@@ -1,5 +1,5 @@
-name: Build & Integration Tests
-run-name: 'Build & Integration Tests: ${{ github.head_ref || github.ref_name }}'
+name: Build & Test
+run-name: 'Build & Test: ${{ github.head_ref || github.ref_name }}'
 
 # Dockefile for the self-hosted runner:
 # https://github.com/celo-org/infrastructure/blob/master/terraform/root-modules/gcp/integration-tests-gke/files/github-arc/Dockerfile-monorepo
@@ -25,15 +25,9 @@ defaults:
 
 env:
   # Increment these to force cache rebuilding
-  NODE_MODULE_CACHE_VERSION: 4
+  NODE_MODULE_CACHE_VERSION: 5
   NODE_OPTIONS: '--max-old-space-size=4096'
   TERM: dumb
-  GRADLE_OPTS: '-Dorg.gradle.daemon=false -Dorg.gradle.parallel=false -Dorg.gradle.configureondemand=true -Dorg.gradle.jvmargs="-Xmx4096m -XX:+HeapDumpOnOutOfMemoryError"'
-  # Git Tag for contract release to use
-  #RELEASE_TAG: ganache-v7-core-contracts.v9
-  RELEASE_TAG: core-contracts.v10
-  # CELO_BLOCKCHAIN_BRANCH_TO_TEST: master
-  CELO_BLOCKCHAIN_BRANCH_TO_TEST: release/1.7.x
 
 # EXAMPLE on debug ssh step
 #  - name: Setup tmate session
