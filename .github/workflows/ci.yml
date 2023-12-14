@@ -136,7 +136,9 @@ jobs:
 
   lint-checks:
     name: Lint code
-    runs-on: ['self-hosted', 'monorepo-node18']
+    runs-on: ['self-hosted', 'org', '8-cpu']
+    container:
+      image: us-west1-docker.pkg.dev/devopsre/actions-runner-controller/celo-monorepo:node18
     timeout-minutes: 30
     needs: install-dependencies
     steps:
