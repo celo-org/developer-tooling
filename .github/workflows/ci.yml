@@ -267,7 +267,7 @@ jobs:
           cd packages/sdk/base
           yarn pack
           cd $RUNNER_TEMP
-          npm install $RUNNER_WORKSPACE/celo-monorepo/packages/sdk/base/*.tgz
+          npm install $RUNNER_WORKSPACE/developer-tooling/packages/sdk/base/*.tgz
 
   utils-test:
     name: SDK Utils package Tests
@@ -297,5 +297,5 @@ jobs:
           cd ../utils
           yarn pack
           cd $RUNNER_TEMP
-          npm install $RUNNER_WORKSPACE/celo-monorepo/packages/sdk/base/*.tgz
-          npm install $RUNNER_WORKSPACE/celo-monorepo/packages/sdk/utils/*.tgz
+          npm install $RUNNER_WORKSPACE/developer-tooling/packages/sdk/base/*.tgz
+          npm install $RUNNER_WORKSPACE/developer-tooling/packages/sdk/utils/*.tgz
