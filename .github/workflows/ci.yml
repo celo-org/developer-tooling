@@ -48,7 +48,9 @@ jobs:
       all_modified_files: ',${{ steps.changed-files.outputs.all_modified_files }}'
       artifacts_to_cache: ${{ steps.get_artifacts_to_cache.outputs.artifacts_to_cache }}
     # runs-on: ubuntu-latest
-    runs-on: ['self-hosted', 'monorepo-node18']
+    runs-on: ['self-hosted', 'org', '8-cpu']
+    container:
+      image: us-west1-docker.pkg.dev/devopsre/actions-runner-controller/celo-monorepo:node18
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
@@ -153,7 +155,9 @@ jobs:
       - run: yarn run lint
   general_test:
     name: General jest test
-    runs-on: ['self-hosted', 'monorepo-node18']
+    runs-on: ['self-hosted', 'org', '8-cpu']
+    container:
+      image: us-west1-docker.pkg.dev/devopsre/actions-runner-controller/celo-monorepo:node18
     needs: install-dependencies
     steps:
       - uses: actions/checkout@v4
@@ -179,7 +183,9 @@ jobs:
           path: test-results/jest
   wallet-test:
     name: Wallet test
-    runs-on: ['self-hosted', 'monorepo-node18']
+    runs-on: ['self-hosted', 'org', '8-cpu']
+    container:
+      image: us-west1-docker.pkg.dev/devopsre/actions-runner-controller/celo-monorepo:node18
     timeout-minutes: 30
     needs: install-dependencies
     steps:
@@ -196,7 +202,9 @@ jobs:
 
   contractkit-tests:
     name: ContractKit Tests
-    runs-on: ['self-hosted', 'monorepo-node18']
+    runs-on: ['self-hosted', 'org', '8-cpu']
+    container:
+      image: us-west1-docker.pkg.dev/devopsre/actions-runner-controller/celo-monorepo:node18
     timeout-minutes: 30
     needs: [install-dependencies]
     if: |
@@ -219,7 +227,9 @@ jobs:
 
   cli-tests:
     name: CeloCli Tests
-    runs-on: ['self-hosted', 'monorepo-node18']
+    runs-on: ['self-hosted', 'org', '8-cpu']
+    container:
+      image: us-west1-docker.pkg.dev/devopsre/actions-runner-controller/celo-monorepo:node18
     timeout-minutes: 30
     needs: [install-dependencies]
     if: |
@@ -260,7 +270,9 @@ jobs:
 
   base-test:
     name: SDK Base package Tests
-    runs-on: ['self-hosted', 'monorepo-node18']
+    runs-on: ['self-hosted', 'org', '8-cpu']
+    container:
+      image: us-west1-docker.pkg.dev/devopsre/actions-runner-controller/celo-monorepo:node18
     timeout-minutes: 30
     needs: [install-dependencies]
     if: |
@@ -288,7 +300,9 @@ jobs:
 
   utils-test:
     name: SDK Utils package Tests
-    runs-on: ['self-hosted', 'monorepo-node18']
+    runs-on: ['self-hosted', 'org', '8-cpu']
+    container:
+      image: us-west1-docker.pkg.dev/devopsre/actions-runner-controller/celo-monorepo:node18
     timeout-minutes: 30
     needs: [install-dependencies]
     if: |
