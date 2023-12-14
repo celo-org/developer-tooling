@@ -54,8 +54,6 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
       - name: Restore node cache
         uses: actions/cache@v3
         id: cache_node
@@ -80,20 +78,6 @@ jobs:
         if: steps.cache_node.outputs.cache-hit != 'true'
         run: |
           yarn check-licenses
-      # Get a list of submodules to ignore in the changed files check
-      - name: Get submodules to ignore in changed files check
-        id: get_submodules_to_ignore
-        run: |
-          # Get all the submodules paths
-          submodules=$(git config --file .gitmodules --name-only --get-regexp path)
-          # Remove the "submodule." prefix and ".path" suffix
-          submodules=$(echo $submodules | sed 's/^submodule.//g')
-          submodules=$(echo $submodules | sed 's/.path$//g')
-          # Add a ! in front of each path to ignore it latter in the changed files check
-          submodules=$(echo $submodules | sed 's/^/!/g')
-          echo "submodules<<EOF" >> $GITHUB_OUTPUT
-          echo "$submodules" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
       # Get workdir local changes and fail if there are any change
       - name: Verify Changed files
         id: verify-changed-files
@@ -103,7 +87,6 @@ jobs:
           fail-message: 'Files changed during build. Please build locally and commit the changes.'
           files: |
             **/*
-            ${{ steps.get_submodules_to_ignore.outputs.submodules }}
       - run: |
           echo "${{ steps.verify-changed-files.outputs.changed_files }}"
       - name: Get the artifacts to cache
@@ -145,8 +128,6 @@ jobs:
     needs: install-dependencies
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
       - name: Sync workspace
         uses: ./.github/actions/sync-workspace
         with:
@@ -161,8 +142,6 @@ jobs:
     needs: install-dependencies
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
       - name: Sync workspace
         uses: ./.github/actions/sync-workspace
         with:
@@ -190,8 +169,6 @@ jobs:
     needs: install-dependencies
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
       - name: Sync workspace
         uses: ./.github/actions/sync-workspace
         with:
@@ -215,8 +192,6 @@ jobs:
       false
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
       - name: Sync workspace
         uses: ./.github/actions/sync-workspace
         with:
@@ -242,8 +217,6 @@ jobs:
       false
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
       - name: Sync workspace
         uses: ./.github/actions/sync-workspace
         with:
@@ -284,8 +257,6 @@ jobs:
       false
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
       - name: Sync workspace
         uses: ./.github/actions/sync-workspace
         with:
@@ -314,8 +285,6 @@ jobs:
       false
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: recursive
       - name: Sync workspace
         uses: ./.github/actions/sync-workspace
         with:
