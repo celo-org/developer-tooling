@@ -4,12 +4,12 @@
 ### Verify installation in Docker
 
 Test installation in isolation using Docker.
-This confirms that it is locally installable and does not have implicit dependency on rest of the `celo-monorepo` or have an implicit dependency which is an explicit dependency of another `celo-monorepo` package.
+This confirms that it is locally installable and does not have implicit dependency on rest of the `developer-tooling` or have an implicit dependency which is an explicit dependency of another `developer-tooling` package.
 
 ```
 # Specify the package to test. e.g. celocli, contractkit, utils
-celo-monorepo $ PACKAGE=cli
-celo-monorepo $ docker run --rm -v $PWD/packages/${PACKAGE}:/tmp/npm_package -it --entrypoint bash gcr.io/celo-testnet/circleci-node18:1.0.0
+developer-tooling $ PACKAGE=cli
+developer-tooling $ docker run --rm -v $PWD/packages/${PACKAGE}:/tmp/npm_package -it --entrypoint bash gcr.io/celo-testnet/circleci-node18:1.0.0
 circleci@e0d56700584f:/# mkdir /tmp/tmp1 && cd /tmp/tmp1
 circleci@e0d56700584f:/tmp/tmp1# npm install /tmp/npm_package/
 ```
@@ -18,7 +18,7 @@ circleci@e0d56700584f:/tmp/tmp1# npm install /tmp/npm_package/
 
 ```
 # Publish the package publicly
-celo-monorepo/packages/cli $ yarn publish --access=public
+developer-tooling/packages/cli $ yarn publish --access=public
 ```
 
 Let's say the published package version number 0.0.20, verify that it is installable
@@ -43,7 +43,7 @@ Once you publish do some manual tests, for example, after publishing `celocli`
 
 ```
 # Docker for an isolated environment again
-celo-monorepo $ docker run --rm -it --entrypoint bash gcr.io/celo-testnet/circleci-node18:1.0.0
+developer-tooling $ docker run --rm -it --entrypoint bash gcr.io/celo-testnet/circleci-node18:1.0.0
 circleci@7040a7660754:/$ mkdir /tmp/tmp1 && cd /tmp/tmp1
 circleci@7040a7660754:/tmp/tmp1$ npm install @celo/celocli@0.0.48
 ...
