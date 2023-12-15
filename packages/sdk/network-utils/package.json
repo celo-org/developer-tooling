@@ -7,7 +7,7 @@
   "author": "Celo",
   "license": "Apache-2.0",
   "homepage": "https://celo-sdk-docs.readthedocs.io/en/latest/network-utils",
-  "repository": "https://github.com/celo-org/celo-monorepo/tree/master/packages/sdk/network-utils",
+  "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/sdk/network-utils",
   "keywords": [
     "celo",
     "blockchain",

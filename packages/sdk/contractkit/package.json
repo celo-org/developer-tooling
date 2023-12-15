@@ -8,7 +8,7 @@
   "author": "Celo",
   "license": "Apache-2.0",
   "homepage": "https://docs.celo.org/developer-guide/contractkit",
-  "repository": "https://github.com/celo-org/celo-monorepo/tree/master/packages/sdk/contractkit",
+  "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/sdk/contractkit",
   "keywords": [
     "celo",
     "blockchain",
