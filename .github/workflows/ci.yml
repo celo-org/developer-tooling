@@ -18,7 +18,7 @@ on:
       - 'prerelease/**'
 
 concurrency:
-  group: celo-monorepo-${{ github.ref }}
+  group: dev-tooling-${{ github.ref }}
   cancel-in-progress: true
 
 defaults:

@@ -1,6 +1,6 @@
 # Docs
 
-Most of the docs package in the [celo-monorepo](https://github.com/celo-org/celo-monorepo) has been moved to its own [Celo documentation repo](https://github.com/celo-org/docs).
+Most of the docs package in the [developer-tooling](https://github.com/celo-org/developer-tooling) has been moved to its own [Celo documentation repo](https://github.com/celo-org/docs).
 
 ## Celo CLI docs
 
