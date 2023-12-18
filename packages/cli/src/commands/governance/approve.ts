@@ -14,7 +14,7 @@ export default class Approve extends BaseCommand {
   // Only authorized approvers need to know about this command.
   static hidden = true
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     proposalID: flags.string({
       description: 'UUID of proposal to approve',
@@ -68,7 +68,7 @@ export default class Approve extends BaseCommand {
         .proposalExists(id)
         .proposalInStage(
           id,
-          governanceVersion.storage === '1' && governanceVersion.major < 3
+          governanceVersion.storage === '1' && Number(governanceVersion.major) < 3
             ? 'Approval'
             : 'Referendum'
         )

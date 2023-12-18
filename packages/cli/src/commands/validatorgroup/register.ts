@@ -1,15 +1,15 @@
 import { flags } from '@oclif/command'
+import { IFlag } from '@oclif/parser/lib/flags'
 import BigNumber from 'bignumber.js'
 import humanizeDuration from 'humanize-duration'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { binaryPrompt, displaySendTx } from '../../utils/cli'
 import { Flags } from '../../utils/command'
-
 export default class ValidatorGroupRegister extends BaseCommand {
   static description = 'Register a new Validator Group'
 
-  static flags = {
+  static flags: { commission: IFlag<string>; from: IFlag<string>; yes: IFlag<boolean> } = {
     ...BaseCommand.flags,
     from: Flags.address({ required: true, description: 'Address for the Validator Group' }),
     yes: flags.boolean({ description: 'Answer yes to prompt' }),

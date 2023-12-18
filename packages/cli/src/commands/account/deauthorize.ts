@@ -6,7 +6,7 @@ import { Flags } from '../../utils/command'
 export default class Deauthorize extends BaseCommand {
   static description = "Remove an account's authorized attestation signer role."
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({ required: true }),
     role: flags.string({

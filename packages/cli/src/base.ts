@@ -5,6 +5,7 @@ import { AzureHSMWallet } from '@celo/wallet-hsm-azure'
 import { AddressValidation, newLedgerWalletWithSetup } from '@celo/wallet-ledger'
 import { LocalWallet } from '@celo/wallet-local'
 import { Command, flags } from '@oclif/command'
+import { IFlag } from '@oclif/parser/lib/flags'
 import { ParserOutput } from '@oclif/parser/lib/parse'
 import chalk from 'chalk'
 import net from 'net'
@@ -21,7 +22,8 @@ export const gasOptions = {
 
 // tslint:disable-next-line:max-classes-per-file
 export abstract class BaseCommand extends Command {
-  static flags = {
+  // https://github.com/microsoft/TypeScript/issues/47663
+  static flags: { [name: string]: any } = {
     privateKey: flags.string({
       char: 'k',
       description: 'Use a private key to sign local transactions with',
@@ -31,7 +33,7 @@ export abstract class BaseCommand extends Command {
       char: 'n',
       description: "URL of the node to run commands against (defaults to 'http://localhost:8545')",
       hidden: true,
-      parse: (nodeUrl) => {
+      parse: (nodeUrl: string) => {
         switch (nodeUrl) {
           case 'local':
           case 'localhost':
@@ -47,31 +49,31 @@ export abstract class BaseCommand extends Command {
             return nodeUrl
         }
       },
-    }),
+    }) as IFlag<string>,
     gasCurrency: flags.enum({
       options: Object.keys(gasOptions),
       description:
         "Use a specific gas currency for transaction fees (defaults to 'auto' which uses whatever feeCurrency is available)",
       hidden: true,
-    }),
+    }) as IFlag<string>,
     useLedger: flags.boolean({
       default: false,
       hidden: true,
       description: 'Set it to use a ledger wallet',
-    }),
+    }) as IFlag<boolean>,
     ledgerAddresses: flags.integer({
       default: 1,
       hidden: true,
       exclusive: ['ledgerCustomAddresses'],
       description: 'If --useLedger is set, this will get the first N addresses for local signing',
-    }),
+    }) as IFlag<number>,
     ledgerCustomAddresses: flags.string({
       default: '[0]',
       hidden: true,
       exclusive: ['ledgerAddresses'],
       description:
         'If --useLedger is set, this will get the array of index addresses for local signing. Example --ledgerCustomAddresses "[4,99]"',
-    }),
+    }) as IFlag<string>,
     useAKV: flags.boolean({
       default: false,
       hidden: true,
@@ -80,17 +82,17 @@ export abstract class BaseCommand extends Command {
     azureVaultName: flags.string({
       hidden: true,
       description: 'If --useAKV is set, this is used to connect to the Azure KeyVault',
-    }),
+    }) as IFlag<string>,
     ledgerConfirmAddress: flags.boolean({
       default: false,
       hidden: true,
       description: 'Set it to ask confirmation for the address of the transaction from the ledger',
-    }),
+    }) as IFlag<boolean>,
     globalHelp: flags.boolean({
       default: false,
       hidden: false,
       description: 'View all available global flags',
-    }),
+    }) as IFlag<boolean>,
   }
   // This specifies whether the node needs to be synced before the command
   // can be run. In most cases, this should be `true`, so that's the default.

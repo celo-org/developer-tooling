@@ -6,7 +6,7 @@ export default class DeletePaymentDelegation extends BaseCommand {
   static description =
     "Removes a validator's payment delegation by setting benficiary and fraction to 0."
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     account: Flags.address({ required: true }),
   }

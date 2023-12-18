@@ -8,7 +8,7 @@ import { Flags } from '../../utils/command'
 export default class PrepareHotfix extends BaseCommand {
   static description = 'Prepare a governance hotfix for execution in the current epoch'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({ required: true, description: "Preparer's address" }),
     hash: flags.string({ required: true, description: 'Hash of hotfix transactions' }),

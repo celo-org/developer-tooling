@@ -7,7 +7,7 @@ export default class SetAccount extends ReleaseGoldBaseCommand {
   static description =
     'Set account properties of the ReleaseGold instance account such as name, data encryption key, and the metadata URL'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...ReleaseGoldBaseCommand.flags,
     property: flags.string({
       char: 'p',

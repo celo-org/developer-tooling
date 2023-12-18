@@ -8,7 +8,7 @@ import { OffchainDataCommand } from '../../utils/off-chain-data'
 export default class OffchainRead extends BaseCommand {
   static description = 'DEV: Reads the name from offchain storage'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...OffchainDataCommand.flags,
 
     // private accessor parameters

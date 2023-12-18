@@ -10,7 +10,7 @@ import { Flags } from '../../utils/command'
 export default class ExecuteHotfix extends BaseCommand {
   static description = 'Execute a governance hotfix prepared for the current epoch'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({ required: true, description: "Executors's address" }),
     jsonTransactions: flags.string({ required: true, description: 'Path to json transactions' }),

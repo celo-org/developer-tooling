@@ -9,7 +9,7 @@ import { Args } from '../../utils/command'
 export default class ShowMultiSig extends BaseCommand {
   static description = 'Shows information about multi-sig contract'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     tx: flags.integer({
       default: undefined,

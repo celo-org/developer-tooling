@@ -5,7 +5,7 @@ import { printValueMapRecursive } from '../../utils/cli'
 export default class Info extends BaseCommand {
   static description = 'View general network information such as the current block number'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     lastN: flags.integer({
       char: 'n',

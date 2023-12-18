@@ -471,12 +471,12 @@ export class InteractiveProposalBuilder {
 
       // prompt for function
       const functionPromptName = contractName + ' Function'
-      const functionAnswer = await inquirer.prompt({
+      const functionAnswer = await inquirer.prompt<Record<string, string>>({
         name: functionPromptName,
         type: 'list',
         choices: txMethodNames,
       })
-      const functionName = functionAnswer[functionPromptName] as string
+      const functionName = functionAnswer[functionPromptName]
       const idx = txMethodNames.findIndex((m) => m === functionName)
       const txDefinition = txMethods[idx]
 

@@ -8,9 +8,10 @@ import { BaseCommand } from './base'
 import { newCheckBuilder } from './utils/checks'
 import { displaySendTx, failWith } from './utils/cli'
 import { Flags } from './utils/command'
+// import { IFlag } from '@oclif/parser/lib/flags'
 
 export abstract class TransferStableBase extends BaseCommand {
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({ required: true, description: 'Address of the sender' }),
     to: Flags.address({ required: true, description: 'Address of the receiver' }),

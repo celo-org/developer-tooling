@@ -7,7 +7,7 @@ import { Flags } from '../../utils/command'
 export default class Execute extends BaseCommand {
   static description = 'Executes a Granda Mento exchange proposal'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({
       required: true,

@@ -7,7 +7,7 @@ const DKG = require('./DKG.json')
 export default class DKGDeploy extends BaseCommand {
   static description = 'Deploys the DKG smart contract'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     phaseDuration: flags.integer({
       required: true,

@@ -10,7 +10,7 @@ export default class VotePartially extends BaseCommand {
 
   static voteOptions = ['Abstain', 'No', 'Yes']
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     proposalID: flags.string({ required: true, description: 'UUID of proposal to vote on' }),
     yes: flags.string({ description: 'Yes votes' }),

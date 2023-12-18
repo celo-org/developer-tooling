@@ -8,7 +8,7 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
 
   static description = 'Take all possible steps to revoke given contract instance.'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...ReleaseGoldBaseCommand.flags,
     yesreally: flags.boolean({ description: 'Override interactive prompt to confirm revocation' }),
   }

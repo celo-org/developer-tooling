@@ -11,7 +11,7 @@ const stableTokenOptions = enumEntriesDupWithLowercase(Object.entries(StableToke
 export default class GetBuyAmount extends BaseCommand {
   static description = 'Gets the buy amount for a prospective Granda Mento exchange'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     value: Flags.wei({
       required: true,

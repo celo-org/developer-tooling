@@ -9,7 +9,7 @@ export default class SetCanExpire extends ReleaseGoldBaseCommand {
 
   static expireOptions = ['true', 'false', 'True', 'False']
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...ReleaseGoldBaseCommand.flags,
     value: flags.enum({
       options: SetCanExpire.expireOptions,

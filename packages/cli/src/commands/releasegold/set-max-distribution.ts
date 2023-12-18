@@ -7,7 +7,7 @@ import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
 export default class SetMaxDistribution extends ReleaseGoldBaseCommand {
   static description = 'Set the maximum distribution of celo for the given contract'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...ReleaseGoldBaseCommand.flags,
     distributionRatio: flags.string({
       required: true,

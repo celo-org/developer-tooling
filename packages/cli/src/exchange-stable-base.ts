@@ -1,5 +1,6 @@
 import { StableToken } from '@celo/contractkit'
 import { stableTokenInfos } from '@celo/contractkit/lib/celo-tokens'
+import { IFlag } from '@oclif/parser/lib/flags'
 import { ParserOutput } from '@oclif/parser/lib/parse'
 import BigNumber from 'bignumber.js'
 import { BaseCommand } from './base'
@@ -11,7 +12,7 @@ import { checkNotDangerousExchange } from './utils/exchange'
 const largeOrderPercentage = 1
 const deppegedPricePercentage = 20
 export default class ExchangeStableBase extends BaseCommand {
-  static flags = {
+  static flags: { from: IFlag<string>; value: IFlag<BigNumber>; forAtLeast: IFlag<BigNumber> } = {
     ...BaseCommand.flags,
     from: Flags.address({
       required: true,

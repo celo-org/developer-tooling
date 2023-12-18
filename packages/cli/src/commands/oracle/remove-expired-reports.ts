@@ -14,7 +14,7 @@ export default class RemoveExpiredReports extends BaseCommand {
       description: 'Token to remove expired reports for',
     },
   ]
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({
       required: true,

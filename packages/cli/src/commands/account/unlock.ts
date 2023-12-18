@@ -7,8 +7,8 @@ import { Args } from '../../utils/command'
 export default class Unlock extends BaseCommand {
   static description = 'Unlock an account address to send transactions or validate blocks'
 
-  static flags = {
-    ...BaseCommand.flags,
+  static flags: { [name: string]: any } = {
+    ...(BaseCommand.flags as { useLedger: flags.IFlag<boolean> }),
     password: flags.string({
       required: false,
       description:

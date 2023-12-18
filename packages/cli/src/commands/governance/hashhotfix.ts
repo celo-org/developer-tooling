@@ -9,7 +9,7 @@ import { checkProposal } from '../../utils/governance'
 export default class HashHotfix extends BaseCommand {
   static description = 'Hash a governance hotfix specified by JSON and a salt'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     jsonTransactions: flags.string({
       required: true,

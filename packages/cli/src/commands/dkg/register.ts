@@ -10,7 +10,7 @@ const DKG = require('./DKG.json')
 export default class DKGRegister extends BaseCommand {
   static description = 'Register a public key in the DKG'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     blsKey: flags.string({ required: true }),
     address: Flags.address({ required: true, description: 'DKG Contract Address' }),

@@ -7,7 +7,7 @@ const stableTokenOptions = enumEntriesDupWithLowercase(Object.entries(StableToke
 export default class ExchangeStable extends ExchangeStableBase {
   static description = 'Exchange Stable Token for CELO via the stability mechanism'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...ExchangeStableBase.flags,
     stableToken: flags.enum({
       options: Object.keys(stableTokenOptions),

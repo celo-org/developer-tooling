@@ -8,7 +8,7 @@ export default class MultiSigTransfer extends BaseCommand {
   static description =
     'Ability to approve CELO transfers to and from multisig. Submit transaction or approve a matching existing transaction'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     to: Flags.address({ required: true, description: 'Recipient of transfer' }),
     amount: flags.string({ required: true, description: 'Amount to transfer, e.g. 10e18' }),

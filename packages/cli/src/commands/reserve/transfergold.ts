@@ -7,7 +7,7 @@ import { Flags } from '../../utils/command'
 export default class TransferGold extends BaseCommand {
   static description = 'Transfers reserve celo to other reserve address'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     value: flags.string({ required: true, description: 'The unit amount of CELO' }),
     to: Flags.address({ required: true, description: 'Receiving address' }),

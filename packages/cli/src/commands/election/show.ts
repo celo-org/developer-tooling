@@ -8,7 +8,7 @@ import { Args } from '../../utils/command'
 export default class ElectionShow extends BaseCommand {
   static description = 'Show election information about a voter or registered Validator Group'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     voter: flags.boolean({
       exclusive: ['group'],

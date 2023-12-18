@@ -10,7 +10,7 @@ export default class Unlock extends BaseCommand {
   static description =
     'Unlocks CELO, which can be withdrawn after the unlocking period. Unlocked celo will appear as a "pending withdrawal" until the unlocking period is over, after which it can be withdrawn via "lockedgold:withdraw".'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({ required: true }),
     value: flags.string({ ...LockedGoldArgs.valueArg, required: true }),

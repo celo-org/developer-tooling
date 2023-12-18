@@ -4,7 +4,7 @@ import { printValueMapRecursive } from '../../utils/cli'
 export default class MaxDelegateesCount extends BaseCommand {
   static description = 'Returns the maximum number of delegates allowed per account.'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
   }
 

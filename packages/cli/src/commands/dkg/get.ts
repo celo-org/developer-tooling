@@ -17,7 +17,7 @@ export default class DKGGet extends BaseCommand {
 
   static options = ['shares', 'responses', 'justifications', 'participants', 'phase', 'group']
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     method: flags.enum({
       options: DKGGet.options,

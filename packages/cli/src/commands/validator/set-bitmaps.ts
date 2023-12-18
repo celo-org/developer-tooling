@@ -7,7 +7,7 @@ import { Flags } from '../../utils/command'
 export default class SetBitmapsCommand extends BaseCommand {
   static description = 'Set validator signature bitmaps for provided intervals'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({
       required: true,

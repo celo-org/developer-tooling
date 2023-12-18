@@ -5,7 +5,7 @@ import { nodeIsSynced } from '../../utils/helpers'
 export default class NodeSynced extends BaseCommand {
   static description = 'Check if the node is synced'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     verbose: flags.boolean({
       description: 'output the full status if syncing',

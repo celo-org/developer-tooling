@@ -7,7 +7,7 @@ const DKG = require('./DKG.json')
 export default class DKGStart extends BaseCommand {
   static description = 'Starts the DKG'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     address: Flags.address({ required: true, description: 'DKG Contract Address' }),
     from: Flags.address({ required: true, description: 'Address of the sender' }),

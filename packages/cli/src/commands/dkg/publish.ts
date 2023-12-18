@@ -10,7 +10,7 @@ const DKG = require('./DKG.json')
 export default class DKGPublish extends BaseCommand {
   static description = 'Publishes data for each phase of the DKG'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     data: flags.string({ required: true, description: 'Path to the data being published' }),
     address: Flags.address({ required: true, description: 'DKG Contract Address' }),

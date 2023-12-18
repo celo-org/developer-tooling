@@ -6,7 +6,7 @@ import { Flags } from '../../utils/command'
 export default class RevokeUpvote extends BaseCommand {
   static description = 'Revoke upvotes for queued governance proposals'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({ required: true, description: "Upvoter's address" }),
   }

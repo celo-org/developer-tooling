@@ -6,7 +6,7 @@ import { Flags } from '../../utils/command'
 export default class AttestationRewardsWithdraw extends BaseCommand {
   static description = 'Withdraw accumulated attestation rewards for a given currency'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({
       required: true,

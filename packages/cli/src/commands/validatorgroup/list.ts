@@ -5,7 +5,7 @@ export default class ValidatorGroupList extends BaseCommand {
   static description =
     'List registered Validator Groups, their names (if provided), commission, and members.'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     ...(cli.table.flags() as object),
   }

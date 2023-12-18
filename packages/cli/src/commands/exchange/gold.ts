@@ -4,7 +4,7 @@ export default class ExchangeGold extends ExchangeCelo {
   static description =
     'Exchange CELO for StableTokens via the stability mechanism. *DEPRECATION WARNING* Use the "exchange:celo" command instead'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...ExchangeCelo.flags,
   }
 

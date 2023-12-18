@@ -7,7 +7,7 @@ export default class Withdraw extends BaseCommand {
   static description =
     'Withdraw any pending withdrawals created via "lockedgold:unlock" that have become available.'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({ required: true }),
   }

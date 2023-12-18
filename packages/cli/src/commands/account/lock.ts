@@ -5,7 +5,7 @@ import { Args } from '../../utils/command'
 export default class Lock extends BaseCommand {
   static description = 'Lock an account which was previously unlocked'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
   }
 

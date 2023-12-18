@@ -11,7 +11,7 @@ import {
 export default class BuildProposal extends BaseCommand {
   static description = 'Interactively build a governance proposal'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     output: flags.string({
       required: false,

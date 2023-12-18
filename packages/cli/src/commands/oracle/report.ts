@@ -16,7 +16,7 @@ export default class ReportPrice extends BaseCommand {
       description: 'Token to report on',
     },
   ]
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({ required: true, description: 'Address of the oracle account' }),
     value: flags.string({

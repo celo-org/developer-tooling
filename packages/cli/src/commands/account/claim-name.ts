@@ -4,7 +4,7 @@ import { ClaimCommand } from '../../utils/identity'
 
 export default class ClaimName extends ClaimCommand {
   static description = 'Claim a name and add the claim to a local metadata file'
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...ClaimCommand.flags,
     name: flags.string({
       required: true,

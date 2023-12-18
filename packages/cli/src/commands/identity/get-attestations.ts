@@ -8,7 +8,7 @@ export default class GetAttestations extends BaseCommand {
   static description =
     "Looks up attestations associated with the provided phone number. If a pepper is not provided, it uses the --from account's balance to query the pepper."
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     phoneNumber: flags.string({
       required: false,

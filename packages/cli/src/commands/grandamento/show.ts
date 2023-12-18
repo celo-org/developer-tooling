@@ -6,7 +6,7 @@ import { printValueMap } from '../../utils/cli'
 export default class Show extends BaseCommand {
   static description = 'Shows details of a Granda Mento exchange proposal'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     proposalID: flags.string({
       required: true,

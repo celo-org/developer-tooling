@@ -8,7 +8,7 @@ import { Flags } from '../../utils/command'
 export default class ElectionRevoke extends BaseCommand {
   static description = 'Revoke votes for a Validator Group in validator elections.'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({ required: true, description: "Voter's address" }),
     for: Flags.address({

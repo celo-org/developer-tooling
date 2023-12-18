@@ -10,7 +10,7 @@ export default class RevokeVotes extends ReleaseGoldBaseCommand {
   static description =
     "Revokes `votes` for the given contract's account from the given group's account"
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...ReleaseGoldBaseCommand.flags,
     group: Flags.address({
       required: false,

@@ -7,7 +7,7 @@ import { OffchainDataCommand } from '../../utils/off-chain-data'
 export default class OffchainWrite extends OffchainDataCommand {
   static description = 'DEV: Writes a name to offchain storage'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...OffchainDataCommand.flags,
     name: flags.string({ required: true }),
     privateKey: flags.string({ required: true }),

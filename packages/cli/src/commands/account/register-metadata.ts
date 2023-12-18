@@ -11,7 +11,7 @@ export default class RegisterMetadata extends BaseCommand {
   static description =
     'Register metadata URL for an account where users will be able to retieve the metadata file and verify your claims'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({
       required: true,

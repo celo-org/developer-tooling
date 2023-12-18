@@ -16,7 +16,7 @@ export default class ValidatorList extends BaseCommand {
   static description =
     'List registered Validators, their name (if provided), affiliation, uptime score, and public keys used for validating.'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     ...(cli.table.flags() as object),
   }

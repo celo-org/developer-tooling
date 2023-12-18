@@ -7,7 +7,7 @@ export default class ValidatorGroupDeRegister extends BaseCommand {
   static description =
     'Deregister a Validator Group. Approximately 180 days after the validator group is empty, it will be possible to deregister it start unlocking the CELO. If you wish to deregister your validator group, you must first remove all members, then wait the required 180 days before running this command.'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({ required: true, description: "Signer or ValidatorGroup's address" }),
   }

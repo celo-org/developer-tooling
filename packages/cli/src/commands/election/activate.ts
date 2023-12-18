@@ -10,7 +10,7 @@ export default class ElectionVote extends BaseCommand {
   static description =
     'Activate pending votes in validator elections to begin earning rewards. To earn rewards as a voter, it is required to activate your pending votes at some point after the end of the epoch in which they were made.'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({ required: true, description: "Voter's address" }),
     wait: flags.boolean({ description: 'Wait until all pending votes can be activated' }),
