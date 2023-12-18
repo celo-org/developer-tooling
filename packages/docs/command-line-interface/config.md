@@ -17,7 +17,7 @@ OPTIONS
   --globalHelp  View all available global flags
 ```
 
-_See code: [src/commands/config/get.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/config/get.ts)_
+_See code: [src/commands/config/get.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/config/get.ts)_
 
 ## `celocli config:set`
 
@@ -50,4 +50,4 @@ EXAMPLES
   set --gasCurrency CELO
 ```
 
-_See code: [src/commands/config/set.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/config/set.ts)_
+_See code: [src/commands/config/set.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/config/set.ts)_
