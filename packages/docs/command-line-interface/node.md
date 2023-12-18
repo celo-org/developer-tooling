@@ -17,7 +17,7 @@ OPTIONS
   --globalHelp  View all available global flags
 ```
 
-_See code: [src/commands/node/accounts.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/node/accounts.ts)_
+_See code: [src/commands/node/accounts.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/node/accounts.ts)_
 
 ## `celocli node:synced`
 
@@ -34,4 +34,4 @@ OPTIONS
   --verbose     output the full status if syncing
 ```
 
-_See code: [src/commands/node/synced.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/node/synced.ts)_
+_See code: [src/commands/node/synced.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/node/synced.ts)_

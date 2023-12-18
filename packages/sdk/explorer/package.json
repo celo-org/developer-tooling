@@ -7,7 +7,7 @@
   "author": "Celo",
   "license": "Apache-2.0",
   "homepage": "https://celo-sdk-docs.readthedocs.io/en/latest/explorer",
-  "repository": "https://github.com/celo-org/celo-monorepo/tree/master/packages/sdk/explorer",
+  "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/sdk/explorer",
   "keywords": [
     "celo",
     "blockchain",

@@ -20,7 +20,7 @@ EXAMPLE
   status
 ```
 
-_See code: [src/commands/reserve/status.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/reserve/status.ts)_
+_See code: [src/commands/reserve/status.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/reserve/status.ts)_
 
 ## `celocli reserve:transfergold`
 
@@ -50,4 +50,4 @@ EXAMPLES
   0x5409ed021d9299bf6814279a6a1411a7e866a631 --useMultiSig
 ```
 
-_See code: [src/commands/reserve/transfergold.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/reserve/transfergold.ts)_
+_See code: [src/commands/reserve/transfergold.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/reserve/transfergold.ts)_

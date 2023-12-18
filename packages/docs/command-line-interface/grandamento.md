@@ -22,7 +22,7 @@ OPTIONS
   --proposalID=proposalID                            (required) UUID of proposal to view
 ```
 
-_See code: [src/commands/grandamento/cancel.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/grandamento/cancel.ts)_
+_See code: [src/commands/grandamento/cancel.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/grandamento/cancel.ts)_
 
 ## `celocli grandamento:execute`
 
@@ -43,7 +43,7 @@ OPTIONS
   --proposalID=proposalID                            (required) UUID of proposal to view
 ```
 
-_See code: [src/commands/grandamento/execute.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/grandamento/execute.ts)_
+_See code: [src/commands/grandamento/execute.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/grandamento/execute.ts)_
 
 ## `celocli grandamento:get-buy-amount`
 
@@ -66,7 +66,7 @@ OPTIONS
                                                    exchange
 ```
 
-_See code: [src/commands/grandamento/get-buy-amount.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/grandamento/get-buy-amount.ts)_
+_See code: [src/commands/grandamento/get-buy-amount.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/grandamento/get-buy-amount.ts)_
 
 ## `celocli grandamento:list`
 
@@ -82,7 +82,7 @@ OPTIONS
   --globalHelp  View all available global flags
 ```
 
-_See code: [src/commands/grandamento/list.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/grandamento/list.ts)_
+_See code: [src/commands/grandamento/list.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/grandamento/list.ts)_
 
 ## `celocli grandamento:propose`
 
@@ -109,7 +109,7 @@ OPTIONS
                                                      to exchange
 ```
 
-_See code: [src/commands/grandamento/propose.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/grandamento/propose.ts)_
+_See code: [src/commands/grandamento/propose.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/grandamento/propose.ts)_
 
 ## `celocli grandamento:show`
 
@@ -126,4 +126,4 @@ OPTIONS
   --proposalID=proposalID  (required) UUID of proposal to view
 ```
 
-_See code: [src/commands/grandamento/show.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/grandamento/show.ts)_
+_See code: [src/commands/grandamento/show.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/grandamento/show.ts)_

@@ -58,4 +58,4 @@ EXAMPLE
   show --address 0x5409ed021d9299bf6814279a6a1411a7e866a631
 ```
 
-_See code: [src/commands/rewards/show.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/rewards/show.ts)_
+_See code: [src/commands/rewards/show.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/rewards/show.ts)_

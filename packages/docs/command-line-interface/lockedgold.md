@@ -24,7 +24,7 @@ EXAMPLE
   0xc0ffee254729296a45a3885639AC7E10F9d54979 --percent 100
 ```
 
-_See code: [src/commands/lockedgold/delegate.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/lockedgold/delegate.ts)_
+_See code: [src/commands/lockedgold/delegate.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/lockedgold/delegate.ts)_
 
 ## `celocli lockedgold:delegate-info`
 
@@ -44,7 +44,7 @@ EXAMPLE
   delegate-info --account 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95
 ```
 
-_See code: [src/commands/lockedgold/delegate-info.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/lockedgold/delegate-info.ts)_
+_See code: [src/commands/lockedgold/delegate-info.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/lockedgold/delegate-info.ts)_
 
 ## `celocli lockedgold:lock`
 
@@ -65,7 +65,7 @@ EXAMPLE
   lock --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95 --value 10000000000000000000000
 ```
 
-_See code: [src/commands/lockedgold/lock.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/lockedgold/lock.ts)_
+_See code: [src/commands/lockedgold/lock.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/lockedgold/lock.ts)_
 
 ## `celocli lockedgold:max-delegatees-count`
 
@@ -84,7 +84,7 @@ EXAMPLE
   max-delegatees-count
 ```
 
-_See code: [src/commands/lockedgold/max-delegatees-count.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/lockedgold/max-delegatees-count.ts)_
+_See code: [src/commands/lockedgold/max-delegatees-count.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/lockedgold/max-delegatees-count.ts)_
 
 ## `celocli lockedgold:revoke-delegate`
 
@@ -110,7 +110,7 @@ EXAMPLE
   0xc0ffee254729296a45a3885639AC7E10F9d54979 --percent 100
 ```
 
-_See code: [src/commands/lockedgold/revoke-delegate.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/lockedgold/revoke-delegate.ts)_
+_See code: [src/commands/lockedgold/revoke-delegate.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/lockedgold/revoke-delegate.ts)_
 
 ## `celocli lockedgold:show ACCOUNT`
 
@@ -129,7 +129,7 @@ EXAMPLE
   show 0x5409ed021d9299bf6814279a6a1411a7e866a631
 ```
 
-_See code: [src/commands/lockedgold/show.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/lockedgold/show.ts)_
+_See code: [src/commands/lockedgold/show.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/lockedgold/show.ts)_
 
 ## `celocli lockedgold:unlock`
 
@@ -150,7 +150,7 @@ EXAMPLE
   unlock --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95 --value 500000000
 ```
 
-_See code: [src/commands/lockedgold/unlock.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/lockedgold/unlock.ts)_
+_See code: [src/commands/lockedgold/unlock.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/lockedgold/unlock.ts)_
 
 ## `celocli lockedgold:update-delegated-amount`
 
@@ -172,7 +172,7 @@ EXAMPLE
   0xc0ffee254729296a45a3885639AC7E10F9d54979
 ```
 
-_See code: [src/commands/lockedgold/update-delegated-amount.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/lockedgold/update-delegated-amount.ts)_
+_See code: [src/commands/lockedgold/update-delegated-amount.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/lockedgold/update-delegated-amount.ts)_
 
 ## `celocli lockedgold:withdraw`
 
@@ -192,4 +192,4 @@ EXAMPLE
   withdraw --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95
 ```
 
-_See code: [src/commands/lockedgold/withdraw.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/lockedgold/withdraw.ts)_
+_See code: [src/commands/lockedgold/withdraw.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/lockedgold/withdraw.ts)_

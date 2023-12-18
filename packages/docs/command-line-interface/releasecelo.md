@@ -62,7 +62,7 @@ EXAMPLES
   c2a1571603a50ae224d2b32685e84d4d1a1eebad8452eb
 ```
 
-_See code: [src/commands/releasecelo/authorize.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/releasecelo/authorize.ts)_
+_See code: [src/commands/releasecelo/authorize.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/authorize.ts)_
 
 ## `celocli releasecelo:create-account`
 
@@ -84,7 +84,7 @@ EXAMPLE
   create-account --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631
 ```
 
-_See code: [src/commands/releasecelo/create-account.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/releasecelo/create-account.ts)_
+_See code: [src/commands/releasecelo/create-account.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/create-account.ts)_
 
 ## `celocli releasecelo:locked-gold`
 
@@ -121,7 +121,7 @@ EXAMPLES
   --value 10000000000000000000000
 ```
 
-_See code: [src/commands/releasecelo/locked-gold.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/releasecelo/locked-gold.ts)_
+_See code: [src/commands/releasecelo/locked-gold.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/locked-gold.ts)_
 
 ## `celocli releasecelo:refund-and-finalize`
 
@@ -143,7 +143,7 @@ EXAMPLE
   refund-and-finalize --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631
 ```
 
-_See code: [src/commands/releasecelo/refund-and-finalize.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/releasecelo/refund-and-finalize.ts)_
+_See code: [src/commands/releasecelo/refund-and-finalize.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/refund-and-finalize.ts)_
 
 ## `celocli releasecelo:revoke`
 
@@ -168,7 +168,7 @@ EXAMPLE
   revoke --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631
 ```
 
-_See code: [src/commands/releasecelo/revoke.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/releasecelo/revoke.ts)_
+_See code: [src/commands/releasecelo/revoke.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/revoke.ts)_
 
 ## `celocli releasecelo:revoke-votes`
 
@@ -204,7 +204,7 @@ EXAMPLES
   --allGroups
 ```
 
-_See code: [src/commands/releasecelo/revoke-votes.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/releasecelo/revoke-votes.ts)_
+_See code: [src/commands/releasecelo/revoke-votes.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/revoke-votes.ts)_
 
 ## `celocli releasecelo:set-account`
 
@@ -240,7 +240,7 @@ EXAMPLES
   --value www.test.com
 ```
 
-_See code: [src/commands/releasecelo/set-account.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/releasecelo/set-account.ts)_
+_See code: [src/commands/releasecelo/set-account.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/set-account.ts)_
 
 ## `celocli releasecelo:set-account-wallet-address`
 
@@ -273,7 +273,7 @@ EXAMPLE
   3e7fb9b624127f42ef0871d025d8a56fe2f8f08117e25b
 ```
 
-_See code: [src/commands/releasecelo/set-account-wallet-address.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/releasecelo/set-account-wallet-address.ts)_
+_See code: [src/commands/releasecelo/set-account-wallet-address.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/set-account-wallet-address.ts)_
 
 ## `celocli releasecelo:set-beneficiary`
 
@@ -308,7 +308,7 @@ EXAMPLE
   0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb
 ```
 
-_See code: [src/commands/releasecelo/set-beneficiary.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/releasecelo/set-beneficiary.ts)_
+_See code: [src/commands/releasecelo/set-beneficiary.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/set-beneficiary.ts)_
 
 ## `celocli releasecelo:set-can-expire`
 
@@ -335,7 +335,7 @@ EXAMPLE
   set-can-expire --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631 --value true
 ```
 
-_See code: [src/commands/releasecelo/set-can-expire.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/releasecelo/set-can-expire.ts)_
+_See code: [src/commands/releasecelo/set-can-expire.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/set-can-expire.ts)_
 
 ## `celocli releasecelo:set-liquidity-provision`
 
@@ -360,7 +360,7 @@ EXAMPLE
   set-liquidity-provision --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631
 ```
 
-_See code: [src/commands/releasecelo/set-liquidity-provision.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/releasecelo/set-liquidity-provision.ts)_
+_See code: [src/commands/releasecelo/set-liquidity-provision.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/set-liquidity-provision.ts)_
 
 ## `celocli releasecelo:set-max-distribution`
 
@@ -392,7 +392,7 @@ EXAMPLE
   --distributionRatio 1000
 ```
 
-_See code: [src/commands/releasecelo/set-max-distribution.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/releasecelo/set-max-distribution.ts)_
+_See code: [src/commands/releasecelo/set-max-distribution.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/set-max-distribution.ts)_
 
 ## `celocli releasecelo:show`
 
@@ -414,7 +414,7 @@ EXAMPLE
   show --contract 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95
 ```
 
-_See code: [src/commands/releasecelo/show.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/releasecelo/show.ts)_
+_See code: [src/commands/releasecelo/show.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/show.ts)_
 
 ## `celocli releasecelo:transfer-dollars`
 
@@ -444,7 +444,7 @@ EXAMPLE
   0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb --value 10000000000000000000000
 ```
 
-_See code: [src/commands/releasecelo/transfer-dollars.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/releasecelo/transfer-dollars.ts)_
+_See code: [src/commands/releasecelo/transfer-dollars.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/transfer-dollars.ts)_
 
 ## `celocli releasecelo:withdraw`
 
@@ -470,4 +470,4 @@ EXAMPLE
   10000000000000000000000
 ```
 
-_See code: [src/commands/releasecelo/withdraw.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/releasecelo/withdraw.ts)_
+_See code: [src/commands/releasecelo/withdraw.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/withdraw.ts)_

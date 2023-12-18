@@ -26,7 +26,7 @@ EXAMPLES
   activate --from 0x4443d0349e8b3075cba511a0a87796597602a0f1 --wait
 ```
 
-_See code: [src/commands/election/activate.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/election/activate.ts)_
+_See code: [src/commands/election/activate.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/election/activate.ts)_
 
 ## `celocli election:current`
 
@@ -54,7 +54,7 @@ OPTIONS
                           if keys have been rotated.
 ```
 
-_See code: [src/commands/election/current.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/election/current.ts)_
+_See code: [src/commands/election/current.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/election/current.ts)_
 
 ## `celocli election:list`
 
@@ -81,7 +81,7 @@ EXAMPLE
   list
 ```
 
-_See code: [src/commands/election/list.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/election/list.ts)_
+_See code: [src/commands/election/list.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/election/list.ts)_
 
 ## `celocli election:revoke`
 
@@ -104,7 +104,7 @@ EXAMPLE
   0x932fee04521f5fcb21949041bf161917da3f588b, --value 1000000
 ```
 
-_See code: [src/commands/election/revoke.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/election/revoke.ts)_
+_See code: [src/commands/election/revoke.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/election/revoke.ts)_
 
 ## `celocli election:run`
 
@@ -128,7 +128,7 @@ OPTIONS
   --sort=sort             property to sort by (prepend '-' for descending)
 ```
 
-_See code: [src/commands/election/run.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/election/run.ts)_
+_See code: [src/commands/election/run.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/election/run.ts)_
 
 ## `celocli election:show ADDRESS`
 
@@ -154,7 +154,7 @@ EXAMPLES
   show 0x97f7333c51897469E8D98E7af8653aAb468050a3 --group
 ```
 
-_See code: [src/commands/election/show.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/election/show.ts)_
+_See code: [src/commands/election/show.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/election/show.ts)_
 
 ## `celocli election:vote`
 
@@ -179,4 +179,4 @@ EXAMPLE
   0x932fee04521f5fcb21949041bf161917da3f588b, --value 1000000
 ```
 
-_See code: [src/commands/election/vote.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/election/vote.ts)_
+_See code: [src/commands/election/vote.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/election/vote.ts)_

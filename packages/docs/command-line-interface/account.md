@@ -53,7 +53,7 @@ EXAMPLES
   664ea3923900
 ```
 
-_See code: [src/commands/account/authorize.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/authorize.ts)_
+_See code: [src/commands/account/authorize.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/authorize.ts)_
 
 ## `celocli account:balance ADDRESS`
 
@@ -80,7 +80,7 @@ EXAMPLES
   0x765DE816845861e75A25fCA122bb6898B8B1282a
 ```
 
-_See code: [src/commands/account/balance.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/balance.ts)_
+_See code: [src/commands/account/balance.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/balance.ts)_
 
 ## `celocli account:claim-account FILE`
 
@@ -115,7 +115,7 @@ EXAMPLE
   --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95
 ```
 
-_See code: [src/commands/account/claim-account.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/claim-account.ts)_
+_See code: [src/commands/account/claim-account.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/claim-account.ts)_
 
 ## `celocli account:claim-domain FILE`
 
@@ -146,7 +146,7 @@ EXAMPLE
   0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95
 ```
 
-_See code: [src/commands/account/claim-domain.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/claim-domain.ts)_
+_See code: [src/commands/account/claim-domain.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/claim-domain.ts)_
 
 ## `celocli account:claim-keybase FILE`
 
@@ -177,7 +177,7 @@ EXAMPLE
   --username myusername
 ```
 
-_See code: [src/commands/account/claim-keybase.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/claim-keybase.ts)_
+_See code: [src/commands/account/claim-keybase.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/claim-keybase.ts)_
 
 ## `celocli account:claim-name FILE`
 
@@ -208,7 +208,7 @@ EXAMPLE
   myname
 ```
 
-_See code: [src/commands/account/claim-name.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/claim-name.ts)_
+_See code: [src/commands/account/claim-name.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/claim-name.ts)_
 
 ## `celocli account:claim-storage FILE`
 
@@ -239,7 +239,7 @@ EXAMPLE
   0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95
 ```
 
-_See code: [src/commands/account/claim-storage.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/claim-storage.ts)_
+_See code: [src/commands/account/claim-storage.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/claim-storage.ts)_
 
 ## `celocli account:create-metadata FILE`
 
@@ -266,7 +266,7 @@ EXAMPLE
   create-metadata ~/metadata.json --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95
 ```
 
-_See code: [src/commands/account/create-metadata.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/create-metadata.ts)_
+_See code: [src/commands/account/create-metadata.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/create-metadata.ts)_
 
 ## `celocli account:deauthorize`
 
@@ -289,7 +289,7 @@ EXAMPLE
   --signer 0x6ecbe1db9ef729cbe972c83fb886247691fb6beb
 ```
 
-_See code: [src/commands/account/deauthorize.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/deauthorize.ts)_
+_See code: [src/commands/account/deauthorize.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/deauthorize.ts)_
 
 ## `celocli account:delete-payment-delegation`
 
@@ -309,7 +309,7 @@ EXAMPLE
   delete-payment-delegation --account 0x5409ED021D9299bf6814279A6A1411A7e866A631
 ```
 
-_See code: [src/commands/account/delete-payment-delegation.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/delete-payment-delegation.ts)_
+_See code: [src/commands/account/delete-payment-delegation.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/delete-payment-delegation.ts)_
 
 ## `celocli account:get-metadata ADDRESS`
 
@@ -339,7 +339,7 @@ EXAMPLE
   get-metadata 0x97f7333c51897469E8D98E7af8653aAb468050a3
 ```
 
-_See code: [src/commands/account/get-metadata.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/get-metadata.ts)_
+_See code: [src/commands/account/get-metadata.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/get-metadata.ts)_
 
 ## `celocli account:get-payment-delegation`
 
@@ -381,7 +381,7 @@ EXAMPLE
   get-payment-delegation --account 0x5409ed021d9299bf6814279a6a1411a7e866a631
 ```
 
-_See code: [src/commands/account/get-payment-delegation.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/get-payment-delegation.ts)_
+_See code: [src/commands/account/get-payment-delegation.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/get-payment-delegation.ts)_
 
 ## `celocli account:list`
 
@@ -400,7 +400,7 @@ OPTIONS
                 only show keystore addresses.
 ```
 
-_See code: [src/commands/account/list.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/list.ts)_
+_See code: [src/commands/account/list.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/list.ts)_
 
 ## `celocli account:lock ACCOUNT`
 
@@ -422,7 +422,7 @@ EXAMPLE
   lock 0x5409ed021d9299bf6814279a6a1411a7e866a631
 ```
 
-_See code: [src/commands/account/lock.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/lock.ts)_
+_See code: [src/commands/account/lock.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/lock.ts)_
 
 ## `celocli account:new`
 
@@ -480,7 +480,7 @@ EXAMPLES
   some_folder/my_mnemonic_file --addressIndex 5
 ```
 
-_See code: [src/commands/account/new.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/new.ts)_
+_See code: [src/commands/account/new.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/new.ts)_
 
 ## `celocli account:offchain-read ADDRESS`
 
@@ -514,7 +514,7 @@ EXAMPLES
   offchain-read 0x... --from 0x... --privateKey 0x...
 ```
 
-_See code: [src/commands/account/offchain-read.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/offchain-read.ts)_
+_See code: [src/commands/account/offchain-read.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/offchain-read.ts)_
 
 ## `celocli account:offchain-write`
 
@@ -551,7 +551,7 @@ EXAMPLES
   0x...
 ```
 
-_See code: [src/commands/account/offchain-write.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/offchain-write.ts)_
+_See code: [src/commands/account/offchain-write.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/offchain-write.ts)_
 
 ## `celocli account:proof-of-possession`
 
@@ -578,7 +578,7 @@ EXAMPLE
   0x6ecbe1db9ef729cbe972c83fb886247691fb6beb
 ```
 
-_See code: [src/commands/account/proof-of-possession.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/proof-of-possession.ts)_
+_See code: [src/commands/account/proof-of-possession.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/proof-of-possession.ts)_
 
 ## `celocli account:recover-old`
 
@@ -636,7 +636,7 @@ EXAMPLES
   some_folder/my_passphrase_file --addressIndex 5
 ```
 
-_See code: [src/commands/account/recover-old.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/recover-old.ts)_
+_See code: [src/commands/account/recover-old.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/recover-old.ts)_
 
 ## `celocli account:register`
 
@@ -659,7 +659,7 @@ EXAMPLES
   register --from 0x5409ed021d9299bf6814279a6a1411a7e866a631 --name test-account
 ```
 
-_See code: [src/commands/account/register.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/register.ts)_
+_See code: [src/commands/account/register.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/register.ts)_
 
 ## `celocli account:register-data-encryption-key`
 
@@ -685,7 +685,7 @@ EXAMPLE
   0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95
 ```
 
-_See code: [src/commands/account/register-data-encryption-key.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/register-data-encryption-key.ts)_
+_See code: [src/commands/account/register-data-encryption-key.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/register-data-encryption-key.ts)_
 
 ## `celocli account:register-metadata`
 
@@ -735,7 +735,7 @@ EXAMPLE
   0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95
 ```
 
-_See code: [src/commands/account/register-metadata.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/register-metadata.ts)_
+_See code: [src/commands/account/register-metadata.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/register-metadata.ts)_
 
 ## `celocli account:set-name`
 
@@ -756,7 +756,7 @@ EXAMPLE
   set-name --account 0x5409ed021d9299bf6814279a6a1411a7e866a631 --name test-account
 ```
 
-_See code: [src/commands/account/set-name.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/set-name.ts)_
+_See code: [src/commands/account/set-name.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/set-name.ts)_
 
 ## `celocli account:set-payment-delegation`
 
@@ -781,7 +781,7 @@ EXAMPLE
   --beneficiary 0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb --fraction 0.1
 ```
 
-_See code: [src/commands/account/set-payment-delegation.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/set-payment-delegation.ts)_
+_See code: [src/commands/account/set-payment-delegation.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/set-payment-delegation.ts)_
 
 ## `celocli account:set-wallet`
 
@@ -817,7 +817,7 @@ EXAMPLES
   23305e87fc2896808467c4081d9524a84c01b89ec91ca3
 ```
 
-_See code: [src/commands/account/set-wallet.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/set-wallet.ts)_
+_See code: [src/commands/account/set-wallet.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/set-wallet.ts)_
 
 ## `celocli account:show ADDRESS`
 
@@ -836,7 +836,7 @@ EXAMPLE
   show 0x5409ed021d9299bf6814279a6a1411a7e866a631
 ```
 
-_See code: [src/commands/account/show.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/show.ts)_
+_See code: [src/commands/account/show.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/show.ts)_
 
 ## `celocli account:show-claimed-accounts ADDRESS`
 
@@ -855,7 +855,7 @@ EXAMPLE
   show-claimed-accounts 0x5409ed021d9299bf6814279a6a1411a7e866a631
 ```
 
-_See code: [src/commands/account/show-claimed-accounts.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/show-claimed-accounts.ts)_
+_See code: [src/commands/account/show-claimed-accounts.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/show-claimed-accounts.ts)_
 
 ## `celocli account:show-metadata FILE`
 
@@ -885,7 +885,7 @@ EXAMPLE
   show-metadata ~/metadata.json
 ```
 
-_See code: [src/commands/account/show-metadata.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/show-metadata.ts)_
+_See code: [src/commands/account/show-metadata.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/show-metadata.ts)_
 
 ## `celocli account:unlock ACCOUNT`
 
@@ -915,7 +915,7 @@ EXAMPLES
   unlock 0x5409ed021d9299bf6814279a6a1411a7e866a631 --duration 600
 ```
 
-_See code: [src/commands/account/unlock.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/unlock.ts)_
+_See code: [src/commands/account/unlock.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/unlock.ts)_
 
 ## `celocli account:verify-proof-of-possession`
 
@@ -949,4 +949,4 @@ EXAMPLE
   23305e87fc2896808467c4081d9524a84c01b89ec91ca3
 ```
 
-_See code: [src/commands/account/verify-proof-of-possession.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/account/verify-proof-of-possession.ts)_
+_See code: [src/commands/account/verify-proof-of-possession.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/verify-proof-of-possession.ts)_
