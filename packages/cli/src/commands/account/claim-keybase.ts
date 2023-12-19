@@ -8,19 +8,18 @@ import {
 } from '@celo/contractkit/lib/identity/claims/keybase'
 import { sleep } from '@celo/utils/lib/async'
 import { toChecksumAddress } from '@ethereumjs/util'
-import { flags } from '@oclif/command'
 import { cli } from 'cli-ux'
 import { writeFileSync } from 'fs'
 import { tmpdir } from 'os'
 import { binaryPrompt } from '../../utils/cli'
 import { commandExists, execCmdWithError, execWith0Exit } from '../../utils/exec'
 import { ClaimCommand } from '../../utils/identity'
-
+import { Flags } from '@oclif/core'
 export default class ClaimKeybase extends ClaimCommand {
   static description = 'Claim a keybase username and add the claim to a local metadata file'
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...ClaimCommand.flags,
-    username: flags.string({
+    username: Flags.string({
       required: true,
       description: 'The keybase username you want to claim',
     }),
@@ -32,12 +31,13 @@ export default class ClaimKeybase extends ClaimCommand {
   self = ClaimKeybase
 
   async run() {
-    const res = this.parse(ClaimKeybase)
+    const res = await this.parse(ClaimKeybase)
     const username = res.flags.username
     const metadata = await this.readMetadata()
     const accountAddress = toChecksumAddress(metadata.data.meta.address)
     const claim = createKeybaseClaim(username)
-    const signature = await this.signer.sign(hashOfClaim(claim))
+    const signer = await this.getSigner()
+    const signature = await signer.sign(hashOfClaim(claim))
     await this.addClaim(metadata, claim)
     this.writeMetadata(metadata)
 
@@ -72,7 +72,8 @@ export default class ClaimKeybase extends ClaimCommand {
       cli.action.start(`Claim successfully copied to the keybase file system, verifying proof`)
       // Wait for changes to propagate
       await sleep(3000)
-      const verificationError = await verifyKeybaseClaim(this.kit, claim, address)
+      const kit = await this.getKit()
+      const verificationError = await verifyKeybaseClaim(kit, claim, address)
       if (verificationError) {
         throw new Error(`Claim is not verifiable: ${verificationError}`)
       }

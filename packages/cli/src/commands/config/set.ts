@@ -1,15 +1,14 @@
-import { IFlag } from '@oclif/parser/lib/flags'
 import { BaseCommand, gasOptions } from '../../base'
 import { readConfig, writeConfig } from '../../utils/config'
 export default class Set extends BaseCommand {
   static description = 'Configure running node information for propogating transactions to network'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
     node: {
       ...BaseCommand.flags.node,
       hidden: false,
-    } as IFlag<string>,
+    },
     gasCurrency: {
       ...BaseCommand.flags.gasCurrency,
       hidden: false,
@@ -26,7 +25,7 @@ export default class Set extends BaseCommand {
   requireSynced = false
 
   async run() {
-    const res = this.parse(Set)
+    const res = await this.parse(Set)
     const curr = readConfig(this.config.configDir)
     const node = res.flags.node ?? curr.node
     const gasCurrency = res.flags.gasCurrency

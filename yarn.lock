@@ -836,7 +836,7 @@ __metadata:
     "@ethereumjs/util": 8.0.5
     "@ledgerhq/hw-transport-node-hid": ^6.27.4
     "@oclif/command": ^1.6.0
-    "@oclif/config": ^1.6.0
+    "@oclif/core": 1.26.2
     "@oclif/dev-cli": ^1.23.0
     "@oclif/errors": ^1.3.6
     "@oclif/parser": ^3.8.16
@@ -4082,7 +4082,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@oclif/config@npm:^1.17.1, @oclif/config@npm:^1.18.2, @oclif/config@npm:^1.6.0, @oclif/config@npm:^1.6.22, @oclif/config@npm:^1.8.7":
+"@oclif/config@npm:^1.17.1, @oclif/config@npm:^1.18.2, @oclif/config@npm:^1.6.22, @oclif/config@npm:^1.8.7":
   version: 1.18.8
   resolution: "@oclif/config@npm:1.18.8"
   dependencies:
@@ -4093,6 +4093,42 @@ __metadata:
     is-wsl: ^2.1.1
     tslib: ^2.5.0
   checksum: b4dd7996b31ece66cc173bf56af6f332ae2a2d364bc3b53419d6f8cf2321c64b2903cd5af119af6852bd56d03772e8296d139cefbeefb7afa10b78ca1abe8bff
+  languageName: node
+  linkType: hard
+
+"@oclif/core@npm:1.26.2":
+  version: 1.26.2
+  resolution: "@oclif/core@npm:1.26.2"
+  dependencies:
+    "@oclif/linewrap": ^1.0.0
+    "@oclif/screen": ^3.0.4
+    ansi-escapes: ^4.3.2
+    ansi-styles: ^4.3.0
+    cardinal: ^2.1.1
+    chalk: ^4.1.2
+    clean-stack: ^3.0.1
+    cli-progress: ^3.10.0
+    debug: ^4.3.4
+    ejs: ^3.1.6
+    fs-extra: ^9.1.0
+    get-package-type: ^0.1.0
+    globby: ^11.1.0
+    hyperlinker: ^1.0.0
+    indent-string: ^4.0.0
+    is-wsl: ^2.2.0
+    js-yaml: ^3.14.1
+    natural-orderby: ^2.0.3
+    object-treeify: ^1.1.33
+    password-prompt: ^1.1.2
+    semver: ^7.3.7
+    string-width: ^4.2.3
+    strip-ansi: ^6.0.1
+    supports-color: ^8.1.1
+    supports-hyperlinks: ^2.2.0
+    tslib: ^2.4.1
+    widest-line: ^3.1.0
+    wrap-ansi: ^7.0.0
+  checksum: 1da7f22fff1eb4bba10f17f07a97bad308d317a0b591561be7f1171edff2f40bf84830295965b26cfcb80d3c5df7958df35bbbba4ce030e14a68bbc8e3cedc82
   languageName: node
   linkType: hard
 
@@ -4327,6 +4363,13 @@ __metadata:
   version: 1.0.4
   resolution: "@oclif/screen@npm:1.0.4"
   checksum: 13e64efb1a6b4cf89989dd3e96cc78751193257694f9f104d3d41f7f8d12e217297d3c2983ed972d84d43ff3b50ceff50529996ee6bc6764f01ed90aa39a83cb
+  languageName: node
+  linkType: hard
+
+"@oclif/screen@npm:^3.0.4":
+  version: 3.0.8
+  resolution: "@oclif/screen@npm:3.0.8"
+  checksum: d287d5abf236e6564259a11f3942ad68a70ead2fe2ad3653c3730bce8519d21e49cabcc5be449fab769f4efc5ca74c6de98edc34e3464e60d2277119fb4796d2
   languageName: node
   linkType: hard
 
@@ -7115,7 +7158,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ansi-escapes@npm:^4.2.1, ansi-escapes@npm:^4.3.0":
+"ansi-escapes@npm:^4.2.1, ansi-escapes@npm:^4.3.0, ansi-escapes@npm:^4.3.2":
   version: 4.3.2
   resolution: "ansi-escapes@npm:4.3.2"
   dependencies:
@@ -7168,7 +7211,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ansi-styles@npm:^4.0.0, ansi-styles@npm:^4.1.0, ansi-styles@npm:^4.2.0":
+"ansi-styles@npm:^4.0.0, ansi-styles@npm:^4.1.0, ansi-styles@npm:^4.2.0, ansi-styles@npm:^4.3.0":
   version: 4.3.0
   resolution: "ansi-styles@npm:4.3.0"
   dependencies:
@@ -8687,7 +8730,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"clean-stack@npm:^3.0.0":
+"clean-stack@npm:^3.0.0, clean-stack@npm:^3.0.1":
   version: 3.0.1
   resolution: "clean-stack@npm:3.0.1"
   dependencies:
@@ -8705,7 +8748,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cli-progress@npm:^3.4.0":
+"cli-progress@npm:^3.10.0, cli-progress@npm:^3.4.0":
   version: 3.12.0
   resolution: "cli-progress@npm:3.12.0"
   dependencies:
@@ -10056,7 +10099,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ejs@npm:^3.1.7":
+"ejs@npm:^3.1.6, ejs@npm:^3.1.7":
   version: 3.1.9
   resolution: "ejs@npm:3.1.9"
   dependencies:
@@ -14046,7 +14089,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"js-yaml@npm:3.14.1, js-yaml@npm:^3.10.0, js-yaml@npm:^3.13.0, js-yaml@npm:^3.13.1, js-yaml@npm:^3.6.1":
+"js-yaml@npm:3.14.1, js-yaml@npm:^3.10.0, js-yaml@npm:^3.13.0, js-yaml@npm:^3.13.1, js-yaml@npm:^3.14.1, js-yaml@npm:^3.6.1":
   version: 3.14.1
   resolution: "js-yaml@npm:3.14.1"
   dependencies:
@@ -15750,7 +15793,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"natural-orderby@npm:^2.0.1":
+"natural-orderby@npm:^2.0.1, natural-orderby@npm:^2.0.3":
   version: 2.0.3
   resolution: "natural-orderby@npm:2.0.3"
   checksum: 039be7f0b6cf81e63d2ae5299553f8e6c8f6ae4f571c7c002eab9c6d36a2e33101704e0ec64c3cecef956fa3b1a68bb0ddfc03208e89f31c0b0bb806f3198646
@@ -16401,7 +16444,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"object-treeify@npm:^1.1.4":
+"object-treeify@npm:^1.1.33, object-treeify@npm:^1.1.4":
   version: 1.1.33
   resolution: "object-treeify@npm:1.1.33"
   checksum: 3af7f889349571ee73f5bdfb5ac478270c85eda8bcba950b454eb598ce41759a1ed6b0b43fbd624cb449080a4eb2df906b602e5138b6186b9563b692231f1694
@@ -19505,7 +19548,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"supports-color@npm:^8.0.0, supports-color@npm:^8.1.0":
+"supports-color@npm:^8.0.0, supports-color@npm:^8.1.0, supports-color@npm:^8.1.1":
   version: 8.1.1
   resolution: "supports-color@npm:8.1.1"
   dependencies:
@@ -19524,7 +19567,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"supports-hyperlinks@npm:^2.1.0":
+"supports-hyperlinks@npm:^2.1.0, supports-hyperlinks@npm:^2.2.0":
   version: 2.3.0
   resolution: "supports-hyperlinks@npm:2.3.0"
   dependencies:
@@ -20034,7 +20077,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.6.2":
+"tslib@npm:^2.4.1, tslib@npm:^2.6.2":
   version: 2.6.2
   resolution: "tslib@npm:2.6.2"
   checksum: 329ea56123005922f39642318e3d1f0f8265d1e7fcb92c633e0809521da75eeaca28d2cf96d7248229deb40e5c19adf408259f4b9640afd20d13aecc1430f3ad

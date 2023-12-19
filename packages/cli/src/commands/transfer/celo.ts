@@ -1,20 +1,20 @@
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 
 export default class TransferCelo extends BaseCommand {
   static description =
     'Transfer CELO to a specified address. (Note: this is the equivalent of the old transfer:gold)'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    from: Flags.address({ required: true, description: 'Address of the sender' }),
-    to: Flags.address({ required: true, description: 'Address of the receiver' }),
-    value: flags.string({ required: true, description: 'Amount to transfer (in wei)' }),
-    comment: flags.string({ description: 'Transfer comment' }),
+    from: CustomFlags.address({ required: true, description: 'Address of the sender' }),
+    to: CustomFlags.address({ required: true, description: 'Address of the receiver' }),
+    value: Flags.string({ required: true, description: 'Amount to transfer (in wei)' }),
+    comment: Flags.string({ description: 'Transfer comment' }),
   }
 
   static examples = [
@@ -22,14 +22,15 @@ export default class TransferCelo extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(TransferCelo)
+    const kit = await this.getKit()
+    const res = await this.parse(TransferCelo)
 
     const from: string = res.flags.from
     const to: string = res.flags.to
     const value = new BigNumber(res.flags.value)
 
-    this.kit.defaultAccount = from
-    const celoToken = await this.kit.contracts.getGoldToken()
+    kit.defaultAccount = from
+    const celoToken = await kit.contracts.getGoldToken()
 
     await newCheckBuilder(this).hasEnoughCelo(from, value).runChecks()
 

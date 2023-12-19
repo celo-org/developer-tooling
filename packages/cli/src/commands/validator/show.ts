@@ -1,4 +1,3 @@
-import { IArg } from '@oclif/parser/lib/args'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { printValueMap } from '../../utils/cli'
@@ -7,18 +6,19 @@ import { Args } from '../../utils/command'
 export default class ValidatorShow extends BaseCommand {
   static description = 'Show information about a registered Validator.'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
   }
 
-  static args: IArg[] = [Args.address('validatorAddress', { description: "Validator's address" })]
+  static args = [Args.address('validatorAddress', { description: "Validator's address" })]
 
   static examples = ['show 0x97f7333c51897469E8D98E7af8653aAb468050a3']
 
   async run() {
-    const { args } = this.parse(ValidatorShow)
+    const kit = await this.getKit()
+    const { args } = await this.parse(ValidatorShow)
     const address = args.validatorAddress
-    const validators = await this.kit.contracts.getValidators()
+    const validators = await kit.contracts.getValidators()
 
     await newCheckBuilder(this).isValidator(address).runChecks()
 

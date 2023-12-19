@@ -1,18 +1,18 @@
 import { serializeSignature } from '@celo/utils/lib/signatureUtils'
 import { BaseCommand } from '../../base'
 import { printValueMap } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 export default class ProofOfPossession extends BaseCommand {
   static description =
     'Generate proof-of-possession to be used to authorize a signer. See the "account:authorize" command for more details.'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    signer: Flags.address({
+    signer: CustomFlags.address({
       required: true,
       description: 'Address of the signer key to prove possession of.',
     }),
-    account: Flags.address({
+    account: CustomFlags.address({
       required: true,
       description: 'Address of the account that needs to prove possession of the signer key.',
     }),
@@ -23,8 +23,9 @@ export default class ProofOfPossession extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(ProofOfPossession)
-    const accounts = await this.kit.contracts.getAccounts()
+    const kit = await this.getKit()
+    const res = await this.parse(ProofOfPossession)
+    const accounts = await kit.contracts.getAccounts()
     const pop = await accounts.generateProofOfKeyPossession(res.flags.account, res.flags.signer)
     printValueMap({ signature: serializeSignature(pop) })
   }

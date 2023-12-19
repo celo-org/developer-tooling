@@ -39,7 +39,7 @@ async function getClaims(
 export default class ShowClaimedAccounts extends BaseCommand {
   static description = 'Show information about claimed accounts'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
   }
 
@@ -48,16 +48,17 @@ export default class ShowClaimedAccounts extends BaseCommand {
   static examples = ['show-claimed-accounts 0x5409ed021d9299bf6814279a6a1411a7e866a631']
 
   async run() {
-    const { args } = this.parse(ShowClaimedAccounts)
+    const kit = await this.getKit()
+    const { args } = await this.parse(ShowClaimedAccounts)
 
-    const metadata = await getMetadata(this.kit, args.address)
+    const metadata = await getMetadata(kit, args.address)
 
-    const claimedAccounts = await getClaims(this.kit, args.address, metadata)
+    const claimedAccounts = await getClaims(kit, args.address, metadata)
 
     console.log('All balances expressed in units of 10^-18.')
     for (const address of claimedAccounts) {
       console.log('\nShowing balances for', address)
-      const balance = await this.kit.getTotalBalance(address)
+      const balance = await kit.getTotalBalance(address)
       printValueMap(balance)
     }
   }

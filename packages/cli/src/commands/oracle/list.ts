@@ -5,7 +5,7 @@ import { failWith } from '../../utils/cli'
 export default class List extends BaseCommand {
   static description = 'List oracle addresses for a given token'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
   }
 
@@ -21,8 +21,9 @@ export default class List extends BaseCommand {
   static example = ['list StableToken', 'list', 'list StableTokenEUR']
 
   async run() {
-    const res = this.parse(List)
-    const sortedOracles = await this.kit.contracts.getSortedOracles()
+    const kit = await this.getKit()
+    const res = await this.parse(List)
+    const sortedOracles = await kit.contracts.getSortedOracles()
 
     const oracles = await sortedOracles.getOracles(res.args.token).catch((e) => failWith(e))
     console.log(oracles)

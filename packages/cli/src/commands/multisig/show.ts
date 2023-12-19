@@ -1,7 +1,7 @@
 import { CeloContract } from '@celo/contractkit'
 import { TransactionData } from '@celo/contractkit/lib/wrappers/MultiSig'
 import { newBlockExplorer } from '@celo/explorer/lib/block-explorer'
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { printValueMapRecursive } from '../../utils/cli'
 import { Args } from '../../utils/command'
@@ -9,14 +9,14 @@ import { Args } from '../../utils/command'
 export default class ShowMultiSig extends BaseCommand {
   static description = 'Shows information about multi-sig contract'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    tx: flags.integer({
+    tx: Flags.integer({
       default: undefined,
       description: 'Show info for a transaction',
     }),
-    all: flags.boolean({ default: false, description: 'Show info about all transactions' }),
-    raw: flags.boolean({ default: false, description: 'Do not attempt to parse transactions' }),
+    all: Flags.boolean({ default: false, description: 'Show info about all transactions' }),
+    raw: Flags.boolean({ default: false, description: 'Do not attempt to parse transactions' }),
   }
 
   static args = [Args.address('address')]
@@ -28,13 +28,14 @@ export default class ShowMultiSig extends BaseCommand {
   ]
 
   async run() {
+    const kit = await this.getKit()
     const {
       args,
       flags: { tx, all, raw },
-    } = this.parse(ShowMultiSig)
-    const multisig = await this.kit.contracts.getMultiSig(args.address)
+    } = await this.parse(ShowMultiSig)
+    const multisig = await kit.contracts.getMultiSig(args.address)
     const txs = await multisig.totalTransactionCount()
-    const explorer = await newBlockExplorer(this.kit)
+    const explorer = await newBlockExplorer(kit)
     await explorer.updateContractDetailsMapping(CeloContract.MultiSig, args.address)
     const process = async (txdata: TransactionData) => {
       if (raw) return txdata

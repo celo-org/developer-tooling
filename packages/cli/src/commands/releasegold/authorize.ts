@@ -1,30 +1,29 @@
-import { flags as oclifFlags } from '@oclif/command'
+import { Flags as oclifFlags } from '@oclif/core'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
-
 export default class Authorize extends ReleaseGoldBaseCommand {
   static description =
     'Authorize an alternative key to be used for a given action (Vote, Validate, Attest) on behalf of the ReleaseGold instance contract.'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...ReleaseGoldBaseCommand.flags,
     role: oclifFlags.string({ required: true, options: ['vote', 'validator', 'attestation'] }),
-    signer: Flags.address({
+    signer: CustomFlags.address({
       required: true,
       description: 'The signer key that is to be used for voting through the ReleaseGold instance',
     }),
-    signature: Flags.proofOfPossession({
+    signature: CustomFlags.proofOfPossession({
       description: 'Signature (a.k.a. proof-of-possession) of the signer key',
       required: true,
     }),
-    blsKey: Flags.blsPublicKey({
+    blsKey: CustomFlags.blsPublicKey({
       description:
         'The BLS public key that the validator is using for consensus, should pass proof of possession. 96 bytes.',
       dependsOn: ['blsPop'],
     }),
-    blsPop: Flags.blsProofOfPossession({
+    blsPop: CustomFlags.blsProofOfPossession({
       description:
         'The BLS public key proof-of-possession, which consists of a signature on the account address. 48 bytes.',
       dependsOn: ['blsKey'],
@@ -46,8 +45,9 @@ export default class Authorize extends ReleaseGoldBaseCommand {
   ]
 
   async run() {
+    const kit = await this.getKit()
     // tslint:disable-next-line
-    const { flags } = this.parse(Authorize)
+    const { flags } = await this.parse(Authorize)
 
     const role = flags.role
 
@@ -66,7 +66,7 @@ export default class Authorize extends ReleaseGoldBaseCommand {
     }
     await checker.runChecks()
 
-    const accounts = await this.kit.contracts.getAccounts()
+    const accounts = await kit.contracts.getAccounts()
     const sig = accounts.parseSignatureOfAddress(
       this.releaseGoldWrapper.address,
       flags.signer,
@@ -74,7 +74,7 @@ export default class Authorize extends ReleaseGoldBaseCommand {
     )
 
     const isRevoked = await this.releaseGoldWrapper.isRevoked()
-    this.kit.defaultAccount = isRevoked
+    kit.defaultAccount = isRevoked
       ? await this.releaseGoldWrapper.getReleaseOwner()
       : await this.releaseGoldWrapper.getBeneficiary()
     let tx: any

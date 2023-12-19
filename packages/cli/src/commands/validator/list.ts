@@ -16,7 +16,7 @@ export default class ValidatorList extends BaseCommand {
   static description =
     'List registered Validators, their name (if provided), affiliation, uptime score, and public keys used for validating.'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
     ...(cli.table.flags() as object),
   }
@@ -24,10 +24,11 @@ export default class ValidatorList extends BaseCommand {
   static examples = ['list']
 
   async run() {
-    const res = this.parse(ValidatorList)
+    const kit = await this.getKit()
+    const res = await this.parse(ValidatorList)
 
     cli.action.start('Fetching Validators')
-    const validators = await this.kit.contracts.getValidators()
+    const validators = await kit.contracts.getValidators()
     const validatorList = await validators.getRegisteredValidators()
 
     cli.action.stop()

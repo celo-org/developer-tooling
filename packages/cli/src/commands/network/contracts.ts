@@ -19,15 +19,16 @@ const UNPROXIED_CONTRACTS: CeloContract[] = []
 export default class Contracts extends BaseCommand {
   static description = 'Lists Celo core contracts and their addesses.'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
     ...(cli.table.flags() as object),
   }
 
   async run() {
-    const res = this.parse(Contracts)
+    const kit = await this.getKit()
+    const res = await this.parse(Contracts)
 
-    const addressMapping = await this.kit.registry.addressMapping()
+    const addressMapping = await kit.registry.addressMapping()
     const contractInfo = await concurrentMap(
       4,
       Array.from(addressMapping.entries()),
@@ -35,20 +36,20 @@ export default class Contracts extends BaseCommand {
         // skip implementation check for unproxied contract
         const implementation = UNPROXIED_CONTRACTS.includes(contract)
           ? 'NONE'
-          : await newProxy(this.kit.web3, proxy).methods._getImplementation().call()
+          : await newProxy(kit.web3, proxy).methods._getImplementation().call()
 
         // skip version check for unversioned contracts
         let version: string
         if (UNVERSIONED_CONTRACTS.includes(contract)) {
           version = 'NONE'
         } else {
-          const raw = await newICeloVersionedContract(this.kit.web3, implementation)
+          const raw = await newICeloVersionedContract(kit.web3, implementation)
             .methods.getVersionNumber()
             .call()
           version = `${raw[0]}.${raw[1]}.${raw[2]}.${raw[3]}`
         }
 
-        const balances = await this.kit.celoTokens.balancesOf(proxy)
+        const balances = await kit.celoTokens.balancesOf(proxy)
         return {
           contract,
           proxy,
@@ -60,7 +61,7 @@ export default class Contracts extends BaseCommand {
     )
 
     const tokenBalanceColumns: table.Columns<(typeof contractInfo)[number]> = {}
-    await this.kit.celoTokens.forEachCeloToken(
+    await kit.celoTokens.forEachCeloToken(
       (token) =>
         (tokenBalanceColumns[token.symbol] = {
           header: token.symbol,

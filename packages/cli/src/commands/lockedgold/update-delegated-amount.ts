@@ -1,18 +1,18 @@
 import { Address } from '@celo/connect'
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 
 export default class UpdateDelegatedAmount extends BaseCommand {
   static description =
     'Updates the amount of delegated locked celo. There might be discrepancy between the amount of locked celo and the amount of delegated locked celo because of received rewards.'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    from: flags.string({ ...Flags.address, required: true }),
-    to: flags.string({ ...Flags.address, required: true }),
+    from: Flags.string({ ...CustomFlags.address, required: true }),
+    to: Flags.string({ ...CustomFlags.address, required: true }),
   }
 
   static args = []
@@ -22,15 +22,16 @@ export default class UpdateDelegatedAmount extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(UpdateDelegatedAmount)
+    const kit = await this.getKit()
+    const res = await this.parse(UpdateDelegatedAmount)
     const address: Address = res.flags.from
     const to: Address = res.flags.to
 
-    this.kit.defaultAccount = address
+    kit.defaultAccount = address
 
     await newCheckBuilder(this).isAccount(address).isAccount(to).runChecks()
 
-    const lockedGold = await this.kit.contracts.getLockedGold()
+    const lockedGold = await kit.contracts.getLockedGold()
 
     const tx = lockedGold.updateDelegatedAmount(address, to)
     await displaySendTx('updateDelegatedAmount', tx)

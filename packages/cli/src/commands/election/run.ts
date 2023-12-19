@@ -18,17 +18,18 @@ export default class ElectionRun extends BaseCommand {
   static description =
     'Runs a "mock" election and prints out the validators that would be elected if the epoch ended right now.'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
     ...(cli.table.flags() as object),
   }
 
   async run() {
-    const res = this.parse(ElectionRun)
+    const kit = await this.getKit()
+    const res = await this.parse(ElectionRun)
     cli.action.start('Running mock election')
-    const validators = await this.kit.contracts.getValidators()
+    const validators = await kit.contracts.getValidators()
 
-    const signers = await performElections(this.kit)
+    const signers = await performElections(kit)
 
     const validatorList = await Promise.all(
       signers.map((addr) => validators.getValidatorFromSigner(addr))

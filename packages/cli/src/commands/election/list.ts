@@ -5,7 +5,7 @@ export default class List extends BaseCommand {
   static description =
     'Prints the list of validator groups, the number of votes they have received, the number of additional votes they are able to receive, and whether or not they are eligible to elect validators.'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
     ...(cli.table.flags() as object),
   }
@@ -13,9 +13,10 @@ export default class List extends BaseCommand {
   static examples = ['list']
 
   async run() {
-    const res = this.parse(List)
+    const kit = await this.getKit()
+    const res = await this.parse(List)
     cli.action.start('Fetching validator group vote totals')
-    const election = await this.kit.contracts.getElection()
+    const election = await kit.contracts.getElection()
     const groupVotes = await election.getValidatorGroupsVotes()
     cli.action.stop()
     cli.table(

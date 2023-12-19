@@ -2,11 +2,11 @@ import { Address } from '@celo/connect'
 import { eqAddress } from '@celo/utils/lib/address'
 import { concurrentMap } from '@celo/utils/lib/async'
 import { bitIsSet, parseBlockExtraData } from '@celo/utils/lib/istanbul'
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { cli } from 'cli-ux'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 import { ElectionResultsCache } from '../../utils/election'
 
 interface ValidatorStatusEntry {
@@ -34,26 +34,26 @@ export default class ValidatorStatus extends BaseCommand {
   static description =
     'Shows the consensus status of a validator. This command will show whether a validator is currently elected, would be elected if an election were to be run right now, and the percentage of blocks signed and number of blocks successfully proposed within a given window.'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    validator: Flags.address({
+    validator: CustomFlags.address({
       description: 'address of the validator to check if elected and validating',
       exclusive: ['all', 'signer'],
     }),
-    signer: Flags.address({
+    signer: CustomFlags.address({
       description: 'address of the signer to check if elected and validating',
       exclusive: ['validator', 'all'],
     }),
-    all: flags.boolean({
+    all: Flags.boolean({
       description: 'get the status of all registered validators',
       exclusive: ['validator', 'signer'],
     }),
-    start: flags.integer({
+    start: Flags.integer({
       description:
         'what block to start at when looking at signer activity. defaults to the last 100 blocks',
       default: -1,
     }),
-    end: flags.integer({
+    end: Flags.integer({
       description:
         'what block to end at when looking at signer activity. defaults to the latest block',
       default: -1,
@@ -68,10 +68,11 @@ export default class ValidatorStatus extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(ValidatorStatus)
-    const accounts = await this.kit.contracts.getAccounts()
-    const validators = await this.kit.contracts.getValidators()
-    const election = await this.kit.contracts.getElection()
+    const kit = await this.getKit()
+    const res = await this.parse(ValidatorStatus)
+    const accounts = await kit.contracts.getAccounts()
+    const validators = await kit.contracts.getValidators()
+    const election = await kit.contracts.getElection()
 
     // Resolve the signer address(es) from the provide flags.
     let signers: string[] = []
@@ -92,8 +93,8 @@ export default class ValidatorStatus extends BaseCommand {
       )
     }
 
-    const latest = await this.web3.eth.getBlockNumber()
-    const endBlock = res.flags.end === -1 ? await this.web3.eth.getBlockNumber() : res.flags.end
+    const latest = await kit.web3.eth.getBlockNumber()
+    const endBlock = res.flags.end === -1 ? await kit.web3.eth.getBlockNumber() : res.flags.end
     const startBlock = res.flags.start === -1 ? endBlock - 100 : res.flags.start
     if (startBlock > endBlock || endBlock > latest) {
       this.error('invalid values for start/end')
@@ -139,7 +140,8 @@ export default class ValidatorStatus extends BaseCommand {
       if ((blockNumber - start) % 10 === 0 || blockNumber === end) {
         bar.update(blockNumber - start)
       }
-      const block = await this.web3.eth.getBlock(blockNumber)
+      const web3 = await this.getWeb3()
+      const block = await web3.eth.getBlock(blockNumber)
       const bitmap = parseBlockExtraData(block.extraData).parentAggregatedSeal.bitmap
       const signers = await electionCache.electedSigners(blockNumber)
       signers.map((s, i) => {
@@ -154,8 +156,9 @@ export default class ValidatorStatus extends BaseCommand {
       Array.from({ length: end - start + 1 }, (_, i) => i + start),
       incrementSignatureCounts
     )
+    const kit = await this.getKit()
     const signerToAccountCache = new Map()
-    const accounts = await this.kit.contracts.getAccounts()
+    const accounts = await kit.contracts.getAccounts()
     await concurrentMap(10, Array.from(countsBySigner.keys()), async (signer) => {
       const account = await accounts.signerToAccount(signer)
       signerToAccountCache.set(signer, account)
@@ -184,6 +187,7 @@ export default class ValidatorStatus extends BaseCommand {
     electionCache: ElectionResultsCache,
     epochSize: number
   ): Promise<Map<Address, any>> {
+    const kit = await this.getKit()
     const countsBySigner = new Map()
     let i = start
     while (i < end) {
@@ -197,7 +201,7 @@ export default class ValidatorStatus extends BaseCommand {
       i = j + 1
     }
     const signerToAccountCache = new Map()
-    const accounts = await this.kit.contracts.getAccounts()
+    const accounts = await kit.contracts.getAccounts()
     await concurrentMap(10, Array.from(countsBySigner.keys()), async (signer) => {
       const account = await accounts.signerToAccount(signer)
       signerToAccountCache.set(signer, account)
@@ -218,8 +222,11 @@ export default class ValidatorStatus extends BaseCommand {
     electionCache: ElectionResultsCache,
     frontRunnerSigners: Address[]
   ): Promise<ValidatorStatusEntry> {
-    const accounts = await this.kit.contracts.getAccounts()
-    const validators = await this.kit.contracts.getValidators()
+    const kit = await this.getKit()
+    const [accounts, validators] = await Promise.all([
+      kit.contracts.getAccounts(),
+      kit.contracts.getValidators(),
+    ])
     const validator = await accounts.signerToAccount(signer)
     let name = 'Unregistered validator'
     if (await validators.isValidator(validator)) {
@@ -237,7 +244,7 @@ export default class ValidatorStatus extends BaseCommand {
       name,
       address: validator,
       signer,
-      elected: await electionCache.elected(signer, await this.web3.eth.getBlockNumber()),
+      elected: await electionCache.elected(signer, await kit.web3.eth.getBlockNumber()),
       frontRunner: frontRunnerSigners.some(eqAddress.bind(null, signer)),
       signatures: signatures / elected, // may be NaN
     }

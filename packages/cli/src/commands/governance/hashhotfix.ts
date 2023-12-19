@@ -1,6 +1,6 @@
 import { hotfixToHash, ProposalBuilder, ProposalTransactionJSON } from '@celo/governance'
 import { trimLeading0x } from '@celo/utils/lib/address'
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { readFileSync } from 'fs-extra'
 import { BaseCommand } from '../../base'
 import { printValueMap } from '../../utils/cli'
@@ -9,14 +9,14 @@ import { checkProposal } from '../../utils/governance'
 export default class HashHotfix extends BaseCommand {
   static description = 'Hash a governance hotfix specified by JSON and a salt'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    jsonTransactions: flags.string({
+    jsonTransactions: Flags.string({
       required: true,
       description: 'Path to json transactions of the hotfix',
     }),
-    force: flags.boolean({ description: 'Skip execution check', default: false }),
-    salt: flags.string({ required: true, description: 'Secret salt associated with hotfix' }),
+    force: Flags.boolean({ description: 'Skip execution check', default: false }),
+    salt: Flags.string({ required: true, description: 'Secret salt associated with hotfix' }),
   }
 
   static examples = [
@@ -24,17 +24,18 @@ export default class HashHotfix extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(HashHotfix)
+    const kit = await this.getKit()
+    const res = await this.parse(HashHotfix)
 
     // Parse the transactions JSON file.
     const jsonString = readFileSync(res.flags.jsonTransactions).toString()
     const jsonTransactions: ProposalTransactionJSON[] = JSON.parse(jsonString)
-    const builder = new ProposalBuilder(this.kit)
+    const builder = new ProposalBuilder(kit)
     jsonTransactions.forEach((tx) => builder.addJsonTx(tx))
     const hotfix = await builder.build()
 
     if (!res.flags.force) {
-      const ok = await checkProposal(hotfix, this.kit)
+      const ok = await checkProposal(hotfix, kit)
       if (!ok) {
         return
       }
@@ -43,7 +44,7 @@ export default class HashHotfix extends BaseCommand {
     // Combine with the salt and hash the proposal.
     const saltBuff = Buffer.from(trimLeading0x(res.flags.salt), 'hex')
     console.log(`salt: ${res.flags.salt}, buf: ${saltBuff.toString('hex')}`)
-    const hash = hotfixToHash(this.kit, hotfix, saltBuff)
+    const hash = hotfixToHash(kit, hotfix, saltBuff)
 
     // Print the hash to the console.
     printValueMap({ hash: '0x' + hash.toString('hex') })

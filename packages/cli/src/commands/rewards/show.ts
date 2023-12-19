@@ -3,12 +3,12 @@ import { GroupVoterReward, VoterReward } from '@celo/contractkit/lib/wrappers/El
 import { AccountSlashed } from '@celo/contractkit/lib/wrappers/LockedGold'
 import { Validator, ValidatorReward } from '@celo/contractkit/lib/wrappers/Validators'
 import { eqAddress } from '@celo/utils/lib/address'
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { cli } from 'cli-ux'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 
 interface ExplainedVoterReward extends VoterReward {
   validators: Validator[]
@@ -22,14 +22,14 @@ export default class Show extends BaseCommand {
   static description =
     'Show rewards information about a voter, registered Validator, or Validator Group'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    estimate: flags.boolean({ description: 'Estimate voter rewards from current votes' }),
-    voter: Flags.address({ description: 'Voter to show rewards for' }),
-    validator: Flags.address({ description: 'Validator to show rewards for' }),
-    group: Flags.address({ description: 'Validator Group to show rewards for' }),
-    slashing: flags.boolean({ description: 'Show rewards for slashing', default: true }),
-    epochs: flags.integer({
+    estimate: Flags.boolean({ description: 'Estimate voter rewards from current votes' }),
+    voter: CustomFlags.address({ description: 'Voter to show rewards for' }),
+    validator: CustomFlags.address({ description: 'Validator to show rewards for' }),
+    group: CustomFlags.address({ description: 'Validator Group to show rewards for' }),
+    slashing: Flags.boolean({ description: 'Show rewards for slashing', default: true }),
+    epochs: Flags.integer({
       default: 1,
       description: 'Show results for the last N epochs',
     }),
@@ -41,12 +41,13 @@ export default class Show extends BaseCommand {
   static examples = ['show --address 0x5409ed021d9299bf6814279a6a1411a7e866a631']
 
   async run() {
-    const res = this.parse(Show)
+    const kit = await this.getKit()
+    const res = await this.parse(Show)
     const filter =
       Boolean(res.flags.voter) || Boolean(res.flags.validator) || Boolean(res.flags.group)
-    const election = await this.kit.contracts.getElection()
-    const validators = await this.kit.contracts.getValidators()
-    const lockedGold = await this.kit.contracts.getLockedGold()
+    const election = await kit.contracts.getElection()
+    const validators = await kit.contracts.getValidators()
+    const lockedGold = await kit.contracts.getLockedGold()
     const currentEpoch = (await validators.getEpochNumber()).toNumber()
     const checkBuilder = newCheckBuilder(this)
     const epochs = Math.max(1, res.flags.epochs || 1)

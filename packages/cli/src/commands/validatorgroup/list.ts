@@ -5,7 +5,7 @@ export default class ValidatorGroupList extends BaseCommand {
   static description =
     'List registered Validator Groups, their names (if provided), commission, and members.'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
     ...(cli.table.flags() as object),
   }
@@ -13,10 +13,11 @@ export default class ValidatorGroupList extends BaseCommand {
   static examples = ['list']
 
   async run() {
-    const res = this.parse(ValidatorGroupList)
+    const kit = await this.getKit()
+    const res = await this.parse(ValidatorGroupList)
 
     cli.action.start('Fetching Validator Groups')
-    const validators = await this.kit.contracts.getValidators()
+    const validators = await kit.contracts.getValidators()
     const vgroups = await validators.getRegisteredValidatorGroups()
     cli.action.stop()
 

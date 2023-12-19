@@ -1,33 +1,34 @@
 import { cli } from 'cli-ux'
 import { BaseCommand } from '../../base'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 
 export default class AttestationRewardsWithdraw extends BaseCommand {
   static description = 'Withdraw accumulated attestation rewards for a given currency'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    from: Flags.address({
+    from: CustomFlags.address({
       required: true,
       description:
         'Address to withdraw from. Can be the attestation signer address or the underlying account address',
     }),
-    tokenAddress: Flags.address({
+    tokenAddress: CustomFlags.address({
       description: 'The address of the token that will be withdrawn. Defaults to cUSD',
     }),
   }
 
   async run() {
-    const { flags } = this.parse(AttestationRewardsWithdraw)
+    const kit = await this.getKit()
+    const { flags } = await this.parse(AttestationRewardsWithdraw)
     const [accounts, attestations] = await Promise.all([
-      this.kit.contracts.getAccounts(),
-      this.kit.contracts.getAttestations(),
+      kit.contracts.getAccounts(),
+      kit.contracts.getAttestations(),
     ])
 
     let tokenAddress = flags.tokenAddress
     if (!tokenAddress) {
-      tokenAddress = (await this.kit.contracts.getStableToken()).address
+      tokenAddress = (await kit.contracts.getStableToken()).address
     }
 
     const accountAddress = await accounts.signerToAccount(flags.from)

@@ -1,10 +1,10 @@
-import { LoadOptions } from '@oclif/config'
+import { Interfaces } from '@oclif/core'
 import { BaseCommand } from '../base'
 
 export async function testLocally(
   command: typeof BaseCommand,
   argv: string[],
-  config?: LoadOptions
+  config?: Interfaces.LoadOptions
 ) {
   const extendedArgv = [...argv, '--node', 'local']
   return command.run(extendedArgv, config)

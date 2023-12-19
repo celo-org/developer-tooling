@@ -1,7 +1,7 @@
 import { ProposalBuilder, proposalToJSON } from '@celo/governance'
 import { concurrentMap } from '@celo/utils/lib/async'
 import { toBuffer } from '@ethereumjs/util'
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import chalk from 'chalk'
 import { writeFileSync } from 'fs'
 import { BaseCommand } from '../../base'
@@ -24,42 +24,42 @@ export default class Show extends BaseCommand {
 
   static description = 'Show information about a governance proposal, hotfix, or account.'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    raw: flags.boolean({ required: false, description: 'Display proposal in raw bytes format' }),
-    jsonTransactions: flags.string({
+    raw: Flags.boolean({ required: false, description: 'Display proposal in raw bytes format' }),
+    jsonTransactions: Flags.string({
       required: false,
       description: 'Output proposal JSON to provided file',
     }),
-    proposalID: flags.string({
+    proposalID: Flags.string({
       exclusive: ['account', 'hotfix'],
       description: 'UUID of proposal to view',
     }),
-    account: flags.string({
+    account: Flags.string({
       exclusive: ['proposalID', 'hotfix'],
       description: 'Address of account or voter',
     }),
-    hotfix: flags.string({
+    hotfix: Flags.string({
       exclusive: ['account', 'proposalID'],
       description: 'Hash of hotfix proposal',
     }),
-    notwhitelisted: flags.boolean({
+    notwhitelisted: Flags.boolean({
       description: 'List validators who have not whitelisted the specified hotfix',
     }),
-    whitelisters: flags.boolean({
+    whitelisters: Flags.boolean({
       description: 'If set, displays validators that have whitelisted the hotfix.',
       exclusive: ['nonwhitelisters', 'account', 'proposalID'],
     }),
-    nonwhitelisters: flags.boolean({
+    nonwhitelisters: Flags.boolean({
       description: 'If set, displays validators that have not whitelisted the hotfix.',
       exclusive: ['whitelisters', 'account', 'proposalID'],
     }),
-    afterExecutingProposal: flags.string({
+    afterExecutingProposal: Flags.string({
       required: false,
       description: 'Path to proposal which will be executed prior to proposal',
       exclusive: ['afterExecutingID'],
     }),
-    afterExecutingID: flags.string({
+    afterExecutingID: Flags.string({
       required: false,
       description: 'Governance proposal identifier which will be executed prior to proposal',
       exclusive: ['afterExecutingProposal'],
@@ -76,13 +76,14 @@ export default class Show extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(Show)
+    const kit = await this.getKit()
+    const res = await this.parse(Show)
     const id = res.flags.proposalID
     const raw = res.flags.raw
     const account = res.flags.account
     const hotfix = res.flags.hotfix
 
-    const governance = await this.kit.contracts.getGovernance()
+    const governance = await kit.contracts.getGovernance()
     if (id) {
       await newCheckBuilder(this).proposalExists(id).runChecks()
 
@@ -90,15 +91,15 @@ export default class Show extends BaseCommand {
       const proposal = record.proposal
 
       if (!raw) {
-        const builder = new ProposalBuilder(this.kit)
+        const builder = new ProposalBuilder(kit)
         if (res.flags.afterExecutingID) {
-          await addExistingProposalIDToBuilder(this.kit, builder, res.flags.afterExecutingID)
+          await addExistingProposalIDToBuilder(kit, builder, res.flags.afterExecutingID)
         } else if (res.flags.afterExecutingProposal) {
           await addExistingProposalJSONFileToBuilder(builder, res.flags.afterExecutingProposal)
         }
         try {
           console.log(chalk.cyanBright(`Parsing ${proposal.length} proposal transactions...`))
-          const jsonproposal = await proposalToJSON(this.kit, proposal, builder.registryAdditions)
+          const jsonproposal = await proposalToJSON(kit, proposal, builder.registryAdditions)
           record.proposal = jsonproposal as any
 
           if (res.flags.jsonTransactions) {
@@ -155,7 +156,7 @@ export default class Show extends BaseCommand {
       })
 
       if (res.flags.whitelisters || res.flags.nonwhitelisters) {
-        const validators = await this.kit.contracts.getValidators()
+        const validators = await kit.contracts.getValidators()
         const accounts = await validators.currentValidatorAccountsSet()
         const whitelist = await concurrentMap(
           5,
@@ -170,7 +171,7 @@ export default class Show extends BaseCommand {
         })
       }
     } else if (account) {
-      const accounts = await this.kit.contracts.getAccounts()
+      const accounts = await kit.contracts.getAccounts()
       printValueMapRecursive(await governance.getVoter(await accounts.signerToAccount(account)))
     }
   }

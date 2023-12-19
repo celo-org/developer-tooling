@@ -1,21 +1,21 @@
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import humanizeDuration from 'humanize-duration'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { binaryPrompt, displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 
 export default class ValidatorRegister extends BaseCommand {
   static description = 'Register a new Validator'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    from: Flags.address({ required: true, description: 'Address for the Validator' }),
-    ecdsaKey: Flags.ecdsaPublicKey({ required: true }),
-    blsKey: Flags.blsPublicKey({ required: true }),
-    blsSignature: Flags.blsProofOfPossession({ required: true }),
-    yes: flags.boolean({ description: 'Answer yes to prompt' }),
+    from: CustomFlags.address({ required: true, description: 'Address for the Validator' }),
+    ecdsaKey: CustomFlags.ecdsaPublicKey({ required: true }),
+    blsKey: CustomFlags.blsPublicKey({ required: true }),
+    blsSignature: CustomFlags.blsProofOfPossession({ required: true }),
+    yes: Flags.boolean({ description: 'Answer yes to prompt' }),
   }
 
   static examples = [
@@ -23,10 +23,11 @@ export default class ValidatorRegister extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(ValidatorRegister)
+    const kit = await this.getKit()
+    const res = await this.parse(ValidatorRegister)
 
-    const validators = await this.kit.contracts.getValidators()
-    const accounts = await this.kit.contracts.getAccounts()
+    const validators = await kit.contracts.getValidators()
+    const accounts = await kit.contracts.getAccounts()
 
     if (!res.flags.yes) {
       const requirements = await validators.getValidatorLockedGoldRequirements()
@@ -63,7 +64,7 @@ export default class ValidatorRegister extends BaseCommand {
 
     // register encryption key on accounts contract
     // TODO: Use a different key data encryption
-    const pubKey = await addressToPublicKey(res.flags.from, this.web3.eth.sign)
+    const pubKey = await addressToPublicKey(res.flags.from, kit.web3.eth.sign)
     // TODO fix typing
     const setKeyTx = accounts.setAccountDataEncryptionKey(pubKey as any)
     await displaySendTx('Set encryption key', setKeyTx)

@@ -8,7 +8,7 @@ import { BaseCommand } from '../../base'
 export default class List extends BaseCommand {
   static description = 'List live governance proposals (queued and ongoing)'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
     ...(cli.table.flags() as object),
   }
@@ -16,9 +16,10 @@ export default class List extends BaseCommand {
   static examples = ['list']
 
   async run() {
-    const res = this.parse(List)
+    const kit = await this.getKit()
+    const res = await this.parse(List)
 
-    const governance = await this.kit.contracts.getGovernance()
+    const governance = await kit.contracts.getGovernance()
     const queue = await governance.getQueue()
     const expiredQueueMap = await concurrentMap(5, queue, (upvoteRecord) =>
       governance.isQueuedProposalExpired(upvoteRecord.proposalID)

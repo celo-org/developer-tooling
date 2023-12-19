@@ -1,4 +1,4 @@
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { printValueMapRecursive } from '../../utils/cli'
 
@@ -6,9 +6,9 @@ export default class Parameters extends BaseCommand {
   static description =
     'View parameters of the network, including but not limited to configuration for the various Celo core smart contracts.'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    raw: flags.boolean({
+    raw: Flags.boolean({
       description: 'Display raw numerical configuration',
       required: false,
       default: false,
@@ -16,8 +16,9 @@ export default class Parameters extends BaseCommand {
   }
 
   async run() {
-    const res = this.parse(Parameters)
-    const config = await this.kit.getNetworkConfig(!res.flags.raw)
+    const kit = await this.getKit()
+    const res = await this.parse(Parameters)
+    const config = await kit.getNetworkConfig(!res.flags.raw)
     printValueMapRecursive(config)
   }
 }

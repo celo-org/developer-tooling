@@ -1,38 +1,38 @@
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 
 export default class Authorize extends BaseCommand {
   static description =
     'Keep your locked Gold more secure by authorizing alternative keys to be used for signing attestations, voting, or validating. By doing so, you can continue to participate in the protocol while keeping the key with access to your locked Gold in cold storage. You must include a "proof-of-possession" of the key being authorized, which can be generated with the "account:proof-of-possession" command.'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    from: Flags.address({ required: true }),
-    role: flags.string({
+    from: CustomFlags.address({ required: true }),
+    role: Flags.string({
       char: 'r',
       options: ['vote', 'validator', 'attestation'],
       description: 'Role to delegate',
       required: true,
     }),
-    signature: Flags.proofOfPossession({
+    signature: CustomFlags.proofOfPossession({
       description: 'Signature (a.k.a proof-of-possession) of the signer key',
       required: true,
     }),
-    signer: Flags.address({ required: true }),
-    blsKey: Flags.blsPublicKey({
+    signer: CustomFlags.address({ required: true }),
+    blsKey: CustomFlags.blsPublicKey({
       description:
         'The BLS public key that the validator is using for consensus, should pass proof of possession. 96 bytes.',
       dependsOn: ['blsPop'],
     }),
-    blsPop: Flags.blsProofOfPossession({
+    blsPop: CustomFlags.blsProofOfPossession({
       description:
         'The BLS public key proof-of-possession, which consists of a signature on the account address. 48 bytes.',
       dependsOn: ['blsKey'],
     }),
-    force: flags.boolean({
+    force: Flags.boolean({
       description:
         'Allow rotation of validator ECDSA key without rotating the BLS key. Only intended for validators with a special reason to do so.',
       default: false,
@@ -48,9 +48,9 @@ export default class Authorize extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(Authorize)
-
-    const accounts = await this.kit.contracts.getAccounts()
+    const res = await this.parse(Authorize)
+    const kit = await this.getKit()
+    const accounts = await kit.contracts.getAccounts()
     const sig = accounts.parseSignatureOfAddress(
       res.flags.from,
       res.flags.signer,
@@ -83,7 +83,7 @@ export default class Authorize extends BaseCommand {
         res.flags.blsPop
       )
     } else if (res.flags.role === 'validator') {
-      const validatorsWrapper = await this.kit.contracts.getValidators()
+      const validatorsWrapper = await kit.contracts.getValidators()
       tx = await accounts.authorizeValidatorSigner(res.flags.signer, sig, validatorsWrapper)
     } else if (res.flags.role === 'attestation') {
       tx = await accounts.authorizeAttestationSigner(res.flags.signer, sig)

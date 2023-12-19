@@ -1,6 +1,6 @@
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 const DKG = require('./DKG.json')
 
 export enum Method {
@@ -17,19 +17,20 @@ export default class DKGGet extends BaseCommand {
 
   static options = ['shares', 'responses', 'justifications', 'participants', 'phase', 'group']
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    method: flags.enum({
+    method: Flags.enum({
       options: DKGGet.options,
       required: true,
       description: 'Getter method to call',
     }),
-    address: Flags.address({ required: true, description: 'DKG Contract Address' }),
+    address: CustomFlags.address({ required: true, description: 'DKG Contract Address' }),
   }
 
   async run() {
-    const res = this.parse(DKGGet)
-    const web3 = this.kit.connection.web3
+    const kit = await this.getKit()
+    const res = await this.parse(DKGGet)
+    const web3 = kit.connection.web3
 
     const dkg = new web3.eth.Contract(DKG.abi, res.flags.address)
 

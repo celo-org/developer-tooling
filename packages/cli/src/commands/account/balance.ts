@@ -1,13 +1,13 @@
 import { BaseCommand } from '../../base'
 import { failWith, printValueMap } from '../../utils/cli'
-import { Args, Flags } from '../../utils/command'
+import { Args, CustomFlags } from '../../utils/command'
 
 export default class Balance extends BaseCommand {
   static description = 'View Celo Stables and CELO balances for an address'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    erc20Address: Flags.address({
+    erc20Address: CustomFlags.address({
       description: 'Address of generic ERC-20 token to also check balance for',
     }),
   }
@@ -20,13 +20,14 @@ export default class Balance extends BaseCommand {
   ]
 
   async run() {
-    const { args, flags } = this.parse(Balance)
+    const kit = await this.getKit()
+    const { args, flags } = await this.parse(Balance)
 
     console.log('All balances expressed in units of 10^-18.')
-    printValueMap(await this.kit.getTotalBalance(args.address))
+    printValueMap(await kit.getTotalBalance(args.address))
     if (flags.erc20Address) {
       try {
-        const erc20 = await this.kit.contracts.getErc20(flags.erc20Address)
+        const erc20 = await kit.contracts.getErc20(flags.erc20Address)
         printValueMap({ erc20: await erc20.balanceOf(args.address) })
       } catch {
         failWith('Invalid erc20 address')

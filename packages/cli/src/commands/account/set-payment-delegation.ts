@@ -1,18 +1,18 @@
 import { valueToFixidityString } from '@celo/contractkit/lib/wrappers/BaseWrapper'
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 
 export default class SetPaymentDelegation extends BaseCommand {
   static description =
     "Sets a payment delegation beneficiary, an account address to receive a fraction of the validator's payment every epoch. The fraction must not be greater than 1."
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    account: Flags.address({ required: true }),
-    beneficiary: Flags.address({ required: true }),
-    fraction: flags.string({ required: true }),
+    account: CustomFlags.address({ required: true }),
+    beneficiary: CustomFlags.address({ required: true }),
+    fraction: Flags.string({ required: true }),
   }
 
   static args = []
@@ -22,9 +22,10 @@ export default class SetPaymentDelegation extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(SetPaymentDelegation)
-    this.kit.defaultAccount = res.flags.account
-    const accounts = await this.kit.contracts.getAccounts()
+    const kit = await this.getKit()
+    const res = await this.parse(SetPaymentDelegation)
+    kit.defaultAccount = res.flags.account
+    const accounts = await kit.contracts.getAccounts()
 
     await displaySendTx(
       'setPaymentDelegation',

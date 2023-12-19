@@ -1,33 +1,33 @@
 import { CeloTransactionObject } from '@celo/connect'
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
 import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
+import { CustomFlags } from '../../utils/command'
 
 export default class RevokeVotes extends ReleaseGoldBaseCommand {
   static description =
     "Revokes `votes` for the given contract's account from the given group's account"
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...ReleaseGoldBaseCommand.flags,
-    group: Flags.address({
+    group: CustomFlags.address({
       required: false,
       exclusive: ['allGroups'],
       description: 'Address of the group to revoke votes from',
     }),
-    votes: flags.string({
+    votes: Flags.string({
       required: false,
       exclusive: ['allVotes', 'allGroups'],
       description: 'The number of votes to revoke',
     }),
-    allVotes: flags.boolean({
+    allVotes: Flags.boolean({
       required: false,
       exclusive: ['votes'],
       description: 'Revoke all votes',
     }),
-    allGroups: flags.boolean({
+    allGroups: Flags.boolean({
       required: false,
       exclusive: ['group', 'votes'],
       description: 'Revoke all votes from all groups',
@@ -40,8 +40,9 @@ export default class RevokeVotes extends ReleaseGoldBaseCommand {
   ]
 
   async run() {
+    const kit = await this.getKit()
     // tslint:disable-next-line
-    const { flags } = this.parse(RevokeVotes)
+    const { flags } = await this.parse(RevokeVotes)
 
     await newCheckBuilder(this).isAccount(this.releaseGoldWrapper.address).runChecks()
 
@@ -49,7 +50,7 @@ export default class RevokeVotes extends ReleaseGoldBaseCommand {
     const beneficiary = await this.releaseGoldWrapper.getBeneficiary()
     const releaseOwner = await this.releaseGoldWrapper.getReleaseOwner()
 
-    this.kit.defaultAccount = isRevoked ? releaseOwner : beneficiary
+    kit.defaultAccount = isRevoked ? releaseOwner : beneficiary
 
     let txos: Array<CeloTransactionObject<void>>
     if (flags.allVotes && flags.allGroups) {

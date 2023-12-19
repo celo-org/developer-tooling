@@ -1,7 +1,7 @@
 import { CeloContract } from '@celo/contractkit'
 import { BaseCommand } from '../../base'
 import { displaySendTx, failWith } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 
 export default class RemoveExpiredReports extends BaseCommand {
   static description = 'Remove expired oracle reports for a specified token'
@@ -14,9 +14,9 @@ export default class RemoveExpiredReports extends BaseCommand {
       description: 'Token to remove expired reports for',
     },
   ]
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    from: Flags.address({
+    from: CustomFlags.address({
       required: true,
       description: 'Address of the account removing oracle reports',
     }),
@@ -29,9 +29,10 @@ export default class RemoveExpiredReports extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(RemoveExpiredReports)
+    const kit = await this.getKit()
+    const res = await this.parse(RemoveExpiredReports)
 
-    const sortedOracles = await this.kit.contracts.getSortedOracles().catch((e) => failWith(e))
+    const sortedOracles = await kit.contracts.getSortedOracles().catch((e) => failWith(e))
     const txo = await sortedOracles.removeExpiredReports(res.args.token)
     await displaySendTx('removeExpiredReports', txo)
   }

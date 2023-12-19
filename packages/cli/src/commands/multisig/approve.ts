@@ -1,23 +1,23 @@
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 
 export default class ApproveMultiSig extends BaseCommand {
   static description = 'Approves an existing transaction on a multi-sig contract'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    from: Flags.address({
+    from: CustomFlags.address({
       required: true,
       description: 'Account approving the multi-sig transaction',
     }),
-    for: Flags.address({
+    for: CustomFlags.address({
       required: true,
       description: 'Address of the multi-sig contract',
     }),
-    tx: flags.integer({
+    tx: Flags.integer({
       required: true,
       description: 'Transaction to approve',
     }),
@@ -28,11 +28,12 @@ export default class ApproveMultiSig extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(ApproveMultiSig)
+    const kit = await this.getKit()
+    const res = await this.parse(ApproveMultiSig)
     const account = res.flags.from
-    this.kit.defaultAccount = account
+    kit.defaultAccount = account
 
-    const multisig = await this.kit.contracts.getMultiSig(res.flags.for)
+    const multisig = await kit.contracts.getMultiSig(res.flags.for)
 
     const checkBuilder = newCheckBuilder(this)
       .isMultiSigOwner(account, multisig)

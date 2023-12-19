@@ -1,9 +1,9 @@
 import { StableToken } from '@celo/contractkit'
 import { toFixed } from '@celo/utils/lib/fixidity'
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { printValueMap } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 import { enumEntriesDupWithLowercase } from '../../utils/helpers'
 
 const stableTokenOptions = enumEntriesDupWithLowercase(Object.entries(StableToken))
@@ -11,19 +11,19 @@ const stableTokenOptions = enumEntriesDupWithLowercase(Object.entries(StableToke
 export default class GetBuyAmount extends BaseCommand {
   static description = 'Gets the buy amount for a prospective Granda Mento exchange'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    value: Flags.wei({
+    value: CustomFlags.wei({
       required: true,
       description: 'The value of the tokens to exchange',
     }),
-    stableToken: flags.enum({
+    stableToken: Flags.enum({
       required: true,
       options: Object.keys(stableTokenOptions),
       description: 'Name of the stable to receive or send',
       default: 'cUSD',
     }),
-    sellCelo: flags.enum({
+    sellCelo: Flags.enum({
       options: ['true', 'false'],
       required: true,
       description: 'Sell or buy CELO',
@@ -31,15 +31,16 @@ export default class GetBuyAmount extends BaseCommand {
   }
 
   async run() {
-    const grandaMento = await this.kit.contracts.getGrandaMento()
+    const kit = await this.getKit()
+    const grandaMento = await kit.contracts.getGrandaMento()
 
-    const res = this.parse(GetBuyAmount)
+    const res = await this.parse(GetBuyAmount)
     const sellAmount = res.flags.value
     const stableToken = stableTokenOptions[res.flags.stableToken]
     const sellCelo = res.flags.sellCelo === 'true'
 
-    const stableTokenAddress = await this.kit.celoTokens.getAddress(stableToken)
-    const sortedOracles = await this.kit.contracts.getSortedOracles()
+    const stableTokenAddress = await kit.celoTokens.getAddress(stableToken)
+    const sortedOracles = await kit.contracts.getSortedOracles()
     const celoStableTokenOracleRate = (await sortedOracles.medianRate(stableTokenAddress)).rate
 
     const buyAmount = await grandaMento.getBuyAmount(

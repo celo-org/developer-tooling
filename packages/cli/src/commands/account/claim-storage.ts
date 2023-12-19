@@ -1,11 +1,11 @@
 import { createStorageClaim } from '@celo/contractkit/lib/identity/claims/claim'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 import { ClaimCommand } from '../../utils/identity'
 export default class ClaimStorage extends ClaimCommand {
   static description = 'Claim a storage root and add the claim to a local metadata file'
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...ClaimCommand.flags,
-    url: Flags.url({
+    url: CustomFlags.url({
       required: true,
       description: 'The URL of the storage root you want to claim',
     }),
@@ -17,7 +17,7 @@ export default class ClaimStorage extends ClaimCommand {
   self = ClaimStorage
 
   async run() {
-    const res = this.parse(ClaimStorage)
+    const res = await this.parse(ClaimStorage)
     const metadata = await this.readMetadata()
     await this.addClaim(metadata, createStorageClaim(res.flags.url))
     this.writeMetadata(metadata)

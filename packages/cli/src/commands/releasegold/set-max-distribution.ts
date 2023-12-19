@@ -1,20 +1,19 @@
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import prompts from 'prompts'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
 import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
-
 export default class SetMaxDistribution extends ReleaseGoldBaseCommand {
   static description = 'Set the maximum distribution of celo for the given contract'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...ReleaseGoldBaseCommand.flags,
-    distributionRatio: flags.string({
+    distributionRatio: Flags.string({
       required: true,
       description:
         'Amount in range [0, 1000] (3 significant figures) indicating % of total balance available for distribution.',
     }),
-    yesreally: flags.boolean({
+    yesreally: Flags.boolean({
       description: 'Override prompt to set new maximum distribution (be careful!)',
     }),
   }
@@ -26,8 +25,9 @@ export default class SetMaxDistribution extends ReleaseGoldBaseCommand {
   ]
 
   async run() {
+    const kit = await this.getKit()
     // tslint:disable-next-line
-    const { flags } = this.parse(SetMaxDistribution)
+    const { flags } = await this.parse(SetMaxDistribution)
     const distributionRatio = Number(flags.distributionRatio)
 
     await newCheckBuilder(this)
@@ -53,7 +53,7 @@ export default class SetMaxDistribution extends ReleaseGoldBaseCommand {
       }
     }
 
-    this.kit.defaultAccount = await this.releaseGoldWrapper.getReleaseOwner()
+    kit.defaultAccount = await this.releaseGoldWrapper.getReleaseOwner()
     await displaySendTx(
       'setMaxDistribution',
       this.releaseGoldWrapper.setMaxDistribution(distributionRatio)

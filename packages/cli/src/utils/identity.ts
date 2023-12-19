@@ -8,15 +8,15 @@ import { concurrentMap } from '@celo/utils/lib/async'
 import { NativeSigner } from '@celo/utils/lib/signatureUtils'
 import { toChecksumAddress } from '@ethereumjs/util'
 import { cli } from 'cli-ux'
-import { writeFileSync } from 'fs'
 import humanizeDuration from 'humanize-duration'
+import { writeFile } from 'node:fs/promises'
 import { BaseCommand } from '../base'
-import { Args, Flags } from './command'
+import { Args, CustomFlags } from './command'
 
 export abstract class ClaimCommand extends BaseCommand {
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    from: Flags.address({
+    from: CustomFlags.address({
       required: true,
       description:
         'Address of the account to set metadata for or an authorized signer for the address in the metadata',
@@ -31,7 +31,8 @@ export abstract class ClaimCommand extends BaseCommand {
     if (eqAddress(address, from)) {
       return
     }
-    const accounts = await this.kit.contracts.getAccounts()
+    const kit = await this.getKit()
+    const accounts = await kit.contracts.getAccounts()
     const signers = await accounts.getCurrentSigners(address)
     if (!signers.some((a) => eqAddress(a, from))) {
       throw new Error(
@@ -41,12 +42,13 @@ export abstract class ClaimCommand extends BaseCommand {
   }
 
   protected readMetadata = async () => {
-    const { args, flags } = this.parse(this.self)
+    const { args, flags } = await this.parse(this.self)
+    const kit = await this.getKit()
     const filePath = args.file
     try {
       cli.action.start(`Read Metadata from ${filePath}`)
       const data = await IdentityMetadataWrapper.fromFile(
-        await this.kit.contracts.getAccounts(),
+        await kit.contracts.getAccounts(),
         filePath
       )
       await this.checkMetadataAddress(data.data.meta.address, flags.from)
@@ -58,16 +60,18 @@ export abstract class ClaimCommand extends BaseCommand {
     }
   }
 
-  protected get signer() {
-    const res = this.parse(this.self)
+  protected async getSigner() {
+    const res = await this.parse(this.self)
+    const kit = await this.getKit()
     const address = toChecksumAddress(res.flags.from)
-    return NativeSigner(this.kit.connection.sign, address)
+    return NativeSigner(kit.connection.sign, address)
   }
 
   protected async addClaim(metadata: IdentityMetadataWrapper, claim: Claim): Promise<Claim> {
     try {
       cli.action.start(`Add claim`)
-      const addedClaim = await metadata.addClaim(claim, this.signer)
+      const signer = await this.getSigner()
+      const addedClaim = await metadata.addClaim(claim, signer)
       cli.action.stop()
       return addedClaim
     } catch (error) {
@@ -76,13 +80,13 @@ export abstract class ClaimCommand extends BaseCommand {
     }
   }
 
-  protected writeMetadata = (metadata: IdentityMetadataWrapper) => {
-    const { args } = this.parse(this.self)
+  protected writeMetadata = async (metadata: IdentityMetadataWrapper) => {
+    const { args } = await this.parse(this.self)
     const filePath = args.file
 
     try {
       cli.action.start(`Write Metadata to ${filePath}`)
-      writeFileSync(filePath, metadata.toString())
+      await writeFile(filePath, metadata.toString())
       cli.action.stop()
     } catch (error) {
       cli.action.stop(`Error: ${error}`)
@@ -154,5 +158,5 @@ export const modifyMetadata = async (
     filePath
   )
   await operation(metadata)
-  writeFileSync(filePath, metadata.toString())
+  await writeFile(filePath, metadata.toString())
 }

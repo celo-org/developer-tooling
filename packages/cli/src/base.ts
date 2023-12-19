@@ -4,9 +4,7 @@ import { stableTokenInfos } from '@celo/contractkit/lib/celo-tokens'
 import { AzureHSMWallet } from '@celo/wallet-hsm-azure'
 import { AddressValidation, newLedgerWalletWithSetup } from '@celo/wallet-ledger'
 import { LocalWallet } from '@celo/wallet-local'
-import { Command, flags } from '@oclif/command'
-import { IFlag } from '@oclif/parser/lib/flags'
-import { ParserOutput } from '@oclif/parser/lib/parse'
+import { Command, Flags } from '@oclif/core'
 import chalk from 'chalk'
 import net from 'net'
 import Web3 from 'web3'
@@ -22,18 +20,17 @@ export const gasOptions = {
 
 // tslint:disable-next-line:max-classes-per-file
 export abstract class BaseCommand extends Command {
-  // https://github.com/microsoft/TypeScript/issues/47663
-  static flags: { [name: string]: any } = {
-    privateKey: flags.string({
+  static flags = {
+    privateKey: Flags.string({
       char: 'k',
       description: 'Use a private key to sign local transactions with',
       hidden: true,
     }),
-    node: flags.string({
+    node: Flags.string({
       char: 'n',
       description: "URL of the node to run commands against (defaults to 'http://localhost:8545')",
       hidden: true,
-      parse: (nodeUrl: string) => {
+      parse: async (nodeUrl: string) => {
         switch (nodeUrl) {
           case 'local':
           case 'localhost':
@@ -49,50 +46,50 @@ export abstract class BaseCommand extends Command {
             return nodeUrl
         }
       },
-    }) as IFlag<string>,
-    gasCurrency: flags.enum({
+    }),
+    gasCurrency: Flags.enum({
       options: Object.keys(gasOptions),
       description:
         "Use a specific gas currency for transaction fees (defaults to 'auto' which uses whatever feeCurrency is available)",
       hidden: true,
-    }) as IFlag<string>,
-    useLedger: flags.boolean({
+    }),
+    useLedger: Flags.boolean({
       default: false,
       hidden: true,
       description: 'Set it to use a ledger wallet',
-    }) as IFlag<boolean>,
-    ledgerAddresses: flags.integer({
+    }),
+    ledgerAddresses: Flags.integer({
       default: 1,
       hidden: true,
       exclusive: ['ledgerCustomAddresses'],
       description: 'If --useLedger is set, this will get the first N addresses for local signing',
-    }) as IFlag<number>,
-    ledgerCustomAddresses: flags.string({
+    }),
+    ledgerCustomAddresses: Flags.string({
       default: '[0]',
       hidden: true,
       exclusive: ['ledgerAddresses'],
       description:
         'If --useLedger is set, this will get the array of index addresses for local signing. Example --ledgerCustomAddresses "[4,99]"',
-    }) as IFlag<string>,
-    useAKV: flags.boolean({
+    }),
+    useAKV: Flags.boolean({
       default: false,
       hidden: true,
       description: 'Set it to use an Azure KeyVault HSM',
     }),
-    azureVaultName: flags.string({
+    azureVaultName: Flags.string({
       hidden: true,
       description: 'If --useAKV is set, this is used to connect to the Azure KeyVault',
-    }) as IFlag<string>,
-    ledgerConfirmAddress: flags.boolean({
+    }),
+    ledgerConfirmAddress: Flags.boolean({
       default: false,
       hidden: true,
       description: 'Set it to ask confirmation for the address of the transaction from the ledger',
-    }) as IFlag<boolean>,
-    globalHelp: flags.boolean({
+    }),
+    globalHelp: Flags.boolean({
       default: false,
       hidden: false,
       description: 'View all available global flags',
-    }) as IFlag<boolean>,
+    }),
   }
   // This specifies whether the node needs to be synced before the command
   // can be run. In most cases, this should be `true`, so that's the default.
@@ -105,9 +102,9 @@ export abstract class BaseCommand extends Command {
   private _kit: ContractKit | null = null
   private _wallet?: ReadOnlyWallet
 
-  get web3() {
+  async getWeb3() {
     if (!this._web3) {
-      const res: ParserOutput<any, any> = this.parse()
+      const res = await this.parse()
       const nodeUrl = (res.flags && res.flags.node) || getNodeUrl(this.config.configDir)
       this._web3 =
         nodeUrl && nodeUrl.endsWith('.ipc')
@@ -118,20 +115,20 @@ export abstract class BaseCommand extends Command {
   }
 
   async newWeb3() {
-    const res: ParserOutput<any, any> = this.parse()
+    const res = await this.parse()
     const nodeUrl = (res.flags && res.flags.node) || getNodeUrl(this.config.configDir)
     return nodeUrl && nodeUrl.endsWith('.ipc')
       ? new Web3(new Web3.providers.IpcProvider(nodeUrl, net))
       : new Web3(nodeUrl)
   }
 
-  get kit() {
+  async getKit() {
     if (!this._kit) {
-      this._kit = newKitFromWeb3(this.web3)
+      this._kit = newKitFromWeb3(await this.getWeb3())
       this._kit.connection.wallet = this._wallet
     }
 
-    const res: ParserOutput<any, any> = this.parse()
+    const res = await this.parse()
     if (res.flags && res.flags.privateKey && !res.flags.useLedger && !res.flags.useAKV) {
       this._kit.connection.addAccount(res.flags.privateKey)
     }
@@ -140,10 +137,11 @@ export abstract class BaseCommand extends Command {
 
   async init() {
     if (this.requireSynced) {
-      await requireNodeIsSynced(this.web3)
+      const web3 = await this.getWeb3()
+      await requireNodeIsSynced(web3)
     }
-
-    const res: ParserOutput<any, any> = this.parse()
+    const kit = await this.getKit()
+    const res = await this.parse()
     if (res.flags.globalHelp) {
       console.log(chalk.red.bold('GLOBAL OPTIONS'))
       Object.entries(BaseCommand.flags).forEach(([name, flag]) => {
@@ -155,11 +153,7 @@ export abstract class BaseCommand extends Command {
     if (res.flags.useLedger) {
       let transport
       try {
-        // Importing for ledger uses only fixes running jest tests
-        const _TransportNodeHid = (await import('@ledgerhq/hw-transport-node-hid')).default
-        // types seem to be suggesting 2 defaults but js is otherwise for TransportNodeHid
-        const TransportNodeHid: typeof _TransportNodeHid.default =
-          _TransportNodeHid.default || _TransportNodeHid
+        const TransportNodeHid = (await import('@ledgerhq/hw-transport-node-hid')).default
         transport = await TransportNodeHid.open('')
         const derivationPathIndexes = res.raw.some(
           (value) => (value as any).flag === 'ledgerCustomAddresses'
@@ -197,7 +191,7 @@ export abstract class BaseCommand extends Command {
     }
 
     if (res.flags.from) {
-      this.kit.defaultAccount = res.flags.from
+      kit.defaultAccount = res.flags.from
     }
 
     const gasCurrencyConfig = res.flags.gasCurrency
@@ -205,12 +199,12 @@ export abstract class BaseCommand extends Command {
       : getGasCurrency(this.config.configDir)
 
     const setStableTokenGas = async (stable: StableToken) => {
-      await this.kit.setFeeCurrency(stableTokenInfos[stable].contract)
+      await kit.setFeeCurrency(stableTokenInfos[stable].contract)
     }
     if (Object.keys(StableToken).includes(gasCurrencyConfig)) {
       await setStableTokenGas(StableToken[gasCurrencyConfig as keyof typeof StableToken])
-    } else if (gasCurrencyConfig === gasOptions.auto && this.kit.defaultAccount) {
-      const balances = await this.kit.getTotalBalance(this.kit.defaultAccount)
+    } else if (gasCurrencyConfig === gasOptions.auto && kit.defaultAccount) {
+      const balances = await kit.getTotalBalance(kit.defaultAccount)
       if (balances.CELO!.isZero()) {
         const stables = Object.entries(StableToken)
         for (const stable of stables) {
@@ -226,9 +220,10 @@ export abstract class BaseCommand extends Command {
     }
   }
 
-  finally(arg: Error | undefined): Promise<any> {
+  async finally(arg: Error | undefined): Promise<any> {
     try {
-      this.kit.connection.stop()
+      const kit = await this.getKit()
+      kit.connection.stop()
     } catch (error) {
       this.log(`Failed to close the connection: ${error}`)
     }

@@ -1,20 +1,20 @@
 import { PrivateNameAccessor, PublicNameAccessor } from '@celo/identity/lib/offchain/accessors/name'
 import { privateKeyToAddress } from '@celo/utils/lib/address'
-import { flags } from '@oclif/command'
 import { binaryPrompt } from '../../utils/cli'
 import { OffchainDataCommand } from '../../utils/off-chain-data'
-
+import { Flags } from '@oclif/core'
+// @ts-expect-error privateKey is required here but not for parent and that is causing a type error
 export default class OffchainWrite extends OffchainDataCommand {
   static description = 'DEV: Writes a name to offchain storage'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...OffchainDataCommand.flags,
-    name: flags.string({ required: true }),
-    privateKey: flags.string({ required: true }),
+    name: Flags.string({ required: true }),
+    privateKey: Flags.string({ required: true }),
 
     // private accessor parameters
-    privateDEK: flags.string({ dependsOn: ['privateKey', 'encryptTo'] }),
-    encryptTo: flags.string({ dependsOn: ['privateKey', 'privateDEK'] }),
+    privateDEK: Flags.string({ dependsOn: ['privateKey', 'encryptTo'] }),
+    encryptTo: Flags.string({ dependsOn: ['privateKey', 'privateDEK'] }),
   }
 
   static args = []
@@ -25,13 +25,14 @@ export default class OffchainWrite extends OffchainDataCommand {
   ]
 
   async run() {
+    const kit = await this.getKit()
     const {
       flags: { encryptTo, name, privateDEK, privateKey },
-    } = this.parse(OffchainWrite)
+    } = await this.parse(OffchainWrite)
 
     if (encryptTo && privateDEK && privateKey) {
-      this.kit.defaultAccount = privateKeyToAddress(privateKey)
-      this.kit.addAccount(privateDEK)
+      kit.defaultAccount = privateKeyToAddress(privateKey)
+      kit
       const nameSchema = new PrivateNameAccessor(this.offchainDataWrapper)
       await nameSchema.write({ name }, [encryptTo])
     } else {

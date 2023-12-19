@@ -1,32 +1,32 @@
 import { ContractKit } from '@celo/contractkit'
 import { OdisUtils } from '@celo/identity'
 import { AuthSigner, OdisContextName } from '@celo/identity/lib/odis/query'
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 
 export default class GetAttestations extends BaseCommand {
   static description =
     "Looks up attestations associated with the provided phone number. If a pepper is not provided, it uses the --from account's balance to query the pepper."
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    phoneNumber: flags.string({
+    phoneNumber: Flags.string({
       required: false,
       description: 'Phone number to check attestations for',
     }),
-    from: flags.string({
+    from: Flags.string({
       required: false,
       description: 'Account whose balance to use for querying ODIS for the pepper lookup',
     }),
-    pepper: flags.string({
+    pepper: Flags.string({
       required: false,
       description: 'ODIS phone number pepper',
     }),
-    identifier: flags.string({
+    identifier: Flags.string({
       required: false,
       description: 'On-chain identifier',
     }),
-    network: flags.string({
+    network: Flags.string({
       required: false,
       description: 'The ODIS service to hit: mainnet, alfajores, alfajoresstaging',
     }),
@@ -39,7 +39,8 @@ export default class GetAttestations extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(GetAttestations)
+    const kit = await this.getKit()
+    const res = await this.parse(GetAttestations)
     const phoneNumber = res.flags.phoneNumber
     const account = res.flags.from
     let identifier = res.flags.identifier
@@ -48,8 +49,8 @@ export default class GetAttestations extends BaseCommand {
       throw Error('Must specify either --from or --pepper or --identifier')
     }
     const network = res.flags.network
-    const attestationsContract = await this.kit.contracts.getAttestations()
-    const accountsContract = await this.kit.contracts.getAccounts()
+    const attestationsContract = await kit.contracts.getAttestations()
+    const accountsContract = await kit.contracts.getAccounts()
 
     if (!identifier) {
       if (!phoneNumber) {
@@ -58,11 +59,11 @@ export default class GetAttestations extends BaseCommand {
       // Get Phone number pepper
       // Needs a balance to perform query
       if (!pepper) {
-        pepper = await this.getPhoneNumberPepper(this.kit, phoneNumber!, account!, network)
+        pepper = await this.getPhoneNumberPepper(kit, phoneNumber!, account!, network)
         console.log('Pepper: ' + pepper)
       }
 
-      const computedIdentifier = this.kit.connection.web3.utils.soliditySha3({
+      const computedIdentifier = kit.connection.web3.utils.soliditySha3({
         type: 'string',
         value: 'tel://' + phoneNumber + '__' + pepper,
       })

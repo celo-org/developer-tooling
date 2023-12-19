@@ -1,28 +1,26 @@
 import { StableToken } from '@celo/contractkit'
 import { stableTokenInfos } from '@celo/contractkit/lib/celo-tokens'
-import { IFlag } from '@oclif/parser/lib/flags'
-import { ParserOutput } from '@oclif/parser/lib/parse'
 import BigNumber from 'bignumber.js'
 import { BaseCommand } from './base'
 import { newCheckBuilder } from './utils/checks'
 import { displaySendTx, failWith } from './utils/cli'
-import { Flags } from './utils/command'
+import { CustomFlags } from './utils/command'
 import { checkNotDangerousExchange } from './utils/exchange'
 
 const largeOrderPercentage = 1
 const deppegedPricePercentage = 20
 export default class ExchangeStableBase extends BaseCommand {
-  static flags: { from: IFlag<string>; value: IFlag<BigNumber>; forAtLeast: IFlag<BigNumber> } = {
+  static flags = {
     ...BaseCommand.flags,
-    from: Flags.address({
+    from: CustomFlags.address({
       required: true,
       description: 'The address with the Stable Token to exchange',
     }),
-    value: Flags.wei({
+    value: CustomFlags.wei({
       required: true,
       description: 'The value of Stable Tokens to exchange for CELO',
     }),
-    forAtLeast: Flags.wei({
+    forAtLeast: CustomFlags.wei({
       description: 'Optional, the minimum value of CELO to receive in return',
       default: new BigNumber(0),
     }),
@@ -31,7 +29,8 @@ export default class ExchangeStableBase extends BaseCommand {
   protected _stableCurrency: StableToken | null = null
 
   async run() {
-    const res: ParserOutput<any, any> = this.parse()
+    const kit = await this.getKit()
+    const res = await this.parse()
     const sellAmount = res.flags.value
     const minBuyAmount = res.flags.forAtLeast
 
@@ -45,15 +44,15 @@ export default class ExchangeStableBase extends BaseCommand {
     let stableToken
     let exchange
     try {
-      stableToken = await this.kit.contracts.getStableToken(this._stableCurrency)
-      exchange = await this.kit.contracts.getExchange(this._stableCurrency)
+      stableToken = await kit.contracts.getStableToken(this._stableCurrency)
+      exchange = await kit.contracts.getExchange(this._stableCurrency)
     } catch {
       failWith(`The ${this._stableCurrency} token was not deployed yet`)
     }
 
     if (minBuyAmount.toNumber() === 0) {
       const check = await checkNotDangerousExchange(
-        this.kit,
+        kit,
         sellAmount,
         largeOrderPercentage,
         deppegedPricePercentage,

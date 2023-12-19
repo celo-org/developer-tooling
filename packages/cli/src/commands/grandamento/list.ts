@@ -4,12 +4,13 @@ import { printValueMap } from '../../utils/cli'
 export default class List extends BaseCommand {
   static description = 'List current active Granda Mento exchange proposals'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
   }
 
   async run() {
-    const grandaMento = await this.kit.contracts.getGrandaMento()
+    const kit = await this.getKit()
+    const grandaMento = await kit.contracts.getGrandaMento()
     const proposals = await grandaMento.getActiveProposalIds()
 
     if (!proposals.length) {

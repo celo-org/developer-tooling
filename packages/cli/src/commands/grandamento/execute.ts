@@ -1,28 +1,29 @@
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 
 export default class Execute extends BaseCommand {
   static description = 'Executes a Granda Mento exchange proposal'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    from: Flags.address({
+    from: CustomFlags.address({
       required: true,
       description: 'The address to execute the exchange proposal',
     }),
-    proposalID: flags.string({
+    proposalID: Flags.string({
       required: true,
       description: 'UUID of proposal to view',
     }),
   }
 
   async run() {
-    const grandaMento = await this.kit.contracts.getGrandaMento()
+    const kit = await this.getKit()
+    const grandaMento = await kit.contracts.getGrandaMento()
 
-    const res = this.parse(Execute)
+    const res = await this.parse(Execute)
     const proposalID = res.flags.proposalID
 
     await newCheckBuilder(this)

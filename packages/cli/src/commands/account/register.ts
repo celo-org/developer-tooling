@@ -1,17 +1,17 @@
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
-
+import { CustomFlags } from '../../utils/command'
+CustomFlags
 export default class Register extends BaseCommand {
   static description =
     'Register an account on-chain. This allows you to lock Gold, which is a pre-requisite for registering a Validator or Group, participating in Validator elections and on-chain Governance, and earning epoch rewards.'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    name: flags.string(),
-    from: Flags.address({ required: true }),
+    name: Flags.string(),
+    from: CustomFlags.address({ required: true }),
   }
 
   static args = []
@@ -22,9 +22,10 @@ export default class Register extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(Register)
+    const kit = await this.getKit()
+    const res = await this.parse(Register)
 
-    const accounts = await this.kit.contracts.getAccounts()
+    const accounts = await kit.contracts.getAccounts()
 
     await newCheckBuilder(this).isNotAccount(res.flags.from).runChecks()
     await displaySendTx('register', accounts.createAccount())

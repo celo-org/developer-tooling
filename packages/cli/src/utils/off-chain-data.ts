@@ -6,8 +6,7 @@ import {
   LocalStorageWriter,
 } from '@celo/identity/lib/offchain/storage-writers'
 import { privateKeyToAddress } from '@celo/utils/lib/address'
-import { flags } from '@oclif/command'
-import { ParserOutput } from '@oclif/parser/lib/parse'
+import { Flags } from '@oclif/core'
 import { BaseCommand } from '../base'
 import { parsePath } from './command'
 
@@ -18,18 +17,18 @@ export enum StorageProviders {
 }
 
 export abstract class OffchainDataCommand extends BaseCommand {
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    directory: flags.string({
+    directory: Flags.string({
       parse: parsePath,
-      default: '.',
+      default: async () => '.',
       description: 'To which directory data should be written',
     }),
-    provider: flags.enum({
+    provider: Flags.enum({
       options: ['git', 'aws', 'gcp'],
       description: 'If the CLI should attempt to push to the cloud',
     }),
-    bucket: flags.string({
+    bucket: Flags.string({
       dependsOn: ['provider'],
       description: 'If using a GCP or AWS storage bucket this parameter is required',
     }),
@@ -43,11 +42,11 @@ export abstract class OffchainDataCommand extends BaseCommand {
 
     const {
       flags: { provider, directory, bucket, privateKey },
-    }: ParserOutput<any, any> = this.parse()
+    } = await this.parse()
 
     const from = privateKeyToAddress(privateKey)
     // @ts-ignore -- TODO: if identity depends on diff version of ck which has a slightly differnt type this complains
-    this.offchainDataWrapper = new BasicDataWrapper(from, this.kit)
+    this.offchainDataWrapper = new BasicDataWrapper(from, await this.getKit())
 
     this.offchainDataWrapper.storageWriter =
       provider === StorageProviders.GCP
