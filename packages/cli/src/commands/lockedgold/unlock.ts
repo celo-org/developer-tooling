@@ -16,7 +16,7 @@ export default class Unlock extends BaseCommand {
     value: Flags.string({ ...LockedGoldArgs.valueArg, required: true }),
   }
 
-  static args = []
+  static args = {}
 
   static examples = ['unlock --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95 --value 500000000']
 

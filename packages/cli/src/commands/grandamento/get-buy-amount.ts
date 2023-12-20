@@ -17,14 +17,11 @@ export default class GetBuyAmount extends BaseCommand {
       required: true,
       description: 'The value of the tokens to exchange',
     }),
-    stableToken: Flags.enum({
-      required: true,
-      options: Object.keys(stableTokenOptions),
+    stableToken: Flags.option({
+      options: Object.keys(stableTokenOptions) as Array<StableToken | Lowercase<StableToken>>,
       description: 'Name of the stable to receive or send',
-      default: 'cUSD',
-    }),
-    sellCelo: Flags.enum({
-      options: ['true', 'false'],
+    })({ required: true, default: 'cusd' }),
+    sellCelo: Flags.boolean({
       required: true,
       description: 'Sell or buy CELO',
     }),
@@ -37,7 +34,7 @@ export default class GetBuyAmount extends BaseCommand {
     const res = await this.parse(GetBuyAmount)
     const sellAmount = res.flags.value
     const stableToken = stableTokenOptions[res.flags.stableToken]
-    const sellCelo = res.flags.sellCelo === 'true'
+    const sellCelo = res.flags.sellCelo
 
     const stableTokenAddress = await kit.celoTokens.getAddress(stableToken)
     const sortedOracles = await kit.contracts.getSortedOracles()

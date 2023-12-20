@@ -1,15 +1,16 @@
 import { Validator } from '@celo/contractkit/lib/wrappers/Validators'
-import { cli } from 'cli-ux'
+import { ux } from '@oclif/core'
+
 import { BaseCommand } from '../../base'
 
-export const validatorTable = {
-  address: {},
-  name: {},
-  affiliation: {},
-  score: { get: (v: Validator) => v.score.toFixed() },
-  ecdsaPublicKey: {},
-  blsPublicKey: {},
-  signer: {},
+export const validatorTable: ux.Table.table.Columns<Record<'v', Validator>> = {
+  address: { get: (row) => row.v.address },
+  name: { get: (row) => row.v.name },
+  affiliation: { get: (row) => row.v.affiliation },
+  score: { get: (row) => row.v.score.toFixed() },
+  ecdsaPublicKey: { get: (row) => row.v.ecdsaPublicKey },
+  blsPublicKey: { get: (row) => row.v.blsPublicKey },
+  signer: { get: (row) => row.v.signer },
 }
 
 export default class ValidatorList extends BaseCommand {
@@ -18,7 +19,7 @@ export default class ValidatorList extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    ...(cli.table.flags() as object),
+    ...(ux.table.flags() as object),
   }
 
   static examples = ['list']
@@ -27,11 +28,15 @@ export default class ValidatorList extends BaseCommand {
     const kit = await this.getKit()
     const res = await this.parse(ValidatorList)
 
-    cli.action.start('Fetching Validators')
+    ux.action.start('Fetching Validators')
     const validators = await kit.contracts.getValidators()
     const validatorList = await validators.getRegisteredValidators()
 
-    cli.action.stop()
-    cli.table(validatorList, validatorTable, res.flags)
+    ux.action.stop()
+    ux.table(
+      validatorList.map((v) => ({ ['v']: v })),
+      validatorTable,
+      res.flags
+    )
   }
 }

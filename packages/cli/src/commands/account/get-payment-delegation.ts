@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js'
-import { cli } from 'cli-ux'
+import { ux } from '@oclif/core'
+
 import { BaseCommand } from '../../base'
 import { CustomFlags } from '../../utils/command'
 
@@ -10,10 +11,10 @@ export default class GetPaymentDelegation extends BaseCommand {
   static flags = {
     ...BaseCommand.flags,
     account: CustomFlags.address({ required: true }),
-    ...(cli.table.flags() as object),
+    ...(ux.table.flags() as object),
   }
 
-  static args = []
+  static args = {}
 
   static examples = ['get-payment-delegation --account 0x5409ed021d9299bf6814279a6a1411a7e866a631']
 

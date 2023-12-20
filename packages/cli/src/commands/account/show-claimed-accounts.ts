@@ -6,7 +6,7 @@ import { ensureLeading0x } from '@celo/utils/lib/address'
 import { notEmpty } from '@celo/utils/lib/collections'
 import { BaseCommand } from '../../base'
 import { printValueMap } from '../../utils/cli'
-import { Args } from '../../utils/command'
+import { CustomArgs } from '../../utils/command'
 
 async function getMetadata(kit: ContractKit, address: string) {
   const accounts = await kit.contracts.getAccounts()
@@ -43,7 +43,9 @@ export default class ShowClaimedAccounts extends BaseCommand {
     ...BaseCommand.flags,
   }
 
-  static args = [Args.address('address')]
+  static args = {
+    arg1: CustomArgs.address('address'),
+  }
 
   static examples = ['show-claimed-accounts 0x5409ed021d9299bf6814279a6a1411a7e866a631']
 
@@ -51,9 +53,9 @@ export default class ShowClaimedAccounts extends BaseCommand {
     const kit = await this.getKit()
     const { args } = await this.parse(ShowClaimedAccounts)
 
-    const metadata = await getMetadata(kit, args.address)
+    const metadata = await getMetadata(kit, args.arg1 as string)
 
-    const claimedAccounts = await getClaims(kit, args.address, metadata)
+    const claimedAccounts = await getClaims(kit, args.arg1 as string, metadata)
 
     console.log('All balances expressed in units of 10^-18.')
     for (const address of claimedAccounts) {

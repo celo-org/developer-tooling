@@ -1,6 +1,7 @@
 {
   "extends": "@celo/typescript/tsconfig.library.json",
   "compilerOptions": {
+    "resolveJsonModule": true,
     "moduleResolution": "node16",
     "declarationMap": true,
     "module": "Node16",
@@ -9,5 +10,5 @@
     "esModuleInterop": true,
     "target": "es2020"
   },
-  "include": ["src"],
+  "include": ["src", "src/commands/dkg/DKG.json"],
 }

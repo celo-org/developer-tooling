@@ -19,11 +19,11 @@ export default class DKGGet extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    method: Flags.enum({
+    method: Flags.option({
       options: DKGGet.options,
       required: true,
       description: 'Getter method to call',
-    }),
+    })(),
     address: CustomFlags.address({ required: true, description: 'DKG Contract Address' }),
   }
 

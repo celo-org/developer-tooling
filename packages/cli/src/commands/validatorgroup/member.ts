@@ -3,7 +3,7 @@ import prompts from 'prompts'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { Args, CustomFlags } from '../../utils/command'
+import { CustomArgs, CustomFlags } from '../../utils/command'
 
 export default class ValidatorGroupMembers extends BaseCommand {
   static description = 'Add or remove members from a Validator Group'
@@ -26,7 +26,9 @@ export default class ValidatorGroupMembers extends BaseCommand {
     }),
   }
 
-  static args = [Args.address('validatorAddress', { description: "Validator's address" })]
+  static args = {
+    arg1: CustomArgs.address('validatorAddress', { description: "Validator's address" }),
+  }
 
   static examples = [
     'member --from 0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95 --accept 0x97f7333c51897469e8d98e7af8653aab468050a3',
@@ -37,7 +39,7 @@ export default class ValidatorGroupMembers extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(ValidatorGroupMembers)
-
+    const validatorAddress = res.args.arg1 as string
     if (!(res.flags.accept || res.flags.remove || typeof res.flags.reorder === 'number')) {
       this.error(`Specify action: --accept, --remove or --reorder`)
       return
@@ -49,7 +51,7 @@ export default class ValidatorGroupMembers extends BaseCommand {
       .isSignerOrAccount()
       .canSignValidatorTxs()
       .signerAccountIsValidatorGroup()
-      .isValidator(res.args.validatorAddress)
+      .isValidator(validatorAddress)
       .runChecks()
 
     const validatorGroup = await validators.signerToAccount(res.flags.from)
@@ -67,14 +69,14 @@ export default class ValidatorGroupMembers extends BaseCommand {
           process.exit(0)
         }
       }
-      const tx = await validators.addMember(validatorGroup, res.args.validatorAddress)
+      const tx = await validators.addMember(validatorGroup, validatorAddress)
       await displaySendTx('addMember', tx)
     } else if (res.flags.remove) {
-      await displaySendTx('removeMember', validators.removeMember(res.args.validatorAddress))
+      await displaySendTx('removeMember', validators.removeMember(validatorAddress))
     } else if (res.flags.reorder != null) {
       await displaySendTx(
         'reorderMember',
-        await validators.reorderMember(validatorGroup, res.args.validatorAddress, res.flags.reorder)
+        await validators.reorderMember(validatorGroup, validatorAddress, res.flags.reorder)
       )
     }
   }

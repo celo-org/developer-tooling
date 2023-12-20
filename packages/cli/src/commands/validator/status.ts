@@ -3,7 +3,8 @@ import { eqAddress } from '@celo/utils/lib/address'
 import { concurrentMap } from '@celo/utils/lib/async'
 import { bitIsSet, parseBlockExtraData } from '@celo/utils/lib/istanbul'
 import { Flags } from '@oclif/core'
-import { cli } from 'cli-ux'
+import { ux } from '@oclif/core'
+
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { CustomFlags } from '../../utils/command'
@@ -25,8 +26,8 @@ export const statusTable = {
   elected: {},
   frontRunner: {},
   signatures: {
-    get: (v: ValidatorStatusEntry) =>
-      isNaN(v.signatures) ? '' : (v.signatures * 100).toFixed(2) + '%',
+    get: (vs: { status: ValidatorStatusEntry }) =>
+      isNaN(vs.status.signatures) ? '' : (vs.status.signatures * 100).toFixed(2) + '%',
   },
 }
 
@@ -58,7 +59,7 @@ export default class ValidatorStatus extends BaseCommand {
         'what block to end at when looking at signer activity. defaults to the latest block',
       default: -1,
     }),
-    ...(cli.table.flags() as object),
+    ...(ux.table.flags() as object),
   }
 
   static examples = [
@@ -103,13 +104,13 @@ export default class ValidatorStatus extends BaseCommand {
     const epochSize = (await validators.getEpochSize()).toNumber()
     const electionCache = new ElectionResultsCache(election, epochSize)
     let frontRunnerSigners: string[] = []
-    cli.action.start(`Running mock election`)
+    ux.action.start(`Running mock election`)
     try {
       frontRunnerSigners = await election.electValidatorSigners()
     } catch (err) {
       console.warn('Warning: Elections not available')
     }
-    cli.action.stop()
+    ux.action.stop()
     const signatureCounts = await this.getSignatureCounts(startBlock, endBlock, electionCache)
     const electedCounts = await this.getElectedCounts(
       startBlock,
@@ -117,13 +118,17 @@ export default class ValidatorStatus extends BaseCommand {
       electionCache,
       epochSize
     )
-    cli.action.start(`Fetching validator information`)
+    ux.action.start(`Fetching validator information`)
     const validatorStatuses = await concurrentMap(10, signers, (s) =>
       this.getStatus(s, signatureCounts, electedCounts, electionCache, frontRunnerSigners)
     )
-    cli.action.stop()
+    ux.action.stop()
 
-    cli.table(validatorStatuses, statusTable, res.flags)
+    ux.table(
+      validatorStatuses.map((vs) => ({ status: vs })),
+      statusTable,
+      res.flags
+    )
   }
 
   private async getSignatureCounts(
@@ -131,7 +136,7 @@ export default class ValidatorStatus extends BaseCommand {
     end: number,
     electionCache: ElectionResultsCache
   ): Promise<Map<Address, any>> {
-    const bar = cli.progress({
+    const bar = ux.progress({
       format: 'counting block signatures [{bar}] {percentage}% | ETA: {eta}s | {value}/{total}',
     })
     bar.start(end - start)

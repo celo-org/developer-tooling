@@ -9,10 +9,10 @@ export default class TransferStable extends TransferStableBase {
 
   static flags = {
     ...TransferStableBase.flags,
-    stableToken: Flags.enum({
+    stableToken: Flags.option({
       options: Object.keys(stableTokenOptions) as Array<StableToken | Lowercase<StableToken>>,
       description: 'Name of the stable to be transfered',
-    }),
+    })(),
   }
 
   static examples = [

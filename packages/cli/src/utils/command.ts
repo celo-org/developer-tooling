@@ -1,10 +1,11 @@
 import { URL_REGEX } from '@celo/base/lib/io'
 import { CeloContract, RegisteredContracts } from '@celo/contractkit'
+import { Interval } from '@celo/contractkit/lib/wrappers/DowntimeSlasher'
 import { BLS_POP_SIZE, BLS_PUBLIC_KEY_SIZE } from '@celo/cryptographic-utils/lib/bls'
 import { isE164NumberStrict } from '@celo/phone-utils/lib/phoneNumbers'
 import { ensureLeading0x, trimLeading0x } from '@celo/utils/lib/address'
 import { POP_SIZE } from '@celo/utils/lib/signatureUtils'
-import { Errors, Flags } from '@oclif/core'
+import { Args, Errors, Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { pathExistsSync } from 'fs-extra'
 import Web3 from 'web3'
@@ -64,7 +65,7 @@ const parseWei: ParseFn<BigNumber> = async (input) => {
   }
 }
 
-export const parsePath: ParseFn<string> = async (input) => {
+export const parsePath: ParseFn<string> = async (input: string) => {
   if (pathExistsSync(input)) {
     return input
   } else {
@@ -130,20 +131,20 @@ export const parseIntRange = (input: string) => {
   return { start, end }
 }
 
-type Omit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>>
-type ArgBuilder<T> = (name: string, args?: Partial<Omit<IArg<T>, 'name' | 'parse'>>) => IArg<T>
-export function argBuilder<T>(parser: ParseFn<T>): ArgBuilder<T> {
-  return (name, args) => ({
-    name,
-    ...args,
-    required: true,
-    parse: parser,
-  })
+export function argBuilder<T>(parser: ParseFn<T>) {
+  return (name: string, args?: Parameters<typeof Args.custom>[0]) =>
+    Args.custom({
+      name,
+      ...args,
+      required: true,
+      parse: parser,
+    })()
 }
+const parseIntervalArray = async (s: string) => s.split(',').map((r) => parseIntRange(r.trim()))
 
 export const CustomFlags = {
-  intRangeArray: Flags.custom({
-    parse: async (s) => s.split(',').map((r) => parseIntRange(r.trim())),
+  intRangeArray: Flags.custom<Interval[]>({
+    parse: parseIntervalArray,
     helpValue: "'[0:1], [1:2]'",
   }),
   addressArray: Flags.custom({
@@ -203,9 +204,9 @@ export const CustomFlags = {
   }),
 }
 
-export const Args = {
+export const CustomArgs = {
   address: argBuilder(parseAddress),
   file: argBuilder(parsePath),
   // TODO: Check that the file path is possible
-  newFile: argBuilder((x) => x),
+  newFile: argBuilder<string>((x) => x),
 }

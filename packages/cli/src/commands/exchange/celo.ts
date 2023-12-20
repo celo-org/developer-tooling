@@ -28,14 +28,14 @@ export default class ExchangeCelo extends BaseCommand {
       description: 'Optional, the minimum value of StableTokens to receive in return',
       default: new BigNumber(0),
     }),
-    stableToken: Flags.enum({
-      options: Object.keys(stableTokenOptions),
+    stableToken: Flags.option({
+      options: Object.keys(stableTokenOptions) as Array<StableToken | Lowercase<StableToken>>,
       description: 'Name of the stable to receive',
-      default: 'cUSD',
-    }),
+      default: 'cusd',
+    })(),
   }
 
-  static args = []
+  static args = {}
 
   static examples = [
     'celo --value 5000000000000 --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d',

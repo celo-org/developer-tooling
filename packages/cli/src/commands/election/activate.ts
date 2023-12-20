@@ -1,6 +1,7 @@
 import { sleep } from '@celo/utils/lib/async'
 import { Flags } from '@oclif/core'
-import { cli } from 'cli-ux'
+import { ux } from '@oclif/core'
+
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
@@ -33,11 +34,11 @@ export default class ElectionVote extends BaseCommand {
     if (hasPendingVotes) {
       if (res.flags.wait) {
         // Spin until pending votes become activatable.
-        cli.action.start(`Waiting until pending votes can be activated`)
+        ux.action.start(`Waiting until pending votes can be activated`)
         while (!(await election.hasActivatablePendingVotes(account))) {
           await sleep(1000)
         }
-        cli.action.stop()
+        ux.action.stop()
       }
       const txos = await election.activate(account)
       for (const txo of txos) {

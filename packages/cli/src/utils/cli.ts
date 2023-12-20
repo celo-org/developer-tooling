@@ -3,9 +3,7 @@ import { Errors } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import chalk from 'chalk'
 import Table from 'cli-table'
-import { CliUx } from '@oclif/core'
-
-const ux = CliUx.ux
+import { ux } from '@oclif/core'
 
 const CLIError = Errors.CLIError
 

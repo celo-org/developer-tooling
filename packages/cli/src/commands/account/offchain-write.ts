@@ -3,7 +3,6 @@ import { privateKeyToAddress } from '@celo/utils/lib/address'
 import { binaryPrompt } from '../../utils/cli'
 import { OffchainDataCommand } from '../../utils/off-chain-data'
 import { Flags } from '@oclif/core'
-// @ts-expect-error privateKey is required here but not for parent and that is causing a type error
 export default class OffchainWrite extends OffchainDataCommand {
   static description = 'DEV: Writes a name to offchain storage'
 
@@ -17,7 +16,7 @@ export default class OffchainWrite extends OffchainDataCommand {
     encryptTo: Flags.string({ dependsOn: ['privateKey', 'privateDEK'] }),
   }
 
-  static args = []
+  static args = {}
 
   static examples = [
     'offchain-write --name test-account --privateKey 0x...',

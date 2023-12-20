@@ -11,17 +11,17 @@ export default class SetCanExpire extends ReleaseGoldBaseCommand {
 
   static flags = {
     ...ReleaseGoldBaseCommand.flags,
-    value: Flags.enum({
+    value: Flags.option({
       options: SetCanExpire.expireOptions,
       required: true,
       description: 'canExpire value',
-    }),
+    })(),
     yesreally: Flags.boolean({
       description: 'Override prompt to set expiration flag (be careful!)',
     }),
   }
 
-  static args = []
+  static args = {}
 
   static examples = [
     'set-can-expire --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631 --value true',

@@ -15,7 +15,7 @@ export default class UpdateDelegatedAmount extends BaseCommand {
     to: Flags.string({ ...CustomFlags.address, required: true }),
   }
 
-  static args = []
+  static args = {}
 
   static examples = [
     'update-delegated-amount --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95 --to 0xc0ffee254729296a45a3885639AC7E10F9d54979',

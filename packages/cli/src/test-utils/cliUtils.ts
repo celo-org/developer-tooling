@@ -1,8 +1,9 @@
 import { Interfaces } from '@oclif/core'
-import { BaseCommand } from '../base'
+
+type Runner = { run: (argv: string[], config?: Interfaces.LoadOptions) => Promise<any> }
 
 export async function testLocally(
-  command: typeof BaseCommand,
+  command: Runner,
   argv: string[],
   config?: Interfaces.LoadOptions
 ) {

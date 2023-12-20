@@ -1,6 +1,7 @@
 import { IdentityMetadataWrapper } from '@celo/contractkit'
 import { Flags } from '@oclif/core'
-import { cli } from 'cli-ux'
+import { ux } from '@oclif/core'
+
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
@@ -23,7 +24,7 @@ export default class RegisterMetadata extends BaseCommand {
     }),
     force: Flags.boolean({ description: 'Ignore metadata validity checks' }),
 
-    ...(cli.table.flags() as object),
+    ...(ux.table.flags() as object),
   }
 
   static examples = [

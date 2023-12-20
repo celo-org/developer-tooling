@@ -1,7 +1,8 @@
 import { IdentityMetadataWrapper } from '@celo/contractkit'
-import { cli } from 'cli-ux'
+import { ux } from '@oclif/core'
+
 import { BaseCommand } from '../../base'
-import { Args } from '../../utils/command'
+import { CustomArgs } from '../../utils/command'
 import { displayMetadata } from '../../utils/identity'
 
 export default class GetMetadata extends BaseCommand {
@@ -10,17 +11,19 @@ export default class GetMetadata extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    ...(cli.table.flags() as object),
+    ...(ux.table.flags() as object),
   }
 
-  static args = [Args.address('address', { description: 'Address to get metadata for' })]
+  static args = {
+    arg1: CustomArgs.address('address', { description: 'Address to get metadata for' }),
+  }
 
   static examples = ['get-metadata 0x97f7333c51897469E8D98E7af8653aAb468050a3']
 
   async run() {
     const kit = await this.getKit()
     const { args, flags } = await this.parse(GetMetadata)
-    const address = args.address
+    const address = args.arg1 as string
     const accounts = await kit.contracts.getAccounts()
     const metadataURL = await accounts.getMetadataURL(address)
 

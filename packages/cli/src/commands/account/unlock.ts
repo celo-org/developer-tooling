@@ -1,15 +1,15 @@
-import { CliUx, Flags } from '@oclif/core'
+import { ux, Flags } from '@oclif/core'
 
 import { BaseCommand } from '../../base'
-import { Args } from '../../utils/command'
+import { CustomArgs } from '../../utils/command'
 
-const { ux } = CliUx
 export default class Unlock extends BaseCommand {
   static description = 'Unlock an account address to send transactions or validate blocks'
 
   static flags = {
     ...BaseCommand.flags,
     password: Flags.string({
+      noCacheDefault: true,
       required: false,
       description:
         'Password used to unlock the account. If not specified, you will be prompted for a password.',
@@ -22,7 +22,9 @@ export default class Unlock extends BaseCommand {
     }),
   }
 
-  static args = [Args.address('account', { description: 'Account address' })]
+  static args = {
+    arg1: CustomArgs.address('account', { description: 'Account address' }),
+  }
 
   static examples = [
     'unlock 0x5409ed021d9299bf6814279a6a1411a7e866a631',
@@ -37,9 +39,10 @@ export default class Unlock extends BaseCommand {
     if (res.flags.useLedger) {
       console.warn('Warning: account:unlock not implemented for Ledger')
     }
+    const account = res.args.arg1 as string
 
     const password =
       res.flags.password || (await ux.prompt('Password', { type: 'hide', required: false }))
-    await web3.eth.personal.unlockAccount(res.args.account, password, res.flags.duration)
+    await web3.eth.personal.unlockAccount(account, password, res.flags.duration)
   }
 }

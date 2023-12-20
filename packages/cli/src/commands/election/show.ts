@@ -2,7 +2,7 @@ import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { printValueMapRecursive } from '../../utils/cli'
-import { Args } from '../../utils/command'
+import { CustomArgs } from '../../utils/command'
 
 export default class ElectionShow extends BaseCommand {
   static description = 'Show election information about a voter or registered Validator Group'
@@ -19,7 +19,9 @@ export default class ElectionShow extends BaseCommand {
     }),
   }
 
-  static args = [Args.address('address', { description: "Voter or Validator Groups's address" })]
+  static args = {
+    arg1: CustomArgs.address('address', { description: "Voter or Validator Groups's address" }),
+  }
 
   static examples = [
     'show 0x97f7333c51897469E8D98E7af8653aAb468050a3 --voter',
@@ -29,7 +31,7 @@ export default class ElectionShow extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(ElectionShow)
-    const address = res.args.address
+    const address = res.args.arg1 as string
     const election = await kit.contracts.getElection()
 
     if (res.flags.group) {

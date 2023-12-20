@@ -1,5 +1,5 @@
 import { CeloContract } from '@celo/contractkit'
-import { Flags } from '@oclif/core'
+import { Args, Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { BaseCommand } from '../../base'
 import { displaySendTx, failWith } from '../../utils/cli'
@@ -8,14 +8,14 @@ import { CustomFlags } from '../../utils/command'
 export default class ReportPrice extends BaseCommand {
   static description = 'Report the price of CELO in a specified token'
 
-  static args = [
-    {
+  static args = {
+    arg1: Args.string({
       name: 'token',
       required: true,
       default: CeloContract.StableToken,
       description: 'Token to report on',
-    },
-  ]
+    }),
+  }
   static flags = {
     ...BaseCommand.flags,
     from: CustomFlags.address({ required: true, description: 'Address of the oracle account' }),
@@ -39,8 +39,10 @@ export default class ReportPrice extends BaseCommand {
 
     await displaySendTx(
       'sortedOracles.report',
-      await sortedOracles.report(res.args.token, value, res.flags.from).catch((e) => failWith(e))
+      await sortedOracles
+        .report(res.args.arg1 as string, value, res.flags.from)
+        .catch((e) => failWith(e))
     )
-    this.log(`Reported oracle value: ${value.toString()} ${res.args.token} == 1 CELO`)
+    this.log(`Reported oracle value: ${value.toString()} ${res.args.arg1} == 1 CELO`)
   }
 }

@@ -1,10 +1,11 @@
 import { eqAddress } from '@celo/utils/lib/address'
 import { Flags } from '@oclif/core'
-import { cli } from 'cli-ux'
+import { ux } from '@oclif/core'
+
 import { BaseCommand } from '../../base'
 import { validatorTable } from '../validator/list'
 
-export const otherValidatorTable = {
+export const otherValidatorTable: ux.Table.table.Columns<{ address: string }> = {
   address: {},
   name: {},
   currentSigner: {},
@@ -21,13 +22,13 @@ export default class ElectionCurrent extends BaseCommand {
       description:
         'Show currently used signers from valset (by default the authorized validator signers are shown). Useful for checking if keys have been rotated.',
     }),
-    ...(cli.table.flags() as object),
+    ...(ux.table.flags() as object),
   }
 
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(ElectionCurrent)
-    cli.action.start('Fetching currently elected Validators')
+    ux.action.start('Fetching currently elected Validators')
     const election = await kit.contracts.getElection()
     const validators = await kit.contracts.getValidators()
     const signers = await election.getCurrentValidatorSigners()
@@ -35,17 +36,25 @@ export default class ElectionCurrent extends BaseCommand {
       const validatorList = await Promise.all(
         signers.map(async (addr) => {
           const v = await validators.getValidatorFromSigner(addr)
-          return { ...v, currentSigner: addr, changed: eqAddress(addr, v.signer) ? '' : 'CHANGING' }
+          return {
+            ...v,
+            currentSigner: addr,
+            changed: eqAddress(addr, v.signer) ? 'no' : 'CHANGING',
+          }
         })
       )
-      cli.action.stop()
-      cli.table(validatorList, otherValidatorTable, res.flags)
+      ux.action.stop()
+      ux.table(validatorList, otherValidatorTable, res.flags)
     } else {
       const validatorList = await Promise.all(
         signers.map((addr) => validators.getValidatorFromSigner(addr))
       )
-      cli.action.stop()
-      cli.table(validatorList, validatorTable, res.flags)
+      ux.action.stop()
+      ux.table(
+        validatorList.map((v) => ({ v })),
+        validatorTable,
+        res.flags
+      )
     }
   }
 }

@@ -15,7 +15,7 @@ export default class Withdraw extends ReleaseGoldBaseCommand {
     }),
   }
 
-  static args = []
+  static args = {}
 
   static examples = [
     'withdraw --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631 --value 10000000000000000000000',

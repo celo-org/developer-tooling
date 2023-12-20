@@ -18,7 +18,7 @@ export default class TransferDollars extends ReleaseGoldBaseCommand {
     }),
   }
 
-  static args = []
+  static args = {}
 
   static examples = [
     'transfer-dollars --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631 --to 0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb --value 10000000000000000000000',

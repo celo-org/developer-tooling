@@ -1,4 +1,5 @@
-import { cli } from 'cli-ux'
+import { ux } from '@oclif/core'
+
 import { BaseCommand } from '../../base'
 import { displaySendTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
@@ -41,8 +42,8 @@ export default class AttestationRewardsWithdraw extends BaseCommand {
       return
     }
 
-    cli.action.start(`Withdrawing ${pendingWithdrawals.toString()} rewards to ${accountAddress}`)
+    ux.action.start(`Withdrawing ${pendingWithdrawals.toString()} rewards to ${accountAddress}`)
     await displaySendTx('withdraw', attestations.withdraw(tokenAddress), { from: flags.from })
-    cli.action.stop()
+    ux.action.stop()
   }
 }

@@ -14,7 +14,7 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
     yesreally: Flags.boolean({ description: 'Override interactive prompt to confirm revocation' }),
   }
 
-  static args = []
+  static args = {}
 
   static examples = ['admin-revoke --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631']
 

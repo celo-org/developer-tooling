@@ -1,7 +1,7 @@
 import { Provider } from '@celo/connect/lib/types'
 import { stopProvider } from '@celo/connect/lib/utils/provider-utils'
 import { concurrentMap } from '@celo/utils/lib/async'
-import { CliUx, Flags } from '@oclif/core'
+import { ux, Flags } from '@oclif/core'
 import chalk from 'chalk'
 import { BaseCommand } from '../../base'
 import { CustomFlags } from '../../utils/command'
@@ -132,7 +132,7 @@ export default class ValidatorSignedBlocks extends BaseCommand {
           try {
             let response: string
             do {
-              response = await CliUx.ux.prompt('', { prompt: '', type: 'single', required: false })
+              response = await ux.prompt('', { prompt: '', type: 'single', required: false })
             } while (response !== 'q' && response !== '\u0003' /* ctrl-c */)
           } finally {
             await subscription.unsubscribe()

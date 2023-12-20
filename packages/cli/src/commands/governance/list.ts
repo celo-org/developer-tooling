@@ -2,7 +2,8 @@ import { valueToString } from '@celo/contractkit/lib/wrappers/BaseWrapper'
 import { concurrentMap } from '@celo/utils/lib/async'
 import { zip } from '@celo/utils/lib/collections'
 import chalk from 'chalk'
-import { cli } from 'cli-ux'
+import { ux } from '@oclif/core'
+
 import { BaseCommand } from '../../base'
 
 export default class List extends BaseCommand {
@@ -10,7 +11,7 @@ export default class List extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    ...(cli.table.flags() as object),
+    ...(ux.table.flags() as object),
   }
 
   static examples = ['list']
@@ -28,10 +29,13 @@ export default class List extends BaseCommand {
     const sortedQueue = governance.sortedQueue(unexpiredQueue)
 
     console.log(chalk.magenta.bold('Queued Proposals:'))
-    cli.table(
+    ux.table(
+      // @ts-expect-error
       sortedQueue,
       {
+        // @ts-expect-error
         ID: { get: (p) => valueToString(p.proposalID) },
+        // @ts-expect-error
         upvotes: { get: (p) => valueToString(p.upvotes) },
       },
       res.flags
@@ -44,7 +48,7 @@ export default class List extends BaseCommand {
     const proposals = zip((proposalID, stage) => ({ proposalID, stage }), unexpiredDequeue, stages)
 
     console.log(chalk.blue.bold('Dequeued Proposals:'))
-    cli.table(
+    ux.table(
       proposals,
       {
         ID: { get: (p) => valueToString(p.proposalID) },
@@ -60,9 +64,11 @@ export default class List extends BaseCommand {
     const expiredDequeue = dequeue
       .filter((_, idx) => expiredDequeueMap[idx])
       .map((_, idx) => dequeue[idx])
-    cli.table(
+    ux.table(
+      // @ts-expect-error
       expiredQueue.concat(expiredDequeue),
       {
+        // @ts-expect-error
         ID: { get: (id) => valueToString(id) },
       },
       res.flags

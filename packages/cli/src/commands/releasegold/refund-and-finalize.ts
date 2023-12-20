@@ -10,7 +10,7 @@ export default class RefundAndFinalize extends ReleaseGoldBaseCommand {
     ...ReleaseGoldBaseCommand.flags,
   }
 
-  static args = []
+  static args = {}
 
   static examples = ['refund-and-finalize --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631']
 

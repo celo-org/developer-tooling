@@ -13,7 +13,6 @@ import NewAccount from './new'
  * @deprecated
  */
 // TODO: This command should be prune in the future after all accounts had been migrated
-// @ts-expect-error mnemonicPath is required here but not for sub and that is causing a type error
 export default class RecoverOld extends NewAccount {
   static description =
     'Recovers the Valora old account and print out the key information. The old Valora app (in a beta state) generated the user address using a seed of 32 bytes, instead of 64 bytes. As the app fixed that, some old accounts were left with some funds. This command allows the user to recover those funds.'

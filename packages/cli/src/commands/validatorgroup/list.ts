@@ -1,4 +1,5 @@
-import { cli } from 'cli-ux'
+import { ux } from '@oclif/core'
+
 import { BaseCommand } from '../../base'
 
 export default class ValidatorGroupList extends BaseCommand {
@@ -7,7 +8,7 @@ export default class ValidatorGroupList extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    ...(cli.table.flags() as object),
+    ...(ux.table.flags() as object),
   }
 
   static examples = ['list']
@@ -16,18 +17,18 @@ export default class ValidatorGroupList extends BaseCommand {
     const kit = await this.getKit()
     const res = await this.parse(ValidatorGroupList)
 
-    cli.action.start('Fetching Validator Groups')
+    ux.action.start('Fetching Validator Groups')
     const validators = await kit.contracts.getValidators()
     const vgroups = await validators.getRegisteredValidatorGroups()
-    cli.action.stop()
+    ux.action.stop()
 
-    cli.table(
-      vgroups,
+    ux.table(
+      vgroups.map((vg) => ({ group: vg })),
       {
         address: {},
         name: {},
-        commission: { get: (r) => r.commission.toFixed() },
-        members: { get: (r) => r.members.length },
+        commission: { get: (r) => r.group.commission.toFixed() },
+        members: { get: (r) => r.group.members.length },
       },
       res.flags
     )

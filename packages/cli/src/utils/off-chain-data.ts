@@ -24,10 +24,10 @@ export abstract class OffchainDataCommand extends BaseCommand {
       default: async () => '.',
       description: 'To which directory data should be written',
     }),
-    provider: Flags.enum({
+    provider: Flags.option({
       options: ['git', 'aws', 'gcp'],
       description: 'If the CLI should attempt to push to the cloud',
-    }),
+    })(),
     bucket: Flags.string({
       dependsOn: ['provider'],
       description: 'If using a GCP or AWS storage bucket this parameter is required',

@@ -12,7 +12,7 @@ export default class SetLiquidityProvision extends ReleaseGoldBaseCommand {
     yesreally: Flags.boolean({ description: 'Override prompt to set liquidity (be careful!)' }),
   }
 
-  static args = []
+  static args = {}
 
   static examples = [
     'set-liquidity-provision --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631',

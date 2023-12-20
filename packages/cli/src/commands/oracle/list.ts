@@ -1,6 +1,7 @@
 import { CeloContract } from '@celo/contractkit'
 import { BaseCommand } from '../../base'
 import { failWith } from '../../utils/cli'
+import { Args } from '@oclif/core'
 
 export default class List extends BaseCommand {
   static description = 'List oracle addresses for a given token'
@@ -9,14 +10,14 @@ export default class List extends BaseCommand {
     ...BaseCommand.flags,
   }
 
-  static args = [
-    {
+  static args = {
+    arg1: Args.string({
       name: 'token',
       required: true,
       description: 'Token to list the oracles for',
       default: CeloContract.StableToken,
-    },
-  ]
+    }),
+  }
 
   static example = ['list StableToken', 'list', 'list StableTokenEUR']
 
@@ -25,7 +26,7 @@ export default class List extends BaseCommand {
     const res = await this.parse(List)
     const sortedOracles = await kit.contracts.getSortedOracles()
 
-    const oracles = await sortedOracles.getOracles(res.args.token).catch((e) => failWith(e))
+    const oracles = await sortedOracles.getOracles(res.args.arg1).catch((e) => failWith(e))
     console.log(oracles)
   }
 }

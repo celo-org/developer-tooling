@@ -11,7 +11,7 @@ export default class DeletePaymentDelegation extends BaseCommand {
     account: CustomFlags.address({ required: true }),
   }
 
-  static args = []
+  static args = {}
 
   static examples = [
     'delete-payment-delegation --account 0x5409ED021D9299bf6814279A6A1411A7e866A631',

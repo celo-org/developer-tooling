@@ -9,10 +9,10 @@ export default class ExchangeStable extends ExchangeStableBase {
 
   static flags = {
     ...ExchangeStableBase.flags,
-    stableToken: Flags.enum({
-      options: Object.keys(stableTokenOptions) as StableToken[],
+    stableToken: Flags.option({
+      options: Object.keys(stableTokenOptions) as Array<StableToken | Lowercase<StableToken>>,
       description: 'Name of the stable token to be transfered',
-    }),
+    })(),
   }
 
   static examples = [

@@ -1,5 +1,5 @@
 import { Address } from '@celo/connect'
-import { toFixed } from '@celo/utils/src/fixidity'
+import { toFixed } from '@celo/utils/lib/fixidity'
 import { Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { BaseCommand } from '../../base'
@@ -22,7 +22,7 @@ export default class RevokeDelegate extends BaseCommand {
     }),
   }
 
-  static args = []
+  static args = {}
 
   static examples = [
     'revoke-delegate --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95 --to 0xc0ffee254729296a45a3885639AC7E10F9d54979 --percent 100',

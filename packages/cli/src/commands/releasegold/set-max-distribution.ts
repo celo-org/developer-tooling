@@ -18,7 +18,7 @@ export default class SetMaxDistribution extends ReleaseGoldBaseCommand {
     }),
   }
 
-  static args = []
+  static args = {}
 
   static examples = [
     'set-max-distribution --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631 --distributionRatio 1000',

@@ -8,7 +8,8 @@ import {
 } from '@celo/contractkit/lib/identity/claims/keybase'
 import { sleep } from '@celo/utils/lib/async'
 import { toChecksumAddress } from '@ethereumjs/util'
-import { cli } from 'cli-ux'
+import { ux } from '@oclif/core'
+
 import { writeFileSync } from 'fs'
 import { tmpdir } from 'os'
 import { binaryPrompt } from '../../utils/cli'
@@ -56,7 +57,7 @@ export default class ClaimKeybase extends ClaimCommand {
   ) {
     const signedClaim = { claim, signature }
     try {
-      cli.action.start(`Attempting to automate keybase proof`)
+      ux.action.start(`Attempting to automate keybase proof`)
       const publicFolderPrefix = `/keybase/public/${username}/`
       await this.ensureKeybaseFilePathToProof(publicFolderPrefix)
       const fileName = proofFileName(address)
@@ -67,9 +68,9 @@ export default class ClaimKeybase extends ClaimCommand {
         ['fs', 'cp', tmpPath, publicFolderPrefix + keybaseFilePathToProof + '/' + fileName],
         { silent: true }
       )
-      cli.action.stop()
+      ux.action.stop()
 
-      cli.action.start(`Claim successfully copied to the keybase file system, verifying proof`)
+      ux.action.start(`Claim successfully copied to the keybase file system, verifying proof`)
       // Wait for changes to propagate
       await sleep(3000)
       const kit = await this.getKit()
@@ -77,10 +78,10 @@ export default class ClaimKeybase extends ClaimCommand {
       if (verificationError) {
         throw new Error(`Claim is not verifiable: ${verificationError}`)
       }
-      cli.action.stop()
+      ux.action.stop()
       console.info('Claim is verifiable!')
     } catch (error) {
-      cli.action.stop(`Error: ${error}`)
+      ux.action.stop(`Error: ${error}`)
       throw error
     }
   }
@@ -97,7 +98,7 @@ export default class ClaimKeybase extends ClaimCommand {
         this.printManualInstruction(claim, signature, username, address)
       }
     } catch (error) {
-      cli.action.stop('Error')
+      ux.action.stop('Error')
       console.error(
         'Could not automatically finish the proving, please complete this step manually.\n\n ' +
           error

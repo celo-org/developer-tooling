@@ -47,12 +47,12 @@ export abstract class BaseCommand extends Command {
         }
       },
     }),
-    gasCurrency: Flags.enum({
+    gasCurrency: Flags.option({
       options: Object.keys(gasOptions),
       description:
         "Use a specific gas currency for transaction fees (defaults to 'auto' which uses whatever feeCurrency is available)",
       hidden: true,
-    }),
+    })(),
     useLedger: Flags.boolean({
       default: false,
       hidden: true,
@@ -153,7 +153,11 @@ export abstract class BaseCommand extends Command {
     if (res.flags.useLedger) {
       let transport
       try {
-        const TransportNodeHid = (await import('@ledgerhq/hw-transport-node-hid')).default
+        // Importing for ledger uses only fixes running jest tests
+        const _TransportNodeHid = (await import('@ledgerhq/hw-transport-node-hid')).default
+        // types seem to be suggesting 2 defaults but js is otherwise for TransportNodeHid
+        const TransportNodeHid: typeof _TransportNodeHid.default =
+          _TransportNodeHid.default || _TransportNodeHid
         transport = await TransportNodeHid.open('')
         const derivationPathIndexes = res.raw.some(
           (value) => (value as any).flag === 'ledgerCustomAddresses'

@@ -1,7 +1,7 @@
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { printValueMap } from '../../utils/cli'
-import { Args } from '../../utils/command'
+import { CustomArgs } from '../../utils/command'
 
 export default class ValidatorGroupShow extends BaseCommand {
   static description = 'Show information about an existing Validator Group'
@@ -10,7 +10,9 @@ export default class ValidatorGroupShow extends BaseCommand {
     ...BaseCommand.flags,
   }
 
-  static args = [Args.address('groupAddress', { description: "ValidatorGroup's address" })]
+  static args = {
+    arg1: CustomArgs.address('groupAddress', { description: "ValidatorGroup's address" }),
+  }
 
   static examples = ['show 0x97f7333c51897469E8D98E7af8653aAb468050a3']
 
@@ -18,10 +20,10 @@ export default class ValidatorGroupShow extends BaseCommand {
     const kit = await this.getKit()
     const res = await this.parse(ValidatorGroupShow)
     const validators = await kit.contracts.getValidators()
+    const groupAddress = res.args.arg1 as string
+    await newCheckBuilder(this).isValidatorGroup(groupAddress).runChecks()
 
-    await newCheckBuilder(this).isValidatorGroup(res.args.groupAddress).runChecks()
-
-    const validatorGroup = await validators.getValidatorGroup(res.args.groupAddress)
+    const validatorGroup = await validators.getValidatorGroup(groupAddress)
     printValueMap(validatorGroup)
   }
 }

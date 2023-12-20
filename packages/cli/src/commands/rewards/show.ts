@@ -5,7 +5,7 @@ import { Validator, ValidatorReward } from '@celo/contractkit/lib/wrappers/Valid
 import { eqAddress } from '@celo/utils/lib/address'
 import { Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
-import { cli } from 'cli-ux'
+import { ux } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { CustomFlags } from '../../utils/command'
@@ -33,10 +33,10 @@ export default class Show extends BaseCommand {
       default: 1,
       description: 'Show results for the last N epochs',
     }),
-    ...(cli.table.flags() as object),
+    ...(ux.table.flags() as object),
   }
 
-  static args = []
+  static args = {}
 
   static examples = ['show --address 0x5409ed021d9299bf6814279a6a1411a7e866a631']
 
@@ -72,7 +72,7 @@ export default class Show extends BaseCommand {
     let validatorGroupRewards: ValidatorReward[] = []
     let accountsSlashed: AccountSlashed[] = []
 
-    cli.action.start(`Calculating rewards`)
+    ux.action.start(`Calculating rewards`)
     // Accumulate the rewards from each epoch
     for (
       let epochNumber = Math.max(0, currentEpoch - epochs);
@@ -172,7 +172,7 @@ export default class Show extends BaseCommand {
       )
     }
 
-    cli.action.stop()
+    ux.action.stop()
 
     // At the end of each epoch: R, the total amount of rewards in celo to be allocated to stakers
     // for this epoch is programmatically derived from considering the tradeoff between paying rewards
@@ -187,13 +187,15 @@ export default class Show extends BaseCommand {
     if (voterRewards.length > 0) {
       console.info('')
       console.info('Voter rewards:')
-      cli.table(
-        voterRewards,
+      ux.table(
+        voterRewards.map((vr) => ({ group: vr })),
         {
           address: {},
-          addressPayment: { get: (e) => e.addressPayment.toFixed(0) },
+          addressPayment: { get: (e) => e.group.addressPayment.toFixed(0) },
           group: { get: (e) => e.group.address },
-          averageValidatorScore: { get: (e) => averageValidatorScore(e.validators).toFixed() },
+          averageValidatorScore: {
+            get: (e) => averageValidatorScore(e.group.validators).toFixed(),
+          },
           epochNumber: {},
         },
         res.flags
@@ -201,13 +203,15 @@ export default class Show extends BaseCommand {
     } else if (groupVoterRewards.length > 0) {
       console.info('')
       console.info('Group voter rewards:')
-      cli.table(
-        groupVoterRewards,
+      ux.table(
+        groupVoterRewards.map((vr) => ({ group: vr })),
         {
-          groupName: { get: (e) => e.group.name },
-          group: { get: (e) => e.group.address },
-          groupVoterPayment: { get: (e) => e.groupVoterPayment.toFixed(0) },
-          averageValidatorScore: { get: (e) => averageValidatorScore(e.validators).toFixed() },
+          groupName: { get: (e) => e.group.group.name },
+          group: { get: (e) => e.group.group.address },
+          groupVoterPayment: { get: (e) => e.group.groupVoterPayment.toFixed(0) },
+          averageValidatorScore: {
+            get: (e) => averageValidatorScore(e.group.validators).toFixed(),
+          },
           epochNumber: {},
         },
         res.flags
@@ -232,14 +236,14 @@ export default class Show extends BaseCommand {
     if (validatorRewards.length > 0) {
       console.info('')
       console.info('Validator rewards:')
-      cli.table(
-        validatorRewards,
+      ux.table(
+        validatorRewards.map((vr) => ({ vr })),
         {
-          validatorName: { get: (e) => e.validator.name },
-          validator: { get: (e) => e.validator.address },
-          validatorPayment: { get: (e) => e.validatorPayment.toFixed(0) },
-          validatorScore: { get: (e) => e.validator.score.toFixed() },
-          group: { get: (e) => e.group.address },
+          validatorName: { get: ({ vr }) => vr.validator.name },
+          validator: { get: ({ vr }) => vr.validator.address },
+          validatorPayment: { get: ({ vr }) => vr.validatorPayment.toFixed(0) },
+          validatorScore: { get: ({ vr }) => vr.validator.score.toFixed() },
+          group: { get: ({ vr }) => vr.group.address },
           epochNumber: {},
         },
         res.flags
@@ -255,14 +259,14 @@ export default class Show extends BaseCommand {
     if (validatorGroupRewards.length > 0) {
       console.info('')
       console.info('Validator Group rewards:')
-      cli.table(
-        validatorGroupRewards,
+      ux.table(
+        validatorGroupRewards.map((vgr) => ({ vgr })),
         {
-          groupName: { get: (e) => e.group.name },
-          group: { get: (e) => e.group.address },
-          groupPayment: { get: (e) => e.groupPayment.toFixed(0) },
-          validator: { get: (e) => e.validator.address },
-          validatorScore: { get: (e) => e.validator.score.toFixed() },
+          groupName: { get: (e) => e.vgr.group.name },
+          group: { get: (e) => e.vgr.group.address },
+          groupPayment: { get: (e) => e.vgr.groupPayment.toFixed(0) },
+          validator: { get: (e) => e.vgr.validator.address },
+          validatorScore: { get: (e) => e.vgr.validator.score.toFixed() },
           epochNumber: {},
         },
         res.flags
@@ -272,13 +276,13 @@ export default class Show extends BaseCommand {
     if (accountsSlashed.length > 0) {
       console.info('')
       console.info('Slashing penalties and rewards:')
-      cli.table(
-        accountsSlashed,
+      ux.table(
+        accountsSlashed.map((slashed) => ({ account: slashed })),
         {
           slashed: {},
-          penalty: { get: (e) => e.penalty.toFixed(0) },
+          penalty: { get: ({ account }) => account.penalty.toFixed(0) },
           reporter: {},
-          reward: { get: (e) => e.reward.toFixed(0) },
+          reward: { get: ({ account }) => account.reward.toFixed(0) },
           epochNumber: {},
         },
         res.flags

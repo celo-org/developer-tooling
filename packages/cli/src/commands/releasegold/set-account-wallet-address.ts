@@ -20,7 +20,7 @@ export default class SetAccountWalletAddress extends ReleaseGoldBaseCommand {
     }),
   }
 
-  static args = []
+  static args = {}
 
   static examples = [
     'set-account-wallet-address --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631 --walletAddress 0xE36Ea790bc9d7AB70C55260C66D52b1eca985f84 --pop 0x1b3e611d05e46753c43444cdc55c2cc3d95c54da0eba2464a8cc8cb01bd57ae8bb3d82a0e293ca97e5813e7fb9b624127f42ef0871d025d8a56fe2f8f08117e25b',

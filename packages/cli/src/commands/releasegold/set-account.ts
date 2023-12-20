@@ -21,7 +21,7 @@ export default class SetAccount extends ReleaseGoldBaseCommand {
     }),
   }
 
-  static args = []
+  static args = {}
 
   static examples = [
     'set-account --contract 0x5719118266779B58D0f9519383A4A27aA7b829E5 --property name --value mywallet',

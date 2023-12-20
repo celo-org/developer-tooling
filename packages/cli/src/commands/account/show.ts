@@ -1,7 +1,7 @@
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { printValueMapRecursive } from '../../utils/cli'
-import { Args } from '../../utils/command'
+import { CustomArgs } from '../../utils/command'
 
 export default class Show extends BaseCommand {
   static description =
@@ -11,16 +11,19 @@ export default class Show extends BaseCommand {
     ...BaseCommand.flags,
   }
 
-  static args = [Args.address('address')]
+  static args = {
+    arg1: CustomArgs.address('address'),
+  }
 
   static examples = ['show 0x5409ed021d9299bf6814279a6a1411a7e866a631']
 
   async run() {
     const kit = await this.getKit()
     const { args } = await this.parse(Show)
-    await newCheckBuilder(this, args.address).isSignerOrAccount().runChecks()
+    const addressArg = args.arg1 as string
+    await newCheckBuilder(this, addressArg).isSignerOrAccount().runChecks()
     const accounts = await kit.contracts.getAccounts()
-    const address = await accounts.signerToAccount(args.address)
+    const address = await accounts.signerToAccount(addressArg)
     printValueMapRecursive(await accounts.getAccountSummary(address))
   }
 }

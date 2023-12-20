@@ -15,7 +15,7 @@ export default class SetPaymentDelegation extends BaseCommand {
     fraction: Flags.string({ required: true }),
   }
 
-  static args = []
+  static args = {}
 
   static examples = [
     'set-payment-delegation --account 0x5409ed021d9299bf6814279a6a1411a7e866a631 --beneficiary 0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb --fraction 0.1',

@@ -18,7 +18,7 @@ export default class Deauthorize extends BaseCommand {
     signer: CustomFlags.address({ required: true }),
   }
 
-  static args = []
+  static args = {}
 
   static examples = [
     'deauthorize --from 0x5409ED021D9299bf6814279A6A1411A7e866A631 --role attestation --signer 0x6ecbe1db9ef729cbe972c83fb886247691fb6beb',

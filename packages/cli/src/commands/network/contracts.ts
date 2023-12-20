@@ -2,8 +2,8 @@ import { newICeloVersionedContract } from '@celo/abis/web3/ICeloVersionedContrac
 import { newProxy } from '@celo/abis/web3/Proxy'
 import { concurrentMap } from '@celo/base'
 import { CeloContract } from '@celo/contractkit'
-import { cli } from 'cli-ux'
-import { table } from 'cli-ux/lib/styled/table'
+import { ux } from '@oclif/core'
+
 import { BaseCommand } from '../../base'
 
 const UNVERSIONED_CONTRACTS = [
@@ -21,7 +21,7 @@ export default class Contracts extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    ...(cli.table.flags() as object),
+    ...(ux.table.flags() as object),
   }
 
   async run() {
@@ -60,7 +60,7 @@ export default class Contracts extends BaseCommand {
       }
     )
 
-    const tokenBalanceColumns: table.Columns<(typeof contractInfo)[number]> = {}
+    const tokenBalanceColumns: ux.Table.table.Columns<(typeof contractInfo)[number]> = {}
     await kit.celoTokens.forEachCeloToken(
       (token) =>
         (tokenBalanceColumns[token.symbol] = {
@@ -72,7 +72,7 @@ export default class Contracts extends BaseCommand {
         })
     )
 
-    cli.table(
+    ux.table(
       contractInfo,
       {
         contract: { get: (i) => i.contract },

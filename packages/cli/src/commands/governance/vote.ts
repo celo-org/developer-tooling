@@ -13,7 +13,7 @@ export default class Vote extends BaseCommand {
   static flags = {
     ...BaseCommand.flags,
     proposalID: Flags.string({ required: true, description: 'UUID of proposal to vote on' }),
-    value: Flags.enum({ options: Vote.voteOptions, required: true, description: 'Vote' }),
+    value: Flags.option({ options: Vote.voteOptions, required: true, description: 'Vote' })(),
     from: CustomFlags.address({ required: true, description: "Voter's address" }),
   }
 

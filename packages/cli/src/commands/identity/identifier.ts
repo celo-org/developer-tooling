@@ -1,12 +1,11 @@
 import { OdisUtils } from '@celo/identity'
 import { AuthSigner, OdisContextName } from '@celo/identity/lib/odis/query'
-import { CliUx, Flags } from '@oclif/core'
+import { ux, Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { printValueMap } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
-const { ux } = CliUx
 export default class IdentifierQuery extends BaseCommand {
   static description =
     'Queries ODIS for the on-chain identifier and pepper corresponding to a given phone number.'

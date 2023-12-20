@@ -2,7 +2,7 @@ import { Flags } from '@oclif/core'
 import { BigNumber } from 'bignumber.js'
 import { BaseCommand } from '../../base'
 import { displaySendTx } from '../../utils/cli'
-import { Args, CustomFlags } from '../../utils/command'
+import { CustomArgs, CustomFlags } from '../../utils/command'
 
 export default class MultiSigTransfer extends BaseCommand {
   static description =
@@ -22,7 +22,9 @@ export default class MultiSigTransfer extends BaseCommand {
     }),
   }
 
-  static args = [Args.address('address')]
+  static args = {
+    arg1: CustomArgs.address('address'),
+  }
 
   static examples = [
     'transfer <multiSigAddr> --to 0x5409ed021d9299bf6814279a6a1411a7e866a631 --amount 200000e18 --from 0x123abc',
@@ -37,7 +39,7 @@ export default class MultiSigTransfer extends BaseCommand {
     } = await this.parse(MultiSigTransfer)
     const amountBN = new BigNumber(amount)
     const celoToken = await kit.contracts.getGoldToken()
-    const multisig = await kit.contracts.getMultiSig(args.address)
+    const multisig = await kit.contracts.getMultiSig(args.arg1 as string)
 
     let transferTx
     if (transferFrom) {
