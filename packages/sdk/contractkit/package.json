@@ -20,7 +20,7 @@
     "clean": "tsc -b . --clean",
     "prepublishOnly": "yarn build",
     "docs": "typedoc",
-    "test": "jest --runInBand",
+    "test": "jest --runInBand --forceExit",
     "lint": "tslint -c tslint.json --project ."
   },
   "dependencies": {
