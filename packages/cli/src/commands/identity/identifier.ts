@@ -1,6 +1,6 @@
 import { OdisUtils } from '@celo/identity'
 import { AuthSigner, OdisContextName } from '@celo/identity/lib/odis/query'
-import { ux, Flags } from '@oclif/core'
+import { Flags, ux } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { printValueMap } from '../../utils/cli'

@@ -1,11 +1,11 @@
 import { IERC20 } from '@celo/abis/web3/IERC20'
 import { Erc20Wrapper } from '@celo/contractkit/lib/wrappers/Erc20Wrapper'
+import { Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx, failWith } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
-import { Flags } from '@oclif/core'
 export default class TransferErc20 extends BaseCommand {
   static description = 'Transfer ERC20 to a specified address'
 

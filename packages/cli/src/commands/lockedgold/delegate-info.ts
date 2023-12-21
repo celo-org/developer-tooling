@@ -1,7 +1,7 @@
 import { Address } from '@celo/connect'
-import { CustomFlags } from '../../utils/command'
 import { BaseCommand } from '../../base'
 import { printValueMapRecursive } from '../../utils/cli'
+import { CustomFlags } from '../../utils/command'
 
 export default class DelegateInfo extends BaseCommand {
   static description = 'Delegate info about account.'

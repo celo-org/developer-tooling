@@ -1,8 +1,8 @@
 import { valueToString } from '@celo/contractkit/lib/wrappers/BaseWrapper'
 import { concurrentMap } from '@celo/utils/lib/async'
 import { zip } from '@celo/utils/lib/collections'
-import chalk from 'chalk'
 import { ux } from '@oclif/core'
+import chalk from 'chalk'
 
 import { BaseCommand } from '../../base'
 

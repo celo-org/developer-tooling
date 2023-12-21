@@ -5,12 +5,12 @@ import { readFileSync } from 'fs'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx, printValueMapRecursive } from '../../utils/cli'
+import { CustomFlags } from '../../utils/command'
 import {
   addExistingProposalIDToBuilder,
   addExistingProposalJSONFileToBuilder,
   checkProposal,
 } from '../../utils/governance'
-import { CustomFlags } from '../../utils/command'
 export default class Propose extends BaseCommand {
   static description = 'Submit a governance proposal'
 

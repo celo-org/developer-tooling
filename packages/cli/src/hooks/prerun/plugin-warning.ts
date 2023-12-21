@@ -1,4 +1,4 @@
-import { Hook, Errors } from '@oclif/core'
+import { Errors, Hook } from '@oclif/core'
 import prompts from 'prompts'
 
 const hook: Hook<'prerun'> = async (opts) => {

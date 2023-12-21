@@ -1,8 +1,8 @@
 import { CeloContract } from '@celo/contractkit'
+import { Args } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { displaySendTx, failWith } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
-import { Args } from '@oclif/core'
 
 export default class RemoveExpiredReports extends BaseCommand {
   static description = 'Remove expired oracle reports for a specified token'

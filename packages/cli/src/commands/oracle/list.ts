@@ -1,7 +1,7 @@
 import { CeloContract } from '@celo/contractkit'
+import { Args } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { failWith } from '../../utils/cli'
-import { Args } from '@oclif/core'
 
 export default class List extends BaseCommand {
   static description = 'List oracle addresses for a given token'
