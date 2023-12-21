@@ -206,7 +206,7 @@ jobs:
       - run: sudo corepack enable yarn
       - name: Run tests
         run: |
-          yarn --cwd=packages/sdk/contractkit test
+          yarn workspace @celo/contractkit test
 
   cli-tests:
     name: CeloCli Tests
@@ -232,10 +232,10 @@ jobs:
       - run: sudo corepack enable yarn
       - name: Run tests
         run: |
-          yarn --cwd=packages/cli test
+          yarn workspace @celo/celocli test
       - name: Fail if someone forgot to commit CLI docs
         run: |
-          yarn --cwd=packages/cli docs
+          yarn workspace @celo/celocli docs
           if [[ $(git status packages/docs/command-line-interface --porcelain) ]]; then
             git --no-pager diff packages/docs/command-line-interface
             echo "There are git differences after generating CLI docs"
@@ -245,10 +245,10 @@ jobs:
           fi
       - name: Verify that a new account can be created
         run: |
-          yarn --cwd=packages/cli run celocli account:new
+          yarn workspace @celo/celocli run celocli account:new
       - name: Test that releasecelo command topic is working
         run: |
-          yarn --cwd=packages/cli run celocli releasecelo --help
+          yarn workspace @celo/celocli run celocli releasecelo --help
 
   base-test:
     name: SDK Base package Tests
