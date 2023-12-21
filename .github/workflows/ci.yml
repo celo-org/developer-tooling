@@ -89,8 +89,9 @@ jobs:
           fail-if-changed: 'true'
           fail-message: 'Files changed during build. Please build locally and commit the changes.'
           files: |
-            !.yarn/cache/**
             **/*
+            !.yarn/cache/**
+            !.**/*.map.js
       - run: |
           echo "${{ steps.verify-changed-files.outputs.changed_files }}"
       - name: Get the artifacts to cache
