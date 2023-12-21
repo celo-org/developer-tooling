@@ -90,14 +90,13 @@ jobs:
           fail-message: 'Files changed during build. Please build locally and commit the changes.'
           files: |
             **/*
-            !.yarn/cache/**
-            !.**/*.map.js
+
       - run: |
           echo "${{ steps.verify-changed-files.outputs.changed_files }}"
       - name: Get the artifacts to cache
         id: get_artifacts_to_cache
         run: |
-          artifacts_to_cache="$(git ls-files --others --ignored --exclude-standard | grep -v node_modules | grep -v .js.map)"
+          artifacts_to_cache="$(git ls-files --others --ignored --exclude-standard | grep -v node_modules | grep -v .js.map | grep -v .d.ts.map | grep -v .yarn/cache)"
           echo "artifacts_to_cache<<EOF" >> $GITHUB_OUTPUT
           echo "$artifacts_to_cache" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
