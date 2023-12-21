@@ -89,6 +89,7 @@ jobs:
           fail-if-changed: 'true'
           fail-message: 'Files changed during build. Please build locally and commit the changes.'
           files: |
+            !.yarn/cache/**
             **/*
       - run: |
           echo "${{ steps.verify-changed-files.outputs.changed_files }}"
