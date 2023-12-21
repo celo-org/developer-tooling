@@ -4,8 +4,8 @@ import BigNumber from 'bignumber.js'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { LockedGoldArgs } from '../../utils/lockedgold'
 import { CustomFlags } from '../../utils/command'
+import { LockedGoldArgs } from '../../utils/lockedgold'
 
 export default class Lock extends BaseCommand {
   static description = 'Locks CELO to be used in governance and validator elections.'

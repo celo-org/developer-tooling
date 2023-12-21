@@ -1,9 +1,9 @@
 import { CeloTransactionObject, CeloTx, EventLog, parseDecodedParams } from '@celo/connect'
 import { Errors } from '@oclif/core'
+import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import chalk from 'chalk'
 import Table from 'cli-table'
-import { ux } from '@oclif/core'
 
 const CLIError = Errors.CLIError
 

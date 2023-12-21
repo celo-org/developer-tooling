@@ -1,5 +1,5 @@
-import BigNumber from 'bignumber.js'
 import { ux } from '@oclif/core'
+import BigNumber from 'bignumber.js'
 
 import { BaseCommand } from '../../base'
 import { CustomFlags } from '../../utils/command'

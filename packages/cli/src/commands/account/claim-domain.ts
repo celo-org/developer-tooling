@@ -1,6 +1,6 @@
 import { createDomainClaim, serializeClaim } from '@celo/contractkit/lib/identity/claims/claim'
-import { ClaimCommand } from '../../utils/identity'
 import { Flags } from '@oclif/core'
+import { ClaimCommand } from '../../utils/identity'
 export default class ClaimDomain extends ClaimCommand {
   static description = 'Claim a domain and add the claim to a local metadata file'
   static flags = {

@@ -5,8 +5,8 @@ import { ux } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { displayMetadata } from '../../utils/identity'
 import { CustomFlags } from '../../utils/command'
+import { displayMetadata } from '../../utils/identity'
 
 export default class RegisterMetadata extends BaseCommand {
   static description =

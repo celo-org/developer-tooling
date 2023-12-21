@@ -10,12 +10,12 @@ import { sleep } from '@celo/utils/lib/async'
 import { toChecksumAddress } from '@ethereumjs/util'
 import { ux } from '@oclif/core'
 
+import { Flags } from '@oclif/core'
 import { writeFileSync } from 'fs'
 import { tmpdir } from 'os'
 import { binaryPrompt } from '../../utils/cli'
 import { commandExists, execCmdWithError, execWith0Exit } from '../../utils/exec'
 import { ClaimCommand } from '../../utils/identity'
-import { Flags } from '@oclif/core'
 export default class ClaimKeybase extends ClaimCommand {
   static description = 'Claim a keybase username and add the claim to a local metadata file'
   static flags = {
