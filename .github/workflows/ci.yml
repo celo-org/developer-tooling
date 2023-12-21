@@ -136,6 +136,7 @@ jobs:
         uses: ./.github/actions/sync-workspace
         with:
           artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
+      - run: corepack enable yarn
       - run: yarn run prettify:diff
       - run: yarn run lint
   general_test:
@@ -150,6 +151,7 @@ jobs:
         uses: ./.github/actions/sync-workspace
         with:
           artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
+      - run: corepack enable yarn
       - name: Run Jest Tests
         run: |
           mkdir -p test-results/jest
@@ -177,6 +179,7 @@ jobs:
         uses: ./.github/actions/sync-workspace
         with:
           artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
+      - run: corepack enable yarn
       - name: Run Wallet tests
         run: |
           yarn run lerna --scope '@celo/wallet-*' run test
@@ -200,6 +203,7 @@ jobs:
         uses: ./.github/actions/sync-workspace
         with:
           artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
+      - run: corepack enable yarn
       - name: Run tests
         run: |
           yarn --cwd=packages/sdk/contractkit test
@@ -225,6 +229,7 @@ jobs:
         uses: ./.github/actions/sync-workspace
         with:
           artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
+      - run: corepack enable yarn
       - name: Run tests
         run: |
           yarn --cwd=packages/cli test
@@ -265,6 +270,7 @@ jobs:
         uses: ./.github/actions/sync-workspace
         with:
           artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
+      - run: corepack enable yarn
       - name: Install and test the npm package
         run: |
           set -euo pipefail
@@ -293,6 +299,7 @@ jobs:
         uses: ./.github/actions/sync-workspace
         with:
           artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
+      - run: corepack enable yarn
       - name: Install and test the npm package
         run: |
           set -euo pipefail
