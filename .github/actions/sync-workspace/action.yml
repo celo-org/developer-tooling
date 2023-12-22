@@ -17,7 +17,6 @@ runs:
     - name: "enable corepack for yarn"
       run : sudo corepack enable yarn
       shell: bash
-    - uses: actions/checkout@v4
     # must call twice because of chicken and egg problem with yarn and node
     - uses: actions/setup-node@v2
       with:
