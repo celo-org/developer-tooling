@@ -13,4 +13,5 @@ export default async function globalSetup() {
   await baseSetup(path.resolve(chainDataPath), 'v10.tar.gz', {
     from_targz: true,
   })
+  console.log('\n ganache started...')
 }
