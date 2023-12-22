@@ -28,8 +28,8 @@ runs:
         REBUILD_PACKAGE: ${{ inputs.rebuild-package }}
       with:
         path: |
-          .yarn
-          node_modules
+          .yarn/cache
+          .yarn/install-state.gz
           packages/**/node_modules
         key: node-${{ runner.os }}-${{ runner.arch }}-${{ env.NODE_MODULE_CACHE_VERSION }}-${{ hashFiles('**/yarn.lock') }}
         enableCrossOsArchive: true
