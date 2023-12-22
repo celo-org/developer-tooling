@@ -11,12 +11,24 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '18'
+    - name: "enable corepack for yarn"
+      run : sudo corepack enable yarn
+    - uses: actions/checkout@v4
+    # must call twice because of chicken and egg problem with yarn and node
+    - uses: actions/setup-node@v2
+      with:
+        node-version: '18'
+        cache: 'yarn'
     - uses: actions/cache/restore@v3
       id: cache_node
       env:
         REBUILD_PACKAGE: ${{ inputs.rebuild-package }}
       with:
         path: |
+          .yarn
           node_modules
           packages/**/node_modules
         key: node-${{ runner.os }}-${{ runner.arch }}-${{ env.NODE_MODULE_CACHE_VERSION }}-${{ hashFiles('**/yarn.lock') }}
