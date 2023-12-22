@@ -174,17 +174,7 @@ jobs:
     timeout-minutes: 30
     needs: install-dependencies
     steps:
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '18'
-      - name: "enable corepack for yarn"
-        run : sudo corepack enable yarn
       - uses: actions/checkout@v4
-      # must call twice because of chicken and egg problem with yarn and node
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '18'
-          cache: 'yarn'
       - name: Sync workspace
         uses: ./.github/actions/sync-workspace
         with:
@@ -207,17 +197,7 @@ jobs:
       contains(needs.install-dependencies.outputs.all_modified_files, ',yarn.lock') ||
       false
     steps:
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '18'
-      - name: "enable corepack for yarn"
-        run : sudo corepack enable yarn
       - uses: actions/checkout@v4
-      # must call twice because of chicken and egg problem with yarn and node
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '18'
-          cache: 'yarn'
       - name: Sync workspace
         uses: ./.github/actions/sync-workspace
         with:
@@ -242,22 +222,11 @@ jobs:
       contains(needs.install-dependencies.outputs.all_modified_files, ',yarn.lock') ||
       false
     steps:
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '18'
-      - name: "enable corepack for yarn"
-        run : sudo corepack enable yarn
       - uses: actions/checkout@v4
-      # must call twice because of chicken and egg problem with yarn and node
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '18'
-          cache: 'yarn'
       - name: Sync workspace
         uses: ./.github/actions/sync-workspace
         with:
           artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
-      - run: sudo corepack enable yarn
       - name: Run tests
         run: |
           yarn workspace @celo/celocli test
@@ -292,17 +261,7 @@ jobs:
       contains(needs.install-dependencies.outputs.all_modified_files, ',yarn.lock') ||
       false
     steps:
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '18'
-      - name: "enable corepack for yarn"
-        run : sudo corepack enable yarn
       - uses: actions/checkout@v4
-      # must call twice because of chicken and egg problem with yarn and node
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '18'
-          cache: 'yarn'
       - name: Sync workspace
         uses: ./.github/actions/sync-workspace
         with:
