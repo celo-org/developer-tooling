@@ -54,6 +54,11 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '18'
+      # must call twice because of chicken and egg problem with yarn and node
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+          cache: 'yarn'
       - uses: actions/checkout@v4
       - name: Restore node cache
         uses: actions/cache@v3
@@ -129,11 +134,13 @@ jobs:
   lint-checks:
     name: Lint code
     runs-on: ['self-hosted', 'org', '8-cpu']
-    container:
-      image: us-west1-docker.pkg.dev/devopsre/actions-runner-controller/celo-monorepo:node18
     timeout-minutes: 30
     needs: install-dependencies
     steps:
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+          cache: 'yarn'
       - uses: actions/checkout@v4
       - name: Sync workspace
         uses: ./.github/actions/sync-workspace
@@ -145,11 +152,13 @@ jobs:
   general_test:
     name: General jest test
     runs-on: ['self-hosted', 'org', '8-cpu']
-    container:
-      image: us-west1-docker.pkg.dev/devopsre/actions-runner-controller/celo-monorepo:node18
     needs: install-dependencies
     steps:
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '18'
       - uses: actions/checkout@v4
+
       - name: Sync workspace
         uses: ./.github/actions/sync-workspace
         with:
@@ -172,11 +181,13 @@ jobs:
   wallet-test:
     name: Wallet test
     runs-on: ['self-hosted', 'org', '8-cpu']
-    container:
-      image: us-west1-docker.pkg.dev/devopsre/actions-runner-controller/celo-monorepo:node18
     timeout-minutes: 30
     needs: install-dependencies
     steps:
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+          cache: 'yarn'
       - uses: actions/checkout@v4
       - name: Sync workspace
         uses: ./.github/actions/sync-workspace
@@ -190,17 +201,20 @@ jobs:
   contractkit-tests:
     name: ContractKit Tests
     runs-on: ['self-hosted', 'org', '8-cpu']
-    container:
-      image: us-west1-docker.pkg.dev/devopsre/actions-runner-controller/celo-monorepo:node18
     timeout-minutes: 30
     needs: [install-dependencies]
     if: |
+
       github.base_ref == 'master' ||  contains(github.base_ref, 'release') ||
       contains(needs.install-dependencies.outputs.all_modified_files, 'packages/sdk') ||
       contains(needs.install-dependencies.outputs.all_modified_files, ',package.json') ||
       contains(needs.install-dependencies.outputs.all_modified_files, ',yarn.lock') ||
       false
     steps:
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+          cache: 'yarn'
       - uses: actions/checkout@v4
       - name: Sync workspace
         uses: ./.github/actions/sync-workspace
@@ -214,11 +228,10 @@ jobs:
   cli-tests:
     name: CeloCli Tests
     runs-on: ['self-hosted', 'org', '8-cpu']
-    container:
-      image: us-west1-docker.pkg.dev/devopsre/actions-runner-controller/celo-monorepo:node18
     timeout-minutes: 30
     needs: [install-dependencies]
     if: |
+
       github.base_ref == 'master' || contains(github.base_ref, 'staging') || contains(github.base_ref, 'production') ||
       contains(needs.install-dependencies.outputs.all_modified_files, 'packages/cli') ||
       contains(needs.install-dependencies.outputs.all_modified_files, 'packages/sdk') ||
@@ -256,11 +269,10 @@ jobs:
   base-test:
     name: SDK Base package Tests
     runs-on: ['self-hosted', 'org', '8-cpu']
-    container:
-      image: us-west1-docker.pkg.dev/devopsre/actions-runner-controller/celo-monorepo:node18
     timeout-minutes: 30
     needs: [install-dependencies]
     if: |
+
       github.base_ref == 'master' || contains(github.base_ref, 'staging') || contains(github.base_ref, 'production') ||
       contains(needs.install-dependencies.outputs.all_modified_files, 'packages/sdk') ||
       contains(needs.install-dependencies.outputs.all_modified_files, 'packages/typescript') ||
@@ -285,11 +297,10 @@ jobs:
   utils-test:
     name: SDK Utils package Tests
     runs-on: ['self-hosted', 'org', '8-cpu']
-    container:
-      image: us-west1-docker.pkg.dev/devopsre/actions-runner-controller/celo-monorepo:node18
     timeout-minutes: 30
     needs: [install-dependencies]
     if: |
+
       github.base_ref == 'master' || contains(github.base_ref, 'staging') || contains(github.base_ref, 'production') ||
       contains(needs.install-dependencies.outputs.all_modified_files, 'packages/sdk') ||
       contains(needs.install-dependencies.outputs.all_modified_files, 'packages/typescript') ||
