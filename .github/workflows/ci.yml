@@ -137,6 +137,7 @@ jobs:
     timeout-minutes: 30
     needs: install-dependencies
     steps:
+      - uses: actions/checkout@v4
       - name: Sync workspace
         uses: ./.github/actions/sync-workspace
         with:
@@ -148,6 +149,7 @@ jobs:
     runs-on: ['self-hosted', 'org', '8-cpu']
     needs: install-dependencies
     steps:
+      - uses: actions/checkout@v4
       - name: Sync workspace
         uses: ./.github/actions/sync-workspace
         with:
