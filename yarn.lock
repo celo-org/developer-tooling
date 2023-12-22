@@ -874,6 +874,7 @@ __metadata:
     tslib: ^1
     typescript: 5.3.3
     web3: 1.10.0
+    web3-utils: ^1.10.0
   bin:
     celocli: ./bin/run
   languageName: unknown
