@@ -1,4 +1,5 @@
 // Import a static mapping of timezone names to metadata.
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const timezones: { [name: string]: Timezone } = require('./timezones.json')
 
 // Used in testing to override the timezone which is returned by the system.

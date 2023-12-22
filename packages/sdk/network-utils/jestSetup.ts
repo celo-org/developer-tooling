@@ -1,5 +1,5 @@
-const fetchMockSandbox = require('fetch-mock').sandbox()
+import fetchMock from 'fetch-mock'
+const fetchMockSandbox = fetchMock.sandbox()
 jest.mock('cross-fetch', () => fetchMockSandbox)
 
-// @ts-ignore
 global.fetchMock = fetchMockSandbox

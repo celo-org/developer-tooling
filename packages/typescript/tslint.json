@@ -1,12 +1,12 @@
 {
-  "extends": ["tslint:latest", "tslint-react", "tslint-react-hooks", "tslint-config-prettier"],
+  "extends": ["tslint:latest", "tslint-config-prettier"],
   "rulesDirectory": [
     "../../../node_modules/tslint-eslint-rules/dist/rules",
     "../../../node_modules/tslint-microsoft-contrib",
     "./custom-rules"
   ],
   "rules": {
-    "no-eval": true,
+      "no-eval": true,
     "no-duplicate-switch-case": true,
     "no-reference": true,
     "no-duplicate-super": true,
