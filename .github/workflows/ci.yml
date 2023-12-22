@@ -54,7 +54,9 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '18'
-      # must call twice because of chicken and egg problem with yarn and node
+      - name: "enable corepack for yarn"
+        run : sudo corepack enable yarn
+          # must call twice because of chicken and egg problem with yarn and node
       - uses: actions/setup-node@v2
         with:
           node-version: '18'
@@ -74,8 +76,6 @@ jobs:
           key: node-${{ runner.os }}-${{ runner.arch }}-${{ env.NODE_MODULE_CACHE_VERSION }}-${{ hashFiles('yarn.lock') }}
           restore-keys: |
             node-${{ runner.os }}-${{ runner.arch }}-${{ env.NODE_MODULE_CACHE_VERSION }}-
-      - name: "enable corepack for yarn"
-        run : sudo corepack enable yarn
       - name: Install yarn dependencies
         run: git config --global url."https://".insteadOf ssh:// && yarn install
         if: steps.cache_node.outputs.cache-hit != 'true'
