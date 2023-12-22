@@ -70,7 +70,7 @@ jobs:
           # Update this list also in .github/actions/sync-workspace/action.yml with exactly the same list
           path: |
             .yarn/cache
-            /yarn/install-state.gz
+            .yarn/install-state.gz
             node_modules
             packages/**/node_modules
           key: node-${{ runner.os }}-${{ runner.arch }}-${{ env.NODE_MODULE_CACHE_VERSION }}-${{ hashFiles('yarn.lock') }}
