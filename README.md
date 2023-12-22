@@ -1,5 +1,8 @@
 # Developer Tooling
 
+> **NOTE** This is a relatively new repository and is still under active development.
+> Some of the packages and release process may not be fully documented yet.
+
 This repository contains the source code for various JS/TS developer tools and CLI(s) released by cLabs 
 for the Celo community. 
 
