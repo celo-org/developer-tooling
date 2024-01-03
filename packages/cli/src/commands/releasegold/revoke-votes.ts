@@ -52,7 +52,7 @@ export default class RevokeVotes extends ReleaseGoldBaseCommand {
 
     kit.defaultAccount = isRevoked ? releaseOwner : beneficiary
 
-    let txos: Array<CeloTransactionObject<void>>
+    let txos: CeloTransactionObject<void>[]
     if (flags.allVotes && flags.allGroups) {
       txos = await this.releaseGoldWrapper.revokeAllVotesForAllGroups()
     } else if (flags.allVotes && flags.group) {

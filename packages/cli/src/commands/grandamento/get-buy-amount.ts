@@ -18,7 +18,7 @@ export default class GetBuyAmount extends BaseCommand {
       description: 'The value of the tokens to exchange',
     }),
     stableToken: Flags.option({
-      options: Object.keys(stableTokenOptions) as Array<StableToken | Lowercase<StableToken>>,
+      options: Object.keys(stableTokenOptions) as (StableToken | Lowercase<StableToken>)[],
       description: 'Name of the stable to receive or send',
     })({ required: true, default: 'cusd' }),
     sellCelo: Flags.boolean({

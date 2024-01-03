@@ -3,8 +3,7 @@ import { GroupVoterReward, VoterReward } from '@celo/contractkit/lib/wrappers/El
 import { AccountSlashed } from '@celo/contractkit/lib/wrappers/LockedGold'
 import { Validator, ValidatorReward } from '@celo/contractkit/lib/wrappers/Validators'
 import { eqAddress } from '@celo/utils/lib/address'
-import { Flags } from '@oclif/core'
-import { ux } from '@oclif/core'
+import { Flags, ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
@@ -112,15 +111,14 @@ export default class Show extends BaseCommand {
                 })
               )
             )
-          } catch (error: any) {
-            if (error.message.includes('missing trie node')) {
-              throw new Error(
-                'Exact voter information is avaiable only for 1024 blocks after each epoch.\n' +
-                  'Supply --estimate to estimate rewards based on current votes, or use an archive node.'
-              )
-            } else {
-              throw error
-            }
+          } catch (error) {
+            const _error = error.message.includes('missing trie node')
+              ? new Error(
+                  'Exact voter information is avaiable only for 1024 blocks after each epoch.\n' +
+                    'Supply --estimate to estimate rewards based on current votes, or use an archive node.'
+                )
+              : error
+            throw _error
           }
         }
       }

@@ -20,6 +20,6 @@ export default class ClaimStorage extends ClaimCommand {
     const res = await this.parse(ClaimStorage)
     const metadata = await this.readMetadata()
     await this.addClaim(metadata, createStorageClaim(res.flags.url))
-    this.writeMetadata(metadata)
+    await this.writeMetadata(metadata)
   }
 }

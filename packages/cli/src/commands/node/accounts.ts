@@ -11,7 +11,7 @@ export default class NodeAccounts extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
-    this.parse(NodeAccounts)
+    await this.parse(NodeAccounts)
 
     const accounts = await kit.connection.getAccounts()
     console.log('***This command will be deprecated, please use "account:list" ***')
