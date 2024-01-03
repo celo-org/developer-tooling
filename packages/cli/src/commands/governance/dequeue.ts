@@ -5,7 +5,7 @@ import { Flags } from '../../utils/command'
 export default class Dequeue extends BaseCommand {
   static description = 'Try to dequeue governance proposal'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({ required: true, description: 'From address' }),
   }

@@ -8,7 +8,7 @@ export default class SetPaymentDelegation extends BaseCommand {
   static description =
     "Sets a payment delegation beneficiary, an account address to receive a fraction of the validator's payment every epoch. The fraction must not be greater than 1."
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     account: Flags.address({ required: true }),
     beneficiary: Flags.address({ required: true }),

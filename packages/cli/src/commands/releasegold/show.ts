@@ -4,7 +4,7 @@ import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
 export default class Show extends ReleaseGoldBaseCommand {
   static description = 'Show info on a ReleaseGold instance contract.'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...ReleaseGoldBaseCommand.flags,
   }
 

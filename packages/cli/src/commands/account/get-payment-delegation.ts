@@ -7,7 +7,7 @@ export default class GetPaymentDelegation extends BaseCommand {
   static description =
     "Get the payment delegation account beneficiary and fraction allocated from a validator's payment each epoch. The fraction cannot be greater than 1."
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     account: Flags.address({ required: true }),
     ...(cli.table.flags() as object),

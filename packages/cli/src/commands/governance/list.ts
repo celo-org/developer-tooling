@@ -8,7 +8,7 @@ import { BaseCommand } from '../../base'
 export default class List extends BaseCommand {
   static description = 'List live governance proposals (queued and ongoing)'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     ...(cli.table.flags() as object),
   }

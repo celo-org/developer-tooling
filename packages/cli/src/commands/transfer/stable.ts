@@ -7,7 +7,7 @@ const stableTokenOptions = enumEntriesDupWithLowercase(Object.entries(StableToke
 export default class TransferStable extends TransferStableBase {
   static description = 'Transfer a stable token to a specified address.'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...TransferStableBase.flags,
     stableToken: flags.enum({
       options: Object.keys(stableTokenOptions),

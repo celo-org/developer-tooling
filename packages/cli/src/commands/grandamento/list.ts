@@ -4,7 +4,7 @@ import { printValueMap } from '../../utils/cli'
 export default class List extends BaseCommand {
   static description = 'List current active Granda Mento exchange proposals'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
   }
 

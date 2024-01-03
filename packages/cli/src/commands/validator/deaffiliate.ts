@@ -7,7 +7,7 @@ export default class ValidatorDeAffiliate extends BaseCommand {
   static description =
     'Deaffiliate a Validator from a Validator Group, and remove it from the Group if it is also a member.'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({ required: true, description: "Signer or Validator's address" }),
   }

@@ -9,7 +9,7 @@ export default class RegisterDataEncryptionKey extends BaseCommand {
   static description =
     'Register a data encryption key for an account on chain. This key can be used to encrypt data to you such as offchain metadata or transaction comments'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({
       required: true,

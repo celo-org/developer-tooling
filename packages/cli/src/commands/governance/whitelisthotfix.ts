@@ -8,7 +8,7 @@ import { Flags } from '../../utils/command'
 export default class WhitelistHotfix extends BaseCommand {
   static description = 'Whitelist a governance hotfix'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({ required: true, description: "Whitelister's address" }),
     hash: flags.string({ required: true, description: 'Hash of hotfix transactions' }),

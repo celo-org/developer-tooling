@@ -6,7 +6,7 @@ export default class RefundAndFinalize extends ReleaseGoldBaseCommand {
   static description =
     "Refund the given contract's balance to the appopriate parties and destroy the contact. Can only be called by the release owner of revocable ReleaseGold instances."
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...ReleaseGoldBaseCommand.flags,
   }
 

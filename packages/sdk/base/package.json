@@ -21,7 +21,6 @@
   "files": [
     "lib/**/*"
   ],
-  "dependencies": {},
   "devDependencies": {
     "@celo/typescript": "0.0.1",
     "bignumber.js": "^9.0.0",

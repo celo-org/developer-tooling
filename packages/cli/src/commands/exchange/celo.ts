@@ -17,7 +17,7 @@ export default class ExchangeCelo extends BaseCommand {
   static description =
     'Exchange CELO for StableTokens via the stability mechanism. (Note: this is the equivalent of the old exchange:gold)'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({ required: true, description: 'The address with CELO to exchange' }),
     value: Flags.wei({

@@ -7,7 +7,7 @@ import { Args } from '../../utils/command'
 export default class ResetSlashingMultiplier extends BaseCommand {
   static description = 'Reset validator group slashing multiplier.'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
   }
 

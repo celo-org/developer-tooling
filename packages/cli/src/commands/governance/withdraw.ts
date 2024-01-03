@@ -6,7 +6,7 @@ import { Flags } from '../../utils/command'
 export default class Withdraw extends BaseCommand {
   static description = 'Withdraw refunded governance proposal deposits.'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({ required: true, description: "Proposer's address" }),
   }

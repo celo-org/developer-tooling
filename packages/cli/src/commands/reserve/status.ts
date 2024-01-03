@@ -4,7 +4,7 @@ import { printValueMapRecursive } from '../../utils/cli'
 export default class ReserveStatus extends BaseCommand {
   static description = 'Shows information about reserve'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
   }
 

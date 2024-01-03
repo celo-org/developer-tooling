@@ -6,7 +6,7 @@ export default class TransferDollars extends ReleaseGoldBaseCommand {
   static description =
     'Transfer Celo Dollars from the given contract address. Dollars may be accrued to the ReleaseGold contract via validator epoch rewards.'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...ReleaseGoldBaseCommand.flags,
     to: Flags.address({
       required: true,

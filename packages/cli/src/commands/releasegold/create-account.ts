@@ -4,7 +4,7 @@ import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
 export default class CreateAccount extends ReleaseGoldBaseCommand {
   static description = 'Creates a new account for the ReleaseGold instance'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...ReleaseGoldBaseCommand.flags,
   }
 

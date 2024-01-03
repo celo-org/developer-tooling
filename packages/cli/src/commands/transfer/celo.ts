@@ -9,7 +9,7 @@ export default class TransferCelo extends BaseCommand {
   static description =
     'Transfer CELO to a specified address. (Note: this is the equivalent of the old transfer:gold)'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({ required: true, description: 'Address of the sender' }),
     to: Flags.address({ required: true, description: 'Address of the receiver' }),

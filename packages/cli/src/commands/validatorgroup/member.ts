@@ -9,7 +9,7 @@ import { Args, Flags } from '../../utils/command'
 export default class ValidatorGroupMembers extends BaseCommand {
   static description = 'Add or remove members from a Validator Group'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({ required: true, description: "ValidatorGroup's address" }),
     yes: flags.boolean({ description: 'Answer yes to prompt' }),

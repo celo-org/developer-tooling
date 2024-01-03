@@ -18,7 +18,7 @@ export default class ElectionRun extends BaseCommand {
   static description =
     'Runs a "mock" election and prints out the validators that would be elected if the epoch ended right now.'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     ...(cli.table.flags() as object),
   }

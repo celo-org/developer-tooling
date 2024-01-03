@@ -15,7 +15,7 @@ export default class ElectionCurrent extends BaseCommand {
   static description =
     'Outputs the set of validators currently participating in BFT to create blocks. An election is run to select the validator set at the end of every epoch.'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     valset: flags.boolean({
       description:

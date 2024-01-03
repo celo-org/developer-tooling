@@ -7,7 +7,7 @@ import { displayMetadata } from '../../utils/identity'
 
 export default class ShowMetadata extends BaseCommand {
   static description = 'Show the data in a local metadata file'
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     ...(cli.table.flags() as object),
   }

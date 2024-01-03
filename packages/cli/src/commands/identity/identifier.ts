@@ -11,7 +11,7 @@ export default class IdentifierQuery extends BaseCommand {
   static description =
     'Queries ODIS for the on-chain identifier and pepper corresponding to a given phone number.'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({
       required: true,

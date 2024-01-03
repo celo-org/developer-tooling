@@ -7,7 +7,7 @@ import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
 export default class SetAccountWalletAddress extends ReleaseGoldBaseCommand {
   static description = "Set the ReleaseGold contract account's wallet address"
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...ReleaseGoldBaseCommand.flags,
     walletAddress: Flags.address({
       required: true,

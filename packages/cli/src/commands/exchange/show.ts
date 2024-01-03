@@ -6,7 +6,7 @@ import { BaseCommand } from '../../base'
 export default class ExchangeShow extends BaseCommand {
   static description = 'Show the current exchange rates offered by the Exchange'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     amount: flags.string({
       description: 'Amount of the token being exchanged to report rates for',

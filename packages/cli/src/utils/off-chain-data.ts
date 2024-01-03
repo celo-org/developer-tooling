@@ -18,7 +18,7 @@ export enum StorageProviders {
 }
 
 export abstract class OffchainDataCommand extends BaseCommand {
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     directory: flags.string({
       parse: parsePath,

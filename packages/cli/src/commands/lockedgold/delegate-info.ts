@@ -7,7 +7,7 @@ import { Flags } from '../../utils/command'
 export default class DelegateInfo extends BaseCommand {
   static description = 'Delegate info about account.'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     account: flags.string({ ...Flags.address, required: true }),
   }

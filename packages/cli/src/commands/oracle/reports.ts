@@ -6,7 +6,7 @@ import { failWith } from '../../utils/cli'
 export default class Reports extends BaseCommand {
   static description = 'List oracle reports for a given token'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     ...(cli.table.flags() as object),
   }

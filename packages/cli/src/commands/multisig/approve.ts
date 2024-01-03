@@ -7,7 +7,7 @@ import { Flags } from '../../utils/command'
 export default class ApproveMultiSig extends BaseCommand {
   static description = 'Approves an existing transaction on a multi-sig contract'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({
       required: true,

@@ -9,7 +9,7 @@ import { Flags } from '../../utils/command'
 export default class ValidatorRegister extends BaseCommand {
   static description = 'Register a new Validator'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({ required: true, description: 'Address for the Validator' }),
     ecdsaKey: Flags.ecdsaPublicKey({ required: true }),

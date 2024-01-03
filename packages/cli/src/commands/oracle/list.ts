@@ -5,7 +5,7 @@ import { failWith } from '../../utils/cli'
 export default class List extends BaseCommand {
   static description = 'List oracle addresses for a given token'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
   }
 

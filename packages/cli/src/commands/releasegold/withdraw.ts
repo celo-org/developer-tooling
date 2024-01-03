@@ -7,7 +7,7 @@ export default class Withdraw extends ReleaseGoldBaseCommand {
   static description =
     'Withdraws `value` released celo to the beneficiary address. Fails if `value` worth of celo has not been released yet.'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...ReleaseGoldBaseCommand.flags,
     value: Flags.wei({
       required: true,

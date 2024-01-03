@@ -8,7 +8,7 @@ export default class SetLiquidityProvision extends ReleaseGoldBaseCommand {
   static description =
     'Set the liquidity provision to true, allowing the beneficiary to withdraw released gold.'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...ReleaseGoldBaseCommand.flags,
     yesreally: flags.boolean({ description: 'Override prompt to set liquidity (be careful!)' }),
   }

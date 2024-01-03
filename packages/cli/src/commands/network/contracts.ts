@@ -19,7 +19,7 @@ const UNPROXIED_CONTRACTS: CeloContract[] = []
 export default class Contracts extends BaseCommand {
   static description = 'Lists Celo core contracts and their addesses.'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     ...(cli.table.flags() as object),
   }

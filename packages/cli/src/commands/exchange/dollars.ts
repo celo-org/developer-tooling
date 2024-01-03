@@ -4,7 +4,7 @@ import { Flags } from '../../utils/command'
 export default class ExchangeDollars extends ExchangeStableBase {
   static description = 'Exchange Celo Dollars for CELO via the stability mechanism'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...ExchangeStableBase.flags,
     from: Flags.address({
       required: true,

@@ -39,7 +39,7 @@ async function getClaims(
 export default class ShowClaimedAccounts extends BaseCommand {
   static description = 'Show information about claimed accounts'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
   }
 

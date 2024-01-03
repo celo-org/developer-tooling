@@ -7,7 +7,7 @@ import { ClaimCommand } from '../../utils/identity'
 export default class CreateMetadata extends ClaimCommand {
   static description =
     'Create an empty identity metadata file. Use this metadata file to store claims attesting to ownership of off-chain resources. Claims can be generated with the account:claim-* commands.'
-  static flags = ClaimCommand.flags
+  static flags: { [name: string]: any } = ClaimCommand.flags
   static args: IArg[] = [
     Args.newFile('file', { description: 'Path where the metadata should be saved' }),
   ]

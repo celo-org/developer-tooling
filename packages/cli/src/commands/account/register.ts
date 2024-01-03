@@ -8,7 +8,7 @@ export default class Register extends BaseCommand {
   static description =
     'Register an account on-chain. This allows you to lock Gold, which is a pre-requisite for registering a Validator or Group, participating in Validator elections and on-chain Governance, and earning epoch rewards.'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     name: flags.string(),
     from: Flags.address({ required: true }),

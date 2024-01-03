@@ -11,7 +11,7 @@ const stableTokenOptions = enumEntriesDupWithLowercase(Object.entries(StableToke
 export default class Propose extends BaseCommand {
   static description = 'Proposes a Granda Mento exchange'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({ required: true, description: 'The address with tokens to exchange' }),
     value: Flags.wei({

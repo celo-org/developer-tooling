@@ -22,7 +22,7 @@ export default class Show extends BaseCommand {
   static description =
     'Show rewards information about a voter, registered Validator, or Validator Group'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     estimate: flags.boolean({ description: 'Estimate voter rewards from current votes' }),
     voter: Flags.address({ description: 'Voter to show rewards for' }),

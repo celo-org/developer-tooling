@@ -22,27 +22,24 @@
   "dependencies": {
     "@celo/utils": "^5.0.6",
     "@celo/wallet-base": "^5.1.1",
-    "@celo/wallet-remote": "^5.1.1",
     "@celo/wallet-hsm": "^5.1.1",
+    "@celo/wallet-remote": "^5.1.1",
+    "@ethereumjs/util": "8.0.5",
     "@google-cloud/kms": "~2.9.0",
     "@types/debug": "^4.1.5",
     "@types/secp256k1": "^4.0.0",
-    "eth-lib": "^0.2.8",
-    "@ethereumjs/util": "8.0.5",
     "bignumber.js": "^9.0.0",
     "debug": "^4.1.1",
+    "eth-lib": "^0.2.8",
     "secp256k1": "^4.0.0"
   },
   "devDependencies": {
     "@celo/connect": "^5.1.1",
-    "elliptic": "^6.5.4",
     "dotenv": "^8.2.0",
+    "elliptic": "^6.5.4",
     "web3": "1.10.0"
   },
   "engines": {
     "node": ">=8.14.2"
-  },
-  "resolutions": {
-    "secp256k1": "^4.0.0"
   }
 }

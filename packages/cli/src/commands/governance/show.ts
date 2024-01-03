@@ -24,7 +24,7 @@ export default class Show extends BaseCommand {
 
   static description = 'Show information about a governance proposal, hotfix, or account.'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     raw: flags.boolean({ required: false, description: 'Display proposal in raw bytes format' }),
     jsonTransactions: flags.string({

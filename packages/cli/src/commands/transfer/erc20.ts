@@ -10,7 +10,7 @@ import { Flags } from '../../utils/command'
 export default class TransferErc20 extends BaseCommand {
   static description = 'Transfer ERC20 to a specified address'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     erc20Address: Flags.address({
       required: true,

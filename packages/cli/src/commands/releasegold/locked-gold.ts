@@ -10,7 +10,7 @@ export default class LockedGold extends ReleaseGoldBaseCommand {
   static description =
     'Perform actions [lock, unlock, withdraw] on CELO that has been locked via the provided ReleaseGold contract.'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...ReleaseGoldBaseCommand.flags,
     action: flags.string({
       char: 'a',

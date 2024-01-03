@@ -6,7 +6,7 @@ export default class VerifyProofOfPossession extends BaseCommand {
   static description =
     'Verify a proof-of-possession. See the "account:proof-of-possession" command for more details.'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     signer: Flags.address({
       required: true,

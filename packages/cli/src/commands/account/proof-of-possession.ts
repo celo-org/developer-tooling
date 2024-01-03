@@ -6,7 +6,7 @@ export default class ProofOfPossession extends BaseCommand {
   static description =
     'Generate proof-of-possession to be used to authorize a signer. See the "account:authorize" command for more details.'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     signer: Flags.address({
       required: true,

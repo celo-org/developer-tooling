@@ -4,7 +4,7 @@ import { ClaimCommand } from '../../utils/identity'
 
 export default class ClaimDomain extends ClaimCommand {
   static description = 'Claim a domain and add the claim to a local metadata file'
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...ClaimCommand.flags,
     domain: flags.string({
       required: true,

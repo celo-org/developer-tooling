@@ -7,7 +7,7 @@ import { Flags } from '../../utils/command'
 export default class Execute extends BaseCommand {
   static description = 'Execute a passing governance proposal'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     proposalID: flags.string({ required: true, description: 'UUID of proposal to execute' }),
     from: Flags.address({ required: true, description: "Executor's address" }),

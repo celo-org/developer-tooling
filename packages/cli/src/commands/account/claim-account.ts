@@ -5,7 +5,7 @@ import { ClaimCommand } from '../../utils/identity'
 export default class ClaimAccount extends ClaimCommand {
   static description =
     'Claim another account, and optionally its public key, and add the claim to a local metadata file'
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...ClaimCommand.flags,
     address: flags.string({
       required: true,

@@ -7,7 +7,7 @@ import { Flags } from '../../utils/command'
 export default class DowntimeSlashCommand extends BaseCommand {
   static description = 'Downtime slash a validator'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({
       required: true,

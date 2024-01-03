@@ -9,7 +9,7 @@ const DKG = require('./DKG.json')
 export default class DKGRegister extends BaseCommand {
   static description = 'Allowlist an address in the DKG'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     participantAddress: flags.string({
       required: true,

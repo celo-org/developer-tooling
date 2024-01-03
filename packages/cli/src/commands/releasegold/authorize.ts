@@ -8,7 +8,7 @@ export default class Authorize extends ReleaseGoldBaseCommand {
   static description =
     'Authorize an alternative key to be used for a given action (Vote, Validate, Attest) on behalf of the ReleaseGold instance contract.'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...ReleaseGoldBaseCommand.flags,
     role: oclifFlags.string({ required: true, options: ['vote', 'validator', 'attestation'] }),
     signer: Flags.address({

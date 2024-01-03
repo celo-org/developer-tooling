@@ -8,7 +8,7 @@ export default class SetName extends BaseCommand {
   static description =
     "Sets the name of a registered account on-chain. An account's name is an optional human readable identifier"
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     account: Flags.address({ required: true }),
     name: flags.string({ required: true }),

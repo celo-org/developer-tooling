@@ -1,18 +1,20 @@
 import { flags } from '@oclif/command'
+import { IFlag } from '@oclif/parser/lib/flags'
 import { BaseCommand } from '../../base'
-
 export default class AccountList extends BaseCommand {
   static description = 'List the addresses from the node and the local instance'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     local: flags.boolean({
       allowNo: true,
       description:
         'If set, only show local and hardware wallet accounts. Use no-local to only show keystore addresses.',
     }),
+  } as {
+    local: IFlag<boolean>
+    useLedger: IFlag<boolean>
   }
-
   requireSynced = false
 
   async run() {

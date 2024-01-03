@@ -7,7 +7,7 @@ import { Flags } from '../../utils/command'
 export default class Cancel extends BaseCommand {
   static description = 'Cancels a Granda Mento exchange proposal'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({
       required: true,

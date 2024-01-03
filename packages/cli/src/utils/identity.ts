@@ -1,7 +1,7 @@
 import { ContractKit } from '@celo/contractkit'
 import { ClaimTypes, IdentityMetadataWrapper } from '@celo/contractkit/lib/identity'
 import { Claim } from '@celo/contractkit/lib/identity/claims/claim'
-import { now, VERIFIABLE_CLAIM_TYPES } from '@celo/contractkit/lib/identity/claims/types'
+import { VERIFIABLE_CLAIM_TYPES, now } from '@celo/contractkit/lib/identity/claims/types'
 import { verifyClaim } from '@celo/contractkit/lib/identity/claims/verify'
 import { eqAddress } from '@celo/utils/lib/address'
 import { concurrentMap } from '@celo/utils/lib/async'
@@ -14,7 +14,7 @@ import { BaseCommand } from '../base'
 import { Args, Flags } from './command'
 
 export abstract class ClaimCommand extends BaseCommand {
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({
       required: true,

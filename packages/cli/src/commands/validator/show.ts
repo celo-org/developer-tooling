@@ -7,7 +7,7 @@ import { Args } from '../../utils/command'
 export default class ValidatorShow extends BaseCommand {
   static description = 'Show information about a registered Validator.'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
   }
 

@@ -19,7 +19,7 @@ export default class NewAccount extends BaseCommand {
   static description =
     "Creates a new account locally using the Celo Derivation Path (m/44'/52752'/0/changeIndex/addressIndex) and print out the key information. Save this information for local transaction signing or import into a Celo node. Ledger: this command has been tested swapping mnemonics with the Ledger successfully (only supports english)"
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     passphrasePath: flags.string({
       description:

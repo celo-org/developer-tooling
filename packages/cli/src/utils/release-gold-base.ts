@@ -5,7 +5,7 @@ import { BaseCommand } from '../base'
 import { Flags } from './command'
 
 export abstract class ReleaseGoldBaseCommand extends BaseCommand {
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     contract: Flags.address({ required: true, description: 'Address of the ReleaseGold Contract' }),
   }

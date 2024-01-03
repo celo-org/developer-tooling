@@ -7,7 +7,7 @@ export default class SetWallet extends BaseCommand {
   static description =
     "Sets the wallet of a registered account on-chain. An account's wallet is an optional wallet associated with an account. Can be set by the account or an account's signer."
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     account: Flags.address({ required: true }),
     wallet: Flags.address({ required: true }),

@@ -10,7 +10,7 @@ export default class TestProposal extends BaseCommand {
 
   static hidden = true
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     jsonTransactions: flags.string({
       required: true,

@@ -10,7 +10,7 @@ Regular (ECDSA and BLS) key rotation is recommended for Validator operational se
 
 WARNING: By default, the BLS key used by the validator node is derived from the ECDSA private key. As a result, rotating the BLS key without rotating the ECDSA key will result in validator downtime without special configuration. Use this method only if you know what you are doing.`
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     from: Flags.address({ required: true, description: "Validator's address" }),
     blsKey: Flags.blsPublicKey({ required: true }),

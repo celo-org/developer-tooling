@@ -14,7 +14,7 @@ import {
 export default class Propose extends BaseCommand {
   static description = 'Submit a governance proposal'
 
-  static flags = {
+  static flags: { [name: string]: any } = {
     ...BaseCommand.flags,
     jsonTransactions: flags.string({
       required: true,
