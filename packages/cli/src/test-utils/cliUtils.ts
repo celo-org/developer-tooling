@@ -1,6 +1,8 @@
 import { Interfaces } from '@oclif/core'
+import { BaseCommand } from '../base'
 
-type Runner = { run: (argv: string[], config?: Interfaces.LoadOptions) => Promise<any> }
+type AbstractConstructor<T> = new (...args: any[]) => T
+interface Runner extends AbstractConstructor<BaseCommand> {}
 
 export async function testLocally(
   command: Runner,
@@ -8,5 +10,6 @@ export async function testLocally(
   config?: Interfaces.LoadOptions
 ) {
   const extendedArgv = [...argv, '--node', 'local']
-  return command.run(extendedArgv, config)
+  const runner = new command(extendedArgv, config)
+  return runner.run()
 }
