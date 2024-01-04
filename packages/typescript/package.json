@@ -7,7 +7,5 @@
   "main": "tsconfig.json",
   "scripts": {
     "build-rules": "tsc"
-  },
-  "devDependencies": {
   }
 }
