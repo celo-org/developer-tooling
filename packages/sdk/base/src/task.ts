@@ -26,11 +26,7 @@ export interface TaskOptions {
  * It will prefix taskName to the logs
  */
 const createTaskLogger = (opts: TaskOptions): Logger => {
-  if (opts.logger) {
-    return prefixLogger(opts.name, opts.logger)
-  } else {
-    return noopLogger
-  }
+  return opts.logger ? prefixLogger(opts.name, opts.logger) : noopLogger
 }
 
 interface RepeatTaskOptions extends TaskOptions {
@@ -60,7 +56,7 @@ export function repeatTask(
 
   const ctx: RepeatTaskContext = {
     executionNumber: 0,
-    stopTask() {
+    stopTask: () => {
       isActive = false
     },
   }
@@ -85,15 +81,12 @@ export function repeatTask(
   if (opts.initialDelayMS != null) {
     setTimeout(loop, opts.initialDelayMS)
   } else {
-    // tslint:disable-next-line: no-floating-promises
-    loop()
+    void loop()
   }
 
   return {
     stop: ctx.stopTask,
-    isRunning() {
-      return isActive
-    },
+    isRunning: () => isActive,
   }
 }
 
