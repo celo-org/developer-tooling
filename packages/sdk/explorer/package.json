@@ -18,7 +18,7 @@
     "clean": "tsc -b . --clean",
     "docs": "typedoc",
     "test": "jest --runInBand --passWithNoTests",
-    "lint": "tslint -c tslint.json --project .",
+    "lint": "yarn run --top-level eslint -c .eslintrc.js --ext .ts src",
     "prepublishOnly": "yarn build"
   },
   "dependencies": {
