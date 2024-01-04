@@ -19,7 +19,7 @@ module.exports = {
   extends: ['prettier'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: './tsconfig.json',
+    project: './eslint.tsconfig.json',
     sourceType: 'module',
   },
   plugins: [
@@ -249,4 +249,12 @@ module.exports = {
       },
     ],
   },
+  overrides: [
+    {
+      files: ['src/**/*.test.ts', 'src/test-utils/*'],
+      rules: {
+        'import/no-extraneous-dependencies': 'off',
+      },
+    },
+  ],
 }
