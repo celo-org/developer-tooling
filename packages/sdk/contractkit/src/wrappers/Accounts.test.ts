@@ -36,7 +36,7 @@ testWithGanache('Accounts Wrapper', (web3) => {
     await lockedGold.lock().sendAndWaitForReceipt({ from: account, value: minLockedGoldValue })
   }
 
-  function getParsedSignatureOfAddressForTest(address: string, signer: string) {
+  const getParsedSignatureOfAddressForTest = (address: string, signer: string) => {
     return getParsedSignatureOfAddress(
       web3.utils.soliditySha3,
       kit.connection.sign,

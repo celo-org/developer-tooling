@@ -107,7 +107,7 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<LockedGold> {
   getMaxDelegateesCount = async () => {
     const maxDelegateesCountHex = await this.connection.web3.eth.getStorageAt(
       // tslint:disable-next-line:no-string-literal
-      this.contract['_address'],
+      this.contract._address,
       10
     )
     return new BigNumber(maxDelegateesCountHex, 16)
@@ -155,10 +155,7 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<LockedGold> {
    * Relocks gold that has been unlocked but not withdrawn.
    * @param value The value to relock from pending withdrawals.
    */
-  async relock(
-    account: Address,
-    value: BigNumber.Value
-  ): Promise<Array<CeloTransactionObject<void>>> {
+  async relock(account: Address, value: BigNumber.Value): Promise<CeloTransactionObject<void>[]> {
     const pendingWithdrawals = await this.getPendingWithdrawals(account)
     // Ensure there are enough pending withdrawals to relock.
     const totalValue = await this.getPendingWithdrawalsTotalValue(account)
@@ -175,11 +172,7 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<LockedGold> {
     pendingWithdrawals.forEach(throwIfNotSorted)
 
     let remainingToRelock = new BigNumber(value)
-    const relockPw = (
-      acc: Array<CeloTransactionObject<void>>,
-      pw: PendingWithdrawal,
-      i: number
-    ) => {
+    const relockPw = (acc: CeloTransactionObject<void>[], pw: PendingWithdrawal, i: number) => {
       const valueToRelock = BigNumber.minimum(pw.value, remainingToRelock)
       if (!valueToRelock.isZero()) {
         remainingToRelock = remainingToRelock.minus(valueToRelock)
@@ -187,7 +180,7 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<LockedGold> {
       }
       return acc
     }
-    return pendingWithdrawals.reduceRight(relockPw, []) as Array<CeloTransactionObject<void>>
+    return pendingWithdrawals.reduceRight(relockPw, []) as CeloTransactionObject<void>[]
   }
 
   /**
