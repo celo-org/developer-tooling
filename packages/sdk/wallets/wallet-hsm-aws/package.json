@@ -18,10 +18,11 @@
     "clean": "tsc -b . --clean",
     "docs": "typedoc",
     "test": "jest --runInBand",
-    "lint": "tslint -c tslint.json --project .",
+    "lint": "yarn run --top-level eslint -c .eslintrc.js --ext .ts src",
     "prepublishOnly": "yarn build"
   },
   "dependencies": {
+    "@celo/connect": "^5.1.1",
     "@celo/utils": "^5.0.6",
     "@celo/wallet-base": "^5.1.1",
     "@celo/wallet-hsm": "^5.1.1",
@@ -36,7 +37,6 @@
     "secp256k1": "^4.0.0"
   },
   "devDependencies": {
-    "@celo/connect": "^5.1.1",
     "dotenv": "^8.2.0",
     "elliptic": "^6.5.4",
     "web3": "1.10.0"
