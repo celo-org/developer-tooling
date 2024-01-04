@@ -13,4 +13,7 @@ export default async function globalSetup() {
   await baseSetup(path.resolve(chainDataPath), 'v10.tar.gz', {
     from_targz: true,
   })
+  // it is necessary to disabled oclif integration with ts-node as
+  // together it leads to a silent signit error and exit when tsconfk is loaded.
+  global.oclif = { tsnodeEnabled: false }
 }
