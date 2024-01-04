@@ -270,7 +270,6 @@ function ckToViem(tx: CeloTx & { v?: number }) {
 }
 
 describe('recoverTransaction', () => {
-  const ACCOUNT_ADDRESS1 = privateKeyToAddress(PRIVATE_KEY1)
   describe('with EIP1559 transactions', () => {
     test('ok', async () => {
       const account = privateKeyToAccount(PRIVATE_KEY1)
