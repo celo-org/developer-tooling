@@ -16,7 +16,7 @@
     "docs": "typedoc",
     "test": "jest --runInBand --ci",
     "test:verbose": "jest --verbose",
-    "lint": "tslint -c tslint.json --project ."
+    "lint": "yarn run --top-level eslint -c .eslintrc.js --ext .ts src"
   },
   "files": [
     "lib/**/*"
