@@ -11,7 +11,8 @@ export default class ReserveStatus extends BaseCommand {
   static examples = ['status']
 
   async run() {
-    const reserve = await this.kit.contracts.getReserve()
+    const kit = await this.getKit()
+    const reserve = await kit.contracts.getReserve()
     const data = {
       'Reserve address': reserve.address,
       Spenders: await reserve.getSpenders(),

@@ -11,6 +11,7 @@ export default class Show extends ReleaseGoldBaseCommand {
   static examples = ['show --contract 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95']
 
   async run() {
+    const kit = await this.getKit()
     const balanceStateData = {
       totalWithdrawn: await this.releaseGoldWrapper.getTotalWithdrawn(),
       maxDistribution: await this.releaseGoldWrapper.getMaxDistribution(),
@@ -20,7 +21,7 @@ export default class Show extends ReleaseGoldBaseCommand {
       remainingLockedBalance: await this.releaseGoldWrapper.getRemainingLockedBalance(),
       currentReleasedTotalAmount: await this.releaseGoldWrapper.getCurrentReleasedTotalAmount(),
     }
-    const accounts = await this.kit.contracts.getAccounts()
+    const accounts = await kit.contracts.getAccounts()
     const isAccount = await accounts.isAccount(this.releaseGoldWrapper.address)
     const authorizedSigners = isAccount
       ? {

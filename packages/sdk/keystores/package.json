@@ -27,8 +27,8 @@
     "ethereumjs-wallet": "^1.0.1"
   },
   "devDependencies": {
-    "rimraf": "3.0.2",
-    "@types/rimraf": "3.0.2"
+    "@types/rimraf": "3.0.2",
+    "rimraf": "3.0.2"
   },
   "engines": {
     "node": ">=10"

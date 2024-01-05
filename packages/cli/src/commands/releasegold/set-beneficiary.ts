@@ -1,8 +1,8 @@
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import prompts from 'prompts'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
 
 export default class SetBeneficiary extends ReleaseGoldBaseCommand {
@@ -11,34 +11,36 @@ export default class SetBeneficiary extends ReleaseGoldBaseCommand {
 
   static flags = {
     ...ReleaseGoldBaseCommand.flags,
-    from: Flags.address({
+    from: CustomFlags.address({
       required: true,
       description: 'Address to submit multisig transaction from (one of the owners)',
     }),
-    beneficiary: Flags.address({
+    beneficiary: CustomFlags.address({
       required: true,
       description: 'Address of the new beneficiary',
     }),
-    yesreally: flags.boolean({
+    yesreally: Flags.boolean({
       description: 'Override prompt to set new beneficiary (be careful!)',
     }),
   }
 
-  static args = []
+  static args = {}
 
   static examples = [
     'set-beneficiary --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631 --from 0xE36Ea790bc9d7AB70C55260C66D52b1eca985f84 --beneficiary 0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb',
   ]
 
   async run() {
-    // tslint:disable-next-line
-    const { flags } = this.parse(SetBeneficiary)
-    const newBeneficiary = flags.beneficiary
+    const kit = await this.getKit()
+    const { flags } = await this.parse(SetBeneficiary)
+    const newBeneficiary = flags.beneficiary as string
 
     const owner = await this.releaseGoldWrapper.getOwner()
-    const releaseGoldMultiSig = await this.kit.contracts.getMultiSig(owner)
+    const releaseGoldMultiSig = await kit.contracts.getMultiSig(owner)
 
-    await newCheckBuilder(this).isMultiSigOwner(flags.from, releaseGoldMultiSig).runChecks()
+    await newCheckBuilder(this)
+      .isMultiSigOwner(flags.from as string, releaseGoldMultiSig)
+      .runChecks()
 
     if (!flags.yesreally) {
       const response = await prompts({
@@ -57,13 +59,13 @@ export default class SetBeneficiary extends ReleaseGoldBaseCommand {
     const currentBeneficiary = await this.releaseGoldWrapper.getBeneficiary()
     const setBeneficiaryTx = this.releaseGoldWrapper.setBeneficiary(newBeneficiary)
     const setBeneficiaryMultiSigTx = await releaseGoldMultiSig.submitOrConfirmTransaction(
-      this.contractAddress,
+      await this.contractAddress(),
       setBeneficiaryTx.txo
     )
     await displaySendTx<any>(
       'setBeneficiary',
       setBeneficiaryMultiSigTx,
-      { from: flags.from },
+      { from: flags.from as string },
       'BeneficiarySet'
     )
     const replaceOwnerTx = releaseGoldMultiSig.replaceOwner(currentBeneficiary, newBeneficiary)

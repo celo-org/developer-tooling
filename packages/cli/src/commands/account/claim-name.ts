@@ -1,12 +1,11 @@
 import { createNameClaim } from '@celo/contractkit/lib/identity/claims/claim'
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { ClaimCommand } from '../../utils/identity'
-
 export default class ClaimName extends ClaimCommand {
   static description = 'Claim a name and add the claim to a local metadata file'
   static flags = {
     ...ClaimCommand.flags,
-    name: flags.string({
+    name: Flags.string({
       required: true,
       description: 'The name you want to claim',
     }),
@@ -17,9 +16,9 @@ export default class ClaimName extends ClaimCommand {
   ]
   self = ClaimName
   async run() {
-    const res = this.parse(ClaimName)
+    const res = await this.parse(ClaimName)
     const metadata = await this.readMetadata()
     await this.addClaim(metadata, createNameClaim(res.flags.name))
-    this.writeMetadata(metadata)
+    await this.writeMetadata(metadata)
   }
 }

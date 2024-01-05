@@ -1,7 +1,7 @@
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 
 export default class ValidatorGroupDeRegister extends BaseCommand {
   static description =
@@ -9,15 +9,19 @@ export default class ValidatorGroupDeRegister extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    from: Flags.address({ required: true, description: "Signer or ValidatorGroup's address" }),
+    from: CustomFlags.address({
+      required: true,
+      description: "Signer or ValidatorGroup's address",
+    }),
   }
 
   static examples = ['deregister --from 0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95']
 
   async run() {
-    const res = this.parse(ValidatorGroupDeRegister)
+    const kit = await this.getKit()
+    const res = await this.parse(ValidatorGroupDeRegister)
 
-    const validators = await this.kit.contracts.getValidators()
+    const validators = await kit.contracts.getValidators()
 
     const account = await validators.signerToAccount(res.flags.from)
 

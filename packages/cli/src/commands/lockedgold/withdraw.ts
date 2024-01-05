@@ -1,7 +1,7 @@
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 
 export default class Withdraw extends BaseCommand {
   static description =
@@ -9,16 +9,17 @@ export default class Withdraw extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    from: Flags.address({ required: true }),
+    from: CustomFlags.address({ required: true }),
   }
 
   static examples = ['withdraw --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95']
 
   async run() {
+    const kit = await this.getKit()
     // tslint:disable-next-line
-    const { flags } = this.parse(Withdraw)
-    this.kit.defaultAccount = flags.from
-    const lockedgold = await this.kit.contracts.getLockedGold()
+    const { flags } = await this.parse(Withdraw)
+    kit.defaultAccount = flags.from
+    const lockedgold = await kit.contracts.getLockedGold()
 
     await newCheckBuilder(this).isAccount(flags.from).runChecks()
 

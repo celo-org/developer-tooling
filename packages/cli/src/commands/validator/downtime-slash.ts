@@ -1,31 +1,31 @@
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 
 export default class DowntimeSlashCommand extends BaseCommand {
   static description = 'Downtime slash a validator'
 
   static flags = {
     ...BaseCommand.flags,
-    from: Flags.address({
+    from: CustomFlags.address({
       required: true,
       description: 'From address to perform the slash (reward recipient)',
     }),
-    validator: Flags.address({
+    validator: CustomFlags.address({
       description: 'Validator (signer or account) address',
       exclusive: ['validators'],
     }),
-    validators: Flags.addressArray({
+    validators: CustomFlags.addressArray({
       description: 'Validator (signer or account) address list',
       exclusive: ['validator'],
     }),
-    intervals: Flags.intRangeArray({
+    intervals: CustomFlags.intRangeArray({
       description: 'Array of intervals, ordered by min start to max end',
       exclusive: ['beforeBlock'],
     }),
-    beforeBlock: flags.integer({
+    beforeBlock: Flags.integer({
       description: 'Slash for slashable downtime window before provided block',
       exclusive: ['intervals'],
     }),
@@ -43,10 +43,11 @@ export default class DowntimeSlashCommand extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(DowntimeSlashCommand)
+    const kit = await this.getKit()
+    const res = await this.parse(DowntimeSlashCommand)
     const validatorsToSlash = res.flags.validators ?? [res.flags.validator!]
 
-    const downtimeSlasher = await this.kit.contracts.getDowntimeSlasher()
+    const downtimeSlasher = await kit.contracts.getDowntimeSlasher()
     const intervals = res.flags.beforeBlock
       ? await downtimeSlasher.slashableDowntimeIntervalsBefore(res.flags.beforeBlock)
       : res.flags.intervals!

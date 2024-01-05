@@ -67,7 +67,7 @@ testWithGanache('releasegold:withdraw cmd', (web3: Web3) => {
     ).rejects.toThrow()
 
     // Move out the cUSD balance
-    await await testLocally(RGTransferDollars, [
+    await testLocally(RGTransferDollars, [
       '--contract',
       contractAddress,
       '--to',

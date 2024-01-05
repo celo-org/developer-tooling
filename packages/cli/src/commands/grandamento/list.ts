@@ -9,7 +9,8 @@ export default class List extends BaseCommand {
   }
 
   async run() {
-    const grandaMento = await this.kit.contracts.getGrandaMento()
+    const kit = await this.getKit()
+    const grandaMento = await kit.contracts.getGrandaMento()
     const proposals = await grandaMento.getActiveProposalIds()
 
     if (!proposals.length) {

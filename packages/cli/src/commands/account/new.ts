@@ -8,7 +8,7 @@ import {
 } from '@celo/cryptographic-utils/lib/account'
 import { privateKeyToAddress } from '@celo/utils/lib/address'
 import { toChecksumAddress } from '@ethereumjs/util'
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import * as fs from 'fs-extra'
 import { BaseCommand } from '../../base'
 import { printValueMap } from '../../utils/cli'
@@ -21,19 +21,19 @@ export default class NewAccount extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    passphrasePath: flags.string({
+    passphrasePath: Flags.string({
       description:
         'Path to a file that contains the BIP39 passphrase to combine with the mnemonic specified using the mnemonicPath flag and the index specified using the addressIndex flag. Every passphrase generates a different private key and wallet address.',
     }),
-    changeIndex: flags.integer({
+    changeIndex: Flags.integer({
       default: 0,
       description: 'Choose the change index for the derivation path',
     }),
-    addressIndex: flags.integer({
+    addressIndex: Flags.integer({
       default: 0,
       description: 'Choose the address index for the derivation path',
     }),
-    language: flags.string({
+    language: Flags.string({
       options: [
         'chinese_simplified',
         'chinese_traditional',
@@ -48,11 +48,11 @@ export default class NewAccount extends BaseCommand {
       description:
         "Language for the mnemonic words. **WARNING**, some hardware wallets don't support other languages",
     }),
-    mnemonicPath: flags.string({
+    mnemonicPath: Flags.string({
       description:
         'Instead of generating a new mnemonic (seed phrase), use the user-supplied mnemonic instead. Path to a file that contains all the mnemonic words separated by a space (example: "word1 word2 word3 ... word24"). If the words are a language other than English, the --language flag must be used. Only BIP39 mnemonics are supported',
     }),
-    derivationPath: flags.string({
+    derivationPath: Flags.string({
       description:
         "Choose a different derivation Path (Celo's default is \"m/44'/52752'/0'\"). Use \"eth\" as an alias of the Ethereum derivation path (\"m/44'/60'/0'\"). Recreating the same account requires knowledge of the mnemonic, passphrase (if any), and the derivation path",
     }),
@@ -98,7 +98,7 @@ export default class NewAccount extends BaseCommand {
   requireSynced = false
 
   async run() {
-    const res = this.parse(NewAccount)
+    const res = await this.parse(NewAccount)
     let mnemonic = NewAccount.readFile(res.flags.mnemonicPath)
     if (mnemonic) {
       mnemonic = normalizeMnemonic(mnemonic)

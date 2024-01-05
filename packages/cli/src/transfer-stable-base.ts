@@ -1,27 +1,27 @@
 import { StableToken } from '@celo/contractkit'
 import { stableTokenInfos } from '@celo/contractkit/lib/celo-tokens'
 import { StableTokenWrapper } from '@celo/contractkit/lib/wrappers/StableTokenWrapper'
-import { flags } from '@oclif/command'
-import { ParserOutput } from '@oclif/parser/lib/parse'
+import { Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { BaseCommand } from './base'
 import { newCheckBuilder } from './utils/checks'
 import { displaySendTx, failWith } from './utils/cli'
-import { Flags } from './utils/command'
+import { CustomFlags } from './utils/command'
 
 export abstract class TransferStableBase extends BaseCommand {
   static flags = {
     ...BaseCommand.flags,
-    from: Flags.address({ required: true, description: 'Address of the sender' }),
-    to: Flags.address({ required: true, description: 'Address of the receiver' }),
-    value: flags.string({ required: true, description: 'Amount to transfer (in wei)' }),
-    comment: flags.string({ description: 'Transfer comment' }),
+    from: CustomFlags.address({ required: true, description: 'Address of the sender' }),
+    to: CustomFlags.address({ required: true, description: 'Address of the receiver' }),
+    value: Flags.string({ required: true, description: 'Amount to transfer (in wei)' }),
+    comment: Flags.string({ description: 'Transfer comment' }),
   }
 
   protected _stableCurrency: StableToken | null = null
 
   async run() {
-    const res: ParserOutput<any, any> = this.parse()
+    const kit = await this.getKit()
+    const res = await this.parse()
 
     const from: string = res.flags.from
     const to: string = res.flags.to
@@ -32,13 +32,13 @@ export abstract class TransferStableBase extends BaseCommand {
     }
     let stableToken: StableTokenWrapper
     try {
-      stableToken = await this.kit.contracts.getStableToken(this._stableCurrency)
+      stableToken = await kit.contracts.getStableToken(this._stableCurrency)
     } catch {
       failWith(`The ${this._stableCurrency} token was not deployed yet`)
     }
     // If gasCurrency is not set, use the transferring token
     if (!res.flags.gasCurrency) {
-      await this.kit.setFeeCurrency(stableTokenInfos[this._stableCurrency].contract)
+      await kit.setFeeCurrency(stableTokenInfos[this._stableCurrency].contract)
     }
 
     const tx = res.flags.comment
@@ -49,11 +49,11 @@ export abstract class TransferStableBase extends BaseCommand {
       .hasEnoughStable(from, value, this._stableCurrency)
       .addConditionalCheck(
         `Account can afford transfer and gas paid in ${this._stableCurrency}`,
-        this.kit.connection.defaultFeeCurrency === stableToken.address,
+        kit.connection.defaultFeeCurrency === stableToken.address,
         async () => {
           const [gas, gasPrice, balance] = await Promise.all([
             tx.txo.estimateGas({ feeCurrency: stableToken.address }),
-            this.kit.connection.gasPrice(stableToken.address),
+            kit.connection.gasPrice(stableToken.address),
             stableToken.balanceOf(from),
           ])
           const gasValue = new BigNumber(gas).times(gasPrice as string)

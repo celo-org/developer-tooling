@@ -1,7 +1,7 @@
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 
 export default class ValidatorForceDeaffiliate extends BaseCommand {
   static description =
@@ -9,8 +9,8 @@ export default class ValidatorForceDeaffiliate extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    from: Flags.address({ required: true, description: 'Initiator' }),
-    validator: Flags.address({ required: true, description: "Validator's address" }),
+    from: CustomFlags.address({ required: true, description: 'Initiator' }),
+    validator: CustomFlags.address({ required: true, description: "Validator's address" }),
   }
 
   static examples = [
@@ -18,9 +18,10 @@ export default class ValidatorForceDeaffiliate extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(ValidatorForceDeaffiliate)
+    const kit = await this.getKit()
+    const res = await this.parse(ValidatorForceDeaffiliate)
 
-    const validators = await this.kit.contracts.getValidators()
+    const validators = await kit.contracts.getValidators()
 
     await newCheckBuilder(this, res.flags.validator)
       .isSignerOrAccount()
