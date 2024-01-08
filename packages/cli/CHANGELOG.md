@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.4
+
+### Patch Changes
+
+- Adds bogus changeset to test the newly configured CHANGELOG.md
+
 ## 3.1.3
 
 ### Patch Changes
