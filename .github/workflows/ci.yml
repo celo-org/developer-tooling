@@ -10,12 +10,6 @@ on:
       - master
       - changeset-release/master
   pull_request:
-    branches:
-      - master
-      - new-main
-      - main
-      - 'release/**'
-      - 'prerelease/**'
 
 concurrency:
   group: celo-monorepo-${{ github.ref }}
