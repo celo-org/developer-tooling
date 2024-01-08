@@ -89,8 +89,8 @@ export default class LockedGold extends ReleaseGoldBaseCommand {
     } else if (flags.action === 'withdraw') {
       await checkBuilder.runChecks()
       const currentTime = Math.round(new Date().getTime() / 1000)
-      while (true) {
-        let madeWithdrawal = false
+      let madeWithdrawal = false
+      while (!madeWithdrawal) {
         const pendingWithdrawals = await lockedGold.getPendingWithdrawals(contractAddress)
         for (let i = 0; i < pendingWithdrawals.length; i++) {
           const pendingWithdrawal = pendingWithdrawals[i]
@@ -100,10 +100,8 @@ export default class LockedGold extends ReleaseGoldBaseCommand {
             )
             await displaySendTx('lockedGoldWithdraw', this.releaseGoldWrapper.withdrawLockedGold(i))
             madeWithdrawal = true
-            break
           }
         }
-        if (!madeWithdrawal) break
       }
       const remainingPendingWithdrawals = await lockedGold.getPendingWithdrawals(contractAddress)
       for (const pendingWithdrawal of remainingPendingWithdrawals) {

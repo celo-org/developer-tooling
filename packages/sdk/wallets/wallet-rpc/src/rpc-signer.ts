@@ -28,7 +28,6 @@ enum RpcSignerEndpoint {
   Decrypt = 'personal_decrypt',
 }
 
-// tslint:disable-next-line: interface-over-type-literal
 type RpcSignerEndpointInputs = {
   personal_importRawKey: [string, string]
   personal_unlockAccount: [string, string, number]
@@ -38,7 +37,6 @@ type RpcSignerEndpointInputs = {
   personal_decrypt: [string, string]
 }
 
-// tslint:disable-next-line: interface-over-type-literal
 type RpcSignerEndpointResult = {
   personal_importRawKey: string
   personal_unlockAccount: boolean

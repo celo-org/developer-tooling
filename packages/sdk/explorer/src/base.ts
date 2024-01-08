@@ -35,7 +35,7 @@ export async function obtainKitContractDetails(kit: ContractKit): Promise<Contra
   )
 }
 
-export function mapFromPairs<A, B>(pairs: Array<[A, B]>): Map<A, B> {
+export function mapFromPairs<A, B>(pairs: [A, B][]): Map<A, B> {
   const map = new Map<A, B>()
   pairs.forEach(([k, v]) => {
     map.set(k, v)

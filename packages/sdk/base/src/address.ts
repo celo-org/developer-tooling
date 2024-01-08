@@ -35,15 +35,15 @@ export const findAddressIndex = (address: Address, addresses: Address[]) =>
 
 // Returns an array of indices mapping the entries of oldAddress[] to newAddress[]
 export const mapAddressListOnto = (oldAddress: Address[], newAddress: Address[]) => {
-  const oldAddressIndex: Array<{
+  const oldAddressIndex: {
     address: Address
     index: number
-  }> = oldAddress.map((x: Address, index: number) => ({ address: normalizeAddress(x), index }))
+  }[] = oldAddress.map((x: Address, index: number) => ({ address: normalizeAddress(x), index }))
 
-  const newAddressIndex: Array<{
+  const newAddressIndex: {
     address: Address
     index: number
-  }> = newAddress.map((x: Address, index: number) => ({ address: normalizeAddress(x), index }))
+  }[] = newAddress.map((x: Address, index: number) => ({ address: normalizeAddress(x), index }))
 
   oldAddressIndex.sort((a, b) => a.address.localeCompare(b.address))
   newAddressIndex.sort((a, b) => a.address.localeCompare(b.address))

@@ -9,7 +9,7 @@ import ValidatorGroupRegister from './register'
 process.env.NO_SYNCCHECK = 'true'
 
 testWithGanache('validatorgroup:comission cmd', (web3: Web3) => {
-  async function registerValidatorGroup() {
+  const registerValidatorGroup = async () => {
     const accounts = await web3.eth.getAccounts()
 
     await testLocally(AccountRegister, ['--from', accounts[0]])

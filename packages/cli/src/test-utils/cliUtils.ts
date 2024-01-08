@@ -12,5 +12,6 @@ export async function testLocally(
   config?: Interfaces.LoadOptions
 ) {
   const extendedArgv = [...argv, '--node', 'local']
-  return command.run(extendedArgv, config)
+  const runner = new command(extendedArgv, config)
+  return runner.run()
 }

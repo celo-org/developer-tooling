@@ -31,7 +31,6 @@ export default class OffchainWrite extends OffchainDataCommand {
 
     if (encryptTo && privateDEK && privateKey) {
       kit.defaultAccount = privateKeyToAddress(privateKey)
-      kit
       const nameSchema = new PrivateNameAccessor(this.offchainDataWrapper)
       await nameSchema.write({ name }, [encryptTo])
     } else {

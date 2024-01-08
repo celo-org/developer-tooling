@@ -3,12 +3,12 @@ import { ensureLeading0x, trimLeading0x } from '@celo/utils/lib/address'
 import { EIP712TypedData, generateTypedDataHash } from '@celo/utils/lib/sign-typed-data-utils'
 import { getHashFromEncoded } from '@celo/wallet-base'
 import {
+  Signature,
   bigNumberToBuffer,
   bufferToBigNumber,
   makeCanonical,
   parseBERSignature,
   recoverKeyIndex,
-  Signature,
   sixtyFour,
   thirtyTwo,
 } from '@celo/wallet-hsm'
@@ -30,9 +30,6 @@ export class AwsHsmSigner implements Signer {
   }
 
   private async findCanonicalSignature(buffer: Buffer): Promise<{ S: BigNumber; R: BigNumber }> {
-    let S: BigNumber
-    let R: BigNumber
-
     const { Signature: signature } = await this.kms
       .sign({
         KeyId: this.keyId,
@@ -43,8 +40,8 @@ export class AwsHsmSigner implements Signer {
       .promise()
     const { r, s } = parseBERSignature(signature as Buffer)
 
-    R = bufferToBigNumber(r)
-    S = bufferToBigNumber(s)
+    const R = bufferToBigNumber(r)
+    let S = bufferToBigNumber(s)
     S = makeCanonical(S)
 
     return { S: S!, R: R! }

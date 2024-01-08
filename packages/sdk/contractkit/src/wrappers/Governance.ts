@@ -440,7 +440,7 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<Governance> {
     const schedule = await this.proposalSchedule(proposalID)
 
     const dates: Partial<StageDurations<string>> = {}
-    for (const stage of Object.keys(schedule) as Array<keyof StageDurations<any>>) {
+    for (const stage of Object.keys(schedule) as (keyof StageDurations<any>)[]) {
       dates[stage] = unixSecondsTimestampToDateString(schedule[stage]!)
     }
     return dates

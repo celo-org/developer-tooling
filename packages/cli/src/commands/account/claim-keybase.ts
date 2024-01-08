@@ -8,9 +8,8 @@ import {
 } from '@celo/contractkit/lib/identity/claims/keybase'
 import { sleep } from '@celo/utils/lib/async'
 import { toChecksumAddress } from '@ethereumjs/util'
-import { ux } from '@oclif/core'
 
-import { Flags } from '@oclif/core'
+import { Flags, ux } from '@oclif/core'
 import { writeFileSync } from 'fs'
 import { tmpdir } from 'os'
 import { binaryPrompt } from '../../utils/cli'
@@ -40,7 +39,7 @@ export default class ClaimKeybase extends ClaimCommand {
     const signer = await this.getSigner()
     const signature = await signer.sign(hashOfClaim(claim))
     await this.addClaim(metadata, claim)
-    this.writeMetadata(metadata)
+    await this.writeMetadata(metadata)
 
     try {
       await this.uploadProof(claim, signature, username, accountAddress)

@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/no-floating-promises: off, eqeqeq: off */
 import {
   Callback,
   CeloTx,
@@ -58,7 +59,7 @@ describe('Transaction Utils', () => {
     connection = new Connection(web3)
     connection.wallet = new LocalWallet()
   }
-  async function verifyLocalSigning(celoTransaction: CeloTx): Promise<void> {
+  const verifyLocalSigning = async (celoTransaction: CeloTx): Promise<void> => {
     let recoveredSigner: string | undefined
     let recoveredTransaction: CeloTx | undefined
     let signedTransaction: { raw: string; tx: any } | undefined
@@ -142,7 +143,7 @@ describe('Transaction Utils', () => {
     })
   }
 
-  async function verifyLocalSigningInAllPermutations(from: string, to: string): Promise<void> {
+  const verifyLocalSigningInAllPermutations = async (from: string, to: string): Promise<void> => {
     const amountInWei: string = Web3.utils.toWei('1', 'ether')
     const nonce = 0
     const badNonce = 100
@@ -154,30 +155,7 @@ describe('Transaction Utils', () => {
     const data = '0xabcdef'
     const chainId = 1
 
-    // tslint:disable:no-bitwise
-    // Test all possible combinations for rigor.
-    for (let i = 0; i < 16; i++) {
-      const celoTransaction: CeloTx = {
-        from,
-        to,
-        value: amountInWei,
-        nonce,
-        gasPrice: i % 2 === 0 ? gasPrice : undefined,
-        maxFeePerGas: i % 2 === 1 ? gasPrice : undefined,
-        maxPriorityFeePerGas: i % 2 === 1 ? gasPrice : undefined,
-        chainId,
-        gas,
-        feeCurrency: i % 3 === 0 ? feeCurrency : undefined,
-        gatewayFeeRecipient: i % 7 === 0 ? gatewayFeeRecipient : undefined,
-        gatewayFee: i % 7 === 0 ? gatewayFee : undefined,
-        data: i & 8 ? data : undefined,
-      }
-      describe(transactionDescription(celoTransaction), () => {
-        verifyLocalSigning(celoTransaction)
-      })
-    }
-
-    function transactionDescription(celoTransaction: CeloTx) {
+    const transactionDescription = (celoTransaction: CeloTx) => {
       const description: string[] = []
       if (celoTransaction.gasPrice != undefined) {
         description.push(`Testing Legacy with gas price ${celoTransaction.gasPrice}`)
@@ -207,6 +185,28 @@ describe('Transaction Utils', () => {
       }
 
       return description.join(' ')
+    }
+    // Test all possible combinations for rigor.
+    for (let i = 0; i < 16; i++) {
+      const celoTransaction: CeloTx = {
+        from,
+        to,
+        value: amountInWei,
+        nonce,
+        gasPrice: i % 2 === 0 ? gasPrice : undefined,
+        maxFeePerGas: i % 2 === 1 ? gasPrice : undefined,
+        maxPriorityFeePerGas: i % 2 === 1 ? gasPrice : undefined,
+        chainId,
+        gas,
+        feeCurrency: i % 3 === 0 ? feeCurrency : undefined,
+        gatewayFeeRecipient: i % 7 === 0 ? gatewayFeeRecipient : undefined,
+        gatewayFee: i % 7 === 0 ? gatewayFee : undefined,
+        // eslint-disable-next-line no-bitwise
+        data: i & 8 ? data : undefined,
+      }
+      describe(transactionDescription(celoTransaction), () => {
+        verifyLocalSigning(celoTransaction)
+      })
     }
 
     // A special case.

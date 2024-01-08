@@ -21,10 +21,11 @@ export class TransactionResult {
   private receiptFuture = new Future<CeloTxReceipt>()
 
   constructor(pe: PromiEvent<any>) {
-    pe.on('transactionHash', (hash: string) => {
-      debug('hash: %s', hash)
-      this.hashFuture.resolve(hash)
-    })
+    void pe
+      .on('transactionHash', (hash: string) => {
+        debug('hash: %s', hash)
+        this.hashFuture.resolve(hash)
+      })
       .on('receipt', (receipt: CeloTxReceipt) => {
         debug('receipt: %O', receipt)
         this.receiptFuture.resolve(receipt)

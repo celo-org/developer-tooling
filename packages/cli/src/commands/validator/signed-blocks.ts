@@ -1,3 +1,5 @@
+/* eslint max-classes-per-file: off */
+
 import { Provider } from '@celo/connect/lib/types'
 import { stopProvider } from '@celo/connect/lib/utils/provider-utils'
 import { concurrentMap } from '@celo/utils/lib/async'
@@ -111,7 +113,7 @@ export default class ValidatorSignedBlocks extends BaseCommand {
         }
 
         if (res.flags.follow) {
-          const web3 = await this.newWeb3()
+          const newWeb3 = await this.newWeb3()
           const subscription = web3.eth
             .subscribe('newBlockHeaders', (error) => {
               if (error) {
@@ -136,7 +138,7 @@ export default class ValidatorSignedBlocks extends BaseCommand {
             } while (response !== 'q' && response !== '\u0003' /* ctrl-c */)
           } finally {
             await subscription.unsubscribe()
-            stopProvider(web3.currentProvider as Provider)
+            stopProvider(newWeb3.currentProvider as Provider)
           }
         }
       } finally {
@@ -154,7 +156,6 @@ export default class ValidatorSignedBlocks extends BaseCommand {
 /**
  * Printer object to output marks in a grid to indicate signing status.
  */
-// tslint:disable-next-line:max-classes-per-file
 class MarkPrinter {
   private previousBlockNumber: number | null = null
 
@@ -187,9 +188,7 @@ class MarkPrinter {
   async done() {
     // Print a final newline to complete the line.
     return new Promise<void>((resolve, reject) => {
-      process.stdout.write('\n', (err: any) => {
-        err ? reject(err) : resolve()
-      })
+      process.stdout.write('\n', (err: any) => (err ? reject(err) : resolve()))
     })
   }
 

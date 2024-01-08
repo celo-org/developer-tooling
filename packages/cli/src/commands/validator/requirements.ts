@@ -13,7 +13,7 @@ export default class ValidatorRequirements extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
-    this.parse(ValidatorRequirements)
+    await this.parse(ValidatorRequirements)
 
     const validators = await kit.contracts.getValidators()
 

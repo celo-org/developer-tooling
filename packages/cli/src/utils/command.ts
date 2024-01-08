@@ -27,11 +27,9 @@ const parseBytes = (input: string, length: number, msg: string) => {
 const parseEcdsaPublicKey: ParseFn<string> = async (input) => {
   const stripped = trimLeading0x(input)
   // ECDSA public keys may be passed as 65 byte values. When this happens, we drop the first byte.
-  if (stripped.length === 65 * 2) {
-    return parseBytes(stripped.slice(2), 64, `${input} is not an ECDSA public key`)
-  } else {
-    return parseBytes(input, 64, `${input} is not an ECDSA public key`)
-  }
+  return stripped.length === 65 * 2
+    ? parseBytes(stripped.slice(2), 64, `${input} is not an ECDSA public key`)
+    : parseBytes(input, 64, `${input} is not an ECDSA public key`)
 }
 const parseBlsPublicKey: ParseFn<string> = async (input) => {
   return parseBytes(input, BLS_PUBLIC_KEY_SIZE, `${input} is not a BLS public key`)

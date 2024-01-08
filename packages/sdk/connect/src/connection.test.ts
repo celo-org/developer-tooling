@@ -47,8 +47,8 @@ describe('Connection', () => {
           }
         })
       })
-      it('asked the rpc what they should be', () => {
-        connection.setFeeMarketGas({ feeCurrency: '0x000000' })
+      it('asked the rpc what they should be', async () => {
+        await connection.setFeeMarketGas({ feeCurrency: '0x000000' })
         expect(connection.rpcCaller.call).toHaveBeenCalledWith('eth_gasPrice', ['0x000000'])
         expect(connection.rpcCaller.call).toHaveBeenCalledWith('eth_maxPriorityFeePerGas', [
           '0x000000',

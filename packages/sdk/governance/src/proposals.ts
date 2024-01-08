@@ -1,3 +1,4 @@
+/* eslint max-classes-per-file: off */
 import { ABI as GovernanceABI } from '@celo/abis/web3/Governance'
 import { ABI as RegistryABI } from '@celo/abis/web3/Registry'
 import { Address, isHexString, trimLeading0x } from '@celo/base/lib/address'
@@ -20,14 +21,13 @@ import {
   REGISTRY_CONTRACT_ADDRESS,
 } from '@celo/contractkit'
 import { stripProxy, suffixProxy } from '@celo/contractkit/lib/base'
-// tslint:disable: ordered-imports
 import {
   getInitializeAbiOfImplementation,
   SET_AND_INITIALIZE_IMPLEMENTATION_ABI,
   SET_IMPLEMENTATION_ABI,
   setImplementationOnProxy,
 } from '@celo/contractkit/lib/proxy'
-// tslint:enable: ordered-imports
+
 import { valueToString } from '@celo/contractkit/lib/wrappers/BaseWrapper'
 import {
   hotfixToParams,
@@ -237,7 +237,7 @@ export class ProposalBuilder {
 
   constructor(
     private readonly kit: ContractKit,
-    private readonly builders: Array<() => Promise<ProposalTransaction>> = [],
+    private readonly builders: (() => Promise<ProposalTransaction>)[] = [],
     public readonly registryAdditions: RegistryAdditions = {}
   ) {}
 
@@ -445,6 +445,7 @@ export class InteractiveProposalBuilder {
 
   async promptTransactions() {
     const transactions: ProposalTransactionJSON[] = []
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       console.log(`Transaction #${transactions.length + 1}:`)
 

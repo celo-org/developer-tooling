@@ -12,7 +12,7 @@ export function zip<A, B, C>(fn: (a: A, b: B) => C, as: A[], bs: B[]) {
 
 export function zip3<A, B, C>(as: A[], bs: B[], cs: C[]) {
   const len = Math.min(as.length, bs.length, cs.length)
-  const res: Array<[A, B, C]> = []
+  const res: [A, B, C][] = []
 
   for (let i = 0; i < len; i++) {
     res.push([as[i], bs[i], cs[i]])
@@ -56,7 +56,7 @@ export interface AddressListItem<T> {
 }
 
 function upsert<T>(
-  sortedList: Array<AddressListItem<T>>,
+  sortedList: AddressListItem<T>[],
   change: AddressListItem<T>,
   comparator: Comparator<T>
 ) {
@@ -77,7 +77,7 @@ function upsert<T>(
 
 // Warning: sortedList is modified
 function _linkedListChange<T>(
-  sortedList: Array<AddressListItem<T>>,
+  sortedList: AddressListItem<T>[],
   change: AddressListItem<T>,
   comparator: Comparator<T>
 ) {
@@ -88,20 +88,20 @@ function _linkedListChange<T>(
 }
 
 export function linkedListChange<T>(
-  sortedList: Array<AddressListItem<T>>,
+  sortedList: AddressListItem<T>[],
   change: AddressListItem<T>,
   comparator: Comparator<T>
-): { lesser: string; greater: string; list: Array<AddressListItem<T>> } {
+): { lesser: string; greater: string; list: AddressListItem<T>[] } {
   const list = sortedList.concat()
   const { lesser, greater } = _linkedListChange(list, change, comparator)
   return { lesser, greater, list }
 }
 
 export function linkedListChanges<T>(
-  sortedList: Array<AddressListItem<T>>,
-  changeList: Array<AddressListItem<T>>,
+  sortedList: AddressListItem<T>[],
+  changeList: AddressListItem<T>[],
   comparator: Comparator<T>
-): { lessers: string[]; greaters: string[]; list: Array<AddressListItem<T>> } {
+): { lessers: string[]; greaters: string[]; list: AddressListItem<T>[] } {
   const listClone = [...sortedList]
   const lessers: string[] = []
   const greaters: string[] = []

@@ -52,7 +52,7 @@ export class MetaTransactionWalletWrapper extends BaseWrapper<MetaTransactionWal
    * @deprecated https://github.com/celo-org/celo-monorepo/issues/10766
    */
   public executeTransactions(
-    txs: Array<TransactionInput<any>>
+    txs: TransactionInput<any>[]
   ): CeloTransactionObject<{ 0: string; 1: string[] }> {
     const { destinations, values, callData, callDataLengths } = toTransactionBatch(txs)
 
@@ -264,7 +264,7 @@ export const toRawTransaction = (tx: TransactionInput<any>): RawTransaction => {
  * @returns Params for the executeTransactions method call
  */
 export const toTransactionBatch = (
-  txs: Array<TransactionInput<any>>
+  txs: TransactionInput<any>[]
 ): {
   destinations: string[]
   values: string[]

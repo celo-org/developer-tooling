@@ -2,13 +2,13 @@ import { BaseProps, ValidatorKind } from '@celo/base/lib/inputValidation'
 import { validateInput } from './inputValidation'
 
 describe('inputValidation', () => {
-  function validateFunction(
+  const validateFunction = (
     itStr: string,
     inputs: string[],
     validator: ValidatorKind,
     expected: string,
     props?: BaseProps
-  ) {
+  ) => {
     it(itStr, () =>
       inputs.forEach((input) => {
         const result = validateInput(input, { validator, countryCallingCode: '1', ...props })

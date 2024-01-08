@@ -57,7 +57,7 @@ class MockWallet implements ReadOnlyWallet {
   decrypt(_address: string, _ciphertext: Buffer): Promise<Buffer> {
     return Promise.resolve(Buffer.from('mock'))
   }
-  // tslint:disable-next-line: no-empty
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   removeAccount(_address: string): void {}
   computeSharedSecret(_address: string, _publicKey: string): Promise<Buffer> {
     return Promise.resolve(Buffer.from('mock'))
@@ -125,7 +125,7 @@ describe('CeloProvider', () => {
   })
 
   describe('when celo provider has a local account', () => {
-    function paramsForMethod(method: string, from: string, to: string) {
+    const paramsForMethod = (method: string, from: string, to: string) => {
       const tx: CeloTx = {
         from,
         to,

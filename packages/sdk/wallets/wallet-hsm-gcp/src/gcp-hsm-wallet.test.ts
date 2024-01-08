@@ -12,7 +12,7 @@ import * as ethUtil from '@ethereumjs/util'
 import { BigNumber } from 'bignumber.js'
 // NOTE: elliptic is disabled elsewhere in this library to prevent
 // accidental signing of truncated messages.
-// tslint:disable-next-line:import-blacklist
+// eslint-disable-next-line no-restricted-imports
 import { ec as EC } from 'elliptic'
 import Web3 from 'web3'
 import { GcpHsmWallet } from './gcp-hsm-wallet'

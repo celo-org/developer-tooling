@@ -1,3 +1,4 @@
+/* eslint max-classes-per-file: off */
 export interface OkResult<TResult> {
   ok: true
   result: TResult
@@ -75,7 +76,6 @@ export class RootError<T> extends Error implements BaseError<T> {
 }
 
 export const JSONParseErrorType = 'JsonParseError'
-// tslint:disable-next-line:max-classes-per-file
 export class JSONParseError extends RootError<string> {
   constructor(readonly error: Error) {
     super(JSONParseErrorType)

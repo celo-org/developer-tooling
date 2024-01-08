@@ -210,7 +210,7 @@ export class IdentityMetadataWrapper {
     return this.data.claims.find(isOfType(type))
   }
 
-  filterClaims<K extends ClaimTypes>(type: K): Array<ClaimPayload<K>> {
+  filterClaims<K extends ClaimTypes>(type: K): ClaimPayload<K>[] {
     return this.data.claims.filter(isOfType(type))
   }
 }

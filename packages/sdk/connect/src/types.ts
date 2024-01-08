@@ -21,7 +21,7 @@ export interface CeloParams {
   gatewayFee: string
 }
 
-export type AccessListRaw = Array<[string, string[]]>
+export type AccessListRaw = [string, string[]][]
 
 export type HexOrMissing = Hex | undefined
 export interface FormattedCeloTx {

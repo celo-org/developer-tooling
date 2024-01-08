@@ -23,10 +23,10 @@ interface EIP712TestCase {
   types: EIP712Types
   typeEncoding: string
   zero?: EIP712Object
-  examples: Array<{
+  examples: {
     data: EIP712Object
     dataEncoding: Buffer
-  }>
+  }[]
 }
 
 const TEST_TYPES: EIP712TestCase[] = [

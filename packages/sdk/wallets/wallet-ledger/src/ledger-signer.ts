@@ -53,7 +53,7 @@ export class LedgerSigner implements Signer {
       )
       // EIP155 support. check/recalc signature v value.
       const rv = parseInt(signature.v, 16)
-      // tslint:disable-next-line: no-bitwise
+      // eslint-disable-next-line no-bitwise
       if (rv !== addToV && (rv & addToV) !== rv) {
         addToV += 1 // add signature v bit.
       }
