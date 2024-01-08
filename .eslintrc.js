@@ -22,13 +22,7 @@ module.exports = {
     project: './eslint.tsconfig.json',
     sourceType: 'module',
   },
-  plugins: [
-    'eslint-plugin-prefer-arrow',
-    'eslint-plugin-unicorn',
-    'eslint-plugin-import',
-    '@typescript-eslint',
-    '@typescript-eslint/tslint',
-  ],
+  plugins: ['eslint-plugin-unicorn', 'eslint-plugin-import', '@typescript-eslint'],
   root: true,
   rules: {
     '@typescript-eslint/adjacent-overload-signatures': 'error',
@@ -212,12 +206,6 @@ module.exports = {
         allowSingleLineBlocks: true,
       },
     ],
-    'prefer-arrow/prefer-arrow-functions': [
-      'error',
-      {
-        allowStandaloneDeclarations: true,
-      },
-    ],
     'prefer-const': 'error',
     'prefer-object-spread': 'error',
     'quote-props': 'off',
@@ -236,18 +224,6 @@ module.exports = {
     'unicorn/prefer-ternary': 'off',
     'use-isnan': 'error',
     'valid-typeof': 'off',
-    '@typescript-eslint/tslint/config': [
-      'error',
-      {
-        rules: {
-          'jsx-no-string-ref': true,
-          'no-ex-assign': true,
-          'no-extra-boolean-cast': true,
-          'no-inner-declarations': [true, 'functions'],
-          'no-promise-as-boolean': true,
-        },
-      },
-    ],
   },
   overrides: [
     {
