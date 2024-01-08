@@ -9,4 +9,3 @@ sed -i.bak '/^- \[/d' ../docs/command-line-interface/*
 rm -rf ../docs/command-line-interface/*.bak
 # reverse changes to package.json
 sed -i -e 's@./src/commands@./lib/commands@g' package.json
-rm package.json-e
