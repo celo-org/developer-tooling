@@ -35,6 +35,7 @@ export default class Info extends BaseCommand {
     }
 
     console.log('Adding test comment, to test new CHANGELOG.md configuration looks as expected')
+    console.log('Adding another test comment')
 
     printValueMapRecursive({
       blockNumber,
