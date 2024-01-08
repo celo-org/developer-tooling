@@ -22,7 +22,7 @@
     "clean": "tsc -b . --clean",
     "build": "tsc -b .",
     "docs": "./generate_docs.sh",
-    "lint": "yarn run --top-level eslint -c .eslintrc.js --ext .ts src",
+    "lint": "yarn run --top-level eslint -c .eslintrc.js ",
     "prepublish": "",
     "prepack": "yarn run build && oclif-dev manifest && oclif-dev readme",
     "test": "TZ=UTC jest --runInBand"

@@ -16,7 +16,7 @@
     "clean": "tsc -b . --clean",
     "test": "jest --runInBand --ci",
     "test:verbose": "jest --verbose",
-    "lint": "yarn run --top-level eslint -c .eslintrc.js --ext .ts src"
+    "lint": "yarn run --top-level eslint -c .eslintrc.js "
   },
   "files": [
     "lib/**/*"

@@ -21,7 +21,7 @@
     "prepublishOnly": "yarn build",
     "docs": "typedoc",
     "test": "jest --runInBand --forceExit",
-    "lint": "yarn run --top-level eslint -c .eslintrc.js --ext .ts src"
+    "lint": "yarn run --top-level eslint -c .eslintrc.js "
   },
   "dependencies": {
     "@celo/abis": "10.0.0",
