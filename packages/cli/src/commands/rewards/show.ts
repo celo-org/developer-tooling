@@ -112,12 +112,12 @@ export default class Show extends BaseCommand {
               )
             )
           } catch (error) {
-            const _error = error.message.includes('missing trie node')
+            const _error = (error as Error).message.includes('missing trie node')
               ? new Error(
                   'Exact voter information is avaiable only for 1024 blocks after each epoch.\n' +
                     'Supply --estimate to estimate rewards based on current votes, or use an archive node.'
                 )
-              : error
+              : (error as Error)
             throw _error
           }
         }

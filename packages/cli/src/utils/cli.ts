@@ -45,7 +45,7 @@ export async function displaySendTx<A>(
         })
     }
   } catch (e) {
-    ux.action.stop(`failed: ${e.message}`)
+    ux.action.stop(`failed: ${(e as Error).message}`)
     throw e
   }
 }

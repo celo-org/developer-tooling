@@ -49,7 +49,9 @@ export default class RegisterMetadata extends BaseCommand {
         await displayMetadata(metadata, kit, res.flags)
         console.info() // Print a newline.
       } catch (error) {
-        console.error(`Metadata could not be retrieved from ${metadataURL}: ${error.toString()}`)
+        console.error(
+          `Metadata could not be retrieved from ${metadataURL}: ${(error as Error).toString()}`
+        )
         console.info('Exiting without performing changes...')
         process.exit(-1)
       }
