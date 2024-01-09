@@ -1,7 +1,11 @@
-# `celocli identity`
+`celocli identity`
+==================
 
 Interact with ODIS and the attestations service
 
+* [`celocli identity:get-attestations`](#celocli-identityget-attestations)
+* [`celocli identity:identifier`](#celocli-identityidentifier)
+* [`celocli identity:withdraw-attestation-rewards`](#celocli-identitywithdraw-attestation-rewards)
 
 ## `celocli identity:get-attestations`
 

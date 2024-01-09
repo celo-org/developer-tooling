@@ -1,7 +1,11 @@
-# `celocli multisig`
+`celocli multisig`
+==================
 
 Approves an existing transaction on a multi-sig contract
 
+* [`celocli multisig:approve`](#celocli-multisigapprove)
+* [`celocli multisig:show ARG1`](#celocli-multisigshow-arg1)
+* [`celocli multisig:transfer ARG1`](#celocli-multisigtransfer-arg1)
 
 ## `celocli multisig:approve`
 

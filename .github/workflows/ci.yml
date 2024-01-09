@@ -221,9 +221,6 @@ jobs:
         uses: ./.github/actions/sync-workspace
         with:
           artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
-      - name: Run tests
-        run: |
-          yarn workspace @celo/celocli test
       - name: Fail if someone forgot to commit CLI docs
         run: |
           yarn workspace @celo/celocli docs
@@ -234,6 +231,9 @@ jobs:
             git diff
             exit 1
           fi
+      - name: Run tests
+        run: |
+          yarn workspace @celo/celocli test
       - name: Verify that a new account can be created
         run: |
           yarn workspace @celo/celocli run celocli account:new

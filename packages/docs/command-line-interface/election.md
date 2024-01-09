@@ -1,7 +1,15 @@
-# `celocli election`
+`celocli election`
+==================
 
 Participate in and view the state of Validator Elections
 
+* [`celocli election:activate`](#celocli-electionactivate)
+* [`celocli election:current`](#celocli-electioncurrent)
+* [`celocli election:list`](#celocli-electionlist)
+* [`celocli election:revoke`](#celocli-electionrevoke)
+* [`celocli election:run`](#celocli-electionrun)
+* [`celocli election:show ARG1`](#celocli-electionshow-arg1)
+* [`celocli election:vote`](#celocli-electionvote)
 
 ## `celocli election:activate`
 

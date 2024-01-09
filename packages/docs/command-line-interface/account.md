@@ -1,7 +1,38 @@
-# `celocli account`
+`celocli account`
+=================
 
 Manage your account, keys, and metadata
 
+* [`celocli account:authorize`](#celocli-accountauthorize)
+* [`celocli account:balance ARG1`](#celocli-accountbalance-arg1)
+* [`celocli account:claim-account ARG1`](#celocli-accountclaim-account-arg1)
+* [`celocli account:claim-domain ARG1`](#celocli-accountclaim-domain-arg1)
+* [`celocli account:claim-keybase ARG1`](#celocli-accountclaim-keybase-arg1)
+* [`celocli account:claim-name ARG1`](#celocli-accountclaim-name-arg1)
+* [`celocli account:claim-storage ARG1`](#celocli-accountclaim-storage-arg1)
+* [`celocli account:create-metadata ARG1`](#celocli-accountcreate-metadata-arg1)
+* [`celocli account:deauthorize`](#celocli-accountdeauthorize)
+* [`celocli account:delete-payment-delegation`](#celocli-accountdelete-payment-delegation)
+* [`celocli account:get-metadata ARG1`](#celocli-accountget-metadata-arg1)
+* [`celocli account:get-payment-delegation`](#celocli-accountget-payment-delegation)
+* [`celocli account:list`](#celocli-accountlist)
+* [`celocli account:lock ARG1`](#celocli-accountlock-arg1)
+* [`celocli account:new`](#celocli-accountnew)
+* [`celocli account:offchain-read ARG1`](#celocli-accountoffchain-read-arg1)
+* [`celocli account:offchain-write`](#celocli-accountoffchain-write)
+* [`celocli account:proof-of-possession`](#celocli-accountproof-of-possession)
+* [`celocli account:recover-old`](#celocli-accountrecover-old)
+* [`celocli account:register`](#celocli-accountregister)
+* [`celocli account:register-data-encryption-key`](#celocli-accountregister-data-encryption-key)
+* [`celocli account:register-metadata`](#celocli-accountregister-metadata)
+* [`celocli account:set-name`](#celocli-accountset-name)
+* [`celocli account:set-payment-delegation`](#celocli-accountset-payment-delegation)
+* [`celocli account:set-wallet`](#celocli-accountset-wallet)
+* [`celocli account:show ARG1`](#celocli-accountshow-arg1)
+* [`celocli account:show-claimed-accounts ARG1`](#celocli-accountshow-claimed-accounts-arg1)
+* [`celocli account:show-metadata ARG1`](#celocli-accountshow-metadata-arg1)
+* [`celocli account:unlock ARG1`](#celocli-accountunlock-arg1)
+* [`celocli account:verify-proof-of-possession`](#celocli-accountverify-proof-of-possession)
 
 ## `celocli account:authorize`
 
@@ -226,7 +257,7 @@ _See code: [src/commands/account/claim-storage.ts](https://github.com/celo-org/d
 
 ## `celocli account:create-metadata ARG1`
 
-Create an empty identity metadata file. Use this metadata file to store claims attesting to ownership of off-chain resources. Claims can be generated with the account:claim-\* commands.
+Create an empty identity metadata file. Use this metadata file to store claims attesting to ownership of off-chain resources. Claims can be generated with the account:claim-* commands.
 
 ```
 USAGE

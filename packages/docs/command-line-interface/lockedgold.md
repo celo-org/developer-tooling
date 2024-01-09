@@ -1,7 +1,17 @@
-# `celocli lockedgold`
+`celocli lockedgold`
+====================
 
 View and manage locked CELO
 
+* [`celocli lockedgold:delegate`](#celocli-lockedgolddelegate)
+* [`celocli lockedgold:delegate-info`](#celocli-lockedgolddelegate-info)
+* [`celocli lockedgold:lock`](#celocli-lockedgoldlock)
+* [`celocli lockedgold:max-delegatees-count`](#celocli-lockedgoldmax-delegatees-count)
+* [`celocli lockedgold:revoke-delegate`](#celocli-lockedgoldrevoke-delegate)
+* [`celocli lockedgold:show ARG1`](#celocli-lockedgoldshow-arg1)
+* [`celocli lockedgold:unlock`](#celocli-lockedgoldunlock)
+* [`celocli lockedgold:update-delegated-amount`](#celocli-lockedgoldupdate-delegated-amount)
+* [`celocli lockedgold:withdraw`](#celocli-lockedgoldwithdraw)
 
 ## `celocli lockedgold:delegate`
 
