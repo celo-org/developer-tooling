@@ -2,7 +2,6 @@
 
 View and manage ReleaseGold contracts
 
-
 ## `celocli releasecelo:authorize`
 
 Authorize an alternative key to be used for a given action (Vote, Validate, Attest) on behalf of the ReleaseGold instance contract.

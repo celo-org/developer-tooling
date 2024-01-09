@@ -2,7 +2,6 @@
 
 Display help for celocli.
 
-
 ## `celocli help [COMMANDS]`
 
 Display help for celocli.
