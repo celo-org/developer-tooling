@@ -1,7 +1,18 @@
-# `celocli plugins`
+`celocli plugins`
+=================
 
 List installed plugins.
 
+* [`celocli plugins`](#celocli-plugins)
+* [`celocli plugins:install PLUGIN...`](#celocli-pluginsinstall-plugin)
+* [`celocli plugins:inspect PLUGIN...`](#celocli-pluginsinspect-plugin)
+* [`celocli plugins:install PLUGIN...`](#celocli-pluginsinstall-plugin-1)
+* [`celocli plugins:link PLUGIN`](#celocli-pluginslink-plugin)
+* [`celocli plugins:uninstall PLUGIN...`](#celocli-pluginsuninstall-plugin)
+* [`celocli plugins:reset`](#celocli-pluginsreset)
+* [`celocli plugins:uninstall PLUGIN...`](#celocli-pluginsuninstall-plugin-1)
+* [`celocli plugins:uninstall PLUGIN...`](#celocli-pluginsuninstall-plugin-2)
+* [`celocli plugins:update`](#celocli-pluginsupdate)
 
 ## `celocli plugins`
 
@@ -62,7 +73,7 @@ ALIASES
   $ celocli plugins:add
 
 EXAMPLES
-  $ celocli plugins:add myplugin
+  $ celocli plugins:add myplugin 
 
   $ celocli plugins:add https://github.com/someuser/someplugin
 
@@ -132,7 +143,7 @@ ALIASES
   $ celocli plugins:add
 
 EXAMPLES
-  $ celocli plugins:install myplugin
+  $ celocli plugins:install myplugin 
 
   $ celocli plugins:install https://github.com/someuser/someplugin
 

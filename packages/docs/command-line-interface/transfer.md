@@ -1,7 +1,15 @@
-# `celocli transfer`
+`celocli transfer`
+==================
 
 Transfer CELO and Celo Dollars
 
+* [`celocli transfer:celo`](#celocli-transfercelo)
+* [`celocli transfer:dollars`](#celocli-transferdollars)
+* [`celocli transfer:erc20`](#celocli-transfererc20)
+* [`celocli transfer:euros`](#celocli-transfereuros)
+* [`celocli transfer:gold`](#celocli-transfergold)
+* [`celocli transfer:reals`](#celocli-transferreals)
+* [`celocli transfer:stable`](#celocli-transferstable)
 
 ## `celocli transfer:celo`
 
@@ -114,7 +122,7 @@ _See code: [src/commands/transfer/euros.ts](https://github.com/celo-org/develope
 
 ## `celocli transfer:gold`
 
-Transfer CELO to a specified address. _DEPRECATION WARNING_ Use the "transfer:celo" command instead
+Transfer CELO to a specified address. *DEPRECATION WARNING* Use the "transfer:celo" command instead
 
 ```
 USAGE

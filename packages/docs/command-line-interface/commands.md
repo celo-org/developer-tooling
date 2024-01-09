@@ -1,7 +1,9 @@
-# `celocli commands`
+`celocli commands`
+==================
 
 list all the commands
 
+* [`celocli commands`](#celocli-commands)
 
 ## `celocli commands`
 

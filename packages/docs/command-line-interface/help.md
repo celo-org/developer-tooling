@@ -1,7 +1,9 @@
-# `celocli help`
+`celocli help`
+==============
 
 Display help for celocli.
 
+* [`celocli help [COMMANDS]`](#celocli-help-commands)
 
 ## `celocli help [COMMANDS]`
 

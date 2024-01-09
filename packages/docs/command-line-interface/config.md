@@ -1,7 +1,10 @@
-# `celocli config`
+`celocli config`
+================
 
 Configure CLI options which persist across commands
 
+* [`celocli config:get`](#celocli-configget)
+* [`celocli config:set`](#celocli-configset)
 
 ## `celocli config:get`
 

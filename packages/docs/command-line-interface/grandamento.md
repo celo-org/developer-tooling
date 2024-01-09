@@ -1,7 +1,14 @@
-# `celocli grandamento`
+`celocli grandamento`
+=====================
 
 Cancels a Granda Mento exchange proposal
 
+* [`celocli grandamento:cancel`](#celocli-grandamentocancel)
+* [`celocli grandamento:execute`](#celocli-grandamentoexecute)
+* [`celocli grandamento:get-buy-amount`](#celocli-grandamentoget-buy-amount)
+* [`celocli grandamento:list`](#celocli-grandamentolist)
+* [`celocli grandamento:propose`](#celocli-grandamentopropose)
+* [`celocli grandamento:show`](#celocli-grandamentoshow)
 
 ## `celocli grandamento:cancel`
 

@@ -1,7 +1,14 @@
-# `celocli dkg`
+`celocli dkg`
+=============
 
 Publish your locally computed DKG results to the blockchain
 
+* [`celocli dkg:allowlist`](#celocli-dkgallowlist)
+* [`celocli dkg:deploy`](#celocli-dkgdeploy)
+* [`celocli dkg:get`](#celocli-dkgget)
+* [`celocli dkg:publish`](#celocli-dkgpublish)
+* [`celocli dkg:register`](#celocli-dkgregister)
+* [`celocli dkg:start`](#celocli-dkgstart)
 
 ## `celocli dkg:allowlist`
 
