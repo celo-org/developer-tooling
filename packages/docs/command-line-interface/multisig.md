@@ -2,6 +2,7 @@
 
 Approves an existing transaction on a multi-sig contract
 
+
 ## `celocli multisig:approve`
 
 Approves an existing transaction on a multi-sig contract

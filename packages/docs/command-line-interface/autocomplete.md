@@ -2,6 +2,7 @@
 
 Display autocomplete installation instructions.
 
+
 ## `celocli autocomplete [SHELL]`
 
 Display autocomplete installation instructions.

@@ -2,6 +2,7 @@
 
 View and manage locked CELO
 
+
 ## `celocli lockedgold:delegate`
 
 Delegate locked celo.

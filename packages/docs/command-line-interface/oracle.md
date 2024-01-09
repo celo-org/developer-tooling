@@ -2,6 +2,7 @@
 
 List oracle addresses for a given token
 
+
 ## `celocli oracle:list ARG1`
 
 List oracle addresses for a given token

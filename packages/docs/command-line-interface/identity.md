@@ -2,6 +2,7 @@
 
 Interact with ODIS and the attestations service
 
+
 ## `celocli identity:get-attestations`
 
 Looks up attestations associated with the provided phone number. If a pepper is not provided, it uses the --from account's balance to query the pepper.

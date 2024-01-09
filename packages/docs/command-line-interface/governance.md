@@ -2,6 +2,7 @@
 
 Interact with on-chain governance proposals and hotfixes
 
+
 ## `celocli governance:approvehotfix`
 
 Approve a dequeued governance proposal (or hotfix)
