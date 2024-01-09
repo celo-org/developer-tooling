@@ -96,7 +96,7 @@ jobs:
           echo "${{ steps.verify-changed-files.outputs.changed_files }}"
       - name: Get the artifacts to cache
         id: get_artifacts_to_cache
-        # there are too many files when listed individually. TODO need to do with wildcards.
+        # there are too many files when listed individually.
         run: |
           artifacts_to_cache="$(git ls-files --others --ignored --exclude-standard | grep -v node_modules | grep -v .js.map | grep -v .d.ts.map | grep -v .yarn/cache)"
           echo "artifacts_to_cache<<EOF" >> $GITHUB_OUTPUT
