@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.5
+
+### Patch Changes
+
+- [#37](https://github.com/celo-org/developer-tooling/pull/37) [`8cbe530`](https://github.com/celo-org/developer-tooling/commit/8cbe53086ecad823da0519a56bdd74fd0b6a303a) Thanks [@0xarthurxyz](https://github.com/0xarthurxyz)! - Adds bogus PR to test the newly configured CHANGELOG.md
+
 ## 3.1.4
 
 ### Patch Changes
