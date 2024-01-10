@@ -22,7 +22,7 @@ jobs:
         shell: bash
         run: |
           # CELOCLI_VERSION="$(${{ github.event.release.name }}##*@)"
-          CELOCLI_VERSION="0.0.0-test"
+          CELOCLI_VERSION="3.1.3"
           echo "CELOCLI_VERSION=$CELOCLI_VERSION" >> $GITHUB_OUTPUT
   # CeloCli standalone image
   celocli-standalone:
@@ -35,7 +35,7 @@ jobs:
       workload-id-provider: projects/1094498259535/locations/global/workloadIdentityPools/gh-developer-tooling/providers/github-by-repos
       service-account: 'developer-tooling-dev@devopsre.iam.gserviceaccount.com'
       artifact-registry: us-west1-docker.pkg.dev/devopsre/developer-tooling/celocli
-      tags: ${{ needs.split-version.outputs.CELOCLI_VERSION }}
+      tags: ci-test-${{ needs.split-version.outputs.CELOCLI_VERSION }}
       context: .
       file: packages/cli/standalone.Dockerfile
       build-args: VERSION=${{ needs.split-version.outputs.CELOCLI_VERSION }}
