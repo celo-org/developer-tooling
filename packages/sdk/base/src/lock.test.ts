@@ -18,7 +18,7 @@ test('lock', async () => {
     lock.release()
   }
 
-  const promises: Array<Promise<void>> = []
+  const promises: Promise<void>[] = []
   for (let i = 0; i < 100; i++) {
     promises.push(race(i))
   }

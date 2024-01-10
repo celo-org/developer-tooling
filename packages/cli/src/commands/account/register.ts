@@ -3,7 +3,7 @@ import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
-CustomFlags
+
 export default class Register extends BaseCommand {
   static description =
     'Register an account on-chain. This allows you to lock Gold, which is a pre-requisite for registering a Validator or Group, participating in Validator elections and on-chain Governance, and earning epoch rewards.'

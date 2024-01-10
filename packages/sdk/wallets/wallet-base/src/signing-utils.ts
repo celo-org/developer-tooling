@@ -453,7 +453,7 @@ export function recoverTransaction(rawTx: string): [CeloTx, string] {
       const rawValues = RLP.decode(rawTx)
       debug('signing-utils@recoverTransaction: values are %s', rawValues)
       const recovery = Bytes.toNumber(rawValues[9])
-      // tslint:disable-next-line:no-bitwise
+      //  eslint-disable-next-line no-bitwise
       const chainId = Bytes.fromNumber((recovery - 35) >> 1)
       const celoTx: CeloTx = {
         type: 'celo-legacy',

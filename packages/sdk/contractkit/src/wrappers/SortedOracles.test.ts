@@ -22,12 +22,12 @@ testWithGanache('SortedOracles Wrapper', (web3) => {
   const SortedOracles = truffleContract(SortedOraclesArtifacts)
   SortedOracles.setProvider(web3.currentProvider)
 
-  async function reportAsOracles(
+  const reportAsOracles = async (
     sortedOracles: SortedOraclesWrapper,
     target: ReportTarget,
     oracles: Address[],
     rates: number[] = []
-  ): Promise<void> {
+  ): Promise<void> => {
     // Create some arbitrary values to report if none were passed in
     if (rates.length === 0) {
       for (const _oracle of oracles) {
@@ -43,12 +43,12 @@ testWithGanache('SortedOracles Wrapper', (web3) => {
 
   // Quick setup for conditions when some oracle reports are expired and the rest are not.
   // This assumes that the rates reported can be arbitrary and not a critical piece of the test.
-  async function setupExpiredAndNotExpiredReports(
+  const setupExpiredAndNotExpiredReports = async (
     sortedOracles: SortedOraclesWrapper,
     target: ReportTarget,
     expiredOracles: Address[],
     allOracles: Address[]
-  ): Promise<void> {
+  ): Promise<void> => {
     const expirySeconds = (await sortedOracles.reportExpirySeconds()).toNumber()
     await reportAsOracles(sortedOracles, target, expiredOracles)
     await timeTravel(expirySeconds + 5, web3)
@@ -65,18 +65,18 @@ testWithGanache('SortedOracles Wrapper', (web3) => {
    * To make it easier we'll deploy an new version for use in
    * the tests
    */
-  async function newSortedOracles(owner: Address): Promise<SortedOraclesWrapper> {
+  const newSortedOracles = async (owner: Address): Promise<SortedOraclesWrapper> => {
     const instance = await SortedOracles.new(true, { from: owner })
     await instance.initialize(NetworkConfig.oracles.reportExpiry, { from: owner })
     return new SortedOraclesWrapper(kit.connection, instance.contract, kit.registry)
   }
 
-  async function addOracleForTarget(
+  const addOracleForTarget = async (
     sortedOraclesInstance: SortedOraclesWrapper,
     target: ReportTarget,
     oracle: Address,
     owner: Address
-  ): Promise<void> {
+  ): Promise<void> => {
     // @ts-ignore
     const identifier = await sortedOraclesInstance.toCurrencyPairIdentifier(target)
     // @ts-ignore
@@ -140,7 +140,7 @@ testWithGanache('SortedOracles Wrapper', (web3) => {
     ).sendAndWaitForReceipt()
   })
 
-  const testCases: Array<{ label: string; reportTarget: ReportTarget }> = [
+  const testCases: { label: string; reportTarget: ReportTarget }[] = [
     {
       label: 'StableToken (CELO/USD)',
       reportTarget: CeloContract.StableToken,

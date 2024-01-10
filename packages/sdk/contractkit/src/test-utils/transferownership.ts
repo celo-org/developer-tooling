@@ -1,7 +1,6 @@
 import { NetworkConfig, timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import Web3 from 'web3'
 import { newKitFromWeb3 } from '../kit'
-import { AccountsWrapper } from '../wrappers/Accounts'
 import { Proposal, ProposalTransaction } from '../wrappers/Governance'
 
 // Implements a transfer ownership function using only contractkit primitives
@@ -12,8 +11,7 @@ export async function assumeOwnership(web3: Web3, to: string) {
   const kit = newKitFromWeb3(web3)
   const ONE_CGLD = web3.utils.toWei('1', 'ether')
   const accounts = await web3.eth.getAccounts()
-  let accountWrapper: AccountsWrapper
-  accountWrapper = await kit.contracts.getAccounts()
+  const accountWrapper = await kit.contracts.getAccounts()
   const lockedGold = await kit.contracts.getLockedGold()
 
   try {

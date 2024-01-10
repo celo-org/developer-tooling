@@ -1,6 +1,5 @@
 import { StableTokenInfo } from '@celo/contractkit/lib/celo-tokens'
-import { Flags } from '@oclif/core'
-import { ux } from '@oclif/core'
+import { Flags, ux } from '@oclif/core'
 
 import { BaseCommand } from '../../base'
 

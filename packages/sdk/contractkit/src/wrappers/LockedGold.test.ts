@@ -45,6 +45,7 @@ testWithGanache('LockedGold Wrapper', (web3) => {
   })
   // when this fails the 2 tests below should pass.
   test('getTotalPendingWithdrawalsCount throws when version is below minimum', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     expect(lockedGold.getTotalPendingWithdrawalsCount(account)).rejects.toThrowError(
       'getTotalPendingWithdrawalsCount not implemented for LockedGold version (1.1.3.0) deployed to this chain'
     )

@@ -34,13 +34,11 @@ export default class TransferCelo extends BaseCommand {
 
     await newCheckBuilder(this).hasEnoughCelo(from, value).runChecks()
 
-    if (res.flags.comment) {
-      await displaySendTx(
-        'transferWithComment',
-        celoToken.transferWithComment(to, value.toFixed(), res.flags.comment)
-      )
-    } else {
-      await displaySendTx('transfer', celoToken.transfer(to, value.toFixed()))
-    }
+    await (res.flags.comment
+      ? displaySendTx(
+          'transferWithComment',
+          celoToken.transferWithComment(to, value.toFixed(), res.flags.comment)
+        )
+      : displaySendTx('transfer', celoToken.transfer(to, value.toFixed())))
   }
 }

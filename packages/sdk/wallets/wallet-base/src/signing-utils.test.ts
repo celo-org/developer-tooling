@@ -270,14 +270,14 @@ function ckToViem(tx: CeloTx & { v?: number }) {
 }
 
 describe('recoverTransaction', () => {
-  const ACCOUNT_ADDRESS1 = privateKeyToAddress(PRIVATE_KEY1)
+  const ACCOUNT_ADDRESS1_UNFORMATTED = privateKeyToAddress(PRIVATE_KEY1) as `0x${string}`
   describe('with EIP1559 transactions', () => {
     test('ok', async () => {
       const account = privateKeyToAccount(PRIVATE_KEY1)
       const hash = await account.signTransaction({
         type: 'eip1559' as const,
-        from: ACCOUNT_ADDRESS1,
-        to: ACCOUNT_ADDRESS1 as `0x${string}`,
+        from: ACCOUNT_ADDRESS1_UNFORMATTED,
+        to: ACCOUNT_ADDRESS1_UNFORMATTED,
         chainId: 2,
         value: BigInt(1000),
         nonce: 0,
@@ -288,7 +288,7 @@ describe('recoverTransaction', () => {
       })
 
       const [transaction, signer] = recoverTransaction(hash)
-      expect(signer).toEqual(ACCOUNT_ADDRESS1)
+      expect(signer).toEqual(ACCOUNT_ADDRESS1_UNFORMATTED)
       expect(transaction).toMatchInlineSnapshot(`
         {
           "accessList": [],

@@ -24,8 +24,8 @@ export default class Withdraw extends BaseCommand {
     await newCheckBuilder(this).isAccount(flags.from).runChecks()
 
     const currentTime = Math.round(new Date().getTime() / 1000)
-    while (true) {
-      let madeWithdrawal = false
+    let madeWithdrawal = false
+    while (!madeWithdrawal) {
       const pendingWithdrawals = await lockedgold.getPendingWithdrawals(flags.from)
       for (let i = 0; i < pendingWithdrawals.length; i++) {
         const pendingWithdrawal = pendingWithdrawals[i]
@@ -35,11 +35,7 @@ export default class Withdraw extends BaseCommand {
           )
           await displaySendTx('withdraw', lockedgold.withdraw(i))
           madeWithdrawal = true
-          break
         }
-      }
-      if (!madeWithdrawal) {
-        break
       }
     }
     const remainingPendingWithdrawals = await lockedgold.getPendingWithdrawals(flags.from)
