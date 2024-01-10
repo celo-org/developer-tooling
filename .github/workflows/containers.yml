@@ -5,6 +5,9 @@ on:
   release:
     types:
       - "published"
+  push:
+    branches:
+      - jcortejoso/celocli-container
 
 jobs:
   split-version:
@@ -15,12 +18,11 @@ jobs:
       CELOCLI_VERSION: ${{ steps.split.outputs.CELOCLI_VERSION }}
     steps:
       - name: Split celocli-version
-        env:
-          CELOCLI_VERSION: ${{ github.ref_name }}
         id: split
         shell: bash
         run: |
-          CELOCLI_VERSION="$(${{ github.event.release.name }}##*@)"
+          # CELOCLI_VERSION="$(${{ github.event.release.name }}##*@)"
+          CELOCLI_VERSION="0.0.0-test"
           echo "CELOCLI_VERSION=$CELOCLI_VERSION" >> $GITHUB_OUTPUT
   # CeloCli standalone image
   celocli-standalone:
