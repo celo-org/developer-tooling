@@ -10,7 +10,7 @@ jobs:
   split-version:
     runs-on: ['ubuntu-latest']
     if: |
-      contains(github.event.release.name, '@celo/celicli')
+      contains(github.event.release.name, '@celo/celocli')
     outputs:
       CELOCLI_VERSION: ${{ steps.split.outputs.CELOCLI_VERSION }}
     steps:
@@ -24,11 +24,11 @@ jobs:
           echo "CELOCLI_VERSION=$CELOCLI_VERSION" >> $GITHUB_OUTPUT
   # CeloCli standalone image
   celocli-standalone:
-    uses: celo-org/reusable-workflows/.github/workflows/container-cicd.yaml@v1.14.0
+    uses: celo-org/reusable-workflows/.github/workflows/container-cicd.yaml@v1.14.1
     name: Build us-west1-docker.pkg.dev/devopsre/dev-images/celocli:${{ needs.split-version.outputs.CELOCLI_VERSION }}
     needs: ['split-version']
     if: |
-      contains(github.event.release.name, '@celo/celicli')
+      contains(github.event.release.name, '@celo/celocli')
     with:
       workload-id-provider: projects/1094498259535/locations/global/workloadIdentityPools/gh-developer-tooling/providers/github-by-repos
       service-account: 'developer-tooling-dev@devopsre.iam.gserviceaccount.com'
