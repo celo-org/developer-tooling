@@ -1,8 +1,8 @@
 blank_issues_enabled: true
 contact_links:
-  - name: Celo Discord
-    url: https://chat.celo.org/
+  - name: Github Discussions
+    url: https://github.com/celo-org/developer-tooling/discussions
     about: Please ask and answer questions here.
-  - name: Celo Docs
+  - name: Docs
     url: https://docs.celo.org/
     about: Documentation on the Celo Platform
