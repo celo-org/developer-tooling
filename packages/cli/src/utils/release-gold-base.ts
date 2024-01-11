@@ -1,21 +1,23 @@
 import { newReleaseGold } from '@celo/abis/web3/ReleaseGold'
 import { ReleaseGoldWrapper } from '@celo/contractkit/lib/wrappers/ReleaseGold'
-import { ParserOutput } from '@oclif/parser/lib/parse'
 import { BaseCommand } from '../base'
-import { Flags } from './command'
+import { CustomFlags } from './command'
 
 export abstract class ReleaseGoldBaseCommand extends BaseCommand {
   static flags = {
     ...BaseCommand.flags,
-    contract: Flags.address({ required: true, description: 'Address of the ReleaseGold Contract' }),
+    contract: CustomFlags.address({
+      required: true,
+      description: 'Address of the ReleaseGold Contract',
+    }),
   }
 
   private _contractAddress: string | null = null
   private _releaseGoldWrapper: ReleaseGoldWrapper | null = null
 
-  get contractAddress() {
+  async contractAddress() {
     if (!this._contractAddress) {
-      const res: ParserOutput<any, any> = this.parse()
+      const res = await this.parse()
       this._contractAddress = String(res.flags.contract)
     }
     return this._contractAddress
@@ -29,12 +31,13 @@ export abstract class ReleaseGoldBaseCommand extends BaseCommand {
   }
 
   async init() {
+    const kit = await this.getKit()
     await super.init()
     if (!this._releaseGoldWrapper) {
       this._releaseGoldWrapper = new ReleaseGoldWrapper(
-        this.kit.connection,
-        newReleaseGold(this.kit.connection.web3, this.contractAddress as string),
-        this.kit.contracts
+        kit.connection,
+        newReleaseGold(kit.connection.web3, await this.contractAddress()),
+        kit.contracts
       )
       // Call arbitrary release gold fn to verify `contractAddress` is a releasegold contract.
       try {

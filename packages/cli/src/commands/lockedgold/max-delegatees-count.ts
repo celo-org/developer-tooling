@@ -11,7 +11,8 @@ export default class MaxDelegateesCount extends BaseCommand {
   static examples = ['max-delegatees-count']
 
   async run() {
-    const lockedGold = await this.kit.contracts.getLockedGold()
+    const kit = await this.getKit()
+    const lockedGold = await kit.contracts.getLockedGold()
 
     const res = {
       maxDelegateesCount: (await lockedGold.getMaxDelegateesCount()).toFixed(),

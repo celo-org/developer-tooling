@@ -16,12 +16,11 @@
     "docs": "typedoc",
     "test": "jest --runInBand --ci",
     "test:verbose": "jest --verbose",
-    "lint": "tslint -c tslint.json --project ."
+    "lint": "yarn run --top-level eslint -c .eslintrc.js "
   },
   "files": [
     "lib/**/*"
   ],
-  "dependencies": {},
   "devDependencies": {
     "@celo/typescript": "0.0.1",
     "bignumber.js": "^9.0.0",

@@ -1,7 +1,7 @@
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { displayWeb3Tx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 const DKG = require('./DKG.json')
 
 export default class DKGDeploy extends BaseCommand {
@@ -9,17 +9,18 @@ export default class DKGDeploy extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    phaseDuration: flags.integer({
+    phaseDuration: Flags.integer({
       required: true,
       description: 'Duration of each DKG phase in blocks',
     }),
-    threshold: flags.integer({ required: true, description: 'The threshold to use for the DKG' }),
-    from: Flags.address({ required: true, description: 'Address of the sender' }),
+    threshold: Flags.integer({ required: true, description: 'The threshold to use for the DKG' }),
+    from: CustomFlags.address({ required: true, description: 'Address of the sender' }),
   }
 
   async run() {
-    const res = this.parse(DKGDeploy)
-    const web3 = this.kit.connection.web3
+    const kit = await this.getKit()
+    const res = await this.parse(DKGDeploy)
+    const web3 = kit.connection.web3
     const dkg = new web3.eth.Contract(DKG.abi)
 
     await displayWeb3Tx(

@@ -1,4 +1,4 @@
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { nodeIsSynced } from '../../utils/helpers'
 
@@ -7,7 +7,7 @@ export default class NodeSynced extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    verbose: flags.boolean({
+    verbose: Flags.boolean({
       description: 'output the full status if syncing',
     }),
   }
@@ -15,14 +15,15 @@ export default class NodeSynced extends BaseCommand {
   requireSynced = false
 
   async run() {
-    const res = this.parse(NodeSynced)
+    const web3 = await this.getWeb3()
+    const res = await this.parse(NodeSynced)
 
     if (res.flags.verbose) {
-      const status = await this.web3.eth.isSyncing()
+      const status = await web3.eth.isSyncing()
       if (typeof status !== 'boolean') {
         console.log(status)
       }
     }
-    console.log(await nodeIsSynced(this.web3))
+    console.log(await nodeIsSynced(web3))
   }
 }

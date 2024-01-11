@@ -18,19 +18,19 @@
     "clean": "tsc -b . --clean",
     "docs": "typedoc",
     "test": "jest",
-    "lint": "tslint -c tslint.json --project .",
+    "lint": "yarn run --top-level eslint -c .eslintrc.js ",
     "prepublishOnly": "yarn build"
   },
   "dependencies": {
-    "@celo/utils": "^5.0.6",
     "@celo/connect": "^5.1.1",
+    "@celo/utils": "^5.0.6",
     "@celo/wallet-base": "^5.1.1",
-    "eth-lib": "^0.2.8",
-    "@ethereumjs/util": "8.0.5"
+    "@ethereumjs/util": "8.0.5",
+    "eth-lib": "^0.2.8"
   },
   "devDependencies": {
-    "web3": "1.10.0",
-    "viem": "~1.5.4"
+    "viem": "~1.5.4",
+    "web3": "1.10.0"
   },
   "engines": {
     "node": ">=8.14.2"

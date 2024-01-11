@@ -10,9 +10,10 @@ export default class NodeAccounts extends BaseCommand {
   requireSynced = false
 
   async run() {
-    this.parse(NodeAccounts)
+    const kit = await this.getKit()
+    await this.parse(NodeAccounts)
 
-    const accounts = await this.kit.connection.getAccounts()
+    const accounts = await kit.connection.getAccounts()
     console.log('***This command will be deprecated, please use "account:list" ***')
     console.log(accounts)
   }

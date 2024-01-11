@@ -1,9 +1,9 @@
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 
 export default class ValidatorGroupCommission extends BaseCommand {
   static description =
@@ -11,15 +11,15 @@ export default class ValidatorGroupCommission extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    from: Flags.address({
+    from: CustomFlags.address({
       required: true,
       description: 'Address for the Validator Group or Validator Group validator signer',
     }),
-    apply: flags.boolean({
+    apply: Flags.boolean({
       exclusive: ['queue-update'],
       description: 'Applies a previously queued update. Should be called after the update delay.',
     }),
-    'queue-update': flags.string({
+    'queue-update': Flags.string({
       exclusive: ['apply'],
       description:
         'Queues an update to the commission, which can be applied after the update delay.',
@@ -32,14 +32,15 @@ export default class ValidatorGroupCommission extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(ValidatorGroupCommission)
+    const kit = await this.getKit()
+    const res = await this.parse(ValidatorGroupCommission)
 
     if (!(res.flags['queue-update'] || res.flags.apply)) {
       this.error(`Specify action: --apply or --queue-update`)
       return
     }
 
-    const validators = await this.kit.contracts.getValidators()
+    const validators = await kit.contracts.getValidators()
 
     if (res.flags['queue-update']) {
       const commission = new BigNumber(res.flags['queue-update'])

@@ -1,8 +1,8 @@
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 
 export default class Authorize extends BaseCommand {
   static description =
@@ -10,29 +10,29 @@ export default class Authorize extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    from: Flags.address({ required: true }),
-    role: flags.string({
+    from: CustomFlags.address({ required: true }),
+    role: Flags.string({
       char: 'r',
       options: ['vote', 'validator', 'attestation'],
       description: 'Role to delegate',
       required: true,
     }),
-    signature: Flags.proofOfPossession({
+    signature: CustomFlags.proofOfPossession({
       description: 'Signature (a.k.a proof-of-possession) of the signer key',
       required: true,
     }),
-    signer: Flags.address({ required: true }),
-    blsKey: Flags.blsPublicKey({
+    signer: CustomFlags.address({ required: true }),
+    blsKey: CustomFlags.blsPublicKey({
       description:
         'The BLS public key that the validator is using for consensus, should pass proof of possession. 96 bytes.',
       dependsOn: ['blsPop'],
     }),
-    blsPop: Flags.blsProofOfPossession({
+    blsPop: CustomFlags.blsProofOfPossession({
       description:
         'The BLS public key proof-of-possession, which consists of a signature on the account address. 48 bytes.',
       dependsOn: ['blsKey'],
     }),
-    force: flags.boolean({
+    force: Flags.boolean({
       description:
         'Allow rotation of validator ECDSA key without rotating the BLS key. Only intended for validators with a special reason to do so.',
       default: false,
@@ -40,7 +40,7 @@ export default class Authorize extends BaseCommand {
     }),
   }
 
-  static args = []
+  static args = {}
 
   static examples = [
     'authorize --from 0x5409ED021D9299bf6814279A6A1411A7e866A631 --role vote --signer 0x6ecbe1db9ef729cbe972c83fb886247691fb6beb --signature 0x1b9fca4bbb5bfb1dbe69ef1cddbd9b4202dcb6b134c5170611e1e36ecfa468d7b46c85328d504934fce6c2a1571603a50ae224d2b32685e84d4d1a1eebad8452eb',
@@ -48,9 +48,9 @@ export default class Authorize extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(Authorize)
-
-    const accounts = await this.kit.contracts.getAccounts()
+    const res = await this.parse(Authorize)
+    const kit = await this.getKit()
+    const accounts = await kit.contracts.getAccounts()
     const sig = accounts.parseSignatureOfAddress(
       res.flags.from,
       res.flags.signer,
@@ -83,7 +83,7 @@ export default class Authorize extends BaseCommand {
         res.flags.blsPop
       )
     } else if (res.flags.role === 'validator') {
-      const validatorsWrapper = await this.kit.contracts.getValidators()
+      const validatorsWrapper = await kit.contracts.getValidators()
       tx = await accounts.authorizeValidatorSigner(res.flags.signer, sig, validatorsWrapper)
     } else if (res.flags.role === 'attestation') {
       tx = await accounts.authorizeAttestationSigner(res.flags.signer, sig)

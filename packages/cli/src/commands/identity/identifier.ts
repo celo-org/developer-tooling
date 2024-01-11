@@ -1,11 +1,10 @@
 import { OdisUtils } from '@celo/identity'
 import { AuthSigner, OdisContextName } from '@celo/identity/lib/odis/query'
-import { flags as oFlags } from '@oclif/command'
-import { cli } from 'cli-ux'
+import { Flags, ux } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { printValueMap } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 
 export default class IdentifierQuery extends BaseCommand {
   static description =
@@ -13,16 +12,16 @@ export default class IdentifierQuery extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    from: Flags.address({
+    from: CustomFlags.address({
       required: true,
       description: 'The address from which to perform the query',
     }),
-    phoneNumber: Flags.phoneNumber({
+    phoneNumber: CustomFlags.phoneNumber({
       required: true,
       description:
         'The phone number for which to query the identifier. Should be in e164 format with country code.',
     }),
-    context: oFlags.string({
+    context: Flags.string({
       required: false,
       description: 'mainnet (default), alfajores, or alfajoresstaging',
     }),
@@ -33,17 +32,18 @@ export default class IdentifierQuery extends BaseCommand {
   ]
 
   async run() {
-    const { flags } = this.parse(IdentifierQuery)
+    const kit = await this.getKit()
+    const { flags } = await this.parse(IdentifierQuery)
     const { phoneNumber, from, context } = flags
 
     await newCheckBuilder(this).isValidAddress(flags.from).runChecks()
 
-    cli.action.start('Querying ODIS for identifier')
+    ux.action.start('Querying ODIS for identifier')
 
     const authSigner: AuthSigner = {
       authenticationMethod: OdisUtils.Query.AuthenticationMethod.WALLET_KEY,
       // @ts-ignore -- TODO: if identity depends on diff version of ck which has a slightly differnt type this complains
-      contractKit: this.kit,
+      contractKit: kit,
     }
 
     const res = await OdisUtils.PhoneNumberIdentifier.getPhoneNumberIdentifier(
@@ -53,7 +53,7 @@ export default class IdentifierQuery extends BaseCommand {
       OdisUtils.Query.getServiceContext(context as OdisContextName)
     )
 
-    cli.action.stop()
+    ux.action.stop()
 
     printValueMap({
       identifier: res.phoneHash,

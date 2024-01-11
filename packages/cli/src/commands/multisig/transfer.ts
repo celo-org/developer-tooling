@@ -1,8 +1,8 @@
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { BigNumber } from 'bignumber.js'
 import { BaseCommand } from '../../base'
 import { displaySendTx } from '../../utils/cli'
-import { Args, Flags } from '../../utils/command'
+import { CustomArgs, CustomFlags } from '../../utils/command'
 
 export default class MultiSigTransfer extends BaseCommand {
   static description =
@@ -10,19 +10,21 @@ export default class MultiSigTransfer extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    to: Flags.address({ required: true, description: 'Recipient of transfer' }),
-    amount: flags.string({ required: true, description: 'Amount to transfer, e.g. 10e18' }),
-    transferFrom: flags.boolean({
+    to: CustomFlags.address({ required: true, description: 'Recipient of transfer' }),
+    amount: Flags.string({ required: true, description: 'Amount to transfer, e.g. 10e18' }),
+    transferFrom: Flags.boolean({
       description: 'Perform transferFrom instead of transfer in the ERC-20 interface',
     }),
-    sender: Flags.address({ description: 'Identify sender if performing transferFrom' }),
-    from: Flags.address({
+    sender: CustomFlags.address({ description: 'Identify sender if performing transferFrom' }),
+    from: CustomFlags.address({
       required: true,
       description: 'Account transferring value to the recipient',
     }),
   }
 
-  static args = [Args.address('address')]
+  static args = {
+    arg1: CustomArgs.address('address'),
+  }
 
   static examples = [
     'transfer <multiSigAddr> --to 0x5409ed021d9299bf6814279a6a1411a7e866a631 --amount 200000e18 --from 0x123abc',
@@ -30,13 +32,14 @@ export default class MultiSigTransfer extends BaseCommand {
   ]
 
   async run() {
+    const kit = await this.getKit()
     const {
       args,
       flags: { to, sender, from, amount, transferFrom },
-    } = this.parse(MultiSigTransfer)
+    } = await this.parse(MultiSigTransfer)
     const amountBN = new BigNumber(amount)
-    const celoToken = await this.kit.contracts.getGoldToken()
-    const multisig = await this.kit.contracts.getMultiSig(args.address)
+    const celoToken = await kit.contracts.getGoldToken()
+    const multisig = await kit.contracts.getMultiSig(args.arg1 as string)
 
     let transferTx
     if (transferFrom) {

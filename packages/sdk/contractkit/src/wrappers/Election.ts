@@ -329,7 +329,7 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
    * Activates any activatable pending votes.
    * @param account The account with pending votes to activate.
    */
-  async activate(account: Address): Promise<Array<CeloTransactionObject<boolean>>> {
+  async activate(account: Address): Promise<CeloTransactionObject<boolean>[]> {
     const groups = await this.contract.methods.getGroupsVotedForByAccount(account).call()
     const isActivatable = await Promise.all(
       groups.map((g) => this.contract.methods.hasActivatablePendingVotes(account, g).call())
@@ -391,7 +391,7 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
     account: Address,
     group: Address,
     value: BigNumber
-  ): Promise<Array<CeloTransactionObject<boolean>>> {
+  ): Promise<CeloTransactionObject<boolean>[]> {
     const vote = await this.getVotesForGroupByAccount(account, group)
     if (value.gt(vote.pending.plus(vote.active))) {
       throw new Error(`can't revoke more votes for ${group} than have been made by ${account}`)

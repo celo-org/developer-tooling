@@ -6,14 +6,15 @@ import { ensureLeading0x } from '@celo/utils/lib/address'
 import { notEmpty } from '@celo/utils/lib/collections'
 import { BaseCommand } from '../../base'
 import { printValueMap } from '../../utils/cli'
-import { Args } from '../../utils/command'
+import { CustomArgs } from '../../utils/command'
 
 async function getMetadata(kit: ContractKit, address: string) {
   const accounts = await kit.contracts.getAccounts()
   const url = await accounts.getMetadataURL(address)
   console.log(address, 'has url', url)
-  if (url === '') return IdentityMetadataWrapper.fromEmpty(address)
-  else return IdentityMetadataWrapper.fetchFromURL(accounts, url)
+  return url === ''
+    ? IdentityMetadataWrapper.fromEmpty(address)
+    : IdentityMetadataWrapper.fetchFromURL(accounts, url)
 }
 
 function dedup(lst: string[]): string[] {
@@ -43,21 +44,24 @@ export default class ShowClaimedAccounts extends BaseCommand {
     ...BaseCommand.flags,
   }
 
-  static args = [Args.address('address')]
+  static args = {
+    arg1: CustomArgs.address('address'),
+  }
 
   static examples = ['show-claimed-accounts 0x5409ed021d9299bf6814279a6a1411a7e866a631']
 
   async run() {
-    const { args } = this.parse(ShowClaimedAccounts)
+    const kit = await this.getKit()
+    const { args } = await this.parse(ShowClaimedAccounts)
 
-    const metadata = await getMetadata(this.kit, args.address)
+    const metadata = await getMetadata(kit, args.arg1 as string)
 
-    const claimedAccounts = await getClaims(this.kit, args.address, metadata)
+    const claimedAccounts = await getClaims(kit, args.arg1 as string, metadata)
 
     console.log('All balances expressed in units of 10^-18.')
     for (const address of claimedAccounts) {
       console.log('\nShowing balances for', address)
-      const balance = await this.kit.getTotalBalance(address)
+      const balance = await kit.getTotalBalance(address)
       printValueMap(balance)
     }
   }

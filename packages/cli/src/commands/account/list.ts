@@ -1,29 +1,27 @@
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
-
 export default class AccountList extends BaseCommand {
   static description = 'List the addresses from the node and the local instance'
 
   static flags = {
     ...BaseCommand.flags,
-    local: flags.boolean({
+    local: Flags.boolean({
       allowNo: true,
       description:
         'If set, only show local and hardware wallet accounts. Use no-local to only show keystore addresses.',
     }),
   }
-
   requireSynced = false
 
   async run() {
-    const res = this.parse(AccountList)
+    const kit = await this.getKit()
+    const res = await this.parse(AccountList)
 
     // Retreive accounts from the connected Celo node.
-    const allAddresses = !res.flags.local ? await this.kit.connection.getAccounts() : []
+    const allAddresses = !res.flags.local ? await kit.connection.getAccounts() : []
 
     // Get addresses from the local wallet.
-    const localAddresses =
-      res.flags.local ?? true ? await this.kit.connection.getLocalAccounts() : []
+    const localAddresses = res.flags.local ?? true ? await kit.connection.getLocalAccounts() : []
 
     // Display the addresses.
     const localName = res.flags.useLedger ? 'Ledger' : 'Local'

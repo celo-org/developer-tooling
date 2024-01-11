@@ -16,15 +16,15 @@
     "clean": "tsc -b . --clean",
     "test": "jest --runInBand --ci",
     "test:verbose": "jest --verbose",
-    "lint": "tslint -c tslint.json --project ."
+    "lint": "yarn run --top-level eslint -c .eslintrc.js "
   },
   "files": [
     "lib/**/*"
   ],
   "dependencies": {
-    "@celo/utils": "^5.0.6",
-    "@celo/bls12377js": "0.1.1",
     "@celo/base": "^6.0.0",
+    "@celo/bls12377js": "0.1.1",
+    "@celo/utils": "^5.0.6",
     "@ethereumjs/util": "8.0.5",
     "@types/bn.js": "^5.1.0",
     "@types/elliptic": "^6.4.9",

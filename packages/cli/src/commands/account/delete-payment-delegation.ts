@@ -1,6 +1,6 @@
 import { BaseCommand } from '../../base'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 
 export default class DeletePaymentDelegation extends BaseCommand {
   static description =
@@ -8,19 +8,20 @@ export default class DeletePaymentDelegation extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    account: Flags.address({ required: true }),
+    account: CustomFlags.address({ required: true }),
   }
 
-  static args = []
+  static args = {}
 
   static examples = [
     'delete-payment-delegation --account 0x5409ED021D9299bf6814279A6A1411A7e866A631',
   ]
 
   async run() {
-    const res = this.parse(DeletePaymentDelegation)
-    this.kit.defaultAccount = res.flags.account
-    const accounts = await this.kit.contracts.getAccounts()
+    const kit = await this.getKit()
+    const res = await this.parse(DeletePaymentDelegation)
+    kit.defaultAccount = res.flags.account
+    const accounts = await kit.contracts.getAccounts()
 
     await displaySendTx('deletePaymentDelegation', accounts.deletePaymentDelegation())
 

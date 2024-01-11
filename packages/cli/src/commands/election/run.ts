@@ -1,5 +1,6 @@
 import { ContractKit } from '@celo/contractkit/lib'
-import { cli } from 'cli-ux'
+import { ux } from '@oclif/core'
+
 import { BaseCommand } from '../../base'
 import { validatorTable } from '../validator/list'
 
@@ -20,20 +21,22 @@ export default class ElectionRun extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    ...(cli.table.flags() as object),
+    ...(ux.table.flags() as object),
   }
 
   async run() {
-    const res = this.parse(ElectionRun)
-    cli.action.start('Running mock election')
-    const validators = await this.kit.contracts.getValidators()
+    const kit = await this.getKit()
+    const res = await this.parse(ElectionRun)
+    ux.action.start('Running mock election')
+    const validators = await kit.contracts.getValidators()
 
-    const signers = await performElections(this.kit)
+    const signers = await performElections(kit)
 
     const validatorList = await Promise.all(
       signers.map((addr) => validators.getValidatorFromSigner(addr))
     )
-    cli.action.stop()
-    cli.table(validatorList, validatorTable, res.flags)
+    ux.action.stop()
+    // @ts-expect-error
+    ux.table(validatorList, validatorTable, res.flags)
   }
 }

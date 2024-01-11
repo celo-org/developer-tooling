@@ -8,7 +8,7 @@ export default class ExchangeGold extends ExchangeCelo {
     ...ExchangeCelo.flags,
   }
 
-  static args = []
+  static args = {}
 
   static examples = [
     'gold --value 5000000000000 --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d',

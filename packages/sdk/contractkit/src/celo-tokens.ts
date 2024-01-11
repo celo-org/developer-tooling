@@ -157,7 +157,7 @@ export class CeloTokens {
   }
 
   private async forEachWrapperInfo<T>(
-    fn: () => Promise<Array<{ symbol: CeloTokenType; data: T }>>
+    fn: () => Promise<{ symbol: CeloTokenType; data: T }[]>
   ): Promise<EachCeloToken<T>> {
     return (await fn()).reduce(
       (

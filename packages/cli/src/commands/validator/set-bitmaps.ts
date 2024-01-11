@@ -1,27 +1,27 @@
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 
 export default class SetBitmapsCommand extends BaseCommand {
   static description = 'Set validator signature bitmaps for provided intervals'
 
   static flags = {
     ...BaseCommand.flags,
-    from: Flags.address({
+    from: CustomFlags.address({
       required: true,
       description: 'From address to sign set bitmap transactions',
     }),
-    slashableDowntimeBeforeBlock: flags.integer({
+    slashableDowntimeBeforeBlock: Flags.integer({
       description: 'Set all bitmaps for slashable downtime window before provided block',
       exclusive: ['intervals', 'slashableDowntimeBeforeLatest'],
     }),
-    slashableDowntimeBeforeLatest: flags.boolean({
+    slashableDowntimeBeforeLatest: Flags.boolean({
       description: 'Set all bitmaps for slashable downtime window before latest block',
       exclusive: ['intervals', 'slashableDowntimeBeforeBlock'],
     }),
-    intervals: Flags.intRangeArray({
+    intervals: CustomFlags.intRangeArray({
       description: 'Array of intervals, ordered by min start to max end',
       exclusive: ['beforeBlock'],
     }),
@@ -33,9 +33,10 @@ export default class SetBitmapsCommand extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(SetBitmapsCommand)
+    const kit = await this.getKit()
+    const res = await this.parse(SetBitmapsCommand)
 
-    const downtimeSlasher = await this.kit.contracts.getDowntimeSlasher()
+    const downtimeSlasher = await kit.contracts.getDowntimeSlasher()
 
     const intervals =
       res.flags.slashableDowntimeBeforeLatest || res.flags.slashableDowntimeBeforeBlock

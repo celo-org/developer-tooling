@@ -1,8 +1,3 @@
-import Help from '@oclif/plugin-help'
+import { Help } from '@oclif/core'
 
-export default class CustomHelp extends Help {
-  // TODO: customize help output (to show hidden flags)
-  // showHelp(args: string[]): void {
-  //   console.log('TEST')
-  // }
-}
+export default class CustomHelp extends Help {}

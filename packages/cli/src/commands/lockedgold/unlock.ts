@@ -1,9 +1,9 @@
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 import { LockedGoldArgs } from '../../utils/lockedgold'
 
 export default class Unlock extends BaseCommand {
@@ -12,18 +12,18 @@ export default class Unlock extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    from: Flags.address({ required: true }),
-    value: flags.string({ ...LockedGoldArgs.valueArg, required: true }),
+    from: CustomFlags.address({ required: true }),
+    value: Flags.string({ ...LockedGoldArgs.valueArg, required: true }),
   }
 
-  static args = []
+  static args = {}
 
   static examples = ['unlock --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95 --value 500000000']
 
   async run() {
-    const res = this.parse(Unlock)
-
-    const lockedgold = await this.kit.contracts.getLockedGold()
+    const res = await this.parse(Unlock)
+    const kit = await this.getKit()
+    const lockedgold = await kit.contracts.getLockedGold()
     const value = new BigNumber(res.flags.value)
 
     await newCheckBuilder(this, res.flags.from)

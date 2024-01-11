@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/no-floating-promises: off */
 import { StrongAddress } from '@celo/base/lib/address'
 import { CeloTx, EncodedTransaction, Hex } from '@celo/connect'
 import {
@@ -375,9 +376,9 @@ describe('Local wallet class', () => {
         })
         describe('when using signTransaction with type CIP42/64', () => {
           let celoTransactionBase: CeloTx
-          let feeCurrency = '0x10c892a6ec43a53e45d0b916b4b7d383b1b78c0f'
-          let maxFeePerGas = '0x100000000'
-          let maxPriorityFeePerGas = '0x100000000'
+          const feeCurrency = '0x10c892a6ec43a53e45d0b916b4b7d383b1b78c0f'
+          const maxFeePerGas = '0x100000000'
+          const maxPriorityFeePerGas = '0x100000000'
 
           beforeEach(() => {
             celoTransactionBase = {
@@ -458,7 +459,7 @@ describe('Local wallet class', () => {
                 maxPriorityFeePerGas,
                 gasPrice: '0x100000000',
               }
-              expect(async () => await wallet.signTransaction(transaction)).rejects.toThrowError(
+              expect(async () => wallet.signTransaction(transaction)).rejects.toThrowError(
                 'when "maxFeePerGas" or "maxPriorityFeePerGas" are set, "gasPrice" must not be set'
               )
             })

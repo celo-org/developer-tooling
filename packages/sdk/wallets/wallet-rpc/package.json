@@ -18,22 +18,22 @@
     "clean": "tsc -b . --clean",
     "docs": "typedoc",
     "test": "jest --runInBand",
-    "lint": "tslint -c tslint.json --project .",
+    "lint": "yarn run --top-level eslint -c .eslintrc.js ",
     "prepublishOnly": "yarn build"
   },
   "dependencies": {
-    "@types/bn.js": "^5.1.0",
     "@celo/base": "^6.0.0",
     "@celo/connect": "^5.1.1",
     "@celo/utils": "^5.0.6",
     "@celo/wallet-base": "^5.1.1",
     "@celo/wallet-remote": "^5.1.1",
+    "@types/bn.js": "^5.1.0",
     "bignumber.js": "^9.0.0",
     "debug": "^4.1.1"
   },
   "devDependencies": {
-    "@celo/dev-utils": "0.0.1-beta.1",
     "@celo/contractkit": "^6.0.0",
+    "@celo/dev-utils": "0.0.1-beta.1",
     "bn.js": "^5.1.0",
     "web3": "1.10.0"
   },

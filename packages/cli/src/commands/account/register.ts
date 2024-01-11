@@ -1,8 +1,8 @@
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 
 export default class Register extends BaseCommand {
   static description =
@@ -10,11 +10,11 @@ export default class Register extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    name: flags.string(),
-    from: Flags.address({ required: true }),
+    name: Flags.string(),
+    from: CustomFlags.address({ required: true }),
   }
 
-  static args = []
+  static args = {}
 
   static examples = [
     'register --from 0x5409ed021d9299bf6814279a6a1411a7e866a631',
@@ -22,9 +22,10 @@ export default class Register extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(Register)
+    const kit = await this.getKit()
+    const res = await this.parse(Register)
 
-    const accounts = await this.kit.contracts.getAccounts()
+    const accounts = await kit.contracts.getAccounts()
 
     await newCheckBuilder(this).isNotAccount(res.flags.from).runChecks()
     await displaySendTx('register', accounts.createAccount())

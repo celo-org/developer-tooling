@@ -1,11 +1,11 @@
 import { StableToken } from '@celo/contractkit'
 import { stableTokenInfos } from '@celo/contractkit/lib/celo-tokens'
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx, failWith } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 import { checkNotDangerousExchange } from '../../utils/exchange'
 import { enumEntriesDupWithLowercase } from '../../utils/helpers'
 
@@ -19,23 +19,23 @@ export default class ExchangeCelo extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    from: Flags.address({ required: true, description: 'The address with CELO to exchange' }),
-    value: Flags.wei({
+    from: CustomFlags.address({ required: true, description: 'The address with CELO to exchange' }),
+    value: CustomFlags.wei({
       required: true,
       description: 'The value of CELO to exchange for a StableToken',
     }),
-    forAtLeast: Flags.wei({
+    forAtLeast: CustomFlags.wei({
       description: 'Optional, the minimum value of StableTokens to receive in return',
       default: new BigNumber(0),
     }),
-    stableToken: flags.enum({
-      options: Object.keys(stableTokenOptions),
+    stableToken: Flags.option({
+      options: Object.keys(stableTokenOptions) as (StableToken | Lowercase<StableToken>)[],
       description: 'Name of the stable to receive',
-      default: 'cUSD',
-    }),
+      default: 'cusd',
+    })(),
   }
 
-  static args = []
+  static args = {}
 
   static examples = [
     'celo --value 5000000000000 --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d',
@@ -43,14 +43,15 @@ export default class ExchangeCelo extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(ExchangeCelo)
+    const kit = await this.getKit()
+    const res = await this.parse(ExchangeCelo)
     const sellAmount = res.flags.value
     const minBuyAmount = res.flags.forAtLeast
     const stableToken = stableTokenOptions[res.flags.stableToken]
 
     let exchange
     try {
-      exchange = await this.kit.contracts.getExchange(stableToken)
+      exchange = await kit.contracts.getExchange(stableToken)
     } catch {
       failWith(`The ${stableToken} token was not deployed yet`)
     }
@@ -59,7 +60,7 @@ export default class ExchangeCelo extends BaseCommand {
 
     if (minBuyAmount.toNumber() === 0) {
       const check = await checkNotDangerousExchange(
-        this.kit,
+        kit,
         sellAmount,
         largeOrderPercentage,
         deppegedPricePercentage,
@@ -73,7 +74,7 @@ export default class ExchangeCelo extends BaseCommand {
       }
     }
 
-    const celoToken = await this.kit.contracts.getGoldToken()
+    const celoToken = await kit.contracts.getGoldToken()
 
     await displaySendTx(
       'increaseAllowance',
