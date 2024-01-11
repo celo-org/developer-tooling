@@ -1,4 +1,5 @@
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
+
 import prompts from 'prompts'
 import { displaySendTx, printValueMap } from '../../utils/cli'
 import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
@@ -8,18 +9,19 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
 
   static description = 'Take all possible steps to revoke given contract instance.'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...ReleaseGoldBaseCommand.flags,
-    yesreally: flags.boolean({ description: 'Override interactive prompt to confirm revocation' }),
+    yesreally: Flags.boolean({ description: 'Override interactive prompt to confirm revocation' }),
   }
 
-  static args = []
+  static args = {}
 
   static examples = ['admin-revoke --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631']
 
   async run() {
-    const { flags: _flags } = this.parse(AdminRevoke)
-
+    const kit = await this.getKit()
+    const { flags: _flags } = await this.parse(AdminRevoke)
+    const web3 = await this.getWeb3()
     if (!_flags.yesreally) {
       const response = await prompts({
         type: 'confirm',
@@ -33,7 +35,7 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
       }
     }
 
-    this.kit.defaultAccount = await this.releaseGoldWrapper.getReleaseOwner()
+    kit.defaultAccount = await this.releaseGoldWrapper.getReleaseOwner()
 
     const isRevoked = await this.releaseGoldWrapper.isRevoked()
     if (!isRevoked) {
@@ -45,16 +47,17 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
       )
     }
 
-    const accounts = await this.kit.contracts.getAccounts()
-    const isAccount = await accounts.isAccount(this.contractAddress)
+    const accounts = await kit.contracts.getAccounts()
+    const contractAddress = await this.contractAddress()
+    const isAccount = await accounts.isAccount(contractAddress)
     if (isAccount) {
       // rotate vote signers
-      let voteSigner = await accounts.getVoteSigner(this.contractAddress)
-      if (voteSigner !== this.contractAddress) {
+      let voteSigner = await accounts.getVoteSigner(contractAddress)
+      if (voteSigner !== contractAddress) {
         const password = 'bad_password'
-        voteSigner = await this.web3.eth.personal.newAccount(password)
-        await this.web3.eth.personal.unlockAccount(voteSigner, password, 1000)
-        const pop = await accounts.generateProofOfKeyPossession(this.contractAddress, voteSigner)
+        voteSigner = await web3.eth.personal.newAccount(password)
+        await web3.eth.personal.unlockAccount(voteSigner, password, 1000)
+        const pop = await accounts.generateProofOfKeyPossession(contractAddress, voteSigner)
         await displaySendTx(
           'accounts: rotateVoteSigner',
           await this.releaseGoldWrapper.authorizeVoteSigner(voteSigner, pop),
@@ -63,8 +66,8 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
         )
       }
 
-      const election = await this.kit.contracts.getElection()
-      const electionVotes = await election.getTotalVotesByAccount(this.contractAddress)
+      const election = await kit.contracts.getElection()
+      const electionVotes = await election.getTotalVotesByAccount(contractAddress)
       const isElectionVoting = electionVotes.isGreaterThan(0)
 
       // handle election votes
@@ -78,22 +81,22 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
         }
       }
 
-      const governance = await this.kit.contracts.getGovernance()
-      const isGovernanceVoting = await governance.isVoting(this.contractAddress)
+      const governance = await kit.contracts.getGovernance()
+      const isGovernanceVoting = await governance.isVoting(contractAddress)
 
       // handle governance votes
       if (isGovernanceVoting) {
-        const isUpvoting = await governance.isUpvoting(this.contractAddress)
+        const isUpvoting = await governance.isUpvoting(contractAddress)
         if (isUpvoting) {
           await displaySendTx(
             'governance: revokeUpvote',
-            await governance.revokeUpvote(this.contractAddress),
+            await governance.revokeUpvote(contractAddress),
             { from: voteSigner },
             'ProposalUpvoteRevoked'
           )
         }
 
-        const isVotingReferendum = await governance.isVotingReferendum(this.contractAddress)
+        const isVotingReferendum = await governance.isVotingReferendum(contractAddress)
         if (isVotingReferendum) {
           await displaySendTx(
             'governance: revokeVotes',
@@ -113,12 +116,12 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
     }
 
     // rescue any cUSD balance
-    const stabletoken = await this.kit.contracts.getStableToken()
-    const cusdBalance = await stabletoken.balanceOf(this.contractAddress)
+    const stabletoken = await kit.contracts.getStableToken()
+    const cusdBalance = await stabletoken.balanceOf(contractAddress)
     if (cusdBalance.isGreaterThan(0)) {
       await displaySendTx(
         'releasegold: rescueCUSD',
-        this.releaseGoldWrapper.transfer(this.kit.defaultAccount, cusdBalance),
+        this.releaseGoldWrapper.transfer(kit.defaultAccount, cusdBalance),
         undefined,
         'Transfer'
       )
@@ -135,8 +138,8 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
       )
     } else {
       console.log('Some celo is still locked, printing pending withdrawals...')
-      const lockedGold = await this.kit.contracts.getLockedGold()
-      const pendingWithdrawals = await lockedGold.getPendingWithdrawals(this.contractAddress)
+      const lockedGold = await kit.contracts.getLockedGold()
+      const pendingWithdrawals = await lockedGold.getPendingWithdrawals(contractAddress)
       pendingWithdrawals.forEach((w) => printValueMap(w))
     }
   }

@@ -1,4 +1,4 @@
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import prompts from 'prompts'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
@@ -9,27 +9,28 @@ export default class SetCanExpire extends ReleaseGoldBaseCommand {
 
   static expireOptions = ['true', 'false', 'True', 'False']
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...ReleaseGoldBaseCommand.flags,
-    value: flags.enum({
+    value: Flags.option({
       options: SetCanExpire.expireOptions,
       required: true,
       description: 'canExpire value',
-    }),
-    yesreally: flags.boolean({
+    })(),
+    yesreally: Flags.boolean({
       description: 'Override prompt to set expiration flag (be careful!)',
     }),
   }
 
-  static args = []
+  static args = {}
 
   static examples = [
     'set-can-expire --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631 --value true',
   ]
 
   async run() {
+    const kit = await this.getKit()
     // tslint:disable-next-line
-    const { flags } = this.parse(SetCanExpire)
+    const { flags } = await this.parse(SetCanExpire)
     const canExpire = flags.value === 'true' || flags.value === 'True' ? true : false
 
     await newCheckBuilder(this)
@@ -52,7 +53,7 @@ export default class SetCanExpire extends ReleaseGoldBaseCommand {
       }
     }
 
-    this.kit.defaultAccount = await this.releaseGoldWrapper.getBeneficiary()
+    kit.defaultAccount = await this.releaseGoldWrapper.getBeneficiary()
     await displaySendTx('setCanExpire', this.releaseGoldWrapper.setCanExpire(canExpire))
   }
 }

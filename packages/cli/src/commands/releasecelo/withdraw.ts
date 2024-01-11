@@ -1,29 +1,30 @@
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
 
 export default class Withdraw extends ReleaseGoldBaseCommand {
   static description =
     'Withdraws `value` released celo to the beneficiary address. Fails if `value` worth of celo has not been released yet.'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...ReleaseGoldBaseCommand.flags,
-    value: Flags.wei({
+    value: CustomFlags.wei({
       required: true,
       description: 'Amount of released celo (in wei) to withdraw',
     }),
   }
 
-  static args = []
+  static args = {}
 
   static examples = [
     'withdraw --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631 --value 10000000000000000000000',
   ]
 
   async run() {
+    const kit = await this.getKit()
     // tslint:disable-next-line
-    const { flags } = this.parse(Withdraw)
+    const { flags } = await this.parse(Withdraw)
     const value = flags.value
 
     const remainingUnlockedBalance = await this.releaseGoldWrapper.getRemainingUnlockedBalance()
@@ -43,7 +44,7 @@ export default class Withdraw extends ReleaseGoldBaseCommand {
         'Contract would self-destruct with cUSD left when withdrawing the whole balance',
         async () => {
           if (value.eq(remainingUnlockedBalance)) {
-            const stableToken = await this.kit.contracts.getStableToken()
+            const stableToken = await kit.contracts.getStableToken()
             const stableBalance = await stableToken.balanceOf(this.releaseGoldWrapper.address)
             if (stableBalance.gt(0)) {
               return false
@@ -55,7 +56,7 @@ export default class Withdraw extends ReleaseGoldBaseCommand {
       )
       .runChecks()
 
-    this.kit.defaultAccount = await this.releaseGoldWrapper.getBeneficiary()
+    kit.defaultAccount = await this.releaseGoldWrapper.getBeneficiary()
     await displaySendTx('withdrawTx', this.releaseGoldWrapper.withdraw(value))
   }
 }

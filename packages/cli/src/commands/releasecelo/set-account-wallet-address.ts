@@ -1,34 +1,35 @@
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
 
 export default class SetAccountWalletAddress extends ReleaseGoldBaseCommand {
   static description = "Set the ReleaseGold contract account's wallet address"
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...ReleaseGoldBaseCommand.flags,
-    walletAddress: Flags.address({
+    walletAddress: CustomFlags.address({
       required: true,
       description:
         "Address of wallet to set for contract's account and signer of PoP. 0x0 if owner wants payers to contact them directly.",
     }),
-    pop: flags.string({
+    pop: Flags.string({
       required: false,
       description: "ECDSA PoP for signer over contract's account",
     }),
   }
 
-  static args = []
+  static args = {}
 
   static examples = [
     'set-account-wallet-address --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631 --walletAddress 0xE36Ea790bc9d7AB70C55260C66D52b1eca985f84 --pop 0x1b3e611d05e46753c43444cdc55c2cc3d95c54da0eba2464a8cc8cb01bd57ae8bb3d82a0e293ca97e5813e7fb9b624127f42ef0871d025d8a56fe2f8f08117e25b',
   ]
 
   async run() {
+    const kit = await this.getKit()
     // tslint:disable-next-line
-    const { flags } = this.parse(SetAccountWalletAddress)
+    const { flags } = await this.parse(SetAccountWalletAddress)
     const isRevoked = await this.releaseGoldWrapper.isRevoked()
 
     const checkBuilder = newCheckBuilder(this)
@@ -37,7 +38,7 @@ export default class SetAccountWalletAddress extends ReleaseGoldBaseCommand {
 
     let sig: any
     if (flags.walletAddress !== '0x0000000000000000000000000000000000000000') {
-      const accounts = await this.kit.contracts.getAccounts()
+      const accounts = await kit.contracts.getAccounts()
       checkBuilder.addCheck(
         'Wallet address is provided and PoP is provided',
         () => flags.pop !== undefined
@@ -57,7 +58,7 @@ export default class SetAccountWalletAddress extends ReleaseGoldBaseCommand {
       sig.s = '0x0'
     }
 
-    this.kit.defaultAccount = await this.releaseGoldWrapper.getBeneficiary()
+    kit.defaultAccount = await this.releaseGoldWrapper.getBeneficiary()
     await displaySendTx(
       'setAccountWalletAddressTx',
       this.releaseGoldWrapper.setAccountWalletAddress(flags.walletAddress, sig.v, sig.r, sig.s)

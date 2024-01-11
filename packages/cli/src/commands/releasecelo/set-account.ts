@@ -1,28 +1,27 @@
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
 import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
-
 export default class SetAccount extends ReleaseGoldBaseCommand {
   static description =
     'Set account properties of the ReleaseGold instance account such as name, data encryption key, and the metadata URL'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...ReleaseGoldBaseCommand.flags,
-    property: flags.string({
+    property: Flags.string({
       char: 'p',
       options: ['name', 'dataEncryptionKey', 'metaURL'],
       description: 'Property type to set',
       required: true,
     }),
-    value: flags.string({
+    value: Flags.string({
       char: 'v',
       description: 'Property value to set',
       required: true,
     }),
   }
 
-  static args = []
+  static args = {}
 
   static examples = [
     'set-account --contract 0x5719118266779B58D0f9519383A4A27aA7b829E5 --property name --value mywallet',
@@ -31,8 +30,9 @@ export default class SetAccount extends ReleaseGoldBaseCommand {
   ]
 
   async run() {
+    const kit = await this.getKit()
     // tslint:disable-next-line
-    const { flags } = this.parse(SetAccount)
+    const { flags } = await this.parse(SetAccount)
     const isRevoked = await this.releaseGoldWrapper.isRevoked()
 
     await newCheckBuilder(this)
@@ -51,7 +51,7 @@ export default class SetAccount extends ReleaseGoldBaseCommand {
       return this.error(`Invalid property provided`)
     }
 
-    this.kit.defaultAccount = await this.releaseGoldWrapper.getBeneficiary()
+    kit.defaultAccount = await this.releaseGoldWrapper.getBeneficiary()
     await displaySendTx('setAccount' + flags.property + 'Tx', tx)
   }
 }

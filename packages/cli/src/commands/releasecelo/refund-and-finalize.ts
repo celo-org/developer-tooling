@@ -6,15 +6,16 @@ export default class RefundAndFinalize extends ReleaseGoldBaseCommand {
   static description =
     "Refund the given contract's balance to the appopriate parties and destroy the contact. Can only be called by the release owner of revocable ReleaseGold instances."
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...ReleaseGoldBaseCommand.flags,
   }
 
-  static args = []
+  static args = {}
 
   static examples = ['refund-and-finalize --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631']
 
   async run() {
+    const kit = await this.getKit()
     const isRevoked = await this.releaseGoldWrapper.isRevoked()
     const remainingLockedBalance = await this.releaseGoldWrapper.getRemainingLockedBalance()
 
@@ -23,7 +24,7 @@ export default class RefundAndFinalize extends ReleaseGoldBaseCommand {
       .addCheck('All contract celo is unlocked', () => remainingLockedBalance.eq(0))
       .runChecks()
 
-    this.kit.defaultAccount = await this.releaseGoldWrapper.getReleaseOwner()
+    kit.defaultAccount = await this.releaseGoldWrapper.getReleaseOwner()
     await displaySendTx('refundAndFinalize', await this.releaseGoldWrapper.refundAndFinalize())
   }
 }
