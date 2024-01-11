@@ -88,7 +88,7 @@ describe('rpcCallHandler function', () => {
 
   describe('when the handle promise fails', () => {
     it('the callback receives a response with the error', (done) => {
-      function callback(_error: Error | null, response?: JsonRpcResponse) {
+      const callback = (_error: Error | null, response?: JsonRpcResponse) => {
         try {
           expect((response as any).error.code).toBe(-32000)
           done()
@@ -104,10 +104,10 @@ describe('rpcCallHandler function', () => {
 
   describe('when the handle fails (not the promise)', () => {
     it('the callback receives a response with the error', (done) => {
-      function callback(error: Error | null, response?: JsonRpcResponse) {
+      const callback = (_error: Error | null, response?: JsonRpcResponse) => {
         try {
           expect(response).toBeUndefined()
-          expect(error).not.toBeNull()
+          expect(_error).not.toBeNull()
           done()
         } catch (error) {
           done(error)
@@ -121,7 +121,7 @@ describe('rpcCallHandler function', () => {
 
   describe('when the handle succeeds', () => {
     it('the callback receives a response with a result', (done) => {
-      function callback(_error: Error | null, response?: JsonRpcResponse) {
+      const callback = (_error: Error | null, response?: JsonRpcResponse) => {
         try {
           expect((response as any).error).toBeUndefined()
           expect(response!.result).toBe('mock_response')

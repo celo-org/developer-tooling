@@ -1,7 +1,15 @@
-# `celocli exchange`
+`celocli exchange`
+==================
 
 Exchange Celo Dollars and CELO via the stability mechanism
 
+* [`celocli exchange:celo`](#celocli-exchangecelo)
+* [`celocli exchange:dollars`](#celocli-exchangedollars)
+* [`celocli exchange:euros`](#celocli-exchangeeuros)
+* [`celocli exchange:gold`](#celocli-exchangegold)
+* [`celocli exchange:reals`](#celocli-exchangereals)
+* [`celocli exchange:show`](#celocli-exchangeshow)
+* [`celocli exchange:stable`](#celocli-exchangestable)
 
 ## `celocli exchange:celo`
 
@@ -98,7 +106,7 @@ _See code: [src/commands/exchange/euros.ts](https://github.com/celo-org/develope
 
 ## `celocli exchange:gold`
 
-Exchange CELO for StableTokens via the stability mechanism. _DEPRECATION WARNING_ Use the "exchange:celo" command instead
+Exchange CELO for StableTokens via the stability mechanism. *DEPRECATION WARNING* Use the "exchange:celo" command instead
 
 ```
 USAGE

@@ -12,8 +12,9 @@ async function getMetadata(kit: ContractKit, address: string) {
   const accounts = await kit.contracts.getAccounts()
   const url = await accounts.getMetadataURL(address)
   console.log(address, 'has url', url)
-  if (url === '') return IdentityMetadataWrapper.fromEmpty(address)
-  else return IdentityMetadataWrapper.fetchFromURL(accounts, url)
+  return url === ''
+    ? IdentityMetadataWrapper.fromEmpty(address)
+    : IdentityMetadataWrapper.fetchFromURL(accounts, url)
 }
 
 function dedup(lst: string[]): string[] {

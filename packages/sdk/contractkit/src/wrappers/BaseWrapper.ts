@@ -202,7 +202,7 @@ export function tupleParser<A0, B0, A1, B1, A2, B2, A3, B3>(
   parser2: Parser<A2, B2>,
   parser3: Parser<A3, B3>
 ): (...args: [A0, A1, A2, A3]) => [B0, B1, B2, B3]
-export function tupleParser(...parsers: Array<Parser<any, any>>) {
+export function tupleParser(...parsers: Parser<any, any>[]) {
   return (...args: any[]) => zip((parser, input) => parser(input), parsers, args)
 }
 

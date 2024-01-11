@@ -1,7 +1,11 @@
-# `celocli network`
+`celocli network`
+=================
 
 View details about the network, like contracts and parameters
 
+* [`celocli network:contracts`](#celocli-networkcontracts)
+* [`celocli network:info`](#celocli-networkinfo)
+* [`celocli network:parameters`](#celocli-networkparameters)
 
 ## `celocli network:contracts`
 

@@ -1,7 +1,21 @@
-# `celocli validator`
+`celocli validator`
+===================
 
 View and manage Validators
 
+* [`celocli validator:affiliate ARG1`](#celocli-validatoraffiliate-arg1)
+* [`celocli validator:deaffiliate`](#celocli-validatordeaffiliate)
+* [`celocli validator:deregister`](#celocli-validatorderegister)
+* [`celocli validator:downtime-slash`](#celocli-validatordowntime-slash)
+* [`celocli validator:force-deaffiliate`](#celocli-validatorforce-deaffiliate)
+* [`celocli validator:list`](#celocli-validatorlist)
+* [`celocli validator:register`](#celocli-validatorregister)
+* [`celocli validator:requirements`](#celocli-validatorrequirements)
+* [`celocli validator:set-bitmaps`](#celocli-validatorset-bitmaps)
+* [`celocli validator:show ARG1`](#celocli-validatorshow-arg1)
+* [`celocli validator:signed-blocks`](#celocli-validatorsigned-blocks)
+* [`celocli validator:status`](#celocli-validatorstatus)
+* [`celocli validator:update-bls-public-key`](#celocli-validatorupdate-bls-public-key)
 
 ## `celocli validator:affiliate ARG1`
 
@@ -123,7 +137,7 @@ _See code: [src/commands/validator/downtime-slash.ts](https://github.com/celo-or
 
 ## `celocli validator:force-deaffiliate`
 
-Force deaffiliate a Validator from a Validator Group, and remove it from the Group if it is also a member. Used by stake-off admins in order to remove validators from the next epoch's validator set if they are down and consistently unresponsive, in order to preserve the health of the network. This feature will be removed once slashing for downtime is implemented.
+Force deaffiliate a Validator from a Validator Group, and remove it from the Group if it is also a member.  Used by stake-off admins in order to remove validators from the next epoch's validator set if they are down and consistently unresponsive, in order to preserve the health of the network. This feature will be removed once slashing for downtime is implemented.
 
 ```
 USAGE

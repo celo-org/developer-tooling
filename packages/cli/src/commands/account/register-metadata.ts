@@ -1,6 +1,5 @@
 import { IdentityMetadataWrapper } from '@celo/contractkit'
-import { Flags } from '@oclif/core'
-import { ux } from '@oclif/core'
+import { Flags, ux } from '@oclif/core'
 
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
@@ -49,8 +48,10 @@ export default class RegisterMetadata extends BaseCommand {
         console.info('Metadata contains the following claims: \n')
         await displayMetadata(metadata, kit, res.flags)
         console.info() // Print a newline.
-      } catch (error: any) {
-        console.error(`Metadata could not be retrieved from ${metadataURL}: ${error.toString()}`)
+      } catch (error) {
+        console.error(
+          `Metadata could not be retrieved from ${metadataURL}: ${(error as Error).toString()}`
+        )
         console.info('Exiting without performing changes...')
         process.exit(-1)
       }

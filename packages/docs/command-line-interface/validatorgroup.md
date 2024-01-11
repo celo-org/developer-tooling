@@ -1,7 +1,15 @@
-# `celocli validatorgroup`
+`celocli validatorgroup`
+========================
 
 View and manage Validator Groups
 
+* [`celocli validatorgroup:commission`](#celocli-validatorgroupcommission)
+* [`celocli validatorgroup:deregister`](#celocli-validatorgroupderegister)
+* [`celocli validatorgroup:list`](#celocli-validatorgrouplist)
+* [`celocli validatorgroup:member ARG1`](#celocli-validatorgroupmember-arg1)
+* [`celocli validatorgroup:register`](#celocli-validatorgroupregister)
+* [`celocli validatorgroup:reset-slashing-multiplier ARG1`](#celocli-validatorgroupreset-slashing-multiplier-arg1)
+* [`celocli validatorgroup:show ARG1`](#celocli-validatorgroupshow-arg1)
 
 ## `celocli validatorgroup:commission`
 

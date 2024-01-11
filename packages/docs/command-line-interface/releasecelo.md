@@ -1,7 +1,23 @@
-# `celocli releasecelo`
+`celocli releasecelo`
+=====================
 
 View and manage ReleaseGold contracts
 
+* [`celocli releasecelo:authorize`](#celocli-releaseceloauthorize)
+* [`celocli releasecelo:create-account`](#celocli-releasecelocreate-account)
+* [`celocli releasecelo:locked-gold`](#celocli-releasecelolocked-gold)
+* [`celocli releasecelo:refund-and-finalize`](#celocli-releasecelorefund-and-finalize)
+* [`celocli releasecelo:revoke`](#celocli-releasecelorevoke)
+* [`celocli releasecelo:revoke-votes`](#celocli-releasecelorevoke-votes)
+* [`celocli releasecelo:set-account`](#celocli-releaseceloset-account)
+* [`celocli releasecelo:set-account-wallet-address`](#celocli-releaseceloset-account-wallet-address)
+* [`celocli releasecelo:set-beneficiary`](#celocli-releaseceloset-beneficiary)
+* [`celocli releasecelo:set-can-expire`](#celocli-releaseceloset-can-expire)
+* [`celocli releasecelo:set-liquidity-provision`](#celocli-releaseceloset-liquidity-provision)
+* [`celocli releasecelo:set-max-distribution`](#celocli-releaseceloset-max-distribution)
+* [`celocli releasecelo:show`](#celocli-releaseceloshow)
+* [`celocli releasecelo:transfer-dollars`](#celocli-releasecelotransfer-dollars)
+* [`celocli releasecelo:withdraw`](#celocli-releasecelowithdraw)
 
 ## `celocli releasecelo:authorize`
 

@@ -44,10 +44,8 @@ const counter = () => {
   let value = 0
 
   return {
-    val() {
-      return value
-    },
-    async inc(x: number) {
+    val: () => value,
+    inc: async (x: number) => {
       await sleep(5)
       value++
       return x * x

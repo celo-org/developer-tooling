@@ -102,9 +102,9 @@ testWithGanache('Election Wrapper', (web3) => {
 
     const txList = await election.activate(userAccount)
 
-    let promises: Promise<CeloTxReceipt>[] = []
+    const promises: Promise<CeloTxReceipt>[] = []
 
-    for (let tx of txList) {
+    for (const tx of txList) {
       const promise = tx.sendAndWaitForReceipt({ from: userAccount })
       promises.push(promise)
     }
@@ -170,8 +170,8 @@ testWithGanache('Election Wrapper', (web3) => {
         await mineToNextEpoch(web3)
 
         const txList = await election.activate(userAccount)
-        let promises: Promise<CeloTxReceipt>[] = []
-        for (let tx of txList) {
+        const promises: Promise<CeloTxReceipt>[] = []
+        for (const tx of txList) {
           const promise = tx.sendAndWaitForReceipt({ from: userAccount })
           promises.push(promise)
         }
@@ -264,7 +264,7 @@ testWithGanache('Election Wrapper', (web3) => {
           groupAccount,
           THREE_HUNDRED_GOLD
         )
-        for (let tx of revokeTransactionsList) {
+        for (const tx of revokeTransactionsList) {
           await tx.sendAndWaitForReceipt({ from: userAccount })
         }
         const remainingVotes = await election.getTotalVotesForGroup(groupAccount)
@@ -278,7 +278,7 @@ testWithGanache('Election Wrapper', (web3) => {
           groupAccount,
           THREE_HUNDRED_GOLD
         )
-        for (let tx of revokeTransactionsList) {
+        for (const tx of revokeTransactionsList) {
           await tx.sendAndWaitForReceipt({ from: userAccount })
         }
         const remainingVotes = await election.getTotalVotesForGroup(groupAccount)
@@ -331,7 +331,7 @@ testWithGanache('Election Wrapper', (web3) => {
         groupAccountA,
         TWO_HUNDRED_GOLD
       )
-      for (let tx of revokeTransactionsList) {
+      for (const tx of revokeTransactionsList) {
         await tx.sendAndWaitForReceipt({ from: userAccount })
       }
       const groupOrder = await election.findLesserAndGreaterAfterVote(groupAccountA, ZERO_GOLD)

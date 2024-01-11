@@ -1,7 +1,14 @@
-# `celocli grandamento`
+`celocli grandamento`
+=====================
 
 Cancels a Granda Mento exchange proposal
 
+* [`celocli grandamento:cancel`](#celocli-grandamentocancel)
+* [`celocli grandamento:execute`](#celocli-grandamentoexecute)
+* [`celocli grandamento:get-buy-amount`](#celocli-grandamentoget-buy-amount)
+* [`celocli grandamento:list`](#celocli-grandamentolist)
+* [`celocli grandamento:propose`](#celocli-grandamentopropose)
+* [`celocli grandamento:show`](#celocli-grandamentoshow)
 
 ## `celocli grandamento:cancel`
 
@@ -22,8 +29,6 @@ DESCRIPTION
   Cancels a Granda Mento exchange proposal
 ```
 
-_See code: [src/commands/grandamento/cancel.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/grandamento/cancel.ts)_
-
 ## `celocli grandamento:execute`
 
 Executes a Granda Mento exchange proposal
@@ -41,8 +46,6 @@ FLAGS
 DESCRIPTION
   Executes a Granda Mento exchange proposal
 ```
-
-_See code: [src/commands/grandamento/execute.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/grandamento/execute.ts)_
 
 ## `celocli grandamento:get-buy-amount`
 
@@ -65,8 +68,6 @@ DESCRIPTION
   Gets the buy amount for a prospective Granda Mento exchange
 ```
 
-_See code: [src/commands/grandamento/get-buy-amount.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/grandamento/get-buy-amount.ts)_
-
 ## `celocli grandamento:list`
 
 List current active Granda Mento exchange proposals
@@ -81,8 +82,6 @@ FLAGS
 DESCRIPTION
   List current active Granda Mento exchange proposals
 ```
-
-_See code: [src/commands/grandamento/list.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/grandamento/list.ts)_
 
 ## `celocli grandamento:propose`
 
@@ -109,8 +108,6 @@ DESCRIPTION
   Proposes a Granda Mento exchange
 ```
 
-_See code: [src/commands/grandamento/propose.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/grandamento/propose.ts)_
-
 ## `celocli grandamento:show`
 
 Shows details of a Granda Mento exchange proposal
@@ -126,5 +123,3 @@ FLAGS
 DESCRIPTION
   Shows details of a Granda Mento exchange proposal
 ```
-
-_See code: [src/commands/grandamento/show.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/grandamento/show.ts)_

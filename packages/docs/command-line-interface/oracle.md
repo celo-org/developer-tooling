@@ -1,7 +1,12 @@
-# `celocli oracle`
+`celocli oracle`
+================
 
 List oracle addresses for a given token
 
+* [`celocli oracle:list ARG1`](#celocli-oraclelist-arg1)
+* [`celocli oracle:remove-expired-reports ARG1`](#celocli-oracleremove-expired-reports-arg1)
+* [`celocli oracle:report ARG1`](#celocli-oraclereport-arg1)
+* [`celocli oracle:reports ARG1`](#celocli-oraclereports-arg1)
 
 ## `celocli oracle:list ARG1`
 

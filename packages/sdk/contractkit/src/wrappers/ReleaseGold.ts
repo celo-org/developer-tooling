@@ -341,7 +341,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<ReleaseGold> {
    * @param index The index of the pending withdrawal to relock from.
    * @param value The value to relock from the specified pending withdrawal.
    */
-  async relockGold(value: BigNumber.Value): Promise<Array<CeloTransactionObject<void>>> {
+  async relockGold(value: BigNumber.Value): Promise<CeloTransactionObject<void>[]> {
     const lockedGold = await this.contracts.getLockedGold()
     const pendingWithdrawals = await lockedGold.getPendingWithdrawals(this.address)
     // Ensure there are enough pending withdrawals to relock.
@@ -359,11 +359,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<ReleaseGold> {
     pendingWithdrawals.forEach(throwIfNotSorted)
 
     let remainingToRelock = new BigNumber(value)
-    const relockPw = (
-      acc: Array<CeloTransactionObject<void>>,
-      pw: PendingWithdrawal,
-      i: number
-    ) => {
+    const relockPw = (acc: CeloTransactionObject<void>[], pw: PendingWithdrawal, i: number) => {
       const valueToRelock = BigNumber.minimum(pw.value, remainingToRelock)
       if (!valueToRelock.isZero()) {
         remainingToRelock = remainingToRelock.minus(valueToRelock)
@@ -371,7 +367,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<ReleaseGold> {
       }
       return acc
     }
-    return pendingWithdrawals.reduceRight(relockPw, []) as Array<CeloTransactionObject<void>>
+    return pendingWithdrawals.reduceRight(relockPw, []) as CeloTransactionObject<void>[]
   }
 
   /**
@@ -679,7 +675,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<ReleaseGold> {
     account: Address,
     group: Address,
     value: BigNumber
-  ): Promise<Array<CeloTransactionObject<void>>> {
+  ): Promise<CeloTransactionObject<void>[]> {
     const electionContract = await this.contracts.getElection()
     const vote = await electionContract.getVotesForGroupByAccount(account, group)
     if (value.gt(vote.pending.plus(vote.active))) {
