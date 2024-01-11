@@ -1,7 +1,7 @@
 import { Address, ensureLeading0x } from '@celo/base/lib/address'
 import * as ethUtil from '@ethereumjs/util'
+import { secp256k1 } from '@noble/curves/secp256k1'
 import { BigNumber } from 'bignumber.js'
-import { ecdsaRecover } from 'secp256k1'
 
 // 0x04 prefix indicates that the key is not compressed
 // https://tools.ietf.org/html/rfc5480#section-2.2
@@ -16,10 +16,7 @@ export const thirtyTwo: number = 32
  * https://github.com/bitcoin/bips/blob/master/bip-0062.mediawiki#Low_S_values_in_signatures
  */
 export const makeCanonical = (S: BigNumber): BigNumber => {
-  // tslint:disable-next-line:import-blacklist
-  const EC = require('elliptic').ec
-  const secp256k1Curve = new EC('secp256k1')
-  const curveN = bufferToBigNumber(secp256k1Curve.curve.n)
+  const curveN = new BigNumber(secp256k1.CURVE.n.toString())
   const isCanonical = S.comparedTo(curveN.dividedBy(2)) <= 0
   if (!isCanonical) {
     return curveN.minus(S)
@@ -63,10 +60,11 @@ export function recoverKeyIndex(
   for (let i = 0; i < 4; i++) {
     const compressed = false
     // Force types to be Uint8Array
-    const signatureArray = new Uint8Array(signature)
-    const hashArray = new Uint8Array(hash)
-    const recoveredPublicKeyByteArr = ecdsaRecover(signatureArray, i, hashArray, compressed)
-    const publicKeyBuff = Buffer.from(recoveredPublicKeyByteArr)
+    const signatureArray = compressed
+      ? secp256k1.Signature.fromCompact(signature)
+      : secp256k1.Signature.fromDER(signature)
+    const recoveredPublicKeyByteArr = signatureArray.recoverPublicKey(hash)
+    const publicKeyBuff = Buffer.from(recoveredPublicKeyByteArr.toRawBytes())
     const recoveredPublicKey = bufferToBigNumber(publicKeyBuff)
     if (publicKey.eq(recoveredPublicKey)) {
       return i

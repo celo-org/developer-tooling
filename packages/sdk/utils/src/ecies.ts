@@ -6,6 +6,9 @@
  */
 'use strict'
 
+import { secp256k1 } from '@noble/curves/secp256k1'
+import { hkdf } from '@noble/hashes/hkdf'
+import { sha256 } from '@noble/hashes/sha256'
 import { createCipheriv, createDecipheriv, createHash, createHmac, randomBytes } from 'crypto'
 
 export const IV_LENGTH = 16
@@ -140,19 +143,25 @@ export function AES128DecryptAndHMAC(
  * @returns {Buffer} Encrypted message, serialized, 113+ bytes
  */
 export function Encrypt(pubKeyTo: Buffer, plaintext: Buffer) {
-  // NOTE: elliptic is disabled elsewhere in this library to prevent
-  // accidental signing of truncated messages.
-  // tslint:disable-next-line:import-blacklist
-  const EC = require('elliptic').ec
-  const ec = new EC('secp256k1')
-  const ephemPrivKey = ec.keyFromPrivate(randomBytes(32))
-  const ephemPubKey = ephemPrivKey.getPublic(false, 'hex')
-  const ephemPubKeyEncoded = Buffer.from(ephemPubKey, 'hex')
-  const px = ephemPrivKey.derive(
-    ec.keyFromPublic(Buffer.concat([Buffer.from([0x04]), pubKeyTo])).getPublic()
-  )
+  //   // NOTE: elliptic is disabled elsewhere in this library to prevent
+  // // accidental signing of truncated messages.
+  // // tslint:disable-next-line:import-blacklist
+  // const EC = require('elliptic').ec
+  // const ec = new EC('secp256k1')
+  // const ephemPrivKey = ec.keyFromPrivate(randomBytes(32))
+  // const ephemPubKey = ephemPrivKey.getPublic(false, 'hex')
+  // const ephemPubKeyEncoded = Buffer.from(ephemPubKey, 'hex')
+  // const px = ephemPrivKey.derive(
+  //   ec.keyFromPublic(Buffer.concat([Buffer.from([0x04]), pubKeyTo])).getPublic()
+  // )
+  const ephemPrivKey = secp256k1.utils.randomPrivateKey()
+  const ephemPubKey = Buffer.from(secp256k1.getPublicKey(ephemPrivKey))
+  const ephemPubKeyEncoded = Buffer.from(ephemPubKey)
+  const pubKeyToEncoded = Buffer.concat([Buffer.from([0x04]), pubKeyTo])
+  const px = ephemPrivKey.derive(ec.keyFromPublic(pubKeyToEncoded).getPublic())
+  const px = hkdf(sha256, ephemPrivKey, undefined, undefined, IV_LENGTH)
   const hash = ConcatKDF(px.toArrayLike(Buffer), 32)
-  const encryptionKey = hash.slice(0, 16)
+  const encryptionKey = hash.slice(0, IV_LENGTH)
   const macKey = createHash('sha256').update(hash.slice(16)).digest()
   const message = AES128EncryptAndHMAC(encryptionKey, macKey, plaintext)
   const serializedCiphertext = Buffer.concat([

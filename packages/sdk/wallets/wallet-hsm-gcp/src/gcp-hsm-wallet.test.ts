@@ -9,11 +9,8 @@ import { verifySignature } from '@celo/utils/lib/signatureUtils'
 import { recoverTransaction, verifyEIP712TypedDataSigner } from '@celo/wallet-base'
 import { asn1FromPublicKey } from '@celo/wallet-hsm'
 import * as ethUtil from '@ethereumjs/util'
+import { secp256k1 } from '@noble/curves/secp256k1'
 import { BigNumber } from 'bignumber.js'
-// NOTE: elliptic is disabled elsewhere in this library to prevent
-// accidental signing of truncated messages.
-// eslint-disable-next-line no-restricted-imports
-import { ec as EC } from 'elliptic'
 import Web3 from 'web3'
 import { GcpHsmWallet } from './gcp-hsm-wallet'
 require('dotenv').config()
@@ -74,7 +71,6 @@ const MOCK_VERSION_NAME = '1d6db902-9a45-4dd5-bd1e-7250b2306f18'
 const GCP_VERSION_NAME = USING_MOCK ? MOCK_VERSION_NAME : process.env.GCP_VERSION_NAME!
 
 const key1 = PRIVATE_KEY1
-const ec = new EC('secp256k1')
 
 const keys: Map<string, string> = new Map([[MOCK_VERSION_NAME, key1]])
 
@@ -119,8 +115,8 @@ describe('GcpHsmWallet class', () => {
             const privateKey = trimLeading0x(keys.get(name)!)
             if (privateKey) {
               const pkBuffer = Buffer.from(privateKey, 'hex')
-              const signature = ec.sign(digest.sha256, pkBuffer, { canonical: true })
-              return [{ signature: Buffer.from(signature.toDER()) }]
+              const signature = secp256k1.sign(digest.sha256, pkBuffer, {})
+              return [{ signature: Buffer.from(signature.toDERRawBytes()) }]
             }
             throw new Error(`Unable to locate key: ${name}`)
           },
