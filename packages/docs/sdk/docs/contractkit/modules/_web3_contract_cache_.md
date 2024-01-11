@@ -146,18 +146,6 @@
 
 *Defined in [packages/sdk/contractkit/src/web3-contract-cache.ts:57](https://github.com/celo-org/celo-monorepo/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L57)*
 
-###  [CeloContract.MetaTransactionWalletDeployer]
-
-• **[CeloContract.MetaTransactionWalletDeployer]**: *newMetaTransactionWalletDeployer* = newMetaTransactionWalletDeployer
-
-*Defined in [packages/sdk/contractkit/src/web3-contract-cache.ts:59](https://github.com/celo-org/celo-monorepo/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L59)*
-
-###  [CeloContract.MetaTransactionWallet]
-
-• **[CeloContract.MetaTransactionWallet]**: *newMetaTransactionWallet* = newMetaTransactionWallet
-
-*Defined in [packages/sdk/contractkit/src/web3-contract-cache.ts:58](https://github.com/celo-org/celo-monorepo/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L58)*
-
 ###  [CeloContract.MultiSig]
 
 • **[CeloContract.MultiSig]**: *newMultiSig* = newMultiSig

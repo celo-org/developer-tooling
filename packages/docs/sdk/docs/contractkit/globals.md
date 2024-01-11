@@ -50,8 +50,6 @@
 * ["wrappers/Governance"](modules/_wrappers_governance_.md)
 * ["wrappers/GrandaMento"](modules/_wrappers_grandamento_.md)
 * ["wrappers/LockedGold"](modules/_wrappers_lockedgold_.md)
-* ["wrappers/MetaTransactionWallet"](modules/_wrappers_metatransactionwallet_.md)
-* ["wrappers/MetaTransactionWalletDeployer"](modules/_wrappers_metatransactionwalletdeployer_.md)
 * ["wrappers/MultiSig"](modules/_wrappers_multisig_.md)
 * ["wrappers/ReleaseGold"](modules/_wrappers_releasegold_.md)
 * ["wrappers/Reserve"](modules/_wrappers_reserve_.md)

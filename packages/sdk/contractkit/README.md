@@ -152,8 +152,6 @@ There are many core contracts.
 - GovernanceWrapper
 - GrandaMentoWrapper
 - LockedGoldWrapper
-- MetaTransactionWalletWrapper
-- MetaTransactionWalletDeployerWrapper
 - MultiSigWrapper
 - ReserveWrapper
 - SortedOraclesWrapper
