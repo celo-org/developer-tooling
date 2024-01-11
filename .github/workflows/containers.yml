@@ -1,0 +1,39 @@
+---
+name: Build containers
+
+on:
+  release:
+    types:
+      - "published"
+
+jobs:
+  split-version:
+    runs-on: ['ubuntu-latest']
+    # if: |
+    #   contains(github.event.release.name, '@celo/celocli')
+    outputs:
+      CELOCLI_VERSION: ${{ steps.split.outputs.CELOCLI_VERSION }}
+    steps:
+      - name: Split celocli-version
+        id: split
+        shell: bash
+        run: |
+          CELOCLI_VERSION="$(${{ github.event.release.name }}##*@)"
+          echo "CELOCLI_VERSION=$CELOCLI_VERSION" >> $GITHUB_OUTPUT
+
+  # CeloCli standalone image
+  celocli-standalone:
+    uses: celo-org/reusable-workflows/.github/workflows/container-cicd.yaml@v1.14.1
+    name: Build us-west1-docker.pkg.dev/devopsre/dev-images/celocli:${{ needs.split-version.outputs.CELOCLI_VERSION }}
+    needs: ['split-version']
+    # if: |
+    #   contains(github.event.release.name, '@celo/celocli')
+    with:
+      workload-id-provider: projects/1094498259535/locations/global/workloadIdentityPools/gh-developer-tooling/providers/github-by-repos
+      service-account: 'developer-tooling-dev@devopsre.iam.gserviceaccount.com'
+      artifact-registry: us-west1-docker.pkg.dev/devopsre/developer-tooling/celocli
+      tags: ${{ needs.split-version.outputs.CELOCLI_VERSION }}
+      context: .
+      file: packages/cli/standalone.Dockerfile
+      build-args: VERSION=${{ needs.split-version.outputs.CELOCLI_VERSION }}
+      trivy: true
