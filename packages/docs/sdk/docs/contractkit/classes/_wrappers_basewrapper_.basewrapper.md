@@ -40,9 +40,6 @@
 
   ↳ [FreezerWrapper](_wrappers_freezer_.freezerwrapper.md)
 
-  ↳ [MetaTransactionWalletWrapper](_wrappers_metatransactionwallet_.metatransactionwalletwrapper.md)
-
-  ↳ [MetaTransactionWalletDeployerWrapper](_wrappers_metatransactionwalletdeployer_.metatransactionwalletdeployerwrapper.md)
 
 ## Index
 

@@ -43,8 +43,6 @@ a contract wrapper
 * [getGovernance](_web3_contract_cache_.web3contractcache.md#getgovernance)
 * [getGrandaMento](_web3_contract_cache_.web3contractcache.md#getgrandamento)
 * [getLockedGold](_web3_contract_cache_.web3contractcache.md#getlockedgold)
-* [getMetaTransactionWallet](_web3_contract_cache_.web3contractcache.md#getmetatransactionwallet)
-* [getMetaTransactionWalletDeployer](_web3_contract_cache_.web3contractcache.md#getmetatransactionwalletdeployer)
 * [getMultiSig](_web3_contract_cache_.web3contractcache.md#getmultisig)
 * [getRandom](_web3_contract_cache_.web3contractcache.md#getrandom)
 * [getRegistry](_web3_contract_cache_.web3contractcache.md#getregistry)
@@ -204,7 +202,7 @@ ___
 
 ###  getExchange
 
-▸ **getExchange**(`stableToken`: [StableToken](../enums/_base_.celocontract.md#stabletoken)): *Promise‹Registry‹› | Accounts‹› | Exchange‹› | Ierc20‹› | GoldToken‹› | StableToken‹› | Attestations‹› | BlockchainParameters‹› | DoubleSigningSlasher‹› | DowntimeSlasher‹› | Election‹› | EpochRewards‹› | Escrow‹› | ExchangeEur‹› | ExchangeBrl‹› | FeeCurrencyWhitelist‹› | Freezer‹› | GasPriceMinimum‹› | Governance‹› | GrandaMento‹› | LockedGold‹› | MetaTransactionWallet‹› | MetaTransactionWalletDeployer‹› | MultiSig‹› | Random‹› | Reserve‹› | SortedOracles‹› | TransferWhitelist‹› | Validators‹››*
+▸ **getExchange**(`stableToken`: [StableToken](../enums/_base_.celocontract.md#stabletoken)): *Promise‹Registry‹› | Accounts‹› | Exchange‹› | Ierc20‹› | GoldToken‹› | StableToken‹› | Attestations‹› | BlockchainParameters‹› | DoubleSigningSlasher‹› | DowntimeSlasher‹› | Election‹› | EpochRewards‹› | Escrow‹› | ExchangeEur‹› | ExchangeBrl‹› | FeeCurrencyWhitelist‹› | Freezer‹› | GasPriceMinimum‹› | Governance‹› | GrandaMento‹› | LockedGold‹› | MultiSig‹› | Random‹› | Reserve‹› | SortedOracles‹› | TransferWhitelist‹› | Validators‹››*
 
 *Defined in [packages/sdk/contractkit/src/web3-contract-cache.ts:126](https://github.com/celo-org/celo-monorepo/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L126)*
 
@@ -214,7 +212,7 @@ Name | Type | Default |
 ------ | ------ | ------ |
 `stableToken` | [StableToken](../enums/_base_.celocontract.md#stabletoken) | StableToken.cUSD |
 
-**Returns:** *Promise‹Registry‹› | Accounts‹› | Exchange‹› | Ierc20‹› | GoldToken‹› | StableToken‹› | Attestations‹› | BlockchainParameters‹› | DoubleSigningSlasher‹› | DowntimeSlasher‹› | Election‹› | EpochRewards‹› | Escrow‹› | ExchangeEur‹› | ExchangeBrl‹› | FeeCurrencyWhitelist‹› | Freezer‹› | GasPriceMinimum‹› | Governance‹› | GrandaMento‹› | LockedGold‹› | MetaTransactionWallet‹› | MetaTransactionWalletDeployer‹› | MultiSig‹› | Random‹› | Reserve‹› | SortedOracles‹› | TransferWhitelist‹› | Validators‹››*
+**Returns:** *Promise‹Registry‹› | Accounts‹› | Exchange‹› | Ierc20‹› | GoldToken‹› | StableToken‹› | Attestations‹› | BlockchainParameters‹› | DoubleSigningSlasher‹› | DowntimeSlasher‹› | Election‹› | EpochRewards‹› | Escrow‹› | ExchangeEur‹› | ExchangeBrl‹› | FeeCurrencyWhitelist‹› | Freezer‹› | GasPriceMinimum‹› | Governance‹› | GrandaMento‹› | LockedGold‹› | MultiSig‹› | Random‹› | Reserve‹› | SortedOracles‹› | TransferWhitelist‹› | Validators‹››*
 
 ___
 
@@ -288,36 +286,6 @@ ___
 
 ___
 
-###  getMetaTransactionWallet
-
-▸ **getMetaTransactionWallet**(`address`: string): *Promise‹MetaTransactionWallet‹››*
-
-*Defined in [packages/sdk/contractkit/src/web3-contract-cache.ts:150](https://github.com/celo-org/celo-monorepo/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L150)*
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`address` | string |
-
-**Returns:** *Promise‹MetaTransactionWallet‹››*
-
-___
-
-###  getMetaTransactionWalletDeployer
-
-▸ **getMetaTransactionWalletDeployer**(`address`: string): *Promise‹MetaTransactionWalletDeployer‹››*
-
-*Defined in [packages/sdk/contractkit/src/web3-contract-cache.ts:153](https://github.com/celo-org/celo-monorepo/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L153)*
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`address` | string |
-
-**Returns:** *Promise‹MetaTransactionWalletDeployer‹››*
-
 ___
 
 ###  getMultiSig
@@ -378,7 +346,7 @@ ___
 
 ###  getStableToken
 
-▸ **getStableToken**(`stableToken`: [StableToken](../enums/_base_.celocontract.md#stabletoken)): *Promise‹Registry‹› | Accounts‹› | Exchange‹› | Ierc20‹› | GoldToken‹› | StableToken‹› | Attestations‹› | BlockchainParameters‹› | DoubleSigningSlasher‹› | DowntimeSlasher‹› | Election‹› | EpochRewards‹› | Escrow‹› | ExchangeEur‹› | ExchangeBrl‹› | FeeCurrencyWhitelist‹› | Freezer‹› | GasPriceMinimum‹› | Governance‹› | GrandaMento‹› | LockedGold‹› | MetaTransactionWallet‹› | MetaTransactionWalletDeployer‹› | MultiSig‹› | Random‹› | Reserve‹› | SortedOracles‹› | TransferWhitelist‹› | Validators‹››*
+▸ **getStableToken**(`stableToken`: [StableToken](../enums/_base_.celocontract.md#stabletoken)): *Promise‹Registry‹› | Accounts‹› | Exchange‹› | Ierc20‹› | GoldToken‹› | StableToken‹› | Attestations‹› | BlockchainParameters‹› | DoubleSigningSlasher‹› | DowntimeSlasher‹› | Election‹› | EpochRewards‹› | Escrow‹› | ExchangeEur‹› | ExchangeBrl‹› | FeeCurrencyWhitelist‹› | Freezer‹› | GasPriceMinimum‹› | Governance‹› | GrandaMento‹› | LockedGold‹› | MultiSig‹› | Random‹› | Reserve‹› | SortedOracles‹› | TransferWhitelist‹› | Validators‹››*
 
 *Defined in [packages/sdk/contractkit/src/web3-contract-cache.ts:171](https://github.com/celo-org/celo-monorepo/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L171)*
 
@@ -388,7 +356,7 @@ Name | Type | Default |
 ------ | ------ | ------ |
 `stableToken` | [StableToken](../enums/_base_.celocontract.md#stabletoken) | StableToken.cUSD |
 
-**Returns:** *Promise‹Registry‹› | Accounts‹› | Exchange‹› | Ierc20‹› | GoldToken‹› | StableToken‹› | Attestations‹› | BlockchainParameters‹› | DoubleSigningSlasher‹› | DowntimeSlasher‹› | Election‹› | EpochRewards‹› | Escrow‹› | ExchangeEur‹› | ExchangeBrl‹› | FeeCurrencyWhitelist‹› | Freezer‹› | GasPriceMinimum‹› | Governance‹› | GrandaMento‹› | LockedGold‹› | MetaTransactionWallet‹› | MetaTransactionWalletDeployer‹› | MultiSig‹› | Random‹› | Reserve‹› | SortedOracles‹› | TransferWhitelist‹› | Validators‹››*
+**Returns:** *Promise‹Registry‹› | Accounts‹› | Exchange‹› | Ierc20‹› | GoldToken‹› | StableToken‹› | Attestations‹› | BlockchainParameters‹› | DoubleSigningSlasher‹› | DowntimeSlasher‹› | Election‹› | EpochRewards‹› | Escrow‹› | ExchangeEur‹› | ExchangeBrl‹› | FeeCurrencyWhitelist‹› | Freezer‹› | GasPriceMinimum‹› | Governance‹› | GrandaMento‹› | LockedGold‹› |  MultiSig‹› | Random‹› | Reserve‹› | SortedOracles‹› | TransferWhitelist‹› | Validators‹››*
 
 ___
 
