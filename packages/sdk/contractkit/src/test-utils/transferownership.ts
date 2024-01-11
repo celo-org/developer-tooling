@@ -21,20 +21,12 @@ export async function assumeOwnership(web3: Web3, to: string) {
     console.log('Account already created')
   }
 
-  const grandaMento = await kit._web3Contracts.getGrandaMento()
   const governance = await kit.contracts.getGovernance()
   const multiSig = await kit.contracts.getMultiSig(await governance.getApprover())
 
   const tenMillionCELO = web3.utils.toWei('10000000')
 
   await lockedGold.lock().sendAndWaitForReceipt({ value: tenMillionCELO })
-
-  const ownershiptx: ProposalTransaction = {
-    value: '0',
-    to: (grandaMento as any)._address,
-    input: grandaMento.methods.transferOwnership(to).encodeABI(),
-  }
-  const proposal: Proposal = [ownershiptx]
 
   await governance.propose(proposal, 'URL').sendAndWaitForReceipt({
     from: accounts[0],

@@ -48,7 +48,6 @@ Consider Using {@link MiniWrapperCache}, building your own, or if you only need 
 * [getGasPriceMinimum](_contract_cache_.wrappercache.md#getgaspriceminimum)
 * [getGoldToken](_contract_cache_.wrappercache.md#getgoldtoken)
 * [getGovernance](_contract_cache_.wrappercache.md#getgovernance)
-* [getGrandaMento](_contract_cache_.wrappercache.md#getgrandamento)
 * [getLockedGold](_contract_cache_.wrappercache.md#getlockedgold)
 * [getMultiSig](_contract_cache_.wrappercache.md#getmultisig)
 * [getReserve](_contract_cache_.wrappercache.md#getreserve)
@@ -279,16 +278,6 @@ ___
 *Defined in [packages/sdk/contractkit/src/contract-cache.ts:175](https://github.com/celo-org/celo-monorepo/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L175)*
 
 **Returns:** *Promise‹[GovernanceWrapper](_wrappers_governance_.governancewrapper.md)‹››*
-
-___
-
-###  getGrandaMento
-
-▸ **getGrandaMento**(): *Promise‹[GrandaMentoWrapper](_wrappers_grandamento_.grandamentowrapper.md)‹››*
-
-*Defined in [packages/sdk/contractkit/src/contract-cache.ts:178](https://github.com/celo-org/celo-monorepo/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L178)*
-
-**Returns:** *Promise‹[GrandaMentoWrapper](_wrappers_grandamento_.grandamentowrapper.md)‹››*
 
 ___
 

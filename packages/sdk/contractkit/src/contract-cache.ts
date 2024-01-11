@@ -20,7 +20,6 @@ import { FreezerWrapper } from './wrappers/Freezer'
 import { GasPriceMinimumWrapper } from './wrappers/GasPriceMinimum'
 import { GoldTokenWrapper } from './wrappers/GoldTokenWrapper'
 import { GovernanceWrapper } from './wrappers/Governance'
-import { GrandaMentoWrapper } from './wrappers/GrandaMento'
 import { LockedGoldWrapper } from './wrappers/LockedGold'
 import { MultiSigWrapper } from './wrappers/MultiSig'
 import { OdisPaymentsWrapper } from './wrappers/OdisPayments'
@@ -43,7 +42,6 @@ const WrapperFactories = {
   [CeloContract.Freezer]: FreezerWrapper,
   [CeloContract.GasPriceMinimum]: GasPriceMinimumWrapper,
   [CeloContract.GoldToken]: GoldTokenWrapper,
-  [CeloContract.GrandaMento]: GrandaMentoWrapper,
   // [CeloContract.Random]: RandomWrapper,
   // [CeloContract.Registry]: RegistryWrapper,
   [CeloContract.MultiSig]: MultiSigWrapper,
@@ -97,7 +95,6 @@ interface WrapperCacheMap {
   [CeloContract.GasPriceMinimum]?: GasPriceMinimumWrapper
   [CeloContract.GoldToken]?: GoldTokenWrapper
   [CeloContract.Governance]?: GovernanceWrapper
-  [CeloContract.GrandaMento]?: GrandaMentoWrapper
   [CeloContract.LockedGold]?: LockedGoldWrapper
   [CeloContract.MultiSig]?: MultiSigWrapper
   [CeloContract.OdisPayments]?: OdisPaymentsWrapper
@@ -174,9 +171,6 @@ export class WrapperCache implements ContractCacheType {
   }
   getGovernance() {
     return this.getContract(CeloContract.Governance)
-  }
-  getGrandaMento() {
-    return this.getContract(CeloContract.GrandaMento)
   }
   getLockedGold() {
     return this.getContract(CeloContract.LockedGold)

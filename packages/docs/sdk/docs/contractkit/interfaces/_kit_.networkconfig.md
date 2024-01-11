@@ -17,7 +17,6 @@
 * [exchanges](_kit_.networkconfig.md#exchanges)
 * [gasPriceMinimum](_kit_.networkconfig.md#gaspriceminimum)
 * [governance](_kit_.networkconfig.md#governance)
-* [grandaMento](_kit_.networkconfig.md#grandamento)
 * [lockedGold](_kit_.networkconfig.md#lockedgold)
 * [reserve](_kit_.networkconfig.md#reserve)
 * [sortedOracles](_kit_.networkconfig.md#sortedoracles)
@@ -82,11 +81,7 @@ ___
 
 ___
 
-###  grandaMento
 
-• **grandaMento**: *[GrandaMentoConfig](_wrappers_grandamento_.grandamentoconfig.md)*
-
-*Defined in [packages/sdk/contractkit/src/kit.ts:83](https://github.com/celo-org/celo-monorepo/blob/master/packages/sdk/contractkit/src/kit.ts#L83)*
 
 ___
 
