@@ -29,7 +29,7 @@ EXAMPLE
   0x97f7333c51897469e8d98e7af8653aab468050a3
 ```
 
-_See code: [src/commands/validator/affiliate.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/validator/affiliate.ts)_
+_See code: [src/commands/validator/affiliate.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/affiliate.ts)_
 
 ## `celocli validator:deaffiliate`
 
@@ -51,7 +51,7 @@ EXAMPLE
   deaffiliate --from 0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95
 ```
 
-_See code: [src/commands/validator/deaffiliate.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/validator/deaffiliate.ts)_
+_See code: [src/commands/validator/deaffiliate.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/deaffiliate.ts)_
 
 ## `celocli validator:deregister`
 
@@ -73,7 +73,7 @@ EXAMPLE
   deregister --from 0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95
 ```
 
-_See code: [src/commands/validator/deregister.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/validator/deregister.ts)_
+_See code: [src/commands/validator/deregister.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/deregister.ts)_
 
 ## `celocli validator:downtime-slash`
 
@@ -113,7 +113,7 @@ EXAMPLES
   0xb7ef0985bdb4f19460A29d9829aA1514B181C4CD     --slashableDowntimeBeforeBlock 200
 ```
 
-_See code: [src/commands/validator/downtime-slash.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/validator/downtime-slash.ts)_
+_See code: [src/commands/validator/downtime-slash.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/downtime-slash.ts)_
 
 ## `celocli validator:force-deaffiliate`
 
@@ -138,7 +138,7 @@ EXAMPLE
   0xb7ef0985bdb4f19460A29d9829aA1514B181C4CD
 ```
 
-_See code: [src/commands/validator/force-deaffiliate.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/validator/force-deaffiliate.ts)_
+_See code: [src/commands/validator/force-deaffiliate.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/force-deaffiliate.ts)_
 
 ## `celocli validator:list`
 
@@ -165,7 +165,7 @@ EXAMPLE
   list
 ```
 
-_See code: [src/commands/validator/list.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/validator/list.ts)_
+_See code: [src/commands/validator/list.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/list.ts)_
 
 ## `celocli validator:register`
 
@@ -200,7 +200,7 @@ EXAMPLE
   664ea3923900
 ```
 
-_See code: [src/commands/validator/register.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/validator/register.ts)_
+_See code: [src/commands/validator/register.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/register.ts)_
 
 ## `celocli validator:requirements`
 
@@ -219,7 +219,7 @@ EXAMPLE
   requirements
 ```
 
-_See code: [src/commands/validator/requirements.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/validator/requirements.ts)_
+_See code: [src/commands/validator/requirements.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/requirements.ts)_
 
 ## `celocli validator:set-bitmaps`
 
@@ -259,7 +259,7 @@ EXAMPLES
   (100:200]"
 ```
 
-_See code: [src/commands/validator/set-bitmaps.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/validator/set-bitmaps.ts)_
+_See code: [src/commands/validator/set-bitmaps.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/set-bitmaps.ts)_
 
 ## `celocli validator:show VALIDATORADDRESS`
 
@@ -281,7 +281,7 @@ EXAMPLE
   show 0x97f7333c51897469E8D98E7af8653aAb468050a3
 ```
 
-_See code: [src/commands/validator/show.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/validator/show.ts)_
+_See code: [src/commands/validator/show.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/show.ts)_
 
 ## `celocli validator:signed-blocks`
 
@@ -332,7 +332,7 @@ EXAMPLES
   0x5409ED021D9299bf6814279A6A1411A7e866A631
 ```
 
-_See code: [src/commands/validator/signed-blocks.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/validator/signed-blocks.ts)_
+_See code: [src/commands/validator/signed-blocks.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/signed-blocks.ts)_
 
 ## `celocli validator:status`
 
@@ -398,7 +398,7 @@ EXAMPLES
   status --all --start 1480000 --end 1490000
 ```
 
-_See code: [src/commands/validator/status.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/validator/status.ts)_
+_See code: [src/commands/validator/status.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/status.ts)_
 
 ## `celocli validator:update-bls-public-key`
 
@@ -439,4 +439,4 @@ EXAMPLE
   664ea3923900
 ```
 
-_See code: [src/commands/validator/update-bls-public-key.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/validator/update-bls-public-key.ts)_
+_See code: [src/commands/validator/update-bls-public-key.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/update-bls-public-key.ts)_

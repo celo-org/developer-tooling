@@ -12,7 +12,7 @@
     "sdk"
   ],
   "homepage": "https://celo-sdk-docs.readthedocs.io/en/latest/keystores",
-  "repository": "https://github.com/celo-org/celo-monorepo/tree/master/packages/sdk/keystores",
+  "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/sdk/keystores",
   "scripts": {
     "build": "tsc -b .",
     "clean": "tsc -b . --clean",

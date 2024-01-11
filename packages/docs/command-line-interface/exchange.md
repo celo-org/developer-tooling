@@ -36,7 +36,7 @@ EXAMPLES
   0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --stableToken cStableTokenSymbol
 ```
 
-_See code: [src/commands/exchange/celo.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/exchange/celo.ts)_
+_See code: [src/commands/exchange/celo.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/exchange/celo.ts)_
 
 ## `celocli exchange:dollars`
 
@@ -67,7 +67,7 @@ EXAMPLES
   0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
 ```
 
-_See code: [src/commands/exchange/dollars.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/exchange/dollars.ts)_
+_See code: [src/commands/exchange/dollars.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/exchange/dollars.ts)_
 
 ## `celocli exchange:euros`
 
@@ -98,7 +98,7 @@ EXAMPLES
   0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
 ```
 
-_See code: [src/commands/exchange/euros.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/exchange/euros.ts)_
+_See code: [src/commands/exchange/euros.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/exchange/euros.ts)_
 
 ## `celocli exchange:gold`
 
@@ -133,7 +133,7 @@ EXAMPLES
   0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --stableToken cUSD
 ```
 
-_See code: [src/commands/exchange/gold.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/exchange/gold.ts)_
+_See code: [src/commands/exchange/gold.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/exchange/gold.ts)_
 
 ## `celocli exchange:reals`
 
@@ -164,7 +164,7 @@ EXAMPLES
   0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
 ```
 
-_See code: [src/commands/exchange/reals.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/exchange/reals.ts)_
+_See code: [src/commands/exchange/reals.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/exchange/reals.ts)_
 
 ## `celocli exchange:show`
 
@@ -186,7 +186,7 @@ EXAMPLE
   list
 ```
 
-_See code: [src/commands/exchange/show.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/exchange/show.ts)_
+_See code: [src/commands/exchange/show.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/exchange/show.ts)_
 
 ## `celocli exchange:stable`
 
@@ -221,4 +221,4 @@ EXAMPLES
   0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --stableToken cStableTokenSymbol
 ```
 
-_See code: [src/commands/exchange/stable.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/exchange/stable.ts)_
+_See code: [src/commands/exchange/stable.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/exchange/stable.ts)_

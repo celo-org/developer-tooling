@@ -31,7 +31,7 @@ EXAMPLE
   build-proposal --output ./transactions.json
 ```
 
-_See code: [src/commands/governance/build-proposal.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/governance/build-proposal.ts)_
+_See code: [src/commands/governance/build-proposal.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/governance/build-proposal.ts)_
 
 ## `celocli governance:dequeue`
 
@@ -51,7 +51,7 @@ EXAMPLE
   dequeue --from 0x5409ed021d9299bf6814279a6a1411a7e866a631
 ```
 
-_See code: [src/commands/governance/dequeue.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/governance/dequeue.ts)_
+_See code: [src/commands/governance/dequeue.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/governance/dequeue.ts)_
 
 ## `celocli governance:execute`
 
@@ -74,7 +74,7 @@ EXAMPLE
   execute --proposalID 99 --from 0x5409ed021d9299bf6814279a6a1411a7e866a631
 ```
 
-_See code: [src/commands/governance/execute.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/governance/execute.ts)_
+_See code: [src/commands/governance/execute.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/governance/execute.ts)_
 
 ## `celocli governance:executehotfix`
 
@@ -102,7 +102,7 @@ EXAMPLE
   0x5409ed021d9299bf6814279a6a1411a7e866a631
 ```
 
-_See code: [src/commands/governance/executehotfix.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/governance/executehotfix.ts)_
+_See code: [src/commands/governance/executehotfix.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/governance/executehotfix.ts)_
 
 ## `celocli governance:hashhotfix`
 
@@ -128,7 +128,7 @@ EXAMPLE
   0x614dccb5ac13cba47c2430bdee7829bb8c8f3603a8ace22e7680d317b39e3658
 ```
 
-_See code: [src/commands/governance/hashhotfix.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/governance/hashhotfix.ts)_
+_See code: [src/commands/governance/hashhotfix.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/governance/hashhotfix.ts)_
 
 ## `celocli governance:list`
 
@@ -155,7 +155,7 @@ EXAMPLE
   list
 ```
 
-_See code: [src/commands/governance/list.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/governance/list.ts)_
+_See code: [src/commands/governance/list.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/governance/list.ts)_
 
 ## `celocli governance:preparehotfix`
 
@@ -180,7 +180,7 @@ EXAMPLE
   0x5409ed021d9299bf6814279a6a1411a7e866a631
 ```
 
-_See code: [src/commands/governance/preparehotfix.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/governance/preparehotfix.ts)_
+_See code: [src/commands/governance/preparehotfix.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/governance/preparehotfix.ts)_
 
 ## `celocli governance:propose`
 
@@ -222,7 +222,7 @@ EXAMPLE
   https://gist.github.com/yorhodes/46430eacb8ed2f73f7bf79bef9d58a33
 ```
 
-_See code: [src/commands/governance/propose.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/governance/propose.ts)_
+_See code: [src/commands/governance/propose.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/governance/propose.ts)_
 
 ## `celocli governance:revokeupvote`
 
@@ -242,7 +242,7 @@ EXAMPLE
   revokeupvote --from 0x5409ed021d9299bf6814279a6a1411a7e866a631
 ```
 
-_See code: [src/commands/governance/revokeupvote.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/governance/revokeupvote.ts)_
+_See code: [src/commands/governance/revokeupvote.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/governance/revokeupvote.ts)_
 
 ## `celocli governance:show`
 
@@ -306,7 +306,7 @@ EXAMPLES
   show --account 0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95
 ```
 
-_See code: [src/commands/governance/show.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/governance/show.ts)_
+_See code: [src/commands/governance/show.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/governance/show.ts)_
 
 ## `celocli governance:upvote`
 
@@ -329,7 +329,7 @@ EXAMPLE
   upvote --proposalID 99 --from 0x5409ed021d9299bf6814279a6a1411a7e866a631
 ```
 
-_See code: [src/commands/governance/upvote.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/governance/upvote.ts)_
+_See code: [src/commands/governance/upvote.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/governance/upvote.ts)_
 
 ## `celocli governance:vote`
 
@@ -354,7 +354,7 @@ EXAMPLE
   vote --proposalID 99 --value Yes --from 0x5409ed021d9299bf6814279a6a1411a7e866a631
 ```
 
-_See code: [src/commands/governance/vote.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/governance/vote.ts)_
+_See code: [src/commands/governance/vote.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/governance/vote.ts)_
 
 ## `celocli governance:votePartially`
 
@@ -382,7 +382,7 @@ EXAMPLE
   0x5409ed021d9299bf6814279a6a1411a7e866a631
 ```
 
-_See code: [src/commands/governance/votePartially.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/governance/votePartially.ts)_
+_See code: [src/commands/governance/votePartially.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/governance/votePartially.ts)_
 
 ## `celocli governance:whitelisthotfix`
 
@@ -407,7 +407,7 @@ EXAMPLE
   0x5409ed021d9299bf6814279a6a1411a7e866a631
 ```
 
-_See code: [src/commands/governance/whitelisthotfix.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/governance/whitelisthotfix.ts)_
+_See code: [src/commands/governance/whitelisthotfix.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/governance/whitelisthotfix.ts)_
 
 ## `celocli governance:withdraw`
 
@@ -427,4 +427,4 @@ EXAMPLE
   withdraw --from 0x5409ed021d9299bf6814279a6a1411a7e866a631
 ```
 
-_See code: [src/commands/governance/withdraw.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/governance/withdraw.ts)_
+_See code: [src/commands/governance/withdraw.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/governance/withdraw.ts)_

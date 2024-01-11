@@ -22,7 +22,7 @@ OPTIONS
                                                         participant to allowlist
 ```
 
-_See code: [src/commands/dkg/allowlist.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/dkg/allowlist.ts)_
+_See code: [src/commands/dkg/allowlist.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/dkg/allowlist.ts)_
 
 ## `celocli dkg:deploy`
 
@@ -45,7 +45,7 @@ OPTIONS
                                                      the DKG
 ```
 
-_See code: [src/commands/dkg/deploy.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/dkg/deploy.ts)_
+_See code: [src/commands/dkg/deploy.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/dkg/deploy.ts)_
 
 ## `celocli dkg:get`
 
@@ -69,7 +69,7 @@ OPTIONS
                                                                        method to call
 ```
 
-_See code: [src/commands/dkg/get.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/dkg/get.ts)_
+_See code: [src/commands/dkg/get.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/dkg/get.ts)_
 
 ## `celocli dkg:publish`
 
@@ -92,7 +92,7 @@ OPTIONS
   --globalHelp                                          View all available global flags
 ```
 
-_See code: [src/commands/dkg/publish.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/dkg/publish.ts)_
+_See code: [src/commands/dkg/publish.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/dkg/publish.ts)_
 
 ## `celocli dkg:register`
 
@@ -111,7 +111,7 @@ OPTIONS
   --globalHelp                                          View all available global flags
 ```
 
-_See code: [src/commands/dkg/register.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/dkg/register.ts)_
+_See code: [src/commands/dkg/register.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/dkg/register.ts)_
 
 ## `celocli dkg:start`
 
@@ -129,4 +129,4 @@ OPTIONS
   --globalHelp                                          View all available global flags
 ```
 
-_See code: [src/commands/dkg/start.ts](https://github.com/celo-org/celo-monorepo/tree/master/packages/cli/src/commands/dkg/start.ts)_
+_See code: [src/commands/dkg/start.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/dkg/start.ts)_
