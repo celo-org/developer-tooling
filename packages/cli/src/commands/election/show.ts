@@ -1,28 +1,27 @@
-import { flags } from '@oclif/command'
-import { IArg } from '@oclif/parser/lib/args'
+import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { printValueMapRecursive } from '../../utils/cli'
-import { Args } from '../../utils/command'
+import { CustomArgs } from '../../utils/command'
 
 export default class ElectionShow extends BaseCommand {
   static description = 'Show election information about a voter or registered Validator Group'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    voter: flags.boolean({
+    voter: Flags.boolean({
       exclusive: ['group'],
       description: 'Show information about an account voting in Validator elections',
     }),
-    group: flags.boolean({
+    group: Flags.boolean({
       exclusive: ['voter'],
       description: 'Show information about a group running in Validator elections',
     }),
   }
 
-  static args: IArg[] = [
-    Args.address('address', { description: "Voter or Validator Groups's address" }),
-  ]
+  static args = {
+    arg1: CustomArgs.address('address', { description: "Voter or Validator Groups's address" }),
+  }
 
   static examples = [
     'show 0x97f7333c51897469E8D98E7af8653aAb468050a3 --voter',
@@ -30,9 +29,10 @@ export default class ElectionShow extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(ElectionShow)
-    const address = res.args.address
-    const election = await this.kit.contracts.getElection()
+    const kit = await this.getKit()
+    const res = await this.parse(ElectionShow)
+    const address = res.args.arg1 as string
+    const election = await kit.contracts.getElection()
 
     if (res.flags.group) {
       await newCheckBuilder(this).isValidatorGroup(address).runChecks()

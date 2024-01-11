@@ -1,20 +1,20 @@
 import { VoteValue } from '@celo/contractkit/lib/wrappers/Governance'
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 
 export default class Vote extends BaseCommand {
   static description = 'Vote on an approved governance proposal'
 
   static voteOptions = ['Abstain', 'No', 'Yes']
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    proposalID: flags.string({ required: true, description: 'UUID of proposal to vote on' }),
-    value: flags.enum({ options: Vote.voteOptions, required: true, description: 'Vote' }),
-    from: Flags.address({ required: true, description: "Voter's address" }),
+    proposalID: Flags.string({ required: true, description: 'UUID of proposal to vote on' }),
+    value: Flags.option({ options: Vote.voteOptions, required: true, description: 'Vote' })(),
+    from: CustomFlags.address({ required: true, description: "Voter's address" }),
   }
 
   static examples = [
@@ -22,13 +22,14 @@ export default class Vote extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(Vote)
+    const kit = await this.getKit()
+    const res = await this.parse(Vote)
     const signer = res.flags.from
     const id = res.flags.proposalID
     const voteValue = res.flags.value as keyof typeof VoteValue
 
-    this.kit.defaultAccount = signer
-    const governance = await this.kit.contracts.getGovernance()
+    kit.defaultAccount = signer
+    const governance = await kit.contracts.getGovernance()
 
     await newCheckBuilder(this, signer)
       .isVoteSignerOrAccount()

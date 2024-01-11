@@ -87,3 +87,4 @@ packages/protocol/types/typechain-mento/*.d.ts
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+package.json-e

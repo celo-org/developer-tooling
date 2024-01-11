@@ -1,27 +1,38 @@
-# `celocli lockedgold`
+`celocli lockedgold`
+====================
 
 View and manage locked CELO
 
+* [`celocli lockedgold:delegate`](#celocli-lockedgolddelegate)
+* [`celocli lockedgold:delegate-info`](#celocli-lockedgolddelegate-info)
+* [`celocli lockedgold:lock`](#celocli-lockedgoldlock)
+* [`celocli lockedgold:max-delegatees-count`](#celocli-lockedgoldmax-delegatees-count)
+* [`celocli lockedgold:revoke-delegate`](#celocli-lockedgoldrevoke-delegate)
+* [`celocli lockedgold:show ARG1`](#celocli-lockedgoldshow-arg1)
+* [`celocli lockedgold:unlock`](#celocli-lockedgoldunlock)
+* [`celocli lockedgold:update-delegated-amount`](#celocli-lockedgoldupdate-delegated-amount)
+* [`celocli lockedgold:withdraw`](#celocli-lockedgoldwithdraw)
 
 ## `celocli lockedgold:delegate`
 
 Delegate locked celo.
 
 ```
-Delegate locked celo.
-
 USAGE
-  $ celocli lockedgold:delegate
+  $ celocli lockedgold:delegate --from <value> --to <value> --percent <value>
+    [--globalHelp]
 
-OPTIONS
-  --from=from        (required)
+FLAGS
+  --from=<value>     (required)
   --globalHelp       View all available global flags
-  --percent=percent  (required) 1-100% of locked celo to be delegated
-  --to=to            (required)
+  --percent=<value>  (required) 1-100% of locked celo to be delegated
+  --to=<value>       (required)
 
-EXAMPLE
-  delegate --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95 --to
-  0xc0ffee254729296a45a3885639AC7E10F9d54979 --percent 100
+DESCRIPTION
+  Delegate locked celo.
+
+EXAMPLES
+  delegate --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95 --to 0xc0ffee254729296a45a3885639AC7E10F9d54979 --percent 100
 ```
 
 _See code: [src/commands/lockedgold/delegate.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/lockedgold/delegate.ts)_
@@ -31,16 +42,17 @@ _See code: [src/commands/lockedgold/delegate.ts](https://github.com/celo-org/dev
 Delegate info about account.
 
 ```
-Delegate info about account.
-
 USAGE
-  $ celocli lockedgold:delegate-info
+  $ celocli lockedgold:delegate-info --account <value> [--globalHelp]
 
-OPTIONS
-  --account=account  (required)
-  --globalHelp       View all available global flags
+FLAGS
+  --account=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d  (required) Account Address
+  --globalHelp                                          View all available global flags
 
-EXAMPLE
+DESCRIPTION
+  Delegate info about account.
+
+EXAMPLES
   delegate-info --account 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95
 ```
 
@@ -51,17 +63,18 @@ _See code: [src/commands/lockedgold/delegate-info.ts](https://github.com/celo-or
 Locks CELO to be used in governance and validator elections.
 
 ```
-Locks CELO to be used in governance and validator elections.
-
 USAGE
-  $ celocli lockedgold:lock
+  $ celocli lockedgold:lock --from <value> --value <value> [--globalHelp]
 
-OPTIONS
-  --from=from    (required)
-  --globalHelp   View all available global flags
-  --value=value  (required) The unit amount of CELO
+FLAGS
+  --from=<value>   (required)
+  --globalHelp     View all available global flags
+  --value=<value>  (required) The unit amount of CELO
 
-EXAMPLE
+DESCRIPTION
+  Locks CELO to be used in governance and validator elections.
+
+EXAMPLES
   lock --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95 --value 10000000000000000000000
 ```
 
@@ -72,15 +85,16 @@ _See code: [src/commands/lockedgold/lock.ts](https://github.com/celo-org/develop
 Returns the maximum number of delegates allowed per account.
 
 ```
-Returns the maximum number of delegates allowed per account.
-
 USAGE
-  $ celocli lockedgold:max-delegatees-count
+  $ celocli lockedgold:max-delegatees-count [--globalHelp]
 
-OPTIONS
+FLAGS
   --globalHelp  View all available global flags
 
-EXAMPLE
+DESCRIPTION
+  Returns the maximum number of delegates allowed per account.
+
+EXAMPLES
   max-delegatees-count
 ```
 
@@ -91,41 +105,45 @@ _See code: [src/commands/lockedgold/max-delegatees-count.ts](https://github.com/
 Revoke delegated locked celo.
 
 ```
-Revoke delegated locked celo.
-
 USAGE
-  $ celocli lockedgold:revoke-delegate
+  $ celocli lockedgold:revoke-delegate --from <value> --to <value> --percent <value>
+    [--globalHelp]
 
-OPTIONS
-  --from=from        (required)
+FLAGS
+  --from=<value>     (required)
   --globalHelp       View all available global flags
-
-  --percent=percent  (required) 1-100% of locked celo to be revoked from currently
+  --percent=<value>  (required) 1-100% of locked celo to be revoked from currently
                      delegated amount
+  --to=<value>       (required)
 
-  --to=to            (required)
+DESCRIPTION
+  Revoke delegated locked celo.
 
-EXAMPLE
-  revoke-delegate --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95 --to
-  0xc0ffee254729296a45a3885639AC7E10F9d54979 --percent 100
+EXAMPLES
+  revoke-delegate --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95 --to 0xc0ffee254729296a45a3885639AC7E10F9d54979 --percent 100
 ```
 
 _See code: [src/commands/lockedgold/revoke-delegate.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/lockedgold/revoke-delegate.ts)_
 
-## `celocli lockedgold:show ACCOUNT`
+## `celocli lockedgold:show ARG1`
 
 Show Locked Gold information for a given account. This includes the total amount of locked celo, the amount being used for voting in Validator Elections, the Locked Gold balance this account is required to maintain due to a registered Validator or Validator Group, and any pending withdrawals that have been initiated via "lockedgold:unlock".
 
 ```
-Show Locked Gold information for a given account. This includes the total amount of locked celo, the amount being used for voting in Validator Elections, the Locked Gold balance this account is required to maintain due to a registered Validator or Validator Group, and any pending withdrawals that have been initiated via "lockedgold:unlock".
-
 USAGE
-  $ celocli lockedgold:show ACCOUNT
+  $ celocli lockedgold:show ARG1 [--globalHelp]
 
-OPTIONS
+FLAGS
   --globalHelp  View all available global flags
 
-EXAMPLE
+DESCRIPTION
+  Show Locked Gold information for a given account. This includes the total amount of
+  locked celo, the amount being used for voting in Validator Elections, the Locked Gold
+  balance this account is required to maintain due to a registered Validator or
+  Validator Group, and any pending withdrawals that have been initiated via
+  "lockedgold:unlock".
+
+EXAMPLES
   show 0x5409ed021d9299bf6814279a6a1411a7e866a631
 ```
 
@@ -136,17 +154,20 @@ _See code: [src/commands/lockedgold/show.ts](https://github.com/celo-org/develop
 Unlocks CELO, which can be withdrawn after the unlocking period. Unlocked celo will appear as a "pending withdrawal" until the unlocking period is over, after which it can be withdrawn via "lockedgold:withdraw".
 
 ```
-Unlocks CELO, which can be withdrawn after the unlocking period. Unlocked celo will appear as a "pending withdrawal" until the unlocking period is over, after which it can be withdrawn via "lockedgold:withdraw".
-
 USAGE
-  $ celocli lockedgold:unlock
+  $ celocli lockedgold:unlock --from <value> --value <value> [--globalHelp]
 
-OPTIONS
+FLAGS
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d  (required) Account Address
   --globalHelp                                       View all available global flags
-  --value=value                                      (required) The unit amount of CELO
+  --value=<value>                                    (required) The unit amount of CELO
 
-EXAMPLE
+DESCRIPTION
+  Unlocks CELO, which can be withdrawn after the unlocking period. Unlocked celo will
+  appear as a "pending withdrawal" until the unlocking period is over, after which it
+  can be withdrawn via "lockedgold:withdraw".
+
+EXAMPLES
   unlock --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95 --value 500000000
 ```
 
@@ -157,19 +178,22 @@ _See code: [src/commands/lockedgold/unlock.ts](https://github.com/celo-org/devel
 Updates the amount of delegated locked celo. There might be discrepancy between the amount of locked celo and the amount of delegated locked celo because of received rewards.
 
 ```
-Updates the amount of delegated locked celo. There might be discrepancy between the amount of locked celo and the amount of delegated locked celo because of received rewards.
-
 USAGE
-  $ celocli lockedgold:update-delegated-amount
+  $ celocli lockedgold:update-delegated-amount --from <value> --to <value>
+  [--globalHelp]
 
-OPTIONS
-  --from=from   (required)
-  --globalHelp  View all available global flags
-  --to=to       (required)
+FLAGS
+  --from=<value>  (required)
+  --globalHelp    View all available global flags
+  --to=<value>    (required)
 
-EXAMPLE
-  update-delegated-amount --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95 --to
-  0xc0ffee254729296a45a3885639AC7E10F9d54979
+DESCRIPTION
+  Updates the amount of delegated locked celo. There might be discrepancy between the
+  amount of locked celo and the amount of delegated locked celo because of received
+  rewards.
+
+EXAMPLES
+  update-delegated-amount --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95 --to 0xc0ffee254729296a45a3885639AC7E10F9d54979
 ```
 
 _See code: [src/commands/lockedgold/update-delegated-amount.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/lockedgold/update-delegated-amount.ts)_
@@ -179,16 +203,18 @@ _See code: [src/commands/lockedgold/update-delegated-amount.ts](https://github.c
 Withdraw any pending withdrawals created via "lockedgold:unlock" that have become available.
 
 ```
-Withdraw any pending withdrawals created via "lockedgold:unlock" that have become available.
-
 USAGE
-  $ celocli lockedgold:withdraw
+  $ celocli lockedgold:withdraw --from <value> [--globalHelp]
 
-OPTIONS
+FLAGS
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d  (required) Account Address
   --globalHelp                                       View all available global flags
 
-EXAMPLE
+DESCRIPTION
+  Withdraw any pending withdrawals created via "lockedgold:unlock" that have become
+  available.
+
+EXAMPLES
   withdraw --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95
 ```
 

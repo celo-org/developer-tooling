@@ -1,24 +1,26 @@
 import { valueToString } from '@celo/contractkit/lib/wrappers/BaseWrapper'
 import { concurrentMap } from '@celo/utils/lib/async'
 import { zip } from '@celo/utils/lib/collections'
+import { ux } from '@oclif/core'
 import chalk from 'chalk'
-import { cli } from 'cli-ux'
+
 import { BaseCommand } from '../../base'
 
 export default class List extends BaseCommand {
   static description = 'List live governance proposals (queued and ongoing)'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    ...(cli.table.flags() as object),
+    ...(ux.table.flags() as object),
   }
 
   static examples = ['list']
 
   async run() {
-    const res = this.parse(List)
+    const kit = await this.getKit()
+    const res = await this.parse(List)
 
-    const governance = await this.kit.contracts.getGovernance()
+    const governance = await kit.contracts.getGovernance()
     const queue = await governance.getQueue()
     const expiredQueueMap = await concurrentMap(5, queue, (upvoteRecord) =>
       governance.isQueuedProposalExpired(upvoteRecord.proposalID)
@@ -27,10 +29,13 @@ export default class List extends BaseCommand {
     const sortedQueue = governance.sortedQueue(unexpiredQueue)
 
     console.log(chalk.magenta.bold('Queued Proposals:'))
-    cli.table(
+    ux.table(
+      // @ts-expect-error
       sortedQueue,
       {
+        // @ts-expect-error
         ID: { get: (p) => valueToString(p.proposalID) },
+        // @ts-expect-error
         upvotes: { get: (p) => valueToString(p.upvotes) },
       },
       res.flags
@@ -43,7 +48,7 @@ export default class List extends BaseCommand {
     const proposals = zip((proposalID, stage) => ({ proposalID, stage }), unexpiredDequeue, stages)
 
     console.log(chalk.blue.bold('Dequeued Proposals:'))
-    cli.table(
+    ux.table(
       proposals,
       {
         ID: { get: (p) => valueToString(p.proposalID) },
@@ -59,9 +64,11 @@ export default class List extends BaseCommand {
     const expiredDequeue = dequeue
       .filter((_, idx) => expiredDequeueMap[idx])
       .map((_, idx) => dequeue[idx])
-    cli.table(
+    ux.table(
+      // @ts-expect-error
       expiredQueue.concat(expiredDequeue),
       {
+        // @ts-expect-error
         ID: { get: (id) => valueToString(id) },
       },
       res.flags

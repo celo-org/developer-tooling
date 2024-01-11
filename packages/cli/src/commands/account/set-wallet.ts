@@ -1,28 +1,28 @@
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 
 export default class SetWallet extends BaseCommand {
   static description =
     "Sets the wallet of a registered account on-chain. An account's wallet is an optional wallet associated with an account. Can be set by the account or an account's signer."
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    account: Flags.address({ required: true }),
-    wallet: Flags.address({ required: true }),
-    signature: Flags.proofOfPossession({
+    account: CustomFlags.address({ required: true }),
+    wallet: CustomFlags.address({ required: true }),
+    signature: CustomFlags.proofOfPossession({
       required: false,
       description: 'Signature (a.k.a. proof-of-possession) of the signer key',
     }),
-    signer: Flags.address({
+    signer: CustomFlags.address({
       required: false,
       default: '',
       description: 'Address of the signer key to verify proof of possession.',
     }),
   }
 
-  static args = []
+  static args = {}
 
   static examples = [
     'set-wallet --account 0x5409ed021d9299bf6814279a6a1411a7e866a631 --wallet 0x5409ed021d9299bf6814279a6a1411a7e866a631',
@@ -30,9 +30,10 @@ export default class SetWallet extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(SetWallet)
-    this.kit.defaultAccount = res.flags.account
-    const accounts = await this.kit.contracts.getAccounts()
+    const kit = await this.getKit()
+    const res = await this.parse(SetWallet)
+    kit.defaultAccount = res.flags.account
+    const accounts = await kit.contracts.getAccounts()
 
     await newCheckBuilder(this).isAccount(res.flags.account).runChecks()
 

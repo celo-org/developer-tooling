@@ -1,25 +1,25 @@
 import { CeloContract } from '@celo/contractkit'
-import { flags } from '@oclif/command'
+import { Args, Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { BaseCommand } from '../../base'
 import { displaySendTx, failWith } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 
 export default class ReportPrice extends BaseCommand {
   static description = 'Report the price of CELO in a specified token'
 
-  static args = [
-    {
+  static args = {
+    arg1: Args.string({
       name: 'token',
       required: true,
       default: CeloContract.StableToken,
       description: 'Token to report on',
-    },
-  ]
-  static flags: { [name: string]: any } = {
+    }),
+  }
+  static flags = {
     ...BaseCommand.flags,
-    from: Flags.address({ required: true, description: 'Address of the oracle account' }),
-    value: flags.string({
+    from: CustomFlags.address({ required: true, description: 'Address of the oracle account' }),
+    value: Flags.string({
       required: true,
       description: 'Amount of the specified token equal to 1 CELO',
     }),
@@ -32,14 +32,17 @@ export default class ReportPrice extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(ReportPrice)
-    const sortedOracles = await this.kit.contracts.getSortedOracles()
+    const kit = await this.getKit()
+    const res = await this.parse(ReportPrice)
+    const sortedOracles = await kit.contracts.getSortedOracles()
     const value = new BigNumber(res.flags.value)
 
     await displaySendTx(
       'sortedOracles.report',
-      await sortedOracles.report(res.args.token, value, res.flags.from).catch((e) => failWith(e))
+      await sortedOracles
+        .report(res.args.arg1 as string, value, res.flags.from)
+        .catch((e) => failWith(e))
     )
-    this.log(`Reported oracle value: ${value.toString()} ${res.args.token} == 1 CELO`)
+    this.log(`Reported oracle value: ${value.toString()} ${res.args.arg1} == 1 CELO`)
   }
 }

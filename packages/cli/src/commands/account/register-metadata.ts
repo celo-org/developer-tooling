@@ -1,19 +1,19 @@
 import { IdentityMetadataWrapper } from '@celo/contractkit'
-import { flags } from '@oclif/command'
-import { cli } from 'cli-ux'
+import { Flags, ux } from '@oclif/core'
+
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 import { displayMetadata } from '../../utils/identity'
 
 export default class RegisterMetadata extends BaseCommand {
   static description =
     'Register metadata URL for an account where users will be able to retieve the metadata file and verify your claims'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    from: Flags.address({
+    from: CustomFlags.address({
       required: true,
       description: 'Addess of the account to set metadata for',
     }),
@@ -21,9 +21,9 @@ export default class RegisterMetadata extends BaseCommand {
       required: true,
       description: 'The url to the metadata you want to register',
     }),
-    force: flags.boolean({ description: 'Ignore metadata validity checks' }),
+    force: Flags.boolean({ description: 'Ignore metadata validity checks' }),
 
-    ...(cli.table.flags() as object),
+    ...(ux.table.flags() as object),
   }
 
   static examples = [
@@ -31,26 +31,32 @@ export default class RegisterMetadata extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(RegisterMetadata)
+    const kit = await this.getKit()
+    const res = await this.parse(RegisterMetadata)
 
     await newCheckBuilder(this).isAccount(res.flags.from).runChecks()
 
     const metadataURL = res.flags.url
-    const accounts = await this.kit.contracts.getAccounts()
+    const accounts = await kit.contracts.getAccounts()
 
     if (!res.flags.force) {
       try {
-        const metadata = await IdentityMetadataWrapper.fetchFromURL(accounts, metadataURL)
+        const metadata = await IdentityMetadataWrapper.fetchFromURL(
+          accounts,
+          metadataURL.toString()
+        )
         console.info('Metadata contains the following claims: \n')
-        await displayMetadata(metadata, this.kit, res.flags)
+        await displayMetadata(metadata, kit, res.flags)
         console.info() // Print a newline.
-      } catch (error: any) {
-        console.error(`Metadata could not be retrieved from ${metadataURL}: ${error.toString()}`)
+      } catch (error) {
+        console.error(
+          `Metadata could not be retrieved from ${metadataURL}: ${(error as Error).toString()}`
+        )
         console.info('Exiting without performing changes...')
         process.exit(-1)
       }
     }
 
-    await displaySendTx('registerMetadata', accounts.setMetadataURL(metadataURL))
+    await displaySendTx('registerMetadata', accounts.setMetadataURL(metadataURL.toString()))
   }
 }

@@ -23,9 +23,8 @@ testWithGanache('governance:withdraw', (web3: Web3) => {
     accounts = await web3.eth.getAccounts()
     kit.defaultAccount = accounts[0]
     governance = await kit.contracts.getGovernance()
-    let proposal: Proposal
     console.log((await governance.lastDequeue()).toNumber())
-    proposal = await new ProposalBuilder(kit).build()
+    const proposal: Proposal = await new ProposalBuilder(kit).build()
     await governance
       .propose(proposal, 'URL')
       .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })

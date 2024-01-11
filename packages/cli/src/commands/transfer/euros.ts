@@ -4,7 +4,7 @@ import { TransferStableBase } from '../../transfer-stable-base'
 export default class TransferEuros extends TransferStableBase {
   static description = 'Transfer Celo Euros (cEUR) to a specified address.'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...TransferStableBase.flags,
   }
 

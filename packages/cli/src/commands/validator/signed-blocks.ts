@@ -1,48 +1,49 @@
+/* eslint max-classes-per-file: off */
+
 import { Provider } from '@celo/connect/lib/types'
 import { stopProvider } from '@celo/connect/lib/utils/provider-utils'
 import { concurrentMap } from '@celo/utils/lib/async'
-import { flags } from '@oclif/command'
+import { Flags, ux } from '@oclif/core'
 import chalk from 'chalk'
-import { cli } from 'cli-ux'
 import { BaseCommand } from '../../base'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 import { ElectionResultsCache } from '../../utils/election'
 
 export default class ValidatorSignedBlocks extends BaseCommand {
   static description =
     "Display a graph of blocks and whether the given signer's signature is included in each. A green '.' indicates the signature is present in that block, a red '✘' indicates the signature is not present. A yellow '~' indicates the signer is not elected for that block."
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    signer: Flags.address({
+    signer: CustomFlags.address({
       description: 'address of the signer to check for signatures',
       exclusive: ['signers'],
     }),
-    signers: Flags.addressArray({
+    signers: CustomFlags.addressArray({
       description: 'list of signer addresses to check for signatures',
       exclusive: ['signer'],
     }),
-    wasDownWhileElected: flags.boolean({
+    wasDownWhileElected: Flags.boolean({
       description: 'indicate whether a validator was down while elected for range',
     }),
-    'at-block': flags.integer({
+    'at-block': Flags.integer({
       description: 'latest block to examine for signer activity',
       exclusive: ['follow'],
     }),
-    lookback: flags.integer({
+    lookback: Flags.integer({
       description: 'how many blocks to look back for signer activity',
       default: 120,
       exclusive: ['slashableDowntime'],
     }),
-    slashableDowntimeLookback: flags.boolean({
+    slashableDowntimeLookback: Flags.boolean({
       description: 'lookback of slashableDowntime',
       exclusive: ['lookback'],
     }),
-    width: flags.integer({
+    width: Flags.integer({
       description: 'line width for printing marks',
       default: 40,
     }),
-    follow: flags.boolean({
+    follow: Flags.boolean({
       char: 'f',
       default: false,
       exclusive: ['at-block'],
@@ -59,9 +60,11 @@ export default class ValidatorSignedBlocks extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(ValidatorSignedBlocks)
-    const election = await this.kit.contracts.getElection()
-    const validators = await this.kit.contracts.getValidators()
+    const kit = await this.getKit()
+    const res = await this.parse(ValidatorSignedBlocks)
+    const web3 = await this.getWeb3()
+    const election = await kit.contracts.getElection()
+    const validators = await kit.contracts.getValidators()
     const epochSize = await validators.getEpochSize()
     const electionCache = new ElectionResultsCache(election, epochSize.toNumber())
 
@@ -71,18 +74,18 @@ export default class ValidatorSignedBlocks extends BaseCommand {
 
     const latest = res.flags['at-block']
       ? res.flags['at-block'] + 1
-      : (await this.web3.eth.getBlock('latest')).number
+      : (await web3.eth.getBlock('latest')).number
 
     let lookback: number
     if (res.flags.slashableDowntimeLookback) {
-      const downtimeSlasher = await this.kit.contracts.getDowntimeSlasher()
+      const downtimeSlasher = await kit.contracts.getDowntimeSlasher()
       lookback = await downtimeSlasher.slashableDowntime()
     } else {
       lookback = res.flags.lookback
     }
 
     const blocks = await concurrentMap(10, [...Array(lookback).keys()], (i) =>
-      this.web3.eth.getBlock(latest - lookback! + i + 1)
+      web3.eth.getBlock(latest - lookback! + i + 1)
     )
 
     const signers = res.flags.signers ?? [res.flags.signer!]
@@ -110,7 +113,7 @@ export default class ValidatorSignedBlocks extends BaseCommand {
         }
 
         if (res.flags.follow) {
-          const web3 = await this.newWeb3()
+          const newWeb3 = await this.newWeb3()
           const subscription = web3.eth
             .subscribe('newBlockHeaders', (error) => {
               if (error) {
@@ -131,11 +134,11 @@ export default class ValidatorSignedBlocks extends BaseCommand {
           try {
             let response: string
             do {
-              response = await cli.prompt('', { prompt: '', type: 'single', required: false })
+              response = await ux.prompt('', { prompt: '', type: 'single', required: false })
             } while (response !== 'q' && response !== '\u0003' /* ctrl-c */)
           } finally {
             await subscription.unsubscribe()
-            stopProvider(web3.currentProvider as Provider)
+            stopProvider(newWeb3.currentProvider as Provider)
           }
         }
       } finally {
@@ -153,7 +156,6 @@ export default class ValidatorSignedBlocks extends BaseCommand {
 /**
  * Printer object to output marks in a grid to indicate signing status.
  */
-// tslint:disable-next-line:max-classes-per-file
 class MarkPrinter {
   private previousBlockNumber: number | null = null
 
@@ -186,9 +188,7 @@ class MarkPrinter {
   async done() {
     // Print a final newline to complete the line.
     return new Promise<void>((resolve, reject) => {
-      process.stdout.write('\n', (err: any) => {
-        err ? reject(err) : resolve()
-      })
+      process.stdout.write('\n', (err: any) => (err ? reject(err) : resolve()))
     })
   }
 

@@ -1,22 +1,22 @@
 import { ProposalBuilder, proposalToJSON, ProposalTransactionJSON } from '@celo/governance'
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { readFileSync } from 'fs'
 import { BaseCommand } from '../../base'
 import { printValueMapRecursive } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 import { executeProposal } from '../../utils/governance'
 export default class TestProposal extends BaseCommand {
   static description = 'Test a governance proposal'
 
   static hidden = true
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    jsonTransactions: flags.string({
+    jsonTransactions: Flags.string({
       required: true,
       description: 'Path to json transactions',
     }),
-    from: Flags.address({ required: true, description: "Proposer's address" }),
+    from: CustomFlags.address({ required: true, description: "Proposer's address" }),
   }
 
   static examples = [
@@ -24,11 +24,12 @@ export default class TestProposal extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(TestProposal)
+    const kit = await this.getKit()
+    const res = await this.parse(TestProposal)
     const account = res.flags.from
-    this.kit.defaultAccount = account
+    kit.defaultAccount = account
 
-    const builder = new ProposalBuilder(this.kit)
+    const builder = new ProposalBuilder(kit)
 
     // BUILD FROM JSON
     const jsonString = readFileSync(res.flags.jsonTransactions).toString()
@@ -36,8 +37,8 @@ export default class TestProposal extends BaseCommand {
     jsonTransactions.forEach((tx) => builder.addJsonTx(tx))
 
     const proposal = await builder.build()
-    printValueMapRecursive(await proposalToJSON(this.kit, proposal))
+    printValueMapRecursive(await proposalToJSON(kit, proposal))
 
-    await executeProposal(proposal, this.kit, account)
+    await executeProposal(proposal, kit, account)
   }
 }

@@ -4,7 +4,7 @@ export default class TransferGold extends TransferCelo {
   static description =
     'Transfer CELO to a specified address. *DEPRECATION WARNING* Use the "transfer:celo" command instead'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...TransferCelo.flags,
   }
 

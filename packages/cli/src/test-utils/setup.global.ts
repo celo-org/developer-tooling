@@ -13,4 +13,9 @@ export default async function globalSetup() {
   await baseSetup(path.resolve(chainDataPath), 'v10.tar.gz', {
     from_targz: true,
   })
+  console.log('\n ganache started...')
+  // it is necessary to disabled oclif integration with ts-node as
+  // together it leads to a silent signit error and exit when tsconfk is loaded.
+  // @ts-ignore - because global this doesnt have oclif property
+  global.oclif = { tsnodeEnabled: false }
 }

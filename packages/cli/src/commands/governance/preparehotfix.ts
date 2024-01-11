@@ -1,17 +1,17 @@
 import { toBuffer } from '@ethereumjs/util'
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 
 export default class PrepareHotfix extends BaseCommand {
   static description = 'Prepare a governance hotfix for execution in the current epoch'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    from: Flags.address({ required: true, description: "Preparer's address" }),
-    hash: flags.string({ required: true, description: 'Hash of hotfix transactions' }),
+    from: CustomFlags.address({ required: true, description: "Preparer's address" }),
+    hash: Flags.string({ required: true, description: 'Hash of hotfix transactions' }),
   }
 
   static examples = [
@@ -19,11 +19,12 @@ export default class PrepareHotfix extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(PrepareHotfix)
+    const kit = await this.getKit()
+    const res = await this.parse(PrepareHotfix)
     const account = res.flags.from
-    this.kit.defaultAccount = account
+    kit.defaultAccount = account
 
-    const governance = await this.kit.contracts.getGovernance()
+    const governance = await kit.contracts.getGovernance()
     const hash = toBuffer(res.flags.hash) as Buffer
 
     await newCheckBuilder(this, account)
@@ -33,7 +34,7 @@ export default class PrepareHotfix extends BaseCommand {
         `Hotfix 0x${hash.toString('hex')} not already prepared for current epoch`,
         async () => {
           const { preparedEpoch } = await governance.getHotfixRecord(hash)
-          const validators = await this.kit.contracts.getValidators()
+          const validators = await kit.contracts.getValidators()
           const currentEpoch = await validators.getEpochNumber()
           return preparedEpoch.lt(currentEpoch)
         }

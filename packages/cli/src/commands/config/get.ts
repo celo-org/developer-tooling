@@ -5,7 +5,7 @@ import { readConfig } from '../../utils/config'
 export default class Get extends BaseCommand {
   static description = 'Output network node configuration'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
   }
 

@@ -1,18 +1,18 @@
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 
 export default class TransferGold extends BaseCommand {
   static description = 'Transfers reserve celo to other reserve address'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    value: flags.string({ required: true, description: 'The unit amount of CELO' }),
-    to: Flags.address({ required: true, description: 'Receiving address' }),
-    from: Flags.address({ required: true, description: "Spender's address" }),
-    useMultiSig: flags.boolean({
+    value: Flags.string({ required: true, description: 'The unit amount of CELO' }),
+    to: CustomFlags.address({ required: true, description: 'Receiving address' }),
+    from: CustomFlags.address({ required: true, description: "Spender's address" }),
+    useMultiSig: Flags.boolean({
       description: 'True means the request will be sent through multisig.',
     }),
   }
@@ -23,18 +23,19 @@ export default class TransferGold extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(TransferGold)
+    const kit = await this.getKit()
+    const res = await this.parse(TransferGold)
     const value = res.flags.value
     const to = res.flags.to
     const account = res.flags.from
     const useMultiSig = res.flags.useMultiSig
-    this.kit.defaultAccount = account
-    const reserve = await this.kit.contracts.getReserve()
+    kit.defaultAccount = account
+    const reserve = await kit.contracts.getReserve()
     const spenders = useMultiSig ? await reserve.getSpenders() : []
     // assumes that the multisig is the most recent spender in the spenders array
     const multiSigAddress = spenders.length > 0 ? spenders[spenders.length - 1] : ''
     const reserveSpenderMultiSig = useMultiSig
-      ? await this.kit.contracts.getMultiSig(multiSigAddress)
+      ? await kit.contracts.getMultiSig(multiSigAddress)
       : undefined
     const spender = useMultiSig ? multiSigAddress : account
 

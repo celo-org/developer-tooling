@@ -1,16 +1,16 @@
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 
 export default class ValidatorForceDeaffiliate extends BaseCommand {
   static description =
     "Force deaffiliate a Validator from a Validator Group, and remove it from the Group if it is also a member.  Used by stake-off admins in order to remove validators from the next epoch's validator set if they are down and consistently unresponsive, in order to preserve the health of the network. This feature will be removed once slashing for downtime is implemented."
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    from: Flags.address({ required: true, description: 'Initiator' }),
-    validator: Flags.address({ required: true, description: "Validator's address" }),
+    from: CustomFlags.address({ required: true, description: 'Initiator' }),
+    validator: CustomFlags.address({ required: true, description: "Validator's address" }),
   }
 
   static examples = [
@@ -18,9 +18,10 @@ export default class ValidatorForceDeaffiliate extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(ValidatorForceDeaffiliate)
+    const kit = await this.getKit()
+    const res = await this.parse(ValidatorForceDeaffiliate)
 
-    const validators = await this.kit.contracts.getValidators()
+    const validators = await kit.contracts.getValidators()
 
     await newCheckBuilder(this, res.flags.validator)
       .isSignerOrAccount()

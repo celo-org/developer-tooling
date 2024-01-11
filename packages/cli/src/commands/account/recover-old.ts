@@ -6,18 +6,20 @@ import {
 } from '@celo/cryptographic-utils/lib/account'
 import { privateKeyToAddress } from '@celo/utils/lib/address'
 import { toChecksumAddress } from '@ethereumjs/util'
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import { printValueMap } from '../../utils/cli'
 import NewAccount from './new'
-
+/*
+ * @deprecated
+ */
 // TODO: This command should be prune in the future after all accounts had been migrated
 export default class RecoverOld extends NewAccount {
   static description =
     'Recovers the Valora old account and print out the key information. The old Valora app (in a beta state) generated the user address using a seed of 32 bytes, instead of 64 bytes. As the app fixed that, some old accounts were left with some funds. This command allows the user to recover those funds.'
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...NewAccount.flags,
-    mnemonicPath: flags.string({
+    mnemonicPath: Flags.string({
       required: true,
       description:
         'Path to a file that contains all the mnemonic words separated by a space (example: "word1 word2 word3 ... word24"). If the words are a language other than English, the --language flag must be used. Only BIP39 mnemonics are supported',
@@ -33,7 +35,7 @@ export default class RecoverOld extends NewAccount {
   ]
 
   async run() {
-    const res = this.parse(RecoverOld)
+    const res = await this.parse(RecoverOld)
     let mnemonic = NewAccount.readFile(res.flags.mnemonicPath)
     if (mnemonic) {
       mnemonic = normalizeMnemonic(mnemonic)

@@ -1,22 +1,22 @@
-import { flags } from '@oclif/command'
+import { Flags } from '@oclif/core'
 import chalk from 'chalk'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
-import { Flags } from '../../utils/command'
+import { CustomFlags } from '../../utils/command'
 
 export default class VotePartially extends BaseCommand {
   static description = 'Vote partially on an approved governance proposal'
 
   static voteOptions = ['Abstain', 'No', 'Yes']
 
-  static flags: { [name: string]: any } = {
+  static flags = {
     ...BaseCommand.flags,
-    proposalID: flags.string({ required: true, description: 'UUID of proposal to vote on' }),
-    yes: flags.string({ description: 'Yes votes' }),
-    no: flags.string({ description: 'No votes' }),
-    abstain: flags.string({ description: 'Abstain votes' }),
-    from: Flags.address({ required: true, description: "Voter's address" }),
+    proposalID: Flags.string({ required: true, description: 'UUID of proposal to vote on' }),
+    yes: Flags.string({ description: 'Yes votes' }),
+    no: Flags.string({ description: 'No votes' }),
+    abstain: Flags.string({ description: 'Abstain votes' }),
+    from: CustomFlags.address({ required: true, description: "Voter's address" }),
   }
 
   static examples = [
@@ -24,12 +24,13 @@ export default class VotePartially extends BaseCommand {
   ]
 
   async run() {
-    const res = this.parse(VotePartially)
+    const kit = await this.getKit()
+    const res = await this.parse(VotePartially)
     const signer = res.flags.from
     const id = res.flags.proposalID
 
-    this.kit.defaultAccount = signer
-    const governance = await this.kit.contracts.getGovernance()
+    kit.defaultAccount = signer
+    const governance = await kit.contracts.getGovernance()
 
     await newCheckBuilder(this, signer)
       .isVoteSignerOrAccount()
