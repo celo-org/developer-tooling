@@ -152,10 +152,11 @@ jobs:
         run: |
           mkdir -p test-results/jest
           # Skipping packages that are tested in a specific job below
-          yarn run lerna \
-            --ignore @celo/contractkit \
-            --ignore @celo/celocli \
-            --ignore '@celo/wallet-*' \
+          yarn workspaces foreach \
+            --all \
+            --exclude celo \
+            --exclude "@celo/{celocli,contractkit,wallet-*}" \
+            -ip \
             run test
       - name: Upload Jest Test Results
         uses: actions/upload-artifact@v3
@@ -176,7 +177,7 @@ jobs:
       - run: sudo corepack enable yarn
       - name: Run Wallet tests
         run: |
-          yarn run lerna --scope '@celo/wallet-*' run test
+          yarn workspaces foreach --all --include '@celo/wallet-*' -ip run test
 
   contractkit-tests:
     name: ContractKit Tests
