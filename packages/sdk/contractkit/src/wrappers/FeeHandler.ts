@@ -12,14 +12,6 @@ export enum ExchangeProposalState {
   Cancelled,
 }
 
-export interface GrandaMentoConfig {
-  approver: string
-  spread: BigNumber
-  vetoPeriodSeconds: BigNumber
-  maxApprovalExchangeRateChange: BigNumber
-  exchangeLimits: AllStableConfig
-}
-
 export interface StableTokenExchangeLimits {
   minExchangeAmount: BigNumber
   maxExchangeAmount: BigNumber

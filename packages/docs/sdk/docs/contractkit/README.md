@@ -152,7 +152,6 @@ There are many core contracts.
 - GasPriceMinimumWrapper
 - GoldTokenWrapper
 - GovernanceWrapper
-- GrandaMentoWrapper
 - LockedGoldWrapper
 - MultiSigWrapper
 - ReserveWrapper
