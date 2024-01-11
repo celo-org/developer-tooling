@@ -64,6 +64,8 @@ EXAMPLES
   authorize --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631 --role attestation --signer 0x6ecbe1db9ef729cbe972c83fb886247691fb6beb --signature 0x1b9fca4bbb5bfb1dbe69ef1cddbd9b4202dcb6b134c5170611e1e36ecfa468d7b46c85328d504934fce6c2a1571603a50ae224d2b32685e84d4d1a1eebad8452eb
 ```
 
+_See code: [src/commands/releasecelo/authorize.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/authorize.ts)_
+
 ## `celocli releasecelo:create-account`
 
 Creates a new account for the ReleaseGold instance
@@ -83,6 +85,8 @@ DESCRIPTION
 EXAMPLES
   create-account --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631
 ```
+
+_See code: [src/commands/releasecelo/create-account.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/create-account.ts)_
 
 ## `celocli releasecelo:locked-gold`
 
@@ -118,6 +122,8 @@ EXAMPLES
   locked-gold --contract 0xCcc8a47BE435F1590809337BB14081b256Ae26A8 --action withdraw --value 10000000000000000000000
 ```
 
+_See code: [src/commands/releasecelo/locked-gold.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/locked-gold.ts)_
+
 ## `celocli releasecelo:refund-and-finalize`
 
 Refund the given contract's balance to the appopriate parties and destroy the contact. Can only be called by the release owner of revocable ReleaseGold instances.
@@ -138,6 +144,8 @@ DESCRIPTION
 EXAMPLES
   refund-and-finalize --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631
 ```
+
+_See code: [src/commands/releasecelo/refund-and-finalize.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/refund-and-finalize.ts)_
 
 ## `celocli releasecelo:revoke`
 
@@ -163,6 +171,8 @@ DESCRIPTION
 EXAMPLES
   revoke --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631
 ```
+
+_See code: [src/commands/releasecelo/revoke.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/revoke.ts)_
 
 ## `celocli releasecelo:revoke-votes`
 
@@ -192,6 +202,8 @@ EXAMPLES
 
   revoke-votes --contract 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95 --allVotes --allGroups
 ```
+
+_See code: [src/commands/releasecelo/revoke-votes.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/revoke-votes.ts)_
 
 ## `celocli releasecelo:set-account`
 
@@ -226,6 +238,8 @@ EXAMPLES
   set-account --contract 0x5719118266779B58D0f9519383A4A27aA7b829E5 --property metaURL --value www.test.com
 ```
 
+_See code: [src/commands/releasecelo/set-account.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/set-account.ts)_
+
 ## `celocli releasecelo:set-account-wallet-address`
 
 Set the ReleaseGold contract account's wallet address
@@ -255,6 +269,8 @@ DESCRIPTION
 EXAMPLES
   set-account-wallet-address --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631 --walletAddress 0xE36Ea790bc9d7AB70C55260C66D52b1eca985f84 --pop 0x1b3e611d05e46753c43444cdc55c2cc3d95c54da0eba2464a8cc8cb01bd57ae8bb3d82a0e293ca97e5813e7fb9b624127f42ef0871d025d8a56fe2f8f08117e25b
 ```
+
+_See code: [src/commands/releasecelo/set-account-wallet-address.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/set-account-wallet-address.ts)_
 
 ## `celocli releasecelo:set-beneficiary`
 
@@ -288,6 +304,8 @@ EXAMPLES
   set-beneficiary --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631 --from 0xE36Ea790bc9d7AB70C55260C66D52b1eca985f84 --beneficiary 0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb
 ```
 
+_See code: [src/commands/releasecelo/set-beneficiary.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/set-beneficiary.ts)_
+
 ## `celocli releasecelo:set-can-expire`
 
 Set the canExpire flag for the given ReleaseGold contract
@@ -314,6 +332,8 @@ EXAMPLES
   set-can-expire --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631 --value true
 ```
 
+_See code: [src/commands/releasecelo/set-can-expire.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/set-can-expire.ts)_
+
 ## `celocli releasecelo:set-liquidity-provision`
 
 Set the liquidity provision to true, allowing the beneficiary to withdraw released gold.
@@ -337,6 +357,8 @@ DESCRIPTION
 EXAMPLES
   set-liquidity-provision --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631
 ```
+
+_See code: [src/commands/releasecelo/set-liquidity-provision.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/set-liquidity-provision.ts)_
 
 ## `celocli releasecelo:set-max-distribution`
 
@@ -366,6 +388,8 @@ EXAMPLES
   set-max-distribution --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631 --distributionRatio 1000
 ```
 
+_See code: [src/commands/releasecelo/set-max-distribution.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/set-max-distribution.ts)_
+
 ## `celocli releasecelo:show`
 
 Show info on a ReleaseGold instance contract.
@@ -385,6 +409,8 @@ DESCRIPTION
 EXAMPLES
   show --contract 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95
 ```
+
+_See code: [src/commands/releasecelo/show.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/show.ts)_
 
 ## `celocli releasecelo:transfer-dollars`
 
@@ -413,6 +439,8 @@ EXAMPLES
   transfer-dollars --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631 --to 0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb --value 10000000000000000000000
 ```
 
+_See code: [src/commands/releasecelo/transfer-dollars.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/transfer-dollars.ts)_
+
 ## `celocli releasecelo:withdraw`
 
 Withdraws `value` released celo to the beneficiary address. Fails if `value` worth of celo has not been released yet.
@@ -435,3 +463,5 @@ DESCRIPTION
 EXAMPLES
   withdraw --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631 --value 10000000000000000000000
 ```
+
+_See code: [src/commands/releasecelo/withdraw.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/releasecelo/withdraw.ts)_
