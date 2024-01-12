@@ -1,5 +1,15 @@
 # @celo/contractkit
 
+## 6.0.1-beta.1
+
+### Patch Changes
+
+- [#56](https://github.com/celo-org/developer-tooling/pull/56) [`7dfbcd6`](https://github.com/celo-org/developer-tooling/commit/7dfbcd60203c8fd95bc6e113adfba02f7071ac47) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Reremoves grandamento
+
+  While 9ab9d00eb previously removed grandamento it was added back temporarily because the celo cli required the wrappers to be available in order to execute the proposal to remove it from governance. It is now gone for good. RIP.
+
+  Due to previous removal this is not considered a breaking change.
+
 ## 6.0.1-beta.0
 
 ### Patch Changes
