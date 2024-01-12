@@ -60,7 +60,6 @@
     "pretty-quick": "^2.0.1",
     "prompt": "1.2.0",
     "semver": "7.5.2",
-    "solc": "0.5.8",
     "ts-jest": "^29.0.0",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^3.8.0",
