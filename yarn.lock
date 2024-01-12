@@ -979,7 +979,7 @@ __metadata:
     "@types/randombytes": "npm:^2.0.0"
     bigi: "npm:^1.4.2"
     bip32: "npm:^3.1.0"
-    bip39: "https://github.com/bitcoinjs/bip39#d8ea080a18b40f301d4e2219a2991cd2417e83c2"
+    bip39: "https://github.com/bitcoinjs/bip39#a7ecbfe2e60d0214ce17163d610cad9f7b23140c"
     buffer-reverse: "npm:^1.0.1"
     elliptic: "npm:^6.5.4"
     ethereum-cryptography: "npm:1.2.0"
@@ -3777,6 +3777,13 @@ __metadata:
   version: 1.3.1
   resolution: "@noble/hashes@npm:1.3.1"
   checksum: 39474bab7e7813dbbfd8750476f48046d3004984e161fcd4333e40ca823f07b069010b35a20246e5b4ac20858e29913172a4d69720fd1e93620f7bedb70f9b72
+  languageName: node
+  linkType: hard
+
+"@noble/hashes@npm:^1.2.0":
+  version: 1.3.3
+  resolution: "@noble/hashes@npm:1.3.3"
+  checksum: 1025ddde4d24630e95c0818e63d2d54ee131b980fe113312d17ed7468bc18f54486ac86c907685759f8a7e13c2f9b9e83ec7b67d1cc20836f36b5e4a65bb102d
   languageName: node
   linkType: hard
 
@@ -7021,13 +7028,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:11.11.6":
-  version: 11.11.6
-  resolution: "@types/node@npm:11.11.6"
-  checksum: 3b0be5fe7104dc24d34271cb043149dab55317356bc20d7f3871dc9cb60954dc77ffc6b0531b00c3de32a748c207db769b925f17dbe03565f8a4a5001acbf367
-  languageName: node
-  linkType: hard
-
 "@types/node@npm:18.7.16":
   version: 18.7.16
   resolution: "@types/node@npm:18.7.16"
@@ -8598,15 +8598,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bip39@https://github.com/bitcoinjs/bip39#d8ea080a18b40f301d4e2219a2991cd2417e83c2":
-  version: 3.0.3
-  resolution: "bip39@https://github.com/bitcoinjs/bip39.git#commit=d8ea080a18b40f301d4e2219a2991cd2417e83c2"
+"bip39@https://github.com/bitcoinjs/bip39#a7ecbfe2e60d0214ce17163d610cad9f7b23140c":
+  version: 3.1.0
+  resolution: "bip39@https://github.com/bitcoinjs/bip39.git#commit=a7ecbfe2e60d0214ce17163d610cad9f7b23140c"
   dependencies:
-    "@types/node": "npm:11.11.6"
-    create-hash: "npm:^1.1.0"
-    pbkdf2: "npm:^3.0.9"
-    randombytes: "npm:^2.0.1"
-  checksum: 50351401aeed4297e7570c5c8556e1de6c5e956928326569c98fbaf7331f94790726defedca748982a8cc4af209f78bf7f950d91e2245036b7d50faebefd20fe
+    "@noble/hashes": "npm:^1.2.0"
+  checksum: 406c0b5bdab0d43df2ff8916c5b57bb7f65cd36a115cbd7620a75b972638f8511840bfc27bfc68946027086fd33ed3050d8cd304e85fd527503b23d857a8486e
   languageName: node
   linkType: hard
 
@@ -19399,7 +19396,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pbkdf2@npm:^3.0.17, pbkdf2@npm:^3.0.9":
+"pbkdf2@npm:^3.0.17":
   version: 3.1.2
   resolution: "pbkdf2@npm:3.1.2"
   dependencies:
