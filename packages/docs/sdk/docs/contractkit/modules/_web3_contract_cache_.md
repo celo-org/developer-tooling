@@ -134,9 +134,6 @@
 
 *Defined in [packages/sdk/contractkit/src/web3-contract-cache.ts:55](https://github.com/celo-org/celo-monorepo/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L55)*
 
-###  [CeloContract.GrandaMento]
-
-• **[CeloContract.GrandaMento]**: *newGrandaMento* = newGrandaMento
 
 *Defined in [packages/sdk/contractkit/src/web3-contract-cache.ts:56](https://github.com/celo-org/celo-monorepo/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L56)*
 

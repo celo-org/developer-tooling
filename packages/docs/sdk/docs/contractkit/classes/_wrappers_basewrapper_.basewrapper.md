@@ -26,8 +26,6 @@
 
   ↳ [GasPriceMinimumWrapper](_wrappers_gaspriceminimum_.gaspriceminimumwrapper.md)
 
-  ↳ [GrandaMentoWrapper](_wrappers_grandamento_.grandamentowrapper.md)
-
   ↳ [ReserveWrapper](_wrappers_reserve_.reservewrapper.md)
 
   ↳ [SortedOraclesWrapper](_wrappers_sortedoracles_.sortedoracleswrapper.md)

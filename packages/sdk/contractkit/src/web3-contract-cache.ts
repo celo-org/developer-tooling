@@ -30,7 +30,6 @@ import { newValidators } from '@celo/abis/web3/Validators'
 import { newExchange } from '@celo/abis/web3/mento/Exchange'
 import { newExchangeBRL } from '@celo/abis/web3/mento/ExchangeBRL'
 import { newExchangeEUR } from '@celo/abis/web3/mento/ExchangeEUR'
-import { newGrandaMento } from '@celo/abis/web3/mento/GrandaMento'
 import { newReserve } from '@celo/abis/web3/mento/Reserve'
 import { newStableToken } from '@celo/abis/web3/mento/StableToken'
 
@@ -61,7 +60,6 @@ export const ContractFactories = {
   [CeloContract.GasPriceMinimum]: newGasPriceMinimum,
   [CeloContract.GoldToken]: newGoldToken,
   [CeloContract.Governance]: newGovernance,
-  [CeloContract.GrandaMento]: newGrandaMento,
   [CeloContract.LockedGold]: newLockedGold,
   [CeloContract.MultiSig]: newMultiSig,
   [CeloContract.OdisPayments]: newOdisPayments,
@@ -153,9 +151,7 @@ export class Web3ContractCache {
   getGovernance() {
     return this.getContract(CeloContract.Governance)
   }
-  getGrandaMento() {
-    return this.getContract(CeloContract.GrandaMento)
-  }
+
   getLockedGold() {
     return this.getContract(CeloContract.LockedGold)
   }

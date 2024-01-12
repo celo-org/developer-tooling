@@ -23,7 +23,6 @@
 * [GasPriceMinimum](_base_.celocontract.md#gaspriceminimum)
 * [GoldToken](_base_.celocontract.md#goldtoken)
 * [Governance](_base_.celocontract.md#governance)
-* [GrandaMento](_base_.celocontract.md#grandamento)
 * [LockedGold](_base_.celocontract.md#lockedgold)
 * [MetaTransactionWallet](_base_.celocontract.md#metatransactionwallet)
 * [MetaTransactionWalletDeployer](_base_.celocontract.md#metatransactionwalletdeployer)
@@ -173,14 +172,6 @@ ___
 • **Governance**: = "Governance"
 
 *Defined in [packages/sdk/contractkit/src/base.ts:18](https://github.com/celo-org/celo-monorepo/blob/master/packages/sdk/contractkit/src/base.ts#L18)*
-
-___
-
-###  GrandaMento
-
-• **GrandaMento**: = "GrandaMento"
-
-*Defined in [packages/sdk/contractkit/src/base.ts:19](https://github.com/celo-org/celo-monorepo/blob/master/packages/sdk/contractkit/src/base.ts#L19)*
 
 ___
 
