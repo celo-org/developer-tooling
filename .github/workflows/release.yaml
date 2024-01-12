@@ -31,14 +31,17 @@ jobs:
           access-id: p-kf9vjzruht6l
           static-secrets: '{"/static-secrets/NPM/npm-publish-token":"NPM_TOKEN"}'
       - name: Setup Node.js 18.x
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18.x
-      - name: 'Setup yarn'
+      - name: "enable corepack for yarn"
+        run : sudo corepack enable yarn
         shell: bash
-        run: |
-          npm install --global yarn
-          source ~/.bashrc
+      # must call twice because of chicken and egg problem with yarn and node
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'yarn'
       - name: Install Dependencies
         shell: bash
         run: yarn
