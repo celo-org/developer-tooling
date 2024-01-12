@@ -22,7 +22,7 @@ echo "Merge the Version Packages (beta) PR to publish a beta"
 #    a. if you do merge/publish you will need to add more changesets to initiate a new beta being published
 # 8. repeat 7 if wanted
 # 9. when ready to exit pre mode. `yarn beta-exit`
-echo "when complete with beta mode, run `yarn beta-exit`"
+echo "when complete with beta mode, run 'yarn beta-exit'"
 echo "IMPORTANT: once you exit pre mode you should open a PR to merge your branch into main."
 echo "DONT MERGE the Version Packages PR which is not Beta into prerelease/$branch_name branch"
 # 11. open PR for prerelease into main
