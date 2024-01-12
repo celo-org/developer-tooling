@@ -177,7 +177,7 @@ jobs:
       - run: sudo corepack enable yarn
       - name: Run Wallet tests
         run: |
-          yarn workspaces foreach  -ip --all --include '@celo/wallet-*' run test
+          yarn workspaces foreach -ip --all --include '@celo/wallet-*' run test
 
   contractkit-tests:
     name: ContractKit Tests
