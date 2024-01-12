@@ -6,7 +6,7 @@ Kit ContractWrappers factory & cache.
 
 Provides access to all contract wrappers for celo core contracts
 
-**`remarks`** 
+**`remarks`**
 
 Because it provides access to all contract wrappers it must load all wrappers and the contract ABIs for them
 Consider Using {@link MiniWrapperCache}, building your own, or if you only need one Wrapper using it directly
@@ -50,8 +50,6 @@ Consider Using {@link MiniWrapperCache}, building your own, or if you only need 
 * [getGovernance](_contract_cache_.wrappercache.md#getgovernance)
 * [getGrandaMento](_contract_cache_.wrappercache.md#getgrandamento)
 * [getLockedGold](_contract_cache_.wrappercache.md#getlockedgold)
-* [getMetaTransactionWallet](_contract_cache_.wrappercache.md#getmetatransactionwallet)
-* [getMetaTransactionWalletDeployer](_contract_cache_.wrappercache.md#getmetatransactionwalletdeployer)
 * [getMultiSig](_contract_cache_.wrappercache.md#getmultisig)
 * [getReserve](_contract_cache_.wrappercache.md#getreserve)
 * [getSortedOracles](_contract_cache_.wrappercache.md#getsortedoracles)
@@ -304,37 +302,6 @@ ___
 
 ___
 
-###  getMetaTransactionWallet
-
-▸ **getMetaTransactionWallet**(`address`: string): *Promise‹[MetaTransactionWalletWrapper](_wrappers_metatransactionwallet_.metatransactionwalletwrapper.md)‹››*
-
-*Defined in [packages/sdk/contractkit/src/contract-cache.ts:184](https://github.com/celo-org/celo-monorepo/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L184)*
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`address` | string |
-
-**Returns:** *Promise‹[MetaTransactionWalletWrapper](_wrappers_metatransactionwallet_.metatransactionwalletwrapper.md)‹››*
-
-___
-
-###  getMetaTransactionWalletDeployer
-
-▸ **getMetaTransactionWalletDeployer**(`address`: string): *Promise‹[MetaTransactionWalletDeployerWrapper](_wrappers_metatransactionwalletdeployer_.metatransactionwalletdeployerwrapper.md)‹››*
-
-*Defined in [packages/sdk/contractkit/src/contract-cache.ts:187](https://github.com/celo-org/celo-monorepo/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L187)*
-
-**Parameters:**
-
-Name | Type |
------- | ------ |
-`address` | string |
-
-**Returns:** *Promise‹[MetaTransactionWalletDeployerWrapper](_wrappers_metatransactionwalletdeployer_.metatransactionwalletdeployerwrapper.md)‹››*
-
-___
 
 ###  getMultiSig
 

@@ -22,8 +22,6 @@ export enum CeloContract {
   LockedGold = 'LockedGold',
   MentoFeeHandlerSeller = 'MentoFeeHandlerSeller',
   UniswapFeeHandlerSeller = 'UniswapFeeHandlerSeller',
-  MetaTransactionWallet = 'MetaTransactionWallet',
-  MetaTransactionWalletDeployer = 'MetaTransactionWalletDeployer',
   MultiSig = 'MultiSig',
   OdisPayments = 'OdisPayments',
   Random = 'Random',
@@ -54,12 +52,7 @@ export type CeloTokenContract = StableTokenContract | CeloContract.GoldToken
 export type CeloToken = CeloTokenContract
 
 export const AllContracts = Object.keys(CeloContract) as CeloContract[]
-const AuxiliaryContracts = [
-  CeloContract.MultiSig,
-  CeloContract.MetaTransactionWalletDeployer,
-  CeloContract.MetaTransactionWallet,
-  CeloContract.ERC20,
-]
+const AuxiliaryContracts = [CeloContract.MultiSig, CeloContract.ERC20]
 export const RegisteredContracts = AllContracts.filter((v) => !AuxiliaryContracts.includes(v))
 
 /** @internal */
