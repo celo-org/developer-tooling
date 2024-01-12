@@ -1891,6 +1891,7 @@ __metadata:
     "@types/node": "npm:^18.7.16"
     bignumber.js: "npm:^9.0.0"
     bn.js: "npm:4.11.9"
+    elliptic: "npm:^6.5.4"
     ethereum-cryptography: "npm:1.2.0"
     fp-ts: "npm:2.1.1"
     io-ts: "npm:2.0.1"

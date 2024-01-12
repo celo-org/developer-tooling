@@ -31,6 +31,7 @@
     "@types/node": "^18.7.16",
     "bignumber.js": "^9.0.0",
     "bn.js": "4.11.9",
+    "elliptic": "^6.5.4",
     "ethereum-cryptography": "1.2.0",
     "fp-ts": "2.1.1",
     "io-ts": "2.0.1",

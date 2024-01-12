@@ -8,11 +8,16 @@ import {
 import { normalizeAccents } from '@celo/base/lib/string'
 import { privateKeyToAddress } from '@celo/utils/lib/address'
 import { levenshteinDistance } from '@celo/utils/lib/levenshtein'
+// TODO replace by @scure/bip32
 import BIP32Factory from 'bip32'
+// TODO replace by @scure/bip32
 import * as bip39 from 'bip39'
+// TODO replace by @noble/hashes/sha3 { keccak_256 }
 import { keccak256 } from 'ethereum-cryptography/keccak'
 import { utf8ToBytes } from 'ethereum-cryptography/utils'
 import randomBytes from 'randombytes'
+
+// TODO replace by @noble/curves/secp256k1
 import * as ecc from 'tiny-secp256k1'
 // Exports moved to @celo/base, forwarding them
 // here for backwards compatibility

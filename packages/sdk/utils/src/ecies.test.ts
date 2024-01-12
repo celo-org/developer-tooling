@@ -1,4 +1,7 @@
 import { privateToPublic } from '@ethereumjs/util'
+import { ctr } from '@noble/ciphers/aes'
+import { bytesToUtf8, utf8ToBytes } from '@noble/ciphers/utils'
+import { randomBytes as randooom } from '@noble/ciphers/webcrypto/utils'
 import { randomBytes } from 'crypto'
 import { ECIES } from './ecies'
 
@@ -7,7 +10,7 @@ describe('ECIES', () => {
     it('should encrypt a message without error', () => {
       const privKey = randomBytes(32)
       const pubKey = privateToPublic(privKey)
-      const message = Buffer.from(`foo`)
+      const message = Buffer.from('foo')
       const encrypted = ECIES.Encrypt(pubKey, message)
       expect(encrypted.length).toBeGreaterThanOrEqual(113)
     })
@@ -39,6 +42,21 @@ describe('ECIES', () => {
   })
 
   describe('roundtrip', () => {
+    it('should return the same plaintext after roundtrip - core', () => {
+      // const plaintext = utf8ToBytes('spam')
+      const privKey = randooom(32)
+      // const pubKey = privateToPublic(privKey)
+      // const iv = randomBytes(16)
+      // const encrypted = AES128Encrypt(privKey, iv, plaintext)
+      // const decrypted = AES128Decrypt(privKey, iv, encrypted)
+
+      const plaintext = 'Hello, World'
+      const aes = ctr(privKey, randomBytes(16))
+      const ciphertext_ = aes.encrypt(utf8ToBytes(plaintext))
+      const plaintext_ = aes.decrypt(ciphertext_)
+      expect(bytesToUtf8(plaintext_)).toEqual(plaintext)
+    })
+
     it('should return the same plaintext after roundtrip', () => {
       const plaintext = Buffer.from('spam')
       const privKey = randomBytes(32)
@@ -100,7 +118,7 @@ describe('AES128CTR', () => {
       const macKey = randomBytes(16)
       const fakeKey = randomBytes(16)
       const encrypted = ECIES.AES128EncryptAndHMAC(encKey, macKey, plaintext)
-      console.info(encrypted.toString('hex').length)
+      // console.info(encrypted.toString('hex').length)
       const decrypted = ECIES.AES128DecryptAndHMAC(fakeKey, macKey, encrypted)
       expect(plaintext.equals(decrypted)).toBe(false)
     })
