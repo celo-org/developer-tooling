@@ -2,5 +2,40 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "local>celo-org/.github:renovate-config"
+  ],
+  "suppressNotifications": [
+    "prIgnoreNotification"
+  ],
+  "packageRules": [
+    {
+      "matchUpdateTypes": [
+        "patch",
+        "minor"
+      ],
+      "automerge": true
+    },
+    {
+      "packageRules": [
+        {
+          "matchPackageNames": [
+            "web3",
+            "web3-core",
+            "web3-eth",
+            "web3-eth",
+            "web3-eth-contract"
+          ],
+          "allowedVersions": "1.x"
+        }
+      ]
+    },
+    {
+      "packageRules": [
+        {
+          "ignoreDeps": [
+            "@celo/dev-utils"
+          ]
+        }
+      ]
+    }
   ]
 }
