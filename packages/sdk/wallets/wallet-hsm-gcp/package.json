@@ -15,7 +15,7 @@
     "build": "tsc -b .",
     "clean": "tsc -b . --clean",
     "docs": "typedoc && ts-node ../../utils/scripts/linkdocs.ts wallet-hsm-gcp",
-    "test": "jest --runInBand",
+    "test": "yarn run --top-level jest --runInBand",
     "lint": "yarn run --top-level eslint -c .eslintrc.js ",
     "prepublishOnly": "yarn build"
   },
