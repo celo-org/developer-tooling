@@ -14,8 +14,8 @@
     "build": "tsc -b .",
     "docs": "typedoc",
     "clean": "tsc -b . --clean",
-    "test": "jest --runInBand --ci",
-    "test:verbose": "jest --verbose",
+    "test": "yarn run --top-level jest --runInBand --ci",
+    "test:verbose": "yarn run --top-level jest --verbose",
     "lint": "yarn run --top-level eslint -c .eslintrc.js "
   },
   "files": [
