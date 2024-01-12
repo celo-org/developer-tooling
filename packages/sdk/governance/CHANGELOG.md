@@ -1,5 +1,13 @@
 # @celo/governance
 
+## 5.0.9-beta.0
+
+### Patch Changes
+
+- Updated dependencies [[`8fb6c76`](https://github.com/celo-org/developer-tooling/commit/8fb6c76e4fada71c91f516ed151c4519ff2fe0fd)]:
+  - @celo/contractkit@6.0.1-beta.0
+  - @celo/explorer@5.0.8-beta.0
+
 ## 5.0.8
 
 ### Patch Changes

@@ -1,5 +1,20 @@
 # Changelog
 
+## 4.0.0-beta.0
+
+### Major Changes
+
+- [#21](https://github.com/celo-org/developer-tooling/pull/21) [`f167758`](https://github.com/celo-org/developer-tooling/commit/f1677581b90675e37a4846ce53b29d8615a056e6) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Removes releasegold commnand topic. use releasecelo
+
+- [#21](https://github.com/celo-org/developer-tooling/pull/21) [`f167758`](https://github.com/celo-org/developer-tooling/commit/f1677581b90675e37a4846ce53b29d8615a056e6) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Remove Grandamento from CLI
+
+### Patch Changes
+
+- Updated dependencies [[`8fb6c76`](https://github.com/celo-org/developer-tooling/commit/8fb6c76e4fada71c91f516ed151c4519ff2fe0fd)]:
+  - @celo/contractkit@6.0.1-beta.0
+  - @celo/explorer@5.0.8-beta.0
+  - @celo/governance@5.0.9-beta.0
+
 ## 3.1.3
 
 ### Patch Changes
