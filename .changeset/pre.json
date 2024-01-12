@@ -25,5 +25,9 @@
     "@celo/wallet-rpc": "5.1.1",
     "@celo/typescript": "0.0.1"
   },
-  "changesets": []
+  "changesets": [
+    "curly-pianos-applaud",
+    "real-rabbits-grab",
+    "tough-gorillas-invent"
+  ]
 }
