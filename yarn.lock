@@ -5407,9 +5407,9 @@ __metadata:
   linkType: hard
 
 "@types/cli-table@npm:^0.3.0":
-  version: 0.3.1
-  resolution: "@types/cli-table@npm:0.3.1"
-  checksum: d6017999e3b800d9c36172faaad3177d71644aaa322d6e935ead62ca0f3b423776d58ab3a906c00935745a794778143e1f7577088789bbb4835b3986357bdd05
+  version: 0.3.4
+  resolution: "@types/cli-table@npm:0.3.4"
+  checksum: 25887c8b5278bf090a06d4dd14871c8a82076eb3ec2d1bb375ae5d7f62d328706af260af9404ececf97b43b0c9a36321620d4781bb32f0b05c86c9647f57b48f
   languageName: node
   linkType: hard
 
