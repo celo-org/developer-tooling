@@ -2,4 +2,4 @@
 '@celo/celocli': major
 ---
 
-Removes releasegold commnand topic. use releasecelo
+Removes the `releasegold` command in favour of `releasecelo`.

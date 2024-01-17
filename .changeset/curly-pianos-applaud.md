@@ -2,6 +2,6 @@
 '@celo/contractkit': patch
 ---
 
-Re-removes MetaTransaction wallets (as previously removed in 6.0)
+Re-removes MetaTransaction wallets, as previously removed in 6.0.0 (9ab9d00eb).
 
-*previous messsage for removal* - 9ab9d00eb: Remove Support for deprecated MetaTransactionWallet and MetaTransactionWalletDeployer. IF absolutely needed the contracts can be accessed directly or an alternative such as account abstraction should be used
+Remove support for deprecated `MetaTransactionWallet` and `MetaTransactionWalletDeployer`. If absolutely needed the contracts can be accessed directly or an alternative such as account abstraction should be used.
