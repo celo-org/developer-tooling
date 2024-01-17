@@ -63,6 +63,8 @@
     "ts-jest": "^29.0.0",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^3.8.0",
+    "typedoc": "^0.25.7",
+    "typedoc-plugin-markdown": "^3.17.1",
     "typescript": "5.3.3"
   },
   "resolutions": {
