@@ -1591,7 +1591,8 @@ __metadata:
     web3: "npm:1.10.0"
     web3-utils: "npm:^1.10.0"
   bin:
-    celocli: ./bin/run
+    celocli: ./bin/run.js
+    dev: .bin/dev.js
   languageName: unknown
   linkType: soft
 

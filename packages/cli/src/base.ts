@@ -100,7 +100,6 @@ export abstract class BaseCommand extends Command {
 
   private _web3: Web3 | null = null
   private _kit: ContractKit | null = null
-  private _wallet?: ReadOnlyWallet
 
   async getWeb3() {
     if (!this._web3) {
@@ -114,6 +113,14 @@ export abstract class BaseCommand extends Command {
     return this._web3
   }
 
+  get _wallet(): ReadOnlyWallet | undefined {
+    return this._wallet
+  }
+
+  set _wallet(wallet: ReadOnlyWallet | undefined) {
+    this._kit!.connection.wallet = wallet
+  }
+
   async newWeb3() {
     const res = await this.parse()
     const nodeUrl = (res.flags && res.flags.node) || getNodeUrl(this.config.configDir)
@@ -125,7 +132,6 @@ export abstract class BaseCommand extends Command {
   async getKit() {
     if (!this._kit) {
       this._kit = newKitFromWeb3(await this.getWeb3())
-      this._kit.connection.wallet = this._wallet
     }
 
     const res = await this.parse()
