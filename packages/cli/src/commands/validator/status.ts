@@ -138,7 +138,7 @@ export default class ValidatorStatus extends BaseCommand {
     const bar = ux.progress({
       format: 'counting block signatures [{bar}] {percentage}% | ETA: {eta}s | {value}/{total}',
     })
-    bar.start(end - start)
+    bar.start(end, start)
     const countsBySigner = new Map()
     const incrementSignatureCounts = async (blockNumber: number) => {
       if ((blockNumber - start) % 10 === 0 || blockNumber === end) {

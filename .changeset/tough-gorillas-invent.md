@@ -2,4 +2,4 @@
 '@celo/celocli': major
 ---
 
-Remove Grandamento from CLI
+Remove `grandamento` commands from CLI.
