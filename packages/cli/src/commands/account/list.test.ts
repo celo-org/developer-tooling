@@ -56,7 +56,8 @@ testWithGanache('account:list', (web3: Web3) => {
     await testLocally(List, [])
     expect(spy).toHaveBeenCalledWith('All Addresses: ', accounts)
   })
-  test.only('shows the list of accounts when --useLedger given', async () => {
+
+  test('shows the list of accounts when --useLedger given', async () => {
     const spy = jest.spyOn(console, 'log')
 
     await testLocally(List, ['--useLedger'])
