@@ -2,7 +2,6 @@ import { CeloTransactionObject, CeloTx, EventLog, parseDecodedParams } from '@ce
 import { Errors, ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import chalk from 'chalk'
-import Table from 'cli-table'
 
 const CLIError = Errors.CLIError
 
@@ -82,14 +81,6 @@ function toStringValueMapRecursive(valueMap: Record<string, any>, prefix: string
   return Object.keys(valueMap)
     .map((key) => prefix + chalk.yellowBright.bold(`${key}: `) + printValue(valueMap[key]))
     .join('\n')
-}
-
-export function printVTable(valueMap: Record<string, any>) {
-  const table = new Table()
-  Object.keys(valueMap).forEach((key) => {
-    table.push({ [key]: valueMap[key] })
-  })
-  console.log(table.toString())
 }
 
 export function failWith(msg: string): never {
