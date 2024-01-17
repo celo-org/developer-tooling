@@ -849,7 +849,6 @@ __metadata:
     "@oclif/plugin-not-found": "npm:^3.0.7"
     "@oclif/plugin-plugins": "npm:^4.1.14"
     "@oclif/plugin-warn-if-update-available": "npm:^3.0.8"
-    "@types/cli-table": "npm:^0.3.0"
     "@types/command-exists": "npm:^1.2.0"
     "@types/debug": "npm:^4.1.4"
     "@types/fs-extra": "npm:^8.0.0"
@@ -862,7 +861,6 @@ __metadata:
     bignumber.js: "npm:9.0.0"
     bip32: "npm:3.1.0"
     chalk: "npm:^2.4.2"
-    cli-table: "npm:^0.3.1"
     command-exists: "npm:^1.2.9"
     debug: "npm:^4.1.1"
     events: "npm:^3.0.0"
@@ -5403,13 +5401,6 @@ __metadata:
     "@types/node": "npm:*"
     "@types/responselike": "npm:^1.0.0"
   checksum: 159f9fdb2a1b7175eef453ae2ced5ea04c0d2b9610cc9ccd9f9abb066d36dacb1f37acd879ace10ad7cbb649490723feb396fb7307004c9670be29636304b988
-  languageName: node
-  linkType: hard
-
-"@types/cli-table@npm:^0.3.0":
-  version: 0.3.1
-  resolution: "@types/cli-table@npm:0.3.1"
-  checksum: d6017999e3b800d9c36172faaad3177d71644aaa322d6e935ead62ca0f3b423776d58ab3a906c00935745a794778143e1f7577088789bbb4835b3986357bdd05
   languageName: node
   linkType: hard
 
