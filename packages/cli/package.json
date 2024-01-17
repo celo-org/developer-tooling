@@ -9,7 +9,10 @@
   "bugs": "https://github.com/celo-org/developer-tooling/issues?utf8=%E2%9C%93&q=label%3Acli+",
   "types": "lib/index.d.ts",
   "main": "lib/index.js",
-  "bin": "./bin/run",
+  "bin": {
+    "celocli": "./bin/run.js",
+    "dev": ".bin/dev.js"
+  },
   "keywords": [
     "celo",
     "celocli",
@@ -20,12 +23,13 @@
   },
   "scripts": {
     "clean": "tsc -b . --clean",
+    "dev": "ts-node ./bin/dev.js",
     "build": "tsc -b .",
     "docs": "./generate_docs.sh",
     "lint": "yarn run --top-level eslint -c .eslintrc.js ",
     "prepublish": "",
     "prepack": "yarn run build && oclif manifest && oclif readme",
-    "test": "TZ=UTC jest --runInBand"
+    "test": "TZ=UTC yarn node --experimental-vm-modules $(yarn bin jest)"
   },
   "dependencies": {
     "@celo/abis": "10.0.0",
@@ -69,6 +73,7 @@
   "devDependencies": {
     "@celo/celo-devchain": "^6.0.3",
     "@celo/dev-utils": "0.0.1-beta.1",
+    "@celo/typescript": "workspace:^",
     "@types/cli-table": "^0.3.0",
     "@types/debug": "^4.1.4",
     "@types/fs-extra": "^8.0.0",
