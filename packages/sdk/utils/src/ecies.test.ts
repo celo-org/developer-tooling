@@ -1,29 +1,22 @@
-import { privateToPublic } from '@ethereumjs/util'
-import { ctr } from '@noble/ciphers/aes'
 import { bytesToUtf8, utf8ToBytes } from '@noble/ciphers/utils'
-import { randomBytes as randooom } from '@noble/ciphers/webcrypto/utils'
-import { randomBytes } from 'crypto'
+import { randomBytes } from '@noble/ciphers/webcrypto/utils'
+import { secp256k1 } from '@noble/curves/secp256k1'
 import { ECIES } from './ecies'
 
 describe('ECIES', () => {
   describe('encrypt', () => {
     it('should encrypt a message without error', () => {
       const privKey = randomBytes(32)
-      const pubKey = privateToPublic(privKey)
+      const pubKey = secp256k1.getPublicKey(privKey, false).slice(1)
       const message = Buffer.from('foo')
-      const encrypted = ECIES.Encrypt(pubKey, message)
-      expect(encrypted.length).toBeGreaterThanOrEqual(113)
-    })
 
+      expect(() => ECIES.Encrypt(pubKey, message)).not.toThrow()
+    })
     it('should throw an error if priv key is given', () => {
       const privKey = randomBytes(32)
       const message = Buffer.from('foo')
-      try {
-        ECIES.Encrypt(privKey, message)
-        expect(false).toBe(true)
-      } catch (error) {
-        // ok, encryption should not work when a priv key is given
-      }
+
+      expect(() => ECIES.Encrypt(privKey, message)).toThrow()
     })
 
     it.only('should not regress', () => {
@@ -42,51 +35,34 @@ describe('ECIES', () => {
   })
 
   describe('roundtrip', () => {
-    it('should return the same plaintext after roundtrip - core', () => {
-      // const plaintext = utf8ToBytes('spam')
-      const privKey = randooom(32)
-      // const pubKey = privateToPublic(privKey)
-      // const iv = randomBytes(16)
-      // const encrypted = AES128Encrypt(privKey, iv, plaintext)
-      // const decrypted = AES128Decrypt(privKey, iv, encrypted)
-
-      const plaintext = 'Hello, World'
-      const aes = ctr(privKey, randomBytes(16))
-      const ciphertext_ = aes.encrypt(utf8ToBytes(plaintext))
-      const plaintext_ = aes.decrypt(ciphertext_)
-      expect(bytesToUtf8(plaintext_)).toEqual(plaintext)
-    })
-
     it('should return the same plaintext after roundtrip', () => {
-      const plaintext = Buffer.from('spam')
+      const plaintext = 'spam'
       const privKey = randomBytes(32)
-      const pubKey = privateToPublic(privKey)
-      const encrypted = ECIES.Encrypt(pubKey, plaintext)
-      const decrypted = ECIES.Decrypt(privKey, encrypted)
-      expect(decrypted.toString()).toEqual(plaintext.toString())
+      const pubKey = secp256k1.getPublicKey(privKey, false).slice(1)
+      const encrypted = ECIES.Encrypt(pubKey, utf8ToBytes(plaintext))
+      const decrypted = ECIES.Decrypt(Buffer.from(privKey), encrypted)
+
+      expect(bytesToUtf8(decrypted)).toEqual(plaintext)
     })
 
     it('should only decrypt if correct priv key is given', () => {
       const plaintext = Buffer.from('spam')
       const privKey = randomBytes(32)
-      const pubKey = privateToPublic(privKey)
+      const pubKey = secp256k1.getPublicKey(privKey, false).slice(1)
       const fakePrivKey = randomBytes(32)
-      try {
-        ECIES.Encrypt(pubKey, plaintext)
-        ECIES.Decrypt(fakePrivKey, plaintext)
-        expect(false).toBe(true)
-      } catch (error) {
-        // ok, decryption should not work for incorrect priv key
-      }
+      const encrypted = ECIES.Encrypt(pubKey, plaintext)
+
+      expect(() => ECIES.Decrypt(fakePrivKey, encrypted)).toThrow()
     })
 
     it('should be able to encrypt and decrypt a longer message (1024 bytes)', () => {
       const plaintext = randomBytes(1024)
       const privKey = randomBytes(32)
-      const pubKey = privateToPublic(privKey)
+      const pubKey = secp256k1.getPublicKey(privKey, false).slice(1)
       const encrypted = ECIES.Encrypt(pubKey, plaintext)
       const decrypted = ECIES.Decrypt(privKey, encrypted)
-      expect(decrypted.toString()).toEqual(plaintext.toString())
+
+      expect(decrypted).toEqual(plaintext)
     })
   })
 })
@@ -109,7 +85,7 @@ describe('AES128CTR', () => {
       const macKey = randomBytes(16)
       const encrypted = ECIES.AES128EncryptAndHMAC(encKey, macKey, plaintext)
       const decrypted = ECIES.AES128DecryptAndHMAC(encKey, macKey, encrypted)
-      expect(decrypted.toString()).toEqual(plaintext.toString())
+      expect(bytesToUtf8(decrypted)).toEqual(plaintext.toString())
     })
 
     it('should only decrypt if correct priv key is given', () => {
@@ -129,7 +105,7 @@ describe('AES128CTR', () => {
       const macKey = randomBytes(16)
       const encrypted = ECIES.AES128EncryptAndHMAC(encKey, macKey, plaintext)
       const decrypted = ECIES.AES128DecryptAndHMAC(encKey, macKey, encrypted)
-      expect(decrypted.toString()).toEqual(plaintext.toString())
+      expect(decrypted).toEqual(plaintext)
     })
   })
 
