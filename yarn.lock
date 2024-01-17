@@ -1549,6 +1549,7 @@ __metadata:
     "@celo/governance": "npm:^5.0.9-beta.0"
     "@celo/identity": "npm:^5.1.1"
     "@celo/phone-utils": "npm:^6.0.0"
+    "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^5.0.6"
     "@celo/wallet-hsm-azure": "npm:^5.1.1"
     "@celo/wallet-ledger": "npm:^5.1.1"
@@ -1869,7 +1870,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/typescript@npm:0.0.1, @celo/typescript@workspace:packages/typescript":
+"@celo/typescript@npm:0.0.1, @celo/typescript@workspace:^, @celo/typescript@workspace:packages/typescript":
   version: 0.0.0-use.local
   resolution: "@celo/typescript@workspace:packages/typescript"
   languageName: unknown
