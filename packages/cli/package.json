@@ -29,7 +29,7 @@
     "lint": "yarn run --top-level eslint -c .eslintrc.js ",
     "prepublish": "",
     "prepack": "yarn run build && oclif manifest && oclif readme",
-    "test": "TZ=UTC yarn jest"
+    "test": "TZ=UTC yarn jest --runInBand"
   },
   "dependencies": {
     "@celo/abis": "10.0.0",
