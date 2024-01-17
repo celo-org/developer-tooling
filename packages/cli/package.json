@@ -67,7 +67,7 @@
   },
   "devDependencies": {
     "@celo/celo-devchain": "^6.0.3",
-    "@celo/dev-utils": "0.0.1-beta.1",
+    "@celo/dev-utils": "0.0.1",
     "@types/debug": "^4.1.4",
     "@types/fs-extra": "^8.0.0",
     "@types/humanize-duration": "^3.27.0",

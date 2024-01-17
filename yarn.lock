@@ -831,7 +831,7 @@ __metadata:
     "@celo/connect": "npm:^5.1.1"
     "@celo/contractkit": "npm:^6.0.1-beta.0"
     "@celo/cryptographic-utils": "npm:^5.0.6"
-    "@celo/dev-utils": "npm:0.0.1-beta.1"
+    "@celo/dev-utils": "npm:0.0.1"
     "@celo/explorer": "npm:^5.0.8-beta.0"
     "@celo/governance": "npm:^5.0.9-beta.0"
     "@celo/identity": "npm:^5.1.1"
@@ -934,7 +934,7 @@ __metadata:
     "@celo/base": "npm:^6.0.0"
     "@celo/celo-devchain": "npm:^6.0.3"
     "@celo/connect": "npm:^5.1.1"
-    "@celo/dev-utils": "npm:0.0.1-beta.1"
+    "@celo/dev-utils": "npm:0.0.1"
     "@celo/odis-identifiers": "npm:^1.0.0"
     "@celo/utils": "npm:^5.0.6"
     "@celo/wallet-local": "npm:^5.1.1"
@@ -983,9 +983,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/dev-utils@npm:0.0.1-beta.1":
-  version: 0.0.1-beta.1
-  resolution: "@celo/dev-utils@npm:0.0.1-beta.1"
+"@celo/dev-utils@npm:0.0.1":
+  version: 0.0.1
+  resolution: "@celo/dev-utils@npm:0.0.1"
   dependencies:
     bignumber.js: "npm:^9.0.0"
     fs-extra: "npm:^8.1.0"
@@ -994,7 +994,7 @@ __metadata:
     tmp: "npm:^0.1.0"
     web3: "npm:1.10.0"
     web3-core-helpers: "npm:1.10.0"
-  checksum: 8d7dba3953050f301329ee6e62dac146a9d1282aec0d96a4edbdac2d1eb93b6174463dfd1d1b5f4b649607593ce98afabb25624aeffbcb34287e6d1a3ef37a19
+  checksum: 66915944a9cdd7d69062dd535296af65cd238056842ccf8b33051b8290f217c7cc678e24ddab55947e41a4e1884b4d63e997eb52bda9dc4d46f591c93c6ae962
   languageName: node
   linkType: hard
 
@@ -1074,7 +1074,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/network-utils@workspace:packages/sdk/network-utils"
   dependencies:
-    "@celo/dev-utils": "npm:0.0.1-beta.1"
+    "@celo/dev-utils": "npm:0.0.1"
     "@types/debug": "npm:^4.1.5"
     cross-fetch: "npm:3.0.6"
     debug: "npm:^4.1.1"
@@ -1145,7 +1145,7 @@ __metadata:
     "@celo/celo-devchain": "npm:^6.0.3"
     "@celo/connect": "npm:^5.1.1"
     "@celo/contractkit": "npm:^6.0.1-beta.0"
-    "@celo/dev-utils": "npm:0.0.1-beta.1"
+    "@celo/dev-utils": "npm:0.0.1"
     "@types/debug": "npm:^4.1.5"
     "@types/qrcode": "npm:^1.3.4"
     bn.js: "npm:4.11.9"
@@ -1348,7 +1348,7 @@ __metadata:
     "@celo/base": "npm:^6.0.0"
     "@celo/connect": "npm:^5.1.1"
     "@celo/contractkit": "npm:^6.0.1-beta.0"
-    "@celo/dev-utils": "npm:0.0.1-beta.1"
+    "@celo/dev-utils": "npm:0.0.1"
     "@celo/utils": "npm:^5.0.6"
     "@celo/wallet-base": "npm:^5.1.1"
     "@celo/wallet-remote": "npm:^5.1.1"
