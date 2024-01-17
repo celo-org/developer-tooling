@@ -4,13 +4,13 @@ import { stableTokenInfos } from '@celo/contractkit/lib/celo-tokens'
 import { AzureHSMWallet } from '@celo/wallet-hsm-azure'
 import { AddressValidation, newLedgerWalletWithSetup } from '@celo/wallet-ledger'
 import { LocalWallet } from '@celo/wallet-local'
+import _TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
 import { Command, Flags } from '@oclif/core'
 import chalk from 'chalk'
 import net from 'net'
 import Web3 from 'web3'
 import { getGasCurrency, getNodeUrl } from './utils/config'
 import { enumEntriesDupWithLowercase, requireNodeIsSynced } from './utils/helpers'
-
 export const gasOptions = {
   auto: 'auto',
   Auto: 'auto',
@@ -157,14 +157,12 @@ export abstract class BaseCommand extends Command {
     }
 
     if (res.flags.useLedger) {
-      let transport
       try {
-        // Importing for ledger uses only fixes running jest tests
-        const _TransportNodeHid = (await import('@ledgerhq/hw-transport-node-hid')).default
         // types seem to be suggesting 2 defaults but js is otherwise for TransportNodeHid
-        const TransportNodeHid: typeof _TransportNodeHid.default =
+        const TransportNodeHid: typeof _TransportNodeHid =
+          // @ts-expect-error
           _TransportNodeHid.default || _TransportNodeHid
-        transport = await TransportNodeHid.open('')
+        const transport = await TransportNodeHid.open('')
         const derivationPathIndexes = res.raw.some(
           (value) => (value as any).flag === 'ledgerCustomAddresses'
         )
