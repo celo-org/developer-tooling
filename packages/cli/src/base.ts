@@ -4,13 +4,13 @@ import { stableTokenInfos } from '@celo/contractkit/lib/celo-tokens'
 import { AzureHSMWallet } from '@celo/wallet-hsm-azure'
 import { AddressValidation, newLedgerWalletWithSetup } from '@celo/wallet-ledger'
 import { LocalWallet } from '@celo/wallet-local'
+import _TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
 import { Command, Flags } from '@oclif/core'
 import chalk from 'chalk'
 import net from 'net'
 import Web3 from 'web3'
 import { getGasCurrency, getNodeUrl } from './utils/config'
 import { enumEntriesDupWithLowercase, requireNodeIsSynced } from './utils/helpers'
-
 export const gasOptions = {
   auto: 'auto',
   Auto: 'auto',
@@ -100,7 +100,6 @@ export abstract class BaseCommand extends Command {
 
   private _web3: Web3 | null = null
   private _kit: ContractKit | null = null
-  private _wallet?: ReadOnlyWallet
 
   async getWeb3() {
     if (!this._web3) {
@@ -114,6 +113,14 @@ export abstract class BaseCommand extends Command {
     return this._web3
   }
 
+  get _wallet(): ReadOnlyWallet | undefined {
+    return this._wallet
+  }
+
+  set _wallet(wallet: ReadOnlyWallet | undefined) {
+    this._kit!.connection.wallet = wallet
+  }
+
   async newWeb3() {
     const res = await this.parse()
     const nodeUrl = (res.flags && res.flags.node) || getNodeUrl(this.config.configDir)
@@ -125,7 +132,6 @@ export abstract class BaseCommand extends Command {
   async getKit() {
     if (!this._kit) {
       this._kit = newKitFromWeb3(await this.getWeb3())
-      this._kit.connection.wallet = this._wallet
     }
 
     const res = await this.parse()
@@ -151,14 +157,12 @@ export abstract class BaseCommand extends Command {
     }
 
     if (res.flags.useLedger) {
-      let transport
       try {
-        // Importing for ledger uses only fixes running jest tests
-        const _TransportNodeHid = (await import('@ledgerhq/hw-transport-node-hid')).default
         // types seem to be suggesting 2 defaults but js is otherwise for TransportNodeHid
-        const TransportNodeHid: typeof _TransportNodeHid.default =
+        const TransportNodeHid: typeof _TransportNodeHid =
+          // @ts-expect-error
           _TransportNodeHid.default || _TransportNodeHid
-        transport = await TransportNodeHid.open('')
+        const transport = await TransportNodeHid.open('')
         const derivationPathIndexes = res.raw.some(
           (value) => (value as any).flag === 'ledgerCustomAddresses'
         )
