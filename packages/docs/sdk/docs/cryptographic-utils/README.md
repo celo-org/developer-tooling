@@ -1,6 +1,4 @@
-[@celo/cryptographic-utils](README.md) › [Globals](globals.md)
-
-# @celo/cryptographic-utils
+@celo/cryptographic-utils / [Exports](modules.md)
 
 # @celo/cryptographic-utils
 

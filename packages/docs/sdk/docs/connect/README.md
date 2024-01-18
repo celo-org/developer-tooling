@@ -1,6 +1,4 @@
-[@celo/connect](README.md) › [Globals](globals.md)
-
-# @celo/connect
+@celo/connect / [Exports](modules.md)
 
 # @celo/connect
 

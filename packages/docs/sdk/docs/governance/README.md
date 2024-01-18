@@ -1,9 +1,10 @@
-[@celo/governance](README.md)
+@celo/governance
 
 # @celo/governance
 
-## Index
+## Table of contents
 
 ### Modules
 
-* ["proposals"](modules/_proposals_.md)
+- [index](modules/index.md)
+- [proposals](modules/proposals.md)

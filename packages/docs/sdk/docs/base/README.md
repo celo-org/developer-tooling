@@ -1,27 +1,28 @@
-[@celo/base](README.md)
+@celo/base
 
 # @celo/base
 
-## Index
+## Table of contents
 
 ### Modules
 
-* ["account"](modules/_account_.md)
-* ["address"](modules/_address_.md)
-* ["async"](modules/_async_.md)
-* ["attestations"](modules/_attestations_.md)
-* ["collections"](modules/_collections_.md)
-* ["contacts"](modules/_contacts_.md)
-* ["currencies"](modules/_currencies_.md)
-* ["displayFormatting"](modules/_displayformatting_.md)
-* ["future"](modules/_future_.md)
-* ["inputValidation"](modules/_inputvalidation_.md)
-* ["io"](modules/_io_.md)
-* ["lock"](modules/_lock_.md)
-* ["logger"](modules/_logger_.md)
-* ["parsing"](modules/_parsing_.md)
-* ["phoneNumbers"](modules/_phonenumbers_.md)
-* ["result"](modules/_result_.md)
-* ["signatureUtils"](modules/_signatureutils_.md)
-* ["string"](modules/_string_.md)
-* ["task"](modules/_task_.md)
+- [account](modules/account.md)
+- [address](modules/address.md)
+- [async](modules/async.md)
+- [collections](modules/collections.md)
+- [contacts](modules/contacts.md)
+- [currencies](modules/currencies.md)
+- [displayFormatting](modules/displayFormatting.md)
+- [future](modules/future.md)
+- [index](modules/index.md)
+- [inputValidation](modules/inputValidation.md)
+- [io](modules/io.md)
+- [lock](modules/lock.md)
+- [logger](modules/logger.md)
+- [parsing](modules/parsing.md)
+- [phoneNumbers](modules/phoneNumbers.md)
+- [result](modules/result.md)
+- [signatureUtils](modules/signatureUtils.md)
+- [string](modules/string.md)
+- [task](modules/task.md)
+- [types](modules/types.md)

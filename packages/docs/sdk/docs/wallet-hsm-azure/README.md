@@ -1,11 +1,12 @@
-[@celo/wallet-hsm-azure](README.md)
+@celo/wallet-hsm-azure
 
 # @celo/wallet-hsm-azure
 
-## Index
+## Table of contents
 
 ### Modules
 
-* ["azure-hsm-signer"](modules/_azure_hsm_signer_.md)
-* ["azure-hsm-wallet"](modules/_azure_hsm_wallet_.md)
-* ["azure-key-vault-client"](modules/_azure_key_vault_client_.md)
+- [azure-hsm-signer](modules/azure_hsm_signer.md)
+- [azure-hsm-wallet](modules/azure_hsm_wallet.md)
+- [azure-key-vault-client](modules/azure_key_vault_client.md)
+- [index](modules/index.md)

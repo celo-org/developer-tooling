@@ -1,6 +1,4 @@
-[@celo/contractkit](README.md) › [Globals](globals.md)
-
-# @celo/contractkit
+@celo/contractkit / [Exports](modules.md)
 
 # ContractKit
 
@@ -176,7 +174,7 @@ You can also initialize contracts wrappers directly. They require a `Connection`
 
 import { newKit } from "@celo/contractkit/lib/mini-kit"
 import { MultiSigWrapper } from '@celo/contractkit/lib/wrappers/MultiSig'
-import { newMultiSig } from '@celo/contractkit/lib/generated/MultiSig'
+import { newMultiSig } from '@celo/abis/web3/MultiSig'
 
 const miniKit = newKit("https://alfajores-forno.celo-testnet.org/")
 

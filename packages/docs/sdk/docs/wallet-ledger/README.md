@@ -1,13 +1,14 @@
-[@celo/wallet-ledger](README.md)
+@celo/wallet-ledger
 
 # @celo/wallet-ledger
 
-## Index
+## Table of contents
 
 ### Modules
 
-* ["data"](modules/_data_.md)
-* ["ledger-signer"](modules/_ledger_signer_.md)
-* ["ledger-utils"](modules/_ledger_utils_.md)
-* ["ledger-wallet"](modules/_ledger_wallet_.md)
-* ["tokens"](modules/_tokens_.md)
+- [data](modules/data.md)
+- [index](modules/index.md)
+- [ledger-signer](modules/ledger_signer.md)
+- [ledger-utils](modules/ledger_utils.md)
+- [ledger-wallet](modules/ledger_wallet.md)
+- [tokens](modules/tokens.md)

@@ -1,9 +1,10 @@
-[@celo/wallet-remote](README.md)
+@celo/wallet-remote
 
 # @celo/wallet-remote
 
-## Index
+## Table of contents
 
 ### Modules
 
-* ["remote-wallet"](modules/_remote_wallet_.md)
+- [index](modules/index.md)
+- [remote-wallet](modules/remote_wallet.md)

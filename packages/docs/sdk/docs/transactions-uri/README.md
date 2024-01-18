@@ -1,11 +1,12 @@
-[@celo/transactions-uri](README.md)
+@celo/transactions-uri
 
 # @celo/transactions-uri
 
-## Index
+## Table of contents
 
 ### Modules
 
-* ["test-utils/setup.global"](modules/_test_utils_setup_global_.md)
-* ["test-utils/teardown.global"](modules/_test_utils_teardown_global_.md)
-* ["tx-uri"](modules/_tx_uri_.md)
+- [index](modules/index.md)
+- [test-utils/setup.global](modules/test_utils_setup_global.md)
+- [test-utils/teardown.global](modules/test_utils_teardown_global.md)
+- [tx-uri](modules/tx_uri.md)
