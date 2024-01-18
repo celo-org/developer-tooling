@@ -10,7 +10,7 @@ import { Bip39, generateKeys } from './account'
  * @returns {string} Corresponding compressed public key in hex encoding with '0x' leader.
  */
 export function compressedPubKey(privateKey: Buffer): string {
-  return ensureLeading0x(bytesToHex(secp256k1.getPublicKey(privateKey)))
+  return ensureLeading0x(bytesToHex(secp256k1.getPublicKey(privateKey))).slice(1)
 }
 
 /**
@@ -21,7 +21,7 @@ export function compressedPubKey(privateKey: Buffer): string {
  * @returns Decompresssed public key without prefix.
  */
 export function decompressPublicKey(publicKey: Buffer): Buffer {
-  return Buffer.from(secp256k1.getSharedSecret(BigInt(1), publicKey, false))
+  return Buffer.from(secp256k1.getSharedSecret(BigInt(1), publicKey, false)).slice(1)
 }
 
 /**

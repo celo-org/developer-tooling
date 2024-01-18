@@ -19,6 +19,49 @@ import { randomBytes } from '@noble/hashes/utils'
 export const IV_LENGTH = 16
 
 /**
+ * Increments big endian uint32
+ *
+ * @param {Buffer} ctr 32 bit unsigned big endian integer to increment.
+ * @returns Incremented counter.
+ */
+const IncCounter = (ctr: Buffer) => {
+  for (let i = ctr.length - 1; i >= 0; i--) {
+    ctr[i]++
+    if (ctr[i] !== 0) {
+      return ctr
+    }
+  }
+  return ctr
+}
+
+/**
+ * NIST 8000-56C Rev 1 One Step KDF with the following parameters:
+ * - H(x) is SHA-256(x)
+ * - Fixed info is null
+ *
+ * TODO:
+ * - Implement proper ceiling on reps.
+ *
+ * @param {Buffer} px Input keying material to derive key from.
+ * @param {number} kdLen Length of output in bytes
+ * @returns {Buffer} Output keying material of length kdLen bytes.
+ */
+export const ConcatKDF = (px: Buffer, kdLen: number) => {
+  const blockSize = 32
+  const reps = ((kdLen + 7) * 8) / (blockSize * 8)
+  let counter = Buffer.from('00000001', 'hex')
+  let k = Buffer.from('00', 'hex')
+  for (let i = 0; i <= reps; i++) {
+    const hash = sha256.create()
+    hash.update(counter)
+    hash.update(px)
+    k = Buffer.concat([k, hash.digest()])
+    counter = IncCounter(counter)
+  }
+  return k.slice(1, kdLen + 1)
+}
+
+/**
  * AES-128 CTR encrypt
  * @param {Uint8Array} encryptionKey
  * @param {Uint8Array} iv
@@ -92,7 +135,7 @@ export function AES128DecryptAndHMAC(
   return AES128Decrypt(encryptionKey, iv, message)
 }
 
-const COMPRESSED_KEY_LENGTH = secp256k1.CURVE.Fp.BYTES + 1 // e.g. 33 for 32
+const UNCOMPRESSED_KEY_LENGTH = 65
 /**
  * ECIES encrypt
  * @param {Buffer} pubKeyTo Ethereum pub key, 64 bytes.
@@ -101,21 +144,22 @@ const COMPRESSED_KEY_LENGTH = secp256k1.CURVE.Fp.BYTES + 1 // e.g. 33 for 32
  */
 export function Encrypt(pubKeyTo: PubKey, plaintext: Uint8Array) {
   const ephemPrivKey = secp256k1.utils.randomPrivateKey()
-  const ephemPubKey = Buffer.from(secp256k1.getPublicKey(ephemPrivKey))
+  const ephemPubKey = Buffer.from(secp256k1.getPublicKey(ephemPrivKey, false))
   const ephemPubKeyEncoded = Buffer.from(ephemPubKey)
   if (typeof pubKeyTo === 'string') {
     pubKeyTo = secp256k1.ProjectivePoint.fromHex(pubKeyTo).toRawBytes()
   }
 
   const pubKeyToEncoded = Buffer.concat([Buffer.from([0x04]), pubKeyTo as Buffer])
-  const px = secp256k1.getSharedSecret(ephemPrivKey, pubKeyToEncoded).slice(1)
+  const px = secp256k1.getSharedSecret(ephemPrivKey, pubKeyToEncoded, false).slice(1)
 
   const hash = hkdf(sha256, px, undefined, undefined, 32)
+  // const hash = ConcatKDF(Buffer.from(px), 32)
   const encryptionKey = hash.subarray(0, 16)
   const macKey = sha256.create().update(hash.subarray(16)).digest()
   const message = AES128EncryptAndHMAC(Buffer.from(encryptionKey), macKey, plaintext)
   const serializedCiphertext = Buffer.concat([
-    ephemPubKeyEncoded, // {COMPRESSED_KEY_LENGTH} bytes
+    ephemPubKeyEncoded, // {UNCOMPRESSED_KEY_LENGTH} bytes
     message, // iv + ciphertext + mac (min 48 bytes)
   ])
 
@@ -130,11 +174,12 @@ export function Encrypt(pubKeyTo: PubKey, plaintext: Uint8Array) {
  */
 export function Decrypt(privKey: PrivKey, encrypted: Buffer) {
   // Read iv, ephemPubKey, mac, ciphertext from encrypted message
-  const ephemPubKeyEncoded = u8(encrypted).slice(0, COMPRESSED_KEY_LENGTH)
-  const symmetricEncrypted = u8(encrypted).slice(COMPRESSED_KEY_LENGTH)
+  const ephemPubKeyEncoded = u8(encrypted).slice(0, UNCOMPRESSED_KEY_LENGTH)
+  const symmetricEncrypted = u8(encrypted).slice(UNCOMPRESSED_KEY_LENGTH)
 
-  const px = secp256k1.getSharedSecret(privKey, ephemPubKeyEncoded).slice(1)
+  const px = secp256k1.getSharedSecret(privKey, ephemPubKeyEncoded, false).slice(1)
   const hash = hkdf(sha256, px, undefined, undefined, 32)
+  // const hash = ConcatKDF(Buffer.from(px), 32)
   // km, ke
   const encryptionKey = hash.subarray(0, 16)
 
