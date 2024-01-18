@@ -12,34 +12,45 @@ export default class ElectionVote extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    from: CustomFlags.address({ required: true, description: "Voter's address" }),
+    from: CustomFlags.address({
+      required: true,
+      description: "Address sending transaction (and voter's address if --for not specified)",
+    }),
+    for: CustomFlags.address({
+      required: false,
+      description: 'Optional: use this to activate votes for another address',
+    }),
     wait: Flags.boolean({ description: 'Wait until all pending votes can be activated' }),
   }
 
   static examples = [
     'activate --from 0x4443d0349e8b3075cba511a0a87796597602a0f1',
+    'activate --from 0x4443d0349e8b3075cba511a0a87796597602a0f1 --for 0x5409ed021d9299bf6814279a6a1411a7e866a631',
     'activate --from 0x4443d0349e8b3075cba511a0a87796597602a0f1 --wait',
   ]
+
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(ElectionVote)
 
-    await newCheckBuilder(this, res.flags.from).isSignerOrAccount().runChecks()
+    const forAccount = res.flags.for ?? res.flags.from
+    await newCheckBuilder(this, forAccount).isSignerOrAccount().runChecks()
+
+    const accounts = await kit.contracts.getAccounts()
+    const signerAccount = await accounts.voteSignerToAccount(forAccount)
 
     const election = await kit.contracts.getElection()
-    const accounts = await kit.contracts.getAccounts()
-    const account = await accounts.voteSignerToAccount(res.flags.from)
-    const hasPendingVotes = await election.hasPendingVotes(account)
+    const hasPendingVotes = await election.hasPendingVotes(signerAccount)
     if (hasPendingVotes) {
       if (res.flags.wait) {
         // Spin until pending votes become activatable.
         ux.action.start(`Waiting until pending votes can be activated`)
-        while (!(await election.hasActivatablePendingVotes(account))) {
+        while (!(await election.hasActivatablePendingVotes(signerAccount))) {
           await sleep(1000)
         }
         ux.action.stop()
       }
-      const txos = await election.activate(account)
+      const txos = await election.activate(signerAccount, res.flags.for != null)
       for (const txo of txos) {
         await displaySendTx('activate', txo, { from: res.flags.from })
       }
