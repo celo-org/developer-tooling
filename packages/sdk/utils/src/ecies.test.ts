@@ -22,6 +22,20 @@ describe('ECIES', () => {
         // ok, encryption should not work when a priv key is given
       }
     })
+
+    it.only('should not regress', () => {
+      const snapshotPrivKey = Buffer.from(
+        'f353837781491b9ded31b6cb669c867e4c91f0ccfdaa85db4b1f0a814bc060c5',
+        'hex'
+      )
+      const pubKey = privateToPublic(snapshotPrivKey)
+      const message = Buffer.from('foo')
+      const encrypted = ECIES.Encrypt(pubKey, message).toString('hex')
+      expect(encrypted).toMatchInlineSnapshot(
+        `"0487d78806c22bc7a5dd5ab38b02fb7ef48220648b6dd815b7ea3466c0270ebfe17aafece9af8f1c827ae9c47bac4215cd344afd94132581f4d789f8715a429d5c5c2dc365496750655bcd1c29445b118967cf790bb46b6a708ff1b3e82982173d98546ae6f228260913572127dc38a015386cb8"`
+      )
+      expect(ECIES.Decrypt(snapshotPrivKey, Buffer.from(encrypted, 'hex'))).toEqual(message)
+    })
   })
 
   describe('roundtrip', () => {

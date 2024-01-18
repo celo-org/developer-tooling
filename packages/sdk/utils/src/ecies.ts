@@ -118,6 +118,14 @@ export function AES128DecryptAndHMAC(
   const mac = ciphertext.slice(ciphertext.length - 32, ciphertext.length)
   const dataToMac = Buffer.concat([iv, message])
   const computedMac = createHmac('sha256', macKey).update(dataToMac).digest()
+  console.log({
+    message,
+    mac: mac.toString('hex'),
+    mac2: mac,
+    dataToMac,
+    computedMac,
+    computedMac2: computedMac.toString('hex'),
+  })
   if (!mac.equals(computedMac)) {
     throw new Error('MAC mismatch')
   }
