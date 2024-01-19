@@ -82,6 +82,7 @@ export function AES128Encrypt(
  * AES-128 CTR encrypt with message authentication
  * @param {Uint8Array} encryptionKey
  * @param {Uint8Array} macKey
+ *
  * @param {Uint8Array} plaintext
  * @returns {Uint8Array} ciphertext
  */

@@ -61,9 +61,8 @@ export class LocalSigner implements Signer {
   }
 
   decrypt(ciphertext: Buffer) {
-    const decryptedPlaintext = Decrypt(
-      Buffer.from(trimLeading0x(this.privateKey), 'hex'),
-      ciphertext
+    const decryptedPlaintext = Buffer.from(
+      Decrypt(Buffer.from(trimLeading0x(this.privateKey), 'hex'), ciphertext)
     )
     return Promise.resolve(decryptedPlaintext)
   }

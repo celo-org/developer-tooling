@@ -53,7 +53,7 @@ export function decryptData(data: Buffer, key: Buffer, sender: boolean): Buffer 
   const sessionKey = ECIESDecrypt(key, sessionKeyEncrypted)
 
   const encryptedMessage = data.slice(ECIES_SESSION_KEY_LEN * 2)
-  return AES128DecryptAndHMAC(sessionKey, sessionKey, encryptedMessage)
+  return Buffer.from(AES128DecryptAndHMAC(sessionKey, sessionKey, encryptedMessage))
 }
 
 /**
