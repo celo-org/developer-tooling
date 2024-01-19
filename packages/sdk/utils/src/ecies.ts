@@ -18,48 +18,48 @@ import { randomBytes } from '@noble/hashes/utils'
 
 export const IV_LENGTH = 16
 
-/**
- * Increments big endian uint32
- *
- * @param {Buffer} ctr 32 bit unsigned big endian integer to increment.
- * @returns Incremented counter.
- */
-const IncCounter = (ctr: Buffer) => {
-  for (let i = ctr.length - 1; i >= 0; i--) {
-    ctr[i]++
-    if (ctr[i] !== 0) {
-      return ctr
-    }
-  }
-  return ctr
-}
+// /**
+//  * Increments big endian uint32
+//  *
+//  * @param {Buffer} ctr 32 bit unsigned big endian integer to increment.
+//  * @returns Incremented counter.
+//  */
+// const IncCounter = (ctr: Buffer) => {
+//   for (let i = ctr.length - 1; i >= 0; i--) {
+//     ctr[i]++
+//     if (ctr[i] !== 0) {
+//       return ctr
+//     }
+//   }
+//   return ctr
+// }
 
-/**
- * NIST 8000-56C Rev 1 One Step KDF with the following parameters:
- * - H(x) is SHA-256(x)
- * - Fixed info is null
- *
- * TODO:
- * - Implement proper ceiling on reps.
- *
- * @param {Buffer} px Input keying material to derive key from.
- * @param {number} kdLen Length of output in bytes
- * @returns {Buffer} Output keying material of length kdLen bytes.
- */
-export const ConcatKDF = (px: Buffer, kdLen: number) => {
-  const blockSize = 32
-  const reps = ((kdLen + 7) * 8) / (blockSize * 8)
-  let counter = Buffer.from('00000001', 'hex')
-  let k = Buffer.from('00', 'hex')
-  for (let i = 0; i <= reps; i++) {
-    const hash = sha256.create()
-    hash.update(counter)
-    hash.update(px)
-    k = Buffer.concat([k, hash.digest()])
-    counter = IncCounter(counter)
-  }
-  return k.slice(1, kdLen + 1)
-}
+// /**
+//  * NIST 8000-56C Rev 1 One Step KDF with the following parameters:
+//  * - H(x) is SHA-256(x)
+//  * - Fixed info is null
+//  *
+//  * TODO:
+//  * - Implement proper ceiling on reps.
+//  *
+//  * @param {Buffer} px Input keying material to derive key from.
+//  * @param {number} kdLen Length of output in bytes
+//  * @returns {Buffer} Output keying material of length kdLen bytes.
+//  */
+// export const ConcatKDF = (px: Buffer, kdLen: number) => {
+//   const blockSize = 32
+//   const reps = ((kdLen + 7) * 8) / (blockSize * 8)
+//   let counter = Buffer.from('00000001', 'hex')
+//   let k = Buffer.from('00', 'hex')
+//   for (let i = 0; i <= reps; i++) {
+//     const hash = sha256.create()
+//     hash.update(counter)
+//     hash.update(px)
+//     k = Buffer.concat([k, hash.digest()])
+//     counter = IncCounter(counter)
+//   }
+//   return k.slice(1, kdLen + 1)
+// }
 
 /**
  * AES-128 CTR encrypt
