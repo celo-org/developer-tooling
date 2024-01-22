@@ -1,12 +1,13 @@
-[@celo/wallet-rpc](README.md)
+@celo/wallet-rpc
 
 # @celo/wallet-rpc
 
-## Index
+## Table of contents
 
 ### Modules
 
-* ["rpc-signer"](modules/_rpc_signer_.md)
-* ["rpc-wallet"](modules/_rpc_wallet_.md)
-* ["test-utils/ganache.setup"](modules/_test_utils_ganache_setup_.md)
-* ["test-utils/ganache.teardown"](modules/_test_utils_ganache_teardown_.md)
+- [index](modules/index.md)
+- [rpc-signer](modules/rpc_signer.md)
+- [rpc-wallet](modules/rpc_wallet.md)
+- [test-utils/ganache.setup](modules/test_utils_ganache_setup.md)
+- [test-utils/ganache.teardown](modules/test_utils_ganache_teardown.md)

@@ -22,5 +22,3 @@ Similarly, the tests include an in-memory mock implementation of the Ledger sign
 To generate docs from [TSdoc](https://github.com/microsoft/tsdoc) annotations using [typedoc](https://typedoc.org/):
 
 `yarn docs`
-
-To customize this generation, see the [linkdocs](./scripts/linkdocs.ts) script.

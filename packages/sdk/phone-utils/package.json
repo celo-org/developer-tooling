@@ -13,7 +13,7 @@
     "prepublishOnly": "yarn build",
     "build": "tsc -b .",
     "clean": "tsc -b . --clean",
-    "docs": "typedoc",
+    "docs": "yarn run --top-level typedoc",
     "test": "yarn run --top-level jest --runInBand --ci",
     "test:verbose": "yarn run --top-level jest --verbose",
     "lint": "yarn run --top-level eslint -c .eslintrc.js "

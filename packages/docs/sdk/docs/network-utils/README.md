@@ -1,12 +1,14 @@
-[@celo/network-utils](README.md)
+@celo/network-utils
 
 # @celo/network-utils
 
-## Index
+## Table of contents
 
 ### Modules
 
-* ["genesis-block-utils"](modules/_genesis_block_utils_.md)
-* ["google-storage-utils"](modules/_google_storage_utils_.md)
-* ["static-node-utils"](modules/_static_node_utils_.md)
-* ["utils/timezone"](modules/_utils_timezone_.md)
+- [genesis-block-utils](modules/genesis_block_utils.md)
+- [globals](modules/globals.md)
+- [google-storage-utils](modules/google_storage_utils.md)
+- [index](modules/index.md)
+- [static-node-utils](modules/static_node_utils.md)
+- [utils/timezone](modules/utils_timezone.md)

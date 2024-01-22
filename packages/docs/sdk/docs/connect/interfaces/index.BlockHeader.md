@@ -1,0 +1,175 @@
+[@celo/connect](../README.md) / [Exports](../modules.md) / [index](../modules/index.md) / BlockHeader
+
+# Interface: BlockHeader
+
+[index](../modules/index.md).BlockHeader
+
+## Table of contents
+
+### Properties
+
+- [baseFeePerGas](index.BlockHeader.md#basefeepergas)
+- [extraData](index.BlockHeader.md#extradata)
+- [gasLimit](index.BlockHeader.md#gaslimit)
+- [gasUsed](index.BlockHeader.md#gasused)
+- [hash](index.BlockHeader.md#hash)
+- [logsBloom](index.BlockHeader.md#logsbloom)
+- [miner](index.BlockHeader.md#miner)
+- [nonce](index.BlockHeader.md#nonce)
+- [number](index.BlockHeader.md#number)
+- [parentHash](index.BlockHeader.md#parenthash)
+- [receiptsRoot](index.BlockHeader.md#receiptsroot)
+- [sha3Uncles](index.BlockHeader.md#sha3uncles)
+- [stateRoot](index.BlockHeader.md#stateroot)
+- [timestamp](index.BlockHeader.md#timestamp)
+- [transactionsRoot](index.BlockHeader.md#transactionsroot)
+
+## Properties
+
+### baseFeePerGas
+
+• `Optional` **baseFeePerGas**: `number`
+
+#### Defined in
+
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:433
+
+___
+
+### extraData
+
+• **extraData**: `string`
+
+#### Defined in
+
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:429
+
+___
+
+### gasLimit
+
+• **gasLimit**: `number`
+
+#### Defined in
+
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:430
+
+___
+
+### gasUsed
+
+• **gasUsed**: `number`
+
+#### Defined in
+
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:431
+
+___
+
+### hash
+
+• **hash**: `string`
+
+#### Defined in
+
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:420
+
+___
+
+### logsBloom
+
+• **logsBloom**: `string`
+
+#### Defined in
+
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:424
+
+___
+
+### miner
+
+• **miner**: `string`
+
+#### Defined in
+
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:428
+
+___
+
+### nonce
+
+• **nonce**: `string`
+
+#### Defined in
+
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:422
+
+___
+
+### number
+
+• **number**: `number`
+
+#### Defined in
+
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:419
+
+___
+
+### parentHash
+
+• **parentHash**: `string`
+
+#### Defined in
+
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:421
+
+___
+
+### receiptsRoot
+
+• **receiptsRoot**: `string`
+
+#### Defined in
+
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:427
+
+___
+
+### sha3Uncles
+
+• **sha3Uncles**: `string`
+
+#### Defined in
+
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:423
+
+___
+
+### stateRoot
+
+• **stateRoot**: `string`
+
+#### Defined in
+
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:426
+
+___
+
+### timestamp
+
+• **timestamp**: `string` \| `number`
+
+#### Defined in
+
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:432
+
+___
+
+### transactionsRoot
+
+• **transactionsRoot**: `string`
+
+#### Defined in
+
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:425

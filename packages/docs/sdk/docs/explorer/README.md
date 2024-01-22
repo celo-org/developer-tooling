@@ -1,11 +1,14 @@
-[@celo/explorer](README.md)
+@celo/explorer
 
 # @celo/explorer
 
-## Index
+## Table of contents
 
 ### Modules
 
-* ["base"](modules/_base_.md)
-* ["block-explorer"](modules/_block_explorer_.md)
-* ["log-explorer"](modules/_log_explorer_.md)
+- [base](modules/base.md)
+- [block-explorer](modules/block_explorer.md)
+- [globals](modules/globals.md)
+- [index](modules/index.md)
+- [log-explorer](modules/log_explorer.md)
+- [sourcify](modules/sourcify.md)

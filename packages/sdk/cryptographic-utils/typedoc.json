@@ -1,13 +1,19 @@
 {
-  "mode": "modules",
-  "exclude": ["**/*+(index|.test).ts"],
-  "excludeNotExported": true,
+  "exclude": [
+    "**/*+(index|.test).ts"
+  ],
   "excludePrivate": true,
   "excludeProtected": true,
-  "includeDeclarations": false,
-  "ignoreCompilerErrors": true,
-  "hideGenerator": "true",
+  "hideGenerator": true,
   "out": "../../docs/sdk/docs/cryptographic-utils",
   "gitRevision": "master",
-  "readme": "README.md"
+  "readme": "README.md",
+  "entryPoints": [
+    "./src"
+  ],
+  "githubPages": false,
+  "plugin": [
+    "typedoc-plugin-markdown"
+  ],
+  "entryPointStrategy": "expand"
 }

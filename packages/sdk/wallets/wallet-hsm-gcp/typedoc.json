@@ -1,13 +1,19 @@
 {
-    "mode": "modules",
-    "exclude": ["**/*+(index|.test).ts"],
-    "excludeNotExported": true,
-    "excludePrivate": true,
-    "excludeProtected": true,
-    "includeDeclarations": false,
-    "ignoreCompilerErrors": true,
-    "hideGenerator": "true",
-    "theme": "gitbook",
-    "out": "../../../docs/developer-resources/wallet-hsm-gcp/reference",
-    "gitRevision": "master"
-  }
+  "exclude": [
+    "**/*+(index|.test).ts"
+  ],
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "hideGenerator": true,
+  "out": "../../../docs/sdk/docs/wallet-hsm-gcp",
+  "gitRevision": "master",
+  "entryPoints": [
+    "./src"
+  ],
+  "githubPages": false,
+  "plugin": [
+    "typedoc-plugin-markdown"
+  ],
+  "readme": "none",
+  "entryPointStrategy": "expand"
+}

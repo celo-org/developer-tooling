@@ -1,6 +1,4 @@
-[@celo/phone-utils](README.md) › [Globals](globals.md)
-
-# @celo/phone-utils
+@celo/phone-utils / [Exports](modules.md)
 
 # @celo/phone-utils
 
