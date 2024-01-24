@@ -153,6 +153,10 @@ export function Encrypt(pubKeyTo: PubKey, plaintext: Uint8Array) {
   const pubKeyToEncoded = Buffer.concat([Buffer.from([0x04]), pubKeyTo as Buffer])
   const px = secp256k1.getSharedSecret(ephemPrivKey, pubKeyToEncoded).slice(1)
 
+  // NOTE:
+  // Can't swap to proper hkdf implementation because then there's ALWAYS a mac mismatch
+  // for OLD comments. Maybe we should use a comment version?
+  //
   // const hash = hkdf(sha256, px, undefined, undefined, 32)
   const hash = ConcatKDF(Buffer.from(px), 32)
   const encryptionKey = hash.subarray(0, 16)
@@ -178,6 +182,10 @@ export function Decrypt(privKey: PrivKey, encrypted: Buffer) {
   const symmetricEncrypted = u8(encrypted).slice(UNCOMPRESSED_KEY_LENGTH)
 
   const px = secp256k1.getSharedSecret(privKey, ephemPubKeyEncoded).slice(1)
+  // NOTE:
+  // Can't swap to proper hkdf implementation because then there's ALWAYS a mac mismatch
+  // for OLD comments. Maybe we should use a comment version?
+  //
   // const hash = hkdf(sha256, px, undefined, undefined, 32)
   const hash = ConcatKDF(Buffer.from(px), 32)
   // km, ke
