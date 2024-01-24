@@ -131,8 +131,8 @@ describe('AwsHsmWallet class', () => {
               const privateKey = trimLeading0x(keys.get(KeyId)!)
               if (privateKey) {
                 const pkBuffer = Buffer.from(privateKey, 'hex')
-                const signature = secp256k1.sign(Message, pkBuffer, {})
-                return [{ signature: Buffer.from(signature.toDERRawBytes()) }]
+                const signature = secp256k1.sign(Message, pkBuffer, { lowS: true })
+                return { Signature: signature.toDERRawBytes() }
               }
               throw new Error(`Unable to locate key: ${KeyId}`)
             },

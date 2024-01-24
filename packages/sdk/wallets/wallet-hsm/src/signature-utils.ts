@@ -54,19 +54,30 @@ export class Signature {
  */
 export function recoverKeyIndex(
   signature: Uint8Array,
-  publicKey: BigNumber,
+  _publicKey: BigNumber,
   hash: Uint8Array
 ): number {
   for (let i = 0; i < 4; i++) {
-    const compressed = false
-    // Force types to be Uint8Array
-    const signatureArray = compressed
-      ? secp256k1.Signature.fromCompact(signature)
-      : secp256k1.Signature.fromDER(signature)
-    const recoveredPublicKeyByteArr = signatureArray.recoverPublicKey(hash)
-    const publicKeyBuff = Buffer.from(recoveredPublicKeyByteArr.toRawBytes())
-    const recoveredPublicKey = bufferToBigNumber(publicKeyBuff)
-    if (publicKey.eq(recoveredPublicKey)) {
+    let sig = secp256k1.Signature.fromCompact(signature)
+    sig = sig.addRecoveryBit(i)
+    const recoveredPublicKeyByteArr = sig.recoverPublicKey(hash)
+
+    // NOTE:
+    // converting hex value to bigint allows for discrepencies between
+    // libraries to disappear, ran into an issue where
+    // "0x01234" wasn't equal to "0x1234", the conversion removes it
+    const compressedRecoveredPublicKey = BigInt(
+      ensureLeading0x(recoveredPublicKeyByteArr.toHex(false))
+    )
+    const uncompressedRecoveredPublicKey = BigInt(
+      ensureLeading0x(recoveredPublicKeyByteArr.toHex(true))
+    )
+    const publicKey = BigInt(ensureLeading0x(_publicKey.toString(16)))
+
+    if (
+      publicKey === compressedRecoveredPublicKey ||
+      publicKey === uncompressedRecoveredPublicKey
+    ) {
       return i
     }
   }

@@ -115,8 +115,8 @@ describe('GcpHsmWallet class', () => {
             const privateKey = trimLeading0x(keys.get(name)!)
             if (privateKey) {
               const pkBuffer = Buffer.from(privateKey, 'hex')
-              const signature = secp256k1.sign(digest.sha256, pkBuffer, {})
-              return [{ signature: Buffer.from(signature.toDERRawBytes()) }]
+              const signature = secp256k1.sign(digest.sha256, pkBuffer, { lowS: true })
+              return { Signature: signature.toDERRawBytes() }
             }
             throw new Error(`Unable to locate key: ${name}`)
           },
