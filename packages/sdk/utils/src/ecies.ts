@@ -11,55 +11,54 @@ import { u8 } from '@noble/ciphers/utils'
 import { PrivKey } from '@noble/curves/abstract/utils'
 import { PubKey } from '@noble/curves/abstract/weierstrass'
 import { secp256k1 } from '@noble/curves/secp256k1'
-import { hkdf } from '@noble/hashes/hkdf'
 import { hmac } from '@noble/hashes/hmac'
 import { sha256 } from '@noble/hashes/sha256'
 import { randomBytes } from '@noble/hashes/utils'
 
 export const IV_LENGTH = 16
 
-// /**
-//  * Increments big endian uint32
-//  *
-//  * @param {Buffer} ctr 32 bit unsigned big endian integer to increment.
-//  * @returns Incremented counter.
-//  */
-// const IncCounter = (ctr: Buffer) => {
-//   for (let i = ctr.length - 1; i >= 0; i--) {
-//     ctr[i]++
-//     if (ctr[i] !== 0) {
-//       return ctr
-//     }
-//   }
-//   return ctr
-// }
+/**
+ * Increments big endian uint32
+ *
+ * @param {Buffer} ctr 32 bit unsigned big endian integer to increment.
+ * @returns Incremented counter.
+ */
+const IncCounter = (ctr: Buffer) => {
+  for (let i = ctr.length - 1; i >= 0; i--) {
+    ctr[i]++
+    if (ctr[i] !== 0) {
+      return ctr
+    }
+  }
+  return ctr
+}
 
-// /**
-//  * NIST 8000-56C Rev 1 One Step KDF with the following parameters:
-//  * - H(x) is SHA-256(x)
-//  * - Fixed info is null
-//  *
-//  * TODO:
-//  * - Implement proper ceiling on reps.
-//  *
-//  * @param {Buffer} px Input keying material to derive key from.
-//  * @param {number} kdLen Length of output in bytes
-//  * @returns {Buffer} Output keying material of length kdLen bytes.
-//  */
-// export const ConcatKDF = (px: Buffer, kdLen: number) => {
-//   const blockSize = 32
-//   const reps = ((kdLen + 7) * 8) / (blockSize * 8)
-//   let counter = Buffer.from('00000001', 'hex')
-//   let k = Buffer.from('00', 'hex')
-//   for (let i = 0; i <= reps; i++) {
-//     const hash = sha256.create()
-//     hash.update(counter)
-//     hash.update(px)
-//     k = Buffer.concat([k, hash.digest()])
-//     counter = IncCounter(counter)
-//   }
-//   return k.slice(1, kdLen + 1)
-// }
+/**
+ * NIST 8000-56C Rev 1 One Step KDF with the following parameters:
+ * - H(x) is SHA-256(x)
+ * - Fixed info is null
+ *
+ * TODO:
+ * - Implement proper ceiling on reps.
+ *
+ * @param {Buffer} px Input keying material to derive key from.
+ * @param {number} kdLen Length of output in bytes
+ * @returns {Buffer} Output keying material of length kdLen bytes.
+ */
+export const ConcatKDF = (px: Buffer, kdLen: number) => {
+  const blockSize = 32
+  const reps = ((kdLen + 7) * 8) / (blockSize * 8)
+  let counter = Buffer.from('00000001', 'hex')
+  let k = Buffer.from('00', 'hex')
+  for (let i = 0; i <= reps; i++) {
+    const hash = sha256.create()
+    hash.update(counter)
+    hash.update(px)
+    k = Buffer.concat([k, hash.digest()])
+    counter = IncCounter(counter)
+  }
+  return k.slice(1, kdLen + 1)
+}
 
 /**
  * AES-128 CTR encrypt
@@ -152,10 +151,10 @@ export function Encrypt(pubKeyTo: PubKey, plaintext: Uint8Array) {
   }
 
   const pubKeyToEncoded = Buffer.concat([Buffer.from([0x04]), pubKeyTo as Buffer])
-  const px = secp256k1.getSharedSecret(ephemPrivKey, pubKeyToEncoded, false).slice(1)
+  const px = secp256k1.getSharedSecret(ephemPrivKey, pubKeyToEncoded).slice(1)
 
-  const hash = hkdf(sha256, px, undefined, undefined, 32)
-  // const hash = ConcatKDF(Buffer.from(px), 32)
+  // const hash = hkdf(sha256, px, undefined, undefined, 32)
+  const hash = ConcatKDF(Buffer.from(px), 32)
   const encryptionKey = hash.subarray(0, 16)
   const macKey = sha256.create().update(hash.subarray(16)).digest()
   const message = AES128EncryptAndHMAC(Buffer.from(encryptionKey), macKey, plaintext)
@@ -178,9 +177,9 @@ export function Decrypt(privKey: PrivKey, encrypted: Buffer) {
   const ephemPubKeyEncoded = u8(encrypted).slice(0, UNCOMPRESSED_KEY_LENGTH)
   const symmetricEncrypted = u8(encrypted).slice(UNCOMPRESSED_KEY_LENGTH)
 
-  const px = secp256k1.getSharedSecret(privKey, ephemPubKeyEncoded, false).slice(1)
-  const hash = hkdf(sha256, px, undefined, undefined, 32)
-  // const hash = ConcatKDF(Buffer.from(px), 32)
+  const px = secp256k1.getSharedSecret(privKey, ephemPubKeyEncoded).slice(1)
+  // const hash = hkdf(sha256, px, undefined, undefined, 32)
+  const hash = ConcatKDF(Buffer.from(px), 32)
   // km, ke
   const encryptionKey = hash.subarray(0, 16)
 

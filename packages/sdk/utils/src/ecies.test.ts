@@ -33,7 +33,7 @@ describe('ECIES', () => {
       // secp256k1.getPublicKey(snapshotPrivKey).slice(1)
 
       // const _message = Buffer.from('foo')
-      expect(ECIES.Decrypt(snapshotPrivKey, snapshotEncrypted).toString()).toEqual('foo')
+      expect(bytesToUtf8(ECIES.Decrypt(snapshotPrivKey, snapshotEncrypted))).toEqual('foo')
     })
   })
 

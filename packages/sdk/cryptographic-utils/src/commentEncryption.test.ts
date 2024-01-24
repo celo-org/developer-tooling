@@ -106,7 +106,7 @@ describe('Comment Encryption', () => {
       expect(decrypted).toEqual(newComment)
       expect(didDecrypt).toBeTruthy()
     })
-    it('should not regress for recipeient', () => {
+    it('should not regress for recipient', () => {
       const { comment: decrypted, success: didDecrypt } = decryptComment(
         encrypted,
         newRecipPriv,
