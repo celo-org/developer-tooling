@@ -42,7 +42,6 @@ export function asn1FromPublicKey(bn: BigNumber): Buffer {
  * AWS returns DER encoded signatures but DER is valid BER
  */
 export function parseBERSignature(b: Buffer): { r: Buffer; s: Buffer } {
-  console.log('Hello', b, asn1.fromBER(toArrayBuffer(b)))
   const { result } = asn1.fromBER(toArrayBuffer(b))
 
   const parts = (result as asn1.Sequence).valueBlock.value as asn1.BitString[]

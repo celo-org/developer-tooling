@@ -1,5 +1,6 @@
 import { Address, ensureLeading0x } from '@celo/base/lib/address'
 import * as ethUtil from '@ethereumjs/util'
+import { SignatureType } from '@noble/curves/abstract/weierstrass'
 import { secp256k1 } from '@noble/curves/secp256k1'
 import { BigNumber } from 'bignumber.js'
 
@@ -57,30 +58,41 @@ export function recoverKeyIndex(
   _publicKey: BigNumber,
   hash: Uint8Array
 ): number {
-  for (let i = 0; i < 4; i++) {
-    let sig = secp256k1.Signature.fromCompact(signature)
-    sig = sig.addRecoveryBit(i)
-    const recoveredPublicKeyByteArr = sig.recoverPublicKey(hash)
+  const formats = ['fromCompact', 'fromDER'] as const
 
-    // NOTE:
-    // converting hex value to bigint allows for discrepencies between
-    // libraries to disappear, ran into an issue where
-    // "0x01234" wasn't equal to "0x1234", the conversion removes it
-    const compressedRecoveredPublicKey = BigInt(
-      ensureLeading0x(recoveredPublicKeyByteArr.toHex(false))
-    )
-    const uncompressedRecoveredPublicKey = BigInt(
-      ensureLeading0x(recoveredPublicKeyByteArr.toHex(true))
-    )
-    const publicKey = BigInt(ensureLeading0x(_publicKey.toString(16)))
+  for (let format of formats) {
+    let sig: SignatureType
+    try {
+      sig = secp256k1.Signature[format](signature)
+    } catch (e) {
+      continue
+    }
 
-    if (
-      publicKey === compressedRecoveredPublicKey ||
-      publicKey === uncompressedRecoveredPublicKey
-    ) {
-      return i
+    for (let i = 0; i < 4; i++) {
+      sig = sig.addRecoveryBit(i)
+      const recoveredPublicKeyByteArr = sig.recoverPublicKey(hash)
+
+      // NOTE:
+      // converting hex value to bigint allows for discrepencies between
+      // libraries to disappear, ran into an issue where
+      // "0x01234" wasn't equal to "0x1234", the conversion removes it
+      const compressedRecoveredPublicKey = BigInt(
+        ensureLeading0x(recoveredPublicKeyByteArr.toHex(false))
+      )
+      const uncompressedRecoveredPublicKey = BigInt(
+        ensureLeading0x(recoveredPublicKeyByteArr.toHex(true))
+      )
+      const publicKey = BigInt(ensureLeading0x(_publicKey.toString(16)))
+
+      if (
+        publicKey === compressedRecoveredPublicKey ||
+        publicKey === uncompressedRecoveredPublicKey
+      ) {
+        return i
+      }
     }
   }
+
   throw new Error('Unable to generate recovery key from signature.')
 }
 
