@@ -89,11 +89,7 @@ export class AzureKeyVaultClient {
     }
     const signingAlgorithm = SIGNING_ALGORITHM_FOR[curve]
     const cryptographyClient = await this.getCryptographyClient(keyName)
-    const signResult = await cryptographyClient.sign(
-      // @ts-ignore-next-line (ECDSA256 is not included in the client enum but is valid)
-      signingAlgorithm,
-      new Uint8Array(message)
-    )
+    const signResult = await cryptographyClient.sign(signingAlgorithm, new Uint8Array(message))
     // The output of this will be a 64 byte array.
     // The first 32 are the value for R and the rest is S
     if (
