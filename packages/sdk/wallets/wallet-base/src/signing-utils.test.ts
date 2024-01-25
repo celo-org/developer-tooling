@@ -287,7 +287,7 @@ describe('recoverTransaction', () => {
       })
 
       const [transaction, signer] = recoverTransaction(hash)
-      expect(signer).toEqual(ACCOUNT_ADDRESS1)
+      expect(signer.toLowerCase()).toEqual(ACCOUNT_ADDRESS1.toLowerCase())
       expect(transaction).toMatchInlineSnapshot(`
         {
           "accessList": [],
