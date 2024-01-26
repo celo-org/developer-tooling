@@ -6,7 +6,6 @@
 /tmp/
 /.tmp/
 
-/tslint.json
 /tsconfig.*
 /jest.config.*
 *.tgz

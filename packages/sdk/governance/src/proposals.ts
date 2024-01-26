@@ -491,7 +491,6 @@ export class InteractiveProposalBuilder {
             switch (functionInput.type) {
               case 'uint256':
                 try {
-                  // tslint:disable-next-line: no-unused-expression
                   new BigNumber(input)
                   return true
                 } catch (e) {

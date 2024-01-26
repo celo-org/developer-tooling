@@ -23,7 +23,6 @@ export default class Withdraw extends ReleaseGoldBaseCommand {
 
   async run() {
     const kit = await this.getKit()
-    // tslint:disable-next-line
     const { flags } = await this.parse(Withdraw)
     const value = flags.value
 
