@@ -1,7 +1,7 @@
 import { CeloTokenType, StableToken, Token } from '@celo/base'
 import { BigNumber } from 'bignumber.js'
 import { AddressRegistry } from './address-registry'
-import { CeloContract, CeloTokenContract, ExchangeContract, StableTokenContract } from './base'
+import { CeloContract, CeloTokenContract, StableTokenContract } from './base'
 import { ContractCacheType } from './basic-contract-cache-type'
 import { GoldTokenWrapper } from './wrappers/GoldTokenWrapper'
 import { StableTokenWrapper } from './wrappers/StableTokenWrapper'
@@ -20,7 +20,6 @@ export interface CeloTokenInfo {
 
 export interface StableTokenInfo extends CeloTokenInfo {
   contract: StableTokenContract
-  exchangeContract: ExchangeContract
 }
 
 /** Basic info for each stable token */
@@ -29,17 +28,14 @@ export const stableTokenInfos: {
 } = {
   [StableToken.cUSD]: {
     contract: CeloContract.StableToken,
-    exchangeContract: CeloContract.Exchange,
     symbol: StableToken.cUSD,
   },
   [StableToken.cEUR]: {
     contract: CeloContract.StableTokenEUR,
-    exchangeContract: CeloContract.ExchangeEUR,
     symbol: StableToken.cEUR,
   },
   [StableToken.cREAL]: {
     contract: CeloContract.StableTokenBRL,
-    exchangeContract: CeloContract.ExchangeBRL,
     symbol: StableToken.cREAL,
   },
 }
@@ -97,16 +93,6 @@ export class CeloTokens {
         return stableWrapper.getHumanReadableConfig()
       }
       return stableWrapper.getConfig()
-    })
-  }
-
-  async getExchangesConfigs(humanReadable: boolean = false) {
-    return this.forStableCeloToken(async (info: StableTokenInfo) => {
-      const exchangeWrapper = await this.contracts.getContract(info.exchangeContract)
-      if (humanReadable) {
-        return exchangeWrapper.getHumanReadableConfig()
-      }
-      return exchangeWrapper.getConfig()
     })
   }
 
@@ -196,7 +182,6 @@ export class CeloTokens {
         try {
           // The registry add the valid addresses to a cache
           await this.registry.addressFor(info.contract)
-          await this.registry.addressFor(info.exchangeContract)
           return true
         } catch {
           // The contract was not deployed in the chain
@@ -228,15 +213,6 @@ export class CeloTokens {
   getContract(token: StableToken): StableTokenContract
   getContract(token: CeloTokenType): CeloTokenContract {
     return celoTokenInfos[token].contract
-  }
-
-  /**
-   * Gets the exchange contract for the provided stable token
-   * @param token the stable token to get exchange contract of
-   * @return The exchange contract for the token
-   */
-  getExchangeContract(token: StableToken) {
-    return stableTokenInfos[token].exchangeContract
   }
 
   /**

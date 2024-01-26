@@ -1,9 +1,6 @@
 import { newGasPriceMinimum } from '@celo/abis/web3/0.8/GasPriceMinimum'
 import { newAccounts } from '@celo/abis/web3/Accounts'
 import { newGoldToken } from '@celo/abis/web3/GoldToken'
-import { newExchange } from '@celo/abis/web3/mento/Exchange'
-import { newExchangeBRL } from '@celo/abis/web3/mento/ExchangeBRL'
-import { newExchangeEUR } from '@celo/abis/web3/mento/ExchangeEUR'
 import { newStableToken } from '@celo/abis/web3/mento/StableToken'
 import { newStableTokenBRL } from '@celo/abis/web3/mento/StableTokenBRL'
 import { newStableTokenEUR } from '@celo/abis/web3/mento/StableTokenEUR'
@@ -14,7 +11,6 @@ import { CeloContract } from './base'
 import { ContractCacheType } from './basic-contract-cache-type'
 import { stableTokenInfos } from './celo-tokens'
 import { AccountsWrapper } from './wrappers/Accounts'
-import { ExchangeWrapper } from './wrappers/Exchange'
 import { GasPriceMinimumWrapper } from './wrappers/GasPriceMinimum'
 import { GoldTokenWrapper } from './wrappers/GoldTokenWrapper'
 import { StableTokenWrapper } from './wrappers/StableTokenWrapper'
@@ -31,18 +27,6 @@ const MINIMUM_CONTRACTS = {
   [CeloContract.GoldToken]: {
     newInstance: newGoldToken,
     wrapper: GoldTokenWrapper,
-  },
-  [CeloContract.Exchange]: {
-    newInstance: newExchange,
-    wrapper: ExchangeWrapper,
-  },
-  [CeloContract.ExchangeEUR]: {
-    newInstance: newExchangeEUR,
-    wrapper: ExchangeWrapper,
-  },
-  [CeloContract.ExchangeBRL]: {
-    newInstance: newExchangeBRL,
-    wrapper: ExchangeWrapper,
   },
   [CeloContract.StableToken]: {
     newInstance: newStableToken,
@@ -77,7 +61,7 @@ const contractsWhichRequireCache = new Set([
 /**
  * Alternative Contract Cache with Minimal Contracts
  *
- * Provides access to a subset of wrappers: {@link AccountsWrapper},  {@link ExchangeWrapper}, {@link GasPriceMinimumWrapper} and Celo Token contracts
+ * Provides access to a subset of wrappers: {@link AccountsWrapper}, {@link GasPriceMinimumWrapper} and Celo Token contracts
  * Used internally by {@link MiniContractKit}
  *
  * @param connection – {@link Connection}
@@ -95,9 +79,6 @@ export class MiniContractCache implements ContractCacheType {
 
   getAccounts(): Promise<AccountsWrapper> {
     return this.getContract(CeloContract.Accounts)
-  }
-  getExchange(stableToken: StableToken = StableToken.cUSD): Promise<ExchangeWrapper> {
-    return this.getContract(stableTokenInfos[stableToken].exchangeContract)
   }
 
   getGoldToken(): Promise<GoldTokenWrapper> {

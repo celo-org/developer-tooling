@@ -2827,13 +2827,6 @@
         "dweb:/ipfs/QmRDDTXUqbA6dHfJe4ZS1442JDAfwoHq2eH9LHnQyzsh44"
       ]
     },
-    "/home/bowd/Workspace/job/celo/celo-monorepo/packages/protocol/contracts/stability/interfaces/IExchange.sol": {
-      "keccak256": "0xbfcf77e30fc62218decbb73297d5161b9c490f7e44f75158f1c79674e4b8b83c",
-      "urls": [
-        "bzz-raw://ad0caaddcb552a2c040e827e9336cdec7dfaf629cca9f30e5f5bc12645abde43",
-        "dweb:/ipfs/QmTjnGbfoSkZhNWhrbcYdLjF1LLqAJcviJ2ZKSMH9KWz95"
-      ]
-    },
     "/home/bowd/Workspace/job/celo/celo-monorepo/packages/protocol/contracts/stability/interfaces/IReserve.sol": {
       "keccak256": "0x8da4d702b47a7e60981ca416f2d0f24a3c1dea9ab44f04b695c0fde02c84a38e",
       "urls": [
