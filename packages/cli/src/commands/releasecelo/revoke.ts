@@ -18,7 +18,7 @@ export default class Revoke extends ReleaseGoldBaseCommand {
 
   async run() {
     const kit = await this.getKit()
-    // tslint:disable-next-line
+
     const { flags } = await this.parse(Revoke)
 
     const isRevoked = await this.releaseGoldWrapper.isRevoked()

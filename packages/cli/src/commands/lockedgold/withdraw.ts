@@ -16,7 +16,6 @@ export default class Withdraw extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
-    // tslint:disable-next-line
     const { flags } = await this.parse(Withdraw)
     kit.defaultAccount = flags.from
     const lockedgold = await kit.contracts.getLockedGold()
