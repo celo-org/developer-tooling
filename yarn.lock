@@ -1577,7 +1577,6 @@ __metadata:
     chalk: "npm:^2.4.2"
     command-exists: "npm:^1.2.9"
     debug: "npm:^4.1.1"
-    events: "npm:^3.0.0"
     fs-extra: "npm:^8.1.0"
     humanize-duration: "npm:^3.29.0"
     jest: "npm:^29.0.2"

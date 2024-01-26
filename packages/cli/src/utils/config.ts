@@ -1,5 +1,3 @@
-// tslint:disable:class-name max-classes-per-file
-// TODO: investigate tslint issues
 import * as fs from 'fs-extra'
 import * as path from 'path'
 import { gasOptions } from '../base'
