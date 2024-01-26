@@ -7108,13 +7108,13 @@ __metadata:
   linkType: hard
 
 "@types/ledgerhq__hw-transport-node-hid@npm:^4.22.2":
-  version: 4.22.2
-  resolution: "@types/ledgerhq__hw-transport-node-hid@npm:4.22.2"
+  version: 4.22.5
+  resolution: "@types/ledgerhq__hw-transport-node-hid@npm:4.22.5"
   dependencies:
     "@types/ledgerhq__hw-transport": "npm:*"
     "@types/node": "npm:*"
     "@types/node-hid": "npm:*"
-  checksum: f8196906ad4102f59046b921693b8d93317d7f641fd03796bd07839d1cec48e6eff5a4f58f969f783a9ded9cd250e5b7009a89ea6528f1e8739ceb52b1f36f46
+  checksum: 4b9934009e8e5aa43ece0268661cec17e8238c50214caa9a8c196edabb3a41005092932cba3b30e06457ff5cc953bad26a59f4d7b7398884b691ab51bc18a97d
   languageName: node
   linkType: hard
 
