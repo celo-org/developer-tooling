@@ -7500,19 +7500,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/eslint-plugin-tslint@npm:^6.17.0":
-  version: 6.17.0
-  resolution: "@typescript-eslint/eslint-plugin-tslint@npm:6.17.0"
-  dependencies:
-    "@typescript-eslint/utils": "npm:6.17.0"
-  peerDependencies:
-    eslint: ^7.0.0 || ^8.0.0
-    tslint: ^5.0.0 || ^6.0.0
-    typescript: "*"
-  checksum: d2f0453d491b457fee97def722653516d5408e77baa235b05a6e9b9ab6e07749d62cfceb5b6ecb43a1d6746d3f4dcfe6ccefbdaf6ee32c02b550a46a68f0a186
-  languageName: node
-  linkType: hard
-
 "@typescript-eslint/eslint-plugin@npm:^6.17.0":
   version: 6.17.0
   resolution: "@typescript-eslint/eslint-plugin@npm:6.17.0"
@@ -9356,7 +9343,6 @@ __metadata:
     "@types/prompt": "npm:1.1.1"
     "@types/semver": "npm:7.3.8"
     "@typescript-eslint/eslint-plugin": "npm:^6.17.0"
-    "@typescript-eslint/eslint-plugin-tslint": "npm:^6.17.0"
     "@typescript-eslint/parser": "npm:^6.17.0"
     codecov: "npm:^3.6.5"
     colors: "npm:1.4.0"
