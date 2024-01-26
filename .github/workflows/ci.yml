@@ -247,6 +247,11 @@ jobs:
       false
     steps:
       - uses: actions/checkout@v4
+      - name: Sync workspace
+        uses: ./.github/actions/sync-workspace
+        with:
+          artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
+      - run: sudo corepack enable yarn
       - name: Fail if someone forgot to commit CLI docs
         run: |
           yarn docs
