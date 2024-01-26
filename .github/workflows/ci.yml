@@ -252,7 +252,7 @@ jobs:
         with:
           artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
       - run: sudo corepack enable yarn
-      - name: Fail if someone forgot to commit CLI docs
+      - name: Fail if someone forgot to commit docs
         run: |
           yarn docs
           if [[ $(git status packages/docs --porcelain) ]]; then
