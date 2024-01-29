@@ -47,7 +47,7 @@ BlockTransactionBase.baseFeePerGas
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:433
+node_modules/web3-eth/types/index.d.ts:433
 
 ___
 
@@ -61,7 +61,7 @@ BlockTransactionBase.difficulty
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:443
+node_modules/web3-eth/types/index.d.ts:443
 
 ___
 
@@ -75,7 +75,7 @@ BlockTransactionBase.extraData
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:429
+node_modules/web3-eth/types/index.d.ts:429
 
 ___
 
@@ -89,7 +89,7 @@ BlockTransactionBase.gasLimit
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:430
+node_modules/web3-eth/types/index.d.ts:430
 
 ___
 
@@ -103,7 +103,7 @@ BlockTransactionBase.gasUsed
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:431
+node_modules/web3-eth/types/index.d.ts:431
 
 ___
 
@@ -117,7 +117,7 @@ BlockTransactionBase.hash
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:420
+node_modules/web3-eth/types/index.d.ts:420
 
 ___
 
@@ -131,7 +131,7 @@ BlockTransactionBase.logsBloom
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:424
+node_modules/web3-eth/types/index.d.ts:424
 
 ___
 
@@ -145,7 +145,7 @@ BlockTransactionBase.miner
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:428
+node_modules/web3-eth/types/index.d.ts:428
 
 ___
 
@@ -159,7 +159,7 @@ BlockTransactionBase.nonce
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:422
+node_modules/web3-eth/types/index.d.ts:422
 
 ___
 
@@ -173,7 +173,7 @@ BlockTransactionBase.number
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:419
+node_modules/web3-eth/types/index.d.ts:419
 
 ___
 
@@ -187,7 +187,7 @@ BlockTransactionBase.parentHash
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:421
+node_modules/web3-eth/types/index.d.ts:421
 
 ___
 
@@ -201,7 +201,7 @@ BlockTransactionBase.receiptsRoot
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:427
+node_modules/web3-eth/types/index.d.ts:427
 
 ___
 
@@ -215,7 +215,7 @@ BlockTransactionBase.sha3Uncles
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:423
+node_modules/web3-eth/types/index.d.ts:423
 
 ___
 
@@ -229,7 +229,7 @@ BlockTransactionBase.size
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:442
+node_modules/web3-eth/types/index.d.ts:442
 
 ___
 
@@ -243,7 +243,7 @@ BlockTransactionBase.stateRoot
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:426
+node_modules/web3-eth/types/index.d.ts:426
 
 ___
 
@@ -257,7 +257,7 @@ BlockTransactionBase.timestamp
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:432
+node_modules/web3-eth/types/index.d.ts:432
 
 ___
 
@@ -271,7 +271,7 @@ BlockTransactionBase.totalDifficulty
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:444
+node_modules/web3-eth/types/index.d.ts:444
 
 ___
 
@@ -281,7 +281,7 @@ ___
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:438
+node_modules/web3-eth/types/index.d.ts:438
 
 ___
 
@@ -295,7 +295,7 @@ BlockTransactionBase.transactionsRoot
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:425
+node_modules/web3-eth/types/index.d.ts:425
 
 ___
 
@@ -309,4 +309,4 @@ BlockTransactionBase.uncles
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:445
+node_modules/web3-eth/types/index.d.ts:445

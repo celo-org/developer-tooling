@@ -114,7 +114,7 @@ ___
 
 #### Defined in
 
-[wallet-hsm-azure/src/azure-key-vault-client.ts:135](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-azure/src/azure-key-vault-client.ts#L135)
+[wallet-hsm-azure/src/azure-key-vault-client.ts:131](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-azure/src/azure-key-vault-client.ts#L131)
 
 ___
 
@@ -134,7 +134,7 @@ ___
 
 #### Defined in
 
-[wallet-hsm-azure/src/azure-key-vault-client.ts:123](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-azure/src/azure-key-vault-client.ts#L123)
+[wallet-hsm-azure/src/azure-key-vault-client.ts:119](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-azure/src/azure-key-vault-client.ts#L119)
 
 ___
 
