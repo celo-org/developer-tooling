@@ -32,7 +32,7 @@
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:433
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:433
 
 ___
 
@@ -42,7 +42,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:429
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:429
 
 ___
 
@@ -52,7 +52,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:430
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:430
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:431
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:431
 
 ___
 
@@ -72,7 +72,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:420
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:420
 
 ___
 
@@ -82,7 +82,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:424
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:424
 
 ___
 
@@ -92,7 +92,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:428
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:428
 
 ___
 
@@ -102,7 +102,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:422
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:422
 
 ___
 
@@ -112,7 +112,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:419
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:419
 
 ___
 
@@ -122,7 +122,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:421
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:421
 
 ___
 
@@ -132,7 +132,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:427
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:427
 
 ___
 
@@ -142,7 +142,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:423
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:423
 
 ___
 
@@ -152,7 +152,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:426
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:426
 
 ___
 
@@ -162,7 +162,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:432
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:432
 
 ___
 
@@ -172,4 +172,4 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:425
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:425
