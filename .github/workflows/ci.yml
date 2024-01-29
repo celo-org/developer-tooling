@@ -48,8 +48,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '18'
-      - name: "enable corepack for yarn"
-        run : sudo corepack enable yarn
+      - name: 'enable corepack for yarn'
+        run: sudo corepack enable yarn
       - uses: actions/checkout@v4
       # must call twice because of chicken and egg problem with yarn and node
       - uses: actions/setup-node@v4
@@ -222,16 +222,6 @@ jobs:
         uses: ./.github/actions/sync-workspace
         with:
           artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
-      - name: Fail if someone forgot to commit CLI docs
-        run: |
-          yarn workspace @celo/celocli docs
-          if [[ $(git status packages/docs/command-line-interface --porcelain) ]]; then
-            git --no-pager diff packages/docs/command-line-interface
-            echo "There are git differences after generating CLI docs"
-            git status
-            git diff
-            exit 1
-          fi
       - name: Run tests
         run: |
           yarn workspace @celo/celocli test
@@ -241,6 +231,41 @@ jobs:
       - name: Test that releasecelo command topic is working
         run: |
           yarn workspace @celo/celocli run celocli releasecelo --help
+
+  docs-tests:
+    name: Docs tests
+    runs-on: ['self-hosted', 'org', '8-cpu']
+    timeout-minutes: 30
+    needs: [install-dependencies]
+    if: |
+      github.base_ref == 'master' || contains(github.base_ref, 'staging') || contains(github.base_ref, 'production') ||
+      contains(needs.install-dependencies.outputs.all_modified_files, 'packages/cli') ||
+      contains(needs.install-dependencies.outputs.all_modified_files, 'packages/sdk') ||
+      contains(needs.install-dependencies.outputs.all_modified_files, 'packages/typescript') ||
+      contains(needs.install-dependencies.outputs.all_modified_files, ',package.json') ||
+      contains(needs.install-dependencies.outputs.all_modified_files, ',yarn.lock') ||
+      false
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sync workspace
+        uses: ./.github/actions/sync-workspace
+        with:
+          artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
+      - run: sudo corepack enable yarn
+      - name: Sync workspace
+        uses: ./.github/actions/sync-workspace
+        with:
+          artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
+      - name: Fail if someone forgot to commit docs
+        run: |
+          yarn docs
+          if [[ $(git status packages/docs --porcelain) ]]; then
+            git --no-pager diff packages/docs
+            echo "There are git differences after generating all docs"
+            git status
+            git diff
+            exit 1
+          fi
 
   base-test:
     name: SDK Base package Tests
