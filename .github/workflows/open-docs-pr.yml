@@ -35,15 +35,20 @@ jobs:
         run: |
           COMMIT=${{ inputs.commit }}
           REPOSITORY="nicolasbrugneaux/celo-docs"
+          DOCS_CWD="celo-docs"
           BRANCH_NAME="ci/${{ github.run_id }}-${{ github.run_attempt }}"
 
           # Clone the remote repository
           git clone \
-            --depth=1 \
+            --recurse-submodules \
             --branch=main \
-            https://github.com/$REPOSITORY docs
-
-          cd docs
+            https://github.com/$REPOSITORY \
+            $DOCS_CWD
+            
+          cd DOCS_CWD
+            
+          git submodule init
+          git submodule update
 
           # Setup the committers identity.
           # TODO: ask security for a bot account
