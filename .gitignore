@@ -88,3 +88,6 @@ packages/protocol/types/typechain-mento/*.d.ts
 !.yarn/sdks
 !.yarn/versions
 package.json-e
+
+# Ignore generated credentials from google-github-actions/auth
+gha-creds-*.json
