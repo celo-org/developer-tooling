@@ -8,8 +8,11 @@ on:
   push:
     branches:
       - master
-      - changeset-release/master
+      - changeset-release/**
   pull_request:
+    branches:
+      - prerelease/**
+
 
 concurrency:
   group: dev-tooling-${{ github.ref }}
