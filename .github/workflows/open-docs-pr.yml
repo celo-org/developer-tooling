@@ -10,9 +10,11 @@ on:
         required: true
 
   workflow_dispatch:
-  push:
-    branches:
-      - ci/update-celo-docs
+    inputs:
+      commit:
+        description: 'Commit of the developer-tooling repo that the submodule will be updated to'
+        type: string
+        required: true
 
 jobs:
   open-docs-pr:
