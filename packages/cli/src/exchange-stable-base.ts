@@ -88,7 +88,6 @@ export default class ExchangeStableBase extends BaseCommand {
       expected || minBuyAmount // TODO use minBuyAmount if given / not zero
     )
     console.info('original tx', tx)
-    // Set explicit gas based on github.com/celo-org/celo-monorepo/issues/2541
-    await displaySendEthersTxViaCK('exchange', tx, kit.connection, { gas: '300000' })
+    await displaySendEthersTxViaCK('exchange', tx, kit.connection)
   }
 }
