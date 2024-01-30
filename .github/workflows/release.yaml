@@ -60,6 +60,6 @@ jobs:
   open-docs-pr:
     needs: release
     if: ${{ contains(fromJson(needs.release.outputs.publishedPackages).*.name, '@celo/cli') }}
-    uses: celo-org/developer-tooling/.github/workflows/open-docs-pr.yml@ci/update-celo-docs
+    uses: celo-org/developer-tooling/.github/workflows/open-docs-pr.yml@main
     with:
       commit: ${{ github.ref_name }}

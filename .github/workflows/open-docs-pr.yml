@@ -53,7 +53,7 @@ jobs:
           # Create a new feature branch for the changes.
           git checkout -b $BRANCH_NAME
 
-          cd submodule/developer-tooling
+          cd submodules/developer-tooling
           git checkout $COMMIT
           cd ..
 
