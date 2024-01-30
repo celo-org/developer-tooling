@@ -1,0 +1,68 @@
+---
+name: Open a pull-request on the celo-org/docs repository
+
+on:
+  workflow_call:
+    inputs:
+      commit:
+        description: 'Commit of the developer-tooling repo that the submodule will be updated to'
+        type: string
+        required: true
+
+  workflow_dispatch:
+  push:
+    branches:
+      - ci/update-celo-docs
+
+jobs:
+  open-docs-pr:
+    name: Prepare or Publish
+    # TODO: ask the correct runner for this workflow
+    runs-on: ['self-hosted', 'org', '8-cpu']
+    # TODO: ask correct permissions
+    permissions:
+      contents: write
+      id-token: write
+      pull-requests: write
+      repository-projects: write
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Open pull-request
+        run: |
+          COMMIT=${{ inputs.commit }}
+          REPOSITORY="nicolasbrugneaux/celo-docs"
+          BRANCH_NAME="ci/${{ github.run_id }}-${{ github.run_attempt }}"
+
+          # Clone the remote repository
+          git clone \
+            --depth=1 \
+            --branch=main \
+            https://github.com/$REPOSITORY docs
+
+          cd docs
+
+          # Setup the committers identity.
+          # TODO: ask security for a bot account
+          git config user.email "nicolas.brugneaux@clabs.co"
+          git config user.name "Nicolas Brugneaux"
+
+          # Create a new feature branch for the changes.
+          git checkout -b $BRANCH_NAME
+
+          cd submodule/developer-tooling
+          git checkout $COMMIT
+          cd ..
+
+          git add .
+          git commit -m "chore: update developer-tooling submodule"
+          git push origin $BRANCH_NAME
+
+          echo "${{ secrets.ACCESS_TOKEN }}" > token.txt
+          gh auth login --with-token < token.txt
+          gh pr create \
+            --body "__I was created by a bot beep boop__" \
+            --title "chore: update developer-tooling submodule to $COMMIT" \
+            --head "$BRANCH_NAME" \
+            --base "main"
