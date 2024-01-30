@@ -1,5 +1,23 @@
 # Changelog
 
+## 4.0.0-contracts-11-pre.1
+
+### Patch Changes
+
+- [#109](https://github.com/celo-org/developer-tooling/pull/109) [`6b8d22b`](https://github.com/celo-org/developer-tooling/commit/6b8d22bbd6a1b4a38e0511b10bf0b46efdfb2972) Thanks [@github-actions](https://github.com/apps/github-actions)! - Using Prerelease of CoreContracts 11
+
+- Updated dependencies [[`45d156d`](https://github.com/celo-org/developer-tooling/commit/45d156d03c03399bef51a00fe2b5cfb5e5669642), [`6b2e34c`](https://github.com/celo-org/developer-tooling/commit/6b2e34c973290da221aaabdc2bf4c6654ef9f99c), [`6b8d22b`](https://github.com/celo-org/developer-tooling/commit/6b8d22bbd6a1b4a38e0511b10bf0b46efdfb2972)]:
+  - @celo/wallet-hsm-azure@5.1.2-contracts-11-pre.0
+  - @celo/utils@6.0.0-contracts-11-pre.0
+  - @celo/contractkit@6.0.1-contracts-11-pre.2
+  - @celo/governance@5.0.9-contracts-11-pre.1
+  - @celo/connect@5.1.2-contracts-11-pre.0
+  - @celo/cryptographic-utils@5.0.7-contracts-11-pre.0
+  - @celo/explorer@5.0.8-contracts-11-pre.1
+  - @celo/phone-utils@6.0.1-contracts-11-pre.0
+  - @celo/wallet-ledger@5.1.2-contracts-11-pre.0
+  - @celo/wallet-local@5.1.2-contracts-11-pre.0
+
 ## 4.0.0-beta.0
 
 ### Major Changes
