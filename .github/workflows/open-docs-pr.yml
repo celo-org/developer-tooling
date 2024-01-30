@@ -18,7 +18,7 @@ on:
 
 jobs:
   open-docs-pr:
-    name: Prepare or Publish
+    name: Open a pull-request on the celo-org/docs repository
     # TODO: ask the correct runner for this workflow
     runs-on: ['self-hosted', 'org', '8-cpu']
     # TODO: ask correct permissions

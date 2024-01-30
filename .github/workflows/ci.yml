@@ -331,4 +331,4 @@ jobs:
     if: true
     uses: celo-org/developer-tooling/.github/workflows/open-docs-pr.yml@ci/update-celo-docs
     with:
-      commit: ${{ github.ref_name }}
+      commit: ${{ github.sha }}
