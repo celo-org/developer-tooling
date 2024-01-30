@@ -199,7 +199,6 @@ export function typeHash(primaryType: string, types: EIP712Types): Buffer {
 function encodeValue(valueType: string, value: EIP712ObjectValue, types: EIP712Types): Buffer {
   // Encode the atomic types as their corresponding soldity ABI type.
   if (EIP712_ATOMIC_TYPES.includes(valueType)) {
-    // @ts-ignore TypeScript does not believe encodeParameter exists.
     const hexEncoded = coder.encodeParameter(valueType, normalizeValue(valueType, value))
     return Buffer.from(trimLeading0x(hexEncoded), 'hex')
   }
