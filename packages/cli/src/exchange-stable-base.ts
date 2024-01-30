@@ -1,14 +1,15 @@
-import { StableToken } from '@celo/contractkit'
+import { CeloContract, StableToken } from '@celo/contractkit'
 import { stableTokenInfos } from '@celo/contractkit/lib/celo-tokens'
 import BigNumber from 'bignumber.js'
 import { BaseCommand } from './base'
 import { newCheckBuilder } from './utils/checks'
-import { displaySendTx, failWith } from './utils/cli'
+import { displaySendEthersTxViaCK, displaySendTx } from './utils/cli'
 import { CustomFlags } from './utils/command'
 import { checkNotDangerousExchange } from './utils/exchange'
+import { getMentoBroker } from './utils/mento-broker-adaptor'
 
 const largeOrderPercentage = 1
-const deppegedPricePercentage = 20
+const depeggedPricePercentage = 20
 export default class ExchangeStableBase extends BaseCommand {
   static flags = {
     ...BaseCommand.flags,
@@ -41,23 +42,22 @@ export default class ExchangeStableBase extends BaseCommand {
       .hasEnoughStable(res.flags.from, sellAmount, this._stableCurrency)
       .runChecks()
 
-    let stableToken
-    let exchange
-    try {
-      stableToken = await kit.contracts.getStableToken(this._stableCurrency)
-      exchange = await kit.contracts.getExchange(this._stableCurrency)
-    } catch {
-      failWith(`The ${this._stableCurrency} token was not deployed yet`)
-    }
+    const [stableToken, celoNativeTokenAddress] = await Promise.all([
+      kit.contracts.getStableToken(this._stableCurrency),
+      kit.registry.addressFor(CeloContract.GoldToken),
+    ])
 
-    if (minBuyAmount.toNumber() === 0) {
+    console.info(`Exchange ${stableToken.address} for ${celoNativeTokenAddress}`)
+
+    // TODO mento temp disable
+    if (false) {
       const check = await checkNotDangerousExchange(
         kit,
         sellAmount,
         largeOrderPercentage,
-        deppegedPricePercentage,
+        depeggedPricePercentage,
         false,
-        stableTokenInfos[this._stableCurrency]
+        stableTokenInfos[this._stableCurrency as StableToken]
       )
 
       if (!check) {
@@ -66,13 +66,29 @@ export default class ExchangeStableBase extends BaseCommand {
       }
     }
 
+    const { mento, brokerAddress, getQuote } = await getMentoBroker(kit.connection)
+    console.info('Using mento broker', brokerAddress)
+
     await displaySendTx(
       'increaseAllowance',
-      stableToken.increaseAllowance(exchange.address, sellAmount.toFixed())
+      stableToken.increaseAllowance(brokerAddress, sellAmount.toFixed())
     )
 
-    const exchangeTx = exchange.exchange(sellAmount.toFixed(), minBuyAmount!.toFixed(), false)
+    const expected = await getQuote(
+      stableToken.address,
+      celoNativeTokenAddress,
+      sellAmount.toFixed()
+    )
+
+    console.log('Swapping', sellAmount.toFixed(), 'for at least', expected)
+    const tx = await mento.swapIn(
+      stableToken.address,
+      celoNativeTokenAddress,
+      sellAmount.toFixed(),
+      expected || minBuyAmount // TODO use minBuyAmount if given / not zero
+    )
+    console.info('original tx', tx)
     // Set explicit gas based on github.com/celo-org/celo-monorepo/issues/2541
-    await displaySendTx('exchange', exchangeTx, { gas: 300000 })
+    await displaySendEthersTxViaCK('exchange', tx, kit.connection, { gas: '300000' })
   }
 }

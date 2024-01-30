@@ -1608,6 +1608,7 @@ __metadata:
     "@celo/wallet-local": "npm:^5.1.1"
     "@ethereumjs/util": "npm:8.0.5"
     "@ledgerhq/hw-transport-node-hid": "npm:^6.27.4"
+    "@mento-protocol/mento-sdk": "npm:^0.2.2"
     "@oclif/core": "npm:^3.18.1"
     "@oclif/plugin-autocomplete": "npm:^3.0.5"
     "@oclif/plugin-commands": "npm:^3.1.1"
@@ -1629,6 +1630,7 @@ __metadata:
     chalk: "npm:^2.4.2"
     command-exists: "npm:^1.2.9"
     debug: "npm:^4.1.1"
+    ethers: "npm:5"
     fs-extra: "npm:^8.1.0"
     humanize-duration: "npm:^3.29.0"
     jest: "npm:^29.0.2"
@@ -3718,6 +3720,24 @@ __metadata:
     globby: "npm:^11.0.0"
     read-yaml-file: "npm:^1.1.0"
   checksum: 4912e002199ff3974ec48586376a04c5f1815a4faa5f4d36b0698838eec143c9d4e3d42c41e0de009f48a1e2251802ed63c1311ab44de225b50102f85919a248
+  languageName: node
+  linkType: hard
+
+"@mento-protocol/mento-core-ts@npm:^0.2.0":
+  version: 0.2.1
+  resolution: "@mento-protocol/mento-core-ts@npm:0.2.1"
+  checksum: 8f3c37c62852caaadae93b2158075af091a4827742a986fec249653a3fdcb8405299aa6c9724ff8e4e94cc9ee9073bc6ce3f2505bfd68eeaf589dce8e593d9fd
+  languageName: node
+  linkType: hard
+
+"@mento-protocol/mento-sdk@npm:^0.2.2":
+  version: 0.2.2
+  resolution: "@mento-protocol/mento-sdk@npm:0.2.2"
+  dependencies:
+    "@mento-protocol/mento-core-ts": "npm:^0.2.0"
+  peerDependencies:
+    ethers: ^5.7
+  checksum: 73c7bbf0cfb930e7574c9b2aaf4d06f5fa23921262c4954f743b3dee3121dc8d2941da71ba0749572a48f428f06d4d4c36a1672418021b4b9f7facc7efd3502e
   languageName: node
   linkType: hard
 
@@ -11421,24 +11441,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ethers@npm:^4.0.32":
-  version: 4.0.49
-  resolution: "ethers@npm:4.0.49"
-  dependencies:
-    aes-js: "npm:3.0.0"
-    bn.js: "npm:^4.11.9"
-    elliptic: "npm:6.5.4"
-    hash.js: "npm:1.1.3"
-    js-sha3: "npm:0.5.7"
-    scrypt-js: "npm:2.0.4"
-    setimmediate: "npm:1.0.4"
-    uuid: "npm:2.0.1"
-    xmlhttprequest: "npm:1.8.0"
-  checksum: a4cec0254f940a0fb118317d23676faa46eb5540fc0a3b9177b8aef71318f509ed19b8264f102b1a2a32d0256274ecc526fd926bd22a4a4ac25cd8e0e6560f12
-  languageName: node
-  linkType: hard
-
-"ethers@npm:^5.0.13":
+"ethers@npm:5, ethers@npm:^5.0.13":
   version: 5.7.2
   resolution: "ethers@npm:5.7.2"
   dependencies:
@@ -11473,6 +11476,23 @@ __metadata:
     "@ethersproject/web": "npm:5.7.1"
     "@ethersproject/wordlists": "npm:5.7.0"
   checksum: 227dfa88a2547c799c0c3c9e92e5e246dd11342f4b495198b3ae7c942d5bf81d3970fcef3fbac974a9125d62939b2d94f3c0458464e702209b839a8e6e615028
+  languageName: node
+  linkType: hard
+
+"ethers@npm:^4.0.32":
+  version: 4.0.49
+  resolution: "ethers@npm:4.0.49"
+  dependencies:
+    aes-js: "npm:3.0.0"
+    bn.js: "npm:^4.11.9"
+    elliptic: "npm:6.5.4"
+    hash.js: "npm:1.1.3"
+    js-sha3: "npm:0.5.7"
+    scrypt-js: "npm:2.0.4"
+    setimmediate: "npm:1.0.4"
+    uuid: "npm:2.0.1"
+    xmlhttprequest: "npm:1.8.0"
+  checksum: a4cec0254f940a0fb118317d23676faa46eb5540fc0a3b9177b8aef71318f509ed19b8264f102b1a2a32d0256274ecc526fd926bd22a4a4ac25cd8e0e6560f12
   languageName: node
   linkType: hard
 

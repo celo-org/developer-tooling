@@ -1,7 +1,16 @@
-import { CeloTransactionObject, CeloTx, EventLog, parseDecodedParams } from '@celo/connect'
+import {
+  CeloTransactionObject,
+  CeloTx,
+  Connection,
+  EventLog,
+  TransactionResult,
+  parseDecodedParams,
+} from '@celo/connect'
 import { Errors, ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import chalk from 'chalk'
+import { ethers } from 'ethers'
+import { convertEthersToCeloTx } from './mento-broker-adaptor'
 
 const CLIError = Errors.CLIError
 
@@ -11,6 +20,26 @@ export async function displayWeb3Tx(name: string, txObj: any, tx?: Omit<CeloTx, 
   const result = await txObj.send(tx)
   console.log(result)
   ux.action.stop()
+}
+// allows building a tx with ethers but signing and sending with celo Connection
+// cant use displaySendTx because it expects a CeloTransactionObject which isnt really possible to convert to from ethers
+export async function displaySendEthersTxViaCK(
+  name: string,
+  txData: ethers.providers.TransactionRequest,
+  connection: Connection,
+  defaultParams: { gas?: string } = {}
+) {
+  ux.action.start(`Sending Transaction: ${name}`)
+  const tx = convertEthersToCeloTx(txData, defaultParams)
+  const txWithPrices = await connection.setFeeMarketGas(tx)
+  console.log(txWithPrices)
+  try {
+    const result = await connection.sendTransaction(txWithPrices)
+    await innerDisplaySendTx(name, result)
+  } catch (e) {
+    ux.action.stop(`failed: ${(e as Error).message}`)
+    throw e
+  }
 }
 
 export async function displaySendTx<A>(
@@ -22,30 +51,39 @@ export async function displaySendTx<A>(
   ux.action.start(`Sending Transaction: ${name}`)
   try {
     const txResult = await txObj.send(tx)
-    const txHash = await txResult.getHash()
-
-    console.log(chalk`SendTransaction: {red.bold ${name}}`)
-    printValueMap({ txHash })
-
-    const txReceipt = await txResult.waitReceipt()
-    ux.action.stop()
-
-    if (displayEventName && txReceipt.events) {
-      Object.entries(txReceipt.events)
-        .filter(
-          ([eventName]) =>
-            (typeof displayEventName === 'string' && eventName === displayEventName) ||
-            displayEventName.includes(eventName)
-        )
-        .forEach(([eventName, log]) => {
-          const { params } = parseDecodedParams((log as EventLog).returnValues)
-          console.log(chalk.magenta.bold(`${eventName}:`))
-          printValueMap(params, chalk.magenta)
-        })
-    }
+    await innerDisplaySendTx(name, txResult, displayEventName)
   } catch (e) {
     ux.action.stop(`failed: ${(e as Error).message}`)
     throw e
+  }
+}
+
+// to share between displaySendTx and displaySendEthersTxViaCK
+async function innerDisplaySendTx(
+  name: string,
+  txResult: TransactionResult,
+  displayEventName?: string | string[] | undefined
+) {
+  const txHash = await txResult.getHash()
+
+  console.log(chalk`SendTransaction: {red.bold ${name}}`)
+  printValueMap({ txHash })
+
+  const txReceipt = await txResult.waitReceipt()
+  ux.action.stop()
+
+  if (displayEventName && txReceipt.events) {
+    Object.entries(txReceipt.events)
+      .filter(
+        ([eventName]) =>
+          (typeof displayEventName === 'string' && eventName === displayEventName) ||
+          displayEventName.includes(eventName)
+      )
+      .forEach(([eventName, log]) => {
+        const { params } = parseDecodedParams((log as EventLog).returnValues)
+        console.log(chalk.magenta.bold(`${eventName}:`))
+        printValueMap(params, chalk.magenta)
+      })
   }
 }
 

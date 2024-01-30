@@ -31,6 +31,7 @@ export async function checkNotDangerousExchange(
   const oracles = await kit.contracts.getSortedOracles()
   const exchange = await kit.contracts.getExchange(stableTokenInfo.symbol as StableToken)
   const oracleMedianRate = (await oracles.medianRate(stableTokenInfo.contract)).rate
+  // TODO mento  since mento broker is different im not sure what do replace this with
   const buckets = await exchange.getBuyAndSellBuckets(false)
 
   const chainRate = buckets[1].dividedBy(buckets[0])
