@@ -62,4 +62,4 @@ jobs:
     if: ${{ contains(fromJson(needs.release.outputs.publishedPackages).*.name, '@celo/cli') }}
     uses: celo-org/developer-tooling/.github/workflows/open-docs-pr.yml@main
     with:
-      commit: TODO
+      commit: ${{ github.sha }}

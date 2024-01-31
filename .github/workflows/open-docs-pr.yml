@@ -19,9 +19,7 @@ on:
 jobs:
   open-docs-pr:
     name: Open a pull-request on the celo-org/docs repository
-    # TODO: ask the correct runner for this workflow
     runs-on: ubuntu-latest
-    # TODO: ask correct permissions
     permissions:
       contents: write
       id-token: write
@@ -42,8 +40,7 @@ jobs:
           repository: 'celo-org/docs'
           submodules: 'recursive'
           fetch-depth: 0
-          # TODO: swap to main
-          ref: chore/docs-sync
+          ref: main
           token: ${{ env.DOCS_TOKEN }}
 
       - name: Open pull-request
@@ -51,8 +48,7 @@ jobs:
           COMMIT: ${{ inputs.commit }}
           REPOSITORY: 'celo-org/docs'
           DOCS_CWD: 'celo-docs'
-          # TODO: swap to main
-          BASE_BRANCH: chore/docs-sync
+          BASE_BRANCH: main
           NEW_BRANCH: 'ci/${{ github.run_id }}-${{ github.run_attempt }}'
           BOT_NAME: 'github-actions'
           BOT_EMAIL: 'github-actions@github.com'
@@ -78,11 +74,11 @@ jobs:
           git push origin $NEW_BRANCH
 
           cat >/tmp/pr-body.md <<EOL
-          Update developer-tooling submodule to \`[$COMMIT](https://github.com/celo-org/developer-tooling/commit/$COMMIT).\`
+          Update developer-tooling submodule to [$COMMIT](https://github.com/celo-org/developer-tooling/commit/$COMMIT).
 
-          Merging this pull-request will update the docs using generated files (such as the CLI).
+          Merging this pull-request will update the docs using generated files (such as the CLI docs).
 
-          🤖 __This pull-request was opened by a robot beep boop.__ 🤖
+          🤖 _This pull-request was opened by a robot beep boop._ 🤖
           EOL
 
           echo "$DOCS_TOKEN" > token.txt

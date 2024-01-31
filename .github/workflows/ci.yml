@@ -325,10 +325,3 @@ jobs:
           cd $RUNNER_TEMP
           npm install $RUNNER_WORKSPACE/developer-tooling/packages/sdk/base/*.tgz
           npm install $RUNNER_WORKSPACE/developer-tooling/packages/sdk/utils/*.tgz
-
-  temp-create-pr:
-    name: "[TEMPORARY] Open PR on Nico's fork on push"
-    if: true
-    uses: celo-org/developer-tooling/.github/workflows/open-docs-pr.yml@ci/update-celo-docs
-    with:
-      commit: ${{ github.event.pull_request.head.sha }}
