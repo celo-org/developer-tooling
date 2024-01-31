@@ -4,7 +4,7 @@ import { Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendEthersTxViaCK, displaySendTx } from '../../utils/cli'
+import { binaryPrompt, displaySendEthersTxViaCK, displaySendTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { checkNotDangerousExchange } from '../../utils/exchange'
 import { enumEntriesDupWithLowercase } from '../../utils/helpers'
@@ -72,7 +72,15 @@ export default class ExchangeCelo extends BaseCommand {
         depeggedPricePercentage,
         stableTokenInfos[stableToken]
       )
-
+      if (!check) {
+        console.log('Cancelled')
+        return
+      }
+    } else if (expectedAmountToReceive.lt(minBuyAmount.toString())) {
+      const check = await binaryPrompt(
+        'Warning: the expected amount to receive is less than the minimum amount to receive. Are you sure you want to continue?',
+        false
+      )
       if (!check) {
         console.log('Cancelled')
         return

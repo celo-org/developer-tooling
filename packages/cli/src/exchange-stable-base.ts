@@ -50,6 +50,10 @@ export default class ExchangeStableBase extends BaseCommand {
 
     console.info(`Prepare to exchange ${stableToken.address} for ${celoNativeTokenAddress}`)
 
+    // TODO: im unsure how to handle that now with mento we get a quote vs using the forAtLeast param
+    // at the moment all i do is check if the quote is bigger than the for atLeast.
+    // but what if someone wanted to accept less than the quote?
+    // should I only use the quote if they don't provide a forAtLeast?
     const expectedAmountToReceive = await getQuote(
       stableToken.address,
       celoNativeTokenAddress,
