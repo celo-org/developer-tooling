@@ -41,6 +41,7 @@ jobs:
         with:
           repository: 'celo-org/docs'
           submodules: 'recursive'
+          fetch-depth: 0 # is this necessary?
           # TODO: swap to main
           ref: chore/docs-sync
           token: ${{ env.DOCS_TOKEN }}
