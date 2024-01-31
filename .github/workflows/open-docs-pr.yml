@@ -34,15 +34,17 @@ jobs:
       - name: Open pull-request
         run: |
           COMMIT=${{ inputs.commit }}
-          REPOSITORY="nicolasbrugneaux/celo-docs"
+          USERNAME=nicolasbrugneaux
+          REPOSITORY="$USERNAME/celo-docs"
           DOCS_CWD="celo-docs"
           BRANCH_NAME="ci/${{ github.run_id }}-${{ github.run_attempt }}"
+          TOKEN=${{ secrets.NICO_PERSONAL_TOKEN_FORK }}
 
           # Clone the remote repository
           git clone \
             --recurse-submodules \
             --branch=main \
-            https://github.com/$REPOSITORY \
+            https://$USERNAME:$TOKEN@github.com/$REPOSITORY \
             $DOCS_CWD
             
           cd $DOCS_CWD
@@ -64,7 +66,7 @@ jobs:
           git commit -m "chore: update developer-tooling submodule"
           git push origin $BRANCH_NAME
 
-          echo "${{ secrets.ACCESS_TOKEN }}" > token.txt
+          echo "$TOKEN" > token.txt
           gh auth login --with-token < token.txt
           gh pr create \
             --body "__I was created by a bot beep boop__" \
