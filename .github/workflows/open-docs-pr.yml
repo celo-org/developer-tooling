@@ -38,7 +38,7 @@ jobs:
           REPOSITORY="$USERNAME/celo-docs"
           DOCS_CWD="celo-docs"
           BRANCH_NAME="ci/${{ github.run_id }}-${{ github.run_attempt }}"
-          TOKEN=${{ secrets.NICO_PERSONAL_TOKEN_FORK }}
+          TOKEN=${{ secrets.NICO_PERSONAL_TOKEN_FORK2 }}
 
           # Clone the remote repository
           git clone \
