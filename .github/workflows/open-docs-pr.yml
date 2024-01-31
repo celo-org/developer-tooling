@@ -57,6 +57,8 @@ jobs:
           BOT_EMAIL: 'github-actions@github.com'
 
         run: |
+          set -x
+
           # Setup the committers identity.
           git config user.name $BOT_NAME
           git config user.email $BOT_EMAIL
@@ -67,9 +69,11 @@ jobs:
           git submodule sync
           cd submodules/developer-tooling
           git fetch --all
+          git remote update
           git checkout $COMMIT
           cd ..
 
+          git status
           git add .
           git commit -m "chore: update developer-tooling submodule"
           git push origin $NEW_BRANCH
@@ -77,7 +81,7 @@ jobs:
           echo "$DOCS_TOKEN" > token.txt
           gh auth login --with-token < token.txt
           gh pr create \
-            --body "__I was created by a bot beep boop__" \
-            --title "chore: update developer-tooling submodule to $COMMIT" \
+            --body "Update developer-tooling submodule to $COMMIT\n__I was created by a bot beep boop__" \
+            --title "chore: update auto-generated docs reference from developer-tooling" \
             --head "$NEW_BRANCH" \
             --base "$BASE_BRANCH"
