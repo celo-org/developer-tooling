@@ -70,6 +70,7 @@ jobs:
           cd submodules/developer-tooling
           git fetch --all
           git remote update
+          git remote -v
           git checkout $COMMIT
           cd ..
 
