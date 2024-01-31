@@ -46,14 +46,14 @@ jobs:
           REPOSITORY="$USERNAME/celo-docs"
           DOCS_CWD="celo-docs"
           BRANCH_NAME="ci/${{ github.run_id }}-${{ github.run_attempt }}"
-           TOKEN=${{ env.DOCS_TOKEN }}
+          TOKEN=${{ env.DOCS_TOKEN }}
 
 
           # Clone the remote repository
           git clone \
             --recurse-submodules \
             --branch=main \
-            https://$USERNAME:$TOKEN@github.com/$REPOSITORY \
+            https://$TOKEN@github.com/$REPOSITORY \
             $DOCS_CWD
             
           cd $DOCS_CWD
