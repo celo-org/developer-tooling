@@ -61,8 +61,8 @@ jobs:
           set -x
 
           # Setup the committers identity.
-          git config user.name $BOT_NAME
-          git config user.email $BOT_EMAIL
+          git config --global user.name $BOT_NAME
+          git config --global user.email $BOT_EMAIL
 
           # Create a new feature branch for the changes.
           git checkout -b $NEW_BRANCH
@@ -77,10 +77,18 @@ jobs:
           git commit -m "chore: update developer-tooling submodule"
           git push origin $NEW_BRANCH
 
+          cat >/tmp/pr-body.md <<EOL
+          Update developer-tooling submodule to \`[$COMMIT](https://github.com/celo-org/developer-tooling/commit/$COMMIT).\`
+
+          Merging this pull-request will update the docs using generated files (such as the CLI).
+
+          🤖 __This pull-request was opened by a robot beep boop.__ 🤖
+          EOL
+
           echo "$DOCS_TOKEN" > token.txt
           gh auth login --with-token < token.txt
           gh pr create \
-            --body "Update developer-tooling submodule to $COMMIT\n__This pull-request was opened by a bot beep boop.__" \
+            --body-file /tmp/pr-body.md \
             --title "chore: update auto-generated docs reference from developer-tooling" \
             --head "$NEW_BRANCH" \
             --base "$BASE_BRANCH"
