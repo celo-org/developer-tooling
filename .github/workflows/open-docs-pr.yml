@@ -42,8 +42,8 @@ jobs:
       - name: Open pull-request
         run: |
           COMMIT=${{ inputs.commit }}
-          USERNAME=nicolasbrugneaux
-          REPOSITORY="$USERNAME/celo-docs"
+          USERNAME=celo-org
+          REPOSITORY="$USERNAME/docs"
           DOCS_CWD="celo-docs"
           BRANCH_NAME="ci/${{ github.run_id }}-${{ github.run_attempt }}"
           TOKEN=${{ env.DOCS_TOKEN }}
