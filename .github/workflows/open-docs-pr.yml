@@ -39,33 +39,27 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
         with:
+          repository: 'celo-org/docs'
+          submodules: true
+          # TODO: swap to main
+          ref: chore/docs-sync
           token: ${{ env.DOCS_TOKEN }}
 
-      - name: Setup env
+      - name: Open pull-request
         env:
           COMMIT: ${{ inputs.commit }}
-          USERNAME: celo-org
-          REPOSITORY: '${{ env.USERNAME }}/docs'
+          REPOSITORY: 'celo-org/docs'
           DOCS_CWD: 'celo-docs'
-          NEW_BRANCH: 'ci/${{ github.run_id }}-${{ github.run_attempt }}'
-          TOKEN: ${{ env.DOCS_TOKEN }}
           # TODO: swap to main
           BASE_BRANCH: chore/docs-sync
+          NEW_BRANCH: 'ci/${{ github.run_id }}-${{ github.run_attempt }}'
+          BOT_NAME: 'github-actions'
+          BOT_EMAIL: 'ithub-actions@github.com'
 
         run: |
-          # Clone the remote repository
-          git clone \
-            --recurse-submodules \
-            --branch=$BASE_BRANCH \
-            git@github.com:$REPOSITORY \
-            $DOCS_CWD
-            
-          cd $DOCS_CWD
-
           # Setup the committers identity.
-          # TODO: ask security for a bot account
-          git config --global user.email "apptooling@clabs.co"
-          git config --global user.name "The devtoolers"
+          git config user.name $BOT_NAME
+          git config user.email $BOT_EMAIL
 
           # Create a new feature branch for the changes.
           git checkout -b $NEW_BRANCH
@@ -79,7 +73,7 @@ jobs:
           git commit -m "chore: update developer-tooling submodule"
           git push origin $NEW_BRANCH
 
-          echo "$TOKEN" > token.txt
+          echo "$DOCS_TOKEN" > token.txt
           gh auth login --with-token < token.txt
           gh pr create \
             --body "__I was created by a bot beep boop__" \
