@@ -28,9 +28,6 @@ jobs:
       pull-requests: write
       repository-projects: write
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
-
       - name: Fetch secrets from AKeyless
         id: fetch-secrets
         uses: docker://us-west1-docker.pkg.dev/devopsre/akeyless-public/akeyless-action:latest
@@ -38,6 +35,11 @@ jobs:
           access-id: p-kf9vjzruht6l
           api-url: https://api.gateway.akeyless.celo-networks-dev.org
           dynamic-secrets: '{"/dynamic-secrets/keys/github/docs/contents=write,pull_requests=write":"DOCS_TOKEN"}'
+
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          token: ${{ env.DOCS_TOKEN }}
 
       - name: Open pull-request
         run: |
@@ -55,15 +57,15 @@ jobs:
           git clone \
             --recurse-submodules \
             --branch=$BASE_BRANCH \
-            https://$TOKEN@github.com/$REPOSITORY \
+            https://github.com/$REPOSITORY \
             $DOCS_CWD
             
           cd $DOCS_CWD
 
           # Setup the committers identity.
           # TODO: ask security for a bot account
-          git config user.email "nicolas.brugneaux@clabs.co"
-          git config user.name "Nicolas Brugneaux"
+          git config --global user.email "apptooling@clabs.co"
+          git config --global user.name "The devtoolers"
 
           # Create a new feature branch for the changes.
           git checkout -b $NEW_BRANCH
