@@ -31,6 +31,14 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
+      - name: Fetch secrets from AKeyless
+        id: fetch-secrets
+        uses:  us-docker.pkg.dev/clabs-secrets-and-permissions/public-images/akeyless-actions:latest
+        with:
+          access-id: p-kf9vjzruht6l
+          dynamic-secrets: '{"/dynamic-secrets/keys/github/docs/contents=write,pull_requests=write":"DOCS_TOKEN"}'
+
+
       - name: Open pull-request
         run: |
           COMMIT=${{ inputs.commit }}
@@ -38,7 +46,8 @@ jobs:
           REPOSITORY="$USERNAME/celo-docs"
           DOCS_CWD="celo-docs"
           BRANCH_NAME="ci/${{ github.run_id }}-${{ github.run_attempt }}"
-          TOKEN=${{ secrets.NICO_PERSONAL_TOKEN_FORK2 }}
+           TOKEN=${{ env.DOCS_TOKEN }}
+
 
           # Clone the remote repository
           git clone \
