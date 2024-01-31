@@ -45,14 +45,16 @@ jobs:
           USERNAME=celo-org
           REPOSITORY="$USERNAME/docs"
           DOCS_CWD="celo-docs"
-          BRANCH_NAME="ci/${{ github.run_id }}-${{ github.run_attempt }}"
+          NEW_BRANCH="ci/${{ github.run_id }}-${{ github.run_attempt }}"
           TOKEN=${{ env.DOCS_TOKEN }}
+          # TODO: swap to main
+          BASE_BRANCH=chore/docs-sync
 
 
           # Clone the remote repository
           git clone \
             --recurse-submodules \
-            --branch=main \
+            --branch=$BASE_BRANCH \
             https://$TOKEN@github.com/$REPOSITORY \
             $DOCS_CWD
             
@@ -64,7 +66,7 @@ jobs:
           git config user.name "Nicolas Brugneaux"
 
           # Create a new feature branch for the changes.
-          git checkout -b $BRANCH_NAME
+          git checkout -b $NEW_BRANCH
 
           cd submodules/developer-tooling
           git fetch origin
@@ -73,12 +75,12 @@ jobs:
 
           git add .
           git commit -m "chore: update developer-tooling submodule"
-          git push origin $BRANCH_NAME
+          git push origin $NEW_BRANCH
 
           echo "$TOKEN" > token.txt
           gh auth login --with-token < token.txt
           gh pr create \
             --body "__I was created by a bot beep boop__" \
             --title "chore: update developer-tooling submodule to $COMMIT" \
-            --head "$BRANCH_NAME" \
-            --base "main"
+            --head "$NEW_BRANCH" \
+            --base "$BASE_BRANCH"
