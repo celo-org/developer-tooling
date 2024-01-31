@@ -65,7 +65,7 @@ jobs:
           git checkout -b $NEW_BRANCH
 
           cd submodules/developer-tooling
-          git fetch origin
+          git fetch origin --all
           git checkout $COMMIT
           cd ..
 
