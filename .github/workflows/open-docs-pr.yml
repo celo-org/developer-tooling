@@ -20,7 +20,7 @@ jobs:
   open-docs-pr:
     name: Open a pull-request on the celo-org/docs repository
     # TODO: ask the correct runner for this workflow
-    runs-on: ['self-hosted', 'org', '8-cpu']
+    runs-on: ubuntu-latest
     # TODO: ask correct permissions
     permissions:
       contents: write
@@ -41,7 +41,7 @@ jobs:
         with:
           repository: 'celo-org/docs'
           submodules: 'recursive'
-          fetch-depth: 0 # is this necessary?
+          fetch-depth: 0
           # TODO: swap to main
           ref: chore/docs-sync
           token: ${{ env.DOCS_TOKEN }}
@@ -67,23 +67,20 @@ jobs:
           # Create a new feature branch for the changes.
           git checkout -b $NEW_BRANCH
 
-          git submodule sync
           cd submodules/developer-tooling
           git fetch --all
-          git remote update
-          git remote -v
           git checkout $COMMIT
-          cd ..
+          cd ../..
 
           git status
-          git add .
+          git add submodules/developer-tooling
           git commit -m "chore: update developer-tooling submodule"
           git push origin $NEW_BRANCH
 
           echo "$DOCS_TOKEN" > token.txt
           gh auth login --with-token < token.txt
           gh pr create \
-            --body "Update developer-tooling submodule to $COMMIT\n__I was created by a bot beep boop__" \
+            --body "Update developer-tooling submodule to $COMMIT\n__This pull-request was opened by a bot beep boop.__" \
             --title "chore: update auto-generated docs reference from developer-tooling" \
             --head "$NEW_BRANCH" \
             --base "$BASE_BRANCH"
