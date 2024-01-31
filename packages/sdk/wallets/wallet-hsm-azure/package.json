@@ -14,17 +14,17 @@
     "sdk"
   ],
   "scripts": {
-    "build": "tsc -b .",
-    "clean": "tsc -b . --clean",
+    "build": "yarn run --top-level tsc -b .",
+    "clean": "yarn run --top-level tsc -b . --clean",
     "docs": "yarn run --top-level typedoc",
     "test": "yarn run --top-level jest --runInBand",
     "lint": "yarn run --top-level eslint -c .eslintrc.js ",
     "prepublishOnly": "yarn build"
   },
   "dependencies": {
-    "@azure/identity": "^1.1.0",
-    "@azure/keyvault-keys": "^4.1.0",
-    "@azure/keyvault-secrets": "^4.1.0",
+    "@azure/identity": "^4.0.1",
+    "@azure/keyvault-keys": "^4.7.2",
+    "@azure/keyvault-secrets": "^4.7.0",
     "@celo/base": "^6.0.0",
     "@celo/connect": "^5.1.1",
     "@celo/utils": "^5.0.6",

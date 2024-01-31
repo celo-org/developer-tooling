@@ -78,7 +78,6 @@ const EIP712_BYTES_REGEXP = /^bytes\d*$/
  *
  * @remarks EIP712Optonal is not part of the EIP712 standard, but is fully compatible with it.
  */
-// tslint:disable-next-line:interface-over-type-literal Only builds when defined as type literal.
 export type EIP712Optional<T extends EIP712ObjectValue> = {
   defined: boolean
   value: T
@@ -220,7 +219,6 @@ function encodeValue(valueType: string, value: EIP712ObjectValue, types: EIP712T
 
   // Encode structs as its hashStruct (e.g. keccak(typeHash || encodeData(struct)) ).
   if (types[valueType] !== undefined) {
-    // tslint:disable-next-line:no-unnecessary-type-assertion.
     return structHash(valueType, value as EIP712Object, types)
   }
 

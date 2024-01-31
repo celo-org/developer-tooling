@@ -75,12 +75,10 @@ describe.skip('rpc-wallet', () => {
     }
 
     const result = await wallet.signTransaction(tx)
-    // tslint:disable:no-console
     console.log(result)
 
     const connection = new Connection(new Web3(ipcUrl), wallet)
     const txResult = await connection.sendSignedTransaction(result.raw)
-    // tslint:disable:no-console
     console.log(txResult)
   })
 })

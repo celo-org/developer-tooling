@@ -1,4 +1,3 @@
-// tslint:disable: ordered-imports
 import { ensureLeading0x, trimLeading0x } from '@celo/base/lib/address'
 import {
   CeloTx,
