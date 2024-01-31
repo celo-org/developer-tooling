@@ -41,23 +41,23 @@ jobs:
         with:
           token: ${{ env.DOCS_TOKEN }}
 
-      - name: Open pull-request
-        run: |
-          COMMIT=${{ inputs.commit }}
-          USERNAME=celo-org
-          REPOSITORY="$USERNAME/docs"
-          DOCS_CWD="celo-docs"
-          NEW_BRANCH="ci/${{ github.run_id }}-${{ github.run_attempt }}"
-          TOKEN=${{ env.DOCS_TOKEN }}
+      - name: Setup env
+        env:
+          COMMIT: ${{ inputs.commit }}
+          USERNAME: celo-org
+          REPOSITORY: '${{ env.USERNAME }}/docs'
+          DOCS_CWD: 'celo-docs'
+          NEW_BRANCH: 'ci/${{ github.run_id }}-${{ github.run_attempt }}'
+          TOKEN: ${{ env.DOCS_TOKEN }}
           # TODO: swap to main
-          BASE_BRANCH=chore/docs-sync
+          BASE_BRANCH: chore/docs-sync
 
-
+        run: |
           # Clone the remote repository
           git clone \
             --recurse-submodules \
             --branch=$BASE_BRANCH \
-            https://github.com/$REPOSITORY \
+            git@github.com:$REPOSITORY \
             $DOCS_CWD
             
           cd $DOCS_CWD
