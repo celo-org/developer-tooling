@@ -51,11 +51,17 @@ export default class ExchangeCelo extends BaseCommand {
 
     await newCheckBuilder(this).hasEnoughCelo(res.flags.from, sellAmount).runChecks()
 
-    const [celoToken, stableTokenAddress, { mento, brokerAddress, getQuote }] = await Promise.all([
+    const [celoToken, stableTokenAddress, { mento, brokerAddress }] = await Promise.all([
       kit.contracts.getGoldToken(),
       kit.registry.addressFor(stableTokenInfos[stableToken].contract),
       getMentoBroker(kit.connection),
     ])
+
+    async function getQuote(tokenIn: string, tokenOut: string, amount: string) {
+      const quoteAmountOut = await mento.getAmountOut(tokenIn, tokenOut, amount)
+      const expectedAmountOut = quoteAmountOut.mul(99).div(100)
+      return expectedAmountOut
+    }
 
     console.info(`Fetching Quote`)
     const expectedAmountToReceive = await getQuote(

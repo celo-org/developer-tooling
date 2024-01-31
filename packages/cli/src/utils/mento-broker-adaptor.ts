@@ -12,16 +12,9 @@ export async function getMentoBroker(connection: Connection) {
 
   const brokerAddress = broker.address
 
-  async function getQuote(tokenIn: string, tokenOut: string, amount: string) {
-    const quoteAmountOut = await mento.getAmountOut(tokenIn, tokenOut, amount)
-    const expectedAmountOut = quoteAmountOut.mul(99).div(100)
-    return expectedAmountOut
-  }
-
   return {
     brokerAddress,
     mento,
-    getQuote,
   }
 }
 
@@ -41,6 +34,5 @@ export function convertEthersToCeloTx(
     data: tx.data ? tx.data.toString() : undefined,
     chainId: tx.chainId,
   }
-  console.info(celoTx)
   return { ...defaults, ...celoTx }
 }

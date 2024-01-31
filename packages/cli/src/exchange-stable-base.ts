@@ -41,14 +41,20 @@ export default class ExchangeStableBase extends BaseCommand {
       .hasEnoughStable(res.flags.from, sellAmount, this._stableCurrency)
       .runChecks()
 
-    const [stableToken, celoNativeTokenAddress, { mento, brokerAddress, getQuote }] =
-      await Promise.all([
-        kit.contracts.getStableToken(this._stableCurrency),
-        kit.registry.addressFor(CeloContract.GoldToken),
-        getMentoBroker(kit.connection),
-      ])
+    const [stableToken, celoNativeTokenAddress, { mento, brokerAddress }] = await Promise.all([
+      kit.contracts.getStableToken(this._stableCurrency),
+      kit.registry.addressFor(CeloContract.GoldToken),
+      getMentoBroker(kit.connection),
+    ])
 
     console.info(`Prepare to exchange ${stableToken.address} for ${celoNativeTokenAddress}`)
+
+    // note using getAmountIn here to match way rate is shown in the oracles
+    async function getQuote(tokenIn: string, tokenOut: string, amount: string) {
+      const quoteAmountOut = await mento.getAmountIn(tokenIn, tokenOut, amount)
+      const expectedAmountOut = quoteAmountOut.mul(99).div(100)
+      return expectedAmountOut
+    }
 
     // TODO: im unsure how to handle that now with mento we get a quote vs using the forAtLeast param
     // at the moment all i do is check if the quote is bigger than the for atLeast.

@@ -32,7 +32,6 @@ export async function displaySendEthersTxViaCK(
   ux.action.start(`Sending Transaction: ${name}`)
   const tx = convertEthersToCeloTx(txData, defaultParams)
   const txWithPrices = await connection.setFeeMarketGas(tx)
-  console.log(txWithPrices)
   try {
     const result = await connection.sendTransaction(txWithPrices)
     await innerDisplaySendTx(name, result)
