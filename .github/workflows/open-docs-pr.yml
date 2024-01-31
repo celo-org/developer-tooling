@@ -64,8 +64,9 @@ jobs:
           # Create a new feature branch for the changes.
           git checkout -b $NEW_BRANCH
 
+          git submodule sync
           cd submodules/developer-tooling
-          git fetch origin --all
+          git fetch --all
           git checkout $COMMIT
           cd ..
 
