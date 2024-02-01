@@ -67,9 +67,11 @@ jobs:
           git fetch --all
           git checkout $COMMIT
           cd ../..
+          ./scripts/copy-generated-docs.sh
 
           git status
           git add submodules/developer-tooling
+          git add docs/cli
           git commit -m "chore: update developer-tooling submodule"
           git push origin $NEW_BRANCH
 
