@@ -1,5 +1,21 @@
 # Changelog
 
+## 4.0.0-beta.1
+
+### Patch Changes
+
+- Updated dependencies [[`45d156d`](https://github.com/celo-org/developer-tooling/commit/45d156d03c03399bef51a00fe2b5cfb5e5669642), [`6b2e34c`](https://github.com/celo-org/developer-tooling/commit/6b2e34c973290da221aaabdc2bf4c6654ef9f99c)]:
+  - @celo/wallet-hsm-azure@5.1.2-beta.0
+  - @celo/utils@6.0.0-beta.0
+  - @celo/connect@5.1.2-beta.0
+  - @celo/contractkit@6.0.1-beta.2
+  - @celo/cryptographic-utils@5.0.7-beta.0
+  - @celo/explorer@5.0.8-beta.1
+  - @celo/governance@5.0.9-beta.1
+  - @celo/phone-utils@6.0.1-beta.0
+  - @celo/wallet-ledger@5.1.2-beta.0
+  - @celo/wallet-local@5.1.2-beta.0
+
 ## 4.0.0-beta.0
 
 ### Major Changes

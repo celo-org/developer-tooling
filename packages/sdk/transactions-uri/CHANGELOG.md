@@ -1,5 +1,12 @@
 # @celo/transactions-uri
 
+## 5.0.7-beta.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @celo/connect@5.1.2-beta.0
+
 ## 5.0.6
 
 ### Patch Changes
