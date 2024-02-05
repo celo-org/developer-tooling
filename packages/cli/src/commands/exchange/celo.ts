@@ -98,7 +98,13 @@ export default class ExchangeCelo extends BaseCommand {
       celoToken.increaseAllowance(brokerAddress, sellAmount.toFixed())
     )
 
-    ux.log('Swapping', sellAmount.toFixed(), 'for at least', expectedAmountToReceive.toString())
+    ux.log(
+      'Swapping',
+      sellAmount.toFixed(),
+      'CELO for at least',
+      expectedAmountToReceive.toString(),
+      stableToken
+    )
     const tx = await mento.swapIn(
       celoToken.address,
       stableTokenAddress,

@@ -47,7 +47,7 @@ export default class ExchangeStableBase extends BaseCommand {
       getMentoBroker(kit.connection),
     ])
 
-    ux.log(`Prepare to exchange ${stableToken.address} for ${celoNativeTokenAddress}`)
+    ux.debug(`Prepare to exchange ${stableToken.address} for ${celoNativeTokenAddress}`)
 
     // note using getAmountIn here to match way rate is shown in the oracles
     async function getQuote(tokenIn: string, tokenOut: string, amount: string) {
@@ -93,7 +93,14 @@ export default class ExchangeStableBase extends BaseCommand {
       stableToken.increaseAllowance(brokerAddress, sellAmount.toFixed())
     )
 
-    ux.info('Swapping', sellAmount.toFixed(), 'for at least', expectedAmountToReceive.toString())
+    ux.info(
+      'Swapping',
+      sellAmount.toFixed(),
+      this._stableCurrency,
+      ' for at least',
+      expectedAmountToReceive.toString(),
+      ' CELO'
+    )
     const tx = await mento.swapIn(
       stableToken.address,
       celoNativeTokenAddress,

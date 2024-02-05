@@ -28,8 +28,7 @@ export async function checkNotDangerousExchange(
 ): Promise<boolean> {
   const oracles = await kit.contracts.getSortedOracles()
   const oracleMedianRate = (await oracles.medianRate(stableTokenInfo.contract)).rate
-  // TODO when swapping  CELO for cusd this rate is good but when we do cusd for CELO it is not what we want
-  // XX% difference between rates
+
   const expectedSlippage = calculateExpectedSlippage(
     sellAmount,
     quotedAmountToReceiveWithBuffer,
@@ -59,9 +58,7 @@ export function calculateExpectedSlippage(
 
   const priceDifference = quotedPrice.minus(marketPrice)
   const slippage = priceDifference.dividedBy(quotedPrice).multipliedBy(100)
-  console.info(
-    `Quoted Price: ${quotedPrice.toString()} differs from Market Price: ${marketPrice.toString()} by ${slippage.toString()}%`
-  )
+  console.info(`Quoted Price: ${quotedPrice.decimalPlaces(8).toString()} per token`)
 
   return slippage.toNumber()
 }
