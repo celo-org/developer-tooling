@@ -8,7 +8,7 @@ describe('calculateExpectedSlippage', () => {
       const sellingAmount = new BigNumber(100)
       const quotedAmountToReceiveWithBuffer = new BigNumber(110)
       const oracleMedianRate = new BigNumber('1.1')
-      const slippage = 0 // 2% slippage
+      const slippage = 0 // % slippage
       // (Executed Price – Expected Price) / Expected Price * 100
       expect(
         calculateExpectedSlippage(sellingAmount, quotedAmountToReceiveWithBuffer, oracleMedianRate)
@@ -20,7 +20,7 @@ describe('calculateExpectedSlippage', () => {
       const sellingAmount = new BigNumber(100)
       const quotedAmountToReceiveWithBuffer = new BigNumber(105)
       const oracleMedianRate = new BigNumber('1.1')
-      const slippage = -1.81 // 2% slippage
+      const slippage = -4.761904761904762 // % slippage
       // (Executed Price – Expected Price) / Expected Price * 100
       expect(
         calculateExpectedSlippage(sellingAmount, quotedAmountToReceiveWithBuffer, oracleMedianRate)
@@ -32,8 +32,7 @@ describe('calculateExpectedSlippage', () => {
       const sellingAmount = new BigNumber(100)
       const quotedAmountToReceiveWithBuffer = new BigNumber(115)
       const oracleMedianRate = new BigNumber('1.1')
-      const slippage = 1.81 // 2% slippage
-      // (Executed Price – Expected Price) / Expected Price * 100
+      const slippage = 4.3478260869565215 // % slippage
       expect(
         calculateExpectedSlippage(sellingAmount, quotedAmountToReceiveWithBuffer, oracleMedianRate)
       ).toEqual(slippage)
