@@ -1,5 +1,6 @@
 import { CeloTx, Connection } from '@celo/connect'
 import { Mento } from '@mento-protocol/mento-sdk'
+import { ux } from '@oclif/core'
 import { ethers } from 'ethers'
 
 export async function getMentoBroker(connection: Connection) {
@@ -35,4 +36,39 @@ export function convertEthersToCeloTx(
     chainId: tx.chainId,
   }
   return { ...defaults, ...celoTx }
+}
+
+const VALID_SYMBOLS = new Set(['cUSD', 'cEUR', 'cREAL', 'CELO'])
+
+// amount is string representation of a number in wei
+export async function getExchangeRates(
+  connection: Connection,
+  amount: string,
+  validSymbols: Set<string> = VALID_SYMBOLS
+) {
+  const { mento } = await getMentoBroker(connection)
+
+  const pairs = await mento.getTradeablePairs()
+  // the cli only supports CELO to stable token pairs
+  const celoPairs = pairs.filter((pair) => {
+    return validSymbols.has(pair[0].symbol) && validSymbols.has(pair[1].symbol)
+  })
+
+  return Promise.all(
+    celoPairs.map(async (pair) => {
+      try {
+        const [buy, sell] = await Promise.all([
+          mento.getAmountIn(pair[0].address, pair[1].address, amount),
+          mento.getAmountOut(pair[0].address, pair[1].address, amount),
+        ])
+        return {
+          buy,
+          sell,
+          symbol: pair[0].symbol === 'CELO' ? pair[1].symbol : pair[0].symbol,
+        }
+      } catch (e) {
+        ux.error(`Error Fetching for ${pair[0].symbol} => ${pair[1].symbol}`, e as Error)
+      }
+    })
+  )
 }
