@@ -9,6 +9,7 @@ import { CustomFlags } from '../../utils/command'
 import { checkNotDangerousExchange } from '../../utils/exchange'
 import { enumEntriesDupWithLowercase } from '../../utils/helpers'
 import { getMentoBroker } from '../../utils/mento-broker-adaptor'
+import { consoleLogger } from '@celo/base'
 
 const depeggedPricePercentage = 20
 
@@ -63,13 +64,12 @@ export default class ExchangeCelo extends BaseCommand {
       return expectedAmountOut
     }
 
-    console.info(`Fetching Quote`)
+    consoleLogger(`Fetching Quote`)
     const expectedAmountToReceive = await getQuote(
       celoToken.address,
       stableTokenAddress,
       sellAmount.toFixed()
     )
-
     if (minBuyAmount.toNumber() === 0) {
       const check = await checkNotDangerousExchange(
         kit,
@@ -88,7 +88,7 @@ export default class ExchangeCelo extends BaseCommand {
         false
       )
       if (!check) {
-        console.log('Cancelled')
+        consoleLogger('Cancelled')
         return
       }
     }
@@ -98,7 +98,7 @@ export default class ExchangeCelo extends BaseCommand {
       celoToken.increaseAllowance(brokerAddress, sellAmount.toFixed())
     )
 
-    console.log('Swapping', sellAmount.toFixed(), 'for at least', expectedAmountToReceive)
+    consoleLogger('Swapping', sellAmount.toFixed(), 'for at least', expectedAmountToReceive)
     const tx = await mento.swapIn(
       celoToken.address,
       stableTokenAddress,

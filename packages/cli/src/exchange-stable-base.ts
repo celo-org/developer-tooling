@@ -7,6 +7,7 @@ import { binaryPrompt, displaySendEthersTxViaCK, displaySendTx } from './utils/c
 import { CustomFlags } from './utils/command'
 import { checkNotDangerousExchange } from './utils/exchange'
 import { getMentoBroker } from './utils/mento-broker-adaptor'
+import { consoleLogger } from '@celo/base'
 
 const depeggedPricePercentage = 20
 export default class ExchangeStableBase extends BaseCommand {
@@ -60,6 +61,7 @@ export default class ExchangeStableBase extends BaseCommand {
     // at the moment all i do is check if the quote is bigger than the for atLeast.
     // but what if someone wanted to accept less than the quote?
     // should I only use the quote if they don't provide a forAtLeast?
+    consoleLogger('Fetching quote')
     const expectedAmountToReceive = await getQuote(
       stableToken.address,
       celoNativeTokenAddress,
@@ -77,7 +79,7 @@ export default class ExchangeStableBase extends BaseCommand {
       )
 
       if (!check) {
-        console.log('Cancelled')
+        consoleLogger('Cancelled')
         return
       }
     } else if (expectedAmountToReceive.lt(minBuyAmount.toString())) {
@@ -86,7 +88,7 @@ export default class ExchangeStableBase extends BaseCommand {
         false
       )
       if (!check) {
-        console.log('Cancelled')
+        consoleLogger('Cancelled')
         return
       }
     }
@@ -96,7 +98,7 @@ export default class ExchangeStableBase extends BaseCommand {
       stableToken.increaseAllowance(brokerAddress, sellAmount.toFixed())
     )
 
-    console.log('Swapping', sellAmount.toFixed(), 'for at least', expectedAmountToReceive)
+    consoleLogger('Swapping', sellAmount.toFixed(), 'for at least', expectedAmountToReceive)
     const tx = await mento.swapIn(
       stableToken.address,
       celoNativeTokenAddress,
