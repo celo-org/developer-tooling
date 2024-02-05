@@ -1,3 +1,4 @@
+import { consoleLogger } from '@celo/base'
 import { CeloContract, StableToken } from '@celo/contractkit'
 import { stableTokenInfos } from '@celo/contractkit/lib/celo-tokens'
 import BigNumber from 'bignumber.js'
@@ -7,7 +8,6 @@ import { binaryPrompt, displaySendEthersTxViaCK, displaySendTx } from './utils/c
 import { CustomFlags } from './utils/command'
 import { checkNotDangerousExchange } from './utils/exchange'
 import { getMentoBroker } from './utils/mento-broker-adaptor'
-import { consoleLogger } from '@celo/base'
 
 const depeggedPricePercentage = 20
 export default class ExchangeStableBase extends BaseCommand {
@@ -98,7 +98,12 @@ export default class ExchangeStableBase extends BaseCommand {
       stableToken.increaseAllowance(brokerAddress, sellAmount.toFixed())
     )
 
-    consoleLogger('Swapping', sellAmount.toFixed(), 'for at least', expectedAmountToReceive)
+    consoleLogger(
+      'Swapping',
+      sellAmount.toFixed(),
+      'for at least',
+      expectedAmountToReceive.toString()
+    )
     const tx = await mento.swapIn(
       stableToken.address,
       celoNativeTokenAddress,

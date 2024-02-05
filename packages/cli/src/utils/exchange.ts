@@ -58,7 +58,10 @@ export function calculateExpectedSlippage(
   const quotedPrice = quotedAmountToReceiveWithBuffer.dividedBy(sellAmount)
 
   const priceDifference = quotedPrice.minus(marketPrice)
-  console.info(`Quoted Price: ${quotedPrice.toString()} vs Market Price: ${marketPrice.toString()}`)
   const slippage = priceDifference.dividedBy(quotedPrice).multipliedBy(100)
+  console.info(
+    `Quoted Price: ${quotedPrice.toString()} differs from Market Price: ${marketPrice.toString()} by ${slippage.toString()}%`
+  )
+
   return slippage.toNumber()
 }
