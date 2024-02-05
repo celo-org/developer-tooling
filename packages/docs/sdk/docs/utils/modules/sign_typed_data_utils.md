@@ -246,7 +246,7 @@ Constructs the struct encoding of the data as the primary type.
 
 #### Defined in
 
-[packages/sdk/utils/src/sign-typed-data-utils.ts:249](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L249)
+[packages/sdk/utils/src/sign-typed-data-utils.ts:248](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L248)
 
 ___
 
@@ -316,7 +316,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/sign-typed-data-utils.ts:258](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L258)
+[packages/sdk/utils/src/sign-typed-data-utils.ts:257](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L257)
 
 ___
 
@@ -368,4 +368,4 @@ Note that EIP-712 does not specify zero values, and so this is non-standard.
 
 #### Defined in
 
-[packages/sdk/utils/src/sign-typed-data-utils.ts:274](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L274)
+[packages/sdk/utils/src/sign-typed-data-utils.ts:273](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L273)

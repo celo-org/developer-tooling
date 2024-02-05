@@ -8,7 +8,6 @@
 
 - [address](modules/address.md)
 - [async](modules/async.md)
-- [bn](modules/bn.md)
 - [celoHistory](modules/celoHistory.md)
 - [collections](modules/collections.md)
 - [contacts](modules/contacts.md)

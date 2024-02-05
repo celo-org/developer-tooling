@@ -29,3 +29,28 @@ This includes:
   - [`@celo/wallet-local`](https://www.npmjs.com/package/@celo/wallet-local)
   - [`@celo/wallet-remote`](https://www.npmjs.com/package/@celo/wallet-remote)
   - [`@celo/wallet-rpc`](https://www.npmjs.com/package/@celo/wallet-rpc)
+
+## Contributing
+
+If you're interested in contributing, please read the [contributing docs](./CONTRIBUTING.md) 
+**before submitting a pull request**.
+
+## Documentation
+
+[Head to the documentation](https://docs.celo.org/) to read and learn more about Celo SDK(s) and 
+CLI(s).
+
+## Community
+
+Check out the following places for more developer tooling-related content:
+
+- Join the [discussions on GitHub](https://github.com/celo-org/developer-tooling/discussions)
+- Follow [@cLabs](https://twitter.com/cLabs) and [@celo](https://twitter.com/Celo) on X 
+  (formerly Twitter) for project updates
+
+## Authors
+
+- [@aaronmgdr](https://github.com/aaronmgdr)
+- [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)
+- [@shazarre](https://github.com/shazarre)
+- [@arthurgousset](https://github.com/arthurgousset)
