@@ -5,7 +5,7 @@ import { enumEntriesDupWithLowercase } from '../../utils/helpers'
 
 const stableTokenOptions = enumEntriesDupWithLowercase(Object.entries(StableToken))
 export default class ExchangeStable extends ExchangeStableBase {
-  static description = 'Exchange Stable Token for CELO via the stability mechanism'
+  static description = 'Exchange Stable Token for CELO via Mento'
 
   static flags = {
     ...ExchangeStableBase.flags,

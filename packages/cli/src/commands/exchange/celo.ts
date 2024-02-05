@@ -1,6 +1,6 @@
 import { StableToken } from '@celo/contractkit'
 import { stableTokenInfos } from '@celo/contractkit/lib/celo-tokens'
-import { Flags } from '@oclif/core'
+import { Flags, ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
@@ -9,14 +9,13 @@ import { CustomFlags } from '../../utils/command'
 import { checkNotDangerousExchange } from '../../utils/exchange'
 import { enumEntriesDupWithLowercase } from '../../utils/helpers'
 import { getMentoBroker } from '../../utils/mento-broker-adaptor'
-import { consoleLogger } from '@celo/base'
 
 const depeggedPricePercentage = 20
 
 const stableTokenOptions = enumEntriesDupWithLowercase(Object.entries(StableToken))
 export default class ExchangeCelo extends BaseCommand {
   static description =
-    'Exchange CELO for StableTokens via the stability mechanism. (Note: this is the equivalent of the old exchange:gold)'
+    'Exchange CELO for StableTokens via Mento. (Note: this is the equivalent of the old exchange:gold)'
 
   static flags = {
     ...BaseCommand.flags,
@@ -64,12 +63,13 @@ export default class ExchangeCelo extends BaseCommand {
       return expectedAmountOut
     }
 
-    consoleLogger(`Fetching Quote`)
+    ux.action.start(`Fetching Quote`)
     const expectedAmountToReceive = await getQuote(
       celoToken.address,
       stableTokenAddress,
       sellAmount.toFixed()
     )
+    ux.action.stop()
     if (minBuyAmount.toNumber() === 0) {
       const check = await checkNotDangerousExchange(
         kit,
@@ -79,8 +79,8 @@ export default class ExchangeCelo extends BaseCommand {
         stableTokenInfos[stableToken]
       )
       if (!check) {
-        console.log('Cancelled')
-        return
+        ux.info('Cancelled')
+        ux.exit(0)
       }
     } else if (expectedAmountToReceive.lt(minBuyAmount.toString())) {
       const check = await binaryPrompt(
@@ -88,8 +88,8 @@ export default class ExchangeCelo extends BaseCommand {
         false
       )
       if (!check) {
-        consoleLogger('Cancelled')
-        return
+        ux.info('Cancelled')
+        ux.exit(0)
       }
     }
 
@@ -98,7 +98,7 @@ export default class ExchangeCelo extends BaseCommand {
       celoToken.increaseAllowance(brokerAddress, sellAmount.toFixed())
     )
 
-    consoleLogger('Swapping', sellAmount.toFixed(), 'for at least', expectedAmountToReceive)
+    ux.log('Swapping', sellAmount.toFixed(), 'for at least', expectedAmountToReceive.toString())
     const tx = await mento.swapIn(
       celoToken.address,
       stableTokenAddress,

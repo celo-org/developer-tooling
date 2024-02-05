@@ -2,7 +2,7 @@ import ExchangeCelo from './celo'
 
 export default class ExchangeGold extends ExchangeCelo {
   static description =
-    'Exchange CELO for StableTokens via the stability mechanism. *DEPRECATION WARNING* Use the "exchange:celo" command instead'
+    'Exchange CELO for StableTokens via Mento. *DEPRECATION WARNING* Use the "exchange:celo" command instead'
 
   static flags = {
     ...ExchangeCelo.flags,

@@ -1,7 +1,7 @@
-import { StableTokenInfo } from '@celo/contractkit/lib/celo-tokens'
 import { Flags, ux } from '@oclif/core'
 
 import { BaseCommand } from '../../base'
+import { getExchangeRates } from '../../utils/mento-broker-adaptor'
 
 export default class ExchangeShow extends BaseCommand {
   static description = 'Show the current exchange rates offered by the Exchange'
@@ -23,21 +23,16 @@ export default class ExchangeShow extends BaseCommand {
     const { flags: parsedFlags } = await this.parse(ExchangeShow)
 
     ux.action.start('Fetching exchange rates...')
-    const exchangeAmounts = await kit.celoTokens.forStableCeloToken(
-      async (info: StableTokenInfo) => {
-        const exchange = await kit.contracts.getContract(info.exchangeContract)
-        return {
-          buy: await exchange.getBuyTokenAmount(parsedFlags.amount as string, true),
-          sell: await exchange.getBuyTokenAmount(parsedFlags.amount as string, false),
-        }
-      }
-    )
+    const exchangeAmounts = await getExchangeRates(kit.connection, parsedFlags.amount as string)
     ux.action.stop()
 
-    Object.entries(exchangeAmounts).forEach((element) => {
-      this.log(`CELO/${element[0]}:`)
-      this.log(`${parsedFlags.amount} CELO => ${element[1]!.buy} ${element[0]}`)
-      this.log(`${parsedFlags.amount} ${element[0]} => ${element[1]!.sell} CELO`)
-    })
+    exchangeAmounts
+      .filter((element) => element !== undefined)
+      .forEach((element) => {
+        this.log(`CELO/${element?.symbol}:`)
+        this.log(`${parsedFlags.amount} CELO => ${element?.buy} ${element?.symbol}`)
+        this.log(`${parsedFlags.amount} ${element?.symbol} => ${element?.sell} CELO`)
+      })
+    ux.exit(0)
   }
 }

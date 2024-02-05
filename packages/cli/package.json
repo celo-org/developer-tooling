@@ -132,7 +132,7 @@
         "description": "Participate in and view the state of Validator Elections"
       },
       "exchange": {
-        "description": "Exchange Celo Dollars and CELO via the stability mechanism"
+        "description": "Exchange Celo Dollars and CELO via Mento"
       },
       "governance": {
         "description": "Interact with on-chain governance proposals and hotfixes"
