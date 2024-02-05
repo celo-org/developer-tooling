@@ -1,6 +1,6 @@
-import { consoleLogger } from '@celo/base'
 import { CeloContract, StableToken } from '@celo/contractkit'
 import { stableTokenInfos } from '@celo/contractkit/lib/celo-tokens'
+import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { BaseCommand } from './base'
 import { newCheckBuilder } from './utils/checks'
@@ -8,7 +8,6 @@ import { binaryPrompt, displaySendEthersTxViaCK, displaySendTx } from './utils/c
 import { CustomFlags } from './utils/command'
 import { checkNotDangerousExchange } from './utils/exchange'
 import { getMentoBroker } from './utils/mento-broker-adaptor'
-
 const depeggedPricePercentage = 20
 export default class ExchangeStableBase extends BaseCommand {
   static flags = {
@@ -48,7 +47,7 @@ export default class ExchangeStableBase extends BaseCommand {
       getMentoBroker(kit.connection),
     ])
 
-    console.info(`Prepare to exchange ${stableToken.address} for ${celoNativeTokenAddress}`)
+    ux.log(`Prepare to exchange ${stableToken.address} for ${celoNativeTokenAddress}`)
 
     // note using getAmountIn here to match way rate is shown in the oracles
     async function getQuote(tokenIn: string, tokenOut: string, amount: string) {
@@ -57,13 +56,14 @@ export default class ExchangeStableBase extends BaseCommand {
       return expectedAmountOut
     }
 
-    consoleLogger('Fetching quote')
+    ux.action.start(`Fetching Quote`)
+
     const expectedAmountToReceive = await getQuote(
       stableToken.address,
       celoNativeTokenAddress,
       sellAmount.toFixed()
     )
-
+    ux.action.stop()
     if (minBuyAmount.toNumber() === 0) {
       const check = await checkNotDangerousExchange(
         kit,
@@ -74,8 +74,8 @@ export default class ExchangeStableBase extends BaseCommand {
       )
 
       if (!check) {
-        consoleLogger('Cancelled')
-        return
+        ux.log('Cancelled')
+        ux.exit(0)
       }
     } else if (expectedAmountToReceive.lt(minBuyAmount.toString())) {
       const check = await binaryPrompt(
@@ -83,8 +83,8 @@ export default class ExchangeStableBase extends BaseCommand {
         false
       )
       if (!check) {
-        consoleLogger('Cancelled')
-        return
+        ux.log('Cancelled')
+        ux.exit(0)
       }
     }
 
@@ -93,12 +93,7 @@ export default class ExchangeStableBase extends BaseCommand {
       stableToken.increaseAllowance(brokerAddress, sellAmount.toFixed())
     )
 
-    consoleLogger(
-      'Swapping',
-      sellAmount.toFixed(),
-      'for at least',
-      expectedAmountToReceive.toString()
-    )
+    ux.info('Swapping', sellAmount.toFixed(), 'for at least', expectedAmountToReceive.toString())
     const tx = await mento.swapIn(
       stableToken.address,
       celoNativeTokenAddress,
