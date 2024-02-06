@@ -21,6 +21,9 @@ const PROXY_IMPLEMENTATION_GETTERS = [
   'implementation',
 ]
 
+const PROXY_IMPLEMENTATION_POSITION_UUPS =
+  '0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc'
+
 const PROXY_ABI: AbiItem[] = PROXY_IMPLEMENTATION_GETTERS.map((funcName) => ({
   constant: true,
   inputs: [],
@@ -234,4 +237,11 @@ export async function tryGetProxyImplementation(
       continue
     }
   }
+
+  const hexValue = await connection.web3.eth.getStorageAt(
+    contract,
+    PROXY_IMPLEMENTATION_POSITION_UUPS
+  )
+  const address = connection.web3.utils.toChecksumAddress('0x' + hexValue.slice(-40))
+  return address
 }

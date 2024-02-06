@@ -336,7 +336,7 @@ export class ProposalBuilder {
     return (
       potentialABIs.find((abi) => {
         try {
-          abiCoder.encodeFunctionCall(abi, tx.args)
+          abiCoder.encodeFunctionCall(abi, this.transformArgs(abi, tx.args))
           return true
         } catch {
           return false
@@ -371,7 +371,9 @@ export class ProposalBuilder {
       methodABI = signatureToAbiDefinition(tx.function)
     }
 
-    const input = this.kit.connection.getAbiCoder().encodeFunctionCall(methodABI, tx.args)
+    const input = this.kit.connection
+      .getAbiCoder()
+      .encodeFunctionCall(methodABI, this.transformArgs(methodABI, tx.args))
     return { input, to: tx.address, value: tx.value }
   }
 
@@ -380,6 +382,25 @@ export class ProposalBuilder {
    *
    */
   buildFunctionCallToExternalContract = this.buildCallToExternalContract
+
+  transformArgs = (abi: AbiItem, args: any[]) => {
+    if (abi.inputs?.length !== args.length) {
+      throw new Error(
+        `ABI inputs length ${abi.inputs?.length} does not match args length ${args.length}`
+      )
+    }
+    const res = []
+    for (let i = 0; i < args.length; i++) {
+      const input = abi.inputs![i]
+      if (input.type === 'tuple') {
+        // support of structs and tuples
+        res.push(JSON.parse(args[i]))
+      } else {
+        res.push(args[i])
+      }
+    }
+    return res
+  }
 
   buildCallToCoreContract = async (tx: ProposalTransactionJSON): Promise<ProposalTransaction> => {
     // Account for canonical registry addresses from current proposal
