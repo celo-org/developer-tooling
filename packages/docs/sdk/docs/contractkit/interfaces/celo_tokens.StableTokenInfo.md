@@ -15,7 +15,6 @@
 ### Properties
 
 - [contract](celo_tokens.StableTokenInfo.md#contract)
-- [exchangeContract](celo_tokens.StableTokenInfo.md#exchangecontract)
 - [symbol](celo_tokens.StableTokenInfo.md#symbol)
 
 ## Properties
@@ -31,16 +30,6 @@
 #### Defined in
 
 [packages/sdk/contractkit/src/celo-tokens.ts:22](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L22)
-
-___
-
-### exchangeContract
-
-• **exchangeContract**: [`ExchangeContract`](../modules/base.md#exchangecontract)
-
-#### Defined in
-
-[packages/sdk/contractkit/src/celo-tokens.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L23)
 
 ___
 

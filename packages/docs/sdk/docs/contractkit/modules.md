@@ -45,7 +45,6 @@
 - [wrappers/EpochRewards](modules/wrappers_EpochRewards.md)
 - [wrappers/Erc20Wrapper](modules/wrappers_Erc20Wrapper.md)
 - [wrappers/Escrow](modules/wrappers_Escrow.md)
-- [wrappers/Exchange](modules/wrappers_Exchange.md)
 - [wrappers/FederatedAttestations](modules/wrappers_FederatedAttestations.md)
 - [wrappers/FeeHandler](modules/wrappers_FeeHandler.md)
 - [wrappers/Freezer](modules/wrappers_Freezer.md)

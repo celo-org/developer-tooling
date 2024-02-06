@@ -18,7 +18,6 @@ to make a MiniContractKit or CeloTokens Class
 
 - [getAccounts](basic_contract_cache_type.ContractCacheType.md#getaccounts)
 - [getContract](basic_contract_cache_type.ContractCacheType.md#getcontract)
-- [getExchange](basic_contract_cache_type.ContractCacheType.md#getexchange)
 - [getGoldToken](basic_contract_cache_type.ContractCacheType.md#getgoldtoken)
 - [getStableToken](basic_contract_cache_type.ContractCacheType.md#getstabletoken)
 
@@ -34,27 +33,11 @@ to make a MiniContractKit or CeloTokens Class
 
 #### Defined in
 
-[packages/sdk/contractkit/src/basic-contract-cache-type.ts:13](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/basic-contract-cache-type.ts#L13)
+[packages/sdk/contractkit/src/basic-contract-cache-type.ts:12](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/basic-contract-cache-type.ts#L12)
 
 ___
 
 ### getContract
-
-▸ **getContract**(`contract`): `Promise`\<[`ExchangeWrapper`](../classes/wrappers_Exchange.ExchangeWrapper.md)\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `contract` | [`Exchange`](../enums/base.CeloContract.md#exchange) \| [`ExchangeEUR`](../enums/base.CeloContract.md#exchangeeur) \| [`ExchangeBRL`](../enums/base.CeloContract.md#exchangebrl) |
-
-#### Returns
-
-`Promise`\<[`ExchangeWrapper`](../classes/wrappers_Exchange.ExchangeWrapper.md)\>
-
-#### Defined in
-
-[packages/sdk/contractkit/src/basic-contract-cache-type.ts:20](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/basic-contract-cache-type.ts#L20)
 
 ▸ **getContract**(`contract`): `Promise`\<[`StableTokenWrapper`](../classes/wrappers_StableTokenWrapper.StableTokenWrapper.md)\>
 
@@ -70,7 +53,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/basic-contract-cache-type.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/basic-contract-cache-type.ts#L23)
+[packages/sdk/contractkit/src/basic-contract-cache-type.ts:18](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/basic-contract-cache-type.ts#L18)
 
 ▸ **getContract**(`contract`): `Promise`\<[`GoldTokenWrapper`](../classes/wrappers_GoldTokenWrapper.GoldTokenWrapper.md)\>
 
@@ -86,27 +69,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/basic-contract-cache-type.ts:24](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/basic-contract-cache-type.ts#L24)
-
-___
-
-### getExchange
-
-▸ **getExchange**(`stableToken`): `Promise`\<[`ExchangeWrapper`](../classes/wrappers_Exchange.ExchangeWrapper.md)\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `stableToken` | [`StableToken`](../enums/celo_tokens.StableToken.md) |
-
-#### Returns
-
-`Promise`\<[`ExchangeWrapper`](../classes/wrappers_Exchange.ExchangeWrapper.md)\>
-
-#### Defined in
-
-[packages/sdk/contractkit/src/basic-contract-cache-type.ts:14](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/basic-contract-cache-type.ts#L14)
+[packages/sdk/contractkit/src/basic-contract-cache-type.ts:19](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/basic-contract-cache-type.ts#L19)
 
 ___
 
@@ -120,7 +83,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/basic-contract-cache-type.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/basic-contract-cache-type.ts#L16)
+[packages/sdk/contractkit/src/basic-contract-cache-type.ts:14](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/basic-contract-cache-type.ts#L14)
 
 ___
 
@@ -140,4 +103,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/basic-contract-cache-type.ts:18](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/basic-contract-cache-type.ts#L18)
+[packages/sdk/contractkit/src/basic-contract-cache-type.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/basic-contract-cache-type.ts#L16)
