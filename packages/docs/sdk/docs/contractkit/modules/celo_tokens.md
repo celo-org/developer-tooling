@@ -79,7 +79,7 @@ Basic info for each supported celo token, including stable tokens
 
 #### Defined in
 
-[packages/sdk/contractkit/src/celo-tokens.ts:48](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L48)
+[packages/sdk/contractkit/src/celo-tokens.ts:44](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L44)
 
 ___
 
@@ -91,7 +91,7 @@ Basic info for each stable token
 
 #### Defined in
 
-[packages/sdk/contractkit/src/celo-tokens.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L27)
+[packages/sdk/contractkit/src/celo-tokens.ts:26](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L26)
 
 ## Functions
 
@@ -111,4 +111,4 @@ Basic info for each stable token
 
 #### Defined in
 
-[packages/sdk/contractkit/src/celo-tokens.ts:275](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L275)
+[packages/sdk/contractkit/src/celo-tokens.ts:251](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L251)

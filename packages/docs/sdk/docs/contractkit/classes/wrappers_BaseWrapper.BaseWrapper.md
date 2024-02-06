@@ -30,8 +30,6 @@
 
   ↳ [`EscrowWrapper`](wrappers_Escrow.EscrowWrapper.md)
 
-  ↳ [`ExchangeWrapper`](wrappers_Exchange.ExchangeWrapper.md)
-
   ↳ [`FederatedAttestationsWrapper`](wrappers_FederatedAttestations.FederatedAttestationsWrapper.md)
 
   ↳ [`FeeHandlerWrapper`](wrappers_FeeHandler.FeeHandlerWrapper.md)

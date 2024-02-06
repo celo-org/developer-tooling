@@ -27,7 +27,6 @@ import { AttestationsConfig } from './wrappers/Attestations'
 import { BlockchainParametersConfig } from './wrappers/BlockchainParameters'
 import { DowntimeSlasherConfig } from './wrappers/DowntimeSlasher'
 import { ElectionConfig } from './wrappers/Election'
-import { ExchangeConfig } from './wrappers/Exchange'
 import { GasPriceMinimumConfig } from './wrappers/GasPriceMinimum'
 import { GovernanceConfig } from './wrappers/Governance'
 import { LockedGoldConfig } from './wrappers/LockedGold'
@@ -68,7 +67,6 @@ export function newKitFromWeb3(web3: Web3, wallet: ReadOnlyWallet = new LocalWal
   return new ContractKit(new Connection(web3, wallet))
 }
 export interface NetworkConfig {
-  exchanges: EachCeloToken<ExchangeConfig>
   stableTokens: EachCeloToken<StableTokenConfig>
   election: ElectionConfig
   attestations: AttestationsConfig
@@ -141,7 +139,7 @@ export class ContractKit {
 
   async getNetworkConfig(
     humanReadable = false
-  ): Promise<NetworkConfig | Record<CeloContract & 'exchanges' & 'stableTokens', unknown>> {
+  ): Promise<NetworkConfig | Record<CeloContract & 'stableTokens', unknown>> {
     const configContracts: ValidWrappers[] = [
       CeloContract.Election,
       CeloContract.Attestations,
@@ -181,7 +179,6 @@ export class ContractKit {
     configArray.forEach((config, index) => (configMap[configContracts[index]] = config))
 
     return {
-      exchanges: await this.celoTokens.getExchangesConfigs(humanReadable),
       stableTokens: await this.celoTokens.getStablesConfigs(humanReadable),
       ...configMap,
     }

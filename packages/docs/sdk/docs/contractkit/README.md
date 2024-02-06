@@ -145,7 +145,6 @@ There are many core contracts.
 - EpochRewardsWrapper
 - Erc20Wrapper
 - EscrowWrapper
-- ExchangeWrapper
 - FreezerWrapper
 - GasPriceMinimumWrapper
 - GoldTokenWrapper
@@ -195,7 +194,7 @@ Some user might want to access web3 native contract wrappers.
 To do so, you can:
 
 ```ts
-const web3Exchange = await kit._web3Contracts.getExchange()
+const feeCurrencyWhitelist = await kit._web3Contracts.getFeeCurrencyWhitelist()
 ```
 
 We expose native wrappers for all Celo core contracts.
@@ -206,7 +205,6 @@ The complete list of Celo Core contracts is:
 - Attestations
 - LockedGold
 - Escrow
-- Exchange
 - FeeCurrencyWhitelist
 - GasPriceMinimum
 - GoldToken

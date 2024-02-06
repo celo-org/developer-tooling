@@ -1,7 +1,7 @@
 `celocli exchange`
 ==================
 
-Exchange Celo Dollars and CELO via the stability mechanism
+Exchange Celo Dollars and CELO via Mento
 
 * [`celocli exchange:celo`](#celocli-exchangecelo)
 * [`celocli exchange:dollars`](#celocli-exchangedollars)
@@ -13,7 +13,7 @@ Exchange Celo Dollars and CELO via the stability mechanism
 
 ## `celocli exchange:celo`
 
-Exchange CELO for StableTokens via the stability mechanism. (Note: this is the equivalent of the old exchange:gold)
+Exchange CELO for StableTokens via Mento. (Note: this is the equivalent of the old exchange:gold)
 
 ```
 USAGE
@@ -35,8 +35,8 @@ FLAGS
                                                      exchange for a StableToken
 
 DESCRIPTION
-  Exchange CELO for StableTokens via the stability mechanism. (Note: this is the
-  equivalent of the old exchange:gold)
+  Exchange CELO for StableTokens via Mento. (Note: this is the equivalent of the old
+  exchange:gold)
 
 EXAMPLES
   celo --value 5000000000000 --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
@@ -48,7 +48,7 @@ _See code: [src/commands/exchange/celo.ts](https://github.com/celo-org/developer
 
 ## `celocli exchange:dollars`
 
-Exchange Celo Dollars for CELO via the stability mechanism
+Exchange Celo Dollars for CELO via Mento
 
 ```
 USAGE
@@ -65,7 +65,7 @@ FLAGS
                                                      Dollars to exchange for CELO
 
 DESCRIPTION
-  Exchange Celo Dollars for CELO via the stability mechanism
+  Exchange Celo Dollars for CELO via Mento
 
 EXAMPLES
   dollars --value 10000000000000 --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
@@ -77,7 +77,7 @@ _See code: [src/commands/exchange/dollars.ts](https://github.com/celo-org/develo
 
 ## `celocli exchange:euros`
 
-Exchange Celo Euros for CELO via the stability mechanism
+Exchange Celo Euros for CELO via Mento
 
 ```
 USAGE
@@ -94,7 +94,7 @@ FLAGS
                                                      to exchange for CELO
 
 DESCRIPTION
-  Exchange Celo Euros for CELO via the stability mechanism
+  Exchange Celo Euros for CELO via Mento
 
 EXAMPLES
   euros --value 10000000000000 --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
@@ -106,7 +106,7 @@ _See code: [src/commands/exchange/euros.ts](https://github.com/celo-org/develope
 
 ## `celocli exchange:gold`
 
-Exchange CELO for StableTokens via the stability mechanism. *DEPRECATION WARNING* Use the "exchange:celo" command instead
+Exchange CELO for StableTokens via Mento. *DEPRECATION WARNING* Use the "exchange:celo" command instead
 
 ```
 USAGE
@@ -128,8 +128,8 @@ FLAGS
                                                      exchange for a StableToken
 
 DESCRIPTION
-  Exchange CELO for StableTokens via the stability mechanism. *DEPRECATION WARNING* Use
-  the "exchange:celo" command instead
+  Exchange CELO for StableTokens via Mento. *DEPRECATION WARNING* Use the
+  "exchange:celo" command instead
 
 EXAMPLES
   gold --value 5000000000000 --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
@@ -137,11 +137,9 @@ EXAMPLES
   gold --value 5000000000000 --forAtLeast 100000000000000 --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --stableToken cUSD
 ```
 
-_See code: [src/commands/exchange/gold.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/exchange/gold.ts)_
-
 ## `celocli exchange:reals`
 
-Exchange Celo Brazilian Real (cREAL) for CELO via the stability mechanism
+Exchange Celo Brazilian Real (cREAL) for CELO via Mento
 
 ```
 USAGE
@@ -158,7 +156,7 @@ FLAGS
                                                      Brazilian Real to exchange for CELO
 
 DESCRIPTION
-  Exchange Celo Brazilian Real (cREAL) for CELO via the stability mechanism
+  Exchange Celo Brazilian Real (cREAL) for CELO via Mento
 
 EXAMPLES
   reals --value 10000000000000 --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
@@ -170,7 +168,7 @@ _See code: [src/commands/exchange/reals.ts](https://github.com/celo-org/develope
 
 ## `celocli exchange:show`
 
-Show the current exchange rates offered by the Exchange
+Show the current exchange rates offered by the Broker
 
 ```
 USAGE
@@ -182,7 +180,7 @@ FLAGS
   --globalHelp      View all available global flags
 
 DESCRIPTION
-  Show the current exchange rates offered by the Exchange
+  Show the current exchange rates offered by the Broker
 
 EXAMPLES
   list
@@ -192,7 +190,7 @@ _See code: [src/commands/exchange/show.ts](https://github.com/celo-org/developer
 
 ## `celocli exchange:stable`
 
-Exchange Stable Token for CELO via the stability mechanism
+Exchange Stable Token for CELO via Mento
 
 ```
 USAGE
@@ -213,7 +211,7 @@ FLAGS
                                                      Tokens to exchange for CELO
 
 DESCRIPTION
-  Exchange Stable Token for CELO via the stability mechanism
+  Exchange Stable Token for CELO via Mento
 
 EXAMPLES
   stable --value 10000000000000 --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --stableToken cStableTokenSymbol

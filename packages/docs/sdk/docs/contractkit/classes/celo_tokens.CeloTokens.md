@@ -26,8 +26,6 @@ A helper class to interact with all Celo tokens, ie CELO and stable tokens
 - [getAddress](celo_tokens.CeloTokens.md#getaddress)
 - [getAddresses](celo_tokens.CeloTokens.md#getaddresses)
 - [getContract](celo_tokens.CeloTokens.md#getcontract)
-- [getExchangeContract](celo_tokens.CeloTokens.md#getexchangecontract)
-- [getExchangesConfigs](celo_tokens.CeloTokens.md#getexchangesconfigs)
 - [getFeeCurrencyAddress](celo_tokens.CeloTokens.md#getfeecurrencyaddress)
 - [getStablesConfigs](celo_tokens.CeloTokens.md#getstablesconfigs)
 - [getWrapper](celo_tokens.CeloTokens.md#getwrapper)
@@ -55,7 +53,7 @@ A helper class to interact with all Celo tokens, ie CELO and stable tokens
 
 #### Defined in
 
-[packages/sdk/contractkit/src/celo-tokens.ts:62](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L62)
+[packages/sdk/contractkit/src/celo-tokens.ts:58](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L58)
 
 ## Properties
 
@@ -65,7 +63,7 @@ A helper class to interact with all Celo tokens, ie CELO and stable tokens
 
 #### Defined in
 
-[packages/sdk/contractkit/src/celo-tokens.ts:62](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L62)
+[packages/sdk/contractkit/src/celo-tokens.ts:58](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L58)
 
 ___
 
@@ -89,7 +87,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/celo-tokens.ts:272](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L272)
+[packages/sdk/contractkit/src/celo-tokens.ts:248](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L248)
 
 ___
 
@@ -99,7 +97,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/celo-tokens.ts:62](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L62)
+[packages/sdk/contractkit/src/celo-tokens.ts:58](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L58)
 
 ## Methods
 
@@ -124,7 +122,7 @@ a promise resolving to an object containing the address's balance
 
 #### Defined in
 
-[packages/sdk/contractkit/src/celo-tokens.ts:70](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L70)
+[packages/sdk/contractkit/src/celo-tokens.ts:66](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L66)
 
 ___
 
@@ -156,7 +154,7 @@ an object containing the resolved value the call to fn for each
 
 #### Defined in
 
-[packages/sdk/contractkit/src/celo-tokens.ts:120](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L120)
+[packages/sdk/contractkit/src/celo-tokens.ts:106](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L106)
 
 ___
 
@@ -188,7 +186,7 @@ an object containing the resolved value the call to fn for each
 
 #### Defined in
 
-[packages/sdk/contractkit/src/celo-tokens.ts:143](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L143)
+[packages/sdk/contractkit/src/celo-tokens.ts:129](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L129)
 
 ___
 
@@ -212,7 +210,7 @@ A promise resolving to the address of the token's contract
 
 #### Defined in
 
-[packages/sdk/contractkit/src/celo-tokens.ts:247](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L247)
+[packages/sdk/contractkit/src/celo-tokens.ts:223](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L223)
 
 ___
 
@@ -230,7 +228,7 @@ an promise resolving to an object containing the address for each celo token pro
 
 #### Defined in
 
-[packages/sdk/contractkit/src/celo-tokens.ts:89](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L89)
+[packages/sdk/contractkit/src/celo-tokens.ts:85](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L85)
 
 ___
 
@@ -254,51 +252,7 @@ The contract for the token
 
 #### Defined in
 
-[packages/sdk/contractkit/src/celo-tokens.ts:228](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L228)
-
-___
-
-### getExchangeContract
-
-▸ **getExchangeContract**(`token`): [`ExchangeContract`](../modules/base.md#exchangecontract)
-
-Gets the exchange contract for the provided stable token
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `token` | [`StableToken`](../enums/celo_tokens.StableToken.md) | the stable token to get exchange contract of |
-
-#### Returns
-
-[`ExchangeContract`](../modules/base.md#exchangecontract)
-
-The exchange contract for the token
-
-#### Defined in
-
-[packages/sdk/contractkit/src/celo-tokens.ts:238](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L238)
-
-___
-
-### getExchangesConfigs
-
-▸ **getExchangesConfigs**(`humanReadable?`): `Promise`\<[`EachCeloToken`](../modules/celo_tokens.md#eachcelotoken)\<[`ExchangeConfig`](../interfaces/wrappers_Exchange.ExchangeConfig.md) \| \{ `lastBucketUpdate`: `string` ; `minimumReports`: `BigNumber` ; `reserveFraction`: `BigNumber` ; `spread`: `BigNumber` ; `updateFrequency`: `string`  }\>\>
-
-#### Parameters
-
-| Name | Type | Default value |
-| :------ | :------ | :------ |
-| `humanReadable` | `boolean` | `false` |
-
-#### Returns
-
-`Promise`\<[`EachCeloToken`](../modules/celo_tokens.md#eachcelotoken)\<[`ExchangeConfig`](../interfaces/wrappers_Exchange.ExchangeConfig.md) \| \{ `lastBucketUpdate`: `string` ; `minimumReports`: `BigNumber` ; `reserveFraction`: `BigNumber` ; `spread`: `BigNumber` ; `updateFrequency`: `string`  }\>\>
-
-#### Defined in
-
-[packages/sdk/contractkit/src/celo-tokens.ts:103](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L103)
+[packages/sdk/contractkit/src/celo-tokens.ts:213](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L213)
 
 ___
 
@@ -323,7 +277,7 @@ If not CELO, the address of the token's contract. If CELO, undefined.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/celo-tokens.ts:255](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L255)
+[packages/sdk/contractkit/src/celo-tokens.ts:231](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L231)
 
 ___
 
@@ -343,7 +297,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/celo-tokens.ts:93](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L93)
+[packages/sdk/contractkit/src/celo-tokens.ts:89](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L89)
 
 ___
 
@@ -367,7 +321,7 @@ an promise resolving to the wrapper for the token
 
 #### Defined in
 
-[packages/sdk/contractkit/src/celo-tokens.ts:216](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L216)
+[packages/sdk/contractkit/src/celo-tokens.ts:201](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L201)
 
 ▸ **getWrapper**(`token`): `Promise`\<[`GoldTokenWrapper`](wrappers_GoldTokenWrapper.GoldTokenWrapper.md)\>
 
@@ -383,7 +337,7 @@ an promise resolving to the wrapper for the token
 
 #### Defined in
 
-[packages/sdk/contractkit/src/celo-tokens.ts:217](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L217)
+[packages/sdk/contractkit/src/celo-tokens.ts:202](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L202)
 
 ▸ **getWrapper**(`token`): `Promise`\<[`CeloTokenWrapper`](../modules/celo_tokens.md#celotokenwrapper)\>
 
@@ -399,7 +353,7 @@ an promise resolving to the wrapper for the token
 
 #### Defined in
 
-[packages/sdk/contractkit/src/celo-tokens.ts:218](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L218)
+[packages/sdk/contractkit/src/celo-tokens.ts:203](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L203)
 
 ___
 
@@ -417,7 +371,7 @@ an promise resolving to an object containing the wrapper for each celo token.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/celo-tokens.ts:81](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L81)
+[packages/sdk/contractkit/src/celo-tokens.ts:77](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L77)
 
 ___
 
@@ -441,7 +395,7 @@ if token is a StableToken
 
 #### Defined in
 
-[packages/sdk/contractkit/src/celo-tokens.ts:267](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L267)
+[packages/sdk/contractkit/src/celo-tokens.ts:243](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L243)
 
 ___
 
@@ -455,7 +409,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/celo-tokens.ts:176](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L176)
+[packages/sdk/contractkit/src/celo-tokens.ts:162](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L162)
 
 ___
 
@@ -469,4 +423,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/celo-tokens.ts:193](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L193)
+[packages/sdk/contractkit/src/celo-tokens.ts:179](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/celo-tokens.ts#L179)

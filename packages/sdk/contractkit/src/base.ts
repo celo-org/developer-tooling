@@ -8,9 +8,6 @@ export enum CeloContract {
   EpochRewards = 'EpochRewards',
   ERC20 = 'ERC20',
   Escrow = 'Escrow',
-  Exchange = 'Exchange',
-  ExchangeEUR = 'ExchangeEUR',
-  ExchangeBRL = 'ExchangeBRL',
   FederatedAttestations = 'FederatedAttestations',
   FeeCurrencyWhitelist = 'FeeCurrencyWhitelist',
   FeeHandler = 'FeeHandler',
@@ -37,11 +34,6 @@ export type StableTokenContract =
   | CeloContract.StableToken
   | CeloContract.StableTokenEUR
   | CeloContract.StableTokenBRL
-
-export type ExchangeContract =
-  | CeloContract.Exchange
-  | CeloContract.ExchangeEUR
-  | CeloContract.ExchangeBRL
 
 export type CeloTokenContract = StableTokenContract | CeloContract.GoldToken
 /**
