@@ -23,7 +23,7 @@ jobs:
 
   # CeloCli standalone image
   celocli-standalone:
-    uses: celo-org/reusable-workflows/.github/workflows/container-cicd.yaml@v1.14.1
+    uses: celo-org/reusable-workflows/.github/workflows/container-cicd.yaml@v1.14.2
     name: Build us-west1-docker.pkg.dev/devopsre/dev-images/celocli:${{ needs.split-version.outputs.CELOCLI_VERSION }}
     needs: ['split-version']
     # if: |
