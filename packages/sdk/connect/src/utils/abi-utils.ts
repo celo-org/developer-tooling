@@ -34,20 +34,22 @@ export const signatureToAbiDefinition = (fnSignature: string): ABIDefinition => 
     name: method,
     signature: fnSignature,
     type: 'function',
-    inputs: args.map((type, index) => {
-      const parts = type
-        .trim()
-        .split(' ')
-        .map((p) => p.trim())
-      if (parts.length > 2) {
-        throw new Error(`${fnSignature} is malformed`)
-      }
+    inputs: args
+      .filter((type) => type ?? '' != '')
+      .map((type, index) => {
+        const parts = type
+          .trim()
+          .split(' ')
+          .map((p) => p.trim())
+        if (parts.length > 2) {
+          throw new Error(`${fnSignature} is malformed`)
+        }
 
-      return {
-        name: parts.length > 1 ? parts[1] : `a${index}`,
-        type: parts[0],
-      }
-    }),
+        return {
+          name: parts.length > 1 ? parts[1] : `a${index}`,
+          type: parts[0],
+        }
+      }),
   }
 }
 

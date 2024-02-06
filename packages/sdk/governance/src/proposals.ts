@@ -183,7 +183,10 @@ export const proposalToJSON = async (
         initAbi = getInitializeAbiOfImplementation(jsonTx.contract as any)
       } else {
         const implAddress = jsonTx.args[0]
-        const metadata = await fetchMetadata(kit.connection, implAddress)
+        const metadata = await fetchMetadata(
+          kit.connection,
+          kit.web3.utils.toChecksumAddress(implAddress)
+        )
         if (metadata && metadata.abi) {
           initAbi = metadata?.abiForMethod('initialize')[0]
         }
@@ -325,7 +328,10 @@ export class ProposalBuilder {
     tx: ProposalTransactionJSON
   ): Promise<AbiItem | null> => {
     const abiCoder = this.kit.connection.getAbiCoder()
-    const metadata = await fetchMetadata(this.kit.connection, address)
+    const metadata = await fetchMetadata(
+      this.kit.connection,
+      this.kit.web3.utils.toChecksumAddress(address)
+    )
     const potentialABIs = metadata?.abiForMethod(tx.function) ?? []
     return (
       potentialABIs.find((abi) => {
