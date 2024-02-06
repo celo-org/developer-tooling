@@ -1,0 +1,17 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "local>celo-org/.github:renovate-config"
+  ],
+  "prCreation": "approval",
+  "prConcurrentLimit": 2,
+  "minimumReleaseAge": "5 days",
+  "packageRules": [
+    {
+      "matchManagers": ["github-actions"],
+      "automerge": true,
+      "autoApprove": "true",
+      "prCreation": "status-success"
+    }
+  ]
+}
