@@ -12253,9 +12253,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ganache@npm:@soloseng/ganache@7.8.0-beta.1":
-  version: 7.8.0-beta.1
-  resolution: "@soloseng/ganache@npm:7.8.0-beta.1"
+"ganache@npm:@soloseng/ganache@7.8.0-beta.4":
+  version: 7.8.0-beta.4
+  resolution: "@soloseng/ganache@npm:7.8.0-beta.4"
   dependencies:
     "@trufflesuite/bigint-buffer": "npm:*"
     "@trufflesuite/uws-js-unofficial": "npm:20.10.0-unofficial.2"
@@ -12279,7 +12279,7 @@ __metadata:
   bin:
     ganache: dist/node/cli.js
     ganache-cli: dist/node/cli.js
-  checksum: c5637ff3c72498a44d49f8eeceef1d9adb17d058135072c6d9d9a8fe4724e78c7b17f6c96d95a869f7ded73b3e0bd7d80911ad0ca5f02ac317196d6cd4e5e02d
+  checksum: f782dd5dfa56adb181834de64e9d3f8b934cb6d0cd2f47a1804f4c2db6661a0901039d41daffb013d3122e2404e80de800bff1ce561d4daae80eb16e4492c7ae
   languageName: node
   linkType: hard
 
