@@ -6,6 +6,9 @@
   "prCreation": "approval",
   "prConcurrentLimit": 2,
   "minimumReleaseAge": "5 days",
+  "major": {
+    "minimumReleaseAge": "14 days"
+  },
   "packageRules": [
     {
       "matchManagers": ["github-actions"],
