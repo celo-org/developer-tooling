@@ -32,7 +32,7 @@ export default class ExchangeStableBase extends BaseCommand {
     const kit = await this.getKit()
     const res = await this.parse()
     const sellAmount = res.flags.value as BigNumber
-    const minBuyAmount = res.flags.forAtLeast as BigNumber
+    const forAtLeast = res.flags.forAtLeast as BigNumber
 
     if (!this._stableCurrency) {
       throw new Error('Stable currency not set')
@@ -49,9 +49,8 @@ export default class ExchangeStableBase extends BaseCommand {
 
     ux.debug(`Prepare to exchange ${stableToken.address} for ${celoNativeTokenAddress}`)
 
-    // note using getAmountIn here to match way rate is shown in the oracles
     async function getQuote(tokenIn: string, tokenOut: string, amount: string) {
-      const quoteAmountOut = await mento.getAmountIn(tokenIn, tokenOut, amount)
+      const quoteAmountOut = await mento.getAmountOut(tokenIn, tokenOut, amount)
       const expectedAmountOut = quoteAmountOut.mul(99).div(100)
       return expectedAmountOut
     }
@@ -64,20 +63,21 @@ export default class ExchangeStableBase extends BaseCommand {
       sellAmount.toFixed()
     )
     ux.action.stop()
-    if (minBuyAmount.toNumber() === 0) {
+    if (forAtLeast.toNumber() === 0) {
       const check = await checkNotDangerousExchange(
         kit,
         sellAmount,
         new BigNumber(expectedAmountToReceive.toString()),
         depeggedPricePercentage,
-        stableTokenInfos[this._stableCurrency as StableToken]
+        stableTokenInfos[this._stableCurrency as StableToken],
+        true
       )
 
       if (!check) {
         ux.log('Cancelled')
         ux.exit(0)
       }
-    } else if (expectedAmountToReceive.lt(minBuyAmount.toString())) {
+    } else if (expectedAmountToReceive.lt(forAtLeast.toString())) {
       const check = await binaryPrompt(
         'Warning: the expected amount to receive is less than the minimum amount to receive. Are you sure you want to continue?',
         false
@@ -97,9 +97,9 @@ export default class ExchangeStableBase extends BaseCommand {
       'Swapping',
       sellAmount.toFixed(),
       this._stableCurrency,
-      ' for at least',
+      'for estimated',
       expectedAmountToReceive.toString(),
-      ' CELO'
+      'CELO'
     )
     const tx = await mento.swapIn(
       stableToken.address,

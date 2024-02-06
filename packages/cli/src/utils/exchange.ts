@@ -24,11 +24,14 @@ export async function checkNotDangerousExchange(
   sellAmount: BigNumber,
   quotedAmountToReceiveWithBuffer: BigNumber,
   depeggedPricePercentage: number,
-  stableTokenInfo: StableTokenInfo = stableTokenInfos[StableToken.cUSD]
+  stableTokenInfo: StableTokenInfo = stableTokenInfos[StableToken.cUSD],
+  flipOracle = false
 ): Promise<boolean> {
   const oracles = await kit.contracts.getSortedOracles()
-  const oracleMedianRate = (await oracles.medianRate(stableTokenInfo.contract)).rate
-
+  const oracleMedianRateRaw = (await oracles.medianRate(stableTokenInfo.contract)).rate
+  const oracleMedianRate = flipOracle
+    ? new BigNumber(1).div(oracleMedianRateRaw)
+    : oracleMedianRateRaw
   const expectedSlippage = calculateExpectedSlippage(
     sellAmount,
     quotedAmountToReceiveWithBuffer,

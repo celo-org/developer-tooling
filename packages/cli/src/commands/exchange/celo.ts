@@ -101,7 +101,7 @@ export default class ExchangeCelo extends BaseCommand {
     ux.log(
       'Swapping',
       sellAmount.toFixed(),
-      'CELO for at least',
+      'CELO for estimated',
       expectedAmountToReceive.toString(),
       stableToken
     )
