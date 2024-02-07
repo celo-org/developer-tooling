@@ -10,7 +10,7 @@ import { checkNotDangerousExchange } from '../../utils/exchange'
 import { enumEntriesDupWithLowercase } from '../../utils/helpers'
 import { getMentoBroker } from '../../utils/mento-broker-adaptor'
 
-const depeggedPricePercentage = 20
+const MAX_DEPEG_PRICE_PERCENTAGE = 20
 
 const stableTokenOptions = enumEntriesDupWithLowercase(Object.entries(StableToken))
 export default class ExchangeCelo extends BaseCommand {
@@ -75,7 +75,7 @@ export default class ExchangeCelo extends BaseCommand {
         kit,
         sellAmount,
         new BigNumber(expectedAmountToReceive.toString()),
-        depeggedPricePercentage,
+        MAX_DEPEG_PRICE_PERCENTAGE,
         stableTokenInfos[stableToken]
       )
       if (!check) {

@@ -23,7 +23,7 @@ export async function checkNotDangerousExchange(
   kit: ContractKit,
   sellAmount: BigNumber,
   quotedAmountToReceiveWithBuffer: BigNumber,
-  depeggedPricePercentage: number,
+  maxDepegPricePercentage: number,
   stableTokenInfo: StableTokenInfo = stableTokenInfos[StableToken.cUSD],
   flipOracle = false
 ): Promise<boolean> {
@@ -37,7 +37,7 @@ export async function checkNotDangerousExchange(
     quotedAmountToReceiveWithBuffer,
     oracleMedianRate
   )
-  if (Math.abs(expectedSlippage) > depeggedPricePercentage) {
+  if (Math.abs(expectedSlippage) > Math.abs(maxDepegPricePercentage)) {
     const check = await binaryPrompt(
       `Warning ${
         stableTokenInfo.symbol

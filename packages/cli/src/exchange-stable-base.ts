@@ -8,7 +8,7 @@ import { binaryPrompt, displaySendEthersTxViaCK, displaySendTx } from './utils/c
 import { CustomFlags } from './utils/command'
 import { checkNotDangerousExchange } from './utils/exchange'
 import { getMentoBroker } from './utils/mento-broker-adaptor'
-const depeggedPricePercentage = 20
+const MAX_DEPEG_PRICE_PERCENTAGE = 20
 export default class ExchangeStableBase extends BaseCommand {
   static flags = {
     ...BaseCommand.flags,
@@ -68,7 +68,7 @@ export default class ExchangeStableBase extends BaseCommand {
         kit,
         sellAmount,
         new BigNumber(expectedAmountToReceive.toString()),
-        depeggedPricePercentage,
+        MAX_DEPEG_PRICE_PERCENTAGE,
         stableTokenInfos[this._stableCurrency as StableToken],
         true
       )
