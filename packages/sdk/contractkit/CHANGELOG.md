@@ -1,5 +1,18 @@
 # @celo/contractkit
 
+## 7.0.0-beta.2
+
+### Major Changes
+
+- [#107](https://github.com/celo-org/developer-tooling/pull/107) [`b34439a`](https://github.com/celo-org/developer-tooling/commit/b34439a945c698c560c096c92255c230602adee6) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Remove all references to now defunkt mento exchange contracts
+
+### Patch Changes
+
+- Updated dependencies [[`6b2e34c`](https://github.com/celo-org/developer-tooling/commit/6b2e34c973290da221aaabdc2bf4c6654ef9f99c)]:
+  - @celo/utils@6.0.0-beta.0
+  - @celo/connect@5.1.2-beta.0
+  - @celo/wallet-local@5.1.2-beta.0
+
 ## 6.0.1-beta.1
 
 ### Patch Changes
