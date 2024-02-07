@@ -1,5 +1,31 @@
 # Changelog
 
+## 4.0.0-contracts-11-pre.1
+
+### Major Changes
+
+- [#106](https://github.com/celo-org/developer-tooling/pull/106) [`0a3a570`](https://github.com/celo-org/developer-tooling/commit/0a3a5706575fdb8af34dd2143759ed0535c386bf) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Remove the deprecated exchange:gold command. exchange:celo is a drop in replacement
+
+### Minor Changes
+
+- [#106](https://github.com/celo-org/developer-tooling/pull/106) [`0a3a570`](https://github.com/celo-org/developer-tooling/commit/0a3a5706575fdb8af34dd2143759ed0535c386bf) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Add support for swapping celo -- cStables via mento broker
+
+### Patch Changes
+
+- [`f0fde55`](https://github.com/celo-org/developer-tooling/commit/f0fde556ae98aff6579f773fa0fb46123e318e10) - Using Prerelease of CoreContracts 11
+
+- Updated dependencies [[`45d156d`](https://github.com/celo-org/developer-tooling/commit/45d156d03c03399bef51a00fe2b5cfb5e5669642), [`b34439a`](https://github.com/celo-org/developer-tooling/commit/b34439a945c698c560c096c92255c230602adee6), [`6b2e34c`](https://github.com/celo-org/developer-tooling/commit/6b2e34c973290da221aaabdc2bf4c6654ef9f99c), [`f0fde55`](https://github.com/celo-org/developer-tooling/commit/f0fde556ae98aff6579f773fa0fb46123e318e10)]:
+  - @celo/wallet-hsm-azure@5.1.2-contracts-11-pre.0
+  - @celo/contractkit@7.0.0-contracts-11-pre.2
+  - @celo/utils@6.0.0-contracts-11-pre.0
+  - @celo/governance@5.0.9-contracts-11-pre.1
+  - @celo/explorer@5.0.8-contracts-11-pre.1
+  - @celo/connect@5.1.2-contracts-11-pre.0
+  - @celo/cryptographic-utils@5.0.7-contracts-11-pre.0
+  - @celo/phone-utils@6.0.1-contracts-11-pre.0
+  - @celo/wallet-ledger@5.1.2-contracts-11-pre.0
+  - @celo/wallet-local@5.1.2-contracts-11-pre.0
+
 ## 4.0.0-beta.0
 
 ### Major Changes

@@ -1,5 +1,7 @@
 # @celo/wallet-hsm
 
+## 5.1.2-contracts-11-pre.0
+
 ## 5.1.1
 
 ### Patch Changes
