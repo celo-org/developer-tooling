@@ -41,7 +41,7 @@ export async function checkNotDangerousExchange(
     const check = await binaryPrompt(
       `Warning ${
         stableTokenInfo.symbol
-      } price here (i.e. on-chain) is depegged by ${expectedSlippage}% which is >${depeggedPricePercentage}% from the oracle prices ${oracleMedianRate.toString()} (i.e. swap prices). Are you sure you want to continue?`,
+      } price here (i.e. on-chain) would be depegged by ${expectedSlippage}% from the oracle prices ${oracleMedianRate.toString()} (i.e. swap prices). Are you sure you want to continue?`,
       true
     )
     return check
