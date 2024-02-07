@@ -7000,9 +7000,9 @@ __metadata:
   linkType: hard
 
 "@types/fetch-mock@npm:^7.3.5":
-  version: 7.3.5
-  resolution: "@types/fetch-mock@npm:7.3.5"
-  checksum: 33c9d63fd91c6d2419013f99b448caa99bad6c73d35fc780eacf2ed03eb0850a21b0fd5e66238063823ce3b856c815b2ab79c830f051330e6bc46ad47ddb255f
+  version: 7.3.8
+  resolution: "@types/fetch-mock@npm:7.3.8"
+  checksum: de8f44a697b2276c81d2e1ce63e3d2805b5d33b9405f2b313619d58da241e21fdc97402d722b8d17c28e4747cb65d129784d22cf8e5b04f0866b9a219a89e4bd
   languageName: node
   linkType: hard
 
