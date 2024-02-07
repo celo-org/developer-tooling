@@ -1,5 +1,14 @@
 # @celo/explorer
 
+## 5.0.8-beta.1
+
+### Patch Changes
+
+- Updated dependencies [[`b34439a`](https://github.com/celo-org/developer-tooling/commit/b34439a945c698c560c096c92255c230602adee6), [`6b2e34c`](https://github.com/celo-org/developer-tooling/commit/6b2e34c973290da221aaabdc2bf4c6654ef9f99c)]:
+  - @celo/contractkit@7.0.0-beta.2
+  - @celo/utils@6.0.0-beta.0
+  - @celo/connect@5.1.2-beta.0
+
 ## 5.0.8-beta.0
 
 ### Patch Changes

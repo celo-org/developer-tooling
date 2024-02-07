@@ -26,9 +26,15 @@
     "@celo/typescript": "0.0.1"
   },
   "changesets": [
+    "clean-parents-run",
     "curly-pianos-applaud",
+    "empty-beans-sell",
+    "funny-feet-suffer",
+    "light-humans-smell",
     "plenty-bananas-shop",
     "real-rabbits-grab",
+    "silly-moose-type",
+    "tall-buckets-sit",
     "tough-gorillas-invent"
   ]
 }
