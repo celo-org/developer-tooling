@@ -37,7 +37,7 @@ export async function checkNotDangerousExchange(
     quotedAmountToReceiveWithBuffer,
     oracleMedianRate
   )
-  if (expectedSlippage > depeggedPricePercentage) {
+  if (Math.abs(expectedSlippage) > depeggedPricePercentage) {
     const check = await binaryPrompt(
       `Warning ${
         stableTokenInfo.symbol
