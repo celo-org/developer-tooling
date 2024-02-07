@@ -7007,11 +7007,11 @@ __metadata:
   linkType: hard
 
 "@types/fs-extra@npm:^8.0.0":
-  version: 8.1.2
-  resolution: "@types/fs-extra@npm:8.1.2"
+  version: 8.1.5
+  resolution: "@types/fs-extra@npm:8.1.5"
   dependencies:
     "@types/node": "npm:*"
-  checksum: f338fea9c90683a3d50f304e54a0d0cee26953dbfe486ff73d651a0eb31b5cde2874aa17c4264e3938e49d22eb107d21b2d09078a7560084f0ec13866f40a8ac
+  checksum: 565d9e55cd05064b3ab272b8748ed512b8fa5cddc23fd32b0d5f147f9ea3a45981577c4478b5060cae7b3d914c508bd2ea97eb84d9c1fa6f967982c892e4ab26
   languageName: node
   linkType: hard
 
