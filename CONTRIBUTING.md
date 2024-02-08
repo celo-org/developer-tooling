@@ -13,7 +13,7 @@ getting started or are an expert. We appreciate your interest in contributing.
 >
 > It's never a fun experience to have your pull request declined after investing time and effort
 > into a new feature. To avoid this from happening, we invite contributors to create a
-> [new discussion](https://github.com/wevm/viem/discussions) to discuss API changes or
+> [new discussion](https://github.com/celo-org/developer-tooling/discussions) to discuss API changes or
 > significant new ideas.
 
 ## Basic guide
