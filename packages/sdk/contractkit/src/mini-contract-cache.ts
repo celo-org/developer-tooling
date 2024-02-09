@@ -1,3 +1,4 @@
+import {} from '@celo/abis'
 import { newGasPriceMinimum } from '@celo/abis/web3/0.8/GasPriceMinimum'
 import { newAccounts } from '@celo/abis/web3/Accounts'
 import { newGoldToken } from '@celo/abis/web3/GoldToken'
@@ -38,6 +39,12 @@ const MINIMUM_CONTRACTS = {
   },
   [CeloContract.StableTokenEUR]: {
     newInstance: newStableTokenEUR,
+    wrapper: StableTokenWrapper,
+  },
+  [CeloContract.StableToken$USDC]: {
+    // TODO: use the TokenAdapter from @celo/abis@11 when it's out
+    // https://docs.celo.org/protocol/transaction/erc20-transaction-fees#alfajores-testnet
+    // newInstance: newStableToken$USDC,
     wrapper: StableTokenWrapper,
   },
 }

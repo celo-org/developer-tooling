@@ -27,6 +27,7 @@ export enum CeloContract {
   StableToken = 'StableToken',
   StableTokenEUR = 'StableTokenEUR',
   StableTokenBRL = 'StableTokenBRL',
+  StableToken$USDC = 'StableToken$USDC',
   Validators = 'Validators',
 }
 
@@ -34,6 +35,7 @@ export type StableTokenContract =
   | CeloContract.StableToken
   | CeloContract.StableTokenEUR
   | CeloContract.StableTokenBRL
+  | CeloContract.StableToken$USDC
 
 export type CeloTokenContract = StableTokenContract | CeloContract.GoldToken
 /**

@@ -38,6 +38,10 @@ export const stableTokenInfos: {
     contract: CeloContract.StableTokenBRL,
     symbol: StableToken.cREAL,
   },
+  [StableToken.$USDC]: {
+    contract: CeloContract.StableToken$USDC,
+    symbol: StableToken.$USDC,
+  },
 }
 
 /** Basic info for each supported celo token, including stable tokens */

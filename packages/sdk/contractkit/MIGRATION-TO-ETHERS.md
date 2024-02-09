@@ -73,10 +73,9 @@ async function getToken(token: string) {
 }
 async function CeloTokens(): Promise<[string, string][]> {
   return Promise.all(
-    ['GoldToken', 'StableToken', 'StableTokenEUR', 'StableTokenBRL'].map(async (token) => [
-      token,
-      await getToken(token),
-    ])
+    ['GoldToken', 'StableToken', 'StableTokenEUR', 'StableTokenBRL', 'StableToken$USDC'].map(
+      async (token) => [token, await getToken(token)]
+    )
   )
 }
 ```

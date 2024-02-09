@@ -3,12 +3,14 @@ export enum CURRENCY_ENUM {
   GOLD = 'Celo Gold',
   DOLLAR = 'Celo Dollar',
   EURO = 'Celo Euro',
+  $USDC = 'USD Coin',
 }
 
 export enum StableToken {
   cUSD = 'cUSD',
   cEUR = 'cEUR',
   cREAL = 'cREAL',
+  $USDC = '$USDC',
 }
 
 export enum Token {
@@ -42,6 +44,12 @@ export const CURRENCIES: CurrencyObject = {
     code: 'cEUR',
     displayDecimals: 2,
   },
+  // NOTE: should we just get rid of CURRENCIES
+  [CURRENCY_ENUM.$USDC]: {
+    symbol: '$',
+    code: 'USDC',
+    displayDecimals: 2,
+  },
 }
 
 export const resolveCurrency = (label: string): CURRENCY_ENUM => {
@@ -57,6 +65,7 @@ export const resolveCurrency = (label: string): CURRENCY_ENUM => {
   }
 }
 
+// NOTE: should we just get rid of SHORT_CURRENCIES
 /** @deprecated use StableToken and Token */
 export enum SHORT_CURRENCIES {
   DOLLAR = 'dollar',

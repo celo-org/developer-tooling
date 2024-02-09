@@ -46,6 +46,9 @@ const WrapperFactories = {
   [CeloContract.StableToken]: StableTokenWrapper,
   [CeloContract.StableTokenEUR]: StableTokenWrapper,
   [CeloContract.StableTokenBRL]: StableTokenWrapper,
+  // TODO: use the TokenAdapter from @celo/abis@11 when it's out
+  // https://docs.celo.org/protocol/transaction/erc20-transaction-fees#alfajores-testnet
+  [CeloContract.StableToken$USDC]: StableTokenWrapper,
 } as const
 
 const WithRegistry = {
@@ -98,6 +101,9 @@ interface WrapperCacheMap {
   [CeloContract.StableToken]?: StableTokenWrapper
   [CeloContract.StableTokenEUR]?: StableTokenWrapper
   [CeloContract.StableTokenBRL]?: StableTokenWrapper
+  // TODO: use the TokenAdapter from @celo/abis@11 when it's out
+  // https://docs.celo.org/protocol/transaction/erc20-transaction-fees#alfajores-testnet
+  [CeloContract.StableToken$USDC]?: StableTokenWrapper
   [CeloContract.Validators]?: ValidatorsWrapper
 }
 

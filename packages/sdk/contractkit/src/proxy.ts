@@ -122,6 +122,7 @@ const initializeAbiMap = {
   StableTokenProxy: findInitializeAbi(StableTokenABI),
   StableTokenEURProxy: findInitializeAbi(StableTokenABI),
   StableTokenBRLProxy: findInitializeAbi(StableTokenABI),
+  StableToken$USDCProxy: findInitializeAbi(StableTokenABI),
   ValidatorsProxy: findInitializeAbi(ValidatorsABI),
 }
 

@@ -30,6 +30,11 @@ testWithGanache('StableToken Wrapper', async (web3) => {
       name: 'Celo Brazilian Real',
       symbol: 'cREAL',
     },
+    [StableToken.$USDC]: {
+      stableToken: StableToken.$USDC,
+      name: 'Circle USD Coin',
+      symbol: '$USDC',
+    },
   }
 
   for (const stableTokenInfo of Object.values(stableTokenInfos)) {

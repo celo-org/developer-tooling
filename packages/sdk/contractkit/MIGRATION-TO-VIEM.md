@@ -111,10 +111,9 @@ const registryContract = getContract({
 
 async function CeloTokens(): Promise<[string, string][]> {
   return Promise.all(
-    ['GoldToken', 'StableToken', 'StableTokenEUR', 'StableTokenBRL'].map(async (token) => [
-      token,
-      await registryContract.read.getAddressForString(token),
-    ])
+    ['GoldToken', 'StableToken', 'StableTokenEUR', 'StableTokenBRL', 'StableToken$USDC'].map(
+      async (token) => [token, await registryContract.read.getAddressForString(token)]
+    )
   )
 }
 ```
@@ -200,28 +199,28 @@ const stages = (await publicClient.multicall({ contracts: stageCalls })).map((x)
 With Viem's built in Celo transaction serializer and Celo block/transaction formatters it is easy to build a wallet that supports Celo's ability to pay gas fees with various erc20 tokens. Simply, import a Celo chain from `viem/chain` and pass it to Viem's `createWalletClient`. Once the client is created you can add the feeCurrency field to your transaction with the address of the token you want to use for gas.
 
 ```ts
-  import { celo } from 'viem/chains'
-  import { createWalletClient, privateKeyToAccount, type SendTransactionParameters, http } from 'viem'
+import { celo } from 'viem/chains'
+import { createWalletClient, privateKeyToAccount, type SendTransactionParameters, http } from 'viem'
 
-  const account = privateKeyToAccount(PRIVATE_KEY)
+const account = privateKeyToAccount(PRIVATE_KEY)
 
-  // ALFAJORES ADDRESS: Celo Mainnet can be fetched from the registry
-  const cUSDAddress = '0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1'
+// ALFAJORES ADDRESS: Celo Mainnet can be fetched from the registry
+const cUSDAddress = '0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1'
 
-  const localAccountClient = createWalletClient({
-    account,
-    chain: celo,
-  })
+const localAccountClient = createWalletClient({
+  account,
+  chain: celo,
+})
 
-  const sendTransaction = (tx: SendTransactionParameters<typeof celo>) => {
-    return localAccountClient.sendTransaction(tx)
-  }
+const sendTransaction = (tx: SendTransactionParameters<typeof celo>) => {
+  return localAccountClient.sendTransaction(tx)
+}
 
-  const hash = await sendTransaction({
-    feeCurrency: cUSDAddress,
-    value: BigInt(100000000),
-    to: '0x22579CA45eE22E2E16dDF72D955D6cf4c767B0eF',
-  })
+const hash = await sendTransaction({
+  feeCurrency: cUSDAddress,
+  value: BigInt(100000000),
+  to: '0x22579CA45eE22E2E16dDF72D955D6cf4c767B0eF',
+})
 ```
 
 ### Further reading

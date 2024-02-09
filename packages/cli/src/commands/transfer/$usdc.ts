@@ -1,8 +1,8 @@
 import { StableToken } from '@celo/contractkit'
 import { TransferStableBase } from '../../transfer-stable-base'
 
-export default class TransferReals extends TransferStableBase {
-  static description = 'Transfer Celo Brazilian Real (cREAL) to a specified address.'
+export default class TransferUSDCoin extends TransferStableBase {
+  static description = 'Transfer Circle USD Coin ($USDC) to a specified address.'
 
   static flags = {
     ...TransferStableBase.flags,
@@ -13,7 +13,7 @@ export default class TransferReals extends TransferStableBase {
   ]
 
   async init() {
-    this._stableCurrency = StableToken.cREAL
+    this._stableCurrency = StableToken.$USDC
     await super.init()
   }
 }
