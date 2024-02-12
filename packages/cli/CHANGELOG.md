@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.0.0-beta.2
+
+### Patch Changes
+
+- [#129](https://github.com/celo-org/developer-tooling/pull/129) [`0eabd86`](https://github.com/celo-org/developer-tooling/commit/0eabd86f1fc4078638f0819150e9873b417696b7) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Improve column header names for rewards:show command
+
+- [#129](https://github.com/celo-org/developer-tooling/pull/129) [`0eabd86`](https://github.com/celo-org/developer-tooling/commit/0eabd86f1fc4078638f0819150e9873b417696b7) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Various fixes for displaying tablular information from commands
+
 ## 4.0.0-beta.1
 
 ### Major Changes
