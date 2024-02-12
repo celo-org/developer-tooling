@@ -18,12 +18,11 @@ interface ValidatorStatusEntry {
   signatures: number
 }
 
-export const statusTable = {
-  address: {},
-  name: {},
-  signer: {},
-  elected: {},
-  frontRunner: {},
+export const statusTable: ux.Table.table.Columns<Record<'status', ValidatorStatusEntry>> = {
+  address: { get: ({ status }) => status.address },
+  signer: { get: ({ status }) => status.signer },
+  elected: { get: ({ status }) => status.elected },
+  frontRunner: { get: ({ status }) => status.frontRunner },
   signatures: {
     get: (vs: { status: ValidatorStatusEntry }) =>
       isNaN(vs.status.signatures) ? '' : (vs.status.signatures * 100).toFixed(2) + '%',
@@ -70,9 +69,11 @@ export default class ValidatorStatus extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(ValidatorStatus)
-    const accounts = await kit.contracts.getAccounts()
-    const validators = await kit.contracts.getValidators()
-    const election = await kit.contracts.getElection()
+    const [accounts, validators, election] = await Promise.all([
+      kit.contracts.getAccounts(),
+      kit.contracts.getValidators(),
+      kit.contracts.getElection(),
+    ])
 
     // Resolve the signer address(es) from the provide flags.
     let signers: string[] = []
@@ -94,7 +95,7 @@ export default class ValidatorStatus extends BaseCommand {
     }
 
     const latest = await kit.web3.eth.getBlockNumber()
-    const endBlock = res.flags.end === -1 ? await kit.web3.eth.getBlockNumber() : res.flags.end
+    const endBlock = res.flags.end === -1 ? latest : res.flags.end
     const startBlock = res.flags.start === -1 ? endBlock - 100 : res.flags.start
     if (startBlock > endBlock || endBlock > latest) {
       this.error('invalid values for start/end')

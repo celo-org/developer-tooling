@@ -25,10 +25,10 @@ export default class ValidatorGroupList extends BaseCommand {
     ux.table(
       vgroups.map((vg) => ({ group: vg })),
       {
-        address: {},
-        name: {},
-        commission: { get: (r) => r.group.commission.toFixed() },
-        members: { get: (r) => r.group.members.length },
+        address: { get: ({ group }) => group.address },
+        name: { get: ({ group }) => group.name },
+        commission: { get: ({ group }) => group.commission.toFixed() },
+        members: { get: ({ group }) => group.members.length },
       },
       res.flags
     )
