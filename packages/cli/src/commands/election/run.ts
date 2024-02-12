@@ -36,7 +36,11 @@ export default class ElectionRun extends BaseCommand {
       signers.map((addr) => validators.getValidatorFromSigner(addr))
     )
     ux.action.stop()
-    // @ts-expect-error
-    ux.table(validatorList, validatorTable, res.flags)
+
+    ux.table(
+      validatorList.map((v) => ({ ['v']: v })),
+      validatorTable,
+      res.flags
+    )
   }
 }
