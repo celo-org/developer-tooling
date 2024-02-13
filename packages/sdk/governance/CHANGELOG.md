@@ -1,5 +1,15 @@
 # @celo/governance
 
+## 5.0.9
+
+### Patch Changes
+
+- Updated dependencies [[`8fb6c76`](https://github.com/celo-org/developer-tooling/commit/8fb6c76e4fada71c91f516ed151c4519ff2fe0fd), [`7dfbcd6`](https://github.com/celo-org/developer-tooling/commit/7dfbcd60203c8fd95bc6e113adfba02f7071ac47), [`b34439a`](https://github.com/celo-org/developer-tooling/commit/b34439a945c698c560c096c92255c230602adee6), [`6b2e34c`](https://github.com/celo-org/developer-tooling/commit/6b2e34c973290da221aaabdc2bf4c6654ef9f99c)]:
+  - @celo/contractkit@7.0.0
+  - @celo/utils@6.0.0
+  - @celo/connect@5.1.2
+  - @celo/explorer@5.0.8
+
 ## 5.0.9-beta.1
 
 ### Patch Changes
