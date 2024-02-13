@@ -1,11 +1,11 @@
 import { BLS } from '@celo/bls12377js'
 // this is an implementation of a subset of BLS12-377
 import { isValidAddress } from '@celo/utils/lib/address'
-import { keccak256 } from 'ethereum-cryptography/keccak'
-const BigInteger = require('bigi')
+import { keccak_256 } from '@noble/hashes/sha3'
+import { bytesToHex } from '@noble/hashes/utils'
 const reverse = require('buffer-reverse')
 
-const n = BigInteger.fromHex('12ab655e9a2ca55660b44d1e5c37b00159aa76fed00000010a11800000000001', 16)
+const n = BigInt('0x12ab655e9a2ca55660b44d1e5c37b00159aa76fed00000010a11800000000001')
 
 const MODULUSMASK = 31
 export const BLS_PUBLIC_KEY_SIZE = 96
@@ -22,17 +22,18 @@ export const blsPrivateKeyToProcessedPrivateKey = (privateKeyHex: string) => {
       iBuffer,
       originalPrivateKeyBytes,
     ])
-    const privateKeyBLSBytes = keccak256(keyBytes)
+    const privateKeyBLSBytes = keccak_256(keyBytes)
 
     // eslint-disable-next-line no-bitwise
     privateKeyBLSBytes[0] &= MODULUSMASK
 
-    const privateKeyNum = BigInteger.fromBuffer(privateKeyBLSBytes)
-    if (privateKeyNum.compareTo(n) >= 0) {
+    const _privateKeyHex = `0x${bytesToHex(privateKeyBLSBytes)}`
+    const privateKeyNum = BigInt(_privateKeyHex)
+    if (privateKeyNum >= n) {
       continue
     }
 
-    const privateKeyBytes = reverse(privateKeyNum.toBuffer())
+    const privateKeyBytes = reverse(Buffer.from(_privateKeyHex, 'hex'))
 
     return privateKeyBytes
   }

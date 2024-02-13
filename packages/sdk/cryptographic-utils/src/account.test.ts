@@ -1,5 +1,5 @@
 import { MnemonicLanguages } from '@celo/base/lib/account'
-import * as bip39 from 'bip39'
+import * as bip39 from '@scure/bip39'
 import {
   generateKeys,
   generateMnemonic,
@@ -10,6 +10,7 @@ import {
   suggestMnemonicCorrections,
   validateMnemonic,
 } from './account'
+import wordlists from './wordlists'
 
 describe('AccountUtils', () => {
   describe('.generateMnemonic()', () => {
@@ -32,7 +33,7 @@ describe('AccountUtils', () => {
         // This validates against all languages
         expect(validateMnemonic(mnemonic)).toBeTruthy()
         // This validates using a specific wordlist
-        expect(bip39.validateMnemonic(mnemonic, bip39.wordlists[languageName])).toBeTruthy()
+        expect(bip39.validateMnemonic(mnemonic, wordlists[language])).toBeTruthy()
       })
     }
   })
@@ -69,7 +70,7 @@ describe('AccountUtils', () => {
         // This validates against all languages
         expect(validateMnemonic(mnemonic)).toBeTruthy()
         // This validates using a specific wordlist
-        expect(bip39.validateMnemonic(mnemonic, bip39.wordlists[languageName])).toBeTruthy()
+        expect(bip39.validateMnemonic(mnemonic, wordlists[language])).toBeTruthy()
       })
     }
   })
