@@ -1,5 +1,9 @@
 # @celo/wallet-hsm
 
+## 5.1.2
+
+## 5.1.2-beta.0
+
 ## 5.1.1
 
 ### Patch Changes

@@ -30,13 +30,10 @@ export default class List extends BaseCommand {
 
     console.log(chalk.magenta.bold('Queued Proposals:'))
     ux.table(
-      // @ts-expect-error
-      sortedQueue,
+      sortedQueue.map((proposal) => ({ proposal })),
       {
-        // @ts-expect-error
-        ID: { get: (p) => valueToString(p.proposalID) },
-        // @ts-expect-error
-        upvotes: { get: (p) => valueToString(p.upvotes) },
+        ID: { get: ({ proposal }) => valueToString(proposal.proposalID) },
+        upvotes: { get: ({ proposal }) => valueToString(proposal.upvotes) },
       },
       res.flags
     )
@@ -65,11 +62,9 @@ export default class List extends BaseCommand {
       .filter((_, idx) => expiredDequeueMap[idx])
       .map((_, idx) => dequeue[idx])
     ux.table(
-      // @ts-expect-error
-      expiredQueue.concat(expiredDequeue),
+      expiredQueue.concat(expiredDequeue).map((id) => ({ id })),
       {
-        // @ts-expect-error
-        ID: { get: (id) => valueToString(id) },
+        ID: { get: ({ id }) => valueToString(id) },
       },
       res.flags
     )

@@ -1,7 +1,7 @@
 {
   "name": "@celo/celocli",
   "description": "CLI Tool for transacting with the Celo protocol",
-  "version": "4.0.0-beta.0",
+  "version": "4.0.0",
   "author": "Celo",
   "license": "Apache-2.0",
   "repository": "celo-org/developer-tooling",
@@ -23,7 +23,7 @@
   },
   "scripts": {
     "clean": "tsc -b . --clean",
-    "dev": "ts-node ./bin/dev.js",
+    "dev": "yarn build && ts-node ./bin/dev.js",
     "build": "tsc -b .",
     "docs": "./generate_docs.sh",
     "lint": "yarn run --top-level eslint -c .eslintrc.js ",
@@ -34,20 +34,21 @@
   "dependencies": {
     "@celo/abis": "10.0.0",
     "@celo/base": "^6.0.0",
-    "@celo/connect": "^5.1.1",
-    "@celo/contractkit": "^6.0.1-beta.0",
-    "@celo/cryptographic-utils": "^5.0.6",
-    "@celo/explorer": "^5.0.8-beta.0",
-    "@celo/governance": "^5.0.9-beta.0",
+    "@celo/connect": "^5.1.2",
+    "@celo/contractkit": "^7.0.0",
+    "@celo/cryptographic-utils": "^5.0.7",
+    "@celo/explorer": "^5.0.8",
+    "@celo/governance": "^5.0.9",
     "@celo/identity": "^5.1.1",
-    "@celo/phone-utils": "^6.0.0",
-    "@celo/utils": "^5.0.6",
-    "@celo/wallet-hsm-azure": "^5.1.1",
-    "@celo/wallet-ledger": "^5.1.1",
-    "@celo/wallet-local": "^5.1.1",
+    "@celo/phone-utils": "^6.0.1",
+    "@celo/utils": "^6.0.0",
+    "@celo/wallet-hsm-azure": "^5.1.2",
+    "@celo/wallet-ledger": "^5.1.2",
+    "@celo/wallet-local": "^5.1.2",
     "@ethereumjs/util": "8.0.5",
     "@ledgerhq/hw-transport-node-hid": "^6.27.4",
-    "@oclif/core": "^3.18.1",
+    "@mento-protocol/mento-sdk": "^0.2.2",
+    "@oclif/core": "^3.19.1",
     "@oclif/plugin-autocomplete": "^3.0.5",
     "@oclif/plugin-commands": "^3.1.1",
     "@oclif/plugin-help": "^6.0.12",
@@ -60,7 +61,7 @@
     "chalk": "^2.4.2",
     "command-exists": "^1.2.9",
     "debug": "^4.1.1",
-    "events": "^3.0.0",
+    "ethers": "5",
     "fs-extra": "^8.1.0",
     "humanize-duration": "^3.29.0",
     "path": "^0.12.7",
@@ -131,7 +132,7 @@
         "description": "Participate in and view the state of Validator Elections"
       },
       "exchange": {
-        "description": "Exchange Celo Dollars and CELO via the stability mechanism"
+        "description": "Exchange Celo Dollars and CELO via Mento"
       },
       "governance": {
         "description": "Interact with on-chain governance proposals and hotfixes"

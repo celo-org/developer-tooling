@@ -1,5 +1,77 @@
 # Changelog
 
+## 4.0.0
+
+### Major Changes
+
+- [#106](https://github.com/celo-org/developer-tooling/pull/106) [`0a3a570`](https://github.com/celo-org/developer-tooling/commit/0a3a5706575fdb8af34dd2143759ed0535c386bf) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Remove the deprecated exchange:gold command. exchange:celo is a drop in replacement
+
+- [#21](https://github.com/celo-org/developer-tooling/pull/21) [`f167758`](https://github.com/celo-org/developer-tooling/commit/f1677581b90675e37a4846ce53b29d8615a056e6) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Removes the `releasegold` command in favour of `releasecelo`.
+
+- [#21](https://github.com/celo-org/developer-tooling/pull/21) [`f167758`](https://github.com/celo-org/developer-tooling/commit/f1677581b90675e37a4846ce53b29d8615a056e6) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Remove `grandamento` commands from CLI.
+
+### Minor Changes
+
+- [#106](https://github.com/celo-org/developer-tooling/pull/106) [`0a3a570`](https://github.com/celo-org/developer-tooling/commit/0a3a5706575fdb8af34dd2143759ed0535c386bf) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Add support for swapping celo -- cStables via mento broker
+
+### Patch Changes
+
+- [#129](https://github.com/celo-org/developer-tooling/pull/129) [`0eabd86`](https://github.com/celo-org/developer-tooling/commit/0eabd86f1fc4078638f0819150e9873b417696b7) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Improve column header names for rewards:show command
+
+- [#129](https://github.com/celo-org/developer-tooling/pull/129) [`0eabd86`](https://github.com/celo-org/developer-tooling/commit/0eabd86f1fc4078638f0819150e9873b417696b7) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Various fixes for displaying tablular information from commands
+
+- [#134](https://github.com/celo-org/developer-tooling/pull/134) [`6968ad6`](https://github.com/celo-org/developer-tooling/commit/6968ad68c3e5b3f0bc09b73a673fbb0f50335674) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - force beta release
+
+- Updated dependencies [[`8fb6c76`](https://github.com/celo-org/developer-tooling/commit/8fb6c76e4fada71c91f516ed151c4519ff2fe0fd), [`45d156d`](https://github.com/celo-org/developer-tooling/commit/45d156d03c03399bef51a00fe2b5cfb5e5669642), [`7dfbcd6`](https://github.com/celo-org/developer-tooling/commit/7dfbcd60203c8fd95bc6e113adfba02f7071ac47), [`b34439a`](https://github.com/celo-org/developer-tooling/commit/b34439a945c698c560c096c92255c230602adee6), [`6b2e34c`](https://github.com/celo-org/developer-tooling/commit/6b2e34c973290da221aaabdc2bf4c6654ef9f99c)]:
+  - @celo/contractkit@7.0.0
+  - @celo/wallet-hsm-azure@5.1.2
+  - @celo/utils@6.0.0
+  - @celo/wallet-ledger@5.1.2
+  - @celo/wallet-local@5.1.2
+  - @celo/connect@5.1.2
+  - @celo/cryptographic-utils@5.0.7
+  - @celo/explorer@5.0.8
+  - @celo/governance@5.0.9
+  - @celo/phone-utils@6.0.1
+
+## 4.0.0-beta.3
+
+### Patch Changes
+
+- [#134](https://github.com/celo-org/developer-tooling/pull/134) [`6968ad6`](https://github.com/celo-org/developer-tooling/commit/6968ad68c3e5b3f0bc09b73a673fbb0f50335674) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - force beta release
+
+## 4.0.0-beta.2
+
+### Patch Changes
+
+- [#129](https://github.com/celo-org/developer-tooling/pull/129) [`0eabd86`](https://github.com/celo-org/developer-tooling/commit/0eabd86f1fc4078638f0819150e9873b417696b7) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Improve column header names for rewards:show command
+
+- [#129](https://github.com/celo-org/developer-tooling/pull/129) [`0eabd86`](https://github.com/celo-org/developer-tooling/commit/0eabd86f1fc4078638f0819150e9873b417696b7) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Various fixes for displaying tablular information from commands
+
+## 4.0.0-beta.1
+
+### Major Changes
+
+- [#106](https://github.com/celo-org/developer-tooling/pull/106) [`0a3a570`](https://github.com/celo-org/developer-tooling/commit/0a3a5706575fdb8af34dd2143759ed0535c386bf) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Remove the deprecated exchange:gold command. exchange:celo is a drop in replacement
+
+### Minor Changes
+
+- [#106](https://github.com/celo-org/developer-tooling/pull/106) [`0a3a570`](https://github.com/celo-org/developer-tooling/commit/0a3a5706575fdb8af34dd2143759ed0535c386bf) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Add support for swapping celo -- cStables via mento broker
+
+### Patch Changes
+
+- Updated dependencies [[`45d156d`](https://github.com/celo-org/developer-tooling/commit/45d156d03c03399bef51a00fe2b5cfb5e5669642), [`b34439a`](https://github.com/celo-org/developer-tooling/commit/b34439a945c698c560c096c92255c230602adee6), [`6b2e34c`](https://github.com/celo-org/developer-tooling/commit/6b2e34c973290da221aaabdc2bf4c6654ef9f99c)]:
+  - @celo/wallet-hsm-azure@5.1.2-beta.0
+  - @celo/contractkit@7.0.0-beta.2
+  - @celo/utils@6.0.0-beta.0
+  - @celo/explorer@5.0.8-beta.1
+  - @celo/governance@5.0.9-beta.1
+  - @celo/connect@5.1.2-beta.0
+  - @celo/cryptographic-utils@5.0.7-beta.0
+  - @celo/phone-utils@6.0.1-beta.0
+  - @celo/wallet-ledger@5.1.2-beta.0
+  - @celo/wallet-local@5.1.2-beta.0
+
 ## 4.0.0-beta.0
 
 ### Major Changes

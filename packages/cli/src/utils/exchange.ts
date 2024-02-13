@@ -2,7 +2,6 @@ import { ContractKit } from '@celo/contractkit'
 import { StableToken, StableTokenInfo, stableTokenInfos } from '@celo/contractkit/lib/celo-tokens'
 import BigNumber from 'bignumber.js'
 import { binaryPrompt } from './cli'
-
 export const swapArguments = [
   {
     name: 'sellAmount',
@@ -22,36 +21,47 @@ export const swapArguments = [
 
 export async function checkNotDangerousExchange(
   kit: ContractKit,
-  amount: BigNumber,
-  largeOrderPercentage: number,
-  deppegedPricePercentage: number,
-  buyBucket: boolean,
-  stableTokenInfo: StableTokenInfo = stableTokenInfos[StableToken.cUSD]
+  sellAmount: BigNumber,
+  quotedAmountToReceiveWithBuffer: BigNumber,
+  maxDepegPricePercentage: number,
+  stableTokenInfo: StableTokenInfo = stableTokenInfos[StableToken.cUSD],
+  flipOracle = false
 ): Promise<boolean> {
   const oracles = await kit.contracts.getSortedOracles()
-  const exchange = await kit.contracts.getExchange(stableTokenInfo.symbol as StableToken)
-  const oracleMedianRate = (await oracles.medianRate(stableTokenInfo.contract)).rate
-  const buckets = await exchange.getBuyAndSellBuckets(false)
-
-  const chainRate = buckets[1].dividedBy(buckets[0])
-  let warningMessage
-  // XX% difference between rates
-  if (Math.abs(oracleMedianRate.dividedBy(chainRate).toNumber() - 1) > deppegedPricePercentage) {
-    const warningDeppegedPrice = `Warning ${stableTokenInfo.symbol} price here (i.e. on-chain) is depegged by >${deppegedPricePercentage}% from the oracle prices (i.e. exchange prices).`
-    warningMessage = warningDeppegedPrice
-  }
-
-  // X% of the bucket
-  const bucket = buyBucket ? buckets[1] : buckets[0]
-  if (bucket.dividedBy(100 / largeOrderPercentage).isLessThanOrEqualTo(amount)) {
-    const warningLargeOrder =
-      'Warning you are executing a large order, risk of price slippage i.e. getting an unfavorable exchange rate.'
-    warningMessage = warningMessage ? `${warningMessage} ${warningLargeOrder}` : warningLargeOrder
-  }
-
-  if (warningMessage) {
-    const check = await binaryPrompt(`${warningMessage}. Are you sure you want to continue?`, true)
+  const oracleMedianRateRaw = (await oracles.medianRate(stableTokenInfo.contract)).rate
+  const oracleMedianRate = flipOracle
+    ? new BigNumber(1).div(oracleMedianRateRaw)
+    : oracleMedianRateRaw
+  const expectedSlippage = calculateExpectedSlippage(
+    sellAmount,
+    quotedAmountToReceiveWithBuffer,
+    oracleMedianRate
+  )
+  if (Math.abs(expectedSlippage) > Math.abs(maxDepegPricePercentage)) {
+    const check = await binaryPrompt(
+      `Warning ${
+        stableTokenInfo.symbol
+      } price here (i.e. on-chain) would be depegged by ${expectedSlippage}% from the oracle prices ${oracleMedianRate.toString()} (i.e. swap prices). Are you sure you want to continue?`,
+      true
+    )
     return check
   }
+
   return true
+}
+
+// (Quoted Price – MarketPrice Price) / Quoted Price * 100
+export function calculateExpectedSlippage(
+  sellAmount: BigNumber,
+  quotedAmountToReceiveWithBuffer: BigNumber,
+  oracleMedianRate: BigNumber
+) {
+  const marketPrice = oracleMedianRate
+  const quotedPrice = quotedAmountToReceiveWithBuffer.dividedBy(sellAmount)
+
+  const priceDifference = quotedPrice.minus(marketPrice)
+  const slippage = priceDifference.dividedBy(quotedPrice).multipliedBy(100)
+  console.info(`Quoted Price: ${quotedPrice.decimalPlaces(8).toString()} per token`)
+
+  return slippage.toNumber()
 }

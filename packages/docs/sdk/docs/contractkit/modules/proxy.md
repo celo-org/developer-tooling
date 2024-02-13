@@ -26,7 +26,7 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/proxy.ts:33](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L33)
+[packages/sdk/contractkit/src/proxy.ts:32](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L32)
 
 ___
 
@@ -36,7 +36,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/proxy.ts:85](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L85)
+[packages/sdk/contractkit/src/proxy.ts:84](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L84)
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/proxy.ts:92](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L92)
+[packages/sdk/contractkit/src/proxy.ts:91](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L91)
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/proxy.ts:91](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L91)
+[packages/sdk/contractkit/src/proxy.ts:90](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L90)
 
 ___
 
@@ -66,7 +66,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/proxy.ts:65](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L65)
+[packages/sdk/contractkit/src/proxy.ts:64](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L64)
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/proxy.ts:49](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L49)
+[packages/sdk/contractkit/src/proxy.ts:48](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L48)
 
 ## Functions
 
@@ -88,7 +88,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `proxyContractName` | ``"AccountsProxy"`` \| ``"AttestationsProxy"`` \| ``"BlockchainParametersProxy"`` \| ``"DoubleSigningSlasherProxy"`` \| ``"DowntimeSlasherProxy"`` \| ``"ElectionProxy"`` \| ``"EpochRewardsProxy"`` \| ``"EscrowProxy"`` \| ``"ExchangeProxy"`` \| ``"ExchangeEURProxy"`` \| ``"ExchangeBRLProxy"`` \| ``"FederatedAttestationsProxy"`` \| ``"FeeCurrencyWhitelistProxy"`` \| ``"FeeHandlerProxy"`` \| ``"FreezerProxy"`` \| ``"GasPriceMinimumProxy"`` \| ``"GoldTokenProxy"`` \| ``"GovernanceProxy"`` \| ``"LockedGoldProxy"`` \| ``"MentoFeeHandlerSellerProxy"`` \| ``"UniswapFeeHandlerSellerProxy"`` \| ``"MultiSigProxy"`` \| ``"OdisPaymentsProxy"`` \| ``"RandomProxy"`` \| ``"RegistryProxy"`` \| ``"ReserveProxy"`` \| ``"SortedOraclesProxy"`` \| ``"StableTokenProxy"`` \| ``"StableTokenEURProxy"`` \| ``"StableTokenBRLProxy"`` \| ``"ValidatorsProxy"`` \| ``"ProxyProxy"`` |
+| `proxyContractName` | ``"AccountsProxy"`` \| ``"AttestationsProxy"`` \| ``"BlockchainParametersProxy"`` \| ``"DoubleSigningSlasherProxy"`` \| ``"DowntimeSlasherProxy"`` \| ``"ElectionProxy"`` \| ``"EpochRewardsProxy"`` \| ``"EscrowProxy"`` \| ``"FederatedAttestationsProxy"`` \| ``"FeeCurrencyWhitelistProxy"`` \| ``"FeeHandlerProxy"`` \| ``"FreezerProxy"`` \| ``"GasPriceMinimumProxy"`` \| ``"GoldTokenProxy"`` \| ``"GovernanceProxy"`` \| ``"LockedGoldProxy"`` \| ``"MentoFeeHandlerSellerProxy"`` \| ``"UniswapFeeHandlerSellerProxy"`` \| ``"MultiSigProxy"`` \| ``"OdisPaymentsProxy"`` \| ``"RandomProxy"`` \| ``"RegistryProxy"`` \| ``"ReserveProxy"`` \| ``"SortedOraclesProxy"`` \| ``"StableTokenProxy"`` \| ``"StableTokenEURProxy"`` \| ``"StableTokenBRLProxy"`` \| ``"ValidatorsProxy"`` \| ``"ProxyProxy"`` |
 
 #### Returns
 
@@ -96,7 +96,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/proxy.ts:132](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L132)
+[packages/sdk/contractkit/src/proxy.ts:128](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L128)
 
 ___
 
@@ -117,4 +117,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/proxy.ts:142](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L142)
+[packages/sdk/contractkit/src/proxy.ts:138](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L138)

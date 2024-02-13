@@ -23,11 +23,11 @@ export default class List extends BaseCommand {
     ux.table(
       groupVotes.map((g) => ({ group: g })),
       {
-        address: {},
-        name: {},
+        address: { get: ({ group }) => group.address },
+        name: { get: ({ group }) => group.name },
         votes: { get: ({ group }) => group.votes.toFixed() },
         capacity: { get: ({ group }) => group.capacity.toFixed() },
-        eligible: {},
+        eligible: { get: ({ group }) => group.eligible },
       },
       res.flags
     )

@@ -48,8 +48,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '18'
-      - name: "enable corepack for yarn"
-        run : sudo corepack enable yarn
+      - name: 'enable corepack for yarn'
+        run: sudo corepack enable yarn
       - uses: actions/checkout@v4
       # must call twice because of chicken and egg problem with yarn and node
       - uses: actions/setup-node@v4
@@ -71,7 +71,8 @@ jobs:
           restore-keys: |
             node-${{ runner.os }}-${{ runner.arch }}-${{ env.NODE_MODULE_CACHE_VERSION }}-
       - name: Install yarn dependencies
-        run: git config --global url."https://".insteadOf ssh:// && yarn install
+        # skip check due to YN0078: │ Invalid resolution @celo/connect@npm:^5.1.1 → npm:5.1.1
+        run: git config --global url."https://".insteadOf ssh:// && yarn install  --no-check-resolutions
         if: steps.cache_node.outputs.cache-hit != 'true'
       - name: Run yarn postinstall if cache hitted
         run: yarn run postinstall
@@ -222,16 +223,6 @@ jobs:
         uses: ./.github/actions/sync-workspace
         with:
           artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
-      - name: Fail if someone forgot to commit CLI docs
-        run: |
-          yarn workspace @celo/celocli docs
-          if [[ $(git status packages/docs/command-line-interface --porcelain) ]]; then
-            git --no-pager diff packages/docs/command-line-interface
-            echo "There are git differences after generating CLI docs"
-            git status
-            git diff
-            exit 1
-          fi
       - name: Run tests
         run: |
           yarn workspace @celo/celocli test
@@ -241,6 +232,41 @@ jobs:
       - name: Test that releasecelo command topic is working
         run: |
           yarn workspace @celo/celocli run celocli releasecelo --help
+
+  docs-tests:
+    name: Docs tests
+    runs-on: ['self-hosted', 'org', '8-cpu']
+    timeout-minutes: 30
+    needs: [install-dependencies]
+    if: |
+      github.base_ref == 'master' || contains(github.base_ref, 'staging') || contains(github.base_ref, 'production') ||
+      contains(needs.install-dependencies.outputs.all_modified_files, 'packages/cli') ||
+      contains(needs.install-dependencies.outputs.all_modified_files, 'packages/sdk') ||
+      contains(needs.install-dependencies.outputs.all_modified_files, 'packages/typescript') ||
+      contains(needs.install-dependencies.outputs.all_modified_files, ',package.json') ||
+      contains(needs.install-dependencies.outputs.all_modified_files, ',yarn.lock') ||
+      false
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sync workspace
+        uses: ./.github/actions/sync-workspace
+        with:
+          artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
+      - run: sudo corepack enable yarn
+      - name: Sync workspace
+        uses: ./.github/actions/sync-workspace
+        with:
+          artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
+      - name: Fail if someone forgot to commit docs
+        run: |
+          yarn docs
+          if [[ $(git status packages/docs --porcelain) ]]; then
+            git --no-pager diff packages/docs
+            echo "There are git differences after generating all docs"
+            git status
+            git diff
+            exit 1
+          fi
 
   base-test:
     name: SDK Base package Tests
@@ -300,3 +326,18 @@ jobs:
           cd $RUNNER_TEMP
           npm install $RUNNER_WORKSPACE/developer-tooling/packages/sdk/base/*.tgz
           npm install $RUNNER_WORKSPACE/developer-tooling/packages/sdk/utils/*.tgz
+
+  validate-renovate-config:
+    name: Validate Renovate Config
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+      - name: Validate Renovate Config
+        run: |
+          npm install --global renovate
+          renovate-config-validator

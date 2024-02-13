@@ -20,7 +20,6 @@ export default class SetLiquidityProvision extends ReleaseGoldBaseCommand {
 
   async run() {
     const kit = await this.getKit()
-    // tslint:disable-next-line
     const { flags } = await this.parse(SetLiquidityProvision)
 
     await newCheckBuilder(this)

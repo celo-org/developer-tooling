@@ -31,7 +31,6 @@ export default class SetAccount extends ReleaseGoldBaseCommand {
 
   async run() {
     const kit = await this.getKit()
-    // tslint:disable-next-line
     const { flags } = await this.parse(SetAccount)
     const isRevoked = await this.releaseGoldWrapper.isRevoked()
 

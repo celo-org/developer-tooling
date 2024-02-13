@@ -30,14 +30,11 @@ export default class Reports extends BaseCommand {
 
     const reports = await sortedOracles.getReports(res.args.arg1).catch((e) => failWith(e))
     ux.table(
-      // @ts-expect-error
-      reports,
+      reports.map((report) => ({ report })),
       {
-        address: {},
-        // @ts-expect-error
-        rate: { get: (r) => r.rate.toNumber() },
-        // @ts-expect-error
-        timestamp: { get: (r) => r.timestamp.toNumber() },
+        address: { get: ({ report }) => report.address },
+        rate: { get: ({ report }) => report.rate.toNumber() },
+        timestamp: { get: ({ report }) => report.timestamp.toNumber() },
       },
       res.flags
     )

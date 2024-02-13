@@ -26,7 +26,6 @@ import { ABI as RegistryABI } from '@celo/abis/web3/Registry'
 import { ABI as SortedOraclesABI } from '@celo/abis/web3/SortedOracles'
 import { ABI as UniswapFeeHandlerSellerABI } from '@celo/abis/web3/UniswapFeeHandlerSeller'
 import { ABI as ValidatorsABI } from '@celo/abis/web3/Validators'
-import { ABI as ExchangeABI } from '@celo/abis/web3/mento/Exchange'
 import { ABI as ReserveABI } from '@celo/abis/web3/mento/Reserve'
 import { ABI as StableTokenABI } from '@celo/abis/web3/mento/StableToken'
 
@@ -103,9 +102,6 @@ const initializeAbiMap = {
   ElectionProxy: findInitializeAbi(ElectionABI),
   EpochRewardsProxy: findInitializeAbi(EpochRewardsABI),
   EscrowProxy: findInitializeAbi(EscrowABI),
-  ExchangeProxy: findInitializeAbi(ExchangeABI),
-  ExchangeEURProxy: findInitializeAbi(ExchangeABI),
-  ExchangeBRLProxy: findInitializeAbi(ExchangeABI),
   FederatedAttestationsProxy: findInitializeAbi(FederatedAttestationsABI),
   FeeCurrencyWhitelistProxy: findInitializeAbi(FeeCurrencyWhitelistABI),
   FeeHandlerProxy: findInitializeAbi(FeeHandlerABI),

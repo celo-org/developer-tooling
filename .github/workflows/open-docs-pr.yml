@@ -1,0 +1,92 @@
+---
+name: Open a pull-request on the celo-org/docs repository
+
+on:
+  workflow_call:
+    inputs:
+      commit:
+        description: 'Commit of the developer-tooling repo that the submodule will be updated to'
+        type: string
+        required: true
+
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: 'Commit of the developer-tooling repo that the submodule will be updated to'
+        type: string
+        required: true
+
+jobs:
+  open-docs-pr:
+    name: Open a pull-request on the celo-org/docs repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      pull-requests: write
+      repository-projects: write
+    steps:
+      - name: Fetch secrets from AKeyless
+        id: fetch-secrets
+        uses: docker://us-west1-docker.pkg.dev/devopsre/akeyless-public/akeyless-action:latest
+        with:
+          access-id: p-kf9vjzruht6l
+          api-url: https://api.gateway.akeyless.celo-networks-dev.org
+          dynamic-secrets: '{"/dynamic-secrets/keys/github/docs/contents=write,pull_requests=write":"DOCS_TOKEN"}'
+
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          repository: 'celo-org/docs'
+          submodules: 'recursive'
+          fetch-depth: 0
+          ref: main
+          token: ${{ env.DOCS_TOKEN }}
+
+      - name: Open pull-request
+        env:
+          COMMIT: ${{ inputs.commit }}
+          REPOSITORY: 'celo-org/docs'
+          DOCS_CWD: 'celo-docs'
+          BASE_BRANCH: main
+          NEW_BRANCH: 'ci/${{ github.run_id }}-${{ github.run_attempt }}'
+          BOT_NAME: 'github-actions'
+          BOT_EMAIL: 'github-actions@github.com'
+
+        run: |
+          set -x
+
+          # Setup the committers identity.
+          git config --global user.name $BOT_NAME
+          git config --global user.email $BOT_EMAIL
+
+          # Create a new feature branch for the changes.
+          git checkout -b $NEW_BRANCH
+
+          cd submodules/developer-tooling
+          git fetch --all
+          git checkout $COMMIT
+          cd ../..
+          ./scripts/copy-generated-docs.sh
+
+          git status
+          git add submodules/developer-tooling
+          git add docs/cli
+          git commit -m "chore: update developer-tooling submodule"
+          git push origin $NEW_BRANCH
+
+          cat >/tmp/pr-body.md <<EOL
+          Update developer-tooling submodule to [$COMMIT](https://github.com/celo-org/developer-tooling/commit/$COMMIT).
+
+          Merging this pull-request will update the docs using generated files (such as the CLI docs).
+
+          🤖 _This pull-request was opened by a robot beep boop._ 🤖
+          EOL
+
+          echo "$DOCS_TOKEN" > token.txt
+          gh auth login --with-token < token.txt
+          gh pr create \
+            --body-file /tmp/pr-body.md \
+            --title "chore: update auto-generated docs reference from developer-tooling" \
+            --head "$NEW_BRANCH" \
+            --base "$BASE_BRANCH"
