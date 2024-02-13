@@ -71,7 +71,8 @@ jobs:
           restore-keys: |
             node-${{ runner.os }}-${{ runner.arch }}-${{ env.NODE_MODULE_CACHE_VERSION }}-
       - name: Install yarn dependencies
-        run: git config --global url."https://".insteadOf ssh:// && yarn install
+        # skip check due to YN0078: │ Invalid resolution @celo/connect@npm:^5.1.1 → npm:5.1.1
+        run: git config --global url."https://".insteadOf ssh:// && yarn install  --no-check-resolutions
         if: steps.cache_node.outputs.cache-hit != 'true'
       - name: Run yarn postinstall if cache hitted
         run: yarn run postinstall

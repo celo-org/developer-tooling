@@ -1,5 +1,21 @@
 # @celo/wallet-hsm-azure
 
+## 5.1.2
+
+### Patch Changes
+
+- [#94](https://github.com/celo-org/developer-tooling/pull/94) [`45d156d`](https://github.com/celo-org/developer-tooling/commit/45d156d03c03399bef51a00fe2b5cfb5e5669642) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Bump all @azure packages to latest versions. These includes several major bumps which should not affect use in this library. For More details
+  - https://github.com/Azure/azure-sdk-for-js/blob/main/sdk/identity/identity/CHANGELOG.md
+  - https://github.com/Azure/azure-sdk-for-js/blob/main/sdk/identity/identity/BREAKING_CHANGES.md
+  - https://github.com/Azure/azure-sdk-for-js/blob/main/sdk/keyvault/keyvault-secrets/CHANGELOG.md
+  - https://github.com/Azure/azure-sdk-for-js/blob/main/sdk/keyvault/keyvault-keys/CHANGELOG.md
+- Updated dependencies [[`6b2e34c`](https://github.com/celo-org/developer-tooling/commit/6b2e34c973290da221aaabdc2bf4c6654ef9f99c)]:
+  - @celo/utils@6.0.0
+  - @celo/wallet-base@5.1.2
+  - @celo/wallet-hsm@5.1.2
+  - @celo/wallet-remote@5.1.2
+  - @celo/connect@5.1.2
+
 ## 5.1.2-beta.0
 
 ### Patch Changes
