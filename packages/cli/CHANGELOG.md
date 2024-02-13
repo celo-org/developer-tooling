@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.0.0-beta.3
+
+### Patch Changes
+
+- [#134](https://github.com/celo-org/developer-tooling/pull/134) [`6968ad6`](https://github.com/celo-org/developer-tooling/commit/6968ad68c3e5b3f0bc09b73a673fbb0f50335674) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - force beta release
+
 ## 4.0.0-beta.2
 
 ### Patch Changes
