@@ -423,6 +423,7 @@ describe('recoverTransaction', () => {
       ]
     `)
   })
+  // TODO: What is viem doing here?
   test('cip42 serialized by viem', async () => {
     const account = privateKeyToAccount(PRIVATE_KEY1)
     const signed = await account.signTransaction(
