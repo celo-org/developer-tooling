@@ -4,13 +4,13 @@ import {
   generateKeys,
   generateMnemonic,
   getAllLanguages,
+  getWordList,
   invalidMnemonicWords,
   MnemonicStrength,
   normalizeMnemonic,
   suggestMnemonicCorrections,
   validateMnemonic,
 } from './account'
-import wordlists from './wordlists'
 
 describe('AccountUtils', () => {
   describe('.generateMnemonic()', () => {
@@ -33,7 +33,7 @@ describe('AccountUtils', () => {
         // This validates against all languages
         expect(validateMnemonic(mnemonic)).toBeTruthy()
         // This validates using a specific wordlist
-        expect(bip39.validateMnemonic(mnemonic, wordlists[language])).toBeTruthy()
+        expect(bip39.validateMnemonic(mnemonic, getWordList(language))).toBeTruthy()
       })
     }
   })
@@ -70,7 +70,7 @@ describe('AccountUtils', () => {
         // This validates against all languages
         expect(validateMnemonic(mnemonic)).toBeTruthy()
         // This validates using a specific wordlist
-        expect(bip39.validateMnemonic(mnemonic, wordlists[language])).toBeTruthy()
+        expect(bip39.validateMnemonic(mnemonic, getWordList(language))).toBeTruthy()
       })
     }
   })

@@ -168,7 +168,7 @@ export function formatNonAccentedCharacters(mnemonic: string) {
 }
 
 // Unify the bip39.wordlists (otherwise depends on the instance of the bip39)
-function getWordList(language: MnemonicLanguages = MnemonicLanguages.english): string[] {
+export function getWordList(language: MnemonicLanguages = MnemonicLanguages.english): string[] {
   return wordlists[language]
 }
 
