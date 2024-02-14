@@ -1,4 +1,5 @@
 import {
+  Bip39,
   CELO_DERIVATION_PATH_BASE,
   MnemonicLanguages,
   MnemonicStrength,
@@ -10,12 +11,7 @@ import { levenshteinDistance } from '@celo/utils/lib/levenshtein'
 import { keccak_256 } from '@noble/hashes/sha3'
 import { bytesToHex, utf8ToBytes } from '@noble/hashes/utils'
 import { HDKey } from '@scure/bip32'
-import {
-  validateMnemonic as _validateMnemonic,
-  entropyToMnemonic,
-  mnemonicToSeed,
-  mnemonicToSeedSync,
-} from '@scure/bip39'
+import * as bip39 from '@scure/bip39'
 import { randomBytes } from 'crypto'
 import wordlists from './wordlists'
 
@@ -42,15 +38,22 @@ function defaultGenerateMnemonic(
       if (error) {
         reject(error)
       } else {
-        resolve(entropyToMnemonic(randomBytesBuffer, wordlist))
+        resolve(bip39.entropyToMnemonic(randomBytesBuffer, wordlist))
       }
     })
   })
 }
 
-const bip39Wrapper = {
-  mnemonicToSeedSync: mnemonicToSeedSync,
-  mnemonicToSeed: mnemonicToSeed,
+function _validateMnemonic(
+  mnemonic: string,
+  wordlist: string[] = wordlists[MnemonicLanguages.english]
+) {
+  return bip39.validateMnemonic(mnemonic, wordlist)
+}
+
+const bip39Wrapper: Bip39 = {
+  mnemonicToSeedSync: bip39.mnemonicToSeedSync,
+  mnemonicToSeed: bip39.mnemonicToSeed,
   generateMnemonic: defaultGenerateMnemonic,
   validateMnemonic: _validateMnemonic,
 }
