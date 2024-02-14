@@ -25,6 +25,7 @@ export default class Balance extends BaseCommand {
     const kit = await this.getKit()
     const { args, flags } = await this.parse(Balance)
 
+    // TODO: Consider what happens if the contract has 6 decimals
     console.log('All balances expressed in units of 10^-18.')
     printValueMap(await kit.getTotalBalance(args.arg1 as string))
     if (flags.erc20Address) {
