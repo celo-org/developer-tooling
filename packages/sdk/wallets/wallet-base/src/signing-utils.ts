@@ -482,12 +482,12 @@ function getPublicKeyofSignerFromTx(transactionArray: string[], type: Transactio
   // this needs to be 10 for cip64, 12 for cip42 and eip1559
   const base = transactionArray.slice(0, correctLengthOf(type, false))
   const message = concatHex([TxTypeToPrefix[type], RLP.encode(base).slice(2)])
-  const msgHash = keccak_256(hexToBytes(message))
+  const msgHash = keccak_256(hexToBytes(trimLeading0x(message)))
 
   const { v, r, s } = extractSignatureFromDecoded(transactionArray)
   try {
     return ecrecover(
-      toBuffer(msgHash),
+      Buffer.from(msgHash),
       v === '0x' || v === undefined ? BigInt(0) : BigInt(1),
       toBuffer(r),
       toBuffer(s)
