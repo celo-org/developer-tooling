@@ -446,7 +446,9 @@ describe('encodeType()', () => {
 describe('typeHash()', () => {
   for (const { primaryType, types, typeEncoding } of TEST_TYPES) {
     it(`should hash type ${primaryType} correctly`, () => {
-      expect(typeHash(primaryType, types)).toEqual(keccak_256(utf8ToBytes(typeEncoding)))
+      expect(typeHash(primaryType, types)).toEqual(
+        Buffer.from(keccak_256(utf8ToBytes(typeEncoding)))
+      )
     })
   }
 })
@@ -468,7 +470,9 @@ describe('structHash()', () => {
     if (examples.length > 0) {
       it(`should hash data ${primaryType} correctly`, () => {
         for (const { data, dataEncoding } of examples) {
-          const expected = keccak_256(Buffer.concat([typeHash(primaryType, types), dataEncoding]))
+          const expected = Buffer.from(
+            keccak_256(Buffer.concat([typeHash(primaryType, types), dataEncoding]))
+          )
           expect(structHash(primaryType, data, types)).toEqual(expected)
         }
       })
