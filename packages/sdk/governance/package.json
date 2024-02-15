@@ -32,7 +32,6 @@
     "@types/inquirer": "^6.5.0",
     "bignumber.js": "^9.0.0",
     "debug": "^4.1.1",
-    "ethereum-cryptography": "1.2.0",
     "inquirer": "^7.0.5"
   },
   "engines": {

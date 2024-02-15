@@ -17,11 +17,11 @@ import { EIP712TypedData, generateTypedDataHash } from '@celo/utils/lib/sign-typ
 import { parseSignatureWithoutPrefix } from '@celo/utils/lib/signatureUtils'
 // @ts-ignore-next-line
 import * as ethUtil from '@ethereumjs/util'
+import { keccak_256 } from '@noble/hashes/sha3'
+import { hexToBytes } from '@noble/hashes/utils'
 import debugFactory from 'debug'
 // @ts-ignore-next-line eth-lib types not found
 import { account as Account, bytes as Bytes, hash as Hash, RLP } from 'eth-lib'
-import { keccak256 } from 'ethereum-cryptography/keccak'
-import { hexToBytes } from 'ethereum-cryptography/utils.js'
 import Web3 from 'web3' // TODO try to do this without web3 direct
 import Accounts from 'web3-eth-accounts'
 
@@ -58,7 +58,7 @@ export function chainIdTransformationForSigning(chainId: number): number {
 }
 
 export function getHashFromEncoded(rlpEncode: string): string {
-  return Hash.keccak256(rlpEncode)
+  return Buffer.from(keccak_256(rlpEncode)).toString('hex')
 }
 
 function trimLeadingZero(hex: string) {
@@ -482,7 +482,7 @@ function getPublicKeyofSignerFromTx(transactionArray: string[], type: Transactio
   // this needs to be 10 for cip64, 12 for cip42 and eip1559
   const base = transactionArray.slice(0, correctLengthOf(type, false))
   const message = concatHex([TxTypeToPrefix[type], RLP.encode(base).slice(2)])
-  const msgHash = keccak256(hexToBytes(message))
+  const msgHash = keccak_256(hexToBytes(message))
 
   const { v, r, s } = extractSignatureFromDecoded(transactionArray)
   try {

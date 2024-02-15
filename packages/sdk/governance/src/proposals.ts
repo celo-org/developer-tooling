@@ -38,10 +38,10 @@ import { newBlockExplorer } from '@celo/explorer'
 import { fetchMetadata, tryGetProxyImplementation } from '@celo/explorer/lib/sourcify'
 import { isValidAddress } from '@celo/utils/lib/address'
 import { fromFixed } from '@celo/utils/lib/fixidity'
+import { keccak_256 } from '@noble/hashes/sha3'
+import { utf8ToBytes } from '@noble/hashes/utils'
 import { BigNumber } from 'bignumber.js'
 import debugFactory from 'debug'
-import { keccak256 } from 'ethereum-cryptography/keccak'
-import { utf8ToBytes } from 'ethereum-cryptography/utils'
 import * as inquirer from 'inquirer'
 
 const debug = debugFactory('governance:proposals')
@@ -54,8 +54,8 @@ export const hotfixToEncodedParams = (kit: ContractKit, proposal: Proposal, salt
     hotfixToParams(proposal, salt)
   )
 
-export const hotfixToHash = (kit: ContractKit, proposal: Proposal, salt: Buffer) =>
-  keccak256(utf8ToBytes(hotfixToEncodedParams(kit, proposal, salt))) as Buffer
+export const hotfixToHash = (kit: ContractKit, proposal: Proposal, salt: Buffer): Buffer =>
+  Buffer.from(keccak_256(utf8ToBytes(hotfixToEncodedParams(kit, proposal, salt))))
 
 /**
  * JSON encoding of a proposal transaction.

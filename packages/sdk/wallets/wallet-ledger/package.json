@@ -32,8 +32,7 @@
     "@ledgerhq/hw-app-eth": "~5.11.0",
     "@ledgerhq/hw-transport": "~5.11.0",
     "debug": "^4.1.1",
-    "eth-lib": "^0.2.8",
-    "ethereum-cryptography": "1.2.0"
+    "eth-lib": "^0.2.8"
   },
   "devDependencies": {
     "@ledgerhq/hw-transport-node-hid": "^6.27.4",

@@ -10,9 +10,9 @@ import {
 } from '@celo/wallet-base'
 import * as ethUtil from '@ethereumjs/util'
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
+import { keccak_256 } from '@noble/hashes/sha3'
 // @ts-ignore-next-line eth-lib types not found
 import { account as Account } from 'eth-lib'
-import { keccak256 } from 'ethereum-cryptography/keccak'
 import Web3 from 'web3'
 import { AddressValidation, LedgerWallet } from './ledger-wallet'
 
@@ -144,7 +144,7 @@ function mockLedger(wallet: LedgerWallet, mockForceValidation: () => void) {
         domainSeparator: Buffer,
         structHash: Buffer
       ) => {
-        const messageHash = keccak256(
+        const messageHash = keccak_256(
           Buffer.concat([Buffer.from('1901', 'hex'), domainSeparator, structHash])
         ) as Buffer
 
