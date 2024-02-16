@@ -67,7 +67,7 @@ Signer.computeSharedSecret
 
 #### Defined in
 
-[wallet-local/src/local-signer.ts:71](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L71)
+[wallet-local/src/local-signer.ts:70](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L70)
 
 ___
 

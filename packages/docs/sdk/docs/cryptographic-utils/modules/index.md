@@ -35,6 +35,7 @@
 - [getAllLanguages](index.md#getalllanguages)
 - [getBlsPoP](index.md#getblspop)
 - [getBlsPublicKey](index.md#getblspublickey)
+- [getWordList](index.md#getwordlist)
 - [invalidMnemonicWords](index.md#invalidmnemonicwords)
 - [mnemonicLengthFromStrength](index.md#mnemoniclengthfromstrength)
 - [normalizeMnemonic](index.md#normalizemnemonic)
@@ -214,6 +215,12 @@ ___
 ### getBlsPublicKey
 
 Re-exports [getBlsPublicKey](bls.md#getblspublickey)
+
+___
+
+### getWordList
+
+Re-exports [getWordList](account.md#getwordlist)
 
 ___
 

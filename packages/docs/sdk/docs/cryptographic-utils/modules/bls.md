@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-[cryptographic-utils/src/bls.ts:53](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/bls.ts#L53)
+[cryptographic-utils/src/bls.ts:54](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/bls.ts#L54)
 
 ___
 
@@ -94,4 +94,4 @@ ___
 
 #### Defined in
 
-[cryptographic-utils/src/bls.ts:48](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/bls.ts#L48)
+[cryptographic-utils/src/bls.ts:49](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/bls.ts#L49)

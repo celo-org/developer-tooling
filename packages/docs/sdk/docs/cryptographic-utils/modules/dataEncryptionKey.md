@@ -30,7 +30,7 @@
 
 #### Defined in
 
-[cryptographic-utils/src/dataEncryptionKey.ts:56](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/dataEncryptionKey.ts#L56)
+[cryptographic-utils/src/dataEncryptionKey.ts:47](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/dataEncryptionKey.ts#L47)
 
 ## Functions
 
@@ -50,11 +50,11 @@ Turns a private key to a compressed public key (hex string with hex leader).
 
 `string`
 
-Corresponding compessed public key in hex encoding with '0x' leader.
+Corresponding compressed public key in hex encoding with '0x' leader.
 
 #### Defined in
 
-[cryptographic-utils/src/dataEncryptionKey.ts:10](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/dataEncryptionKey.ts#L10)
+[cryptographic-utils/src/dataEncryptionKey.ts:12](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/dataEncryptionKey.ts#L12)
 
 ___
 
@@ -79,7 +79,7 @@ Decompresssed public key without prefix.
 
 #### Defined in
 
-[cryptographic-utils/src/dataEncryptionKey.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/dataEncryptionKey.ts#L27)
+[cryptographic-utils/src/dataEncryptionKey.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/dataEncryptionKey.ts#L23)
 
 ___
 
@@ -104,4 +104,4 @@ Comment Encryption Private key.
 
 #### Defined in
 
-[cryptographic-utils/src/dataEncryptionKey.ts:42](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/dataEncryptionKey.ts#L42)
+[cryptographic-utils/src/dataEncryptionKey.ts:33](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/dataEncryptionKey.ts#L33)

@@ -67,7 +67,7 @@ Signer.computeSharedSecret
 
 #### Defined in
 
-[wallet-hsm-gcp/src/gcp-hsm-signer.ts:108](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-gcp/src/gcp-hsm-signer.ts#L108)
+[wallet-hsm-gcp/src/gcp-hsm-signer.ts:115](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-gcp/src/gcp-hsm-signer.ts#L115)
 
 ___
 
@@ -91,7 +91,7 @@ Signer.decrypt
 
 #### Defined in
 
-[wallet-hsm-gcp/src/gcp-hsm-signer.ts:102](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-gcp/src/gcp-hsm-signer.ts#L102)
+[wallet-hsm-gcp/src/gcp-hsm-signer.ts:109](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-gcp/src/gcp-hsm-signer.ts#L109)
 
 ___
 
@@ -109,7 +109,7 @@ Signer.getNativeKey
 
 #### Defined in
 
-[wallet-hsm-gcp/src/gcp-hsm-signer.ts:98](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-gcp/src/gcp-hsm-signer.ts#L98)
+[wallet-hsm-gcp/src/gcp-hsm-signer.ts:105](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-gcp/src/gcp-hsm-signer.ts#L105)
 
 ___
 
@@ -133,7 +133,7 @@ Signer.signPersonalMessage
 
 #### Defined in
 
-[wallet-hsm-gcp/src/gcp-hsm-signer.ts:75](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-gcp/src/gcp-hsm-signer.ts#L75)
+[wallet-hsm-gcp/src/gcp-hsm-signer.ts:82](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-gcp/src/gcp-hsm-signer.ts#L82)
 
 ___
 
@@ -158,7 +158,7 @@ Signer.signTransaction
 
 #### Defined in
 
-[wallet-hsm-gcp/src/gcp-hsm-signer.ts:63](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-gcp/src/gcp-hsm-signer.ts#L63)
+[wallet-hsm-gcp/src/gcp-hsm-signer.ts:70](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-gcp/src/gcp-hsm-signer.ts#L70)
 
 ___
 
@@ -182,4 +182,4 @@ Signer.signTypedData
 
 #### Defined in
 
-[wallet-hsm-gcp/src/gcp-hsm-signer.ts:87](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-gcp/src/gcp-hsm-signer.ts#L87)
+[wallet-hsm-gcp/src/gcp-hsm-signer.ts:94](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-gcp/src/gcp-hsm-signer.ts#L94)
