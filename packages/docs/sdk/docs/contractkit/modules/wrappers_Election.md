@@ -30,4 +30,4 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:569](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L569)
+[packages/sdk/contractkit/src/wrappers/Election.ts:576](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L576)
