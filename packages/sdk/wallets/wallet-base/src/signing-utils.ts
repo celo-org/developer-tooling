@@ -21,7 +21,7 @@ import { keccak_256 } from '@noble/hashes/sha3'
 import { hexToBytes } from '@noble/hashes/utils'
 import debugFactory from 'debug'
 // @ts-ignore-next-line eth-lib types not found
-import { account as Account, bytes as Bytes, hash as Hash, RLP } from 'eth-lib'
+import { account as Account, bytes as Bytes, RLP } from 'eth-lib'
 import Web3 from 'web3' // TODO try to do this without web3 direct
 import Accounts from 'web3-eth-accounts'
 

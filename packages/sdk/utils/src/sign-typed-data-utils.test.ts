@@ -68,7 +68,7 @@ const TEST_TYPES: EIP712TestCase[] = [
         dataEncoding: Buffer.concat([
           Buffer.from('000000000000000000000000000000000000000000000000000000000000a1ce', 'hex'),
           Buffer.from('0000000000000000000000000000000000000000000000000000000000000b0b', 'hex'),
-          keccak_256(Buffer.from('0xdeadbeef', 'utf8')),
+          keccak_256(utf8ToBytes('0xdeadbeef')),
         ]),
       },
     ],

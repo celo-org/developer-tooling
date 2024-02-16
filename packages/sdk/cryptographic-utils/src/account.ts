@@ -407,7 +407,7 @@ export function generateDeterministicInviteCode(
   changeIndex: number = 0,
   derivationPath: string = CELO_DERIVATION_PATH_BASE
 ): { privateKey: string; publicKey: string } {
-  const seed = keccak_256(utf8ToBytes(recipientPhoneHash + recipientPepper)) as Buffer
+  const seed = Buffer.from(keccak_256(utf8ToBytes(recipientPhoneHash + recipientPepper)))
   return generateKeysFromSeed(seed, changeIndex, addressIndex, derivationPath)
 }
 
