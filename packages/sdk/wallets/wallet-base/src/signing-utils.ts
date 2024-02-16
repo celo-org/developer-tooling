@@ -58,7 +58,9 @@ export function chainIdTransformationForSigning(chainId: number): number {
 }
 
 export function getHashFromEncoded(rlpEncode: string): string {
-  return Buffer.from(keccak_256(rlpEncode)).toString('hex')
+  const rlpBytes = hexToBytes(trimLeading0x(rlpEncode))
+  const hash = Buffer.from(keccak_256(rlpBytes))
+  return `0x${hash.toString('hex')}`
 }
 
 function trimLeadingZero(hex: string) {
