@@ -13,11 +13,6 @@ import { Connection, CeloProvider } from '@celo/connect'
 
 const web3 = new Web3("YOUR_RPC_URL")
 const connection = new Connection(web3)
-
-connection.setProvider()
-
-const connectedChainID =  await connection.chainId()
-
 ```
 
 For a raw transaction:
