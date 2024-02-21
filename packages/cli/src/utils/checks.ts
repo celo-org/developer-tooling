@@ -1,4 +1,5 @@
 import { eqAddress, NULL_ADDRESS } from '@celo/base/lib/address'
+import { COMPLIANT_ERROR_RESPONSE } from '@celo/compliance'
 import { Address } from '@celo/connect'
 import { StableToken } from '@celo/contractkit'
 import { AccountsWrapper } from '@celo/contractkit/lib/wrappers/Accounts'
@@ -13,7 +14,6 @@ import chalk from 'chalk'
 import utils from 'web3-utils'
 import { BaseCommand } from '../base'
 import { printValueMapRecursive } from './cli'
-import { SANCTIONED_ADDRESSES, COMPLIANT_ERROR_RESPONSE } from '@celo/compliance'
 import { isSanctioned } from './helpers'
 
 export interface CommandCheck {
