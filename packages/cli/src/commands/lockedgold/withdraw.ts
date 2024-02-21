@@ -20,7 +20,7 @@ export default class Withdraw extends BaseCommand {
     kit.defaultAccount = flags.from
     const lockedgold = await kit.contracts.getLockedGold()
 
-    await newCheckBuilder(this).isAccount(flags.from).runChecks()
+    await newCheckBuilder(this).isAccount(flags.from).isNotSanctioned(flags.from).runChecks()
 
     const currentTime = Math.round(new Date().getTime() / 1000)
     let madeWithdrawal = false

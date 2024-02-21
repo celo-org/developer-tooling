@@ -50,7 +50,11 @@ export default class TransferErc20 extends BaseCommand {
     } catch {
       failWith('Invalid erc20 address')
     }
-    await newCheckBuilder(this).hasEnoughErc20(from, value, res.flags.erc20Address).runChecks()
+    await newCheckBuilder(this)
+      .isNotSanctioned(from)
+      .isNotSanctioned(to)
+      .hasEnoughErc20(from, value, res.flags.erc20Address)
+      .runChecks()
 
     await displaySendTx('transfer', celoToken.transfer(to, value.toFixed()))
   }

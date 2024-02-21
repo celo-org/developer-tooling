@@ -1593,6 +1593,7 @@ __metadata:
     "@celo/abis": "npm:10.0.0"
     "@celo/base": "npm:^6.0.0"
     "@celo/celo-devchain": "npm:^6.0.3"
+    "@celo/compliance": "npm:^1.0.15"
     "@celo/connect": "npm:^5.1.2"
     "@celo/contractkit": "npm:^7.0.0"
     "@celo/cryptographic-utils": "npm:^5.0.7"
@@ -1649,6 +1650,13 @@ __metadata:
     dev: .bin/dev.js
   languageName: unknown
   linkType: soft
+
+"@celo/compliance@npm:^1.0.15":
+  version: 1.0.15
+  resolution: "@celo/compliance@npm:1.0.15"
+  checksum: 1bffb6ff0a09a225d97a1b44262001489ad187c1d47291046c24e4ee72f0cd68d79583476a85524ca99cdf299f670ab9c0d34d1bdc4818cfe2462c074527fad5
+  languageName: node
+  linkType: hard
 
 "@celo/connect@npm:^5.1.1":
   version: 5.1.1

@@ -53,6 +53,7 @@ export default class Withdraw extends ReleaseGoldBaseCommand {
           return true
         }
       )
+      .isNotSanctioned(kit.defaultAccount as string)
       .runChecks()
 
     kit.defaultAccount = await this.releaseGoldWrapper.getBeneficiary()

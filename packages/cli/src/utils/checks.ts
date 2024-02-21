@@ -13,6 +13,8 @@ import chalk from 'chalk'
 import utils from 'web3-utils'
 import { BaseCommand } from '../base'
 import { printValueMapRecursive } from './cli'
+import { SANCTIONED_ADDRESSES, COMPLIANT_ERROR_RESPONSE } from '@celo/compliance'
+import { isSanctioned } from './helpers'
 
 export interface CommandCheck {
   name: string
@@ -266,6 +268,13 @@ class CheckBuilder {
         validators.meetsValidatorGroupBalanceRequirements(account)
       )
     )
+  isNotSanctioned = (address: Address) => {
+    return this.addCheck(
+      'Compliant Address',
+      () => !isSanctioned(address),
+      COMPLIANT_ERROR_RESPONSE
+    )
+  }
 
   isValidAddress = (address: Address) =>
     this.addCheck(`${address} is a valid address`, () => isValidAddress(address))

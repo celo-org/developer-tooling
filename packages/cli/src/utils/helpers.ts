@@ -1,3 +1,4 @@
+import { SANCTIONED_ADDRESSES } from '@celo/compliance'
 import { Block } from '@celo/connect'
 import Web3 from 'web3'
 import { failWith } from './cli'
@@ -52,4 +53,12 @@ export async function requireNodeIsSynced(web3: Web3) {
   if (!(await nodeIsSynced(web3))) {
     failWith('Node is not currently synced. Run node:synced to check its status.')
   }
+}
+
+// SANCTIONED_ADDRESSES is so well typed that if you call includes with a string it gives a type error.
+// same if you make it a set or use indexOf so concat it with an empty string to give type without needing to ts-ignore
+const SANCTIONED_SET = new Set([''].concat(SANCTIONED_ADDRESSES))
+
+export function isSanctioned(address: string) {
+  return SANCTIONED_SET.has(address)
 }

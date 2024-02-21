@@ -1,3 +1,4 @@
+import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
@@ -31,6 +32,7 @@ export default class TransferDollars extends ReleaseGoldBaseCommand {
     kit.defaultAccount = isRevoked
       ? await this.releaseGoldWrapper.getReleaseOwner()
       : await this.releaseGoldWrapper.getBeneficiary()
+    newCheckBuilder(this).isNotSanctioned(kit.defaultAccount).isNotSanctioned(flags.to).runChecks()
     await displaySendTx('transfer', this.releaseGoldWrapper.transfer(flags.to, flags.value))
   }
 }
