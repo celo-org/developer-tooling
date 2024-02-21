@@ -1,5 +1,6 @@
-import { SANCTIONED_ADDRESSES } from '@celo/compliance'
+import { OFAC_SANCTIONS_LIST_URL, SANCTIONED_ADDRESSES } from '@celo/compliance'
 import { Block } from '@celo/connect'
+import { fetch } from 'cross-fetch'
 import Web3 from 'web3'
 import { failWith } from './cli'
 
@@ -57,8 +58,25 @@ export async function requireNodeIsSynced(web3: Web3) {
 
 // SANCTIONED_ADDRESSES is so well typed that if you call includes with a string it gives a type error.
 // same if you make it a set or use indexOf so concat it with an empty string to give type without needing to ts-ignore
-const SANCTIONED_SET = new Set([''].concat(SANCTIONED_ADDRESSES))
-
-export function isSanctioned(address: string) {
-  return SANCTIONED_SET.has(address)
+const SANCTIONED_SET = { data: new Set([''].concat(SANCTIONED_ADDRESSES)), lastUpdated: Date.now() }
+const CACHE_DURATION_MS = 1000 * 60 * 60 * 24 // 1 day
+export async function isSanctioned(address: string) {
+  if (SANCTIONED_SET.data.has(address)) {
+    return true
+    // Wwould like to avoid calling this EVERY run. but at least calling
+    // twice in a row (such as when checking from and to addresses) should be cached
+  } else if (Date.now() - SANCTIONED_SET.lastUpdated < CACHE_DURATION_MS) {
+    try {
+      const result = await fetch(OFAC_SANCTIONS_LIST_URL)
+      const data = await result.json()
+      if (Array.isArray(data)) {
+        SANCTIONED_SET.data = new Set(data)
+        SANCTIONED_SET.lastUpdated = Date.now()
+        return SANCTIONED_SET.data.has(address)
+      }
+    } finally {
+      return false
+    }
+  }
+  return false
 }
