@@ -125,7 +125,7 @@ export class Connection {
 
   /**
    * Set the ERC20 address for the token to use to pay for transaction fees.
-   * The ERC20 must be whitelisted for gas.
+   * The ERC20 address SHOULD be whitelisted for gas, but this is not checked or enforced.
    *
    * Set to `null` to use CELO
    *
