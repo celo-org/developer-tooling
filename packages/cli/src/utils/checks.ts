@@ -514,26 +514,22 @@ class CheckBuilder {
   }
 
   private async fetchIsSanctioned(address: string) {
-    if (this.SANCTIONED_SET.data.has(address)) {
-      return true
-      // Would like to avoid calling this EVERY run. but at least calling
-      // twice in a row (such as when checking from and to addresses) should be cached
-      // using boolean because either it's been refreshed or this is the first run of the invocation. its short lived
-    } else if (!this.SANCTIONED_SET.wasRefreshed) {
+    // Would like to avoid calling this EVERY run. but at least calling
+    // twice in a row (such as when checking from and to addresses) should be cached
+    // using boolean because either it's been refreshed or this is the first run of the invocation. its short lived
+    if (!this.SANCTIONED_SET.wasRefreshed) {
       try {
         const result = await fetch(OFAC_SANCTIONS_LIST_URL)
         const data = await result.json()
         if (Array.isArray(data)) {
           this.SANCTIONED_SET.data = new Set(data)
           this.SANCTIONED_SET.wasRefreshed = true
-          return this.SANCTIONED_SET.data.has(address)
         }
       } catch (e) {
         console.error('Error fetching OFAC sanctions list', e)
-        return false
       }
     }
-    return false
+    return this.SANCTIONED_SET.data.has(address)
   }
 
   // async executeValidatorTx(
