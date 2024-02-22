@@ -30,17 +30,24 @@ export default class Contracts extends BaseCommand {
 
     const addressMapping = await kit.registry.addressMapping()
     const contractInfo = await concurrentMap(
-      4,
+      6,
       Array.from(addressMapping.entries()),
       async ([contract, proxy]) => {
-        // skip implementation check for unproxied contract
-        const implementation = UNPROXIED_CONTRACTS.includes(contract)
-          ? 'NONE'
-          : await newProxy(kit.web3, proxy).methods._getImplementation().call()
-
-        // skip version check for unversioned contracts
+        // skip implementation check for known unproxied contracts
+        let implementation: string
+        if (UNPROXIED_CONTRACTS.includes(contract)) {
+          implementation = 'NONE'
+        } else {
+          try {
+            implementation = await newProxy(kit.web3, proxy).methods._getImplementation().call()
+          } catch (e) {
+            // if we fail to get implementation that means it doesnt have one so set it to NONE
+            implementation = 'NONE'
+          }
+        }
+        // skip version check for unversioned contracts (unproxied contracts are by definition unversioned))
         let version: string
-        if (UNVERSIONED_CONTRACTS.includes(contract)) {
+        if (UNVERSIONED_CONTRACTS.includes(contract) || implementation === 'NONE') {
           version = 'NONE'
         } else {
           const raw = await newICeloVersionedContract(kit.web3, implementation)
