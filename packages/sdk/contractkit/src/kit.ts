@@ -1,4 +1,5 @@
 // tslint:disable: ordered-imports
+import { StrongAddress, isHexString } from '@celo/base'
 import {
   Address,
   CeloTx,
@@ -13,7 +14,7 @@ import { LocalWallet } from '@celo/wallet-local'
 import { BigNumber } from 'bignumber.js'
 import Web3 from 'web3'
 import { AddressRegistry } from './address-registry'
-import { CeloContract } from './base'
+import { CeloContract } from './base' // TODO(Arthur): Any reason we're not importing @celo/base from NPM here?
 import { CeloTokens, EachCeloToken } from './celo-tokens'
 import { ValidWrappers, WrapperCache } from './contract-cache'
 import {
@@ -188,10 +189,12 @@ export class ContractKit {
 
   /**
    * Set an addressed to use to pay for gas fees
-   * @param address any string address
+   * @param address any hexadecimal address
    */
-  setFeeCurrency(address: string) {
-    // TODO(Arthur): Should we define a HexString type to enforce it's an address?
+  setFeeCurrency(address: StrongAddress) {
+    if (!isHexString(address)) {
+      // TODO(Arthur): Check how to best handle this? What does ContractKit do in other place (throw exception?, return boolean)
+    }
     this.connection.defaultFeeCurrency = address
   }
 
