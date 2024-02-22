@@ -1,5 +1,9 @@
 import { eqAddress, NULL_ADDRESS } from '@celo/base/lib/address'
-import { COMPLIANT_ERROR_RESPONSE } from '@celo/compliance'
+import {
+  COMPLIANT_ERROR_RESPONSE,
+  OFAC_SANCTIONS_LIST_URL,
+  SANCTIONED_ADDRESSES,
+} from '@celo/compliance'
 import { Address } from '@celo/connect'
 import { StableToken } from '@celo/contractkit'
 import { AccountsWrapper } from '@celo/contractkit/lib/wrappers/Accounts'
@@ -11,10 +15,10 @@ import { isValidAddress } from '@celo/utils/lib/address'
 import { verifySignature } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
 import chalk from 'chalk'
+import { fetch } from 'cross-fetch'
 import utils from 'web3-utils'
 import { BaseCommand } from '../base'
 import { printValueMapRecursive } from './cli'
-import { isSanctioned } from './helpers'
 
 export interface CommandCheck {
   name: string
@@ -271,7 +275,7 @@ class CheckBuilder {
   isNotSanctioned = (address: Address) => {
     return this.addCheck(
       'Compliant Address',
-      () => !isSanctioned(address),
+      () => !this.fetchComplianceStatus(address),
       COMPLIANT_ERROR_RESPONSE
     )
   }
@@ -491,6 +495,35 @@ class CheckBuilder {
     } else {
       console.log(`All checks passed`)
     }
+  }
+
+  // SANCTIONED_ADDRESSES is so well typed that if you call includes with a string it gives a type error.
+  // same if you make it a set or use indexOf so concat it with an empty string to give type without needing to ts-ignore
+  private readonly SANCTIONED_SET = {
+    data: new Set([''].concat(SANCTIONED_ADDRESSES)),
+    wasRefreshed: false,
+  }
+
+  private async fetchComplianceStatus(address: string) {
+    if (this.SANCTIONED_SET.data.has(address)) {
+      return true
+      // Would like to avoid calling this EVERY run. but at least calling
+      // twice in a row (such as when checking from and to addresses) should be cached
+      // using boolean because either it's been refreshed or this is the first run of the invocation. its short lived
+    } else if (!this.SANCTIONED_SET.wasRefreshed) {
+      try {
+        const result = await fetch(OFAC_SANCTIONS_LIST_URL)
+        const data = await result.json()
+        if (Array.isArray(data)) {
+          this.SANCTIONED_SET.data = new Set(data)
+          this.SANCTIONED_SET.wasRefreshed = true
+          return this.SANCTIONED_SET.data.has(address)
+        }
+      } catch {
+        return false
+      }
+    }
+    return false
   }
 
   // async executeValidatorTx(
