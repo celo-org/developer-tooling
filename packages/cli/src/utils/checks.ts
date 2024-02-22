@@ -115,6 +115,12 @@ class CheckBuilder {
     }
   }
 
+  /*
+   * Add a check to the list of checks to be run
+   * @param name - Name of the check
+   * @param predicate - When this returns true a green check will be displayed, otherwise a red x
+   * @param errorMessage - Optional error message to display if the check returns false
+   */
   addCheck(name: string, predicate: () => Promise<boolean> | boolean, errorMessage?: string) {
     this.checks.push(check(name, predicate, errorMessage))
     return this
@@ -275,7 +281,10 @@ class CheckBuilder {
   isNotSanctioned = (address: Address) => {
     return this.addCheck(
       'Compliant Address',
-      () => !this.fetchComplianceStatus(address),
+      async () => {
+        const isSanctioned = await this.fetchIsSanctioned(address)
+        return !isSanctioned
+      },
       COMPLIANT_ERROR_RESPONSE
     )
   }
@@ -504,7 +513,7 @@ class CheckBuilder {
     wasRefreshed: false,
   }
 
-  private async fetchComplianceStatus(address: string) {
+  private async fetchIsSanctioned(address: string) {
     if (this.SANCTIONED_SET.data.has(address)) {
       return true
       // Would like to avoid calling this EVERY run. but at least calling
@@ -519,7 +528,8 @@ class CheckBuilder {
           this.SANCTIONED_SET.wasRefreshed = true
           return this.SANCTIONED_SET.data.has(address)
         }
-      } catch {
+      } catch (e) {
+        console.error('Error fetching OFAC sanctions list', e)
         return false
       }
     }
