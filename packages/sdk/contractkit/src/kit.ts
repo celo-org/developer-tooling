@@ -193,7 +193,7 @@ export class ContractKit {
    */
   setFeeCurrency(address: StrongAddress) {
     if (!isHexString(address)) {
-      // TODO(Arthur): Check how to best handle this? What does ContractKit do in other place (throw exception?, return boolean)
+      throw new Error('Supplied address is not a valid hexadecimal address.')
     }
     this.connection.defaultFeeCurrency = address
   }
