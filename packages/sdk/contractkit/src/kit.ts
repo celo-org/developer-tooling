@@ -13,7 +13,7 @@ import { LocalWallet } from '@celo/wallet-local'
 import { BigNumber } from 'bignumber.js'
 import Web3 from 'web3'
 import { AddressRegistry } from './address-registry'
-import { CeloContract, CeloTokenContract } from './base'
+import { CeloContract } from './base'
 import { CeloTokens, EachCeloToken } from './celo-tokens'
 import { ValidWrappers, WrapperCache } from './contract-cache'
 import {
@@ -187,14 +187,11 @@ export class ContractKit {
   getHumanReadableNetworkConfig = () => this.getNetworkConfig(true)
 
   /**
-   * Set CeloToken to use to pay for gas fees
-   * @param tokenContract CELO (GoldToken) or a supported StableToken contract
+   * Set an addressed to use to pay for gas fees
+   * @param address any string address
    */
-  async setFeeCurrency(tokenContract: CeloTokenContract): Promise<void> {
-    const address =
-      tokenContract === CeloContract.GoldToken
-        ? undefined
-        : await this.registry.addressFor(tokenContract)
+  setFeeCurrency(address: string) {
+    // TODO(Arthur): Should we define a HexString type to enforce it's an address?
     this.connection.defaultFeeCurrency = address
   }
 
