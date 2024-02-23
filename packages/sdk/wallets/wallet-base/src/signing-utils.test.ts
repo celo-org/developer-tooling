@@ -261,7 +261,7 @@ describe('rlpEncodedTx', () => {
 function ckToViem(tx: CeloTx & { v?: number }) {
   return {
     ...tx,
-    gas: BigInt(tx.gas!),
+    gas: BigInt(tx.gas! as string),
     maxFeePerGas: BigInt(tx.maxFeePerGas?.toString()!),
     maxPriorityFeePerGas: BigInt(tx.maxPriorityFeePerGas?.toString()!),
     value: BigInt(tx.value?.toString()!),
@@ -356,7 +356,7 @@ describe('recoverTransaction', () => {
           "data": "0xabcdef",
           "feeCurrency": "0x",
           "gas": 10,
-          "gasPrice": 99,
+          "gasPrice": "99",
           "gatewayFee": "0x5678",
           "gatewayFeeRecipient": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
           "nonce": 0,
@@ -565,8 +565,17 @@ describe('extractSignature', () => {
     `)
   })
   it('fails when length is wrong', () => {
+    expect(() =>
+      extractSignature(
+        '0xf88282ad5a8063630a94588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a764000083abcdefc094cd2a3d9f938e13cd947ec05abc7fe734df8dd82680a091b5504a59e529e7efa42dbb97fbc3311a91d035c873a94ab0789441fc989f84a02e8254d6b3101b63417e5d496833bc84f4832d4a8bf8a2b83e291d8f38c0f62d'
+      )
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"@extractSignature: provided transaction has 13 elements but celo-legacy txs with a signature have 12 [{"0":173,"1":90},{},{"0":99},{"0":99},{"0":10},{"0":88,"1":142,"2":75,"3":104,"4":25,"5":48,"6":1,"7":228,"8":209,"9":9,"10":40,"11":102,"12":10,"13":180,"14":22,"15":91,"16":129,"17":55,"18":23,"19":192},{"0":13,"1":224,"2":182,"3":179,"4":167,"5":100,"6":0,"7":0},{"0":171,"1":205,"2":239},[],{"0":205,"1":42,"2":61,"3":159,"4":147,"5":142,"6":19,"7":205,"8":148,"9":126,"10":192,"11":90,"12":188,"13":127,"14":231,"15":52,"16":223,"17":141,"18":216,"19":38},{},{"0":145,"1":181,"2":80,"3":74,"4":89,"5":229,"6":41,"7":231,"8":239,"9":164,"10":45,"11":187,"12":151,"13":251,"14":195,"15":49,"16":26,"17":145,"18":208,"19":53,"20":200,"21":115,"22":169,"23":74,"24":176,"25":120,"26":148,"27":65,"28":252,"29":152,"30":159,"31":132},{"0":46,"1":130,"2":84,"3":214,"4":179,"5":16,"6":27,"7":99,"8":65,"9":126,"10":93,"11":73,"12":104,"13":51,"14":188,"15":132,"16":244,"17":131,"18":45,"19":74,"20":139,"21":248,"22":162,"23":184,"24":62,"25":41,"26":29,"27":143,"28":56,"29":192,"30":246,"31":45}]"`
+    )
+  })
+  it('fails when length is empty', () => {
     expect(() => extractSignature('0x')).toThrowErrorMatchingInlineSnapshot(
-      `"@extractSignature: provided transaction has 0 elements but celo-legacy txs with a signature have 12 []"`
+      `"Invalid byte sequence"`
     )
   })
 })
