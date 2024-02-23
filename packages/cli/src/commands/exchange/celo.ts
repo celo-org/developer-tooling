@@ -49,7 +49,10 @@ export default class ExchangeCelo extends BaseCommand {
     const minBuyAmount = res.flags.forAtLeast
     const stableToken = stableTokenOptions[res.flags.stableToken]
 
-    await newCheckBuilder(this).hasEnoughCelo(res.flags.from, sellAmount).runChecks()
+    await newCheckBuilder(this)
+      .isNotSanctioned(res.flags.from)
+      .hasEnoughCelo(res.flags.from, sellAmount)
+      .runChecks()
 
     const [celoToken, stableTokenAddress, { mento, brokerAddress }] = await Promise.all([
       kit.contracts.getGoldToken(),

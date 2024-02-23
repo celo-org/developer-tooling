@@ -32,7 +32,11 @@ export default class TransferCelo extends BaseCommand {
     kit.defaultAccount = from
     const celoToken = await kit.contracts.getGoldToken()
 
-    await newCheckBuilder(this).hasEnoughCelo(from, value).runChecks()
+    await newCheckBuilder(this)
+      .isNotSanctioned(from)
+      .isNotSanctioned(to)
+      .hasEnoughCelo(from, value)
+      .runChecks()
 
     await (res.flags.comment
       ? displaySendTx(

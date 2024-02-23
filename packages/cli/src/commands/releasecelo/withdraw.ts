@@ -29,6 +29,7 @@ export default class Withdraw extends ReleaseGoldBaseCommand {
     const remainingUnlockedBalance = await this.releaseGoldWrapper.getRemainingUnlockedBalance()
     const maxDistribution = await this.releaseGoldWrapper.getMaxDistribution()
     const totalWithdrawn = await this.releaseGoldWrapper.getTotalWithdrawn()
+    kit.defaultAccount = await this.releaseGoldWrapper.getBeneficiary()
     await newCheckBuilder(this)
       .addCheck('Value does not exceed available unlocked celo', () =>
         value.lte(remainingUnlockedBalance)
@@ -53,9 +54,9 @@ export default class Withdraw extends ReleaseGoldBaseCommand {
           return true
         }
       )
+      .isNotSanctioned(kit.defaultAccount as string)
       .runChecks()
 
-    kit.defaultAccount = await this.releaseGoldWrapper.getBeneficiary()
     await displaySendTx('withdrawTx', this.releaseGoldWrapper.withdraw(value))
   }
 }
