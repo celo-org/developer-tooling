@@ -190,6 +190,7 @@ export class ContractKit {
   /**
    * Set an addressed to use to pay for gas fees
    * @param address any hexadecimal address
+   * @dev Throws if supplied address is not a valid hexadecimal address
    */
   setFeeCurrency(address: StrongAddress) {
     if (!isHexString(address)) {
