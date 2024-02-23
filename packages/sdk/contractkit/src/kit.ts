@@ -1,5 +1,5 @@
 // tslint:disable: ordered-imports
-import { StrongAddress, isHexString } from '@celo/base'
+import { StrongAddress } from '@celo/base'
 import {
   Address,
   CeloTx,
@@ -193,7 +193,7 @@ export class ContractKit {
    * @dev Throws if supplied address is not a valid hexadecimal address
    */
   setFeeCurrency(address: StrongAddress) {
-    if (!isHexString(address)) {
+    if (!this.web3.utils.isAddress(address)) {
       throw new Error('Supplied address is not a valid hexadecimal address.')
     }
     this.connection.defaultFeeCurrency = address
