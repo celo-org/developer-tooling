@@ -1614,6 +1614,7 @@ __metadata:
     "@celo/abis": "npm:10.0.0"
     "@celo/base": "npm:^6.0.0"
     "@celo/celo-devchain": "npm:^6.0.3"
+    "@celo/compliance": "npm:~1.0.17"
     "@celo/connect": "npm:^5.1.2"
     "@celo/contractkit": "npm:^7.0.0"
     "@celo/cryptographic-utils": "npm:^5.0.7"
@@ -1650,6 +1651,7 @@ __metadata:
     bip32: "npm:3.1.0"
     chalk: "npm:^2.4.2"
     command-exists: "npm:^1.2.9"
+    cross-fetch: "npm:3.0.6"
     debug: "npm:^4.1.1"
     ethers: "npm:5"
     fs-extra: "npm:^8.1.0"
@@ -1670,6 +1672,13 @@ __metadata:
     dev: .bin/dev.js
   languageName: unknown
   linkType: soft
+
+"@celo/compliance@npm:~1.0.17":
+  version: 1.0.17
+  resolution: "@celo/compliance@npm:1.0.17"
+  checksum: d38bcff8468066e348afba47747f4300533e90351ef9f7ae1de92df3979dd8072127d053f32bc36e0d0008c8a232d5f5bb522dd5aea8a48e05eeff361c7e44fb
+  languageName: node
+  linkType: hard
 
 "@celo/connect@npm:^5.1.1, @celo/connect@npm:^5.1.2, @celo/connect@workspace:packages/sdk/connect":
   version: 0.0.0-use.local
@@ -1984,7 +1993,6 @@ __metadata:
     "@types/bn.js": "npm:^5.1.0"
     "@types/node": "npm:^18.7.16"
     bignumber.js: "npm:^9.0.0"
-    elliptic: "npm:^6.5.4"
     ethereum-cryptography: "npm:1.2.0"
     fp-ts: "npm:2.1.1"
     io-ts: "npm:2.0.1"

@@ -39,6 +39,7 @@ export default class ExchangeStableBase extends BaseCommand {
     }
     await newCheckBuilder(this)
       .hasEnoughStable(res.flags.from, sellAmount, this._stableCurrency)
+      .isNotSanctioned(res.flags.from)
       .runChecks()
 
     const [stableToken, celoNativeTokenAddress, { mento, brokerAddress }] = await Promise.all([
