@@ -80,7 +80,8 @@ async function getKit(myAddress: string, privateKey: string) {
   kit.connection.addAccount(privateKey)
 
   // paid gas in celo dollars
-  await kit.setFeeCurrency(CeloContract.StableToken)
+  // TODO(Arthur): Update this example when the method signature for `setFeeCurrency` is confirmed.
+  await kit.setFeeCurrency(CeloContract.StableToken) 
 
   return kit
 }
