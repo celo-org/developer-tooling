@@ -206,6 +206,7 @@ export abstract class BaseCommand extends Command {
       : getGasCurrency(this.config.configDir)
 
     const setStableTokenGas = async (stable: StableToken) => {
+      // TODO(Arthur): Update implementation to match new `setFeeCurrency` method signature
       await kit.setFeeCurrency(stableTokenInfos[stable].contract)
     }
     if (Object.keys(StableToken).includes(gasCurrencyConfig)) {

@@ -38,6 +38,7 @@ export abstract class TransferStableBase extends BaseCommand {
     }
     // If gasCurrency is not set, use the transferring token
     if (!res.flags.gasCurrency) {
+      // TODO(Arthur): Update implementation to match new `setFeeCurrency` method signature
       await kit.setFeeCurrency(stableTokenInfos[this._stableCurrency].contract)
     }
 
