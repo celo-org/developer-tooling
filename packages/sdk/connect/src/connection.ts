@@ -131,6 +131,7 @@ export class Connection {
    *
    * @param address ERC20 address
    */
+  // TODO(Arthur): Consider replacing `Address` with stronger type like `StrongAddress`
   set defaultFeeCurrency(address: Address | undefined) {
     this.config.feeCurrency = address
   }
