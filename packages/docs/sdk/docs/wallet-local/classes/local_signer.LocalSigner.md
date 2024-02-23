@@ -43,7 +43,7 @@ Signs the EVM transaction using the provided private key
 
 #### Defined in
 
-[wallet-local/src/local-signer.ts:17](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L17)
+[wallet-local/src/local-signer.ts:15](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L15)
 
 ## Methods
 
@@ -67,7 +67,7 @@ Signer.computeSharedSecret
 
 #### Defined in
 
-[wallet-local/src/local-signer.ts:70](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L70)
+[wallet-local/src/local-signer.ts:66](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L66)
 
 ___
 
@@ -91,7 +91,7 @@ Signer.decrypt
 
 #### Defined in
 
-[wallet-local/src/local-signer.ts:63](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L63)
+[wallet-local/src/local-signer.ts:59](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L59)
 
 ___
 
@@ -109,7 +109,7 @@ Signer.getNativeKey
 
 #### Defined in
 
-[wallet-local/src/local-signer.ts:21](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L21)
+[wallet-local/src/local-signer.ts:19](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L19)
 
 ___
 
@@ -133,7 +133,7 @@ Signer.signPersonalMessage
 
 #### Defined in
 
-[wallet-local/src/local-signer.ts:34](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L34)
+[wallet-local/src/local-signer.ts:30](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L30)
 
 ___
 
@@ -158,7 +158,7 @@ Signer.signTransaction
 
 #### Defined in
 
-[wallet-local/src/local-signer.ts:25](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L25)
+[wallet-local/src/local-signer.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L23)
 
 ___
 
@@ -182,4 +182,4 @@ Signer.signTypedData
 
 #### Defined in
 
-[wallet-local/src/local-signer.ts:50](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L50)
+[wallet-local/src/local-signer.ts:46](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-local/src/local-signer.ts#L46)

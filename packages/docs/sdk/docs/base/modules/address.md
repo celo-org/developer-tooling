@@ -57,7 +57,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/base/src/address.ts:31](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/address.ts#L31)
+[packages/sdk/base/src/address.ts:32](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/address.ts#L32)
 
 ## Functions
 
@@ -77,7 +77,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/base/src/address.ts:29](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/address.ts#L29)
+[packages/sdk/base/src/address.ts:30](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/address.ts#L30)
 
 ___
 
@@ -97,7 +97,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/base/src/address.ts:17](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/address.ts#L17)
+[packages/sdk/base/src/address.ts:18](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/address.ts#L18)
 
 ___
 
@@ -139,7 +139,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/base/src/address.ts:33](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/address.ts#L33)
+[packages/sdk/base/src/address.ts:34](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/address.ts#L34)
 
 ___
 
@@ -159,7 +159,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/base/src/address.ts:22](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/address.ts#L22)
+[packages/sdk/base/src/address.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/address.ts#L23)
 
 ___
 
@@ -179,7 +179,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/base/src/address.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/address.ts#L27)
+[packages/sdk/base/src/address.ts:28](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/address.ts#L28)
 
 ___
 
@@ -199,7 +199,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/base/src/address.ts:25](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/address.ts#L25)
+[packages/sdk/base/src/address.ts:26](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/address.ts#L26)
 
 ___
 
@@ -248,7 +248,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/base/src/address.ts:70](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/address.ts#L70)
+[packages/sdk/base/src/address.ts:71](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/address.ts#L71)
 
 ___
 
@@ -269,7 +269,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/base/src/address.ts:37](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/address.ts#L37)
+[packages/sdk/base/src/address.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/address.ts#L38)
 
 ___
 
@@ -295,7 +295,7 @@ ___
 
 ### normalizeAddressWith0x
 
-▸ **normalizeAddressWith0x**(`a`): `string`
+▸ **normalizeAddressWith0x**(`a`): \`0x$\{string}\`
 
 #### Parameters
 
@@ -305,7 +305,7 @@ ___
 
 #### Returns
 
-`string`
+\`0x$\{string}\`
 
 #### Defined in
 
@@ -329,4 +329,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/base/src/address.ts:15](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/address.ts#L15)
+[packages/sdk/base/src/address.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/address.ts#L16)

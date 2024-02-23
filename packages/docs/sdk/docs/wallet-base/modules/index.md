@@ -20,6 +20,7 @@
 - [recoverMessageSigner](index.md#recovermessagesigner)
 - [recoverTransaction](index.md#recovertransaction)
 - [rlpEncodedTx](index.md#rlpencodedtx)
+- [signTransaction](index.md#signtransaction)
 - [sixtyFour](index.md#sixtyfour)
 - [stringNumberOrBNToHex](index.md#stringnumberorbntohex)
 - [thirtyTwo](index.md#thirtytwo)
@@ -109,6 +110,12 @@ ___
 ### rlpEncodedTx
 
 Re-exports [rlpEncodedTx](signing_utils.md#rlpencodedtx)
+
+___
+
+### signTransaction
+
+Re-exports [signTransaction](signing_utils.md#signtransaction)
 
 ___
 
