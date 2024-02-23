@@ -118,7 +118,7 @@ const receipt = await tx.waitReceipt()
 If you would like to pay fees in cUSD, (or other cStables like cEUR, cUSD).
 
 ```ts
-
+// TODO(Arthur): Update this example when the method signature for `setFeeCurrency` is confirmed.
 kit.setFeeCurrency(CeloContract.StableToken) // Default to paying fees in cUSD
 
 const stableTokenContract = kit.contracts.getStableToken()
