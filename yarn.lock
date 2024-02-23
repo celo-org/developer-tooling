@@ -1980,6 +1980,7 @@ __metadata:
   dependencies:
     "@celo/base": "npm:^6.0.0"
     "@celo/typescript": "npm:0.0.1"
+    "@ethereumjs/rlp": "npm:^5.0.2"
     "@ethereumjs/util": "npm:8.0.5"
     "@noble/ciphers": "npm:0.4.1"
     "@noble/curves": "npm:1.3.0"
@@ -1989,7 +1990,6 @@ __metadata:
     bignumber.js: "npm:^9.0.0"
     fp-ts: "npm:2.1.1"
     io-ts: "npm:2.0.1"
-    rlp: "npm:^2.2.4"
     web3-eth-abi: "npm:1.10.0"
     web3-utils: "npm:1.10.0"
   languageName: unknown
@@ -2002,8 +2002,10 @@ __metadata:
     "@celo/base": "npm:^6.0.0"
     "@celo/connect": "npm:^5.1.2"
     "@celo/utils": "npm:^6.0.0"
-    "@ethereumjs/rlp": "npm:^5.0.0"
+    "@ethereumjs/rlp": "npm:^5.0.2"
     "@ethereumjs/util": "npm:8.0.5"
+    "@noble/curves": "npm:^1.3.0"
+    "@noble/hashes": "npm:^1.3.3"
     "@types/debug": "npm:^4.1.5"
     bignumber.js: "npm:^9.0.0"
     debug: "npm:^4.1.1"
@@ -2121,8 +2123,8 @@ __metadata:
     "@ledgerhq/hw-app-eth": "npm:~5.11.0"
     "@ledgerhq/hw-transport": "npm:~5.11.0"
     "@ledgerhq/hw-transport-node-hid": "npm:^6.27.4"
+    "@noble/hashes": "npm:^1.3.3"
     debug: "npm:^4.1.1"
-    eth-lib: "npm:^0.2.8"
     web3: "npm:1.10.0"
   languageName: unknown
   linkType: soft
@@ -2603,12 +2605,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ethereumjs/rlp@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "@ethereumjs/rlp@npm:5.0.0"
+"@ethereumjs/rlp@npm:^5.0.2":
+  version: 5.0.2
+  resolution: "@ethereumjs/rlp@npm:5.0.2"
   bin:
-    rlp: bin/rlp
-  checksum: ed2478580489f0adbb037b8c054b178ab2f22e0b1417470fb6659e655436a3a5c9762030f29c5ab64db6a902911fcad92eeaebdfe59d0561a6ecc149d1a42f06
+    rlp: bin/rlp.cjs
+  checksum: 2af80d98faf7f64dfb6d739c2df7da7350ff5ad52426c3219897e843ee441215db0ffa346873200a6be6d11142edb9536e66acd62436b5005fa935baaf7eb6bd
   languageName: node
   linkType: hard
 
@@ -3767,7 +3769,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@noble/curves@npm:1.3.0, @noble/curves@npm:~1.3.0":
+"@noble/curves@npm:1.3.0, @noble/curves@npm:^1.3.0, @noble/curves@npm:~1.3.0":
   version: 1.3.0
   resolution: "@noble/curves@npm:1.3.0"
   dependencies:
@@ -3797,7 +3799,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@noble/hashes@npm:1.3.3, @noble/hashes@npm:~1.3.2":
+"@noble/hashes@npm:1.3.3, @noble/hashes@npm:^1.3.3, @noble/hashes@npm:~1.3.2":
   version: 1.3.3
   resolution: "@noble/hashes@npm:1.3.3"
   checksum: 1025ddde4d24630e95c0818e63d2d54ee131b980fe113312d17ed7468bc18f54486ac86c907685759f8a7e13c2f9b9e83ec7b67d1cc20836f36b5e4a65bb102d

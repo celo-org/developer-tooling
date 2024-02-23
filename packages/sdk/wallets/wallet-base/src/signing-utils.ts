@@ -15,25 +15,20 @@ import {
 } from '@celo/connect/lib/utils/formatter'
 import { EIP712TypedData, generateTypedDataHash } from '@celo/utils/lib/sign-typed-data-utils'
 import { parseSignatureWithoutPrefix } from '@celo/utils/lib/signatureUtils'
+import { publicKeyToAddress } from '@celo/utils/src/address'
 // @ts-ignore-next-line
 import * as ethUtil from '@ethereumjs/util'
+import { secp256k1 } from '@noble/curves/secp256k1'
 import { keccak_256 } from '@noble/hashes/sha3'
 import { hexToBytes } from '@noble/hashes/utils'
 import debugFactory from 'debug'
 // @ts-ignore-next-line eth-lib types not found
-import { account as Account, bytes as Bytes, RLP } from 'eth-lib'
+import { bytes as Bytes, RLP } from 'eth-lib'
+// TODO: replace by @ethereumjs/rlp
 import Web3 from 'web3' // TODO try to do this without web3 direct
 import Accounts from 'web3-eth-accounts'
 
-const {
-  Address,
-  ecrecover,
-  fromRpcSig,
-  hashPersonalMessage,
-  pubToAddress,
-  toBuffer,
-  toChecksumAddress,
-} = ethUtil
+const { ecrecover, fromRpcSig, hashPersonalMessage, toBuffer } = ethUtil
 const debug = debugFactory('wallet-base:tx:sign')
 
 // Original code taken from
@@ -57,7 +52,7 @@ export function chainIdTransformationForSigning(chainId: number): number {
   return chainId * 2 + 35
 }
 
-export function getHashFromEncoded(rlpEncode: string): string {
+export function getHashFromEncoded(rlpEncode: string): Hex {
   const rlpBytes = hexToBytes(trimLeading0x(rlpEncode))
   const hash = Buffer.from(keccak_256(rlpBytes))
   return `0x${hash.toString('hex')}`
@@ -469,13 +464,17 @@ export function recoverTransaction(rawTx: string): [CeloTx, string] {
         data: rawValues[8],
         chainId,
       }
-      const { r, v, s } = extractSignatureFromDecoded(rawValues)
-      const signature = Account.encodeSignature([v, r, s])
+      const { r, v: _v, s } = extractSignatureFromDecoded(rawValues)
+      let v = parseInt(_v || '0x0', 16)
+      const signature = new secp256k1.Signature(BigInt(r), BigInt(s)).addRecoveryBit(
+        v - chainIdTransformationForSigning(chainId)
+      )
       const extraData = recovery < 35 ? [] : [chainId, '0x', '0x']
       const signingData = rawValues.slice(0, 9).concat(extraData)
       const signingDataHex = RLP.encode(signingData)
-      const signer = Account.recover(getHashFromEncoded(signingDataHex), signature)
-      return [celoTx, signer]
+      const signingDataHash = getHashFromEncoded(signingDataHex)
+      const publicKey = signature.recoverPublicKey(trimLeading0x(signingDataHash)).toHex(false)
+      return [celoTx, publicKeyToAddress(publicKey)]
   }
 }
 
@@ -505,7 +504,8 @@ export function getSignerFromTxEIP2718TX(serializedTransaction: string): string 
     transactionArray,
     determineTXType(serializedTransaction)
   )
-  return toChecksumAddress(Address.fromPublicKey(signer).toString())
+
+  return publicKeyToAddress(signer.toString('hex'))
 }
 
 function determineTXType(serializedTransaction: string): TransactionTypes {
@@ -670,8 +670,8 @@ export function recoverMessageSigner(signingDataHex: string, signedData: string)
   const signature = fromRpcSig(signedData)
 
   const publicKey = ecrecover(msgHashBuff, signature.v, signature.r, signature.s)
-  const address = pubToAddress(publicKey, true)
-  return ensureLeading0x(address.toString('hex'))
+  const address = publicKeyToAddress(publicKey.toString('hex'))
+  return ensureLeading0x(address)
 }
 
 export function verifyEIP712TypedDataSigner(
@@ -696,12 +696,37 @@ export function verifySignatureWithoutPrefix(
   }
 }
 
-export function decodeSig(sig: any) {
-  const [v, r, s] = Account.decodeSignature(sig)
+function bigintToPaddedHex(n: bigint, length: number): string {
+  const hex = n.toString(16)
+  if (hex.length >= length) {
+    return hex
+  }
+  const padded = new Array(length).fill('0').join('') + hex
+  return padded.slice(-length)
+}
+
+export function decodeSig(sig: Hex | ReturnType<typeof secp256k1.sign>, addToV = 0) {
+  const { recovery, r, s } = typeof sig === 'string' ? secp256k1.Signature.fromCompact(sig) : sig
 
   return {
-    v: parseInt(v, 16),
-    r: toBuffer(r) as Buffer,
-    s: toBuffer(s) as Buffer,
+    v: recovery! + addToV,
+    r: Buffer.from(bigintToPaddedHex(r, 64), 'hex'),
+    s: Buffer.from(bigintToPaddedHex(s, 64), 'hex'),
   }
+  // const [v, r, s] = Account.decodeSignature(sig)
+
+  // return {
+  //   v: parseInt(v, 16),
+  //   r: toBuffer(r) as Buffer,
+  //   s: toBuffer(s) as Buffer,
+  // }
+}
+
+export function signTransaction(hash: Hex, privateKey: Hex, addToV = 0) {
+  const signature = secp256k1.sign(
+    trimLeading0x(hash),
+    hexToBytes(trimLeading0x(privateKey)),
+    { lowS: true } // canonical:true
+  )
+  return decodeSig(signature, addToV)
 }
