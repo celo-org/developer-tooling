@@ -24,7 +24,7 @@
     "lint": "yarn run --top-level eslint -c .eslintrc.js "
   },
   "dependencies": {
-    "@celo/abis": "10.0.0",
+    "@celo/abis": "11.0.0-canary.16",
     "@celo/base": "^6.0.0",
     "@celo/connect": "^5.1.2",
     "@celo/utils": "^6.0.0",
