@@ -1,5 +1,22 @@
 # Changelog
 
+## 4.1.0-contracts-11-post-audit.0
+
+### Minor Changes
+
+- [#140](https://github.com/celo-org/developer-tooling/pull/140) [`0ad9c01`](https://github.com/celo-org/developer-tooling/commit/0ad9c011b868c4bf5456f4048cb6d405c9dd8c8e) Thanks [@timmoreton](https://github.com/timmoreton)! - Activate votes from any account, new optional parameter to specify for account in ElectionWrapper:activate
+
+### Patch Changes
+
+- [#150](https://github.com/celo-org/developer-tooling/pull/150) [`6157c6d`](https://github.com/celo-org/developer-tooling/commit/6157c6d45e6bb0d868cd57155316016e013211fb) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Fix issue where core contracts not having proxy could break cli
+
+- [#149](https://github.com/celo-org/developer-tooling/pull/149) [`ae51ca8`](https://github.com/celo-org/developer-tooling/commit/ae51ca8851e6684d372f976dd8610ddf502a266b) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Require addresses the cli sends from or to not to be sanctioned
+
+- Updated dependencies [[`0ad9c01`](https://github.com/celo-org/developer-tooling/commit/0ad9c011b868c4bf5456f4048cb6d405c9dd8c8e)]:
+  - @celo/contractkit@7.1.0-contracts-11-post-audit.0
+  - @celo/explorer@5.0.9-contracts-11-post-audit.0
+  - @celo/governance@5.0.10-contracts-11-post-audit.0
+
 ## 4.0.0
 
 ### Major Changes
