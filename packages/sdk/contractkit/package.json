@@ -1,6 +1,6 @@
 {
   "name": "@celo/contractkit",
-  "version": "7.0.0",
+  "version": "7.1.0-contracts-11-post-audit.0",
   "description": "Celo's ContractKit to interact with Celo network",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
