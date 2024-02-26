@@ -86,9 +86,9 @@ function signatureFormatter(
     v = signature.v === Y_PARITY_EIP_2098 ? 0 : 1
   }
   return {
-    v: stringNumberToHex(v),
-    r: makeEven(trimLeadingZero(ensureLeading0x(signature.r.toString('hex')))),
-    s: makeEven(trimLeadingZero(ensureLeading0x(signature.s.toString('hex')))),
+    v: trimLeading0x(stringNumberToHex(v)),
+    r: trimLeading0x(makeEven(trimLeadingZero(ensureLeading0x(signature.r.toString('hex'))))),
+    s: trimLeading0x(makeEven(trimLeadingZero(ensureLeading0x(signature.s.toString('hex'))))),
   }
 }
 
@@ -322,9 +322,7 @@ export async function encodeTransaction(
   signature: { v: number; r: Buffer; s: Buffer }
 ): Promise<EncodedTransaction> {
   const sanitizedSignature = signatureFormatter(signature, rlpEncoded.type)
-  const v = sanitizedSignature.v
-  const r = sanitizedSignature.r
-  const s = sanitizedSignature.s
+  const { v, r, s } = sanitizedSignature
   const decodedTX = prefixAwareRLPDecode(rlpEncoded.rlpEncode, rlpEncoded.type) as Uint8Array[]
   // for legacy tx we need to slice but for new ones we do not want to do that
   const rawTx = (rlpEncoded.type === 'celo-legacy' ? decodedTX.slice(0, 9) : decodedTX).concat([
@@ -370,7 +368,7 @@ export async function encodeTransaction(
   if (rlpEncoded.type === 'celo-legacy') {
     tx = {
       ...tx,
-      // @ts-expect-error -- just a matter of how  this tx is built
+      // @ts-expect-error -- just a matter of how this tx is built
       gasPrice: rlpEncoded.transaction.gasPrice!.toString(),
     }
   }
@@ -469,13 +467,11 @@ export function recoverTransaction(rawTx: string): [CeloTx, string] {
         // @ts-expect-error
         chainId: ensureLeading0x(chainId.toString(16)),
       }
-      console.log(celoTx)
       const { r, v: _v, s } = extractSignatureFromDecoded(rawValues)
       let v = parseInt(_v || '0x0', 16)
       const signature = new secp256k1.Signature(BigInt(r), BigInt(s)).addRecoveryBit(
         v - chainIdTransformationForSigning(chainId)
       )
-      console.log({ r, v, s, vv: v - chainIdTransformationForSigning(chainId) })
       const extraData =
         recovery < 35 ? [] : [hexToBytes(chainId.toString(16)), hexToBytes(''), hexToBytes('')]
       const signingData = rawValues.slice(0, 9).concat(extraData)
