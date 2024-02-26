@@ -28,7 +28,7 @@
     "release": "yarn clean && yarn build && yarn workspace @celo/celocli run prepack && yarn cs publish",
     "beta-enter": "bash scripts/beta-mode.sh",
     "beta-exit": "yarn changeset pre exit && git commit -am 'Complete beta mode'",
-    "version-and-reinstall": "yarn changeset version && yarn install --no-immutable",
+    "version-and-reinstall": "yarn changeset version && yarn install --no-immutable --no-check-resolutions",
     "celocli": "yarn workspace @celo/celocli run --silent celocli"
   },
   "workspaces": {
@@ -64,7 +64,7 @@
     "typescript": "5.3.3"
   },
   "resolutions": {
-    "ganache": "npm:@soloseng/ganache@7.8.0-beta.1",
+    "ganache": "npm:@celo/ganache@7.8.0-unofficial.0",
     "bip39": "https://github.com/bitcoinjs/bip39#a7ecbfe2e60d0214ce17163d610cad9f7b23140c",
     "blind-threshold-bls": "npm:@celo/blind-threshold-bls@1.0.0-beta",
     "@types/bn.js": "4.11.6",

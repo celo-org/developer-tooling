@@ -71,7 +71,8 @@ jobs:
           restore-keys: |
             node-${{ runner.os }}-${{ runner.arch }}-${{ env.NODE_MODULE_CACHE_VERSION }}-
       - name: Install yarn dependencies
-        run: git config --global url."https://".insteadOf ssh:// && yarn install
+        # skip check due to YN0078: │ Invalid resolution @celo/connect@npm:^5.1.1 → npm:5.1.1
+        run: git config --global url."https://".insteadOf ssh:// && yarn install  --no-check-resolutions
         if: steps.cache_node.outputs.cache-hit != 'true'
       - name: Run yarn postinstall if cache hitted
         run: yarn run postinstall
@@ -325,3 +326,18 @@ jobs:
           cd $RUNNER_TEMP
           npm install $RUNNER_WORKSPACE/developer-tooling/packages/sdk/base/*.tgz
           npm install $RUNNER_WORKSPACE/developer-tooling/packages/sdk/utils/*.tgz
+
+  validate-renovate-config:
+    name: Validate Renovate Config
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+      - name: Validate Renovate Config
+        run: |
+          npm install --global renovate
+          renovate-config-validator

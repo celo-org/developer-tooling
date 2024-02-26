@@ -27,9 +27,6 @@ import { newRandom } from '@celo/abis/web3/Random'
 import { newRegistry } from '@celo/abis/web3/Registry'
 import { newSortedOracles } from '@celo/abis/web3/SortedOracles'
 import { newValidators } from '@celo/abis/web3/Validators'
-import { newExchange } from '@celo/abis/web3/mento/Exchange'
-import { newExchangeBRL } from '@celo/abis/web3/mento/ExchangeBRL'
-import { newExchangeEUR } from '@celo/abis/web3/mento/ExchangeEUR'
 import { newReserve } from '@celo/abis/web3/mento/Reserve'
 import { newStableToken } from '@celo/abis/web3/mento/StableToken'
 
@@ -48,9 +45,6 @@ export const ContractFactories = {
   [CeloContract.EpochRewards]: newEpochRewards,
   [CeloContract.ERC20]: newIERC20,
   [CeloContract.Escrow]: newEscrow,
-  [CeloContract.Exchange]: newExchange,
-  [CeloContract.ExchangeEUR]: newExchangeEUR,
-  [CeloContract.ExchangeBRL]: newExchangeBRL,
   [CeloContract.FederatedAttestations]: newFederatedAttestations,
   [CeloContract.FeeCurrencyWhitelist]: newFeeCurrencyWhitelist,
   [CeloContract.Freezer]: newFreezer,
@@ -77,12 +71,6 @@ const StableToContract = {
   [StableToken.cEUR]: CeloContract.StableTokenEUR,
   [StableToken.cUSD]: CeloContract.StableToken,
   [StableToken.cREAL]: CeloContract.StableTokenBRL,
-}
-
-const StableToExchange = {
-  [StableToken.cEUR]: CeloContract.ExchangeEUR,
-  [StableToken.cUSD]: CeloContract.Exchange,
-  [StableToken.cREAL]: CeloContract.ExchangeBRL,
 }
 
 export type CFType = typeof ContractFactories
@@ -127,9 +115,7 @@ export class Web3ContractCache {
   getEscrow() {
     return this.getContract(CeloContract.Escrow)
   }
-  getExchange(stableToken: StableToken = StableToken.cUSD) {
-    return this.getContract(StableToExchange[stableToken])
-  }
+
   getFederatedAttestations() {
     return this.getContract(CeloContract.FederatedAttestations)
   }

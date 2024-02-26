@@ -46,7 +46,7 @@ describe('CeloTokens', () => {
     })
 
     it('returns false if the contract is not a stable token contract', () => {
-      expect(celoTokens.isStableTokenContract(CeloContract.Exchange)).toEqual(false)
+      expect(celoTokens.isStableTokenContract(CeloContract.ERC20)).toEqual(false)
     })
   })
 })

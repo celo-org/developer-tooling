@@ -1,0 +1,281 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`network:contracts runs 1`] = `
+[
+  [
+    "[
+  {
+    "contract": "Accounts",
+    "proxy": "0xa9a65D631f8c8577f543B64B35909030C84676A2",
+    "implementation": "0x038C860fd0d598B3DF5577B466c8b0a074867f56",
+    "version": "1.1.4.1",
+    "CELO": "0",
+    "cUSD": "0",
+    "cEUR": "0",
+    "cREAL": "0"
+  },
+  {
+    "contract": "Attestations",
+    "proxy": "0x54a582397Ace3F9a6F5A28cE6Dc50473E4A9d375",
+    "implementation": "0xc650825Ca03EeB83d0d075c2737022cBb01F5799",
+    "version": "1.2.0.0",
+    "CELO": "0",
+    "cUSD": "0",
+    "cEUR": "0",
+    "cREAL": "0"
+  },
+  {
+    "contract": "BlockchainParameters",
+    "proxy": "0xd418d14C9b8aA740E8D18C6dfda3af6f023A27A5",
+    "implementation": "0x4CF20BEf2FBe159601939bE49B760457B11C1d52",
+    "version": "1.3.0.0",
+    "CELO": "0",
+    "cUSD": "0",
+    "cEUR": "0",
+    "cREAL": "0"
+  },
+  {
+    "contract": "DoubleSigningSlasher",
+    "proxy": "0x175Ac784563DE645647C6350F0CFc577Dcc7eE5b",
+    "implementation": "0xA47aA5fCecBfb374E79144F05fDf91D0F50fA351",
+    "version": "1.1.1.0",
+    "CELO": "0",
+    "cUSD": "0",
+    "cEUR": "0",
+    "cREAL": "0"
+  },
+  {
+    "contract": "DowntimeSlasher",
+    "proxy": "0x0C5173a51e26b29d6126C686756FB9FBEf71f762",
+    "implementation": "0x33a89cA59bc3A9221456ffE461de17C8deF24684",
+    "version": "2.0.0.0",
+    "CELO": "0",
+    "cUSD": "0",
+    "cEUR": "0",
+    "cREAL": "0"
+  },
+  {
+    "contract": "Election",
+    "proxy": "0xcBAe15A320F56Fc9ad6c8319D55Be1FeF0750070",
+    "implementation": "0x51815ebd3C922B215b0d0B9b41a4Daa0dB70b841",
+    "version": "1.1.3.0",
+    "CELO": "0",
+    "cUSD": "0",
+    "cEUR": "0",
+    "cREAL": "0"
+  },
+  {
+    "contract": "EpochRewards",
+    "proxy": "0x537732b0bAC4F2A1a97b1a60cEa0df5C3f0DEF16",
+    "implementation": "0x1E28a5fB7B112291F088bBB8ab693D2214DB7895",
+    "version": "1.1.1.0",
+    "CELO": "0",
+    "cUSD": "0",
+    "cEUR": "0",
+    "cREAL": "0"
+  },
+  {
+    "contract": "Escrow",
+    "proxy": "0xE8593eFb73423D86e5F337A46B3450eEec1027c6",
+    "implementation": "0xc51B43db0Cea40E36207993F0aB1883E7A865417",
+    "version": "1.2.0.0",
+    "CELO": "0",
+    "cUSD": "0",
+    "cEUR": "0",
+    "cREAL": "0"
+  },
+  {
+    "contract": "FederatedAttestations",
+    "proxy": "0x8C3d218745c360A399285c0176714530Ce0af3B1",
+    "implementation": "0x9d0e84A58Bb5B9b94F5c34fD4f310ed3F41A2D69",
+    "version": "1.1.0.0",
+    "CELO": "0",
+    "cUSD": "0",
+    "cEUR": "0",
+    "cREAL": "0"
+  },
+  {
+    "contract": "FeeCurrencyWhitelist",
+    "proxy": "0xE86bB98fcF9BFf3512C74589B78Fb168200CC546",
+    "implementation": "0xDc688D29394a3f1E6f1E5100862776691afAf3d2",
+    "version": "NONE",
+    "CELO": "0",
+    "cUSD": "0",
+    "cEUR": "0",
+    "cREAL": "0"
+  },
+  {
+    "contract": "FeeHandler",
+    "proxy": "0x176097114008844bCb75Ea58998B7f8303b4C2d4",
+    "implementation": "0x123d0530A2a37FA4d4efA3999e79203BAf5bE517",
+    "version": "1.1.0.0",
+    "CELO": "0",
+    "cUSD": "0",
+    "cEUR": "0",
+    "cREAL": "0"
+  },
+  {
+    "contract": "Freezer",
+    "proxy": "0xcFC18CEc799fBD1793B5C43E773C98D4d61Cc2dB",
+    "implementation": "0xF22469F31527adc53284441bae1665A7b9214DBA",
+    "version": "NONE",
+    "CELO": "0",
+    "cUSD": "0",
+    "cEUR": "0",
+    "cREAL": "0"
+  },
+  {
+    "contract": "GasPriceMinimum",
+    "proxy": "0x038F9B392Fb9A9676DbAddF78EA5fdbf6C7d9710",
+    "implementation": "0x371b13d97f4bF77d724E78c16B7dC74099f40e84",
+    "version": "1.2.0.0",
+    "CELO": "0",
+    "cUSD": "0",
+    "cEUR": "0",
+    "cREAL": "0"
+  },
+  {
+    "contract": "GoldToken",
+    "proxy": "0x04B5dAdd2c0D6a261bfafBc964E0cAc48585dEF3",
+    "implementation": "0x8726C7414ac023D23348326B47AF3205185Fd035",
+    "version": "1.1.2.0",
+    "CELO": "0",
+    "cUSD": "0",
+    "cEUR": "0",
+    "cREAL": "0"
+  },
+  {
+    "contract": "Governance",
+    "proxy": "0x82E9A894F6b752E5c1058ea69898Ff5D3EBA3939",
+    "implementation": "0xc98E260cBF7041cc2C42D7e055fb4350DF22dd68",
+    "version": "1.4.0.0",
+    "CELO": "0",
+    "cUSD": "0",
+    "cEUR": "0",
+    "cREAL": "0"
+  },
+  {
+    "contract": "LockedGold",
+    "proxy": "0x4A86aD5f263260f24483Df2B1B3a23ea4788B6AB",
+    "implementation": "0x0221652D4306F6b3CB7B23E43C3e25D8F9a142Ca",
+    "version": "1.1.3.0",
+    "CELO": "0",
+    "cUSD": "0",
+    "cEUR": "0",
+    "cREAL": "0"
+  },
+  {
+    "contract": "MentoFeeHandlerSeller",
+    "proxy": "0x98942DE2B8eaC1c264e41cA981b82032762d72a4",
+    "implementation": "0x8501835ac2B234147F766bB6e6423D6Ef50A9247",
+    "version": "1.1.0.0",
+    "CELO": "0",
+    "cUSD": "0",
+    "cEUR": "0",
+    "cREAL": "0"
+  },
+  {
+    "contract": "OdisPayments",
+    "proxy": "0x347BfD5F56F04210603c9cC7c6c1f88E9E5c9676",
+    "implementation": "0x05E0c172eB6244A564B0D9e59Ce63074584a1e7A",
+    "version": "1.1.0.0",
+    "CELO": "0",
+    "cUSD": "0",
+    "cEUR": "0",
+    "cREAL": "0"
+  },
+  {
+    "contract": "Random",
+    "proxy": "0xd2dBF3250a764eaaa94fa0C84ED87C0Edc8eD04E",
+    "implementation": "0x39c3Fc9F4D8430af2713306CE80C584752d9e1C7",
+    "version": "1.1.1.0",
+    "CELO": "0",
+    "cUSD": "0",
+    "cEUR": "0",
+    "cREAL": "0"
+  },
+  {
+    "contract": "Registry",
+    "proxy": "0x000000000000000000000000000000000000ce10",
+    "implementation": "0x07f96Aa816C1F244CbC6ef114bB2b023Ba54a2EB",
+    "version": "NONE",
+    "CELO": "0",
+    "cUSD": "0",
+    "cEUR": "0",
+    "cREAL": "0"
+  },
+  {
+    "contract": "Reserve",
+    "proxy": "0xCA9717a4A6e8009B3518648C9f3E7676255471A1",
+    "implementation": "0x4586649629F699f9A4B61D0e962DC3c9025Fe488",
+    "version": "1.1.2.2",
+    "CELO": "1.000e+26",
+    "cUSD": "0",
+    "cEUR": "0",
+    "cREAL": "0"
+  },
+  {
+    "contract": "SortedOracles",
+    "proxy": "0x4D3d5c850Dd5bD9D6F4AdDA3DD039a3C8054CA29",
+    "implementation": "0xA31E64EA55B9B6Bbb9d6A676738e9A5b23149f84",
+    "version": "1.1.2.2",
+    "CELO": "0",
+    "cUSD": "0",
+    "cEUR": "0",
+    "cREAL": "0"
+  },
+  {
+    "contract": "StableToken",
+    "proxy": "0x5315e44798395d4a952530d131249fE00f554565",
+    "implementation": "0xDFF540fE764855D3175DcfAe9d91AE8aEE5C6D6F",
+    "version": "NONE",
+    "CELO": "0",
+    "cUSD": "0",
+    "cEUR": "0",
+    "cREAL": "0"
+  },
+  {
+    "contract": "StableTokenBRL",
+    "proxy": "0x965D352283a3C8A016b9BBbC9bf6306665d495E7",
+    "implementation": "0x9a1df498af690a7EB43E10A28AB51345a3A33F75",
+    "version": "NONE",
+    "CELO": "0",
+    "cUSD": "0",
+    "cEUR": "0",
+    "cREAL": "0"
+  },
+  {
+    "contract": "StableTokenEUR",
+    "proxy": "0xdD66C23e07b4D6925b6089b5Fe6fc9E62941aFE8",
+    "implementation": "0x4609e0ED27A8BAAc57b753D36a5D2971915588f9",
+    "version": "NONE",
+    "CELO": "0",
+    "cUSD": "0",
+    "cEUR": "0",
+    "cREAL": "0"
+  },
+  {
+    "contract": "UniswapFeeHandlerSeller",
+    "proxy": "0x9EF3dACB3367d7741099b5607A7a93E99a119F7b",
+    "implementation": "0x0F3723fB2a7C147357868702164f9beEf54E1E85",
+    "version": "1.1.0.0",
+    "CELO": "0",
+    "cUSD": "0",
+    "cEUR": "0",
+    "cREAL": "0"
+  },
+  {
+    "contract": "Validators",
+    "proxy": "0x6AC7189BD267c81c55d7d7d0321f9B23639cB9db",
+    "implementation": "0x3E809c563c15a295E832e37053798DdC8d6C8dab",
+    "version": "1.2.0.5",
+    "CELO": "0",
+    "cUSD": "0",
+    "cEUR": "0",
+    "cREAL": "0"
+  }
+]
+",
+  ],
+]
+`;

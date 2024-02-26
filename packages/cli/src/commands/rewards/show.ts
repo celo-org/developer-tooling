@@ -23,11 +23,18 @@ export default class Show extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    estimate: Flags.boolean({ description: 'Estimate voter rewards from current votes' }),
+    estimate: Flags.boolean({
+      description: 'Estimate voter rewards from current votes',
+    }),
     voter: CustomFlags.address({ description: 'Voter to show rewards for' }),
     validator: CustomFlags.address({ description: 'Validator to show rewards for' }),
-    group: CustomFlags.address({ description: 'Validator Group to show rewards for' }),
-    slashing: Flags.boolean({ description: 'Show rewards for slashing', default: true }),
+    group: CustomFlags.address({
+      description: 'Validator Group to show rewards for',
+    }),
+    slashing: Flags.boolean({
+      description: 'Show rewards for slashing',
+      default: true,
+    }),
     epochs: Flags.integer({
       default: 1,
       description: 'Show results for the last N epochs',
@@ -37,7 +44,7 @@ export default class Show extends BaseCommand {
 
   static args = {}
 
-  static examples = ['show --address 0x5409ed021d9299bf6814279a6a1411a7e866a631']
+  static examples = ['show --voter 0x5409ed021d9299bf6814279a6a1411a7e866a631']
 
   async run() {
     const kit = await this.getKit()
@@ -112,43 +119,41 @@ export default class Show extends BaseCommand {
               )
             )
           } catch (error) {
-            const _error = (error as Error).message.includes('missing trie node')
-              ? new Error(
-                  'Exact voter information is avaiable only for 1024 blocks after each epoch.\n' +
-                    'Supply --estimate to estimate rewards based on current votes, or use an archive node.'
-                )
-              : (error as Error)
-            throw _error
+            throw decorateMissingTrieError(error)
           }
         }
       }
       if (!filter || res.flags.validator || res.flags.group) {
         const useBlockNumber = !res.flags.estimate
-        const epochValidatorRewards: ValidatorReward[] = await validators.getValidatorRewards(
-          epochNumber,
-          useBlockNumber
-        )
-
-        if (!filter || res.flags.validator) {
-          const address = res.flags.validator
-          validatorRewards = validatorRewards.concat(
-            address
-              ? epochValidatorRewards.filter((e: ValidatorReward) =>
-                  eqAddress(e.validator.address, address)
-                )
-              : epochValidatorRewards
+        try {
+          const epochValidatorRewards: ValidatorReward[] = await validators.getValidatorRewards(
+            epochNumber,
+            useBlockNumber
           )
-        }
 
-        if (!filter || res.flags.group) {
-          const address = res.flags.group
-          validatorGroupRewards = validatorGroupRewards.concat(
-            address
-              ? epochValidatorRewards.filter((e: ValidatorReward) =>
-                  eqAddress(e.group.address, address)
-                )
-              : epochValidatorRewards
-          )
+          if (!filter || res.flags.validator) {
+            const address = res.flags.validator
+            validatorRewards = validatorRewards.concat(
+              address
+                ? epochValidatorRewards.filter((e: ValidatorReward) =>
+                    eqAddress(e.validator.address, address)
+                  )
+                : epochValidatorRewards
+            )
+          }
+
+          if (!filter || res.flags.group) {
+            const address = res.flags.group
+            validatorGroupRewards = validatorGroupRewards.concat(
+              address
+                ? epochValidatorRewards.filter((e: ValidatorReward) =>
+                    eqAddress(e.group.address, address)
+                  )
+                : epochValidatorRewards
+            )
+          }
+        } catch (error) {
+          throw decorateMissingTrieError(error)
         }
       }
 
@@ -188,11 +193,15 @@ export default class Show extends BaseCommand {
       ux.table(
         voterRewards.map((vr) => ({ group: vr })),
         {
-          address: {},
-          addressPayment: { get: (e) => e.group.addressPayment.toFixed(0) },
+          address: { get: ({ group }) => group.address },
+          addressPayment: {
+            get: (e) => e.group.addressPayment.toFixed(0),
+            header: 'Address Payment',
+          },
           group: { get: (e) => e.group.address },
           averageValidatorScore: {
             get: (e) => averageValidatorScore(e.group.validators).toFixed(),
+            header: 'Avg Validator Score',
           },
           epochNumber: {},
         },
@@ -206,9 +215,13 @@ export default class Show extends BaseCommand {
         {
           groupName: { get: (e) => e.group.group.name },
           group: { get: (e) => e.group.group.address },
-          groupVoterPayment: { get: (e) => e.group.groupVoterPayment.toFixed(0) },
+          groupVoterPayment: {
+            get: (e) => e.group.groupVoterPayment.toFixed(0),
+            header: 'Group Voter Payment',
+          },
           averageValidatorScore: {
             get: (e) => averageValidatorScore(e.group.validators).toFixed(),
+            header: 'Avg Validator Score',
           },
           epochNumber: {},
         },
@@ -297,6 +310,15 @@ export default class Show extends BaseCommand {
       console.info('No rewards.')
     }
   }
+}
+
+function decorateMissingTrieError(error: unknown) {
+  return (error as Error).message.includes('missing trie node')
+    ? new Error(
+        'Exact voter information is avaiable only for 1024 blocks after each epoch.\n' +
+          'Supply --estimate to estimate rewards based on current votes, or use an archive node.'
+      )
+    : (error as Error)
 }
 
 function filterValidatorsByGroup(validators: Validator[], group: Address) {

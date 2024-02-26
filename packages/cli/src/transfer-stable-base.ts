@@ -47,6 +47,8 @@ export abstract class TransferStableBase extends BaseCommand {
 
     await newCheckBuilder(this)
       .hasEnoughStable(from, value, this._stableCurrency)
+      .isNotSanctioned(from)
+      .isNotSanctioned(to)
       .addConditionalCheck(
         `Account can afford transfer and gas paid in ${this._stableCurrency}`,
         kit.connection.defaultFeeCurrency === stableToken.address,

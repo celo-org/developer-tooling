@@ -1,21 +1,21 @@
 import { StableToken } from '@celo/contractkit'
 import { stableTokenInfos } from '@celo/contractkit/lib/celo-tokens'
-import { Flags } from '@oclif/core'
+import { Flags, ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx, failWith } from '../../utils/cli'
+import { binaryPrompt, displaySendEthersTxViaCK, displaySendTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { checkNotDangerousExchange } from '../../utils/exchange'
 import { enumEntriesDupWithLowercase } from '../../utils/helpers'
+import { getMentoBroker } from '../../utils/mento-broker-adaptor'
 
-const largeOrderPercentage = 1
-const deppegedPricePercentage = 20
+const MAX_DEPEG_PRICE_PERCENTAGE = 20
 
 const stableTokenOptions = enumEntriesDupWithLowercase(Object.entries(StableToken))
 export default class ExchangeCelo extends BaseCommand {
   static description =
-    'Exchange CELO for StableTokens via the stability mechanism. (Note: this is the equivalent of the old exchange:gold)'
+    'Exchange CELO for StableTokens via Mento. (Note: this is the equivalent of the old exchange:gold)'
 
   static flags = {
     ...BaseCommand.flags,
@@ -49,40 +49,71 @@ export default class ExchangeCelo extends BaseCommand {
     const minBuyAmount = res.flags.forAtLeast
     const stableToken = stableTokenOptions[res.flags.stableToken]
 
-    let exchange
-    try {
-      exchange = await kit.contracts.getExchange(stableToken)
-    } catch {
-      failWith(`The ${stableToken} token was not deployed yet`)
+    await newCheckBuilder(this)
+      .isNotSanctioned(res.flags.from)
+      .hasEnoughCelo(res.flags.from, sellAmount)
+      .runChecks()
+
+    const [celoToken, stableTokenAddress, { mento, brokerAddress }] = await Promise.all([
+      kit.contracts.getGoldToken(),
+      kit.registry.addressFor(stableTokenInfos[stableToken].contract),
+      getMentoBroker(kit.connection),
+    ])
+
+    async function getQuote(tokenIn: string, tokenOut: string, amount: string) {
+      const quoteAmountOut = await mento.getAmountOut(tokenIn, tokenOut, amount)
+      const expectedAmountOut = quoteAmountOut.mul(99).div(100)
+      return expectedAmountOut
     }
 
-    await newCheckBuilder(this).hasEnoughCelo(res.flags.from, sellAmount).runChecks()
-
+    ux.action.start(`Fetching Quote`)
+    const expectedAmountToReceive = await getQuote(
+      celoToken.address,
+      stableTokenAddress,
+      sellAmount.toFixed()
+    )
+    ux.action.stop()
     if (minBuyAmount.toNumber() === 0) {
       const check = await checkNotDangerousExchange(
         kit,
         sellAmount,
-        largeOrderPercentage,
-        deppegedPricePercentage,
-        true,
+        new BigNumber(expectedAmountToReceive.toString()),
+        MAX_DEPEG_PRICE_PERCENTAGE,
         stableTokenInfos[stableToken]
       )
-
       if (!check) {
-        console.log('Cancelled')
-        return
+        ux.info('Cancelled')
+        ux.exit(0)
+      }
+    } else if (expectedAmountToReceive.lt(minBuyAmount.toString())) {
+      const check = await binaryPrompt(
+        'Warning: the expected amount to receive is less than the minimum amount to receive. Are you sure you want to continue?',
+        false
+      )
+      if (!check) {
+        ux.info('Cancelled')
+        ux.exit(0)
       }
     }
 
-    const celoToken = await kit.contracts.getGoldToken()
-
     await displaySendTx(
       'increaseAllowance',
-      celoToken.increaseAllowance(exchange.address, sellAmount.toFixed())
+      celoToken.increaseAllowance(brokerAddress, sellAmount.toFixed())
     )
 
-    const exchangeTx = exchange.exchange(sellAmount.toFixed(), minBuyAmount!.toFixed(), true)
-    // Set explicit gas based on github.com/celo-org/celo-monorepo/issues/2541
-    await displaySendTx('exchange', exchangeTx, { gas: 300000 })
+    ux.log(
+      'Swapping',
+      sellAmount.toFixed(),
+      'CELO for estimated',
+      expectedAmountToReceive.toString(),
+      stableToken
+    )
+    const tx = await mento.swapIn(
+      celoToken.address,
+      stableTokenAddress,
+      sellAmount.toFixed(),
+      expectedAmountToReceive
+    )
+    await displaySendEthersTxViaCK('exchange', tx, kit.connection)
   }
 }
