@@ -28,6 +28,7 @@ export default class Set extends BaseCommand {
     const res = await this.parse(Set)
     const curr = readConfig(this.config.configDir)
     const node = res.flags.node ?? curr.node
+    // TODO(Arthur): Update `gasCurrency` logic here
     const gasCurrency = res.flags.gasCurrency
       ? (gasOptions as any)[res.flags.gasCurrency as string]
       : curr.gasCurrency

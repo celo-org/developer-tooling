@@ -11,6 +11,12 @@ import net from 'net'
 import Web3 from 'web3'
 import { getGasCurrency, getNodeUrl } from './utils/config'
 import { enumEntriesDupWithLowercase, requireNodeIsSynced } from './utils/helpers'
+/**
+ * TODO(Arthur): Probably need to change the `gasOption` defintion because we support arbitrary
+ * addresses, and not just strings in a list.
+ *
+ * Possibly change this check to make a feeCurrencyWhitelist contract call and assert inclusion.
+ */
 export const gasOptions = {
   auto: 'auto',
   Auto: 'auto',
@@ -46,6 +52,9 @@ export abstract class BaseCommand extends Command {
         }
       },
     }),
+    /**
+     * TODO(Arthur): What does "defaults to 'auto' which uses whatever feeCurrency is available" mean?
+     */
     gasCurrency: Flags.option({
       options: Object.keys(gasOptions),
       description:
@@ -201,6 +210,7 @@ export abstract class BaseCommand extends Command {
       kit.defaultAccount = res.flags.from
     }
 
+    // TODO(Arthur): Update this
     const gasCurrencyConfig = res.flags.gasCurrency
       ? (gasOptions as any)[res.flags.gasCurrency]
       : getGasCurrency(this.config.configDir)
@@ -211,6 +221,7 @@ export abstract class BaseCommand extends Command {
     }
     if (Object.keys(StableToken).includes(gasCurrencyConfig)) {
       await setStableTokenGas(StableToken[gasCurrencyConfig as keyof typeof StableToken])
+      // TODO(Arthur): Check if `gasOptions.auto` continues to make sense
     } else if (gasCurrencyConfig === gasOptions.auto && kit.defaultAccount) {
       const balances = await kit.getTotalBalance(kit.defaultAccount)
       if (balances.CELO!.isZero()) {
@@ -220,7 +231,7 @@ export abstract class BaseCommand extends Command {
           const stableToken = stable[1]
           // has balance
           if ((balances as any)[stableName] && !(balances as any)[stableName].isZero()) {
-            await setStableTokenGas(stableToken)
+            await setStableTokenGas(stableToken) // TODO(Arthur): Update this
             break
           }
         }

@@ -32,7 +32,7 @@ testWithGanache('transfer:celo cmd', (web3: Web3) => {
       '--value',
       amountToTransfer,
       '--gasCurrency',
-      'cusd',
+      'cusd', // TODO(Arthur): Update this test to accept fee currency addresses
     ])
     // RG cUSD balance should match the amount sent
     const receiverBalance = await kit.getTotalBalance(accounts[1])
@@ -48,7 +48,7 @@ testWithGanache('transfer:celo cmd', (web3: Web3) => {
       '--value',
       amountToTransfer,
       '--gasCurrency',
-      'cusd',
+      'cusd', // TODO(Arthur): Update this test to accept fee currency addresses
     ])
     const balanceAfter = await kit.getTotalBalance(accounts[0])
     expect(balanceBefore.CELO).toEqual(balanceAfter.CELO)

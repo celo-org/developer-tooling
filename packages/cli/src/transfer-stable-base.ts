@@ -17,6 +17,7 @@ export abstract class TransferStableBase extends BaseCommand {
     comment: Flags.string({ description: 'Transfer comment' }),
   }
 
+  // TODO(Arthur): Reminder to check what to do here
   protected _stableCurrency: StableToken | null = null
 
   async run() {
