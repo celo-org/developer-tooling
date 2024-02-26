@@ -356,7 +356,7 @@ describe('recoverTransaction', () => {
           "data": "0xabcdef",
           "feeCurrency": "0x",
           "gas": 10,
-          "gasPrice": "99",
+          "gasPrice": 99,
           "gatewayFee": "0x5678",
           "gatewayFeeRecipient": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
           "nonce": 0,
