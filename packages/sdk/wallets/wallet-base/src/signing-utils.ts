@@ -341,9 +341,9 @@ export async function encodeTransaction(
     to: rlpEncoded.transaction.to!.toString(),
     value: rlpEncoded.transaction.value!.toString(),
     input: rlpEncoded.transaction.data!,
-    v,
-    r,
-    s,
+    v: ensureLeading0x(v),
+    r: ensureLeading0x(r),
+    s: ensureLeading0x(s),
     hash,
   }
   let tx: Partial<EncodedTransaction['tx']> = baseTX
@@ -472,8 +472,11 @@ export function recoverTransaction(rawTx: string): [CeloTx, string] {
       const signature = new secp256k1.Signature(BigInt(r), BigInt(s)).addRecoveryBit(
         v - chainIdTransformationForSigning(chainId)
       )
+      const safeChainId = trimLeading0x(
+        makeEven(trimLeadingZero(ensureLeading0x(chainId.toString(16))))
+      )
       const extraData =
-        recovery < 35 ? [] : [hexToBytes(chainId.toString(16)), hexToBytes(''), hexToBytes('')]
+        recovery < 35 ? [] : [hexToBytes(safeChainId), hexToBytes(''), hexToBytes('')]
       const signingData = rawValues.slice(0, 9).concat(extraData)
       const signingDataHex = rlpEncodeHex(signingData)
       const signingDataHash = getHashFromEncoded(signingDataHex)
