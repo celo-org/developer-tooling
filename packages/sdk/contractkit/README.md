@@ -196,6 +196,9 @@ Some user might want to access web3 native contract wrappers.
 
 To do so, you can:
 
+TODO(Arthur): Update this code example. I don't think this is working code, unless I made a 
+mistake while using this code example.
+
 ```ts
 const feeCurrencyWhitelist = await kit._web3Contracts.getFeeCurrencyWhitelist()
 ```
