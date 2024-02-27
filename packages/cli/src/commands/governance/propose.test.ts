@@ -249,7 +249,7 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
       '--descriptionURL',
       'https://dummyurl.com',
       '--force',
-      '--noinfo',
+      '--noInfo',
     ])
 
     const proposal = await governance.getProposal(1)

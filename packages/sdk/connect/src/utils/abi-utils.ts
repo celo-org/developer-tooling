@@ -21,7 +21,16 @@ export const parseDecodedParams = (params: DecodedParamsObject) => {
   return { args, params }
 }
 
-/** @internal */
+/**
+ * Parses solidity function signature
+ * @dev
+ * example of input function signature: transfer(address,uint256)
+ * example of output structure can be found in propose.test.ts variable `structAbiDefinition`
+ * supports tuples eg. mint(uint256, (uint256, uint256))
+ * and structs eg. mint(uint256, (uint256 a, uint256 b))
+ * @param fnSignature The function signature
+ * @returns AbiItem structure that can be used to encode/decode
+ */
 export const signatureToAbiDefinition = (fnSignature: string): ABIDefinition => {
   const matches = /(?<method>[^\(]+)\((?<args>.*)\)/.exec(fnSignature)
   if (matches == null) {
@@ -42,7 +51,7 @@ export const signatureToAbiDefinition = (fnSignature: string): ABIDefinition => 
         .split(',')
         .map((a) => a.trim())
 
-      const components = tupleArgs.map((type) => {
+      const components = tupleArgs.map((type, tupleIndex) => {
         const parts = type
           .trim()
           .split(' ')
@@ -50,12 +59,10 @@ export const signatureToAbiDefinition = (fnSignature: string): ABIDefinition => 
         if (parts.length > 2) {
           throw new Error(`${fnSignature} is malformed`)
         }
-        if (parts.length == 1) {
-          throw new Error(`${fnSignature} tuple signature needs to have parameters named`)
-        }
+
         return {
           type: parts[0],
-          name: parts[1],
+          name: parts[1] ?? `a${index}-${tupleIndex}`,
         }
       })
 
