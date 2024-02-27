@@ -20,7 +20,10 @@ export default class Propose extends BaseCommand {
       required: true,
       description: 'Path to json transactions',
     }),
-    deposit: Flags.string({ required: true, description: 'Amount of Gold to attach to proposal' }),
+    deposit: Flags.string({
+      required: true,
+      description: 'Amount of Celo to attach to proposal',
+    }),
     from: CustomFlags.address({ required: true, description: "Proposer's address" }),
     force: Flags.boolean({ description: 'Skip execution check', default: false }),
     noInfo: Flags.boolean({ description: 'Skip printing the proposal info', default: false }),
@@ -91,7 +94,7 @@ export default class Propose extends BaseCommand {
     await displaySendTx(
       'proposeTx',
       governance.propose(proposal, res.flags.descriptionURL),
-      { value: deposit.toString() },
+      { value: deposit.toFixed() },
       'ProposalQueued'
     )
   }

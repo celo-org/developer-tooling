@@ -2,7 +2,8 @@ import { Address } from '@celo/connect'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { GoldTokenWrapper } from '@celo/contractkit/lib/wrappers/GoldTokenWrapper'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
+import { NetworkConfig, testWithGanache } from '@celo/dev-utils/lib/ganache-test'
+import { ux } from '@oclif/core'
 import * as fs from 'fs'
 import Web3 from 'web3'
 import { testLocally } from '../../test-utils/cliUtils'
@@ -135,11 +136,15 @@ const structAbiDefinition = {
 }
 
 testWithGanache('governance:propose cmd', (web3: Web3) => {
+  let governance: GovernanceWrapper
+  let goldToken: GoldTokenWrapper
+
+  const expConfig = NetworkConfig.governance
+
+  const minDeposit = web3.utils.toWei(expConfig.minDeposit.toString(), 'ether')
   const kit = newKitFromWeb3(web3)
 
   let accounts: Address[] = []
-  let governance: GovernanceWrapper
-  let goldToken: GoldTokenWrapper
 
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
@@ -210,7 +215,7 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
       '--descriptionURL',
       'https://dummyurl.com',
       '--force',
-      '--noinfo',
+      '--noInfo',
     ])
 
     const proposal = await governance.getProposal(1)
@@ -262,5 +267,65 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
       .encodeFunctionCall(structAbiDefinition, [JSON.parse(transactionsWithStruct[0].args[0])])
 
     expect(proposal[0].input).toEqual(expectedInput)
+  })
+
+  test('fails when descriptionURl is missing', async () => {
+    await expect(
+      testLocally(Propose, [
+        '--from',
+        accounts[0],
+        '--deposit',
+        '0',
+        '--jsonTransactions',
+        './exampleProposal.json',
+      ])
+    ).rejects.toThrow('Missing required flag descriptionURL')
+  })
+
+  test('can submit empty proposal', async () => {
+    await testLocally(Propose, [
+      '--from',
+      accounts[0],
+      '--deposit',
+      minDeposit,
+      '--jsonTransactions',
+      './exampleProposal.json',
+      '--descriptionURL',
+      'https://example.com',
+    ])
+  })
+
+  test('can submit proposal using e notion for deposit', async () => {
+    const spyStart = jest.spyOn(ux.action, 'start')
+    const spyStop = jest.spyOn(ux.action, 'stop')
+    await testLocally(Propose, [
+      '--from',
+      accounts[0],
+      '--deposit',
+      '10000e18',
+      '--jsonTransactions',
+      './exampleProposal.json',
+      '--descriptionURL',
+      'https://example.com',
+    ])
+    expect(spyStart).toHaveBeenCalledWith('Sending Transaction: proposeTx')
+    expect(spyStop).toHaveBeenCalled()
+  })
+  test('when deposit is 10K it succeeds', async () => {
+    const spyStart = jest.spyOn(ux.action, 'start')
+    const spyStop = jest.spyOn(ux.action, 'stop')
+
+    await testLocally(Propose, [
+      '--from',
+      accounts[0],
+      '--deposit',
+      '10000000000000000000000',
+      '--jsonTransactions',
+      './exampleProposal.json',
+      '--descriptionURL',
+      'https://example.com',
+    ])
+    expect(spyStart).toHaveBeenCalledWith('Sending Transaction: proposeTx')
+    expect(spyStop).toHaveBeenCalled()
   })
 })
