@@ -1,19 +1,14 @@
+import { StrongAddress } from '@celo/base'
 import { Block } from '@celo/connect'
+import { ContractKit } from '@celo/contractkit'
 import Web3 from 'web3'
 import { failWith } from './cli'
 
-/**
- * TODO(Arthur): This is pseudo-code doesn't work, because I can't find the fee currency wrapper
- *
- * Fetch fee currency whitelist so it can be set as `gasOptions`
- *
- *
- */
-// export async function fetchWhitelistedFeeCurrencies(kit: ContractKit): Promise<StrongAddress[]> {
-//   const feeCurrencyWhitelist = await kit._web3Contracts.getFeeCurrencyWhitelist()
-//   const gasOptions: StrongAddress[] = await feeCurrencyWhitelist.getWhitelist()
-//   return gasOptions
-// }
+export async function getGasOptions(kit: ContractKit): Promise<StrongAddress[]> {
+  const contract = await kit._web3Contracts.getContract('FeeCurrencyWhitelist')
+  // We can assert the `StrongAddress[]` type, because the smart contract returns an `address[]`
+  return (await contract.methods.getWhitelist().call()) as StrongAddress[]
+}
 
 export function enumEntriesDupWithLowercase<T>(entries: [string, T][]) {
   const enumMap: { [key: string]: T } = {}
