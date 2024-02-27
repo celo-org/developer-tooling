@@ -12,14 +12,22 @@ import Web3 from 'web3'
 import { getGasCurrency, getNodeUrl } from './utils/config'
 import { enumEntriesDupWithLowercase, requireNodeIsSynced } from './utils/helpers'
 /**
- * TODO(Arthur): Probably need to change the `gasOption` defintion because we support arbitrary
- * addresses, and not just strings in a list.
+ * TODO(Arthur): Probably need to change the `gasOption` definition because we support arbitrary
+ * addresses, and not just a set of well-defined strings (cUSD, cEUR, ...).
  *
- * Possibly change this check to make a feeCurrencyWhitelist contract call and assert inclusion.
+ * I defined a `getGasOptions` function in `helpers.ts` that makes a contract call to fetch the
+ * whitelisted address, but I need to consider that the list of gasOptions is different per
+ * network (alfajores, mainnet, baklava), because:
+ * 1. the fee currency addresses are different per network,
+ * 2. the whitelist is different, alfajores has more addresses for internal testing purposes.
+ *
+ * Question: How do I support 'auto' if `gasOptions` will a list of accepted addresses,
+ * and not a list of strings.
  */
 export const gasOptions = {
   auto: 'auto',
   Auto: 'auto',
+  //
   ...enumEntriesDupWithLowercase(Object.entries(Token)),
   ...enumEntriesDupWithLowercase(Object.entries(StableToken)),
 }
