@@ -1,10 +1,8 @@
 ---
-"@celo/celocli": patch
-"@celo/connect": patch
-"@celo/explorer": patch
+"@celo/celocli": minor
 "@celo/governance": patch
 ---
 
-Added support of structs and tuples in Proposals
+Added support of structs and tuples in governance:propose
 
 Adds ability to parse structs and tuples

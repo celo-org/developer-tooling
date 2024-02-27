@@ -29,7 +29,7 @@ we need to enforce the structure at runtime.
 
 #### Defined in
 
-[src/sourcify.ts:49](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L49)
+[src/sourcify.ts:51](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L51)
 
 ___
 
@@ -45,4 +45,4 @@ ___
 
 #### Defined in
 
-[src/sourcify.ts:52](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L52)
+[src/sourcify.ts:54](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L54)
