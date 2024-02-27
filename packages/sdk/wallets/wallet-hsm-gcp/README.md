@@ -1,10 +1,8 @@
-# @celo/wallet-rpc
-
-Wallet-rpc provides utilities for performing wallet functions via RPC.
+# @celo/wallet-hsm-gcp
 
 ## How we work
 
-We are a GitHub-first team, wihich means we have a strong preference for communicating via GitHub. 
+We are a GitHub-first team, which means we have a strong preference for communicating via GitHub. 
 Please use GitHub to:
 
 🐞 [File a bug report](https://github.com/celo-org/developer-tooling/issues/new/choose)
