@@ -34,6 +34,7 @@ Builder class to construct proposals from JSON or transaction objects.
 - [isRegistryContract](proposals.ProposalBuilder.md#isregistrycontract)
 - [lookupExternalMethodABI](proposals.ProposalBuilder.md#lookupexternalmethodabi)
 - [setRegistryAddition](proposals.ProposalBuilder.md#setregistryaddition)
+- [transformArgs](proposals.ProposalBuilder.md#transformargs)
 
 ## Constructors
 
@@ -55,7 +56,7 @@ Builder class to construct proposals from JSON or transaction objects.
 
 #### Defined in
 
-[proposals.ts:238](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L238)
+[proposals.ts:241](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L241)
 
 ## Properties
 
@@ -79,7 +80,7 @@ Builder class to construct proposals from JSON or transaction objects.
 
 #### Defined in
 
-[proposals.ts:376](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L376)
+[proposals.ts:384](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L384)
 
 ___
 
@@ -89,7 +90,7 @@ ___
 
 #### Defined in
 
-[proposals.ts:236](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L236)
+[proposals.ts:239](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L239)
 
 ___
 
@@ -113,7 +114,7 @@ ___
 
 #### Defined in
 
-[proposals.ts:321](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L321)
+[proposals.ts:324](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L324)
 
 ___
 
@@ -123,7 +124,7 @@ ___
 
 #### Defined in
 
-[proposals.ts:241](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L241)
+[proposals.ts:244](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L244)
 
 ## Methods
 
@@ -143,7 +144,7 @@ ___
 
 #### Defined in
 
-[proposals.ts:433](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L433)
+[proposals.ts:460](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L460)
 
 ___
 
@@ -166,7 +167,7 @@ Adds a transaction to set the implementation on a proxy to the given address.
 
 #### Defined in
 
-[proposals.ts:272](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L272)
+[proposals.ts:275](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L275)
 
 ___
 
@@ -189,7 +190,7 @@ Adds a Celo transaction to the list for proposal construction.
 
 #### Defined in
 
-[proposals.ts:298](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L298)
+[proposals.ts:301](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L301)
 
 ___
 
@@ -212,7 +213,7 @@ Adds a Web3 transaction to the list for proposal construction.
 
 #### Defined in
 
-[proposals.ts:290](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L290)
+[proposals.ts:293](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L293)
 
 ___
 
@@ -230,7 +231,7 @@ A constructed Proposal object (i.e. a list of ProposalTransaction)
 
 #### Defined in
 
-[proposals.ts:248](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L248)
+[proposals.ts:251](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L251)
 
 ___
 
@@ -250,7 +251,7 @@ ___
 
 #### Defined in
 
-[proposals.ts:378](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L378)
+[proposals.ts:405](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L405)
 
 ___
 
@@ -270,7 +271,7 @@ ___
 
 #### Defined in
 
-[proposals.ts:342](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L342)
+[proposals.ts:348](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L348)
 
 ___
 
@@ -290,7 +291,7 @@ ___
 
 #### Defined in
 
-[proposals.ts:408](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L408)
+[proposals.ts:435](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L435)
 
 ___
 
@@ -313,7 +314,7 @@ Converts a Web3 transaction into a proposal transaction object.
 
 #### Defined in
 
-[proposals.ts:261](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L261)
+[proposals.ts:264](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L264)
 
 ___
 
@@ -333,7 +334,7 @@ ___
 
 #### Defined in
 
-[proposals.ts:311](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L311)
+[proposals.ts:314](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L314)
 
 ___
 
@@ -353,7 +354,7 @@ ___
 
 #### Defined in
 
-[proposals.ts:314](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L314)
+[proposals.ts:317](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L317)
 
 ___
 
@@ -374,7 +375,7 @@ ___
 
 #### Defined in
 
-[proposals.ts:323](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L323)
+[proposals.ts:326](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L326)
 
 ___
 
@@ -395,4 +396,25 @@ ___
 
 #### Defined in
 
-[proposals.ts:308](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L308)
+[proposals.ts:311](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L311)
+
+___
+
+### transformArgs
+
+▸ **transformArgs**(`abi`, `args`): `any`[]
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `abi` | `AbiItem` |
+| `args` | `any`[] |
+
+#### Returns
+
+`any`[]
+
+#### Defined in
+
+[proposals.ts:386](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L386)
