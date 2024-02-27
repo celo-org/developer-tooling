@@ -88,7 +88,7 @@ Contract for handling deposits needed for voting.
 
 ### \_getTotalPendingWithdrawalsCount
 
-• **\_getTotalPendingWithdrawalsCount**: (...`args`: [account: string]) => `Promise`\<`BigNumber`\>
+• **\_getTotalPendingWithdrawalsCount**: (...`args`: `any`[]) => `Promise`\<`BigNumber`\>
 
 #### Type declaration
 
@@ -98,7 +98,7 @@ Contract for handling deposits needed for voting.
 
 | Name | Type |
 | :------ | :------ |
-| `...args` | [account: string] |
+| `...args` | `any`[] |
 
 ##### Returns
 
@@ -354,7 +354,7 @@ ___
 
 ### methodIds
 
-• **methodIds**: `Record`\<``"unlockingPeriod"`` \| ``"slash"`` \| ``"initialized"`` \| ``"isOwner"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"getVersionNumber"`` \| ``"initialize"`` \| ``"withdraw"`` \| ``"slashingWhitelist"`` \| ``"totalDelegatedCelo"`` \| ``"totalNonvoting"`` \| ``"isSlasher"`` \| ``"setUnlockingPeriod"`` \| ``"setMaxDelegateesCount"`` \| ``"lock"`` \| ``"incrementNonvotingAccountBalance"`` \| ``"decrementNonvotingAccountBalance"`` \| ``"unlock"`` \| ``"relock"`` \| ``"getTotalLockedGold"`` \| ``"getNonvotingLockedGold"`` \| ``"delegateGovernanceVotes"`` \| ``"revokeDelegatedGovernanceVotes"`` \| ``"updateDelegatedAmount"`` \| ``"getAccountTotalDelegatedFraction"`` \| ``"getAccountTotalLockedGold"`` \| ``"getAccountTotalGovernanceVotingPower"`` \| ``"getDelegatorDelegateeInfo"`` \| ``"getDelegatorDelegateeExpectedAndRealAmount"`` \| ``"getDelegateesOfDelegator"`` \| ``"getAccountNonvotingLockedGold"`` \| ``"getPendingWithdrawals"`` \| ``"getPendingWithdrawal"`` \| ``"getTotalPendingWithdrawalsCount"`` \| ``"getTotalPendingWithdrawals"`` \| ``"getSlashingWhitelist"`` \| ``"addSlasher"`` \| ``"removeSlasher"``, `string`\>
+• **methodIds**: `Record`\<``"unlockingPeriod"`` \| ``"slash"`` \| ``"initialized"`` \| ``"isOwner"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"getVersionNumber"`` \| ``"initialize"`` \| ``"withdraw"`` \| ``"slashingWhitelist"`` \| ``"totalDelegatedCelo"`` \| ``"totalNonvoting"`` \| ``"isSlasher"`` \| ``"setUnlockingPeriod"`` \| ``"setMaxDelegateesCount"`` \| ``"lock"`` \| ``"incrementNonvotingAccountBalance"`` \| ``"decrementNonvotingAccountBalance"`` \| ``"unlock"`` \| ``"relock"`` \| ``"getTotalLockedGold"`` \| ``"getNonvotingLockedGold"`` \| ``"delegateGovernanceVotes"`` \| ``"revokeDelegatedGovernanceVotes"`` \| ``"updateDelegatedAmount"`` \| ``"getAccountTotalDelegatedFraction"`` \| ``"getAccountTotalLockedGold"`` \| ``"getAccountTotalGovernanceVotingPower"`` \| ``"getDelegatorDelegateeInfo"`` \| ``"getDelegatorDelegateeExpectedAndRealAmount"`` \| ``"getDelegateesOfDelegator"`` \| ``"getAccountNonvotingLockedGold"`` \| ``"getPendingWithdrawals"`` \| ``"getPendingWithdrawal"`` \| ``"getTotalPendingWithdrawals"`` \| ``"getSlashingWhitelist"`` \| ``"addSlasher"`` \| ``"removeSlasher"``, `string`\>
 
 #### Inherited from
 

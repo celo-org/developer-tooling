@@ -198,7 +198,7 @@ ___
 
 ### methodIds
 
-• **methodIds**: `Record`\<``"gasPriceMinimum"`` \| ``"targetDensity"`` \| ``"adjustmentSpeed"`` \| ``"initialized"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"getVersionNumber"`` \| ``"initialize"`` \| ``"ABSOLUTE_MINIMAL_GAS_PRICE"`` \| ``"baseFeeOpCodeActivationBlock"`` \| ``"deprecated_gasPriceMinimum"`` \| ``"gasPriceMinimumFloor"`` \| ``"setAdjustmentSpeed"`` \| ``"setTargetDensity"`` \| ``"setGasPriceMinimumFloor"`` \| ``"setBaseFeeOpCodeActivationBlock"`` \| ``"getGasPriceMinimum"`` \| ``"updateGasPriceMinimum"`` \| ``"getUpdatedGasPriceMinimum"``, `string`\>
+• **methodIds**: `Record`\<``"gasPriceMinimum"`` \| ``"targetDensity"`` \| ``"adjustmentSpeed"`` \| ``"initialized"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"getVersionNumber"`` \| ``"initialize"`` \| ``"baseFeeOpCodeActivationBlock"`` \| ``"deprecated_gasPriceMinimum"`` \| ``"gasPriceMinimumFloor"`` \| ``"setAdjustmentSpeed"`` \| ``"setTargetDensity"`` \| ``"setGasPriceMinimumFloor"`` \| ``"setBaseFeeOpCodeActivationBlock"`` \| ``"getGasPriceMinimum"`` \| ``"updateGasPriceMinimum"`` \| ``"getUpdatedGasPriceMinimum"``, `string`\>
 
 #### Inherited from
 

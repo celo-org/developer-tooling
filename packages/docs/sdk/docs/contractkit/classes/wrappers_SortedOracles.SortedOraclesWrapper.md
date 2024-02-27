@@ -99,8 +99,6 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `BreakerBoxUpdated` | `ContractEvent`\<`string`\> |
-| `EquivalentTokenSet` | `ContractEvent`\<\{ `0`: `string` ; `1`: `string` ; `equivalentToken`: `string` ; `token`: `string`  }\> |
 | `MedianUpdated` | `ContractEvent`\<\{ `0`: `string` ; `1`: `string` ; `token`: `string` ; `value`: `string`  }\> |
 | `OracleAdded` | `ContractEvent`\<\{ `0`: `string` ; `1`: `string` ; `oracleAddress`: `string` ; `token`: `string`  }\> |
 | `OracleRemoved` | `ContractEvent`\<\{ `0`: `string` ; `1`: `string` ; `oracleAddress`: `string` ; `token`: `string`  }\> |
@@ -123,7 +121,7 @@ ___
 
 ### methodIds
 
-• **methodIds**: `Record`\<``"reportExpirySeconds"`` \| ``"initialized"`` \| ``"isOwner"`` \| ``"owner"`` \| ``"renounceOwnership"`` \| ``"transferOwnership"`` \| ``"getVersionNumber"`` \| ``"initialize"`` \| ``"breakerBox"`` \| ``"equivalentTokens"`` \| ``"isOracle"`` \| ``"oracles"`` \| ``"tokenReportExpirySeconds"`` \| ``"setReportExpiry"`` \| ``"setTokenReportExpiry"`` \| ``"setBreakerBox"`` \| ``"addOracle"`` \| ``"removeOracle"`` \| ``"removeExpiredReports"`` \| ``"isOldestReportExpired"`` \| ``"setEquivalentToken"`` \| ``"deleteEquivalentToken"`` \| ``"getEquivalentToken"`` \| ``"report"`` \| ``"numRates"`` \| ``"medianRateWithoutEquivalentMapping"`` \| ``"medianRate"`` \| ``"getRates"`` \| ``"numTimestamps"`` \| ``"medianTimestamp"`` \| ``"getTimestamps"`` \| ``"getOracles"`` \| ``"getTokenReportExpirySeconds"``, `string`\>
+• **methodIds**: `Record`\<``"reportExpirySeconds"`` \| ``"initialized"`` \| ``"isOwner"`` \| ``"owner"`` \| ``"renounceOwnership"`` \| ``"transferOwnership"`` \| ``"getVersionNumber"`` \| ``"initialize"`` \| ``"isOracle"`` \| ``"oracles"`` \| ``"tokenReportExpirySeconds"`` \| ``"setReportExpiry"`` \| ``"setTokenReportExpiry"`` \| ``"addOracle"`` \| ``"removeOracle"`` \| ``"removeExpiredReports"`` \| ``"isOldestReportExpired"`` \| ``"report"`` \| ``"numRates"`` \| ``"medianRate"`` \| ``"getRates"`` \| ``"numTimestamps"`` \| ``"medianTimestamp"`` \| ``"getTimestamps"`` \| ``"getOracles"`` \| ``"getTokenReportExpirySeconds"``, `string`\>
 
 #### Inherited from
 
@@ -255,7 +253,7 @@ Contract getPastEvents
 
 | Name | Type |
 | :------ | :------ |
-| `event` | ``"OwnershipTransferred"`` \| ``"allEvents"`` \| ``"BreakerBoxUpdated"`` \| ``"EquivalentTokenSet"`` \| ``"MedianUpdated"`` \| ``"OracleAdded"`` \| ``"OracleRemoved"`` \| ``"OracleReportRemoved"`` \| ``"OracleReported"`` \| ``"ReportExpirySet"`` \| ``"TokenReportExpirySet"`` |
+| `event` | ``"OwnershipTransferred"`` \| ``"allEvents"`` \| ``"MedianUpdated"`` \| ``"OracleAdded"`` \| ``"OracleRemoved"`` \| ``"OracleReportRemoved"`` \| ``"OracleReported"`` \| ``"ReportExpirySet"`` \| ``"TokenReportExpirySet"`` |
 | `options` | `PastEventOptions` |
 
 #### Returns
