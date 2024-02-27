@@ -30,7 +30,7 @@
 
 #### Defined in
 
-[packages/sdk/connect/src/utils/abi-utils.ts:55](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/abi-utils.ts#L55)
+[packages/sdk/connect/src/utils/abi-utils.ts:91](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/abi-utils.ts#L91)
 
 ___
 
