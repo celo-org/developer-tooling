@@ -238,10 +238,14 @@ export async function tryGetProxyImplementation(
     }
   }
 
-  const hexValue = await connection.web3.eth.getStorageAt(
-    contract,
-    PROXY_IMPLEMENTATION_POSITION_UUPS
-  )
-  const address = connection.web3.utils.toChecksumAddress('0x' + hexValue.slice(-40))
-  return address
+  try {
+    const hexValue = await connection.web3.eth.getStorageAt(
+      contract,
+      PROXY_IMPLEMENTATION_POSITION_UUPS
+    )
+    const address = connection.web3.utils.toChecksumAddress('0x' + hexValue.slice(-40))
+    return address
+  } catch {
+    return undefined
+  }
 }

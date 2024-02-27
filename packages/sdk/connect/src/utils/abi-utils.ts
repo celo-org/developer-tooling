@@ -28,15 +28,21 @@ export const signatureToAbiDefinition = (fnSignature: string): ABIDefinition => 
     throw new Error(`${fnSignature} is malformed`)
   }
   const method = matches.groups!.method
-  const args = matches.groups!.args.split(',')
 
-  return {
-    name: method,
-    signature: fnSignature,
-    type: 'function',
-    inputs: args
-      .filter((type) => type ?? '' != '')
-      .map((type, index) => {
+  const argRegex = /\(((?:[^()]+|\((?:[^()]+|\([^()]*\))*\))*)\)|(\b\w+\b(?:(?:\s+\w+)?))/g
+  const args = [...matches.groups!.args.matchAll(argRegex)].map((match) =>
+    match[1] ? `(${match[1]})` : match[2]
+  )
+
+  const inputs = args.map((arg, index) => {
+    if (arg.indexOf('(') == 0) {
+      // tuple or struct
+      const tupleArgs = arg
+        .substring(1, arg.length - 1)
+        .split(',')
+        .map((a) => a.trim())
+
+      const components = tupleArgs.map((type) => {
         const parts = type
           .trim()
           .split(' ')
@@ -44,12 +50,40 @@ export const signatureToAbiDefinition = (fnSignature: string): ABIDefinition => 
         if (parts.length > 2) {
           throw new Error(`${fnSignature} is malformed`)
         }
-
-        return {
-          name: parts.length > 1 ? parts[1] : `a${index}`,
-          type: parts[0],
+        if (parts.length == 1) {
+          throw new Error(`${fnSignature} tuple signature needs to have parameters named`)
         }
-      }),
+        return {
+          type: parts[0],
+          name: parts[1],
+        }
+      })
+
+      return {
+        name: 'params',
+        type: 'tuple',
+        components: components,
+      }
+    } else {
+      const parts = arg
+        .trim()
+        .split(' ')
+        .map((p) => p.trim())
+      if (parts.length > 2) {
+        throw new Error(`${fnSignature} is malformed`)
+      }
+      return {
+        type: parts[0],
+        name: parts[1] ?? `a${index}`,
+      }
+    }
+  })
+
+  return {
+    name: method,
+    signature: fnSignature,
+    type: 'function',
+    inputs,
   }
 }
 

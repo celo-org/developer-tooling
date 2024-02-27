@@ -454,7 +454,7 @@ export class ProposalBuilder {
       }
     }
 
-    throw new Error(`Couldn't build call for transaction: ${JSON.stringify(tx)}`)
+    throw new Error(`Couldn't build call for transactio2: ${JSON.stringify(tx)}`)
   }
 
   addJsonTx = (tx: ProposalTransactionJSON) => this.builders.push(async () => this.fromJsonTx(tx))
