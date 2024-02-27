@@ -45,6 +45,7 @@ testWithGanache('releasegold:withdraw cmd', (web3: Web3) => {
   })
 
   test("can't withdraw the whole balance if there is a cUSD balance", async () => {
+    const spy = jest.spyOn(console, 'log')
     await testLocally(SetLiquidityProvision, ['--contract', contractAddress, '--yesreally'])
     // ReleasePeriod of default contract
     await timeTravel(300000000, web3)
@@ -65,7 +66,9 @@ testWithGanache('releasegold:withdraw cmd', (web3: Web3) => {
     await expect(
       testLocally(Withdraw, ['--contract', contractAddress, '--value', remainingBalance.toString()])
     ).rejects.toThrow()
-
+    expect(spy).toHaveBeenCalledWith(
+      expect.stringContaining('The liquidity provision has not already been set')
+    )
     // Move out the cUSD balance
     await testLocally(RGTransferDollars, [
       '--contract',
@@ -84,7 +87,6 @@ testWithGanache('releasegold:withdraw cmd', (web3: Web3) => {
     ])
     const balanceAfter = await kit.getTotalBalance(beneficiary)
     expect(balanceBefore.CELO!.toNumber()).toBeLessThan(balanceAfter.CELO!.toNumber())
-
     // Contract should self-destruct now
     await expect(releaseGoldWrapper.getRemainingUnlockedBalance()).rejects.toThrow()
   })
