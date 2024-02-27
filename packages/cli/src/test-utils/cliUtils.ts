@@ -14,3 +14,5 @@ export async function testLocally(
   const extendedArgv = [...argv, '--node', 'local']
   return command.run(extendedArgv, config)
 }
+
+export const LONG_TIMEOUT_MS = 10 * 1000
