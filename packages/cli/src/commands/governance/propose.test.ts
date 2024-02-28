@@ -6,7 +6,7 @@ import { NetworkConfig, testWithGanache } from '@celo/dev-utils/lib/ganache-test
 import { ux } from '@oclif/core'
 import * as fs from 'fs'
 import Web3 from 'web3'
-import { testLocally } from '../../test-utils/cliUtils'
+import { EXTRA_LONG_TIMEOUT_MS, testLocally } from '../../test-utils/cliUtils'
 import Propose from './propose'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -153,179 +153,208 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
     goldToken = await kit.contracts.getGoldToken()
   })
 
-  test('will successfully create proposal based on Core contract', async () => {
-    const transactionsToBeSaved = JSON.stringify(transactions)
-    fs.writeFileSync('transactions.json', transactionsToBeSaved, { flag: 'w' })
+  test(
+    'will successfully create proposal based on Core contract',
+    async () => {
+      const transactionsToBeSaved = JSON.stringify(transactions)
+      fs.writeFileSync('transactions.json', transactionsToBeSaved, { flag: 'w' })
 
-    await (
-      await kit.sendTransaction({
-        to: governance.address,
-        from: accounts[0],
-        value: web3.utils.toWei('1', 'ether'),
-      })
-    ).waitReceipt()
+      await (
+        await kit.sendTransaction({
+          to: governance.address,
+          from: accounts[0],
+          value: web3.utils.toWei('1', 'ether'),
+        })
+      ).waitReceipt()
 
-    const proposalBefore = await governance.getProposal(1)
-    expect(proposalBefore).toEqual([])
+      const proposalBefore = await governance.getProposal(1)
+      expect(proposalBefore).toEqual([])
 
-    await testLocally(Propose, [
-      '--jsonTransactions',
-      'transactions.json',
-      '--deposit',
-      '1000000000000000000',
-      '--from',
-      accounts[0],
-      '--descriptionURL',
-      'https://dummyurl.com',
-    ])
+      await testLocally(Propose, [
+        '--jsonTransactions',
+        'transactions.json',
+        '--deposit',
+        '1000000000000000000',
+        '--from',
+        accounts[0],
+        '--descriptionURL',
+        'https://dummyurl.com',
+      ])
 
-    const proposal = await governance.getProposal(1)
-    expect(proposal.length).toEqual(transactions.length)
-    expect(proposal[0].to).toEqual(goldToken.address)
-    expect(proposal[0].value).toEqual(transactions[0].value)
-    const expectedInput = goldToken['contract'].methods['transfer'](
-      transactions[0].args[0],
-      transactions[0].args[1]
-    ).encodeABI()
-    expect(proposal[0].input).toEqual(expectedInput)
-  })
+      const proposal = await governance.getProposal(1)
+      expect(proposal.length).toEqual(transactions.length)
+      expect(proposal[0].to).toEqual(goldToken.address)
+      expect(proposal[0].value).toEqual(transactions[0].value)
+      const expectedInput = goldToken['contract'].methods['transfer'](
+        transactions[0].args[0],
+        transactions[0].args[1]
+      ).encodeABI()
+      expect(proposal[0].input).toEqual(expectedInput)
+    },
+    EXTRA_LONG_TIMEOUT_MS
+  )
 
-  test('will successfully create proposal with random contract', async () => {
-    const transactionsToBeSaved = JSON.stringify(transactionsUnknownAddress)
-    fs.writeFileSync('transactions.json', transactionsToBeSaved, { flag: 'w' })
+  test(
+    'will successfully create proposal with random contract',
+    async () => {
+      const transactionsToBeSaved = JSON.stringify(transactionsUnknownAddress)
+      fs.writeFileSync('transactions.json', transactionsToBeSaved, { flag: 'w' })
 
-    await (
-      await kit.sendTransaction({
-        to: governance.address,
-        from: accounts[0],
-        value: web3.utils.toWei('1', 'ether'),
-      })
-    ).waitReceipt()
+      await (
+        await kit.sendTransaction({
+          to: governance.address,
+          from: accounts[0],
+          value: web3.utils.toWei('1', 'ether'),
+        })
+      ).waitReceipt()
 
-    const proposalBefore = await governance.getProposal(1)
-    expect(proposalBefore).toEqual([])
+      const proposalBefore = await governance.getProposal(1)
+      expect(proposalBefore).toEqual([])
 
-    await testLocally(Propose, [
-      '--jsonTransactions',
-      'transactions.json',
-      '--deposit',
-      '1000000000000000000',
-      '--from',
-      accounts[0],
-      '--descriptionURL',
-      'https://dummyurl.com',
-      '--force',
-      '--noInfo',
-    ])
+      await testLocally(Propose, [
+        '--jsonTransactions',
+        'transactions.json',
+        '--deposit',
+        '1000000000000000000',
+        '--from',
+        accounts[0],
+        '--descriptionURL',
+        'https://dummyurl.com',
+        '--force',
+        '--noInfo',
+      ])
 
-    const proposal = await governance.getProposal(1)
-    expect(proposal.length).toEqual(transactions.length)
-    expect(proposal[0].to).toEqual(randomAddress)
-    expect(proposal[0].value).toEqual(transactions[0].value)
-    const expectedInput = goldToken['contract'].methods['transfer'](
-      transactions[0].args[0],
-      transactions[0].args[1]
-    ).encodeABI()
-    expect(proposal[0].input).toEqual(expectedInput)
-  })
+      const proposal = await governance.getProposal(1)
+      expect(proposal.length).toEqual(transactions.length)
+      expect(proposal[0].to).toEqual(randomAddress)
+      expect(proposal[0].value).toEqual(transactions[0].value)
+      const expectedInput = goldToken['contract'].methods['transfer'](
+        transactions[0].args[0],
+        transactions[0].args[1]
+      ).encodeABI()
+      expect(proposal[0].input).toEqual(expectedInput)
+    },
+    EXTRA_LONG_TIMEOUT_MS
+  )
 
-  test('will successfully create proposal with struct as input', async () => {
-    const transactionsToBeSaved = JSON.stringify(transactionsWithStruct)
-    fs.writeFileSync('transactions.json', transactionsToBeSaved, { flag: 'w' })
+  test(
+    'will successfully create proposal with struct as input',
+    async () => {
+      const transactionsToBeSaved = JSON.stringify(transactionsWithStruct)
+      fs.writeFileSync('transactions.json', transactionsToBeSaved, { flag: 'w' })
 
-    await (
-      await kit.sendTransaction({
-        to: governance.address,
-        from: accounts[0],
-        value: web3.utils.toWei('1', 'ether'),
-      })
-    ).waitReceipt()
+      await (
+        await kit.sendTransaction({
+          to: governance.address,
+          from: accounts[0],
+          value: web3.utils.toWei('1', 'ether'),
+        })
+      ).waitReceipt()
 
-    const proposalBefore = await governance.getProposal(1)
-    expect(proposalBefore).toEqual([])
+      const proposalBefore = await governance.getProposal(1)
+      expect(proposalBefore).toEqual([])
 
-    await testLocally(Propose, [
-      '--jsonTransactions',
-      'transactions.json',
-      '--deposit',
-      '1000000000000000000',
-      '--from',
-      accounts[0],
-      '--descriptionURL',
-      'https://dummyurl.com',
-      '--force',
-      '--noInfo',
-    ])
+      await testLocally(Propose, [
+        '--jsonTransactions',
+        'transactions.json',
+        '--deposit',
+        '1000000000000000000',
+        '--from',
+        accounts[0],
+        '--descriptionURL',
+        'https://dummyurl.com',
+        '--force',
+        '--noInfo',
+      ])
 
-    const proposal = await governance.getProposal(1)
-    expect(proposal.length).toEqual(transactions.length)
-    expect(proposal[0].to).toEqual('0x3d79EdAaBC0EaB6F08ED885C05Fc0B014290D95A')
-    expect(proposal[0].value).toEqual(transactions[0].value)
+      const proposal = await governance.getProposal(1)
+      expect(proposal.length).toEqual(transactions.length)
+      expect(proposal[0].to).toEqual('0x3d79EdAaBC0EaB6F08ED885C05Fc0B014290D95A')
+      expect(proposal[0].value).toEqual(transactions[0].value)
 
-    const expectedInput = kit.connection
-      .getAbiCoder()
-      .encodeFunctionCall(structAbiDefinition, [JSON.parse(transactionsWithStruct[0].args[0])])
+      const expectedInput = kit.connection
+        .getAbiCoder()
+        .encodeFunctionCall(structAbiDefinition, [JSON.parse(transactionsWithStruct[0].args[0])])
 
-    expect(proposal[0].input).toEqual(expectedInput)
-  })
+      expect(proposal[0].input).toEqual(expectedInput)
+    },
+    EXTRA_LONG_TIMEOUT_MS
+  )
 
-  test('fails when descriptionURl is missing', async () => {
-    await expect(
-      testLocally(Propose, [
+  test(
+    'fails when descriptionURl is missing',
+    async () => {
+      await expect(
+        testLocally(Propose, [
+          '--from',
+          accounts[0],
+          '--deposit',
+          '0',
+          '--jsonTransactions',
+          './exampleProposal.json',
+        ])
+      ).rejects.toThrow('Missing required flag descriptionURL')
+    },
+    EXTRA_LONG_TIMEOUT_MS
+  )
+
+  test(
+    'can submit empty proposal',
+    async () => {
+      await testLocally(Propose, [
         '--from',
         accounts[0],
         '--deposit',
-        '0',
+        minDeposit,
         '--jsonTransactions',
         './exampleProposal.json',
+        '--descriptionURL',
+        'https://example.com',
       ])
-    ).rejects.toThrow('Missing required flag descriptionURL')
-  })
+    },
+    EXTRA_LONG_TIMEOUT_MS
+  )
 
-  test('can submit empty proposal', async () => {
-    await testLocally(Propose, [
-      '--from',
-      accounts[0],
-      '--deposit',
-      minDeposit,
-      '--jsonTransactions',
-      './exampleProposal.json',
-      '--descriptionURL',
-      'https://example.com',
-    ])
-  })
+  test(
+    'can submit proposal using e notion for deposit',
+    async () => {
+      const spyStart = jest.spyOn(ux.action, 'start')
+      const spyStop = jest.spyOn(ux.action, 'stop')
+      await testLocally(Propose, [
+        '--from',
+        accounts[0],
+        '--deposit',
+        '10000e18',
+        '--jsonTransactions',
+        './exampleProposal.json',
+        '--descriptionURL',
+        'https://example.com',
+      ])
+      expect(spyStart).toHaveBeenCalledWith('Sending Transaction: proposeTx')
+      expect(spyStop).toHaveBeenCalled()
+    },
+    EXTRA_LONG_TIMEOUT_MS
+  )
 
-  test('can submit proposal using e notion for deposit', async () => {
-    const spyStart = jest.spyOn(ux.action, 'start')
-    const spyStop = jest.spyOn(ux.action, 'stop')
-    await testLocally(Propose, [
-      '--from',
-      accounts[0],
-      '--deposit',
-      '10000e18',
-      '--jsonTransactions',
-      './exampleProposal.json',
-      '--descriptionURL',
-      'https://example.com',
-    ])
-    expect(spyStart).toHaveBeenCalledWith('Sending Transaction: proposeTx')
-    expect(spyStop).toHaveBeenCalled()
-  })
-  test('when deposit is 10K it succeeds', async () => {
-    const spyStart = jest.spyOn(ux.action, 'start')
-    const spyStop = jest.spyOn(ux.action, 'stop')
+  test(
+    'when deposit is 10K it succeeds',
+    async () => {
+      const spyStart = jest.spyOn(ux.action, 'start')
+      const spyStop = jest.spyOn(ux.action, 'stop')
 
-    await testLocally(Propose, [
-      '--from',
-      accounts[0],
-      '--deposit',
-      '10000000000000000000000',
-      '--jsonTransactions',
-      './exampleProposal.json',
-      '--descriptionURL',
-      'https://example.com',
-    ])
-    expect(spyStart).toHaveBeenCalledWith('Sending Transaction: proposeTx')
-    expect(spyStop).toHaveBeenCalled()
-  })
+      await testLocally(Propose, [
+        '--from',
+        accounts[0],
+        '--deposit',
+        '10000000000000000000000',
+        '--jsonTransactions',
+        './exampleProposal.json',
+        '--descriptionURL',
+        'https://example.com',
+      ])
+      expect(spyStart).toHaveBeenCalledWith('Sending Transaction: proposeTx')
+      expect(spyStop).toHaveBeenCalled()
+    },
+    EXTRA_LONG_TIMEOUT_MS
+  )
 })

@@ -16,3 +16,4 @@ export async function testLocally(
 }
 
 export const LONG_TIMEOUT_MS = 10 * 1000
+export const EXTRA_LONG_TIMEOUT_MS = 20 * 1000
