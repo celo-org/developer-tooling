@@ -1,5 +1,15 @@
 # @celo/explorer
 
+## 5.0.9-beta.1
+
+### Patch Changes
+
+- [#146](https://github.com/celo-org/developer-tooling/pull/146) [`28cd8f8`](https://github.com/celo-org/developer-tooling/commit/28cd8f8c8dd62ecafa01ef7a7fb89117e6db9b56) Thanks [@pahor167](https://github.com/pahor167)! - when fetching metadata use checksumed address
+
+- Updated dependencies [[`28cd8f8`](https://github.com/celo-org/developer-tooling/commit/28cd8f8c8dd62ecafa01ef7a7fb89117e6db9b56)]:
+  - @celo/connect@5.2.0-beta.0
+  - @celo/contractkit@7.1.0-beta.1
+
 ## 5.0.9-beta.0
 
 ### Patch Changes

@@ -9,7 +9,10 @@ on:
     branches:
       - master
       - changeset-release/master
+      - prerelease/*
   pull_request:
+    branches:
+      - changeset-release/*
 
 concurrency:
   group: dev-tooling-${{ github.ref }}
