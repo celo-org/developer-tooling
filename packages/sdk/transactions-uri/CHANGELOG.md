@@ -1,5 +1,12 @@
 # @celo/transactions-uri
 
+## 5.0.8-contracts-11-post-audit.0
+
+### Patch Changes
+
+- Updated dependencies [[`28cd8f8`](https://github.com/celo-org/developer-tooling/commit/28cd8f8c8dd62ecafa01ef7a7fb89117e6db9b56)]:
+  - @celo/connect@5.2.0-contracts-11-post-audit.0
+
 ## 5.0.7
 
 ### Patch Changes

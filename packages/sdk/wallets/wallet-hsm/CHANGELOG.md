@@ -1,5 +1,7 @@
 # @celo/wallet-hsm
 
+## 5.1.3-contracts-11-post-audit.0
+
 ## 5.1.2
 
 ## 5.1.2-beta.0
