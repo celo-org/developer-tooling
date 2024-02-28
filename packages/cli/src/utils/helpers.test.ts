@@ -11,14 +11,12 @@ import { getGasOptions } from './helpers'
  * A failing "developer test" here might not mean that the user experience is broken.
  */
 testWithGanache('Fetch whitelisted fee currencies', (web3: Web3) => {
-  let account: string
-  let accounts: string[]
   let kit: ContractKit
+  let accounts: string[]
 
   beforeEach(async () => {
     accounts = await web3.eth.getAccounts()
     kit = newKitFromWeb3(web3)
-    account = accounts[0]
   })
 
   describe('When whitelisted fee currencies are fetched on-chain', () => {
@@ -32,22 +30,20 @@ testWithGanache('Fetch whitelisted fee currencies', (web3: Web3) => {
     test('Then the resulting addresses are valid fee currencies', async () => {
       const contract = await kit.contracts.getGoldToken()
       const gasOptions = await getGasOptions(kit)
-      const sender = account[0]
+      const sender = accounts[0]
       const recipient = accounts[1]
       const amount = kit.web3.utils.toWei('0.01', 'ether')
 
       for (let i = 0; i < gasOptions.length; i++) {
-        console.log(`DEBUGGING: Testing gasOption: ${gasOptions[0]}`)
         const recipientBalanceBefore = await kit.getTotalBalance(recipient)
-        console.log(`DEBUGGING: recipientBalanceBefore: ${recipientBalanceBefore.CELO!}`)
         const transactionObject = contract.transfer(recipient, amount)
+
         await transactionObject.sendAndWaitForReceipt({
           from: sender,
           to: recipient,
-          feeCurrency: gasOptions[i],
+          feeCurrency: web3.utils.toChecksumAddress(gasOptions[i]),
         })
         const recipientBalanceAfter = await kit.getTotalBalance(recipient)
-        console.log(`DEBUGGING: recipientBalanceAfter: ${recipientBalanceAfter.CELO!}`)
 
         expect(recipientBalanceAfter.CELO!.toFixed()).toEqual(
           recipientBalanceBefore.CELO!.plus(amount).toFixed()
