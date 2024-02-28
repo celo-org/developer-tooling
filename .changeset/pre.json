@@ -26,6 +26,7 @@
     "@celo/typescript": "0.0.1"
   },
   "changesets": [
+    "gentle-clocks-beam",
     "good-cheetahs-destroy",
     "happy-rice-camp",
     "two-poems-complain"

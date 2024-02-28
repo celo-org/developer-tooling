@@ -4,7 +4,7 @@ import { BaseCommand } from '../../base'
 import { getExchangeRates } from '../../utils/mento-broker-adaptor'
 
 export default class ExchangeShow extends BaseCommand {
-  static description = 'Show the current exchange rates offered by the Exchange'
+  static description = 'Show the current exchange rates offered by the Broker'
 
   static flags = {
     ...BaseCommand.flags,
