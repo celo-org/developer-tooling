@@ -319,7 +319,10 @@ export class BlockExplorer {
     if (cached) {
       return cached
     }
-    const metadata = await fetchMetadata(this.kit.connection, address)
+    const metadata = await fetchMetadata(
+      this.kit.connection,
+      this.kit.web3.utils.toChecksumAddress(address)
+    )
     const mapping = metadata?.toContractMapping()
     if (mapping) {
       this.addressMapping.set(address, mapping)
