@@ -1,5 +1,12 @@
 # @celo/keystores
 
+## 5.0.8-contracts-11-post-audit.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @celo/wallet-local@5.1.3-contracts-11-post-audit.0
+
 ## 5.0.7
 
 ### Patch Changes

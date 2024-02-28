@@ -1,6 +1,6 @@
 {
   "name": "@celo/governance",
-  "version": "5.0.10-contracts-11-post-audit.0",
+  "version": "5.0.10-contracts-11-post-audit.1",
   "description": "Celo's governance proposals",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -23,9 +23,9 @@
   "dependencies": {
     "@celo/abis": "11.0.0-canary.16",
     "@celo/base": "^6.0.0",
-    "@celo/connect": "^5.1.2",
-    "@celo/contractkit": "^7.1.0-contracts-11-post-audit.0",
-    "@celo/explorer": "^5.0.9-contracts-11-post-audit.0",
+    "@celo/connect": "^5.2.0-contracts-11-post-audit.0",
+    "@celo/contractkit": "^7.1.0-contracts-11-post-audit.1",
+    "@celo/explorer": "^5.0.9-contracts-11-post-audit.1",
     "@celo/utils": "^6.0.0",
     "@ethereumjs/util": "8.0.5",
     "@types/debug": "^4.1.5",
