@@ -1,5 +1,17 @@
 # @celo/contractkit
 
+## 7.1.0
+
+### Minor Changes
+
+- [#140](https://github.com/celo-org/developer-tooling/pull/140) [`0ad9c01`](https://github.com/celo-org/developer-tooling/commit/0ad9c011b868c4bf5456f4048cb6d405c9dd8c8e) Thanks [@timmoreton](https://github.com/timmoreton)! - Activate votes from any account, new optional parameter to specify for account in ElectionWrapper:activate
+
+### Patch Changes
+
+- Updated dependencies [[`28cd8f8`](https://github.com/celo-org/developer-tooling/commit/28cd8f8c8dd62ecafa01ef7a7fb89117e6db9b56)]:
+  - @celo/connect@5.2.0
+  - @celo/wallet-local@5.1.3
+
 ## 7.1.0-beta.1
 
 ### Patch Changes
