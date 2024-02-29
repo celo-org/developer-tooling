@@ -1,5 +1,18 @@
 # @celo/governance
 
+## 5.0.10
+
+### Patch Changes
+
+- [#146](https://github.com/celo-org/developer-tooling/pull/146) [`28cd8f8`](https://github.com/celo-org/developer-tooling/commit/28cd8f8c8dd62ecafa01ef7a7fb89117e6db9b56) Thanks [@pahor167](https://github.com/pahor167)! - Added support of structs and tuples in governance:propose
+
+  Adds ability to parse structs and tuples
+
+- Updated dependencies [[`0ad9c01`](https://github.com/celo-org/developer-tooling/commit/0ad9c011b868c4bf5456f4048cb6d405c9dd8c8e), [`28cd8f8`](https://github.com/celo-org/developer-tooling/commit/28cd8f8c8dd62ecafa01ef7a7fb89117e6db9b56), [`28cd8f8`](https://github.com/celo-org/developer-tooling/commit/28cd8f8c8dd62ecafa01ef7a7fb89117e6db9b56)]:
+  - @celo/contractkit@7.1.0
+  - @celo/explorer@5.0.9
+  - @celo/connect@5.2.0
+
 ## 5.0.10-beta.1
 
 ### Patch Changes
