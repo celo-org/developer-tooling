@@ -3,7 +3,6 @@ import { BLS } from '@celo/bls12377js'
 import { isValidAddress } from '@celo/utils/lib/address'
 import { keccak_256 } from '@noble/hashes/sha3'
 import { bytesToHex } from '@noble/hashes/utils'
-const reverse = require('buffer-reverse')
 
 const n = BigInt('0x12ab655e9a2ca55660b44d1e5c37b00159aa76fed00000010a11800000000001')
 
@@ -33,9 +32,7 @@ export const blsPrivateKeyToProcessedPrivateKey = (privateKeyHex: string) => {
       continue
     }
 
-    const privateKeyBytes = reverse(Buffer.from(_privateKeyHex, 'hex'))
-
-    return privateKeyBytes
+    return Buffer.from(privateKeyBLSBytes.reverse())
   }
 
   throw new Error("couldn't derive BLS key from ECDSA key")
