@@ -32,7 +32,7 @@ testWithGanache('transfer:dollars cmd', (web3: Web3) => {
       '--value',
       amountToTransfer,
       '--gasCurrency',
-      'CELO',
+      'CELO', // TODO(Arthur): Replace this with a hex address
     ])
     // RG cUSD balance should match the amount sent
     const receiverBalance = await kit.getTotalBalance(accounts[1])
@@ -48,7 +48,7 @@ testWithGanache('transfer:dollars cmd', (web3: Web3) => {
       '--value',
       amountToTransfer,
       '--gasCurrency',
-      'CELO',
+      'CELO', // TODO(Arthur): Replace this with a hex address
     ])
     const balanceAfter = await kit.getTotalBalance(accounts[0])
     expect(balanceBefore.cUSD).toEqual(balanceAfter.cUSD)
