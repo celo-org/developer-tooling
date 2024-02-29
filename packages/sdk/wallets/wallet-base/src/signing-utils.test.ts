@@ -1,5 +1,6 @@
 import { CeloTx } from '@celo/connect'
 import { normalizeAddressWith0x, privateKeyToAddress } from '@celo/utils/lib/address'
+import { hexToBytes } from '@noble/hashes/utils'
 import { parseTransaction, serializeTransaction } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { celo } from 'viem/chains'
@@ -7,6 +8,10 @@ import Web3 from 'web3'
 import {
   extractSignature,
   getSignerFromTxEIP2718TX,
+  handleBigInt,
+  handleData,
+  handleHexString,
+  handleNumber,
   isPriceToLow,
   recoverTransaction,
   rlpEncodedTx,
@@ -622,4 +627,26 @@ describe('stringNumberOrBNToHex', () => {
     const biggie = Web3.utils.toBN('123')
     expect(stringNumberOrBNToHex(biggie)).toEqual('0x7b')
   })
+})
+
+describe('handleNumber', () => {
+  test('handles numbers', () => {
+    expect(handleNumber(hexToBytes('cafe0123'))).toEqual(3405644067)
+    expect(handleNumber(hexToBytes(''))).toEqual(0)
+  })
+})
+
+describe('handleBigInt', () => {
+  expect(handleBigInt(hexToBytes('ffffffffffffff'))).toEqual(BigInt('72057594037927935'))
+  expect(handleBigInt(hexToBytes(''))).toEqual(BigInt(0))
+})
+
+describe('handleHexString', () => {
+  expect(handleHexString(hexToBytes('cafe0123'))).toEqual('0xcafe0123')
+  expect(handleHexString(hexToBytes(''))).toEqual('0x')
+})
+
+describe('handleData', () => {
+  expect(handleData(hexToBytes('cafe0123'))).toEqual('0xcafe0123')
+  expect(handleData(hexToBytes(''))).toEqual('0x')
 })

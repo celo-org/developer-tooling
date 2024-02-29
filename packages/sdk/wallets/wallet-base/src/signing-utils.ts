@@ -1,4 +1,9 @@
-import { ensureLeading0x, normalizeAddressWith0x, trimLeading0x } from '@celo/base/lib/address'
+import {
+  StrongAddress,
+  ensureLeading0x,
+  normalizeAddressWith0x,
+  trimLeading0x,
+} from '@celo/base/lib/address'
 import {
   CeloTx,
   CeloTxWithSig,
@@ -719,19 +724,19 @@ export function signTransaction(hash: Hex, privateKey: Hex, addToV = 0) {
   return decodeSig(signature, addToV)
 }
 
-function handleNumber(n: Uint8Array) {
+export function handleNumber(n: Uint8Array): number {
   const hex = `0x${bytesToHex(n)}`
   if (hex === '0x') return 0
   return parseInt(hex, 16)
 }
 
-// function handleBigNumber(n: Uint8Array) {
-//   const hex = `0x${bytesToHex(n)}`
-//   if (hex === '0x') return '0'
-//   return BigInt(hex)
-// }
+export function handleBigInt(n: Uint8Array): bigint {
+  const hex = `0x${bytesToHex(n)}`
+  if (hex === '0x') return BigInt(0)
+  return BigInt(hex)
+}
 
-function handleHexString(adr: Uint8Array) {
+export function handleHexString(adr: Uint8Array): StrongAddress {
   if (!adr.length) {
     return '0x'
   }
@@ -739,10 +744,10 @@ function handleHexString(adr: Uint8Array) {
   return normalizeAddressWith0x(hex)
 }
 
-function handleData(data: Uint8Array) {
+export function handleData(data: Uint8Array): string {
   if (!data.length) {
     return '0x'
   }
   const hex = `0x${bytesToHex(data)}`
-  return hex // unsure
+  return hex
 }
