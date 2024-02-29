@@ -1,7 +1,7 @@
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
 import Web3 from 'web3'
-import { getGasOptions } from './helpers'
+import { getFeeCurrencyWhitelist } from './helpers'
 
 /**
  * These are "developer tests", meaning that they test implementation specific aspects, and might
@@ -21,7 +21,7 @@ testWithGanache('Fetch whitelisted fee currencies', (web3: Web3) => {
 
   describe('When whitelisted fee currencies are fetched on-chain', () => {
     test('Then the result includes addresses', async () => {
-      const gasOptions = await getGasOptions(kit)
+      const gasOptions = await getFeeCurrencyWhitelist(kit)
       for (let i = 0; i < gasOptions.length; i++) {
         expect(web3.utils.isAddress(gasOptions[i])).toBeTruthy()
       }
@@ -29,7 +29,7 @@ testWithGanache('Fetch whitelisted fee currencies', (web3: Web3) => {
 
     test('Then the resulting addresses are valid fee currencies', async () => {
       const contract = await kit.contracts.getGoldToken()
-      const gasOptions = await getGasOptions(kit)
+      const gasOptions = await getFeeCurrencyWhitelist(kit)
       const sender = accounts[0]
       const recipient = accounts[1]
       const amount = kit.web3.utils.toWei('0.01', 'ether')
