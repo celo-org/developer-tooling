@@ -186,13 +186,11 @@ export async function fetchMetadata(
     return fullMatchMetadata
   }
   console.error('None found on full match, trying celoScan')
-
   const fullMatchFromCeloScan = await queryCeloScan(connection, contract)
   if (fullMatchFromCeloScan !== null) {
     return fullMatchFromCeloScan
   }
   console.error('No full match found, trying partial match')
-
   if (strict) {
     return null
   } else {
