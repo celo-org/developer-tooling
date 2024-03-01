@@ -23,7 +23,7 @@
 
 #### Defined in
 
-[cryptographic-utils/src/bls.ts:12](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/bls.ts#L12)
+[cryptographic-utils/src/bls.ts:11](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/bls.ts#L11)
 
 ___
 
@@ -33,13 +33,13 @@ ___
 
 #### Defined in
 
-[cryptographic-utils/src/bls.ts:11](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/bls.ts#L11)
+[cryptographic-utils/src/bls.ts:10](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/bls.ts#L10)
 
 ## Functions
 
 ### blsPrivateKeyToProcessedPrivateKey
 
-▸ **blsPrivateKeyToProcessedPrivateKey**(`privateKeyHex`): `any`
+▸ **blsPrivateKeyToProcessedPrivateKey**(`privateKeyHex`): `Buffer`
 
 #### Parameters
 
@@ -49,11 +49,11 @@ ___
 
 #### Returns
 
-`any`
+`Buffer`
 
 #### Defined in
 
-[cryptographic-utils/src/bls.ts:14](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/bls.ts#L14)
+[cryptographic-utils/src/bls.ts:13](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/bls.ts#L13)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-[cryptographic-utils/src/bls.ts:54](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/bls.ts#L54)
+[cryptographic-utils/src/bls.ts:51](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/bls.ts#L51)
 
 ___
 
@@ -94,4 +94,4 @@ ___
 
 #### Defined in
 
-[cryptographic-utils/src/bls.ts:49](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/bls.ts#L49)
+[cryptographic-utils/src/bls.ts:46](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/bls.ts#L46)
