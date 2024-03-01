@@ -5,6 +5,7 @@ View and manage Validators
 
 * [`celocli validator:affiliate ARG1`](#celocli-validatoraffiliate-arg1)
 * [`celocli validator:deaffiliate`](#celocli-validatordeaffiliate)
+* [`celocli validator:demo`](#celocli-validatordemo)
 * [`celocli validator:deregister`](#celocli-validatorderegister)
 * [`celocli validator:downtime-slash`](#celocli-validatordowntime-slash)
 * [`celocli validator:force-deaffiliate`](#celocli-validatorforce-deaffiliate)
@@ -68,6 +69,13 @@ EXAMPLES
 ```
 
 _See code: [src/commands/validator/deaffiliate.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/deaffiliate.ts)_
+
+## `celocli validator:demo`
+
+```
+USAGE
+  $ celocli validator:demo
+```
 
 ## `celocli validator:deregister`
 

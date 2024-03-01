@@ -9,7 +9,9 @@ on:
     branches:
       - master
       - changeset-release/master
+      - prerelease/*
   pull_request:
+    types: [opened, reopened]
 
 concurrency:
   group: dev-tooling-${{ github.ref }}

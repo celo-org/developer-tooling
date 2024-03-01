@@ -20,9 +20,13 @@ export default class Propose extends BaseCommand {
       required: true,
       description: 'Path to json transactions',
     }),
-    deposit: Flags.string({ required: true, description: 'Amount of Gold to attach to proposal' }),
+    deposit: Flags.string({
+      required: true,
+      description: 'Amount of Celo to attach to proposal',
+    }),
     from: CustomFlags.address({ required: true, description: "Proposer's address" }),
     force: Flags.boolean({ description: 'Skip execution check', default: false }),
+    noInfo: Flags.boolean({ description: 'Skip printing the proposal info', default: false }),
     descriptionURL: Flags.string({
       required: true,
       description: 'A URL where further information about the proposal can be viewed',
@@ -74,7 +78,9 @@ export default class Propose extends BaseCommand {
     // builder.addWeb3Tx()
     // builder.addProxyRepointingTx
     const proposal = await builder.build()
-    printValueMapRecursive(await proposalToJSON(kit, proposal, builder.registryAdditions))
+    if (!res.flags.noInfo) {
+      printValueMapRecursive(await proposalToJSON(kit, proposal, builder.registryAdditions))
+    }
 
     const governance = await kit.contracts.getGovernance()
 
@@ -88,7 +94,7 @@ export default class Propose extends BaseCommand {
     await displaySendTx(
       'proposeTx',
       governance.propose(proposal, res.flags.descriptionURL),
-      { value: deposit.toString() },
+      { value: deposit.toFixed() },
       'ProposalQueued'
     )
   }
