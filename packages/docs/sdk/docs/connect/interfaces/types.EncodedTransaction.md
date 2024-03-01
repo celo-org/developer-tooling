@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:117](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L117)
+[packages/sdk/connect/src/types.ts:118](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L118)
 
 ___
 
@@ -29,4 +29,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:118](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L118)
+[packages/sdk/connect/src/types.ts:119](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L119)

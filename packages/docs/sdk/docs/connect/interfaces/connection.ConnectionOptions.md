@@ -16,11 +16,11 @@
 
 ### feeCurrency
 
-• `Optional` **feeCurrency**: `string`
+• `Optional` **feeCurrency**: \`0x$\{string}\`
 
 #### Defined in
 
-[packages/sdk/connect/src/connection.ts:46](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L46)
+[packages/sdk/connect/src/connection.ts:47](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L47)
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/connection.ts:47](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L47)
+[packages/sdk/connect/src/connection.ts:48](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L48)
 
 ___
 
@@ -40,4 +40,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/connection.ts:45](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L45)
+[packages/sdk/connect/src/connection.ts:46](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L46)

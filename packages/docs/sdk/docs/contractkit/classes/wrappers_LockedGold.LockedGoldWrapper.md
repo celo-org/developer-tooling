@@ -490,13 +490,13 @@ Withdraws a gold that has been unlocked after the unlocking period has passed.
 
 ### address
 
-• `get` **address**(): `string`
+• `get` **address**(): \`0x$\{string}\`
 
 Contract address
 
 #### Returns
 
-`string`
+\`0x$\{string}\`
 
 #### Inherited from
 

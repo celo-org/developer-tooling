@@ -335,7 +335,7 @@ ___
 
 ### normalizeAddressWith0x
 
-▸ **normalizeAddressWith0x**(`a`): `string`
+▸ **normalizeAddressWith0x**(`a`): \`0x$\{string}\`
 
 #### Parameters
 
@@ -345,7 +345,7 @@ ___
 
 #### Returns
 
-`string`
+\`0x$\{string}\`
 
 #### Defined in
 

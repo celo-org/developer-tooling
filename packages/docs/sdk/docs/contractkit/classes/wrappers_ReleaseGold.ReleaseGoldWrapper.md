@@ -1135,13 +1135,13 @@ Withdraw gold in the ReleaseGold instance that has been unlocked but not withdra
 
 ### address
 
-• `get` **address**(): `string`
+• `get` **address**(): \`0x$\{string}\`
 
 Contract address
 
 #### Returns
 
-`string`
+\`0x$\{string}\`
 
 #### Inherited from
 
