@@ -16,7 +16,6 @@ export abstract class TransferStableBase extends BaseCommand {
     comment: Flags.string({ description: 'Transfer comment' }),
   }
 
-  // TODO(Arthur): Reminder to check what to do here
   protected _stableCurrency: StableToken | null = null
 
   async run() {
@@ -36,14 +35,10 @@ export abstract class TransferStableBase extends BaseCommand {
     } catch {
       failWith(`The ${this._stableCurrency} token was not deployed yet`)
     }
-    /**
-     * TODO(Arthur): Check if this makes sense in the new context of setFeeCurrency
-     *
-     * Delete or update this if clause.
-     */
+
     // If gasCurrency is not set, use the transferring token
     if (!res.flags.gasCurrency) {
-      await kit.setFeeCurrency(stableTokenInfos[this._stableCurrency])
+      kit.setFeeCurrency(stableToken.address)
     }
 
     const tx = res.flags.comment
@@ -56,7 +51,7 @@ export abstract class TransferStableBase extends BaseCommand {
       .isNotSanctioned(to)
       .addConditionalCheck(
         `Account can afford transfer and gas paid in ${this._stableCurrency}`,
-        kit.connection.defaultFeeCurrency === stableToken.address, // TODO(Arthur): Check if this makes sense in the new context
+        kit.connection.defaultFeeCurrency === stableToken.address,
         async () => {
           const [gas, gasPrice, balance] = await Promise.all([
             tx.txo.estimateGas({ feeCurrency: stableToken.address }),

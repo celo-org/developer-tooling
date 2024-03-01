@@ -9,11 +9,9 @@ import { Command, Flags } from '@oclif/core'
 import chalk from 'chalk'
 import net from 'net'
 import Web3 from 'web3'
-import { getGasCurrency, getNodeUrl } from './utils/config'
-import { getFeeCurrencyWhitelist, requireNodeIsSynced } from './utils/helpers'
+import { getNodeUrl } from './utils/config'
+import { requireNodeIsSynced } from './utils/helpers'
 /**
- * TODO(Arthur): Probably need to change the `gasOption` definition because we support arbitrary
- * addresses, and not just a set of well-defined strings (cUSD, cEUR, ...).
  *
  * I defined a `getGasOptions` function in `helpers.ts` that makes a contract call to fetch the
  * whitelisted address, but I need to consider that the list of gasOptions is different per
@@ -21,15 +19,7 @@ import { getFeeCurrencyWhitelist, requireNodeIsSynced } from './utils/helpers'
  * 1. the fee currency addresses are different per network,
  * 2. the whitelist is different, alfajores has more addresses for internal testing purposes.
  *
- * Question: How do I support 'auto' if `gasOptions` will a list of accepted addresses,
- * and not a list of strings.
  */
-export type GasOption = 'auto' | StrongAddress
-/**
- * TODO(Arthur): Remove `gasOptions` across code base, then remove `gasOptions` here.
- */
-const gasOptions: GasOption[] = ['auto', ...(await getFeeCurrencyWhitelist())] // TODO(Arthur): Can't export this constant, because it's a Promise
-
 export abstract class BaseCommand extends Command {
   static flags = {
     privateKey: Flags.string({
@@ -58,11 +48,6 @@ export abstract class BaseCommand extends Command {
         }
       },
     }),
-    /**
-     * TODO(Arthur): This needs to become Can't make using an async call as an `option` here.
-     *
-     * What how does 'auto'?
-     */
     gasCurrency: Flags.string({
       description:
         'Use a specific gas currency for transaction fees (defaults to CELO if no gas currency is supplied)',
@@ -217,15 +202,12 @@ export abstract class BaseCommand extends Command {
       kit.defaultAccount = res.flags.from
     }
 
-    const gasCurrencyConfig = res.flags.gasCurrency
-      ? (gasOptions as any)[res.flags.gasCurrency]
-      : getGasCurrency(this.config.configDir)
-
-    const validFeeCurrencies = await getFeeCurrencyWhitelist(kit)
-    if (validFeeCurrencies.includes(gasCurrencyConfig)) {
-      await kit.setFeeCurrency(gasCurrencyConfig)
+    const validFeeCurrencies = await kit.getFeeCurrencyWhitelist()
+    const gasCurrencyFlag = res.flags.gasCurrency as StrongAddress
+    if (validFeeCurrencies.includes(gasCurrencyFlag)) {
+      kit.setFeeCurrency(gasCurrencyFlag)
     } else {
-      throw new Error(`${gasCurrencyConfig} is not a valid fee currency`)
+      throw new Error(`${gasCurrencyFlag} is not a valid fee currency`)
     }
   }
 

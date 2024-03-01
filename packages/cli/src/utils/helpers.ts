@@ -1,14 +1,6 @@
-import { StrongAddress } from '@celo/base'
 import { Block } from '@celo/connect'
-import { ContractKit } from '@celo/contractkit'
 import Web3 from 'web3'
 import { failWith } from './cli'
-
-export async function getFeeCurrencyWhitelist(kit: ContractKit): Promise<StrongAddress[]> {
-  const contract = await kit._web3Contracts.getContract('FeeCurrencyWhitelist')
-  // We can assert the `StrongAddress[]` type, because the smart contract returns an `address[]`
-  return contract.methods.getWhitelist().call() as Promise<StrongAddress[]>
-}
 
 export function enumEntriesDupWithLowercase<T>(entries: [string, T][]) {
   const enumMap: { [key: string]: T } = {}

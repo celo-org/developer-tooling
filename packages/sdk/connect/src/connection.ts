@@ -1,4 +1,5 @@
 // tslint:disable: ordered-imports
+import { StrongAddress } from '@celo/base'
 import { ensureLeading0x, toChecksumAddress } from '@celo/utils/lib/address'
 import { EIP712TypedData, generateTypedDataHash } from '@celo/utils/lib/sign-typed-data-utils'
 import { Signature, parseSignatureWithoutPrefix } from '@celo/utils/lib/signatureUtils'
@@ -43,7 +44,7 @@ const debugGasEstimation = debugFactory('connection:gas-estimation')
 type BN = ReturnType<Web3['utils']['toBN']>
 export interface ConnectionOptions {
   gasInflationFactor: number
-  feeCurrency?: Address
+  feeCurrency?: StrongAddress
   from?: Address
 }
 
@@ -131,8 +132,7 @@ export class Connection {
    *
    * @param address ERC20 address
    */
-  // TODO(Arthur): Consider replacing `Address` with stronger type like `StrongAddress`
-  set defaultFeeCurrency(address: Address | undefined) {
+  set defaultFeeCurrency(address: StrongAddress | undefined) {
     this.config.feeCurrency = address
   }
 

@@ -14,7 +14,7 @@ import { LocalWallet } from '@celo/wallet-local'
 import { BigNumber } from 'bignumber.js'
 import Web3 from 'web3'
 import { AddressRegistry } from './address-registry'
-import { CeloContract } from './base' // TODO(Arthur): Any reason we're not importing @celo/base from NPM here?
+import { CeloContract } from './base'
 import { CeloTokens, EachCeloToken } from './celo-tokens'
 import { ValidWrappers, WrapperCache } from './contract-cache'
 import {
@@ -243,7 +243,7 @@ export class ContractKit {
     return this.connection.defaultGasInflationFactor
   }
 
-  set defaultFeeCurrency(address: Address | undefined) {
+  set defaultFeeCurrency(address: StrongAddress | undefined) {
     this.connection.defaultFeeCurrency = address
   }
 
@@ -272,6 +272,11 @@ export class ContractKit {
 
   async signTypedData(signer: string, typedData: EIP712TypedData): Promise<Signature> {
     return this.connection.signTypedData(signer, typedData)
+  }
+
+  async getFeeCurrencyWhitelist(): Promise<StrongAddress[]> {
+    const contract = await this._web3Contracts.getContract(CeloContract.FeeCurrencyWhitelist)
+    return contract.methods.getWhitelist().call() as Promise<StrongAddress[]>
   }
 
   stop() {

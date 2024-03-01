@@ -1,4 +1,5 @@
-import { BaseCommand, gasOptions } from '../../base'
+import { StrongAddress } from '@celo/base'
+import { BaseCommand } from '../../base'
 import { readConfig, writeConfig } from '../../utils/config'
 export default class Set extends BaseCommand {
   static description = 'Configure running node information for propogating transactions to network'
@@ -27,17 +28,15 @@ export default class Set extends BaseCommand {
     const res = await this.parse(Set)
     const curr = readConfig(this.config.configDir)
     const node = res.flags.node ?? curr.node
-    // TODO(Arthur): Check `gasCurrency` logic works as expected here
-    const gasCurrency = res.flags.gasCurrency
-      ? (gasOptions as any)[res.flags.gasCurrency as string]
-      : curr.gasCurrency
-    /**
-     * TODO(Arthur): Consider if this is a good place to implement a runtime check that
-     * asserts the `gasCurrency` argument is a valid fee currency, before writing config.
-     */
-    writeConfig(this.config.configDir, {
-      node,
-      gasCurrency,
-    })
+    const gasCurrency = res.flags.gasCurrency as StrongAddress
+
+    await writeConfig(
+      this.config.configDir,
+      {
+        node,
+        gasCurrency,
+      },
+      await this.getKit()
+    )
   }
 }

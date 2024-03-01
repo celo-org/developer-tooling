@@ -1,5 +1,5 @@
 import { COMPLIANT_ERROR_RESPONSE, SANCTIONED_ADDRESSES } from '@celo/compliance'
-import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
+import { ContractKit, StableToken, newKitFromWeb3 } from '@celo/contractkit'
 import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
 import Web3 from 'web3'
 import { testLocally } from '../../test-utils/cliUtils'
@@ -32,7 +32,7 @@ testWithGanache('transfer:celo cmd', (web3: Web3) => {
       '--value',
       amountToTransfer,
       '--gasCurrency',
-      'cusd', // TODO(Arthur): Update this test to accept fee currency addresses
+      (await kit.contracts.getStableToken(StableToken.cUSD)).address,
     ])
     // RG cUSD balance should match the amount sent
     const receiverBalance = await kit.getTotalBalance(accounts[1])
@@ -48,7 +48,7 @@ testWithGanache('transfer:celo cmd', (web3: Web3) => {
       '--value',
       amountToTransfer,
       '--gasCurrency',
-      'cusd', // TODO(Arthur): Update this test to accept fee currency addresses
+      (await kit.contracts.getStableToken(StableToken.cUSD)).address,
     ])
     const balanceAfter = await kit.getTotalBalance(accounts[0])
     expect(balanceBefore.CELO).toEqual(balanceAfter.CELO)
