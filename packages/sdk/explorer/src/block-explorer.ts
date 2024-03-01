@@ -324,6 +324,7 @@ export class BlockExplorer {
       this.kit.web3.utils.toChecksumAddress(address)
     )
     const mapping = metadata?.toContractMapping()
+    console.error('mapping', mapping)
     if (mapping) {
       this.addressMapping.set(address, mapping)
     }

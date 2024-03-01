@@ -43,7 +43,7 @@ export default class LockedGold extends ReleaseGoldBaseCommand {
     const releaseOwner = await this.releaseGoldWrapper.getReleaseOwner()
     const lockedGold = await kit.contracts.getLockedGold()
     kit.defaultAccount = isRevoked ? releaseOwner : beneficiary
-
+    console.log(`Using account ${kit.defaultAccount}`)
     if (flags.action === 'lock') {
       // Must verify contract is account before checking pending withdrawals
       await checkBuilder.addCheck('Is not revoked', () => !isRevoked).runChecks()

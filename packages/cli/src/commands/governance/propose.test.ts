@@ -178,7 +178,7 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
         '--from',
         accounts[0],
         '--descriptionURL',
-        'https://dummyurl.com',
+        'https://example.com',
       ])
 
       const proposal = await governance.getProposal(1)
@@ -219,7 +219,7 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
         '--from',
         accounts[0],
         '--descriptionURL',
-        'https://dummyurl.com',
+        'https://example.com',
         '--force',
         '--noInfo',
       ])
@@ -262,7 +262,7 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
         '--from',
         accounts[0],
         '--descriptionURL',
-        'https://dummyurl.com',
+        'https://example.com',
         '--force',
         '--noInfo',
       ])
@@ -357,4 +357,72 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
     },
     EXTRA_LONG_TIMEOUT_MS
   )
+
+  const transactionsForContractsVerifiedOnCeloScan = [
+    {
+      contract: '0xFa3df877F98ac5ecd87456a7AcCaa948462412f0',
+      address: '0xFa3df877F98ac5ecd87456a7AcCaa948462412f0',
+      function: 'removeLiquidity(uint256,uint256[],uint256)',
+      args: ['10000000000000000000000000', ['0', '0'], 1674883684],
+      value: '0',
+    },
+    {
+      contract: '0x765de816845861e75a25fca122bb6898b8b1282a',
+      address: '0x765de816845861e75a25fca122bb6898b8b1282a',
+      function: 'approve(address,uint256)',
+      args: ['0x87647780180B8f55980C7D3fFeFe08a9B29e9aE1', '11000000000000000000000000'],
+      value: '0',
+    },
+    {
+      contract: '0x37f750B7cC259A2f741AF45294f6a16572CF5cAd',
+      address: '0x37f750B7cC259A2f741AF45294f6a16572CF5cAd',
+      function: 'approve(address,uint256)',
+      args: ['0x87647780180B8f55980C7D3fFeFe08a9B29e9aE1', '11000000000000'],
+      value: '0',
+    },
+  ]
+
+  test('when proposal contains transactions for contracts not verified', async () => {
+    const transactionsForUnverifiedContracts = [
+      {
+        contract: '0x552b9AA0eEe500c60f09456e49FBc1096322714C',
+        address: '0x37f750B7cC259A2f741AF45294f6a16572CF5cAd',
+        function: 'approve(address,uint256)',
+        args: ['0xFa3df877F98ac5ecd87456a7AcCaa948462412f0', '10000000000000000000000000'],
+        value: '0',
+      },
+    ]
+    const transactionsToBeSaved = JSON.stringify(transactionsForUnverifiedContracts)
+    fs.writeFileSync('transactions.json', transactionsToBeSaved, { flag: 'w' })
+    expect(
+      async () =>
+        await testLocally(Propose, [
+          '--jsonTransactions',
+          'transactions.json',
+          '--deposit',
+          '1000000000000000000',
+          '--from',
+          accounts[0],
+          '--descriptionURL',
+          'https://example.com',
+        ])
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Couldn't build call for transaction: {"contract":"0x552b9AA0eEe500c60f09456e49FBc1096322714C","function":"approve(address,uint256)","args":["0xFa3df877F98ac5ecd87456a7AcCaa948462412f0","10000000000000000000000000"],"value":"0"}"`
+    )
+  })
+
+  test.only('succeeds when proposal contains transactions for contracts verified on celoScan', async () => {
+    const transactionsToBeSaved = JSON.stringify(transactionsForContractsVerifiedOnCeloScan)
+    fs.writeFileSync('transactions2.json', transactionsToBeSaved, { flag: 'w' })
+    await testLocally(Propose, [
+      '--jsonTransactions',
+      'transactions2.json',
+      '--deposit',
+      '1000000000000000000',
+      '--from',
+      accounts[0],
+      '--descriptionURL',
+      'https://example.com',
+    ])
+  })
 })

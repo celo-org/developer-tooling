@@ -348,7 +348,7 @@ export class ProposalBuilder {
   buildCallToExternalContract = async (
     tx: ProposalTransactionJSON
   ): Promise<ProposalTransaction> => {
-    if (!tx.address || !isValidAddress(tx.address)) {
+    if (!tx.address || (!isValidAddress(tx.address) && !isValidAddress(tx.contract))) {
       throw new Error(`${tx.contract} is not a core celo contract so address must be specified`)
     }
 
@@ -443,13 +443,13 @@ export class ProposalBuilder {
       console.log(tx.address + ' is a proxy, repointing to ' + tx.args[0])
       this.externalCallProxyRepoint.set(tx.address || tx.contract, tx.args[0] as string)
     }
-
+    console.error('Building transaction for', tx)
     const strategies = [this.buildCallToCoreContract, this.buildCallToExternalContract]
-
     for (const strategy of strategies) {
       try {
         return await strategy(tx)
       } catch (e) {
+        console.error('HELP', e)
         debug("Couldn't build transaction with strategy %s: %O", strategy.name, e)
       }
     }
