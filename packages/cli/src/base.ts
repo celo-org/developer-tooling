@@ -1,6 +1,6 @@
+import { StrongAddress } from '@celo/base'
 import { ReadOnlyWallet } from '@celo/connect'
-import { ContractKit, newKitFromWeb3, StableToken, Token } from '@celo/contractkit'
-import { stableTokenInfos } from '@celo/contractkit/lib/celo-tokens'
+import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { AzureHSMWallet } from '@celo/wallet-hsm-azure'
 import { AddressValidation, newLedgerWalletWithSetup } from '@celo/wallet-ledger'
 import { LocalWallet } from '@celo/wallet-local'
@@ -10,7 +10,7 @@ import chalk from 'chalk'
 import net from 'net'
 import Web3 from 'web3'
 import { getGasCurrency, getNodeUrl } from './utils/config'
-import { enumEntriesDupWithLowercase, requireNodeIsSynced } from './utils/helpers'
+import { getFeeCurrencyWhitelist, requireNodeIsSynced } from './utils/helpers'
 /**
  * TODO(Arthur): Probably need to change the `gasOption` definition because we support arbitrary
  * addresses, and not just a set of well-defined strings (cUSD, cEUR, ...).
@@ -24,13 +24,11 @@ import { enumEntriesDupWithLowercase, requireNodeIsSynced } from './utils/helper
  * Question: How do I support 'auto' if `gasOptions` will a list of accepted addresses,
  * and not a list of strings.
  */
-export const gasOptions = {
-  auto: 'auto',
-  Auto: 'auto',
-  //
-  ...enumEntriesDupWithLowercase(Object.entries(Token)),
-  ...enumEntriesDupWithLowercase(Object.entries(StableToken)),
-}
+export type GasOption = 'auto' | StrongAddress
+/**
+ * TODO(Arthur): Remove `gasOptions` across code base, then remove `gasOptions` here.
+ */
+const gasOptions: GasOption[] = ['auto', ...(await getFeeCurrencyWhitelist())] // TODO(Arthur): Can't export this constant, because it's a Promise
 
 export abstract class BaseCommand extends Command {
   static flags = {
@@ -61,14 +59,15 @@ export abstract class BaseCommand extends Command {
       },
     }),
     /**
-     * TODO(Arthur): What does "defaults to 'auto' which uses whatever feeCurrency is available" mean?
+     * TODO(Arthur): This needs to become Can't make using an async call as an `option` here.
+     *
+     * What how does 'auto'?
      */
-    gasCurrency: Flags.option({
-      options: Object.keys(gasOptions),
+    gasCurrency: Flags.string({
       description:
-        "Use a specific gas currency for transaction fees (defaults to 'auto' which uses whatever feeCurrency is available)",
+        'Use a specific gas currency for transaction fees (defaults to CELO if no gas currency is supplied)',
       hidden: true,
-    })(),
+    }),
     useLedger: Flags.boolean({
       default: false,
       hidden: true,
@@ -218,32 +217,15 @@ export abstract class BaseCommand extends Command {
       kit.defaultAccount = res.flags.from
     }
 
-    // TODO(Arthur): Update this
     const gasCurrencyConfig = res.flags.gasCurrency
       ? (gasOptions as any)[res.flags.gasCurrency]
       : getGasCurrency(this.config.configDir)
 
-    const setStableTokenGas = async (stable: StableToken) => {
-      // TODO(Arthur): Update implementation to match new `setFeeCurrency` method signature
-      await kit.setFeeCurrency(stableTokenInfos[stable].contract)
-    }
-    if (Object.keys(StableToken).includes(gasCurrencyConfig)) {
-      await setStableTokenGas(StableToken[gasCurrencyConfig as keyof typeof StableToken])
-      // TODO(Arthur): Check if `gasOptions.auto` continues to make sense
-    } else if (gasCurrencyConfig === gasOptions.auto && kit.defaultAccount) {
-      const balances = await kit.getTotalBalance(kit.defaultAccount)
-      if (balances.CELO!.isZero()) {
-        const stables = Object.entries(StableToken)
-        for (const stable of stables) {
-          const stableName = stable[0]
-          const stableToken = stable[1]
-          // has balance
-          if ((balances as any)[stableName] && !(balances as any)[stableName].isZero()) {
-            await setStableTokenGas(stableToken) // TODO(Arthur): Update this
-            break
-          }
-        }
-      }
+    const validFeeCurrencies = await getFeeCurrencyWhitelist(kit)
+    if (validFeeCurrencies.includes(gasCurrencyConfig)) {
+      await kit.setFeeCurrency(gasCurrencyConfig)
+    } else {
+      throw new Error(`${gasCurrencyConfig} is not a valid fee currency`)
     }
   }
 

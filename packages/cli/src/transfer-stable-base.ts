@@ -1,5 +1,4 @@
 import { StableToken } from '@celo/contractkit'
-import { stableTokenInfos } from '@celo/contractkit/lib/celo-tokens'
 import { StableTokenWrapper } from '@celo/contractkit/lib/wrappers/StableTokenWrapper'
 import { Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
@@ -37,10 +36,14 @@ export abstract class TransferStableBase extends BaseCommand {
     } catch {
       failWith(`The ${this._stableCurrency} token was not deployed yet`)
     }
+    /**
+     * TODO(Arthur): Check if this makes sense in the new context of setFeeCurrency
+     *
+     * Delete or update this if clause.
+     */
     // If gasCurrency is not set, use the transferring token
     if (!res.flags.gasCurrency) {
-      // TODO(Arthur): Update implementation to match new `setFeeCurrency` method signature
-      await kit.setFeeCurrency(stableTokenInfos[this._stableCurrency].contract)
+      await kit.setFeeCurrency(stableTokenInfos[this._stableCurrency])
     }
 
     const tx = res.flags.comment
@@ -53,7 +56,7 @@ export abstract class TransferStableBase extends BaseCommand {
       .isNotSanctioned(to)
       .addConditionalCheck(
         `Account can afford transfer and gas paid in ${this._stableCurrency}`,
-        kit.connection.defaultFeeCurrency === stableToken.address,
+        kit.connection.defaultFeeCurrency === stableToken.address, // TODO(Arthur): Check if this makes sense in the new context
         async () => {
           const [gas, gasPrice, balance] = await Promise.all([
             tx.txo.estimateGas({ feeCurrency: stableToken.address }),
