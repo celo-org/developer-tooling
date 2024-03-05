@@ -31,7 +31,7 @@
     "web3-eth-abi": "1.10.0"
   },
   "devDependencies": {
-    "@celo/celo-devchain": "^6.0.3",
+    "@celo/celo-devchain": "^7.0.0",
     "@celo/contractkit": "^7.1.0",
     "@celo/dev-utils": "0.0.1-beta.1",
     "dotenv": "^8.2.0"
