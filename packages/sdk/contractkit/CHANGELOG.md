@@ -1,5 +1,13 @@
 # @celo/contractkit
 
+## 7.2.0
+
+### Minor Changes
+
+- [#171](https://github.com/celo-org/developer-tooling/pull/171) [`fb7877a`](https://github.com/celo-org/developer-tooling/commit/fb7877ac364a4552769d77e4edd980460494557a) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Support for Core Contracts Release 11 (upgrade @celo/abis)
+
+  see https://github.com/celo-org/celo-monorepo/releases/tag/core-contracts.v11
+
 ## 7.1.0
 
 ### Minor Changes
