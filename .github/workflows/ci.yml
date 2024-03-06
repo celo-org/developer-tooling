@@ -11,7 +11,7 @@ on:
       - changeset-release/master
       - prerelease/*
   pull_request:
-    types: [opened, reopened]
+    types: [opened, reopened, synchronize, edited, ready_for_review]
 
 concurrency:
   group: dev-tooling-${{ github.ref }}

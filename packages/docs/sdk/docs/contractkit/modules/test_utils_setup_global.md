@@ -20,4 +20,4 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/test-utils/setup.global.ts:10](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/test-utils/setup.global.ts#L10)
+[packages/sdk/contractkit/src/test-utils/setup.global.ts:9](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/test-utils/setup.global.ts#L9)
