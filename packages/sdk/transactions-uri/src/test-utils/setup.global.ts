@@ -8,10 +8,6 @@ import * as path from 'path'
 // If there is not, then your editor probably deleted it automatically.
 
 export default async function globalSetup() {
-  // adding this here so that hopefully it doesnt get auto deleted by the editor.
-  // note that if it is used outside this function then a "cant find jest error will be thrown"
-  // eslint-disable-next-line
-  _must_be_imported
   const chainDataPath = path.join(path.dirname(require.resolve('@celo/celo-devchain')), '../chains')
   // vX refers to core contract release version X
   await baseSetup(path.resolve(chainDataPath), 'v11.tar.gz', {
