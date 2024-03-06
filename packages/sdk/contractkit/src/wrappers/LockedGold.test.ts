@@ -43,14 +43,7 @@ testWithGanache('LockedGold Wrapper', (web3) => {
     await Promise.all(txos.map((txo) => txo.sendAndWaitForReceipt()))
     //
   })
-  // when this fails the 2 tests below should pass.
-  test('getTotalPendingWithdrawalsCount throws when version is below minimum', async () => {
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    expect(lockedGold.getTotalPendingWithdrawalsCount(account)).rejects.toThrowError(
-      'getTotalPendingWithdrawalsCount not implemented for LockedGold version (1.1.3.0) deployed to this chain'
-    )
-  })
-  test.failing('should return the count of pending withdrawals', async () => {
+  test('should return the count of pending withdrawals', async () => {
     await lockedGold.lock().sendAndWaitForReceipt({ value: value * 2 })
     await lockedGold.unlock(value).sendAndWaitForReceipt()
     await lockedGold.unlock(value).sendAndWaitForReceipt()
@@ -59,7 +52,7 @@ testWithGanache('LockedGold Wrapper', (web3) => {
     expect(count).toEqBigNumber(2)
   })
 
-  test.failing('should return zero when there are no pending withdrawals', async () => {
+  test('should return zero when there are no pending withdrawals', async () => {
     const count = await lockedGold.getTotalPendingWithdrawalsCount(account)
     expect(count).toEqBigNumber(0)
   })

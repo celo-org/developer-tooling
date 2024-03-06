@@ -28,4 +28,4 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:420](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L420)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:409](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L409)

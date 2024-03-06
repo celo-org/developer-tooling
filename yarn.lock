@@ -1536,10 +1536,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/abis@npm:10.0.0":
-  version: 10.0.0
-  resolution: "@celo/abis@npm:10.0.0"
-  checksum: 963571a9ed7d749df2437305df05cac7ed32c4902c00345fc678964faad01a28e3bc67dc7b29132945dec4ee0d177920d803bdf62b8250767a02a263cdee0213
+"@celo/abis@npm:11.0.0":
+  version: 11.0.0
+  resolution: "@celo/abis@npm:11.0.0"
+  checksum: f54204d2fad17e01201b03efbea02837c9b360130d201f229cca6f048031ca20aeea964599ac8ba8c3a367f8dba861f79ace4d47376cbd5379f9987fec4a10c8
   languageName: node
   linkType: hard
 
@@ -1571,9 +1571,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/celo-devchain@npm:^6.0.3":
-  version: 6.0.3
-  resolution: "@celo/celo-devchain@npm:6.0.3"
+"@celo/celo-devchain@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "@celo/celo-devchain@npm:7.0.0"
   dependencies:
     commander: "npm:^10.0.0"
     ganache: "npm:@celo/ganache@7.8.0-unofficial.0"
@@ -1582,7 +1582,7 @@ __metadata:
     tmp: "npm:^0.2.1"
   bin:
     celo-devchain: dist/run.js
-  checksum: 23acd0626b13e2805c2d3e57614f3998ec18fe6b0d8bcba9bca3d59d0e8f9d70b6f115f161fcec6e11b98f2e9acef14cdf106a2657d5c94abfb5980eba0df034
+  checksum: 91f3fd48475eb0a9ee1e0c8ad1adb9461ac884023ae87b49e5080421f66b57c9d28764bcdd21cb4c5de0af72b802037330bf8e5b1a82177d716aaf1c3f64bb8f
   languageName: node
   linkType: hard
 
@@ -1590,9 +1590,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/celocli@workspace:packages/cli"
   dependencies:
-    "@celo/abis": "npm:10.0.0"
+    "@celo/abis": "npm:11.0.0"
     "@celo/base": "npm:^6.0.0"
-    "@celo/celo-devchain": "npm:^6.0.3"
+    "@celo/celo-devchain": "npm:^7.0.0"
     "@celo/compliance": "npm:~1.0.17"
     "@celo/connect": "npm:^5.2.0"
     "@celo/contractkit": "npm:^7.1.0"
@@ -1728,9 +1728,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/contractkit@workspace:packages/sdk/contractkit"
   dependencies:
-    "@celo/abis": "npm:10.0.0"
+    "@celo/abis": "npm:11.0.0"
     "@celo/base": "npm:^6.0.0"
-    "@celo/celo-devchain": "npm:^6.0.3"
+    "@celo/celo-devchain": "npm:^7.0.0"
     "@celo/connect": "npm:^5.2.0"
     "@celo/dev-utils": "npm:0.0.1-beta.1"
     "@celo/odis-identifiers": "npm:^1.0.0"
@@ -1816,7 +1816,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/governance@workspace:packages/sdk/governance"
   dependencies:
-    "@celo/abis": "npm:10.0.0"
+    "@celo/abis": "npm:11.0.0"
     "@celo/base": "npm:^6.0.0"
     "@celo/connect": "npm:^5.2.0"
     "@celo/contractkit": "npm:^7.1.0"
@@ -1938,7 +1938,7 @@ __metadata:
   resolution: "@celo/transactions-uri@workspace:packages/sdk/transactions-uri"
   dependencies:
     "@celo/base": "npm:^6.0.0"
-    "@celo/celo-devchain": "npm:^6.0.3"
+    "@celo/celo-devchain": "npm:^7.0.0"
     "@celo/connect": "npm:^5.2.0"
     "@celo/contractkit": "npm:^7.1.0"
     "@celo/dev-utils": "npm:0.0.1-beta.1"

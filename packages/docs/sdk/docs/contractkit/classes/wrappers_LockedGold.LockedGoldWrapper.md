@@ -88,7 +88,7 @@ Contract for handling deposits needed for voting.
 
 ### \_getTotalPendingWithdrawalsCount
 
-• **\_getTotalPendingWithdrawalsCount**: (...`args`: `any`[]) => `Promise`\<`BigNumber`\>
+• **\_getTotalPendingWithdrawalsCount**: (...`args`: [account: string]) => `Promise`\<`BigNumber`\>
 
 #### Type declaration
 
@@ -98,7 +98,7 @@ Contract for handling deposits needed for voting.
 
 | Name | Type |
 | :------ | :------ |
-| `...args` | `any`[] |
+| `...args` | [account: string] |
 
 ##### Returns
 
@@ -106,7 +106,7 @@ Contract for handling deposits needed for voting.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:412](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L412)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:402](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L402)
 
 ___
 
@@ -143,7 +143,7 @@ Relocks gold that has been unlocked but not withdrawn.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:191](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L191)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:190](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L190)
 
 ___
 
@@ -171,7 +171,7 @@ Delegates locked gold.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:94](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L94)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:93](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L93)
 
 ___
 
@@ -252,7 +252,7 @@ The total amount of non-voting locked gold for an account.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:224](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L224)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:223](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L223)
 
 ___
 
@@ -286,7 +286,7 @@ The total amount of locked gold for an account.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:202](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L202)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:201](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L201)
 
 ___
 
@@ -318,7 +318,7 @@ The total amount of locked gold in the system.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:213](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L213)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:212](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L212)
 
 ___
 
@@ -348,13 +348,13 @@ The gold to be locked, must be specified as the `tx.value`
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:89](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L89)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:88](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L88)
 
 ___
 
 ### methodIds
 
-• **methodIds**: `Record`\<``"unlockingPeriod"`` \| ``"slash"`` \| ``"initialized"`` \| ``"isOwner"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"getVersionNumber"`` \| ``"initialize"`` \| ``"withdraw"`` \| ``"slashingWhitelist"`` \| ``"totalDelegatedCelo"`` \| ``"totalNonvoting"`` \| ``"isSlasher"`` \| ``"setUnlockingPeriod"`` \| ``"setMaxDelegateesCount"`` \| ``"lock"`` \| ``"incrementNonvotingAccountBalance"`` \| ``"decrementNonvotingAccountBalance"`` \| ``"unlock"`` \| ``"relock"`` \| ``"getTotalLockedGold"`` \| ``"getNonvotingLockedGold"`` \| ``"delegateGovernanceVotes"`` \| ``"revokeDelegatedGovernanceVotes"`` \| ``"updateDelegatedAmount"`` \| ``"getAccountTotalDelegatedFraction"`` \| ``"getAccountTotalLockedGold"`` \| ``"getAccountTotalGovernanceVotingPower"`` \| ``"getDelegatorDelegateeInfo"`` \| ``"getDelegatorDelegateeExpectedAndRealAmount"`` \| ``"getDelegateesOfDelegator"`` \| ``"getAccountNonvotingLockedGold"`` \| ``"getPendingWithdrawals"`` \| ``"getPendingWithdrawal"`` \| ``"getTotalPendingWithdrawals"`` \| ``"getSlashingWhitelist"`` \| ``"addSlasher"`` \| ``"removeSlasher"``, `string`\>
+• **methodIds**: `Record`\<``"unlockingPeriod"`` \| ``"slash"`` \| ``"initialized"`` \| ``"isOwner"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"getVersionNumber"`` \| ``"initialize"`` \| ``"withdraw"`` \| ``"slashingWhitelist"`` \| ``"totalDelegatedCelo"`` \| ``"totalNonvoting"`` \| ``"isSlasher"`` \| ``"setUnlockingPeriod"`` \| ``"setMaxDelegateesCount"`` \| ``"lock"`` \| ``"incrementNonvotingAccountBalance"`` \| ``"decrementNonvotingAccountBalance"`` \| ``"unlock"`` \| ``"relock"`` \| ``"getTotalLockedGold"`` \| ``"getNonvotingLockedGold"`` \| ``"delegateGovernanceVotes"`` \| ``"revokeDelegatedGovernanceVotes"`` \| ``"updateDelegatedAmount"`` \| ``"getAccountTotalDelegatedFraction"`` \| ``"getAccountTotalLockedGold"`` \| ``"getAccountTotalGovernanceVotingPower"`` \| ``"getDelegatorDelegateeInfo"`` \| ``"getDelegatorDelegateeExpectedAndRealAmount"`` \| ``"getDelegateesOfDelegator"`` \| ``"getAccountNonvotingLockedGold"`` \| ``"getPendingWithdrawals"`` \| ``"getPendingWithdrawal"`` \| ``"getTotalPendingWithdrawalsCount"`` \| ``"getTotalPendingWithdrawals"`` \| ``"getSlashingWhitelist"`` \| ``"addSlasher"`` \| ``"removeSlasher"``, `string`\>
 
 #### Inherited from
 
@@ -390,7 +390,7 @@ Revokes delegated locked gold.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:105](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L105)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:104](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L104)
 
 ___
 
@@ -422,7 +422,7 @@ Unlocks gold that becomes withdrawable after the unlocking period.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:140](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L140)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:139](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L139)
 
 ___
 
@@ -452,7 +452,7 @@ and the amount of delegated locked gold because of received rewards.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:100](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L100)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:99](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L99)
 
 ___
 
@@ -484,7 +484,7 @@ Withdraws a gold that has been unlocked after the unlocking period has passed.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:80](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L80)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:79](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L79)
 
 ## Accessors
 
@@ -529,7 +529,7 @@ List of (group, voting gold) to decrement from `account`.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:342](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L342)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:341](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L341)
 
 ___
 
@@ -551,7 +551,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:349](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L349)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:348](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L348)
 
 ___
 
@@ -571,7 +571,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:252](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L252)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:251](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L251)
 
 ___
 
@@ -595,7 +595,7 @@ The total amount of governance voting power for an account.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:276](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L276)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:275](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L275)
 
 ___
 
@@ -617,7 +617,7 @@ Retrieves AccountSlashed for epochNumber.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:319](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L319)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:318](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L318)
 
 ___
 
@@ -633,7 +633,7 @@ Returns current configuration parameters.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:233](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L233)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:232](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L232)
 
 ___
 
@@ -653,7 +653,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:116](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L116)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:115](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L115)
 
 ___
 
@@ -673,7 +673,7 @@ Returns human readable configuration of the lockedgold contract
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:244](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L244)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:243](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L243)
 
 ___
 
@@ -687,7 +687,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:107](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L107)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:106](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L106)
 
 ___
 
@@ -741,7 +741,7 @@ The timestamp of the pending withdrawal.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:307](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L307)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:306](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L306)
 
 ___
 
@@ -765,7 +765,7 @@ The value and timestamp for each pending withdrawal.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:288](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L288)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:287](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L287)
 
 ___
 
@@ -785,7 +785,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:146](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L146)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:145](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L145)
 
 ___
 
@@ -807,13 +807,9 @@ Returns the number of pending withdrawals for the specified account.
 
 The count of pending withdrawals.
 
-**`Notice`**
-
-This method is only available in version 1.1.4 or higher of the LockedGold contract.
-
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:400](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L400)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:398](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L398)
 
 ___
 
@@ -836,7 +832,7 @@ Relocks gold that has been unlocked but not withdrawn.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:158](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L158)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:157](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L157)
 
 ___
 

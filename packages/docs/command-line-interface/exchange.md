@@ -168,7 +168,7 @@ _See code: [src/commands/exchange/reals.ts](https://github.com/celo-org/develope
 
 ## `celocli exchange:show`
 
-Show the current exchange rates offered by the Exchange
+Show the current exchange rates offered by the Broker
 
 ```
 USAGE
@@ -180,7 +180,7 @@ FLAGS
   --globalHelp      View all available global flags
 
 DESCRIPTION
-  Show the current exchange rates offered by the Exchange
+  Show the current exchange rates offered by the Broker
 
 EXAMPLES
   list
