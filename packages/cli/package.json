@@ -32,7 +32,7 @@
     "test": "TZ=UTC yarn jest --runInBand"
   },
   "dependencies": {
-    "@celo/abis": "10.0.0",
+    "@celo/abis": "11.0.0",
     "@celo/base": "^6.0.0",
     "@celo/compliance": "~1.0.17",
     "@celo/connect": "^5.2.0",

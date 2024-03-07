@@ -21,7 +21,7 @@
     "prepublishOnly": "yarn build"
   },
   "dependencies": {
-    "@celo/abis": "10.0.0",
+    "@celo/abis": "11.0.0",
     "@celo/base": "^6.0.0",
     "@celo/connect": "^5.2.0",
     "@celo/contractkit": "^7.1.0",
