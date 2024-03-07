@@ -32,7 +32,7 @@ testWithGanache('transfer:euros cmd', (web3: Web3) => {
       '--value',
       amountToTransfer,
       '--gasCurrency',
-      'CELO',
+      (await kit.contracts.getGoldToken()).address,
     ])
     // RG cEUR balance should match the amount sent
     const receiverBalance = await kit.getTotalBalance(accounts[1])
@@ -48,7 +48,7 @@ testWithGanache('transfer:euros cmd', (web3: Web3) => {
       '--value',
       amountToTransfer,
       '--gasCurrency',
-      'CELO',
+      (await kit.contracts.getGoldToken()).address,
     ])
     const balanceAfter = await kit.getTotalBalance(accounts[0])
     expect(balanceBefore.cEUR).toEqual(balanceAfter.cEUR)
