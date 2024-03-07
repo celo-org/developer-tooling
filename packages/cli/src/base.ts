@@ -204,10 +204,12 @@ export abstract class BaseCommand extends Command {
 
     const validFeeCurrencies = await kit.getFeeCurrencyWhitelist()
     const gasCurrencyFlag = res.flags.gasCurrency as StrongAddress
-    if (validFeeCurrencies.includes(gasCurrencyFlag)) {
-      kit.setFeeCurrency(gasCurrencyFlag)
-    } else {
-      throw new Error(`${gasCurrencyFlag} is not a valid fee currency`)
+    if (gasCurrencyFlag) {
+      if (validFeeCurrencies.includes(gasCurrencyFlag)) {
+        kit.setFeeCurrency(gasCurrencyFlag)
+      } else {
+        throw new Error(`${gasCurrencyFlag} is not a valid fee currency`)
+      }
     }
   }
 
