@@ -410,7 +410,6 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<LockedGold> {
   }
 
   _getTotalPendingWithdrawalsCount = proxyCall(
-    // @ts-expect-error
     this.contract.methods.getTotalPendingWithdrawalsCount,
     undefined,
     valueToBigNumber

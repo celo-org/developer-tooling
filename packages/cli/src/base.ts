@@ -208,7 +208,11 @@ export abstract class BaseCommand extends Command {
       if (validFeeCurrencies.includes(gasCurrencyFlag)) {
         kit.setFeeCurrency(gasCurrencyFlag)
       } else {
-        throw new Error(`${gasCurrencyFlag} is not a valid fee currency`)
+        throw new Error(
+          `${gasCurrencyFlag} is not a valid fee currency. Available currencies: ${validFeeCurrencies.join(
+            ', '
+          )}`
+        )
       }
     }
   }
