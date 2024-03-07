@@ -282,7 +282,7 @@ export class ContractKit {
     const feeCurrencyWhitelist = (await whitelist.methods.getWhitelist().call()) as StrongAddress[]
 
     // Making sure we always have at least CELO and a uniq list.
-    return [...new Set([celo.address, ...feeCurrencyWhitelist])]
+    return [...new Set([celo.address, ...feeCurrencyWhitelist])].sort()
   }
 
   stop() {

@@ -82,4 +82,22 @@ testWithGanache('transfer:celo cmd', (web3: Web3) => {
     ).rejects.toThrow()
     expect(spy).toHaveBeenCalledWith(expect.stringContaining(COMPLIANT_ERROR_RESPONSE))
   })
+
+  test("should fail if the feeCurrency isn't whitelisted", async () => {
+    const wrongFee = '0x123'
+    await expect(
+      testLocally(TransferCelo, [
+        '--from',
+        accounts[0],
+        '--to',
+        accounts[1],
+        '--value',
+        '1',
+        '--gasCurrency',
+        wrongFee,
+      ])
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"0x123 is not a valid fee currency. Available currencies: 0x04B5dAdd2c0D6a261bfafBc964E0cAc48585dEF3, 0x5315e44798395d4a952530d131249fE00f554565, 0xdD66C23e07b4D6925b6089b5Fe6fc9E62941aFE8, 0x965D352283a3C8A016b9BBbC9bf6306665d495E7"`
+    )
+  })
 })
