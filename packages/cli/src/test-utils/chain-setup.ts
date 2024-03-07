@@ -96,6 +96,24 @@ export const voteForGroupFrom = async (
   await (await election.vote(groupAddress, amount)).sendAndWaitForReceipt({ from: fromAddress })
 }
 
+export const voteForGroupFromAndActivateVotes = async (
+  kit: ContractKit,
+  fromAddress: string,
+  groupAddress: string,
+  amount: BigNumber
+) => {
+  await voteForGroupFrom(kit, fromAddress, groupAddress, amount)
+
+  await mineEpoch(kit)
+
+  const election = await kit.contracts.getElection()
+
+  const txos = await election.activate(fromAddress, false)
+  for (const txo of txos) {
+    await txo.sendAndWaitForReceipt({ from: fromAddress })
+  }
+}
+
 export const mineEpoch = async (kit: ContractKit) => {
   await mineBlocks(100, kit.web3)
 }
