@@ -109,9 +109,8 @@ export const voteForGroupFromAndActivateVotes = async (
   const election = await kit.contracts.getElection()
 
   const txos = await election.activate(fromAddress, false)
-  for (const txo of txos) {
-    await txo.sendAndWaitForReceipt({ from: fromAddress })
-  }
+
+  await Promise.all(txos.map((txo) => txo.sendAndWaitForReceipt({ from: fromAddress })))
 }
 
 export const mineEpoch = async (kit: ContractKit) => {
