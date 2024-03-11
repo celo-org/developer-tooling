@@ -33,7 +33,7 @@ export const registerAccountWithLockedGold = async (
   await lockedGold.lock().sendAndWaitForReceipt({ from: address, value })
 }
 
-const setupGroup = async (
+export const setupGroup = async (
   kit: ContractKit,
   groupAccount: string,
   groupCommission = GROUP_COMMISION
