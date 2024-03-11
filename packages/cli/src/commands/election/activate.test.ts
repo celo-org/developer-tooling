@@ -15,7 +15,7 @@ import Activate from './activate'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithGanache('election:list', (web3: Web3) => {
+testWithGanache('election:activate', (web3: Web3) => {
   afterEach(async () => {
     jest.clearAllMocks()
   })
