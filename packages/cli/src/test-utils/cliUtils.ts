@@ -15,6 +15,7 @@ export async function testLocally(
   return command.run(extendedArgv, config)
 }
 
+// Removes font-formatting ANSI codes (colors/styles)
 export const stripAnsiCodes = (text: string): string => {
   return text.replace(/\u001b\[.*?m/g, '')
 }
