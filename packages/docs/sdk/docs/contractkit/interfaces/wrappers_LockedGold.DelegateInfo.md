@@ -20,7 +20,7 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:39](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L39)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L38)
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L38)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:37](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L37)
 
 ___
 
@@ -40,4 +40,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:40](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L40)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:39](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L39)

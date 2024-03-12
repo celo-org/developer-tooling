@@ -7,7 +7,6 @@ import {
 } from '@celo/base/lib/collections'
 import { Address, CeloTransactionObject, EventLog } from '@celo/connect'
 import BigNumber from 'bignumber.js'
-import { ContractVersion } from '../versions'
 import {
   proxyCall,
   proxySend,
@@ -394,19 +393,10 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<LockedGold> {
   /**
    * Returns the number of pending withdrawals for the specified account.
    * @param account The account.
-   * @notice This method is only available in version 1.1.4 or higher of the LockedGold contract.
    * @returns The count of pending withdrawals.
    */
   async getTotalPendingWithdrawalsCount(account: string) {
-    const minVersion = new ContractVersion(1, 1, 4, 0)
-    const version = await this.version()
-    if (version.isAtLeast(minVersion)) {
-      return this._getTotalPendingWithdrawalsCount(account)
-    } else {
-      throw new Error(
-        `getTotalPendingWithdrawalsCount not implemented for LockedGold version (${version.toString()}) deployed to this chain`
-      )
-    }
+    return this._getTotalPendingWithdrawalsCount(account)
   }
 
   _getTotalPendingWithdrawalsCount = proxyCall(

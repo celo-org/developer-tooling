@@ -8,7 +8,7 @@ import * as path from 'path'
 export default async function globalSetup() {
   console.log('\nstarting ganache...')
   const chainDataPath = path.join(path.dirname(require.resolve('@celo/celo-devchain')), '../chains')
-  // v11 refers to core contract release 11
+  // v X refers to core contract release X
   await baseSetup(path.resolve(chainDataPath), 'v11.tar.gz', {
     from_targz: true,
   })
