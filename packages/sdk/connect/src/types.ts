@@ -65,7 +65,7 @@ export { BlockNumber, EventLog, Log, PromiEvent, Sign } from 'web3-core'
 export { Block, BlockHeader, Syncing } from 'web3-eth'
 export { Contract, ContractSendMethod, PastEventOptions } from 'web3-eth-contract'
 
-export type TransactionTypes = 'eip1559' | 'celo-legacy' | 'cip42' | 'cip64'
+export type TransactionTypes = 'ethereum-legacy' | 'eip1559' | 'celo-legacy' | 'cip42' | 'cip64'
 
 interface CommonTXProperties {
   nonce: string
@@ -113,9 +113,19 @@ export interface LegacyTXProperties extends CommonTXProperties {
   type: 'celo-legacy'
 }
 
+export interface EthereumLegacyTXProperties extends CommonTXProperties {
+  gasPrice: string
+  type: 'ethereum-legacy'
+}
+
 export interface EncodedTransaction {
   raw: Hex
-  tx: LegacyTXProperties | CIP42TXProperties | EIP1559TXProperties | CIP64TXProperties
+  tx:
+    | EthereumLegacyTXProperties
+    | LegacyTXProperties
+    | CIP42TXProperties
+    | EIP1559TXProperties
+    | CIP64TXProperties
 }
 
 export type CeloTxPending = Transaction & Partial<CeloParams>
