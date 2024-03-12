@@ -48,11 +48,6 @@ export abstract class BaseCommand extends Command {
         }
       },
     }),
-    gasCurrency: Flags.string({
-      description:
-        'Use a specific gas currency for transaction fees (defaults to CELO if no gas currency is supplied)',
-      hidden: true,
-    }),
     useLedger: Flags.boolean({
       default: false,
       hidden: true,

@@ -14,6 +14,11 @@ export abstract class TransferStableBase extends BaseCommand {
     to: CustomFlags.address({ required: true, description: 'Address of the receiver' }),
     value: Flags.string({ required: true, description: 'Amount to transfer (in wei)' }),
     comment: Flags.string({ description: 'Transfer comment' }),
+    gasCurrency: Flags.string({
+      description:
+        'Use a specific gas currency for transaction fees (defaults to CELO if no gas currency is supplied)',
+      hidden: true,
+    }),
   }
 
   protected _stableCurrency: StableToken | null = null
@@ -37,26 +42,36 @@ export abstract class TransferStableBase extends BaseCommand {
     }
 
     // If gasCurrency is not set, use the transferring token
-    if (!res.flags.gasCurrency) {
-      kit.setFeeCurrency(stableToken.address)
+    if (res.flags.gasCurrency) {
+      kit.connection.defaultFeeCurrency = res.flags.gasCurrency
+    } else {
+      kit.connection.defaultFeeCurrency = (
+        await kit.contracts.getStableToken(this._stableCurrency)
+      ).address
     }
 
     const tx = res.flags.comment
       ? stableToken.transferWithComment(to, value.toFixed(), res.flags.comment)
       : stableToken.transfer(to, value.toFixed())
 
+    let gas: number
+    let gasPrice: string
+    let balance: BigNumber
     await newCheckBuilder(this)
       .hasEnoughStable(from, value, this._stableCurrency)
       .isNotSanctioned(from)
       .isNotSanctioned(to)
-      .addConditionalCheck(
-        `Account can afford transfer and gas paid in ${this._stableCurrency}`,
-        kit.connection.defaultFeeCurrency === stableToken.address,
+      .addCheck(
+        `Account can afford transfer and gas paid in ${
+          res.flags.gasCurrency || this._stableCurrency
+        }`,
         async () => {
-          const [gas, gasPrice, balance] = await Promise.all([
-            tx.txo.estimateGas({ feeCurrency: stableToken.address }),
-            kit.connection.gasPrice(stableToken.address),
-            stableToken.balanceOf(from),
+          ;[gas, gasPrice, balance] = await Promise.all([
+            tx.txo.estimateGas({ feeCurrency: kit.connection.defaultFeeCurrency }),
+            kit.connection.gasPrice(kit.connection.defaultFeeCurrency),
+            kit.contracts
+              .getErc20(kit.connection.defaultFeeCurrency!)
+              .then((erc20) => erc20.balanceOf(from)),
           ])
           const gasValue = new BigNumber(gas).times(gasPrice as string)
           return balance.gte(value.plus(gasValue))
@@ -65,6 +80,10 @@ export abstract class TransferStableBase extends BaseCommand {
       )
       .runChecks()
 
-    await displaySendTx(res.flags.comment ? 'transferWithComment' : 'transfer', tx)
+    await displaySendTx(res.flags.comment ? 'transferWithComment' : 'transfer', tx, {
+      feeCurrency: kit.connection.defaultFeeCurrency,
+      maxFeePerGas: gasPrice!,
+      maxPriorityFeePerGas: gasPrice!,
+    })
   }
 }

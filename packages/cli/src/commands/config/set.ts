@@ -1,4 +1,5 @@
 import { StrongAddress } from '@celo/base'
+import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { readConfig, writeConfig } from '../../utils/config'
 export default class Set extends BaseCommand {
@@ -10,10 +11,11 @@ export default class Set extends BaseCommand {
       ...BaseCommand.flags.node,
       hidden: false,
     },
-    gasCurrency: {
-      ...BaseCommand.flags.gasCurrency,
-      hidden: false,
-    },
+    gasCurrency: Flags.string({
+      description:
+        'Use a specific gas currency for transaction fees (defaults to CELO if no gas currency is supplied)',
+      hidden: true,
+    }),
   }
 
   static examples = [
