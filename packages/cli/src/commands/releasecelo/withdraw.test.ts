@@ -41,7 +41,7 @@ testWithGanache('releasegold:withdraw cmd', (web3: Web3) => {
     await testLocally(Withdraw, ['--contract', contractAddress, '--value', withdrawalAmount])
     const balanceAfter = (await kit.getTotalBalance(beneficiary)).CELO!
     const difference = balanceAfter.minus(balanceBefore)
-    expect(difference.isEqualTo(new BigNumber(withdrawalAmount))).toBe(true)
+    expect(difference.toFixed()).toEqual(new BigNumber(withdrawalAmount).toFixed())
   })
 
   test("can't withdraw the whole balance if there is a cUSD balance", async () => {
