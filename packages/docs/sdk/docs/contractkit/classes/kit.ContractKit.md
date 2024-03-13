@@ -31,6 +31,7 @@
 - [addAccount](kit.ContractKit.md#addaccount)
 - [getEpochNumberOfBlock](kit.ContractKit.md#getepochnumberofblock)
 - [getEpochSize](kit.ContractKit.md#getepochsize)
+- [getFeeCurrencyInformation](kit.ContractKit.md#getfeecurrencyinformation)
 - [getFeeCurrencyWhitelist](kit.ContractKit.md#getfeecurrencywhitelist)
 - [getFirstBlockNumberForEpoch](kit.ContractKit.md#getfirstblocknumberforepoch)
 - [getHumanReadableNetworkConfig](kit.ContractKit.md#gethumanreadablenetworkconfig)
@@ -240,7 +241,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:286](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L286)
+[packages/sdk/contractkit/src/kit.ts:335](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L335)
 
 ## Methods
 
@@ -295,6 +296,26 @@ ___
 #### Defined in
 
 [packages/sdk/contractkit/src/kit.ts:202](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L202)
+
+___
+
+### getFeeCurrencyInformation
+
+▸ **getFeeCurrencyInformation**(`feeCurrencies`): `Promise`\<\{ `address`: \`0x$\{string}\` ; `name`: `string` ; `symbol`: `string`  }[]\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `feeCurrencies` | \`0x$\{string}\`[] |
+
+#### Returns
+
+`Promise`\<\{ `address`: \`0x$\{string}\` ; `name`: `string` ; `symbol`: `string`  }[]\>
+
+#### Defined in
+
+[packages/sdk/contractkit/src/kit.ts:288](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L288)
 
 ___
 
@@ -546,4 +567,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:282](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L282)
+[packages/sdk/contractkit/src/kit.ts:331](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L331)
