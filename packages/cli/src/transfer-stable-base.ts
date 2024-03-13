@@ -14,11 +14,6 @@ export abstract class TransferStableBase extends BaseCommand {
     to: CustomFlags.address({ required: true, description: 'Address of the receiver' }),
     value: Flags.string({ required: true, description: 'Amount to transfer (in wei)' }),
     comment: Flags.string({ description: 'Transfer comment' }),
-    gasCurrency: Flags.string({
-      description:
-        'Use a specific gas currency for transaction fees (defaults to CELO if no gas currency is supplied)',
-      hidden: true,
-    }),
   }
 
   protected _stableCurrency: StableToken | null = null
@@ -56,7 +51,8 @@ export abstract class TransferStableBase extends BaseCommand {
 
     let gas: number
     let gasPrice: string
-    let balance: BigNumber
+    let gasBalance: BigNumber
+    let valueBalance: BigNumber
     await newCheckBuilder(this)
       .hasEnoughStable(from, value, this._stableCurrency)
       .isNotSanctioned(from)
@@ -66,15 +62,21 @@ export abstract class TransferStableBase extends BaseCommand {
           res.flags.gasCurrency || this._stableCurrency
         }`,
         async () => {
-          ;[gas, gasPrice, balance] = await Promise.all([
+          ;[gas, gasPrice, gasBalance, valueBalance] = await Promise.all([
             tx.txo.estimateGas({ feeCurrency: kit.connection.defaultFeeCurrency }),
             kit.connection.gasPrice(kit.connection.defaultFeeCurrency),
             kit.contracts
               .getErc20(kit.connection.defaultFeeCurrency!)
               .then((erc20) => erc20.balanceOf(from)),
+            kit.contracts
+              .getStableToken(this._stableCurrency!)
+              .then((token) => token.balanceOf(from)),
           ])
           const gasValue = new BigNumber(gas).times(gasPrice as string)
-          return balance.gte(value.plus(gasValue))
+          if (res.flags.gasCurrency) {
+            return gasBalance.gte(gasValue) && valueBalance.gte(value)
+          }
+          return valueBalance.gte(value.plus(gasValue))
         },
         `Cannot afford transfer with ${this._stableCurrency} gasCurrency; try reducing value slightly or using gasCurrency=CELO`
       )
@@ -82,6 +84,7 @@ export abstract class TransferStableBase extends BaseCommand {
 
     await displaySendTx(res.flags.comment ? 'transferWithComment' : 'transfer', tx, {
       feeCurrency: kit.connection.defaultFeeCurrency,
+      // NOTE: passing this makes the tx a modern tx rather than legacy-celo
       maxFeePerGas: gasPrice!,
       maxPriorityFeePerGas: gasPrice!,
     })

@@ -48,6 +48,11 @@ export abstract class BaseCommand extends Command {
         }
       },
     }),
+    gasCurrency: Flags.string({
+      description:
+        'Use a specific gas currency for transaction fees (defaults to CELO if no gas currency is supplied)',
+      hidden: true,
+    }),
     useLedger: Flags.boolean({
       default: false,
       hidden: true,
@@ -203,9 +208,13 @@ export abstract class BaseCommand extends Command {
       if (validFeeCurrencies.includes(gasCurrencyFlag)) {
         kit.setFeeCurrency(gasCurrencyFlag)
       } else {
+        const pairs = (await kit.getFeeCurrencyInformation(validFeeCurrencies)).map(
+          ({ name, symbol, address }) => `${address} - ${name} (${symbol})`
+        )
+
         throw new Error(
-          `${gasCurrencyFlag} is not a valid fee currency. Available currencies: ${validFeeCurrencies.join(
-            ', '
+          `${gasCurrencyFlag} is not a valid fee currency. Available currencies:\n${pairs.join(
+            '\n'
           )}`
         )
       }

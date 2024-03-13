@@ -285,6 +285,49 @@ export class ContractKit {
     return [...new Set([celo.address, ...feeCurrencyWhitelist])].sort()
   }
 
+  async getFeeCurrencyInformation(feeCurrencies: StrongAddress[]): Promise<
+    {
+      name: string
+      address: StrongAddress
+      symbol: string
+    }[]
+  > {
+    const abi = [
+      {
+        type: 'function' as const,
+        stateMutability: 'view',
+        outputs: [{ type: 'string', name: '', internalType: 'string' }],
+        name: 'symbol',
+        inputs: [],
+      },
+      {
+        type: 'function' as const,
+        stateMutability: 'view',
+        outputs: [{ type: 'string', name: '', internalType: 'string' }],
+        name: 'name',
+        inputs: [],
+      },
+    ]
+
+    return Promise.all(
+      feeCurrencies.map(async (address) => {
+        // @ts-expect-error abi typing is not 100% correct but works
+        const contract = new this.web3.eth.Contract(abi, address)
+        return Promise.all([
+          contract.methods
+            .name()
+            .call()
+            .catch(() => 'unknown name'),
+          contract.methods
+            .symbol()
+            .call()
+            .catch(() => 'N/A'),
+          address,
+        ]).then(([name, symbol, address]) => ({ name, symbol, address }))
+      })
+    )
+  }
+
   stop() {
     this.connection.stop()
   }
