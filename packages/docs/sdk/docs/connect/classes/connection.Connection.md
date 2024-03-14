@@ -138,13 +138,13 @@ ___
 
 ### defaultAccount
 
-• `get` **defaultAccount**(): `undefined` \| `string`
+• `get` **defaultAccount**(): `undefined` \| \`0x$\{string}\`
 
 Default account for generated transactions (eg. tx.from)
 
 #### Returns
 
-`undefined` \| `string`
+`undefined` \| \`0x$\{string}\`
 
 #### Defined in
 
@@ -158,7 +158,7 @@ Set default account for generated transactions (eg. tx.from )
 
 | Name | Type |
 | :------ | :------ |
-| `address` | `undefined` \| `string` |
+| `address` | `undefined` \| \`0x$\{string}\` |
 
 #### Returns
 

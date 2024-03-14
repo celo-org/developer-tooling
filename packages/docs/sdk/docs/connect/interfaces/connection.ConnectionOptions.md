@@ -26,7 +26,7 @@ ___
 
 ### from
 
-• `Optional` **from**: `string`
+• `Optional` **from**: \`0x$\{string}\`
 
 #### Defined in
 
