@@ -1,4 +1,3 @@
-import { StrongAddress } from '@celo/base'
 import { CeloTx, Connection, Provider } from '@celo/connect'
 import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
 import { normalizeAddressWith0x, privateKeyToAddress } from '@celo/utils/lib/address'
@@ -219,7 +218,7 @@ testWithGanache('rpc-wallet', (web3) => {
                 nonce: 65,
                 gas: '10',
                 gasPrice: '99',
-                feeCurrency: '0x' as StrongAddress,
+                feeCurrency: '0x' as const,
                 gatewayFeeRecipient: '0x1234',
                 gatewayFee: '0x5678',
                 data: '0xabcdef',

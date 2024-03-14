@@ -16,7 +16,6 @@ import { BigNumber } from 'bignumber.js'
 import { ec as EC } from 'elliptic'
 import Web3 from 'web3'
 import { GcpHsmWallet } from './gcp-hsm-wallet'
-import { StrongAddress } from '@celo/base'
 require('dotenv').config()
 
 // Note: A lot of this test class was copied from the wallet-hsm-aws test since they work very similarly.
@@ -257,7 +256,7 @@ describe('GcpHsmWallet class', () => {
             nonce: 65,
             gas: '10',
             gasPrice: '99',
-            feeCurrency: '0x' as StrongAddress,
+            feeCurrency: '0x' as const,
             gatewayFeeRecipient: ACCOUNT_ADDRESS_NEVER,
             gatewayFee: '0x5678',
             data: '0xabcdef',

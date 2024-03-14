@@ -84,9 +84,11 @@ export abstract class TransferStableBase extends BaseCommand {
 
     await displaySendTx(res.flags.comment ? 'transferWithComment' : 'transfer', tx, {
       feeCurrency: kit.connection.defaultFeeCurrency,
-      // NOTE: passing this makes the tx a modern tx rather than legacy-celo
-      maxFeePerGas: gasPrice!,
-      maxPriorityFeePerGas: gasPrice!,
+      // NOTE(nico): passing this makes the tx eip1559 rather than legacy-celo
+      // but this breaks ledger. Leaving it as a reminder we need to do this at
+      // some point.
+      // maxFeePerGas: gasPrice!,
+      // maxPriorityFeePerGas: gasPrice!,
     })
   }
 }

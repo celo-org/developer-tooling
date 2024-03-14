@@ -12,7 +12,6 @@ import * as ethUtil from '@ethereumjs/util'
 import { BigNumber } from 'bignumber.js'
 import Web3 from 'web3'
 import { AwsHsmWallet } from './aws-hsm-wallet'
-import { StrongAddress } from '@celo/base'
 require('dotenv').config()
 
 export const PRIVATE_KEY1 = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
@@ -270,7 +269,7 @@ describe('AwsHsmWallet class', () => {
             nonce: 65,
             gas: '10',
             gasPrice: '99',
-            feeCurrency: '0x' as StrongAddress,
+            feeCurrency: '0x' as const,
             gatewayFeeRecipient: ACCOUNT_ADDRESS_NEVER,
             gatewayFee: '0x5678',
             data: '0xabcdef',

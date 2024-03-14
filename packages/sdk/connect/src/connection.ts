@@ -45,7 +45,7 @@ type BN = ReturnType<Web3['utils']['toBN']>
 export interface ConnectionOptions {
   gasInflationFactor: number
   feeCurrency?: StrongAddress
-  from?: Address
+  from?: StrongAddress
 }
 
 /**
@@ -71,7 +71,7 @@ export class Connection {
     this.setProvider(existingProvider)
     // TODO: Add this line with the wallets separation completed
     // this.wallet = _wallet ?? new LocalWallet()
-    this.config.from = web3.eth.defaultAccount ?? undefined
+    this.config.from = (web3.eth.defaultAccount as StrongAddress) ?? undefined
     this.paramsPopulator = new TxParamsNormalizer(this)
   }
 
@@ -104,7 +104,7 @@ export class Connection {
   /**
    * Set default account for generated transactions (eg. tx.from )
    */
-  set defaultAccount(address: Address | undefined) {
+  set defaultAccount(address: StrongAddress | undefined) {
     this.config.from = address
     this.web3.eth.defaultAccount = address ? address : null
   }
@@ -112,7 +112,7 @@ export class Connection {
   /**
    * Default account for generated transactions (eg. tx.from)
    */
-  get defaultAccount(): Address | undefined {
+  get defaultAccount(): StrongAddress | undefined {
     return this.config.from
   }
 
