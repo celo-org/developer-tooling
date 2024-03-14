@@ -15,5 +15,10 @@ export async function testLocally(
   return command.run(extendedArgv, config)
 }
 
+// Removes font-formatting ANSI codes (colors/styles)
+export const stripAnsiCodes = (text: string): string => {
+  return text.replace(/\u001b\[.*?m/g, '')
+}
+
 export const LONG_TIMEOUT_MS = 10 * 1000
 export const EXTRA_LONG_TIMEOUT_MS = 20 * 1000

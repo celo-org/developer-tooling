@@ -13,7 +13,7 @@ import Revoke from './revoke'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithGanache('election:list', (web3: Web3) => {
+testWithGanache('election:revoke', (web3: Web3) => {
   afterEach(async () => {
     jest.clearAllMocks()
   })

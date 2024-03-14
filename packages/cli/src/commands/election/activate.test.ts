@@ -10,12 +10,12 @@ import {
   setupGroupAndAffiliateValidator,
   voteForGroupFrom,
 } from '../../test-utils/chain-setup'
-import { testLocally } from '../../test-utils/cliUtils'
+import { stripAnsiCodes, testLocally } from '../../test-utils/cliUtils'
 import Activate from './activate'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithGanache('election:list', (web3: Web3) => {
+testWithGanache('election:activate', (web3: Web3) => {
   afterEach(async () => {
     jest.clearAllMocks()
   })
@@ -85,6 +85,59 @@ testWithGanache('election:list', (web3: Web3) => {
 
     await testLocally(Activate, ['--from', userAddress])
 
+    expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
+    expect((await election.getVotesForGroupByAccount(userAddress, groupAddress)).active).toEqual(
+      new BigNumber(activateAmount)
+    )
+  })
+
+  it('activate votes with --wait flag', async () => {
+    const kit = newKitFromWeb3(web3)
+    const [groupAddress, validatorAddress, userAddress] = await web3.eth.getAccounts()
+    const election = await kit.contracts.getElection()
+    const writeMock = jest.spyOn(ux.write, 'stdout')
+    const activateAmount = 12345
+    const logMock = jest.spyOn(console, 'log')
+
+    await setupGroupAndAffiliateValidator(kit, groupAddress, validatorAddress)
+    await registerAccountWithLockedGold(kit, userAddress)
+
+    await voteForGroupFrom(kit, userAddress, groupAddress, new BigNumber(activateAmount))
+
+    expect((await election.getVotesForGroupByAccount(userAddress, groupAddress)).active).toEqual(
+      new BigNumber(0)
+    )
+
+    await Promise.all([
+      testLocally(Activate, ['--from', userAddress, '--wait']),
+      new Promise<void>((resolve) => {
+        // at least the amount the --wait flag waits in the check
+        setTimeout(async () => {
+          await mineEpoch(kit)
+          resolve()
+        }, 1000)
+      }),
+    ])
+
+    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
+      [
+        [
+          "Running Checks:",
+        ],
+        [
+          "   ✔  0xE36Ea790bc9d7AB70C55260C66D52b1eca985f84 is Signer or registered Account ",
+        ],
+        [
+          "All checks passed",
+        ],
+        [
+          "SendTransaction: activate",
+        ],
+        [
+          "txHash: 0xeb8b78386a4a12b607bc7fcd5025f9b831b37eda9b3719a87c7235947a314d49",
+        ],
+      ]
+    `)
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
     expect((await election.getVotesForGroupByAccount(userAddress, groupAddress)).active).toEqual(
       new BigNumber(activateAmount)
