@@ -275,14 +275,13 @@ export class ContractKit {
   }
 
   async getFeeCurrencyWhitelist(): Promise<StrongAddress[]> {
-    const [whitelist, celo] = await Promise.all([
+    const [whitelist] = await Promise.all([
       this._web3Contracts.getContract(CeloContract.FeeCurrencyWhitelist),
-      this.contracts.getGoldToken(),
     ])
     const feeCurrencyWhitelist = (await whitelist.methods.getWhitelist().call()) as StrongAddress[]
 
-    // Making sure we always have at least CELO and a uniq list.
-    return [...new Set([celo.address, ...feeCurrencyWhitelist])].sort()
+    // Making sure we always have a uniq list.
+    return [...new Set(feeCurrencyWhitelist)].sort()
   }
 
   async getFeeCurrencyInformation(feeCurrencies: StrongAddress[]): Promise<
