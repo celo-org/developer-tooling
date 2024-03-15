@@ -12,8 +12,8 @@ export default class Delegate extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    from: CustomFlags.address({ ...CustomFlags.address, required: true }),
-    to: CustomFlags.address({ ...CustomFlags.address, required: true }),
+    from: CustomFlags.address({ required: true }),
+    to: CustomFlags.address({ required: true }),
     percent: Flags.string({
       ...LockedGoldArgs.valueArg,
       required: true,

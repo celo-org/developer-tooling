@@ -36,13 +36,8 @@ export abstract class TransferStableBase extends BaseCommand {
       failWith(`The ${this._stableCurrency} token was not deployed yet`)
     }
 
-    // If gasCurrency is not set, use the transferring token
     if (res.flags.gasCurrency) {
       kit.connection.defaultFeeCurrency = res.flags.gasCurrency
-    } else {
-      kit.connection.defaultFeeCurrency = (
-        await kit.contracts.getStableToken(this._stableCurrency)
-      ).address
     }
 
     const tx = res.flags.comment
@@ -58,9 +53,7 @@ export abstract class TransferStableBase extends BaseCommand {
       .isNotSanctioned(from)
       .isNotSanctioned(to)
       .addCheck(
-        `Account can afford transfer and gas paid in ${
-          res.flags.gasCurrency || this._stableCurrency
-        }`,
+        `Account can afford transfer in ${this._stableCurrency} and gas paid in ${res.flags.gasCurrency}`,
         async () => {
           ;[gas, gasPrice, gasBalance, valueBalance] = await Promise.all([
             tx.txo.estimateGas({ feeCurrency: kit.connection.defaultFeeCurrency }),
@@ -82,13 +75,8 @@ export abstract class TransferStableBase extends BaseCommand {
       )
       .runChecks()
 
-    await displaySendTx(res.flags.comment ? 'transferWithComment' : 'transfer', tx, {
-      feeCurrency: kit.connection.defaultFeeCurrency,
-      // NOTE(nico): passing this makes the tx eip1559 rather than legacy-celo
-      // but this breaks ledger. Leaving it as a reminder we need to do this at
-      // some point.
-      // maxFeePerGas: gasPrice!,
-      // maxPriorityFeePerGas: gasPrice!,
-    })
+    // If gasCurrency is not set, defaults to eip1559 tx
+    const params = res.flags.feeCurrency ? { feeCurrency: kit.connection.defaultFeeCurrency } : {}
+    await displaySendTx(res.flags.comment ? 'transferWithComment' : 'transfer', tx, params)
   }
 }

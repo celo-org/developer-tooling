@@ -42,7 +42,15 @@ export function getGasCurrency(configDir: string): StrongAddress {
 export async function writeConfig(configDir: string, configObj: CeloConfig, kit: ContractKit) {
   const validFeeCurrencies = await kit.getFeeCurrencyWhitelist()
   if (configObj.gasCurrency && !validFeeCurrencies.includes(configObj.gasCurrency)) {
-    throw new Error('Invalid gas option, available feeCurrencies: ' + validFeeCurrencies.join(', '))
+    const pairs = (await kit.getFeeCurrencyInformation(validFeeCurrencies)).map(
+      ({ name, symbol, address }) => `${address} - ${name} (${symbol})`
+    )
+    throw new Error(
+      `${configObj.gasCurrency} is not a valid fee currency. Available currencies:\n${pairs.join(
+        '\n'
+      )}`
+    )
   }
+
   fs.outputJSONSync(configPath(configDir), configObj)
 }
