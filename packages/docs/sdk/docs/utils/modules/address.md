@@ -200,7 +200,7 @@ ___
 
 ### isValidAddress
 
-▸ **isValidAddress**(`input`): `boolean`
+▸ **isValidAddress**(`input`): input is \`0x$\{string}\`
 
 #### Parameters
 
@@ -210,11 +210,11 @@ ___
 
 #### Returns
 
-`boolean`
+input is \`0x$\{string}\`
 
 #### Defined in
 
-[packages/sdk/utils/src/address.ts:44](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/address.ts#L44)
+[packages/sdk/utils/src/address.ts:46](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/address.ts#L46)
 
 ___
 
@@ -259,7 +259,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/address.ts:41](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/address.ts#L41)
+[packages/sdk/utils/src/address.ts:43](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/address.ts#L43)
 
 ___
 
@@ -355,7 +355,7 @@ ___
 
 ### privateKeyToAddress
 
-▸ **privateKeyToAddress**(`privateKey`): `string`
+▸ **privateKeyToAddress**(`privateKey`): \`0x$\{string}\`
 
 #### Parameters
 
@@ -365,7 +365,7 @@ ___
 
 #### Returns
 
-`string`
+\`0x$\{string}\`
 
 #### Defined in
 
@@ -389,13 +389,13 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/address.ts:33](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/address.ts#L33)
+[packages/sdk/utils/src/address.ts:35](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/address.ts#L35)
 
 ___
 
 ### publicKeyToAddress
 
-▸ **publicKeyToAddress**(`publicKey`): `string`
+▸ **publicKeyToAddress**(`publicKey`): \`0x$\{string}\`
 
 #### Parameters
 
@@ -405,11 +405,11 @@ ___
 
 #### Returns
 
-`string`
+\`0x$\{string}\`
 
 #### Defined in
 
-[packages/sdk/utils/src/address.ts:36](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/address.ts#L36)
+[packages/sdk/utils/src/address.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/address.ts#L38)
 
 ___
 

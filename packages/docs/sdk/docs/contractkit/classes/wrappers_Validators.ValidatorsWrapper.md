@@ -899,13 +899,13 @@ ___
 
 ### currentValidatorAccountsSet
 
-▸ **currentValidatorAccountsSet**(): `Promise`\<\{ `account`: `string` ; `signer`: `string`  }[]\>
+▸ **currentValidatorAccountsSet**(): `Promise`\<\{ `account`: \`0x$\{string}\` ; `signer`: `string`  }[]\>
 
 Returns the current set of validator signer and account addresses
 
 #### Returns
 
-`Promise`\<\{ `account`: `string` ; `signer`: `string`  }[]\>
+`Promise`\<\{ `account`: \`0x$\{string}\` ; `signer`: `string`  }[]\>
 
 #### Defined in
 
@@ -1410,7 +1410,7 @@ ___
 
 ### signerToAccount
 
-▸ **signerToAccount**(`signerAddress`): `Promise`\<`string`\>
+▸ **signerToAccount**(`signerAddress`): `Promise`\<\`0x$\{string}\`\>
 
 Returns the account associated with `signer`.
 
@@ -1422,7 +1422,7 @@ Returns the account associated with `signer`.
 
 #### Returns
 
-`Promise`\<`string`\>
+`Promise`\<\`0x$\{string}\`\>
 
 The associated account.
 
@@ -1438,7 +1438,7 @@ ___
 
 ### validatorSignerToAccount
 
-▸ **validatorSignerToAccount**(`signerAddress`): `Promise`\<`string`\>
+▸ **validatorSignerToAccount**(`signerAddress`): `Promise`\<\`0x$\{string}\`\>
 
 Returns the account associated with `signer`.
 
@@ -1450,7 +1450,7 @@ Returns the account associated with `signer`.
 
 #### Returns
 
-`Promise`\<`string`\>
+`Promise`\<\`0x$\{string}\`\>
 
 The associated account.
 

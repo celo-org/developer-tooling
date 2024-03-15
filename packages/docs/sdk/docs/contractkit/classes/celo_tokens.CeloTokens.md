@@ -192,7 +192,7 @@ ___
 
 ### getAddress
 
-▸ **getAddress**(`token`): `Promise`\<`string`\>
+▸ **getAddress**(`token`): `Promise`\<\`0x$\{string}\`\>
 
 Gets the address of the contract for the provided token.
 
@@ -204,7 +204,7 @@ Gets the address of the contract for the provided token.
 
 #### Returns
 
-`Promise`\<`string`\>
+`Promise`\<\`0x$\{string}\`\>
 
 A promise resolving to the address of the token's contract
 
@@ -258,7 +258,7 @@ ___
 
 ### getFeeCurrencyAddress
 
-▸ **getFeeCurrencyAddress**(`token`): `undefined` \| `Promise`\<`string`\>
+▸ **getFeeCurrencyAddress**(`token`): `undefined` \| `Promise`\<\`0x$\{string}\`\>
 
 Gets the address to use as the feeCurrency when paying for gas with the
  provided token.
@@ -271,7 +271,7 @@ Gets the address to use as the feeCurrency when paying for gas with the
 
 #### Returns
 
-`undefined` \| `Promise`\<`string`\>
+`undefined` \| `Promise`\<\`0x$\{string}\`\>
 
 If not CELO, the address of the token's contract. If CELO, undefined.
 
