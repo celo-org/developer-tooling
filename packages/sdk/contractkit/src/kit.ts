@@ -1,13 +1,6 @@
 // tslint:disable: ordered-imports
 import { StrongAddress } from '@celo/base'
-import {
-  Address,
-  CeloTx,
-  CeloTxObject,
-  Connection,
-  ReadOnlyWallet,
-  TransactionResult,
-} from '@celo/connect'
+import { CeloTx, CeloTxObject, Connection, ReadOnlyWallet, TransactionResult } from '@celo/connect'
 import { EIP712TypedData } from '@celo/utils/lib/sign-typed-data-utils'
 import { Signature } from '@celo/utils/lib/signatureUtils'
 import { LocalWallet } from '@celo/wallet-local'
@@ -227,11 +220,11 @@ export class ContractKit {
     this.connection.addAccount(privateKey)
   }
 
-  set defaultAccount(address: Address | undefined) {
+  set defaultAccount(address: StrongAddress | undefined) {
     this.connection.defaultAccount = address
   }
 
-  get defaultAccount(): Address | undefined {
+  get defaultAccount(): StrongAddress | undefined {
     return this.connection.defaultAccount
   }
 

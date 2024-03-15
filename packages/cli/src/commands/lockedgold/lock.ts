@@ -1,4 +1,4 @@
-import { Address } from '@celo/connect'
+import { StrongAddress } from '@celo/base'
 import { Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { BaseCommand } from '../../base'
@@ -12,7 +12,7 @@ export default class Lock extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    from: Flags.string({ ...CustomFlags.address, required: true }),
+    from: CustomFlags.address({ ...CustomFlags.address, required: true }),
     value: Flags.string({ ...LockedGoldArgs.valueArg, required: true }),
   }
 
@@ -25,7 +25,7 @@ export default class Lock extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(Lock)
-    const address: Address = res.flags.from
+    const address = res.flags.from as StrongAddress
 
     kit.defaultAccount = address
     const value = new BigNumber(res.flags.value)

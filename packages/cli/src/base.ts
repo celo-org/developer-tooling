@@ -11,6 +11,7 @@ import net from 'net'
 import Web3 from 'web3'
 import { getNodeUrl } from './utils/config'
 import { requireNodeIsSynced } from './utils/helpers'
+import { CustomFlags } from './utils/command'
 /**
  *
  * I defined a `getGasOptions` function in `helpers.ts` that makes a contract call to fetch the
@@ -48,7 +49,7 @@ export abstract class BaseCommand extends Command {
         }
       },
     }),
-    gasCurrency: Flags.string({
+    gasCurrency: CustomFlags.address({
       description:
         'Use a specific gas currency for transaction fees (defaults to CELO if no gas currency is supplied)',
       hidden: true,

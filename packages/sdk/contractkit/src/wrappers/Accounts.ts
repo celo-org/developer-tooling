@@ -1,9 +1,10 @@
 import { Accounts } from '@celo/abis/web3/Accounts'
+import { StrongAddress } from '@celo/base'
 import { NativeSigner, Signature, Signer } from '@celo/base/lib/signatureUtils'
-import { Address, CeloTransactionObject, toTransactionObject } from '@celo/connect'
+import { Address, CeloTransactionObject, CeloTxObject, toTransactionObject } from '@celo/connect'
 import {
-  hashMessageWithPrefix,
   LocalSigner,
+  hashMessageWithPrefix,
   parseSignature,
   signedMessageToPublicKey,
 } from '@celo/utils/lib/signatureUtils'
@@ -48,8 +49,8 @@ export class AccountsWrapper extends BaseWrapper<Accounts> {
    * @param account The address of the account.
    * @return The address with which the account can vote.
    */
-  getAttestationSigner: (account: string) => Promise<Address> = proxyCall(
-    this.contract.methods.getAttestationSigner
+  getAttestationSigner: (account: string) => Promise<StrongAddress> = proxyCall(
+    this.contract.methods.getAttestationSigner as (account: string) => CeloTxObject<StrongAddress>
   )
 
   /**
@@ -66,16 +67,16 @@ export class AccountsWrapper extends BaseWrapper<Accounts> {
    * @param account The address of the account.
    * @return The address with which the account can vote.
    */
-  getVoteSigner: (account: string) => Promise<Address> = proxyCall(
-    this.contract.methods.getVoteSigner
+  getVoteSigner: (account: string) => Promise<StrongAddress> = proxyCall(
+    this.contract.methods.getVoteSigner as (account: string) => CeloTxObject<StrongAddress>
   )
   /**
    * Returns the validator signer for the specified account.
    * @param account The address of the account.
    * @return The address with which the account can register a validator or group.
    */
-  getValidatorSigner: (account: string) => Promise<Address> = proxyCall(
-    this.contract.methods.getValidatorSigner
+  getValidatorSigner: (account: string) => Promise<StrongAddress> = proxyCall(
+    this.contract.methods.getValidatorSigner as (account: string) => CeloTxObject<StrongAddress>
   )
 
   /**
@@ -83,8 +84,8 @@ export class AccountsWrapper extends BaseWrapper<Accounts> {
    * @param signer Address that is authorized to sign the tx as voter
    * @return The Account address
    */
-  voteSignerToAccount: (signer: Address) => Promise<Address> = proxyCall(
-    this.contract.methods.voteSignerToAccount
+  voteSignerToAccount: (signer: Address) => Promise<StrongAddress> = proxyCall(
+    this.contract.methods.voteSignerToAccount as (account: string) => CeloTxObject<StrongAddress>
   )
 
   /**
@@ -92,8 +93,10 @@ export class AccountsWrapper extends BaseWrapper<Accounts> {
    * @param signer Address that is authorized to sign the tx as validator
    * @return The Account address
    */
-  validatorSignerToAccount: (signer: Address) => Promise<Address> = proxyCall(
-    this.contract.methods.validatorSignerToAccount
+  validatorSignerToAccount: (signer: Address) => Promise<StrongAddress> = proxyCall(
+    this.contract.methods.validatorSignerToAccount as (
+      account: string
+    ) => CeloTxObject<StrongAddress>
   )
 
   /**
@@ -102,8 +105,8 @@ export class AccountsWrapper extends BaseWrapper<Accounts> {
    * @dev Fails if the `signer` is not an account or previously authorized signer.
    * @return The associated account.
    */
-  signerToAccount: (signer: Address) => Promise<Address> = proxyCall(
-    this.contract.methods.signerToAccount
+  signerToAccount: (signer: Address) => Promise<StrongAddress> = proxyCall(
+    this.contract.methods.signerToAccount as (account: string) => CeloTxObject<StrongAddress>
   )
 
   /**

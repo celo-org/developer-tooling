@@ -1,4 +1,4 @@
-import { Address } from '@celo/connect'
+import { StrongAddress } from '@celo/base'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { NetworkConfig, testWithGanache, timeTravel } from '@celo/dev-utils/lib/ganache-test'
@@ -25,11 +25,11 @@ testWithGanache('governance:upvote cmd', (web3: Web3) => {
   const proposalID6 = new BigNumber(6)
   const proposalID7 = new BigNumber(7)
 
-  let accounts: Address[] = []
+  let accounts: StrongAddress[] = []
   let governance: GovernanceWrapper
 
   beforeEach(async () => {
-    accounts = await web3.eth.getAccounts()
+    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
     governance = await kit.contracts.getGovernance()
     const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()

@@ -1,5 +1,6 @@
 import { Flags } from '@oclif/core'
 
+import { StrongAddress } from '@celo/base'
 import prompts from 'prompts'
 import { displaySendTx, printValueMap } from '../../utils/cli'
 import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
@@ -55,7 +56,7 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
       let voteSigner = await accounts.getVoteSigner(contractAddress)
       if (voteSigner !== contractAddress) {
         const password = 'bad_password'
-        voteSigner = await web3.eth.personal.newAccount(password)
+        voteSigner = (await web3.eth.personal.newAccount(password)) as StrongAddress
         await web3.eth.personal.unlockAccount(voteSigner, password, 1000)
         const pop = await accounts.generateProofOfKeyPossession(contractAddress, voteSigner)
         await displaySendTx(

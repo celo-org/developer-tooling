@@ -4,10 +4,17 @@ import {
   findAddressIndex,
   normalizeAddressWith0x,
   NULL_ADDRESS,
+  StrongAddress,
 } from '@celo/base/lib/address'
 import { concurrentMap, concurrentValuesMap } from '@celo/base/lib/async'
 import { zeroRange, zip } from '@celo/base/lib/collections'
-import { Address, CeloTransactionObject, EventLog, toTransactionObject } from '@celo/connect'
+import {
+  Address,
+  CeloTransactionObject,
+  CeloTxObject,
+  EventLog,
+  toTransactionObject,
+} from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import {
   fixidityValueToBigNumber,
@@ -95,16 +102,25 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
    * @param blockNumber Block number to retrieve the validator set from.
    * @return Address of validator at the requested index.
    */
-  validatorSignerAddressFromSet: (signerIndex: number, blockNumber: number) => Promise<Address> =
-    proxyCall(this.contract.methods.validatorSignerAddressFromSet)
+  validatorSignerAddressFromSet: (
+    signerIndex: number,
+    blockNumber: number
+  ) => Promise<StrongAddress> = proxyCall(
+    this.contract.methods.validatorSignerAddressFromSet as (
+      signerIndex: number,
+      blockNumber: number
+    ) => CeloTxObject<StrongAddress>
+  )
 
   /**
    * Gets a validator address from the current validator set.
    * @param index Index of requested validator in the validator set.
-   * @return Address of validator at the requested index.
+   * @return Address of validator at the requested index.PrPromise<StrongAddress>ess>
    */
-  validatorSignerAddressFromCurrentSet: (index: number) => Promise<Address> = proxyCall(
-    this.contract.methods.validatorSignerAddressFromCurrentSet,
+  validatorSignerAddressFromCurrentSet: (index: number) => Promise<StrongAddress> = proxyCall(
+    this.contract.methods.validatorSignerAddressFromCurrentSet as (
+      signerIndex: number
+    ) => CeloTxObject<StrongAddress>,
     tupleParser<number, number>(identity)
   )
 

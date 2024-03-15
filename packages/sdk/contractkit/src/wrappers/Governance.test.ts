@@ -1,10 +1,10 @@
+import { Registry } from '@celo/abis/web3/Registry'
 import { Address } from '@celo/base/lib/address'
 import { concurrentMap } from '@celo/base/lib/async'
 import { NetworkConfig, testWithGanache, timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { CeloContract } from '..'
-import { Registry } from '@celo/abis/web3/Registry'
 import { newKitFromWeb3 } from '../kit'
 import { AccountsWrapper } from './Accounts'
 import { GovernanceWrapper, Proposal, ProposalTransaction, VoteValue } from './Governance'
@@ -19,7 +19,7 @@ testWithGanache('Governance Wrapper', (web3: Web3) => {
   const minDeposit = web3.utils.toWei(expConfig.minDeposit.toString(), 'ether')
   const ONE_CGLD = web3.utils.toWei('1', 'ether')
 
-  let accounts: Address[] = []
+  let accounts: StrongAddress[] = []
   let governance: GovernanceWrapper
   let governanceApproverMultiSig: MultiSigWrapper
   let lockedGold: LockedGoldWrapper

@@ -17,7 +17,7 @@ export default class SetWallet extends BaseCommand {
     }),
     signer: CustomFlags.address({
       required: false,
-      default: '',
+      default: undefined,
       description: 'Address of the signer key to verify proof of possession.',
     }),
   }
