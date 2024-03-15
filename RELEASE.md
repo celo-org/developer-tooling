@@ -62,27 +62,36 @@ $ git push --follow-tags
 
 ## Pre-releases
 
-to create betas 
+### To create betas 
 
-from master checkout a new branch and run 
+from master checkout a new branch (name as you wish) and run 
 
 `yarn changesets pre enter beta`
 
-then commit, push and open a pr
+This will create `.changeset/pre.json` 
 
-once the pr is merged the changesets github action will create a new pr entitld "Version Packages (beta)" merging it will result in package releases. 
+Commit this file, push and open a pull request. [example of previous pr](https://github.com/celo-org/developer-tooling/commit/4baf0a79e01cafb78f19221ed5a56963410bdf5d)
 
-you can keep master branch in beta mode until you are statisfied and ready for the main release then run 
+```
+git add .changeset/pre.json
+git commit -m "Enter Beta Mode"
+git push 
+```
+
+Once the pr is merged the changesets github action will create a new pr entitld "Version Packages (beta)" merging it will result in package releases. 
+
+You may keep master branch in beta mode until you are statisfied and ready for the main release then run 
 
 `yarn changesets pre exit`  
 
-(this will just change pre mode in the changesets config to "exit")
+(this will just change pre mode in the changesets config to "exit") 
 
-commit the changes, push and open a pr to master branch 
 
-as with entering pre mode the changeset action will open a pr. this time entitled "Version Packages" 
+Commit the changes to `.changeset/pre.json`, `git push` and open a pr to master branch.
 
-### troubleshooting
+As with exiting pre mode, on merge of your PR the changeset action will open a new PR -- this time entitled "Version Packages" 
+
+### Troubleshooting
 
 If packages are not released when a Version Packages PR is merged or the Version Packages PR is never created there is likely an issue with the gh action. Go to [github.com/celo-org/developer-tooling/actions/workflows/release.yaml](https://github.com/celo-org/developer-tooling/actions/workflows/release.yaml) and see if there are errors. 
 
