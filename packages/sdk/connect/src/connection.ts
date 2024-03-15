@@ -140,7 +140,7 @@ export class Connection {
     return this.config.feeCurrency
   }
 
-  isLocalAccount(address?: Address): boolean {
+  isLocalAccount(address?: StrongAddress): boolean {
     return this.wallet != null && this.wallet.hasAccount(address)
   }
 
@@ -168,17 +168,19 @@ export class Connection {
     }
   }
 
-  async getNodeAccounts(): Promise<string[]> {
+  async getNodeAccounts(): Promise<StrongAddress[]> {
     const nodeAccountsResp = await this.rpcCaller.call('eth_accounts', [])
-    return this.toChecksumAddresses(nodeAccountsResp.result ?? [])
+    return this.toChecksumAddresses(nodeAccountsResp.result ?? []) as StrongAddress[]
   }
 
-  getLocalAccounts(): string[] {
-    return this.wallet ? this.toChecksumAddresses(this.wallet.getAccounts()) : []
+  getLocalAccounts(): StrongAddress[] {
+    return this.wallet
+      ? (this.toChecksumAddresses(this.wallet.getAccounts()) as StrongAddress[])
+      : []
   }
 
-  async getAccounts(): Promise<string[]> {
-    return (await this.getNodeAccounts()).concat(this.getLocalAccounts())
+  async getAccounts(): Promise<StrongAddress[]> {
+    return (await this.getNodeAccounts()).concat(this.getLocalAccounts()) as StrongAddress[]
   }
 
   private toChecksumAddresses(addresses: string[]) {
