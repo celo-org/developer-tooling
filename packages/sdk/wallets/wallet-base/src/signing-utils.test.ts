@@ -27,7 +27,7 @@ describe('rlpEncodedTx', () => {
       gas: '1500000000',
       gasPrice: '9900000000',
       data: '0xabcdef',
-    }
+    } as const
     it('convert CeloTx into RLP', () => {
       const transaction = {
         ...legacyTransaction,
@@ -61,7 +61,7 @@ describe('rlpEncodedTx', () => {
         const transaction = {
           ...legacyTransaction,
           chainId: -1,
-        }
+        } as const
         expect(() => rlpEncodedTx(transaction)).toThrowErrorMatchingInlineSnapshot(
           `"Gas, nonce or chainId is less than than 0"`
         )
@@ -143,7 +143,7 @@ describe('rlpEncodedTx', () => {
         const CIP64Transaction = {
           ...eip1559Transaction,
           feeCurrency: '0x5409ED021D9299bf6814279A6A1411A7e866A631',
-        }
+        } as const
         const result = rlpEncodedTx(CIP64Transaction)
         expect(result).toMatchInlineSnapshot(`
           {

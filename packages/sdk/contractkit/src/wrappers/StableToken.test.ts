@@ -58,7 +58,7 @@ export function testStableToken(
 
   beforeAll(async () => {
     accounts = await web3.eth.getAccounts()
-    kit.defaultAccount = accounts[0]
+    kit.defaultAccount = accounts[0] as StrongAddress
     stableToken = await kit.contracts.getStableToken(stableTokenName)
   })
 

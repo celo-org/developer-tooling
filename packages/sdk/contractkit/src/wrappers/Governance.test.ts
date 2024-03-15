@@ -1,5 +1,5 @@
 import { Registry } from '@celo/abis/web3/Registry'
-import { Address } from '@celo/base/lib/address'
+import { Address, StrongAddress } from '@celo/base/lib/address'
 import { concurrentMap } from '@celo/base/lib/async'
 import { NetworkConfig, testWithGanache, timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import BigNumber from 'bignumber.js'
@@ -27,7 +27,7 @@ testWithGanache('Governance Wrapper', (web3: Web3) => {
   let registry: Registry
 
   beforeAll(async () => {
-    accounts = await web3.eth.getAccounts()
+    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
     governance = await kit.contracts.getGovernance()
     governanceApproverMultiSig = await kit.contracts.getMultiSig(await governance.getApprover())
