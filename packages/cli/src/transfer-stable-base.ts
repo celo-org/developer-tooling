@@ -7,6 +7,28 @@ import { newCheckBuilder } from './utils/checks'
 import { displaySendTx, failWith } from './utils/cli'
 import { CustomFlags } from './utils/command'
 
+const erc20_mock_abi = [
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+    ],
+    name: 'balanceOf',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+] as const
+
 export abstract class TransferStableBase extends BaseCommand {
   static flags = {
     ...BaseCommand.flags,
@@ -39,6 +61,8 @@ export abstract class TransferStableBase extends BaseCommand {
     if (res.flags.gasCurrency) {
       kit.connection.defaultFeeCurrency = res.flags.gasCurrency
     }
+    // If gasCurrency is not set, defaults to eip1559 tx
+    const params = res.flags.feeCurrency ? { feeCurrency: kit.connection.defaultFeeCurrency } : {}
 
     const tx = res.flags.comment
       ? stableToken.transferWithComment(to, value.toFixed(), res.flags.comment)
@@ -53,14 +77,20 @@ export abstract class TransferStableBase extends BaseCommand {
       .isNotSanctioned(from)
       .isNotSanctioned(to)
       .addCheck(
-        `Account can afford transfer in ${this._stableCurrency} and gas paid in ${res.flags.gasCurrency}`,
+        `Account can afford transfer in ${this._stableCurrency} and gas paid in ${
+          res.flags.gasCurrency || 'native token'
+        }`,
         async () => {
           ;[gas, gasPrice, gasBalance, valueBalance] = await Promise.all([
-            tx.txo.estimateGas({ feeCurrency: kit.connection.defaultFeeCurrency }),
+            tx.txo.estimateGas(params),
             kit.connection.gasPrice(kit.connection.defaultFeeCurrency),
-            kit.contracts
-              .getErc20(kit.connection.defaultFeeCurrency!)
-              .then((erc20) => erc20.balanceOf(from)),
+            res.flags.gasCurrency
+              ? // @ts-expect-error abi typing is not 100% correct but works
+                new kit.web3.eth.Contract(erc20_mock_abi, res.flags.gasCurrency).methods
+                  .balanceOf(from)
+                  .call()
+                  .then((x: string) => new BigNumber(x))
+              : kit.contracts.getGoldToken().then((celo) => celo.balanceOf(from)),
             kit.contracts
               .getStableToken(this._stableCurrency!)
               .then((token) => token.balanceOf(from)),
@@ -75,8 +105,6 @@ export abstract class TransferStableBase extends BaseCommand {
       )
       .runChecks()
 
-    // If gasCurrency is not set, defaults to eip1559 tx
-    const params = res.flags.feeCurrency ? { feeCurrency: kit.connection.defaultFeeCurrency } : {}
     await displaySendTx(res.flags.comment ? 'transferWithComment' : 'transfer', tx, params)
   }
 }
