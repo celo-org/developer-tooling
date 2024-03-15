@@ -45,7 +45,7 @@ export function inputCeloTxFormatter(tx: CeloTx): FormattedCeloTx {
   formattedTX.from = inputAddressFormatter(from?.toString())
   formattedTX.to = inputAddressFormatter(to)
 
-  formattedTX.gas = numberToHex(gas?.toString())
+  formattedTX.gas = numberToHex(gas)
 
   formattedTX.value = numberToHex(value?.toString())
   formattedTX.nonce = numberToHex(nonce?.toString())
