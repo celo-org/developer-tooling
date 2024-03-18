@@ -84,7 +84,7 @@ FeeCurrencyWhitelist contract listing available currencies usable to pay fees
 
 #### Defined in
 
-packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:65
+[packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:62](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts#L62)
 
 ___
 
@@ -145,7 +145,7 @@ ___
 
 #### Defined in
 
-packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:30
+[packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts#L27)
 
 ___
 
@@ -183,7 +183,7 @@ ___
 
 #### Defined in
 
-packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:64
+[packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:61](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts#L61)
 
 ## Accessors
 
@@ -223,7 +223,7 @@ BaseWrapper.address
 
 #### Defined in
 
-packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:36
+[packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:33](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts#L33)
 
 ___
 

@@ -20,4 +20,4 @@
 
 #### Defined in
 
-packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:68
+[packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:65](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts#L65)
