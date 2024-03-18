@@ -6,7 +6,7 @@ import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
-export default class ElectionVote extends BaseCommand {
+export default class ElectionActivate extends BaseCommand {
   static description =
     'Activate pending votes in validator elections to begin earning rewards. To earn rewards as a voter, it is required to activate your pending votes at some point after the end of the epoch in which they were made.'
 
@@ -31,7 +31,7 @@ export default class ElectionVote extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
-    const res = await this.parse(ElectionVote)
+    const res = await this.parse(ElectionActivate)
 
     const forAccount = res.flags.for ?? res.flags.from
     await newCheckBuilder(this, forAccount).isSignerOrAccount().runChecks()

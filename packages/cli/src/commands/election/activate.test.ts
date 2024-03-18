@@ -5,13 +5,12 @@ import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import {
   mineEpoch,
-  registerAccount,
   registerAccountWithLockedGold,
   setupGroupAndAffiliateValidator,
   voteForGroupFrom,
 } from '../../test-utils/chain-setup'
 import { stripAnsiCodes, testLocally } from '../../test-utils/cliUtils'
-import Activate from './activate'
+import ElectionActivate from './activate'
 
 process.env.NO_SYNCCHECK = 'true'
 
@@ -21,7 +20,7 @@ testWithGanache('election:activate', (web3: Web3) => {
   })
 
   it('fails when no flags are provided', async () => {
-    await expect(testLocally(Activate, [])).rejects.toThrow('Missing required flag from')
+    await expect(testLocally(ElectionActivate, [])).rejects.toThrow('Missing required flag from')
   })
 
   it('shows no pending votes', async () => {
@@ -29,9 +28,9 @@ testWithGanache('election:activate', (web3: Web3) => {
     const [userAddress] = await web3.eth.getAccounts()
     const writeMock = jest.spyOn(ux.write, 'stdout')
 
-    registerAccount(kit, userAddress)
+    await registerAccountWithLockedGold(kit, userAddress)
 
-    await testLocally(Activate, ['--from', userAddress])
+    await testLocally(ElectionActivate, ['--from', userAddress])
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`
       [
@@ -53,7 +52,7 @@ testWithGanache('election:activate', (web3: Web3) => {
     await registerAccountWithLockedGold(kit, userAddress)
 
     await voteForGroupFrom(kit, userAddress, groupAddress, new BigNumber(10))
-    await testLocally(Activate, ['--from', userAddress])
+    await testLocally(ElectionActivate, ['--from', userAddress])
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`
       [
@@ -83,7 +82,7 @@ testWithGanache('election:activate', (web3: Web3) => {
       new BigNumber(0)
     )
 
-    await testLocally(Activate, ['--from', userAddress])
+    await testLocally(ElectionActivate, ['--from', userAddress])
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
     expect((await election.getVotesForGroupByAccount(userAddress, groupAddress)).active).toEqual(
@@ -109,7 +108,7 @@ testWithGanache('election:activate', (web3: Web3) => {
     )
 
     await Promise.all([
-      testLocally(Activate, ['--from', userAddress, '--wait']),
+      testLocally(ElectionActivate, ['--from', userAddress, '--wait']),
       new Promise<void>((resolve) => {
         // at least the amount the --wait flag waits in the check
         setTimeout(async () => {
@@ -166,7 +165,7 @@ testWithGanache('election:activate', (web3: Web3) => {
       (await election.getVotesForGroupByAccount(otherUserAddress, groupAddress)).active
     ).toEqual(new BigNumber(0))
 
-    await testLocally(Activate, ['--from', otherUserAddress, '--for', userAddress])
+    await testLocally(ElectionActivate, ['--from', otherUserAddress, '--for', userAddress])
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
     expect((await election.getVotesForGroupByAccount(userAddress, groupAddress)).active).toEqual(
