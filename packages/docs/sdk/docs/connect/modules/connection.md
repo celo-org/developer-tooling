@@ -34,4 +34,4 @@
 
 #### Defined in
 
-[packages/sdk/connect/src/connection.ts:535](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L535)
+[packages/sdk/connect/src/connection.ts:537](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L537)
