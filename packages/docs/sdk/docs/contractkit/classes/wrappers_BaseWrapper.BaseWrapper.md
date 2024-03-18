@@ -32,6 +32,8 @@
 
   ↳ [`FederatedAttestationsWrapper`](wrappers_FederatedAttestations.FederatedAttestationsWrapper.md)
 
+  ↳ [`FeeCurrencyWhitelistWrapper`](wrappers_FeeCurrencyWhitelistWrapper.FeeCurrencyWhitelistWrapper.md)
+
   ↳ [`FeeHandlerWrapper`](wrappers_FeeHandler.FeeHandlerWrapper.md)
 
   ↳ [`FreezerWrapper`](wrappers_Freezer.FreezerWrapper.md)

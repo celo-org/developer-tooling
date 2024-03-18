@@ -9,9 +9,9 @@ import { Command, Flags } from '@oclif/core'
 import chalk from 'chalk'
 import net from 'net'
 import Web3 from 'web3'
+import { CustomFlags } from './utils/command'
 import { getNodeUrl } from './utils/config'
 import { requireNodeIsSynced } from './utils/helpers'
-import { CustomFlags } from './utils/command'
 /**
  *
  * I defined a `getGasOptions` function in `helpers.ts` that makes a contract call to fetch the
@@ -203,14 +203,18 @@ export abstract class BaseCommand extends Command {
       kit.defaultAccount = res.flags.from
     }
 
-    const validFeeCurrencies = await kit.getFeeCurrencyWhitelist()
+    const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyWhitelist()
+    const validFeeCurrencies = await feeCurrencyWhitelist.getWhitelist()
     const gasCurrencyFlag = res.flags.gasCurrency as StrongAddress
     if (gasCurrencyFlag) {
       if (validFeeCurrencies.includes(gasCurrencyFlag)) {
         kit.setFeeCurrency(gasCurrencyFlag)
       } else {
-        const pairs = (await kit.getFeeCurrencyInformation(validFeeCurrencies)).map(
-          ({ name, symbol, address }) => `${address} - ${name} (${symbol})`
+        const pairs = (
+          await feeCurrencyWhitelist.getFeeCurrencyInformation(validFeeCurrencies)
+        ).map(
+          ({ name, symbol, address }) =>
+            `${address} - ${name || 'unknown name'} (${symbol || 'N/A'})`
         )
 
         throw new Error(

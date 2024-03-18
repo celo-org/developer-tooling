@@ -14,9 +14,10 @@ export default class Whitelist extends BaseCommand {
   async run() {
     const kit = await this.getKit()
 
-    const validFeeCurrencies = await kit.getFeeCurrencyWhitelist()
-    const pairs = (await kit.getFeeCurrencyInformation(validFeeCurrencies)).map(
-      ({ name, symbol, address }) => `${address} - ${name} (${symbol})`
+    const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyWhitelist()
+    const validFeeCurrencies = await feeCurrencyWhitelist.getWhitelist()
+    const pairs = (await feeCurrencyWhitelist.getFeeCurrencyInformation(validFeeCurrencies)).map(
+      ({ name, symbol, address }) => `${address} - ${name || 'unknown name'} (${symbol || 'N/A'})`
     )
     console.log(`Available currencies:\n${pairs.join('\n')}`)
   }

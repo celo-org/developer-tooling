@@ -31,8 +31,6 @@
 - [addAccount](kit.ContractKit.md#addaccount)
 - [getEpochNumberOfBlock](kit.ContractKit.md#getepochnumberofblock)
 - [getEpochSize](kit.ContractKit.md#getepochsize)
-- [getFeeCurrencyInformation](kit.ContractKit.md#getfeecurrencyinformation)
-- [getFeeCurrencyWhitelist](kit.ContractKit.md#getfeecurrencywhitelist)
 - [getFirstBlockNumberForEpoch](kit.ContractKit.md#getfirstblocknumberforepoch)
 - [getHumanReadableNetworkConfig](kit.ContractKit.md#gethumanreadablenetworkconfig)
 - [getLastBlockNumberForEpoch](kit.ContractKit.md#getlastblocknumberforepoch)
@@ -241,7 +239,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:327](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L327)
+[packages/sdk/contractkit/src/kit.ts:274](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L274)
 
 ## Methods
 
@@ -296,40 +294,6 @@ ___
 #### Defined in
 
 [packages/sdk/contractkit/src/kit.ts:195](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L195)
-
-___
-
-### getFeeCurrencyInformation
-
-▸ **getFeeCurrencyInformation**(`feeCurrencies`): `Promise`\<\{ `address`: \`0x$\{string}\` ; `name`: `string` ; `symbol`: `string`  }[]\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `feeCurrencies` | \`0x$\{string}\`[] |
-
-#### Returns
-
-`Promise`\<\{ `address`: \`0x$\{string}\` ; `name`: `string` ; `symbol`: `string`  }[]\>
-
-#### Defined in
-
-[packages/sdk/contractkit/src/kit.ts:280](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L280)
-
-___
-
-### getFeeCurrencyWhitelist
-
-▸ **getFeeCurrencyWhitelist**(): `Promise`\<\`0x$\{string}\`[]\>
-
-#### Returns
-
-`Promise`\<\`0x$\{string}\`[]\>
-
-#### Defined in
-
-[packages/sdk/contractkit/src/kit.ts:270](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L270)
 
 ___
 
@@ -567,4 +531,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:323](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L323)
+[packages/sdk/contractkit/src/kit.ts:270](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L270)

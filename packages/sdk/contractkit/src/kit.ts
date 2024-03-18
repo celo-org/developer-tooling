@@ -267,59 +267,6 @@ export class ContractKit {
     return this.connection.signTypedData(signer, typedData)
   }
 
-  async getFeeCurrencyWhitelist(): Promise<StrongAddress[]> {
-    const [whitelist] = await Promise.all([
-      this._web3Contracts.getContract(CeloContract.FeeCurrencyWhitelist),
-    ])
-    const feeCurrencyWhitelist = (await whitelist.methods.getWhitelist().call()) as StrongAddress[]
-
-    // Making sure we always have a uniq list.
-    return [...new Set(feeCurrencyWhitelist)].sort()
-  }
-
-  async getFeeCurrencyInformation(feeCurrencies: StrongAddress[]): Promise<
-    {
-      name: string
-      address: StrongAddress
-      symbol: string
-    }[]
-  > {
-    const abi = [
-      {
-        type: 'function' as const,
-        stateMutability: 'view',
-        outputs: [{ type: 'string', name: '', internalType: 'string' }],
-        name: 'symbol',
-        inputs: [],
-      },
-      {
-        type: 'function' as const,
-        stateMutability: 'view',
-        outputs: [{ type: 'string', name: '', internalType: 'string' }],
-        name: 'name',
-        inputs: [],
-      },
-    ]
-
-    return Promise.all(
-      feeCurrencies.map(async (address) => {
-        // @ts-expect-error abi typing is not 100% correct but works
-        const contract = new this.web3.eth.Contract(abi, address)
-        return Promise.all([
-          contract.methods
-            .name()
-            .call()
-            .catch(() => 'unknown name'),
-          contract.methods
-            .symbol()
-            .call()
-            .catch(() => 'N/A'),
-          address,
-        ]).then(([name, symbol, address]) => ({ name, symbol, address }))
-      })
-    )
-  }
-
   stop() {
     this.connection.stop()
   }

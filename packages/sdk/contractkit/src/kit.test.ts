@@ -176,7 +176,8 @@ testWithGanache('Fetch whitelisted fee currencies', (web3: Web3) => {
 
   describe('When whitelisted fee currencies are fetched on-chain', () => {
     test('Then the result includes addresses', async () => {
-      const gasOptions = await kit.getFeeCurrencyWhitelist()
+      const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyWhitelist()
+      const gasOptions = await feeCurrencyWhitelist.getWhitelist()
       for (let i = 0; i < gasOptions.length; i++) {
         expect(web3.utils.isAddress(gasOptions[i])).toBeTruthy()
       }
@@ -184,7 +185,8 @@ testWithGanache('Fetch whitelisted fee currencies', (web3: Web3) => {
 
     test.failing('Then the resulting addresses are valid fee currencies', async () => {
       const celo = await kit.contracts.getGoldToken()
-      const gasOptions = await kit.getFeeCurrencyWhitelist()
+      const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyWhitelist()
+      const gasOptions = await feeCurrencyWhitelist.getWhitelist()
       const sender = accounts[0]
       const recipient = accounts[1]
       const amount = kit.web3.utils.toWei('0.01', 'ether')

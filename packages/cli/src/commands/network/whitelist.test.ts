@@ -7,17 +7,10 @@ process.env.NO_SYNCCHECK = 'true'
 // Lots of commands, sometimes times out
 jest.setTimeout(15000)
 
-testWithGanache('utils:whitelist cmd', () => {
-  // let accounts: string[] = []
-  // let kit: ContractKit
-
-  // beforeEach(async () => {
-  //   kit = newKitFromWeb3(web3)
-  //   accounts = await web3.eth.getAccounts()
-  // })
-
+testWithGanache('network:whitelist cmd', () => {
   test('can print the whitelist', async () => {
     const spy = jest.spyOn(console, 'log')
+
     await testLocally(Whitelist, [])
     expect(spy.mock.calls[0][0]).toMatchInlineSnapshot(`
       "Available currencies:
