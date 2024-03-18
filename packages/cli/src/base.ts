@@ -229,6 +229,9 @@ export abstract class BaseCommand extends Command {
 
   async finally(arg: Error | undefined): Promise<any> {
     try {
+      if (arg) {
+        console.error('received error while cleaning up', arg)
+      }
       const kit = await this.getKit()
       kit.connection.stop()
     } catch (error) {

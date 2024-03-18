@@ -179,7 +179,6 @@ export class ContractKit {
     configArray.forEach((config, index) => (configMap[configContracts[index]] = config))
 
     return {
-      stableTokens: await this.celoTokens.getStablesConfigs(humanReadable),
       ...configMap,
     }
   }
