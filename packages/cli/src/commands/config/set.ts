@@ -1,4 +1,3 @@
-import { StrongAddress } from '@celo/base'
 import { BaseCommand } from '../../base'
 import { readConfig, writeConfig } from '../../utils/config'
 export default class Set extends BaseCommand {
@@ -24,7 +23,7 @@ export default class Set extends BaseCommand {
     const res = await this.parse(Set)
     const curr = readConfig(this.config.configDir)
     const node = res.flags.node ?? curr.node
-    const gasCurrency = res.flags.gasCurrency as StrongAddress
+    const gasCurrency = res.flags.gasCurrency ?? curr.gasCurrency
 
     await writeConfig(
       this.config.configDir,
