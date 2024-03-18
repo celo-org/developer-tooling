@@ -12,15 +12,7 @@ import Web3 from 'web3'
 import { CustomFlags } from './utils/command'
 import { getNodeUrl } from './utils/config'
 import { requireNodeIsSynced } from './utils/helpers'
-/**
- *
- * I defined a `getGasOptions` function in `helpers.ts` that makes a contract call to fetch the
- * whitelisted address, but I need to consider that the list of gasOptions is different per
- * network (alfajores, mainnet, baklava), because:
- * 1. the fee currency addresses are different per network,
- * 2. the whitelist is different, alfajores has more addresses for internal testing purposes.
- *
- */
+
 export abstract class BaseCommand extends Command {
   static flags = {
     privateKey: Flags.string({
