@@ -283,7 +283,7 @@ ___
 
 ### getStablesConfigs
 
-▸ **getStablesConfigs**(`humanReadable?`): `Promise`\<[`EachCeloToken`](../modules/celo_tokens.md#eachcelotoken)\<[`StableTokenConfig`](../interfaces/wrappers_StableTokenWrapper.StableTokenConfig.md) \| \{ `decimals`: `number` ; `inflationParameters`: \{ `factor`: `BigNumber` ; `factorLastUpdated`: `string` ; `rate`: `BigNumber` ; `updatePeriod`: `string`  } ; `name`: `string` ; `symbol`: `string`  }\>\>
+▸ **getStablesConfigs**(`humanReadable?`): `Promise`\<[`EachCeloToken`](../modules/celo_tokens.md#eachcelotoken)\<[`StableTokenConfig`](../interfaces/wrappers_StableTokenWrapper.StableTokenConfig.md)\>\>
 
 #### Parameters
 
@@ -293,7 +293,7 @@ ___
 
 #### Returns
 
-`Promise`\<[`EachCeloToken`](../modules/celo_tokens.md#eachcelotoken)\<[`StableTokenConfig`](../interfaces/wrappers_StableTokenWrapper.StableTokenConfig.md) \| \{ `decimals`: `number` ; `inflationParameters`: \{ `factor`: `BigNumber` ; `factorLastUpdated`: `string` ; `rate`: `BigNumber` ; `updatePeriod`: `string`  } ; `name`: `string` ; `symbol`: `string`  }\>\>
+`Promise`\<[`EachCeloToken`](../modules/celo_tokens.md#eachcelotoken)\<[`StableTokenConfig`](../interfaces/wrappers_StableTokenWrapper.StableTokenConfig.md)\>\>
 
 #### Defined in
 
