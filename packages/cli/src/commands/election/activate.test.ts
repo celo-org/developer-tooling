@@ -5,6 +5,7 @@ import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import {
   mineEpoch,
+  registerAccount,
   registerAccountWithLockedGold,
   setupGroupAndAffiliateValidator,
   voteForGroupFrom,
@@ -28,7 +29,7 @@ testWithGanache('election:activate', (web3: Web3) => {
     const [userAddress] = await web3.eth.getAccounts()
     const writeMock = jest.spyOn(ux.write, 'stdout')
 
-    await registerAccountWithLockedGold(kit, userAddress)
+    await registerAccount(kit, userAddress)
 
     await testLocally(ElectionActivate, ['--from', userAddress])
 
