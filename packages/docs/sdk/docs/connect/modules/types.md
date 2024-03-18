@@ -27,6 +27,7 @@
 - [EIP1559TXProperties](../interfaces/types.EIP1559TXProperties.md)
 - [EncodedTransaction](../interfaces/types.EncodedTransaction.md)
 - [Error](../interfaces/types.Error.md)
+- [EthereumLegacyTXProperties](../interfaces/types.EthereumLegacyTXProperties.md)
 - [FormattedCeloTx](../interfaces/types.FormattedCeloTx.md)
 - [HttpProvider](../interfaces/types.HttpProvider.md)
 - [JsonRpcPayload](../interfaces/types.JsonRpcPayload.md)
@@ -163,7 +164,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:124](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L124)
+[packages/sdk/connect/src/types.ts:134](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L134)
 
 ___
 
@@ -183,7 +184,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:121](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L121)
+[packages/sdk/connect/src/types.ts:131](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L131)
 
 ___
 
@@ -193,7 +194,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:122](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L122)
+[packages/sdk/connect/src/types.ts:132](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L132)
 
 ___
 
@@ -229,7 +230,7 @@ ___
 
 ### TransactionTypes
 
-Ƭ **TransactionTypes**: ``"eip1559"`` \| ``"celo-legacy"`` \| ``"cip42"`` \| ``"cip64"``
+Ƭ **TransactionTypes**: ``"ethereum-legacy"`` \| ``"eip1559"`` \| ``"celo-legacy"`` \| ``"cip42"`` \| ``"cip64"``
 
 #### Defined in
 
