@@ -44,7 +44,7 @@ export function inputCeloTxFormatter(tx: CeloTx): FormattedCeloTx {
   const formattedTX: Partial<FormattedCeloTx> = rest
   formattedTX.from = inputAddressFormatter(from?.toString())
   formattedTX.to = inputAddressFormatter(to)
-  //@ts-expect-error
+
   formattedTX.gas = numberToHex(gas)
 
   formattedTX.value = numberToHex(value?.toString())
