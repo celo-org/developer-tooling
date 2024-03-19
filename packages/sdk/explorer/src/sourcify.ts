@@ -53,6 +53,8 @@ export interface MetadataResponse {
   }
   settings?: {
     compilationTarget?: Record<string, string>
+    implementation?: string
+    name?: string
   }
 }
 
@@ -64,6 +66,7 @@ export interface MetadataResponse {
 export class Metadata {
   public abi: AbiItem[] | null = null
   public contractName: string | null = null
+  public implementationAddress: string | null = null
   public fnMapping: Map<string, ABIDefinition> = new Map()
 
   private abiCoder: AbiCoder
@@ -72,8 +75,9 @@ export class Metadata {
 
   constructor(connection: Connection, address: Address, response: MetadataResponse) {
     this.abiCoder = connection.getAbiCoder()
-
     this.response = response as MetadataResponse
+    this.contractName = response.settings?.name || null
+    this.implementationAddress = response.settings?.implementation || null
     // XXX: For some reason this isn't exported as it should be
     // @ts-ignore
     this.jsonInterfaceMethodToString = connection.web3.utils._jsonInterfaceMethodToString
@@ -109,7 +113,7 @@ export class Metadata {
       // XXX: Not sure when there are multiple compilationTargets and what should
       // happen then but defaulting to this for now.
       const contracts = Object.values(value.settings.compilationTarget)
-      this.contractName = contracts[0]
+      this.contractName = this.contractName || contracts[0]
     }
   }
 
@@ -187,7 +191,13 @@ export async function fetchMetadata(
   }
   console.error('None found on full match, trying celoScan')
   const fullMatchFromCeloScan = await queryCeloScan(connection, contract)
+  // TODO decide if querying celoscan here is the best or if each place fetchMetada is called to do it there
+  // same for the implementation proxy fetching
   if (fullMatchFromCeloScan !== null) {
+    if (fullMatchFromCeloScan.implementationAddress) {
+      console.info('Implementation found', fullMatchFromCeloScan.implementationAddress)
+      return queryCeloScan(connection, fullMatchFromCeloScan.implementationAddress)
+    }
     return fullMatchFromCeloScan
   }
   console.error('No full match found, trying partial match')
@@ -266,9 +276,14 @@ export async function queryCeloScan(
   )
   if (resp.ok) {
     const json = (await resp.json()) as CeloScanResponse
+    // TODO get implementation when it is a proxy. the implementation address is in the response already.
     if (json.message === 'OK' && json.result[0].SourceCode.length > 2) {
-      const data = JSON.parse(json.result[0].ABI) as AbiItem[]
-      return new Metadata(connection, contract, { output: { abi: data } })
+      const info = json.result[0]
+      const data = JSON.parse(info.ABI) as AbiItem[]
+      return new Metadata(connection, contract, {
+        output: { abi: data },
+        settings: { name: info.ContractName, implementation: info.Implementation },
+      })
     }
   }
   return null
