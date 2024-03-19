@@ -1,4 +1,3 @@
-import { StrongAddress } from '@celo/base'
 import { ReadOnlyWallet } from '@celo/connect'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { AzureHSMWallet } from '@celo/wallet-hsm-azure'
@@ -10,7 +9,7 @@ import chalk from 'chalk'
 import net from 'net'
 import Web3 from 'web3'
 import { CustomFlags } from './utils/command'
-import { getNodeUrl } from './utils/config'
+import { getGasCurrency, getNodeUrl } from './utils/config'
 import { requireNodeIsSynced } from './utils/helpers'
 
 export abstract class BaseCommand extends Command {
@@ -195,10 +194,10 @@ export abstract class BaseCommand extends Command {
       kit.defaultAccount = res.flags.from
     }
 
-    const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyWhitelist()
-    const validFeeCurrencies = await feeCurrencyWhitelist.getWhitelist()
-    const gasCurrencyFlag = res.flags.gasCurrency as StrongAddress
+    const gasCurrencyFlag = res.flags.gasCurrency ?? getGasCurrency(this.config.configDir)
     if (gasCurrencyFlag) {
+      const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyWhitelist()
+      const validFeeCurrencies = await feeCurrencyWhitelist.getWhitelist()
       if (validFeeCurrencies.includes(gasCurrencyFlag)) {
         kit.setFeeCurrency(gasCurrencyFlag)
       } else {
