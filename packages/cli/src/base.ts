@@ -205,8 +205,10 @@ export abstract class BaseCommand extends Command {
         const pairs = (
           await feeCurrencyWhitelist.getFeeCurrencyInformation(validFeeCurrencies)
         ).map(
-          ({ name, symbol, address }) =>
-            `${address} - ${name || 'unknown name'} (${symbol || 'N/A'})`
+          ({ name, symbol, address, adaptedToken }) =>
+            `${address} - ${name || 'unknown name'} (${symbol || 'N/A'})${
+              adaptedToken ? ` (adapted token: ${adaptedToken})` : ''
+            }`
         )
 
         throw new Error(

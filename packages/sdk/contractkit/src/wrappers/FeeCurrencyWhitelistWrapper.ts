@@ -18,6 +18,13 @@ const minimal_token_info_abi = [
     name: 'name',
     inputs: [],
   },
+  {
+    type: 'function' as const,
+    stateMutability: 'view',
+    inputs: [],
+    outputs: [{ type: 'address', name: '', internalType: 'address' }],
+    name: 'adaptedToken',
+  },
 ] as const
 
 /**
@@ -30,30 +37,39 @@ export class FeeCurrencyWhitelistWrapper extends BaseWrapper<FeeCurrencyWhitelis
     (addresses) => [...new Set(addresses)].sort() as StrongAddress[]
   )
 
-  async getFeeCurrencyInformation(whitelist?: StrongAddress[]): Promise<
-    {
-      name: string | undefined
-      address: StrongAddress
-      symbol: string | undefined
-    }[]
-  > {
+  async getFeeCurrencyInformation(whitelist?: StrongAddress[]) {
     const feeCurrencies = whitelist ?? (await this.getWhitelist())
 
     return Promise.all(
       feeCurrencies.map(async (address) => {
         // @ts-expect-error abi typing is not 100% correct but works
-        const contract = new this.connection.web3.eth.Contract(minimal_token_info_abi, address)
+        let contract = new this.connection.web3.eth.Contract(minimal_token_info_abi, address)
+
+        const adaptedToken = (await contract.methods
+          .adaptedToken()
+          .call()
+          .catch(() => undefined)) as StrongAddress | undefined
+
+        if (adaptedToken) {
+          // @ts-expect-error abi typing is not 100% correct but works
+          contract = new this.connection.web3.eth.Contract(minimal_token_info_abi, adaptedToken)
+        }
+
         return Promise.all([
           contract.methods
             .name()
             .call()
-            .catch(() => undefined),
+            .catch(() => undefined) as Promise<string | undefined>,
           contract.methods
             .symbol()
             .call()
-            .catch(() => undefined),
+            .catch(() => undefined) as Promise<string | undefined>,
+        ]).then(([name, symbol]) => ({
+          name,
+          symbol,
           address,
-        ]).then(([name, symbol, address]) => ({ name, symbol, address }))
+          adaptedToken,
+        }))
       })
     )
   }

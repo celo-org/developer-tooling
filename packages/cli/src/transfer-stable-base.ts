@@ -78,7 +78,7 @@ export abstract class TransferStableBase extends BaseCommand {
       .isNotSanctioned(to)
       .addCheck(
         `Account can afford transfer in ${this._stableCurrency} and gas paid in ${
-          res.flags.gasCurrency || 'native token'
+          res.flags.gasCurrency || 'CELO'
         }`,
         async () => {
           ;[gas, gasPrice, gasBalance, valueBalance] = await Promise.all([

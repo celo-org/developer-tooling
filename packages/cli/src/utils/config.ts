@@ -44,7 +44,10 @@ export async function writeConfig(configDir: string, configObj: CeloConfig, kit:
   const validFeeCurrencies = await feeCurrencyWhitelist.getWhitelist()
   if (configObj.gasCurrency && !validFeeCurrencies.includes(configObj.gasCurrency)) {
     const pairs = (await feeCurrencyWhitelist.getFeeCurrencyInformation(validFeeCurrencies)).map(
-      ({ name, symbol, address }) => `${address} - ${name || 'unknown name'} (${symbol || 'N/A'})`
+      ({ name, symbol, address, adaptedToken }) =>
+        `${address} - ${name || 'unknown name'} (${symbol || 'N/A'})${
+          adaptedToken ? ` (adapted token: ${adaptedToken})` : ''
+        }`
     )
     throw new Error(
       `${configObj.gasCurrency} is not a valid fee currency. Available currencies:\n${pairs.join(
