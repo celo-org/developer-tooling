@@ -1,5 +1,6 @@
-import { StrongAddress } from '@celo/base'
+import { StableToken, StrongAddress } from '@celo/base'
 import { ContractKit } from '@celo/contractkit'
+import { isValidAddress } from '@celo/utils/lib/address'
 import * as fs from 'fs-extra'
 import * as path from 'path'
 
@@ -35,8 +36,28 @@ export function getNodeUrl(configDir: string): string {
   return readConfig(configDir).node
 }
 
-export function getGasCurrency(configDir: string): StrongAddress {
-  return readConfig(configDir).gasCurrency!
+export async function getGasCurrency(
+  configDir: string,
+  kit: ContractKit
+): Promise<StrongAddress | undefined> {
+  const { gasCurrency, ...config } = readConfig(configDir) as CeloConfig
+
+  if (!gasCurrency) return
+
+  if (isValidAddress(gasCurrency)) return gasCurrency
+
+  // NOTE: This handles a legacy version of celocli where the gasCurrency
+  // was passed as cEUR, cUSD, or cREAL
+  switch (gasCurrency) {
+    case 'auto':
+      return undefined
+    case StableToken.cEUR:
+    case StableToken.cUSD:
+    case StableToken.cREAL:
+      const { address } = await kit.contracts.getStableToken(gasCurrency)
+      await writeConfig(configDir, { ...config, gasCurrency: address }, kit)
+      return
+  }
 }
 
 export async function writeConfig(configDir: string, configObj: CeloConfig, kit: ContractKit) {

@@ -195,9 +195,8 @@ export abstract class BaseCommand extends Command {
       kit.defaultAccount = res.flags.from
     }
 
-    const gasCurrencyFlag = (res.flags.gasCurrency ?? getGasCurrency(this.config.configDir)) as
-      | StrongAddress
-      | undefined
+    const gasCurrencyFlag = (res.flags.gasCurrency ??
+      (await getGasCurrency(this.config.configDir, kit))) as StrongAddress | undefined
 
     if (gasCurrencyFlag) {
       const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyWhitelist()
