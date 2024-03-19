@@ -9,6 +9,12 @@
   "major": {
     "minimumReleaseAge": "14 days"
   },
+  "minor": {
+    "rangeStrategy": "bump"
+  },
+  "patch": {
+    "rangeStrategy": "bump"
+  },
   "packageRules": [
     {
       "matchManagers": ["github-actions"],
