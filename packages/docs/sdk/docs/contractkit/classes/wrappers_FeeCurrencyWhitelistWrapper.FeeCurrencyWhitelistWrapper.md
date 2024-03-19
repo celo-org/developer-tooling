@@ -84,7 +84,7 @@ FeeCurrencyWhitelist contract listing available currencies usable to pay fees
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:62](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts#L62)
+[packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:78](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts#L78)
 
 ___
 
@@ -145,7 +145,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts#L27)
+[packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:34](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts#L34)
 
 ___
 
@@ -183,7 +183,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:61](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts#L61)
+[packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:77](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts#L77)
 
 ## Accessors
 
@@ -209,7 +209,7 @@ BaseWrapper.address
 
 ### getFeeCurrencyInformation
 
-▸ **getFeeCurrencyInformation**(`whitelist?`): `Promise`\<\{ `address`: \`0x$\{string}\` ; `name`: `undefined` \| `string` ; `symbol`: `undefined` \| `string`  }[]\>
+▸ **getFeeCurrencyInformation**(`whitelist?`): `Promise`\<\{ `adaptedToken`: `undefined` \| \`0x$\{string}\` ; `address`: \`0x$\{string}\` ; `name`: `undefined` \| `string` ; `symbol`: `undefined` \| `string`  }[]\>
 
 #### Parameters
 
@@ -219,11 +219,11 @@ BaseWrapper.address
 
 #### Returns
 
-`Promise`\<\{ `address`: \`0x$\{string}\` ; `name`: `undefined` \| `string` ; `symbol`: `undefined` \| `string`  }[]\>
+`Promise`\<\{ `adaptedToken`: `undefined` \| \`0x$\{string}\` ; `address`: \`0x$\{string}\` ; `name`: `undefined` \| `string` ; `symbol`: `undefined` \| `string`  }[]\>
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:33](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts#L33)
+[packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:40](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts#L40)
 
 ___
 
