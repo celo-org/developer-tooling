@@ -103,6 +103,33 @@ testWithGanache('transfer:celo cmd', (web3: Web3) => {
     `)
   })
 
+  test("should NOT fail if the feeCurrency isn't the same capitalization as in the whitelist", async () => {
+    const balanceBefore = await kit.getTotalBalance(accounts[0])
+    const receiverBalanceBefore = await kit.getTotalBalance(accounts[1])
+    const amountToTransfer = '1'
+    await expect(
+      testLocally(TransferCelo, [
+        '--from',
+        accounts[0],
+        '--to',
+        accounts[1],
+        '--value',
+        amountToTransfer,
+        '--gasCurrency',
+        (await kit.contracts.getStableToken(StableToken.cUSD)).address.toUpperCase(),
+      ])
+    ).resolves.toBeUndefined()
+
+    const balanceAfter = await kit.getTotalBalance(accounts[0])
+    const receiverBalanceAfter = await kit.getTotalBalance(accounts[1])
+    expect(receiverBalanceAfter.CELO!.toFixed()).toEqual(
+      receiverBalanceBefore.CELO!.plus(amountToTransfer).toFixed()
+    )
+    expect(balanceAfter.CELO!.toFixed()).toEqual(
+      balanceBefore.CELO!.minus(amountToTransfer).toFixed()
+    )
+  })
+
   test("should fail if the feeCurrency isn't whitelisted", async () => {
     const wrongFee = '0x1234567890123456789012345678901234567890'
     await expect(

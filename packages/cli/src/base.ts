@@ -1,3 +1,4 @@
+import { StrongAddress } from '@celo/base'
 import { ReadOnlyWallet } from '@celo/connect'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { AzureHSMWallet } from '@celo/wallet-hsm-azure'
@@ -194,15 +195,23 @@ export abstract class BaseCommand extends Command {
       kit.defaultAccount = res.flags.from
     }
 
-    const gasCurrencyFlag = res.flags.gasCurrency ?? getGasCurrency(this.config.configDir)
+    const gasCurrencyFlag = (res.flags.gasCurrency ?? getGasCurrency(this.config.configDir)) as
+      | StrongAddress
+      | undefined
+
     if (gasCurrencyFlag) {
       const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyWhitelist()
       const validFeeCurrencies = await feeCurrencyWhitelist.getWhitelist()
-      if (validFeeCurrencies.includes(gasCurrencyFlag)) {
+
+      if (
+        validFeeCurrencies.map((x) => x.toLocaleLowerCase()).includes(gasCurrencyFlag.toLowerCase())
+      ) {
         kit.setFeeCurrency(gasCurrencyFlag)
       } else {
         const pairs = (
-          await feeCurrencyWhitelist.getFeeCurrencyInformation(validFeeCurrencies)
+          await feeCurrencyWhitelist.getFeeCurrencyInformation(
+            validFeeCurrencies as StrongAddress[]
+          )
         ).map(
           ({ name, symbol, address, adaptedToken }) =>
             `${address} - ${name || 'unknown name'} (${symbol || 'N/A'})${
