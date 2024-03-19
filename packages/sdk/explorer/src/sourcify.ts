@@ -224,12 +224,31 @@ type CeloScanResponse =
   | {
       status: '1'
       message: 'OK'
-      result: string // JSON stringified ABI
+      result:
+        | [
+            {
+              SourceCode: string
+              ABI: string
+              ContractName: string
+              Implementation: `0x${string}`
+              // More
+            }
+          ]
+        | [
+            {
+              SourceCode: ''
+              ABI: 'Contract source code not verified'
+              ContractName: ''
+              EVMVersion: 'Default'
+              Proxy: '0'
+              Implementation: ''
+            }
+          ]
     }
   | {
       status: '0'
       message: 'NOTOK'
-      result: string // Error message
+      result: string
     }
 
 /**
@@ -243,12 +262,12 @@ export async function queryCeloScan(
   contract: Address
 ): Promise<Metadata | null> {
   const resp = await fetch(
-    `https://api.celoscan.io/api?module=contract&action=getabi&address=${contract}`
+    `https://api.celoscan.io/api?module=contract&action=getsourcecode&address=${contract}`
   )
   if (resp.ok) {
     const json = (await resp.json()) as CeloScanResponse
-    if (json.message === 'OK') {
-      const data = JSON.parse(json.result) as AbiItem[]
+    if (json.message === 'OK' && json.result[0].SourceCode.length > 2) {
+      const data = JSON.parse(json.result[0].ABI) as AbiItem[]
       return new Metadata(connection, contract, { output: { abi: data } })
     }
   }
