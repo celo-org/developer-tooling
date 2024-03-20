@@ -1,5 +1,5 @@
 import { BaseCommand } from '../../base'
-import { readConfig, writeConfig } from '../../utils/config'
+import { CeloConfig, readConfig, writeConfig } from '../../utils/config'
 export default class Set extends BaseCommand {
   static description = 'Configure running node information for propogating transactions to network'
 
@@ -30,7 +30,7 @@ export default class Set extends BaseCommand {
       {
         node,
         gasCurrency,
-      },
+      } as CeloConfig,
       await this.getKit()
     )
   }

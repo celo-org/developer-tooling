@@ -48,6 +48,16 @@ const parseAddress: ParseFn<StrongAddress> = async (input) => {
     throw new CLIError(`${input} is not a valid address`)
   }
 }
+const parseGasCurrency: ParseFn<StrongAddress | 'CELO'> = async (input) => {
+  if (input === 'CELO') {
+    return 'CELO'
+  }
+  if (Web3.utils.isAddress(input)) {
+    return input as StrongAddress
+  } else {
+    throw new CLIError(`${input} is not a valid address`)
+  }
+}
 const parseCoreContract: ParseFn<string> = async (input) => {
   if (RegisteredContracts.includes(input as CeloContract)) {
     return input
@@ -155,6 +165,11 @@ export const CustomFlags = {
     parse: parseAddress,
     description: 'Account Address',
     helpValue: '0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d',
+  }),
+  gasCurrency: Flags.custom<StrongAddress | 'CELO'>({
+    parse: parseGasCurrency,
+    description: 'A whitelisted feeCurrency or CELO to use native eip1559 transactions',
+    helpValue: '0',
   }),
   ecdsaPublicKey: Flags.custom({
     parse: parseEcdsaPublicKey,

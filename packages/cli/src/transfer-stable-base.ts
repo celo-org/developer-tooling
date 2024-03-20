@@ -7,7 +7,7 @@ import { newCheckBuilder } from './utils/checks'
 import { displaySendTx, failWith } from './utils/cli'
 import { CustomFlags } from './utils/command'
 
-const erc20_mock_abi = [
+const ERC20_MOCK_ABI = [
   {
     inputs: [
       {
@@ -86,7 +86,7 @@ export abstract class TransferStableBase extends BaseCommand {
             kit.connection.gasPrice(kit.connection.defaultFeeCurrency),
             res.flags.gasCurrency
               ? // @ts-expect-error abi typing is not 100% correct but works
-                new kit.web3.eth.Contract(erc20_mock_abi, res.flags.gasCurrency).methods
+                new kit.web3.eth.Contract(ERC20_MOCK_ABI, res.flags.gasCurrency).methods
                   .balanceOf(from)
                   .call()
                   .then((x: string) => new BigNumber(x))

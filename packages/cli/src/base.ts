@@ -41,7 +41,7 @@ export abstract class BaseCommand extends Command {
         }
       },
     }),
-    gasCurrency: CustomFlags.address({
+    gasCurrency: CustomFlags.gasCurrency({
       description:
         'Use a specific gas currency for transaction fees (defaults to CELO if no gas currency is supplied)',
       hidden: true,
@@ -196,9 +196,9 @@ export abstract class BaseCommand extends Command {
     }
 
     const gasCurrencyFlag = (res.flags.gasCurrency ??
-      (await getGasCurrency(this.config.configDir, kit))) as StrongAddress | undefined
+      (await getGasCurrency(this.config.configDir, kit))) as StrongAddress | 'CELO' | undefined
 
-    if (gasCurrencyFlag) {
+    if (gasCurrencyFlag && gasCurrencyFlag !== 'CELO') {
       const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyWhitelist()
       const validFeeCurrencies = await feeCurrencyWhitelist.getWhitelist()
 
