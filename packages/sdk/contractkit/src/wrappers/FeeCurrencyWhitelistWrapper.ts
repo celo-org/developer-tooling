@@ -3,7 +3,7 @@ import { StrongAddress } from '@celo/base'
 import 'bignumber.js'
 import { BaseWrapper, proxyCall } from './BaseWrapper'
 
-const minimal_token_info_abi = [
+const MINIMAL_TOKEN_INFO_ABI = [
   {
     type: 'function' as const,
     stateMutability: 'view',
@@ -43,7 +43,7 @@ export class FeeCurrencyWhitelistWrapper extends BaseWrapper<FeeCurrencyWhitelis
     return Promise.all(
       feeCurrencies.map(async (address) => {
         // @ts-expect-error abi typing is not 100% correct but works
-        let contract = new this.connection.web3.eth.Contract(minimal_token_info_abi, address)
+        let contract = new this.connection.web3.eth.Contract(MINIMAL_TOKEN_INFO_ABI, address)
 
         const adaptedToken = (await contract.methods
           .adaptedToken()
@@ -52,7 +52,7 @@ export class FeeCurrencyWhitelistWrapper extends BaseWrapper<FeeCurrencyWhitelis
 
         if (adaptedToken) {
           // @ts-expect-error abi typing is not 100% correct but works
-          contract = new this.connection.web3.eth.Contract(minimal_token_info_abi, adaptedToken)
+          contract = new this.connection.web3.eth.Contract(MINIMAL_TOKEN_INFO_ABI, adaptedToken)
         }
 
         return Promise.all([

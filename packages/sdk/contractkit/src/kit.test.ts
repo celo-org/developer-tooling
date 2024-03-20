@@ -158,13 +158,6 @@ describe('newKitWithApiKey()', () => {
   })
 })
 
-/**
- * These are "developer tests", meaning that they test implementation specific aspects, and might
- * break if the implementation changes. It's ok and expected for these tests to fail if the
- * implementation changes. Feel free to modify these tests in that case implementation.
- *
- * A failing "developer test" here might not mean that the user experience is broken.
- */
 testWithGanache('Fetch whitelisted fee currencies', (web3: Web3) => {
   let kit: ContractKit
   let accounts: string[]

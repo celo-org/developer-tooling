@@ -425,7 +425,7 @@ Gets a validator address from the current validator set.
 
 `Promise`\<\`0x$\{string}\`\>
 
-Address of validator at the requested index.PrPromise<StrongAddress>ess>
+Address of validator at the requested index.
 
 #### Defined in
 

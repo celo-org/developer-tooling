@@ -115,7 +115,7 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
   /**
    * Gets a validator address from the current validator set.
    * @param index Index of requested validator in the validator set.
-   * @return Address of validator at the requested index.PrPromise<StrongAddress>ess>
+   * @return Address of validator at the requested index.
    */
   validatorSignerAddressFromCurrentSet: (index: number) => Promise<StrongAddress> = proxyCall(
     this.contract.methods.validatorSignerAddressFromCurrentSet as (
