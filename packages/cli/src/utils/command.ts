@@ -49,7 +49,7 @@ const parseAddress: ParseFn<StrongAddress> = async (input) => {
   }
 }
 const parseGasCurrency: ParseFn<StrongAddress | 'CELO'> = async (input) => {
-  if (input === 'CELO') {
+  if (input.toUpperCase() === 'CELO') {
     return 'CELO'
   }
   if (Web3.utils.isAddress(input)) {
