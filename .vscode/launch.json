@@ -2,38 +2,6 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug PhoneNumberPrivacy Combiner Tests",
-      "type": "node",
-      "request": "launch",
-      "runtimeArgs": [
-        "--inspect-brk",
-        "${workspaceRoot}/node_modules/.bin/jest",
-        "--rootDir",
-        "${workspaceFolder}/packages/phone-number-privacy",
-        "--runInBand",
-        "${workspaceFolder}/packages/phone-number-privacy/combiner/test/**",
-      ],
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
-      "port": 9229
-    },
-    {
-      "name": "Debug PhoneNumberPrivacy Signer Tests",
-      "type": "node",
-      "request": "launch",
-      "runtimeArgs": [
-        "--inspect-brk",
-        "${workspaceRoot}/node_modules/.bin/jest",
-        "--rootDir",
-        "${workspaceFolder}/packages/phone-number-privacy/signer",
-        "--runInBand",
-        "${workspaceFolder}/packages/phone-number-privacy/signer/test/**",
-      ],
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
-      "port": 9229
-    },
-    {
       "name": "Debug ContractKit Tests",
       "type": "node",
       "request": "launch",
@@ -41,9 +9,9 @@
         "--inspect-brk",
         "${workspaceRoot}/node_modules/.bin/jest",
         "--rootDir",
-        "${workspaceFolder}/packages/contractkit",
+        "${workspaceFolder}/packages/sdk/contractkit",
         "--runInBand",
-        "${workspaceFolder}/packages/contractkit/src/**/*.test.ts",
+        "${workspaceFolder}/packages/sdk/contractkit/src/**/*.test.ts",
       ],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
