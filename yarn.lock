@@ -1828,14 +1828,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/odis-identifiers@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@celo/odis-identifiers@npm:1.0.0"
-  checksum: e00b54199288257c0b7b4dc2c6b1edb82bf01175269e38862ba400bbf5d1a39e506e1faa6a6b55828450a959d2ca2bc18c6a51ab886e971e881f9b09c660a74e
-  languageName: node
-  linkType: hard
-
-"@celo/odis-identifiers@npm:^1.0.1":
+"@celo/odis-identifiers@npm:^1.0.0, @celo/odis-identifiers@npm:^1.0.1":
   version: 1.0.1
   resolution: "@celo/odis-identifiers@npm:1.0.1"
   checksum: 4df11774103f49fd6375d641adc49148073d153940a5c23878dbfb29970d000d178912ccb006b7c6a866ebd66b9d5b290bb5614e3f906c1bba566595e876bedf
