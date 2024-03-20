@@ -36,7 +36,7 @@
     "eth-lib": "^0.2.8",
     "ethereum-cryptography": "^2.1.2",
     "web3": "1.10.4",
-    "web3-eth-accounts": "1.10.0"
+    "web3-eth-accounts": "1.10.4"
   },
   "engines": {
     "node": ">=8.14.2"

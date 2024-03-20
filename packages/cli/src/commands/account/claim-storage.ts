@@ -12,7 +12,7 @@ export default class ClaimStorage extends ClaimCommand {
   }
   static args = ClaimCommand.args
   static examples = [
-    'claim-storage ~/metadata.json --url http://test.com/myurl --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95',
+    'claim-storage ~/metadata.json --url http://example.com/myurl --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95',
   ]
   self = ClaimStorage
 
