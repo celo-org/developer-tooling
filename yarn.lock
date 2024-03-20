@@ -1593,7 +1593,7 @@ __metadata:
     "@celo/dev-utils": "npm:0.0.1-beta.1"
     "@celo/explorer": "npm:^5.0.9"
     "@celo/governance": "npm:^5.1.0"
-    "@celo/identity": "npm:^5.1.1"
+    "@celo/identity": "npm:^5.1.2"
     "@celo/phone-utils": "npm:^6.0.1"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^6.0.0"
@@ -1782,7 +1782,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/identity@npm:^5.1.1":
+"@celo/identity@npm:^5.1.2":
   version: 5.1.2
   resolution: "@celo/identity@npm:5.1.2"
   dependencies:
