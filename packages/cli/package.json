@@ -40,7 +40,7 @@
     "@celo/cryptographic-utils": "^5.0.7",
     "@celo/explorer": "^5.0.9",
     "@celo/governance": "^5.1.0",
-    "@celo/identity": "^5.1.1",
+    "@celo/identity": "^5.1.2",
     "@celo/phone-utils": "^6.0.1",
     "@celo/utils": "^6.0.0",
     "@celo/wallet-hsm-azure": "^5.1.3",
