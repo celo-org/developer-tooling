@@ -34,7 +34,7 @@
   "devDependencies": {
     "@types/fetch-mock": "^7.3.5",
     "fetch-mock": "^9.11.0",
-    "web3": "1.10.0"
+    "web3": "1.10.4"
   },
   "engines": {
     "node": ">=8.13.0"
