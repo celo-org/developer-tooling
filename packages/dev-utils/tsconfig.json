@@ -2,10 +2,14 @@
   "extends": "@celo/typescript/tsconfig.library.json",
   "compilerOptions": {
     "rootDir": "src",
+    "moduleResolution": "node16",
     "strict": false,
+    "module": "Node16",
     "outDir": "lib",
     "resolveJsonModule": true,
-    "declaration": true
+    "esModuleInterop": true,
+    "declaration": true,
+    "target": "es2020"
   },
-  "include": ["src", "types/", "src/migration-override.json"]
+  "include": ["src", "src/migration-override.json"]
 }
