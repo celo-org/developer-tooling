@@ -24,7 +24,7 @@
   "dependencies": {
     "@celo/connect": "^5.2.0",
     "@celo/utils": "^6.0.0",
-    "@celo/wallet-base": "^5.1.3",
+    "@celo/wallet-base": "file:../wallet-base",
     "@ethereumjs/util": "8.0.5",
     "eth-lib": "^0.2.8"
   },

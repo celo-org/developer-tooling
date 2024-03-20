@@ -26,9 +26,9 @@
   "dependencies": {
     "@celo/abis": "11.0.0",
     "@celo/base": "^6.0.0",
-    "@celo/connect": "^5.2.0",
+    "@celo/connect": "file:../connect",
     "@celo/utils": "^6.0.0",
-    "@celo/wallet-local": "^5.1.3",
+    "@celo/wallet-local": "file:../wallets/wallet-local",
     "@types/bn.js": "^5.1.0",
     "@types/debug": "^4.1.5",
     "bignumber.js": "^9.0.0",
