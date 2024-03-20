@@ -10,7 +10,8 @@ export const normalizeAddress = (a: Address) => trimLeading0x(a).toLowerCase()
 
 export const isNullAddress = (a: Address) => normalizeAddress(a) === normalizeAddress(NULL_ADDRESS)
 
-export const normalizeAddressWith0x = (a: Address) => ensureLeading0x(a).toLowerCase()
+export const normalizeAddressWith0x = (a: Address) =>
+  ensureLeading0x(a).toLowerCase() as StrongAddress
 
 export const trimLeading0x = (input: string) => (input.startsWith('0x') ? input.slice(2) : input)
 

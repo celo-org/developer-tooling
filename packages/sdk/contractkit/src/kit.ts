@@ -1,19 +1,13 @@
 // tslint:disable: ordered-imports
-import {
-  Address,
-  CeloTx,
-  CeloTxObject,
-  Connection,
-  ReadOnlyWallet,
-  TransactionResult,
-} from '@celo/connect'
+import { StrongAddress } from '@celo/base'
+import { CeloTx, CeloTxObject, Connection, ReadOnlyWallet, TransactionResult } from '@celo/connect'
 import { EIP712TypedData } from '@celo/utils/lib/sign-typed-data-utils'
 import { Signature } from '@celo/utils/lib/signatureUtils'
 import { LocalWallet } from '@celo/wallet-local'
 import { BigNumber } from 'bignumber.js'
 import Web3 from 'web3'
 import { AddressRegistry } from './address-registry'
-import { CeloContract, CeloTokenContract } from './base'
+import { CeloContract } from './base'
 import { CeloTokens, EachCeloToken } from './celo-tokens'
 import { ValidWrappers, WrapperCache } from './contract-cache'
 import {
@@ -186,14 +180,14 @@ export class ContractKit {
   getHumanReadableNetworkConfig = () => this.getNetworkConfig(true)
 
   /**
-   * Set CeloToken to use to pay for gas fees
-   * @param tokenContract CELO (GoldToken) or a supported StableToken contract
+   * Set an addressed to use to pay for gas fees
+   * @param address any hexadecimal address
+   * @dev Throws if supplied address is not a valid hexadecimal address
    */
-  async setFeeCurrency(tokenContract: CeloTokenContract): Promise<void> {
-    const address =
-      tokenContract === CeloContract.GoldToken
-        ? undefined
-        : await this.registry.addressFor(tokenContract)
+  setFeeCurrency(address: StrongAddress) {
+    if (!this.web3.utils.isAddress(address)) {
+      throw new Error('Supplied address is not a valid hexadecimal address.')
+    }
     this.connection.defaultFeeCurrency = address
   }
 
@@ -225,11 +219,11 @@ export class ContractKit {
     this.connection.addAccount(privateKey)
   }
 
-  set defaultAccount(address: Address | undefined) {
+  set defaultAccount(address: StrongAddress | undefined) {
     this.connection.defaultAccount = address
   }
 
-  get defaultAccount(): Address | undefined {
+  get defaultAccount(): StrongAddress | undefined {
     return this.connection.defaultAccount
   }
 
@@ -241,7 +235,7 @@ export class ContractKit {
     return this.connection.defaultGasInflationFactor
   }
 
-  set defaultFeeCurrency(address: Address | undefined) {
+  set defaultFeeCurrency(address: StrongAddress | undefined) {
     this.connection.defaultFeeCurrency = address
   }
 

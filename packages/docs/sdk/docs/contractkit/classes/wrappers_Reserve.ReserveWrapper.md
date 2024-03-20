@@ -598,13 +598,13 @@ ___
 
 ### address
 
-• `get` **address**(): `string`
+• `get` **address**(): \`0x$\{string}\`
 
 Contract address
 
 #### Returns
 
-`string`
+\`0x$\{string}\`
 
 #### Inherited from
 

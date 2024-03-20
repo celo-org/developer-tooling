@@ -1,5 +1,5 @@
-import { BaseCommand, gasOptions } from '../../base'
-import { readConfig, writeConfig } from '../../utils/config'
+import { BaseCommand } from '../../base'
+import { CeloConfig, readConfig, writeConfig } from '../../utils/config'
 export default class Set extends BaseCommand {
   static description = 'Configure running node information for propogating transactions to network'
 
@@ -9,17 +9,12 @@ export default class Set extends BaseCommand {
       ...BaseCommand.flags.node,
       hidden: false,
     },
-    gasCurrency: {
-      ...BaseCommand.flags.gasCurrency,
-      hidden: false,
-    },
   }
 
   static examples = [
     'set --node ws://localhost:2500',
     'set --node <geth-location>/geth.ipc',
-    'set --gasCurrency cUSD',
-    'set --gasCurrency CELO',
+    'set --gasCurrency 0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1',
   ]
 
   requireSynced = false
@@ -28,12 +23,15 @@ export default class Set extends BaseCommand {
     const res = await this.parse(Set)
     const curr = readConfig(this.config.configDir)
     const node = res.flags.node ?? curr.node
-    const gasCurrency = res.flags.gasCurrency
-      ? (gasOptions as any)[res.flags.gasCurrency as string]
-      : curr.gasCurrency
-    writeConfig(this.config.configDir, {
-      node,
-      gasCurrency,
-    })
+    const gasCurrency = res.flags.gasCurrency ?? curr.gasCurrency
+
+    await writeConfig(
+      this.config.configDir,
+      {
+        node,
+        gasCurrency,
+      } as CeloConfig,
+      await this.getKit()
+    )
   }
 }

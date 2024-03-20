@@ -23,7 +23,7 @@ You might not need the full ContractKit. Consider using `@celo/connect` which po
 
 ## How we work
 
-We are a GitHub-first team, which means we have a strong preference for communicating via GitHub. 
+We are a GitHub-first team, which means we have a strong preference for communicating via GitHub.
 Please use GitHub to:
 
 🐞 [File a bug report](https://github.com/celo-org/developer-tooling/issues/new/choose)
@@ -37,8 +37,8 @@ Please use GitHub to:
 🚔 [Report a security vulnerability](https://github.com/celo-org/developer-tooling/issues/new/choose)
 
 > [!TIP]
-> 
-> Please avoid messaging us via Slack, Telegram, or email. We are more likely to respond to you on 
+>
+> Please avoid messaging us via Slack, Telegram, or email. We are more likely to respond to you on
 > GitHub than if you message us anywhere else. We actively monitor GitHub, and will get back to you shortly 🌟
 
 ### Getting Started
@@ -71,16 +71,14 @@ const balances = await kit.getTotalBalance()
 
 // returns an object with {cUSD, cEUR, cREAL}
 const balances = await miniKit.getTotalBalance()
-
 ```
 
 If you don't need the balances of all tokens use the balanceOf method
-```ts
 
+```ts
 const stableTokenWrapper = await kit.getStableToken(StableToken.cREAL)
 
 const cRealBalance = stableTokenWrapper.balanceOf(accountAddress)
-
 ```
 
 ### Setting Default Tx Options
@@ -100,7 +98,7 @@ async function getKit(myAddress: string, privateKey: string) {
   kit.connection.addAccount(privateKey)
 
   // paid gas in celo dollars
-  await kit.setFeeCurrency(CeloContract.StableToken)
+  await kit.setFeeCurrency('0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1')
 
   return kit
 }
@@ -127,7 +125,7 @@ To send funds:
 ```ts
 const oneGold = kit.connection.web3.utils.toWei('1', 'ether')
 const tx = await goldToken.transfer(someAddress, oneGold).send({
-  from: myAddress
+  from: myAddress,
 })
 
 const hash = await tx.getHash()
@@ -137,8 +135,7 @@ const receipt = await tx.waitReceipt()
 If you would like to pay fees in cUSD, (or other cStables like cEUR, cUSD).
 
 ```ts
-
-kit.setFeeCurrency(CeloContract.StableToken) // Default to paying fees in cUSD
+kit.setFeeCurrency('0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1') // Default to paying fees in cUSD
 
 const stableTokenContract = kit.contracts.getStableToken()
 
@@ -149,7 +146,6 @@ const tx = await stableTokenContract
 const hash = await tx.getHash()
 
 const receipt = await tx.waitReceipt()
-
 ```
 
 ### Interacting with Core Contracts
@@ -182,7 +178,7 @@ When using the `kit` you can access core contracts like
 
 `kit.contracts.get{ContractName}`
 
-E.G. `kit.contracts.getAccounts()`,  `kit.contracts.getValidators()`
+E.G. `kit.contracts.getAccounts()`, `kit.contracts.getValidators()`
 
 #### Stand Alone Wrappers
 
@@ -191,11 +187,11 @@ You can also initialize contracts wrappers directly. They require a `Connection`
 ```typescript
 // MiniContractKit only gives access to a limited set of Contracts, so we import Multisig
 
-import { newKit } from "@celo/contractkit/lib/mini-kit"
+import { newKit } from '@celo/contractkit/lib/mini-kit'
 import { MultiSigWrapper } from '@celo/contractkit/lib/wrappers/MultiSig'
 import { newMultiSig } from '@celo/abis/web3/MultiSig'
 
-const miniKit = newKit("https://alfajores-forno.celo-testnet.org/")
+const miniKit = newKit('https://alfajores-forno.celo-testnet.org/')
 
 // Alternatively import { Connection } from '@celo/connect'
 // const connection = new Connection(web3)
@@ -207,14 +203,14 @@ const multisigWrapper = new MultiSigWrapper(miniKit.connection, contract)
 
 ### Accessing web3 contract wrappers
 
-`MiniContractKit` *does not provide access to the web3 contracts*
+`MiniContractKit` _does not provide access to the web3 contracts_
 
 Some user might want to access web3 native contract wrappers.
 
 To do so, you can:
 
 ```ts
-const feeCurrencyWhitelist = await kit._web3Contracts.getFeeCurrencyWhitelist()
+const feeCurrencyWhitelist = await kit._web3Contracts.getContract(CeloContract.FeeCurrencyWhitelist)
 ```
 
 We expose native wrappers for all Celo core contracts.
@@ -223,19 +219,35 @@ The complete list of Celo Core contracts is:
 
 - Accounts
 - Attestations
-- LockedGold
+- BlockchainParameters
+- DoubleSigningSlasher
+- DowntimeSlasher
+- Election
+- EpochRewards
+- ERC20
 - Escrow
+- FederatedAttestations
 - FeeCurrencyWhitelist
+- FeeHandler
+- Freezer
 - GasPriceMinimum
 - GoldToken
 - Governance
+- LockedGold
+- MentoFeeHandlerSeller
+- UniswapFeeHandlerSeller
 - MultiSig
+- OdisPayments
 - Random
 - Registry
 - Reserve
 - SortedOracles
 - StableToken
+- StableTokenEUR
+- StableTokenBRL
 - Validators
+
+This can also be found in `packages/sdk/contractkit/src/base.ts`
 
 ### A Note About Contract Addresses
 

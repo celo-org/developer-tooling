@@ -1,3 +1,4 @@
+import { StrongAddress } from '@celo/base'
 import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
 import { getIdentifierHash, IdentifierPrefix } from '@celo/odis-identifiers'
 import { newKitFromWeb3 } from '../kit'
@@ -13,11 +14,11 @@ testWithGanache('Attestations Wrapper', (web3) => {
   )
 
   const kit = newKitFromWeb3(web3)
-  let accounts: string[] = []
+  let accounts: StrongAddress[] = []
   let attestations: AttestationsWrapper
 
   beforeAll(async () => {
-    accounts = await web3.eth.getAccounts()
+    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
     attestations = await kit.contracts.getAttestations()
   })

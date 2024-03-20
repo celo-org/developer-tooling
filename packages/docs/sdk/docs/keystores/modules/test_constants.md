@@ -21,7 +21,7 @@
 
 ### ADDRESS1
 
-• `Const` **ADDRESS1**: `string`
+• `Const` **ADDRESS1**: \`0x$\{string}\`
 
 #### Defined in
 
@@ -31,7 +31,7 @@ ___
 
 ### ADDRESS2
 
-• `Const` **ADDRESS2**: `string`
+• `Const` **ADDRESS2**: \`0x$\{string}\`
 
 #### Defined in
 

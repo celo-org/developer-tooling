@@ -282,7 +282,7 @@ describe('Local wallet class', () => {
               maxFeePerGas: '99',
               maxPriorityFeePerGas: '99',
               feeCurrency: '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826',
-            }
+            } as const
             await expect(wallet.signTransaction(recoverTransactionCIP64)).resolves
               .toMatchInlineSnapshot(`
               {
@@ -311,7 +311,7 @@ describe('Local wallet class', () => {
               maxPriorityFeePerGas: '99',
               gatewayFee: '0x5678',
               feeCurrency: '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826',
-            }
+            } as const
             await expect(wallet.signTransaction(transaction42)).resolves.toMatchInlineSnapshot(`
               {
                 "raw": "0x7cf89a82ad5a8063630a94cd2a3d9f938e13cd947ec05abc7fe734df8dd826941be31a94361a391bbafb2a4ccd704f57dc04d4bb82567894588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a764000083abcdefc080a0c610507b2ac3cff80dd7017419021196807d605efce0970c18cde48db33c27d1a01799477e0f601f554f0ee6f7ac21490602124801e9f7a99d9605249b90f03112",
@@ -362,7 +362,7 @@ describe('Local wallet class', () => {
               gatewayFeeRecipient: FEE_ADDRESS,
               gatewayFee: '0x5678',
               data: '0xabcdef',
-            }
+            } as const
 
             const signedTx: EncodedTransaction = await wallet.signTransaction(
               celoTransactionZeroPrefix

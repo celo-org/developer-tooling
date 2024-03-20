@@ -1,3 +1,4 @@
+import { StrongAddress } from '@celo/base'
 import {
   AccessList,
   PromiEvent,
@@ -10,7 +11,7 @@ export type Address = string
 
 export type Hex = `0x${string}`
 export interface CeloParams {
-  feeCurrency: string
+  feeCurrency: StrongAddress
   /*
   @deprecated
   */

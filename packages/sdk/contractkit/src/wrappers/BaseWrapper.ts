@@ -1,5 +1,5 @@
 import { ICeloVersionedContract } from '@celo/abis/web3/ICeloVersionedContract'
-import { bufferToHex, ensureLeading0x } from '@celo/base/lib/address'
+import { StrongAddress, bufferToHex, ensureLeading0x } from '@celo/base/lib/address'
 import { zip } from '@celo/base/lib/collections'
 import {
   CeloTransactionObject,
@@ -34,8 +34,8 @@ export abstract class BaseWrapper<T extends Contract> {
   constructor(protected readonly connection: Connection, protected readonly contract: T) {}
 
   /** Contract address */
-  get address(): string {
-    return this.contract.options.address
+  get address(): StrongAddress {
+    return this.contract.options.address as StrongAddress
   }
 
   async version() {
