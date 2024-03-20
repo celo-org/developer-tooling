@@ -70,7 +70,7 @@
     "prompts": "^2.0.1",
     "randombytes": "^2.0.1",
     "web3": "1.10.4",
-    "web3-utils": "^1.10.0"
+    "web3-utils": "^1.10.4"
   },
   "devDependencies": {
     "@celo/celo-devchain": "^7.0.0",
@@ -83,7 +83,6 @@
     "@types/ledgerhq__hw-transport-node-hid": "^4.22.2",
     "@types/node": "^18.7.16",
     "@types/prompts": "^1.1.1",
-    "@types/web3": "^1.0.18",
     "jest": "^29.0.2",
     "oclif": "^4.3.4",
     "prettier": "1.19.1",

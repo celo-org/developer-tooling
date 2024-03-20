@@ -52,7 +52,7 @@ testWithGanache('account metadata cmds', (web3: Web3) => {
 
     test('account:claim-domain cmd', async () => {
       generateEmptyMetadataFile()
-      const domain = 'test.com'
+      const domain = 'example.com'
       await testLocally(ClaimDomain, ['--from', account, '--domain', domain, emptyFilePath])
       const metadata = await readFile()
       const claim = metadata.findClaim(ClaimTypes.DOMAIN)
@@ -84,7 +84,7 @@ testWithGanache('account metadata cmds', (web3: Web3) => {
           '--from',
           account,
           '--url',
-          'https://test.com',
+          'https://example.com',
         ])
       })
 
@@ -97,7 +97,13 @@ testWithGanache('account metadata cmds', (web3: Web3) => {
 
     it('cannot register metadata', async () => {
       await expect(
-        testLocally(RegisterMetadata, ['--force', '--from', account, '--url', 'https://test.com'])
+        testLocally(RegisterMetadata, [
+          '--force',
+          '--from',
+          account,
+          '--url',
+          'https://example.com',
+        ])
       ).rejects.toThrow("Some checks didn't pass!")
     })
   })

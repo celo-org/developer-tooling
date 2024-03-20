@@ -3,7 +3,7 @@ import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
 import { NativeSigner, Signer, verifySignature } from '@celo/utils/lib/signatureUtils'
 import { newKitFromWeb3 } from '../../kit'
 import { IdentityMetadataWrapper } from '../metadata'
-import { createDomainClaim, DomainClaim, serializeClaim } from './claim'
+import { DomainClaim, createDomainClaim, serializeClaim } from './claim'
 import { verifyDomainRecord } from './verify'
 
 testWithGanache('Domain claims', (web3) => {
@@ -12,7 +12,7 @@ testWithGanache('Domain claims', (web3) => {
   const secondAddress = ACCOUNT_ADDRESSES[1]
 
   it('can make a domain claim', async () => {
-    const domain = 'test.com'
+    const domain = 'example.com'
     const metadata = IdentityMetadataWrapper.fromEmpty(address)
     await metadata.addClaim(createDomainClaim(domain), NativeSigner(kit.connection.sign, address))
   })
@@ -23,7 +23,7 @@ testWithGanache('Domain claims', (web3) => {
     let signature: string
     let signatureBase64: string
     let signer: Signer
-    const domain = 'test.com'
+    const domain = 'example.com'
     const originalFetchFromURLImplementation = IdentityMetadataWrapper.fetchFromURL
     const dnsResolver = (
       _hostname: string,
@@ -56,7 +56,7 @@ testWithGanache('Domain claims', (web3) => {
 
     describe('when we have a signature', () => {
       it('indicates that signature is correct', async () => {
-        const verifiedSignature = await verifySignature(serializeClaim(claim), signature, address)
+        const verifiedSignature = verifySignature(serializeClaim(claim), signature, address)
         expect(verifiedSignature).toBeTruthy()
       })
 
@@ -68,7 +68,7 @@ testWithGanache('Domain claims', (web3) => {
           serializeClaim(newClaim)
         )
 
-        const verifiedSignature = await verifySignature(
+        const verifiedSignature = verifySignature(
           serializeClaim(newClaim),
           newSignature,
           secondAddress
