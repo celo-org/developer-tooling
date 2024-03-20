@@ -1,0 +1,11 @@
+{
+  "extends": "@celo/typescript/tsconfig.library.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "strict": false,
+    "outDir": "lib",
+    "resolveJsonModule": true,
+    "declaration": true
+  },
+  "include": ["src", "types/", "src/migration-override.json"]
+}
