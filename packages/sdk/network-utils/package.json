@@ -14,8 +14,8 @@
     "contractkit"
   ],
   "scripts": {
-    "build": "tsc -b .",
-    "clean": "tsc -b . --clean",
+    "build": "yarn run --top-level tsc -b .",
+    "clean": "yarn run --top-level tsc -b . --clean",
     "docs": "yarn run --top-level typedoc",
     "test": "yarn run --top-level jest --runInBand",
     "lint": "yarn run --top-level eslint -c .eslintrc.js ",
@@ -27,7 +27,7 @@
     "debug": "^4.1.1"
   },
   "devDependencies": {
-    "@celo/dev-utils": "0.0.1-beta.1",
+    "@celo/dev-utils": "0.0.2",
     "fetch-mock": "9.10.4"
   },
   "engines": {

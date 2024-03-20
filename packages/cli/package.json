@@ -22,9 +22,9 @@
     "node": ">=16"
   },
   "scripts": {
-    "clean": "tsc -b . --clean",
+    "clean": "yarn run --top-level tsc -b . --clean",
     "dev": "yarn build && ts-node ./bin/dev.js",
-    "build": "tsc -b .",
+    "build": "yarn run --top-level tsc -b .",
     "docs": "./generate_docs.sh",
     "lint": "yarn run --top-level eslint -c .eslintrc.js ",
     "prepublish": "",
@@ -74,7 +74,7 @@
   },
   "devDependencies": {
     "@celo/celo-devchain": "^7.0.0",
-    "@celo/dev-utils": "0.0.1-beta.1",
+    "@celo/dev-utils": "0.0.2",
     "@celo/typescript": "workspace:^",
     "@types/debug": "^4.1.4",
     "@types/fs-extra": "^8.0.0",

@@ -15,9 +15,9 @@
     "contractkit"
   ],
   "scripts": {
-    "build:ts": "tsc -b .",
-    "build": "tsc -b .",
-    "clean": "tsc -b . --clean",
+    "build:ts": "yarn run --top-level tsc -b .",
+    "build": "yarn run --top-level tsc -b .",
+    "clean": "yarn run --top-level tsc -b . --clean",
     "prepublishOnly": "yarn build",
     "docs": "yarn run --top-level typedoc",
     "test": "yarn run --top-level jest --runInBand --forceExit",
@@ -42,7 +42,7 @@
   },
   "devDependencies": {
     "@celo/celo-devchain": "^7.0.0",
-    "@celo/dev-utils": "0.0.1-beta.1",
+    "@celo/dev-utils": "0.0.2",
     "@celo/odis-identifiers": "^1.0.0",
     "@truffle/contract": "4.6.31",
     "@types/debug": "^4.1.5",
