@@ -41,7 +41,7 @@
   "devDependencies": {
     "dotenv": "^8.2.0",
     "elliptic": "^6.5.4",
-    "web3": "1.10.0"
+    "web3": "1.10.4"
   },
   "engines": {
     "node": ">=8.14.2"

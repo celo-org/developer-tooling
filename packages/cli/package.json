@@ -69,7 +69,7 @@
     "path": "^0.12.7",
     "prompts": "^2.0.1",
     "randombytes": "^2.0.1",
-    "web3": "1.10.0",
+    "web3": "1.10.4",
     "web3-utils": "^1.10.0"
   },
   "devDependencies": {
