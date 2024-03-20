@@ -1623,7 +1623,7 @@ __metadata:
     bip32: "npm:3.1.0"
     chalk: "npm:^2.4.2"
     command-exists: "npm:^1.2.9"
-    cross-fetch: "npm:3.0.6"
+    cross-fetch: "npm:3.1.5"
     debug: "npm:^4.1.1"
     ethers: "npm:5"
     fs-extra: "npm:^8.1.0"
@@ -1691,7 +1691,7 @@ __metadata:
     "@types/debug": "npm:^4.1.5"
     bignumber.js: "npm:^9.0.0"
     bn.js: "npm:^5.1.0"
-    cross-fetch: "npm:3.0.6"
+    cross-fetch: "npm:3.1.5"
     debug: "npm:^4.1.1"
     fetch-mock: "npm:9.10.4"
     fp-ts: "npm:2.1.1"
@@ -1755,7 +1755,7 @@ __metadata:
     "@types/debug": "npm:^4.1.5"
     "@types/fetch-mock": "npm:^7.3.5"
     bignumber.js: "npm:9.0.0"
-    cross-fetch: "npm:3.0.6"
+    cross-fetch: "npm:3.1.5"
     debug: "npm:^4.1.1"
     fetch-mock: "npm:^9.11.0"
     web3: "npm:1.10.0"
@@ -1822,7 +1822,7 @@ __metadata:
   dependencies:
     "@celo/dev-utils": "npm:0.0.1-beta.1"
     "@types/debug": "npm:^4.1.5"
-    cross-fetch: "npm:3.0.6"
+    cross-fetch: "npm:3.1.5"
     debug: "npm:^4.1.1"
     fetch-mock: "npm:9.10.4"
   languageName: unknown
@@ -8652,15 +8652,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-fetch@npm:3.0.6":
-  version: 3.0.6
-  resolution: "cross-fetch@npm:3.0.6"
-  dependencies:
-    node-fetch: "npm:2.6.1"
-  checksum: cd181379c1fd4cbc45f757fc71dd9749ed012304ef0d87ded751b3c03b5163da6327df390d9987f208db5a9aa861fc662685703b9260d7ae90f7811e2ddad54b
-  languageName: node
-  linkType: hard
-
 "cross-fetch@npm:3.1.5, cross-fetch@npm:^3.1.4":
   version: 3.1.5
   resolution: "cross-fetch@npm:3.1.5"
@@ -14816,13 +14807,6 @@ __metadata:
   version: 1.0.0
   resolution: "node-domexception@npm:1.0.0"
   checksum: e332522f242348c511640c25a6fc7da4f30e09e580c70c6b13cb0be83c78c3e71c8d4665af2527e869fc96848924a4316ae7ec9014c091e2156f41739d4fa233
-  languageName: node
-  linkType: hard
-
-"node-fetch@npm:2.6.1":
-  version: 2.6.1
-  resolution: "node-fetch@npm:2.6.1"
-  checksum: 0b54e56681a99e1b511f8e94dc56b971104834c99c0368cdf5a9e43b3355d77e8aa92842602cf2c08e60654c32ae439d84946eccb38427e6dc2e9d7d90fc787c
   languageName: node
   linkType: hard
 
