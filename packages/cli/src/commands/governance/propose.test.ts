@@ -397,7 +397,7 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
     )
   })
 
-  test.only('succeeds when proposal contains transactions for contracts verified on celoScan', async () => {
+  test('succeeds when proposal contains transactions for contracts verified on celoScan', async () => {
     const transactionsToBeSaved = JSON.stringify(transactionsForContractsVerifiedOnCeloScan)
     fs.writeFileSync('transactions2.json', transactionsToBeSaved, { flag: 'w' })
     await testLocally(Propose, [
