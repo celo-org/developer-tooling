@@ -23,7 +23,21 @@
     "@celo/wallet-local": "5.1.3",
     "@celo/wallet-remote": "5.1.3",
     "@celo/wallet-rpc": "5.1.3",
-    "@celo/typescript": "0.0.1"
+    "@celo/typescript": "0.0.1",
+    "@celo/dev-utils": "0.0.2"
   },
-  "changesets": []
+  "changesets": [
+    "brave-spies-own",
+    "chatty-planets-trade",
+    "early-terms-push",
+    "friendly-penguins-happen",
+    "khaki-lies-wait",
+    "lemon-doors-rescue",
+    "pretty-taxis-juggle",
+    "proud-days-hunt",
+    "quick-tips-happen",
+    "rude-hornets-smell",
+    "seven-carrots-cross",
+    "slimy-trainers-develop"
+  ]
 }
