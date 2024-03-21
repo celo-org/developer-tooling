@@ -16,7 +16,7 @@
   ],
   "scripts": {
     "build": "yarn run --top-level tsc -b .",
-    "lint": "yarn run --top-level eslint .",
+    "lint": "yarn run --top-level eslint -c .eslintrc.js ",
     "prepack": "yarn build"
   },
   "dependencies": {
