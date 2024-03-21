@@ -1543,7 +1543,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/base@npm:^6.0.0, @celo/base@workspace:packages/sdk/base":
+"@celo/base@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "@celo/base@npm:6.0.0"
+  checksum: 0ce49ce58f7824708967412cfcd30f3c981f74e93132475575ffa3f5cbd233652c8e8bb51ff999fff4f49c36f5ef8e61d2db30857310d0342d16a20585da4ccc
+  languageName: node
+  linkType: hard
+
+"@celo/base@npm:^6.0.1-beta.0, @celo/base@workspace:packages/sdk/base":
   version: 0.0.0-use.local
   resolution: "@celo/base@workspace:packages/sdk/base"
   dependencies:
@@ -1584,22 +1591,22 @@ __metadata:
   resolution: "@celo/celocli@workspace:packages/cli"
   dependencies:
     "@celo/abis": "npm:11.0.0"
-    "@celo/base": "npm:^6.0.0"
+    "@celo/base": "npm:^6.0.1-beta.0"
     "@celo/celo-devchain": "npm:^7.0.0"
     "@celo/compliance": "npm:~1.0.17"
-    "@celo/connect": "npm:^5.2.0"
-    "@celo/contractkit": "npm:^7.2.0"
-    "@celo/cryptographic-utils": "npm:^5.0.7"
-    "@celo/dev-utils": "npm:0.0.2"
-    "@celo/explorer": "npm:^5.0.9"
-    "@celo/governance": "npm:^5.1.0"
+    "@celo/connect": "npm:^5.3.0-beta.0"
+    "@celo/contractkit": "npm:^8.0.0-beta.0"
+    "@celo/cryptographic-utils": "npm:^5.0.8-beta.0"
+    "@celo/dev-utils": "npm:0.0.3-beta.0"
+    "@celo/explorer": "npm:^5.0.10-beta.0"
+    "@celo/governance": "npm:^5.1.1-beta.0"
     "@celo/identity": "npm:^5.1.2"
-    "@celo/phone-utils": "npm:^6.0.1"
+    "@celo/phone-utils": "npm:^6.0.2-beta.0"
     "@celo/typescript": "workspace:^"
-    "@celo/utils": "npm:^6.0.0"
-    "@celo/wallet-hsm-azure": "npm:^5.1.3"
-    "@celo/wallet-ledger": "npm:^5.1.3"
-    "@celo/wallet-local": "npm:^5.1.3"
+    "@celo/utils": "npm:^6.0.1-beta.0"
+    "@celo/wallet-hsm-azure": "npm:^5.2.0-beta.0"
+    "@celo/wallet-ledger": "npm:^5.2.0-beta.0"
+    "@celo/wallet-local": "npm:^5.2.0-beta.0"
     "@ethereumjs/util": "npm:8.0.5"
     "@ledgerhq/hw-transport-node-hid": "npm:^6.27.4"
     "@mento-protocol/mento-sdk": "npm:^0.2.2"
@@ -1651,12 +1658,33 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/connect@npm:^5.2.0, @celo/connect@workspace:packages/sdk/connect":
-  version: 0.0.0-use.local
-  resolution: "@celo/connect@workspace:packages/sdk/connect"
+"@celo/connect@npm:^5.2.0":
+  version: 5.2.0
+  resolution: "@celo/connect@npm:5.2.0"
   dependencies:
     "@celo/base": "npm:^6.0.0"
     "@celo/utils": "npm:^6.0.0"
+    "@ethereumjs/util": "npm:8.0.5"
+    "@types/debug": "npm:^4.1.5"
+    "@types/utf8": "npm:^2.1.6"
+    bignumber.js: "npm:^9.0.0"
+    debug: "npm:^4.1.1"
+    utf8: "npm:3.0.0"
+    web3-core: "npm:1.10.0"
+    web3-eth: "npm:1.10.0"
+    web3-eth-contract: "npm:1.10.0"
+  peerDependencies:
+    web3: 1.10.0
+  checksum: 927ea9ffc3605d6824ba18ea4004f6c2e315fab24aad579eb4fb004434e0f67b7ea8736513b970b209ac08f4d63ebb8defd085ed3e7f64369bceec2edfdc0d66
+  languageName: node
+  linkType: hard
+
+"@celo/connect@npm:^5.3.0-beta.0, @celo/connect@workspace:packages/sdk/connect":
+  version: 0.0.0-use.local
+  resolution: "@celo/connect@workspace:packages/sdk/connect"
+  dependencies:
+    "@celo/base": "npm:^6.0.1-beta.0"
+    "@celo/utils": "npm:^6.0.1-beta.0"
     "@ethereumjs/util": "npm:8.0.5"
     "@types/debug": "npm:^4.1.5"
     "@types/utf8": "npm:^2.1.6"
@@ -1673,18 +1701,41 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/contractkit@npm:^7.1.0, @celo/contractkit@npm:^7.2.0, @celo/contractkit@workspace:packages/sdk/contractkit":
+"@celo/contractkit@npm:^7.1.0":
+  version: 7.2.0
+  resolution: "@celo/contractkit@npm:7.2.0"
+  dependencies:
+    "@celo/abis": "npm:11.0.0"
+    "@celo/base": "npm:^6.0.0"
+    "@celo/connect": "npm:^5.2.0"
+    "@celo/utils": "npm:^6.0.0"
+    "@celo/wallet-local": "npm:^5.1.3"
+    "@types/bn.js": "npm:^5.1.0"
+    "@types/debug": "npm:^4.1.5"
+    bignumber.js: "npm:^9.0.0"
+    cross-fetch: "npm:3.0.6"
+    debug: "npm:^4.1.1"
+    fp-ts: "npm:2.1.1"
+    io-ts: "npm:2.0.1"
+    semver: "npm:^7.3.5"
+    web3: "npm:1.10.0"
+    web3-core-helpers: "npm:1.10.0"
+  checksum: 2f87e561acc3d56e99d1de7b6c3827b50c872c30447aad820519226df81ae40c191098637a277bc795c3ca758f241c03ca33fbd139bca61701d109f8363fbeb7
+  languageName: node
+  linkType: hard
+
+"@celo/contractkit@npm:^8.0.0-beta.0, @celo/contractkit@workspace:packages/sdk/contractkit":
   version: 0.0.0-use.local
   resolution: "@celo/contractkit@workspace:packages/sdk/contractkit"
   dependencies:
     "@celo/abis": "npm:11.0.0"
-    "@celo/base": "npm:^6.0.0"
+    "@celo/base": "npm:^6.0.1-beta.0"
     "@celo/celo-devchain": "npm:^7.0.0"
-    "@celo/connect": "npm:^5.2.0"
-    "@celo/dev-utils": "npm:0.0.2"
+    "@celo/connect": "npm:^5.3.0-beta.0"
+    "@celo/dev-utils": "npm:0.0.3-beta.0"
     "@celo/odis-identifiers": "npm:^1.0.0"
-    "@celo/utils": "npm:^6.0.0"
-    "@celo/wallet-local": "npm:^5.1.3"
+    "@celo/utils": "npm:^6.0.1-beta.0"
+    "@celo/wallet-local": "npm:^5.2.0-beta.0"
     "@truffle/contract": "npm:4.6.31"
     "@types/bn.js": "npm:^5.1.0"
     "@types/debug": "npm:^4.1.5"
@@ -1704,14 +1755,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/cryptographic-utils@npm:^5.0.7, @celo/cryptographic-utils@workspace:packages/sdk/cryptographic-utils":
+"@celo/cryptographic-utils@npm:^5.0.8-beta.0, @celo/cryptographic-utils@workspace:packages/sdk/cryptographic-utils":
   version: 0.0.0-use.local
   resolution: "@celo/cryptographic-utils@workspace:packages/sdk/cryptographic-utils"
   dependencies:
-    "@celo/base": "npm:^6.0.0"
+    "@celo/base": "npm:^6.0.1-beta.0"
     "@celo/bls12377js": "npm:0.1.1"
     "@celo/typescript": "npm:0.0.1"
-    "@celo/utils": "npm:^6.0.0"
+    "@celo/utils": "npm:^6.0.1-beta.0"
     "@ethereumjs/util": "npm:8.0.5"
     "@types/bn.js": "npm:^5.1.0"
     "@types/elliptic": "npm:^6.4.9"
@@ -1728,7 +1779,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/dev-utils@npm:0.0.2, @celo/dev-utils@workspace:packages/dev-utils":
+"@celo/dev-utils@npm:0.0.3-beta.0, @celo/dev-utils@workspace:packages/dev-utils":
   version: 0.0.0-use.local
   resolution: "@celo/dev-utils@workspace:packages/dev-utils"
   dependencies:
@@ -1745,14 +1796,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/explorer@npm:^5.0.9, @celo/explorer@workspace:packages/sdk/explorer":
+"@celo/explorer@npm:^5.0.10-beta.0, @celo/explorer@workspace:packages/sdk/explorer":
   version: 0.0.0-use.local
   resolution: "@celo/explorer@workspace:packages/sdk/explorer"
   dependencies:
-    "@celo/base": "npm:^6.0.0"
-    "@celo/connect": "npm:^5.2.0"
-    "@celo/contractkit": "npm:^7.1.0"
-    "@celo/utils": "npm:^6.0.0"
+    "@celo/base": "npm:^6.0.1-beta.0"
+    "@celo/connect": "npm:^5.3.0-beta.0"
+    "@celo/contractkit": "npm:^8.0.0-beta.0"
+    "@celo/utils": "npm:^6.0.1-beta.0"
     "@types/debug": "npm:^4.1.5"
     "@types/fetch-mock": "npm:^7.3.5"
     bignumber.js: "npm:9.0.0"
@@ -1763,16 +1814,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/governance@npm:^5.1.0, @celo/governance@workspace:packages/sdk/governance":
+"@celo/governance@npm:^5.1.1-beta.0, @celo/governance@workspace:packages/sdk/governance":
   version: 0.0.0-use.local
   resolution: "@celo/governance@workspace:packages/sdk/governance"
   dependencies:
     "@celo/abis": "npm:11.0.0"
-    "@celo/base": "npm:^6.0.0"
-    "@celo/connect": "npm:^5.2.0"
-    "@celo/contractkit": "npm:^7.2.0"
-    "@celo/explorer": "npm:^5.0.9"
-    "@celo/utils": "npm:^6.0.0"
+    "@celo/base": "npm:^6.0.1-beta.0"
+    "@celo/connect": "npm:^5.3.0-beta.0"
+    "@celo/contractkit": "npm:^8.0.0-beta.0"
+    "@celo/explorer": "npm:^5.0.10-beta.0"
+    "@celo/utils": "npm:^6.0.1-beta.0"
     "@ethereumjs/util": "npm:8.0.5"
     "@types/debug": "npm:^4.1.5"
     "@types/inquirer": "npm:^6.5.0"
@@ -1809,8 +1860,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/keystores@workspace:packages/sdk/keystores"
   dependencies:
-    "@celo/utils": "npm:^6.0.0"
-    "@celo/wallet-local": "npm:^5.1.3"
+    "@celo/utils": "npm:^6.0.1-beta.0"
+    "@celo/wallet-local": "npm:^5.2.0-beta.0"
     "@types/rimraf": "npm:3.0.2"
     ethereumjs-wallet: "npm:^1.0.1"
     rimraf: "npm:3.0.2"
@@ -1821,7 +1872,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/network-utils@workspace:packages/sdk/network-utils"
   dependencies:
-    "@celo/dev-utils": "npm:0.0.2"
+    "@celo/dev-utils": "npm:0.0.3-beta.0"
     "@types/debug": "npm:^4.1.5"
     cross-fetch: "npm:3.1.5"
     debug: "npm:^4.1.1"
@@ -1859,13 +1910,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/phone-utils@npm:^6.0.1, @celo/phone-utils@workspace:packages/sdk/phone-utils":
+"@celo/phone-utils@npm:^6.0.2-beta.0, @celo/phone-utils@workspace:packages/sdk/phone-utils":
   version: 0.0.0-use.local
   resolution: "@celo/phone-utils@workspace:packages/sdk/phone-utils"
   dependencies:
-    "@celo/base": "npm:^6.0.0"
+    "@celo/base": "npm:^6.0.1-beta.0"
     "@celo/typescript": "npm:0.0.1"
-    "@celo/utils": "npm:^6.0.0"
+    "@celo/utils": "npm:^6.0.1-beta.0"
     "@types/country-data": "npm:^0.0.0"
     "@types/google-libphonenumber": "npm:^7.4.23"
     "@types/node": "npm:^18.7.16"
@@ -1881,11 +1932,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/transactions-uri@workspace:packages/sdk/transactions-uri"
   dependencies:
-    "@celo/base": "npm:^6.0.0"
+    "@celo/base": "npm:^6.0.1-beta.0"
     "@celo/celo-devchain": "npm:^7.0.0"
-    "@celo/connect": "npm:^5.2.0"
-    "@celo/contractkit": "npm:^7.1.0"
-    "@celo/dev-utils": "npm:0.0.2"
+    "@celo/connect": "npm:^5.3.0-beta.0"
+    "@celo/contractkit": "npm:^8.0.0-beta.0"
+    "@celo/dev-utils": "npm:0.0.3-beta.0"
     "@types/debug": "npm:^4.1.5"
     "@types/qrcode": "npm:^1.3.4"
     bn.js: "npm:4.11.9"
@@ -1901,11 +1952,31 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/utils@npm:^6.0.0, @celo/utils@workspace:packages/sdk/utils":
+"@celo/utils@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "@celo/utils@npm:6.0.0"
+  dependencies:
+    "@celo/base": "npm:^6.0.0"
+    "@ethereumjs/util": "npm:8.0.5"
+    "@types/elliptic": "npm:^6.4.9"
+    "@types/node": "npm:^18.7.16"
+    bignumber.js: "npm:^9.0.0"
+    elliptic: "npm:^6.5.4"
+    ethereum-cryptography: "npm:1.2.0"
+    fp-ts: "npm:2.1.1"
+    io-ts: "npm:2.0.1"
+    rlp: "npm:^2.2.4"
+    web3-eth-abi: "npm:1.10.0"
+    web3-utils: "npm:1.10.0"
+  checksum: e8828369726f958d2db7c3f5b321e07c0243d48cc16e0ebef938ae404b1e26aabb11203d971c9f578731bf58424ece5b1bcb5e7710b29653241179cd10473c8e
+  languageName: node
+  linkType: hard
+
+"@celo/utils@npm:^6.0.1-beta.0, @celo/utils@workspace:packages/sdk/utils":
   version: 0.0.0-use.local
   resolution: "@celo/utils@workspace:packages/sdk/utils"
   dependencies:
-    "@celo/base": "npm:^6.0.0"
+    "@celo/base": "npm:^6.0.1-beta.0"
     "@celo/typescript": "npm:0.0.1"
     "@ethereumjs/util": "npm:8.0.5"
     "@types/elliptic": "npm:^6.4.9"
@@ -1921,13 +1992,33 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/wallet-base@npm:^5.1.3, @celo/wallet-base@workspace:packages/sdk/wallets/wallet-base":
-  version: 0.0.0-use.local
-  resolution: "@celo/wallet-base@workspace:packages/sdk/wallets/wallet-base"
+"@celo/wallet-base@npm:^5.1.3":
+  version: 5.1.3
+  resolution: "@celo/wallet-base@npm:5.1.3"
   dependencies:
     "@celo/base": "npm:^6.0.0"
     "@celo/connect": "npm:^5.2.0"
     "@celo/utils": "npm:^6.0.0"
+    "@ethereumjs/rlp": "npm:^5.0.0"
+    "@ethereumjs/util": "npm:8.0.5"
+    "@types/debug": "npm:^4.1.5"
+    bignumber.js: "npm:^9.0.0"
+    debug: "npm:^4.1.1"
+    eth-lib: "npm:^0.2.8"
+    ethereum-cryptography: "npm:^2.1.2"
+    web3: "npm:1.10.0"
+    web3-eth-accounts: "npm:1.10.0"
+  checksum: 8cbf2e9e9a56ea90aacd858cbcb1a0720413e7729fddd06be1a613bacd65ae8f955bff6c84010276199618c1df6004e808981bbd60edcd274e72e67ad9164419
+  languageName: node
+  linkType: hard
+
+"@celo/wallet-base@npm:^5.2.0-beta.0, @celo/wallet-base@workspace:packages/sdk/wallets/wallet-base":
+  version: 0.0.0-use.local
+  resolution: "@celo/wallet-base@workspace:packages/sdk/wallets/wallet-base"
+  dependencies:
+    "@celo/base": "npm:^6.0.1-beta.0"
+    "@celo/connect": "npm:^5.3.0-beta.0"
+    "@celo/utils": "npm:^6.0.1-beta.0"
     "@ethereumjs/rlp": "npm:^5.0.0"
     "@ethereumjs/util": "npm:8.0.5"
     "@types/debug": "npm:^4.1.5"
@@ -1945,11 +2036,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/wallet-hsm-aws@workspace:packages/sdk/wallets/wallet-hsm-aws"
   dependencies:
-    "@celo/connect": "npm:^5.2.0"
-    "@celo/utils": "npm:^6.0.0"
-    "@celo/wallet-base": "npm:^5.1.3"
-    "@celo/wallet-hsm": "npm:^5.1.3"
-    "@celo/wallet-remote": "npm:^5.1.3"
+    "@celo/connect": "npm:^5.3.0-beta.0"
+    "@celo/utils": "npm:^6.0.1-beta.0"
+    "@celo/wallet-base": "npm:^5.2.0-beta.0"
+    "@celo/wallet-hsm": "npm:^5.2.0-beta.0"
+    "@celo/wallet-remote": "npm:^5.2.0-beta.0"
     "@ethereumjs/util": "npm:8.0.5"
     "@types/debug": "npm:^4.1.5"
     "@types/secp256k1": "npm:^4.0.0"
@@ -1964,19 +2055,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/wallet-hsm-azure@npm:^5.1.3, @celo/wallet-hsm-azure@workspace:packages/sdk/wallets/wallet-hsm-azure":
+"@celo/wallet-hsm-azure@npm:^5.2.0-beta.0, @celo/wallet-hsm-azure@workspace:packages/sdk/wallets/wallet-hsm-azure":
   version: 0.0.0-use.local
   resolution: "@celo/wallet-hsm-azure@workspace:packages/sdk/wallets/wallet-hsm-azure"
   dependencies:
     "@azure/identity": "npm:^4.0.1"
     "@azure/keyvault-keys": "npm:^4.7.2"
     "@azure/keyvault-secrets": "npm:^4.7.0"
-    "@celo/base": "npm:^6.0.0"
-    "@celo/connect": "npm:^5.2.0"
-    "@celo/utils": "npm:^6.0.0"
-    "@celo/wallet-base": "npm:^5.1.3"
-    "@celo/wallet-hsm": "npm:^5.1.3"
-    "@celo/wallet-remote": "npm:^5.1.3"
+    "@celo/base": "npm:^6.0.1-beta.0"
+    "@celo/connect": "npm:^5.3.0-beta.0"
+    "@celo/utils": "npm:^6.0.1-beta.0"
+    "@celo/wallet-base": "npm:^5.2.0-beta.0"
+    "@celo/wallet-hsm": "npm:^5.2.0-beta.0"
+    "@celo/wallet-remote": "npm:^5.2.0-beta.0"
     "@ethereumjs/util": "npm:8.0.5"
     "@types/secp256k1": "npm:^4.0.0"
     bignumber.js: "npm:^9.0.0"
@@ -1993,11 +2084,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/wallet-hsm-gcp@workspace:packages/sdk/wallets/wallet-hsm-gcp"
   dependencies:
-    "@celo/connect": "npm:^5.2.0"
-    "@celo/utils": "npm:^6.0.0"
-    "@celo/wallet-base": "npm:^5.1.3"
-    "@celo/wallet-hsm": "npm:^5.1.3"
-    "@celo/wallet-remote": "npm:^5.1.3"
+    "@celo/connect": "npm:^5.3.0-beta.0"
+    "@celo/utils": "npm:^6.0.1-beta.0"
+    "@celo/wallet-base": "npm:^5.2.0-beta.0"
+    "@celo/wallet-hsm": "npm:^5.2.0-beta.0"
+    "@celo/wallet-remote": "npm:^5.2.0-beta.0"
     "@ethereumjs/util": "npm:8.0.5"
     "@google-cloud/kms": "npm:~2.9.0"
     "@types/debug": "npm:^4.1.5"
@@ -2012,11 +2103,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/wallet-hsm@npm:^5.1.3, @celo/wallet-hsm@workspace:packages/sdk/wallets/wallet-hsm":
+"@celo/wallet-hsm@npm:^5.2.0-beta.0, @celo/wallet-hsm@workspace:packages/sdk/wallets/wallet-hsm":
   version: 0.0.0-use.local
   resolution: "@celo/wallet-hsm@workspace:packages/sdk/wallets/wallet-hsm"
   dependencies:
-    "@celo/base": "npm:^6.0.0"
+    "@celo/base": "npm:^6.0.1-beta.0"
     "@ethereumjs/util": "npm:8.0.5"
     "@types/asn1js": "npm:^0.0.2"
     "@types/debug": "npm:^4.1.5"
@@ -2030,15 +2121,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/wallet-ledger@npm:^5.1.3, @celo/wallet-ledger@workspace:packages/sdk/wallets/wallet-ledger":
+"@celo/wallet-ledger@npm:^5.2.0-beta.0, @celo/wallet-ledger@workspace:packages/sdk/wallets/wallet-ledger":
   version: 0.0.0-use.local
   resolution: "@celo/wallet-ledger@workspace:packages/sdk/wallets/wallet-ledger"
   dependencies:
-    "@celo/base": "npm:^6.0.0"
-    "@celo/connect": "npm:^5.2.0"
-    "@celo/utils": "npm:^6.0.0"
-    "@celo/wallet-base": "npm:^5.1.3"
-    "@celo/wallet-remote": "npm:^5.1.3"
+    "@celo/base": "npm:^6.0.1-beta.0"
+    "@celo/connect": "npm:^5.3.0-beta.0"
+    "@celo/utils": "npm:^6.0.1-beta.0"
+    "@celo/wallet-base": "npm:^5.2.0-beta.0"
+    "@celo/wallet-remote": "npm:^5.2.0-beta.0"
     "@ethereumjs/util": "npm:8.0.5"
     "@ledgerhq/errors": "npm:^5.50.0"
     "@ledgerhq/hw-app-eth": "npm:~5.11.0"
@@ -2051,13 +2142,26 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/wallet-local@npm:^5.1.3, @celo/wallet-local@workspace:packages/sdk/wallets/wallet-local":
-  version: 0.0.0-use.local
-  resolution: "@celo/wallet-local@workspace:packages/sdk/wallets/wallet-local"
+"@celo/wallet-local@npm:^5.1.3":
+  version: 5.1.3
+  resolution: "@celo/wallet-local@npm:5.1.3"
   dependencies:
     "@celo/connect": "npm:^5.2.0"
     "@celo/utils": "npm:^6.0.0"
     "@celo/wallet-base": "npm:^5.1.3"
+    "@ethereumjs/util": "npm:8.0.5"
+    eth-lib: "npm:^0.2.8"
+  checksum: e1e5edaeb9606855c98b2de8426606733a967fa0a2dd1d05b59277e290c2649d0223f4a0ea5dcd45749d9c3587ef3fe2fb18584104a9fa4f442d2f04a28f0ba0
+  languageName: node
+  linkType: hard
+
+"@celo/wallet-local@npm:^5.2.0-beta.0, @celo/wallet-local@workspace:packages/sdk/wallets/wallet-local":
+  version: 0.0.0-use.local
+  resolution: "@celo/wallet-local@workspace:packages/sdk/wallets/wallet-local"
+  dependencies:
+    "@celo/connect": "npm:^5.3.0-beta.0"
+    "@celo/utils": "npm:^6.0.1-beta.0"
+    "@celo/wallet-base": "npm:^5.2.0-beta.0"
     "@ethereumjs/util": "npm:8.0.5"
     eth-lib: "npm:^0.2.8"
     viem: "npm:~1.5.4"
@@ -2065,13 +2169,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/wallet-remote@npm:^5.1.3, @celo/wallet-remote@workspace:packages/sdk/wallets/wallet-remote":
+"@celo/wallet-remote@npm:^5.2.0-beta.0, @celo/wallet-remote@workspace:packages/sdk/wallets/wallet-remote":
   version: 0.0.0-use.local
   resolution: "@celo/wallet-remote@workspace:packages/sdk/wallets/wallet-remote"
   dependencies:
-    "@celo/connect": "npm:^5.2.0"
-    "@celo/utils": "npm:^6.0.0"
-    "@celo/wallet-base": "npm:^5.1.3"
+    "@celo/connect": "npm:^5.3.0-beta.0"
+    "@celo/utils": "npm:^6.0.1-beta.0"
+    "@celo/wallet-base": "npm:^5.2.0-beta.0"
     "@ethereumjs/util": "npm:8.0.5"
     "@types/debug": "npm:^4.1.5"
     eth-lib: "npm:^0.2.8"
@@ -2083,13 +2187,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/wallet-rpc@workspace:packages/sdk/wallets/wallet-rpc"
   dependencies:
-    "@celo/base": "npm:^6.0.0"
-    "@celo/connect": "npm:^5.2.0"
-    "@celo/contractkit": "npm:^7.1.0"
-    "@celo/dev-utils": "npm:0.0.2"
-    "@celo/utils": "npm:^6.0.0"
-    "@celo/wallet-base": "npm:^5.1.3"
-    "@celo/wallet-remote": "npm:^5.1.3"
+    "@celo/base": "npm:^6.0.1-beta.0"
+    "@celo/connect": "npm:^5.3.0-beta.0"
+    "@celo/contractkit": "npm:^8.0.0-beta.0"
+    "@celo/dev-utils": "npm:0.0.3-beta.0"
+    "@celo/utils": "npm:^6.0.1-beta.0"
+    "@celo/wallet-base": "npm:^5.2.0-beta.0"
+    "@celo/wallet-remote": "npm:^5.2.0-beta.0"
     "@types/bn.js": "npm:^5.1.0"
     bignumber.js: "npm:^9.0.0"
     bn.js: "npm:^5.1.0"
@@ -8689,6 +8793,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cross-fetch@npm:3.0.6":
+  version: 3.0.6
+  resolution: "cross-fetch@npm:3.0.6"
+  dependencies:
+    node-fetch: "npm:2.6.1"
+  checksum: cd181379c1fd4cbc45f757fc71dd9749ed012304ef0d87ded751b3c03b5163da6327df390d9987f208db5a9aa861fc662685703b9260d7ae90f7811e2ddad54b
+  languageName: node
+  linkType: hard
+
 "cross-fetch@npm:3.1.5":
   version: 3.1.5
   resolution: "cross-fetch@npm:3.1.5"
@@ -14862,6 +14975,13 @@ __metadata:
   version: 1.0.0
   resolution: "node-domexception@npm:1.0.0"
   checksum: e332522f242348c511640c25a6fc7da4f30e09e580c70c6b13cb0be83c78c3e71c8d4665af2527e869fc96848924a4316ae7ec9014c091e2156f41739d4fa233
+  languageName: node
+  linkType: hard
+
+"node-fetch@npm:2.6.1":
+  version: 2.6.1
+  resolution: "node-fetch@npm:2.6.1"
+  checksum: 0b54e56681a99e1b511f8e94dc56b971104834c99c0368cdf5a9e43b3355d77e8aa92842602cf2c08e60654c32ae439d84946eccb38427e6dc2e9d7d90fc787c
   languageName: node
   linkType: hard
 
