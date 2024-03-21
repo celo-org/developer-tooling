@@ -53,7 +53,7 @@ Construct a new instance of the RPC signer
 
 #### Defined in
 
-[packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts:64](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts#L64)
+[sdk/wallets/wallet-rpc/src/rpc-signer.ts:64](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts#L64)
 
 ## Methods
 
@@ -77,7 +77,7 @@ Signer.computeSharedSecret
 
 #### Defined in
 
-[packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts:174](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts#L174)
+[sdk/wallets/wallet-rpc/src/rpc-signer.ts:174](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts#L174)
 
 ___
 
@@ -101,7 +101,7 @@ Signer.decrypt
 
 #### Defined in
 
-[packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts:165](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts#L165)
+[sdk/wallets/wallet-rpc/src/rpc-signer.ts:165](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts#L165)
 
 ___
 
@@ -119,7 +119,7 @@ Signer.getNativeKey
 
 #### Defined in
 
-[packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts:123](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts#L123)
+[sdk/wallets/wallet-rpc/src/rpc-signer.ts:123](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts#L123)
 
 ___
 
@@ -140,7 +140,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts:72](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts#L72)
+[sdk/wallets/wallet-rpc/src/rpc-signer.ts:72](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts#L72)
 
 ___
 
@@ -154,7 +154,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts:147](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts#L147)
+[sdk/wallets/wallet-rpc/src/rpc-signer.ts:147](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts#L147)
 
 ___
 
@@ -178,7 +178,7 @@ Signer.signPersonalMessage
 
 #### Defined in
 
-[packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts:115](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts#L115)
+[sdk/wallets/wallet-rpc/src/rpc-signer.ts:115](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts#L115)
 
 ___
 
@@ -198,7 +198,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts:78](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts#L78)
+[sdk/wallets/wallet-rpc/src/rpc-signer.ts:78](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts#L78)
 
 ___
 
@@ -216,7 +216,7 @@ Signer.signTransaction
 
 #### Defined in
 
-[packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts:102](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts#L102)
+[sdk/wallets/wallet-rpc/src/rpc-signer.ts:102](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts#L102)
 
 ___
 
@@ -240,7 +240,7 @@ Signer.signTypedData
 
 #### Defined in
 
-[packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts:106](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts#L106)
+[sdk/wallets/wallet-rpc/src/rpc-signer.ts:106](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts#L106)
 
 ___
 
@@ -261,4 +261,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts:125](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts#L125)
+[sdk/wallets/wallet-rpc/src/rpc-signer.ts:125](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-signer.ts#L125)

@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts:10](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts#L10)
+[sdk/wallets/wallet-rpc/src/rpc-wallet.ts:10](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts#L10)
 
 ___
 
@@ -29,4 +29,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts:9](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts#L9)
+[sdk/wallets/wallet-rpc/src/rpc-wallet.ts:9](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts#L9)

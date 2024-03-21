@@ -20,4 +20,4 @@
 
 #### Defined in
 
-[packages/sdk/wallets/wallet-rpc/src/test-utils/ganache.setup.ts:4](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/test-utils/ganache.setup.ts#L4)
+[sdk/wallets/wallet-rpc/src/test-utils/ganache.setup.ts:4](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/test-utils/ganache.setup.ts#L4)
