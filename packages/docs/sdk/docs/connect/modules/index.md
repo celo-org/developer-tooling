@@ -32,6 +32,7 @@
 - [EIP1559TXProperties](index.md#eip1559txproperties)
 - [EncodedTransaction](index.md#encodedtransaction)
 - [Error](index.md#error)
+- [EthereumLegacyTXProperties](index.md#ethereumlegacytxproperties)
 - [FormattedCeloTx](index.md#formattedcelotx)
 - [Hex](index.md#hex)
 - [HexOrMissing](index.md#hexormissing)
@@ -232,6 +233,12 @@ ___
 ### Error
 
 Re-exports [Error](../interfaces/types.Error.md)
+
+___
+
+### EthereumLegacyTXProperties
+
+Re-exports [EthereumLegacyTXProperties](../interfaces/types.EthereumLegacyTXProperties.md)
 
 ___
 

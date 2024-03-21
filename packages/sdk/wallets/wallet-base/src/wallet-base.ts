@@ -78,7 +78,9 @@ export abstract class WalletBase<TSigner extends Signer> implements ReadOnlyWall
     }
     const rlpEncoded = rlpEncodedTx(txParams)
     const addToV =
-      rlpEncoded.type === 'celo-legacy' ? chainIdTransformationForSigning(txParams.chainId!) : 27
+      rlpEncoded.type === 'celo-legacy' || rlpEncoded.type === 'ethereum-legacy'
+        ? chainIdTransformationForSigning(txParams.chainId!)
+        : 27
 
     // Get the signer from the 'from' field
     const fromAddress = txParams.from!.toString()
