@@ -16,4 +16,4 @@
 '@celo/celocli': patch
 ---
 
-Bump web3-\* to 1.10.4
+Bump web3-\* to 1.10.4 -- Some consumers may be forced to upgrade their web3 instance to the same version 
