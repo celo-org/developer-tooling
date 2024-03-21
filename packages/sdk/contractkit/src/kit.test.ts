@@ -1,7 +1,6 @@
 import { StrongAddress } from '@celo/base'
 import { CeloTx, CeloTxObject, CeloTxReceipt, JsonRpcPayload, PromiEvent } from '@celo/connect'
 import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
-import fetchMock from 'fetch-mock'
 import Web3 from 'web3'
 import { HttpProvider } from 'web3-core'
 import {
@@ -129,24 +128,25 @@ export function txoStub<T>(): TransactionObjectStub<T> {
   })
 })
 
-describe.only('newKitWithApiKey()', () => {
+describe('newKitWithApiKey()', () => {
   test('should set apiKey in request header', async () => {
-    const spy = fetchMock.spy()
     const kit = newKitWithApiKey('http://', 'key')
-    const httpProvider = kit.web3.currentProvider as HttpProvider
+    const celoProvider = kit.web3.currentProvider as HttpProvider
     const rpcPayload: JsonRpcPayload = {
       jsonrpc: '',
       method: '',
       params: [],
     }
-    httpProvider.send(rpcPayload, (error: Error | null) =>
+    celoProvider.send(rpcPayload, (error: Error | null) =>
       expect(error?.message).toContain("Couldn't connect to node http://")
     )
-    // why can i not spy on fetch????
-    expect(spy.lastOptions()).toEqual({ headers: { apiKey: 'key' } })
-    // -- we can see here that the httpProvider gets the apikey header.
-    // i feel like that is enough we shouldnt really need to chec that its then  passed to fetch right?
-    // @ts-ignore because its not in the types
+    // important part is that  "headers": looks like [
+    //   {
+    //     "name": "apiKey",
+    //     "value": "key",
+    //   },
+    // ],
+    // @ts-ignore -- httpProvider isnt in the types for rpcCaller but it IS
     expect(kit.connection.rpcCaller['httpProvider']).toMatchInlineSnapshot(`
       HttpProvider {
         "agent": undefined,
@@ -190,13 +190,6 @@ describe.only('newKitWithApiKey()', () => {
         "withCredentials": undefined,
       }
     `)
-    // exp
-    // if (headers.apiKey) {
-    //   // Api Key should be set in the request header of fetch
-    //   expect(headers.apiKey).toBe('key')
-    // } else {
-    //   throw new Error('apiKey not set in request header')
-    // }
   })
 })
 
