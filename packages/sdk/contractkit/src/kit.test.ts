@@ -1,8 +1,7 @@
 import { StrongAddress } from '@celo/base'
-import { CeloTx, CeloTxObject, CeloTxReceipt, JsonRpcPayload, PromiEvent } from '@celo/connect'
+import { CeloTx, CeloTxObject, CeloTxReceipt, PromiEvent } from '@celo/connect'
 import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
 import Web3 from 'web3'
-import { HttpProvider } from 'web3-core'
 import {
   ContractKit,
   newKitFromWeb3 as newFullKitFromWeb3,
@@ -130,66 +129,12 @@ export function txoStub<T>(): TransactionObjectStub<T> {
 
 describe('newKitWithApiKey()', () => {
   test('should set apiKey in request header', async () => {
-    const kit = newKitWithApiKey('http://', 'key')
-    const celoProvider = kit.web3.currentProvider as HttpProvider
-    const rpcPayload: JsonRpcPayload = {
-      jsonrpc: '',
-      method: '',
-      params: [],
-    }
-    celoProvider.send(rpcPayload, (error: Error | null) =>
-      expect(error?.message).toContain("Couldn't connect to node http://")
-    )
-    // important part is that  "headers": looks like [
-    //   {
-    //     "name": "apiKey",
-    //     "value": "key",
-    //   },
-    // ],
-    // @ts-ignore -- httpProvider isnt in the types for rpcCaller but it IS
-    expect(kit.connection.rpcCaller['httpProvider']).toMatchInlineSnapshot(`
-      HttpProvider {
-        "agent": undefined,
-        "connected": false,
-        "forceGlobalFetch": false,
-        "headers": [
-          {
-            "name": "apiKey",
-            "value": "key",
-          },
-        ],
-        "host": "http://",
-        "httpAgent": Agent {
-          "_events": {
-            "free": [Function],
-            "newListener": [Function],
-          },
-          "_eventsCount": 2,
-          "_maxListeners": undefined,
-          "defaultPort": 80,
-          "freeSockets": {},
-          "keepAlive": true,
-          "keepAliveMsecs": 1000,
-          "maxFreeSockets": 256,
-          "maxSockets": Infinity,
-          "maxTotalSockets": Infinity,
-          "options": {
-            "keepAlive": true,
-            "noDelay": true,
-            "path": null,
-          },
-          "protocol": "http:",
-          "requests": {},
-          "scheduling": "lifo",
-          "sockets": {},
-          "totalSocketCount": 0,
-          Symbol(shapeMode): false,
-          Symbol(kCapture): false,
-        },
-        "timeout": 0,
-        "withCredentials": undefined,
-      }
-    `)
+    jest.spyOn(Web3.providers, 'HttpProvider')
+
+    newKitWithApiKey('http://', 'key')
+    expect(Web3.providers.HttpProvider).toHaveBeenCalledWith('http://', {
+      headers: [{ name: 'apiKey', value: 'key' }],
+    })
   })
 })
 
