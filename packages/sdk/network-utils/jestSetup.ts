@@ -3,4 +3,3 @@ jest.mock('cross-fetch', () => fetchMockSandbox)
 
 // @ts-ignore
 global.fetchMock = fetchMockSandbox
-global.fetch = fetchMockSandbox
