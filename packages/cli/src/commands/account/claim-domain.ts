@@ -12,7 +12,7 @@ export default class ClaimDomain extends ClaimCommand {
   }
   static args = ClaimCommand.args
   static examples = [
-    'claim-domain ~/metadata.json --domain test.com --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95',
+    'claim-domain ~/metadata.json --domain example.com --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95',
   ]
   self = ClaimDomain
   async run() {

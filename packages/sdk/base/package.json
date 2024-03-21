@@ -11,8 +11,8 @@
   "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/sdk/base",
   "scripts": {
     "prepublishOnly": "yarn build",
-    "build": "tsc -b .",
-    "clean": "tsc -b . --clean",
+    "build": "yarn run --top-level tsc -b .",
+    "clean": "yarn run --top-level tsc -b . --clean",
     "docs": "yarn run --top-level typedoc",
     "test": "yarn run --top-level jest --runInBand --ci",
     "test:verbose": "yarn run --top-level jest --verbose",
@@ -25,6 +25,6 @@
     "@celo/typescript": "0.0.1",
     "bignumber.js": "^9.0.0",
     "elliptic": "^6.5.4",
-    "web3-utils": "1.10.0"
+    "web3-utils": "1.10.4"
   }
 }

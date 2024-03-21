@@ -1,0 +1,39 @@
+{
+  "name": "@celo/dev-utils",
+  "version": "0.0.2",
+  "description": "util package for celo packages that should only be a devDependency",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "author": "Celo",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/celo-org/celo-monorepo/tree/master/packages/dev-utils",
+  "repository": "https://github.com/celo-org/celo-monorepo/tree/master/packages/dev-utils",
+  "keywords": [
+    "celo"
+  ],
+  "files": [
+    "lib/*"
+  ],
+  "scripts": {
+    "build": "yarn run --top-level tsc -b .",
+    "lint": "yarn run --top-level eslint -c .eslintrc.js ",
+    "prepack": "yarn build"
+  },
+  "dependencies": {
+    "bignumber.js": "^9.0.0",
+    "fs-extra": "^8.1.0",
+    "ganache": "npm:@celo/ganache@7.8.0-unofficial.0",
+    "targz": "^1.0.1",
+    "tmp": "^0.1.0",
+    "web3": "1.10.4",
+    "web3-core-helpers": "1.10.4"
+  },
+  "devDependencies": {
+    "@tsconfig/recommended": "^1.0.3",
+    "@types/fs-extra": "^8.1.0",
+    "@types/targz": "1.0.0"
+  },
+  "engines": {
+    "node": ">=18.14.2"
+  }
+}

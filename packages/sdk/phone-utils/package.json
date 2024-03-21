@@ -11,8 +11,8 @@
   "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/sdk/phone-utils",
   "scripts": {
     "prepublishOnly": "yarn build",
-    "build": "tsc -b .",
-    "clean": "tsc -b . --clean",
+    "build": "yarn run --top-level tsc -b .",
+    "clean": "yarn run --top-level tsc -b . --clean",
     "docs": "yarn run --top-level typedoc",
     "test": "yarn run --top-level jest --runInBand --ci",
     "test:verbose": "yarn run --top-level jest --verbose",

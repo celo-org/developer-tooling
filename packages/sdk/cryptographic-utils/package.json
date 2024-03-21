@@ -11,9 +11,9 @@
   "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/sdk/cryptographic-utils",
   "scripts": {
     "prepublishOnly": "yarn build",
-    "build": "tsc -b .",
+    "build": "yarn run --top-level tsc -b .",
     "docs": "yarn run --top-level typedoc",
-    "clean": "tsc -b . --clean",
+    "clean": "yarn run --top-level tsc -b . --clean",
     "test": "yarn run --top-level jest --runInBand --ci",
     "test:verbose": "yarn run --top-level jest --verbose",
     "lint": "yarn run --top-level eslint -c .eslintrc.js "

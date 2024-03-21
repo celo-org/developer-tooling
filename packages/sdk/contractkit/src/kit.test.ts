@@ -1,8 +1,7 @@
 import { StrongAddress } from '@celo/base'
-import { CeloTx, CeloTxObject, CeloTxReceipt, JsonRpcPayload, PromiEvent } from '@celo/connect'
+import { CeloTx, CeloTxObject, CeloTxReceipt, PromiEvent } from '@celo/connect'
 import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
 import Web3 from 'web3'
-import { HttpProvider } from 'web3-core'
 import {
   ContractKit,
   newKitFromWeb3 as newFullKitFromWeb3,
@@ -129,32 +128,13 @@ export function txoStub<T>(): TransactionObjectStub<T> {
 })
 
 describe('newKitWithApiKey()', () => {
-  const kit = newKitWithApiKey('http://', 'key')
-  const fetchSpy = jest.spyOn(global, 'fetch')
-
-  afterEach(() => {
-    jest.restoreAllMocks()
-  })
-
   test('should set apiKey in request header', async () => {
-    const httpProvider = kit.web3.currentProvider as HttpProvider
-    const rpcPayload: JsonRpcPayload = {
-      jsonrpc: '',
-      method: '',
-      params: [],
-    }
-    httpProvider.send(rpcPayload, (error: Error | null) =>
-      expect(error?.message).toContain("Couldn't connect to node http://")
-    )
-    const headers: any = fetchSpy.mock.calls[0]?.[1]?.headers
-    if (headers.apiKey) {
-      // Api Key should be set in the request header of fetch
-      expect(headers.apiKey).toBe('key')
-    } else {
-      throw new Error('apiKey not set in request header')
-    }
+    jest.spyOn(Web3.providers, 'HttpProvider')
 
-    expect(fetchSpy).toHaveBeenCalled()
+    newKitWithApiKey('http://', 'key')
+    expect(Web3.providers.HttpProvider).toHaveBeenCalledWith('http://', {
+      headers: [{ name: 'apiKey', value: 'key' }],
+    })
   })
 })
 
