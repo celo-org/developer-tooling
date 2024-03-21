@@ -386,7 +386,6 @@ export class BlockExplorer {
       )
     }
     const mapping = metadata?.toContractMapping()
-    console.info('CS map', address)
     mapping?.fnMapping.forEach((selector) => {
       console.info(selector.name, JSON.stringify(selector))
     })

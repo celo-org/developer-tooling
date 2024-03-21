@@ -360,25 +360,11 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
 
   const transactionsForContractsVerifiedOnCeloScan = [
     {
-      contract: '0xFa3df877F98ac5ecd87456a7AcCaa948462412f0',
-      address: '0xFa3df877F98ac5ecd87456a7AcCaa948462412f0',
-      function: 'removeLiquidity(uint256,uint256[],uint256)',
-      args: ['10000000000000000000000000', ['0', '0'], 1674883684],
-      value: '0',
-    },
-    {
-      contract: '0x765de816845861e75a25fca122bb6898b8b1282a',
-      address: '0x765de816845861e75a25fca122bb6898b8b1282a',
-      function: 'approve(address,uint256)',
-      args: ['0x87647780180B8f55980C7D3fFeFe08a9B29e9aE1', '11000000000000000000000000'],
-      value: '0',
-    },
-    {
-      contract: '0x37f750B7cC259A2f741AF45294f6a16572CF5cAd',
-      address: '0x37f750B7cC259A2f741AF45294f6a16572CF5cAd',
-      function: 'approve(address,uint256)',
-      args: ['0x87647780180B8f55980C7D3fFeFe08a9B29e9aE1', '11000000000000'],
-      value: '0',
+      contract: 'Vyper_contract',
+      address: '0xf4cab10dC19695AaCe14b7A16d7705b600ad5F73',
+      function: 'transfer(address,uint256)',
+      args: ['0x87647780180B8f55980C7D3fFeFe08a9B29e9aE1', '20001239154911011864219072'],
+      value: 0,
     },
   ]
 
@@ -402,7 +388,7 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
           '--deposit',
           '1000000000000000000',
           '--from',
-          accounts[0],
+          accounts[0] as StrongAddress,
           '--descriptionURL',
           'https://example.com',
         ])

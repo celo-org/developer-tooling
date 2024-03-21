@@ -1,3 +1,4 @@
+import { StrongAddress } from '@celo/base'
 import { ProposalBuilder, proposalToJSON, ProposalTransactionJSON } from '@celo/governance'
 import { Flags } from '@oclif/core'
 import { BigNumber } from 'bignumber.js'
@@ -52,7 +53,7 @@ export default class Propose extends BaseCommand {
     const res = await this.parse(Propose)
     const account = res.flags.from
     const deposit = new BigNumber(res.flags.deposit)
-    kit.defaultAccount = account
+    kit.defaultAccount = account as StrongAddress
 
     await newCheckBuilder(this, account)
       .hasEnoughCelo(account, deposit)
