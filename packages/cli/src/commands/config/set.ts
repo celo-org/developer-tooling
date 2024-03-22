@@ -1,3 +1,4 @@
+import { newKit } from '@celo/contractkit'
 import { BaseCommand } from '../../base'
 import { CeloConfig, readConfig, writeConfig } from '../../utils/config'
 export default class Set extends BaseCommand {
@@ -24,14 +25,15 @@ export default class Set extends BaseCommand {
     const curr = readConfig(this.config.configDir)
     const node = res.flags.node ?? curr.node
     const gasCurrency = res.flags.gasCurrency ?? curr.gasCurrency
-
+    // must get new kit or it will be use the old node url while looking up gasTokens
+    const kit = newKit(node)
     await writeConfig(
       this.config.configDir,
       {
         node,
         gasCurrency,
       } as CeloConfig,
-      await this.getKit()
+      kit
     )
   }
 }
