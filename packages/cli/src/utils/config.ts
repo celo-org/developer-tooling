@@ -30,7 +30,11 @@ const configFile = 'config.json'
 export function configPath(configDir: string) {
   return path.join(configDir, configFile)
 }
-
+/*
+ * @dev if like me you thought why cant readConfig migrate the data internally to the new Config style,
+ * it cannot as the migration requires being connected to a node and the url for that is stored in the config.
+ * @returns CeloConfig with gasCurrency as Record or if the no change to config since switch will return with gasCurrency as string
+ */
 export function readConfig(configDir: string): CeloConfig | LegacyCeloConfig {
   if (fs.pathExistsSync(configPath(configDir))) {
     const existingConfig: CeloConfig | LegacyCeloConfig = fs.readJSONSync(configPath(configDir))
