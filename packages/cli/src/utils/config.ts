@@ -31,15 +31,15 @@ export function configPath(configDir: string) {
   return path.join(configDir, configFile)
 }
 
-// actually could be legacy atm but lets fix that
 export function readConfig(configDir: string): CeloConfig | LegacyCeloConfig {
   if (fs.pathExistsSync(configPath(configDir))) {
     const existingConfig: CeloConfig | LegacyCeloConfig = fs.readJSONSync(configPath(configDir))
     const combinedConfig = { ...defaultConfig, ...existingConfig }
     if (combinedConfig.hasOwnProperty('nodeUrl')) {
-      // @ts-expect-error
+      // @ts-expect-error -- nodeUrl no longer exists but must have in the past
       combinedConfig.node = combinedConfig.nodeUrl
     }
+
     return combinedConfig
   } else {
     return defaultConfig
@@ -66,8 +66,21 @@ export async function getGasCurrency(
 }
 
 /*
-  @dev it is vital that the kit passed in is already connected to the next node
-*/
+ * @param configUpdate this contains just the new data { node: string, gasCurrency: Address } 
+          it will be merged with any data that is curently saved
+ * @dev it is vital that the kit passed in is already connected to the next node
+
+ * @remarks 
+ *  writes a json object to disk like 
+ *   
+ *  { node: 'alfajores
+ *     gasCurrency: {
+ *       44787: '0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1',
+ *       44787: '0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1',
+ *     }
+ *   }
+ *
+ */
 export async function writeConfig(
   configDir: string,
   configUpdate: CeloConfigUpdate,

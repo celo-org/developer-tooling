@@ -24,6 +24,7 @@ export default class Set extends BaseCommand {
     const res = await this.parse(Set)
     const curr = readConfig(this.config.configDir)
     const node = res.flags.node ?? curr.node
+    // dont set the gasCurrency to curr here. it will be handled inside of writeConfig
     const gasCurrency = res.flags.gasCurrency
     // must get new kit or it will be use the old node url while looking up gasTokens
     const kit = newKit(node)

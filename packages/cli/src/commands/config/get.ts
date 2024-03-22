@@ -12,6 +12,7 @@ export default class Get extends BaseCommand {
   requireSynced = false
 
   async run() {
+    // TODO now that thee are multiple values for gas currency it needs to be printed out differently
     printValueMap(readConfig(this.config.configDir))
   }
 }
