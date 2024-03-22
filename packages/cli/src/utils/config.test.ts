@@ -4,7 +4,7 @@ import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
 import * as fs from 'fs-extra'
 import { tmpdir } from 'os'
 import { join } from 'path'
-import { CeloConfig, LegacyCeloConfig, getGasCurrency, writeConfig } from './config'
+import { LegacyCeloConfig, getGasCurrency, writeConfig } from './config'
 
 // NOTE: for some reason if I don't mock the whole module, jest fails
 // to spy on outputJSONSync
@@ -21,7 +21,7 @@ testWithGanache('config', (web3) => {
   const kit = newKitFromWeb3(web3)
   describe('writeConfig', () => {
     test('empty config', async () => {
-      writeConfig(PATH, {} as CeloConfig, kit)
+      writeConfig(PATH, {}, kit)
 
       expect(spy).toHaveBeenCalledTimes(1)
       expect(spy.mock.calls[0]).toHaveLength(2)
@@ -67,7 +67,7 @@ testWithGanache('config', (web3) => {
     })
     test('gasCurrency badly formatted address', async () => {
       await expect(
-        writeConfig(PATH, { gasCurrency: '0x123' as StrongAddress } as CeloConfig, kit)
+        writeConfig(PATH, { gasCurrency: '0x123' as StrongAddress }, kit)
       ).rejects.toMatchInlineSnapshot(`[Error: Invalid address 0x123]`)
     })
     test('gasCurrency wrong address', async () => {
@@ -76,7 +76,7 @@ testWithGanache('config', (web3) => {
           PATH,
           {
             gasCurrency: '0x0000000000000000000000000000000000000000' as StrongAddress,
-          } as CeloConfig,
+          },
           kit
         )
       ).rejects.toMatchInlineSnapshot(`
@@ -92,7 +92,7 @@ testWithGanache('config', (web3) => {
         PATH,
         {
           gasCurrency: (await kit.contracts.getStableToken(StableToken.cEUR)).address,
-        } as CeloConfig,
+        },
         kit
       )
       expect(spy.mock.calls[0][1]).toMatchInlineSnapshot(`
@@ -110,7 +110,7 @@ testWithGanache('config', (web3) => {
       expect(await getGasCurrency(PATH, kit)).toBe(undefined)
     })
     test('CELO', async () => {
-      fs.outputJSONSync(join(PATH, 'config.json'), { getGasCurrency: 'CELO' })
+      fs.outputJSONSync(join(PATH, 'config.json'), { gasCurrency: 'CELO' })
       expect(await getGasCurrency(PATH, kit)).toBe(undefined)
     })
     test('address', async () => {
