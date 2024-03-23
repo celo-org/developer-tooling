@@ -396,6 +396,19 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<Governance> {
   /**
    * Returns the approver multisig contract for proposals and hotfixes.
    */
+  /**
+   * TODO(Arthur): I wonder if the existing `getApproveMultisig` method in the GovernanceWrapper
+   * class is an anti-pattern. It's a pretty shallow "pass-through function" that doesn't add a lot
+   * of functionality. Using it requires knowledge of `getMultiSig` and it's not part
+   * of the `Governance.sol` interface.
+   *
+   * The logic is basically, "if the registered `approver` address happens to be a multisig,
+   * then create a MultiSigWrapper object. Might be worth implementing this at a higher-level,
+   * maybe a global flag.
+   *
+   * In that case `getApproverMultiSig` won't be a necessary specialiazation anymore, and
+   * `getMultiSig` will be sufficient.
+   */
   getApproverMultisig = () =>
     this.getApprover().then((address) => this.contracts.getMultiSig(address))
 
