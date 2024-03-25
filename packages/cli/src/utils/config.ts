@@ -28,8 +28,8 @@ export function readConfig(configDir: string): CeloConfig {
 
     // NOTE: make sure we don't confuse the user by printing legacy config elements
     for (const [legacyKey, newKey] of Object.entries(LEGACY_MAPPING)) {
-      if (newKey) {
-        combinedConfig[newKey] = legacyKey
+      if (newKey && combinedConfig[legacyKey]) {
+        combinedConfig[newKey] = combinedConfig[legacyKey]
       }
       delete combinedConfig[legacyKey]
     }
