@@ -1,5 +1,15 @@
 # Changelog
 
+## 5.0.0-beta.1
+
+### Major Changes
+
+- [#198](https://github.com/celo-org/developer-tooling/pull/198) [`880a838`](https://github.com/celo-org/developer-tooling/commit/880a8386e10cf9cd84c57d141330e84635a7eeaa) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - The following changes are related to adding support for more fee currencies in the @celo packages.
+
+  (BREAKING): global flag `--gasCurrency` changed to accept only whitelisted addresses instead of previously accepting a StableToken or 'auto'
+  (BREAKING): `config:set --gasCurrency` is now ignored and not saved to a default config and prints a warning instead
+  (ADDED): `celocli network:whitelist` prints the whitelisted feeCurrencies
+
 ## 5.0.0-beta.0
 
 ### Major Changes
