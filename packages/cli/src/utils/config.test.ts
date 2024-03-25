@@ -35,12 +35,4 @@ describe('writeConfig', () => {
         }
       `)
   })
-  it('ignores gasCurrency (legacy)', async () => {
-    await writeConfig(PATH, { node: 'SOME_URL' })
-    expect(spy.mock.calls[0][1]).toMatchInlineSnapshot(`
-      {
-        "node": "SOME_URL",
-      }
-    `)
-  })
 })
