@@ -48,10 +48,7 @@ const parseAddress: ParseFn<StrongAddress> = async (input) => {
     throw new CLIError(`${input} is not a valid address`)
   }
 }
-const parseGasCurrency: ParseFn<StrongAddress | 'CELO'> = async (input) => {
-  if (input.toUpperCase() === 'CELO') {
-    return 'CELO'
-  }
+const parseGasCurrency: ParseFn<StrongAddress> = async (input) => {
   if (Web3.utils.isAddress(input)) {
     return input as StrongAddress
   } else {
@@ -166,10 +163,10 @@ export const CustomFlags = {
     description: 'Account Address',
     helpValue: '0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d',
   }),
-  gasCurrency: Flags.custom<StrongAddress | 'CELO'>({
+  gasCurrency: Flags.custom<StrongAddress>({
     parse: parseGasCurrency,
-    description: 'A whitelisted feeCurrency or CELO to use native eip1559 transactions',
-    helpValue: '0',
+    description: 'A whitelisted feeCurrency',
+    helpValue: '0x1234567890123456789012345678901234567890',
   }),
   ecdsaPublicKey: Flags.custom({
     parse: parseEcdsaPublicKey,

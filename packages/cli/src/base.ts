@@ -10,7 +10,7 @@ import chalk from 'chalk'
 import net from 'net'
 import Web3 from 'web3'
 import { CustomFlags } from './utils/command'
-import { getGasCurrency, getNodeUrl } from './utils/config'
+import { getNodeUrl } from './utils/config'
 import { requireNodeIsSynced } from './utils/helpers'
 
 export abstract class BaseCommand extends Command {
@@ -43,8 +43,7 @@ export abstract class BaseCommand extends Command {
     }),
     gasCurrency: CustomFlags.gasCurrency({
       description:
-        'Use a specific gas currency for transaction fees (defaults to CELO if no gas currency is supplied)',
-      hidden: true,
+        'Use a specific gas currency for transaction fees (defaults to CELO if no gas currency is supplied). It must be a whitelisted token.',
     }),
     useLedger: Flags.boolean({
       default: false,
@@ -195,10 +194,9 @@ export abstract class BaseCommand extends Command {
       kit.defaultAccount = res.flags.from
     }
 
-    const gasCurrencyFlag = (res.flags.gasCurrency ??
-      (await getGasCurrency(this.config.configDir, kit))) as StrongAddress | 'CELO' | undefined
+    const gasCurrencyFlag = res.flags.gasCurrency as StrongAddress | undefined
 
-    if (gasCurrencyFlag && gasCurrencyFlag !== 'CELO') {
+    if (gasCurrencyFlag) {
       const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyWhitelist()
       const validFeeCurrencies = await feeCurrencyWhitelist.getWhitelist()
 

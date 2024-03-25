@@ -58,11 +58,13 @@ export abstract class TransferStableBase extends BaseCommand {
       failWith(`The ${this._stableCurrency} token was not deployed yet`)
     }
 
-    if (res.flags.gasCurrency) {
-      kit.connection.defaultFeeCurrency = res.flags.gasCurrency
-    }
-    // If gasCurrency is not set, defaults to eip1559 tx
-    const params = res.flags.feeCurrency ? { feeCurrency: kit.connection.defaultFeeCurrency } : {}
+    // NOTE 1: if --gasCurrency is not set, defaults to eip1559 tx
+    // NOTE 2: if --gasCurrency is set by the user, then
+    //     `kit.connection.defaultFeeCurrency` is set in base.ts via
+    //     `kit.setFeeCurrency()`
+    const params = kit.connection.defaultFeeCurrency
+      ? { feeCurrency: kit.connection.defaultFeeCurrency }
+      : {}
 
     const tx = res.flags.comment
       ? stableToken.transferWithComment(to, value.toFixed(), res.flags.comment)
@@ -84,9 +86,9 @@ export abstract class TransferStableBase extends BaseCommand {
           ;[gas, gasPrice, gasBalance, valueBalance] = await Promise.all([
             tx.txo.estimateGas(params),
             kit.connection.gasPrice(kit.connection.defaultFeeCurrency),
-            res.flags.gasCurrency
+            kit.connection.defaultFeeCurrency
               ? // @ts-expect-error abi typing is not 100% correct but works
-                new kit.web3.eth.Contract(ERC20_MOCK_ABI, res.flags.gasCurrency).methods
+                new kit.web3.eth.Contract(ERC20_MOCK_ABI, kit.connection.defaultFeeCurrency).methods
                   .balanceOf(from)
                   .call()
                   .then((x: string) => new BigNumber(x))
@@ -96,7 +98,7 @@ export abstract class TransferStableBase extends BaseCommand {
               .then((token) => token.balanceOf(from)),
           ])
           const gasValue = new BigNumber(gas).times(gasPrice as string)
-          if (res.flags.gasCurrency) {
+          if (kit.connection.defaultFeeCurrency) {
             return gasBalance.gte(gasValue) && valueBalance.gte(value)
           }
           return valueBalance.gte(value.plus(gasValue))
