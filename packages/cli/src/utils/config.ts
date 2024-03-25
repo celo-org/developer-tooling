@@ -23,7 +23,7 @@ export function configPath(configDir: string) {
 
 export function readConfig(configDir: string): CeloConfig {
   if (fs.pathExistsSync(configPath(configDir))) {
-    const { existingConfig } = fs.readJSONSync(configPath(configDir))
+    const existingConfig = fs.readJSONSync(configPath(configDir))
     const combinedConfig = { ...defaultConfig, ...existingConfig }
 
     // NOTE: make sure we don't confuse the user by printing legacy config elements
