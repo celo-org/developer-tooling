@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.2.1
+
+### Patch Changes
+
+- [#189](https://github.com/celo-org/developer-tooling/pull/189) [`cbfedf0`](https://github.com/celo-org/developer-tooling/commit/cbfedf0849a69e347a6ee3647b301ca0e7a11cac) Thanks [@renovate](https://github.com/apps/renovate)! - Bumps @celo/identity package to version [5.1.2](https://github.com/celo-org/social-connect/pull/181). This version removes the opentelemetry dependencies, which removes the warnings when users install @celo/celocli.
+
 ## 4.2.0
 
 ### Minor Changes
