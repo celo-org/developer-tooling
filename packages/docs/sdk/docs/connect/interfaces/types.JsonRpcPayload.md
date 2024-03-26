@@ -21,7 +21,7 @@
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:141](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L141)
+[packages/sdk/connect/src/types.ts:152](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L152)
 
 ___
 
@@ -31,7 +31,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:138](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L138)
+[packages/sdk/connect/src/types.ts:149](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L149)
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:139](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L139)
+[packages/sdk/connect/src/types.ts:150](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L150)
 
 ___
 
@@ -51,4 +51,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:140](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L140)
+[packages/sdk/connect/src/types.ts:151](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L151)

@@ -3,6 +3,7 @@ import { OdisUtils } from '@celo/identity'
 import { AuthSigner, OdisContextName } from '@celo/identity/lib/odis/query'
 import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
+import { CustomFlags } from '../../utils/command'
 
 export default class GetAttestations extends BaseCommand {
   static description =
@@ -14,7 +15,7 @@ export default class GetAttestations extends BaseCommand {
       required: false,
       description: 'Phone number to check attestations for',
     }),
-    from: Flags.string({
+    from: CustomFlags.address({
       required: false,
       description: 'Account whose balance to use for querying ODIS for the pepper lookup',
     }),

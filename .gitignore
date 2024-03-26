@@ -71,7 +71,6 @@ packages/sdk/identity/*
 packages/sdk/encrypted-backup/*
 packages/protocol/*
 packages/celotool/*
-packages/dev-utils/*
 packages/metadata-crawler/*
 packages/helm-charts/*
 # temp json file for deploy-sdks script

@@ -1,3 +1,4 @@
+import { StrongAddress } from '@celo/base'
 import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
 import { newKitFromWeb3 } from '../kit'
 import { AccountsWrapper } from './Accounts'
@@ -10,9 +11,9 @@ testWithGanache('LockedGold Wrapper', (web3) => {
 
   // Arbitrary value.
   const value = 120938732980
-  let account: string
+  let account: StrongAddress
   beforeAll(async () => {
-    account = (await web3.eth.getAccounts())[0]
+    account = (await web3.eth.getAccounts())[0] as StrongAddress
     kit.defaultAccount = account
     lockedGold = await kit.contracts.getLockedGold()
     accounts = await kit.contracts.getAccounts()

@@ -1,4 +1,4 @@
-# celocli
+# @celo/celocli
 
 Tool for interacting with the Celo Protocol.
 
@@ -33,6 +33,11 @@ Please use GitHub to:
 > 
 > Please avoid messaging us via Slack, Telegram, or email. We are more likely to respond to you on 
 > GitHub than if you message us anywhere else. We actively monitor GitHub, and will get back to you shortly 🌟
+
+### Documentation
+
+[Head to the documentation](https://docs.celo.org/) to read and learn more about the Celo 
+CLI.
 
 ### Plugins
 

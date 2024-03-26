@@ -1,6 +1,6 @@
 {
   "name": "@celo/contractkit",
-  "version": "7.2.0",
+  "version": "8.0.0-beta.0",
   "description": "Celo's ContractKit to interact with Celo network",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -15,9 +15,9 @@
     "contractkit"
   ],
   "scripts": {
-    "build:ts": "tsc -b .",
-    "build": "tsc -b .",
-    "clean": "tsc -b . --clean",
+    "build:ts": "yarn run --top-level tsc -b .",
+    "build": "yarn run --top-level tsc -b .",
+    "clean": "yarn run --top-level tsc -b . --clean",
     "prepublishOnly": "yarn build",
     "docs": "yarn run --top-level typedoc",
     "test": "yarn run --top-level jest --runInBand --forceExit",
@@ -25,24 +25,24 @@
   },
   "dependencies": {
     "@celo/abis": "11.0.0",
-    "@celo/base": "^6.0.0",
-    "@celo/connect": "^5.2.0",
-    "@celo/utils": "^6.0.0",
-    "@celo/wallet-local": "^5.1.3",
+    "@celo/base": "^6.0.1-beta.0",
+    "@celo/connect": "^5.3.0-beta.0",
+    "@celo/utils": "^6.0.1-beta.0",
+    "@celo/wallet-local": "^5.2.0-beta.0",
     "@types/bn.js": "^5.1.0",
     "@types/debug": "^4.1.5",
     "bignumber.js": "^9.0.0",
-    "cross-fetch": "3.0.6",
+    "cross-fetch": "3.1.5",
     "debug": "^4.1.1",
     "fp-ts": "2.1.1",
     "io-ts": "2.0.1",
     "semver": "^7.3.5",
-    "web3": "1.10.0",
-    "web3-core-helpers": "1.10.0"
+    "web3": "1.10.4",
+    "web3-core-helpers": "1.10.4"
   },
   "devDependencies": {
     "@celo/celo-devchain": "^7.0.0",
-    "@celo/dev-utils": "0.0.1-beta.1",
+    "@celo/dev-utils": "0.0.3-beta.0",
     "@celo/odis-identifiers": "^1.0.0",
     "@truffle/contract": "4.6.31",
     "@types/debug": "^4.1.5",

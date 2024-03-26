@@ -1,6 +1,6 @@
+import { StrongAddress } from '@celo/base'
 import { ReadOnlyWallet } from '@celo/connect'
-import { ContractKit, newKitFromWeb3, StableToken, Token } from '@celo/contractkit'
-import { stableTokenInfos } from '@celo/contractkit/lib/celo-tokens'
+import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { AzureHSMWallet } from '@celo/wallet-hsm-azure'
 import { AddressValidation, newLedgerWalletWithSetup } from '@celo/wallet-ledger'
 import { LocalWallet } from '@celo/wallet-local'
@@ -9,14 +9,9 @@ import { Command, Flags } from '@oclif/core'
 import chalk from 'chalk'
 import net from 'net'
 import Web3 from 'web3'
-import { getGasCurrency, getNodeUrl } from './utils/config'
-import { enumEntriesDupWithLowercase, requireNodeIsSynced } from './utils/helpers'
-export const gasOptions = {
-  auto: 'auto',
-  Auto: 'auto',
-  ...enumEntriesDupWithLowercase(Object.entries(Token)),
-  ...enumEntriesDupWithLowercase(Object.entries(StableToken)),
-}
+import { CustomFlags } from './utils/command'
+import { getNodeUrl } from './utils/config'
+import { requireNodeIsSynced } from './utils/helpers'
 
 export abstract class BaseCommand extends Command {
   static flags = {
@@ -46,12 +41,10 @@ export abstract class BaseCommand extends Command {
         }
       },
     }),
-    gasCurrency: Flags.option({
-      options: Object.keys(gasOptions),
+    gasCurrency: CustomFlags.gasCurrency({
       description:
-        "Use a specific gas currency for transaction fees (defaults to 'auto' which uses whatever feeCurrency is available)",
-      hidden: true,
-    })(),
+        'Use a specific gas currency for transaction fees (defaults to CELO if no gas currency is supplied). It must be a whitelisted token.',
+    }),
     useLedger: Flags.boolean({
       default: false,
       hidden: true,
@@ -201,34 +194,42 @@ export abstract class BaseCommand extends Command {
       kit.defaultAccount = res.flags.from
     }
 
-    const gasCurrencyConfig = res.flags.gasCurrency
-      ? (gasOptions as any)[res.flags.gasCurrency]
-      : getGasCurrency(this.config.configDir)
+    const gasCurrencyFlag = res.flags.gasCurrency as StrongAddress | undefined
 
-    const setStableTokenGas = async (stable: StableToken) => {
-      await kit.setFeeCurrency(stableTokenInfos[stable].contract)
-    }
-    if (Object.keys(StableToken).includes(gasCurrencyConfig)) {
-      await setStableTokenGas(StableToken[gasCurrencyConfig as keyof typeof StableToken])
-    } else if (gasCurrencyConfig === gasOptions.auto && kit.defaultAccount) {
-      const balances = await kit.getTotalBalance(kit.defaultAccount)
-      if (balances.CELO!.isZero()) {
-        const stables = Object.entries(StableToken)
-        for (const stable of stables) {
-          const stableName = stable[0]
-          const stableToken = stable[1]
-          // has balance
-          if ((balances as any)[stableName] && !(balances as any)[stableName].isZero()) {
-            await setStableTokenGas(stableToken)
-            break
-          }
-        }
+    if (gasCurrencyFlag) {
+      const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyWhitelist()
+      const validFeeCurrencies = await feeCurrencyWhitelist.getWhitelist()
+
+      if (
+        validFeeCurrencies.map((x) => x.toLocaleLowerCase()).includes(gasCurrencyFlag.toLowerCase())
+      ) {
+        kit.setFeeCurrency(gasCurrencyFlag)
+      } else {
+        const pairs = (
+          await feeCurrencyWhitelist.getFeeCurrencyInformation(
+            validFeeCurrencies as StrongAddress[]
+          )
+        ).map(
+          ({ name, symbol, address, adaptedToken }) =>
+            `${address} - ${name || 'unknown name'} (${symbol || 'N/A'})${
+              adaptedToken ? ` (adapted token: ${adaptedToken})` : ''
+            }`
+        )
+
+        throw new Error(
+          `${gasCurrencyFlag} is not a valid fee currency. Available currencies:\n${pairs.join(
+            '\n'
+          )}`
+        )
       }
     }
   }
 
   async finally(arg: Error | undefined): Promise<any> {
     try {
+      if (arg) {
+        console.error('received error while cleaning up', arg)
+      }
       const kit = await this.getKit()
       kit.connection.stop()
     } catch (error) {

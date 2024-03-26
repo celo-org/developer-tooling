@@ -37,8 +37,8 @@ export default class TransferErc20 extends BaseCommand {
     const kit = await this.getKit()
     const res = await this.parse(TransferErc20)
 
-    const from: string = res.flags.from
-    const to: string = res.flags.to
+    const from = res.flags.from
+    const to = res.flags.to
     const value = new BigNumber(res.flags.value)
 
     kit.defaultAccount = from

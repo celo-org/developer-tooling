@@ -1,3 +1,4 @@
+import { StrongAddress } from '@celo/base'
 import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
 import { StableToken } from '../celo-tokens'
 import { ContractKit, newKitFromWeb3 } from '../kit'
@@ -57,8 +58,8 @@ export function testStableToken(
   let stableToken: StableTokenWrapper
 
   beforeAll(async () => {
-    accounts = await web3.eth.getAccounts()
-    kit.defaultAccount = accounts[0]
+    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
+    kit.defaultAccount = accounts[0] as StrongAddress
     stableToken = await kit.contracts.getStableToken(stableTokenName)
   })
 

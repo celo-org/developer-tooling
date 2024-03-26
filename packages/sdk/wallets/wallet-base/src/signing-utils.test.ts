@@ -16,7 +16,7 @@ const PRIVATE_KEY1 = '0x1234567890abcdef1234567890abcdef1234567890abcdef12345678
 const ACCOUNT_ADDRESS1 = normalizeAddressWith0x(privateKeyToAddress(PRIVATE_KEY1)) as `0x${string}`
 
 describe('rlpEncodedTx', () => {
-  describe('legacy', () => {
+  describe('Celo legacy', () => {
     const legacyTransaction = {
       feeCurrency: '0x5409ED021D9299bf6814279A6A1411A7e866A631',
       from: ACCOUNT_ADDRESS1,
@@ -27,7 +27,7 @@ describe('rlpEncodedTx', () => {
       gas: '1500000000',
       gasPrice: '9900000000',
       data: '0xabcdef',
-    }
+    } as const
     it('convert CeloTx into RLP', () => {
       const transaction = {
         ...legacyTransaction,
@@ -61,7 +61,7 @@ describe('rlpEncodedTx', () => {
         const transaction = {
           ...legacyTransaction,
           chainId: -1,
-        }
+        } as const
         expect(() => rlpEncodedTx(transaction)).toThrowErrorMatchingInlineSnapshot(
           `"Gas, nonce or chainId is less than than 0"`
         )
@@ -99,6 +99,43 @@ describe('rlpEncodedTx', () => {
   describe('when no gas fields are provided', () => {
     it('throws an error', () => {
       expect(() => rlpEncodedTx({})).toThrowErrorMatchingInlineSnapshot(`""gas" is missing"`)
+    })
+  })
+
+  describe('Ethereum legacy', () => {
+    const legacyTransaction = {
+      from: '0x1daf825EB5C0D9d9FeC33C444e413452A08e04A6',
+      to: '0x43d72ff17701b2da814620735c39c620ce0ea4a1',
+      chainId: 42220,
+      value: Web3.utils.toWei('0', 'ether'),
+      nonce: 619,
+      gas: '504830',
+      gasPrice: '5000000000',
+      data: '0x4e71d92d',
+    }
+    it('convert CeloTx into RLP', () => {
+      const transaction = {
+        ...legacyTransaction,
+      }
+      const result = rlpEncodedTx(transaction)
+      expect(result).toMatchInlineSnapshot(`
+        {
+          "rlpEncode": "0xed82026b85012a05f2008307b3fe9443d72ff17701b2da814620735c39c620ce0ea4a180844e71d92d82a4ec8080",
+          "transaction": {
+            "chainId": 42220,
+            "data": "0x4e71d92d",
+            "from": "0x1daf825eb5c0d9d9fec33c444e413452a08e04a6",
+            "gas": "0x07b3fe",
+            "gasPrice": "0x012a05f200",
+            "maxFeePerGas": "0x",
+            "maxPriorityFeePerGas": "0x",
+            "nonce": 619,
+            "to": "0x43d72ff17701b2da814620735c39c620ce0ea4a1",
+            "value": "0x",
+          },
+          "type": "ethereum-legacy",
+        }
+      `)
     })
   })
 
@@ -143,7 +180,7 @@ describe('rlpEncodedTx', () => {
         const CIP64Transaction = {
           ...eip1559Transaction,
           feeCurrency: '0x5409ED021D9299bf6814279A6A1411A7e866A631',
-        }
+        } as const
         const result = rlpEncodedTx(CIP64Transaction)
         expect(result).toMatchInlineSnapshot(`
           {
@@ -369,6 +406,25 @@ describe('recoverTransaction', () => {
       ]
     `)
   })
+  it('handles ethereum-legacy transactions', () => {
+    const ethereumLegacyTx =
+      '0xf86e82026b85012a05f2008307b3fe9443d72ff17701b2da814620735c39c620ce0ea4a180844e71d92d830149fba0f616cf0a105a0b117b178f6aaa5dc79b9b2aa3898811f99a8f48fb70cece8a33a032a158ab09e32747044e62bd3facd9abd746df23df306dbc31305668da2c7937'
+    expect(recoverTransaction(ethereumLegacyTx)).toMatchInlineSnapshot(`
+      [
+        {
+          "chainId": "0xa4ec",
+          "data": "0x4e71d92d",
+          "gas": 504830,
+          "gasPrice": 5000000000,
+          "nonce": 619,
+          "to": "0x43d72ff17701b2da814620735c39c620ce0ea4a1",
+          "type": "ethereum-legacy",
+          "value": "0x",
+        },
+        "0x1daf825EB5C0D9d9FeC33C444e413452A08e04A6",
+      ]
+    `)
+  })
   it('handles cip64 transactions', () => {
     const cip64TX =
       '0x7bf88282ad5a8063630a94588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a764000083abcdefc094cd2a3d9f938e13cd947ec05abc7fe734df8dd82680a091b5504a59e529e7efa42dbb97fbc3311a91d035c873a94ab0789441fc989f84a02e8254d6b3101b63417e5d496833bc84f4832d4a8bf8a2b83e291d8f38c0f62d'
@@ -567,7 +623,7 @@ describe('extractSignature', () => {
   })
   it('fails when length is wrong', () => {
     expect(() => extractSignature('0x')).toThrowErrorMatchingInlineSnapshot(
-      `"@extractSignature: provided transaction has 0 elements but celo-legacy txs with a signature have 12 []"`
+      `"@extractSignature: provided transaction has 0 elements but ethereum-legacy txs with a signature have 9 []"`
     )
   })
 })

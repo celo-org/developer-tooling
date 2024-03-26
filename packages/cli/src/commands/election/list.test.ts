@@ -2,7 +2,7 @@ import { ElectionWrapper, ValidatorGroupVote } from '@celo/contractkit/lib/wrapp
 import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { testLocally } from '../../test-utils/cliUtils'
-import List from './list'
+import ElectionList from './list'
 
 process.env.NO_SYNCCHECK = 'true'
 
@@ -33,7 +33,7 @@ describe('election:list cmd', () => {
 
     const writeMock = jest.spyOn(ux.write, 'stdout')
 
-    await testLocally(List, ['--csv'])
+    await testLocally(ElectionList, ['--csv'])
 
     expect(getValidatorGroupsVotesMock).toHaveBeenCalled()
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`

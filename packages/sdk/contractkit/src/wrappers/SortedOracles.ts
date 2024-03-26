@@ -1,5 +1,5 @@
 import { SortedOracles } from '@celo/abis/web3/SortedOracles'
-import { eqAddress, NULL_ADDRESS } from '@celo/base/lib/address'
+import { eqAddress, NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
 import { Address, CeloTransactionObject, Connection, toTransactionObject } from '@celo/connect'
 import { isValidAddress } from '@celo/utils/lib/address'
 import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
@@ -304,7 +304,7 @@ export class SortedOraclesWrapper extends BaseWrapper<SortedOracles> {
     return { lesserKey, greaterKey }
   }
 
-  private async toCurrencyPairIdentifier(target: ReportTarget): Promise<Address> {
+  private async toCurrencyPairIdentifier(target: ReportTarget): Promise<StrongAddress> {
     if (isStableTokenContract(target as CeloContract)) {
       return this.registry.addressFor(target as StableTokenContract)
     } else if (isValidAddress(target)) {

@@ -1,8 +1,8 @@
 import { ReleaseGold } from '@celo/abis/web3/ReleaseGold'
 import { concurrentMap } from '@celo/base'
-import { findAddressIndex } from '@celo/base/lib/address'
+import { StrongAddress, findAddressIndex } from '@celo/base/lib/address'
 import { Signature } from '@celo/base/lib/signatureUtils'
-import { Address, CeloTransactionObject, toTransactionObject } from '@celo/connect'
+import { Address, CeloTransactionObject, CeloTxObject, toTransactionObject } from '@celo/connect'
 import { hashMessageWithPrefix, signedMessageToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
 import { flatten } from 'fp-ts/lib/Array'
@@ -100,25 +100,33 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<ReleaseGold> {
    * Returns the beneficiary of the ReleaseGold contract
    * @return The address of the beneficiary.
    */
-  getBeneficiary: () => Promise<Address> = proxyCall(this.contract.methods.beneficiary)
+  getBeneficiary: () => Promise<StrongAddress> = proxyCall(
+    this.contract.methods.beneficiary as () => CeloTxObject<StrongAddress>
+  )
 
   /**
    * Returns the releaseOwner address of the ReleaseGold contract
    * @return The address of the releaseOwner.
    */
-  getReleaseOwner: () => Promise<Address> = proxyCall(this.contract.methods.releaseOwner)
+  getReleaseOwner: () => Promise<StrongAddress> = proxyCall(
+    this.contract.methods.releaseOwner as () => CeloTxObject<StrongAddress>
+  )
 
   /**
    * Returns the refund address of the ReleaseGold contract
    * @return The refundAddress.
    */
-  getRefundAddress: () => Promise<Address> = proxyCall(this.contract.methods.refundAddress)
+  getRefundAddress: () => Promise<StrongAddress> = proxyCall(
+    this.contract.methods.refundAddress as () => CeloTxObject<StrongAddress>
+  )
 
   /**
    * Returns the owner's address of the ReleaseGold contract
    * @return The owner's address.
    */
-  getOwner: () => Promise<Address> = proxyCall(this.contract.methods.owner)
+  getOwner: () => Promise<StrongAddress> = proxyCall(
+    this.contract.methods.owner as () => CeloTxObject<StrongAddress>
+  )
 
   /**
    * Returns true if the liquidity provision has been met for this contract

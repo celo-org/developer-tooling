@@ -62,7 +62,7 @@ RemoteWallet\&lt;RpcSigner\&gt;.constructor
 
 #### Defined in
 
-[packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts:20](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts#L20)
+[sdk/wallets/wallet-rpc/src/rpc-wallet.ts:20](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts#L20)
 
 ## Properties
 
@@ -84,7 +84,7 @@ RemoteWallet.isSetupFinished
 
 #### Defined in
 
-packages/sdk/wallets/wallet-remote/lib/remote-wallet.d.ts:51
+sdk/wallets/wallet-remote/lib/remote-wallet.d.ts:51
 
 ## Methods
 
@@ -109,7 +109,7 @@ UnlockableWallet.addAccount
 
 #### Defined in
 
-[packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts#L38)
+[sdk/wallets/wallet-rpc/src/rpc-wallet.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts#L38)
 
 ___
 
@@ -140,7 +140,7 @@ RemoteWallet.computeSharedSecret
 
 #### Defined in
 
-packages/sdk/wallets/wallet-base/lib/wallet-base.d.ts:64
+sdk/wallets/wallet-base/lib/wallet-base.d.ts:64
 
 ___
 
@@ -169,7 +169,7 @@ RemoteWallet.decrypt
 
 #### Defined in
 
-packages/sdk/wallets/wallet-base/lib/wallet-base.d.ts:60
+sdk/wallets/wallet-base/lib/wallet-base.d.ts:60
 
 ___
 
@@ -193,7 +193,7 @@ RemoteWallet.getAccounts
 
 #### Defined in
 
-packages/sdk/wallets/wallet-remote/lib/remote-wallet.d.ts:27
+sdk/wallets/wallet-remote/lib/remote-wallet.d.ts:27
 
 ___
 
@@ -223,7 +223,7 @@ RemoteWallet.hasAccount
 
 #### Defined in
 
-packages/sdk/wallets/wallet-remote/lib/remote-wallet.d.ts:32
+sdk/wallets/wallet-remote/lib/remote-wallet.d.ts:32
 
 ___
 
@@ -244,7 +244,7 @@ RemoteWallet.init
 
 #### Defined in
 
-packages/sdk/wallets/wallet-remote/lib/remote-wallet.d.ts:15
+sdk/wallets/wallet-remote/lib/remote-wallet.d.ts:15
 
 ___
 
@@ -268,7 +268,7 @@ UnlockableWallet.isAccountUnlocked
 
 #### Defined in
 
-[packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts:54](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts#L54)
+[sdk/wallets/wallet-rpc/src/rpc-wallet.ts:54](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts#L54)
 
 ___
 
@@ -286,7 +286,7 @@ RemoteWallet.loadAccountSigners
 
 #### Defined in
 
-[packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts:25](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts#L25)
+[sdk/wallets/wallet-rpc/src/rpc-wallet.ts:25](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts#L25)
 
 ___
 
@@ -316,7 +316,7 @@ RemoteWallet.removeAccount
 
 #### Defined in
 
-packages/sdk/wallets/wallet-base/lib/wallet-base.d.ts:23
+sdk/wallets/wallet-base/lib/wallet-base.d.ts:23
 
 ___
 
@@ -347,7 +347,7 @@ RemoteWallet.signPersonalMessage
 
 #### Defined in
 
-packages/sdk/wallets/wallet-remote/lib/remote-wallet.d.ts:43
+sdk/wallets/wallet-remote/lib/remote-wallet.d.ts:43
 
 ___
 
@@ -381,7 +381,7 @@ RemoteWallet.signTransaction
 
 #### Defined in
 
-[packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts:64](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts#L64)
+[sdk/wallets/wallet-rpc/src/rpc-wallet.ts:64](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts#L64)
 
 ___
 
@@ -412,7 +412,7 @@ RemoteWallet.signTypedData
 
 #### Defined in
 
-packages/sdk/wallets/wallet-remote/lib/remote-wallet.d.ts:49
+sdk/wallets/wallet-remote/lib/remote-wallet.d.ts:49
 
 ___
 
@@ -438,4 +438,4 @@ UnlockableWallet.unlockAccount
 
 #### Defined in
 
-[packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts:49](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts#L49)
+[sdk/wallets/wallet-rpc/src/rpc-wallet.ts:49](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts#L49)
