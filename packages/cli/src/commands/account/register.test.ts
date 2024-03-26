@@ -13,8 +13,6 @@ testWithGanache('account:register cmd', (web3: Web3) => {
   })
 
   test('fails if from is missing', async () => {
-    // const accounts = await web3.eth.getAccounts()
-
     await expect(testLocally(Register, [])).rejects.toThrow('Missing required flag')
   })
 })

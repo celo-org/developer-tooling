@@ -52,5 +52,5 @@ describe('election:list cmd', () => {
         ],
       ]
     `)
-  })
+  }, 4000)
 })

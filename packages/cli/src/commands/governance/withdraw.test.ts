@@ -23,7 +23,7 @@ testWithGanache('governance:withdraw', (web3: Web3) => {
     accounts = (await web3.eth.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
     governance = await kit.contracts.getGovernance()
-    console.log((await governance.lastDequeue()).toNumber())
+    console.log('dequeue', (await governance.lastDequeue()).toNumber())
     const proposal: Proposal = await new ProposalBuilder(kit).build()
     await governance
       .propose(proposal, 'URL')
