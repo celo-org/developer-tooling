@@ -119,7 +119,7 @@ Creates an account.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:44](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L44)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:45](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L45)
 
 ___
 
@@ -149,7 +149,7 @@ fraction to 0.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:456](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L456)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:459](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L459)
 
 ___
 
@@ -215,7 +215,7 @@ ___
 
 ### getAttestationSigner
 
-• **getAttestationSigner**: (`account`: `string`) => `Promise`\<`string`\>
+• **getAttestationSigner**: (`account`: `string`) => `Promise`\<\`0x$\{string}\`\>
 
 Returns the attestation signer for the specified account.
 
@@ -225,7 +225,7 @@ The address of the account.
 
 #### Type declaration
 
-▸ (`account`): `Promise`\<`string`\>
+▸ (`account`): `Promise`\<\`0x$\{string}\`\>
 
 Returns the attestation signer for the specified account.
 
@@ -237,13 +237,13 @@ Returns the attestation signer for the specified account.
 
 ##### Returns
 
-`Promise`\<`string`\>
+`Promise`\<\`0x$\{string}\`\>
 
 The address with which the account can vote.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:51](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L51)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:52](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L52)
 
 ___
 
@@ -275,7 +275,7 @@ Returns the set data encryption key for the account
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:362](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L362)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:365](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L365)
 
 ___
 
@@ -307,7 +307,7 @@ Returns the metadataURL for the account
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:376](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L376)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:379](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L379)
 
 ___
 
@@ -341,13 +341,13 @@ Beneficiary address and fraction of payment delegated.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:466](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L466)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:469](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L469)
 
 ___
 
 ### getValidatorSigner
 
-• **getValidatorSigner**: (`account`: `string`) => `Promise`\<`string`\>
+• **getValidatorSigner**: (`account`: `string`) => `Promise`\<\`0x$\{string}\`\>
 
 Returns the validator signer for the specified account.
 
@@ -357,7 +357,7 @@ The address of the account.
 
 #### Type declaration
 
-▸ (`account`): `Promise`\<`string`\>
+▸ (`account`): `Promise`\<\`0x$\{string}\`\>
 
 Returns the validator signer for the specified account.
 
@@ -369,19 +369,19 @@ Returns the validator signer for the specified account.
 
 ##### Returns
 
-`Promise`\<`string`\>
+`Promise`\<\`0x$\{string}\`\>
 
 The address with which the account can register a validator or group.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:77](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L77)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:78](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L78)
 
 ___
 
 ### getVoteSigner
 
-• **getVoteSigner**: (`account`: `string`) => `Promise`\<`string`\>
+• **getVoteSigner**: (`account`: `string`) => `Promise`\<\`0x$\{string}\`\>
 
 Returns the vote signer for the specified account.
 
@@ -391,7 +391,7 @@ The address of the account.
 
 #### Type declaration
 
-▸ (`account`): `Promise`\<`string`\>
+▸ (`account`): `Promise`\<\`0x$\{string}\`\>
 
 Returns the vote signer for the specified account.
 
@@ -403,13 +403,13 @@ Returns the vote signer for the specified account.
 
 ##### Returns
 
-`Promise`\<`string`\>
+`Promise`\<\`0x$\{string}\`\>
 
 The address with which the account can vote.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:69](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L69)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:70](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L70)
 
 ___
 
@@ -441,7 +441,7 @@ Returns the set wallet address for the account
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:370](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L370)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:373](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L373)
 
 ___
 
@@ -475,7 +475,7 @@ If the account has authorized an attestation signer
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:60](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L60)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:61](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L61)
 
 ___
 
@@ -509,7 +509,7 @@ Returns `true` if account exists. Returns `false` otherwise.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:114](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L114)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:117](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L117)
 
 ___
 
@@ -543,7 +543,7 @@ Returns `true` if account exists. Returns `false` otherwise.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:121](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L121)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:124](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L124)
 
 ___
 
@@ -589,7 +589,7 @@ Sets the data encryption of the account
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:382](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L382)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:385](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L385)
 
 ___
 
@@ -621,7 +621,7 @@ Sets the metadataURL for the account
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:439](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L439)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:442](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L442)
 
 ___
 
@@ -653,7 +653,7 @@ Sets the name for the account
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:433](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L433)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:436](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L436)
 
 ___
 
@@ -700,13 +700,13 @@ Use `deletePaymentDelegation` to unset the payment delegation.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:450](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L450)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:453](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L453)
 
 ___
 
 ### signerToAccount
 
-• **signerToAccount**: (`signer`: `string`) => `Promise`\<`string`\>
+• **signerToAccount**: (`signer`: `string`) => `Promise`\<\`0x$\{string}\`\>
 
 Returns the account associated with `signer`.
 
@@ -720,7 +720,7 @@ Fails if the `signer` is not an account or previously authorized signer.
 
 #### Type declaration
 
-▸ (`signer`): `Promise`\<`string`\>
+▸ (`signer`): `Promise`\<\`0x$\{string}\`\>
 
 Returns the account associated with `signer`.
 
@@ -732,7 +732,7 @@ Returns the account associated with `signer`.
 
 ##### Returns
 
-`Promise`\<`string`\>
+`Promise`\<\`0x$\{string}\`\>
 
 The associated account.
 
@@ -742,13 +742,13 @@ Fails if the `signer` is not an account or previously authorized signer.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:105](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L105)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:108](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L108)
 
 ___
 
 ### validatorSignerToAccount
 
-• **validatorSignerToAccount**: (`signer`: `string`) => `Promise`\<`string`\>
+• **validatorSignerToAccount**: (`signer`: `string`) => `Promise`\<\`0x$\{string}\`\>
 
 Returns the account address given the signer for validating
 
@@ -758,7 +758,7 @@ Address that is authorized to sign the tx as validator
 
 #### Type declaration
 
-▸ (`signer`): `Promise`\<`string`\>
+▸ (`signer`): `Promise`\<\`0x$\{string}\`\>
 
 Returns the account address given the signer for validating
 
@@ -770,19 +770,19 @@ Returns the account address given the signer for validating
 
 ##### Returns
 
-`Promise`\<`string`\>
+`Promise`\<\`0x$\{string}\`\>
 
 The Account address
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:95](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L95)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:96](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L96)
 
 ___
 
 ### voteSignerToAccount
 
-• **voteSignerToAccount**: (`signer`: `string`) => `Promise`\<`string`\>
+• **voteSignerToAccount**: (`signer`: `string`) => `Promise`\<\`0x$\{string}\`\>
 
 Returns the account address given the signer for voting
 
@@ -792,7 +792,7 @@ Address that is authorized to sign the tx as voter
 
 #### Type declaration
 
-▸ (`signer`): `Promise`\<`string`\>
+▸ (`signer`): `Promise`\<\`0x$\{string}\`\>
 
 Returns the account address given the signer for voting
 
@@ -804,25 +804,25 @@ Returns the account address given the signer for voting
 
 ##### Returns
 
-`Promise`\<`string`\>
+`Promise`\<\`0x$\{string}\`\>
 
 The Account address
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:86](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L86)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:87](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L87)
 
 ## Accessors
 
 ### address
 
-• `get` **address**(): `string`
+• `get` **address**(): \`0x$\{string}\`
 
 Contract address
 
 #### Returns
 
-`string`
+\`0x$\{string}\`
 
 #### Inherited from
 
@@ -855,7 +855,7 @@ A CeloTransactionObject
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:163](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L163)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:166](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L166)
 
 ___
 
@@ -876,7 +876,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:287](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L287)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:290](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L290)
 
 ___
 
@@ -903,7 +903,7 @@ A CeloTransactionObject
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:204](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L204)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:207](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L207)
 
 ___
 
@@ -930,7 +930,7 @@ A CeloTransactionObject
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:255](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L255)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:258](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L258)
 
 ___
 
@@ -955,7 +955,7 @@ A CeloTransactionObject
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:183](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L183)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:186](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L186)
 
 ___
 
@@ -976,7 +976,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:320](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L320)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:323](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L323)
 
 ___
 
@@ -997,7 +997,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:336](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L336)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:339](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L339)
 
 ___
 
@@ -1019,7 +1019,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:344](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L344)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:347](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L347)
 
 ___
 
@@ -1039,7 +1039,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:133](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L133)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:136](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L136)
 
 ___
 
@@ -1059,7 +1059,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:125](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L125)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:128](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L128)
 
 ___
 
@@ -1082,7 +1082,7 @@ Returns the set name for the account
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:353](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L353)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:356](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L356)
 
 ___
 
@@ -1137,7 +1137,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:494](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L494)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:497](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L497)
 
 ___
 
@@ -1155,7 +1155,7 @@ A CeloTransactionObject
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:332](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L332)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:335](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L335)
 
 ___
 
@@ -1180,7 +1180,7 @@ Convenience Setter for the dataEncryptionKey and wallet address for an account
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:394](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L394)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:397](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L397)
 
 ___
 
@@ -1203,7 +1203,7 @@ Sets the wallet address for the account
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:472](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L472)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:475](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L475)
 
 ___
 
@@ -1224,7 +1224,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Accounts.ts:312](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L312)
+[packages/sdk/contractkit/src/wrappers/Accounts.ts:315](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Accounts.ts#L315)
 
 ___
 

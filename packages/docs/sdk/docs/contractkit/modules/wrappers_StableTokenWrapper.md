@@ -10,7 +10,6 @@
 
 ### Interfaces
 
-- [InflationParameters](../interfaces/wrappers_StableTokenWrapper.InflationParameters.md)
 - [StableTokenConfig](../interfaces/wrappers_StableTokenWrapper.StableTokenConfig.md)
 
 ### Type Aliases
@@ -25,4 +24,4 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts:139](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts#L139)
+[packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts:64](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts#L64)

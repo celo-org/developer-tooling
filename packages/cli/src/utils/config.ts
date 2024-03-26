@@ -1,15 +1,18 @@
 import * as fs from 'fs-extra'
 import * as path from 'path'
-import { gasOptions } from '../base'
 
 export interface CeloConfig {
   node: string
-  gasCurrency: string
 }
+
+// NOTE: this mapping should stay updated as CeloConfig evolves
+const LEGACY_MAPPING: Record<string, keyof CeloConfig | undefined> = {
+  nodeUrl: 'node',
+  gasCurrency: undefined,
+} as const
 
 export const defaultConfig: CeloConfig = {
   node: 'http://localhost:8545',
-  gasCurrency: 'auto',
 }
 
 const configFile = 'config.json'
@@ -22,9 +25,15 @@ export function readConfig(configDir: string): CeloConfig {
   if (fs.pathExistsSync(configPath(configDir))) {
     const existingConfig = fs.readJSONSync(configPath(configDir))
     const combinedConfig = { ...defaultConfig, ...existingConfig }
-    if (combinedConfig.hasOwnProperty('nodeUrl')) {
-      combinedConfig.node = combinedConfig.nodeUrl
+
+    // NOTE: make sure we don't confuse the user by printing legacy config elements
+    for (const [legacyKey, newKey] of Object.entries(LEGACY_MAPPING)) {
+      if (newKey && combinedConfig[legacyKey]) {
+        combinedConfig[newKey] = combinedConfig[legacyKey]
+      }
+      delete combinedConfig[legacyKey]
     }
+
     return combinedConfig
   } else {
     return defaultConfig
@@ -35,13 +44,8 @@ export function getNodeUrl(configDir: string): string {
   return readConfig(configDir).node
 }
 
-export function getGasCurrency(configDir: string): string {
-  return readConfig(configDir).gasCurrency
-}
+export async function writeConfig(configDir: string, configObj: CeloConfig) {
+  const config = { ...defaultConfig, ...configObj }
 
-export function writeConfig(configDir: string, configObj: CeloConfig) {
-  if (!Object.keys(gasOptions).includes(configObj.gasCurrency)) {
-    throw new Error('Invalid gas option')
-  }
-  fs.outputJSONSync(configPath(configDir), configObj)
+  fs.outputJSONSync(configPath(configDir), config)
 }

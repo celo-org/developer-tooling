@@ -52,7 +52,7 @@
 
 #### Defined in
 
-[packages/sdk/connect/src/celo-provider.ts:53](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L53)
+[packages/sdk/connect/src/celo-provider.ts:54](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L54)
 
 ## Properties
 
@@ -62,7 +62,7 @@
 
 #### Defined in
 
-[packages/sdk/connect/src/celo-provider.ts:53](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L53)
+[packages/sdk/connect/src/celo-provider.ts:54](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L54)
 
 ___
 
@@ -72,7 +72,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/celo-provider.ts:53](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L53)
+[packages/sdk/connect/src/celo-provider.ts:54](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L54)
 
 ## Accessors
 
@@ -86,7 +86,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/celo-provider.ts:260](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L260)
+[packages/sdk/connect/src/celo-provider.ts:261](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L261)
 
 ## Methods
 
@@ -106,7 +106,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/celo-provider.ts:58](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L58)
+[packages/sdk/connect/src/celo-provider.ts:59](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L59)
 
 ___
 
@@ -120,7 +120,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/celo-provider.ts:68](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L68)
+[packages/sdk/connect/src/celo-provider.ts:69](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L69)
 
 ___
 
@@ -140,7 +140,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/celo-provider.ts:72](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L72)
+[packages/sdk/connect/src/celo-provider.ts:73](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L73)
 
 ___
 
@@ -160,7 +160,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/celo-provider.ts:63](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L63)
+[packages/sdk/connect/src/celo-provider.ts:64](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L64)
 
 ___
 
@@ -187,7 +187,7 @@ Send method as expected by web3.js
 
 #### Defined in
 
-[packages/sdk/connect/src/celo-provider.ts:79](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L79)
+[packages/sdk/connect/src/celo-provider.ts:80](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L80)
 
 ___
 
@@ -201,7 +201,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/celo-provider.ts:158](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L158)
+[packages/sdk/connect/src/celo-provider.ts:159](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L159)
 
 ___
 
@@ -215,4 +215,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/celo-provider.ts:264](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L264)
+[packages/sdk/connect/src/celo-provider.ts:265](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L265)

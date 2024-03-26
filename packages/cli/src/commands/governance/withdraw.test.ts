@@ -1,4 +1,4 @@
-import { Address } from '@celo/connect'
+import { StrongAddress } from '@celo/base'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { GovernanceWrapper, Proposal } from '@celo/contractkit/lib/wrappers/Governance'
 import { NetworkConfig, testWithGanache, timeTravel } from '@celo/dev-utils/lib/ganache-test'
@@ -16,11 +16,11 @@ testWithGanache('governance:withdraw', (web3: Web3) => {
   const minDeposit = web3.utils.toWei(expConfig.minDeposit.toString(), 'ether')
   const kit = newKitFromWeb3(web3)
 
-  let accounts: Address[] = []
+  let accounts: StrongAddress[] = []
   let governance: GovernanceWrapper
 
   beforeEach(async () => {
-    accounts = await web3.eth.getAccounts()
+    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
     governance = await kit.contracts.getGovernance()
     console.log((await governance.lastDequeue()).toNumber())

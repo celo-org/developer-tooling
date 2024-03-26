@@ -30,4 +30,4 @@ asserts provider is CeloProvider
 
 #### Defined in
 
-[packages/sdk/connect/src/celo-provider.ts:34](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L34)
+[packages/sdk/connect/src/celo-provider.ts:35](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L35)

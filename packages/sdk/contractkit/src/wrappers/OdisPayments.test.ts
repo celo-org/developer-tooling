@@ -1,4 +1,4 @@
-import { StableToken } from '@celo/base'
+import { StableToken, StrongAddress } from '@celo/base'
 import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
 import { newKitFromWeb3 } from '../kit'
 import { OdisPaymentsWrapper } from './OdisPayments'
@@ -6,12 +6,12 @@ import { StableTokenWrapper } from './StableTokenWrapper'
 
 testWithGanache('OdisPayments Wrapper', (web3) => {
   const kit = newKitFromWeb3(web3)
-  let accounts: string[] = []
+  let accounts: StrongAddress[] = []
   let odisPayments: OdisPaymentsWrapper
   let stableToken: StableTokenWrapper
 
   beforeAll(async () => {
-    accounts = await web3.eth.getAccounts()
+    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
     odisPayments = await kit.contracts.getOdisPayments()
     stableToken = await kit.contracts.getStableToken(StableToken.cUSD)

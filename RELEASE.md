@@ -62,44 +62,40 @@ $ git push --follow-tags
 
 ## Pre-releases
 
-### Automatic (recommended)
+### To create betas 
 
-> [!TIP]
-> For detailed steps read [`beta-mode.sh`](./scripts/beta-mode.sh).
+from master checkout a new branch (name as you wish) and run 
 
-1. Run `yarn beta-enter`
+`yarn changesets pre enter beta`
 
-   This will enter the "pre mode" of changesets, create a `prerelease/beta` branch, and push
-   it to `origin` (GitHub).
+This will create `.changeset/pre.json` 
 
-   Anytime a commit is pushed to `prerelease/..` GitHub will open a "Version Packages (Beta)" PR.
-   You can merge this PR and packages will be published as specified in the branch (should be beta).
+Commit this file, push and open a pull request. [example of previous pr](https://github.com/celo-org/developer-tooling/commit/4baf0a79e01cafb78f19221ed5a56963410bdf5d)
 
-2. If you need to release another beta make a changeset and commit it up.
-
-3. When done run `yarn beta-exit`
-   This will exit changeset pre mode. Push up.
-
-4. Now you can open a PR with your `prerelease/..` branch against `main`.
-
-### Manual (discouraged)
-
-Changesets has two strategies for pre release versions.
-
-The first is to [enter `pre` mode on changesets](https://github.com/changesets/changesets/blob/main/docs/prereleases.md).
-
-```sh
-$ yarn changeset pre enter beta
-$ yarn changeset version
-$ git add .
-$ git commit -m "Enter prerelease mode and version packages"
-$ yarn changeset publish
-$ git push --follow-tags
+```
+git add .changeset/pre.json
+git commit -m "Enter Beta Mode"
+git push 
 ```
 
-The other is to [append `--snapshot`](https://github.com/changesets/changesets/blob/main/docs/snapshot-releases.md), which is great for daily releases.
+Once the pr is merged the changesets github action will create a new pr entitld "Version Packages (beta)" merging it will result in package releases. 
 
-```sh
-$ yarn changeset version --snapshot canary
-$ yarn changeset publish --no-git-tag --snapshot
-```
+You may keep master branch in beta mode until you are statisfied and ready for the main release then run 
+
+`yarn changesets pre exit`  
+
+(this will just change pre mode in the changesets config to "exit") 
+
+
+Commit the changes to `.changeset/pre.json`, `git push` and open a pr to master branch.
+
+As with exiting pre mode, on merge of your PR the changeset action will open a new PR -- this time entitled "Version Packages" 
+
+### Troubleshooting
+
+If packages are not released when a Version Packages PR is merged or the Version Packages PR is never created there is likely an issue with the gh action. Go to [github.com/celo-org/developer-tooling/actions/workflows/release.yaml](https://github.com/celo-org/developer-tooling/actions/workflows/release.yaml) and see if there are errors. 
+
+
+### Other pre releasing
+
+it is possible to make prereleases with tags besides beta by replacing 'beta' with the tag you prefer. Although these SHOULD NOT be merged into master but instead into a branch starting with 'prerelease/'

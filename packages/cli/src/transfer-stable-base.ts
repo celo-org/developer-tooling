@@ -1,5 +1,4 @@
 import { StableToken } from '@celo/contractkit'
-import { stableTokenInfos } from '@celo/contractkit/lib/celo-tokens'
 import { StableTokenWrapper } from '@celo/contractkit/lib/wrappers/StableTokenWrapper'
 import { Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
@@ -7,6 +6,28 @@ import { BaseCommand } from './base'
 import { newCheckBuilder } from './utils/checks'
 import { displaySendTx, failWith } from './utils/cli'
 import { CustomFlags } from './utils/command'
+
+const ERC20_MOCK_ABI = [
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'account',
+        type: 'address',
+      },
+    ],
+    name: 'balanceOf',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+] as const
 
 export abstract class TransferStableBase extends BaseCommand {
   static flags = {
@@ -36,35 +57,56 @@ export abstract class TransferStableBase extends BaseCommand {
     } catch {
       failWith(`The ${this._stableCurrency} token was not deployed yet`)
     }
-    // If gasCurrency is not set, use the transferring token
-    if (!res.flags.gasCurrency) {
-      await kit.setFeeCurrency(stableTokenInfos[this._stableCurrency].contract)
-    }
+
+    // NOTE 1: if --gasCurrency is not set, defaults to eip1559 tx
+    // NOTE 2: if --gasCurrency is set by the user, then
+    //     `kit.connection.defaultFeeCurrency` is set in base.ts via
+    //     `kit.setFeeCurrency()`
+    const params = kit.connection.defaultFeeCurrency
+      ? { feeCurrency: kit.connection.defaultFeeCurrency }
+      : {}
 
     const tx = res.flags.comment
       ? stableToken.transferWithComment(to, value.toFixed(), res.flags.comment)
       : stableToken.transfer(to, value.toFixed())
 
+    let gas: number
+    let gasPrice: string
+    let gasBalance: BigNumber
+    let valueBalance: BigNumber
     await newCheckBuilder(this)
       .hasEnoughStable(from, value, this._stableCurrency)
       .isNotSanctioned(from)
       .isNotSanctioned(to)
-      .addConditionalCheck(
-        `Account can afford transfer and gas paid in ${this._stableCurrency}`,
-        kit.connection.defaultFeeCurrency === stableToken.address,
+      .addCheck(
+        `Account can afford transfer in ${this._stableCurrency} and gas paid in ${
+          res.flags.gasCurrency || 'CELO'
+        }`,
         async () => {
-          const [gas, gasPrice, balance] = await Promise.all([
-            tx.txo.estimateGas({ feeCurrency: stableToken.address }),
-            kit.connection.gasPrice(stableToken.address),
-            stableToken.balanceOf(from),
+          ;[gas, gasPrice, gasBalance, valueBalance] = await Promise.all([
+            tx.txo.estimateGas(params),
+            kit.connection.gasPrice(kit.connection.defaultFeeCurrency),
+            kit.connection.defaultFeeCurrency
+              ? // @ts-expect-error abi typing is not 100% correct but works
+                new kit.web3.eth.Contract(ERC20_MOCK_ABI, kit.connection.defaultFeeCurrency).methods
+                  .balanceOf(from)
+                  .call()
+                  .then((x: string) => new BigNumber(x))
+              : kit.contracts.getGoldToken().then((celo) => celo.balanceOf(from)),
+            kit.contracts
+              .getStableToken(this._stableCurrency!)
+              .then((token) => token.balanceOf(from)),
           ])
           const gasValue = new BigNumber(gas).times(gasPrice as string)
-          return balance.gte(value.plus(gasValue))
+          if (kit.connection.defaultFeeCurrency) {
+            return gasBalance.gte(gasValue) && valueBalance.gte(value)
+          }
+          return valueBalance.gte(value.plus(gasValue))
         },
         `Cannot afford transfer with ${this._stableCurrency} gasCurrency; try reducing value slightly or using gasCurrency=CELO`
       )
       .runChecks()
 
-    await displaySendTx(res.flags.comment ? 'transferWithComment' : 'transfer', tx)
+    await displaySendTx(res.flags.comment ? 'transferWithComment' : 'transfer', tx, params)
   }
 }

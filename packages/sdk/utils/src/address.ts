@@ -1,4 +1,4 @@
-import { ensureLeading0x, hexToBuffer } from '@celo/base/lib/address'
+import { StrongAddress, ensureLeading0x, hexToBuffer } from '@celo/base/lib/address'
 import {
   isValidPrivate,
   privateToAddress,
@@ -11,6 +11,7 @@ import {
 // here for backwards compatibility
 export {
   Address,
+  NULL_ADDRESS,
   bufferToHex,
   ensureLeading0x,
   eqAddress,
@@ -22,13 +23,14 @@ export {
   mapAddressListOnto,
   normalizeAddress,
   normalizeAddressWith0x,
-  NULL_ADDRESS,
   trimLeading0x,
 } from '@celo/base/lib/address'
 export { isValidChecksumAddress, toChecksumAddress } from '@ethereumjs/util'
 
 export const privateKeyToAddress = (privateKey: string) =>
-  toChecksumAddress(ensureLeading0x(privateToAddress(hexToBuffer(privateKey)).toString('hex')))
+  toChecksumAddress(
+    ensureLeading0x(privateToAddress(hexToBuffer(privateKey)).toString('hex'))
+  ) as StrongAddress
 
 export const privateKeyToPublicKey = (privateKey: string) =>
   toChecksumAddress(ensureLeading0x(privateToPublic(hexToBuffer(privateKey)).toString('hex')))
@@ -36,12 +38,12 @@ export const privateKeyToPublicKey = (privateKey: string) =>
 export const publicKeyToAddress = (publicKey: string) =>
   toChecksumAddress(
     ensureLeading0x(pubToAddress(toBuffer(ensureLeading0x(publicKey)), true).toString('hex'))
-  )
+  ) as StrongAddress
 
 export const isValidPrivateKey = (privateKey: string) =>
   privateKey.startsWith('0x') && isValidPrivate(hexToBuffer(privateKey))
 
-export const isValidAddress = (input: string): boolean => {
+export const isValidAddress = (input: string): input is StrongAddress => {
   if ('string' !== typeof input) {
     return false
   }

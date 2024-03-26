@@ -227,7 +227,7 @@ The ContractMapping for the contract at that address, or undefined
 
 #### Defined in
 
-[src/block-explorer.ts:342](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L342)
+[src/block-explorer.ts:345](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L345)
 
 ___
 
@@ -254,7 +254,7 @@ The ContractMapping for the contract which has the function selector, or undefin
 
 #### Defined in
 
-[src/block-explorer.ts:371](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L371)
+[src/block-explorer.ts:374](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L374)
 
 ___
 

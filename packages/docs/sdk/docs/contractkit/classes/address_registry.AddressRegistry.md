@@ -59,7 +59,7 @@ Celo Core Contract's Address Registry
 
 ### addressFor
 
-▸ **addressFor**(`contract`): `Promise`\<`string`\>
+▸ **addressFor**(`contract`): `Promise`\<\`0x$\{string}\`\>
 
 Get the address for a `CeloContract`
 
@@ -71,7 +71,7 @@ Get the address for a `CeloContract`
 
 #### Returns
 
-`Promise`\<`string`\>
+`Promise`\<\`0x$\{string}\`\>
 
 #### Defined in
 
@@ -81,13 +81,13 @@ ___
 
 ### addressMapping
 
-▸ **addressMapping**(): `Promise`\<`Map`\<[`CeloContract`](../enums/base.CeloContract.md), `string`\>\>
+▸ **addressMapping**(): `Promise`\<`Map`\<[`CeloContract`](../enums/base.CeloContract.md), \`0x$\{string}\`\>\>
 
 Get the address mapping for known registered contracts
 
 #### Returns
 
-`Promise`\<`Map`\<[`CeloContract`](../enums/base.CeloContract.md), `string`\>\>
+`Promise`\<`Map`\<[`CeloContract`](../enums/base.CeloContract.md), \`0x$\{string}\`\>\>
 
 #### Defined in
 

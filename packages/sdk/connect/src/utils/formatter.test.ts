@@ -51,7 +51,7 @@ describe('inputCeloTxFormatter', () => {
       ...base,
       gasPrice: '0x3e8',
       feeCurrency: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-    }
+    } as const
     it('formats', () => {
       expect(inputCeloTxFormatter(legacy)).toMatchInlineSnapshot(`
         {
@@ -73,7 +73,7 @@ describe('inputCeloTxFormatter', () => {
       maxFeePerGas: '0x3e8',
       maxPriorityFeePerGas: '0x3e8',
       feeCurrency: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-    }
+    } as const
     it('formats', () => {
       expect(inputCeloTxFormatter(cip64)).toMatchInlineSnapshot(`
         {
@@ -96,7 +96,7 @@ describe('inputCeloTxFormatter', () => {
       maxFeePerGas: '0x3e8',
       maxPriorityFeePerGas: '0x3e8',
       feeCurrency: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-    }
+    } as const
     it('formats', () => {
       expect(inputCeloTxFormatter(cip42)).toMatchInlineSnapshot(`
         {
@@ -118,7 +118,7 @@ describe('inputCeloTxFormatter', () => {
       ...base,
       maxFeePerGas: '0x3e8',
       maxPriorityFeePerGas: '0x3e8',
-    }
+    } as const
     it('formats', () => {
       expect(inputCeloTxFormatter(eip1559)).toMatchInlineSnapshot(`
         {

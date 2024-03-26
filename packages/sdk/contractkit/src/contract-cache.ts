@@ -15,6 +15,7 @@ import { EpochRewardsWrapper } from './wrappers/EpochRewards'
 import { Erc20Wrapper } from './wrappers/Erc20Wrapper'
 import { EscrowWrapper } from './wrappers/Escrow'
 import { FederatedAttestationsWrapper } from './wrappers/FederatedAttestations'
+import { FeeCurrencyWhitelistWrapper } from './wrappers/FeeCurrencyWhitelistWrapper'
 import { FreezerWrapper } from './wrappers/Freezer'
 import { GasPriceMinimumWrapper } from './wrappers/GasPriceMinimum'
 import { GoldTokenWrapper } from './wrappers/GoldTokenWrapper'
@@ -34,7 +35,7 @@ const WrapperFactories = {
   [CeloContract.ERC20]: Erc20Wrapper,
   [CeloContract.Escrow]: EscrowWrapper,
   [CeloContract.FederatedAttestations]: FederatedAttestationsWrapper,
-  // [CeloContract.FeeCurrencyWhitelist]: FeeCurrencyWhitelistWrapper,
+  [CeloContract.FeeCurrencyWhitelist]: FeeCurrencyWhitelistWrapper,
   [CeloContract.Freezer]: FreezerWrapper,
   [CeloContract.GasPriceMinimum]: GasPriceMinimumWrapper,
   [CeloContract.GoldToken]: GoldTokenWrapper,
@@ -83,7 +84,7 @@ interface WrapperCacheMap {
   [CeloContract.ERC20]?: Erc20Wrapper<IERC20>
   [CeloContract.Escrow]?: EscrowWrapper
   [CeloContract.FederatedAttestations]?: FederatedAttestationsWrapper
-  // [CeloContract.FeeCurrencyWhitelist]?: FeeCurrencyWhitelistWrapper,
+  [CeloContract.FeeCurrencyWhitelist]?: FeeCurrencyWhitelistWrapper
   [CeloContract.Freezer]?: FreezerWrapper
   [CeloContract.GasPriceMinimum]?: GasPriceMinimumWrapper
   [CeloContract.GoldToken]?: GoldTokenWrapper
@@ -153,6 +154,9 @@ export class WrapperCache implements ContractCacheType {
   }
   getFederatedAttestations() {
     return this.getContract(CeloContract.FederatedAttestations)
+  }
+  getFeeCurrencyWhitelist() {
+    return this.getContract(CeloContract.FeeCurrencyWhitelist)
   }
   getGasPriceMinimum() {
     return this.getContract(CeloContract.GasPriceMinimum)

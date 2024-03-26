@@ -1,4 +1,9 @@
-import { ensureLeading0x, normalizeAddressWith0x, trimLeading0x } from '@celo/base/lib/address'
+import {
+  StrongAddress,
+  ensureLeading0x,
+  normalizeAddressWith0x,
+  trimLeading0x,
+} from '@celo/base/lib/address'
 import { CeloTx, EncodedTransaction, Hex } from '@celo/connect'
 import { privateKeyToAddress } from '@celo/utils/lib/address'
 import { verifySignature } from '@celo/utils/lib/signatureUtils'
@@ -260,8 +265,8 @@ describe('LedgerWallet class', () => {
       }
       await wallet.init()
       if (USE_PHYSICAL_LEDGER) {
-        knownAddress = wallet.getAccounts()[0] as Hex
-        otherAddress = wallet.getAccounts()[1] as Hex
+        knownAddress = wallet.getAccounts()[0] as StrongAddress
+        otherAddress = wallet.getAccounts()[1] as StrongAddress
       }
     }, TEST_TIMEOUT_IN_MS)
 
@@ -372,7 +377,7 @@ describe('LedgerWallet class', () => {
                   nonce: 65,
                   gas: '10',
                   gasPrice: '99',
-                  feeCurrency: '0x',
+                  feeCurrency: '0x' as const,
                   gatewayFeeRecipient: ACCOUNT_ADDRESS_NEVER,
                   gatewayFee: '0x5678',
                   data: '0xabcdef',

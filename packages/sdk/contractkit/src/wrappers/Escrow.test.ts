@@ -1,3 +1,4 @@
+import { StrongAddress } from '@celo/base'
 import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
 import { newKitFromWeb3 } from '../kit'
 import { getParsedSignatureOfAddress } from '../utils/getParsedSignatureOfAddress'
@@ -19,7 +20,7 @@ testWithGanache('Escrow Wrapper', (web3) => {
     )
   }
 
-  let accounts: string[] = []
+  let accounts: StrongAddress[] = []
   let escrow: EscrowWrapper
   let federatedAttestations: FederatedAttestationsWrapper
   let stableTokenContract: StableTokenWrapper
@@ -30,7 +31,7 @@ testWithGanache('Escrow Wrapper', (web3) => {
     stableTokenContract = await kit.contracts.getStableToken()
     federatedAttestations = await kit.contracts.getFederatedAttestations()
 
-    accounts = await web3.eth.getAccounts()
+    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
 
     identifier = kit.web3.utils.soliditySha3({

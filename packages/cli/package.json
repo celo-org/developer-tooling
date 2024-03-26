@@ -1,7 +1,7 @@
 {
   "name": "@celo/celocli",
   "description": "CLI Tool for transacting with the Celo protocol",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "author": "Celo",
   "license": "Apache-2.0",
   "repository": "celo-org/developer-tooling",
@@ -22,9 +22,9 @@
     "node": ">=16"
   },
   "scripts": {
-    "clean": "tsc -b . --clean",
+    "clean": "yarn run --top-level tsc -b . --clean",
     "dev": "yarn build && ts-node ./bin/dev.js",
-    "build": "tsc -b .",
+    "build": "yarn run --top-level tsc -b .",
     "docs": "./generate_docs.sh",
     "lint": "yarn run --top-level eslint -c .eslintrc.js ",
     "prepublish": "",
@@ -32,20 +32,20 @@
     "test": "TZ=UTC yarn jest --runInBand"
   },
   "dependencies": {
-    "@celo/abis": "10.0.0",
-    "@celo/base": "^6.0.0",
+    "@celo/abis": "11.0.0",
+    "@celo/base": "^6.0.1",
     "@celo/compliance": "~1.0.17",
-    "@celo/connect": "^5.1.2",
-    "@celo/contractkit": "^7.0.0",
-    "@celo/cryptographic-utils": "^5.0.7",
-    "@celo/explorer": "^5.0.8",
-    "@celo/governance": "^5.0.9",
-    "@celo/identity": "^5.1.1",
-    "@celo/phone-utils": "^6.0.1",
-    "@celo/utils": "^6.0.0",
-    "@celo/wallet-hsm-azure": "^5.1.2",
-    "@celo/wallet-ledger": "^5.1.2",
-    "@celo/wallet-local": "^5.1.2",
+    "@celo/connect": "^5.3.0",
+    "@celo/contractkit": "^8.0.0",
+    "@celo/cryptographic-utils": "^5.0.8",
+    "@celo/explorer": "^5.0.10",
+    "@celo/governance": "^5.1.1",
+    "@celo/identity": "^5.1.2",
+    "@celo/phone-utils": "^6.0.2",
+    "@celo/utils": "^6.0.1",
+    "@celo/wallet-hsm-azure": "^5.2.0",
+    "@celo/wallet-ledger": "^5.2.0",
+    "@celo/wallet-local": "^5.2.0",
     "@ethereumjs/util": "8.0.5",
     "@ledgerhq/hw-transport-node-hid": "^6.27.4",
     "@mento-protocol/mento-sdk": "^0.2.2",
@@ -61,7 +61,7 @@
     "bignumber.js": "9.0.0",
     "chalk": "^2.4.2",
     "command-exists": "^1.2.9",
-    "cross-fetch": "3.0.6",
+    "cross-fetch": "3.1.5",
     "debug": "^4.1.1",
     "ethers": "5",
     "fs-extra": "^8.1.0",
@@ -69,12 +69,12 @@
     "path": "^0.12.7",
     "prompts": "^2.0.1",
     "randombytes": "^2.0.1",
-    "web3": "1.10.0",
-    "web3-utils": "^1.10.0"
+    "web3": "1.10.4",
+    "web3-utils": "^1.10.4"
   },
   "devDependencies": {
-    "@celo/celo-devchain": "^6.0.3",
-    "@celo/dev-utils": "0.0.1-beta.1",
+    "@celo/celo-devchain": "^7.0.0",
+    "@celo/dev-utils": "0.0.3",
     "@celo/typescript": "workspace:^",
     "@types/debug": "^4.1.4",
     "@types/fs-extra": "^8.0.0",
@@ -83,7 +83,6 @@
     "@types/ledgerhq__hw-transport-node-hid": "^4.22.2",
     "@types/node": "^18.7.16",
     "@types/prompts": "^1.1.1",
-    "@types/web3": "^1.0.18",
     "jest": "^29.0.2",
     "oclif": "^4.3.4",
     "prettier": "1.19.1",
@@ -170,7 +169,8 @@
     },
     "repositoryPrefix": "https://github.com/celo-org/developer-tooling/tree/master/packages/cli/<%- commandPath %>",
     "hooks": {
-      "prerun": "./lib/hooks/prerun/plugin-warning"
+      "prerun": "./lib/hooks/prerun/plugin-warning",
+      "postrun": "./lib/hooks/postrun/feedback"
     }
   }
 }

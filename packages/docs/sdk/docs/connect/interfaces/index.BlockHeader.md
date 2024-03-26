@@ -32,7 +32,7 @@
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:433
+node_modules/web3-eth/types/index.d.ts:435
 
 ___
 
@@ -42,7 +42,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:429
+node_modules/web3-eth/types/index.d.ts:431
 
 ___
 
@@ -52,7 +52,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:430
+node_modules/web3-eth/types/index.d.ts:432
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:431
+node_modules/web3-eth/types/index.d.ts:433
 
 ___
 
@@ -72,7 +72,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:420
+node_modules/web3-eth/types/index.d.ts:422
 
 ___
 
@@ -82,7 +82,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:424
+node_modules/web3-eth/types/index.d.ts:426
 
 ___
 
@@ -92,7 +92,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:428
+node_modules/web3-eth/types/index.d.ts:430
 
 ___
 
@@ -102,7 +102,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:422
+node_modules/web3-eth/types/index.d.ts:424
 
 ___
 
@@ -112,7 +112,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:419
+node_modules/web3-eth/types/index.d.ts:421
 
 ___
 
@@ -122,7 +122,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:421
+node_modules/web3-eth/types/index.d.ts:423
 
 ___
 
@@ -132,7 +132,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:427
+node_modules/web3-eth/types/index.d.ts:429
 
 ___
 
@@ -142,7 +142,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:423
+node_modules/web3-eth/types/index.d.ts:425
 
 ___
 
@@ -152,7 +152,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:426
+node_modules/web3-eth/types/index.d.ts:428
 
 ___
 
@@ -162,7 +162,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:432
+node_modules/web3-eth/types/index.d.ts:434
 
 ___
 
@@ -172,4 +172,4 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:425
+node_modules/web3-eth/types/index.d.ts:427

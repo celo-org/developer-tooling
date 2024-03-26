@@ -8,7 +8,7 @@ import {
 } from '@celo/utils/lib/address'
 import { verifySignature } from '@celo/utils/lib/signatureUtils'
 import { recoverTransaction, verifyEIP712TypedDataSigner } from '@celo/wallet-base'
-import { publicKeyPrefix, Signature } from '@celo/wallet-hsm'
+import { Signature, publicKeyPrefix } from '@celo/wallet-hsm'
 import * as ethUtil from '@ethereumjs/util'
 import { BigNumber } from 'bignumber.js'
 import Web3 from 'web3'
@@ -265,7 +265,7 @@ describe('AzureHSMWallet class', () => {
                 nonce: 65,
                 gas: '10',
                 gasPrice: '99',
-                feeCurrency: '0x',
+                feeCurrency: '0x' as const,
                 gatewayFeeRecipient: ACCOUNT_ADDRESS_NEVER,
                 gatewayFee: '0x5678',
                 data: '0xabcdef',

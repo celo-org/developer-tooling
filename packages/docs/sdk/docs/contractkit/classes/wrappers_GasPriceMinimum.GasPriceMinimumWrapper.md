@@ -198,7 +198,7 @@ ___
 
 ### methodIds
 
-• **methodIds**: `Record`\<``"gasPriceMinimum"`` \| ``"targetDensity"`` \| ``"adjustmentSpeed"`` \| ``"initialized"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"getVersionNumber"`` \| ``"initialize"`` \| ``"baseFeeOpCodeActivationBlock"`` \| ``"deprecated_gasPriceMinimum"`` \| ``"gasPriceMinimumFloor"`` \| ``"setAdjustmentSpeed"`` \| ``"setTargetDensity"`` \| ``"setGasPriceMinimumFloor"`` \| ``"setBaseFeeOpCodeActivationBlock"`` \| ``"getGasPriceMinimum"`` \| ``"updateGasPriceMinimum"`` \| ``"getUpdatedGasPriceMinimum"``, `string`\>
+• **methodIds**: `Record`\<``"gasPriceMinimum"`` \| ``"targetDensity"`` \| ``"adjustmentSpeed"`` \| ``"initialized"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"getVersionNumber"`` \| ``"initialize"`` \| ``"ABSOLUTE_MINIMAL_GAS_PRICE"`` \| ``"baseFeeOpCodeActivationBlock"`` \| ``"deprecated_gasPriceMinimum"`` \| ``"gasPriceMinimumFloor"`` \| ``"setAdjustmentSpeed"`` \| ``"setTargetDensity"`` \| ``"setGasPriceMinimumFloor"`` \| ``"setBaseFeeOpCodeActivationBlock"`` \| ``"getGasPriceMinimum"`` \| ``"updateGasPriceMinimum"`` \| ``"getUpdatedGasPriceMinimum"``, `string`\>
 
 #### Inherited from
 
@@ -242,13 +242,13 @@ the current block density targeted by the gas price minimum algorithm.
 
 ### address
 
-• `get` **address**(): `string`
+• `get` **address**(): \`0x$\{string}\`
 
 Contract address
 
 #### Returns
 
-`string`
+\`0x$\{string}\`
 
 #### Inherited from
 
