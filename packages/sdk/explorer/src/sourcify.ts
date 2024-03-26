@@ -189,10 +189,8 @@ export async function fetchMetadata(
   if (fullMatchMetadata !== null) {
     return fullMatchMetadata
   }
-  console.error('None found on full match, trying celoScan')
+  console.debug('None found on full match on celo explorer, trying celoScan')
   const fullMatchFromCeloScan = await queryCeloScan(connection, contract)
-  // TODO decide if querying celoscan here is the best or if each place fetchMetada is called to do it there
-  // same for the implementation proxy fetching
   if (fullMatchFromCeloScan !== null) {
     if (fullMatchFromCeloScan.implementationAddress) {
       console.info('Implementation found', fullMatchFromCeloScan.implementationAddress)
@@ -200,7 +198,7 @@ export async function fetchMetadata(
     }
     return fullMatchFromCeloScan
   }
-  console.error('No full match found, trying partial match')
+  console.debug('No full match found, trying partial match')
   if (strict) {
     return null
   } else {
@@ -267,10 +265,7 @@ type CeloScanResponse =
  * @param contract the address of the contract to query
  * @returns Metadata
  */
-export async function queryCeloScan(
-  connection: Connection,
-  contract: Address
-): Promise<Metadata | null> {
+async function queryCeloScan(connection: Connection, contract: Address): Promise<Metadata | null> {
   const resp = await fetch(
     `https://api.celoscan.io/api?module=contract&action=getsourcecode&address=${contract}`
   )

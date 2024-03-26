@@ -18,7 +18,7 @@ import {
   mapFromPairs,
   obtainKitContractDetails,
 } from './base'
-import { fetchMetadata, queryCeloScan, tryGetProxyImplementation } from './sourcify'
+import { fetchMetadata, tryGetProxyImplementation } from './sourcify'
 
 const debug = debugFactory('kit:explorer:block')
 export interface ContractNameAndMethodAbi {
@@ -308,7 +308,7 @@ export class BlockExplorer {
 
   /**
    * Returns the ContractMapping for the contract at that address, or undefined
-   * by looking up the contract address in Sourcify.
+   * by looking up the contract address on various contract verification services.
    * @param address
    * @returns The ContractMapping for the contract at that address, or undefined
    */
@@ -362,38 +362,6 @@ export class BlockExplorer {
       }
     }
   }
-  /**
-   * Returns the ContractMapping for the contract at that address, or if a proxy its implementation
-   * by looking up the contract address in CeloScan.
-   * @param address
-   * @returns The ContractMapping for the contract at that address, or undefined
-   */
-  getContractMappingFromCeloScan = async (
-    address: string
-  ): Promise<ContractMapping | undefined> => {
-    const cached = this.addressMapping.get(address)
-    if (cached) {
-      return cached
-    }
-    let metadata = await queryCeloScan(
-      this.kit.connection,
-      this.kit.web3.utils.toChecksumAddress(address)
-    )
-    if (metadata?.implementationAddress) {
-      metadata = await queryCeloScan(
-        this.kit.connection,
-        this.kit.web3.utils.toChecksumAddress(metadata?.implementationAddress)
-      )
-    }
-    const mapping = metadata?.toContractMapping()
-    mapping?.fnMapping.forEach((selector) => {
-      console.info(selector.name, JSON.stringify(selector))
-    })
-    if (mapping) {
-      this.addressMapping.set(address, mapping)
-    }
-    return mapping
-  }
 
   /**
    * Uses all of the strategies available to find a contract mapping that contains
@@ -408,7 +376,6 @@ export class BlockExplorer {
     selector: string,
     strategies = [
       this.getContractMappingFromCore,
-      this.getContractMappingFromCeloScan,
       this.getContractMappingFromSourcify,
       this.getContractMappingFromSourcifyAsProxy,
     ]
