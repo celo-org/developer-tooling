@@ -1,5 +1,38 @@
 # Changelog
 
+## 5.0.0
+
+### Major Changes
+
+- [#200](https://github.com/celo-org/developer-tooling/pull/200) [`6e3372f`](https://github.com/celo-org/developer-tooling/commit/6e3372f5ada20bb59d88e275170be4dae1e99f01) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - The following changes are related to adding support for more fee currencies in the @celo packages.
+
+  (BREAKING): global flag `--gasCurrency` changed to accept only whitelisted addresses instead of previously accepting a StableToken or 'auto'
+  (BREAKING): `config:set --gasCurrency` is now ignored and not saved to a default config and prints a warning instead
+  (ADDED): `celocli network:whitelist` prints the whitelisted feeCurrencies
+
+### Patch Changes
+
+- [#189](https://github.com/celo-org/developer-tooling/pull/189) [`cbfedf0`](https://github.com/celo-org/developer-tooling/commit/cbfedf0849a69e347a6ee3647b301ca0e7a11cac) Thanks [@renovate](https://github.com/apps/renovate)! - Bumps @celo/identity package to version [5.1.2](https://github.com/celo-org/social-connect/pull/181). This version removes the opentelemetry dependencies, which removes the warnings when users install @celo/celocli.
+
+- [#200](https://github.com/celo-org/developer-tooling/pull/200) [`6e3372f`](https://github.com/celo-org/developer-tooling/commit/6e3372f5ada20bb59d88e275170be4dae1e99f01) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Bump Cross Fetch to fix security vulnerability
+
+- [#200](https://github.com/celo-org/developer-tooling/pull/200) [`6e3372f`](https://github.com/celo-org/developer-tooling/commit/6e3372f5ada20bb59d88e275170be4dae1e99f01) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Bump web3-\* to 1.10.4 -- Some consumers may be forced to upgrade their web3 instance to the same version
+
+- [#200](https://github.com/celo-org/developer-tooling/pull/200) [`6e3372f`](https://github.com/celo-org/developer-tooling/commit/6e3372f5ada20bb59d88e275170be4dae1e99f01) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - celocli nework:parameters no longer includes info on stable tokens
+
+- Updated dependencies [[`6e3372f`](https://github.com/celo-org/developer-tooling/commit/6e3372f5ada20bb59d88e275170be4dae1e99f01), [`6e3372f`](https://github.com/celo-org/developer-tooling/commit/6e3372f5ada20bb59d88e275170be4dae1e99f01), [`6e3372f`](https://github.com/celo-org/developer-tooling/commit/6e3372f5ada20bb59d88e275170be4dae1e99f01), [`6e3372f`](https://github.com/celo-org/developer-tooling/commit/6e3372f5ada20bb59d88e275170be4dae1e99f01), [`6e3372f`](https://github.com/celo-org/developer-tooling/commit/6e3372f5ada20bb59d88e275170be4dae1e99f01), [`6e3372f`](https://github.com/celo-org/developer-tooling/commit/6e3372f5ada20bb59d88e275170be4dae1e99f01), [`6e3372f`](https://github.com/celo-org/developer-tooling/commit/6e3372f5ada20bb59d88e275170be4dae1e99f01), [`6e3372f`](https://github.com/celo-org/developer-tooling/commit/6e3372f5ada20bb59d88e275170be4dae1e99f01)]:
+  - @celo/contractkit@8.0.0
+  - @celo/explorer@5.0.10
+  - @celo/wallet-hsm-azure@5.2.0
+  - @celo/wallet-ledger@5.2.0
+  - @celo/wallet-local@5.2.0
+  - @celo/connect@5.3.0
+  - @celo/utils@6.0.1
+  - @celo/base@6.0.1
+  - @celo/cryptographic-utils@5.0.8
+  - @celo/governance@5.1.1
+  - @celo/phone-utils@6.0.2
+
 ## 5.0.0-beta.1
 
 ### Major Changes
