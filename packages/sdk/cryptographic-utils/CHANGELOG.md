@@ -1,5 +1,13 @@
 # @celo/cryptographic-utils
 
+## 5.0.8
+
+### Patch Changes
+
+- Updated dependencies [[`6e3372f`](https://github.com/celo-org/developer-tooling/commit/6e3372f5ada20bb59d88e275170be4dae1e99f01), [`6e3372f`](https://github.com/celo-org/developer-tooling/commit/6e3372f5ada20bb59d88e275170be4dae1e99f01), [`6e3372f`](https://github.com/celo-org/developer-tooling/commit/6e3372f5ada20bb59d88e275170be4dae1e99f01)]:
+  - @celo/utils@6.0.1
+  - @celo/base@6.0.1
+
 ## 5.0.8-beta.0
 
 ### Patch Changes
