@@ -31,7 +31,7 @@
     "fp-ts": "2.1.1",
     "google-libphonenumber": "^3.2.27",
     "io-ts": "2.0.1",
-    "web3-utils": "^1.10.0"
+    "web3-utils": "^4.0.0"
   },
   "devDependencies": {
     "@celo/typescript": "0.0.1"

@@ -70,7 +70,7 @@
     "prompts": "^2.0.1",
     "randombytes": "^2.0.1",
     "web3": "1.10.4",
-    "web3-utils": "^1.10.4"
+    "web3-utils": "^4.0.0"
   },
   "devDependencies": {
     "@celo/celo-devchain": "^7.0.0",

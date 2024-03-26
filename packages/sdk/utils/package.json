@@ -33,7 +33,7 @@
     "io-ts": "2.0.1",
     "rlp": "^2.2.4",
     "web3-eth-abi": "1.10.4",
-    "web3-utils": "1.10.4"
+    "web3-utils": "4.2.1"
   },
   "devDependencies": {
     "@celo/typescript": "0.0.1"
