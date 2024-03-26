@@ -23,8 +23,8 @@
 
 ▸ **fetchMetadata**(`connection`, `contract`, `strict?`): `Promise`\<[`Metadata`](../classes/sourcify.Metadata.md) \| ``null``\>
 
-Fetch the sourcify response and instantiate a Metadata wrapper class around it.
-Try a full_match but fallback to partial_match when not strict.
+Fetch the sourcify or celoscan response and instantiate a Metadata wrapper class around it.
+Try a full_match but fallback to partial_match when not strict. (only valid for sourcify)
 
 #### Parameters
 
@@ -42,7 +42,7 @@ Metadata or null
 
 #### Defined in
 
-[src/sourcify.ts:179](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L179)
+[src/sourcify.ts:185](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L185)
 
 ___
 
@@ -73,4 +73,4 @@ the implementation address or null
 
 #### Defined in
 
-[src/sourcify.ts:228](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L228)
+[src/sourcify.ts:301](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L301)

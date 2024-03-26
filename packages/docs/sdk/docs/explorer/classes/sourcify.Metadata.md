@@ -19,6 +19,7 @@ light runtime verification.
 - [abi](sourcify.Metadata.md#abi)
 - [contractName](sourcify.Metadata.md#contractname)
 - [fnMapping](sourcify.Metadata.md#fnmapping)
+- [implementationAddress](sourcify.Metadata.md#implementationaddress)
 
 ### Accessors
 
@@ -42,7 +43,7 @@ light runtime verification.
 | :------ | :------ |
 | `connection` | `Connection` |
 | `address` | `string` |
-| `response` | `any` |
+| `response` | [`MetadataResponse`](../interfaces/sourcify.MetadataResponse.md) |
 
 #### Returns
 
@@ -50,7 +51,7 @@ light runtime verification.
 
 #### Defined in
 
-[src/sourcify.ts:73](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L73)
+[src/sourcify.ts:76](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L76)
 
 ## Properties
 
@@ -60,7 +61,7 @@ light runtime verification.
 
 #### Defined in
 
-[src/sourcify.ts:65](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L65)
+[src/sourcify.ts:67](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L67)
 
 ___
 
@@ -70,7 +71,7 @@ ___
 
 #### Defined in
 
-[src/sourcify.ts:66](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L66)
+[src/sourcify.ts:68](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L68)
 
 ___
 
@@ -80,7 +81,17 @@ ___
 
 #### Defined in
 
-[src/sourcify.ts:67](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L67)
+[src/sourcify.ts:70](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L70)
+
+___
+
+### implementationAddress
+
+• **implementationAddress**: ``null`` \| `string` = `null`
+
+#### Defined in
+
+[src/sourcify.ts:69](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L69)
 
 ## Accessors
 
@@ -100,7 +111,7 @@ ___
 
 #### Defined in
 
-[src/sourcify.ts:83](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L83)
+[src/sourcify.ts:88](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L88)
 
 ## Methods
 
@@ -127,7 +138,7 @@ and array of AbiItems matching the query
 
 #### Defined in
 
-[src/sourcify.ts:152](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L152)
+[src/sourcify.ts:158](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L158)
 
 ___
 
@@ -151,7 +162,7 @@ an AbiItem if found or null
 
 #### Defined in
 
-[src/sourcify.ts:136](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L136)
+[src/sourcify.ts:142](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L142)
 
 ___
 
@@ -167,4 +178,4 @@ Turn the ABI into a mapping of function selectors to ABI items.
 
 #### Defined in
 
-[src/sourcify.ts:119](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L119)
+[src/sourcify.ts:125](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L125)

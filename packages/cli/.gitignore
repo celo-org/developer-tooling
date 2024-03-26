@@ -10,4 +10,5 @@ oclif.manifest.json
 src/generated
 .devchain/
 .devchain.tar.gz
+transactions.json
 transactions2.json

@@ -180,7 +180,7 @@ ___
 ▸ **getContractMappingFromSourcify**(`address`): `Promise`\<`undefined` \| [`ContractMapping`](../interfaces/base.ContractMapping.md)\>
 
 Returns the ContractMapping for the contract at that address, or undefined
-by looking up the contract address in Sourcify.
+by looking up the contract address on various contract verification services.
 
 #### Parameters
 

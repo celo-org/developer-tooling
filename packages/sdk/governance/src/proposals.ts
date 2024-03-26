@@ -348,7 +348,7 @@ export class ProposalBuilder {
   buildCallToExternalContract = async (
     tx: ProposalTransactionJSON
   ): Promise<ProposalTransaction> => {
-    if (!tx.address || (!isValidAddress(tx.address) && !isValidAddress(tx.contract))) {
+    if (!tx.address || !isValidAddress(tx.address)) {
       throw new Error(`${tx.contract} is not a core celo contract so address must be specified`)
     }
 
