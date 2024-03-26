@@ -52,6 +52,11 @@ export abstract class BaseCommand extends Command {
         "Use a specific gas currency for transaction fees (defaults to 'auto' which uses whatever feeCurrency is available)",
       hidden: true,
     })(),
+    useMultiSig: Flags.boolean({
+      default: false,
+      hidden: true,
+      description: 'True means the request will be sent through multisig.',
+    }),
     useLedger: Flags.boolean({
       default: false,
       hidden: true,

@@ -40,19 +40,41 @@ export default class Approve extends BaseCommand {
     const kit = await this.getKit()
     const res = await this.parse(Approve)
     const account = res.flags.from
+    /**
+     * TODO(Arthur): Move `useMultiSig` to another class
+     */
     const useMultiSig = res.flags.useMultiSig
     const id = res.flags.proposalID
     const hotfix = res.flags.hotfix
     kit.defaultAccount = account
     const governance = await kit.contracts.getGovernance()
+    /**
+     * TODO(Arthur): My thinking is the use of the `getApproverMultisig` method in this variable
+     * definition is too specialised and doesn't generalise if we want to support MultiSig
+     * as a global flag.
+     *
+     * I'm thinking about refactoring this into a more generalised function that can be used
+     * for MultiSig support here and elsewhere.
+     *
+     * In another class:
+     * const multisig = getMultiSig(address)
+     */
     const governanceApproverMultiSig = useMultiSig
       ? await governance.getApproverMultisig()
       : undefined
     const approver = useMultiSig ? governanceApproverMultiSig!.address : account
+    /**
+     * TODO(Arthur): In this file:
+     * const approver = useMultiSig ? MultiSig!.address : account
+     */
 
     const checkBuilder = newCheckBuilder(this)
       .isApprover(approver)
       .addConditionalCheck(`${account} is multisig signatory`, useMultiSig, () =>
+        /**
+         * TODO(Arthur): refactor to something like
+         * multisig!.isowner(account)
+         */
         governanceApproverMultiSig!.isowner(account)
       )
 
@@ -86,6 +108,9 @@ export default class Approve extends BaseCommand {
       failWith('Proposal ID or hotfix must be provided')
     }
 
+    /**
+     * TODO(Arthur): Refactor
+     */
     const tx = useMultiSig
       ? await governanceApproverMultiSig!.submitOrConfirmTransaction(
           governance.address,
