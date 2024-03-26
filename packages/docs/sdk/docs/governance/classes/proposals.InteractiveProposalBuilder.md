@@ -33,7 +33,7 @@
 
 #### Defined in
 
-[proposals.ts:439](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L439)
+[proposals.ts:466](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L466)
 
 ## Methods
 
@@ -47,7 +47,7 @@
 
 #### Defined in
 
-[proposals.ts:441](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L441)
+[proposals.ts:468](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L468)
 
 ___
 
@@ -61,4 +61,4 @@ ___
 
 #### Defined in
 
-[proposals.ts:446](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L446)
+[proposals.ts:473](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L473)

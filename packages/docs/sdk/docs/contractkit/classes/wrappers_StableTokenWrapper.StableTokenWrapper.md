@@ -33,14 +33,11 @@ Stable token with variable supply
 - [mint](wrappers_StableTokenWrapper.StableTokenWrapper.md#mint)
 - [name](wrappers_StableTokenWrapper.StableTokenWrapper.md#name)
 - [owner](wrappers_StableTokenWrapper.StableTokenWrapper.md#owner)
-- [setInflationParameters](wrappers_StableTokenWrapper.StableTokenWrapper.md#setinflationparameters)
 - [symbol](wrappers_StableTokenWrapper.StableTokenWrapper.md#symbol)
 - [totalSupply](wrappers_StableTokenWrapper.StableTokenWrapper.md#totalsupply)
 - [transfer](wrappers_StableTokenWrapper.StableTokenWrapper.md#transfer)
 - [transferFrom](wrappers_StableTokenWrapper.StableTokenWrapper.md#transferfrom)
 - [transferWithComment](wrappers_StableTokenWrapper.StableTokenWrapper.md#transferwithcomment)
-- [unitsToValue](wrappers_StableTokenWrapper.StableTokenWrapper.md#unitstovalue)
-- [valueToUnits](wrappers_StableTokenWrapper.StableTokenWrapper.md#valuetounits)
 
 ### Accessors
 
@@ -50,7 +47,6 @@ Stable token with variable supply
 
 - [getConfig](wrappers_StableTokenWrapper.StableTokenWrapper.md#getconfig)
 - [getHumanReadableConfig](wrappers_StableTokenWrapper.StableTokenWrapper.md#gethumanreadableconfig)
-- [getInflationParameters](wrappers_StableTokenWrapper.StableTokenWrapper.md#getinflationparameters)
 - [getPastEvents](wrappers_StableTokenWrapper.StableTokenWrapper.md#getpastevents)
 - [version](wrappers_StableTokenWrapper.StableTokenWrapper.md#version)
 
@@ -223,7 +219,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts:83](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts#L83)
+[packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts:40](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts#L40)
 
 ___
 
@@ -295,7 +291,7 @@ true if success.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts:81](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts#L81)
+[packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts#L38)
 
 ___
 
@@ -374,7 +370,7 @@ true if success.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts:70](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts#L70)
+[packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts#L27)
 
 ___
 
@@ -412,7 +408,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts:82](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts#L82)
+[packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts:39](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts#L39)
 
 ___
 
@@ -476,31 +472,7 @@ the address of the owner of the contract.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts#L38)
-
-___
-
-### setInflationParameters
-
-• **setInflationParameters**: (...`args`: [rate: string \| number, updatePeriod: string \| number]) => `CeloTransactionObject`\<`void`\>
-
-#### Type declaration
-
-▸ (`...args`): `CeloTransactionObject`\<`void`\>
-
-##### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `...args` | [rate: string \| number, updatePeriod: string \| number] |
-
-##### Returns
-
-`CeloTransactionObject`\<`void`\>
-
-#### Defined in
-
-[packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts:85](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts#L85)
+[packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts:19](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts#L19)
 
 ___
 
@@ -704,95 +676,17 @@ True if the transaction succeeds.
 
 [packages/sdk/contractkit/src/wrappers/CeloTokenWrapper.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/CeloTokenWrapper.ts#L38)
 
-___
-
-### unitsToValue
-
-• **unitsToValue**: (`units`: `Value`) => `Promise`\<`BigNumber`\>
-
-Returns the value of a given number of units given the current inflation factor.
-
-**`Param`**
-
-The units to convert to value.
-
-#### Type declaration
-
-▸ (`units`): `Promise`\<`BigNumber`\>
-
-Returns the value of a given number of units given the current inflation factor.
-
-##### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `units` | `Value` | The units to convert to value. |
-
-##### Returns
-
-`Promise`\<`BigNumber`\>
-
-The value corresponding to `units` given the current inflation factor.
-
-#### Defined in
-
-[packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts:58](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts#L58)
-
-___
-
-### valueToUnits
-
-• **valueToUnits**: (`value`: `Value`) => `Promise`\<`BigNumber`\>
-
-Returns the units for a given value given the current inflation factor.
-
-**`Param`**
-
-The value to convert to units.
-
-**`Dev`**
-
-We don't compute the updated inflationFactor here because
-we assume any function calling this will have updated the inflation factor.
-
-#### Type declaration
-
-▸ (`value`): `Promise`\<`BigNumber`\>
-
-Returns the units for a given value given the current inflation factor.
-
-##### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `value` | `Value` | The value to convert to units. |
-
-##### Returns
-
-`Promise`\<`BigNumber`\>
-
-The units corresponding to `value` given the current inflation factor.
-
-**`Dev`**
-
-We don't compute the updated inflationFactor here because
-we assume any function calling this will have updated the inflation factor.
-
-#### Defined in
-
-[packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts:47](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts#L47)
-
 ## Accessors
 
 ### address
 
-• `get` **address**(): `string`
+• `get` **address**(): \`0x$\{string}\`
 
 Contract address
 
 #### Returns
 
-`string`
+\`0x$\{string}\`
 
 #### Inherited from
 
@@ -816,17 +710,17 @@ Returns current configuration parameters.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts:104](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts#L104)
+[packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts:45](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts#L45)
 
 ___
 
 ### getHumanReadableConfig
 
-▸ **getHumanReadableConfig**(): `Promise`\<\{ `decimals`: `number` ; `inflationParameters`: \{ `factor`: `BigNumber` ; `factorLastUpdated`: `string` ; `rate`: `BigNumber` ; `updatePeriod`: `string`  } ; `name`: `string` ; `symbol`: `string`  }\>
+▸ **getHumanReadableConfig**(): `Promise`\<[`StableTokenConfig`](../interfaces/wrappers_StableTokenWrapper.StableTokenConfig.md)\>
 
 #### Returns
 
-`Promise`\<\{ `decimals`: `number` ; `inflationParameters`: \{ `factor`: `BigNumber` ; `factorLastUpdated`: `string` ; `rate`: `BigNumber` ; `updatePeriod`: `string`  } ; `name`: `string` ; `symbol`: `string`  }\>
+`Promise`\<[`StableTokenConfig`](../interfaces/wrappers_StableTokenWrapper.StableTokenConfig.md)\>
 
 StableTokenConfig object
 
@@ -836,25 +730,7 @@ Returns human readable configuration of the stabletoken contract
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts:123](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts#L123)
-
-___
-
-### getInflationParameters
-
-▸ **getInflationParameters**(): `Promise`\<[`InflationParameters`](../interfaces/wrappers_StableTokenWrapper.InflationParameters.md)\>
-
-Querying the inflation parameters.
-
-#### Returns
-
-`Promise`\<[`InflationParameters`](../interfaces/wrappers_StableTokenWrapper.InflationParameters.md)\>
-
-Inflation rate, inflation factor, inflation update period and the last time factor was updated.
-
-#### Defined in
-
-[packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts:91](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts#L91)
+[packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts:58](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/StableTokenWrapper.ts#L58)
 
 ___
 

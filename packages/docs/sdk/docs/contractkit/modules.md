@@ -46,6 +46,7 @@
 - [wrappers/Erc20Wrapper](modules/wrappers_Erc20Wrapper.md)
 - [wrappers/Escrow](modules/wrappers_Escrow.md)
 - [wrappers/FederatedAttestations](modules/wrappers_FederatedAttestations.md)
+- [wrappers/FeeCurrencyWhitelistWrapper](modules/wrappers_FeeCurrencyWhitelistWrapper.md)
 - [wrappers/FeeHandler](modules/wrappers_FeeHandler.md)
 - [wrappers/Freezer](modules/wrappers_Freezer.md)
 - [wrappers/GasPriceMinimum](modules/wrappers_GasPriceMinimum.md)

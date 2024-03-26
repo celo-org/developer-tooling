@@ -8,7 +8,6 @@ import Authorize from './authorize'
 import Register from './register'
 
 process.env.NO_SYNCCHECK = 'true'
-
 testWithGanache('account:authorize cmd', (web3: Web3) => {
   test('can authorize vote signer', async () => {
     const accounts = await web3.eth.getAccounts()

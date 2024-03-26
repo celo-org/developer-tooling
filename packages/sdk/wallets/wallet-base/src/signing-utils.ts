@@ -84,7 +84,7 @@ function signatureFormatter(
   s: string
 } {
   let v = signature.v
-  if (type !== 'celo-legacy') {
+  if (type !== 'celo-legacy' && type !== 'ethereum-legacy') {
     v = signature.v === Y_PARITY_EIP_2098 ? 0 : 1
   }
   return {
@@ -193,7 +193,7 @@ export function rlpEncodedTx(tx: CeloTx): RLPEncodedTx {
       rlpEncode: concatHex([TxTypeToPrefix.eip1559, rlpEncode]),
       type: 'eip1559',
     }
-  } else {
+  } else if (isCeloLegacy(tx)) {
     // This order should match the order in Geth.
     // https://github.com/celo-org/celo-blockchain/blob/027dba2e4584936cc5a8e8993e4e27d28d5247b8/core/types/transaction.go#L65
     rlpEncode = RLP.encode([
@@ -211,10 +211,29 @@ export function rlpEncodedTx(tx: CeloTx): RLPEncodedTx {
       '0x',
     ])
     return { transaction, rlpEncode, type: 'celo-legacy' }
+  } else {
+    // https://github.com/celo-org/celo-proposals/blob/master/CIPs/cip-0035.md
+    // rlp([nonce, gasprice, gaslimit, recipient, amount, data, v, r, s])
+    rlpEncode = RLP.encode([
+      stringNumberToHex(transaction.nonce),
+      transaction.gasPrice,
+      transaction.gas,
+      transaction.to,
+      transaction.value,
+      transaction.data,
+      stringNumberToHex(transaction.chainId),
+      '0x',
+      '0x',
+    ])
+    delete transaction.feeCurrency
+    delete transaction.gatewayFee
+    delete transaction.gatewayFeeRecipient
+    return { transaction, rlpEncode, type: 'ethereum-legacy' }
   }
 }
 
 enum TxTypeToPrefix {
+  'ethereum-legacy' = '',
   'celo-legacy' = '',
   cip42 = '0x7c',
   cip64 = '0x7b',
@@ -290,7 +309,7 @@ function isCIP64(tx: CeloTx) {
   return (
     isEIP1559(tx) &&
     isPresent(tx.feeCurrency) &&
-    !isPresent(tx.gatewayFeeRecipient) &&
+    !isPresent(tx.gatewayFee) &&
     !isPresent(tx.gatewayFeeRecipient)
   )
 }
@@ -298,6 +317,13 @@ function isCIP64(tx: CeloTx) {
 function isCIP42(tx: CeloTx): boolean {
   return (
     isEIP1559(tx) &&
+    (isPresent(tx.feeCurrency) || isPresent(tx.gatewayFeeRecipient) || isPresent(tx.gatewayFee))
+  )
+}
+
+function isCeloLegacy(tx: CeloTx): boolean {
+  return (
+    !isEIP1559(tx) &&
     (isPresent(tx.feeCurrency) || isPresent(tx.gatewayFeeRecipient) || isPresent(tx.gatewayFee))
   )
 }
@@ -328,12 +354,19 @@ export async function encodeTransaction(
   const r = sanitizedSignature.r
   const s = sanitizedSignature.s
   const decodedTX = prefixAwareRLPDecode(rlpEncoded.rlpEncode, rlpEncoded.type)
+
+  let decodedFields: string[]
+
   // for legacy tx we need to slice but for new ones we do not want to do that
-  const rawTx = (rlpEncoded.type === 'celo-legacy' ? decodedTX.slice(0, 9) : decodedTX).concat([
-    v,
-    r,
-    s,
-  ])
+  if (rlpEncoded.type == 'celo-legacy') {
+    decodedFields = decodedTX.slice(0, 9)
+  } else if (rlpEncoded.type == 'ethereum-legacy') {
+    decodedFields = decodedTX.slice(0, 6)
+  } else {
+    decodedFields = decodedTX
+  }
+
+  const rawTx = decodedFields.concat([v, r, s])
 
   // After signing, the transaction is encoded again and type prefix added
   const rawTransaction = concatTypePrefixHex(RLP.encode(rawTx), rlpEncoded.type)
@@ -369,7 +402,7 @@ export async function encodeTransaction(
       gatewayFee: rlpEncoded.transaction.gatewayFee!.toString(),
     }
   }
-  if (rlpEncoded.type === 'celo-legacy') {
+  if (rlpEncoded.type === 'celo-legacy' || rlpEncoded.type === 'ethereum-legacy') {
     tx = {
       ...tx,
       // @ts-expect-error -- just a matter of how  this tx is built
@@ -386,7 +419,11 @@ export async function encodeTransaction(
 }
 // new types have prefix but legacy does not
 function prefixAwareRLPDecode(rlpEncode: string, type: TransactionTypes): string[] {
-  return type === 'celo-legacy' ? RLP.decode(rlpEncode) : RLP.decode(`0x${rlpEncode.slice(4)}`)
+  if (type === 'celo-legacy' || type === 'ethereum-legacy') {
+    return RLP.decode(rlpEncode)
+  }
+
+  return RLP.decode(`0x${rlpEncode.slice(4)}`)
 }
 
 function correctLengthOf(type: TransactionTypes, includeSig: boolean = true) {
@@ -396,11 +433,14 @@ function correctLengthOf(type: TransactionTypes, includeSig: boolean = true) {
     }
     case 'cip42':
       return includeSig ? 15 : 12
+    case 'ethereum-legacy':
+      return 9
     case 'celo-legacy':
     case 'eip1559':
       return 12
   }
 }
+
 // Based on the return type of ensureLeading0x this was not a Buffer
 export function extractSignature(rawTx: string) {
   const type = determineTXType(rawTx)
@@ -448,32 +488,10 @@ export function recoverTransaction(rawTx: string): [CeloTx, string] {
       return recoverTransactionCIP42(rawTx as Hex)
     case 'eip1559':
       return recoverTransactionEIP1559(rawTx as Hex)
+    case 'celo-legacy':
+      return recoverCeloLegacy(rawTx as Hex)
     default:
-      const rawValues = RLP.decode(rawTx)
-      debug('signing-utils@recoverTransaction: values are %s', rawValues)
-      const recovery = Bytes.toNumber(rawValues[9])
-      //  eslint-disable-next-line no-bitwise
-      const chainId = Bytes.fromNumber((recovery - 35) >> 1)
-      const celoTx: CeloTx = {
-        type: 'celo-legacy',
-        nonce: rawValues[0].toLowerCase() === '0x' ? 0 : parseInt(rawValues[0], 16),
-        gasPrice: rawValues[1].toLowerCase() === '0x' ? 0 : parseInt(rawValues[1], 16),
-        gas: rawValues[2].toLowerCase() === '0x' ? 0 : parseInt(rawValues[2], 16),
-        feeCurrency: rawValues[3],
-        gatewayFeeRecipient: rawValues[4],
-        gatewayFee: rawValues[5],
-        to: rawValues[6],
-        value: rawValues[7],
-        data: rawValues[8],
-        chainId,
-      }
-      const { r, v, s } = extractSignatureFromDecoded(rawValues)
-      const signature = Account.encodeSignature([v, r, s])
-      const extraData = recovery < 35 ? [] : [chainId, '0x', '0x']
-      const signingData = rawValues.slice(0, 9).concat(extraData)
-      const signingDataHex = RLP.encode(signingData)
-      const signer = Account.recover(getHashFromEncoded(signingDataHex), signature)
-      return [celoTx, signer]
+      return recoverEthereumLegacy(rawTx as Hex)
   }
 }
 
@@ -516,7 +534,13 @@ function determineTXType(serializedTransaction: string): TransactionTypes {
   } else if (prefix === TxTypeToPrefix.cip64) {
     return 'cip64'
   }
-  return 'celo-legacy'
+
+  // it is one of the legacy types (Celo or Ethereum), to differentiate between
+  // legacy tx types we have to check the numberof fields
+  const rawValues = RLP.decode(serializedTransaction)
+  const length = rawValues.length
+
+  return correctLengthOf('celo-legacy') === length ? 'celo-legacy' : 'ethereum-legacy'
 }
 
 function vrsForRecovery(vRaw: string, r: string, s: string) {
@@ -659,6 +683,59 @@ function recoverTransactionEIP1559(serializedTransaction: Hex): [CeloTxWithSig, 
   const web3Account = new Accounts()
   const signer = web3Account.recoverTransaction(serializedTransaction)
 
+  return [celoTx, signer]
+}
+
+function recoverCeloLegacy(serializedTransaction: Hex): [CeloTx, string] {
+  const rawValues = RLP.decode(serializedTransaction)
+  debug('signing-utils@recoverTransaction: values are %s', rawValues)
+  const recovery = Bytes.toNumber(rawValues[9])
+  //  eslint-disable-next-line no-bitwise
+  const chainId = Bytes.fromNumber((recovery - 35) >> 1)
+  const celoTx: CeloTx = {
+    type: 'celo-legacy',
+    nonce: rawValues[0].toLowerCase() === '0x' ? 0 : parseInt(rawValues[0], 16),
+    gasPrice: rawValues[1].toLowerCase() === '0x' ? 0 : parseInt(rawValues[1], 16),
+    gas: rawValues[2].toLowerCase() === '0x' ? 0 : parseInt(rawValues[2], 16),
+    feeCurrency: rawValues[3],
+    gatewayFeeRecipient: rawValues[4],
+    gatewayFee: rawValues[5],
+    to: rawValues[6],
+    value: rawValues[7],
+    data: rawValues[8],
+    chainId,
+  }
+  const { r, v, s } = extractSignatureFromDecoded(rawValues)
+  const signature = Account.encodeSignature([v, r, s])
+  const extraData = recovery < 35 ? [] : [chainId, '0x', '0x']
+  const signingData = rawValues.slice(0, 9).concat(extraData)
+  const signingDataHex = RLP.encode(signingData)
+  const signer = Account.recover(getHashFromEncoded(signingDataHex), signature)
+  return [celoTx, signer]
+}
+
+function recoverEthereumLegacy(serializedTransaction: Hex): [CeloTx, string] {
+  const rawValues = RLP.decode(serializedTransaction)
+  debug('signing-utils@recoverTransaction: values are %s', rawValues)
+  const recovery = Bytes.toNumber(rawValues[6])
+  //  eslint-disable-next-line no-bitwise
+  const chainId = Bytes.fromNumber((recovery - 35) >> 1)
+  const celoTx: CeloTx = {
+    type: 'ethereum-legacy',
+    nonce: rawValues[0].toLowerCase() === '0x' ? 0 : parseInt(rawValues[0], 16),
+    gasPrice: rawValues[1].toLowerCase() === '0x' ? 0 : parseInt(rawValues[1], 16),
+    gas: rawValues[2].toLowerCase() === '0x' ? 0 : parseInt(rawValues[2], 16),
+    to: rawValues[3],
+    value: rawValues[4],
+    data: rawValues[5],
+    chainId,
+  }
+  const { r, v, s } = extractSignatureFromDecoded(rawValues)
+  const signature = Account.encodeSignature([v, r, s])
+  const extraData = recovery < 35 ? [] : [chainId, '0x', '0x']
+  const signingData = rawValues.slice(0, 6).concat(extraData)
+  const signingDataHex = RLP.encode(signingData)
+  const signer = Account.recover(getHashFromEncoded(signingDataHex), signature)
   return [celoTx, signer]
 }
 

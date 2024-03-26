@@ -132,11 +132,11 @@ describe('TxParamsNormalizer class', () => {
       celoTx.gasPrice = undefined
       celoTx.maxFeePerGas = undefined
       celoTx.maxPriorityFeePerGas = undefined
-      celoTx.feeCurrency = 'celoMagic'
+      celoTx.feeCurrency = '0x1234'
       const newCeloTx = await populator.populate(celoTx)
       expect(newCeloTx.maxFeePerGas).toBe('0x2f')
       expect(newCeloTx.maxPriorityFeePerGas).toBe('0x27')
-      expect(mockRpcCall.mock.calls[0]).toEqual(['eth_gasPrice', ['celoMagic']])
+      expect(mockRpcCall.mock.calls[0]).toEqual(['eth_gasPrice', ['0x1234']])
       expect(mockRpcCall.mock.calls[1]).toEqual(['eth_maxPriorityFeePerGas', []])
     })
   })

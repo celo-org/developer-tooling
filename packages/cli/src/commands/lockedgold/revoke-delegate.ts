@@ -1,4 +1,3 @@
-import { Address } from '@celo/connect'
 import { toFixed } from '@celo/utils/lib/fixidity'
 import { Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
@@ -13,8 +12,8 @@ export default class RevokeDelegate extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    from: Flags.string({ ...CustomFlags.address, required: true }),
-    to: Flags.string({ ...CustomFlags.address, required: true }),
+    from: CustomFlags.address({ required: true }),
+    to: CustomFlags.address({ required: true }),
     percent: Flags.string({
       ...LockedGoldArgs.valueArg,
       required: true,
@@ -31,8 +30,8 @@ export default class RevokeDelegate extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(RevokeDelegate)
-    const address: Address = res.flags.from
-    const to: Address = res.flags.to
+    const address = res.flags.from
+    const to = res.flags.to
 
     kit.defaultAccount = address
     const percent = new BigNumber(res.flags.percent).div(100)

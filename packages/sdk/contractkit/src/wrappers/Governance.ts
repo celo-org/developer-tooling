@@ -4,11 +4,12 @@ import {
   ensureLeading0x,
   hexToBuffer,
   NULL_ADDRESS,
+  StrongAddress,
   trimLeading0x,
 } from '@celo/base/lib/address'
 import { concurrentMap } from '@celo/base/lib/async'
 import { zeroRange, zip } from '@celo/base/lib/collections'
-import { Address, CeloTxPending, toTransactionObject } from '@celo/connect'
+import { Address, CeloTxObject, CeloTxPending, toTransactionObject } from '@celo/connect'
 import { fromFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
 import {
@@ -391,7 +392,7 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<Governance> {
   /**
    * Returns the approver address for proposals and hotfixes.
    */
-  getApprover = proxyCall(this.contract.methods.approver)
+  getApprover = proxyCall(this.contract.methods.approver as () => CeloTxObject<StrongAddress>)
 
   /**
    * Returns the approver multisig contract for proposals and hotfixes.

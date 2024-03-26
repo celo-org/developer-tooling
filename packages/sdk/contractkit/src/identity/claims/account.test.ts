@@ -62,7 +62,7 @@ testWithGanache('Account claims', (web3) => {
     beforeEach(async () => {
       otherMetadata = IdentityMetadataWrapper.fromEmpty(otherAddress)
 
-      const myUrl = 'https://www.test.com/'
+      const myUrl = 'https://www.example.com/'
       const accounts = await kit.contracts.getAccounts()
       await accounts.createAccount().send({ from: address })
       await accounts.setMetadataURL(myUrl).sendAndWaitForReceipt({ from: address, gas: 0 })
