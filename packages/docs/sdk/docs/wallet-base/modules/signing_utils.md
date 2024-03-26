@@ -39,7 +39,7 @@
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:41](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L41)
+[wallets/wallet-base/src/signing-utils.ts:40](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L40)
 
 ___
 
@@ -49,7 +49,7 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:42](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L42)
+[wallets/wallet-base/src/signing-utils.ts:41](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L41)
 
 ___
 
@@ -59,7 +59,7 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:43](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L43)
+[wallets/wallet-base/src/signing-utils.ts:42](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L42)
 
 ## Functions
 
@@ -79,7 +79,7 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:57](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L57)
+[wallets/wallet-base/src/signing-utils.ts:56](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L56)
 
 ___
 
@@ -106,11 +106,7 @@ ___
 
 #### Defined in
 
-<<<<<<< HEAD
-[wallets/wallet-base/src/signing-utils.ts:708](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L708)
-=======
-[wallets/wallet-base/src/signing-utils.ts:774](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L774)
->>>>>>> elliptic-more-like-byelliptic
+[wallets/wallet-base/src/signing-utils.ts:796](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L796)
 
 ___
 
@@ -134,11 +130,7 @@ ___
 
 #### Defined in
 
-<<<<<<< HEAD
-[wallets/wallet-base/src/signing-utils.ts:325](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L325)
-=======
-[wallets/wallet-base/src/signing-utils.ts:348](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L348)
->>>>>>> elliptic-more-like-byelliptic
+[wallets/wallet-base/src/signing-utils.ts:350](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L350)
 
 ___
 
@@ -164,17 +156,13 @@ ___
 
 #### Defined in
 
-<<<<<<< HEAD
-[wallets/wallet-base/src/signing-utils.ts:406](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L406)
-=======
-[wallets/wallet-base/src/signing-utils.ts:445](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L445)
->>>>>>> elliptic-more-like-byelliptic
+[wallets/wallet-base/src/signing-utils.ts:444](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L444)
 
 ___
 
 ### getHashFromEncoded
 
-▸ **getHashFromEncoded**(`rlpEncode`): `Hex`
+▸ **getHashFromEncoded**(`rlpEncode`): `StrongAddress`
 
 #### Parameters
 
@@ -184,11 +172,11 @@ ___
 
 #### Returns
 
-`Hex`
+`StrongAddress`
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:61](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L61)
+[wallets/wallet-base/src/signing-utils.ts:60](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L60)
 
 ___
 
@@ -208,8 +196,7 @@ ___
 
 #### Defined in
 
-<<<<<<< HEAD
-[wallets/wallet-base/src/signing-utils.ts:513](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L513)
+[wallets/wallet-base/src/signing-utils.ts:514](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L514)
 
 ___
 
@@ -229,7 +216,7 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:733](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L733)
+[wallets/wallet-base/src/signing-utils.ts:821](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L821)
 
 ___
 
@@ -249,7 +236,7 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:747](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L747)
+[wallets/wallet-base/src/signing-utils.ts:835](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L835)
 
 ___
 
@@ -269,7 +256,7 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:739](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L739)
+[wallets/wallet-base/src/signing-utils.ts:827](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L827)
 
 ___
 
@@ -289,10 +276,7 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:727](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L727)
-=======
-[wallets/wallet-base/src/signing-utils.ts:518](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L518)
->>>>>>> elliptic-more-like-byelliptic
+[wallets/wallet-base/src/signing-utils.ts:815](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L815)
 
 ___
 
@@ -312,11 +296,7 @@ ___
 
 #### Defined in
 
-<<<<<<< HEAD
-[wallets/wallet-base/src/signing-utils.ts:274](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L274)
-=======
-[wallets/wallet-base/src/signing-utils.ts:290](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L290)
->>>>>>> elliptic-more-like-byelliptic
+[wallets/wallet-base/src/signing-utils.ts:292](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L292)
 
 ___
 
@@ -337,11 +317,7 @@ ___
 
 #### Defined in
 
-<<<<<<< HEAD
-[wallets/wallet-base/src/signing-utils.ts:676](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L676)
-=======
-[wallets/wallet-base/src/signing-utils.ts:742](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L742)
->>>>>>> elliptic-more-like-byelliptic
+[wallets/wallet-base/src/signing-utils.ts:764](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L764)
 
 ___
 
@@ -361,11 +337,7 @@ ___
 
 #### Defined in
 
-<<<<<<< HEAD
-[wallets/wallet-base/src/signing-utils.ts:437](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L437)
-=======
-[wallets/wallet-base/src/signing-utils.ts:479](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L479)
->>>>>>> elliptic-more-like-byelliptic
+[wallets/wallet-base/src/signing-utils.ts:475](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L475)
 
 ___
 
@@ -385,7 +357,7 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:116](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L116)
+[wallets/wallet-base/src/signing-utils.ts:115](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L115)
 
 ___
 
@@ -413,13 +385,13 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:718](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L718)
+[wallets/wallet-base/src/signing-utils.ts:806](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L806)
 
 ___
 
 ### stringNumberOrBNToHex
 
-▸ **stringNumberOrBNToHex**(`num?`): `Hex`
+▸ **stringNumberOrBNToHex**(`num?`): `StrongAddress`
 
 #### Parameters
 
@@ -429,11 +401,11 @@ ___
 
 #### Returns
 
-`Hex`
+`StrongAddress`
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:100](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L100)
+[wallets/wallet-base/src/signing-utils.ts:99](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L99)
 
 ___
 
@@ -455,11 +427,7 @@ ___
 
 #### Defined in
 
-<<<<<<< HEAD
-[wallets/wallet-base/src/signing-utils.ts:686](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L686)
-=======
-[wallets/wallet-base/src/signing-utils.ts:752](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L752)
->>>>>>> elliptic-more-like-byelliptic
+[wallets/wallet-base/src/signing-utils.ts:774](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L774)
 
 ___
 
@@ -481,8 +449,4 @@ ___
 
 #### Defined in
 
-<<<<<<< HEAD
-[wallets/wallet-base/src/signing-utils.ts:695](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L695)
-=======
-[wallets/wallet-base/src/signing-utils.ts:761](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L761)
->>>>>>> elliptic-more-like-byelliptic
+[wallets/wallet-base/src/signing-utils.ts:783](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L783)
