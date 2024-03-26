@@ -122,9 +122,13 @@ export abstract class BaseCommand extends Command {
   }
 
   async getKit() {
-    if (!this._kit) {
-      this._kit = newKitFromWeb3(await this.getWeb3())
+    // return now if kit already has been built instead of doing all that parsing and awaiting
+    // because this.getKit is called when closing down the command by not returning early this.parse would be called and weird logs occure
+    if (this._kit) {
+      return this._kit
     }
+
+    this._kit = newKitFromWeb3(await this.getWeb3())
 
     const res = await this.parse()
     if (res.flags && res.flags.privateKey && !res.flags.useLedger && !res.flags.useAKV) {

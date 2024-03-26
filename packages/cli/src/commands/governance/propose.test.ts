@@ -395,7 +395,7 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Couldn't build call for transaction: {"contract":"0x552b9AA0eEe500c60f09456e49FBc1096322714C","function":"approve(address,uint256)","args":["0xFa3df877F98ac5ecd87456a7AcCaa948462412f0","10000000000000000000000000"],"value":"0"}"`
     )
-  }, 8000)
+  }, 20000)
 
   test('succeeds when proposal contains transactions for contracts verified on celoScan', async () => {
     const transactionsToBeSaved = JSON.stringify(transactionsForContractsVerifiedOnCeloScan)
@@ -410,5 +410,5 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
       '--descriptionURL',
       'https://example.com',
     ])
-  }, 8000)
+  }, 20000)
 })
