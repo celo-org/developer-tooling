@@ -75,8 +75,9 @@ export class Metadata {
 
   constructor(connection: Connection, address: Address, response: MetadataResponse) {
     this.abiCoder = connection.getAbiCoder()
-    this.response = response as MetadataResponse
     this.contractName = response.settings?.name || null
+    // note setting this.response has a side affect of setting this.contractName if it is empty
+    this.response = response as MetadataResponse
     this.implementationAddress = response.settings?.implementation || null
     // XXX: For some reason this isn't exported as it should be
     // @ts-ignore
@@ -113,7 +114,8 @@ export class Metadata {
       // XXX: Not sure when there are multiple compilationTargets and what should
       // happen then but defaulting to this for now.
       const contracts = Object.values(value.settings.compilationTarget)
-      this.contractName = this.contractName || contracts[0]
+
+      this.contractName = this.contractName ?? contracts[0]
     }
   }
 
