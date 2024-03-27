@@ -410,8 +410,8 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
       ]
       const transactionsToBeSaved = JSON.stringify(transactionsForUnverifiedContracts)
       fs.writeFileSync('transactions.json', transactionsToBeSaved, { flag: 'w' })
-      expect(
-        await testLocally(Propose, [
+      await expect(
+        testLocally(Propose, [
           '--jsonTransactions',
           'transactions.json',
           '--deposit',
@@ -422,7 +422,7 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
           'https://example.com',
         ])
       ).rejects.toThrowErrorMatchingInlineSnapshot(
-        `"Couldn't build call for transaction: {"contract":"0x552b9AA0eEe500c60f09456e49FBc1096322714C","address":"0x37f750B7cC259A2f741AF45294f6a16572CF5cAd","function":"approve(address,uint256)","args":["0xFa3df877F98ac5ecd87456a7AcCaa948462412f0","10000000000000000000000000"],"value":"0"}"`
+        `"Unable to parse {"input":"0x095ea7b3000000000000000000000000fa3df877f98ac5ecd87456a7accaa948462412f0000000000000000000000000000000000000000000084595161401484a000000","to":"0x37f750B7cC259A2f741AF45294f6a16572CF5cAd","value":"0"} with block explorer"`
       )
     },
     EXTRA_LONG_TIMEOUT_MS
