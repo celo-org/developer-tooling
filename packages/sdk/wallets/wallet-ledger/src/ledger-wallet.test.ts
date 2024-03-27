@@ -22,7 +22,7 @@ import { AddressValidation, LedgerWallet } from './ledger-wallet'
 import { ILedger } from './types'
 
 // Update this variable when testing using a physical device
-const USE_PHYSICAL_LEDGER = false
+const USE_PHYSICAL_LEDGER = process.env.USE_PHYSICAL_LEDGER === 'true'
 // Increase timeout to give developer time to respond on device
 const TEST_TIMEOUT_IN_MS = USE_PHYSICAL_LEDGER ? 30 * 1000 : 1 * 1000
 
@@ -142,7 +142,7 @@ function mockLedger(wallet: LedgerWallet, mockForceValidation: () => void) {
             const pkBuffer = Buffer.from(trimmedKey, 'hex')
             const signature = ethUtil.ecsign(msgHashBuff, pkBuffer)
             return {
-              v: signature.v.toString(16),
+              v: signature.v.toString(10),
               r: signature.r.toString('hex'),
               s: signature.s.toString('hex'),
             }

@@ -18,6 +18,7 @@
     "clean": "yarn run --top-level tsc -b . --clean",
     "docs": "yarn run --top-level typedoc",
     "test": "yarn run --top-level jest --runInBand",
+    "test:physical_ledger": "USE_PHYSICAL_LEDGER=true yarn test",
     "lint": "yarn run --top-level eslint -c .eslintrc.js ",
     "prepublishOnly": "yarn build"
   },

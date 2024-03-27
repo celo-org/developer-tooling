@@ -86,9 +86,8 @@ export class LedgerSigner implements Signer {
         await this.getValidatedDerivationPath(),
         trimLeading0x(data)
       )
-
       return {
-        v: parseInt(signature.v, 16),
+        v: parseInt(signature.v, 10),
         r: ethUtil.toBuffer(ensureLeading0x(signature.r)) as Buffer,
         s: ethUtil.toBuffer(ensureLeading0x(signature.s)) as Buffer,
       }
