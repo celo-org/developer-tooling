@@ -1632,6 +1632,7 @@ __metadata:
     cross-fetch: "npm:3.1.5"
     debug: "npm:^4.1.1"
     ethers: "npm:5"
+    fetch-mock: "npm:^9.11.0"
     fs-extra: "npm:^8.1.0"
     humanize-duration: "npm:^3.29.0"
     jest: "npm:^29.0.2"
