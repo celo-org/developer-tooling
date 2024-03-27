@@ -364,7 +364,7 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
       address: '0xf4cab10dC19695AaCe14b7A16d7705b600ad5F73',
       function: 'transfer(address,uint256)',
       args: ['0x87647780180B8f55980C7D3fFeFe08a9B29e9aE1', '20001239154911011864219072'],
-      value: 0,
+      value: '0',
     },
   ]
 
@@ -404,7 +404,6 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
   test(
     'succeeds when proposal contains transactions for contracts verified on celoScan',
     async () => {
-      const sendSpy = jest.spyOn(kit.connection, 'sendTransaction')
       // fetchMock
       //   .get(
       //     'https://api.celoscan.io/api?module=contract&action=getsourcecode&address=0xf4cab10dC19695AaCe14b7A16d7705b600ad5F73',
@@ -423,7 +422,10 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
         '--descriptionURL',
         'https://example.com',
       ])
-      expect(sendSpy.mock.calls).toMatchInlineSnapshot(`[]`)
+      const proposal = await governance.getProposal(1)
+      expect(proposal.length).toEqual(transactionsForContractsVerifiedOnCeloScan.length)
+      expect(proposal[0].to).toEqual('0xf4cab10dC19695AaCe14b7A16d7705b600ad5F73')
+      expect(proposal[0].value).toEqual(transactionsForContractsVerifiedOnCeloScan[0].value)
     },
     EXTRA_LONG_TIMEOUT_MS * 3
   )
