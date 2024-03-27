@@ -1,8 +1,15 @@
 const fetchMockSandbox = require('fetch-mock').sandbox()
-// jest.mock('cross-fetch', () => fetchMockSandbox)
+jest.mock('cross-fetch', () => fetchMockSandbox)
 
 // @ts-ignore
 global.fetchMock = fetchMockSandbox
+
+/* eslint import/no-extraneous-dependencies:off */
+import { FetchMockSandbox } from 'fetch-mock'
+
+declare global {
+  const fetchMock: FetchMockSandbox
+}
 
 jest.mock('@ledgerhq/hw-transport-node-hid', () => {
   return {

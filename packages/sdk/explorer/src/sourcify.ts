@@ -273,8 +273,7 @@ async function queryCeloScan(connection: Connection, contract: Address): Promise
   )
   if (resp.ok) {
     const json = (await resp.json()) as CeloScanResponse
-    // TODO get implementation when it is a proxy. the implementation address is in the response already.
-    if (json.message === 'OK' && json.result[0].SourceCode.length > 2) {
+    if (json.message === 'OK' && json.result[0].ABI.length > 2) {
       const info = json.result[0]
       const data = JSON.parse(info.ABI) as AbiItem[]
       return new Metadata(connection, contract, {
