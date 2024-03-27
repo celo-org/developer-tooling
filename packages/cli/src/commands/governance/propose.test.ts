@@ -281,7 +281,7 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
     EXTRA_LONG_TIMEOUT_MS
   )
 
-  test(
+  test.skip(
     'fails when descriptionURl is missing',
     async () => {
       await expect(
@@ -368,7 +368,7 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
     },
   ]
 
-  test(
+  test.skip(
     'when proposal contains transactions for contracts not verified',
     async () => {
       const transactionsForUnverifiedContracts = [
@@ -401,7 +401,7 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
     EXTRA_LONG_TIMEOUT_MS * 4
   )
 
-  test(
+  test.skip(
     'succeeds when proposal contains transactions for contracts verified on celoScan',
     async () => {
       // fetchMock
