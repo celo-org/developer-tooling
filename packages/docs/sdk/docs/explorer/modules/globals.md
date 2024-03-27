@@ -30,4 +30,4 @@ a field that accepts both `fetch()` and a fetch-mock sandbox.
 
 #### Defined in
 
-[src/globals.d.ts:5](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/globals.d.ts#L5)
+[packages/sdk/explorer/src/globals.d.ts:5](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/globals.d.ts#L5)

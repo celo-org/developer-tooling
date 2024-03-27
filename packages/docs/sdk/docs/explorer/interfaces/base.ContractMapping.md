@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[src/base.ts:13](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/base.ts#L13)
+[packages/sdk/explorer/src/base.ts:13](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/base.ts#L13)
 
 ___
 
@@ -29,4 +29,4 @@ ___
 
 #### Defined in
 
-[src/base.ts:14](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/base.ts#L14)
+[packages/sdk/explorer/src/base.ts:14](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/base.ts#L14)

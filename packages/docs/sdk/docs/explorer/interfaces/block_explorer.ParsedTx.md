@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[src/block-explorer.ts:40](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L40)
+[packages/sdk/explorer/src/block-explorer.ts:40](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L40)
 
 ___
 
@@ -29,4 +29,4 @@ ___
 
 #### Defined in
 
-[src/block-explorer.ts:41](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L41)
+[packages/sdk/explorer/src/block-explorer.ts:41](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/block-explorer.ts#L41)

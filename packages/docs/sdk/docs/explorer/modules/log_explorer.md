@@ -30,4 +30,4 @@
 
 #### Defined in
 
-[src/log-explorer.ts:10](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/log-explorer.ts#L10)
+[packages/sdk/explorer/src/log-explorer.ts:10](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/log-explorer.ts#L10)
