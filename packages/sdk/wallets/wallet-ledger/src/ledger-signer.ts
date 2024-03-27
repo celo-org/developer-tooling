@@ -108,6 +108,7 @@ export class LedgerSigner implements Signer {
         typedData.types
       )
 
+      // NOTE: this function doesn't exist on ledger 5.11 so it fails, probably never worked
       const sig = await this.ledger!.signEIP712HashedMessage(
         await this.getValidatedDerivationPath(),
         domainSeparator,
