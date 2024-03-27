@@ -187,4 +187,4 @@ Signer.signTypedData
 
 #### Defined in
 
-[wallet-ledger/src/ledger-signer.ts:103](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-signer.ts#L103)
+[wallet-ledger/src/ledger-signer.ts:102](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-signer.ts#L102)

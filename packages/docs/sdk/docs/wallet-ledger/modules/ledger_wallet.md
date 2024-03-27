@@ -28,7 +28,7 @@
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:11](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L11)
+[wallet-ledger/src/ledger-wallet.ts:12](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L12)
 
 ## Functions
 
@@ -51,4 +51,4 @@
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:26](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L26)
+[wallet-ledger/src/ledger-wallet.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L27)
