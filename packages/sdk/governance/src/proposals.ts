@@ -451,7 +451,7 @@ export class ProposalBuilder {
         debug("Couldn't build transaction with strategy %s: %O", strategy.name, e)
       }
     }
-
+    // this throws when every strategy fails. so you must run in debug mode or add another log to see to real error
     throw new Error(`Couldn't build call for transaction: ${JSON.stringify(tx)}`)
   }
 
