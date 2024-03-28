@@ -65,7 +65,7 @@ RemoteWallet\&lt;LedgerSigner\&gt;.constructor
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:55](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L55)
+[wallet-ledger/src/ledger-wallet.ts:56](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L56)
 
 ## Properties
 
@@ -77,7 +77,7 @@ base derivation path. Default: "44'/52752'/0'/0"
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:57](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L57)
+[wallet-ledger/src/ledger-wallet.ts:58](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L58)
 
 ___
 
@@ -92,7 +92,7 @@ Example: [3, 99, 53] will retrieve the derivation paths of
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:56](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L56)
+[wallet-ledger/src/ledger-wallet.ts:57](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L57)
 
 ___
 
@@ -124,7 +124,7 @@ ___
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:59](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L59)
+[wallet-ledger/src/ledger-wallet.ts:60](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L60)
 
 ___
 
@@ -136,7 +136,7 @@ Transport to connect the ledger device
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:58](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L58)
+[wallet-ledger/src/ledger-wallet.ts:59](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L59)
 
 ## Methods
 
@@ -360,7 +360,7 @@ RemoteWallet.signTransaction
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:70](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L70)
+[wallet-ledger/src/ledger-wallet.ts:71](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L71)
 
 ___
 

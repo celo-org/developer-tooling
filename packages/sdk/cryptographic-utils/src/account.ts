@@ -8,17 +8,13 @@ import {
 import { normalizeAccents } from '@celo/base/lib/string'
 import { privateKeyToAddress } from '@celo/utils/lib/address'
 import { levenshteinDistance } from '@celo/utils/lib/levenshtein'
-// TODO replace by @scure/bip32
-import BIP32Factory from 'bip32'
-// TODO replace by @scure/bip32
-import * as bip39 from 'bip39'
-// TODO replace by @noble/hashes/sha3 { keccak_256 }
-import { keccak256 } from 'ethereum-cryptography/keccak'
-import { utf8ToBytes } from 'ethereum-cryptography/utils'
-import randomBytes from 'randombytes'
+import { keccak_256 } from '@noble/hashes/sha3'
+import { bytesToHex, utf8ToBytes } from '@noble/hashes/utils'
+import { HDKey } from '@scure/bip32'
+import * as bip39 from '@scure/bip39'
+import { randomBytes } from 'crypto'
+import wordlists from './wordlists'
 
-// TODO replace by @noble/curves/secp256k1
-import * as ecc from 'tiny-secp256k1'
 // Exports moved to @celo/base, forwarding them
 // here for backwards compatibility
 export {
@@ -28,12 +24,11 @@ export {
   MnemonicStrength,
   RandomNumberGenerator,
 } from '@celo/base/lib/account'
-const bip32 = BIP32Factory(ecc)
 
 function defaultGenerateMnemonic(
   strength?: number,
   rng?: RandomNumberGenerator,
-  wordlist?: string[]
+  wordlist: string[] = wordlists[MnemonicLanguages.english]
 ): Promise<string> {
   return new Promise((resolve, reject) => {
     strength = strength || 128
@@ -43,30 +38,37 @@ function defaultGenerateMnemonic(
       if (error) {
         reject(error)
       } else {
-        resolve(bip39.entropyToMnemonic(randomBytesBuffer.toString('hex'), wordlist))
+        resolve(bip39.entropyToMnemonic(randomBytesBuffer, wordlist))
       }
     })
   })
+}
+
+function _validateMnemonic(
+  mnemonic: string,
+  wordlist: string[] = wordlists[MnemonicLanguages.english]
+) {
+  return bip39.validateMnemonic(mnemonic, wordlist)
 }
 
 const bip39Wrapper: Bip39 = {
   mnemonicToSeedSync: bip39.mnemonicToSeedSync,
   mnemonicToSeed: bip39.mnemonicToSeed,
   generateMnemonic: defaultGenerateMnemonic,
-  validateMnemonic: bip39.validateMnemonic,
+  validateMnemonic: _validateMnemonic,
 }
 
 export async function generateMnemonic(
   strength: MnemonicStrength = MnemonicStrength.s256_24words,
   language?: MnemonicLanguages,
-  bip39ToUse: Bip39 = bip39Wrapper
+  bip39ToUse = bip39Wrapper
 ): Promise<string> {
   return bip39ToUse.generateMnemonic(strength, undefined, getWordList(language))
 }
 
 export function validateMnemonic(
   mnemonic: string,
-  bip39ToUse: Bip39 = bip39Wrapper,
+  bip39ToUse = bip39Wrapper,
   language?: MnemonicLanguages
 ) {
   if (language !== undefined) {
@@ -166,28 +168,8 @@ export function formatNonAccentedCharacters(mnemonic: string) {
 }
 
 // Unify the bip39.wordlists (otherwise depends on the instance of the bip39)
-function getWordList(language?: MnemonicLanguages): string[] {
-  // Use exhaustive switch to ensure that every language is accounted for.
-  switch (language ?? MnemonicLanguages.english) {
-    case MnemonicLanguages.chinese_simplified:
-      return bip39.wordlists.chinese_simplified
-    case MnemonicLanguages.chinese_traditional:
-      return bip39.wordlists.chinese_traditional
-    case MnemonicLanguages.english:
-      return bip39.wordlists.english
-    case MnemonicLanguages.french:
-      return bip39.wordlists.french
-    case MnemonicLanguages.italian:
-      return bip39.wordlists.italian
-    case MnemonicLanguages.japanese:
-      return bip39.wordlists.japanese
-    case MnemonicLanguages.korean:
-      return bip39.wordlists.korean
-    case MnemonicLanguages.spanish:
-      return bip39.wordlists.spanish
-    case MnemonicLanguages.portuguese:
-      return bip39.wordlists.portuguese
-  }
+export function getWordList(language: MnemonicLanguages = MnemonicLanguages.english): string[] {
+  return wordlists[language]
 }
 
 export function getAllLanguages(): MnemonicLanguages[] {
@@ -410,7 +392,7 @@ export async function generateKeys(
   password?: string,
   changeIndex: number = 0,
   addressIndex: number = 0,
-  bip39ToUse: Bip39 = bip39Wrapper,
+  bip39ToUse = bip39Wrapper,
   derivationPath: string = CELO_DERIVATION_PATH_BASE
 ): Promise<{ privateKey: string; publicKey: string; address: string }> {
   const seed: Buffer = await generateSeed(mnemonic, password, bip39ToUse)
@@ -425,7 +407,7 @@ export function generateDeterministicInviteCode(
   changeIndex: number = 0,
   derivationPath: string = CELO_DERIVATION_PATH_BASE
 ): { privateKey: string; publicKey: string } {
-  const seed = keccak256(utf8ToBytes(recipientPhoneHash + recipientPepper)) as Buffer
+  const seed = Buffer.from(keccak_256(utf8ToBytes(recipientPhoneHash + recipientPepper)))
   return generateKeysFromSeed(seed, changeIndex, addressIndex, derivationPath)
 }
 
@@ -434,10 +416,10 @@ export function generateDeterministicInviteCode(
 export async function generateSeed(
   mnemonic: string,
   password?: string,
-  bip39ToUse: Bip39 = bip39Wrapper,
+  bip39ToUse = bip39Wrapper,
   keyByteLength: number = 64
 ): Promise<Buffer> {
-  let seed: Buffer = await bip39ToUse.mnemonicToSeed(mnemonic, password)
+  let seed = Buffer.from(await bip39ToUse.mnemonicToSeed(mnemonic, password))
   if (keyByteLength > 0 && seed.byteLength > keyByteLength) {
     const bufAux = Buffer.allocUnsafe(keyByteLength)
     seed.copy(bufAux, 0, 0, keyByteLength)
@@ -452,18 +434,21 @@ export function generateKeysFromSeed(
   addressIndex: number = 0,
   derivationPath: string = CELO_DERIVATION_PATH_BASE
 ): { privateKey: string; publicKey: string; address: string } {
-  const node = bip32.fromSeed(seed)
-  const newNode = node.derivePath(
+  const node = HDKey.fromMasterSeed(seed)
+  const newNode = node.derive(
     `${derivationPath ? `${derivationPath}/` : ''}${changeIndex}/${addressIndex}`
   )
   if (!newNode.privateKey) {
     // As we are generating the node from a seed, the node will always have a private key and this would never happened
     throw new Error('utils-accounts@generateKeys: invalid node to derivate')
   }
+  const privateKey = bytesToHex(newNode.privateKey)
+  const publicKey = bytesToHex(newNode.publicKey!)
+
   return {
-    privateKey: newNode.privateKey.toString('hex'),
-    publicKey: newNode.publicKey.toString('hex'),
-    address: privateKeyToAddress(newNode.privateKey.toString('hex')),
+    privateKey,
+    publicKey,
+    address: privateKeyToAddress(privateKey),
   }
 }
 

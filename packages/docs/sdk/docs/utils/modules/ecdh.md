@@ -51,13 +51,13 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/ecdh.ts:18](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecdh.ts#L18)
+[packages/sdk/utils/src/ecdh.ts:21](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecdh.ts#L21)
 
 ___
 
 ### ensureUncompressed
 
-▸ **ensureUncompressed**(`publicKey`): `any`
+▸ **ensureUncompressed**(`publicKey`): `Uint8Array`
 
 #### Parameters
 
@@ -67,7 +67,7 @@ ___
 
 #### Returns
 
-`any`
+`Uint8Array`
 
 #### Defined in
 
@@ -91,7 +91,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/ecdh.ts:10](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecdh.ts#L10)
+[packages/sdk/utils/src/ecdh.ts:13](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecdh.ts#L13)
 
 ___
 
@@ -111,4 +111,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/ecdh.ts:40](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecdh.ts#L40)
+[packages/sdk/utils/src/ecdh.ts:32](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecdh.ts#L32)

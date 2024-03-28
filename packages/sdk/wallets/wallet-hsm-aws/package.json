@@ -32,8 +32,7 @@
     "@types/secp256k1": "^4.0.0",
     "aws-sdk": "^2.705.0",
     "bignumber.js": "^9.0.0",
-    "debug": "^4.1.1",
-    "eth-lib": "^0.2.8"
+    "debug": "^4.1.1"
   },
   "devDependencies": {
     "@noble/ciphers": "0.4.1",

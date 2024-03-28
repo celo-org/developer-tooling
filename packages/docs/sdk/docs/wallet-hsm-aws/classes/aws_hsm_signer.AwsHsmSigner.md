@@ -43,7 +43,7 @@
 
 #### Defined in
 
-[wallet-hsm-aws/src/aws-hsm-signer.ts:26](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-aws/src/aws-hsm-signer.ts#L26)
+[wallet-hsm-aws/src/aws-hsm-signer.ts:25](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-aws/src/aws-hsm-signer.ts#L25)
 
 ## Methods
 
@@ -67,7 +67,7 @@ Signer.computeSharedSecret
 
 #### Defined in
 
-[wallet-hsm-aws/src/aws-hsm-signer.ts:112](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-aws/src/aws-hsm-signer.ts#L112)
+[wallet-hsm-aws/src/aws-hsm-signer.ts:117](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-aws/src/aws-hsm-signer.ts#L117)
 
 ___
 
@@ -91,7 +91,7 @@ Signer.decrypt
 
 #### Defined in
 
-[wallet-hsm-aws/src/aws-hsm-signer.ts:106](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-aws/src/aws-hsm-signer.ts#L106)
+[wallet-hsm-aws/src/aws-hsm-signer.ts:111](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-aws/src/aws-hsm-signer.ts#L111)
 
 ___
 
@@ -109,7 +109,7 @@ Signer.getNativeKey
 
 #### Defined in
 
-[wallet-hsm-aws/src/aws-hsm-signer.ts:102](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-aws/src/aws-hsm-signer.ts#L102)
+[wallet-hsm-aws/src/aws-hsm-signer.ts:107](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-aws/src/aws-hsm-signer.ts#L107)
 
 ___
 
@@ -133,7 +133,7 @@ Signer.signPersonalMessage
 
 #### Defined in
 
-[wallet-hsm-aws/src/aws-hsm-signer.ts:79](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-aws/src/aws-hsm-signer.ts#L79)
+[wallet-hsm-aws/src/aws-hsm-signer.ts:84](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-aws/src/aws-hsm-signer.ts#L84)
 
 ___
 
@@ -158,7 +158,7 @@ Signer.signTransaction
 
 #### Defined in
 
-[wallet-hsm-aws/src/aws-hsm-signer.ts:67](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-aws/src/aws-hsm-signer.ts#L67)
+[wallet-hsm-aws/src/aws-hsm-signer.ts:72](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-aws/src/aws-hsm-signer.ts#L72)
 
 ___
 
@@ -182,4 +182,4 @@ Signer.signTypedData
 
 #### Defined in
 
-[wallet-hsm-aws/src/aws-hsm-signer.ts:91](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-aws/src/aws-hsm-signer.ts#L91)
+[wallet-hsm-aws/src/aws-hsm-signer.ts:96](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm-aws/src/aws-hsm-signer.ts#L96)

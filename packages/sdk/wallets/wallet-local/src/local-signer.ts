@@ -1,21 +1,19 @@
-import { RLPEncodedTx, Signer } from '@celo/connect'
+import { Hex, RLPEncodedTx, Signer } from '@celo/connect'
 import { ensureLeading0x, trimLeading0x } from '@celo/utils/lib/address'
 import { computeSharedSecret as computeECDHSecret } from '@celo/utils/lib/ecdh'
 import { Decrypt } from '@celo/utils/lib/ecies'
 import { EIP712TypedData, generateTypedDataHash } from '@celo/utils/lib/sign-typed-data-utils'
-import { decodeSig, getHashFromEncoded } from '@celo/wallet-base'
+import { getHashFromEncoded, signTransaction } from '@celo/wallet-base'
 import * as ethUtil from '@ethereumjs/util'
-// @ts-ignore eth-lib types not found
-import { account as Account } from 'eth-lib'
 
 /**
  * Signs the EVM transaction using the provided private key
  */
 export class LocalSigner implements Signer {
-  private privateKey: string
+  private privateKey: Hex
 
   constructor(privateKey: string) {
-    this.privateKey = privateKey
+    this.privateKey = ensureLeading0x(privateKey)
   }
 
   getNativeKey(): string {
@@ -26,9 +24,7 @@ export class LocalSigner implements Signer {
     addToV: number,
     encodedTx: RLPEncodedTx
   ): Promise<{ v: number; r: Buffer; s: Buffer }> {
-    const hash = getHashFromEncoded(encodedTx.rlpEncode)
-    const signature = Account.makeSigner(addToV)(hash, this.privateKey)
-    return decodeSig(signature)
+    return signTransaction(getHashFromEncoded(encodedTx.rlpEncode), this.privateKey, addToV)
   }
 
   async signPersonalMessage(data: string): Promise<{ v: number; r: Buffer; s: Buffer }> {

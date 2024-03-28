@@ -1631,6 +1631,7 @@ __metadata:
     "@oclif/plugin-not-found": "npm:^3.0.9"
     "@oclif/plugin-plugins": "npm:^4.1.17"
     "@oclif/plugin-warn-if-update-available": "npm:^3.0.9"
+    "@scure/bip32": "npm:^1.3.3"
     "@types/command-exists": "npm:^1.2.3"
     "@types/debug": "npm:^4.1.4"
     "@types/fs-extra": "npm:^8.0.0"
@@ -1640,7 +1641,6 @@ __metadata:
     "@types/node": "npm:^18.7.16"
     "@types/prompts": "npm:^1.1.1"
     bignumber.js: "npm:9.0.0"
-    bip32: "npm:3.1.0"
     chalk: "npm:^2.4.2"
     command-exists: "npm:^1.2.9"
     cross-fetch: "npm:3.1.5"
@@ -1777,20 +1777,15 @@ __metadata:
     "@celo/bls12377js": "npm:0.1.1"
     "@celo/typescript": "npm:0.0.1"
     "@celo/utils": "npm:^6.0.1"
-    "@ethereumjs/util": "npm:8.0.5"
     "@noble/ciphers": "npm:0.4.1"
     "@noble/curves": "npm:1.3.0"
     "@noble/hashes": "npm:1.3.3"
+    "@scure/bip32": "npm:^1.3.3"
+    "@scure/bip39": "npm:^1.2.2"
     "@types/bn.js": "npm:^5.1.0"
     "@types/node": "npm:^18.7.16"
-    "@types/randombytes": "npm:^2.0.0"
     bigi: "npm:^1.4.2"
-    bip32: "npm:^3.1.0"
-    bip39: "https://github.com/bitcoinjs/bip39#a7ecbfe2e60d0214ce17163d610cad9f7b23140c"
     buffer-reverse: "npm:^1.0.1"
-    ethereum-cryptography: "npm:1.2.0"
-    randombytes: "npm:^2.0.1"
-    tiny-secp256k1: "npm:2.2.1"
   languageName: unknown
   linkType: soft
 
@@ -1844,7 +1839,6 @@ __metadata:
     "@types/inquirer": "npm:^6.5.0"
     bignumber.js: "npm:^9.0.0"
     debug: "npm:^4.1.1"
-    ethereum-cryptography: "npm:1.2.0"
     inquirer: "npm:^7.0.5"
   languageName: unknown
   linkType: soft
@@ -1973,6 +1967,7 @@ __metadata:
   dependencies:
     "@celo/base": "npm:^6.0.1"
     "@celo/typescript": "npm:0.0.1"
+    "@ethereumjs/rlp": "npm:^5.0.2"
     "@ethereumjs/util": "npm:8.0.5"
     "@noble/ciphers": "npm:0.4.1"
     "@noble/curves": "npm:1.3.0"
@@ -1980,10 +1975,8 @@ __metadata:
     "@types/bn.js": "npm:^5.1.0"
     "@types/node": "npm:^18.7.16"
     bignumber.js: "npm:^9.0.0"
-    ethereum-cryptography: "npm:1.2.0"
     fp-ts: "npm:2.1.1"
     io-ts: "npm:2.0.1"
-    rlp: "npm:^2.2.4"
     web3-eth-abi: "npm:1.10.4"
     web3-utils: "npm:1.10.4"
   languageName: unknown
@@ -2016,13 +2009,13 @@ __metadata:
     "@celo/base": "npm:^6.0.1"
     "@celo/connect": "npm:^5.3.0"
     "@celo/utils": "npm:^6.0.1"
-    "@ethereumjs/rlp": "npm:^5.0.0"
+    "@ethereumjs/rlp": "npm:^5.0.2"
     "@ethereumjs/util": "npm:8.0.5"
+    "@noble/curves": "npm:^1.3.0"
+    "@noble/hashes": "npm:^1.3.3"
     "@types/debug": "npm:^4.1.5"
     bignumber.js: "npm:^9.0.0"
     debug: "npm:^4.1.1"
-    eth-lib: "npm:^0.2.8"
-    ethereum-cryptography: "npm:^2.1.2"
     viem: "npm:~1.5.4"
     web3: "npm:1.10.4"
     web3-eth-accounts: "npm:1.10.4"
@@ -2048,7 +2041,6 @@ __metadata:
     bignumber.js: "npm:^9.0.0"
     debug: "npm:^4.1.1"
     dotenv: "npm:^8.2.0"
-    eth-lib: "npm:^0.2.8"
     web3: "npm:1.10.4"
   languageName: unknown
   linkType: soft
@@ -2074,7 +2066,6 @@ __metadata:
     bignumber.js: "npm:^9.0.0"
     debug: "npm:^4.1.1"
     dotenv: "npm:^8.2.0"
-    eth-lib: "npm:^0.2.8"
     web3: "npm:1.10.4"
   languageName: unknown
   linkType: soft
@@ -2098,7 +2089,6 @@ __metadata:
     bignumber.js: "npm:^9.0.0"
     debug: "npm:^4.1.1"
     dotenv: "npm:^8.2.0"
-    eth-lib: "npm:^0.2.8"
     web3: "npm:1.10.4"
   languageName: unknown
   linkType: soft
@@ -2118,7 +2108,6 @@ __metadata:
     asn1js: "npm:^2.0.26"
     bignumber.js: "npm:^9.0.0"
     dotenv: "npm:^8.2.0"
-    eth-lib: "npm:^0.2.8"
   languageName: unknown
   linkType: soft
 
@@ -2136,9 +2125,8 @@ __metadata:
     "@ledgerhq/hw-app-eth": "npm:~5.11.0"
     "@ledgerhq/hw-transport": "npm:~5.11.0"
     "@ledgerhq/hw-transport-node-hid": "npm:^6.27.4"
+    "@noble/hashes": "npm:^1.3.3"
     debug: "npm:^4.1.1"
-    eth-lib: "npm:^0.2.8"
-    ethereum-cryptography: "npm:1.2.0"
     web3: "npm:1.10.4"
   languageName: unknown
   linkType: soft
@@ -2164,7 +2152,6 @@ __metadata:
     "@celo/utils": "npm:^6.0.1"
     "@celo/wallet-base": "npm:^5.2.0"
     "@ethereumjs/util": "npm:8.0.5"
-    eth-lib: "npm:^0.2.8"
     viem: "npm:~1.5.4"
     web3: "npm:1.10.4"
   languageName: unknown
@@ -2179,7 +2166,6 @@ __metadata:
     "@celo/wallet-base": "npm:^5.2.0"
     "@ethereumjs/util": "npm:8.0.5"
     "@types/debug": "npm:^4.1.5"
-    eth-lib: "npm:^0.2.8"
     web3: "npm:1.10.4"
   languageName: unknown
   linkType: soft
@@ -2638,6 +2624,15 @@ __metadata:
   bin:
     rlp: bin/rlp
   checksum: ed2478580489f0adbb037b8c054b178ab2f22e0b1417470fb6659e655436a3a5c9762030f29c5ab64db6a902911fcad92eeaebdfe59d0561a6ecc149d1a42f06
+  languageName: node
+  linkType: hard
+
+"@ethereumjs/rlp@npm:^5.0.2":
+  version: 5.0.2
+  resolution: "@ethereumjs/rlp@npm:5.0.2"
+  bin:
+    rlp: bin/rlp.cjs
+  checksum: 2af80d98faf7f64dfb6d739c2df7da7350ff5ad52426c3219897e843ee441215db0ffa346873200a6be6d11142edb9536e66acd62436b5005fa935baaf7eb6bd
   languageName: node
   linkType: hard
 
@@ -3705,7 +3700,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@noble/curves@npm:1.3.0":
+"@noble/curves@npm:1.3.0, @noble/curves@npm:^1.3.0, @noble/curves@npm:~1.3.0":
   version: 1.3.0
   resolution: "@noble/curves@npm:1.3.0"
   dependencies:
@@ -3735,7 +3730,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@noble/hashes@npm:1.3.3, @noble/hashes@npm:^1.2.0":
+"@noble/hashes@npm:1.3.3, @noble/hashes@npm:^1.3.3, @noble/hashes@npm:~1.3.2":
   version: 1.3.3
   resolution: "@noble/hashes@npm:1.3.3"
   checksum: 1025ddde4d24630e95c0818e63d2d54ee131b980fe113312d17ed7468bc18f54486ac86c907685759f8a7e13c2f9b9e83ec7b67d1cc20836f36b5e4a65bb102d
@@ -4601,7 +4596,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@scure/base@npm:~1.1.0":
+"@scure/base@npm:~1.1.0, @scure/base@npm:~1.1.4":
   version: 1.1.5
   resolution: "@scure/base@npm:1.1.5"
   checksum: 543fa9991c6378b6a0d5ab7f1e27b30bb9c1e860d3ac81119b4213cfdf0ad7b61be004e06506e89de7ce0cec9391c17f5c082bb34c3b617a2ee6a04129f52481
@@ -4641,6 +4636,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@scure/bip32@npm:^1.3.3":
+  version: 1.3.3
+  resolution: "@scure/bip32@npm:1.3.3"
+  dependencies:
+    "@noble/curves": "npm:~1.3.0"
+    "@noble/hashes": "npm:~1.3.2"
+    "@scure/base": "npm:~1.1.4"
+  checksum: 4b8b75567866ff7d6b3ba154538add02d2951e9433e8dd7f0014331ac500cda5a88fe3d39b408fcc36e86b633682013f172b967af022c2e4e4ab07336801d688
+  languageName: node
+  linkType: hard
+
 "@scure/bip39@npm:1.1.1":
   version: 1.1.1
   resolution: "@scure/bip39@npm:1.1.1"
@@ -4668,6 +4674,16 @@ __metadata:
     "@noble/hashes": "npm:~1.3.0"
     "@scure/base": "npm:~1.1.0"
   checksum: 2ea368bbed34d6b1701c20683bf465e147f231a9e37e639b8c82f585d6f978bb0f3855fca7ceff04954ae248b3e313f5d322d0210614fb7acb402739415aaf31
+  languageName: node
+  linkType: hard
+
+"@scure/bip39@npm:^1.2.2":
+  version: 1.2.2
+  resolution: "@scure/bip39@npm:1.2.2"
+  dependencies:
+    "@noble/hashes": "npm:~1.3.2"
+    "@scure/base": "npm:~1.1.4"
+  checksum: f71aceda10a7937bf3779fd2b4c4156c95ec9813269470ddca464cb8ab610d2451b173037f4b1e6dac45414e406e7adc7b5814c51279f4474d5d38140bbee542
   languageName: node
   linkType: hard
 
@@ -6095,15 +6111,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/randombytes@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "@types/randombytes@npm:2.0.0"
-  dependencies:
-    "@types/node": "npm:*"
-  checksum: 3835678127f020e1f0812f9dbcf400ef98916bc6fb9aff7d36e701c996ae668163f49a69aa6ce6832ca5dd150e6376e3e586094be4f45cc1e190b0db39320671
-  languageName: node
-  linkType: hard
-
 "@types/responselike@npm:^1.0.0":
   version: 1.0.0
   resolution: "@types/responselike@npm:1.0.0"
@@ -7269,29 +7276,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bip32@npm:3.1.0, bip32@npm:^3.1.0":
-  version: 3.1.0
-  resolution: "bip32@npm:3.1.0"
-  dependencies:
-    bs58check: "npm:^2.1.1"
-    create-hash: "npm:^1.2.0"
-    create-hmac: "npm:^1.1.7"
-    ripemd160: "npm:^2.0.2"
-    typeforce: "npm:^1.11.5"
-    wif: "npm:^2.0.6"
-  checksum: 6cdad901d25959e21835fe7b43066fc2498548962aa07ce438860b7420a7a93ceec3a9b34ddee68bbc568a68b9d96029338dbea1eadb548651b06d800a14fc3d
-  languageName: node
-  linkType: hard
-
-"bip39@https://github.com/bitcoinjs/bip39#a7ecbfe2e60d0214ce17163d610cad9f7b23140c":
-  version: 3.1.0
-  resolution: "bip39@https://github.com/bitcoinjs/bip39.git#commit=a7ecbfe2e60d0214ce17163d610cad9f7b23140c"
-  dependencies:
-    "@noble/hashes": "npm:^1.2.0"
-  checksum: 406c0b5bdab0d43df2ff8916c5b57bb7f65cd36a115cbd7620a75b972638f8511840bfc27bfc68946027086fd33ed3050d8cd304e85fd527503b23d857a8486e
-  languageName: node
-  linkType: hard
-
 "bl@npm:^1.0.0":
   version: 1.2.3
   resolution: "bl@npm:1.2.3"
@@ -7520,7 +7504,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bs58check@npm:<3.0.0, bs58check@npm:^2.1.1, bs58check@npm:^2.1.2":
+"bs58check@npm:^2.1.2":
   version: 2.1.2
   resolution: "bs58check@npm:2.1.2"
   dependencies:
@@ -18639,15 +18623,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tiny-secp256k1@npm:2.2.1":
-  version: 2.2.1
-  resolution: "tiny-secp256k1@npm:2.2.1"
-  dependencies:
-    uint8array-tools: "npm:0.0.7"
-  checksum: 8eb871e912c18d3282d9a6e4cf7f33e18548d48445b16d8381442529cbbf958bbaaa7912817898eadf896d2b8c631ddf3f212162e2305397d4260019d2e17418
-  languageName: node
-  linkType: hard
-
 "title-case@npm:^2.1.0":
   version: 2.1.1
   resolution: "title-case@npm:2.1.1"
@@ -19121,13 +19096,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typeforce@npm:^1.11.5":
-  version: 1.18.0
-  resolution: "typeforce@npm:1.18.0"
-  checksum: dbf98c75b1d57e56e33c1e1271d5505e67981f4e6a2e2e6e8e31160b58777fea1726160810b6c606517db16476805b7dce315926ba2d4859b9a56cab05b7a41f
-  languageName: node
-  linkType: hard
-
 "typescript@npm:5.3.3":
   version: 5.3.3
   resolution: "typescript@npm:5.3.3"
@@ -19154,13 +19122,6 @@ __metadata:
   bin:
     uglifyjs: bin/uglifyjs
   checksum: 4c0b800e0ff192079d2c3ce8414fd3b656a570028c7c79af5c29c53d5c532b68bbcae4ad47307f89c2ee124d11826fff7a136b59d5c5bb18422bcdf5568afe1e
-  languageName: node
-  linkType: hard
-
-"uint8array-tools@npm:0.0.7":
-  version: 0.0.7
-  resolution: "uint8array-tools@npm:0.0.7"
-  checksum: 6ffc45c7d2136757d63c6e556eb8345f908948618a9de37c805fec1249d989c265187b3fbef6cffc4ce5129083204829025b3c58800a0f24c8548e243d42ba13
   languageName: node
   linkType: hard
 
@@ -20329,15 +20290,6 @@ __metadata:
   dependencies:
     string-width: "npm:^4.0.0"
   checksum: 03db6c9d0af9329c37d74378ff1d91972b12553c7d72a6f4e8525fe61563fa7adb0b9d6e8d546b7e059688712ea874edd5ded475999abdeedf708de9849310e0
-  languageName: node
-  linkType: hard
-
-"wif@npm:^2.0.6":
-  version: 2.0.6
-  resolution: "wif@npm:2.0.6"
-  dependencies:
-    bs58check: "npm:<3.0.0"
-  checksum: c8d7581664532d9ab6d163ee5194a9bec71b089a6e50d54d6ec57a9bd714fcf84bc8d9f22f4cfc7c297fc6ad10b973b8e83eca5c41240163fc61f44b5154b7da
   languageName: node
   linkType: hard
 
