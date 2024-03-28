@@ -380,7 +380,7 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
   ]
 
   // this one leaves open handles
-  test.only(
+  test(
     'when proposal contains transactions for contracts not verified',
     async () => {
       fetchMock
