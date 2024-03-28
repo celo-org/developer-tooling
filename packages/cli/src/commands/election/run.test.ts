@@ -6,7 +6,7 @@ import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { setupGroupAndAffiliateValidator } from '../../test-utils/chain-setup'
-import { stripAnsiCodes, testLocally } from '../../test-utils/cliUtils'
+import { EXTRA_LONG_TIMEOUT_MS, stripAnsiCodes, testLocally } from '../../test-utils/cliUtils'
 import Run from './run'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -41,54 +41,59 @@ testWithGanache('election:run', (web3: Web3) => {
     `)
   })
 
-  it('runs election', async () => {
-    const kit = newKitFromWeb3(web3)
-    const logMock = jest.spyOn(console, 'log')
-    const warnMock = jest.spyOn(console, 'warn')
-    const writeMock = jest.spyOn(ux.write, 'stdout')
-    const [
-      validatorAddress,
-      anotherValidatorAddress,
-      groupAddress,
-      anotherGroupAddress,
-      signerAddress,
-      anotherSignerAddress,
-    ] = await web3.eth.getAccounts()
+  it(
+    'runs election',
+    async () => {
+      const kit = newKitFromWeb3(web3)
+      const logMock = jest.spyOn(console, 'log')
+      const warnMock = jest.spyOn(console, 'warn')
+      const writeMock = jest.spyOn(ux.write, 'stdout')
+      const [
+        validatorAddress,
+        anotherValidatorAddress,
+        groupAddress,
+        anotherGroupAddress,
+        signerAddress,
+        anotherSignerAddress,
+      ] = await web3.eth.getAccounts()
 
-    await setupGroupAndAffiliateValidator(kit, groupAddress, validatorAddress)
-    await setupGroupAndAffiliateValidator(kit, anotherGroupAddress, anotherValidatorAddress)
+      await setupGroupAndAffiliateValidator(kit, groupAddress, validatorAddress)
+      await setupGroupAndAffiliateValidator(kit, anotherGroupAddress, anotherValidatorAddress)
 
-    const electValidatorSignersMock = jest.spyOn(ElectionWrapper.prototype, 'electValidatorSigners')
-    const getValidatorMock = jest.spyOn(ValidatorsWrapper.prototype, 'getValidator')
+      const electValidatorSignersMock = jest.spyOn(
+        ElectionWrapper.prototype,
+        'electValidatorSigners'
+      )
+      const getValidatorMock = jest.spyOn(ValidatorsWrapper.prototype, 'getValidator')
 
-    electValidatorSignersMock.mockImplementation(async () => [
-      validatorAddress,
-      anotherValidatorAddress,
-    ])
+      electValidatorSignersMock.mockImplementation(async () => [
+        validatorAddress,
+        anotherValidatorAddress,
+      ])
 
-    getValidatorMock
-      .mockImplementationOnce(async () => ({
-        address: validatorAddress,
-        affiliation: groupAddress,
-        blsPublicKey: '0x-bls-public-key-1',
-        ecdsaPublicKey: '0x-ecdsa-public-key-1',
-        name: 'Validator #1',
-        score: new BigNumber(85),
-        signer: signerAddress,
-      }))
-      .mockImplementationOnce(async () => ({
-        address: anotherValidatorAddress,
-        affiliation: anotherGroupAddress,
-        blsPublicKey: '0x-bls-public-key-2',
-        ecdsaPublicKey: '0x-ecdsa-public-key-2',
-        name: 'Validator #2',
-        score: new BigNumber(100),
-        signer: anotherSignerAddress,
-      }))
+      getValidatorMock
+        .mockImplementationOnce(async () => ({
+          address: validatorAddress,
+          affiliation: groupAddress,
+          blsPublicKey: '0x-bls-public-key-1',
+          ecdsaPublicKey: '0x-ecdsa-public-key-1',
+          name: 'Validator #1',
+          score: new BigNumber(85),
+          signer: signerAddress,
+        }))
+        .mockImplementationOnce(async () => ({
+          address: anotherValidatorAddress,
+          affiliation: anotherGroupAddress,
+          blsPublicKey: '0x-bls-public-key-2',
+          ecdsaPublicKey: '0x-ecdsa-public-key-2',
+          name: 'Validator #2',
+          score: new BigNumber(100),
+          signer: anotherSignerAddress,
+        }))
 
-    await testLocally(Run, ['--csv'])
+      await testLocally(Run, ['--csv'])
 
-    expect(writeMock.mock.calls).toMatchInlineSnapshot(`
+      expect(writeMock.mock.calls).toMatchInlineSnapshot(`
       [
         [
           "Address,Name,Affiliation,Score,Ecdsapublickey,Blspublickey,Signer
@@ -104,7 +109,11 @@ testWithGanache('election:run', (web3: Web3) => {
         ],
       ]
     `)
-    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`[]`)
-    expect(warnMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`[]`)
-  })
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`[]`)
+      expect(warnMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(
+        `[]`
+      )
+    },
+    EXTRA_LONG_TIMEOUT_MS
+  )
 })

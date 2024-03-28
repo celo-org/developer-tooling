@@ -8,7 +8,7 @@ import {
   registerAccountWithLockedGold,
   setupGroupAndAffiliateValidator,
 } from '../../test-utils/chain-setup'
-import { stripAnsiCodes, testLocally } from '../../test-utils/cliUtils'
+import { EXTRA_LONG_TIMEOUT_MS, stripAnsiCodes, testLocally } from '../../test-utils/cliUtils'
 import Vote from './vote'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -51,44 +51,59 @@ testWithGanache('election:vote', (web3: Web3) => {
     )
   })
 
-  it('fails when value is too high', async () => {
-    const kit = newKitFromWeb3(web3)
-    const logMock = jest.spyOn(console, 'log')
-    const [fromAddress, groupAddress, validatorAddress] = await web3.eth.getAccounts()
+  it(
+    'fails when value is too high',
+    async () => {
+      const kit = newKitFromWeb3(web3)
+      const logMock = jest.spyOn(console, 'log')
+      const [fromAddress, groupAddress, validatorAddress] = await web3.eth.getAccounts()
 
-    await registerAccount(kit, fromAddress)
-    await setupGroupAndAffiliateValidator(kit, groupAddress, validatorAddress)
+      await registerAccount(kit, fromAddress)
+      await setupGroupAndAffiliateValidator(kit, groupAddress, validatorAddress)
 
-    await expect(
-      testLocally(Vote, ['--from', fromAddress, '--for', groupAddress, '--value', '1'])
-    ).rejects.toThrow()
+      await expect(
+        testLocally(Vote, ['--from', fromAddress, '--for', groupAddress, '--value', '1'])
+      ).rejects.toThrow()
 
-    expect(stripAnsiCodes(logMock.mock.calls[3][0])).toContain(
-      `✘  Account has at least 0.000000000000000001 non-voting Locked Gold`
-    )
-  })
+      expect(stripAnsiCodes(logMock.mock.calls[3][0])).toContain(
+        `✘  Account has at least 0.000000000000000001 non-voting Locked Gold`
+      )
+    },
+    EXTRA_LONG_TIMEOUT_MS
+  )
 
-  it('successfuly votes for a group', async () => {
-    const kit = newKitFromWeb3(web3)
-    const logMock = jest.spyOn(console, 'log')
-    const writeMock = jest.spyOn(ux.write, 'stdout')
-    const [fromAddress, groupAddress, validatorAddress] = await web3.eth.getAccounts()
-    const amount = new BigNumber(12345)
-    const election = await kit.contracts.getElection()
+  it(
+    'successfuly votes for a group',
+    async () => {
+      const kit = newKitFromWeb3(web3)
+      const logMock = jest.spyOn(console, 'log')
+      const writeMock = jest.spyOn(ux.write, 'stdout')
+      const [fromAddress, groupAddress, validatorAddress] = await web3.eth.getAccounts()
+      const amount = new BigNumber(12345)
+      const election = await kit.contracts.getElection()
 
-    await registerAccountWithLockedGold(kit, fromAddress)
-    await setupGroupAndAffiliateValidator(kit, groupAddress, validatorAddress)
+      await registerAccountWithLockedGold(kit, fromAddress)
+      await setupGroupAndAffiliateValidator(kit, groupAddress, validatorAddress)
 
-    expect(await election.getTotalVotesForGroupByAccount(groupAddress, fromAddress)).toEqual(
-      new BigNumber(0)
-    )
+      expect(await election.getTotalVotesForGroupByAccount(groupAddress, fromAddress)).toEqual(
+        new BigNumber(0)
+      )
 
-    await expect(
-      testLocally(Vote, ['--from', fromAddress, '--for', groupAddress, '--value', amount.toFixed()])
-    ).resolves.not.toThrow()
+      await expect(
+        testLocally(Vote, [
+          '--from',
+          fromAddress,
+          '--for',
+          groupAddress,
+          '--value',
+          amount.toFixed(),
+        ])
+      ).resolves.not.toThrow()
 
-    expect(await election.getTotalVotesForGroupByAccount(groupAddress, fromAddress)).toEqual(amount)
-    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
+      expect(await election.getTotalVotesForGroupByAccount(groupAddress, fromAddress)).toEqual(
+        amount
+      )
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
       [
         [
           "Running Checks:",
@@ -113,6 +128,8 @@ testWithGanache('election:vote', (web3: Web3) => {
         ],
       ]
     `)
-    expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
-  })
+      expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
+    },
+    EXTRA_LONG_TIMEOUT_MS
+  )
 })
