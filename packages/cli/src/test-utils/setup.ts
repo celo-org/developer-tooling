@@ -1,5 +1,5 @@
 const fetchMockSandbox = require('fetch-mock').sandbox()
-jest.mock('cross-fetch', () => fetchMockSandbox)
+jest.mock('cross-fetch', () => ({ default: fetchMockSandbox, fetch: fetchMockSandbox }))
 
 // @ts-ignore
 global.fetchMock = fetchMockSandbox
