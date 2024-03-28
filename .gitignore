@@ -91,3 +91,4 @@ package.json-e
 # Ignore generated credentials from google-github-actions/auth
 gha-creds-*.json
 transactions.json
+transactions2.json

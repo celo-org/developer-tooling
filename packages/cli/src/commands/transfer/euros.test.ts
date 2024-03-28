@@ -1,4 +1,8 @@
-import { COMPLIANT_ERROR_RESPONSE, SANCTIONED_ADDRESSES } from '@celo/compliance'
+import {
+  COMPLIANT_ERROR_RESPONSE,
+  OFAC_SANCTIONS_LIST_URL,
+  SANCTIONED_ADDRESSES,
+} from '@celo/compliance'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
 import Web3 from 'web3'
@@ -17,7 +21,9 @@ testWithGanache('transfer:euros cmd', (web3: Web3) => {
   beforeEach(async () => {
     kit = newKitFromWeb3(web3)
     accounts = await web3.eth.getAccounts()
+    fetchMock.get(OFAC_SANCTIONS_LIST_URL, SANCTIONED_ADDRESSES)
   })
+  afterEach(() => fetchMock.reset())
 
   test('can transfer ceur', async () => {
     const balanceBefore = await kit.getTotalBalance(accounts[0])
@@ -61,7 +67,7 @@ testWithGanache('transfer:euros cmd', (web3: Web3) => {
         '--value',
         '1',
       ])
-    ).rejects.toThrow()
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     expect(spy).toHaveBeenCalledWith(expect.stringContaining(COMPLIANT_ERROR_RESPONSE))
   })
 })

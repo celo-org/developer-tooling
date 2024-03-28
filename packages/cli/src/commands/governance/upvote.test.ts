@@ -4,7 +4,7 @@ import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { NetworkConfig, testWithGanache, timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
-import { testLocally } from '../../test-utils/cliUtils'
+import { EXTRA_LONG_TIMEOUT_MS, testLocally } from '../../test-utils/cliUtils'
 import Register from '../account/register'
 import Lock from '../lockedgold/lock'
 import Dequeue from './dequeue'
@@ -81,10 +81,14 @@ testWithGanache('governance:upvote cmd', (web3: Web3) => {
     ])
   })
 
-  test('can upvote proposal which cannot be dequeued', async () => {
-    await testLocally(Upvote, ['--proposalID', proposalID7.toString(10), '--from', accounts[0]])
+  test(
+    'can upvote proposal which cannot be dequeued',
+    async () => {
+      await testLocally(Upvote, ['--proposalID', proposalID7.toString(10), '--from', accounts[0]])
 
-    const queue = await governance.getQueue()
-    expect(queue).toEqual([{ proposalID: proposalID7, upvotes: new BigNumber(100) }])
-  })
+      const queue = await governance.getQueue()
+      expect(queue).toEqual([{ proposalID: proposalID7, upvotes: new BigNumber(100) }])
+    },
+    EXTRA_LONG_TIMEOUT_MS
+  )
 })

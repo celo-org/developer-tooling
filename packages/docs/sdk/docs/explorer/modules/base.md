@@ -26,7 +26,7 @@
 
 #### Defined in
 
-[src/base.ts:17](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/base.ts#L17)
+[packages/sdk/explorer/src/base.ts:17](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/base.ts#L17)
 
 ## Functions
 
@@ -53,7 +53,7 @@
 
 #### Defined in
 
-[src/base.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/base.ts#L38)
+[packages/sdk/explorer/src/base.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/base.ts#L38)
 
 ___
 
@@ -73,4 +73,4 @@ ___
 
 #### Defined in
 
-[src/base.ts:31](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/base.ts#L31)
+[packages/sdk/explorer/src/base.ts:31](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/base.ts#L31)

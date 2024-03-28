@@ -29,7 +29,7 @@ we need to enforce the structure at runtime.
 
 #### Defined in
 
-[src/sourcify.ts:51](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L51)
+[packages/sdk/explorer/src/sourcify.ts:51](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L51)
 
 ___
 
@@ -42,7 +42,9 @@ ___
 | Name | Type |
 | :------ | :------ |
 | `compilationTarget?` | `Record`\<`string`, `string`\> |
+| `implementation?` | `string` |
+| `name?` | `string` |
 
 #### Defined in
 
-[src/sourcify.ts:54](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L54)
+[packages/sdk/explorer/src/sourcify.ts:54](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L54)

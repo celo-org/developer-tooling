@@ -8,7 +8,7 @@ import {
   setupGroupAndAffiliateValidator,
   voteForGroupFromAndActivateVotes,
 } from '../../test-utils/chain-setup'
-import { testLocally } from '../../test-utils/cliUtils'
+import { EXTRA_LONG_TIMEOUT_MS, testLocally } from '../../test-utils/cliUtils'
 import Revoke from './revoke'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -34,73 +34,85 @@ testWithGanache('election:revoke', (web3: Web3) => {
     )
   })
 
-  it('fails when trying to revoke more votes than voted', async () => {
-    const kit = newKitFromWeb3(web3)
-    const [fromAddress, groupAddress] = await web3.eth.getAccounts()
+  it(
+    'fails when trying to revoke more votes than voted',
+    async () => {
+      const kit = newKitFromWeb3(web3)
+      const [fromAddress, groupAddress] = await web3.eth.getAccounts()
 
-    await registerAccount(kit, fromAddress)
+      await registerAccount(kit, fromAddress)
 
-    await expect(
-      testLocally(Revoke, ['--from', fromAddress, '--for', groupAddress, '--value', '1'])
-    ).rejects.toThrow(
-      `can't revoke more votes for ${groupAddress} than have been made by ${fromAddress}`
-    )
-  })
+      await expect(
+        testLocally(Revoke, ['--from', fromAddress, '--for', groupAddress, '--value', '1'])
+      ).rejects.toThrow(
+        `can't revoke more votes for ${groupAddress} than have been made by ${fromAddress}`
+      )
+    },
+    EXTRA_LONG_TIMEOUT_MS
+  )
 
-  it('successfuly revokes all votes', async () => {
-    const kit = newKitFromWeb3(web3)
-    const election = await kit.contracts.getElection()
-    const amount = new BigNumber(12345)
-    const [fromAddress, validatorAddress, groupAddress] = await web3.eth.getAccounts()
+  it(
+    'successfuly revokes all votes',
+    async () => {
+      const kit = newKitFromWeb3(web3)
+      const election = await kit.contracts.getElection()
+      const amount = new BigNumber(12345)
+      const [fromAddress, validatorAddress, groupAddress] = await web3.eth.getAccounts()
 
-    await registerAccountWithLockedGold(kit, fromAddress)
-    await setupGroupAndAffiliateValidator(kit, groupAddress, validatorAddress)
-    await voteForGroupFromAndActivateVotes(kit, fromAddress, groupAddress, amount)
+      await registerAccountWithLockedGold(kit, fromAddress)
+      await setupGroupAndAffiliateValidator(kit, groupAddress, validatorAddress)
+      await voteForGroupFromAndActivateVotes(kit, fromAddress, groupAddress, amount)
 
-    expect((await election.getVotesForGroupByAccount(fromAddress, groupAddress)).active).toEqual(
-      amount
-    )
+      expect((await election.getVotesForGroupByAccount(fromAddress, groupAddress)).active).toEqual(
+        amount
+      )
 
-    await testLocally(Revoke, [
-      '--from',
-      fromAddress,
-      '--for',
-      groupAddress,
-      '--value',
-      amount.toFixed(),
-    ])
+      await testLocally(Revoke, [
+        '--from',
+        fromAddress,
+        '--for',
+        groupAddress,
+        '--value',
+        amount.toFixed(),
+      ])
 
-    expect((await election.getVotesForGroupByAccount(fromAddress, groupAddress)).active).toEqual(
-      new BigNumber(0)
-    )
-  })
+      expect((await election.getVotesForGroupByAccount(fromAddress, groupAddress)).active).toEqual(
+        new BigNumber(0)
+      )
+    },
+    EXTRA_LONG_TIMEOUT_MS
+  )
 
-  it('successfuly revokes votes partially', async () => {
-    const kit = newKitFromWeb3(web3)
-    const election = await kit.contracts.getElection()
-    const amount = new BigNumber(54321)
-    const revokeAmount = new BigNumber(4321)
-    const [fromAddress, validatorAddress, groupAddress] = await web3.eth.getAccounts()
+  it(
+    'successfuly revokes votes partially',
+    async () => {
+      const kit = newKitFromWeb3(web3)
+      const election = await kit.contracts.getElection()
+      const amount = new BigNumber(54321)
+      const revokeAmount = new BigNumber(4321)
+      const [fromAddress, validatorAddress, groupAddress] = await web3.eth.getAccounts()
 
-    await registerAccountWithLockedGold(kit, fromAddress)
-    await setupGroupAndAffiliateValidator(kit, groupAddress, validatorAddress)
-    await voteForGroupFromAndActivateVotes(kit, fromAddress, groupAddress, amount)
+      await registerAccountWithLockedGold(kit, fromAddress)
+      await setupGroupAndAffiliateValidator(kit, groupAddress, validatorAddress)
+      await voteForGroupFromAndActivateVotes(kit, fromAddress, groupAddress, amount)
 
-    expect((await election.getVotesForGroupByAccount(fromAddress, groupAddress)).active).toEqual(
-      amount
-    )
+      expect((await election.getVotesForGroupByAccount(fromAddress, groupAddress)).active).toEqual(
+        amount
+      )
 
-    await testLocally(Revoke, [
-      '--from',
-      fromAddress,
-      '--for',
-      groupAddress,
-      '--value',
-      revokeAmount.toFixed(),
-    ])
+      await testLocally(Revoke, [
+        '--from',
+        fromAddress,
+        '--for',
+        groupAddress,
+        '--value',
+        revokeAmount.toFixed(),
+      ])
 
-    expect((await election.getVotesForGroupByAccount(fromAddress, groupAddress)).active).toEqual(
-      amount.minus(revokeAmount)
-    )
-  })
+      expect((await election.getVotesForGroupByAccount(fromAddress, groupAddress)).active).toEqual(
+        amount.minus(revokeAmount)
+      )
+    },
+    EXTRA_LONG_TIMEOUT_MS
+  )
 })

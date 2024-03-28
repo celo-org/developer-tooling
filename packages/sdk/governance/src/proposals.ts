@@ -443,9 +443,7 @@ export class ProposalBuilder {
       console.log(tx.address + ' is a proxy, repointing to ' + tx.args[0])
       this.externalCallProxyRepoint.set(tx.address || tx.contract, tx.args[0] as string)
     }
-
     const strategies = [this.buildCallToCoreContract, this.buildCallToExternalContract]
-
     for (const strategy of strategies) {
       try {
         return await strategy(tx)
@@ -453,7 +451,7 @@ export class ProposalBuilder {
         debug("Couldn't build transaction with strategy %s: %O", strategy.name, e)
       }
     }
-
+    // this throws when every strategy fails. so you must run in debug mode or add another log to see to real error
     throw new Error(`Couldn't build call for transaction: ${JSON.stringify(tx)}`)
   }
 

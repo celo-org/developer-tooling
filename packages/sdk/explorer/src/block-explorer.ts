@@ -308,7 +308,7 @@ export class BlockExplorer {
 
   /**
    * Returns the ContractMapping for the contract at that address, or undefined
-   * by looking up the contract address in Sourcify.
+   * by looking up the contract address on various contract verification services.
    * @param address
    * @returns The ContractMapping for the contract at that address, or undefined
    */
@@ -380,14 +380,11 @@ export class BlockExplorer {
       this.getContractMappingFromSourcifyAsProxy,
     ]
   ): Promise<ContractMapping | undefined> {
-    const mappings = await Promise.all(
-      strategies.map(async (strategy) => {
-        const contractMapping = await strategy(address)
-        if (contractMapping && contractMapping.fnMapping.get(selector)) {
-          return contractMapping
-        }
-      })
-    )
-    return mappings.find((mapping) => mapping !== undefined)
+    for (const strategy of strategies) {
+      const contractMapping = await strategy(address)
+      if (contractMapping && contractMapping.fnMapping.get(selector)) {
+        return contractMapping
+      }
+    }
   }
 }

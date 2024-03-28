@@ -21,7 +21,7 @@
 
 #### Defined in
 
-[src/base.ts:7](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/base.ts#L7)
+[packages/sdk/explorer/src/base.ts:7](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/base.ts#L7)
 
 ___
 
@@ -31,7 +31,7 @@ ___
 
 #### Defined in
 
-[src/base.ts:9](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/base.ts#L9)
+[packages/sdk/explorer/src/base.ts:9](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/base.ts#L9)
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 #### Defined in
 
-[src/base.ts:8](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/base.ts#L8)
+[packages/sdk/explorer/src/base.ts:8](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/base.ts#L8)
 
 ___
 
@@ -51,4 +51,4 @@ ___
 
 #### Defined in
 
-[src/base.ts:6](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/base.ts#L6)
+[packages/sdk/explorer/src/base.ts:6](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/base.ts#L6)
