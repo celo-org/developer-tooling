@@ -36,11 +36,3 @@ export function trimUncompressedPrefix(publicKey: string) {
   }
   return noLeading0x
 }
-
-// function ensureUncompressedPrefix(publicKey: string): string {
-//   const noLeading0x = trimLeading0x(publicKey)
-//   if (noLeading0x.length === 128) {
-//     return `04${noLeading0x}`
-//   }
-//   return noLeading0x
-// }
