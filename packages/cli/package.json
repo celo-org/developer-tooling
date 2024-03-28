@@ -29,7 +29,7 @@
     "lint": "yarn run --top-level eslint -c .eslintrc.js ",
     "prepublish": "",
     "prepack": "yarn run build && oclif manifest && oclif readme",
-    "test": "yarn jest --runInBand --detectOpenHandles"
+    "test": "yarn jest --runInBand --silent --detectOpenHandles"
   },
   "dependencies": {
     "@celo/abis": "11.0.0",

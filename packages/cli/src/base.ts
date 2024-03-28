@@ -7,11 +7,14 @@ import { LocalWallet } from '@celo/wallet-local'
 import _TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
 import { Command, Flags } from '@oclif/core'
 import chalk from 'chalk'
+import debugFactory from 'debug'
 import net from 'net'
 import Web3 from 'web3'
 import { CustomFlags } from './utils/command'
 import { getNodeUrl } from './utils/config'
 import { requireNodeIsSynced } from './utils/helpers'
+
+const debug = debugFactory('cli:base')
 
 export abstract class BaseCommand extends Command {
   static flags = {
@@ -232,10 +235,11 @@ export abstract class BaseCommand extends Command {
   async finally(arg: Error | undefined): Promise<any> {
     try {
       if (arg) {
-        console.error('received error while cleaning up', arg)
+        debug('received error while cleaning up:', arg)
       }
-      const kit = await this.getKit()
-      kit.connection.stop()
+      // we only need to stop the kit if one exists. if there is an error on this.parse for flags then there is no kit and thus none to stop
+      // if we use this.getKit then this.parse is called and errors out. throwing and logging failed to close the connection
+      this._kit && this._kit.connection.stop()
     } catch (error) {
       this.log(`Failed to close the connection: ${error}`)
     }
