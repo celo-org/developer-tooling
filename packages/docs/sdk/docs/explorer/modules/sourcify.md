@@ -73,4 +73,4 @@ the implementation address or null
 
 #### Defined in
 
-[packages/sdk/explorer/src/sourcify.ts:301](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L301)
+[packages/sdk/explorer/src/sourcify.ts:300](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L300)
