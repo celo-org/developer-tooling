@@ -7,6 +7,7 @@ import debugFactory from 'debug'
 import { transportErrorFriendlyMessage } from './ledger-utils'
 import { AddressValidation } from './ledger-wallet'
 import { compareLedgerAppVersions, tokenInfoByAddressAndChainId } from './tokens'
+import { ILedger } from './types'
 
 const debug = debugFactory('kit:wallet:ledger')
 const CELO_APP_ACCEPTS_CONTRACT_DATA_FROM_VERSION = '1.0.2'
@@ -15,14 +16,14 @@ const CELO_APP_ACCEPTS_CONTRACT_DATA_FROM_VERSION = '1.0.2'
  * Signs the EVM transaction with a Ledger device
  */
 export class LedgerSigner implements Signer {
-  private ledger: any
+  private ledger: ILedger
   private derivationPath: string
   private validated: boolean = false
   private ledgerAddressValidation: AddressValidation
   private appConfiguration: { arbitraryDataEnabled: number; version: string }
 
   constructor(
-    ledger: any,
+    ledger: ILedger,
     derivationPath: string,
     ledgerAddressValidation: AddressValidation,
     appConfiguration: { arbitraryDataEnabled: number; version: string } = {
@@ -57,9 +58,8 @@ export class LedgerSigner implements Signer {
       if (rv !== addToV && (rv & addToV) !== rv) {
         addToV += 1 // add signature v bit.
       }
-      signature.v = addToV.toString(10)
       return {
-        v: signature.v,
+        v: addToV,
         r: ethUtil.toBuffer(ensureLeading0x(signature.r)) as Buffer,
         s: ethUtil.toBuffer(ensureLeading0x(signature.s)) as Buffer,
       }
@@ -86,9 +86,8 @@ export class LedgerSigner implements Signer {
         await this.getValidatedDerivationPath(),
         trimLeading0x(data)
       )
-
       return {
-        v: signature.v,
+        v: parseInt(signature.v, 10),
         r: ethUtil.toBuffer(ensureLeading0x(signature.r)) as Buffer,
         s: ethUtil.toBuffer(ensureLeading0x(signature.s)) as Buffer,
       }
@@ -109,6 +108,7 @@ export class LedgerSigner implements Signer {
         typedData.types
       )
 
+      // NOTE: this function doesn't exist on ledger 5.11 so it fails, probably never worked
       const sig = await this.ledger!.signEIP712HashedMessage(
         await this.getValidatedDerivationPath(),
         domainSeparator,
@@ -116,7 +116,7 @@ export class LedgerSigner implements Signer {
       )
 
       return {
-        v: parseInt(sig.v, 10),
+        v: parseInt(sig.v, 16),
         r: ethUtil.toBuffer(ensureLeading0x(sig.r)) as Buffer,
         s: ethUtil.toBuffer(ensureLeading0x(sig.s)) as Buffer,
       }

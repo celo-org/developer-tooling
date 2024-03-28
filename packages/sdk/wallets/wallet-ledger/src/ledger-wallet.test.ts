@@ -4,25 +4,25 @@ import {
   normalizeAddressWith0x,
   trimLeading0x,
 } from '@celo/base/lib/address'
-import { CeloTx, EncodedTransaction } from '@celo/connect'
+import { CeloTx, EncodedTransaction, Hex } from '@celo/connect'
 import { privateKeyToAddress } from '@celo/utils/lib/address'
 import { verifySignature } from '@celo/utils/lib/signatureUtils'
 import {
   chainIdTransformationForSigning,
   getHashFromEncoded,
   recoverTransaction,
+  signTransaction,
   verifyEIP712TypedDataSigner,
 } from '@celo/wallet-base'
 import * as ethUtil from '@ethereumjs/util'
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
-// @ts-ignore-next-line eth-lib types not found
-import { account as Account } from 'eth-lib'
-import { keccak256 } from 'ethereum-cryptography/keccak'
+import { keccak_256 } from '@noble/hashes/sha3'
 import Web3 from 'web3'
 import { AddressValidation, LedgerWallet } from './ledger-wallet'
+import { ILedger } from './types'
 
 // Update this variable when testing using a physical device
-const USE_PHYSICAL_LEDGER = false
+const USE_PHYSICAL_LEDGER = process.env.USE_PHYSICAL_LEDGER === 'true'
 // Increase timeout to give developer time to respond on device
 const TEST_TIMEOUT_IN_MS = USE_PHYSICAL_LEDGER ? 30 * 1000 : 1 * 1000
 
@@ -39,7 +39,7 @@ const ACCOUNT_ADDRESS5 = normalizeAddressWith0x(privateKeyToAddress(PRIVATE_KEY5
 const PRIVATE_KEY_NEVER = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890ffffff'
 const ACCOUNT_ADDRESS_NEVER = normalizeAddressWith0x(privateKeyToAddress(PRIVATE_KEY_NEVER))
 
-const ledgerAddresses: { [myKey: string]: { address: string; privateKey: string } } = {
+const ledgerAddresses: { [myKey: string]: { address: Hex; privateKey: Hex } } = {
   "44'/52752'/0'/0/0": {
     address: ACCOUNT_ADDRESS1,
     privateKey: PRIVATE_KEY1,
@@ -105,68 +105,76 @@ const TYPED_DATA = {
 }
 
 function mockLedger(wallet: LedgerWallet, mockForceValidation: () => void) {
-  jest.spyOn<any, any>(wallet, 'generateNewLedger').mockImplementation((_transport: any) => {
-    return {
-      getAddress: async (derivationPath: string, forceValidation?: boolean) => {
-        if (forceValidation) {
-          mockForceValidation()
-        }
-        if (ledgerAddresses[derivationPath]) {
-          return { address: ledgerAddresses[derivationPath].address, derivationPath }
-        }
-        return {}
-      },
-      signTransaction: async (derivationPath: string, data: string) => {
-        if (ledgerAddresses[derivationPath]) {
-          const hash = getHashFromEncoded(ensureLeading0x(data))
-          const signature = Account.makeSigner(chainIdTransformationForSigning(CHAIN_ID))(
-            hash,
-            ledgerAddresses[derivationPath].privateKey
+  jest
+    .spyOn<any, any>(wallet, 'generateNewLedger')
+    .mockImplementation((_transport: any): ILedger => {
+      return {
+        getAddress: async (derivationPath: string, forceValidation?: boolean) => {
+          if (forceValidation) {
+            mockForceValidation()
+          }
+          if (ledgerAddresses[derivationPath]) {
+            return { address: ledgerAddresses[derivationPath].address, derivationPath }
+          }
+          return {}
+        },
+        signTransaction: async (derivationPath: string, data: string) => {
+          if (ledgerAddresses[derivationPath]) {
+            const { r, s, v } = signTransaction(
+              getHashFromEncoded(ensureLeading0x(data)),
+              ledgerAddresses[derivationPath].privateKey,
+              chainIdTransformationForSigning(CHAIN_ID)
+            )
+            return {
+              v: v.toString(16),
+              r: r.toString('hex'),
+              s: s.toString('hex'),
+            }
+          }
+          throw new Error('Invalid Path')
+        },
+        signPersonalMessage: async (derivationPath: string, data: string) => {
+          if (ledgerAddresses[derivationPath]) {
+            const dataBuff = ethUtil.toBuffer(ensureLeading0x(data))
+            const msgHashBuff = ethUtil.hashPersonalMessage(dataBuff)
+
+            const trimmedKey = trimLeading0x(ledgerAddresses[derivationPath].privateKey)
+            const pkBuffer = Buffer.from(trimmedKey, 'hex')
+            const signature = ethUtil.ecsign(msgHashBuff, pkBuffer)
+            return {
+              v: signature.v.toString(10),
+              r: signature.r.toString('hex'),
+              s: signature.s.toString('hex'),
+            }
+          }
+          throw new Error('Invalid Path')
+        },
+        signEIP712HashedMessage: async (
+          derivationPath: string,
+          domainSeparator: Buffer,
+          structHash: Buffer
+        ) => {
+          const messageHash = Buffer.from(
+            keccak_256(Buffer.concat([Buffer.from('1901', 'hex'), domainSeparator, structHash]))
           )
-          const [v, r, s] = Account.decodeSignature(signature)
-          return { v, r, s }
-        }
-        throw new Error('Invalid Path')
-      },
-      signPersonalMessage: async (derivationPath: string, data: string) => {
-        if (ledgerAddresses[derivationPath]) {
-          const dataBuff = ethUtil.toBuffer(ensureLeading0x(data))
-          const msgHashBuff = ethUtil.hashPersonalMessage(dataBuff)
 
           const trimmedKey = trimLeading0x(ledgerAddresses[derivationPath].privateKey)
           const pkBuffer = Buffer.from(trimmedKey, 'hex')
-          const signature = ethUtil.ecsign(msgHashBuff, pkBuffer)
+          const signature = ethUtil.ecsign(messageHash, pkBuffer)
           return {
-            v: signature.v,
+            v: signature.v.toString(16),
             r: signature.r.toString('hex'),
             s: signature.s.toString('hex'),
           }
-        }
-        throw new Error('Invalid Path')
-      },
-      signEIP712HashedMessage: async (
-        derivationPath: string,
-        domainSeparator: Buffer,
-        structHash: Buffer
-      ) => {
-        const messageHash = keccak256(
-          Buffer.concat([Buffer.from('1901', 'hex'), domainSeparator, structHash])
-        ) as Buffer
-
-        const trimmedKey = trimLeading0x(ledgerAddresses[derivationPath].privateKey)
-        const pkBuffer = Buffer.from(trimmedKey, 'hex')
-        const signature = ethUtil.ecsign(messageHash, pkBuffer)
-        return {
-          v: signature.v,
-          r: signature.r.toString('hex'),
-          s: signature.s.toString('hex'),
-        }
-      },
-      getAppConfiguration: async () => {
-        return { arbitraryDataEnabled: 1, version: '0.0.0' }
-      },
-    }
-  })
+        },
+        getAppConfiguration: async () => {
+          return { arbitraryDataEnabled: 1, version: '0.0.0' }
+        },
+        provideERC20TokenInformation: async (_token) => {
+          return {}
+        },
+      }
+    })
 }
 
 describe('LedgerWallet class', () => {

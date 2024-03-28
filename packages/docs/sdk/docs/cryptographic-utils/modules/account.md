@@ -32,6 +32,7 @@
 - [generateMnemonic](account.md#generatemnemonic)
 - [generateSeed](account.md#generateseed)
 - [getAllLanguages](account.md#getalllanguages)
+- [getWordList](account.md#getwordlist)
 - [invalidMnemonicWords](account.md#invalidmnemonicwords)
 - [mnemonicLengthFromStrength](account.md#mnemoniclengthfromstrength)
 - [normalizeMnemonic](account.md#normalizemnemonic)
@@ -85,7 +86,7 @@ base/lib/account.d.ts:18
 
 #### Defined in
 
-[cryptographic-utils/src/account.ts:465](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L465)
+[cryptographic-utils/src/account.ts:455](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L455)
 
 ___
 
@@ -125,7 +126,7 @@ malformed. It may occasionally occur that a typo results in word from another la
 
 #### Defined in
 
-[cryptographic-utils/src/account.ts:233](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L233)
+[cryptographic-utils/src/account.ts:220](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L220)
 
 ___
 
@@ -149,7 +150,7 @@ now an alias for normalizeMnemonic.
 
 #### Defined in
 
-[cryptographic-utils/src/account.ts:159](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L159)
+[cryptographic-utils/src/account.ts:166](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L166)
 
 ___
 
@@ -178,7 +179,7 @@ ___
 
 #### Defined in
 
-[cryptographic-utils/src/account.ts:416](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L416)
+[cryptographic-utils/src/account.ts:403](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L403)
 
 ___
 
@@ -203,7 +204,7 @@ ___
 
 #### Defined in
 
-[cryptographic-utils/src/account.ts:403](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L403)
+[cryptographic-utils/src/account.ts:390](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L390)
 
 ___
 
@@ -232,7 +233,7 @@ ___
 
 #### Defined in
 
-[cryptographic-utils/src/account.ts:444](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L444)
+[cryptographic-utils/src/account.ts:431](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L431)
 
 ___
 
@@ -254,7 +255,7 @@ ___
 
 #### Defined in
 
-[cryptographic-utils/src/account.ts:54](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L54)
+[cryptographic-utils/src/account.ts:61](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L61)
 
 ___
 
@@ -277,7 +278,7 @@ ___
 
 #### Defined in
 
-[cryptographic-utils/src/account.ts:429](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L429)
+[cryptographic-utils/src/account.ts:416](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L416)
 
 ___
 
@@ -291,7 +292,27 @@ ___
 
 #### Defined in
 
-[cryptographic-utils/src/account.ts:188](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L188)
+[cryptographic-utils/src/account.ts:175](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L175)
+
+___
+
+### getWordList
+
+▸ **getWordList**(`language?`): `string`[]
+
+#### Parameters
+
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `language` | [`MnemonicLanguages`](../enums/account.MnemonicLanguages.md) | `MnemonicLanguages.english` |
+
+#### Returns
+
+`string`[]
+
+#### Defined in
+
+[cryptographic-utils/src/account.ts:171](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L171)
 
 ___
 
@@ -320,7 +341,7 @@ invalid, or half of the valid words are from one language and the other half fro
 
 #### Defined in
 
-[cryptographic-utils/src/account.ts:88](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L88)
+[cryptographic-utils/src/account.ts:95](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L95)
 
 ___
 
@@ -340,7 +361,7 @@ ___
 
 #### Defined in
 
-[cryptographic-utils/src/account.ts:202](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L202)
+[cryptographic-utils/src/account.ts:189](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L189)
 
 ___
 
@@ -369,7 +390,7 @@ that all the words in the phrase are contained in a valid wordlist.
 
 #### Defined in
 
-[cryptographic-utils/src/account.ts:109](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L109)
+[cryptographic-utils/src/account.ts:116](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L116)
 
 ___
 
@@ -410,7 +431,7 @@ It is recommended to normalize the mnemonic phrase before inputting to this func
 
 #### Defined in
 
-[cryptographic-utils/src/account.ts:288](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L288)
+[cryptographic-utils/src/account.ts:275](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L275)
 
 ___
 
@@ -432,4 +453,4 @@ ___
 
 #### Defined in
 
-[cryptographic-utils/src/account.ts:62](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L62)
+[cryptographic-utils/src/account.ts:69](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L69)

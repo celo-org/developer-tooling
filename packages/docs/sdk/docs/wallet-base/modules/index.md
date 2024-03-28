@@ -15,11 +15,16 @@
 - [extractSignature](index.md#extractsignature)
 - [getHashFromEncoded](index.md#gethashfromencoded)
 - [getSignerFromTxEIP2718TX](index.md#getsignerfromtxeip2718tx)
+- [handleBigInt](index.md#handlebigint)
+- [handleData](index.md#handledata)
+- [handleHexString](index.md#handlehexstring)
+- [handleNumber](index.md#handlenumber)
 - [isPriceToLow](index.md#ispricetolow)
 - [publicKeyPrefix](index.md#publickeyprefix)
 - [recoverMessageSigner](index.md#recovermessagesigner)
 - [recoverTransaction](index.md#recovertransaction)
 - [rlpEncodedTx](index.md#rlpencodedtx)
+- [signTransaction](index.md#signtransaction)
 - [sixtyFour](index.md#sixtyfour)
 - [stringNumberOrBNToHex](index.md#stringnumberorbntohex)
 - [thirtyTwo](index.md#thirtytwo)
@@ -82,6 +87,30 @@ Re-exports [getSignerFromTxEIP2718TX](signing_utils.md#getsignerfromtxeip2718tx)
 
 ___
 
+### handleBigInt
+
+Re-exports [handleBigInt](signing_utils.md#handlebigint)
+
+___
+
+### handleData
+
+Re-exports [handleData](signing_utils.md#handledata)
+
+___
+
+### handleHexString
+
+Re-exports [handleHexString](signing_utils.md#handlehexstring)
+
+___
+
+### handleNumber
+
+Re-exports [handleNumber](signing_utils.md#handlenumber)
+
+___
+
 ### isPriceToLow
 
 Re-exports [isPriceToLow](signing_utils.md#ispricetolow)
@@ -109,6 +138,12 @@ ___
 ### rlpEncodedTx
 
 Re-exports [rlpEncodedTx](signing_utils.md#rlpencodedtx)
+
+___
+
+### signTransaction
+
+Re-exports [signTransaction](signing_utils.md#signtransaction)
 
 ___
 

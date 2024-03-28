@@ -1,20 +1,16 @@
 import { ensureLeading0x } from '@celo/utils/lib/address'
+import { bytesToHex } from '@noble/curves/abstract/utils'
+import { secp256k1 } from '@noble/curves/secp256k1'
 import { Bip39, generateKeys } from './account'
 
 /**
  * Turns a private key to a compressed public key (hex string with hex leader).
  *
  * @param {Buffer} privateKey Private key.
- * @returns {string} Corresponding compessed public key in hex encoding with '0x' leader.
+ * @returns {string} Corresponding compressed public key in hex encoding with '0x' leader.
  */
 export function compressedPubKey(privateKey: Buffer): string {
-  // NOTE: elliptic is disabled elsewhere in this library to prevent
-  // accidental signing of truncated messages.
-  // tslint:disable-next-line:import-blacklist
-  const EC = require('elliptic').ec
-  const ec = new EC('secp256k1')
-  const key = ec.keyFromPrivate(privateKey)
-  return ensureLeading0x(key.getPublic(true, 'hex'))
+  return ensureLeading0x(bytesToHex(secp256k1.getPublicKey(privateKey))).slice(1)
 }
 
 /**
@@ -25,12 +21,7 @@ export function compressedPubKey(privateKey: Buffer): string {
  * @returns Decompresssed public key without prefix.
  */
 export function decompressPublicKey(publicKey: Buffer): Buffer {
-  // NOTE: elliptic is disabled elsewhere in this library to prevent
-  // accidental signing of truncated messages.
-  // tslint:disable-next-line:import-blacklist
-  const EC = require('elliptic').ec
-  const ec = new EC('secp256k1')
-  return Buffer.from(ec.keyFromPublic(publicKey).getPublic(false, 'hex'), 'hex').slice(1)
+  return Buffer.from(secp256k1.getSharedSecret(BigInt(1), publicKey, false)).slice(1)
 }
 
 /**

@@ -18,10 +18,6 @@ module.exports = {
   },
   extends: ['prettier'],
   parser: '@typescript-eslint/parser',
-  parserOptions: {
-    project: './eslint.tsconfig.json',
-    sourceType: 'module',
-  },
   plugins: ['eslint-plugin-unicorn', 'eslint-plugin-import', '@typescript-eslint'],
   root: true,
   rules: {
@@ -170,17 +166,6 @@ module.exports = {
     'no-new-func': 'error',
     'no-new-wrappers': 'error',
     'no-redeclare': 'off',
-    'no-restricted-imports': [
-      'error',
-      {
-        paths: [
-          {
-            name: 'elliptic',
-            importNames: ['ec'],
-          },
-        ],
-      },
-    ],
     'no-restricted-syntax': ['error', 'ForInStatement'],
     'no-return-await': 'error',
     'no-sequences': 'error',

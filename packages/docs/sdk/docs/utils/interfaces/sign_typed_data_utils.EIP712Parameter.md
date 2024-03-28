@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[packages/sdk/utils/src/sign-typed-data-utils.ts:10](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L10)
+[packages/sdk/utils/src/sign-typed-data-utils.ts:9](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L9)
 
 ___
 
@@ -29,4 +29,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/sign-typed-data-utils.ts:11](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L11)
+[packages/sdk/utils/src/sign-typed-data-utils.ts:10](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L10)

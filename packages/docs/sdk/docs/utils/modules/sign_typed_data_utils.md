@@ -46,7 +46,7 @@
 
 #### Defined in
 
-[packages/sdk/utils/src/sign-typed-data-utils.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L23)
+[packages/sdk/utils/src/sign-typed-data-utils.ts:22](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L22)
 
 ___
 
@@ -76,7 +76,7 @@ EIP712Optonal is not part of the EIP712 standard, but is fully compatible with i
 
 #### Defined in
 
-[packages/sdk/utils/src/sign-typed-data-utils.ts:81](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L81)
+[packages/sdk/utils/src/sign-typed-data-utils.ts:80](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L80)
 
 ## Variables
 
@@ -88,7 +88,7 @@ Array of all EIP-712 atomic type names.
 
 #### Defined in
 
-[packages/sdk/utils/src/sign-typed-data-utils.ts:44](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L44)
+[packages/sdk/utils/src/sign-typed-data-utils.ts:43](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L43)
 
 ___
 
@@ -98,7 +98,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/sign-typed-data-utils.ts:64](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L64)
+[packages/sdk/utils/src/sign-typed-data-utils.ts:63](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L63)
 
 ___
 
@@ -108,7 +108,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/sign-typed-data-utils.ts:62](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L62)
+[packages/sdk/utils/src/sign-typed-data-utils.ts:61](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L61)
 
 ___
 
@@ -120,7 +120,7 @@ Undefined EIP712Optional type with value type boolean.
 
 #### Defined in
 
-[packages/sdk/utils/src/sign-typed-data-utils.ts:115](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L115)
+[packages/sdk/utils/src/sign-typed-data-utils.ts:114](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L114)
 
 ___
 
@@ -132,7 +132,7 @@ Undefined EIP712Optional type with value type number.
 
 #### Defined in
 
-[packages/sdk/utils/src/sign-typed-data-utils.ts:121](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L121)
+[packages/sdk/utils/src/sign-typed-data-utils.ts:120](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L120)
 
 ___
 
@@ -144,7 +144,7 @@ Undefined EIP712Optional type with value type string.
 
 #### Defined in
 
-[packages/sdk/utils/src/sign-typed-data-utils.ts:127](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L127)
+[packages/sdk/utils/src/sign-typed-data-utils.ts:126](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L126)
 
 ## Functions
 
@@ -172,7 +172,7 @@ Utility to construct an defined EIP712Optional value with inferred type.
 
 #### Defined in
 
-[packages/sdk/utils/src/sign-typed-data-utils.ts:109](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L109)
+[packages/sdk/utils/src/sign-typed-data-utils.ts:108](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L108)
 
 ___
 
@@ -200,7 +200,7 @@ Utility to build EIP712Optional<T> schemas for encoding and decoding with io-ts.
 
 #### Defined in
 
-[packages/sdk/utils/src/sign-typed-data-utils.ts:102](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L102)
+[packages/sdk/utils/src/sign-typed-data-utils.ts:101](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L101)
 
 ___
 
@@ -222,7 +222,7 @@ Utility to build EIP712Optional<T> types to insert in EIP-712 type arrays.
 
 #### Defined in
 
-[packages/sdk/utils/src/sign-typed-data-utils.ts:91](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L91)
+[packages/sdk/utils/src/sign-typed-data-utils.ts:90](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L90)
 
 ___
 
@@ -246,7 +246,7 @@ Constructs the struct encoding of the data as the primary type.
 
 #### Defined in
 
-[packages/sdk/utils/src/sign-typed-data-utils.ts:248](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L248)
+[packages/sdk/utils/src/sign-typed-data-utils.ts:251](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L251)
 
 ___
 
@@ -270,7 +270,7 @@ E.g. "Transaction(Person from,Person to,Asset tx)Asset(address token,uint256 amo
 
 #### Defined in
 
-[packages/sdk/utils/src/sign-typed-data-utils.ts:183](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L183)
+[packages/sdk/utils/src/sign-typed-data-utils.ts:184](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L184)
 
 ___
 
@@ -294,7 +294,7 @@ A Buffer containing the hash of the typed data.
 
 #### Defined in
 
-[packages/sdk/utils/src/sign-typed-data-utils.ts:137](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L137)
+[packages/sdk/utils/src/sign-typed-data-utils.ts:136](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L136)
 
 ___
 
@@ -316,7 +316,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/sign-typed-data-utils.ts:257](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L257)
+[packages/sdk/utils/src/sign-typed-data-utils.ts:260](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L260)
 
 ___
 
@@ -337,7 +337,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/sign-typed-data-utils.ts:194](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L194)
+[packages/sdk/utils/src/sign-typed-data-utils.ts:195](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L195)
 
 ___
 
@@ -368,4 +368,4 @@ Note that EIP-712 does not specify zero values, and so this is non-standard.
 
 #### Defined in
 
-[packages/sdk/utils/src/sign-typed-data-utils.ts:273](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L273)
+[packages/sdk/utils/src/sign-typed-data-utils.ts:276](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/sign-typed-data-utils.ts#L276)

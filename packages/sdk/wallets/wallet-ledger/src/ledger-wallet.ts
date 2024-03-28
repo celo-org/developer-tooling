@@ -7,6 +7,7 @@ import Ledger from '@ledgerhq/hw-app-eth'
 import debugFactory from 'debug'
 import { LedgerSigner } from './ledger-signer'
 import { transportErrorFriendlyMessage } from './ledger-utils'
+import { ILedger } from './types'
 
 export const CELO_BASE_DERIVATION_PATH = `${CELO_DERIVATION_PATH_BASE.slice(2)}/0`
 const ADDRESS_QTY = 5
@@ -42,7 +43,7 @@ export async function newLedgerWalletWithSetup(
 const debug = debugFactory('kit:wallet:ledger')
 
 export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnlyWallet {
-  private ledger: any
+  private ledger: ILedger | undefined
 
   /**
    * @param derivationPathIndexes number array of "address_index" for the base derivation path.
@@ -82,7 +83,7 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
 
   protected async loadAccountSigners(): Promise<Map<Address, LedgerSigner>> {
     if (!this.ledger) {
-      this.ledger = this.generateNewLedger(this.transport)
+      this.ledger = this.generateNewLedger(this.transport) as ILedger
     }
     debug('Fetching addresses from the ledger')
     let addressToSigner = new Map<Address, LedgerSigner>()
@@ -112,9 +113,9 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
       const derivationPath = `${this.baseDerivationPath}/${value}`
       const addressInfo = await this.ledger!.getAddress(derivationPath, validationRequired)
       addressToSigner.set(
-        addressInfo.address,
+        addressInfo.address!,
         new LedgerSigner(
-          this.ledger,
+          this.ledger!,
           derivationPath,
           this.ledgerAddressValidation,
           appConfiguration

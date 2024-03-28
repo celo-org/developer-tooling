@@ -12,3 +12,4 @@
 - [ledger-utils](modules/ledger_utils.md)
 - [ledger-wallet](modules/ledger_wallet.md)
 - [tokens](modules/tokens.md)
+- [types](modules/types.md)

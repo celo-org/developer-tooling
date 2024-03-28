@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[cryptographic-utils/src/commentEncryption.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/commentEncryption.ts#L16)
+[cryptographic-utils/src/commentEncryption.ts:17](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/commentEncryption.ts#L17)
 
 ___
 
@@ -29,4 +29,4 @@ ___
 
 #### Defined in
 
-[cryptographic-utils/src/commentEncryption.ts:15](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/commentEncryption.ts#L15)
+[cryptographic-utils/src/commentEncryption.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/commentEncryption.ts#L16)

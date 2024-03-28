@@ -1,7 +1,7 @@
 import { RLPEncodedTx, Signer } from '@celo/connect'
 import { ensureLeading0x, trimLeading0x } from '@celo/utils/lib/address'
 import { EIP712TypedData, generateTypedDataHash } from '@celo/utils/lib/sign-typed-data-utils'
-import { getHashFromEncoded } from '@celo/wallet-base'
+import { getHashFromEncoded, sixtyFour } from '@celo/wallet-base'
 import {
   Signature,
   bigNumberToBuffer,
@@ -9,7 +9,6 @@ import {
   makeCanonical,
   parseBERSignature,
   recoverKeyIndex,
-  sixtyFour,
   thirtyTwo,
 } from '@celo/wallet-hsm'
 import * as ethUtil from '@ethereumjs/util'
@@ -51,12 +50,18 @@ export class AwsHsmSigner implements Signer {
     const { R, S } = await this.findCanonicalSignature(buffer)
     const rBuff = bigNumberToBuffer(R, thirtyTwo)
     const sBuff = bigNumberToBuffer(S, thirtyTwo)
+
+    // TODO: either move away from bignumber or update bignumber
+    // to get the BigNumber::toBigInt() method
+    // the following is the same as
+    /*
+      new secp256k1.Signature(R.toBigInt(), S.toBigInt()).toCompactHex()
+    */
     const recoveryParam = recoverKeyIndex(
       Buffer.concat([rBuff, sBuff], sixtyFour),
       this.publicKey,
       buffer
     )
-
     return {
       r: rBuff,
       s: sBuff,

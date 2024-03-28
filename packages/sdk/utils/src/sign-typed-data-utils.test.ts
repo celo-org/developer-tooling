@@ -1,7 +1,7 @@
 import { NULL_ADDRESS } from '@celo/base/lib/address'
+import { keccak_256 } from '@noble/hashes/sha3'
+import { utf8ToBytes } from '@noble/hashes/utils'
 import { BigNumber } from 'bignumber.js'
-import { keccak256 } from 'ethereum-cryptography/keccak'
-import { utf8ToBytes } from 'ethereum-cryptography/utils'
 import {
   EIP712Object,
   EIP712ObjectValue,
@@ -55,7 +55,7 @@ const TEST_TYPES: EIP712TestCase[] = [
         dataEncoding: Buffer.concat([
           Buffer.from('000000000000000000000000000000000000000000000000000000000000a1ce', 'hex'),
           Buffer.from('0000000000000000000000000000000000000000000000000000000000000b0b', 'hex'),
-          keccak256(utf8ToBytes('hello bob!')),
+          keccak_256(utf8ToBytes('hello bob!')),
         ]),
       },
       {
@@ -68,7 +68,7 @@ const TEST_TYPES: EIP712TestCase[] = [
         dataEncoding: Buffer.concat([
           Buffer.from('000000000000000000000000000000000000000000000000000000000000a1ce', 'hex'),
           Buffer.from('0000000000000000000000000000000000000000000000000000000000000b0b', 'hex'),
-          keccak256(Buffer.from('0xdeadbeef', 'utf8')),
+          keccak_256(utf8ToBytes('0xdeadbeef')),
         ]),
       },
     ],
@@ -108,29 +108,29 @@ const TEST_TYPES: EIP712TestCase[] = [
           },
         },
         dataEncoding: Buffer.concat([
-          keccak256(
+          keccak_256(
             Buffer.concat([
-              keccak256(utf8ToBytes('Person(address wallet,string name)')),
+              keccak_256(utf8ToBytes('Person(address wallet,string name)')),
               Buffer.from(
                 '000000000000000000000000000000000000000000000000000000000000a1ce',
                 'hex'
               ),
-              keccak256(utf8ToBytes('Alice')),
+              keccak_256(utf8ToBytes('Alice')),
             ])
           ),
-          keccak256(
+          keccak_256(
             Buffer.concat([
-              keccak256(utf8ToBytes('Person(address wallet,string name)')),
+              keccak_256(utf8ToBytes('Person(address wallet,string name)')),
               Buffer.from(
                 '0000000000000000000000000000000000000000000000000000000000000b0b',
                 'hex'
               ),
-              keccak256(utf8ToBytes('Bob')),
+              keccak_256(utf8ToBytes('Bob')),
             ])
           ),
-          keccak256(
+          keccak_256(
             Buffer.concat([
-              keccak256(utf8ToBytes('Asset(address token,uint256 amount)')),
+              keccak_256(utf8ToBytes('Asset(address token,uint256 amount)')),
               Buffer.from(
                 '000000000000000000000000000000000000000000000000000000000000ce10',
                 'hex'
@@ -202,13 +202,13 @@ const TEST_TYPES: EIP712TestCase[] = [
           ],
         },
         dataEncoding: Buffer.concat([
-          keccak256(
+          keccak_256(
             Buffer.concat([
-              keccak256(
+              keccak_256(
                 Buffer.concat([
-                  keccak256(
+                  keccak_256(
                     Buffer.concat([
-                      keccak256(utf8ToBytes('Tile(bool occupied,uint8 occupantId)')),
+                      keccak_256(utf8ToBytes('Tile(bool occupied,uint8 occupantId)')),
                       Buffer.from(
                         '0000000000000000000000000000000000000000000000000000000000000001',
                         'hex'
@@ -219,9 +219,9 @@ const TEST_TYPES: EIP712TestCase[] = [
                       ),
                     ])
                   ),
-                  keccak256(
+                  keccak_256(
                     Buffer.concat([
-                      keccak256(utf8ToBytes('Tile(bool occupied,uint8 occupantId)')),
+                      keccak_256(utf8ToBytes('Tile(bool occupied,uint8 occupantId)')),
                       Buffer.from(
                         '0000000000000000000000000000000000000000000000000000000000000000',
                         'hex'
@@ -234,11 +234,11 @@ const TEST_TYPES: EIP712TestCase[] = [
                   ),
                 ])
               ),
-              keccak256(
+              keccak_256(
                 Buffer.concat([
-                  keccak256(
+                  keccak_256(
                     Buffer.concat([
-                      keccak256(utf8ToBytes('Tile(bool occupied,uint8 occupantId)')),
+                      keccak_256(utf8ToBytes('Tile(bool occupied,uint8 occupantId)')),
                       Buffer.from(
                         '0000000000000000000000000000000000000000000000000000000000000001',
                         'hex'
@@ -249,9 +249,9 @@ const TEST_TYPES: EIP712TestCase[] = [
                       ),
                     ])
                   ),
-                  keccak256(
+                  keccak_256(
                     Buffer.concat([
-                      keccak256(utf8ToBytes('Tile(bool occupied,uint8 occupantId)')),
+                      keccak_256(utf8ToBytes('Tile(bool occupied,uint8 occupantId)')),
                       Buffer.from(
                         '0000000000000000000000000000000000000000000000000000000000000001',
                         'hex'
@@ -446,7 +446,9 @@ describe('encodeType()', () => {
 describe('typeHash()', () => {
   for (const { primaryType, types, typeEncoding } of TEST_TYPES) {
     it(`should hash type ${primaryType} correctly`, () => {
-      expect(typeHash(primaryType, types)).toEqual(keccak256(utf8ToBytes(typeEncoding)))
+      expect(typeHash(primaryType, types)).toEqual(
+        Buffer.from(keccak_256(utf8ToBytes(typeEncoding)))
+      )
     })
   }
 })
@@ -468,7 +470,9 @@ describe('structHash()', () => {
     if (examples.length > 0) {
       it(`should hash data ${primaryType} correctly`, () => {
         for (const { data, dataEncoding } of examples) {
-          const expected = keccak256(Buffer.concat([typeHash(primaryType, types), dataEncoding]))
+          const expected = Buffer.from(
+            keccak_256(Buffer.concat([typeHash(primaryType, types), dataEncoding]))
+          )
           expect(structHash(primaryType, data, types)).toEqual(expected)
         }
       })

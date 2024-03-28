@@ -1,5 +1,5 @@
 import { ensureLeading0x, normalizeAddressWith0x, trimLeading0x } from '@celo/base/lib/address'
-import { CeloTx, EncodedTransaction, RpcCaller, Signer } from '@celo/connect'
+import { CeloTx, EncodedTransaction, Hex, RpcCaller, Signer } from '@celo/connect'
 import { EIP712TypedData } from '@celo/utils/lib/sign-typed-data-utils'
 import { decodeSig } from '@celo/wallet-base'
 import BigNumber from 'bignumber.js'
@@ -109,7 +109,7 @@ export class RpcSigner implements Signer {
       typedData,
     ])
 
-    return decodeSig(result)
+    return decodeSig(result as Hex)
   }
 
   async signPersonalMessage(data: string): Promise<{ v: number; r: Buffer; s: Buffer }> {
@@ -117,7 +117,7 @@ export class RpcSigner implements Signer {
       this.account,
       data,
     ])
-    return decodeSig(result)
+    return decodeSig(result as Hex)
   }
 
   getNativeKey = () => this.account

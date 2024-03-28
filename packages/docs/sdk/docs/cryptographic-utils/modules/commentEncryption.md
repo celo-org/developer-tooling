@@ -34,7 +34,7 @@
 
 #### Defined in
 
-[cryptographic-utils/src/commentEncryption.ts:115](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/commentEncryption.ts#L115)
+[cryptographic-utils/src/commentEncryption.ts:119](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/commentEncryption.ts#L119)
 
 ## Functions
 
@@ -61,7 +61,7 @@ Decrypted comment if can decrypt, otherwise comment.
 
 #### Defined in
 
-[cryptographic-utils/src/commentEncryption.ts:104](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/commentEncryption.ts#L104)
+[cryptographic-utils/src/commentEncryption.ts:108](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/commentEncryption.ts#L108)
 
 ___
 
@@ -87,7 +87,7 @@ Decrypted data.
 
 #### Defined in
 
-[cryptographic-utils/src/commentEncryption.ts:45](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/commentEncryption.ts#L45)
+[cryptographic-utils/src/commentEncryption.ts:46](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/commentEncryption.ts#L46)
 
 ___
 
@@ -115,7 +115,7 @@ base64 string of encrypted comment if can encrypt, otherwise comment.
 
 #### Defined in
 
-[cryptographic-utils/src/commentEncryption.ts:69](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/commentEncryption.ts#L69)
+[cryptographic-utils/src/commentEncryption.ts:73](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/commentEncryption.ts#L73)
 
 ___
 
@@ -141,4 +141,4 @@ Encrypted data to sender and recipient.
 
 #### Defined in
 
-[cryptographic-utils/src/commentEncryption.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/commentEncryption.ts#L27)
+[cryptographic-utils/src/commentEncryption.ts:28](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/commentEncryption.ts#L28)

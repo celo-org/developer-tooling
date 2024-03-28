@@ -12,3 +12,4 @@
 - [dataEncryptionKey](modules/dataEncryptionKey.md)
 - [index](modules/index.md)
 - [types](modules/types.md)
+- [wordlists](modules/wordlists.md)
