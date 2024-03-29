@@ -32,10 +32,19 @@ export default class Lock extends BaseCommand {
 
     await newCheckBuilder(this)
       .addCheck(`Value [${value.toFixed()}] is > 0`, () => value.gt(0))
-      .isAccount(address)
       .runChecks()
 
-    const lockedGold = await kit.contracts.getLockedGold()
+    const [lockedGold, accountsContract] = await Promise.all([
+      kit.contracts.getLockedGold(),
+      kit.contracts.getAccounts(),
+    ])
+
+    const isAccount = await accountsContract.isAccount(address)
+
+    if (!isAccount) {
+      await displaySendTx('register', accountsContract.createAccount())
+    }
+
     const pendingWithdrawalsValue = await lockedGold.getPendingWithdrawalsTotalValue(address)
     const relockValue = BigNumber.minimum(pendingWithdrawalsValue, value)
     const lockValue = value.minus(relockValue)
