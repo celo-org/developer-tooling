@@ -379,7 +379,6 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
     },
   ]
 
-  // this one leaves open handles
   test(
     'when proposal contains transactions for contracts not verified',
     async () => {
@@ -456,6 +455,15 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
       expect(proposal.length).toEqual(transactionsForContractsVerifiedOnCeloScan.length)
       expect(proposal[0].to).toEqual('0xf4cab10dC19695AaCe14b7A16d7705b600ad5F73')
       expect(proposal[0].value).toEqual(transactionsForContractsVerifiedOnCeloScan[0].value)
+      expect(proposal).toMatchInlineSnapshot(`
+        [
+          {
+            "input": "0xa9059cbb00000000000000000000000087647780180b8f55980c7d3ffefe08a9b29e9ae1000000000000000000000000000000000000000000108b6d58e29cce52f28dc0",
+            "to": "0xf4cab10dC19695AaCe14b7A16d7705b600ad5F73",
+            "value": "0",
+          },
+        ]
+      `)
     },
     EXTRA_LONG_TIMEOUT_MS
   )
