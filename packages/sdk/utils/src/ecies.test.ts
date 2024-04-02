@@ -22,7 +22,7 @@ describe('ECIES', () => {
     it('should not regress', () => {
       // snapshot generated on master at commit=4861e71d0
       // with message='foo'
-      // and privkey='0xd2a515a64d37407f0e0e4a6a6a69a95eeb5ef8c2524ef01a6ffc6e3b39e0661b'
+      // and privkey='f353837781491b9ded31b6cb669c867e4c91f0ccfdaa85db4b1f0a814bc060c5'
       const snapshotPrivKey = u8(
         Buffer.from('f353837781491b9ded31b6cb669c867e4c91f0ccfdaa85db4b1f0a814bc060c5', 'hex')
       )
@@ -30,9 +30,6 @@ describe('ECIES', () => {
         '0487d78806c22bc7a5dd5ab38b02fb7ef48220648b6dd815b7ea3466c0270ebfe17aafece9af8f1c827ae9c47bac4215cd344afd94132581f4d789f8715a429d5c5c2dc365496750655bcd1c29445b118967cf790bb46b6a708ff1b3e82982173d98546ae6f228260913572127dc38a015386cb8',
         'hex'
       )
-      // secp256k1.getPublicKey(snapshotPrivKey).slice(1)
-
-      // const _message = Buffer.from('foo')
       expect(bytesToUtf8(ECIES.Decrypt(snapshotPrivKey, snapshotEncrypted))).toEqual('foo')
     })
   })
