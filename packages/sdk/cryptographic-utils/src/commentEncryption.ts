@@ -4,7 +4,8 @@ import {
   Decrypt as ECIESDecrypt,
   Encrypt as ECIESEncrypt,
 } from '@celo/utils/lib/ecies'
-import { randomBytes } from 'crypto'
+import { u8 } from '@noble/ciphers/utils'
+import { randomBytes } from '@noble/ciphers/webcrypto/utils'
 import { decompressPublicKey } from './dataEncryptionKey'
 
 const ECIES_SESSION_KEY_LEN = 129
@@ -25,10 +26,10 @@ export interface EncryptionStatus {
  * @returns {Buffer} Encrypted data to sender and recipient.
  */
 export function encryptData(data: Buffer, pubKeyRecipient: Buffer, pubKeySelf: Buffer): Buffer {
-  const sessionKey: Buffer = randomBytes(16)
+  const sessionKey = randomBytes(16)
   const sessionKeyToSelf: Buffer = ECIESEncrypt(pubKeySelf, sessionKey)
   const sessionKeyToOther: Buffer = ECIESEncrypt(pubKeyRecipient, sessionKey)
-  const ciphertext = AES128EncryptAndHMAC(sessionKey, sessionKey, data)
+  const ciphertext = AES128EncryptAndHMAC(u8(sessionKey), sessionKey, u8(data))
 
   return Buffer.concat([sessionKeyToOther, sessionKeyToSelf, ciphertext])
 }
@@ -48,12 +49,15 @@ export function decryptData(data: Buffer, key: Buffer, sender: boolean): Buffer 
     throw new Error('Buffer length too short')
   }
   const sessionKeyEncrypted = sender
-    ? data.slice(ECIES_SESSION_KEY_LEN, ECIES_SESSION_KEY_LEN * 2)
-    : data.slice(0, ECIES_SESSION_KEY_LEN)
-  const sessionKey = ECIESDecrypt(key, sessionKeyEncrypted)
+    ? data.subarray(ECIES_SESSION_KEY_LEN, ECIES_SESSION_KEY_LEN * 2)
+    : data.subarray(0, ECIES_SESSION_KEY_LEN)
+  const sessionKey = ECIESDecrypt(u8(key), sessionKeyEncrypted)
+  if (sender) {
+    console.log(sessionKeyEncrypted)
+  }
 
-  const encryptedMessage = data.slice(ECIES_SESSION_KEY_LEN * 2)
-  return AES128DecryptAndHMAC(sessionKey, sessionKey, encryptedMessage)
+  const encryptedMessage = data.subarray(ECIES_SESSION_KEY_LEN * 2)
+  return Buffer.from(AES128DecryptAndHMAC(u8(sessionKey), u8(sessionKey), u8(encryptedMessage)))
 }
 
 /**

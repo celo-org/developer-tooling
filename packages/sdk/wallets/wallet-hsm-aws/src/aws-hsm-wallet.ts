@@ -91,6 +91,7 @@ export class AwsHsmWallet extends RemoteWallet<AwsHsmSigner> implements ReadOnly
    */
   async getAddressFromKeyId(keyId: string): Promise<Address> {
     const publicKey = await this.getPublicKeyFromKeyId(keyId)
+
     return getAddressFromPublicKey(publicKey)
   }
 }

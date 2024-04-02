@@ -43,11 +43,11 @@ ___
 
 ### mnemonicToSeed
 
-• **mnemonicToSeed**: (`mnemonic`: `string`, `password?`: `string`) => `Promise`\<`Buffer`\>
+• **mnemonicToSeed**: (`mnemonic`: `string`, `password?`: `string`) => `Promise`\<`Uint8Array`\>
 
 #### Type declaration
 
-▸ (`mnemonic`, `password?`): `Promise`\<`Buffer`\>
+▸ (`mnemonic`, `password?`): `Promise`\<`Uint8Array`\>
 
 ##### Parameters
 
@@ -58,7 +58,7 @@ ___
 
 ##### Returns
 
-`Promise`\<`Buffer`\>
+`Promise`\<`Uint8Array`\>
 
 #### Defined in
 
@@ -68,11 +68,11 @@ ___
 
 ### mnemonicToSeedSync
 
-• **mnemonicToSeedSync**: (`mnemonic`: `string`, `password?`: `string`) => `Buffer`
+• **mnemonicToSeedSync**: (`mnemonic`: `string`, `password?`: `string`) => `Uint8Array`
 
 #### Type declaration
 
-▸ (`mnemonic`, `password?`): `Buffer`
+▸ (`mnemonic`, `password?`): `Uint8Array`
 
 ##### Parameters
 
@@ -83,7 +83,7 @@ ___
 
 ##### Returns
 
-`Buffer`
+`Uint8Array`
 
 #### Defined in
 

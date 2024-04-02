@@ -47,6 +47,13 @@ export class GcpHsmSigner implements Signer {
     const { R, S } = await this.findCanonicalSignature(buffer)
     const rBuff = bigNumberToBuffer(R, thirtyTwo)
     const sBuff = bigNumberToBuffer(S, thirtyTwo)
+
+    // TODO: either move away from bignumber or update bignumber
+    // to get the BigNumber::toBigInt() method
+    // the following is the same as
+    /*
+      new secp256k1.Signature(R.toBigInt(), S.toBigInt()).toCompactHex()
+    */
     const recoveryParam = recoverKeyIndex(
       Buffer.concat([rBuff, sBuff], sixtyFour),
       this.publicKey,

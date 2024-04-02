@@ -36,7 +36,7 @@
 
 #### Defined in
 
-[signature-utils.ts:48](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm/src/signature-utils.ts#L48)
+[signature-utils.ts:46](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm/src/signature-utils.ts#L46)
 
 ## Properties
 
@@ -46,7 +46,7 @@
 
 #### Defined in
 
-[signature-utils.ts:45](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm/src/signature-utils.ts#L45)
+[signature-utils.ts:43](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm/src/signature-utils.ts#L43)
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-[signature-utils.ts:46](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm/src/signature-utils.ts#L46)
+[signature-utils.ts:44](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm/src/signature-utils.ts#L44)
 
 ___
 
@@ -66,4 +66,4 @@ ___
 
 #### Defined in
 
-[signature-utils.ts:44](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm/src/signature-utils.ts#L44)
+[signature-utils.ts:42](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm/src/signature-utils.ts#L42)

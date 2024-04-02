@@ -1,6 +1,6 @@
 import { bufferToHex, toChecksumAddress } from '@ethereumjs/util'
 import BigNumber from 'bignumber.js'
-import * as rlp from 'rlp'
+import * as rlp from '@ethereumjs/rlp'
 import { Address } from './address'
 
 // This file contains utilities that help with istanbul-specific block information.
@@ -42,14 +42,19 @@ function sealFromBuffers(data: Buffer[]): Seal {
 // Parse RLP encoded block extra data into an IstanbulExtra object.
 export function parseBlockExtraData(data: string): IstanbulExtra {
   const buffer = Buffer.from(data.replace(/^0x/, ''), 'hex')
-  const decode: any = rlp.decode('0x' + buffer.slice(ISTANBUL_EXTRA_VANITY_BYTES).toString('hex'))
+  const decode = rlp.decode('0x' + buffer.subarray(ISTANBUL_EXTRA_VANITY_BYTES).toString('hex'))
+
   return {
-    addedValidators: decode[0].map((addr: Buffer) => toChecksumAddress(bufferToHex(addr))),
-    addedValidatorsPublicKeys: decode[1].map((key: Buffer) => '0x' + key.toString('hex')),
-    removedValidators: bigNumberFromBuffer(decode[2]),
-    seal: '0x' + decode[3].toString('hex'),
-    aggregatedSeal: sealFromBuffers(decode[4]),
-    parentAggregatedSeal: sealFromBuffers(decode[5]),
+    addedValidators: (decode.at(0) as Uint8Array[]).map((addr) =>
+      toChecksumAddress(bufferToHex(Buffer.from(addr)))
+    ),
+    addedValidatorsPublicKeys: (decode.at(1) as Uint8Array[]).map(
+      (key) => '0x' + Buffer.from(key).toString('hex')
+    ),
+    removedValidators: bigNumberFromBuffer(Buffer.from(decode.at(2) as Uint8Array)),
+    seal: '0x' + Buffer.from(decode.at(3) as Uint8Array).toString('hex'),
+    aggregatedSeal: sealFromBuffers((decode.at(4) as Uint8Array[]).map(Buffer.from)),
+    parentAggregatedSeal: sealFromBuffers((decode.at(5) as Uint8Array[]).map(Buffer.from)),
   }
 }
 

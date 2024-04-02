@@ -3,5 +3,5 @@
 ;(async () => {
   const oclif = await import('@oclif/core')
   console.info('Running in development mode')
-  await oclif.execute({ development: true, dir: __dirname })
+  await oclif.execute({ development: false, dir: __dirname })
 })()
