@@ -67,7 +67,7 @@ jobs:
           git fetch --all
           git checkout $COMMIT
           cd ../..
-          ./scripts/copy-generated-docs.sh
+          cp -R ./submodules/developer-tooling/packages/docs/command-line-interface/* ./docs/cli/
 
           git status
           git add submodules/developer-tooling
