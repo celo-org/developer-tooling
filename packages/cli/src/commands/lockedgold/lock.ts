@@ -42,6 +42,7 @@ export default class Lock extends BaseCommand {
     const isAccount = await accountsContract.isAccount(address)
 
     if (!isAccount) {
+      console.log('Address will be registered with Account contract to enable locking.')
       await displaySendTx('register', accountsContract.createAccount())
     }
 

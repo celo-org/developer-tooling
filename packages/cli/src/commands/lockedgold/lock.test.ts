@@ -61,6 +61,9 @@ testWithGanache('lockedgold:lock cmd', (web3: Web3) => {
             "All checks passed",
           ],
           [
+            "Address will be registered with Account contract to lock.",
+          ],
+          [
             "SendTransaction: register",
           ],
           [
