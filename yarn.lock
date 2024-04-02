@@ -1631,7 +1631,6 @@ __metadata:
     "@oclif/plugin-not-found": "npm:^3.0.9"
     "@oclif/plugin-plugins": "npm:^4.1.17"
     "@oclif/plugin-warn-if-update-available": "npm:^3.0.9"
-    "@scure/bip32": "npm:^1.3.3"
     "@types/command-exists": "npm:^1.2.3"
     "@types/debug": "npm:^4.1.4"
     "@types/fs-extra": "npm:^8.0.0"
@@ -1784,8 +1783,6 @@ __metadata:
     "@scure/bip39": "npm:^1.2.2"
     "@types/bn.js": "npm:^5.1.0"
     "@types/node": "npm:^18.7.16"
-    bigi: "npm:^1.4.2"
-    buffer-reverse: "npm:^1.0.1"
   languageName: unknown
   linkType: soft
 
@@ -7213,13 +7210,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bigi@npm:^1.4.2":
-  version: 1.4.2
-  resolution: "bigi@npm:1.4.2"
-  checksum: e8165beb2ad113add286f81a066653295737a3edc6287effae7b72c2d7695be19d36774069e80a977df7187857c9e2c4a9517f6ec966bb887e097ea8d36cc2e0
-  languageName: node
-  linkType: hard
-
 "bignumber.js@npm:9.0.0":
   version: 9.0.0
   resolution: "bignumber.js@npm:9.0.0"
@@ -7559,13 +7549,6 @@ __metadata:
   version: 1.1.2
   resolution: "buffer-from@npm:1.1.2"
   checksum: 0448524a562b37d4d7ed9efd91685a5b77a50672c556ea254ac9a6d30e3403a517d8981f10e565db24e8339413b43c97ca2951f10e399c6125a0d8911f5679bb
-  languageName: node
-  linkType: hard
-
-"buffer-reverse@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "buffer-reverse@npm:1.0.1"
-  checksum: e350872a89b17af0a7e1bd7a73239a535164f3f010b0800add44f2e52bd0511548dc5b96c20309effba969868c385023d2d02a0add6155f6a76da7b3073b77bd
   languageName: node
   linkType: hard
 
