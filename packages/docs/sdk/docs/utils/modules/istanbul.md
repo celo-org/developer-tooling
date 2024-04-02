@@ -30,7 +30,7 @@
 
 #### Defined in
 
-[packages/sdk/utils/src/istanbul.ts:12](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/istanbul.ts#L12)
+[packages/sdk/utils/src/istanbul.ts:11](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/istanbul.ts#L11)
 
 ## Variables
 
@@ -47,7 +47,7 @@
 
 #### Defined in
 
-[packages/sdk/utils/src/istanbul.ts:72](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/istanbul.ts#L72)
+[packages/sdk/utils/src/istanbul.ts:71](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/istanbul.ts#L71)
 
 ## Functions
 
@@ -68,7 +68,7 @@
 
 #### Defined in
 
-[packages/sdk/utils/src/istanbul.ts:62](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/istanbul.ts#L62)
+[packages/sdk/utils/src/istanbul.ts:61](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/istanbul.ts#L61)
 
 ___
 
@@ -88,4 +88,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/istanbul.ts:44](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/istanbul.ts#L44)
+[packages/sdk/utils/src/istanbul.ts:43](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/istanbul.ts#L43)
