@@ -3,5 +3,6 @@
   "extends": [
     "local>celo-org/.github:renovate-config",
     "local>celo-org/developer-tooling:dt-renovate-base"
-  ]
+  ],
+  "rangeStrategy": "bump"
 }
