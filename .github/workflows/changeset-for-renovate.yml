@@ -23,5 +23,6 @@ jobs:
       - uses: actions/checkout@v4
       - name: "Run changesets-renovate"
         # when on a renovate branch which modified the package.json for a workspace this will  create a changeset for those changes
-        run: npx changesets-renovate
+        run: npx @scaleway/changesets-renovate
+
 
