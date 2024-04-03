@@ -60,7 +60,7 @@
     "bignumber.js": "9.0.0",
     "chalk": "^2.4.2",
     "command-exists": "^1.2.9",
-    "cross-fetch": "3.1.5",
+    "cross-fetch": "4.0.0",
     "debug": "^4.1.1",
     "ethers": "5",
     "fs-extra": "^8.1.0",

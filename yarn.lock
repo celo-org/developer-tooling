@@ -1642,7 +1642,7 @@ __metadata:
     bignumber.js: "npm:9.0.0"
     chalk: "npm:^2.4.2"
     command-exists: "npm:^1.2.9"
-    cross-fetch: "npm:3.1.5"
+    cross-fetch: "npm:4.0.0"
     debug: "npm:^4.1.1"
     ethers: "npm:5"
     fs-extra: "npm:^8.1.0"
@@ -1754,7 +1754,7 @@ __metadata:
     "@types/debug": "npm:^4.1.5"
     bignumber.js: "npm:^9.0.0"
     bn.js: "npm:^5.1.0"
-    cross-fetch: "npm:3.1.5"
+    cross-fetch: "npm:4.0.0"
     debug: "npm:^4.1.1"
     fetch-mock: "npm:9.10.4"
     fp-ts: "npm:2.1.1"
@@ -1814,7 +1814,7 @@ __metadata:
     "@types/debug": "npm:^4.1.5"
     "@types/fetch-mock": "npm:^7.3.5"
     bignumber.js: "npm:9.0.0"
-    cross-fetch: "npm:3.1.5"
+    cross-fetch: "npm:4.0.0"
     debug: "npm:^4.1.1"
     fetch-mock: "npm:^9.11.0"
     web3: "npm:1.10.4"
@@ -1880,7 +1880,7 @@ __metadata:
   dependencies:
     "@celo/dev-utils": "npm:0.0.3"
     "@types/debug": "npm:^4.1.5"
-    cross-fetch: "npm:3.1.5"
+    cross-fetch: "npm:4.0.0"
     debug: "npm:^4.1.1"
     fetch-mock: "npm:9.10.4"
   languageName: unknown
@@ -8784,7 +8784,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cross-fetch@npm:^4.0.0":
+"cross-fetch@npm:4.0.0, cross-fetch@npm:^4.0.0":
   version: 4.0.0
   resolution: "cross-fetch@npm:4.0.0"
   dependencies:
