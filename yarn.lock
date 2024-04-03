@@ -3504,22 +3504,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kwsites/file-exists@npm:^1.1.1":
-  version: 1.1.1
-  resolution: "@kwsites/file-exists@npm:1.1.1"
-  dependencies:
-    debug: "npm:^4.1.1"
-  checksum: 4ff945de7293285133aeae759caddc71e73c4a44a12fac710fdd4f574cce2671a3f89d8165fdb03d383cfc97f3f96f677d8de3c95133da3d0e12a123a23109fe
-  languageName: node
-  linkType: hard
-
-"@kwsites/promise-deferred@npm:^1.1.1":
-  version: 1.1.1
-  resolution: "@kwsites/promise-deferred@npm:1.1.1"
-  checksum: 07455477a0123d9a38afb503739eeff2c5424afa8d3dbdcc7f9502f13604488a4b1d9742fc7288832a52a6422cf1e1c0a1d51f69a39052f14d27c9a0420b6629
-  languageName: node
-  linkType: hard
-
 "@ledgerhq/devices@npm:^5.11.0, @ledgerhq/devices@npm:^5.51.1":
   version: 5.51.1
   resolution: "@ledgerhq/devices@npm:5.51.1"
@@ -4606,17 +4590,6 @@ __metadata:
   version: 1.1.0
   resolution: "@protobufjs/utf8@npm:1.1.0"
   checksum: 131e289c57534c1d73a0e55782d6751dd821db1583cb2f7f7e017c9d6747addaebe79f28120b2e0185395d990aad347fb14ffa73ef4096fa38508d61a0e64602
-  languageName: node
-  linkType: hard
-
-"@scaleway/changesets-renovate@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "@scaleway/changesets-renovate@npm:2.0.1"
-  dependencies:
-    simple-git: "npm:3.23.0"
-  bin:
-    changesets-renovate: dist/index.js
-  checksum: 9a4990d49d8f6f58386dd98158d4bf87d26fd0d59a5d56badd03cafd6d3d1c238b4fa2ccdc25f901d25619b65b9e3798d472fb2052cbf7a6213c1e800c496f8b
   languageName: node
   linkType: hard
 
@@ -7990,7 +7963,6 @@ __metadata:
   dependencies:
     "@changesets/changelog-github": "npm:^0.5.0"
     "@changesets/cli": "npm:^2.26.2"
-    "@scaleway/changesets-renovate": "npm:^2.0.1"
     "@types/jest": "npm:^29.1.1"
     "@types/node": "npm:18.7.16"
     "@types/semver": "npm:7.3.8"
@@ -17808,17 +17780,6 @@ __metadata:
     once: "npm:^1.3.1"
     simple-concat: "npm:^1.0.0"
   checksum: 93f1b32319782f78f2f2234e9ce34891b7ab6b990d19d8afefaa44423f5235ce2676aae42d6743fecac6c8dfff4b808d4c24fe5265be813d04769917a9a44f36
-  languageName: node
-  linkType: hard
-
-"simple-git@npm:3.23.0":
-  version: 3.23.0
-  resolution: "simple-git@npm:3.23.0"
-  dependencies:
-    "@kwsites/file-exists": "npm:^1.1.1"
-    "@kwsites/promise-deferred": "npm:^1.1.1"
-    debug: "npm:^4.3.4"
-  checksum: 08ddfcbc310bfeaba066ef7b0d178967d9984aa1bc5e29f0360d166b0ccf820a3e5bb67d02036fca40fde6cdfc998f2b5fb2db9a8bbbad29b4feb4c1391f39e0
   languageName: node
   linkType: hard
 
