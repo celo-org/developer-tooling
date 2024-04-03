@@ -1,18 +1,15 @@
-import { randomBytes } from 'crypto'
+import { secp256k1 } from '@noble/curves/secp256k1'
 import { decryptComment, encryptComment } from './commentEncryption'
 
 describe('Comment Encryption', () => {
   // NOTE: elliptic is disabled elsewhere in this library to prevent
   // accidental signing of truncated messages.
-  // tslint:disable-next-line:import-blacklist
-  const EC = require('elliptic').ec
-  const ec = new EC('secp256k1')
-  const self = ec.keyFromPrivate(randomBytes(32))
-  const selfPublic = Buffer.from(self.getPublic('hex'), 'hex')
-  const selfPriv = Buffer.from(self.getPrivate('hex'), 'hex')
-  const recip = ec.keyFromPrivate(randomBytes(32))
-  const recipPublic = Buffer.from(recip.getPublic('hex'), 'hex')
-  const recipPriv = Buffer.from(recip.getPrivate('hex'), 'hex')
+  const _selfPriv = secp256k1.utils.randomPrivateKey()
+  const selfPriv = Buffer.from(_selfPriv)
+  const selfPublic = Buffer.from(secp256k1.getPublicKey(_selfPriv))
+  const _recipPriv = secp256k1.utils.randomPrivateKey()
+  const recipPriv = Buffer.from(_recipPriv)
+  const recipPublic = Buffer.from(secp256k1.getPublicKey(_recipPriv))
   const comment = 'text'
   const emojis = '👮‍♂️👸👱‍♀️👷‍♂️🧟‍♀️🙅‍♀️🙅‍♂️☝️👉💪🌁⛺🏭🌅🚋🦄🐇🐧🐻🐐🐓🐊🐠🐬🦅🐠🦕🐙🏵🌺🌳🍀🌻🐝🍃'
 
@@ -109,7 +106,7 @@ describe('Comment Encryption', () => {
       expect(decrypted).toEqual(newComment)
       expect(didDecrypt).toBeTruthy()
     })
-    it('should not regress for recipeient', () => {
+    it('should not regress for recipient', () => {
       const { comment: decrypted, success: didDecrypt } = decryptComment(
         encrypted,
         newRecipPriv,

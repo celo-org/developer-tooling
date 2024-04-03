@@ -23,8 +23,8 @@ export type RandomNumberGenerator = (
 ) => void
 
 export interface Bip39 {
-  mnemonicToSeedSync: (mnemonic: string, password?: string) => Buffer
-  mnemonicToSeed: (mnemonic: string, password?: string) => Promise<Buffer>
+  mnemonicToSeedSync: (mnemonic: string, password?: string) => Uint8Array
+  mnemonicToSeed: (mnemonic: string, password?: string) => Promise<Uint8Array>
   generateMnemonic: (
     strength?: number,
     rng?: RandomNumberGenerator,

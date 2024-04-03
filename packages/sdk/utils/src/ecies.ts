@@ -6,7 +6,14 @@
  */
 'use strict'
 
-import { createCipheriv, createDecipheriv, createHash, createHmac, randomBytes } from 'crypto'
+import { ctr } from '@noble/ciphers/aes'
+import { u8 } from '@noble/ciphers/utils'
+import { PrivKey } from '@noble/curves/abstract/utils'
+import { PubKey } from '@noble/curves/abstract/weierstrass'
+import { secp256k1 } from '@noble/curves/secp256k1'
+import { hmac } from '@noble/hashes/hmac'
+import { sha256 } from '@noble/hashes/sha256'
+import { randomBytes } from '@noble/hashes/utils'
 
 export const IV_LENGTH = 16
 
@@ -38,13 +45,13 @@ const IncCounter = (ctr: Buffer) => {
  * @param {number} kdLen Length of output in bytes
  * @returns {Buffer} Output keying material of length kdLen bytes.
  */
-const ConcatKDF = (px: Buffer, kdLen: number) => {
+export const ConcatKDF = (px: Buffer, kdLen: number) => {
   const blockSize = 32
   const reps = ((kdLen + 7) * 8) / (blockSize * 8)
   let counter = Buffer.from('00000001', 'hex')
   let k = Buffer.from('00', 'hex')
   for (let i = 0; i <= reps; i++) {
-    const hash = createHash('sha256')
+    const hash = sha256.create()
     hash.update(counter)
     hash.update(px)
     k = Buffer.concat([k, hash.digest()])
@@ -55,102 +62,111 @@ const ConcatKDF = (px: Buffer, kdLen: number) => {
 
 /**
  * AES-128 CTR encrypt
- * @param {Buffer} encryptionKey
- * @param {Buffer} iv
- * @param {Buffer} plaintext
- * @returns {Buffer} ciphertext
+ * @param {Uint8Array} encryptionKey
+ * @param {Uint8Array} iv
+ * @param {Uint8Array} plaintext
+ * @returns {Uint8Array} ciphertext
  */
-export function AES128Encrypt(encryptionKey: Buffer, iv: Buffer, plaintext: Buffer) {
-  const cipher = createCipheriv('aes-128-ctr', encryptionKey, iv)
-  const firstChunk = cipher.update(plaintext)
-  const secondChunk = cipher.final()
-  return Buffer.concat([iv, firstChunk, secondChunk])
+export function AES128Encrypt(
+  encryptionKey: Uint8Array,
+  iv: Uint8Array,
+  plaintext: Uint8Array
+): Uint8Array {
+  const aes = ctr(encryptionKey, iv)
+  const message = aes.encrypt(plaintext)
+  return u8(Buffer.concat([iv, message]))
 }
 
 /**
  * AES-128 CTR encrypt with message authentication
- * @param {Buffer} encryptionKey
- * @param {Buffer} macKey
- * @param {Buffer} plaintext
- * @returns {Buffer} ciphertext
+ * @param {Uint8Array} encryptionKey
+ * @param {Uint8Array} macKey
+ *
+ * @param {Uint8Array} plaintext
+ * @returns {Uint8Array} ciphertext
  */
 export function AES128EncryptAndHMAC(
-  encryptionKey: Buffer,
-  macKey: Buffer,
-  plaintext: Buffer
-): Buffer {
+  encryptionKey: Uint8Array,
+  macKey: Uint8Array,
+  plaintext: Uint8Array
+): Uint8Array {
   const iv = randomBytes(IV_LENGTH)
   const dataToMac = AES128Encrypt(encryptionKey, iv, plaintext)
-  const mac = createHmac('sha256', macKey).update(dataToMac).digest()
-
-  return Buffer.concat([dataToMac, mac])
+  const mac = hmac(sha256, macKey, dataToMac)
+  return u8(Buffer.concat([dataToMac, mac]))
 }
 
 /**
  * AES-128 CTR decrypt
- * @param {Buffer} encryptionKey
- * @param {Buffer} iv
- * @param {Buffer} ciphertext
- * @returns {Buffer} plaintext
+ * @param {Uint8Array} encryptionKey
+ * @param {Uint8Array} iv
+ * @param {Uint8Array} ciphertext
+ * @returns {Uint8Array} plaintext
  */
-export function AES128Decrypt(encryptionKey: Buffer, iv: Buffer, ciphertext: Buffer) {
-  const cipher = createDecipheriv('aes-128-ctr', encryptionKey, iv)
-  const firstChunk = cipher.update(ciphertext)
-  const secondChunk = cipher.final()
-
-  return Buffer.concat([firstChunk, secondChunk])
+export function AES128Decrypt(
+  encryptionKey: Uint8Array,
+  iv: Uint8Array,
+  ciphertext: Uint8Array
+): Uint8Array {
+  const aes = ctr(encryptionKey, iv)
+  return aes.decrypt(ciphertext)
 }
 
 /**
  * AES-128 CTR decrypt with message authentication
- * @param {Buffer} encryptionKey
- * @param {Buffer} macKey
- * @param {Buffer} ciphertext
- * @returns {Buffer} plaintext
+ * @param {Uint8Array} encryptionKey
+ * @param {Uint8Array} macKey
+ * @param {Uint8Array} ciphertext
+ * @returns {Uint8Array} plaintext
  */
 export function AES128DecryptAndHMAC(
-  encryptionKey: Buffer,
-  macKey: Buffer,
-  ciphertext: Buffer
-): Buffer {
+  encryptionKey: Uint8Array,
+  macKey: Uint8Array,
+  ciphertext: Uint8Array
+): Uint8Array {
   const iv = ciphertext.slice(0, IV_LENGTH)
-  const message = ciphertext.slice(IV_LENGTH, ciphertext.length - 32)
-  const mac = ciphertext.slice(ciphertext.length - 32, ciphertext.length)
+  const message = ciphertext.slice(IV_LENGTH, ciphertext.length - sha256.outputLen)
+  const mac = ciphertext.slice(ciphertext.length - sha256.outputLen, ciphertext.length)
   const dataToMac = Buffer.concat([iv, message])
-  const computedMac = createHmac('sha256', macKey).update(dataToMac).digest()
-  if (!mac.equals(computedMac)) {
+  const computedMac = hmac(sha256, macKey, dataToMac)
+  if (!Buffer.from(mac).equals(Buffer.from(computedMac))) {
     throw new Error('MAC mismatch')
   }
-
   return AES128Decrypt(encryptionKey, iv, message)
 }
 
+const UNCOMPRESSED_KEY_LENGTH = 65
 /**
  * ECIES encrypt
  * @param {Buffer} pubKeyTo Ethereum pub key, 64 bytes.
- * @param {Buffer} plaintext Plaintext to be encrypted.
+ * @param {Uint8Array} plaintext Plaintext to be encrypted.
  * @returns {Buffer} Encrypted message, serialized, 113+ bytes
  */
-export function Encrypt(pubKeyTo: Buffer, plaintext: Buffer) {
-  // NOTE: elliptic is disabled elsewhere in this library to prevent
-  // accidental signing of truncated messages.
-  // tslint:disable-next-line:import-blacklist
-  const EC = require('elliptic').ec
-  const ec = new EC('secp256k1')
-  const ephemPrivKey = ec.keyFromPrivate(randomBytes(32))
-  const ephemPubKey = ephemPrivKey.getPublic(false, 'hex')
-  const ephemPubKeyEncoded = Buffer.from(ephemPubKey, 'hex')
-  const px = ephemPrivKey.derive(
-    ec.keyFromPublic(Buffer.concat([Buffer.from([0x04]), pubKeyTo])).getPublic()
-  )
-  const hash = ConcatKDF(px.toArrayLike(Buffer), 32)
-  const encryptionKey = hash.slice(0, 16)
-  const macKey = createHash('sha256').update(hash.slice(16)).digest()
-  const message = AES128EncryptAndHMAC(encryptionKey, macKey, plaintext)
+export function Encrypt(pubKeyTo: PubKey, plaintext: Uint8Array) {
+  const ephemPrivKey = secp256k1.utils.randomPrivateKey()
+  const ephemPubKey = Buffer.from(secp256k1.getPublicKey(ephemPrivKey, false))
+  const ephemPubKeyEncoded = Buffer.from(ephemPubKey)
+  if (typeof pubKeyTo === 'string') {
+    pubKeyTo = secp256k1.ProjectivePoint.fromHex(pubKeyTo).toRawBytes()
+  }
+
+  const pubKeyToEncoded = Buffer.concat([Buffer.from([0x04]), pubKeyTo as Buffer])
+  const px = secp256k1.getSharedSecret(ephemPrivKey, pubKeyToEncoded).slice(1)
+
+  // NOTE:
+  // Can't swap to proper hkdf implementation because then there's ALWAYS a mac mismatch
+  // for OLD comments. Maybe we should use a comment version?
+  //
+  // const hash = hkdf(sha256, px, undefined, undefined, 32)
+  const hash = ConcatKDF(Buffer.from(px), 32)
+  const encryptionKey = hash.subarray(0, 16)
+  const macKey = sha256.create().update(hash.subarray(16)).digest()
+  const message = AES128EncryptAndHMAC(Buffer.from(encryptionKey), macKey, plaintext)
   const serializedCiphertext = Buffer.concat([
-    ephemPubKeyEncoded, // 65 bytes
+    ephemPubKeyEncoded, // {UNCOMPRESSED_KEY_LENGTH} bytes
     message, // iv + ciphertext + mac (min 48 bytes)
   ])
+
   return serializedCiphertext
 }
 
@@ -160,25 +176,24 @@ export function Encrypt(pubKeyTo: Buffer, plaintext: Buffer) {
  * @param {Buffer} encrypted Encrypted message, serialized, 113+ bytes
  * @returns {Buffer} plaintext
  */
-export function Decrypt(privKey: Buffer, encrypted: Buffer) {
+export function Decrypt(privKey: PrivKey, encrypted: Buffer) {
   // Read iv, ephemPubKey, mac, ciphertext from encrypted message
-  const ephemPubKeyEncoded = encrypted.slice(0, 65)
-  const symmetricEncrypted = encrypted.slice(65)
+  const ephemPubKeyEncoded = u8(encrypted).slice(0, UNCOMPRESSED_KEY_LENGTH)
+  const symmetricEncrypted = u8(encrypted).slice(UNCOMPRESSED_KEY_LENGTH)
 
-  // NOTE: elliptic is disabled elsewhere in this library to prevent
-  // accidental signing of truncated messages.
-  // tslint:disable-next-line:import-blacklist
-  const EC = require('elliptic').ec
-  const ec = new EC('secp256k1')
-
-  const ephemPubKey = ec.keyFromPublic(ephemPubKeyEncoded).getPublic()
-  const px = ec.keyFromPrivate(privKey).derive(ephemPubKey)
-  const hash = ConcatKDF(px.toBuffer(), 32)
+  const px = secp256k1.getSharedSecret(privKey, ephemPubKeyEncoded).slice(1)
+  // NOTE:
+  // Can't swap to proper hkdf implementation because then there's ALWAYS a mac mismatch
+  // for OLD comments. Maybe we should use a comment version?
+  //
+  // const hash = hkdf(sha256, px, undefined, undefined, 32)
+  const hash = ConcatKDF(Buffer.from(px), 32)
   // km, ke
-  const encryptionKey = hash.slice(0, 16)
-  const macKey = createHash('sha256').update(hash.slice(16)).digest()
+  const encryptionKey = hash.subarray(0, 16)
 
-  return AES128DecryptAndHMAC(encryptionKey, macKey, symmetricEncrypted)
+  const macKey = sha256.create().update(hash.subarray(16)).digest()
+
+  return AES128DecryptAndHMAC(Buffer.from(encryptionKey), macKey, symmetricEncrypted)
 }
 
 export const ECIES = {

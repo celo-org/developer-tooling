@@ -30,7 +30,7 @@
 
 #### Defined in
 
-[signature-utils.ts:8](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm/src/signature-utils.ts#L8)
+[signature-utils.ts:9](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm/src/signature-utils.ts#L9)
 
 ___
 
@@ -40,7 +40,7 @@ ___
 
 #### Defined in
 
-[signature-utils.ts:9](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm/src/signature-utils.ts#L9)
+[signature-utils.ts:10](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm/src/signature-utils.ts#L10)
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 #### Defined in
 
-[signature-utils.ts:10](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm/src/signature-utils.ts#L10)
+[signature-utils.ts:11](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm/src/signature-utils.ts#L11)
 
 ## Functions
 
@@ -71,7 +71,7 @@ ___
 
 #### Defined in
 
-[signature-utils.ts:34](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm/src/signature-utils.ts#L34)
+[signature-utils.ts:32](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm/src/signature-utils.ts#L32)
 
 ___
 
@@ -91,7 +91,7 @@ ___
 
 #### Defined in
 
-[signature-utils.ts:30](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm/src/signature-utils.ts#L30)
+[signature-utils.ts:28](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm/src/signature-utils.ts#L28)
 
 ___
 
@@ -111,7 +111,7 @@ ___
 
 #### Defined in
 
-[signature-utils.ts:78](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm/src/signature-utils.ts#L78)
+[signature-utils.ts:99](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm/src/signature-utils.ts#L99)
 
 ___
 
@@ -136,13 +136,13 @@ https://github.com/bitcoin/bips/blob/master/bip-0062.mediawiki#Low_S_values_in_s
 
 #### Defined in
 
-[signature-utils.ts:18](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm/src/signature-utils.ts#L18)
+[signature-utils.ts:19](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm/src/signature-utils.ts#L19)
 
 ___
 
 ### recoverKeyIndex
 
-▸ **recoverKeyIndex**(`signature`, `publicKey`, `hash`): `number`
+▸ **recoverKeyIndex**(`signature`, `_publicKey`, `hash`): `number`
 
 Attempts each recovery key to find a match
 
@@ -151,7 +151,7 @@ Attempts each recovery key to find a match
 | Name | Type |
 | :------ | :------ |
 | `signature` | `Uint8Array` |
-| `publicKey` | `BigNumber` |
+| `_publicKey` | `BigNumber` |
 | `hash` | `Uint8Array` |
 
 #### Returns
@@ -160,4 +160,4 @@ Attempts each recovery key to find a match
 
 #### Defined in
 
-[signature-utils.ts:58](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm/src/signature-utils.ts#L58)
+[signature-utils.ts:56](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-hsm/src/signature-utils.ts#L56)
