@@ -163,7 +163,7 @@ jobs:
             --exclude celo \
             --exclude "@celo/{celocli,contractkit,wallet-*}" \
             -ip \
-            run test
+            run test --coverage
       - name: Upload Jest Test Results
         uses: actions/upload-artifact@v3
         with:
@@ -184,9 +184,6 @@ jobs:
           verbose: true
         env:
           CODECOV_TOKEN: ${{ env.CODECOV_TOKEN }}
-
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
 
   wallet-test:
     name: Wallet test
