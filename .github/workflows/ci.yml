@@ -144,6 +144,9 @@ jobs:
   general_test:
     name: General jest test
     runs-on: ['self-hosted', 'org', '8-cpu']
+    permissions: # Must change the job token permissions to use JWT auth
+      id-token: write
+      contents: read
     needs: install-dependencies
     steps:
       - uses: actions/checkout@v4
