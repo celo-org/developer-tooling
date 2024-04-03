@@ -437,7 +437,7 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
         )
         .get(
           'https://api.celoscan.io/api?module=contract&action=getsourcecode&address=0xf4cab10dC19695AaCe14b7A16d7705b600ad5F73',
-          VIBER_CONTRACT
+          MOCK_CONTRACT_RESPONSE
         )
       const transactionsToBeSaved = JSON.stringify(transactionsForContractsVerifiedOnCeloScan)
       fs.writeFileSync('transactions2.json', transactionsToBeSaved, { flag: 'w' })
@@ -469,7 +469,7 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
   )
 })
 
-const VIBER_CONTRACT = {
+const MOCK_CONTRACT_RESPONSE = {
   status: '1',
   message: 'OK',
   result: [
