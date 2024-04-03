@@ -1,7 +1,8 @@
 import { Address, ensureLeading0x } from '@celo/base/lib/address'
 import * as ethUtil from '@ethereumjs/util'
+import { SignatureType } from '@noble/curves/abstract/weierstrass'
+import { secp256k1 } from '@noble/curves/secp256k1'
 import { BigNumber } from 'bignumber.js'
-import { ecdsaRecover } from 'secp256k1'
 
 // 0x04 prefix indicates that the key is not compressed
 // https://tools.ietf.org/html/rfc5480#section-2.2
@@ -16,10 +17,7 @@ export const thirtyTwo: number = 32
  * https://github.com/bitcoin/bips/blob/master/bip-0062.mediawiki#Low_S_values_in_signatures
  */
 export const makeCanonical = (S: BigNumber): BigNumber => {
-  // tslint:disable-next-line:import-blacklist
-  const EC = require('elliptic').ec
-  const secp256k1Curve = new EC('secp256k1')
-  const curveN = bufferToBigNumber(secp256k1Curve.curve.n)
+  const curveN = new BigNumber(secp256k1.CURVE.n.toString())
   const isCanonical = S.comparedTo(curveN.dividedBy(2)) <= 0
   if (!isCanonical) {
     return curveN.minus(S)
@@ -57,21 +55,44 @@ export class Signature {
  */
 export function recoverKeyIndex(
   signature: Uint8Array,
-  publicKey: BigNumber,
+  _publicKey: BigNumber,
   hash: Uint8Array
 ): number {
-  for (let i = 0; i < 4; i++) {
-    const compressed = false
-    // Force types to be Uint8Array
-    const signatureArray = new Uint8Array(signature)
-    const hashArray = new Uint8Array(hash)
-    const recoveredPublicKeyByteArr = ecdsaRecover(signatureArray, i, hashArray, compressed)
-    const publicKeyBuff = Buffer.from(recoveredPublicKeyByteArr)
-    const recoveredPublicKey = bufferToBigNumber(publicKeyBuff)
-    if (publicKey.eq(recoveredPublicKey)) {
-      return i
+  const formats = ['fromCompact', 'fromDER'] as const
+
+  for (let format of formats) {
+    let sig: SignatureType
+    try {
+      sig = secp256k1.Signature[format](signature)
+    } catch (e) {
+      continue
+    }
+
+    for (let i = 0; i < 4; i++) {
+      sig = sig.addRecoveryBit(i)
+      const recoveredPublicKeyByteArr = sig.recoverPublicKey(hash)
+
+      // NOTE:
+      // converting hex value to bigint allows for discrepencies between
+      // libraries to disappear, ran into an issue where
+      // "0x01234" wasn't equal to "0x1234", the conversion removes it
+      const compressedRecoveredPublicKey = BigInt(
+        ensureLeading0x(recoveredPublicKeyByteArr.toHex(false))
+      )
+      const uncompressedRecoveredPublicKey = BigInt(
+        ensureLeading0x(recoveredPublicKeyByteArr.toHex(true))
+      )
+      const publicKey = BigInt(ensureLeading0x(_publicKey.toString(16)))
+
+      if (
+        publicKey === compressedRecoveredPublicKey ||
+        publicKey === uncompressedRecoveredPublicKey
+      ) {
+        return i
+      }
     }
   }
+
   throw new Error('Unable to generate recovery key from signature.')
 }
 

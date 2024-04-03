@@ -1,10 +1,13 @@
 import { trimLeading0x } from '@celo/base/lib/address'
-import { createECDH } from 'crypto'
+import { secp256k1 } from '@noble/curves/secp256k1'
 
 export function computeSharedSecret(privateKey: string, publicKey: string): Buffer {
-  const ecdh = createECDH('secp256k1')
-  ecdh.setPrivateKey(Buffer.from(trimLeading0x(privateKey), 'hex'))
-  return ecdh.computeSecret(Buffer.from(ensureCompressed(publicKey), 'hex'))
+  return Buffer.from(
+    secp256k1.getSharedSecret(
+      Buffer.from(trimLeading0x(privateKey), 'hex'),
+      Buffer.from(ensureCompressed(publicKey), 'hex')
+    )
+  )
 }
 
 export function isCompressed(publicKey: string) {
@@ -16,39 +19,20 @@ export function isCompressed(publicKey: string) {
 }
 
 export function ensureCompressed(publicKey: string): string {
-  // NOTE: elliptic is disabled elsewhere in this library to prevent
-  // accidental signing of truncated messages.
-  // tslint:disable-next-line:import-blacklist
-  const EC = require('elliptic').ec
-  const ec = new EC('secp256k1')
-  return ec.keyFromPublic(ensureUncompressedPrefix(publicKey), 'hex').getPublic(true, 'hex')
+  return Buffer.from(secp256k1.getSharedSecret(BigInt(1), Buffer.from(publicKey, 'hex'))).toString(
+    'hex'
+  )
 }
 
 export function ensureUncompressed(publicKey: string) {
   const noLeading0x = trimLeading0x(publicKey)
-  // NOTE: elliptic is disabled elsewhere in this library to prevent
-  // accidental signing of truncated messages.
-  // tslint:disable-next-line:import-blacklist
-  const EC = require('elliptic').ec
-  const ec = new EC('secp256k1')
-  const uncompressed = ec
-    .keyFromPublic(ensureUncompressedPrefix(noLeading0x), 'hex')
-    .getPublic(false, 'hex')
-  return uncompressed
+  return secp256k1.getSharedSecret(BigInt(1), Buffer.from(noLeading0x, 'hex'), false)
 }
 
 export function trimUncompressedPrefix(publicKey: string) {
   const noLeading0x = trimLeading0x(publicKey)
   if (noLeading0x.length === 130 && noLeading0x.startsWith('04')) {
     return noLeading0x.slice(2)
-  }
-  return noLeading0x
-}
-
-function ensureUncompressedPrefix(publicKey: string): string {
-  const noLeading0x = trimLeading0x(publicKey)
-  if (noLeading0x.length === 128) {
-    return `04${noLeading0x}`
   }
   return noLeading0x
 }
