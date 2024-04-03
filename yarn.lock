@@ -1607,7 +1607,7 @@ __metadata:
     "@celo/abis": "npm:11.0.0"
     "@celo/base": "npm:^6.0.1"
     "@celo/celo-devchain": "npm:^7.0.0"
-    "@celo/compliance": "npm:~1.0.17"
+    "@celo/compliance": "npm:~1.0.20"
     "@celo/connect": "npm:^5.3.0"
     "@celo/contractkit": "npm:^8.0.0"
     "@celo/cryptographic-utils": "npm:^5.0.8"
@@ -1664,10 +1664,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/compliance@npm:~1.0.17":
-  version: 1.0.17
-  resolution: "@celo/compliance@npm:1.0.17"
-  checksum: d38bcff8468066e348afba47747f4300533e90351ef9f7ae1de92df3979dd8072127d053f32bc36e0d0008c8a232d5f5bb522dd5aea8a48e05eeff361c7e44fb
+"@celo/compliance@npm:~1.0.20":
+  version: 1.0.20
+  resolution: "@celo/compliance@npm:1.0.20"
+  checksum: 39d4012a64dfa36cd5c3dac7ce1b56c59810e22cf3bb7fdc1cb9f5bd0a740cb7dc6efe51f4c8e1a7e199051711ee1a47425d73f4480dd61e36ff4ea48c16e57e
   languageName: node
   linkType: hard
 
