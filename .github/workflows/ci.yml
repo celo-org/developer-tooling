@@ -181,10 +181,12 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
-          flags: smart-tests
           verbose: true
         env:
           CODECOV_TOKEN: ${{ env.CODECOV_TOKEN }}
+
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
 
   wallet-test:
     name: Wallet test
