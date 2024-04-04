@@ -17,9 +17,9 @@ import {
   inputCeloTxFormatter,
   parseAccessList,
 } from '@celo/connect/lib/utils/formatter'
+import { publicKeyToAddress } from '@celo/utils/lib/address'
 import { EIP712TypedData, generateTypedDataHash } from '@celo/utils/lib/sign-typed-data-utils'
 import { parseSignatureWithoutPrefix } from '@celo/utils/lib/signatureUtils'
-import { publicKeyToAddress } from '@celo/utils/src/address'
 import * as RLP from '@ethereumjs/rlp'
 import * as ethUtil from '@ethereumjs/util'
 import { secp256k1 } from '@noble/curves/secp256k1'
