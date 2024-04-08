@@ -36,6 +36,22 @@ env:
 #    limit-access-to-actor: true
 
 jobs:
+  get-codecov-token:
+    name: Fetches Codecov token
+    outputs:
+      codecov_token: '${{ steps.get_codecov_token.outputs.token }}'
+    runs-on: ['self-hosted', 'org', '8-cpu']
+    steps:
+      - name: Akeyless Get CODECOV_TOKEN Secrets
+        id: get_codecov_token
+        uses: docker://us-west1-docker.pkg.dev/devopsre/akeyless-public/akeyless-action:latest
+        with:
+          api-url: https://api.gateway.akeyless.celo-networks-dev.org
+          access-id: p-kf9vjzruht6l
+          static-secrets: '{"/static-secrets/dev-tooling-circle/codecov/developer-tooling":"CODECOV_TOKEN"}'
+      - name: Write token to the output
+        run: echo "token=$CODECOV_TOKEN" >> $GITHUB_OUTPUT
+
   install-dependencies:
     name: Install dependencies
     outputs:
@@ -147,7 +163,7 @@ jobs:
     permissions: # Must change the job token permissions to use Akeyless JWT auth
       id-token: write
       contents: read
-    needs: install-dependencies
+    needs: [install-dependencies, get-codecov-token]
     steps:
       - uses: actions/checkout@v4
       - name: Sync workspace
@@ -169,19 +185,12 @@ jobs:
         with:
           name: Jest Test Results
           path: test-results/jest
-      - name: Akeyless Get CODECOV_TOKEN Secrets
-        id: get_codecov_token
-        uses: docker://us-west1-docker.pkg.dev/devopsre/akeyless-public/akeyless-action:latest
-        with:
-          api-url: https://api.gateway.akeyless.celo-networks-dev.org
-          access-id: p-kf9vjzruht6l
-          static-secrets: '{"/static-secrets/dev-tooling-circle/codecov/developer-tooling":"CODECOV_TOKEN"}'
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
           verbose: true
         env:
-          CODECOV_TOKEN: ${{ env.CODECOV_TOKEN }}
+          CODECOV_TOKEN: ${{ needs.get-codecov-token.outputs.codecov_token }}
 
   wallet-test:
     name: Wallet test
