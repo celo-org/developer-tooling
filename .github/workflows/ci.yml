@@ -169,20 +169,10 @@ jobs:
         with:
           name: Jest Test Results
           path: test-results/jest
-      - name: Akeyless Get CODECOV_TOKEN Secrets
-        id: get_codecov_token
-        uses: docker://us-west1-docker.pkg.dev/devopsre/akeyless-public/akeyless-action:latest
+      - uses: ./.github/actions/upload-codecov
         with:
-          api-url: https://api.gateway.akeyless.celo-networks-dev.org
-          access-id: p-kf9vjzruht6l
-          static-secrets: '{"/static-secrets/dev-tooling-circle/codecov/developer-tooling":"CODECOV_TOKEN"}'
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          verbose: true
-        env:
-          CODECOV_TOKEN: ${{ env.CODECOV_TOKEN }}
-
+          name: "general_test"
+  
   wallet-test:
     name: Wallet test
     runs-on: ['self-hosted', 'org', '8-cpu']
