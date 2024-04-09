@@ -171,12 +171,15 @@ jobs:
           path: test-results/jest
       - uses: ./.github/actions/upload-codecov
         with:
-          name: "general_test"
+          report-name: "general_test"
   
   wallet-test:
     name: Wallet test
     runs-on: ['self-hosted', 'org', '8-cpu']
     timeout-minutes: 30
+    permissions: # Must change the job token permissions to use Akeyless JWT auth
+      id-token: write
+      contents: read
     needs: install-dependencies
     steps:
       - uses: actions/checkout@v4
@@ -190,13 +193,16 @@ jobs:
           yarn workspaces foreach -ip --all --include '@celo/wallet-*' run test --coverage
       - uses: ./.github/actions/upload-codecov
         with:
-          name: "wallet"
+          report-name: "wallet"
 
 
   contractkit-tests:
     name: ContractKit Tests
     runs-on: ['self-hosted', 'org', '8-cpu']
     timeout-minutes: 30
+    permissions: # Must change the job token permissions to use Akeyless JWT auth
+      id-token: write
+      contents: read
     needs: [install-dependencies]
     if: |
 
@@ -217,12 +223,15 @@ jobs:
           yarn workspace @celo/contractkit test --coverage
       - uses: ./.github/actions/upload-codecov
         with:
-          name: "contractkit"
+          report-name: "contractkit"
 
   cli-tests:
     name: CeloCli Tests
     runs-on: ['self-hosted', 'org', '8-cpu']
     timeout-minutes: 30
+    permissions: # Must change the job token permissions to use Akeyless JWT auth
+      id-token: write
+      contents: read
     needs: [install-dependencies]
     if: |
 
@@ -250,7 +259,7 @@ jobs:
           yarn workspace @celo/celocli run celocli releasecelo --help
       - uses: ./.github/actions/upload-codecov
         with:
-          name: "celocli"
+          report-name: "celocli"
 
   docs-tests:
     name: Docs tests
