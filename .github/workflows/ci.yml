@@ -187,7 +187,11 @@ jobs:
       - run: sudo corepack enable yarn
       - name: Run Wallet tests
         run: |
-          yarn workspaces foreach -ip --all --include '@celo/wallet-*' run test
+          yarn workspaces foreach -ip --all --include '@celo/wallet-*' run test --coverage
+      - uses: ./.github/actions/upload-codecov
+        with:
+          name: "wallet"
+
 
   contractkit-tests:
     name: ContractKit Tests
@@ -210,7 +214,10 @@ jobs:
       - run: sudo corepack enable yarn
       - name: Run tests
         run: |
-          yarn workspace @celo/contractkit test
+          yarn workspace @celo/contractkit test --coverage
+      - uses: ./.github/actions/upload-codecov
+        with:
+          name: "contractkit"
 
   cli-tests:
     name: CeloCli Tests
@@ -234,13 +241,16 @@ jobs:
           artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
       - name: Run tests
         run: |
-          yarn workspace @celo/celocli test
+          yarn workspace @celo/celocli test --coverage
       - name: Verify that a new account can be created
         run: |
           yarn workspace @celo/celocli run celocli account:new
       - name: Test that releasecelo command topic is working
         run: |
           yarn workspace @celo/celocli run celocli releasecelo --help
+      - uses: ./.github/actions/upload-codecov
+        with:
+          name: "celocli"
 
   docs-tests:
     name: Docs tests
