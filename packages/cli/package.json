@@ -41,7 +41,6 @@
     "@celo/explorer": "^5.0.10",
     "@celo/governance": "^5.1.1",
     "@celo/identity": "^5.1.2",
-    "@celo/phone-utils": "^6.0.2",
     "@celo/utils": "^6.0.1",
     "@celo/wallet-hsm-azure": "^5.2.0",
     "@celo/wallet-ledger": "^5.2.0",
