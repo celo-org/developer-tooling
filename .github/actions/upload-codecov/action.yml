@@ -1,0 +1,24 @@
+name: "Upload Codecov report"
+description: "Fetches Codecov token and uploads report"
+inputs:
+  report-name:
+    description: "Report name to use while uploading it"
+    required: false
+    default: ""
+runs:
+  using: "composite"
+  steps:
+    - name: Akeyless Get CODECOV_TOKEN Secrets
+      id: get_codecov_token
+      uses: docker://us-west1-docker.pkg.dev/devopsre/akeyless-public/akeyless-action:latest
+      with:
+        api-url: https://api.gateway.akeyless.celo-networks-dev.org
+        access-id: p-kf9vjzruht6l
+        static-secrets: '{"/static-secrets/dev-tooling-circle/codecov/developer-tooling":"CODECOV_TOKEN"}'
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        verbose: true
+        name: ${{ inputs.report-name }}
+      env:
+        CODECOV_TOKEN: ${{ env.CODECOV_TOKEN }}
