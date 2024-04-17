@@ -30,7 +30,7 @@
 
 #### Defined in
 
-[packages/sdk/base/src/phoneNumbers.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/phoneNumbers.ts#L16)
+[packages/sdk/base/src/phoneNumbers.ts:15](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/phoneNumbers.ts#L15)
 
 ## Functions
 
