@@ -14,7 +14,6 @@
 
 ### Functions
 
-- [anonymizedPhone](phoneNumbers.md#anonymizedphone)
 - [isE164Number](phoneNumbers.md#ise164number)
 
 ## Variables
@@ -31,29 +30,9 @@
 
 #### Defined in
 
-[packages/sdk/base/src/phoneNumbers.ts:19](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/phoneNumbers.ts#L19)
+[packages/sdk/base/src/phoneNumbers.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/phoneNumbers.ts#L16)
 
 ## Functions
-
-### anonymizedPhone
-
-▸ **anonymizedPhone**(`phoneNumber`): `string`
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `phoneNumber` | `string` |
-
-#### Returns
-
-`string`
-
-#### Defined in
-
-[packages/sdk/base/src/phoneNumbers.ts:15](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/phoneNumbers.ts#L15)
-
-___
 
 ### isE164Number
 

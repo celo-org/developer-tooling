@@ -20,7 +20,7 @@
 
 #### Defined in
 
-packages/sdk/base/lib/currencies.d.ts:9
+packages/sdk/base/lib/currencies.d.ts:3
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 #### Defined in
 
-packages/sdk/base/lib/currencies.d.ts:10
+packages/sdk/base/lib/currencies.d.ts:4
 
 ___
 
@@ -40,4 +40,4 @@ ___
 
 #### Defined in
 
-packages/sdk/base/lib/currencies.d.ts:8
+packages/sdk/base/lib/currencies.d.ts:2

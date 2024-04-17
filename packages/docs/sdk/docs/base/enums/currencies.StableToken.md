@@ -20,7 +20,7 @@
 
 #### Defined in
 
-[packages/sdk/base/src/currencies.ts:10](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/currencies.ts#L10)
+[packages/sdk/base/src/currencies.ts:3](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/currencies.ts#L3)
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/base/src/currencies.ts:11](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/currencies.ts#L11)
+[packages/sdk/base/src/currencies.ts:4](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/currencies.ts#L4)
 
 ___
 
@@ -40,4 +40,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/base/src/currencies.ts:9](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/currencies.ts#L9)
+[packages/sdk/base/src/currencies.ts:2](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/currencies.ts#L2)
