@@ -36,8 +36,6 @@ class MockWallet implements ReadOnlyWallet {
         gasPrice: 'gasPrice',
         gas: 'gas',
         feeCurrency: 'feeCurrency',
-        gatewayFeeRecipient: 'gatewayFeeRecipient',
-        gatewayFee: 'gatewayFee',
         to: 'to',
         value: 'value',
         input: 'input',
@@ -134,8 +132,6 @@ describe('CeloProvider', () => {
         gas: 10,
         gasPrice: 99,
         feeCurrency: '0x124356',
-        gatewayFeeRecipient: '0x1234',
-        gatewayFee: '0x5678',
         data: '0xabcdef',
         chainId: 1,
       }

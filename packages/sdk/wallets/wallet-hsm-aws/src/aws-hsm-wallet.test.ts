@@ -179,8 +179,6 @@ describe('AwsHsmWallet class', () => {
           gas: '10',
           gasPrice: '99',
           feeCurrency: '0x',
-          gatewayFeeRecipient: ACCOUNT_ADDRESS_NEVER,
-          gatewayFee: '0x5678',
           data: '0xabcdef',
         }
       })
@@ -238,8 +236,6 @@ describe('AwsHsmWallet class', () => {
           gas: '10',
           gasPrice: '99',
           feeCurrency: '0x',
-          gatewayFeeRecipient: ACCOUNT_ADDRESS_NEVER,
-          gatewayFee: '0x5678',
           data: '0xabcdef',
         }
       })
@@ -266,8 +262,6 @@ describe('AwsHsmWallet class', () => {
             gas: '10',
             gasPrice: '99',
             feeCurrency: '0x' as const,
-            gatewayFeeRecipient: ACCOUNT_ADDRESS_NEVER,
-            gatewayFee: '0x5678',
             data: '0xabcdef',
           }
           const signedTx: EncodedTransaction = await wallet.signTransaction(

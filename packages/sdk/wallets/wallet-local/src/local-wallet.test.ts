@@ -63,7 +63,6 @@ const ACCOUNT_ADDRESS1 = normalizeAddressWith0x(privateKeyToAddress(PRIVATE_KEY1
 const PRIVATE_KEY2 = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890fdeccc'
 const ACCOUNT_ADDRESS2 = normalizeAddressWith0x(privateKeyToAddress(PRIVATE_KEY2))
 
-const FEE_ADDRESS = ACCOUNT_ADDRESS1
 const CURRENCY_ADDRESS = ACCOUNT_ADDRESS2
 
 describe('Local wallet class', () => {
@@ -121,10 +120,9 @@ describe('Local wallet class', () => {
             value: Web3.utils.toWei('1', 'ether'),
             nonce: 0,
             gas: '10',
-            gasPrice: '99',
+            maxFeePerGas: '99',
+            maxPriorityFeePerGas: '99',
             feeCurrency: CURRENCY_ADDRESS,
-            gatewayFeeRecipient: FEE_ADDRESS,
-            gatewayFee: '0x5678',
             data: '0xabcdef',
           }
         })
@@ -168,34 +166,39 @@ describe('Local wallet class', () => {
               nonce: 0,
               gas: '10',
               gasPrice: '99',
-              feeCurrency: '0x',
-              gatewayFeeRecipient: FEE_ADDRESS,
-              gatewayFee: '0x5678',
               data: '0xabcdef' as const,
             }
           })
+          describe('when gasPrice and feeCurrency are both provided', () => {
+            test('throws error', async () => {
+              const tx = {
+                ...celoTransactionWithGasPrice,
+                feeCurrency: '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826' as StrongAddress,
+              }
+              await expect(wallet.signTransaction(tx)).rejects.toMatchInlineSnapshot(
+                `[Error: Cannot serialize both "gasPrice" and "feeCurrency" together. To keep "feeCurrency", replace "gasPrice" with "maxFeePerGas". To keep "gasPrice" and send a type 0 transaction remove "feeCurrency"]`
+              )
+            })
+          })
 
-          test('succeeds with legacy', async () => {
+          test('succeeds with eth-legacy', async () => {
             await expect(wallet.signTransaction(celoTransactionWithGasPrice)).resolves
               .toMatchInlineSnapshot(`
               {
-                "raw": "0xf88480630a80941be31a94361a391bbafb2a4ccd704f57dc04d4bb82567894588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a764000083abcdef83015ad8a09e121a99dc0832a9f4d1d71500b3c8a69a3c064d437c225d6292577ffcc45a71a02c5efa3c4b58953c35968e42d11d3882dacacf45402ee802824268b7cd60daff",
+                "raw": "0xf86b80630a94588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a764000083abcdef83015ad7a0c6f2c698f9952bc121b64496b60aa019863388f1542f5e10271ea89d0a19682ca01f270cf24f9d16d7be5e38b52b4ba9c2d8ac73d77ba8ca28142544dee5803ba7",
                 "tx": {
-                  "feeCurrency": "0x",
                   "gas": "0x0a",
                   "gasPrice": "0x63",
-                  "gatewayFee": "0x5678",
-                  "gatewayFeeRecipient": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
-                  "hash": "0xd24898ee3f68caa01fe065784453db7360bf783060fcbd18033f9d254ab8b082",
+                  "hash": "0x59f4ff742a8b1f8eb1ad3e36fed4df3895da6b071dfaa858144a94c65f1fa8e3",
                   "input": "0xabcdef",
                   "nonce": "0",
-                  "r": "0x9e121a99dc0832a9f4d1d71500b3c8a69a3c064d437c225d6292577ffcc45a71",
-                  "s": "0x2c5efa3c4b58953c35968e42d11d3882dacacf45402ee802824268b7cd60daff",
+                  "r": "0xc6f2c698f9952bc121b64496b60aa019863388f1542f5e10271ea89d0a19682c",
+                  "s": "0x1f270cf24f9d16d7be5e38b52b4ba9c2d8ac73d77ba8ca28142544dee5803ba7",
                   "to": "0x588e4b68193001e4d10928660ab4165b813717c0",
-                  "v": "0x015ad8",
+                  "v": "0x015ad7",
                   "value": "0x0de0b6b3a7640000",
                 },
-                "type": "celo-legacy",
+                "type": "ethereum-legacy",
               }
             `)
           })
@@ -210,25 +213,22 @@ describe('Local wallet class', () => {
             }
             await expect(wallet.signTransaction(transaction1559)).resolves.toMatchInlineSnapshot(`
               {
-                "raw": "0x7cf88682ad5a8063630a80941be31a94361a391bbafb2a4ccd704f57dc04d4bb82567894588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a764000083abcdefc001a0cfa1e1b30d1e4617ce80922d853c5e8b54b21f5ed6604438f90280ef2f0b7fd0a06fd8eee02fbdd421136fb45e6851ce72b5d87a2c06b2e136ef1a062df9256f4e",
+                "raw": "0x02f86d82ad5a8063630a94588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a764000083abcdefc080a02c61b97c545c0a59732adbc497e944818da323a508930996383751d17e0b932ea015666dce65f074f12335ab78e1912f8b83fda75f05a002943459598712e6b17c",
                 "tx": {
                   "accessList": [],
-                  "feeCurrency": "0x",
                   "gas": "0x0a",
-                  "gatewayFee": "0x5678",
-                  "gatewayFeeRecipient": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
-                  "hash": "0x29327536ba9901fde64b1b86882fd173517b41cd8bc8245e3761847d9b231c6d",
+                  "hash": "0xc8be0a99b8f133e843f6824d00db12b89d94e0df0cc28899021edc8924b7b2ba",
                   "input": "0xabcdef",
                   "maxFeePerGas": "0x63",
                   "maxPriorityFeePerGas": "0x63",
                   "nonce": "0",
-                  "r": "0xcfa1e1b30d1e4617ce80922d853c5e8b54b21f5ed6604438f90280ef2f0b7fd0",
-                  "s": "0x6fd8eee02fbdd421136fb45e6851ce72b5d87a2c06b2e136ef1a062df9256f4e",
+                  "r": "0x2c61b97c545c0a59732adbc497e944818da323a508930996383751d17e0b932e",
+                  "s": "0x15666dce65f074f12335ab78e1912f8b83fda75f05a002943459598712e6b17c",
                   "to": "0x588e4b68193001e4d10928660ab4165b813717c0",
-                  "v": "0x01",
+                  "v": "0x",
                   "value": "0x0de0b6b3a7640000",
                 },
-                "type": "cip42",
+                "type": "eip1559",
               }
             `)
           })
@@ -245,8 +245,6 @@ describe('Local wallet class', () => {
               to: otherAddress,
               gasPrice: undefined,
               feeCurrency: undefined,
-              gatewayFeeRecipient: undefined,
-              gatewayFee: undefined,
               maxFeePerGas: '99',
               maxPriorityFeePerGas: '99',
               data: celoTransactionWithGasPrice.data as Hex,
@@ -277,8 +275,6 @@ describe('Local wallet class', () => {
             const recoverTransactionCIP64 = {
               ...celoTransactionWithGasPrice,
               gasPrice: undefined,
-              gatewayFee: undefined,
-              gatewayFeeRecipient: undefined,
               maxFeePerGas: '99',
               maxPriorityFeePerGas: '99',
               feeCurrency: '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826',
@@ -288,9 +284,13 @@ describe('Local wallet class', () => {
               {
                 "raw": "0x7bf88282ad5a8063630a94588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a764000083abcdefc094cd2a3d9f938e13cd947ec05abc7fe734df8dd82680a091b5504a59e529e7efa42dbb97fbc3311a91d035c873a94ab0789441fc989f84a02e8254d6b3101b63417e5d496833bc84f4832d4a8bf8a2b83e291d8f38c0f62d",
                 "tx": {
+                  "accessList": [],
+                  "feeCurrency": "0xcd2a3d9f938e13cd947ec05abc7fe734df8dd826",
                   "gas": "0x0a",
                   "hash": "0x645afc1d19fe805c0c0956e70d5415487bf073741d7b297ccb7e7040c6ce5df6",
                   "input": "0xabcdef",
+                  "maxFeePerGas": "0x63",
+                  "maxPriorityFeePerGas": "0x63",
                   "nonce": "0",
                   "r": "0x91b5504a59e529e7efa42dbb97fbc3311a91d035c873a94ab0789441fc989f84",
                   "s": "0x2e8254d6b3101b63417e5d496833bc84f4832d4a8bf8a2b83e291d8f38c0f62d",
@@ -303,36 +303,35 @@ describe('Local wallet class', () => {
             `)
           })
 
-          test('succeeds with cip42', async () => {
+          test('ignores invalid fields', async () => {
             const transaction42 = {
               ...celoTransactionWithGasPrice,
               gasPrice: undefined,
               maxFeePerGas: '99',
               maxPriorityFeePerGas: '99',
+              // invalid field
               gatewayFee: '0x5678',
               feeCurrency: '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826',
             } as const
             await expect(wallet.signTransaction(transaction42)).resolves.toMatchInlineSnapshot(`
               {
-                "raw": "0x7cf89a82ad5a8063630a94cd2a3d9f938e13cd947ec05abc7fe734df8dd826941be31a94361a391bbafb2a4ccd704f57dc04d4bb82567894588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a764000083abcdefc080a0c610507b2ac3cff80dd7017419021196807d605efce0970c18cde48db33c27d1a01799477e0f601f554f0ee6f7ac21490602124801e9f7a99d9605249b90f03112",
+                "raw": "0x7bf88282ad5a8063630a94588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a764000083abcdefc094cd2a3d9f938e13cd947ec05abc7fe734df8dd82680a091b5504a59e529e7efa42dbb97fbc3311a91d035c873a94ab0789441fc989f84a02e8254d6b3101b63417e5d496833bc84f4832d4a8bf8a2b83e291d8f38c0f62d",
                 "tx": {
                   "accessList": [],
                   "feeCurrency": "0xcd2a3d9f938e13cd947ec05abc7fe734df8dd826",
                   "gas": "0x0a",
-                  "gatewayFee": "0x5678",
-                  "gatewayFeeRecipient": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
-                  "hash": "0x7afcef8db391ff574b7f9c9205399b8ab094fc9fc8afbfb881204cbaaf093365",
+                  "hash": "0x645afc1d19fe805c0c0956e70d5415487bf073741d7b297ccb7e7040c6ce5df6",
                   "input": "0xabcdef",
                   "maxFeePerGas": "0x63",
                   "maxPriorityFeePerGas": "0x63",
                   "nonce": "0",
-                  "r": "0xc610507b2ac3cff80dd7017419021196807d605efce0970c18cde48db33c27d1",
-                  "s": "0x1799477e0f601f554f0ee6f7ac21490602124801e9f7a99d9605249b90f03112",
+                  "r": "0x91b5504a59e529e7efa42dbb97fbc3311a91d035c873a94ab0789441fc989f84",
+                  "s": "0x2e8254d6b3101b63417e5d496833bc84f4832d4a8bf8a2b83e291d8f38c0f62d",
                   "to": "0x588e4b68193001e4d10928660ab4165b813717c0",
                   "v": "0x",
                   "value": "0x0de0b6b3a7640000",
                 },
-                "type": "cip42",
+                "type": "cip64",
               }
             `)
           })
@@ -358,9 +357,6 @@ describe('Local wallet class', () => {
               nonce: 65,
               gas: '10',
               gasPrice: '99',
-              feeCurrency: '0x',
-              gatewayFeeRecipient: FEE_ADDRESS,
-              gatewayFee: '0x5678',
               data: '0xabcdef',
             } as const
 
@@ -374,7 +370,7 @@ describe('Local wallet class', () => {
             )
           })
         })
-        describe('when using signTransaction with type CIP42/64', () => {
+        describe('when using signTransaction with type CIP64', () => {
           let celoTransactionBase: CeloTx
           const feeCurrency = '0x10c892a6ec43a53e45d0b916b4b7d383b1b78c0f'
           const maxFeePerGas = '0x100000000'
@@ -391,12 +387,10 @@ describe('Local wallet class', () => {
               data: '0xabcdef',
             }
           })
-          describe('when feeCurrency and maxPriorityFeePerGas and maxFeePerGas are set but no gatewayfees', () => {
+          describe('when feeCurrency and maxPriorityFeePerGas and maxFeePerGas are set', () => {
             it('signs as a CIP64 tx', async () => {
               const transaction: CeloTx = {
                 ...celoTransactionBase,
-                gatewayFee: undefined,
-                gatewayFeeRecipient: undefined,
                 feeCurrency,
                 maxFeePerGas,
                 maxPriorityFeePerGas,
@@ -405,20 +399,7 @@ describe('Local wallet class', () => {
               expect(signedTx.raw).toMatch(/^0x7b/)
             })
           })
-          describe('when feeCurrency and gatewayFee and maxPriorityFeePerGas and maxFeePerGas are set', () => {
-            it('signs as a CIP42 tx', async () => {
-              const transaction: CeloTx = {
-                ...celoTransactionBase,
-                gatewayFee: '0x1331',
-                gatewayFeeRecipient: FEE_ADDRESS,
-                feeCurrency,
-                maxFeePerGas,
-                maxPriorityFeePerGas,
-              }
-              const signedTx: EncodedTransaction = await wallet.signTransaction(transaction)
-              expect(signedTx.raw).toMatch(/^0x7c/)
-            })
-          })
+
           describe('when feeCurrency and maxFeePerGas but not maxPriorityFeePerGas are set', () => {
             it('throws error', async () => {
               const transaction: CeloTx = {

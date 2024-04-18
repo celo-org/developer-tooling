@@ -12,14 +12,6 @@ export type Address = string
 export type Hex = `0x${string}`
 export interface CeloParams {
   feeCurrency: StrongAddress
-  /*
-  @deprecated
-  */
-  gatewayFeeRecipient: string
-  /*
-  @deprecated
-  */
-  gatewayFee: string
 }
 
 export type AccessListRaw = [string, string[]][]
@@ -32,14 +24,6 @@ export interface FormattedCeloTx {
   data: string | undefined
   value: HexOrMissing
   feeCurrency?: HexOrMissing
-  /*
-  @deprecated
-  */
-  gatewayFeeRecipient?: HexOrMissing
-  /*
-  @deprecated
-  */
-  gatewayFee?: HexOrMissing
   gas: HexOrMissing
   gasPrice?: Hex
   maxFeePerGas?: Hex
@@ -66,7 +50,7 @@ export { BlockNumber, EventLog, Log, PromiEvent, Sign } from 'web3-core'
 export { Block, BlockHeader, Syncing } from 'web3-eth'
 export { Contract, ContractSendMethod, PastEventOptions } from 'web3-eth-contract'
 
-export type TransactionTypes = 'ethereum-legacy' | 'eip1559' | 'celo-legacy' | 'cip42' | 'cip64'
+export type TransactionTypes = 'ethereum-legacy' | 'eip1559' | 'cip64'
 
 interface CommonTXProperties {
   nonce: string
@@ -96,24 +80,6 @@ export interface CIP64TXProperties extends FeeMarketAndAccessListTXProperties {
   type: 'cip64'
 }
 
-export interface CIP42TXProperties extends FeeMarketAndAccessListTXProperties {
-  feeCurrency: string
-  gatewayFeeRecipient?: string
-  gatewayFee?: string
-  type: 'cip42'
-}
-
-/*
-  @deprecated
-  */
-export interface LegacyTXProperties extends CommonTXProperties {
-  gasPrice: string
-  feeCurrency: string
-  gatewayFeeRecipient: string
-  gatewayFee: string
-  type: 'celo-legacy'
-}
-
 export interface EthereumLegacyTXProperties extends CommonTXProperties {
   gasPrice: string
   type: 'ethereum-legacy'
@@ -121,12 +87,7 @@ export interface EthereumLegacyTXProperties extends CommonTXProperties {
 
 export interface EncodedTransaction {
   raw: Hex
-  tx:
-    | EthereumLegacyTXProperties
-    | LegacyTXProperties
-    | CIP42TXProperties
-    | EIP1559TXProperties
-    | CIP64TXProperties
+  tx: EthereumLegacyTXProperties | EIP1559TXProperties | CIP64TXProperties
 }
 
 export type CeloTxPending = Transaction & Partial<CeloParams>

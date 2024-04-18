@@ -86,7 +86,6 @@ export class RpcSigner implements Signer {
       nonce: toRpcHex(tx.nonce),
       value: toRpcHex(tx.value),
       gas: toRpcHex(tx.gas),
-      gatewayFee: toRpcHex(tx.gatewayFee),
       ...(tx.gasPrice
         ? {
             gasPrice: toRpcHex(tx.gasPrice),

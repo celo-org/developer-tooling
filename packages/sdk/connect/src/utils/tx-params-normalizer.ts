@@ -17,18 +17,11 @@ function isPresent(value: string | undefined) {
 
 export class TxParamsNormalizer {
   private chainId: number | null = null
-  private gatewayFeeRecipient: string | null = null
 
   constructor(readonly connection: Connection) {}
 
   public async populate(celoTxParams: CeloTx): Promise<CeloTx> {
     const txParams = { ...celoTxParams }
-
-    if (isPresent(txParams.gatewayFeeRecipient) || isPresent(txParams.gatewayFee)) {
-      console.warn(
-        'Gateway fee has been deprecated and will be removed see: https://github.com/celo-org/celo-proposals/blob/master/CIPs/cip-0057.md'
-      )
-    }
 
     const [chainId, nonce, gas, maxFeePerGas] = await Promise.all(
       [
@@ -101,22 +94,5 @@ export class TxParamsNormalizer {
       this.chainId = await this.connection.chainId()
     }
     return this.chainId
-  }
-
-  // Right now, Forno does not expose a node's coinbase so we can't
-  // set the gatewayFeeRecipient. Once that is fixed, we can reenable
-  // this.
-  // @ts-ignore - see comment above
-  private async getCoinbase(): Promise<string> {
-    if (this.gatewayFeeRecipient === null) {
-      this.gatewayFeeRecipient = await this.connection.coinbase()
-    }
-    if (this.gatewayFeeRecipient == null) {
-      throw new Error(
-        'missing-tx-params-populator@getCoinbase: Coinbase is null, we are not connected to a full ' +
-          'node, cannot sign transactions locally'
-      )
-    }
-    return this.gatewayFeeRecipient
   }
 }
