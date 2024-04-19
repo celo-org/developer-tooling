@@ -60,4 +60,4 @@ export abstract class OffchainDataCommand extends BaseCommand {
 }
 
 export const DEPRECATION_NOTICE =
-  'offchain-read and offchain-write commands are deprecated as CIP8 was abandonded. They will be remove next major release.'
+  'offchain-read and offchain-write commands are deprecated as CIP8 was abandonded. They will be removed next major release.'
