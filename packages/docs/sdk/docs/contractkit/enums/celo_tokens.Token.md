@@ -18,4 +18,4 @@
 
 #### Defined in
 
-packages/sdk/base/lib/currencies.d.ts:13
+packages/sdk/base/lib/currencies.d.ts:7

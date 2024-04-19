@@ -41,7 +41,7 @@
 
 #### Defined in
 
-packages/sdk/base/lib/currencies.d.ts:15
+packages/sdk/base/lib/currencies.d.ts:9
 
 ___
 
