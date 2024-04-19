@@ -1,8 +1,8 @@
 import { PrivateNameAccessor, PublicNameAccessor } from '@celo/identity/lib/offchain/accessors/name'
 import { privateKeyToAddress } from '@celo/utils/lib/address'
-import { Flags } from '@oclif/core'
+import { Flags, ux } from '@oclif/core'
 import { binaryPrompt } from '../../utils/cli'
-import { OffchainDataCommand } from '../../utils/off-chain-data'
+import { DEPRECATION_NOTICE, OffchainDataCommand } from '../../utils/off-chain-data'
 export default class OffchainWrite extends OffchainDataCommand {
   static description = 'DEV: Writes a name to offchain storage'
 
@@ -24,6 +24,8 @@ export default class OffchainWrite extends OffchainDataCommand {
   ]
 
   async run() {
+    ux.warn(DEPRECATION_NOTICE)
+
     const kit = await this.getKit()
     const {
       flags: { encryptTo, name, privateDEK, privateKey },
