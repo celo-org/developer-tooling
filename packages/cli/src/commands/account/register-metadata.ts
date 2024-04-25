@@ -9,13 +9,13 @@ import { displayMetadata } from '../../utils/identity'
 
 export default class RegisterMetadata extends BaseCommand {
   static description =
-    'Register metadata URL for an account where users will be able to retieve the metadata file and verify your claims'
+    'Register metadata URL for an account where users will be able to retrieve the metadata file and verify your claims'
 
   static flags = {
     ...BaseCommand.flags,
     from: CustomFlags.address({
       required: true,
-      description: 'Addess of the account to set metadata for',
+      description: 'Address of the account to set metadata for',
     }),
     url: Flags.url({
       required: true,

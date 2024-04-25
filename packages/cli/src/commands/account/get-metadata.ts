@@ -7,7 +7,7 @@ import { displayMetadata } from '../../utils/identity'
 
 export default class GetMetadata extends BaseCommand {
   static description =
-    'Show information about an address. Retreives the metadata URL for an account from the on-chain, then fetches the metadata file off-chain and verifies proofs as able.'
+    'Show information about an address. Retrieves the metadata URL for an account from the on-chain, then fetches the metadata file off-chain and verifies proofs as able.'
 
   static flags = {
     ...BaseCommand.flags,
@@ -39,7 +39,7 @@ export default class GetMetadata extends BaseCommand {
       )
       console.info('Metadata contains the following claims: \n')
       await displayMetadata(metadata, kit, flags)
-    } catch (error: any) {
+    } catch (error) {
       console.error(`Metadata could not be retrieved from ${metadataURL}: ${error.toString()}`)
     }
   }

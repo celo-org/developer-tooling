@@ -17,7 +17,7 @@ const UNVERSIONED_CONTRACTS = [
 const UNPROXIED_CONTRACTS: CeloContract[] = []
 
 export default class Contracts extends BaseCommand {
-  static description = 'Lists Celo core contracts and their addesses.'
+  static description = 'Lists Celo core contracts and their addresses.'
 
   static flags = {
     ...BaseCommand.flags,

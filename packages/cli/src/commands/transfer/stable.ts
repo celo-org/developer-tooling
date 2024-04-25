@@ -11,7 +11,7 @@ export default class TransferStable extends TransferStableBase {
     ...TransferStableBase.flags,
     stableToken: Flags.option({
       options: Object.keys(stableTokenOptions) as (StableToken | Lowercase<StableToken>)[],
-      description: 'Name of the stable to be transfered',
+      description: 'Name of the stable to be transferred',
     })(),
   }
 

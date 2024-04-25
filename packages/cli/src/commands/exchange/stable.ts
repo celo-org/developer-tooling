@@ -11,7 +11,7 @@ export default class ExchangeStable extends ExchangeStableBase {
     ...ExchangeStableBase.flags,
     stableToken: Flags.option({
       options: Object.keys(stableTokenOptions) as (StableToken | Lowercase<StableToken>)[],
-      description: 'Name of the stable token to be transfered',
+      description: 'Name of the stable token to be transferred',
     })(),
   }
 
