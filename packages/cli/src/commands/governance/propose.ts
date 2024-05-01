@@ -28,6 +28,14 @@ export default class Propose extends BaseCommand {
     useMultiSig: Flags.boolean({
       description: 'True means the request will be sent through multisig.',
     }),
+    for: CustomFlags.address({
+      dependsOn: ['useMultiSig'],
+      description: 'Address of the multi-sig contract',
+      /* 
+      TODO(Arthur): check this syntax is correct.
+      The goal is to ensure `--for` is only used if `--useMultiSig` is used
+      */
+    }),
     force: Flags.boolean({ description: 'Skip execution check', default: false }),
     noInfo: Flags.boolean({ description: 'Skip printing the proposal info', default: false }),
     descriptionURL: Flags.string({
@@ -48,7 +56,7 @@ export default class Propose extends BaseCommand {
 
   static examples = [
     'propose --jsonTransactions ./transactions.json --deposit 10000e18 --from 0x5409ed021d9299bf6814279a6a1411a7e866a631 --descriptionURL https://gist.github.com/yorhodes/46430eacb8ed2f73f7bf79bef9d58a33',
-    'propose --jsonTransactions ./transactions.json --deposit 10000e18 --from 0x5409ed021d9299bf6814279a6a1411a7e866a631  --useMultiSig --descriptionURL https://gist.github.com/yorhodes/46430eacb8ed2f73f7bf79bef9d58a33',
+    'propose --jsonTransactions ./transactions.json --deposit 10000e18 --from 0x5409ed021d9299bf6814279a6a1411a7e866a631  --useMultiSig --for 0x6c3dDFB1A9e73B5F49eDD46624F4954Bf66CAe93 --descriptionURL https://gist.github.com/yorhodes/46430eacb8ed2f73f7bf79bef9d58a33',
   ]
 
   async run() {
@@ -58,6 +66,15 @@ export default class Propose extends BaseCommand {
     const useMultiSig = res.flags.useMultiSig
     const deposit = new BigNumber(res.flags.deposit)
     kit.defaultAccount = account
+    /* 
+    TODO(Arthur): Check that I'm handling edge cases 
+    where --useMultiSig and --for are defined/undefined
+    correctly.
+    */
+    const proposerMultiSig = res.flags.for
+      ? await kit.contracts.getMultiSig(res.flags.for)
+      : undefined
+    const proposer = useMultiSig ? proposerMultiSig!.address : account
 
     const builder = new ProposalBuilder(kit)
 
@@ -84,16 +101,11 @@ export default class Propose extends BaseCommand {
 
     const governance = await kit.contracts.getGovernance()
 
-    const governanceProposerMultiSig = useMultiSig
-      ? await kit.contracts.getMultiSig(account)
-      : undefined
-    const proposer = useMultiSig ? governanceProposerMultiSig!.address : account
-
     await newCheckBuilder(this, proposer)
       .hasEnoughCelo(proposer, deposit)
       .exceedsProposalMinDeposit(deposit)
       .addConditionalCheck(`${account} is multisig signatory`, useMultiSig, () =>
-        governanceProposerMultiSig!.isowner(account)
+        proposerMultiSig!.isowner(account)
       )
       .runChecks()
 
@@ -106,18 +118,20 @@ export default class Propose extends BaseCommand {
 
     const governanceTx = governance.propose(proposal, res.flags.descriptionURL)
 
-    const tx = useMultiSig
-      ? await governanceProposerMultiSig!.submitOrConfirmTransaction(
-          governance.address,
-          governanceTx.txo
-        )
-      : governanceTx
-
-    await displaySendTx<string | void | boolean>(
-      'proposeTx',
-      tx,
-      { value: deposit.toFixed() },
-      'ProposalQueued'
-    )
+    if (useMultiSig) {
+      const multiSigTx = await proposerMultiSig!.submitOrConfirmTransaction(
+        governance.address,
+        governanceTx.txo,
+        deposit.toFixed()
+      )
+      await displaySendTx<string | void | boolean>('proposeTx', multiSigTx, {}, 'ProposalQueued')
+    } else {
+      await displaySendTx<string | void | boolean>(
+        'proposeTx',
+        governanceTx,
+        { value: deposit.toFixed() },
+        'ProposalQueued'
+      )
+    }
   }
 }
