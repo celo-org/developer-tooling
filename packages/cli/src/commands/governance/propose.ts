@@ -25,6 +25,9 @@ export default class Propose extends BaseCommand {
       description: 'Amount of Celo to attach to proposal',
     }),
     from: CustomFlags.address({ required: true, description: "Proposer's address" }),
+    useMultiSig: Flags.boolean({
+      description: 'True means the request will be sent through multisig.',
+    }),
     force: Flags.boolean({ description: 'Skip execution check', default: false }),
     noInfo: Flags.boolean({ description: 'Skip printing the proposal info', default: false }),
     descriptionURL: Flags.string({
@@ -51,13 +54,9 @@ export default class Propose extends BaseCommand {
     const kit = await this.getKit()
     const res = await this.parse(Propose)
     const account = res.flags.from
+    const useMultiSig = res.flags.useMultiSig
     const deposit = new BigNumber(res.flags.deposit)
     kit.defaultAccount = account
-
-    await newCheckBuilder(this, account)
-      .hasEnoughCelo(account, deposit)
-      .exceedsProposalMinDeposit(deposit)
-      .runChecks()
 
     const builder = new ProposalBuilder(kit)
 
@@ -84,6 +83,19 @@ export default class Propose extends BaseCommand {
 
     const governance = await kit.contracts.getGovernance()
 
+    const governanceProposerMultiSig = useMultiSig
+      ? await kit.contracts.getMultiSig(account)
+      : undefined
+    const proposer = useMultiSig ? governanceProposerMultiSig!.address : account
+
+    await newCheckBuilder(this, proposer)
+      .hasEnoughCelo(proposer, deposit)
+      .exceedsProposalMinDeposit(deposit)
+      .addConditionalCheck(`${account} is multisig signatory`, useMultiSig, () =>
+        governanceProposerMultiSig!.isowner(account)
+      )
+      .runChecks()
+
     if (!res.flags.force) {
       const ok = await checkProposal(proposal, kit)
       if (!ok) {
@@ -91,9 +103,18 @@ export default class Propose extends BaseCommand {
       }
     }
 
-    await displaySendTx(
+    const governanceTx = governance.propose(proposal, res.flags.descriptionURL)
+
+    const tx = useMultiSig
+      ? await governanceProposerMultiSig!.submitOrConfirmTransaction(
+          governance.address,
+          governanceTx.txo
+        )
+      : governanceTx
+
+    await displaySendTx<string | void | boolean>(
       'proposeTx',
-      governance.propose(proposal, res.flags.descriptionURL),
+      tx,
       { value: deposit.toFixed() },
       'ProposalQueued'
     )
