@@ -43,7 +43,7 @@ export default class TransferGold extends BaseCommand {
       .addCheck(`${spender} is a reserve spender`, async () => reserve.isSpender(spender))
       .addConditionalCheck(`${account} is a multisig signatory`, useMultiSig, async () =>
         reserveSpenderMultiSig !== undefined
-          ? reserveSpenderMultiSig.isowner(account)
+          ? reserveSpenderMultiSig.isOwner(account)
           : new Promise<boolean>(() => false)
       )
       .addCheck(`${to} is another reserve address`, async () => reserve.isOtherReserveAddress(to))

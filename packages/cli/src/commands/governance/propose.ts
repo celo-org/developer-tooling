@@ -105,7 +105,7 @@ export default class Propose extends BaseCommand {
       .hasEnoughCelo(proposer, deposit)
       .exceedsProposalMinDeposit(deposit)
       .addConditionalCheck(`${account} is multisig signatory`, useMultiSig, () =>
-        proposerMultiSig!.isowner(account)
+        proposerMultiSig!.isOwner(account)
       )
       .runChecks()
 

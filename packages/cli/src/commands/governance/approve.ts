@@ -53,7 +53,7 @@ export default class Approve extends BaseCommand {
     const checkBuilder = newCheckBuilder(this)
       .isApprover(approver)
       .addConditionalCheck(`${account} is multisig signatory`, useMultiSig, () =>
-        governanceApproverMultiSig!.isowner(account)
+        governanceApproverMultiSig!.isOwner(account)
       )
 
     let governanceTx: CeloTransactionObject<any>
