@@ -174,9 +174,63 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
         '--jsonTransactions',
         'transactions.json',
         '--deposit',
-        '1000000000000000000',
+        '1000000000000000000', // TODO(Arthur): This is 1 CELO, shouldn't this be 10,000 CELO now?
         '--from',
         accounts[0],
+        '--descriptionURL',
+        'https://dummyurl.com',
+      ])
+
+      const proposal = await governance.getProposal(1)
+      expect(proposal.length).toEqual(transactions.length)
+      expect(proposal[0].to).toEqual(goldToken.address)
+      expect(proposal[0].value).toEqual(transactions[0].value)
+      const expectedInput = goldToken['contract'].methods['transfer'](
+        transactions[0].args[0],
+        transactions[0].args[1]
+      ).encodeABI()
+      expect(proposal[0].input).toEqual(expectedInput)
+    },
+    EXTRA_LONG_TIMEOUT_MS
+  )
+
+  /* 
+  TODO(Arthur): This test is incomplete.
+  1. I need to have access to a MultiSig.sol instance where `accounts[0]` is an authorized
+  signer and multisig[0] (or the like) gives me access to the multisig address.
+  */
+  test(
+    'will successfully create proposal based on Core contract with `--useMultisig` option',
+    async () => {
+      const transactionsToBeSaved = JSON.stringify(transactions)
+      fs.writeFileSync('transactions.json', transactionsToBeSaved, { flag: 'w' })
+
+      /*
+      TODO(Arthur): Why do we send the governance contract 1 CELO when 
+      the `governance:propose` command makes a deposit with the the `--deposit` flag anyway?
+      Is this strictly necessary?
+      */
+      await (
+        await kit.sendTransaction({
+          to: governance.address,
+          from: accounts[0],
+          value: web3.utils.toWei('1', 'ether'),
+        })
+      ).waitReceipt()
+
+      const proposalBefore = await governance.getProposal(1)
+      expect(proposalBefore).toEqual([])
+
+      await testLocally(Propose, [
+        '--jsonTransactions',
+        'transactions.json',
+        '--deposit',
+        '10000e18',
+        '--from',
+        accounts[0], // TODO(Arthur): ensure account is multisig signer
+        '--useMultiSig',
+        '--for',
+        '', // TODO(Arthur): replace with multisig address
         '--descriptionURL',
         'https://dummyurl.com',
       ])
