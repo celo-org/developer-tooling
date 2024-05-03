@@ -26,7 +26,7 @@ Contract for handling multisig actions
 - [getOwners](wrappers_MultiSig.MultiSigWrapper.md#getowners)
 - [getRequired](wrappers_MultiSig.MultiSigWrapper.md#getrequired)
 - [getTransactionCount](wrappers_MultiSig.MultiSigWrapper.md#gettransactioncount)
-- [isowner](wrappers_MultiSig.MultiSigWrapper.md#isowner)
+- [isOwner](wrappers_MultiSig.MultiSigWrapper.md#isowner)
 - [methodIds](wrappers_MultiSig.MultiSigWrapper.md#methodids)
 - [replaceOwner](wrappers_MultiSig.MultiSigWrapper.md#replaceowner)
 - [totalTransactionCount](wrappers_MultiSig.MultiSigWrapper.md#totaltransactioncount)
@@ -212,9 +212,9 @@ ___
 
 ___
 
-### isowner
+### isOwner
 
-• **isowner**: (`owner`: `string`) => `Promise`\<`boolean`\>
+• **isOwner**: (`owner`: `string`) => `Promise`\<`boolean`\>
 
 #### Type declaration
 
