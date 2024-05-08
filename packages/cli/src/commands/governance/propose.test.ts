@@ -185,7 +185,7 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
         '--jsonTransactions',
         'transactions.json',
         '--deposit',
-        '1000000000000000000', // TODO(Arthur): This is 1 CELO, shouldn't this be 10,000 CELO now?
+        '1000000000000000000',
         '--from',
         accounts[0],
         '--descriptionURL',
@@ -211,15 +211,10 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
       const transactionsToBeSaved = JSON.stringify(transactions)
       fs.writeFileSync('transactions.json', transactionsToBeSaved, { flag: 'w' })
 
-      /*
-      TODO(Arthur): Why do we send the governance contract 1 CELO when
-      the `governance:propose` command makes a deposit with the the `--deposit` flag anyway?
-      Is this strictly necessary?
-      */
       await (
         await kit.sendTransaction({
-          to: governance.address,
           from: accounts[0],
+          to: governance.address,
           value: web3.utils.toWei('1', 'ether'),
         })
       ).waitReceipt()
@@ -235,7 +230,7 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
         await kit.sendTransaction({
           from: accounts[2],
           to: multisigs[0],
-          value: web3.utils.toWei('20000', 'ether'), // 2x min deposit
+          value: web3.utils.toWei('20000', 'ether'), // 2x min deposit on Mainnet
         })
       ).waitReceipt()
 
@@ -275,11 +270,6 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
       const transactionsToBeSaved = JSON.stringify(transactions)
       fs.writeFileSync('transactions.json', transactionsToBeSaved, { flag: 'w' })
 
-      /*
-      TODO(Arthur): Why do we send the governance contract 1 CELO when
-      the `governance:propose` command makes a deposit with the the `--deposit` flag anyway?
-      Is this strictly necessary?
-      */
       await (
         await kit.sendTransaction({
           to: governance.address,
@@ -299,7 +289,7 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
         await kit.sendTransaction({
           from: accounts[2],
           to: multisigs[1],
-          value: web3.utils.toWei('20000', 'ether'), // 2x min deposit
+          value: web3.utils.toWei('20000', 'ether'), // 2x min deposit on Mainnet
         })
       ).waitReceipt()
 
