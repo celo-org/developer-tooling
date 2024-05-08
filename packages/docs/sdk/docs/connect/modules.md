@@ -14,6 +14,7 @@
 - [utils/abi-utils](modules/utils_abi_utils.md)
 - [utils/celo-transaction-object](modules/utils_celo_transaction_object.md)
 - [utils/formatter](modules/utils_formatter.md)
+- [utils/is-cel2](modules/utils_is_cel2.md)
 - [utils/provider-utils](modules/utils_provider_utils.md)
 - [utils/rpc-caller](modules/utils_rpc_caller.md)
 - [utils/tx-params-normalizer](modules/utils_tx_params_normalizer.md)
