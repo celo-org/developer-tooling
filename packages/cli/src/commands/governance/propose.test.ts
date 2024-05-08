@@ -1,4 +1,3 @@
-import { multiSigABI, proxyABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { GoldTokenWrapper } from '@celo/contractkit/lib/wrappers/GoldTokenWrapper'
@@ -8,7 +7,7 @@ import { ux } from '@oclif/core'
 import * as fs from 'fs'
 import Web3 from 'web3'
 import { EXTRA_LONG_TIMEOUT_MS, testLocally } from '../../test-utils/cliUtils'
-import { multiSigBytecode, proxyBytecode } from '../../test-utils/constants'
+import { createMultisig } from '../../test-utils/multisigUtils'
 import Propose from './propose'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -157,58 +156,13 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
   })
 
   beforeAll(async () => {
-    // Default account set up for simpler function calls below
     accounts = (await web3.eth.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
 
-    // Deploy Proxy contract
-    const proxyDeploymentTx = await kit.sendTransaction({
-      data: proxyBytecode,
-    })
-    const { contractAddress: proxyAddress } = await proxyDeploymentTx.waitReceipt()
-
-    // Deploy MultiSig contract
-    const multisigDeploymentTx = await kit.sendTransaction({
-      data: multiSigBytecode,
-    })
-    const { contractAddress: multiSigAddress } = await multisigDeploymentTx.waitReceipt()
-
-    // Configure and initialize MultiSig
-    const owners = [accounts[0]]
-    const requiredSignatures = 1
-    const requiredInternalSignatures = 1
-    const initializerAbi = multiSigABI.find(
-      (abi) => abi.type === 'function' && abi.name === 'initialize'
-    )
-    const proxy = new kit.web3.eth.Contract(proxyABI as any, proxyAddress)
-    const baseFee = await kit.web3.eth.getBlock('latest').then((block: any) => block.baseFeePerGas)
-    const priorityFee = kit.web3.utils.toWei('2', 'gwei')
-
-    const initMethod = proxy.methods._setAndInitializeImplementation
-    const callData = kit.web3.eth.abi.encodeFunctionCall(initializerAbi as any, [
-      owners as any,
-      requiredSignatures as any,
-      requiredInternalSignatures as any,
-    ])
-    const initTx = initMethod(multiSigAddress, callData)
-    await initTx.send({
-      from: kit.defaultAccount,
-      gas: await initTx.estimateGas({ from: kit.defaultAccount }),
-      maxPriorityFeePerGas: priorityFee,
-      maxFeePerGas: (parseInt(baseFee) + parseInt(priorityFee)).toString(),
-    })
-
-    const transferOwnershipMethod = proxy.methods._transferOwnership
-    const changeOwnerTx = transferOwnershipMethod(proxyAddress)
-    await changeOwnerTx.send({
-      from: kit.defaultAccount,
-      gas: await changeOwnerTx.estimateGas({ from: kit.defaultAccount }),
-      maxPriorityFeePerGas: priorityFee,
-      maxFeePerGas: (parseInt(baseFee) + parseInt(priorityFee)).toString(),
-    })
-
-    // Fetch Multisig
-    multisigs[0] = proxyAddress as StrongAddress
+    /**
+     * Sets up MultiSig with 1 signers
+     */
+    multisigs[0] = await createMultisig(kit, [accounts[0]], 1, 1)
   })
 
   test(
