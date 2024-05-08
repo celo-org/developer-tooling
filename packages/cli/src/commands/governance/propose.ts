@@ -63,14 +63,17 @@ export default class Propose extends BaseCommand {
     const kit = await this.getKit()
     const res = await this.parse(Propose)
     const account = res.flags.from
-    const useMultiSig = res.flags.useMultiSig
-    const deposit = new BigNumber(res.flags.deposit)
     kit.defaultAccount = account
-    /* 
-    TODO(Arthur): Check that I'm handling edge cases 
-    where --useMultiSig and --for are defined/undefined
-    correctly.
-    */
+    const deposit = new BigNumber(res.flags.deposit)
+    if (res.flags.useMultiSig && !res.flags.for) {
+      this.error(
+        'If the --useMultiSig flag is set, then the --for flag has to also be set to an address.'
+      )
+    }
+    const useMultiSig = res.flags.useMultiSig
+    if (res.flags.for && !res.flags.useMultiSig) {
+      this.error('If the --for flag is set, then the --useMultiSig flag has to also be set.')
+    }
     const proposerMultiSig = res.flags.for
       ? await kit.contracts.getMultiSig(res.flags.for)
       : undefined
