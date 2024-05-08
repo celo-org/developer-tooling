@@ -20,7 +20,7 @@
 
 #### Defined in
 
-[packages/sdk/connect/src/utils/is-cel2.ts:3](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/is-cel2.ts#L3)
+[packages/sdk/connect/src/utils/is-cel2.ts:8](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/is-cel2.ts#L8)
 
 ## Functions
 
@@ -40,4 +40,4 @@
 
 #### Defined in
 
-[packages/sdk/connect/src/utils/is-cel2.ts:5](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/is-cel2.ts#L5)
+[packages/sdk/connect/src/utils/is-cel2.ts:10](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/is-cel2.ts#L10)
