@@ -63,7 +63,7 @@ export default class Propose extends BaseCommand {
     const deposit = new BigNumber(res.flags.deposit)
     if (res.flags.useMultiSig && !res.flags.for) {
       this.error(
-        'If the --useMultiSig flag is set, then the --for flag has to also be set to an address.'
+        'If the --useMultiSig flag is set, then the --for flag has to also be set to a Multisig address.'
       )
     }
     const useMultiSig = res.flags.useMultiSig
