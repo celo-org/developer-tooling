@@ -41,7 +41,7 @@ export async function createMultisig(
     from: kit.defaultAccount,
     gas: await initTx.estimateGas({ from: kit.defaultAccount }),
     maxPriorityFeePerGas: priorityFee,
-    maxFeePerGas: (parseInt(baseFee) + parseInt(priorityFee)).toString(),
+    maxFeePerGas: (BigInt(baseFee) + BigInt(priorityFee)).toString(),
   })
   const transferOwnershipMethod = proxy.methods._transferOwnership
   const changeOwnerTx = transferOwnershipMethod(proxyAddress)
@@ -49,7 +49,7 @@ export async function createMultisig(
     from: kit.defaultAccount,
     gas: await changeOwnerTx.estimateGas({ from: kit.defaultAccount }),
     maxPriorityFeePerGas: priorityFee,
-    maxFeePerGas: (parseInt(baseFee) + parseInt(priorityFee)).toString(),
+    maxFeePerGas: (BigInt(baseFee) + BigInt(priorityFee)).toString(),
   })
 
   return proxyAddress as StrongAddress
