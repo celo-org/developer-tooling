@@ -31,10 +31,6 @@ export default class Propose extends BaseCommand {
     for: CustomFlags.address({
       dependsOn: ['useMultiSig'],
       description: 'Address of the multi-sig contract',
-      /* 
-      TODO(Arthur): check this syntax is correct.
-      The goal is to ensure `--for` is only used if `--useMultiSig` is used
-      */
     }),
     force: Flags.boolean({ description: 'Skip execution check', default: false }),
     noInfo: Flags.boolean({ description: 'Skip printing the proposal info', default: false }),
