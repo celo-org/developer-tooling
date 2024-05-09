@@ -1,3 +1,4 @@
+import { isCel2 } from '@celo/connect'
 import { BaseCommand } from '../../base'
 
 export default class Whitelist extends BaseCommand {
@@ -14,9 +15,12 @@ export default class Whitelist extends BaseCommand {
   async run() {
     const kit = await this.getKit()
 
-    const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyWhitelist()
-    const validFeeCurrencies = await feeCurrencyWhitelist.getWhitelist()
-    const pairs = (await feeCurrencyWhitelist.getFeeCurrencyInformation(validFeeCurrencies)).map(
+    const feeCurrencyContract = await ((await isCel2(kit.web3))
+      ? kit.contracts.getFeeCurrencyDirectory()
+      : kit.contracts.getFeeCurrencyWhitelist())
+    const validFeeCurrencies = await feeCurrencyContract.getAddresses()
+
+    const pairs = (await feeCurrencyContract.getFeeCurrencyInformation(validFeeCurrencies)).map(
       ({ name, symbol, address, adaptedToken }) =>
         `${address} - ${name || 'unknown name'} (${symbol || 'N/A'})${
           adaptedToken ? ` (adapted token: ${adaptedToken})` : ''
