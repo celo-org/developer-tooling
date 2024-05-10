@@ -1,5 +1,5 @@
 import { StrongAddress } from '@celo/base'
-import { ReadOnlyWallet } from '@celo/connect'
+import { ReadOnlyWallet, isCel2 } from '@celo/connect'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { AzureHSMWallet } from '@celo/wallet-hsm-azure'
 import { AddressValidation, newLedgerWalletWithSetup } from '@celo/wallet-ledger'
@@ -11,6 +11,7 @@ import net from 'net'
 import Web3 from 'web3'
 import { CustomFlags } from './utils/command'
 import { getNodeUrl } from './utils/config'
+import { getFeeCurrencyContractWrapper } from './utils/fee-currency'
 import { requireNodeIsSynced } from './utils/helpers'
 
 export abstract class BaseCommand extends Command {
@@ -92,6 +93,9 @@ export abstract class BaseCommand extends Command {
 
   private _web3: Web3 | null = null
   private _kit: ContractKit | null = null
+
+  // Indicates if celocli running in L2 context
+  private cel2: boolean = false
 
   async getWeb3() {
     if (!this._web3) {
@@ -194,11 +198,12 @@ export abstract class BaseCommand extends Command {
       kit.defaultAccount = res.flags.from
     }
 
+    this.cel2 = await isCel2(await this.getWeb3())
     const gasCurrencyFlag = res.flags.gasCurrency as StrongAddress | undefined
 
     if (gasCurrencyFlag) {
-      const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyWhitelist()
-      const validFeeCurrencies = await feeCurrencyWhitelist.getWhitelist()
+      const feeCurrencyContract = await getFeeCurrencyContractWrapper(kit, this.isCel2())
+      const validFeeCurrencies = await feeCurrencyContract.getAddresses()
 
       if (
         validFeeCurrencies.map((x) => x.toLocaleLowerCase()).includes(gasCurrencyFlag.toLowerCase())
@@ -206,9 +211,7 @@ export abstract class BaseCommand extends Command {
         kit.setFeeCurrency(gasCurrencyFlag)
       } else {
         const pairs = (
-          await feeCurrencyWhitelist.getFeeCurrencyInformation(
-            validFeeCurrencies as StrongAddress[]
-          )
+          await feeCurrencyContract.getFeeCurrencyInformation(validFeeCurrencies as StrongAddress[])
         ).map(
           ({ name, symbol, address, adaptedToken }) =>
             `${address} - ${name || 'unknown name'} (${symbol || 'N/A'})${
@@ -237,5 +240,9 @@ export abstract class BaseCommand extends Command {
     }
 
     return super.finally(arg)
+  }
+
+  protected isCel2() {
+    return this.cel2
   }
 }

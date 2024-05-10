@@ -1,5 +1,5 @@
-import { isCel2 } from '@celo/connect'
 import { BaseCommand } from '../../base'
+import { getFeeCurrencyContractWrapper } from '../../utils/fee-currency'
 
 export default class Whitelist extends BaseCommand {
   static description = 'List the whitelisted fee currencies'
@@ -14,10 +14,7 @@ export default class Whitelist extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
-
-    const feeCurrencyContract = await ((await isCel2(kit.web3))
-      ? kit.contracts.getFeeCurrencyDirectory()
-      : kit.contracts.getFeeCurrencyWhitelist())
+    const feeCurrencyContract = await getFeeCurrencyContractWrapper(kit, this.isCel2())
     const validFeeCurrencies = await feeCurrencyContract.getAddresses()
 
     const pairs = (await feeCurrencyContract.getFeeCurrencyInformation(validFeeCurrencies)).map(
