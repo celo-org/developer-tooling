@@ -147,21 +147,12 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
   const kit = newKitFromWeb3(web3)
 
   let accounts: StrongAddress[] = []
-  let multisigs: StrongAddress[] = []
 
   beforeEach(async () => {
     accounts = (await web3.eth.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
     governance = await kit.contracts.getGovernance()
     goldToken = await kit.contracts.getGoldToken()
-  })
-
-  beforeAll(async () => {
-    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
-    kit.defaultAccount = accounts[0]
-
-    multisigs[0] = await createMultisig(kit, [accounts[0]], 1, 1)
-    multisigs[1] = await createMultisig(kit, [accounts[0], accounts[1]], 2, 2)
   })
 
   test(
@@ -219,6 +210,7 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
         })
       ).waitReceipt()
 
+      const multisigWithOneSigner = await createMultisig(kit, [accounts[0]], 1, 1)
       /**
        * Faucet the multisig with 20,000 CELO so it has more than sufficient CELO
        * to submit governance proposals (2x minDeposit in this case).
@@ -229,7 +221,7 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
       await (
         await kit.sendTransaction({
           from: accounts[2],
-          to: multisigs[0],
+          to: multisigWithOneSigner,
           value: web3.utils.toWei('20000', 'ether'), // 2x min deposit on Mainnet
         })
       ).waitReceipt()
@@ -246,7 +238,7 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
         accounts[0],
         '--useMultiSig',
         '--for',
-        multisigs[0],
+        multisigWithOneSigner,
         '--descriptionURL',
         'https://dummyurl.com',
       ])
@@ -278,6 +270,7 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
         })
       ).waitReceipt()
 
+      const multisigWithTwoSigners = await createMultisig(kit, [accounts[0], accounts[1]], 2, 2)
       /**
        * Faucet the multisig with 20,000 CELO so it has more than sufficient CELO
        * to submit governance proposals (2x minDeposit in this case).
@@ -288,7 +281,7 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
       await (
         await kit.sendTransaction({
           from: accounts[2],
-          to: multisigs[1],
+          to: multisigWithTwoSigners,
           value: web3.utils.toWei('20000', 'ether'), // 2x min deposit on Mainnet
         })
       ).waitReceipt()
@@ -306,7 +299,7 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
         accounts[0],
         '--useMultiSig',
         '--for',
-        multisigs[1],
+        multisigWithTwoSigners,
         '--descriptionURL',
         'https://dummyurl.com',
       ])
@@ -315,7 +308,14 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
       expect(proposalBetween).toEqual([])
 
       // Approve proposal from signer B
-      await testLocally(Approve, ['--from', accounts[1], '--for', multisigs[1], '--tx', '0'])
+      await testLocally(Approve, [
+        '--from',
+        accounts[1],
+        '--for',
+        multisigWithTwoSigners,
+        '--tx',
+        '0',
+      ])
 
       const proposal = await governance.getProposal(1)
       expect(proposal.length).toEqual(transactions.length)
