@@ -5,7 +5,7 @@
   "excludePrivate": true,
   "excludeProtected": true,
   "hideGenerator": true,
-  "out": "../../docs/sdk/docs/phone-utils",
+  "out": "../../docs/sdk/phone-utils",
   "gitRevision": "master",
   "readme": "README.md",
   "entryPoints": [
