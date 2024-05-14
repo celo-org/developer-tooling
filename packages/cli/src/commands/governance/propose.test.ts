@@ -7,6 +7,8 @@ import { ux } from '@oclif/core'
 import * as fs from 'fs'
 import Web3 from 'web3'
 import { EXTRA_LONG_TIMEOUT_MS, testLocally } from '../../test-utils/cliUtils'
+import { createMultisig } from '../../test-utils/multisigUtils'
+import Approve from '../multisig/approve'
 import Propose from './propose'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -179,6 +181,140 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
         accounts[0],
         '--descriptionURL',
         'https://dummyurl.com',
+      ])
+
+      const proposal = await governance.getProposal(1)
+      expect(proposal.length).toEqual(transactions.length)
+      expect(proposal[0].to).toEqual(goldToken.address)
+      expect(proposal[0].value).toEqual(transactions[0].value)
+      const expectedInput = goldToken['contract'].methods['transfer'](
+        transactions[0].args[0],
+        transactions[0].args[1]
+      ).encodeABI()
+      expect(proposal[0].input).toEqual(expectedInput)
+    },
+    EXTRA_LONG_TIMEOUT_MS
+  )
+
+  test(
+    'will successfully create proposal based on Core contract with multisig (1 signer)',
+    async () => {
+      const transactionsToBeSaved = JSON.stringify(transactions)
+      fs.writeFileSync('transactions.json', transactionsToBeSaved, { flag: 'w' })
+
+      await (
+        await kit.sendTransaction({
+          from: accounts[0],
+          to: governance.address,
+          value: web3.utils.toWei('1', 'ether'),
+        })
+      ).waitReceipt()
+
+      const multisigWithOneSigner = await createMultisig(kit, [accounts[0]], 1, 1)
+      /**
+       * Faucet the multisig with 20,000 CELO so it has more than sufficient CELO
+       * to submit governance proposals (2x minDeposit in this case).
+       * In practice, `minDeposit` is currently 1 CELO on the devchain, so practically 20,000 CELO
+       * is too much. But I'm leaving this in case we update the devchain to match
+       * Alfajores or Mainnet parameters in the future.
+       */
+      await (
+        await kit.sendTransaction({
+          from: accounts[2],
+          to: multisigWithOneSigner,
+          value: web3.utils.toWei('20000', 'ether'), // 2x min deposit on Mainnet
+        })
+      ).waitReceipt()
+
+      const proposalBefore = await governance.getProposal(1)
+      expect(proposalBefore).toEqual([])
+
+      await testLocally(Propose, [
+        '--jsonTransactions',
+        'transactions.json',
+        '--deposit',
+        '10000e18',
+        '--from',
+        accounts[0],
+        '--useMultiSig',
+        '--for',
+        multisigWithOneSigner,
+        '--descriptionURL',
+        'https://dummyurl.com',
+      ])
+
+      const proposal = await governance.getProposal(1)
+      expect(proposal.length).toEqual(transactions.length)
+      expect(proposal[0].to).toEqual(goldToken.address)
+      expect(proposal[0].value).toEqual(transactions[0].value)
+      const expectedInput = goldToken['contract'].methods['transfer'](
+        transactions[0].args[0],
+        transactions[0].args[1]
+      ).encodeABI()
+      expect(proposal[0].input).toEqual(expectedInput)
+    },
+    EXTRA_LONG_TIMEOUT_MS
+  )
+
+  test(
+    'will successfully create proposal based on Core contract with multisig (2 signers)',
+    async () => {
+      const transactionsToBeSaved = JSON.stringify(transactions)
+      fs.writeFileSync('transactions.json', transactionsToBeSaved, { flag: 'w' })
+
+      await (
+        await kit.sendTransaction({
+          to: governance.address,
+          from: accounts[0],
+          value: web3.utils.toWei('1', 'ether'),
+        })
+      ).waitReceipt()
+
+      const multisigWithTwoSigners = await createMultisig(kit, [accounts[0], accounts[1]], 2, 2)
+      /**
+       * Faucet the multisig with 20,000 CELO so it has more than sufficient CELO
+       * to submit governance proposals (2x minDeposit in this case).
+       * In practice, `minDeposit` is currently 1 CELO on the devchain, so practically 20,000 CELO
+       * is too much. But I'm leaving this in case we update the devchain to match
+       * Alfajores or Mainnet parameters in the future.
+       */
+      await (
+        await kit.sendTransaction({
+          from: accounts[2],
+          to: multisigWithTwoSigners,
+          value: web3.utils.toWei('20000', 'ether'), // 2x min deposit on Mainnet
+        })
+      ).waitReceipt()
+
+      const proposalBefore = await governance.getProposal(1)
+      expect(proposalBefore).toEqual([])
+
+      // Submit proposal from signer A
+      await testLocally(Propose, [
+        '--jsonTransactions',
+        'transactions.json',
+        '--deposit',
+        '10000e18',
+        '--from',
+        accounts[0],
+        '--useMultiSig',
+        '--for',
+        multisigWithTwoSigners,
+        '--descriptionURL',
+        'https://dummyurl.com',
+      ])
+
+      const proposalBetween = await governance.getProposal(1)
+      expect(proposalBetween).toEqual([])
+
+      // Approve proposal from signer B
+      await testLocally(Approve, [
+        '--from',
+        accounts[1],
+        '--for',
+        multisigWithTwoSigners,
+        '--tx',
+        '0',
       ])
 
       const proposal = await governance.getProposal(1)
