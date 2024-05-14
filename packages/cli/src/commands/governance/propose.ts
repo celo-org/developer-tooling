@@ -1,4 +1,3 @@
-import { StrongAddress } from '@celo/base'
 import { ProposalBuilder, proposalToJSON, ProposalTransactionJSON } from '@celo/governance'
 import { Flags } from '@oclif/core'
 import { BigNumber } from 'bignumber.js'
@@ -26,6 +25,13 @@ export default class Propose extends BaseCommand {
       description: 'Amount of Celo to attach to proposal',
     }),
     from: CustomFlags.address({ required: true, description: "Proposer's address" }),
+    useMultiSig: Flags.boolean({
+      description: 'True means the request will be sent through multisig.',
+    }),
+    for: CustomFlags.address({
+      dependsOn: ['useMultiSig'],
+      description: 'Address of the multi-sig contract',
+    }),
     force: Flags.boolean({ description: 'Skip execution check', default: false }),
     noInfo: Flags.boolean({ description: 'Skip printing the proposal info', default: false }),
     descriptionURL: Flags.string({
@@ -45,20 +51,29 @@ export default class Propose extends BaseCommand {
   }
 
   static examples = [
-    'propose --jsonTransactions ./transactions.json --deposit 10000 --from 0x5409ed021d9299bf6814279a6a1411a7e866a631 --descriptionURL https://gist.github.com/yorhodes/46430eacb8ed2f73f7bf79bef9d58a33',
+    'propose --jsonTransactions ./transactions.json --deposit 10000e18 --from 0x5409ed021d9299bf6814279a6a1411a7e866a631 --descriptionURL https://gist.github.com/yorhodes/46430eacb8ed2f73f7bf79bef9d58a33',
+    'propose --jsonTransactions ./transactions.json --deposit 10000e18 --from 0x5409ed021d9299bf6814279a6a1411a7e866a631  --useMultiSig --for 0x6c3dDFB1A9e73B5F49eDD46624F4954Bf66CAe93 --descriptionURL https://gist.github.com/yorhodes/46430eacb8ed2f73f7bf79bef9d58a33',
   ]
 
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(Propose)
     const account = res.flags.from
+    kit.defaultAccount = account
     const deposit = new BigNumber(res.flags.deposit)
-    kit.defaultAccount = account as StrongAddress
-
-    await newCheckBuilder(this, account)
-      .hasEnoughCelo(account, deposit)
-      .exceedsProposalMinDeposit(deposit)
-      .runChecks()
+    if (res.flags.useMultiSig && !res.flags.for) {
+      this.error(
+        'If the --useMultiSig flag is set, then the --for flag has to also be set to a Multisig address.'
+      )
+    }
+    const useMultiSig = res.flags.useMultiSig
+    if (res.flags.for && !res.flags.useMultiSig) {
+      this.error('If the --for flag is set, then the --useMultiSig flag has to also be set.')
+    }
+    const proposerMultiSig = res.flags.for
+      ? await kit.contracts.getMultiSig(res.flags.for)
+      : undefined
+    const proposer = useMultiSig ? proposerMultiSig!.address : account
 
     const builder = new ProposalBuilder(kit)
 
@@ -85,6 +100,14 @@ export default class Propose extends BaseCommand {
 
     const governance = await kit.contracts.getGovernance()
 
+    await newCheckBuilder(this, proposer)
+      .hasEnoughCelo(proposer, deposit)
+      .exceedsProposalMinDeposit(deposit)
+      .addConditionalCheck(`${account} is multisig signatory`, useMultiSig, () =>
+        proposerMultiSig!.isOwner(account)
+      )
+      .runChecks()
+
     if (!res.flags.force) {
       const ok = await checkProposal(proposal, kit)
       if (!ok) {
@@ -92,11 +115,22 @@ export default class Propose extends BaseCommand {
       }
     }
 
-    await displaySendTx(
-      'proposeTx',
-      governance.propose(proposal, res.flags.descriptionURL),
-      { value: deposit.toFixed() },
-      'ProposalQueued'
-    )
+    const governanceTx = governance.propose(proposal, res.flags.descriptionURL)
+
+    if (useMultiSig) {
+      const multiSigTx = await proposerMultiSig!.submitOrConfirmTransaction(
+        governance.address,
+        governanceTx.txo,
+        deposit.toFixed()
+      )
+      await displaySendTx<string | void | boolean>('proposeTx', multiSigTx, {}, 'ProposalQueued')
+    } else {
+      await displaySendTx<string | void | boolean>(
+        'proposeTx',
+        governanceTx,
+        { value: deposit.toFixed() },
+        'ProposalQueued'
+      )
+    }
   }
 }

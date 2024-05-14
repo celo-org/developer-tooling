@@ -58,3 +58,6 @@ export abstract class OffchainDataCommand extends BaseCommand {
         : new LocalStorageWriter(directory)
   }
 }
+
+export const DEPRECATION_NOTICE =
+  'offchain-read and offchain-write commands are deprecated as CIP8 was abandonded. They will be removed next major release.'
