@@ -95,7 +95,7 @@ export abstract class BaseCommand extends Command {
   private _kit: ContractKit | null = null
 
   // Indicates if celocli running in L2 context
-  private cel2: boolean = false
+  private cel2: boolean | null = null
 
   async getWeb3() {
     if (!this._web3) {
@@ -198,11 +198,10 @@ export abstract class BaseCommand extends Command {
       kit.defaultAccount = res.flags.from
     }
 
-    this.cel2 = await isCel2(await this.getWeb3())
     const gasCurrencyFlag = res.flags.gasCurrency as StrongAddress | undefined
 
     if (gasCurrencyFlag) {
-      const feeCurrencyContract = await getFeeCurrencyContractWrapper(kit, this.isCel2())
+      const feeCurrencyContract = await getFeeCurrencyContractWrapper(kit, await this.isCel2())
       const validFeeCurrencies = await feeCurrencyContract.getAddresses()
 
       if (
@@ -242,7 +241,11 @@ export abstract class BaseCommand extends Command {
     return super.finally(arg)
   }
 
-  protected isCel2() {
+  protected async isCel2() {
+    if (this.cel2 === null) {
+      this.cel2 = await isCel2(await this.getWeb3())
+    }
+
     return this.cel2
   }
 }
