@@ -25,6 +25,13 @@ const MINIMAL_TOKEN_INFO_ABI = [
     outputs: [{ type: 'address', name: '', internalType: 'address' }],
     name: 'adaptedToken',
   },
+  {
+    type: 'function' as const,
+    stateMutability: 'view',
+    inputs: [],
+    outputs: [{ type: 'uint8', name: '', internalType: 'uint8' }],
+    name: 'decimals',
+  },
 ] as const
 
 /**
@@ -64,11 +71,17 @@ export class FeeCurrencyWhitelistWrapper extends BaseWrapper<FeeCurrencyWhitelis
             .symbol()
             .call()
             .catch(() => undefined) as Promise<string | undefined>,
-        ]).then(([name, symbol]) => ({
+          contract.methods
+            .decimals()
+            .call()
+            .then((x: string) => x && parseInt(x, 10))
+            .catch(() => undefined) as Promise<number | undefined>,
+        ]).then(([name, symbol, decimals]) => ({
           name,
           symbol,
           address,
           adaptedToken,
+          decimals,
         }))
       })
     )
