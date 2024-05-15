@@ -408,7 +408,7 @@ _See code: [src/commands/account/delete-payment-delegation.ts](https://github.co
 
 ## `celocli account:get-metadata ARG1`
 
-Show information about an address. Retreives the metadata URL for an account from the on-chain, then fetches the metadata file off-chain and verifies proofs as able.
+Show information about an address. Retrieves the metadata URL for an account from the on-chain, then fetches the metadata file off-chain and verifies proofs as able.
 
 ```
 USAGE
@@ -453,7 +453,7 @@ FLAGS
       property to sort by (prepend '-' for descending)
 
 DESCRIPTION
-  Show information about an address. Retreives the metadata URL for an account from the
+  Show information about an address. Retrieves the metadata URL for an account from the
   on-chain, then fetches the metadata file off-chain and verifies proofs as able.
 
 EXAMPLES
@@ -897,7 +897,7 @@ _See code: [src/commands/account/register-data-encryption-key.ts](https://github
 
 ## `celocli account:register-metadata`
 
-Register metadata URL for an account where users will be able to retieve the metadata file and verify your claims
+Register metadata URL for an account where users will be able to retrieve the metadata file and verify your claims
 
 ```
 USAGE
@@ -922,7 +922,7 @@ FLAGS
       Ignore metadata validity checks
 
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
-      (required) Addess of the account to set metadata for
+      (required) Address of the account to set metadata for
 
   --gasCurrency=0x1234567890123456789012345678901234567890
       Use a specific gas currency for transaction fees (defaults to CELO if no gas
@@ -948,7 +948,7 @@ FLAGS
       (required) The url to the metadata you want to register
 
 DESCRIPTION
-  Register metadata URL for an account where users will be able to retieve the metadata
+  Register metadata URL for an account where users will be able to retrieve the metadata
   file and verify your claims
 
 EXAMPLES
