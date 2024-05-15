@@ -5,7 +5,7 @@
   "excludePrivate": true,
   "excludeProtected": true,
   "hideGenerator": true,
-  "out": "../../../docs/sdk/docs/wallet-ledger",
+  "out": "../../../../docs/sdk/wallet-ledger",
   "gitRevision": "master",
   "readme": "none",
   "entryPoints": [
