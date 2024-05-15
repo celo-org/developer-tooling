@@ -5,9 +5,9 @@ import { RemoteWallet } from '@celo/wallet-remote'
 import { TransportError, TransportStatusError } from '@ledgerhq/errors'
 import Ledger from '@ledgerhq/hw-app-eth'
 import debugFactory from 'debug'
+import { SemVer } from 'semver'
 import { LedgerSigner } from './ledger-signer'
 import { transportErrorFriendlyMessage } from './ledger-utils'
-import { ILedger } from './types'
 
 export const CELO_BASE_DERIVATION_PATH = `${CELO_DERIVATION_PATH_BASE.slice(2)}/0`
 const ADDRESS_QTY = 5
@@ -43,7 +43,8 @@ export async function newLedgerWalletWithSetup(
 const debug = debugFactory('kit:wallet:ledger')
 
 export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnlyWallet {
-  private ledger: ILedger | undefined
+  private MIN_VERSION_SUPPORTED = '1.2.0'
+  ledger: Ledger | undefined
 
   /**
    * @param derivationPathIndexes number array of "address_index" for the base derivation path.
@@ -68,22 +69,30 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
     }
   }
 
-  signTransaction(txParams: CeloTx): Promise<EncodedTransaction> {
-    // CeloLedger does not support maxFeePerGas and maxPriorityFeePerGas yet
-    txParams.gasPrice = txParams.gasPrice ?? txParams.maxFeePerGas
-    if (txParams.maxFeePerGas || txParams.maxPriorityFeePerGas) {
-      console.info(
-        'maxFeePerGas and maxPriorityFeePerGas are not supported on Ledger yet. Automatically using gasPrice instead.'
+  async signTransaction(txParams: CeloTx): Promise<EncodedTransaction> {
+    if (txParams.gasPrice) {
+      if (txParams.feeCurrency && txParams.feeCurrency !== '0x') {
+        // NOTE: celo-legacy is not supported anymore
+        throw new Error(
+          'celo-legacy transactions are not supported anymore, please try sending a more modern transaction instead (eip1559, cip64, etc.)'
+        )
+      }
+      throw new Error(
+        'ethereum-legacy transactions are not supported anymore, please try sending a more modern transaction instead (eip1559, cip64, etc.)'
       )
-      delete txParams.maxFeePerGas
-      delete txParams.maxPriorityFeePerGas
+    }
+    if (txParams.feeCurrency && txParams.feeCurrency !== '0x') {
+      // NOTE: TEMPORARY error, remove when datablob is signed
+      throw new Error(
+        'Due to technical limitations, only EIP1559 transactions are currently supported, follow this issue for more information'
+      )
     }
     return super.signTransaction(txParams)
   }
 
   protected async loadAccountSigners(): Promise<Map<Address, LedgerSigner>> {
     if (!this.ledger) {
-      this.ledger = this.generateNewLedger(this.transport) as ILedger
+      this.ledger = this.generateNewLedger(this.transport)
     }
     debug('Fetching addresses from the ledger')
     let addressToSigner = new Map<Address, LedgerSigner>()
@@ -130,6 +139,11 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
     version: string
   }> {
     const appConfiguration = await this.ledger!.getAppConfiguration()
+    if (new SemVer(appConfiguration.version).compare(this.MIN_VERSION_SUPPORTED) === -1) {
+      throw new Error(
+        `TODO: MESSAGING TO PROMPT USER TO UPGRADE LEDGER APP to >= ${this.MIN_VERSION_SUPPORTED}`
+      )
+    }
     if (!appConfiguration.arbitraryDataEnabled) {
       console.warn(
         'Beware, your ledger does not allow the use of contract data. Some features may not work correctly, including token transfers. You can enable it from the ledger app settings.'

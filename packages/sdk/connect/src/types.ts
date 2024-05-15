@@ -35,8 +35,8 @@ export interface FormattedCeloTx {
 
 export type CeloTx = TransactionConfig &
   Partial<CeloParams> & { accessList?: AccessList; type?: TransactionTypes }
-
-export type CeloTxWithSig = CeloTx & { v: number; s: string; r: string; yParity: 0 | 1 }
+export type WithSig<T> = T & { v: number; s: string; r: string; yParity: 0 | 1 }
+export type CeloTxWithSig = WithSig<CeloTx>
 export interface CeloTxObject<T> {
   arguments: any[]
   call(tx?: CeloTx): Promise<T>
