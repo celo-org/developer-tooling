@@ -148,7 +148,7 @@ _See code: [src/commands/releasecelo/locked-gold.ts](https://github.com/celo-org
 
 ## `celocli releasecelo:refund-and-finalize`
 
-Refund the given contract's balance to the appropriate parties and destroy the contact. Can only be called by the release owner of revocable ReleaseGold instances.
+Refund the given contract's balance to the appopriate parties and destroy the contact. Can only be called by the release owner of revocable ReleaseGold instances.
 
 ```
 USAGE
@@ -167,8 +167,8 @@ FLAGS
                                                             flags
 
 DESCRIPTION
-  Refund the given contract's balance to the appropriate parties and destroy the
-  contact. Can only be called by the release owner of revocable ReleaseGold instances.
+  Refund the given contract's balance to the appopriate parties and destroy the contact.
+  Can only be called by the release owner of revocable ReleaseGold instances.
 
 EXAMPLES
   refund-and-finalize --contract 0x5409ED021D9299bf6814279A6A1411A7e866A631
