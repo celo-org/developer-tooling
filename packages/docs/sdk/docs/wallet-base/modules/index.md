@@ -11,7 +11,9 @@
 - [WalletBase](index.md#walletbase)
 - [chainIdTransformationForSigning](index.md#chainidtransformationforsigning)
 - [decodeSig](index.md#decodesig)
+- [determineTXType](index.md#determinetxtype)
 - [encodeTransaction](index.md#encodetransaction)
+- [extractPublicKeyFromHashAndSignature](index.md#extractpublickeyfromhashandsignature)
 - [extractSignature](index.md#extractsignature)
 - [getHashFromEncoded](index.md#gethashfromencoded)
 - [getSignerFromTxEIP2718TX](index.md#getsignerfromtxeip2718tx)
@@ -63,9 +65,21 @@ Re-exports [decodeSig](signing_utils.md#decodesig)
 
 ___
 
+### determineTXType
+
+Re-exports [determineTXType](signing_utils.md#determinetxtype)
+
+___
+
 ### encodeTransaction
 
 Re-exports [encodeTransaction](signing_utils.md#encodetransaction)
+
+___
+
+### extractPublicKeyFromHashAndSignature
+
+Re-exports [extractPublicKeyFromHashAndSignature](signing_utils.md#extractpublickeyfromhashandsignature)
 
 ___
 

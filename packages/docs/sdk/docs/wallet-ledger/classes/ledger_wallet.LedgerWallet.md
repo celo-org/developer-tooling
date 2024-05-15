@@ -25,6 +25,7 @@
 - [baseDerivationPath](ledger_wallet.LedgerWallet.md#basederivationpath)
 - [derivationPathIndexes](ledger_wallet.LedgerWallet.md#derivationpathindexes)
 - [isSetupFinished](ledger_wallet.LedgerWallet.md#issetupfinished)
+- [ledger](ledger_wallet.LedgerWallet.md#ledger)
 - [ledgerAddressValidation](ledger_wallet.LedgerWallet.md#ledgeraddressvalidation)
 - [transport](ledger_wallet.LedgerWallet.md#transport)
 
@@ -65,7 +66,7 @@ RemoteWallet\&lt;LedgerSigner\&gt;.constructor
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:56](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L56)
+[wallet-ledger/src/ledger-wallet.ts:57](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L57)
 
 ## Properties
 
@@ -77,7 +78,7 @@ base derivation path. Default: "44'/52752'/0'/0"
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:58](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L58)
+[wallet-ledger/src/ledger-wallet.ts:59](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L59)
 
 ___
 
@@ -92,7 +93,7 @@ Example: [3, 99, 53] will retrieve the derivation paths of
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:57](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L57)
+[wallet-ledger/src/ledger-wallet.ts:58](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L58)
 
 ___
 
@@ -118,13 +119,23 @@ wallet-remote/lib/remote-wallet.d.ts:51
 
 ___
 
+### ledger
+
+• **ledger**: `undefined` \| `default`
+
+#### Defined in
+
+[wallet-ledger/src/ledger-wallet.ts:47](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L47)
+
+___
+
 ### ledgerAddressValidation
 
 • `Readonly` **ledgerAddressValidation**: [`AddressValidation`](../enums/ledger_wallet.AddressValidation.md) = `AddressValidation.firstTransactionPerAddress`
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:60](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L60)
+[wallet-ledger/src/ledger-wallet.ts:61](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L61)
 
 ___
 
@@ -136,7 +147,7 @@ Transport to connect the ledger device
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:59](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L59)
+[wallet-ledger/src/ledger-wallet.ts:60](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L60)
 
 ## Methods
 
@@ -360,7 +371,7 @@ RemoteWallet.signTransaction
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:71](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L71)
+[wallet-ledger/src/ledger-wallet.ts:72](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L72)
 
 ___
 

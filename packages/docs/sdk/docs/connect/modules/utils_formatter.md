@@ -39,7 +39,7 @@
 
 #### Defined in
 
-[packages/sdk/connect/src/utils/formatter.ts:223](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/formatter.ts#L223)
+[packages/sdk/connect/src/utils/formatter.ts:207](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/formatter.ts#L207)
 
 ___
 
@@ -59,7 +59,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/utils/formatter.ts:303](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/formatter.ts#L303)
+[packages/sdk/connect/src/utils/formatter.ts:287](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/formatter.ts#L287)
 
 ___
 
@@ -79,7 +79,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/utils/formatter.ts:320](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/formatter.ts#L320)
+[packages/sdk/connect/src/utils/formatter.ts:304](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/formatter.ts#L304)
 
 ___
 
@@ -99,7 +99,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/utils/formatter.ts:168](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/formatter.ts#L168)
+[packages/sdk/connect/src/utils/formatter.ts:152](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/formatter.ts#L152)
 
 ___
 
@@ -141,7 +141,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/utils/formatter.ts:160](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/formatter.ts#L160)
+[packages/sdk/connect/src/utils/formatter.ts:144](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/formatter.ts#L144)
 
 ___
 
@@ -161,7 +161,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/utils/formatter.ts:330](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/formatter.ts#L330)
+[packages/sdk/connect/src/utils/formatter.ts:314](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/formatter.ts#L314)
 
 ___
 
@@ -181,7 +181,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/utils/formatter.ts:264](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/formatter.ts#L264)
+[packages/sdk/connect/src/utils/formatter.ts:248](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/formatter.ts#L248)
 
 ___
 
@@ -201,7 +201,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/utils/formatter.ts:202](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/formatter.ts#L202)
+[packages/sdk/connect/src/utils/formatter.ts:186](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/formatter.ts#L186)
 
 ___
 
@@ -221,7 +221,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/utils/formatter.ts:187](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/formatter.ts#L187)
+[packages/sdk/connect/src/utils/formatter.ts:171](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/formatter.ts#L171)
 
 ___
 
@@ -241,7 +241,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/utils/formatter.ts:85](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/formatter.ts#L85)
+[packages/sdk/connect/src/utils/formatter.ts:77](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/formatter.ts#L77)
 
 ___
 
@@ -261,7 +261,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/utils/formatter.ts:131](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/formatter.ts#L131)
+[packages/sdk/connect/src/utils/formatter.ts:115](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/formatter.ts#L115)
 
 ___
 
@@ -281,7 +281,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/utils/formatter.ts:230](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/formatter.ts#L230)
+[packages/sdk/connect/src/utils/formatter.ts:214](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/formatter.ts#L214)
 
 ___
 
@@ -301,4 +301,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/utils/formatter.ts:272](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/formatter.ts#L272)
+[packages/sdk/connect/src/utils/formatter.ts:256](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/formatter.ts#L256)

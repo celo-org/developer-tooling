@@ -14,7 +14,6 @@
 - [AbiOutput](index.md#abioutput)
 - [AccessListRaw](index.md#accesslistraw)
 - [Address](index.md#address)
-- [CIP42TXProperties](index.md#cip42txproperties)
 - [CIP64TXProperties](index.md#cip64txproperties)
 - [Callback](index.md#callback)
 - [CeloParams](index.md#celoparams)
@@ -40,7 +39,6 @@
 - [HttpRpcCaller](index.md#httprpccaller)
 - [JsonRpcPayload](index.md#jsonrpcpayload)
 - [JsonRpcResponse](index.md#jsonrpcresponse)
-- [LegacyTXProperties](index.md#legacytxproperties)
 - [Provider](index.md#provider)
 - [RLPEncodedTx](index.md#rlpencodedtx)
 - [ReadOnlyWallet](index.md#readonlywallet)
@@ -48,6 +46,7 @@
 - [Signer](index.md#signer)
 - [TransactionResult](index.md#transactionresult)
 - [TransactionTypes](index.md#transactiontypes)
+- [WithSig](index.md#withsig)
 - [decodeStringParameter](index.md#decodestringparameter)
 - [getAbiByName](index.md#getabibyname)
 - [getRandomId](index.md#getrandomid)
@@ -125,12 +124,6 @@ ___
 ### Address
 
 Re-exports [Address](types.md#address)
-
-___
-
-### CIP42TXProperties
-
-Re-exports [CIP42TXProperties](../interfaces/types.CIP42TXProperties.md)
 
 ___
 
@@ -284,12 +277,6 @@ Re-exports [JsonRpcResponse](../interfaces/types.JsonRpcResponse.md)
 
 ___
 
-### LegacyTXProperties
-
-Re-exports [LegacyTXProperties](../interfaces/types.LegacyTXProperties.md)
-
-___
-
 ### Provider
 
 Re-exports [Provider](../interfaces/types.Provider.md)
@@ -329,6 +316,12 @@ ___
 ### TransactionTypes
 
 Re-exports [TransactionTypes](types.md#transactiontypes)
+
+___
+
+### WithSig
+
+Re-exports [WithSig](types.md#withsig)
 
 ___
 

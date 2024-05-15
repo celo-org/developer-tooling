@@ -35,6 +35,7 @@ testWithGanache('network:whitelist cmd', () => {
             symbol: 'MCK',
             address: '0x123',
             adaptedToken: '0x456',
+            decimals: 18,
           },
         ])
       )
