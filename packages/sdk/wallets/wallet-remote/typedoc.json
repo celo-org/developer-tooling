@@ -5,7 +5,7 @@
   "excludePrivate": true,
   "excludeProtected": true,
   "hideGenerator": true,
-  "out": "../../../docs/sdk/docs/wallet-remote",
+  "out": "../../../docs/sdk/wallet-remote",
   "gitRevision": "master",
   "readme": "none",
   "entryPoints": [
