@@ -6,7 +6,7 @@
   "excludePrivate": true,
   "excludeProtected": true,
   "hideGenerator": true,
-  "out": "../../docs/sdk/governance",
+  "out": "../../../docs/sdk/governance",
   "gitRevision": "master",
   "readme": "none",
   "entryPoints": [

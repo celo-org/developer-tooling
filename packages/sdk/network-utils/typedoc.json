@@ -5,7 +5,7 @@
   "excludePrivate": true,
   "excludeProtected": true,
   "hideGenerator": true,
-  "out": "../../docs/sdk/network-utils",
+  "out": "../../../docs/sdk/network-utils",
   "gitRevision": "master",
   "readme": "none",
   "entryPoints": [
