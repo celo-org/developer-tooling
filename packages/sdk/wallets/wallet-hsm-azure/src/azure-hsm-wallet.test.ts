@@ -169,7 +169,8 @@ describe('AzureHSMWallet class', () => {
               value: Web3.utils.toWei('1', 'ether'),
               nonce: 0,
               gas: '10',
-              gasPrice: '99',
+              maxFeePerGas: '99',
+              maxPriorityFeePerGas: '99',
               feeCurrency: ACCOUNT_ADDRESS_NEVER,
               data: '0xabcdef',
             }
