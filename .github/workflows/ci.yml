@@ -127,6 +127,10 @@ jobs:
           # Checking if changed in the last 100 commits in PRs
           fetch_depth: '150'
       - run: echo ",${{ steps.changed-files.outputs.all_modified_files }}"
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: "nightly-f625d0fa7c51e65b4bf1e8f7931cd1c6e2e285e9"
 
   lint-checks:
     name: Lint code
