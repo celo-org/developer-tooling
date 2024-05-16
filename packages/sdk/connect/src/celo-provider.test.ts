@@ -31,9 +31,10 @@ class MockWallet implements ReadOnlyWallet {
     return Promise.resolve({
       raw: '0xmock',
       tx: {
-        type: 'celo-legacy',
+        type: 'cip64',
         nonce: 'nonce',
-        gasPrice: 'gasPrice',
+        maxFeePerGas: 'maxFeePerGas',
+        maxPriorityFeePerGas: 'maxPriorityFeePerGas',
         gas: 'gas',
         feeCurrency: 'feeCurrency',
         to: 'to',
