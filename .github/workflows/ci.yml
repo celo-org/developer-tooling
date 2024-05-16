@@ -288,8 +288,8 @@ jobs:
       - name: Fail if someone forgot to commit docs
         run: |
           yarn docs
-          if [[ $(git status packages/docs --porcelain) ]]; then
-            git --no-pager diff packages/docs
+          if [[ $(git status docs --porcelain) ]]; then
+            git --no-pager diff docs
             echo "There are git differences after generating all docs"
             git status
             git diff
