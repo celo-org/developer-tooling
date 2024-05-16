@@ -1,9 +1,9 @@
 import { BasicDataWrapper } from '@celo/identity/lib/offchain-data-wrapper'
 import { PrivateNameAccessor, PublicNameAccessor } from '@celo/identity/lib/offchain/accessors/name'
-import { Flags } from '@oclif/core'
+import { Flags, ux } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { CustomArgs, CustomFlags } from '../../utils/command'
-import { OffchainDataCommand } from '../../utils/off-chain-data'
+import { DEPRECATION_NOTICE, OffchainDataCommand } from '../../utils/off-chain-data'
 
 export default class OffchainRead extends BaseCommand {
   static description = 'DEV: Reads the name from offchain storage'
@@ -23,6 +23,8 @@ export default class OffchainRead extends BaseCommand {
   static examples = ['offchain-read 0x...', 'offchain-read 0x... --from 0x... --privateKey 0x...']
 
   async run() {
+    ux.warn(DEPRECATION_NOTICE)
+
     const kit = await this.getKit()
     const {
       args: { arg1: address },

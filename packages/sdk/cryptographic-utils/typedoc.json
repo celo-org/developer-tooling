@@ -5,7 +5,7 @@
   "excludePrivate": true,
   "excludeProtected": true,
   "hideGenerator": true,
-  "out": "../../docs/sdk/docs/cryptographic-utils",
+  "out": "../../../docs/sdk/cryptographic-utils",
   "gitRevision": "master",
   "readme": "README.md",
   "entryPoints": [

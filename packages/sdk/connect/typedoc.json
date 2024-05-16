@@ -6,7 +6,7 @@
   "excludePrivate": true,
   "excludeProtected": true,
   "hideGenerator": true,
-  "out": "../../docs/sdk/docs/connect",
+  "out": "../../../docs/sdk/connect",
   "gitRevision": "master",
   "readme": "./README.md",
   "entryPoints": [

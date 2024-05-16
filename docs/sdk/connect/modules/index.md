@@ -39,6 +39,7 @@
 - [HttpRpcCaller](index.md#httprpccaller)
 - [JsonRpcPayload](index.md#jsonrpcpayload)
 - [JsonRpcResponse](index.md#jsonrpcresponse)
+- [PROXY\_ADMIN\_ADDRESS](index.md#proxy_admin_address)
 - [Provider](index.md#provider)
 - [RLPEncodedTx](index.md#rlpencodedtx)
 - [ReadOnlyWallet](index.md#readonlywallet)
@@ -50,6 +51,7 @@
 - [decodeStringParameter](index.md#decodestringparameter)
 - [getAbiByName](index.md#getabibyname)
 - [getRandomId](index.md#getrandomid)
+- [isCel2](index.md#iscel2)
 - [isPresent](index.md#ispresent)
 - [parseDecodedParams](index.md#parsedecodedparams)
 - [rpcCallHandler](index.md#rpccallhandler)
@@ -277,6 +279,12 @@ Re-exports [JsonRpcResponse](../interfaces/types.JsonRpcResponse.md)
 
 ___
 
+### PROXY\_ADMIN\_ADDRESS
+
+Re-exports [PROXY_ADMIN_ADDRESS](utils_is_cel2.md#proxy_admin_address)
+
+___
+
 ### Provider
 
 Re-exports [Provider](../interfaces/types.Provider.md)
@@ -340,6 +348,12 @@ ___
 ### getRandomId
 
 Re-exports [getRandomId](utils_rpc_caller.md#getrandomid)
+
+___
+
+### isCel2
+
+Re-exports [isCel2](utils_is_cel2.md#iscel2)
 
 ___
 

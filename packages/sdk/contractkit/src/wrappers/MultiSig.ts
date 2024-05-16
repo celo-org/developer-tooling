@@ -67,7 +67,7 @@ export class MultiSigWrapper extends BaseWrapper<MultiSig> {
     )
   }
 
-  isowner: (owner: Address) => Promise<boolean> = proxyCall(this.contract.methods.isOwner)
+  isOwner: (owner: Address) => Promise<boolean> = proxyCall(this.contract.methods.isOwner)
   getOwners = proxyCall(this.contract.methods.getOwners)
   getRequired = proxyCall(this.contract.methods.required, undefined, valueToBigNumber)
   getInternalRequired = proxyCall(
