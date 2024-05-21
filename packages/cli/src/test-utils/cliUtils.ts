@@ -17,6 +17,15 @@ export async function testLocallyWithWeb3Node(
     return testLocally(command, [...argv, '--node', web3.currentProvider.host], config)
   }
 
+  // CeloProvider is not exported from @celo/connect, but it's injected into web3
+  if (web3.currentProvider !== null && web3.currentProvider.constructor.name === 'CeloProvider') {
+    return testLocally(
+      command,
+      [...argv, '--node', (web3.currentProvider as any).existingProvider.host],
+      config
+    )
+  }
+
   throw new Error('Unsupported provider')
 }
 
