@@ -7,7 +7,7 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "sideEffects": false,
-  "homepage": "https://celo-sdk-docs.readthedocs.io/en/latest/base",
+  "homepage": "https://docs.celo.org/developer/tools#celo-sdk-reference-docs",
   "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/sdk/base",
   "scripts": {
     "prepublishOnly": "yarn build",
