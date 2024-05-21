@@ -1,3 +1,4 @@
+import { newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import Web3 from 'web3'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
@@ -14,6 +15,11 @@ testWithAnvil('account:register cmd', (web3: Web3) => {
       ['--from', accounts[0], '--name', 'Chapulin Colorado'],
       web3
     )
+
+    const kit = newKitFromWeb3(web3)
+    const account = await kit.contracts.getAccounts()
+
+    expect(await account.getName(accounts[0])).toMatchInlineSnapshot(`"Chapulin Colorado"`)
   })
 
   test('fails if from is missing', async () => {
