@@ -1,4 +1,5 @@
 import { Interfaces } from '@oclif/core'
+import Web3 from 'web3'
 import { BaseCommand } from '../base'
 
 type AbstractConstructor<T> = new (...args: any[]) => T
@@ -6,11 +7,37 @@ interface Runner extends AbstractConstructor<BaseCommand> {
   run: typeof BaseCommand.run
 }
 
+export async function testLocallyWithWeb3Node(
+  command: Runner,
+  argv: string[],
+  web3: Web3,
+  config?: Interfaces.LoadOptions
+) {
+  if (web3.currentProvider instanceof Web3.providers.HttpProvider) {
+    return testLocally(command, [...argv, '--node', web3.currentProvider.host], config)
+  }
+
+  // CeloProvider is not exported from @celo/connect, but it's injected into web3
+  if (web3.currentProvider !== null && web3.currentProvider.constructor.name === 'CeloProvider') {
+    return testLocally(
+      command,
+      [...argv, '--node', (web3.currentProvider as any).existingProvider.host],
+      config
+    )
+  }
+
+  throw new Error('Unsupported provider')
+}
+
 export async function testLocally(
   command: Runner,
   argv: string[],
   config?: Interfaces.LoadOptions
 ) {
+  if (argv.includes('--node')) {
+    return command.run(argv, config)
+  }
+
   const extendedArgv = [...argv, '--node', 'local']
   return command.run(extendedArgv, config)
 }

@@ -12,5 +12,9 @@
     "strict": false,
     "declaration": true,
   },
-  "include": ["src/**/*", "src/migration-override.json"]
+  "include": [
+    "src/**/*", 
+    "src/migration-override.json",
+    "src/anvil-state.json",
+  ]
 }
