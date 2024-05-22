@@ -576,7 +576,7 @@ describe('LedgerWallet class', () => {
 
       it("will fail to initialize if the version isn't supported", async () => {
         expect(wallet.init()).rejects.toMatchInlineSnapshot(
-          `[Error: TODO: MESSAGING TO PROMPT USER TO UPGRADE LEDGER APP to >= 1.2.0]`
+          `[Error: Due to technical issues, we require the users to update their ledger celo-app to >= 1.2.0. You can do this on ledger-live by updating the celo-app in the app catalo.]`
         )
       })
     })

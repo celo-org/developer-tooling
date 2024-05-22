@@ -83,6 +83,8 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
     }
     if (txParams.feeCurrency && txParams.feeCurrency !== '0x') {
       // NOTE: TEMPORARY error, remove when datablob is signed
+      // https://github.com/celo-org/developer-tooling/issues/246
+      // TODO: Remove when issue above is closed
       throw new Error(
         'Due to technical limitations, only EIP1559 transactions are currently supported, follow this issue for more information'
       )
@@ -141,7 +143,7 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
     const appConfiguration = await this.ledger!.getAppConfiguration()
     if (new SemVer(appConfiguration.version).compare(this.MIN_VERSION_SUPPORTED) === -1) {
       throw new Error(
-        `TODO: MESSAGING TO PROMPT USER TO UPGRADE LEDGER APP to >= ${this.MIN_VERSION_SUPPORTED}`
+        `Due to technical issues, we require the users to update their ledger celo-app to >= ${this.MIN_VERSION_SUPPORTED}. You can do this on ledger-live by updating the celo-app in the app catalo.`
       )
     }
     if (!appConfiguration.arbitraryDataEnabled) {
