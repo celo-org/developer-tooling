@@ -7,7 +7,7 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "sideEffects": false,
-  "homepage": "https://celo-sdk-docs.readthedocs.io/en/latest/phone-utils",
+  "homepage": "https://docs.celo.org/developer/tools",
   "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/sdk/phone-utils",
   "scripts": {
     "prepublishOnly": "yarn build",
