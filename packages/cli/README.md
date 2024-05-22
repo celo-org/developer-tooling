@@ -61,7 +61,7 @@ Use `yarn docs` to populate `packages/docs` with generated documentation. Genera
 
 ### Testing
 
-We use both ganache and anvil for testing. You'll need foundry installed on your machine.
+We use both ganache and anvil for testing. You'll need [foundry](https://book.getfoundry.sh/getting-started/installation) installed on your machine.
 
 To run tests run the following command:
 
