@@ -254,7 +254,7 @@ jobs:
           version: "nightly-f625d0fa7c51e65b4bf1e8f7931cd1c6e2e285e9"
       - name: Run tests
         run: |
-          yarn workspace @celo/celocli test --coverage
+          NODE_OPTIONS="--experimental-vm-modules" yarn workspace @celo/celocli test --coverage
       - name: Verify that a new account can be created
         run: |
           yarn workspace @celo/celocli run celocli account:new

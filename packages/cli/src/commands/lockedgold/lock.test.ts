@@ -1,20 +1,20 @@
 import { newKitFromWeb3 } from '@celo/contractkit'
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
 import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import {
   LONG_TIMEOUT_MS,
   stripAnsiCodesFromNestedArray,
-  testLocally,
+  testLocallyWithWeb3Node,
 } from '../../test-utils/cliUtils'
 import Register from '../account/register'
 import Lock from './lock'
 import Unlock from './unlock'
+import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithGanache('lockedgold:lock cmd', (web3: Web3) => {
+testWithAnvil('lockedgold:lock cmd', (web3: Web3) => {
   test(
     'can lock with pending withdrawals',
     async () => {
@@ -22,12 +22,12 @@ testWithGanache('lockedgold:lock cmd', (web3: Web3) => {
       const account = accounts[0]
       const kit = newKitFromWeb3(web3)
       const lockedGold = await kit.contracts.getLockedGold()
-      await testLocally(Register, ['--from', account])
-      await testLocally(Lock, ['--from', account, '--value', '100'])
-      await testLocally(Unlock, ['--from', account, '--value', '50'])
-      await testLocally(Lock, ['--from', account, '--value', '75'])
-      await testLocally(Unlock, ['--from', account, '--value', '50'])
-      await testLocally(Lock, ['--from', account, '--value', '50'])
+      await testLocallyWithWeb3Node(Register, ['--from', account], web3)
+      await testLocallyWithWeb3Node(Lock, ['--from', account, '--value', '100'], web3)
+      await testLocallyWithWeb3Node(Unlock, ['--from', account, '--value', '50'], web3)
+      await testLocallyWithWeb3Node(Lock, ['--from', account, '--value', '75'], web3)
+      await testLocallyWithWeb3Node(Unlock, ['--from', account, '--value', '50'], web3)
+      await testLocallyWithWeb3Node(Lock, ['--from', account, '--value', '50'], web3)
       const pendingWithdrawalsTotalValue = await lockedGold.getPendingWithdrawalsTotalValue(account)
       expect(pendingWithdrawalsTotalValue.toFixed()).toBe('0')
     },
@@ -47,7 +47,7 @@ testWithGanache('lockedgold:lock cmd', (web3: Web3) => {
       // pre check
       expect(await accountsContract.isAccount(eoa)).toBe(false)
 
-      await testLocally(Lock, ['--from', eoa, '--value', '100'])
+      await testLocallyWithWeb3Node(Lock, ['--from', eoa, '--value', '100'], web3)
 
       expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls)).toMatchInlineSnapshot(`
         [
@@ -67,7 +67,7 @@ testWithGanache('lockedgold:lock cmd', (web3: Web3) => {
             "SendTransaction: register",
           ],
           [
-            "txHash: 0x9322aba7cf28f466f1377b1da9a1e7ed94c3109aa5fd2f4ea23caab371f1cb0f",
+            "txHash: 0xtxhash",
           ],
           [
             "Running Checks:",
@@ -82,7 +82,7 @@ testWithGanache('lockedgold:lock cmd', (web3: Web3) => {
             "SendTransaction: lock",
           ],
           [
-            "txHash: 0x947e5f8c97fdfabf688b3879f5856e1165c3578f2741d2481c3c961aa83bba51",
+            "txHash: 0xtxhash",
           ],
         ]
       `)

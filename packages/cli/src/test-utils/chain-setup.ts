@@ -3,6 +3,10 @@ import { mineBlocks } from '@celo/dev-utils/lib/ganache-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
+import { StableToken } from '@celo/contractkit'
+import { STABLES_ADDRESS, impersonateAccount, setCode, stopImpersonatingAccount } from '@celo/dev-utils/lib/anvil-test'
+import { PROXY_ADMIN_ADDRESS } from '@celo/connect'
+import { proxyBytecode } from './constants'
 
 export const GANACHE_EPOCH_SIZE = 100
 export const MIN_LOCKED_CELO_VALUE = new BigNumber(Web3.utils.toWei('10000', 'ether')) // 10k CELO
@@ -115,4 +119,25 @@ export const voteForGroupFromAndActivateVotes = async (
 
 export const mineEpoch = async (kit: ContractKit) => {
   await mineBlocks(100, kit.web3)
+}
+
+export const topUpWithToken = async (
+  kit: ContractKit,
+  stableToken: StableToken,
+  account: string,
+  amount: BigNumber
+) => {
+  const token = await kit.contracts.getStableToken(stableToken);
+
+  await impersonateAccount(kit.web3, STABLES_ADDRESS);
+  await token.transfer(account, amount.toFixed()).sendAndWaitForReceipt({
+    from: STABLES_ADDRESS
+  });
+  await stopImpersonatingAccount(kit.web3, STABLES_ADDRESS);
+}
+
+export const setupL2 = async (kit: ContractKit) => {
+  // Temporarily deploying any bytecode, so it's just there, 
+  // isCel2 should hence return true as it just checks for bytecode existence
+  await setCode(kit.web3, PROXY_ADMIN_ADDRESS, proxyBytecode);
 }

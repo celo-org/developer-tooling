@@ -5,7 +5,7 @@ import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { registerAccount, setupGroup } from '../../test-utils/chain-setup'
-import { stripAnsiCodes, testLocally } from '../../test-utils/cliUtils'
+import { stripAnsiCodesAndTxHashes, testLocally } from '../../test-utils/cliUtils'
 import Show from './show'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -33,7 +33,7 @@ testWithGanache('election:show', (web3: Web3) => {
     await expect(testLocally(Show, [groupAddress, '--group'])).rejects.toThrow(
       "Some checks didn't pass!"
     )
-    expect(stripAnsiCodes(logMock.mock.calls[1][0])).toContain(
+    expect(stripAnsiCodesAndTxHashes(logMock.mock.calls[1][0])).toContain(
       `✘  ${groupAddress} is ValidatorGroup`
     )
   })
@@ -45,7 +45,7 @@ testWithGanache('election:show', (web3: Web3) => {
     await expect(testLocally(Show, [voterAddress, '--voter'])).rejects.toThrow(
       "Some checks didn't pass!"
     )
-    expect(stripAnsiCodes(logMock.mock.calls[1][0])).toContain(
+    expect(stripAnsiCodesAndTxHashes(logMock.mock.calls[1][0])).toContain(
       `${voterAddress} is not registered as an account. Try running account:register`
     )
   })
@@ -75,7 +75,8 @@ testWithGanache('election:show', (web3: Web3) => {
     await testLocally(Show, [groupAddress, '--group'])
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
-    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
+    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+      .toMatchInlineSnapshot(`
       [
         [
           "Running Checks:",
@@ -127,7 +128,8 @@ testWithGanache('election:show', (web3: Web3) => {
     await testLocally(Show, [voterAddress, '--voter'])
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
-    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
+    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+      .toMatchInlineSnapshot(`
       [
         [
           "Running Checks:",

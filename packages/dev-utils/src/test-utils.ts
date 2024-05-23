@@ -2,6 +2,12 @@ import Web3 from 'web3'
 import { JsonRpcResponse } from 'web3-core-helpers'
 import migrationOverride from './migration-override.json'
 
+export const TEST_MNEMONIC =
+  'concert load couple harbor equip island argue ramp clarify fence smart topic'
+export const TEST_BALANCE = 1000000
+export const TEST_GAS_PRICE = 0
+export const TEST_GAS_LIMIT = 20000000
+
 export const NetworkConfig = migrationOverride
 
 export function jsonRpcCall<O>(web3: Web3, method: string, params: any[]): Promise<O> {
@@ -47,11 +53,20 @@ export function evmSnapshot(web3: Web3) {
   return jsonRpcCall<string>(web3, 'evm_snapshot', [])
 }
 
-export function testWithWeb3(name: string, rpcUrl: string, fn: (web3: Web3) => void) {
+type TestWithWeb3Hooks = {
+  beforeAll?: () => Promise<void>
+  afterAll?: () => Promise<void>
+}
+
+export function testWithWeb3(name: string, rpcUrl: string, fn: (web3: Web3) => void, hooks?: TestWithWeb3Hooks) {
   const web3 = new Web3(rpcUrl)
 
   describe(name, () => {
     let snapId: string | null = null
+
+    if (hooks?.beforeAll) {
+      beforeAll(hooks.beforeAll);
+    }
 
     beforeEach(async () => {
       if (snapId != null) {
@@ -65,6 +80,10 @@ export function testWithWeb3(name: string, rpcUrl: string, fn: (web3: Web3) => v
         await evmRevert(web3, snapId)
       }
     })
+
+    if (hooks?.afterAll) {
+      afterAll(hooks.afterAll);
+    }
 
     fn(web3)
   })

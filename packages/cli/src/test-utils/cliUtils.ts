@@ -13,17 +13,17 @@ export async function testLocallyWithWeb3Node(
   web3: Web3,
   config?: Interfaces.LoadOptions
 ) {
+  return testLocally(command, [...argv, '--node', extractHostFromWeb3(web3)], config);
+}
+
+export const extractHostFromWeb3 = (web3: Web3): string => {
   if (web3.currentProvider instanceof Web3.providers.HttpProvider) {
-    return testLocally(command, [...argv, '--node', web3.currentProvider.host], config)
+    return web3.currentProvider.host
   }
 
   // CeloProvider is not exported from @celo/connect, but it's injected into web3
   if (web3.currentProvider !== null && web3.currentProvider.constructor.name === 'CeloProvider') {
-    return testLocally(
-      command,
-      [...argv, '--node', (web3.currentProvider as any).existingProvider.host],
-      config
-    )
+    return (web3.currentProvider as any).existingProvider.host
   }
 
   throw new Error('Unsupported provider')
@@ -42,13 +42,13 @@ export async function testLocally(
   return command.run(extendedArgv, config)
 }
 
-// Removes font-formatting ANSI codes (colors/styles)
-export const stripAnsiCodes = (text: string): string => {
-  return text.replace(/\u001b\[.*?m/g, '')
+// Removes font-formatting ANSI codes (colors/styles) and normalizes transaction hashes from a string
+export const stripAnsiCodesAndTxHashes = (text: string): string => {
+  return text.replace(/\u001b\[.*?m/g, '').replace(/0x([A-Fa-f0-9]{64})/, '0xtxhash')
 }
 
 export function stripAnsiCodesFromNestedArray(arrays: Array<string[]>) {
-  return arrays.map((level0) => level0.map((level1) => stripAnsiCodes(level1)))
+  return arrays.map((level0) => level0.map((level1) => stripAnsiCodesAndTxHashes(level1)))
 }
 
 export const LONG_TIMEOUT_MS = 10 * 1000
