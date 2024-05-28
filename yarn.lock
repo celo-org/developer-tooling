@@ -1612,6 +1612,7 @@ __metadata:
     "@celo/contractkit": "npm:^8.0.0"
     "@celo/cryptographic-utils": "npm:^5.0.8"
     "@celo/dev-utils": "npm:0.0.3"
+    "@celo/devchain-anvil": "npm:^0.0.11006"
     "@celo/explorer": "npm:^5.0.10"
     "@celo/governance": "npm:^5.1.1"
     "@celo/identity": "npm:^5.1.2"
@@ -1803,6 +1804,13 @@ __metadata:
     web3-core-helpers: "npm:1.10.4"
   languageName: unknown
   linkType: soft
+
+"@celo/devchain-anvil@npm:^0.0.11006":
+  version: 0.0.11006
+  resolution: "@celo/devchain-anvil@npm:0.0.11006"
+  checksum: 83d8b2123b617167562783e7ef01a48c99b256bad573d7048bba9c446e36c33cb360ac327ff3cddf44bf1df197b0bd4202135106bf3a439bfbbdeeca9c34e683
+  languageName: node
+  linkType: hard
 
 "@celo/explorer@npm:^5.0.10, @celo/explorer@workspace:packages/sdk/explorer":
   version: 0.0.0-use.local
