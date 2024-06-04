@@ -14,7 +14,6 @@
   },
   "include": [
     "src/**/*", 
-    "src/migration-override.json",
-    "src/anvil-state.json",
+    "src/migration-override.json"
   ]
 }
