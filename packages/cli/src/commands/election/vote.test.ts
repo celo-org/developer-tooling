@@ -8,7 +8,7 @@ import {
   registerAccountWithLockedGold,
   setupGroupAndAffiliateValidator,
 } from '../../test-utils/chain-setup'
-import { stripAnsiCodesAndTxHashes, testLocally } from '../../test-utils/cliUtils'
+import { stripAnsiCodes, testLocally } from '../../test-utils/cliUtils'
 import Vote from './vote'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -46,7 +46,7 @@ testWithGanache('election:vote', (web3: Web3) => {
       testLocally(Vote, ['--from', fromAddress, '--for', groupAddress, '--value', '1'])
     ).rejects.toThrow()
 
-    expect(stripAnsiCodesAndTxHashes(logMock.mock.calls[2][0])).toContain(
+    expect(stripAnsiCodes(logMock.mock.calls[2][0])).toContain(
       `✘  0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb is ValidatorGroup`
     )
   })
@@ -63,7 +63,7 @@ testWithGanache('election:vote', (web3: Web3) => {
       testLocally(Vote, ['--from', fromAddress, '--for', groupAddress, '--value', '1'])
     ).rejects.toThrow()
 
-    expect(stripAnsiCodesAndTxHashes(logMock.mock.calls[3][0])).toContain(
+    expect(stripAnsiCodes(logMock.mock.calls[3][0])).toContain(
       `✘  Account has at least 0.000000000000000001 non-voting Locked Gold`
     )
   })
@@ -88,8 +88,7 @@ testWithGanache('election:vote', (web3: Web3) => {
     ).resolves.not.toThrow()
 
     expect(await election.getTotalVotesForGroupByAccount(groupAddress, fromAddress)).toEqual(amount)
-    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-      .toMatchInlineSnapshot(`
+    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
       [
         [
           "Running Checks:",
@@ -110,7 +109,7 @@ testWithGanache('election:vote', (web3: Web3) => {
           "SendTransaction: vote",
         ],
         [
-          "txHash: 0xtxhash",
+          "txHash: 0x5427ddef3d99512241b5c61b8c0467674c7278ef86a2258676d864430285b1ad",
         ],
       ]
     `)

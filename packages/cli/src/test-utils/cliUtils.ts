@@ -42,13 +42,13 @@ export async function testLocally(
   return command.run(extendedArgv, config)
 }
 
-// Removes font-formatting ANSI codes (colors/styles) and normalizes transaction hashes from a string
-export const stripAnsiCodesAndTxHashes = (text: string): string => {
-  return text.replace(/\u001b\[.*?m/g, '').replace(/0x([A-Fa-f0-9]{64})/, `0xtxhash`)
+// Removes font-formatting ANSI codes (colors/styles) from a string
+export const stripAnsiCodes = (text: string): string => {
+  return text.replace(/\u001b\[.*?m/g, '')
 }
 
 export function stripAnsiCodesFromNestedArray(arrays: Array<string[]>) {
-  return arrays.map((level0) => level0.map((level1) => stripAnsiCodesAndTxHashes(level1)))
+  return arrays.map((level0) => level0.map((level1) => stripAnsiCodes(level1)))
 }
 
 export const LONG_TIMEOUT_MS = 10 * 1000

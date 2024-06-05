@@ -6,7 +6,7 @@ import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { setupGroupAndAffiliateValidator } from '../../test-utils/chain-setup'
-import { stripAnsiCodesAndTxHashes, testLocally } from '../../test-utils/cliUtils'
+import { stripAnsiCodes, testLocally } from '../../test-utils/cliUtils'
 import Run from './run'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -31,11 +31,8 @@ testWithGanache('election:run', (web3: Web3) => {
         ],
       ]
     `)
-    expect(
-      logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-    ).toMatchInlineSnapshot(`[]`)
-    expect(warnMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-      .toMatchInlineSnapshot(`
+    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`[]`)
+    expect(warnMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
       [
         [
           "Warning: error running actual elections, retrying with minimum validators at 0",
@@ -107,11 +104,7 @@ testWithGanache('election:run', (web3: Web3) => {
         ],
       ]
     `)
-    expect(
-      logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-    ).toMatchInlineSnapshot(`[]`)
-    expect(
-      warnMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-    ).toMatchInlineSnapshot(`[]`)
+    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`[]`)
+    expect(warnMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`[]`)
   })
 })
