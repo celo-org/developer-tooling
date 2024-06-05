@@ -6,7 +6,6 @@ import { PROOF_OF_POSSESSION_SIGNATURE } from '../../test-utils/constants'
 import Lock from '../lockedgold/lock'
 import ValidatorRegister from '../validator/register'
 import Authorize from './authorize'
-import ProofOfPossession from './proof-of-possession'
 import Register from './register'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -18,12 +17,6 @@ testWithAnvil('account:authorize cmd', (web3: Web3) => {
     const signerNotRegisteredAccount = accounts[1]
 
     await testLocallyWithWeb3Node(Register, ['--from', notRegisteredAccount], web3)
-
-    await testLocallyWithWeb3Node(
-      ProofOfPossession,
-      ['--account', notRegisteredAccount, '--signer', signerNotRegisteredAccount],
-      web3
-    )
 
     await testLocallyWithWeb3Node(
       Authorize,
