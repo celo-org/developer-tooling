@@ -58,14 +58,19 @@ type TestWithWeb3Hooks = {
   afterAll?: () => Promise<void>
 }
 
-export function testWithWeb3(name: string, rpcUrl: string, fn: (web3: Web3) => void, hooks?: TestWithWeb3Hooks) {
+export function testWithWeb3(
+  name: string,
+  rpcUrl: string,
+  fn: (web3: Web3) => void,
+  hooks?: TestWithWeb3Hooks
+) {
   const web3 = new Web3(rpcUrl)
 
   describe(name, () => {
     let snapId: string | null = null
 
     if (hooks?.beforeAll) {
-      beforeAll(hooks.beforeAll);
+      beforeAll(hooks.beforeAll)
     }
 
     beforeEach(async () => {
@@ -82,7 +87,7 @@ export function testWithWeb3(name: string, rpcUrl: string, fn: (web3: Web3) => v
     })
 
     if (hooks?.afterAll) {
-      afterAll(hooks.afterAll);
+      afterAll(hooks.afterAll)
     }
 
     fn(web3)

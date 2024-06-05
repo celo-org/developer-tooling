@@ -13,7 +13,7 @@ export async function testLocallyWithWeb3Node(
   web3: Web3,
   config?: Interfaces.LoadOptions
 ) {
-  return testLocally(command, [...argv, '--node', extractHostFromWeb3(web3)], config);
+  return testLocally(command, [...argv, '--node', extractHostFromWeb3(web3)], config)
 }
 
 export const extractHostFromWeb3 = (web3: Web3): string => {
@@ -44,7 +44,7 @@ export async function testLocally(
 
 // Removes font-formatting ANSI codes (colors/styles) and normalizes transaction hashes from a string
 export const stripAnsiCodesAndTxHashes = (text: string): string => {
-  return text.replace(/\u001b\[.*?m/g, '').replace(/0x([A-Fa-f0-9]{64})/, '0xtxhash')
+  return text.replace(/\u001b\[.*?m/g, '').replace(/0x([A-Fa-f0-9]{64})/, `0xtxhash`)
 }
 
 export function stripAnsiCodesFromNestedArray(arrays: Array<string[]>) {

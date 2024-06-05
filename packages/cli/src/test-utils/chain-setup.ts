@@ -4,7 +4,12 @@ import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { StableToken } from '@celo/contractkit'
-import { STABLES_ADDRESS, impersonateAccount, setCode, stopImpersonatingAccount } from '@celo/dev-utils/lib/anvil-test'
+import {
+  STABLES_ADDRESS,
+  impersonateAccount,
+  setCode,
+  stopImpersonatingAccount,
+} from '@celo/dev-utils/lib/anvil-test'
 import { PROXY_ADMIN_ADDRESS } from '@celo/connect'
 import { proxyBytecode } from './constants'
 
@@ -127,17 +132,17 @@ export const topUpWithToken = async (
   account: string,
   amount: BigNumber
 ) => {
-  const token = await kit.contracts.getStableToken(stableToken);
+  const token = await kit.contracts.getStableToken(stableToken)
 
-  await impersonateAccount(kit.web3, STABLES_ADDRESS);
+  await impersonateAccount(kit.web3, STABLES_ADDRESS)
   await token.transfer(account, amount.toFixed()).sendAndWaitForReceipt({
-    from: STABLES_ADDRESS
-  });
-  await stopImpersonatingAccount(kit.web3, STABLES_ADDRESS);
+    from: STABLES_ADDRESS,
+  })
+  await stopImpersonatingAccount(kit.web3, STABLES_ADDRESS)
 }
 
 export const setupL2 = async (kit: ContractKit) => {
-  // Temporarily deploying any bytecode, so it's just there, 
+  // Temporarily deploying any bytecode, so it's just there,
   // isCel2 should hence return true as it just checks for bytecode existence
-  await setCode(kit.web3, PROXY_ADMIN_ADDRESS, proxyBytecode);
+  await setCode(kit.web3, PROXY_ADMIN_ADDRESS, proxyBytecode)
 }

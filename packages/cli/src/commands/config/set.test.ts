@@ -1,5 +1,9 @@
 import { ux } from '@oclif/core'
-import { extractHostFromWeb3, stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import {
+  extractHostFromWeb3,
+  stripAnsiCodesFromNestedArray,
+  testLocallyWithWeb3Node,
+} from '../../test-utils/cliUtils'
 import * as config from '../../utils/config'
 import Set from './set'
 import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'

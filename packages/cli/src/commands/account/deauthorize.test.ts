@@ -13,24 +13,32 @@ testWithAnvil('account:deauthorize cmd', (web3) => {
     const notRegisteredAccount = accounts[0]
     const signerNotRegisteredAccount = accounts[1]
     await testLocallyWithWeb3Node(Register, ['--from', accounts[0]], web3)
-    await testLocallyWithWeb3Node(Authorize, [
-      '--from',
-      notRegisteredAccount,
-      '--role',
-      'attestation',
-      '--signer',
-      signerNotRegisteredAccount,
-      '--signature',
-      PROOF_OF_POSSESSION_SIGNATURE,
-    ], web3)
-    await testLocallyWithWeb3Node(Deauthorize, [
-      '--from',
-      notRegisteredAccount,
-      '--role',
-      'attestation',
-      '--signer',
-      signerNotRegisteredAccount,
-    ], web3)
+    await testLocallyWithWeb3Node(
+      Authorize,
+      [
+        '--from',
+        notRegisteredAccount,
+        '--role',
+        'attestation',
+        '--signer',
+        signerNotRegisteredAccount,
+        '--signature',
+        PROOF_OF_POSSESSION_SIGNATURE,
+      ],
+      web3
+    )
+    await testLocallyWithWeb3Node(
+      Deauthorize,
+      [
+        '--from',
+        notRegisteredAccount,
+        '--role',
+        'attestation',
+        '--signer',
+        signerNotRegisteredAccount,
+      ],
+      web3
+    )
   })
 
   test('cannot deauthorize a non-authorized signer', async () => {
@@ -40,14 +48,18 @@ testWithAnvil('account:deauthorize cmd', (web3) => {
     await testLocallyWithWeb3Node(Register, ['--from', notRegisteredAccount], web3)
 
     await expect(
-      testLocallyWithWeb3Node(Deauthorize, [
-        '--from',
-        notRegisteredAccount,
-        '--role',
-        'attestation',
-        '--signer',
-        signerNotRegisteredAccount,
-      ], web3)
+      testLocallyWithWeb3Node(
+        Deauthorize,
+        [
+          '--from',
+          notRegisteredAccount,
+          '--role',
+          'attestation',
+          '--signer',
+          signerNotRegisteredAccount,
+        ],
+        web3
+      )
     ).rejects.toThrow()
   })
 })

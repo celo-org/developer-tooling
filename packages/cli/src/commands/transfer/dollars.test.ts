@@ -22,8 +22,18 @@ testWithAnvil('transfer:dollars cmd', (web3: Web3) => {
   })
 
   test('can transfer cusd', async () => {
-    await topUpWithToken(kit, StableToken.cUSD, accounts[0], new BigNumber('1000000000000000000000'));
-    await topUpWithToken(kit, StableToken.cUSD, accounts[1], new BigNumber('1000000000000000000000'));
+    await topUpWithToken(
+      kit,
+      StableToken.cUSD,
+      accounts[0],
+      new BigNumber('1000000000000000000000')
+    )
+    await topUpWithToken(
+      kit,
+      StableToken.cUSD,
+      accounts[1],
+      new BigNumber('1000000000000000000000')
+    )
 
     const balanceBefore = await kit.getTotalBalance(accounts[0])
     const receiverBalanceBefore = await kit.getTotalBalance(accounts[1])
