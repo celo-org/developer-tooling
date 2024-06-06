@@ -17,5 +17,9 @@ export class FeeCurrencyDirectoryWrapper extends AbstractFeeCurrencyWrapper<FeeC
     return this.getCurrencies()
   }
 
-  // TODO add other methods as well
+  getExchangeRate: (token: StrongAddress) => Promise<{ numerator: string; denominator: string }> =
+    proxyCall(this.contract.methods.getExchangeRate)
+
+  getCurrencyConfig: (token: StrongAddress) => Promise<{ oracle: string; intrinsicGas: string }> =
+    proxyCall(this.contract.methods.getCurrencyConfig)
 }
