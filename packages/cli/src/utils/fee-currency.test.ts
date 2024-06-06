@@ -1,26 +1,29 @@
+import { isCel2 } from '@celo/connect'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { FeeCurrencyDirectoryWrapper } from '@celo/contractkit/lib/wrappers/FeeCurrencyDirectoryWrapper'
 import { FeeCurrencyWhitelistWrapper } from '@celo/contractkit/lib/wrappers/FeeCurrencyWhitelistWrapper'
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
+import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import Web3 from 'web3'
+import { setupL2 } from '../test-utils/chain-setup'
 import { getFeeCurrencyContractWrapper } from './fee-currency'
 
 /**
  * Based on L1/L2 context returns an appropriate fee currency contract from contractkit.
  */
-testWithGanache('getFeeCurrencyContractWrapper', async (web3: Web3) => {
+testWithAnvil('getFeeCurrencyContractWrapper', async (web3: Web3) => {
   it('returns FeeCurrencyWhitelist for L1 context', async () => {
     const kit = newKitFromWeb3(web3)
-    const wrapper = await getFeeCurrencyContractWrapper(kit, false)
 
+    const wrapper = await getFeeCurrencyContractWrapper(kit, await isCel2(web3))
     expect(wrapper).toBeInstanceOf(FeeCurrencyWhitelistWrapper)
   })
 
-  // TODO it's currently expected to fail with "FeeCurrencyDirectory not (yet) registered"
-  it.failing('returns FeeCurrencyDirectory for L2 context', async () => {
+  it('returns FeeCurrencyDirectory for L2 context', async () => {
     const kit = newKitFromWeb3(web3)
-    const wrapper = await getFeeCurrencyContractWrapper(kit, true)
 
+    await setupL2(kit)
+
+    const wrapper = await getFeeCurrencyContractWrapper(kit, await isCel2(web3))
     expect(wrapper).toBeInstanceOf(FeeCurrencyDirectoryWrapper)
   })
 })
