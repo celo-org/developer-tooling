@@ -220,7 +220,7 @@ jobs:
       - run: sudo corepack enable yarn
       - name: Run tests
         run: |
-          yarn workspace @celo/contractkit test --coverage
+          NODE_OPTIONS="--experimental-vm-modules" yarn workspace @celo/contractkit test --coverage
       - uses: ./.github/actions/upload-codecov
         with:
           report-name: "contractkit"
