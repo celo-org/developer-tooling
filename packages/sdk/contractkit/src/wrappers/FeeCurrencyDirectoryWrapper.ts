@@ -1,4 +1,4 @@
-import { FeeCurrencyDirectory } from '@celo/abis-cel2/web3/FeeCurrencyDirectory'
+import { FeeCurrencyDirectory } from '@celo/abis-12/web3/FeeCurrencyDirectory'
 import { StrongAddress } from '@celo/base'
 import { AbstractFeeCurrencyWrapper } from './AbstractFeeCurrencyWrapper'
 import { proxyCall } from './BaseWrapper'

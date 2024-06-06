@@ -7,9 +7,6 @@ import Web3 from 'web3'
 import { setupL2 } from '../test-utils/chain-setup'
 import { getFeeCurrencyContractWrapper } from './fee-currency'
 
-/**
- * Based on L1/L2 context returns an appropriate fee currency contract from contractkit.
- */
 testWithAnvil('getFeeCurrencyContractWrapper', async (web3: Web3) => {
   it('returns FeeCurrencyWhitelist for L1 context', async () => {
     const kit = newKitFromWeb3(web3)

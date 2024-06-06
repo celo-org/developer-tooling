@@ -1555,10 +1555,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/abis-cel2@npm:@celo/abis@11.0.0-fee-currency-directory.0":
-  version: 11.0.0-fee-currency-directory.0
-  resolution: "@celo/abis@npm:11.0.0-fee-currency-directory.0"
-  checksum: 187cd48a5ebb5213fd501f5e54f11d5f3ec0e2ca4c35b5b649c3559cb5476e43ec19be0f1dc652e3e2da06d6ea507f673412743d8c497f770a6075436bccaaeb
+"@celo/abis-12@npm:@celo/abis@12.0.0-canary.0":
+  version: 12.0.0-canary.0
+  resolution: "@celo/abis@npm:12.0.0-canary.0"
+  checksum: a7bc515a936b9ee8c198f3d5699c56ebe144df2a3123625e7f5f1480e248f4667efa16669997f6547a85cbdf329d903eea88ecf6ace222e334e34609910da656
   languageName: node
   linkType: hard
 
@@ -1750,7 +1750,7 @@ __metadata:
   resolution: "@celo/contractkit@workspace:packages/sdk/contractkit"
   dependencies:
     "@celo/abis": "npm:11.0.0"
-    "@celo/abis-cel2": "npm:@celo/abis@11.0.0-fee-currency-directory.0"
+    "@celo/abis-12": "npm:@celo/abis@12.0.0-canary.0"
     "@celo/base": "npm:^6.0.1"
     "@celo/celo-devchain": "npm:^7.0.0"
     "@celo/connect": "npm:^5.3.0"
