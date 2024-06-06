@@ -15,7 +15,6 @@ afterAll(() => {
 
 testWithAnvil('network:whitelist cmd', (web3: Web3) => {
   test('can print the whitelist', async () => {
-    // @ts-ignore
     const kit = newKitFromWeb3(web3)
 
     await setupL2(kit)
