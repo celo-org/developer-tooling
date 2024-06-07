@@ -217,7 +217,7 @@ jobs:
           version: "nightly-f625d0fa7c51e65b4bf1e8f7931cd1c6e2e285e9"
       - name: Run tests
         run: |
-          NODE_OPTIONS="--experimental-vm-modules" yarn workspace @celo/contractkit test --coverage
+          yarn workspace @celo/contractkit test --coverage
       - uses: ./.github/actions/upload-codecov
         with:
           report-name: "contractkit"
