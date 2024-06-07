@@ -1,4 +1,3 @@
-import { newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import Web3 from 'web3'
 import { setupL2 } from '../../test-utils/chain-setup'
@@ -15,9 +14,7 @@ afterAll(() => {
 
 testWithAnvil('network:whitelist cmd', (web3: Web3) => {
   test('can print the whitelist', async () => {
-    const kit = newKitFromWeb3(web3)
-
-    await setupL2(kit)
+    await setupL2(web3)
 
     await testLocallyWithWeb3Node(Whitelist, [], web3)
     expect(spy.mock.calls[0][0]).toMatchInlineSnapshot(`

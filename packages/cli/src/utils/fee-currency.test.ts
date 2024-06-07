@@ -18,7 +18,7 @@ testWithAnvil('getFeeCurrencyContractWrapper', async (web3: Web3) => {
   it('returns FeeCurrencyDirectory for L2 context', async () => {
     const kit = newKitFromWeb3(web3)
 
-    await setupL2(kit)
+    await setupL2(web3)
 
     const wrapper = await getFeeCurrencyContractWrapper(kit, await isCel2(web3))
     expect(wrapper).toBeInstanceOf(FeeCurrencyDirectoryWrapper)
