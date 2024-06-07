@@ -11,7 +11,7 @@ testWithAnvil('chain setup', (web3: Web3) => {
 
       expect(await isCel2(web3)).toEqual(false)
 
-      await setupL2(kit)
+      await setupL2(kit.web3)
 
       expect(await isCel2(web3)).toEqual(true)
     })

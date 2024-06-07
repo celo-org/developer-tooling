@@ -141,8 +141,8 @@ export const topUpWithToken = async (
 }
 
 // TODO remove this once no longer needed
-export const setupL2 = async (kit: ContractKit) => {
+export const setupL2 = async (web3: Web3) => {
   // Temporarily deploying any bytecode, so it's just there,
   // isCel2 should hence return true as it just checks for bytecode existence
-  await setCode(kit.web3, PROXY_ADMIN_ADDRESS, proxyBytecode)
+  await setCode(web3, PROXY_ADMIN_ADDRESS, proxyBytecode)
 }

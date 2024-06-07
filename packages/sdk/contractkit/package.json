@@ -20,7 +20,7 @@
     "clean": "yarn run --top-level tsc -b . --clean",
     "prepublishOnly": "yarn build",
     "docs": "yarn run --top-level typedoc",
-    "test": "yarn run --top-level jest --runInBand --forceExit",
+    "test": "NODE_OPTIONS=--experimental-vm-modules yarn run --top-level jest --runInBand --forceExit",
     "lint": "yarn run --top-level eslint -c .eslintrc.js "
   },
   "dependencies": {
