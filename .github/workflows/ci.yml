@@ -204,13 +204,6 @@ jobs:
       id-token: write
       contents: read
     needs: [install-dependencies]
-    if: |
-
-      github.base_ref == 'master' ||  contains(github.base_ref, 'release') ||
-      contains(needs.install-dependencies.outputs.all_modified_files, 'packages/sdk') ||
-      contains(needs.install-dependencies.outputs.all_modified_files, ',package.json') ||
-      contains(needs.install-dependencies.outputs.all_modified_files, ',yarn.lock') ||
-      false
     steps:
       - uses: actions/checkout@v4
       - name: Sync workspace
@@ -233,15 +226,6 @@ jobs:
       id-token: write
       contents: read
     needs: [install-dependencies]
-    if: |
-
-      github.base_ref == 'master' || contains(github.base_ref, 'staging') || contains(github.base_ref, 'production') ||
-      contains(needs.install-dependencies.outputs.all_modified_files, 'packages/cli') ||
-      contains(needs.install-dependencies.outputs.all_modified_files, 'packages/sdk') ||
-      contains(needs.install-dependencies.outputs.all_modified_files, 'packages/typescript') ||
-      contains(needs.install-dependencies.outputs.all_modified_files, ',package.json') ||
-      contains(needs.install-dependencies.outputs.all_modified_files, ',yarn.lock') ||
-      false
     steps:
       - uses: actions/checkout@v4
       - name: Sync workspace
