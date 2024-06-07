@@ -1,4 +1,5 @@
 import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+import BigNumber from 'bignumber.js'
 import { newKitFromWeb3 } from '../kit'
 
 testWithAnvil('FeeCurrencyDirectory', (web3) => {
@@ -28,6 +29,27 @@ testWithAnvil('FeeCurrencyDirectory', (web3) => {
           "symbol": "Celo Dollar",
         },
       ]
+    `)
+  })
+
+  it('fetches exchange rate', async () => {
+    const wrapper = await kit.contracts.getFeeCurrencyDirectory()
+    const exchangeRate = await wrapper.getExchangeRate('0xe6774BE4E5f97dB10cAFB4c00C74cFbdCDc434D9')
+
+    expect(exchangeRate.denominator).toEqual(new BigNumber('1000000000000000000000000'))
+    expect(exchangeRate.numerator).toEqual(new BigNumber('1000000000000000000000000'))
+  })
+
+  it('fetches currency config', async () => {
+    const wrapper = await kit.contracts.getFeeCurrencyDirectory()
+    const currencyConfig = await wrapper.getCurrencyConfig(
+      '0xe6774BE4E5f97dB10cAFB4c00C74cFbdCDc434D9'
+    )
+    expect(currencyConfig).toMatchInlineSnapshot(`
+      {
+        "intrinsicGas": "21000",
+        "oracle": "0xa2204011717369e044106e3bC93599E02538d65b",
+      }
     `)
   })
 })
