@@ -120,17 +120,17 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts:10](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts#L10)
+[packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts:11](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts#L11)
 
 ___
 
 ### getCurrencyConfig
 
-• **getCurrencyConfig**: (`token`: \`0x$\{string}\`) => `Promise`\<\{ `intrinsicGas`: `string` ; `oracle`: `string`  }\>
+• **getCurrencyConfig**: (`token`: \`0x$\{string}\`) => `Promise`\<\{ `intrinsicGas`: `BigNumber` ; `oracle`: \`0x$\{string}\`  }\>
 
 #### Type declaration
 
-▸ (`token`): `Promise`\<\{ `intrinsicGas`: `string` ; `oracle`: `string`  }\>
+▸ (`token`): `Promise`\<\{ `intrinsicGas`: `BigNumber` ; `oracle`: \`0x$\{string}\`  }\>
 
 ##### Parameters
 
@@ -140,21 +140,21 @@ ___
 
 ##### Returns
 
-`Promise`\<\{ `intrinsicGas`: `string` ; `oracle`: `string`  }\>
+`Promise`\<\{ `intrinsicGas`: `BigNumber` ; `oracle`: \`0x$\{string}\`  }\>
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts#L23)
+[packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts:32](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts#L32)
 
 ___
 
 ### getExchangeRate
 
-• **getExchangeRate**: (`token`: \`0x$\{string}\`) => `Promise`\<\{ `denominator`: `string` ; `numerator`: `string`  }\>
+• **getExchangeRate**: (`token`: \`0x$\{string}\`) => `Promise`\<\{ `denominator`: `BigNumber` ; `numerator`: `BigNumber`  }\>
 
 #### Type declaration
 
-▸ (`token`): `Promise`\<\{ `denominator`: `string` ; `numerator`: `string`  }\>
+▸ (`token`): `Promise`\<\{ `denominator`: `BigNumber` ; `numerator`: `BigNumber`  }\>
 
 ##### Parameters
 
@@ -164,11 +164,11 @@ ___
 
 ##### Returns
 
-`Promise`\<\{ `denominator`: `string` ; `numerator`: `string`  }\>
+`Promise`\<\{ `denominator`: `BigNumber` ; `numerator`: `BigNumber`  }\>
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts:20](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts#L20)
+[packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts:21](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts#L21)
 
 ___
 
@@ -220,7 +220,7 @@ AbstractFeeCurrencyWrapper.address
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts#L16)
+[packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts:17](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts#L17)
 
 ___
 
