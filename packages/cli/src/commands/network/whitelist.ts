@@ -23,6 +23,7 @@ export default class Whitelist extends BaseCommand {
           adaptedToken ? ` (adapted token: ${adaptedToken})` : ''
         }`
     )
+    // if we use ux.table for this instead then people could pass --csv or --json to get the data how they need it
     console.log(`Available currencies:\n${pairs.join('\n')}`)
   }
 }
