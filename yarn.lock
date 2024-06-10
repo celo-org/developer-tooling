@@ -1874,6 +1874,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@celo/ledger-token-signer@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "@celo/ledger-token-signer@npm:0.1.0"
+  checksum: 7112fa472871fc41daa433de244722660f18357a91c583a3ef49bc96efcf17c7c6bec5fce31e74d7e74965ad5a89abfdc646c70becd2eb03577262cb8e3ad42b
+  languageName: node
+  linkType: hard
+
 "@celo/network-utils@workspace:packages/sdk/network-utils":
   version: 0.0.0-use.local
   resolution: "@celo/network-utils@workspace:packages/sdk/network-utils"
@@ -2115,6 +2122,7 @@ __metadata:
     "@celo/base": "npm:^6.0.1"
     "@celo/connect": "npm:^5.3.0"
     "@celo/contractkit": "npm:^8.0.0"
+    "@celo/ledger-token-signer": "npm:^0.1.0"
     "@celo/utils": "npm:^6.0.1"
     "@celo/wallet-base": "npm:^5.2.0"
     "@celo/wallet-remote": "npm:^5.2.0"

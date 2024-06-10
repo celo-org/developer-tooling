@@ -4,7 +4,7 @@ import { EIP712TypedData, structHash } from '@celo/utils/lib/sign-typed-data-uti
 import { chainIdTransformationForSigning } from '@celo/wallet-base'
 import * as ethUtil from '@ethereumjs/util'
 import { TransportStatusError } from '@ledgerhq/errors'
-import Ledger, { ledgerService } from '@ledgerhq/hw-app-eth'
+import Ledger from '@ledgerhq/hw-app-eth'
 import debugFactory from 'debug'
 import { SemVer } from 'semver'
 import { transportErrorFriendlyMessage } from './ledger-utils'
@@ -50,15 +50,10 @@ export class LedgerSigner implements Signer {
     try {
       const validatedDerivationPath = await this.getValidatedDerivationPath()
       await this.checkForKnownToken(encodedTx)
-      const resolution = await ledgerService.resolveTransaction(
-        trimLeading0x(encodedTx.rlpEncode),
-        this.ledger.loadConfig,
-        { erc20: true }
-      )
       const signature = await this.ledger!.signTransaction(
         validatedDerivationPath,
         trimLeading0x(encodedTx.rlpEncode), // the ledger requires the rlpEncode without the leading 0x
-        resolution
+        null
       )
 
       // EIP155 support. check/recalc signature v value.
@@ -191,7 +186,7 @@ export class LedgerSigner implements Signer {
           rlpEncoded.transaction.chainId!
         )
         if (feeTokenInfo) {
-          await this.ledger!.provideERC20TokenInformation(`0x${feeTokenInfo.data.toString('hex')}`)
+          await this.ledger!.provideERC20TokenInformation(feeTokenInfo.data.toString('hex'))
         }
       }
     }

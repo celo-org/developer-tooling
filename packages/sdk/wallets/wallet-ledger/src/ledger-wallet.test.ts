@@ -5,7 +5,7 @@ import {
   trimLeading0x,
 } from '@celo/base/lib/address'
 import { CeloTx, EncodedTransaction, Hex } from '@celo/connect'
-import { newKit } from '@celo/contractkit'
+import { StableToken, newKit } from '@celo/contractkit'
 import { privateKeyToAddress, privateKeyToPublicKey } from '@celo/utils/lib/address'
 import { generateTypedDataHash } from '@celo/utils/lib/sign-typed-data-utils'
 import { verifySignature } from '@celo/utils/lib/signatureUtils'
@@ -445,7 +445,7 @@ describe('LedgerWallet class', () => {
                 await expect(
                   wallet.signTransaction(celoTransaction)
                 ).rejects.toThrowErrorMatchingInlineSnapshot(
-                  `"ethereum-legacy transactions are not supported anymore, please try sending a more modern transaction instead (eip1559, cip64, etc.)"`
+                  `"ethereum-legacy transactions are not supported, please try sending a more modern transaction instead (eip1559, cip64, etc.)"`
                 )
               },
               TEST_TIMEOUT_IN_MS
@@ -490,19 +490,14 @@ describe('LedgerWallet class', () => {
                 gas: 99,
                 maxFeePerGas: 99,
                 maxPriorityFeePerGas: 99,
-                feeCurrency: (await kit.contracts.getGoldToken()).address,
-                // data: '0xabcdef',
+                feeCurrency: (await kit.contracts.getStableToken(StableToken.cUSD)).address,
               }
             })
 
             test(
-              'fails',
+              'succeeds',
               async () => {
-                await expect(
-                  wallet.signTransaction(celoTransaction)
-                ).rejects.toThrowErrorMatchingInlineSnapshot(
-                  `"Due to technical limitations, only EIP1559 transactions are currently supported, follow this issue for more information"`
-                )
+                await expect(wallet.signTransaction(celoTransaction)).resolves.not.toBeUndefined()
               },
               TEST_TIMEOUT_IN_MS
             )

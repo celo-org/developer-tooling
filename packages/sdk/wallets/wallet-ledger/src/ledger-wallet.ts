@@ -78,15 +78,7 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
         )
       }
       throw new Error(
-        'ethereum-legacy transactions are not supported anymore, please try sending a more modern transaction instead (eip1559, cip64, etc.)'
-      )
-    }
-    if (txParams.feeCurrency && txParams.feeCurrency !== '0x') {
-      // NOTE: TEMPORARY error, remove when datablob is signed
-      // https://github.com/celo-org/developer-tooling/issues/246
-      // TODO: Remove when issue above is closed
-      throw new Error(
-        'Due to technical limitations, only EIP1559 transactions are currently supported, follow this issue for more information'
+        'ethereum-legacy transactions are not supported, please try sending a more modern transaction instead (eip1559, cip64, etc.)'
       )
     }
     return super.signTransaction(txParams)
