@@ -1,59 +1,59 @@
-[@celo/contractkit](../README.md) / [Exports](../modules.md) / [wrappers/FeeCurrencyWhitelistWrapper](../modules/wrappers_FeeCurrencyWhitelistWrapper.md) / FeeCurrencyWhitelistWrapper
+[@celo/contractkit](../README.md) / [Exports](../modules.md) / [wrappers/FeeCurrencyDirectoryWrapper](../modules/wrappers_FeeCurrencyDirectoryWrapper.md) / FeeCurrencyDirectoryWrapper
 
-# Class: FeeCurrencyWhitelistWrapper
+# Class: FeeCurrencyDirectoryWrapper
 
-[wrappers/FeeCurrencyWhitelistWrapper](../modules/wrappers_FeeCurrencyWhitelistWrapper.md).FeeCurrencyWhitelistWrapper
+[wrappers/FeeCurrencyDirectoryWrapper](../modules/wrappers_FeeCurrencyDirectoryWrapper.md).FeeCurrencyDirectoryWrapper
 
-FeeCurrencyWhitelist contract listing available currencies usable to pay fees
+FeeCurrencyDirectory contract listing available currencies usable to pay fees
 
 ## Hierarchy
 
-- [`AbstractFeeCurrencyWrapper`](wrappers_AbstractFeeCurrencyWrapper.AbstractFeeCurrencyWrapper.md)\<`FeeCurrencyWhitelist`\>
+- [`AbstractFeeCurrencyWrapper`](wrappers_AbstractFeeCurrencyWrapper.AbstractFeeCurrencyWrapper.md)\<`FeeCurrencyDirectory`\>
 
-  ↳ **`FeeCurrencyWhitelistWrapper`**
+  ↳ **`FeeCurrencyDirectoryWrapper`**
 
 ## Table of contents
 
 ### Constructors
 
-- [constructor](wrappers_FeeCurrencyWhitelistWrapper.FeeCurrencyWhitelistWrapper.md#constructor)
+- [constructor](wrappers_FeeCurrencyDirectoryWrapper.FeeCurrencyDirectoryWrapper.md#constructor)
 
 ### Properties
 
-- [addToken](wrappers_FeeCurrencyWhitelistWrapper.FeeCurrencyWhitelistWrapper.md#addtoken)
-- [eventTypes](wrappers_FeeCurrencyWhitelistWrapper.FeeCurrencyWhitelistWrapper.md#eventtypes)
-- [events](wrappers_FeeCurrencyWhitelistWrapper.FeeCurrencyWhitelistWrapper.md#events)
-- [getWhitelist](wrappers_FeeCurrencyWhitelistWrapper.FeeCurrencyWhitelistWrapper.md#getwhitelist)
-- [methodIds](wrappers_FeeCurrencyWhitelistWrapper.FeeCurrencyWhitelistWrapper.md#methodids)
-- [removeToken](wrappers_FeeCurrencyWhitelistWrapper.FeeCurrencyWhitelistWrapper.md#removetoken)
+- [eventTypes](wrappers_FeeCurrencyDirectoryWrapper.FeeCurrencyDirectoryWrapper.md#eventtypes)
+- [events](wrappers_FeeCurrencyDirectoryWrapper.FeeCurrencyDirectoryWrapper.md#events)
+- [getCurrencies](wrappers_FeeCurrencyDirectoryWrapper.FeeCurrencyDirectoryWrapper.md#getcurrencies)
+- [getCurrencyConfig](wrappers_FeeCurrencyDirectoryWrapper.FeeCurrencyDirectoryWrapper.md#getcurrencyconfig)
+- [getExchangeRate](wrappers_FeeCurrencyDirectoryWrapper.FeeCurrencyDirectoryWrapper.md#getexchangerate)
+- [methodIds](wrappers_FeeCurrencyDirectoryWrapper.FeeCurrencyDirectoryWrapper.md#methodids)
 
 ### Accessors
 
-- [address](wrappers_FeeCurrencyWhitelistWrapper.FeeCurrencyWhitelistWrapper.md#address)
+- [address](wrappers_FeeCurrencyDirectoryWrapper.FeeCurrencyDirectoryWrapper.md#address)
 
 ### Methods
 
-- [getAddresses](wrappers_FeeCurrencyWhitelistWrapper.FeeCurrencyWhitelistWrapper.md#getaddresses)
-- [getFeeCurrencyInformation](wrappers_FeeCurrencyWhitelistWrapper.FeeCurrencyWhitelistWrapper.md#getfeecurrencyinformation)
-- [getPastEvents](wrappers_FeeCurrencyWhitelistWrapper.FeeCurrencyWhitelistWrapper.md#getpastevents)
-- [version](wrappers_FeeCurrencyWhitelistWrapper.FeeCurrencyWhitelistWrapper.md#version)
+- [getAddresses](wrappers_FeeCurrencyDirectoryWrapper.FeeCurrencyDirectoryWrapper.md#getaddresses)
+- [getFeeCurrencyInformation](wrappers_FeeCurrencyDirectoryWrapper.FeeCurrencyDirectoryWrapper.md#getfeecurrencyinformation)
+- [getPastEvents](wrappers_FeeCurrencyDirectoryWrapper.FeeCurrencyDirectoryWrapper.md#getpastevents)
+- [version](wrappers_FeeCurrencyDirectoryWrapper.FeeCurrencyDirectoryWrapper.md#version)
 
 ## Constructors
 
 ### constructor
 
-• **new FeeCurrencyWhitelistWrapper**(`connection`, `contract`): [`FeeCurrencyWhitelistWrapper`](wrappers_FeeCurrencyWhitelistWrapper.FeeCurrencyWhitelistWrapper.md)
+• **new FeeCurrencyDirectoryWrapper**(`connection`, `contract`): [`FeeCurrencyDirectoryWrapper`](wrappers_FeeCurrencyDirectoryWrapper.FeeCurrencyDirectoryWrapper.md)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `connection` | `Connection` |
-| `contract` | `FeeCurrencyWhitelist` |
+| `contract` | `FeeCurrencyDirectory` |
 
 #### Returns
 
-[`FeeCurrencyWhitelistWrapper`](wrappers_FeeCurrencyWhitelistWrapper.FeeCurrencyWhitelistWrapper.md)
+[`FeeCurrencyDirectoryWrapper`](wrappers_FeeCurrencyDirectoryWrapper.FeeCurrencyDirectoryWrapper.md)
 
 #### Inherited from
 
@@ -65,33 +65,9 @@ FeeCurrencyWhitelist contract listing available currencies usable to pay fees
 
 ## Properties
 
-### addToken
-
-• **addToken**: (...`args`: [tokenAddress: string]) => `Promise`\<`void`\>
-
-#### Type declaration
-
-▸ (`...args`): `Promise`\<`void`\>
-
-##### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `...args` | [tokenAddress: string] |
-
-##### Returns
-
-`Promise`\<`void`\>
-
-#### Defined in
-
-[packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:17](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts#L17)
-
-___
-
 ### eventTypes
 
-• **eventTypes**: `EventsEnum`\<`FeeCurrencyWhitelist`\>
+• **eventTypes**: `EventsEnum`\<`FeeCurrencyDirectory`\>
 
 #### Inherited from
 
@@ -111,8 +87,6 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `FeeCurrencyWhitelistRemoved` | `ContractEvent`\<`string`\> |
-| `FeeCurrencyWhitelisted` | `ContractEvent`\<`string`\> |
 | `OwnershipTransferred` | `ContractEvent`\<\{ `0`: `string` ; `1`: `string` ; `newOwner`: `string` ; `previousOwner`: `string`  }\> |
 | `allEvents` | (`options?`: `EventOptions`, `cb?`: `Callback`\<`EventLog`\>) => `EventEmitter` |
 
@@ -126,9 +100,9 @@ ___
 
 ___
 
-### getWhitelist
+### getCurrencies
 
-• **getWhitelist**: (...`args`: []) => `Promise`\<\`0x$\{string}\`[]\>
+• **getCurrencies**: (...`args`: []) => `Promise`\<\`0x$\{string}\`[]\>
 
 #### Type declaration
 
@@ -146,13 +120,61 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:10](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts#L10)
+[packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts:11](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts#L11)
+
+___
+
+### getCurrencyConfig
+
+• **getCurrencyConfig**: (`token`: \`0x$\{string}\`) => `Promise`\<\{ `intrinsicGas`: `BigNumber` ; `oracle`: \`0x$\{string}\`  }\>
+
+#### Type declaration
+
+▸ (`token`): `Promise`\<\{ `intrinsicGas`: `BigNumber` ; `oracle`: \`0x$\{string}\`  }\>
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `token` | \`0x$\{string}\` |
+
+##### Returns
+
+`Promise`\<\{ `intrinsicGas`: `BigNumber` ; `oracle`: \`0x$\{string}\`  }\>
+
+#### Defined in
+
+[packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts:32](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts#L32)
+
+___
+
+### getExchangeRate
+
+• **getExchangeRate**: (`token`: \`0x$\{string}\`) => `Promise`\<\{ `denominator`: `BigNumber` ; `numerator`: `BigNumber`  }\>
+
+#### Type declaration
+
+▸ (`token`): `Promise`\<\{ `denominator`: `BigNumber` ; `numerator`: `BigNumber`  }\>
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `token` | \`0x$\{string}\` |
+
+##### Returns
+
+`Promise`\<\{ `denominator`: `BigNumber` ; `numerator`: `BigNumber`  }\>
+
+#### Defined in
+
+[packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts:21](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts#L21)
 
 ___
 
 ### methodIds
 
-• **methodIds**: `Record`\<``"initialized"`` \| ``"isOwner"`` \| ``"owner"`` \| ``"renounceOwnership"`` \| ``"transferOwnership"`` \| ``"getVersionNumber"`` \| ``"initialize"`` \| ``"addToken"`` \| ``"removeToken"`` \| ``"whitelist"`` \| ``"getWhitelist"``, `string`\>
+• **methodIds**: `Record`\<``"initialized"`` \| ``"owner"`` \| ``"renounceOwnership"`` \| ``"transferOwnership"`` \| ``"getVersionNumber"`` \| ``"initialize"`` \| ``"currencies"`` \| ``"setCurrencyConfig"`` \| ``"removeCurrencies"`` \| ``"getCurrencies"`` \| ``"getCurrencyConfig"`` \| ``"getExchangeRate"``, `string`\>
 
 #### Inherited from
 
@@ -161,30 +183,6 @@ ___
 #### Defined in
 
 [packages/sdk/contractkit/src/wrappers/BaseWrapper.ts:68](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BaseWrapper.ts#L68)
-
-___
-
-### removeToken
-
-• **removeToken**: (...`args`: [tokenAddress: string, index: string \| number]) => `Promise`\<`void`\>
-
-#### Type declaration
-
-▸ (`...args`): `Promise`\<`void`\>
-
-##### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `...args` | [tokenAddress: string, index: string \| number] |
-
-##### Returns
-
-`Promise`\<`void`\>
-
-#### Defined in
-
-[packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts#L16)
 
 ## Accessors
 
@@ -222,7 +220,7 @@ AbstractFeeCurrencyWrapper.address
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:19](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts#L19)
+[packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts:17](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts#L17)
 
 ___
 
@@ -260,7 +258,7 @@ Contract getPastEvents
 
 | Name | Type |
 | :------ | :------ |
-| `event` | ``"OwnershipTransferred"`` \| ``"allEvents"`` \| ``"FeeCurrencyWhitelistRemoved"`` \| ``"FeeCurrencyWhitelisted"`` |
+| `event` | ``"OwnershipTransferred"`` \| ``"allEvents"`` |
 | `options` | `PastEventOptions` |
 
 #### Returns

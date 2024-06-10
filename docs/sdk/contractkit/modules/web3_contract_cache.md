@@ -24,7 +24,7 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:76](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L76)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:78](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L78)
 
 ## Variables
 
@@ -46,6 +46,7 @@
 | `EpochRewards` | (`web3`: `default`, `address`: `string`) => `EpochRewards` |
 | `Escrow` | (`web3`: `default`, `address`: `string`) => `Escrow` |
 | `FederatedAttestations` | (`web3`: `default`, `address`: `string`) => `FederatedAttestations` |
+| `FeeCurrencyDirectory` | (`web3`: `default`, `address`: `string`) => `FeeCurrencyDirectory` |
 | `FeeCurrencyWhitelist` | (`web3`: `default`, `address`: `string`) => `FeeCurrencyWhitelist` |
 | `FeeHandler` | (`web3`: `default`, `address`: `string`) => `FeeHandler` |
 | `Freezer` | (`web3`: `default`, `address`: `string`) => `Freezer` |
@@ -68,4 +69,4 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L38)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:39](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L39)
