@@ -9,6 +9,7 @@ export enum CeloContract {
   ERC20 = 'ERC20',
   Escrow = 'Escrow',
   FederatedAttestations = 'FederatedAttestations',
+  FeeCurrencyDirectory = 'FeeCurrencyDirectory',
   FeeCurrencyWhitelist = 'FeeCurrencyWhitelist',
   FeeHandler = 'FeeHandler',
   Freezer = 'Freezer',
