@@ -7,3 +7,7 @@
 ### Classes
 
 - [FeeCurrencyDirectoryWrapper](../classes/wrappers_FeeCurrencyDirectoryWrapper.FeeCurrencyDirectoryWrapper.md)
+
+### Interfaces
+
+- [FeeCurrencyDirectoryConfig](../interfaces/wrappers_FeeCurrencyDirectoryWrapper.FeeCurrencyDirectoryConfig.md)
