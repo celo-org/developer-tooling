@@ -1,9 +1,10 @@
 import { CeloTx } from '@celo/connect'
 import { CeloContract, newKitFromWeb3 } from '@celo/contractkit'
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
+import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+
 import { buildUri, parseUri } from './tx-uri'
 
-testWithGanache('URI utils', (web3) => {
+testWithAnvil('URI utils', (web3) => {
   const recipient = '0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef'
   const value = '100'
 

@@ -1,5 +1,5 @@
 import { CeloTx, Connection, Provider } from '@celo/connect'
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
+import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import { normalizeAddressWith0x, privateKeyToAddress } from '@celo/utils/lib/address'
 import { verifySignature } from '@celo/utils/lib/signatureUtils'
 import { recoverTransaction, verifyEIP712TypedDataSigner } from '@celo/wallet-base'
@@ -83,11 +83,11 @@ describe.skip('rpc-wallet', () => {
   })
 })
 
-testWithGanache('rpc-wallet', (web3) => {
+testWithAnvil('rpc-wallet', (web3) => {
   const provider = web3.currentProvider
   const rpcWallet = new RpcWallet(provider as Provider)
 
-  describe('with ganache web3 provider', () => {
+  describe('with web3 provider', () => {
     let ganacheAccounts: string[]
     beforeAll(async () => {
       await rpcWallet.init()
