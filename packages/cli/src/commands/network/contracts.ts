@@ -67,18 +67,6 @@ export default class Contracts extends BaseCommand {
       }
     )
 
-    const tokenBalanceColumns: ux.Table.table.Columns<(typeof contractInfo)[number]> = {}
-    await kit.celoTokens.forEachCeloToken(
-      (token) =>
-        (tokenBalanceColumns[token.symbol] = {
-          header: token.symbol,
-          get: (i) => {
-            const balance = i.balances[token.symbol]!
-            return balance.isZero() ? '0' : balance.toExponential(3)
-          },
-        })
-    )
-
     ux.table(
       contractInfo,
       {
@@ -88,7 +76,6 @@ export default class Contracts extends BaseCommand {
         version: {
           get: (i) => i.version,
         },
-        ...tokenBalanceColumns,
       },
       { sort: 'contract', ...res.flags }
     )
