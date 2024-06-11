@@ -1,9 +1,9 @@
 import { StrongAddress } from '@celo/base'
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
+import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import { newKitFromWeb3 } from '../kit'
 import { FederatedAttestationsWrapper } from './FederatedAttestations'
 
-testWithGanache('FederatedAttestations Wrapper', (web3) => {
+testWithAnvil('FederatedAttestations Wrapper', (web3) => {
   const kit = newKitFromWeb3(web3)
   const TIME_STAMP = 1665080820
   let accounts: StrongAddress[] = []
@@ -50,11 +50,6 @@ testWithGanache('FederatedAttestations Wrapper', (web3) => {
 
     const accountInstance = await kit.contracts.getAccounts()
     await accountInstance.createAccount().sendAndWaitForReceipt({ from: issuer })
-
-    // Ganache returns 1 in chainId assembly code
-    // @ts-ignore
-    jest.spyOn<any, any>(kit.connection, 'chainId').mockReturnValue(1)
-
     const celoTransactionObject = await federatedAttestations.registerAttestation(
       testIdentifierBytes32,
       issuer,

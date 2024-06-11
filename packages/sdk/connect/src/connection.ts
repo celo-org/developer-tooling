@@ -266,7 +266,7 @@ export class Connection {
   signTypedData = async (
     signer: string,
     typedData: EIP712TypedData,
-    version?: 1 | 3 | 4 | 5
+    version: 1 | 3 | 4 | 5 | null = 4
   ): Promise<Signature> => {
     // stringify data for v3 & v4 based on https://github.com/MetaMask/metamask-extension/blob/c72199a1a6e4151c40c22f79d0f3b6ed7a2d59a7/app/scripts/lib/typed-message-manager.js#L185
     const shouldStringify = version === 3 || version === 4
