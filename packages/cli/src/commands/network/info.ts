@@ -1,4 +1,5 @@
-import { Flags } from '@oclif/core'
+import { isCel2 } from '@celo/connect'
+import { Flags, ux } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { printValueMapRecursive } from '../../utils/cli'
 
@@ -18,8 +19,18 @@ export default class Info extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(Info)
+    const isL2 = await isCel2(kit.connection.web3)
 
     const blockNumber = await kit.connection.getBlockNumber()
+
+    if (isL2) {
+      ux.info('Celo no longer has epochs')
+      printValueMapRecursive({
+        blockNumber,
+      })
+      return
+    }
+
     const latestEpochNumber = await kit.getEpochNumberOfBlock(blockNumber)
     const epochSize = await kit.getEpochSize()
 
