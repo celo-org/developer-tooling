@@ -30,7 +30,6 @@ import { newValidators } from '@celo/abis/web3/Validators'
 import { newReserve } from '@celo/abis/web3/mento/Reserve'
 import { newStableToken } from '@celo/abis/web3/mento/StableToken'
 
-import { newFeeCurrencyDirectory } from '@celo/abis-12/web3/FeeCurrencyDirectory'
 import { newMentoFeeHandlerSeller } from '@celo/abis/web3/MentoFeeHandlerSeller'
 import { newUniswapFeeHandlerSeller } from '@celo/abis/web3/UniswapFeeHandlerSeller'
 
@@ -47,7 +46,6 @@ export const ContractFactories = {
   [CeloContract.ERC20]: newIERC20,
   [CeloContract.Escrow]: newEscrow,
   [CeloContract.FederatedAttestations]: newFederatedAttestations,
-  [CeloContract.FeeCurrencyDirectory]: newFeeCurrencyDirectory,
   [CeloContract.FeeCurrencyWhitelist]: newFeeCurrencyWhitelist,
   [CeloContract.Freezer]: newFreezer,
   [CeloContract.FeeHandler]: newFeeHandler,

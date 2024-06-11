@@ -20,7 +20,6 @@
     "prepack": "yarn build"
   },
   "dependencies": {
-    "@viem/anvil": "^0.0.9",
     "bignumber.js": "^9.0.0",
     "fs-extra": "^8.1.0",
     "ganache": "npm:@celo/ganache@7.8.0-unofficial.0",

@@ -6,6 +6,7 @@
 
 ### Modules
 
+- [data](modules/data.md)
 - [index](modules/index.md)
 - [ledger-signer](modules/ledger_signer.md)
 - [ledger-utils](modules/ledger_utils.md)

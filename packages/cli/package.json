@@ -29,7 +29,7 @@
     "lint": "yarn run --top-level eslint -c .eslintrc.js ",
     "prepublish": "",
     "prepack": "yarn run build && oclif manifest && oclif readme",
-    "test": "TZ=UTC NODE_OPTIONS=--experimental-vm-modules yarn jest --runInBand --forceExit"
+    "test": "TZ=UTC yarn jest --runInBand --forceExit"
   },
   "dependencies": {
     "@celo/abis": "11.0.0",
@@ -38,7 +38,6 @@
     "@celo/connect": "^5.3.0",
     "@celo/contractkit": "^8.0.0",
     "@celo/cryptographic-utils": "^5.0.8",
-    "@celo/devchain-anvil": "^0.0.11007",
     "@celo/explorer": "^5.0.10",
     "@celo/governance": "^5.1.1",
     "@celo/identity": "^5.1.2",

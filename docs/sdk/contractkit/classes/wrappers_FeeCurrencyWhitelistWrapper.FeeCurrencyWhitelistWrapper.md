@@ -8,7 +8,7 @@ FeeCurrencyWhitelist contract listing available currencies usable to pay fees
 
 ## Hierarchy
 
-- [`AbstractFeeCurrencyWrapper`](wrappers_AbstractFeeCurrencyWrapper.AbstractFeeCurrencyWrapper.md)\<`FeeCurrencyWhitelist`\>
+- [`BaseWrapper`](wrappers_BaseWrapper.BaseWrapper.md)\<`FeeCurrencyWhitelist`\>
 
   ↳ **`FeeCurrencyWhitelistWrapper`**
 
@@ -33,7 +33,6 @@ FeeCurrencyWhitelist contract listing available currencies usable to pay fees
 
 ### Methods
 
-- [getAddresses](wrappers_FeeCurrencyWhitelistWrapper.FeeCurrencyWhitelistWrapper.md#getaddresses)
 - [getFeeCurrencyInformation](wrappers_FeeCurrencyWhitelistWrapper.FeeCurrencyWhitelistWrapper.md#getfeecurrencyinformation)
 - [getPastEvents](wrappers_FeeCurrencyWhitelistWrapper.FeeCurrencyWhitelistWrapper.md#getpastevents)
 - [version](wrappers_FeeCurrencyWhitelistWrapper.FeeCurrencyWhitelistWrapper.md#version)
@@ -57,7 +56,7 @@ FeeCurrencyWhitelist contract listing available currencies usable to pay fees
 
 #### Inherited from
 
-[AbstractFeeCurrencyWrapper](wrappers_AbstractFeeCurrencyWrapper.AbstractFeeCurrencyWrapper.md).[constructor](wrappers_AbstractFeeCurrencyWrapper.AbstractFeeCurrencyWrapper.md#constructor)
+[BaseWrapper](wrappers_BaseWrapper.BaseWrapper.md).[constructor](wrappers_BaseWrapper.BaseWrapper.md#constructor)
 
 #### Defined in
 
@@ -85,7 +84,7 @@ FeeCurrencyWhitelist contract listing available currencies usable to pay fees
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:17](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts#L17)
+[packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:91](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts#L91)
 
 ___
 
@@ -95,7 +94,7 @@ ___
 
 #### Inherited from
 
-[AbstractFeeCurrencyWrapper](wrappers_AbstractFeeCurrencyWrapper.AbstractFeeCurrencyWrapper.md).[eventTypes](wrappers_AbstractFeeCurrencyWrapper.AbstractFeeCurrencyWrapper.md#eventtypes)
+[BaseWrapper](wrappers_BaseWrapper.BaseWrapper.md).[eventTypes](wrappers_BaseWrapper.BaseWrapper.md#eventtypes)
 
 #### Defined in
 
@@ -118,7 +117,7 @@ ___
 
 #### Inherited from
 
-[AbstractFeeCurrencyWrapper](wrappers_AbstractFeeCurrencyWrapper.AbstractFeeCurrencyWrapper.md).[events](wrappers_AbstractFeeCurrencyWrapper.AbstractFeeCurrencyWrapper.md#events)
+[BaseWrapper](wrappers_BaseWrapper.BaseWrapper.md).[events](wrappers_BaseWrapper.BaseWrapper.md#events)
 
 #### Defined in
 
@@ -146,7 +145,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:10](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts#L10)
+[packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:41](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts#L41)
 
 ___
 
@@ -156,7 +155,7 @@ ___
 
 #### Inherited from
 
-[AbstractFeeCurrencyWrapper](wrappers_AbstractFeeCurrencyWrapper.AbstractFeeCurrencyWrapper.md).[methodIds](wrappers_AbstractFeeCurrencyWrapper.AbstractFeeCurrencyWrapper.md#methodids)
+[BaseWrapper](wrappers_BaseWrapper.BaseWrapper.md).[methodIds](wrappers_BaseWrapper.BaseWrapper.md#methodids)
 
 #### Defined in
 
@@ -184,7 +183,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts#L16)
+[packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:90](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts#L90)
 
 ## Accessors
 
@@ -200,31 +199,13 @@ Contract address
 
 #### Inherited from
 
-AbstractFeeCurrencyWrapper.address
+BaseWrapper.address
 
 #### Defined in
 
 [packages/sdk/contractkit/src/wrappers/BaseWrapper.ts:37](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BaseWrapper.ts#L37)
 
 ## Methods
-
-### getAddresses
-
-▸ **getAddresses**(): `Promise`\<\`0x$\{string}\`[]\>
-
-#### Returns
-
-`Promise`\<\`0x$\{string}\`[]\>
-
-#### Overrides
-
-[AbstractFeeCurrencyWrapper](wrappers_AbstractFeeCurrencyWrapper.AbstractFeeCurrencyWrapper.md).[getAddresses](wrappers_AbstractFeeCurrencyWrapper.AbstractFeeCurrencyWrapper.md#getaddresses)
-
-#### Defined in
-
-[packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:19](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts#L19)
-
-___
 
 ### getFeeCurrencyInformation
 
@@ -240,13 +221,9 @@ ___
 
 `Promise`\<\{ `adaptedToken`: `undefined` \| \`0x$\{string}\` ; `address`: \`0x$\{string}\` ; `decimals`: `undefined` \| `number` ; `name`: `undefined` \| `string` ; `symbol`: `undefined` \| `string`  }[]\>
 
-#### Inherited from
-
-[AbstractFeeCurrencyWrapper](wrappers_AbstractFeeCurrencyWrapper.AbstractFeeCurrencyWrapper.md).[getFeeCurrencyInformation](wrappers_AbstractFeeCurrencyWrapper.AbstractFeeCurrencyWrapper.md#getfeecurrencyinformation)
-
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/AbstractFeeCurrencyWrapper.ts:41](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/AbstractFeeCurrencyWrapper.ts#L41)
+[packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts:47](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyWhitelistWrapper.ts#L47)
 
 ___
 
@@ -269,7 +246,7 @@ Contract getPastEvents
 
 #### Inherited from
 
-[AbstractFeeCurrencyWrapper](wrappers_AbstractFeeCurrencyWrapper.AbstractFeeCurrencyWrapper.md).[getPastEvents](wrappers_AbstractFeeCurrencyWrapper.AbstractFeeCurrencyWrapper.md#getpastevents)
+[BaseWrapper](wrappers_BaseWrapper.BaseWrapper.md).[getPastEvents](wrappers_BaseWrapper.BaseWrapper.md#getpastevents)
 
 #### Defined in
 
@@ -287,7 +264,7 @@ ___
 
 #### Inherited from
 
-[AbstractFeeCurrencyWrapper](wrappers_AbstractFeeCurrencyWrapper.AbstractFeeCurrencyWrapper.md).[version](wrappers_AbstractFeeCurrencyWrapper.AbstractFeeCurrencyWrapper.md#version)
+[BaseWrapper](wrappers_BaseWrapper.BaseWrapper.md).[version](wrappers_BaseWrapper.BaseWrapper.md#version)
 
 #### Defined in
 

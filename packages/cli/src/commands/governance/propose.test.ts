@@ -193,7 +193,7 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
       ).encodeABI()
       expect(proposal[0].input).toEqual(expectedInput)
     },
-    EXTRA_LONG_TIMEOUT_MS * 2
+    EXTRA_LONG_TIMEOUT_MS
   )
 
   test(
