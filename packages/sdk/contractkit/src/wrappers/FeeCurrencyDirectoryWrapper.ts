@@ -4,6 +4,12 @@ import BigNumber from 'bignumber.js'
 import { AbstractFeeCurrencyWrapper } from './AbstractFeeCurrencyWrapper'
 import { proxyCall, valueToBigNumber } from './BaseWrapper'
 
+export interface FeeCurrencyDirectoryConfig {
+  intrinsicGasForAlternativeFeeCurrency: {
+    [feeCurrencyAddress: StrongAddress]: BigNumber
+  }
+}
+
 /**
  * FeeCurrencyDirectory contract listing available currencies usable to pay fees
  */
@@ -39,4 +45,20 @@ export class FeeCurrencyDirectoryWrapper extends AbstractFeeCurrencyWrapper<FeeC
       intrinsicGas: valueToBigNumber(res.intrinsicGas),
     })
   )
+
+  /**
+   * Returns current configuration parameters.
+   */
+  async getConfig(): Promise<FeeCurrencyDirectoryConfig> {
+    const addresses = await this.getAddresses()
+    let config: FeeCurrencyDirectoryConfig = { intrinsicGasForAlternativeFeeCurrency: {} }
+
+    for (const address of addresses) {
+      config.intrinsicGasForAlternativeFeeCurrency[address] = (
+        await this.getCurrencyConfig(address)
+      ).intrinsicGas
+    }
+
+    return config
+  }
 }
