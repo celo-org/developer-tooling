@@ -15,7 +15,7 @@ Please use GitHub to:
 
 💬 [Ask a question](https://github.com/celo-org/developer-tooling/discussions)
 
-✨ [Suggest a feature](httpsi//github.com/celo-org/developer-tooling/issues/new/choose)
+✨ [Suggest a feature](https://github.com/celo-org/developer-tooling/issues/new/choose)
 
 🧑‍💻 [Contribute!](/CONTRIBUTING.md)
 
