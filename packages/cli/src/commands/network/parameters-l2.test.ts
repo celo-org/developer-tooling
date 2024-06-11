@@ -46,6 +46,11 @@ testWithAnvil('network:parameters', (web3) => {
           adjustment: 0 
           max: 0.0005 
           target: 0 
+      FeeCurrencyDirectory: 
+        intrinsicGasForAlternativeFeeCurrency: 
+          0x2A3733dBc31980f02b12135C809b5da33BF3a1e9: 21000 (~2.100e+4)
+          0xb7a33b4ad2B1f6b0a944232F5c71798d27Ad9272: 21000 (~2.100e+4)
+          0xe6774BE4E5f97dB10cAFB4c00C74cFbdCDc434D9: 21000 (~2.100e+4)
       GasPriceMinimum: 
         adjustmentSpeed: 0.5 
         gasPriceMinimum: 100000000 (~1.000e+8)

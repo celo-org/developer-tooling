@@ -1,6 +1,13 @@
 // tslint:disable: ordered-imports
 import { StrongAddress } from '@celo/base'
-import { CeloTx, CeloTxObject, Connection, ReadOnlyWallet, TransactionResult } from '@celo/connect'
+import {
+  CeloTx,
+  CeloTxObject,
+  Connection,
+  ReadOnlyWallet,
+  TransactionResult,
+  isCel2,
+} from '@celo/connect'
 import { EIP712TypedData } from '@celo/utils/lib/sign-typed-data-utils'
 import { Signature } from '@celo/utils/lib/signatureUtils'
 import { LocalWallet } from '@celo/wallet-local'
@@ -147,6 +154,10 @@ export class ContractKit {
       CeloContract.BlockchainParameters,
       CeloContract.EpochRewards,
     ]
+
+    if (await isCel2(this.web3)) {
+      configContracts.push(CeloContract.FeeCurrencyDirectory)
+    }
 
     const configMethod = async (contract: ValidWrappers) => {
       try {
