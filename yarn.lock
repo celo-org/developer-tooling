@@ -1874,10 +1874,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/ledger-token-signer@npm:^0.2.0":
-  version: 0.2.0
-  resolution: "@celo/ledger-token-signer@npm:0.2.0"
-  checksum: c03ff8609859fb571c53043df228eea62e350152907ca8374a2f731637b99187ebcddfa34e42e2f21a2774e16a97867aeada0eb12ab0c623d4294979c85f7beb
+"@celo/ledger-token-signer@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "@celo/ledger-token-signer@npm:0.4.0"
+  checksum: 8cd9638c4092f699b22e3d02a188710afbf562997e0c6682e530e38bbe26d57dbc3cf73e4383b7cb5b2c72c0915016f258b985eb2390e10b902abb23ee42a8b5
   languageName: node
   linkType: hard
 
@@ -2122,7 +2122,7 @@ __metadata:
     "@celo/base": "npm:^6.0.1"
     "@celo/connect": "npm:^5.3.0"
     "@celo/contractkit": "npm:^8.0.0"
-    "@celo/ledger-token-signer": "npm:^0.2.0"
+    "@celo/ledger-token-signer": "npm:^0.4.0"
     "@celo/utils": "npm:^6.0.1"
     "@celo/wallet-base": "npm:^5.2.0"
     "@celo/wallet-remote": "npm:^5.2.0"
@@ -2131,6 +2131,7 @@ __metadata:
     "@ledgerhq/hw-app-eth": "npm:6.36.1"
     "@ledgerhq/hw-transport": "npm:^6.30.6"
     "@ledgerhq/hw-transport-node-hid": "npm:^6.28.5"
+    "@noble/curves": "npm:^1.4.0"
     "@noble/hashes": "npm:^1.3.3"
     debug: "npm:^4.1.1"
     patch-package: "npm:^8.0.0"
@@ -3848,6 +3849,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@noble/curves@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "@noble/curves@npm:1.4.0"
+  dependencies:
+    "@noble/hashes": "npm:1.4.0"
+  checksum: b21b30a36ff02bfcc0f5e6163d245cdbaf7f640511fff97ccf83fc207ee79cfd91584b4d97977374de04cb118a55eb63a7964c82596a64162bbc42bc685ae6d9
+  languageName: node
+  linkType: hard
+
 "@noble/hashes@npm:1.2.0, @noble/hashes@npm:~1.2.0":
   version: 1.2.0
   resolution: "@noble/hashes@npm:1.2.0"
@@ -3873,6 +3883,13 @@ __metadata:
   version: 1.3.3
   resolution: "@noble/hashes@npm:1.3.3"
   checksum: 1025ddde4d24630e95c0818e63d2d54ee131b980fe113312d17ed7468bc18f54486ac86c907685759f8a7e13c2f9b9e83ec7b67d1cc20836f36b5e4a65bb102d
+  languageName: node
+  linkType: hard
+
+"@noble/hashes@npm:1.4.0":
+  version: 1.4.0
+  resolution: "@noble/hashes@npm:1.4.0"
+  checksum: e156e65794c473794c52fa9d06baf1eb20903d0d96719530f523cc4450f6c721a957c544796e6efd0197b2296e7cd70efeb312f861465e17940a3e3c7e0febc6
   languageName: node
   linkType: hard
 

@@ -17,10 +17,10 @@ export default class Whitelist extends BaseCommand {
     const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyWhitelist()
     const validFeeCurrencies = await feeCurrencyWhitelist.getWhitelist()
     const pairs = (await feeCurrencyWhitelist.getFeeCurrencyInformation(validFeeCurrencies)).map(
-      ({ name, symbol, address, adaptedToken }) =>
+      ({ name, symbol, address, adaptedToken, decimals }) =>
         `${address} - ${name || 'unknown name'} (${symbol || 'N/A'})${
           adaptedToken ? ` (adapted token: ${adaptedToken})` : ''
-        }`
+        } - ${decimals} decimals`
     )
     console.log(`Available currencies:\n${pairs.join('\n')}`)
   }
