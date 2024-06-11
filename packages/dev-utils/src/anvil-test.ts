@@ -38,16 +38,14 @@ export function testWithAnvil(name: string, fn: (web3: Web3) => void) {
   // for each test case, we start and stop a new anvil instance
   return testWithWeb3(name, `http://127.0.0.1:${anvil.port}`, fn, {
     beforeAll: async () => {
-      // these logs never show
       console.time('anvil start')
       await anvil.start()
-      console.timeEnd('anvil stop')
+      console.timeEnd('anvil start')
     },
     afterAll: async () => {
-      console.error('anvil logs', anvil.logs)
       console.time('anvil stop')
       await anvil.stop()
-      console.timeEnd('anvil stop')
+      console.timeEnd(`anvil stop`)
     },
   })
 }
