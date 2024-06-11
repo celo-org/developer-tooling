@@ -34,6 +34,7 @@ FeeCurrencyDirectory contract listing available currencies usable to pay fees
 ### Methods
 
 - [getAddresses](wrappers_FeeCurrencyDirectoryWrapper.FeeCurrencyDirectoryWrapper.md#getaddresses)
+- [getConfig](wrappers_FeeCurrencyDirectoryWrapper.FeeCurrencyDirectoryWrapper.md#getconfig)
 - [getFeeCurrencyInformation](wrappers_FeeCurrencyDirectoryWrapper.FeeCurrencyDirectoryWrapper.md#getfeecurrencyinformation)
 - [getPastEvents](wrappers_FeeCurrencyDirectoryWrapper.FeeCurrencyDirectoryWrapper.md#getpastevents)
 - [version](wrappers_FeeCurrencyDirectoryWrapper.FeeCurrencyDirectoryWrapper.md#version)
@@ -120,7 +121,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts:11](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts#L11)
+[packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts:17](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts#L17)
 
 ___
 
@@ -144,7 +145,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts:32](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts#L32)
+[packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts#L38)
 
 ___
 
@@ -168,7 +169,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts:21](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts#L21)
+[packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts#L27)
 
 ___
 
@@ -220,7 +221,23 @@ AbstractFeeCurrencyWrapper.address
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts:17](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts#L17)
+[packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts#L23)
+
+___
+
+### getConfig
+
+▸ **getConfig**(): `Promise`\<[`FeeCurrencyDirectoryConfig`](../interfaces/wrappers_FeeCurrencyDirectoryWrapper.FeeCurrencyDirectoryConfig.md)\>
+
+Returns current configuration parameters.
+
+#### Returns
+
+`Promise`\<[`FeeCurrencyDirectoryConfig`](../interfaces/wrappers_FeeCurrencyDirectoryWrapper.FeeCurrencyDirectoryConfig.md)\>
+
+#### Defined in
+
+[packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts:52](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/FeeCurrencyDirectoryWrapper.ts#L52)
 
 ___
 

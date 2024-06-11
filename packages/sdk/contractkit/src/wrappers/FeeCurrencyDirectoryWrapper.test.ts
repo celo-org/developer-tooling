@@ -52,4 +52,19 @@ testWithAnvil('FeeCurrencyDirectory', (web3) => {
       }
     `)
   })
+
+  it('fetches config', async () => {
+    const wrapper = await kit.contracts.getFeeCurrencyDirectory()
+    const config = await wrapper.getConfig()
+
+    expect(config).toMatchInlineSnapshot(`
+      {
+        "intrinsicGasForAlternativeFeeCurrency": {
+          "0x2A3733dBc31980f02b12135C809b5da33BF3a1e9": "21000",
+          "0xb7a33b4ad2B1f6b0a944232F5c71798d27Ad9272": "21000",
+          "0xe6774BE4E5f97dB10cAFB4c00C74cFbdCDc434D9": "21000",
+        },
+      }
+    `)
+  })
 })
