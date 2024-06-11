@@ -53,6 +53,12 @@ exports[`network:contracts runs 1`] = `
     "version": "1.1.0.0"
   },
   {
+    "contract": "FeeCurrencyDirectory",
+    "proxy": "0x42Fe5a2A61ed9705eb2F08a04A58CEB606D22f6a",
+    "implementation": "0x63837e6E68C9070DF4f1CD70DCdcce4644b42b0E",
+    "version": "1.1.0.0"
+  },
+  {
     "contract": "FeeCurrencyWhitelist",
     "proxy": "0x99f389e8a9903aF72ba481e8f000e8E229e529dA",
     "implementation": "0x84E366f7a6d4b8F9C00c86EB22de9f1Cbfff4327",
