@@ -1619,7 +1619,7 @@ __metadata:
     "@celo/contractkit": "npm:^8.0.0"
     "@celo/cryptographic-utils": "npm:^5.0.8"
     "@celo/dev-utils": "npm:0.0.3"
-    "@celo/devchain-anvil": "npm:^0.0.11007"
+    "@celo/devchain-anvil": "npm:0.0.11028"
     "@celo/explorer": "npm:^5.0.10"
     "@celo/governance": "npm:^5.1.1"
     "@celo/identity": "npm:^5.1.2"
@@ -1813,10 +1813,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/devchain-anvil@npm:^0.0.11007":
-  version: 0.0.11007
-  resolution: "@celo/devchain-anvil@npm:0.0.11007"
-  checksum: 08ff1904363969996e5b747781c317c45150a6ddee4868ae6aae6e515114ebb0b953a0abaecce1c2f7550544facc53beaf0081b8dfdfb5757ceece4e1c69e2e1
+"@celo/devchain-anvil@npm:0.0.11028":
+  version: 0.0.11028
+  resolution: "@celo/devchain-anvil@npm:0.0.11028"
+  checksum: 5d0bcd28953deb243899a46e4e06948c371680ded497027eeaca0f0348f9cc26e24a8cfded0c77e7379374b99890a99ec6d7ef2ccb7e13e2579ba86875e737e0
   languageName: node
   linkType: hard
 
