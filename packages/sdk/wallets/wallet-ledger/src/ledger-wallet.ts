@@ -135,7 +135,7 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
     const appConfiguration = await this.ledger!.getAppConfiguration()
     if (new SemVer(appConfiguration.version).compare(this.MIN_VERSION_SUPPORTED) === -1) {
       throw new Error(
-        `Due to technical issues, we require the users to update their ledger celo-app to >= ${this.MIN_VERSION_SUPPORTED}. You can do this on ledger-live by updating the celo-app in the app catalo.`
+        `Due to technical issues, we require the users to update their ledger celo-app to >= ${this.MIN_VERSION_SUPPORTED}. You can do this on ledger-live by updating the celo-app in the app catalog.`
       )
     }
     if (!appConfiguration.arbitraryDataEnabled) {
