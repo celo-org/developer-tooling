@@ -213,7 +213,7 @@ describe('Transaction Utils', () => {
         gas,
         feeCurrency: i % 3 === 0 ? feeCurrency : undefined,
         // TODO: No idea which modulo it should be. Can we document this?
-        maxFeeInFeeCurrency: i % 3 === 1 ? gasPrice : undefined,
+        maxFeeInFeeCurrency: i % 6 === 1 ? gasPrice : undefined,
         gatewayFeeRecipient: i % 7 === 0 ? gatewayFeeRecipient : undefined,
         gatewayFee: i % 7 === 0 ? gatewayFee : undefined,
         // eslint-disable-next-line no-bitwise
