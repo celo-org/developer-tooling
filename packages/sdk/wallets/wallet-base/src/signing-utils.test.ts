@@ -216,7 +216,25 @@ describe('rlpEncodedTx', () => {
           maxFeeInFeeCurrency: '0x666',
         } as const
         const result = rlpEncodedTx(CIP66Transaction)
-        expect(result).toMatchInlineSnapshot()
+        expect(result).toMatchInlineSnapshot(`
+          {
+            "rlpEncode": "0x7af8410280630a63941be31a94361a391bbafb2a4ccd704f57dc04d4bb893635c9adc5dea0000083abcdefc0945409ed021d9299bf6814279a6a1411a7e866a631820666",
+            "transaction": {
+              "chainId": 2,
+              "data": "0xabcdef",
+              "feeCurrency": "0x5409ed021d9299bf6814279a6a1411a7e866a631",
+              "from": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
+              "gas": "0x63",
+              "maxFeeInFeeCurrency": "0x666",
+              "maxFeePerGas": "0x0a",
+              "maxPriorityFeePerGas": "0x63",
+              "nonce": 0,
+              "to": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
+              "value": "0x3635c9adc5dea00000",
+            },
+            "type": "cip66",
+          }
+        `)
       })
     })
 
@@ -470,7 +488,29 @@ describe('recoverTransaction', () => {
   it('handles cip66 transactions', () => {
     const cip66TX =
       '0x7af8ce82a4ec01843b9aca00850342770c0083030d409443d72ff17701b2da814620735c39c620ce0ea4a180b844a9059cbb000000000000000000000000bd8be21f6883569ad7d15cc55c87137fcef308c300000000000000000000000000000000000000000000000001605eba271024d6c094765de816845861e75a25fca122bb6898b8b1282a8501a13b860080a02a015905a494549d8a1da26ce769309963e43f407936bbce1ea8276072b08416a072fd12d24c44bc79648bd88f4d8c158f2f0778694557868b3dc7d80e3aa6b539'
-    expect(recoverTransaction(cip66TX)).toMatchInlineSnapshot()
+    expect(recoverTransaction(cip66TX)).toMatchInlineSnapshot(`
+      [
+        {
+          "accessList": [],
+          "chainId": 42220,
+          "data": "0xa9059cbb000000000000000000000000bd8be21f6883569ad7d15cc55c87137fcef308c300000000000000000000000000000000000000000000000001605eba271024d6",
+          "feeCurrency": "0x765de816845861e75a25fca122bb6898b8b1282a",
+          "gas": 200000,
+          "maxFeeInFeeCurrency": 7000000000,
+          "maxFeePerGas": 14000000000,
+          "maxPriorityFeePerGas": 1000000000,
+          "nonce": 1,
+          "r": "0x2a015905a494549d8a1da26ce769309963e43f407936bbce1ea8276072b08416",
+          "s": "0x72fd12d24c44bc79648bd88f4d8c158f2f0778694557868b3dc7d80e3aa6b539",
+          "to": "0x43d72ff17701b2da814620735c39c620ce0ea4a1",
+          "type": "cip64",
+          "v": 27,
+          "value": 0,
+          "yParity": 0,
+        },
+        "0xa94f5374Fce5edBC8E2a8697C15331677e6EbF0B",
+      ]
+    `)
   })
   it('handles cip42 transactions', () => {
     const cip42TX =
