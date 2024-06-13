@@ -2,11 +2,11 @@ import { StrongAddress } from '@celo/base'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { GoldTokenWrapper } from '@celo/contractkit/lib/wrappers/GoldTokenWrapper'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
-import { NetworkConfig, testWithGanache } from '@celo/dev-utils/lib/ganache-test'
+import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import { ux } from '@oclif/core'
 import * as fs from 'fs'
 import Web3 from 'web3'
-import { EXTRA_LONG_TIMEOUT_MS, testLocally } from '../../test-utils/cliUtils'
+import { EXTRA_LONG_TIMEOUT_MS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import { createMultisig } from '../../test-utils/multisigUtils'
 import Approve from '../multisig/approve'
 import Propose from './propose'
@@ -137,13 +137,11 @@ const structAbiDefinition = {
   type: 'function',
 }
 
-testWithGanache('governance:propose cmd', (web3: Web3) => {
+testWithAnvil('governance:propose cmd', (web3: Web3) => {
   let governance: GovernanceWrapper
   let goldToken: GoldTokenWrapper
+  let minDeposit: string
 
-  const expConfig = NetworkConfig.governance
-
-  const minDeposit = web3.utils.toWei(expConfig.minDeposit.toString(), 'ether')
   const kit = newKitFromWeb3(web3)
 
   let accounts: StrongAddress[] = []
@@ -153,6 +151,7 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
     kit.defaultAccount = accounts[0]
     governance = await kit.contracts.getGovernance()
     goldToken = await kit.contracts.getGoldToken()
+    minDeposit = (await governance.minDeposit()).toFixed()
   })
 
   test(
@@ -172,16 +171,20 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
       const proposalBefore = await governance.getProposal(1)
       expect(proposalBefore).toEqual([])
 
-      await testLocally(Propose, [
-        '--jsonTransactions',
-        'transactions.json',
-        '--deposit',
-        '1000000000000000000',
-        '--from',
-        accounts[0],
-        '--descriptionURL',
-        'https://dummyurl.com',
-      ])
+      await testLocallyWithWeb3Node(
+        Propose,
+        [
+          '--jsonTransactions',
+          'transactions.json',
+          '--deposit',
+          minDeposit,
+          '--from',
+          accounts[0],
+          '--descriptionURL',
+          'https://example.com',
+        ],
+        web3
+      )
 
       const proposal = await governance.getProposal(1)
       expect(proposal.length).toEqual(transactions.length)
@@ -229,19 +232,23 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
       const proposalBefore = await governance.getProposal(1)
       expect(proposalBefore).toEqual([])
 
-      await testLocally(Propose, [
-        '--jsonTransactions',
-        'transactions.json',
-        '--deposit',
-        '10000e18',
-        '--from',
-        accounts[0],
-        '--useMultiSig',
-        '--for',
-        multisigWithOneSigner,
-        '--descriptionURL',
-        'https://dummyurl.com',
-      ])
+      await testLocallyWithWeb3Node(
+        Propose,
+        [
+          '--jsonTransactions',
+          'transactions.json',
+          '--deposit',
+          '10000e18',
+          '--from',
+          accounts[0],
+          '--useMultiSig',
+          '--for',
+          multisigWithOneSigner,
+          '--descriptionURL',
+          'https://dummyurl.com',
+        ],
+        web3
+      )
 
       const proposal = await governance.getProposal(1)
       expect(proposal.length).toEqual(transactions.length)
@@ -290,32 +297,33 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
       expect(proposalBefore).toEqual([])
 
       // Submit proposal from signer A
-      await testLocally(Propose, [
-        '--jsonTransactions',
-        'transactions.json',
-        '--deposit',
-        '10000e18',
-        '--from',
-        accounts[0],
-        '--useMultiSig',
-        '--for',
-        multisigWithTwoSigners,
-        '--descriptionURL',
-        'https://dummyurl.com',
-      ])
+      await testLocallyWithWeb3Node(
+        Propose,
+        [
+          '--jsonTransactions',
+          'transactions.json',
+          '--deposit',
+          '10000e18',
+          '--from',
+          accounts[0],
+          '--useMultiSig',
+          '--for',
+          multisigWithTwoSigners,
+          '--descriptionURL',
+          'https://dummyurl.com',
+        ],
+        web3
+      )
 
       const proposalBetween = await governance.getProposal(1)
       expect(proposalBetween).toEqual([])
 
       // Approve proposal from signer B
-      await testLocally(Approve, [
-        '--from',
-        accounts[1],
-        '--for',
-        multisigWithTwoSigners,
-        '--tx',
-        '0',
-      ])
+      await testLocallyWithWeb3Node(
+        Approve,
+        ['--from', accounts[1], '--for', multisigWithTwoSigners, '--tx', '0'],
+        web3
+      )
 
       const proposal = await governance.getProposal(1)
       expect(proposal.length).toEqual(transactions.length)
@@ -347,18 +355,22 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
       const proposalBefore = await governance.getProposal(1)
       expect(proposalBefore).toEqual([])
 
-      await testLocally(Propose, [
-        '--jsonTransactions',
-        'transactions.json',
-        '--deposit',
-        '1000000000000000000',
-        '--from',
-        accounts[0],
-        '--descriptionURL',
-        'https://dummyurl.com',
-        '--force',
-        '--noInfo',
-      ])
+      await testLocallyWithWeb3Node(
+        Propose,
+        [
+          '--jsonTransactions',
+          'transactions.json',
+          '--deposit',
+          minDeposit,
+          '--from',
+          accounts[0],
+          '--descriptionURL',
+          'https://dummyurl.com',
+          '--force',
+          '--noInfo',
+        ],
+        web3
+      )
 
       const proposal = await governance.getProposal(1)
       expect(proposal.length).toEqual(transactions.length)
@@ -390,18 +402,22 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
       const proposalBefore = await governance.getProposal(1)
       expect(proposalBefore).toEqual([])
 
-      await testLocally(Propose, [
-        '--jsonTransactions',
-        'transactions.json',
-        '--deposit',
-        '1000000000000000000',
-        '--from',
-        accounts[0],
-        '--descriptionURL',
-        'https://dummyurl.com',
-        '--force',
-        '--noInfo',
-      ])
+      await testLocallyWithWeb3Node(
+        Propose,
+        [
+          '--jsonTransactions',
+          'transactions.json',
+          '--deposit',
+          minDeposit,
+          '--from',
+          accounts[0],
+          '--descriptionURL',
+          'https://dummyurl.com',
+          '--force',
+          '--noInfo',
+        ],
+        web3
+      )
 
       const proposal = await governance.getProposal(1)
       expect(proposal.length).toEqual(transactions.length)
@@ -421,14 +437,11 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
     'fails when descriptionURl is missing',
     async () => {
       await expect(
-        testLocally(Propose, [
-          '--from',
-          accounts[0],
-          '--deposit',
-          '0',
-          '--jsonTransactions',
-          './exampleProposal.json',
-        ])
+        testLocallyWithWeb3Node(
+          Propose,
+          ['--from', accounts[0], '--deposit', '0', '--jsonTransactions', './exampleProposal.json'],
+          web3
+        )
       ).rejects.toThrow('Missing required flag descriptionURL')
     },
     EXTRA_LONG_TIMEOUT_MS
@@ -437,16 +450,20 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
   test(
     'can submit empty proposal',
     async () => {
-      await testLocally(Propose, [
-        '--from',
-        accounts[0],
-        '--deposit',
-        minDeposit,
-        '--jsonTransactions',
-        './exampleProposal.json',
-        '--descriptionURL',
-        'https://example.com',
-      ])
+      await testLocallyWithWeb3Node(
+        Propose,
+        [
+          '--from',
+          accounts[0],
+          '--deposit',
+          minDeposit,
+          '--jsonTransactions',
+          './exampleProposal.json',
+          '--descriptionURL',
+          'https://example.com',
+        ],
+        web3
+      )
     },
     EXTRA_LONG_TIMEOUT_MS
   )
@@ -456,16 +473,20 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
     async () => {
       const spyStart = jest.spyOn(ux.action, 'start')
       const spyStop = jest.spyOn(ux.action, 'stop')
-      await testLocally(Propose, [
-        '--from',
-        accounts[0],
-        '--deposit',
-        '10000e18',
-        '--jsonTransactions',
-        './exampleProposal.json',
-        '--descriptionURL',
-        'https://example.com',
-      ])
+      await testLocallyWithWeb3Node(
+        Propose,
+        [
+          '--from',
+          accounts[0],
+          '--deposit',
+          '10000e18',
+          '--jsonTransactions',
+          './exampleProposal.json',
+          '--descriptionURL',
+          'https://example.com',
+        ],
+        web3
+      )
       expect(spyStart).toHaveBeenCalledWith('Sending Transaction: proposeTx')
       expect(spyStop).toHaveBeenCalled()
     },
@@ -478,16 +499,20 @@ testWithGanache('governance:propose cmd', (web3: Web3) => {
       const spyStart = jest.spyOn(ux.action, 'start')
       const spyStop = jest.spyOn(ux.action, 'stop')
 
-      await testLocally(Propose, [
-        '--from',
-        accounts[0],
-        '--deposit',
-        '10000000000000000000000',
-        '--jsonTransactions',
-        './exampleProposal.json',
-        '--descriptionURL',
-        'https://example.com',
-      ])
+      await testLocallyWithWeb3Node(
+        Propose,
+        [
+          '--from',
+          accounts[0],
+          '--deposit',
+          '10000000000000000000000',
+          '--jsonTransactions',
+          './exampleProposal.json',
+          '--descriptionURL',
+          'https://example.com',
+        ],
+        web3
+      )
       expect(spyStart).toHaveBeenCalledWith('Sending Transaction: proposeTx')
       expect(spyStop).toHaveBeenCalled()
     },
