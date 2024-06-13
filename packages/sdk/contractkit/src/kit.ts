@@ -7,6 +7,7 @@ import {
   ReadOnlyWallet,
   TransactionResult,
   isCel2,
+  isPresent,
 } from '@celo/connect'
 import { EIP712TypedData } from '@celo/utils/lib/sign-typed-data-utils'
 import { Signature } from '@celo/utils/lib/signatureUtils'
@@ -23,6 +24,7 @@ import {
   getWeb3ForKit,
   setupAPIKey,
 } from './setupForKits'
+import { estimateMaxFeeInFeeToken } from './utils/estimateMaxFeeInToken'
 import { Web3ContractCache } from './web3-contract-cache'
 import { AttestationsConfig } from './wrappers/Attestations'
 import { BlockchainParametersConfig } from './wrappers/BlockchainParameters'
@@ -220,6 +222,31 @@ export class ContractKit {
   async getEpochNumberOfBlock(blockNumber: number): Promise<number> {
     const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
     return blockchainParamsWrapper.getEpochNumberOfBlock(blockNumber)
+  }
+
+  async populateMaxFeeInToken(tx: CeloTx): Promise<CeloTx> {
+    if (!(await isCel2(this.connection.web3))) {
+      throw new Error("Can't populate `maxFeeInFeeCurrency` if not on a CEL2 network")
+    }
+
+    if (isPresent(tx.feeCurrency) && !isPresent(tx.maxFeeInFeeCurrency)) {
+      // Force maxFeePerGas and maxPriorityFeePerGas to be expressed in CELO
+      const [maxFeePerGas, maxPriorityFeePerGas] = await Promise.all([
+        this.connection.gasPrice(),
+        await this.connection.rpcCaller.call('eth_maxPriorityFeePerGas', []).then((x) => x.result),
+      ])
+      tx.maxFeePerGas = maxFeePerGas
+      tx.maxPriorityFeePerGas = maxPriorityFeePerGas
+      const maxFeeInFeeCurrency = await estimateMaxFeeInFeeToken(this.connection.web3, {
+        feeCurrency: tx.feeCurrency,
+        gasLimit: BigInt(tx.gas!),
+        maxFeePerGas: BigInt(maxPriorityFeePerGas),
+      })
+
+      tx.maxFeeInFeeCurrency = `0x${maxFeeInFeeCurrency.toString(16)}`
+    }
+
+    return tx
   }
 
   // *** NOTICE ***

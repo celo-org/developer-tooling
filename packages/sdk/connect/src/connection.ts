@@ -33,7 +33,6 @@ import {
   outputCeloTxFormatter,
   outputCeloTxReceiptFormatter,
 } from './utils/formatter'
-import { isCel2 } from './utils/is-cel2'
 import { hasProperty } from './utils/provider-utils'
 import { HttpRpcCaller, RpcCaller, getRandomId } from './utils/rpc-caller'
 import { TxParamsNormalizer } from './utils/tx-params-normalizer'
@@ -59,7 +58,6 @@ export class Connection {
   private config: ConnectionOptions
   private _chainID: number | undefined
   readonly paramsPopulator: TxParamsNormalizer
-  private isCel2: Promise<boolean>
   rpcCaller!: RpcCaller
 
   constructor(readonly web3: Web3, public wallet?: ReadOnlyWallet, handleRevert = true) {
@@ -75,7 +73,6 @@ export class Connection {
     // this.wallet = _wallet ?? new LocalWallet()
     this.config.from = (web3.eth.defaultAccount as StrongAddress) ?? undefined
     this.paramsPopulator = new TxParamsNormalizer(this)
-    this.isCel2 = isCel2(web3)
   }
 
   setProvider(provider: Provider) {
@@ -340,8 +337,10 @@ export class Connection {
     // default to the current values
     const calls = [Promise.resolve(tx.maxFeePerGas), Promise.resolve(tx.maxPriorityFeePerGas)]
 
-    if (isEmpty(tx.maxPriorityFeePerGas) || isEmpty(tx.maxFeePerGas)) {
+    if (isEmpty(tx.maxFeePerGas)) {
       calls[0] = this.gasPrice(tx.feeCurrency)
+    }
+    if (isEmpty(tx.maxPriorityFeePerGas)) {
       calls[1] = this.rpcCaller
         .call('eth_maxPriorityFeePerGas', [tx.feeCurrency])
         .then((rpcResponse) => {
@@ -352,15 +351,6 @@ export class Connection {
 
     tx.maxFeePerGas = maxFeePerGas
     tx.maxPriorityFeePerGas = maxPriorityFeePerGas
-
-    if ((await this.isCel2) && isPresent(tx.feeCurrency) && isEmpty(tx.maxFeeInFeeCurrency)) {
-      const maxFeeInFeeCurrency = await this.estimateMaxFeeInFeeToken({
-        feeCurrency: tx.feeCurrency,
-        gasLimit: BigInt(tx.gas!),
-        maxFeePerGas: BigInt(maxFeePerGas?.toString()!),
-      })
-      tx.maxFeeInFeeCurrency = `0x${maxFeeInFeeCurrency.toString(16)}`
-    }
 
     delete tx.gasPrice
     return tx
@@ -391,30 +381,6 @@ export class Connection {
       })
       return Promise.reject(`Gas estimation failed: ${revertReason} or ${e}`)
     }
-  }
-
-  /**
-   * For cip 66 transactions (the prefered way to pay for gas with fee tokens on Cel2) it is necessary
-   * to provide the absolute limit one is willing to pay denominated in the token.
-   * In contrast with earlier tx types for fee currencies (celo legacy, cip42, cip 64).
-   *
-   * Calulating Estimation requires the gas, maxfeePerGas and the conversion rate from CELO to feeToken
-   * https://github.com/celo-org/celo-proposals/blob/master/CIPs/cip-0066.md
-   */
-  async estimateMaxFeeInFeeToken({
-    gasLimit,
-    maxFeePerGas,
-    feeCurrency,
-  }: {
-    gasLimit: bigint
-    maxFeePerGas: bigint
-    feeCurrency: string
-  }) {
-    const maxGasFeesInCELO = gasLimit * maxFeePerGas
-    // TODO: This is rather easy to implement via contractkit, but we're in @celo/connect right now...
-    const [ratioTOKEN, ratioCELO] = await getConversionRateFromCeloToToken(feeCurrency, this)
-
-    return (maxGasFeesInCELO * ratioCELO) / ratioTOKEN
   }
 
   getAbiCoder(): AbiCoder {
