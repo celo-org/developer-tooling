@@ -90,6 +90,18 @@ describe('inputCeloTxFormatter', () => {
       `)
     })
   })
+  describe('valid cip66 tx', () => {
+    const cip66 = {
+      ...base,
+      maxFeePerGas: '0x3e8',
+      maxPriorityFeePerGas: '0x3e8',
+      feeCurrency: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+      maxFeeInFeeCurrency: '0x3f0',
+    } as const
+    it('formats', () => {
+      expect(inputCeloTxFormatter(cip66)).toMatchInlineSnapshot()
+    })
+  })
   describe('valid cip42 tx', () => {
     const cip42 = {
       ...base,

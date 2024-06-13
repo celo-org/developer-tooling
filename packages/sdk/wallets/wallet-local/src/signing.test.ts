@@ -119,6 +119,13 @@ describe('Transaction Utils', () => {
         )
       }
     })
+    test('Checking maxFeeInFeeCurrency', async () => {
+      if (celoTransaction.maxFeeInFeeCurrency != null) {
+        expect(recoveredTransaction?.maxFeeInFeeCurrency).toEqual(
+          celoTransaction.maxFeeInFeeCurrency
+        )
+      }
+    })
     test('gatewayFeeRecipient', async () => {
       if (
         celoTransaction.gatewayFeeRecipient !== undefined &&
@@ -166,6 +173,8 @@ describe('Transaction Utils', () => {
         description.push('Testing CIP42 with')
       } else if (celoTransaction.feeCurrency != undefined) {
         description.push('Testing CIP64 with')
+      } else if (celoTransaction.maxFeeInFeeCurrency != undefined) {
+        description.push('Testing CIP66 with')
       } else {
         description.push(`Testing EIP1559 with maxFeePerGas ${celoTransaction.maxFeePerGas}`)
       }
@@ -175,6 +184,10 @@ describe('Transaction Utils', () => {
 
       if (celoTransaction.feeCurrency != undefined) {
         description.push(`fee currency: ${celoTransaction.feeCurrency}`)
+      }
+
+      if (celoTransaction.maxFeeInFeeCurrency != undefined) {
+        description.push(`maxFeeInFeeCurrency currency: ${celoTransaction.maxFeeInFeeCurrency}`)
       }
 
       if (celoTransaction.gatewayFeeRecipient != undefined) {
@@ -199,6 +212,8 @@ describe('Transaction Utils', () => {
         chainId,
         gas,
         feeCurrency: i % 3 === 0 ? feeCurrency : undefined,
+        // TODO: No idea which modulo it should be. Can we document this?
+        maxFeeInFeeCurrency: i % 3 === 1 ? gasPrice : undefined,
         gatewayFeeRecipient: i % 7 === 0 ? gatewayFeeRecipient : undefined,
         gatewayFee: i % 7 === 0 ? gatewayFee : undefined,
         // eslint-disable-next-line no-bitwise

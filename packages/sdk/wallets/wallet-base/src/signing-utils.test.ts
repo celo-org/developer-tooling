@@ -208,6 +208,18 @@ describe('rlpEncodedTx', () => {
       })
     })
 
+    describe('when maxFeeInFeeCurrency and feeCurrency are provided', () => {
+      it('orders fields in RLP as specified by CIP66', () => {
+        const CIP66Transaction = {
+          ...eip1559Transaction,
+          feeCurrency: '0x5409ED021D9299bf6814279A6A1411A7e866A631',
+          maxFeeInFeeCurrency: '0x666',
+        } as const
+        const result = rlpEncodedTx(CIP66Transaction)
+        expect(result).toMatchInlineSnapshot()
+      })
+    })
+
     describe('when maxFeePerGas and maxPriorityFeePerGas are provided', () => {
       it('orders fields in RLP as specified by EIP1559', () => {
         const result = rlpEncodedTx(eip1559Transaction)
@@ -454,6 +466,11 @@ describe('recoverTransaction', () => {
         "0x1Be31A94361a391bBaFB2a4CCd704F57dc04d4bb",
       ]
     `)
+  })
+  it('handles cip66 transactions', () => {
+    const cip66TX =
+      '0x7af8ce82a4ec01843b9aca00850342770c0083030d409443d72ff17701b2da814620735c39c620ce0ea4a180b844a9059cbb000000000000000000000000bd8be21f6883569ad7d15cc55c87137fcef308c300000000000000000000000000000000000000000000000001605eba271024d6c094765de816845861e75a25fca122bb6898b8b1282a8501a13b860080a02a015905a494549d8a1da26ce769309963e43f407936bbce1ea8276072b08416a072fd12d24c44bc79648bd88f4d8c158f2f0778694557868b3dc7d80e3aa6b539'
+    expect(recoverTransaction(cip66TX)).toMatchInlineSnapshot()
   })
   it('handles cip42 transactions', () => {
     const cip42TX =

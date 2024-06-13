@@ -273,6 +273,21 @@ describe('Local wallet class', () => {
             )
             expect(signedTransaction.raw).toEqual(viemSignedTransaction)
           })
+          test('succeeds with cip66', async () => {
+            const recoverTransactionCIP66 = {
+              ...celoTransactionWithGasPrice,
+              gasPrice: undefined,
+              gatewayFee: undefined,
+              gatewayFeeRecipient: undefined,
+              maxFeePerGas: '99',
+              maxPriorityFeePerGas: '99',
+              feeCurrency: '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826',
+              maxFeeInFeeCurrency: '92',
+            } as const
+            await expect(
+              wallet.signTransaction(recoverTransactionCIP66)
+            ).resolves.toMatchInlineSnapshot()
+          })
           test('succeeds with cip64', async () => {
             const recoverTransactionCIP64 = {
               ...celoTransactionWithGasPrice,
@@ -379,6 +394,7 @@ describe('Local wallet class', () => {
           const feeCurrency = '0x10c892a6ec43a53e45d0b916b4b7d383b1b78c0f'
           const maxFeePerGas = '0x100000000'
           const maxPriorityFeePerGas = '0x100000000'
+          const maxFeeInFeeCurrency = '0x100000000'
 
           beforeEach(() => {
             celoTransactionBase = {
@@ -403,6 +419,19 @@ describe('Local wallet class', () => {
               }
               const signedTx: EncodedTransaction = await wallet.signTransaction(transaction)
               expect(signedTx.raw).toMatch(/^0x7b/)
+            })
+            it('signs as a CIP66 tx', async () => {
+              const transaction: CeloTx = {
+                ...celoTransactionBase,
+                gatewayFee: undefined,
+                gatewayFeeRecipient: undefined,
+                feeCurrency,
+                maxFeePerGas,
+                maxPriorityFeePerGas,
+                maxFeeInFeeCurrency,
+              }
+              const signedTx: EncodedTransaction = await wallet.signTransaction(transaction)
+              expect(signedTx.raw).toMatch(/^0x7a/)
             })
           })
           describe('when feeCurrency and gatewayFee and maxPriorityFeePerGas and maxFeePerGas are set', () => {
