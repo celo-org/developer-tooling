@@ -1,14 +1,11 @@
 import { StrongAddress } from '@celo/base'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
-import {
-  impersonateAccount,
-  stopImpersonatingAccount,
-  testWithAnvil,
-} from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import { NetworkConfig, timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import { ux } from '@oclif/core'
 import Web3 from 'web3'
+import { changeMultiSigOwner } from '../../test-utils/chain-setup'
 import { stripAnsiCodes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Approve from './approve'
 
@@ -85,20 +82,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
   })
 
   test('can approve with multisig option', async () => {
-    // replace the original owner in the devchain, so we can act as the multisig owner
-    // the transaction needs to be sent by the multisig itself and it needs some funds first
-    // TODO possibly create a helper function if needed in more tests
-    const multisig = await governance.getApproverMultisig()
-    await kit.sendTransaction({
-      from: accounts[0],
-      to: multisig.address,
-      value: web3.utils.toWei('1', 'ether'),
-    })
-    await impersonateAccount(web3, multisig.address)
-    await multisig
-      .replaceOwner('0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266', accounts[0])
-      .sendAndWaitForReceipt({ from: multisig.address })
-    await stopImpersonatingAccount(web3, multisig.address)
+    await changeMultiSigOwner(kit, accounts[0])
 
     const writeMock = jest.spyOn(ux.write, 'stdout')
     const logMock = jest.spyOn(console, 'log')
