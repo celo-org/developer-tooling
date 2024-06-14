@@ -1,5 +1,5 @@
 import { StrongAddress } from '@celo/base'
-import { ReadOnlyWallet } from '@celo/connect'
+import { ReadOnlyWallet, isCel2 } from '@celo/connect'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { AzureHSMWallet } from '@celo/wallet-hsm-azure'
 import { AddressValidation, newLedgerWalletWithSetup } from '@celo/wallet-ledger'
@@ -93,6 +93,8 @@ export abstract class BaseCommand extends Command {
   private _web3: Web3 | null = null
   private _kit: ContractKit | null = null
 
+  private cel2: boolean | null = null
+
   async getWeb3() {
     if (!this._web3) {
       const res = await this.parse()
@@ -170,7 +172,8 @@ export abstract class BaseCommand extends Command {
           transport,
           derivationPathIndexes,
           undefined,
-          ledgerConfirmation
+          ledgerConfirmation,
+          await this.isCel2()
         )
       } catch (err) {
         console.log('Check if the ledger is connected and logged.')
@@ -237,5 +240,13 @@ export abstract class BaseCommand extends Command {
     }
 
     return super.finally(arg)
+  }
+
+  protected async isCel2() {
+    if (this.cel2 === null) {
+      this.cel2 = await isCel2(await this.getWeb3())
+    }
+
+    return this.cel2
   }
 }

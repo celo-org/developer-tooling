@@ -138,7 +138,7 @@ const mockLedgerImplementation = (mockForceValidation: () => void, version: stri
       if (ledgerAddresses[derivationPath]) {
         const type = determineTXType(ensureLeading0x(data))
         // replicate logic from wallet-base/src/wallet-base.ts
-        const addToV = type === 'ethereum-legacy' ? chainIdTransformationForSigning(CHAIN_ID) : 27
+        const addToV = type === 'celo-legacy' ? chainIdTransformationForSigning(CHAIN_ID) : 27
         const hash = getHashFromEncoded(ensureLeading0x(data))
         const { r, s, v } = signTransaction(
           hash,
@@ -465,17 +465,67 @@ describe('LedgerWallet class', () => {
                 feeCurrency: '0x1234',
               }
             })
-            test(
-              'fails',
-              async () => {
-                await expect(
-                  wallet.signTransaction(celoTransaction)
-                ).rejects.toThrowErrorMatchingInlineSnapshot(
-                  `"celo-legacy transactions are not supported anymore, please try sending a more modern transaction instead (eip1559, cip64, etc.)"`
+            describe('with old ledger app', () => {
+              describe('on Cel2 with old app version', () => {
+                beforeEach(async () => {
+                  wallet = new LedgerWallet(
+                    undefined,
+                    undefined,
+                    undefined,
+                    AddressValidation.never,
+                    true
+                  )
+                  mockForceValidation = jest.fn((): void => {
+                    // do nothing
+                  })
+                  mockLedger(wallet, mockForceValidation, '1.0.0')
+                  await wallet.init()
+                })
+
+                test(
+                  'fails',
+                  async () => {
+                    await expect(
+                      wallet.signTransaction(celoTransaction)
+                    ).rejects.toThrowErrorMatchingInlineSnapshot(
+                      `"celo ledger app version must be at least 1.2.0 to sign transactions supported on celo after the L2 upgrade"`
+                    )
+                  },
+                  TEST_TIMEOUT_IN_MS
                 )
-              },
-              TEST_TIMEOUT_IN_MS
-            )
+              })
+              describe('on celo l1 with old app version', () => {
+                beforeEach(async () => {
+                  wallet = new LedgerWallet(
+                    undefined,
+                    undefined,
+                    undefined,
+                    AddressValidation.never,
+                    false
+                  )
+                  mockForceValidation = jest.fn((): void => {
+                    // do nothing
+                  })
+                  mockLedger(wallet, mockForceValidation, '1.0.0')
+                  await wallet.init()
+                })
+                test(
+                  'succeeds with warning',
+                  async () => {
+                    const warnSpy = jest.spyOn(console, 'warn')
+
+                    const signSpy = jest.spyOn(wallet.ledger!, 'signTransaction')
+
+                    await wallet.signTransaction(celoTransaction)
+
+                    expect(signSpy).toHaveBeenCalledWith('0x')
+
+                    expect(warnSpy.mock.calls).toMatchInlineSnapshot()
+                  },
+                  TEST_TIMEOUT_IN_MS
+                )
+              })
+            })
           })
 
           describe('[cip64]', () => {
@@ -496,6 +546,30 @@ describe('LedgerWallet class', () => {
 
             test(
               'succeeds',
+              async () => {
+                await expect(wallet.signTransaction(celoTransaction)).resolves.not.toBeUndefined()
+              },
+              TEST_TIMEOUT_IN_MS
+            )
+          })
+          describe('[cip66]', () => {
+            const kit = newKit('https://alfajores-forno.celo-testnet.org')
+            beforeEach(async () => {
+              celoTransaction = {
+                from: knownAddress,
+                to: otherAddress,
+                chainId: CHAIN_ID,
+                value: Web3.utils.toWei('1', 'ether'),
+                nonce: 0,
+                gas: 99,
+                maxFeePerGas: 99,
+                maxPriorityFeePerGas: 99,
+                feeCurrency: (await kit.contracts.getStableToken(StableToken.cUSD)).address,
+              }
+            })
+
+            test(
+              'gives warning',
               async () => {
                 await expect(wallet.signTransaction(celoTransaction)).resolves.not.toBeUndefined()
               },
@@ -571,7 +645,7 @@ describe('LedgerWallet class', () => {
 
       it("will fail to initialize if the version isn't supported", async () => {
         expect(wallet.init()).rejects.toMatchInlineSnapshot(
-          `[Error: Due to technical issues, we require the users to update their ledger celo-app to >= 1.2.0. You can do this on ledger-live by updating the celo-app in the app catalog.]`
+          `[Error: Due to technical issues, we require the users to update their ledger celo-app to >= 1.0.0. You can do this on ledger-live by updating the celo-app in the app catalog.]`
         )
       })
     })

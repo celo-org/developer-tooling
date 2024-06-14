@@ -1,7 +1,7 @@
 import { ensureLeading0x, trimLeading0x } from '@celo/base/lib/address'
 import { RLPEncodedTx, Signer } from '@celo/connect'
 import { EIP712TypedData, structHash } from '@celo/utils/lib/sign-typed-data-utils'
-import { chainIdTransformationForSigning } from '@celo/wallet-base'
+import { LegacyEncodedTx, chainIdTransformationForSigning } from '@celo/wallet-base'
 import * as ethUtil from '@ethereumjs/util'
 import { TransportStatusError } from '@ledgerhq/errors'
 import Ledger from '@ledgerhq/hw-app-eth'
@@ -45,7 +45,7 @@ export class LedgerSigner implements Signer {
 
   async signTransaction(
     addToV: number,
-    encodedTx: RLPEncodedTx
+    encodedTx: RLPEncodedTx | LegacyEncodedTx
   ): Promise<{ v: number; r: Buffer; s: Buffer }> {
     try {
       const validatedDerivationPath = await this.getValidatedDerivationPath()
@@ -65,7 +65,7 @@ export class LedgerSigner implements Signer {
 
       return {
         v:
-          encodedTx.type === 'ethereum-legacy'
+          encodedTx.type === 'ethereum-legacy' || encodedTx.type === 'celo-legacy'
             ? _v + chainIdTransformationForSigning(encodedTx.transaction.chainId)
             : _v,
         r: ethUtil.toBuffer(ensureLeading0x(signature.r)),
@@ -167,7 +167,7 @@ export class LedgerSigner implements Signer {
    * Display ERC20 info on ledger if contract is well known
    * @param rlpEncoded Encoded transaction
    */
-  private async checkForKnownToken(rlpEncoded: RLPEncodedTx) {
+  private async checkForKnownToken(rlpEncoded: RLPEncodedTx | LegacyEncodedTx) {
     if (
       new SemVer(this.appConfiguration.version).compare(
         CELO_APP_ACCEPTS_CONTRACT_DATA_FROM_VERSION
