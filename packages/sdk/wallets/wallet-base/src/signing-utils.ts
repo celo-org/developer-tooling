@@ -583,9 +583,10 @@ function vrsForRecovery(vRaw: string, r: string, s: string) {
 }
 
 function recoverTransactionCIP42(serializedTransaction: StrongAddress): [CeloTxWithSig, string] {
-  const transactionArray = prefixAwareRLPDecode(serializedTransaction, 'cip42')
-  debug('signing-utils@recoverTransactionCIP42: values are %s', transactionArray)
-  assertLength(transactionArray, 'cip42')
+  const type = 'cip42'
+  const transactionArray = prefixAwareRLPDecode(serializedTransaction, type)
+  debug(`signing-utils@recoverTransaction${type.toUpperCase()}: values are %s`, transactionArray)
+  assertLength(transactionArray, type)
   const [
     chainId,
     nonce,
@@ -605,7 +606,7 @@ function recoverTransactionCIP42(serializedTransaction: StrongAddress): [CeloTxW
   ] = transactionArray as Uint8Array[]
 
   const celoTX: CeloTxWithSig = {
-    type: 'cip42',
+    type,
     nonce: handleNumber(nonce),
     maxPriorityFeePerGas: handleNumber(maxPriorityFeePerGas),
     maxFeePerGas: handleNumber(maxFeePerGas),
@@ -622,16 +623,17 @@ function recoverTransactionCIP42(serializedTransaction: StrongAddress): [CeloTxW
   }
 
   const signer =
-    transactionArray.length === correctLengthOf('cip42')
+    transactionArray.length === correctLengthOf(type)
       ? getSignerFromTxEIP2718TX(serializedTransaction)
       : 'unsigned'
   return [celoTX, signer]
 }
 
 function recoverTransactionCIP64(serializedTransaction: StrongAddress): [CeloTxWithSig, string] {
-  const transactionArray = prefixAwareRLPDecode(serializedTransaction, 'cip64')
-  debug('signing-utils@recoverTransactionCIP64: values are %s', transactionArray)
-  assertLength(transactionArray, 'cip64')
+  const type = 'cip64'
+  const transactionArray = prefixAwareRLPDecode(serializedTransaction, type)
+  debug(`signing-utils@recoverTransaction${type.toUpperCase()}: values are %s`, transactionArray)
+  assertLength(transactionArray, type)
   const [
     chainId,
     nonce,
@@ -649,7 +651,7 @@ function recoverTransactionCIP64(serializedTransaction: StrongAddress): [CeloTxW
   ] = transactionArray as Uint8Array[]
 
   const celoTX: CeloTxWithSig = {
-    type: 'cip64',
+    type,
     nonce: handleNumber(nonce),
     maxPriorityFeePerGas: handleNumber(maxPriorityFeePerGas),
     maxFeePerGas: handleNumber(maxFeePerGas),
@@ -664,16 +666,17 @@ function recoverTransactionCIP64(serializedTransaction: StrongAddress): [CeloTxW
   }
 
   const signer =
-    transactionArray.length === correctLengthOf('cip64', true)
+    transactionArray.length === correctLengthOf(type, true)
       ? getSignerFromTxEIP2718TX(serializedTransaction)
       : 'unsigned'
   return [celoTX, signer]
 }
 
 function recoverTransactionCIP66(serializedTransaction: StrongAddress): [CeloTxWithSig, string] {
+  const type = 'cip66'
   const transactionArray = prefixAwareRLPDecode(serializedTransaction, 'cip66')
-  debug('signing-utils@recoverTransactionCIP66: values are %s', transactionArray)
-  assertLength(transactionArray, 'cip66')
+  debug(`signing-utils@recoverTransaction${type.toUpperCase()}: values are %s`, transactionArray)
+  assertLength(transactionArray, type)
 
   const [
     chainId,
@@ -693,13 +696,13 @@ function recoverTransactionCIP66(serializedTransaction: StrongAddress): [CeloTxW
   ] = transactionArray as Uint8Array[]
 
   const celoTX: CeloTxWithSig = {
-    type: 'cip64',
+    type,
     nonce: handleNumber(nonce),
     maxPriorityFeePerGas: handleNumber(maxPriorityFeePerGas),
     maxFeePerGas: handleNumber(maxFeePerGas),
     gas: handleNumber(gas),
     feeCurrency: handleHexString(feeCurrency),
-    maxFeeInFeeCurrency: handleNumber(maxFeeInFeeCurrency),
+    maxFeeInFeeCurrency: handleHexString(maxFeeInFeeCurrency),
     to: handleHexString(to),
     value: handleNumber(value),
     data: handleData(data),
@@ -709,15 +712,16 @@ function recoverTransactionCIP66(serializedTransaction: StrongAddress): [CeloTxW
   }
 
   const signer =
-    transactionArray.length === correctLengthOf('cip66', true)
+    transactionArray.length === correctLengthOf(type, true)
       ? getSignerFromTxEIP2718TX(serializedTransaction)
       : 'unsigned'
   return [celoTX, signer]
 }
 
 function recoverTransactionEIP1559(serializedTransaction: StrongAddress): [CeloTxWithSig, string] {
-  const transactionArray = prefixAwareRLPDecode(serializedTransaction, 'eip1559')
-  debug('signing-utils@recoverTransactionEIP1559: values are %s', transactionArray)
+  const type = 'eip1559'
+  const transactionArray = prefixAwareRLPDecode(serializedTransaction, type)
+  debug(`signing-utils@recoverTransaction${type.toUpperCase()}: values are %s`, transactionArray)
 
   const [
     chainId,
@@ -735,7 +739,7 @@ function recoverTransactionEIP1559(serializedTransaction: StrongAddress): [CeloT
   ] = transactionArray as Uint8Array[]
 
   const celoTx: CeloTxWithSig = {
-    type: 'eip1559',
+    type,
     nonce: handleNumber(nonce),
     gas: handleNumber(gas),
     maxPriorityFeePerGas: handleNumber(maxPriorityFeePerGas),
@@ -748,6 +752,8 @@ function recoverTransactionEIP1559(serializedTransaction: StrongAddress): [CeloT
     ...vrsForRecovery(handleHexString(vRaw), handleHexString(r), handleHexString(s)),
   }
   const web3Account = new Accounts()
+  // TODO: check if can be refactored to `getSignerFromTxEIP2718TX`
+  // the same way recoverTransactionCIPXYZ are implemented
   const signer = web3Account.recoverTransaction(serializedTransaction)
 
   return [celoTx, signer]

@@ -348,12 +348,12 @@ export class Connection {
         })
     }
     const [maxFeePerGas, maxPriorityFeePerGas] = await Promise.all(calls)
-
-    tx.maxFeePerGas = maxFeePerGas
-    tx.maxPriorityFeePerGas = maxPriorityFeePerGas
-
-    delete tx.gasPrice
-    return tx
+    return {
+      ...tx,
+      gasPrice: undefined,
+      maxFeePerGas,
+      maxPriorityFeePerGas,
+    }
   }
 
   estimateGas = async (
