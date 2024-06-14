@@ -15,6 +15,9 @@ const ANVIL_PORT = 8546
 
 export const STABLES_ADDRESS = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
 
+// Introducing a different name for the same address to avoid confusion
+export const DEFAULT_OWNER_ADDRESS = STABLES_ADDRESS
+
 export function createInstance(): Anvil {
   // preparation for not needing to have --runInBand for anvil tests
   const port = ANVIL_PORT + (process.pid - process.ppid)
