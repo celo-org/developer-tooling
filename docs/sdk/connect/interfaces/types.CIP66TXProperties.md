@@ -1,33 +1,34 @@
-[@celo/connect](../README.md) / [Exports](../modules.md) / [types](../modules/types.md) / CIP64TXProperties
+[@celo/connect](../README.md) / [Exports](../modules.md) / [types](../modules/types.md) / CIP66TXProperties
 
-# Interface: CIP64TXProperties
+# Interface: CIP66TXProperties
 
-[types](../modules/types.md).CIP64TXProperties
+[types](../modules/types.md).CIP66TXProperties
 
 ## Hierarchy
 
 - `FeeMarketAndAccessListTXProperties`
 
-  ↳ **`CIP64TXProperties`**
+  ↳ **`CIP66TXProperties`**
 
 ## Table of contents
 
 ### Properties
 
-- [accessList](types.CIP64TXProperties.md#accesslist)
-- [feeCurrency](types.CIP64TXProperties.md#feecurrency)
-- [gas](types.CIP64TXProperties.md#gas)
-- [hash](types.CIP64TXProperties.md#hash)
-- [input](types.CIP64TXProperties.md#input)
-- [maxFeePerGas](types.CIP64TXProperties.md#maxfeepergas)
-- [maxPriorityFeePerGas](types.CIP64TXProperties.md#maxpriorityfeepergas)
-- [nonce](types.CIP64TXProperties.md#nonce)
-- [r](types.CIP64TXProperties.md#r)
-- [s](types.CIP64TXProperties.md#s)
-- [to](types.CIP64TXProperties.md#to)
-- [type](types.CIP64TXProperties.md#type)
-- [v](types.CIP64TXProperties.md#v)
-- [value](types.CIP64TXProperties.md#value)
+- [accessList](types.CIP66TXProperties.md#accesslist)
+- [feeCurrency](types.CIP66TXProperties.md#feecurrency)
+- [gas](types.CIP66TXProperties.md#gas)
+- [hash](types.CIP66TXProperties.md#hash)
+- [input](types.CIP66TXProperties.md#input)
+- [maxFeeInFeeCurrency](types.CIP66TXProperties.md#maxfeeinfeecurrency)
+- [maxFeePerGas](types.CIP66TXProperties.md#maxfeepergas)
+- [maxPriorityFeePerGas](types.CIP66TXProperties.md#maxpriorityfeepergas)
+- [nonce](types.CIP66TXProperties.md#nonce)
+- [r](types.CIP66TXProperties.md#r)
+- [s](types.CIP66TXProperties.md#s)
+- [to](types.CIP66TXProperties.md#to)
+- [type](types.CIP66TXProperties.md#type)
+- [v](types.CIP66TXProperties.md#v)
+- [value](types.CIP66TXProperties.md#value)
 
 ## Properties
 
@@ -51,7 +52,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:109](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L109)
+[packages/sdk/connect/src/types.ts:103](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L103)
 
 ___
 
@@ -94,6 +95,16 @@ FeeMarketAndAccessListTXProperties.input
 #### Defined in
 
 [packages/sdk/connect/src/types.ts:84](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L84)
+
+___
+
+### maxFeeInFeeCurrency
+
+• **maxFeeInFeeCurrency**: `string`
+
+#### Defined in
+
+[packages/sdk/connect/src/types.ts:104](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L104)
 
 ___
 
@@ -183,7 +194,7 @@ ___
 
 ### type
 
-• **type**: ``"cip64"``
+• **type**: ``"cip66"``
 
 #### Overrides
 
@@ -191,7 +202,7 @@ FeeMarketAndAccessListTXProperties.type
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:110](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L110)
+[packages/sdk/connect/src/types.ts:105](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L105)
 
 ___
 

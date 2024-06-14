@@ -11,6 +11,7 @@
 - [feeCurrency](types.CeloParams.md#feecurrency)
 - [gatewayFee](types.CeloParams.md#gatewayfee)
 - [gatewayFeeRecipient](types.CeloParams.md#gatewayfeerecipient)
+- [maxFeeInFeeCurrency](types.CeloParams.md#maxfeeinfeecurrency)
 
 ## Properties
 
@@ -30,7 +31,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:22](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L22)
+[packages/sdk/connect/src/types.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L23)
 
 ___
 
@@ -40,4 +41,14 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:18](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L18)
+[packages/sdk/connect/src/types.ts:19](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L19)
+
+___
+
+### maxFeeInFeeCurrency
+
+• `Optional` **maxFeeInFeeCurrency**: \`0x$\{string}\`
+
+#### Defined in
+
+[packages/sdk/connect/src/types.ts:15](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L15)

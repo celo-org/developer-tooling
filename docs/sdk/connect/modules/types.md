@@ -22,6 +22,7 @@
 
 - [CIP42TXProperties](../interfaces/types.CIP42TXProperties.md)
 - [CIP64TXProperties](../interfaces/types.CIP64TXProperties.md)
+- [CIP66TXProperties](../interfaces/types.CIP66TXProperties.md)
 - [CeloParams](../interfaces/types.CeloParams.md)
 - [CeloTxObject](../interfaces/types.CeloTxObject.md)
 - [EIP1559TXProperties](../interfaces/types.EIP1559TXProperties.md)
@@ -123,7 +124,7 @@ Re-exports [Syncing](../interfaces/index.Syncing.md)
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:25](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L25)
+[packages/sdk/connect/src/types.ts:26](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L26)
 
 ___
 
@@ -164,7 +165,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:135](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L135)
+[packages/sdk/connect/src/types.ts:150](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L150)
 
 ___
 
@@ -174,7 +175,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:52](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L52)
+[packages/sdk/connect/src/types.ts:54](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L54)
 
 ___
 
@@ -184,7 +185,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:132](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L132)
+[packages/sdk/connect/src/types.ts:147](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L147)
 
 ___
 
@@ -194,7 +195,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:133](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L133)
+[packages/sdk/connect/src/types.ts:148](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L148)
 
 ___
 
@@ -204,7 +205,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:55](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L55)
+[packages/sdk/connect/src/types.ts:57](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L57)
 
 ___
 
@@ -224,14 +225,14 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L27)
+[packages/sdk/connect/src/types.ts:28](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L28)
 
 ___
 
 ### TransactionTypes
 
-Ƭ **TransactionTypes**: ``"ethereum-legacy"`` \| ``"eip1559"`` \| ``"celo-legacy"`` \| ``"cip42"`` \| ``"cip64"``
+Ƭ **TransactionTypes**: ``"ethereum-legacy"`` \| ``"eip1559"`` \| ``"celo-legacy"`` \| ``"cip42"`` \| ``"cip64"`` \| ``"cip66"``
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:69](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L69)
+[packages/sdk/connect/src/types.ts:71](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L71)

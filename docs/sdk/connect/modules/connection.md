@@ -20,7 +20,7 @@
 
 ### isPresent
 
-▸ **isPresent**(`value`): `boolean`
+▸ **isPresent**(`value`): value is string \| number \| BN
 
 #### Parameters
 
@@ -30,7 +30,7 @@
 
 #### Returns
 
-`boolean`
+value is string \| number \| BN
 
 #### Defined in
 
