@@ -210,7 +210,7 @@ testWithAnvil('kit', (web3) => {
   let kit: ContractKit
   let feeToken: StrongAddress
   beforeEach(async () => {
-    const kit = newKitFromWeb3(web3)
+    kit = newKitFromWeb3(web3)
     const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyWhitelist()
     const gasOptions = await feeCurrencyWhitelist.getWhitelist()
     feeToken = gasOptions[0]
@@ -220,27 +220,53 @@ testWithAnvil('kit', (web3) => {
       it('throws not L2 error', () => {
         expect(
           kit.populateMaxFeeInToken({ feeCurrency: feeToken, gas: '10000000034230982772378193726' })
-        ).rejects.toMatchInlineSnapshot()
+        ).rejects.toMatchInlineSnapshot(
+          `[Error: Can't populate \`maxFeeInFeeCurrency\` if not on a CEL2 network]`
+        )
       })
     })
     describe('when on cel2', () => {
-      beforeEach(() => {})
+      beforeEach(() => {
+        // set is l2 true
+      })
       describe('when gas is missing', () => {
         it('throws gas required error', () => {
           expect(
+            // @ts-expect-error gas should be missing
             kit.populateMaxFeeInToken({
               feeCurrency: feeToken,
-              gas: '10000000034230982772378193726',
             })
-          ).rejects.toMatchInlineSnapshot()
+          ).rejects.toMatchInlineSnapshot(
+            `[Error: The estimated gas is required to calculate maxFeeInFeeCurrency]`
+          )
         })
       })
       describe('when maxFeePerFeeCurrency exists', () => {
-        it('returns without modification', () => {
-          expect(kit.populateMaxFeeInToken({}))
+        it('returns without modification', async () => {
+          const maxFeeInFeeCurrency = '2000000'
+          expect(
+            kit.populateMaxFeeInToken({
+              maxFeeInFeeCurrency,
+              feeCurrency: feeToken,
+              gas: '102864710371401736267367367',
+            })
+          ).resolves.toMatchObject({
+            maxFeeInFeeCurrency,
+            feeCurrency: feeToken,
+            gas: '102864710371401736267367367',
+          })
         })
       })
-      describe('when feeCurrency provided with gas', () => {})
+      describe('when feeCurrency provided with gas', () => {
+        it('returns with maxFeePerFeeCurrency estimated', () => {
+          expect(
+            kit.populateMaxFeeInToken({
+              feeCurrency: feeToken,
+              gas: '102864710371401736267367367',
+            })
+          ).resolves.toEqual({})
+        })
+      })
     })
   })
 })
