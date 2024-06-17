@@ -8,6 +8,7 @@ import {
   CeloTx,
   CeloTxWithSig,
   EncodedTransaction,
+  Hex,
   RLPEncodedTx,
   TransactionTypes,
   isPresent,
@@ -98,11 +99,11 @@ function signatureFormatter(
 
 export function stringNumberOrBNToHex(
   num?: number | string | ReturnType<Web3['utils']['toBN']>
-): StrongAddress {
+): Hex {
   if (typeof num === 'string' || typeof num === 'number' || num === undefined) {
     return stringNumberToHex(num)
   } else {
-    return makeEven(`0x` + num.toString(16)) as StrongAddress
+    return makeEven(`0x` + num.toString(16)) as Hex
   }
 }
 function stringNumberToHex(num?: number | string): StrongAddress {
@@ -134,6 +135,7 @@ export function rlpEncodedTx(tx: CeloTx): RLPEncodedTx {
 
   let rlpEncode: StrongAddress
   if (isCIP66(tx)) {
+    transaction.maxFeeInFeeCurrency = stringNumberOrBNToHex(tx.maxFeeInFeeCurrency)
     // https://github.com/celo-org/celo-proposals/blob/master/CIPs/cip-0064.md
     // 0x7b || rlp([chainId, nonce, maxPriorityFeePerGas, maxFeePerGas, gasLimit, to, value, data, accessList, feeCurrency, signatureYParity, signatureR, signatureS]).
     rlpEncode = rlpEncodeHex([
@@ -698,13 +700,13 @@ function recoverTransactionCIP66(serializedTransaction: StrongAddress): [CeloTxW
   const celoTX: CeloTxWithSig = {
     type,
     nonce: handleNumber(nonce),
-    maxPriorityFeePerGas: handleNumber(maxPriorityFeePerGas),
-    maxFeePerGas: handleNumber(maxFeePerGas),
-    gas: handleNumber(gas),
+    maxPriorityFeePerGas: handleStringNumber(maxPriorityFeePerGas),
+    maxFeePerGas: handleStringNumber(maxFeePerGas),
+    gas: handleStringNumber(gas),
     feeCurrency: handleHexString(feeCurrency),
     maxFeeInFeeCurrency: handleHexString(maxFeeInFeeCurrency),
     to: handleHexString(to),
-    value: handleNumber(value),
+    value: handleStringNumber(value),
     data: handleData(data),
     chainId: handleNumber(chainId),
     accessList: parseAccessList(accessList as unknown as [string, string[]][]),
@@ -895,6 +897,12 @@ export function handleNumber(n: Uint8Array): number {
   const hex = `0x${bytesToHex(n)}`
   if (hex === '0x') return 0
   return parseInt(hex, 16)
+}
+
+export function handleStringNumber(n: Uint8Array): string {
+  const hex = `0x${bytesToHex(n)}`
+  if (hex === '0x') return '0'
+  return BigInt(hex).toString(10)
 }
 
 export function handleBigInt(n: Uint8Array): bigint {

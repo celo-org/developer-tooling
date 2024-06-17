@@ -225,7 +225,34 @@ describe('rlpEncodedTx', () => {
               "feeCurrency": "0x5409ed021d9299bf6814279a6a1411a7e866a631",
               "from": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
               "gas": "0x63",
-              "maxFeeInFeeCurrency": "0x666",
+              "maxFeeInFeeCurrency": "0x0666",
+              "maxFeePerGas": "0x0a",
+              "maxPriorityFeePerGas": "0x63",
+              "nonce": 0,
+              "to": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
+              "value": "0x3635c9adc5dea00000",
+            },
+            "type": "cip66",
+          }
+        `)
+      })
+      it('orders fields in RLP as specified by CIP66 when given BN values', () => {
+        const CIP66Transaction = {
+          ...eip1559Transaction,
+          feeCurrency: '0x5409ED021D9299bf6814279A6A1411A7e866A631',
+          maxFeeInFeeCurrency: Web3.utils.toBN('100000000010181646104615494635153636353810897'),
+        } as const
+        const result = rlpEncodedTx(CIP66Transaction)
+        expect(result).toMatchInlineSnapshot(`
+          {
+            "rlpEncode": "0x7af8520280630a63941be31a94361a391bbafb2a4ccd704f57dc04d4bb893635c9adc5dea0000083abcdefc0945409ed021d9299bf6814279a6a1411a7e866a63193047bf19675d5515464c13ea56f3922e602a1d1",
+            "transaction": {
+              "chainId": 2,
+              "data": "0xabcdef",
+              "feeCurrency": "0x5409ed021d9299bf6814279a6a1411a7e866a631",
+              "from": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
+              "gas": "0x63",
+              "maxFeeInFeeCurrency": "0x047bf19675d5515464c13ea56f3922e602a1d1",
               "maxFeePerGas": "0x0a",
               "maxPriorityFeePerGas": "0x63",
               "nonce": 0,
@@ -495,17 +522,17 @@ describe('recoverTransaction', () => {
           "chainId": 42220,
           "data": "0xa9059cbb000000000000000000000000bd8be21f6883569ad7d15cc55c87137fcef308c300000000000000000000000000000000000000000000000001605eba271024d6",
           "feeCurrency": "0x765de816845861e75a25fca122bb6898b8b1282a",
-          "gas": 200000,
-          "maxFeeInFeeCurrency": 7000000000,
-          "maxFeePerGas": 14000000000,
-          "maxPriorityFeePerGas": 1000000000,
+          "gas": "200000",
+          "maxFeeInFeeCurrency": "0x01a13b8600",
+          "maxFeePerGas": "14000000000",
+          "maxPriorityFeePerGas": "1000000000",
           "nonce": 1,
           "r": "0x2a015905a494549d8a1da26ce769309963e43f407936bbce1ea8276072b08416",
           "s": "0x72fd12d24c44bc79648bd88f4d8c158f2f0778694557868b3dc7d80e3aa6b539",
           "to": "0x43d72ff17701b2da814620735c39c620ce0ea4a1",
-          "type": "cip64",
+          "type": "cip66",
           "v": 27,
-          "value": 0,
+          "value": "0",
           "yParity": 0,
         },
         "0xa94f5374Fce5edBC8E2a8697C15331677e6EbF0B",
