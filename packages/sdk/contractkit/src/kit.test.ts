@@ -1,5 +1,6 @@
 import { StrongAddress } from '@celo/base'
 import { CeloTx, CeloTxObject, CeloTxReceipt, PromiEvent } from '@celo/connect'
+import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
 import Web3 from 'web3'
 import {
@@ -201,6 +202,45 @@ testWithGanache('Fetch whitelisted fee currencies', (web3: Web3) => {
           feeCurrency: '0123' as StrongAddress,
         })
       ).rejects.toThrowErrorMatchingInlineSnapshot()
+    })
+  })
+})
+
+testWithAnvil('kit', (web3) => {
+  let kit: ContractKit
+  let feeToken: StrongAddress
+  beforeEach(async () => {
+    const kit = newKitFromWeb3(web3)
+    const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyWhitelist()
+    const gasOptions = await feeCurrencyWhitelist.getWhitelist()
+    feeToken = gasOptions[0]
+  })
+  describe('populateMaxFeeInToken', () => {
+    describe('when not on cel2', () => {
+      it('throws not L2 error', () => {
+        expect(
+          kit.populateMaxFeeInToken({ feeCurrency: feeToken, gas: '10000000034230982772378193726' })
+        ).rejects.toMatchInlineSnapshot()
+      })
+    })
+    describe('when on cel2', () => {
+      beforeEach(() => {})
+      describe('when gas is missing', () => {
+        it('throws gas required error', () => {
+          expect(
+            kit.populateMaxFeeInToken({
+              feeCurrency: feeToken,
+              gas: '10000000034230982772378193726',
+            })
+          ).rejects.toMatchInlineSnapshot()
+        })
+      })
+      describe('when maxFeePerFeeCurrency exists', () => {
+        it('returns without modification', () => {
+          expect(kit.populateMaxFeeInToken({}))
+        })
+      })
+      describe('when feeCurrency provided with gas', () => {})
     })
   })
 })
