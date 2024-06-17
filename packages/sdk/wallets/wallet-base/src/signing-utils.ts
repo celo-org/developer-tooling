@@ -232,8 +232,11 @@ export function encode_deprecated_celo_legacy_type_only_for_temporary_ledger_com
   // Celo Specific
   transaction.feeCurrency = ensureLeading0x((tx.feeCurrency || '0x').toLowerCase())
   // we arent supporting the full classic celo tx so we can zero out these fields.
-  const gatewayFeeRecipient = '0x'
-  const gatewayFee = '0x'
+
+  // @ts-expect-error
+  transaction.gatewayFeeRecipient = '0x'
+  // @ts-expect-error
+  transaction.gatewayFee = '0x'
   // Legacy
   transaction.gasPrice = stringNumberOrBNToHex(tx.gasPrice)
   // This order should match the order in Geth.
@@ -243,8 +246,10 @@ export function encode_deprecated_celo_legacy_type_only_for_temporary_ledger_com
     transaction.gasPrice,
     transaction.gas,
     transaction.feeCurrency,
-    gatewayFeeRecipient,
-    gatewayFee,
+    // @ts-expect-error
+    transaction.gatewayFeeRecipient,
+    // @ts-expect-error
+    transaction.gatewayFee,
     transaction.to,
     transaction.value,
     transaction.data,

@@ -1,6 +1,6 @@
 import { CELO_DERIVATION_PATH_BASE } from '@celo/base/lib/account'
 import { zeroRange } from '@celo/base/lib/collections'
-import { Address, CeloTx, EncodedTransaction, ReadOnlyWallet } from '@celo/connect'
+import { Address, CeloTx, EncodedTransaction, ReadOnlyWallet, isPresent } from '@celo/connect'
 import {
   chainIdTransformationForSigning,
   encodeTransaction,
@@ -105,7 +105,7 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
     if (isAtLeastMinimum(version, { minimum: MINIMUM_VERSION_FOR_STANDARD_TRANSACTIONS })) {
       if (txParams.gasPrice && txParams.feeCurrency && txParams.feeCurrency !== '0x') {
         throw new Error(
-          'Cannot serialize both "gasPrice" and "feeCurrency" together. To keep "feeCurrency", replace "gasPrice" with "maxFeePerGas". To keep "gasPrice" and send a type 0 transaction remove "feeCurrency"'
+          `celo ledger app above ${MINIMUM_VERSION_FOR_STANDARD_TRANSACTIONS.version} cannot serialize legacy celo transactions. Replace "gasPrice" with "maxFeePerGas".`
         )
       }
       if (txParams.gasPrice) {
@@ -116,7 +116,8 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
       // TODO ensure it is building a 1559 or cip64 tx, possibly force it
       // by deleting/ adding properties instead of throwing.
       // TODO when cip66 is implemented ensure it is not that
-      if (isEIP1559(txParams) || isCIP64(txParams)) {
+      // @ts-expect-error -- 66 isnt in this branch but will be in the release so future proof
+      if (isEIP1559(txParams) || (isCIP64(txParams) && !isPresent(txParams.maxFeePerFeeCurrency))) {
         return rlpEncodedTx(txParams)
       } else {
         throw new Error(
@@ -129,14 +130,16 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
         `celo ledger app version must be at least ${MINIMUM_VERSION_FOR_STANDARD_TRANSACTIONS.version} to sign transactions supported on celo after the L2 upgrade`
       )
     } else {
+      // the l1 legacy case
       console.warn(
-        `Upgrade your celo ledger app to at least ${MINIMUM_VERSION_FOR_STANDARD_TRANSACTIONS}`
+        `Upgrade your celo ledger app to at least ${MINIMUM_VERSION_FOR_STANDARD_TRANSACTIONS.version} before cel2 transition`
       )
       if (!txParams.gasPrice) {
         // this version of app only supports legacy so must have gasPrice
         txParams.gasPrice = txParams.maxFeePerGas
         delete txParams.maxFeePerGas
         delete txParams.maxPriorityFeePerGas
+        console.info('automatically converting to legacy transaction')
       }
       return encode_deprecated_celo_legacy_type_only_for_temporary_ledger_compat(txParams)
     }
