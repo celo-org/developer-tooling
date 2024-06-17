@@ -18,6 +18,7 @@ export enum CeloContract {
   Governance = 'Governance',
   LockedGold = 'LockedGold',
   MentoFeeHandlerSeller = 'MentoFeeHandlerSeller',
+  MintGoldSchedule = 'MintGoldSchedule',
   UniswapFeeHandlerSeller = 'UniswapFeeHandlerSeller',
   MultiSig = 'MultiSig',
   OdisPayments = 'OdisPayments',

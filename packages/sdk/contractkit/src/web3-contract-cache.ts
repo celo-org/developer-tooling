@@ -31,6 +31,7 @@ import { newReserve } from '@celo/abis/web3/mento/Reserve'
 import { newStableToken } from '@celo/abis/web3/mento/StableToken'
 
 import { newFeeCurrencyDirectory } from '@celo/abis-12/web3/FeeCurrencyDirectory'
+import { newMintGoldSchedule } from '@celo/abis-12/web3/MintGoldSchedule'
 import { newMentoFeeHandlerSeller } from '@celo/abis/web3/MentoFeeHandlerSeller'
 import { newUniswapFeeHandlerSeller } from '@celo/abis/web3/UniswapFeeHandlerSeller'
 
@@ -52,6 +53,7 @@ export const ContractFactories = {
   [CeloContract.Freezer]: newFreezer,
   [CeloContract.FeeHandler]: newFeeHandler,
   [CeloContract.MentoFeeHandlerSeller]: newMentoFeeHandlerSeller,
+  [CeloContract.MintGoldSchedule]: newMintGoldSchedule,
   [CeloContract.UniswapFeeHandlerSeller]: newUniswapFeeHandlerSeller,
   [CeloContract.GasPriceMinimum]: newGasPriceMinimum,
   [CeloContract.GoldToken]: newGoldToken,

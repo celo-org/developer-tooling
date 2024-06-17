@@ -157,6 +157,7 @@ export class ContractKit {
 
     if (await isCel2(this.web3)) {
       configContracts.push(CeloContract.FeeCurrencyDirectory)
+      configContracts.push(CeloContract.MintGoldSchedule)
     }
 
     const configMethod = async (contract: ValidWrappers) => {

@@ -1,6 +1,5 @@
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+import { setupL2, testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import Web3 from 'web3'
-import { setupL2 } from '../../test-utils/chain-setup'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Whitelist from './whitelist'
 
