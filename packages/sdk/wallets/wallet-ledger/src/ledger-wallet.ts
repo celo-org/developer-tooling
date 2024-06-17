@@ -55,7 +55,7 @@ const debug = debugFactory('kit:wallet:ledger')
 export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnlyWallet {
   static MIN_VERSION_SUPPORTED = '1.0.0'
   static MIN_VERSION_TOKEN_DATA = '1.0.2'
-  static MIN_VERSION_EIP159 = '1.2.0'
+  static MIN_VERSION_EIP1559 = '1.2.0'
   ledger: Ledger | undefined
 
   /**
@@ -104,10 +104,10 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
     const version = new SemVer(deviceApp.version)
 
     // if the app is of minimum version it doesnt matter if chain is cel2 or not
-    if (meetsVersionRequirements(version, { minimum: LedgerWallet.MIN_VERSION_EIP159 })) {
+    if (meetsVersionRequirements(version, { minimum: LedgerWallet.MIN_VERSION_EIP1559 })) {
       if (txParams.gasPrice && txParams.feeCurrency && txParams.feeCurrency !== '0x') {
         throw new Error(
-          `celo ledger app above ${LedgerWallet.MIN_VERSION_EIP159} cannot serialize legacy celo transactions. Replace "gasPrice" with "maxFeePerGas".`
+          `celo ledger app above ${LedgerWallet.MIN_VERSION_EIP1559} cannot serialize legacy celo transactions. Replace "gasPrice" with "maxFeePerGas".`
         )
       }
       if (txParams.gasPrice) {
@@ -129,12 +129,12 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
       // but if not celo as layer 2 and as layer 1 are different
     } else if (this.isCel2) {
       throw new Error(
-        `celo ledger app version must be at least ${LedgerWallet.MIN_VERSION_EIP159} to sign transactions supported on celo after the L2 upgrade`
+        `celo ledger app version must be at least ${LedgerWallet.MIN_VERSION_EIP1559} to sign transactions supported on celo after the L2 upgrade`
       )
     } else {
       // the l1 legacy case
       console.warn(
-        `Upgrade your celo ledger app to at least ${LedgerWallet.MIN_VERSION_EIP159} before cel2 transition`
+        `Upgrade your celo ledger app to at least ${LedgerWallet.MIN_VERSION_EIP1559} before cel2 transition`
       )
       if (!txParams.gasPrice) {
         // this version of app only supports legacy so must have gasPrice

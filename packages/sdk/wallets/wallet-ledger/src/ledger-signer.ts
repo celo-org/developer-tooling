@@ -12,7 +12,6 @@ import { AddressValidation, LedgerWallet } from './ledger-wallet'
 import { legacyTokenInfoByAddressAndChainId, tokenInfoByAddressAndChainId } from './tokens'
 
 const debug = debugFactory('kit:wallet:ledger')
-const CELO_APP_ACCEPTS_CONTRACT_DATA_FROM_VERSION = '1.0.2'
 
 /**
  * Signs the EVM transaction with a Ledger device
@@ -171,7 +170,7 @@ export class LedgerSigner implements Signer {
     const version = new SemVer(this.appConfiguration.version)
     if (meetsVersionRequirements(version, { minimum: LedgerWallet.MIN_VERSION_TOKEN_DATA })) {
       const getTokenInfo = meetsVersionRequirements(version, {
-        minimum: LedgerWallet.MIN_VERSION_EIP159,
+        minimum: LedgerWallet.MIN_VERSION_EIP1559,
       })
         ? tokenInfoByAddressAndChainId
         : legacyTokenInfoByAddressAndChainId

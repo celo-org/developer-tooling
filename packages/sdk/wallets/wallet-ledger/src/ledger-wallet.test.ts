@@ -20,7 +20,12 @@ import {
 import * as ethUtil from '@ethereumjs/util'
 import Ledger from '@ledgerhq/hw-app-eth'
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
+import { VerifyPublicKeyInput, createVerify } from 'crypto'
+import { readFileSync } from 'fs'
+import { dirname, join } from 'path'
 import Web3 from 'web3'
+import { legacyLedgerPublicKeyHex } from './data'
+import { meetsVersionRequirements } from './ledger-utils'
 import { AddressValidation, LedgerWallet } from './ledger-wallet'
 
 // Update this variable when testing using a physical device
@@ -116,7 +121,7 @@ interface ILedger {
 }
 
 const mockLedgerImplementation = (mockForceValidation: () => void, version: string): ILedger => {
-  return {
+  const _ledger = {
     getAddress: async (derivationPath: string, forceValidation?: boolean) => {
       if (forceValidation) {
         mockForceValidation()
@@ -197,15 +202,55 @@ const mockLedgerImplementation = (mockForceValidation: () => void, version: stri
         starkv2Supported: 1,
       }
     },
-    provideERC20TokenInformation: async (_token) => {
-      return true
+    provideERC20TokenInformation: async (tokenData: string) => {
+      let pubkey: VerifyPublicKeyInput
+      const version = (await _ledger.getAppConfiguration()).version
+      if (
+        meetsVersionRequirements(version, {
+          minimum: LedgerWallet.MIN_VERSION_EIP1559,
+        })
+      ) {
+        // verify with new pubkey
+        const pubDir = dirname(require.resolve('@celo/ledger-token-signer'))
+        pubkey = { key: readFileSync(join(pubDir, 'pubkey.pem')).toString() }
+      } else {
+        // verify with oldpubkey
+        pubkey = { key: legacyLedgerPublicKeyHex }
+      }
+
+      const verify = createVerify('sha256')
+      const tokenDataBuf = Buffer.from(tokenData, 'hex')
+      const BASE_DATA_LENGTH =
+        20 + // contract address, 20 bytes
+        4 + // decimals, uint32, 4 bytes
+        4 // chainId, uint32, 4 bytes
+      // first byte of data is the ticker length, so we add that to base data length
+      const dataLen = BASE_DATA_LENGTH + tokenDataBuf.readInt8(0)
+      // start at 1 since the first byte was just informative
+      const data = tokenDataBuf.slice(1, dataLen + 1)
+      verify.update(data)
+      verify.end()
+      // read from end of data til the end
+      const signature = tokenDataBuf.slice(dataLen + 1)
+      const verified = verify.verify(pubkey, signature)
+
+      if (!verified) {
+        throw new Error('couldnt verify data sent to MockLedger')
+      }
+      return verified
     },
   }
+  return _ledger
 }
 
-function mockLedger(wallet: LedgerWallet, mockForceValidation: () => void, version = '1.2.0') {
+function mockLedger(
+  wallet: LedgerWallet,
+  mockForceValidation: () => void,
+  version = LedgerWallet.MIN_VERSION_EIP1559
+) {
   jest
     .spyOn<any, any>(wallet, 'generateNewLedger')
+    .mockClear()
     .mockImplementation((_transport: any): ILedger => {
       return mockLedgerImplementation(mockForceValidation, version)
     })
@@ -394,7 +439,7 @@ describe('LedgerWallet class', () => {
                 mockForceValidation = jest.fn((): void => {
                   // do nothing
                 })
-                mockLedger(wallet, mockForceValidation, '1.0.0')
+                mockLedger(wallet, mockForceValidation, LedgerWallet.MIN_VERSION_TOKEN_DATA)
                 await wallet.init()
 
                 expect(
@@ -418,7 +463,7 @@ describe('LedgerWallet class', () => {
                 mockForceValidation = jest.fn((): void => {
                   // do nothing
                 })
-                mockLedger(wallet, mockForceValidation, '1.0.0')
+                mockLedger(wallet, mockForceValidation, LedgerWallet.MIN_VERSION_TOKEN_DATA)
                 await wallet.init()
                 const warnSpy = jest.spyOn(console, 'warn')
                 // setup complete
@@ -522,6 +567,7 @@ describe('LedgerWallet class', () => {
 
           describe('[celo-legacy]', () => {
             beforeEach(async () => {
+              const kit = newKit('https://alfajores-forno.celo-testnet.org')
               celoTransaction = {
                 from: knownAddress,
                 to: otherAddress,
@@ -530,7 +576,7 @@ describe('LedgerWallet class', () => {
                 nonce: 0,
                 gas: 99,
                 gasPrice: 99,
-                feeCurrency: '0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73',
+                feeCurrency: (await kit.contracts.getStableToken(StableToken.cUSD)).address,
               }
             })
             describe('with old ledger app', () => {
@@ -546,7 +592,7 @@ describe('LedgerWallet class', () => {
                   mockForceValidation = jest.fn((): void => {
                     // do nothing
                   })
-                  mockLedger(wallet, mockForceValidation, '1.0.0')
+                  mockLedger(wallet, mockForceValidation, LedgerWallet.MIN_VERSION_TOKEN_DATA)
                   await wallet.init()
                 })
 
@@ -576,7 +622,7 @@ describe('LedgerWallet class', () => {
                     mockForceValidation = jest.fn((): void => {
                       // do nothing
                     })
-                    mockLedger(wallet, mockForceValidation, '1.0.0')
+                    mockLedger(wallet, mockForceValidation, LedgerWallet.MIN_VERSION_TOKEN_DATA)
                     await wallet.init()
                     const warnSpy = jest.spyOn(console, 'warn')
                     // setup complete
@@ -584,15 +630,15 @@ describe('LedgerWallet class', () => {
                     await expect(wallet.signTransaction(celoTransaction)).resolves
                       .toMatchInlineSnapshot(`
                       {
-                        "raw": "0xf87f80636394d8763cba276a3738e6de85b4b3bf5fded6d6ca73808094588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a76400008083015e09a09d8307331534bc7839f055dcaab64d991057da094b021466c734f26b08c3e1f4a02332ec85ff2889e1a05590a97fe0c429fadb2c4260af4dea2b6b69a26c4d60e0",
+                        "raw": "0xf87f80636394874069fa1eb16d44d622f2e0ca25eea172369bc1808094588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a76400008083015e09a024c4b1d027c50d2e847d371cd902d3e22c9fa10fcbd59e9c5a854282afed34daa0686180d75830ea223c3ed1ca12613d029bc3613b4b5b51a724b33067491c2398",
                         "tx": {
-                          "feeCurrency": "0xd8763cba276a3738e6de85b4b3bf5fded6d6ca73",
+                          "feeCurrency": "0x874069fa1eb16d44d622f2e0ca25eea172369bc1",
                           "gas": "0x63",
-                          "hash": "0xc0467a86cae1f1a526899e450764c747777dc146f6c021edbe9021c13e1e189b",
+                          "hash": "0x302b12585b4a17317e9affcbe0abd0cd8cd39ef402108625085485b1c1d92d71",
                           "input": "0x",
                           "nonce": "0",
-                          "r": "0x9d8307331534bc7839f055dcaab64d991057da094b021466c734f26b08c3e1f4",
-                          "s": "0x2332ec85ff2889e1a05590a97fe0c429fadb2c4260af4dea2b6b69a26c4d60e0",
+                          "r": "0x24c4b1d027c50d2e847d371cd902d3e22c9fa10fcbd59e9c5a854282afed34da",
+                          "s": "0x686180d75830ea223c3ed1ca12613d029bc3613b4b5b51a724b33067491c2398",
                           "to": "0x588e4b68193001e4d10928660ab4165b813717c0",
                           "v": "0x015e09",
                           "value": "0x0de0b6b3a7640000",
