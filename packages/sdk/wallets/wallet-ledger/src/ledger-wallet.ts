@@ -15,7 +15,7 @@ import Ledger from '@ledgerhq/hw-app-eth'
 import debugFactory from 'debug'
 import { SemVer } from 'semver'
 import { LedgerSigner } from './ledger-signer'
-import { transportErrorFriendlyMessage } from './ledger-utils'
+import { meetsVersionRequirements, transportErrorFriendlyMessage } from './ledger-utils'
 
 export const CELO_BASE_DERIVATION_PATH = `${CELO_DERIVATION_PATH_BASE.slice(2)}/0`
 const ADDRESS_QTY = 5
@@ -53,7 +53,9 @@ export async function newLedgerWalletWithSetup(
 const debug = debugFactory('kit:wallet:ledger')
 
 export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnlyWallet {
-  private MIN_VERSION_SUPPORTED = '1.0.0'
+  static MIN_VERSION_SUPPORTED = '1.0.0'
+  static MIN_VERSION_TOKEN_DATA = '1.0.2'
+  static MIN_VERSION_EIP159 = '1.2.0'
   ledger: Ledger | undefined
 
   /**
@@ -102,10 +104,10 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
     const version = new SemVer(deviceApp.version)
 
     // if the app is of minimum version it doesnt matter if chain is cel2 or not
-    if (isAtLeastMinimum(version, { minimum: MINIMUM_VERSION_FOR_STANDARD_TRANSACTIONS })) {
+    if (meetsVersionRequirements(version, { minimum: LedgerWallet.MIN_VERSION_EIP159 })) {
       if (txParams.gasPrice && txParams.feeCurrency && txParams.feeCurrency !== '0x') {
         throw new Error(
-          `celo ledger app above ${MINIMUM_VERSION_FOR_STANDARD_TRANSACTIONS.version} cannot serialize legacy celo transactions. Replace "gasPrice" with "maxFeePerGas".`
+          `celo ledger app above ${LedgerWallet.MIN_VERSION_EIP159} cannot serialize legacy celo transactions. Replace "gasPrice" with "maxFeePerGas".`
         )
       }
       if (txParams.gasPrice) {
@@ -127,12 +129,12 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
       // but if not celo as layer 2 and as layer 1 are different
     } else if (this.isCel2) {
       throw new Error(
-        `celo ledger app version must be at least ${MINIMUM_VERSION_FOR_STANDARD_TRANSACTIONS.version} to sign transactions supported on celo after the L2 upgrade`
+        `celo ledger app version must be at least ${LedgerWallet.MIN_VERSION_EIP159} to sign transactions supported on celo after the L2 upgrade`
       )
     } else {
       // the l1 legacy case
       console.warn(
-        `Upgrade your celo ledger app to at least ${MINIMUM_VERSION_FOR_STANDARD_TRANSACTIONS.version} before cel2 transition`
+        `Upgrade your celo ledger app to at least ${LedgerWallet.MIN_VERSION_EIP159} before cel2 transition`
       )
       if (!txParams.gasPrice) {
         // this version of app only supports legacy so must have gasPrice
@@ -194,9 +196,9 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
     version: string
   }> {
     const appConfiguration = await this.ledger!.getAppConfiguration()
-    if (new SemVer(appConfiguration.version).compare(this.MIN_VERSION_SUPPORTED) === -1) {
+    if (new SemVer(appConfiguration.version).compare(LedgerWallet.MIN_VERSION_SUPPORTED) === -1) {
       throw new Error(
-        `Due to technical issues, we require the users to update their ledger celo-app to >= ${this.MIN_VERSION_SUPPORTED}. You can do this on ledger-live by updating the celo-app in the app catalog.`
+        `Due to technical issues, we require the users to update their ledger celo-app to >= ${LedgerWallet.MIN_VERSION_SUPPORTED}. You can do this on ledger-live by updating the celo-app in the app catalog.`
       )
     }
     if (!appConfiguration.arbitraryDataEnabled) {
@@ -207,10 +209,3 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
     return appConfiguration
   }
 }
-
-function isAtLeastMinimum(version: SemVer, { minimum }: { minimum: SemVer }) {
-  const equality = version.compare(minimum)
-  return equality === 0 || equality === 1
-}
-
-const MINIMUM_VERSION_FOR_STANDARD_TRANSACTIONS = new SemVer('1.2.0')

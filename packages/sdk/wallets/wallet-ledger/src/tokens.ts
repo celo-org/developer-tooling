@@ -1,6 +1,7 @@
 // Copied from '@ledgerhq/hw-app-eth/erc20' because we need to change the path of the blob and support for address+chainId
 import { Address, normalizeAddressWith0x } from '@celo/base/lib/address'
 import blob from '@celo/ledger-token-signer'
+import blobLegacy from './data'
 
 /**
  * Retrieve the token information by a given contract address and chainId if any
@@ -8,12 +9,19 @@ import blob from '@celo/ledger-token-signer'
 export const tokenInfoByAddressAndChainId = (
   contract: Address,
   chainId: number
-): TokenInfo | null | undefined => get().byContractKey(generateContractKey(contract, chainId))
+): TokenInfo | null | undefined => get(blob).byContractKey(generateContractKey(contract, chainId))
+
+export const legacyTokenInfoByAddressAndChainId = (
+  contract: Address,
+  chainId: number
+): TokenInfo | null | undefined =>
+  get(blobLegacy).byContractKey(generateContractKey(contract, chainId))
 
 /**
  * list all the ERC20 tokens informations
  */
-export const list = (): TokenInfo[] => get().list()
+export const list = (): TokenInfo[] => get(blob).list()
+export const listLegacy = (): TokenInfo[] => get(blobLegacy).list()
 
 export interface TokenInfo {
   contractAddress: Address
@@ -22,23 +30,6 @@ export interface TokenInfo {
   chainId: number
   signature: Buffer
   data: Buffer
-}
-
-/**
- * @return
- * -1: version1 < version2,
- *  0: version1 == version2,
- *  1: version1 > version2
- */
-export function compareLedgerAppVersions(version1: string, version2: string): number {
-  const numberV1 = stringVersionToNumber(version1)
-  const numberV2 = stringVersionToNumber(version2)
-  return numberV1 < numberV2 ? -1 : numberV1 === numberV2 ? 0 : 1
-}
-
-function stringVersionToNumber(version: string): number {
-  const parts = version.split('.')
-  return parts.reduce((accum, part) => (accum + Number(part)) * 1000, 0)
 }
 
 export interface API {
@@ -51,13 +42,13 @@ function generateContractKey(contract: Address, chainId: number): string {
 }
 
 // this internal get() will lazy load and cache the data from the erc20 data blob
-const get: () => API = (() => {
+const get: (data: string) => API = (() => {
   let cache: API
-  return () => {
+  return (data) => {
     if (cache) {
       return cache
     }
-    const buf = Buffer.from(blob, 'base64')
+    const buf = Buffer.from(data, 'base64')
     const byContract: { [id: string]: TokenInfo } = {}
     const entries: TokenInfo[] = []
     let i = 0

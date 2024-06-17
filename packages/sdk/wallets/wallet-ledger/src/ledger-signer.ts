@@ -7,9 +7,9 @@ import { TransportStatusError } from '@ledgerhq/errors'
 import Ledger from '@ledgerhq/hw-app-eth'
 import debugFactory from 'debug'
 import { SemVer } from 'semver'
-import { transportErrorFriendlyMessage } from './ledger-utils'
-import { AddressValidation } from './ledger-wallet'
-import { tokenInfoByAddressAndChainId } from './tokens'
+import { meetsVersionRequirements, transportErrorFriendlyMessage } from './ledger-utils'
+import { AddressValidation, LedgerWallet } from './ledger-wallet'
+import { legacyTokenInfoByAddressAndChainId, tokenInfoByAddressAndChainId } from './tokens'
 
 const debug = debugFactory('kit:wallet:ledger')
 const CELO_APP_ACCEPTS_CONTRACT_DATA_FROM_VERSION = '1.0.2'
@@ -168,20 +168,20 @@ export class LedgerSigner implements Signer {
    * @param rlpEncoded Encoded transaction
    */
   private async checkForKnownToken(rlpEncoded: RLPEncodedTx | LegacyEncodedTx) {
-    if (
-      new SemVer(this.appConfiguration.version).compare(
-        CELO_APP_ACCEPTS_CONTRACT_DATA_FROM_VERSION
-      ) >= 0
-    ) {
-      const tokenInfo = tokenInfoByAddressAndChainId(
-        rlpEncoded.transaction.to!,
-        rlpEncoded.transaction.chainId!
-      )
+    const version = new SemVer(this.appConfiguration.version)
+    if (meetsVersionRequirements(version, { minimum: LedgerWallet.MIN_VERSION_TOKEN_DATA })) {
+      const getTokenInfo = meetsVersionRequirements(version, {
+        minimum: LedgerWallet.MIN_VERSION_EIP159,
+      })
+        ? tokenInfoByAddressAndChainId
+        : legacyTokenInfoByAddressAndChainId
+
+      const tokenInfo = getTokenInfo(rlpEncoded.transaction.to!, rlpEncoded.transaction.chainId!)
       if (tokenInfo) {
         await this.ledger!.provideERC20TokenInformation(`0x${tokenInfo.data.toString('hex')}`)
       }
       if (rlpEncoded.transaction.feeCurrency && rlpEncoded.transaction.feeCurrency !== '0x') {
-        const feeTokenInfo = tokenInfoByAddressAndChainId(
+        const feeTokenInfo = getTokenInfo(
           rlpEncoded.transaction.feeCurrency!,
           rlpEncoded.transaction.chainId!
         )
