@@ -1,6 +1,14 @@
 import { CELO_DERIVATION_PATH_BASE } from '@celo/base/lib/account'
 import { zeroRange } from '@celo/base/lib/collections'
-import { Address, CeloTx, EncodedTransaction, ReadOnlyWallet } from '@celo/connect'
+import { Address, CeloTx, EncodedTransaction, ReadOnlyWallet, isPresent } from '@celo/connect'
+import {
+  chainIdTransformationForSigning,
+  encodeTransaction,
+  encode_deprecated_celo_legacy_type_only_for_temporary_ledger_compat,
+  isCIP64,
+  isEIP1559,
+  rlpEncodedTx,
+} from '@celo/wallet-base'
 import { RemoteWallet } from '@celo/wallet-remote'
 import { TransportError, TransportStatusError } from '@ledgerhq/errors'
 import Ledger from '@ledgerhq/hw-app-eth'
@@ -28,13 +36,15 @@ export async function newLedgerWalletWithSetup(
   transport: any,
   derivationPathIndexes?: number[],
   baseDerivationPath?: string,
-  ledgerAddressValidation?: AddressValidation
+  ledgerAddressValidation?: AddressValidation,
+  isCel2?: boolean
 ): Promise<LedgerWallet> {
   const wallet = new LedgerWallet(
     derivationPathIndexes,
     baseDerivationPath,
     transport,
-    ledgerAddressValidation
+    ledgerAddressValidation,
+    isCel2
   )
   await wallet.init()
   return wallet
@@ -43,7 +53,7 @@ export async function newLedgerWalletWithSetup(
 const debug = debugFactory('kit:wallet:ledger')
 
 export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnlyWallet {
-  private MIN_VERSION_SUPPORTED = '1.2.0'
+  private MIN_VERSION_SUPPORTED = '1.0.0'
   ledger: Ledger | undefined
 
   /**
@@ -58,7 +68,8 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
     readonly derivationPathIndexes: number[] = zeroRange(ADDRESS_QTY),
     readonly baseDerivationPath: string = CELO_BASE_DERIVATION_PATH,
     readonly transport: any = {},
-    readonly ledgerAddressValidation: AddressValidation = AddressValidation.firstTransactionPerAddress
+    readonly ledgerAddressValidation: AddressValidation = AddressValidation.firstTransactionPerAddress,
+    readonly isCel2?: boolean
   ) {
     super()
     const invalidDPs = derivationPathIndexes.some(
@@ -70,18 +81,68 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
   }
 
   async signTransaction(txParams: CeloTx): Promise<EncodedTransaction> {
-    if (txParams.gasPrice) {
-      if (txParams.feeCurrency && txParams.feeCurrency !== '0x') {
-        // NOTE: celo-legacy is not supported anymore
+    const rlpEncoded = await this.rlpEncodedTxForLedger(txParams)
+    const addToV =
+      rlpEncoded.type === 'celo-legacy' ? chainIdTransformationForSigning(txParams.chainId!) : 27
+
+    // Get the signer from the 'from' field
+    const fromAddress = txParams.from!.toString()
+    const signer = this.getSigner(fromAddress)
+    const signature = await signer!.signTransaction(addToV, rlpEncoded)
+
+    return encodeTransaction(rlpEncoded, signature)
+  }
+
+  async rlpEncodedTxForLedger(txParams: CeloTx) {
+    if (!txParams) {
+      throw new Error('No transaction object given!')
+    }
+
+    const deviceApp = await this.retrieveAppConfiguration()
+    const version = new SemVer(deviceApp.version)
+
+    // if the app is of minimum version it doesnt matter if chain is cel2 or not
+    if (isAtLeastMinimum(version, { minimum: MINIMUM_VERSION_FOR_STANDARD_TRANSACTIONS })) {
+      if (txParams.gasPrice && txParams.feeCurrency && txParams.feeCurrency !== '0x') {
         throw new Error(
-          'celo-legacy transactions are not supported anymore, please try sending a more modern transaction instead (eip1559, cip64, etc.)'
+          `celo ledger app above ${MINIMUM_VERSION_FOR_STANDARD_TRANSACTIONS.version} cannot serialize legacy celo transactions. Replace "gasPrice" with "maxFeePerGas".`
         )
       }
+      if (txParams.gasPrice) {
+        throw new Error(
+          'ethereum-legacy transactions are not supported, please try sending a more modern transaction instead (eip1559, cip64, etc.)'
+        )
+      }
+      // TODO ensure it is building a 1559 or cip64 tx, possibly force it
+      // by deleting/ adding properties instead of throwing.
+      // TODO when cip66 is implemented ensure it is not that
+      // @ts-expect-error -- 66 isnt in this branch but will be in the release so future proof
+      if (isEIP1559(txParams) || (isCIP64(txParams) && !isPresent(txParams.maxFeePerFeeCurrency))) {
+        return rlpEncodedTx(txParams)
+      } else {
+        throw new Error(
+          'only eip1559 and cip64 transactions can be signd by this version of celo ledger app'
+        )
+      }
+      // but if not celo as layer 2 and as layer 1 are different
+    } else if (this.isCel2) {
       throw new Error(
-        'ethereum-legacy transactions are not supported, please try sending a more modern transaction instead (eip1559, cip64, etc.)'
+        `celo ledger app version must be at least ${MINIMUM_VERSION_FOR_STANDARD_TRANSACTIONS.version} to sign transactions supported on celo after the L2 upgrade`
       )
+    } else {
+      // the l1 legacy case
+      console.warn(
+        `Upgrade your celo ledger app to at least ${MINIMUM_VERSION_FOR_STANDARD_TRANSACTIONS.version} before cel2 transition`
+      )
+      if (!txParams.gasPrice) {
+        // this version of app only supports legacy so must have gasPrice
+        txParams.gasPrice = txParams.maxFeePerGas
+        delete txParams.maxFeePerGas
+        delete txParams.maxPriorityFeePerGas
+        console.info('automatically converting to legacy transaction')
+      }
+      return encode_deprecated_celo_legacy_type_only_for_temporary_ledger_compat(txParams)
     }
-    return super.signTransaction(txParams)
   }
 
   protected async loadAccountSigners(): Promise<Map<Address, LedgerSigner>> {
@@ -146,3 +207,10 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
     return appConfiguration
   }
 }
+
+function isAtLeastMinimum(version: SemVer, { minimum }: { minimum: SemVer }) {
+  const equality = version.compare(minimum)
+  return equality === 0 || equality === 1
+}
+
+const MINIMUM_VERSION_FOR_STANDARD_TRANSACTIONS = new SemVer('1.2.0')

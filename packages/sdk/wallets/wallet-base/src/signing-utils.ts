@@ -8,6 +8,7 @@ import {
   CeloTx,
   CeloTxWithSig,
   EncodedTransaction,
+  FormattedCeloTx,
   RLPEncodedTx,
   TransactionTypes,
   WithSig,
@@ -91,14 +92,14 @@ function makeEven(hex: string) {
 
 function signatureFormatter(
   signature: { v: number | bigint; r: Buffer; s: Buffer },
-  type: TransactionTypes
+  type: TransactionTypes | 'celo-legacy'
 ): {
   v: string
   r: string
   s: string
 } {
   let v = signature.v
-  if (type !== 'ethereum-legacy') {
+  if (type !== 'celo-legacy' && type !== 'ethereum-legacy') {
     v = signature.v === Y_PARITY_EIP_2098 ? 0 : 1
   }
   return {
@@ -211,9 +212,57 @@ enum TxTypeToPrefix {
   eip1559 = '0x02',
 }
 
+export interface LegacyEncodedTx {
+  type: 'celo-legacy'
+  rlpEncode: `0x${string}`
+  transaction: FormattedCeloTx
+}
+
+// dont use this its in snake case specifically to make you hesitate.
+export function encode_deprecated_celo_legacy_type_only_for_temporary_ledger_compat(
+  tx: CeloTx
+): LegacyEncodedTx {
+  const transaction = inputCeloTxFormatter(tx)
+  transaction.to = ensureLeading0x((tx.to || '0x').toLowerCase())
+  transaction.nonce = Number(((tx.nonce as any) !== '0x' ? tx.nonce : 0) || 0)
+  transaction.data = (tx.data || '0x').toLowerCase()
+  transaction.value = stringNumberOrBNToHex(tx.value)
+  transaction.gas = stringNumberOrBNToHex(tx.gas)
+  transaction.chainId = tx.chainId || 1
+  // Celo Specific
+  transaction.feeCurrency = ensureLeading0x((tx.feeCurrency || '0x').toLowerCase())
+  // we arent supporting the full classic celo tx so we can zero out these fields.
+
+  // @ts-expect-error
+  transaction.gatewayFeeRecipient = '0x'
+  // @ts-expect-error
+  transaction.gatewayFee = '0x'
+  // Legacy
+  transaction.gasPrice = stringNumberOrBNToHex(tx.gasPrice)
+  // This order should match the order in Geth.
+  // https://github.com/celo-org/celo-blockchain/blob/027dba2e4584936cc5a8e8993e4e27d28d5247b8/core/types/transaction.go#L65
+  const rlpEncode = rlpEncodeHex([
+    stringNumberToHex(transaction.nonce),
+    transaction.gasPrice,
+    transaction.gas,
+    transaction.feeCurrency,
+    // @ts-expect-error
+    transaction.gatewayFeeRecipient,
+    // @ts-expect-error
+    transaction.gatewayFee,
+    transaction.to,
+    transaction.value,
+    transaction.data,
+    stringNumberToHex(transaction.chainId),
+    '0x',
+    '0x',
+  ])
+  return { transaction, rlpEncode, type: 'celo-legacy' }
+}
+
 function concatTypePrefixHex(
   rawTransaction: string,
-  txType: EncodedTransaction['tx']['type']
+  txType: EncodedTransaction['tx']['type'] | 'celo-legacy'
 ): StrongAddress {
   const prefix = TxTypeToPrefix[txType]
   if (prefix) {
@@ -272,11 +321,11 @@ export function isPriceToLow(tx: CeloTx) {
   return isLow
 }
 
-function isEIP1559(tx: CeloTx): boolean {
+export function isEIP1559(tx: CeloTx): boolean {
   return isPresent(tx.maxFeePerGas) && isPresent(tx.maxPriorityFeePerGas)
 }
 
-function isCIP64(tx: CeloTx) {
+export function isCIP64(tx: CeloTx) {
   return isEIP1559(tx) && isPresent(tx.feeCurrency)
 }
 
@@ -298,7 +347,7 @@ function isLessThanZero(value: CeloTx['gasPrice']) {
 }
 
 export async function encodeTransaction(
-  rlpEncoded: RLPEncodedTx,
+  rlpEncoded: RLPEncodedTx | LegacyEncodedTx,
   signature: { v: number | bigint; r: Buffer; s: Buffer }
 ): Promise<EncodedTransaction> {
   const sanitizedSignature = signatureFormatter(signature, rlpEncoded.type)
@@ -307,7 +356,9 @@ export async function encodeTransaction(
   // for legacy tx we need to slice but for new ones we do not want to do that
   let decodedFields: typeof decodedTX
 
-  if (rlpEncoded.type == 'ethereum-legacy') {
+  if (rlpEncoded.type == 'celo-legacy') {
+    decodedFields = decodedTX.slice(0, 9)
+  } else if (rlpEncoded.type == 'ethereum-legacy') {
     decodedFields = decodedTX.slice(0, 6)
   } else {
     decodedFields = decodedTX
@@ -339,7 +390,7 @@ export async function encodeTransaction(
       accessList: parseAccessList(rlpEncoded.transaction.accessList || []),
     }
   }
-  if (rlpEncoded.type === 'cip64') {
+  if (rlpEncoded.type === 'cip64' || rlpEncoded.type === 'celo-legacy') {
     tx = {
       ...tx,
       // @ts-expect-error -- just a matter of how  this tx is built
@@ -354,7 +405,7 @@ export async function encodeTransaction(
     }
   }
 
-  const result: EncodedTransaction & { type: TransactionTypes } = {
+  const result: EncodedTransaction & { type: TransactionTypes | 'celo-legacy' } = {
     tx: tx as EncodedTransaction['tx'],
     raw: rawTransaction,
     type: rlpEncoded.type,
