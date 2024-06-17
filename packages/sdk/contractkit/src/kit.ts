@@ -24,7 +24,6 @@ import {
   getWeb3ForKit,
   setupAPIKey,
 } from './setupForKits'
-import { estimateMaxFeeInFeeToken } from './utils/estimateMaxFeeInToken'
 import { Web3ContractCache } from './web3-contract-cache'
 import { AttestationsConfig } from './wrappers/Attestations'
 import { BlockchainParametersConfig } from './wrappers/BlockchainParameters'
@@ -224,9 +223,25 @@ export class ContractKit {
     return blockchainParamsWrapper.getEpochNumberOfBlock(blockNumber)
   }
 
-  async populateMaxFeeInToken(tx: CeloTx): Promise<CeloTx> {
+  /*
+   * Sets the maxFeeInFeeCurrency on the provided transaction
+   *
+   * @remarks
+   * Because tx with maxFeeInFeeCurrency set require maxPriorityFeePerGas and maxFeePerGas to be expressed in CELO
+   * and previous tx types with feeCurrency expressed these in the token paying for the transaction,
+   * this method overwrites maxPriorityFeePerGas and maxFeePerGas to ensure they are correctly valued in CELO
+   *
+   * @param tx.gas is required
+   */
+  async populateMaxFeeInToken(
+    tx: CeloTx & Pick<Required<CeloTx>, 'gas' | 'feeCurrency'>
+  ): Promise<CeloTx> {
     if (!(await isCel2(this.connection.web3))) {
       throw new Error("Can't populate `maxFeeInFeeCurrency` if not on a CEL2 network")
+    }
+
+    if (!isPresent(tx.gas)) {
+      throw new Error('The estimated gas is required to calculate maxFeeInFeeCurrency')
     }
 
     if (isPresent(tx.feeCurrency) && !isPresent(tx.maxFeeInFeeCurrency)) {
@@ -237,16 +252,40 @@ export class ContractKit {
       ])
       tx.maxFeePerGas = maxFeePerGas
       tx.maxPriorityFeePerGas = maxPriorityFeePerGas
-      const maxFeeInFeeCurrency = await estimateMaxFeeInFeeToken(this.connection.web3, {
+      const maxFeeInFeeCurrency = await this.estimateMaxFeeInFeeToken({
         feeCurrency: tx.feeCurrency,
         gasLimit: BigInt(tx.gas!),
         maxFeePerGas: BigInt(maxPriorityFeePerGas),
       })
 
-      tx.maxFeeInFeeCurrency = `0x${maxFeeInFeeCurrency.toString(16)}`
+      tx.maxFeeInFeeCurrency = maxFeeInFeeCurrency
     }
 
     return tx
+  }
+
+  /**
+   * For cip 66 transactions (the prefered way to pay for gas with fee tokens on Cel2) it is necessary
+   * to provide the absolute limit one is willing to pay denominated in the token.
+   * In contrast with earlier tx types for fee currencies (celo legacy, cip42, cip 64).
+   *
+   * Calulating Estimation requires the gas, maxfeePerGas and the conversion rate from CELO to feeToken
+   * https://github.com/celo-org/celo-proposals/blob/master/CIPs/cip-0066.md
+   */
+  async estimateMaxFeeInFeeToken({
+    gasLimit,
+    maxFeePerGas,
+    feeCurrency,
+  }: {
+    gasLimit: bigint
+    maxFeePerGas: bigint
+    feeCurrency: StrongAddress
+  }) {
+    const maxGasFeesInCELO = gasLimit * maxFeePerGas
+    const fcd = await this.contracts.getFeeCurrencyDirectory()
+    const { numerator: ratioTOKEN, denominator: ratioCELO } = await fcd.getExchangeRate(feeCurrency)
+
+    return (maxGasFeesInCELO * BigInt(ratioCELO.toString())) / BigInt(ratioTOKEN.toString())
   }
 
   // *** NOTICE ***

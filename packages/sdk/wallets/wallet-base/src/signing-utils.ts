@@ -98,7 +98,7 @@ function signatureFormatter(
 }
 
 export function stringNumberOrBNToHex(
-  num?: number | string | ReturnType<Web3['utils']['toBN']>
+  num?: number | string | ReturnType<Web3['utils']['toBN']> | bigint
 ): Hex {
   if (typeof num === 'string' || typeof num === 'number' || num === undefined) {
     return stringNumberToHex(num)
