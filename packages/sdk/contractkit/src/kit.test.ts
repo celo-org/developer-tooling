@@ -209,8 +209,12 @@ testWithGanache('Fetch whitelisted fee currencies', (web3: Web3) => {
 testWithAnvil('kit', (web3) => {
   let kit: ContractKit
   let feeToken: StrongAddress
-  beforeEach(async () => {
+  beforeAll(async () => {
+    // when this is beforeEach the web3 instance is reused so the second time it already is attached to a celo provider
+    // but if the provider is already an instance of celo provider then  rpccaller is not attached to connection class instance
+    //  web3 must be a new instance when creating a kit not a an instance that was already used by a different kit
     kit = newKitFromWeb3(web3)
+
     const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyWhitelist()
     const gasOptions = await feeCurrencyWhitelist.getWhitelist()
     feeToken = gasOptions[0]
@@ -227,7 +231,10 @@ testWithAnvil('kit', (web3) => {
     })
     describe('when on cel2', () => {
       beforeEach(() => {
-        // set is l2 true
+        // replace when setupL2 is in dev tils instead of in cli utils
+        jest.spyOn(web3.eth, 'getCode').mockImplementation(async () => {
+          return '0x2k2131325123PROXY'
+        })
       })
       describe('when gas is missing', () => {
         it('throws gas required error', () => {
