@@ -64,7 +64,11 @@
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:115](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L115)
+=======
+[packages/sdk/contractkit/src/kit.ts:113](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L113)
+>>>>>>> l2-integrate
 
 ## Properties
 
@@ -76,7 +80,11 @@ factory for core contract's native web3 wrappers
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:106](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L106)
+=======
+[packages/sdk/contractkit/src/kit.ts:104](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L104)
+>>>>>>> l2-integrate
 
 ___
 
@@ -88,7 +96,11 @@ helper for interacting with CELO & stable tokens
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:110](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L110)
+=======
+[packages/sdk/contractkit/src/kit.ts:108](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L108)
+>>>>>>> l2-integrate
 
 ___
 
@@ -98,7 +110,11 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:115](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L115)
+=======
+[packages/sdk/contractkit/src/kit.ts:113](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L113)
+>>>>>>> l2-integrate
 
 ___
 
@@ -110,7 +126,11 @@ factory for core contract's kit wrappers
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:108](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L108)
+=======
+[packages/sdk/contractkit/src/kit.ts:106](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L106)
+>>>>>>> l2-integrate
 
 ___
 
@@ -124,7 +144,11 @@ no longer needed since gasPrice is available on node rpc
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:113](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L113)
+=======
+[packages/sdk/contractkit/src/kit.ts:111](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L111)
+>>>>>>> l2-integrate
 
 ___
 
@@ -136,7 +160,11 @@ core contract's address registry
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:104](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L104)
+=======
+[packages/sdk/contractkit/src/kit.ts:102](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L102)
+>>>>>>> l2-integrate
 
 ## Accessors
 
@@ -150,7 +178,11 @@ core contract's address registry
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:264](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L264)
+=======
+[packages/sdk/contractkit/src/kit.ts:237](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L237)
+>>>>>>> l2-integrate
 
 • `set` **defaultAccount**(`address`): `void`
 
@@ -166,7 +198,11 @@ core contract's address registry
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:260](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L260)
+=======
+[packages/sdk/contractkit/src/kit.ts:233](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L233)
+>>>>>>> l2-integrate
 
 ___
 
@@ -180,7 +216,11 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:280](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L280)
+=======
+[packages/sdk/contractkit/src/kit.ts:253](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L253)
+>>>>>>> l2-integrate
 
 • `set` **defaultFeeCurrency**(`address`): `void`
 
@@ -196,7 +236,11 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:276](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L276)
+=======
+[packages/sdk/contractkit/src/kit.ts:249](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L249)
+>>>>>>> l2-integrate
 
 ___
 
@@ -210,7 +254,11 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:272](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L272)
+=======
+[packages/sdk/contractkit/src/kit.ts:245](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L245)
+>>>>>>> l2-integrate
 
 • `set` **gasInflationFactor**(`factor`): `void`
 
@@ -226,7 +274,11 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:268](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L268)
+=======
+[packages/sdk/contractkit/src/kit.ts:241](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L241)
+>>>>>>> l2-integrate
 
 ___
 
@@ -240,7 +292,11 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:311](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L311)
+=======
+[packages/sdk/contractkit/src/kit.ts:284](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L284)
+>>>>>>> l2-integrate
 
 ## Methods
 
@@ -260,7 +316,11 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:256](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L256)
+=======
+[packages/sdk/contractkit/src/kit.ts:229](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L229)
+>>>>>>> l2-integrate
 
 ___
 
@@ -280,7 +340,11 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:222](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L222)
+=======
+[packages/sdk/contractkit/src/kit.ts:220](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L220)
+>>>>>>> l2-integrate
 
 ___
 
@@ -294,7 +358,11 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:207](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L207)
+=======
+[packages/sdk/contractkit/src/kit.ts:205](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L205)
+>>>>>>> l2-integrate
 
 ___
 
@@ -314,7 +382,11 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:212](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L212)
+=======
+[packages/sdk/contractkit/src/kit.ts:210](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L210)
+>>>>>>> l2-integrate
 
 ___
 
@@ -328,7 +400,11 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:193](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L193)
+=======
+[packages/sdk/contractkit/src/kit.ts:191](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L191)
+>>>>>>> l2-integrate
 
 ___
 
@@ -348,7 +424,11 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:217](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L217)
+=======
+[packages/sdk/contractkit/src/kit.ts:215](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L215)
+>>>>>>> l2-integrate
 
 ___
 
@@ -368,7 +448,11 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:143](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L143)
+=======
+[packages/sdk/contractkit/src/kit.ts:141](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L141)
+>>>>>>> l2-integrate
 
 ___
 
@@ -388,7 +472,11 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:126](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L126)
+=======
+[packages/sdk/contractkit/src/kit.ts:124](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L124)
+>>>>>>> l2-integrate
 
 ___
 
@@ -402,7 +490,11 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:122](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L122)
+=======
+[packages/sdk/contractkit/src/kit.ts:120](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L120)
+>>>>>>> l2-integrate
 
 ___
 
@@ -416,7 +508,11 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:284](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L284)
+=======
+[packages/sdk/contractkit/src/kit.ts:257](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L257)
+>>>>>>> l2-integrate
 
 ___
 
@@ -430,6 +526,7 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:288](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L288)
 
 ___
@@ -451,6 +548,9 @@ ___
 #### Defined in
 
 [packages/sdk/contractkit/src/kit.ts:227](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L227)
+=======
+[packages/sdk/contractkit/src/kit.ts:261](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L261)
+>>>>>>> l2-integrate
 
 ___
 
@@ -470,7 +570,11 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:292](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L292)
+=======
+[packages/sdk/contractkit/src/kit.ts:265](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L265)
+>>>>>>> l2-integrate
 
 ___
 
@@ -491,7 +595,11 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:296](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L296)
+=======
+[packages/sdk/contractkit/src/kit.ts:269](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L269)
+>>>>>>> l2-integrate
 
 ___
 
@@ -517,7 +625,11 @@ Throws if supplied address is not a valid hexadecimal address
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:200](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L200)
+=======
+[packages/sdk/contractkit/src/kit.ts:198](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L198)
+>>>>>>> l2-integrate
 
 ___
 
@@ -538,7 +650,11 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:303](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L303)
+=======
+[packages/sdk/contractkit/src/kit.ts:276](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L276)
+>>>>>>> l2-integrate
 
 ___
 
@@ -552,4 +668,8 @@ ___
 
 #### Defined in
 
+<<<<<<< HEAD
 [packages/sdk/contractkit/src/kit.ts:307](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L307)
+=======
+[packages/sdk/contractkit/src/kit.ts:280](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L280)
+>>>>>>> l2-integrate

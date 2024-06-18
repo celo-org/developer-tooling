@@ -20,6 +20,7 @@
 - [handleData](index.md#handledata)
 - [handleHexString](index.md#handlehexstring)
 - [handleNumber](index.md#handlenumber)
+- [handleStringNumber](index.md#handlestringnumber)
 - [isCIP66](index.md#iscip66)
 - [isPriceToLow](index.md#ispricetolow)
 - [publicKeyPrefix](index.md#publickeyprefix)
@@ -116,6 +117,12 @@ ___
 ### handleNumber
 
 Re-exports [handleNumber](signing_utils.md#handlenumber)
+
+___
+
+### handleStringNumber
+
+Re-exports [handleStringNumber](signing_utils.md#handlestringnumber)
 
 ___
 

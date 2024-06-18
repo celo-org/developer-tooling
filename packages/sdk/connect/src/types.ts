@@ -1,4 +1,5 @@
 import { StrongAddress } from '@celo/base'
+import Web3 from 'web3'
 import {
   AccessList,
   PromiEvent,
@@ -12,7 +13,7 @@ export type Address = string
 export type Hex = `0x${string}`
 export interface CeloParams {
   feeCurrency: StrongAddress
-  maxFeeInFeeCurrency?: Hex
+  maxFeeInFeeCurrency?: Hex | string | bigint | ReturnType<Web3['utils']['toBN']>
   /*
   @deprecated
   */

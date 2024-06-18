@@ -30,6 +30,7 @@ export function inputCeloTxFormatter(tx: CeloTx): FormattedCeloTx {
     gasPrice,
     maxFeePerGas,
     maxPriorityFeePerGas,
+    maxFeeInFeeCurrency,
     feeCurrency,
     gatewayFee,
     gatewayFeeRecipient,
@@ -77,6 +78,10 @@ export function inputCeloTxFormatter(tx: CeloTx): FormattedCeloTx {
   }
   if (accessList) {
     formattedTX.accessList = inputAccessListFormatter(accessList)
+  }
+
+  if (maxFeeInFeeCurrency) {
+    formattedTX.maxFeeInFeeCurrency = numberToHex(maxFeeInFeeCurrency.toString())
   }
 
   return formattedTX as FormattedCeloTx

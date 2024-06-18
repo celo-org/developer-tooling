@@ -23,6 +23,7 @@
 - [handleData](signing_utils.md#handledata)
 - [handleHexString](signing_utils.md#handlehexstring)
 - [handleNumber](signing_utils.md#handlenumber)
+- [handleStringNumber](signing_utils.md#handlestringnumber)
 - [isCIP66](signing_utils.md#iscip66)
 - [isPriceToLow](signing_utils.md#ispricetolow)
 - [recoverMessageSigner](signing_utils.md#recovermessagesigner)
@@ -41,7 +42,7 @@
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:40](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L40)
+[wallets/wallet-base/src/signing-utils.ts:41](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L41)
 
 ___
 
@@ -51,7 +52,7 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:41](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L41)
+[wallets/wallet-base/src/signing-utils.ts:42](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L42)
 
 ___
 
@@ -61,7 +62,7 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:42](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L42)
+[wallets/wallet-base/src/signing-utils.ts:43](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L43)
 
 ## Functions
 
@@ -82,7 +83,7 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:922](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L922)
+[wallets/wallet-base/src/signing-utils.ts:930](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L930)
 
 ___
 
@@ -102,7 +103,7 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:56](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L56)
+[wallets/wallet-base/src/signing-utils.ts:57](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L57)
 
 ___
 
@@ -129,7 +130,7 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:875](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L875)
+[wallets/wallet-base/src/signing-utils.ts:877](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L877)
 
 ___
 
@@ -153,7 +154,7 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:375](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L375)
+[wallets/wallet-base/src/signing-utils.ts:377](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L377)
 
 ___
 
@@ -179,7 +180,7 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:472](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L472)
+[wallets/wallet-base/src/signing-utils.ts:474](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L474)
 
 ___
 
@@ -199,7 +200,7 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:60](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L60)
+[wallets/wallet-base/src/signing-utils.ts:61](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L61)
 
 ___
 
@@ -219,7 +220,7 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:544](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L544)
+[wallets/wallet-base/src/signing-utils.ts:546](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L546)
 
 ___
 
@@ -239,7 +240,7 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:900](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L900)
+[wallets/wallet-base/src/signing-utils.ts:908](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L908)
 
 ___
 
@@ -259,7 +260,7 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:914](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L914)
+[wallets/wallet-base/src/signing-utils.ts:922](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L922)
 
 ___
 
@@ -279,7 +280,7 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:906](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L906)
+[wallets/wallet-base/src/signing-utils.ts:914](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L914)
 
 ___
 
@@ -299,7 +300,27 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:894](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L894)
+[wallets/wallet-base/src/signing-utils.ts:896](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L896)
+
+___
+
+### handleStringNumber
+
+▸ **handleStringNumber**(`n`): `string`
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `n` | `Uint8Array` |
+
+#### Returns
+
+`string`
+
+#### Defined in
+
+[wallets/wallet-base/src/signing-utils.ts:902](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L902)
 
 ___
 
@@ -319,7 +340,7 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:331](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L331)
+[wallets/wallet-base/src/signing-utils.ts:333](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L333)
 
 ___
 
@@ -339,7 +360,7 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:313](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L313)
+[wallets/wallet-base/src/signing-utils.ts:315](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L315)
 
 ___
 
@@ -360,7 +381,7 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:843](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L843)
+[wallets/wallet-base/src/signing-utils.ts:845](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L845)
 
 ___
 
@@ -380,7 +401,7 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:503](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L503)
+[wallets/wallet-base/src/signing-utils.ts:505](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L505)
 
 ___
 
@@ -400,7 +421,7 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:115](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L115)
+[wallets/wallet-base/src/signing-utils.ts:116](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L116)
 
 ___
 
@@ -428,27 +449,27 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:885](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L885)
+[wallets/wallet-base/src/signing-utils.ts:887](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L887)
 
 ___
 
 ### stringNumberOrBNToHex
 
-▸ **stringNumberOrBNToHex**(`num?`): `StrongAddress`
+▸ **stringNumberOrBNToHex**(`num?`): `Hex`
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `num?` | `string` \| `number` \| `BN` |
+| `num?` | `string` \| `number` \| `bigint` \| `BN` |
 
 #### Returns
 
-`StrongAddress`
+`Hex`
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:99](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L99)
+[wallets/wallet-base/src/signing-utils.ts:100](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L100)
 
 ___
 
@@ -470,7 +491,7 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:853](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L853)
+[wallets/wallet-base/src/signing-utils.ts:855](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L855)
 
 ___
 
@@ -492,4 +513,4 @@ ___
 
 #### Defined in
 
-[wallets/wallet-base/src/signing-utils.ts:862](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L862)
+[wallets/wallet-base/src/signing-utils.ts:864](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/signing-utils.ts#L864)
