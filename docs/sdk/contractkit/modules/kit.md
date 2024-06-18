@@ -65,11 +65,7 @@ options to pass to the Web3 HttpProvider constructor
 
 #### Defined in
 
-<<<<<<< HEAD
-[packages/sdk/contractkit/src/kit.ts:48](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L48)
-=======
-[packages/sdk/contractkit/src/kit.ts:46](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L46)
->>>>>>> l2-integrate
+[packages/sdk/contractkit/src/kit.ts:47](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L47)
 
 ___
 
@@ -92,11 +88,7 @@ Creates a new instance of the `ContractKit` with a web3 instance
 
 #### Defined in
 
-<<<<<<< HEAD
-[packages/sdk/contractkit/src/kit.ts:68](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L68)
-=======
-[packages/sdk/contractkit/src/kit.ts:66](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L66)
->>>>>>> l2-integrate
+[packages/sdk/contractkit/src/kit.ts:67](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L67)
 
 ___
 
@@ -124,8 +116,4 @@ wallet to reuse or add a wallet different than the default (example ledger-walle
 
 #### Defined in
 
-<<<<<<< HEAD
-[packages/sdk/contractkit/src/kit.ts:59](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L59)
-=======
-[packages/sdk/contractkit/src/kit.ts:57](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L57)
->>>>>>> l2-integrate
+[packages/sdk/contractkit/src/kit.ts:58](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L58)

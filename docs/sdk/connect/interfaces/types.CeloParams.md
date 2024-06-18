@@ -21,7 +21,7 @@
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:14](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L14)
+[packages/sdk/connect/src/types.ts:15](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L15)
 
 ___
 
@@ -31,7 +31,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L23)
+[packages/sdk/connect/src/types.ts:24](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L24)
 
 ___
 
@@ -41,14 +41,14 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:19](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L19)
+[packages/sdk/connect/src/types.ts:20](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L20)
 
 ___
 
 ### maxFeeInFeeCurrency
 
-• `Optional` **maxFeeInFeeCurrency**: \`0x$\{string}\`
+• `Optional` **maxFeeInFeeCurrency**: `string` \| `bigint` \| `BN`
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:15](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L15)
+[packages/sdk/connect/src/types.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L16)

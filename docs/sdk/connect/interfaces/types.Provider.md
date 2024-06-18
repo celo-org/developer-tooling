@@ -33,4 +33,4 @@
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:171](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L171)
+[packages/sdk/connect/src/types.ts:172](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L172)

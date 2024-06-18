@@ -29,7 +29,6 @@
 - [test-utils/setup.global](modules/test_utils_setup_global.md)
 - [test-utils/teardown.global](modules/test_utils_teardown_global.md)
 - [test-utils/utils](modules/test_utils_utils.md)
-- [utils/estimateMaxFeeInToken](modules/utils_estimateMaxFeeInToken.md)
 - [utils/getParsedSignatureOfAddress](modules/utils_getParsedSignatureOfAddress.md)
 - [versions](modules/versions.md)
 - [web3-contract-cache](modules/web3_contract_cache.md)
