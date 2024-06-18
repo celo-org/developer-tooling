@@ -253,7 +253,7 @@ export class ContractKit {
       const maxFeeInFeeCurrency = await this.estimateMaxFeeInFeeToken({
         feeCurrency: tx.feeCurrency,
         gasLimit: BigInt(tx.gas),
-        maxFeePerGas: BigInt(maxPriorityFeePerGas),
+        maxFeePerGas: BigInt(maxFeePerGas),
       })
 
       tx.maxFeeInFeeCurrency = maxFeeInFeeCurrency.toString(10)
@@ -279,10 +279,15 @@ export class ContractKit {
     maxFeePerGas: bigint
     feeCurrency: StrongAddress
   }) {
+    // 2 percent wriggle room
+    const slippage = BigInt(102) / BigInt(100)
     const maxGasFeesInCELO = gasLimit * maxFeePerGas
     const fcd = await this.contracts.getFeeCurrencyDirectory()
     const { numerator: ratioTOKEN, denominator: ratioCELO } = await fcd.getExchangeRate(feeCurrency)
-    return (maxGasFeesInCELO * BigInt(ratioCELO.toString(10))) / BigInt(ratioTOKEN.toString(10))
+    return (
+      ((maxGasFeesInCELO * BigInt(ratioCELO.toString(10))) / BigInt(ratioTOKEN.toString(10))) *
+      slippage
+    )
   }
 
   // *** NOTICE ***
