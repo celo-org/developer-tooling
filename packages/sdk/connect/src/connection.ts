@@ -532,7 +532,7 @@ function isEmpty(value: string | undefined | number | BN | bigint): value is und
     value === BigInt(0) ||
     (typeof value === 'string' &&
       (value.toLowerCase() === '0x' || value.toLowerCase() === '0x0')) ||
-    Web3.utils.toBN(value.toString()).eq(Web3.utils.toBN(0))
+    Web3.utils.toBN(value.toString(10)).eq(Web3.utils.toBN(0))
   )
 }
 export function isPresent(
