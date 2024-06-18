@@ -237,15 +237,20 @@ testWithAnvil('kit', (web3) => {
         })
       })
       describe('when gas is missing', () => {
-        it('throws gas required error', () => {
+        it('fills the gas and works as normal', () => {
           expect(
-            // @ts-expect-error gas should be missing
             kit.populateMaxFeeInToken({
               feeCurrency: feeToken,
             })
-          ).rejects.toMatchInlineSnapshot(
-            `[Error: The estimated gas is required to calculate maxFeeInFeeCurrency]`
-          )
+          ).resolves.toMatchInlineSnapshot(`
+            {
+              "feeCurrency": "0x2A3733dBc31980f02b12135C809b5da33BF3a1e9",
+              "gas": 53001,
+              "maxFeeInFeeCurrency": "53001000000000",
+              "maxFeePerGas": "2000000000",
+              "maxPriorityFeePerGas": "1000000000",
+            }
+          `)
         })
       })
       describe('when maxFeePerFeeCurrency exists', () => {

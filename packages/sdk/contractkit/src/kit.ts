@@ -233,32 +233,30 @@ export class ContractKit {
    *
    * @param tx.gas is required
    */
-  async populateMaxFeeInToken(
-    tx: CeloTx & Pick<Required<CeloTx>, 'gas' | 'feeCurrency'>
-  ): Promise<CeloTx> {
+  async populateMaxFeeInToken(tx: CeloTx & Pick<Required<CeloTx>, 'feeCurrency'>): Promise<CeloTx> {
     if (!(await isCel2(this.connection.web3))) {
       throw new Error("Can't populate `maxFeeInFeeCurrency` if not on a CEL2 network")
     }
 
-    if (!isPresent(tx.gas)) {
-      throw new Error('The estimated gas is required to calculate maxFeeInFeeCurrency')
-    }
-
     if (isPresent(tx.feeCurrency) && !isPresent(tx.maxFeeInFeeCurrency)) {
+      if (!isPresent(tx.gas)) {
+        tx.gas = await this.connection.estimateGas(tx)
+      }
+
       // Force maxFeePerGas and maxPriorityFeePerGas to be expressed in CELO
       const [maxFeePerGas, maxPriorityFeePerGas] = await Promise.all([
         this.connection.gasPrice(),
         await this.connection.rpcCaller.call('eth_maxPriorityFeePerGas', []).then((x) => x.result),
       ])
-      tx.maxFeePerGas = maxFeePerGas
-      tx.maxPriorityFeePerGas = maxPriorityFeePerGas
+      tx.maxFeePerGas = new BigNumber(maxFeePerGas).toString(10)
+      tx.maxPriorityFeePerGas = new BigNumber(maxPriorityFeePerGas).toString(10)
       const maxFeeInFeeCurrency = await this.estimateMaxFeeInFeeToken({
         feeCurrency: tx.feeCurrency,
         gasLimit: BigInt(tx.gas),
         maxFeePerGas: BigInt(maxPriorityFeePerGas),
       })
 
-      tx.maxFeeInFeeCurrency = maxFeeInFeeCurrency
+      tx.maxFeeInFeeCurrency = maxFeeInFeeCurrency.toString(10)
     }
 
     return tx
@@ -284,7 +282,6 @@ export class ContractKit {
     const maxGasFeesInCELO = gasLimit * maxFeePerGas
     const fcd = await this.contracts.getFeeCurrencyDirectory()
     const { numerator: ratioTOKEN, denominator: ratioCELO } = await fcd.getExchangeRate(feeCurrency)
-
     return (maxGasFeesInCELO * BigInt(ratioCELO.toString(10))) / BigInt(ratioTOKEN.toString(10))
   }
 
