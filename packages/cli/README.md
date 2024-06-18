@@ -23,7 +23,7 @@ Please use GitHub to:
 
 💬 [Ask a question](https://github.com/celo-org/developer-tooling/discussions)
 
-✨ [Suggest a feature](httpsi//github.com/celo-org/developer-tooling/issues/new/choose)
+✨ [Suggest a feature](https://github.com/celo-org/developer-tooling/issues/new/choose)
 
 🧑‍💻 [Contribute!](/CONTRIBUTING.md)
 
@@ -58,6 +58,16 @@ Use `yarn build` to compile the CLI.
 ### Generate docs
 
 Use `yarn docs` to populate `packages/docs` with generated documentation. Generated files should be checked in, and CI will fail if CLI modifications cause changes in the docs which were not checked in.
+
+### Testing
+
+We use both ganache and anvil for testing. You'll need [foundry](https://book.getfoundry.sh/getting-started/installation) installed on your machine.
+
+To run tests run the following command:
+
+```bash
+yarn workspace @celo/celocli test
+```
 
 ### Known build issues on Linux
 

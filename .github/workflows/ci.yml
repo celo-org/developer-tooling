@@ -204,13 +204,6 @@ jobs:
       id-token: write
       contents: read
     needs: [install-dependencies]
-    if: |
-
-      github.base_ref == 'master' ||  contains(github.base_ref, 'release') ||
-      contains(needs.install-dependencies.outputs.all_modified_files, 'packages/sdk') ||
-      contains(needs.install-dependencies.outputs.all_modified_files, ',package.json') ||
-      contains(needs.install-dependencies.outputs.all_modified_files, ',yarn.lock') ||
-      false
     steps:
       - uses: actions/checkout@v4
       - name: Sync workspace
@@ -233,24 +226,20 @@ jobs:
       id-token: write
       contents: read
     needs: [install-dependencies]
-    if: |
-
-      github.base_ref == 'master' || contains(github.base_ref, 'staging') || contains(github.base_ref, 'production') ||
-      contains(needs.install-dependencies.outputs.all_modified_files, 'packages/cli') ||
-      contains(needs.install-dependencies.outputs.all_modified_files, 'packages/sdk') ||
-      contains(needs.install-dependencies.outputs.all_modified_files, 'packages/typescript') ||
-      contains(needs.install-dependencies.outputs.all_modified_files, ',package.json') ||
-      contains(needs.install-dependencies.outputs.all_modified_files, ',yarn.lock') ||
-      false
     steps:
       - uses: actions/checkout@v4
       - name: Sync workspace
         uses: ./.github/actions/sync-workspace
         with:
           artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: "nightly-f625d0fa7c51e65b4bf1e8f7931cd1c6e2e285e9"
+      # NODE_OPTIONS="--experimental-vm-modules" is needed because @viem/anvil uses dynamic imports
       - name: Run tests
         run: |
-          yarn workspace @celo/celocli test --coverage
+          NODE_OPTIONS="--experimental-vm-modules" yarn workspace @celo/celocli test --coverage
       - name: Verify that a new account can be created
         run: |
           yarn workspace @celo/celocli run celocli account:new

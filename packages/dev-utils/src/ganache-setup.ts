@@ -2,9 +2,8 @@ import * as fs from 'fs-extra'
 import * as ganache from 'ganache'
 import * as path from 'path'
 import * as targz from 'targz'
+import { TEST_BALANCE, TEST_GAS_LIMIT, TEST_GAS_PRICE, TEST_MNEMONIC } from './test-utils'
 
-/* eslint no-console: 0 */ // --> OFF
-const MNEMONIC = 'concert load couple harbor equip island argue ramp clarify fence smart topic'
 export const ACCOUNT_PRIVATE_KEYS = [
   '0xf2f48ee19680706196e2e339e5da3491186e0c4c5030670656b0e0164837257d',
   '0x5d862464fe9303452126c8bc94274b8c5f9874cbd219789b3eb2128075a76f72',
@@ -67,10 +66,10 @@ function launchServer(opts: { verbose?: boolean; from_targz?: boolean }, chain?:
       }
 
   const server = ganache.server({
-    wallet: { mnemonic: MNEMONIC, defaultBalance: 1000000 },
+    wallet: { mnemonic: TEST_MNEMONIC, defaultBalance: TEST_BALANCE },
     logging: { logger: { log: logFn } },
     database: { dbPath: chain },
-    miner: { blockGasLimit: 20000000, defaultGasPrice: 0 },
+    miner: { blockGasLimit: TEST_GAS_LIMIT, defaultGasPrice: TEST_GAS_PRICE },
     chain: { networkId: 1101, chainId: 1, allowUnlimitedContractSize: true, hardfork: 'istanbul' },
   })
 
