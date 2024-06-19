@@ -72,7 +72,7 @@ Signer.computeSharedSecret
 
 #### Defined in
 
-[wallet-ledger/src/ledger-signer.ts:200](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-signer.ts#L200)
+[wallet-ledger/src/ledger-signer.ts:197](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-signer.ts#L197)
 
 ___
 
@@ -96,7 +96,7 @@ Signer.decrypt
 
 #### Defined in
 
-[wallet-ledger/src/ledger-signer.ts:194](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-signer.ts#L194)
+[wallet-ledger/src/ledger-signer.ts:191](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-signer.ts#L191)
 
 ___
 
@@ -138,7 +138,7 @@ Signer.signPersonalMessage
 
 #### Defined in
 
-[wallet-ledger/src/ledger-signer.ts:89](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-signer.ts#L89)
+[wallet-ledger/src/ledger-signer.ts:86](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-signer.ts#L86)
 
 ___
 
@@ -187,4 +187,4 @@ Signer.signTypedData
 
 #### Defined in
 
-[wallet-ledger/src/ledger-signer.ts:109](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-signer.ts#L109)
+[wallet-ledger/src/ledger-signer.ts:106](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-signer.ts#L106)

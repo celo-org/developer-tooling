@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[utils/timezone.ts:12](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/utils/timezone.ts#L12)
+[src/utils/timezone.ts:12](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/utils/timezone.ts#L12)
 
 ___
 
@@ -29,4 +29,4 @@ ___
 
 #### Defined in
 
-[utils/timezone.ts:13](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/utils/timezone.ts#L13)
+[src/utils/timezone.ts:13](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/utils/timezone.ts#L13)

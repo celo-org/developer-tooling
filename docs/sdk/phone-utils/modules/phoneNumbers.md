@@ -40,7 +40,7 @@
 
 #### Defined in
 
-[packages/sdk/phone-utils/src/phoneNumbers.ts:239](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/phoneNumbers.ts#L239)
+[phone-utils/src/phoneNumbers.ts:239](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/phoneNumbers.ts#L239)
 
 ## Functions
 
@@ -60,7 +60,7 @@
 
 #### Defined in
 
-[packages/sdk/phone-utils/src/phoneNumbers.ts:12](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/phoneNumbers.ts#L12)
+[phone-utils/src/phoneNumbers.ts:12](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/phoneNumbers.ts#L12)
 
 ___
 
@@ -80,7 +80,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/phone-utils/src/phoneNumbers.ts:58](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/phoneNumbers.ts#L58)
+[phone-utils/src/phoneNumbers.ts:58](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/phoneNumbers.ts#L58)
 
 ___
 
@@ -101,7 +101,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/phone-utils/src/phoneNumbers.ts:48](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/phoneNumbers.ts#L48)
+[phone-utils/src/phoneNumbers.ts:48](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/phoneNumbers.ts#L48)
 
 ___
 
@@ -121,7 +121,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/phone-utils/src/phoneNumbers.ts:69](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/phoneNumbers.ts#L69)
+[phone-utils/src/phoneNumbers.ts:69](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/phoneNumbers.ts#L69)
 
 ___
 
@@ -142,7 +142,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/phone-utils/src/phoneNumbers.ts:74](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/phoneNumbers.ts#L74)
+[phone-utils/src/phoneNumbers.ts:74](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/phoneNumbers.ts#L74)
 
 ___
 
@@ -164,7 +164,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/phone-utils/src/phoneNumbers.ts:211](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/phoneNumbers.ts#L211)
+[phone-utils/src/phoneNumbers.ts:211](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/phoneNumbers.ts#L211)
 
 ___
 
@@ -184,7 +184,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/phone-utils/src/phoneNumbers.ts:24](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/phoneNumbers.ts#L24)
+[phone-utils/src/phoneNumbers.ts:24](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/phoneNumbers.ts#L24)
 
 ___
 
@@ -204,7 +204,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/phone-utils/src/phoneNumbers.ts:36](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/phoneNumbers.ts#L36)
+[phone-utils/src/phoneNumbers.ts:36](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/phoneNumbers.ts#L36)
 
 ___
 
@@ -224,7 +224,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/phone-utils/src/phoneNumbers.ts:84](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/phoneNumbers.ts#L84)
+[phone-utils/src/phoneNumbers.ts:84](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/phoneNumbers.ts#L84)
 
 ___
 
@@ -245,4 +245,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/phone-utils/src/phoneNumbers.ts:96](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/phoneNumbers.ts#L96)
+[phone-utils/src/phoneNumbers.ts:96](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/phoneNumbers.ts#L96)

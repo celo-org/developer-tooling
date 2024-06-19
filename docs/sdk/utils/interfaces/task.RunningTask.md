@@ -35,7 +35,7 @@ Indicates wether the task is running
 
 #### Defined in
 
-packages/sdk/base/lib/task.d.ts:11
+base/lib/task.d.ts:11
 
 ___
 
@@ -51,4 +51,4 @@ Flag task to be stopped. Might not be inmediate
 
 #### Defined in
 
-packages/sdk/base/lib/task.d.ts:9
+base/lib/task.d.ts:9

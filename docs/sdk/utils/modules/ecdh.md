@@ -31,7 +31,7 @@
 
 #### Defined in
 
-[packages/sdk/utils/src/ecdh.ts:4](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecdh.ts#L4)
+[utils/src/ecdh.ts:4](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecdh.ts#L4)
 
 ___
 
@@ -51,7 +51,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/ecdh.ts:21](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecdh.ts#L21)
+[utils/src/ecdh.ts:21](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecdh.ts#L21)
 
 ___
 
@@ -71,7 +71,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/ecdh.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecdh.ts#L27)
+[utils/src/ecdh.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecdh.ts#L27)
 
 ___
 
@@ -91,7 +91,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/ecdh.ts:13](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecdh.ts#L13)
+[utils/src/ecdh.ts:13](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecdh.ts#L13)
 
 ___
 
@@ -111,4 +111,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/ecdh.ts:32](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecdh.ts#L32)
+[utils/src/ecdh.ts:32](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecdh.ts#L32)

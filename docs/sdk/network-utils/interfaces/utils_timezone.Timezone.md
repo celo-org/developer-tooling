@@ -21,7 +21,7 @@
 
 #### Defined in
 
-[utils/timezone.ts:22](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/utils/timezone.ts#L22)
+[src/utils/timezone.ts:22](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/utils/timezone.ts#L22)
 
 ___
 
@@ -31,7 +31,7 @@ ___
 
 #### Defined in
 
-[utils/timezone.ts:21](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/utils/timezone.ts#L21)
+[src/utils/timezone.ts:21](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/utils/timezone.ts#L21)
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 #### Defined in
 
-[utils/timezone.ts:20](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/utils/timezone.ts#L20)
+[src/utils/timezone.ts:20](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/utils/timezone.ts#L20)
 
 ___
 
@@ -51,4 +51,4 @@ ___
 
 #### Defined in
 
-[utils/timezone.ts:19](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/utils/timezone.ts#L19)
+[src/utils/timezone.ts:19](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/utils/timezone.ts#L19)
