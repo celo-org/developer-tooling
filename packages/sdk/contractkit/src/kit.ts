@@ -280,8 +280,9 @@ export class ContractKit {
     feeCurrency: StrongAddress
   }) {
     const maxGasFeesInCELO = gasLimit * maxFeePerGas
-    const fcd = await this.contracts.getFeeCurrencyDirectory()
-    const { numerator: ratioTOKEN, denominator: ratioCELO } = await fcd.getExchangeRate(feeCurrency)
+    const feeCurrencyDirectoryWrapper = await this.contracts.getFeeCurrencyDirectory()
+    const { numerator: ratioTOKEN, denominator: ratioCELO } =
+      await feeCurrencyDirectoryWrapper.getExchangeRate(feeCurrency)
 
     return (
       // convert from celo to token and add 2 percent wriggle room, 102/100 you cant pre calculate this as it will just be 1 then
