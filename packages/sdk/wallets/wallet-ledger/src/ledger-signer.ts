@@ -1,7 +1,7 @@
 import { ensureLeading0x, trimLeading0x } from '@celo/base/lib/address'
 import { RLPEncodedTx, Signer } from '@celo/connect'
 import { EIP712TypedData, structHash } from '@celo/utils/lib/sign-typed-data-utils'
-import { LegacyEncodedTx, chainIdTransformationForSigning } from '@celo/wallet-base'
+import { LegacyEncodedTx } from '@celo/wallet-base'
 import * as ethUtil from '@ethereumjs/util'
 import { TransportStatusError } from '@ledgerhq/errors'
 import Ledger from '@ledgerhq/hw-app-eth'
@@ -63,10 +63,7 @@ export class LedgerSigner implements Signer {
       }
 
       return {
-        v:
-          encodedTx.type === 'ethereum-legacy' || encodedTx.type === 'celo-legacy'
-            ? _v + chainIdTransformationForSigning(encodedTx.transaction.chainId)
-            : _v,
+        v: _v,
         r: ethUtil.toBuffer(ensureLeading0x(signature.r)),
         s: ethUtil.toBuffer(ensureLeading0x(signature.s)),
       }

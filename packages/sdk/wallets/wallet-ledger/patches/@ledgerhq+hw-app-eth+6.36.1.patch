@@ -1,5 +1,5 @@
 diff --git a/node_modules/@ledgerhq/hw-app-eth/lib/utils.js b/node_modules/@ledgerhq/hw-app-eth/lib/utils.js
-index 027089b..92f7d03 100644
+index 027089b..87f1a6f 100644
 --- a/node_modules/@ledgerhq/hw-app-eth/lib/utils.js
 +++ b/node_modules/@ledgerhq/hw-app-eth/lib/utils.js
 @@ -39,7 +39,7 @@ function maybeHexBuffer(str) {
@@ -11,7 +11,7 @@ index 027089b..92f7d03 100644
      const txType = VALID_TYPES.includes(rawTx[0]) ? rawTx[0] : null;
      const rlpData = txType === null ? rawTx : rawTx.slice(1);
      const rlpTx = (0, rlp_1.decode)(rlpData).map(hex => Buffer.from(hex.slice(2), "hex"));
-@@ -62,6 +62,15 @@ const decodeTxInfo = (rawTx) => {
+@@ -62,13 +62,22 @@ const decodeTxInfo = (rawTx) => {
              chainId: rlpTx[0],
          };
      }
@@ -25,5 +25,17 @@ index 027089b..92f7d03 100644
 +        }
 +    }
      else {
-         // Legacy tx
+-        // Legacy tx
++        // Celo-Legacy tx
          decodedTx = {
+-            data: rlpDecoded[5],
+-            to: rlpDecoded[3],
+-            // Default to 1 for non EIP 155 txs
+-            chainId: rlpTx.length > 6 ? rlpTx[6] : Buffer.from("0x01", "hex"),
++          data: rlpDecoded[8],
++          to: rlpDecoded[6],
++          // Default to 1 for non EIP 155 txs
++          chainId: rlpTx.length > 9 ? rlpTx[9] : Buffer.from("0x01", "hex"),
+         };
+     }
+     const chainIdSrc = decodedTx.chainId;

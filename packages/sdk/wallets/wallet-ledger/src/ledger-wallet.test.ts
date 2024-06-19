@@ -151,11 +151,9 @@ const mockLedgerImplementation = (mockForceValidation: () => void, version: stri
           ledgerAddresses[derivationPath].privateKey,
           addToV
         )
-        // NOTE: v is 27 or 28 or a big number from chainIdTransformation,
-        // but ledger returns 0 or 1, so we wanna make sure we match the same
-        // behaviour in our mock.
+
         return {
-          v: (v - addToV).toString(16),
+          v: v.toString(16),
           r: r.toString('hex'),
           s: s.toString('hex'),
         }
@@ -607,6 +605,22 @@ describe('LedgerWallet class', () => {
                 )
               })
               describe('on celo l1 with old app version', () => {
+                test(
+                  'physical device only',
+                  async () => {
+                    if (!hardwareWallet) {
+                      expect(true).toBeTruthy()
+                      return
+                    }
+                    const signedTx = await wallet.signTransaction(celoTransaction)
+                    const [_tx, recoveredSigner] = recoverTransaction(signedTx.raw)
+                    expect(normalizeAddressWith0x(recoveredSigner)).toEqual(
+                      normalizeAddressWith0x(knownAddress)
+                    )
+                  },
+                  TEST_TIMEOUT_IN_MS
+                )
+
                 test(
                   'succeeds with warning',
                   async () => {
