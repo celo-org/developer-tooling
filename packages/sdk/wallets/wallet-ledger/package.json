@@ -41,9 +41,11 @@
   },
   "devDependencies": {
     "@celo/contractkit": "^8.0.0",
+    "@celo/typescript": "workspace:^",
     "@ledgerhq/hw-transport-node-hid": "^6.28.5",
     "@noble/curves": "^1.4.0",
     "@noble/hashes": "^1.3.3",
+    "@types/debug": "^4.1.12",
     "ts-node": "^10.9.2",
     "web3": "1.10.4"
   },

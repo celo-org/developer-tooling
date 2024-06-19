@@ -28,6 +28,8 @@
   },
   "devDependencies": {
     "@celo/dev-utils": "0.0.3",
+    "@celo/typescript": "workspace:^",
+    "@types/debug": "^4.1.12",
     "fetch-mock": "9.10.4"
   },
   "engines": {

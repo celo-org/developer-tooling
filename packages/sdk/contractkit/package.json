@@ -44,6 +44,7 @@
     "@celo/celo-devchain": "^7.0.0",
     "@celo/dev-utils": "0.0.3",
     "@celo/odis-identifiers": "^1.0.0",
+    "@celo/typescript": "workspace:^",
     "@truffle/contract": "4.6.31",
     "@types/debug": "^4.1.5",
     "bn.js": "^5.1.0",

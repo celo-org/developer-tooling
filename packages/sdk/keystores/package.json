@@ -27,6 +27,7 @@
     "ethereumjs-wallet": "^1.0.1"
   },
   "devDependencies": {
+    "@celo/typescript": "workspace:^",
     "@types/rimraf": "3.0.2",
     "rimraf": "3.0.2"
   },

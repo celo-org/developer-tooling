@@ -30,6 +30,7 @@
     "web3-core-helpers": "1.10.4"
   },
   "devDependencies": {
+    "@celo/typescript": "workspace:^",
     "@tsconfig/recommended": "^1.0.3",
     "@types/fs-extra": "^8.1.0",
     "@types/targz": "1.0.0"
