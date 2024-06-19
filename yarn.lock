@@ -1758,7 +1758,7 @@ __metadata:
     bn.js: "npm:^5.1.0"
     cross-fetch: "npm:3.1.5"
     debug: "npm:^4.1.1"
-    fetch-mock: "npm:9.10.4"
+    fetch-mock: "npm:^9.11.0"
     fp-ts: "npm:2.1.1"
     ganache: "npm:@celo/ganache@7.8.0-unofficial.0"
     io-ts: "npm:2.0.1"
@@ -1905,7 +1905,7 @@ __metadata:
     "@types/debug": "npm:^4.1.12"
     cross-fetch: "npm:3.1.5"
     debug: "npm:^4.1.1"
-    fetch-mock: "npm:9.10.4"
+    fetch-mock: "npm:^9.11.0"
   languageName: unknown
   linkType: soft
 
@@ -1972,6 +1972,7 @@ __metadata:
     bn.js: "npm:4.11.9"
     cross-fetch: "npm:3.1.5"
     dotenv: "npm:^8.2.0"
+    fetch-mock: "npm:^9.11.0"
     qrcode: "npm:1.4.4"
     web3-eth-abi: "npm:1.10.4"
   languageName: unknown
@@ -7360,16 +7361,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-runtime@npm:^6.26.0":
-  version: 6.26.0
-  resolution: "babel-runtime@npm:6.26.0"
-  dependencies:
-    core-js: "npm:^2.4.0"
-    regenerator-runtime: "npm:^0.11.0"
-  checksum: 2cdf0f083b9598a43cdb11cbf1e7060584079a9a2230f06aec997ba81e887ef17fdcb5ad813a484ee099e06d2de0cea832bdd3011c06325acb284284c754ee8f
-  languageName: node
-  linkType: hard
-
 "balanced-match@npm:^1.0.0":
   version: 1.0.2
   resolution: "balanced-match@npm:1.0.2"
@@ -8893,13 +8884,6 @@ __metadata:
   dependencies:
     browserslist: "npm:^4.22.2"
   checksum: aa21ad2f0c946be7a8ecef92233bc003a38fa27e43a925fcd9b79e32ae49b879e0f5c23459ffc310df38ee547389b8e5e43a6a8be0b2369b9b9ebf3d04ae69b9
-  languageName: node
-  linkType: hard
-
-"core-js@npm:^2.4.0":
-  version: 2.6.12
-  resolution: "core-js@npm:2.6.12"
-  checksum: 7c624eb00a59c74c769d5d80f751f3bf1fc6201205b6562f27286ad5e00bbca1483f2f7eb0c2854b86f526ef5c7dc958b45f2ff536f8a31b8e9cb1a13a96efca
   languageName: node
   linkType: hard
 
@@ -10693,28 +10677,6 @@ __metadata:
     node-domexception: "npm:^1.0.0"
     web-streams-polyfill: "npm:^3.0.3"
   checksum: 5264ecceb5fdc19eb51d1d0359921f12730941e333019e673e71eb73921146dceabcb0b8f534582be4497312d656508a439ad0f5edeec2b29ab2e10c72a1f86b
-  languageName: node
-  linkType: hard
-
-"fetch-mock@npm:9.10.4":
-  version: 9.10.4
-  resolution: "fetch-mock@npm:9.10.4"
-  dependencies:
-    babel-runtime: "npm:^6.26.0"
-    core-js: "npm:^3.0.0"
-    debug: "npm:^4.1.1"
-    glob-to-regexp: "npm:^0.4.0"
-    is-subset: "npm:^0.1.1"
-    lodash.isequal: "npm:^4.5.0"
-    path-to-regexp: "npm:^2.2.1"
-    querystring: "npm:^0.2.0"
-    whatwg-url: "npm:^6.5.0"
-  peerDependencies:
-    node-fetch: "*"
-  peerDependenciesMeta:
-    node-fetch:
-      optional: true
-  checksum: 8b61a4b130cbf40ed5c0453196b23a9215337e4750387a01ddf7784599b01716490e30e55652f896dba804c4f486138819d1758db6aa87572eb93d89cc0f0c4c
   languageName: node
   linkType: hard
 
@@ -17511,13 +17473,6 @@ __metadata:
   dependencies:
     esprima: "npm:~4.0.0"
   checksum: 86880f97d54bb55bbf1c338e27fe28f18f52afc2f5afa808354a09a3777aa79b4f04e04844350d7fec80aa2d299196bde256b21f586e7e5d9b63494bd4a9db27
-  languageName: node
-  linkType: hard
-
-"regenerator-runtime@npm:^0.11.0":
-  version: 0.11.1
-  resolution: "regenerator-runtime@npm:0.11.1"
-  checksum: 64e62d78594c227e7d5269811bca9e4aa6451332adaae8c79a30cab0fa98733b1ad90bdb9d038095c340c6fad3b414a49a8d9e0b6b424ab7ff8f94f35704f8a2
   languageName: node
   linkType: hard
 
