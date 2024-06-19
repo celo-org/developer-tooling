@@ -18,9 +18,9 @@ testWithAnvil('network:whitelist cmd', (web3: Web3) => {
     await testLocallyWithWeb3Node(Whitelist, [], web3)
     expect(spy.mock.calls[0][0]).toMatchInlineSnapshot(`
       "Available currencies:
-      0x2A3733dBc31980f02b12135C809b5da33BF3a1e9 - Celo Brazilian Real (Celo Brazilian Real)
-      0xb7a33b4ad2B1f6b0a944232F5c71798d27Ad9272 - Celo Euro (Celo Euro)
-      0xe6774BE4E5f97dB10cAFB4c00C74cFbdCDc434D9 - Celo Dollar (Celo Dollar)"
+      0x4CB77DF8f44817DE26D2dE10813e98dd0aA6AE00 - Celo Euro (Celo Euro)
+      0x4E2EE025A14c76020D24a511AC1Ce7755537fACf - Celo Dollar (Celo Dollar)
+      0x5428F291b5d2555EA47EEaec4a12E434CF267cd2 - Celo Brazilian Real (Celo Brazilian Real)"
     `)
   })
 })

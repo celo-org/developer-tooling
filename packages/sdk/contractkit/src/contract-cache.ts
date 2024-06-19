@@ -22,7 +22,7 @@ import { GasPriceMinimumWrapper } from './wrappers/GasPriceMinimum'
 import { GoldTokenWrapper } from './wrappers/GoldTokenWrapper'
 import { GovernanceWrapper } from './wrappers/Governance'
 import { LockedGoldWrapper } from './wrappers/LockedGold'
-import { MintGoldScheduleWrapper } from './wrappers/MintGoldScheduleWrapper'
+import { MintCeloScheduleWrapper } from './wrappers/MintCeloScheduleWrapper'
 import { MultiSigWrapper } from './wrappers/MultiSig'
 import { OdisPaymentsWrapper } from './wrappers/OdisPayments'
 import { ReserveWrapper } from './wrappers/Reserve'
@@ -44,7 +44,7 @@ const WrapperFactories = {
   [CeloContract.GoldToken]: GoldTokenWrapper,
   // [CeloContract.Random]: RandomWrapper,
   // [CeloContract.Registry]: RegistryWrapper,
-  [CeloContract.MintGoldSchedule]: MintGoldScheduleWrapper,
+  [CeloContract.MintGoldSchedule]: MintCeloScheduleWrapper,
   [CeloContract.MultiSig]: MultiSigWrapper,
   [CeloContract.OdisPayments]: OdisPaymentsWrapper,
   [CeloContract.Reserve]: ReserveWrapper,
@@ -95,7 +95,7 @@ interface WrapperCacheMap {
   [CeloContract.GoldToken]?: GoldTokenWrapper
   [CeloContract.Governance]?: GovernanceWrapper
   [CeloContract.LockedGold]?: LockedGoldWrapper
-  [CeloContract.MintGoldSchedule]?: MintGoldScheduleWrapper
+  [CeloContract.MintGoldSchedule]?: MintCeloScheduleWrapper
   [CeloContract.MultiSig]?: MultiSigWrapper
   [CeloContract.OdisPayments]?: OdisPaymentsWrapper
   // [CeloContract.Random]?: RandomWrapper,
@@ -179,7 +179,7 @@ export class WrapperCache implements ContractCacheType {
   getLockedGold() {
     return this.getContract(CeloContract.LockedGold)
   }
-  getMintGoldSchedule() {
+  getMintCeloSchedule() {
     return this.getContract(CeloContract.MintGoldSchedule)
   }
   getMultiSig(address: string) {

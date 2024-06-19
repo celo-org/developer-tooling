@@ -7,10 +7,10 @@ type TargetTotalSupplyResponse = {
   carbonFundTargetRewards: string
 }
 
-type MintGoldScheduleConfig = {
+type MintCeloScheduleConfig = {
   carbonOffsetting: {
     fraction: string
-    fund: string
+    partner: string
   }
   communityReward: {
     fraction: string
@@ -24,12 +24,9 @@ type MintGoldScheduleConfig = {
   }
 }
 
-export class MintGoldScheduleWrapper extends BaseWrapper<MintGoldSchedule> {
-  communityRewardFund = proxyCall(
-    this.contract.methods.communityRewardFund,
-    undefined,
-    valueToString
-  )
+export class MintCeloScheduleWrapper extends BaseWrapper<MintGoldSchedule> {
+  carbonOffsettingPartner = proxyCall(this.contract.methods.carbonOffsettingPartner)
+  communityRewardFund = proxyCall(this.contract.methods.communityRewardFund)
 
   getCommunityRewardFraction = proxyCall(
     this.contract.methods.getCommunityRewardFraction,
@@ -62,25 +59,16 @@ export class MintGoldScheduleWrapper extends BaseWrapper<MintGoldSchedule> {
     })
   )
 
-  activate = proxySend(this.connection, this.contract.methods.activate)
   mintAccordingToSchedule = proxySend(
     this.connection,
     this.contract.methods.mintAccordingToSchedule
   )
-  setCommunityRewardFraction = proxySend(
-    this.connection,
-    this.contract.methods.setCommunityRewardFraction
-  )
-  setCarbonOffsettingFund = proxySend(
-    this.connection,
-    this.contract.methods.setCarbonOffsettingFund
-  )
 
-  async getConfig(): Promise<MintGoldScheduleConfig> {
+  async getConfig(): Promise<MintCeloScheduleConfig> {
     return {
       carbonOffsetting: {
         fraction: await this.getCarbonOffsettingFraction(),
-        fund: await this.communityRewardFund(),
+        partner: await this.carbonOffsettingPartner(),
       },
       communityReward: {
         fraction: await this.getCommunityRewardFraction(),
