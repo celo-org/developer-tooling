@@ -279,14 +279,15 @@ export class ContractKit {
     maxFeePerGas: bigint
     feeCurrency: StrongAddress
   }) {
-    // 2 percent wriggle room
-    const slippage = BigInt(102) / BigInt(100)
     const maxGasFeesInCELO = gasLimit * maxFeePerGas
     const fcd = await this.contracts.getFeeCurrencyDirectory()
     const { numerator: ratioTOKEN, denominator: ratioCELO } = await fcd.getExchangeRate(feeCurrency)
+
     return (
-      ((maxGasFeesInCELO * BigInt(ratioCELO.toString(10))) / BigInt(ratioTOKEN.toString(10))) *
-      slippage
+      // convert from celo to token and add 2 percent wriggle room, 102/100 you cant pre calculate this as it will just be 1 then
+      (((maxGasFeesInCELO * BigInt(ratioCELO.toString(10))) / BigInt(ratioTOKEN.toString(10))) *
+        BigInt(102)) /
+      BigInt(100)
     )
   }
 

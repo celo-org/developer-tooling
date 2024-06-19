@@ -246,7 +246,7 @@ testWithAnvil('kit', (web3) => {
             {
               "feeCurrency": "0x2A3733dBc31980f02b12135C809b5da33BF3a1e9",
               "gas": 53001,
-              "maxFeeInFeeCurrency": "106002000000000",
+              "maxFeeInFeeCurrency": "108122040000000",
               "maxFeePerGas": "2000000000",
               "maxPriorityFeePerGas": "1000000000",
             }
@@ -279,7 +279,7 @@ testWithAnvil('kit', (web3) => {
           ).resolves.toEqual({
             feeCurrency: '0x2A3733dBc31980f02b12135C809b5da33BF3a1e9',
             gas: '102864710371401736267367367',
-            maxFeeInFeeCurrency: '205729420742803472534734734000000000',
+            maxFeeInFeeCurrency: '209844009157659541985429428680000000',
             maxFeePerGas: '2000000000',
             maxPriorityFeePerGas: '1000000000',
           })
