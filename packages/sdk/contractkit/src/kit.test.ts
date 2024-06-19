@@ -1,6 +1,6 @@
 import { StrongAddress } from '@celo/base'
 import { CeloTx, CeloTxObject, CeloTxReceipt, PromiEvent } from '@celo/connect'
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+import { setupL2, testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
 import Web3 from 'web3'
 import {
@@ -230,11 +230,8 @@ testWithAnvil('kit', (web3) => {
       })
     })
     describe('when on cel2', () => {
-      beforeEach(() => {
-        // replace when setupL2 is in dev tils instead of in cli utils
-        jest.spyOn(web3.eth, 'getCode').mockImplementation(async () => {
-          return '0x2k2131325123PROXY'
-        })
+      beforeEach(async () => {
+        await setupL2(web3)
       })
       describe('when gas is missing', () => {
         it('fills the gas and works as normal', () => {
