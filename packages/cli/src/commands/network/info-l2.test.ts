@@ -1,6 +1,5 @@
 import { newKitFromWeb3 } from '@celo/contractkit'
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
-import { setupL2 } from '../../test-utils/chain-setup'
+import { setupL2, testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Info from './info'
 process.env.NO_SYNCCHECK = 'true'

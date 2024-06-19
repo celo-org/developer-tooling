@@ -1,5 +1,4 @@
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
-import { setupL2 } from '../../test-utils/chain-setup'
+import { setupL2, testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Parameters from './parameters'
 
@@ -13,13 +12,7 @@ testWithAnvil('network:parameters', (web3) => {
     expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
       [
         [
-          "Attestations: 
-      Failed to fetch config for contract Attestations: 
-      Error: Attestations not (yet) registered
-      BlockchainParameters: 
-        blockGasLimit: 13000000 (~1.300e+7)
-        intrinsicGasForAlternativeFeeCurrency: 50000 (~5.000e+4)
-      DowntimeSlasher: 
+          "DowntimeSlasher: 
         slashableDowntime: 5 minutes
         slashingIncentives: 
           penalty: 100000000000000000000 (~1.000e+20)
@@ -32,29 +25,11 @@ testWithAnvil('network:parameters', (web3) => {
           min: 1 
         maxNumGroupsVotedFor: 10 
         totalVotes: 0 
-      EpochRewards: 
-        carbonOffsetting: 
-          factor: 0.001 
-          partner: 0x0000000000000000000000000000000000000000
-        communityReward: 0.25 
-        rewardsMultiplier: 
-          max: 0 
-          overspendAdjustment: 5 
-          underspendAdjustment: 0.5 
-        targetValidatorEpochPayment: 205479452054794520547 (~2.055e+20)
-        targetVotingYield: 
-          adjustment: 0 
-          max: 0.0005 
-          target: 0 
       FeeCurrencyDirectory: 
         intrinsicGasForAlternativeFeeCurrency: 
           0x2A3733dBc31980f02b12135C809b5da33BF3a1e9: 21000 (~2.100e+4)
           0xb7a33b4ad2B1f6b0a944232F5c71798d27Ad9272: 21000 (~2.100e+4)
           0xe6774BE4E5f97dB10cAFB4c00C74cFbdCDc434D9: 21000 (~2.100e+4)
-      GasPriceMinimum: 
-        adjustmentSpeed: 0.5 
-        gasPriceMinimum: 100000000 (~1.000e+8)
-        targetDensity: 0.5 
       Governance: 
         concurrentProposals: 3 
         dequeueFrequency: 4 hours

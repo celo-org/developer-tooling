@@ -1,6 +1,5 @@
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+import { setupL2, testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import write from '@oclif/core/lib/cli-ux/write'
-import { setupL2 } from '../../test-utils/chain-setup'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Contracts from './contracts'
 process.env.NO_SYNCCHECK = 'true'

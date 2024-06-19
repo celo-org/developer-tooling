@@ -1,18 +1,15 @@
 import { StrongAddress } from '@celo/base'
-import { PROXY_ADMIN_ADDRESS } from '@celo/connect'
 import { ContractKit, StableToken } from '@celo/contractkit'
 import {
   DEFAULT_OWNER_ADDRESS,
   STABLES_ADDRESS,
   impersonateAccount,
-  setCode,
   stopImpersonatingAccount,
 } from '@celo/dev-utils/lib/anvil-test'
 import { mineBlocks } from '@celo/dev-utils/lib/ganache-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
-import { proxyBytecode } from './constants'
 
 export const GANACHE_EPOCH_SIZE = 100
 export const MIN_LOCKED_CELO_VALUE = new BigNumber(Web3.utils.toWei('10000', 'ether')) // 10k CELO
@@ -140,13 +137,6 @@ export const topUpWithToken = async (
     from: STABLES_ADDRESS,
   })
   await stopImpersonatingAccount(kit.web3, STABLES_ADDRESS)
-}
-
-// TODO remove this once no longer needed
-export const setupL2 = async (web3: Web3) => {
-  // Temporarily deploying any bytecode, so it's just there,
-  // isCel2 should hence return true as it just checks for bytecode existence
-  await setCode(web3, PROXY_ADMIN_ADDRESS, proxyBytecode)
 }
 
 // replace the original owner in the devchain, so we can act as the multisig owner

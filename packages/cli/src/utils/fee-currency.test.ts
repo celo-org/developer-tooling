@@ -2,9 +2,8 @@ import { isCel2 } from '@celo/connect'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { FeeCurrencyDirectoryWrapper } from '@celo/contractkit/lib/wrappers/FeeCurrencyDirectoryWrapper'
 import { FeeCurrencyWhitelistWrapper } from '@celo/contractkit/lib/wrappers/FeeCurrencyWhitelistWrapper'
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+import { setupL2, testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import Web3 from 'web3'
-import { setupL2 } from '../test-utils/chain-setup'
 import { getFeeCurrencyContractWrapper } from './fee-currency'
 
 testWithAnvil('getFeeCurrencyContractWrapper', async (web3: Web3) => {

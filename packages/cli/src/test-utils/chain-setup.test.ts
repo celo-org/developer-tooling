@@ -1,7 +1,6 @@
 import { isCel2 } from '@celo/connect'
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+import { setupL2, testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import Web3 from 'web3'
-import { setupL2 } from './chain-setup'
 
 testWithAnvil('chain setup', (web3: Web3) => {
   describe('setupL2()', () => {
