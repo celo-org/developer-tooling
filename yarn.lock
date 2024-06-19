@@ -1555,10 +1555,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/abis-12@npm:@celo/abis@12.0.0-canary.1":
-  version: 12.0.0-canary.1
-  resolution: "@celo/abis@npm:12.0.0-canary.1"
-  checksum: f7522236f0730af56d7fd2e4923d3830c5b382257548cc5566610c22ea821922889031e571d71c4d3bce1ad4942a6fedbdae9f882bd0ae0494edf3d4b9d8dd2c
+"@celo/abis-12@npm:@celo/abis@12.0.0-canary.2":
+  version: 12.0.0-canary.2
+  resolution: "@celo/abis@npm:12.0.0-canary.2"
+  checksum: 01d62e7b11b1d2f2b8feaaedbed1615b016b09b2903bcb48695de855399548f9ab150a38add32f2887ae6dba958586d49ee12c809b867699b2808de2ea8796e2
   languageName: node
   linkType: hard
 
@@ -1619,7 +1619,7 @@ __metadata:
     "@celo/contractkit": "npm:^8.0.0"
     "@celo/cryptographic-utils": "npm:^5.0.8"
     "@celo/dev-utils": "npm:0.0.3"
-    "@celo/devchain-anvil": "npm:0.0.11035"
+    "@celo/devchain-anvil": "npm:0.0.11007"
     "@celo/explorer": "npm:^5.0.10"
     "@celo/governance": "npm:^5.1.1"
     "@celo/identity": "npm:^5.1.2"
@@ -1750,7 +1750,7 @@ __metadata:
   resolution: "@celo/contractkit@workspace:packages/sdk/contractkit"
   dependencies:
     "@celo/abis": "npm:11.0.0"
-    "@celo/abis-12": "npm:@celo/abis@12.0.0-canary.1"
+    "@celo/abis-12": "npm:@celo/abis@12.0.0-canary.2"
     "@celo/base": "npm:^6.0.1"
     "@celo/celo-devchain": "npm:^7.0.0"
     "@celo/connect": "npm:^5.3.0"
@@ -1799,6 +1799,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/dev-utils@workspace:packages/dev-utils"
   dependencies:
+    "@celo/connect": "npm:^5.3.0"
     "@tsconfig/recommended": "npm:^1.0.3"
     "@types/fs-extra": "npm:^8.1.0"
     "@types/targz": "npm:1.0.0"
@@ -1813,10 +1814,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/devchain-anvil@npm:0.0.11035":
-  version: 0.0.11035
-  resolution: "@celo/devchain-anvil@npm:0.0.11035"
-  checksum: 0666d82518df32cf446d1ae3e015fff180afe2a6eccdefb1f4060f1ca9c6408a0c0d27b72a5b0803a1fcbc45100ca1876329fd5cd44bf96494b3478e39fba068
+"@celo/devchain-anvil@npm:0.0.11007":
+  version: 0.0.11007
+  resolution: "@celo/devchain-anvil@npm:0.0.11007"
+  checksum: 08ff1904363969996e5b747781c317c45150a6ddee4868ae6aae6e515114ebb0b953a0abaecce1c2f7550544facc53beaf0081b8dfdfb5757ceece4e1c69e2e1
   languageName: node
   linkType: hard
 
