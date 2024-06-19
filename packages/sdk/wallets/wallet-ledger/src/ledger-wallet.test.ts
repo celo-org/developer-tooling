@@ -24,6 +24,7 @@ import { VerifyPublicKeyInput, createVerify } from 'crypto'
 import { readFileSync } from 'fs'
 import { dirname, join } from 'path'
 import Web3 from 'web3'
+import { rlpEncodedTx } from '../../wallet-base/lib'
 import { legacyLedgerPublicKeyHex } from './data'
 import { meetsVersionRequirements } from './ledger-utils'
 import { AddressValidation, LedgerWallet } from './ledger-wallet'
@@ -498,9 +499,7 @@ describe('LedgerWallet class', () => {
               'with same signer',
               async () => {
                 const signedTx: EncodedTransaction = await wallet.signTransaction(celoTransaction)
-                const [tx, recoveredSigner] = recoverTransaction(signedTx.raw)
-                console.log({ tx, recoveredSigner, knownAddress, otherAddress })
-                console.log(wallet.getAccounts())
+                const [_tx, recoveredSigner] = recoverTransaction(signedTx.raw)
                 expect(normalizeAddressWith0x(recoveredSigner)).toBe(
                   normalizeAddressWith0x(knownAddress)
                 )
@@ -525,7 +524,6 @@ describe('LedgerWallet class', () => {
                   feeCurrency: '0x' as const,
                   // data: '0xabcdef',
                 }
-                console.log(await wallet.ledger?.getAppConfiguration())
                 const signedTx: EncodedTransaction = await wallet.signTransaction(
                   celoTransactionZeroPrefix
                 )
@@ -873,5 +871,46 @@ describe('LedgerWallet class', () => {
         expect(mockForceValidation.mock.calls.length).toBe(1)
       })
     })
+  })
+})
+
+describe('patch-package @ledgerhq/hw-app-eth', () => {
+  test('was applied correctly', async () => {
+    const { decodeTxInfo } = await import('@ledgerhq/hw-app-eth/lib/utils')
+
+    const kit = newKit('https://alfajores-forno.celo-testnet.org')
+    const celoTransaction = {
+      from: ACCOUNT_ADDRESS1,
+      to: ACCOUNT_ADDRESS2,
+      chainId: CHAIN_ID,
+      value: Web3.utils.toWei('1', 'ether'),
+      nonce: 0,
+      gas: 99,
+      maxFeePerGas: 99,
+      maxPriorityFeePerGas: 99,
+      feeCurrency: (await kit.contracts.getStableToken(StableToken.cUSD)).address,
+    }
+    const serialized = rlpEncodedTx(celoTransaction)
+    const rawTx = Buffer.from(trimLeading0x(serialized.rlpEncode), 'hex')
+    let ledgerDecoded: ReturnType<typeof decodeTxInfo>
+    expect(() => {
+      ledgerDecoded = decodeTxInfo(rawTx)
+    }).not.toThrow(/invalid rlp data/)
+    expect(ledgerDecoded!.txType).toEqual(0x7b)
+    expect(ledgerDecoded!.chainId.toNumber()).toEqual(CHAIN_ID)
+    expect(ledgerDecoded!.decodedTx).toMatchInlineSnapshot(`
+      {
+        "chainId": {
+          "data": [
+            174,
+            243,
+          ],
+          "type": "Buffer",
+        },
+        "data": "0x",
+        "feeCurrency": "0x874069fa1eb16d44d622f2e0ca25eea172369bc1",
+        "to": "0x588e4b68193001e4d10928660ab4165b813717c0",
+      }
+    `)
   })
 })
