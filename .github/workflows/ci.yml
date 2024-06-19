@@ -90,6 +90,7 @@ jobs:
         id: verify-changed-files
         uses: tj-actions/verify-changed-files@v17
         with:
+          path: yarn.lock
           fail-if-changed: 'true'
           fail-message: 'Files changed during build. Please build locally and commit the changes.'
           files: |
