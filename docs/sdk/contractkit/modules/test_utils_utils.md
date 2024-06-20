@@ -28,7 +28,7 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/test-utils/utils.ts:50](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/test-utils/utils.ts#L50)
+[packages/sdk/contractkit/src/test-utils/utils.ts:51](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/test-utils/utils.ts#L51)
 
 ___
 
