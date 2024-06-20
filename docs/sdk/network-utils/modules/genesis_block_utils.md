@@ -20,4 +20,4 @@
 
 #### Defined in
 
-[src/genesis-block-utils.ts:5](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/genesis-block-utils.ts#L5)
+[genesis-block-utils.ts:5](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/genesis-block-utils.ts#L5)

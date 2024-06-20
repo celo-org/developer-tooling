@@ -43,7 +43,7 @@
 
 #### Defined in
 
-[src/genesis-block-utils.ts:22](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/genesis-block-utils.ts#L22)
+[genesis-block-utils.ts:22](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/genesis-block-utils.ts#L22)
 
 ___
 
@@ -67,4 +67,4 @@ along with the response data from Google api.
 
 #### Defined in
 
-[src/genesis-block-utils.ts:14](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/genesis-block-utils.ts#L14)
+[genesis-block-utils.ts:14](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/genesis-block-utils.ts#L14)
