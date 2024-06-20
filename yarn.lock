@@ -1636,7 +1636,7 @@ __metadata:
     "@types/fs-extra": "npm:^8.0.0"
     "@types/humanize-duration": "npm:^3.27.0"
     "@types/inquirer": "npm:^6.5.0"
-    "@types/ledgerhq__hw-transport-node-hid": "npm:^4.22.2"
+    "@types/ledgerhq__hw-transport-node-hid": "npm:^4.22.5"
     "@types/node": "npm:^18.7.16"
     "@types/prompts": "npm:^1.1.1"
     bignumber.js: "npm:9.0.0"
@@ -1647,13 +1647,13 @@ __metadata:
     ethers: "npm:5"
     fs-extra: "npm:^8.1.0"
     humanize-duration: "npm:^3.29.0"
-    jest: "npm:^29.0.2"
+    jest: "npm:^29.7.0"
     oclif: "npm:^4.3.4"
     path: "npm:^0.12.7"
     prettier: "npm:1.19.1"
     prompts: "npm:^2.0.1"
     randombytes: "npm:^2.0.1"
-    ts-jest: "npm:^29.0.0"
+    ts-jest: "npm:^29.1.5"
     ts-node: "npm:^10.9.1"
     typescript: "npm:5.3.3"
     web3: "npm:1.10.4"
@@ -1762,7 +1762,7 @@ __metadata:
     fp-ts: "npm:2.1.1"
     ganache: "npm:@celo/ganache@7.8.0-unofficial.0"
     io-ts: "npm:2.0.1"
-    jest: "npm:^29.0.2"
+    jest: "npm:^29.7.0"
     semver: "npm:^7.3.5"
     ts-node: "npm:^10.9.1"
     web3: "npm:1.10.4"
@@ -6081,14 +6081,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ledgerhq__hw-transport-node-hid@npm:^4.22.2":
-  version: 4.22.2
-  resolution: "@types/ledgerhq__hw-transport-node-hid@npm:4.22.2"
+"@types/ledgerhq__hw-transport-node-hid@npm:^4.22.5":
+  version: 4.22.5
+  resolution: "@types/ledgerhq__hw-transport-node-hid@npm:4.22.5"
   dependencies:
     "@types/ledgerhq__hw-transport": "npm:*"
     "@types/node": "npm:*"
     "@types/node-hid": "npm:*"
-  checksum: f8196906ad4102f59046b921693b8d93317d7f641fd03796bd07839d1cec48e6eff5a4f58f969f783a9ded9cd250e5b7009a89ea6528f1e8739ceb52b1f36f46
+  checksum: 4b9934009e8e5aa43ece0268661cec17e8238c50214caa9a8c196edabb3a41005092932cba3b30e06457ff5cc953bad26a59f4d7b7398884b691ab51bc18a97d
   languageName: node
   linkType: hard
 
@@ -8130,12 +8130,12 @@ __metadata:
     eslint-plugin-import: "npm:^2.29.1"
     eslint-plugin-unicorn: "npm:^50.0.1"
     husky: "npm:^8.0.0"
-    jest: "npm:^29.0.2"
+    jest: "npm:^29.7.0"
     patch-package: "npm:^8.0.0"
     prettier: "npm:^2.7.1"
     pretty-quick: "npm:^2.0.1"
     semver: "npm:7.5.2"
-    ts-jest: "npm:^29.0.0"
+    ts-jest: "npm:^29.1.5"
     ts-node: "npm:^10.9.1"
     tsconfig-paths: "npm:^3.8.0"
     typedoc: "npm:^0.25.7"
@@ -13218,7 +13218,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest@npm:^29.0.2":
+"jest@npm:^29.7.0":
   version: 29.7.0
   resolution: "jest@npm:29.7.0"
   dependencies:
@@ -19130,9 +19130,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-jest@npm:^29.0.0":
-  version: 29.1.1
-  resolution: "ts-jest@npm:29.1.1"
+"ts-jest@npm:^29.1.5":
+  version: 29.1.5
+  resolution: "ts-jest@npm:29.1.5"
   dependencies:
     bs-logger: "npm:0.x"
     fast-json-stable-stringify: "npm:2.x"
@@ -19144,12 +19144,15 @@ __metadata:
     yargs-parser: "npm:^21.0.1"
   peerDependencies:
     "@babel/core": ">=7.0.0-beta.0 <8"
+    "@jest/transform": ^29.0.0
     "@jest/types": ^29.0.0
     babel-jest: ^29.0.0
     jest: ^29.0.0
     typescript: ">=4.3 <6"
   peerDependenciesMeta:
     "@babel/core":
+      optional: true
+    "@jest/transform":
       optional: true
     "@jest/types":
       optional: true
@@ -19159,7 +19162,7 @@ __metadata:
       optional: true
   bin:
     ts-jest: cli.js
-  checksum: 30e8259baba95dd786e64f7c18b864e904598f3ba07911be4d9bd29ca9c3c0024bad4ccf8ec0abd2a2fa14b06622cbbadff1b3be822189c657196442d33ee6ca
+  checksum: 11a29a49130f1c9bef5aebe8007f6be3e630af6c2dea6b00ff5a86d649321854a43966b4990a43960d77a3f98d7a753b9b7e19c20c42a2d38341d6e67a3e48d1
   languageName: node
   linkType: hard
 
