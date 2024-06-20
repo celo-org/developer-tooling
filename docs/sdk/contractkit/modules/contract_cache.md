@@ -20,4 +20,4 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:71](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L71)
+[packages/sdk/contractkit/src/contract-cache.ts:73](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L73)

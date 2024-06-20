@@ -40,6 +40,8 @@
 
   ↳ [`GasPriceMinimumWrapper`](wrappers_GasPriceMinimum.GasPriceMinimumWrapper.md)
 
+  ↳ [`MintCeloScheduleWrapper`](wrappers_MintCeloScheduleWrapper.MintCeloScheduleWrapper.md)
+
   ↳ [`MultiSigWrapper`](wrappers_MultiSig.MultiSigWrapper.md)
 
   ↳ [`OdisPaymentsWrapper`](wrappers_OdisPayments.OdisPaymentsWrapper.md)

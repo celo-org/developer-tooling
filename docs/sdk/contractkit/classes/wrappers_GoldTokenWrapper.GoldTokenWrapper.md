@@ -253,6 +253,7 @@ ___
 | `Approval` | `ContractEvent`\<\{ `0`: `string` ; `1`: `string` ; `2`: `string` ; `owner`: `string` ; `spender`: `string` ; `value`: `string`  }\> |
 | `OwnershipTransferred` | `ContractEvent`\<\{ `0`: `string` ; `1`: `string` ; `newOwner`: `string` ; `previousOwner`: `string`  }\> |
 | `RegistrySet` | `ContractEvent`\<`string`\> |
+| `SetGoldTokenMintingScheduleAddress` | `ContractEvent`\<`string`\> |
 | `Transfer` | `ContractEvent`\<\{ `0`: `string` ; `1`: `string` ; `2`: `string` ; `from`: `string` ; `to`: `string` ; `value`: `string`  }\> |
 | `TransferComment` | `ContractEvent`\<`string`\> |
 | `allEvents` | (`options?`: `EventOptions`, `cb?`: `Callback`\<`EventLog`\>) => `EventEmitter` |
@@ -307,7 +308,7 @@ ___
 
 ### methodIds
 
-• **methodIds**: `Record`\<``"symbol"`` \| ``"name"`` \| ``"decimals"`` \| ``"initialized"`` \| ``"isOwner"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"getVersionNumber"`` \| ``"initialize"`` \| ``"approve"`` \| ``"transfer"`` \| ``"increaseAllowance"`` \| ``"decreaseAllowance"`` \| ``"mint"`` \| ``"transferWithComment"`` \| ``"burn"`` \| ``"transferFrom"`` \| ``"allowance"`` \| ``"balanceOf"`` \| ``"totalSupply"`` \| ``"circulatingSupply"`` \| ``"increaseSupply"`` \| ``"getBurnedAmount"``, `string`\>
+• **methodIds**: `Record`\<``"symbol"`` \| ``"name"`` \| ``"decimals"`` \| ``"initialized"`` \| ``"isOwner"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"getVersionNumber"`` \| ``"initialize"`` \| ``"approve"`` \| ``"isL2"`` \| ``"transfer"`` \| ``"increaseAllowance"`` \| ``"decreaseAllowance"`` \| ``"mint"`` \| ``"transferWithComment"`` \| ``"burn"`` \| ``"transferFrom"`` \| ``"allowance"`` \| ``"balanceOf"`` \| ``"totalSupply"`` \| ``"goldTokenMintingSchedule"`` \| ``"setGoldTokenMintingScheduleAddress"`` \| ``"increaseSupply"`` \| ``"circulatingSupply"`` \| ``"getBurnedAmount"``, `string`\>
 
 #### Inherited from
 
@@ -616,7 +617,7 @@ Contract getPastEvents
 
 | Name | Type |
 | :------ | :------ |
-| `event` | ``"OwnershipTransferred"`` \| ``"RegistrySet"`` \| ``"allEvents"`` \| ``"Approval"`` \| ``"Transfer"`` \| ``"TransferComment"`` |
+| `event` | ``"OwnershipTransferred"`` \| ``"RegistrySet"`` \| ``"allEvents"`` \| ``"Approval"`` \| ``"Transfer"`` \| ``"TransferComment"`` \| ``"SetGoldTokenMintingScheduleAddress"`` |
 | `options` | `PastEventOptions` |
 
 #### Returns

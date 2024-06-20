@@ -55,6 +55,7 @@
 - [wrappers/GoldTokenWrapper](modules/wrappers_GoldTokenWrapper.md)
 - [wrappers/Governance](modules/wrappers_Governance.md)
 - [wrappers/LockedGold](modules/wrappers_LockedGold.md)
+- [wrappers/MintCeloScheduleWrapper](modules/wrappers_MintCeloScheduleWrapper.md)
 - [wrappers/MultiSig](modules/wrappers_MultiSig.md)
 - [wrappers/OdisPayments](modules/wrappers_OdisPayments.md)
 - [wrappers/ReleaseGold](modules/wrappers_ReleaseGold.md)

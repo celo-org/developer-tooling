@@ -55,6 +55,7 @@
 | `Governance` | (`web3`: `default`, `address`: `string`) => `Governance` |
 | `LockedGold` | (`web3`: `default`, `address`: `string`) => `LockedGold` |
 | `MentoFeeHandlerSeller` | (`web3`: `default`, `address`: `string`) => `MentoFeeHandlerSeller` |
+| `MintGoldSchedule` | (`web3`: `default`, `address`: `string`) => `MintGoldSchedule` |
 | `MultiSig` | (`web3`: `default`, `address`: `string`) => `MultiSig` |
 | `OdisPayments` | (`web3`: `default`, `address`: `string`) => `OdisPayments` |
 | `Random` | (`web3`: `default`, `address`: `string`) => `Random` |
@@ -69,4 +70,4 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:39](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L39)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L38)

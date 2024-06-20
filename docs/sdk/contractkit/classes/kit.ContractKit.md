@@ -149,7 +149,7 @@ core contract's address registry
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:237](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L237)
+[packages/sdk/contractkit/src/kit.ts:260](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L260)
 
 • `set` **defaultAccount**(`address`): `void`
 
@@ -165,7 +165,7 @@ core contract's address registry
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:233](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L233)
+[packages/sdk/contractkit/src/kit.ts:256](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L256)
 
 ___
 
@@ -179,7 +179,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:253](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L253)
+[packages/sdk/contractkit/src/kit.ts:276](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L276)
 
 • `set` **defaultFeeCurrency**(`address`): `void`
 
@@ -195,7 +195,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:249](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L249)
+[packages/sdk/contractkit/src/kit.ts:272](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L272)
 
 ___
 
@@ -209,7 +209,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:245](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L245)
+[packages/sdk/contractkit/src/kit.ts:268](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L268)
 
 • `set` **gasInflationFactor**(`factor`): `void`
 
@@ -225,7 +225,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:241](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L241)
+[packages/sdk/contractkit/src/kit.ts:264](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L264)
 
 ___
 
@@ -239,7 +239,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:284](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L284)
+[packages/sdk/contractkit/src/kit.ts:307](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L307)
 
 ## Methods
 
@@ -259,7 +259,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:229](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L229)
+[packages/sdk/contractkit/src/kit.ts:252](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L252)
 
 ___
 
@@ -279,7 +279,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:220](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L220)
+[packages/sdk/contractkit/src/kit.ts:243](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L243)
 
 ___
 
@@ -293,7 +293,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:205](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L205)
+[packages/sdk/contractkit/src/kit.ts:219](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L219)
 
 ___
 
@@ -313,7 +313,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:210](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L210)
+[packages/sdk/contractkit/src/kit.ts:227](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L227)
 
 ___
 
@@ -327,7 +327,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:191](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L191)
+[packages/sdk/contractkit/src/kit.ts:203](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L203)
 
 ___
 
@@ -347,7 +347,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:215](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L215)
+[packages/sdk/contractkit/src/kit.ts:235](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L235)
 
 ___
 
@@ -415,7 +415,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:257](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L257)
+[packages/sdk/contractkit/src/kit.ts:280](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L280)
 
 ___
 
@@ -429,7 +429,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:261](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L261)
+[packages/sdk/contractkit/src/kit.ts:284](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L284)
 
 ___
 
@@ -449,7 +449,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:265](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L265)
+[packages/sdk/contractkit/src/kit.ts:288](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L288)
 
 ___
 
@@ -470,7 +470,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:269](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L269)
+[packages/sdk/contractkit/src/kit.ts:292](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L292)
 
 ___
 
@@ -496,7 +496,7 @@ Throws if supplied address is not a valid hexadecimal address
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:198](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L198)
+[packages/sdk/contractkit/src/kit.ts:210](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L210)
 
 ___
 
@@ -517,7 +517,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:276](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L276)
+[packages/sdk/contractkit/src/kit.ts:299](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L299)
 
 ___
 
@@ -531,4 +531,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:280](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L280)
+[packages/sdk/contractkit/src/kit.ts:303](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L303)
