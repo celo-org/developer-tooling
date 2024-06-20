@@ -1,5 +1,5 @@
 import { newGoldToken as newToken } from '@celo/abis-12/web3/GoldToken'
-import { newMintGoldSchedule as newCeloGoldSchedule } from '@celo/abis-12/web3/MintGoldSchedule'
+import { newMintGoldSchedule as newMintCeloSchedule } from '@celo/abis-12/web3/MintGoldSchedule'
 import { DEFAULT_OWNER_ADDRESS, withImpersonatedAccount } from '@celo/dev-utils/lib/anvil-test'
 import { mineBlocks } from '@celo/dev-utils/lib/ganache-test'
 import BigNumber from 'bignumber.js'
@@ -42,6 +42,7 @@ export const mineToNextEpoch = async (web3: Web3, epochSize: number = GANACHE_EP
   await mineBlocks(blocksUntilNextEpoch, web3)
 }
 
+// Arbitrary timestamp in the past needed by MintCeloSchedule contract during activation
 const L2_TIMESTAMP = new BigNumber(1715808537)
 
 // This method tries to mimic the logic in
@@ -53,7 +54,7 @@ export const activateMintCeloSchedule = async (kit: ContractKit) => {
     const tokenWrapper = await kit.contracts.getGoldToken()
     const accounts = await kit.web3.eth.getAccounts()
     const token = newToken(kit.web3, tokenWrapper.address)
-    const mintCeloSchedule = newCeloGoldSchedule(kit.web3, mintCeloScheduleWrapper.address)
+    const mintCeloSchedule = newMintCeloSchedule(kit.web3, mintCeloScheduleWrapper.address)
 
     // this (and other) methods are not exposed in wrappers, so we need to use proxySend
     // directly on methods provided by generated web3 files in @celo/abis package
