@@ -1028,7 +1028,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:^7.0.0, @babel/core@npm:^7.11.6, @babel/core@npm:^7.12.3":
+"@babel/core@npm:^7.11.6, @babel/core@npm:^7.12.3":
   version: 7.21.4
   resolution: "@babel/core@npm:7.21.4"
   dependencies:
@@ -1448,15 +1448,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.5.5":
-  version: 7.21.0
-  resolution: "@babel/runtime@npm:7.21.0"
-  dependencies:
-    regenerator-runtime: "npm:^0.13.11"
-  checksum: 35acd166298d57d14444396c33b3f0b76dbb82fd7440f38aa1605beb2ec9743a693b21730b4de4b85eaf36b0fc94c94bb0ebcd80e05409c36b24da27d458ba41
-  languageName: node
-  linkType: hard
-
 "@babel/runtime@npm:^7.20.1":
   version: 7.23.2
   resolution: "@babel/runtime@npm:7.23.2"
@@ -1472,6 +1463,15 @@ __metadata:
   dependencies:
     regenerator-runtime: "npm:^0.14.0"
   checksum: 3a8d61400c636d1ce3a42895a106cd4dfb4e9b88832a8a754a724c68652f821d7a46dce394305d7623f9f0d3597bf0a98aeb5f9c150ef60e14bbbf66caab4654
+  languageName: node
+  linkType: hard
+
+"@babel/runtime@npm:^7.5.5":
+  version: 7.21.0
+  resolution: "@babel/runtime@npm:7.21.0"
+  dependencies:
+    regenerator-runtime: "npm:^0.13.11"
+  checksum: 35acd166298d57d14444396c33b3f0b76dbb82fd7440f38aa1605beb2ec9743a693b21730b4de4b85eaf36b0fc94c94bb0ebcd80e05409c36b24da27d458ba41
   languageName: node
   linkType: hard
 
@@ -1622,7 +1622,7 @@ __metadata:
     "@celo/wallet-ledger": "npm:^5.2.0"
     "@celo/wallet-local": "npm:^5.2.0"
     "@ethereumjs/util": "npm:8.0.5"
-    "@ledgerhq/hw-transport-node-hid": "npm:^6.27.4"
+    "@ledgerhq/hw-transport-node-hid": "npm:^6.28.5"
     "@mento-protocol/mento-sdk": "npm:^0.2.2"
     "@oclif/core": "npm:^3.19.1"
     "@oclif/plugin-autocomplete": "npm:^3.0.5"
@@ -1758,7 +1758,7 @@ __metadata:
     bn.js: "npm:^5.1.0"
     cross-fetch: "npm:3.1.5"
     debug: "npm:^4.1.1"
-    fetch-mock: "npm:^9.11.0"
+    fetch-mock: "npm:^10.0.7"
     fp-ts: "npm:2.1.1"
     ganache: "npm:@celo/ganache@7.8.0-unofficial.0"
     io-ts: "npm:2.0.1"
@@ -1825,11 +1825,10 @@ __metadata:
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^6.0.1"
     "@types/debug": "npm:^4.1.12"
-    "@types/fetch-mock": "npm:^7.3.5"
     bignumber.js: "npm:9.0.0"
     cross-fetch: "npm:3.1.5"
     debug: "npm:^4.1.1"
-    fetch-mock: "npm:^9.11.0"
+    fetch-mock: "npm:^10.0.7"
     web3: "npm:1.10.4"
   languageName: unknown
   linkType: soft
@@ -1905,7 +1904,7 @@ __metadata:
     "@types/debug": "npm:^4.1.12"
     cross-fetch: "npm:3.1.5"
     debug: "npm:^4.1.1"
-    fetch-mock: "npm:^9.11.0"
+    fetch-mock: "npm:^10.0.7"
   languageName: unknown
   linkType: soft
 
@@ -1972,7 +1971,7 @@ __metadata:
     bn.js: "npm:4.11.9"
     cross-fetch: "npm:3.1.5"
     dotenv: "npm:^8.2.0"
-    fetch-mock: "npm:^9.11.0"
+    fetch-mock: "npm:^10.0.7"
     qrcode: "npm:1.4.4"
     web3-eth-abi: "npm:1.10.4"
   languageName: unknown
@@ -3562,18 +3561,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/devices@npm:^8.0.1":
-  version: 8.0.1
-  resolution: "@ledgerhq/devices@npm:8.0.1"
-  dependencies:
-    "@ledgerhq/errors": "npm:^6.12.4"
-    "@ledgerhq/logs": "npm:^6.10.1"
-    rxjs: "npm:6"
-    semver: "npm:^7.3.5"
-  checksum: f73f0a1ee0d532c60cb6cd2876167c93a7d76c7461a930b5dd1c701c669d9d87b9535c248d0cf7361717034bb7d62f202cffddc6d4354c6da01699dcd05b3bad
-  languageName: node
-  linkType: hard
-
 "@ledgerhq/devices@npm:^8.2.2":
   version: 8.2.2
   resolution: "@ledgerhq/devices@npm:8.2.2"
@@ -3610,13 +3597,6 @@ __metadata:
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
   checksum: b501039ca9ccf562117f2395b4f459881ad574b414c8e8983c400594a733fb85bdb0f8ef1a6ad39c2b0a27b18f706ed5d4146e387f3adb31ce0b1441891aa7d5
-  languageName: node
-  linkType: hard
-
-"@ledgerhq/errors@npm:^6.12.4":
-  version: 6.12.4
-  resolution: "@ledgerhq/errors@npm:6.12.4"
-  checksum: d38fad40cc994f201c3bb8b1245a4cbb016e25ed40b43fccb711d1232dc3c765287cc54ffe58c909f31ccdc27a8852a2116dcbb9c2944692a7369f4fc34d5271
   languageName: node
   linkType: hard
 
@@ -3678,19 +3658,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/hw-transport-node-hid-noevents@npm:^6.27.13":
-  version: 6.27.13
-  resolution: "@ledgerhq/hw-transport-node-hid-noevents@npm:6.27.13"
-  dependencies:
-    "@ledgerhq/devices": "npm:^8.0.1"
-    "@ledgerhq/errors": "npm:^6.12.4"
-    "@ledgerhq/hw-transport": "npm:^6.28.2"
-    "@ledgerhq/logs": "npm:^6.10.1"
-    node-hid: "npm:^2.1.2"
-  checksum: 6b17eefba428f3ba980e2c6b9b6c1f419af3f92f97d829ed00ef65339868c4fb305d7504a0a56eaae15e5024466522a2df7d5431ae15c91ca015c79f373111b7
-  languageName: node
-  linkType: hard
-
 "@ledgerhq/hw-transport-node-hid-noevents@npm:^6.29.5":
   version: 6.29.5
   resolution: "@ledgerhq/hw-transport-node-hid-noevents@npm:6.29.5"
@@ -3701,22 +3668,6 @@ __metadata:
     "@ledgerhq/logs": "npm:^6.12.0"
     node-hid: "npm:^2.1.2"
   checksum: f089bde9df64fd784ab77dab27289a593faf9e5d940422b96cad14f86ad14a410a591a7f2e401a3da3cdd0eae5e75f5040b49b0c6b185480d67a07ceccc50e15
-  languageName: node
-  linkType: hard
-
-"@ledgerhq/hw-transport-node-hid@npm:^6.27.4":
-  version: 6.27.13
-  resolution: "@ledgerhq/hw-transport-node-hid@npm:6.27.13"
-  dependencies:
-    "@ledgerhq/devices": "npm:^8.0.1"
-    "@ledgerhq/errors": "npm:^6.12.4"
-    "@ledgerhq/hw-transport": "npm:^6.28.2"
-    "@ledgerhq/hw-transport-node-hid-noevents": "npm:^6.27.13"
-    "@ledgerhq/logs": "npm:^6.10.1"
-    lodash: "npm:^4.17.21"
-    node-hid: "npm:^2.1.2"
-    usb: "npm:^1.7.0"
-  checksum: 5109c8e6f301288f88fb19e514c5fd8a530208e9ae851d68b7f035717f0417dd712adbe1ebb2279822aff7fb2e8362a41fabd1fad44b72e987777d5509883c3e
   languageName: node
   linkType: hard
 
@@ -3733,17 +3684,6 @@ __metadata:
     node-hid: "npm:^2.1.2"
     usb: "npm:2.9.0"
   checksum: 32c3b40af333e85a6f83e96ccc9bb2720e7b21508862759d3a8da9cbf27644514d30324cbcd817d5e73e7f5ed944115775cbfbb7cccf0f97fb79ae703e0e5f01
-  languageName: node
-  linkType: hard
-
-"@ledgerhq/hw-transport@npm:^6.28.2":
-  version: 6.28.2
-  resolution: "@ledgerhq/hw-transport@npm:6.28.2"
-  dependencies:
-    "@ledgerhq/devices": "npm:^8.0.1"
-    "@ledgerhq/errors": "npm:^6.12.4"
-    events: "npm:^3.3.0"
-  checksum: 38c32ac1707cbfa1336f1f352f3d55f89e4f72dcadc73be4821ca82ef0a9dd490158904a9cda19b1751fc921fe564c22ce48fe0408a8eba03235b35864acef94
   languageName: node
   linkType: hard
 
@@ -3778,13 +3718,6 @@ __metadata:
     rxjs: "npm:^7.8.1"
     utility-types: "npm:^3.10.0"
   checksum: ce07442185f6c6b23f75b2f4bef7de167f770175ae4fbff62ebc2e2c00f5859e0d5c2e764d23c98b453edd154da0c264ed751308cd6b6df0944087067c0939f2
-  languageName: node
-  linkType: hard
-
-"@ledgerhq/logs@npm:^6.10.1":
-  version: 6.10.1
-  resolution: "@ledgerhq/logs@npm:6.10.1"
-  checksum: 4dde46557d9daa6028f7040d26585aaa7260445212ad8348ae4a01463b7d76a1592dfc36921e47f5fc477c50b5d73e840070ac167e3cbe5b45123f36a4f96b08
   languageName: node
   linkType: hard
 
@@ -6018,13 +5951,6 @@ __metadata:
   version: 1.20.4
   resolution: "@types/expect@npm:1.20.4"
   checksum: fa25b771c81fed431fdfe7c906ccdcb88af7aa4d06375a7798c317d8bcb2b3f78d132e358025d991ccd72083ffb743fd46e26427aa82dc69d7cdbc9b2e88ff3f
-  languageName: node
-  linkType: hard
-
-"@types/fetch-mock@npm:^7.3.5":
-  version: 7.3.5
-  resolution: "@types/fetch-mock@npm:7.3.5"
-  checksum: 33c9d63fd91c6d2419013f99b448caa99bad6c73d35fc780eacf2ed03eb0850a21b0fd5e66238063823ce3b856c815b2ab79c830f051330e6bc46ad47ddb255f
   languageName: node
   linkType: hard
 
@@ -8887,13 +8813,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"core-js@npm:^3.0.0":
-  version: 3.30.1
-  resolution: "core-js@npm:3.30.1"
-  checksum: 5a21c0d53faa13a11f257f95cd0f0b59429b87267e63a1ac7a54691f8d9f34ff12e5d28c65f3e37c7dbef10654dbff726bfb85a77d19e494b898807db1801d53
-  languageName: node
-  linkType: hard
-
 "core-util-is@npm:1.0.2":
   version: 1.0.2
   resolution: "core-util-is@npm:1.0.2"
@@ -10680,26 +10599,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fetch-mock@npm:^9.11.0":
-  version: 9.11.0
-  resolution: "fetch-mock@npm:9.11.0"
+"fetch-mock@npm:^10.0.7":
+  version: 10.0.7
+  resolution: "fetch-mock@npm:10.0.7"
   dependencies:
-    "@babel/core": "npm:^7.0.0"
-    "@babel/runtime": "npm:^7.0.0"
-    core-js: "npm:^3.0.0"
     debug: "npm:^4.1.1"
     glob-to-regexp: "npm:^0.4.0"
     is-subset: "npm:^0.1.1"
     lodash.isequal: "npm:^4.5.0"
     path-to-regexp: "npm:^2.2.1"
-    querystring: "npm:^0.2.0"
-    whatwg-url: "npm:^6.5.0"
-  peerDependencies:
-    node-fetch: "*"
+    querystring: "npm:^0.2.1"
   peerDependenciesMeta:
     node-fetch:
       optional: true
-  checksum: 4bbd312eafd960b787596ab587d00f84967c009a5b00d66566cba9312171bc1f8a8f8d85898d9d158c4fdabbd26913ad360ef4363ec85153463893ae761f2a8c
+  checksum: 63f83b7d1f5045c736ad6025b6c1f02b965e5ced903aea6f4b8992dc726bc1d445ee1995e34b50678ebfd832864b8f2df8629193d9b018d01cb5366fab6eba1f
   languageName: node
   linkType: hard
 
@@ -15177,15 +15090,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-addon-api@npm:^4.2.0":
-  version: 4.3.0
-  resolution: "node-addon-api@npm:4.3.0"
-  dependencies:
-    node-gyp: "npm:latest"
-  checksum: d3b38d16cb9ad0714d965331d0e38cef1c27750c2c3343cd3464a9ed8158501a2910ccbf2fd9fdc476e806a19dbc9e0524ff9d66a7c779d42a9752a63ba30b80
-  languageName: node
-  linkType: hard
-
 "node-addon-api@npm:^5.0.0":
   version: 5.1.0
   resolution: "node-addon-api@npm:5.1.0"
@@ -17164,7 +17068,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"querystring@npm:^0.2.0":
+"querystring@npm:^0.2.1":
   version: 0.2.1
   resolution: "querystring@npm:0.2.1"
   checksum: 5ae2eeb8c6d70263a3d13ffaf234ce9593ae0e95ad8ea04aa540e14ff66679347420817aeb4fe6fdfa2aaa7fac86e311b6f1d3da2187f433082ad9125c808c14
@@ -17788,7 +17692,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rxjs@npm:6, rxjs@npm:^6.4.0, rxjs@npm:^6.6.0":
+"rxjs@npm:^6.4.0, rxjs@npm:^6.6.0":
   version: 6.6.7
   resolution: "rxjs@npm:6.6.7"
   dependencies:
@@ -19188,15 +19092,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tr46@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "tr46@npm:1.0.1"
-  dependencies:
-    punycode: "npm:^2.1.0"
-  checksum: 6e80d75480cb6658f7f283c15f5f41c2d4dfa243ca99a0e1baf3de6cc823fc4c829f89782a7a11e029905781fccfea42d08d8a6674ba7948c7dbc595b6f27dd3
-  languageName: node
-  linkType: hard
-
 "tr46@npm:~0.0.3":
   version: 0.0.3
   resolution: "tr46@npm:0.0.3"
@@ -19872,17 +19767,6 @@ __metadata:
     node-gyp: "npm:latest"
     node-gyp-build: "npm:^4.5.0"
   checksum: ab68d4247a24a463328e293256aec5682c12163278ab474b7243a9dba6283a44bb74f9e0ca96f1d00197bb271f294549c3a4debdbd3452a02750a4a65ff29ee6
-  languageName: node
-  linkType: hard
-
-"usb@npm:^1.7.0":
-  version: 1.9.2
-  resolution: "usb@npm:1.9.2"
-  dependencies:
-    node-addon-api: "npm:^4.2.0"
-    node-gyp: "npm:latest"
-    node-gyp-build: "npm:^4.3.0"
-  checksum: a9bbaade5a9acedea3fba6ea3e5b7b79b835685be1d3c9fbcf44c50ded0878669bc170b5efa0097fc8109ed83181f5c1558da4d4e6188bfd80fe6d838edaa52b
   languageName: node
   linkType: hard
 
@@ -20670,13 +20554,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webidl-conversions@npm:^4.0.2":
-  version: 4.0.2
-  resolution: "webidl-conversions@npm:4.0.2"
-  checksum: 594187c36f2d7898f89c0ed3b9248a095fa549ecc1befb10a97bc884b5680dc96677f58df5579334d8e0d1018e5ef075689cfa2a6c459f45a61a9deb512cb59e
-  languageName: node
-  linkType: hard
-
 "websocket@npm:^1.0.32":
   version: 1.0.34
   resolution: "websocket@npm:1.0.34"
@@ -20698,17 +20575,6 @@ __metadata:
     tr46: "npm:~0.0.3"
     webidl-conversions: "npm:^3.0.0"
   checksum: f95adbc1e80820828b45cc671d97da7cd5e4ef9deb426c31bcd5ab00dc7103042291613b3ef3caec0a2335ed09e0d5ed026c940755dbb6d404e2b27f940fdf07
-  languageName: node
-  linkType: hard
-
-"whatwg-url@npm:^6.5.0":
-  version: 6.5.0
-  resolution: "whatwg-url@npm:6.5.0"
-  dependencies:
-    lodash.sortby: "npm:^4.7.0"
-    tr46: "npm:^1.0.1"
-    webidl-conversions: "npm:^4.0.2"
-  checksum: fbe8e9d81f8f07343f60bc135962ff346d7d19efc9e2f842f54b5c525837dcf1a36d13be21902311a2922b6342799dd82454e552b4e460d74451794f187ba0a5
   languageName: node
   linkType: hard
 

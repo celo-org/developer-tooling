@@ -47,7 +47,7 @@
     "@celo/wallet-ledger": "^5.2.0",
     "@celo/wallet-local": "^5.2.0",
     "@ethereumjs/util": "8.0.5",
-    "@ledgerhq/hw-transport-node-hid": "^6.27.4",
+    "@ledgerhq/hw-transport-node-hid": "^6.28.5",
     "@mento-protocol/mento-sdk": "^0.2.2",
     "@oclif/core": "^3.19.1",
     "@oclif/plugin-autocomplete": "^3.0.5",
