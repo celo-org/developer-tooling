@@ -7,6 +7,7 @@ export const TEST_MNEMONIC =
 export const TEST_BALANCE = 1000000
 export const TEST_GAS_PRICE = 0
 export const TEST_GAS_LIMIT = 20000000
+export const TEST_TIMESTAMP = 1718872285
 
 export const NetworkConfig = migrationOverride
 

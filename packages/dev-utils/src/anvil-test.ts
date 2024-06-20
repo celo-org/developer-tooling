@@ -6,6 +6,7 @@ import {
   TEST_GAS_LIMIT,
   TEST_GAS_PRICE,
   TEST_MNEMONIC,
+  TEST_TIMESTAMP,
   jsonRpcCall,
   testWithWeb3,
 } from './test-utils'
@@ -29,6 +30,8 @@ export function createInstance(): Anvil {
     balance: TEST_BALANCE,
     gasPrice: TEST_GAS_PRICE,
     gasLimit: TEST_GAS_LIMIT,
+    // we need a fixed timestamp, so time-sensitive tests are deterministic
+    timestamp: TEST_TIMESTAMP,
   }
 
   instance = createAnvil(options)
@@ -70,6 +73,10 @@ export const withImpersonatedAccount = async (
 
 export function setCode(web3: Web3, address: string, code: string) {
   return jsonRpcCall(web3, 'anvil_setCode', [address, code])
+}
+
+export function setNextBlockTimestamp(web3: Web3, timestamp: string) {
+  return jsonRpcCall(web3, 'evm_setNextBlockTimestamp', [timestamp])
 }
 
 // TODO remove this once no longer needed
