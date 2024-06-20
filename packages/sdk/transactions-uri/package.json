@@ -37,7 +37,7 @@
     "@celo/typescript": "workspace:^",
     "cross-fetch": "3.1.5",
     "dotenv": "^8.2.0",
-    "fetch-mock": "^9.11.0"
+    "fetch-mock": "^10.0.7"
   },
   "engines": {
     "node": ">=8.13.0"

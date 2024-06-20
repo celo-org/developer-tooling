@@ -51,7 +51,7 @@ along with the response data from Google API.
 
 #### Defined in
 
-[src/static-node-utils.ts:110](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/static-node-utils.ts#L110)
+[static-node-utils.ts:110](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/static-node-utils.ts#L110)
 
 ___
 
@@ -83,7 +83,7 @@ may be replaced in the future.
 
 #### Defined in
 
-[src/static-node-utils.ts:88](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/static-node-utils.ts#L88)
+[static-node-utils.ts:88](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/static-node-utils.ts#L88)
 
 ___
 
@@ -107,7 +107,7 @@ along with the response data from Google API.
 
 #### Defined in
 
-[src/static-node-utils.ts:123](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/static-node-utils.ts#L123)
+[static-node-utils.ts:123](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/static-node-utils.ts#L123)
 
 ___
 
@@ -121,4 +121,4 @@ ___
 
 #### Defined in
 
-[src/static-node-utils.ts:74](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/static-node-utils.ts#L74)
+[static-node-utils.ts:74](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/static-node-utils.ts#L74)

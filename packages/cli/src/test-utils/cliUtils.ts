@@ -17,7 +17,12 @@ export async function testLocallyWithWeb3Node(
 }
 
 export const extractHostFromWeb3 = (web3: Web3): string => {
-  if (web3.currentProvider instanceof Web3.providers.HttpProvider) {
+  // why would the constructor name be HttpProvider but it not be considered an instance of HttpProvider? idk but it happens
+  if (
+    web3.currentProvider instanceof Web3.providers.HttpProvider ||
+    web3.currentProvider?.constructor.name === 'HttpProvider'
+  ) {
+    // @ts-ignore
     return web3.currentProvider.host
   }
 
@@ -26,7 +31,7 @@ export const extractHostFromWeb3 = (web3: Web3): string => {
     return (web3.currentProvider as any).existingProvider.host
   }
 
-  throw new Error('Unsupported provider')
+  throw new Error(`Unsupported provider, ${web3.currentProvider?.constructor.name}`)
 }
 
 export async function testLocally(

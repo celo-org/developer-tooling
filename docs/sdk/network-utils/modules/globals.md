@@ -4,30 +4,16 @@
 
 ## Table of contents
 
-### Functions
+### Variables
 
 - [fetchMock](globals.md#fetchmock)
 
-## Functions
+## Variables
 
 ### fetchMock
 
-▸ **fetchMock**(`input?`, `init?`): `Promise`\<`Response`\>
-
-Also callable as fetch(). Use `typeof fetch` in your code to define
-a field that accepts both `fetch()` and a fetch-mock sandbox.
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `input?` | `string` \| `Request` |
-| `init?` | `RequestInit` |
-
-#### Returns
-
-`Promise`\<`Response`\>
+• `Const` **fetchMock**: `FetchMockSandbox`
 
 #### Defined in
 
-[src/globals.d.ts:5](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/globals.d.ts#L5)
+[globals.d.ts:5](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/globals.d.ts#L5)
