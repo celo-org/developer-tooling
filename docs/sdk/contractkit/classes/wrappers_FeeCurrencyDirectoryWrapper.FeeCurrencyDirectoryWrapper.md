@@ -243,7 +243,7 @@ ___
 
 ### getFeeCurrencyInformation
 
-▸ **getFeeCurrencyInformation**(`whitelist?`): `Promise`\<\{ `adaptedToken`: `undefined` \| \`0x$\{string}\` ; `address`: \`0x$\{string}\` ; `name`: `undefined` \| `string` ; `symbol`: `undefined` \| `string`  }[]\>
+▸ **getFeeCurrencyInformation**(`whitelist?`): `Promise`\<\{ `adaptedToken`: `undefined` \| \`0x$\{string}\` ; `address`: \`0x$\{string}\` ; `decimals`: `undefined` \| `number` ; `name`: `undefined` \| `string` ; `symbol`: `undefined` \| `string`  }[]\>
 
 #### Parameters
 
@@ -253,7 +253,7 @@ ___
 
 #### Returns
 
-`Promise`\<\{ `adaptedToken`: `undefined` \| \`0x$\{string}\` ; `address`: \`0x$\{string}\` ; `name`: `undefined` \| `string` ; `symbol`: `undefined` \| `string`  }[]\>
+`Promise`\<\{ `adaptedToken`: `undefined` \| \`0x$\{string}\` ; `address`: \`0x$\{string}\` ; `decimals`: `undefined` \| `number` ; `name`: `undefined` \| `string` ; `symbol`: `undefined` \| `string`  }[]\>
 
 #### Inherited from
 
@@ -261,7 +261,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/AbstractFeeCurrencyWrapper.ts:34](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/AbstractFeeCurrencyWrapper.ts#L34)
+[packages/sdk/contractkit/src/wrappers/AbstractFeeCurrencyWrapper.ts:41](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/AbstractFeeCurrencyWrapper.ts#L41)
 
 ___
 
