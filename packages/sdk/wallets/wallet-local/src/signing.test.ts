@@ -113,27 +113,13 @@ describe('Transaction Utils', () => {
       }
     })
     test('Checking feeCurrency', async () => {
-      if (celoTransaction.feeCurrency != null) {
+      if (celoTransaction.feeCurrency != null && celoTransaction.maxFeePerGas != null) {
         expect(recoveredTransaction?.feeCurrency!.toLowerCase()).toEqual(
           celoTransaction.feeCurrency.toLowerCase()
         )
       }
     })
-    test('gatewayFeeRecipient', async () => {
-      if (
-        celoTransaction.gatewayFeeRecipient !== undefined &&
-        celoTransaction.gatewayFeeRecipient !== null
-      ) {
-        expect(recoveredTransaction?.gatewayFeeRecipient?.toLowerCase()).toEqual(
-          celoTransaction.gatewayFeeRecipient.toLowerCase()
-        )
-      }
-    })
-    test('Checking gateway fee value', async () => {
-      if (celoTransaction.gatewayFee !== undefined && celoTransaction.gatewayFee !== null) {
-        expect(recoveredTransaction?.gatewayFee).toEqual(celoTransaction.gatewayFee.toString())
-      }
-    })
+
     test('Checking data', async () => {
       if (celoTransaction.data != null) {
         expect(recoveredTransaction?.data!.toLowerCase()).toEqual(
@@ -150,8 +136,6 @@ describe('Transaction Utils', () => {
     const gas = 10000
     const gasPrice = 99000000000
     const feeCurrency = ACCOUNT_ADDRESS1
-    const gatewayFeeRecipient = ACCOUNT_ADDRESS2
-    const gatewayFee = '0x5678'
     const data = '0xabcdef'
     const chainId = 1
 
@@ -159,11 +143,6 @@ describe('Transaction Utils', () => {
       const description: string[] = []
       if (celoTransaction.gasPrice != undefined) {
         description.push(`Testing Legacy with gas price ${celoTransaction.gasPrice}`)
-      } else if (
-        celoTransaction.gatewayFeeRecipient !== undefined ||
-        celoTransaction.gatewayFee !== undefined
-      ) {
-        description.push('Testing CIP42 with')
       } else if (celoTransaction.feeCurrency != undefined) {
         description.push('Testing CIP64 with')
       } else {
@@ -177,32 +156,22 @@ describe('Transaction Utils', () => {
         description.push(`fee currency: ${celoTransaction.feeCurrency}`)
       }
 
-      if (celoTransaction.gatewayFeeRecipient != undefined) {
-        description.push(`gateway fee recipient: ${celoTransaction.gatewayFeeRecipient}`)
-      }
-      if (celoTransaction.gatewayFee != undefined) {
-        description.push(`gateway fee: ${celoTransaction.gatewayFee}`)
-      }
-
       return description.join(' ')
     }
     // Test all possible combinations for rigor.
-    for (let i = 0; i < 16; i++) {
+    for (let i = 0; i < 7; i++) {
       const celoTransaction: CeloTx = {
         from,
         to,
         value: amountInWei,
         nonce,
-        gasPrice: i % 2 === 0 ? gasPrice : undefined,
-        maxFeePerGas: i % 2 === 1 ? gasPrice : undefined,
-        maxPriorityFeePerGas: i % 2 === 1 ? gasPrice : undefined,
+        gasPrice: i <= 1 ? gasPrice : undefined,
+        maxFeePerGas: i > 1 ? gasPrice : undefined,
+        maxPriorityFeePerGas: i > 1 ? gasPrice : undefined,
         chainId,
         gas,
-        feeCurrency: i % 3 === 0 ? feeCurrency : undefined,
-        gatewayFeeRecipient: i % 7 === 0 ? gatewayFeeRecipient : undefined,
-        gatewayFee: i % 7 === 0 ? gatewayFee : undefined,
-        // eslint-disable-next-line no-bitwise
-        data: i & 8 ? data : undefined,
+        feeCurrency: i > 1 && i % 2 === 0 ? feeCurrency : undefined,
+        data: i % 3 === 0 ? data : undefined,
       }
       describe(transactionDescription(celoTransaction), () => {
         verifyLocalSigning(celoTransaction)

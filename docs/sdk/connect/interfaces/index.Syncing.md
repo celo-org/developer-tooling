@@ -22,7 +22,7 @@
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:414
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:414
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:415
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:415
 
 ___
 
@@ -42,7 +42,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:416
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:416
 
 ___
 
@@ -52,7 +52,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:417
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:417
 
 ___
 
@@ -62,4 +62,4 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth/types/index.d.ts:413
+packages/sdk/connect/node_modules/web3-eth/types/index.d.ts:413

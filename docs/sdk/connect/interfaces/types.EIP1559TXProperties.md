@@ -40,7 +40,7 @@ FeeMarketAndAccessListTXProperties.accessList
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:87](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L87)
+[packages/sdk/connect/src/types.ts:71](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L71)
 
 ___
 
@@ -54,7 +54,7 @@ FeeMarketAndAccessListTXProperties.gas
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:73](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L73)
+[packages/sdk/connect/src/types.ts:57](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L57)
 
 ___
 
@@ -68,7 +68,7 @@ FeeMarketAndAccessListTXProperties.hash
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:80](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L80)
+[packages/sdk/connect/src/types.ts:64](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L64)
 
 ___
 
@@ -82,7 +82,7 @@ FeeMarketAndAccessListTXProperties.input
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:76](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L76)
+[packages/sdk/connect/src/types.ts:60](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L60)
 
 ___
 
@@ -96,7 +96,7 @@ FeeMarketAndAccessListTXProperties.maxFeePerGas
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:85](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L85)
+[packages/sdk/connect/src/types.ts:69](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L69)
 
 ___
 
@@ -110,7 +110,7 @@ FeeMarketAndAccessListTXProperties.maxPriorityFeePerGas
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:86](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L86)
+[packages/sdk/connect/src/types.ts:70](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L70)
 
 ___
 
@@ -124,7 +124,7 @@ FeeMarketAndAccessListTXProperties.nonce
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:72](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L72)
+[packages/sdk/connect/src/types.ts:56](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L56)
 
 ___
 
@@ -138,7 +138,7 @@ FeeMarketAndAccessListTXProperties.r
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:77](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L77)
+[packages/sdk/connect/src/types.ts:61](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L61)
 
 ___
 
@@ -152,7 +152,7 @@ FeeMarketAndAccessListTXProperties.s
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:78](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L78)
+[packages/sdk/connect/src/types.ts:62](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L62)
 
 ___
 
@@ -166,7 +166,7 @@ FeeMarketAndAccessListTXProperties.to
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:74](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L74)
+[packages/sdk/connect/src/types.ts:58](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L58)
 
 ___
 
@@ -180,7 +180,7 @@ FeeMarketAndAccessListTXProperties.type
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:91](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L91)
+[packages/sdk/connect/src/types.ts:75](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L75)
 
 ___
 
@@ -194,7 +194,7 @@ FeeMarketAndAccessListTXProperties.v
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:79](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L79)
+[packages/sdk/connect/src/types.ts:63](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L63)
 
 ___
 
@@ -208,4 +208,4 @@ FeeMarketAndAccessListTXProperties.value
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:75](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L75)
+[packages/sdk/connect/src/types.ts:59](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L59)

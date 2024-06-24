@@ -32,4 +32,4 @@
 
 #### Defined in
 
-packages/sdk/base/lib/signatureUtils.d.ts:3
+base/lib/signatureUtils.d.ts:3

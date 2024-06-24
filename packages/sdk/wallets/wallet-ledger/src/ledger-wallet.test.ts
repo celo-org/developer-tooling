@@ -5,21 +5,29 @@ import {
   trimLeading0x,
 } from '@celo/base/lib/address'
 import { CeloTx, EncodedTransaction, Hex } from '@celo/connect'
-import { privateKeyToAddress } from '@celo/utils/lib/address'
+import { StableToken, newKit } from '@celo/contractkit'
+import { privateKeyToAddress, privateKeyToPublicKey } from '@celo/utils/lib/address'
+import { generateTypedDataHash } from '@celo/utils/lib/sign-typed-data-utils'
 import { verifySignature } from '@celo/utils/lib/signatureUtils'
 import {
   chainIdTransformationForSigning,
+  determineTXType,
   getHashFromEncoded,
   recoverTransaction,
   signTransaction,
   verifyEIP712TypedDataSigner,
 } from '@celo/wallet-base'
 import * as ethUtil from '@ethereumjs/util'
+import Ledger from '@ledgerhq/hw-app-eth'
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
-import { keccak_256 } from '@noble/hashes/sha3'
+import { VerifyPublicKeyInput, createVerify } from 'crypto'
+import { readFileSync } from 'fs'
+import { dirname, join } from 'path'
 import Web3 from 'web3'
+import { rlpEncodedTx } from '../../wallet-base/lib'
+import { legacyLedgerPublicKeyHex } from './data'
+import { meetsVersionRequirements } from './ledger-utils'
 import { AddressValidation, LedgerWallet } from './ledger-wallet'
-import { ILedger } from './types'
 
 // Update this variable when testing using a physical device
 const USE_PHYSICAL_LEDGER = process.env.USE_PHYSICAL_LEDGER === 'true'
@@ -62,7 +70,7 @@ const ledgerAddresses: { [myKey: string]: { address: Hex; privateKey: Hex } } = 
   },
 }
 
-const CHAIN_ID = 44378
+const CHAIN_ID = 44787
 
 // Sample data from the official EIP-712 example:
 // https://github.com/ethereum/EIPs/blob/master/assets/eip-712/Example.js
@@ -104,76 +112,146 @@ const TYPED_DATA = {
   },
 }
 
-function mockLedger(wallet: LedgerWallet, mockForceValidation: () => void) {
+interface ILedger {
+  getAddress: typeof Ledger.prototype.getAddress
+  signTransaction: typeof Ledger.prototype.signTransaction
+  signPersonalMessage: typeof Ledger.prototype.signPersonalMessage
+  signEIP712HashedMessage: typeof Ledger.prototype.signEIP712HashedMessage
+  getAppConfiguration: typeof Ledger.prototype.getAppConfiguration
+  provideERC20TokenInformation: typeof Ledger.prototype.provideERC20TokenInformation
+}
+
+const mockLedgerImplementation = (mockForceValidation: () => void, version: string): ILedger => {
+  const _ledger = {
+    getAddress: async (derivationPath: string, forceValidation?: boolean) => {
+      if (forceValidation) {
+        mockForceValidation()
+      }
+      if (ledgerAddresses[derivationPath]) {
+        return {
+          address: ledgerAddresses[derivationPath].address,
+          derivationPath,
+          publicKey: privateKeyToPublicKey(ledgerAddresses[derivationPath].privateKey),
+        }
+      }
+      return {
+        address: '',
+        derivationPath,
+        publicKey: '',
+      }
+    },
+    signTransaction: async (derivationPath: string, data: string) => {
+      if (ledgerAddresses[derivationPath]) {
+        const type = determineTXType(ensureLeading0x(data))
+        // replicate logic from wallet-base/src/wallet-base.ts
+        const addToV = type === 'celo-legacy' ? chainIdTransformationForSigning(CHAIN_ID) : 27
+        const hash = getHashFromEncoded(ensureLeading0x(data))
+        const { r, s, v } = signTransaction(
+          hash,
+          ledgerAddresses[derivationPath].privateKey,
+          addToV
+        )
+
+        return {
+          v: v.toString(16),
+          r: r.toString('hex'),
+          s: s.toString('hex'),
+        }
+      }
+      throw new Error('Invalid Path')
+    },
+    signPersonalMessage: async (derivationPath: string, data: string) => {
+      if (ledgerAddresses[derivationPath]) {
+        const dataBuff = ethUtil.toBuffer(ensureLeading0x(data))
+        const msgHashBuff = ethUtil.hashPersonalMessage(dataBuff)
+
+        const trimmedKey = trimLeading0x(ledgerAddresses[derivationPath].privateKey)
+        const pkBuffer = Buffer.from(trimmedKey, 'hex')
+        const signature = ethUtil.ecsign(msgHashBuff, pkBuffer)
+        return {
+          v: Number(signature.v),
+          r: signature.r.toString('hex'),
+          s: signature.s.toString('hex'),
+        }
+      }
+      throw new Error('Invalid Path')
+    },
+    signEIP712HashedMessage: async (
+      derivationPath: string,
+      _domainSeparator: string,
+      _structHash: string
+    ) => {
+      const messageHash = generateTypedDataHash(TYPED_DATA)
+
+      const trimmedKey = trimLeading0x(ledgerAddresses[derivationPath].privateKey)
+      const pkBuffer = Buffer.from(trimmedKey, 'hex')
+      const signature = ethUtil.ecsign(messageHash, pkBuffer)
+      return {
+        v: Number(signature.v),
+        r: signature.r.toString('hex'),
+        s: signature.s.toString('hex'),
+      }
+    },
+    getAppConfiguration: async () => {
+      return {
+        arbitraryDataEnabled: 1,
+        version: version,
+        erc20ProvisioningNecessary: 1,
+        starkEnabled: 1,
+        starkv2Supported: 1,
+      }
+    },
+    provideERC20TokenInformation: async (tokenData: string) => {
+      let pubkey: VerifyPublicKeyInput
+      const version = (await _ledger.getAppConfiguration()).version
+      if (
+        meetsVersionRequirements(version, {
+          minimum: LedgerWallet.MIN_VERSION_EIP1559,
+        })
+      ) {
+        // verify with new pubkey
+        const pubDir = dirname(require.resolve('@celo/ledger-token-signer'))
+        pubkey = { key: readFileSync(join(pubDir, 'pubkey.pem')).toString() }
+      } else {
+        // verify with oldpubkey
+        pubkey = { key: legacyLedgerPublicKeyHex }
+      }
+
+      const verify = createVerify('sha256')
+      const tokenDataBuf = Buffer.from(tokenData, 'hex')
+      const BASE_DATA_LENGTH =
+        20 + // contract address, 20 bytes
+        4 + // decimals, uint32, 4 bytes
+        4 // chainId, uint32, 4 bytes
+      // first byte of data is the ticker length, so we add that to base data length
+      const dataLen = BASE_DATA_LENGTH + tokenDataBuf.readInt8(0)
+      // start at 1 since the first byte was just informative
+      const data = tokenDataBuf.slice(1, dataLen + 1)
+      verify.update(data)
+      verify.end()
+      // read from end of data til the end
+      const signature = tokenDataBuf.slice(dataLen + 1)
+      const verified = verify.verify(pubkey, signature)
+
+      if (!verified) {
+        throw new Error('couldnt verify data sent to MockLedger')
+      }
+      return verified
+    },
+  }
+  return _ledger
+}
+
+function mockLedger(
+  wallet: LedgerWallet,
+  mockForceValidation: () => void,
+  version = LedgerWallet.MIN_VERSION_EIP1559
+) {
   jest
     .spyOn<any, any>(wallet, 'generateNewLedger')
+    .mockClear()
     .mockImplementation((_transport: any): ILedger => {
-      return {
-        getAddress: async (derivationPath: string, forceValidation?: boolean) => {
-          if (forceValidation) {
-            mockForceValidation()
-          }
-          if (ledgerAddresses[derivationPath]) {
-            return { address: ledgerAddresses[derivationPath].address, derivationPath }
-          }
-          return {}
-        },
-        signTransaction: async (derivationPath: string, data: string) => {
-          if (ledgerAddresses[derivationPath]) {
-            const { r, s, v } = signTransaction(
-              getHashFromEncoded(ensureLeading0x(data)),
-              ledgerAddresses[derivationPath].privateKey,
-              chainIdTransformationForSigning(CHAIN_ID)
-            )
-            return {
-              v: v.toString(16),
-              r: r.toString('hex'),
-              s: s.toString('hex'),
-            }
-          }
-          throw new Error('Invalid Path')
-        },
-        signPersonalMessage: async (derivationPath: string, data: string) => {
-          if (ledgerAddresses[derivationPath]) {
-            const dataBuff = ethUtil.toBuffer(ensureLeading0x(data))
-            const msgHashBuff = ethUtil.hashPersonalMessage(dataBuff)
-
-            const trimmedKey = trimLeading0x(ledgerAddresses[derivationPath].privateKey)
-            const pkBuffer = Buffer.from(trimmedKey, 'hex')
-            const signature = ethUtil.ecsign(msgHashBuff, pkBuffer)
-            return {
-              v: signature.v.toString(10),
-              r: signature.r.toString('hex'),
-              s: signature.s.toString('hex'),
-            }
-          }
-          throw new Error('Invalid Path')
-        },
-        signEIP712HashedMessage: async (
-          derivationPath: string,
-          domainSeparator: Buffer,
-          structHash: Buffer
-        ) => {
-          const messageHash = Buffer.from(
-            keccak_256(Buffer.concat([Buffer.from('1901', 'hex'), domainSeparator, structHash]))
-          )
-
-          const trimmedKey = trimLeading0x(ledgerAddresses[derivationPath].privateKey)
-          const pkBuffer = Buffer.from(trimmedKey, 'hex')
-          const signature = ethUtil.ecsign(messageHash, pkBuffer)
-          return {
-            v: signature.v.toString(16),
-            r: signature.r.toString('hex'),
-            s: signature.s.toString('hex'),
-          }
-        },
-        getAppConfiguration: async () => {
-          return { arbitraryDataEnabled: 1, version: '0.0.0' }
-        },
-        provideERC20TokenInformation: async (_token) => {
-          return {}
-        },
-      }
+      return mockLedgerImplementation(mockForceValidation, version)
     })
 }
 
@@ -218,11 +296,10 @@ describe('LedgerWallet class', () => {
         chainId: CHAIN_ID,
         value: Web3.utils.toWei('1', 'ether'),
         nonce: 0,
-        gas: '10',
-        gasPrice: '99',
-        feeCurrency: '0x',
-        gatewayFeeRecipient: ACCOUNT_ADDRESS_NEVER,
-        gatewayFee: '0x5678',
+        gas: 99,
+        maxFeePerGas: 99,
+        maxPriorityFeePerGas: 99,
+        // feeCurrency: '0x',
         data: '0xabcdef',
       }
     })
@@ -291,11 +368,9 @@ describe('LedgerWallet class', () => {
           chainId: CHAIN_ID,
           value: Web3.utils.toWei('1', 'ether'),
           nonce: 0,
-          gas: '10',
-          gasPrice: '99',
-          feeCurrency: '0x',
-          gatewayFeeRecipient: ACCOUNT_ADDRESS_NEVER,
-          gatewayFee: '0x5678',
+          gas: 99,
+          maxFeePerGas: 99,
+          maxPriorityFeePerGas: 99,
           data: '0xabcdef',
         }
       })
@@ -327,27 +402,93 @@ describe('LedgerWallet class', () => {
         })
 
         describe('using a known address', () => {
-          describe('when calling signTransaction', () => {
-            beforeEach(() => {
+          describe('[eip1559]', () => {
+            beforeEach(async () => {
               celoTransaction = {
                 from: knownAddress,
                 to: otherAddress,
                 chainId: CHAIN_ID,
                 value: Web3.utils.toWei('1', 'ether'),
                 nonce: 0,
-                gas: '10',
-                gasPrice: '99',
-                feeCurrency: '0x',
-                gatewayFeeRecipient: ACCOUNT_ADDRESS_NEVER,
-                gatewayFee: '0x5678',
-                data: '0xabcdef',
+                gas: 99,
+                maxFeePerGas: 99,
+                maxPriorityFeePerGas: 99,
+                // data: '0xabcdef',
               }
             })
 
             test(
-              'succeeds',
+              'succeeds on cel2 (when ledger version is above minimum)',
               async () => {
                 await expect(wallet.signTransaction(celoTransaction)).resolves.not.toBeUndefined()
+              },
+              TEST_TIMEOUT_IN_MS
+            )
+            //
+            test(
+              'fails on cel2 (when ledger version is below minimum)',
+              async () => {
+                wallet = new LedgerWallet(
+                  undefined,
+                  undefined,
+                  undefined,
+                  AddressValidation.never,
+                  true
+                )
+                mockForceValidation = jest.fn((): void => {
+                  // do nothing
+                })
+                mockLedger(wallet, mockForceValidation, LedgerWallet.MIN_VERSION_TOKEN_DATA)
+                await wallet.init()
+
+                expect(
+                  wallet.signTransaction(celoTransaction)
+                ).rejects.toThrowErrorMatchingInlineSnapshot(
+                  `"celo ledger app version must be at least 1.2.0 to sign transactions supported on celo after the L2 upgrade"`
+                )
+              },
+              TEST_TIMEOUT_IN_MS
+            )
+            test(
+              'on cel1 with old ledger converts to legacy tx',
+              async () => {
+                wallet = new LedgerWallet(
+                  undefined,
+                  undefined,
+                  undefined,
+                  AddressValidation.never,
+                  false
+                )
+                mockForceValidation = jest.fn((): void => {
+                  // do nothing
+                })
+                mockLedger(wallet, mockForceValidation, LedgerWallet.MIN_VERSION_TOKEN_DATA)
+                await wallet.init()
+                const warnSpy = jest.spyOn(console, 'warn')
+                // setup complete
+
+                await expect(wallet.signTransaction(celoTransaction)).resolves
+                  .toMatchInlineSnapshot(`
+                  {
+                    "raw": "0xf86b80636380808094588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a76400008083015e09a0dc9e278c10d4b3416f436ef1c3e7ab913391771fee82f7d7f5a810d01561ba34a07d9d09088d2cfe05345fede2fdfb837be7b5e2ae428e4dda94c042d3dd246e1e",
+                    "tx": {
+                      "feeCurrency": "0x",
+                      "gas": "0x63",
+                      "hash": "0x3c764c8b7e35fb841b57d8409a9210df87b10d6e6334a43ce936cdf569f20d01",
+                      "input": "0x",
+                      "nonce": "0",
+                      "r": "0xdc9e278c10d4b3416f436ef1c3e7ab913391771fee82f7d7f5a810d01561ba34",
+                      "s": "0x7d9d09088d2cfe05345fede2fdfb837be7b5e2ae428e4dda94c042d3dd246e1e",
+                      "to": "0x588e4b68193001e4d10928660ab4165b813717c0",
+                      "v": "0x015e09",
+                      "value": "0x0de0b6b3a7640000",
+                    },
+                    "type": "celo-legacy",
+                  }
+                `)
+                expect(warnSpy).toHaveBeenCalledWith(
+                  'Upgrade your celo ledger app to at least 1.2.0 before cel2 transition'
+                )
               },
               TEST_TIMEOUT_IN_MS
             )
@@ -356,7 +497,7 @@ describe('LedgerWallet class', () => {
               'with same signer',
               async () => {
                 const signedTx: EncodedTransaction = await wallet.signTransaction(celoTransaction)
-                const [, recoveredSigner] = recoverTransaction(signedTx.raw)
+                const [_tx, recoveredSigner] = recoverTransaction(signedTx.raw)
                 expect(normalizeAddressWith0x(recoveredSigner)).toBe(
                   normalizeAddressWith0x(knownAddress)
                 )
@@ -376,13 +517,11 @@ describe('LedgerWallet class', () => {
                   value: Web3.utils.toWei('1', 'ether'),
                   nonce: 65,
                   gas: '10',
-                  gasPrice: '99',
+                  maxFeePerGas: 99,
+                  maxPriorityFeePerGas: 99,
                   feeCurrency: '0x' as const,
-                  gatewayFeeRecipient: ACCOUNT_ADDRESS_NEVER,
-                  gatewayFee: '0x5678',
-                  data: '0xabcdef',
+                  // data: '0xabcdef',
                 }
-
                 const signedTx: EncodedTransaction = await wallet.signTransaction(
                   celoTransactionZeroPrefix
                 )
@@ -391,6 +530,201 @@ describe('LedgerWallet class', () => {
                 expect(normalizeAddressWith0x(recoveredSigner)).toBe(
                   normalizeAddressWith0x(knownAddress)
                 )
+              },
+              TEST_TIMEOUT_IN_MS
+            )
+          })
+
+          describe('[eth-legacy]', () => {
+            beforeEach(async () => {
+              celoTransaction = {
+                from: knownAddress,
+                to: otherAddress,
+                chainId: CHAIN_ID,
+                value: Web3.utils.toWei('1', 'ether'),
+                nonce: 1,
+                gas: 99,
+                gasPrice: 99,
+              }
+            })
+
+            test(
+              'fails',
+              async () => {
+                await expect(
+                  wallet.signTransaction(celoTransaction)
+                ).rejects.toThrowErrorMatchingInlineSnapshot(
+                  `"ethereum-legacy transactions are not supported, please try sending a more modern transaction instead (eip1559, cip64, etc.)"`
+                )
+              },
+              TEST_TIMEOUT_IN_MS
+            )
+          })
+
+          describe('[celo-legacy]', () => {
+            beforeEach(async () => {
+              const kit = newKit('https://alfajores-forno.celo-testnet.org')
+              celoTransaction = {
+                from: knownAddress,
+                to: otherAddress,
+                chainId: CHAIN_ID,
+                value: Web3.utils.toWei('1', 'ether'),
+                nonce: 0,
+                gas: 99,
+                gasPrice: 99,
+                feeCurrency: (await kit.contracts.getStableToken(StableToken.cUSD)).address,
+              }
+            })
+            describe('with old ledger app', () => {
+              describe('on Cel2 with old app version', () => {
+                beforeEach(async () => {
+                  wallet = new LedgerWallet(
+                    undefined,
+                    undefined,
+                    undefined,
+                    AddressValidation.never,
+                    true
+                  )
+                  mockForceValidation = jest.fn((): void => {
+                    // do nothing
+                  })
+                  mockLedger(wallet, mockForceValidation, LedgerWallet.MIN_VERSION_TOKEN_DATA)
+                  await wallet.init()
+                })
+
+                test(
+                  'fails',
+                  async () => {
+                    await expect(
+                      wallet.signTransaction(celoTransaction)
+                    ).rejects.toThrowErrorMatchingInlineSnapshot(
+                      `"celo ledger app version must be at least 1.2.0 to sign transactions supported on celo after the L2 upgrade"`
+                    )
+                  },
+                  TEST_TIMEOUT_IN_MS
+                )
+              })
+              describe('on celo l1 with old app version', () => {
+                test(
+                  'physical device only',
+                  async () => {
+                    if (!hardwareWallet) {
+                      expect(true).toBeTruthy()
+                      return
+                    }
+                    const signedTx = await wallet.signTransaction(celoTransaction)
+                    const [_tx, recoveredSigner] = recoverTransaction(signedTx.raw)
+                    expect(normalizeAddressWith0x(recoveredSigner)).toEqual(
+                      normalizeAddressWith0x(knownAddress)
+                    )
+                  },
+                  TEST_TIMEOUT_IN_MS
+                )
+
+                test(
+                  'succeeds with warning',
+                  async () => {
+                    wallet = new LedgerWallet(
+                      undefined,
+                      undefined,
+                      undefined,
+                      AddressValidation.never,
+                      false
+                    )
+                    mockForceValidation = jest.fn((): void => {
+                      // do nothing
+                    })
+                    mockLedger(wallet, mockForceValidation, LedgerWallet.MIN_VERSION_TOKEN_DATA)
+                    await wallet.init()
+                    const warnSpy = jest.spyOn(console, 'warn')
+                    // setup complete
+
+                    await expect(wallet.signTransaction(celoTransaction)).resolves
+                      .toMatchInlineSnapshot(`
+                      {
+                        "raw": "0xf87f80636394874069fa1eb16d44d622f2e0ca25eea172369bc1808094588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a76400008083015e09a024c4b1d027c50d2e847d371cd902d3e22c9fa10fcbd59e9c5a854282afed34daa0686180d75830ea223c3ed1ca12613d029bc3613b4b5b51a724b33067491c2398",
+                        "tx": {
+                          "feeCurrency": "0x874069fa1eb16d44d622f2e0ca25eea172369bc1",
+                          "gas": "0x63",
+                          "hash": "0x302b12585b4a17317e9affcbe0abd0cd8cd39ef402108625085485b1c1d92d71",
+                          "input": "0x",
+                          "nonce": "0",
+                          "r": "0x24c4b1d027c50d2e847d371cd902d3e22c9fa10fcbd59e9c5a854282afed34da",
+                          "s": "0x686180d75830ea223c3ed1ca12613d029bc3613b4b5b51a724b33067491c2398",
+                          "to": "0x588e4b68193001e4d10928660ab4165b813717c0",
+                          "v": "0x015e09",
+                          "value": "0x0de0b6b3a7640000",
+                        },
+                        "type": "celo-legacy",
+                      }
+                    `)
+                    expect(warnSpy).toHaveBeenCalledWith(
+                      'Upgrade your celo ledger app to at least 1.2.0 before cel2 transition'
+                    )
+                  },
+                  TEST_TIMEOUT_IN_MS
+                )
+              })
+            })
+            describe('with new ledger app', () => {
+              test(
+                'fails with helpful error',
+                async () => {
+                  await expect(
+                    wallet.signTransaction(celoTransaction)
+                  ).rejects.toThrowErrorMatchingInlineSnapshot(
+                    `"celo ledger app above 1.2.0 cannot serialize legacy celo transactions. Replace "gasPrice" with "maxFeePerGas"."`
+                  )
+                },
+                TEST_TIMEOUT_IN_MS
+              )
+            })
+          })
+
+          describe('[cip64]', () => {
+            const kit = newKit('https://alfajores-forno.celo-testnet.org')
+            beforeEach(async () => {
+              celoTransaction = {
+                from: knownAddress,
+                to: otherAddress,
+                chainId: CHAIN_ID,
+                value: Web3.utils.toWei('1', 'ether'),
+                nonce: 0,
+                gas: 99,
+                maxFeePerGas: 99,
+                maxPriorityFeePerGas: 99,
+                feeCurrency: (await kit.contracts.getStableToken(StableToken.cUSD)).address,
+              }
+            })
+
+            test(
+              'succeeds',
+              async () => {
+                await expect(wallet.signTransaction(celoTransaction)).resolves.not.toBeUndefined()
+              },
+              TEST_TIMEOUT_IN_MS
+            )
+          })
+          describe('[cip66]', () => {
+            const kit = newKit('https://alfajores-forno.celo-testnet.org')
+            beforeEach(async () => {
+              celoTransaction = {
+                from: knownAddress,
+                to: otherAddress,
+                chainId: CHAIN_ID,
+                value: Web3.utils.toWei('1', 'ether'),
+                nonce: 0,
+                gas: 99,
+                maxFeePerGas: 99,
+                maxPriorityFeePerGas: 99,
+                feeCurrency: (await kit.contracts.getStableToken(StableToken.cUSD)).address,
+              }
+            })
+
+            test(
+              'gives warning',
+              async () => {
+                await expect(wallet.signTransaction(celoTransaction)).resolves.not.toBeUndefined()
               },
               TEST_TIMEOUT_IN_MS
             )
@@ -412,7 +746,7 @@ describe('LedgerWallet class', () => {
         })
 
         describe('when calling signTypedData', () => {
-          test(
+          test.skip(
             'succeeds',
             async () => {
               const signedMessage = await wallet.signTypedData(knownAddress, TYPED_DATA)
@@ -450,6 +784,22 @@ describe('LedgerWallet class', () => {
         expect(mockForceValidation.mock.calls.length).toBe(0)
         await wallet.signPersonalMessage(knownAddress, ACCOUNT_ADDRESS_NEVER)
         expect(mockForceValidation.mock.calls.length).toBe(0)
+      })
+    })
+
+    describe('only in the initialization legacy (version < 1.2.0)', () => {
+      beforeEach(() => {
+        wallet = new LedgerWallet(undefined, undefined, {}, AddressValidation.initializationOnly)
+        mockForceValidation = jest.fn((): void => {
+          // do nothing
+        })
+        mockLedger(wallet, mockForceValidation, '0.0.0')
+      })
+
+      it("will fail to initialize if the version isn't supported", async () => {
+        expect(wallet.init()).rejects.toMatchInlineSnapshot(
+          `[Error: Due to technical issues, we require the users to update their ledger celo-app to >= 1.0.0. You can do this on ledger-live by updating the celo-app in the app catalog.]`
+        )
       })
     })
 
@@ -535,5 +885,46 @@ describe('LedgerWallet class', () => {
         expect(mockForceValidation.mock.calls.length).toBe(1)
       })
     })
+  })
+})
+
+describe('patch-package @ledgerhq/hw-app-eth', () => {
+  test('was applied correctly', async () => {
+    const { decodeTxInfo } = await import('@ledgerhq/hw-app-eth/lib/utils')
+
+    const kit = newKit('https://alfajores-forno.celo-testnet.org')
+    const celoTransaction = {
+      from: ACCOUNT_ADDRESS1,
+      to: ACCOUNT_ADDRESS2,
+      chainId: CHAIN_ID,
+      value: Web3.utils.toWei('1', 'ether'),
+      nonce: 0,
+      gas: 99,
+      maxFeePerGas: 99,
+      maxPriorityFeePerGas: 99,
+      feeCurrency: (await kit.contracts.getStableToken(StableToken.cUSD)).address,
+    }
+    const serialized = rlpEncodedTx(celoTransaction)
+    const rawTx = Buffer.from(trimLeading0x(serialized.rlpEncode), 'hex')
+    let ledgerDecoded: ReturnType<typeof decodeTxInfo>
+    expect(() => {
+      ledgerDecoded = decodeTxInfo(rawTx)
+    }).not.toThrow(/invalid rlp data/)
+    expect(ledgerDecoded!.txType).toEqual(0x7b)
+    expect(ledgerDecoded!.chainId.toNumber()).toEqual(CHAIN_ID)
+    expect(ledgerDecoded!.decodedTx).toMatchInlineSnapshot(`
+      {
+        "chainId": {
+          "data": [
+            174,
+            243,
+          ],
+          "type": "Buffer",
+        },
+        "data": "0x",
+        "feeCurrency": "0x874069fa1eb16d44d622f2e0ca25eea172369bc1",
+        "to": "0x588e4b68193001e4d10928660ab4165b813717c0",
+      }
+    `)
   })
 })

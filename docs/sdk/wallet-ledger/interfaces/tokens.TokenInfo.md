@@ -23,7 +23,7 @@
 
 #### Defined in
 
-[wallet-ledger/src/tokens.ts:22](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/tokens.ts#L22)
+[wallet-ledger/src/tokens.ts:30](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/tokens.ts#L30)
 
 ___
 
@@ -33,7 +33,7 @@ ___
 
 #### Defined in
 
-[wallet-ledger/src/tokens.ts:19](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/tokens.ts#L19)
+[wallet-ledger/src/tokens.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/tokens.ts#L27)
 
 ___
 
@@ -43,7 +43,7 @@ ___
 
 #### Defined in
 
-[wallet-ledger/src/tokens.ts:24](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/tokens.ts#L24)
+[wallet-ledger/src/tokens.ts:32](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/tokens.ts#L32)
 
 ___
 
@@ -53,7 +53,7 @@ ___
 
 #### Defined in
 
-[wallet-ledger/src/tokens.ts:21](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/tokens.ts#L21)
+[wallet-ledger/src/tokens.ts:29](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/tokens.ts#L29)
 
 ___
 
@@ -63,7 +63,7 @@ ___
 
 #### Defined in
 
-[wallet-ledger/src/tokens.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/tokens.ts#L23)
+[wallet-ledger/src/tokens.ts:31](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/tokens.ts#L31)
 
 ___
 
@@ -73,4 +73,4 @@ ___
 
 #### Defined in
 
-[wallet-ledger/src/tokens.ts:20](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/tokens.ts#L20)
+[wallet-ledger/src/tokens.ts:28](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/tokens.ts#L28)

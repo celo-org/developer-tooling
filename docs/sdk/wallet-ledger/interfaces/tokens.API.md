@@ -33,7 +33,7 @@
 
 #### Defined in
 
-[wallet-ledger/src/tokens.ts:45](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/tokens.ts#L45)
+[wallet-ledger/src/tokens.ts:36](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/tokens.ts#L36)
 
 ___
 
@@ -51,4 +51,4 @@ ___
 
 #### Defined in
 
-[wallet-ledger/src/tokens.ts:46](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/tokens.ts#L46)
+[wallet-ledger/src/tokens.ts:37](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/tokens.ts#L37)

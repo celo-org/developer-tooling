@@ -26,7 +26,7 @@
 
 #### Defined in
 
-[packages/sdk/utils/src/fixidity.ts:3](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/fixidity.ts#L3)
+[utils/src/fixidity.ts:3](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/fixidity.ts#L3)
 
 ___
 
@@ -36,7 +36,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/fixidity.ts:4](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/fixidity.ts#L4)
+[utils/src/fixidity.ts:4](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/fixidity.ts#L4)
 
 ## Functions
 
@@ -57,7 +57,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/fixidity.ts:24](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/fixidity.ts#L24)
+[utils/src/fixidity.ts:24](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/fixidity.ts#L24)
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/fixidity.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/fixidity.ts#L16)
+[utils/src/fixidity.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/fixidity.ts#L16)
 
 ___
 
@@ -97,7 +97,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/fixidity.ts:11](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/fixidity.ts#L11)
+[utils/src/fixidity.ts:11](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/fixidity.ts#L11)
 
 ___
 
@@ -118,7 +118,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/fixidity.ts:20](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/fixidity.ts#L20)
+[utils/src/fixidity.ts:20](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/fixidity.ts#L20)
 
 ___
 
@@ -138,7 +138,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/fixidity.ts:28](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/fixidity.ts#L28)
+[utils/src/fixidity.ts:28](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/fixidity.ts#L28)
 
 ___
 
@@ -158,4 +158,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/fixidity.ts:6](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/fixidity.ts#L6)
+[utils/src/fixidity.ts:6](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/fixidity.ts#L6)

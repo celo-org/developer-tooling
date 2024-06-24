@@ -22,6 +22,8 @@
     "prepublishOnly": "yarn build"
   },
   "devDependencies": {
+    "@celo/typescript": "workspace:^",
+    "@types/debug": "^4.1.12",
     "viem": "~1.5.4"
   },
   "dependencies": {

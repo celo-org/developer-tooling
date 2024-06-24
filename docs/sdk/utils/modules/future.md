@@ -38,7 +38,7 @@
 
 #### Defined in
 
-packages/sdk/base/lib/future.d.ts:19
+base/lib/future.d.ts:19
 
 ___
 
@@ -64,4 +64,4 @@ ___
 
 #### Defined in
 
-packages/sdk/base/lib/future.d.ts:17
+base/lib/future.d.ts:17

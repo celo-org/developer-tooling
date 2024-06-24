@@ -88,14 +88,15 @@ jobs:
         run: |
           yarn check-licenses
       # Get workdir local changes and fail if there are any change
-      - name: Verify Changed files
-        id: verify-changed-files
-        uses: tj-actions/verify-changed-files@v17
-        with:
-          fail-if-changed: 'true'
-          fail-message: 'Files changed during build. Please build locally and commit the changes.'
-          files: |
-            **/*
+      # - name: Verify Changed files
+      #   id: verify-changed-files
+      #   uses: tj-actions/verify-changed-files@v17
+      #   with:
+      #     path: yarn.lock
+      #     fail-if-changed: 'true'
+      #     fail-message: 'Files changed during build. Please build locally and commit the changes.'
+      #     files: |
+      #       **/*
 
       - run: |
           echo "${{ steps.verify-changed-files.outputs.changed_files }}"

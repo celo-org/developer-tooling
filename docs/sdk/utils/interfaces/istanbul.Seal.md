@@ -20,7 +20,7 @@
 
 #### Defined in
 
-[packages/sdk/utils/src/istanbul.ts:15](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/istanbul.ts#L15)
+[utils/src/istanbul.ts:15](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/istanbul.ts#L15)
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/istanbul.ts:17](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/istanbul.ts#L17)
+[utils/src/istanbul.ts:17](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/istanbul.ts#L17)
 
 ___
 
@@ -40,4 +40,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/istanbul.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/istanbul.ts#L16)
+[utils/src/istanbul.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/istanbul.ts#L16)
