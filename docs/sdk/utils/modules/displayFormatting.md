@@ -26,4 +26,4 @@
 
 #### Defined in
 
-packages/sdk/base/lib/displayFormatting.d.ts:2
+base/lib/displayFormatting.d.ts:2

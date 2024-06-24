@@ -18,10 +18,10 @@ export default class Whitelist extends BaseCommand {
     const validFeeCurrencies = await feeCurrencyContract.getAddresses()
 
     const pairs = (await feeCurrencyContract.getFeeCurrencyInformation(validFeeCurrencies)).map(
-      ({ name, symbol, address, adaptedToken }) =>
+      ({ name, symbol, address, adaptedToken, decimals }) =>
         `${address} - ${name || 'unknown name'} (${symbol || 'N/A'})${
           adaptedToken ? ` (adapted token: ${adaptedToken})` : ''
-        }`
+        } - ${decimals} decimals`
     )
     // if we use ux.table for this instead then people could pass --csv or --json to get the data how they need it
     console.log(`Available currencies:\n${pairs.join('\n')}`)

@@ -36,7 +36,7 @@
 
 #### Defined in
 
-[packages/sdk/connect/src/utils/tx-params-normalizer.ts:22](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/tx-params-normalizer.ts#L22)
+[packages/sdk/connect/src/utils/tx-params-normalizer.ts:21](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/tx-params-normalizer.ts#L21)
 
 ## Properties
 
@@ -46,7 +46,7 @@
 
 #### Defined in
 
-[packages/sdk/connect/src/utils/tx-params-normalizer.ts:22](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/tx-params-normalizer.ts#L22)
+[packages/sdk/connect/src/utils/tx-params-normalizer.ts:21](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/tx-params-normalizer.ts#L21)
 
 ## Methods
 
@@ -66,4 +66,4 @@
 
 #### Defined in
 
-[packages/sdk/connect/src/utils/tx-params-normalizer.ts:24](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/tx-params-normalizer.ts#L24)
+[packages/sdk/connect/src/utils/tx-params-normalizer.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/tx-params-normalizer.ts#L23)

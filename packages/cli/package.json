@@ -29,7 +29,7 @@
     "lint": "yarn run --top-level eslint -c .eslintrc.js ",
     "prepublish": "",
     "prepack": "yarn run build && oclif manifest && oclif readme",
-    "test": "TZ=UTC NODE_OPTIONS=--experimental-vm-modules yarn jest --runInBand --forceExit"
+    "test": "TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --runInBand --workerIdleMemoryLimit=0.1 --forceExit"
   },
   "dependencies": {
     "@celo/abis": "11.0.0",
@@ -47,7 +47,7 @@
     "@celo/wallet-ledger": "^5.2.0",
     "@celo/wallet-local": "^5.2.0",
     "@ethereumjs/util": "8.0.5",
-    "@ledgerhq/hw-transport-node-hid": "^6.27.4",
+    "@ledgerhq/hw-transport-node-hid": "^6.28.5",
     "@mento-protocol/mento-sdk": "^0.2.2",
     "@oclif/core": "^3.19.1",
     "@oclif/plugin-autocomplete": "^3.0.5",
@@ -80,13 +80,13 @@
     "@types/fs-extra": "^8.0.0",
     "@types/humanize-duration": "^3.27.0",
     "@types/inquirer": "^6.5.0",
-    "@types/ledgerhq__hw-transport-node-hid": "^4.22.2",
+    "@types/ledgerhq__hw-transport-node-hid": "^4.22.5",
     "@types/node": "^18.7.16",
     "@types/prompts": "^1.1.1",
-    "jest": "^29.0.2",
+    "jest": "^29.7.0",
     "oclif": "^4.3.4",
     "prettier": "1.19.1",
-    "ts-jest": "^29.0.0",
+    "ts-jest": "^29.1.5",
     "ts-node": "^10.9.1",
     "typescript": "5.3.3"
   },

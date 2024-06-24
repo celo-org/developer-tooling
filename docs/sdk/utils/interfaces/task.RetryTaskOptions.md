@@ -40,7 +40,7 @@ Logger function
 
 #### Defined in
 
-packages/sdk/base/lib/task.d.ts:17
+base/lib/task.d.ts:17
 
 ___
 
@@ -52,7 +52,7 @@ Maximum number of attemps
 
 #### Defined in
 
-packages/sdk/base/lib/task.d.ts:48
+base/lib/task.d.ts:48
 
 ___
 
@@ -68,7 +68,7 @@ Name for the task. To be used in logging messages
 
 #### Defined in
 
-packages/sdk/base/lib/task.d.ts:15
+base/lib/task.d.ts:15
 
 ___
 
@@ -80,7 +80,7 @@ seconds between repetition
 
 #### Defined in
 
-packages/sdk/base/lib/task.d.ts:46
+base/lib/task.d.ts:46
 
 ___
 
@@ -102,4 +102,4 @@ Function that tries to obtain a value A or returns null
 
 #### Defined in
 
-packages/sdk/base/lib/task.d.ts:50
+base/lib/task.d.ts:50

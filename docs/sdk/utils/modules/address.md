@@ -42,7 +42,7 @@
 
 #### Defined in
 
-packages/sdk/base/lib/address.d.ts:2
+base/lib/address.d.ts:2
 
 ## Variables
 
@@ -52,7 +52,7 @@ packages/sdk/base/lib/address.d.ts:2
 
 #### Defined in
 
-packages/sdk/base/lib/address.d.ts:14
+base/lib/address.d.ts:14
 
 ## Functions
 
@@ -72,7 +72,7 @@ packages/sdk/base/lib/address.d.ts:14
 
 #### Defined in
 
-packages/sdk/base/lib/address.d.ts:13
+base/lib/address.d.ts:13
 
 ___
 
@@ -92,7 +92,7 @@ ___
 
 #### Defined in
 
-packages/sdk/base/lib/address.d.ts:9
+base/lib/address.d.ts:9
 
 ___
 
@@ -113,7 +113,7 @@ ___
 
 #### Defined in
 
-packages/sdk/base/lib/address.d.ts:4
+base/lib/address.d.ts:4
 
 ___
 
@@ -134,7 +134,7 @@ ___
 
 #### Defined in
 
-packages/sdk/base/lib/address.d.ts:15
+base/lib/address.d.ts:15
 
 ___
 
@@ -154,7 +154,7 @@ ___
 
 #### Defined in
 
-packages/sdk/base/lib/address.d.ts:10
+base/lib/address.d.ts:10
 
 ___
 
@@ -174,7 +174,7 @@ ___
 
 #### Defined in
 
-packages/sdk/base/lib/address.d.ts:12
+base/lib/address.d.ts:12
 
 ___
 
@@ -194,7 +194,7 @@ ___
 
 #### Defined in
 
-packages/sdk/base/lib/address.d.ts:11
+base/lib/address.d.ts:11
 
 ___
 
@@ -214,7 +214,7 @@ input is \`0x$\{string}\`
 
 #### Defined in
 
-[packages/sdk/utils/src/address.ts:46](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/address.ts#L46)
+[utils/src/address.ts:46](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/address.ts#L46)
 
 ___
 
@@ -239,7 +239,7 @@ See toChecksumAddress' documentation for details about the eip1191ChainId parame
 
 #### Defined in
 
-node_modules/@ethereumjs/util/dist/account.d.ts:65
+utils/node_modules/@ethereumjs/util/dist/account.d.ts:65
 
 ___
 
@@ -259,7 +259,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/address.ts:43](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/address.ts#L43)
+[utils/src/address.ts:43](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/address.ts#L43)
 
 ___
 
@@ -288,7 +288,7 @@ ___
 
 #### Defined in
 
-packages/sdk/base/lib/address.d.ts:17
+base/lib/address.d.ts:17
 
 ___
 
@@ -309,7 +309,7 @@ ___
 
 #### Defined in
 
-packages/sdk/base/lib/address.d.ts:16
+base/lib/address.d.ts:16
 
 ___
 
@@ -329,7 +329,7 @@ ___
 
 #### Defined in
 
-packages/sdk/base/lib/address.d.ts:5
+base/lib/address.d.ts:5
 
 ___
 
@@ -349,7 +349,7 @@ ___
 
 #### Defined in
 
-packages/sdk/base/lib/address.d.ts:7
+base/lib/address.d.ts:7
 
 ___
 
@@ -369,7 +369,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/address.ts:30](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/address.ts#L30)
+[utils/src/address.ts:30](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/address.ts#L30)
 
 ___
 
@@ -389,7 +389,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/address.ts:35](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/address.ts#L35)
+[utils/src/address.ts:35](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/address.ts#L35)
 
 ___
 
@@ -409,7 +409,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/utils/src/address.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/address.ts#L38)
+[utils/src/address.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/address.ts#L38)
 
 ___
 
@@ -441,7 +441,7 @@ Usage of this EIP is therefore discouraged unless you have a very targeted use c
 
 #### Defined in
 
-node_modules/@ethereumjs/util/dist/account.d.ts:59
+utils/node_modules/@ethereumjs/util/dist/account.d.ts:59
 
 ___
 
@@ -461,4 +461,4 @@ ___
 
 #### Defined in
 
-packages/sdk/base/lib/address.d.ts:8
+base/lib/address.d.ts:8

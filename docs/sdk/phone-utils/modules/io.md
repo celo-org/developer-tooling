@@ -28,7 +28,7 @@
 
 #### Defined in
 
-[packages/sdk/phone-utils/src/io.ts:41](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/io.ts#L41)
+[phone-utils/src/io.ts:41](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/io.ts#L41)
 
 ___
 
@@ -38,7 +38,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/phone-utils/src/io.ts:87](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/io.ts#L87)
+[phone-utils/src/io.ts:87](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/io.ts#L87)
 
 ___
 
@@ -48,7 +48,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/phone-utils/src/io.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/io.ts#L23)
+[phone-utils/src/io.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/io.ts#L23)
 
 ___
 
@@ -58,7 +58,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/phone-utils/src/io.ts:25](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/io.ts#L25)
+[phone-utils/src/io.ts:25](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/io.ts#L25)
 
 ___
 
@@ -68,7 +68,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/phone-utils/src/io.ts:53](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/io.ts#L53)
+[phone-utils/src/io.ts:53](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/io.ts#L53)
 
 ## Variables
 
@@ -78,7 +78,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/phone-utils/src/io.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/io.ts#L27)
+[phone-utils/src/io.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/io.ts#L27)
 
 ___
 
@@ -88,7 +88,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/phone-utils/src/io.ts:55](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/io.ts#L55)
+[phone-utils/src/io.ts:55](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/io.ts#L55)
 
 ___
 
@@ -98,7 +98,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/phone-utils/src/io.ts:17](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/io.ts#L17)
+[phone-utils/src/io.ts:17](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/io.ts#L17)
 
 ___
 
@@ -108,7 +108,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/phone-utils/src/io.ts:6](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/io.ts#L6)
+[phone-utils/src/io.ts:6](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/io.ts#L6)
 
 ___
 
@@ -118,4 +118,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/phone-utils/src/io.ts:43](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/io.ts#L43)
+[phone-utils/src/io.ts:43](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/io.ts#L43)

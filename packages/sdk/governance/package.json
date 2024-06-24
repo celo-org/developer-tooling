@@ -36,5 +36,9 @@
   },
   "engines": {
     "node": ">=8.14.2"
+  },
+  "devDependencies": {
+    "@celo/typescript": "workspace:^",
+    "@types/debug": "^4.1.12"
   }
 }

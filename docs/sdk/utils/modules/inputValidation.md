@@ -36,7 +36,7 @@
 
 #### Defined in
 
-packages/sdk/base/lib/inputValidation.d.ts:14
+base/lib/inputValidation.d.ts:14
 
 ___
 
@@ -56,4 +56,4 @@ ___
 
 #### Defined in
 
-packages/sdk/base/lib/inputValidation.d.ts:13
+base/lib/inputValidation.d.ts:13
