@@ -20,6 +20,7 @@
     "prepack": "yarn build"
   },
   "dependencies": {
+    "@celo/connect": "^5.3.0",
     "@viem/anvil": "^0.0.9",
     "bignumber.js": "^9.0.0",
     "fs-extra": "^8.1.0",

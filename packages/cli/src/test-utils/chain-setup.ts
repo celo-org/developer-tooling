@@ -1,16 +1,15 @@
-import { PROXY_ADMIN_ADDRESS } from '@celo/connect'
+import { StrongAddress } from '@celo/base'
 import { ContractKit, StableToken } from '@celo/contractkit'
 import {
+  DEFAULT_OWNER_ADDRESS,
   STABLES_ADDRESS,
   impersonateAccount,
-  setCode,
   stopImpersonatingAccount,
 } from '@celo/dev-utils/lib/anvil-test'
 import { mineBlocks } from '@celo/dev-utils/lib/ganache-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
-import { proxyBytecode } from './constants'
 
 export const GANACHE_EPOCH_SIZE = 100
 export const MIN_LOCKED_CELO_VALUE = new BigNumber(Web3.utils.toWei('10000', 'ether')) // 10k CELO
@@ -140,9 +139,19 @@ export const topUpWithToken = async (
   await stopImpersonatingAccount(kit.web3, STABLES_ADDRESS)
 }
 
-// TODO remove this once no longer needed
-export const setupL2 = async (kit: ContractKit) => {
-  // Temporarily deploying any bytecode, so it's just there,
-  // isCel2 should hence return true as it just checks for bytecode existence
-  await setCode(kit.web3, PROXY_ADMIN_ADDRESS, proxyBytecode)
+// replace the original owner in the devchain, so we can act as the multisig owner
+// the transaction needs to be sent by the multisig itself and it needs some funds first
+export const changeMultiSigOwner = async (kit: ContractKit, toAccount: StrongAddress) => {
+  const governance = await kit.contracts.getGovernance()
+  const multisig = await governance.getApproverMultisig()
+  await kit.sendTransaction({
+    from: toAccount,
+    to: multisig.address,
+    value: kit.web3.utils.toWei('1', 'ether'),
+  })
+  await impersonateAccount(kit.web3, multisig.address)
+  await multisig
+    .replaceOwner(DEFAULT_OWNER_ADDRESS, toAccount)
+    .sendAndWaitForReceipt({ from: multisig.address })
+  await stopImpersonatingAccount(kit.web3, multisig.address)
 }

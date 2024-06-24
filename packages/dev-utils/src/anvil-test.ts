@@ -1,3 +1,4 @@
+import { PROXY_ADMIN_ADDRESS } from '@celo/connect'
 import { Anvil, CreateAnvilOptions, createAnvil } from '@viem/anvil'
 import Web3 from 'web3'
 import {
@@ -14,6 +15,9 @@ let instance: null | Anvil = null
 const ANVIL_PORT = 8546
 
 export const STABLES_ADDRESS = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
+
+// Introducing a different name for the same address to avoid confusion
+export const DEFAULT_OWNER_ADDRESS = STABLES_ADDRESS
 
 export function createInstance(): Anvil {
   // preparation for not needing to have --runInBand for anvil tests
@@ -54,6 +58,23 @@ export function stopImpersonatingAccount(web3: Web3, address: string) {
   return jsonRpcCall(web3, 'anvil_stopImpersonatingAccount', [address])
 }
 
+export const withImpersonatedAccount = async (
+  web3: Web3,
+  account: string,
+  fn: () => Promise<void>
+) => {
+  await impersonateAccount(web3, account)
+  await fn()
+  await stopImpersonatingAccount(web3, account)
+}
+
 export function setCode(web3: Web3, address: string, code: string) {
   return jsonRpcCall(web3, 'anvil_setCode', [address, code])
+}
+
+// TODO remove this once no longer needed
+export const setupL2 = async (web3: Web3) => {
+  // Temporarily deploying any bytecode, so it's just there,
+  // isCel2 should hence return true as it just checks for bytecode existence
+  await setCode(web3, PROXY_ADMIN_ADDRESS, '0x1234567890')
 }

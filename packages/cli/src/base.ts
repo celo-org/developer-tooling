@@ -11,6 +11,7 @@ import net from 'net'
 import Web3 from 'web3'
 import { CustomFlags } from './utils/command'
 import { getNodeUrl } from './utils/config'
+import { getFeeCurrencyContractWrapper } from './utils/fee-currency'
 import { requireNodeIsSynced } from './utils/helpers'
 
 export abstract class BaseCommand extends Command {
@@ -93,6 +94,7 @@ export abstract class BaseCommand extends Command {
   private _web3: Web3 | null = null
   private _kit: ContractKit | null = null
 
+  // Indicates if celocli running in L2 context
   private cel2: boolean | null = null
 
   async getWeb3() {
@@ -200,8 +202,8 @@ export abstract class BaseCommand extends Command {
     const gasCurrencyFlag = res.flags.gasCurrency as StrongAddress | undefined
 
     if (gasCurrencyFlag) {
-      const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyWhitelist()
-      const validFeeCurrencies = await feeCurrencyWhitelist.getWhitelist()
+      const feeCurrencyContract = await getFeeCurrencyContractWrapper(kit, await this.isCel2())
+      const validFeeCurrencies = await feeCurrencyContract.getAddresses()
 
       if (
         validFeeCurrencies.map((x) => x.toLocaleLowerCase()).includes(gasCurrencyFlag.toLowerCase())
@@ -209,9 +211,7 @@ export abstract class BaseCommand extends Command {
         kit.setFeeCurrency(gasCurrencyFlag)
       } else {
         const pairs = (
-          await feeCurrencyWhitelist.getFeeCurrencyInformation(
-            validFeeCurrencies as StrongAddress[]
-          )
+          await feeCurrencyContract.getFeeCurrencyInformation(validFeeCurrencies as StrongAddress[])
         ).map(
           ({ name, symbol, address, adaptedToken }) =>
             `${address} - ${name || 'unknown name'} (${symbol || 'N/A'})${

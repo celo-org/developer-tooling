@@ -214,6 +214,10 @@ jobs:
         with:
           artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
       - run: sudo corepack enable yarn
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: "nightly-f625d0fa7c51e65b4bf1e8f7931cd1c6e2e285e9"
       - name: Run tests
         run: |
           yarn workspace @celo/contractkit test --coverage
@@ -239,10 +243,9 @@ jobs:
         uses: foundry-rs/foundry-toolchain@v1
         with:
           version: ${{ env.SUPPORTED_FOUNDRY_VERSION }}
-      # NODE_OPTIONS="--experimental-vm-modules" is needed because @viem/anvil uses dynamic imports
       - name: Run tests
         run: |
-          NODE_OPTIONS="--experimental-vm-modules" yarn workspace @celo/celocli test --coverage
+          yarn workspace @celo/celocli test --coverage
       - name: Verify that a new account can be created
         run: |
           yarn workspace @celo/celocli run celocli account:new

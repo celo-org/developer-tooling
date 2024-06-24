@@ -16,6 +16,8 @@
 
 - **`BaseWrapper`**
 
+  ↳ [`AbstractFeeCurrencyWrapper`](wrappers_AbstractFeeCurrencyWrapper.AbstractFeeCurrencyWrapper.md)
+
   ↳ [`AccountsWrapper`](wrappers_Accounts.AccountsWrapper.md)
 
   ↳ [`AttestationsWrapper`](wrappers_Attestations.AttestationsWrapper.md)
@@ -31,8 +33,6 @@
   ↳ [`EscrowWrapper`](wrappers_Escrow.EscrowWrapper.md)
 
   ↳ [`FederatedAttestationsWrapper`](wrappers_FederatedAttestations.FederatedAttestationsWrapper.md)
-
-  ↳ [`FeeCurrencyWhitelistWrapper`](wrappers_FeeCurrencyWhitelistWrapper.FeeCurrencyWhitelistWrapper.md)
 
   ↳ [`FeeHandlerWrapper`](wrappers_FeeHandler.FeeHandlerWrapper.md)
 

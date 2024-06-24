@@ -802,11 +802,11 @@ ___
 
 #### Parameters
 
-| Name | Type |
-| :------ | :------ |
-| `signer` | `string` |
-| `typedData` | `EIP712TypedData` |
-| `version?` | ``1`` \| ``3`` \| ``4`` \| ``5`` |
+| Name | Type | Default value |
+| :------ | :------ | :------ |
+| `signer` | `string` | `undefined` |
+| `typedData` | `EIP712TypedData` | `undefined` |
+| `version` | ``null`` \| ``1`` \| ``3`` \| ``4`` \| ``5`` | `4` |
 
 #### Returns
 

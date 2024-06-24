@@ -17,7 +17,7 @@
     "test": "yarn test-pure && yarn test-needing-ganache",
     "test-pure": "yarn workspaces foreach -piv --all --exclude celo --exclude \"@celo/{celocli,contractkit,transactions-uri}\" run test",
     "test-needing-ganache": "yarn workspace @celo/contractkit test && yarn workspace @celo/celocli test && yarn workspace @celo/transactions-uri test",
-    "build": "yarn workspaces foreach -pitv --all run build",
+    "build": "yarn workspaces foreach -piv --all --topological-dev run build",
     "clean": "yarn workspaces foreach -piv --all run clean",
     "docs": "yarn workspaces foreach -piv --all run docs",
     "cs": "yarn changeset",

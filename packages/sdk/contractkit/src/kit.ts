@@ -1,6 +1,13 @@
 // tslint:disable: ordered-imports
 import { StrongAddress } from '@celo/base'
-import { CeloTx, CeloTxObject, Connection, ReadOnlyWallet, TransactionResult } from '@celo/connect'
+import {
+  CeloTx,
+  CeloTxObject,
+  Connection,
+  ReadOnlyWallet,
+  TransactionResult,
+  isCel2,
+} from '@celo/connect'
 import { EIP712TypedData } from '@celo/utils/lib/sign-typed-data-utils'
 import { Signature } from '@celo/utils/lib/signatureUtils'
 import { LocalWallet } from '@celo/wallet-local'
@@ -134,19 +141,34 @@ export class ContractKit {
   async getNetworkConfig(
     humanReadable = false
   ): Promise<NetworkConfig | Record<CeloContract & 'stableTokens', unknown>> {
-    const configContracts: ValidWrappers[] = [
-      CeloContract.Election,
-      CeloContract.Attestations,
-      CeloContract.Governance,
-      CeloContract.LockedGold,
-      CeloContract.SortedOracles,
-      CeloContract.GasPriceMinimum,
-      CeloContract.Reserve,
-      CeloContract.Validators,
-      CeloContract.DowntimeSlasher,
-      CeloContract.BlockchainParameters,
-      CeloContract.EpochRewards,
-    ]
+    let configContracts: ValidWrappers[]
+
+    if (await isCel2(this.web3)) {
+      configContracts = [
+        CeloContract.Election,
+        CeloContract.Governance,
+        CeloContract.LockedGold,
+        CeloContract.SortedOracles,
+        CeloContract.Reserve,
+        CeloContract.Validators,
+        CeloContract.DowntimeSlasher,
+        CeloContract.FeeCurrencyDirectory,
+      ]
+    } else {
+      configContracts = [
+        CeloContract.Election,
+        CeloContract.Attestations,
+        CeloContract.Governance,
+        CeloContract.LockedGold,
+        CeloContract.SortedOracles,
+        CeloContract.GasPriceMinimum,
+        CeloContract.Reserve,
+        CeloContract.Validators,
+        CeloContract.DowntimeSlasher,
+        CeloContract.BlockchainParameters,
+        CeloContract.EpochRewards,
+      ]
+    }
 
     const configMethod = async (contract: ValidWrappers) => {
       try {
@@ -190,22 +212,33 @@ export class ContractKit {
     }
     this.connection.defaultFeeCurrency = address
   }
-
+  /*
+   * @deprecated - epoch related methods will be removed from contractkit
+   */
   async getEpochSize(): Promise<number> {
     const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
     return blockchainParamsWrapper.getEpochSizeNumber()
   }
 
+  /*
+   * @deprecated - epoch related methods will be removed from contractkit
+   */
   async getFirstBlockNumberForEpoch(epochNumber: number): Promise<number> {
     const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
     return blockchainParamsWrapper.getFirstBlockNumberForEpoch(epochNumber)
   }
 
+  /*
+   * @deprecated - epoch related methods will be removed from contractkit
+   */
   async getLastBlockNumberForEpoch(epochNumber: number): Promise<number> {
     const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
     return blockchainParamsWrapper.getLastBlockNumberForEpoch(epochNumber)
   }
 
+  /*
+   * @deprecated - epoch related methods will be removed from contractkit
+   */
   async getEpochNumberOfBlock(blockNumber: number): Promise<number> {
     const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
     return blockchainParamsWrapper.getEpochNumberOfBlock(blockNumber)
