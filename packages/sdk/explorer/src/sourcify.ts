@@ -280,6 +280,8 @@ async function queryCeloScan(connection: Connection, contract: Address): Promise
         output: { abi: data },
         settings: { name: info.ContractName, implementation: info.Implementation },
       })
+    } else {
+      console.warn(json.status, json.result)
     }
   }
   return null
