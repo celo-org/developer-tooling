@@ -28,7 +28,7 @@
 
 #### Defined in
 
-[packages/sdk/phone-utils/src/inputValidation.ts:20](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/inputValidation.ts#L20)
+[phone-utils/src/inputValidation.ts:20](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/inputValidation.ts#L20)
 
 ___
 
@@ -49,4 +49,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/phone-utils/src/inputValidation.ts:4](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/inputValidation.ts#L4)
+[phone-utils/src/inputValidation.ts:4](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/inputValidation.ts#L4)

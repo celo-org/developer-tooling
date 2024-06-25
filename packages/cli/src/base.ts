@@ -174,7 +174,8 @@ export abstract class BaseCommand extends Command {
           transport,
           derivationPathIndexes,
           undefined,
-          ledgerConfirmation
+          ledgerConfirmation,
+          await this.isCel2()
         )
       } catch (err) {
         console.log('Check if the ledger is connected and logged.')

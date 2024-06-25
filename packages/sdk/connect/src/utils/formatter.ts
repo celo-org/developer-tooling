@@ -32,8 +32,6 @@ export function inputCeloTxFormatter(tx: CeloTx): FormattedCeloTx {
     maxPriorityFeePerGas,
     maxFeeInFeeCurrency,
     feeCurrency,
-    gatewayFee,
-    gatewayFeeRecipient,
     data,
     value,
     accessList,
@@ -53,12 +51,6 @@ export function inputCeloTxFormatter(tx: CeloTx): FormattedCeloTx {
 
   if (feeCurrency) {
     formattedTX.feeCurrency = inputAddressFormatter(feeCurrency)
-  }
-  if (gatewayFeeRecipient) {
-    formattedTX.gatewayFeeRecipient = inputAddressFormatter(gatewayFeeRecipient)
-  }
-  if (gatewayFee) {
-    formattedTX.gatewayFee = numberToHex(gatewayFee)
   }
 
   if (data && !isHex(data)) {
@@ -98,10 +90,6 @@ export function outputCeloTxFormatter(tx: any): CeloTxPending {
   tx.gas = hexToNumber(tx.gas)
   tx.value = outputBigNumberFormatter(tx.value)
 
-  if (tx.gatewayFee) {
-    tx.gatewayFee = outputBigNumberFormatter(tx.gatewayFee)
-  }
-
   if (tx.gasPrice) {
     tx.gasPrice = outputBigNumberFormatter(tx.gasPrice)
   }
@@ -124,10 +112,6 @@ export function outputCeloTxFormatter(tx: any): CeloTxPending {
 
   if (tx.feeCurrency) {
     tx.feeCurrency = toChecksumAddress(tx.feeCurrency)
-  }
-
-  if (tx.gatewayFeeRecipient) {
-    tx.gatewayFeeRecipient = toChecksumAddress(tx.gatewayFeeRecipient)
   }
 
   return tx as CeloTxPending

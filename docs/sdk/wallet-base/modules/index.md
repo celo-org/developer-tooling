@@ -6,13 +6,17 @@
 
 ### References
 
+- [LegacyEncodedTx](index.md#legacyencodedtx)
 - [UnlockableWallet](index.md#unlockablewallet)
 - [Wallet](index.md#wallet)
 - [WalletBase](index.md#walletbase)
 - [assertLength](index.md#assertlength)
 - [chainIdTransformationForSigning](index.md#chainidtransformationforsigning)
 - [decodeSig](index.md#decodesig)
+- [determineTXType](index.md#determinetxtype)
 - [encodeTransaction](index.md#encodetransaction)
+- [encode\_deprecated\_celo\_legacy\_type\_only\_for\_temporary\_ledger\_compat](index.md#encode_deprecated_celo_legacy_type_only_for_temporary_ledger_compat)
+- [extractPublicKeyFromHashAndSignature](index.md#extractpublickeyfromhashandsignature)
 - [extractSignature](index.md#extractsignature)
 - [getHashFromEncoded](index.md#gethashfromencoded)
 - [getSignerFromTxEIP2718TX](index.md#getsignerfromtxeip2718tx)
@@ -21,7 +25,9 @@
 - [handleHexString](index.md#handlehexstring)
 - [handleNumber](index.md#handlenumber)
 - [handleStringNumber](index.md#handlestringnumber)
+- [isCIP64](index.md#iscip64)
 - [isCIP66](index.md#iscip66)
+- [isEIP1559](index.md#iseip1559)
 - [isPriceToLow](index.md#ispricetolow)
 - [publicKeyPrefix](index.md#publickeyprefix)
 - [recoverMessageSigner](index.md#recovermessagesigner)
@@ -35,6 +41,12 @@
 - [verifySignatureWithoutPrefix](index.md#verifysignaturewithoutprefix)
 
 ## References
+
+### LegacyEncodedTx
+
+Re-exports [LegacyEncodedTx](../interfaces/signing_utils.LegacyEncodedTx.md)
+
+___
 
 ### UnlockableWallet
 
@@ -72,9 +84,27 @@ Re-exports [decodeSig](signing_utils.md#decodesig)
 
 ___
 
+### determineTXType
+
+Re-exports [determineTXType](signing_utils.md#determinetxtype)
+
+___
+
 ### encodeTransaction
 
 Re-exports [encodeTransaction](signing_utils.md#encodetransaction)
+
+___
+
+### encode\_deprecated\_celo\_legacy\_type\_only\_for\_temporary\_ledger\_compat
+
+Re-exports [encode_deprecated_celo_legacy_type_only_for_temporary_ledger_compat](signing_utils.md#encode_deprecated_celo_legacy_type_only_for_temporary_ledger_compat)
+
+___
+
+### extractPublicKeyFromHashAndSignature
+
+Re-exports [extractPublicKeyFromHashAndSignature](signing_utils.md#extractpublickeyfromhashandsignature)
 
 ___
 
@@ -126,9 +156,21 @@ Re-exports [handleStringNumber](signing_utils.md#handlestringnumber)
 
 ___
 
+### isCIP64
+
+Re-exports [isCIP64](signing_utils.md#iscip64)
+
+___
+
 ### isCIP66
 
 Re-exports [isCIP66](signing_utils.md#iscip66)
+
+___
+
+### isEIP1559
+
+Re-exports [isEIP1559](signing_utils.md#iseip1559)
 
 ___
 

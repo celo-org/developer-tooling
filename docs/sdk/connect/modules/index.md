@@ -14,7 +14,6 @@
 - [AbiOutput](index.md#abioutput)
 - [AccessListRaw](index.md#accesslistraw)
 - [Address](index.md#address)
-- [CIP42TXProperties](index.md#cip42txproperties)
 - [CIP64TXProperties](index.md#cip64txproperties)
 - [CIP66TXProperties](index.md#cip66txproperties)
 - [Callback](index.md#callback)
@@ -41,7 +40,6 @@
 - [HttpRpcCaller](index.md#httprpccaller)
 - [JsonRpcPayload](index.md#jsonrpcpayload)
 - [JsonRpcResponse](index.md#jsonrpcresponse)
-- [LegacyTXProperties](index.md#legacytxproperties)
 - [PROXY\_ADMIN\_ADDRESS](index.md#proxy_admin_address)
 - [Provider](index.md#provider)
 - [RLPEncodedTx](index.md#rlpencodedtx)
@@ -50,6 +48,7 @@
 - [Signer](index.md#signer)
 - [TransactionResult](index.md#transactionresult)
 - [TransactionTypes](index.md#transactiontypes)
+- [WithSig](index.md#withsig)
 - [decodeStringParameter](index.md#decodestringparameter)
 - [getAbiByName](index.md#getabibyname)
 - [getRandomId](index.md#getrandomid)
@@ -128,12 +127,6 @@ ___
 ### Address
 
 Re-exports [Address](types.md#address)
-
-___
-
-### CIP42TXProperties
-
-Re-exports [CIP42TXProperties](../interfaces/types.CIP42TXProperties.md)
 
 ___
 
@@ -293,12 +286,6 @@ Re-exports [JsonRpcResponse](../interfaces/types.JsonRpcResponse.md)
 
 ___
 
-### LegacyTXProperties
-
-Re-exports [LegacyTXProperties](../interfaces/types.LegacyTXProperties.md)
-
-___
-
 ### PROXY\_ADMIN\_ADDRESS
 
 Re-exports [PROXY_ADMIN_ADDRESS](utils_is_cel2.md#proxy_admin_address)
@@ -344,6 +331,12 @@ ___
 ### TransactionTypes
 
 Re-exports [TransactionTypes](types.md#transactiontypes)
+
+___
+
+### WithSig
+
+Re-exports [WithSig](types.md#withsig)
 
 ___
 
@@ -413,4 +406,4 @@ Re-exports [toTxResult](utils_tx_result.md#totxresult)
 
 #### Defined in
 
-node_modules/web3-core/types/index.d.ts:442
+packages/sdk/connect/node_modules/web3-core/types/index.d.ts:442

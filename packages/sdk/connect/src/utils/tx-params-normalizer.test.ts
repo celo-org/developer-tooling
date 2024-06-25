@@ -20,8 +20,6 @@ describe('TxParamsNormalizer class', () => {
     maxFeePerGas: undefined,
     maxPriorityFeePerGas: undefined,
     feeCurrency: undefined,
-    gatewayFeeRecipient: '1',
-    gatewayFee: '1',
   }
 
   beforeEach(() => {

@@ -12,8 +12,8 @@
 
 ### fetchMock
 
-• `Const` **fetchMock**: `any`
+• `Const` **fetchMock**: `FetchMockSandbox`
 
 #### Defined in
 
-[globals.d.ts:1](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/globals.d.ts#L1)
+[globals.d.ts:5](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/network-utils/src/globals.d.ts#L5)

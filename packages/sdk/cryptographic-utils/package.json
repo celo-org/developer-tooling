@@ -34,6 +34,6 @@
     "@types/node": "^18.7.16"
   },
   "devDependencies": {
-    "@celo/typescript": "0.0.1"
+    "@celo/typescript": "workspace:^"
   }
 }

@@ -24,9 +24,14 @@
 
 - [baseDerivationPath](ledger_wallet.LedgerWallet.md#basederivationpath)
 - [derivationPathIndexes](ledger_wallet.LedgerWallet.md#derivationpathindexes)
+- [isCel2](ledger_wallet.LedgerWallet.md#iscel2)
 - [isSetupFinished](ledger_wallet.LedgerWallet.md#issetupfinished)
+- [ledger](ledger_wallet.LedgerWallet.md#ledger)
 - [ledgerAddressValidation](ledger_wallet.LedgerWallet.md#ledgeraddressvalidation)
 - [transport](ledger_wallet.LedgerWallet.md#transport)
+- [MIN\_VERSION\_EIP1559](ledger_wallet.LedgerWallet.md#min_version_eip1559)
+- [MIN\_VERSION\_SUPPORTED](ledger_wallet.LedgerWallet.md#min_version_supported)
+- [MIN\_VERSION\_TOKEN\_DATA](ledger_wallet.LedgerWallet.md#min_version_token_data)
 
 ### Methods
 
@@ -36,6 +41,7 @@
 - [hasAccount](ledger_wallet.LedgerWallet.md#hasaccount)
 - [init](ledger_wallet.LedgerWallet.md#init)
 - [removeAccount](ledger_wallet.LedgerWallet.md#removeaccount)
+- [rlpEncodedTxForLedger](ledger_wallet.LedgerWallet.md#rlpencodedtxforledger)
 - [signPersonalMessage](ledger_wallet.LedgerWallet.md#signpersonalmessage)
 - [signTransaction](ledger_wallet.LedgerWallet.md#signtransaction)
 - [signTypedData](ledger_wallet.LedgerWallet.md#signtypeddata)
@@ -44,7 +50,7 @@
 
 ### constructor
 
-• **new LedgerWallet**(`derivationPathIndexes?`, `baseDerivationPath?`, `transport?`, `ledgerAddressValidation?`): [`LedgerWallet`](ledger_wallet.LedgerWallet.md)
+• **new LedgerWallet**(`derivationPathIndexes?`, `baseDerivationPath?`, `transport?`, `ledgerAddressValidation?`, `isCel2?`): [`LedgerWallet`](ledger_wallet.LedgerWallet.md)
 
 #### Parameters
 
@@ -54,6 +60,7 @@
 | `baseDerivationPath` | `string` | `CELO_BASE_DERIVATION_PATH` | base derivation path. Default: "44'/52752'/0'/0" |
 | `transport` | `any` | `{}` | Transport to connect the ledger device |
 | `ledgerAddressValidation` | [`AddressValidation`](../enums/ledger_wallet.AddressValidation.md) | `AddressValidation.firstTransactionPerAddress` | - |
+| `isCel2?` | `boolean` | `undefined` | - |
 
 #### Returns
 
@@ -65,7 +72,7 @@ RemoteWallet\&lt;LedgerSigner\&gt;.constructor
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:56](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L56)
+[wallet-ledger/src/ledger-wallet.ts:69](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L69)
 
 ## Properties
 
@@ -77,7 +84,7 @@ base derivation path. Default: "44'/52752'/0'/0"
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:58](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L58)
+[wallet-ledger/src/ledger-wallet.ts:71](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L71)
 
 ___
 
@@ -92,7 +99,17 @@ Example: [3, 99, 53] will retrieve the derivation paths of
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:57](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L57)
+[wallet-ledger/src/ledger-wallet.ts:70](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L70)
+
+___
+
+### isCel2
+
+• `Optional` `Readonly` **isCel2**: `boolean`
+
+#### Defined in
+
+[wallet-ledger/src/ledger-wallet.ts:74](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L74)
 
 ___
 
@@ -118,13 +135,23 @@ wallet-remote/lib/remote-wallet.d.ts:51
 
 ___
 
+### ledger
+
+• **ledger**: `undefined` \| `default`
+
+#### Defined in
+
+[wallet-ledger/src/ledger-wallet.ts:59](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L59)
+
+___
+
 ### ledgerAddressValidation
 
 • `Readonly` **ledgerAddressValidation**: [`AddressValidation`](../enums/ledger_wallet.AddressValidation.md) = `AddressValidation.firstTransactionPerAddress`
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:60](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L60)
+[wallet-ledger/src/ledger-wallet.ts:73](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L73)
 
 ___
 
@@ -136,7 +163,37 @@ Transport to connect the ledger device
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:59](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L59)
+[wallet-ledger/src/ledger-wallet.ts:72](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L72)
+
+___
+
+### MIN\_VERSION\_EIP1559
+
+▪ `Static` **MIN\_VERSION\_EIP1559**: `string` = `'1.2.0'`
+
+#### Defined in
+
+[wallet-ledger/src/ledger-wallet.ts:58](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L58)
+
+___
+
+### MIN\_VERSION\_SUPPORTED
+
+▪ `Static` **MIN\_VERSION\_SUPPORTED**: `string` = `'1.0.0'`
+
+#### Defined in
+
+[wallet-ledger/src/ledger-wallet.ts:56](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L56)
+
+___
+
+### MIN\_VERSION\_TOKEN\_DATA
+
+▪ `Static` **MIN\_VERSION\_TOKEN\_DATA**: `string` = `'1.0.2'`
+
+#### Defined in
+
+[wallet-ledger/src/ledger-wallet.ts:57](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L57)
 
 ## Methods
 
@@ -305,6 +362,26 @@ wallet-base/lib/wallet-base.d.ts:23
 
 ___
 
+### rlpEncodedTxForLedger
+
+▸ **rlpEncodedTxForLedger**(`txParams`): `Promise`\<`RLPEncodedTx` \| `LegacyEncodedTx`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `txParams` | `CeloTx` |
+
+#### Returns
+
+`Promise`\<`RLPEncodedTx` \| `LegacyEncodedTx`\>
+
+#### Defined in
+
+[wallet-ledger/src/ledger-wallet.ts:98](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L98)
+
+___
+
 ### signPersonalMessage
 
 ▸ **signPersonalMessage**(`address`, `data`): `Promise`\<`string`\>
@@ -360,7 +437,7 @@ RemoteWallet.signTransaction
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:71](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L71)
+[wallet-ledger/src/ledger-wallet.ts:85](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L85)
 
 ___
 

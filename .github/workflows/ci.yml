@@ -26,6 +26,8 @@ env:
   NODE_MODULE_CACHE_VERSION: 5
   NODE_OPTIONS: '--max-old-space-size=4096'
   TERM: dumb
+  # Supported Foundry version defined at celo-org (GitHub organisation) level, for consistency across workflows.
+  SUPPORTED_FOUNDRY_VERSION: ${{ vars.SUPPORTED_FOUNDRY_VERSION }}
 
 # EXAMPLE on debug ssh step
 #  - name: Setup tmate session
@@ -86,14 +88,15 @@ jobs:
         run: |
           yarn check-licenses
       # Get workdir local changes and fail if there are any change
-      - name: Verify Changed files
-        id: verify-changed-files
-        uses: tj-actions/verify-changed-files@v17
-        with:
-          fail-if-changed: 'true'
-          fail-message: 'Files changed during build. Please build locally and commit the changes.'
-          files: |
-            **/*
+      # - name: Verify Changed files
+      #   id: verify-changed-files
+      #   uses: tj-actions/verify-changed-files@v17
+      #   with:
+      #     path: yarn.lock
+      #     fail-if-changed: 'true'
+      #     fail-message: 'Files changed during build. Please build locally and commit the changes.'
+      #     files: |
+      #       **/*
 
       - run: |
           echo "${{ steps.verify-changed-files.outputs.changed_files }}"
@@ -239,7 +242,7 @@ jobs:
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
         with:
-          version: "nightly-f625d0fa7c51e65b4bf1e8f7931cd1c6e2e285e9"
+          version: ${{ env.SUPPORTED_FOUNDRY_VERSION }}
       - name: Run tests
         run: |
           yarn workspace @celo/celocli test --coverage

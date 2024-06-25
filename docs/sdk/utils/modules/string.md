@@ -40,4 +40,4 @@ Renames and re-exports [__type](string.md#__type)
 
 #### Defined in
 
-[packages/sdk/utils/src/string.ts:5](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/string.ts#L5)
+[utils/src/string.ts:5](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/string.ts#L5)
