@@ -42,7 +42,7 @@ Metadata or null
 
 #### Defined in
 
-[sourcify.ts:179](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L179)
+[sourcify.ts:185](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L185)
 
 ___
 
@@ -73,4 +73,4 @@ the implementation address or null
 
 #### Defined in
 
-[sourcify.ts:228](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L228)
+[sourcify.ts:300](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/sourcify.ts#L300)

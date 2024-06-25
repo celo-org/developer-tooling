@@ -1,4 +1,4 @@
-w[@celo/explorer](../README.md) / [block-explorer](../modules/block_explorer.md) / ParsedBlock
+[@celo/explorer](../README.md) / [block-explorer](../modules/block_explorer.md) / ParsedBlock
 
 # Interface: ParsedBlock
 

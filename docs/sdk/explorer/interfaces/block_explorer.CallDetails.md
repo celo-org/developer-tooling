@@ -1,4 +1,4 @@
-w[@celo/explorer](../README.md) / [block-explorer](../modules/block_explorer.md) / CallDetails
+[@celo/explorer](../README.md) / [block-explorer](../modules/block_explorer.md) / CallDetails
 
 # Interface: CallDetails
 
