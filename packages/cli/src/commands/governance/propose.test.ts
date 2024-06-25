@@ -256,7 +256,7 @@ testWithAnvil('governance:propose cmd', (web3: Web3) => {
           '--for',
           multisigWithOneSigner,
           '--descriptionURL',
-          'https://dummyurl.com',
+          'https://example.com',
         ],
         web3
       )
@@ -321,7 +321,7 @@ testWithAnvil('governance:propose cmd', (web3: Web3) => {
           '--for',
           multisigWithTwoSigners,
           '--descriptionURL',
-          'https://dummyurl.com',
+          'https://example.com',
         ],
         web3
       )
@@ -376,7 +376,7 @@ testWithAnvil('governance:propose cmd', (web3: Web3) => {
           '--from',
           accounts[0],
           '--descriptionURL',
-          'https://dummyurl.com',
+          'https://example.com',
           '--force',
           '--noInfo',
         ],
@@ -423,7 +423,7 @@ testWithAnvil('governance:propose cmd', (web3: Web3) => {
           '--from',
           accounts[0],
           '--descriptionURL',
-          'https://dummyurl.com',
+          'https://example.com',
           '--force',
           '--noInfo',
         ],
