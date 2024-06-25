@@ -73,7 +73,7 @@ testWithAnvil('transfer:dollars cmd', (web3: Web3) => {
         ['--from', accounts[1], '--to', SANCTIONED_ADDRESSES[0], '--value', '1'],
         web3
       )
-    ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
+    ).rejects.toThrow(`"Some checks didn't pass!"`)
     expect(spy).toHaveBeenCalledWith(expect.stringContaining(COMPLIANT_ERROR_RESPONSE))
   })
 })
