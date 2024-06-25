@@ -169,10 +169,9 @@ describe('AzureHSMWallet class', () => {
               value: Web3.utils.toWei('1', 'ether'),
               nonce: 0,
               gas: '10',
-              gasPrice: '99',
+              maxFeePerGas: '99',
+              maxPriorityFeePerGas: '99',
               feeCurrency: ACCOUNT_ADDRESS_NEVER,
-              gatewayFeeRecipient: ACCOUNT_ADDRESS_NEVER,
-              gatewayFee: '0x5678',
               data: '0xabcdef',
             }
           })
@@ -234,8 +233,6 @@ describe('AzureHSMWallet class', () => {
               gas: '10',
               gasPrice: '99',
               feeCurrency: '0x',
-              gatewayFeeRecipient: ACCOUNT_ADDRESS_NEVER,
-              gatewayFee: '0x5678',
               data: '0xabcdef',
             }
           })
@@ -266,8 +263,6 @@ describe('AzureHSMWallet class', () => {
                 gas: '10',
                 gasPrice: '99',
                 feeCurrency: '0x' as const,
-                gatewayFeeRecipient: ACCOUNT_ADDRESS_NEVER,
-                gatewayFee: '0x5678',
                 data: '0xabcdef',
               }
 

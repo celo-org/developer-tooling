@@ -5,7 +5,7 @@
   "excludePrivate": true,
   "excludeProtected": true,
   "hideGenerator": true,
-  "out": "../../docs/sdk/docs/utils",
+  "out": "../../../docs/sdk/utils",
   "gitRevision": "master",
   "readme": "none",
   "entryPoints": [

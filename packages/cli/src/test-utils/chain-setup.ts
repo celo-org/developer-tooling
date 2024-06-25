@@ -1,4 +1,11 @@
-import { ContractKit } from '@celo/contractkit'
+import { StrongAddress } from '@celo/base'
+import { ContractKit, StableToken } from '@celo/contractkit'
+import {
+  DEFAULT_OWNER_ADDRESS,
+  STABLES_ADDRESS,
+  impersonateAccount,
+  stopImpersonatingAccount,
+} from '@celo/dev-utils/lib/anvil-test'
 import { mineBlocks } from '@celo/dev-utils/lib/ganache-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
@@ -115,4 +122,36 @@ export const voteForGroupFromAndActivateVotes = async (
 
 export const mineEpoch = async (kit: ContractKit) => {
   await mineBlocks(100, kit.web3)
+}
+
+export const topUpWithToken = async (
+  kit: ContractKit,
+  stableToken: StableToken,
+  account: string,
+  amount: BigNumber
+) => {
+  const token = await kit.contracts.getStableToken(stableToken)
+
+  await impersonateAccount(kit.web3, STABLES_ADDRESS)
+  await token.transfer(account, amount.toFixed()).sendAndWaitForReceipt({
+    from: STABLES_ADDRESS,
+  })
+  await stopImpersonatingAccount(kit.web3, STABLES_ADDRESS)
+}
+
+// replace the original owner in the devchain, so we can act as the multisig owner
+// the transaction needs to be sent by the multisig itself and it needs some funds first
+export const changeMultiSigOwner = async (kit: ContractKit, toAccount: StrongAddress) => {
+  const governance = await kit.contracts.getGovernance()
+  const multisig = await governance.getApproverMultisig()
+  await kit.sendTransaction({
+    from: toAccount,
+    to: multisig.address,
+    value: kit.web3.utils.toWei('1', 'ether'),
+  })
+  await impersonateAccount(kit.web3, multisig.address)
+  await multisig
+    .replaceOwner(DEFAULT_OWNER_ADDRESS, toAccount)
+    .sendAndWaitForReceipt({ from: multisig.address })
+  await stopImpersonatingAccount(kit.web3, multisig.address)
 }

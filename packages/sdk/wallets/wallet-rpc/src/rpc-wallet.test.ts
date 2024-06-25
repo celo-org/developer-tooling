@@ -170,8 +170,6 @@ testWithGanache('rpc-wallet', (web3) => {
                 gas: '10',
                 gasPrice: '99',
                 feeCurrency: '0x',
-                gatewayFeeRecipient: '0x1234',
-                gatewayFee: '0x5678',
                 data: '0xabcdef',
               }
             })
@@ -219,8 +217,6 @@ testWithGanache('rpc-wallet', (web3) => {
                 gas: '10',
                 gasPrice: '99',
                 feeCurrency: '0x' as const,
-                gatewayFeeRecipient: '0x1234',
-                gatewayFee: '0x5678',
                 data: '0xabcdef',
               }
 

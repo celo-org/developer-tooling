@@ -7,7 +7,7 @@
   "sideEffects": false,
   "author": "Celo",
   "license": "Apache-2.0",
-  "homepage": "https://celo-sdk-docs.readthedocs.io/en/latest/connect",
+  "homepage": "https://docs.celo.org/developer/tools",
   "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/sdk/connect",
   "keywords": [
     "celo",
@@ -35,6 +35,8 @@
     "web3-eth-contract": "1.10.4"
   },
   "devDependencies": {
+    "@celo/typescript": "workspace:^",
+    "@types/debug": "^4.1.12",
     "web3": "1.10.4",
     "web3-core": "1.10.4",
     "web3-eth": "1.10.4",

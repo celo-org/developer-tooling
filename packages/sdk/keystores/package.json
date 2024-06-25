@@ -11,13 +11,13 @@
     "blockchain",
     "sdk"
   ],
-  "homepage": "https://celo-sdk-docs.readthedocs.io/en/latest/keystores",
+  "homepage": "https://docs.celo.org/developer/tools",
   "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/sdk/keystores",
   "scripts": {
     "build": "yarn run --top-level tsc -b .",
     "clean": "yarn run --top-level tsc -b . --clean",
     "docs": "yarn run --top-level typedoc",
-    "test": "yarn run --top-level jest --runInBand",
+    "test": "yarn run --top-level jest --runInBand --forceExit",
     "lint": "yarn run --top-level eslint -c .eslintrc.js ",
     "prepublishOnly": "yarn build"
   },
@@ -27,6 +27,7 @@
     "ethereumjs-wallet": "^1.0.1"
   },
   "devDependencies": {
+    "@celo/typescript": "workspace:^",
     "@types/rimraf": "3.0.2",
     "rimraf": "3.0.2"
   },
