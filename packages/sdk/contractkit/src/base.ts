@@ -1,6 +1,7 @@
 export enum CeloContract {
   Accounts = 'Accounts',
   Attestations = 'Attestations',
+  CeloDistributionSchedule = 'CeloDistributionSchedule',
   BlockchainParameters = 'BlockchainParameters',
   DoubleSigningSlasher = 'DoubleSigningSlasher',
   DowntimeSlasher = 'DowntimeSlasher',

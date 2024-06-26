@@ -1,8 +1,4 @@
 // tslint:disable: ordered-imports
-import debugFactory from 'debug'
-import { AddressRegistry } from './address-registry'
-import { CeloContract, ProxyContracts } from './base'
-import { StableToken } from './celo-tokens'
 import { newGasPriceMinimum } from '@celo/abis/web3/0.8/GasPriceMinimum'
 import { newAccounts } from '@celo/abis/web3/Accounts'
 import { newAttestations } from '@celo/abis/web3/Attestations'
@@ -29,7 +25,12 @@ import { newSortedOracles } from '@celo/abis/web3/SortedOracles'
 import { newValidators } from '@celo/abis/web3/Validators'
 import { newReserve } from '@celo/abis/web3/mento/Reserve'
 import { newStableToken } from '@celo/abis/web3/mento/StableToken'
+import debugFactory from 'debug'
+import { AddressRegistry } from './address-registry'
+import { CeloContract, ProxyContracts } from './base'
+import { StableToken } from './celo-tokens'
 
+import { newCeloDistributionSchedule } from '@celo/abis-12/web3/CeloDistributionSchedule'
 import { newFeeCurrencyDirectory } from '@celo/abis-12/web3/FeeCurrencyDirectory'
 import { newMentoFeeHandlerSeller } from '@celo/abis/web3/MentoFeeHandlerSeller'
 import { newUniswapFeeHandlerSeller } from '@celo/abis/web3/UniswapFeeHandlerSeller'
@@ -48,6 +49,7 @@ export const ContractFactories = {
   [CeloContract.Escrow]: newEscrow,
   [CeloContract.FederatedAttestations]: newFederatedAttestations,
   [CeloContract.FeeCurrencyDirectory]: newFeeCurrencyDirectory,
+  [CeloContract.CeloDistributionSchedule]: newCeloDistributionSchedule,
   [CeloContract.FeeCurrencyWhitelist]: newFeeCurrencyWhitelist,
   [CeloContract.Freezer]: newFreezer,
   [CeloContract.FeeHandler]: newFeeHandler,

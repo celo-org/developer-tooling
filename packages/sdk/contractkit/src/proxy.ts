@@ -1,6 +1,7 @@
 // tslint:disable: ordered-imports
-import { ABIDefinition, AbiItem } from '@celo/connect'
-import Web3 from 'web3'
+import { ABI as CeloDistributionScheduleABI } from '@celo/abis-12/web3/CeloDistributionSchedule'
+import { ABI as FeeCurrencyDirectoryABI } from '@celo/abis-12/web3/FeeCurrencyDirectory'
+
 import { ABI as GasPriceMinimumABI } from '@celo/abis/web3/0.8/GasPriceMinimum'
 import { ABI as AccountsABI } from '@celo/abis/web3/Accounts'
 import { ABI as AttestationsABI } from '@celo/abis/web3/Attestations'
@@ -28,6 +29,9 @@ import { ABI as UniswapFeeHandlerSellerABI } from '@celo/abis/web3/UniswapFeeHan
 import { ABI as ValidatorsABI } from '@celo/abis/web3/Validators'
 import { ABI as ReserveABI } from '@celo/abis/web3/mento/Reserve'
 import { ABI as StableTokenABI } from '@celo/abis/web3/mento/StableToken'
+
+import { ABIDefinition, AbiItem } from '@celo/connect'
+import Web3 from 'web3'
 
 export const GET_IMPLEMENTATION_ABI: ABIDefinition = {
   constant: true,
@@ -93,6 +97,7 @@ export const PROXY_SET_AND_INITIALIZE_IMPLEMENTATION_SIGNATURE =
 
 const findInitializeAbi = (items: AbiItem[]) => items.find((item) => item.name === 'initialize')
 
+// todo can this be generalized?
 const initializeAbiMap = {
   AccountsProxy: findInitializeAbi(AccountsABI),
   AttestationsProxy: findInitializeAbi(AttestationsABI),
@@ -104,6 +109,8 @@ const initializeAbiMap = {
   EscrowProxy: findInitializeAbi(EscrowABI),
   FederatedAttestationsProxy: findInitializeAbi(FederatedAttestationsABI),
   FeeCurrencyWhitelistProxy: findInitializeAbi(FeeCurrencyWhitelistABI),
+  CeloDistributionScheduleProxy: findInitializeAbi(CeloDistributionScheduleABI),
+  FeeCurrencyDirectoryProxy: findInitializeAbi(FeeCurrencyDirectoryABI),
   FeeHandlerProxy: findInitializeAbi(FeeHandlerABI),
   MentoFeeHandlerSellerProxy: findInitializeAbi(MentoFeeHandlerSellerABI),
   UniswapFeeHandlerSellerProxy: findInitializeAbi(UniswapFeeHandlerSellerABI),
