@@ -13,7 +13,7 @@ testWithAnvil('network:info', (web3) => {
     expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
       [
         [
-          "blockNumber: 269",
+          "blockNumber: 270",
         ],
       ]
     `)
