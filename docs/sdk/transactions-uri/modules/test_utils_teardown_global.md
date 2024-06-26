@@ -20,4 +20,4 @@
 
 #### Defined in
 
-[test-utils/teardown.global.ts:3](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/transactions-uri/src/test-utils/teardown.global.ts#L3)
+[test-utils/teardown.global.ts:1](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/transactions-uri/src/test-utils/teardown.global.ts#L1)
