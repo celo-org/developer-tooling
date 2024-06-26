@@ -432,8 +432,6 @@ describe('Local wallet class', () => {
             it('signs as a CIP66 tx', async () => {
               const transaction: CeloTx = {
                 ...celoTransactionBase,
-                gatewayFee: undefined,
-                gatewayFeeRecipient: undefined,
                 feeCurrency,
                 maxFeePerGas,
                 maxPriorityFeePerGas,

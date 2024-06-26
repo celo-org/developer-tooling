@@ -221,8 +221,8 @@ testWithAnvil('kit', (web3) => {
   })
   describe('populateMaxFeeInToken', () => {
     describe('when not on cel2', () => {
-      it('throws not L2 error', () => {
-        expect(
+      it('throws not L2 error', async () => {
+        await expect(
           kit.populateMaxFeeInToken({ feeCurrency: feeToken, gas: '10000000034230982772378193726' })
         ).rejects.toMatchInlineSnapshot(
           `[Error: Can't populate \`maxFeeInFeeCurrency\` if not on a CEL2 network]`
@@ -234,8 +234,8 @@ testWithAnvil('kit', (web3) => {
         await setupL2(web3)
       })
       describe('when gas is missing', () => {
-        it('fills the gas and works as normal', () => {
-          expect(
+        it('fills the gas and works as normal', async () => {
+          await expect(
             kit.populateMaxFeeInToken({
               feeCurrency: feeToken,
             })
@@ -253,7 +253,7 @@ testWithAnvil('kit', (web3) => {
       describe('when maxFeePerFeeCurrency exists', () => {
         it('returns without modification', async () => {
           const maxFeeInFeeCurrency = '2000000'
-          expect(
+          await expect(
             kit.populateMaxFeeInToken({
               maxFeeInFeeCurrency,
               feeCurrency: feeToken,
@@ -267,8 +267,8 @@ testWithAnvil('kit', (web3) => {
         })
       })
       describe('when feeCurrency provided with gas', () => {
-        it('returns with maxFeePerFeeCurrency estimated', () => {
-          expect(
+        it('returns with maxFeePerFeeCurrency estimated', async () => {
+          await expect(
             kit.populateMaxFeeInToken({
               feeCurrency: feeToken,
               gas: '102864710371401736267367367',
