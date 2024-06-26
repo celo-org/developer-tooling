@@ -2,4 +2,4 @@
 '@celo/celocli': minor
 ---
 
-Added support for MintCeloSchedule contract in network:parameters command
+Added support for CeloDistributionSchedule contract in network:parameters command

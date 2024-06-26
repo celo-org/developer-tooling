@@ -153,7 +153,7 @@ export class ContractKit {
         CeloContract.Validators,
         CeloContract.DowntimeSlasher,
         CeloContract.FeeCurrencyDirectory,
-        CeloContract.MintGoldSchedule,
+        CeloContract.CeloDistributionSchedule,
       ]
     } else {
       configContracts = [

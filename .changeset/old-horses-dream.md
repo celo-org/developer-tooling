@@ -2,4 +2,4 @@
 '@celo/contractkit': minor
 ---
 
-Introduced MintCeloScheduleWrapper
+Introduced CeloDistributionScheduleWrapper

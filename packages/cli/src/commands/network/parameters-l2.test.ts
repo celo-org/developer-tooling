@@ -1,4 +1,4 @@
-import { MintCeloScheduleWrapper } from '@celo/contractkit/lib/wrappers/MintCeloScheduleWrapper'
+import { CeloDistributionScheduleWrapper } from '@celo/contractkit/lib/wrappers/CeloDistributionScheduleWrapper'
 import { setupL2, testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Parameters from './parameters'
@@ -9,31 +9,45 @@ testWithAnvil('network:parameters', (web3) => {
   test('runs', async () => {
     await setupL2(web3)
 
-    jest.spyOn(MintCeloScheduleWrapper.prototype, 'getConfig').mockImplementation(async () => {
-      return {
-        carbonOffsetting: {
-          fraction: '1000000000000000000000',
-          partner: '0x0000000000000000000000000000000000000003',
-        },
-        communityReward: {
-          fraction: '250000000000000000000000',
-          fund: '0xA2e328097D5805e37414fbF80F43D71c9B588F23',
-        },
-        mintableAmount: '409271032214310717281708',
-        targetGoldTotalSupply: {
-          carbonFundTargetRewards: '1630561881331915208293',
-          communityTargetRewards: '407640470332978802073415',
-          targetGoldTotalSupply: '612754949032214310717281708',
-        },
-      }
-    })
+    jest
+      .spyOn(CeloDistributionScheduleWrapper.prototype, 'getConfig')
+      .mockImplementation(async () => {
+        return {
+          carbonOffsetting: {
+            fraction: '1000000000000000000000',
+            partner: '0x0000000000000000000000000000000000000003',
+          },
+          communityReward: {
+            fraction: '250000000000000000000000',
+            fund: '0xA2e328097D5805e37414fbF80F43D71c9B588F23',
+          },
+          distributableAmount: '409271032214310717281708',
+          targetCeloTotalSupply: {
+            carbonFundTargetRewards: '1630561881331915208293',
+            communityTargetRewards: '407640470332978802073415',
+            targetCeloTotalSupply: '612754949032214310717281708',
+          },
+        }
+      })
 
     const spy = jest.spyOn(console, 'log')
     await testLocallyWithWeb3Node(Parameters, [], web3)
     expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
       [
         [
-          "DowntimeSlasher: 
+          "CeloDistributionSchedule: 
+        carbonOffsetting: 
+          fraction: 1000000000000000000000
+          partner: 0x0000000000000000000000000000000000000003
+        communityReward: 
+          fraction: 250000000000000000000000
+          fund: 0xA2e328097D5805e37414fbF80F43D71c9B588F23
+        distributableAmount: 409271032214310717281708
+        targetCeloTotalSupply: 
+          carbonFundTargetRewards: 1630561881331915208293
+          communityTargetRewards: 407640470332978802073415
+          targetCeloTotalSupply: 612754949032214310717281708
+      DowntimeSlasher: 
         slashableDowntime: 5 minutes
         slashingIncentives: 
           penalty: 100000000000000000000 (~1.000e+20)
@@ -67,22 +81,10 @@ testWithAnvil('network:parameters', (web3) => {
       LockedGold: 
         totalLockedGold: 60000000000000000000000 (~6.000e+22)
         unlockingPeriod: 6 hours
-      MintGoldSchedule: 
-        carbonOffsetting: 
-          fraction: 1000000000000000000000
-          partner: 0x0000000000000000000000000000000000000003
-        communityReward: 
-          fraction: 250000000000000000000000
-          fund: 0xA2e328097D5805e37414fbF80F43D71c9B588F23
-        mintableAmount: 409271032214310717281708
-        targetGoldTotalSupply: 
-          carbonFundTargetRewards: 1630561881331915208293
-          communityTargetRewards: 407640470332978802073415
-          targetGoldTotalSupply: 612754949032214310717281708
       Reserve: 
         frozenReserveGoldDays: 0 
         frozenReserveGoldStartBalance: 0 
-        frozenReserveGoldStartDay: 19886 (~1.989e+4)
+        frozenReserveGoldStartDay: 19899 (~1.990e+4)
         otherReserveAddresses: 
 
         tobinTaxStalenessThreshold: 3153600000 (~3.154e+9)

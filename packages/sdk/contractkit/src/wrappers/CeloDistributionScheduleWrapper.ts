@@ -1,13 +1,13 @@
-import { MintGoldSchedule } from '@celo/abis-12/web3/MintGoldSchedule'
+import { CeloDistributionSchedule } from '@celo/abis-12/web3/CeloDistributionSchedule'
 import { BaseWrapper, proxyCall, proxySend, valueToString } from './BaseWrapper'
 
 type TargetTotalSupplyResponse = {
-  targetGoldTotalSupply: string
+  targetCeloTotalSupply: string
   communityTargetRewards: string
   carbonFundTargetRewards: string
 }
 
-type MintCeloScheduleConfig = {
+type CeloDistributionScheduleConfig = {
   carbonOffsetting: {
     fraction: string
     partner: string
@@ -16,15 +16,15 @@ type MintCeloScheduleConfig = {
     fraction: string
     fund: string
   }
-  mintableAmount: string
-  targetGoldTotalSupply: {
+  distributableAmount: string
+  targetCeloTotalSupply: {
     carbonFundTargetRewards: string
     communityTargetRewards: string
-    targetGoldTotalSupply: string
+    targetCeloTotalSupply: string
   }
 }
 
-export class MintCeloScheduleWrapper extends BaseWrapper<MintGoldSchedule> {
+export class CeloDistributionScheduleWrapper extends BaseWrapper<CeloDistributionSchedule> {
   carbonOffsettingPartner = proxyCall(this.contract.methods.carbonOffsettingPartner)
   communityRewardFund = proxyCall(this.contract.methods.communityRewardFund)
 
@@ -38,33 +38,37 @@ export class MintCeloScheduleWrapper extends BaseWrapper<MintGoldSchedule> {
     undefined,
     valueToString
   )
-  getRemainingBalanceToMint = proxyCall(
-    this.contract.methods.getRemainingBalanceToMint,
+  getRemainingBalanceToDistribute = proxyCall(
+    this.contract.methods.getRemainingBalanceToDistribute,
     undefined,
     valueToString
   )
-  getTotalMintedBySchedule = proxyCall(
-    this.contract.methods.getTotalMintedBySchedule,
+  getTotalDistributedBySchedule = proxyCall(
+    this.contract.methods.getTotalDistributedBySchedule,
     undefined,
     valueToString
   )
-  getMintableAmount = proxyCall(this.contract.methods.getMintableAmount, undefined, valueToString)
-  getTargetGoldTotalSupply: () => Promise<TargetTotalSupplyResponse> = proxyCall(
-    this.contract.methods.getTargetGoldTotalSupply,
+  getDistributableAmount = proxyCall(
+    this.contract.methods.getDistributableAmount,
+    undefined,
+    valueToString
+  )
+  getTargetCeloTotalSupply: () => Promise<TargetTotalSupplyResponse> = proxyCall(
+    this.contract.methods.getTargetCeloTotalSupply,
     undefined,
     (res) => ({
       carbonFundTargetRewards: valueToString(res.carbonFundTargetRewards),
       communityTargetRewards: valueToString(res.communityTargetRewards),
-      targetGoldTotalSupply: valueToString(res.targetGoldTotalSupply),
+      targetCeloTotalSupply: valueToString(res.targetCeloTotalSupply),
     })
   )
 
-  mintAccordingToSchedule = proxySend(
+  distributeAccordingToSchedule = proxySend(
     this.connection,
-    this.contract.methods.mintAccordingToSchedule
+    this.contract.methods.distributeAccordingToSchedule
   )
 
-  async getConfig(): Promise<MintCeloScheduleConfig> {
+  async getConfig(): Promise<CeloDistributionScheduleConfig> {
     return {
       carbonOffsetting: {
         fraction: await this.getCarbonOffsettingFraction(),
@@ -74,8 +78,8 @@ export class MintCeloScheduleWrapper extends BaseWrapper<MintGoldSchedule> {
         fraction: await this.getCommunityRewardFraction(),
         fund: await this.communityRewardFund(),
       },
-      mintableAmount: await this.getMintableAmount(),
-      targetGoldTotalSupply: await this.getTargetGoldTotalSupply(),
+      distributableAmount: await this.getDistributableAmount(),
+      targetCeloTotalSupply: await this.getTargetCeloTotalSupply(),
     }
   }
 }

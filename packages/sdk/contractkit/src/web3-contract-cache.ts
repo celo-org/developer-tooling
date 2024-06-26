@@ -1,6 +1,6 @@
+import { newCeloDistributionSchedule } from '@celo/abis-12/web3/CeloDistributionSchedule'
 import { newFeeCurrencyDirectory } from '@celo/abis-12/web3/FeeCurrencyDirectory'
 import { newGoldToken } from '@celo/abis-12/web3/GoldToken'
-import { newMintGoldSchedule } from '@celo/abis-12/web3/MintGoldSchedule'
 import { newGasPriceMinimum } from '@celo/abis/web3/0.8/GasPriceMinimum'
 import { newAccounts } from '@celo/abis/web3/Accounts'
 import { newAttestations } from '@celo/abis/web3/Attestations'
@@ -39,6 +39,7 @@ export const ContractFactories = {
   [CeloContract.Accounts]: newAccounts,
   [CeloContract.Attestations]: newAttestations,
   [CeloContract.BlockchainParameters]: newBlockchainParameters,
+  [CeloContract.CeloDistributionSchedule]: newCeloDistributionSchedule,
   [CeloContract.DoubleSigningSlasher]: newDoubleSigningSlasher,
   [CeloContract.DowntimeSlasher]: newDowntimeSlasher,
   [CeloContract.Election]: newElection,
@@ -51,7 +52,6 @@ export const ContractFactories = {
   [CeloContract.Freezer]: newFreezer,
   [CeloContract.FeeHandler]: newFeeHandler,
   [CeloContract.MentoFeeHandlerSeller]: newMentoFeeHandlerSeller,
-  [CeloContract.MintGoldSchedule]: newMintGoldSchedule,
   [CeloContract.UniswapFeeHandlerSeller]: newUniswapFeeHandlerSeller,
   [CeloContract.GasPriceMinimum]: newGasPriceMinimum,
   [CeloContract.GoldToken]: newGoldToken,
