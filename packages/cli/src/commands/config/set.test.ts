@@ -1,4 +1,7 @@
+import { newKitFromWeb3 } from '@celo/contractkit'
+import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import { ux } from '@oclif/core'
+import Web3 from 'web3'
 import {
   extractHostFromWeb3,
   stripAnsiCodesFromNestedArray,
@@ -6,8 +9,6 @@ import {
 } from '../../test-utils/cliUtils'
 import * as config from '../../utils/config'
 import Set from './set'
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
-import Web3 from 'web3'
 
 process.env.NO_SYNCCHECK = 'true'
 
@@ -18,12 +19,14 @@ afterEach(async () => {
 
 testWithAnvil('config:set cmd', (web3: Web3) => {
   it('shows a warning if gasCurrency is passed', async () => {
+    const kit = newKitFromWeb3(web3)
+    const feeCurrencyDirectory = await kit.contracts.getFeeCurrencyDirectory()
     const consoleMock = jest.spyOn(ux, 'warn')
     const writeMock = jest.spyOn(config, 'writeConfig')
 
     await testLocallyWithWeb3Node(
       Set,
-      ['--gasCurrency', '0xe6774BE4E5f97dB10cAFB4c00C74cFbdCDc434D9'],
+      ['--gasCurrency', (await feeCurrencyDirectory.getCurrencies())[0]],
       web3
     )
     expect(stripAnsiCodesFromNestedArray(consoleMock.mock.calls as string[][]))

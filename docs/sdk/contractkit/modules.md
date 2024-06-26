@@ -39,6 +39,7 @@
 - [wrappers/BaseWrapper](modules/wrappers_BaseWrapper.md)
 - [wrappers/BaseWrapperForGoverning](modules/wrappers_BaseWrapperForGoverning.md)
 - [wrappers/BlockchainParameters](modules/wrappers_BlockchainParameters.md)
+- [wrappers/CeloDistributionScheduleWrapper](modules/wrappers_CeloDistributionScheduleWrapper.md)
 - [wrappers/CeloTokenWrapper](modules/wrappers_CeloTokenWrapper.md)
 - [wrappers/DoubleSigningSlasher](modules/wrappers_DoubleSigningSlasher.md)
 - [wrappers/DowntimeSlasher](modules/wrappers_DowntimeSlasher.md)
