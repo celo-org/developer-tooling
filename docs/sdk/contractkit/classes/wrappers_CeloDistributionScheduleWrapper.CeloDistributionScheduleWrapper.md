@@ -320,7 +320,7 @@ ___
 
 ### methodIds
 
-• **methodIds**: `Record`\<``"initialized"`` \| ``"isL2"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"initialize"`` \| ``"getVersionNumber"`` \| ``"activate"`` \| ``"carbonOffsettingPartner"`` \| ``"setCommunityRewardFraction"`` \| ``"getCommunityRewardFraction"`` \| ``"setCarbonOffsettingFund"`` \| ``"getCarbonOffsettingFraction"`` \| ``"areDependenciesSet"`` \| ``"communityRewardFund"`` \| ``"l2StartTime"`` \| ``"totalDistributedBySchedule"`` \| ``"totalSupplyAtL2Start"`` \| ``"distributeAccordingToSchedule"`` \| ``"getTotalDistributedBySchedule"`` \| ``"getRemainingBalanceToDistribute"`` \| ``"getDistributableAmount"`` \| ``"getTargetCeloTotalSupply"``, `string`\>
+• **methodIds**: `Record`\<``"initialized"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"getVersionNumber"`` \| ``"initialize"`` \| ``"activate"`` \| ``"carbonOffsettingPartner"`` \| ``"setCommunityRewardFraction"`` \| ``"getCommunityRewardFraction"`` \| ``"setCarbonOffsettingFund"`` \| ``"getCarbonOffsettingFraction"`` \| ``"areDependenciesSet"`` \| ``"communityRewardFund"`` \| ``"isL2"`` \| ``"l2StartTime"`` \| ``"totalDistributedBySchedule"`` \| ``"totalSupplyAtL2Start"`` \| ``"distributeAccordingToSchedule"`` \| ``"getTotalDistributedBySchedule"`` \| ``"getRemainingBalanceToDistribute"`` \| ``"getDistributableAmount"`` \| ``"getTargetCeloTotalSupply"``, `string`\>
 
 #### Inherited from
 

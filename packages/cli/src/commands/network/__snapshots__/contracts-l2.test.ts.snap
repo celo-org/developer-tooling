@@ -13,31 +13,37 @@ exports[`network:contracts runs 1`] = `
   {
     "contract": "BlockchainParameters",
     "proxy": "0xF2Eae8eA7A0912F496649Eb15F3197C13bEd7666",
-    "implementation": "0x99FFf5981A42b969489599a9042Bb42F50B4011E",
+    "implementation": "0x97877ee036DAEEbb03b147b649547BecbAA5a9fc",
     "version": "1.3.1.0"
+  },
+  {
+    "contract": "CeloDistributionSchedule",
+    "proxy": "0xd4A2e54fd5dA58BdF05E07F0d36292d3075C0fd0",
+    "implementation": "0x95304b3622f95CBbE19A19bCf1a5bcb73C490747",
+    "version": "1.1.0.0"
   },
   {
     "contract": "DoubleSigningSlasher",
     "proxy": "0xa5db3Dfed7Bbc9bc882152A51596A88d2352E485",
-    "implementation": "0x7353Be882744Ee5B86747CD946aaa3C7aA2bc83d",
+    "implementation": "0x11691495F2a43d03B1598c753006aB60AEB55511",
     "version": "1.1.2.0"
   },
   {
     "contract": "DowntimeSlasher",
     "proxy": "0xc28630104d0c0679a869D5Cb7FC0c55120B47316",
-    "implementation": "0xCfB467d2684A4791832a707A5EE3964559B89F13",
+    "implementation": "0x0aC6bAB87b85c92d955f03e991e5c983F1591239",
     "version": "2.0.1.0"
   },
   {
     "contract": "Election",
     "proxy": "0x983d5a72cd4F181037F8093791b0b704AF1C80e6",
-    "implementation": "0x5a078172FEA669a0Fc932759BA2A6620dEEF5349",
+    "implementation": "0x00fC7C459118aD8bA10F3CaE14970e4111a3EA04",
     "version": "1.1.4.0"
   },
   {
     "contract": "EpochRewards",
     "proxy": "0xB1D5655C390ab7765917185e29b3ffEBcdB008Dc",
-    "implementation": "0x1d6cFDB5C888A52A2264Be1e4065E55642f08E3E",
+    "implementation": "0xAD556333ac0C3864Aad4349E45DdC1ba8133C467",
     "version": "1.1.2.0"
   },
   {
@@ -85,14 +91,14 @@ exports[`network:contracts runs 1`] = `
   {
     "contract": "GoldToken",
     "proxy": "0x3597cdC9a3f1191588C179fFa83bbd90AeD240a1",
-    "implementation": "0x83bEE2E50A72A33a1288720f7Ea96FA91e943199",
+    "implementation": "0xEeA2e54eb2B95d35e16e0D92de4f84141A99CE3b",
     "version": "1.1.3.0"
   },
   {
     "contract": "Governance",
     "proxy": "0xA2e328097D5805e37414fbF80F43D71c9B588F23",
-    "implementation": "0xCc382fC139CDb1D41222cAd70a74c311F54201EB",
-    "version": "1.4.1.1"
+    "implementation": "0xb57ab2360D6777005F76397F05d325d0dEd20b7A",
+    "version": "1.4.2.0"
   },
   {
     "contract": "LockedGold",
@@ -107,12 +113,6 @@ exports[`network:contracts runs 1`] = `
     "version": "1.1.0.0"
   },
   {
-    "contract": "MintGoldSchedule",
-    "proxy": "0xd4A2e54fd5dA58BdF05E07F0d36292d3075C0fd0",
-    "implementation": "0x19f7A108A4aB10667Ba8EB89e790bEd3Ece01ad1",
-    "version": "1.1.0.0"
-  },
-  {
     "contract": "OdisPayments",
     "proxy": "0x9A3523e1bbD0cce775bF8Fad755ec123E5645Dd3",
     "implementation": "0xF2B0342226f5c5e829874e246149Ae3d4FEc763E",
@@ -121,7 +121,7 @@ exports[`network:contracts runs 1`] = `
   {
     "contract": "Random",
     "proxy": "0xbcB62c7B5523f02BFA0bC8494a414ac7Be07dFC4",
-    "implementation": "0x5C0A16bE3cE00b27887C3CDAEcF99D5126C6E436",
+    "implementation": "0x5971E1E2A749974B7E1f31499C0364aE31E47D2F",
     "version": "1.1.2.0"
   },
   {
@@ -169,7 +169,7 @@ exports[`network:contracts runs 1`] = `
   {
     "contract": "Validators",
     "proxy": "0x9d65fF00455df6987B1dE282638Ceac4bF91a208",
-    "implementation": "0x37ecbF5d3b3Eb1cd77D8C15eB003f91bC5f3c764",
+    "implementation": "0xB437092B7000DcB77F46115e8dF1082bfED96736",
     "version": "1.3.0.0"
   }
 ]

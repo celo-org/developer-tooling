@@ -12,8 +12,8 @@
 
 ### fetchMock
 
-• `Const` **fetchMock**: `any`
+• `Const` **fetchMock**: `FetchMockSandbox`
 
 #### Defined in
 
-[packages/sdk/contractkit/src/globals.d.ts:1](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/globals.d.ts#L1)
+[packages/sdk/contractkit/src/globals.d.ts:5](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/globals.d.ts#L5)

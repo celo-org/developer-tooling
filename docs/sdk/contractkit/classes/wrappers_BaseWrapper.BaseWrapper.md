@@ -26,6 +26,8 @@
 
   ↳ [`BlockchainParametersWrapper`](wrappers_BlockchainParameters.BlockchainParametersWrapper.md)
 
+  ↳ [`CeloDistributionScheduleWrapper`](wrappers_CeloDistributionScheduleWrapper.CeloDistributionScheduleWrapper.md)
+
   ↳ [`EpochRewardsWrapper`](wrappers_EpochRewards.EpochRewardsWrapper.md)
 
   ↳ [`Erc20Wrapper`](wrappers_Erc20Wrapper.Erc20Wrapper.md)
@@ -39,8 +41,6 @@
   ↳ [`FreezerWrapper`](wrappers_Freezer.FreezerWrapper.md)
 
   ↳ [`GasPriceMinimumWrapper`](wrappers_GasPriceMinimum.GasPriceMinimumWrapper.md)
-
-  ↳ [`MintCeloScheduleWrapper`](wrappers_MintCeloScheduleWrapper.MintCeloScheduleWrapper.md)
 
   ↳ [`MultiSigWrapper`](wrappers_MultiSig.MultiSigWrapper.md)
 

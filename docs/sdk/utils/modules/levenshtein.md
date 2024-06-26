@@ -27,4 +27,4 @@
 
 #### Defined in
 
-[packages/sdk/utils/src/levenshtein.ts:9](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/levenshtein.ts#L9)
+[utils/src/levenshtein.ts:9](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/levenshtein.ts#L9)

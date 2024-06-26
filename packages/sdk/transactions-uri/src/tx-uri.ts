@@ -13,7 +13,7 @@ const ABI_TYPE_REGEX = '(u?int(8|16|32|64|128|256)|address|bool|bytes(4|32)?|str
 const FUNCTION_REGEX = `(?<function>\\w+\\((?<inputTypes>(,?${ABI_TYPE_REGEX})*)\\))`
 const ADDRESS_REGEX_STR = '(?<address>0x[a-fA-F0-9]{40})'
 const CHAIN_ID_REGEX = '(?<chainId>\\d+)'
-const TX_PARAMS = ['feeCurrency', 'gas', 'gasPrice', 'value', 'gatewayFee', 'gatewayFeeRecipient']
+const TX_PARAMS = ['feeCurrency', 'gas', 'gasPrice', 'value']
 const PARAM_REGEX = `(${TX_PARAMS.join('|')})=\\w+`
 const ARGS_REGEX = 'args=\\[(,?\\w+)*\\]'
 const QUERY_REGEX = `(?<query>(&?(${PARAM_REGEX}|${ARGS_REGEX}))+)`

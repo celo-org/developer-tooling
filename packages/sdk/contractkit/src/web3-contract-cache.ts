@@ -99,6 +99,9 @@ export class Web3ContractCache {
   getBlockchainParameters() {
     return this.getContract(CeloContract.BlockchainParameters)
   }
+  getCeloDistributionSchedule() {
+    return this.getContract(CeloContract.CeloDistributionSchedule)
+  }
   getDoubleSigningSlasher() {
     return this.getContract(CeloContract.DoubleSigningSlasher)
   }

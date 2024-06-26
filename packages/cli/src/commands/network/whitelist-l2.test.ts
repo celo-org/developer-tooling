@@ -5,14 +5,14 @@ import Whitelist from './whitelist'
 
 process.env.NO_SYNCCHECK = 'true'
 
-const spy = jest.spyOn(console, 'log')
-
 afterAll(() => {
   jest.clearAllMocks()
 })
 
 testWithAnvil('network:whitelist cmd', (web3: Web3) => {
   test('can print the whitelist', async () => {
+    const spy = jest.spyOn(console, 'log')
+
     await setupL2(web3)
 
     await testLocallyWithWeb3Node(Whitelist, [], web3)

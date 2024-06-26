@@ -53,7 +53,7 @@
 
 #### Defined in
 
-node_modules/web3-eth-contract/types/index.d.ts:27
+packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:27
 
 ## Properties
 
@@ -63,7 +63,7 @@ node_modules/web3-eth-contract/types/index.d.ts:27
 
 #### Defined in
 
-node_modules/web3-eth-contract/types/index.d.ts:37
+packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:37
 
 ___
 
@@ -73,7 +73,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth-contract/types/index.d.ts:38
+packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:38
 
 ___
 
@@ -83,7 +83,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth-contract/types/index.d.ts:41
+packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:41
 
 ___
 
@@ -93,7 +93,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth-contract/types/index.d.ts:39
+packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:39
 
 ___
 
@@ -103,7 +103,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth-contract/types/index.d.ts:40
+packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:40
 
 ___
 
@@ -113,7 +113,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth-contract/types/index.d.ts:65
+packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:65
 
 ___
 
@@ -123,7 +123,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth-contract/types/index.d.ts:45
+packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:45
 
 ___
 
@@ -133,7 +133,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth-contract/types/index.d.ts:53
+packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:53
 
 ___
 
@@ -143,7 +143,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth-contract/types/index.d.ts:47
+packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:47
 
 ___
 
@@ -153,7 +153,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth-contract/types/index.d.ts:44
+packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:44
 
 ___
 
@@ -163,7 +163,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth-contract/types/index.d.ts:43
+packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:43
 
 ___
 
@@ -173,7 +173,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth-contract/types/index.d.ts:42
+packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:42
 
 ## Methods
 
@@ -187,7 +187,7 @@ node_modules/web3-eth-contract/types/index.d.ts:42
 
 #### Defined in
 
-node_modules/web3-eth-contract/types/index.d.ts:49
+packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:49
 
 ___
 
@@ -207,7 +207,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth-contract/types/index.d.ts:51
+packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:51
 
 ___
 
@@ -227,7 +227,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth-contract/types/index.d.ts:67
+packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:67
 
 ▸ **getPastEvents**(`event`, `options`, `callback`): `Promise`\<`EventData`[]\>
 
@@ -245,7 +245,7 @@ node_modules/web3-eth-contract/types/index.d.ts:67
 
 #### Defined in
 
-node_modules/web3-eth-contract/types/index.d.ts:68
+packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:68
 
 ▸ **getPastEvents**(`event`, `options`): `Promise`\<`EventData`[]\>
 
@@ -262,7 +262,7 @@ node_modules/web3-eth-contract/types/index.d.ts:68
 
 #### Defined in
 
-node_modules/web3-eth-contract/types/index.d.ts:73
+packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:73
 
 ▸ **getPastEvents**(`event`, `callback`): `Promise`\<`EventData`[]\>
 
@@ -279,7 +279,7 @@ node_modules/web3-eth-contract/types/index.d.ts:73
 
 #### Defined in
 
-node_modules/web3-eth-contract/types/index.d.ts:74
+packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:74
 
 ___
 
@@ -300,7 +300,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth-contract/types/index.d.ts:55
+packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:55
 
 ▸ **once**(`event`, `options`, `callback`): `void`
 
@@ -318,7 +318,7 @@ node_modules/web3-eth-contract/types/index.d.ts:55
 
 #### Defined in
 
-node_modules/web3-eth-contract/types/index.d.ts:59
+packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:59
 
 ___
 
@@ -339,4 +339,4 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth-contract/types/index.d.ts:33
+packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:33

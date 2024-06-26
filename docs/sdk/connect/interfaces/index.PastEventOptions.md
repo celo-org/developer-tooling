@@ -32,7 +32,7 @@ PastLogsOptions.address
 
 #### Defined in
 
-node_modules/web3-core/types/index.d.ts:438
+packages/sdk/connect/node_modules/web3-core/types/index.d.ts:438
 
 ___
 
@@ -42,7 +42,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-eth-contract/types/index.d.ts:152
+packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:152
 
 ___
 
@@ -56,7 +56,7 @@ PastLogsOptions.fromBlock
 
 #### Defined in
 
-node_modules/web3-core/types/index.d.ts:437
+packages/sdk/connect/node_modules/web3-core/types/index.d.ts:437
 
 ___
 
@@ -70,7 +70,7 @@ PastLogsOptions.toBlock
 
 #### Defined in
 
-node_modules/web3-core/types/index.d.ts:433
+packages/sdk/connect/node_modules/web3-core/types/index.d.ts:433
 
 ___
 
@@ -84,4 +84,4 @@ PastLogsOptions.topics
 
 #### Defined in
 
-node_modules/web3-core/types/index.d.ts:439
+packages/sdk/connect/node_modules/web3-core/types/index.d.ts:439

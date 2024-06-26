@@ -72,7 +72,7 @@ ReadOnlyWallet.computeSharedSecret
 
 #### Defined in
 
-[wallets/wallet-base/src/wallet-base.ts:143](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/wallet-base.ts#L143)
+[wallets/wallet-base/src/wallet-base.ts:148](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/wallet-base.ts#L148)
 
 ___
 
@@ -97,7 +97,7 @@ ReadOnlyWallet.decrypt
 
 #### Defined in
 
-[wallets/wallet-base/src/wallet-base.ts:135](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/wallet-base.ts#L135)
+[wallets/wallet-base/src/wallet-base.ts:140](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/wallet-base.ts#L140)
 
 ___
 
@@ -198,7 +198,7 @@ ReadOnlyWallet.signPersonalMessage
 
 #### Defined in
 
-[wallets/wallet-base/src/wallet-base.ts:99](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/wallet-base.ts#L99)
+[wallets/wallet-base/src/wallet-base.ts:104](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/wallet-base.ts#L104)
 
 ___
 
@@ -253,4 +253,4 @@ ReadOnlyWallet.signTypedData
 
 #### Defined in
 
-[wallets/wallet-base/src/wallet-base.ts:116](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/wallet-base.ts#L116)
+[wallets/wallet-base/src/wallet-base.ts:121](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-base/src/wallet-base.ts#L121)

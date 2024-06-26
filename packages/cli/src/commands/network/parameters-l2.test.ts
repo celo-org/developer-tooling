@@ -8,7 +8,6 @@ process.env.NO_SYNCCHECK = 'true'
 testWithAnvil('network:parameters', (web3) => {
   test('runs', async () => {
     await setupL2(web3)
-
     jest
       .spyOn(CeloDistributionScheduleWrapper.prototype, 'getConfig')
       .mockImplementation(async () => {

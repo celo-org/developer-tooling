@@ -126,7 +126,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-core/types/index.d.ts:94
+packages/sdk/connect/node_modules/web3-core/types/index.d.ts:94
 
 ▸ **on**(`type`, `handler`): [`PromiEvent`](index.PromiEvent.md)\<`T`\>
 
@@ -143,7 +143,7 @@ node_modules/web3-core/types/index.d.ts:94
 
 #### Defined in
 
-node_modules/web3-core/types/index.d.ts:99
+packages/sdk/connect/node_modules/web3-core/types/index.d.ts:99
 
 ▸ **on**(`type`, `handler`): [`PromiEvent`](index.PromiEvent.md)\<`T`\>
 
@@ -160,7 +160,7 @@ node_modules/web3-core/types/index.d.ts:99
 
 #### Defined in
 
-node_modules/web3-core/types/index.d.ts:104
+packages/sdk/connect/node_modules/web3-core/types/index.d.ts:104
 
 ▸ **on**(`type`, `handler`): [`PromiEvent`](index.PromiEvent.md)\<`T`\>
 
@@ -177,7 +177,7 @@ node_modules/web3-core/types/index.d.ts:104
 
 #### Defined in
 
-node_modules/web3-core/types/index.d.ts:109
+packages/sdk/connect/node_modules/web3-core/types/index.d.ts:109
 
 ▸ **on**(`type`, `handler`): [`PromiEvent`](index.PromiEvent.md)\<`T`\>
 
@@ -194,7 +194,7 @@ node_modules/web3-core/types/index.d.ts:109
 
 #### Defined in
 
-node_modules/web3-core/types/index.d.ts:114
+packages/sdk/connect/node_modules/web3-core/types/index.d.ts:114
 
 ▸ **on**(`type`, `handler`): [`PromiEvent`](index.PromiEvent.md)\<`T`\>
 
@@ -211,7 +211,7 @@ node_modules/web3-core/types/index.d.ts:114
 
 #### Defined in
 
-node_modules/web3-core/types/index.d.ts:119
+packages/sdk/connect/node_modules/web3-core/types/index.d.ts:119
 
 ▸ **on**(`type`, `handler`): [`PromiEvent`](index.PromiEvent.md)\<`T`\>
 
@@ -228,7 +228,7 @@ node_modules/web3-core/types/index.d.ts:119
 
 #### Defined in
 
-node_modules/web3-core/types/index.d.ts:121
+packages/sdk/connect/node_modules/web3-core/types/index.d.ts:121
 
 ___
 
@@ -249,7 +249,7 @@ ___
 
 #### Defined in
 
-node_modules/web3-core/types/index.d.ts:62
+packages/sdk/connect/node_modules/web3-core/types/index.d.ts:62
 
 ▸ **once**(`type`, `handler`): [`PromiEvent`](index.PromiEvent.md)\<`T`\>
 
@@ -266,7 +266,7 @@ node_modules/web3-core/types/index.d.ts:62
 
 #### Defined in
 
-node_modules/web3-core/types/index.d.ts:67
+packages/sdk/connect/node_modules/web3-core/types/index.d.ts:67
 
 ▸ **once**(`type`, `handler`): [`PromiEvent`](index.PromiEvent.md)\<`T`\>
 
@@ -283,7 +283,7 @@ node_modules/web3-core/types/index.d.ts:67
 
 #### Defined in
 
-node_modules/web3-core/types/index.d.ts:72
+packages/sdk/connect/node_modules/web3-core/types/index.d.ts:72
 
 ▸ **once**(`type`, `handler`): [`PromiEvent`](index.PromiEvent.md)\<`T`\>
 
@@ -300,7 +300,7 @@ node_modules/web3-core/types/index.d.ts:72
 
 #### Defined in
 
-node_modules/web3-core/types/index.d.ts:77
+packages/sdk/connect/node_modules/web3-core/types/index.d.ts:77
 
 ▸ **once**(`type`, `handler`): [`PromiEvent`](index.PromiEvent.md)\<`T`\>
 
@@ -317,7 +317,7 @@ node_modules/web3-core/types/index.d.ts:77
 
 #### Defined in
 
-node_modules/web3-core/types/index.d.ts:82
+packages/sdk/connect/node_modules/web3-core/types/index.d.ts:82
 
 ▸ **once**(`type`, `handler`): [`PromiEvent`](index.PromiEvent.md)\<`T`\>
 
@@ -334,7 +334,7 @@ node_modules/web3-core/types/index.d.ts:82
 
 #### Defined in
 
-node_modules/web3-core/types/index.d.ts:87
+packages/sdk/connect/node_modules/web3-core/types/index.d.ts:87
 
 ▸ **once**(`type`, `handler`): [`PromiEvent`](index.PromiEvent.md)\<`T`\>
 
@@ -351,7 +351,7 @@ node_modules/web3-core/types/index.d.ts:87
 
 #### Defined in
 
-node_modules/web3-core/types/index.d.ts:89
+packages/sdk/connect/node_modules/web3-core/types/index.d.ts:89
 
 ___
 

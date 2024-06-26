@@ -27,7 +27,7 @@ Logger function
 
 #### Defined in
 
-packages/sdk/base/lib/task.d.ts:17
+base/lib/task.d.ts:17
 
 ___
 
@@ -39,4 +39,4 @@ Name for the task. To be used in logging messages
 
 #### Defined in
 
-packages/sdk/base/lib/task.d.ts:15
+base/lib/task.d.ts:15

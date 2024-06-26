@@ -11,34 +11,31 @@
 
 ### Functions
 
-- [compareLedgerAppVersions](tokens.md#compareledgerappversions)
+- [legacyTokenInfoByAddressAndChainId](tokens.md#legacytokeninfobyaddressandchainid)
 - [list](tokens.md#list)
+- [listLegacy](tokens.md#listlegacy)
 - [tokenInfoByAddressAndChainId](tokens.md#tokeninfobyaddressandchainid)
 
 ## Functions
 
-### compareLedgerAppVersions
+### legacyTokenInfoByAddressAndChainId
 
-▸ **compareLedgerAppVersions**(`version1`, `version2`): `number`
+▸ **legacyTokenInfoByAddressAndChainId**(`contract`, `chainId`): `undefined` \| ``null`` \| [`TokenInfo`](../interfaces/tokens.TokenInfo.md)
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
-| `version1` | `string` |
-| `version2` | `string` |
+| `contract` | `string` |
+| `chainId` | `number` |
 
 #### Returns
 
-`number`
-
--1: version1 < version2,
- 0: version1 == version2,
- 1: version1 > version2
+`undefined` \| ``null`` \| [`TokenInfo`](../interfaces/tokens.TokenInfo.md)
 
 #### Defined in
 
-[wallet-ledger/src/tokens.ts:33](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/tokens.ts#L33)
+[wallet-ledger/src/tokens.ts:14](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/tokens.ts#L14)
 
 ___
 
@@ -54,7 +51,21 @@ list all the ERC20 tokens informations
 
 #### Defined in
 
-[wallet-ledger/src/tokens.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/tokens.ts#L16)
+[wallet-ledger/src/tokens.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/tokens.ts#L23)
+
+___
+
+### listLegacy
+
+▸ **listLegacy**(): [`TokenInfo`](../interfaces/tokens.TokenInfo.md)[]
+
+#### Returns
+
+[`TokenInfo`](../interfaces/tokens.TokenInfo.md)[]
+
+#### Defined in
+
+[wallet-ledger/src/tokens.ts:24](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/tokens.ts#L24)
 
 ___
 
@@ -77,4 +88,4 @@ Retrieve the token information by a given contract address and chainId if any
 
 #### Defined in
 
-[wallet-ledger/src/tokens.ts:8](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/tokens.ts#L8)
+[wallet-ledger/src/tokens.ts:9](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/tokens.ts#L9)
