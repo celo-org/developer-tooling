@@ -450,7 +450,7 @@ describe('Local wallet class', () => {
                 maxFeePerGas,
                 maxPriorityFeePerGas: undefined,
               }
-              expect(() =>
+              await expect(() =>
                 wallet.signTransaction(transaction)
               ).rejects.toThrowErrorMatchingInlineSnapshot(
                 `""gasPrice" or "maxFeePerGas" and "maxPriorityFeePerGas" are missing"`
@@ -466,7 +466,7 @@ describe('Local wallet class', () => {
                 maxFeePerGas: undefined,
                 maxPriorityFeePerGas,
               }
-              expect(() =>
+              await expect(() =>
                 wallet.signTransaction(transaction)
               ).rejects.toThrowErrorMatchingInlineSnapshot(
                 `""gasPrice" or "maxFeePerGas" and "maxPriorityFeePerGas" are missing"`
@@ -482,8 +482,10 @@ describe('Local wallet class', () => {
                 maxPriorityFeePerGas,
                 gasPrice: '0x100000000',
               }
-              expect(async () => wallet.signTransaction(transaction)).rejects.toThrowError(
-                'when "maxFeePerGas" or "maxPriorityFeePerGas" are set, "gasPrice" must not be set'
+              await expect(async () =>
+                wallet.signTransaction(transaction)
+              ).rejects.toThrowErrorMatchingInlineSnapshot(
+                `"when "maxFeePerGas" or "maxPriorityFeePerGas" are set, "gasPrice" must not be set"`
               )
             })
           })
@@ -527,7 +529,9 @@ describe('Local wallet class', () => {
         test('fails calling decrypt', async () => {
           await expect(
             wallet.decrypt(ACCOUNT_ADDRESS2, Buffer.from('anything'))
-          ).rejects.toThrowError()
+          ).rejects.toThrowErrorMatchingInlineSnapshot(
+            `"Could not find address 0x588e4b68193001e4d10928660ab4165b813717c0"`
+          )
         })
       })
 
