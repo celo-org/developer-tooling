@@ -11,6 +11,7 @@
 - [Accounts](base.CeloContract.md#accounts)
 - [Attestations](base.CeloContract.md#attestations)
 - [BlockchainParameters](base.CeloContract.md#blockchainparameters)
+- [CeloDistributionSchedule](base.CeloContract.md#celodistributionschedule)
 - [DoubleSigningSlasher](base.CeloContract.md#doublesigningslasher)
 - [DowntimeSlasher](base.CeloContract.md#downtimeslasher)
 - [ERC20](base.CeloContract.md#erc20)
@@ -27,7 +28,6 @@
 - [Governance](base.CeloContract.md#governance)
 - [LockedGold](base.CeloContract.md#lockedgold)
 - [MentoFeeHandlerSeller](base.CeloContract.md#mentofeehandlerseller)
-- [MintGoldSchedule](base.CeloContract.md#mintgoldschedule)
 - [MultiSig](base.CeloContract.md#multisig)
 - [OdisPayments](base.CeloContract.md#odispayments)
 - [Random](base.CeloContract.md#random)
@@ -72,13 +72,23 @@ ___
 
 ___
 
+### CeloDistributionSchedule
+
+• **CeloDistributionSchedule** = ``"CeloDistributionSchedule"``
+
+#### Defined in
+
+[packages/sdk/contractkit/src/base.ts:5](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L5)
+
+___
+
 ### DoubleSigningSlasher
 
 • **DoubleSigningSlasher** = ``"DoubleSigningSlasher"``
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:5](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L5)
+[packages/sdk/contractkit/src/base.ts:6](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L6)
 
 ___
 
@@ -88,7 +98,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:6](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L6)
+[packages/sdk/contractkit/src/base.ts:7](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L7)
 
 ___
 
@@ -98,7 +108,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:9](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L9)
+[packages/sdk/contractkit/src/base.ts:10](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L10)
 
 ___
 
@@ -108,7 +118,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:7](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L7)
+[packages/sdk/contractkit/src/base.ts:8](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L8)
 
 ___
 
@@ -118,7 +128,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:8](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L8)
+[packages/sdk/contractkit/src/base.ts:9](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L9)
 
 ___
 
@@ -128,7 +138,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:10](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L10)
+[packages/sdk/contractkit/src/base.ts:11](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L11)
 
 ___
 
@@ -138,7 +148,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:11](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L11)
+[packages/sdk/contractkit/src/base.ts:12](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L12)
 
 ___
 
@@ -148,7 +158,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:12](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L12)
+[packages/sdk/contractkit/src/base.ts:13](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L13)
 
 ___
 
@@ -158,7 +168,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:13](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L13)
+[packages/sdk/contractkit/src/base.ts:14](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L14)
 
 ___
 
@@ -168,7 +178,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:14](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L14)
+[packages/sdk/contractkit/src/base.ts:15](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L15)
 
 ___
 
@@ -178,7 +188,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:15](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L15)
+[packages/sdk/contractkit/src/base.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L16)
 
 ___
 
@@ -188,7 +198,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L16)
+[packages/sdk/contractkit/src/base.ts:17](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L17)
 
 ___
 
@@ -198,7 +208,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:17](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L17)
+[packages/sdk/contractkit/src/base.ts:18](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L18)
 
 ___
 
@@ -208,7 +218,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:18](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L18)
+[packages/sdk/contractkit/src/base.ts:19](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L19)
 
 ___
 
@@ -218,23 +228,13 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:19](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L19)
+[packages/sdk/contractkit/src/base.ts:20](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L20)
 
 ___
 
 ### MentoFeeHandlerSeller
 
 • **MentoFeeHandlerSeller** = ``"MentoFeeHandlerSeller"``
-
-#### Defined in
-
-[packages/sdk/contractkit/src/base.ts:20](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L20)
-
-___
-
-### MintGoldSchedule
-
-• **MintGoldSchedule** = ``"MintGoldSchedule"``
 
 #### Defined in
 

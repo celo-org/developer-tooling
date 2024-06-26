@@ -39,6 +39,7 @@
 | `Accounts` | (`web3`: `default`, `address`: `string`) => `Accounts` |
 | `Attestations` | (`web3`: `default`, `address`: `string`) => `Attestations` |
 | `BlockchainParameters` | (`web3`: `default`, `address`: `string`) => `BlockchainParameters` |
+| `CeloDistributionSchedule` | (`web3`: `default`, `address`: `string`) => `CeloDistributionSchedule` |
 | `DoubleSigningSlasher` | (`web3`: `default`, `address`: `string`) => `DoubleSigningSlasher` |
 | `DowntimeSlasher` | (`web3`: `default`, `address`: `string`) => `DowntimeSlasher` |
 | `ERC20` | (`web3`: `default`, `address`: `string`) => `IERC20` |
@@ -55,7 +56,6 @@
 | `Governance` | (`web3`: `default`, `address`: `string`) => `Governance` |
 | `LockedGold` | (`web3`: `default`, `address`: `string`) => `LockedGold` |
 | `MentoFeeHandlerSeller` | (`web3`: `default`, `address`: `string`) => `MentoFeeHandlerSeller` |
-| `MintGoldSchedule` | (`web3`: `default`, `address`: `string`) => `MintGoldSchedule` |
 | `MultiSig` | (`web3`: `default`, `address`: `string`) => `MultiSig` |
 | `OdisPayments` | (`web3`: `default`, `address`: `string`) => `OdisPayments` |
 | `Random` | (`web3`: `default`, `address`: `string`) => `Random` |

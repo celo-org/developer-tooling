@@ -6,31 +6,10 @@
 
 ### Functions
 
-- [activateMintCeloSchedule](test_utils_utils.md#activatemintceloschedule)
 - [currentEpochNumber](test_utils_utils.md#currentepochnumber)
 - [mineToNextEpoch](test_utils_utils.md#minetonextepoch)
 
 ## Functions
-
-### activateMintCeloSchedule
-
-▸ **activateMintCeloSchedule**(`kit`): `Promise`\<`void`\>
-
-#### Parameters
-
-| Name | Type |
-| :------ | :------ |
-| `kit` | [`ContractKit`](../classes/kit.ContractKit.md) |
-
-#### Returns
-
-`Promise`\<`void`\>
-
-#### Defined in
-
-[packages/sdk/contractkit/src/test-utils/utils.ts:51](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/test-utils/utils.ts#L51)
-
-___
 
 ### currentEpochNumber
 
@@ -49,7 +28,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/test-utils/utils.ts:11](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/test-utils/utils.ts#L11)
+[packages/sdk/contractkit/src/test-utils/utils.ts:5](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/test-utils/utils.ts#L5)
 
 ___
 
@@ -70,4 +49,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/test-utils/utils.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/test-utils/utils.ts#L38)
+[packages/sdk/contractkit/src/test-utils/utils.ts:32](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/test-utils/utils.ts#L32)
