@@ -2,7 +2,7 @@ import { StrongAddress } from '@celo/base'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
-import { NetworkConfig, timeTravel } from '@celo/dev-utils/lib/ganache-test'
+import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import { ux } from '@oclif/core'
 import Web3 from 'web3'
 import { changeMultiSigOwner } from '../../test-utils/chain-setup'
@@ -10,8 +10,6 @@ import { stripAnsiCodes, testLocallyWithWeb3Node } from '../../test-utils/cliUti
 import Approve from './approve'
 
 process.env.NO_SYNCCHECK = 'true'
-
-const expConfig = NetworkConfig.governance
 
 testWithAnvil('governance:approve cmd', (web3: Web3) => {
   const kit = newKitFromWeb3(web3)
@@ -30,7 +28,10 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
     await governance
       .propose([], 'URL')
       .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
-    await timeTravel(expConfig.dequeueFrequency, web3)
+
+    const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
+
+    await timeTravel(dequeueFrequency, web3)
   })
 
   afterEach(() => {

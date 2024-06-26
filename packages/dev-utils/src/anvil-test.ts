@@ -6,7 +6,6 @@ import {
   TEST_GAS_LIMIT,
   TEST_GAS_PRICE,
   TEST_MNEMONIC,
-  TEST_TIMESTAMP,
   jsonRpcCall,
   testWithWeb3,
 } from './test-utils'
@@ -30,8 +29,6 @@ export function createInstance(): Anvil {
     balance: TEST_BALANCE,
     gasPrice: TEST_GAS_PRICE,
     gasLimit: TEST_GAS_LIMIT,
-    // we need a fixed timestamp, so time-sensitive tests are deterministic
-    timestamp: TEST_TIMESTAMP,
   }
 
   instance = createAnvil(options)
