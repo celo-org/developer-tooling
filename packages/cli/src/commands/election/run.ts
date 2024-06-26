@@ -33,7 +33,7 @@ export default class ElectionRun extends BaseCommand {
     const signers = await performElections(kit)
 
     const validatorList = await Promise.all(
-      signers.map((addr) => validators.getValidatorFromSigner(addr))
+      signers.sort().map((addr) => validators.getValidatorFromSigner(addr))
     )
     ux.action.stop()
 
