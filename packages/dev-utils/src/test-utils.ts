@@ -85,7 +85,7 @@ export function testWithWeb3(
         await evmRevert(web3, snapId)
       }
       if (hooks?.afterAll) {
-        // hook must be awaited here or jest doesnt actually wait for it and complains of open handlesc
+        // hook must be awaited here or jest doesnt actually wait for it and complains of open handles
         await hooks.afterAll()
       }
     })
