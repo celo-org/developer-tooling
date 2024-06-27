@@ -7,6 +7,7 @@ export default class Whitelist extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
+    ...(ux.table.flags() as object),
   }
 
   static args = {}
@@ -15,16 +16,13 @@ export default class Whitelist extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const { flags } = await this.parse(Whitelist)
+
     const feeCurrencyContract = await getFeeCurrencyContractWrapper(kit, await this.isCel2())
     const validFeeCurrencies = await feeCurrencyContract.getAddresses()
 
     const pairs = await feeCurrencyContract.getFeeCurrencyInformation(validFeeCurrencies)
-    // .map(
-    //   ({ name, symbol, address, adaptedToken, decimals }) =>
-    //     `${address} - ${name || 'unknown name'} (${symbol || 'N/A'})${
-    //       adaptedToken ? ` (adapted token: ${adaptedToken})` : ''
-    //     } - ${decimals} decimals`
-    // )
+
     ux.table(
       pairs.map((token) => token),
       {
@@ -33,9 +31,9 @@ export default class Whitelist extends BaseCommand {
         whitelisted: { get: (token) => token.address, header: 'Whitelisted Address' },
         token: { get: (token) => token.adaptedToken || token.address, header: 'Token Address' },
         decimals: { get: (token) => token.decimals },
-        usesAdapter: { get: (token) => !!token.adaptedToken, header: 'Uses Adapter' },
-      }
+        usesAdapter: { get: (token) => !!token.adaptedToken, header: 'Uses Adapter?' },
+      },
+      flags
     )
-    // TODO add flags
   }
 }
