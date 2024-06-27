@@ -910,7 +910,7 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<Governance> {
         }
       }
     } else {
-      // @ts-ignore this method does on exist starting 1.5.0.0
+      // @ts-ignore this method does not exist starting 1.5.0.0
       const res = await this.contract.methods.getHotfixRecord(bufferToHex(hash)).call()
 
       return {
