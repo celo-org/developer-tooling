@@ -395,7 +395,7 @@ testWithAnvil('GovernanceWrapper', (web3: Web3) => {
           "approved": false,
           "councilApproved": false,
           "executed": false,
-          "executionTimeWindow": 0,
+          "executionTimeLimit": "0",
         }
       `)
     })

@@ -1,4 +1,5 @@
 import { Governance } from '@celo/abis-12/web3/Governance'
+import { newGovernance } from '@celo/abis/web3/Governance'
 import {
   bufferToHex,
   ensureLeading0x,
@@ -910,8 +911,8 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<Governance> {
         }
       }
     } else {
-      // @ts-ignore this method does not exist starting 1.5.0.0
-      const res = await this.contract.methods.getHotfixRecord(bufferToHex(hash)).call()
+      const governancePre1500Contract = newGovernance(this.connection.web3, this.address)
+      const res = await governancePre1500Contract.methods.getHotfixRecord(bufferToHex(hash)).call()
 
       return {
         approved: res[0],
