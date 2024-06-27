@@ -1,3 +1,4 @@
+import { L1HotfixRecord } from '@celo/contractkit/lib/wrappers/Governance'
 import { hotfixToHash, ProposalBuilder, ProposalTransactionJSON } from '@celo/governance'
 import { hexToBuffer } from '@celo/utils/lib/address'
 import { Flags } from '@oclif/core'
@@ -38,17 +39,26 @@ export default class ExecuteHotfix extends BaseCommand {
 
     const governance = await kit.contracts.getGovernance()
     const record = await governance.getHotfixRecord(hash)
+    const isCel2 = await this.isCel2()
 
-    await newCheckBuilder(this, account)
-      .hotfixIsPassing(hash)
-      .hotfixNotExecuted(hash)
-      .addCheck(`Hotfix 0x${hash.toString('hex')} is prepared for current epoch`, async () => {
-        const validators = await kit.contracts.getValidators()
-        const currentEpoch = await validators.getEpochNumber()
-        return record.preparedEpoch.eq(currentEpoch)
-      })
-      .addCheck(`Hotfix 0x${hash.toString('hex')} is approved`, () => record.approved)
-      .runChecks()
+    if (isCel2) {
+      await newCheckBuilder(this, account)
+        .hotfixApproved(hash)
+        .hotfixCouncilApproved(hash)
+        .hotfixNotExecuted(hash)
+        .runChecks()
+    } else {
+      await newCheckBuilder(this, account)
+        .hotfixIsPassing(hash)
+        .hotfixNotExecuted(hash)
+        .addCheck(`Hotfix 0x${hash.toString('hex')} is prepared for current epoch`, async () => {
+          const validators = await kit.contracts.getValidators()
+          const currentEpoch = await validators.getEpochNumber()
+          return (record as L1HotfixRecord).preparedEpoch.eq(currentEpoch)
+        })
+        .addCheck(`Hotfix 0x${hash.toString('hex')} is approved`, () => record.approved)
+        .runChecks()
+    }
 
     await displaySendTx(
       'executeHotfixTx',

@@ -1,4 +1,4 @@
-import { Governance } from '@celo/abis/web3/Governance'
+import { Governance } from '@celo/abis-12/web3/Governance'
 import {
   bufferToHex,
   ensureLeading0x,
@@ -9,9 +9,10 @@ import {
 } from '@celo/base/lib/address'
 import { concurrentMap } from '@celo/base/lib/async'
 import { zeroRange, zip } from '@celo/base/lib/collections'
-import { Address, CeloTxObject, CeloTxPending, toTransactionObject } from '@celo/connect'
+import { Address, CeloTxObject, CeloTxPending, isCel2, toTransactionObject } from '@celo/connect'
 import { fromFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
+import { ContractVersion } from '../versions'
 import {
   bufferToSolidityBytes,
   identity,
@@ -126,10 +127,20 @@ export const hotfixToParams = (proposal: Proposal, salt: Buffer): HotfixParams =
   return [p[0], p[1], p[2], p[3], bufferToHex(salt)]
 }
 
-export interface HotfixRecord {
+// TODO remove this once no longer needed, consider this as legacy
+export interface L1HotfixRecord {
   approved: boolean
   executed: boolean
   preparedEpoch: BigNumber
+}
+
+// Purposfully not named L2HotfixRecord to signal that this is a new and valid going forward
+// interface
+export interface HotfixRecord {
+  approved: boolean
+  councilApproved: boolean
+  executed: boolean
+  executionTimeLimit: BigNumber
 }
 
 export interface VoteRecord {
@@ -874,12 +885,39 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<Governance> {
    * Returns approved, executed, and prepared status associated with a given hotfix.
    * @param hash keccak256 hash of hotfix's associated abi encoded transactions
    */
-  async getHotfixRecord(hash: Buffer): Promise<HotfixRecord> {
-    const res = await this.contract.methods.getHotfixRecord(bufferToHex(hash)).call()
-    return {
-      approved: res[0],
-      executed: res[1],
-      preparedEpoch: valueToBigNumber(res[2]),
+  async getHotfixRecord(hash: Buffer): Promise<L1HotfixRecord | HotfixRecord> {
+    const version = await this.version()
+
+    if (version.isAtLeast(new ContractVersion(1, 5, 0, 0))) {
+      if (await isCel2(this.connection.web3)) {
+        // is L2
+        const res = await this.contract.methods.getL2HotfixRecord(bufferToHex(hash)).call()
+
+        return {
+          approved: res[0],
+          councilApproved: res[1],
+          executed: res[2],
+          executionTimeLimit: valueToBigNumber(res[3]),
+        }
+      } else {
+        // is L1
+        const res = await this.contract.methods.getL1HotfixRecord(bufferToHex(hash)).call()
+
+        return {
+          approved: res[0],
+          executed: res[1],
+          preparedEpoch: valueToBigNumber(res[2]),
+        }
+      }
+    } else {
+      // @ts-ignore this method does on exist starting 1.5.0.0
+      const res = await this.contract.methods.getHotfixRecord(bufferToHex(hash)).call()
+
+      return {
+        approved: res[0],
+        executed: res[1],
+        preparedEpoch: valueToBigNumber(res[2]),
+      }
     }
   }
 

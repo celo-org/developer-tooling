@@ -1,11 +1,13 @@
 import { Registry } from '@celo/abis/web3/Registry'
 import { Address, StrongAddress } from '@celo/base/lib/address'
 import { concurrentMap } from '@celo/base/lib/async'
+import { setupL2, testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import { NetworkConfig, testWithGanache, timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { CeloContract } from '..'
 import { newKitFromWeb3 } from '../kit'
+import { ContractVersion } from '../versions'
 import { AccountsWrapper } from './Accounts'
 import { GovernanceWrapper, Proposal, ProposalTransaction, VoteValue } from './Governance'
 import { LockedGoldWrapper } from './LockedGold'
@@ -265,6 +267,22 @@ testWithGanache('Governance Wrapper', (web3: Web3) => {
     })
   })
 
+  describe('Hotfixes', () => {
+    it('gets L1 hotfix record pre 1.5.0.0', async () => {
+      // Sanity check to make sure we're pre 1.5.0.0
+      expect((await governance.version()).toString()).toBe('1.4.1.0')
+
+      const hotfixRecord = await governance.getHotfixRecord(Buffer.from('0x', 'hex'))
+      expect(hotfixRecord).toMatchInlineSnapshot(`
+        {
+          "approved": false,
+          "executed": false,
+          "preparedEpoch": "0",
+        }
+      `)
+    })
+  })
+
   // Disabled until validator set precompile is available in ganache
   // https://github.com/celo-org/celo-monorepo/issues/1737
 
@@ -346,4 +364,40 @@ testWithGanache('Governance Wrapper', (web3: Web3) => {
   //     10 * ONE_SEC
   //   )
   // })
+})
+
+testWithAnvil('GovernanceWrapper', (web3: Web3) => {
+  describe('Hotfixes', () => {
+    it('gets L1/L2 hotfix record for version >= 1.5.0.0', async () => {
+      const kit = newKitFromWeb3(web3)
+      const governance = await kit.contracts.getGovernance()
+      const hotfixHash = Buffer.from('0x', 'hex')
+
+      // Sanity check to make sure we're on at least 1.5.0.0 version
+      expect((await governance.version()).isAtLeast(new ContractVersion(1, 5, 0, 0)))
+
+      // Test L1 context
+      const hotfixRecordL1 = await governance.getHotfixRecord(hotfixHash)
+      expect(hotfixRecordL1).toMatchInlineSnapshot(`
+        {
+          "approved": false,
+          "executed": false,
+          "preparedEpoch": "0",
+        }
+      `)
+
+      // Test L2 context
+      await setupL2(web3)
+
+      const hotfixRecordL2 = await governance.getHotfixRecord(hotfixHash)
+      expect(hotfixRecordL2).toMatchInlineSnapshot(`
+        {
+          "approved": false,
+          "councilApproved": false,
+          "executed": false,
+          "executionTimeWindow": 0,
+        }
+      `)
+    })
+  })
 })
