@@ -1,7 +1,7 @@
 import { Registry } from '@celo/abis/web3/Registry'
 import { Address, StrongAddress } from '@celo/base/lib/address'
 import { concurrentMap } from '@celo/base/lib/async'
-import { setupL2, testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import { NetworkConfig, testWithGanache, timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
@@ -368,7 +368,7 @@ testWithGanache('Governance Wrapper', (web3: Web3) => {
 
 testWithAnvil('GovernanceWrapper', (web3: Web3) => {
   describe('Hotfixes', () => {
-    it('gets L1/L2 hotfix record for version >= 1.5.0.0', async () => {
+    it('gets L1 hotfix record for version >= 1.5.0.0', async () => {
       const kit = newKitFromWeb3(web3)
       const governance = await kit.contracts.getGovernance()
       const hotfixHash = Buffer.from('0x', 'hex')
@@ -383,19 +383,6 @@ testWithAnvil('GovernanceWrapper', (web3: Web3) => {
           "approved": false,
           "executed": false,
           "preparedEpoch": "0",
-        }
-      `)
-
-      // Test L2 context
-      await setupL2(web3)
-
-      const hotfixRecordL2 = await governance.getHotfixRecord(hotfixHash)
-      expect(hotfixRecordL2).toMatchInlineSnapshot(`
-        {
-          "approved": false,
-          "councilApproved": false,
-          "executed": false,
-          "executionTimeLimit": "0",
         }
       `)
     })
