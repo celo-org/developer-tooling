@@ -2,7 +2,7 @@ import { StrongAddress } from '@celo/base'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
-import { NetworkConfig, timeTravel } from '@celo/dev-utils/lib/ganache-test'
+import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import { ux } from '@oclif/core'
 import Web3 from 'web3'
 import { changeMultiSigOwner } from '../../test-utils/chain-setup'
@@ -10,8 +10,6 @@ import { stripAnsiCodes, testLocallyWithWeb3Node } from '../../test-utils/cliUti
 import Approve from './approve'
 
 process.env.NO_SYNCCHECK = 'true'
-
-const expConfig = NetworkConfig.governance
 
 testWithAnvil('governance:approve cmd', (web3: Web3) => {
   const kit = newKitFromWeb3(web3)
@@ -30,7 +28,10 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
     await governance
       .propose([], 'URL')
       .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
-    await timeTravel(expConfig.dequeueFrequency, web3)
+
+    const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
+
+    await timeTravel(dequeueFrequency, web3)
   })
 
   afterEach(() => {
@@ -62,7 +63,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
           "Running Checks:",
         ],
         [
-          "   ✔  0x1288C356E8d9F2811F10B8E92dBADbf3bCEC12F8 is approver address ",
+          "   ✔  0x1B46C60e8B3B427d91d35df22FCfc3FF36407f35 is approver address ",
         ],
         [
           "   ✘  0x5409ED021D9299bf6814279A6A1411A7e866A631 is multisig signatory ",
@@ -100,7 +101,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
           "Running Checks:",
         ],
         [
-          "   ✔  0x1288C356E8d9F2811F10B8E92dBADbf3bCEC12F8 is approver address ",
+          "   ✔  0x1B46C60e8B3B427d91d35df22FCfc3FF36407f35 is approver address ",
         ],
         [
           "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is multisig signatory ",
@@ -121,7 +122,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
           "SendTransaction: approveTx",
         ],
         [
-          "txHash: 0x10ee79a4404b04c5312fe146f49f1f84dd0ee451f5bebbe5dc2b78b2c0f37520",
+          "txHash: 0x2d94ff2c52c79fe05df141be1e366935bb3e360d03bbc7fce3274bd6324aa707",
         ],
       ]
     `)

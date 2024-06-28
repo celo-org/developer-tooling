@@ -1,8 +1,6 @@
-// tslint:disable: ordered-imports
-import debugFactory from 'debug'
-import { AddressRegistry } from './address-registry'
-import { CeloContract, ProxyContracts } from './base'
-import { StableToken } from './celo-tokens'
+import { newCeloDistributionSchedule } from '@celo/abis-12/web3/CeloDistributionSchedule'
+import { newFeeCurrencyDirectory } from '@celo/abis-12/web3/FeeCurrencyDirectory'
+import { newGoldToken } from '@celo/abis-12/web3/GoldToken'
 import { newGasPriceMinimum } from '@celo/abis/web3/0.8/GasPriceMinimum'
 import { newAccounts } from '@celo/abis/web3/Accounts'
 import { newAttestations } from '@celo/abis/web3/Attestations'
@@ -16,23 +14,24 @@ import { newFederatedAttestations } from '@celo/abis/web3/FederatedAttestations'
 import { newFeeCurrencyWhitelist } from '@celo/abis/web3/FeeCurrencyWhitelist'
 import { newFeeHandler } from '@celo/abis/web3/FeeHandler'
 import { newFreezer } from '@celo/abis/web3/Freezer'
-import { newGoldToken } from '@celo/abis/web3/GoldToken'
 import { newGovernance } from '@celo/abis/web3/Governance'
 import { newIERC20 } from '@celo/abis/web3/IERC20'
 import { newLockedGold } from '@celo/abis/web3/LockedGold'
+import { newMentoFeeHandlerSeller } from '@celo/abis/web3/MentoFeeHandlerSeller'
 import { newMultiSig } from '@celo/abis/web3/MultiSig'
 import { newOdisPayments } from '@celo/abis/web3/OdisPayments'
 import { newProxy } from '@celo/abis/web3/Proxy'
 import { newRandom } from '@celo/abis/web3/Random'
 import { newRegistry } from '@celo/abis/web3/Registry'
 import { newSortedOracles } from '@celo/abis/web3/SortedOracles'
+import { newUniswapFeeHandlerSeller } from '@celo/abis/web3/UniswapFeeHandlerSeller'
 import { newValidators } from '@celo/abis/web3/Validators'
 import { newReserve } from '@celo/abis/web3/mento/Reserve'
 import { newStableToken } from '@celo/abis/web3/mento/StableToken'
-
-import { newFeeCurrencyDirectory } from '@celo/abis-12/web3/FeeCurrencyDirectory'
-import { newMentoFeeHandlerSeller } from '@celo/abis/web3/MentoFeeHandlerSeller'
-import { newUniswapFeeHandlerSeller } from '@celo/abis/web3/UniswapFeeHandlerSeller'
+import debugFactory from 'debug'
+import { AddressRegistry } from './address-registry'
+import { CeloContract, ProxyContracts } from './base'
+import { StableToken } from './celo-tokens'
 
 const debug = debugFactory('kit:web3-contract-cache')
 
@@ -40,6 +39,7 @@ export const ContractFactories = {
   [CeloContract.Accounts]: newAccounts,
   [CeloContract.Attestations]: newAttestations,
   [CeloContract.BlockchainParameters]: newBlockchainParameters,
+  [CeloContract.CeloDistributionSchedule]: newCeloDistributionSchedule,
   [CeloContract.DoubleSigningSlasher]: newDoubleSigningSlasher,
   [CeloContract.DowntimeSlasher]: newDowntimeSlasher,
   [CeloContract.Election]: newElection,
@@ -98,6 +98,9 @@ export class Web3ContractCache {
   }
   getBlockchainParameters() {
     return this.getContract(CeloContract.BlockchainParameters)
+  }
+  getCeloDistributionSchedule() {
+    return this.getContract(CeloContract.CeloDistributionSchedule)
   }
   getDoubleSigningSlasher() {
     return this.getContract(CeloContract.DoubleSigningSlasher)

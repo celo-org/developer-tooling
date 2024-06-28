@@ -26,6 +26,7 @@ a contract wrapper
 - [getAccounts](web3_contract_cache.Web3ContractCache.md#getaccounts)
 - [getAttestations](web3_contract_cache.Web3ContractCache.md#getattestations)
 - [getBlockchainParameters](web3_contract_cache.Web3ContractCache.md#getblockchainparameters)
+- [getCeloDistributionSchedule](web3_contract_cache.Web3ContractCache.md#getcelodistributionschedule)
 - [getContract](web3_contract_cache.Web3ContractCache.md#getcontract)
 - [getDoubleSigningSlasher](web3_contract_cache.Web3ContractCache.md#getdoublesigningslasher)
 - [getDowntimeSlasher](web3_contract_cache.Web3ContractCache.md#getdowntimeslasher)
@@ -127,6 +128,20 @@ ___
 
 ___
 
+### getCeloDistributionSchedule
+
+▸ **getCeloDistributionSchedule**(): `Promise`\<`CeloDistributionSchedule`\>
+
+#### Returns
+
+`Promise`\<`CeloDistributionSchedule`\>
+
+#### Defined in
+
+[packages/sdk/contractkit/src/web3-contract-cache.ts:102](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L102)
+
+___
+
 ### getContract
 
 ▸ **getContract**\<`C`\>(`contract`, `address?`): `Promise`\<`NonNullable`\<`ContractCacheMap`[`C`]\>\>
@@ -152,7 +167,7 @@ Get native web3 contract wrapper
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:174](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L174)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:177](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L177)
 
 ___
 
@@ -166,7 +181,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:102](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L102)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:105](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L105)
 
 ___
 
@@ -180,7 +195,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:105](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L105)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:108](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L108)
 
 ___
 
@@ -194,7 +209,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:108](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L108)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:111](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L111)
 
 ___
 
@@ -208,7 +223,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:111](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L111)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:114](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L114)
 
 ___
 
@@ -228,7 +243,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:114](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L114)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:117](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L117)
 
 ___
 
@@ -242,7 +257,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:117](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L117)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:120](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L120)
 
 ___
 
@@ -256,7 +271,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:121](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L121)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:124](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L124)
 
 ___
 
@@ -270,7 +285,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:124](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L124)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:127](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L127)
 
 ___
 
@@ -284,7 +299,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:130](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L130)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:133](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L133)
 
 ___
 
@@ -298,7 +313,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:127](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L127)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:130](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L130)
 
 ___
 
@@ -312,7 +327,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:133](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L133)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:136](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L136)
 
 ___
 
@@ -326,7 +341,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:136](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L136)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:139](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L139)
 
 ___
 
@@ -340,7 +355,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:139](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L139)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:142](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L142)
 
 ___
 
@@ -354,7 +369,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:143](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L143)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:146](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L146)
 
 ___
 
@@ -374,7 +389,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:146](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L146)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:149](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L149)
 
 ___
 
@@ -388,7 +403,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:149](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L149)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:152](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L152)
 
 ___
 
@@ -402,7 +417,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:152](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L152)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:155](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L155)
 
 ___
 
@@ -416,7 +431,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:155](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L155)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:158](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L158)
 
 ___
 
@@ -430,7 +445,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:158](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L158)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:161](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L161)
 
 ___
 
@@ -444,13 +459,13 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:161](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L161)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:164](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L164)
 
 ___
 
 ### getStableToken
 
-▸ **getStableToken**(`stableToken?`): `Promise`\<`NonNullable`\<`undefined` \| `Registry` \| `Accounts` \| `IERC20` \| `GoldToken` \| `StableToken` \| `Attestations` \| `BlockchainParameters` \| `DoubleSigningSlasher` \| `DowntimeSlasher` \| `Election` \| `EpochRewards` \| `Escrow` \| `FederatedAttestations` \| `FeeCurrencyDirectory` \| `FeeCurrencyWhitelist` \| `Freezer` \| `FeeHandler` \| `MentoFeeHandlerSeller` \| `UniswapFeeHandlerSeller` \| `GasPriceMinimum` \| `Governance` \| `LockedGold` \| `MultiSig` \| `OdisPayments` \| `Random` \| `Reserve` \| `SortedOracles` \| `Validators`\>\>
+▸ **getStableToken**(`stableToken?`): `Promise`\<`NonNullable`\<`undefined` \| `Registry` \| `Accounts` \| `IERC20` \| `GoldToken` \| `StableToken` \| `Attestations` \| `BlockchainParameters` \| `CeloDistributionSchedule` \| `DoubleSigningSlasher` \| `DowntimeSlasher` \| `Election` \| `EpochRewards` \| `Escrow` \| `FederatedAttestations` \| `FeeCurrencyDirectory` \| `FeeCurrencyWhitelist` \| `Freezer` \| `FeeHandler` \| `MentoFeeHandlerSeller` \| `UniswapFeeHandlerSeller` \| `GasPriceMinimum` \| `Governance` \| `LockedGold` \| `MultiSig` \| `OdisPayments` \| `Random` \| `Reserve` \| `SortedOracles` \| `Validators`\>\>
 
 #### Parameters
 
@@ -460,11 +475,11 @@ ___
 
 #### Returns
 
-`Promise`\<`NonNullable`\<`undefined` \| `Registry` \| `Accounts` \| `IERC20` \| `GoldToken` \| `StableToken` \| `Attestations` \| `BlockchainParameters` \| `DoubleSigningSlasher` \| `DowntimeSlasher` \| `Election` \| `EpochRewards` \| `Escrow` \| `FederatedAttestations` \| `FeeCurrencyDirectory` \| `FeeCurrencyWhitelist` \| `Freezer` \| `FeeHandler` \| `MentoFeeHandlerSeller` \| `UniswapFeeHandlerSeller` \| `GasPriceMinimum` \| `Governance` \| `LockedGold` \| `MultiSig` \| `OdisPayments` \| `Random` \| `Reserve` \| `SortedOracles` \| `Validators`\>\>
+`Promise`\<`NonNullable`\<`undefined` \| `Registry` \| `Accounts` \| `IERC20` \| `GoldToken` \| `StableToken` \| `Attestations` \| `BlockchainParameters` \| `CeloDistributionSchedule` \| `DoubleSigningSlasher` \| `DowntimeSlasher` \| `Election` \| `EpochRewards` \| `Escrow` \| `FederatedAttestations` \| `FeeCurrencyDirectory` \| `FeeCurrencyWhitelist` \| `Freezer` \| `FeeHandler` \| `MentoFeeHandlerSeller` \| `UniswapFeeHandlerSeller` \| `GasPriceMinimum` \| `Governance` \| `LockedGold` \| `MultiSig` \| `OdisPayments` \| `Random` \| `Reserve` \| `SortedOracles` \| `Validators`\>\>
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:164](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L164)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:167](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L167)
 
 ___
 
@@ -478,7 +493,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:167](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L167)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:170](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L170)
 
 ___
 
@@ -504,4 +519,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:193](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L193)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:196](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L196)

@@ -39,6 +39,7 @@
 | `Accounts` | (`web3`: `default`, `address`: `string`) => `Accounts` |
 | `Attestations` | (`web3`: `default`, `address`: `string`) => `Attestations` |
 | `BlockchainParameters` | (`web3`: `default`, `address`: `string`) => `BlockchainParameters` |
+| `CeloDistributionSchedule` | (`web3`: `default`, `address`: `string`) => `CeloDistributionSchedule` |
 | `DoubleSigningSlasher` | (`web3`: `default`, `address`: `string`) => `DoubleSigningSlasher` |
 | `DowntimeSlasher` | (`web3`: `default`, `address`: `string`) => `DowntimeSlasher` |
 | `ERC20` | (`web3`: `default`, `address`: `string`) => `IERC20` |
@@ -69,4 +70,4 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:39](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L39)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L38)

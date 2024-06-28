@@ -26,6 +26,8 @@
 
   ↳ [`BlockchainParametersWrapper`](wrappers_BlockchainParameters.BlockchainParametersWrapper.md)
 
+  ↳ [`CeloDistributionScheduleWrapper`](wrappers_CeloDistributionScheduleWrapper.CeloDistributionScheduleWrapper.md)
+
   ↳ [`EpochRewardsWrapper`](wrappers_EpochRewards.EpochRewardsWrapper.md)
 
   ↳ [`Erc20Wrapper`](wrappers_Erc20Wrapper.Erc20Wrapper.md)
