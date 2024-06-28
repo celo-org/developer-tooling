@@ -1,7 +1,7 @@
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { getContractFromEvent, testWithGanache } from '@celo/dev-utils/lib/ganache-test'
 import Web3 from 'web3'
-import { LONG_TIMEOUT_MS, testLocally } from '../../test-utils/cliUtils'
+import { testLocally } from '../../test-utils/cliUtils'
 import CreateAccount from './create-account'
 import LockedGold from './locked-gold'
 
@@ -20,47 +20,43 @@ testWithGanache('releasegold:locked-gold cmd', (web3: Web3) => {
     await testLocally(CreateAccount, ['--contract', contractAddress])
   })
 
-  test(
-    'can lock celo with pending withdrawals',
-    async () => {
-      const lockedGold = await kit.contracts.getLockedGold()
-      await testLocally(LockedGold, [
-        '--contract',
-        contractAddress,
-        '--action',
-        'lock',
-        '--value',
-        '100',
-      ])
-      await testLocally(LockedGold, [
-        '--contract',
-        contractAddress,
-        '--action',
-        'unlock',
-        '--value',
-        '50',
-      ])
-      await testLocally(LockedGold, [
-        '--contract',
-        contractAddress,
-        '--action',
-        'lock',
-        '--value',
-        '75',
-      ])
-      await testLocally(LockedGold, [
-        '--contract',
-        contractAddress,
-        '--action',
-        'unlock',
-        '--value',
-        '50',
-      ])
-      const pendingWithdrawalsTotalValue = await lockedGold.getPendingWithdrawalsTotalValue(
-        contractAddress
-      )
-      expect(pendingWithdrawalsTotalValue.toFixed()).toBe('50')
-    },
-    LONG_TIMEOUT_MS * 2
-  )
+  test('can lock celo with pending withdrawals', async () => {
+    const lockedGold = await kit.contracts.getLockedGold()
+    await testLocally(LockedGold, [
+      '--contract',
+      contractAddress,
+      '--action',
+      'lock',
+      '--value',
+      '100',
+    ])
+    await testLocally(LockedGold, [
+      '--contract',
+      contractAddress,
+      '--action',
+      'unlock',
+      '--value',
+      '50',
+    ])
+    await testLocally(LockedGold, [
+      '--contract',
+      contractAddress,
+      '--action',
+      'lock',
+      '--value',
+      '75',
+    ])
+    await testLocally(LockedGold, [
+      '--contract',
+      contractAddress,
+      '--action',
+      'unlock',
+      '--value',
+      '50',
+    ])
+    const pendingWithdrawalsTotalValue = await lockedGold.getPendingWithdrawalsTotalValue(
+      contractAddress
+    )
+    expect(pendingWithdrawalsTotalValue.toFixed()).toBe('50')
+  })
 })

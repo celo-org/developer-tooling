@@ -1,4 +1,5 @@
 import { newKitFromWeb3 } from '@celo/contractkit'
+import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
@@ -10,7 +11,6 @@ import {
 import Register from '../account/register'
 import Lock from './lock'
 import Unlock from './unlock'
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 
 process.env.NO_SYNCCHECK = 'true'
 

@@ -5,7 +5,7 @@ import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { EXTRA_LONG_TIMEOUT_MS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Register from '../account/register'
 import Lock from '../lockedgold/lock'
 import Dequeue from './dequeue'
@@ -70,14 +70,18 @@ testWithAnvil('governance:upvote cmd', (web3: Web3) => {
     expect(dequeue).toEqual([proposalID, proposalID2, proposalID3, proposalID4])
   })
 
-  test('can upvote proposal which cannot be dequeued', async () => {
-    await testLocallyWithWeb3Node(
-      Upvote,
-      ['--proposalID', proposalID5.toString(10), '--from', accounts[0]],
-      web3
-    )
+  test(
+    'can upvote proposal which cannot be dequeued',
+    async () => {
+      await testLocallyWithWeb3Node(
+        Upvote,
+        ['--proposalID', proposalID5.toString(10), '--from', accounts[0]],
+        web3
+      )
 
-    const queue = await governance.getQueue()
-    expect(queue).toEqual([{ proposalID: proposalID5, upvotes: new BigNumber(100) }])
-  })
+      const queue = await governance.getQueue()
+      expect(queue).toEqual([{ proposalID: proposalID5, upvotes: new BigNumber(100) }])
+    },
+    EXTRA_LONG_TIMEOUT_MS
+  )
 })

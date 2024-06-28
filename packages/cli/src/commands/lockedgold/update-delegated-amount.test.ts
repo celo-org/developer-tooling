@@ -1,10 +1,10 @@
+import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import Web3 from 'web3'
 import { LONG_TIMEOUT_MS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Register from '../account/register'
 import Delegate from './delegate'
 import Lock from './lock'
 import UpdateDelegatedAmount from './update-delegated-amount'
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 
 process.env.NO_SYNCCHECK = 'true'
 

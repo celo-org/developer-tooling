@@ -1,3 +1,4 @@
+import { OFAC_SANCTIONS_LIST_URL, SANCTIONED_ADDRESSES } from '@celo/compliance'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { getContractFromEvent, testWithGanache } from '@celo/dev-utils/lib/ganache-test'
 import Web3 from 'web3'
@@ -24,10 +25,13 @@ testWithGanache('releasegold:transfer-dollars cmd', (web3: Web3) => {
       { index: 1 } // canValidate = false
     )
     kit = newKitFromWeb3(web3)
+    fetchMock.get(OFAC_SANCTIONS_LIST_URL, SANCTIONED_ADDRESSES)
+
     accounts = await web3.eth.getAccounts()
     await testLocally(Register, ['--from', accounts[0]])
     await testLocally(CreateAccount, ['--contract', contractAddress])
   })
+  afterEach(() => fetchMock.reset())
 
   test('can transfer dollars out of the ReleaseGold contract', async () => {
     const balanceBefore = await kit.getTotalBalance(accounts[0])

@@ -53,6 +53,8 @@ export interface MetadataResponse {
   }
   settings?: {
     compilationTarget?: Record<string, string>
+    implementation?: string
+    name?: string
   }
 }
 
@@ -64,16 +66,19 @@ export interface MetadataResponse {
 export class Metadata {
   public abi: AbiItem[] | null = null
   public contractName: string | null = null
+  public implementationAddress: string | null = null
   public fnMapping: Map<string, ABIDefinition> = new Map()
 
   private abiCoder: AbiCoder
   private jsonInterfaceMethodToString: (item: AbiItem) => string
   private address: Address
 
-  constructor(connection: Connection, address: Address, response: any) {
+  constructor(connection: Connection, address: Address, response: MetadataResponse) {
     this.abiCoder = connection.getAbiCoder()
-
+    this.contractName = response.settings?.name || null
+    // note setting this.response has a side affect of setting this.contractName if it is empty
     this.response = response as MetadataResponse
+    this.implementationAddress = response.settings?.implementation || null
     // XXX: For some reason this isn't exported as it should be
     // @ts-ignore
     this.jsonInterfaceMethodToString = connection.web3.utils._jsonInterfaceMethodToString
@@ -109,7 +114,8 @@ export class Metadata {
       // XXX: Not sure when there are multiple compilationTargets and what should
       // happen then but defaulting to this for now.
       const contracts = Object.values(value.settings.compilationTarget)
-      this.contractName = contracts[0]
+
+      this.contractName = this.contractName ?? contracts[0]
     }
   }
 
@@ -169,8 +175,8 @@ export class Metadata {
 }
 
 /**
- * Fetch the sourcify response and instantiate a Metadata wrapper class around it.
- * Try a full_match but fallback to partial_match when not strict.
+ * Fetch the sourcify or celoscan response and instantiate a Metadata wrapper class around it.
+ * Try a full_match but fallback to partial_match when not strict. (only valid for sourcify)
  * @param connection @celo/connect instance
  * @param contract the address of the contract to query
  * @param strict only allow full matches https://docs.sourcify.dev/docs/full-vs-partial-match/
@@ -184,7 +190,18 @@ export async function fetchMetadata(
   const fullMatchMetadata = await querySourcify(connection, 'full_match', contract)
   if (fullMatchMetadata !== null) {
     return fullMatchMetadata
-  } else if (strict) {
+  }
+  console.debug('None found on full match on celo explorer, trying celoScan')
+  const fullMatchFromCeloScan = await queryCeloScan(connection, contract)
+  if (fullMatchFromCeloScan !== null) {
+    if (fullMatchFromCeloScan.implementationAddress) {
+      console.info('Implementation found', fullMatchFromCeloScan.implementationAddress)
+      return queryCeloScan(connection, fullMatchFromCeloScan.implementationAddress)
+    }
+    return fullMatchFromCeloScan
+  }
+  console.debug('No full match found, trying partial match')
+  if (strict) {
     return null
   } else {
     return querySourcify(connection, 'partial_match', contract)
@@ -208,7 +225,64 @@ async function querySourcify(
     `https://repo.sourcify.dev/contracts/${matchType}/${chainID}/${contract}/metadata.json`
   )
   if (resp.ok) {
-    return new Metadata(connection, contract, await resp.json())
+    return new Metadata(connection, contract, (await resp.json()) as MetadataResponse)
+  }
+  return null
+}
+
+type CeloScanResponse =
+  | {
+      status: '1'
+      message: 'OK'
+      result:
+        | [
+            {
+              SourceCode: string
+              ABI: string
+              ContractName: string
+              Implementation: `0x${string}`
+              // More
+            }
+          ]
+        | [
+            {
+              SourceCode: ''
+              ABI: 'Contract source code not verified'
+              ContractName: ''
+              EVMVersion: 'Default'
+              Proxy: '0'
+              Implementation: ''
+            }
+          ]
+    }
+  | {
+      status: '0'
+      message: 'NOTOK'
+      result: string
+    }
+
+/**
+ * Fetch the celoScan response and instantiate a Metadata wrapper class around it.
+ * @param connection @celo/connect instance
+ * @param contract the address of the contract to query
+ * @returns Metadata
+ */
+async function queryCeloScan(connection: Connection, contract: Address): Promise<Metadata | null> {
+  const resp = await fetch(
+    `https://api.celoscan.io/api?module=contract&action=getsourcecode&address=${contract}`
+  )
+  if (resp.ok) {
+    const json = (await resp.json()) as CeloScanResponse
+    if (json.message === 'OK' && json.result[0].ABI.length > 2) {
+      const info = json.result[0]
+      const data = JSON.parse(info.ABI) as AbiItem[]
+      return new Metadata(connection, contract, {
+        output: { abi: data },
+        settings: { name: info.ContractName, implementation: info.Implementation },
+      })
+    } else {
+      console.warn(json.status, json.result)
+    }
   }
   return null
 }

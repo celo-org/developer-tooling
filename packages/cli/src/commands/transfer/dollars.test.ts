@@ -1,11 +1,15 @@
-import { COMPLIANT_ERROR_RESPONSE, SANCTIONED_ADDRESSES } from '@celo/compliance'
+import {
+  COMPLIANT_ERROR_RESPONSE,
+  OFAC_SANCTIONS_LIST_URL,
+  SANCTIONED_ADDRESSES,
+} from '@celo/compliance'
 import { ContractKit, StableToken, newKitFromWeb3 } from '@celo/contractkit'
+import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
+import { topUpWithToken } from '../../test-utils/chain-setup'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import TransferCUSD from './dollars'
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
-import { topUpWithToken } from '../../test-utils/chain-setup'
-import BigNumber from 'bignumber.js'
 
 process.env.NO_SYNCCHECK = 'true'
 
@@ -19,7 +23,9 @@ testWithAnvil('transfer:dollars cmd', (web3: Web3) => {
   beforeEach(async () => {
     kit = newKitFromWeb3(web3)
     accounts = await web3.eth.getAccounts()
+    fetchMock.get(OFAC_SANCTIONS_LIST_URL, SANCTIONED_ADDRESSES)
   })
+  afterEach(() => fetchMock.reset())
 
   test('can transfer cusd', async () => {
     await topUpWithToken(
@@ -67,7 +73,7 @@ testWithAnvil('transfer:dollars cmd', (web3: Web3) => {
         ['--from', accounts[1], '--to', SANCTIONED_ADDRESSES[0], '--value', '1'],
         web3
       )
-    ).rejects.toThrow()
+    ).rejects.toThrow(`"Some checks didn't pass!"`)
     expect(spy).toHaveBeenCalledWith(expect.stringContaining(COMPLIANT_ERROR_RESPONSE))
   })
 })

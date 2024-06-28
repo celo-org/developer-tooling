@@ -42,6 +42,8 @@ ___
 | Name | Type |
 | :------ | :------ |
 | `compilationTarget?` | `Record`\<`string`, `string`\> |
+| `implementation?` | `string` |
+| `name?` | `string` |
 
 #### Defined in
 
