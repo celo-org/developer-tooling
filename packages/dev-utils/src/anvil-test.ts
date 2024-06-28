@@ -1,5 +1,6 @@
 import { PROXY_ADMIN_ADDRESS } from '@celo/connect'
 import { Anvil, CreateAnvilOptions, createAnvil } from '@viem/anvil'
+import path from 'path'
 import Web3 from 'web3'
 import {
   TEST_BALANCE,
@@ -24,7 +25,8 @@ export function createInstance(): Anvil {
   const port = ANVIL_PORT + (process.pid - process.ppid)
   const options: CreateAnvilOptions = {
     port,
-    loadState: require.resolve('@celo/devchain-anvil/devchain.json'),
+    // TEMP: use devchain.json for now until L2 hotfix branch is merged
+    loadState: path.join(__dirname, 'devchain.json'),
     mnemonic: TEST_MNEMONIC,
     balance: TEST_BALANCE,
     gasPrice: TEST_GAS_PRICE,

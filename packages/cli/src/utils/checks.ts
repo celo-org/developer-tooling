@@ -7,7 +7,11 @@ import {
 import { Address } from '@celo/connect'
 import { StableToken } from '@celo/contractkit'
 import { AccountsWrapper } from '@celo/contractkit/lib/wrappers/Accounts'
-import { GovernanceWrapper, ProposalStage } from '@celo/contractkit/lib/wrappers/Governance'
+import {
+  GovernanceWrapper,
+  HotfixRecord,
+  ProposalStage,
+} from '@celo/contractkit/lib/wrappers/Governance'
 import { LockedGoldWrapper } from '@celo/contractkit/lib/wrappers/LockedGold'
 import { MultiSigWrapper } from '@celo/contractkit/lib/wrappers/MultiSig'
 import { ValidatorsWrapper } from '@celo/contractkit/lib/wrappers/Validators'
@@ -179,6 +183,21 @@ class CheckBuilder {
     this.addCheck(
       `Hotfix 0x${hash.toString('hex')} is not already executed`,
       this.withGovernance(async (governance) => !(await governance.getHotfixRecord(hash)).executed)
+    )
+
+  hotfixApproved = (hash: Buffer) =>
+    this.addCheck(
+      `Hotfix 0x${hash.toString('hex')} is approved by approver`,
+      this.withGovernance(async (governance) => (await governance.getHotfixRecord(hash)).approved)
+    )
+
+  hotfixCouncilApproved = (hash: Buffer) =>
+    this.addCheck(
+      `Hotfix 0x${hash.toString('hex')} is approved by security council`,
+      this.withGovernance(
+        async (governance) =>
+          ((await governance.getHotfixRecord(hash)) as HotfixRecord).councilApproved
+      )
     )
 
   hotfixNotApproved = (hash: Buffer) =>
