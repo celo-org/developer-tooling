@@ -15,6 +15,7 @@
 - [from](types.FormattedCeloTx.md#from)
 - [gas](types.FormattedCeloTx.md#gas)
 - [gasPrice](types.FormattedCeloTx.md#gasprice)
+- [maxFeeInFeeCurrency](types.FormattedCeloTx.md#maxfeeinfeecurrency)
 - [maxFeePerGas](types.FormattedCeloTx.md#maxfeepergas)
 - [maxPriorityFeePerGas](types.FormattedCeloTx.md#maxpriorityfeepergas)
 - [nonce](types.FormattedCeloTx.md#nonce)
@@ -30,7 +31,7 @@
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:32](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L32)
+[packages/sdk/connect/src/types.ts:35](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L35)
 
 ___
 
@@ -40,7 +41,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:21](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L21)
+[packages/sdk/connect/src/types.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L23)
 
 ___
 
@@ -50,7 +51,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:24](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L24)
+[packages/sdk/connect/src/types.ts:26](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L26)
 
 ___
 
@@ -60,7 +61,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:26](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L26)
+[packages/sdk/connect/src/types.ts:28](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L28)
 
 ___
 
@@ -70,7 +71,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:22](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L22)
+[packages/sdk/connect/src/types.ts:24](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L24)
 
 ___
 
@@ -80,7 +81,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L27)
+[packages/sdk/connect/src/types.ts:29](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L29)
 
 ___
 
@@ -90,7 +91,17 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:28](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L28)
+[packages/sdk/connect/src/types.ts:30](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L30)
+
+___
+
+### maxFeeInFeeCurrency
+
+• `Optional` **maxFeeInFeeCurrency**: \`0x$\{string}\`
+
+#### Defined in
+
+[packages/sdk/connect/src/types.ts:33](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L33)
 
 ___
 
@@ -100,7 +111,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:29](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L29)
+[packages/sdk/connect/src/types.ts:31](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L31)
 
 ___
 
@@ -110,7 +121,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:30](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L30)
+[packages/sdk/connect/src/types.ts:32](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L32)
 
 ___
 
@@ -120,7 +131,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:31](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L31)
+[packages/sdk/connect/src/types.ts:34](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L34)
 
 ___
 
@@ -130,7 +141,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L23)
+[packages/sdk/connect/src/types.ts:25](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L25)
 
 ___
 
@@ -140,7 +151,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:33](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L33)
+[packages/sdk/connect/src/types.ts:36](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L36)
 
 ___
 
@@ -150,4 +161,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:25](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L25)
+[packages/sdk/connect/src/types.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L27)

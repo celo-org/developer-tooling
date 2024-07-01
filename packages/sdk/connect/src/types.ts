@@ -1,4 +1,5 @@
 import { StrongAddress } from '@celo/base'
+import Web3 from 'web3'
 import {
   AccessList,
   PromiEvent,
@@ -12,6 +13,7 @@ export type Address = string
 export type Hex = `0x${string}`
 export interface CeloParams {
   feeCurrency: StrongAddress
+  maxFeeInFeeCurrency?: Hex | string | bigint | ReturnType<Web3['utils']['toBN']>
 }
 
 export type AccessListRaw = [string, string[]][]
@@ -28,6 +30,7 @@ export interface FormattedCeloTx {
   gasPrice?: Hex
   maxFeePerGas?: Hex
   maxPriorityFeePerGas?: Hex
+  maxFeeInFeeCurrency?: Hex
   nonce: HexOrMissing | number
   accessList?: AccessListRaw
   type: TransactionTypes
@@ -50,7 +53,7 @@ export { BlockNumber, EventLog, Log, PromiEvent, Sign } from 'web3-core'
 export { Block, BlockHeader, Syncing } from 'web3-eth'
 export { Contract, ContractSendMethod, PastEventOptions } from 'web3-eth-contract'
 
-export type TransactionTypes = 'ethereum-legacy' | 'eip1559' | 'cip64'
+export type TransactionTypes = 'ethereum-legacy' | 'eip1559' | 'cip42' | 'cip64' | 'cip66'
 
 interface CommonTXProperties {
   nonce: string
@@ -75,6 +78,12 @@ export interface EIP1559TXProperties extends FeeMarketAndAccessListTXProperties 
   type: 'eip1559'
 }
 
+export interface CIP66TXProperties extends FeeMarketAndAccessListTXProperties {
+  feeCurrency: string
+  maxFeeInFeeCurrency: string
+  type: 'cip66'
+}
+
 export interface CIP64TXProperties extends FeeMarketAndAccessListTXProperties {
   feeCurrency: string
   type: 'cip64'
@@ -87,7 +96,7 @@ export interface EthereumLegacyTXProperties extends CommonTXProperties {
 
 export interface EncodedTransaction {
   raw: Hex
-  tx: EthereumLegacyTXProperties | EIP1559TXProperties | CIP64TXProperties
+  tx: EthereumLegacyTXProperties | EIP1559TXProperties | CIP64TXProperties | CIP66TXProperties
 }
 
 export type CeloTxPending = Transaction & Partial<CeloParams>

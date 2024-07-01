@@ -19,14 +19,14 @@
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:89](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L89)
+[packages/sdk/connect/src/types.ts:98](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L98)
 
 ___
 
 ### tx
 
-• **tx**: [`EIP1559TXProperties`](types.EIP1559TXProperties.md) \| [`CIP64TXProperties`](types.CIP64TXProperties.md) \| [`EthereumLegacyTXProperties`](types.EthereumLegacyTXProperties.md)
+• **tx**: [`EIP1559TXProperties`](types.EIP1559TXProperties.md) \| [`CIP66TXProperties`](types.CIP66TXProperties.md) \| [`CIP64TXProperties`](types.CIP64TXProperties.md) \| [`EthereumLegacyTXProperties`](types.EthereumLegacyTXProperties.md)
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:90](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L90)
+[packages/sdk/connect/src/types.ts:99](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L99)

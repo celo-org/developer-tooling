@@ -129,6 +129,90 @@ describe('rlpEncodedTx', () => {
       })
     })
 
+    describe('when maxFeeInFeeCurrency and feeCurrency are provided', () => {
+      it('orders fields in RLP as specified by CIP66', () => {
+        const CIP66Transaction = {
+          ...eip1559Transaction,
+          feeCurrency: '0x5409ED021D9299bf6814279A6A1411A7e866A631',
+          maxFeeInFeeCurrency: '0x666',
+        } as const
+        const result = rlpEncodedTx(CIP66Transaction)
+        expect(result).toMatchInlineSnapshot(`
+          {
+            "rlpEncode": "0x7af8410280630a63941be31a94361a391bbafb2a4ccd704f57dc04d4bb893635c9adc5dea0000083abcdefc0945409ed021d9299bf6814279a6a1411a7e866a631820666",
+            "transaction": {
+              "chainId": 2,
+              "data": "0xabcdef",
+              "feeCurrency": "0x5409ed021d9299bf6814279a6a1411a7e866a631",
+              "from": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
+              "gas": "0x63",
+              "maxFeeInFeeCurrency": "0x0666",
+              "maxFeePerGas": "0x0a",
+              "maxPriorityFeePerGas": "0x63",
+              "nonce": 0,
+              "to": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
+              "value": "0x3635c9adc5dea00000",
+            },
+            "type": "cip66",
+          }
+        `)
+      })
+      it('orders fields in RLP as specified by CIP66 when given BN values', () => {
+        const CIP66Transaction = {
+          ...eip1559Transaction,
+          feeCurrency: '0x5409ED021D9299bf6814279A6A1411A7e866A631',
+          maxFeeInFeeCurrency: Web3.utils.toBN('100000000010181646104615494635153636353810897'),
+        } as const
+        const result = rlpEncodedTx(CIP66Transaction)
+        expect(result).toMatchInlineSnapshot(`
+          {
+            "rlpEncode": "0x7af8520280630a63941be31a94361a391bbafb2a4ccd704f57dc04d4bb893635c9adc5dea0000083abcdefc0945409ed021d9299bf6814279a6a1411a7e866a63193047bf19675d5515464c13ea56f3922e602a1d1",
+            "transaction": {
+              "chainId": 2,
+              "data": "0xabcdef",
+              "feeCurrency": "0x5409ed021d9299bf6814279a6a1411a7e866a631",
+              "from": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
+              "gas": "0x63",
+              "maxFeeInFeeCurrency": "0x047bf19675d5515464c13ea56f3922e602a1d1",
+              "maxFeePerGas": "0x0a",
+              "maxPriorityFeePerGas": "0x63",
+              "nonce": 0,
+              "to": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
+              "value": "0x3635c9adc5dea00000",
+            },
+            "type": "cip66",
+          }
+        `)
+      })
+      it('orders fields in RLP as specified by CIP66 when given bigInt values', () => {
+        const CIP66Transaction = {
+          ...eip1559Transaction,
+          feeCurrency: '0x5409ED021D9299bf6814279A6A1411A7e866A631',
+          maxFeeInFeeCurrency: BigInt('100000000010181646104615494635153636353810897'),
+        } as const
+        const result = rlpEncodedTx(CIP66Transaction)
+        expect(result).toMatchInlineSnapshot(`
+          {
+            "rlpEncode": "0x7af8520280630a63941be31a94361a391bbafb2a4ccd704f57dc04d4bb893635c9adc5dea0000083abcdefc0945409ed021d9299bf6814279a6a1411a7e866a63193047bf19675d5515464c13ea56f3922e602a1d1",
+            "transaction": {
+              "chainId": 2,
+              "data": "0xabcdef",
+              "feeCurrency": "0x5409ed021d9299bf6814279a6a1411a7e866a631",
+              "from": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
+              "gas": "0x63",
+              "maxFeeInFeeCurrency": "0x047bf19675d5515464c13ea56f3922e602a1d1",
+              "maxFeePerGas": "0x0a",
+              "maxPriorityFeePerGas": "0x63",
+              "nonce": 0,
+              "to": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
+              "value": "0x3635c9adc5dea00000",
+            },
+            "type": "cip66",
+          }
+        `)
+      })
+    })
+
     describe('when maxFeePerGas and maxPriorityFeePerGas are provided', () => {
       it('orders fields in RLP as specified by EIP1559', () => {
         const result = rlpEncodedTx(eip1559Transaction)
@@ -414,6 +498,33 @@ describe('recoverTransaction', () => {
       ]
     `)
   })
+  it('handles cip66 transactions', () => {
+    const cip66TX =
+      '0x7af8ce82a4ec01843b9aca00850342770c0083030d409443d72ff17701b2da814620735c39c620ce0ea4a180b844a9059cbb000000000000000000000000bd8be21f6883569ad7d15cc55c87137fcef308c300000000000000000000000000000000000000000000000001605eba271024d6c094765de816845861e75a25fca122bb6898b8b1282a8501a13b860080a02a015905a494549d8a1da26ce769309963e43f407936bbce1ea8276072b08416a072fd12d24c44bc79648bd88f4d8c158f2f0778694557868b3dc7d80e3aa6b539'
+    expect(recoverTransaction(cip66TX)).toMatchInlineSnapshot(`
+      [
+        {
+          "accessList": [],
+          "chainId": 42220,
+          "data": "0xa9059cbb000000000000000000000000bd8be21f6883569ad7d15cc55c87137fcef308c300000000000000000000000000000000000000000000000001605eba271024d6",
+          "feeCurrency": "0x765de816845861e75a25fca122bb6898b8b1282a",
+          "gas": "200000",
+          "maxFeeInFeeCurrency": "0x01a13b8600",
+          "maxFeePerGas": "14000000000",
+          "maxPriorityFeePerGas": "1000000000",
+          "nonce": 1,
+          "r": "0x2a015905a494549d8a1da26ce769309963e43f407936bbce1ea8276072b08416",
+          "s": "0x72fd12d24c44bc79648bd88f4d8c158f2f0778694557868b3dc7d80e3aa6b539",
+          "to": "0x43d72ff17701b2da814620735c39c620ce0ea4a1",
+          "type": "cip66",
+          "v": 27,
+          "value": "0",
+          "yParity": 0,
+        },
+        "0xa94f5374Fce5edBC8E2a8697C15331677e6EbF0B",
+      ]
+    `)
+  })
   it('handles cip42 transactions', () => {
     const cip42TX =
       '0x7cf89a82ad5a8063630a94cd2a3d9f938e13cd947ec05abc7fe734df8dd826941be31a94361a391bbafb2a4ccd704f57dc04d4bb82567894588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a764000083abcdefc01ba0c610507b2ac3cff80dd7017419021196807d605efce0970c18cde48db33c27d1a01799477e0f601f554f0ee6f7ac21490602124801e9f7a99d9605249b90f03112'
@@ -641,6 +752,9 @@ describe('stringNumberOrBNToHex', () => {
   test('BN', () => {
     const biggie = Web3.utils.toBN('123')
     expect(stringNumberOrBNToHex(biggie)).toEqual('0x7b')
+  })
+  test('bigint', () => {
+    expect(stringNumberOrBNToHex(BigInt('100293872610573514616'))).toEqual('0x056fdb69c275837778')
   })
 })
 

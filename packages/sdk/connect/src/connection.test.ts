@@ -22,6 +22,19 @@ describe('Connection', () => {
         })
       })
     })
+    describe('when fee market gas is set', () => {
+      it('returns with gasPrice undefined and feeMarketGas set', async () => {
+        const result = await connection.setFeeMarketGas({
+          maxFeePerGas: '1',
+          maxPriorityFeePerGas: '2',
+        })
+        expect(result).toEqual({
+          gasPrice: undefined,
+          maxFeePerGas: '1',
+          maxPriorityFeePerGas: '2',
+        })
+      })
+    })
 
     describe('when fee market gas is not set', () => {
       beforeEach(() => {

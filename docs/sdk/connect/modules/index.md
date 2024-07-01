@@ -15,6 +15,7 @@
 - [AccessListRaw](index.md#accesslistraw)
 - [Address](index.md#address)
 - [CIP64TXProperties](index.md#cip64txproperties)
+- [CIP66TXProperties](index.md#cip66txproperties)
 - [Callback](index.md#callback)
 - [CeloParams](index.md#celoparams)
 - [CeloTransactionObject](index.md#celotransactionobject)
@@ -132,6 +133,12 @@ ___
 ### CIP64TXProperties
 
 Re-exports [CIP64TXProperties](../interfaces/types.CIP64TXProperties.md)
+
+___
+
+### CIP66TXProperties
+
+Re-exports [CIP66TXProperties](../interfaces/types.CIP66TXProperties.md)
 
 ___
 

@@ -271,6 +271,36 @@ describe('Local wallet class', () => {
             )
             expect(signedTransaction.raw).toEqual(viemSignedTransaction)
           })
+          test('succeeds with cip66', async () => {
+            const recoverTransactionCIP66 = {
+              ...celoTransactionWithGasPrice,
+              gasPrice: undefined,
+              gatewayFee: undefined,
+              gatewayFeeRecipient: undefined,
+              maxFeePerGas: '99',
+              maxPriorityFeePerGas: '99',
+              feeCurrency: '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826',
+              maxFeeInFeeCurrency: '92',
+            } as const
+            await expect(wallet.signTransaction(recoverTransactionCIP66)).resolves
+              .toMatchInlineSnapshot(`
+              {
+                "raw": "0x7af88582ad5a8063630a94588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a764000083abcdefc094cd2a3d9f938e13cd947ec05abc7fe734df8dd82682393201a04cdeaf8b632f94f28d3a1e4f1f75c480f0e9320e8c6e2bc1e23910af65c87e18a0289bfe70775f616b3bf2f31cb74ca38ed227fea6eb89f319a4b7de16c43d4b08",
+                "tx": {
+                  "gas": "0x0a",
+                  "hash": "0x8b70cc7dffeb12df7576863a3ed09b8e7dde3c0e0e9bad5d7ee9bd4b97ee68c1",
+                  "input": "0xabcdef",
+                  "nonce": "0",
+                  "r": "0x4cdeaf8b632f94f28d3a1e4f1f75c480f0e9320e8c6e2bc1e23910af65c87e18",
+                  "s": "0x289bfe70775f616b3bf2f31cb74ca38ed227fea6eb89f319a4b7de16c43d4b08",
+                  "to": "0x588e4b68193001e4d10928660ab4165b813717c0",
+                  "v": "0x01",
+                  "value": "0x0de0b6b3a7640000",
+                },
+                "type": "cip66",
+              }
+            `)
+          })
           test('succeeds with cip64', async () => {
             const recoverTransactionCIP64 = {
               ...celoTransactionWithGasPrice,
@@ -375,6 +405,7 @@ describe('Local wallet class', () => {
           const feeCurrency = '0x10c892a6ec43a53e45d0b916b4b7d383b1b78c0f'
           const maxFeePerGas = '0x100000000'
           const maxPriorityFeePerGas = '0x100000000'
+          const maxFeeInFeeCurrency = '0x100000000'
 
           beforeEach(() => {
             celoTransactionBase = {
@@ -398,6 +429,17 @@ describe('Local wallet class', () => {
               const signedTx: EncodedTransaction = await wallet.signTransaction(transaction)
               expect(signedTx.raw).toMatch(/^0x7b/)
             })
+            it('signs as a CIP66 tx', async () => {
+              const transaction: CeloTx = {
+                ...celoTransactionBase,
+                feeCurrency,
+                maxFeePerGas,
+                maxPriorityFeePerGas,
+                maxFeeInFeeCurrency,
+              }
+              const signedTx: EncodedTransaction = await wallet.signTransaction(transaction)
+              expect(signedTx.raw).toMatch(/^0x7a/)
+            })
           })
 
           describe('when feeCurrency and maxFeePerGas but not maxPriorityFeePerGas are set', () => {
@@ -408,7 +450,7 @@ describe('Local wallet class', () => {
                 maxFeePerGas,
                 maxPriorityFeePerGas: undefined,
               }
-              expect(() =>
+              await expect(() =>
                 wallet.signTransaction(transaction)
               ).rejects.toThrowErrorMatchingInlineSnapshot(
                 `""gasPrice" or "maxFeePerGas" and "maxPriorityFeePerGas" are missing"`
@@ -424,7 +466,7 @@ describe('Local wallet class', () => {
                 maxFeePerGas: undefined,
                 maxPriorityFeePerGas,
               }
-              expect(() =>
+              await expect(() =>
                 wallet.signTransaction(transaction)
               ).rejects.toThrowErrorMatchingInlineSnapshot(
                 `""gasPrice" or "maxFeePerGas" and "maxPriorityFeePerGas" are missing"`
@@ -440,8 +482,10 @@ describe('Local wallet class', () => {
                 maxPriorityFeePerGas,
                 gasPrice: '0x100000000',
               }
-              expect(async () => wallet.signTransaction(transaction)).rejects.toThrowError(
-                'when "maxFeePerGas" or "maxPriorityFeePerGas" are set, "gasPrice" must not be set'
+              await expect(async () =>
+                wallet.signTransaction(transaction)
+              ).rejects.toThrowErrorMatchingInlineSnapshot(
+                `"when "maxFeePerGas" or "maxPriorityFeePerGas" are set, "gasPrice" must not be set"`
               )
             })
           })
@@ -485,7 +529,9 @@ describe('Local wallet class', () => {
         test('fails calling decrypt', async () => {
           await expect(
             wallet.decrypt(ACCOUNT_ADDRESS2, Buffer.from('anything'))
-          ).rejects.toThrowError()
+          ).rejects.toThrowErrorMatchingInlineSnapshot(
+            `"Could not find address 0x588e4b68193001e4d10928660ab4165b813717c0"`
+          )
         })
       })
 

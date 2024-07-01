@@ -29,4 +29,4 @@
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:130](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L130)
+[packages/sdk/connect/src/types.ts:139](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L139)
