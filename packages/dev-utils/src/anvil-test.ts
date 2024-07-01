@@ -29,6 +29,7 @@ export function createInstance(): Anvil {
     balance: TEST_BALANCE,
     gasPrice: TEST_GAS_PRICE,
     gasLimit: TEST_GAS_LIMIT,
+    stopTimeout: 1000,
   }
 
   instance = createAnvil(options)
@@ -41,11 +42,11 @@ export function testWithAnvil(name: string, fn: (web3: Web3) => void) {
 
   // for each test case, we start and stop a new anvil instance
   return testWithWeb3(name, `http://127.0.0.1:${anvil.port}`, fn, {
-    beforeAll: () => {
-      return anvil.start()
+    beforeAll: async () => {
+      await anvil.start()
     },
     afterAll: async () => {
-      return anvil.stop()
+      await anvil.stop()
     },
   })
 }

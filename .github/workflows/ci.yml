@@ -153,6 +153,10 @@ jobs:
     needs: install-dependencies
     steps:
       - uses: actions/checkout@v4
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+        with:
+          version: ${{ env.SUPPORTED_FOUNDRY_VERSION }}
       - name: Sync workspace
         uses: ./.github/actions/sync-workspace
         with:

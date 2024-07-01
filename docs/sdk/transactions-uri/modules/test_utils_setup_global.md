@@ -20,4 +20,4 @@
 
 #### Defined in
 
-[test-utils/setup.global.ts:10](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/transactions-uri/src/test-utils/setup.global.ts#L10)
+[test-utils/setup.global.ts:7](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/transactions-uri/src/test-utils/setup.global.ts#L7)

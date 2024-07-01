@@ -84,11 +84,11 @@ export function testWithWeb3(
       if (snapId != null) {
         await evmRevert(web3, snapId)
       }
+      if (hooks?.afterAll) {
+        // hook must be awaited here or jest doesnt actually wait for it and complains of open handles
+        await hooks.afterAll()
+      }
     })
-
-    if (hooks?.afterAll) {
-      afterAll(hooks.afterAll)
-    }
 
     fn(web3)
   })
