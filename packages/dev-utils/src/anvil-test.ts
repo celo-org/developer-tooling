@@ -72,6 +72,10 @@ export function setCode(web3: Web3, address: string, code: string) {
   return jsonRpcCall(web3, 'anvil_setCode', [address, code])
 }
 
+export function setNextBlockTimestamp(web3: Web3, timestamp: string) {
+  return jsonRpcCall(web3, 'evm_setNextBlockTimestamp', [timestamp])
+}
+
 // TODO remove this once no longer needed
 export const setupL2 = async (web3: Web3) => {
   // Temporarily deploying any bytecode, so it's just there,

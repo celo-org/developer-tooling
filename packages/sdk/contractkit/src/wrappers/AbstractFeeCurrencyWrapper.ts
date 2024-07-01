@@ -24,6 +24,14 @@ const MINIMAL_TOKEN_INFO_ABI = [
     outputs: [{ type: 'address', name: '', internalType: 'address' }],
     name: 'adaptedToken',
   },
+  //  usdt adapter uses slightly different interface this adaptedToken/getAdaptedToken are aliases
+  {
+    type: 'function' as const,
+    stateMutability: 'view',
+    inputs: [],
+    outputs: [{ type: 'address', name: '', internalType: 'address' }],
+    name: 'getAdaptedToken',
+  },
   {
     type: 'function' as const,
     stateMutability: 'view',
@@ -49,7 +57,13 @@ export abstract class AbstractFeeCurrencyWrapper<
         const adaptedToken = (await contract.methods
           .adaptedToken()
           .call()
-          .catch(() => undefined)) as StrongAddress | undefined
+          .catch(() =>
+            contract.methods
+              .getAdaptedToken()
+              .call()
+              .catch(() => undefined)
+          )) as StrongAddress | undefined
+        // if standard didnt work try alt
 
         if (adaptedToken) {
           // @ts-expect-error abi typing is not 100% correct but works

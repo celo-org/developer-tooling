@@ -154,6 +154,7 @@ export class ContractKit {
         CeloContract.Validators,
         CeloContract.DowntimeSlasher,
         CeloContract.FeeCurrencyDirectory,
+        CeloContract.CeloDistributionSchedule,
       ]
     } else {
       configContracts = [
