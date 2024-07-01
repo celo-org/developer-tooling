@@ -241,7 +241,7 @@ testWithAnvil('kit', (web3) => {
             })
           ).resolves.toMatchInlineSnapshot(`
             {
-              "feeCurrency": "0x2A3733dBc31980f02b12135C809b5da33BF3a1e9",
+              "feeCurrency": "0x4CB77DF8f44817DE26D2dE10813e98dd0aA6AE00",
               "gas": 53001,
               "maxFeeInFeeCurrency": "108122040000000",
               "maxFeePerGas": "2000000000",
@@ -274,7 +274,7 @@ testWithAnvil('kit', (web3) => {
               gas: '102864710371401736267367367',
             })
           ).resolves.toEqual({
-            feeCurrency: '0x2A3733dBc31980f02b12135C809b5da33BF3a1e9',
+            feeCurrency: feeToken,
             gas: '102864710371401736267367367',
             maxFeeInFeeCurrency: '209844009157659541985429428680000000',
             maxFeePerGas: '2000000000',
@@ -282,6 +282,57 @@ testWithAnvil('kit', (web3) => {
           })
         })
       })
+    })
+    describe('estimateMaxFeeInFeeToken', () => {
+      it('returns the right estimation (1/2)', async () => {
+        const spy = jest.spyOn(await kit.contracts.getFeeCurrencyDirectory(), 'getExchangeRate')
+        //@ts-expect-error
+        spy.mockImplementation(() =>
+          Promise.resolve({ numerator: BigInt(1), denominator: BigInt(2) })
+        )
+
+        await expect(
+          kit.estimateMaxFeeInFeeToken({
+            feeCurrency: feeToken,
+            gasLimit: BigInt(10),
+            maxFeePerGas: BigInt(10),
+          })
+          // 10 * 10 * 1.2 * 2
+        ).resolves.toEqual(BigInt(204))
+      })
+      it('returns the right estimation (1/1)', async () => {
+        const spy = jest.spyOn(await kit.contracts.getFeeCurrencyDirectory(), 'getExchangeRate')
+        //@ts-expect-error
+        spy.mockImplementation(() =>
+          Promise.resolve({ numerator: BigInt(1), denominator: BigInt(1) })
+        )
+
+        await expect(
+          kit.estimateMaxFeeInFeeToken({
+            feeCurrency: feeToken,
+            gasLimit: BigInt(10),
+            maxFeePerGas: BigInt(10),
+          })
+          // 10 * 10 * 1.2 * 1
+        ).resolves.toEqual(BigInt(102))
+      })
+    })
+
+    it('returns the right estimation (1/1)', async () => {
+      const spy = jest.spyOn(await kit.contracts.getFeeCurrencyDirectory(), 'getExchangeRate')
+      //@ts-expect-error
+      spy.mockImplementation(() =>
+        Promise.resolve({ numerator: BigInt(2), denominator: BigInt(1) })
+      )
+
+      await expect(
+        kit.estimateMaxFeeInFeeToken({
+          feeCurrency: feeToken,
+          gasLimit: BigInt(10),
+          maxFeePerGas: BigInt(10),
+        })
+        // 10 * 10 * 1.2 * 1/2
+      ).resolves.toEqual(BigInt(51))
     })
   })
 })
