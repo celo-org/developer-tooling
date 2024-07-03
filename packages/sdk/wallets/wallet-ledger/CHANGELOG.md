@@ -1,5 +1,15 @@
 # @celo/wallet-ledger
 
+## 6.0.0-beta.1
+
+### Patch Changes
+
+- [#283](https://github.com/celo-org/developer-tooling/pull/283) [`6d2a838`](https://github.com/celo-org/developer-tooling/commit/6d2a838a80a51007d75768c77d62a861f2cec136) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Change the @ledgerhq/hw-app-eth dependency to our own fork
+
+- Updated dependencies []:
+  - @celo/wallet-base@6.0.0-beta.1
+  - @celo/wallet-remote@6.0.0-beta.1
+
 ## 6.0.0-beta.0
 
 ### Patch Changes
