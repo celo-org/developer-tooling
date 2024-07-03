@@ -20,7 +20,7 @@
 
 #### Defined in
 
-base/lib/signatureUtils.d.ts:8
+packages/sdk/base/lib/signatureUtils.d.ts:8
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 #### Defined in
 
-base/lib/signatureUtils.d.ts:9
+packages/sdk/base/lib/signatureUtils.d.ts:9
 
 ___
 
@@ -40,4 +40,4 @@ ___
 
 #### Defined in
 
-base/lib/signatureUtils.d.ts:7
+packages/sdk/base/lib/signatureUtils.d.ts:7

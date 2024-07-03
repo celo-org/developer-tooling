@@ -32,7 +32,7 @@
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:96
+node_modules/web3-eth-contract/types/index.d.ts:96
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:117
+node_modules/web3-eth-contract/types/index.d.ts:117
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:101
+node_modules/web3-eth-contract/types/index.d.ts:101
 
 ▸ **estimateGas**(`callback`): `Promise`\<`number`\>
 
@@ -83,7 +83,7 @@ packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:101
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:106
+node_modules/web3-eth-contract/types/index.d.ts:106
 
 ▸ **estimateGas**(`options`, `callback`): `Promise`\<`number`\>
 
@@ -100,7 +100,7 @@ packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:106
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:108
+node_modules/web3-eth-contract/types/index.d.ts:108
 
 ▸ **estimateGas**(`options`): `Promise`\<`number`\>
 
@@ -116,7 +116,7 @@ packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:108
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:113
+node_modules/web3-eth-contract/types/index.d.ts:113
 
 ▸ **estimateGas**(): `Promise`\<`number`\>
 
@@ -126,7 +126,7 @@ packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:113
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:115
+node_modules/web3-eth-contract/types/index.d.ts:115
 
 ___
 
@@ -147,4 +147,4 @@ ___
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-eth-contract/types/index.d.ts:91
+node_modules/web3-eth-contract/types/index.d.ts:91

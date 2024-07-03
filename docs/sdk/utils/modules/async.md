@@ -42,7 +42,7 @@ Map an async function over a list xs with a given concurrency level
 
 #### Defined in
 
-base/lib/async.d.ts:16
+packages/sdk/base/lib/async.d.ts:16
 
 ___
 
@@ -73,7 +73,7 @@ Map an async function over the values in Object x with a given concurrency level
 
 #### Defined in
 
-base/lib/async.d.ts:24
+packages/sdk/base/lib/async.d.ts:24
 
 ___
 
@@ -104,7 +104,7 @@ ___
 
 #### Defined in
 
-base/lib/async.d.ts:5
+packages/sdk/base/lib/async.d.ts:5
 
 ___
 
@@ -136,7 +136,7 @@ ___
 
 #### Defined in
 
-base/lib/async.d.ts:6
+packages/sdk/base/lib/async.d.ts:6
 
 ___
 
@@ -169,7 +169,7 @@ ___
 
 #### Defined in
 
-base/lib/async.d.ts:7
+packages/sdk/base/lib/async.d.ts:7
 
 ___
 
@@ -191,4 +191,4 @@ Sleep for a number of milliseconds
 
 #### Defined in
 
-base/lib/async.d.ts:3
+packages/sdk/base/lib/async.d.ts:3

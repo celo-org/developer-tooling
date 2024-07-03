@@ -46,7 +46,7 @@
 
 #### Defined in
 
-base/lib/future.d.ts:8
+packages/sdk/base/lib/future.d.ts:8
 
 ## Accessors
 
@@ -60,7 +60,7 @@ base/lib/future.d.ts:8
 
 #### Defined in
 
-base/lib/future.d.ts:10
+packages/sdk/base/lib/future.d.ts:10
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-base/lib/future.d.ts:9
+packages/sdk/base/lib/future.d.ts:9
 
 ## Methods
 
@@ -88,7 +88,7 @@ base/lib/future.d.ts:9
 
 #### Defined in
 
-base/lib/future.d.ts:14
+packages/sdk/base/lib/future.d.ts:14
 
 ___
 
@@ -108,7 +108,7 @@ ___
 
 #### Defined in
 
-base/lib/future.d.ts:12
+packages/sdk/base/lib/future.d.ts:12
 
 ___
 
@@ -128,7 +128,7 @@ ___
 
 #### Defined in
 
-base/lib/future.d.ts:11
+packages/sdk/base/lib/future.d.ts:11
 
 ___
 
@@ -142,4 +142,4 @@ ___
 
 #### Defined in
 
-base/lib/future.d.ts:13
+packages/sdk/base/lib/future.d.ts:13

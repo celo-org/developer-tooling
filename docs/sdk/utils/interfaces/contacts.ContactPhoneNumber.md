@@ -19,7 +19,7 @@
 
 #### Defined in
 
-base/lib/contacts.d.ts:2
+packages/sdk/base/lib/contacts.d.ts:2
 
 ___
 
@@ -29,4 +29,4 @@ ___
 
 #### Defined in
 
-base/lib/contacts.d.ts:3
+packages/sdk/base/lib/contacts.d.ts:3

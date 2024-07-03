@@ -28,7 +28,7 @@
 
 #### Defined in
 
-utils/node_modules/web3-utils/types/index.d.ts:98
+node_modules/web3-utils/types/index.d.ts:98
 
 ___
 
@@ -48,7 +48,7 @@ ___
 
 #### Defined in
 
-utils/node_modules/web3-utils/types/index.d.ts:116
+node_modules/web3-utils/types/index.d.ts:116
 
 ___
 
@@ -68,4 +68,4 @@ ___
 
 #### Defined in
 
-utils/node_modules/web3-utils/types/index.d.ts:117
+node_modules/web3-utils/types/index.d.ts:117

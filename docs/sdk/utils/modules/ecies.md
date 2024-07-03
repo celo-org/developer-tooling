@@ -36,7 +36,7 @@
 
 #### Defined in
 
-[utils/src/ecies.ts:199](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecies.ts#L199)
+[packages/sdk/utils/src/ecies.ts:199](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecies.ts#L199)
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Defined in
 
-[utils/src/ecies.ts:18](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecies.ts#L18)
+[packages/sdk/utils/src/ecies.ts:18](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecies.ts#L18)
 
 ## Functions
 
@@ -72,7 +72,7 @@ plaintext
 
 #### Defined in
 
-[utils/src/ecies.ts:106](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecies.ts#L106)
+[packages/sdk/utils/src/ecies.ts:106](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecies.ts#L106)
 
 ___
 
@@ -98,7 +98,7 @@ plaintext
 
 #### Defined in
 
-[utils/src/ecies.ts:122](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecies.ts#L122)
+[packages/sdk/utils/src/ecies.ts:122](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecies.ts#L122)
 
 ___
 
@@ -124,7 +124,7 @@ ciphertext
 
 #### Defined in
 
-[utils/src/ecies.ts:70](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecies.ts#L70)
+[packages/sdk/utils/src/ecies.ts:70](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecies.ts#L70)
 
 ___
 
@@ -150,7 +150,7 @@ ciphertext
 
 #### Defined in
 
-[utils/src/ecies.ts:88](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecies.ts#L88)
+[packages/sdk/utils/src/ecies.ts:88](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecies.ts#L88)
 
 ___
 
@@ -180,7 +180,7 @@ Output keying material of length kdLen bytes.
 
 #### Defined in
 
-[utils/src/ecies.ts:48](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecies.ts#L48)
+[packages/sdk/utils/src/ecies.ts:48](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecies.ts#L48)
 
 ___
 
@@ -205,7 +205,7 @@ plaintext
 
 #### Defined in
 
-[utils/src/ecies.ts:179](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecies.ts#L179)
+[packages/sdk/utils/src/ecies.ts:179](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecies.ts#L179)
 
 ___
 
@@ -230,4 +230,4 @@ Encrypted message, serialized, 113+ bytes
 
 #### Defined in
 
-[utils/src/ecies.ts:145](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecies.ts#L145)
+[packages/sdk/utils/src/ecies.ts:145](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/ecies.ts#L145)
