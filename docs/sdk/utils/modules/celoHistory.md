@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[utils/src/celoHistory.ts:7](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/celoHistory.ts#L7)
+[packages/sdk/utils/src/celoHistory.ts:7](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/celoHistory.ts#L7)
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 #### Defined in
 
-[utils/src/celoHistory.ts:6](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/celoHistory.ts#L6)
+[packages/sdk/utils/src/celoHistory.ts:6](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/celoHistory.ts#L6)

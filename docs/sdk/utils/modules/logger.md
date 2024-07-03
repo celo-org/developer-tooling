@@ -36,7 +36,7 @@
 
 #### Defined in
 
-base/lib/logger.d.ts:1
+packages/sdk/base/lib/logger.d.ts:1
 
 ## Functions
 
@@ -56,7 +56,7 @@ base/lib/logger.d.ts:1
 
 #### Defined in
 
-base/lib/logger.d.ts:7
+packages/sdk/base/lib/logger.d.ts:7
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 #### Defined in
 
-base/lib/logger.d.ts:3
+packages/sdk/base/lib/logger.d.ts:3
 
 ___
 
@@ -97,4 +97,4 @@ ___
 
 #### Defined in
 
-base/lib/logger.d.ts:5
+packages/sdk/base/lib/logger.d.ts:5

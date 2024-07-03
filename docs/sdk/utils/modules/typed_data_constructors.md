@@ -32,7 +32,7 @@
 
 #### Defined in
 
-[utils/src/typed-data-constructors.ts:4](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/typed-data-constructors.ts#L4)
+[packages/sdk/utils/src/typed-data-constructors.ts:4](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/typed-data-constructors.ts#L4)
 
 ___
 
@@ -67,4 +67,4 @@ ___
 
 #### Defined in
 
-[utils/src/typed-data-constructors.ts:52](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/typed-data-constructors.ts#L52)
+[packages/sdk/utils/src/typed-data-constructors.ts:52](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/typed-data-constructors.ts#L52)

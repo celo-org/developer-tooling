@@ -28,4 +28,4 @@
 
 #### Defined in
 
-[phone-utils/src/getCountryEmoji.ts:4](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/getCountryEmoji.ts#L4)
+[packages/sdk/phone-utils/src/getCountryEmoji.ts:4](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/getCountryEmoji.ts#L4)

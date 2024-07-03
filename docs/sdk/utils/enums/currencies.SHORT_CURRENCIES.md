@@ -24,7 +24,7 @@ use StableToken and Token
 
 #### Defined in
 
-base/lib/currencies.d.ts:29
+packages/sdk/base/lib/currencies.d.ts:29
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 #### Defined in
 
-base/lib/currencies.d.ts:31
+packages/sdk/base/lib/currencies.d.ts:31
 
 ___
 
@@ -44,4 +44,4 @@ ___
 
 #### Defined in
 
-base/lib/currencies.d.ts:30
+packages/sdk/base/lib/currencies.d.ts:30

@@ -56,7 +56,7 @@ Renames and re-exports [__type](signatureUtils.md#__type)
 
 #### Defined in
 
-base/lib/signatureUtils.d.ts:1
+packages/sdk/base/lib/signatureUtils.d.ts:1
 
 ___
 
@@ -81,7 +81,7 @@ ___
 
 #### Defined in
 
-[utils/src/signatureUtils.ts:235](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L235)
+[packages/sdk/utils/src/signatureUtils.ts:235](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L235)
 
 ## Functions
 
@@ -101,7 +101,7 @@ ___
 
 #### Defined in
 
-[utils/src/signatureUtils.ts:64](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L64)
+[packages/sdk/utils/src/signatureUtils.ts:64](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L64)
 
 ___
 
@@ -122,7 +122,7 @@ ___
 
 #### Defined in
 
-[utils/src/signatureUtils.ts:43](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L43)
+[packages/sdk/utils/src/signatureUtils.ts:43](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L43)
 
 ___
 
@@ -143,7 +143,7 @@ ___
 
 #### Defined in
 
-[utils/src/signatureUtils.ts:196](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L196)
+[packages/sdk/utils/src/signatureUtils.ts:196](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L196)
 
 ___
 
@@ -163,7 +163,7 @@ ___
 
 #### Defined in
 
-[utils/src/signatureUtils.ts:39](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L39)
+[packages/sdk/utils/src/signatureUtils.ts:39](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L39)
 
 ___
 
@@ -183,7 +183,7 @@ ___
 
 #### Defined in
 
-[utils/src/signatureUtils.ts:34](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L34)
+[packages/sdk/utils/src/signatureUtils.ts:34](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L34)
 
 ___
 
@@ -211,7 +211,7 @@ ___
 
 #### Defined in
 
-[utils/src/signatureUtils.ts:113](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L113)
+[packages/sdk/utils/src/signatureUtils.ts:113](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L113)
 
 ___
 
@@ -239,7 +239,7 @@ ___
 
 #### Defined in
 
-[utils/src/signatureUtils.ts:117](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L117)
+[packages/sdk/utils/src/signatureUtils.ts:117](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L117)
 
 ___
 
@@ -264,7 +264,7 @@ string signer, or throws error if parsing fails
 
 #### Defined in
 
-[utils/src/signatureUtils.ts:153](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L153)
+[packages/sdk/utils/src/signatureUtils.ts:153](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L153)
 
 ___
 
@@ -289,7 +289,7 @@ string signer, or throws error if parsing fails
 
 #### Defined in
 
-[utils/src/signatureUtils.ts:166](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L166)
+[packages/sdk/utils/src/signatureUtils.ts:166](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L166)
 
 ___
 
@@ -317,7 +317,7 @@ ___
 
 #### Defined in
 
-[utils/src/signatureUtils.ts:83](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L83)
+[packages/sdk/utils/src/signatureUtils.ts:83](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L83)
 
 ___
 
@@ -345,7 +345,7 @@ ___
 
 #### Defined in
 
-[utils/src/signatureUtils.ts:91](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L91)
+[packages/sdk/utils/src/signatureUtils.ts:91](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L91)
 
 ___
 
@@ -368,7 +368,7 @@ ___
 
 #### Defined in
 
-[utils/src/signatureUtils.ts:73](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L73)
+[packages/sdk/utils/src/signatureUtils.ts:73](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L73)
 
 ___
 
@@ -392,7 +392,7 @@ boolean, true if `signer` is a possible signer of `signature`
 
 #### Defined in
 
-[utils/src/signatureUtils.ts:179](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L179)
+[packages/sdk/utils/src/signatureUtils.ts:179](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L179)
 
 ___
 
@@ -414,4 +414,4 @@ ___
 
 #### Defined in
 
-[utils/src/signatureUtils.ts:104](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L104)
+[packages/sdk/utils/src/signatureUtils.ts:104](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/signatureUtils.ts#L104)

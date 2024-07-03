@@ -399,4 +399,4 @@ Re-exports [toTxResult](utils_tx_result.md#totxresult)
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-core/types/index.d.ts:442
+node_modules/web3-core/types/index.d.ts:442
