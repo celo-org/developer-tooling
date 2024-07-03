@@ -172,6 +172,7 @@ describe('Transaction Utils', () => {
     }
     // Test all possible combinations for rigor.
     for (let i = 0; i < 7; i++) {
+      const shouldHaveFeeCurrency = i > 1 && i % 2 === 0
       const celoTransaction: CeloTx = {
         from,
         to,
@@ -182,8 +183,9 @@ describe('Transaction Utils', () => {
         maxPriorityFeePerGas: i > 1 ? gasPrice : undefined,
         chainId,
         gas,
-        maxFeeInFeeCurrency: i % 6 === 1 ? (BigInt(gasPrice) * BigInt(gas)).toString() : undefined,
-        feeCurrency: i > 1 && i % 2 === 0 ? feeCurrency : undefined,
+        maxFeeInFeeCurrency:
+          shouldHaveFeeCurrency && i % 6 === 1 ? BigInt(gasPrice) * BigInt(gas) : undefined,
+        feeCurrency: shouldHaveFeeCurrency ? feeCurrency : undefined,
         data: i % 3 === 0 ? data : undefined,
       }
       describe(transactionDescription(celoTransaction), () => {

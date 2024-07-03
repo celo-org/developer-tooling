@@ -285,14 +285,14 @@ describe('Local wallet class', () => {
             await expect(wallet.signTransaction(recoverTransactionCIP66)).resolves
               .toMatchInlineSnapshot(`
               {
-                "raw": "0x7af88582ad5a8063630a94588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a764000083abcdefc094cd2a3d9f938e13cd947ec05abc7fe734df8dd82682393201a04cdeaf8b632f94f28d3a1e4f1f75c480f0e9320e8c6e2bc1e23910af65c87e18a0289bfe70775f616b3bf2f31cb74ca38ed227fea6eb89f319a4b7de16c43d4b08",
+                "raw": "0x7af88382ad5a8063630a94588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a764000083abcdefc094cd2a3d9f938e13cd947ec05abc7fe734df8dd8265c01a00fb404c1a62ab54b47b4ca07f5ac7e7b233be6cd173294c0b1f3a209c36f6265a05ac38f9ddd67ecf936f2dfea2be5f641959e2a66545fffb01ebd8c925ac23b89",
                 "tx": {
                   "gas": "0x0a",
-                  "hash": "0x8b70cc7dffeb12df7576863a3ed09b8e7dde3c0e0e9bad5d7ee9bd4b97ee68c1",
+                  "hash": "0x1e42e925b5950a428243b02d6d878ba19570bab0f499a06125b035d46ef81d9b",
                   "input": "0xabcdef",
                   "nonce": "0",
-                  "r": "0x4cdeaf8b632f94f28d3a1e4f1f75c480f0e9320e8c6e2bc1e23910af65c87e18",
-                  "s": "0x289bfe70775f616b3bf2f31cb74ca38ed227fea6eb89f319a4b7de16c43d4b08",
+                  "r": "0x0fb404c1a62ab54b47b4ca07f5ac7e7b233be6cd173294c0b1f3a209c36f6265",
+                  "s": "0x5ac38f9ddd67ecf936f2dfea2be5f641959e2a66545fffb01ebd8c925ac23b89",
                   "to": "0x588e4b68193001e4d10928660ab4165b813717c0",
                   "v": "0x01",
                   "value": "0x0de0b6b3a7640000",
