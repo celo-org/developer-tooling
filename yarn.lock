@@ -2210,7 +2210,7 @@ __metadata:
     "@celo/wallet-remote": "npm:^6.0.0-beta.0"
     "@ethereumjs/util": "npm:8.0.5"
     "@ledgerhq/errors": "npm:^6.16.4"
-    "@ledgerhq/hw-app-eth": "git+https://github.com:celo-org/ledgerjs-hw-app-eth.git"
+    "@ledgerhq/hw-app-eth": "git+https://github.com:celo-org/ledgerjs-hw-app-eth.git#commit=f9950727c1048054d8bdd46658c071c6a157982f"
     "@ledgerhq/hw-transport": "npm:^6.30.6"
     "@ledgerhq/hw-transport-node-hid": "npm:^6.28.5"
     "@noble/curves": "npm:^1.4.0"
@@ -3702,7 +3702,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/hw-app-eth@git+https://github.com:celo-org/ledgerjs-hw-app-eth.git":
+"@ledgerhq/hw-app-eth@git+https://github.com:celo-org/ledgerjs-hw-app-eth.git#commit=f9950727c1048054d8bdd46658c071c6a157982f":
   version: 6.37.1
   resolution: "@ledgerhq/hw-app-eth@https://github.com:celo-org/ledgerjs-hw-app-eth.git#commit=f9950727c1048054d8bdd46658c071c6a157982f"
   dependencies:
