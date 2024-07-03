@@ -1,6 +1,6 @@
 {
   "name": "@celo/transactions-uri",
-  "version": "5.0.10-beta.0",
+  "version": "5.0.10-beta.1",
   "description": "Celo's transactions uri generation",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "@celo/contractkit": "^8.1.0-beta.0",
-    "@celo/dev-utils": "0.0.4-beta.0",
+    "@celo/dev-utils": "0.0.4-beta.1",
     "@celo/typescript": "workspace:^",
     "cross-fetch": "3.1.5",
     "dotenv": "^8.2.0",

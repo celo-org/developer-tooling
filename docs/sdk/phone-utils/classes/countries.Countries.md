@@ -40,7 +40,7 @@
 
 #### Defined in
 
-[phone-utils/src/countries.ts:42](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/countries.ts#L42)
+[packages/sdk/phone-utils/src/countries.ts:42](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/countries.ts#L42)
 
 ## Properties
 
@@ -50,7 +50,7 @@
 
 #### Defined in
 
-[phone-utils/src/countries.ts:39](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/countries.ts#L39)
+[packages/sdk/phone-utils/src/countries.ts:39](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/countries.ts#L39)
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 #### Defined in
 
-[phone-utils/src/countries.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/countries.ts#L38)
+[packages/sdk/phone-utils/src/countries.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/countries.ts#L38)
 
 ___
 
@@ -70,7 +70,7 @@ ___
 
 #### Defined in
 
-[phone-utils/src/countries.ts:40](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/countries.ts#L40)
+[packages/sdk/phone-utils/src/countries.ts:40](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/countries.ts#L40)
 
 ## Methods
 
@@ -90,7 +90,7 @@ ___
 
 #### Defined in
 
-[phone-utils/src/countries.ts:50](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/countries.ts#L50)
+[packages/sdk/phone-utils/src/countries.ts:50](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/countries.ts#L50)
 
 ___
 
@@ -110,7 +110,7 @@ ___
 
 #### Defined in
 
-[phone-utils/src/countries.ts:60](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/countries.ts#L60)
+[packages/sdk/phone-utils/src/countries.ts:60](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/countries.ts#L60)
 
 ___
 
@@ -130,4 +130,4 @@ ___
 
 #### Defined in
 
-[phone-utils/src/countries.ts:64](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/countries.ts#L64)
+[packages/sdk/phone-utils/src/countries.ts:64](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/phone-utils/src/countries.ts#L64)

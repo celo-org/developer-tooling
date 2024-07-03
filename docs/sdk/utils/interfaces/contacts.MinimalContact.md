@@ -21,7 +21,7 @@
 
 #### Defined in
 
-base/lib/contacts.d.ts:7
+packages/sdk/base/lib/contacts.d.ts:7
 
 ___
 
@@ -31,7 +31,7 @@ ___
 
 #### Defined in
 
-base/lib/contacts.d.ts:8
+packages/sdk/base/lib/contacts.d.ts:8
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 #### Defined in
 
-base/lib/contacts.d.ts:6
+packages/sdk/base/lib/contacts.d.ts:6
 
 ___
 
@@ -51,4 +51,4 @@ ___
 
 #### Defined in
 
-base/lib/contacts.d.ts:9
+packages/sdk/base/lib/contacts.d.ts:9

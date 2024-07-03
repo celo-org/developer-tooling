@@ -21,8 +21,7 @@
     "test": "yarn run --top-level jest --runInBand",
     "test:physical_ledger": "USE_PHYSICAL_LEDGER=true yarn test",
     "lint": "yarn run --top-level eslint -c .eslintrc.js ",
-    "prepublishOnly": "yarn build",
-    "postinstall": "patch-package"
+    "prepublishOnly": "yarn build"
   },
   "dependencies": {
     "@celo/base": "^6.1.0-beta.0",
@@ -33,10 +32,9 @@
     "@celo/wallet-remote": "^6.0.0-beta.0",
     "@ethereumjs/util": "8.0.5",
     "@ledgerhq/errors": "^6.16.4",
-    "@ledgerhq/hw-app-eth": "6.36.1",
+    "@ledgerhq/hw-app-eth": "git+https://github.com:celo-org/ledgerjs-hw-app-eth.git#commit=a6c1bc97f09709fea0902873f8f6c03daa5c0bcd",
     "@ledgerhq/hw-transport": "^6.30.6",
     "debug": "^4.1.1",
-    "patch-package": "^8.0.0",
     "semver": "^7.6.0"
   },
   "devDependencies": {

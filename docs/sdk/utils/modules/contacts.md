@@ -37,7 +37,7 @@ May be removed in future
 
 #### Defined in
 
-[utils/src/contacts.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/contacts.ts#L16)
+[packages/sdk/utils/src/contacts.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/contacts.ts#L16)
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 #### Defined in
 
-base/lib/contacts.d.ts:11
+packages/sdk/base/lib/contacts.d.ts:11
 
 ___
 
@@ -77,4 +77,4 @@ contactOrNumber is MinimalContact
 
 #### Defined in
 
-base/lib/contacts.d.ts:12
+packages/sdk/base/lib/contacts.d.ts:12
