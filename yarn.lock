@@ -1644,7 +1644,7 @@ __metadata:
     "@celo/connect": "npm:^6.0.0-beta.0"
     "@celo/contractkit": "npm:^8.1.0-beta.0"
     "@celo/cryptographic-utils": "npm:^5.1.0-beta.0"
-    "@celo/dev-utils": "npm:0.0.4-beta.0"
+    "@celo/dev-utils": "npm:0.0.4-beta.1"
     "@celo/devchain-anvil": "npm:1.0.0"
     "@celo/explorer": "npm:^5.0.11-beta.0"
     "@celo/governance": "npm:^5.1.2-beta.0"
@@ -1781,7 +1781,7 @@ __metadata:
     "@celo/base": "npm:^6.1.0-beta.0"
     "@celo/celo-devchain": "npm:^7.0.0"
     "@celo/connect": "npm:^6.0.0-beta.0"
-    "@celo/dev-utils": "npm:0.0.4-beta.0"
+    "@celo/dev-utils": "npm:0.0.4-beta.1"
     "@celo/odis-identifiers": "npm:^1.0.0"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^7.0.0-beta.0"
@@ -1823,7 +1823,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/dev-utils@npm:0.0.4-beta.0, @celo/dev-utils@workspace:packages/dev-utils":
+"@celo/dev-utils@npm:0.0.4-beta.1, @celo/dev-utils@workspace:packages/dev-utils":
   version: 0.0.0-use.local
   resolution: "@celo/dev-utils@workspace:packages/dev-utils"
   dependencies:
@@ -1858,7 +1858,7 @@ __metadata:
     "@celo/base": "npm:^6.1.0-beta.0"
     "@celo/connect": "npm:^6.0.0-beta.0"
     "@celo/contractkit": "npm:^8.1.0-beta.0"
-    "@celo/dev-utils": "npm:0.0.4-beta.0"
+    "@celo/dev-utils": "npm:0.0.4-beta.1"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^7.0.0-beta.0"
     "@types/debug": "npm:^4.1.12"
@@ -1936,7 +1936,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/network-utils@workspace:packages/sdk/network-utils"
   dependencies:
-    "@celo/dev-utils": "npm:0.0.4-beta.0"
+    "@celo/dev-utils": "npm:0.0.4-beta.1"
     "@celo/typescript": "workspace:^"
     "@types/debug": "npm:^4.1.12"
     cross-fetch: "npm:3.1.5"
@@ -2000,7 +2000,7 @@ __metadata:
     "@celo/base": "npm:^6.1.0-beta.0"
     "@celo/connect": "npm:^6.0.0-beta.0"
     "@celo/contractkit": "npm:^8.1.0-beta.0"
-    "@celo/dev-utils": "npm:0.0.4-beta.0"
+    "@celo/dev-utils": "npm:0.0.4-beta.1"
     "@celo/typescript": "workspace:^"
     "@types/bn.js": "npm:^5.1.0"
     "@types/debug": "npm:^4.1.5"
@@ -2274,7 +2274,7 @@ __metadata:
     "@celo/base": "npm:^6.1.0-beta.0"
     "@celo/connect": "npm:^6.0.0-beta.0"
     "@celo/contractkit": "npm:^8.1.0-beta.0"
-    "@celo/dev-utils": "npm:0.0.4-beta.0"
+    "@celo/dev-utils": "npm:0.0.4-beta.1"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^7.0.0-beta.0"
     "@celo/wallet-base": "npm:^6.0.0-beta.0"
@@ -3720,7 +3720,7 @@ __metadata:
     "@ledgerhq/types-live": "npm:^6.48.1"
     axios: "npm:^1.3.4"
     bignumber.js: "npm:^9.1.2"
-  checksum: 8b6a0ba0effd787dee5e78ce47d3f0e05ffcdc78410a57291f651cb1bb288520a0cbb4b03af423a14cc1f2c2829546acc066d290b970bcfd5547e79139ba93e2
+  checksum: 17bd39f07520ec15d5818e8b54a5474c40113748f50732beb5066966f0d5c8331a422575786179ae140fe86cc20eb3140fd37de94f1ff659e83da712fc1d8a2b
   languageName: node
   linkType: hard
 
