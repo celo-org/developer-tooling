@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.1.0-beta.1
+
+### Patch Changes
+
+- [#285](https://github.com/celo-org/developer-tooling/pull/285) [`cae3f80`](https://github.com/celo-org/developer-tooling/commit/cae3f8097805c2ba2cea6fed48356781728ff4dd) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Trigger beta release with latest ledger and cip66
+
 ## 5.1.0-beta.0
 
 ### Minor Changes
