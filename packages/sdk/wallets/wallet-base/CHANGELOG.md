@@ -1,5 +1,7 @@
 # @celo/wallet-base
 
+## 6.0.0-beta.3
+
 ## 6.0.0-beta.2
 
 ### Minor Changes
