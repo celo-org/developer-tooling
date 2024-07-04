@@ -1,5 +1,15 @@
 # @celo/wallet-ledger
 
+## 6.0.0-beta.3
+
+### Patch Changes
+
+- [#288](https://github.com/celo-org/developer-tooling/pull/288) [`d5b1508`](https://github.com/celo-org/developer-tooling/commit/d5b1508d7d08a99f6bb6deb569ec8b89194de2b9) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Change git url
+
+- Updated dependencies []:
+  - @celo/wallet-base@6.0.0-beta.3
+  - @celo/wallet-remote@6.0.0-beta.3
+
 ## 6.0.0-beta.2
 
 ### Minor Changes
