@@ -1,6 +1,6 @@
 {
   "name": "@celo/wallet-ledger",
-  "version": "6.0.0-beta.1",
+  "version": "6.0.0-beta.2",
   "description": "Ledger wallet implementation",
   "author": "Celo",
   "license": "Apache-2.0",
@@ -25,11 +25,11 @@
   },
   "dependencies": {
     "@celo/base": "^6.1.0-beta.0",
-    "@celo/connect": "^6.0.0-beta.0",
+    "@celo/connect": "^6.0.0-beta.1",
     "@celo/ledger-token-signer": "^0.4.0",
     "@celo/utils": "^7.0.0-beta.0",
-    "@celo/wallet-base": "^6.0.0-beta.1",
-    "@celo/wallet-remote": "^6.0.0-beta.1",
+    "@celo/wallet-base": "^6.0.0-beta.2",
+    "@celo/wallet-remote": "^6.0.0-beta.2",
     "@ethereumjs/util": "8.0.5",
     "@ledgerhq/errors": "^6.16.4",
     "@ledgerhq/hw-app-eth": "git+https://github.com:celo-org/ledgerjs-hw-app-eth.git#commit=49bdd4f163f5ff73daa9f54f8e46aa2882b85f44",
@@ -38,7 +38,7 @@
     "semver": "^7.6.0"
   },
   "devDependencies": {
-    "@celo/contractkit": "^8.1.0-beta.0",
+    "@celo/contractkit": "^8.1.0-beta.1",
     "@celo/typescript": "workspace:^",
     "@ledgerhq/hw-transport-node-hid": "^6.28.5",
     "@noble/curves": "^1.4.0",

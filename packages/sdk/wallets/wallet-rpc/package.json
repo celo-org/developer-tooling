@@ -1,6 +1,6 @@
 {
   "name": "@celo/wallet-rpc",
-  "version": "6.0.0-beta.1",
+  "version": "6.0.0-beta.2",
   "description": "Geth RPC wallet implementation",
   "author": "Celo",
   "license": "Apache-2.0",
@@ -23,16 +23,16 @@
   },
   "dependencies": {
     "@celo/base": "^6.1.0-beta.0",
-    "@celo/connect": "^6.0.0-beta.0",
+    "@celo/connect": "^6.0.0-beta.1",
     "@celo/utils": "^7.0.0-beta.0",
-    "@celo/wallet-base": "^6.0.0-beta.1",
-    "@celo/wallet-remote": "^6.0.0-beta.1",
+    "@celo/wallet-base": "^6.0.0-beta.2",
+    "@celo/wallet-remote": "^6.0.0-beta.2",
     "@types/bn.js": "^5.1.0",
     "bignumber.js": "^9.0.0",
     "debug": "^4.1.1"
   },
   "devDependencies": {
-    "@celo/contractkit": "^8.1.0-beta.0",
+    "@celo/contractkit": "^8.1.0-beta.1",
     "@celo/dev-utils": "0.0.4-beta.1",
     "@celo/typescript": "workspace:^",
     "@types/debug": "^4.1.12",
