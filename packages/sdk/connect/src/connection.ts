@@ -523,17 +523,20 @@ export class Connection {
   }
 }
 
-function isEmpty(value: string | undefined | number | BN) {
+function isEmpty(value: string | undefined | number | BN | bigint): value is undefined {
   return (
     value === 0 ||
     value === undefined ||
     value === null ||
     value === '0' ||
+    value === BigInt(0) ||
     (typeof value === 'string' &&
       (value.toLowerCase() === '0x' || value.toLowerCase() === '0x0')) ||
-    Web3.utils.toBN(value.toString()).eq(Web3.utils.toBN(0))
+    Web3.utils.toBN(value.toString(10)).eq(Web3.utils.toBN(0))
   )
 }
-export function isPresent(value: string | undefined | number | BN) {
+export function isPresent(
+  value: string | undefined | number | BN | bigint
+): value is string | number | BN | bigint {
   return !isEmpty(value)
 }

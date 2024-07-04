@@ -1,5 +1,6 @@
 import { StrongAddress } from '@celo/base'
 import { CeloTx, CeloTxObject, CeloTxReceipt, PromiEvent } from '@celo/connect'
+import { setupL2, testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
 import Web3 from 'web3'
 import {
@@ -201,6 +202,137 @@ testWithGanache('Fetch whitelisted fee currencies', (web3: Web3) => {
           feeCurrency: '0123' as StrongAddress,
         })
       ).rejects.toThrowErrorMatchingInlineSnapshot()
+    })
+  })
+})
+
+testWithAnvil('kit', (web3) => {
+  let kit: ContractKit
+  let feeToken: StrongAddress
+  beforeAll(async () => {
+    // when this is beforeEach the web3 instance is reused so the second time it already is attached to a celo provider
+    // but if the provider is already an instance of celo provider then  rpccaller is not attached to connection class instance
+    //  web3 must be a new instance when creating a kit not a an instance that was already used by a different kit
+    kit = newKitFromWeb3(web3)
+
+    const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyWhitelist()
+    const gasOptions = await feeCurrencyWhitelist.getWhitelist()
+    feeToken = gasOptions[0]
+  })
+  describe('populateMaxFeeInToken', () => {
+    describe('when not on cel2', () => {
+      it('throws not L2 error', async () => {
+        await expect(
+          kit.populateMaxFeeInToken({ feeCurrency: feeToken, gas: '10000000034230982772378193726' })
+        ).rejects.toMatchInlineSnapshot(
+          `[Error: Can't populate \`maxFeeInFeeCurrency\` if not on a CEL2 network]`
+        )
+      })
+    })
+    describe('when on cel2', () => {
+      beforeEach(async () => {
+        await setupL2(web3)
+      })
+      describe('when gas is missing', () => {
+        it('fills the gas and works as normal', async () => {
+          await expect(
+            kit.populateMaxFeeInToken({
+              feeCurrency: feeToken,
+            })
+          ).resolves.toMatchInlineSnapshot(`
+            {
+              "feeCurrency": "0x4CB77DF8f44817DE26D2dE10813e98dd0aA6AE00",
+              "gas": 53001,
+              "maxFeeInFeeCurrency": "108122040000000",
+              "maxFeePerGas": "2000000000",
+              "maxPriorityFeePerGas": "1000000000",
+            }
+          `)
+        })
+      })
+      describe('when maxFeePerFeeCurrency exists', () => {
+        it('returns without modification', async () => {
+          const maxFeeInFeeCurrency = '2000000'
+          await expect(
+            kit.populateMaxFeeInToken({
+              maxFeeInFeeCurrency,
+              feeCurrency: feeToken,
+              gas: '102864710371401736267367367',
+            })
+          ).resolves.toMatchObject({
+            maxFeeInFeeCurrency,
+            feeCurrency: feeToken,
+            gas: '102864710371401736267367367',
+          })
+        })
+      })
+      describe('when feeCurrency provided with gas', () => {
+        it('returns with maxFeePerFeeCurrency estimated', async () => {
+          await expect(
+            kit.populateMaxFeeInToken({
+              feeCurrency: feeToken,
+              gas: '102864710371401736267367367',
+            })
+          ).resolves.toEqual({
+            feeCurrency: feeToken,
+            gas: '102864710371401736267367367',
+            maxFeeInFeeCurrency: '209844009157659541985429428680000000',
+            maxFeePerGas: '2000000000',
+            maxPriorityFeePerGas: '1000000000',
+          })
+        })
+      })
+    })
+    describe('estimateMaxFeeInFeeToken', () => {
+      it('returns the right estimation (1/2)', async () => {
+        const spy = jest.spyOn(await kit.contracts.getFeeCurrencyDirectory(), 'getExchangeRate')
+        //@ts-expect-error
+        spy.mockImplementation(() =>
+          Promise.resolve({ numerator: BigInt(1), denominator: BigInt(2) })
+        )
+
+        await expect(
+          kit.estimateMaxFeeInFeeToken({
+            feeCurrency: feeToken,
+            gasLimit: BigInt(10),
+            maxFeePerGas: BigInt(10),
+          })
+          // 10 * 10 * 1.2 * 2
+        ).resolves.toEqual(BigInt(204))
+      })
+      it('returns the right estimation (1/1)', async () => {
+        const spy = jest.spyOn(await kit.contracts.getFeeCurrencyDirectory(), 'getExchangeRate')
+        //@ts-expect-error
+        spy.mockImplementation(() =>
+          Promise.resolve({ numerator: BigInt(1), denominator: BigInt(1) })
+        )
+
+        await expect(
+          kit.estimateMaxFeeInFeeToken({
+            feeCurrency: feeToken,
+            gasLimit: BigInt(10),
+            maxFeePerGas: BigInt(10),
+          })
+          // 10 * 10 * 1.2 * 1
+        ).resolves.toEqual(BigInt(102))
+      })
+    })
+
+    it('returns the right estimation (1/1)', async () => {
+      const spy = jest.spyOn(await kit.contracts.getFeeCurrencyDirectory(), 'getExchangeRate')
+      //@ts-expect-error
+      spy.mockImplementation(() =>
+        Promise.resolve({ numerator: BigInt(2), denominator: BigInt(1) })
+      )
+
+      await expect(
+        kit.estimateMaxFeeInFeeToken({
+          feeCurrency: feeToken,
+          gasLimit: BigInt(10),
+          maxFeePerGas: BigInt(10),
+        })
+        // 10 * 10 * 1.2 * 1/2
+      ).resolves.toEqual(BigInt(51))
     })
   })
 })

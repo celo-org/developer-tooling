@@ -794,10 +794,11 @@ describe('LedgerWallet class', () => {
           // do nothing
         })
         mockLedger(wallet, mockForceValidation, '0.0.0')
+        Promise.resolve(123)
       })
 
       it("will fail to initialize if the version isn't supported", async () => {
-        expect(wallet.init()).rejects.toMatchInlineSnapshot(
+        await expect(wallet.init()).rejects.toMatchInlineSnapshot(
           `[Error: Due to technical issues, we require the users to update their ledger celo-app to >= 1.0.0. You can do this on ledger-live by updating the celo-app in the app catalog.]`
         )
       })
