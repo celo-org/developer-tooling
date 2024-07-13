@@ -150,9 +150,8 @@ class CheckBuilder {
       this.withGovernance((governance) => governance.proposalExists(proposalID))
     )
 
-  proposalInStage = (proposalID: string, stage: keyof typeof ProposalStage) => {
-    return this.proposalInStages(proposalID, [stage])
-  }
+  proposalInStage = (proposalID: string, stage: keyof typeof ProposalStage) =>
+    this.proposalInStages(proposalID, [stage])
 
   proposalInStages = (proposalID: string, stages: (keyof typeof ProposalStage)[]) =>
     this.addCheck(
