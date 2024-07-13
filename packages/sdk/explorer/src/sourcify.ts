@@ -21,6 +21,11 @@ const PROXY_IMPLEMENTATION_GETTERS = [
   'implementation',
 ]
 
+// Position of the implementation in the UUPS proxy smart contract storage
+// https://github.com/OpenZeppelin/openzeppelin-contracts/blob/8b4b7b8d041c62a84e2c23d7f6e1f0d9e0fc1f20/contracts/proxy/ERC1967/ERC1967Utils.sol#L35
+const PROXY_IMPLEMENTATION_POSITION_UUPS =
+  '0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc'
+
 const PROXY_ABI: AbiItem[] = PROXY_IMPLEMENTATION_GETTERS.map((funcName) => ({
   constant: true,
   inputs: [],
@@ -233,5 +238,16 @@ export async function tryGetProxyImplementation(
     } catch {
       continue
     }
+  }
+
+  try {
+    const hexValue = await connection.web3.eth.getStorageAt(
+      contract,
+      PROXY_IMPLEMENTATION_POSITION_UUPS
+    )
+    const address = connection.web3.utils.toChecksumAddress('0x' + hexValue.slice(-40))
+    return address
+  } catch {
+    return undefined
   }
 }

@@ -8,9 +8,7 @@
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
     "redhat.vscode-yaml",
-    "smkamranqadri.vscode-bolt-language",
-    "davidanson.vscode-markdownlint",
-    "coenraads.bracket-pair-colorizer-2",
+    "davidanson.vscode-markdownlint", 
     "markis.code-coverage"
   ],
   // List of extensions recommended by VS Code that should not be recommended for users of this workspace.

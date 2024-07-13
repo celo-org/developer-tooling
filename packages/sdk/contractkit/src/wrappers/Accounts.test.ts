@@ -7,6 +7,7 @@ import { AccountsWrapper } from './Accounts'
 import { valueToBigNumber, valueToFixidityString } from './BaseWrapper'
 import { LockedGoldWrapper } from './LockedGold'
 import { ValidatorsWrapper } from './Validators'
+import { StrongAddress } from '@celo/base'
 jest.setTimeout(10 * 1000)
 
 /*
@@ -24,7 +25,7 @@ const blsPoP =
 
 testWithGanache('Accounts Wrapper', (web3) => {
   let kit: ContractKit
-  let accounts: string[] = []
+  let accounts: StrongAddress[] = []
   let accountsInstance: AccountsWrapper
   let validators: ValidatorsWrapper
   let lockedGold: LockedGoldWrapper

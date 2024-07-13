@@ -116,6 +116,7 @@ function toStringValueMapRecursive(valueMap: Record<string, any>, prefix: string
     return chalk`${v}`
   }
   return Object.keys(valueMap)
+    .sort()
     .map((key) => prefix + chalk.yellowBright.bold(`${key}: `) + printValue(valueMap[key]))
     .join('\n')
 }

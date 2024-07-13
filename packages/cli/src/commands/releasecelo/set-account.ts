@@ -26,7 +26,7 @@ export default class SetAccount extends ReleaseGoldBaseCommand {
   static examples = [
     'set-account --contract 0x5719118266779B58D0f9519383A4A27aA7b829E5 --property name --value mywallet',
     'set-account --contract 0x5719118266779B58D0f9519383A4A27aA7b829E5 --property dataEncryptionKey --value 0x041bb96e35f9f4b71ca8de561fff55a249ddf9d13ab582bdd09a09e75da68ae4cd0ab7038030f41b237498b4d76387ae878dc8d98fd6f6db2c15362d1a3bf11216',
-    'set-account --contract 0x5719118266779B58D0f9519383A4A27aA7b829E5 --property metaURL --value www.test.com',
+    'set-account --contract 0x5719118266779B58D0f9519383A4A27aA7b829E5 --property metaURL --value www.example.com',
   ]
 
   async run() {

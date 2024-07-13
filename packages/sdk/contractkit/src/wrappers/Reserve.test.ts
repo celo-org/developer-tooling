@@ -1,3 +1,4 @@
+import { StrongAddress } from '@celo/base'
 import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
 import BigNumber from 'bignumber.js'
 import { newKitFromWeb3 } from '../kit'
@@ -6,13 +7,13 @@ import { ReserveWrapper } from './Reserve'
 
 testWithGanache('Reserve Wrapper', (web3) => {
   const kit = newKitFromWeb3(web3)
-  let accounts: string[] = []
+  let accounts: StrongAddress[] = []
   let reserve: ReserveWrapper
   let reserveSpenderMultiSig: MultiSigWrapper
-  let otherReserveAddress: string
-  let otherSpender: string
+  let otherReserveAddress: StrongAddress
+  let otherSpender: StrongAddress
   beforeAll(async () => {
-    accounts = await web3.eth.getAccounts()
+    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
     otherReserveAddress = accounts[9]
     otherSpender = accounts[7]

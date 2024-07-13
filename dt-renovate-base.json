@@ -6,6 +6,7 @@
   "prCreation": "approval",
   "prConcurrentLimit": 2,
   "minimumReleaseAge": "5 days",
+  "rangeStrategy": "bump",
   "major": {
     "minimumReleaseAge": "14 days"
   },

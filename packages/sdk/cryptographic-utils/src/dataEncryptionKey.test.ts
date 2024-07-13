@@ -1,4 +1,4 @@
-import { randomBytes } from 'crypto'
+import { secp256k1 } from '@noble/curves/secp256k1'
 import { decompressPublicKey, deriveDek } from './dataEncryptionKey'
 
 describe('deriveDek', () => {
@@ -13,26 +13,16 @@ describe('deriveDek', () => {
 
 describe('decompressPublicKey', () => {
   it('should work with compressed input', () => {
-    // NOTE: elliptic is disabled elsewhere in this library to prevent
-    // accidental signing of truncated messages.
-    // tslint:disable-next-line:import-blacklist
-    const EC = require('elliptic').ec
-    const ec = new EC('secp256k1')
-    const privateKey = ec.keyFromPrivate(randomBytes(32))
-    const publicKeyFull = Buffer.from(privateKey.getPublic(false, 'hex'), 'hex')
-    const publicKeyCompressed = Buffer.from(privateKey.getPublic(true, 'hex'), 'hex')
+    const privateKey = secp256k1.utils.randomPrivateKey()
+    const publicKeyFull = Buffer.from(secp256k1.getPublicKey(privateKey, false))
+    const publicKeyCompressed = Buffer.from(secp256k1.getPublicKey(privateKey))
     const decompressed = decompressPublicKey(publicKeyCompressed)
     expect(Buffer.concat([Buffer.from('04', 'hex'), decompressed])).toEqual(publicKeyFull)
     expect(decompressed).toHaveLength(64)
   })
   it('should work with long form input', () => {
-    // NOTE: elliptic is disabled elsewhere in this library to prevent
-    // accidental signing of truncated messages.
-    // tslint:disable-next-line:import-blacklist
-    const EC = require('elliptic').ec
-    const ec = new EC('secp256k1')
-    const privateKey = ec.keyFromPrivate(randomBytes(32))
-    const publicKeyFull = Buffer.from(privateKey.getPublic(false, 'hex'), 'hex')
+    const privateKey = secp256k1.utils.randomPrivateKey()
+    const publicKeyFull = Buffer.from(secp256k1.getPublicKey(privateKey, false))
     const decompressed = decompressPublicKey(publicKeyFull)
     expect(Buffer.concat([Buffer.from('04', 'hex'), decompressed])).toEqual(publicKeyFull)
     expect(decompressed).toHaveLength(64)

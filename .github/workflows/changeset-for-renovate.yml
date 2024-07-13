@@ -1,0 +1,22 @@
+name: Write Renovate changeset
+on:
+  pull_request_target:
+    paths:
+      - '.github/workflows/changeset-for-renovate.yml'
+      - '**/yarn.lock'
+
+
+jobs:
+  generate-changeset:
+    runs-on: ['self-hosted', 'org', '8-cpu']
+    if: github.actor == 'renovate[bot]'
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - uses: actions/checkout@v4
+      - name: "Run changesets-renovate"
+        # when on a renovate branch which modified the package.json for a workspace this will  create a changeset for those changes
+        run: npx @scaleway/changesets-renovate
+
+

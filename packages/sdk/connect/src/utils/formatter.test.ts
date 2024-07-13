@@ -51,7 +51,7 @@ describe('inputCeloTxFormatter', () => {
       ...base,
       gasPrice: '0x3e8',
       feeCurrency: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-    }
+    } as const
     it('formats', () => {
       expect(inputCeloTxFormatter(legacy)).toMatchInlineSnapshot(`
         {
@@ -73,7 +73,7 @@ describe('inputCeloTxFormatter', () => {
       maxFeePerGas: '0x3e8',
       maxPriorityFeePerGas: '0x3e8',
       feeCurrency: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-    }
+    } as const
     it('formats', () => {
       expect(inputCeloTxFormatter(cip64)).toMatchInlineSnapshot(`
         {
@@ -90,13 +90,38 @@ describe('inputCeloTxFormatter', () => {
       `)
     })
   })
+  describe('valid cip66 tx', () => {
+    const cip66 = {
+      ...base,
+      maxFeePerGas: '0x3e8',
+      maxPriorityFeePerGas: '0x3e8',
+      feeCurrency: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
+      maxFeeInFeeCurrency: '0x3f0',
+    } as const
+    it('formats', () => {
+      expect(inputCeloTxFormatter(cip66)).toMatchInlineSnapshot(`
+        {
+          "data": "0x",
+          "feeCurrency": "0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae",
+          "from": "0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae",
+          "gas": "0xf4240",
+          "maxFeeInFeeCurrency": "0x3f0",
+          "maxFeePerGas": "0x3e8",
+          "maxPriorityFeePerGas": "0x3e8",
+          "nonce": "0x1",
+          "to": "0x11f4d0a3c12e86b4b5f39b213f7e19d048276dae",
+          "value": "0x241",
+        }
+      `)
+    })
+  })
   describe('valid cip42 tx', () => {
     const cip42 = {
       ...base,
       maxFeePerGas: '0x3e8',
       maxPriorityFeePerGas: '0x3e8',
       feeCurrency: '0x11f4d0A3c12e86B4b5F39B213F7E19D048276DAe',
-    }
+    } as const
     it('formats', () => {
       expect(inputCeloTxFormatter(cip42)).toMatchInlineSnapshot(`
         {
@@ -118,7 +143,7 @@ describe('inputCeloTxFormatter', () => {
       ...base,
       maxFeePerGas: '0x3e8',
       maxPriorityFeePerGas: '0x3e8',
-    }
+    } as const
     it('formats', () => {
       expect(inputCeloTxFormatter(eip1559)).toMatchInlineSnapshot(`
         {

@@ -1,5 +1,29 @@
 # @celo/phone-utils
 
+## 6.0.3-beta.0
+
+### Patch Changes
+
+- Updated dependencies [[`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03), [`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03)]:
+  - @celo/utils@7.0.0-beta.0
+  - @celo/base@6.1.0-beta.0
+
+## 6.0.2
+
+### Patch Changes
+
+- Updated dependencies [[`6e3372f`](https://github.com/celo-org/developer-tooling/commit/6e3372f5ada20bb59d88e275170be4dae1e99f01), [`6e3372f`](https://github.com/celo-org/developer-tooling/commit/6e3372f5ada20bb59d88e275170be4dae1e99f01), [`6e3372f`](https://github.com/celo-org/developer-tooling/commit/6e3372f5ada20bb59d88e275170be4dae1e99f01)]:
+  - @celo/utils@6.0.1
+  - @celo/base@6.0.1
+
+## 6.0.2-beta.0
+
+### Patch Changes
+
+- Updated dependencies [[`c42682d`](https://github.com/celo-org/developer-tooling/commit/c42682d8a7e582f0adaa63c833a4c83a0a649f20), [`08b0d6a`](https://github.com/celo-org/developer-tooling/commit/08b0d6a18b73b01c162f6ba4f97d73f3e3708160), [`08b0d6a`](https://github.com/celo-org/developer-tooling/commit/08b0d6a18b73b01c162f6ba4f97d73f3e3708160)]:
+  - @celo/utils@6.0.1-beta.0
+  - @celo/base@6.0.1-beta.0
+
 ## 6.0.1
 
 ### Patch Changes

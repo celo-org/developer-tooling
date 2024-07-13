@@ -1,12 +1,18 @@
 import { CeloTx } from '@celo/connect'
 import { normalizeAddressWith0x, privateKeyToAddress } from '@celo/utils/lib/address'
+import { hexToBytes } from '@noble/hashes/utils'
 import { parseTransaction, serializeTransaction } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { celo } from 'viem/chains'
 import Web3 from 'web3'
 import {
+  encode_deprecated_celo_legacy_type_only_for_temporary_ledger_compat,
   extractSignature,
   getSignerFromTxEIP2718TX,
+  handleBigInt,
+  handleData,
+  handleHexString,
+  handleNumber,
   isPriceToLow,
   recoverTransaction,
   rlpEncodedTx,
@@ -16,17 +22,22 @@ const PRIVATE_KEY1 = '0x1234567890abcdef1234567890abcdef1234567890abcdef12345678
 const ACCOUNT_ADDRESS1 = normalizeAddressWith0x(privateKeyToAddress(PRIVATE_KEY1)) as `0x${string}`
 
 describe('rlpEncodedTx', () => {
-  describe('legacy', () => {
+  describe('when no gas fields are provided', () => {
+    it('throws an error', () => {
+      expect(() => rlpEncodedTx({})).toThrowErrorMatchingInlineSnapshot(`""gas" is missing"`)
+    })
+  })
+
+  describe('Ethereum legacy', () => {
     const legacyTransaction = {
-      feeCurrency: '0x5409ED021D9299bf6814279A6A1411A7e866A631',
-      from: ACCOUNT_ADDRESS1,
-      to: ACCOUNT_ADDRESS1,
-      chainId: 2,
-      value: Web3.utils.toWei('1000', 'ether'),
-      nonce: 1,
-      gas: '1500000000',
-      gasPrice: '9900000000',
-      data: '0xabcdef',
+      from: '0x1daf825EB5C0D9d9FeC33C444e413452A08e04A6',
+      to: '0x43d72ff17701b2da814620735c39c620ce0ea4a1',
+      chainId: 42220,
+      value: Web3.utils.toWei('0', 'ether'),
+      nonce: 619,
+      gas: '504830',
+      gasPrice: '5000000000',
+      data: '0x4e71d92d',
     }
     it('convert CeloTx into RLP', () => {
       const transaction = {
@@ -35,70 +46,22 @@ describe('rlpEncodedTx', () => {
       const result = rlpEncodedTx(transaction)
       expect(result).toMatchInlineSnapshot(`
         {
-          "rlpEncode": "0xf8490185024e1603008459682f00945409ed021d9299bf6814279a6a1411a7e866a6318080941be31a94361a391bbafb2a4ccd704f57dc04d4bb893635c9adc5dea0000083abcdef028080",
+          "rlpEncode": "0xed82026b85012a05f2008307b3fe9443d72ff17701b2da814620735c39c620ce0ea4a180844e71d92d82a4ec8080",
           "transaction": {
-            "chainId": 2,
-            "data": "0xabcdef",
-            "feeCurrency": "0x5409ed021d9299bf6814279a6a1411a7e866a631",
-            "from": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
-            "gas": "0x59682f00",
-            "gasPrice": "0x024e160300",
-            "gatewayFee": "0x",
-            "gatewayFeeRecipient": "0x",
+            "chainId": 42220,
+            "data": "0x4e71d92d",
+            "from": "0x1daf825eb5c0d9d9fec33c444e413452a08e04a6",
+            "gas": "0x07b3fe",
+            "gasPrice": "0x012a05f200",
             "maxFeePerGas": "0x",
             "maxPriorityFeePerGas": "0x",
-            "nonce": 1,
-            "to": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
-            "value": "0x3635c9adc5dea00000",
+            "nonce": 619,
+            "to": "0x43d72ff17701b2da814620735c39c620ce0ea4a1",
+            "value": "0x",
           },
-          "type": "celo-legacy",
+          "type": "ethereum-legacy",
         }
       `)
-    })
-
-    describe('when chainId / gasPrice / nonce is invalid', () => {
-      it('chainId is not a positive number it throws error', () => {
-        const transaction = {
-          ...legacyTransaction,
-          chainId: -1,
-        }
-        expect(() => rlpEncodedTx(transaction)).toThrowErrorMatchingInlineSnapshot(
-          `"Gas, nonce or chainId is less than than 0"`
-        )
-      })
-      it('gasPrice is not a positive number it throws error', () => {
-        const transaction = {
-          ...legacyTransaction,
-          gasPrice: -1,
-        }
-        expect(() => rlpEncodedTx(transaction)).toThrowErrorMatchingInlineSnapshot(
-          `"GasPrice or maxFeePerGas or maxPriorityFeePerGas is less than than 0"`
-        )
-      })
-      it('nonce is not a positive number it throws error', () => {
-        const transaction = {
-          ...legacyTransaction,
-          nonce: -1,
-        }
-        expect(() => rlpEncodedTx(transaction)).toThrowErrorMatchingInlineSnapshot(
-          `"Gas, nonce or chainId is less than than 0"`
-        )
-      })
-      it('gas is not a positive number it throws error', () => {
-        const transaction = {
-          ...legacyTransaction,
-          gas: -1,
-        }
-        expect(() => rlpEncodedTx(transaction)).toThrowErrorMatchingInlineSnapshot(
-          `"Gas, nonce or chainId is less than than 0"`
-        )
-      })
-    })
-  })
-
-  describe('when no gas fields are provided', () => {
-    it('throws an error', () => {
-      expect(() => rlpEncodedTx({})).toThrowErrorMatchingInlineSnapshot(`""gas" is missing"`)
     })
   })
 
@@ -143,7 +106,7 @@ describe('rlpEncodedTx', () => {
         const CIP64Transaction = {
           ...eip1559Transaction,
           feeCurrency: '0x5409ED021D9299bf6814279A6A1411A7e866A631',
-        }
+        } as const
         const result = rlpEncodedTx(CIP64Transaction)
         expect(result).toMatchInlineSnapshot(`
           {
@@ -161,6 +124,90 @@ describe('rlpEncodedTx', () => {
               "value": "0x3635c9adc5dea00000",
             },
             "type": "cip64",
+          }
+        `)
+      })
+    })
+
+    describe('when maxFeeInFeeCurrency and feeCurrency are provided', () => {
+      it('orders fields in RLP as specified by CIP66', () => {
+        const CIP66Transaction = {
+          ...eip1559Transaction,
+          feeCurrency: '0x5409ED021D9299bf6814279A6A1411A7e866A631',
+          maxFeeInFeeCurrency: '0x666',
+        } as const
+        const result = rlpEncodedTx(CIP66Transaction)
+        expect(result).toMatchInlineSnapshot(`
+          {
+            "rlpEncode": "0x7af8410280630a63941be31a94361a391bbafb2a4ccd704f57dc04d4bb893635c9adc5dea0000083abcdefc0945409ed021d9299bf6814279a6a1411a7e866a631820666",
+            "transaction": {
+              "chainId": 2,
+              "data": "0xabcdef",
+              "feeCurrency": "0x5409ed021d9299bf6814279a6a1411a7e866a631",
+              "from": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
+              "gas": "0x63",
+              "maxFeeInFeeCurrency": "0x0666",
+              "maxFeePerGas": "0x0a",
+              "maxPriorityFeePerGas": "0x63",
+              "nonce": 0,
+              "to": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
+              "value": "0x3635c9adc5dea00000",
+            },
+            "type": "cip66",
+          }
+        `)
+      })
+      it('orders fields in RLP as specified by CIP66 when given BN values', () => {
+        const CIP66Transaction = {
+          ...eip1559Transaction,
+          feeCurrency: '0x5409ED021D9299bf6814279A6A1411A7e866A631',
+          maxFeeInFeeCurrency: Web3.utils.toBN('100000000010181646104615494635153636353810897'),
+        } as const
+        const result = rlpEncodedTx(CIP66Transaction)
+        expect(result).toMatchInlineSnapshot(`
+          {
+            "rlpEncode": "0x7af8520280630a63941be31a94361a391bbafb2a4ccd704f57dc04d4bb893635c9adc5dea0000083abcdefc0945409ed021d9299bf6814279a6a1411a7e866a63193047bf19675d5515464c13ea56f3922e602a1d1",
+            "transaction": {
+              "chainId": 2,
+              "data": "0xabcdef",
+              "feeCurrency": "0x5409ed021d9299bf6814279a6a1411a7e866a631",
+              "from": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
+              "gas": "0x63",
+              "maxFeeInFeeCurrency": "0x047bf19675d5515464c13ea56f3922e602a1d1",
+              "maxFeePerGas": "0x0a",
+              "maxPriorityFeePerGas": "0x63",
+              "nonce": 0,
+              "to": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
+              "value": "0x3635c9adc5dea00000",
+            },
+            "type": "cip66",
+          }
+        `)
+      })
+      it('orders fields in RLP as specified by CIP66 when given bigInt values', () => {
+        const CIP66Transaction = {
+          ...eip1559Transaction,
+          feeCurrency: '0x5409ED021D9299bf6814279A6A1411A7e866A631',
+          maxFeeInFeeCurrency: BigInt('100000000010181646104615494635153636353810897'),
+        } as const
+        const result = rlpEncodedTx(CIP66Transaction)
+        expect(result).toMatchInlineSnapshot(`
+          {
+            "rlpEncode": "0x7af8520280630a63941be31a94361a391bbafb2a4ccd704f57dc04d4bb893635c9adc5dea0000083abcdefc0945409ed021d9299bf6814279a6a1411a7e866a63193047bf19675d5515464c13ea56f3922e602a1d1",
+            "transaction": {
+              "chainId": 2,
+              "data": "0xabcdef",
+              "feeCurrency": "0x5409ed021d9299bf6814279a6a1411a7e866a631",
+              "from": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
+              "gas": "0x63",
+              "maxFeeInFeeCurrency": "0x047bf19675d5515464c13ea56f3922e602a1d1",
+              "maxFeePerGas": "0x0a",
+              "maxPriorityFeePerGas": "0x63",
+              "nonce": 0,
+              "to": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
+              "value": "0x3635c9adc5dea00000",
+            },
+            "type": "cip66",
           }
         `)
       })
@@ -258,10 +305,48 @@ describe('rlpEncodedTx', () => {
   })
 })
 
+describe('encode_deprecated_celo_legacy_type_only_for_temporary_ledger_compat', () => {
+  test('serializes the deprecated tx type correctly', () => {
+    const legacyTransaction = {
+      feeCurrency: '0x5409ED021D9299bf6814279A6A1411A7e866A631',
+      from: ACCOUNT_ADDRESS1,
+      to: ACCOUNT_ADDRESS1,
+      chainId: 2,
+      value: Web3.utils.toWei('1000', 'ether'),
+      nonce: 1,
+      gas: '1500000000',
+      gasPrice: '9900000000',
+      data: '0xabcdef',
+    } as const
+
+    const result =
+      encode_deprecated_celo_legacy_type_only_for_temporary_ledger_compat(legacyTransaction)
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "rlpEncode": "0xf8490185024e1603008459682f00945409ed021d9299bf6814279a6a1411a7e866a6318080941be31a94361a391bbafb2a4ccd704f57dc04d4bb893635c9adc5dea0000083abcdef028080",
+        "transaction": {
+          "chainId": 2,
+          "data": "0xabcdef",
+          "feeCurrency": "0x5409ed021d9299bf6814279a6a1411a7e866a631",
+          "from": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
+          "gas": "0x59682f00",
+          "gasPrice": "0x024e160300",
+          "gatewayFee": "0x",
+          "gatewayFeeRecipient": "0x",
+          "nonce": 1,
+          "to": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
+          "value": "0x3635c9adc5dea00000",
+        },
+        "type": "celo-legacy",
+      }
+    `)
+  })
+})
+
 function ckToViem(tx: CeloTx & { v?: number }) {
   return {
     ...tx,
-    gas: BigInt(tx.gas!),
+    gas: BigInt(tx.gas! as string),
     maxFeePerGas: BigInt(tx.maxFeePerGas?.toString()!),
     maxPriorityFeePerGas: BigInt(tx.maxPriorityFeePerGas?.toString()!),
     value: BigInt(tx.value?.toString()!),
@@ -270,14 +355,13 @@ function ckToViem(tx: CeloTx & { v?: number }) {
 }
 
 describe('recoverTransaction', () => {
-  const ACCOUNT_ADDRESS1_UNFORMATTED = privateKeyToAddress(PRIVATE_KEY1) as `0x${string}`
   describe('with EIP1559 transactions', () => {
     test('ok', async () => {
       const account = privateKeyToAccount(PRIVATE_KEY1)
       const hash = await account.signTransaction({
         type: 'eip1559' as const,
-        from: ACCOUNT_ADDRESS1_UNFORMATTED,
-        to: ACCOUNT_ADDRESS1_UNFORMATTED,
+        from: ACCOUNT_ADDRESS1,
+        to: ACCOUNT_ADDRESS1 as `0x${string}`,
         chainId: 2,
         value: BigInt(1000),
         nonce: 0,
@@ -288,7 +372,7 @@ describe('recoverTransaction', () => {
       })
 
       const [transaction, signer] = recoverTransaction(hash)
-      expect(signer).toEqual(ACCOUNT_ADDRESS1_UNFORMATTED)
+      expect(signer.toLowerCase()).toEqual(ACCOUNT_ADDRESS1.toLowerCase())
       expect(transaction).toMatchInlineSnapshot(`
         {
           "accessList": [],
@@ -369,6 +453,25 @@ describe('recoverTransaction', () => {
       ]
     `)
   })
+  it('handles ethereum-legacy transactions', () => {
+    const ethereumLegacyTx =
+      '0xf86e82026b85012a05f2008307b3fe9443d72ff17701b2da814620735c39c620ce0ea4a180844e71d92d830149fba0f616cf0a105a0b117b178f6aaa5dc79b9b2aa3898811f99a8f48fb70cece8a33a032a158ab09e32747044e62bd3facd9abd746df23df306dbc31305668da2c7937'
+    expect(recoverTransaction(ethereumLegacyTx)).toMatchInlineSnapshot(`
+      [
+        {
+          "chainId": "0xa4ec",
+          "data": "0x4e71d92d",
+          "gas": 504830,
+          "gasPrice": 5000000000,
+          "nonce": 619,
+          "to": "0x43d72ff17701b2da814620735c39c620ce0ea4a1",
+          "type": "ethereum-legacy",
+          "value": "0x",
+        },
+        "0x1daf825EB5C0D9d9FeC33C444e413452A08e04A6",
+      ]
+    `)
+  })
   it('handles cip64 transactions', () => {
     const cip64TX =
       '0x7bf88282ad5a8063630a94588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a764000083abcdefc094cd2a3d9f938e13cd947ec05abc7fe734df8dd82680a091b5504a59e529e7efa42dbb97fbc3311a91d035c873a94ab0789441fc989f84a02e8254d6b3101b63417e5d496833bc84f4832d4a8bf8a2b83e291d8f38c0f62d'
@@ -392,6 +495,33 @@ describe('recoverTransaction', () => {
           "yParity": 0,
         },
         "0x1Be31A94361a391bBaFB2a4CCd704F57dc04d4bb",
+      ]
+    `)
+  })
+  it('handles cip66 transactions', () => {
+    const cip66TX =
+      '0x7af8ce82a4ec01843b9aca00850342770c0083030d409443d72ff17701b2da814620735c39c620ce0ea4a180b844a9059cbb000000000000000000000000bd8be21f6883569ad7d15cc55c87137fcef308c300000000000000000000000000000000000000000000000001605eba271024d6c094765de816845861e75a25fca122bb6898b8b1282a8501a13b860080a02a015905a494549d8a1da26ce769309963e43f407936bbce1ea8276072b08416a072fd12d24c44bc79648bd88f4d8c158f2f0778694557868b3dc7d80e3aa6b539'
+    expect(recoverTransaction(cip66TX)).toMatchInlineSnapshot(`
+      [
+        {
+          "accessList": [],
+          "chainId": 42220,
+          "data": "0xa9059cbb000000000000000000000000bd8be21f6883569ad7d15cc55c87137fcef308c300000000000000000000000000000000000000000000000001605eba271024d6",
+          "feeCurrency": "0x765de816845861e75a25fca122bb6898b8b1282a",
+          "gas": "200000",
+          "maxFeeInFeeCurrency": "0x01a13b8600",
+          "maxFeePerGas": "14000000000",
+          "maxPriorityFeePerGas": "1000000000",
+          "nonce": 1,
+          "r": "0x2a015905a494549d8a1da26ce769309963e43f407936bbce1ea8276072b08416",
+          "s": "0x72fd12d24c44bc79648bd88f4d8c158f2f0778694557868b3dc7d80e3aa6b539",
+          "to": "0x43d72ff17701b2da814620735c39c620ce0ea4a1",
+          "type": "cip66",
+          "v": 27,
+          "value": "0",
+          "yParity": 0,
+        },
+        "0xa94f5374Fce5edBC8E2a8697C15331677e6EbF0B",
       ]
     `)
   })
@@ -566,8 +696,17 @@ describe('extractSignature', () => {
     `)
   })
   it('fails when length is wrong', () => {
+    expect(() =>
+      extractSignature(
+        '0xf88282ad5a8063630a94588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a764000083abcdefc094cd2a3d9f938e13cd947ec05abc7fe734df8dd82680a091b5504a59e529e7efa42dbb97fbc3311a91d035c873a94ab0789441fc989f84a02e8254d6b3101b63417e5d496833bc84f4832d4a8bf8a2b83e291d8f38c0f62d'
+      )
+    ).toThrowErrorMatchingInlineSnapshot(
+      `"@extractSignature: provided transaction has 13 elements but ethereum-legacy txs with a signature have 9 [{"0":173,"1":90},{},{"0":99},{"0":99},{"0":10},{"0":88,"1":142,"2":75,"3":104,"4":25,"5":48,"6":1,"7":228,"8":209,"9":9,"10":40,"11":102,"12":10,"13":180,"14":22,"15":91,"16":129,"17":55,"18":23,"19":192},{"0":13,"1":224,"2":182,"3":179,"4":167,"5":100,"6":0,"7":0},{"0":171,"1":205,"2":239},[],{"0":205,"1":42,"2":61,"3":159,"4":147,"5":142,"6":19,"7":205,"8":148,"9":126,"10":192,"11":90,"12":188,"13":127,"14":231,"15":52,"16":223,"17":141,"18":216,"19":38},{},{"0":145,"1":181,"2":80,"3":74,"4":89,"5":229,"6":41,"7":231,"8":239,"9":164,"10":45,"11":187,"12":151,"13":251,"14":195,"15":49,"16":26,"17":145,"18":208,"19":53,"20":200,"21":115,"22":169,"23":74,"24":176,"25":120,"26":148,"27":65,"28":252,"29":152,"30":159,"31":132},{"0":46,"1":130,"2":84,"3":214,"4":179,"5":16,"6":27,"7":99,"8":65,"9":126,"10":93,"11":73,"12":104,"13":51,"14":188,"15":132,"16":244,"17":131,"18":45,"19":74,"20":139,"21":248,"22":162,"23":184,"24":62,"25":41,"26":29,"27":143,"28":56,"29":192,"30":246,"31":45}]"`
+    )
+  })
+  it('fails when length is empty', () => {
     expect(() => extractSignature('0x')).toThrowErrorMatchingInlineSnapshot(
-      `"@extractSignature: provided transaction has 0 elements but celo-legacy txs with a signature have 12 []"`
+      `"Invalid byte sequence"`
     )
   })
 })
@@ -614,4 +753,29 @@ describe('stringNumberOrBNToHex', () => {
     const biggie = Web3.utils.toBN('123')
     expect(stringNumberOrBNToHex(biggie)).toEqual('0x7b')
   })
+  test('bigint', () => {
+    expect(stringNumberOrBNToHex(BigInt('100293872610573514616'))).toEqual('0x056fdb69c275837778')
+  })
+})
+
+describe('handleNumber', () => {
+  test('handles numbers', () => {
+    expect(handleNumber(hexToBytes('cafe0123'))).toEqual(3405644067)
+    expect(handleNumber(hexToBytes(''))).toEqual(0)
+  })
+})
+
+describe('handleBigInt', () => {
+  expect(handleBigInt(hexToBytes('ffffffffffffff'))).toEqual(BigInt('72057594037927935'))
+  expect(handleBigInt(hexToBytes(''))).toEqual(BigInt(0))
+})
+
+describe('handleHexString', () => {
+  expect(handleHexString(hexToBytes('cafe0123'))).toEqual('0xcafe0123')
+  expect(handleHexString(hexToBytes(''))).toEqual('0x')
+})
+
+describe('handleData', () => {
+  expect(handleData(hexToBytes('cafe0123'))).toEqual('0xcafe0123')
+  expect(handleData(hexToBytes(''))).toEqual('0x')
 })

@@ -1,21 +1,22 @@
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
+import { StrongAddress } from '@celo/base'
+import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import { newKitFromWeb3 } from '../kit'
 import { FederatedAttestationsWrapper } from './FederatedAttestations'
 
-testWithGanache('FederatedAttestations Wrapper', (web3) => {
+testWithAnvil('FederatedAttestations Wrapper', (web3) => {
   const kit = newKitFromWeb3(web3)
   const TIME_STAMP = 1665080820
-  let accounts: string[] = []
+  let accounts: StrongAddress[] = []
   let federatedAttestations: FederatedAttestationsWrapper
   let testIdentifierBytes32: string
   let plainTextIdentifier: string
-  let testAccountAddress: string
+  let testAccountAddress: StrongAddress
 
   beforeAll(async () => {
-    accounts = await web3.eth.getAccounts()
+    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
     federatedAttestations = await kit.contracts.getFederatedAttestations()
-    testAccountAddress = kit.web3.eth.accounts.create().address
+    testAccountAddress = kit.web3.eth.accounts.create().address as StrongAddress
     plainTextIdentifier = '221B Baker St., London'
     testIdentifierBytes32 = kit.web3.utils.soliditySha3({
       t: 'bytes32',
@@ -49,11 +50,6 @@ testWithGanache('FederatedAttestations Wrapper', (web3) => {
 
     const accountInstance = await kit.contracts.getAccounts()
     await accountInstance.createAccount().sendAndWaitForReceipt({ from: issuer })
-
-    // Ganache returns 1 in chainId assembly code
-    // @ts-ignore
-    jest.spyOn<any, any>(kit.connection, 'chainId').mockReturnValue(1)
-
     const celoTransactionObject = await federatedAttestations.registerAttestation(
       testIdentifierBytes32,
       issuer,

@@ -1,20 +1,30 @@
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
+import { newKitFromWeb3 } from '@celo/contractkit'
+import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import Web3 from 'web3'
-import { testLocally } from '../../test-utils/cliUtils'
+import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Register from './register'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithGanache('account:register cmd', (web3: Web3) => {
+testWithAnvil('account:register cmd', (web3: Web3) => {
   test('can register account', async () => {
     const accounts = await web3.eth.getAccounts()
 
-    await testLocally(Register, ['--from', accounts[0], '--name', 'Chapulin Colorado'])
+    await testLocallyWithWeb3Node(
+      Register,
+      ['--from', accounts[0], '--name', 'Chapulin Colorado'],
+      web3
+    )
+
+    const kit = newKitFromWeb3(web3)
+    const account = await kit.contracts.getAccounts()
+
+    expect(await account.getName(accounts[0])).toMatchInlineSnapshot(`"Chapulin Colorado"`)
   })
 
   test('fails if from is missing', async () => {
-    // const accounts = await web3.eth.getAccounts()
-
-    await expect(testLocally(Register, [])).rejects.toThrow('Missing required flag')
+    await expect(testLocallyWithWeb3Node(Register, [], web3)).rejects.toThrow(
+      'Missing required flag'
+    )
   })
 })

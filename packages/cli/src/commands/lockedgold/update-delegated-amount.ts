@@ -1,5 +1,3 @@
-import { Address } from '@celo/connect'
-import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
@@ -11,8 +9,8 @@ export default class UpdateDelegatedAmount extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    from: Flags.string({ ...CustomFlags.address, required: true }),
-    to: Flags.string({ ...CustomFlags.address, required: true }),
+    from: CustomFlags.address({ required: true }),
+    to: CustomFlags.address({ required: true }),
   }
 
   static args = {}
@@ -24,8 +22,8 @@ export default class UpdateDelegatedAmount extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(UpdateDelegatedAmount)
-    const address: Address = res.flags.from
-    const to: Address = res.flags.to
+    const address = res.flags.from
+    const to = res.flags.to
 
     kit.defaultAccount = address
 

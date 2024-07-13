@@ -1,3 +1,4 @@
+import { StrongAddress } from '@celo/base'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
@@ -19,7 +20,7 @@ export default class ResetSlashingMultiplier extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const { args } = await this.parse(ResetSlashingMultiplier)
-    const address = args.arg1 as string
+    const address = args.arg1 as StrongAddress
 
     const validators = await kit.contracts.getValidators()
     kit.defaultAccount = address

@@ -38,7 +38,7 @@ $ cd developer-tooling
 ### Installing Node.js
 
 We use [Node.js](https://nodejs.org/en/) to run the project locally.
-You need to install the **Node.js version** specified in [.nvmrc](../.nvmrc). To do so, run:
+You need to install the **Node.js version** specified in [.nvmrc](/.nvmrc). To do so, run:
 
 ```sh
 $ nvm install

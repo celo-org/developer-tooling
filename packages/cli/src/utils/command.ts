@@ -1,3 +1,4 @@
+import { StrongAddress } from '@celo/base'
 import { URL_REGEX } from '@celo/base/lib/io'
 import { CeloContract, RegisteredContracts } from '@celo/contractkit'
 import { Interval } from '@celo/contractkit/lib/wrappers/DowntimeSlasher'
@@ -40,9 +41,16 @@ const parseBlsProofOfPossession: ParseFn<string> = async (input) => {
 const parseProofOfPossession: ParseFn<string> = async (input) => {
   return parseBytes(input, POP_SIZE, `${input} is not a proof-of-possession`)
 }
-const parseAddress: ParseFn<string> = async (input) => {
+const parseAddress: ParseFn<StrongAddress> = async (input) => {
   if (Web3.utils.isAddress(input)) {
-    return input
+    return input as StrongAddress
+  } else {
+    throw new CLIError(`${input} is not a valid address`)
+  }
+}
+const parseGasCurrency: ParseFn<StrongAddress> = async (input) => {
+  if (Web3.utils.isAddress(input)) {
+    return input as StrongAddress
   } else {
     throw new CLIError(`${input} is not a valid address`)
   }
@@ -150,10 +158,15 @@ export const CustomFlags = {
     helpValue:
       '\'["0xb7ef0985bdb4f19460A29d9829aA1514B181C4CD", "0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95"]\'',
   }),
-  address: Flags.custom({
+  address: Flags.custom<StrongAddress>({
     parse: parseAddress,
     description: 'Account Address',
     helpValue: '0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d',
+  }),
+  gasCurrency: Flags.custom<StrongAddress>({
+    parse: parseGasCurrency,
+    description: 'A whitelisted feeCurrency',
+    helpValue: '0x1234567890123456789012345678901234567890',
   }),
   ecdsaPublicKey: Flags.custom({
     parse: parseEcdsaPublicKey,

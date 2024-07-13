@@ -1,12 +1,12 @@
 {
   "name": "@celo/network-utils",
-  "version": "5.0.5",
+  "version": "5.0.6",
   "description": "Utilities for fetching static information about the Celo network",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "author": "Celo",
   "license": "Apache-2.0",
-  "homepage": "https://celo-sdk-docs.readthedocs.io/en/latest/network-utils",
+  "homepage": "https://docs.celo.org/developer/tools",
   "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/sdk/network-utils",
   "keywords": [
     "celo",
@@ -14,8 +14,8 @@
     "contractkit"
   ],
   "scripts": {
-    "build": "tsc -b .",
-    "clean": "tsc -b . --clean",
+    "build": "yarn run --top-level tsc -b .",
+    "clean": "yarn run --top-level tsc -b . --clean",
     "docs": "yarn run --top-level typedoc",
     "test": "yarn run --top-level jest --runInBand",
     "lint": "yarn run --top-level eslint -c .eslintrc.js ",
@@ -23,12 +23,14 @@
   },
   "dependencies": {
     "@types/debug": "^4.1.5",
-    "cross-fetch": "3.0.6",
+    "cross-fetch": "3.1.5",
     "debug": "^4.1.1"
   },
   "devDependencies": {
-    "@celo/dev-utils": "0.0.1-beta.1",
-    "fetch-mock": "9.10.4"
+    "@celo/dev-utils": "0.0.4-beta.1",
+    "@celo/typescript": "workspace:^",
+    "@types/debug": "^4.1.12",
+    "fetch-mock": "^10.0.7"
   },
   "engines": {
     "node": ">=8.13.0"

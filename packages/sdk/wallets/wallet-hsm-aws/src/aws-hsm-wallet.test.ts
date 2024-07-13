@@ -9,6 +9,7 @@ import { verifySignature } from '@celo/utils/lib/signatureUtils'
 import { recoverTransaction, verifyEIP712TypedDataSigner } from '@celo/wallet-base'
 import { asn1FromPublicKey } from '@celo/wallet-hsm'
 import * as ethUtil from '@ethereumjs/util'
+import { secp256k1 } from '@noble/curves/secp256k1'
 import { BigNumber } from 'bignumber.js'
 import Web3 from 'web3'
 import { AwsHsmWallet } from './aws-hsm-wallet'
@@ -130,13 +131,8 @@ describe('AwsHsmWallet class', () => {
               const privateKey = trimLeading0x(keys.get(KeyId)!)
               if (privateKey) {
                 const pkBuffer = Buffer.from(privateKey, 'hex')
-                // NOTE: elliptic is disabled elsewhere in this library to prevent
-                // accidental signing of truncated messages.
-                // tslint:disable-next-line:import-blacklist
-                const EC = require('elliptic').ec
-                const ec = new EC('secp256k1')
-                const signature = ec.sign(Message, pkBuffer, { canonical: true })
-                return { Signature: Buffer.from(signature.toDER()) }
+                const signature = secp256k1.sign(Message, pkBuffer, { lowS: true })
+                return { Signature: signature.toDERRawBytes() }
               }
               throw new Error(`Unable to locate key: ${KeyId}`)
             },
@@ -183,8 +179,6 @@ describe('AwsHsmWallet class', () => {
           gas: '10',
           gasPrice: '99',
           feeCurrency: '0x',
-          gatewayFeeRecipient: ACCOUNT_ADDRESS_NEVER,
-          gatewayFee: '0x5678',
           data: '0xabcdef',
         }
       })
@@ -242,8 +236,6 @@ describe('AwsHsmWallet class', () => {
           gas: '10',
           gasPrice: '99',
           feeCurrency: '0x',
-          gatewayFeeRecipient: ACCOUNT_ADDRESS_NEVER,
-          gatewayFee: '0x5678',
           data: '0xabcdef',
         }
       })
@@ -269,9 +261,7 @@ describe('AwsHsmWallet class', () => {
             nonce: 65,
             gas: '10',
             gasPrice: '99',
-            feeCurrency: '0x',
-            gatewayFeeRecipient: ACCOUNT_ADDRESS_NEVER,
-            gatewayFee: '0x5678',
+            feeCurrency: '0x' as const,
             data: '0xabcdef',
           }
           const signedTx: EncodedTransaction = await wallet.signTransaction(

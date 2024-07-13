@@ -1,48 +1,50 @@
 {
   "name": "@celo/connect",
-  "version": "5.1.2",
+  "version": "6.0.0-beta.1",
   "description": "Light Toolkit for connecting with the Celo network",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "sideEffects": false,
   "author": "Celo",
   "license": "Apache-2.0",
-  "homepage": "https://celo-sdk-docs.readthedocs.io/en/latest/connect",
+  "homepage": "https://docs.celo.org/developer/tools",
   "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/sdk/connect",
   "keywords": [
     "celo",
     "blockchain"
   ],
   "scripts": {
-    "build": "tsc -b .",
-    "clean": "tsc -b . --clean",
+    "build": "yarn run --top-level tsc -b .",
+    "clean": "yarn run --top-level tsc -b . --clean",
     "docs": "yarn run --top-level typedoc",
     "test": "yarn run --top-level jest --runInBand --silent",
     "lint": "yarn run --top-level eslint -c .eslintrc.js ",
     "prepublishOnly": "yarn build"
   },
   "dependencies": {
-    "@celo/base": "^6.0.0",
-    "@celo/utils": "^6.0.0",
+    "@celo/base": "^6.1.0-beta.0",
+    "@celo/utils": "^7.0.0-beta.0",
     "@ethereumjs/util": "8.0.5",
     "@types/debug": "^4.1.5",
     "@types/utf8": "^2.1.6",
     "bignumber.js": "^9.0.0",
     "debug": "^4.1.1",
     "utf8": "3.0.0",
-    "web3-core": "1.10.0",
-    "web3-eth": "1.10.0",
-    "web3-eth-contract": "1.10.0"
+    "web3-core": "1.10.4",
+    "web3-eth": "1.10.4",
+    "web3-eth-contract": "1.10.4"
   },
   "devDependencies": {
-    "web3": "1.10.0",
-    "web3-core": "1.10.0",
-    "web3-eth": "1.10.0",
-    "web3-eth-abi": "1.10.0",
-    "web3-eth-contract": "1.10.0"
+    "@celo/typescript": "workspace:^",
+    "@types/debug": "^4.1.12",
+    "web3": "1.10.4",
+    "web3-core": "1.10.4",
+    "web3-eth": "1.10.4",
+    "web3-eth-abi": "1.10.4",
+    "web3-eth-contract": "1.10.4"
   },
   "peerDependencies": {
-    "web3": "1.10.0"
+    "web3": "1.10.4"
   },
   "engines": {
     "node": ">=8.14.2"

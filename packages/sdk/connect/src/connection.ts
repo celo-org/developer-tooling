@@ -1,4 +1,5 @@
 // tslint:disable: ordered-imports
+import { StrongAddress } from '@celo/base'
 import { ensureLeading0x, toChecksumAddress } from '@celo/utils/lib/address'
 import { EIP712TypedData, generateTypedDataHash } from '@celo/utils/lib/sign-typed-data-utils'
 import { Signature, parseSignatureWithoutPrefix } from '@celo/utils/lib/signatureUtils'
@@ -43,8 +44,8 @@ const debugGasEstimation = debugFactory('connection:gas-estimation')
 type BN = ReturnType<Web3['utils']['toBN']>
 export interface ConnectionOptions {
   gasInflationFactor: number
-  feeCurrency?: Address
-  from?: Address
+  feeCurrency?: StrongAddress
+  from?: StrongAddress
 }
 
 /**
@@ -70,7 +71,7 @@ export class Connection {
     this.setProvider(existingProvider)
     // TODO: Add this line with the wallets separation completed
     // this.wallet = _wallet ?? new LocalWallet()
-    this.config.from = web3.eth.defaultAccount ?? undefined
+    this.config.from = (web3.eth.defaultAccount as StrongAddress) ?? undefined
     this.paramsPopulator = new TxParamsNormalizer(this)
   }
 
@@ -103,7 +104,7 @@ export class Connection {
   /**
    * Set default account for generated transactions (eg. tx.from )
    */
-  set defaultAccount(address: Address | undefined) {
+  set defaultAccount(address: StrongAddress | undefined) {
     this.config.from = address
     this.web3.eth.defaultAccount = address ? address : null
   }
@@ -111,7 +112,7 @@ export class Connection {
   /**
    * Default account for generated transactions (eg. tx.from)
    */
-  get defaultAccount(): Address | undefined {
+  get defaultAccount(): StrongAddress | undefined {
     return this.config.from
   }
 
@@ -125,13 +126,13 @@ export class Connection {
 
   /**
    * Set the ERC20 address for the token to use to pay for transaction fees.
-   * The ERC20 must be whitelisted for gas.
+   * The ERC20 address SHOULD be whitelisted for gas, but this is not checked or enforced.
    *
    * Set to `null` to use CELO
    *
    * @param address ERC20 address
    */
-  set defaultFeeCurrency(address: Address | undefined) {
+  set defaultFeeCurrency(address: StrongAddress | undefined) {
     this.config.feeCurrency = address
   }
 
@@ -139,7 +140,7 @@ export class Connection {
     return this.config.feeCurrency
   }
 
-  isLocalAccount(address?: Address): boolean {
+  isLocalAccount(address?: StrongAddress): boolean {
     return this.wallet != null && this.wallet.hasAccount(address)
   }
 
@@ -167,17 +168,19 @@ export class Connection {
     }
   }
 
-  async getNodeAccounts(): Promise<string[]> {
+  async getNodeAccounts(): Promise<StrongAddress[]> {
     const nodeAccountsResp = await this.rpcCaller.call('eth_accounts', [])
-    return this.toChecksumAddresses(nodeAccountsResp.result ?? [])
+    return this.toChecksumAddresses(nodeAccountsResp.result ?? []) as StrongAddress[]
   }
 
-  getLocalAccounts(): string[] {
-    return this.wallet ? this.toChecksumAddresses(this.wallet.getAccounts()) : []
+  getLocalAccounts(): StrongAddress[] {
+    return this.wallet
+      ? (this.toChecksumAddresses(this.wallet.getAccounts()) as StrongAddress[])
+      : []
   }
 
-  async getAccounts(): Promise<string[]> {
-    return (await this.getNodeAccounts()).concat(this.getLocalAccounts())
+  async getAccounts(): Promise<StrongAddress[]> {
+    return (await this.getNodeAccounts()).concat(this.getLocalAccounts()) as StrongAddress[]
   }
 
   private toChecksumAddresses(addresses: string[]) {
@@ -263,7 +266,7 @@ export class Connection {
   signTypedData = async (
     signer: string,
     typedData: EIP712TypedData,
-    version?: 1 | 3 | 4 | 5
+    version: 1 | 3 | 4 | 5 | null = 4
   ): Promise<Signature> => {
     // stringify data for v3 & v4 based on https://github.com/MetaMask/metamask-extension/blob/c72199a1a6e4151c40c22f79d0f3b6ed7a2d59a7/app/scripts/lib/typed-message-manager.js#L185
     const shouldStringify = version === 3 || version === 4
@@ -520,17 +523,20 @@ export class Connection {
   }
 }
 
-function isEmpty(value: string | undefined | number | BN) {
+function isEmpty(value: string | undefined | number | BN | bigint): value is undefined {
   return (
     value === 0 ||
     value === undefined ||
     value === null ||
     value === '0' ||
+    value === BigInt(0) ||
     (typeof value === 'string' &&
       (value.toLowerCase() === '0x' || value.toLowerCase() === '0x0')) ||
-    Web3.utils.toBN(value.toString()).eq(Web3.utils.toBN(0))
+    Web3.utils.toBN(value.toString(10)).eq(Web3.utils.toBN(0))
   )
 }
-export function isPresent(value: string | undefined | number | BN) {
+export function isPresent(
+  value: string | undefined | number | BN | bigint
+): value is string | number | BN | bigint {
   return !isEmpty(value)
 }

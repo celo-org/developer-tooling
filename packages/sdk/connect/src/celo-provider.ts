@@ -1,3 +1,4 @@
+import { StrongAddress } from '@celo/base'
 import { Lock } from '@celo/base/lib/lock'
 import debugFactory from 'debug'
 import { Connection } from './connection'
@@ -78,7 +79,7 @@ export class CeloProvider implements Provider {
    */
   send(payload: JsonRpcPayload, callback: Callback<JsonRpcResponse>): void {
     let txParams: any
-    let address: string
+    let address: StrongAddress
 
     debugPayload('%O', payload)
 

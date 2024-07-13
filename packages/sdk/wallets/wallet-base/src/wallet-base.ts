@@ -76,9 +76,16 @@ export abstract class WalletBase<TSigner extends Signer> implements ReadOnlyWall
     if (!txParams) {
       throw new Error('No transaction object given!')
     }
+    if (txParams.gasPrice && txParams.feeCurrency && txParams.feeCurrency !== '0x') {
+      throw new Error(
+        'Cannot serialize both "gasPrice" and "feeCurrency" together. To keep "feeCurrency", replace "gasPrice" with "maxFeePerGas". To keep "gasPrice" and send a type 0 transaction remove "feeCurrency"'
+      )
+    }
     const rlpEncoded = rlpEncodedTx(txParams)
     const addToV =
-      rlpEncoded.type === 'celo-legacy' ? chainIdTransformationForSigning(txParams.chainId!) : 27
+      rlpEncoded.type === 'ethereum-legacy'
+        ? chainIdTransformationForSigning(txParams.chainId!)
+        : 27
 
     // Get the signer from the 'from' field
     const fromAddress = txParams.from!.toString()
