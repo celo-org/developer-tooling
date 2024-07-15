@@ -3,7 +3,7 @@
   "extends": [
     "local>celo-org/.github:renovate-config"
   ],
-  "prCreation": "approval",
+  "prCreation": "not-pending",
   "prConcurrentLimit": 2,
   "minimumReleaseAge": "5 days",
   "rangeStrategy": "bump",
