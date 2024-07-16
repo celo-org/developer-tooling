@@ -1,4 +1,4 @@
-import { hotfixToHash, ProposalBuilder, ProposalTransactionJSON } from '@celo/governance'
+import { ProposalBuilder, ProposalTransactionJSON } from '@celo/governance'
 import { trimLeading0x } from '@celo/utils/lib/address'
 import { Flags } from '@oclif/core'
 import { readFileSync } from 'fs-extra'
@@ -42,11 +42,12 @@ export default class HashHotfix extends BaseCommand {
     }
 
     // Combine with the salt and hash the proposal.
+    const governance = await kit.contracts.getGovernance()
     const saltBuff = Buffer.from(trimLeading0x(res.flags.salt), 'hex')
     console.log(`salt: ${res.flags.salt}, buf: ${saltBuff.toString('hex')}`)
-    const hash = hotfixToHash(kit, hotfix, saltBuff)
+    const hash = await governance.getHotfixHash(hotfix, saltBuff)
 
     // Print the hash to the console.
-    printValueMap({ hash: '0x' + hash.toString('hex') })
+    printValueMap({ hash })
   }
 }

@@ -15,7 +15,7 @@ import PrepareHotfix from './preparehotfix'
 process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvil('governance:preparehotfix cmd', (web3: Web3) => {
-  const HOTFIX_HASH = '0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d'
+  const HOTFIX_HASH = '0x8ad3719bb2577b277bcafc1f00ac2f1c3fa5e565173303684d0a8d4f3661680c'
   const HOTFIX_BUFFER = hexToBuffer(HOTFIX_HASH)
   const EXECUTION_TIME_LIMIT = 86400
 

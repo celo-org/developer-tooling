@@ -895,6 +895,8 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<Governance> {
     )
   }
 
+  getHotfixHash = proxyCall(this.contract.methods.getHotfixHash, hotfixToParams)
+
   /**
    * Returns approved, executed, and prepared status associated with a given hotfix.
    * @param hash keccak256 hash of hotfix's associated abi encoded transactions
