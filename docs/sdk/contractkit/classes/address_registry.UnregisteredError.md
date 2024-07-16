@@ -133,7 +133,7 @@ Error.prepareStackTrace
 
 #### Defined in
 
-packages/sdk/contractkit/node_modules/@types/node/globals.d.ts:11
+node_modules/@types/node/globals.d.ts:11
 
 ___
 
@@ -147,7 +147,7 @@ Error.stackTraceLimit
 
 #### Defined in
 
-packages/sdk/contractkit/node_modules/@types/node/globals.d.ts:13
+node_modules/@types/node/globals.d.ts:13
 
 ## Methods
 
@@ -174,4 +174,4 @@ Error.captureStackTrace
 
 #### Defined in
 
-packages/sdk/contractkit/node_modules/@types/node/globals.d.ts:4
+node_modules/@types/node/globals.d.ts:4

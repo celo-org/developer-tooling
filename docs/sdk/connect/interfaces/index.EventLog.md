@@ -26,7 +26,7 @@
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-core/types/index.d.ts:231
+node_modules/web3-core/types/index.d.ts:231
 
 ___
 
@@ -36,7 +36,7 @@ ___
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-core/types/index.d.ts:236
+node_modules/web3-core/types/index.d.ts:236
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-core/types/index.d.ts:237
+node_modules/web3-core/types/index.d.ts:237
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-core/types/index.d.ts:230
+node_modules/web3-core/types/index.d.ts:230
 
 ___
 
@@ -66,7 +66,7 @@ ___
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-core/types/index.d.ts:233
+node_modules/web3-core/types/index.d.ts:233
 
 ___
 
@@ -83,7 +83,7 @@ ___
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-core/types/index.d.ts:238
+node_modules/web3-core/types/index.d.ts:238
 
 ___
 
@@ -93,7 +93,7 @@ ___
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-core/types/index.d.ts:232
+node_modules/web3-core/types/index.d.ts:232
 
 ___
 
@@ -103,7 +103,7 @@ ___
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-core/types/index.d.ts:235
+node_modules/web3-core/types/index.d.ts:235
 
 ___
 
@@ -113,4 +113,4 @@ ___
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-core/types/index.d.ts:234
+node_modules/web3-core/types/index.d.ts:234

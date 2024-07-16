@@ -1,5 +1,38 @@
 # @celo/wallet-ledger
 
+## 6.0.0-beta.3
+
+### Patch Changes
+
+- [#288](https://github.com/celo-org/developer-tooling/pull/288) [`d5b1508`](https://github.com/celo-org/developer-tooling/commit/d5b1508d7d08a99f6bb6deb569ec8b89194de2b9) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Change git url
+
+- Updated dependencies []:
+  - @celo/wallet-base@6.0.0-beta.3
+  - @celo/wallet-remote@6.0.0-beta.3
+
+## 6.0.0-beta.2
+
+### Minor Changes
+
+- [#264](https://github.com/celo-org/developer-tooling/pull/264) [`59f4b42`](https://github.com/celo-org/developer-tooling/commit/59f4b42029699861e91dd2214c40173f70de279e) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Add support for serializing, sending, parsing and deserializing cip66 transactions. This tx type is preffered over cip64 when paying for gas with tokens. Like eip1559 maxFeePerGass and maxPriorityFeePerGas are denominated in CELO. To create an cip66 transaction with Contractkit call the `kit.populateMaxFeeInToken` method with your transaction and then send it.
+
+### Patch Changes
+
+- Updated dependencies [[`59f4b42`](https://github.com/celo-org/developer-tooling/commit/59f4b42029699861e91dd2214c40173f70de279e)]:
+  - @celo/wallet-base@6.0.0-beta.2
+  - @celo/connect@6.0.0-beta.1
+  - @celo/wallet-remote@6.0.0-beta.2
+
+## 6.0.0-beta.1
+
+### Patch Changes
+
+- [#283](https://github.com/celo-org/developer-tooling/pull/283) [`6d2a838`](https://github.com/celo-org/developer-tooling/commit/6d2a838a80a51007d75768c77d62a861f2cec136) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Change the @ledgerhq/hw-app-eth dependency to our own fork
+
+- Updated dependencies []:
+  - @celo/wallet-base@6.0.0-beta.1
+  - @celo/wallet-remote@6.0.0-beta.1
+
 ## 6.0.0-beta.0
 
 ### Patch Changes

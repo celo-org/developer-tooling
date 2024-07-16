@@ -119,7 +119,13 @@ describe('Transaction Utils', () => {
         )
       }
     })
-
+    test('Checking maxFeeInFeeCurrency', async () => {
+      if (celoTransaction.maxFeeInFeeCurrency != null) {
+        expect(recoveredTransaction?.maxFeeInFeeCurrency).toEqual(
+          celoTransaction.maxFeeInFeeCurrency
+        )
+      }
+    })
     test('Checking data', async () => {
       if (celoTransaction.data != null) {
         expect(recoveredTransaction?.data!.toLowerCase()).toEqual(
@@ -145,6 +151,8 @@ describe('Transaction Utils', () => {
         description.push(`Testing Legacy with gas price ${celoTransaction.gasPrice}`)
       } else if (celoTransaction.feeCurrency != undefined) {
         description.push('Testing CIP64 with')
+      } else if (celoTransaction.maxFeeInFeeCurrency != undefined) {
+        description.push('Testing CIP66 with')
       } else {
         description.push(`Testing EIP1559 with maxFeePerGas ${celoTransaction.maxFeePerGas}`)
       }
@@ -156,10 +164,15 @@ describe('Transaction Utils', () => {
         description.push(`fee currency: ${celoTransaction.feeCurrency}`)
       }
 
+      if (celoTransaction.maxFeeInFeeCurrency != undefined) {
+        description.push(`maxFeeInFeeCurrency currency: ${celoTransaction.maxFeeInFeeCurrency}`)
+      }
+
       return description.join(' ')
     }
     // Test all possible combinations for rigor.
     for (let i = 0; i < 7; i++) {
+      const shouldHaveFeeCurrency = i > 1 && i % 2 === 0
       const celoTransaction: CeloTx = {
         from,
         to,
@@ -170,7 +183,9 @@ describe('Transaction Utils', () => {
         maxPriorityFeePerGas: i > 1 ? gasPrice : undefined,
         chainId,
         gas,
-        feeCurrency: i > 1 && i % 2 === 0 ? feeCurrency : undefined,
+        maxFeeInFeeCurrency:
+          shouldHaveFeeCurrency && i % 6 === 1 ? BigInt(gasPrice) * BigInt(gas) : undefined,
+        feeCurrency: shouldHaveFeeCurrency ? feeCurrency : undefined,
         data: i % 3 === 0 ? data : undefined,
       }
       describe(transactionDescription(celoTransaction), () => {

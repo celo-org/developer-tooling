@@ -24,7 +24,7 @@ Number of times the task has been executed (starts in 1)
 
 #### Defined in
 
-base/lib/task.d.ts:27
+packages/sdk/base/lib/task.d.ts:27
 
 ## Methods
 
@@ -40,4 +40,4 @@ Flag task to be stopped. Might not be inmediate
 
 #### Defined in
 
-base/lib/task.d.ts:29
+packages/sdk/base/lib/task.d.ts:29

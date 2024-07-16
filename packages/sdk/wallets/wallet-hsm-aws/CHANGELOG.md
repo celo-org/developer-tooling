@@ -1,5 +1,33 @@
 # @celo/wallet-hsm-aws
 
+## 6.0.0-beta.3
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @celo/wallet-base@6.0.0-beta.3
+  - @celo/wallet-hsm@6.0.0-beta.3
+  - @celo/wallet-remote@6.0.0-beta.3
+
+## 6.0.0-beta.2
+
+### Patch Changes
+
+- Updated dependencies [[`59f4b42`](https://github.com/celo-org/developer-tooling/commit/59f4b42029699861e91dd2214c40173f70de279e)]:
+  - @celo/wallet-base@6.0.0-beta.2
+  - @celo/connect@6.0.0-beta.1
+  - @celo/wallet-hsm@6.0.0-beta.2
+  - @celo/wallet-remote@6.0.0-beta.2
+
+## 6.0.0-beta.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @celo/wallet-base@6.0.0-beta.1
+  - @celo/wallet-hsm@6.0.0-beta.1
+  - @celo/wallet-remote@6.0.0-beta.1
+
 ## 6.0.0-beta.0
 
 ### Patch Changes

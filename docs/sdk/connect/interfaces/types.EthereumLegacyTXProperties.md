@@ -38,7 +38,7 @@ CommonTXProperties.gas
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:57](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L57)
+[packages/sdk/connect/src/types.ts:60](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L60)
 
 ___
 
@@ -48,7 +48,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:84](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L84)
+[packages/sdk/connect/src/types.ts:93](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L93)
 
 ___
 
@@ -62,7 +62,7 @@ CommonTXProperties.hash
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:64](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L64)
+[packages/sdk/connect/src/types.ts:67](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L67)
 
 ___
 
@@ -76,7 +76,7 @@ CommonTXProperties.input
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:60](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L60)
+[packages/sdk/connect/src/types.ts:63](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L63)
 
 ___
 
@@ -90,7 +90,7 @@ CommonTXProperties.nonce
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:56](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L56)
+[packages/sdk/connect/src/types.ts:59](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L59)
 
 ___
 
@@ -104,7 +104,7 @@ CommonTXProperties.r
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:61](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L61)
+[packages/sdk/connect/src/types.ts:64](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L64)
 
 ___
 
@@ -118,7 +118,7 @@ CommonTXProperties.s
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:62](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L62)
+[packages/sdk/connect/src/types.ts:65](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L65)
 
 ___
 
@@ -132,7 +132,7 @@ CommonTXProperties.to
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:58](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L58)
+[packages/sdk/connect/src/types.ts:61](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L61)
 
 ___
 
@@ -146,7 +146,7 @@ CommonTXProperties.type
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:85](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L85)
+[packages/sdk/connect/src/types.ts:94](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L94)
 
 ___
 
@@ -160,7 +160,7 @@ CommonTXProperties.v
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:63](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L63)
+[packages/sdk/connect/src/types.ts:66](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L66)
 
 ___
 
@@ -174,4 +174,4 @@ CommonTXProperties.value
 
 #### Defined in
 
-[packages/sdk/connect/src/types.ts:59](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L59)
+[packages/sdk/connect/src/types.ts:62](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/types.ts#L62)

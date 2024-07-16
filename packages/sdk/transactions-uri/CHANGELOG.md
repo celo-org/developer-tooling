@@ -1,5 +1,11 @@
 # @celo/transactions-uri
 
+## 5.0.10-beta.1
+
+### Patch Changes
+
+- [#278](https://github.com/celo-org/developer-tooling/pull/278) [`3f5f65d`](https://github.com/celo-org/developer-tooling/commit/3f5f65d7328117e92a870a3f14124c68ee03c182) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Bump bn.js
+
 ## 5.0.10-beta.0
 
 ### Patch Changes

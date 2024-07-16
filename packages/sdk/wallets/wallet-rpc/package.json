@@ -1,6 +1,6 @@
 {
   "name": "@celo/wallet-rpc",
-  "version": "6.0.0-beta.0",
+  "version": "6.0.0-beta.3",
   "description": "Geth RPC wallet implementation",
   "author": "Celo",
   "license": "Apache-2.0",
@@ -17,23 +17,23 @@
     "build": "yarn run --top-level tsc -b .",
     "clean": "yarn run --top-level tsc -b . --clean",
     "docs": "yarn run --top-level typedoc",
-    "test": "yarn run --top-level jest --runInBand",
+    "test": "yarn run --top-level jest --runInBand --forceExit",
     "lint": "yarn run --top-level eslint -c .eslintrc.js ",
     "prepublishOnly": "yarn build"
   },
   "dependencies": {
     "@celo/base": "^6.1.0-beta.0",
-    "@celo/connect": "^6.0.0-beta.0",
+    "@celo/connect": "^6.0.0-beta.1",
     "@celo/utils": "^7.0.0-beta.0",
-    "@celo/wallet-base": "^6.0.0-beta.0",
-    "@celo/wallet-remote": "^6.0.0-beta.0",
+    "@celo/wallet-base": "^6.0.0-beta.3",
+    "@celo/wallet-remote": "^6.0.0-beta.3",
     "@types/bn.js": "^5.1.0",
     "bignumber.js": "^9.0.0",
     "debug": "^4.1.1"
   },
   "devDependencies": {
-    "@celo/contractkit": "^8.1.0-beta.0",
-    "@celo/dev-utils": "0.0.4-beta.0",
+    "@celo/contractkit": "^8.1.0-beta.1",
+    "@celo/dev-utils": "0.0.4-beta.1",
     "@celo/typescript": "workspace:^",
     "@types/debug": "^4.1.12",
     "bn.js": "^5.1.0",

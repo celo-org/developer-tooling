@@ -10,6 +10,7 @@
 - [UnlockableWallet](index.md#unlockablewallet)
 - [Wallet](index.md#wallet)
 - [WalletBase](index.md#walletbase)
+- [assertLength](index.md#assertlength)
 - [chainIdTransformationForSigning](index.md#chainidtransformationforsigning)
 - [decodeSig](index.md#decodesig)
 - [determineTXType](index.md#determinetxtype)
@@ -23,7 +24,9 @@
 - [handleData](index.md#handledata)
 - [handleHexString](index.md#handlehexstring)
 - [handleNumber](index.md#handlenumber)
+- [handleStringNumber](index.md#handlestringnumber)
 - [isCIP64](index.md#iscip64)
+- [isCIP66](index.md#iscip66)
 - [isEIP1559](index.md#iseip1559)
 - [isPriceToLow](index.md#ispricetolow)
 - [publicKeyPrefix](index.md#publickeyprefix)
@@ -60,6 +63,12 @@ ___
 ### WalletBase
 
 Re-exports [WalletBase](../classes/wallet_base.WalletBase.md)
+
+___
+
+### assertLength
+
+Re-exports [assertLength](signing_utils.md#assertlength)
 
 ___
 
@@ -141,9 +150,21 @@ Re-exports [handleNumber](signing_utils.md#handlenumber)
 
 ___
 
+### handleStringNumber
+
+Re-exports [handleStringNumber](signing_utils.md#handlestringnumber)
+
+___
+
 ### isCIP64
 
 Re-exports [isCIP64](signing_utils.md#iscip64)
+
+___
+
+### isCIP66
+
+Re-exports [isCIP66](signing_utils.md#iscip66)
 
 ___
 

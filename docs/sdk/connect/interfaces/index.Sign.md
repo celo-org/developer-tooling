@@ -31,7 +31,7 @@
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-core/types/index.d.ts:399
+node_modules/web3-core/types/index.d.ts:399
 
 ___
 
@@ -45,7 +45,7 @@ SignedTransaction.messageHash
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-core/types/index.d.ts:36
+node_modules/web3-core/types/index.d.ts:36
 
 ___
 
@@ -59,7 +59,7 @@ SignedTransaction.r
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-core/types/index.d.ts:37
+node_modules/web3-core/types/index.d.ts:37
 
 ___
 
@@ -73,7 +73,7 @@ SignedTransaction.rawTransaction
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-core/types/index.d.ts:40
+node_modules/web3-core/types/index.d.ts:40
 
 ___
 
@@ -87,7 +87,7 @@ SignedTransaction.s
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-core/types/index.d.ts:38
+node_modules/web3-core/types/index.d.ts:38
 
 ___
 
@@ -97,7 +97,7 @@ ___
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-core/types/index.d.ts:400
+node_modules/web3-core/types/index.d.ts:400
 
 ___
 
@@ -111,7 +111,7 @@ SignedTransaction.transactionHash
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-core/types/index.d.ts:41
+node_modules/web3-core/types/index.d.ts:41
 
 ___
 
@@ -125,4 +125,4 @@ SignedTransaction.v
 
 #### Defined in
 
-packages/sdk/connect/node_modules/web3-core/types/index.d.ts:39
+node_modules/web3-core/types/index.d.ts:39

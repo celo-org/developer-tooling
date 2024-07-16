@@ -31,7 +31,7 @@
 
 #### Defined in
 
-[utils/src/io.ts:66](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/io.ts#L66)
+[packages/sdk/utils/src/io.ts:66](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/io.ts#L66)
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 #### Defined in
 
-[utils/src/io.ts:65](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/io.ts#L65)
+[packages/sdk/utils/src/io.ts:65](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/io.ts#L65)
 
 ## Variables
 
@@ -51,7 +51,7 @@ ___
 
 #### Defined in
 
-[utils/src/io.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/io.ts#L38)
+[packages/sdk/utils/src/io.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/io.ts#L38)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[utils/src/io.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/io.ts#L23)
+[packages/sdk/utils/src/io.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/io.ts#L23)
 
 ___
 
@@ -71,7 +71,7 @@ ___
 
 #### Defined in
 
-[utils/src/io.ts:50](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/io.ts#L50)
+[packages/sdk/utils/src/io.ts:50](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/io.ts#L50)
 
 ___
 
@@ -81,7 +81,7 @@ ___
 
 #### Defined in
 
-[utils/src/io.ts:63](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/io.ts#L63)
+[packages/sdk/utils/src/io.ts:63](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/io.ts#L63)
 
 ___
 
@@ -91,7 +91,7 @@ ___
 
 #### Defined in
 
-[utils/src/io.ts:62](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/io.ts#L62)
+[packages/sdk/utils/src/io.ts:62](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/io.ts#L62)
 
 ___
 
@@ -101,7 +101,7 @@ ___
 
 #### Defined in
 
-base/lib/io.d.ts:1
+packages/sdk/base/lib/io.d.ts:1
 
 ___
 
@@ -111,7 +111,7 @@ ___
 
 #### Defined in
 
-[utils/src/io.ts:11](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/io.ts#L11)
+[packages/sdk/utils/src/io.ts:11](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/io.ts#L11)
 
 ## Functions
 
@@ -131,4 +131,4 @@ ___
 
 #### Defined in
 
-base/lib/io.d.ts:3
+packages/sdk/base/lib/io.d.ts:3

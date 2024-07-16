@@ -29,7 +29,7 @@
 
 #### Defined in
 
-[utils/src/parsing.ts:7](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/parsing.ts#L7)
+[packages/sdk/utils/src/parsing.ts:7](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/utils/src/parsing.ts#L7)
 
 ___
 
@@ -52,7 +52,7 @@ Parses an "array of strings" that is returned from a Solidity function
 
 #### Defined in
 
-base/lib/parsing.d.ts:8
+packages/sdk/base/lib/parsing.d.ts:8
 
 ___
 
@@ -72,4 +72,4 @@ ___
 
 #### Defined in
 
-base/lib/parsing.d.ts:1
+packages/sdk/base/lib/parsing.d.ts:1
