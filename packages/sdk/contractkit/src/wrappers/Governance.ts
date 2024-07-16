@@ -412,6 +412,19 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<Governance> {
   getApproverMultisig = () =>
     this.getApprover().then((address) => this.contracts.getMultiSig(address))
 
+  /**
+   * Returns the security council address for hotfixes.
+   */
+  getSecurityCouncil = proxyCall(
+    this.contract.methods.securityCouncil as () => CeloTxObject<StrongAddress>
+  )
+
+  /**
+   * Returns the security council multisig contract for hotfixes.
+   */
+  getSecurityCouncilMultisig = () =>
+    this.getSecurityCouncil().then((address) => this.contracts.getMultiSig(address))
+
   getProposalStage = async (proposalID: BigNumber.Value): Promise<ProposalStage> => {
     const queue = await this.getQueue()
     const existsInQueue = queue.find((u) => u.proposalID === proposalID) !== undefined

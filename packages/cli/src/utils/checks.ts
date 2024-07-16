@@ -148,6 +148,14 @@ class CheckBuilder {
       this.withGovernance(async (governance) => eqAddress(await governance.getApprover(), account))
     )
 
+  isSecurityCouncil = (account: Address) =>
+    this.addCheck(
+      `${account} is security council address`,
+      this.withGovernance(async (governance) =>
+        eqAddress(await governance.getSecurityCouncil(), account)
+      )
+    )
+
   proposalExists = (proposalID: string) =>
     this.addCheck(
       `${proposalID} is an existing proposal`,
@@ -204,6 +212,16 @@ class CheckBuilder {
     this.addCheck(
       `Hotfix 0x${hash.toString('hex')} is not already approved`,
       this.withGovernance(async (governance) => !(await governance.getHotfixRecord(hash)).approved)
+    )
+
+  hotfixNotApprovedBySecurityCouncil = (hash: Buffer) =>
+    this.addCheck(
+      `Hotfix 0x${hash.toString('hex')} is not already approved by security council`,
+      this.withGovernance(async (governance) => {
+        const record = await governance.getHotfixRecord(hash)
+
+        return !(record as HotfixRecord).councilApproved
+      })
     )
 
   canSign = (account: Address) =>

@@ -242,11 +242,11 @@ export abstract class BaseCommand extends Command {
     return super.finally(arg)
   }
 
-  protected async isCel2() {
+  protected async isCel2(): Promise<boolean> {
     if (this.cel2 === null) {
       this.cel2 = await isCel2(await this.getWeb3())
     }
 
-    return this.cel2
+    return !!this.cel2
   }
 }
