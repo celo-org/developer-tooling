@@ -29,7 +29,8 @@
     "lint": "yarn run --top-level eslint -c .eslintrc.js ",
     "prepublish": "",
     "prepack": "yarn run build && oclif manifest && oclif readme",
-    "test": "TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --runInBand --workerIdleMemoryLimit=0.1 --forceExit"
+    "test": "TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --runInBand --forceExit",
+    "test-ci": "TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --runInBand --workerIdleMemoryLimit=0.1 --forceExit"
   },
   "dependencies": {
     "@celo/abis": "11.0.0",
