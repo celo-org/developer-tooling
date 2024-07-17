@@ -15,6 +15,5 @@
   "include": [
     "src/**/*", 
     "src/migration-override.json",
-    "src/devchain.json",
   ]
 }
