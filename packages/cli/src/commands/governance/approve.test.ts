@@ -174,27 +174,31 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
         )
       ).rejects.not.toBeUndefined()
       const schedule = await governance.proposalSchedule(proposalId)
-      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`[
-  [
-    "Running Checks:",
-  ],
-  [
-    "   ✔  0x1B46C60e8B3B427d91d35df22FCfc3FF36407f35 is approver address ",
-  ],
-  [
-    "   ✔  2 is an existing proposal ",
-  ],
-  [
-    "Expiration: ${schedule.Expiration?.toString()} (~${schedule.Expiration?.toExponential(3)})
-Queued: ${schedule.Queued?.toString()} (~${schedule.Queued?.toExponential(3)})",
-  ],
-  [
-    "   ✘  2 is in stage Referendum or Execution ",
-  ],
-  [
-    "   ✔  2 not already approved ",
-  ],
-]`)
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
+        [
+          [
+            "Running Checks:",
+          ],
+          [
+            "   ✔  0x1B46C60e8B3B427d91d35df22FCfc3FF36407f35 is approver address ",
+          ],
+          [
+            "   ✔  2 is an existing proposal ",
+          ],
+          [
+            "Expiration: ${schedule.Expiration?.toString()} (~${schedule.Expiration?.toExponential(
+        3
+      )})
+        Queued: ${schedule.Queued?.toString()} (~${schedule.Queued?.toExponential(3)})",
+          ],
+          [
+            "   ✘  2 is in stage Referendum or Execution ",
+          ],
+          [
+            "   ✔  2 not already approved ",
+          ],
+        ]
+      `)
       logMock.mockClear()
 
       const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
@@ -208,42 +212,40 @@ Queued: ${schedule.Queued?.toString()} (~${schedule.Queued?.toExponential(3)})",
         ['--from', approver, '--proposalID', proposalId.toString()],
         web3
       )
-      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`[
-  [
-    "Running Checks:",
-  ],
-  [
-    "   ✔  0x1B46C60e8B3B427d91d35df22FCfc3FF36407f35 is approver address ",
-  ],
-  [
-    "   ✔  2 is an existing proposal ",
-  ],
-  [
-    "   ✔  2 is in stage Referendum or Execution ",
-  ],
-  [
-    "   ✔  2 not already approved ",
-  ],
-  [
-    "Expiration: ${schedule.Expiration?.toString()} (~${schedule.Expiration?.toExponential(3)})
-Queued: ${schedule.Queued?.toString()} (~${schedule.Queued?.toExponential(3)})",
-  ],
-  [
-    "All checks passed",
-  ],
-  [
-    "SendTransaction: approveTx",
-  ],
-  [
-    "txHash: 0xdad16fcc5fd26118df61f5a5832e737b33d72856167f0dc7720d95a04591cbe1",
-  ],
-  [
-    "ProposalApproved:",
-  ],
-  [
-    "proposalId: 2",
-  ],
-]`)
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
+        [
+          [
+            "Running Checks:",
+          ],
+          [
+            "   ✔  0x1B46C60e8B3B427d91d35df22FCfc3FF36407f35 is approver address ",
+          ],
+          [
+            "   ✔  2 is an existing proposal ",
+          ],
+          [
+            "   ✔  2 is in stage Referendum or Execution ",
+          ],
+          [
+            "   ✔  2 not already approved ",
+          ],
+          [
+            "All checks passed",
+          ],
+          [
+            "SendTransaction: approveTx",
+          ],
+          [
+            "txHash: 0xdad16fcc5fd26118df61f5a5832e737b33d72856167f0dc7720d95a04591cbe1",
+          ],
+          [
+            "ProposalApproved:",
+          ],
+          [
+            "proposalId: 2",
+          ],
+        ]
+      `)
     })
   })
 })
