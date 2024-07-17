@@ -125,7 +125,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
             "Running Checks:",
           ],
           [
-            "   ✔  0x1B46C60e8B3B427d91d35df22FCfc3FF36407f35 is approver address ",
+            "   ✔  0x078B932B0d1e56554974A431B8B33973D94E002b is approver address ",
           ],
           [
             "   ✘  0x5409ED021D9299bf6814279A6A1411A7e866A631 is approver multisig signatory ",
@@ -335,7 +335,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
             "SendTransaction: approveTx",
           ],
           [
-            "txHash: 0xd2de9b8011c6f68c9d6bed06a7a5846ce66af5ff8c58df62fc315729cdb36e64",
+            "txHash: 0xdf85b6bb3755e1ec2211a7f9b37203d3a89221b594da7747a1f453f6cfdc2aa5",
           ],
           [
             "HotfixApproved:",
@@ -411,7 +411,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
             "SendTransaction: approveTx",
           ],
           [
-            "txHash: 0xe7a13efbda7de481ba50e1cd4a546cb4d50dc3cc68112b10d8ec61b0bc76b611",
+            "txHash: 0x46d5958b1b06239eccb901bb3d35bba371c2520df3a97f9e8cc5f9a289210c05",
           ],
           [
             "HotfixApproved:",
@@ -549,7 +549,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
             "Running Checks:",
           ],
           [
-            "   ✔  0x1B46C60e8B3B427d91d35df22FCfc3FF36407f35 is approver address ",
+            "   ✔  0x078B932B0d1e56554974A431B8B33973D94E002b is approver address ",
           ],
           [
             "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is approver multisig signatory ",
@@ -567,7 +567,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
             "SendTransaction: approveTx",
           ],
           [
-            "txHash: 0xc1c812085a0d6a5e06eb3a395ff836f48b095b73308df4beaeffb7ff6f6d1d90",
+            "txHash: 0xe292cb126f682d68b47d59f65138f160caf6234a57db4347fa6a2a0806795fec",
           ],
         ]
       `)
