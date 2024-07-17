@@ -9,6 +9,11 @@ import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx, failWith } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
+enum HotfixApprovalType {
+  APPROVER = 'approver',
+  SECURITY_COUNCIL = 'securityCouncil',
+}
+
 export default class Approve extends BaseCommand {
   static description = 'Approve a dequeued governance proposal (or hotfix)'
 
@@ -35,8 +40,7 @@ export default class Approve extends BaseCommand {
       description:
         'Determines which type of hotfix approval (approver or security council) to use.',
       dependsOn: ['hotfix'],
-      // TODO add enum or constants
-      options: ['approver', 'securityCouncil'],
+      options: [HotfixApprovalType.APPROVER, HotfixApprovalType.SECURITY_COUNCIL],
       multiple: false,
       required: false,
     })(),
@@ -69,14 +73,13 @@ export default class Approve extends BaseCommand {
     const approver = useMultiSig ? governanceApproverMultiSig!.address : account
     const isCel2 = await this.isCel2()
 
-    // TODO consider passing whole res object or flags object
     await addDefaultChecks(
       checkBuilder,
       governance,
       isCel2,
       !!hotfix,
       useMultiSig,
-      approvalType as 'approver' | 'securityCouncil',
+      approvalType as HotfixApprovalType,
       hotfix as string,
       approver,
       account,
@@ -150,7 +153,7 @@ const addDefaultChecks = async (
   isCel2: boolean,
   isHotfix: boolean,
   useMultiSig: boolean,
-  approvalType: 'approver' | 'securityCouncil',
+  approvalType: HotfixApprovalType,
   hotfix: string,
   approver: StrongAddress,
   account: StrongAddress,
@@ -159,7 +162,7 @@ const addDefaultChecks = async (
   if (isHotfix && isCel2) {
     const hotfixBuf = toBuffer(hotfix) as Buffer
 
-    if (approvalType === 'approver' || approvalType === undefined) {
+    if (approvalType === HotfixApprovalType.APPROVER || approvalType === undefined) {
       if (useMultiSig) {
         const approverMultisig = await governance.getApproverMultisig()
 
