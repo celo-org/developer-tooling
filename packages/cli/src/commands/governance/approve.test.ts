@@ -95,7 +95,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
           "   ✔  1 is an existing proposal ",
         ],
         [
-          "   ✔  1 is in stage Referendum ",
+          "   ✔  1 is in stage Referendum or Execution ",
         ],
         [
           "   ✔  1 not already approved ",
@@ -133,7 +133,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
           "   ✔  1 is an existing proposal ",
         ],
         [
-          "   ✔  1 is in stage Referendum ",
+          "   ✔  1 is in stage Referendum or Execution ",
         ],
         [
           "   ✔  1 not already approved ",
@@ -152,7 +152,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
   })
 
-  describe.only('approve succeeds if stage is "Referendum or Execution" or "Approval"', () => {
+  describe('approve succeeds if stage is "Referendum or Execution" or "Approval"', () => {
     test('can be approved if version >= 3 (default)', async () => {
       const logMock = jest.spyOn(console, 'log')
 
@@ -212,6 +212,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
         ['--from', approver, '--proposalID', proposalId.toString()],
         web3
       )
+      const txHash = stripAnsiCodes(logMock.mock.calls.at(-3)![0].split(':')[1].trim())
       expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
         [
           [
@@ -236,7 +237,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
             "SendTransaction: approveTx",
           ],
           [
-            "txHash: 0xdad16fcc5fd26118df61f5a5832e737b33d72856167f0dc7720d95a04591cbe1",
+            "txHash: ${txHash}",
           ],
           [
             "ProposalApproved:",
