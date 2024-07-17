@@ -67,11 +67,10 @@ export default class Approve extends BaseCommand {
     const governanceApproverMultiSig = useMultiSig
       ? await governance.getApproverMultisig()
       : undefined
-    const governanceSecurityCouncilMultiSig = useMultiSig
-      ? await governance.getSecurityCouncilMultisig()
-      : undefined
-    const approver = useMultiSig ? governanceApproverMultiSig!.address : account
     const isCel2 = await this.isCel2()
+    const governanceSecurityCouncilMultiSig =
+      useMultiSig && isCel2 ? await governance.getSecurityCouncilMultisig() : undefined
+    const approver = useMultiSig ? governanceApproverMultiSig!.address : account
 
     await addDefaultChecks(
       checkBuilder,
