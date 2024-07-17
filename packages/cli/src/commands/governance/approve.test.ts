@@ -1,6 +1,7 @@
 import { StrongAddress } from '@celo/base'
+import { Provider, getRandomId } from '@celo/connect'
 import { newKitFromWeb3 } from '@celo/contractkit'
-import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
+import { GovernanceWrapper, ProposalStage } from '@celo/contractkit/lib/wrappers/Governance'
 import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import { ux } from '@oclif/core'
@@ -12,6 +13,28 @@ import Approve from './approve'
 process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvil('governance:approve cmd', (web3: Web3) => {
+  function sendRawTx(method: string, params: any[]) {
+    return new Promise<string>((resolve, reject) => {
+      ;(kit.web3.currentProvider as Provider).send(
+        {
+          id: getRandomId(),
+          jsonrpc: '2.0',
+          method,
+          params,
+        },
+        (error, resp) => {
+          if (error) {
+            reject(error)
+          } else if (resp) {
+            resolve(resp.result as string)
+          } else {
+            reject(new Error('empty-response'))
+          }
+        }
+      )
+    })
+  }
+
   const kit = newKitFromWeb3(web3)
   const proposalID = '1'
   let minDeposit: string
@@ -127,5 +150,100 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
       ]
     `)
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
+  })
+
+  describe.only('approve succeeds if stage is "Referendum or Execution" or "Approval"', () => {
+    test('can be approved if version >= 3 (default)', async () => {
+      const logMock = jest.spyOn(console, 'log')
+
+      await governance
+        .propose([], 'https://example.com')
+        .sendAndWaitForReceipt({ value: minDeposit })
+
+      const approver = await governance.getApprover()
+      await sendRawTx('anvil_impersonateAccount', [approver])
+      await sendRawTx('anvil_setBalance', [approver, '0x10000000000000000000'])
+
+      let proposalId = (await governance.getQueue())[0].proposalID
+      await expect(governance.getProposalStage(proposalId)).resolves.toBe(ProposalStage.Queued)
+      await expect(
+        testLocallyWithWeb3Node(
+          Approve,
+          ['--from', approver, '--proposalID', proposalId.toString()],
+          web3
+        )
+      ).rejects.not.toBeUndefined()
+      const schedule = await governance.proposalSchedule(proposalId)
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`[
+  [
+    "Running Checks:",
+  ],
+  [
+    "   ✔  0x1B46C60e8B3B427d91d35df22FCfc3FF36407f35 is approver address ",
+  ],
+  [
+    "   ✔  2 is an existing proposal ",
+  ],
+  [
+    "Expiration: ${schedule.Expiration?.toString()} (~${schedule.Expiration?.toExponential(3)})
+Queued: ${schedule.Queued?.toString()} (~${schedule.Queued?.toExponential(3)})",
+  ],
+  [
+    "   ✘  2 is in stage Referendum or Execution ",
+  ],
+  [
+    "   ✔  2 not already approved ",
+  ],
+]`)
+      logMock.mockClear()
+
+      const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
+      await timeTravel(dequeueFrequency, web3)
+      await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
+
+      await governance.vote(proposalId, 'Yes')
+      await expect(governance.getProposalStage(proposalId)).resolves.toBe(ProposalStage.Referendum)
+      await testLocallyWithWeb3Node(
+        Approve,
+        ['--from', approver, '--proposalID', proposalId.toString()],
+        web3
+      )
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`[
+  [
+    "Running Checks:",
+  ],
+  [
+    "   ✔  0x1B46C60e8B3B427d91d35df22FCfc3FF36407f35 is approver address ",
+  ],
+  [
+    "   ✔  2 is an existing proposal ",
+  ],
+  [
+    "   ✔  2 is in stage Referendum or Execution ",
+  ],
+  [
+    "   ✔  2 not already approved ",
+  ],
+  [
+    "Expiration: ${schedule.Expiration?.toString()} (~${schedule.Expiration?.toExponential(3)})
+Queued: ${schedule.Queued?.toString()} (~${schedule.Queued?.toExponential(3)})",
+  ],
+  [
+    "All checks passed",
+  ],
+  [
+    "SendTransaction: approveTx",
+  ],
+  [
+    "txHash: 0xdad16fcc5fd26118df61f5a5832e737b33d72856167f0dc7720d95a04591cbe1",
+  ],
+  [
+    "ProposalApproved:",
+  ],
+  [
+    "proposalId: 2",
+  ],
+]`)
+    })
   })
 })
