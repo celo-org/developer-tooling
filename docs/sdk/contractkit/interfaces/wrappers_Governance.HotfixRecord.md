@@ -9,8 +9,9 @@
 ### Properties
 
 - [approved](wrappers_Governance.HotfixRecord.md#approved)
+- [councilApproved](wrappers_Governance.HotfixRecord.md#councilapproved)
 - [executed](wrappers_Governance.HotfixRecord.md#executed)
-- [preparedEpoch](wrappers_Governance.HotfixRecord.md#preparedepoch)
+- [executionTimeLimit](wrappers_Governance.HotfixRecord.md#executiontimelimit)
 
 ## Properties
 
@@ -20,7 +21,17 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:130](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L130)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:141](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L141)
+
+___
+
+### councilApproved
+
+• **councilApproved**: `boolean`
+
+#### Defined in
+
+[packages/sdk/contractkit/src/wrappers/Governance.ts:142](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L142)
 
 ___
 
@@ -30,14 +41,14 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:131](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L131)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:143](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L143)
 
 ___
 
-### preparedEpoch
+### executionTimeLimit
 
-• **preparedEpoch**: `BigNumber`
+• **executionTimeLimit**: `BigNumber`
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:132](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L132)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:144](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L144)
