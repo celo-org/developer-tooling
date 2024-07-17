@@ -9,7 +9,7 @@ import fs from 'fs'
 import path from 'path'
 import Web3 from 'web3'
 import { AbiItem, PROXY_ADMIN_ADDRESS } from '../../../../sdk/connect/lib'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { EXTRA_LONG_TIMEOUT_MS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Approve from './approve'
 import ExecuteHotfix from './executehotfix'
 import PrepareHotfix from './preparehotfix'
@@ -64,98 +64,102 @@ testWithAnvil('governance:executehotfix cmd', (web3: Web3) => {
     fs.rmSync(HOTFIX_TRANSACTIONS_FILE_PATH)
   })
 
-  it('should execute a hotfix successfuly', async () => {
-    const kit = newKitFromWeb3(web3)
-    const governanceWrapper = await kit.contracts.getGovernance()
-    const [approverAccount, securityCouncilAccount] = await web3.eth.getAccounts()
+  it(
+    'should execute a hotfix successfuly',
+    async () => {
+      const kit = newKitFromWeb3(web3)
+      const governanceWrapper = await kit.contracts.getGovernance()
+      const [approverAccount, securityCouncilAccount] = await web3.eth.getAccounts()
 
-    await setCode(web3, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
+      await setCode(web3, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
 
-    // send some funds to DEFAULT_OWNER_ADDRESS to execute transactions
-    await (
-      await kit.sendTransaction({
-        to: DEFAULT_OWNER_ADDRESS,
-        from: approverAccount,
-        value: web3.utils.toWei('1', 'ether'),
+      // send some funds to DEFAULT_OWNER_ADDRESS to execute transactions
+      await (
+        await kit.sendTransaction({
+          to: DEFAULT_OWNER_ADDRESS,
+          from: approverAccount,
+          value: web3.utils.toWei('1', 'ether'),
+        })
+      ).waitReceipt()
+
+      await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
+        // setHotfixExecutionTimeWindow to EXECUTION_TIME_LIMIT (86400)
+        await (
+          await kit.sendTransaction({
+            to: governanceWrapper.address,
+            from: DEFAULT_OWNER_ADDRESS,
+            data: '0x745407c80000000000000000000000000000000000000000000000000000000000015180',
+          })
+        ).waitReceipt()
+
+        // setApprover to 0x5409ED021D9299bf6814279A6A1411A7e866A631
+        await (
+          await kit.sendTransaction({
+            to: governanceWrapper.address,
+            from: DEFAULT_OWNER_ADDRESS,
+            data: `0x3156560e000000000000000000000000${approverAccount
+              .replace('0x', '')
+              .toLowerCase()}`,
+          })
+        ).waitReceipt()
+
+        // setSecurityCouncil to 0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb
+        await (
+          await kit.sendTransaction({
+            to: governanceWrapper.address,
+            from: DEFAULT_OWNER_ADDRESS,
+            data: `0x1c1083e2000000000000000000000000${securityCouncilAccount
+              .replace('0x', '')
+              .toLowerCase()}`,
+          })
+        ).waitReceipt()
       })
-    ).waitReceipt()
 
-    await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
-      // setHotfixExecutionTimeWindow to EXECUTION_TIME_LIMIT (86400)
-      await (
-        await kit.sendTransaction({
-          to: governanceWrapper.address,
-          from: DEFAULT_OWNER_ADDRESS,
-          data: '0x745407c80000000000000000000000000000000000000000000000000000000000015180',
-        })
-      ).waitReceipt()
+      await testLocallyWithWeb3Node(
+        Approve,
+        ['--hotfix', HOTFIX_HASH, '--from', approverAccount],
+        web3
+      )
 
-      // setApprover to 0x5409ED021D9299bf6814279A6A1411A7e866A631
-      await (
-        await kit.sendTransaction({
-          to: governanceWrapper.address,
-          from: DEFAULT_OWNER_ADDRESS,
-          data: `0x3156560e000000000000000000000000${approverAccount
-            .replace('0x', '')
-            .toLowerCase()}`,
-        })
-      ).waitReceipt()
+      await testLocallyWithWeb3Node(
+        Approve,
+        ['--hotfix', HOTFIX_HASH, '--from', securityCouncilAccount, '--type', 'securityCouncil'],
+        web3
+      )
 
-      // setSecurityCouncil to 0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb
-      await (
-        await kit.sendTransaction({
-          to: governanceWrapper.address,
-          from: DEFAULT_OWNER_ADDRESS,
-          data: `0x1c1083e2000000000000000000000000${securityCouncilAccount
-            .replace('0x', '')
-            .toLowerCase()}`,
-        })
-      ).waitReceipt()
-    })
+      await testLocallyWithWeb3Node(
+        PrepareHotfix,
+        ['--hash', HOTFIX_HASH, '--from', approverAccount],
+        web3
+      )
 
-    await testLocallyWithWeb3Node(
-      Approve,
-      ['--hotfix', HOTFIX_HASH, '--from', approverAccount],
-      web3
-    )
+      const testTransactionsContract = new web3.eth.Contract(
+        TEST_TRANSACTIONS_ABI,
+        PROXY_ADMIN_ADDRESS
+      )
 
-    await testLocallyWithWeb3Node(
-      Approve,
-      ['--hotfix', HOTFIX_HASH, '--from', securityCouncilAccount, '--type', 'securityCouncil'],
-      web3
-    )
+      // TestTransaction contract returns 0 if a value is not set for a given key
+      expect(
+        await testTransactionsContract.methods.getValue(HOTFIX_TRANSACTION_TEST_KEY).call()
+      ).toEqual('0')
 
-    await testLocallyWithWeb3Node(
-      PrepareHotfix,
-      ['--hash', HOTFIX_HASH, '--from', approverAccount],
-      web3
-    )
+      await testLocallyWithWeb3Node(
+        ExecuteHotfix,
+        [
+          '--jsonTransactions',
+          HOTFIX_TRANSACTIONS_FILE_PATH,
+          '--from',
+          approverAccount,
+          '--salt',
+          SALT,
+        ],
+        web3
+      )
 
-    const testTransactionsContract = new web3.eth.Contract(
-      TEST_TRANSACTIONS_ABI,
-      PROXY_ADMIN_ADDRESS
-    )
-
-    // TestTransaction contract returns 0 if a value is not set for a given key
-    expect(
-      await testTransactionsContract.methods.getValue(HOTFIX_TRANSACTION_TEST_KEY).call()
-    ).toEqual('0')
-
-    await testLocallyWithWeb3Node(
-      ExecuteHotfix,
-      [
-        '--jsonTransactions',
-        HOTFIX_TRANSACTIONS_FILE_PATH,
-        '--from',
-        approverAccount,
-        '--salt',
-        SALT,
-      ],
-      web3
-    )
-
-    expect(
-      await testTransactionsContract.methods.getValue(HOTFIX_TRANSACTION_TEST_KEY).call()
-    ).toEqual(HOTFIX_TRANSACTION_TEST_VALUE)
-  })
+      expect(
+        await testTransactionsContract.methods.getValue(HOTFIX_TRANSACTION_TEST_KEY).call()
+      ).toEqual(HOTFIX_TRANSACTION_TEST_VALUE)
+    },
+    EXTRA_LONG_TIMEOUT_MS
+  )
 })
