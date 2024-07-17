@@ -25,6 +25,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
       const governance = await kit.contracts.getGovernance()
       const writeMock = jest.spyOn(ux.write, 'stdout')
       const logMock = jest.spyOn(console, 'log')
+      const multisig = await governance.getApproverMultisig()
 
       await setupL2(web3)
 
@@ -38,12 +39,15 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
           })
         ).waitReceipt()
 
-        // setSecurityCouncil to 0x1B46C60e8B3B427d91d35df22FCfc3FF36407f35 (multisig address)
+        // setSecurityCouncil to multisig address
         await (
           await kit.sendTransaction({
             to: governance.address,
             from: DEFAULT_OWNER_ADDRESS,
-            data: '0x1c1083e20000000000000000000000001b46c60e8b3b427d91d35df22fcfc3ff36407f35',
+            // cast calldata "setSecurityCouncil(address)" <multisig-address>
+            data: `0x1c1083e2000000000000000000000000${multisig.address
+              .replace('0x', '')
+              .toLowerCase()}`,
           })
         ).waitReceipt()
       })
@@ -78,7 +82,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
             "Running Checks:",
           ],
           [
-            "   ✔  0x1B46C60e8B3B427d91d35df22FCfc3FF36407f35 is security council address ",
+            "   ✔  0x078B932B0d1e56554974A431B8B33973D94E002b is security council address ",
           ],
           [
             "   ✘  0x5409ED021D9299bf6814279A6A1411A7e866A631 is security council multisig signatory ",
@@ -431,6 +435,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
       const governance = await kit.contracts.getGovernance()
       const writeMock = jest.spyOn(ux.write, 'stdout')
       const logMock = jest.spyOn(console, 'log')
+      const multisig = await governance.getApproverMultisig()
 
       await setupL2(web3)
       await changeMultiSigOwner(kit, accounts[0])
@@ -446,22 +451,22 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
           })
         ).waitReceipt()
 
-        // setSecurityCouncil to 0x1B46C60e8B3B427d91d35df22FCfc3FF36407f35 (multisig address)
+        // setSecurityCouncil to multisig address
         await (
           await kit.sendTransaction({
             to: governance.address,
             from: DEFAULT_OWNER_ADDRESS,
-            // cast calldata "setSecurityCouncil(address)" "0x1B46C60e8B3B427d91d35df22FCfc3FF36407f35"
-            data: '0x1c1083e20000000000000000000000001b46c60e8b3b427d91d35df22fcfc3ff36407f35',
+            // cast calldata "setSecurityCouncil(address)" <multisig-address>
+            data: `0x1c1083e2000000000000000000000000${multisig.address
+              .replace('0x', '')
+              .toLowerCase()}`,
           })
         ).waitReceipt()
       })
 
       // Sanity checks
       expect(await governance.getApprover()).toBe(accounts[0])
-      expect(await governance.getSecurityCouncil()).toBe(
-        '0x1B46C60e8B3B427d91d35df22FCfc3FF36407f35'
-      )
+      expect(await governance.getSecurityCouncil()).toEqual(multisig.address)
 
       await testLocallyWithWeb3Node(
         Approve,
@@ -485,13 +490,14 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
           "executionTimeLimit": "0",
         }
       `)
+
       expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
           ],
           [
-            "   ✔  0x1B46C60e8B3B427d91d35df22FCfc3FF36407f35 is security council address ",
+            "   ✔  0x078B932B0d1e56554974A431B8B33973D94E002b is security council address ",
           ],
           [
             "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is security council multisig signatory ",
@@ -509,7 +515,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
             "SendTransaction: approveTx",
           ],
           [
-            "txHash: 0xe6be4acedda0456a98ee7169bdb684cc690f631527708d92d5a6fb8b22f5a790",
+            "txHash: 0x7bdb6c9348695e3ed388de315b1980b2285f1d107de6f25db61789cabf74953a",
           ],
         ]
       `)
@@ -567,7 +573,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
             "SendTransaction: approveTx",
           ],
           [
-            "txHash: 0xe292cb126f682d68b47d59f65138f160caf6234a57db4347fa6a2a0806795fec",
+            "txHash: 0xd97a6958d93c34ab230f65be1b76167f655efbd8d1fe64980fa560bf1ed4298a",
           ],
         ]
       `)
@@ -584,6 +590,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
       const governance = await kit.contracts.getGovernance()
       const writeMock = jest.spyOn(ux.write, 'stdout')
       const logMock = jest.spyOn(console, 'log')
+      const multisig = await governance.getApproverMultisig()
 
       await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
         // setApprover to 0x5409ED021D9299bf6814279A6A1411A7e866A631 to avoid "Council cannot be approver" error
@@ -595,12 +602,15 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
           })
         ).waitReceipt()
 
-        // setSecurityCouncil to 0x1B46C60e8B3B427d91d35df22FCfc3FF36407f35 (multisig address)
+        // setSecurityCouncil to multisig address
         await (
           await kit.sendTransaction({
             to: governance.address,
             from: DEFAULT_OWNER_ADDRESS,
-            data: '0x1c1083e20000000000000000000000001b46c60e8b3b427d91d35df22fcfc3ff36407f35',
+            // cast calldata "setSecurityCouncil(address)" <multisig-address>
+            data: `0x1c1083e2000000000000000000000000${multisig.address
+              .replace('0x', '')
+              .toLowerCase()}`,
           })
         ).waitReceipt()
       })
@@ -633,7 +643,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
             "Running Checks:",
           ],
           [
-            "   ✔  0x1B46C60e8B3B427d91d35df22FCfc3FF36407f35 is security council address ",
+            "   ✔  0x078B932B0d1e56554974A431B8B33973D94E002b is security council address ",
           ],
           [
             "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is security council multisig signatory ",
@@ -651,7 +661,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
             "SendTransaction: approveTx",
           ],
           [
-            "txHash: 0x103992a3f7c7364900215b66510f2b95a2468f699d73d7c65819d274084df0f4",
+            "txHash: 0xe7cae35fa46e12f845afe1d7f874d25a00f3594bb9df9adafc78f18d400c09ac",
           ],
         ]
       `)
