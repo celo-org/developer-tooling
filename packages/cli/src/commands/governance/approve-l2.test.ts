@@ -339,7 +339,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
             "SendTransaction: approveTx",
           ],
           [
-            "txHash: 0xdf85b6bb3755e1ec2211a7f9b37203d3a89221b594da7747a1f453f6cfdc2aa5",
+            "txHash: 0x45fa0ad89a10cea114171fda54c27fd0f37dbc6596ce8946638c0f389554b04e",
           ],
           [
             "HotfixApproved:",
@@ -415,7 +415,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
             "SendTransaction: approveTx",
           ],
           [
-            "txHash: 0x46d5958b1b06239eccb901bb3d35bba371c2520df3a97f9e8cc5f9a289210c05",
+            "txHash: 0x5f7bf72da8b16d6870545d4395462728febd0b5be774f0d9857d5542e2393e7d",
           ],
           [
             "HotfixApproved:",
@@ -515,7 +515,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
             "SendTransaction: approveTx",
           ],
           [
-            "txHash: 0x7bdb6c9348695e3ed388de315b1980b2285f1d107de6f25db61789cabf74953a",
+            "txHash: 0x8a5f48287a3612725ada13534f6b5bc8c795630d153cd4782ef594da60e431dc",
           ],
         ]
       `)
@@ -573,7 +573,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
             "SendTransaction: approveTx",
           ],
           [
-            "txHash: 0xd97a6958d93c34ab230f65be1b76167f655efbd8d1fe64980fa560bf1ed4298a",
+            "txHash: 0xc23094c18b45c064f26058220139891f2101e3cea0f2e76a256645424dba0247",
           ],
         ]
       `)
@@ -661,7 +661,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
             "SendTransaction: approveTx",
           ],
           [
-            "txHash: 0xe7cae35fa46e12f845afe1d7f874d25a00f3594bb9df9adafc78f18d400c09ac",
+            "txHash: 0xa1805cea4de891d8a43a4c648f6883651743d4970cd8c4d9ce843c3d4975b6ad",
           ],
         ]
       `)
