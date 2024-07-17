@@ -100,7 +100,7 @@ ___
 
 ### methodIds
 
-• **methodIds**: `Record`\<``"initialized"`` \| ``"isOwner"`` \| ``"owner"`` \| ``"renounceOwnership"`` \| ``"transferOwnership"`` \| ``"getVersionNumber"`` \| ``"initialize"`` \| ``"registryContract"`` \| ``"totalPaidCUSD"`` \| ``"payInCUSD"``, `string`\>
+• **methodIds**: `Record`\<``"initialized"`` \| ``"isOwner"`` \| ``"owner"`` \| ``"renounceOwnership"`` \| ``"transferOwnership"`` \| ``"initialize"`` \| ``"getVersionNumber"`` \| ``"registryContract"`` \| ``"totalPaidCUSD"`` \| ``"payInCUSD"``, `string`\>
 
 #### Inherited from
 

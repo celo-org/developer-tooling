@@ -340,7 +340,7 @@ ___
 
 ### methodIds
 
-• **methodIds**: `Record`\<``"initialized"`` \| ``"isOwner"`` \| ``"owner"`` \| ``"renounceOwnership"`` \| ``"transferOwnership"`` \| ``"getVersionNumber"`` \| ``"initialize"`` \| ``"registryContract"`` \| ``"EIP712_OWNERSHIP_ATTESTATION_TYPEHASH"`` \| ``"MAX_ATTESTATIONS_PER_IDENTIFIER"`` \| ``"MAX_IDENTIFIERS_PER_ADDRESS"`` \| ``"addressToIdentifiers"`` \| ``"eip712DomainSeparator"`` \| ``"identifierToAttestations"`` \| ``"revokedAttestations"`` \| ``"registerAttestationAsIssuer"`` \| ``"registerAttestation"`` \| ``"revokeAttestation"`` \| ``"batchRevokeAttestations"`` \| ``"lookupAttestations"`` \| ``"lookupIdentifiers"`` \| ``"validateAttestationSig"`` \| ``"getUniqueAttestationHash"``, `string`\>
+• **methodIds**: `Record`\<``"initialized"`` \| ``"isOwner"`` \| ``"owner"`` \| ``"renounceOwnership"`` \| ``"transferOwnership"`` \| ``"initialize"`` \| ``"getVersionNumber"`` \| ``"registryContract"`` \| ``"EIP712_OWNERSHIP_ATTESTATION_TYPEHASH"`` \| ``"MAX_ATTESTATIONS_PER_IDENTIFIER"`` \| ``"MAX_IDENTIFIERS_PER_ADDRESS"`` \| ``"addressToIdentifiers"`` \| ``"eip712DomainSeparator"`` \| ``"identifierToAttestations"`` \| ``"revokedAttestations"`` \| ``"registerAttestationAsIssuer"`` \| ``"registerAttestation"`` \| ``"revokeAttestation"`` \| ``"batchRevokeAttestations"`` \| ``"lookupAttestations"`` \| ``"lookupIdentifiers"`` \| ``"validateAttestationSig"`` \| ``"getUniqueAttestationHash"``, `string`\>
 
 #### Inherited from
 

@@ -175,7 +175,7 @@ ___
 
 ### methodIds
 
-• **methodIds**: `Record`\<``"initialized"`` \| ``"owner"`` \| ``"renounceOwnership"`` \| ``"transferOwnership"`` \| ``"getVersionNumber"`` \| ``"initialize"`` \| ``"currencies"`` \| ``"setCurrencyConfig"`` \| ``"removeCurrencies"`` \| ``"getCurrencies"`` \| ``"getCurrencyConfig"`` \| ``"getExchangeRate"``, `string`\>
+• **methodIds**: `Record`\<``"initialized"`` \| ``"owner"`` \| ``"renounceOwnership"`` \| ``"transferOwnership"`` \| ``"initialize"`` \| ``"getVersionNumber"`` \| ``"currencies"`` \| ``"setCurrencyConfig"`` \| ``"removeCurrencies"`` \| ``"getCurrencies"`` \| ``"getCurrencyConfig"`` \| ``"getExchangeRate"``, `string`\>
 
 #### Inherited from
 

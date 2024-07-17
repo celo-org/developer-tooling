@@ -123,7 +123,7 @@ ___
 
 ### methodIds
 
-• **methodIds**: `Record`\<``"reportExpirySeconds"`` \| ``"initialized"`` \| ``"isOwner"`` \| ``"owner"`` \| ``"renounceOwnership"`` \| ``"transferOwnership"`` \| ``"getVersionNumber"`` \| ``"initialize"`` \| ``"breakerBox"`` \| ``"equivalentTokens"`` \| ``"isOracle"`` \| ``"oracles"`` \| ``"tokenReportExpirySeconds"`` \| ``"setReportExpiry"`` \| ``"setTokenReportExpiry"`` \| ``"setBreakerBox"`` \| ``"addOracle"`` \| ``"removeOracle"`` \| ``"removeExpiredReports"`` \| ``"isOldestReportExpired"`` \| ``"setEquivalentToken"`` \| ``"deleteEquivalentToken"`` \| ``"getEquivalentToken"`` \| ``"report"`` \| ``"numRates"`` \| ``"medianRateWithoutEquivalentMapping"`` \| ``"medianRate"`` \| ``"getRates"`` \| ``"numTimestamps"`` \| ``"medianTimestamp"`` \| ``"getTimestamps"`` \| ``"getOracles"`` \| ``"getTokenReportExpirySeconds"``, `string`\>
+• **methodIds**: `Record`\<``"reportExpirySeconds"`` \| ``"initialized"`` \| ``"isOwner"`` \| ``"owner"`` \| ``"renounceOwnership"`` \| ``"transferOwnership"`` \| ``"initialize"`` \| ``"getVersionNumber"`` \| ``"breakerBox"`` \| ``"equivalentTokens"`` \| ``"isOracle"`` \| ``"oracles"`` \| ``"tokenReportExpirySeconds"`` \| ``"setReportExpiry"`` \| ``"setTokenReportExpiry"`` \| ``"setBreakerBox"`` \| ``"addOracle"`` \| ``"removeOracle"`` \| ``"removeExpiredReports"`` \| ``"isOldestReportExpired"`` \| ``"setEquivalentToken"`` \| ``"deleteEquivalentToken"`` \| ``"getEquivalentToken"`` \| ``"report"`` \| ``"numRates"`` \| ``"medianRateWithoutEquivalentMapping"`` \| ``"medianRate"`` \| ``"getRates"`` \| ``"numTimestamps"`` \| ``"medianTimestamp"`` \| ``"getTimestamps"`` \| ``"getOracles"`` \| ``"getTokenReportExpirySeconds"``, `string`\>
 
 #### Inherited from
 
