@@ -1562,7 +1562,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/abis@npm:11.0.0":
+"@celo/abis@npm:11.0.0, @celo/abis@npm:^11.0.0":
   version: 11.0.0
   resolution: "@celo/abis@npm:11.0.0"
   checksum: f54204d2fad17e01201b03efbea02837c9b360130d201f229cca6f048031ca20aeea964599ac8ba8c3a367f8dba861f79ace4d47376cbd5379f9987fec4a10c8
@@ -1808,6 +1808,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/dev-utils@workspace:packages/dev-utils"
   dependencies:
+    "@celo/abis": "npm:^11.0.0"
     "@celo/connect": "npm:^6.0.0-beta.0"
     "@celo/devchain-anvil": "npm:5.0.0-canary.0"
     "@celo/typescript": "workspace:^"

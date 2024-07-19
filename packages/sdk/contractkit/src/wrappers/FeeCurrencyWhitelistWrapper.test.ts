@@ -1,7 +1,7 @@
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
+import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import { newKitFromWeb3 } from '../kit'
 
-testWithGanache('FeeCurrencyWhitelist', (web3) => {
+testWithAnvil('FeeCurrencyWhitelist', (web3) => {
   const kit = newKitFromWeb3(web3)
 
   it('fetches fee currency information', async () => {
@@ -11,24 +11,24 @@ testWithGanache('FeeCurrencyWhitelist', (web3) => {
       [
         {
           "adaptedToken": undefined,
-          "address": "0x5315e44798395d4a952530d131249fE00f554565",
-          "decimals": 18,
-          "name": "Celo Dollar",
-          "symbol": "cUSD",
-        },
-        {
-          "adaptedToken": undefined,
-          "address": "0x965D352283a3C8A016b9BBbC9bf6306665d495E7",
-          "decimals": 18,
-          "name": "Celo Brazilian Real",
-          "symbol": "cREAL",
-        },
-        {
-          "adaptedToken": undefined,
-          "address": "0xdD66C23e07b4D6925b6089b5Fe6fc9E62941aFE8",
+          "address": "0x0c6a0fde0A72bA3990870f0F99ED79a821703474",
           "decimals": 18,
           "name": "Celo Euro",
-          "symbol": "cEUR",
+          "symbol": "Celo Euro",
+        },
+        {
+          "adaptedToken": undefined,
+          "address": "0x603931FF5E63d2fd3EEF1513a55fB773d8082195",
+          "decimals": 18,
+          "name": "Celo Brazilian Real",
+          "symbol": "Celo Brazilian Real",
+        },
+        {
+          "adaptedToken": undefined,
+          "address": "0x82398F079D742F9D0Ae71ef8C99E5c68b2eD6705",
+          "decimals": 18,
+          "name": "Celo Dollar",
+          "symbol": "Celo Dollar",
         },
       ]
     `)
