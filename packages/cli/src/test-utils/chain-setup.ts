@@ -144,12 +144,16 @@ export const topUpWithToken = async (
 export const changeMultiSigOwner = async (kit: ContractKit, toAccount: StrongAddress) => {
   const governance = await kit.contracts.getGovernance()
   const multisig = await governance.getApproverMultisig()
-  await kit.sendTransaction({
-    from: toAccount,
-    to: multisig.address,
-    value: kit.web3.utils.toWei('1', 'ether'),
-  })
+  await (
+    await kit.sendTransaction({
+      from: toAccount,
+      to: multisig.address,
+      value: kit.web3.utils.toWei('1', 'ether'),
+    })
+  ).waitReceipt()
+
   await impersonateAccount(kit.web3, multisig.address)
+
   await multisig
     .replaceOwner(DEFAULT_OWNER_ADDRESS, toAccount)
     .sendAndWaitForReceipt({ from: multisig.address })

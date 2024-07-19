@@ -21,10 +21,10 @@ testWithAnvil('network:parameters', (web3) => {
             fund: '0xA2e328097D5805e37414fbF80F43D71c9B588F23',
           },
           distributableAmount: '409271032214310717281708',
-          targetCeloTotalSupply: {
+          targetCeloDistribution: {
             carbonFundTargetRewards: '1630561881331915208293',
             communityTargetRewards: '407640470332978802073415',
-            targetCeloTotalSupply: '612754949032214310717281708',
+            targetCeloDistribution: '612754949032214310717281708',
           },
         }
       })
@@ -42,10 +42,10 @@ testWithAnvil('network:parameters', (web3) => {
           fraction: 250000000000000000000000
           fund: 0xA2e328097D5805e37414fbF80F43D71c9B588F23
         distributableAmount: 409271032214310717281708
-        targetCeloTotalSupply: 
+        targetCeloDistribution: 
           carbonFundTargetRewards: 1630561881331915208293
           communityTargetRewards: 407640470332978802073415
-          targetCeloTotalSupply: 612754949032214310717281708
+          targetCeloDistribution: 612754949032214310717281708
       DowntimeSlasher: 
         slashableDowntime: 5 minutes
         slashingIncentives: 
@@ -61,9 +61,9 @@ testWithAnvil('network:parameters', (web3) => {
         totalVotes: 0 
       FeeCurrencyDirectory: 
         intrinsicGasForAlternativeFeeCurrency: 
-          0x4CB77DF8f44817DE26D2dE10813e98dd0aA6AE00: 21000 (~2.100e+4)
-          0x4E2EE025A14c76020D24a511AC1Ce7755537fACf: 21000 (~2.100e+4)
-          0x5428F291b5d2555EA47EEaec4a12E434CF267cd2: 21000 (~2.100e+4)
+          0x0c6a0fde0A72bA3990870f0F99ED79a821703474: 21000 (~2.100e+4)
+          0x603931FF5E63d2fd3EEF1513a55fB773d8082195: 21000 (~2.100e+4)
+          0x82398F079D742F9D0Ae71ef8C99E5c68b2eD6705: 21000 (~2.100e+4)
       Governance: 
         concurrentProposals: 3 
         dequeueFrequency: 4 hours
@@ -83,7 +83,7 @@ testWithAnvil('network:parameters', (web3) => {
       Reserve: 
         frozenReserveGoldDays: 0 
         frozenReserveGoldStartBalance: 0 
-        frozenReserveGoldStartDay: 19898 (~1.990e+4)
+        frozenReserveGoldStartDay: 19920 (~1.992e+4)
         otherReserveAddresses: 
 
         tobinTaxStalenessThreshold: 3153600000 (~3.154e+9)

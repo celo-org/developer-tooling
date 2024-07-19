@@ -49,6 +49,11 @@ export async function testLocally(
 
 // Removes font-formatting ANSI codes (colors/styles) from a string
 export const stripAnsiCodes = (text: string): string => {
+  if (typeof text !== 'string') {
+    // Not everything that comes in here is a string (you can console.log anything), so we just return it as is
+    return text
+  }
+
   return text.replace(/\u001b\[.*?m/g, '')
 }
 

@@ -248,7 +248,7 @@ jobs:
           version: ${{ env.SUPPORTED_FOUNDRY_VERSION }}
       - name: Run tests
         run: |
-          yarn workspace @celo/celocli test --coverage
+          yarn workspace @celo/celocli test-ci --coverage
       - name: Verify that a new account can be created
         run: |
           yarn workspace @celo/celocli run celocli account:new

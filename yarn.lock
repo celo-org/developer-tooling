@@ -1555,10 +1555,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/abis-12@npm:@celo/abis@12.0.0-canary.6":
-  version: 12.0.0-canary.6
-  resolution: "@celo/abis@npm:12.0.0-canary.6"
-  checksum: 97f07ef459c49dc131670e76af08c2563f16c56cd001945d7b987e07b373c172bd162e84ff1db802635f4cb5e88dce059f8e293c8ca5f66a4766f6a6c22b3d89
+"@celo/abis-12@npm:@celo/abis@12.0.0-canary.16":
+  version: 12.0.0-canary.16
+  resolution: "@celo/abis@npm:12.0.0-canary.16"
+  checksum: 90782e5934083023846a8e08a1a4bbbf4bcf5d7f20fb18e29af74db3caae5d3b4807e474fd435e168fdb485d220d03bb4842e9147b2a2be4751894eae1146fd4
   languageName: node
   linkType: hard
 
@@ -1626,7 +1626,6 @@ __metadata:
     "@celo/contractkit": "npm:^8.1.0-beta.1"
     "@celo/cryptographic-utils": "npm:^5.1.0-beta.0"
     "@celo/dev-utils": "npm:0.0.4-beta.1"
-    "@celo/devchain-anvil": "npm:1.0.0"
     "@celo/explorer": "npm:^5.0.11-beta.0"
     "@celo/governance": "npm:^5.1.2-beta.0"
     "@celo/identity": "npm:^5.1.2"
@@ -1665,7 +1664,6 @@ __metadata:
     jest: "npm:^29.7.0"
     oclif: "npm:^4.3.4"
     path: "npm:^0.12.7"
-    prettier: "npm:1.19.1"
     prompts: "npm:^2.0.1"
     randombytes: "npm:^2.0.1"
     ts-jest: "npm:^29.1.5"
@@ -1758,7 +1756,7 @@ __metadata:
   resolution: "@celo/contractkit@workspace:packages/sdk/contractkit"
   dependencies:
     "@celo/abis": "npm:11.0.0"
-    "@celo/abis-12": "npm:@celo/abis@12.0.0-canary.6"
+    "@celo/abis-12": "npm:@celo/abis@12.0.0-canary.16"
     "@celo/base": "npm:^6.1.0-beta.0"
     "@celo/celo-devchain": "npm:^7.0.0"
     "@celo/connect": "npm:^6.0.0-beta.1"
@@ -1811,7 +1809,7 @@ __metadata:
   resolution: "@celo/dev-utils@workspace:packages/dev-utils"
   dependencies:
     "@celo/connect": "npm:^6.0.0-beta.0"
-    "@celo/devchain-anvil": "npm:1.0.0"
+    "@celo/devchain-anvil": "npm:5.0.0-canary.0"
     "@celo/typescript": "workspace:^"
     "@tsconfig/recommended": "npm:^1.0.3"
     "@types/fs-extra": "npm:^8.1.0"
@@ -1827,10 +1825,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/devchain-anvil@npm:1.0.0":
-  version: 1.0.0
-  resolution: "@celo/devchain-anvil@npm:1.0.0"
-  checksum: 439adfecb34e421b644e66d2b38d61d424d932662324caeb4907c7bc73162dd39383545e5dd8681c10d801e64a995c2eb6191fe1a9f403739b405924724ed42d
+"@celo/devchain-anvil@npm:5.0.0-canary.0":
+  version: 5.0.0-canary.0
+  resolution: "@celo/devchain-anvil@npm:5.0.0-canary.0"
+  checksum: a720d49ae4c701ffb6ade978de43cc7518effd383ae3fcf7e56f63b955262cf2f24dda739c44fb6a2674f9aa65bfb2ce6d8204b34724f68b52689468ff73e4fd
   languageName: node
   linkType: hard
 
@@ -16683,15 +16681,6 @@ __metadata:
   version: 1.2.1
   resolution: "prelude-ls@npm:1.2.1"
   checksum: 0b9d2c76801ca652a7f64892dd37b7e3fab149a37d2424920099bf894acccc62abb4424af2155ab36dea8744843060a2d8ddc983518d0b1e22265a22324b72ed
-  languageName: node
-  linkType: hard
-
-"prettier@npm:1.19.1":
-  version: 1.19.1
-  resolution: "prettier@npm:1.19.1"
-  bin:
-    prettier: ./bin-prettier.js
-  checksum: 21d245fe788d1123fd7df63a3759f7807d8c0bb7aaa2f4f02cc055998c3e1f92d7c614b6e2749a936c527cdbbb0f3c869bd9723eb32c5232b0fab9fac04b455d
   languageName: node
   linkType: hard
 

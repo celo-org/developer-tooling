@@ -17,6 +17,7 @@
 
 - [GovernanceConfig](../interfaces/wrappers_Governance.GovernanceConfig.md)
 - [HotfixRecord](../interfaces/wrappers_Governance.HotfixRecord.md)
+- [L1HotfixRecord](../interfaces/wrappers_Governance.L1HotfixRecord.md)
 - [ParticipationParameters](../interfaces/wrappers_Governance.ParticipationParameters.md)
 - [ProposalMetadata](../interfaces/wrappers_Governance.ProposalMetadata.md)
 - [ProposalRecord](../interfaces/wrappers_Governance.ProposalRecord.md)
@@ -46,7 +47,7 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:960](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L960)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:1014](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L1014)
 
 ___
 
@@ -56,7 +57,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:123](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L123)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:125](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L125)
 
 ___
 
@@ -66,7 +67,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:75](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L75)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:77](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L77)
 
 ___
 
@@ -76,7 +77,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:73](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L73)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:75](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L75)
 
 ___
 
@@ -86,7 +87,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:74](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L74)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:76](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L76)
 
 ## Functions
 
@@ -107,7 +108,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:124](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L124)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:126](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L126)
 
 ___
 
@@ -128,4 +129,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:77](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L77)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:79](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L79)
