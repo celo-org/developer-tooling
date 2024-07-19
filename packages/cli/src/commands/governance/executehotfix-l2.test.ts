@@ -184,7 +184,7 @@ testWithAnvil('governance:executehotfix cmd', (web3: Web3) => {
             "   ✔  Hotfix 0x8ad3719bb2577b277bcafc1f00ac2f1c3fa5e565173303684d0a8d4f3661680c is not already executed ",
           ],
           [
-            "   ✔  Hotfix 0x8ad3719bb2577b277bcafc1f00ac2f1c3fa5e565173303684d0a8d4f3661680c execution time limit has not been reached ",
+            "   ✔  Hotfix 0x8ad3719bb2577b277bcafc1f00ac2f1c3fa5e565173303684d0a8d4f3661680c is still in its execution time limit window ",
           ],
           [
             "All checks passed",
@@ -327,7 +327,7 @@ testWithAnvil('governance:executehotfix cmd', (web3: Web3) => {
             "   ✔  Hotfix 0x8ad3719bb2577b277bcafc1f00ac2f1c3fa5e565173303684d0a8d4f3661680c is not already executed ",
           ],
           [
-            "   ✘  Hotfix 0x8ad3719bb2577b277bcafc1f00ac2f1c3fa5e565173303684d0a8d4f3661680c execution time limit has not been reached ",
+            "   ✘  Hotfix 0x8ad3719bb2577b277bcafc1f00ac2f1c3fa5e565173303684d0a8d4f3661680c is still in its execution time limit window ",
           ],
         ]
       `)

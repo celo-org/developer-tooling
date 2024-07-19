@@ -195,7 +195,7 @@ class CheckBuilder {
 
   hotfixExecutionTimeLimitNotReached = (hash: Buffer) =>
     this.addCheck(
-      `Hotfix 0x${hash.toString('hex')} execution time limit has not been reached`,
+      `Hotfix 0x${hash.toString('hex')} is still in its execution time limit window`,
       this.withGovernance(async (governance) =>
         ((await governance.getHotfixRecord(hash)) as HotfixRecord).executionTimeLimit.gt(
           getCurrentTimestamp()
