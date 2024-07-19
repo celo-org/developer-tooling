@@ -56,7 +56,7 @@ testWithGanache('GoldToken Wrapper', (web3) => {
     expect(after.minus(before)).toEqBigNumber(ONE_GOLD)
   })
 
-  it('tranfers from', async () => {
+  it('transfers from', async () => {
     const before = await goldToken.balanceOf(accounts[3])
     // account1 approves account0
     await goldToken.approve(accounts[0], ONE_GOLD).sendAndWaitForReceipt({ from: accounts[1] })
