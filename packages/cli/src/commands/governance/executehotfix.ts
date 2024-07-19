@@ -45,6 +45,7 @@ export default class ExecuteHotfix extends BaseCommand {
         .hotfixApproved(hash)
         .hotfixCouncilApproved(hash)
         .hotfixNotExecuted(hash)
+        .hotfixExecutionTimeLimitNotReached(hash)
         .runChecks()
     } else {
       await newCheckBuilder(this, account)

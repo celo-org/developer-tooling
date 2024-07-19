@@ -132,3 +132,7 @@ export async function binaryPrompt(promptMessage: string, defaultToNo?: boolean)
   )
   return ['y', 'yes'].includes(resp.toLowerCase())
 }
+
+export function getCurrentTimestamp() {
+  return Math.floor(Date.now() / 1000)
+}

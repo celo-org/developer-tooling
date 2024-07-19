@@ -9,6 +9,7 @@ import {
 } from '@celo/dev-utils/lib/anvil-test'
 import Web3 from 'web3'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { getCurrentTimestamp } from '../../utils/cli'
 import Approve from './approve'
 import PrepareHotfix from './preparehotfix'
 
@@ -25,7 +26,7 @@ testWithAnvil('governance:preparehotfix cmd', (web3: Web3) => {
     const [approverAccount, securityCouncilAccount] = await web3.eth.getAccounts()
     // arbitrary 100 seconds to the future to avoid
     // Timestamp error: X is lower than or equal to previous block's timestamp
-    const nextTimestamp = Math.floor(Date.now() / 1000) + 100
+    const nextTimestamp = getCurrentTimestamp() + 100
 
     await setupL2(web3)
 
@@ -83,7 +84,7 @@ testWithAnvil('governance:preparehotfix cmd', (web3: Web3) => {
       web3
     )
 
-    await setNextBlockTimestamp(web3, nextTimestamp.toString())
+    await setNextBlockTimestamp(web3, nextTimestamp)
 
     await testLocallyWithWeb3Node(
       PrepareHotfix,

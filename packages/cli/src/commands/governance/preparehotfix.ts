@@ -34,7 +34,6 @@ export default class PrepareHotfix extends BaseCommand {
         .hotfixApproved(hash)
         .hotfixCouncilApproved(hash)
         .hotfixNotExecuted(hash)
-        // TODO add executionTimeWindow check
         .runChecks()
     } else {
       await newCheckBuilder(this, account)

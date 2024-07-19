@@ -22,7 +22,7 @@ import chalk from 'chalk'
 import { fetch } from 'cross-fetch'
 import utils from 'web3-utils'
 import { BaseCommand } from '../base'
-import { printValueMapRecursive } from './cli'
+import { getCurrentTimestamp, printValueMapRecursive } from './cli'
 
 export interface CommandCheck {
   name: string
@@ -191,6 +191,16 @@ class CheckBuilder {
     this.addCheck(
       `Hotfix 0x${hash.toString('hex')} is not already executed`,
       this.withGovernance(async (governance) => !(await governance.getHotfixRecord(hash)).executed)
+    )
+
+  hotfixExecutionTimeLimitNotReached = (hash: Buffer) =>
+    this.addCheck(
+      `Hotfix 0x${hash.toString('hex')} execution time limit has not been reached`,
+      this.withGovernance(async (governance) =>
+        ((await governance.getHotfixRecord(hash)) as HotfixRecord).executionTimeLimit.gt(
+          getCurrentTimestamp()
+        )
+      )
     )
 
   hotfixApproved = (hash: Buffer) =>
