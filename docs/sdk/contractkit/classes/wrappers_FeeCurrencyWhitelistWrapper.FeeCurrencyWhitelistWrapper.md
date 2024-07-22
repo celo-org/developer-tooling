@@ -152,7 +152,7 @@ ___
 
 ### methodIds
 
-• **methodIds**: `Record`\<``"initialized"`` \| ``"isOwner"`` \| ``"owner"`` \| ``"renounceOwnership"`` \| ``"transferOwnership"`` \| ``"getVersionNumber"`` \| ``"initialize"`` \| ``"addToken"`` \| ``"removeToken"`` \| ``"whitelist"`` \| ``"getWhitelist"``, `string`\>
+• **methodIds**: `Record`\<``"initialized"`` \| ``"isOwner"`` \| ``"owner"`` \| ``"renounceOwnership"`` \| ``"transferOwnership"`` \| ``"initialize"`` \| ``"getVersionNumber"`` \| ``"addToken"`` \| ``"removeToken"`` \| ``"whitelist"`` \| ``"getWhitelist"``, `string`\>
 
 #### Inherited from
 

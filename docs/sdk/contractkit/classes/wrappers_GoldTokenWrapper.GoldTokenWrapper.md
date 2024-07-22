@@ -308,7 +308,7 @@ ___
 
 ### methodIds
 
-• **methodIds**: `Record`\<``"symbol"`` \| ``"name"`` \| ``"decimals"`` \| ``"initialized"`` \| ``"isOwner"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"getVersionNumber"`` \| ``"initialize"`` \| ``"approve"`` \| ``"transfer"`` \| ``"isL2"`` \| ``"increaseAllowance"`` \| ``"decreaseAllowance"`` \| ``"mint"`` \| ``"transferWithComment"`` \| ``"burn"`` \| ``"transferFrom"`` \| ``"allowance"`` \| ``"balanceOf"`` \| ``"totalSupply"`` \| ``"celoTokenDistributionSchedule"`` \| ``"withdrawn"`` \| ``"setCeloTokenDistributionScheduleAddress"`` \| ``"withdrawAmount"`` \| ``"depositAmount"`` \| ``"increaseSupply"`` \| ``"allocatedSupply"`` \| ``"circulatingSupply"`` \| ``"getBurnedAmount"``, `string`\>
+• **methodIds**: `Record`\<``"symbol"`` \| ``"name"`` \| ``"decimals"`` \| ``"initialized"`` \| ``"isL2"`` \| ``"isOwner"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"initialize"`` \| ``"approve"`` \| ``"getVersionNumber"`` \| ``"transfer"`` \| ``"increaseAllowance"`` \| ``"decreaseAllowance"`` \| ``"mint"`` \| ``"transferWithComment"`` \| ``"burn"`` \| ``"transferFrom"`` \| ``"allowance"`` \| ``"balanceOf"`` \| ``"totalSupply"`` \| ``"celoTokenDistributionSchedule"`` \| ``"setCeloTokenDistributionScheduleAddress"`` \| ``"increaseSupply"`` \| ``"allocatedSupply"`` \| ``"circulatingSupply"`` \| ``"getBurnedAmount"``, `string`\>
 
 #### Inherited from
 

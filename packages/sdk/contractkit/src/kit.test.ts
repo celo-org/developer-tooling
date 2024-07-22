@@ -241,7 +241,7 @@ testWithAnvil('kit', (web3) => {
             })
           ).resolves.toMatchInlineSnapshot(`
             {
-              "feeCurrency": "0x4CB77DF8f44817DE26D2dE10813e98dd0aA6AE00",
+              "feeCurrency": "0x0c6a0fde0A72bA3990870f0F99ED79a821703474",
               "gas": 53001,
               "maxFeeInFeeCurrency": "108122040000000",
               "maxFeePerGas": "2000000000",

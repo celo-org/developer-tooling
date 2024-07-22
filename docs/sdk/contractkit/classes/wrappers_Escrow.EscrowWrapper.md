@@ -302,7 +302,7 @@ ___
 
 ### methodIds
 
-• **methodIds**: `Record`\<``"initialized"`` \| ``"isOwner"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"transferOwnership"`` \| ``"getVersionNumber"`` \| ``"initialize"`` \| ``"withdraw"`` \| ``"revoke"`` \| ``"registryContract"`` \| ``"MAX_TRUSTED_ISSUERS_PER_PAYMENT"`` \| ``"defaultTrustedIssuers"`` \| ``"escrowedPayments"`` \| ``"receivedPaymentIds"`` \| ``"sentPaymentIds"`` \| ``"trustedIssuersPerPayment"`` \| ``"addDefaultTrustedIssuer"`` \| ``"removeDefaultTrustedIssuer"`` \| ``"transfer"`` \| ``"transferWithTrustedIssuers"`` \| ``"getReceivedPaymentIds"`` \| ``"getSentPaymentIds"`` \| ``"getTrustedIssuersPerPayment"`` \| ``"getDefaultTrustedIssuers"``, `string`\>
+• **methodIds**: `Record`\<``"initialized"`` \| ``"isOwner"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"transferOwnership"`` \| ``"initialize"`` \| ``"withdraw"`` \| ``"getVersionNumber"`` \| ``"revoke"`` \| ``"registryContract"`` \| ``"MAX_TRUSTED_ISSUERS_PER_PAYMENT"`` \| ``"defaultTrustedIssuers"`` \| ``"escrowedPayments"`` \| ``"receivedPaymentIds"`` \| ``"sentPaymentIds"`` \| ``"trustedIssuersPerPayment"`` \| ``"addDefaultTrustedIssuer"`` \| ``"removeDefaultTrustedIssuer"`` \| ``"transfer"`` \| ``"transferWithTrustedIssuers"`` \| ``"getReceivedPaymentIds"`` \| ``"getSentPaymentIds"`` \| ``"getTrustedIssuersPerPayment"`` \| ``"getDefaultTrustedIssuers"``, `string`\>
 
 #### Inherited from
 

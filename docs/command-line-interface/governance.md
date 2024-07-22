@@ -32,7 +32,8 @@ Approve a dequeued governance proposal (or hotfix)
 ```
 USAGE
   $ celocli governance:approvehotfix --from <value> [--gasCurrency <value>] [--globalHelp]
-    [--proposalID <value> | --hotfix <value>] [--useMultiSig]
+    [--proposalID <value> | --hotfix <value>] [--useMultiSig] [--type
+    approver|securityCouncil ]
 
 FLAGS
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Approver's
@@ -46,6 +47,11 @@ FLAGS
                                                             flags
   --hotfix=<value>                                          Hash of hotfix proposal
   --proposalID=<value>                                      UUID of proposal to approve
+  --type=<option>                                           Determines which type of
+                                                            hotfix approval (approver or
+                                                            security council) to use.
+                                                            <options:
+                                                            approver|securityCouncil>
   --useMultiSig                                             True means the request will
                                                             be sent through multisig.
 
@@ -62,6 +68,8 @@ EXAMPLES
   approve --proposalID 99 --from 0x5409ed021d9299bf6814279a6a1411a7e866a631 --useMultiSig
 
   approve --hotfix 0xfcfc98ec3db7c56f0866a7149e811bf7f9e30c9d40008b0def497fcc6fe90649 --from 0xCc50EaC48bA71343dC76852FAE1892c6Bd2971DA --useMultiSig
+
+  approve --hotfix 0xfcfc98ec3db7c56f0866a7149e811bf7f9e30c9d40008b0def497fcc6fe90649 --from 0xCc50EaC48bA71343dC76852FAE1892c6Bd2971DA --useMultiSig --type securityCouncil
 ```
 
 ## `celocli governance:build-proposal`

@@ -2,7 +2,7 @@ import { CeloDistributionSchedule } from '@celo/abis-12/web3/CeloDistributionSch
 import { BaseWrapper, proxyCall, proxySend, valueToString } from './BaseWrapper'
 
 type TargetTotalSupplyResponse = {
-  targetCeloTotalSupply: string
+  targetCeloDistribution: string
   communityTargetRewards: string
   carbonFundTargetRewards: string
 }
@@ -17,10 +17,10 @@ type CeloDistributionScheduleConfig = {
     fund: string
   }
   distributableAmount: string
-  targetCeloTotalSupply: {
+  targetCeloDistribution: {
     carbonFundTargetRewards: string
     communityTargetRewards: string
-    targetCeloTotalSupply: string
+    targetCeloDistribution: string
   }
 }
 
@@ -53,13 +53,13 @@ export class CeloDistributionScheduleWrapper extends BaseWrapper<CeloDistributio
     undefined,
     valueToString
   )
-  getTargetCeloTotalSupply: () => Promise<TargetTotalSupplyResponse> = proxyCall(
-    this.contract.methods.getTargetCeloTotalSupply,
+  getTargetCeloDistribution: () => Promise<TargetTotalSupplyResponse> = proxyCall(
+    this.contract.methods.getTargetCeloDistribution,
     undefined,
     (res) => ({
       carbonFundTargetRewards: valueToString(res.carbonFundTargetRewards),
       communityTargetRewards: valueToString(res.communityTargetRewards),
-      targetCeloTotalSupply: valueToString(res.targetCeloTotalSupply),
+      targetCeloDistribution: valueToString(res.targetCeloDistribution),
     })
   )
 
@@ -79,7 +79,7 @@ export class CeloDistributionScheduleWrapper extends BaseWrapper<CeloDistributio
         fund: await this.communityRewardFund(),
       },
       distributableAmount: await this.getDistributableAmount(),
-      targetCeloTotalSupply: await this.getTargetCeloTotalSupply(),
+      targetCeloDistribution: await this.getTargetCeloDistribution(),
     }
   }
 }

@@ -29,7 +29,7 @@
 - [getCommunityRewardFraction](wrappers_CeloDistributionScheduleWrapper.CeloDistributionScheduleWrapper.md#getcommunityrewardfraction)
 - [getDistributableAmount](wrappers_CeloDistributionScheduleWrapper.CeloDistributionScheduleWrapper.md#getdistributableamount)
 - [getRemainingBalanceToDistribute](wrappers_CeloDistributionScheduleWrapper.CeloDistributionScheduleWrapper.md#getremainingbalancetodistribute)
-- [getTargetCeloTotalSupply](wrappers_CeloDistributionScheduleWrapper.CeloDistributionScheduleWrapper.md#gettargetcelototalsupply)
+- [getTargetCeloDistribution](wrappers_CeloDistributionScheduleWrapper.CeloDistributionScheduleWrapper.md#gettargetcelodistribution)
 - [getTotalDistributedBySchedule](wrappers_CeloDistributionScheduleWrapper.CeloDistributionScheduleWrapper.md#gettotaldistributedbyschedule)
 - [methodIds](wrappers_CeloDistributionScheduleWrapper.CeloDistributionScheduleWrapper.md#methodids)
 
@@ -276,9 +276,9 @@ ___
 
 ___
 
-### getTargetCeloTotalSupply
+### getTargetCeloDistribution
 
-• **getTargetCeloTotalSupply**: () => `Promise`\<`TargetTotalSupplyResponse`\>
+• **getTargetCeloDistribution**: () => `Promise`\<`TargetTotalSupplyResponse`\>
 
 #### Type declaration
 
@@ -320,7 +320,7 @@ ___
 
 ### methodIds
 
-• **methodIds**: `Record`\<``"initialized"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"getVersionNumber"`` \| ``"initialize"`` \| ``"activate"`` \| ``"carbonOffsettingPartner"`` \| ``"setCommunityRewardFraction"`` \| ``"getCommunityRewardFraction"`` \| ``"setCarbonOffsettingFund"`` \| ``"getCarbonOffsettingFraction"`` \| ``"areDependenciesSet"`` \| ``"communityRewardFund"`` \| ``"isL2"`` \| ``"l2StartTime"`` \| ``"totalDistributedBySchedule"`` \| ``"totalSupplyAtL2Start"`` \| ``"distributeAccordingToSchedule"`` \| ``"getTotalDistributedBySchedule"`` \| ``"getRemainingBalanceToDistribute"`` \| ``"getDistributableAmount"`` \| ``"getTargetCeloTotalSupply"``, `string`\>
+• **methodIds**: `Record`\<``"initialized"`` \| ``"isL2"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"initialize"`` \| ``"getVersionNumber"`` \| ``"activate"`` \| ``"carbonOffsettingPartner"`` \| ``"setCommunityRewardFraction"`` \| ``"getCommunityRewardFraction"`` \| ``"setCarbonOffsettingFund"`` \| ``"getCarbonOffsettingFraction"`` \| ``"areDependenciesSet"`` \| ``"communityRewardFund"`` \| ``"l2StartTime"`` \| ``"totalAllocatedAtL2Start"`` \| ``"totalDistributedBySchedule"`` \| ``"distributeAccordingToSchedule"`` \| ``"getTotalDistributedBySchedule"`` \| ``"getRemainingBalanceToDistribute"`` \| ``"getDistributableAmount"`` \| ``"getTargetCeloDistribution"``, `string`\>
 
 #### Inherited from
 

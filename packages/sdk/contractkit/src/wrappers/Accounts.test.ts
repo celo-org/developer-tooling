@@ -1,13 +1,13 @@
-import { getParsedSignatureOfAddress } from '../utils/getParsedSignatureOfAddress'
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
+import { StrongAddress } from '@celo/base'
+import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import Web3 from 'web3'
 import { ContractKit, newKitFromWeb3 } from '../kit'
+import { getParsedSignatureOfAddress } from '../utils/getParsedSignatureOfAddress'
 import { AccountsWrapper } from './Accounts'
 import { valueToBigNumber, valueToFixidityString } from './BaseWrapper'
 import { LockedGoldWrapper } from './LockedGold'
 import { ValidatorsWrapper } from './Validators'
-import { StrongAddress } from '@celo/base'
 jest.setTimeout(10 * 1000)
 
 /*
@@ -23,7 +23,7 @@ const blsPublicKey =
 const blsPoP =
   '0xcdb77255037eb68897cd487fdd85388cbda448f617f874449d4b11588b0b7ad8ddc20d9bb450b513bb35664ea3923900'
 
-testWithGanache('Accounts Wrapper', (web3) => {
+testWithAnvil('Accounts Wrapper', (web3) => {
   let kit: ContractKit
   let accounts: StrongAddress[] = []
   let accountsInstance: AccountsWrapper
@@ -190,9 +190,7 @@ testWithGanache('Accounts Wrapper', (web3) => {
     await expect(
       accountsInstance.setPaymentDelegation(beneficiary, fractionInvalid).sendAndWaitForReceipt({})
     ).rejects.toEqual(
-      new Error(
-        'Error: VM Exception while processing transaction: revert Fraction must not be greater than 1'
-      )
+      new Error('Error: execution reverted: revert: Fraction must not be greater than 1')
     )
   })
 

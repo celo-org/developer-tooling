@@ -20,6 +20,7 @@
     "prepack": "yarn build"
   },
   "dependencies": {
+    "@celo/abis": "^11.0.0",
     "@celo/connect": "^6.0.0-beta.0",
     "@viem/anvil": "^0.0.9",
     "bignumber.js": "^9.0.0",
@@ -31,7 +32,7 @@
     "web3-core-helpers": "1.10.4"
   },
   "devDependencies": {
-    "@celo/devchain-anvil": "1.0.0",
+    "@celo/devchain-anvil": "5.0.0-canary.0",
     "@celo/typescript": "workspace:^",
     "@tsconfig/recommended": "^1.0.3",
     "@types/fs-extra": "^8.1.0",

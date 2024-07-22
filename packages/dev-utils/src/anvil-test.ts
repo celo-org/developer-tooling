@@ -76,8 +76,8 @@ export function setCode(web3: Web3, address: string, code: string) {
   return jsonRpcCall(web3, 'anvil_setCode', [address, code])
 }
 
-export function setNextBlockTimestamp(web3: Web3, timestamp: string) {
-  return jsonRpcCall(web3, 'evm_setNextBlockTimestamp', [timestamp])
+export function setNextBlockTimestamp(web3: Web3, timestamp: number) {
+  return jsonRpcCall(web3, 'evm_setNextBlockTimestamp', [timestamp.toString()])
 }
 
 // TODO remove this once no longer needed
