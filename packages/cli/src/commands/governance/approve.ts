@@ -63,16 +63,9 @@ export default class Approve extends BaseCommand {
         await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
       }
 
-      const governanceVersion = await governance.version()
-
       await checkBuilder
         .proposalExists(id)
-        .proposalInStages(
-          id,
-          governanceVersion.storage === '1' && Number(governanceVersion.major) < 3
-            ? ['Approval']
-            : ['Referendum', 'Execution']
-        )
+        .proposalInStages(id, ['Referendum', 'Execution'])
         .addCheck(`${id} not already approved`, async () => !(await governance.isApproved(id)))
         .runChecks()
       governanceTx = await governance.approve(id)

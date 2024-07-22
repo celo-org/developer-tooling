@@ -1,8 +1,7 @@
 import { StrongAddress } from '@celo/base'
-import { Provider, getRandomId } from '@celo/connect'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { GovernanceWrapper, ProposalStage } from '@celo/contractkit/lib/wrappers/Governance'
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+import { impersonateAccount, testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import { ux } from '@oclif/core'
 import Web3 from 'web3'
@@ -13,28 +12,6 @@ import Approve from './approve'
 process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvil('governance:approve cmd', (web3: Web3) => {
-  function sendRawTx(method: string, params: any[]) {
-    return new Promise<string>((resolve, reject) => {
-      ;(kit.web3.currentProvider as Provider).send(
-        {
-          id: getRandomId(),
-          jsonrpc: '2.0',
-          method,
-          params,
-        },
-        (error, resp) => {
-          if (error) {
-            reject(error)
-          } else if (resp) {
-            resolve(resp.result as string)
-          } else {
-            reject(new Error('empty-response'))
-          }
-        }
-      )
-    })
-  }
-
   const kit = newKitFromWeb3(web3)
   const proposalID = '1'
   let minDeposit: string
@@ -161,8 +138,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
         .sendAndWaitForReceipt({ value: minDeposit })
 
       const approver = await governance.getApprover()
-      await sendRawTx('anvil_impersonateAccount', [approver])
-      await sendRawTx('anvil_setBalance', [approver, '0x10000000000000000000'])
+      await impersonateAccount(web3, approver, '0x10000000000000000000')
 
       let proposalId = (await governance.getQueue())[0].proposalID
       await expect(governance.getProposalStage(proposalId)).resolves.toBe(ProposalStage.Queued)
