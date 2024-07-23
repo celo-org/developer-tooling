@@ -138,7 +138,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
         .sendAndWaitForReceipt({ value: minDeposit })
 
       const approver = await governance.getApprover()
-      await impersonateAccount(web3, approver, '0x10000000000000000000')
+      await impersonateAccount(web3, approver, 1000000000000000000n)
 
       let proposalId = (await governance.getQueue())[0].proposalID
       await expect(governance.getProposalStage(proposalId)).resolves.toBe(ProposalStage.Queued)

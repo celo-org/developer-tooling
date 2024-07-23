@@ -1,5 +1,6 @@
-import { Hex, PROXY_ADMIN_ADDRESS } from '@celo/connect'
+import { PROXY_ADMIN_ADDRESS } from '@celo/connect'
 import { Anvil, CreateAnvilOptions, createAnvil } from '@viem/anvil'
+import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import {
   TEST_BALANCE,
@@ -51,10 +52,16 @@ export function testWithAnvil(name: string, fn: (web3: Web3) => void) {
   })
 }
 
-export function impersonateAccount(web3: Web3, address: string, withBalance?: Hex) {
+export function impersonateAccount(
+  web3: Web3,
+  address: string,
+  withBalance?: number | bigint | BigNumber
+) {
   return Promise.all([
     jsonRpcCall(web3, 'anvil_impersonateAccount', [address]),
-    withBalance ? jsonRpcCall(web3, 'anvil_setBalance', [address, withBalance]) : undefined,
+    withBalance
+      ? jsonRpcCall(web3, 'anvil_setBalance', [address, withBalance.toString(16)])
+      : undefined,
   ])
 }
 
