@@ -22,16 +22,16 @@ testWithAnvil('LockedGold Wrapper', (web3) => {
     }
   })
 
-  test('SBAT lock gold', async () => {
+  it('locks gold', async () => {
     await lockedGold.lock().sendAndWaitForReceipt({ value })
   })
 
-  test('SBAT unlock gold', async () => {
+  it('unlocks gold', async () => {
     await lockedGold.lock().sendAndWaitForReceipt({ value })
     await lockedGold.unlock(value).sendAndWaitForReceipt()
   })
 
-  test('SBAT relock gold', async () => {
+  it('relocks gold', async () => {
     // Make 5 pending withdrawals.
     await lockedGold.lock().sendAndWaitForReceipt({ value: value * 5 })
     await lockedGold.unlock(value).sendAndWaitForReceipt()
@@ -39,11 +39,14 @@ testWithAnvil('LockedGold Wrapper', (web3) => {
     await lockedGold.unlock(value).sendAndWaitForReceipt()
     await lockedGold.unlock(value).sendAndWaitForReceipt()
     await lockedGold.unlock(value).sendAndWaitForReceipt()
+
     // Re-lock 2.5 of them
     const txos = await lockedGold.relock(account, value * 2.5)
-    await Promise.all(txos.map((txo) => txo.sendAndWaitForReceipt()))
-    //
+    for (const txo of txos) {
+      await txo.sendAndWaitForReceipt()
+    }
   })
+
   test('should return the count of pending withdrawals', async () => {
     await lockedGold.lock().sendAndWaitForReceipt({ value: value * 2 })
     await lockedGold.unlock(value).sendAndWaitForReceipt()

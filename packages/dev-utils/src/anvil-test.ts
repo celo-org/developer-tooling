@@ -1,3 +1,4 @@
+import { StrongAddress } from '@celo/base'
 import { PROXY_ADMIN_ADDRESS } from '@celo/connect'
 import { Anvil, CreateAnvilOptions, createAnvil } from '@viem/anvil'
 import Web3 from 'web3'
@@ -40,7 +41,7 @@ export function createInstance(): Anvil {
 export function testWithAnvil(name: string, fn: (web3: Web3) => void) {
   const anvil = createInstance()
 
-  // for each test case, we start and stop a new anvil instance
+  // for each test suite, we start and stop a new anvil instance
   return testWithWeb3(name, `http://127.0.0.1:${anvil.port}`, fn, {
     beforeAll: async () => {
       await anvil.start()
@@ -67,6 +68,15 @@ export const withImpersonatedAccount = async (
   await impersonateAccount(web3, account)
   await fn()
   await stopImpersonatingAccount(web3, account)
+}
+
+export const asCoreContractsOwner = async (
+  web3: Web3,
+  fn: (ownerAddress: StrongAddress) => Promise<void>
+) => {
+  await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
+    await fn(DEFAULT_OWNER_ADDRESS)
+  })
 }
 
 export function setCode(web3: Web3, address: string, code: string) {
