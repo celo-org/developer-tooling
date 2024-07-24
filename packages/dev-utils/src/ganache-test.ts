@@ -16,7 +16,11 @@ export async function mineBlocks(blocks: number, web3: Web3) {
 }
 
 export function testWithGanache(name: string, fn: (web3: Web3) => void) {
-  return testWithWeb3(name, 'http://localhost:8545', fn)
+  return testWithWeb3(name, 'http://localhost:8545', fn, {
+    runIf:
+      process.env.RUN_GANACHE_TESTS === 'true' ||
+      typeof process.env.RUN_GANACHE_TESTS === 'undefined',
+  })
 }
 
 /**

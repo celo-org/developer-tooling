@@ -62,7 +62,10 @@ export function testWithWeb3(
   name: string,
   rpcUrl: string,
   fn: (web3: Web3) => void,
-  hooks?: TestWithWeb3Hooks
+  options: {
+    hooks?: TestWithWeb3Hooks
+    runIf?: boolean
+  } = {}
 ) {
   const web3 = new Web3(rpcUrl)
 
@@ -71,11 +74,19 @@ export function testWithWeb3(
   // before polling again making the tests slow
   web3.eth.transactionPollingInterval = 10
 
-  describe(name, () => {
+  // By default we run all the tests
+  let describeFn = describe
+
+  // and only skip them if explicitly stated
+  if (options.runIf === false) {
+    describeFn = describe.skip
+  }
+
+  describeFn(name, () => {
     let snapId: string | null = null
 
-    if (hooks?.beforeAll) {
-      beforeAll(hooks.beforeAll)
+    if (options.hooks?.beforeAll) {
+      beforeAll(options.hooks.beforeAll)
     }
 
     beforeEach(async () => {
@@ -89,9 +100,9 @@ export function testWithWeb3(
       if (snapId != null) {
         await evmRevert(web3, snapId)
       }
-      if (hooks?.afterAll) {
+      if (options.hooks?.afterAll) {
         // hook must be awaited here or jest doesnt actually wait for it and complains of open handles
-        await hooks.afterAll()
+        await options.hooks.afterAll()
       }
     })
 

@@ -44,11 +44,15 @@ export function testWithAnvil(name: string, fn: (web3: Web3) => void) {
 
   // for each test suite, we start and stop a new anvil instance
   return testWithWeb3(name, `http://127.0.0.1:${anvil.port}`, fn, {
-    beforeAll: async () => {
-      await anvil.start()
-    },
-    afterAll: async () => {
-      await anvil.stop()
+    runIf:
+      process.env.RUN_ANVIL_TESTS === 'true' || typeof process.env.RUN_ANVIL_TESTS === 'undefined',
+    hooks: {
+      beforeAll: async () => {
+        await anvil.start()
+      },
+      afterAll: async () => {
+        await anvil.stop()
+      },
     },
   })
 }
