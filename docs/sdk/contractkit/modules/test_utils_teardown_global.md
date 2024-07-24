@@ -20,4 +20,4 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/test-utils/teardown.global.ts:3](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/test-utils/teardown.global.ts#L3)
+[packages/sdk/contractkit/src/test-utils/teardown.global.ts:4](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/test-utils/teardown.global.ts#L4)
