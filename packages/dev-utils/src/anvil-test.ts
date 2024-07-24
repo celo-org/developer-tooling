@@ -61,7 +61,7 @@ export function impersonateAccount(
   return Promise.all([
     jsonRpcCall(web3, 'anvil_impersonateAccount', [address]),
     withBalance
-      ? jsonRpcCall(web3, 'anvil_setBalance', [address, withBalance.toString(16)])
+      ? jsonRpcCall(web3, 'anvil_setBalance', [address, `0x${withBalance.toString(16)}`])
       : undefined,
   ])
 }

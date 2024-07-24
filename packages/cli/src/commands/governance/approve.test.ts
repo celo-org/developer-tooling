@@ -156,7 +156,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
             "Running Checks:",
           ],
           [
-            "   ✔  0x1B46C60e8B3B427d91d35df22FCfc3FF36407f35 is approver address ",
+            "   ✔  0x078B932B0d1e56554974A431B8B33973D94E002b is approver address ",
           ],
           [
             "   ✔  2 is an existing proposal ",
@@ -195,7 +195,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
             "Running Checks:",
           ],
           [
-            "   ✔  0x1B46C60e8B3B427d91d35df22FCfc3FF36407f35 is approver address ",
+            "   ✔  0x078B932B0d1e56554974A431B8B33973D94E002b is approver address ",
           ],
           [
             "   ✔  2 is an existing proposal ",
