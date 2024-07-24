@@ -1569,14 +1569,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/base@npm:^6.0.0, @celo/base@npm:^6.0.1":
-  version: 6.0.1
-  resolution: "@celo/base@npm:6.0.1"
-  checksum: 72245af11b23ff4c488267deb52b4e70326777d6f23a452b68a8172d7a671a643e59ab7a314727532cfea598b10124d4e741d6e59877db6913986059f3de6b69
-  languageName: node
-  linkType: hard
-
-"@celo/base@npm:^6.1.0, @celo/base@workspace:packages/sdk/base":
+"@celo/base@npm:^6.0.0, @celo/base@npm:^6.0.1, @celo/base@npm:^6.1.0, @celo/base@workspace:packages/sdk/base":
   version: 0.0.0-use.local
   resolution: "@celo/base@workspace:packages/sdk/base"
   dependencies:
