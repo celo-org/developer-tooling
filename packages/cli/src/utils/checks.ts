@@ -163,10 +163,17 @@ class CheckBuilder {
     )
 
   proposalInStage = (proposalID: string, stage: keyof typeof ProposalStage) =>
+    this.proposalInStages(proposalID, [stage])
+
+  proposalInStages = (proposalID: string, stages: (keyof typeof ProposalStage)[]) =>
     this.addCheck(
-      `${proposalID} is in stage ${stage}`,
+      `${proposalID} is in stage ${stages.join(' or ')}`,
       this.withGovernance(async (governance) => {
-        const match = (await governance.getProposalStage(proposalID)) === stage
+        const stage = await governance.getProposalStage(proposalID)
+        let match = false
+        for (const allowedStage of stages) {
+          match = stage === allowedStage || match
+        }
         if (!match) {
           const schedule = await governance.proposalSchedule(proposalID)
           printValueMapRecursive(schedule)

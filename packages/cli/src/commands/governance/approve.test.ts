@@ -1,7 +1,7 @@
 import { StrongAddress } from '@celo/base'
 import { newKitFromWeb3 } from '@celo/contractkit'
-import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+import { GovernanceWrapper, ProposalStage } from '@celo/contractkit/lib/wrappers/Governance'
+import { impersonateAccount, testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import { ux } from '@oclif/core'
 import Web3 from 'web3'
@@ -72,7 +72,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
           "   ✔  1 is an existing proposal ",
         ],
         [
-          "   ✔  1 is in stage Referendum ",
+          "   ✔  1 is in stage Referendum or Execution ",
         ],
         [
           "   ✔  1 not already approved ",
@@ -110,7 +110,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
           "   ✔  1 is an existing proposal ",
         ],
         [
-          "   ✔  1 is in stage Referendum ",
+          "   ✔  1 is in stage Referendum or Execution ",
         ],
         [
           "   ✔  1 not already approved ",
@@ -127,5 +127,102 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
       ]
     `)
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
+  })
+
+  describe('approve succeeds if stage is "Referendum or Execution" or "Approval"', () => {
+    test('can be approved if version >= 3 (default)', async () => {
+      const logMock = jest.spyOn(console, 'log')
+
+      await governance
+        .propose([], 'https://example.com')
+        .sendAndWaitForReceipt({ value: minDeposit })
+
+      const approver = await governance.getApprover()
+      await impersonateAccount(web3, approver, 1000000000000000000n)
+
+      let proposalId = (await governance.getQueue())[0].proposalID
+      await expect(governance.getProposalStage(proposalId)).resolves.toBe(ProposalStage.Queued)
+      await expect(
+        testLocallyWithWeb3Node(
+          Approve,
+          ['--from', approver, '--proposalID', proposalId.toString()],
+          web3
+        )
+      ).rejects.not.toBeUndefined()
+      const schedule = await governance.proposalSchedule(proposalId)
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
+        [
+          [
+            "Running Checks:",
+          ],
+          [
+            "   ✔  0x078B932B0d1e56554974A431B8B33973D94E002b is approver address ",
+          ],
+          [
+            "   ✔  2 is an existing proposal ",
+          ],
+          [
+            "Expiration: ${schedule.Expiration?.toString()} (~${schedule.Expiration?.toExponential(
+        3
+      )})
+        Queued: ${schedule.Queued?.toString()} (~${schedule.Queued?.toExponential(3)})",
+          ],
+          [
+            "   ✘  2 is in stage Referendum or Execution ",
+          ],
+          [
+            "   ✔  2 not already approved ",
+          ],
+        ]
+      `)
+      logMock.mockClear()
+
+      const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
+      await timeTravel(dequeueFrequency, web3)
+      await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
+
+      await governance.vote(proposalId, 'Yes')
+      await expect(governance.getProposalStage(proposalId)).resolves.toBe(ProposalStage.Referendum)
+      await testLocallyWithWeb3Node(
+        Approve,
+        ['--from', approver, '--proposalID', proposalId.toString()],
+        web3
+      )
+      const txHash = stripAnsiCodes(logMock.mock.calls.at(-3)![0].split(':')[1].trim())
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
+        [
+          [
+            "Running Checks:",
+          ],
+          [
+            "   ✔  0x078B932B0d1e56554974A431B8B33973D94E002b is approver address ",
+          ],
+          [
+            "   ✔  2 is an existing proposal ",
+          ],
+          [
+            "   ✔  2 is in stage Referendum or Execution ",
+          ],
+          [
+            "   ✔  2 not already approved ",
+          ],
+          [
+            "All checks passed",
+          ],
+          [
+            "SendTransaction: approveTx",
+          ],
+          [
+            "txHash: ${txHash}",
+          ],
+          [
+            "ProposalApproved:",
+          ],
+          [
+            "proposalId: 2",
+          ],
+        ]
+      `)
+    })
   })
 })
