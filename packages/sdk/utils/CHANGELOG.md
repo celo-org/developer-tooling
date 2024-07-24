@@ -1,5 +1,17 @@
 # @celo/utils
 
+## 7.0.0
+
+### Major Changes
+
+- [#59](https://github.com/celo-org/developer-tooling/pull/59) [`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - CHANGE - Replaced all deprecated cryptographic depencies with the audited and maintained suite of crypto libraries `@noble/*` and `@scure/*`
+  BREAKING - Some functions that used to return a `Buffer` now return a `UInt8Array` instead due to underlying changed
+
+### Patch Changes
+
+- Updated dependencies [[`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03)]:
+  - @celo/base@6.1.0
+
 ## 7.0.0-beta.0
 
 ### Major Changes

@@ -1,5 +1,28 @@
 # @celo/wallet-ledger
 
+## 6.0.0
+
+### Minor Changes
+
+- [#264](https://github.com/celo-org/developer-tooling/pull/264) [`59f4b42`](https://github.com/celo-org/developer-tooling/commit/59f4b42029699861e91dd2214c40173f70de279e) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Add support for serializing, sending, parsing and deserializing cip66 transactions. This tx type is preffered over cip64 when paying for gas with tokens. Like eip1559 maxFeePerGass and maxPriorityFeePerGas are denominated in CELO. To create an cip66 transaction with Contractkit call the `kit.populateMaxFeeInToken` method with your transaction and then send it.
+
+### Patch Changes
+
+- [#283](https://github.com/celo-org/developer-tooling/pull/283) [`6d2a838`](https://github.com/celo-org/developer-tooling/commit/6d2a838a80a51007d75768c77d62a861f2cec136) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Change the @ledgerhq/hw-app-eth dependency to our own fork
+
+- [#59](https://github.com/celo-org/developer-tooling/pull/59) [`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - CHANGE - Update the code to match @celo/wallet-base changes
+
+- [#288](https://github.com/celo-org/developer-tooling/pull/288) [`d5b1508`](https://github.com/celo-org/developer-tooling/commit/d5b1508d7d08a99f6bb6deb569ec8b89194de2b9) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Change git url
+
+- [#239](https://github.com/celo-org/developer-tooling/pull/239) [`66972eb`](https://github.com/celo-org/developer-tooling/commit/66972ebf0dfabc845ae309c2f794fe015ac49a86) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Temporarily support celo-legacy transactions / older celo-ledger apps.
+
+- Updated dependencies [[`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03), [`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03), [`59f4b42`](https://github.com/celo-org/developer-tooling/commit/59f4b42029699861e91dd2214c40173f70de279e), [`182bf73`](https://github.com/celo-org/developer-tooling/commit/182bf73209e6b7de0d9ea1fedaf91c9ec80299f5), [`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03), [`7b93642`](https://github.com/celo-org/developer-tooling/commit/7b93642803261b37971dd3c07f8748b6bc8f3378), [`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03), [`66972eb`](https://github.com/celo-org/developer-tooling/commit/66972ebf0dfabc845ae309c2f794fe015ac49a86)]:
+  - @celo/wallet-base@6.0.0
+  - @celo/utils@7.0.0
+  - @celo/connect@6.0.0
+  - @celo/base@6.1.0
+  - @celo/wallet-remote@6.0.0
+
 ## 6.0.0-beta.3
 
 ### Patch Changes
