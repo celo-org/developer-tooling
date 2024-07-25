@@ -58,6 +58,15 @@ type TestWithWeb3Hooks = {
   afterAll?: () => Promise<void>
 }
 
+/**
+ * Creates a test suite with a given name and provides function with a web3 instance connected to the given rpcUrl.
+ *
+ * It is an equivalent of jest `describe` with the web3 additioon. It also provides hooks for beforeAll and afterAll.
+ *
+ * Optionally if a runIf flag is set to false the test suite will be skipped (useful for conditional test suites). By
+ * default all test suites are run normally, but if the runIf flag is set to false the test suite will be skipped by using
+ * jest `describe.skip`. It will be reported in the summary as "skipped".
+ */
 export function testWithWeb3(
   name: string,
   rpcUrl: string,
