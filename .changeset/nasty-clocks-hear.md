@@ -2,4 +2,4 @@
 '@celo/celocli': patch
 ---
 
-network:whitelist now oututs as a table, typical table formatting flags are now accepted such as --csv
+network:whitelist now outputs as a table accepting typical table formatting flags such as --csv
