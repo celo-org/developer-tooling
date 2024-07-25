@@ -1,11 +1,5 @@
 # Changelog
 
-## 5.1.1
-
-### Patch Changes
-
-- [#275](https://github.com/celo-org/developer-tooling/pull/275) [`ac736ff`](https://github.com/celo-org/developer-tooling/commit/ac736ff5d1c5cb5457d4c3a856bf75675841b379) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - network:whitelist now oututs as a table, typical table formatting flags are now accepted such as --csv
-
 ## 5.1.0
 
 ### Minor Changes
