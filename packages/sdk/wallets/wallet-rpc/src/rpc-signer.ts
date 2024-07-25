@@ -48,6 +48,7 @@ type RpcSignerEndpointResult = {
 
 /**
  * Implements the signer interface on top of the JSON-RPC interface.
+ * @deprecated https://forum.celo.org/t/deprecation-of-celo-wallet-rpc/8452
  */
 export class RpcSigner implements Signer {
   /**

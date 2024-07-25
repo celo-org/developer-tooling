@@ -10,9 +10,11 @@ export enum RpcWalletErrors {
   AccountAlreadyExists = 'RpcWallet: account already exists',
 }
 
-/*
+/**
  *   WARNING: This class should only be used with well-permissioned providers (ie IPC)
  *   to avoid sensitive user 'privateKey' and 'passphrase' information being exposed
+ *
+ * @deprecated https://forum.celo.org/t/deprecation-of-celo-wallet-rpc/8452
  */
 export class RpcWallet extends RemoteWallet<RpcSigner> implements UnlockableWallet {
   protected readonly rpc: RpcCaller
