@@ -1,10 +1,10 @@
 import { StrongAddress } from '@celo/base'
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
 import { newKitFromWeb3 } from '../kit'
 import { GoldTokenWrapper } from './GoldTokenWrapper'
 
-testWithAnvil('GoldToken Wrapper', (web3) => {
+testWithAnvilL1('GoldToken Wrapper', (web3) => {
   const ONE_GOLD = web3.utils.toWei('1', 'ether')
 
   const kit = newKitFromWeb3(web3)

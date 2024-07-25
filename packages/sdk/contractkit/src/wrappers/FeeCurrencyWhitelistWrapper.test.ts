@@ -1,7 +1,7 @@
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { newKitFromWeb3 } from '../kit'
 
-testWithAnvil('FeeCurrencyWhitelist', (web3) => {
+testWithAnvilL1('FeeCurrencyWhitelist', (web3) => {
   const kit = newKitFromWeb3(web3)
 
   it('fetches fee currency information', async () => {

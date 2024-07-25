@@ -1,4 +1,4 @@
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import { PROOF_OF_POSSESSION_SIGNATURE } from '../../test-utils/constants'
 import Authorize from './authorize'
@@ -7,7 +7,7 @@ import Register from './register'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvil('account:deauthorize cmd', (web3) => {
+testWithAnvilL1('account:deauthorize cmd', (web3) => {
   test('can deauthorize attestation signer', async () => {
     const accounts = await web3.eth.getAccounts()
     const notRegisteredAccount = accounts[0]

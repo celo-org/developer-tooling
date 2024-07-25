@@ -1,9 +1,11 @@
+import { hexToBuffer } from '@celo/base'
 import { newKitFromWeb3 } from '@celo/contractkit'
+import { HotfixRecord } from '@celo/contractkit/lib/wrappers/Governance'
 import {
   DEFAULT_OWNER_ADDRESS,
   setCode,
   setNextBlockTimestamp,
-  testWithAnvil,
+  testWithAnvilL2,
   withImpersonatedAccount,
 } from '@celo/dev-utils/lib/anvil-test'
 import fs from 'fs'
@@ -15,15 +17,15 @@ import {
   stripAnsiCodes,
   testLocallyWithWeb3Node,
 } from '../../test-utils/cliUtils'
-import { getCurrentTimestamp } from '../../utils/cli'
 import Approve from './approve'
 import ExecuteHotfix from './executehotfix'
 import PrepareHotfix from './preparehotfix'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvil('governance:executehotfix cmd', (web3: Web3) => {
+testWithAnvilL2('governance:executehotfix cmd', (web3: Web3) => {
   const HOTFIX_HASH = '0x8ad3719bb2577b277bcafc1f00ac2f1c3fa5e565173303684d0a8d4f3661680c'
+  const HOTFIX_BUFFER = hexToBuffer(HOTFIX_HASH)
   const HOTFIX_TRANSACTION_TEST_KEY = '3'
   const HOTFIX_TRANSACTION_TEST_VALUE = '4'
   const HOTFIX_TRANSACTIONS = [
@@ -193,7 +195,7 @@ testWithAnvil('governance:executehotfix cmd', (web3: Web3) => {
             "SendTransaction: executeHotfixTx",
           ],
           [
-            "txHash: 0x3dbdc14336216af76fd3030ddc8ac3a03e1022fe1707b8589eb1afb6fe2b29ea",
+            "txHash: 0x6a71d61809c970505aca3a38d8aaa531e87dedc96696bc2531e8d413071ead47",
           ],
           [
             "HotfixExecuted:",
@@ -287,8 +289,15 @@ testWithAnvil('governance:executehotfix cmd', (web3: Web3) => {
         await testTransactionsContract.methods.getValue(HOTFIX_TRANSACTION_TEST_KEY).call()
       ).toEqual('0')
 
-      // Make sure it it's past the execution time limit
-      await setNextBlockTimestamp(web3, getCurrentTimestamp() + 2)
+      const timestampAfterExecutionLimit = (
+        (await governanceWrapper.getHotfixRecord(HOTFIX_BUFFER)) as HotfixRecord
+      ).executionTimeLimit.plus(1)
+
+      jest
+        .spyOn(global.Date, 'now')
+        .mockImplementation(() => timestampAfterExecutionLimit.multipliedBy(1000).toNumber())
+
+      await setNextBlockTimestamp(web3, timestampAfterExecutionLimit.toNumber())
 
       logMock.mockClear()
 

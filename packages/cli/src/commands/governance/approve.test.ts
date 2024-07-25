@@ -1,7 +1,7 @@
 import { StrongAddress } from '@celo/base'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { GovernanceWrapper, ProposalStage } from '@celo/contractkit/lib/wrappers/Governance'
-import { impersonateAccount, testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+import { impersonateAccount, testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import { ux } from '@oclif/core'
 import Web3 from 'web3'
@@ -11,7 +11,7 @@ import Approve from './approve'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvil('governance:approve cmd', (web3: Web3) => {
+testWithAnvilL1('governance:approve cmd', (web3: Web3) => {
   const kit = newKitFromWeb3(web3)
   const proposalID = '1'
   let minDeposit: string
@@ -122,7 +122,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
           "SendTransaction: approveTx",
         ],
         [
-          "txHash: 0x52cdb8aa50991657f3b8481094a4f07d31db96998975faa7818bd64767d6ea16",
+          "txHash: 0x4a27466ac2819a4d4a2aa086820bbaef4492b7f1412094b890a34dc9244f67ac",
         ],
       ]
     `)

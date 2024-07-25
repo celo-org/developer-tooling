@@ -2,7 +2,7 @@ import { StrongAddress } from '@celo/base'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { GoldTokenWrapper } from '@celo/contractkit/lib/wrappers/GoldTokenWrapper'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { ux } from '@oclif/core'
 import * as fs from 'fs'
 import Web3 from 'web3'
@@ -137,7 +137,7 @@ const structAbiDefinition = {
   type: 'function',
 }
 
-testWithAnvil('governance:propose cmd', (web3: Web3) => {
+testWithAnvilL1('governance:propose cmd', (web3: Web3) => {
   let governance: GovernanceWrapper
   let goldToken: GoldTokenWrapper
   let minDeposit: string

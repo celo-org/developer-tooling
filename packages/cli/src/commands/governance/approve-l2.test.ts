@@ -2,8 +2,7 @@ import { hexToBuffer, StrongAddress } from '@celo/base'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import {
   DEFAULT_OWNER_ADDRESS,
-  setupL2,
-  testWithAnvil,
+  testWithAnvilL2,
   withImpersonatedAccount,
 } from '@celo/dev-utils/lib/anvil-test'
 import { ux } from '@oclif/core'
@@ -14,7 +13,7 @@ import Approve from './approve'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvil('governance:approve cmd', (web3: Web3) => {
+testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
   const HOTFIX_HASH = '0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d'
   const HOTFIX_BUFFER = hexToBuffer(HOTFIX_HASH)
 
@@ -26,8 +25,6 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
       const writeMock = jest.spyOn(ux.write, 'stdout')
       const logMock = jest.spyOn(console, 'log')
       const multisig = await governance.getApproverMultisig()
-
-      await setupL2(web3)
 
       await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
         // setApprover to 0x5409ED021D9299bf6814279A6A1411A7e866A631 to avoid "Council cannot be approver" error
@@ -105,8 +102,6 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
       const writeMock = jest.spyOn(ux.write, 'stdout')
       const logMock = jest.spyOn(console, 'log')
 
-      await setupL2(web3)
-
       await expect(
         testLocallyWithWeb3Node(
           Approve,
@@ -151,8 +146,6 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
       const governance = await kit.contracts.getGovernance()
       const writeMock = jest.spyOn(ux.write, 'stdout')
       const logMock = jest.spyOn(console, 'log')
-
-      await setupL2(web3)
 
       await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
         // setApprover to approver value
@@ -218,8 +211,6 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
       const writeMock = jest.spyOn(ux.write, 'stdout')
       const logMock = jest.spyOn(console, 'log')
 
-      await setupL2(web3)
-
       await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
         // setApprover to approver value
         await (
@@ -280,8 +271,6 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
       const writeMock = jest.spyOn(ux.write, 'stdout')
       const logMock = jest.spyOn(console, 'log')
 
-      await setupL2(web3)
-
       await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
         // setApprover to approver value
         await (
@@ -339,7 +328,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
             "SendTransaction: approveTx",
           ],
           [
-            "txHash: 0x45fa0ad89a10cea114171fda54c27fd0f37dbc6596ce8946638c0f389554b04e",
+            "txHash: 0x80e62182c1254c4a04287789754fdfb6291a3923fec30b99a14ed105d48e5d87",
           ],
           [
             "HotfixApproved:",
@@ -359,8 +348,6 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
       const governance = await kit.contracts.getGovernance()
       const writeMock = jest.spyOn(ux.write, 'stdout')
       const logMock = jest.spyOn(console, 'log')
-
-      await setupL2(web3)
 
       await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
         // setApprover to approver value
@@ -415,7 +402,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
             "SendTransaction: approveTx",
           ],
           [
-            "txHash: 0x5f7bf72da8b16d6870545d4395462728febd0b5be774f0d9857d5542e2393e7d",
+            "txHash: 0x94e7691bb7871d01d90e77d4d12458e30715ce7145846dc8c785084a0d919ce1",
           ],
           [
             "HotfixApproved:",
@@ -437,7 +424,6 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
       const logMock = jest.spyOn(console, 'log')
       const multisig = await governance.getApproverMultisig()
 
-      await setupL2(web3)
       await changeMultiSigOwner(kit, accounts[0])
 
       await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
@@ -515,7 +501,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
             "SendTransaction: approveTx",
           ],
           [
-            "txHash: 0x8a5f48287a3612725ada13534f6b5bc8c795630d153cd4782ef594da60e431dc",
+            "txHash: 0xd3dfa36f21cbece15f6557d868df9372ba83bd05443b7d5a8b2466f84c2ebf5b",
           ],
         ]
       `)
@@ -526,7 +512,6 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
       const kit = newKitFromWeb3(web3)
       const accounts = (await web3.eth.getAccounts()) as StrongAddress[]
 
-      await setupL2(web3)
       await changeMultiSigOwner(kit, accounts[0])
 
       const governance = await kit.contracts.getGovernance()
@@ -538,8 +523,6 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
         ['--from', accounts[0], '--hotfix', HOTFIX_HASH, '--useMultiSig'],
         web3
       )
-
-      await new Promise((resolve) => setTimeout(resolve, 5000))
 
       expect(await governance.getHotfixRecord(HOTFIX_BUFFER)).toMatchInlineSnapshot(`
         {
@@ -573,7 +556,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
             "SendTransaction: approveTx",
           ],
           [
-            "txHash: 0xc23094c18b45c064f26058220139891f2101e3cea0f2e76a256645424dba0247",
+            "txHash: 0x293139f741a926fcd119f0553d5b70735b6a7a676e74be0e1960f98a7513114a",
           ],
         ]
       `)
@@ -584,7 +567,6 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
       const kit = newKitFromWeb3(web3)
       const accounts = (await web3.eth.getAccounts()) as StrongAddress[]
 
-      await setupL2(web3)
       await changeMultiSigOwner(kit, accounts[0])
 
       const governance = await kit.contracts.getGovernance()
@@ -661,7 +643,7 @@ testWithAnvil('governance:approve cmd', (web3: Web3) => {
             "SendTransaction: approveTx",
           ],
           [
-            "txHash: 0xa1805cea4de891d8a43a4c648f6883651743d4970cd8c4d9ce843c3d4975b6ad",
+            "txHash: 0x3b21e3f7a308fb2e308bb28085065dd965e3b26c436379edf7101a1f7278ca89",
           ],
         ]
       `)

@@ -1,6 +1,6 @@
 import { StrongAddress } from '@celo/base'
 import { CeloTx, CeloTxObject, CeloTxReceipt, PromiEvent } from '@celo/connect'
-import { setupL2, testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL1, testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
 import Web3 from 'web3'
 import {
@@ -206,7 +206,7 @@ testWithGanache('Fetch whitelisted fee currencies', (web3: Web3) => {
   })
 })
 
-testWithAnvil('kit', (web3) => {
+testWithAnvilL1('kit', (web3) => {
   let kit: ContractKit
   let feeToken: StrongAddress
   beforeAll(async () => {
@@ -227,60 +227,6 @@ testWithAnvil('kit', (web3) => {
         ).rejects.toMatchInlineSnapshot(
           `[Error: Can't populate \`maxFeeInFeeCurrency\` if not on a CEL2 network]`
         )
-      })
-    })
-    describe('when on cel2', () => {
-      beforeEach(async () => {
-        await setupL2(web3)
-      })
-      describe('when gas is missing', () => {
-        it('fills the gas and works as normal', async () => {
-          await expect(
-            kit.populateMaxFeeInToken({
-              feeCurrency: feeToken,
-            })
-          ).resolves.toMatchInlineSnapshot(`
-            {
-              "feeCurrency": "0x0c6a0fde0A72bA3990870f0F99ED79a821703474",
-              "gas": 53001,
-              "maxFeeInFeeCurrency": "108122040000000",
-              "maxFeePerGas": "2000000000",
-              "maxPriorityFeePerGas": "1000000000",
-            }
-          `)
-        })
-      })
-      describe('when maxFeePerFeeCurrency exists', () => {
-        it('returns without modification', async () => {
-          const maxFeeInFeeCurrency = '2000000'
-          await expect(
-            kit.populateMaxFeeInToken({
-              maxFeeInFeeCurrency,
-              feeCurrency: feeToken,
-              gas: '102864710371401736267367367',
-            })
-          ).resolves.toMatchObject({
-            maxFeeInFeeCurrency,
-            feeCurrency: feeToken,
-            gas: '102864710371401736267367367',
-          })
-        })
-      })
-      describe('when feeCurrency provided with gas', () => {
-        it('returns with maxFeePerFeeCurrency estimated', async () => {
-          await expect(
-            kit.populateMaxFeeInToken({
-              feeCurrency: feeToken,
-              gas: '102864710371401736267367367',
-            })
-          ).resolves.toEqual({
-            feeCurrency: feeToken,
-            gas: '102864710371401736267367367',
-            maxFeeInFeeCurrency: '209844009157659541985429428680000000',
-            maxFeePerGas: '2000000000',
-            maxPriorityFeePerGas: '1000000000',
-          })
-        })
       })
     })
     describe('estimateMaxFeeInFeeToken', () => {
@@ -333,6 +279,74 @@ testWithAnvil('kit', (web3) => {
         })
         // 10 * 10 * 1.2 * 1/2
       ).resolves.toEqual(BigInt(51))
+    })
+  })
+})
+
+testWithAnvilL2('kit', (web3) => {
+  let kit: ContractKit
+  let feeToken: StrongAddress
+
+  beforeAll(async () => {
+    // when this is beforeEach the web3 instance is reused so the second time it already is attached to a celo provider
+    // but if the provider is already an instance of celo provider then  rpccaller is not attached to connection class instance
+    //  web3 must be a new instance when creating a kit not a an instance that was already used by a different kit
+    kit = newKitFromWeb3(web3)
+
+    const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyWhitelist()
+    const gasOptions = await feeCurrencyWhitelist.getWhitelist()
+    feeToken = gasOptions[0]
+  })
+
+  describe('when on cel2', () => {
+    describe('when gas is missing', () => {
+      it('fills the gas and works as normal', async () => {
+        await expect(
+          kit.populateMaxFeeInToken({
+            feeCurrency: feeToken,
+          })
+        ).resolves.toMatchInlineSnapshot(`
+          {
+            "feeCurrency": "0x0c6a0fde0A72bA3990870f0F99ED79a821703474",
+            "gas": 53001,
+            "maxFeeInFeeCurrency": "108122040000000",
+            "maxFeePerGas": "2000000000",
+            "maxPriorityFeePerGas": "1000000000",
+          }
+        `)
+      })
+    })
+    describe('when maxFeePerFeeCurrency exists', () => {
+      it('returns without modification', async () => {
+        const maxFeeInFeeCurrency = '2000000'
+        await expect(
+          kit.populateMaxFeeInToken({
+            maxFeeInFeeCurrency,
+            feeCurrency: feeToken,
+            gas: '102864710371401736267367367',
+          })
+        ).resolves.toMatchObject({
+          maxFeeInFeeCurrency,
+          feeCurrency: feeToken,
+          gas: '102864710371401736267367367',
+        })
+      })
+    })
+    describe('when feeCurrency provided with gas', () => {
+      it('returns with maxFeePerFeeCurrency estimated', async () => {
+        await expect(
+          kit.populateMaxFeeInToken({
+            feeCurrency: feeToken,
+            gas: '102864710371401736267367367',
+          })
+        ).resolves.toEqual({
+          feeCurrency: feeToken,
+          gas: '102864710371401736267367367',
+          maxFeeInFeeCurrency: '209844009157659541985429428680000000',
+          maxFeePerGas: '2000000000',
+          maxPriorityFeePerGas: '1000000000',
+        })
+      })
     })
   })
 })

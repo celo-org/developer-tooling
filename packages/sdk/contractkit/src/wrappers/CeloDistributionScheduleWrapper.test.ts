@@ -1,13 +1,12 @@
-import { setupL2, testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { newKitFromWeb3 } from '../kit'
 
-testWithAnvil('CeloDistributionScheduleWrapper', (web3) => {
+// doesn't work
+testWithAnvilL2('CeloDistributionScheduleWrapper', (web3) => {
   const kit = newKitFromWeb3(web3)
 
-  it.failing('fetches config', async () => {
+  it.only('fetches config', async () => {
     const celoDistributionScheduleWrapper = await kit.contracts.getCeloDistributionSchedule()
-
-    await setupL2(web3)
 
     const config = await celoDistributionScheduleWrapper.getConfig()
     expect(config).toMatchInlineSnapshot(`
