@@ -21,6 +21,8 @@
     "prepublishOnly": "yarn build",
     "docs": "yarn run --top-level typedoc",
     "test": "NODE_OPTIONS=--experimental-vm-modules yarn run --top-level jest --runInBand --forceExit",
+    "test-anvil": "RUN_GANACHE_TESTS=false RUN_ANVIL_TESTS=true NODE_OPTIONS=--experimental-vm-modules yarn run --top-level jest --forceExit",
+    "test-ganache": "RUN_GANACHE_TESTS=true RUN_ANVIL_TESTS=false NODE_OPTIONS=--experimental-vm-modules yarn run --top-level jest --runInBand --forceExit",
     "lint": "yarn run --top-level eslint -c .eslintrc.js "
   },
   "dependencies": {
