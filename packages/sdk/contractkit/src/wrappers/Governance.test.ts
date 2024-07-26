@@ -296,10 +296,7 @@ testWithAnvilL1('Governance Wrapper', (web3: Web3) => {
       expect(voter.votes[0]).toEqual(expectedVoteRecord)
     })
   })
-})
 
-// TODO couldn't this be merged with the previous test suite?
-testWithAnvilL1('Governance Wrapper', (web3: Web3) => {
   describe('Hotfixes', () => {
     it('gets L1 hotfix record for version >= 1.5.0.0', async () => {
       const kit = newKitFromWeb3(web3)
