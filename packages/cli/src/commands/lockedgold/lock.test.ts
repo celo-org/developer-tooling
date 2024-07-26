@@ -67,7 +67,7 @@ testWithAnvilL1('lockedgold:lock cmd', (web3: Web3) => {
             "SendTransaction: register",
           ],
           [
-            "txHash: 0xc16e27382dc3d3e4546c3869a0147c49390a1cd0e758301e9b3e06927c48033f",
+            "txHash: 0xtxhash",
           ],
           [
             "Running Checks:",
@@ -82,7 +82,7 @@ testWithAnvilL1('lockedgold:lock cmd', (web3: Web3) => {
             "SendTransaction: lock",
           ],
           [
-            "txHash: 0x84859d5c23b7c3ba7efd3168bcde9fff5c0b6355c01f20efc90a34b83beaa1bc",
+            "txHash: 0xtxhash",
           ],
         ]
       `)

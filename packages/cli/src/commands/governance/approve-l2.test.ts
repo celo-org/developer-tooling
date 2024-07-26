@@ -8,7 +8,7 @@ import {
 import { ux } from '@oclif/core'
 import Web3 from 'web3'
 import { changeMultiSigOwner } from '../../test-utils/chain-setup'
-import { stripAnsiCodes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Approve from './approve'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -73,7 +73,8 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
           "executionTimeLimit": "0",
         }
       `)
-      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+        .toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
@@ -118,7 +119,8 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
           "executionTimeLimit": "0",
         }
       `)
-      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+        .toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
@@ -185,7 +187,8 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
           "executionTimeLimit": "0",
         }
       `)
-      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+        .toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
@@ -245,7 +248,8 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
           "executionTimeLimit": "0",
         }
       `)
-      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+        .toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
@@ -307,7 +311,8 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
           "executionTimeLimit": "0",
         }
       `)
-      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+        .toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
@@ -328,7 +333,7 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
             "SendTransaction: approveTx",
           ],
           [
-            "txHash: 0x80e62182c1254c4a04287789754fdfb6291a3923fec30b99a14ed105d48e5d87",
+            "txHash: 0xtxhash",
           ],
           [
             "HotfixApproved:",
@@ -381,7 +386,8 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
           "executionTimeLimit": "0",
         }
       `)
-      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+        .toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
@@ -402,7 +408,7 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
             "SendTransaction: approveTx",
           ],
           [
-            "txHash: 0x94e7691bb7871d01d90e77d4d12458e30715ce7145846dc8c785084a0d919ce1",
+            "txHash: 0xtxhash",
           ],
           [
             "HotfixApproved:",
@@ -477,7 +483,8 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
         }
       `)
 
-      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+        .toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
@@ -501,7 +508,7 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
             "SendTransaction: approveTx",
           ],
           [
-            "txHash: 0xd3dfa36f21cbece15f6557d868df9372ba83bd05443b7d5a8b2466f84c2ebf5b",
+            "txHash: 0xtxhash",
           ],
         ]
       `)
@@ -532,7 +539,8 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
           "executionTimeLimit": "0",
         }
       `)
-      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+        .toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
@@ -556,7 +564,7 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
             "SendTransaction: approveTx",
           ],
           [
-            "txHash: 0x293139f741a926fcd119f0553d5b70735b6a7a676e74be0e1960f98a7513114a",
+            "txHash: 0xtxhash",
           ],
         ]
       `)
@@ -619,7 +627,8 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
           "executionTimeLimit": "0",
         }
       `)
-      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+        .toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
@@ -643,7 +652,7 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
             "SendTransaction: approveTx",
           ],
           [
-            "txHash: 0x3b21e3f7a308fb2e308bb28085065dd965e3b26c436379edf7101a1f7278ca89",
+            "txHash: 0xtxhash",
           ],
         ]
       `)

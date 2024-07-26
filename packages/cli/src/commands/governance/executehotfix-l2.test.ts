@@ -14,7 +14,7 @@ import Web3 from 'web3'
 import { AbiItem, PROXY_ADMIN_ADDRESS } from '../../../../sdk/connect/lib'
 import {
   EXTRA_LONG_TIMEOUT_MS,
-  stripAnsiCodes,
+  stripAnsiCodesAndTxHashes,
   testLocallyWithWeb3Node,
 } from '../../test-utils/cliUtils'
 import Approve from './approve'
@@ -171,7 +171,8 @@ testWithAnvilL2('governance:executehotfix cmd', (web3: Web3) => {
         await testTransactionsContract.methods.getValue(HOTFIX_TRANSACTION_TEST_KEY).call()
       ).toEqual(HOTFIX_TRANSACTION_TEST_VALUE)
 
-      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+        .toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
@@ -195,7 +196,7 @@ testWithAnvilL2('governance:executehotfix cmd', (web3: Web3) => {
             "SendTransaction: executeHotfixTx",
           ],
           [
-            "txHash: 0x6a71d61809c970505aca3a38d8aaa531e87dedc96696bc2531e8d413071ead47",
+            "txHash: 0xtxhash",
           ],
           [
             "HotfixExecuted:",
@@ -321,7 +322,8 @@ testWithAnvilL2('governance:executehotfix cmd', (web3: Web3) => {
         await testTransactionsContract.methods.getValue(HOTFIX_TRANSACTION_TEST_KEY).call()
       ).toEqual('0')
 
-      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+        .toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",

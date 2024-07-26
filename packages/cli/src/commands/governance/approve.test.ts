@@ -6,7 +6,7 @@ import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import { ux } from '@oclif/core'
 import Web3 from 'web3'
 import { changeMultiSigOwner } from '../../test-utils/chain-setup'
-import { stripAnsiCodes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Approve from './approve'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -57,7 +57,8 @@ testWithAnvilL1('governance:approve cmd', (web3: Web3) => {
     ).rejects.toThrow("Some checks didn't pass!")
 
     expect(await governance.isApproved(proposalID)).toEqual(false)
-    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
+    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+      .toMatchInlineSnapshot(`
       [
         [
           "Running Checks:",
@@ -95,7 +96,8 @@ testWithAnvilL1('governance:approve cmd', (web3: Web3) => {
     )
 
     expect(await governance.isApproved(proposalID)).toEqual(true)
-    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
+    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+      .toMatchInlineSnapshot(`
       [
         [
           "Running Checks:",
@@ -122,7 +124,7 @@ testWithAnvilL1('governance:approve cmd', (web3: Web3) => {
           "SendTransaction: approveTx",
         ],
         [
-          "txHash: 0x4a27466ac2819a4d4a2aa086820bbaef4492b7f1412094b890a34dc9244f67ac",
+          "txHash: 0xtxhash",
         ],
       ]
     `)
@@ -150,7 +152,8 @@ testWithAnvilL1('governance:approve cmd', (web3: Web3) => {
         )
       ).rejects.not.toBeUndefined()
       const schedule = await governance.proposalSchedule(proposalId)
-      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+        .toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
@@ -188,8 +191,8 @@ testWithAnvilL1('governance:approve cmd', (web3: Web3) => {
         ['--from', approver, '--proposalID', proposalId.toString()],
         web3
       )
-      const txHash = stripAnsiCodes(logMock.mock.calls.at(-3)![0].split(':')[1].trim())
-      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+        .toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
@@ -213,7 +216,7 @@ testWithAnvilL1('governance:approve cmd', (web3: Web3) => {
             "SendTransaction: approveTx",
           ],
           [
-            "txHash: ${txHash}",
+            "txHash: 0xtxhash",
           ],
           [
             "ProposalApproved:",

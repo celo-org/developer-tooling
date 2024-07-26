@@ -10,7 +10,7 @@ import {
   setupGroupAndAffiliateValidator,
   voteForGroupFrom,
 } from '../../test-utils/chain-setup'
-import { stripAnsiCodes, testLocally } from '../../test-utils/cliUtils'
+import { stripAnsiCodesAndTxHashes, testLocally } from '../../test-utils/cliUtils'
 import ElectionActivate from './activate'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -119,7 +119,8 @@ testWithGanache('election:activate', (web3: Web3) => {
       }),
     ])
 
-    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
+    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+      .toMatchInlineSnapshot(`
       [
         [
           "Running Checks:",
