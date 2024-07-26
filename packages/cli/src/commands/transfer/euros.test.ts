@@ -1,18 +1,18 @@
 import { COMPLIANT_ERROR_RESPONSE, SANCTIONED_ADDRESSES } from '@celo/compliance'
 import { ContractKit, StableToken, newKitFromWeb3 } from '@celo/contractkit'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
+import { topUpWithToken } from '../../test-utils/chain-setup'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import TransferEURO from './euros'
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
-import { topUpWithToken } from '../../test-utils/chain-setup'
-import BigNumber from 'bignumber.js'
 
 process.env.NO_SYNCCHECK = 'true'
 
 // Lots of commands, sometimes times out
 jest.setTimeout(15000)
 
-testWithAnvil('transfer:euros cmd', (web3: Web3) => {
+testWithAnvilL1('transfer:euros cmd', (web3: Web3) => {
   let accounts: string[] = []
   let kit: ContractKit
 

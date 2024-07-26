@@ -3,8 +3,7 @@ import { newKitFromWeb3 } from '@celo/contractkit'
 import {
   DEFAULT_OWNER_ADDRESS,
   setNextBlockTimestamp,
-  setupL2,
-  testWithAnvil,
+  testWithAnvilL2,
   withImpersonatedAccount,
 } from '@celo/dev-utils/lib/anvil-test'
 import Web3 from 'web3'
@@ -15,7 +14,7 @@ import PrepareHotfix from './preparehotfix'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvil('governance:preparehotfix cmd', (web3: Web3) => {
+testWithAnvilL2('governance:preparehotfix cmd', (web3: Web3) => {
   const HOTFIX_HASH = '0x8ad3719bb2577b277bcafc1f00ac2f1c3fa5e565173303684d0a8d4f3661680c'
   const HOTFIX_BUFFER = hexToBuffer(HOTFIX_HASH)
   const EXECUTION_TIME_LIMIT = 86400
@@ -27,8 +26,6 @@ testWithAnvil('governance:preparehotfix cmd', (web3: Web3) => {
     // arbitrary 100 seconds to the future to avoid
     // Timestamp error: X is lower than or equal to previous block's timestamp
     const nextTimestamp = getCurrentTimestamp() + 100
-
-    await setupL2(web3)
 
     // send some funds to DEFAULT_OWNER_ADDRESS to execute transactions
     await (

@@ -1,10 +1,10 @@
 import { StrongAddress } from '@celo/base'
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { newKitFromWeb3 } from '../kit'
 import { AccountsWrapper } from './Accounts'
 import { LockedGoldWrapper } from './LockedGold'
 
-testWithAnvil('LockedGold Wrapper', (web3) => {
+testWithAnvilL1('LockedGold Wrapper', (web3) => {
   const kit = newKitFromWeb3(web3)
   let accounts: AccountsWrapper
   let lockedGold: LockedGoldWrapper

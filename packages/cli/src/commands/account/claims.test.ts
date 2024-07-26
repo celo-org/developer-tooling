@@ -1,6 +1,6 @@
 import { ContractKit, IdentityMetadataWrapper, newKitFromWeb3 } from '@celo/contractkit'
 import { ClaimTypes } from '@celo/contractkit/lib/identity'
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { readFileSync, writeFileSync } from 'fs'
 import { tmpdir } from 'os'
 import Web3 from 'web3'
@@ -12,7 +12,7 @@ import CreateMetadata from './create-metadata'
 import RegisterMetadata from './register-metadata'
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvil('account metadata cmds', (web3: Web3) => {
+testWithAnvilL1('account metadata cmds', (web3: Web3) => {
   let account: string
   let accounts: string[]
   let kit: ContractKit

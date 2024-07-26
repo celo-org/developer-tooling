@@ -1,5 +1,5 @@
 import { StrongAddress } from '@celo/base'
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import Web3 from 'web3'
 import { ContractKit, newKitFromWeb3 } from '../kit'
@@ -23,7 +23,7 @@ const blsPublicKey =
 const blsPoP =
   '0xcdb77255037eb68897cd487fdd85388cbda448f617f874449d4b11588b0b7ad8ddc20d9bb450b513bb35664ea3923900'
 
-testWithAnvil('Accounts Wrapper', (web3) => {
+testWithAnvilL1('Accounts Wrapper', (web3) => {
   let kit: ContractKit
   let accounts: StrongAddress[] = []
   let accountsInstance: AccountsWrapper

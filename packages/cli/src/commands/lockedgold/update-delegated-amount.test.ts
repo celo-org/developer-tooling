@@ -1,14 +1,14 @@
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import Web3 from 'web3'
 import { LONG_TIMEOUT_MS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Register from '../account/register'
 import Delegate from './delegate'
 import Lock from './lock'
 import UpdateDelegatedAmount from './update-delegated-amount'
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvil('lockedgold:update-delegated-amount cmd', (web3: Web3) => {
+testWithAnvilL1('lockedgold:update-delegated-amount cmd', (web3: Web3) => {
   test(
     'can update delegated amount',
     async () => {

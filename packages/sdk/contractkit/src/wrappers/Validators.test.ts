@@ -1,4 +1,4 @@
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { setCommissionUpdateDelay } from '@celo/dev-utils/lib/chain-setup'
 import { mineBlocks } from '@celo/dev-utils/lib/ganache-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
@@ -21,7 +21,7 @@ const blsPublicKey =
 const blsPoP =
   '0xcdb77255037eb68897cd487fdd85388cbda448f617f874449d4b11588b0b7ad8ddc20d9bb450b513bb35664ea3923900'
 
-testWithAnvil('Validators Wrapper', (web3) => {
+testWithAnvilL1('Validators Wrapper', (web3) => {
   const kit = newKitFromWeb3(web3)
   let accounts: string[] = []
   let accountsInstance: AccountsWrapper
@@ -112,7 +112,7 @@ testWithAnvil('Validators Wrapper', (web3) => {
     const txOpts = { from: groupAccount }
 
     // Set commission update delay to 3 blocks for backwards compatibility
-    setCommissionUpdateDelay(web3, validators.address, 3)
+    await setCommissionUpdateDelay(web3, validators.address, 3)
 
     await validators.setNextCommissionUpdate('0.2').sendAndWaitForReceipt(txOpts)
     await mineBlocks(3, web3)

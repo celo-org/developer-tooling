@@ -1,7 +1,7 @@
 import { StrongAddress } from '@celo/base'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { GovernanceWrapper, Proposal } from '@celo/contractkit/lib/wrappers/Governance'
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { NetworkConfig, timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import { ProposalBuilder } from '@celo/governance'
 import BigNumber from 'bignumber.js'
@@ -13,7 +13,7 @@ process.env.NO_SYNCCHECK = 'true'
 
 const expConfig = NetworkConfig.governance
 
-testWithAnvil('governance:withdraw', (web3: Web3) => {
+testWithAnvilL1('governance:withdraw', (web3: Web3) => {
   let minDeposit: string
   const kit = newKitFromWeb3(web3)
 

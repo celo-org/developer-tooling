@@ -47,18 +47,20 @@ export async function testLocally(
   return command.run(extendedArgv, config)
 }
 
-// Removes font-formatting ANSI codes (colors/styles) from a string
-export const stripAnsiCodes = (text: string): string => {
+// Removes font-formatting ANSI codes (colors/styles) and transaction hashes from a string
+export const stripAnsiCodesAndTxHashes = (text: string): string => {
   if (typeof text !== 'string') {
     // Not everything that comes in here is a string (you can console.log anything), so we just return it as is
     return text
   }
 
-  return text.replace(/\u001b\[.*?m/g, '')
+  return text
+    .replace(/\u001b\[.*?m/g, '')
+    .replace(/^txHash: 0x([A-Fa-f0-9]{64})$/, 'txHash: 0xtxhash')
 }
 
 export function stripAnsiCodesFromNestedArray(arrays: Array<string[]>) {
-  return arrays.map((level0) => level0.map((level1) => stripAnsiCodes(level1)))
+  return arrays.map((level0) => level0.map((level1) => stripAnsiCodesAndTxHashes(level1)))
 }
 
 export const LONG_TIMEOUT_MS = 10 * 1000
