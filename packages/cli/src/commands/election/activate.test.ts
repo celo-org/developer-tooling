@@ -135,7 +135,7 @@ testWithGanache('election:activate', (web3: Web3) => {
           "SendTransaction: activate",
         ],
         [
-          "txHash: 0xeb8b78386a4a12b607bc7fcd5025f9b831b37eda9b3719a87c7235947a314d49",
+          "txHash: 0xtxhash",
         ],
       ]
     `)
