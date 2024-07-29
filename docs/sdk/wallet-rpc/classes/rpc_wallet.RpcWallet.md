@@ -4,6 +4,13 @@
 
 [rpc-wallet](../modules/rpc_wallet.md).RpcWallet
 
+WARNING: This class should only be used with well-permissioned providers (ie IPC)
+  to avoid sensitive user 'privateKey' and 'passphrase' information being exposed
+
+**`Deprecated`**
+
+https://forum.celo.org/t/deprecation-of-celo-wallet-rpc/8452
+
 ## Hierarchy
 
 - `RemoteWallet`\<[`RpcSigner`](rpc_signer.RpcSigner.md)\>
@@ -62,7 +69,7 @@ RemoteWallet\&lt;RpcSigner\&gt;.constructor
 
 #### Defined in
 
-[sdk/wallets/wallet-rpc/src/rpc-wallet.ts:20](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts#L20)
+[sdk/wallets/wallet-rpc/src/rpc-wallet.ts:22](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts#L22)
 
 ## Properties
 
@@ -109,7 +116,7 @@ UnlockableWallet.addAccount
 
 #### Defined in
 
-[sdk/wallets/wallet-rpc/src/rpc-wallet.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts#L38)
+[sdk/wallets/wallet-rpc/src/rpc-wallet.ts:40](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts#L40)
 
 ___
 
@@ -268,7 +275,7 @@ UnlockableWallet.isAccountUnlocked
 
 #### Defined in
 
-[sdk/wallets/wallet-rpc/src/rpc-wallet.ts:54](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts#L54)
+[sdk/wallets/wallet-rpc/src/rpc-wallet.ts:56](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts#L56)
 
 ___
 
@@ -286,7 +293,7 @@ RemoteWallet.loadAccountSigners
 
 #### Defined in
 
-[sdk/wallets/wallet-rpc/src/rpc-wallet.ts:25](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts#L25)
+[sdk/wallets/wallet-rpc/src/rpc-wallet.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts#L27)
 
 ___
 
@@ -381,7 +388,7 @@ RemoteWallet.signTransaction
 
 #### Defined in
 
-[sdk/wallets/wallet-rpc/src/rpc-wallet.ts:64](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts#L64)
+[sdk/wallets/wallet-rpc/src/rpc-wallet.ts:66](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts#L66)
 
 ___
 
@@ -438,4 +445,4 @@ UnlockableWallet.unlockAccount
 
 #### Defined in
 
-[sdk/wallets/wallet-rpc/src/rpc-wallet.ts:49](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts#L49)
+[sdk/wallets/wallet-rpc/src/rpc-wallet.ts:51](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-rpc/src/rpc-wallet.ts#L51)

@@ -4,6 +4,9 @@ import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
+/**
+ @deprecated https://forum.celo.org/t/sunset-of-reserve-commands/8454
+*/
 export default class TransferGold extends BaseCommand {
   static description = 'Transfers reserve celo to other reserve address'
 
