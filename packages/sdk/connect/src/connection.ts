@@ -339,11 +339,9 @@ export class Connection {
 
     if (isEmpty(tx.maxFeePerGas)) {
       if (isEmpty(tx.feeCurrency)) {
-        calls[0] = this.rpcCaller
-          .call('eth_getBlock', ['latest'])
-          .then((block: any) => block.baseFeePerGas)
+        calls[0] = this.getBlock('latest').then((block: any) => block.baseFeePerGas)
       } else {
-        // NOTE: fall
+        // NOTE: fallback to original estimation
         calls[0] = this.gasPrice(tx.feeCurrency)
       }
     }
