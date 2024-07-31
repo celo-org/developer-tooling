@@ -62,9 +62,9 @@ export abstract class TransferStableBase extends BaseCommand {
     // NOTE 2: if --gasCurrency is set by the user, then
     //     `kit.connection.defaultFeeCurrency` is set in base.ts via
     //     `kit.setFeeCurrency()`
-    const params = kit.connection.defaultFeeCurrency
-      ? { feeCurrency: kit.connection.defaultFeeCurrency }
-      : {}
+    const params = await kit.connection.setFeeMarketGas(
+      kit.connection.defaultFeeCurrency ? { feeCurrency: kit.connection.defaultFeeCurrency } : {}
+    )
 
     const tx = res.flags.comment
       ? stableToken.transferWithComment(to, value.toFixed(), res.flags.comment)
@@ -106,7 +106,6 @@ export abstract class TransferStableBase extends BaseCommand {
         `Cannot afford transfer with ${this._stableCurrency} gasCurrency; try reducing value slightly or using gasCurrency=CELO`
       )
       .runChecks()
-
     await displaySendTx(res.flags.comment ? 'transferWithComment' : 'transfer', tx, params)
   }
 }

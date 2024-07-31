@@ -338,8 +338,16 @@ export class Connection {
     const calls = [Promise.resolve(tx.maxFeePerGas), Promise.resolve(tx.maxPriorityFeePerGas)]
 
     if (isEmpty(tx.maxFeePerGas)) {
-      calls[0] = this.gasPrice(tx.feeCurrency)
+      if (isEmpty(tx.feeCurrency)) {
+        calls[0] = this.rpcCaller
+          .call('eth_getBlock', ['latest'])
+          .then((block: any) => block.baseFeePerGas)
+      } else {
+        // NOTE: fall
+        calls[0] = this.gasPrice(tx.feeCurrency)
+      }
     }
+
     if (isEmpty(tx.maxPriorityFeePerGas)) {
       calls[1] = this.rpcCaller
         .call('eth_maxPriorityFeePerGas', [tx.feeCurrency])
@@ -347,11 +355,13 @@ export class Connection {
           return rpcResponse.result
         })
     }
-    const [maxFeePerGas, maxPriorityFeePerGas] = await Promise.all(calls)
+    const [baseFee, maxPriorityFeePerGas] = (await Promise.all(calls)) as [number, string]
+    const maxFeePerGas = BigInt(baseFee) + BigInt(maxPriorityFeePerGas)
+
     return {
       ...tx,
       gasPrice: undefined,
-      maxFeePerGas,
+      maxFeePerGas: `0x${maxFeePerGas.toString(16)}`,
       maxPriorityFeePerGas,
     }
   }
