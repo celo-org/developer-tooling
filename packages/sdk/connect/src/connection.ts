@@ -334,33 +334,29 @@ export class Connection {
   }
   // if neither gas price nor feeMarket fields are present set them.
   setFeeMarketGas = async (tx: CeloTx): Promise<CeloTx> => {
-    // default to the current values
-    const calls = [Promise.resolve(tx.maxFeePerGas), Promise.resolve(tx.maxPriorityFeePerGas)]
-
-    if (isEmpty(tx.maxFeePerGas)) {
-      if (isEmpty(tx.feeCurrency)) {
-        calls[0] = this.getBlock('latest').then((block: any) => block.baseFeePerGas)
-      } else {
-        // NOTE: fallback to original estimation
-        calls[0] = this.gasPrice(tx.feeCurrency)
-      }
-    }
-
     if (isEmpty(tx.maxPriorityFeePerGas)) {
-      calls[1] = this.rpcCaller
+      tx.maxPriorityFeePerGas = await this.rpcCaller
         .call('eth_maxPriorityFeePerGas', [tx.feeCurrency])
         .then((rpcResponse) => {
           return rpcResponse.result
         })
     }
-    const [baseFee, maxPriorityFeePerGas] = (await Promise.all(calls)) as [number, string]
-    const maxFeePerGas = BigInt(baseFee) + BigInt(maxPriorityFeePerGas)
+
+    if (isEmpty(tx.maxFeePerGas)) {
+      if (isEmpty(tx.feeCurrency)) {
+        const baseFee = await this.getBlock('latest').then((block: any) => block.baseFeePerGas)
+        tx.maxFeePerGas = `0x${(
+          BigInt(baseFee as string) + BigInt(tx.maxPriorityFeePerGas as string)
+        ).toString(16)}`
+      } else {
+        // NOTE: fallback to original estimation
+        tx.maxFeePerGas = await this.gasPrice(tx.feeCurrency)
+      }
+    }
 
     return {
       ...tx,
       gasPrice: undefined,
-      maxFeePerGas: `0x${maxFeePerGas.toString(16)}`,
-      maxPriorityFeePerGas,
     }
   }
 
