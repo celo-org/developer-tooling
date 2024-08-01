@@ -336,7 +336,7 @@ export class Connection {
   setFeeMarketGas = async (tx: CeloTx): Promise<CeloTx> => {
     if (isEmpty(tx.maxPriorityFeePerGas)) {
       tx.maxPriorityFeePerGas = await this.rpcCaller
-        .call('eth_maxPriorityFeePerGas', [tx.feeCurrency])
+        .call('eth_maxPriorityFeePerGas', [])
         .then((rpcResponse) => {
           return rpcResponse.result
         })
