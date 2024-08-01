@@ -34,4 +34,4 @@ value is string \| number \| bigint \| BN
 
 #### Defined in
 
-[packages/sdk/connect/src/connection.ts:538](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L538)
+[packages/sdk/connect/src/connection.ts:542](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L542)

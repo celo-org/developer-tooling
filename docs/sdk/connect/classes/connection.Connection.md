@@ -265,7 +265,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/connection.ts:407](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L407)
+[packages/sdk/connect/src/connection.ts:411](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L411)
 
 ___
 
@@ -279,7 +279,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/connection.ts:429](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L429)
+[packages/sdk/connect/src/connection.ts:433](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L433)
 
 ___
 
@@ -301,7 +301,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/connection.ts:359](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L359)
+[packages/sdk/connect/src/connection.ts:363](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L363)
 
 ___
 
@@ -323,7 +323,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/connection.ts:390](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L390)
+[packages/sdk/connect/src/connection.ts:394](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L394)
 
 ___
 
@@ -343,7 +343,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/connection.ts:435](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L435)
+[packages/sdk/connect/src/connection.ts:439](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L439)
 
 ___
 
@@ -357,7 +357,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/connection.ts:386](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L386)
+[packages/sdk/connect/src/connection.ts:390](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L390)
 
 ___
 
@@ -392,7 +392,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/connection.ts:478](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L478)
+[packages/sdk/connect/src/connection.ts:482](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L482)
 
 ___
 
@@ -413,7 +413,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/connection.ts:453](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L453)
+[packages/sdk/connect/src/connection.ts:457](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L457)
 
 ___
 
@@ -433,7 +433,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/connection.ts:466](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L466)
+[packages/sdk/connect/src/connection.ts:470](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L470)
 
 ___
 
@@ -447,7 +447,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/connection.ts:444](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L444)
+[packages/sdk/connect/src/connection.ts:448](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L448)
 
 ___
 
@@ -495,7 +495,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/connection.ts:487](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L487)
+[packages/sdk/connect/src/connection.ts:491](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L491)
 
 ___
 
@@ -515,7 +515,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/connection.ts:418](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L418)
+[packages/sdk/connect/src/connection.ts:422](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L422)
 
 ___
 
@@ -535,7 +535,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/connection.ts:495](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L495)
+[packages/sdk/connect/src/connection.ts:499](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L499)
 
 ___
 
@@ -643,7 +643,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/connection.ts:425](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L425)
+[packages/sdk/connect/src/connection.ts:429](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L429)
 
 ___
 
@@ -828,4 +828,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/connection.ts:520](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L520)
+[packages/sdk/connect/src/connection.ts:524](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L524)
