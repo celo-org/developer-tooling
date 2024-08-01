@@ -32,15 +32,15 @@ export default class TransferCelo extends BaseCommand {
     kit.defaultAccount = from
     const celoToken = await kit.contracts.getGoldToken()
 
-    const params = await kit.connection.setFeeMarketGas(
-      kit.connection.defaultFeeCurrency ? { feeCurrency: kit.connection.defaultFeeCurrency } : {}
-    )
-
     await newCheckBuilder(this)
       .isNotSanctioned(from)
       .isNotSanctioned(to)
       .hasEnoughCelo(from, value)
       .runChecks()
+
+    const params = await kit.connection.setFeeMarketGas(
+      kit.connection.defaultFeeCurrency ? { feeCurrency: kit.connection.defaultFeeCurrency } : {}
+    )
 
     await (res.flags.comment
       ? displaySendTx(
