@@ -1,15 +1,38 @@
 import { COMPLIANT_ERROR_RESPONSE, SANCTIONED_ADDRESSES } from '@celo/compliance'
+import { HttpRpcCaller } from '@celo/connect'
 import { ContractKit, StableToken, newKitFromWeb3 } from '@celo/contractkit'
+import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
 import Web3 from 'web3'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import TransferCelo from './celo'
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
 
 process.env.NO_SYNCCHECK = 'true'
 
 // Lots of commands, sometimes times out
 jest.setTimeout(15000)
 
+const mockRpc = () =>
+  jest.spyOn(HttpRpcCaller.prototype, 'call').mockImplementation(async (method, _args) => {
+    if (method === 'eth_maxPriorityFeePerGas') {
+      return {
+        result: '20000',
+        id: 1,
+        jsonrpc: '2.0',
+      }
+    }
+    if (method === 'eth_gasPrice') {
+      return {
+        result: '30000',
+        id: 1,
+        jsonrpc: '2.0',
+      }
+    }
+    return {
+      result: 0,
+      id: Math.random(),
+      jsonrpc: '2.0',
+    }
+  })
 testWithGanache('transfer:celo cmd', (web3: Web3) => {
   let accounts: string[] = []
   let kit: ContractKit
@@ -24,6 +47,7 @@ testWithGanache('transfer:celo cmd', (web3: Web3) => {
     const receiverBalanceBefore = await kit.getTotalBalance(accounts[1])
     const amountToTransfer = '500000000000000000000'
     // Send cUSD to RG contract
+    let mock = mockRpc()
     await testLocallyWithWeb3Node(
       TransferCelo,
       [
@@ -38,11 +62,14 @@ testWithGanache('transfer:celo cmd', (web3: Web3) => {
       ],
       web3
     )
+    mock.mockRestore()
     // RG cUSD balance should match the amount sent
     const receiverBalance = await kit.getTotalBalance(accounts[1])
     expect(receiverBalance.CELO!.toFixed()).toEqual(
       receiverBalanceBefore.CELO!.plus(amountToTransfer).toFixed()
     )
+
+    mock = mockRpc()
     // Attempt to send cUSD back
     await testLocallyWithWeb3Node(
       TransferCelo,
@@ -58,6 +85,7 @@ testWithGanache('transfer:celo cmd', (web3: Web3) => {
       ],
       web3
     )
+    mock.mockRestore()
     const balanceAfter = await kit.getTotalBalance(accounts[0])
     expect(balanceBefore.CELO).toEqual(balanceAfter.CELO)
   })
@@ -104,6 +132,7 @@ testWithGanache('transfer:celo cmd', (web3: Web3) => {
     const balanceBefore = await kit.getTotalBalance(accounts[0])
     const receiverBalanceBefore = await kit.getTotalBalance(accounts[1])
     const amountToTransfer = '1'
+    let mock = mockRpc()
     await expect(
       testLocallyWithWeb3Node(
         TransferCelo,
@@ -120,7 +149,7 @@ testWithGanache('transfer:celo cmd', (web3: Web3) => {
         web3
       )
     ).resolves.toBeUndefined()
-
+    mock.mockRestore()
     const balanceAfter = await kit.getTotalBalance(accounts[0])
     const receiverBalanceAfter = await kit.getTotalBalance(accounts[1])
     expect(receiverBalanceAfter.CELO!.toFixed()).toEqual(
