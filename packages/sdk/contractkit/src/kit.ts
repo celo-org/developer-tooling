@@ -254,6 +254,8 @@ export class ContractKit {
    * and previous tx types with feeCurrency expressed these in the token paying for the transaction,
    * this method overwrites maxPriorityFeePerGas and maxFeePerGas to ensure they are correctly valued in CELO
    *
+   * @dev This transaction type is not yet supported
+   *
    * @param tx.gas is required
    */
   async populateMaxFeeInToken(tx: CeloTx & Pick<Required<CeloTx>, 'feeCurrency'>): Promise<CeloTx> {
