@@ -33,6 +33,6 @@ jobs:
       - name: Installing npm package
         run: yarn add ${{ matrix.package }}
       - name: Test celocli command
-        if: matrix.package == '@celo/celocli'
+        if: matrix.package == '@celo/celocli@beta'
         run: |
           yarn workspace @celo/celocli run celocli account:new
