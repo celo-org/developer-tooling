@@ -1,37 +1,36 @@
-import { ICeloVersionedContract } from '@celo/abis/web3/ICeloVersionedContract'
-import { StrongAddress, bufferToHex, ensureLeading0x } from '@celo/base/lib/address'
+import { bufferToHex, ensureLeading0x, StrongAddress } from '@celo/base/lib/address'
 import { zip } from '@celo/base/lib/collections'
-import {
-  CeloTransactionObject,
-  CeloTxObject,
-  Connection,
-  Contract,
-  EventLog,
-  PastEventOptions,
-  toTransactionObject,
-} from '@celo/connect'
+// import {
+//   CeloTransactionObject,
+//   Connection,
+//   EventLog,
+//   PastEventOptions,
+//   toTransactionObject,
+// } from '@celo/connect'
 import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
+import { Contract, eth } from 'web3'
+import { PayableMethodObject } from 'web3-eth-contract'
 import { ContractVersion } from '../versions'
 
 /** Represents web3 native contract Method */
-type Method<I extends any[], O> = (...args: I) => CeloTxObject<O>
+type Method<I extends any[], O> = (...args: I) => PayableMethodObject<I, O> // OR PayableMethodObject
 
-type Events<T extends Contract> = keyof T['events']
-type Methods<T extends Contract> = keyof T['methods']
-type EventsEnum<T extends Contract> = {
+type Events<T extends Contract<[]>> = keyof T['events']
+type Methods<T extends Contract<[]>> = keyof T['methods']
+type EventsEnum<T extends Contract<[]>> = {
   [event in Events<T>]: event
 }
 
 /**
  * @internal -- use its children
  */
-export abstract class BaseWrapper<T extends Contract> {
+export abstract class BaseWrapper<T extends Contract<[]>> {
   protected _version?: T['methods'] extends ICeloVersionedContract['methods']
     ? ContractVersion
     : never
 
-  constructor(protected readonly connection: Connection, protected readonly contract: T) {}
+  constructor(protected readonly contract: T) {}
 
   /** Contract address */
   get address(): StrongAddress {
@@ -53,11 +52,6 @@ export abstract class BaseWrapper<T extends Contract> {
     }
   }
 
-  /** Contract getPastEvents */
-  public getPastEvents(event: Events<T>, options: PastEventOptions): Promise<EventLog[]> {
-    return this.contract.getPastEvents(event as string, options)
-  }
-
   events: T['events'] = this.contract.events
 
   eventTypes = Object.keys(this.events).reduce<EventsEnum<T>>(
@@ -69,10 +63,7 @@ export abstract class BaseWrapper<T extends Contract> {
     (acc, method: Methods<T>) => {
       const methodABI = this.contract.options.jsonInterface.find((item) => item.name === method)
 
-      acc[method] =
-        methodABI === undefined
-          ? '0x'
-          : this.connection.getAbiCoder().encodeFunctionSignature(methodABI)
+      acc[method] = methodABI === undefined ? '0x' : eth.abi.encodeFunctionSignature(method)
 
       return acc
     },
@@ -328,16 +319,15 @@ type ProxySendArgs<InputArgs extends any[], ParsedInputArgs extends any[], Outpu
  * @param methodFn Web3 methods function
  * @param preParse [optional] preParse function, tranforms arguments into `methodFn` expected inputs
  */
-export function proxySend<InputArgs extends any[], ParsedInputArgs extends any[], Output>(
-  connection: Connection,
+export function proxySend<InputArgs extends any[], ParsedInputArgs extends InputArgs, Output>(
   ...sendArgs: ProxySendArgs<InputArgs, ParsedInputArgs, Output>
-): (...args: InputArgs) => CeloTransactionObject<Output> {
+): (...args: InputArgs) => PayableMethodObject<InputArgs, Output> {
   if (sendArgs.length === 2) {
     const methodFn = sendArgs[0]
     const preParse = sendArgs[1]
-    return (...args: InputArgs) => toTransactionObject(connection, methodFn(...preParse(...args)))
+    return (...args: InputArgs) => methodFn(...preParse(...args))
   } else {
     const methodFn = sendArgs[0]
-    return (...args: InputArgs) => toTransactionObject(connection, methodFn(...args))
+    return (...args: InputArgs) => methodFn(...args)
   }
 }

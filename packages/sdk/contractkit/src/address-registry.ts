@@ -1,8 +1,9 @@
 /* eslint max-classes-per-file:off */
-import { newRegistry, Registry } from '@celo/abis/web3/Registry'
+import { registryABI } from '@celo/abis-12'
 import { NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
 import { Connection } from '@celo/connect'
 import debugFactory from 'debug'
+import { Contract } from 'web3'
 import { CeloContract, RegisteredContracts, stripProxy } from './base'
 
 const debug = debugFactory('kit:registry')
@@ -22,12 +23,12 @@ export class UnregisteredError extends Error {
  * @param connection – an instance of @celo/connect {@link Connection}
  */
 export class AddressRegistry {
-  private readonly registry: Registry
+  private readonly registry: Contract<typeof registryABI>
   private readonly cache: Map<CeloContract, StrongAddress> = new Map()
 
   constructor(readonly connection: Connection) {
     this.cache.set(CeloContract.Registry, REGISTRY_CONTRACT_ADDRESS)
-    this.registry = newRegistry(connection.web3, REGISTRY_CONTRACT_ADDRESS)
+    this.registry = new Contract(registryABI, REGISTRY_CONTRACT_ADDRESS, connection.web3)
   }
 
   /**

@@ -1,5 +1,5 @@
 import { StrongAddress } from '@celo/base'
-import { Contract } from '@celo/connect'
+import { Contract } from 'web3'
 import { BaseWrapper } from './BaseWrapper'
 
 const MINIMAL_TOKEN_INFO_ABI = [
@@ -51,8 +51,7 @@ export abstract class AbstractFeeCurrencyWrapper<
 
     return Promise.all(
       feeCurrencies.map(async (address) => {
-        // @ts-expect-error abi typing is not 100% correct but works
-        let contract = new this.connection.web3.eth.Contract(MINIMAL_TOKEN_INFO_ABI, address)
+        let contract = new Contract(MINIMAL_TOKEN_INFO_ABI, address)
 
         const adaptedToken = (await contract.methods
           .adaptedToken()
@@ -66,8 +65,7 @@ export abstract class AbstractFeeCurrencyWrapper<
         // if standard didnt work try alt
 
         if (adaptedToken) {
-          // @ts-expect-error abi typing is not 100% correct but works
-          contract = new this.connection.web3.eth.Contract(MINIMAL_TOKEN_INFO_ABI, adaptedToken)
+          contract = new Contract(MINIMAL_TOKEN_INFO_ABI, adaptedToken)
         }
 
         return Promise.all([

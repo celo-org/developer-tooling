@@ -1,72 +1,157 @@
-import { newCeloDistributionSchedule } from '@celo/abis-12/web3/CeloDistributionSchedule'
-import { newFeeCurrencyDirectory } from '@celo/abis-12/web3/FeeCurrencyDirectory'
-import { newGoldToken } from '@celo/abis-12/web3/GoldToken'
-import { newGovernance } from '@celo/abis-12/web3/Governance'
-import { newGasPriceMinimum } from '@celo/abis/web3/0.8/GasPriceMinimum'
-import { newAccounts } from '@celo/abis/web3/Accounts'
-import { newAttestations } from '@celo/abis/web3/Attestations'
-import { newBlockchainParameters } from '@celo/abis/web3/BlockchainParameters'
-import { newDoubleSigningSlasher } from '@celo/abis/web3/DoubleSigningSlasher'
-import { newDowntimeSlasher } from '@celo/abis/web3/DowntimeSlasher'
-import { newElection } from '@celo/abis/web3/Election'
-import { newEpochRewards } from '@celo/abis/web3/EpochRewards'
-import { newEscrow } from '@celo/abis/web3/Escrow'
-import { newFederatedAttestations } from '@celo/abis/web3/FederatedAttestations'
-import { newFeeCurrencyWhitelist } from '@celo/abis/web3/FeeCurrencyWhitelist'
-import { newFeeHandler } from '@celo/abis/web3/FeeHandler'
-import { newFreezer } from '@celo/abis/web3/Freezer'
-import { newIERC20 } from '@celo/abis/web3/IERC20'
-import { newLockedGold } from '@celo/abis/web3/LockedGold'
-import { newMentoFeeHandlerSeller } from '@celo/abis/web3/MentoFeeHandlerSeller'
-import { newMultiSig } from '@celo/abis/web3/MultiSig'
-import { newOdisPayments } from '@celo/abis/web3/OdisPayments'
-import { newProxy } from '@celo/abis/web3/Proxy'
-import { newRandom } from '@celo/abis/web3/Random'
-import { newRegistry } from '@celo/abis/web3/Registry'
-import { newSortedOracles } from '@celo/abis/web3/SortedOracles'
-import { newUniswapFeeHandlerSeller } from '@celo/abis/web3/UniswapFeeHandlerSeller'
-import { newValidators } from '@celo/abis/web3/Validators'
-import { newReserve } from '@celo/abis/web3/mento/Reserve'
-import { newStableToken } from '@celo/abis/web3/mento/StableToken'
+import { celoDistributionScheduleABI } from '@celo/abis-12/CeloDistributionSchedule'
+import { feeCurrencyDirectoryABI } from '@celo/abis-12/FeeCurrencyDirectory'
+import { goldTokenABI } from '@celo/abis-12/GoldToken'
+import { governanceABI } from '@celo/abis-12/Governance'
+import { accountsABI } from '@celo/abis/Accounts'
+import { attestationsABI } from '@celo/abis/Attestations'
+import { blockchainParametersABI } from '@celo/abis/BlockchainParameters'
+import { doubleSigningSlasherABI } from '@celo/abis/DoubleSigningSlasher'
+import { downtimeSlasherABI } from '@celo/abis/DowntimeSlasher'
+import { electionABI } from '@celo/abis/Election'
+import { epochRewardsABI } from '@celo/abis/EpochRewards'
+import { escrowABI } from '@celo/abis/Escrow'
+import { federatedAttestationsABI } from '@celo/abis/FederatedAttestations'
+import { feeCurrencyWhitelistABI } from '@celo/abis/FeeCurrencyWhitelist'
+import { feeHandlerABI } from '@celo/abis/FeeHandler'
+import { freezerABI } from '@celo/abis/Freezer'
+import { ierc20ABI } from '@celo/abis/IERC20'
+import { lockedGoldABI } from '@celo/abis/LockedGold'
+import { mentoFeeHandlerSellerABI } from '@celo/abis/MentoFeeHandlerSeller'
+import { multiSigABI } from '@celo/abis/MultiSig'
+import { odisPaymentsABI } from '@celo/abis/OdisPayments'
+import { proxyABI } from '@celo/abis/Proxy'
+import { randomABI } from '@celo/abis/Random'
+import { registryABI } from '@celo/abis/Registry'
+import { reserveABI } from '@celo/abis/Reserve'
+import { sortedOraclesABI } from '@celo/abis/SortedOracles'
+import { stableTokenABI } from '@celo/abis/StableToken'
+import { uniswapFeeHandlerSellerABI } from '@celo/abis/UniswapFeeHandlerSeller'
+import { validatorsABI } from '@celo/abis/Validators'
 import debugFactory from 'debug'
 import { AddressRegistry } from './address-registry'
 import { CeloContract, ProxyContracts } from './base'
 import { StableToken } from './celo-tokens'
 
+import { StrongAddress } from '@celo/base'
+import Web3, { Contract } from 'web3'
+
 const debug = debugFactory('kit:web3-contract-cache')
 
 export const ContractFactories = {
-  [CeloContract.Accounts]: newAccounts,
-  [CeloContract.Attestations]: newAttestations,
-  [CeloContract.BlockchainParameters]: newBlockchainParameters,
-  [CeloContract.CeloDistributionSchedule]: newCeloDistributionSchedule,
-  [CeloContract.DoubleSigningSlasher]: newDoubleSigningSlasher,
-  [CeloContract.DowntimeSlasher]: newDowntimeSlasher,
-  [CeloContract.Election]: newElection,
-  [CeloContract.EpochRewards]: newEpochRewards,
-  [CeloContract.ERC20]: newIERC20,
-  [CeloContract.Escrow]: newEscrow,
-  [CeloContract.FederatedAttestations]: newFederatedAttestations,
-  [CeloContract.FeeCurrencyDirectory]: newFeeCurrencyDirectory,
-  [CeloContract.FeeCurrencyWhitelist]: newFeeCurrencyWhitelist,
-  [CeloContract.Freezer]: newFreezer,
-  [CeloContract.FeeHandler]: newFeeHandler,
-  [CeloContract.MentoFeeHandlerSeller]: newMentoFeeHandlerSeller,
-  [CeloContract.UniswapFeeHandlerSeller]: newUniswapFeeHandlerSeller,
-  [CeloContract.GasPriceMinimum]: newGasPriceMinimum,
-  [CeloContract.GoldToken]: newGoldToken,
-  [CeloContract.Governance]: newGovernance,
-  [CeloContract.LockedGold]: newLockedGold,
-  [CeloContract.MultiSig]: newMultiSig,
-  [CeloContract.OdisPayments]: newOdisPayments,
-  [CeloContract.Random]: newRandom,
-  [CeloContract.Registry]: newRegistry,
-  [CeloContract.Reserve]: newReserve,
-  [CeloContract.SortedOracles]: newSortedOracles,
-  [CeloContract.StableToken]: newStableToken,
-  [CeloContract.StableTokenEUR]: newStableToken,
-  [CeloContract.StableTokenBRL]: newStableToken,
-  [CeloContract.Validators]: newValidators,
+  [CeloContract.Accounts]: function newAccounts(web: Web3, address: StrongAddress) {
+    return new Contract(accountsABI, address, web)
+  },
+  [CeloContract.Attestations]: function newAttestations(web: Web3, address: StrongAddress) {
+    return new Contract(attestationsABI, address, web)
+  },
+  [CeloContract.BlockchainParameters]: function newBlockchainParameters(
+    web: Web3,
+    address: StrongAddress
+  ) {
+    return new Contract(blockchainParametersABI, address, web)
+  },
+  [CeloContract.CeloDistributionSchedule]: function newCeloDistributionSchedule(
+    web3: Web3,
+    address: StrongAddress
+  ) {
+    return new Contract(celoDistributionScheduleABI, address, web3)
+  },
+  [CeloContract.DoubleSigningSlasher]: function newDoubleSigningSlasher(
+    web: Web3,
+    address: StrongAddress
+  ) {
+    return new Contract(doubleSigningSlasherABI, address, web)
+  },
+  [CeloContract.DowntimeSlasher]: function newDowntimeSlasher(web: Web3, address: StrongAddress) {
+    return new Contract(downtimeSlasherABI, address, web)
+  },
+  [CeloContract.Election]: function newElection(web: Web3, address: StrongAddress) {
+    return new Contract(electionABI, address, web)
+  },
+  [CeloContract.EpochRewards]: function newEpochRewards(web: Web3, address: StrongAddress) {
+    return new Contract(epochRewardsABI, address, web)
+  },
+  [CeloContract.ERC20]: function newIERC20(web: Web3, address: StrongAddress) {
+    return new Contract(ierc20ABI, address, web)
+  },
+  [CeloContract.Escrow]: function newEscrow(web: Web3, address: StrongAddress) {
+    return new Contract(escrowABI, address, web)
+  },
+  [CeloContract.FederatedAttestations]: function newFederatedAttestations(
+    web: Web3,
+    address: StrongAddress
+  ) {
+    return new Contract(federatedAttestationsABI, address, web)
+  },
+  [CeloContract.FeeCurrencyDirectory]: function newFeeCurrencyDirectory(
+    web: Web3,
+    address: StrongAddress
+  ) {
+    return new Contract(feeCurrencyDirectoryABI, address, web)
+  },
+  [CeloContract.FeeCurrencyWhitelist]: function newFeeCurrencyWhitelist(
+    web: Web3,
+    address: StrongAddress
+  ) {
+    return new Contract(feeCurrencyWhitelistABI, address, web)
+  },
+  [CeloContract.Freezer]: function newFreezer(web: Web3, address: StrongAddress) {
+    return new Contract(freezerABI, address, web)
+  },
+  [CeloContract.FeeHandler]: function newFeeHandler(web: Web3, address: StrongAddress) {
+    return new Contract(feeHandlerABI, address, web)
+  },
+  [CeloContract.MentoFeeHandlerSeller]: function newMentoFeeHandlerSeller(
+    web: Web3,
+    address: StrongAddress
+  ) {
+    return new Contract(mentoFeeHandlerSellerABI, address, web)
+  },
+  [CeloContract.UniswapFeeHandlerSeller]: function newUniswapFeeHandlerSeller(
+    web: Web3,
+    address: StrongAddress
+  ) {
+    return new Contract(uniswapFeeHandlerSellerABI, address, web)
+  },
+  [CeloContract.GoldToken]: function newGoldToken(web: Web3, address: StrongAddress) {
+    return new Contract(goldTokenABI, address, web)
+  },
+  [CeloContract.Governance]: function newGovernance(web: Web3, address: StrongAddress) {
+    return new Contract(governanceABI, address, web)
+  },
+  [CeloContract.LockedGold]: function newLockedGold(web: Web3, address: StrongAddress) {
+    return new Contract(lockedGoldABI, address, web)
+  },
+  [CeloContract.MultiSig]: function newMultiSig(web: Web3, address: StrongAddress) {
+    return new Contract(multiSigABI, address, web)
+  },
+  [CeloContract.OdisPayments]: function newOdisPayments(web: Web3, address: StrongAddress) {
+    return new Contract(odisPaymentsABI, address, web)
+  },
+  [CeloContract.Random]: function newRandom(web: Web3, address: StrongAddress) {
+    return new Contract(randomABI, address, web)
+  },
+  [CeloContract.Registry]: function newRegistry(web: Web3, address: StrongAddress) {
+    return new Contract(registryABI, address, web)
+  },
+  [CeloContract.Reserve]: function newReserve(web: Web3, address: StrongAddress) {
+    return new Contract(reserveABI, address, web)
+  },
+  [CeloContract.SortedOracles]: function newSortedOracles(web: Web3, address: StrongAddress) {
+    return new Contract(sortedOraclesABI, address, web)
+  },
+  [CeloContract.StableToken]: function newStableToken(web: Web3, address: StrongAddress) {
+    return new Contract(stableTokenABI, address, web)
+  },
+  [CeloContract.StableTokenEUR]: function newStableToken(web: Web3, address: StrongAddress) {
+    return new Contract(stableTokenABI, address, web)
+  },
+  [CeloContract.StableTokenBRL]: function newStableToken(web: Web3, address: StrongAddress) {
+    return new Contract(stableTokenABI, address, web)
+  },
+  [CeloContract.Validators]: function newValidators(web: Web3, address: StrongAddress) {
+    return new Contract(validatorsABI, address, web)
+  },
 }
 
 const StableToContract = {
@@ -114,7 +199,7 @@ export class Web3ContractCache {
   getEpochRewards() {
     return this.getContract(CeloContract.EpochRewards)
   }
-  getErc20(address: string) {
+  getErc20(address: StrongAddress) {
     return this.getContract(CeloContract.ERC20, address)
   }
   getEscrow() {
@@ -133,9 +218,6 @@ export class Web3ContractCache {
   getFeeHandler() {
     return this.getContract(CeloContract.FeeHandler)
   }
-  getGasPriceMinimum() {
-    return this.getContract(CeloContract.GasPriceMinimum)
-  }
   getGoldToken() {
     return this.getContract(CeloContract.GoldToken)
   }
@@ -145,9 +227,6 @@ export class Web3ContractCache {
 
   getLockedGold() {
     return this.getContract(CeloContract.LockedGold)
-  }
-  getMultiSig(address: string) {
-    return this.getContract(CeloContract.MultiSig, address)
   }
   getOdisPayments() {
     return this.getContract(CeloContract.OdisPayments)
@@ -165,7 +244,7 @@ export class Web3ContractCache {
     return this.getContract(CeloContract.SortedOracles)
   }
   getStableToken(stableToken: StableToken = StableToken.cUSD) {
-    return this.getContract(StableToContract[stableToken])
+    return this.getContract(StableToContract[stableToken] as CeloContract.StableToken)
   }
   getValidators() {
     return this.getContract(CeloContract.Validators)
@@ -174,7 +253,10 @@ export class Web3ContractCache {
   /**
    * Get native web3 contract wrapper
    */
-  async getContract<C extends keyof typeof ContractFactories>(contract: C, address?: string) {
+  async getContract<C extends keyof typeof ContractFactories>(
+    contract: C,
+    address?: StrongAddress
+  ) {
     if (this.cacheMap[contract] == null || address !== undefined) {
       // core contract in the registry
       if (!address) {
@@ -196,4 +278,8 @@ export class Web3ContractCache {
   public invalidateContract<C extends keyof typeof ContractFactories>(contract: C) {
     this.cacheMap[contract] = undefined
   }
+}
+
+function newProxy(web3: Web3, address: StrongAddress) {
+  return new Contract(proxyABI, address, web3)
 }

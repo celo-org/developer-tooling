@@ -40,8 +40,10 @@
     "fp-ts": "2.1.1",
     "io-ts": "2.0.1",
     "semver": "^7.3.5",
-    "web3": "1.10.4",
-    "web3-core-helpers": "1.10.4"
+    "viem": "^2.18.8",
+    "web3": "^4.11.1",
+    "web3-core-helpers": "1.10.4",
+    "web3-eth-contract": "^4.6.0"
   },
   "devDependencies": {
     "@celo/celo-devchain": "^7.0.0",

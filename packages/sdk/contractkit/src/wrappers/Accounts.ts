@@ -1,7 +1,7 @@
-import { Accounts } from '@celo/abis/web3/Accounts'
+import { accountsABI } from '@celo/abis/Accounts'
 import { StrongAddress } from '@celo/base'
 import { NativeSigner, Signature, Signer } from '@celo/base/lib/signatureUtils'
-import { Address, CeloTransactionObject, CeloTxObject, toTransactionObject } from '@celo/connect'
+import { Address, CeloTransactionObject, toTransactionObject } from '@celo/connect'
 import {
   LocalSigner,
   hashMessageWithPrefix,
@@ -11,6 +11,7 @@ import {
 import { soliditySha3 } from '@celo/utils/lib/solidity'
 import { authorizeSigner as buildAuthorizeSignerTypedData } from '@celo/utils/lib/typed-data-constructors'
 import type BN from 'bn.js' // just the types
+import Web3, { Contract } from 'web3'
 import { getParsedSignatureOfAddress } from '../utils/getParsedSignatureOfAddress'
 import { newContractVersion } from '../versions'
 import {
@@ -19,7 +20,6 @@ import {
   solidityBytesToString,
   stringToSolidityBytes,
 } from '../wrappers/BaseWrapper'
-import { BaseWrapper } from './BaseWrapper'
 interface AccountSummary {
   address: string
   name: string
@@ -36,13 +36,18 @@ interface AccountSummary {
 /**
  * Contract for handling deposits needed for voting.
  */
-export class AccountsWrapper extends BaseWrapper<Accounts> {
+export class AccountsWrapper {
   private RELEASE_4_VERSION = newContractVersion(1, 1, 2, 0)
+  public contract: Contract<typeof accountsABI> = new Contract(accountsABI)
+
+  constructor(web3: Web3, address: StrongAddress) {
+    this.contract = new Contract(accountsABI, address, web3)
+  }
 
   /**
    * Creates an account.
    */
-  createAccount = proxySend(this.connection, this.contract.methods.createAccount)
+  createAccount = proxySend(this.contract.methods.createAccount)
 
   /**
    * Returns the attestation signer for the specified account.
@@ -50,7 +55,7 @@ export class AccountsWrapper extends BaseWrapper<Accounts> {
    * @return The address with which the account can vote.
    */
   getAttestationSigner: (account: string) => Promise<StrongAddress> = proxyCall(
-    this.contract.methods.getAttestationSigner as (account: string) => CeloTxObject<StrongAddress>
+    this.contract.methods.getAttestationSigner
   )
 
   /**
@@ -68,7 +73,7 @@ export class AccountsWrapper extends BaseWrapper<Accounts> {
    * @return The address with which the account can vote.
    */
   getVoteSigner: (account: string) => Promise<StrongAddress> = proxyCall(
-    this.contract.methods.getVoteSigner as (account: string) => CeloTxObject<StrongAddress>
+    this.contract.methods.getVoteSigner
   )
   /**
    * Returns the validator signer for the specified account.
@@ -76,7 +81,7 @@ export class AccountsWrapper extends BaseWrapper<Accounts> {
    * @return The address with which the account can register a validator or group.
    */
   getValidatorSigner: (account: string) => Promise<StrongAddress> = proxyCall(
-    this.contract.methods.getValidatorSigner as (account: string) => CeloTxObject<StrongAddress>
+    this.contract.methods.getValidatorSigner
   )
 
   /**
@@ -85,7 +90,7 @@ export class AccountsWrapper extends BaseWrapper<Accounts> {
    * @return The Account address
    */
   voteSignerToAccount: (signer: Address) => Promise<StrongAddress> = proxyCall(
-    this.contract.methods.voteSignerToAccount as (account: string) => CeloTxObject<StrongAddress>
+    this.contract.methods.voteSignerToAccount
   )
 
   /**
@@ -94,9 +99,7 @@ export class AccountsWrapper extends BaseWrapper<Accounts> {
    * @return The Account address
    */
   validatorSignerToAccount: (signer: Address) => Promise<StrongAddress> = proxyCall(
-    this.contract.methods.validatorSignerToAccount as (
-      account: string
-    ) => CeloTxObject<StrongAddress>
+    this.contract.methods.validatorSignerToAccount
   )
 
   /**
@@ -106,7 +109,7 @@ export class AccountsWrapper extends BaseWrapper<Accounts> {
    * @return The associated account.
    */
   signerToAccount: (signer: Address) => Promise<StrongAddress> = proxyCall(
-    this.contract.methods.signerToAccount as (account: string) => CeloTxObject<StrongAddress>
+    this.contract.methods.signerToAccount
   )
 
   /**
@@ -163,18 +166,12 @@ export class AccountsWrapper extends BaseWrapper<Accounts> {
    * @param proofOfSigningKeyPossession The account address signed by the signer address.
    * @return A CeloTransactionObject
    */
-  async authorizeAttestationSigner(
-    signer: Address,
-    proofOfSigningKeyPossession: Signature
-  ): Promise<CeloTransactionObject<void>> {
-    return toTransactionObject(
-      this.connection,
-      this.contract.methods.authorizeAttestationSigner(
-        signer,
-        proofOfSigningKeyPossession.v,
-        proofOfSigningKeyPossession.r,
-        proofOfSigningKeyPossession.s
-      )
+  async authorizeAttestationSigner(signer: Address, proofOfSigningKeyPossession: Signature) {
+    return this.contract.methods.authorizeAttestationSigner(
+      signer,
+      proofOfSigningKeyPossession.v,
+      proofOfSigningKeyPossession.r,
+      proofOfSigningKeyPossession.s
     )
   }
   /**
@@ -183,18 +180,12 @@ export class AccountsWrapper extends BaseWrapper<Accounts> {
    * @param proofOfSigningKeyPossession The account address signed by the signer address.
    * @return A CeloTransactionObject
    */
-  async authorizeVoteSigner(
-    signer: Address,
-    proofOfSigningKeyPossession: Signature
-  ): Promise<CeloTransactionObject<void>> {
-    return toTransactionObject(
-      this.connection,
-      this.contract.methods.authorizeVoteSigner(
-        signer,
-        proofOfSigningKeyPossession.v,
-        proofOfSigningKeyPossession.r,
-        proofOfSigningKeyPossession.s
-      )
+  async authorizeVoteSigner(signer: Address, proofOfSigningKeyPossession: Signature) {
+    return this.contract.methods.authorizeVoteSigner(
+      signer,
+      proofOfSigningKeyPossession.v,
+      proofOfSigningKeyPossession.r,
+      proofOfSigningKeyPossession.s
     )
   }
 
@@ -208,7 +199,7 @@ export class AccountsWrapper extends BaseWrapper<Accounts> {
     signer: Address,
     proofOfSigningKeyPossession: Signature,
     validatorsWrapper: { isValidator: (account: string) => Promise<boolean> }
-  ): Promise<CeloTransactionObject<void>> {
+  ) {
     const account = this.connection.defaultAccount || (await this.connection.getAccounts())[0]
     if (await validatorsWrapper.isValidator(account)) {
       const message = this.connection.web3.utils.soliditySha3({
@@ -260,7 +251,7 @@ export class AccountsWrapper extends BaseWrapper<Accounts> {
     proofOfSigningKeyPossession: Signature,
     blsPublicKey: string,
     blsPop: string
-  ): Promise<CeloTransactionObject<void>> {
+  ) {
     const account = this.connection.defaultAccount || (await this.connection.getAccounts())[0]
     const message = this.connection.web3.utils.soliditySha3({
       type: 'address',
@@ -313,26 +304,18 @@ export class AccountsWrapper extends BaseWrapper<Accounts> {
   }
 
   async startSignerAuthorization(signer: Address, role: string) {
-    await this.onlyVersionOrGreater(this.RELEASE_4_VERSION)
-    return toTransactionObject(
-      this.connection,
-      this.contract.methods.authorizeSigner(signer, this.keccak256(role))
-    )
+    return this.contract.methods.authorizeSigner(signer, this.keccak256(role))
   }
 
   async completeSignerAuthorization(account: Address, role: string) {
-    await this.onlyVersionOrGreater(this.RELEASE_4_VERSION)
-    return toTransactionObject(
-      this.connection,
-      this.contract.methods.completeSignerAuthorization(account, this.keccak256(role))
-    )
+    return this.contract.methods.completeSignerAuthorization(account, this.keccak256(role))
   }
 
   /**
    * Removes the currently authorized attestation signer for the account
    * @returns A CeloTransactionObject
    */
-  async removeAttestationSigner(): Promise<CeloTransactionObject<void>> {
+  async removeAttestationSigner() {
     return toTransactionObject(this.connection, this.contract.methods.removeAttestationSigner())
   }
 
@@ -382,10 +365,7 @@ export class AccountsWrapper extends BaseWrapper<Accounts> {
    * Sets the data encryption of the account
    * @param encryptionKey The key to set
    */
-  setAccountDataEncryptionKey = proxySend(
-    this.connection,
-    this.contract.methods.setAccountDataEncryptionKey
-  )
+  setAccountDataEncryptionKey = proxySend(this.contract.methods.setAccountDataEncryptionKey)
 
   /**
    * Convenience Setter for the dataEncryptionKey and wallet address for an account
@@ -401,17 +381,14 @@ export class AccountsWrapper extends BaseWrapper<Accounts> {
     proofOfPossession: Signature | null = null
   ): CeloTransactionObject<void> {
     if (proofOfPossession) {
-      return toTransactionObject(
-        this.connection,
-        this.contract.methods.setAccount(
-          name,
-          // @ts-ignore
-          dataEncryptionKey,
-          walletAddress,
-          proofOfPossession.v,
-          proofOfPossession.r,
-          proofOfPossession.s
-        )
+      return this.contract.methods.setAccount(
+        name,
+        // @ts-ignore
+        dataEncryptionKey,
+        walletAddress,
+        proofOfPossession.v,
+        proofOfPossession.r,
+        proofOfPossession.s
       )
     } else {
       return toTransactionObject(
