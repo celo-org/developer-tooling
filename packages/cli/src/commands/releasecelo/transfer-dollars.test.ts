@@ -25,8 +25,18 @@ testWithGanache('releasegold:transfer-dollars cmd', (web3: Web3) => {
     )
     kit = newKitFromWeb3(web3)
     accounts = await web3.eth.getAccounts()
+    jest.spyOn(kit.connection, 'gasPrice').mockImplementation(async () => {
+      return '3000'
+    })
+    jest.spyOn(kit.connection, 'getMaxPriorityFeePerGas').mockImplementation(async () => {
+      return '4000'
+    })
     await testLocally(Register, ['--from', accounts[0]])
     await testLocally(CreateAccount, ['--contract', contractAddress])
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks()
   })
 
   test('can transfer dollars out of the ReleaseGold contract', async () => {

@@ -335,11 +335,7 @@ export class Connection {
   // if neither gas price nor feeMarket fields are present set them.
   setFeeMarketGas = async (tx: CeloTx): Promise<CeloTx> => {
     if (isEmpty(tx.maxPriorityFeePerGas)) {
-      tx.maxPriorityFeePerGas = await this.rpcCaller
-        .call('eth_maxPriorityFeePerGas', [tx.feeCurrency])
-        .then((rpcResponse) => {
-          return rpcResponse.result
-        })
+      tx.maxPriorityFeePerGas = await this.getMaxPriorityFeePerGas(tx.feeCurrency)
     }
 
     if (isEmpty(tx.maxFeePerGas)) {
@@ -443,6 +439,13 @@ export class Connection {
     const response = await this.rpcCaller.call('eth_gasPrice', parameter)
     const gasPriceInHex = response.result.toString()
     return gasPriceInHex
+  }
+
+  getMaxPriorityFeePerGas = async (feeCurrency?: Address): Promise<string> => {
+    const parameter = feeCurrency ? [feeCurrency] : []
+    return this.rpcCaller.call('eth_maxPriorityFeePerGas', parameter).then((rpcResponse) => {
+      return rpcResponse.result
+    })
   }
 
   getBlockNumber = async (): Promise<number> => {
