@@ -1614,7 +1614,7 @@ __metadata:
     "@celo/abis": "npm:11.0.0"
     "@celo/base": "npm:^6.1.0"
     "@celo/celo-devchain": "npm:^7.0.0"
-    "@celo/compliance": "npm:~1.0.20"
+    "@celo/compliance": "npm:~1.0.23"
     "@celo/connect": "npm:^6.0.0"
     "@celo/contractkit": "npm:^8.1.0"
     "@celo/cryptographic-utils": "npm:^5.1.0"
@@ -1630,7 +1630,7 @@ __metadata:
     "@celo/wallet-local": "npm:^6.0.0"
     "@ethereumjs/util": "npm:8.0.5"
     "@ledgerhq/hw-transport-node-hid": "npm:^6.28.5"
-    "@mento-protocol/mento-sdk": "npm:^0.2.2"
+    "@mento-protocol/mento-sdk": "npm:^1.0.1"
     "@oclif/core": "npm:^3.19.1"
     "@oclif/plugin-autocomplete": "npm:^3.0.5"
     "@oclif/plugin-commands": "npm:^3.1.1"
@@ -1670,10 +1670,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/compliance@npm:~1.0.20":
-  version: 1.0.20
-  resolution: "@celo/compliance@npm:1.0.20"
-  checksum: 39d4012a64dfa36cd5c3dac7ce1b56c59810e22cf3bb7fdc1cb9f5bd0a740cb7dc6efe51f4c8e1a7e199051711ee1a47425d73f4480dd61e36ff4ea48c16e57e
+"@celo/compliance@npm:~1.0.23":
+  version: 1.0.23
+  resolution: "@celo/compliance@npm:1.0.23"
+  checksum: 3b67363e4fd266d03fdecfd3dd6ad17b0328c235d79522eea6c815864d7be5fd0aba6accb2b63dd78cc2ec2ec07ed8c85de8a282b8de60c9bd1cd72ff09c01bd
   languageName: node
   linkType: hard
 
@@ -1754,7 +1754,7 @@ __metadata:
     "@celo/celo-devchain": "npm:^7.0.0"
     "@celo/connect": "npm:^6.0.0"
     "@celo/dev-utils": "npm:0.0.4"
-    "@celo/odis-identifiers": "npm:^1.0.0"
+    "@celo/odis-identifiers": "npm:^1.0.1"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^7.0.0"
     "@celo/wallet-local": "npm:^6.0.0"
@@ -1920,7 +1920,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/odis-identifiers@npm:^1.0.0, @celo/odis-identifiers@npm:^1.0.1":
+"@celo/odis-identifiers@npm:^1.0.1":
   version: 1.0.1
   resolution: "@celo/odis-identifiers@npm:1.0.1"
   checksum: 4df11774103f49fd6375d641adc49148073d153940a5c23878dbfb29970d000d178912ccb006b7c6a866ebd66b9d5b290bb5614e3f906c1bba566595e876bedf
@@ -3845,20 +3845,20 @@ __metadata:
   linkType: hard
 
 "@mento-protocol/mento-core-ts@npm:^0.2.0":
-  version: 0.2.1
-  resolution: "@mento-protocol/mento-core-ts@npm:0.2.1"
-  checksum: 8f3c37c62852caaadae93b2158075af091a4827742a986fec249653a3fdcb8405299aa6c9724ff8e4e94cc9ee9073bc6ce3f2505bfd68eeaf589dce8e593d9fd
+  version: 0.2.2
+  resolution: "@mento-protocol/mento-core-ts@npm:0.2.2"
+  checksum: d4dfd636c4661edc5864ce78e44f79742cbf4e3f90594391b01aa9e351d14615d2b274f791b8529f6cfdeb13d025ace29a2799c529e6c124756ffb7049352c83
   languageName: node
   linkType: hard
 
-"@mento-protocol/mento-sdk@npm:^0.2.2":
-  version: 0.2.2
-  resolution: "@mento-protocol/mento-sdk@npm:0.2.2"
+"@mento-protocol/mento-sdk@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@mento-protocol/mento-sdk@npm:1.0.1"
   dependencies:
     "@mento-protocol/mento-core-ts": "npm:^0.2.0"
   peerDependencies:
     ethers: ^5.7
-  checksum: 73c7bbf0cfb930e7574c9b2aaf4d06f5fa23921262c4954f743b3dee3121dc8d2941da71ba0749572a48f428f06d4d4c36a1672418021b4b9f7facc7efd3502e
+  checksum: 64db5866ac2f562286f482775951218ca79f69c7e7edd1ecf350d55bd97ebd009f159e34b5edc5296663a260579328cd7fa59eb7e2aa10bf9b646abc50b08ede
   languageName: node
   linkType: hard
 

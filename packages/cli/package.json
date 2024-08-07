@@ -39,7 +39,7 @@
   "dependencies": {
     "@celo/abis": "11.0.0",
     "@celo/base": "^6.1.0",
-    "@celo/compliance": "~1.0.20",
+    "@celo/compliance": "~1.0.23",
     "@celo/connect": "^6.0.0",
     "@celo/contractkit": "^8.1.0",
     "@celo/cryptographic-utils": "^5.1.0",
@@ -53,7 +53,7 @@
     "@celo/wallet-local": "^6.0.0",
     "@ethereumjs/util": "8.0.5",
     "@ledgerhq/hw-transport-node-hid": "^6.28.5",
-    "@mento-protocol/mento-sdk": "^0.2.2",
+    "@mento-protocol/mento-sdk": "^1.0.1",
     "@oclif/core": "^3.19.1",
     "@oclif/plugin-autocomplete": "^3.0.5",
     "@oclif/plugin-commands": "^3.1.1",
