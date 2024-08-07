@@ -1,4 +1,5 @@
 import { newKitFromWeb3 } from '@celo/contractkit'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
@@ -10,11 +11,10 @@ import {
 import Register from '../account/register'
 import Lock from './lock'
 import Unlock from './unlock'
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvil('lockedgold:lock cmd', (web3: Web3) => {
+testWithAnvilL1('lockedgold:lock cmd', (web3: Web3) => {
   test(
     'can lock with pending withdrawals',
     async () => {
@@ -67,7 +67,7 @@ testWithAnvil('lockedgold:lock cmd', (web3: Web3) => {
             "SendTransaction: register",
           ],
           [
-            "txHash: 0x060e8980ac61a571dd9eb8b7a63d57b013ad006f49e99eb46ed11b3ce1bed3ee",
+            "txHash: 0xtxhash",
           ],
           [
             "Running Checks:",
@@ -82,7 +82,7 @@ testWithAnvil('lockedgold:lock cmd', (web3: Web3) => {
             "SendTransaction: lock",
           ],
           [
-            "txHash: 0xef3f6797fbb8d6ecfb506d6d46d4870b6cc7d71fdafcb2f158f2c2d8fcdee6d8",
+            "txHash: 0xtxhash",
           ],
         ]
       `)

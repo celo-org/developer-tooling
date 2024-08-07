@@ -1,5 +1,4 @@
 import { StrongAddress } from '@celo/base'
-import { PROXY_ADMIN_ADDRESS } from '@celo/connect'
 import { Anvil, CreateAnvilOptions, createAnvil } from '@viem/anvil'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
@@ -21,12 +20,12 @@ export const STABLES_ADDRESS = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
 // Introducing a different name for the same address to avoid confusion
 export const DEFAULT_OWNER_ADDRESS = STABLES_ADDRESS
 
-export function createInstance(): Anvil {
+function createInstance(stateFilePath: string): Anvil {
   // preparation for not needing to have --runInBand for anvil tests
   const port = ANVIL_PORT + (process.pid - process.ppid)
   const options: CreateAnvilOptions = {
     port,
-    loadState: require.resolve('@celo/devchain-anvil/devchain.json'),
+    loadState: stateFilePath,
     mnemonic: TEST_MNEMONIC,
     balance: TEST_BALANCE,
     gasPrice: TEST_GAS_PRICE,
@@ -39,8 +38,16 @@ export function createInstance(): Anvil {
   return instance
 }
 
-export function testWithAnvil(name: string, fn: (web3: Web3) => void) {
-  const anvil = createInstance()
+export function testWithAnvilL1(name: string, fn: (web3: Web3) => void) {
+  return testWithAnvil(require.resolve('@celo/devchain-anvil/devchain.json'), name, fn)
+}
+
+export function testWithAnvilL2(name: string, fn: (web3: Web3) => void) {
+  return testWithAnvil(require.resolve('@celo/devchain-anvil/l2-devchain.json'), name, fn)
+}
+
+function testWithAnvil(stateFilePath: string, name: string, fn: (web3: Web3) => void) {
+  const anvil = createInstance(stateFilePath)
 
   // for each test suite, we start and stop a new anvil instance
   return testWithWeb3(name, `http://127.0.0.1:${anvil.port}`, fn, {
@@ -99,11 +106,4 @@ export function setCode(web3: Web3, address: string, code: string) {
 
 export function setNextBlockTimestamp(web3: Web3, timestamp: number) {
   return jsonRpcCall(web3, 'evm_setNextBlockTimestamp', [timestamp.toString()])
-}
-
-// TODO remove this once no longer needed
-export const setupL2 = async (web3: Web3) => {
-  // Temporarily deploying any bytecode, so it's just there,
-  // isCel2 should hence return true as it just checks for bytecode existence
-  await setCode(web3, PROXY_ADMIN_ADDRESS, '0x1234567890')
 }

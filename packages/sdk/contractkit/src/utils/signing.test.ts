@@ -1,10 +1,10 @@
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { ACCOUNT_ADDRESSES, ACCOUNT_PRIVATE_KEYS } from '@celo/dev-utils/lib/ganache-setup'
 import { LocalSigner, NativeSigner, parseSignature } from '@celo/utils/lib/signatureUtils'
 
 // This only really tests signatureUtils in @celo/utils, but is tested here
 // to avoid the web3/ganache setup in @celo/utils
-testWithAnvil('Signing', (web3) => {
+testWithAnvilL1('Signing', (web3) => {
   const account = ACCOUNT_ADDRESSES[0]
   const pKey = ACCOUNT_PRIVATE_KEYS[0]
 

@@ -1,6 +1,6 @@
 import { Registry } from '@celo/abis/web3/Registry'
 import { Address, StrongAddress } from '@celo/base/lib/address'
-import { asCoreContractsOwner, testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+import { asCoreContractsOwner, testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { setDequeueFrequency, setReferendumStageDuration } from '@celo/dev-utils/lib/chain-setup'
 import { NetworkConfig, testWithGanache, timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import BigNumber from 'bignumber.js'
@@ -36,7 +36,7 @@ testWithGanache('Governance Wrapper', (web3: Web3) => {
   })
 })
 
-testWithAnvil('Governance Wrapper', (web3: Web3) => {
+testWithAnvilL1('Governance Wrapper', (web3: Web3) => {
   const ONE_SEC = 1000
   const kit = newKitFromWeb3(web3)
   const ONE_CGLD = web3.utils.toWei('1', 'ether')
@@ -296,9 +296,7 @@ testWithAnvil('Governance Wrapper', (web3: Web3) => {
       expect(voter.votes[0]).toEqual(expectedVoteRecord)
     })
   })
-})
 
-testWithAnvil('Governance Wrapper', (web3: Web3) => {
   describe('Hotfixes', () => {
     it('gets L1 hotfix record for version >= 1.5.0.0', async () => {
       const kit = newKitFromWeb3(web3)

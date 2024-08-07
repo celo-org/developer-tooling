@@ -1,5 +1,5 @@
 import { newKitFromWeb3 } from '@celo/contractkit'
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { ux } from '@oclif/core'
 import Web3 from 'web3'
 import {
@@ -17,7 +17,7 @@ afterEach(async () => {
   jest.restoreAllMocks()
 })
 
-testWithAnvil('config:set cmd', (web3: Web3) => {
+testWithAnvilL1('config:set cmd', (web3: Web3) => {
   it('shows a warning if gasCurrency is passed', async () => {
     const kit = newKitFromWeb3(web3)
     const feeCurrencyDirectory = await kit.contracts.getFeeCurrencyDirectory()

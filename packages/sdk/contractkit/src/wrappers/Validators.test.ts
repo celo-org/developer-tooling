@@ -1,4 +1,4 @@
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { setCommissionUpdateDelay } from '@celo/dev-utils/lib/chain-setup'
 import { mineBlocks } from '@celo/dev-utils/lib/ganache-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
@@ -21,7 +21,7 @@ const blsPublicKey =
 const blsPoP =
   '0xcdb77255037eb68897cd487fdd85388cbda448f617f874449d4b11588b0b7ad8ddc20d9bb450b513bb35664ea3923900'
 
-testWithAnvil('Validators Wrapper', (web3) => {
+testWithAnvilL1('Validators Wrapper', (web3) => {
   const kit = newKitFromWeb3(web3)
   let accounts: string[] = []
   let accountsInstance: AccountsWrapper

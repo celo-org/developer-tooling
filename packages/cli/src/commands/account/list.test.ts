@@ -1,5 +1,5 @@
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { AddressValidation } from '@celo/wallet-ledger/lib/ledger-wallet'
 import { LocalWallet } from '@celo/wallet-local'
 import Web3 from 'web3'
@@ -24,7 +24,7 @@ jest.mock('@celo/wallet-ledger', () => {
   }
 })
 
-testWithAnvil('account:list', (web3: Web3) => {
+testWithAnvilL1('account:list', (web3: Web3) => {
   let account: string
   let accounts: string[]
   let kit: ContractKit

@@ -1,13 +1,12 @@
 import { CeloDistributionScheduleWrapper } from '@celo/contractkit/lib/wrappers/CeloDistributionScheduleWrapper'
-import { setupL2, testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Parameters from './parameters'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvil('network:parameters', (web3) => {
+testWithAnvilL2('network:parameters', (web3) => {
   test('runs', async () => {
-    await setupL2(web3)
     jest
       .spyOn(CeloDistributionScheduleWrapper.prototype, 'getConfig')
       .mockImplementation(async () => {
@@ -83,7 +82,7 @@ testWithAnvil('network:parameters', (web3) => {
       Reserve: 
         frozenReserveGoldDays: 0 
         frozenReserveGoldStartBalance: 0 
-        frozenReserveGoldStartDay: 19920 (~1.992e+4)
+        frozenReserveGoldStartDay: 19927 (~1.993e+4)
         otherReserveAddresses: 
 
         tobinTaxStalenessThreshold: 3153600000 (~3.154e+9)

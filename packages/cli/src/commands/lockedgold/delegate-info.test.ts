@@ -1,14 +1,14 @@
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import Web3 from 'web3'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Register from '../account/register'
 import Delegate from './delegate'
 import DelegateInfo from './delegate-info'
 import Lock from './lock'
-import { testWithAnvil } from '@celo/dev-utils/lib/anvil-test'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvil('lockedgold:delegate-info cmd', (web3: Web3) => {
+testWithAnvilL1('lockedgold:delegate-info cmd', (web3: Web3) => {
   test('gets the info', async () => {
     const accounts = await web3.eth.getAccounts()
     const account = accounts[0]
