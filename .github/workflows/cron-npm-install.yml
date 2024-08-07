@@ -29,10 +29,10 @@ jobs:
         run: |
           apt update
           apt install -y libusb-1.0-0-dev libudev-dev
-          yarn global add node-gyp
+          npm install node-gyp --global
       - name: Installing npm package
-        run: yarn add ${{ matrix.package }}
+        run: npm install ${{ matrix.package }}
       - name: Test celocli command
         if: matrix.package == '@celo/celocli@beta'
         run: |
-          yarn workspace @celo/celocli run celocli account:new
+          npm run celocli account:new
