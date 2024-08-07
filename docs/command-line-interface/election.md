@@ -17,8 +17,9 @@ Activate pending votes in validator elections to begin earning rewards. To earn 
 
 ```
 USAGE
-  $ celocli election:activate --from <value> [--gasCurrency <value>] [--globalHelp]
-    [--for <value>] [--wait]
+  $ celocli election:activate --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp] [--for
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d] [--wait]
 
 FLAGS
   --for=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d          Optional: use this to
@@ -59,9 +60,10 @@ Outputs the set of validators currently participating in BFT to create blocks. A
 
 ```
 USAGE
-  $ celocli election:current [--gasCurrency <value>] [--globalHelp] [--valset]
-    [--columns <value> | -x] [--filter <value>] [--no-header | [--csv | --no-truncate]]
-    [--output csv|json|yaml |  | ] [--sort <value>]
+  $ celocli election:current [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--valset] [--columns
+    <value> | -x] [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output
+    csv|json|yaml |  | ] [--sort <value>]
 
 FLAGS
   -x, --extended
@@ -113,9 +115,10 @@ Prints the list of validator groups, the number of votes they have received, the
 
 ```
 USAGE
-  $ celocli election:list [--gasCurrency <value>] [--globalHelp] [--columns <value>
-    | -x] [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output
-    csv|json|yaml |  | ] [--sort <value>]
+  $ celocli election:list [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--columns <value> | -x]
+    [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output csv|json|yaml |
+    | ] [--sort <value>]
 
 FLAGS
   -x, --extended
@@ -167,8 +170,9 @@ Revoke votes for a Validator Group in validator elections.
 
 ```
 USAGE
-  $ celocli election:revoke --from <value> --for <value> --value <value>
-    [--gasCurrency <value>] [--globalHelp]
+  $ celocli election:revoke --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --for
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --value <value> [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --for=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d          (required) ValidatorGroup's
@@ -199,9 +203,10 @@ Runs a "mock" election and prints out the validators that would be elected if th
 
 ```
 USAGE
-  $ celocli election:run [--gasCurrency <value>] [--globalHelp] [--columns <value>
-    | -x] [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output
-    csv|json|yaml |  | ] [--sort <value>]
+  $ celocli election:run [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--columns <value> | -x]
+    [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output csv|json|yaml |
+    | ] [--sort <value>]
 
 FLAGS
   -x, --extended
@@ -249,8 +254,8 @@ Show election information about a voter or registered Validator Group
 
 ```
 USAGE
-  $ celocli election:show ARG1 [--gasCurrency <value>] [--globalHelp] [--voter |
-    --group]
+  $ celocli election:show ARG1 [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--voter | --group]
 
 ARGUMENTS
   ARG1  Voter or Validator Groups's address
@@ -287,8 +292,9 @@ Vote for a Validator Group in validator elections.
 
 ```
 USAGE
-  $ celocli election:vote --from <value> --for <value> --value <value>
-    [--gasCurrency <value>] [--globalHelp]
+  $ celocli election:vote --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --for
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --value <value> [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --for=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d          (required) ValidatorGroup's

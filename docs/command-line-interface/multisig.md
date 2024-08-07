@@ -13,8 +13,9 @@ Approves an existing transaction on a multi-sig contract
 
 ```
 USAGE
-  $ celocli multisig:approve --from <value> --for <value> --tx <value> [--gasCurrency
-    <value>] [--globalHelp]
+  $ celocli multisig:approve --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --for
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --tx <value> [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --for=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d          (required) Address of the
@@ -46,8 +47,9 @@ Shows information about multi-sig contract
 
 ```
 USAGE
-  $ celocli multisig:show ARG1 [--gasCurrency <value>] [--globalHelp] [--tx
-    <value>] [--all] [--raw]
+  $ celocli multisig:show ARG1 [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--tx <value>] [--all]
+    [--raw]
 
 FLAGS
   --all                                                     Show info about all
@@ -82,8 +84,10 @@ Ability to approve CELO transfers to and from multisig. Submit transaction or ap
 
 ```
 USAGE
-  $ celocli multisig:transfer ARG1 --to <value> --amount <value> --from <value>
-    [--gasCurrency <value>] [--globalHelp] [--transferFrom] [--sender <value>]
+  $ celocli multisig:transfer ARG1 --to 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --amount <value> --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--transferFrom]
+    [--sender 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d]
 
 FLAGS
   --amount=<value>                                          (required) Amount to

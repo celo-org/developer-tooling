@@ -31,7 +31,8 @@ Approve a dequeued governance proposal (or hotfix)
 
 ```
 USAGE
-  $ celocli governance:approvehotfix --from <value> [--gasCurrency <value>] [--globalHelp]
+  $ celocli governance:approvehotfix --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
     [--proposalID <value> | --hotfix <value>] [--useMultiSig] [--type
     approver|securityCouncil ]
 
@@ -78,7 +79,8 @@ Interactively build a governance proposal
 
 ```
 USAGE
-  $ celocli governance:build-proposal [--gasCurrency <value>] [--globalHelp] [--output <value>]
+  $ celocli governance:build-proposal [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--output <value>]
     [--afterExecutingProposal <value> | --afterExecutingID <value>]
 
 FLAGS
@@ -115,7 +117,8 @@ Try to dequeue governance proposal
 
 ```
 USAGE
-  $ celocli governance:dequeue --from <value> [--gasCurrency <value>] [--globalHelp]
+  $ celocli governance:dequeue --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) From address
@@ -142,8 +145,9 @@ Execute a passing governance proposal
 
 ```
 USAGE
-  $ celocli governance:execute --proposalID <value> --from <value> [--gasCurrency
-    <value>] [--globalHelp]
+  $ celocli governance:execute --proposalID <value> --from
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Executor's
@@ -173,8 +177,9 @@ Execute a governance hotfix prepared for the current epoch
 
 ```
 USAGE
-  $ celocli governance:executehotfix --from <value> --jsonTransactions <value> --salt <value>
-    [--gasCurrency <value>] [--globalHelp]
+  $ celocli governance:executehotfix --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --jsonTransactions <value> --salt <value> [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Executors's
@@ -207,7 +212,7 @@ Hash a governance hotfix specified by JSON and a salt
 ```
 USAGE
   $ celocli governance:hashhotfix --jsonTransactions <value> --salt <value> [--gasCurrency
-    <value>] [--globalHelp] [--force]
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--force]
 
 FLAGS
   --force                                                   Skip execution check
@@ -238,9 +243,10 @@ List live governance proposals (queued and ongoing)
 
 ```
 USAGE
-  $ celocli governance:list [--gasCurrency <value>] [--globalHelp] [--columns <value>
-    | -x] [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output
-    csv|json|yaml |  | ] [--sort <value>]
+  $ celocli governance:list [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--columns <value> | -x]
+    [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output csv|json|yaml |
+    | ] [--sort <value>]
 
 FLAGS
   -x, --extended
@@ -290,8 +296,8 @@ Prepare a governance hotfix for execution in the current epoch
 
 ```
 USAGE
-  $ celocli governance:preparehotfix --from <value> --hash <value> [--gasCurrency <value>]
-    [--globalHelp]
+  $ celocli governance:preparehotfix --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --hash
+    <value> [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Preparer's
@@ -322,9 +328,10 @@ Submit a governance proposal
 ```
 USAGE
   $ celocli governance:propose --jsonTransactions <value> --deposit <value> --from
-    <value> --descriptionURL <value> [--gasCurrency <value>] [--globalHelp] [--for
-    <value> --useMultiSig] [--force] [--noInfo] [--afterExecutingProposal <value> |
-    --afterExecutingID <value>]
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --descriptionURL <value> [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--for
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --useMultiSig] [--force] [--noInfo]
+    [--afterExecutingProposal <value> | --afterExecutingID <value>]
 
 FLAGS
   --afterExecutingID=<value>                                Governance proposal
@@ -374,8 +381,8 @@ Revoke upvotes for queued governance proposals
 
 ```
 USAGE
-  $ celocli governance:revokeupvote --from <value> [--gasCurrency <value>]
-  [--globalHelp]
+  $ celocli governance:revokeupvote --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Upvoter's address
@@ -402,7 +409,8 @@ Show information about a governance proposal, hotfix, or account.
 
 ```
 USAGE
-  $ celocli governance:show [--gasCurrency <value>] [--globalHelp] [--raw]
+  $ celocli governance:show [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--raw]
     [--jsonTransactions <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters
     |  | [--proposalID <value> | --account <value> | --hotfix <value>]]
     [--afterExecutingProposal <value> | --afterExecutingID <value>]
@@ -471,7 +479,8 @@ Show information about a governance proposal, hotfix, or account.
 
 ```
 USAGE
-  $ celocli governance:showaccount [--gasCurrency <value>] [--globalHelp] [--raw]
+  $ celocli governance:showaccount [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--raw]
     [--jsonTransactions <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters
     |  | [--proposalID <value> | --account <value> | --hotfix <value>]]
     [--afterExecutingProposal <value> | --afterExecutingID <value>]
@@ -538,7 +547,8 @@ Show information about a governance proposal, hotfix, or account.
 
 ```
 USAGE
-  $ celocli governance:showhotfix [--gasCurrency <value>] [--globalHelp] [--raw]
+  $ celocli governance:showhotfix [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--raw]
     [--jsonTransactions <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters
     |  | [--proposalID <value> | --account <value> | --hotfix <value>]]
     [--afterExecutingProposal <value> | --afterExecutingID <value>]
@@ -605,8 +615,9 @@ Upvote a queued governance proposal
 
 ```
 USAGE
-  $ celocli governance:upvote --proposalID <value> --from <value> [--gasCurrency
-    <value>] [--globalHelp]
+  $ celocli governance:upvote --proposalID <value> --from
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Upvoter's address
@@ -635,7 +646,8 @@ Show information about a governance proposal, hotfix, or account.
 
 ```
 USAGE
-  $ celocli governance:view [--gasCurrency <value>] [--globalHelp] [--raw]
+  $ celocli governance:view [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--raw]
     [--jsonTransactions <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters
     |  | [--proposalID <value> | --account <value> | --hotfix <value>]]
     [--afterExecutingProposal <value> | --afterExecutingID <value>]
@@ -702,7 +714,8 @@ Show information about a governance proposal, hotfix, or account.
 
 ```
 USAGE
-  $ celocli governance:viewaccount [--gasCurrency <value>] [--globalHelp] [--raw]
+  $ celocli governance:viewaccount [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--raw]
     [--jsonTransactions <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters
     |  | [--proposalID <value> | --account <value> | --hotfix <value>]]
     [--afterExecutingProposal <value> | --afterExecutingID <value>]
@@ -769,7 +782,8 @@ Show information about a governance proposal, hotfix, or account.
 
 ```
 USAGE
-  $ celocli governance:viewhotfix [--gasCurrency <value>] [--globalHelp] [--raw]
+  $ celocli governance:viewhotfix [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--raw]
     [--jsonTransactions <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters
     |  | [--proposalID <value> | --account <value> | --hotfix <value>]]
     [--afterExecutingProposal <value> | --afterExecutingID <value>]
@@ -837,7 +851,8 @@ Vote on an approved governance proposal
 ```
 USAGE
   $ celocli governance:vote --proposalID <value> --value Abstain|No|Yes --from
-    <value> [--gasCurrency <value>] [--globalHelp]
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Voter's address
@@ -868,8 +883,10 @@ Vote partially on an approved governance proposal
 
 ```
 USAGE
-  $ celocli governance:votePartially --proposalID <value> --from <value> [--gasCurrency
-    <value>] [--globalHelp] [--yes <value>] [--no <value>] [--abstain <value>]
+  $ celocli governance:votePartially --proposalID <value> --from
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--yes <value>] [--no
+    <value>] [--abstain <value>]
 
 FLAGS
   --abstain=<value>                                         Abstain votes
@@ -901,8 +918,8 @@ Whitelist a governance hotfix
 
 ```
 USAGE
-  $ celocli governance:whitelisthotfix --from <value> --hash <value> [--gasCurrency <value>]
-    [--globalHelp]
+  $ celocli governance:whitelisthotfix --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --hash
+    <value> [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Whitelister's
@@ -932,7 +949,8 @@ Withdraw refunded governance proposal deposits.
 
 ```
 USAGE
-  $ celocli governance:withdraw --from <value> [--gasCurrency <value>] [--globalHelp]
+  $ celocli governance:withdraw --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Proposer's

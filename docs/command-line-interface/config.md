@@ -12,7 +12,8 @@ Output network node configuration
 
 ```
 USAGE
-  $ celocli config:get [--gasCurrency <value>] [--globalHelp]
+  $ celocli config:get [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --gasCurrency=0x1234567890123456789012345678901234567890  Use a specific gas currency
@@ -35,7 +36,8 @@ Configure running node information for propagating transactions to network
 
 ```
 USAGE
-  $ celocli config:set [-n <value>] [--gasCurrency <value>] [--globalHelp]
+  $ celocli config:set [-n <value>] [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   -n, --node=<value>

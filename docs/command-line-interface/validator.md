@@ -23,8 +23,8 @@ Affiliate a Validator with a Validator Group. This allows the Validator Group to
 
 ```
 USAGE
-  $ celocli validator:affiliate ARG1 --from <value> [--gasCurrency <value>]
-    [--globalHelp] [--yes]
+  $ celocli validator:affiliate ARG1 --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp] [--yes]
 
 ARGUMENTS
   ARG1  ValidatorGroup's address
@@ -59,7 +59,8 @@ Deaffiliate a Validator from a Validator Group, and remove it from the Group if 
 
 ```
 USAGE
-  $ celocli validator:deaffiliate --from <value> [--gasCurrency <value>] [--globalHelp]
+  $ celocli validator:deaffiliate --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Signer or
@@ -88,7 +89,8 @@ Deregister a Validator. Approximately 60 days after the validator is no longer p
 
 ```
 USAGE
-  $ celocli validator:deregister --from <value> [--gasCurrency <value>] [--globalHelp]
+  $ celocli validator:deregister --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Signer or
@@ -120,9 +122,12 @@ Downtime slash a validator
 
 ```
 USAGE
-  $ celocli validator:downtime-slash --from <value> [--gasCurrency <value>] [--globalHelp]
-    [--validator <value> | --validators <value>] [--intervals <value> | --beforeBlock
-    <value>]
+  $ celocli validator:downtime-slash --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
+    [--validator 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d | --validators
+    '["0xb7ef0985bdb4f19460A29d9829aA1514B181C4CD",
+    "0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95"]'] [--intervals '[0:1], [1:2]' |
+    --beforeBlock <value>]
 
 FLAGS
   --beforeBlock=<value>
@@ -165,8 +170,9 @@ Force deaffiliate a Validator from a Validator Group, and remove it from the Gro
 
 ```
 USAGE
-  $ celocli validator:force-deaffiliate --from <value> --validator <value> [--gasCurrency
-    <value>] [--globalHelp]
+  $ celocli validator:force-deaffiliate --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --validator 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Initiator
@@ -199,9 +205,10 @@ List registered Validators, their name (if provided), affiliation, uptime score,
 
 ```
 USAGE
-  $ celocli validator:list [--gasCurrency <value>] [--globalHelp] [--columns <value>
-    | -x] [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output
-    csv|json|yaml |  | ] [--sort <value>]
+  $ celocli validator:list [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--columns <value> | -x]
+    [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output csv|json|yaml |
+    | ] [--sort <value>]
 
 FLAGS
   -x, --extended
@@ -252,8 +259,9 @@ Register a new Validator
 
 ```
 USAGE
-  $ celocli validator:register --from <value> --ecdsaKey <value> --blsKey <value>
-    --blsSignature <value> [--gasCurrency <value>] [--globalHelp] [--yes]
+  $ celocli validator:register --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --ecdsaKey 0x --blsKey 0x --blsSignature 0x [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--yes]
 
 FLAGS
   --blsKey=0x                                               (required) BLS Public Key
@@ -286,7 +294,8 @@ List the Locked Gold requirements for registering a Validator. This consists of 
 
 ```
 USAGE
-  $ celocli validator:requirements [--gasCurrency <value>] [--globalHelp]
+  $ celocli validator:requirements [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --gasCurrency=0x1234567890123456789012345678901234567890  Use a specific gas currency
@@ -315,8 +324,9 @@ Set validator signature bitmaps for provided intervals
 
 ```
 USAGE
-  $ celocli validator:set-bitmaps --from <value> [--gasCurrency <value>] [--globalHelp]
-    [--slashableDowntimeBeforeBlock <value> | --intervals <value> |
+  $ celocli validator:set-bitmaps --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
+    [--slashableDowntimeBeforeBlock <value> | --intervals '[0:1], [1:2]' |
     --slashableDowntimeBeforeLatest]
 
 FLAGS
@@ -355,7 +365,8 @@ Show information about a registered Validator.
 
 ```
 USAGE
-  $ celocli validator:show ARG1 [--gasCurrency <value>] [--globalHelp]
+  $ celocli validator:show ARG1 [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 ARGUMENTS
   ARG1  Validator's address
@@ -384,9 +395,13 @@ Display a graph of blocks and whether the given signer's signature is included i
 
 ```
 USAGE
-  $ celocli validator:signed-blocks [--gasCurrency <value>] [--globalHelp] [--signer <value>
-    | --signers <value>] [--wasDownWhileElected] [--at-block <value> | ]
-    [--slashableDowntimeLookback | [--lookback <value> | ]] [--width <value>]
+  $ celocli validator:signed-blocks [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--signer
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d | --signers
+    '["0xb7ef0985bdb4f19460A29d9829aA1514B181C4CD",
+    "0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95"]'] [--wasDownWhileElected] [--at-block
+    <value> | ] [--slashableDowntimeLookback | [--lookback <value> | ]] [--width
+    <value>]
 
 FLAGS
   --at-block=<value>
@@ -444,10 +459,12 @@ Shows the consensus status of a validator. This command will show whether a vali
 
 ```
 USAGE
-  $ celocli validator:status [--gasCurrency <value>] [--globalHelp] [--validator
-    <value> | --all | --signer <value>] [--start <value>] [--end <value>] [--columns
-    <value> | -x] [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output
-    csv|json|yaml |  | ] [--sort <value>]
+  $ celocli validator:status [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--validator
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d | --all | --signer
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d] [--start <value>] [--end <value>]
+    [--columns <value> | -x] [--filter <value>] [--no-header | [--csv | --no-truncate]]
+    [--output csv|json|yaml |  | ] [--sort <value>]
 
 FLAGS
   -x, --extended
@@ -521,8 +538,9 @@ Update the BLS public key for a Validator to be used in consensus.
 
 ```
 USAGE
-  $ celocli validator:update-bls-public-key --from <value> --blsKey <value> --blsPop <value>
-    [--gasCurrency <value>] [--globalHelp]
+  $ celocli validator:update-bls-public-key --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --blsKey 0x --blsPop 0x [--gasCurrency 0x1234567890123456789012345678901234567890]
+    [--globalHelp]
 
 FLAGS
   --blsKey=0x                                               (required) BLS Public Key

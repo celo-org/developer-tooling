@@ -25,9 +25,10 @@ Authorize an alternative key to be used for a given action (Vote, Validate, Atte
 
 ```
 USAGE
-  $ celocli releasecelo:authorize --contract <value> --role vote|validator|attestation
-    --signer <value> --signature <value> [--gasCurrency <value>] [--globalHelp]
-    [--blsKey <value> --blsPop <value>]
+  $ celocli releasecelo:authorize --contract 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --role vote|validator|attestation --signer
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --signature 0x [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--blsKey 0x --blsPop 0x]
 
 FLAGS
   --blsKey=0x                                               The BLS public key that the
@@ -79,8 +80,8 @@ Creates a new account for the ReleaseGold instance
 
 ```
 USAGE
-  $ celocli releasecelo:create-account --contract <value> [--gasCurrency <value>]
-  [--globalHelp]
+  $ celocli releasecelo:create-account --contract 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --contract=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d     (required) Address of the
@@ -108,8 +109,9 @@ Perform actions [lock, unlock, withdraw] on CELO that has been locked via the pr
 
 ```
 USAGE
-  $ celocli releasecelo:locked-gold --contract <value> -a lock|unlock|withdraw --value
-    <value> [--gasCurrency <value>] [--globalHelp] [--yes]
+  $ celocli releasecelo:locked-gold --contract 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d -a
+    lock|unlock|withdraw --value 10000000000000000000000 [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--yes]
 
 FLAGS
   -a, --action=<option>
@@ -152,8 +154,8 @@ Refund the given contract's balance to the appropriate parties and destroy the c
 
 ```
 USAGE
-  $ celocli releasecelo:refund-and-finalize --contract <value> [--gasCurrency <value>]
-  [--globalHelp]
+  $ celocli releasecelo:refund-and-finalize --contract 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --contract=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d     (required) Address of the
@@ -182,7 +184,8 @@ Revoke the given contract instance. Once revoked, any Locked Gold can be unlocke
 
 ```
 USAGE
-  $ celocli releasecelo:revoke --contract <value> [--gasCurrency <value>] [--globalHelp]
+  $ celocli releasecelo:revoke --contract 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
     [--yesreally]
 
 FLAGS
@@ -216,8 +219,10 @@ Revokes `votes` for the given contract's account from the given group's account
 
 ```
 USAGE
-  $ celocli releasecelo:revoke-votes --contract <value> [--gasCurrency <value>] [--globalHelp]
-    [--group <value> | --allGroups] [--votes <value> | --allVotes | ]
+  $ celocli releasecelo:revoke-votes --contract 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp] [--group
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d | --allGroups] [--votes <value> |
+    --allVotes | ]
 
 FLAGS
   --allGroups                                               Revoke all votes from all
@@ -254,8 +259,9 @@ Set account properties of the ReleaseGold instance account such as name, data en
 
 ```
 USAGE
-  $ celocli releasecelo:set-account --contract <value> -p name|dataEncryptionKey|metaURL -v
-    <value> [--gasCurrency <value>] [--globalHelp]
+  $ celocli releasecelo:set-account --contract 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d -p
+    name|dataEncryptionKey|metaURL -v <value> [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   -p, --property=<option>
@@ -295,8 +301,9 @@ Set the ReleaseGold contract account's wallet address
 
 ```
 USAGE
-  $ celocli releasecelo:set-account-wallet-address --contract <value> --walletAddress <value> [--gasCurrency
-    <value>] [--globalHelp] [--pop <value>]
+  $ celocli releasecelo:set-account-wallet-address --contract 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --walletAddress 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--pop <value>]
 
 FLAGS
   --contract=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
@@ -331,8 +338,10 @@ Set the beneficiary of the ReleaseGold contract. This command is gated via a mul
 
 ```
 USAGE
-  $ celocli releasecelo:set-beneficiary --contract <value> --from <value> --beneficiary <value>
-    [--gasCurrency <value>] [--globalHelp] [--yesreally]
+  $ celocli releasecelo:set-beneficiary --contract 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --beneficiary
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--yesreally]
 
 FLAGS
   --beneficiary=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d  (required) Address of the
@@ -370,8 +379,9 @@ Set the canExpire flag for the given ReleaseGold contract
 
 ```
 USAGE
-  $ celocli releasecelo:set-can-expire --contract <value> --value true|false|True|False
-    [--gasCurrency <value>] [--globalHelp] [--yesreally]
+  $ celocli releasecelo:set-can-expire --contract 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --value true|false|True|False [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--yesreally]
 
 FLAGS
   --contract=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d     (required) Address of the
@@ -405,7 +415,8 @@ Set the liquidity provision to true, allowing the beneficiary to withdraw releas
 
 ```
 USAGE
-  $ celocli releasecelo:set-liquidity-provision --contract <value> [--gasCurrency <value>] [--globalHelp]
+  $ celocli releasecelo:set-liquidity-provision --contract 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
     [--yesreally]
 
 FLAGS
@@ -437,8 +448,9 @@ Set the maximum distribution of celo for the given contract
 
 ```
 USAGE
-  $ celocli releasecelo:set-max-distribution --contract <value> --distributionRatio <value>
-    [--gasCurrency <value>] [--globalHelp] [--yesreally]
+  $ celocli releasecelo:set-max-distribution --contract 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --distributionRatio <value> [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--yesreally]
 
 FLAGS
   --contract=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d     (required) Address of the
@@ -474,7 +486,8 @@ Show info on a ReleaseGold instance contract.
 
 ```
 USAGE
-  $ celocli releasecelo:show --contract <value> [--gasCurrency <value>] [--globalHelp]
+  $ celocli releasecelo:show --contract 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --contract=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d     (required) Address of the
@@ -502,8 +515,9 @@ Transfer Celo Dollars from the given contract address. Dollars may be accrued to
 
 ```
 USAGE
-  $ celocli releasecelo:transfer-dollars --contract <value> --to <value> --value <value>
-    [--gasCurrency <value>] [--globalHelp]
+  $ celocli releasecelo:transfer-dollars --contract 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --to 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --value 10000000000000000000000
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --contract=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d     (required) Address of the
@@ -537,8 +551,9 @@ Withdraws `value` released celo to the beneficiary address. Fails if `value` wor
 
 ```
 USAGE
-  $ celocli releasecelo:withdraw --contract <value> --value <value> [--gasCurrency
-    <value>] [--globalHelp]
+  $ celocli releasecelo:withdraw --contract 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --value 10000000000000000000000 [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --contract=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d     (required) Address of the

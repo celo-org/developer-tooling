@@ -13,9 +13,10 @@ Looks up attestations associated with the provided phone number. If a pepper is 
 
 ```
 USAGE
-  $ celocli identity:get-attestations [--gasCurrency <value>] [--globalHelp] [--phoneNumber
-    <value>] [--from <value>] [--pepper <value>] [--identifier <value>] [--network
-    <value>]
+  $ celocli identity:get-attestations [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--phoneNumber <value>]
+    [--from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d] [--pepper <value>] [--identifier
+    <value>] [--network <value>]
 
 FLAGS
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         Account whose balance to use
@@ -56,8 +57,9 @@ Queries ODIS for the on-chain identifier and pepper corresponding to a given pho
 
 ```
 USAGE
-  $ celocli identity:identifier --from <value> --phoneNumber <value> [--gasCurrency
-    <value>] [--globalHelp] [--context <value>]
+  $ celocli identity:identifier --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --phoneNumber +14152223333 [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--context <value>]
 
 FLAGS
   --context=<value>                                         mainnet (default),
@@ -94,8 +96,9 @@ Withdraw accumulated attestation rewards for a given currency
 
 ```
 USAGE
-  $ celocli identity:withdraw-attestation-rewards --from <value> [--gasCurrency <value>] [--globalHelp]
-    [--tokenAddress <value>]
+  $ celocli identity:withdraw-attestation-rewards --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
+    [--tokenAddress 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d]
 
 FLAGS
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d

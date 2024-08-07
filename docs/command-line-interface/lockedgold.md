@@ -19,8 +19,9 @@ Delegate locked celo.
 
 ```
 USAGE
-  $ celocli lockedgold:delegate --from <value> --to <value> --percent <value>
-    [--gasCurrency <value>] [--globalHelp]
+  $ celocli lockedgold:delegate --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --to
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --percent <value> [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Account Address
@@ -50,8 +51,8 @@ Delegate info about account.
 
 ```
 USAGE
-  $ celocli lockedgold:delegate-info --account <value> [--gasCurrency <value>]
-  [--globalHelp]
+  $ celocli lockedgold:delegate-info --account 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --account=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d      (required) Account Address
@@ -78,8 +79,8 @@ Locks CELO to be used in governance and validator elections.
 
 ```
 USAGE
-  $ celocli lockedgold:lock --from <value> --value <value> [--gasCurrency <value>]
-    [--globalHelp]
+  $ celocli lockedgold:lock --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --value
+    <value> [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Account Address
@@ -108,7 +109,8 @@ Returns the maximum number of delegates allowed per account.
 
 ```
 USAGE
-  $ celocli lockedgold:max-delegatees-count [--gasCurrency <value>] [--globalHelp]
+  $ celocli lockedgold:max-delegatees-count [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --gasCurrency=0x1234567890123456789012345678901234567890  Use a specific gas currency
@@ -134,8 +136,9 @@ Revoke delegated locked celo.
 
 ```
 USAGE
-  $ celocli lockedgold:revoke-delegate --from <value> --to <value> --percent <value>
-    [--gasCurrency <value>] [--globalHelp]
+  $ celocli lockedgold:revoke-delegate --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --to
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --percent <value> [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Account Address
@@ -166,7 +169,8 @@ Show Locked Gold information for a given account. This includes the total amount
 
 ```
 USAGE
-  $ celocli lockedgold:show ARG1 [--gasCurrency <value>] [--globalHelp]
+  $ celocli lockedgold:show ARG1 [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --gasCurrency=0x1234567890123456789012345678901234567890  Use a specific gas currency
@@ -196,8 +200,8 @@ Unlocks CELO, which can be withdrawn after the unlocking period. Unlocked celo w
 
 ```
 USAGE
-  $ celocli lockedgold:unlock --from <value> --value <value> [--gasCurrency <value>]
-    [--globalHelp]
+  $ celocli lockedgold:unlock --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --value
+    <value> [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Account Address
@@ -228,8 +232,9 @@ Updates the amount of delegated locked celo. There might be discrepancy between 
 
 ```
 USAGE
-  $ celocli lockedgold:update-delegated-amount --from <value> --to <value> [--gasCurrency <value>]
-    [--globalHelp]
+  $ celocli lockedgold:update-delegated-amount --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --to
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Account Address
@@ -259,7 +264,8 @@ Withdraw any pending withdrawals created via "lockedgold:unlock" that have becom
 
 ```
 USAGE
-  $ celocli lockedgold:withdraw --from <value> [--gasCurrency <value>] [--globalHelp]
+  $ celocli lockedgold:withdraw --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Account Address

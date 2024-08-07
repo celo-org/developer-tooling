@@ -12,7 +12,8 @@ Shows information about reserve
 
 ```
 USAGE
-  $ celocli reserve:status [--gasCurrency <value>] [--globalHelp]
+  $ celocli reserve:status [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --gasCurrency=0x1234567890123456789012345678901234567890  Use a specific gas currency
@@ -38,8 +39,10 @@ Transfers reserve celo to other reserve address
 
 ```
 USAGE
-  $ celocli reserve:transfergold --value <value> --to <value> --from <value>
-    [--gasCurrency <value>] [--globalHelp] [--useMultiSig]
+  $ celocli reserve:transfergold --value <value> --to
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --from
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--useMultiSig]
 
 FLAGS
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Spender's address

@@ -14,7 +14,8 @@ List oracle addresses for a given token
 
 ```
 USAGE
-  $ celocli oracle:list ARG1 [--gasCurrency <value>] [--globalHelp]
+  $ celocli oracle:list ARG1 [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 ARGUMENTS
   ARG1  [default: StableToken] Token to list the oracles for
@@ -47,8 +48,8 @@ Remove expired oracle reports for a specified token
 
 ```
 USAGE
-  $ celocli oracle:remove-expired-reports ARG1 --from <value> [--gasCurrency <value>]
-  [--globalHelp]
+  $ celocli oracle:remove-expired-reports ARG1 --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
 
 ARGUMENTS
   ARG1  [default: StableToken] Token to remove expired reports for
@@ -84,8 +85,9 @@ Report the price of CELO in a specified token
 
 ```
 USAGE
-  $ celocli oracle:report ARG1 --from <value> --value <value> [--gasCurrency
-    <value>] [--globalHelp]
+  $ celocli oracle:report ARG1 --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --value <value> [--gasCurrency 0x1234567890123456789012345678901234567890]
+    [--globalHelp]
 
 ARGUMENTS
   ARG1  [default: StableToken] Token to report on
@@ -123,9 +125,10 @@ List oracle reports for a given token
 
 ```
 USAGE
-  $ celocli oracle:reports ARG1 [--gasCurrency <value>] [--globalHelp] [--columns
-    <value> | -x] [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output
-    csv|json|yaml |  | ] [--sort <value>]
+  $ celocli oracle:reports ARG1 [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--columns <value> | -x]
+    [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output csv|json|yaml |
+    | ] [--sort <value>]
 
 ARGUMENTS
   ARG1  [default: StableToken] Token to list the reports for
