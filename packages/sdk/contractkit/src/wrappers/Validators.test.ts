@@ -112,7 +112,7 @@ testWithAnvil('Validators Wrapper', (web3) => {
     const txOpts = { from: groupAccount }
 
     // Set commission update delay to 3 blocks for backwards compatibility
-    setCommissionUpdateDelay(web3, validators.address, 3)
+    await setCommissionUpdateDelay(web3, validators.address, 3)
 
     await validators.setNextCommissionUpdate('0.2').sendAndWaitForReceipt(txOpts)
     await mineBlocks(3, web3)
