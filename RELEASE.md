@@ -24,7 +24,7 @@ For technical details see below.
 
 
 
-## the tools
+## The tools
 
 This repo uses [changesets](https://github.com/changesets/changesets) to determine what
 packages need a version bump.
