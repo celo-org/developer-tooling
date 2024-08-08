@@ -12,7 +12,7 @@ Being assigned as the release steward means you expected to deliver
 
 ### What is a signicant release
 
-This is intentional not defined. If it has been a long time, if someone will be asking about the release, if there are big fixes. 
+This is intentionally not defined. Some guiding principles: if it has been a long time, if someone will be asking about the release, if there are big fixes. 
 
 
 ### What do I do? 
