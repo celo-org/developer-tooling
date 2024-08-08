@@ -17,8 +17,9 @@ Transfer CELO to a specified address. (Note: this is the equivalent of the old t
 
 ```
 USAGE
-  $ celocli transfer:celo --from <value> --to <value> --value <value>
-    [--gasCurrency <value>] [--globalHelp] [--comment <value>]
+  $ celocli transfer:celo --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --to
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --value <value> [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--comment <value>]
 
 FLAGS
   --comment=<value>                                         Transfer comment
@@ -52,8 +53,9 @@ Transfer Celo Dollars (cUSD) to a specified address.
 
 ```
 USAGE
-  $ celocli transfer:dollars --from <value> --to <value> --value <value>
-    [--gasCurrency <value>] [--globalHelp] [--comment <value>]
+  $ celocli transfer:dollars --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --to
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --value <value> [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--comment <value>]
 
 FLAGS
   --comment=<value>                                         Transfer comment
@@ -86,8 +88,10 @@ Transfer ERC20 to a specified address
 
 ```
 USAGE
-  $ celocli transfer:erc20 --erc20Address <value> --from <value> --to <value>
-    --value <value> [--gasCurrency <value>] [--globalHelp]
+  $ celocli transfer:erc20 --erc20Address 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --to
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --value <value> [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --erc20Address=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
@@ -124,8 +128,9 @@ Transfer Celo Euros (cEUR) to a specified address.
 
 ```
 USAGE
-  $ celocli transfer:euros --from <value> --to <value> --value <value>
-    [--gasCurrency <value>] [--globalHelp] [--comment <value>]
+  $ celocli transfer:euros --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --to
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --value <value> [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--comment <value>]
 
 FLAGS
   --comment=<value>                                         Transfer comment
@@ -158,8 +163,9 @@ Transfer CELO to a specified address. *DEPRECATION WARNING* Use the "transfer:ce
 
 ```
 USAGE
-  $ celocli transfer:gold --from <value> --to <value> --value <value>
-    [--gasCurrency <value>] [--globalHelp] [--comment <value>]
+  $ celocli transfer:gold --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --to
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --value <value> [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--comment <value>]
 
 FLAGS
   --comment=<value>                                         Transfer comment
@@ -193,8 +199,9 @@ Transfer Celo Brazilian Real (cREAL) to a specified address.
 
 ```
 USAGE
-  $ celocli transfer:reals --from <value> --to <value> --value <value>
-    [--gasCurrency <value>] [--globalHelp] [--comment <value>]
+  $ celocli transfer:reals --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --to
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --value <value> [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--comment <value>]
 
 FLAGS
   --comment=<value>                                         Transfer comment
@@ -227,9 +234,10 @@ Transfer a stable token to a specified address.
 
 ```
 USAGE
-  $ celocli transfer:stable --from <value> --to <value> --value <value>
-    [--gasCurrency <value>] [--globalHelp] [--comment <value>] [--stableToken
-    cUSD|cusd|cEUR|ceur|cREAL|creal]
+  $ celocli transfer:stable --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --to
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --value <value> [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--comment <value>]
+    [--stableToken cUSD|cusd|cEUR|ceur|cREAL|creal]
 
 FLAGS
   --comment=<value>                                         Transfer comment

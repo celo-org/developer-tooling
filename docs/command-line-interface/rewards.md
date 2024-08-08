@@ -11,10 +11,13 @@ Show rewards information about a voter, registered Validator, or Validator Group
 
 ```
 USAGE
-  $ celocli rewards:show [--gasCurrency <value>] [--globalHelp] [--estimate]
-    [--voter <value>] [--validator <value>] [--group <value>] [--slashing] [--epochs
-    <value>] [--columns <value> | -x] [--filter <value>] [--no-header | [--csv |
-    --no-truncate]] [--output csv|json|yaml |  | ] [--sort <value>]
+  $ celocli rewards:show [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--estimate] [--voter
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d] [--validator
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d] [--group
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d] [--slashing] [--epochs <value>]
+    [--columns <value> | -x] [--filter <value>] [--no-header | [--csv | --no-truncate]]
+    [--output csv|json|yaml |  | ] [--sort <value>]
 
 FLAGS
   -x, --extended

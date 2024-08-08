@@ -40,9 +40,10 @@ Keep your locked Gold more secure by authorizing alternative keys to be used for
 
 ```
 USAGE
-  $ celocli account:authorize --from <value> -r vote|validator|attestation --signature
-    <value> --signer <value> [--gasCurrency <value>] [--globalHelp] [--blsKey <value>
-    --blsPop <value>]
+  $ celocli account:authorize --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d -r
+    vote|validator|attestation --signature 0x --signer
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--blsKey 0x --blsPop 0x]
 
 FLAGS
   -r, --role=<option>
@@ -94,8 +95,9 @@ View Celo Stables and CELO balances for an address
 
 ```
 USAGE
-  $ celocli account:balance ARG1 [--gasCurrency <value>] [--globalHelp]
-    [--erc20Address <value>]
+  $ celocli account:balance ARG1 [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--erc20Address
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d]
 
 FLAGS
   --erc20Address=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
@@ -125,8 +127,9 @@ Claim another account, and optionally its public key, and add the claim to a loc
 
 ```
 USAGE
-  $ celocli account:claim-account ARG1 --from <value> --address <value> [--gasCurrency
-    <value>] [--globalHelp] [--publicKey <value>]
+  $ celocli account:claim-account ARG1 --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --address <value> [--gasCurrency 0x1234567890123456789012345678901234567890]
+    [--globalHelp] [--publicKey <value>]
 
 ARGUMENTS
   ARG1  Path of the metadata file
@@ -167,8 +170,9 @@ Claim a domain and add the claim to a local metadata file
 
 ```
 USAGE
-  $ celocli account:claim-domain ARG1 --from <value> --domain <value> [--gasCurrency
-    <value>] [--globalHelp]
+  $ celocli account:claim-domain ARG1 --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --domain <value> [--gasCurrency 0x1234567890123456789012345678901234567890]
+    [--globalHelp]
 
 ARGUMENTS
   ARG1  Path of the metadata file
@@ -203,8 +207,9 @@ Claim a keybase username and add the claim to a local metadata file
 
 ```
 USAGE
-  $ celocli account:claim-keybase ARG1 --from <value> --username <value> [--gasCurrency
-    <value>] [--globalHelp]
+  $ celocli account:claim-keybase ARG1 --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --username <value> [--gasCurrency 0x1234567890123456789012345678901234567890]
+    [--globalHelp]
 
 ARGUMENTS
   ARG1  Path of the metadata file
@@ -239,8 +244,9 @@ Claim a name and add the claim to a local metadata file
 
 ```
 USAGE
-  $ celocli account:claim-name ARG1 --from <value> --name <value> [--gasCurrency
-    <value>] [--globalHelp]
+  $ celocli account:claim-name ARG1 --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --name <value> [--gasCurrency 0x1234567890123456789012345678901234567890]
+    [--globalHelp]
 
 ARGUMENTS
   ARG1  Path of the metadata file
@@ -275,8 +281,9 @@ Claim a storage root and add the claim to a local metadata file
 
 ```
 USAGE
-  $ celocli account:claim-storage ARG1 --from <value> --url <value> [--gasCurrency <value>]
-    [--globalHelp]
+  $ celocli account:claim-storage ARG1 --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --url https://www.celo.org [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 ARGUMENTS
   ARG1  Path of the metadata file
@@ -312,8 +319,8 @@ Create an empty identity metadata file. Use this metadata file to store claims a
 
 ```
 USAGE
-  $ celocli account:create-metadata ARG1 --from <value> [--gasCurrency <value>]
-  [--globalHelp]
+  $ celocli account:create-metadata ARG1 --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
 
 ARGUMENTS
   ARG1  Path where the metadata should be saved
@@ -348,8 +355,9 @@ Remove an account's authorized attestation signer role.
 
 ```
 USAGE
-  $ celocli account:deauthorize --from <value> -r attestation --signer <value>
-    [--gasCurrency <value>] [--globalHelp]
+  $ celocli account:deauthorize --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d -r
+    attestation --signer 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   -r, --role=<option>
@@ -384,8 +392,8 @@ Removes a validator's payment delegation by setting benficiary and fraction to 0
 
 ```
 USAGE
-  $ celocli account:delete-payment-delegation --account <value> [--gasCurrency <value>]
-  [--globalHelp]
+  $ celocli account:delete-payment-delegation --account 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --account=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d      (required) Account Address
@@ -412,9 +420,10 @@ Show information about an address. Retrieves the metadata URL for an account fro
 
 ```
 USAGE
-  $ celocli account:get-metadata ARG1 [--gasCurrency <value>] [--globalHelp] [--columns
-    <value> | -x] [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output
-    csv|json|yaml |  | ] [--sort <value>]
+  $ celocli account:get-metadata ARG1 [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--columns <value> | -x]
+    [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output csv|json|yaml |
+    | ] [--sort <value>]
 
 ARGUMENTS
   ARG1  Address to get metadata for
@@ -468,9 +477,10 @@ Get the payment delegation account beneficiary and fraction allocated from a val
 
 ```
 USAGE
-  $ celocli account:get-payment-delegation --account <value> [--gasCurrency <value>] [--globalHelp]
-    [--columns <value> | -x] [--filter <value>] [--no-header | [--csv | --no-truncate]]
-    [--output csv|json|yaml |  | ] [--sort <value>]
+  $ celocli account:get-payment-delegation --account 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp] [--columns
+    <value> | -x] [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output
+    csv|json|yaml |  | ] [--sort <value>]
 
 FLAGS
   -x, --extended
@@ -524,7 +534,8 @@ List the addresses from the node and the local instance
 
 ```
 USAGE
-  $ celocli account:list [--gasCurrency <value>] [--globalHelp] [--local]
+  $ celocli account:list [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--local]
 
 FLAGS
   --gasCurrency=0x1234567890123456789012345678901234567890  Use a specific gas currency
@@ -551,7 +562,8 @@ Lock an account which was previously unlocked
 
 ```
 USAGE
-  $ celocli account:lock ARG1 [--gasCurrency <value>] [--globalHelp]
+  $ celocli account:lock ARG1 [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 ARGUMENTS
   ARG1  Account address
@@ -580,7 +592,8 @@ Creates a new account locally using the Celo Derivation Path (m/44'/52752'/0/cha
 
 ```
 USAGE
-  $ celocli account:new [--gasCurrency <value>] [--globalHelp] [--passphrasePath
+  $ celocli account:new [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--passphrasePath
     <value>] [--changeIndex <value>] [--addressIndex <value>] [--language chinese_simpli
     fied|chinese_traditional|english|french|italian|japanese|korean|spanish]
     [--mnemonicPath <value>] [--derivationPath <value>]
@@ -649,9 +662,10 @@ DEV: Reads the name from offchain storage
 
 ```
 USAGE
-  $ celocli account:offchain-read ARG1 [--gasCurrency <value>] [--globalHelp] [--directory
-    <value>] [--bucket <value> --provider git|aws|gcp] [--from <value>] [--privateDEK
-    <value>]
+  $ celocli account:offchain-read ARG1 [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--directory <value>]
+    [--bucket <value> --provider git|aws|gcp] [--from
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d] [--privateDEK <value>]
 
 FLAGS
   --bucket=<value>                                          If using a GCP or AWS
@@ -690,9 +704,10 @@ DEV: Writes a name to offchain storage
 
 ```
 USAGE
-  $ celocli account:offchain-write --name <value> [--gasCurrency <value>] [--globalHelp]
-    [--directory <value>] [--bucket <value> --provider git|aws|gcp] (--privateDEK
-    <value> --privateKey <value> --encryptTo <value>)
+  $ celocli account:offchain-write --name <value> [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--directory <value>]
+    [--bucket <value> --provider git|aws|gcp] (--privateDEK <value> --privateKey <value>
+    --encryptTo <value>)
 
 FLAGS
   --bucket=<value>                                          If using a GCP or AWS
@@ -733,8 +748,9 @@ Generate proof-of-possession to be used to authorize a signer. See the "account:
 
 ```
 USAGE
-  $ celocli account:proof-of-possession --signer <value> --account <value> [--gasCurrency
-    <value>] [--globalHelp]
+  $ celocli account:proof-of-possession --signer 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --account 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --account=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d      (required) Address of the
@@ -768,10 +784,11 @@ Recovers the Valora old account and print out the key information. The old Valor
 
 ```
 USAGE
-  $ celocli account:recover-old --mnemonicPath <value> [--gasCurrency <value>]
-    [--globalHelp] [--passphrasePath <value>] [--changeIndex <value>] [--addressIndex
-    <value>] [--language chinese_simplified|chinese_traditional|english|french|italian|j
-    apanese|korean|spanish] [--derivationPath <value>]
+  $ celocli account:recover-old --mnemonicPath <value> [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--passphrasePath
+    <value>] [--changeIndex <value>] [--addressIndex <value>] [--language chinese_simpli
+    fied|chinese_traditional|english|french|italian|japanese|korean|spanish]
+    [--derivationPath <value>]
 
 FLAGS
   --addressIndex=<value>
@@ -835,8 +852,9 @@ Register an account on-chain. This allows you to lock Gold, which is a pre-requi
 
 ```
 USAGE
-  $ celocli account:register --from <value> [--gasCurrency <value>] [--globalHelp]
-    [--name <value>]
+  $ celocli account:register --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp] [--name
+    <value>]
 
 FLAGS
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Account Address
@@ -868,8 +886,9 @@ Register a data encryption key for an account on chain. This key can be used to 
 
 ```
 USAGE
-  $ celocli account:register-data-encryption-key --from <value> --publicKey <value> [--gasCurrency
-    <value>] [--globalHelp]
+  $ celocli account:register-data-encryption-key --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --publicKey <value> [--gasCurrency 0x1234567890123456789012345678901234567890]
+    [--globalHelp]
 
 FLAGS
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Addess of the
@@ -901,9 +920,10 @@ Register metadata URL for an account where users will be able to retrieve the me
 
 ```
 USAGE
-  $ celocli account:register-metadata --from <value> --url <value> [--gasCurrency <value>]
-    [--globalHelp] [--force] [--columns <value> | -x] [--filter <value>] [--no-header |
-    [--csv | --no-truncate]] [--output csv|json|yaml |  | ] [--sort <value>]
+  $ celocli account:register-metadata --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --url
+    <value> [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
+    [--force] [--columns <value> | -x] [--filter <value>] [--no-header | [--csv |
+    --no-truncate]] [--output csv|json|yaml |  | ] [--sort <value>]
 
 FLAGS
   -x, --extended
@@ -963,7 +983,8 @@ Sets the name of a registered account on-chain. An account's name is an optional
 
 ```
 USAGE
-  $ celocli account:set-name --account <value> --name <value> [--gasCurrency <value>]
+  $ celocli account:set-name --account 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --name <value> [--gasCurrency 0x1234567890123456789012345678901234567890]
     [--globalHelp]
 
 FLAGS
@@ -993,8 +1014,9 @@ Sets a payment delegation beneficiary, an account address to receive a fraction 
 
 ```
 USAGE
-  $ celocli account:set-payment-delegation --account <value> --beneficiary <value> --fraction
-    <value> [--gasCurrency <value>] [--globalHelp]
+  $ celocli account:set-payment-delegation --account 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --beneficiary 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --fraction <value>
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --account=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d      (required) Account Address
@@ -1024,8 +1046,10 @@ Sets the wallet of a registered account on-chain. An account's wallet is an opti
 
 ```
 USAGE
-  $ celocli account:set-wallet --account <value> --wallet <value> [--gasCurrency
-    <value>] [--globalHelp] [--signature <value>] [--signer <value>]
+  $ celocli account:set-wallet --account 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --wallet 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--signature 0x]
+    [--signer 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d]
 
 FLAGS
   --account=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d      (required) Account Address
@@ -1061,7 +1085,8 @@ Show information for an account, including name, authorized vote, validator, and
 
 ```
 USAGE
-  $ celocli account:show ARG1 [--gasCurrency <value>] [--globalHelp]
+  $ celocli account:show ARG1 [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --gasCurrency=0x1234567890123456789012345678901234567890  Use a specific gas currency
@@ -1090,7 +1115,8 @@ Show information about claimed accounts
 
 ```
 USAGE
-  $ celocli account:show-claimed-accounts ARG1 [--gasCurrency <value>] [--globalHelp]
+  $ celocli account:show-claimed-accounts ARG1 [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --gasCurrency=0x1234567890123456789012345678901234567890  Use a specific gas currency
@@ -1116,9 +1142,10 @@ Show the data in a local metadata file
 
 ```
 USAGE
-  $ celocli account:show-metadata ARG1 [--gasCurrency <value>] [--globalHelp] [--columns
-    <value> | -x] [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output
-    csv|json|yaml |  | ] [--sort <value>]
+  $ celocli account:show-metadata ARG1 [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--columns <value> | -x]
+    [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output csv|json|yaml |
+    | ] [--sort <value>]
 
 ARGUMENTS
   ARG1  Path of the metadata file
@@ -1171,8 +1198,9 @@ Unlock an account address to send transactions or validate blocks
 
 ```
 USAGE
-  $ celocli account:unlock ARG1 [--gasCurrency <value>] [--globalHelp] [--password
-    <value>] [--duration <value>]
+  $ celocli account:unlock ARG1 [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--password <value>]
+    [--duration <value>]
 
 ARGUMENTS
   ARG1  Account address
@@ -1211,8 +1239,9 @@ Verify a proof-of-possession. See the "account:proof-of-possession" command for 
 
 ```
 USAGE
-  $ celocli account:verify-proof-of-possession --signer <value> --account <value> --signature <value>
-    [--gasCurrency <value>] [--globalHelp]
+  $ celocli account:verify-proof-of-possession --signer 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --account 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --signature 0x [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --account=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d      (required) Address of the

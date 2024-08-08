@@ -16,8 +16,9 @@ Exchange CELO for StableTokens via Mento. (Note: this is the equivalent of the o
 
 ```
 USAGE
-  $ celocli exchange:celo --from <value> --value <value> [--gasCurrency <value>]
-    [--globalHelp] [--forAtLeast <value>] [--stableToken
+  $ celocli exchange:celo --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --value
+    10000000000000000000000 [--gasCurrency 0x1234567890123456789012345678901234567890]
+    [--globalHelp] [--forAtLeast 10000000000000000000000] [--stableToken
     cUSD|cusd|cEUR|ceur|cREAL|creal]
 
 FLAGS
@@ -60,8 +61,9 @@ Exchange Celo Dollars for CELO via Mento
 
 ```
 USAGE
-  $ celocli exchange:dollars --from <value> --value <value> [--gasCurrency <value>]
-    [--globalHelp] [--forAtLeast <value>]
+  $ celocli exchange:dollars --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --value
+    10000000000000000000000 [--gasCurrency 0x1234567890123456789012345678901234567890]
+    [--globalHelp] [--forAtLeast 10000000000000000000000]
 
 FLAGS
   --forAtLeast=10000000000000000000000                      [default: 0] Optional, the
@@ -96,8 +98,9 @@ Exchange Celo Euros for CELO via Mento
 
 ```
 USAGE
-  $ celocli exchange:euros --from <value> --value <value> [--gasCurrency <value>]
-    [--globalHelp] [--forAtLeast <value>]
+  $ celocli exchange:euros --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --value
+    10000000000000000000000 [--gasCurrency 0x1234567890123456789012345678901234567890]
+    [--globalHelp] [--forAtLeast 10000000000000000000000]
 
 FLAGS
   --forAtLeast=10000000000000000000000                      [default: 0] Optional, the
@@ -132,8 +135,9 @@ Exchange Celo Brazilian Real (cREAL) for CELO via Mento
 
 ```
 USAGE
-  $ celocli exchange:reals --from <value> --value <value> [--gasCurrency <value>]
-    [--globalHelp] [--forAtLeast <value>]
+  $ celocli exchange:reals --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --value
+    10000000000000000000000 [--gasCurrency 0x1234567890123456789012345678901234567890]
+    [--globalHelp] [--forAtLeast 10000000000000000000000]
 
 FLAGS
   --forAtLeast=10000000000000000000000                      [default: 0] Optional, the
@@ -170,7 +174,8 @@ Show the current exchange rates offered by the Broker
 
 ```
 USAGE
-  $ celocli exchange:show [--gasCurrency <value>] [--globalHelp] [--amount <value>]
+  $ celocli exchange:show [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--amount <value>]
 
 FLAGS
   --amount=<value>                                          [default:
@@ -200,8 +205,9 @@ Exchange Stable Token for CELO via Mento
 
 ```
 USAGE
-  $ celocli exchange:stable --from <value> --value <value> [--gasCurrency <value>]
-    [--globalHelp] [--forAtLeast <value>] [--stableToken
+  $ celocli exchange:stable --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --value
+    10000000000000000000000 [--gasCurrency 0x1234567890123456789012345678901234567890]
+    [--globalHelp] [--forAtLeast 10000000000000000000000] [--stableToken
     cUSD|cusd|cEUR|ceur|cREAL|creal]
 
 FLAGS

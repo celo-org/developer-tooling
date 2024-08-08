@@ -16,8 +16,10 @@ Allowlist an address in the DKG
 
 ```
 USAGE
-  $ celocli dkg:allowlist --participantAddress <value> --address <value> --from
-    <value> [--gasCurrency <value>] [--globalHelp]
+  $ celocli dkg:allowlist --participantAddress <value> --address
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --from
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --address=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d      (required) DKG Contract
@@ -47,7 +49,8 @@ Deploys the DKG smart contract
 ```
 USAGE
   $ celocli dkg:deploy --phaseDuration <value> --threshold <value> --from
-    <value> [--gasCurrency <value>] [--globalHelp]
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Address of the
@@ -77,8 +80,9 @@ Gets data from the contract to run the next phase
 ```
 USAGE
   $ celocli dkg:get --method
-    shares|responses|justifications|participants|phase|group --address <value>
-    [--gasCurrency <value>] [--globalHelp]
+    shares|responses|justifications|participants|phase|group --address
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --address=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d      (required) DKG Contract
@@ -108,8 +112,10 @@ Publishes data for each phase of the DKG
 
 ```
 USAGE
-  $ celocli dkg:publish --data <value> --address <value> --from <value>
-    [--gasCurrency <value>] [--globalHelp]
+  $ celocli dkg:publish --data <value> --address
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --from
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --address=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d      (required) DKG Contract
@@ -138,8 +144,10 @@ Register a public key in the DKG
 
 ```
 USAGE
-  $ celocli dkg:register --blsKey <value> --address <value> --from <value>
-    [--gasCurrency <value>] [--globalHelp]
+  $ celocli dkg:register --blsKey <value> --address
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --from
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --address=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d      (required) DKG Contract
@@ -167,8 +175,9 @@ Starts the DKG
 
 ```
 USAGE
-  $ celocli dkg:start --address <value> --from <value> [--gasCurrency <value>]
-    [--globalHelp]
+  $ celocli dkg:start --address 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --address=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d      (required) DKG Contract

@@ -12,7 +12,8 @@ List the addresses that this node has the private keys for.
 
 ```
 USAGE
-  $ celocli node:accounts [--gasCurrency <value>] [--globalHelp]
+  $ celocli node:accounts [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --gasCurrency=0x1234567890123456789012345678901234567890  Use a specific gas currency
@@ -35,7 +36,8 @@ Check if the node is synced
 
 ```
 USAGE
-  $ celocli node:synced [--gasCurrency <value>] [--globalHelp] [--verbose]
+  $ celocli node:synced [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--verbose]
 
 FLAGS
   --gasCurrency=0x1234567890123456789012345678901234567890  Use a specific gas currency

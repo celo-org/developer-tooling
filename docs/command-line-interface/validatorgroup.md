@@ -17,8 +17,9 @@ Manage the commission for a registered Validator Group. This represents the shar
 
 ```
 USAGE
-  $ celocli validatorgroup:commission --from <value> [--gasCurrency <value>] [--globalHelp]
-    [--apply | --queue-update <value>]
+  $ celocli validatorgroup:commission --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp] [--apply |
+    --queue-update <value>]
 
 FLAGS
   --apply                                                   Applies a previously queued
@@ -61,8 +62,8 @@ Deregister a Validator Group. Approximately 180 days after the validator group i
 
 ```
 USAGE
-  $ celocli validatorgroup:deregister --from <value> [--gasCurrency <value>]
-  [--globalHelp]
+  $ celocli validatorgroup:deregister --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
 
 FLAGS
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Signer or
@@ -93,9 +94,10 @@ List registered Validator Groups, their names (if provided), commission, and mem
 
 ```
 USAGE
-  $ celocli validatorgroup:list [--gasCurrency <value>] [--globalHelp] [--columns <value>
-    | -x] [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output
-    csv|json|yaml |  | ] [--sort <value>]
+  $ celocli validatorgroup:list [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--columns <value> | -x]
+    [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output csv|json|yaml |
+    | ] [--sort <value>]
 
 FLAGS
   -x, --extended
@@ -145,8 +147,9 @@ Add or remove members from a Validator Group
 
 ```
 USAGE
-  $ celocli validatorgroup:member ARG1 --from <value> [--gasCurrency <value>]
-    [--globalHelp] [--yes] [--accept | --remove | --reorder <value>]
+  $ celocli validatorgroup:member ARG1 --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp] [--yes]
+    [--accept | --remove | --reorder <value>]
 
 ARGUMENTS
   ARG1  Validator's address
@@ -190,8 +193,9 @@ Register a new Validator Group
 
 ```
 USAGE
-  $ celocli validatorgroup:register --from <value> --commission <value> [--gasCurrency
-    <value>] [--globalHelp] [--yes]
+  $ celocli validatorgroup:register --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --commission <value> [--gasCurrency 0x1234567890123456789012345678901234567890]
+    [--globalHelp] [--yes]
 
 FLAGS
   --commission=<value>                                      (required) The share of the
@@ -224,8 +228,8 @@ Reset validator group slashing multiplier.
 
 ```
 USAGE
-  $ celocli validatorgroup:reset-slashing-multiplier ARG1 [--gasCurrency <value>]
-  [--globalHelp]
+  $ celocli validatorgroup:reset-slashing-multiplier ARG1 [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 ARGUMENTS
   ARG1  ValidatorGroup's address
@@ -254,7 +258,8 @@ Show information about an existing Validator Group
 
 ```
 USAGE
-  $ celocli validatorgroup:show ARG1 [--gasCurrency <value>] [--globalHelp]
+  $ celocli validatorgroup:show ARG1 [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp]
 
 ARGUMENTS
   ARG1  ValidatorGroup's address

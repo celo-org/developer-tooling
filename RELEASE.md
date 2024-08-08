@@ -1,5 +1,31 @@
 # Release Process
 
+
+## What do we mean when we say own a release 
+
+Being assigned as the release steward means you are expected to deliver 
+
+* 1 or more sets of beta releases.
+* The final release of packages. 
+* Release notes on github for every package (automatically created by changesets bot)
+* If the release is significant a forum post with the highlights and link back to release notes
+
+### What is a signicant release
+
+This is intentionally not defined. Some guiding principles: if it has been a long time, if someone will be asking about the release, if there are big fixes. 
+
+
+### What do I do? 
+
+As the release steward you should be making sure all prs get the approval they need and have attention that the ci checks are not stuck. This may be automated but its not a passive role. When changesets has published try out installing the new version yourself for each beta and the final. Give celocli a quick spin. Are there people who reported bugs? Message them or comment on their github issue asking them to try the latest beta. 
+
+
+For technical details see below. 
+
+
+
+## The tools
+
 This repo uses [changesets](https://github.com/changesets/changesets) to determine what
 packages need a version bump.
 
@@ -31,34 +57,12 @@ Additional labels for pre-release and build metadata are available as extensions
 
 ## Production releases
 
-### Automatic (recommended)
+### Automatic (only way possible)
 
 The [`release.yaml`](./.github/workflows/release.yaml) workflow will create a PR called
 "Version Packages", each time a PR is merged to master with changeset files this PR will be rebased and updated to show what the published versions would be. Merging this PR will build and publish packages to NPM,
 and publish GitHub release notes.
 
-### Manual (discouraged)
-
-When it's time to release NPM packages run:
-
-```sh
-$ changeset version
-```
-
-This will look through the changeset files that have been generated since the last release and
-bump package versions automatically.
-
-To publish the relevant NPM packages run:
-
-```sh
-$ changeset publish
-```
-
-Afterwards, push git tags to GitHub:
-
-```sh
-$ git push --follow-tags
-```
 
 ## Pre-releases
 

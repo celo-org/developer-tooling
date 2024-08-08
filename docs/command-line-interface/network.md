@@ -14,9 +14,10 @@ Lists Celo core contracts and their addresses.
 
 ```
 USAGE
-  $ celocli network:contracts [--gasCurrency <value>] [--globalHelp] [--columns <value>
-    | -x] [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output
-    csv|json|yaml |  | ] [--sort <value>]
+  $ celocli network:contracts [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--columns <value> | -x]
+    [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output csv|json|yaml |
+    | ] [--sort <value>]
 
 FLAGS
   -x, --extended
@@ -63,7 +64,8 @@ View general network information such as the current block number
 
 ```
 USAGE
-  $ celocli network:info [--gasCurrency <value>] [--globalHelp] [-n <value>]
+  $ celocli network:info [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [-n <value>]
 
 FLAGS
   -n, --lastN=<value>
@@ -88,7 +90,8 @@ View parameters of the network, including but not limited to configuration for t
 
 ```
 USAGE
-  $ celocli network:parameters [--gasCurrency <value>] [--globalHelp] [--raw]
+  $ celocli network:parameters [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--raw]
 
 FLAGS
   --gasCurrency=0x1234567890123456789012345678901234567890  Use a specific gas currency
@@ -114,9 +117,10 @@ List the whitelisted fee currencies
 
 ```
 USAGE
-  $ celocli network:whitelist [--gasCurrency <value>] [--globalHelp] [--columns <value>
-    | -x] [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output
-    csv|json|yaml |  | ] [--sort <value>]
+  $ celocli network:whitelist [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--columns <value> | -x]
+    [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output csv|json|yaml |
+    | ] [--sort <value>]
 
 FLAGS
   -x, --extended
