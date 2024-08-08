@@ -113,6 +113,7 @@ testWithAnvilL1('Validators Wrapper', (web3) => {
 
     // Set commission update delay to 3 blocks for backwards compatibility
     await setCommissionUpdateDelay(web3, validators.address, 3)
+    await mineBlocks(1, web3)
 
     await validators.setNextCommissionUpdate('0.2').sendAndWaitForReceipt(txOpts)
     await mineBlocks(3, web3)

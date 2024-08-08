@@ -62,7 +62,7 @@ export abstract class TransferStableBase extends BaseCommand {
     // NOTE 2: if --gasCurrency is set by the user, then
     //     `kit.connection.defaultFeeCurrency` is set in base.ts via
     //     `kit.setFeeCurrency()`
-    const params = kit.connection.defaultFeeCurrency
+    const baseParams = kit.connection.defaultFeeCurrency
       ? { feeCurrency: kit.connection.defaultFeeCurrency }
       : {}
 
@@ -84,7 +84,7 @@ export abstract class TransferStableBase extends BaseCommand {
         }`,
         async () => {
           ;[gas, gasPrice, gasBalance, valueBalance] = await Promise.all([
-            tx.txo.estimateGas(params),
+            tx.txo.estimateGas(baseParams),
             kit.connection.gasPrice(kit.connection.defaultFeeCurrency),
             kit.connection.defaultFeeCurrency
               ? // @ts-expect-error abi typing is not 100% correct but works
@@ -107,6 +107,7 @@ export abstract class TransferStableBase extends BaseCommand {
       )
       .runChecks()
 
+    const params = await kit.connection.setFeeMarketGas(baseParams)
     await displaySendTx(res.flags.comment ? 'transferWithComment' : 'transfer', tx, params)
   }
 }

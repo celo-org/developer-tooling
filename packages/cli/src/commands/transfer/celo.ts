@@ -38,11 +38,26 @@ export default class TransferCelo extends BaseCommand {
       .hasEnoughCelo(from, value)
       .runChecks()
 
+    const params = await kit.connection.setFeeMarketGas(
+      kit.connection.defaultFeeCurrency ? { feeCurrency: kit.connection.defaultFeeCurrency } : {}
+    )
+
     await (res.flags.comment
       ? displaySendTx(
           'transferWithComment',
           celoToken.transferWithComment(to, value.toFixed(), res.flags.comment)
         )
-      : displaySendTx('transfer', celoToken.transfer(to, value.toFixed())))
+      : displaySendTx(
+          'transfer',
+          // @ts-expect-error
+          {
+            // NOTE: this used to be celoToken.transfer
+            // but this way ledger considers this a native transfer and show the to and value properly
+            // instead of a contract call
+            send: (_params) =>
+              kit.sendTransaction({ to, value: value.toFixed(), from, ..._params }),
+          },
+          params
+        ))
   }
 }

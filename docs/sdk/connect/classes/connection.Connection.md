@@ -52,6 +52,7 @@ handleRevert sets handleRevert on the web3.eth instance passed in
 - [getBlockHeader](connection.Connection.md#getblockheader)
 - [getBlockNumber](connection.Connection.md#getblocknumber)
 - [getLocalAccounts](connection.Connection.md#getlocalaccounts)
+- [getMaxPriorityFeePerGas](connection.Connection.md#getmaxpriorityfeepergas)
 - [getNodeAccounts](connection.Connection.md#getnodeaccounts)
 - [getTransaction](connection.Connection.md#gettransaction)
 - [getTransactionCount](connection.Connection.md#gettransactioncount)
@@ -392,7 +393,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/connection.ts:478](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L478)
+[packages/sdk/connect/src/connection.ts:485](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L485)
 
 ___
 
@@ -413,7 +414,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/connection.ts:453](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L453)
+[packages/sdk/connect/src/connection.ts:460](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L460)
 
 ___
 
@@ -433,7 +434,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/connection.ts:466](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L466)
+[packages/sdk/connect/src/connection.ts:473](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L473)
 
 ___
 
@@ -447,7 +448,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/connection.ts:444](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L444)
+[packages/sdk/connect/src/connection.ts:451](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L451)
 
 ___
 
@@ -462,6 +463,26 @@ ___
 #### Defined in
 
 [packages/sdk/connect/src/connection.ts:176](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L176)
+
+___
+
+### getMaxPriorityFeePerGas
+
+▸ **getMaxPriorityFeePerGas**(`feeCurrency?`): `Promise`\<`string`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `feeCurrency?` | `string` |
+
+#### Returns
+
+`Promise`\<`string`\>
+
+#### Defined in
+
+[packages/sdk/connect/src/connection.ts:444](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L444)
 
 ___
 
@@ -495,7 +516,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/connection.ts:487](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L487)
+[packages/sdk/connect/src/connection.ts:494](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L494)
 
 ___
 
@@ -535,7 +556,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/connection.ts:495](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L495)
+[packages/sdk/connect/src/connection.ts:502](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L502)
 
 ___
 
@@ -828,4 +849,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/connection.ts:520](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L520)
+[packages/sdk/connect/src/connection.ts:527](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L527)
