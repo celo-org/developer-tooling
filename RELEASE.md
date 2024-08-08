@@ -3,7 +3,7 @@
 
 ## What do we mean when we say own a release 
 
-Being assigned as the release steward means you expected to deliver 
+Being assigned as the release steward means you are expected to deliver 
 
 * 1 or more sets of beta releases.
 * The final release of packages. 
