@@ -414,13 +414,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20.x  
+      - name: Validate Team Config    
+        uses: suzuki-shunsuke/github-action-renovate-config-validator@v1.0.1
+        with:
+          config_file_path: dt-renovate-base.json
+          strict: "false" 
       - name: Validate Repo Config  
         uses: suzuki-shunsuke/github-action-renovate-config-validator@v1.0.1
         with:
           config_file_path: renovate.json
           strict: "false"
-      - name: Validate Team Config    
-        uses: suzuki-shunsuke/github-action-renovate-config-validator@v1.0.1
-        with:
-          config_file_path: dt-renovate-base.json
-          strict: "false"    
+        
