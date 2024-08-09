@@ -408,16 +408,19 @@ jobs:
     name: Validate Renovate Config
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-node
+      - name: "Setup Node"
+        uses: actions/setup-node
         with:
           version: 22.x
       - name: Checkout Repo
         uses: actions/checkout@v4
-      - uses: suzuki-shunsuke/github-action-renovate-config-validator@v1.0.1
+      - name: Validate Repo Config  
+        uses: suzuki-shunsuke/github-action-renovate-config-validator@v1.0.1
         with:
           config_file_path: renovate.json
           strict: "false"
-      - uses: suzuki-shunsuke/github-action-renovate-config-validator@v1.0.1
+      - name: Validate Team Config    
+        uses: suzuki-shunsuke/github-action-renovate-config-validator@v1.0.1
         with:
           config_file_path: dt-renovate-base.json
           strict: "false"    
