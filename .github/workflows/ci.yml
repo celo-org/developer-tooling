@@ -416,5 +416,4 @@ jobs:
           node-version: 20.15.x
       - name: Validate Renovate Config
         run: |
-          npm install --global renovate
-          renovate-config-validator
+          npx renovate renovate-config-validator
