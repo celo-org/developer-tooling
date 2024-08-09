@@ -70,7 +70,7 @@ and publish GitHub release notes.
 
 from master checkout a new branch (name as you wish) and run 
 
-`yarn changesets pre enter beta`
+`yarn changeset pre enter beta`
 
 This will create `.changeset/pre.json` 
 
