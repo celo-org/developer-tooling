@@ -410,11 +410,10 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
-      - uses: suzuki-shunsuke/github-action-renovate-config-validator@v1.0.1
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          config_file_path: renovate.json
-          strict: "false"
-      - uses: suzuki-shunsuke/github-action-renovate-config-validator@v1.0.1
-        with:
-          config_file_path: dt-renovate-base.json
-          strict: "false"    
+          node-version: 20.15.x
+      - name: Validate Renovate Config
+        run: |
+          npx renovate renovate-config-validator
