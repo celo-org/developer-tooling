@@ -26,5 +26,15 @@
     "@celo/wallet-rpc": "6.0.0",
     "@celo/typescript": "0.0.1"
   },
-  "changesets": []
+  "changesets": [
+    "fluffy-poets-smile",
+    "mighty-snakes-yell",
+    "nasty-clocks-hear",
+    "plenty-books-shop",
+    "stupid-icons-drum",
+    "swift-pens-switch",
+    "tricky-months-rescue",
+    "twelve-cups-suffer",
+    "wise-hounds-join"
+  ]
 }

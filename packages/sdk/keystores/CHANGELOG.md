@@ -1,5 +1,12 @@
 # @celo/keystores
 
+## 5.0.11-beta.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @celo/wallet-local@6.0.1-beta.0
+
 ## 5.0.10
 
 ### Patch Changes

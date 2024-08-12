@@ -1,5 +1,11 @@
 # @celo/connect
 
+## 6.0.1-beta.0
+
+### Patch Changes
+
+- [#316](https://github.com/celo-org/developer-tooling/pull/316) [`d245703`](https://github.com/celo-org/developer-tooling/commit/d245703fa71ad24c88982fc6566e4d2865f586a4) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Fix the logic to fetch maxFeePerGas
+
 ## 6.0.0
 
 ### Major Changes

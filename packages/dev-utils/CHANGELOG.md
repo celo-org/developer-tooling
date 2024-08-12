@@ -1,5 +1,14 @@
 # @celo/dev-utils
 
+## 0.0.5-beta.0
+
+### Patch Changes
+
+- [#314](https://github.com/celo-org/developer-tooling/pull/314) [`053d2b1`](https://github.com/celo-org/developer-tooling/commit/053d2b1eff1460dba8749c9a03c806f20d8112e9) Thanks [@shazarre](https://github.com/shazarre)! - Introduces testWithAnvilL1 and testWithAnvilL2 that replace previously used testWithAnvil to make it explicit in which context given test suite is being run.
+
+- Updated dependencies [[`d245703`](https://github.com/celo-org/developer-tooling/commit/d245703fa71ad24c88982fc6566e4d2865f586a4)]:
+  - @celo/connect@6.0.1-beta.0
+
 ## 0.0.4
 
 ### Patch Changes

@@ -1,5 +1,16 @@
 # @celo/wallet-rpc
 
+## 6.0.1-beta.0
+
+### Patch Changes
+
+- [#313](https://github.com/celo-org/developer-tooling/pull/313) [`7715590`](https://github.com/celo-org/developer-tooling/commit/7715590b3efda1eb39a2600ffc858905265f5d12) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Deprecate @celo/wallet-rpc see https://forum.celo.org/t/deprecation-of-celo-wallet-rpc/8452
+
+- Updated dependencies [[`d245703`](https://github.com/celo-org/developer-tooling/commit/d245703fa71ad24c88982fc6566e4d2865f586a4)]:
+  - @celo/connect@6.0.1-beta.0
+  - @celo/wallet-base@6.0.1-beta.0
+  - @celo/wallet-remote@6.0.1-beta.0
+
 ## 6.0.0
 
 ### Minor Changes
