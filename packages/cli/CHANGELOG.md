@@ -1,5 +1,28 @@
 # Changelog
 
+## 5.1.1-beta.0
+
+### Patch Changes
+
+- [#315](https://github.com/celo-org/developer-tooling/pull/315) [`dd67b8f`](https://github.com/celo-org/developer-tooling/commit/dd67b8f7e65285d86af277c1172e760f250abd78) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - chore: bump oclif
+
+- [#275](https://github.com/celo-org/developer-tooling/pull/275) [`ac736ff`](https://github.com/celo-org/developer-tooling/commit/ac736ff5d1c5cb5457d4c3a856bf75675841b379) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - network:whitelist now outputs as a table accepting typical table formatting flags such as --csv
+
+- [#316](https://github.com/celo-org/developer-tooling/pull/316) [`d245703`](https://github.com/celo-org/developer-tooling/commit/d245703fa71ad24c88982fc6566e4d2865f586a4) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Change transfer:celo to use native sendTransaction to save up on gas costs as well as better decoding on ledger
+
+- [#313](https://github.com/celo-org/developer-tooling/pull/313) [`7715590`](https://github.com/celo-org/developer-tooling/commit/7715590b3efda1eb39a2600ffc858905265f5d12) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Deprecate reserve commands see https://forum.celo.org/t/sunset-of-reserve-commands/8454
+
+- [#315](https://github.com/celo-org/developer-tooling/pull/315) [`dd67b8f`](https://github.com/celo-org/developer-tooling/commit/dd67b8f7e65285d86af277c1172e760f250abd78) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Upgrade mento packages. version before was accidentally trying to use a dev dependency. (fix husky not installed on install error)
+
+- Updated dependencies [[`dd67b8f`](https://github.com/celo-org/developer-tooling/commit/dd67b8f7e65285d86af277c1172e760f250abd78), [`d245703`](https://github.com/celo-org/developer-tooling/commit/d245703fa71ad24c88982fc6566e4d2865f586a4)]:
+  - @celo/contractkit@8.1.1-beta.0
+  - @celo/connect@6.0.1-beta.0
+  - @celo/explorer@5.0.12-beta.0
+  - @celo/governance@5.1.3-beta.0
+  - @celo/wallet-ledger@6.0.1-beta.0
+  - @celo/wallet-hsm-azure@6.0.1-beta.0
+  - @celo/wallet-local@6.0.1-beta.0
+
 ## 5.1.0
 
 ### Minor Changes
