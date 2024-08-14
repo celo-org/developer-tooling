@@ -1,5 +1,15 @@
 # @celo/contractkit
 
+## 8.1.1
+
+### Patch Changes
+
+- [#315](https://github.com/celo-org/developer-tooling/pull/315) [`dd67b8f`](https://github.com/celo-org/developer-tooling/commit/dd67b8f7e65285d86af277c1172e760f250abd78) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - chore (bump deps)
+
+- Updated dependencies [[`d245703`](https://github.com/celo-org/developer-tooling/commit/d245703fa71ad24c88982fc6566e4d2865f586a4)]:
+  - @celo/connect@6.0.1
+  - @celo/wallet-local@6.0.1
+
 ## 8.1.1-beta.0
 
 ### Patch Changes
