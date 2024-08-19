@@ -1,12 +1,14 @@
 import { StrongAddress } from '@celo/base'
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import BigNumber from 'bignumber.js'
 import { StableToken } from '../celo-tokens'
 import { ContractKit, newKitFromWeb3 } from '../kit'
+import { topUpWithToken } from '../test-utils/utils'
 import { StableTokenWrapper } from './StableTokenWrapper'
 
 // TEST NOTES: balances defined in test-utils/migration-override
 
-testWithGanache('StableToken Wrapper', async (web3) => {
+testWithAnvilL1('StableToken Wrapper', async (web3) => {
   const kit = newKitFromWeb3(web3)
 
   const stableTokenInfos: {
@@ -57,20 +59,24 @@ export function testStableToken(
   let accounts: string[] = []
   let stableToken: StableTokenWrapper
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     accounts = (await web3.eth.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0] as StrongAddress
     stableToken = await kit.contracts.getStableToken(stableTokenName)
+
+    // Make sure the accounts we're transferring from has some stable token
+    for (let i = 0; i <= 3; i++) {
+      await topUpWithToken(kit, stableTokenName, accounts[i], new BigNumber(ONE_STABLE))
+    }
   })
 
-  test('SBAT check balance', () =>
-    expect(stableToken.balanceOf(accounts[0])).resolves.toBeBigNumber())
-  test('SBAT check decimals', () => expect(stableToken.decimals()).resolves.toBe(18))
-  test('SBAT check name', () => expect(stableToken.name()).resolves.toBe(expectedName))
-  test('SBAT check symbol', () => expect(stableToken.symbol()).resolves.toBe(expectedSymbol))
-  test('SBAT check totalSupply', () => expect(stableToken.totalSupply()).resolves.toBeBigNumber())
+  it('checks balance', () => expect(stableToken.balanceOf(accounts[0])).resolves.toBeBigNumber())
+  it('checks decimals', () => expect(stableToken.decimals()).resolves.toBe(18))
+  it('checks name', () => expect(stableToken.name()).resolves.toBe(expectedName))
+  it('checks symbol', () => expect(stableToken.symbol()).resolves.toBe(expectedSymbol))
+  it('checks totalSupply', () => expect(stableToken.totalSupply()).resolves.toBeBigNumber())
 
-  test('SBAT transfer', async () => {
+  it('transfers', async () => {
     const before = await stableToken.balanceOf(accounts[1])
     const tx = await stableToken.transfer(accounts[1], ONE_STABLE).send()
     await tx.waitReceipt()
@@ -79,7 +85,7 @@ export function testStableToken(
     expect(after.minus(before)).toEqBigNumber(ONE_STABLE)
   })
 
-  test('SBAT approve spender', async () => {
+  it('approves spender', async () => {
     const before = await stableToken.allowance(accounts[0], accounts[1])
     expect(before).toEqBigNumber(0)
 
@@ -88,7 +94,7 @@ export function testStableToken(
     expect(after).toEqBigNumber(ONE_STABLE)
   })
 
-  test('SBAT tranfer from', async () => {
+  it('transfers from', async () => {
     const before = await stableToken.balanceOf(accounts[3])
     // account1 approves account0
     await stableToken.approve(accounts[1], ONE_STABLE).sendAndWaitForReceipt({ from: accounts[0] })
