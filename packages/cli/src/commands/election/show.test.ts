@@ -1,27 +1,29 @@
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { ElectionWrapper, ValidatorGroupVote, Voter } from '@celo/contractkit/lib/wrappers/Election'
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { registerAccount, setupGroup } from '../../test-utils/chain-setup'
-import { stripAnsiCodesAndTxHashes, testLocally } from '../../test-utils/cliUtils'
+import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Show from './show'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithGanache('election:show', (web3: Web3) => {
+testWithAnvilL1('election:show', (web3: Web3) => {
   afterEach(async () => {
     jest.clearAllMocks()
   })
 
   it('fails when no args are provided', async () => {
-    await expect(testLocally(Show, [])).rejects.toThrow("Voter or Validator Groups's address")
+    await expect(testLocallyWithWeb3Node(Show, [], web3)).rejects.toThrow(
+      "Voter or Validator Groups's address"
+    )
   })
 
   it('fails when no flags are provided', async () => {
     const [groupAddress] = await web3.eth.getAccounts()
-    await expect(testLocally(Show, [groupAddress])).rejects.toThrow(
+    await expect(testLocallyWithWeb3Node(Show, [groupAddress], web3)).rejects.toThrow(
       'Must select --voter or --group'
     )
   })
@@ -30,7 +32,7 @@ testWithGanache('election:show', (web3: Web3) => {
     const logMock = jest.spyOn(console, 'log')
     const [groupAddress] = await web3.eth.getAccounts()
 
-    await expect(testLocally(Show, [groupAddress, '--group'])).rejects.toThrow(
+    await expect(testLocallyWithWeb3Node(Show, [groupAddress, '--group'], web3)).rejects.toThrow(
       "Some checks didn't pass!"
     )
     expect(stripAnsiCodesAndTxHashes(logMock.mock.calls[1][0])).toContain(
@@ -42,7 +44,7 @@ testWithGanache('election:show', (web3: Web3) => {
     const logMock = jest.spyOn(console, 'log')
     const [voterAddress] = await web3.eth.getAccounts()
 
-    await expect(testLocally(Show, [voterAddress, '--voter'])).rejects.toThrow(
+    await expect(testLocallyWithWeb3Node(Show, [voterAddress, '--voter'], web3)).rejects.toThrow(
       "Some checks didn't pass!"
     )
     expect(stripAnsiCodesAndTxHashes(logMock.mock.calls[1][0])).toContain(
@@ -72,7 +74,7 @@ testWithGanache('election:show', (web3: Web3) => {
       } as ValidatorGroupVote
     })
 
-    await testLocally(Show, [groupAddress, '--group'])
+    await testLocallyWithWeb3Node(Show, [groupAddress, '--group'], web3)
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
     expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
@@ -125,7 +127,7 @@ testWithGanache('election:show', (web3: Web3) => {
       } as Voter
     })
 
-    await testLocally(Show, [voterAddress, '--voter'])
+    await testLocallyWithWeb3Node(Show, [voterAddress, '--voter'], web3)
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
     expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
