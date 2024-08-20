@@ -1,17 +1,17 @@
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { ElectionWrapper } from '@celo/contractkit/lib/wrappers/Election'
 import { ValidatorsWrapper } from '@celo/contractkit/lib/wrappers/Validators'
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { setupGroupAndAffiliateValidator } from '../../test-utils/chain-setup'
-import { stripAnsiCodesAndTxHashes, testLocally } from '../../test-utils/cliUtils'
+import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Run from './run'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithGanache('election:run', (web3: Web3) => {
+testWithAnvilL1('election:run', (web3: Web3) => {
   afterEach(async () => {
     jest.clearAllMocks()
   })
@@ -21,7 +21,7 @@ testWithGanache('election:run', (web3: Web3) => {
     const warnMock = jest.spyOn(console, 'warn')
     const writeMock = jest.spyOn(ux.write, 'stdout')
 
-    await testLocally(Run, ['--csv'])
+    await testLocallyWithWeb3Node(Run, ['--csv'], web3)
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`
       [
@@ -89,7 +89,7 @@ testWithGanache('election:run', (web3: Web3) => {
         signer: anotherSignerAddress,
       }))
 
-    await testLocally(Run, ['--csv'])
+    await testLocallyWithWeb3Node(Run, ['--csv'], web3)
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`
       [

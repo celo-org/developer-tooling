@@ -1,5 +1,5 @@
 import { newKitFromWeb3 } from '@celo/contractkit'
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import {
@@ -8,18 +8,18 @@ import {
   setupGroupAndAffiliateValidator,
   voteForGroupFromAndActivateVotes,
 } from '../../test-utils/chain-setup'
-import { testLocally } from '../../test-utils/cliUtils'
+import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Revoke from './revoke'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithGanache('election:revoke', (web3: Web3) => {
+testWithAnvilL1('election:revoke', (web3: Web3) => {
   afterEach(async () => {
     jest.clearAllMocks()
   })
 
   it('fails when no flags are provided', async () => {
-    await expect(testLocally(Revoke, [])).rejects.toThrow('Missing required flag')
+    await expect(testLocallyWithWeb3Node(Revoke, [], web3)).rejects.toThrow('Missing required flag')
   })
 
   it('fails when address is not an account', async () => {
@@ -27,7 +27,11 @@ testWithGanache('election:revoke', (web3: Web3) => {
     const [fromAddress, groupAddress] = await web3.eth.getAccounts()
 
     await expect(
-      testLocally(Revoke, ['--from', fromAddress, '--for', groupAddress, '--value', '1'])
+      testLocallyWithWeb3Node(
+        Revoke,
+        ['--from', fromAddress, '--for', groupAddress, '--value', '1'],
+        web3
+      )
     ).rejects.toThrow()
     expect(logMock.mock.calls[1][0]).toContain(
       `${fromAddress} is not a signer or registered as an account`
@@ -41,7 +45,11 @@ testWithGanache('election:revoke', (web3: Web3) => {
     await registerAccount(kit, fromAddress)
 
     await expect(
-      testLocally(Revoke, ['--from', fromAddress, '--for', groupAddress, '--value', '1'])
+      testLocallyWithWeb3Node(
+        Revoke,
+        ['--from', fromAddress, '--for', groupAddress, '--value', '1'],
+        web3
+      )
     ).rejects.toThrow(
       `can't revoke more votes for ${groupAddress} than have been made by ${fromAddress}`
     )
@@ -61,14 +69,11 @@ testWithGanache('election:revoke', (web3: Web3) => {
       amount
     )
 
-    await testLocally(Revoke, [
-      '--from',
-      fromAddress,
-      '--for',
-      groupAddress,
-      '--value',
-      amount.toFixed(),
-    ])
+    await testLocallyWithWeb3Node(
+      Revoke,
+      ['--from', fromAddress, '--for', groupAddress, '--value', amount.toFixed()],
+      web3
+    )
 
     expect((await election.getVotesForGroupByAccount(fromAddress, groupAddress)).active).toEqual(
       new BigNumber(0)
@@ -90,14 +95,11 @@ testWithGanache('election:revoke', (web3: Web3) => {
       amount
     )
 
-    await testLocally(Revoke, [
-      '--from',
-      fromAddress,
-      '--for',
-      groupAddress,
-      '--value',
-      revokeAmount.toFixed(),
-    ])
+    await testLocallyWithWeb3Node(
+      Revoke,
+      ['--from', fromAddress, '--for', groupAddress, '--value', revokeAmount.toFixed()],
+      web3
+    )
 
     expect((await election.getVotesForGroupByAccount(fromAddress, groupAddress)).active).toEqual(
       amount.minus(revokeAmount)

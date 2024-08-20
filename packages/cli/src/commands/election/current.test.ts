@@ -2,12 +2,12 @@ import { newKitFromWeb3 } from '@celo/contractkit'
 import { WrapperCache } from '@celo/contractkit/lib/contract-cache'
 import { ElectionWrapper } from '@celo/contractkit/lib/wrappers/Election'
 import { ValidatorsWrapper } from '@celo/contractkit/lib/wrappers/Validators'
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { registerAccount, setupGroupAndAffiliateValidator } from '../../test-utils/chain-setup'
-import { testLocally } from '../../test-utils/cliUtils'
+import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Current from './current'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -17,7 +17,7 @@ afterEach(async () => {
   jest.restoreAllMocks()
 })
 
-testWithGanache('election:current cmd', async (web3: Web3) => {
+testWithAnvilL1('election:current cmd', async (web3: Web3) => {
   it('shows list with no --valset provided', async () => {
     const kit = newKitFromWeb3(web3)
     const [
@@ -75,7 +75,7 @@ testWithGanache('election:current cmd', async (web3: Web3) => {
     const warnMock = jest.spyOn(console, 'warn')
     const writeMock = jest.spyOn(ux.write, 'stdout')
 
-    await testLocally(Current, ['--csv'])
+    await testLocallyWithWeb3Node(Current, ['--csv'], web3)
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`
       [
@@ -152,7 +152,7 @@ testWithGanache('election:current cmd', async (web3: Web3) => {
     const warnMock = jest.spyOn(console, 'warn')
     const writeMock = jest.spyOn(ux.write, 'stdout')
 
-    await testLocally(Current, ['--csv', '--valset'])
+    await testLocallyWithWeb3Node(Current, ['--csv', '--valset'], web3)
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`
       [
