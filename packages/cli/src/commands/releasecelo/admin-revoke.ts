@@ -51,22 +51,9 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
     const accounts = await kit.contracts.getAccounts()
     const contractAddress = await this.contractAddress()
     const isAccount = await accounts.isAccount(contractAddress)
-    if (isAccount) {
-      // rotate vote signers
-      let voteSigner = await accounts.getVoteSigner(contractAddress)
-      if (voteSigner !== contractAddress) {
-        const password = 'bad_password'
-        voteSigner = (await web3.eth.personal.newAccount(password)) as StrongAddress
-        await web3.eth.personal.unlockAccount(voteSigner, password, 1000)
-        const pop = await accounts.generateProofOfKeyPossession(contractAddress, voteSigner)
-        await displaySendTx(
-          'accounts: rotateVoteSigner',
-          await this.releaseGoldWrapper.authorizeVoteSigner(voteSigner, pop),
-          undefined,
-          'VoteSignerAuthorized'
-        )
-      }
+    let voteSigner = await accounts.getVoteSigner(contractAddress)
 
+    if (isAccount) {
       const election = await kit.contracts.getElection()
       const electionVotes = await election.getTotalVotesByAccount(contractAddress)
       const isElectionVoting = electionVotes.isGreaterThan(0)
@@ -102,7 +89,9 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
           await displaySendTx(
             'governance: revokeVotes',
             governance.revokeVotes(),
-            { from: voteSigner },
+            {
+              from: voteSigner,
+            },
             'ProposalVoteRevoked'
           )
         }
@@ -114,6 +103,26 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
         undefined,
         'GoldUnlocked'
       )
+
+      // rotate vote signers
+      if (voteSigner !== contractAddress) {
+        const newAccount = web3.eth.accounts.create()
+        voteSigner = newAccount.address as StrongAddress
+
+        await displaySendTx(
+          'accounts: rotateVoteSigner',
+          await this.releaseGoldWrapper.authorizeVoteSigner(
+            voteSigner,
+            await accounts.generateProofOfKeyPossessionLocally(
+              contractAddress,
+              voteSigner,
+              newAccount.privateKey
+            )
+          ),
+          undefined,
+          'VoteSignerAuthorized'
+        )
+      }
     }
 
     // rescue any cUSD balance

@@ -2,6 +2,12 @@ import Web3 from 'web3'
 import { JsonRpcResponse } from 'web3-core-helpers'
 import migrationOverride from './migration-override.json'
 
+export const MINUTE = 60
+export const HOUR = 60 * 60
+export const DAY = 24 * HOUR
+export const MONTH = 30 * DAY
+export const UNLOCKING_PERIOD = 3 * DAY
+
 export const TEST_MNEMONIC =
   'concert load couple harbor equip island argue ramp clarify fence smart topic'
 export const TEST_BALANCE = 1000000

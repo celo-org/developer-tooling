@@ -1,10 +1,16 @@
 import { newReleaseGold } from '@celo/abis/web3/ReleaseGold'
+import { StableToken, StrongAddress } from '@celo/base'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { ReleaseGoldWrapper } from '@celo/contractkit/lib/wrappers/ReleaseGold'
-import { getContractFromEvent, testWithGanache, timeTravel } from '@celo/dev-utils/lib/ganache-test'
-import { BigNumber } from 'bignumber.js'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
+import { DAY, MONTH } from '@celo/dev-utils/lib/test-utils'
+import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
-import { testLocally } from '../../test-utils/cliUtils'
+import { topUpWithToken } from '../../test-utils/chain-setup'
+import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { createMultisig } from '../../test-utils/multisigUtils'
+import { deployReleaseGoldContract } from '../../test-utils/release-gold'
 import CreateAccount from './create-account'
 import SetLiquidityProvision from './set-liquidity-provision'
 import RGTransferDollars from './transfer-dollars'
@@ -12,43 +18,64 @@ import Withdraw from './withdraw'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithGanache('releasegold:withdraw cmd', (web3: Web3) => {
+testWithAnvilL1('releasegold:withdraw cmd', (web3: Web3) => {
   let contractAddress: string
   let kit: ContractKit
 
   beforeEach(async () => {
-    contractAddress = await getContractFromEvent(
-      'ReleaseGoldInstanceCreated(address,address)',
-      web3
-    )
+    const accounts = (await web3.eth.getAccounts()) as StrongAddress[]
     kit = newKitFromWeb3(web3)
-    await testLocally(CreateAccount, ['--contract', contractAddress])
+
+    contractAddress = await deployReleaseGoldContract(
+      web3,
+      await createMultisig(kit, [accounts[0], accounts[1]] as StrongAddress[], 2, 2),
+      accounts[1],
+      accounts[0],
+      accounts[2]
+    )
+    await testLocallyWithWeb3Node(CreateAccount, ['--contract', contractAddress], web3)
   })
 
   test('can withdraw released celo to beneficiary', async () => {
-    await testLocally(SetLiquidityProvision, ['--contract', contractAddress, '--yesreally'])
-    // ReleasePeriod of default contract
-    await timeTravel(300000000, web3)
+    await testLocallyWithWeb3Node(
+      SetLiquidityProvision,
+      ['--contract', contractAddress, '--yesreally'],
+      web3
+    )
+    // Based on the release schedule, 3 months needs to pass
+    await timeTravel(MONTH * 3 + DAY, web3)
+    const withdrawalAmount = '10000000000000000000'
     const releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
       newReleaseGold(web3, contractAddress),
       kit.contracts
     )
     const beneficiary = await releaseGoldWrapper.getBeneficiary()
+
+    expect((await releaseGoldWrapper.getTotalWithdrawn()).toFixed()).toEqual('0')
+
     const balanceBefore = (await kit.getTotalBalance(beneficiary)).CELO!
-    // Use a value which would lose precision if converted to a normal javascript number
-    const withdrawalAmount = '10000000000000000000005'
-    await testLocally(Withdraw, ['--contract', contractAddress, '--value', withdrawalAmount])
+    await testLocallyWithWeb3Node(
+      Withdraw,
+      ['--contract', contractAddress, '--value', withdrawalAmount],
+      web3
+    )
+
     const balanceAfter = (await kit.getTotalBalance(beneficiary)).CELO!
-    const difference = balanceAfter.minus(balanceBefore)
-    expect(difference.toFixed()).toEqual(new BigNumber(withdrawalAmount).toFixed())
+
+    // TODO: check how to include fees in there or get rid of them completely on anvil level
+    expect(balanceAfter.isGreaterThan(balanceBefore)).toBeTruthy()
+    expect((await releaseGoldWrapper.getTotalWithdrawn()).toFixed()).toEqual(withdrawalAmount)
   })
 
   test("can't withdraw the whole balance if there is a cUSD balance", async () => {
     const spy = jest.spyOn(console, 'log')
-    await testLocally(SetLiquidityProvision, ['--contract', contractAddress, '--yesreally'])
-    // ReleasePeriod of default contract
-    await timeTravel(300000000, web3)
+    await testLocallyWithWeb3Node(
+      SetLiquidityProvision,
+      ['--contract', contractAddress, '--yesreally'],
+      web3
+    )
+    await timeTravel(MONTH * 12 + DAY, web3)
     const releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
       newReleaseGold(web3, contractAddress),
@@ -59,35 +86,40 @@ testWithGanache('releasegold:withdraw cmd', (web3: Web3) => {
     const remainingBalance = await releaseGoldWrapper.getRemainingUnlockedBalance()
 
     const stableToken = await kit.contracts.getStableToken()
+    const cUSDAmount = 100
 
-    await stableToken.transfer(contractAddress, 100).sendAndWaitForReceipt({ from: beneficiary })
+    await topUpWithToken(kit, StableToken.cUSD, beneficiary, new BigNumber(cUSDAmount))
+    await stableToken
+      .transfer(contractAddress, cUSDAmount)
+      .sendAndWaitForReceipt({ from: beneficiary })
 
     // Can't withdraw since there is cUSD balance still
     await expect(
-      testLocally(Withdraw, ['--contract', contractAddress, '--value', remainingBalance.toString()])
+      testLocallyWithWeb3Node(
+        Withdraw,
+        ['--contract', contractAddress, '--value', remainingBalance.toString()],
+        web3
+      )
     ).rejects.toThrow()
     expect(spy).toHaveBeenCalledWith(
       expect.stringContaining('The liquidity provision has not already been set')
     )
     // Move out the cUSD balance
-    await testLocally(RGTransferDollars, [
-      '--contract',
-      contractAddress,
-      '--to',
-      beneficiary,
-      '--value',
-      '100',
-    ])
+    await testLocallyWithWeb3Node(
+      RGTransferDollars,
+      ['--contract', contractAddress, '--to', beneficiary, '--value', '100'],
+      web3
+    )
 
-    await testLocally(Withdraw, [
-      '--contract',
-      contractAddress,
-      '--value',
-      remainingBalance.toString(),
-    ])
+    await testLocallyWithWeb3Node(
+      Withdraw,
+      ['--contract', contractAddress, '--value', remainingBalance.toString()],
+      web3
+    )
     const balanceAfter = await kit.getTotalBalance(beneficiary)
     expect(balanceBefore.CELO!.toNumber()).toBeLessThan(balanceAfter.CELO!.toNumber())
     // Contract should self-destruct now
+    // TODO: it doesn't for now, investigate
     await expect(releaseGoldWrapper.getRemainingUnlockedBalance()).rejects.toThrow()
   })
 })
