@@ -51,9 +51,30 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
     const accounts = await kit.contracts.getAccounts()
     const contractAddress = await this.contractAddress()
     const isAccount = await accounts.isAccount(contractAddress)
-    let voteSigner = await accounts.getVoteSigner(contractAddress)
-
     if (isAccount) {
+      // rotate vote signers
+      let voteSigner = await accounts.getVoteSigner(contractAddress)
+      if (voteSigner !== contractAddress) {
+        const accountToRotateTo = web3.eth.accounts.create()
+        voteSigner = accountToRotateTo.address as StrongAddress
+
+        // Add the account to contractkit, so we can act as it
+        kit.addAccount(accountToRotateTo.privateKey)
+
+        const pop = await accounts.generateProofOfKeyPossessionLocally(
+          contractAddress,
+          voteSigner,
+          accountToRotateTo.privateKey
+        )
+
+        await displaySendTx(
+          'accounts: rotateVoteSigner',
+          await this.releaseGoldWrapper.authorizeVoteSigner(voteSigner, pop),
+          undefined,
+          'VoteSignerAuthorized'
+        )
+      }
+
       const election = await kit.contracts.getElection()
       const electionVotes = await election.getTotalVotesByAccount(contractAddress)
       const isElectionVoting = electionVotes.isGreaterThan(0)
@@ -62,6 +83,7 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
       if (isElectionVoting) {
         const txos = await this.releaseGoldWrapper.revokeAllVotesForAllGroups()
         for (const txo of txos) {
+          // TODO how do we make sure vote signer has enough funds?
           await displaySendTx('election: revokeVotes', txo, { from: voteSigner }, [
             'ValidatorGroupPendingVoteRevoked',
             'ValidatorGroupActiveVoteRevoked',
@@ -89,9 +111,7 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
           await displaySendTx(
             'governance: revokeVotes',
             governance.revokeVotes(),
-            {
-              from: voteSigner,
-            },
+            { from: voteSigner },
             'ProposalVoteRevoked'
           )
         }
@@ -103,26 +123,6 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
         undefined,
         'GoldUnlocked'
       )
-
-      // rotate vote signers
-      if (voteSigner !== contractAddress) {
-        const newAccount = web3.eth.accounts.create()
-        voteSigner = newAccount.address as StrongAddress
-
-        await displaySendTx(
-          'accounts: rotateVoteSigner',
-          await this.releaseGoldWrapper.authorizeVoteSigner(
-            voteSigner,
-            await accounts.generateProofOfKeyPossessionLocally(
-              contractAddress,
-              voteSigner,
-              newAccount.privateKey
-            )
-          ),
-          undefined,
-          'VoteSignerAuthorized'
-        )
-      }
     }
 
     // rescue any cUSD balance

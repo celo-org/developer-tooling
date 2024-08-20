@@ -124,7 +124,6 @@ testWithAnvilL1('releasegold:admin-revoke cmd', (web3: Web3) => {
         )
       })
 
-      // it will fail because of using personal_* RPC methods that anvil won't support
       test('will rotate vote signer', async () => {
         await testLocallyWithWeb3Node(
           AdminRevoke,
@@ -170,6 +169,13 @@ testWithAnvilL1('releasegold:admin-revoke cmd', (web3: Web3) => {
         })
 
         test('will revoke governance votes and upvotes', async () => {
+          // voteSigner address needs to have funds
+          await setBalance(
+            web3,
+            voteSigner as StrongAddress,
+            new BigNumber(web3.utils.toWei('10', 'ether'))
+          )
+
           const isVotingBefore = await governance.isVoting(contractAddress)
           expect(isVotingBefore).toBeTruthy()
           await testLocallyWithWeb3Node(
@@ -181,6 +187,15 @@ testWithAnvilL1('releasegold:admin-revoke cmd', (web3: Web3) => {
           expect(isVotingAfter).toBeFalsy()
         })
       })
+
+      // test('will revoke election votes', async () => {
+      //   const election = await kit.contracts.getElection()
+      //   const votesBefore = await election.getTotalVotesByAccount(contractAddress)
+      //   expect(votesBefore.isZero()).toBeFalsy()
+      //   await testLocallyWithWeb3Node(AdminRevoke, ['--contract', contractAddress, '--yesreally'], web3)
+      //   const votesAfter = await election.getTotalVotesByAccount(contractAddress)
+      //   expect(votesAfter.isZero()).toBeTruthy()
+      // })
     })
   })
 })
