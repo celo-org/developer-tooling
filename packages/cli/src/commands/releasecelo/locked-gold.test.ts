@@ -32,27 +32,22 @@ testWithAnvilL1('releasegold:locked-gold cmd', (web3: Web3) => {
   test(
     'can lock celo with pending withdrawals',
     async () => {
-      console.log('ich bin da')
       const lockedGold = await kit.contracts.getLockedGold()
-      console.log('ich bin schon da')
       await testLocallyWithWeb3Node(
         LockedGold,
         ['--contract', contractAddress, '--action', 'lock', '--value', '100'],
         web3
       )
-      console.log('und wieder')
       await testLocallyWithWeb3Node(
         LockedGold,
         ['--contract', contractAddress, '--action', 'unlock', '--value', '50'],
         web3
       )
-      console.log('auch')
       await testLocallyWithWeb3Node(
         LockedGold,
         ['--contract', contractAddress, '--action', 'lock', '--value', '75'],
         web3
       )
-      console.log('mehr')
       await testLocallyWithWeb3Node(
         LockedGold,
         ['--contract', contractAddress, '--action', 'unlock', '--value', '50'],
