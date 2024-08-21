@@ -3,7 +3,7 @@ import { StableToken, StrongAddress } from '@celo/base'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { ReleaseGoldWrapper } from '@celo/contractkit/lib/wrappers/ReleaseGold'
 import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
-import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
+import { getContractFromEvent, timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import { DAY, MONTH } from '@celo/dev-utils/lib/test-utils'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
@@ -118,8 +118,12 @@ testWithAnvilL1('releasegold:withdraw cmd', (web3: Web3) => {
     )
     const balanceAfter = await kit.getTotalBalance(beneficiary)
     expect(balanceBefore.CELO!.toNumber()).toBeLessThan(balanceAfter.CELO!.toNumber())
-    // Contract should self-destruct now
-    // TODO: it doesn't for now, investigate
-    await expect(releaseGoldWrapper.getRemainingUnlockedBalance()).rejects.toThrow()
+
+    const destroyedContractAddress = await getContractFromEvent(
+      'ReleaseGoldInstanceDestroyed(address,address)',
+      web3
+    )
+
+    expect(destroyedContractAddress).toBe(contractAddress)
   })
 })

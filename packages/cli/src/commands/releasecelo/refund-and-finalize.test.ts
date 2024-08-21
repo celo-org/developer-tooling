@@ -3,13 +3,13 @@ import { StrongAddress } from '@celo/base'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { ReleaseGoldWrapper } from '@celo/contractkit/lib/wrappers/ReleaseGold'
 import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { getContractFromEvent } from '@celo/dev-utils/lib/ganache-test'
 import Web3 from 'web3'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import { createMultisig } from '../../test-utils/multisigUtils'
 import { deployReleaseGoldContract } from '../../test-utils/release-gold'
 import RefundAndFinalize from './refund-and-finalize'
 import Revoke from './revoke'
-import Show from './show'
 
 process.env.NO_SYNCCHECK = 'true'
 
@@ -55,14 +55,18 @@ testWithAnvilL1('releasegold:refund-and-finalize cmd', (web3: Web3) => {
     await testLocallyWithWeb3Node(Revoke, ['--contract', contractAddress, '--yesreally'], web3)
     expect(await releaseGoldWrapper.isRevoked()).toBe(true)
 
+    // Contract still should have some balance
+    expect((await kit.getTotalBalance(contractAddress)).CELO).not.toEqBigNumber(0)
+
     await testLocallyWithWeb3Node(RefundAndFinalize, ['--contract', contractAddress], web3)
 
-    // TODO: second call should fail because of reentrancy
-    await testLocallyWithWeb3Node(RefundAndFinalize, ['--contract', contractAddress], web3)
+    const destroyedContractAddress = await getContractFromEvent(
+      'ReleaseGoldInstanceDestroyed(address,address)',
+      web3
+    )
 
-    // TODO: expectaion is there because there is selfdestruct in the contract
-    await expect(
-      testLocallyWithWeb3Node(Show, ['--contract', contractAddress], web3)
-    ).rejects.toThrow()
+    expect(destroyedContractAddress).toBe(contractAddress)
+    // Contract should not have any balance left anymore
+    expect((await kit.getTotalBalance(contractAddress)).CELO).toEqBigNumber(0)
   })
 })
