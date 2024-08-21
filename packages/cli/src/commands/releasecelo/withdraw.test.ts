@@ -36,7 +36,7 @@ testWithAnvilL1('releasegold:withdraw cmd', (web3: Web3) => {
     await testLocallyWithWeb3Node(CreateAccount, ['--contract', contractAddress], web3)
   })
 
-  test('can withdraw released celo to beneficiary', async () => {
+  test.only('can withdraw released celo to beneficiary', async () => {
     await testLocallyWithWeb3Node(
       SetLiquidityProvision,
       ['--contract', contractAddress, '--yesreally'],
@@ -63,8 +63,20 @@ testWithAnvilL1('releasegold:withdraw cmd', (web3: Web3) => {
 
     const balanceAfter = (await kit.getTotalBalance(beneficiary)).CELO!
 
-    // TODO: check how to include fees in there or get rid of them completely on anvil level
-    expect(balanceAfter.isGreaterThan(balanceBefore)).toBeTruthy()
+    const latestTransactionReceipt = await web3.eth.getTransactionReceipt(
+      (
+        await web3.eth.getBlock('latest')
+      ).transactions[0]
+    )
+
+    // Safety check if the latest transaction was originated by the beneficiary
+    expect(latestTransactionReceipt.from.toLowerCase()).toEqual(beneficiary.toLowerCase())
+
+    const difference = new BigNumber(balanceAfter)
+      .minus(balanceBefore)
+      .plus(latestTransactionReceipt.effectiveGasPrice * latestTransactionReceipt.gasUsed)
+
+    expect(difference.toFixed()).toEqual(withdrawalAmount)
     expect((await releaseGoldWrapper.getTotalWithdrawn()).toFixed()).toEqual(withdrawalAmount)
   })
 
