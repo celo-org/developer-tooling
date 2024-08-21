@@ -55,18 +55,10 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
       // rotate vote signers
       let voteSigner = await accounts.getVoteSigner(contractAddress)
       if (voteSigner !== contractAddress) {
-        const accountToRotateTo = web3.eth.accounts.create()
-        voteSigner = accountToRotateTo.address as StrongAddress
-
-        // Add the account to contractkit, so we can act as it
-        kit.addAccount(accountToRotateTo.privateKey)
-
-        const pop = await accounts.generateProofOfKeyPossessionLocally(
-          contractAddress,
-          voteSigner,
-          accountToRotateTo.privateKey
-        )
-
+        const password = 'bad_password'
+        voteSigner = (await web3.eth.personal.newAccount(password)) as StrongAddress
+        await web3.eth.personal.unlockAccount(voteSigner, password, 1000)
+        const pop = await accounts.generateProofOfKeyPossession(contractAddress, voteSigner)
         await displaySendTx(
           'accounts: rotateVoteSigner',
           await this.releaseGoldWrapper.authorizeVoteSigner(voteSigner, pop),
@@ -83,7 +75,6 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
       if (isElectionVoting) {
         const txos = await this.releaseGoldWrapper.revokeAllVotesForAllGroups()
         for (const txo of txos) {
-          // TODO how do we make sure vote signer has enough funds?
           await displaySendTx('election: revokeVotes', txo, { from: voteSigner }, [
             'ValidatorGroupPendingVoteRevoked',
             'ValidatorGroupActiveVoteRevoked',
