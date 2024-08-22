@@ -21,7 +21,6 @@ export const STABLES_ADDRESS = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
 export const DEFAULT_OWNER_ADDRESS = STABLES_ADDRESS
 
 function createInstance(stateFilePath: string): Anvil {
-  // preparation for not needing to have --runInBand for anvil tests
   const port = ANVIL_PORT + (process.pid - process.ppid)
   const options: CreateAnvilOptions = {
     port,
@@ -84,9 +83,10 @@ export function stopImpersonatingAccount(web3: Web3, address: string) {
 export const withImpersonatedAccount = async (
   web3: Web3,
   account: string,
-  fn: () => Promise<void>
+  fn: () => Promise<void>,
+  withBalance?: number | bigint | BigNumber
 ) => {
-  await impersonateAccount(web3, account)
+  await impersonateAccount(web3, account, withBalance)
   await fn()
   await stopImpersonatingAccount(web3, account)
 }
@@ -106,4 +106,12 @@ export function setCode(web3: Web3, address: string, code: string) {
 
 export function setNextBlockTimestamp(web3: Web3, timestamp: number) {
   return jsonRpcCall(web3, 'evm_setNextBlockTimestamp', [timestamp.toString()])
+}
+
+export function setBalance(
+  web3: Web3,
+  address: StrongAddress,
+  balance: number | bigint | BigNumber
+) {
+  return jsonRpcCall(web3, 'anvil_setBalance', [address, `0x${balance.toString(16)}`])
 }

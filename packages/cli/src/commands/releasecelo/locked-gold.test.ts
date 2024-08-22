@@ -1,61 +1,58 @@
-import { newKitFromWeb3 } from '@celo/contractkit'
-import { getContractFromEvent, testWithGanache } from '@celo/dev-utils/lib/ganache-test'
+import { StrongAddress } from '@celo/base'
+import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import Web3 from 'web3'
-import { LONG_TIMEOUT_MS, testLocally } from '../../test-utils/cliUtils'
+import { LONG_TIMEOUT_MS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { createMultisig } from '../../test-utils/multisigUtils'
+import { deployReleaseGoldContract } from '../../test-utils/release-gold'
 import CreateAccount from './create-account'
 import LockedGold from './locked-gold'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithGanache('releasegold:locked-gold cmd', (web3: Web3) => {
+testWithAnvilL1('releasegold:locked-gold cmd', (web3: Web3) => {
   let contractAddress: string
-  let kit: any
+  let kit: ContractKit
 
   beforeEach(async () => {
-    contractAddress = await getContractFromEvent(
-      'ReleaseGoldInstanceCreated(address,address)',
-      web3
-    )
+    const accounts = (await web3.eth.getAccounts()) as StrongAddress[]
     kit = newKitFromWeb3(web3)
-    await testLocally(CreateAccount, ['--contract', contractAddress])
+
+    contractAddress = await deployReleaseGoldContract(
+      web3,
+      await createMultisig(kit, [accounts[0], accounts[1]] as StrongAddress[], 2, 2),
+      accounts[1],
+      accounts[0],
+      accounts[2]
+    )
+
+    await testLocallyWithWeb3Node(CreateAccount, ['--contract', contractAddress], web3)
   })
 
   test(
     'can lock celo with pending withdrawals',
     async () => {
       const lockedGold = await kit.contracts.getLockedGold()
-      await testLocally(LockedGold, [
-        '--contract',
-        contractAddress,
-        '--action',
-        'lock',
-        '--value',
-        '100',
-      ])
-      await testLocally(LockedGold, [
-        '--contract',
-        contractAddress,
-        '--action',
-        'unlock',
-        '--value',
-        '50',
-      ])
-      await testLocally(LockedGold, [
-        '--contract',
-        contractAddress,
-        '--action',
-        'lock',
-        '--value',
-        '75',
-      ])
-      await testLocally(LockedGold, [
-        '--contract',
-        contractAddress,
-        '--action',
-        'unlock',
-        '--value',
-        '50',
-      ])
+      await testLocallyWithWeb3Node(
+        LockedGold,
+        ['--contract', contractAddress, '--action', 'lock', '--value', '100'],
+        web3
+      )
+      await testLocallyWithWeb3Node(
+        LockedGold,
+        ['--contract', contractAddress, '--action', 'unlock', '--value', '50'],
+        web3
+      )
+      await testLocallyWithWeb3Node(
+        LockedGold,
+        ['--contract', contractAddress, '--action', 'lock', '--value', '75'],
+        web3
+      )
+      await testLocallyWithWeb3Node(
+        LockedGold,
+        ['--contract', contractAddress, '--action', 'unlock', '--value', '50'],
+        web3
+      )
       const pendingWithdrawalsTotalValue = await lockedGold.getPendingWithdrawalsTotalValue(
         contractAddress
       )
