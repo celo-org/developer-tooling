@@ -1,4 +1,4 @@
-import { newCeloDistributionSchedule } from '@celo/abis-12/web3/CeloDistributionSchedule'
+import { newEpochManager } from '@celo/abis-12/web3/EpochManager'
 import { newFeeCurrencyDirectory } from '@celo/abis-12/web3/FeeCurrencyDirectory'
 import { newGoldToken } from '@celo/abis-12/web3/GoldToken'
 import { newGovernance } from '@celo/abis-12/web3/Governance'
@@ -39,10 +39,10 @@ export const ContractFactories = {
   [CeloContract.Accounts]: newAccounts,
   [CeloContract.Attestations]: newAttestations,
   [CeloContract.BlockchainParameters]: newBlockchainParameters,
-  [CeloContract.CeloDistributionSchedule]: newCeloDistributionSchedule,
   [CeloContract.DoubleSigningSlasher]: newDoubleSigningSlasher,
   [CeloContract.DowntimeSlasher]: newDowntimeSlasher,
   [CeloContract.Election]: newElection,
+  [CeloContract.EpochManager]: newEpochManager,
   [CeloContract.EpochRewards]: newEpochRewards,
   [CeloContract.ERC20]: newIERC20,
   [CeloContract.Escrow]: newEscrow,
@@ -99,9 +99,6 @@ export class Web3ContractCache {
   getBlockchainParameters() {
     return this.getContract(CeloContract.BlockchainParameters)
   }
-  getCeloDistributionSchedule() {
-    return this.getContract(CeloContract.CeloDistributionSchedule)
-  }
   getDoubleSigningSlasher() {
     return this.getContract(CeloContract.DoubleSigningSlasher)
   }
@@ -110,6 +107,9 @@ export class Web3ContractCache {
   }
   getElection() {
     return this.getContract(CeloContract.Election)
+  }
+  getEpochManager() {
+    return this.getContract(CeloContract.EpochManager)
   }
   getEpochRewards() {
     return this.getContract(CeloContract.EpochRewards)

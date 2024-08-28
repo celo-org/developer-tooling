@@ -1,4 +1,4 @@
-import { Election } from '@celo/abis/web3/Election'
+import { Election } from '@celo/abis-12/web3/Election'
 import {
   eqAddress,
   findAddressIndex,
@@ -586,6 +586,17 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
       async (voterVotes: BigNumber, group: Address) =>
         voterVotes.dividedBy(await this.getActiveVotesForGroup(group, blockNumber))
     )
+  }
+
+  async getGroupEpochRewards(
+    group: Address,
+    totalEpochRewards: BigNumber,
+    groupScore: BigNumber
+  ): Promise<BigNumber> {
+    const rewards = await this.contract.methods
+      .getGroupEpochRewards(group, totalEpochRewards.toFixed(), groupScore.toFixed())
+      .call()
+    return valueToBigNumber(rewards)
   }
 }
 

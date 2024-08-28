@@ -8,10 +8,10 @@ import { Web3ContractCache } from './web3-contract-cache'
 import { AccountsWrapper } from './wrappers/Accounts'
 import { AttestationsWrapper } from './wrappers/Attestations'
 import { BlockchainParametersWrapper } from './wrappers/BlockchainParameters'
-import { CeloDistributionScheduleWrapper } from './wrappers/CeloDistributionScheduleWrapper'
 import { DoubleSigningSlasherWrapper } from './wrappers/DoubleSigningSlasher'
 import { DowntimeSlasherWrapper } from './wrappers/DowntimeSlasher'
 import { ElectionWrapper } from './wrappers/Election'
+import { EpochManagerWrapper } from './wrappers/EpochManager'
 import { EpochRewardsWrapper } from './wrappers/EpochRewards'
 import { Erc20Wrapper } from './wrappers/Erc20Wrapper'
 import { EscrowWrapper } from './wrappers/Escrow'
@@ -33,8 +33,8 @@ import { ValidatorsWrapper } from './wrappers/Validators'
 const WrapperFactories = {
   [CeloContract.Accounts]: AccountsWrapper,
   [CeloContract.BlockchainParameters]: BlockchainParametersWrapper,
-  [CeloContract.CeloDistributionSchedule]: CeloDistributionScheduleWrapper,
   [CeloContract.EpochRewards]: EpochRewardsWrapper,
+  [CeloContract.EpochManager]: EpochManagerWrapper,
   [CeloContract.ERC20]: Erc20Wrapper,
   [CeloContract.Escrow]: EscrowWrapper,
   [CeloContract.FederatedAttestations]: FederatedAttestationsWrapper,
@@ -81,10 +81,10 @@ interface WrapperCacheMap {
   [CeloContract.Accounts]?: AccountsWrapper
   [CeloContract.Attestations]?: AttestationsWrapper
   [CeloContract.BlockchainParameters]?: BlockchainParametersWrapper
-  [CeloContract.CeloDistributionSchedule]?: CeloDistributionScheduleWrapper
   [CeloContract.DoubleSigningSlasher]?: DoubleSigningSlasherWrapper
   [CeloContract.DowntimeSlasher]?: DowntimeSlasherWrapper
   [CeloContract.Election]?: ElectionWrapper
+  [CeloContract.EpochManager]?: EpochManagerWrapper
   [CeloContract.EpochRewards]?: EpochRewardsWrapper
   [CeloContract.ERC20]?: Erc20Wrapper<IERC20>
   [CeloContract.Escrow]?: EscrowWrapper
@@ -136,9 +136,6 @@ export class WrapperCache implements ContractCacheType {
   getBlockchainParameters() {
     return this.getContract(CeloContract.BlockchainParameters)
   }
-  getCeloDistributionSchedule() {
-    return this.getContract(CeloContract.CeloDistributionSchedule)
-  }
   getDoubleSigningSlasher() {
     return this.getContract<CeloContract.DoubleSigningSlasher>(CeloContract.DoubleSigningSlasher)
   }
@@ -150,6 +147,9 @@ export class WrapperCache implements ContractCacheType {
   }
   getEpochRewards() {
     return this.getContract(CeloContract.EpochRewards)
+  }
+  getEpochManager() {
+    return this.getContract(CeloContract.EpochManager)
   }
   getErc20(address: string) {
     return this.getContract(CeloContract.ERC20, address)
