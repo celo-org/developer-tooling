@@ -1,4 +1,4 @@
-import { Address, eqAddress } from '@celo/base/lib/address'
+import { Address, eqAddress, StrongAddress } from '@celo/base/lib/address'
 import { selectiveRetryAsyncWithBackOff } from '@celo/base/lib/async'
 import { Signer } from '@celo/base/lib/signatureUtils'
 import { AddressType, SignatureType } from '@celo/utils/lib/io'
@@ -8,13 +8,19 @@ import { isLeft } from 'fp-ts/lib/Either'
 import * as t from 'io-ts'
 import { PathReporter } from 'io-ts/lib/PathReporter'
 import { ContractKit } from '../kit'
-import { AccountsWrapper } from '../wrappers/Accounts'
 import { Claim, ClaimPayload, ClaimType, hashOfClaims, isOfType } from './claims/claim'
 import { ClaimTypes, SINGULAR_CLAIM_TYPES } from './claims/types'
 
 export { ClaimTypes } from './claims/types'
 
-type KitOrAccountsWrapper = ContractKit | AccountsWrapper
+type AccountSignerGetters = {
+  isAccount: (address: Address) => Promise<boolean>
+  getVoteSigner: (address: Address) => Promise<StrongAddress>
+  getValidatorSigner: (address: Address) => Promise<StrongAddress>
+  getAttestationSigner: (address: Address) => Promise<StrongAddress>
+}
+
+type KitOrAccountsWrapper = ContractKit | AccountSignerGetters
 
 const MetaType = t.type({
   address: AddressType,
@@ -216,13 +222,13 @@ export class IdentityMetadataWrapper {
 }
 
 // at first these functions required a `kit` but thats a bit heavy
-// as all that is used is the Accounts Wrapper so allow either.
+// as all that is used are functions on the accounts contract so allow just those functions to be passed
 async function getAccounts(
   contractKitOrAccountsWrapper: KitOrAccountsWrapper
-): Promise<AccountsWrapper> {
-  if (contractKitOrAccountsWrapper instanceof AccountsWrapper) {
-    return contractKitOrAccountsWrapper
-  } else {
+): Promise<AccountSignerGetters> {
+  if (contractKitOrAccountsWrapper instanceof ContractKit) {
     return contractKitOrAccountsWrapper.contracts.getAccounts()
+  } else {
+    return contractKitOrAccountsWrapper
   }
 }
