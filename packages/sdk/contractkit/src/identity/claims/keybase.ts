@@ -1,10 +1,9 @@
 import { Address } from '@celo/base/lib/address'
 import fetch from 'cross-fetch'
 import { isLeft } from 'fp-ts/lib/Either'
-import { ContractKit } from '../../kit'
 import { IdentityMetadataWrapper } from '../metadata'
 import { hashOfClaim, KeybaseClaim, KeybaseClaimType, SignedClaimType } from './claim'
-import { ClaimTypes, now } from './types'
+import { AccountMetadataSignerGetters, ClaimTypes, now } from './types'
 
 export const keybaseFilePathToProof = `.well-known/celo/`
 export const proofFileName = (address: Address) => `verify-${address}.json`
@@ -17,14 +16,14 @@ export const targetURL = (username: string, address: Address) =>
  * If verification encounters an error, returns the error message as a string
  * otherwise returns undefined when successful
  *
- * @param kit
+ * @param accountsInfoGetters
  * @param claim
  * @param signer
  * @returns a human readable string with claims (non)verifiability or undefined
  */
 
 export async function verifyKeybaseClaim(
-  kit: ContractKit,
+  accountsInfoGetters: AccountMetadataSignerGetters,
   claim: KeybaseClaim,
   signer: Address
 ): Promise<string | undefined> {
@@ -44,7 +43,7 @@ export async function verifyKeybaseClaim(
     }
 
     const hasValidSignature = await IdentityMetadataWrapper.verifySignerForAddress(
-      await kit.contracts.getAccounts(),
+      accountsInfoGetters,
       hashOfClaim(parsedClaim.right.claim),
       parsedClaim.right.signature,
       signer

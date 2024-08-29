@@ -2,28 +2,32 @@ import { eqAddress } from '@celo/base/lib/address'
 import { isValidUrl } from '@celo/base/lib/io'
 import { resolveTxt } from 'dns'
 import { promisify } from 'util'
-import { ContractKit } from '../..'
 import { IdentityMetadataWrapper } from '../metadata'
 import { AccountClaim } from './account'
 import { Claim, DOMAIN_TXT_HEADER, DomainClaim, serializeClaim } from './claim'
 import { verifyKeybaseClaim } from './keybase'
-import { ClaimTypes } from './types'
+import { AccountMetadataSignerGetters, ClaimTypes } from './types'
 
 /**
  * Verifies a claim made by an account, i.e. whether a claim can be verified to be correct
- * @param kit ContractKit object
+ * @param kit AccountMetadataSignerGetters object
  * @param claim The claim to verify
  * @param address The address that is making the claim
  * @returns If valid, returns undefined. If invalid or unable to verify, returns a string with the error
  */
-export async function verifyClaim(kit: ContractKit, claim: Claim, address: string, tries = 3) {
+export async function verifyClaim(
+  accountMeta: AccountMetadataSignerGetters,
+  claim: Claim,
+  address: string,
+  tries = 3
+) {
   switch (claim.type) {
     case ClaimTypes.KEYBASE:
-      return verifyKeybaseClaim(kit, claim, address)
+      return verifyKeybaseClaim(accountMeta, claim, address)
     case ClaimTypes.ACCOUNT:
-      return verifyAccountClaim(kit, claim, address, tries)
+      return verifyAccountClaim(accountMeta, claim, address, tries)
     case ClaimTypes.DOMAIN:
-      return verifyDomainRecord(kit, claim, address)
+      return verifyDomainRecord(accountMeta, claim, address)
     default:
       break
   }
@@ -31,12 +35,12 @@ export async function verifyClaim(kit: ContractKit, claim: Claim, address: strin
 }
 
 export const verifyAccountClaim = async (
-  kit: ContractKit,
+  accountMeta: AccountMetadataSignerGetters,
   claim: AccountClaim,
   address: string,
   tries = 3
 ) => {
-  const metadataURL = await (await kit.contracts.getAccounts()).getMetadataURL(claim.address)
+  const metadataURL = await accountMeta.getMetadataURL(claim.address)
 
   if (!isValidUrl(metadataURL)) {
     return `Metadata URL of ${claim.address} could not be retrieved`
@@ -44,11 +48,7 @@ export const verifyAccountClaim = async (
 
   let metadata: IdentityMetadataWrapper
   try {
-    metadata = await IdentityMetadataWrapper.fetchFromURL(
-      await kit.contracts.getAccounts(),
-      metadataURL,
-      tries
-    )
+    metadata = await IdentityMetadataWrapper.fetchFromURL(accountMeta, metadataURL, tries)
   } catch (error: any) {
     return `Metadata could not be fetched for ${
       claim.address
@@ -74,7 +74,7 @@ type dnsResolverFunction = (
  * `celo-site-verification` and a valid signature in base64
  */
 export const verifyDomainRecord = async (
-  kit: ContractKit,
+  accountMeta: AccountMetadataSignerGetters,
   claim: DomainClaim,
   address: string,
   dnsResolver: dnsResolverFunction = resolveTxt as any
@@ -89,7 +89,7 @@ export const verifyDomainRecord = async (
           const signature = Buffer.from(signatureBase64, 'base64').toString('binary')
           if (
             await IdentityMetadataWrapper.verifySignerForAddress(
-              await kit.contracts.getAccounts(),
+              accountMeta,
               serializeClaim(claim),
               signature,
               address
