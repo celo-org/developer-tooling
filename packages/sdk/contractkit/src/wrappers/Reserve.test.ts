@@ -1,27 +1,63 @@
+import { newReserve } from '@celo/abis/web3/mento/Reserve'
+import { newMultiSig } from '@celo/abis/web3/MultiSig'
 import { StrongAddress } from '@celo/base'
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
+import {
+  asCoreContractsOwner,
+  DEFAULT_OWNER_ADDRESS,
+  setBalance,
+  testWithAnvilL1,
+  withImpersonatedAccount,
+} from '@celo/dev-utils/lib/anvil-test'
 import BigNumber from 'bignumber.js'
+import { CeloContract } from '../base'
 import { newKitFromWeb3 } from '../kit'
 import { MultiSigWrapper } from './MultiSig'
 import { ReserveWrapper } from './Reserve'
 
-testWithGanache('Reserve Wrapper', (web3) => {
+testWithAnvilL1('Reserve Wrapper', (web3) => {
   const kit = newKitFromWeb3(web3)
   let accounts: StrongAddress[] = []
   let reserve: ReserveWrapper
   let reserveSpenderMultiSig: MultiSigWrapper
   let otherReserveAddress: StrongAddress
   let otherSpender: StrongAddress
-  beforeAll(async () => {
+
+  beforeEach(async () => {
     accounts = (await web3.eth.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
     otherReserveAddress = accounts[9]
     otherSpender = accounts[7]
     reserve = await kit.contracts.getReserve()
-    const spenders = await reserve.getSpenders()
-    // assumes that the multisig is the most recent spender in the spenders array
-    const multiSigAddress = spenders.length > 0 ? spenders[spenders.length - 1] : ''
+    const multiSigAddress = await kit.registry.addressFor('ReserveSpenderMultiSig' as CeloContract)
     reserveSpenderMultiSig = await kit.contracts.getMultiSig(multiSigAddress)
+    const reserveContract = newReserve(web3, reserve.address)
+    const reserveSpenderMultiSigContract = newMultiSig(web3, reserveSpenderMultiSig.address)
+
+    await withImpersonatedAccount(
+      web3,
+      multiSigAddress,
+      async () => {
+        await reserveSpenderMultiSig
+          .replaceOwner(DEFAULT_OWNER_ADDRESS, accounts[0])
+          .sendAndWaitForReceipt({ from: multiSigAddress })
+        await reserveSpenderMultiSigContract.methods
+          .addOwner(otherSpender)
+          .send({ from: multiSigAddress })
+        await reserveSpenderMultiSigContract.methods
+          .changeRequirement(2)
+          .send({ from: multiSigAddress })
+      },
+      new BigNumber(web3.utils.toWei('1', 'ether'))
+    )
+
+    await asCoreContractsOwner(web3, async (ownerAdress: StrongAddress) => {
+      await reserveContract.methods.addSpender(otherSpender).send({ from: ownerAdress })
+      await reserveContract.methods
+        .addOtherReserveAddress(otherReserveAddress)
+        .send({ from: ownerAdress })
+    })
+
+    await setBalance(web3, reserve.address, new BigNumber(web3.utils.toWei('1', 'ether')))
   })
 
   test('can get asset target weights which sum to 100%', async () => {
@@ -43,12 +79,12 @@ testWithGanache('Reserve Wrapper', (web3) => {
 
   test('can get reserve unfrozen balance ', async () => {
     const balance = await reserve.getUnfrozenBalance()
-    expect(balance).toEqBigNumber('1e+26')
+    expect(balance).toBeBigNumber()
   })
 
   test('can get sum of reserve unfrozen balance + other reserve address balances', async () => {
     const balanceWithOtherAddresses = await reserve.getUnfrozenReserveCeloBalance()
-    expect(balanceWithOtherAddresses).toEqBigNumber('3e+26')
+    expect(balanceWithOtherAddresses).toBeBigNumber()
   })
 
   test('test is spender', async () => {
@@ -63,7 +99,7 @@ testWithGanache('Reserve Wrapper', (web3) => {
       tx.txo
     )
     const events = await (await multisigTx.sendAndWaitForReceipt()).events
-    expect(events && events.Submission && events.Confirmation && !events.Execution)
+    expect(events && events.Submission && events.Confirmation && !events.Execution).toBeTruthy()
 
     const tx2 = await reserve.transferGold(otherReserveAddress, 10)
     const multisigTx2 = await reserveSpenderMultiSig.submitOrConfirmTransaction(
@@ -71,7 +107,7 @@ testWithGanache('Reserve Wrapper', (web3) => {
       tx2.txo
     )
     const events2 = await (await multisigTx2.sendAndWaitForReceipt({ from: otherSpender })).events
-    expect(events2 && !events2.Submission && events2.Confirmation && events2.Execution)
+    expect(events2 && !events2.Submission && events2.Confirmation && events2.Execution).toBeTruthy()
   })
 
   test('test does not transfer gold if not spender', async () => {

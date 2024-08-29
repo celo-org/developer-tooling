@@ -1,12 +1,11 @@
+import { newBlockchainParameters } from '@celo/abis/web3/BlockchainParameters'
 import { Connection } from '@celo/connect'
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
-import BigNumber from 'bignumber.js'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { AddressRegistry } from '../address-registry'
 import { CeloContract } from '../base'
-import { newBlockchainParameters } from '@celo/abis/web3/BlockchainParameters'
 import { BlockchainParametersWrapper } from './BlockchainParameters'
 
-testWithGanache('BlockChainParametersWrapper', (web3) => {
+testWithAnvilL1('BlockChainParametersWrapper', (web3) => {
   const connection = new Connection(web3)
   let blockchainParamsWrapper: BlockchainParametersWrapper
 
@@ -50,8 +49,13 @@ testWithGanache('BlockChainParametersWrapper', (web3) => {
   describe('#getConfig', () => {
     it('returns config', async () => {
       const config = await blockchainParamsWrapper.getConfig()
-      expect(config.blockGasLimit).toEqual(new BigNumber('20000000'))
-      expect(config.intrinsicGasForAlternativeFeeCurrency).toEqual(new BigNumber('50000'))
+
+      expect(config).toMatchInlineSnapshot(`
+        {
+          "blockGasLimit": "13000000",
+          "intrinsicGasForAlternativeFeeCurrency": "50000",
+        }
+      `)
     })
   })
 

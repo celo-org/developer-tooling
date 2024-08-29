@@ -1,7 +1,7 @@
 import { COMPLIANT_ERROR_RESPONSE, SANCTIONED_ADDRESSES } from '@celo/compliance'
 import { HttpRpcCaller } from '@celo/connect'
 import { ContractKit, StableToken, newKitFromWeb3 } from '@celo/contractkit'
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import Web3 from 'web3'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import TransferCelo from './celo'
@@ -33,7 +33,7 @@ const mockRpc = () =>
       jsonrpc: '2.0',
     }
   })
-testWithGanache('transfer:celo cmd', (web3: Web3) => {
+testWithAnvilL1('transfer:celo cmd', (web3: Web3) => {
   let accounts: string[] = []
   let kit: ContractKit
 
@@ -43,7 +43,7 @@ testWithGanache('transfer:celo cmd', (web3: Web3) => {
   })
 
   test('can transfer celo', async () => {
-    const balanceBefore = await kit.getTotalBalance(accounts[0])
+    const balanceBefore = (await kit.getTotalBalance(accounts[0])).CELO!
     const receiverBalanceBefore = await kit.getTotalBalance(accounts[1])
     const amountToTransfer = '500000000000000000000'
     // Send cUSD to RG contract
@@ -69,6 +69,15 @@ testWithGanache('transfer:celo cmd', (web3: Web3) => {
       receiverBalanceBefore.CELO!.plus(amountToTransfer).toFixed()
     )
 
+    const transactionReceipt = await web3.eth.getTransactionReceipt(
+      (
+        await web3.eth.getBlock('latest')
+      ).transactions[0]
+    )
+
+    // Safety check if the latest transaction was originated by expected account
+    expect(transactionReceipt.from.toLowerCase()).toEqual(accounts[0].toLowerCase())
+
     mock = mockRpc()
     // Attempt to send cUSD back
     await testLocallyWithWeb3Node(
@@ -86,8 +95,13 @@ testWithGanache('transfer:celo cmd', (web3: Web3) => {
       web3
     )
     mock.mockRestore()
-    const balanceAfter = await kit.getTotalBalance(accounts[0])
-    expect(balanceBefore.CELO).toEqual(balanceAfter.CELO)
+
+    const balanceAfterWithoutFees = (await kit.getTotalBalance(accounts[0])).CELO!
+    const balanceAfterWithFees = balanceAfterWithoutFees.plus(
+      transactionReceipt.effectiveGasPrice * transactionReceipt.gasUsed
+    )
+
+    expect(balanceBefore).toEqual(balanceAfterWithFees)
   })
 
   test('should fail if to address is sanctioned', async () => {
@@ -150,14 +164,26 @@ testWithGanache('transfer:celo cmd', (web3: Web3) => {
       )
     ).resolves.toBeUndefined()
     mock.mockRestore()
+
     const balanceAfter = await kit.getTotalBalance(accounts[0])
     const receiverBalanceAfter = await kit.getTotalBalance(accounts[1])
+    const transactionReceipt = await web3.eth.getTransactionReceipt(
+      (
+        await web3.eth.getBlock('latest')
+      ).transactions[0]
+    )
+
+    // Safety check if the latest transaction was originated by expected account
+    expect(transactionReceipt.from.toLowerCase()).toEqual(accounts[0].toLowerCase())
+
     expect(receiverBalanceAfter.CELO!.toFixed()).toEqual(
       receiverBalanceBefore.CELO!.plus(amountToTransfer).toFixed()
     )
-    expect(balanceAfter.CELO!.toFixed()).toEqual(
-      balanceBefore.CELO!.minus(amountToTransfer).toFixed()
-    )
+    expect(
+      balanceAfter
+        .CELO!.plus(transactionReceipt.effectiveGasPrice * transactionReceipt.gasUsed)
+        .toFixed()
+    ).toEqual(balanceBefore.CELO!.minus(amountToTransfer).toFixed())
   })
 
   test("should fail if the feeCurrency isn't whitelisted", async () => {
@@ -170,9 +196,9 @@ testWithGanache('transfer:celo cmd', (web3: Web3) => {
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`
       "0x1234567890123456789012345678901234567890 is not a valid fee currency. Available currencies:
-      0x5315e44798395d4a952530d131249fE00f554565 - Celo Dollar (cUSD)
-      0x965D352283a3C8A016b9BBbC9bf6306665d495E7 - Celo Brazilian Real (cREAL)
-      0xdD66C23e07b4D6925b6089b5Fe6fc9E62941aFE8 - Celo Euro (cEUR)"
+      0x0c6a0fde0A72bA3990870f0F99ED79a821703474 - Celo Euro (Celo Euro)
+      0x603931FF5E63d2fd3EEF1513a55fB773d8082195 - Celo Brazilian Real (Celo Brazilian Real)
+      0x82398F079D742F9D0Ae71ef8C99E5c68b2eD6705 - Celo Dollar (Celo Dollar)"
     `)
   })
 })
