@@ -20,6 +20,12 @@ export const STABLES_ADDRESS = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
 // Introducing a different name for the same address to avoid confusion
 export const DEFAULT_OWNER_ADDRESS = STABLES_ADDRESS
 
+// Addresses are generated during migrations and need to be extracted from logs
+export enum LinkedLibraryAddress {
+  AddressSortedLinkedListWithMedian = '0x5fbdb2315678afecb367f032d93f642f64180aa3',
+  Signatures = '0xe7f1725e7734ce288f8367e1bb143e90bb3f0512',
+}
+
 function createInstance(stateFilePath: string): Anvil {
   const port = ANVIL_PORT + (process.pid - process.ppid)
   const options: CreateAnvilOptions = {
@@ -29,6 +35,7 @@ function createInstance(stateFilePath: string): Anvil {
     balance: TEST_BALANCE,
     gasPrice: TEST_GAS_PRICE,
     gasLimit: TEST_GAS_LIMIT,
+    blockBaseFeePerGas: 0,
     stopTimeout: 1000,
   }
 
@@ -93,11 +100,17 @@ export const withImpersonatedAccount = async (
 
 export const asCoreContractsOwner = async (
   web3: Web3,
-  fn: (ownerAddress: StrongAddress) => Promise<void>
+  fn: (ownerAddress: StrongAddress) => Promise<void>,
+  withBalance?: number | bigint | BigNumber
 ) => {
-  await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
-    await fn(DEFAULT_OWNER_ADDRESS)
-  })
+  await withImpersonatedAccount(
+    web3,
+    DEFAULT_OWNER_ADDRESS,
+    async () => {
+      await fn(DEFAULT_OWNER_ADDRESS)
+    },
+    withBalance
+  )
 }
 
 export function setCode(web3: Web3, address: string, code: string) {

@@ -1,7 +1,11 @@
 import { newSortedOracles as web3NewSortedOracles } from '@celo/abis/web3/SortedOracles'
 import SortedOraclesArtifacts from '@celo/celo-devchain/contracts/contracts-0.5/SortedOracles.json'
 import { AbiItem, Address } from '@celo/connect'
-import { asCoreContractsOwner, testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import {
+  asCoreContractsOwner,
+  LinkedLibraryAddress,
+  testWithAnvilL1,
+} from '@celo/dev-utils/lib/anvil-test'
 import { describeEach } from '@celo/dev-utils/lib/describeEach'
 import { NetworkConfig, timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import { CeloContract } from '../base'
@@ -62,13 +66,9 @@ testWithAnvilL1('SortedOracles Wrapper', (web3) => {
     const contract = new web3.eth.Contract(SortedOraclesArtifacts.abi as AbiItem[])
 
     const deployTx = contract.deploy({
-      /**
-       * 0x5fbdb2315678afecb367f032d93f642f64180aa3 is the address of the
-       * AddressSortedLinkedListWithMedian linked library
-       */
       data: SortedOraclesArtifacts.bytecode.replace(
         /__AddressSortedLinkedListWithMedian_____/g,
-        '5fbdb2315678afecb367f032d93f642f64180aa3'
+        LinkedLibraryAddress.AddressSortedLinkedListWithMedian.replace('0x', '')
       ),
       arguments: [NetworkConfig.oracles.reportExpiry],
     })
@@ -129,6 +129,10 @@ testWithAnvilL1('SortedOracles Wrapper', (web3) => {
 
     btcSortedOracles = await newSortedOracles(btcOracleOwner)
     stableTokenSortedOracles = await kit.contracts.getSortedOracles()
+    const stableTokenSortedOraclesContract = web3NewSortedOracles(
+      web3,
+      stableTokenSortedOracles.address
+    )
 
     await asCoreContractsOwner(web3, async (ownerAddress) => {
       const stableTokenUSDAddress = (await kit.contracts.getStableToken(StableToken.cUSD)).address
@@ -140,29 +144,25 @@ testWithAnvilL1('SortedOracles Wrapper', (web3) => {
         stableTokenEURAddress,
         stableTokenBRLAddress,
       ]) {
-        // @ts-ignore
-        await stableTokenSortedOracles.contract.methods
+        await stableTokenSortedOraclesContract.methods
           .removeOracle(tokenAddress, ownerAddress, 0)
           .send({ from: ownerAddress })
       }
 
       for (const oracle of stableTokenOracles) {
-        // @ts-ignore
-        await stableTokenSortedOracles.contract.methods
+        await stableTokenSortedOraclesContract.methods
           .addOracle(stableTokenUSDAddress, oracle)
           .send({ from: ownerAddress })
       }
 
       for (const oracle of stableTokenEUROracles) {
-        // @ts-ignore
-        await stableTokenSortedOracles.contract.methods
+        await stableTokenSortedOraclesContract.methods
           .addOracle(stableTokenEURAddress, oracle)
           .send({ from: ownerAddress })
       }
 
       for (const oracle of stableTokenBRLOracles) {
-        // @ts-ignore
-        await stableTokenSortedOracles.contract.methods
+        await stableTokenSortedOraclesContract.methods
           .addOracle(stableTokenBRLAddress, oracle)
           .send({ from: ownerAddress })
       }

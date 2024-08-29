@@ -1,11 +1,31 @@
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
+import { newAttestations } from '@celo/abis/web3/Attestations'
+import { StrongAddress } from '@celo/base'
+import { newKitFromWeb3 } from '@celo/contractkit'
+import { WrapperCache } from '@celo/contractkit/lib/contract-cache'
+import { AttestationsWrapper } from '@celo/contractkit/lib/wrappers/Attestations'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { deployAttestationsContract } from '@celo/dev-utils/lib/contracts'
 import Web3 from 'web3'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import GetAttestations from './get-attestations'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithGanache('identity:get-attetstations', (web3: Web3) => {
+testWithAnvilL1('identity:get-attetstations', (web3: Web3) => {
+  beforeEach(async () => {
+    const kit = newKitFromWeb3(web3)
+    const accounts = (await web3.eth.getAccounts()) as StrongAddress[]
+    const attestationsContractAddress = await deployAttestationsContract(web3, accounts[0])
+
+    jest.spyOn(WrapperCache.prototype, 'getAttestations').mockImplementation(async () => {
+      return new AttestationsWrapper(
+        kit.connection,
+        newAttestations(web3, attestationsContractAddress),
+        newKitFromWeb3(web3).contracts
+      )
+    })
+  })
+
   describe('input validation correctly outputs errors', () => {
     const consoleOutput: string[] = []
     const mockedError = (output: string) => consoleOutput.push(output)

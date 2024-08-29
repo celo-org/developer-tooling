@@ -83,6 +83,7 @@ describe.skip('rpc-wallet', () => {
   })
 })
 
+// It uses personal_importKey RPC call which is not supported in anvil
 testWithGanache('rpc-wallet', (web3) => {
   const provider = web3.currentProvider
   const rpcWallet = new RpcWallet(provider as Provider)
