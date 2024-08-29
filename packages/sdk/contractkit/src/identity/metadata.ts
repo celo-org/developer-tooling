@@ -1,4 +1,4 @@
-import { Address, eqAddress, StrongAddress } from '@celo/base/lib/address'
+import { Address, eqAddress } from '@celo/base/lib/address'
 import { selectiveRetryAsyncWithBackOff } from '@celo/base/lib/async'
 import { Signer } from '@celo/base/lib/signatureUtils'
 import { AddressType, SignatureType } from '@celo/utils/lib/io'
@@ -9,18 +9,16 @@ import * as t from 'io-ts'
 import { PathReporter } from 'io-ts/lib/PathReporter'
 import { ContractKit } from '../kit'
 import { Claim, ClaimPayload, ClaimType, hashOfClaims, isOfType } from './claims/claim'
-import { ClaimTypes, SINGULAR_CLAIM_TYPES } from './claims/types'
+import {
+  AccountMetadataSignerGetters,
+  AccountSignerGetters,
+  ClaimTypes,
+  SINGULAR_CLAIM_TYPES,
+} from './claims/types'
 
 export { ClaimTypes } from './claims/types'
 
-type AccountSignerGetters = {
-  isAccount: (address: Address) => Promise<boolean>
-  getVoteSigner: (address: Address) => Promise<StrongAddress>
-  getValidatorSigner: (address: Address) => Promise<StrongAddress>
-  getAttestationSigner: (address: Address) => Promise<StrongAddress>
-}
-
-type KitOrAccountsWrapper = ContractKit | AccountSignerGetters
+type KitOrAccountsWrapper = ContractKit | AccountMetadataSignerGetters
 
 const MetaType = t.type({
   address: AddressType,
@@ -228,7 +226,17 @@ async function getAccounts(
 ): Promise<AccountSignerGetters> {
   if (contractKitOrAccountsWrapper instanceof ContractKit) {
     return contractKitOrAccountsWrapper.contracts.getAccounts()
-  } else {
+  } else if (
+    'getVoteSigner' in contractKitOrAccountsWrapper &&
+    'isAccount' in contractKitOrAccountsWrapper &&
+    'getValidatorSigner' in contractKitOrAccountsWrapper &&
+    'getAttestationSigner' in contractKitOrAccountsWrapper
+  ) {
     return contractKitOrAccountsWrapper
   }
+  throw new Error(
+    `Must pass a ContractKit or an object with the required functions. received ${JSON.stringify(
+      contractKitOrAccountsWrapper
+    )}`
+  )
 }

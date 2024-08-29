@@ -1,13 +1,16 @@
+import { NULL_ADDRESS } from '@celo/base'
 import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { ACCOUNT_ADDRESSES } from '@celo/dev-utils/lib/ganache-setup'
 import { NativeSigner, Signer, verifySignature } from '@celo/utils/lib/signatureUtils'
 import { newKitFromWeb3 } from '../../kit'
 import { IdentityMetadataWrapper } from '../metadata'
 import { DomainClaim, createDomainClaim, serializeClaim } from './claim'
+import type { AccountMetadataSignerGetters } from './types'
 import { verifyDomainRecord } from './verify'
 
 testWithAnvilL1('Domain claims', (web3) => {
   const kit = newKitFromWeb3(web3)
+
   const address = ACCOUNT_ADDRESSES[0]
   const secondAddress = ACCOUNT_ADDRESSES[1]
 
@@ -36,7 +39,6 @@ testWithAnvilL1('Domain claims', (web3) => {
         ])
       }, 100)
     }
-
     beforeEach(async () => {
       signer = NativeSigner(kit.connection.sign, address)
       metadata = IdentityMetadataWrapper.fromEmpty(address)
@@ -79,13 +81,31 @@ testWithAnvilL1('Domain claims', (web3) => {
     })
 
     describe('when the metadata URL is set', () => {
+      let addressInfoGetters: AccountMetadataSignerGetters = {
+        isAccount: async (_) => false,
+        getVoteSigner: async (_) => NULL_ADDRESS,
+        getValidatorSigner: async (_) => NULL_ADDRESS,
+        getAttestationSigner: async (_) => NULL_ADDRESS,
+        getMetadataURL: async (address) => `https://example.com/${address}.json`,
+      }
+
+      beforeEach(async () => {
+        const accountsContract = await kit.contracts.getAccounts()
+        addressInfoGetters = {
+          isAccount: (address) => accountsContract.isAccount(address),
+          getMetadataURL: (address) => accountsContract.getMetadataURL(address),
+          getVoteSigner: (address) => accountsContract.getVoteSigner(address),
+          getValidatorSigner: (address) => accountsContract.getValidatorSigner(address),
+          getAttestationSigner: (address) => accountsContract.getAttestationSigner(address),
+        }
+      })
       it('indicates that the metadata contain the right claim', async () => {
-        const output = await verifyDomainRecord(kit, claim, address, dnsResolver)
+        const output = await verifyDomainRecord(addressInfoGetters, claim, address, dnsResolver)
         expect(output).toBeUndefined()
       })
 
       it('indicates that the metadata does not contain the proper domain claim', async () => {
-        const error = await verifyDomainRecord(kit, claim, address)
+        const error = await verifyDomainRecord(addressInfoGetters, claim, address)
         expect(error).toContain('Unable to verify domain claim')
       })
     })
