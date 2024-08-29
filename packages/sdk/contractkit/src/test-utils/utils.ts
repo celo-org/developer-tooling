@@ -43,13 +43,13 @@ export const mineToNextEpoch = async (web3: Web3, epochSize: number = GANACHE_EP
 export const topUpWithToken = async (
   kit: ContractKit,
   stableToken: StableToken,
-  account: string,
+  recipientAddress: string,
   amount: BigNumber
 ) => {
   const token = await kit.contracts.getStableToken(stableToken)
 
   await withImpersonatedAccount(kit.web3, STABLES_ADDRESS, async () => {
-    await token.transfer(account, amount.toFixed()).sendAndWaitForReceipt({
+    await token.transfer(recipientAddress, amount.toFixed()).sendAndWaitForReceipt({
       from: STABLES_ADDRESS,
     })
   })
