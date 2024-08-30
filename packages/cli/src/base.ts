@@ -247,9 +247,7 @@ https://github.com/celo-org/developer-tooling/issues/new?assignees=&labels=bug+r
 
       const kit = await this.getKit()
       kit.connection.stop()
-    } catch (error) {
-      this.log(`Failed to close the connection: ${error}`)
-    }
+    } catch (error) {}
 
     return super.finally(arg)
   }
