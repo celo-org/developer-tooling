@@ -1,4 +1,4 @@
-import { IdentityMetadataWrapper } from '@celo/contractkit'
+import { IdentityMetadataWrapper } from '@celo/metadata-claims'
 import { writeFileSync } from 'fs'
 import { CustomArgs } from '../../utils/command'
 import { ClaimCommand } from '../../utils/identity'

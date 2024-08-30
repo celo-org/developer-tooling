@@ -1,8 +1,8 @@
+import { newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { ACCOUNT_ADDRESSES } from '@celo/dev-utils/lib/ganache-setup'
 import { Address } from '@celo/utils/lib/address'
 import { NativeSigner } from '@celo/utils/lib/signatureUtils'
-import { newKitFromWeb3 } from '../kit'
 import { createNameClaim } from './claims/claim'
 import { ClaimTypes, IdentityMetadataWrapper } from './metadata'
 

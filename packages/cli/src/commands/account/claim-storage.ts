@@ -1,4 +1,4 @@
-import { createStorageClaim } from '@celo/contractkit/lib/identity/claims/claim'
+import { createStorageClaim } from '@celo/metadata-claims/lib/claims/claim'
 import { CustomFlags } from '../../utils/command'
 import { ClaimCommand } from '../../utils/identity'
 export default class ClaimStorage extends ClaimCommand {

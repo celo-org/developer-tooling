@@ -1,0 +1,19 @@
+{
+  "exclude": [
+    "**/*+(index|.test).ts"
+  ],
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "hideGenerator": true,
+  "out": "../../../docs/sdk/metadata-claims",
+  "gitRevision": "master",
+  "readme": "none",
+  "entryPoints": [
+    "./src"
+  ],
+  "githubPages": false,
+  "plugin": [
+    "typedoc-plugin-markdown"
+  ],
+  "entryPointStrategy": "expand"
+}

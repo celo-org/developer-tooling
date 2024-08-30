@@ -1,8 +1,12 @@
 import { ContractKit } from '@celo/contractkit'
-import { ClaimTypes, IdentityMetadataWrapper } from '@celo/contractkit/lib/identity'
-import { Claim } from '@celo/contractkit/lib/identity/claims/claim'
-import { now, VERIFIABLE_CLAIM_TYPES } from '@celo/contractkit/lib/identity/claims/types'
-import { verifyClaim } from '@celo/contractkit/lib/identity/claims/verify'
+import { ClaimTypes, IdentityMetadataWrapper } from '@celo/metadata-claims'
+import { Claim } from '@celo/metadata-claims/lib/claims/claim'
+import {
+  AccountMetadataSignerGetters,
+  now,
+  VERIFIABLE_CLAIM_TYPES,
+} from '@celo/metadata-claims/lib/claims/types'
+import { verifyClaim } from '@celo/metadata-claims/lib/claims/verify'
 import { eqAddress } from '@celo/utils/lib/address'
 import { concurrentMap } from '@celo/utils/lib/async'
 import { NativeSigner } from '@celo/utils/lib/signatureUtils'
@@ -104,14 +108,31 @@ const fromNow = (timeInSeconds: number) => {
   return `${humanizeDuration((now() - timeInSeconds) * 1000)} ago`
 }
 
+export async function kitToAccountMetaSigners(
+  kit: ContractKit
+): Promise<AccountMetadataSignerGetters> {
+  const accountsWrapper = await kit.contracts.getAccounts()
+
+  return {
+    isAccount: (address) => accountsWrapper.isAccount(address),
+    getMetadataURL: (address) => accountsWrapper.getMetadataURL(address) as Promise<string>,
+    getVoteSigner: (address) => accountsWrapper.getVoteSigner(address),
+    getValidatorSigner: (address) => accountsWrapper.getValidatorSigner(address),
+    getAttestationSigner: (address) => accountsWrapper.getAttestationSigner(address),
+  }
+}
+
 export const displayMetadata = async (
   metadata: IdentityMetadataWrapper,
   kit: ContractKit,
   tableFlags: object = {}
 ) => {
+  const accountsInfoGetters = await kitToAccountMetaSigners(kit)
   const data = await concurrentMap(5, metadata.claims, async (claim) => {
     const verifiable = VERIFIABLE_CLAIM_TYPES.includes(claim.type)
-    const status = verifiable ? await verifyClaim(kit, claim, metadata.data.meta.address) : 'N/A'
+    const status = verifiable
+      ? await verifyClaim(accountsInfoGetters, claim, metadata.data.meta.address)
+      : 'N/A'
     let extra = ''
     switch (claim.type) {
       case ClaimTypes.DOMAIN:

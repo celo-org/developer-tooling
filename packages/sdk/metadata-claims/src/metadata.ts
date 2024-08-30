@@ -7,7 +7,6 @@ import fetch from 'cross-fetch'
 import { isLeft } from 'fp-ts/lib/Either'
 import * as t from 'io-ts'
 import { PathReporter } from 'io-ts/lib/PathReporter'
-import { ContractKit } from '../kit'
 import { Claim, ClaimPayload, ClaimType, hashOfClaims, isOfType } from './claims/claim'
 import {
   AccountMetadataSignerGetters,
@@ -18,7 +17,7 @@ import {
 
 export { ClaimTypes } from './claims/types'
 
-type KitOrAccountsWrapper = ContractKit | AccountMetadataSignerGetters
+type KitOrAccountsWrapper = AccountMetadataSignerGetters
 
 const MetaType = t.type({
   address: AddressType,
@@ -224,9 +223,7 @@ export class IdentityMetadataWrapper {
 async function getAccounts(
   contractKitOrAccountsWrapper: KitOrAccountsWrapper
 ): Promise<AccountSignerGetters> {
-  if (contractKitOrAccountsWrapper instanceof ContractKit) {
-    return contractKitOrAccountsWrapper.contracts.getAccounts()
-  } else if (
+  if (
     'getVoteSigner' in contractKitOrAccountsWrapper &&
     'isAccount' in contractKitOrAccountsWrapper &&
     'getValidatorSigner' in contractKitOrAccountsWrapper &&
@@ -235,7 +232,7 @@ async function getAccounts(
     return contractKitOrAccountsWrapper
   }
   throw new Error(
-    `Must pass a ContractKit or an object with the required functions. received ${JSON.stringify(
+    `Must pass object with the required functions: getVoteSigner, isAccount, getValidatorSigner, getAttestationSigner. Received ${JSON.stringify(
       contractKitOrAccountsWrapper
     )}`
   )

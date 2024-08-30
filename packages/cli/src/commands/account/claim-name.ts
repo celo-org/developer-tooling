@@ -1,4 +1,4 @@
-import { createNameClaim } from '@celo/contractkit/lib/identity/claims/claim'
+import { createNameClaim } from '@celo/metadata-claims'
 import { Flags } from '@oclif/core'
 import { ClaimCommand } from '../../utils/identity'
 export default class ClaimName extends ClaimCommand {
