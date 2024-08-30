@@ -1,7 +1,7 @@
 import { eqAddress } from '@celo/base/lib/address'
 import { isValidUrl } from '@celo/base/lib/io'
-import { resolveTxt } from 'dns'
-import { promisify } from 'util'
+import { resolveTxt } from 'node:dns' // TODO replace with non node specifc package
+import { promisify } from 'node:util' // TODO replace with non node specifc package
 import { IdentityMetadataWrapper } from '../metadata'
 import { AccountClaim } from './account'
 import { Claim, DOMAIN_TXT_HEADER, DomainClaim, serializeClaim } from './claim'

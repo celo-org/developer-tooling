@@ -1,11 +1,12 @@
+import { newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { ACCOUNT_ADDRESSES, ACCOUNT_PRIVATE_KEYS } from '@celo/dev-utils/lib/ganache-setup'
 import { privateKeyToAddress, privateKeyToPublicKey } from '@celo/utils/lib/address'
 import { NativeSigner } from '@celo/utils/lib/signatureUtils'
-import { newKitFromWeb3 } from '../../kit'
 import { IdentityMetadataWrapper } from '../metadata'
 import { createAccountClaim } from './account'
 import { Claim } from './claim'
+import { AccountMetadataSignerGetters } from './types'
 import { verifyClaim } from './verify'
 
 testWithAnvilL1('Account claims', (web3) => {
@@ -55,6 +56,7 @@ testWithAnvilL1('Account claims', (web3) => {
   describe('verifying', () => {
     let claim: Claim
     let otherMetadata: IdentityMetadataWrapper
+    let addressInfoGetters: AccountMetadataSignerGetters
 
     // Mocking static function calls was too difficult, so manually mocking it
     const originalFetchFromURLImplementation = IdentityMetadataWrapper.fetchFromURL
@@ -74,6 +76,15 @@ testWithAnvilL1('Account claims', (web3) => {
       const metadata = IdentityMetadataWrapper.fromEmpty(address)
       claim = createAccountClaim(otherAddress)
       await metadata.addClaim(claim, NativeSigner(kit.connection.sign, address))
+
+      const accountsContract = await kit.contracts.getAccounts()
+      addressInfoGetters = {
+        isAccount: (address) => accountsContract.isAccount(address),
+        getMetadataURL: (address) => accountsContract.getMetadataURL(address) as Promise<string>,
+        getVoteSigner: (address) => accountsContract.getVoteSigner(address),
+        getValidatorSigner: (address) => accountsContract.getValidatorSigner(address),
+        getAttestationSigner: (address) => accountsContract.getAttestationSigner(address),
+      }
     })
 
     afterEach(() => {
@@ -88,14 +99,14 @@ testWithAnvilL1('Account claims', (web3) => {
       })
 
       it('indicates that the metadata url could not be retrieved', async () => {
-        const error = await verifyClaim(kit, claim, address)
+        const error = await verifyClaim(addressInfoGetters, claim, address)
         expect(error).toContain('could not be retrieved')
       })
     })
 
     describe('when the metadata URL is set, but does not contain the address claim', () => {
       it('indicates that the metadata does not contain the counter claim', async () => {
-        const error = await verifyClaim(kit, claim, address)
+        const error = await verifyClaim(addressInfoGetters, claim, address)
         expect(error).toContain('did not claim')
       })
     })
@@ -109,7 +120,7 @@ testWithAnvilL1('Account claims', (web3) => {
       })
 
       it('returns undefined succesfully', async () => {
-        const error = await verifyClaim(kit, claim, address)
+        const error = await verifyClaim(addressInfoGetters, claim, address)
         expect(error).toBeUndefined()
       })
     })

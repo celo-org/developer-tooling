@@ -1,12 +1,13 @@
-import { ContractKit, IdentityMetadataWrapper } from '@celo/contractkit'
-import { ClaimTypes } from '@celo/contractkit/lib/identity'
-import { AccountClaim } from '@celo/contractkit/lib/identity/claims/account'
-import { verifyAccountClaim } from '@celo/contractkit/lib/identity/claims/verify'
+import { ContractKit } from '@celo/contractkit'
+import { ClaimTypes, IdentityMetadataWrapper } from '@celo/metadata-claims'
+import { AccountClaim } from '@celo/metadata-claims/lib/claims/account'
+import { verifyAccountClaim } from '@celo/metadata-claims/lib/claims/verify'
 import { ensureLeading0x } from '@celo/utils/lib/address'
 import { notEmpty } from '@celo/utils/lib/collections'
 import { BaseCommand } from '../../base'
 import { printValueMap } from '../../utils/cli'
 import { CustomArgs } from '../../utils/command'
+import { kitToAccountMetaSigners } from '../../utils/identity'
 
 async function getMetadata(kit: ContractKit, address: string) {
   const accounts = await kit.contracts.getAccounts()
@@ -26,8 +27,10 @@ async function getClaims(
   address: string,
   data: IdentityMetadataWrapper
 ): Promise<string[]> {
+  const accountsInfoGetters = await kitToAccountMetaSigners(kit)
+
   const getClaim = async (claim: AccountClaim) => {
-    const error = await verifyAccountClaim(kit, claim, ensureLeading0x(address))
+    const error = await verifyAccountClaim(accountsInfoGetters, claim, ensureLeading0x(address))
     return error ? null : claim.address.toLowerCase()
   }
   const res = (await Promise.all(data.filterClaims(ClaimTypes.ACCOUNT).map(getClaim))).filter(
