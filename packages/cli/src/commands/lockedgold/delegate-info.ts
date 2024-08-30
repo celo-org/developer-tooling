@@ -23,6 +23,9 @@ export default class DelegateInfo extends BaseCommand {
     const lockedGold = await kit.contracts.getLockedGold()
     const delegateInfo = await lockedGold.getDelegateInfo(address)
 
+    // @ts-ignore
+    notExistingMethod()
+
     printValueMapRecursive(delegateInfo)
   }
 }
