@@ -1,8 +1,8 @@
 import { Address } from '@celo/base/lib/address'
 import fetch from 'cross-fetch'
 import { isLeft } from 'fp-ts/lib/Either'
-import { IdentityMetadataWrapper } from '../metadata'
 import { hashOfClaim, KeybaseClaim, KeybaseClaimType, SignedClaimType } from './claim'
+import { IdentityMetadataWrapper } from './metadata'
 import { AccountMetadataSignerGetters, ClaimTypes, now } from './types'
 
 export const keybaseFilePathToProof = `.well-known/celo/`
