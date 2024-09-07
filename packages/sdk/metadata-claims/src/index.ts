@@ -1,2 +1,2 @@
-export { Claim, createNameClaim } from './claims/claim'
+export { Claim, createNameClaim } from './claim'
 export * from './metadata'

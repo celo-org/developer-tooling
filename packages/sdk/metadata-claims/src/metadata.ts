@@ -7,15 +7,15 @@ import fetch from 'cross-fetch'
 import { isLeft } from 'fp-ts/lib/Either'
 import * as t from 'io-ts'
 import { PathReporter } from 'io-ts/lib/PathReporter'
-import { Claim, ClaimPayload, ClaimType, hashOfClaims, isOfType } from './claims/claim'
+import { Claim, ClaimPayload, ClaimType, hashOfClaims, isOfType } from './claim'
 import {
   AccountMetadataSignerGetters,
   AccountSignerGetters,
   ClaimTypes,
   SINGULAR_CLAIM_TYPES,
-} from './claims/types'
+} from './types'
 
-export { ClaimTypes } from './claims/types'
+export { ClaimTypes } from './types'
 
 type KitOrAccountsWrapper = AccountMetadataSignerGetters
 
