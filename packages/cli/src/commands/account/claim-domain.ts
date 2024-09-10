@@ -1,4 +1,4 @@
-import { createDomainClaim, serializeClaim } from '@celo/metadata-claims/lib/claims/claim'
+import { createDomainClaim, serializeClaim } from '@celo/metadata-claims/lib/claim'
 import { Flags } from '@oclif/core'
 import { ClaimCommand } from '../../utils/identity'
 export default class ClaimDomain extends ClaimCommand {
