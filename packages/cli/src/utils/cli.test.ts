@@ -16,7 +16,16 @@ testWithAnvilL2('printValueMapRecursive', async () => {
 
     printValueMapRecursive(valueMap)
 
-    expect(stripAnsiCodesFromNestedArray(mock.mock.calls)).toMatchInlineSnapshot(``)
+    expect(stripAnsiCodesFromNestedArray(mock.mock.calls)).toMatchInlineSnapshot(`
+      [
+        [
+          "key1: value1
+      key2: 
+        nestedKey1: nestedValue1
+        nestedKey2: nestedValue2",
+        ],
+      ]
+    `)
   })
 
   it('should print number keys in numeric order', () => {
@@ -53,7 +62,8 @@ testWithAnvilL2('printValueMapRecursive', async () => {
         21: 5
       3: 
         0x1: nestedValue1
-        jupiter: nestedValue2",
+        jupiter: nestedValue2
+        potato: nestedValue3",
         ],
       ]
     `)
