@@ -1,12 +1,12 @@
 import { ContractKit } from '@celo/contractkit'
 import { ClaimTypes, IdentityMetadataWrapper } from '@celo/metadata-claims'
-import { Claim } from '@celo/metadata-claims/lib/claims/claim'
+import { Claim } from '@celo/metadata-claims/lib/claim'
 import {
   AccountMetadataSignerGetters,
   now,
   VERIFIABLE_CLAIM_TYPES,
-} from '@celo/metadata-claims/lib/claims/types'
-import { verifyClaim } from '@celo/metadata-claims/lib/claims/verify'
+} from '@celo/metadata-claims/lib/types'
+import { verifyClaim } from '@celo/metadata-claims/lib/verify'
 import { eqAddress } from '@celo/utils/lib/address'
 import { concurrentMap } from '@celo/utils/lib/async'
 import { NativeSigner } from '@celo/utils/lib/signatureUtils'

@@ -1,4 +1,4 @@
-import { createAccountClaim } from '@celo/metadata-claims/lib/claims/account'
+import { createAccountClaim } from '@celo/metadata-claims/lib/account'
 import { Flags } from '@oclif/core'
 import { ClaimCommand } from '../../utils/identity'
 

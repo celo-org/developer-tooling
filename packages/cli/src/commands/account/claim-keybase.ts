@@ -1,11 +1,11 @@
-import { hashOfClaim, KeybaseClaim } from '@celo/metadata-claims/lib/claims/claim'
+import { hashOfClaim, KeybaseClaim } from '@celo/metadata-claims/lib/claim'
 import {
   createKeybaseClaim,
   keybaseFilePathToProof,
   proofFileName,
   targetURL,
   verifyKeybaseClaim,
-} from '@celo/metadata-claims/lib/claims/keybase'
+} from '@celo/metadata-claims/lib/keybase'
 import { sleep } from '@celo/utils/lib/async'
 import { toChecksumAddress } from '@ethereumjs/util'
 
