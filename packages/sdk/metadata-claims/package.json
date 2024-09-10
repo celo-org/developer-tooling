@@ -1,6 +1,6 @@
 {
   "name": "@celo/metadata-claims",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "author": "cLabs",
   "license": "Apache-2.0",
   "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/sdk/metadata-claims",
