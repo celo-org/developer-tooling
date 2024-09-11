@@ -135,6 +135,7 @@ export abstract class BaseCommand extends Command {
     if (res.flags && res.flags.privateKey && !res.flags.useLedger && !res.flags.useAKV) {
       this._kit.connection.addAccount(res.flags.privateKey)
     }
+
     return this._kit
   }
 
@@ -245,9 +246,12 @@ https://github.com/celo-org/developer-tooling/issues/new?assignees=&labels=bug+r
         }
       }
 
-      const kit = await this.getKit()
-      kit.connection.stop()
-    } catch (error) {}
+      if (this._kit !== null) {
+        this._kit.connection.stop()
+      }
+    } catch (error) {
+      this.log(`Failed to close the connection: ${error}`)
+    }
 
     return super.finally(arg)
   }
