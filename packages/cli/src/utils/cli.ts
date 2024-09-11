@@ -116,7 +116,12 @@ function toStringValueMapRecursive(valueMap: Record<string, any>, prefix: string
     return chalk`${v}`
   }
   return Object.keys(valueMap)
-    .sort()
+    .sort((a, b) => {
+      if (isNaN(Number(a)) && isNaN(Number(b))) {
+        return a.localeCompare(b)
+      }
+      return Number(a) - Number(b)
+    })
     .map((key) => prefix + chalk.yellowBright.bold(`${key}: `) + printValue(valueMap[key]))
     .join('\n')
 }
