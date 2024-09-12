@@ -1,5 +1,9 @@
+import { StableToken } from '@celo/base'
+import { STABLES_ADDRESS, withImpersonatedAccount } from '@celo/dev-utils/lib/anvil-test'
 import { mineBlocks } from '@celo/dev-utils/lib/ganache-test'
+import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
+import { ContractKit } from '../kit'
 
 const GANACHE_EPOCH_SIZE = 100
 export const currentEpochNumber = async (web3: Web3, epochSize: number = GANACHE_EPOCH_SIZE) => {
@@ -34,4 +38,19 @@ export const mineToNextEpoch = async (web3: Web3, epochSize: number = GANACHE_EP
   const epochNumber = await currentEpochNumber(web3, epochSize)
   const blocksUntilNextEpoch = getFirstBlockNumberForEpoch(epochNumber + 1, epochSize) - blockNumber
   await mineBlocks(blocksUntilNextEpoch, web3)
+}
+
+export const topUpWithToken = async (
+  kit: ContractKit,
+  stableToken: StableToken,
+  recipientAddress: string,
+  amount: BigNumber
+) => {
+  const token = await kit.contracts.getStableToken(stableToken)
+
+  await withImpersonatedAccount(kit.web3, STABLES_ADDRESS, async () => {
+    await token.transfer(recipientAddress, amount.toFixed()).sendAndWaitForReceipt({
+      from: STABLES_ADDRESS,
+    })
+  })
 }

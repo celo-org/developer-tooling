@@ -54,19 +54,12 @@ testWithAnvilL1('Accounts Wrapper', (web3) => {
     accountsInstance = await kit.contracts.getAccounts()
   })
 
-  afterAll(async () => {
-    kit.connection.stop()
-  })
-
   const setupValidator = async (validatorAccount: string) => {
     await registerAccountWithLockedGold(validatorAccount)
     const ecdsaPublicKey = await addressToPublicKey(validatorAccount, kit.connection.sign)
-    await validators
-      // @ts-ignore
-      .registerValidator(ecdsaPublicKey, blsPublicKey, blsPoP)
-      .sendAndWaitForReceipt({
-        from: validatorAccount,
-      })
+    await validators.registerValidator(ecdsaPublicKey, blsPublicKey, blsPoP).sendAndWaitForReceipt({
+      from: validatorAccount,
+    })
   }
 
   test('SBAT authorize attestation key', async () => {

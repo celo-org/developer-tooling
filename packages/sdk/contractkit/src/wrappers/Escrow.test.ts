@@ -1,12 +1,19 @@
-import { StrongAddress } from '@celo/base'
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
+import { newAttestations } from '@celo/abis/web3/Attestations'
+import { newRegistry } from '@celo/abis/web3/Registry'
+import { StableToken, StrongAddress } from '@celo/base'
+import { asCoreContractsOwner, setBalance, testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { deployAttestationsContract } from '@celo/dev-utils/lib/contracts'
+import BigNumber from 'bignumber.js'
+import Web3 from 'web3'
+import { REGISTRY_CONTRACT_ADDRESS } from '../address-registry'
 import { newKitFromWeb3 } from '../kit'
+import { topUpWithToken } from '../test-utils/utils'
 import { getParsedSignatureOfAddress } from '../utils/getParsedSignatureOfAddress'
 import { EscrowWrapper } from './Escrow'
 import { FederatedAttestationsWrapper } from './FederatedAttestations'
 import { StableTokenWrapper } from './StableTokenWrapper'
 
-testWithGanache('Escrow Wrapper', (web3) => {
+testWithAnvilL1('Escrow Wrapper', (web3: Web3) => {
   const kit = newKitFromWeb3(web3)
   const TEN_CUSD = kit.web3.utils.toWei('10', 'ether')
   const TIMESTAMP = 1665080820
@@ -26,12 +33,39 @@ testWithGanache('Escrow Wrapper', (web3) => {
   let stableTokenContract: StableTokenWrapper
   let identifier: string
 
-  beforeAll(async () => {
+  beforeEach(async () => {
+    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
     escrow = await kit.contracts.getEscrow()
+
+    await asCoreContractsOwner(
+      web3,
+      async (ownerAdress: StrongAddress) => {
+        const registryContract = newRegistry(web3, REGISTRY_CONTRACT_ADDRESS)
+        const attestationsContractAddress = await deployAttestationsContract(web3, ownerAdress)
+
+        const attestationsContract = newAttestations(web3, attestationsContractAddress)
+
+        // otherwise reverts with "minAttestations larger than limit"
+        await attestationsContract.methods.setMaxAttestations(1).send({ from: ownerAdress })
+
+        await registryContract.methods
+          .setAddressFor('Attestations', attestationsContractAddress)
+          .send({
+            from: ownerAdress,
+          })
+      },
+      new BigNumber(web3.utils.toWei('1', 'ether'))
+    )
+
+    await topUpWithToken(kit, StableToken.cUSD, escrow.address, new BigNumber(TEN_CUSD))
+    await topUpWithToken(kit, StableToken.cUSD, accounts[0], new BigNumber(TEN_CUSD))
+    await topUpWithToken(kit, StableToken.cUSD, accounts[1], new BigNumber(TEN_CUSD))
+    await topUpWithToken(kit, StableToken.cUSD, accounts[2], new BigNumber(TEN_CUSD))
+    await setBalance(web3, accounts[0], new BigNumber(TEN_CUSD))
+
     stableTokenContract = await kit.contracts.getStableToken()
     federatedAttestations = await kit.contracts.getFederatedAttestations()
 
-    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
 
     identifier = kit.web3.utils.soliditySha3({
