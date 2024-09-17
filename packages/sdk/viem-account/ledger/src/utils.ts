@@ -4,8 +4,8 @@ import { RecoveredSignatureType, SignatureType } from '@noble/curves/abstract/we
 import { secp256k1 } from '@noble/curves/secp256k1'
 import { SemVer } from 'semver'
 import { toHex } from 'viem'
+import { tokenInfoByAddressAndChainId } from '../tokens'
 import { Hex } from '../types'
-import { tokenInfoByAddressAndChainId } from './tokens'
 
 export const MIN_VERSION_EIP1559 = '1.2.0'
 

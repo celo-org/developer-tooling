@@ -1,5 +1,5 @@
 {
-  "name": "@celo/viem-account",
+  "name": "@celo/viem-account-ledger",
   "version": "0.0.1",
   "description": "Celo's account helpers",
   "main": "./lib/index.js",
