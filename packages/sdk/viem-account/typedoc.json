@@ -1,0 +1,13 @@
+{
+  "exclude": ["**/generated/*.ts", "**/*+(index|.test).ts"],
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "hideGenerator": true,
+  "out": "../../../docs/sdk/viem-account",
+  "gitRevision": "master",
+  "readme": "none",
+  "entryPoints": ["./src"],
+  "githubPages": false,
+  "plugin": ["typedoc-plugin-markdown"],
+  "entryPointStrategy": "expand"
+}
