@@ -26,6 +26,7 @@ import { LockedGoldWrapper } from './wrappers/LockedGold'
 import { MultiSigWrapper } from './wrappers/MultiSig'
 import { OdisPaymentsWrapper } from './wrappers/OdisPayments'
 import { ReserveWrapper } from './wrappers/Reserve'
+import { ScoreManagerWrapper } from './wrappers/ScoreManager'
 import { SortedOraclesWrapper } from './wrappers/SortedOracles'
 import { StableTokenWrapper } from './wrappers/StableTokenWrapper'
 import { ValidatorsWrapper } from './wrappers/Validators'
@@ -34,7 +35,6 @@ const WrapperFactories = {
   [CeloContract.Accounts]: AccountsWrapper,
   [CeloContract.BlockchainParameters]: BlockchainParametersWrapper,
   [CeloContract.EpochRewards]: EpochRewardsWrapper,
-  [CeloContract.EpochManager]: EpochManagerWrapper,
   [CeloContract.ERC20]: Erc20Wrapper,
   [CeloContract.Escrow]: EscrowWrapper,
   [CeloContract.FederatedAttestations]: FederatedAttestationsWrapper,
@@ -48,6 +48,7 @@ const WrapperFactories = {
   [CeloContract.MultiSig]: MultiSigWrapper,
   [CeloContract.OdisPayments]: OdisPaymentsWrapper,
   [CeloContract.Reserve]: ReserveWrapper,
+  [CeloContract.ScoreManager]: ScoreManagerWrapper,
   [CeloContract.StableToken]: StableTokenWrapper,
   [CeloContract.StableTokenEUR]: StableTokenWrapper,
   [CeloContract.StableTokenBRL]: StableTokenWrapper,
@@ -62,6 +63,7 @@ const WrapperFactoriesWhichNeedCache = {
   [CeloContract.DoubleSigningSlasher]: DoubleSigningSlasherWrapper,
   [CeloContract.DowntimeSlasher]: DowntimeSlasherWrapper,
   [CeloContract.Election]: ElectionWrapper,
+  [CeloContract.EpochManager]: EpochManagerWrapper,
   [CeloContract.Governance]: GovernanceWrapper,
   [CeloContract.LockedGold]: LockedGoldWrapper,
   [CeloContract.Validators]: ValidatorsWrapper,
@@ -101,6 +103,7 @@ interface WrapperCacheMap {
   // [CeloContract.Random]?: RandomWrapper,
   // [CeloContract.Registry]?: RegistryWrapper,
   [CeloContract.Reserve]?: ReserveWrapper
+  [CeloContract.ScoreManager]?: ScoreManagerWrapper
   [CeloContract.SortedOracles]?: SortedOraclesWrapper
   [CeloContract.StableToken]?: StableTokenWrapper
   [CeloContract.StableTokenEUR]?: StableTokenWrapper
@@ -190,6 +193,9 @@ export class WrapperCache implements ContractCacheType {
   }
   getReserve() {
     return this.getContract(CeloContract.Reserve)
+  }
+  getScoreManager() {
+    return this.getContract(CeloContract.ScoreManager)
   }
   getSortedOracles() {
     return this.getContract(CeloContract.SortedOracles)

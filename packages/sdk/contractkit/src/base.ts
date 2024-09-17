@@ -25,6 +25,7 @@ export enum CeloContract {
   Random = 'Random',
   Registry = 'Registry',
   Reserve = 'Reserve',
+  ScoreManager = 'ScoreManager',
   SortedOracles = 'SortedOracles',
   StableToken = 'StableToken',
   StableTokenEUR = 'StableTokenEUR',

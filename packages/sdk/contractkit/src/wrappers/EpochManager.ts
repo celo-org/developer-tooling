@@ -1,6 +1,7 @@
 import { EpochManager } from '@celo/abis-12/web3/EpochManager'
+import { NULL_ADDRESS } from '@celo/base'
 import BigNumber from 'bignumber.js'
-import { proxyCall } from './BaseWrapper'
+import { proxyCall, proxySend } from './BaseWrapper'
 import { BaseWrapperForGoverning } from './BaseWrapperForGoverning'
 import { ValidatorGroupVote } from './Election'
 
@@ -19,47 +20,39 @@ export interface EpochProcessState {
 }
 
 /**
- * Contract handling slashing for Validator downtime using intervals.
+ * Contract handling epoch management.
  */
 export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
-  private ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
-
-  startNextEpochProcess: () => Promise<void> = proxyCall(
-    this.contract.methods.startNextEpochProcess
-  )
-  isTimeForNextEpoch: () => Promise<boolean> = proxyCall(this.contract.methods.isTimeForNextEpoch)
-  getElected: () => Promise<string[]> = proxyCall(this.contract.methods.getElected)
-  getEpochProcessingStatus: () => Promise<EpochProcessState> = async () => {
-    const statusRaw = await this.contract.methods.epochProcessing().call()
-    return {
-      status: parseInt(statusRaw.status),
-      perValidatorReward: new BigNumber(statusRaw.perValidatorReward),
-      totalRewardsVoter: new BigNumber(statusRaw.totalRewardsVoter),
-      totalRewardsCommunity: new BigNumber(statusRaw.totalRewardsCommunity),
-      totalRewardsCarbonFund: new BigNumber(statusRaw.totalRewardsCarbonFund),
-      toProcessGroups: parseInt(statusRaw.toProcessGroups),
+  isTimeForNextEpoch = proxyCall(this.contract.methods.isTimeForNextEpoch)
+  getElected = proxyCall(this.contract.methods.getElected)
+  getEpochProcessingStatus = proxyCall(
+    this.contract.methods.epochProcessing,
+    undefined,
+    (result): EpochProcessState => {
+      return {
+        status: parseInt(result.status),
+        perValidatorReward: new BigNumber(result.perValidatorReward),
+        totalRewardsVoter: new BigNumber(result.totalRewardsVoter),
+        totalRewardsCommunity: new BigNumber(result.totalRewardsCommunity),
+        totalRewardsCarbonFund: new BigNumber(result.totalRewardsCarbonFund),
+        toProcessGroups: parseInt(result.toProcessGroups),
+      }
     }
-  }
-  finishNextEpochProcess: (
-    groups: string[],
-    lessers: string[],
-    greaters: string[]
-  ) => Promise<void> = proxyCall(this.contract.methods.finishNextEpochProcess)
+  )
 
-  finishNextEpochProcessH: () => Promise<void> = async () => {
-    const electedPromise = this.getElected()
-    const electionPromise = this.contracts.getElection()
-    const epochProcessStatePromise = this.getEpochProcessingStatus()
+  startNextEpochProcess = proxySend(this.connection, this.contract.methods.startNextEpochProcess)
+  finishNextEpochProcess = proxySend(this.connection, this.contract.methods.finishNextEpochProcess)
 
-    const elected = await electedPromise
-    const election = await electionPromise
-    const epochProcessState = await epochProcessStatePromise
-
+  prepareFinishNextEpochProcessTx = async () => {
+    const scoreManager = await this.contracts.getScoreManager()
+    const elected = await this.getElected()
+    const epochProcessState = await this.getEpochProcessingStatus()
+    const election = await this.contracts.getElection()
     const currentVotesPromise = await election.getEligibleValidatorGroupsVotes()
 
     const groupsWithRewards = await Promise.all(
       elected.map(async (group) => {
-        const groupScore = new BigNumber(10) // TODO: use score manager
+        const groupScore = await scoreManager.getGroupScore(group)
         const rewards = await election.getGroupEpochRewards(
           group,
           epochProcessState.totalRewardsVoter,
@@ -96,7 +89,7 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
       b.total.comparedTo(a.total)
     )
 
-    let previousGroup = this.ZERO_ADDRESS
+    let previousGroup = NULL_ADDRESS
 
     const groups = []
     const lessers = []
@@ -109,15 +102,13 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
       groups.push(group.group)
       lessers.push(previousGroup)
       greaters.push(
-        i == groupsNewTotalSorted.length - 1
-          ? this.ZERO_ADDRESS
-          : currentVotesMap.keys().next().value
+        i == groupsNewTotalSorted.length - 1 ? NULL_ADDRESS : currentVotesMap.keys().next().value
       )
 
       previousGroup = group.group
     }
 
-    await this.finishNextEpochProcess(groups, lessers, greaters)
+    return this.finishNextEpochProcess(groups, lessers, greaters)
   }
 }
 

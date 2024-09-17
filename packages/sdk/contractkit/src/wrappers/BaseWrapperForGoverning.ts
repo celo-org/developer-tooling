@@ -5,6 +5,7 @@ import { BlockchainParametersWrapper } from './BlockchainParameters'
 import { ElectionWrapper } from './Election'
 import { LockedGoldWrapper } from './LockedGold'
 import { MultiSigWrapper } from './MultiSig'
+import { ScoreManagerWrapper } from './ScoreManager'
 import { ValidatorsWrapper } from './Validators'
 
 interface ContractWrappersForVotingAndRules {
@@ -12,6 +13,7 @@ interface ContractWrappersForVotingAndRules {
   getValidators: () => Promise<ValidatorsWrapper>
   getElection: () => Promise<ElectionWrapper>
   getLockedGold: () => Promise<LockedGoldWrapper>
+  getScoreManager: () => Promise<ScoreManagerWrapper>
   getMultiSig: (address: string) => Promise<MultiSigWrapper>
   getBlockchainParameters: () => Promise<BlockchainParametersWrapper>
 }

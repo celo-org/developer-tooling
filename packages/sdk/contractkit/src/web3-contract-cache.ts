@@ -2,6 +2,7 @@ import { newEpochManager } from '@celo/abis-12/web3/EpochManager'
 import { newFeeCurrencyDirectory } from '@celo/abis-12/web3/FeeCurrencyDirectory'
 import { newGoldToken } from '@celo/abis-12/web3/GoldToken'
 import { newGovernance } from '@celo/abis-12/web3/Governance'
+import { newScoreManager } from '@celo/abis-12/web3/ScoreManager'
 import { newGasPriceMinimum } from '@celo/abis/web3/0.8/GasPriceMinimum'
 import { newAccounts } from '@celo/abis/web3/Accounts'
 import { newAttestations } from '@celo/abis/web3/Attestations'
@@ -62,6 +63,7 @@ export const ContractFactories = {
   [CeloContract.Random]: newRandom,
   [CeloContract.Registry]: newRegistry,
   [CeloContract.Reserve]: newReserve,
+  [CeloContract.ScoreManager]: newScoreManager,
   [CeloContract.SortedOracles]: newSortedOracles,
   [CeloContract.StableToken]: newStableToken,
   [CeloContract.StableTokenEUR]: newStableToken,
@@ -160,6 +162,9 @@ export class Web3ContractCache {
   }
   getReserve() {
     return this.getContract(CeloContract.Reserve)
+  }
+  getScoreManager() {
+    return this.getContract(CeloContract.ScoreManager)
   }
   getSortedOracles() {
     return this.getContract(CeloContract.SortedOracles)
