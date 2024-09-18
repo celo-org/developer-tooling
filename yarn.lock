@@ -1571,10 +1571,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/abis-12@npm:@celo/abis@12.0.0-canary.29":
-  version: 12.0.0-canary.29
-  resolution: "@celo/abis@npm:12.0.0-canary.29"
-  checksum: b98717025d9d39dd323c01200c2ec1b150c63732cb3269d25ac9f03351ae5f3b2ed9086b1e5b0dd030bb553fc98fd7699c560126b6b3bbef68c36eabaf916136
+"@celo/abis-12@npm:@celo/abis@12.0.0-canary.31":
+  version: 12.0.0-canary.31
+  resolution: "@celo/abis@npm:12.0.0-canary.31"
+  checksum: 54d32641224dfcbf9a58b53265fa5359639d8d3928989ef0f7b1cfc45d87c41c0b3928d202b2f9da3ed95b9e4c3ff493219258f2362b66c24c7d9508b3226ef0
   languageName: node
   linkType: hard
 
@@ -1765,7 +1765,7 @@ __metadata:
   resolution: "@celo/contractkit@workspace:packages/sdk/contractkit"
   dependencies:
     "@celo/abis": "npm:11.0.0"
-    "@celo/abis-12": "npm:@celo/abis@12.0.0-canary.29"
+    "@celo/abis-12": "npm:@celo/abis@12.0.0-canary.31"
     "@celo/base": "npm:^6.1.0"
     "@celo/celo-devchain": "npm:^7.0.0"
     "@celo/connect": "npm:^6.0.1"

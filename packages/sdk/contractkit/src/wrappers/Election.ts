@@ -594,7 +594,7 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
     groupScore: BigNumber
   ): Promise<BigNumber> {
     const rewards = await this.contract.methods
-      .getGroupEpochRewards(group, totalEpochRewards.toFixed(), groupScore.toFixed())
+      .getGroupEpochRewardsBasedOnScore(group, totalEpochRewards.toFixed(), groupScore.toFixed())
       .call()
     return valueToBigNumber(rewards)
   }

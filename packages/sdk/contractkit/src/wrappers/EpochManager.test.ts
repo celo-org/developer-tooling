@@ -1,6 +1,8 @@
+import { newElection } from '@celo/abis-12/web3/Election'
 import { newEpochManager } from '@celo/abis-12/web3/EpochManager'
 import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
+import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { newKitFromWeb3 } from '../kit'
 
@@ -9,6 +11,10 @@ process.env.NO_SYNCCHECK = 'true'
 // TODO just a boilerplate code mostly, needs to be updated
 testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
   const kit = newKitFromWeb3(web3)
+
+  const secondsInOneBlock = 5
+  const blocksInEpoch = 17280
+  const timeDelta = blocksInEpoch * secondsInOneBlock
 
   it('has the correct address for the EpochManager contract', async () => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
@@ -20,6 +26,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
 
   it('indicates that it is time for next epoch', async () => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
+    await timeTravel(timeDelta, web3)
 
     expect(await epochManagerWrapper.isTimeForNextEpoch()).toBeTruthy()
   })
@@ -59,20 +66,85 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
     const epochManagerContract = newEpochManager(web3, epochManagerWrapper.address)
 
+    await timeTravel(timeDelta, web3)
+    await timeTravel(timeDelta, web3)
+    await timeTravel(timeDelta, web3)
+    await timeTravel(timeDelta, web3)
+    await timeTravel(timeDelta, web3)
+
     await epochManagerContract.methods.setEpochDuration('10').send({
       from: (await web3.eth.getAccounts())[0],
     })
     await timeTravel(12, web3)
-    await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt()
+    await epochManagerWrapper
+      .startNextEpochProcess()
+      .sendAndWaitForReceipt({ from: (await web3.eth.getAccounts())[0] })
 
-    expect(await epochManagerWrapper.getEpochProcessingStatus()).toMatchInlineSnapshot()
+    expect(await epochManagerWrapper.getEpochProcessingStatus()).toMatchInlineSnapshot(`
+      {
+        "perValidatorReward": "0",
+        "status": 1,
+        "toProcessGroups": 0,
+        "totalRewardsCarbonFund": "0",
+        "totalRewardsCommunity": "0",
+        "totalRewardsVoter": "0",
+      }
+    `)
   })
+
+  async function activateValidators() {
+    const validatorsContract = await kit.contracts.getValidators()
+    const electionWrapper = await kit.contracts.getElection()
+    const electionContract = newElection(web3, electionWrapper.address)
+    const validatorGroups = await validatorsContract.getRegisteredValidatorGroupsAddresses()
+
+    await timeTravel(timeDelta, web3)
+    await timeTravel(timeDelta, web3)
+    await timeTravel(timeDelta, web3)
+    await timeTravel(timeDelta, web3)
+    await timeTravel(timeDelta, web3)
+
+    for (const validatorGroup of validatorGroups) {
+      const pendingVotesForGroup = new BigNumber(
+        await electionContract.methods.getPendingVotesForGroup(validatorGroup).call()
+      )
+      if (pendingVotesForGroup.gt(0)) {
+        await electionContract.methods.activate(validatorGroup).send({ from: validatorGroup })
+      }
+    }
+  }
 
   it('finishes next epoch process', async () => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
 
-    await (await epochManagerWrapper.prepareFinishNextEpochProcessTx()).sendAndWaitForReceipt()
+    const secondsInOneBlock = 5
+    const blocksInEpoch = 17280
+    const timeDelta = blocksInEpoch * secondsInOneBlock
+    await timeTravel(timeDelta, web3)
+    await timeTravel(timeDelta, web3)
+    await timeTravel(timeDelta, web3)
+    await timeTravel(timeDelta, web3)
+    await timeTravel(timeDelta, web3)
 
-    expect(await epochManagerWrapper.getEpochProcessingStatus()).toMatchInlineSnapshot()
+    await epochManagerWrapper
+      .startNextEpochProcess()
+      .sendAndWaitForReceipt({ from: (await web3.eth.getAccounts())[0] })
+
+    await (
+      await epochManagerWrapper.prepareFinishNextEpochProcessTx()
+    ).sendAndWaitForReceipt({ from: (await web3.eth.getAccounts())[0] })
+
+    await activateValidators()
+
+    expect(await epochManagerWrapper.getEpochProcessingStatus()).toMatchInlineSnapshot(`
+      {
+        "perValidatorReward": "0",
+        "status": 0,
+        "toProcessGroups": 3,
+        "totalRewardsCarbonFund": "0",
+        "totalRewardsCommunity": "0",
+        "totalRewardsVoter": "0",
+      }
+    `)
   })
 })

@@ -49,9 +49,14 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
     const epochProcessState = await this.getEpochProcessingStatus()
     const election = await this.contracts.getElection()
     const currentVotesPromise = await election.getEligibleValidatorGroupsVotes()
+    const validators = await this.contracts.getValidators()
+
+    const electedGroups = await Promise.all(
+      elected.map(async (validator) => validators.getValidatorsGroup(validator))
+    )
 
     const groupsWithRewards = await Promise.all(
-      elected.map(async (group) => {
+      electedGroups.map(async (group) => {
         const groupScore = await scoreManager.getGroupScore(group)
         const rewards = await election.getGroupEpochRewards(
           group,
@@ -64,7 +69,6 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
         }
       })
     )
-
     const currentVotes = await currentVotesPromise
     const currentVotesMap = new Map<string, ValidatorGroupVote>()
 
