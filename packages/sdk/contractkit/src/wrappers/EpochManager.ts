@@ -1,9 +1,7 @@
 import { EpochManager } from '@celo/abis-12/web3/EpochManager'
-import { NULL_ADDRESS } from '@celo/base'
 import BigNumber from 'bignumber.js'
 import { proxyCall, proxySend } from './BaseWrapper'
 import { BaseWrapperForGoverning } from './BaseWrapperForGoverning'
-import { ValidatorGroupVote } from './Election'
 
 export enum EpochProcessStatus {
   NotStarted,
@@ -43,76 +41,74 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
   startNextEpochProcess = proxySend(this.connection, this.contract.methods.startNextEpochProcess)
   finishNextEpochProcess = proxySend(this.connection, this.contract.methods.finishNextEpochProcess)
 
-  prepareFinishNextEpochProcessTx = async () => {
-    const scoreManager = await this.contracts.getScoreManager()
+  finishNextEpochProcessTx = async () => {
     const elected = await this.getElected()
-    const epochProcessState = await this.getEpochProcessingStatus()
-    const election = await this.contracts.getElection()
-    const currentVotesPromise = await election.getEligibleValidatorGroupsVotes()
     const validators = await this.contracts.getValidators()
 
-    const electedGroups = await Promise.all(
-      elected.map(async (validator) => validators.getValidatorsGroup(validator))
+    const electedGroups = new Set(
+      await Promise.all(elected.map(async (validator) => validators.getValidatorsGroup(validator)))
     )
+    const groups = Array.from(electedGroups)
 
-    const groupsWithRewards = await Promise.all(
-      electedGroups.map(async (group) => {
-        const groupScore = await scoreManager.getGroupScore(group)
-        const rewards = await election.getGroupEpochRewards(
-          group,
-          epochProcessState.totalRewardsVoter,
-          groupScore
-        )
-        return {
-          group,
-          rewards,
-        }
-      })
-    )
-    const currentVotes = await currentVotesPromise
-    const currentVotesMap = new Map<string, ValidatorGroupVote>()
+    const [lessers, greaters] = await this.getLessersAndGreaters(groups)
 
-    for (const currentVote of currentVotes) {
-      currentVotesMap.set(currentVote.address, currentVote)
-    }
-
-    const groupsNewTotal = new Map(
-      groupsWithRewards
-        .map((gwr) => ({
-          group: gwr.group,
-          total: currentVotesMap.has(gwr.group)
-            ? currentVotesMap.get(gwr.group)!.votes.plus(gwr.rewards)
-            : gwr.rewards,
-        }))
-        .map((object) => {
-          return [object.group, object]
-        })
-    )
-
-    const groupsNewTotalSorted = Array.from(groupsNewTotal.values()).sort((a, b) =>
-      b.total.comparedTo(a.total)
-    )
-
-    let previousGroup = NULL_ADDRESS
-
-    const groups = []
-    const lessers = []
-    const greaters = []
-
-    for (let i = 0; i < groupsNewTotalSorted.length; i++) {
-      const group = groupsNewTotalSorted[i]
-      currentVotesMap.delete(group.group)
-
-      groups.push(group.group)
-      lessers.push(previousGroup)
-      greaters.push(
-        i == groupsNewTotalSorted.length - 1 ? NULL_ADDRESS : currentVotesMap.keys().next().value
-      )
-
-      previousGroup = group.group
+    for (let i = 0; i < groups.length; i++) {
+      console.log(`Group: ${groups[i]} - Lesser: ${lessers[i]} - Greater: ${greaters[i]}`)
     }
 
     return this.finishNextEpochProcess(groups, lessers, greaters)
+  }
+
+  getLessersAndGreaters = async (groups: string[]) => {
+    const zeroAddress = '0x0000000000000000000000000000000000000000'
+    const scoreManager = await this.contracts.getScoreManager()
+    const election = await this.contracts.getElection()
+
+    const processingStatus = await this.getEpochProcessingStatus()
+    const groupWithVotes = await election.getEligibleValidatorGroupsVotes()
+
+    const lessers: string[] = new Array(groups.length)
+    const greaters: string[] = new Array(groups.length)
+
+    const rewards: BigNumber[] = new Array(groups.length)
+
+    for (let i = 0; i < groups.length; i++) {
+      const groupScore = await scoreManager.getGroupScore(groups[i])
+      rewards[i] = await election.getGroupEpochRewards(
+        groups[i],
+        processingStatus.totalRewardsVoter,
+        groupScore
+      )
+    }
+
+    for (let i = 0; i < groups.length; i++) {
+      const reward = rewards[i]
+
+      for (let j = 0; j < groupWithVotes.length; j++) {
+        if (groupWithVotes[j].address === groups[i]) {
+          groupWithVotes[j].votes.plus(reward)
+          break
+        }
+      }
+
+      groupWithVotes.sort((a, b) => (b.votes.gt(a.votes) ? 1 : b.votes.lt(a.votes) ? -1 : 0))
+
+      let lesser = ''
+      let greater = ''
+
+      for (let j = 0; j < groupWithVotes.length; j++) {
+        if (groupWithVotes[j].address === groups[i]) {
+          greater = j === 0 ? zeroAddress : groupWithVotes[j - 1].address
+          lesser = j === groupWithVotes.length - 1 ? zeroAddress : groupWithVotes[j + 1].address
+          break
+        }
+      }
+
+      lessers[i] = lesser
+      greaters[i] = greater
+    }
+
+    return [lessers, greaters]
   }
 }
 

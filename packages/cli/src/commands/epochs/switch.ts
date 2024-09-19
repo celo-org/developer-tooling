@@ -24,7 +24,7 @@ export default class Switch extends BaseCommand {
 
     const epochManager = await kit.contracts.getEpochManager()
 
-    await displaySendTx('finishNextEpoch', await epochManager.prepareFinishNextEpochProcessTx())
+    await displaySendTx('finishNextEpoch', await epochManager.finishNextEpochProcessTx())
     await displaySendTx('startNextEpoch', epochManager.startNextEpochProcess())
   }
 }
