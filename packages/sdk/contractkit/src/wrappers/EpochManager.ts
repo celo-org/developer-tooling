@@ -49,12 +49,7 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
       await Promise.all(elected.map(async (validator) => validators.getValidatorsGroup(validator)))
     )
     const groups = Array.from(electedGroups)
-
     const [lessers, greaters] = await this.getLessersAndGreaters(groups)
-
-    for (let i = 0; i < groups.length; i++) {
-      console.log(`Group: ${groups[i]} - Lesser: ${lessers[i]} - Greater: ${greaters[i]}`)
-    }
 
     return this.finishNextEpochProcess(groups, lessers, greaters)
   }
@@ -64,22 +59,25 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
     const scoreManager = await this.contracts.getScoreManager()
     const election = await this.contracts.getElection()
 
-    const processingStatus = await this.getEpochProcessingStatus()
-    const groupWithVotes = await election.getEligibleValidatorGroupsVotes()
+    const processingStatusPromise = this.getEpochProcessingStatus()
+    const groupWithVotesPromise = election.getEligibleValidatorGroupsVotes()
 
     const lessers: string[] = new Array(groups.length)
     const greaters: string[] = new Array(groups.length)
+    const rewards = await Promise.all(
+      groups.map(async (group) => {
+        const groupScore = await scoreManager.getGroupScore(group)
+        return await election.getGroupEpochRewards(
+          group,
+          (
+            await processingStatusPromise
+          ).totalRewardsVoter,
+          groupScore
+        )
+      })
+    )
 
-    const rewards: BigNumber[] = new Array(groups.length)
-
-    for (let i = 0; i < groups.length; i++) {
-      const groupScore = await scoreManager.getGroupScore(groups[i])
-      rewards[i] = await election.getGroupEpochRewards(
-        groups[i],
-        processingStatus.totalRewardsVoter,
-        groupScore
-      )
-    }
+    const groupWithVotes = await groupWithVotesPromise
 
     for (let i = 0; i < groups.length; i++) {
       const reward = rewards[i]
