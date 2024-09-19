@@ -91,19 +91,13 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
 
       groupWithVotes.sort((a, b) => (b.votes.gt(a.votes) ? 1 : b.votes.lt(a.votes) ? -1 : 0))
 
-      let lesser = ''
-      let greater = ''
-
       for (let j = 0; j < groupWithVotes.length; j++) {
         if (groupWithVotes[j].address === groups[i]) {
-          greater = j === 0 ? zeroAddress : groupWithVotes[j - 1].address
-          lesser = j === groupWithVotes.length - 1 ? zeroAddress : groupWithVotes[j + 1].address
+          greaters[i] = j === 0 ? zeroAddress : groupWithVotes[j - 1].address
+          lessers[i] = j === groupWithVotes.length - 1 ? zeroAddress : groupWithVotes[j + 1].address
           break
         }
       }
-
-      lessers[i] = lesser
-      greaters[i] = greater
     }
 
     return [lessers, greaters]
