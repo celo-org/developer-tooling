@@ -11,7 +11,7 @@ type LedgerAccount = LocalAccount<'ledger'>
 
 export const CELO_BASE_DERIVATION_PATH = `${CELO_DERIVATION_PATH_BASE.slice(2)}/0`
 
-async function generateLedger(transport: TransportNodeHid): Promise<Eth> {
+export async function generateLedger(transport: TransportNodeHid): Promise<Eth> {
   const ledger = new Eth(transport)
   await assertCompat(ledger)
   return ledger

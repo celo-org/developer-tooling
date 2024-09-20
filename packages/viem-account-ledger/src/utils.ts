@@ -4,8 +4,8 @@ import { RecoveredSignatureType, SignatureType } from '@noble/curves/abstract/we
 import { secp256k1 } from '@noble/curves/secp256k1'
 import { SemVer } from 'semver'
 import { toHex } from 'viem'
-import { tokenInfoByAddressAndChainId } from '../tokens'
-import { Hex } from '../types'
+import { tokenInfoByAddressAndChainId } from './tokens'
+import { Hex } from './types'
 
 export const MIN_VERSION_EIP1559 = '1.2.0'
 
@@ -31,8 +31,8 @@ export async function assertCompat(ledger: Eth): Promise<{
   arbitraryDataEnabled: number
   version: string
 }> {
-  const appConfiguration = await ledger!.getAppConfiguration()
-  if (meetsVersionRequirements(appConfiguration.version, { minimum: MIN_VERSION_EIP1559 })) {
+  const appConfiguration = await ledger.getAppConfiguration()
+  if (!meetsVersionRequirements(appConfiguration.version, { minimum: MIN_VERSION_EIP1559 })) {
     throw new Error(
       `Due to technical issues, we require the users to update their ledger celo-app to >= ${MIN_VERSION_EIP1559}. You can do this on ledger-live by updating the celo-app in the app catalog.`
     )
@@ -49,16 +49,17 @@ export async function checkForKnownToken(
   ledger: Eth,
   { to, chainId, feeCurrency }: { to: string; chainId: number; feeCurrency?: Hex }
 ) {
-  const tokenInfo = tokenInfoByAddressAndChainId(to!, chainId)
+  const tokenInfo = tokenInfoByAddressAndChainId(to, chainId)
   if (tokenInfo) {
-    await ledger!.provideERC20TokenInformation(`0x${tokenInfo.data.toString('hex')}`)
+    await ledger.provideERC20TokenInformation(`0x${tokenInfo.data.toString('hex')}`)
   }
 
   if (!feeCurrency || feeCurrency === '0x') return
 
   const feeTokenInfo = tokenInfoByAddressAndChainId(feeCurrency, chainId)
   if (feeTokenInfo) {
-    await ledger!.provideERC20TokenInformation(feeTokenInfo.data.toString('hex'))
+    console.log(feeTokenInfo)
+    await ledger.provideERC20TokenInformation(`0x${feeTokenInfo.data.toString('hex')}`)
   }
 }
 

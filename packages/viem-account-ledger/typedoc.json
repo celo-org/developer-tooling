@@ -3,7 +3,7 @@
   "excludePrivate": true,
   "excludeProtected": true,
   "hideGenerator": true,
-  "out": "../../../docs/sdk/viem-account",
+  "out": "../docs/viem-account-ledger",
   "gitRevision": "master",
   "readme": "none",
   "entryPoints": ["./src"],
