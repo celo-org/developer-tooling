@@ -1,14 +1,18 @@
 import { newElection } from '@celo/abis-12/web3/Election'
 import { newEpochManager } from '@celo/abis-12/web3/EpochManager'
-import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
+import {
+  asCoreContractsOwner,
+  GROUP_ADDRESSES,
+  testWithAnvilL2,
+} from '@celo/dev-utils/lib/anvil-test'
 import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { newKitFromWeb3 } from '../kit'
+import { valueToFixidityString } from './BaseWrapper'
 
 process.env.NO_SYNCCHECK = 'true'
 
-// TODO just a boilerplate code mostly, needs to be updated
 testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
   const kit = newKitFromWeb3(web3)
 
@@ -26,6 +30,9 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
 
   it('indicates that it is time for next epoch', async () => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
+
+    expect(await epochManagerWrapper.isTimeForNextEpoch()).toBeFalsy()
+
     await timeTravel(timeDelta, web3)
 
     expect(await epochManagerWrapper.isTimeForNextEpoch()).toBeTruthy()
@@ -49,8 +56,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
   it('gets current epoch processing status', async () => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
 
-    // TODO this needs some proper values to be tested
-    expect(await epochManagerWrapper.getEpochProcessingStatus()).toMatchInlineSnapshot(`
+    expect((await epochManagerWrapper.getEpochProcessingStatus()).status).toMatchInlineSnapshot(`
       {
         "perValidatorReward": "0",
         "status": 0,
@@ -117,6 +123,28 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
   it('finishes next epoch process', async () => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
 
+    // TODO this seems not to have any effect
+    await asCoreContractsOwner(
+      web3,
+      async (from) => {
+        const elected = await epochManagerWrapper.getElected()
+        const scoreManagerContract = await kit._web3Contracts.getScoreManager()
+
+        for (const groupAddress of GROUP_ADDRESSES) {
+          await scoreManagerContract.methods
+            .setGroupScore(groupAddress, valueToFixidityString(new BigNumber(1)))
+            .send({ from })
+        }
+
+        for (const validatorAddress of elected) {
+          await scoreManagerContract.methods
+            .setValidatorScore(validatorAddress, valueToFixidityString(new BigNumber(1)))
+            .send({ from })
+        }
+      },
+      new BigNumber(web3.utils.toWei('1', 'ether'))
+    )
+
     const secondsInOneBlock = 5
     const blocksInEpoch = 17280
     const timeDelta = blocksInEpoch * secondsInOneBlock
@@ -155,4 +183,6 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
     //   }
     // `)
   })
+
+  // TODO one more tests to create multiple epochs, start/finish multiple epochs
 })
