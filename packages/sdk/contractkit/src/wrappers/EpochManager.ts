@@ -1,4 +1,5 @@
 import { EpochManager } from '@celo/abis-12/web3/EpochManager'
+import { NULL_ADDRESS } from '@celo/base'
 import BigNumber from 'bignumber.js'
 import { proxyCall, proxySend } from './BaseWrapper'
 import { BaseWrapperForGoverning } from './BaseWrapperForGoverning'
@@ -21,6 +22,8 @@ export interface EpochProcessState {
  * Contract handling epoch management.
  */
 export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
+  epochDuration = proxyCall(this.contract.methods.epochDuration)
+  getCurrentEpochNumber = proxyCall(this.contract.methods.getCurrentEpochNumber)
   isTimeForNextEpoch = proxyCall(this.contract.methods.isTimeForNextEpoch)
   getElected = proxyCall(this.contract.methods.getElected)
   getEpochProcessingStatus = proxyCall(
@@ -55,7 +58,6 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
   }
 
   getLessersAndGreaters = async (groups: string[]) => {
-    const zeroAddress = '0x0000000000000000000000000000000000000000'
     const scoreManager = await this.contracts.getScoreManager()
     const election = await this.contracts.getElection()
 
@@ -93,8 +95,9 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
 
       for (let j = 0; j < groupWithVotes.length; j++) {
         if (groupWithVotes[j].address === groups[i]) {
-          greaters[i] = j === 0 ? zeroAddress : groupWithVotes[j - 1].address
-          lessers[i] = j === groupWithVotes.length - 1 ? zeroAddress : groupWithVotes[j + 1].address
+          greaters[i] = j === 0 ? NULL_ADDRESS : groupWithVotes[j - 1].address
+          lessers[i] =
+            j === groupWithVotes.length - 1 ? NULL_ADDRESS : groupWithVotes[j + 1].address
           break
         }
       }
