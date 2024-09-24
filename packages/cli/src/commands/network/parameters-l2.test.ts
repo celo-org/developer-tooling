@@ -1,4 +1,3 @@
-import { CeloDistributionScheduleWrapper } from '@celo/contractkit/lib/wrappers/CeloDistributionScheduleWrapper'
 import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Parameters from './parameters'
@@ -7,27 +6,6 @@ process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvilL2('network:parameters', (web3) => {
   test('runs', async () => {
-    jest
-      .spyOn(CeloDistributionScheduleWrapper.prototype, 'getConfig')
-      .mockImplementation(async () => {
-        return {
-          carbonOffsetting: {
-            fraction: '1000000000000000000000',
-            partner: '0x0000000000000000000000000000000000000003',
-          },
-          communityReward: {
-            fraction: '250000000000000000000000',
-            fund: '0xA2e328097D5805e37414fbF80F43D71c9B588F23',
-          },
-          distributableAmount: '409271032214310717281708',
-          targetCeloDistribution: {
-            carbonFundTargetRewards: '1630561881331915208293',
-            communityTargetRewards: '407640470332978802073415',
-            targetCeloDistribution: '612754949032214310717281708',
-          },
-        }
-      })
-
     const spy = jest.spyOn(console, 'log')
     await testLocallyWithWeb3Node(Parameters, [], web3)
     expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
