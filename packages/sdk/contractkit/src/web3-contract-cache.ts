@@ -1,5 +1,7 @@
+import { newCeloUnreleasedTreasure } from '@celo/abis-12/web3/CeloUnreleasedTreasure'
 import { newElection } from '@celo/abis-12/web3/Election'
 import { newEpochManager } from '@celo/abis-12/web3/EpochManager'
+import { newEpochManagerEnabler } from '@celo/abis-12/web3/EpochManagerEnabler'
 import { newFeeCurrencyDirectory } from '@celo/abis-12/web3/FeeCurrencyDirectory'
 import { newGoldToken } from '@celo/abis-12/web3/GoldToken'
 import { newGovernance } from '@celo/abis-12/web3/Governance'
@@ -40,10 +42,12 @@ export const ContractFactories = {
   [CeloContract.Accounts]: newAccounts,
   [CeloContract.Attestations]: newAttestations,
   [CeloContract.BlockchainParameters]: newBlockchainParameters,
+  [CeloContract.CeloUnreleasedTreasure]: newCeloUnreleasedTreasure,
   [CeloContract.DoubleSigningSlasher]: newDoubleSigningSlasher,
   [CeloContract.DowntimeSlasher]: newDowntimeSlasher,
   [CeloContract.Election]: newElection,
   [CeloContract.EpochManager]: newEpochManager,
+  [CeloContract.EpochManagerEnabler]: newEpochManagerEnabler,
   [CeloContract.EpochRewards]: newEpochRewards,
   [CeloContract.ERC20]: newIERC20,
   [CeloContract.Escrow]: newEscrow,
@@ -101,6 +105,9 @@ export class Web3ContractCache {
   getBlockchainParameters() {
     return this.getContract(CeloContract.BlockchainParameters)
   }
+  getCeloUnreleasedTreasure() {
+    return this.getContract(CeloContract.CeloUnreleasedTreasure)
+  }
   getDoubleSigningSlasher() {
     return this.getContract(CeloContract.DoubleSigningSlasher)
   }
@@ -112,6 +119,9 @@ export class Web3ContractCache {
   }
   getEpochManager() {
     return this.getContract(CeloContract.EpochManager)
+  }
+  getEpochManagerEnabler() {
+    return this.getContract(CeloContract.EpochManagerEnabler)
   }
   getEpochRewards() {
     return this.getContract(CeloContract.EpochRewards)
