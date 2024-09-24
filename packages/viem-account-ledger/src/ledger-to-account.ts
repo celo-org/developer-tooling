@@ -5,7 +5,7 @@ import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
 import { hashMessage, serializeSignature } from 'viem'
 import { LocalAccount, toAccount } from 'viem/accounts'
 import { CeloTransactionSerializable, serializeTransaction } from 'viem/celo'
-import { mockLedger } from './test-utils'
+
 import { assertCompat, checkForKnownToken } from './utils'
 
 type LedgerAccount = LocalAccount<'ledger'>
@@ -13,7 +13,10 @@ type LedgerAccount = LocalAccount<'ledger'>
 export const CELO_BASE_DERIVATION_PATH = `${CELO_DERIVATION_PATH_BASE.slice(2)}/0`
 
 export async function generateLedger(transport: TransportNodeHid): Promise<Eth> {
-  if (!transport) return mockLedger()
+  if (process.env.NODE_ENV === 'test' && !transport) {
+    // TODO: remove this and make the jest.spyOn mock actually work
+    return (await import('./test-utils')).mockLedger()
+  }
   const ledger = new Eth(transport)
   await assertCompat(ledger)
   return ledger
