@@ -1819,7 +1819,7 @@ __metadata:
   dependencies:
     "@celo/abis": "npm:^11.0.0"
     "@celo/connect": "npm:^6.0.1"
-    "@celo/devchain-anvil": "npm:12.0.0-canary.3"
+    "@celo/devchain-anvil": "npm:12.0.0-canary.4"
     "@celo/typescript": "workspace:^"
     "@tsconfig/recommended": "npm:^1.0.3"
     "@types/fs-extra": "npm:^8.1.0"
@@ -1835,10 +1835,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/devchain-anvil@npm:12.0.0-canary.3":
-  version: 12.0.0-canary.3
-  resolution: "@celo/devchain-anvil@npm:12.0.0-canary.3"
-  checksum: 47e09ca0a3a6e5aab040b657b126a5c8841eb42a12127186ef16bd2e1e2b94dcc8ec473c3cdb3c7156afe45cb7ce98e9d334e055c1c44d4f9b8f3d86fda8e4e5
+"@celo/devchain-anvil@npm:12.0.0-canary.4":
+  version: 12.0.0-canary.4
+  resolution: "@celo/devchain-anvil@npm:12.0.0-canary.4"
+  checksum: 82d277148261c3a1678d8b8730f98199590f39da78fbd77bdabfd3944acace415c51c9db7adabde8fa2dc984aa898f7b88027ac1def346485038b7127fcb1e46
   languageName: node
   linkType: hard
 

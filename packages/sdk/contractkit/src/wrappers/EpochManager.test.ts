@@ -1,5 +1,5 @@
 import { newElection } from '@celo/abis-12/web3/Election'
-import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2, withImpersonatedAccount } from '@celo/dev-utils/lib/anvil-test'
 import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
@@ -73,7 +73,14 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
         await electionContract.methods.getPendingVotesForGroup(validatorGroup).call()
       )
       if (pendingVotesForGroup.gt(0)) {
-        await electionContract.methods.activate(validatorGroup).send({ from: validatorGroup })
+        await withImpersonatedAccount(
+          web3,
+          validatorGroup,
+          async () => {
+            await electionContract.methods.activate(validatorGroup).send({ from: validatorGroup })
+          },
+          new BigNumber(web3.utils.toWei('1', 'ether'))
+        )
       }
     }
   }

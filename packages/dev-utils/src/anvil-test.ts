@@ -62,8 +62,7 @@ function testWithAnvil(stateFilePath: string, name: string, fn: (web3: Web3) => 
   const anvil = createInstance(stateFilePath)
 
   // for each test suite, we start and stop a new anvil instance
-  // TODO revert to ${anvil.port}, this is just here to work with locally built devchain
-  return testWithWeb3(name, `http://127.0.0.1:8546`, fn, {
+  return testWithWeb3(name, `http://127.0.0.1:${anvil.port}`, fn, {
     runIf:
       process.env.RUN_ANVIL_TESTS === 'true' || typeof process.env.RUN_ANVIL_TESTS === 'undefined',
     hooks: {
