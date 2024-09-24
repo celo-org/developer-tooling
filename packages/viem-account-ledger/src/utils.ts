@@ -28,6 +28,7 @@ export async function assertCompat(ledger: Eth): Promise<{
   arbitraryDataEnabled: number
   version: string
 }> {
+  // TODO: check version only for CELO and not ETH if we wanna be eth compatible
   const appConfiguration = await ledger.getAppConfiguration()
   if (!meetsVersionRequirements(appConfiguration.version, { minimum: MIN_VERSION_EIP1559 })) {
     throw new Error(
