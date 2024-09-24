@@ -28,10 +28,9 @@
     "@celo/base": "^6.1.0",
     "@celo/ledger-token-signer": "^0.4.0",
     "@celo/utils": "^7.0.0",
-    "@ethereumjs/util": "8.0.5",
     "@ledgerhq/errors": "^6.16.4",
     "@ledgerhq/hw-app-eth": "git+https://github.com:celo-org/ledgerjs-hw-app-eth.git",
-    "@ledgerhq/hw-transport": "^6.30.6",
+    "@ledgerhq/hw-transport": "^6.31.3",
     "@noble/curves": "^1.4.0",
     "semver": "^7.6.0"
   },
@@ -40,10 +39,8 @@
     "@celo/typescript": "workspace:^",
     "@celo/wallet-base": "^6.0.1",
     "@celo/wallet-remote": "^6.0.1",
-    "@ledgerhq/hw-transport-mocker": "^6.29.3",
-    "cross-fetch": "3.1.5",
+    "@ethereumjs/util": "8.0.5",
     "dotenv": "^8.2.0",
-    "fetch-mock": "^10.0.7",
     "viem": "^2.21.14"
   },
   "engines": {
