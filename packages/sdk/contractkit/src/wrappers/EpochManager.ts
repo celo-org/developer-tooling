@@ -1,7 +1,7 @@
 import { EpochManager } from '@celo/abis-12/web3/EpochManager'
 import { NULL_ADDRESS } from '@celo/base'
 import BigNumber from 'bignumber.js'
-import { proxyCall, proxySend } from './BaseWrapper'
+import { proxyCall, proxySend, valueToInt } from './BaseWrapper'
 import { BaseWrapperForGoverning } from './BaseWrapperForGoverning'
 
 export enum EpochProcessStatus {
@@ -18,12 +18,21 @@ export interface EpochProcessState {
   toProcessGroups: number
 }
 
+export interface EpochManagerConfig {
+  currentEpochNumber: number
+  epochDuration: number
+}
+
 /**
  * Contract handling epoch management.
  */
 export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
-  epochDuration = proxyCall(this.contract.methods.epochDuration)
-  getCurrentEpochNumber = proxyCall(this.contract.methods.getCurrentEpochNumber)
+  epochDuration = proxyCall(this.contract.methods.epochDuration, undefined, valueToInt)
+  getCurrentEpochNumber = proxyCall(
+    this.contract.methods.getCurrentEpochNumber,
+    undefined,
+    valueToInt
+  )
   isTimeForNextEpoch = proxyCall(this.contract.methods.isTimeForNextEpoch)
   getElected = proxyCall(this.contract.methods.getElected)
   getEpochProcessingStatus = proxyCall(
@@ -104,6 +113,16 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
     }
 
     return [lessers, greaters]
+  }
+
+  async getConfig(): Promise<EpochManagerConfig> {
+    const currentEpochNumber = await this.getCurrentEpochNumber()
+    const epochDuration = await this.epochDuration()
+
+    return {
+      currentEpochNumber,
+      epochDuration,
+    }
   }
 }
 
