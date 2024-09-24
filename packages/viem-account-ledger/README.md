@@ -1,23 +1,55 @@
-# @celo/transactions-uri
+# @celo/viem-account-ledger
 
-Makes it easy to generate Celo transaction URIs and QR codes.
+This library aims to ease the usage of a ledger device with (viem)[https://viem.sh/].
 
-## How we work
+## Installation
 
-We are a GitHub-first team, which means we have a strong preference for communicating via GitHub. 
-Please use GitHub to:
+```bash
+npm install @celo/viem-account-ledger viem
+# or yarn or bun or ...
+```
 
-🐞 [File a bug report](https://github.com/celo-org/developer-tooling/issues/new/choose)
+> [!IMPORTANT]
+> viem is a peer dependency and MUST be installed alongside this library.
 
-💬 [Ask a question](https://github.com/celo-org/developer-tooling/discussions)
+## Usage
 
-✨ [Suggest a feature](https://github.com/celo-org/developer-tooling/issues/new/choose)
+```ts
+import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
+import { createWalletClient } from 'viem'
+import { celo, celoAlfajores } from 'viem/chains'
 
-🧑‍💻 [Contribute!](/CONTRIBUTING.md)
 
-🚔 [Report a security vulnerability](https://github.com/celo-org/developer-tooling/issues/new/choose)
+async function main() => {
+  const account = await ledgerToAccount({
+    transport: await TransportNodeHid.open(''),
+  })
+  const client = createWalletClient({
+    account,
+    chain: celo,
+    transport: http()
+  });
+  await client.sendTransaction({
+    to: '0x123...',
+    value: 10n,
+    feeCurrency: '0x123...'
+  });
+}
+```
 
-> [!TIP]
-> 
-> Please avoid messaging us via Slack, Telegram, or email. We are more likely to respond to you on 
-> GitHub than if you message us anywhere else. We actively monitor GitHub, and will get back to you shortly 🌟
+You can also use the `account` directly eg:
+
+```ts
+const account = await ledgerToAccount({
+  transport: await TransportNodeHid.open(''),
+})
+account.signTransaction({
+  to: '0x123...',
+  value: 123n,
+  chainId: celoAlfajores.id,
+  nonce: 42,
+  maxFeePerGas: 100n,
+  maxPriorityFeePerGas: 100n,
+  feeCurrency: '0x123...',
+})
+```
