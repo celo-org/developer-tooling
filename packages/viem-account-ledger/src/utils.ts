@@ -1,4 +1,5 @@
 import Eth from '@ledgerhq/hw-app-eth'
+import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
 import { SemVer } from 'semver'
 import { tokenInfoByAddressAndChainId } from './tokens'
 import { Hex } from './types'
@@ -56,4 +57,10 @@ export async function checkForKnownToken(
   if (feeTokenInfo) {
     await ledger.provideERC20TokenInformation(`0x${feeTokenInfo.data.toString('hex')}`)
   }
+}
+
+export async function generateLedger(transport: TransportNodeHid): Promise<Eth> {
+  const ledger = new Eth(transport)
+  await assertCompat(ledger)
+  return ledger
 }

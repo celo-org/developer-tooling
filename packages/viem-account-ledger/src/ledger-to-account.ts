@@ -1,26 +1,15 @@
 import { CELO_DERIVATION_PATH_BASE, trimLeading0x } from '@celo/base'
 import { ensureLeading0x } from '@celo/utils/lib/address'
-import Eth from '@ledgerhq/hw-app-eth'
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
 import { hashMessage, serializeSignature } from 'viem'
 import { LocalAccount, toAccount } from 'viem/accounts'
 import { CeloTransactionSerializable, serializeTransaction } from 'viem/celo'
 
-import { assertCompat, checkForKnownToken } from './utils'
+import { checkForKnownToken, generateLedger } from './utils'
 
 type LedgerAccount = LocalAccount<'ledger'>
 
 export const CELO_BASE_DERIVATION_PATH = `${CELO_DERIVATION_PATH_BASE.slice(2)}/0`
-
-export async function generateLedger(transport: TransportNodeHid): Promise<Eth> {
-  if (process.env.NODE_ENV === 'test' && !transport) {
-    // TODO: remove this and make the jest.spyOn mock actually work
-    return (await import('./test-utils')).mockLedger()
-  }
-  const ledger = new Eth(transport)
-  await assertCompat(ledger)
-  return ledger
-}
 
 export async function ledgerToAccount({
   transport,

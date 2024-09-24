@@ -1,24 +1,30 @@
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
-import * as ledger from './ledger-to-account'
+import { ledgerToAccount } from './ledger-to-account'
 import { mockLedger, TEST_CHAIN_ID } from './test-utils'
+import { generateLedger } from './utils'
 
-const { ledgerToAccount } = ledger
+jest.mock('./utils', () => {
+  const module = jest.requireActual('./utils')
 
-beforeAll(() => {
-  jest.spyOn(ledger, 'generateLedger').mockImplementation(() => Promise.resolve(mockLedger()))
+  return {
+    ...module,
+    generateLedger: jest.fn(() => Promise.resolve(mockLedger())),
+  }
 })
 
 const transport =
   process.env.USE_PHYSICAL_LEDGER === 'true'
     ? TransportNodeHid.open('')
     : Promise.resolve(undefined as unknown as TransportNodeHid)
+
 describe('ledgerToAccount', () => {
-  it('can be setup', async () => {
+  it.only('can be setup', async () => {
     await expect(
       ledgerToAccount({
         transport: await transport,
       })
     ).resolves.not.toBe(undefined)
+    expect((generateLedger as ReturnType<(typeof jest)['fn']>).mock.calls.length).toBe(1)
   })
 
   describe('signs txs', () => {
