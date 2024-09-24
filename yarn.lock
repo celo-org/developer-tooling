@@ -2080,7 +2080,9 @@ __metadata:
     dotenv: "npm:^8.2.0"
     fetch-mock: "npm:^10.0.7"
     semver: "npm:^7.6.0"
-    viem: "npm:^2.21.8"
+    viem: "npm:^2.21.14"
+  peerDependencies:
+    viem: 2.x
   languageName: unknown
   linkType: soft
 
@@ -18798,9 +18800,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"viem@npm:^2.21.8":
-  version: 2.21.10
-  resolution: "viem@npm:2.21.10"
+"viem@npm:^2.21.14":
+  version: 2.21.14
+  resolution: "viem@npm:2.21.14"
   dependencies:
     "@adraffy/ens-normalize": "npm:1.10.0"
     "@noble/curves": "npm:1.4.0"
@@ -18816,7 +18818,7 @@ __metadata:
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 8b0bdbd6922806c76de47346c9b50d6341029871441f093d1c50718d316a0c7438354040d4ace1ccfce0b902ea7ac4e0f0a9e74416b47f9fb83e4df5587b0ce4
+  checksum: 0de5a87604ff8397ab12da3a05212b999cb86fc9d7ac601ae3c49a0ed039246299e401dbdb0b41b4bbb4006b2bff8a358ec2f44d01268f625666a6ad159e0514
   languageName: node
   linkType: hard
 
