@@ -2073,12 +2073,9 @@ __metadata:
     "@ethereumjs/util": "npm:8.0.5"
     "@ledgerhq/errors": "npm:^6.16.4"
     "@ledgerhq/hw-app-eth": "git+https://github.com:celo-org/ledgerjs-hw-app-eth.git"
-    "@ledgerhq/hw-transport": "npm:^6.30.6"
-    "@ledgerhq/hw-transport-mocker": "npm:^6.29.3"
+    "@ledgerhq/hw-transport": "npm:^6.31.3"
     "@noble/curves": "npm:^1.4.0"
-    cross-fetch: "npm:3.1.5"
     dotenv: "npm:^8.2.0"
-    fetch-mock: "npm:^10.0.7"
     semver: "npm:^7.6.0"
     viem: "npm:^2.21.14"
   peerDependencies:
@@ -3841,17 +3838,6 @@ __metadata:
     "@ledgerhq/logs": "npm:^6.12.0"
     rxjs: "npm:^7.8.1"
   checksum: 794b8e6b1a3406d867eceb33b1b263540aca64a42959f198566889a824608e2b24a4f47921b2b5e5915accb234c48bcd49c36efbf1c67ef6aecdea3b983ce0c9
-  languageName: node
-  linkType: hard
-
-"@ledgerhq/hw-transport-mocker@npm:^6.29.3":
-  version: 6.29.3
-  resolution: "@ledgerhq/hw-transport-mocker@npm:6.29.3"
-  dependencies:
-    "@ledgerhq/hw-transport": "npm:^6.31.3"
-    "@ledgerhq/logs": "npm:^6.12.0"
-    rxjs: "npm:^7.8.1"
-  checksum: 1108904dfd07a5ccd9f6ea83fd9f2863257a3de12b6c77ba4370609b62af06e2ea1edfc1d8eba92844ecd8d2c3e98990a059b8a6d5dde96df191d7647a09af22
   languageName: node
   linkType: hard
 

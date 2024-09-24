@@ -1,5 +1,5 @@
 import { ensureLeading0x, normalizeAddressWith0x, trimLeading0x } from '@celo/base'
-import { generateTypedDataHash } from '@celo/utils/lib/sign-typed-data-utils'
+import { generateTypedDataHash } from '@celo/utils/lib/sign-typed-data-utils.js'
 import { getHashFromEncoded, signTransaction } from '@celo/wallet-base'
 import * as ethUtil from '@ethereumjs/util'
 import Eth from '@ledgerhq/hw-app-eth'
@@ -8,8 +8,8 @@ import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { Hex } from 'viem'
 import { privateKeyToAccount, privateKeyToAddress } from 'viem/accounts'
-import { legacyLedgerPublicKeyHex } from './data'
-import { meetsVersionRequirements, MIN_VERSION_EIP1559 } from './utils'
+import { legacyLedgerPublicKeyHex } from './data.js'
+import { meetsVersionRequirements, MIN_VERSION_EIP1559 } from './utils.js'
 
 export const PRIVATE_KEY1 = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
 export const ACCOUNT_ADDRESS1 = normalizeAddressWith0x(privateKeyToAddress(PRIVATE_KEY1))
@@ -90,7 +90,7 @@ const TYPED_DATA = {
   },
 }
 
-interface Config extends Partial<Awaited<ReturnType<Eth['getAppConfiguration']>>> {}
+interface Config extends Partial<Awaited<ReturnType<Eth.default['getAppConfiguration']>>> {}
 
 export const mockLedger = (config?: Config) => {
   const _ledger = {
@@ -201,6 +201,6 @@ export const mockLedger = (config?: Config) => {
       }
       return verified
     },
-  } as unknown as Eth
+  } as unknown as Eth.default
   return _ledger
 }

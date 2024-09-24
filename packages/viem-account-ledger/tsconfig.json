@@ -2,7 +2,10 @@
   "extends": "@celo/typescript/tsconfig.library.json",
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "lib"
+    "outDir": "lib",
+    "moduleResolution": "Node16",
+    "module": "Node16",
+    "declaration": true
   },
   "include": ["src/**/*", "types/**/*"],
   "exclude": ["**/*.test.ts"]

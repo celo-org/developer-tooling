@@ -1,1 +1,1 @@
-export { ledgerToAccount } from './ledger-to-account'
+export { ledgerToAccount } from './ledger-to-account.js'

@@ -1,7 +1,7 @@
 // Copied from '@ledgerhq/hw-app-eth/erc20' because we need to change the path of the blob and support for address+chainId
-import { Address, normalizeAddressWith0x } from '@celo/base/lib/address'
+import { Address, normalizeAddressWith0x } from '@celo/base/lib/address.js'
 import blob from '@celo/ledger-token-signer'
-import blobLegacy from './data'
+import blobLegacy from './data.js'
 
 /**
  * Retrieve the token information by a given contract address and chainId if any
@@ -9,7 +9,8 @@ import blobLegacy from './data'
 export const tokenInfoByAddressAndChainId = (
   contract: Address,
   chainId: number
-): TokenInfo | null | undefined => get(blob).byContractKey(generateContractKey(contract, chainId))
+): TokenInfo | null | undefined =>
+  get(blob.default).byContractKey(generateContractKey(contract, chainId))
 
 export const legacyTokenInfoByAddressAndChainId = (
   contract: Address,
@@ -20,7 +21,7 @@ export const legacyTokenInfoByAddressAndChainId = (
 /**
  * list all the ERC20 tokens informations
  */
-export const list = (): TokenInfo[] => get(blob).list()
+export const list = (): TokenInfo[] => get(blob.default).list()
 export const listLegacy = (): TokenInfo[] => get(blobLegacy).list()
 
 export interface TokenInfo {

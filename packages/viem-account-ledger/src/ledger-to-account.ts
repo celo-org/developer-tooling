@@ -1,11 +1,11 @@
 import { CELO_DERIVATION_PATH_BASE, trimLeading0x } from '@celo/base'
-import { ensureLeading0x } from '@celo/utils/lib/address'
+import { ensureLeading0x } from '@celo/utils/lib/address.js'
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
 import { hashMessage, serializeSignature } from 'viem'
 import { LocalAccount, toAccount } from 'viem/accounts'
 import { CeloTransactionSerializable, serializeTransaction } from 'viem/celo'
 
-import { checkForKnownToken, generateLedger } from './utils'
+import { checkForKnownToken, generateLedger } from './utils.js'
 
 type LedgerAccount = LocalAccount<'ledger'>
 
@@ -16,7 +16,7 @@ export async function ledgerToAccount({
   derivationPathIndex = 0,
   baseDerivationPath = CELO_BASE_DERIVATION_PATH,
 }: {
-  transport: TransportNodeHid
+  transport: TransportNodeHid.default
   derivationPathIndex?: number | string
   baseDerivationPath?: string
 }): Promise<LedgerAccount> {

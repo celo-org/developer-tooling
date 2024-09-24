@@ -1,7 +1,7 @@
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
-import { ledgerToAccount } from './ledger-to-account'
-import { mockLedger, TEST_CHAIN_ID } from './test-utils'
-import { generateLedger } from './utils'
+import { ledgerToAccount } from './ledger-to-account.js'
+import { mockLedger, TEST_CHAIN_ID } from './test-utils.js'
+import { generateLedger } from './utils.js'
 
 jest.mock('./utils', () => {
   const module = jest.requireActual('./utils')

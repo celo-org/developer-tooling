@@ -1,8 +1,8 @@
 import Eth from '@ledgerhq/hw-app-eth'
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
 import { SemVer } from 'semver'
-import { tokenInfoByAddressAndChainId } from './tokens'
-import { Hex } from './types'
+import { tokenInfoByAddressAndChainId } from './tokens.js'
+import { Hex } from './types.js'
 
 export const MIN_VERSION_EIP1559 = '1.2.0'
 
@@ -24,7 +24,7 @@ export function meetsVersionRequirements(
   return min && max
 }
 
-export async function assertCompat(ledger: Eth): Promise<{
+export async function assertCompat(ledger: Eth.default): Promise<{
   arbitraryDataEnabled: number
   version: string
 }> {
@@ -44,7 +44,7 @@ export async function assertCompat(ledger: Eth): Promise<{
 }
 
 export async function checkForKnownToken(
-  ledger: Eth,
+  ledger: Eth.default,
   { to, chainId, feeCurrency }: { to: string; chainId: number; feeCurrency?: Hex }
 ) {
   const tokenInfo = tokenInfoByAddressAndChainId(to, chainId)
@@ -60,8 +60,8 @@ export async function checkForKnownToken(
   }
 }
 
-export async function generateLedger(transport: TransportNodeHid): Promise<Eth> {
-  const ledger = new Eth(transport)
+export async function generateLedger(transport: TransportNodeHid.default) {
+  const ledger = new Eth.default(transport)
   await assertCompat(ledger)
   return ledger
 }

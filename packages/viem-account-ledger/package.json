@@ -1,17 +1,21 @@
 {
   "name": "@celo/viem-account-ledger",
   "version": "0.0.1",
-  "description": "Celo's account helpers",
-  "main": "./lib/index.js",
+  "description": "Helper library to make ledger<->viem interactions easier",
+  "type": "module",
+  "exports": {
+    ".": "./lib/index.js"
+  },
   "types": "./lib/index.d.ts",
-  "author": "Celo",
+  "author": "cLabs",
   "license": "Apache-2.0",
   "homepage": "https://docs.celo.org/developer/tools",
-  "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/sdk/viems-account",
+  "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/viem-account-ledger",
   "keywords": [
     "celo",
     "blockchain",
-    "contractkit"
+    "viem",
+    "ledger"
   ],
   "scripts": {
     "build": "yarn run --top-level tsc -b .",
@@ -44,6 +48,6 @@
     "viem": "^2.21.14"
   },
   "engines": {
-    "node": ">=18.x"
+    "node": ">=18"
   }
 }
