@@ -71,10 +71,8 @@ describe('utils', () => {
   describe('checkForKnownToken', () => {
     const ledger = mockLedger()
 
-    // For some reason my mock implementation is bugged
-    it.failing('works', async () => {
+    it('works', async () => {
       const spy = jest.spyOn(ledger, 'provideERC20TokenInformation')
-
       const cUSDa = '0x874069fa1eb16d44d622f2e0ca25eea172369bc1'
       const cEURa = '0x10c892a6ec43a53e45d0b916b4b7d383b1b78c0f'
 
@@ -106,12 +104,5 @@ describe('utils', () => {
       ).resolves.toBeUndefined()
       expect(spy.mock.calls.length).toBe(2)
     })
-  })
-
-  describe('getRecoveredSignature', () => {
-    test.todo('todo')
-  })
-  describe('formatSignature', () => {
-    test.todo('todo')
   })
 })

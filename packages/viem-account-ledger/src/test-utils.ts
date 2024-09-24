@@ -1,19 +1,13 @@
 import { ensureLeading0x, normalizeAddressWith0x, trimLeading0x } from '@celo/base'
-import { privateKeyToPublicKey } from '@celo/utils/lib/address'
 import { generateTypedDataHash } from '@celo/utils/lib/sign-typed-data-utils'
-import {
-  chainIdTransformationForSigning,
-  determineTXType,
-  getHashFromEncoded,
-  signTransaction,
-} from '@celo/wallet-base'
+import { getHashFromEncoded, signTransaction } from '@celo/wallet-base'
 import * as ethUtil from '@ethereumjs/util'
 import Eth from '@ledgerhq/hw-app-eth'
 import { createVerify, VerifyPublicKeyInput } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { Hex } from 'viem'
-import { privateKeyToAddress } from 'viem/accounts'
+import { privateKeyToAccount, privateKeyToAddress } from 'viem/accounts'
 import { legacyLedgerPublicKeyHex } from './data'
 import { meetsVersionRequirements, MIN_VERSION_EIP1559 } from './utils'
 
@@ -102,10 +96,11 @@ export const mockLedger = (config?: Config) => {
   const _ledger = {
     getAddress: async (derivationPath: string) => {
       if (ledgerAddresses[derivationPath]) {
+        const { address, privateKey } = ledgerAddresses[derivationPath]
         return {
-          address: ledgerAddresses[derivationPath].address,
+          address,
           derivationPath,
-          publicKey: privateKeyToPublicKey(ledgerAddresses[derivationPath].privateKey),
+          publicKey: privateKeyToAccount(privateKey).publicKey,
         }
       }
       return {
@@ -116,15 +111,8 @@ export const mockLedger = (config?: Config) => {
     },
     signTransaction: async (derivationPath: string, data: string) => {
       if (ledgerAddresses[derivationPath]) {
-        const type = determineTXType(ensureLeading0x(data))
-        // replicate logic from wallet-base/src/wallet-base.ts
-        const addToV = type === 'celo-legacy' ? chainIdTransformationForSigning(TEST_CHAIN_ID) : 27
         const hash = getHashFromEncoded(ensureLeading0x(data))
-        const { r, s, v } = signTransaction(
-          hash,
-          ledgerAddresses[derivationPath].privateKey,
-          addToV
-        )
+        const { r, s, v } = signTransaction(hash, ledgerAddresses[derivationPath].privateKey)
 
         return {
           v: v.toString(16),
@@ -192,13 +180,14 @@ export const mockLedger = (config?: Config) => {
       }
 
       const verify = createVerify('sha256')
-      const tokenDataBuf = Buffer.from(tokenData, 'hex')
+      const tokenDataBuf = Buffer.from(trimLeading0x(tokenData), 'hex')
       const BASE_DATA_LENGTH =
         20 + // contract address, 20 bytes
         4 + // decimals, uint32, 4 bytes
         4 // chainId, uint32, 4 bytes
       // first byte of data is the ticker length, so we add that to base data length
-      const dataLen = BASE_DATA_LENGTH + tokenDataBuf.readUInt32BE(0)
+      const dataLen = BASE_DATA_LENGTH + tokenDataBuf.readUint8(0)
+
       // start at 1 since the first byte was just informative
       const data = tokenDataBuf.slice(1, dataLen + 1)
       verify.update(data)

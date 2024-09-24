@@ -1,9 +1,5 @@
-import { ensureLeading0x } from '@celo/base'
 import Eth from '@ledgerhq/hw-app-eth'
-import { RecoveredSignatureType, SignatureType } from '@noble/curves/abstract/weierstrass'
-import { secp256k1 } from '@noble/curves/secp256k1'
 import { SemVer } from 'semver'
-import { toHex } from 'viem'
 import { tokenInfoByAddressAndChainId } from './tokens'
 import { Hex } from './types'
 
@@ -58,47 +54,6 @@ export async function checkForKnownToken(
 
   const feeTokenInfo = tokenInfoByAddressAndChainId(feeCurrency, chainId)
   if (feeTokenInfo) {
-    console.log(feeTokenInfo)
     await ledger.provideERC20TokenInformation(`0x${feeTokenInfo.data.toString('hex')}`)
-  }
-}
-
-// Including 0x prefix
-const UNCOMPRESSED_PUBLIC_KEY_HEX_LENGTH = 132 // 2 * 66
-export async function getRecoveredSignature(
-  signature: SignatureType,
-  publicKey: Hex,
-  hash: Uint8Array
-): Promise<RecoveredSignatureType> {
-  for (let i = 0; i < 4; i++) {
-    const recoveredSig = signature.addRecoveryBit(i)
-    const compressed = publicKey.length < UNCOMPRESSED_PUBLIC_KEY_HEX_LENGTH
-    const recoveredPublicKey = `0x${recoveredSig.recoverPublicKey(hash).toHex(compressed)}`
-    if (publicKey === recoveredPublicKey) {
-      return recoveredSig
-    }
-  }
-
-  throw new Error('Unable to generate recovery key from signature.')
-}
-
-export async function formatSignature(
-  ledgerSignature: { r: string; s: string; v: string | number },
-  hash: string,
-  publicKey: string
-) {
-  const { r, s, recovery } = await getRecoveredSignature(
-    new secp256k1.Signature(
-      BigInt(ensureLeading0x(ledgerSignature.r)),
-      BigInt(ensureLeading0x(ledgerSignature.s))
-    ),
-    ensureLeading0x(publicKey),
-    Buffer.from(ensureLeading0x(hash))
-  )
-  return {
-    r: toHex(r),
-    s: toHex(s),
-    v: BigInt(recovery) + BigInt(27),
-    yParity: recovery,
   }
 }

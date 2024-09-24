@@ -32,13 +32,13 @@
     "@ledgerhq/errors": "^6.16.4",
     "@ledgerhq/hw-app-eth": "git+https://github.com:celo-org/ledgerjs-hw-app-eth.git",
     "@ledgerhq/hw-transport": "^6.30.6",
-    "@ledgerhq/hw-transport-mocker": "^6.29.3",
     "@noble/curves": "^1.4.0",
     "semver": "^7.6.0",
     "viem": "^2.21.8"
   },
   "devDependencies": {
     "@celo/typescript": "workspace:^",
+    "@ledgerhq/hw-transport-mocker": "^6.29.3",
     "cross-fetch": "3.1.5",
     "dotenv": "^8.2.0",
     "fetch-mock": "^10.0.7"

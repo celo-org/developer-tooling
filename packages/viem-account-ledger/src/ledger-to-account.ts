@@ -2,16 +2,18 @@ import { CELO_DERIVATION_PATH_BASE, trimLeading0x } from '@celo/base'
 import { ensureLeading0x } from '@celo/utils/lib/address'
 import Eth from '@ledgerhq/hw-app-eth'
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
-import { hashMessage, hashTypedData, serializeSignature } from 'viem'
+import { hashMessage, serializeSignature } from 'viem'
 import { LocalAccount, toAccount } from 'viem/accounts'
 import { CeloTransactionSerializable, serializeTransaction } from 'viem/celo'
-import { assertCompat, checkForKnownToken, formatSignature } from './utils'
+import { mockLedger } from './test-utils'
+import { assertCompat, checkForKnownToken } from './utils'
 
 type LedgerAccount = LocalAccount<'ledger'>
 
 export const CELO_BASE_DERIVATION_PATH = `${CELO_DERIVATION_PATH_BASE.slice(2)}/0`
 
 export async function generateLedger(transport: TransportNodeHid): Promise<Eth> {
+  if (!transport) return mockLedger()
   const ledger = new Eth(transport)
   await assertCompat(ledger)
   return ledger
@@ -23,8 +25,8 @@ export async function ledgerToAccount({
   baseDerivationPath = CELO_BASE_DERIVATION_PATH,
 }: {
   transport: TransportNodeHid
-  derivationPathIndex: number | string
-  baseDerivationPath: string
+  derivationPathIndex?: number | string
+  baseDerivationPath?: string
 }): Promise<LedgerAccount> {
   const derivationPath = `${baseDerivationPath}/${derivationPathIndex}`
   const ledger = await generateLedger(transport)
@@ -41,27 +43,26 @@ export async function ledgerToAccount({
       })
 
       const hash = serializeTransaction(transaction)
-      const ledgerSignature = await ledger!.signTransaction(
-        derivationPath,
-        trimLeading0x(hash),
-        null
-      )
-      const signature = await formatSignature(ledgerSignature, hash, publicKey)
-      return serializeTransaction(transaction, signature)
+      const { r, s, v } = await ledger!.signTransaction(derivationPath, trimLeading0x(hash), null)
+      return serializeTransaction(transaction, {
+        r: ensureLeading0x(r),
+        s: ensureLeading0x(s),
+        v: BigInt(ensureLeading0x(v)),
+      })
     },
 
     async signMessage({ message }) {
       const hash = hashMessage(message)
-      const ledgerSignature = await ledger!.signPersonalMessage(derivationPath, trimLeading0x(hash))
-      const signature = await formatSignature(ledgerSignature, hash, publicKey)
-      return serializeSignature(signature)
+      const { r, s, v } = await ledger!.signPersonalMessage(derivationPath, trimLeading0x(hash))
+      return serializeSignature({
+        r: ensureLeading0x(r),
+        s: ensureLeading0x(s),
+        v: BigInt(v),
+      })
     },
 
-    async signTypedData(parameters) {
-      const hash = hashTypedData(parameters)
-      const ledgerSignature = await ledger!.signPersonalMessage(derivationPath, trimLeading0x(hash))
-      const signature = await formatSignature(ledgerSignature, hash, publicKey)
-      return serializeSignature(signature)
+    async signTypedData(_parameters) {
+      throw new Error('Not implemented as of this release.')
     },
   })
 
