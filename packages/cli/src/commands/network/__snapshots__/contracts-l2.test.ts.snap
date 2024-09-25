@@ -145,7 +145,7 @@ exports[`network:contracts runs 1`] = `
   {
     "contract": "ScoreManager",
     "proxy": "0x150Cd14f6caeB9f9E16ca6B330B487822D4Ea00a",
-    "implementation": "0x8F2528b963975E15bd7D3688D765072500156BCA",
+    "implementation": "0x154A296F3D0A618d85884D9F669309957D0cF63F",
     "version": "1.1.0.0"
   },
   {

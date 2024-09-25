@@ -16,12 +16,12 @@ testWithAnvilL2('epochs:switch cmd', (web3) => {
 
     await timeTravel(epochDuration.plus(1).toNumber(), web3)
 
-    expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual('4')
+    expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(4)
     expect(await epochManagerWrapper.isTimeForNextEpoch()).toEqual(true)
 
     await testLocallyWithWeb3Node(Switch, ['--from', accounts[0]], web3)
 
-    expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual('5')
+    expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(5)
     expect(await epochManagerWrapper.isTimeForNextEpoch()).toEqual(false)
   })
 })
