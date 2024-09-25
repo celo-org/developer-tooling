@@ -1,4 +1,4 @@
-import { newCeloUnreleasedTreasure } from '@celo/abis-12/web3/CeloUnreleasedTreasure'
+import { newCeloUnreleasedTreasury } from '@celo/abis-12/web3/CeloUnreleasedTreasury'
 import { newElection } from '@celo/abis-12/web3/Election'
 import { newEpochManager } from '@celo/abis-12/web3/EpochManager'
 import { newEpochManagerEnabler } from '@celo/abis-12/web3/EpochManagerEnabler'
@@ -42,7 +42,7 @@ export const ContractFactories = {
   [CeloContract.Accounts]: newAccounts,
   [CeloContract.Attestations]: newAttestations,
   [CeloContract.BlockchainParameters]: newBlockchainParameters,
-  [CeloContract.CeloUnreleasedTreasure]: newCeloUnreleasedTreasure,
+  [CeloContract.CeloUnreleasedTreasury]: newCeloUnreleasedTreasury,
   [CeloContract.DoubleSigningSlasher]: newDoubleSigningSlasher,
   [CeloContract.DowntimeSlasher]: newDowntimeSlasher,
   [CeloContract.Election]: newElection,
@@ -105,8 +105,8 @@ export class Web3ContractCache {
   getBlockchainParameters() {
     return this.getContract(CeloContract.BlockchainParameters)
   }
-  getCeloUnreleasedTreasure() {
-    return this.getContract(CeloContract.CeloUnreleasedTreasure)
+  getCeloUnreleasedTreasury() {
+    return this.getContract(CeloContract.CeloUnreleasedTreasury)
   }
   getDoubleSigningSlasher() {
     return this.getContract(CeloContract.DoubleSigningSlasher)
