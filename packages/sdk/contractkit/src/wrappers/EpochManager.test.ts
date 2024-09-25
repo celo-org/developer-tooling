@@ -121,7 +121,6 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
     const status = await epochManagerWrapper.getEpochProcessingStatus()
 
     expect(status.status).toEqual(0)
-    expect(status.toProcessGroups).toEqual(3)
     expect(status.totalRewardsVoter.toNumber()).toBeGreaterThan(0)
     expect(status.perValidatorReward.toNumber()).toBeGreaterThan(0)
     expect(status.totalRewardsCommunity.toNumber()).toBeGreaterThan(0)

@@ -83,7 +83,7 @@ testWithAnvilL1('Governance Wrapper', (web3: Web3) => {
     expect(await governance.getConfig()).toMatchInlineSnapshot(`
       {
         "concurrentProposals": "3",
-        "dequeueFrequency": "30",
+        "dequeueFrequency": "14400",
         "minDeposit": "100000000000000000000",
         "participationParameters": {
           "baseline": "0.005",
@@ -94,7 +94,7 @@ testWithAnvilL1('Governance Wrapper', (web3: Web3) => {
         "queueExpiry": "2419200",
         "stageDurations": {
           "Execution": "604800",
-          "Referendum": "100",
+          "Referendum": "86400",
         },
       }
     `)

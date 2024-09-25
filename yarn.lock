@@ -1571,10 +1571,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/abis-12@npm:@celo/abis@12.0.0-canary.34":
-  version: 12.0.0-canary.34
-  resolution: "@celo/abis@npm:12.0.0-canary.34"
-  checksum: ccf225c914472e696716b3117fd1830ae620410a3c0fe9e456a970e8c51d34946ccd13aa820212c872dbcca1112d8d8333cc8b37b9eb57fda73eb92b2c03ac40
+"@celo/abis-12@npm:@celo/abis@12.0.0-canary.35":
+  version: 12.0.0-canary.35
+  resolution: "@celo/abis@npm:12.0.0-canary.35"
+  checksum: 0735d278d056a7b688bddd1d670fa595446efea0d71086ccef627dd37ff9d70c02435854c2b60bd2967bc9f1a7a790fc8b6a42f3d0ab8c352357b1d42e65e4e0
   languageName: node
   linkType: hard
 
@@ -1765,7 +1765,7 @@ __metadata:
   resolution: "@celo/contractkit@workspace:packages/sdk/contractkit"
   dependencies:
     "@celo/abis": "npm:11.0.0"
-    "@celo/abis-12": "npm:@celo/abis@12.0.0-canary.34"
+    "@celo/abis-12": "npm:@celo/abis@12.0.0-canary.35"
     "@celo/base": "npm:^6.1.0"
     "@celo/celo-devchain": "npm:^7.0.0"
     "@celo/connect": "npm:^6.0.1"
@@ -1819,7 +1819,7 @@ __metadata:
   dependencies:
     "@celo/abis": "npm:^11.0.0"
     "@celo/connect": "npm:^6.0.1"
-    "@celo/devchain-anvil": "npm:12.0.0-canary.6"
+    "@celo/devchain-anvil": "npm:12.0.0-canary.8"
     "@celo/typescript": "workspace:^"
     "@tsconfig/recommended": "npm:^1.0.3"
     "@types/fs-extra": "npm:^8.1.0"
@@ -1835,10 +1835,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/devchain-anvil@npm:12.0.0-canary.6":
-  version: 12.0.0-canary.6
-  resolution: "@celo/devchain-anvil@npm:12.0.0-canary.6"
-  checksum: 77e31ff27ac0388c1447121b5753b4e3db184ec386725ca605440f2af1cf8d3503f4a7356437d8c980c3de0065ad22b3e8f4834ee83af81f732a7288d4e2204d
+"@celo/devchain-anvil@npm:12.0.0-canary.8":
+  version: 12.0.0-canary.8
+  resolution: "@celo/devchain-anvil@npm:12.0.0-canary.8"
+  checksum: 128d1b4a0d841b171df6b4d02aedb0e1b1f29d9ce3c0f1d6e86e7451b3945d9ca3fd0745c2504f4e78a72b1d8bf762198d5a563dc7c6cdab640e8ce1c7fba1fd
   languageName: node
   linkType: hard
 

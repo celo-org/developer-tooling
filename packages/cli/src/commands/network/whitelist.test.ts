@@ -22,23 +22,23 @@ testWithAnvilL1('network:whitelist cmd', (web3: Web3) => {
     expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`
       [
         [
-          " Name                Symbol              Whitelisted Address                        Token Address                              Decimals Uses Adapter? 
+          " Name                Symbol Whitelisted Address                        Token Address                              Decimals Uses Adapter? 
       ",
         ],
         [
-          " ─────────────────── ─────────────────── ────────────────────────────────────────── ────────────────────────────────────────── ──────── ───────────── 
+          " ─────────────────── ────── ────────────────────────────────────────── ────────────────────────────────────────── ──────── ───────────── 
       ",
         ],
         [
-          " Celo Euro           Celo Euro           0x06f60E083aDf016a98E3c7A1aFfa1c097B617aB9 0x06f60E083aDf016a98E3c7A1aFfa1c097B617aB9 18       false         
+          " Celo Euro           cEUR   0x06f60E083aDf016a98E3c7A1aFfa1c097B617aB9 0x06f60E083aDf016a98E3c7A1aFfa1c097B617aB9 18       false         
       ",
         ],
         [
-          " Celo Dollar         Celo Dollar         0x9cA64d4663B4A623C3E9a7F9155451647592bEc7 0x9cA64d4663B4A623C3E9a7F9155451647592bEc7 18       false         
+          " Celo Dollar         cUSD   0x9cA64d4663B4A623C3E9a7F9155451647592bEc7 0x9cA64d4663B4A623C3E9a7F9155451647592bEc7 18       false         
       ",
         ],
         [
-          " Celo Brazilian Real Celo Brazilian Real 0xC458f5ab25a47741205722d465cDea9aB1E1154A 0xC458f5ab25a47741205722d465cDea9aB1E1154A 18       false         
+          " Celo Brazilian Real cREAL  0xC458f5ab25a47741205722d465cDea9aB1E1154A 0xC458f5ab25a47741205722d465cDea9aB1E1154A 18       false         
       ",
         ],
       ]
