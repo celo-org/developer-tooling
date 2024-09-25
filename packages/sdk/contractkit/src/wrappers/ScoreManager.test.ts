@@ -15,10 +15,10 @@ testWithAnvilL2('ScoreManager Wrapper', (web3) => {
     const scoreManagerWrapper = await kit.contracts.getScoreManager()
     const electedValidatorAddresses = await epochManagerWrapper.getElected()
 
-    // default score is 0
+    // default score is 1
     expect(
       await scoreManagerWrapper.getValidatorScore(electedValidatorAddresses[0])
-    ).toMatchInlineSnapshot(`"0"`)
+    ).toMatchInlineSnapshot(`"1"`)
 
     await asCoreContractsOwner(
       web3,
@@ -45,8 +45,8 @@ testWithAnvilL2('ScoreManager Wrapper', (web3) => {
   it('gets group score', async () => {
     const scoreManagerWrapper = await kit.contracts.getScoreManager()
 
-    // default score is 0
-    expect(await scoreManagerWrapper.getGroupScore(GROUP_ADDRESSES[0])).toMatchInlineSnapshot(`"0"`)
+    // default score is 1
+    expect(await scoreManagerWrapper.getGroupScore(GROUP_ADDRESSES[0])).toMatchInlineSnapshot(`"1"`)
 
     await asCoreContractsOwner(
       web3,

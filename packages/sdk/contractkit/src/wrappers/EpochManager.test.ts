@@ -100,7 +100,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
 
     await activateValidators()
 
-    expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual('5')
+    expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(5)
 
     for (let i = 0; i < EPOCH_COUNT; i++) {
       await timeTravel(EPOCH_DURATION + 1, web3)
@@ -116,7 +116,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
       })
     }
 
-    expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual('10')
+    expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(10)
 
     const status = await epochManagerWrapper.getEpochProcessingStatus()
 
