@@ -165,8 +165,8 @@ testWithGanache('releasegold:admin-revoke cmd', (web3: Web3) => {
 
         beforeEach(async () => {
           // from vote.test.ts
-          const minDeposit = (await governance.minDeposit()).toFixed()
           governance = await kit.contracts.getGovernance()
+          const minDeposit = (await governance.minDeposit()).toFixed()
           await governance
             .propose([], 'URL')
             .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
