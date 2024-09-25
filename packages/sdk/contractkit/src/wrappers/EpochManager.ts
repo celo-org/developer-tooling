@@ -15,7 +15,6 @@ export interface EpochProcessState {
   totalRewardsVoter: BigNumber
   totalRewardsCommunity: BigNumber
   totalRewardsCarbonFund: BigNumber
-  toProcessGroups: number
 }
 
 export interface EpochManagerConfig {
@@ -45,7 +44,6 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
         totalRewardsVoter: new BigNumber(result.totalRewardsVoter),
         totalRewardsCommunity: new BigNumber(result.totalRewardsCommunity),
         totalRewardsCarbonFund: new BigNumber(result.totalRewardsCarbonFund),
-        toProcessGroups: parseInt(result.toProcessGroups),
       }
     }
   )

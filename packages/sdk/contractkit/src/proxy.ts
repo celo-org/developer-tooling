@@ -1,5 +1,5 @@
 // tslint:disable: ordered-imports
-import { ABI as CeloUnreleasedTreasureABI } from '@celo/abis-12/web3/CeloUnreleasedTreasure'
+import { ABI as CeloUnreleasedTreasuryABI } from '@celo/abis-12/web3/CeloUnreleasedTreasury'
 import { ABI as EpochManagerABI } from '@celo/abis-12/web3/EpochManager'
 import { ABI as EpochManagerEnablerABI } from '@celo/abis-12/web3/EpochManagerEnabler'
 import { ABI as FeeCurrencyDirectoryABI } from '@celo/abis-12/web3/FeeCurrencyDirectory'
@@ -102,7 +102,7 @@ const initializeAbiMap = {
   AccountsProxy: findInitializeAbi(AccountsABI),
   AttestationsProxy: findInitializeAbi(AttestationsABI),
   BlockchainParametersProxy: findInitializeAbi(BlockchainParametersABI),
-  CeloUnreleasedTreasureProxy: findInitializeAbi(CeloUnreleasedTreasureABI),
+  CeloUnreleasedTreasuryProxy: findInitializeAbi(CeloUnreleasedTreasuryABI),
   DoubleSigningSlasherProxy: findInitializeAbi(DoubleSigningSlasherABI),
   DowntimeSlasherProxy: findInitializeAbi(DowntimeSlasherABI),
   ElectionProxy: findInitializeAbi(ElectionABI),
