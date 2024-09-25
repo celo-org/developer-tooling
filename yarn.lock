@@ -1665,7 +1665,7 @@ __metadata:
     bignumber.js: "npm:9.0.0"
     chalk: "npm:^2.4.2"
     command-exists: "npm:^1.2.9"
-    cross-fetch: "npm:3.1.5"
+    cross-fetch: "npm:3.1.6"
     debug: "npm:^4.1.1"
     ethers: "npm:5"
     fs-extra: "npm:^8.1.0"
@@ -1780,7 +1780,7 @@ __metadata:
     "@types/node": "npm:18.7.16"
     bignumber.js: "npm:^9.0.0"
     bn.js: "npm:^5.1.0"
-    cross-fetch: "npm:3.1.5"
+    cross-fetch: "npm:3.1.6"
     debug: "npm:^4.1.1"
     fetch-mock: "npm:^10.0.7"
     fp-ts: "npm:2.1.1"
@@ -1854,7 +1854,7 @@ __metadata:
     "@celo/utils": "npm:^7.0.0"
     "@types/debug": "npm:^4.1.12"
     bignumber.js: "npm:9.0.0"
-    cross-fetch: "npm:3.1.5"
+    cross-fetch: "npm:3.1.6"
     debug: "npm:^4.1.1"
     fetch-mock: "npm:^10.0.7"
     web3: "npm:1.10.4"
@@ -1930,7 +1930,7 @@ __metadata:
     "@celo/dev-utils": "npm:0.0.5"
     "@celo/typescript": "workspace:^"
     "@types/debug": "npm:^4.1.12"
-    cross-fetch: "npm:3.1.5"
+    cross-fetch: "npm:3.1.6"
     debug: "npm:^4.1.1"
     fetch-mock: "npm:^10.0.7"
   languageName: unknown
@@ -1997,7 +1997,7 @@ __metadata:
     "@types/debug": "npm:^4.1.5"
     "@types/qrcode": "npm:^1.3.4"
     bn.js: "npm:^5.1.0"
-    cross-fetch: "npm:3.1.5"
+    cross-fetch: "npm:3.1.6"
     dotenv: "npm:^8.2.0"
     fetch-mock: "npm:^10.0.7"
     qrcode: "npm:1.4.4"
@@ -8501,6 +8501,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cross-fetch@npm:3.1.6":
+  version: 3.1.6
+  resolution: "cross-fetch@npm:3.1.6"
+  dependencies:
+    node-fetch: "npm:^2.6.11"
+  checksum: e08325b813da37f2d5312b3e630af992c35681c1737707b029e8ef1c48ea034bda8b960000fc8bee6e0485e133347198aa6ecccadb530b06c47472f6c76bc27b
+  languageName: node
+  linkType: hard
+
 "cross-fetch@npm:^4.0.0":
   version: 4.0.0
   resolution: "cross-fetch@npm:4.0.0"
@@ -14300,7 +14309,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-fetch@npm:^2.5.0, node-fetch@npm:^2.6.12":
+"node-fetch@npm:^2.5.0, node-fetch@npm:^2.6.11, node-fetch@npm:^2.6.12":
   version: 2.7.0
   resolution: "node-fetch@npm:2.7.0"
   dependencies:

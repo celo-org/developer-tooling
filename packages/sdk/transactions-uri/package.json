@@ -35,7 +35,7 @@
     "@celo/contractkit": "^8.1.1",
     "@celo/dev-utils": "0.0.5",
     "@celo/typescript": "workspace:^",
-    "cross-fetch": "3.1.5",
+    "cross-fetch": "3.1.6",
     "dotenv": "^8.2.0",
     "fetch-mock": "^10.0.7"
   },
