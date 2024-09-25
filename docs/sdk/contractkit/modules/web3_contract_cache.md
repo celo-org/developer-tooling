@@ -24,7 +24,7 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:78](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L78)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:84](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L84)
 
 ## Variables
 
@@ -39,11 +39,13 @@
 | `Accounts` | (`web3`: `default`, `address`: `string`) => `Accounts` |
 | `Attestations` | (`web3`: `default`, `address`: `string`) => `Attestations` |
 | `BlockchainParameters` | (`web3`: `default`, `address`: `string`) => `BlockchainParameters` |
-| `CeloDistributionSchedule` | (`web3`: `default`, `address`: `string`) => `CeloDistributionSchedule` |
+| `CeloUnreleasedTreasury` | (`web3`: `default`, `address`: `string`) => `CeloUnreleasedTreasury` |
 | `DoubleSigningSlasher` | (`web3`: `default`, `address`: `string`) => `DoubleSigningSlasher` |
 | `DowntimeSlasher` | (`web3`: `default`, `address`: `string`) => `DowntimeSlasher` |
 | `ERC20` | (`web3`: `default`, `address`: `string`) => `IERC20` |
 | `Election` | (`web3`: `default`, `address`: `string`) => `Election` |
+| `EpochManager` | (`web3`: `default`, `address`: `string`) => `EpochManager` |
+| `EpochManagerEnabler` | (`web3`: `default`, `address`: `string`) => `EpochManagerEnabler` |
 | `EpochRewards` | (`web3`: `default`, `address`: `string`) => `EpochRewards` |
 | `Escrow` | (`web3`: `default`, `address`: `string`) => `Escrow` |
 | `FederatedAttestations` | (`web3`: `default`, `address`: `string`) => `FederatedAttestations` |
@@ -61,6 +63,7 @@
 | `Random` | (`web3`: `default`, `address`: `string`) => `Random` |
 | `Registry` | (`web3`: `default`, `address`: `string`) => `Registry` |
 | `Reserve` | (`web3`: `default`, `address`: `string`) => `Reserve` |
+| `ScoreManager` | (`web3`: `default`, `address`: `string`) => `ScoreManager` |
 | `SortedOracles` | (`web3`: `default`, `address`: `string`) => `SortedOracles` |
 | `StableToken` | (`web3`: `default`, `address`: `string`) => `StableToken` |
 | `StableTokenBRL` | (`web3`: `default`, `address`: `string`) => `StableToken` |
@@ -70,4 +73,4 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L38)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:41](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L41)

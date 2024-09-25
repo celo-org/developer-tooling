@@ -253,7 +253,6 @@ ___
 | `Approval` | `ContractEvent`\<\{ `0`: `string` ; `1`: `string` ; `2`: `string` ; `owner`: `string` ; `spender`: `string` ; `value`: `string`  }\> |
 | `OwnershipTransferred` | `ContractEvent`\<\{ `0`: `string` ; `1`: `string` ; `newOwner`: `string` ; `previousOwner`: `string`  }\> |
 | `RegistrySet` | `ContractEvent`\<`string`\> |
-| `SetCeloTokenDistributionScheduleAddress` | `ContractEvent`\<`string`\> |
 | `Transfer` | `ContractEvent`\<\{ `0`: `string` ; `1`: `string` ; `2`: `string` ; `from`: `string` ; `to`: `string` ; `value`: `string`  }\> |
 | `TransferComment` | `ContractEvent`\<`string`\> |
 | `allEvents` | (`options?`: `EventOptions`, `cb?`: `Callback`\<`EventLog`\>) => `EventEmitter` |
@@ -308,7 +307,7 @@ ___
 
 ### methodIds
 
-• **methodIds**: `Record`\<``"symbol"`` \| ``"name"`` \| ``"decimals"`` \| ``"initialized"`` \| ``"isL2"`` \| ``"isOwner"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"initialize"`` \| ``"approve"`` \| ``"getVersionNumber"`` \| ``"transfer"`` \| ``"increaseAllowance"`` \| ``"decreaseAllowance"`` \| ``"mint"`` \| ``"transferWithComment"`` \| ``"burn"`` \| ``"transferFrom"`` \| ``"allowance"`` \| ``"balanceOf"`` \| ``"totalSupply"`` \| ``"celoTokenDistributionSchedule"`` \| ``"setCeloTokenDistributionScheduleAddress"`` \| ``"increaseSupply"`` \| ``"allocatedSupply"`` \| ``"circulatingSupply"`` \| ``"getBurnedAmount"``, `string`\>
+• **methodIds**: `Record`\<``"symbol"`` \| ``"name"`` \| ``"decimals"`` \| ``"initialized"`` \| ``"isL2"`` \| ``"isOwner"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"initialize"`` \| ``"approve"`` \| ``"getVersionNumber"`` \| ``"transfer"`` \| ``"increaseAllowance"`` \| ``"decreaseAllowance"`` \| ``"mint"`` \| ``"transferWithComment"`` \| ``"burn"`` \| ``"transferFrom"`` \| ``"allowance"`` \| ``"balanceOf"`` \| ``"totalSupply"`` \| ``"increaseSupply"`` \| ``"circulatingSupply"`` \| ``"getBurnedAmount"`` \| ``"allocatedSupply"``, `string`\>
 
 #### Inherited from
 
@@ -617,7 +616,7 @@ Contract getPastEvents
 
 | Name | Type |
 | :------ | :------ |
-| `event` | ``"OwnershipTransferred"`` \| ``"RegistrySet"`` \| ``"allEvents"`` \| ``"Approval"`` \| ``"Transfer"`` \| ``"TransferComment"`` \| ``"SetCeloTokenDistributionScheduleAddress"`` |
+| `event` | ``"OwnershipTransferred"`` \| ``"RegistrySet"`` \| ``"allEvents"`` \| ``"Approval"`` \| ``"Transfer"`` \| ``"TransferComment"`` |
 | `options` | `PastEventOptions` |
 
 #### Returns
