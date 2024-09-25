@@ -7,7 +7,6 @@ export default class Switch extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    // TODO not sure if this flag is needed at all here
     from: CustomFlags.address({ required: true }),
   }
 
