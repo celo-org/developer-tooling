@@ -29,4 +29,4 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:127](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L127)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:131](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L131)
