@@ -1,5 +1,11 @@
 # @celo/contractkit
 
+## 8.2.0
+
+### Minor Changes
+
+- [#334](https://github.com/celo-org/developer-tooling/pull/334) [`7400467`](https://github.com/celo-org/developer-tooling/commit/740046755f5079cb1dafdb71fcc92cc4ad213eb9) Thanks [@pahor167](https://github.com/pahor167)! - Adds support for EpochManager and ScoreManager contracts
+
 ## 8.1.1
 
 ### Patch Changes
