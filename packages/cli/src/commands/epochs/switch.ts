@@ -25,7 +25,6 @@ export default class Switch extends BaseCommand {
     const epochManager = await kit.contracts.getEpochManager()
 
     const isTimeForNextEpoch = await epochManager.isTimeForNextEpoch()
-    console.log('isTimeForNextEpoch?', isTimeForNextEpoch)
     if (!isTimeForNextEpoch) {
       const msg = 'It is not time for the next epoch yet'
       console.info(chalk.red.bold(msg))
