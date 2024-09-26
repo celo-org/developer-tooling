@@ -27,6 +27,7 @@ testWithAnvilL2('network:parameters', (web3) => {
       EpochManager: 
         currentEpochNumber: 4
         epochDuration: 86400
+        isTimeForNextEpoch: false
       FeeCurrencyDirectory: 
         intrinsicGasForAlternativeFeeCurrency: 
           0x06f60E083aDf016a98E3c7A1aFfa1c097B617aB9: 21000 (~2.100e+4)
