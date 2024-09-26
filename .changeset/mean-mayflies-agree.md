@@ -2,4 +2,4 @@
 '@celo/celocli': minor
 ---
 
-Adds epochs:switch command
+Adds epochs:start epochs:switch & epochs:finish  commands
