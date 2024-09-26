@@ -23,27 +23,27 @@ testWithAnvilL1('network:parameters', (web3: Web3) => {
           penalty: 100000000000000000000 (~1.000e+20)
           reward: 10000000000000000000 (~1.000e+19)
       Election: 
-        currentThreshold: 0 
+        currentThreshold: 60000000000000000000 (~6.000e+19)
         electabilityThreshold: 0.001 
         electableValidators: 
           max: 100 
           min: 1 
         maxNumGroupsVotedFor: 10 
-        totalVotes: 0 
+        totalVotes: 60000000000000000000000 (~6.000e+22)
       EpochRewards: 
         carbonOffsetting: 
           factor: 0.001 
-          partner: 0x0000000000000000000000000000000000000000
+          partner: 0xD533Ca259b330c7A88f74E000a3FaEa2d63B7972
         communityReward: 0.25 
         rewardsMultiplier: 
-          max: 0 
+          max: 2 
           overspendAdjustment: 5 
           underspendAdjustment: 0.5 
         targetValidatorEpochPayment: 205479452054794520547 (~2.055e+20)
         targetVotingYield: 
           adjustment: 0 
           max: 0.0005 
-          target: 0 
+          target: 0.00016 
       GasPriceMinimum: 
         adjustmentSpeed: 0.5 
         gasPriceMinimum: 100000000 (~1.000e+8)
@@ -62,12 +62,12 @@ testWithAnvilL1('network:parameters', (web3: Web3) => {
           Execution: 1 week
           Referendum: 1 day
       LockedGold: 
-        totalLockedGold: 60000000000000000000000 (~6.000e+22)
+        totalLockedGold: 120000000000000000000000 (~1.200e+23)
         unlockingPeriod: 6 hours
       Reserve: 
         frozenReserveGoldDays: 0 
         frozenReserveGoldStartBalance: 0 
-        frozenReserveGoldStartDay: 19927 (~1.993e+4)
+        frozenReserveGoldStartDay: 19991 (~1.999e+4)
         otherReserveAddresses: 
 
         tobinTaxStalenessThreshold: 3153600000 (~3.154e+9)
@@ -79,7 +79,7 @@ testWithAnvilL1('network:parameters', (web3: Web3) => {
         groupLockedGoldRequirements: 
           duration: 6 months
           value: 10000000000000000000000 (~1.000e+22)
-        maxGroupSize: 5 
+        maxGroupSize: 2 
         membershipHistoryLength: 60 
         slashingMultiplierResetPeriod: 1 month
         validatorLockedGoldRequirements: 

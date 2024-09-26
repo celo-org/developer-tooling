@@ -26,8 +26,6 @@
 
   ↳ [`BlockchainParametersWrapper`](wrappers_BlockchainParameters.BlockchainParametersWrapper.md)
 
-  ↳ [`CeloDistributionScheduleWrapper`](wrappers_CeloDistributionScheduleWrapper.CeloDistributionScheduleWrapper.md)
-
   ↳ [`EpochRewardsWrapper`](wrappers_EpochRewards.EpochRewardsWrapper.md)
 
   ↳ [`Erc20Wrapper`](wrappers_Erc20Wrapper.Erc20Wrapper.md)
@@ -47,6 +45,8 @@
   ↳ [`OdisPaymentsWrapper`](wrappers_OdisPayments.OdisPaymentsWrapper.md)
 
   ↳ [`ReserveWrapper`](wrappers_Reserve.ReserveWrapper.md)
+
+  ↳ [`ScoreManagerWrapper`](wrappers_ScoreManager.ScoreManagerWrapper.md)
 
   ↳ [`SortedOraclesWrapper`](wrappers_SortedOracles.SortedOraclesWrapper.md)
 

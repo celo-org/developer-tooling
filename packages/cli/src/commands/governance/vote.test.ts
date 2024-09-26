@@ -2,7 +2,7 @@ import { StrongAddress } from '@celo/base'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
-import { NetworkConfig, timeTravel } from '@celo/dev-utils/lib/ganache-test'
+import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { changeMultiSigOwner } from '../../test-utils/chain-setup'
@@ -14,8 +14,6 @@ import Dequeue from './dequeue'
 import Vote from './vote'
 
 process.env.NO_SYNCCHECK = 'true'
-
-const expConfig = NetworkConfig.governance
 
 testWithAnvilL1('governance:vote cmd', (web3: Web3) => {
   let minDeposit: string
@@ -33,7 +31,8 @@ testWithAnvilL1('governance:vote cmd', (web3: Web3) => {
     await governance
       .propose([], 'URL')
       .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
-    await timeTravel(expConfig.dequeueFrequency, web3)
+    const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
+    await timeTravel(dequeueFrequency, web3)
     await testLocallyWithWeb3Node(Dequeue, ['--from', accounts[0]], web3)
     await changeMultiSigOwner(kit, accounts[0])
     await testLocallyWithWeb3Node(

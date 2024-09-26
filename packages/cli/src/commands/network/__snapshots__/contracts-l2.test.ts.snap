@@ -7,7 +7,7 @@ exports[`network:contracts runs 1`] = `
   {
     "contract": "Accounts",
     "proxy": "0x3B4a625Ba01F298Fab94eda78e4e310704F9B658",
-    "implementation": "0xd44a8624EBe6A90F45c94dD0e6426C0F1E16f667",
+    "implementation": "0x27f640a4f0C95Fd18432be400653113ce0b6a617",
     "version": "1.1.5.0"
   },
   {
@@ -17,51 +17,57 @@ exports[`network:contracts runs 1`] = `
     "version": "1.3.1.0"
   },
   {
+    "contract": "CeloUnreleasedTreasury",
+    "proxy": "0x7C9745752517812d2c7968741Fa8b1B578cFD441",
+    "implementation": "0xCcE3F693556cbed36759bC162E5e47705E0D7C2A",
+    "version": "1.1.0.0"
+  },
+  {
     "contract": "DoubleSigningSlasher",
     "proxy": "0x031C3be2CC63d31226A0EA14FBfD83ae70A76fB1",
-    "implementation": "0x3f5555b98facA1c4A2Df1C254Ae29CCd7ab1371e",
+    "implementation": "0x4e18F3711cDc6613ea630f1fDFB89a01500934c5",
     "version": "1.1.2.0"
   },
   {
     "contract": "DowntimeSlasher",
     "proxy": "0x4c5160408DE5FFA4f4c25034D084c40aec3bA6fF",
-    "implementation": "0x37155eCB8cBb564F67CE16239e8d302C3296A33F",
+    "implementation": "0x60b6b1fAe1945ef53AAe72a3f7699708348298D6",
     "version": "2.0.1.0"
   },
   {
     "contract": "Election",
     "proxy": "0x947DB20Ef764841b4aD9335b0DdaB83B03AF25EC",
-    "implementation": "0x25BCCd91887FeeDC97255B06157924fAC25f7147",
+    "implementation": "0x0dB1e9Ceb6627ac045a8D316E67b2638B31b4bBf",
     "version": "1.1.4.0"
   },
   {
     "contract": "EpochManager",
     "proxy": "0xbf13Ba354EeF22976Faf20b11E6dd5440514eE68",
-    "implementation": "0xb170856Bf8FcF4930Da4727bC21F52DdcF5731Cd",
+    "implementation": "0x2b1b73Ad62eFC51afE62D20b79B5e0bc41BBe333",
     "version": "1.1.0.0"
   },
   {
     "contract": "EpochManagerEnabler",
     "proxy": "0x8A6F9F2B407FD63a087D47b32A98A991d26298f0",
-    "implementation": "0x77b37a4C503Ea3Fa405522846Fb487c8020D58C4",
+    "implementation": "0x8b0D48E4CA18484aEDc3B50f28EEa342F68B3430",
     "version": "1.1.0.0"
   },
   {
     "contract": "EpochRewards",
     "proxy": "0x4573120f10c89671a0083d0361B6F3e535de6e6a",
-    "implementation": "0x0fbA463F9c0eC07eB4037dA07d7761aE14b43889",
+    "implementation": "0x5F5f8d61CC0a077CAFD24395a4876c80063c26BD",
     "version": "1.1.2.0"
   },
   {
     "contract": "Escrow",
     "proxy": "0x37C08a3F428258e5B835a256b2FB69C52843989a",
-    "implementation": "0xF984eD10a9395798dC47123DeA021210c7044D39",
+    "implementation": "0x4242e61cF23587b7d73da0b36b66CDCD6D6c9071",
     "version": "1.2.0.0"
   },
   {
     "contract": "FederatedAttestations",
     "proxy": "0x6470D27B61D39D4d430083C4D461b9deD5C36e19",
-    "implementation": "0xBDaC69C32B4864dbB316BBc4d6e6B0e4d201133A",
+    "implementation": "0xFE0393E974cd59c1000E50F1ae83289Ba3CD528B",
     "version": "1.1.0.0"
   },
   {
@@ -79,7 +85,7 @@ exports[`network:contracts runs 1`] = `
   {
     "contract": "FeeHandler",
     "proxy": "0xC7Bbf9cF343A87B592aE9B0E9ee2c8E71D7f5387",
-    "implementation": "0xFd88A50491C2C07DeE54a002d7d805A0032B0931",
+    "implementation": "0x18bC41e7032e9e78A2b7D0232E91c0cD7a898121",
     "version": "1.1.0.1"
   },
   {
@@ -91,37 +97,37 @@ exports[`network:contracts runs 1`] = `
   {
     "contract": "GasPriceMinimum",
     "proxy": "0x50e744e3e818cBebB6251bB577E8D106E06C4D08",
-    "implementation": "0x54e415D2956C0a0C5d932138Bda6dd51D3807F3A",
+    "implementation": "0x64B7527B6fc6327403603FA5C9ADe48a6160808f",
     "version": "1.2.1.0"
   },
   {
     "contract": "GoldToken",
     "proxy": "0x53C4774Afa905093531dD7312a7171f78ba64e8E",
-    "implementation": "0x86A95F9441876B5c9424C766e893996403030dfD",
+    "implementation": "0x7B04141AB1EE8ECCd189015e7bF1294531785708",
     "version": "1.1.3.0"
   },
   {
     "contract": "Governance",
     "proxy": "0x1164B9e064bf1D8C3B70a70A4b6929d0488b6d0a",
-    "implementation": "0x4C0ae808BB67CFBc6b603d517EDe0a90022F3360",
+    "implementation": "0x4feBB2a68917ba1902EAA94934e67158Ef2E211C",
     "version": "1.5.0.0"
   },
   {
     "contract": "LockedGold",
     "proxy": "0x08E6B8D57c7387364EbF5DD3bc34Ed96e97ff0bF",
-    "implementation": "0xf0d5DC6a8348D6acA604389AD1365Ee1a30b5deA",
+    "implementation": "0xFFdeBC16e42b199b8A8FC7f6D55Cc14da0b059A2",
     "version": "1.1.5.0"
   },
   {
     "contract": "MentoFeeHandlerSeller",
     "proxy": "0x119e4B81Ea1E0cAb2222411216486d7B1e75f20C",
-    "implementation": "0x8A3F8EBd58D278FD6E45D8De8e73525da360c282",
+    "implementation": "0x5b0605c44f4356b6F479f00fD5e3A1e6D22867Fc",
     "version": "1.1.0.1"
   },
   {
     "contract": "OdisPayments",
     "proxy": "0xA538082B97D1059abd2B8Ea609517E4EF092C25f",
-    "implementation": "0x160D576019Fe58592fd19eCEE97D7f481670eEbE",
+    "implementation": "0x7c14920BF4319C81b6Ac73532e3a40eC794e548C",
     "version": "1.1.0.0"
   },
   {
@@ -145,7 +151,7 @@ exports[`network:contracts runs 1`] = `
   {
     "contract": "ScoreManager",
     "proxy": "0x150Cd14f6caeB9f9E16ca6B330B487822D4Ea00a",
-    "implementation": "0x8F2528b963975E15bd7D3688D765072500156BCA",
+    "implementation": "0x154A296F3D0A618d85884D9F669309957D0cF63F",
     "version": "1.1.0.0"
   },
   {
@@ -175,13 +181,13 @@ exports[`network:contracts runs 1`] = `
   {
     "contract": "UniswapFeeHandlerSeller",
     "proxy": "0x3C9E3f84f95C1AEFbC8501aBcF882DA63F09DB78",
-    "implementation": "0xB8F5D9d953b74b97f5B9F9360E521B86111903cf",
+    "implementation": "0xEF6022d615fE7B994edB74541E803E67414Da50e",
     "version": "1.1.0.1"
   },
   {
     "contract": "Validators",
     "proxy": "0x88a66D2608E66f82Bf445d8AFA13629a7c4ac718",
-    "implementation": "0xaD0DF9037644d14934eb701814cDb63813848AD8",
+    "implementation": "0x527edb2c6788b7D69b06E011E2F4Ac7deDfaFA3b",
     "version": "1.3.0.0"
   }
 ]
