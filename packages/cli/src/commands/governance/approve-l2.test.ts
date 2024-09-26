@@ -80,7 +80,7 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
             "Running Checks:",
           ],
           [
-            "   ✔  0x078B932B0d1e56554974A431B8B33973D94E002b is security council address ",
+            "   ✔  0x0639DBA9CBD6586E665B2bB7b705C65d96aae4f7 is security council address ",
           ],
           [
             "   ✘  0x5409ED021D9299bf6814279A6A1411A7e866A631 is security council multisig signatory ",
@@ -126,7 +126,7 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
             "Running Checks:",
           ],
           [
-            "   ✔  0x078B932B0d1e56554974A431B8B33973D94E002b is approver address ",
+            "   ✔  0x0639DBA9CBD6586E665B2bB7b705C65d96aae4f7 is approver address ",
           ],
           [
             "   ✘  0x5409ED021D9299bf6814279A6A1411A7e866A631 is approver multisig signatory ",
@@ -490,7 +490,7 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
             "Running Checks:",
           ],
           [
-            "   ✔  0x078B932B0d1e56554974A431B8B33973D94E002b is security council address ",
+            "   ✔  0x0639DBA9CBD6586E665B2bB7b705C65d96aae4f7 is security council address ",
           ],
           [
             "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is security council multisig signatory ",
@@ -546,7 +546,7 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
             "Running Checks:",
           ],
           [
-            "   ✔  0x078B932B0d1e56554974A431B8B33973D94E002b is approver address ",
+            "   ✔  0x0639DBA9CBD6586E665B2bB7b705C65d96aae4f7 is approver address ",
           ],
           [
             "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is approver multisig signatory ",
@@ -634,7 +634,7 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
             "Running Checks:",
           ],
           [
-            "   ✔  0x078B932B0d1e56554974A431B8B33973D94E002b is security council address ",
+            "   ✔  0x0639DBA9CBD6586E665B2bB7b705C65d96aae4f7 is security council address ",
           ],
           [
             "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is security council multisig signatory ",

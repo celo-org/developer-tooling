@@ -11,24 +11,24 @@ testWithAnvilL1('FeeCurrencyWhitelist', (web3) => {
       [
         {
           "adaptedToken": undefined,
-          "address": "0x0c6a0fde0A72bA3990870f0F99ED79a821703474",
+          "address": "0x06f60E083aDf016a98E3c7A1aFfa1c097B617aB9",
           "decimals": 18,
           "name": "Celo Euro",
-          "symbol": "Celo Euro",
+          "symbol": "cEUR",
         },
         {
           "adaptedToken": undefined,
-          "address": "0x603931FF5E63d2fd3EEF1513a55fB773d8082195",
-          "decimals": 18,
-          "name": "Celo Brazilian Real",
-          "symbol": "Celo Brazilian Real",
-        },
-        {
-          "adaptedToken": undefined,
-          "address": "0x82398F079D742F9D0Ae71ef8C99E5c68b2eD6705",
+          "address": "0x9cA64d4663B4A623C3E9a7F9155451647592bEc7",
           "decimals": 18,
           "name": "Celo Dollar",
-          "symbol": "Celo Dollar",
+          "symbol": "cUSD",
+        },
+        {
+          "adaptedToken": undefined,
+          "address": "0xC458f5ab25a47741205722d465cDea9aB1E1154A",
+          "decimals": 18,
+          "name": "Celo Brazilian Real",
+          "symbol": "cREAL",
         },
       ]
     `)
