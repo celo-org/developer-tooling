@@ -20,6 +20,7 @@ export interface EpochProcessState {
 export interface EpochManagerConfig {
   currentEpochNumber: number
   epochDuration: number
+  isTimeForNextEpoch: boolean
 }
 
 /**
@@ -116,10 +117,12 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
   async getConfig(): Promise<EpochManagerConfig> {
     const currentEpochNumber = await this.getCurrentEpochNumber()
     const epochDuration = await this.epochDuration()
+    const isTimeForNextEpoch = await this.isTimeForNextEpoch()
 
     return {
       currentEpochNumber,
       epochDuration,
+      isTimeForNextEpoch,
     }
   }
 }
