@@ -3,8 +3,8 @@ import { BaseCommand } from '../../base'
 import { displaySendTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
-export default class Switch extends BaseCommand {
-  static description = 'Finishes current epoch and starts a new one.'
+export default class Start extends BaseCommand {
+  static description = 'Starts next epoch process.'
 
   static flags = {
     ...BaseCommand.flags,
@@ -13,11 +13,11 @@ export default class Switch extends BaseCommand {
 
   static args = {}
 
-  static examples = ['switch --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95']
+  static examples = ['start --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95']
 
   async run() {
     const kit = await this.getKit()
-    const res = await this.parse(Switch)
+    const res = await this.parse(Start)
     const address = res.flags.from
 
     kit.defaultAccount = address
@@ -25,7 +25,6 @@ export default class Switch extends BaseCommand {
     const epochManager = await kit.contracts.getEpochManager()
 
     const isTimeForNextEpoch = await epochManager.isTimeForNextEpoch()
-    console.log('isTimeForNextEpoch?', isTimeForNextEpoch)
     if (!isTimeForNextEpoch) {
       const msg = 'It is not time for the next epoch yet'
       console.info(chalk.red.bold(msg))
@@ -33,9 +32,12 @@ export default class Switch extends BaseCommand {
     }
 
     const isEpochProcessStarted = await epochManager.isOnEpochProcess()
-    if (!isEpochProcessStarted) {
-      await displaySendTx('startNextEpoch', epochManager.startNextEpochProcess())
+    if (isEpochProcessStarted) {
+      const msg = 'Epoch process has already started.'
+      console.info(chalk.red.bold(msg))
+      return msg
     }
-    await displaySendTx('finishNextEpoch', await epochManager.finishNextEpochProcessTx())
+
+    await displaySendTx('startNextEpoch', epochManager.startNextEpochProcess())
   }
 }
