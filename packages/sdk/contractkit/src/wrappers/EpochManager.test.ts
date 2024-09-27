@@ -4,6 +4,7 @@ import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { newKitFromWeb3 } from '../kit'
+import { startAndFinishEpochProcess } from '../test-utils/utils'
 
 process.env.NO_SYNCCHECK = 'true'
 
@@ -25,11 +26,13 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
   it('indicates that it is time for next epoch', async () => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
 
-    expect(await epochManagerWrapper.isTimeForNextEpoch()).toBeFalsy()
-
-    await timeTravel(EPOCH_DURATION, web3)
+    await timeTravel(EPOCH_DURATION + 1, web3)
 
     expect(await epochManagerWrapper.isTimeForNextEpoch()).toBeTruthy()
+
+    await startAndFinishEpochProcess(kit)
+
+    expect(await epochManagerWrapper.isTimeForNextEpoch()).toBeFalsy()
   })
 
   it('gets elected validators', async () => {
@@ -117,16 +120,11 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
 
   it('starts and finishes a number of epochs', async () => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
-    const accounts = await web3.eth.getAccounts()
     const EPOCH_COUNT = 5
 
     await timeTravel(EPOCH_DURATION, web3)
 
-    await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({ from: accounts[0] })
-
-    await (
-      await epochManagerWrapper.finishNextEpochProcessTx()
-    ).sendAndWaitForReceipt({ from: accounts[0] })
+    await startAndFinishEpochProcess(kit)
 
     await activateValidators()
 
@@ -135,15 +133,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
     for (let i = 0; i < EPOCH_COUNT; i++) {
       await timeTravel(EPOCH_DURATION + 1, web3)
 
-      await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
-        from: accounts[0],
-      })
-
-      await (
-        await epochManagerWrapper.finishNextEpochProcessTx()
-      ).sendAndWaitForReceipt({
-        from: accounts[0],
-      })
+      await startAndFinishEpochProcess(kit)
     }
 
     expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(10)
