@@ -2,4 +2,4 @@
 '@celo/celocli': patch
 ---
 
-Adds support for L2 epoch data for network:info command
+Fix network:info command when in L2 
