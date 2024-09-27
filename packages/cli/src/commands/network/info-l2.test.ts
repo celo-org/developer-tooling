@@ -15,7 +15,7 @@ testWithAnvilL2('network:info', (web3) => {
 
     // Switch epochs 3 times
     for (let i = 0; i < 3; i++) {
-      await timeTravel(epochDuration + 1, web3)
+      await timeTravel(epochDuration * 2, web3)
       await testLocallyWithWeb3Node(EpochsSwitch, ['--from', accounts[0]], web3)
     }
   })
@@ -28,10 +28,10 @@ testWithAnvilL2('network:info', (web3) => {
       [
         [
           "blockNumber: 359
+      epochDuration: 86400
       epochs: 
         number: 7
-        start: 359
-      epochSize: 86400",
+        start: 359",
         ],
       ]
     `)
@@ -39,26 +39,25 @@ testWithAnvilL2('network:info', (web3) => {
 
   it('runs for last 3 epochs', async () => {
     const spy = jest.spyOn(console, 'log')
-
     await testLocallyWithWeb3Node(Info, ['--lastN', '3'], web3)
 
     expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
       [
         [
           "blockNumber: 359
-      epochs:
-        0:
+      epochDuration: 86400
+      epochs: 
+        0: 
           number: 7
           start: 359
-        1:
+        1: 
           end: 358
           number: 6
           start: 356
-        2:
+        2: 
           end: 355
           number: 5
-          start: 353
-      epochSize: 86400",
+          start: 353",
         ],
       ]
     `)
@@ -66,13 +65,13 @@ testWithAnvilL2('network:info', (web3) => {
 
   it('runs for last 100 epochs, but displays only epoch that exist', async () => {
     const spy = jest.spyOn(console, 'log')
-
     await testLocallyWithWeb3Node(Info, ['--lastN', '100'], web3)
 
     expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
       [
         [
           "blockNumber: 359
+      epochDuration: 86400
       epochs: 
         0: 
           number: 7
@@ -88,8 +87,7 @@ testWithAnvilL2('network:info', (web3) => {
         3: 
           end: 352
           number: 4
-          start: 300
-      epochSize: 86400",
+          start: 300",
         ],
       ]
     `)
