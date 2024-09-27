@@ -24,9 +24,12 @@ Contract handling epoch management.
 - [eventTypes](wrappers_EpochManager.EpochManagerWrapper.md#eventtypes)
 - [events](wrappers_EpochManager.EpochManagerWrapper.md#events)
 - [finishNextEpochProcess](wrappers_EpochManager.EpochManagerWrapper.md#finishnextepochprocess)
+- [firstKnownEpoch](wrappers_EpochManager.EpochManagerWrapper.md#firstknownepoch)
 - [getCurrentEpochNumber](wrappers_EpochManager.EpochManagerWrapper.md#getcurrentepochnumber)
 - [getElected](wrappers_EpochManager.EpochManagerWrapper.md#getelected)
 - [getEpochProcessingStatus](wrappers_EpochManager.EpochManagerWrapper.md#getepochprocessingstatus)
+- [getFirstBlockAtEpoch](wrappers_EpochManager.EpochManagerWrapper.md#getfirstblockatepoch)
+- [getLastBlockAtEpoch](wrappers_EpochManager.EpochManagerWrapper.md#getlastblockatepoch)
 - [isOnEpochProcess](wrappers_EpochManager.EpochManagerWrapper.md#isonepochprocess)
 - [isTimeForNextEpoch](wrappers_EpochManager.EpochManagerWrapper.md#istimefornextepoch)
 - [methodIds](wrappers_EpochManager.EpochManagerWrapper.md#methodids)
@@ -157,7 +160,31 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:54](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L54)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:61](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L61)
+
+___
+
+### firstKnownEpoch
+
+• **firstKnownEpoch**: (...`args`: []) => `Promise`\<`number`\>
+
+#### Type declaration
+
+▸ (`...args`): `Promise`\<`number`\>
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `...args` | [] |
+
+##### Returns
+
+`Promise`\<`number`\>
+
+#### Defined in
+
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:31](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L31)
 
 ___
 
@@ -181,7 +208,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:31](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L31)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:32](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L32)
 
 ___
 
@@ -205,7 +232,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L38)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:45](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L45)
 
 ___
 
@@ -229,7 +256,55 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:39](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L39)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:46](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L46)
+
+___
+
+### getFirstBlockAtEpoch
+
+• **getFirstBlockAtEpoch**: (...`args`: [epoch: string \| number]) => `Promise`\<`number`\>
+
+#### Type declaration
+
+▸ (`...args`): `Promise`\<`number`\>
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `...args` | [epoch: string \| number] |
+
+##### Returns
+
+`Promise`\<`number`\>
+
+#### Defined in
+
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:37](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L37)
+
+___
+
+### getLastBlockAtEpoch
+
+• **getLastBlockAtEpoch**: (...`args`: [epoch: string \| number]) => `Promise`\<`number`\>
+
+#### Type declaration
+
+▸ (`...args`): `Promise`\<`number`\>
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `...args` | [epoch: string \| number] |
+
+##### Returns
+
+`Promise`\<`number`\>
+
+#### Defined in
+
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:42](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L42)
 
 ___
 
@@ -253,7 +328,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:36](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L36)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:43](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L43)
 
 ___
 
@@ -277,7 +352,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:37](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L37)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:44](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L44)
 
 ___
 
@@ -315,7 +390,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:53](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L53)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:60](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L60)
 
 ## Accessors
 
@@ -349,7 +424,7 @@ BaseWrapperForGoverning.address
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:56](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L56)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:63](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L63)
 
 ___
 
@@ -363,7 +438,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:118](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L118)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:125](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L125)
 
 ___
 
@@ -383,7 +458,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:69](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L69)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:76](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L76)
 
 ___
 
