@@ -28,11 +28,18 @@ export interface EpochManagerConfig {
  */
 export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
   epochDuration = proxyCall(this.contract.methods.epochDuration, undefined, valueToInt)
+  firstKnownEpoch = proxyCall(this.contract.methods.firstKnownEpoch, undefined, valueToInt)
   getCurrentEpochNumber = proxyCall(
     this.contract.methods.getCurrentEpochNumber,
     undefined,
     valueToInt
   )
+  getFirstBlockAtEpoch = proxyCall(
+    this.contract.methods.getFirstBlockAtEpoch,
+    undefined,
+    valueToInt
+  )
+  getLastBlockAtEpoch = proxyCall(this.contract.methods.getLastBlockAtEpoch, undefined, valueToInt)
   isOnEpochProcess = proxyCall(this.contract.methods.isOnEpochProcess)
   isTimeForNextEpoch = proxyCall(this.contract.methods.isTimeForNextEpoch)
   getElected = proxyCall(this.contract.methods.getElected)
