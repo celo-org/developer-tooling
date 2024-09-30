@@ -339,15 +339,13 @@ export class Connection {
     }
 
     if (isEmpty(tx.maxFeePerGas)) {
-      if (isEmpty(tx.feeCurrency)) {
-        const baseFee = await this.getBlock('latest').then((block: any) => block.baseFeePerGas)
-        tx.maxFeePerGas = `0x${(
-          BigInt(baseFee as string) + BigInt(tx.maxPriorityFeePerGas as string)
-        ).toString(16)}`
-      } else {
-        // NOTE: fallback to original estimation
-        tx.maxFeePerGas = await this.gasPrice(tx.feeCurrency)
-      }
+      const baseFee = isEmpty(tx.feeCurrency)
+        ? await this.getBlock('latest').then((block) => block.baseFeePerGas)
+        : await this.gasPrice(tx.feeCurrency)
+      const withBuffer = addBufferToBaseFee(BigInt(baseFee!))
+      const maxFeePerGas =
+        withBuffer + BigInt(ensureLeading0x(tx.maxPriorityFeePerGas.toString(16)))
+      tx.maxFeePerGas = ensureLeading0x(maxFeePerGas.toString(16))
     }
 
     return {
@@ -529,6 +527,8 @@ export class Connection {
     this.web3.currentProvider.stop()
   }
 }
+
+const addBufferToBaseFee = (gasPrice: bigint) => (gasPrice * BigInt(120)) / BigInt(100)
 
 function isEmpty(value: string | undefined | number | BN | bigint): value is undefined {
   return (
