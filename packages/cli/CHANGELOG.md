@@ -1,5 +1,15 @@
 # Changelog
 
+## 5.2.1
+
+### Patch Changes
+
+- [#348](https://github.com/celo-org/developer-tooling/pull/348) [`76d09b7`](https://github.com/celo-org/developer-tooling/commit/76d09b79c68cbb5aba38c0b36a5322384b7842ba) Thanks [@shazarre](https://github.com/shazarre)! - Fix network:info command when in L2
+
+- Updated dependencies [[`433b70e`](https://github.com/celo-org/developer-tooling/commit/433b70e20563e3e087cc39d744f1a2710d1d09de), [`76d09b7`](https://github.com/celo-org/developer-tooling/commit/76d09b79c68cbb5aba38c0b36a5322384b7842ba)]:
+  - @celo/connect@6.0.2
+  - @celo/contractkit@8.3.0
+
 ## 5.2.0
 
 ### Minor Changes
