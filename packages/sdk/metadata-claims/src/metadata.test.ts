@@ -3,7 +3,7 @@ import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { ACCOUNT_ADDRESSES } from '@celo/dev-utils/lib/ganache-setup'
 import { Address } from '@celo/utils/lib/address'
 import { NativeSigner } from '@celo/utils/lib/signatureUtils'
-import { createNameClaim } from './claims/claim'
+import { createNameClaim } from './claim'
 import { ClaimTypes, IdentityMetadataWrapper } from './metadata'
 
 testWithAnvilL1('Metadata', (web3) => {
