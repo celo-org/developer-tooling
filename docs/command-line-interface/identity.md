@@ -49,8 +49,6 @@ EXAMPLES
   get-attestations --identifier 0x4952c9db9c283a62721b13f56c4b5e84a438e2569af3de21cb3440efa8840872
 ```
 
-_See code: [src/commands/identity/get-attestations.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/identity/get-attestations.ts)_
-
 ## `celocli identity:identifier`
 
 Queries ODIS for the on-chain identifier and pepper corresponding to a given phone number.
@@ -87,8 +85,6 @@ DESCRIPTION
 EXAMPLES
   identifier --phoneNumber +14151231234 --from 0x5409ed021d9299bf6814279a6a1411a7e866a631 --context alfajores
 ```
-
-_See code: [src/commands/identity/identifier.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/identity/identifier.ts)_
 
 ## `celocli identity:withdraw-attestation-rewards`
 
