@@ -6,6 +6,7 @@ import { AddressValidation, newLedgerWalletWithSetup } from '@celo/wallet-ledger
 import { LocalWallet } from '@celo/wallet-local'
 import _TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
 import { Command, Flags } from '@oclif/core'
+import { CLIError } from '@oclif/core/lib/errors'
 import chalk from 'chalk'
 import net from 'net'
 import Web3 from 'web3'
@@ -134,6 +135,7 @@ export abstract class BaseCommand extends Command {
     if (res.flags && res.flags.privateKey && !res.flags.useLedger && !res.flags.useAKV) {
       this._kit.connection.addAccount(res.flags.privateKey)
     }
+
     return this._kit
   }
 
@@ -231,10 +233,22 @@ export abstract class BaseCommand extends Command {
   async finally(arg: Error | undefined): Promise<any> {
     try {
       if (arg) {
-        console.error('received error while cleaning up', arg)
+        if (!(arg instanceof CLIError)) {
+          console.error(
+            `
+Received an error during command execution, if you believe this is a bug you can create an issue here: 
+            
+https://github.com/celo-org/developer-tooling/issues/new?assignees=&labels=bug+report&projects=&template=BUG-FORM.yml
+
+`,
+            arg
+          )
+        }
       }
-      const kit = await this.getKit()
-      kit.connection.stop()
+
+      if (this._kit !== null) {
+        this._kit.connection.stop()
+      }
     } catch (error) {
       this.log(`Failed to close the connection: ${error}`)
     }

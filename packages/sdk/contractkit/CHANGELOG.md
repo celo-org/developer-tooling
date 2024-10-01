@@ -1,5 +1,22 @@
 # @celo/contractkit
 
+## 8.3.0
+
+### Minor Changes
+
+- [#348](https://github.com/celo-org/developer-tooling/pull/348) [`76d09b7`](https://github.com/celo-org/developer-tooling/commit/76d09b79c68cbb5aba38c0b36a5322384b7842ba) Thanks [@shazarre](https://github.com/shazarre)! - Adds support for firstKnownEpoch, getFirstBlockAtEpoch, getLastBlockAtEpoch on EpochManager wrapper
+
+### Patch Changes
+
+- Updated dependencies [[`433b70e`](https://github.com/celo-org/developer-tooling/commit/433b70e20563e3e087cc39d744f1a2710d1d09de)]:
+  - @celo/connect@6.0.2
+
+## 8.2.0
+
+### Minor Changes
+
+- [#334](https://github.com/celo-org/developer-tooling/pull/334) [`7400467`](https://github.com/celo-org/developer-tooling/commit/740046755f5079cb1dafdb71fcc92cc4ad213eb9) Thanks [@pahor167](https://github.com/pahor167)! - Adds support for EpochManager and ScoreManager contracts
+
 ## 8.1.1
 
 ### Patch Changes

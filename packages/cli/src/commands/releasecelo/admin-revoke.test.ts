@@ -6,12 +6,7 @@ import { AccountsWrapper } from '@celo/contractkit/lib/wrappers/Accounts'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { ReleaseGoldWrapper } from '@celo/contractkit/lib/wrappers/ReleaseGold'
 import { setBalance, testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
-import {
-  getContractFromEvent,
-  NetworkConfig,
-  testWithGanache,
-  timeTravel,
-} from '@celo/dev-utils/lib/ganache-test'
+import { getContractFromEvent, testWithGanache, timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { topUpWithToken } from '../../test-utils/chain-setup'
@@ -170,13 +165,15 @@ testWithGanache('releasegold:admin-revoke cmd', (web3: Web3) => {
 
         beforeEach(async () => {
           // from vote.test.ts
-          const expConfig = NetworkConfig.governance
-          const minDeposit = web3.utils.toWei(expConfig.minDeposit.toString(), 'ether')
           governance = await kit.contracts.getGovernance()
+          const minDeposit = (await governance.minDeposit()).toFixed()
           await governance
             .propose([], 'URL')
             .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
-          await timeTravel(expConfig.dequeueFrequency, web3)
+
+          const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
+          await timeTravel(dequeueFrequency + 1, web3)
+
           await testLocally(Approve, ['--from', accounts[0], '--proposalID', '1', '--useMultiSig'])
           await testLocally(GovernanceVote, [
             '--from',

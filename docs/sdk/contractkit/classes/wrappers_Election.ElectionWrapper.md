@@ -48,6 +48,7 @@ Contract for voting for validators and managing validator groups.
 - [getConfig](wrappers_Election.ElectionWrapper.md#getconfig)
 - [getElectedValidators](wrappers_Election.ElectionWrapper.md#getelectedvalidators)
 - [getEligibleValidatorGroupsVotes](wrappers_Election.ElectionWrapper.md#geteligiblevalidatorgroupsvotes)
+- [getGroupEpochRewards](wrappers_Election.ElectionWrapper.md#getgroupepochrewards)
 - [getGroupVoterRewards](wrappers_Election.ElectionWrapper.md#getgroupvoterrewards)
 - [getPastEvents](wrappers_Election.ElectionWrapper.md#getpastevents)
 - [getTotalVotesForGroup](wrappers_Election.ElectionWrapper.md#gettotalvotesforgroup)
@@ -90,7 +91,7 @@ Contract for voting for validators and managing validator groups.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts:21](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts#L21)
+[packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts#L23)
 
 ## Properties
 
@@ -147,6 +148,7 @@ ___
 | Name | Type |
 | :------ | :------ |
 | `AllowedToVoteOverMaxNumberOfGroups` | `ContractEvent`\<\{ `0`: `string` ; `1`: `boolean` ; `account`: `string` ; `flag`: `boolean`  }\> |
+| `BlockedBySet` | `ContractEvent`\<`string`\> |
 | `ElectabilityThresholdSet` | `ContractEvent`\<`string`\> |
 | `ElectableValidatorsSet` | `ContractEvent`\<\{ `0`: `string` ; `1`: `string` ; `max`: `string` ; `min`: `string`  }\> |
 | `EpochRewardsDistributedToVoters` | `ContractEvent`\<\{ `0`: `string` ; `1`: `string` ; `group`: `string` ; `value`: `string`  }\> |
@@ -323,7 +325,7 @@ ___
 
 ### methodIds
 
-• **methodIds**: `Record`\<``"electableValidators"`` \| ``"electabilityThreshold"`` \| ``"maxNumGroupsVotedFor"`` \| ``"checkProofOfPossession"`` \| ``"fractionMulExp"`` \| ``"getBlockNumberFromHeader"`` \| ``"getEpochNumber"`` \| ``"getEpochNumberOfBlock"`` \| ``"getEpochSize"`` \| ``"getParentSealBitmap"`` \| ``"getVerifiedSealBitmapFromHeader"`` \| ``"hashHeader"`` \| ``"initialized"`` \| ``"isOwner"`` \| ``"minQuorumSize"`` \| ``"minQuorumSizeInCurrentSet"`` \| ``"numberValidatorsInCurrentSet"`` \| ``"numberValidatorsInSet"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"validatorSignerAddressFromCurrentSet"`` \| ``"validatorSignerAddressFromSet"`` \| ``"initialize"`` \| ``"vote"`` \| ``"getVersionNumber"`` \| ``"allowedToVoteOverMaxNumberOfGroups"`` \| ``"cachedVotesByAccount"`` \| ``"setElectableValidators"`` \| ``"getElectableValidators"`` \| ``"setMaxNumGroupsVotedFor"`` \| ``"setElectabilityThreshold"`` \| ``"getElectabilityThreshold"`` \| ``"activate"`` \| ``"activateForAccount"`` \| ``"hasActivatablePendingVotes"`` \| ``"revokePending"`` \| ``"revokeAllActive"`` \| ``"revokeActive"`` \| ``"getTotalVotesByAccount"`` \| ``"updateTotalVotesByAccountForGroup"`` \| ``"getPendingVotesForGroupByAccount"`` \| ``"getActiveVotesForGroupByAccount"`` \| ``"getTotalVotesForGroupByAccount"`` \| ``"getActiveVoteUnitsForGroupByAccount"`` \| ``"getActiveVoteUnitsForGroup"`` \| ``"getTotalVotesForGroup"`` \| ``"getActiveVotesForGroup"`` \| ``"getPendingVotesForGroup"`` \| ``"getGroupEligibility"`` \| ``"getGroupEpochRewards"`` \| ``"distributeEpochRewards"`` \| ``"markGroupIneligible"`` \| ``"markGroupEligible"`` \| ``"getGroupsVotedForByAccount"`` \| ``"canReceiveVotes"`` \| ``"getNumVotesReceivable"`` \| ``"getTotalVotes"`` \| ``"getActiveVotes"`` \| ``"getEligibleValidatorGroups"`` \| ``"getTotalVotesForEligibleValidatorGroups"`` \| ``"electValidatorSigners"`` \| ``"electNValidatorSigners"`` \| ``"getCurrentValidatorSigners"`` \| ``"setAllowedToVoteOverMaxNumberOfGroups"`` \| ``"forceDecrementVotes"``, `string`\>
+• **methodIds**: `Record`\<``"electableValidators"`` \| ``"electabilityThreshold"`` \| ``"maxNumGroupsVotedFor"`` \| ``"checkProofOfPossession"`` \| ``"fractionMulExp"`` \| ``"getBlockNumberFromHeader"`` \| ``"getEpochNumber"`` \| ``"getEpochNumberOfBlock"`` \| ``"getEpochSize"`` \| ``"getParentSealBitmap"`` \| ``"getVerifiedSealBitmapFromHeader"`` \| ``"hashHeader"`` \| ``"initialized"`` \| ``"isL2"`` \| ``"isOwner"`` \| ``"minQuorumSize"`` \| ``"minQuorumSizeInCurrentSet"`` \| ``"numberValidatorsInCurrentSet"`` \| ``"numberValidatorsInSet"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"validatorSignerAddressFromCurrentSet"`` \| ``"validatorSignerAddressFromSet"`` \| ``"initialize"`` \| ``"vote"`` \| ``"getVersionNumber"`` \| ``"isBlocked"`` \| ``"allowedToVoteOverMaxNumberOfGroups"`` \| ``"cachedVotesByAccount"`` \| ``"getBlockedbyContract"`` \| ``"activate"`` \| ``"activateForAccount"`` \| ``"revokePending"`` \| ``"revokeAllActive"`` \| ``"revokeActive"`` \| ``"distributeEpochRewards"`` \| ``"markGroupIneligible"`` \| ``"markGroupEligible"`` \| ``"forceDecrementVotes"`` \| ``"setBlockedByContract"`` \| ``"getGroupsVotedForByAccount"`` \| ``"getNumVotesReceivable"`` \| ``"getEligibleValidatorGroups"`` \| ``"getTotalVotesForEligibleValidatorGroups"`` \| ``"electValidatorSigners"`` \| ``"electValidatorAccounts"`` \| ``"getTotalVotesByAccount"`` \| ``"getActiveVoteUnitsForGroupByAccount"`` \| ``"getActiveVoteUnitsForGroup"`` \| ``"getGroupEligibility"`` \| ``"getGroupEpochRewards"`` \| ``"getGroupEpochRewardsBasedOnScore"`` \| ``"hasActivatablePendingVotes"`` \| ``"getElectabilityThreshold"`` \| ``"getElectableValidators"`` \| ``"setElectableValidators"`` \| ``"setMaxNumGroupsVotedFor"`` \| ``"setElectabilityThreshold"`` \| ``"updateTotalVotesByAccountForGroup"`` \| ``"setAllowedToVoteOverMaxNumberOfGroups"`` \| ``"canReceiveVotes"`` \| ``"getTotalVotes"`` \| ``"getActiveVotes"`` \| ``"electNValidatorSigners"`` \| ``"electNValidatorAccounts"`` \| ``"getCurrentValidatorSigners"`` \| ``"getPendingVotesForGroupByAccount"`` \| ``"getActiveVotesForGroupByAccount"`` \| ``"getTotalVotesForGroupByAccount"`` \| ``"getTotalVotesForGroup"`` \| ``"getActiveVotesForGroup"`` \| ``"getPendingVotesForGroup"``, `string`\>
 
 #### Inherited from
 
@@ -662,6 +664,28 @@ Returns the current eligible validator groups and their total votes.
 
 ___
 
+### getGroupEpochRewards
+
+▸ **getGroupEpochRewards**(`group`, `totalEpochRewards`, `groupScore`): `Promise`\<`BigNumber`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `group` | `string` |
+| `totalEpochRewards` | `BigNumber` |
+| `groupScore` | `BigNumber` |
+
+#### Returns
+
+`Promise`\<`BigNumber`\>
+
+#### Defined in
+
+[packages/sdk/contractkit/src/wrappers/Election.ts:591](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L591)
+
+___
+
 ### getGroupVoterRewards
 
 ▸ **getGroupVoterRewards**(`epochNumber`, `useBlockNumber?`): `Promise`\<[`GroupVoterReward`](../interfaces/wrappers_Election.GroupVoterReward.md)[]\>
@@ -695,7 +719,7 @@ Contract getPastEvents
 
 | Name | Type |
 | :------ | :------ |
-| `event` | ``"OwnershipTransferred"`` \| ``"RegistrySet"`` \| ``"allEvents"`` \| ``"AllowedToVoteOverMaxNumberOfGroups"`` \| ``"ElectabilityThresholdSet"`` \| ``"ElectableValidatorsSet"`` \| ``"EpochRewardsDistributedToVoters"`` \| ``"MaxNumGroupsVotedForSet"`` \| ``"ValidatorGroupActiveVoteRevoked"`` \| ``"ValidatorGroupMarkedEligible"`` \| ``"ValidatorGroupMarkedIneligible"`` \| ``"ValidatorGroupPendingVoteRevoked"`` \| ``"ValidatorGroupVoteActivated"`` \| ``"ValidatorGroupVoteCast"`` |
+| `event` | ``"OwnershipTransferred"`` \| ``"RegistrySet"`` \| ``"allEvents"`` \| ``"AllowedToVoteOverMaxNumberOfGroups"`` \| ``"BlockedBySet"`` \| ``"ElectabilityThresholdSet"`` \| ``"ElectableValidatorsSet"`` \| ``"EpochRewardsDistributedToVoters"`` \| ``"MaxNumGroupsVotedForSet"`` \| ``"ValidatorGroupActiveVoteRevoked"`` \| ``"ValidatorGroupMarkedEligible"`` \| ``"ValidatorGroupMarkedIneligible"`` \| ``"ValidatorGroupPendingVoteRevoked"`` \| ``"ValidatorGroupVoteActivated"`` \| ``"ValidatorGroupVoteCast"`` |
 | `options` | `PastEventOptions` |
 
 #### Returns

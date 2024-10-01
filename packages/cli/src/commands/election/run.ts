@@ -8,7 +8,8 @@ async function performElections(kit: ContractKit) {
   const election = await kit.contracts.getElection()
   try {
     const signers = await election.electValidatorSigners()
-    return signers
+
+    return Array.from(signers)
   } catch (err) {
     console.warn('Warning: error running actual elections, retrying with minimum validators at 0')
     return election.electValidatorSigners(0)

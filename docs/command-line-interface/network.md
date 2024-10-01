@@ -65,18 +65,18 @@ View general network information such as the current block number
 ```
 USAGE
   $ celocli network:info [--gasCurrency
-    0x1234567890123456789012345678901234567890] [--globalHelp] [-n <value>]
+    0x1234567890123456789012345678901234567890] [--globalHelp] [--lastN <value>]
 
 FLAGS
-  -n, --lastN=<value>
-      [default: 1] Fetch info about the last n epochs
-
-  --gasCurrency=0x1234567890123456789012345678901234567890
-      Use a specific gas currency for transaction fees (defaults to CELO if no gas
-      currency is supplied). It must be a whitelisted token.
-
-  --globalHelp
-      View all available global flags
+  --gasCurrency=0x1234567890123456789012345678901234567890  Use a specific gas currency
+                                                            for transaction fees
+                                                            (defaults to CELO if no gas
+                                                            currency is supplied). It
+                                                            must be a whitelisted token.
+  --globalHelp                                              View all available global
+                                                            flags
+  --lastN=<value>                                           [default: 1] Fetch info
+                                                            about the last n epochs
 
 DESCRIPTION
   View general network information such as the current block number

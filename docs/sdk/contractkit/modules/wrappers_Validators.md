@@ -30,4 +30,4 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:685](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L685)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:689](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L689)

@@ -1,8 +1,7 @@
 import { Registry } from '@celo/abis/web3/Registry'
 import { Address, StrongAddress } from '@celo/base/lib/address'
 import { asCoreContractsOwner, testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
-import { setDequeueFrequency, setReferendumStageDuration } from '@celo/dev-utils/lib/chain-setup'
-import { NetworkConfig, testWithGanache, timeTravel } from '@celo/dev-utils/lib/ganache-test'
+import { testWithGanache, timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { CeloContract } from '..'
@@ -12,8 +11,6 @@ import { AccountsWrapper } from './Accounts'
 import { GovernanceWrapper, Proposal, ProposalTransaction, VoteValue } from './Governance'
 import { LockedGoldWrapper } from './LockedGold'
 import { MultiSigWrapper } from './MultiSig'
-
-const expConfig = NetworkConfig.governance
 
 // Only on ganache we can test 1.4.1.0 version
 testWithGanache('Governance Wrapper', (web3: Web3) => {
@@ -48,6 +45,8 @@ testWithAnvilL1('Governance Wrapper', (web3: Web3) => {
   let accountWrapper: AccountsWrapper
   let registry: Registry
   let minDeposit: string
+  let dequeueFrequency: number
+  let referendumStageDuration: number
 
   beforeAll(async () => {
     accounts = (await web3.eth.getAccounts()) as StrongAddress[]
@@ -58,9 +57,8 @@ testWithAnvilL1('Governance Wrapper', (web3: Web3) => {
     lockedGold = await kit.contracts.getLockedGold()
     accountWrapper = await kit.contracts.getAccounts()
     minDeposit = (await governance.minDeposit()).toFixed()
-
-    await setDequeueFrequency(web3, governance.address, expConfig.dequeueFrequency)
-    await setReferendumStageDuration(web3, governance.address, expConfig.referendumStageDuration)
+    referendumStageDuration = (await governance.stageDurations())['Referendum'].toNumber()
+    dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
 
     for (const account of accounts.slice(0, 4)) {
       await accountWrapper.createAccount().sendAndWaitForReceipt({ from: account })
@@ -85,7 +83,7 @@ testWithAnvilL1('Governance Wrapper', (web3: Web3) => {
     expect(await governance.getConfig()).toMatchInlineSnapshot(`
       {
         "concurrentProposals": "3",
-        "dequeueFrequency": "30",
+        "dequeueFrequency": "14400",
         "minDeposit": "100000000000000000000",
         "participationParameters": {
           "baseline": "0.005",
@@ -96,7 +94,7 @@ testWithAnvilL1('Governance Wrapper', (web3: Web3) => {
         "queueExpiry": "2419200",
         "stageDurations": {
           "Execution": "604800",
-          "Referendum": "100",
+          "Referendum": "86400",
         },
       }
     `)
@@ -128,7 +126,7 @@ testWithAnvilL1('Governance Wrapper', (web3: Web3) => {
       const tx = await governance.upvote(proposalId ?? proposalID, upvoter)
       await tx.sendAndWaitForReceipt({ from: upvoter })
       if (shouldTimeTravel) {
-        await timeTravel(expConfig.dequeueFrequency, web3)
+        await timeTravel(dequeueFrequency, web3)
         await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
       }
     }
@@ -148,7 +146,7 @@ testWithAnvilL1('Governance Wrapper', (web3: Web3) => {
     const voteFn = async (voter: Address) => {
       const tx = await governance.vote(proposalID, 'Yes')
       await tx.sendAndWaitForReceipt({ from: voter })
-      await timeTravel(expConfig.referendumStageDuration, web3)
+      await timeTravel(referendumStageDuration, web3)
     }
 
     it('#propose', async () => {
@@ -195,7 +193,7 @@ testWithAnvilL1('Governance Wrapper', (web3: Web3) => {
 
     it('#approve', async () => {
       await proposeFn(accounts[0])
-      await timeTravel(expConfig.dequeueFrequency, web3)
+      await timeTravel(dequeueFrequency, web3)
       await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
       await approveFn()
 
@@ -205,7 +203,7 @@ testWithAnvilL1('Governance Wrapper', (web3: Web3) => {
 
     it('#vote', async () => {
       await proposeFn(accounts[0])
-      await timeTravel(expConfig.dequeueFrequency, web3)
+      await timeTravel(dequeueFrequency, web3)
       await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
       await approveFn()
       await voteFn(accounts[2])
@@ -218,7 +216,7 @@ testWithAnvilL1('Governance Wrapper', (web3: Web3) => {
     it('#getVoteRecord', async () => {
       const voter = accounts[2]
       await proposeFn(accounts[0])
-      await timeTravel(expConfig.dequeueFrequency, web3)
+      await timeTravel(dequeueFrequency, web3)
       await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
       await approveFn()
       await voteFn(voter)
@@ -235,7 +233,7 @@ testWithAnvilL1('Governance Wrapper', (web3: Web3) => {
 
     it('#votePartially', async () => {
       await proposeFn(accounts[0])
-      await timeTravel(expConfig.dequeueFrequency, web3)
+      await timeTravel(dequeueFrequency, web3)
       await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
       await approveFn()
 
@@ -245,7 +243,7 @@ testWithAnvilL1('Governance Wrapper', (web3: Web3) => {
 
       const tx = await governance.votePartially(proposalID, yes, no, abstain)
       await tx.sendAndWaitForReceipt({ from: accounts[2] })
-      await timeTravel(expConfig.referendumStageDuration, web3)
+      await timeTravel(referendumStageDuration, web3)
 
       const votes = await governance.getVotes(proposalID)
       const yesVotes = votes[VoteValue.Yes]
@@ -260,7 +258,7 @@ testWithAnvilL1('Governance Wrapper', (web3: Web3) => {
       '#execute',
       async () => {
         await proposeFn(accounts[0])
-        await timeTravel(expConfig.dequeueFrequency, web3)
+        await timeTravel(dequeueFrequency, web3)
         await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
         await approveFn()
         await voteFn(accounts[2])
@@ -276,7 +274,7 @@ testWithAnvilL1('Governance Wrapper', (web3: Web3) => {
 
     it('#getVoter', async () => {
       await proposeFn(accounts[0])
-      await timeTravel(expConfig.dequeueFrequency, web3)
+      await timeTravel(dequeueFrequency, web3)
       await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
       await approveFn()
       await voteFn(accounts[2])

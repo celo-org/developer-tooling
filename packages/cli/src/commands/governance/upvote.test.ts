@@ -32,6 +32,11 @@ testWithAnvilL1('governance:upvote cmd', (web3: Web3) => {
     minDeposit = (await governance.minDeposit()).toFixed()
     const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
 
+    // If the devchain is published less than dequeueFrequency ago, the tests
+    // will fail, so we need to make sure that by calling timeTravel() we will
+    // hit the next dequeue
+    await timeTravel(dequeueFrequency, web3)
+
     await governance
       .propose([], 'URL')
       .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })

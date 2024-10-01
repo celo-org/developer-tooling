@@ -1,5 +1,30 @@
 # Changelog
 
+## 5.2.1
+
+### Patch Changes
+
+- [#348](https://github.com/celo-org/developer-tooling/pull/348) [`76d09b7`](https://github.com/celo-org/developer-tooling/commit/76d09b79c68cbb5aba38c0b36a5322384b7842ba) Thanks [@shazarre](https://github.com/shazarre)! - Fix network:info command when in L2
+
+- Updated dependencies [[`433b70e`](https://github.com/celo-org/developer-tooling/commit/433b70e20563e3e087cc39d744f1a2710d1d09de), [`76d09b7`](https://github.com/celo-org/developer-tooling/commit/76d09b79c68cbb5aba38c0b36a5322384b7842ba)]:
+  - @celo/connect@6.0.2
+  - @celo/contractkit@8.3.0
+
+## 5.2.0
+
+### Minor Changes
+
+- [#334](https://github.com/celo-org/developer-tooling/pull/334) [`7400467`](https://github.com/celo-org/developer-tooling/commit/740046755f5079cb1dafdb71fcc92cc4ad213eb9) Thanks [@pahor167](https://github.com/pahor167)! - Adds epochs:start epochs:switch & epochs:finish commands
+
+### Patch Changes
+
+- [#338](https://github.com/celo-org/developer-tooling/pull/338) [`717809e`](https://github.com/celo-org/developer-tooling/commit/717809e81cedf17048d524dc7603473fbb11e22c) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Fix printing of values that should be ordered numerically
+
+- [#336](https://github.com/celo-org/developer-tooling/pull/336) [`f5e0101`](https://github.com/celo-org/developer-tooling/commit/f5e010193bbf23a1da170c76bc21b1953b58fcc5) Thanks [@shazarre](https://github.com/shazarre)! - Added a link to create an issue when an error occurs
+
+- Updated dependencies [[`7400467`](https://github.com/celo-org/developer-tooling/commit/740046755f5079cb1dafdb71fcc92cc4ad213eb9)]:
+  - @celo/contractkit@8.2.0
+
 ## 5.1.1
 
 ### Patch Changes
