@@ -8,6 +8,7 @@
 
 - [currentEpochNumber](test_utils_utils.md#currentepochnumber)
 - [mineToNextEpoch](test_utils_utils.md#minetonextepoch)
+- [startAndFinishEpochProcess](test_utils_utils.md#startandfinishepochprocess)
 - [topUpWithToken](test_utils_utils.md#topupwithtoken)
 
 ## Functions
@@ -54,6 +55,26 @@ ___
 
 ___
 
+### startAndFinishEpochProcess
+
+▸ **startAndFinishEpochProcess**(`kit`): `Promise`\<`void`\>
+
+#### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `kit` | [`ContractKit`](../classes/kit.ContractKit.md) |
+
+#### Returns
+
+`Promise`\<`void`\>
+
+#### Defined in
+
+[packages/sdk/contractkit/src/test-utils/utils.ts:43](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/test-utils/utils.ts#L43)
+
+___
+
 ### topUpWithToken
 
 ▸ **topUpWithToken**(`kit`, `stableToken`, `recipientAddress`, `amount`): `Promise`\<`void`\>
@@ -73,4 +94,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/test-utils/utils.ts:43](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/test-utils/utils.ts#L43)
+[packages/sdk/contractkit/src/test-utils/utils.ts:58](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/test-utils/utils.ts#L58)

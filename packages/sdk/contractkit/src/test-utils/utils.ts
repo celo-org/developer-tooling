@@ -40,6 +40,21 @@ export const mineToNextEpoch = async (web3: Web3, epochSize: number = GANACHE_EP
   await mineBlocks(blocksUntilNextEpoch, web3)
 }
 
+export const startAndFinishEpochProcess = async (kit: ContractKit) => {
+  const accounts = await kit.web3.eth.getAccounts()
+  const epochManagerWrapper = await kit.contracts.getEpochManager()
+
+  await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
+    from: accounts[0],
+  })
+
+  await (
+    await epochManagerWrapper.finishNextEpochProcessTx()
+  ).sendAndWaitForReceipt({
+    from: accounts[0],
+  })
+}
+
 export const topUpWithToken = async (
   kit: ContractKit,
   stableToken: StableToken,

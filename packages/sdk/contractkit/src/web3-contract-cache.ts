@@ -1,14 +1,19 @@
-import { newCeloDistributionSchedule } from '@celo/abis-12/web3/CeloDistributionSchedule'
+import { newCeloUnreleasedTreasury } from '@celo/abis-12/web3/CeloUnreleasedTreasury'
+import { newElection } from '@celo/abis-12/web3/Election'
+import { newEpochManager } from '@celo/abis-12/web3/EpochManager'
+import { newEpochManagerEnabler } from '@celo/abis-12/web3/EpochManagerEnabler'
 import { newFeeCurrencyDirectory } from '@celo/abis-12/web3/FeeCurrencyDirectory'
 import { newGoldToken } from '@celo/abis-12/web3/GoldToken'
 import { newGovernance } from '@celo/abis-12/web3/Governance'
+import { newLockedGold } from '@celo/abis-12/web3/LockedGold'
+import { newScoreManager } from '@celo/abis-12/web3/ScoreManager'
+import { newValidators } from '@celo/abis-12/web3/Validators'
 import { newGasPriceMinimum } from '@celo/abis/web3/0.8/GasPriceMinimum'
 import { newAccounts } from '@celo/abis/web3/Accounts'
 import { newAttestations } from '@celo/abis/web3/Attestations'
 import { newBlockchainParameters } from '@celo/abis/web3/BlockchainParameters'
 import { newDoubleSigningSlasher } from '@celo/abis/web3/DoubleSigningSlasher'
 import { newDowntimeSlasher } from '@celo/abis/web3/DowntimeSlasher'
-import { newElection } from '@celo/abis/web3/Election'
 import { newEpochRewards } from '@celo/abis/web3/EpochRewards'
 import { newEscrow } from '@celo/abis/web3/Escrow'
 import { newFederatedAttestations } from '@celo/abis/web3/FederatedAttestations'
@@ -16,7 +21,8 @@ import { newFeeCurrencyWhitelist } from '@celo/abis/web3/FeeCurrencyWhitelist'
 import { newFeeHandler } from '@celo/abis/web3/FeeHandler'
 import { newFreezer } from '@celo/abis/web3/Freezer'
 import { newIERC20 } from '@celo/abis/web3/IERC20'
-import { newLockedGold } from '@celo/abis/web3/LockedGold'
+import { newReserve } from '@celo/abis/web3/mento/Reserve'
+import { newStableToken } from '@celo/abis/web3/mento/StableToken'
 import { newMentoFeeHandlerSeller } from '@celo/abis/web3/MentoFeeHandlerSeller'
 import { newMultiSig } from '@celo/abis/web3/MultiSig'
 import { newOdisPayments } from '@celo/abis/web3/OdisPayments'
@@ -25,9 +31,6 @@ import { newRandom } from '@celo/abis/web3/Random'
 import { newRegistry } from '@celo/abis/web3/Registry'
 import { newSortedOracles } from '@celo/abis/web3/SortedOracles'
 import { newUniswapFeeHandlerSeller } from '@celo/abis/web3/UniswapFeeHandlerSeller'
-import { newValidators } from '@celo/abis/web3/Validators'
-import { newReserve } from '@celo/abis/web3/mento/Reserve'
-import { newStableToken } from '@celo/abis/web3/mento/StableToken'
 import debugFactory from 'debug'
 import { AddressRegistry } from './address-registry'
 import { CeloContract, ProxyContracts } from './base'
@@ -39,10 +42,12 @@ export const ContractFactories = {
   [CeloContract.Accounts]: newAccounts,
   [CeloContract.Attestations]: newAttestations,
   [CeloContract.BlockchainParameters]: newBlockchainParameters,
-  [CeloContract.CeloDistributionSchedule]: newCeloDistributionSchedule,
+  [CeloContract.CeloUnreleasedTreasury]: newCeloUnreleasedTreasury,
   [CeloContract.DoubleSigningSlasher]: newDoubleSigningSlasher,
   [CeloContract.DowntimeSlasher]: newDowntimeSlasher,
   [CeloContract.Election]: newElection,
+  [CeloContract.EpochManager]: newEpochManager,
+  [CeloContract.EpochManagerEnabler]: newEpochManagerEnabler,
   [CeloContract.EpochRewards]: newEpochRewards,
   [CeloContract.ERC20]: newIERC20,
   [CeloContract.Escrow]: newEscrow,
@@ -62,6 +67,7 @@ export const ContractFactories = {
   [CeloContract.Random]: newRandom,
   [CeloContract.Registry]: newRegistry,
   [CeloContract.Reserve]: newReserve,
+  [CeloContract.ScoreManager]: newScoreManager,
   [CeloContract.SortedOracles]: newSortedOracles,
   [CeloContract.StableToken]: newStableToken,
   [CeloContract.StableTokenEUR]: newStableToken,
@@ -99,8 +105,8 @@ export class Web3ContractCache {
   getBlockchainParameters() {
     return this.getContract(CeloContract.BlockchainParameters)
   }
-  getCeloDistributionSchedule() {
-    return this.getContract(CeloContract.CeloDistributionSchedule)
+  getCeloUnreleasedTreasury() {
+    return this.getContract(CeloContract.CeloUnreleasedTreasury)
   }
   getDoubleSigningSlasher() {
     return this.getContract(CeloContract.DoubleSigningSlasher)
@@ -110,6 +116,12 @@ export class Web3ContractCache {
   }
   getElection() {
     return this.getContract(CeloContract.Election)
+  }
+  getEpochManager() {
+    return this.getContract(CeloContract.EpochManager)
+  }
+  getEpochManagerEnabler() {
+    return this.getContract(CeloContract.EpochManagerEnabler)
   }
   getEpochRewards() {
     return this.getContract(CeloContract.EpochRewards)
@@ -160,6 +172,9 @@ export class Web3ContractCache {
   }
   getReserve() {
     return this.getContract(CeloContract.Reserve)
+  }
+  getScoreManager() {
+    return this.getContract(CeloContract.ScoreManager)
   }
   getSortedOracles() {
     return this.getContract(CeloContract.SortedOracles)

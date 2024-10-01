@@ -73,8 +73,7 @@ export function testStableToken(
   it('checks balance', () => expect(stableToken.balanceOf(accounts[0])).resolves.toBeBigNumber())
   it('checks decimals', () => expect(stableToken.decimals()).resolves.toBe(18))
   it('checks name', () => expect(stableToken.name()).resolves.toBe(expectedName))
-  // TODO fix once symbols are available in the devchain
-  it.failing('checks symbol', () => expect(stableToken.symbol()).resolves.toBe(expectedSymbol))
+  it('checks symbol', () => expect(stableToken.symbol()).resolves.toBe(expectedSymbol))
   it('checks totalSupply', () => expect(stableToken.totalSupply()).resolves.toBeBigNumber())
 
   it('transfers', async () => {

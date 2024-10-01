@@ -2,7 +2,7 @@ import { StrongAddress } from '@celo/base'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { GovernanceWrapper, Proposal } from '@celo/contractkit/lib/wrappers/Governance'
 import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
-import { NetworkConfig, timeTravel } from '@celo/dev-utils/lib/ganache-test'
+import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import { ProposalBuilder } from '@celo/governance'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
@@ -10,8 +10,6 @@ import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Withdraw from './withdraw'
 
 process.env.NO_SYNCCHECK = 'true'
-
-const expConfig = NetworkConfig.governance
 
 testWithAnvilL1('governance:withdraw', (web3: Web3) => {
   let minDeposit: string
@@ -29,7 +27,8 @@ testWithAnvilL1('governance:withdraw', (web3: Web3) => {
     await governance
       .propose(proposal, 'URL')
       .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
-    await timeTravel(expConfig.dequeueFrequency + 1, web3)
+    const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
+    await timeTravel(dequeueFrequency + 1, web3)
     await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
   })
 

@@ -9,7 +9,7 @@ export async function setCommissionUpdateDelay(
   validatorsContractAddress: StrongAddress,
   delayInBlocks: number
 ) {
-  withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
+  await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
     const validators = newValidators(web3, validatorsContractAddress)
 
     const { transactionHash } = await validators.methods
@@ -26,7 +26,7 @@ export async function setDequeueFrequency(
   governanceContractAddress: StrongAddress,
   frequency: number
 ) {
-  withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
+  await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
     const governance = newGovernance(web3, governanceContractAddress)
 
     const { transactionHash } = await governance.methods.setDequeueFrequency(frequency).send({
@@ -41,7 +41,7 @@ export async function setReferendumStageDuration(
   governanceContractAddress: StrongAddress,
   duration: number
 ) {
-  withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
+  await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
     const governance = newGovernance(web3, governanceContractAddress)
 
     const { transactionHash } = await governance.methods.setReferendumStageDuration(duration).send({

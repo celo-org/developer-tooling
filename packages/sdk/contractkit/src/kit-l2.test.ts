@@ -24,7 +24,7 @@ testWithAnvilL2('kit', (web3: Web3) => {
           })
         ).resolves.toMatchInlineSnapshot(`
           {
-            "feeCurrency": "0x0c6a0fde0A72bA3990870f0F99ED79a821703474",
+            "feeCurrency": "0x06f60E083aDf016a98E3c7A1aFfa1c097B617aB9",
             "gas": 53001,
             "maxFeeInFeeCurrency": "54061020000000",
             "maxFeePerGas": "1000000000",
@@ -58,7 +58,7 @@ testWithAnvilL2('kit', (web3: Web3) => {
           })
         ).resolves.toMatchInlineSnapshot(`
           {
-            "feeCurrency": "0x0c6a0fde0A72bA3990870f0F99ED79a821703474",
+            "feeCurrency": "0x06f60E083aDf016a98E3c7A1aFfa1c097B617aB9",
             "gas": "102864710371401736267367367",
             "maxFeeInFeeCurrency": "104922004578829770992714714340000000",
             "maxFeePerGas": "1000000000",

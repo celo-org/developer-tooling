@@ -1,4 +1,4 @@
-import { Validators } from '@celo/abis/web3/Validators'
+import { Validators } from '@celo/abis-12/web3/Validators'
 import { eqAddress, findAddressIndex, NULL_ADDRESS } from '@celo/base/lib/address'
 import { concurrentMap } from '@celo/base/lib/async'
 import { zeroRange, zip } from '@celo/base/lib/collections'
@@ -298,6 +298,10 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
       score: fromFixed(new BigNumber(res.score)),
       signer: res.signer,
     }
+  }
+
+  async getValidatorsGroup(address: Address): Promise<Address> {
+    return this.contract.methods.getValidatorsGroup(address).call()
   }
 
   async getValidatorFromSigner(address: Address, blockNumber?: number): Promise<Validator> {

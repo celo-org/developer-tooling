@@ -20,6 +20,8 @@
 
   ↳↳ [`ElectionWrapper`](wrappers_Election.ElectionWrapper.md)
 
+  ↳↳ [`EpochManagerWrapper`](wrappers_EpochManager.EpochManagerWrapper.md)
+
   ↳↳ [`GovernanceWrapper`](wrappers_Governance.GovernanceWrapper.md)
 
   ↳↳ [`LockedGoldWrapper`](wrappers_LockedGold.LockedGoldWrapper.md)
@@ -79,7 +81,7 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts:21](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts#L21)
+[packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts#L23)
 
 ## Properties
 

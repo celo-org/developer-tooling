@@ -1,5 +1,11 @@
 # @celo/connect
 
+## 6.0.2
+
+### Patch Changes
+
+- [#350](https://github.com/celo-org/developer-tooling/pull/350) [`433b70e`](https://github.com/celo-org/developer-tooling/commit/433b70e20563e3e087cc39d744f1a2710d1d09de) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Fix calculation of maxFeePerGas. Multiple base Fee by constant for buffer
+
 ## 6.0.1
 
 ### Patch Changes
