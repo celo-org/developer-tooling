@@ -1,11 +1,11 @@
-import { hashOfClaim, KeybaseClaim } from '@celo/contractkit/lib/identity/claims/claim'
+import { hashOfClaim, KeybaseClaim } from '@celo/metadata-claims/lib/claim'
 import {
   createKeybaseClaim,
   keybaseFilePathToProof,
   proofFileName,
   targetURL,
   verifyKeybaseClaim,
-} from '@celo/contractkit/lib/identity/claims/keybase'
+} from '@celo/metadata-claims/lib/keybase'
 import { sleep } from '@celo/utils/lib/async'
 import { toChecksumAddress } from '@ethereumjs/util'
 
@@ -14,7 +14,7 @@ import { writeFileSync } from 'fs'
 import { tmpdir } from 'os'
 import { binaryPrompt } from '../../utils/cli'
 import { commandExists, execCmdWithError, execWith0Exit } from '../../utils/exec'
-import { ClaimCommand } from '../../utils/identity'
+import { ClaimCommand, kitToAccountMetaSigners } from '../../utils/identity'
 export default class ClaimKeybase extends ClaimCommand {
   static description = 'Claim a keybase username and add the claim to a local metadata file'
   static flags = {
@@ -73,7 +73,8 @@ export default class ClaimKeybase extends ClaimCommand {
       // Wait for changes to propagate
       await sleep(3000)
       const kit = await this.getKit()
-      const verificationError = await verifyKeybaseClaim(kit, claim, address)
+      const accountsInfoGetters = await kitToAccountMetaSigners(kit)
+      const verificationError = await verifyKeybaseClaim(accountsInfoGetters, claim, address)
       if (verificationError) {
         throw new Error(`Claim is not verifiable: ${verificationError}`)
       }

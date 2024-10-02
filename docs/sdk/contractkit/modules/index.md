@@ -16,7 +16,6 @@
 - [ContractKit](index.md#contractkit)
 - [GET\_IMPLEMENTATION\_ABI](index.md#get_implementation_abi)
 - [HttpProviderOptions](index.md#httpprovideroptions)
-- [IdentityMetadataWrapper](index.md#identitymetadatawrapper)
 - [NetworkConfig](index.md#networkconfig)
 - [PROXY\_ABI](index.md#proxy_abi)
 - [PROXY\_SET\_AND\_INITIALIZE\_IMPLEMENTATION\_SIGNATURE](index.md#proxy_set_and_initialize_implementation_signature)
@@ -100,12 +99,6 @@ ___
 ### HttpProviderOptions
 
 Re-exports [HttpProviderOptions](setupForKits.md#httpprovideroptions)
-
-___
-
-### IdentityMetadataWrapper
-
-Re-exports [IdentityMetadataWrapper](../classes/identity_metadata.IdentityMetadataWrapper.md)
 
 ___
 

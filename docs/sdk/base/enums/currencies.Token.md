@@ -18,4 +18,4 @@
 
 #### Defined in
 
-[packages/sdk/base/src/currencies.ts:15](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/currencies.ts#L15)
+[packages/sdk/base/src/currencies.ts:8](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/currencies.ts#L8)

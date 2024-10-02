@@ -12,18 +12,14 @@
 - [BaseProps](index.md#baseprops)
 - [Bip39](index.md#bip39)
 - [CELO\_DERIVATION\_PATH\_BASE](index.md#celo_derivation_path_base)
-- [CURRENCIES](index.md#currencies)
-- [CURRENCY\_ENUM](index.md#currency_enum)
 - [CeloTokenType](index.md#celotokentype)
 - [Comparator](index.md#comparator)
-- [ContactPhoneNumber](index.md#contactphonenumber)
 - [Err](index.md#err)
 - [ErrorResult](index.md#errorresult)
 - [Future](index.md#future)
 - [JSONParseError](index.md#jsonparseerror)
 - [JSONParseErrorType](index.md#jsonparseerrortype)
 - [Logger](index.md#logger)
-- [MinimalContact](index.md#minimalcontact)
 - [MnemonicLanguages](index.md#mnemoniclanguages)
 - [MnemonicStrength](index.md#mnemonicstrength)
 - [NULL\_ADDRESS](index.md#null_address)
@@ -40,7 +36,6 @@
 - [RootError](index.md#rooterror)
 - [RunningTask](index.md#runningtask)
 - [RunningTaskWithValue](index.md#runningtaskwithvalue)
-- [SHORT\_CURRENCIES](index.md#short_currencies)
 - [Signature](index.md#signature)
 - [SignatureBase](index.md#signaturebase)
 - [Signer](index.md#signer)
@@ -51,23 +46,18 @@
 - [Token](index.md#token)
 - [URL\_REGEX](index.md#url_regex)
 - [ValidatorKind](index.md#validatorkind)
-- [anonymizedPhone](index.md#anonymizedphone)
 - [appendPath](index.md#appendpath)
 - [bufferToHex](index.md#buffertohex)
 - [concurrentMap](index.md#concurrentmap)
 - [concurrentValuesMap](index.md#concurrentvaluesmap)
 - [conditionWatcher](index.md#conditionwatcher)
 - [consoleLogger](index.md#consolelogger)
-- [currencyToShortMap](index.md#currencytoshortmap)
 - [ensureLeading0x](index.md#ensureleading0x)
 - [eqAddress](index.md#eqaddress)
 - [findAddressIndex](index.md#findaddressindex)
 - [getAddressChunks](index.md#getaddresschunks)
-- [getContactPhoneNumber](index.md#getcontactphonenumber)
-- [getErrorMessage](index.md#geterrormessage)
 - [hexToBuffer](index.md#hextobuffer)
 - [intersection](index.md#intersection)
-- [isContact](index.md#iscontact)
 - [isE164Number](index.md#ise164number)
 - [isErr](index.md#iserr)
 - [isHexString](index.md#ishexstring)
@@ -90,7 +80,6 @@
 - [pipeToFuture](index.md#pipetofuture)
 - [prefixLogger](index.md#prefixlogger)
 - [repeatTask](index.md#repeattask)
-- [resolveCurrency](index.md#resolvecurrency)
 - [retryAsync](index.md#retryasync)
 - [retryAsyncWithBackOff](index.md#retryasyncwithbackoff)
 - [retryAsyncWithBackOffAndTimeout](index.md#retryasyncwithbackoffandtimeout)
@@ -147,18 +136,6 @@ Re-exports [CELO_DERIVATION_PATH_BASE](account.md#celo_derivation_path_base)
 
 ___
 
-### CURRENCIES
-
-Re-exports [CURRENCIES](currencies.md#currencies)
-
-___
-
-### CURRENCY\_ENUM
-
-Re-exports [CURRENCY_ENUM](../enums/currencies.CURRENCY_ENUM.md)
-
-___
-
 ### CeloTokenType
 
 Re-exports [CeloTokenType](currencies.md#celotokentype)
@@ -168,12 +145,6 @@ ___
 ### Comparator
 
 Re-exports [Comparator](collections.md#comparator)
-
-___
-
-### ContactPhoneNumber
-
-Re-exports [ContactPhoneNumber](../interfaces/contacts.ContactPhoneNumber.md)
 
 ___
 
@@ -210,12 +181,6 @@ ___
 ### Logger
 
 Re-exports [Logger](logger.md#logger)
-
-___
-
-### MinimalContact
-
-Re-exports [MinimalContact](../interfaces/contacts.MinimalContact.md)
 
 ___
 
@@ -315,12 +280,6 @@ Re-exports [RunningTaskWithValue](../interfaces/task.RunningTaskWithValue.md)
 
 ___
 
-### SHORT\_CURRENCIES
-
-Re-exports [SHORT_CURRENCIES](../enums/currencies.SHORT_CURRENCIES.md)
-
-___
-
 ### Signature
 
 Re-exports [Signature](../interfaces/signatureUtils.Signature.md)
@@ -381,12 +340,6 @@ Re-exports [ValidatorKind](../enums/inputValidation.ValidatorKind.md)
 
 ___
 
-### anonymizedPhone
-
-Re-exports [anonymizedPhone](phoneNumbers.md#anonymizedphone)
-
-___
-
 ### appendPath
 
 Re-exports [appendPath](string.md#appendpath)
@@ -423,12 +376,6 @@ Re-exports [consoleLogger](logger.md#consolelogger)
 
 ___
 
-### currencyToShortMap
-
-Re-exports [currencyToShortMap](currencies.md#currencytoshortmap)
-
-___
-
 ### ensureLeading0x
 
 Re-exports [ensureLeading0x](address.md#ensureleading0x)
@@ -453,18 +400,6 @@ Re-exports [getAddressChunks](address.md#getaddresschunks)
 
 ___
 
-### getContactPhoneNumber
-
-Re-exports [getContactPhoneNumber](contacts.md#getcontactphonenumber)
-
-___
-
-### getErrorMessage
-
-Re-exports [getErrorMessage](displayFormatting.md#geterrormessage)
-
-___
-
 ### hexToBuffer
 
 Re-exports [hexToBuffer](address.md#hextobuffer)
@@ -474,12 +409,6 @@ ___
 ### intersection
 
 Re-exports [intersection](collections.md#intersection)
-
-___
-
-### isContact
-
-Re-exports [isContact](contacts.md#iscontact)
 
 ___
 
@@ -612,12 +541,6 @@ ___
 ### repeatTask
 
 Re-exports [repeatTask](task.md#repeattask)
-
-___
-
-### resolveCurrency
-
-Re-exports [resolveCurrency](currencies.md#resolvecurrency)
 
 ___
 
