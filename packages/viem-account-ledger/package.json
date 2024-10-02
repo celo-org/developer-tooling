@@ -26,24 +26,23 @@
     "prepublishOnly": "yarn build"
   },
   "peerDependencies": {
+    "@ledgerhq/hw-transport-node-hid": "^6.x",
     "viem": "2.x"
   },
   "dependencies": {
     "@celo/base": "^6.1.0",
     "@celo/ledger-token-signer": "^0.4.0",
-    "@celo/utils": "^7.0.0",
     "@ledgerhq/errors": "^6.16.4",
     "@ledgerhq/hw-app-eth": "git+https://github.com:celo-org/ledgerjs-hw-app-eth.git",
-    "@ledgerhq/hw-transport": "^6.31.3",
-    "@noble/curves": "^1.4.0",
     "semver": "^7.6.0"
   },
   "devDependencies": {
-    "@celo/connect": "^6.0.1",
     "@celo/typescript": "workspace:^",
-    "@celo/wallet-base": "^6.0.1",
-    "@celo/wallet-remote": "^6.0.1",
+    "@celo/utils": "workspace:^",
+    "@celo/wallet-base": "workspace:^",
+    "@celo/wallet-remote": "workspace:^",
     "@ethereumjs/util": "8.0.5",
+    "@ledgerhq/hw-transport-node-hid": "^6.29.5",
     "dotenv": "^8.2.0",
     "viem": "^2.21.14"
   },

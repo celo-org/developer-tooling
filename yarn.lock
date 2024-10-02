@@ -2060,7 +2060,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/utils@npm:^7.0.0, @celo/utils@workspace:packages/sdk/utils":
+"@celo/utils@npm:^7.0.0, @celo/utils@workspace:^, @celo/utils@workspace:packages/sdk/utils":
   version: 0.0.0-use.local
   resolution: "@celo/utils@workspace:packages/sdk/utils"
   dependencies:
@@ -2086,21 +2086,20 @@ __metadata:
   resolution: "@celo/viem-account-ledger@workspace:packages/viem-account-ledger"
   dependencies:
     "@celo/base": "npm:^6.1.0"
-    "@celo/connect": "npm:^6.0.1"
     "@celo/ledger-token-signer": "npm:^0.4.0"
     "@celo/typescript": "workspace:^"
-    "@celo/utils": "npm:^7.0.0"
-    "@celo/wallet-base": "npm:^6.0.1"
-    "@celo/wallet-remote": "npm:^6.0.1"
+    "@celo/utils": "workspace:^"
+    "@celo/wallet-base": "workspace:^"
+    "@celo/wallet-remote": "workspace:^"
     "@ethereumjs/util": "npm:8.0.5"
     "@ledgerhq/errors": "npm:^6.16.4"
     "@ledgerhq/hw-app-eth": "git+https://github.com:celo-org/ledgerjs-hw-app-eth.git"
-    "@ledgerhq/hw-transport": "npm:^6.31.3"
-    "@noble/curves": "npm:^1.4.0"
+    "@ledgerhq/hw-transport-node-hid": "npm:^6.29.5"
     dotenv: "npm:^8.2.0"
     semver: "npm:^7.6.0"
     viem: "npm:^2.21.14"
   peerDependencies:
+    "@ledgerhq/hw-transport-node-hid": ^6.x
     viem: 2.x
   languageName: unknown
   linkType: soft
@@ -2125,7 +2124,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/wallet-base@npm:^6.0.1, @celo/wallet-base@workspace:packages/sdk/wallets/wallet-base":
+"@celo/wallet-base@npm:^6.0.1, @celo/wallet-base@workspace:^, @celo/wallet-base@workspace:packages/sdk/wallets/wallet-base":
   version: 0.0.0-use.local
   resolution: "@celo/wallet-base@workspace:packages/sdk/wallets/wallet-base"
   dependencies:
@@ -2299,7 +2298,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/wallet-remote@npm:^6.0.1, @celo/wallet-remote@workspace:packages/sdk/wallets/wallet-remote":
+"@celo/wallet-remote@npm:^6.0.1, @celo/wallet-remote@workspace:^, @celo/wallet-remote@workspace:packages/sdk/wallets/wallet-remote":
   version: 0.0.0-use.local
   resolution: "@celo/wallet-remote@workspace:packages/sdk/wallets/wallet-remote"
   dependencies:
@@ -3762,15 +3761,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/devices@npm:^8.4.3":
-  version: 8.4.3
-  resolution: "@ledgerhq/devices@npm:8.4.3"
+"@ledgerhq/devices@npm:^8.4.4":
+  version: 8.4.4
+  resolution: "@ledgerhq/devices@npm:8.4.4"
   dependencies:
-    "@ledgerhq/errors": "npm:^6.19.0"
+    "@ledgerhq/errors": "npm:^6.19.1"
     "@ledgerhq/logs": "npm:^6.12.0"
     rxjs: "npm:^7.8.1"
     semver: "npm:^7.3.5"
-  checksum: fa8ce935393b89093a97b94976ccfa0895aaf4b70255f706f7cda2fdb30ff108736a8aeefd171da6c376269e1399a3f310b43c23e00eac2a35b46a94f902c3c0
+  checksum: 57136fc45ae2fa42b3cf93eb7cc3542fd84010390b3d0a536d342c7e92f90e475d608b1774f17a547419edddd7df0d0b1b1dbd6d2c778009ebab0fc3ec313f67
   languageName: node
   linkType: hard
 
@@ -3810,10 +3809,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/errors@npm:^6.19.0":
-  version: 6.19.0
-  resolution: "@ledgerhq/errors@npm:6.19.0"
-  checksum: 944d7a86f4dedd3cac611d704a36667ff66294403ab6e552b8c14ce742574a2b50fa71de89c28827fc442233af68b88ae2971e73cdb03ea98ec4e65239d76d88
+"@ledgerhq/errors@npm:^6.19.1":
+  version: 6.19.1
+  resolution: "@ledgerhq/errors@npm:6.19.1"
+  checksum: 8265c6d73c314a4aabbe060ec29e2feebb4e904fe811bf7a9c53cde08e713dcbceded9d927ebb2f0ffc47a7b16524379d4a7e9aa3d61945b8a832be7cd5cf69b
   languageName: node
   linkType: hard
 
@@ -3876,6 +3875,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ledgerhq/hw-transport-node-hid-noevents@npm:^6.30.5":
+  version: 6.30.5
+  resolution: "@ledgerhq/hw-transport-node-hid-noevents@npm:6.30.5"
+  dependencies:
+    "@ledgerhq/devices": "npm:^8.4.4"
+    "@ledgerhq/errors": "npm:^6.19.1"
+    "@ledgerhq/hw-transport": "npm:^6.31.4"
+    "@ledgerhq/logs": "npm:^6.12.0"
+    node-hid: "npm:2.1.2"
+  checksum: 78d9524bcf441d8c8b909b7dd5e2322283dd4c896079bdc3cc9741a29f3798679ef031f497713c54cf3674bbdd6b84d772e6d74f2fda03a86f3450eee373fe9f
+  languageName: node
+  linkType: hard
+
 "@ledgerhq/hw-transport-node-hid@npm:^6.28.5":
   version: 6.28.5
   resolution: "@ledgerhq/hw-transport-node-hid@npm:6.28.5"
@@ -3889,6 +3901,22 @@ __metadata:
     node-hid: "npm:^2.1.2"
     usb: "npm:2.9.0"
   checksum: 32c3b40af333e85a6f83e96ccc9bb2720e7b21508862759d3a8da9cbf27644514d30324cbcd817d5e73e7f5ed944115775cbfbb7cccf0f97fb79ae703e0e5f01
+  languageName: node
+  linkType: hard
+
+"@ledgerhq/hw-transport-node-hid@npm:^6.29.5":
+  version: 6.29.5
+  resolution: "@ledgerhq/hw-transport-node-hid@npm:6.29.5"
+  dependencies:
+    "@ledgerhq/devices": "npm:^8.4.4"
+    "@ledgerhq/errors": "npm:^6.19.1"
+    "@ledgerhq/hw-transport": "npm:^6.31.4"
+    "@ledgerhq/hw-transport-node-hid-noevents": "npm:^6.30.5"
+    "@ledgerhq/logs": "npm:^6.12.0"
+    lodash: "npm:^4.17.21"
+    node-hid: "npm:2.1.2"
+    usb: "npm:2.9.0"
+  checksum: 60f071ec0582696794c70a884165c11a8f1bae26671f6ecebf66ccf0f6e87976ed762ca403ea0bb51e76355e674d4af2efc14bd1ea58eadb11ba17c3bee1a97a
   languageName: node
   linkType: hard
 
@@ -3928,15 +3956,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/hw-transport@npm:^6.31.3":
-  version: 6.31.3
-  resolution: "@ledgerhq/hw-transport@npm:6.31.3"
+"@ledgerhq/hw-transport@npm:^6.31.4":
+  version: 6.31.4
+  resolution: "@ledgerhq/hw-transport@npm:6.31.4"
   dependencies:
-    "@ledgerhq/devices": "npm:^8.4.3"
-    "@ledgerhq/errors": "npm:^6.19.0"
+    "@ledgerhq/devices": "npm:^8.4.4"
+    "@ledgerhq/errors": "npm:^6.19.1"
     "@ledgerhq/logs": "npm:^6.12.0"
     events: "npm:^3.3.0"
-  checksum: 24375ba43308c2327139f3009d33484c3352a503712bb8f5235d9fa578b90f402401f04844a66ea7e64693ff7ec8f6ed74ce324a33fb955ed3c9b9e76e4cdbbd
+  checksum: cf101e5b818e95e59031241d556dbec24658f54104910e414be493bc4b90b0aea50f5d4b3339a237dd0b12845bb2683c845f3a82f2ea9da4e077b68d1e1f7e48
   languageName: node
   linkType: hard
 
@@ -14547,7 +14575,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-hid@npm:^2.1.2":
+"node-hid@npm:2.1.2, node-hid@npm:^2.1.2":
   version: 2.1.2
   resolution: "node-hid@npm:2.1.2"
   dependencies:

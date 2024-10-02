@@ -5,12 +5,12 @@ This library aims to ease the usage of a ledger device with (viem)[https://viem.
 ## Installation
 
 ```bash
-npm install @celo/viem-account-ledger viem
+npm install @celo/viem-account-ledger viem@2 @ledgerhq/transport-node-hid@6.x
 # or yarn or bun or ...
 ```
 
-> [!IMPORTANT]
-> viem is a peer dependency and MUST be installed alongside this library.
+> [!IMPORTANT] > `viem` is a peer dependency and MUST be installed alongside this library.
+> `@ledgerhq/transport-node-hid` is a peer dependency and MUST be installed alongside this library.
 
 ## Usage
 
@@ -18,7 +18,7 @@ npm install @celo/viem-account-ledger viem
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
 import { createWalletClient } from 'viem'
 import { celo, celoAlfajores } from 'viem/chains'
-
+import { ledgerToAccount } from '@celo/viem-account-ledger'
 
 async function main() => {
   const account = await ledgerToAccount({

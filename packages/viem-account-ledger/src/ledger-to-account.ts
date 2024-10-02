@@ -1,5 +1,5 @@
 import { CELO_DERIVATION_PATH_BASE, trimLeading0x } from '@celo/base'
-import { ensureLeading0x } from '@celo/utils/lib/address.js'
+import { ensureLeading0x } from '@celo/base/lib/address.js'
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
 import { hashMessage, serializeSignature } from 'viem'
 import { LocalAccount, toAccount } from 'viem/accounts'
