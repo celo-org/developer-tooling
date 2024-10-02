@@ -12,10 +12,6 @@ export function isE164Number(phoneNumber: string) {
   return E164_REGEX.test(phoneNumber)
 }
 
-export function anonymizedPhone(phoneNumber: string) {
-  return phoneNumber.slice(0, -4) + 'XXXX'
-}
-
 export const PhoneNumberBase = {
   isE164Number,
 }
