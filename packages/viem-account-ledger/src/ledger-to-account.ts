@@ -9,12 +9,14 @@ import { checkForKnownToken, generateLedger } from './utils.js'
 
 type LedgerAccount = LocalAccount<'ledger'>
 
+export const ETH_DERIVATION_PATH_BASE = "m/44'/60'/0'" as const
 export const CELO_BASE_DERIVATION_PATH = `${CELO_DERIVATION_PATH_BASE.slice(2)}/0`
+export const DEFAULT_DERIVATION_PATH = `${ETH_DERIVATION_PATH_BASE.slice(2)}/0`
 
 export async function ledgerToAccount({
   transport,
   derivationPathIndex = 0,
-  baseDerivationPath = CELO_BASE_DERIVATION_PATH,
+  baseDerivationPath = DEFAULT_DERIVATION_PATH,
 }: {
   transport: TransportNodeHid.default
   derivationPathIndex?: number | string
