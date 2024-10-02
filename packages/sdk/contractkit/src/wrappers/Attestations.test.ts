@@ -1,10 +1,12 @@
+import { newAttestations } from '@celo/abis/web3/Attestations'
 import { StrongAddress } from '@celo/base'
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { deployAttestationsContract } from '@celo/dev-utils/lib/contracts'
 import { getIdentifierHash, IdentifierPrefix } from '@celo/odis-identifiers'
 import { newKitFromWeb3 } from '../kit'
 import { AttestationsWrapper } from './Attestations'
 
-testWithGanache('Attestations Wrapper', (web3) => {
+testWithAnvilL1('AttestationsWrapper', (web3) => {
   const PHONE_NUMBER = '+15555555555'
   const IDENTIFIER = getIdentifierHash(
     web3.utils.sha3,
@@ -20,7 +22,14 @@ testWithGanache('Attestations Wrapper', (web3) => {
   beforeAll(async () => {
     accounts = (await web3.eth.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
-    attestations = await kit.contracts.getAttestations()
+
+    const attestationsContractAddress = await deployAttestationsContract(web3, accounts[0])
+
+    attestations = new AttestationsWrapper(
+      kit.connection,
+      newAttestations(web3, attestationsContractAddress),
+      newKitFromWeb3(web3).contracts
+    )
   })
 
   describe('Verification with default values', () => {

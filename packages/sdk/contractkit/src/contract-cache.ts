@@ -11,10 +11,12 @@ import { BlockchainParametersWrapper } from './wrappers/BlockchainParameters'
 import { DoubleSigningSlasherWrapper } from './wrappers/DoubleSigningSlasher'
 import { DowntimeSlasherWrapper } from './wrappers/DowntimeSlasher'
 import { ElectionWrapper } from './wrappers/Election'
+import { EpochManagerWrapper } from './wrappers/EpochManager'
 import { EpochRewardsWrapper } from './wrappers/EpochRewards'
 import { Erc20Wrapper } from './wrappers/Erc20Wrapper'
 import { EscrowWrapper } from './wrappers/Escrow'
 import { FederatedAttestationsWrapper } from './wrappers/FederatedAttestations'
+import { FeeCurrencyDirectoryWrapper } from './wrappers/FeeCurrencyDirectoryWrapper'
 import { FeeCurrencyWhitelistWrapper } from './wrappers/FeeCurrencyWhitelistWrapper'
 import { FreezerWrapper } from './wrappers/Freezer'
 import { GasPriceMinimumWrapper } from './wrappers/GasPriceMinimum'
@@ -24,6 +26,7 @@ import { LockedGoldWrapper } from './wrappers/LockedGold'
 import { MultiSigWrapper } from './wrappers/MultiSig'
 import { OdisPaymentsWrapper } from './wrappers/OdisPayments'
 import { ReserveWrapper } from './wrappers/Reserve'
+import { ScoreManagerWrapper } from './wrappers/ScoreManager'
 import { SortedOraclesWrapper } from './wrappers/SortedOracles'
 import { StableTokenWrapper } from './wrappers/StableTokenWrapper'
 import { ValidatorsWrapper } from './wrappers/Validators'
@@ -35,6 +38,7 @@ const WrapperFactories = {
   [CeloContract.ERC20]: Erc20Wrapper,
   [CeloContract.Escrow]: EscrowWrapper,
   [CeloContract.FederatedAttestations]: FederatedAttestationsWrapper,
+  [CeloContract.FeeCurrencyDirectory]: FeeCurrencyDirectoryWrapper,
   [CeloContract.FeeCurrencyWhitelist]: FeeCurrencyWhitelistWrapper,
   [CeloContract.Freezer]: FreezerWrapper,
   [CeloContract.GasPriceMinimum]: GasPriceMinimumWrapper,
@@ -44,6 +48,7 @@ const WrapperFactories = {
   [CeloContract.MultiSig]: MultiSigWrapper,
   [CeloContract.OdisPayments]: OdisPaymentsWrapper,
   [CeloContract.Reserve]: ReserveWrapper,
+  [CeloContract.ScoreManager]: ScoreManagerWrapper,
   [CeloContract.StableToken]: StableTokenWrapper,
   [CeloContract.StableTokenEUR]: StableTokenWrapper,
   [CeloContract.StableTokenBRL]: StableTokenWrapper,
@@ -58,6 +63,7 @@ const WrapperFactoriesWhichNeedCache = {
   [CeloContract.DoubleSigningSlasher]: DoubleSigningSlasherWrapper,
   [CeloContract.DowntimeSlasher]: DowntimeSlasherWrapper,
   [CeloContract.Election]: ElectionWrapper,
+  [CeloContract.EpochManager]: EpochManagerWrapper,
   [CeloContract.Governance]: GovernanceWrapper,
   [CeloContract.LockedGold]: LockedGoldWrapper,
   [CeloContract.Validators]: ValidatorsWrapper,
@@ -80,10 +86,12 @@ interface WrapperCacheMap {
   [CeloContract.DoubleSigningSlasher]?: DoubleSigningSlasherWrapper
   [CeloContract.DowntimeSlasher]?: DowntimeSlasherWrapper
   [CeloContract.Election]?: ElectionWrapper
+  [CeloContract.EpochManager]?: EpochManagerWrapper
   [CeloContract.EpochRewards]?: EpochRewardsWrapper
   [CeloContract.ERC20]?: Erc20Wrapper<IERC20>
   [CeloContract.Escrow]?: EscrowWrapper
   [CeloContract.FederatedAttestations]?: FederatedAttestationsWrapper
+  [CeloContract.FeeCurrencyDirectory]?: FeeCurrencyDirectoryWrapper
   [CeloContract.FeeCurrencyWhitelist]?: FeeCurrencyWhitelistWrapper
   [CeloContract.Freezer]?: FreezerWrapper
   [CeloContract.GasPriceMinimum]?: GasPriceMinimumWrapper
@@ -95,6 +103,7 @@ interface WrapperCacheMap {
   // [CeloContract.Random]?: RandomWrapper,
   // [CeloContract.Registry]?: RegistryWrapper,
   [CeloContract.Reserve]?: ReserveWrapper
+  [CeloContract.ScoreManager]?: ScoreManagerWrapper
   [CeloContract.SortedOracles]?: SortedOraclesWrapper
   [CeloContract.StableToken]?: StableTokenWrapper
   [CeloContract.StableTokenEUR]?: StableTokenWrapper
@@ -142,6 +151,9 @@ export class WrapperCache implements ContractCacheType {
   getEpochRewards() {
     return this.getContract(CeloContract.EpochRewards)
   }
+  getEpochManager() {
+    return this.getContract(CeloContract.EpochManager)
+  }
   getErc20(address: string) {
     return this.getContract(CeloContract.ERC20, address)
   }
@@ -154,6 +166,9 @@ export class WrapperCache implements ContractCacheType {
   }
   getFederatedAttestations() {
     return this.getContract(CeloContract.FederatedAttestations)
+  }
+  getFeeCurrencyDirectory() {
+    return this.getContract(CeloContract.FeeCurrencyDirectory)
   }
   getFeeCurrencyWhitelist() {
     return this.getContract(CeloContract.FeeCurrencyWhitelist)
@@ -178,6 +193,9 @@ export class WrapperCache implements ContractCacheType {
   }
   getReserve() {
     return this.getContract(CeloContract.Reserve)
+  }
+  getScoreManager() {
+    return this.getContract(CeloContract.ScoreManager)
   }
   getSortedOracles() {
     return this.getContract(CeloContract.SortedOracles)

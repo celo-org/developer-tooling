@@ -1,19 +1,18 @@
 import { StrongAddress } from '@celo/base'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { GovernanceWrapper, Proposal } from '@celo/contractkit/lib/wrappers/Governance'
-import { NetworkConfig, testWithGanache, timeTravel } from '@celo/dev-utils/lib/ganache-test'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import { ProposalBuilder } from '@celo/governance'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
-import { testLocally } from '../../test-utils/cliUtils'
+import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Withdraw from './withdraw'
 
 process.env.NO_SYNCCHECK = 'true'
 
-const expConfig = NetworkConfig.governance
-
-testWithGanache('governance:withdraw', (web3: Web3) => {
-  const minDeposit = web3.utils.toWei(expConfig.minDeposit.toString(), 'ether')
+testWithAnvilL1('governance:withdraw', (web3: Web3) => {
+  let minDeposit: string
   const kit = newKitFromWeb3(web3)
 
   let accounts: StrongAddress[] = []
@@ -23,24 +22,35 @@ testWithGanache('governance:withdraw', (web3: Web3) => {
     accounts = (await web3.eth.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
     governance = await kit.contracts.getGovernance()
-    console.log((await governance.lastDequeue()).toNumber())
+    minDeposit = (await governance.minDeposit()).toFixed()
     const proposal: Proposal = await new ProposalBuilder(kit).build()
     await governance
       .propose(proposal, 'URL')
       .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
-    console.log(await governance.getProposalMetadata(1))
-    await timeTravel(expConfig.dequeueFrequency + 1, web3)
+    const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
+    await timeTravel(dequeueFrequency + 1, web3)
     await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
   })
 
   test('can withdraw', async () => {
-    console.log(await governance.getProposalMetadata(1))
-    console.log(await governance.getProposalStage(1))
     const balanceBefore = await kit.connection.getBalance(accounts[0])
-    console.log(accounts[0], await governance.getRefundedDeposits(accounts[0]))
-    console.log(await testLocally(Withdraw, ['--from', accounts[0]]))
+
+    await testLocallyWithWeb3Node(Withdraw, ['--from', accounts[0]], web3)
+
     const balanceAfter = await kit.connection.getBalance(accounts[0])
-    const difference = new BigNumber(balanceAfter).minus(balanceBefore)
+    const latestTransactionReceipt = await web3.eth.getTransactionReceipt(
+      (
+        await web3.eth.getBlock('latest')
+      ).transactions[0]
+    )
+
+    // Safety check if the latest transaction was originated by expected account
+    expect(latestTransactionReceipt.from.toLowerCase()).toEqual(accounts[0].toLowerCase())
+
+    const difference = new BigNumber(balanceAfter)
+      .minus(balanceBefore)
+      .plus(latestTransactionReceipt.effectiveGasPrice * latestTransactionReceipt.gasUsed)
+
     expect(difference.toFixed()).toEqual(minDeposit)
   })
 })

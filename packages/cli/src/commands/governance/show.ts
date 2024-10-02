@@ -146,6 +146,10 @@ export default class Show extends BaseCommand {
       const record = await governance.getHotfixRecord(hotfixBuf)
       printValueMap(record)
 
+      if (await this.isCel2()) {
+        return
+      }
+
       const passing = await governance.isHotfixPassing(hotfixBuf)
       printValueMap({ passing })
       const tally = await governance.hotfixWhitelistValidatorTally(hotfixBuf)

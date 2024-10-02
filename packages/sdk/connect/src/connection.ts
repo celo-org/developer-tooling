@@ -266,7 +266,7 @@ export class Connection {
   signTypedData = async (
     signer: string,
     typedData: EIP712TypedData,
-    version?: 1 | 3 | 4 | 5
+    version: 1 | 3 | 4 | 5 | null = 4
   ): Promise<Signature> => {
     // stringify data for v3 & v4 based on https://github.com/MetaMask/metamask-extension/blob/c72199a1a6e4151c40c22f79d0f3b6ed7a2d59a7/app/scripts/lib/typed-message-manager.js#L185
     const shouldStringify = version === 3 || version === 4
@@ -334,25 +334,23 @@ export class Connection {
   }
   // if neither gas price nor feeMarket fields are present set them.
   setFeeMarketGas = async (tx: CeloTx): Promise<CeloTx> => {
-    // default to the current values
-    const calls = [Promise.resolve(tx.maxFeePerGas), Promise.resolve(tx.maxPriorityFeePerGas)]
+    if (isEmpty(tx.maxPriorityFeePerGas)) {
+      tx.maxPriorityFeePerGas = await this.getMaxPriorityFeePerGas(tx.feeCurrency)
+    }
 
     if (isEmpty(tx.maxFeePerGas)) {
-      calls[0] = this.gasPrice(tx.feeCurrency)
+      const baseFee = isEmpty(tx.feeCurrency)
+        ? await this.getBlock('latest').then((block) => block.baseFeePerGas)
+        : await this.gasPrice(tx.feeCurrency)
+      const withBuffer = addBufferToBaseFee(BigInt(baseFee!))
+      const maxFeePerGas =
+        withBuffer + BigInt(ensureLeading0x(tx.maxPriorityFeePerGas.toString(16)))
+      tx.maxFeePerGas = ensureLeading0x(maxFeePerGas.toString(16))
     }
-    if (isEmpty(tx.maxPriorityFeePerGas)) {
-      calls[1] = this.rpcCaller
-        .call('eth_maxPriorityFeePerGas', [tx.feeCurrency])
-        .then((rpcResponse) => {
-          return rpcResponse.result
-        })
-    }
-    const [maxFeePerGas, maxPriorityFeePerGas] = await Promise.all(calls)
+
     return {
       ...tx,
       gasPrice: undefined,
-      maxFeePerGas,
-      maxPriorityFeePerGas,
     }
   }
 
@@ -441,6 +439,13 @@ export class Connection {
     return gasPriceInHex
   }
 
+  getMaxPriorityFeePerGas = async (feeCurrency?: Address): Promise<string> => {
+    const parameter = feeCurrency ? [feeCurrency] : []
+    return this.rpcCaller.call('eth_maxPriorityFeePerGas', parameter).then((rpcResponse) => {
+      return rpcResponse.result
+    })
+  }
+
   getBlockNumber = async (): Promise<number> => {
     const response = await this.rpcCaller.call('eth_blockNumber', [])
 
@@ -523,17 +528,22 @@ export class Connection {
   }
 }
 
-function isEmpty(value: string | undefined | number | BN) {
+const addBufferToBaseFee = (gasPrice: bigint) => (gasPrice * BigInt(120)) / BigInt(100)
+
+function isEmpty(value: string | undefined | number | BN | bigint): value is undefined {
   return (
     value === 0 ||
     value === undefined ||
     value === null ||
     value === '0' ||
+    value === BigInt(0) ||
     (typeof value === 'string' &&
       (value.toLowerCase() === '0x' || value.toLowerCase() === '0x0')) ||
-    Web3.utils.toBN(value.toString()).eq(Web3.utils.toBN(0))
+    Web3.utils.toBN(value.toString(10)).eq(Web3.utils.toBN(0))
   )
 }
-export function isPresent(value: string | undefined | number | BN) {
+export function isPresent(
+  value: string | undefined | number | BN | bigint
+): value is string | number | BN | bigint {
   return !isEmpty(value)
 }

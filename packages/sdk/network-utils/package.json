@@ -6,7 +6,7 @@
   "types": "./lib/index.d.ts",
   "author": "Celo",
   "license": "Apache-2.0",
-  "homepage": "https://celo-sdk-docs.readthedocs.io/en/latest/network-utils",
+  "homepage": "https://docs.celo.org/developer/tools",
   "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/sdk/network-utils",
   "keywords": [
     "celo",
@@ -27,8 +27,10 @@
     "debug": "^4.1.1"
   },
   "devDependencies": {
-    "@celo/dev-utils": "0.0.3",
-    "fetch-mock": "9.10.4"
+    "@celo/dev-utils": "0.0.5",
+    "@celo/typescript": "workspace:^",
+    "@types/debug": "^4.1.12",
+    "fetch-mock": "^10.0.7"
   },
   "engines": {
     "node": ">=8.13.0"

@@ -6,6 +6,7 @@ import { privateKeyToAccount } from 'viem/accounts'
 import { celo } from 'viem/chains'
 import Web3 from 'web3'
 import {
+  encode_deprecated_celo_legacy_type_only_for_temporary_ledger_compat,
   extractSignature,
   getSignerFromTxEIP2718TX,
   handleBigInt,
@@ -21,86 +22,6 @@ const PRIVATE_KEY1 = '0x1234567890abcdef1234567890abcdef1234567890abcdef12345678
 const ACCOUNT_ADDRESS1 = normalizeAddressWith0x(privateKeyToAddress(PRIVATE_KEY1)) as `0x${string}`
 
 describe('rlpEncodedTx', () => {
-  describe('Celo legacy', () => {
-    const legacyTransaction = {
-      feeCurrency: '0x5409ED021D9299bf6814279A6A1411A7e866A631',
-      from: ACCOUNT_ADDRESS1,
-      to: ACCOUNT_ADDRESS1,
-      chainId: 2,
-      value: Web3.utils.toWei('1000', 'ether'),
-      nonce: 1,
-      gas: '1500000000',
-      gasPrice: '9900000000',
-      data: '0xabcdef',
-    } as const
-    it('convert CeloTx into RLP', () => {
-      const transaction = {
-        ...legacyTransaction,
-      }
-      const result = rlpEncodedTx(transaction)
-      expect(result).toMatchInlineSnapshot(`
-        {
-          "rlpEncode": "0xf8490185024e1603008459682f00945409ed021d9299bf6814279a6a1411a7e866a6318080941be31a94361a391bbafb2a4ccd704f57dc04d4bb893635c9adc5dea0000083abcdef028080",
-          "transaction": {
-            "chainId": 2,
-            "data": "0xabcdef",
-            "feeCurrency": "0x5409ed021d9299bf6814279a6a1411a7e866a631",
-            "from": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
-            "gas": "0x59682f00",
-            "gasPrice": "0x024e160300",
-            "gatewayFee": "0x",
-            "gatewayFeeRecipient": "0x",
-            "maxFeePerGas": "0x",
-            "maxPriorityFeePerGas": "0x",
-            "nonce": 1,
-            "to": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
-            "value": "0x3635c9adc5dea00000",
-          },
-          "type": "celo-legacy",
-        }
-      `)
-    })
-
-    describe('when chainId / gasPrice / nonce is invalid', () => {
-      it('chainId is not a positive number it throws error', () => {
-        const transaction = {
-          ...legacyTransaction,
-          chainId: -1,
-        } as const
-        expect(() => rlpEncodedTx(transaction)).toThrowErrorMatchingInlineSnapshot(
-          `"Gas, nonce or chainId is less than than 0"`
-        )
-      })
-      it('gasPrice is not a positive number it throws error', () => {
-        const transaction = {
-          ...legacyTransaction,
-          gasPrice: -1,
-        }
-        expect(() => rlpEncodedTx(transaction)).toThrowErrorMatchingInlineSnapshot(
-          `"GasPrice or maxFeePerGas or maxPriorityFeePerGas is less than than 0"`
-        )
-      })
-      it('nonce is not a positive number it throws error', () => {
-        const transaction = {
-          ...legacyTransaction,
-          nonce: -1,
-        }
-        expect(() => rlpEncodedTx(transaction)).toThrowErrorMatchingInlineSnapshot(
-          `"Gas, nonce or chainId is less than than 0"`
-        )
-      })
-      it('gas is not a positive number it throws error', () => {
-        const transaction = {
-          ...legacyTransaction,
-          gas: -1,
-        }
-        expect(() => rlpEncodedTx(transaction)).toThrowErrorMatchingInlineSnapshot(
-          `"Gas, nonce or chainId is less than than 0"`
-        )
-      })
-    })
-  })
-
   describe('when no gas fields are provided', () => {
     it('throws an error', () => {
       expect(() => rlpEncodedTx({})).toThrowErrorMatchingInlineSnapshot(`""gas" is missing"`)
@@ -208,6 +129,90 @@ describe('rlpEncodedTx', () => {
       })
     })
 
+    describe('when maxFeeInFeeCurrency and feeCurrency are provided', () => {
+      it('orders fields in RLP as specified by CIP66', () => {
+        const CIP66Transaction = {
+          ...eip1559Transaction,
+          feeCurrency: '0x5409ED021D9299bf6814279A6A1411A7e866A631',
+          maxFeeInFeeCurrency: '0x666',
+        } as const
+        const result = rlpEncodedTx(CIP66Transaction)
+        expect(result).toMatchInlineSnapshot(`
+          {
+            "rlpEncode": "0x7af8410280630a63941be31a94361a391bbafb2a4ccd704f57dc04d4bb893635c9adc5dea0000083abcdefc0945409ed021d9299bf6814279a6a1411a7e866a631820666",
+            "transaction": {
+              "chainId": 2,
+              "data": "0xabcdef",
+              "feeCurrency": "0x5409ed021d9299bf6814279a6a1411a7e866a631",
+              "from": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
+              "gas": "0x63",
+              "maxFeeInFeeCurrency": "0x0666",
+              "maxFeePerGas": "0x0a",
+              "maxPriorityFeePerGas": "0x63",
+              "nonce": 0,
+              "to": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
+              "value": "0x3635c9adc5dea00000",
+            },
+            "type": "cip66",
+          }
+        `)
+      })
+      it('orders fields in RLP as specified by CIP66 when given BN values', () => {
+        const CIP66Transaction = {
+          ...eip1559Transaction,
+          feeCurrency: '0x5409ED021D9299bf6814279A6A1411A7e866A631',
+          maxFeeInFeeCurrency: Web3.utils.toBN('100000000010181646104615494635153636353810897'),
+        } as const
+        const result = rlpEncodedTx(CIP66Transaction)
+        expect(result).toMatchInlineSnapshot(`
+          {
+            "rlpEncode": "0x7af8520280630a63941be31a94361a391bbafb2a4ccd704f57dc04d4bb893635c9adc5dea0000083abcdefc0945409ed021d9299bf6814279a6a1411a7e866a63193047bf19675d5515464c13ea56f3922e602a1d1",
+            "transaction": {
+              "chainId": 2,
+              "data": "0xabcdef",
+              "feeCurrency": "0x5409ed021d9299bf6814279a6a1411a7e866a631",
+              "from": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
+              "gas": "0x63",
+              "maxFeeInFeeCurrency": "0x047bf19675d5515464c13ea56f3922e602a1d1",
+              "maxFeePerGas": "0x0a",
+              "maxPriorityFeePerGas": "0x63",
+              "nonce": 0,
+              "to": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
+              "value": "0x3635c9adc5dea00000",
+            },
+            "type": "cip66",
+          }
+        `)
+      })
+      it('orders fields in RLP as specified by CIP66 when given bigInt values', () => {
+        const CIP66Transaction = {
+          ...eip1559Transaction,
+          feeCurrency: '0x5409ED021D9299bf6814279A6A1411A7e866A631',
+          maxFeeInFeeCurrency: BigInt('100000000010181646104615494635153636353810897'),
+        } as const
+        const result = rlpEncodedTx(CIP66Transaction)
+        expect(result).toMatchInlineSnapshot(`
+          {
+            "rlpEncode": "0x7af8520280630a63941be31a94361a391bbafb2a4ccd704f57dc04d4bb893635c9adc5dea0000083abcdefc0945409ed021d9299bf6814279a6a1411a7e866a63193047bf19675d5515464c13ea56f3922e602a1d1",
+            "transaction": {
+              "chainId": 2,
+              "data": "0xabcdef",
+              "feeCurrency": "0x5409ed021d9299bf6814279a6a1411a7e866a631",
+              "from": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
+              "gas": "0x63",
+              "maxFeeInFeeCurrency": "0x047bf19675d5515464c13ea56f3922e602a1d1",
+              "maxFeePerGas": "0x0a",
+              "maxPriorityFeePerGas": "0x63",
+              "nonce": 0,
+              "to": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
+              "value": "0x3635c9adc5dea00000",
+            },
+            "type": "cip66",
+          }
+        `)
+      })
+    })
+
     describe('when maxFeePerGas and maxPriorityFeePerGas are provided', () => {
       it('orders fields in RLP as specified by EIP1559', () => {
         const result = rlpEncodedTx(eip1559Transaction)
@@ -297,6 +302,44 @@ describe('rlpEncodedTx', () => {
       expect(parsedCK).toEqual(parsedViem)
       expect(serialized.rlpEncode).toEqual(viemSerialized)
     })
+  })
+})
+
+describe('encode_deprecated_celo_legacy_type_only_for_temporary_ledger_compat', () => {
+  test('serializes the deprecated tx type correctly', () => {
+    const legacyTransaction = {
+      feeCurrency: '0x5409ED021D9299bf6814279A6A1411A7e866A631',
+      from: ACCOUNT_ADDRESS1,
+      to: ACCOUNT_ADDRESS1,
+      chainId: 2,
+      value: Web3.utils.toWei('1000', 'ether'),
+      nonce: 1,
+      gas: '1500000000',
+      gasPrice: '9900000000',
+      data: '0xabcdef',
+    } as const
+
+    const result =
+      encode_deprecated_celo_legacy_type_only_for_temporary_ledger_compat(legacyTransaction)
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "rlpEncode": "0xf8490185024e1603008459682f00945409ed021d9299bf6814279a6a1411a7e866a6318080941be31a94361a391bbafb2a4ccd704f57dc04d4bb893635c9adc5dea0000083abcdef028080",
+        "transaction": {
+          "chainId": 2,
+          "data": "0xabcdef",
+          "feeCurrency": "0x5409ed021d9299bf6814279a6a1411a7e866a631",
+          "from": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
+          "gas": "0x59682f00",
+          "gasPrice": "0x024e160300",
+          "gatewayFee": "0x",
+          "gatewayFeeRecipient": "0x",
+          "nonce": 1,
+          "to": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
+          "value": "0x3635c9adc5dea00000",
+        },
+        "type": "celo-legacy",
+      }
+    `)
   })
 })
 
@@ -452,6 +495,33 @@ describe('recoverTransaction', () => {
           "yParity": 0,
         },
         "0x1Be31A94361a391bBaFB2a4CCd704F57dc04d4bb",
+      ]
+    `)
+  })
+  it('handles cip66 transactions', () => {
+    const cip66TX =
+      '0x7af8ce82a4ec01843b9aca00850342770c0083030d409443d72ff17701b2da814620735c39c620ce0ea4a180b844a9059cbb000000000000000000000000bd8be21f6883569ad7d15cc55c87137fcef308c300000000000000000000000000000000000000000000000001605eba271024d6c094765de816845861e75a25fca122bb6898b8b1282a8501a13b860080a02a015905a494549d8a1da26ce769309963e43f407936bbce1ea8276072b08416a072fd12d24c44bc79648bd88f4d8c158f2f0778694557868b3dc7d80e3aa6b539'
+    expect(recoverTransaction(cip66TX)).toMatchInlineSnapshot(`
+      [
+        {
+          "accessList": [],
+          "chainId": 42220,
+          "data": "0xa9059cbb000000000000000000000000bd8be21f6883569ad7d15cc55c87137fcef308c300000000000000000000000000000000000000000000000001605eba271024d6",
+          "feeCurrency": "0x765de816845861e75a25fca122bb6898b8b1282a",
+          "gas": "200000",
+          "maxFeeInFeeCurrency": "0x01a13b8600",
+          "maxFeePerGas": "14000000000",
+          "maxPriorityFeePerGas": "1000000000",
+          "nonce": 1,
+          "r": "0x2a015905a494549d8a1da26ce769309963e43f407936bbce1ea8276072b08416",
+          "s": "0x72fd12d24c44bc79648bd88f4d8c158f2f0778694557868b3dc7d80e3aa6b539",
+          "to": "0x43d72ff17701b2da814620735c39c620ce0ea4a1",
+          "type": "cip66",
+          "v": 27,
+          "value": "0",
+          "yParity": 0,
+        },
+        "0xa94f5374Fce5edBC8E2a8697C15331677e6EbF0B",
       ]
     `)
   })
@@ -682,6 +752,9 @@ describe('stringNumberOrBNToHex', () => {
   test('BN', () => {
     const biggie = Web3.utils.toBN('123')
     expect(stringNumberOrBNToHex(biggie)).toEqual('0x7b')
+  })
+  test('bigint', () => {
+    expect(stringNumberOrBNToHex(BigInt('100293872610573514616'))).toEqual('0x056fdb69c275837778')
   })
 })
 

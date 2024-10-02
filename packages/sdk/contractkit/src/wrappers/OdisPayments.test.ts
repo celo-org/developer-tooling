@@ -1,10 +1,12 @@
 import { StableToken, StrongAddress } from '@celo/base'
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import BigNumber from 'bignumber.js'
 import { newKitFromWeb3 } from '../kit'
+import { topUpWithToken } from '../test-utils/utils'
 import { OdisPaymentsWrapper } from './OdisPayments'
 import { StableTokenWrapper } from './StableTokenWrapper'
 
-testWithGanache('OdisPayments Wrapper', (web3) => {
+testWithAnvilL1('OdisPayments Wrapper', (web3) => {
   const kit = newKitFromWeb3(web3)
   let accounts: StrongAddress[] = []
   let odisPayments: OdisPaymentsWrapper
@@ -15,6 +17,8 @@ testWithGanache('OdisPayments Wrapper', (web3) => {
     kit.defaultAccount = accounts[0]
     odisPayments = await kit.contracts.getOdisPayments()
     stableToken = await kit.contracts.getStableToken(StableToken.cUSD)
+
+    await topUpWithToken(kit, StableToken.cUSD, accounts[0], new BigNumber(10000))
   })
 
   describe('#payInCUSD', () => {

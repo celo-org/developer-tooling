@@ -1,5 +1,200 @@
 # Changelog
 
+## 5.2.1
+
+### Patch Changes
+
+- [#348](https://github.com/celo-org/developer-tooling/pull/348) [`76d09b7`](https://github.com/celo-org/developer-tooling/commit/76d09b79c68cbb5aba38c0b36a5322384b7842ba) Thanks [@shazarre](https://github.com/shazarre)! - Fix network:info command when in L2
+
+- Updated dependencies [[`433b70e`](https://github.com/celo-org/developer-tooling/commit/433b70e20563e3e087cc39d744f1a2710d1d09de), [`76d09b7`](https://github.com/celo-org/developer-tooling/commit/76d09b79c68cbb5aba38c0b36a5322384b7842ba)]:
+  - @celo/connect@6.0.2
+  - @celo/contractkit@8.3.0
+
+## 5.2.0
+
+### Minor Changes
+
+- [#334](https://github.com/celo-org/developer-tooling/pull/334) [`7400467`](https://github.com/celo-org/developer-tooling/commit/740046755f5079cb1dafdb71fcc92cc4ad213eb9) Thanks [@pahor167](https://github.com/pahor167)! - Adds epochs:start epochs:switch & epochs:finish commands
+
+### Patch Changes
+
+- [#338](https://github.com/celo-org/developer-tooling/pull/338) [`717809e`](https://github.com/celo-org/developer-tooling/commit/717809e81cedf17048d524dc7603473fbb11e22c) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Fix printing of values that should be ordered numerically
+
+- [#336](https://github.com/celo-org/developer-tooling/pull/336) [`f5e0101`](https://github.com/celo-org/developer-tooling/commit/f5e010193bbf23a1da170c76bc21b1953b58fcc5) Thanks [@shazarre](https://github.com/shazarre)! - Added a link to create an issue when an error occurs
+
+- Updated dependencies [[`7400467`](https://github.com/celo-org/developer-tooling/commit/740046755f5079cb1dafdb71fcc92cc4ad213eb9)]:
+  - @celo/contractkit@8.2.0
+
+## 5.1.1
+
+### Patch Changes
+
+- [#315](https://github.com/celo-org/developer-tooling/pull/315) [`dd67b8f`](https://github.com/celo-org/developer-tooling/commit/dd67b8f7e65285d86af277c1172e760f250abd78) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - chore: bump oclif
+
+- [#275](https://github.com/celo-org/developer-tooling/pull/275) [`ac736ff`](https://github.com/celo-org/developer-tooling/commit/ac736ff5d1c5cb5457d4c3a856bf75675841b379) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - network:whitelist now outputs as a table accepting typical table formatting flags such as --csv
+
+- [#316](https://github.com/celo-org/developer-tooling/pull/316) [`d245703`](https://github.com/celo-org/developer-tooling/commit/d245703fa71ad24c88982fc6566e4d2865f586a4) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - fix: Change transfer:celo to use native sendTransaction to save up on gas costs as well as better decoding on ledger
+
+- [#313](https://github.com/celo-org/developer-tooling/pull/313) [`7715590`](https://github.com/celo-org/developer-tooling/commit/7715590b3efda1eb39a2600ffc858905265f5d12) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - chore: Deprecate reserve commands see https://forum.celo.org/t/sunset-of-reserve-commands/8454
+
+- [#315](https://github.com/celo-org/developer-tooling/pull/315) [`dd67b8f`](https://github.com/celo-org/developer-tooling/commit/dd67b8f7e65285d86af277c1172e760f250abd78) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - chore: Upgrade mento packages. version before was accidentally trying to use a dev dependency. (fix husky not installed on install error)
+
+- Updated dependencies [[`dd67b8f`](https://github.com/celo-org/developer-tooling/commit/dd67b8f7e65285d86af277c1172e760f250abd78), [`d245703`](https://github.com/celo-org/developer-tooling/commit/d245703fa71ad24c88982fc6566e4d2865f586a4)]:
+  - @celo/contractkit@8.1.1
+  - @celo/connect@6.0.1
+  - @celo/explorer@5.0.12
+  - @celo/wallet-hsm-azure@6.0.1
+  - @celo/wallet-ledger@6.0.1
+  - @celo/wallet-local@6.0.1
+  - @celo/governance@5.1.3
+
+## 5.1.1-beta.0
+
+### Patch Changes
+
+- [#315](https://github.com/celo-org/developer-tooling/pull/315) [`dd67b8f`](https://github.com/celo-org/developer-tooling/commit/dd67b8f7e65285d86af277c1172e760f250abd78) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - chore: bump oclif
+
+- [#275](https://github.com/celo-org/developer-tooling/pull/275) [`ac736ff`](https://github.com/celo-org/developer-tooling/commit/ac736ff5d1c5cb5457d4c3a856bf75675841b379) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - network:whitelist now outputs as a table accepting typical table formatting flags such as --csv
+
+- [#316](https://github.com/celo-org/developer-tooling/pull/316) [`d245703`](https://github.com/celo-org/developer-tooling/commit/d245703fa71ad24c88982fc6566e4d2865f586a4) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Change transfer:celo to use native sendTransaction to save up on gas costs as well as better decoding on ledger
+
+- [#313](https://github.com/celo-org/developer-tooling/pull/313) [`7715590`](https://github.com/celo-org/developer-tooling/commit/7715590b3efda1eb39a2600ffc858905265f5d12) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Deprecate reserve commands see https://forum.celo.org/t/sunset-of-reserve-commands/8454
+
+- [#315](https://github.com/celo-org/developer-tooling/pull/315) [`dd67b8f`](https://github.com/celo-org/developer-tooling/commit/dd67b8f7e65285d86af277c1172e760f250abd78) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Upgrade mento packages. version before was accidentally trying to use a dev dependency. (fix husky not installed on install error)
+
+- Updated dependencies [[`dd67b8f`](https://github.com/celo-org/developer-tooling/commit/dd67b8f7e65285d86af277c1172e760f250abd78), [`d245703`](https://github.com/celo-org/developer-tooling/commit/d245703fa71ad24c88982fc6566e4d2865f586a4)]:
+  - @celo/contractkit@8.1.1-beta.0
+  - @celo/connect@6.0.1-beta.0
+  - @celo/explorer@5.0.12-beta.0
+  - @celo/governance@5.1.3-beta.0
+  - @celo/wallet-ledger@6.0.1-beta.0
+  - @celo/wallet-hsm-azure@6.0.1-beta.0
+  - @celo/wallet-local@6.0.1-beta.0
+
+## 5.1.0
+
+### Minor Changes
+
+- [#264](https://github.com/celo-org/developer-tooling/pull/264) [`59f4b42`](https://github.com/celo-org/developer-tooling/commit/59f4b42029699861e91dd2214c40173f70de279e) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Add support for serializing, sending, parsing and deserializing cip66 transactions. This tx type is preffered over cip64 when paying for gas with tokens. Like eip1559 maxFeePerGass and maxPriorityFeePerGas are denominated in CELO. To create an cip66 transaction with Contractkit call the `kit.populateMaxFeeInToken` method with your transaction and then send it.
+
+- [#210](https://github.com/celo-org/developer-tooling/pull/210) [`5f304f0`](https://github.com/celo-org/developer-tooling/commit/5f304f06da4bcee437d1a8d098116b0edf5a12fc) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - feat: Running celocli lockedgold:lock will now automatically register the eoa as an account if needed before locking
+
+- [#267](https://github.com/celo-org/developer-tooling/pull/267) [`f553539`](https://github.com/celo-org/developer-tooling/commit/f553539feb68f0be9e91f83bf367b0c32f940d1e) Thanks [@shazarre](https://github.com/shazarre)! - Added support for CeloDistributionSchedule contract in network:parameters command
+
+- [#233](https://github.com/celo-org/developer-tooling/pull/233) [`eeb44f3`](https://github.com/celo-org/developer-tooling/commit/eeb44f300c08250e179b43881ae83bf0b530dc67) Thanks [@arthurgousset](https://github.com/arthurgousset)! - Adds support for multisigs (via the `--useMultisig` flag) in the `governance:propose` command.
+
+- [#279](https://github.com/celo-org/developer-tooling/pull/279) [`06019bf`](https://github.com/celo-org/developer-tooling/commit/06019bfce3d7d939aca8d04d841193eb733bd372) Thanks [@shazarre](https://github.com/shazarre)! - Adds support for <1.5.0.0 and >=1.5.0.0 Governance contract version
+
+### Patch Changes
+
+- [#266](https://github.com/celo-org/developer-tooling/pull/266) [`182bf73`](https://github.com/celo-org/developer-tooling/commit/182bf73209e6b7de0d9ea1fedaf91c9ec80299f5) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - network:info will not show epoch info when ran on an L2 context
+
+- [#266](https://github.com/celo-org/developer-tooling/pull/266) [`182bf73`](https://github.com/celo-org/developer-tooling/commit/182bf73209e6b7de0d9ea1fedaf91c9ec80299f5) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - network:contracts no longer shows balance each contract holds of mento tokens
+
+- [#285](https://github.com/celo-org/developer-tooling/pull/285) [`cae3f80`](https://github.com/celo-org/developer-tooling/commit/cae3f8097805c2ba2cea6fed48356781728ff4dd) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Trigger beta release with latest ledger and cip66
+
+- [#288](https://github.com/celo-org/developer-tooling/pull/288) [`d5b1508`](https://github.com/celo-org/developer-tooling/commit/d5b1508d7d08a99f6bb6deb569ec8b89194de2b9) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Change git url
+
+- [#217](https://github.com/celo-org/developer-tooling/pull/217) [`28738ca`](https://github.com/celo-org/developer-tooling/commit/28738ca591e54545bcd71c237fd5a9e4f077a9fd) Thanks [@renovate](https://github.com/apps/renovate)! - Updated dependency `@celo/compliance` to `~1.0.20`.
+
+- [#59](https://github.com/celo-org/developer-tooling/pull/59) [`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - CHANGE - Replaced all deprecated cryptographic depencies with the audited and maintained suite of crypto libraries `@noble/*` and `@scure/*`
+
+- [#231](https://github.com/celo-org/developer-tooling/pull/231) [`e7ac487`](https://github.com/celo-org/developer-tooling/commit/e7ac487358c30593cfef0497a7e67325a893ac14) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Add deprecation notice about future removal of `account:offchain-read` and `account:offchain-write` commands. These were created to showcase ["CIP8: Expand Metadata to general off-chain storage"](https://github.com/celo-org/celo-proposals/blob/8260b49b2ec9a87ded6727fec7d9104586eb0752/CIPs/cip-0008.md), which has been abandond and they are presenting a high maintainence burden.
+
+- [#266](https://github.com/celo-org/developer-tooling/pull/266) [`182bf73`](https://github.com/celo-org/developer-tooling/commit/182bf73209e6b7de0d9ea1fedaf91c9ec80299f5) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Adds check for L1/L2 context and switches to FeeCurrencyDirectory contract for network:whitelist command and while using --gasCurrency flag
+
+- [#266](https://github.com/celo-org/developer-tooling/pull/266) [`182bf73`](https://github.com/celo-org/developer-tooling/commit/182bf73209e6b7de0d9ea1fedaf91c9ec80299f5) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Changes network:parameters to include FeeCurrencyDirectory data
+
+- [#274](https://github.com/celo-org/developer-tooling/pull/274) [`bfa24da`](https://github.com/celo-org/developer-tooling/commit/bfa24da3eef5f9386395b2173ced2cfd0a4b0eb2) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - fix: USTD not showing that it uses an adapter by supporting Tether's tokenAdapter implementation
+
+- [#296](https://github.com/celo-org/developer-tooling/pull/296) [`de1e5a0`](https://github.com/celo-org/developer-tooling/commit/de1e5a02bb0361aa42b486e9227222b20dfb8416) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Allows approving proposals when in Execution or Referendum stages
+
+- Updated dependencies [[`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03), [`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03), [`59f4b42`](https://github.com/celo-org/developer-tooling/commit/59f4b42029699861e91dd2214c40173f70de279e), [`182bf73`](https://github.com/celo-org/developer-tooling/commit/182bf73209e6b7de0d9ea1fedaf91c9ec80299f5), [`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03), [`7b93642`](https://github.com/celo-org/developer-tooling/commit/7b93642803261b37971dd3c07f8748b6bc8f3378), [`6d2a838`](https://github.com/celo-org/developer-tooling/commit/6d2a838a80a51007d75768c77d62a861f2cec136), [`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03), [`f553539`](https://github.com/celo-org/developer-tooling/commit/f553539feb68f0be9e91f83bf367b0c32f940d1e), [`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03), [`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03), [`d5b1508`](https://github.com/celo-org/developer-tooling/commit/d5b1508d7d08a99f6bb6deb569ec8b89194de2b9), [`66972eb`](https://github.com/celo-org/developer-tooling/commit/66972ebf0dfabc845ae309c2f794fe015ac49a86), [`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03), [`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03), [`182bf73`](https://github.com/celo-org/developer-tooling/commit/182bf73209e6b7de0d9ea1fedaf91c9ec80299f5), [`182bf73`](https://github.com/celo-org/developer-tooling/commit/182bf73209e6b7de0d9ea1fedaf91c9ec80299f5), [`182bf73`](https://github.com/celo-org/developer-tooling/commit/182bf73209e6b7de0d9ea1fedaf91c9ec80299f5), [`eeb44f3`](https://github.com/celo-org/developer-tooling/commit/eeb44f300c08250e179b43881ae83bf0b530dc67), [`66972eb`](https://github.com/celo-org/developer-tooling/commit/66972ebf0dfabc845ae309c2f794fe015ac49a86), [`bfa24da`](https://github.com/celo-org/developer-tooling/commit/bfa24da3eef5f9386395b2173ced2cfd0a4b0eb2), [`06019bf`](https://github.com/celo-org/developer-tooling/commit/06019bfce3d7d939aca8d04d841193eb733bd372)]:
+  - @celo/cryptographic-utils@5.1.0
+  - @celo/utils@7.0.0
+  - @celo/wallet-ledger@6.0.0
+  - @celo/wallet-local@6.0.0
+  - @celo/contractkit@8.1.0
+  - @celo/connect@6.0.0
+  - @celo/base@6.1.0
+  - @celo/wallet-hsm-azure@6.0.0
+  - @celo/governance@5.1.2
+  - @celo/explorer@5.0.11
+  - @celo/phone-utils@6.0.3
+
+## 5.1.0-beta.3
+
+### Patch Changes
+
+- [#288](https://github.com/celo-org/developer-tooling/pull/288) [`d5b1508`](https://github.com/celo-org/developer-tooling/commit/d5b1508d7d08a99f6bb6deb569ec8b89194de2b9) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Change git url
+
+- Updated dependencies [[`d5b1508`](https://github.com/celo-org/developer-tooling/commit/d5b1508d7d08a99f6bb6deb569ec8b89194de2b9)]:
+  - @celo/wallet-ledger@6.0.0-beta.3
+  - @celo/wallet-hsm-azure@6.0.0-beta.3
+  - @celo/wallet-local@6.0.0-beta.3
+
+## 5.1.0-beta.2
+
+### Minor Changes
+
+- [#264](https://github.com/celo-org/developer-tooling/pull/264) [`59f4b42`](https://github.com/celo-org/developer-tooling/commit/59f4b42029699861e91dd2214c40173f70de279e) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Add support for serializing, sending, parsing and deserializing cip66 transactions. This tx type is preffered over cip64 when paying for gas with tokens. Like eip1559 maxFeePerGass and maxPriorityFeePerGas are denominated in CELO. To create an cip66 transaction with Contractkit call the `kit.populateMaxFeeInToken` method with your transaction and then send it.
+
+### Patch Changes
+
+- Updated dependencies [[`59f4b42`](https://github.com/celo-org/developer-tooling/commit/59f4b42029699861e91dd2214c40173f70de279e)]:
+  - @celo/wallet-ledger@6.0.0-beta.2
+  - @celo/wallet-local@6.0.0-beta.2
+  - @celo/contractkit@8.1.0-beta.1
+  - @celo/connect@6.0.0-beta.1
+  - @celo/wallet-hsm-azure@6.0.0-beta.2
+
+## 5.1.0-beta.1
+
+### Patch Changes
+
+- [#285](https://github.com/celo-org/developer-tooling/pull/285) [`cae3f80`](https://github.com/celo-org/developer-tooling/commit/cae3f8097805c2ba2cea6fed48356781728ff4dd) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Trigger beta release with latest ledger and cip66
+
+## 5.1.0-beta.0
+
+### Minor Changes
+
+- [#210](https://github.com/celo-org/developer-tooling/pull/210) [`5f304f0`](https://github.com/celo-org/developer-tooling/commit/5f304f06da4bcee437d1a8d098116b0edf5a12fc) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - feat: Running celocli lockedgold:lock will now automatically register the eoa as an account if needed before locking
+
+- [#267](https://github.com/celo-org/developer-tooling/pull/267) [`f553539`](https://github.com/celo-org/developer-tooling/commit/f553539feb68f0be9e91f83bf367b0c32f940d1e) Thanks [@shazarre](https://github.com/shazarre)! - Added support for CeloDistributionSchedule contract in network:parameters command
+
+- [#233](https://github.com/celo-org/developer-tooling/pull/233) [`eeb44f3`](https://github.com/celo-org/developer-tooling/commit/eeb44f300c08250e179b43881ae83bf0b530dc67) Thanks [@arthurgousset](https://github.com/arthurgousset)! - Adds support for multisigs (via the `--useMultisig` flag) in the `governance:propose` command.
+
+### Patch Changes
+
+- [#266](https://github.com/celo-org/developer-tooling/pull/266) [`182bf73`](https://github.com/celo-org/developer-tooling/commit/182bf73209e6b7de0d9ea1fedaf91c9ec80299f5) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - network:info will not show epoch info when ran on an L2 context
+
+- [#266](https://github.com/celo-org/developer-tooling/pull/266) [`182bf73`](https://github.com/celo-org/developer-tooling/commit/182bf73209e6b7de0d9ea1fedaf91c9ec80299f5) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - network:contracts no longer shows balance each contract holds of mento tokens
+
+- [#217](https://github.com/celo-org/developer-tooling/pull/217) [`28738ca`](https://github.com/celo-org/developer-tooling/commit/28738ca591e54545bcd71c237fd5a9e4f077a9fd) Thanks [@renovate](https://github.com/apps/renovate)! - Updated dependency `@celo/compliance` to `~1.0.20`.
+
+- [#59](https://github.com/celo-org/developer-tooling/pull/59) [`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - CHANGE - Replaced all deprecated cryptographic depencies with the audited and maintained suite of crypto libraries `@noble/*` and `@scure/*`
+
+- [#231](https://github.com/celo-org/developer-tooling/pull/231) [`e7ac487`](https://github.com/celo-org/developer-tooling/commit/e7ac487358c30593cfef0497a7e67325a893ac14) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Add deprecation notice about future removal of `account:offchain-read` and `account:offchain-write` commands. These were created to showcase ["CIP8: Expand Metadata to general off-chain storage"](https://github.com/celo-org/celo-proposals/blob/8260b49b2ec9a87ded6727fec7d9104586eb0752/CIPs/cip-0008.md), which has been abandond and they are presenting a high maintainence burden.
+
+- [#266](https://github.com/celo-org/developer-tooling/pull/266) [`182bf73`](https://github.com/celo-org/developer-tooling/commit/182bf73209e6b7de0d9ea1fedaf91c9ec80299f5) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Adds check for L1/L2 context and switches to FeeCurrencyDirectory contract for network:whitelist command and while using --gasCurrency flag
+
+- [#266](https://github.com/celo-org/developer-tooling/pull/266) [`182bf73`](https://github.com/celo-org/developer-tooling/commit/182bf73209e6b7de0d9ea1fedaf91c9ec80299f5) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Changes network:parameters to include FeeCurrencyDirectory data
+
+- [#274](https://github.com/celo-org/developer-tooling/pull/274) [`bfa24da`](https://github.com/celo-org/developer-tooling/commit/bfa24da3eef5f9386395b2173ced2cfd0a4b0eb2) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - fix: USTD not showing that it uses an adapter by supporting Tether's tokenAdapter implementation
+
+- Updated dependencies [[`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03), [`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03), [`182bf73`](https://github.com/celo-org/developer-tooling/commit/182bf73209e6b7de0d9ea1fedaf91c9ec80299f5), [`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03), [`7b93642`](https://github.com/celo-org/developer-tooling/commit/7b93642803261b37971dd3c07f8748b6bc8f3378), [`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03), [`f553539`](https://github.com/celo-org/developer-tooling/commit/f553539feb68f0be9e91f83bf367b0c32f940d1e), [`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03), [`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03), [`66972eb`](https://github.com/celo-org/developer-tooling/commit/66972ebf0dfabc845ae309c2f794fe015ac49a86), [`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03), [`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03), [`182bf73`](https://github.com/celo-org/developer-tooling/commit/182bf73209e6b7de0d9ea1fedaf91c9ec80299f5), [`182bf73`](https://github.com/celo-org/developer-tooling/commit/182bf73209e6b7de0d9ea1fedaf91c9ec80299f5), [`182bf73`](https://github.com/celo-org/developer-tooling/commit/182bf73209e6b7de0d9ea1fedaf91c9ec80299f5), [`eeb44f3`](https://github.com/celo-org/developer-tooling/commit/eeb44f300c08250e179b43881ae83bf0b530dc67), [`66972eb`](https://github.com/celo-org/developer-tooling/commit/66972ebf0dfabc845ae309c2f794fe015ac49a86), [`bfa24da`](https://github.com/celo-org/developer-tooling/commit/bfa24da3eef5f9386395b2173ced2cfd0a4b0eb2)]:
+  - @celo/cryptographic-utils@5.1.0-beta.0
+  - @celo/utils@7.0.0-beta.0
+  - @celo/connect@6.0.0-beta.0
+  - @celo/base@6.1.0-beta.0
+  - @celo/wallet-hsm-azure@6.0.0-beta.0
+  - @celo/contractkit@8.1.0-beta.0
+  - @celo/wallet-ledger@6.0.0-beta.0
+  - @celo/wallet-local@6.0.0-beta.0
+  - @celo/governance@5.1.2-beta.0
+  - @celo/explorer@5.0.11-beta.0
+  - @celo/phone-utils@6.0.3-beta.0
+
 ## 5.0.0
 
 ### Major Changes

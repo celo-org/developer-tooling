@@ -1,4 +1,6 @@
-import { mineBlocks, testWithGanache } from '@celo/dev-utils/lib/ganache-test'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { setCommissionUpdateDelay } from '@celo/dev-utils/lib/chain-setup'
+import { mineBlocks } from '@celo/dev-utils/lib/ganache-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
@@ -19,7 +21,7 @@ const blsPublicKey =
 const blsPoP =
   '0xcdb77255037eb68897cd487fdd85388cbda448f617f874449d4b11588b0b7ad8ddc20d9bb450b513bb35664ea3923900'
 
-testWithGanache('Validators Wrapper', (web3) => {
+testWithAnvilL1('Validators Wrapper', (web3) => {
   const kit = newKitFromWeb3(web3)
   let accounts: string[] = []
   let accountsInstance: AccountsWrapper
@@ -66,19 +68,19 @@ testWithGanache('Validators Wrapper', (web3) => {
       })
   }
 
-  test('SBAT registerValidatorGroup', async () => {
+  it('registers a validator group', async () => {
     const groupAccount = accounts[0]
     await setupGroup(groupAccount)
     await expect(validators.isValidatorGroup(groupAccount)).resolves.toBe(true)
   })
 
-  test('SBAT registerValidator', async () => {
+  it('registers a validator', async () => {
     const validatorAccount = accounts[1]
     await setupValidator(validatorAccount)
     await expect(validators.isValidator(validatorAccount)).resolves.toBe(true)
   })
 
-  test('SBAT addMember', async () => {
+  it('adds a member', async () => {
     const groupAccount = accounts[0]
     const validatorAccount = accounts[1]
     await setupGroup(groupAccount)
@@ -94,7 +96,7 @@ testWithGanache('Validators Wrapper', (web3) => {
     expect(members).toContain(validatorAccount)
   })
 
-  test('SBAT setNextCommissionUpdate', async () => {
+  it('sets next commission update', async () => {
     const groupAccount = accounts[0]
     await setupGroup(groupAccount)
     await validators.setNextCommissionUpdate('0.2').sendAndWaitForReceipt({
@@ -104,10 +106,15 @@ testWithGanache('Validators Wrapper', (web3) => {
     expect(commission).toEqBigNumber('0.2')
   })
 
-  test('SBAT updateCommission', async () => {
+  it('updates commission', async () => {
     const groupAccount = accounts[0]
     await setupGroup(groupAccount)
     const txOpts = { from: groupAccount }
+
+    // Set commission update delay to 3 blocks for backwards compatibility
+    await setCommissionUpdateDelay(web3, validators.address, 3)
+    await mineBlocks(1, web3)
+
     await validators.setNextCommissionUpdate('0.2').sendAndWaitForReceipt(txOpts)
     await mineBlocks(3, web3)
     await validators.updateCommission().sendAndWaitForReceipt(txOpts)
@@ -116,7 +123,7 @@ testWithGanache('Validators Wrapper', (web3) => {
     expect(commission).toEqBigNumber('0.2')
   })
 
-  test('SBAT get group affiliates', async () => {
+  it('gets group affiliates', async () => {
     const groupAccount = accounts[0]
     const validatorAccount = accounts[1]
     await setupGroup(groupAccount)
@@ -126,7 +133,7 @@ testWithGanache('Validators Wrapper', (web3) => {
     expect(group.affiliates).toContain(validatorAccount)
   })
 
-  describe('SBAT reorderMember', () => {
+  describe('reorders member', () => {
     jest.setTimeout(30 * 1000)
     let groupAccount: string, validator1: string, validator2: string
 
@@ -155,7 +162,7 @@ testWithGanache('Validators Wrapper', (web3) => {
       expect(members).toEqual([validator1, validator2])
     })
 
-    test('move last to first', async () => {
+    it('moves last to first', async () => {
       jest.setTimeout(30 * 1000)
 
       await validators
@@ -169,7 +176,7 @@ testWithGanache('Validators Wrapper', (web3) => {
       expect(membersAfter).toEqual([validator2, validator1])
     })
 
-    test('move first to last', async () => {
+    it('moves first to last', async () => {
       jest.setTimeout(30 * 1000)
 
       await validators
@@ -183,7 +190,7 @@ testWithGanache('Validators Wrapper', (web3) => {
       expect(membersAfter).toEqual([validator2, validator1])
     })
 
-    test('test address normalization', async () => {
+    it('checks address normalization', async () => {
       jest.setTimeout(30 * 1000)
 
       await validators

@@ -1,6 +1,14 @@
 // tslint:disable: ordered-imports
 import { StrongAddress } from '@celo/base'
-import { CeloTx, CeloTxObject, Connection, ReadOnlyWallet, TransactionResult } from '@celo/connect'
+import {
+  CeloTx,
+  CeloTxObject,
+  Connection,
+  ReadOnlyWallet,
+  TransactionResult,
+  isCel2,
+  isPresent,
+} from '@celo/connect'
 import { EIP712TypedData } from '@celo/utils/lib/sign-typed-data-utils'
 import { Signature } from '@celo/utils/lib/signatureUtils'
 import { LocalWallet } from '@celo/wallet-local'
@@ -134,19 +142,35 @@ export class ContractKit {
   async getNetworkConfig(
     humanReadable = false
   ): Promise<NetworkConfig | Record<CeloContract & 'stableTokens', unknown>> {
-    const configContracts: ValidWrappers[] = [
-      CeloContract.Election,
-      CeloContract.Attestations,
-      CeloContract.Governance,
-      CeloContract.LockedGold,
-      CeloContract.SortedOracles,
-      CeloContract.GasPriceMinimum,
-      CeloContract.Reserve,
-      CeloContract.Validators,
-      CeloContract.DowntimeSlasher,
-      CeloContract.BlockchainParameters,
-      CeloContract.EpochRewards,
-    ]
+    let configContracts: ValidWrappers[]
+
+    if (await isCel2(this.web3)) {
+      configContracts = [
+        CeloContract.Election,
+        CeloContract.Governance,
+        CeloContract.LockedGold,
+        CeloContract.SortedOracles,
+        CeloContract.Reserve,
+        CeloContract.Validators,
+        CeloContract.DowntimeSlasher,
+        CeloContract.FeeCurrencyDirectory,
+        CeloContract.EpochManager,
+      ]
+    } else {
+      configContracts = [
+        CeloContract.Election,
+        CeloContract.Attestations,
+        CeloContract.Governance,
+        CeloContract.LockedGold,
+        CeloContract.SortedOracles,
+        CeloContract.GasPriceMinimum,
+        CeloContract.Reserve,
+        CeloContract.Validators,
+        CeloContract.DowntimeSlasher,
+        CeloContract.BlockchainParameters,
+        CeloContract.EpochRewards,
+      ]
+    }
 
     const configMethod = async (contract: ValidWrappers) => {
       try {
@@ -190,25 +214,107 @@ export class ContractKit {
     }
     this.connection.defaultFeeCurrency = address
   }
-
+  /*
+   * @deprecated - epoch related methods will be removed from contractkit
+   */
   async getEpochSize(): Promise<number> {
     const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
     return blockchainParamsWrapper.getEpochSizeNumber()
   }
 
+  /*
+   * @deprecated - epoch related methods will be removed from contractkit
+   */
   async getFirstBlockNumberForEpoch(epochNumber: number): Promise<number> {
     const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
     return blockchainParamsWrapper.getFirstBlockNumberForEpoch(epochNumber)
   }
 
+  /*
+   * @deprecated - epoch related methods will be removed from contractkit
+   */
   async getLastBlockNumberForEpoch(epochNumber: number): Promise<number> {
     const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
     return blockchainParamsWrapper.getLastBlockNumberForEpoch(epochNumber)
   }
 
+  /*
+   * @deprecated - epoch related methods will be removed from contractkit
+   */
   async getEpochNumberOfBlock(blockNumber: number): Promise<number> {
     const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
     return blockchainParamsWrapper.getEpochNumberOfBlock(blockNumber)
+  }
+
+  /*
+   * Sets the maxFeeInFeeCurrency on the provided transaction
+   *
+   * @remarks
+   * Because tx with maxFeeInFeeCurrency set require maxPriorityFeePerGas and maxFeePerGas to be expressed in CELO
+   * and previous tx types with feeCurrency expressed these in the token paying for the transaction,
+   * this method overwrites maxPriorityFeePerGas and maxFeePerGas to ensure they are correctly valued in CELO
+   *
+   * @dev This transaction type is not yet supported
+   *
+   * @param tx.gas is required
+   */
+  async populateMaxFeeInToken(tx: CeloTx & Pick<Required<CeloTx>, 'feeCurrency'>): Promise<CeloTx> {
+    if (!(await isCel2(this.connection.web3))) {
+      throw new Error("Can't populate `maxFeeInFeeCurrency` if not on a CEL2 network")
+    }
+
+    if (isPresent(tx.feeCurrency) && !isPresent(tx.maxFeeInFeeCurrency)) {
+      if (!isPresent(tx.gas)) {
+        tx.gas = await this.connection.estimateGas(tx)
+      }
+
+      // Force maxFeePerGas and maxPriorityFeePerGas to be expressed in CELO
+      const [maxFeePerGas, maxPriorityFeePerGas] = await Promise.all([
+        this.connection.gasPrice(),
+        await this.connection.rpcCaller.call('eth_maxPriorityFeePerGas', []).then((x) => x.result),
+      ])
+      tx.maxFeePerGas = new BigNumber(maxFeePerGas).toString(10)
+      tx.maxPriorityFeePerGas = new BigNumber(maxPriorityFeePerGas).toString(10)
+      const maxFeeInFeeCurrency = await this.estimateMaxFeeInFeeToken({
+        feeCurrency: tx.feeCurrency,
+        gasLimit: BigInt(tx.gas),
+        maxFeePerGas: BigInt(maxFeePerGas),
+      })
+
+      tx.maxFeeInFeeCurrency = maxFeeInFeeCurrency.toString(10)
+    }
+
+    return tx
+  }
+
+  /**
+   * For cip 66 transactions (the prefered way to pay for gas with fee tokens on Cel2) it is necessary
+   * to provide the absolute limit one is willing to pay denominated in the token.
+   * In contrast with earlier tx types for fee currencies (celo legacy, cip42, cip 64).
+   *
+   * Calulating Estimation requires the gas, maxfeePerGas and the conversion rate from CELO to feeToken
+   * https://github.com/celo-org/celo-proposals/blob/master/CIPs/cip-0066.md
+   */
+  async estimateMaxFeeInFeeToken({
+    gasLimit,
+    maxFeePerGas,
+    feeCurrency,
+  }: {
+    gasLimit: bigint
+    maxFeePerGas: bigint
+    feeCurrency: StrongAddress
+  }) {
+    const maxGasFeesInCELO = gasLimit * maxFeePerGas
+    const feeCurrencyDirectoryWrapper = await this.contracts.getFeeCurrencyDirectory()
+    const { numerator: ratioTOKEN, denominator: ratioCELO } =
+      await feeCurrencyDirectoryWrapper.getExchangeRate(feeCurrency)
+
+    return (
+      // convert from celo to token and add 2 percent wriggle room, 102/100 you cant pre calculate this as it will just be 1 then
+      (((maxGasFeesInCELO * BigInt(ratioCELO.toString(10))) / BigInt(ratioTOKEN.toString(10))) *
+        BigInt(102)) /
+      BigInt(100)
+    )
   }
 
   // *** NOTICE ***

@@ -11,8 +11,26 @@
         "--rootDir",
         "${workspaceFolder}/packages/sdk/contractkit",
         "--runInBand",
-        "${workspaceFolder}/packages/sdk/contractkit/src/**/*.test.ts",
+        "${workspaceFolder}/packages/sdk/contractkit/src/**/*.test.ts"
       ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "port": 9229
+    },
+    {
+      "name": "Debug Ledger Tests",
+      "type": "node",
+      "request": "launch",
+      "runtimeArgs": [
+        "--inspect-brk",
+        "${workspaceRoot}/node_modules/.bin/jest",
+        "--rootDir",
+        "${workspaceFolder}/packages/sdk/wallets/wallet-ledger",
+        "--runInBand"
+      ],
+      "env": {
+        "USE_PHYSICAL_LEDGER": "true"
+      },
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "port": 9229

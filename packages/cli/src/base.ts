@@ -1,16 +1,18 @@
 import { StrongAddress } from '@celo/base'
-import { ReadOnlyWallet } from '@celo/connect'
+import { ReadOnlyWallet, isCel2 } from '@celo/connect'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { AzureHSMWallet } from '@celo/wallet-hsm-azure'
 import { AddressValidation, newLedgerWalletWithSetup } from '@celo/wallet-ledger'
 import { LocalWallet } from '@celo/wallet-local'
 import _TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
 import { Command, Flags } from '@oclif/core'
+import { CLIError } from '@oclif/core/lib/errors'
 import chalk from 'chalk'
 import net from 'net'
 import Web3 from 'web3'
 import { CustomFlags } from './utils/command'
 import { getNodeUrl } from './utils/config'
+import { getFeeCurrencyContractWrapper } from './utils/fee-currency'
 import { requireNodeIsSynced } from './utils/helpers'
 
 export abstract class BaseCommand extends Command {
@@ -93,6 +95,9 @@ export abstract class BaseCommand extends Command {
   private _web3: Web3 | null = null
   private _kit: ContractKit | null = null
 
+  // Indicates if celocli running in L2 context
+  private cel2: boolean | null = null
+
   async getWeb3() {
     if (!this._web3) {
       const res = await this.parse()
@@ -130,6 +135,7 @@ export abstract class BaseCommand extends Command {
     if (res.flags && res.flags.privateKey && !res.flags.useLedger && !res.flags.useAKV) {
       this._kit.connection.addAccount(res.flags.privateKey)
     }
+
     return this._kit
   }
 
@@ -170,7 +176,8 @@ export abstract class BaseCommand extends Command {
           transport,
           derivationPathIndexes,
           undefined,
-          ledgerConfirmation
+          ledgerConfirmation,
+          await this.isCel2()
         )
       } catch (err) {
         console.log('Check if the ledger is connected and logged.')
@@ -197,8 +204,8 @@ export abstract class BaseCommand extends Command {
     const gasCurrencyFlag = res.flags.gasCurrency as StrongAddress | undefined
 
     if (gasCurrencyFlag) {
-      const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyWhitelist()
-      const validFeeCurrencies = await feeCurrencyWhitelist.getWhitelist()
+      const feeCurrencyContract = await getFeeCurrencyContractWrapper(kit, await this.isCel2())
+      const validFeeCurrencies = await feeCurrencyContract.getAddresses()
 
       if (
         validFeeCurrencies.map((x) => x.toLocaleLowerCase()).includes(gasCurrencyFlag.toLowerCase())
@@ -206,9 +213,7 @@ export abstract class BaseCommand extends Command {
         kit.setFeeCurrency(gasCurrencyFlag)
       } else {
         const pairs = (
-          await feeCurrencyWhitelist.getFeeCurrencyInformation(
-            validFeeCurrencies as StrongAddress[]
-          )
+          await feeCurrencyContract.getFeeCurrencyInformation(validFeeCurrencies as StrongAddress[])
         ).map(
           ({ name, symbol, address, adaptedToken }) =>
             `${address} - ${name || 'unknown name'} (${symbol || 'N/A'})${
@@ -228,14 +233,34 @@ export abstract class BaseCommand extends Command {
   async finally(arg: Error | undefined): Promise<any> {
     try {
       if (arg) {
-        console.error('received error while cleaning up', arg)
+        if (!(arg instanceof CLIError)) {
+          console.error(
+            `
+Received an error during command execution, if you believe this is a bug you can create an issue here: 
+            
+https://github.com/celo-org/developer-tooling/issues/new?assignees=&labels=bug+report&projects=&template=BUG-FORM.yml
+
+`,
+            arg
+          )
+        }
       }
-      const kit = await this.getKit()
-      kit.connection.stop()
+
+      if (this._kit !== null) {
+        this._kit.connection.stop()
+      }
     } catch (error) {
       this.log(`Failed to close the connection: ${error}`)
     }
 
     return super.finally(arg)
+  }
+
+  protected async isCel2(): Promise<boolean> {
+    if (this.cel2 === null) {
+      this.cel2 = await isCel2(await this.getWeb3())
+    }
+
+    return !!this.cel2
   }
 }

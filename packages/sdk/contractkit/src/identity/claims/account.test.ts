@@ -1,5 +1,5 @@
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { ACCOUNT_ADDRESSES, ACCOUNT_PRIVATE_KEYS } from '@celo/dev-utils/lib/ganache-setup'
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
 import { privateKeyToAddress, privateKeyToPublicKey } from '@celo/utils/lib/address'
 import { NativeSigner } from '@celo/utils/lib/signatureUtils'
 import { newKitFromWeb3 } from '../../kit'
@@ -8,7 +8,7 @@ import { createAccountClaim } from './account'
 import { Claim } from './claim'
 import { verifyClaim } from './verify'
 
-testWithGanache('Account claims', (web3) => {
+testWithAnvilL1('Account claims', (web3) => {
   const kit = newKitFromWeb3(web3)
   const address = ACCOUNT_ADDRESSES[0]
   const otherAddress = ACCOUNT_ADDRESSES[1]
@@ -64,9 +64,9 @@ testWithGanache('Account claims', (web3) => {
 
       const myUrl = 'https://www.example.com/'
       const accounts = await kit.contracts.getAccounts()
-      await accounts.createAccount().send({ from: address })
+      await accounts.createAccount().sendAndWaitForReceipt({ from: address })
       await accounts.setMetadataURL(myUrl).sendAndWaitForReceipt({ from: address, gas: 0 })
-      await accounts.createAccount().send({ from: otherAddress })
+      await accounts.createAccount().sendAndWaitForReceipt({ from: otherAddress })
       await accounts.setMetadataURL(myUrl).sendAndWaitForReceipt({ from: otherAddress, gas: 0 })
 
       IdentityMetadataWrapper.fetchFromURL = () => Promise.resolve(otherMetadata)

@@ -1,6 +1,6 @@
 import { StrongAddress } from '@celo/base'
 import { CeloTx, CeloTxObject, CeloTxReceipt, PromiEvent } from '@celo/connect'
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import Web3 from 'web3'
 import {
   ContractKit,
@@ -138,69 +138,138 @@ describe('newKitWithApiKey()', () => {
   })
 })
 
-testWithGanache('Fetch whitelisted fee currencies', (web3: Web3) => {
+testWithAnvilL1('kit', (web3: Web3) => {
   let kit: ContractKit
   let accounts: string[]
-
-  beforeEach(async () => {
+  let feeToken: StrongAddress
+  beforeAll(async () => {
     accounts = await web3.eth.getAccounts()
     kit = newKitFromWeb3(web3)
+
+    const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyWhitelist()
+    const gasOptions = await feeCurrencyWhitelist.getWhitelist()
+    feeToken = gasOptions[0]
   })
+  describe('Fetch whitelisted fee currencies', () => {
+    describe('When whitelisted fee currencies are fetched on-chain', () => {
+      test('Then the result includes addresses', async () => {
+        const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyWhitelist()
+        const gasOptions = await feeCurrencyWhitelist.getWhitelist()
+        for (let i = 0; i < gasOptions.length; i++) {
+          expect(web3.utils.isAddress(gasOptions[i])).toBeTruthy()
+        }
+      })
 
-  describe('When whitelisted fee currencies are fetched on-chain', () => {
-    test('Then the result includes addresses', async () => {
-      const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyWhitelist()
-      const gasOptions = await feeCurrencyWhitelist.getWhitelist()
-      for (let i = 0; i < gasOptions.length; i++) {
-        expect(web3.utils.isAddress(gasOptions[i])).toBeTruthy()
-      }
-    })
+      test.failing('Then the resulting addresses are valid fee currencies', async () => {
+        const celo = await kit.contracts.getGoldToken()
+        const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyWhitelist()
+        const gasOptions = await feeCurrencyWhitelist.getWhitelist()
+        const sender = accounts[0]
+        const recipient = accounts[1]
+        const amount = kit.web3.utils.toWei('0.01', 'ether')
 
-    test.failing('Then the resulting addresses are valid fee currencies', async () => {
-      const celo = await kit.contracts.getGoldToken()
-      const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyWhitelist()
-      const gasOptions = await feeCurrencyWhitelist.getWhitelist()
-      const sender = accounts[0]
-      const recipient = accounts[1]
-      const amount = kit.web3.utils.toWei('0.01', 'ether')
+        for (let gasOption of gasOptions.filter((x) => x !== celo.address)) {
+          const recipientBalanceBefore = await kit.getTotalBalance(recipient)
+          const feeAsErc20 = await kit.contracts.getErc20(gasOption)
+          // const transactionObject = celo.transfer(recipient, amount)
+          const feeCurrencyBalanceBefore = await feeAsErc20.balanceOf(sender)
+          await kit.connection.sendTransaction({
+            from: sender,
+            to: recipient,
+            value: amount,
+            feeCurrency: gasOption,
+          })
+          const recipientBalanceAfter = await kit.getTotalBalance(recipient)
+          const feeCurrencyBalanceAfter = await feeAsErc20.balanceOf(sender)
 
-      for (let gasOption of gasOptions.filter((x) => x !== celo.address)) {
-        const recipientBalanceBefore = await kit.getTotalBalance(recipient)
-        const feeAsErc20 = await kit.contracts.getErc20(gasOption)
-        // const transactionObject = celo.transfer(recipient, amount)
-        const feeCurrencyBalanceBefore = await feeAsErc20.balanceOf(sender)
-        await kit.connection.sendTransaction({
-          from: sender,
-          to: recipient,
-          value: amount,
-          feeCurrency: gasOption,
-        })
-        const recipientBalanceAfter = await kit.getTotalBalance(recipient)
-        const feeCurrencyBalanceAfter = await feeAsErc20.balanceOf(sender)
+          expect(recipientBalanceAfter.CELO!.eq(recipientBalanceBefore.CELO!.plus(amount))).toBe(
+            true
+          )
 
-        expect(recipientBalanceAfter.CELO!.eq(recipientBalanceBefore.CELO!.plus(amount))).toBe(true)
+          // This is failing because celo-ganache doesn't support feeCurrency
+          // https://github.com/celo-org/ganache-cli/tree/master
+          expect(feeCurrencyBalanceBefore.isGreaterThan(feeCurrencyBalanceAfter)).toBe(true)
+        }
+      })
 
+      test.failing('Then using a wrong address will fail', async () => {
         // This is failing because celo-ganache doesn't support feeCurrency
         // https://github.com/celo-org/ganache-cli/tree/master
-        expect(feeCurrencyBalanceBefore.isGreaterThan(feeCurrencyBalanceAfter)).toBe(true)
-      }
+
+        const sender = accounts[0]
+        const recipient = accounts[1]
+        const amount = kit.web3.utils.toWei('0.01', 'ether')
+        await expect(
+          kit.connection.sendTransaction({
+            from: sender,
+            to: recipient,
+            value: amount,
+            feeCurrency: '0123' as StrongAddress,
+          })
+        ).rejects.toThrowErrorMatchingInlineSnapshot()
+      })
+    })
+  })
+  describe('populateMaxFeeInToken', () => {
+    describe('when not on cel2', () => {
+      it('throws not L2 error', async () => {
+        await expect(
+          kit.populateMaxFeeInToken({ feeCurrency: feeToken, gas: '10000000034230982772378193726' })
+        ).rejects.toMatchInlineSnapshot(
+          `[Error: Can't populate \`maxFeeInFeeCurrency\` if not on a CEL2 network]`
+        )
+      })
+    })
+    describe('estimateMaxFeeInFeeToken', () => {
+      it('returns the right estimation (1/2)', async () => {
+        const spy = jest.spyOn(await kit.contracts.getFeeCurrencyDirectory(), 'getExchangeRate')
+        //@ts-expect-error
+        spy.mockImplementation(() =>
+          Promise.resolve({ numerator: BigInt(1), denominator: BigInt(2) })
+        )
+
+        await expect(
+          kit.estimateMaxFeeInFeeToken({
+            feeCurrency: feeToken,
+            gasLimit: BigInt(10),
+            maxFeePerGas: BigInt(10),
+          })
+          // 10 * 10 * 1.2 * 2
+        ).resolves.toEqual(BigInt(204))
+      })
+      it('returns the right estimation (1/1)', async () => {
+        const spy = jest.spyOn(await kit.contracts.getFeeCurrencyDirectory(), 'getExchangeRate')
+        //@ts-expect-error
+        spy.mockImplementation(() =>
+          Promise.resolve({ numerator: BigInt(1), denominator: BigInt(1) })
+        )
+
+        await expect(
+          kit.estimateMaxFeeInFeeToken({
+            feeCurrency: feeToken,
+            gasLimit: BigInt(10),
+            maxFeePerGas: BigInt(10),
+          })
+          // 10 * 10 * 1.2 * 1
+        ).resolves.toEqual(BigInt(102))
+      })
     })
 
-    test.failing('Then using a wrong address will fail', async () => {
-      // This is failing because celo-ganache doesn't support feeCurrency
-      // https://github.com/celo-org/ganache-cli/tree/master
+    it('returns the right estimation (1/1)', async () => {
+      const spy = jest.spyOn(await kit.contracts.getFeeCurrencyDirectory(), 'getExchangeRate')
+      //@ts-expect-error
+      spy.mockImplementation(() =>
+        Promise.resolve({ numerator: BigInt(2), denominator: BigInt(1) })
+      )
 
-      const sender = accounts[0]
-      const recipient = accounts[1]
-      const amount = kit.web3.utils.toWei('0.01', 'ether')
       await expect(
-        kit.connection.sendTransaction({
-          from: sender,
-          to: recipient,
-          value: amount,
-          feeCurrency: '0123' as StrongAddress,
+        kit.estimateMaxFeeInFeeToken({
+          feeCurrency: feeToken,
+          gasLimit: BigInt(10),
+          maxFeePerGas: BigInt(10),
         })
-      ).rejects.toThrowErrorMatchingInlineSnapshot()
+        // 10 * 10 * 1.2 * 1/2
+      ).resolves.toEqual(BigInt(51))
     })
   })
 })

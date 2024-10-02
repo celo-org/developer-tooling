@@ -1,5 +1,83 @@
 # @celo/wallet-local
 
+## 6.0.1
+
+### Patch Changes
+
+- Updated dependencies [[`d245703`](https://github.com/celo-org/developer-tooling/commit/d245703fa71ad24c88982fc6566e4d2865f586a4)]:
+  - @celo/connect@6.0.1
+  - @celo/wallet-base@6.0.1
+
+## 6.0.1-beta.0
+
+### Patch Changes
+
+- Updated dependencies [[`d245703`](https://github.com/celo-org/developer-tooling/commit/d245703fa71ad24c88982fc6566e4d2865f586a4)]:
+  - @celo/connect@6.0.1-beta.0
+  - @celo/wallet-base@6.0.1-beta.0
+
+## 6.0.0
+
+### Major Changes
+
+- [#239](https://github.com/celo-org/developer-tooling/pull/239) [`66972eb`](https://github.com/celo-org/developer-tooling/commit/66972ebf0dfabc845ae309c2f794fe015ac49a86) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Remove support for celo-legacy and cip42 transaction serialization and signing. These were the transaction types that supported gatewayFee. Transactions that specify feeCurrency and gasPrice togther will now throw. Users should migrate these to either ethereum type 0, eip1559 and cip64 style transactions depending on their need.
+
+### Minor Changes
+
+- [#264](https://github.com/celo-org/developer-tooling/pull/264) [`59f4b42`](https://github.com/celo-org/developer-tooling/commit/59f4b42029699861e91dd2214c40173f70de279e) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Add support for serializing, sending, parsing and deserializing cip66 transactions. This tx type is preffered over cip64 when paying for gas with tokens. Like eip1559 maxFeePerGass and maxPriorityFeePerGas are denominated in CELO. To create an cip66 transaction with Contractkit call the `kit.populateMaxFeeInToken` method with your transaction and then send it.
+
+### Patch Changes
+
+- [#59](https://github.com/celo-org/developer-tooling/pull/59) [`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - CHANGE - Update the code to match @celo/wallet-base changes
+
+- Updated dependencies [[`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03), [`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03), [`59f4b42`](https://github.com/celo-org/developer-tooling/commit/59f4b42029699861e91dd2214c40173f70de279e), [`182bf73`](https://github.com/celo-org/developer-tooling/commit/182bf73209e6b7de0d9ea1fedaf91c9ec80299f5), [`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03), [`7b93642`](https://github.com/celo-org/developer-tooling/commit/7b93642803261b37971dd3c07f8748b6bc8f3378), [`66972eb`](https://github.com/celo-org/developer-tooling/commit/66972ebf0dfabc845ae309c2f794fe015ac49a86)]:
+  - @celo/wallet-base@6.0.0
+  - @celo/utils@7.0.0
+  - @celo/connect@6.0.0
+  - @celo/base@6.1.0
+
+## 6.0.0-beta.3
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @celo/wallet-base@6.0.0-beta.3
+
+## 6.0.0-beta.2
+
+### Minor Changes
+
+- [#264](https://github.com/celo-org/developer-tooling/pull/264) [`59f4b42`](https://github.com/celo-org/developer-tooling/commit/59f4b42029699861e91dd2214c40173f70de279e) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Add support for serializing, sending, parsing and deserializing cip66 transactions. This tx type is preffered over cip64 when paying for gas with tokens. Like eip1559 maxFeePerGass and maxPriorityFeePerGas are denominated in CELO. To create an cip66 transaction with Contractkit call the `kit.populateMaxFeeInToken` method with your transaction and then send it.
+
+### Patch Changes
+
+- Updated dependencies [[`59f4b42`](https://github.com/celo-org/developer-tooling/commit/59f4b42029699861e91dd2214c40173f70de279e)]:
+  - @celo/wallet-base@6.0.0-beta.2
+  - @celo/connect@6.0.0-beta.1
+
+## 6.0.0-beta.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @celo/wallet-base@6.0.0-beta.1
+
+## 6.0.0-beta.0
+
+### Major Changes
+
+- [#239](https://github.com/celo-org/developer-tooling/pull/239) [`66972eb`](https://github.com/celo-org/developer-tooling/commit/66972ebf0dfabc845ae309c2f794fe015ac49a86) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Remove support for celo-legacy and cip42 transaction serialization and signing. These were the transaction types that supported gatewayFee. Transactions that specify feeCurrency and gasPrice togther will now throw. Users should migrate these to either ethereum type 0, eip1559 and cip64 style transactions depending on their need.
+
+### Patch Changes
+
+- [#59](https://github.com/celo-org/developer-tooling/pull/59) [`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - CHANGE - Update the code to match @celo/wallet-base changes
+
+- Updated dependencies [[`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03), [`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03), [`182bf73`](https://github.com/celo-org/developer-tooling/commit/182bf73209e6b7de0d9ea1fedaf91c9ec80299f5), [`38b2631`](https://github.com/celo-org/developer-tooling/commit/38b26316d615e836e21bbfe2f44853f7e8220e03), [`7b93642`](https://github.com/celo-org/developer-tooling/commit/7b93642803261b37971dd3c07f8748b6bc8f3378), [`66972eb`](https://github.com/celo-org/developer-tooling/commit/66972ebf0dfabc845ae309c2f794fe015ac49a86)]:
+  - @celo/wallet-base@6.0.0-beta.0
+  - @celo/utils@7.0.0-beta.0
+  - @celo/connect@6.0.0-beta.0
+  - @celo/base@6.1.0-beta.0
+
 ## 5.2.0
 
 ### Patch Changes

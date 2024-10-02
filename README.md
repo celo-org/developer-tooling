@@ -12,7 +12,7 @@ Please use GitHub to:
 
 💬 [Ask a question](https://github.com/celo-org/developer-tooling/discussions)
 
-✨ [Suggest a feature](httpsi//github.com/celo-org/developer-tooling/issues/new/choose)
+✨ [Suggest a feature](https://github.com/celo-org/developer-tooling/issues/new/choose)
 
 🧑‍💻 [Contribute!](/CONTRIBUTING.md)
 
@@ -47,7 +47,6 @@ This repository contains source code for:
   - [`@celo/wallet-ledger`](https://www.npmjs.com/package/@celo/wallet-ledger)
   - [`@celo/wallet-local`](https://www.npmjs.com/package/@celo/wallet-local)
   - [`@celo/wallet-remote`](https://www.npmjs.com/package/@celo/wallet-remote)
-  - [`@celo/wallet-rpc`](https://www.npmjs.com/package/@celo/wallet-rpc)
 
 ## Contributing
 

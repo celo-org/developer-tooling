@@ -1,5 +1,12 @@
+import { newKitFromWeb3 } from '@celo/contractkit'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { ux } from '@oclif/core'
-import { stripAnsiCodesFromNestedArray, testLocally } from '../../test-utils/cliUtils'
+import Web3 from 'web3'
+import {
+  extractHostFromWeb3,
+  stripAnsiCodesFromNestedArray,
+  testLocallyWithWeb3Node,
+} from '../../test-utils/cliUtils'
 import * as config from '../../utils/config'
 import Set from './set'
 
@@ -10,12 +17,18 @@ afterEach(async () => {
   jest.restoreAllMocks()
 })
 
-describe('config:set cmd', () => {
+testWithAnvilL1('config:set cmd', (web3: Web3) => {
   it('shows a warning if gasCurrency is passed', async () => {
+    const kit = newKitFromWeb3(web3)
+    const feeCurrencyDirectory = await kit.contracts.getFeeCurrencyDirectory()
     const consoleMock = jest.spyOn(ux, 'warn')
     const writeMock = jest.spyOn(config, 'writeConfig')
 
-    await testLocally(Set, ['--gasCurrency', '0x5315e44798395d4a952530d131249fE00f554565'])
+    await testLocallyWithWeb3Node(
+      Set,
+      ['--gasCurrency', (await feeCurrencyDirectory.getCurrencies())[0]],
+      web3
+    )
     expect(stripAnsiCodesFromNestedArray(consoleMock.mock.calls as string[][]))
       .toMatchInlineSnapshot(`
       [
@@ -28,7 +41,7 @@ describe('config:set cmd', () => {
     `)
     expect(writeMock.mock.calls[0][1]).toMatchInlineSnapshot(`
       {
-        "node": "http://localhost:8545",
+        "node": "${extractHostFromWeb3(web3)}",
       }
     `)
   })

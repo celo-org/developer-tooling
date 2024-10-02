@@ -1,6 +1,6 @@
 {
   "name": "@celo/dev-utils",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "description": "util package for celo packages that should only be a devDependency",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -20,6 +20,9 @@
     "prepack": "yarn build"
   },
   "dependencies": {
+    "@celo/abis": "^11.0.0",
+    "@celo/connect": "^6.0.1",
+    "@viem/anvil": "^0.0.9",
     "bignumber.js": "^9.0.0",
     "fs-extra": "^8.1.0",
     "ganache": "npm:@celo/ganache@7.8.0-unofficial.0",
@@ -29,6 +32,8 @@
     "web3-core-helpers": "1.10.4"
   },
   "devDependencies": {
+    "@celo/devchain-anvil": "12.0.0-canary.8",
+    "@celo/typescript": "workspace:^",
     "@tsconfig/recommended": "^1.0.3",
     "@types/fs-extra": "^8.1.0",
     "@types/targz": "1.0.0"

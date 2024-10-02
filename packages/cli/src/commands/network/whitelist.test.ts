@@ -1,6 +1,8 @@
 import { FeeCurrencyWhitelistWrapper } from '@celo/contractkit/lib/wrappers/FeeCurrencyWhitelistWrapper'
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
-import { testLocally } from '../../test-utils/cliUtils'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { ux } from '@oclif/core'
+import Web3 from 'web3'
+import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Whitelist from './whitelist'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -8,20 +10,38 @@ process.env.NO_SYNCCHECK = 'true'
 // Lots of commands, sometimes times out
 jest.setTimeout(15000)
 
-const spy = jest.spyOn(console, 'log')
+const writeMock = jest.spyOn(ux.write, 'stdout')
 
 beforeEach(() => {
-  spy.mockClear()
+  writeMock.mockClear()
 })
 
-testWithGanache('network:whitelist cmd', () => {
+testWithAnvilL1('network:whitelist cmd', (web3: Web3) => {
   test('can print the whitelist', async () => {
-    await testLocally(Whitelist, [])
-    expect(spy.mock.calls[0][0]).toMatchInlineSnapshot(`
-      "Available currencies:
-      0x5315e44798395d4a952530d131249fE00f554565 - Celo Dollar (cUSD)
-      0x965D352283a3C8A016b9BBbC9bf6306665d495E7 - Celo Brazilian Real (cREAL)
-      0xdD66C23e07b4D6925b6089b5Fe6fc9E62941aFE8 - Celo Euro (cEUR)"
+    await testLocallyWithWeb3Node(Whitelist, [], web3)
+    expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`
+      [
+        [
+          " Name                Symbol Whitelisted Address                        Token Address                              Decimals Uses Adapter? 
+      ",
+        ],
+        [
+          " ─────────────────── ────── ────────────────────────────────────────── ────────────────────────────────────────── ──────── ───────────── 
+      ",
+        ],
+        [
+          " Celo Euro           cEUR   0x06f60E083aDf016a98E3c7A1aFfa1c097B617aB9 0x06f60E083aDf016a98E3c7A1aFfa1c097B617aB9 18       false         
+      ",
+        ],
+        [
+          " Celo Dollar         cUSD   0x9cA64d4663B4A623C3E9a7F9155451647592bEc7 0x9cA64d4663B4A623C3E9a7F9155451647592bEc7 18       false         
+      ",
+        ],
+        [
+          " Celo Brazilian Real cREAL  0xC458f5ab25a47741205722d465cDea9aB1E1154A 0xC458f5ab25a47741205722d465cDea9aB1E1154A 18       false         
+      ",
+        ],
+      ]
     `)
   })
 
@@ -35,15 +55,28 @@ testWithGanache('network:whitelist cmd', () => {
             symbol: 'MCK',
             address: '0x123',
             adaptedToken: '0x456',
+            decimals: 69,
           },
         ])
       )
 
-    await testLocally(Whitelist, [])
+    await testLocallyWithWeb3Node(Whitelist, [], web3)
 
-    expect(spy.mock.calls[0][0]).toMatchInlineSnapshot(`
-      "Available currencies:
-      0x123 - mock token (MCK) (adapted token: 0x456)"
+    expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`
+      [
+        [
+          " Name       Symbol Whitelisted Address Token Address Decimals Uses Adapter? 
+      ",
+        ],
+        [
+          " ────────── ────── ─────────────────── ───────────── ──────── ───────────── 
+      ",
+        ],
+        [
+          " mock token MCK    0x123               0x456         69       true          
+      ",
+        ],
+      ]
     `)
 
     mock.mockClear()

@@ -7,7 +7,11 @@ import {
 import { Address } from '@celo/connect'
 import { StableToken } from '@celo/contractkit'
 import { AccountsWrapper } from '@celo/contractkit/lib/wrappers/Accounts'
-import { GovernanceWrapper, ProposalStage } from '@celo/contractkit/lib/wrappers/Governance'
+import {
+  GovernanceWrapper,
+  HotfixRecord,
+  ProposalStage,
+} from '@celo/contractkit/lib/wrappers/Governance'
 import { LockedGoldWrapper } from '@celo/contractkit/lib/wrappers/LockedGold'
 import { MultiSigWrapper } from '@celo/contractkit/lib/wrappers/MultiSig'
 import { ValidatorsWrapper } from '@celo/contractkit/lib/wrappers/Validators'
@@ -18,7 +22,7 @@ import chalk from 'chalk'
 import { fetch } from 'cross-fetch'
 import utils from 'web3-utils'
 import { BaseCommand } from '../base'
-import { printValueMapRecursive } from './cli'
+import { getCurrentTimestamp, printValueMapRecursive } from './cli'
 
 export interface CommandCheck {
   name: string
@@ -144,6 +148,14 @@ class CheckBuilder {
       this.withGovernance(async (governance) => eqAddress(await governance.getApprover(), account))
     )
 
+  isSecurityCouncil = (account: Address) =>
+    this.addCheck(
+      `${account} is security council address`,
+      this.withGovernance(async (governance) =>
+        eqAddress(await governance.getSecurityCouncil(), account)
+      )
+    )
+
   proposalExists = (proposalID: string) =>
     this.addCheck(
       `${proposalID} is an existing proposal`,
@@ -151,10 +163,17 @@ class CheckBuilder {
     )
 
   proposalInStage = (proposalID: string, stage: keyof typeof ProposalStage) =>
+    this.proposalInStages(proposalID, [stage])
+
+  proposalInStages = (proposalID: string, stages: (keyof typeof ProposalStage)[]) =>
     this.addCheck(
-      `${proposalID} is in stage ${stage}`,
+      `${proposalID} is in stage ${stages.join(' or ')}`,
       this.withGovernance(async (governance) => {
-        const match = (await governance.getProposalStage(proposalID)) === stage
+        const stage = await governance.getProposalStage(proposalID)
+        let match = false
+        for (const allowedStage of stages) {
+          match = stage === allowedStage || match
+        }
         if (!match) {
           const schedule = await governance.proposalSchedule(proposalID)
           printValueMapRecursive(schedule)
@@ -181,10 +200,45 @@ class CheckBuilder {
       this.withGovernance(async (governance) => !(await governance.getHotfixRecord(hash)).executed)
     )
 
+  hotfixExecutionTimeLimitNotReached = (hash: Buffer) =>
+    this.addCheck(
+      `Hotfix 0x${hash.toString('hex')} is still in its execution time limit window`,
+      this.withGovernance(async (governance) =>
+        ((await governance.getHotfixRecord(hash)) as HotfixRecord).executionTimeLimit.gt(
+          getCurrentTimestamp()
+        )
+      )
+    )
+
+  hotfixApproved = (hash: Buffer) =>
+    this.addCheck(
+      `Hotfix 0x${hash.toString('hex')} is approved by approver`,
+      this.withGovernance(async (governance) => (await governance.getHotfixRecord(hash)).approved)
+    )
+
+  hotfixCouncilApproved = (hash: Buffer) =>
+    this.addCheck(
+      `Hotfix 0x${hash.toString('hex')} is approved by security council`,
+      this.withGovernance(
+        async (governance) =>
+          ((await governance.getHotfixRecord(hash)) as HotfixRecord).councilApproved
+      )
+    )
+
   hotfixNotApproved = (hash: Buffer) =>
     this.addCheck(
       `Hotfix 0x${hash.toString('hex')} is not already approved`,
       this.withGovernance(async (governance) => !(await governance.getHotfixRecord(hash)).approved)
+    )
+
+  hotfixNotApprovedBySecurityCouncil = (hash: Buffer) =>
+    this.addCheck(
+      `Hotfix 0x${hash.toString('hex')} is not already approved by security council`,
+      this.withGovernance(async (governance) => {
+        const record = await governance.getHotfixRecord(hash)
+
+        return !(record as HotfixRecord).councilApproved
+      })
     )
 
   canSign = (account: Address) =>

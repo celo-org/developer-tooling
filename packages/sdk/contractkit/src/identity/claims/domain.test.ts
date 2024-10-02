@@ -1,12 +1,12 @@
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { ACCOUNT_ADDRESSES } from '@celo/dev-utils/lib/ganache-setup'
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
 import { NativeSigner, Signer, verifySignature } from '@celo/utils/lib/signatureUtils'
 import { newKitFromWeb3 } from '../../kit'
 import { IdentityMetadataWrapper } from '../metadata'
 import { DomainClaim, createDomainClaim, serializeClaim } from './claim'
 import { verifyDomainRecord } from './verify'
 
-testWithGanache('Domain claims', (web3) => {
+testWithAnvilL1('Domain claims', (web3) => {
   const kit = newKitFromWeb3(web3)
   const address = ACCOUNT_ADDRESSES[0]
   const secondAddress = ACCOUNT_ADDRESSES[1]

@@ -1,10 +1,10 @@
 import { StrongAddress } from '@celo/base'
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { newKitFromWeb3 } from '../kit'
 import { AccountsWrapper } from './Accounts'
 import { LockedGoldWrapper } from './LockedGold'
 
-testWithGanache('LockedGold Wrapper', (web3) => {
+testWithAnvilL1('LockedGold Wrapper', (web3) => {
   const kit = newKitFromWeb3(web3)
   let accounts: AccountsWrapper
   let lockedGold: LockedGoldWrapper
@@ -22,16 +22,16 @@ testWithGanache('LockedGold Wrapper', (web3) => {
     }
   })
 
-  test('SBAT lock gold', async () => {
+  it('locks gold', async () => {
     await lockedGold.lock().sendAndWaitForReceipt({ value })
   })
 
-  test('SBAT unlock gold', async () => {
+  it('unlocks gold', async () => {
     await lockedGold.lock().sendAndWaitForReceipt({ value })
     await lockedGold.unlock(value).sendAndWaitForReceipt()
   })
 
-  test('SBAT relock gold', async () => {
+  it('relocks gold', async () => {
     // Make 5 pending withdrawals.
     await lockedGold.lock().sendAndWaitForReceipt({ value: value * 5 })
     await lockedGold.unlock(value).sendAndWaitForReceipt()
@@ -39,11 +39,14 @@ testWithGanache('LockedGold Wrapper', (web3) => {
     await lockedGold.unlock(value).sendAndWaitForReceipt()
     await lockedGold.unlock(value).sendAndWaitForReceipt()
     await lockedGold.unlock(value).sendAndWaitForReceipt()
+
     // Re-lock 2.5 of them
     const txos = await lockedGold.relock(account, value * 2.5)
-    await Promise.all(txos.map((txo) => txo.sendAndWaitForReceipt()))
-    //
+    for (const txo of txos) {
+      await txo.sendAndWaitForReceipt()
+    }
   })
+
   test('should return the count of pending withdrawals', async () => {
     await lockedGold.lock().sendAndWaitForReceipt({ value: value * 2 })
     await lockedGold.unlock(value).sendAndWaitForReceipt()

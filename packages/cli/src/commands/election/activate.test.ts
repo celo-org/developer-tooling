@@ -1,5 +1,5 @@
 import { newKitFromWeb3 } from '@celo/contractkit'
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
@@ -10,18 +10,20 @@ import {
   setupGroupAndAffiliateValidator,
   voteForGroupFrom,
 } from '../../test-utils/chain-setup'
-import { stripAnsiCodes, testLocally } from '../../test-utils/cliUtils'
+import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import ElectionActivate from './activate'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithGanache('election:activate', (web3: Web3) => {
+testWithAnvilL1('election:activate', (web3: Web3) => {
   afterEach(async () => {
     jest.clearAllMocks()
   })
 
   it('fails when no flags are provided', async () => {
-    await expect(testLocally(ElectionActivate, [])).rejects.toThrow('Missing required flag from')
+    await expect(testLocallyWithWeb3Node(ElectionActivate, [], web3)).rejects.toThrow(
+      'Missing required flag from'
+    )
   })
 
   it('shows no pending votes', async () => {
@@ -31,7 +33,7 @@ testWithGanache('election:activate', (web3: Web3) => {
 
     await registerAccount(kit, userAddress)
 
-    await testLocally(ElectionActivate, ['--from', userAddress])
+    await testLocallyWithWeb3Node(ElectionActivate, ['--from', userAddress], web3)
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`
       [
@@ -53,7 +55,7 @@ testWithGanache('election:activate', (web3: Web3) => {
     await registerAccountWithLockedGold(kit, userAddress)
 
     await voteForGroupFrom(kit, userAddress, groupAddress, new BigNumber(10))
-    await testLocally(ElectionActivate, ['--from', userAddress])
+    await testLocallyWithWeb3Node(ElectionActivate, ['--from', userAddress], web3)
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`
       [
@@ -83,7 +85,7 @@ testWithGanache('election:activate', (web3: Web3) => {
       new BigNumber(0)
     )
 
-    await testLocally(ElectionActivate, ['--from', userAddress])
+    await testLocallyWithWeb3Node(ElectionActivate, ['--from', userAddress], web3)
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
     expect((await election.getVotesForGroupByAccount(userAddress, groupAddress)).active).toEqual(
@@ -109,7 +111,7 @@ testWithGanache('election:activate', (web3: Web3) => {
     )
 
     await Promise.all([
-      testLocally(ElectionActivate, ['--from', userAddress, '--wait']),
+      testLocallyWithWeb3Node(ElectionActivate, ['--from', userAddress, '--wait'], web3),
       new Promise<void>((resolve) => {
         // at least the amount the --wait flag waits in the check
         setTimeout(async () => {
@@ -119,7 +121,8 @@ testWithGanache('election:activate', (web3: Web3) => {
       }),
     ])
 
-    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
+    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+      .toMatchInlineSnapshot(`
       [
         [
           "Running Checks:",
@@ -134,7 +137,7 @@ testWithGanache('election:activate', (web3: Web3) => {
           "SendTransaction: activate",
         ],
         [
-          "txHash: 0xeb8b78386a4a12b607bc7fcd5025f9b831b37eda9b3719a87c7235947a314d49",
+          "txHash: 0xtxhash",
         ],
       ]
     `)
@@ -166,7 +169,11 @@ testWithGanache('election:activate', (web3: Web3) => {
       (await election.getVotesForGroupByAccount(otherUserAddress, groupAddress)).active
     ).toEqual(new BigNumber(0))
 
-    await testLocally(ElectionActivate, ['--from', otherUserAddress, '--for', userAddress])
+    await testLocallyWithWeb3Node(
+      ElectionActivate,
+      ['--from', otherUserAddress, '--for', userAddress],
+      web3
+    )
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
     expect((await election.getVotesForGroupByAccount(userAddress, groupAddress)).active).toEqual(

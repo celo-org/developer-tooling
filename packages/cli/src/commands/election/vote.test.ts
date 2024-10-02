@@ -1,5 +1,5 @@
 import { newKitFromWeb3 } from '@celo/contractkit'
-import { testWithGanache } from '@celo/dev-utils/lib/ganache-test'
+import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
@@ -8,18 +8,18 @@ import {
   registerAccountWithLockedGold,
   setupGroupAndAffiliateValidator,
 } from '../../test-utils/chain-setup'
-import { stripAnsiCodes, testLocally } from '../../test-utils/cliUtils'
+import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Vote from './vote'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithGanache('election:vote', (web3: Web3) => {
+testWithAnvilL1('election:vote', (web3: Web3) => {
   afterEach(async () => {
     jest.clearAllMocks()
   })
 
   it('fails when no flags are provided', async () => {
-    await expect(testLocally(Vote, [])).rejects.toThrow('Missing required flag')
+    await expect(testLocallyWithWeb3Node(Vote, [], web3)).rejects.toThrow('Missing required flag')
   })
 
   it('fails when voter is not an account', async () => {
@@ -27,7 +27,11 @@ testWithGanache('election:vote', (web3: Web3) => {
     const [fromAddress, groupAddress] = await web3.eth.getAccounts()
 
     await expect(
-      testLocally(Vote, ['--from', fromAddress, '--for', groupAddress, '--value', '1'])
+      testLocallyWithWeb3Node(
+        Vote,
+        ['--from', fromAddress, '--for', groupAddress, '--value', '1'],
+        web3
+      )
     ).rejects.toThrow()
 
     expect(logMock.mock.calls[1][0]).toContain(
@@ -43,10 +47,14 @@ testWithGanache('election:vote', (web3: Web3) => {
     await registerAccount(kit, fromAddress)
 
     await expect(
-      testLocally(Vote, ['--from', fromAddress, '--for', groupAddress, '--value', '1'])
+      testLocallyWithWeb3Node(
+        Vote,
+        ['--from', fromAddress, '--for', groupAddress, '--value', '1'],
+        web3
+      )
     ).rejects.toThrow()
 
-    expect(stripAnsiCodes(logMock.mock.calls[2][0])).toContain(
+    expect(stripAnsiCodesAndTxHashes(logMock.mock.calls[2][0])).toContain(
       `✘  0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb is ValidatorGroup`
     )
   })
@@ -60,10 +68,14 @@ testWithGanache('election:vote', (web3: Web3) => {
     await setupGroupAndAffiliateValidator(kit, groupAddress, validatorAddress)
 
     await expect(
-      testLocally(Vote, ['--from', fromAddress, '--for', groupAddress, '--value', '1'])
+      testLocallyWithWeb3Node(
+        Vote,
+        ['--from', fromAddress, '--for', groupAddress, '--value', '1'],
+        web3
+      )
     ).rejects.toThrow()
 
-    expect(stripAnsiCodes(logMock.mock.calls[3][0])).toContain(
+    expect(stripAnsiCodesAndTxHashes(logMock.mock.calls[3][0])).toContain(
       `✘  Account has at least 0.000000000000000001 non-voting Locked Gold`
     )
   })
@@ -84,11 +96,16 @@ testWithGanache('election:vote', (web3: Web3) => {
     )
 
     await expect(
-      testLocally(Vote, ['--from', fromAddress, '--for', groupAddress, '--value', amount.toFixed()])
+      testLocallyWithWeb3Node(
+        Vote,
+        ['--from', fromAddress, '--for', groupAddress, '--value', amount.toFixed()],
+        web3
+      )
     ).resolves.not.toThrow()
 
     expect(await election.getTotalVotesForGroupByAccount(groupAddress, fromAddress)).toEqual(amount)
-    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodes))).toMatchInlineSnapshot(`
+    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+      .toMatchInlineSnapshot(`
       [
         [
           "Running Checks:",
@@ -109,7 +126,7 @@ testWithGanache('election:vote', (web3: Web3) => {
           "SendTransaction: vote",
         ],
         [
-          "txHash: 0x5427ddef3d99512241b5c61b8c0467674c7278ef86a2258676d864430285b1ad",
+          "txHash: 0xtxhash",
         ],
       ]
     `)
