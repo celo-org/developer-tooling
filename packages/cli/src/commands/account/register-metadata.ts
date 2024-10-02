@@ -1,4 +1,4 @@
-import { IdentityMetadataWrapper } from '@celo/contractkit'
+import { IdentityMetadataWrapper } from '@celo/metadata-claims'
 import { Flags, ux } from '@oclif/core'
 
 import { BaseCommand } from '../../base'

@@ -1,6 +1,6 @@
-import { ContractKit, IdentityMetadataWrapper, newKitFromWeb3 } from '@celo/contractkit'
-import { ClaimTypes } from '@celo/contractkit/lib/identity'
+import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { ClaimTypes, IdentityMetadataWrapper } from '@celo/metadata-claims'
 import { readFileSync, writeFileSync } from 'fs'
 import { tmpdir } from 'os'
 import Web3 from 'web3'

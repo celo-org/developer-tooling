@@ -1,0 +1,46 @@
+{
+  "name": "@celo/metadata-claims",
+  "version": "0.0.1",
+  "author": "cLabs",
+  "license": "Apache-2.0",
+  "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/sdk/metadata-claims",
+  "keywords": [
+    "celo",
+    "identity",
+    "metadata",
+    "claims",
+    "identifiers"
+  ],
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "build": "yarn tsc -b .",
+    "clean": "rm -rf lib ; yarn run tsc -b . --clean",
+    "prepublishOnly": "yarn build",
+    "docs": "yarn run --top-level typedoc",
+    "test": "NODE_OPTIONS=--experimental-vm-modules yarn run --top-level jest --runInBand --forceExit",
+    "test-anvil": "RUN_GANACHE_TESTS=false RUN_ANVIL_TESTS=true NODE_OPTIONS=--experimental-vm-modules yarn run --top-level jest --forceExit",
+    "lint": "yarn run --top-level eslint -c .eslintrc.js "
+  },
+  "dependencies": {
+    "@celo/base": "^6.1.0",
+    "@celo/utils": "^7.0.0",
+    "cross-fetch": "3.1.5",
+    "fp-ts": "2.1.1",
+    "io-ts": "2.0.1"
+  },
+  "devDependencies": {
+    "@celo/celo-devchain": "^7.0.0",
+    "@celo/contractkit": "workspace:^",
+    "@celo/dev-utils": "0.0.5",
+    "@celo/odis-identifiers": "^1.0.1",
+    "@celo/typescript": "workspace:^",
+    "@types/node": "18.7.6",
+    "fetch-mock": "^10.0.7",
+    "jest": "^29.7.0",
+    "ts-node": "^10.9.1",
+    "typescript": "5.3.3"
+  },
+  "packageManager": "yarn@4.0.2"
+}
