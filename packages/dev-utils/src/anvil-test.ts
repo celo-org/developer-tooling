@@ -33,8 +33,7 @@ export enum LinkedLibraryAddress {
 }
 
 function createInstance(stateFilePath: string): Anvil {
-  // const port = ANVIL_PORT + (process.pid - process.ppid)
-  const port = ANVIL_PORT + Math.round(Math.random() * 100)
+  const port = ANVIL_PORT + (process.pid - process.ppid)
   const options: CreateAnvilOptions = {
     port,
     loadState: stateFilePath,
