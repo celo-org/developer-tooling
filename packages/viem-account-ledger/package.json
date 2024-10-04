@@ -1,0 +1,54 @@
+{
+  "name": "@celo/viem-account-ledger",
+  "version": "0.0.1",
+  "description": "Helper library to make ledger<->viem interactions easier",
+  "type": "module",
+  "exports": {
+    ".": "./lib/index.js"
+  },
+  "types": "./lib/index.d.ts",
+  "author": "cLabs",
+  "license": "Apache-2.0",
+  "homepage": "https://docs.celo.org/developer/tools",
+  "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/viem-account-ledger",
+  "keywords": [
+    "celo",
+    "blockchain",
+    "viem",
+    "ledger"
+  ],
+  "scripts": {
+    "build": "yarn run --top-level tsc -b .",
+    "clean": "yarn run --top-level tsc -b . --clean",
+    "docs": "yarn run --top-level typedoc",
+    "test": "yarn run vitest",
+    "lint": "yarn run --top-level eslint -c .eslintrc.cjs ",
+    "prepublishOnly": "yarn build"
+  },
+  "peerDependencies": {
+    "@ledgerhq/hw-transport-node-hid": "^6.x",
+    "viem": "2.x"
+  },
+  "dependencies": {
+    "@celo/base": "^6.1.0",
+    "@celo/ledger-token-signer": "^0.4.0",
+    "@ledgerhq/errors": "^6.16.4",
+    "@ledgerhq/hw-app-eth": "git+https://github.com:celo-org/ledgerjs-hw-app-eth.git",
+    "semver": "^7.6.0"
+  },
+  "devDependencies": {
+    "@celo/typescript": "workspace:^",
+    "@celo/utils": "workspace:^",
+    "@celo/wallet-base": "workspace:^",
+    "@celo/wallet-remote": "workspace:^",
+    "@ethereumjs/util": "8.0.5",
+    "@ledgerhq/hw-transport-node-hid": "^6.29.5",
+    "@vitest/coverage-v8": "2.1.2",
+    "dotenv": "^8.2.0",
+    "viem": "^2.21.14",
+    "vitest": "^2.1.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
