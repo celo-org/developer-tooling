@@ -2282,27 +2282,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/wallet-rpc@workspace:packages/sdk/wallets/wallet-rpc":
-  version: 0.0.0-use.local
-  resolution: "@celo/wallet-rpc@workspace:packages/sdk/wallets/wallet-rpc"
-  dependencies:
-    "@celo/base": "npm:^6.1.0"
-    "@celo/connect": "npm:^6.0.1"
-    "@celo/contractkit": "npm:^8.1.1"
-    "@celo/dev-utils": "npm:0.0.5"
-    "@celo/typescript": "workspace:^"
-    "@celo/utils": "npm:^7.0.0"
-    "@celo/wallet-base": "npm:^6.0.1"
-    "@celo/wallet-remote": "npm:^6.0.1"
-    "@types/bn.js": "npm:^5.1.0"
-    "@types/debug": "npm:^4.1.12"
-    bignumber.js: "npm:^9.0.0"
-    bn.js: "npm:^5.1.0"
-    debug: "npm:^4.1.1"
-    web3: "npm:1.10.4"
-  languageName: unknown
-  linkType: soft
-
 "@chainsafe/as-sha256@npm:^0.3.1":
   version: 0.3.1
   resolution: "@chainsafe/as-sha256@npm:0.3.1"
