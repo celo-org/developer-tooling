@@ -21,7 +21,7 @@
     "build": "yarn run --top-level tsc -b .",
     "clean": "yarn run --top-level tsc -b . --clean",
     "docs": "yarn run --top-level typedoc",
-    "test": "NODE_OPTIONS='--experimental-vm-modules' yarn run --top-level jest --runInBand",
+    "test": "yarn run vitest",
     "lint": "yarn run --top-level eslint -c .eslintrc.cjs ",
     "prepublishOnly": "yarn build"
   },
@@ -44,7 +44,8 @@
     "@ethereumjs/util": "8.0.5",
     "@ledgerhq/hw-transport-node-hid": "^6.29.5",
     "dotenv": "^8.2.0",
-    "viem": "^2.21.14"
+    "viem": "^2.21.14",
+    "vitest": "^2.1.2"
   },
   "engines": {
     "node": ">=18"

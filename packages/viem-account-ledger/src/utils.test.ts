@@ -1,10 +1,12 @@
+import { describe, expect, it, test, vi } from 'vitest'
 import { ACCOUNT_ADDRESS1, mockLedger, TEST_CHAIN_ID } from './test-utils'
 import {
   assertCompat,
   checkForKnownToken,
   meetsVersionRequirements,
   transportErrorFriendlyMessage,
-} from './utils'
+} from './utils.js'
+
 describe('utils', () => {
   describe('transportErrorFriendlyMessage', () => {
     test('26368', () => {
@@ -12,7 +14,7 @@ describe('utils', () => {
       // @ts-expect-error
       error.statusCode = 26368
       expect(() => transportErrorFriendlyMessage(error)).toThrowErrorMatchingInlineSnapshot(
-        `"Possible connection lost with the ledger. Check if still on and connected. Test error"`
+        `[Error: Possible connection lost with the ledger. Check if still on and connected. Test error]`
       )
     })
     test('26628', () => {
@@ -20,19 +22,19 @@ describe('utils', () => {
       // @ts-expect-error
       error.statusCode = 26628
       expect(() => transportErrorFriendlyMessage(error)).toThrowErrorMatchingInlineSnapshot(
-        `"Possible connection lost with the ledger. Check if still on and connected. Test error"`
+        `[Error: Possible connection lost with the ledger. Check if still on and connected. Test error]`
       )
     })
     test('NoDevice', () => {
       const error = new Error('NoDevice')
       expect(() => transportErrorFriendlyMessage(error)).toThrowErrorMatchingInlineSnapshot(
-        `"Possible connection lost with the ledger. Check if still on and connected. NoDevice"`
+        `[Error: Possible connection lost with the ledger. Check if still on and connected. NoDevice]`
       )
     })
     test('other', () => {
       const error = new Error('Test error')
       expect(() => transportErrorFriendlyMessage(error)).toThrowErrorMatchingInlineSnapshot(
-        `"Test error"`
+        `[Error: Test error]`
       )
     })
   })
@@ -55,7 +57,7 @@ describe('utils', () => {
       )
     })
     it('warns if it doesnt enable `arbitraryDataEnabled`', async () => {
-      const warn = jest.spyOn(console, 'warn').mockImplementation(() => undefined)
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
       await expect(assertCompat(mockLedger({ arbitraryDataEnabled: 0 }))).resolves.toBeTruthy()
       expect(warn.mock.lastCall).toMatchInlineSnapshot(`
         [
@@ -72,7 +74,7 @@ describe('utils', () => {
     const ledger = mockLedger()
 
     it('works', async () => {
-      const spy = jest.spyOn(ledger, 'provideERC20TokenInformation')
+      const spy = vi.spyOn(ledger, 'provideERC20TokenInformation')
       const cUSDa = '0x874069fa1eb16d44d622f2e0ca25eea172369bc1'
       const cEURa = '0x10c892a6ec43a53e45d0b916b4b7d383b1b78c0f'
 

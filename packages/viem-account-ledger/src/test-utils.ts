@@ -9,6 +9,7 @@ import { dirname, join } from 'node:path'
 import { Hex } from 'viem'
 import { privateKeyToAccount, privateKeyToAddress } from 'viem/accounts'
 import { legacyLedgerPublicKeyHex } from './data.js'
+import { DEFAULT_DERIVATION_PATH } from './ledger-to-account.js'
 import { meetsVersionRequirements, MIN_VERSION_EIP1559 } from './utils.js'
 
 const PRIVATE_KEY1 = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
@@ -25,23 +26,23 @@ const PRIVATE_KEY_NEVER = '0x1234567890abcdef1234567890abcdef1234567890abcdef123
 export const ACCOUNT_ADDRESS_NEVER = normalizeAddressWith0x(privateKeyToAddress(PRIVATE_KEY_NEVER))
 
 const ledgerAddresses: { [myKey: string]: { address: Hex; privateKey: Hex } } = {
-  "44'/52752'/0'/0/0": {
+  [`${DEFAULT_DERIVATION_PATH}/0`]: {
     address: ACCOUNT_ADDRESS1,
     privateKey: PRIVATE_KEY1,
   },
-  "44'/52752'/0'/0/1": {
+  [`${DEFAULT_DERIVATION_PATH}/1`]: {
     address: ACCOUNT_ADDRESS2,
     privateKey: PRIVATE_KEY2,
   },
-  "44'/52752'/0'/0/2": {
+  [`${DEFAULT_DERIVATION_PATH}/2`]: {
     address: ACCOUNT_ADDRESS3,
     privateKey: PRIVATE_KEY3,
   },
-  "44'/52752'/0'/0/3": {
+  [`${DEFAULT_DERIVATION_PATH}/3`]: {
     address: ACCOUNT_ADDRESS4,
     privateKey: PRIVATE_KEY4,
   },
-  "44'/52752'/0'/0/4": {
+  [`${DEFAULT_DERIVATION_PATH}/4`]: {
     address: ACCOUNT_ADDRESS5,
     privateKey: PRIVATE_KEY5,
   },
