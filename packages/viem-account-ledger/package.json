@@ -43,6 +43,7 @@
     "@celo/wallet-remote": "workspace:^",
     "@ethereumjs/util": "8.0.5",
     "@ledgerhq/hw-transport-node-hid": "^6.29.5",
+    "@vitest/coverage-v8": "2.1.2",
     "dotenv": "^8.2.0",
     "viem": "^2.21.14",
     "vitest": "^2.1.2"

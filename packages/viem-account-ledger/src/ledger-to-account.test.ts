@@ -1,7 +1,7 @@
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
+import { describe, expect, it, test, vi } from 'vitest'
 import { ledgerToAccount } from './ledger-to-account.js'
 import { mockLedger, TEST_CHAIN_ID } from './test-utils.js'
-import { vi, describe, it, test, expect } from 'vitest'
 
 vi.mock('./utils.js', async () => {
   const module = await vi.importActual('./utils.js')
@@ -18,7 +18,7 @@ const transport =
     : Promise.resolve(undefined as unknown as TransportNodeHid)
 
 describe('ledgerToAccount', () => {
-  it.only('can be setup', async () => {
+  it('can be setup', async () => {
     await expect(
       ledgerToAccount({
         transport: await transport,
