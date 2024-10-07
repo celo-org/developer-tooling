@@ -60,7 +60,7 @@
     "@oclif/plugin-commands": "^3.3.4",
     "@oclif/plugin-help": "^6.2.8",
     "@oclif/plugin-not-found": "^3.2.15",
-    "@oclif/plugin-plugins": "^4.3.10",
+    "@oclif/plugin-plugins": "^5.4.9",
     "@oclif/plugin-warn-if-update-available": "^3.1.11",
     "@types/command-exists": "^1.2.3",
     "bignumber.js": "9.0.0",
