@@ -2,6 +2,7 @@ import { StrongAddress } from '@celo/base'
 import { Contract } from '@celo/connect'
 import { BaseWrapper } from './BaseWrapper'
 
+// TODO this could be imported from an extracted package
 const MINIMAL_TOKEN_INFO_ABI = [
   {
     type: 'function' as const,
@@ -41,12 +42,21 @@ const MINIMAL_TOKEN_INFO_ABI = [
   },
 ] as const
 
+// TODO same here
+export interface FeeCurrencyInformation {
+  name?: string
+  symbol?: string
+  address: StrongAddress
+  adaptedToken?: StrongAddress
+  decimals?: number
+}
+
 export abstract class AbstractFeeCurrencyWrapper<
   TContract extends Contract
 > extends BaseWrapper<TContract> {
   abstract getAddresses(): Promise<StrongAddress[]>
 
-  async getFeeCurrencyInformation(whitelist?: StrongAddress[]) {
+  async getFeeCurrencyInformation(whitelist?: StrongAddress[]): Promise<FeeCurrencyInformation[]> {
     const feeCurrencies = whitelist ?? (await this.getAddresses())
 
     return Promise.all(

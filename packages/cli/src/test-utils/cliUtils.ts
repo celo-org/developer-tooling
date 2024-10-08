@@ -1,9 +1,10 @@
 import { Interfaces } from '@oclif/core'
 import Web3 from 'web3'
 import { BaseCommand } from '../base'
+import { CeloCommand } from '../celo'
 
 type AbstractConstructor<T> = new (...args: any[]) => T
-interface Runner extends AbstractConstructor<BaseCommand> {
+interface Runner extends AbstractConstructor<CeloCommand> {
   run: typeof BaseCommand.run
 }
 

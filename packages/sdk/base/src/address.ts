@@ -31,6 +31,8 @@ export const bufferToHex = (buf: Buffer) => ensureLeading0x(buf.toString('hex'))
 
 export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000'
 
+export const REGISTRY_CONTRACT_ADDRESS = '0x000000000000000000000000000000000000ce10'
+
 export const findAddressIndex = (address: Address, addresses: Address[]) =>
   addresses.findIndex((x) => eqAddress(x, address))
 

@@ -1,10 +1,10 @@
-import { newICeloVersionedContract } from '@celo/abis/web3/ICeloVersionedContract'
-import { newProxy } from '@celo/abis/web3/Proxy'
-import { concurrentMap } from '@celo/base'
-import { CeloContract } from '@celo/contractkit'
 import { ux } from '@oclif/core'
 
-import { BaseCommand } from '../../base'
+import { iCeloVersionedContractABI, proxyABI } from '@celo/abis'
+import { concurrentMap, NULL_ADDRESS, StrongAddress } from '@celo/base'
+import { CeloCommand } from '../../celo'
+import { CeloContract, RegisteredContracts } from '../../packages-to-be/contracts'
+import { ViemCommand } from '../../viem'
 
 const UNVERSIONED_CONTRACTS = [
   CeloContract.Registry,
@@ -16,61 +16,74 @@ const UNVERSIONED_CONTRACTS = [
 ]
 const UNPROXIED_CONTRACTS: CeloContract[] = []
 
-export default class Contracts extends BaseCommand {
+export default class Contracts extends ViemCommand {
   static description = 'Lists Celo core contracts and their addresses.'
 
   static flags = {
-    ...BaseCommand.flags,
+    ...CeloCommand.flags,
     ...(ux.table.flags() as object),
   }
 
   async run() {
-    const kit = await this.getKit()
     const res = await this.parse(Contracts)
+    const client = await this.getPublicClient()
+    const addressResolver = await this.getAddressResolver()
 
-    const addressMapping = await kit.registry.addressMapping()
-    const contractInfo = await concurrentMap(
-      6,
-      Array.from(addressMapping.entries()),
-      async ([contract, proxy]) => {
-        // skip implementation check for known unproxied contracts
-        let implementation: string
-        if (UNPROXIED_CONTRACTS.includes(contract)) {
+    const allContractsAddresses: [CeloContract, StrongAddress][] = await Promise.all(
+      RegisteredContracts.map(async (contractName) => {
+        try {
+          const contractAddress = await addressResolver.resolve(contractName)
+
+          return [contractName, contractAddress as StrongAddress]
+        } catch (err) {
+          return [contractName, NULL_ADDRESS as StrongAddress]
+        }
+      })
+    )
+    const addressMapping = allContractsAddresses.filter(([_, address]) => address !== NULL_ADDRESS)
+    const contractInfo = await concurrentMap(6, addressMapping, async ([contractName, proxy]) => {
+      // skip implementation check for known unproxied contracts
+      let implementation: string
+      if (UNPROXIED_CONTRACTS.includes(contractName)) {
+        implementation = 'NONE'
+      } else {
+        try {
+          implementation = await client.readContract({
+            address: proxy,
+            abi: proxyABI,
+            functionName: '_getImplementation',
+          })
+        } catch (e) {
+          // if we fail to get implementation that means it doesnt have one so set it to NONE
           implementation = 'NONE'
-        } else {
-          try {
-            implementation = await newProxy(kit.web3, proxy).methods._getImplementation().call()
-          } catch (e) {
-            // if we fail to get implementation that means it doesnt have one so set it to NONE
-            implementation = 'NONE'
-          }
-        }
-        // skip version check for unversioned contracts (unproxied contracts are by definition unversioned))
-        let version: string
-        if (UNVERSIONED_CONTRACTS.includes(contract) || implementation === 'NONE') {
-          version = 'NONE'
-        } else {
-          const raw = await newICeloVersionedContract(kit.web3, implementation)
-            .methods.getVersionNumber()
-            .call()
-          version = `${raw[0]}.${raw[1]}.${raw[2]}.${raw[3]}`
-        }
-
-        const balances = await kit.celoTokens.balancesOf(proxy)
-        return {
-          contract,
-          proxy,
-          implementation,
-          version,
-          balances,
         }
       }
-    )
+      // skip version check for unversioned contracts (unproxied contracts are by definition unversioned))
+      let version: string
+      if (UNVERSIONED_CONTRACTS.includes(contractName) || implementation === 'NONE') {
+        version = 'NONE'
+      } else {
+        const raw = await client.readContract({
+          address: proxy,
+          abi: iCeloVersionedContractABI,
+          functionName: 'getVersionNumber',
+        })
+
+        version = `${raw[0]}.${raw[1]}.${raw[2]}.${raw[3]}`
+      }
+
+      return {
+        contractName,
+        proxy,
+        implementation,
+        version,
+      }
+    })
 
     ux.table(
       contractInfo,
       {
-        contract: { get: (i) => i.contract },
+        contract: { get: (i) => i.contractName },
         proxy: { get: (i) => i.proxy },
         implementation: { get: (i) => i.implementation },
         version: {
