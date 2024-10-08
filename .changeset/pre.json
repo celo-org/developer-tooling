@@ -1,0 +1,31 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "@celo/celocli": "5.2.1",
+    "@celo/dev-utils": "0.0.5",
+    "@celo/base": "6.1.0",
+    "@celo/connect": "6.0.2",
+    "@celo/contractkit": "8.3.0",
+    "@celo/cryptographic-utils": "5.1.0",
+    "@celo/explorer": "5.0.12",
+    "@celo/governance": "5.1.3",
+    "@celo/keystores": "5.0.11",
+    "@celo/metadata-claims": "0.0.1",
+    "@celo/network-utils": "5.0.6",
+    "@celo/phone-utils": "6.0.3",
+    "@celo/transactions-uri": "5.0.11",
+    "@celo/utils": "7.0.0",
+    "@celo/wallet-base": "6.0.1",
+    "@celo/wallet-hsm": "6.0.1",
+    "@celo/wallet-hsm-aws": "6.0.1",
+    "@celo/wallet-hsm-azure": "6.0.1",
+    "@celo/wallet-hsm-gcp": "6.0.1",
+    "@celo/wallet-ledger": "6.0.1",
+    "@celo/wallet-local": "6.0.1",
+    "@celo/wallet-remote": "6.0.1",
+    "@celo/typescript": "0.0.1",
+    "@celo/viem-account-ledger": "0.0.1"
+  },
+  "changesets": []
+}
