@@ -31,7 +31,7 @@ jobs:
 
       - id: npm-info
         run: |
-          npm info ${{ matrix.lib }} --json >> "$GITHUB_OUTPUT"
+          echo "json=$(npm info ${{ matrix.lib }} --json)" >> "$GITHUB_OUTPUT"
 
       - name: Install https://github.com/fsaintjacques/semver-tool
         run: |
@@ -52,7 +52,7 @@ jobs:
           semver validate $LAST_VERSION
           echo "result=$(semver compare $LAST_VERSION $FETCHED_VERSION)" >> "$GITHUB_OUTPUT"
         env:
-          FETCHED_VERSION: ${{ fromJson(steps.npm-info.outputs).version }}
+          FETCHED_VERSION: ${{ fromJson(steps.npm-info.outputs.json).version }}
 
       - id: trigger-tests
         if: ${{ steps.compare-version.outputs.result }} == -1
