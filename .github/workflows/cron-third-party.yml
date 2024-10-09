@@ -29,9 +29,9 @@ jobs:
 
       - uses: actions/setup-node@v4
 
-      - id: npm-info
+      - id: npm-version
         run: |
-          echo "json=$(npm info ${{ matrix.lib }} --json)" >> "$GITHUB_OUTPUT"
+          echo "result=$(npm info ${{ matrix.lib }} --json | jq -r ".version")" >> "$GITHUB_OUTPUT"
 
       - name: Install https://github.com/fsaintjacques/semver-tool
         run: |
@@ -48,11 +48,10 @@ jobs:
       - id: compare-version
         run: |
           LAST_VERSION=$(cat /tmp/last-version-${{ matrix.lib }} 2>/dev/null || echo '0.0.0')
+          FETCHED_VERSION="${{ steps.npm-version.outputs.result }}"
 
           semver validate $LAST_VERSION
           echo "result=$(semver compare $LAST_VERSION $FETCHED_VERSION)" >> "$GITHUB_OUTPUT"
-        env:
-          FETCHED_VERSION: ${{ fromJson(steps.npm-info.outputs.json).version }}
 
       - id: trigger-tests
         if: ${{ steps.compare-version.outputs.result }} == -1
