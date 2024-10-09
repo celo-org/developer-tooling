@@ -8,9 +8,15 @@ export interface ContractAddressResolver {
 }
 
 export class ViemAddressResolver implements ContractAddressResolver {
+  protected cache: Record<string, StrongAddress> = {}
+
   constructor(private readonly publicClient: PublicClient<Transport, typeof celo>) {}
 
   async resolve(contractName: string): Promise<StrongAddress> {
+    if (this.cache[contractName]) {
+      return this.cache[contractName]
+    }
+
     const address = await this.publicClient.readContract({
       address: REGISTRY_CONTRACT_ADDRESS,
       abi: registryABI,
@@ -19,6 +25,8 @@ export class ViemAddressResolver implements ContractAddressResolver {
     })
 
     if (address && address !== NULL_ADDRESS) {
+      this.cache[contractName] = address
+
       return address
     }
 
