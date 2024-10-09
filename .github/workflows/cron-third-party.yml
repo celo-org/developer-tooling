@@ -50,7 +50,12 @@ jobs:
           LAST_VERSION=$(cat /tmp/last-version-${{ matrix.lib }} 2>/dev/null || echo '0.0.0')
           FETCHED_VERSION="${{ steps.npm-version.outputs.result }}"
 
+          echo "Validating $LAST_VERSION ..."
           semver validate $LAST_VERSION
+
+          echo "Validating $FETCHED_VERSION ..."
+          semver validate $FETCHED_VERSION
+
           echo "result=$(semver compare $LAST_VERSION $FETCHED_VERSION)" >> "$GITHUB_OUTPUT"
 
       - id: trigger-tests
