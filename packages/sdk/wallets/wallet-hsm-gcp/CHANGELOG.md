@@ -1,5 +1,16 @@
 # @celo/wallet-hsm-gcp
 
+## 6.0.2-beta.0
+
+### Patch Changes
+
+- Updated dependencies [[`4ef76eb`](https://github.com/celo-org/developer-tooling/commit/4ef76eb174454f60304080d0ef63a859cd8d931b)]:
+  - @celo/utils@8.0.0-beta.0
+  - @celo/connect@6.0.3-beta.0
+  - @celo/wallet-base@6.0.2-beta.0
+  - @celo/wallet-hsm@6.0.2-beta.0
+  - @celo/wallet-remote@6.0.2-beta.0
+
 ## 6.0.1
 
 ### Patch Changes
