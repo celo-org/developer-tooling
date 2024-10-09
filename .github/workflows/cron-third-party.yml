@@ -1,0 +1,67 @@
+name: Third party libraries testing workflow
+# By default the sha where it runs is latest commit on default branch
+# https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule
+on:
+  schedule:
+    # hourly
+    - cron: 0 * * * *
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  compare-versions:
+    name: ${{ matrix.lib }} check if new version is out
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        lib:
+          - 'viem'
+          - 'web3'
+          - 'ethers'
+
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: last-version-${{ matrix.lib }}
+          path: /tmp/
+
+      - uses: actions/setup-node@v4
+      - id: npm-info
+        run: |
+          npm info ${{ matrix.lib }} --json >> "$GITHUB_OUTPUT"
+
+      - name: Install https://github.com/fsaintjacques/semver-tool
+        run: |
+          # Download the script and save it to /usr/local/bin
+          wget -O /usr/local/bin/semver \
+            https://raw.githubusercontent.com/fsaintjacques/semver-tool/master/src/semver
+
+          # Make script executable
+          chmod +x /usr/local/bin/semver
+
+          # Prove it works
+          semver --version
+
+      - id: compare-version
+        run: |
+          LAST_VERSION=$(cat /tmp/last-version-${{ matrix.lib }})
+
+          semver validate $LAST_VERSION
+          echo "result=$(semver compare $LAST_VERSION $FETCHED_VERSION)"" >> "$GITHUB_OUTPUT"
+        env:
+          FETCHED_VERSION: ${{ fromJson(steps.npm-info.outputs).version }}
+
+      - id: trigger-tests
+        if: ${{ steps.compare-version.outputs.result }} == -1
+        # TODO: implement third-party-test
+        # uses: celo-org/developer-tooling/.github/actions/test-third-party.yml
+        # with:
+        #   lib: ${{ matrix.lib }}
+        run: echo TODO
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ steps.compare-version.outputs.result }} == -1
+        with:
+          name: last-version-${{ matrix.lib }}
+          path: /tmp/fetched-version-${{ matrix.lib }}
