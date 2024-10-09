@@ -10,7 +10,7 @@ on:
 
 jobs:
   compare-versions:
-    name: ${{ matrix.lib }} check if new version is out
+    name: check if new version of ${{ matrix.lib }} is out
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -25,8 +25,10 @@ jobs:
         with:
           name: last-version-${{ matrix.lib }}
           path: /tmp/
+        continue-on-error: true
 
       - uses: actions/setup-node@v4
+
       - id: npm-info
         run: |
           npm info ${{ matrix.lib }} --json >> "$GITHUB_OUTPUT"
@@ -45,10 +47,10 @@ jobs:
 
       - id: compare-version
         run: |
-          LAST_VERSION=$(cat /tmp/last-version-${{ matrix.lib }})
+          LAST_VERSION=$(cat /tmp/last-version-${{ matrix.lib }} 2>/dev/null || echo '0.0.0')
 
           semver validate $LAST_VERSION
-          echo "result=$(semver compare $LAST_VERSION $FETCHED_VERSION)"" >> "$GITHUB_OUTPUT"
+          echo "result=$(semver compare $LAST_VERSION $FETCHED_VERSION)" >> "$GITHUB_OUTPUT"
         env:
           FETCHED_VERSION: ${{ fromJson(steps.npm-info.outputs).version }}
 
