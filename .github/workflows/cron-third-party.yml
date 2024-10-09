@@ -1,0 +1,81 @@
+name: Third party libraries testing workflow
+# By default the sha where it runs is latest commit on default branch
+# https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule
+on:
+  schedule:
+    # hourly
+    - cron: 0 * * * *
+  workflow_dispatch:
+  pull_request:
+
+jobs:
+  compare-versions:
+    name: check if new version of ${{ matrix.lib }} is out
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        lib:
+          - 'viem'
+          - 'web3'
+          - 'ethers'
+
+    steps:
+      - uses: actions/download-artifact@v4
+        name: Download last version tested
+        with:
+          name: last-version-${{ matrix.lib }}
+          path: /tmp/
+        continue-on-error: true
+
+      - uses: actions/setup-node@v4
+        name: Setup NPM
+
+      - id: npm-version
+        name: Fetch latest available version from NPM
+        run: |
+          echo "result=$(npm info ${{ matrix.lib }} --json | jq -r ".version")" >> "$GITHUB_OUTPUT"
+
+      - name: Install semver-tool
+        run: |
+          # https://github.com/fsaintjacques/semver-tool
+          # Download the script and save it to /usr/local/bin
+          wget -O /usr/local/bin/semver \
+            https://raw.githubusercontent.com/fsaintjacques/semver-tool/master/src/semver
+
+          # Make script executable
+          chmod +x /usr/local/bin/semver
+
+          # Prove it works
+          semver --version
+
+      - id: compare-version
+        name: Compare last version with NPM's version
+        run: |
+          LAST_VERSION=$(cat /tmp/last-version-${{ matrix.lib }} 2>/dev/null || echo '0.0.0')
+          FETCHED_VERSION="${{ steps.npm-version.outputs.result }}"
+
+          echo "Validating last version: $LAST_VERSION ..."
+          semver validate $LAST_VERSION
+
+          echo "Validating fetched version: $FETCHED_VERSION ..."
+          semver validate $FETCHED_VERSION
+
+          echo "result=$(semver compare $LAST_VERSION $FETCHED_VERSION)" >> "$GITHUB_OUTPUT"
+
+      - id: trigger-tests
+        name: Trigger tests if NPM's version was higher than tested version
+        if: ${{ steps.compare-version.outputs.result }} == -1
+        # TODO: implement third-party-test
+        # uses: celo-org/developer-tooling/.github/actions/test-third-party.yml
+        # with:
+        #   lib: ${{ matrix.lib }}
+        run: echo TODO
+
+      - uses: actions/upload-artifact@v4
+        # TODO: Move this to the test flow on success probably?
+        name: Upload version
+        if: ${{ steps.compare-version.outputs.result }} == -1
+        with:
+          name: last-version-${{ matrix.lib }}
+          path: /tmp/fetched-version-${{ matrix.lib }}
