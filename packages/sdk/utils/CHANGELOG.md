@@ -1,5 +1,24 @@
 # @celo/utils
 
+## 8.0.0-beta.0
+
+### Major Changes
+
+- [#228](https://github.com/celo-org/developer-tooling/pull/228) [`4ef76eb`](https://github.com/celo-org/developer-tooling/commit/4ef76eb174454f60304080d0ef63a859cd8d931b) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - remove deprecated functions and consts exported from ./contacts and ./displayformating. ./currencies and ./phonenumbers. If these are used by your app we recommend to inline the functions from the previous release.
+
+  - https://github.com/celo-org/developer-tooling/blob/%40celo/wallet-base%406.0.1/packages/sdk/base/src/contacts.ts
+  - https://github.com/celo-org/developer-tooling/blob/%40celo/wallet-base%406.0.1/packages/sdk/base/src/displayFormatting.ts
+  - https://github.com/celo-org/developer-tooling/blob/%40celo/wallet-base%406.0.1/packages/sdk/base/src/phoneNumbers.ts
+
+  https://github.com/celo-org/developer-tooling/tree/%40celo/wallet-base%406.0.1/packages/sdk/base/src
+
+  Full List of removed exports -- ContactPhoneNumber, MinimalContact, getContactPhoneNumber, isContact, CURRENCY_ENUM, Currency, CURRENCIES, resolveCurrency, SHORT_CURRENCIES, currencyToShortMap | getErrorMessage | anonymizedPhone | getContactNameHash
+
+### Patch Changes
+
+- Updated dependencies [[`4ef76eb`](https://github.com/celo-org/developer-tooling/commit/4ef76eb174454f60304080d0ef63a859cd8d931b)]:
+  - @celo/base@7.0.0-beta.0
+
 ## 7.0.0
 
 ### Major Changes

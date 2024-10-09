@@ -1,6 +1,6 @@
 {
   "name": "@celo/dev-utils",
-  "version": "0.0.5",
+  "version": "0.0.6-beta.0",
   "description": "util package for celo packages that should only be a devDependency",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@celo/abis": "^11.0.0",
-    "@celo/connect": "^6.0.1",
+    "@celo/connect": "^6.0.3-beta.0",
     "@viem/anvil": "^0.0.9",
     "bignumber.js": "^9.0.0",
     "fs-extra": "^8.1.0",

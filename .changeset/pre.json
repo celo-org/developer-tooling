@@ -27,5 +27,12 @@
     "@celo/typescript": "0.0.1",
     "@celo/viem-account-ledger": "0.0.1"
   },
-  "changesets": []
+  "changesets": [
+    "dry-gifts-love",
+    "gold-pumas-fry",
+    "hot-pugs-nail",
+    "moody-falcons-remain",
+    "rude-parrots-know",
+    "thirty-pugs-smile"
+  ]
 }
