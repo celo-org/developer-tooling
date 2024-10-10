@@ -1,4 +1,5 @@
 import {
+  CELO_DERIVATION_PATH_BASE,
   generateKeys,
   generateMnemonic,
   MnemonicLanguages,
@@ -9,6 +10,7 @@ import {
 import { privateKeyToAddress } from '@celo/utils/lib/address'
 import { toChecksumAddress } from '@ethereumjs/util'
 import { Flags } from '@oclif/core'
+import chalk from 'chalk'
 import * as fs from 'fs-extra'
 import { BaseCommand } from '../../base'
 import { printValueMap } from '../../utils/cli'
@@ -67,9 +69,13 @@ export default class NewAccount extends BaseCommand {
     'new --passphrasePath some_folder/my_passphrase_file --mnemonicPath some_folder/my_mnemonic_file --addressIndex 5',
   ]
 
+  async init() {
+    // Dont call super class init because this command does not need to connect to a node
+  }
+
   static languageOptions(language: string): MnemonicLanguages | undefined {
     if (language) {
-      // @ts-ignore
+      // @ts-expect-error
       const enumLanguage = MnemonicLanguages[language]
       return enumLanguage as MnemonicLanguages
     }
@@ -112,7 +118,9 @@ export default class NewAccount extends BaseCommand {
         NewAccount.languageOptions(res.flags.language!)
       )
     }
-    const derivationPath = NewAccount.sanitizeDerivationPath(res.flags.derivationPath)
+    const derivationPath = NewAccount.sanitizeDerivationPath(
+      res.flags.derivationPath ?? CELO_DERIVATION_PATH_BASE
+    )
     const passphrase = NewAccount.readFile(res.flags.passphrasePath)
     const keys = await generateKeys(
       mnemonic,
@@ -123,9 +131,21 @@ export default class NewAccount extends BaseCommand {
       derivationPath
     )
     const accountAddress = toChecksumAddress(privateKeyToAddress(keys.privateKey))
+
+    if (derivationPath === CELO_DERIVATION_PATH_BASE) {
+      this.log(
+        chalk.magenta(
+          `\nUsing celo-legacy path (${CELO_DERIVATION_PATH_BASE}) for derivation. This will be switched to eth derivation path (${ETHEREUM_DERIVATION_PATH}) next major version.\n`
+        )
+      )
+    }
+
+    printValueMap({ mnemonic, derivationPath, accountAddress, ...keys })
+
     this.log(
-      'This is not being stored anywhere. Save the mnemonic somewhere to use this account at a later point.\n'
+      chalk.green.bold(
+        '\nThis is not being stored anywhere. Save the mnemonic somewhere to use this account at a later point.\n'
+      )
     )
-    printValueMap({ mnemonic, accountAddress, ...keys })
   }
 }
