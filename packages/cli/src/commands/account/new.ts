@@ -86,7 +86,7 @@ export default class NewAccount extends BaseCommand {
     if (derivationPath) {
       derivationPath = derivationPath.endsWith('/') ? derivationPath.slice(0, -1) : derivationPath
     }
-    return derivationPath !== 'eth' ? derivationPath : ETHEREUM_DERIVATION_PATH
+    return derivationPath === 'eth' ? ETHEREUM_DERIVATION_PATH : derivationPath
   }
 
   static readFile(file?: string): string | undefined {
