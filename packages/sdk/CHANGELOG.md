@@ -35,7 +35,7 @@ for detail info see [#9127](https://github.com/celo-org/celo-monorepo/pull/9127)
 
   - Removes phone and country related functions from utils. Now in [phone-utils](https://github.com/celo-org/celo-monorepo/pull/8987)
 
-  - comment encryption, bls and mneumonic functions moved to @celo/cryptographic-utils
+  - comment encryption, bls and mnemonic functions moved to @celo/cryptographic-utils
 
 
 Features

@@ -387,7 +387,7 @@ function wordSuggestions(typo: string, language: MnemonicLanguages): Suggestions
     }, new Map<number, string[]>())
 }
 /*
- * @param mneumonic 12 or 12 BIP39 words
+ * @param mnemonic 12 or 12 BIP39 words
  * @param password
  * @param changeIndex postion 4 from https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
  * @param addressIndex postion 5 from https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
@@ -436,7 +436,7 @@ export async function generateSeed(
 }
 
 /*
- * @param seed - Buffer created from mneumonic
+ * @param seed - Buffer created from mnemonic
  * @param changeIndex postion 4 from https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
  * @param addressIndex postion 5 from https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
  * @param derivationPath - This will default to ETH_DERIVATION_PATH in 7.0 forum.celo.org/t/deprecating-the-celo-derivation-path/9229

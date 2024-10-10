@@ -19,7 +19,7 @@ testWithAnvilL2('account:set-name cmd', (web3: Web3) => {
     writeMock.mockClear()
     consoleMock.mockClear()
   })
-  it('generates mneumonic and lets people know which derivation path is being used when called with no flags', async () => {
+  it('generates mnemonic and lets people know which derivation path is being used when called with no flags', async () => {
     await testLocallyWithWeb3Node(NewAccount, [], web3)
 
     expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`
@@ -46,7 +46,7 @@ testWithAnvilL2('account:set-name cmd', (web3: Web3) => {
       address: ADDRESS"
     `)
   })
-  it("when called with --derivationPath eth flag generates mneumonic using m/44'/60'/0'", async () => {
+  it("when called with --derivationPath eth flag generates mnemonic using m/44'/60'/0'", async () => {
     await testLocallyWithWeb3Node(NewAccount, ['--derivationPath', 'eth'], web3)
 
     expect(deRandomize(consoleMock.mock.lastCall?.[0])).toMatchInlineSnapshot(`
@@ -60,20 +60,20 @@ testWithAnvilL2('account:set-name cmd', (web3: Web3) => {
   })
 
   describe('when called with --mnemonicPath', () => {
-    const MNEUMONIC_PATH = path.join(__dirname, 'public_mneumonic')
-    const TEST_MNEUMONIC =
+    const MNEMONIC_PATH = path.join(__dirname, 'public_mnemonic')
+    const TEST_mnemonic =
       'hamster label near volume denial spawn stable orbit trade only crawl learn forest fire test feel bubble found angle also olympic obscure fork venue'
     beforeEach(() => {
-      fs.writeFileSync(MNEUMONIC_PATH, TEST_MNEUMONIC, {
+      fs.writeFileSync(MNEMONIC_PATH, TEST_mnemonic, {
         flag: 'w',
       })
     })
     afterEach(async () => {
-      fs.rmSync(MNEUMONIC_PATH)
+      fs.rmSync(MNEMONIC_PATH)
     })
 
     it('generates using celo derivation path', async () => {
-      await testLocallyWithWeb3Node(NewAccount, [`--mnemonicPath`, MNEUMONIC_PATH], web3)
+      await testLocallyWithWeb3Node(NewAccount, [`--mnemonicPath`, MNEMONIC_PATH], web3)
 
       expect(stripAnsiCodesAndTxHashes(consoleMock.mock.lastCall?.[0])).toMatchInlineSnapshot(`
         "mnemonic: hamster label near volume denial spawn stable orbit trade only crawl learn forest fire test feel bubble found angle also olympic obscure fork venue
@@ -88,7 +88,7 @@ testWithAnvilL2('account:set-name cmd', (web3: Web3) => {
     it("and --derivationPath m/44'/60'/0' generates using eth derivation path", async () => {
       await testLocallyWithWeb3Node(
         NewAccount,
-        [`--mnemonicPath`, MNEUMONIC_PATH, '--derivationPath', "m/44'/60'/0'"],
+        [`--mnemonicPath`, MNEMONIC_PATH, '--derivationPath', "m/44'/60'/0'"],
         web3
       )
 
@@ -104,7 +104,7 @@ testWithAnvilL2('account:set-name cmd', (web3: Web3) => {
     it("and --derivationPath m/44'/60'/0' and --changeIndex generates using eth derivation path", async () => {
       await testLocallyWithWeb3Node(
         NewAccount,
-        [`--mnemonicPath`, MNEUMONIC_PATH, '--derivationPath', 'eth', '--changeIndex', '2'],
+        [`--mnemonicPath`, MNEMONIC_PATH, '--derivationPath', 'eth', '--changeIndex', '2'],
         web3
       )
 
@@ -120,7 +120,7 @@ testWithAnvilL2('account:set-name cmd', (web3: Web3) => {
     it('and --derivationPath eth and --addressIndex generates using eth derivation path', async () => {
       await testLocallyWithWeb3Node(
         NewAccount,
-        [`--mnemonicPath`, MNEUMONIC_PATH, '--derivationPath', 'eth', '--addressIndex', '3'],
+        [`--mnemonicPath`, MNEMONIC_PATH, '--derivationPath', 'eth', '--addressIndex', '3'],
         web3
       )
 
