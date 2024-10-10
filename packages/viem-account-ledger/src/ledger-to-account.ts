@@ -7,12 +7,21 @@ import { CeloTransactionSerializable, serializeTransaction } from 'viem/celo'
 
 import { checkForKnownToken, generateLedger } from './utils.js'
 
-type LedgerAccount = LocalAccount<'ledger'>
+export type LedgerAccount = LocalAccount<'ledger'>
 
 export const ETH_DERIVATION_PATH_BASE = "m/44'/60'/0'" as const
 export const CELO_BASE_DERIVATION_PATH = `${CELO_DERIVATION_PATH_BASE.slice(2)}/0`
 export const DEFAULT_DERIVATION_PATH = `${ETH_DERIVATION_PATH_BASE.slice(2)}/0`
 
+/**
+ * A function to create a ledger account for viem
+ * @param options
+ * @param options.transport a Ledger Transport
+ * @param options.derivationPathIndex aka addressIndex
+ * @param options.baseDerivationPath defaults to "m/44'/60'/0"
+ *
+ * @returns a viem LocalAccount<"ledger">
+ */
 export async function ledgerToAccount({
   transport,
   derivationPathIndex = 0,

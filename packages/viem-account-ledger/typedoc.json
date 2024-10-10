@@ -5,8 +5,9 @@
   "hideGenerator": true,
   "out": "../docs/viem-account-ledger",
   "gitRevision": "master",
-  "readme": "none",
-  "entryPoints": ["./src"],
+  "readme": "./README.md",
+  "entryPoints": ["./src/index.ts", "./src/ledger-to-account.ts"],
+  "excludeInternal": true,
   "githubPages": false,
   "plugin": ["typedoc-plugin-markdown"],
   "entryPointStrategy": "expand"
