@@ -1,4 +1,5 @@
 import {
+  CELO_DERIVATION_PATH_BASE,
   generateKeys,
   generateMnemonic,
   MnemonicLanguages,
@@ -9,6 +10,7 @@ import {
 import { privateKeyToAddress } from '@celo/utils/lib/address'
 import { toChecksumAddress } from '@ethereumjs/util'
 import { Flags } from '@oclif/core'
+import chalk from 'chalk'
 import * as fs from 'fs-extra'
 import { BaseCommand } from '../../base'
 import { printValueMap } from '../../utils/cli'
@@ -17,7 +19,8 @@ const ETHEREUM_DERIVATION_PATH = "m/44'/60'/0'"
 
 export default class NewAccount extends BaseCommand {
   static description =
-    "Creates a new account locally using the Celo Derivation Path (m/44'/52752'/0/changeIndex/addressIndex) and print out the key information. Save this information for local transaction signing or import into a Celo node. Ledger: this command has been tested swapping mnemonics with the Ledger successfully (only supports english)"
+    "Creates a new account locally using the Celo Derivation Path (m/44'/52752'/0/changeIndex/addressIndex) and print out the key information. Save this information for local transaction signing or import into a Celo node. Ledger: this command has been tested swapping mnemonics with the Ledger successfully (only supports english)" +
+    "\n\nWARN: In 7.0 the default derivation path will be Eth (\"m/44'/60'/0'\") forum.celo.org/t/deprecating-the-celo-derivation-path/9229"
 
   static flags = {
     ...BaseCommand.flags,
@@ -66,9 +69,13 @@ export default class NewAccount extends BaseCommand {
     'new --passphrasePath some_folder/my_passphrase_file --mnemonicPath some_folder/my_mnemonic_file --addressIndex 5',
   ]
 
+  async init() {
+    // Dont call super class init because this command does not need to connect to a node
+  }
+
   static languageOptions(language: string): MnemonicLanguages | undefined {
     if (language) {
-      // @ts-ignore
+      // @ts-expect-error
       const enumLanguage = MnemonicLanguages[language]
       return enumLanguage as MnemonicLanguages
     }
@@ -79,7 +86,7 @@ export default class NewAccount extends BaseCommand {
     if (derivationPath) {
       derivationPath = derivationPath.endsWith('/') ? derivationPath.slice(0, -1) : derivationPath
     }
-    return derivationPath !== 'eth' ? derivationPath : ETHEREUM_DERIVATION_PATH
+    return derivationPath === 'eth' ? ETHEREUM_DERIVATION_PATH : derivationPath
   }
 
   static readFile(file?: string): string | undefined {
@@ -111,7 +118,9 @@ export default class NewAccount extends BaseCommand {
         NewAccount.languageOptions(res.flags.language!)
       )
     }
-    const derivationPath = NewAccount.sanitizeDerivationPath(res.flags.derivationPath)
+    const derivationPath = NewAccount.sanitizeDerivationPath(
+      res.flags.derivationPath ?? CELO_DERIVATION_PATH_BASE
+    )
     const passphrase = NewAccount.readFile(res.flags.passphrasePath)
     const keys = await generateKeys(
       mnemonic,
@@ -122,9 +131,21 @@ export default class NewAccount extends BaseCommand {
       derivationPath
     )
     const accountAddress = toChecksumAddress(privateKeyToAddress(keys.privateKey))
+
+    if (derivationPath === CELO_DERIVATION_PATH_BASE) {
+      this.log(
+        chalk.magenta(
+          `\nUsing celo-legacy path (${CELO_DERIVATION_PATH_BASE}) for derivation. This will be switched to eth derivation path (${ETHEREUM_DERIVATION_PATH}) next major version.\n`
+        )
+      )
+    }
+
+    printValueMap({ mnemonic, derivationPath, accountAddress, ...keys })
+
     this.log(
-      'This is not being stored anywhere. Save the mnemonic somewhere to use this account at a later point.\n'
+      chalk.green.bold(
+        '\nThis is not being stored anywhere. Save the mnemonic somewhere to use this account at a later point.\n'
+      )
     )
-    printValueMap({ mnemonic, accountAddress, ...keys })
   }
 }
