@@ -1,7 +1,7 @@
 import { StrongAddress } from '@celo/base'
 import { FeeCurrencyInformation } from '@celo/contractkit/lib/wrappers/AbstractFeeCurrencyWrapper'
-import { createPublicClient, http, HttpTransport, PublicClient } from 'viem'
-import { celo } from 'viem/chains'
+import { createPublicClient, extractChain, http, HttpTransport, PublicClient } from 'viem'
+import { celo, celoAlfajores } from 'viem/chains'
 import { CeloCommand } from './celo'
 import { ContractAddressResolver, ViemAddressResolver } from './packages-to-be/address-resolver'
 import { FeeCurrencyProvider, ViemFeeCurrencyProvider } from './packages-to-be/fee-currency'
@@ -19,9 +19,9 @@ export abstract class ViemCommand extends CeloCommand {
     const res = await this.parse()
 
     if (res.flags.useLedger) {
-      // use viem-account-ledger
+      // TODO use viem-account-ledger
     } else {
-      // use WalletClient?
+      // TODO instantiate local wallet client
     }
 
     if (res.flags.from) {
@@ -29,12 +29,24 @@ export abstract class ViemCommand extends CeloCommand {
     }
   }
 
+  // TODO possibly create wallet client and extend it with public actions
   protected async getPublicClient(): Promise<PublicClient<HttpTransport, typeof celo>> {
     if (!this.publicClient) {
-      this.publicClient = createPublicClient({
-        transport: http(await this.getNodeUrl()),
-        chain: celo,
+      const nodeUrl = await this.getNodeUrl()
+      const transport = http(nodeUrl)
+      // Create an intermediate client to get the chain id
+      const intermediateClient = createPublicClient({
+        transport,
       })
+      const extractedChain = extractChain({
+        chains: [celo, celoAlfajores],
+        id: (await intermediateClient.getChainId()) as 42220 | 44787,
+      })
+
+      this.publicClient = createPublicClient({
+        transport,
+        chain: extractedChain ?? celo,
+      }) as PublicClient<HttpTransport, typeof celo>
     }
 
     return this.publicClient
