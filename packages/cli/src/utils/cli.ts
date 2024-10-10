@@ -112,7 +112,12 @@ function toStringValueMapRecursive(valueMap: Record<string, any>, prefix: string
         return '\n' + chalk.red(v.message)
       }
       return '\n' + toStringValueMapRecursive(v, prefix + '  ')
+    } else if (typeof v === 'bigint') {
+      const extra = v > 1000n ? `(~${Number(v).toExponential(3)})` : ''
+
+      return `${v} ${extra}`
     }
+
     return chalk`${v}`
   }
   return Object.keys(valueMap)
