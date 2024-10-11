@@ -700,7 +700,9 @@ describe('LedgerWallet class', () => {
             test(
               'succeeds',
               async () => {
-                await expect(wallet.signTransaction(celoTransaction)).resolves.not.toBeUndefined()
+                jest
+                  .spyOn(wallet.ledger!, 'provideERC20TokenInformation')
+                  .mockImplementationOnce(async () => true)
                 await expect(wallet.signTransaction(celoTransaction)).resolves
                   .toMatchInlineSnapshot(`
                   {

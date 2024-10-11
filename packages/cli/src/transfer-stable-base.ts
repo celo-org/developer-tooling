@@ -103,6 +103,7 @@ export abstract class TransferStableBase extends BaseCommand {
           }
           return valueBalance.gte(value.plus(gasValue))
         },
+        `Cannot afford to transfer ${this._stableCurrency} with ${res.flags.gasCurrency} gasCurrency; try reducing value slightly or using gasCurrency=CELO`
       )
       .runChecks()
 
