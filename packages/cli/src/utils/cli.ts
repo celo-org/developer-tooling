@@ -116,6 +116,9 @@ function toStringValueMapRecursive(valueMap: Record<string, any>, prefix: string
       const extra = v > 1000n ? `(~${Number(v).toExponential(3)})` : ''
 
       return `${v} ${extra}`
+    } else if (typeof v === 'number') {
+      // TEMP (?) to avoid missing space in the output
+      return `${v} `
     }
 
     return chalk`${v}`

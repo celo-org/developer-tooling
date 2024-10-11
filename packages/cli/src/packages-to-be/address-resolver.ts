@@ -30,6 +30,6 @@ export class ViemAddressResolver implements ContractAddressResolver {
       return address
     }
 
-    throw new Error(`Contract ${contractName} not found in the registry`)
+    throw new Error(`${contractName} not (yet) registered`)
   }
 }
