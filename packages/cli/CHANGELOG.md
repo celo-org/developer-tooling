@@ -1,5 +1,18 @@
 # Changelog
 
+## 5.2.2
+
+### Patch Changes
+
+- [#396](https://github.com/celo-org/developer-tooling/pull/396) [`d58929c`](https://github.com/celo-org/developer-tooling/commit/d58929c5160b334cb91b109645381aa49fa76011) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Fix incorrect message where the transfered token was used as gas token in the messaging but not in actuality
+
+- [#396](https://github.com/celo-org/developer-tooling/pull/396) [`d58929c`](https://github.com/celo-org/developer-tooling/commit/d58929c5160b334cb91b109645381aa49fa76011) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Fix Transfering, exchanging cusd (and other fee tokens) and or using gasCurrency flag with ledger devices prior to 1.2
+
+- Updated dependencies [[`d58929c`](https://github.com/celo-org/developer-tooling/commit/d58929c5160b334cb91b109645381aa49fa76011)]:
+  - @celo/wallet-ledger@6.0.2
+  - @celo/wallet-hsm-azure@6.0.2
+  - @celo/wallet-local@6.0.2
+
 ## 5.2.1
 
 ### Patch Changes
