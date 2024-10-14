@@ -1,5 +1,39 @@
 # Changelog
 
+## 6.0.0-beta.0
+
+### Major Changes
+
+- [#339](https://github.com/celo-org/developer-tooling/pull/339) [`87223ba`](https://github.com/celo-org/developer-tooling/commit/87223ba93ab79f43ae6884282d30a420eb09c23c) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Remove support for reserve:\* commands. As foretold by https://forum.celo.org/t/sunset-of-reserve-commands/8454
+
+- [#343](https://github.com/celo-org/developer-tooling/pull/343) [`54741cc`](https://github.com/celo-org/developer-tooling/commit/54741cc01ef0a6716bdd45a955ac65c7ecced6c1) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Remove commands identity:identifier, identity:get-attestations
+
+  See https://forum.celo.org/t/rfc-deprecation-of-celocli-identity-commands/8676
+
+### Patch Changes
+
+- [#389](https://github.com/celo-org/developer-tooling/pull/389) [`5a0a922`](https://github.com/celo-org/developer-tooling/commit/5a0a922f4965336849b33d5f90234766db55b2e5) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Add warning that ETH derivation path will be the default in a future major breaking change.
+
+- [#395](https://github.com/celo-org/developer-tooling/pull/395) [`693f6e7`](https://github.com/celo-org/developer-tooling/commit/693f6e7d2fe3034b6d7a3bc4a9719e76229d1981) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Fix incorrect message where the transfered token was used as gas token in the messaging but not in actuality
+
+- [#395](https://github.com/celo-org/developer-tooling/pull/395) [`693f6e7`](https://github.com/celo-org/developer-tooling/commit/693f6e7d2fe3034b6d7a3bc4a9719e76229d1981) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Fix Transfering, exchanging cusd (and other fee tokens) and or using gasCurrency flag with ledger devices prior to 1.2
+
+- [#389](https://github.com/celo-org/developer-tooling/pull/389) [`5a0a922`](https://github.com/celo-org/developer-tooling/commit/5a0a922f4965336849b33d5f90234766db55b2e5) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Fix: account:new can now be called without a node
+
+- Updated dependencies [[`693f6e7`](https://github.com/celo-org/developer-tooling/commit/693f6e7d2fe3034b6d7a3bc4a9719e76229d1981), [`5a0a922`](https://github.com/celo-org/developer-tooling/commit/5a0a922f4965336849b33d5f90234766db55b2e5), [`33ad4aa`](https://github.com/celo-org/developer-tooling/commit/33ad4aaf6b9edc33d1ce19833dbea626798cfb88), [`4ef76eb`](https://github.com/celo-org/developer-tooling/commit/4ef76eb174454f60304080d0ef63a859cd8d931b), [`33ad4aa`](https://github.com/celo-org/developer-tooling/commit/33ad4aaf6b9edc33d1ce19833dbea626798cfb88)]:
+  - @celo/wallet-ledger@6.0.2-beta.0
+  - @celo/cryptographic-utils@5.1.1-beta.0
+  - @celo/contractkit@9.0.0-beta.0
+  - @celo/base@7.0.0-beta.0
+  - @celo/utils@8.0.0-beta.0
+  - @celo/metadata-claims@1.0.0-beta.0
+  - @celo/explorer@5.0.13-beta.0
+  - @celo/governance@5.1.4-beta.0
+  - @celo/connect@6.0.3-beta.0
+  - @celo/phone-utils@6.0.4-beta.0
+  - @celo/wallet-hsm-azure@6.0.2-beta.0
+  - @celo/wallet-local@6.0.2-beta.0
+
 ## 5.2.1
 
 ### Patch Changes

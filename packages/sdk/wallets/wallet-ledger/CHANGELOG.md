@@ -1,5 +1,18 @@
 # @celo/wallet-ledger
 
+## 6.0.2-beta.0
+
+### Patch Changes
+
+- [#395](https://github.com/celo-org/developer-tooling/pull/395) [`693f6e7`](https://github.com/celo-org/developer-tooling/commit/693f6e7d2fe3034b6d7a3bc4a9719e76229d1981) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Fix issue where ledger running celo firmware app 1.1.10 could not send fee token transactions or perform and interactions with those contracts
+
+- Updated dependencies [[`4ef76eb`](https://github.com/celo-org/developer-tooling/commit/4ef76eb174454f60304080d0ef63a859cd8d931b)]:
+  - @celo/base@7.0.0-beta.0
+  - @celo/utils@8.0.0-beta.0
+  - @celo/connect@6.0.3-beta.0
+  - @celo/wallet-base@6.0.2-beta.0
+  - @celo/wallet-remote@6.0.2-beta.0
+
 ## 6.0.1
 
 ### Patch Changes
