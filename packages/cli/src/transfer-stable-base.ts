@@ -79,7 +79,7 @@ export abstract class TransferStableBase extends BaseCommand {
       .isNotSanctioned(from)
       .isNotSanctioned(to)
       .addCheck(
-        `Account can afford transfer in ${this._stableCurrency} and gas paid in ${
+        `Account can afford to transfer ${this._stableCurrency} and gas paid in ${
           res.flags.gasCurrency || 'CELO'
         }`,
         async () => {
@@ -103,7 +103,9 @@ export abstract class TransferStableBase extends BaseCommand {
           }
           return valueBalance.gte(value.plus(gasValue))
         },
-        `Cannot afford transfer with ${this._stableCurrency} gasCurrency; try reducing value slightly or using gasCurrency=CELO`
+        `Cannot afford to transfer ${this._stableCurrency} ${
+          res.flags.gasCurrency ? 'with' + ' ' + res.flags.gasCurrency + ' ' + 'gasCurrency' : ''
+        }; try reducing value slightly or using a different gasCurrency`
       )
       .runChecks()
 
