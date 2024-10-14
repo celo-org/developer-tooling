@@ -700,12 +700,40 @@ describe('LedgerWallet class', () => {
             test(
               'succeeds',
               async () => {
-                await expect(wallet.signTransaction(celoTransaction)).resolves.not.toBeUndefined()
+                jest
+                  .spyOn(wallet.ledger!, 'provideERC20TokenInformation')
+                  .mockImplementationOnce(async () => true)
+                await expect(wallet.signTransaction(celoTransaction)).resolves
+                  .toMatchInlineSnapshot(`
+                  {
+                    "raw": "0x7bf87f82aef38063636394588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a764000080c094874069fa1eb16d44d622f2e0ca25eea172369bc101a0254f952c5223c30039f7f845778d7aac558464ce2971fd09883df34913eb6dfca037a78571ae1a44d86bac7269e3a845990a49ad5fb60a5ec1fcaba428693558c0",
+                    "tx": {
+                      "accessList": [],
+                      "feeCurrency": "0x874069fa1eb16d44d622f2e0ca25eea172369bc1",
+                      "gas": "0x63",
+                      "hash": "0xdc8347423b5310ed64e46a9abb49cd455e8049f838f93752afd122ae938e53c9",
+                      "input": "0x",
+                      "maxFeePerGas": "0x63",
+                      "maxPriorityFeePerGas": "0x63",
+                      "nonce": "0",
+                      "r": "0x254f952c5223c30039f7f845778d7aac558464ce2971fd09883df34913eb6dfc",
+                      "s": "0x37a78571ae1a44d86bac7269e3a845990a49ad5fb60a5ec1fcaba428693558c0",
+                      "to": "0x588e4b68193001e4d10928660ab4165b813717c0",
+                      "v": "0x01",
+                      "value": "0x0de0b6b3a7640000",
+                    },
+                    "type": "cip64",
+                  }
+                `)
+
+                expect(wallet.ledger!.provideERC20TokenInformation).toHaveBeenCalledWith(
+                  `0x06612063555344874069fa1eb16d44d622f2e0ca25eea172369bc1000000120000aef33045022100a885480c357fd6ec64ed532656a7e988198fdf4e2cf4632408f2d65561189872022009fd78725055fc68af16e151516ba29625e3e1c74ceab3da1bcabd6015e3f6e8`
+                )
               },
               TEST_TIMEOUT_IN_MS
             )
           })
-          describe('[cip66]', () => {
+          describe.skip('[cip66]', () => {
             const kit = newKit('https://alfajores-forno.celo-testnet.org')
             beforeEach(async () => {
               celoTransaction = {

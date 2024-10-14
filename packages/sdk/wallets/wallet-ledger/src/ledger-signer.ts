@@ -174,7 +174,7 @@ export class LedgerSigner implements Signer {
 
       const tokenInfo = getTokenInfo(rlpEncoded.transaction.to!, rlpEncoded.transaction.chainId!)
       if (tokenInfo) {
-        await this.ledger!.provideERC20TokenInformation(`0x${tokenInfo.data.toString('hex')}`)
+        await this.provideERC20TokenInformation(tokenInfo.data)
       }
       if (rlpEncoded.transaction.feeCurrency && rlpEncoded.transaction.feeCurrency !== '0x') {
         const feeTokenInfo = getTokenInfo(
@@ -182,7 +182,7 @@ export class LedgerSigner implements Signer {
           rlpEncoded.transaction.chainId!
         )
         if (feeTokenInfo) {
-          await this.ledger!.provideERC20TokenInformation(feeTokenInfo.data.toString('hex'))
+          await this.provideERC20TokenInformation(feeTokenInfo.data)
         }
       }
     }
@@ -197,5 +197,18 @@ export class LedgerSigner implements Signer {
   computeSharedSecret(_publicKey: string) {
     throw new Error('Not implemented')
     return Promise.resolve(Buffer.from([]))
+  }
+
+  private provideERC20TokenInformation(tokenInfoData: Buffer) {
+    // it looks like legacy might need it WITHOUT 0x prefix
+    const isModern = meetsVersionRequirements(this.appConfiguration.version, {
+      minimum: LedgerWallet.MIN_VERSION_EIP1559,
+    })
+
+    const hexStringTokenInfo = isModern
+      ? ensureLeading0x(tokenInfoData.toString('hex'))
+      : trimLeading0x(tokenInfoData.toString('hex'))
+
+    return this.ledger!.provideERC20TokenInformation(hexStringTokenInfo)
   }
 }
