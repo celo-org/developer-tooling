@@ -3,9 +3,8 @@ name: Release Packages
 on:
   push:
     branches:
-      - main
       - master
-      - 'prerelease/*'
+      - hotfixes
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
