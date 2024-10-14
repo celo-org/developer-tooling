@@ -205,8 +205,10 @@ export class LedgerSigner implements Signer {
       minimum: LedgerWallet.MIN_VERSION_EIP1559,
     })
 
-    return this.ledger!.provideERC20TokenInformation(
-      `${isModern ? '0x' : ''}${tokenInfoData.toString('hex')}`
-    )
+    const hexStringTokenInfo = isModern
+      ? ensureLeading0x(tokenInfoData.toString('hex'))
+      : trimLeading0x(tokenInfoData.toString('hex'))
+
+    return this.ledger!.provideERC20TokenInformation(hexStringTokenInfo)
   }
 }
