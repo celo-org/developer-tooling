@@ -24,7 +24,7 @@ testWithAnvilL1('network:parameters', (web3: Web3) => {
           reward: 10000000000000000000 (~1.000e+19)
       Election: 
         currentThreshold: 60000000000000000000 (~6.000e+19)
-        electabilityThreshold: 0.001 
+        electabilityThreshold: 0.001
         electableValidators: 
           max: 100 
           min: 1 
@@ -32,31 +32,31 @@ testWithAnvilL1('network:parameters', (web3: Web3) => {
         totalVotes: 60000000000000000000000 (~6.000e+22)
       EpochRewards: 
         carbonOffsetting: 
-          factor: 0.001 
+          factor: 0.001
           partner: 0xD533Ca259b330c7A88f74E000a3FaEa2d63B7972
-        communityReward: 0.25 
+        communityReward: 0.25
         rewardsMultiplier: 
-          max: 2 
-          overspendAdjustment: 5 
-          underspendAdjustment: 0.5 
+          max: 2
+          overspendAdjustment: 5
+          underspendAdjustment: 0.5
         targetValidatorEpochPayment: 205479452054794520547 (~2.055e+20)
         targetVotingYield: 
-          adjustment: 0 
-          max: 0.0005 
-          target: 0.00016 
+          adjustment: 0
+          max: 0.0005
+          target: 0.00016
       GasPriceMinimum: 
-        adjustmentSpeed: 0.5 
+        adjustmentSpeed: 0.5
         gasPriceMinimum: 100000000 (~1.000e+8)
-        targetDensity: 0.5 
+        targetDensity: 0.5
       Governance: 
         concurrentProposals: 3 
         dequeueFrequency: 4 hours
         minDeposit: 100000000000000000000 (~1.000e+20)
         participationParameters: 
-          baseline: 0.005 
-          baselineFloor: 0.01 
-          baselineQuorumFactor: 1 
-          baselineUpdateFactor: 0.2 
+          baseline: 0.005
+          baselineFloor: 0.01
+          baselineQuorumFactor: 1
+          baselineUpdateFactor: 0.2
         queueExpiry: 4 weeks
         stageDurations: 
           Execution: 1 week

@@ -85,6 +85,7 @@ export default class Parameters extends ViemCommand {
   private async getConfigPromises(humanReadable: boolean): Promise<Record<string, Promise<any>>> {
     if (await this.isCel2()) {
       return {
+        [CeloContract.DowntimeSlasher]: this.getDowntimeSlasherConfig(humanReadable),
         [CeloContract.Election]: this.getElectionConfig(humanReadable),
         [CeloContract.Governance]: this.getGovernanceConfig(humanReadable),
         [CeloContract.LockedGold]: this.getLockedGoldConfig(humanReadable),
@@ -122,31 +123,30 @@ export default class Parameters extends ViemCommand {
       address: await addressResolver.resolve(CeloContract.DowntimeSlasher),
     }
 
-    const results = await client.multicall({
-      contracts: [
-        {
-          ...contractCallBase,
-          functionName: 'slashableDowntime',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'slashingIncentives',
-        },
-      ],
-    })
+    try {
+      const results = await client.multicall({
+        allowFailure: false,
+        contracts: [
+          {
+            ...contractCallBase,
+            functionName: 'slashableDowntime',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'slashingIncentives',
+          },
+        ],
+      })
 
-    if (results[0].status === 'failure' || results[1].status === 'failure') {
+      return {
+        slashableDowntime: humanReadable ? blocksToDurationString(results[0]) : results[0],
+        slashingIncentives: {
+          penalty: results[1][0],
+          reward: results[1][1],
+        },
+      }
+    } catch (_) {
       throw new Error('Failed to fetch DowntimeSlasher parameters')
-    }
-
-    return {
-      slashableDowntime: humanReadable
-        ? blocksToDurationString(results[0].result)
-        : results[0].result,
-      slashingIncentives: {
-        penalty: results[1].result[0],
-        reward: results[1].result[1],
-      },
     }
   }
 
@@ -159,45 +159,41 @@ export default class Parameters extends ViemCommand {
       address: await addressResolver.resolve(CeloContract.Election),
     }
 
-    const results = await client.multicall({
-      contracts: [
-        {
-          ...contractCallBase,
-          functionName: 'electableValidators',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'electabilityThreshold',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'maxNumGroupsVotedFor',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'getTotalVotes',
-        },
-      ],
-    })
+    try {
+      const results = await client.multicall({
+        allowFailure: false,
+        contracts: [
+          {
+            ...contractCallBase,
+            functionName: 'electableValidators',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'electabilityThreshold',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'maxNumGroupsVotedFor',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'getTotalVotes',
+          },
+        ],
+      })
 
-    if (
-      results[0].status === 'failure' ||
-      results[1].status === 'failure' ||
-      results[2].status === 'failure' ||
-      results[3].status === 'failure'
-    ) {
+      return {
+        electableValidators: {
+          min: results[0][0],
+          max: results[0][1],
+        },
+        electabilityThreshold: fromFixidityValueToFraction(results[1]),
+        maxNumGroupsVotedFor: results[2],
+        totalVotes: results[3],
+        currentThreshold: multiplyByFixidityFraction(results[3], results[1]),
+      }
+    } catch (_) {
       throw new Error('Failed to fetch Election parameters')
-    }
-
-    return {
-      electableValidators: {
-        min: results[0].result[0],
-        max: results[0].result[1],
-      },
-      electabilityThreshold: fromFixidityValueToFraction(results[1].result!),
-      maxNumGroupsVotedFor: results[2].result!,
-      totalVotes: results[3].result!,
-      currentThreshold: multiplyByFixidityFraction(results[3].result, results[1].result),
     }
   }
 
@@ -210,68 +206,55 @@ export default class Parameters extends ViemCommand {
       address: await addressResolver.resolve(CeloContract.Governance),
     }
 
-    const results = await client.multicall({
-      contracts: [
-        {
-          ...contractCallBase,
-          functionName: 'concurrentProposals',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'dequeueFrequency',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'minDeposit',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'queueExpiry',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'stageDurations',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'getParticipationParameters',
-        },
-      ],
-    })
+    try {
+      const results = await client.multicall({
+        allowFailure: false,
+        contracts: [
+          {
+            ...contractCallBase,
+            functionName: 'concurrentProposals',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'dequeueFrequency',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'minDeposit',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'queueExpiry',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'stageDurations',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'getParticipationParameters',
+          },
+        ],
+      })
 
-    if (
-      results[0].status === 'failure' ||
-      results[1].status === 'failure' ||
-      results[2].status === 'failure' ||
-      results[3].status === 'failure' ||
-      results[4].status === 'failure' ||
-      results[5].status === 'failure'
-    ) {
+      return {
+        concurrentProposals: results[0],
+        dequeueFrequency: humanReadable ? secondsToDurationString(results[1]) : results[1],
+        minDeposit: results[2],
+        queueExpiry: humanReadable ? secondsToDurationString(results[3]) : results[3],
+        stageDurations: {
+          Referendum: humanReadable ? secondsToDurationString(results[4][1]) : results[4][1],
+          Execution: humanReadable ? secondsToDurationString(results[4][2]) : results[4][2],
+        },
+        participationParameters: {
+          baseline: fromFixidityValueToFraction(results[5][0]),
+          baselineFloor: fromFixidityValueToFraction(results[5][1]),
+          baselineUpdateFactor: fromFixidityValueToFraction(results[5][2]),
+          baselineQuorumFactor: fromFixidityValueToFraction(results[5][3]),
+        },
+      }
+    } catch (_) {
       throw new Error('Failed to fetch Governance parameters')
-    }
-
-    // TODO it doesn't work as it should, fix it
-    return {
-      concurrentProposals: results[0].result,
-      dequeueFrequency: humanReadable
-        ? blocksToDurationString(results[1].result)
-        : results[1].result,
-      minDeposit: results[2].result,
-      queueExpiry: humanReadable ? blocksToDurationString(results[3].result) : results[3].result,
-      stageDurations: {
-        Referendum: humanReadable
-          ? blocksToDurationString(results[4].result[1])
-          : results[4].result[1],
-        Execution: humanReadable
-          ? blocksToDurationString(results[4].result[2])
-          : results[4].result[2],
-      },
-      participationParameters: {
-        baseline: fromFixidityValueToFraction(results[5].result[0]),
-        baselineFloor: fromFixidityValueToFraction(results[5].result[1]),
-        baselineUpdateFactor: fromFixidityValueToFraction(results[5].result[2]),
-        baselineQuorumFactor: fromFixidityValueToFraction(results[5].result[3]),
-      },
     }
   }
 
@@ -284,28 +267,27 @@ export default class Parameters extends ViemCommand {
       address: await addressResolver.resolve(CeloContract.LockedGold),
     }
 
-    const results = await client.multicall({
-      contracts: [
-        {
-          ...contractCallBase,
-          functionName: 'getTotalLockedGold',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'unlockingPeriod',
-        },
-      ],
-    })
+    try {
+      const results = await client.multicall({
+        allowFailure: false,
+        contracts: [
+          {
+            ...contractCallBase,
+            functionName: 'getTotalLockedGold',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'unlockingPeriod',
+          },
+        ],
+      })
 
-    if (results[0].status === 'failure' || results[1].status === 'failure') {
+      return {
+        totalLockedGold: results[0],
+        unlockingPeriod: humanReadable ? secondsToDurationString(results[1]) : results[1],
+      }
+    } catch (_) {
       throw new Error('Failed to fetch LockedGold parameters')
-    }
-
-    return {
-      totalLockedGold: results[0].result,
-      unlockingPeriod: humanReadable
-        ? secondsToDurationString(results[1].result)
-        : results[1].result,
     }
   }
 
@@ -318,23 +300,22 @@ export default class Parameters extends ViemCommand {
       address: await addressResolver.resolve(CeloContract.SortedOracles),
     }
 
-    const results = await client.multicall({
-      contracts: [
-        {
-          ...contractCallBase,
-          functionName: 'reportExpirySeconds',
-        },
-      ],
-    })
+    try {
+      const results = await client.multicall({
+        allowFailure: false,
+        contracts: [
+          {
+            ...contractCallBase,
+            functionName: 'reportExpirySeconds',
+          },
+        ],
+      })
 
-    if (results[0].status === 'failure') {
+      return {
+        reportExpiry: humanReadable ? secondsToDurationString(results[0]) : results[0],
+      }
+    } catch (_) {
       throw new Error('Failed to fetch SortedOracles parameters')
-    }
-
-    return {
-      reportExpirySeconds: humanReadable
-        ? secondsToDurationString(results[0].result)
-        : results[0].result,
     }
   }
 
@@ -347,47 +328,42 @@ export default class Parameters extends ViemCommand {
       address: await addressResolver.resolve(CeloContract.Reserve),
     }
 
-    const results = await client.multicall({
-      contracts: [
-        {
-          ...contractCallBase,
-          functionName: 'tobinTaxStalenessThreshold',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'frozenReserveGoldStartBalance',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'frozenReserveGoldStartDay',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'frozenReserveGoldDays',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'getOtherReserveAddresses',
-        },
-      ],
-    })
+    try {
+      const results = await client.multicall({
+        allowFailure: false,
+        contracts: [
+          {
+            ...contractCallBase,
+            functionName: 'tobinTaxStalenessThreshold',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'frozenReserveGoldStartBalance',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'frozenReserveGoldStartDay',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'frozenReserveGoldDays',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'getOtherReserveAddresses',
+          },
+        ],
+      })
 
-    if (
-      results[0].status === 'failure' ||
-      results[1].status === 'failure' ||
-      results[2].status === 'failure' ||
-      results[3].status === 'failure' ||
-      results[4].status === 'failure'
-    ) {
+      return {
+        tobinTaxStalenessThreshold: results[0],
+        frozenReserveGoldStartBalance: results[1],
+        frozenReserveGoldStartDay: results[2],
+        frozenReserveGoldDays: results[3],
+        otherReserveAddresses: results[4] as string[],
+      }
+    } catch (_) {
       throw new Error('Failed to fetch Reserve parameters')
-    }
-
-    return {
-      tobinTaxStalenessThreshold: results[0].result,
-      frozenReserveGoldStartBalance: results[1].result,
-      frozenReserveGoldStartDay: results[2].result,
-      frozenReserveGoldDays: results[3].result,
-      otherReserveAddresses: results[4].result as string[],
     }
   }
 
@@ -400,73 +376,60 @@ export default class Parameters extends ViemCommand {
       address: await addressResolver.resolve(CeloContract.Validators),
     }
 
-    const results = await client.multicall({
-      contracts: [
-        {
-          ...contractCallBase,
-          functionName: 'getValidatorLockedGoldRequirements',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'getGroupLockedGoldRequirements',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'maxGroupSize',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'membershipHistoryLength',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'slashingMultiplierResetPeriod',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'commissionUpdateDelay',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'downtimeGracePeriod',
-        },
-      ],
-    })
+    try {
+      const results = await client.multicall({
+        allowFailure: false,
+        contracts: [
+          {
+            ...contractCallBase,
+            functionName: 'getValidatorLockedGoldRequirements',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'getGroupLockedGoldRequirements',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'maxGroupSize',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'membershipHistoryLength',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'slashingMultiplierResetPeriod',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'commissionUpdateDelay',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'downtimeGracePeriod',
+          },
+        ],
+      })
 
-    if (
-      results[0].status === 'failure' ||
-      results[1].status === 'failure' ||
-      results[2].status === 'failure' ||
-      results[3].status === 'failure' ||
-      results[4].status === 'failure' ||
-      results[5].status === 'failure' ||
-      results[6].status === 'failure'
-    ) {
+      return {
+        validatorLockedGoldRequirements: {
+          value: results[0][0],
+          duration: humanReadable ? secondsToDurationString(results[0][1]) : results[0][1],
+        },
+        groupLockedGoldRequirements: {
+          value: results[1][0],
+          duration: humanReadable ? secondsToDurationString(results[1][1]) : results[1][1],
+        },
+        maxGroupSize: results[2],
+        membershipHistoryLength: results[3],
+        slashingMultiplierResetPeriod: humanReadable
+          ? secondsToDurationString(results[4])
+          : results[4],
+        commissionUpdateDelay: humanReadable ? blocksToDurationString(results[5]) : results[5],
+        downtimeGracePeriod: results[6],
+      }
+    } catch (err) {
       throw new Error('Failed to fetch Validators parameters')
-    }
-
-    return {
-      validatorLockedGoldRequirements: {
-        value: results[0].result[0],
-        duration: humanReadable
-          ? secondsToDurationString(results[0].result[1])
-          : results[0].result[1],
-      },
-      groupLockedGoldRequirements: {
-        value: results[1].result[0],
-        duration: humanReadable
-          ? secondsToDurationString(results[1].result[1])
-          : results[1].result[1],
-      },
-      maxGroupSize: results[2].result,
-      membershipHistoryLength: results[3].result,
-      slashingMultiplierResetPeriod: humanReadable
-        ? secondsToDurationString(results[4].result)
-        : results[4].result,
-      commissionUpdateDelay: humanReadable
-        ? blocksToDurationString(results[5].result)
-        : results[5].result,
-      downtimeGracePeriod: results[6].result,
     }
   }
 
@@ -484,23 +447,23 @@ export default class Parameters extends ViemCommand {
     })
 
     const results = await client.multicall({
+      allowFailure: false,
       contracts: addresses.map((address) => ({
         abi: feeCurrencyDirectoryABI,
         address: feeCurrencyDirectoryAddress,
         functionName: 'getCurrencyConfig',
         args: [address],
-      })),
+      })) as Array<{
+        abi: typeof feeCurrencyDirectoryABI
+        address: StrongAddress
+        functionName: 'getCurrencyConfig'
+      }>,
     })
 
     let config: FeeCurrencyDirectoryConfig = { intrinsicGasForAlternativeFeeCurrency: {} }
 
-    if (results.some((result) => result.status === 'failure')) {
-      throw new Error('Failed to fetch FeeCurrencyDirectory parameters')
-    }
-
     for (let i = 0; i < addresses.length; i++) {
-      // @ts-expect-error TODO how can I fix the typing here? data is correct
-      config.intrinsicGasForAlternativeFeeCurrency[addresses[i]] = results[i].result.intrinsicGas
+      config.intrinsicGasForAlternativeFeeCurrency[addresses[i]] = results[i].intrinsicGas
     }
 
     return config
@@ -515,35 +478,32 @@ export default class Parameters extends ViemCommand {
       address: await addressResolver.resolve(CeloContract.EpochManager),
     }
 
-    const results = await client.multicall({
-      contracts: [
-        {
-          ...contractCallBase,
-          functionName: 'getCurrentEpochNumber',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'epochDuration',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'isTimeForNextEpoch',
-        },
-      ],
-    })
+    try {
+      const results = await client.multicall({
+        allowFailure: false,
+        contracts: [
+          {
+            ...contractCallBase,
+            functionName: 'getCurrentEpochNumber',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'epochDuration',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'isTimeForNextEpoch',
+          },
+        ],
+      })
 
-    if (
-      results[0].status === 'failure' ||
-      results[1].status === 'failure' ||
-      results[2].status === 'failure'
-    ) {
+      return {
+        currentEpochNumber: results[0],
+        epochDuration: Number(results[1]),
+        isTimeForNextEpoch: results[2],
+      }
+    } catch (_) {
       throw new Error('Failed to fetch EpochManager parameters')
-    }
-
-    return {
-      currentEpochNumber: results[0].result,
-      epochDuration: results[1].result,
-      isTimeForNextEpoch: results[2].result,
     }
   }
 
@@ -556,35 +516,36 @@ export default class Parameters extends ViemCommand {
       address: await addressResolver.resolve(CeloContract.Attestations),
     }
 
-    const attestationRequestFeeContractCalls = await Promise.all(
+    const attestationRequestFeeContractCalls = (await Promise.all(
       Object.values(celoTokenInfos).map(async (token) => ({
         ...contractCallBase,
         functionName: 'getAttestationRequestFee',
         args: [await addressResolver.resolve(token.contract)],
       }))
-    )
+    )) as Array<{
+      abi: typeof attestationsABI
+      address: StrongAddress
+      functionName: 'getAttestationRequestFee'
+      args: [StrongAddress]
+    }>
 
-    const results = await client.multicall({
-      contracts: [
-        {
-          ...contractCallBase,
-          functionName: 'attestationExpiryBlocks',
-        },
-      ].concat(attestationRequestFeeContractCalls),
+    const attestationsExpiryBlockResult = await client.readContract({
+      ...contractCallBase,
+      functionName: 'attestationExpiryBlocks',
     })
 
-    if (results.some((result) => result.status === 'failure')) {
-      throw new Error('Failed to fetch Attestations parameters')
-    }
+    const attestationRequestFeeContractCallResults = await client.multicall({
+      allowFailure: false,
+      contracts: attestationRequestFeeContractCalls,
+    })
 
     return {
-      // @ts-ignore TODO fix typing, data is correct
       attestationExpiryBlocks: humanReadable
-        ? blocksToDurationString(results[0].result)
-        : results[0].result,
-      attestationRequestFees: results.slice(1).map((result, index) => ({
-        address: attestationRequestFeeContractCalls[index].args[0] as StrongAddress,
-        fee: result.result as bigint,
+        ? blocksToDurationString(attestationsExpiryBlockResult)
+        : attestationsExpiryBlockResult,
+      attestationRequestFees: attestationRequestFeeContractCallResults.map((result, index) => ({
+        address: attestationRequestFeeContractCalls[index].args[0],
+        fee: result,
       })),
     }
   }
@@ -598,35 +559,32 @@ export default class Parameters extends ViemCommand {
       address: await addressResolver.resolve(CeloContract.GasPriceMinimum),
     }
 
-    const results = await client.multicall({
-      contracts: [
-        {
-          ...contractCallBase,
-          functionName: 'gasPriceMinimum',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'targetDensity',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'adjustmentSpeed',
-        },
-      ],
-    })
+    try {
+      const results = await client.multicall({
+        allowFailure: false,
+        contracts: [
+          {
+            ...contractCallBase,
+            functionName: 'gasPriceMinimum',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'targetDensity',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'adjustmentSpeed',
+          },
+        ],
+      })
 
-    if (
-      results[0].status === 'failure' ||
-      results[1].status === 'failure' ||
-      results[2].status === 'failure'
-    ) {
+      return {
+        gasPriceMinimum: results[0],
+        targetDensity: fromFixidityValueToFraction(results[1]),
+        adjustmentSpeed: fromFixidityValueToFraction(results[2]),
+      }
+    } catch (_) {
       throw new Error('Failed to fetch GasPriceMinimum parameters')
-    }
-
-    return {
-      gasPriceMinimum: results[0].result,
-      targetDensity: results[1].result,
-      adjustmentSpeed: fromFixidityValueToFraction(results[2].result),
     }
   }
 
@@ -639,26 +597,27 @@ export default class Parameters extends ViemCommand {
       address: await addressResolver.resolve(CeloContract.BlockchainParameters),
     }
 
-    const results = await client.multicall({
-      contracts: [
-        {
-          ...contractCallBase,
-          functionName: 'blockGasLimit',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'intrinsicGasForAlternativeFeeCurrency',
-        },
-      ],
-    })
+    try {
+      const results = await client.multicall({
+        allowFailure: false,
+        contracts: [
+          {
+            ...contractCallBase,
+            functionName: 'blockGasLimit',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'intrinsicGasForAlternativeFeeCurrency',
+          },
+        ],
+      })
 
-    if (results[0].status === 'failure' || results[1].status === 'failure') {
+      return {
+        blockGasLimit: results[0],
+        intrinsicGasForAlternativeFeeCurrency: results[1],
+      }
+    } catch (_) {
       throw new Error('Failed to fetch BlockchainParameters parameters')
-    }
-
-    return {
-      blockGasLimit: results[0].result,
-      intrinsicGasForAlternativeFeeCurrency: results[1].result,
     }
   }
 
@@ -671,63 +630,57 @@ export default class Parameters extends ViemCommand {
       address: await addressResolver.resolve(CeloContract.EpochRewards),
     }
 
-    const results = await client.multicall({
-      contracts: [
-        {
-          ...contractCallBase,
-          functionName: 'getRewardsMultiplierParameters',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'getCarbonOffsettingFraction',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'carbonOffsettingPartner',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'getCommunityRewardFraction',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'getTargetVotingYieldParameters',
-        },
-        {
-          ...contractCallBase,
-          functionName: 'targetValidatorEpochPayment',
-        },
-      ],
-    })
+    try {
+      const results = await client.multicall({
+        allowFailure: false,
+        contracts: [
+          {
+            ...contractCallBase,
+            functionName: 'getRewardsMultiplierParameters',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'getCarbonOffsettingFraction',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'carbonOffsettingPartner',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'getCommunityRewardFraction',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'getTargetVotingYieldParameters',
+          },
+          {
+            ...contractCallBase,
+            functionName: 'targetValidatorEpochPayment',
+          },
+        ],
+      })
 
-    if (
-      results[0].status === 'failure' ||
-      results[1].status === 'failure' ||
-      results[2].status === 'failure' ||
-      results[3].status === 'failure' ||
-      results[4].status === 'failure' ||
-      results[5].status === 'failure'
-    ) {
+      return {
+        rewardsMultiplier: {
+          max: fromFixidityValueToFraction(results[0][0]),
+          underspendAdjustment: fromFixidityValueToFraction(results[0][1]),
+          overspendAdjustment: fromFixidityValueToFraction(results[0][2]),
+        },
+        carbonOffsetting: {
+          factor: fromFixidityValueToFraction(results[1]),
+          partner: results[2],
+        },
+        communityReward: fromFixidityValueToFraction(results[3]),
+        targetVotingYield: {
+          target: fromFixidityValueToFraction(results[4][0]),
+          max: fromFixidityValueToFraction(results[4][1]),
+          adjustment: fromFixidityValueToFraction(results[4][2]),
+        },
+        targetValidatorEpochPayment: results[5],
+      }
+    } catch (_) {
       throw new Error('Failed to fetch EpochRewards parameters')
-    }
-
-    return {
-      rewardsMultiplier: {
-        max: fromFixidityValueToFraction(results[0].result[0]),
-        underspendAdjustment: fromFixidityValueToFraction(results[0].result[1]),
-        overspendAdjustment: fromFixidityValueToFraction(results[0].result[2]),
-      },
-      carbonOffsetting: {
-        factor: fromFixidityValueToFraction(results[1].result),
-        partner: results[2].result,
-      },
-      communityReward: fromFixidityValueToFraction(results[3].result),
-      targetVotingYield: {
-        target: fromFixidityValueToFraction(results[4].result[0]),
-        max: fromFixidityValueToFraction(results[4].result[1]),
-        adjustment: fromFixidityValueToFraction(results[4].result[2]),
-      },
-      targetValidatorEpochPayment: results[5].result,
     }
   }
 }

@@ -18,14 +18,14 @@ testWithAnvilL2('network:parameters', (web3) => {
           reward: 10000000000000000000 (~1.000e+19)
       Election: 
         currentThreshold: 60000000000000000000 (~6.000e+19)
-        electabilityThreshold: 0.001 
+        electabilityThreshold: 0.001
         electableValidators: 
           max: 100 
           min: 1 
         maxNumGroupsVotedFor: 10 
         totalVotes: 60000000000000000000000 (~6.000e+22)
       EpochManager: 
-        currentEpochNumber: 4
+        currentEpochNumber: 4 
         epochDuration: 86400
         isTimeForNextEpoch: false
       FeeCurrencyDirectory: 
@@ -38,10 +38,10 @@ testWithAnvilL2('network:parameters', (web3) => {
         dequeueFrequency: 4 hours
         minDeposit: 100000000000000000000 (~1.000e+20)
         participationParameters: 
-          baseline: 0.005 
-          baselineFloor: 0.01 
-          baselineQuorumFactor: 1 
-          baselineUpdateFactor: 0.2 
+          baseline: 0.005
+          baselineFloor: 0.01
+          baselineQuorumFactor: 1
+          baselineUpdateFactor: 0.2
         queueExpiry: 4 weeks
         stageDurations: 
           Execution: 1 week

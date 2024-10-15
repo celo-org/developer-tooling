@@ -13,7 +13,7 @@ export interface ElectionConfig {
     min: bigint
     max: bigint
   }
-  electabilityThreshold: number
+  electabilityThreshold: string
   maxNumGroupsVotedFor: bigint
   totalVotes: bigint
   currentThreshold: bigint
@@ -29,10 +29,10 @@ export interface GovernanceConfig {
     Execution: bigint | string
   }
   participationParameters: {
-    baseline: number
-    baselineFloor: number
-    baselineUpdateFactor: number
-    baselineQuorumFactor: number
+    baseline: string
+    baselineFloor: string
+    baselineUpdateFactor: string
+    baselineQuorumFactor: string
   }
 }
 
@@ -42,7 +42,7 @@ export interface LockedGoldConfig {
 }
 
 export interface SortedOraclesConfig {
-  reportExpirySeconds: bigint | string
+  reportExpiry: bigint | string
 }
 
 export interface ReserveConfig {
@@ -77,7 +77,7 @@ export interface FeeCurrencyDirectoryConfig {
 
 export interface EpochManagerConfig {
   currentEpochNumber: bigint
-  epochDuration: bigint
+  epochDuration: number
   isTimeForNextEpoch: boolean
 }
 
@@ -91,8 +91,8 @@ export interface AttestationsConfig {
 
 export interface GasPriceMinimumConfig {
   gasPriceMinimum: bigint
-  targetDensity: bigint
-  adjustmentSpeed: number
+  targetDensity: string
+  adjustmentSpeed: string
 }
 
 export interface BlockchainParametersConfig {
@@ -102,19 +102,19 @@ export interface BlockchainParametersConfig {
 
 export interface EpochRewardsConfig {
   rewardsMultiplier: {
-    max: number
-    underspendAdjustment: number
-    overspendAdjustment: number
+    max: string
+    underspendAdjustment: string
+    overspendAdjustment: string
   }
   carbonOffsetting: {
-    factor: number
+    factor: String
     partner: StrongAddress
   }
-  communityReward: number
+  communityReward: string
   targetVotingYield: {
-    target: number
-    max: number
-    adjustment: number
+    target: string
+    max: string
+    adjustment: string
   }
   targetValidatorEpochPayment: bigint
 }

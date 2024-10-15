@@ -117,8 +117,7 @@ function toStringValueMapRecursive(valueMap: Record<string, any>, prefix: string
 
       return `${v} ${extra}`
     } else if (typeof v === 'number') {
-      // TEMP (?) to avoid missing space in the output
-      return `${v} `
+      return `${v}`
     }
 
     return chalk`${v}`
