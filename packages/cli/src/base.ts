@@ -106,6 +106,12 @@ export abstract class BaseCommand extends Command {
         nodeUrl && nodeUrl.endsWith('.ipc')
           ? new Web3(new Web3.providers.IpcProvider(nodeUrl, net))
           : new Web3(nodeUrl)
+
+      // Speed up the build for Github Actions
+      if (process.env['GITHUB_ACTIONS']) {
+        // @ts-ignore
+        this._web3.eth.transactionPollingInterval = 10
+      }
     }
     return this._web3
   }
