@@ -75,13 +75,14 @@ type TestWithWeb3Hooks = {
  */
 export function testWithWeb3(
   name: string,
-  web3: Web3,
+  rpcUrl: string,
   fn: (web3: Web3) => void,
   options: {
     hooks?: TestWithWeb3Hooks
     runIf?: boolean
   } = {}
 ) {
+  const web3 = new Web3(rpcUrl)
   // @ts-ignore with anvil setup the tx receipt is apparently not immedietaly
   // available after the tx is send, so by default it was waiting for 1000 ms
   // before polling again making the tests slow

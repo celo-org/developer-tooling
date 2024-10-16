@@ -64,10 +64,9 @@ export function testWithAnvilL2(name: string, fn: (web3: Web3) => void) {
 
 function testWithAnvil(stateFilePath: string, name: string, fn: (web3: Web3) => void) {
   const anvil = createInstance(stateFilePath)
-  const web3 = new Web3(`http://127.0.0.1:${anvil.port}`)
 
   // for each test suite, we start and stop a new anvil instance
-  return testWithWeb3(name, web3, fn, {
+  return testWithWeb3(name, `http://127.0.0.1:${anvil.port}`, fn, {
     runIf:
       process.env.RUN_ANVIL_TESTS === 'true' || typeof process.env.RUN_ANVIL_TESTS === 'undefined',
     hooks: {

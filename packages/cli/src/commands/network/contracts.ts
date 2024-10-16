@@ -2,7 +2,6 @@ import { ux } from '@oclif/core'
 
 import { iCeloVersionedContractABI, proxyABI } from '@celo/abis'
 import { concurrentMap, NULL_ADDRESS, StrongAddress } from '@celo/base'
-import { CeloCommand } from '../../celo'
 import { CeloContract, RegisteredContracts } from '../../packages-to-be/contracts'
 import { ViemCommand } from '../../viem'
 
@@ -20,7 +19,7 @@ export default class Contracts extends ViemCommand {
   static description = 'Lists Celo core contracts and their addresses.'
 
   static flags = {
-    ...CeloCommand.flags,
+    ...ViemCommand.flags,
     ...(ux.table.flags() as object),
   }
 
