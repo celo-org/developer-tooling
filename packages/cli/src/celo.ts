@@ -101,8 +101,6 @@ export abstract class CeloCommand extends Command {
 
   protected abstract checkIfL2(): Promise<boolean>
 
-  protected onError(_: any) {}
-
   protected async getNodeUrl(): Promise<string> {
     const res = await this.parse()
 
@@ -167,8 +165,6 @@ https://github.com/celo-org/developer-tooling/issues/new?assignees=&labels=bug+r
           arg
         )
       }
-
-      this.onError(arg)
     }
 
     return super.finally(arg)

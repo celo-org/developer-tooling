@@ -106,16 +106,16 @@ function toStringValueMapRecursive(valueMap: Record<string, any>, prefix: string
   const printValue = (v: any): string => {
     if (typeof v === 'object' && v != null) {
       if (BigNumber.isBigNumber(v)) {
-        const extra = v.isGreaterThan(new BigNumber(10).pow(3)) ? `(~${v.toExponential(3)})` : ''
-        return `${v.toFixed()} ${extra}`
+        const extra = v.isGreaterThan(new BigNumber(10).pow(3)) ? ` (~${v.toExponential(3)})` : ''
+        return `${v.toFixed()}${extra}`
       } else if (v instanceof Error) {
         return '\n' + chalk.red(v.message)
       }
       return '\n' + toStringValueMapRecursive(v, prefix + '  ')
     } else if (typeof v === 'bigint') {
-      const extra = v > 1000n ? `(~${Number(v).toExponential(3)})` : ''
+      const extra = v > 1000n ? ` (~${Number(v).toExponential(3)})` : ''
 
-      return `${v} ${extra}`
+      return `${v}${extra}`
     } else if (typeof v === 'number') {
       return `${v}`
     }

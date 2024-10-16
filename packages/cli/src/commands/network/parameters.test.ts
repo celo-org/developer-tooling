@@ -26,9 +26,9 @@ testWithAnvilL1('network:parameters', (web3: Web3) => {
         currentThreshold: 60000000000000000000 (~6.000e+19)
         electabilityThreshold: 0.001
         electableValidators: 
-          max: 100 
-          min: 1 
-        maxNumGroupsVotedFor: 10 
+          max: 100
+          min: 1
+        maxNumGroupsVotedFor: 10
         totalVotes: 60000000000000000000000 (~6.000e+22)
       EpochRewards: 
         carbonOffsetting: 
@@ -49,7 +49,7 @@ testWithAnvilL1('network:parameters', (web3: Web3) => {
         gasPriceMinimum: 100000000 (~1.000e+8)
         targetDensity: 0.5
       Governance: 
-        concurrentProposals: 3 
+        concurrentProposals: 3
         dequeueFrequency: 4 hours
         minDeposit: 100000000000000000000 (~1.000e+20)
         participationParameters: 
@@ -65,8 +65,8 @@ testWithAnvilL1('network:parameters', (web3: Web3) => {
         totalLockedGold: 120000000000000000000000 (~1.200e+23)
         unlockingPeriod: 6 hours
       Reserve: 
-        frozenReserveGoldDays: 0 
-        frozenReserveGoldStartBalance: 0 
+        frozenReserveGoldDays: 0
+        frozenReserveGoldStartBalance: 0
         frozenReserveGoldStartDay: 19991 (~1.999e+4)
         otherReserveAddresses: 
 
@@ -75,12 +75,12 @@ testWithAnvilL1('network:parameters', (web3: Web3) => {
         reportExpiry: 5 minutes
       Validators: 
         commissionUpdateDelay: 3 days
-        downtimeGracePeriod: 0 
+        downtimeGracePeriod: 0
         groupLockedGoldRequirements: 
           duration: 6 months
           value: 10000000000000000000000 (~1.000e+22)
-        maxGroupSize: 2 
-        membershipHistoryLength: 60 
+        maxGroupSize: 2
+        membershipHistoryLength: 60
         slashingMultiplierResetPeriod: 1 month
         validatorLockedGoldRequirements: 
           duration: 2 months

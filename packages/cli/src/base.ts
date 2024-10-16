@@ -108,7 +108,7 @@ export abstract class BaseCommand extends CeloCommand {
     }
   }
 
-  protected onError(): void {
+  async finally(arg?: Error): Promise<any> {
     try {
       if (this._kit !== null) {
         this._kit.connection.stop()
@@ -116,6 +116,8 @@ export abstract class BaseCommand extends CeloCommand {
     } catch (error) {
       this.log(`Failed to close the connection: ${error}`)
     }
+
+    super.finally(arg)
   }
 
   protected async checkIfL2(): Promise<boolean> {

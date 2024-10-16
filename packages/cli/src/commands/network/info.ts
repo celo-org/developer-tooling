@@ -113,7 +113,7 @@ export default class Info extends ViemCommand {
     printValueMapRecursive({
       blockNumber,
       epochs: epochs.length === 1 ? epochs[0] : epochs,
-      ...(isL2 && { epochDuration: epochSize }),
+      ...(isL2 && { epochDuration: Number(epochSize) }),
       ...(!isL2 && { epochSize }),
     })
   }
