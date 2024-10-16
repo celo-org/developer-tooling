@@ -1,4 +1,9 @@
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import {
+  MULTICALL_ADDRESS,
+  MULTICALL_CODE,
+  setCode,
+  testWithAnvilL1,
+} from '@celo/dev-utils/lib/anvil-test'
 import Web3 from 'web3'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Parameters from './parameters'
@@ -6,6 +11,9 @@ process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvilL1('network:parameters', (web3: Web3) => {
   test('runs', async () => {
+    // Setup the multicall contract
+    await setCode(web3, MULTICALL_ADDRESS, MULTICALL_CODE)
+
     const spy = jest.spyOn(console, 'log')
     await testLocallyWithWeb3Node(Parameters, [], web3)
     expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
