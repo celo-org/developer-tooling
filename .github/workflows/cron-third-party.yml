@@ -21,6 +21,7 @@ jobs:
           - 'ethers'
 
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         name: Download last version tested
         with:
@@ -66,14 +67,12 @@ jobs:
       - id: trigger-tests
         name: Trigger tests if NPM's version was higher than tested version
         if: ${{ steps.compare-version.outputs.result }} == -1
-        # TODO: implement third-party-test
-        # uses: celo-org/developer-tooling/.github/actions/test-third-party.yml
-        # with:
-        #   lib: ${{ matrix.lib }}
-        run: echo TODO
+        uses: ./.github/actions/third-party-tests/action.yaml
+        with:
+          library: ${{ github.event.inputs.library }}
+          version: ${{ github.event.inputs.version }}
 
       - uses: actions/upload-artifact@v4
-        # TODO: Move this to the test flow on success probably?
         name: Upload version
         if: ${{ steps.compare-version.outputs.result }} == -1
         with:
