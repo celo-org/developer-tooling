@@ -1,0 +1,24 @@
+name: Third party libraries testing workflow
+on:
+  workflow_dispatch:
+    inputs:
+      library:
+        type: choice
+        options:
+          - viem
+          - web3
+          - ethers
+      version:
+        type: string
+        default: 'latest'
+        description: Version to test again or 'latest'
+  workflow_run:
+
+jobs:
+  third-party-test-workflow:
+    runs-on: ['self-hosted', 'org', '8-cpu']
+    steps:
+      - uses: celo-org/developer-tooling/.github/actions/third-party-tests/action.yaml
+        with:
+          library: ${{ github.event.inputs.library }}
+          version: ${{ github.event.inputs.version }}

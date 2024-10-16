@@ -1,0 +1,35 @@
+{
+  "name": "@celo/e2e",
+  "version": "0.0.1",
+  "description": "TODO",
+  "types": "./lib/index.d.ts",
+  "author": "cLabs",
+  "license": "Apache-2.0",
+  "homepage": "https://docs.celo.org/developer/tools",
+  "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/e2e",
+  "keywords": [],
+  "type": "module",
+  "exports": {
+    ".": "./lib/index.js"
+  },
+  "scripts": {
+    "test": "yarn run vitest",
+    "test:viem": "yarn run vitest viem",
+    "test:ethers": "yarn run vitest ethers",
+    "test:web3": "yarn run vitest web3"
+  },
+  "dependencies": {
+    "@celo/abis": "^11.0.0",
+    "@celo/typescript": "workspace:^",
+    "@celo/web3-plugin-transaction-types": "^1.0.2",
+    "@vitest/coverage-v8": "2.1.2",
+    "dotenv": "^8.2.0",
+    "ethers": "^6.13.4",
+    "viem": "^2.21.27",
+    "vitest": "^2.1.2",
+    "web3": "^4.13.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
