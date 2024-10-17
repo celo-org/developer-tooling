@@ -1,11 +1,8 @@
 import { Command } from '@oclif/core'
 import { createPublicClient, extractChain, http, HttpTransport, PublicClient } from 'viem'
 import { celo, celoAlfajores } from 'viem/chains'
-import { getNodeUrl } from './utils/config'
 
 export abstract class ViemCommand extends Command {
-  protected requireSynced = true
-
   private publicClient?: PublicClient<HttpTransport, typeof celo>
 
   protected async getPublicClient(): Promise<PublicClient<HttpTransport, typeof celo>> {
@@ -28,15 +25,5 @@ export abstract class ViemCommand extends Command {
     }
 
     return this.publicClient
-  }
-
-  protected async checkIfSynced(): Promise<boolean> {
-    return true
-  }
-
-  protected async getNodeUrl(): Promise<string> {
-    const res = await this.parse()
-
-    return (res.flags && res.flags.node) || getNodeUrl(this.config.configDir)
   }
 }
