@@ -30,7 +30,7 @@ jobs:
       - uses: actions/download-artifact@v4
         name: Download last version tested
         with:
-          name: last-version-${{ matrix.lib }}
+          name: /tmp/cache-last-version-${{ matrix.lib }}
           path: /tmp/
         continue-on-error: true
 
@@ -58,7 +58,8 @@ jobs:
       - id: compare-version
         name: Compare last version with NPM's version
         run: |
-          LAST_VERSION=$(cat /tmp/last-version-${{ matrix.lib }} 2>/dev/null || echo '0.0.0')
+          FILE_PATH=/tmp/cache-last-version-${{ matrix.lib }}
+          LAST_VERSION=$(cat $FILEPATH 2>/dev/null || echo '0.0.0')
           FETCHED_VERSION="${{ steps.npm-version.outputs.result }}"
 
           echo "Validating last version: $LAST_VERSION ..."
@@ -67,7 +68,8 @@ jobs:
           echo "Validating fetched version: $FETCHED_VERSION ..."
           semver validate $FETCHED_VERSION
 
-          echo "result=$(semver compare $LAST_VERSION $FETCHED_VERSION)" >> "$GITHUB_OUTPUT"
+          semver compare $LAST_VERSION $FETCHED_VERSION >> $FILE_PATH
+          echo "result=$(cat $FILE_PATH)" >> "$GITHUB_OUTPUT"
 
       - run: ls -lA .
 
@@ -89,5 +91,5 @@ jobs:
         name: Upload version
         if: ${{ steps.compare-version.outputs.result }} == -1
         with:
-          name: last-version-${{ matrix.lib }}
-          path: /tmp/fetched-version-${{ matrix.lib }}
+          name: cache-last-version-${{ matrix.lib }}
+          path: /tmp/
