@@ -1739,7 +1739,7 @@ __metadata:
     ts-jest: "npm:^29.1.5"
     ts-node: "npm:^10.9.1"
     typescript: "npm:5.3.3"
-    viem: "npm:^2.21.19"
+    viem: "npm:^2.21.28"
     web3: "npm:1.10.4"
     web3-utils: "npm:^1.10.4"
   bin:
@@ -19838,9 +19838,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"viem@npm:^2.21.19":
-  version: 2.21.19
-  resolution: "viem@npm:2.21.19"
+"viem@npm:^2.21.28":
+  version: 2.21.28
+  resolution: "viem@npm:2.21.28"
   dependencies:
     "@adraffy/ens-normalize": "npm:1.11.0"
     "@noble/curves": "npm:1.6.0"
@@ -19856,7 +19856,7 @@ __metadata:
   peerDependenciesMeta:
     typescript:
       optional: true
-  checksum: 1e23cb9fbbdc3d7d671b60c45329888cfe6675bc5773f5ec78df6754e65c292b5c20db2567fcacfa6dfd33d8d4123670699e03e3b257bde76d9e40696784b3b5
+  checksum: 191b97d26afa587297f3d940d6ee8e2724944ddd0beae417d235412dedeeef35247b2c02d5ae38904066151378101f0a271557d79625711c1c0ce155e9c8e88f
   languageName: node
   linkType: hard
 
