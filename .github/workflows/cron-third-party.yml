@@ -7,6 +7,8 @@ on:
     - cron: 0 * * * *
   workflow_dispatch:
   pull_request:
+    branches:
+      - 'nicolasbrugneaux/ci-watcher'
 
 jobs:
   compare-versions:
@@ -22,6 +24,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          # TODO: REMOVE THIS
+          ref: nicolasbrugneaux/ci-watcher
+          sparse-checkout: |
+            .github
       - uses: actions/download-artifact@v4
         name: Download last version tested
         with:
