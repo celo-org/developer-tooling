@@ -1,6 +1,6 @@
 name: 'Test a third party library'
 inputs:
-  library:
+  lib:
     type: string
     required: true
   version:
