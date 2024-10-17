@@ -25,6 +25,8 @@ jobs:
         with:
           # TODO: REMOVE THIS
           ref: nicolasbrugneaux/ci-watcher
+          sparse-checkout: |
+            .github
       - uses: actions/download-artifact@v4
         name: Download last version tested
         with:
@@ -67,14 +69,14 @@ jobs:
 
           echo "result=$(semver compare $LAST_VERSION $FETCHED_VERSION)" >> "$GITHUB_OUTPUT"
 
-      - run: ls -lA .github
+      - run: ls -lA .
 
       - id: trigger-tests
         name: Trigger tests if NPM's version was higher than tested version
         if: ${{ steps.compare-version.outputs.result }} == -1
-        uses: celo-org/developer-tooling/.github/workflows/third-party-tests.yml@nicolasbrugneaux/ci-watcher
+        uses: ./.github/actions/third-party-tests
         with:
-          lib: ${{ github.event.inputs.lib }}
+          library: ${{ github.event.inputs.library }}
           version: ${{ github.event.inputs.version }}
 
       - uses: actions/upload-artifact@v4
