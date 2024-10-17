@@ -13,10 +13,10 @@
     ".": "./lib/index.js"
   },
   "scripts": {
-    "test": "yarn run vitest",
-    "test:viem": "yarn run vitest viem",
-    "test:ethers": "yarn run vitest ethers",
-    "test:web3": "yarn run vitest web3"
+    "test-e2e": "yarn run vitest",
+    "test-e2e:viem": "yarn run vitest viem",
+    "test-e2e:ethers": "yarn run vitest ethers",
+    "test-e2e:web3": "yarn run vitest web3"
   },
   "dependencies": {
     "@celo/abis": "^11.0.0",

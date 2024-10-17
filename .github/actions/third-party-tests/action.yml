@@ -45,4 +45,4 @@ runs:
       cd packages/e2e
       yarn
       yarn add ${{ github.event.input.library }}@${{ github.env.input.version }}
-      yarn run test:${{ github.event.input.library }}
+      yarn run test-e2e:${{ github.event.input.library }}

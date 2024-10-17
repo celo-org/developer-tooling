@@ -1,4 +1,4 @@
-name: Third party libraries testing workflow
+name: Trigger manually third party libraries testing workflow
 on:
   workflow_dispatch:
     inputs:
