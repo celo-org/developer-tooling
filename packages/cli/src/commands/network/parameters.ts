@@ -448,6 +448,7 @@ export default class Parameters extends ViemCommand {
 
     const results = await client.multicall({
       allowFailure: false,
+      // @ts-ignore debug
       contracts: addresses.map((address) => ({
         abi: feeCurrencyDirectoryABI,
         address: feeCurrencyDirectoryAddress,
@@ -543,6 +544,7 @@ export default class Parameters extends ViemCommand {
       attestationExpiryBlocks: humanReadable
         ? blocksToDurationString(attestationsExpiryBlockResult)
         : attestationsExpiryBlockResult,
+      // @ts-ignore debug
       attestationRequestFees: attestationRequestFeeContractCallResults.map((result, index) => ({
         address: attestationRequestFeeContractCalls[index].args[0],
         fee: result,
