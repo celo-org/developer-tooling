@@ -1,13 +1,7 @@
-import { StrongAddress } from '@celo/base'
 import { Command } from '@oclif/core'
 import { createPublicClient, extractChain, http, HttpTransport, PublicClient } from 'viem'
 import { celo, celoAlfajores } from 'viem/chains'
 import { ContractAddressResolver, ViemAddressResolver } from './packages-to-be/address-resolver'
-import {
-  FeeCurrencyInformation,
-  FeeCurrencyProvider,
-  ViemFeeCurrencyProvider,
-} from './packages-to-be/fee-currency'
 import { L2Resolver, ViemL2Resolver } from './packages-to-be/l2-resolver'
 import { getNodeUrl } from './utils/config'
 
@@ -20,7 +14,6 @@ export abstract class ViemCommand extends Command {
   private publicClient?: PublicClient<HttpTransport, typeof celo>
   private addressResolver?: ContractAddressResolver
   private l2Resolver?: L2Resolver
-  private feeCurrencyProvider?: FeeCurrencyProvider
 
   protected async getPublicClient(): Promise<PublicClient<HttpTransport, typeof celo>> {
     if (!this.publicClient) {
@@ -82,31 +75,5 @@ export abstract class ViemCommand extends Command {
     }
 
     return !!this.cel2
-  }
-
-  protected async getFeeCurrencyProvider(): Promise<FeeCurrencyProvider> {
-    if (!this.feeCurrencyProvider) {
-      this.feeCurrencyProvider = new ViemFeeCurrencyProvider(
-        await this.getPublicClient(),
-        await this.getAddressResolver(),
-        await this.isCel2()
-      )
-    }
-
-    return this.feeCurrencyProvider
-  }
-
-  protected async getFeeCurrencyInformation(
-    addresses: StrongAddress[]
-  ): Promise<FeeCurrencyInformation[]> {
-    const feeCurrencyProvider = await this.getFeeCurrencyProvider()
-
-    return feeCurrencyProvider.getFeeCurrencyInformation(addresses)
-  }
-
-  protected async getSupportedFeeCurrencyAddresses(): Promise<StrongAddress[]> {
-    const feeCurrencyProvider = await this.getFeeCurrencyProvider()
-
-    return feeCurrencyProvider.getAddresses()
   }
 }
