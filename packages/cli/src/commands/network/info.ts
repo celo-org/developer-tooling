@@ -1,9 +1,17 @@
-import { isCel2 } from '@celo/connect'
+import { blockchainParametersABI } from '@celo/abis'
+import { epochManagerABI } from '@celo/abis-12'
 import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
+import { CeloContract } from '../../packages-to-be/contracts'
+import {
+  calculateEpochNumberOfBlock,
+  calculateFirstBlockNumberForEpoch,
+  calculateLastBlockNumberForEpoch,
+} from '../../packages-to-be/epochs'
 import { printValueMapRecursive } from '../../utils/cli'
+import { ViemCommand } from '../../viem'
 
-export default class Info extends BaseCommand {
+export default class Info extends ViemCommand {
   static description = 'View general network information such as the current block number'
 
   static flags = {
@@ -17,36 +25,66 @@ export default class Info extends BaseCommand {
   }
 
   async run() {
-    const kit = await this.getKit()
     const res = await this.parse(Info)
-    const isL2 = await isCel2(kit.connection.web3)
-    let latestEpochNumber: number
-    let epochSize: number
+    const isL2 = await this.isCel2()
 
-    const blockNumber = await kit.connection.getBlockNumber()
+    const client = await this.getPublicClient()
+    const addressResolver = await this.getAddressResolver()
+
+    let latestEpochNumber: bigint
+    let epochSize: bigint
+
+    const blockNumber = await client.getBlockNumber()
 
     if (isL2) {
-      const epochManagerWrapper = await kit.contracts.getEpochManager()
+      const epochManagerContractAddress = await addressResolver.resolve(CeloContract.EpochManager)
 
-      latestEpochNumber = await epochManagerWrapper.getCurrentEpochNumber()
-      epochSize = await epochManagerWrapper.epochDuration()
+      latestEpochNumber = await client.readContract({
+        abi: epochManagerABI,
+        functionName: 'getCurrentEpochNumber',
+        address: epochManagerContractAddress,
+      })
+
+      epochSize = await client.readContract({
+        abi: epochManagerABI,
+        functionName: 'epochDuration',
+        address: epochManagerContractAddress,
+      })
     } else {
-      latestEpochNumber = await kit.getEpochNumberOfBlock(blockNumber)
-      epochSize = await kit.getEpochSize()
+      const blockchainParametersContractAddress = await addressResolver.resolve(
+        CeloContract.BlockchainParameters
+      )
+
+      epochSize = await client.readContract({
+        abi: blockchainParametersABI,
+        functionName: 'getEpochSize',
+        address: blockchainParametersContractAddress,
+      })
+      latestEpochNumber = calculateEpochNumberOfBlock(blockNumber, epochSize)
     }
 
-    const fetchEpochInfo = async (epochNumber: number) => {
+    const fetchEpochInfo = async (epochNumber: bigint) => {
       if (isL2) {
-        const epochManagerWrapper = await kit.contracts.getEpochManager()
+        const epochManagerContractAddress = await addressResolver.resolve(CeloContract.EpochManager)
 
-        const epochData: Record<string, number> = {
+        const epochData: Record<string, bigint> = {
           number: epochNumber,
-          start: await epochManagerWrapper.getFirstBlockAtEpoch(epochNumber),
+          start: await client.readContract({
+            abi: epochManagerABI,
+            functionName: 'getFirstBlockAtEpoch',
+            address: epochManagerContractAddress,
+            args: [epochNumber],
+          }),
         }
 
         // for L2 we cannot fetch the end block of the current epoch
         if (epochNumber < latestEpochNumber) {
-          epochData.end = await epochManagerWrapper.getLastBlockAtEpoch(epochNumber)
+          epochData.end = await client.readContract({
+            abi: epochManagerABI,
+            functionName: 'getLastBlockAtEpoch',
+            address: epochManagerContractAddress,
+            args: [epochNumber],
+          })
         }
 
         return epochData
@@ -54,22 +92,28 @@ export default class Info extends BaseCommand {
 
       return {
         number: epochNumber,
-        start: await kit.getFirstBlockNumberForEpoch(epochNumber),
-        end: await kit.getLastBlockNumberForEpoch(epochNumber),
+        start: calculateFirstBlockNumberForEpoch(epochNumber, epochSize),
+        end: calculateLastBlockNumberForEpoch(epochNumber, epochSize),
       }
     }
 
     const n = res.flags.lastN
-    const minEpoch = isL2 ? await (await kit.contracts.getEpochManager()).firstKnownEpoch() : 1
+    const minEpoch = isL2
+      ? await client.readContract({
+          abi: epochManagerABI,
+          functionName: 'firstKnownEpoch',
+          address: await addressResolver.resolve('EpochManager'),
+        })
+      : 1
     const epochs = []
-    for (let i = latestEpochNumber; i > latestEpochNumber - n && i >= minEpoch; i--) {
+    for (let i = latestEpochNumber; i > latestEpochNumber - BigInt(n) && i >= minEpoch; i--) {
       epochs.push(await fetchEpochInfo(i))
     }
 
     printValueMapRecursive({
       blockNumber,
       epochs: epochs.length === 1 ? epochs[0] : epochs,
-      ...(isL2 && { epochDuration: epochSize }),
+      ...(isL2 && { epochDuration: Number(epochSize) }),
       ...(!isL2 && { epochSize }),
     })
   }

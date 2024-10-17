@@ -1,7 +1,7 @@
-import { FeeCurrencyWhitelistWrapper } from '@celo/contractkit/lib/wrappers/FeeCurrencyWhitelistWrapper'
 import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { ux } from '@oclif/core'
 import Web3 from 'web3'
+import { ViemFeeCurrencyProvider } from '../../packages-to-be/fee-currency'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Whitelist from './whitelist'
 
@@ -47,7 +47,7 @@ testWithAnvilL1('network:whitelist cmd', (web3: Web3) => {
 
   test('handles adapted tokens too', async () => {
     const mock = jest
-      .spyOn(FeeCurrencyWhitelistWrapper.prototype, 'getFeeCurrencyInformation')
+      .spyOn(ViemFeeCurrencyProvider.prototype, 'getFeeCurrencyInformation')
       .mockImplementation(() =>
         Promise.resolve([
           {

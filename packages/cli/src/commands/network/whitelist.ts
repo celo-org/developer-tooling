@@ -1,8 +1,8 @@
 import { ux } from '@oclif/core'
 import { BaseCommand } from '../../base'
-import { getFeeCurrencyContractWrapper } from '../../utils/fee-currency'
+import { ViemCommand } from '../../viem'
 
-export default class Whitelist extends BaseCommand {
+export default class Whitelist extends ViemCommand {
   static description = 'List the whitelisted fee currencies'
 
   static flags = {
@@ -15,16 +15,17 @@ export default class Whitelist extends BaseCommand {
   static examples = ['whitelist']
 
   async run() {
-    const kit = await this.getKit()
     const { flags } = await this.parse(Whitelist)
 
-    const feeCurrencyContract = await getFeeCurrencyContractWrapper(kit, await this.isCel2())
-    const validFeeCurrencies = await feeCurrencyContract.getAddresses()
+    const validFeeCurrencies = await this.getSupportedFeeCurrencyAddresses()
+    const feeCurrencyProvider = await this.getFeeCurrencyProvider()
+    const pairs = await feeCurrencyProvider.getFeeCurrencyInformation(validFeeCurrencies)
 
-    const pairs = await feeCurrencyContract.getFeeCurrencyInformation(validFeeCurrencies)
+    // Sort to have deterministic output
+    pairs.sort((a, b) => a.address.localeCompare(b.address))
 
     ux.table(
-      pairs.map((token) => token),
+      pairs.map((token) => ({ ...token })),
       {
         name: { get: (token) => token.name },
         symbol: { get: (token) => token.symbol },
