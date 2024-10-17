@@ -76,8 +76,8 @@ jobs:
         if: ${{ steps.compare-version.outputs.result }} == -1
         uses: ./.github/actions/third-party-tests
         with:
-          library: ${{ github.event.inputs.library }}
-          version: ${{ github.event.inputs.version }}
+          lib: ${{ matrix.lib }}
+          version: ${{ steps.npm-version.outputs.result }}
         env:
           # Increment these to force cache rebuilding
           NODE_MODULE_CACHE_VERSION: 5

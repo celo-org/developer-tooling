@@ -48,6 +48,6 @@ runs:
     - run: |
         cd packages/e2e
         yarn
-        yarn add ${{ github.event.input.lib }}@${{ github.env.input.version }}
-        yarn run test-e2e:${{ github.event.input.lib }}
+        yarn add ${{ inputs.lib }}@${{ inputs.version }}
+        yarn run test-e2e:${{ inputs.lib }}
       shell: bash --login -eo pipefail {0}

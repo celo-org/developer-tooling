@@ -2,7 +2,7 @@ name: Trigger manually third party libraries testing workflow
 on:
   workflow_dispatch:
     inputs:
-      library:
+      lib:
         type: choice
         options:
           - viem
@@ -20,8 +20,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/third-party-tests
         with:
-          library: ${{ github.event.inputs.library }}
-          version: ${{ github.event.inputs.version }}
+          lib: ${{ inputs.lib }}
+          version: ${{ inputs.version }}
         env:
           # Increment these to force cache rebuilding
           NODE_MODULE_CACHE_VERSION: 5
