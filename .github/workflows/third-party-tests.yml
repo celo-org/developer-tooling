@@ -27,3 +27,4 @@ jobs:
           NODE_MODULE_CACHE_VERSION: 5
           NODE_OPTIONS: '--max-old-space-size=4096'
           TERM: dumb
+          TEST_ACCOUNT: ${{ secrets.TEST_ACCOUNT }}

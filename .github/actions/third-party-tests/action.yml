@@ -52,4 +52,4 @@ runs:
         yarn run test-e2e:${{ inputs.lib }}
       shell: bash --login -eo pipefail {0}
       env:
-        TEST_ACCOUNT: ${{ secrets.TEST_ACCOUNT }}
+        TEST_ACCOUNT: ${{ env.TEST_ACCOUNT }}
