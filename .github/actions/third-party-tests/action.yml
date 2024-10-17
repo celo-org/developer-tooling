@@ -1,12 +1,11 @@
 name: 'Test a third party library'
 inputs:
-  inputs:
-    library:
-      type: string
-      required: true
-    version:
-      type: string
-      default: 'latest'
+  library:
+    type: string
+    required: true
+  version:
+    type: string
+    default: 'latest'
 
 runs:
   using: 'composite'
