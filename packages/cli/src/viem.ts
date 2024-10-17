@@ -2,7 +2,7 @@ import { StrongAddress } from '@celo/base'
 import { Command } from '@oclif/core'
 import { CLIError } from '@oclif/core/lib/errors'
 import chalk from 'chalk'
-import { createPublicClient, extractChain, http } from 'viem'
+import { createPublicClient, extractChain, http, HttpTransport, PublicClient } from 'viem'
 import { celo, celoAlfajores } from 'viem/chains'
 import { BaseCommand } from './base'
 import { ContractAddressResolver, ViemAddressResolver } from './packages-to-be/address-resolver'
@@ -29,7 +29,7 @@ export abstract class ViemCommand extends Command {
   private l2Resolver?: L2Resolver
   private feeCurrencyProvider?: FeeCurrencyProvider
 
-  protected async getPublicClient() {
+  protected async getPublicClient(): Promise<PublicClient<HttpTransport, typeof celo>> {
     if (!this.publicClient) {
       const nodeUrl = await this.getNodeUrl()
       const transport = http(nodeUrl)
