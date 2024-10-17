@@ -1,0 +1,30 @@
+name: Trigger manually third party libraries testing workflow
+on:
+  workflow_dispatch:
+    inputs:
+      lib:
+        type: choice
+        options:
+          - viem
+          - web3
+          - ethers
+      version:
+        type: string
+        default: 'latest'
+        description: Version to test again or 'latest'
+
+jobs:
+  third-party-test-workflow:
+    runs-on: ['self-hosted', 'org', '8-cpu']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/third-party-tests
+        with:
+          lib: ${{ inputs.lib }}
+          version: ${{ inputs.version }}
+        env:
+          # Increment these to force cache rebuilding
+          NODE_MODULE_CACHE_VERSION: 5
+          NODE_OPTIONS: '--max-old-space-size=4096'
+          TERM: dumb
+          TEST_ACCOUNT: ${{ secrets.TEST_ACCOUNT }}
