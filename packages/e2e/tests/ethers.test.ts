@@ -1,4 +1,4 @@
-import { Contract, ethers, Wallet } from 'ethers'
+import { Contract, ethers, NonceManager, Wallet } from 'ethers'
 
 import { describe, expect, it } from 'vitest'
 
@@ -6,7 +6,7 @@ import { registryABI } from '@celo/abis'
 import { celoAlfajores, TEST_PRIVATE_KEY } from './common'
 
 const provider = new ethers.JsonRpcProvider(celoAlfajores.rpcUrls.default.http[0])
-const signer = new Wallet(TEST_PRIVATE_KEY, provider)
+const signer = new NonceManager(new Wallet(TEST_PRIVATE_KEY, provider))
 
 const cEURContract = new Contract(
   '0x000000000000000000000000000000000000ce10',
