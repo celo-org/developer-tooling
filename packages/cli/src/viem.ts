@@ -7,7 +7,8 @@ export abstract class ViemCommand extends Command {
 
   protected async getPublicClient(): Promise<PublicClient<HttpTransport, typeof celo>> {
     if (!this.publicClient) {
-      const nodeUrl = await this.getNodeUrl()
+      // TEMP
+      const nodeUrl = 'http://127.0.0.1:8545'
       const transport = http(nodeUrl)
       // Create an intermediate client to get the chain id
       const intermediateClient = createPublicClient({
