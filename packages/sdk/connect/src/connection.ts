@@ -33,6 +33,7 @@ import {
   outputCeloTxFormatter,
   outputCeloTxReceiptFormatter,
 } from './utils/formatter'
+import { isCel2 } from './utils/is-cel2'
 import { hasProperty } from './utils/provider-utils'
 import { HttpRpcCaller, RpcCaller, getRandomId } from './utils/rpc-caller'
 import { TxParamsNormalizer } from './utils/tx-params-normalizer'
@@ -338,13 +339,25 @@ export class Connection {
       tx.maxPriorityFeePerGas = await this.getMaxPriorityFeePerGas(tx.feeCurrency)
     }
 
+    const maxPriorityFeePerGas = BigInt(ensureLeading0x(tx.maxPriorityFeePerGas.toString(16)))
+
     if (isEmpty(tx.maxFeePerGas)) {
-      const baseFee = isEmpty(tx.feeCurrency)
-        ? await this.getBlock('latest').then((block) => block.baseFeePerGas)
-        : await this.gasPrice(tx.feeCurrency)
-      const withBuffer = addBufferToBaseFee(BigInt(baseFee!))
-      const maxFeePerGas =
-        withBuffer + BigInt(ensureLeading0x(tx.maxPriorityFeePerGas.toString(16)))
+      let baseFee: bigint = BigInt(0)
+      if (isEmpty(tx.feeCurrency)) {
+        baseFee = await this.getBlock('latest').then((block) => BigInt(block.baseFeePerGas!))
+      } else if (await isCel2(this.web3)) {
+        //as of L2 eth_gasPrice includes the basefee + maxPriorityFeePerGas.
+        // therefore subtract the maxPriorityFeePerGas so we can add in the buffer multiple before adding it back
+        baseFee = await this.gasPrice(tx.feeCurrency).then(
+          (price) => BigInt(price) - maxPriorityFeePerGas
+        )
+      } else {
+        // on L1 gasPrice returns base fee * 2
+        baseFee = await this.gasPrice(tx.feeCurrency).then((price) => BigInt(price) / BigInt(2))
+      }
+
+      const withBuffer = addBufferToBaseFee(baseFee)
+      const maxFeePerGas = withBuffer + maxPriorityFeePerGas
       tx.maxFeePerGas = ensureLeading0x(maxFeePerGas.toString(16))
     }
 
