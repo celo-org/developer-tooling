@@ -1,5 +1,12 @@
 # @celo/dev-utils
 
+## 0.0.6-beta.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @celo/connect@6.0.3-beta.0
+
 ## 0.0.5
 
 ### Patch Changes

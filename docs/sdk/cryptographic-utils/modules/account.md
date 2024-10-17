@@ -86,7 +86,7 @@ base/lib/account.d.ts:18
 
 #### Defined in
 
-[cryptographic-utils/src/account.ts:455](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L455)
+[cryptographic-utils/src/account.ts:468](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L468)
 
 ___
 
@@ -179,7 +179,7 @@ ___
 
 #### Defined in
 
-[cryptographic-utils/src/account.ts:403](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L403)
+[cryptographic-utils/src/account.ts:410](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L410)
 
 ___
 
@@ -204,7 +204,7 @@ ___
 
 #### Defined in
 
-[cryptographic-utils/src/account.ts:390](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L390)
+[cryptographic-utils/src/account.ts:397](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L397)
 
 ___
 
@@ -233,7 +233,7 @@ ___
 
 #### Defined in
 
-[cryptographic-utils/src/account.ts:431](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L431)
+[cryptographic-utils/src/account.ts:444](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L444)
 
 ___
 
@@ -278,7 +278,7 @@ ___
 
 #### Defined in
 
-[cryptographic-utils/src/account.ts:416](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L416)
+[cryptographic-utils/src/account.ts:423](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/account.ts#L423)
 
 ___
 

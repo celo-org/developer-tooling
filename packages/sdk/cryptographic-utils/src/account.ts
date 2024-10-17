@@ -68,7 +68,7 @@ export async function generateMnemonic(
 
 export function validateMnemonic(
   mnemonic: string,
-  bip39ToUse = bip39Wrapper,
+  bip39ToUse: Bip39 = bip39Wrapper,
   language?: MnemonicLanguages
 ) {
   if (language !== undefined) {
@@ -386,13 +386,20 @@ function wordSuggestions(typo: string, language: MnemonicLanguages): Suggestions
       return map
     }, new Map<number, string[]>())
 }
-
+/*
+ * @param mnemonic 12 or 12 BIP39 words
+ * @param password
+ * @param changeIndex postion 4 from https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
+ * @param addressIndex postion 5 from https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
+ * bip39ToUse - bip39 library
+ * @param derivationPath - This will default to ETH_DERIVATION_PATH in 7.0 forum.celo.org/t/deprecating-the-celo-derivation-path/9229
+ */
 export async function generateKeys(
   mnemonic: string,
   password?: string,
   changeIndex: number = 0,
   addressIndex: number = 0,
-  bip39ToUse = bip39Wrapper,
+  bip39ToUse: Bip39 = bip39Wrapper,
   derivationPath: string = CELO_DERIVATION_PATH_BASE
 ): Promise<{ privateKey: string; publicKey: string; address: string }> {
   const seed: Buffer = await generateSeed(mnemonic, password, bip39ToUse)
@@ -410,13 +417,13 @@ export function generateDeterministicInviteCode(
   const seed = Buffer.from(keccak_256(utf8ToBytes(recipientPhoneHash + recipientPepper)))
   return generateKeysFromSeed(seed, changeIndex, addressIndex, derivationPath)
 }
-
-// keyByteLength truncates the seed. *Avoid its use*
-// It was added only because a backwards compatibility bug
+/*
+ * @param keyByteLength truncates the seed. *Avoid its use* It was added only because a backwards compatibility bug
+ */
 export async function generateSeed(
   mnemonic: string,
   password?: string,
-  bip39ToUse = bip39Wrapper,
+  bip39ToUse: Bip39 = bip39Wrapper,
   keyByteLength: number = 64
 ): Promise<Buffer> {
   let seed = Buffer.from(await bip39ToUse.mnemonicToSeed(mnemonic, password))
@@ -428,6 +435,12 @@ export async function generateSeed(
   return seed
 }
 
+/*
+ * @param seed - Buffer created from mnemonic
+ * @param changeIndex postion 4 from https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
+ * @param addressIndex postion 5 from https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
+ * @param derivationPath - This will default to ETH_DERIVATION_PATH in 7.0 forum.celo.org/t/deprecating-the-celo-derivation-path/9229
+ */
 export function generateKeysFromSeed(
   seed: Buffer,
   changeIndex: number = 0,

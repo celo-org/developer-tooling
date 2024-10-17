@@ -642,6 +642,9 @@ DESCRIPTION
   command has been tested swapping mnemonics with the Ledger successfully (only supports
   english)
 
+  WARN: In 7.0 the default derivation path will be Eth ("m/44'/60'/0'")
+  forum.celo.org/t/deprecating-the-celo-derivation-path/9229
+
 EXAMPLES
   new
 

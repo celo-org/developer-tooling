@@ -1,5 +1,56 @@
 # @celo/contractkit
 
+## 9.0.0-beta.0
+
+### Major Changes
+
+- [#340](https://github.com/celo-org/developer-tooling/pull/340) [`33ad4aa`](https://github.com/celo-org/developer-tooling/commit/33ad4aaf6b9edc33d1ce19833dbea626798cfb88) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Removes all exports under the lib/identity folder. These have been move to a new @celo/metadata-claims package and should be imported from there.
+
+  Note that folder structure is also flattened slightly. so replace `@celo/contractkit/lib/identity/claims/` with `@celo/metadata-claims/lib/`
+
+  example
+
+  ```diff
+  - import { createAccountClaim } from '@celo/contractkit/lib/identity/claims/account'
+  + import { createAccountClaim } from '@celo/metadata-claims/lib/account'
+  ```
+
+  ```diff
+  - import { ContractKit, IdentityMetadataWrapper, newKitFromWeb3 } from '@celo/contractkit'
+  - import { ClaimTypes } from '@celo/contractkit/lib/identity'
+  + import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
+  + import { ClaimTypes, IdentityMetadataWrapper } from '@celo/metadata-claims'
+
+  ```
+
+  Note that Contractkit is Not a dependency. Instead when using `IdentityMetadataWrapper` you should make an object that satisfis the `AccountMetadataSignerGetters` type
+
+  ```typescript
+  import { AccountMetadataSignerGetters } from '@celo/metadata-claims/lib/types'
+  ```
+
+  using viem it would be like
+
+  ```typescript
+  const accountsMetaDataSignerGetters: AccountMetadataSignerGetters = {
+    isAccount: async (address: string) => accounts.read.isAccount([address as Address]),
+    getValidatorSigner: async (address: string) =>
+      accounts.read.getValidatorSigner([address as Address]),
+    getVoteSigner: async (address: string) =>
+      accounts.read.getValidatorSigner([address as Address]),
+    getAttestationSigner: async (address: string) =>
+      accounts.read.getValidatorSigner([address as Address]),
+  }
+  ```
+
+### Patch Changes
+
+- Updated dependencies [[`4ef76eb`](https://github.com/celo-org/developer-tooling/commit/4ef76eb174454f60304080d0ef63a859cd8d931b)]:
+  - @celo/base@7.0.0-beta.0
+  - @celo/utils@8.0.0-beta.0
+  - @celo/connect@6.0.3-beta.0
+  - @celo/wallet-local@6.0.2-beta.0
+
 ## 8.3.0
 
 ### Minor Changes
