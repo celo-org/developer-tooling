@@ -22,3 +22,8 @@ jobs:
         with:
           library: ${{ github.event.inputs.library }}
           version: ${{ github.event.inputs.version }}
+        env:
+          # Increment these to force cache rebuilding
+          NODE_MODULE_CACHE_VERSION: 5
+          NODE_OPTIONS: '--max-old-space-size=4096'
+          TERM: dumb
