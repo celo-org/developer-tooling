@@ -1,10 +1,11 @@
 import { Interfaces } from '@oclif/core'
 import Web3 from 'web3'
 import { BaseCommand } from '../base'
+import { ViemCommand } from '../viem'
 
 type AbstractConstructor<T> = new (...args: any[]) => T
-interface Runner extends AbstractConstructor<BaseCommand> {
-  run: typeof BaseCommand.run
+interface Runner extends AbstractConstructor<BaseCommand | ViemCommand> {
+  run: typeof BaseCommand.run | typeof ViemCommand.run
 }
 
 export async function testLocallyWithWeb3Node(
