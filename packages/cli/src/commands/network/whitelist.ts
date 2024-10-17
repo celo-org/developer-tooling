@@ -24,6 +24,7 @@ export default class Whitelist extends BaseCommand {
     const pairs = await feeCurrencyContract.getFeeCurrencyInformation(validFeeCurrencies)
 
     ux.table(
+      // @ts-ignore debug (why does it suddenly starts to fail?)
       pairs.map((token) => token),
       {
         name: { get: (token) => token.name },
