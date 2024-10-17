@@ -74,7 +74,7 @@ jobs:
       - id: trigger-tests
         name: Trigger tests if NPM's version was higher than tested version
         if: ${{ steps.compare-version.outputs.result }} == -1
-        uses: ./.github/actions/third-party-tests/action.yml
+        uses: ./.github/actions/third-party-tests
         with:
           library: ${{ github.event.inputs.library }}
           version: ${{ github.event.inputs.version }}

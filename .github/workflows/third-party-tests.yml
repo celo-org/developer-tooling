@@ -18,7 +18,7 @@ jobs:
     runs-on: ['self-hosted', 'org', '8-cpu']
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/third-party-tests/action.yml
+      - uses: ./.github/actions/third-party-tests
         with:
           library: ${{ github.event.inputs.library }}
           version: ${{ github.event.inputs.version }}
