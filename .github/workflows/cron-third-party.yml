@@ -30,8 +30,8 @@ jobs:
       - uses: actions/download-artifact@v4
         name: Download last version tested
         with:
-          name: /tmp/cache-last-version-${{ matrix.lib }}
-          path: /tmp/
+          name: /${{ github.workspace }}/cache-last-version-${{ matrix.lib }}
+          path: /${{ github.workspace }}/
         continue-on-error: true
 
       - uses: actions/setup-node@v4
@@ -58,7 +58,7 @@ jobs:
       - id: compare-version
         name: Compare last version with NPM's version
         run: |
-          LAST_VERSION=$(cat /tmp/cache-last-version-${{ matrix.lib }}2>/dev/null || echo '0.0.0')
+          LAST_VERSION=$(cat /${{ github.workspace }}/cache-last-version-${{ matrix.lib }}2>/dev/null || echo '0.0.0')
           FETCHED_VERSION="${{ steps.npm-version.outputs.result }}"
 
           echo "Validating last version: $LAST_VERSION ..."
@@ -89,7 +89,7 @@ jobs:
       - id: save-version
         name: Save the tested version
         run: |
-          echo $VERSION_TO_SAVE >> /tmp/cache-last-version-${{ matrix.lib }}
+          echo $VERSION_TO_SAVE >> /${{ github.workspace }}/cache-last-version-${{ matrix.lib }}
         env:
           VERSION_TO_SAVE: ${{ steps.npm-version.outputs.result }}
 
@@ -97,4 +97,4 @@ jobs:
         name: Upload version
         with:
           name: cache-last-version-${{ matrix.lib }}
-          path: /tmp/
+          path: /${{ github.workspace }}/
