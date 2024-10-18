@@ -1,17 +1,12 @@
 import { registryABI } from '@celo/abis'
 
-import { createPublicClient, createWalletClient, http } from 'viem'
+import { createWalletClient, http, publicActions } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { createNonceManager, jsonRpc } from 'viem/nonce'
 
 import { describe, expect, it } from 'vitest'
 
-import { celoAlfajores, TEST_PRIVATE_KEY } from './common'
-
-const publicClient = createPublicClient({
-  chain: celoAlfajores,
-  transport: http(),
-})
+import { CHAIN, TEST_PRIVATE_KEY } from './common'
 
 const walletClient = createWalletClient({
   account: privateKeyToAccount(TEST_PRIVATE_KEY, {
@@ -20,10 +15,10 @@ const walletClient = createWalletClient({
     }),
   }),
   transport: http(),
-  chain: celoAlfajores,
-})
+  chain: CHAIN,
+}).extend(publicActions)
 
-let cEUR = publicClient.readContract({
+let cEUR = walletClient.readContract({
   abi: registryABI,
   functionName: 'getAddressForString',
   address: '0x000000000000000000000000000000000000ce10',
@@ -32,7 +27,7 @@ let cEUR = publicClient.readContract({
 
 describe('viem e2e test suite', () => {
   it('is setup correctly', async () => {
-    const blockNumber = await publicClient.getBlockNumber()
+    const blockNumber = await walletClient.getBlockNumber()
     expect(blockNumber).toBeTypeOf('bigint')
     expect(blockNumber).toBeGreaterThan(0)
   })
@@ -41,7 +36,7 @@ describe('viem e2e test suite', () => {
     const [address] = await walletClient.getAddresses()
     expect(address).toMatchInlineSnapshot(`"0x5FB3913Eb60d125Afbe7A6572E4F0F624dd945Ed"`)
 
-    const balance = await publicClient.getBalance({ address, blockTag: 'latest' })
+    const balance = await walletClient.getBalance({ address, blockTag: 'latest' })
     expect(balance).toBeTypeOf('bigint')
     expect(balance).toBeGreaterThan(0)
   })

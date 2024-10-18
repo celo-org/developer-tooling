@@ -12,6 +12,9 @@ on:
         type: string
         default: 'latest'
         description: Version to test again or 'latest'
+      network:
+        type: string
+        default: alfajores
 
 jobs:
   third-party-test-workflow:
@@ -22,6 +25,7 @@ jobs:
         with:
           lib: ${{ inputs.lib }}
           version: ${{ inputs.version }}
+          network: ${{ inputs.network }}
         env:
           # Increment these to force cache rebuilding
           NODE_MODULE_CACHE_VERSION: 5

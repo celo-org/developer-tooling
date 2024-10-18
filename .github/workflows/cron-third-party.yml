@@ -58,8 +58,7 @@ jobs:
       - id: compare-version
         name: Compare last version with NPM's version
         run: |
-          FILE_PATH=/tmp/cache-last-version-${{ matrix.lib }}
-          LAST_VERSION=$(cat $FILEPATH 2>/dev/null || echo '0.0.0')
+          LAST_VERSION=$(cat /tmp/cache-last-version-${{ matrix.lib }}2>/dev/null || echo '0.0.0')
           FETCHED_VERSION="${{ steps.npm-version.outputs.result }}"
 
           echo "Validating last version: $LAST_VERSION ..."
@@ -68,8 +67,7 @@ jobs:
           echo "Validating fetched version: $FETCHED_VERSION ..."
           semver validate $FETCHED_VERSION
 
-          semver compare $LAST_VERSION $FETCHED_VERSION >> $FILE_PATH
-          echo "result=$(cat $FILE_PATH)" >> "$GITHUB_OUTPUT"
+          echo "result=$(semver compare $LAST_VERSION $FETCHED_VERSION)" >> "$GITHUB_OUTPUT"
 
       - run: ls -lA .
 
@@ -80,6 +78,7 @@ jobs:
         with:
           lib: ${{ matrix.lib }}
           version: ${{ steps.npm-version.outputs.result }}
+          network: alfajores
         env:
           # Increment these to force cache rebuilding
           NODE_MODULE_CACHE_VERSION: 5
@@ -87,9 +86,15 @@ jobs:
           TERM: dumb
           TEST_ACCOUNT: ${{ secrets.TEST_ACCOUNT }}
 
+      - id: save-version
+        name: Save the tested version
+        run: |
+          echo $VERSION_TO_SAVE >> /tmp/cache-last-version-${{ matrix.lib }}
+        env:
+          VERSION_TO_SAVE: ${{ steps.npm-version.outputs.result }}
+
       - uses: actions/upload-artifact@v4
         name: Upload version
-        if: ${{ steps.compare-version.outputs.result }} == -1
         with:
           name: cache-last-version-${{ matrix.lib }}
           path: /tmp/

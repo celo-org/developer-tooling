@@ -5,11 +5,11 @@ import { describe, expect, it } from 'vitest'
 
 import Web3 from 'web3'
 
-import { TEST_PRIVATE_KEY, celoAlfajores } from './common'
+import { CHAIN, TEST_PRIVATE_KEY } from './common'
 
-const web3 = new Web3(celoAlfajores.rpcUrls.default[0])
+const web3 = new Web3(CHAIN.rpcUrls.default.http[0])
 const account = web3.eth.accounts.wallet.add(TEST_PRIVATE_KEY)
-web3.setProvider(new Web3.providers.HttpProvider(celoAlfajores.rpcUrls.default.http[0]))
+web3.setProvider(new Web3.providers.HttpProvider(CHAIN.rpcUrls.default.http[0]))
 
 const cEURContract = new web3.eth.Contract(
   registryABI as any,

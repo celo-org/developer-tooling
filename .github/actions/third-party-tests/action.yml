@@ -6,6 +6,9 @@ inputs:
   version:
     type: string
     default: 'latest'
+  network:
+    type: string
+    required: true
 
 runs:
   using: 'composite'
@@ -53,3 +56,4 @@ runs:
       shell: bash --login -eo pipefail {0}
       env:
         TEST_ACCOUNT: ${{ env.TEST_ACCOUNT }}
+        NETWORK: ${{ inputs.network }}
