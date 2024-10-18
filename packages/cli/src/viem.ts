@@ -2,7 +2,7 @@ import { StrongAddress } from '@celo/base'
 import { Command } from '@oclif/core'
 import { CLIError } from '@oclif/core/lib/errors'
 import chalk from 'chalk'
-import { createPublicClient, extractChain, http } from 'viem'
+import { createPublicClient, extractChain, http, PublicClient, Transport } from 'viem'
 import { celo, celoAlfajores } from 'viem/chains'
 import { BaseCommand } from './base'
 import { ContractAddressResolver, ViemAddressResolver } from './packages-to-be/address-resolver'
@@ -23,13 +23,12 @@ export abstract class ViemCommand extends Command {
   // Indicates if celocli running in L2 context
   private cel2: boolean | null = null
 
-  // @ts-ignore DEBUG: removed type
-  private publicClient
+  private publicClient: PublicClient<Transport, typeof celo> | null = null
   private addressResolver?: ContractAddressResolver
   private l2Resolver?: L2Resolver
   private feeCurrencyProvider?: FeeCurrencyProvider
 
-  protected async getPublicClient() {
+  protected async getPublicClient(): Promise<PublicClient<Transport, typeof celo>> {
     if (!this.publicClient) {
       const nodeUrl = await this.getNodeUrl()
       const transport = http(nodeUrl)
@@ -42,10 +41,11 @@ export abstract class ViemCommand extends Command {
         id: (await intermediateClient.getChainId()) as 42220 | 44787,
       })
 
+      // @ts-ignore debug
       this.publicClient = createPublicClient({
         transport,
         chain: extractedChain ?? celo,
-      })
+      }) as PublicClient<Transport, typeof celo>
     }
 
     return this.publicClient
