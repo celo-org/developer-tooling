@@ -272,4 +272,19 @@ testWithAnvilL1('kit', (web3: Web3) => {
       ).resolves.toEqual(BigInt(51))
     })
   })
+
+  describe('epochs', () => {
+    it('gets the current epoch size', async () => {
+      expect(await kit.getEpochSize()).toEqual(100)
+    })
+
+    it('gets first and last block number of an epoch', async () => {
+      expect(await kit.getFirstBlockNumberForEpoch(2)).toEqual(101)
+      expect(await kit.getLastBlockNumberForEpoch(2)).toEqual(200)
+    })
+
+    it('gets the current epoch number', async () => {
+      expect(await kit.getEpochNumberOfBlock(300)).toEqual(3)
+    })
+  })
 })

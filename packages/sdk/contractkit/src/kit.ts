@@ -214,36 +214,71 @@ export class ContractKit {
     }
     this.connection.defaultFeeCurrency = address
   }
-  /*
-   * @deprecated - epoch related methods will be removed from contractkit
-   */
+
   async getEpochSize(): Promise<number> {
-    const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
-    return blockchainParamsWrapper.getEpochSizeNumber()
+    if (!(await isCel2(this.web3))) {
+      const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
+
+      return blockchainParamsWrapper.getEpochSizeNumber()
+    }
+
+    const epochManagerWrapper = await this.contracts.getEpochManager()
+
+    return epochManagerWrapper.epochDuration()
   }
 
-  /*
-   * @deprecated - epoch related methods will be removed from contractkit
-   */
   async getFirstBlockNumberForEpoch(epochNumber: number): Promise<number> {
-    const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
-    return blockchainParamsWrapper.getFirstBlockNumberForEpoch(epochNumber)
+    if (!(await isCel2(this.web3))) {
+      const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
+
+      return blockchainParamsWrapper.getFirstBlockNumberForEpoch(epochNumber)
+    }
+
+    const epochManagerWrapper = await this.contracts.getEpochManager()
+
+    return epochManagerWrapper.getFirstBlockAtEpoch(epochNumber)
   }
 
-  /*
-   * @deprecated - epoch related methods will be removed from contractkit
-   */
   async getLastBlockNumberForEpoch(epochNumber: number): Promise<number> {
-    const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
-    return blockchainParamsWrapper.getLastBlockNumberForEpoch(epochNumber)
+    if (!(await isCel2(this.web3))) {
+      const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
+
+      return blockchainParamsWrapper.getLastBlockNumberForEpoch(epochNumber)
+    }
+
+    const epochManagerWrapper = await this.contracts.getEpochManager()
+
+    return epochManagerWrapper.getLastBlockAtEpoch(epochNumber)
   }
 
-  /*
-   * @deprecated - epoch related methods will be removed from contractkit
-   */
   async getEpochNumberOfBlock(blockNumber: number): Promise<number> {
-    const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
-    return blockchainParamsWrapper.getEpochNumberOfBlock(blockNumber)
+    if (!(await isCel2(this.web3))) {
+      const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
+
+      return blockchainParamsWrapper.getEpochNumberOfBlock(blockNumber)
+    }
+
+    const epochManagerWrapper = await this.contracts.getEpochManager()
+    const latestEpochNumber = await epochManagerWrapper.getCurrentEpochNumber()
+    const latestEpochFirstBlockNumber = await epochManagerWrapper.getFirstBlockAtEpoch(
+      latestEpochNumber
+    )
+    const minEpoch = await epochManagerWrapper.firstKnownEpoch()
+
+    if (blockNumber === latestEpochFirstBlockNumber) {
+      return latestEpochNumber
+    }
+
+    for (let epochNumber = latestEpochNumber - 1; epochNumber >= minEpoch; epochNumber--) {
+      const startBlock = await epochManagerWrapper.getFirstBlockAtEpoch(epochNumber)
+      const endBlock = await epochManagerWrapper.getLastBlockAtEpoch(epochNumber)
+
+      if (blockNumber >= startBlock && blockNumber <= endBlock) {
+        return epochNumber
+      }
+    }
+
+    throw new Error(`Block number ${blockNumber} is not in any known L2 epoch`)
   }
 
   /*
