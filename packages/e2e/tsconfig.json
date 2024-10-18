@@ -1,0 +1,13 @@
+{
+  "extends": "@celo/typescript/tsconfig.library.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib",
+    "moduleResolution": "Node16",
+    "module": "Node16",
+    "declaration": true,
+    "types": ["vitest/globals"]
+  },
+  "include": ["src/**/*", "types/**/*"],
+  "exclude": ["**/*.test.ts"]
+}

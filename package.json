@@ -15,7 +15,7 @@
     "reset-rn": "watchman watch-del-all; rm -rf $TMPDIR/metro-cache-*; rm -rf $TMPDIR/haste-map-*; rm -rf $TMPDIR/metro-symbolicate*",
     "reset-yarn": "yarn cache clean",
     "test": "yarn test-pure && yarn test-needing-ganache",
-    "test-pure": "yarn workspaces foreach -piv --all --exclude celo --exclude \"@celo/{celocli,contractkit,transactions-uri}\" run test",
+    "test-pure": "yarn workspaces foreach -piv --all --exclude celo --exclude \"@celo/{celocli,contractkit,transactions-uri,e2e}\" run test",
     "test-needing-ganache": "yarn workspace @celo/contractkit test && yarn workspace @celo/celocli test && yarn workspace @celo/transactions-uri test",
     "build": "yarn workspaces foreach -piv --all --topological-dev run build",
     "clean": "yarn workspaces foreach -piv --all run clean",
