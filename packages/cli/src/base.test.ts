@@ -23,8 +23,8 @@ testWithAnvilL1('BaseCommand', (web3: Web3) => {
       [
         [
           "
-      Received an error during command execution, if you believe this is a bug you can create an issue here: 
-                  
+      Received an error during command execution, if you believe this is a bug you can create an issue here:
+
       https://github.com/celo-org/developer-tooling/issues/new?assignees=&labels=bug+report&projects=&template=BUG-FORM.yml
 
       ",
