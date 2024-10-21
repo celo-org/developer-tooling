@@ -30,15 +30,15 @@ testWithAnvilL1('network:whitelist cmd', (web3: Web3) => {
       ",
         ],
         [
-          " Celo Euro           cEUR   0x06f60E083aDf016a98E3c7A1aFfa1c097B617aB9 0x06f60E083aDf016a98E3c7A1aFfa1c097B617aB9 18       false         
+          " Celo Dollar         cUSD   0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1 0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1 18       false         
       ",
         ],
         [
-          " Celo Dollar         cUSD   0x9cA64d4663B4A623C3E9a7F9155451647592bEc7 0x9cA64d4663B4A623C3E9a7F9155451647592bEc7 18       false         
+          " Celo Euro           cEUR   0x5930519559Ffa7528a00BE445734036471c443a2 0x5930519559Ffa7528a00BE445734036471c443a2 18       false         
       ",
         ],
         [
-          " Celo Brazilian Real cREAL  0xC458f5ab25a47741205722d465cDea9aB1E1154A 0xC458f5ab25a47741205722d465cDea9aB1E1154A 18       false         
+          " Celo Brazilian Real cREAL  0xB2Fd9852Ca3D69678286A8635d661690906A3E9d 0xB2Fd9852Ca3D69678286A8635d661690906A3E9d 18       false         
       ",
         ],
       ]
