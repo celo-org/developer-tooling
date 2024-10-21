@@ -42,7 +42,7 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
   getLastBlockAtEpoch = proxyCall(this.contract.methods.getLastBlockAtEpoch, undefined, valueToInt)
   isOnEpochProcess = proxyCall(this.contract.methods.isOnEpochProcess)
   isTimeForNextEpoch = proxyCall(this.contract.methods.isTimeForNextEpoch)
-  getElected = proxyCall(this.contract.methods.getElected)
+  getElectedAccounts = proxyCall(this.contract.methods.getElectedAccounts)
   getEpochProcessingStatus = proxyCall(
     this.contract.methods.epochProcessing,
     undefined,
@@ -61,7 +61,7 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
   finishNextEpochProcess = proxySend(this.connection, this.contract.methods.finishNextEpochProcess)
 
   finishNextEpochProcessTx = async () => {
-    const elected = await this.getElected()
+    const elected = await this.getElectedAccounts()
     const validators = await this.contracts.getValidators()
 
     const electedGroups = new Set(

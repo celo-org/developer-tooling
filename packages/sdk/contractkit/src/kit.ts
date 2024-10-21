@@ -86,6 +86,9 @@ interface AccountBalance extends EachCeloToken<BigNumber> {
   lockedCELO: BigNumber
   pending: BigNumber
 }
+
+const BLOCKS_PER_EPOCH = 17280
+
 /*
  * ContractKit provides a convenient interface for All Celo Contracts
  *
@@ -259,11 +262,22 @@ export class ContractKit {
     }
 
     const epochManagerWrapper = await this.contracts.getEpochManager()
+    const minEpoch = await epochManagerWrapper.firstKnownEpoch()
+
+    // port of BlockchainParameters::getEpochNumberOfBlock
+    if (blockNumber < (await epochManagerWrapper.getFirstBlockAtEpoch(minEpoch))) {
+      const epochNumber = Math.floor(blockNumber / BLOCKS_PER_EPOCH)
+      if (blockNumber % BLOCKS_PER_EPOCH === 0) {
+        return epochNumber
+      } else {
+        return epochNumber + 1
+      }
+    }
+
     const latestEpochNumber = await epochManagerWrapper.getCurrentEpochNumber()
     const latestEpochFirstBlockNumber = await epochManagerWrapper.getFirstBlockAtEpoch(
       latestEpochNumber
     )
-    const minEpoch = await epochManagerWrapper.firstKnownEpoch()
 
     if (blockNumber === latestEpochFirstBlockNumber) {
       return latestEpochNumber

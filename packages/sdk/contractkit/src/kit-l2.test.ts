@@ -12,8 +12,8 @@ testWithAnvilL2('kit', (web3: Web3) => {
   beforeAll(async () => {
     kit = newKitFromWeb3(web3)
 
-    const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyWhitelist()
-    const gasOptions = await feeCurrencyWhitelist.getWhitelist()
+    const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyDirectory()
+    const gasOptions = await feeCurrencyWhitelist.getAddresses()
     feeToken = gasOptions[0]
   })
 
@@ -26,7 +26,7 @@ testWithAnvilL2('kit', (web3: Web3) => {
           })
         ).resolves.toMatchInlineSnapshot(`
           {
-            "feeCurrency": "0x06f60E083aDf016a98E3c7A1aFfa1c097B617aB9",
+            "feeCurrency": "0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1",
             "gas": 53001,
             "maxFeeInFeeCurrency": "54061020000000",
             "maxFeePerGas": "1000000000",
@@ -60,7 +60,7 @@ testWithAnvilL2('kit', (web3: Web3) => {
           })
         ).resolves.toMatchInlineSnapshot(`
           {
-            "feeCurrency": "0x06f60E083aDf016a98E3c7A1aFfa1c097B617aB9",
+            "feeCurrency": "0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1",
             "gas": "102864710371401736267367367",
             "maxFeeInFeeCurrency": "104922004578829770992714714340000000",
             "maxFeePerGas": "1000000000",
@@ -114,21 +114,24 @@ testWithAnvilL2('kit', (web3: Web3) => {
       expect(await kit.getLastBlockNumberForEpoch(6)).toEqual(358)
 
       expect(await kit.getFirstBlockNumberForEpoch(7)).toEqual(359)
-      expect(await kit.getLastBlockNumberForEpoch(7)).toEqual(371)
+      expect(await kit.getLastBlockNumberForEpoch(7)).toEqual(361)
 
-      expect(await kit.getFirstBlockNumberForEpoch(8)).toEqual(372)
+      expect(await kit.getFirstBlockNumberForEpoch(8)).toEqual(362)
     })
 
     it('gets the current epoch number', async () => {
       expect(await kit.getEpochNumberOfBlock(300)).toEqual(4)
       expect(await kit.getEpochNumberOfBlock(357)).toEqual(6)
-      expect(await kit.getEpochNumberOfBlock(371)).toEqual(7)
-      expect(await kit.getEpochNumberOfBlock(372)).toEqual(8)
+      expect(await kit.getEpochNumberOfBlock(361)).toEqual(7)
+      expect(await kit.getEpochNumberOfBlock(362)).toEqual(8)
     })
 
-    it('throws when block number is out of range', async () => {
-      await expect(kit.getEpochNumberOfBlock(299)).rejects.toThrow()
-      await expect(kit.getEpochNumberOfBlock(373)).rejects.toThrow()
+    it('throws when block number is out of range for L2', async () => {
+      await expect(kit.getEpochNumberOfBlock(363)).rejects.toThrow()
+    })
+
+    it('falls back to L1 calculation for epochs before the first known L2 epoch', async () => {
+      expect(await kit.getEpochNumberOfBlock(299)).toEqual(1)
     })
   })
 })

@@ -19,7 +19,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
 
     expect(epochManagerWrapper.address).toMatchInlineSnapshot(
-      `"0xbf13Ba354EeF22976Faf20b11E6dd5440514eE68"`
+      `"0x2E290D8c2D6b26985f2826A63Aa103963DbAca23"`
     )
   })
 
@@ -38,7 +38,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
   it('gets elected validators', async () => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
 
-    expect(await epochManagerWrapper.getElected()).toMatchInlineSnapshot(`
+    expect(await epochManagerWrapper.getElectedAccounts()).toMatchInlineSnapshot(`
       [
         "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65",
         "0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc",

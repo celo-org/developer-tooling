@@ -12,21 +12,21 @@ testWithAnvilL1('FeeCurrencyDirectory', (web3) => {
       [
         {
           "adaptedToken": undefined,
-          "address": "0x06f60E083aDf016a98E3c7A1aFfa1c097B617aB9",
-          "decimals": 18,
-          "name": "Celo Euro",
-          "symbol": "cEUR",
-        },
-        {
-          "adaptedToken": undefined,
-          "address": "0x9cA64d4663B4A623C3E9a7F9155451647592bEc7",
+          "address": "0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1",
           "decimals": 18,
           "name": "Celo Dollar",
           "symbol": "cUSD",
         },
         {
           "adaptedToken": undefined,
-          "address": "0xC458f5ab25a47741205722d465cDea9aB1E1154A",
+          "address": "0x5930519559Ffa7528a00BE445734036471c443a2",
+          "decimals": 18,
+          "name": "Celo Euro",
+          "symbol": "cEUR",
+        },
+        {
+          "adaptedToken": undefined,
+          "address": "0xB2Fd9852Ca3D69678286A8635d661690906A3E9d",
           "decimals": 18,
           "name": "Celo Brazilian Real",
           "symbol": "cREAL",
@@ -37,7 +37,8 @@ testWithAnvilL1('FeeCurrencyDirectory', (web3) => {
 
   it('fetches exchange rate', async () => {
     const wrapper = await kit.contracts.getFeeCurrencyDirectory()
-    const exchangeRate = await wrapper.getExchangeRate('0x06f60E083aDf016a98E3c7A1aFfa1c097B617aB9')
+    const addresses = await wrapper.getAddresses()
+    const exchangeRate = await wrapper.getExchangeRate(addresses[0])
 
     expect(exchangeRate.denominator).toEqual(new BigNumber('1000000000000000000000000'))
     expect(exchangeRate.numerator).toEqual(new BigNumber('1000000000000000000000000'))
@@ -45,13 +46,12 @@ testWithAnvilL1('FeeCurrencyDirectory', (web3) => {
 
   it('fetches currency config', async () => {
     const wrapper = await kit.contracts.getFeeCurrencyDirectory()
-    const currencyConfig = await wrapper.getCurrencyConfig(
-      '0x06f60E083aDf016a98E3c7A1aFfa1c097B617aB9'
-    )
+    const addresses = await wrapper.getAddresses()
+    const currencyConfig = await wrapper.getCurrencyConfig(addresses[0])
     expect(currencyConfig).toMatchInlineSnapshot(`
       {
         "intrinsicGas": "21000",
-        "oracle": "0xAa2b1051A90b6BCa493E844338307dCe6817F4d7",
+        "oracle": "0xeA6aCD469A2C2F32E167a9Ce50db735B61e00A2a",
       }
     `)
   })
@@ -63,9 +63,9 @@ testWithAnvilL1('FeeCurrencyDirectory', (web3) => {
     expect(config).toMatchInlineSnapshot(`
       {
         "intrinsicGasForAlternativeFeeCurrency": {
-          "0x06f60E083aDf016a98E3c7A1aFfa1c097B617aB9": "21000",
-          "0x9cA64d4663B4A623C3E9a7F9155451647592bEc7": "21000",
-          "0xC458f5ab25a47741205722d465cDea9aB1E1154A": "21000",
+          "0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1": "21000",
+          "0x5930519559Ffa7528a00BE445734036471c443a2": "21000",
+          "0xB2Fd9852Ca3D69678286A8635d661690906A3E9d": "21000",
         },
       }
     `)
