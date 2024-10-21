@@ -119,6 +119,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
   }
 
   it('starts and finishes a number of epochs', async () => {
+    const accounts = await kit.web3.eth.getAccounts()
     const epochManagerWrapper = await kit.contracts.getEpochManager()
     const EPOCH_COUNT = 5
 
@@ -137,10 +138,16 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
     }
 
     expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(10)
+    expect((await epochManagerWrapper.getEpochProcessingStatus()).status).toEqual(0)
+
+    // Start a new epoch process, but not finish it, so we can check the amounts
+    await timeTravel(EPOCH_DURATION + 1, web3)
+    await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
+      from: accounts[0],
+    })
 
     const status = await epochManagerWrapper.getEpochProcessingStatus()
 
-    expect(status.status).toEqual(0)
     expect(status.totalRewardsVoter.toNumber()).toBeGreaterThan(0)
     expect(status.perValidatorReward.toNumber()).toBeGreaterThan(0)
     expect(status.totalRewardsCommunity.toNumber()).toBeGreaterThan(0)
