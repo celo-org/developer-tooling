@@ -307,7 +307,7 @@ ___
 
 ### methodIds
 
-• **methodIds**: `Record`\<``"symbol"`` \| ``"name"`` \| ``"decimals"`` \| ``"initialized"`` \| ``"isL2"`` \| ``"isOwner"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"initialize"`` \| ``"approve"`` \| ``"getVersionNumber"`` \| ``"transfer"`` \| ``"increaseAllowance"`` \| ``"decreaseAllowance"`` \| ``"mint"`` \| ``"transferWithComment"`` \| ``"burn"`` \| ``"transferFrom"`` \| ``"allowance"`` \| ``"balanceOf"`` \| ``"totalSupply"`` \| ``"increaseSupply"`` \| ``"circulatingSupply"`` \| ``"getBurnedAmount"`` \| ``"allocatedSupply"``, `string`\>
+• **methodIds**: `Record`\<``"symbol"`` \| ``"name"`` \| ``"decimals"`` \| ``"initialized"`` \| ``"isOwner"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"initialize"`` \| ``"approve"`` \| ``"getVersionNumber"`` \| ``"transfer"`` \| ``"increaseAllowance"`` \| ``"decreaseAllowance"`` \| ``"mint"`` \| ``"transferWithComment"`` \| ``"burn"`` \| ``"transferFrom"`` \| ``"allowance"`` \| ``"balanceOf"`` \| ``"totalSupply"`` \| ``"increaseSupply"`` \| ``"circulatingSupply"`` \| ``"getBurnedAmount"`` \| ``"allocatedSupply"``, `string`\>
 
 #### Inherited from
 
