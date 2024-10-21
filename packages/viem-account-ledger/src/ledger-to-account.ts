@@ -1,7 +1,7 @@
 import { CELO_DERIVATION_PATH_BASE, trimLeading0x } from '@celo/base'
 import { ensureLeading0x } from '@celo/base/lib/address.js'
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
-import { hashMessage, serializeSignature } from 'viem'
+import { hashMessage, NonceManager, serializeSignature } from 'viem'
 import { LocalAccount, toAccount } from 'viem/accounts'
 import { CeloTransactionSerializable, serializeTransaction } from 'viem/celo'
 
@@ -13,6 +13,9 @@ export const ETH_DERIVATION_PATH_BASE = "m/44'/60'/0'" as const
 export const CELO_BASE_DERIVATION_PATH = `${CELO_DERIVATION_PATH_BASE.slice(2)}/0`
 export const DEFAULT_DERIVATION_PATH = `${ETH_DERIVATION_PATH_BASE.slice(2)}/0`
 
+export type LedgerToAccountOptions = {
+  nonceManager?: NonceManager | undefined
+}
 /**
  * A function to create a ledger account for viem
  * @param options
@@ -22,22 +25,26 @@ export const DEFAULT_DERIVATION_PATH = `${ETH_DERIVATION_PATH_BASE.slice(2)}/0`
  *
  * @returns a viem LocalAccount<"ledger">
  */
-export async function ledgerToAccount({
-  transport,
-  derivationPathIndex = 0,
-  baseDerivationPath = DEFAULT_DERIVATION_PATH,
-}: {
-  transport: TransportNodeHid.default
-  derivationPathIndex?: number | string
-  baseDerivationPath?: string
-}): Promise<LedgerAccount> {
+export async function ledgerToAccount(
+  {
+    transport,
+    derivationPathIndex = 0,
+    baseDerivationPath = DEFAULT_DERIVATION_PATH,
+  }: {
+    transport: TransportNodeHid.default
+    derivationPathIndex?: number | string
+    baseDerivationPath?: string
+  },
+  options: LedgerToAccountOptions = {}
+): Promise<LedgerAccount> {
+  const { nonceManager } = options
   const derivationPath = `${baseDerivationPath}/${derivationPathIndex}`
   const ledger = await generateLedger(transport)
   const { address, publicKey } = await ledger.getAddress(derivationPath, true)
 
   const account = toAccount({
     address: ensureLeading0x(address),
-
+    nonceManager,
     async signTransaction(transaction: CeloTransactionSerializable) {
       await checkForKnownToken(ledger, {
         to: transaction.to!,
