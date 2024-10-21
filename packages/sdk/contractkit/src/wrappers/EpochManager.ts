@@ -40,6 +40,11 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
     valueToInt
   )
   getLastBlockAtEpoch = proxyCall(this.contract.methods.getLastBlockAtEpoch, undefined, valueToInt)
+  getEpochNumberOfBlock = proxyCall(
+    this.contract.methods.getEpochNumberOfBlock,
+    undefined,
+    valueToInt
+  )
   isOnEpochProcess = proxyCall(this.contract.methods.isOnEpochProcess)
   isTimeForNextEpoch = proxyCall(this.contract.methods.isTimeForNextEpoch)
   getElectedAccounts = proxyCall(this.contract.methods.getElectedAccounts)

@@ -129,9 +129,5 @@ testWithAnvilL2('kit', (web3: Web3) => {
     it('throws when block number is out of range for L2', async () => {
       await expect(kit.getEpochNumberOfBlock(363)).rejects.toThrow()
     })
-
-    it('falls back to L1 calculation for epochs before the first known L2 epoch', async () => {
-      expect(await kit.getEpochNumberOfBlock(299)).toEqual(1)
-    })
   })
 })

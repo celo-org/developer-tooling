@@ -87,8 +87,6 @@ interface AccountBalance extends EachCeloToken<BigNumber> {
   pending: BigNumber
 }
 
-const BLOCKS_PER_EPOCH = 17280
-
 /*
  * ContractKit provides a convenient interface for All Celo Contracts
  *
@@ -218,6 +216,11 @@ export class ContractKit {
     this.connection.defaultFeeCurrency = address
   }
 
+  /**
+   * This method returns for:
+   * - L1: epoch size (in blocks)
+   * - L2: epoch duration (in seconds)
+   */
   async getEpochSize(): Promise<number> {
     if (!(await isCel2(this.web3))) {
       const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
@@ -239,7 +242,7 @@ export class ContractKit {
 
     const epochManagerWrapper = await this.contracts.getEpochManager()
 
-    return epochManagerWrapper.getFirstBlockAtEpoch(epochNumber)
+    return await epochManagerWrapper.getFirstBlockAtEpoch(epochNumber)
   }
 
   async getLastBlockNumberForEpoch(epochNumber: number): Promise<number> {
@@ -251,7 +254,7 @@ export class ContractKit {
 
     const epochManagerWrapper = await this.contracts.getEpochManager()
 
-    return epochManagerWrapper.getLastBlockAtEpoch(epochNumber)
+    return await epochManagerWrapper.getLastBlockAtEpoch(epochNumber)
   }
 
   async getEpochNumberOfBlock(blockNumber: number): Promise<number> {
@@ -262,37 +265,12 @@ export class ContractKit {
     }
 
     const epochManagerWrapper = await this.contracts.getEpochManager()
-    const minEpoch = await epochManagerWrapper.firstKnownEpoch()
 
-    // port of BlockchainParameters::getEpochNumberOfBlock
-    if (blockNumber < (await epochManagerWrapper.getFirstBlockAtEpoch(minEpoch))) {
-      const epochNumber = Math.floor(blockNumber / BLOCKS_PER_EPOCH)
-      if (blockNumber % BLOCKS_PER_EPOCH === 0) {
-        return epochNumber
-      } else {
-        return epochNumber + 1
-      }
+    try {
+      return epochManagerWrapper.getEpochNumberOfBlock(blockNumber)
+    } catch (_) {
+      throw new Error(`Block number ${blockNumber} is not in any known L2 epoch`)
     }
-
-    const latestEpochNumber = await epochManagerWrapper.getCurrentEpochNumber()
-    const latestEpochFirstBlockNumber = await epochManagerWrapper.getFirstBlockAtEpoch(
-      latestEpochNumber
-    )
-
-    if (blockNumber === latestEpochFirstBlockNumber) {
-      return latestEpochNumber
-    }
-
-    for (let epochNumber = latestEpochNumber - 1; epochNumber >= minEpoch; epochNumber--) {
-      const startBlock = await epochManagerWrapper.getFirstBlockAtEpoch(epochNumber)
-      const endBlock = await epochManagerWrapper.getLastBlockAtEpoch(epochNumber)
-
-      if (blockNumber >= startBlock && blockNumber <= endBlock) {
-        return epochNumber
-      }
-    }
-
-    throw new Error(`Block number ${blockNumber} is not in any known L2 epoch`)
   }
 
   /*
