@@ -4,13 +4,13 @@ import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import {
-  mineEpoch,
   registerAccount,
   registerAccountWithLockedGold,
   setupGroupAndAffiliateValidator,
   voteForGroupFrom,
 } from '../../test-utils/chain-setup'
 import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import Switch from '../epochs/switch'
 import ElectionActivate from './activate'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -79,7 +79,7 @@ testWithAnvilL2('election:activate', (web3: Web3) => {
 
     await voteForGroupFrom(kit, userAddress, groupAddress, new BigNumber(activateAmount))
 
-    await mineEpoch(kit)
+    await testLocallyWithWeb3Node(Switch, ['--from', userAddress], web3)
 
     expect((await election.getVotesForGroupByAccount(userAddress, groupAddress)).active).toEqual(
       new BigNumber(0)
@@ -115,7 +115,7 @@ testWithAnvilL2('election:activate', (web3: Web3) => {
       new Promise<void>((resolve) => {
         // at least the amount the --wait flag waits in the check
         setTimeout(async () => {
-          await mineEpoch(kit)
+          testLocallyWithWeb3Node(Switch, ['--from', userAddress], web3)
           resolve()
         }, 1000)
       }),
@@ -132,6 +132,18 @@ testWithAnvilL2('election:activate', (web3: Web3) => {
         ],
         [
           "All checks passed",
+        ],
+        [
+          "SendTransaction: startNextEpoch",
+        ],
+        [
+          "txHash: 0xtxhash",
+        ],
+        [
+          "SendTransaction: finishNextEpoch",
+        ],
+        [
+          "txHash: 0xtxhash",
         ],
         [
           "SendTransaction: activate",
@@ -160,7 +172,7 @@ testWithAnvilL2('election:activate', (web3: Web3) => {
 
     await voteForGroupFrom(kit, userAddress, groupAddress, new BigNumber(activateAmount))
 
-    await mineEpoch(kit)
+    await testLocallyWithWeb3Node(Switch, ['--from', userAddress], web3)
 
     expect((await election.getVotesForGroupByAccount(userAddress, groupAddress)).active).toEqual(
       new BigNumber(0)
