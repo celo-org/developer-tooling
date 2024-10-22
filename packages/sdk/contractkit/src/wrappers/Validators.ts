@@ -433,6 +433,16 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
     tupleParser(stringToSolidityBytes, stringToSolidityBytes, stringToSolidityBytes)
   )
 
+  registerValidatorNoBls: (
+    ecdsaPublicKey: string,
+    blsPublicKey: string,
+    blsPop: string
+  ) => CeloTransactionObject<boolean> = proxySend(
+    this.connection,
+    this.contract.methods.registerValidatorNoBls,
+    tupleParser(stringToSolidityBytes)
+  )
+
   getEpochNumber = proxyCall(this.contract.methods.getEpochNumber, undefined, valueToBigNumber)
 
   getEpochSize = proxyCall(this.contract.methods.getEpochSize, undefined, valueToBigNumber)
