@@ -1,4 +1,5 @@
 import { StrongAddress } from '@celo/base'
+import { isCel2 } from '@celo/connect'
 import { ContractKit, StableToken } from '@celo/contractkit'
 import {
   DEFAULT_OWNER_ADDRESS,
@@ -66,11 +67,17 @@ const setupValidator = async (kit: ContractKit, validatorAccount: string) => {
   const ecdsaPublicKey = await addressToPublicKey(validatorAccount, kit.connection.sign)
   const validators = await kit.contracts.getValidators()
 
-  await validators
-    .registerValidator(ecdsaPublicKey, BLS_PUBLIC_KEY, BLS_POP)
-    .sendAndWaitForReceipt({
-      from: validatorAccount,
-    })
+  if (!(await isCel2(kit.web3))) {
+    await validators
+      .registerValidator(ecdsaPublicKey, BLS_PUBLIC_KEY, BLS_POP)
+      .sendAndWaitForReceipt({
+        from: validatorAccount,
+      })
+  }
+
+  await validators.registerValidatorNoBls(ecdsaPublicKey).sendAndWaitForReceipt({
+    from: validatorAccount,
+  })
 }
 
 export const setupGroupAndAffiliateValidator = async (
