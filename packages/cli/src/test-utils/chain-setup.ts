@@ -11,6 +11,8 @@ import { mineBlocks } from '@celo/dev-utils/lib/ganache-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
+import Switch from '../commands/epochs/switch'
+import { testLocallyWithWeb3Node } from './cliUtils'
 
 export const GANACHE_EPOCH_SIZE = 100
 export const MIN_LOCKED_CELO_VALUE = new BigNumber(Web3.utils.toWei('10000', 'ether')) // 10k CELO
@@ -116,9 +118,14 @@ export const voteForGroupFromAndActivateVotes = async (
   groupAddress: string,
   amount: BigNumber
 ) => {
+  const accounts = await kit.web3.eth.getAccounts()
   await voteForGroupFrom(kit, fromAddress, groupAddress, amount)
 
-  await mineEpoch(kit)
+  if (!isCel2(kit.web3)) {
+    await mineEpoch(kit)
+  } else {
+    await testLocallyWithWeb3Node(Switch, ['--from', accounts[0]], kit.web3)
+  }
 
   const election = await kit.contracts.getElection()
 
