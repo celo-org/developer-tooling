@@ -75,6 +75,8 @@ const setupValidator = async (kit: ContractKit, validatorAccount: string) => {
       .sendAndWaitForReceipt({
         from: validatorAccount,
       })
+
+    return
   }
 
   await validators.registerValidatorNoBls(ecdsaPublicKey).sendAndWaitForReceipt({
@@ -121,7 +123,7 @@ export const voteForGroupFromAndActivateVotes = async (
   const accounts = await kit.web3.eth.getAccounts()
   await voteForGroupFrom(kit, fromAddress, groupAddress, amount)
 
-  if (!isCel2(kit.web3)) {
+  if (!(await isCel2(kit.web3))) {
     await mineEpoch(kit)
   } else {
     await testLocallyWithWeb3Node(Switch, ['--from', accounts[0]], kit.web3)
