@@ -52,15 +52,22 @@ export default class ValidatorRegister extends BaseCommand {
       .signerMeetsValidatorBalanceRequirements()
       .runChecks()
 
-    await displaySendTx(
-      'registerValidator',
-      validators.registerValidator(
-        // @ts-ignore incorrect typing for bytes type
-        res.flags.ecdsaKey,
-        res.flags.blsKey,
-        res.flags.blsSignature
+    if (await this.isCel2()) {
+      await displaySendTx(
+        'registerValidator',
+        validators.registerValidatorNoBls(res.flags.ecdsaKey)
       )
-    )
+    } else {
+      await displaySendTx(
+        'registerValidator',
+        validators.registerValidator(
+          // @ts-ignore incorrect typing for bytes type
+          res.flags.ecdsaKey,
+          res.flags.blsKey,
+          res.flags.blsSignature
+        )
+      )
+    }
 
     // register encryption key on accounts contract
     // TODO: Use a different key data encryption
