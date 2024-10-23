@@ -3,6 +3,7 @@ import { AccountsWrapper } from './Accounts'
 import { BaseWrapper } from './BaseWrapper'
 import { BlockchainParametersWrapper } from './BlockchainParameters'
 import { ElectionWrapper } from './Election'
+import { EpochManagerWrapper } from './EpochManager'
 import { LockedGoldWrapper } from './LockedGold'
 import { MultiSigWrapper } from './MultiSig'
 import { ScoreManagerWrapper } from './ScoreManager'
@@ -16,6 +17,7 @@ interface ContractWrappersForVotingAndRules {
   getScoreManager: () => Promise<ScoreManagerWrapper>
   getMultiSig: (address: string) => Promise<MultiSigWrapper>
   getBlockchainParameters: () => Promise<BlockchainParametersWrapper>
+  getEpochManager: () => Promise<EpochManagerWrapper>
 }
 
 /** @internal */

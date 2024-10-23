@@ -86,6 +86,7 @@ ___
 | :------ | :------ |
 | `GroupScoreSet` | `ContractEvent`\<\{ `0`: `string` ; `1`: `string` ; `group`: `string` ; `score`: `string`  }\> |
 | `OwnershipTransferred` | `ContractEvent`\<\{ `0`: `string` ; `1`: `string` ; `newOwner`: `string` ; `previousOwner`: `string`  }\> |
+| `ScoreManagerSetterSet` | `ContractEvent`\<`string`\> |
 | `ValidatorScoreSet` | `ContractEvent`\<\{ `0`: `string` ; `1`: `string` ; `score`: `string` ; `validator`: `string`  }\> |
 | `allEvents` | (`options?`: `EventOptions`, `cb?`: `Callback`\<`EventLog`\>) => `EventEmitter` |
 
@@ -149,7 +150,7 @@ ___
 
 ### methodIds
 
-• **methodIds**: `Record`\<``"initialized"`` \| ``"owner"`` \| ``"renounceOwnership"`` \| ``"transferOwnership"`` \| ``"initialize"`` \| ``"getVersionNumber"`` \| ``"groupScores"`` \| ``"validatorScores"`` \| ``"setGroupScore"`` \| ``"setValidatorScore"`` \| ``"getGroupScore"`` \| ``"getValidatorScore"``, `string`\>
+• **methodIds**: `Record`\<``"initialized"`` \| ``"owner"`` \| ``"renounceOwnership"`` \| ``"transferOwnership"`` \| ``"initialize"`` \| ``"getVersionNumber"`` \| ``"ZERO_SCORE"`` \| ``"groupScores"`` \| ``"validatorScores"`` \| ``"setGroupScore"`` \| ``"setValidatorScore"`` \| ``"setScoreManagerSetter"`` \| ``"getGroupScore"`` \| ``"getValidatorScore"`` \| ``"getScoreManagerSetter"``, `string`\>
 
 #### Inherited from
 
@@ -191,7 +192,7 @@ Contract getPastEvents
 
 | Name | Type |
 | :------ | :------ |
-| `event` | ``"OwnershipTransferred"`` \| ``"allEvents"`` \| ``"GroupScoreSet"`` \| ``"ValidatorScoreSet"`` |
+| `event` | ``"OwnershipTransferred"`` \| ``"allEvents"`` \| ``"GroupScoreSet"`` \| ``"ScoreManagerSetterSet"`` \| ``"ValidatorScoreSet"`` |
 | `options` | `PastEventOptions` |
 
 #### Returns

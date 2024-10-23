@@ -64,7 +64,7 @@ testWithAnvilL1('governance:approve cmd', (web3: Web3) => {
           "Running Checks:",
         ],
         [
-          "   ✔  0x0639DBA9CBD6586E665B2bB7b705C65d96aae4f7 is approver address ",
+          "   ✔  0xf750153fc4211e4Ef325A7fD87d8258222e0b510 is approver address ",
         ],
         [
           "   ✘  0x5409ED021D9299bf6814279A6A1411A7e866A631 is multisig signatory ",
@@ -103,7 +103,7 @@ testWithAnvilL1('governance:approve cmd', (web3: Web3) => {
           "Running Checks:",
         ],
         [
-          "   ✔  0x0639DBA9CBD6586E665B2bB7b705C65d96aae4f7 is approver address ",
+          "   ✔  0xf750153fc4211e4Ef325A7fD87d8258222e0b510 is approver address ",
         ],
         [
           "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is multisig signatory ",
@@ -159,7 +159,7 @@ testWithAnvilL1('governance:approve cmd', (web3: Web3) => {
             "Running Checks:",
           ],
           [
-            "   ✔  0x0639DBA9CBD6586E665B2bB7b705C65d96aae4f7 is approver address ",
+            "   ✔  0xf750153fc4211e4Ef325A7fD87d8258222e0b510 is approver address ",
           ],
           [
             "   ✔  2 is an existing proposal ",
@@ -198,7 +198,7 @@ testWithAnvilL1('governance:approve cmd', (web3: Web3) => {
             "Running Checks:",
           ],
           [
-            "   ✔  0x0639DBA9CBD6586E665B2bB7b705C65d96aae4f7 is approver address ",
+            "   ✔  0xf750153fc4211e4Ef325A7fD87d8258222e0b510 is approver address ",
           ],
           [
             "   ✔  2 is an existing proposal ",
