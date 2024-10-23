@@ -1,5 +1,11 @@
 # @celo/contractkit
 
+## 9.0.0-beta.1
+
+### Patch Changes
+
+- [#400](https://github.com/celo-org/developer-tooling/pull/400) [`38fe4d0`](https://github.com/celo-org/developer-tooling/commit/38fe4d018d1b9ed5954a17501bdaa59b0aeec2f2) Thanks [@shazarre](https://github.com/shazarre)! - Renames `getElected` and its usages to `getElectedAccounts` for `EpochManagerWrapper`
+
 ## 9.0.0-beta.0
 
 ### Major Changes

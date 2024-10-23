@@ -28,6 +28,7 @@
     "@celo/viem-account-ledger": "0.0.1"
   },
   "changesets": [
+    "calm-sheep-tie",
     "dry-gifts-love",
     "fair-points-beg",
     "fifty-roses-explain",
@@ -38,6 +39,7 @@
     "moody-falcons-remain",
     "polite-pets-push",
     "rude-parrots-know",
+    "smart-guests-refuse",
     "thirty-pugs-smile"
   ]
 }
