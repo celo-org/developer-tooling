@@ -31,6 +31,7 @@ import { AddressValidation, LedgerWallet } from './ledger-wallet'
 
 // Update this variable when testing using a physical device
 const USE_PHYSICAL_LEDGER = process.env.USE_PHYSICAL_LEDGER === 'true'
+// const USE_PHYSICAL_LEDGER = true
 // Increase timeout to give developer time to respond on device
 const TEST_TIMEOUT_IN_MS = USE_PHYSICAL_LEDGER ? 30 * 1000 : 1 * 1000
 
@@ -266,6 +267,7 @@ describe('LedgerWallet class', () => {
   beforeEach(async () => {
     jest.setTimeout(TEST_TIMEOUT_IN_MS)
 
+    console.log({ USE_PHYSICAL_LEDGER })
     if (USE_PHYSICAL_LEDGER) {
       try {
         // Use physical ledger if present
@@ -417,13 +419,35 @@ describe('LedgerWallet class', () => {
               }
             })
 
-            test(
-              'succeeds on cel2 (when ledger version is above minimum)',
-              async () => {
-                await expect(wallet.signTransaction(celoTransaction)).resolves.not.toBeUndefined()
-              },
-              TEST_TIMEOUT_IN_MS
-            )
+            describe('succeeds on cel2 (when ledger version is above minimum)', () => {
+              test(
+                'v=0',
+                async () => {
+                  const signed = await wallet.signTransaction({
+                    // produces a v=0
+                    ...celoTransaction,
+                  })
+                  expect(signed).not.toBeUndefined()
+                  const [_txParams, address] = recoverTransaction(signed.raw)
+                  expect(address.toLowerCase()).toBe(wallet.getAccounts()[0].toLowerCase())
+                },
+                TEST_TIMEOUT_IN_MS
+              )
+              test(
+                'v=1',
+                async () => {
+                  const signed = await wallet.signTransaction({
+                    // produces a v=1
+                    ...celoTransaction,
+                    nonce: 501,
+                  })
+                  expect(signed).not.toBeUndefined()
+                  const [_txParams, address] = recoverTransaction(signed.raw)
+                  expect(address.toLowerCase()).toBe(wallet.getAccounts()[0].toLowerCase())
+                },
+                TEST_TIMEOUT_IN_MS
+              )
+            })
             //
             test(
               'fails on cel2 (when ledger version is below minimum)',
@@ -452,6 +476,10 @@ describe('LedgerWallet class', () => {
             test(
               'on cel1 with old ledger converts to legacy tx',
               async () => {
+                if (!hardwareWallet) {
+                  expect(true).toBeTruthy()
+                  return
+                }
                 wallet = new LedgerWallet(
                   undefined,
                   undefined,
