@@ -63,24 +63,17 @@ export class LedgerSigner implements Signer {
       // }
 
       let v: number
-      const isModern = addToV === 27
-      if (isModern) {
-        if (_v === 0 || _v === 1) {
-          v = _v + 27
-        } else if (_v === 27 || _v === 28) {
-          v = _v
-        }
+      if (_v === 0 || _v === 1) {
+        // if v is 0 or 1, it's already representing parity
+        v = addToV + _v
+      } else if (_v === 27 || _v === 28) {
+        const parity = _v - 27 // transforming v into 0 or 1 to become the parity
+        v = addToV + _v + parity
       } else {
-        // NOTE
-        // dark magic for legacy
-        if (_v !== addToV && (_v & addToV) !== _v) {
-          v = _v + 1 // add signature v bit.
-        } else {
-          v = _v
-        }
+        v = _v
       }
 
-      console.log({ v: v!, _v, signature })
+      console.log({ addToV, v: v!, _v, signature })
       return {
         v: v!,
         r: ethUtil.toBuffer(ensureLeading0x(signature.r)),

@@ -649,49 +649,103 @@ describe('LedgerWallet class', () => {
                   TEST_TIMEOUT_IN_MS
                 )
 
-                test(
-                  'succeeds with warning',
-                  async () => {
-                    wallet = new LedgerWallet(
-                      undefined,
-                      undefined,
-                      undefined,
-                      AddressValidation.never,
-                      false
-                    )
-                    mockForceValidation = jest.fn((): void => {
-                      // do nothing
-                    })
-                    mockLedger(wallet, mockForceValidation, LedgerWallet.MIN_VERSION_TOKEN_DATA)
-                    await wallet.init()
-                    const warnSpy = jest.spyOn(console, 'warn')
-                    // setup complete
+                describe.only('succeeds with warning', () => {
+                  test(
+                    'v=0',
+                    async () => {
+                      wallet = new LedgerWallet(
+                        undefined,
+                        undefined,
+                        undefined,
+                        AddressValidation.never,
+                        false
+                      )
+                      mockForceValidation = jest.fn((): void => {
+                        // do nothing
+                      })
+                      mockLedger(wallet, mockForceValidation, LedgerWallet.MIN_VERSION_TOKEN_DATA)
+                      await wallet.init()
+                      const warnSpy = jest.spyOn(console, 'warn')
+                      // setup complete
 
-                    await expect(wallet.signTransaction(celoTransaction)).resolves
-                      .toMatchInlineSnapshot(`
-                      {
-                        "raw": "0xf87f80636394874069fa1eb16d44d622f2e0ca25eea172369bc1808094588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a76400008083015e09a024c4b1d027c50d2e847d371cd902d3e22c9fa10fcbd59e9c5a854282afed34daa0686180d75830ea223c3ed1ca12613d029bc3613b4b5b51a724b33067491c2398",
-                        "tx": {
-                          "feeCurrency": "0x874069fa1eb16d44d622f2e0ca25eea172369bc1",
-                          "gas": "0x63",
-                          "hash": "0x302b12585b4a17317e9affcbe0abd0cd8cd39ef402108625085485b1c1d92d71",
-                          "input": "0x",
-                          "nonce": "0",
-                          "r": "0x24c4b1d027c50d2e847d371cd902d3e22c9fa10fcbd59e9c5a854282afed34da",
-                          "s": "0x686180d75830ea223c3ed1ca12613d029bc3613b4b5b51a724b33067491c2398",
-                          "to": "0x588e4b68193001e4d10928660ab4165b813717c0",
-                          "v": "0x015e09",
-                          "value": "0x0de0b6b3a7640000",
-                        },
-                        "type": "celo-legacy",
-                      }
-                    `)
-                    expect(warnSpy).toHaveBeenCalledWith(
-                      'Upgrade your celo ledger app to at least 1.2.0 before cel2 transition'
-                    )
-                  },
-                  TEST_TIMEOUT_IN_MS
-                )
+                      const tx = await wallet.signTransaction(celoTransaction)
+                      expect(tx).toMatchInlineSnapshot(`
+                        {
+                          "raw": "0xf87f80636394874069fa1eb16d44d622f2e0ca25eea172369bc1808094588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a76400008083015e09a024c4b1d027c50d2e847d371cd902d3e22c9fa10fcbd59e9c5a854282afed34daa0686180d75830ea223c3ed1ca12613d029bc3613b4b5b51a724b33067491c2398",
+                          "tx": {
+                            "feeCurrency": "0x874069fa1eb16d44d622f2e0ca25eea172369bc1",
+                            "gas": "0x63",
+                            "hash": "0x302b12585b4a17317e9affcbe0abd0cd8cd39ef402108625085485b1c1d92d71",
+                            "input": "0x",
+                            "nonce": "0",
+                            "r": "0x24c4b1d027c50d2e847d371cd902d3e22c9fa10fcbd59e9c5a854282afed34da",
+                            "s": "0x686180d75830ea223c3ed1ca12613d029bc3613b4b5b51a724b33067491c2398",
+                            "to": "0x588e4b68193001e4d10928660ab4165b813717c0",
+                            "v": "0x015e09",
+                            "value": "0x0de0b6b3a7640000",
+                          },
+                          "type": "celo-legacy",
+                        }
+                      `)
+                      expect(recoverTransaction(tx.raw)[1].toLowerCase()).toBe(
+                        wallet.getAccounts()[0].toLowerCase()
+                      )
+                      expect(warnSpy).toHaveBeenCalledWith(
+                        'Upgrade your celo ledger app to at least 1.2.0 before cel2 transition'
+                      )
+                    },
+                    TEST_TIMEOUT_IN_MS
+                  )
+                  test(
+                    'v=1',
+                    async () => {
+                      wallet = new LedgerWallet(
+                        undefined,
+                        undefined,
+                        undefined,
+                        AddressValidation.never,
+                        false
+                      )
+                      mockForceValidation = jest.fn((): void => {
+                        // do nothing
+                      })
+                      mockLedger(wallet, mockForceValidation, LedgerWallet.MIN_VERSION_TOKEN_DATA)
+                      await wallet.init()
+                      const warnSpy = jest.spyOn(console, 'warn')
+                      // setup complete
+
+                      const tx = await wallet.signTransaction({
+                        ...celoTransaction,
+                        nonce: 1,
+                      })
+                      expect(tx).toMatchInlineSnapshot(`
+                        {
+                          "raw": "0xf87f01636394874069fa1eb16d44d622f2e0ca25eea172369bc1808094588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a76400008083015e0aa07f4b5fda6eb400f44a22efae0f394b5237c0edfeab75f5bee5952ccbdf1c75a5a03d1f8e0cbfd80027a8523caf3600bd4cb3188761b1c11924607b060dc46a726f",
+                          "tx": {
+                            "feeCurrency": "0x874069fa1eb16d44d622f2e0ca25eea172369bc1",
+                            "gas": "0x63",
+                            "hash": "0x1a60bc35a24e3457bc15fdcbb37f77424f95697cda005d722d2c6e4d3bb95da0",
+                            "input": "0x",
+                            "nonce": "1",
+                            "r": "0x7f4b5fda6eb400f44a22efae0f394b5237c0edfeab75f5bee5952ccbdf1c75a5",
+                            "s": "0x3d1f8e0cbfd80027a8523caf3600bd4cb3188761b1c11924607b060dc46a726f",
+                            "to": "0x588e4b68193001e4d10928660ab4165b813717c0",
+                            "v": "0x015e0a",
+                            "value": "0x0de0b6b3a7640000",
+                          },
+                          "type": "celo-legacy",
+                        }
+                      `)
+                      expect(recoverTransaction(tx.raw)[1].toLowerCase()).toBe(
+                        wallet.getAccounts()[0].toLowerCase()
+                      )
+                      expect(warnSpy).toHaveBeenCalledWith(
+                        'Upgrade your celo ledger app to at least 1.2.0 before cel2 transition'
+                      )
+                    },
+                    TEST_TIMEOUT_IN_MS
+                  )
+                })
               })
             })
             describe('with new ledger app', () => {
