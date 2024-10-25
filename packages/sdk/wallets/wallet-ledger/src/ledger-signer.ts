@@ -57,13 +57,32 @@ export class LedgerSigner implements Signer {
 
       // EIP155 support. check/recalc signature v value.
       const _v = parseInt(signature.v, 16)
-      // eslint-disable-next-line no-bitwise
-      if (_v !== addToV && (_v & addToV) !== _v) {
-        addToV += 1 // add signature v bit.
+      // // eslint-disable-next-line no-bitwise
+      // if (_v !== addToV && (_v & addToV) !== _v) {
+      //   addToV += 1 // add signature v bit.
+      // }
+
+      let v: number
+      const isModern = addToV === 27
+      if (isModern) {
+        if (_v === 0 || _v === 1) {
+          v = _v + 27
+        } else if (_v === 27 || _v === 28) {
+          v = _v
+        }
+      } else {
+        // NOTE
+        // dark magic for legacy
+        if (_v !== addToV && (_v & addToV) !== _v) {
+          v = _v + 1 // add signature v bit.
+        } else {
+          v = _v
+        }
       }
 
+      console.log({ v: v!, _v, signature })
       return {
-        v: _v,
+        v: v!,
         r: ethUtil.toBuffer(ensureLeading0x(signature.r)),
         s: ethUtil.toBuffer(ensureLeading0x(signature.s)),
       }

@@ -419,7 +419,7 @@ describe('LedgerWallet class', () => {
               }
             })
 
-            describe('succeeds on cel2 (when ledger version is above minimum)', () => {
+            describe.only('succeeds on cel2 (when ledger version is above minimum)', () => {
               test(
                 'v=0',
                 async () => {

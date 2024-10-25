@@ -95,7 +95,7 @@ function signatureFormatter(
 } {
   let v = signature.v
   if (type !== 'celo-legacy' && type !== 'ethereum-legacy') {
-    v = signature.v === Y_PARITY_EIP_2098 ? 0 : 1
+    v = BigInt(signature.v) === BigInt(Y_PARITY_EIP_2098) ? 0 : 1
   }
   return {
     v: trimLeading0x(stringNumberToHex(v)),
