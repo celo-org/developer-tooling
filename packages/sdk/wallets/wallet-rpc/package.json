@@ -32,8 +32,8 @@
     "debug": "^4.1.1"
   },
   "devDependencies": {
-    "@celo/contractkit": "^8.1.1",
-    "@celo/dev-utils": "0.0.5",
+    "@celo/contractkit": "^8.3.1",
+    "@celo/dev-utils": "0.0.6",
     "@celo/typescript": "workspace:^",
     "@types/debug": "^4.1.12",
     "bn.js": "^5.1.0",

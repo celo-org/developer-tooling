@@ -1,5 +1,11 @@
 # @celo/dev-utils
 
+## 0.0.6
+
+### Patch Changes
+
+- [#409](https://github.com/celo-org/developer-tooling/pull/409) [`e709b88`](https://github.com/celo-org/developer-tooling/commit/e709b8821315e354e418649320b5f93a7a464c16) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Upgrades to latest devchain
+
 ## 0.0.5
 
 ### Patch Changes
