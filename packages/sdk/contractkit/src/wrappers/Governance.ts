@@ -904,7 +904,7 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<Governance> {
   async getHotfixRecord(hash: Buffer): Promise<L1HotfixRecord | HotfixRecord> {
     const version = await this.version()
 
-    if (version.isAtLeast(new ContractVersion(1, 5, 0, 0))) {
+    if (version.isAtLeast(new ContractVersion(1, 4, 2, 0))) {
       if (await isCel2(this.connection.web3)) {
         // is L2
         const res = await this.contract.methods.getL2HotfixRecord(bufferToHex(hash)).call()

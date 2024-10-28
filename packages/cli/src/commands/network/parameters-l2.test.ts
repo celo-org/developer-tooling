@@ -20,7 +20,7 @@ testWithAnvilL2('network:parameters', (web3) => {
         currentThreshold: 60000000000000000000 (~6.000e+19)
         electabilityThreshold: 0.001 
         electableValidators: 
-          max: 100 
+          max: 110 
           min: 1 
         maxNumGroupsVotedFor: 10 
         totalVotes: 60000000000000000000000 (~6.000e+22)
@@ -30,9 +30,9 @@ testWithAnvilL2('network:parameters', (web3) => {
         isTimeForNextEpoch: false
       FeeCurrencyDirectory: 
         intrinsicGasForAlternativeFeeCurrency: 
-          0x06f60E083aDf016a98E3c7A1aFfa1c097B617aB9: 21000 (~2.100e+4)
-          0x9cA64d4663B4A623C3E9a7F9155451647592bEc7: 21000 (~2.100e+4)
-          0xC458f5ab25a47741205722d465cDea9aB1E1154A: 21000 (~2.100e+4)
+          0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1: 21000 (~2.100e+4)
+          0x5930519559Ffa7528a00BE445734036471c443a2: 21000 (~2.100e+4)
+          0xB2Fd9852Ca3D69678286A8635d661690906A3E9d: 21000 (~2.100e+4)
       Governance: 
         concurrentProposals: 3 
         dequeueFrequency: 4 hours
@@ -52,7 +52,7 @@ testWithAnvilL2('network:parameters', (web3) => {
       Reserve: 
         frozenReserveGoldDays: 0 
         frozenReserveGoldStartBalance: 0 
-        frozenReserveGoldStartDay: 19991 (~1.999e+4)
+        frozenReserveGoldStartDay: 20013 (~2.001e+4)
         otherReserveAddresses: 
 
         tobinTaxStalenessThreshold: 3153600000 (~3.154e+9)

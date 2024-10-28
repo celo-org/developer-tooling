@@ -1,4 +1,3 @@
-import { isCel2 } from '@celo/connect'
 import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { printValueMapRecursive } from '../../utils/cli'
@@ -19,7 +18,7 @@ export default class Info extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(Info)
-    const isL2 = await isCel2(kit.connection.web3)
+    const isL2 = await this.isCel2()
     let latestEpochNumber: number
     let epochSize: number
 
