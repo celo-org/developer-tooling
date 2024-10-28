@@ -1,6 +1,6 @@
 {
   "name": "@celo/contractkit",
-  "version": "8.3.0",
+  "version": "8.3.1",
   "description": "Celo's ContractKit to interact with Celo network",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "@celo/celo-devchain": "^7.0.0",
-    "@celo/dev-utils": "0.0.5",
+    "@celo/dev-utils": "0.0.6",
     "@celo/odis-identifiers": "^1.0.1",
     "@celo/typescript": "workspace:^",
     "@truffle/contract": "4.6.31",
