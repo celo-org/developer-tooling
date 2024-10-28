@@ -15,10 +15,10 @@ import { MultiSigWrapper } from './MultiSig'
 // Only on ganache we can test 1.4.1.0 version
 testWithGanache('Governance Wrapper', (web3: Web3) => {
   describe('Hotfixes', () => {
-    it('gets L1 hotfix record pre 1.5.0.0', async () => {
+    it('gets L1 hotfix record pre 1.4.2.0', async () => {
       const kit = newKitFromWeb3(web3)
       const governance = await kit.contracts.getGovernance()
-      // Sanity check to make sure we're pre 1.5.0.0
+      // Sanity check to make sure we're pre 1.4.2.0
       expect((await governance.version()).toString()).toBe('1.4.1.0')
 
       const hotfixRecord = await governance.getHotfixRecord(Buffer.from('0x', 'hex'))
@@ -296,13 +296,13 @@ testWithAnvilL1('Governance Wrapper', (web3: Web3) => {
   })
 
   describe('Hotfixes', () => {
-    it('gets L1 hotfix record for version >= 1.5.0.0', async () => {
+    it('gets L1 hotfix record for version >= 1.4.2.0', async () => {
       const kit = newKitFromWeb3(web3)
       const governance = await kit.contracts.getGovernance()
       const hotfixHash = Buffer.from('0x', 'hex')
 
-      // Sanity check to make sure we're on at least 1.5.0.0 version
-      expect((await governance.version()).isAtLeast(new ContractVersion(1, 5, 0, 0)))
+      // Sanity check to make sure we're on at least 1.4.2.0 version
+      expect((await governance.version()).isAtLeast(new ContractVersion(1, 4, 2, 0))).toBeTruthy()
 
       // Test L1 context
       const hotfixRecordL1 = await governance.getHotfixRecord(hotfixHash)

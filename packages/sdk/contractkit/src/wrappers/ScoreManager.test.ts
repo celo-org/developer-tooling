@@ -13,7 +13,7 @@ testWithAnvilL2('ScoreManager Wrapper', (web3) => {
   it('gets validator score', async () => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
     const scoreManagerWrapper = await kit.contracts.getScoreManager()
-    const electedValidatorAddresses = await epochManagerWrapper.getElected()
+    const electedValidatorAddresses = await epochManagerWrapper.getElectedAccounts()
 
     // default score is 1
     expect(

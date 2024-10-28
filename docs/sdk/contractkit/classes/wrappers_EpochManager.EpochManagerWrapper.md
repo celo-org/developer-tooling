@@ -26,7 +26,8 @@ Contract handling epoch management.
 - [finishNextEpochProcess](wrappers_EpochManager.EpochManagerWrapper.md#finishnextepochprocess)
 - [firstKnownEpoch](wrappers_EpochManager.EpochManagerWrapper.md#firstknownepoch)
 - [getCurrentEpochNumber](wrappers_EpochManager.EpochManagerWrapper.md#getcurrentepochnumber)
-- [getElected](wrappers_EpochManager.EpochManagerWrapper.md#getelected)
+- [getElectedAccounts](wrappers_EpochManager.EpochManagerWrapper.md#getelectedaccounts)
+- [getEpochNumberOfBlock](wrappers_EpochManager.EpochManagerWrapper.md#getepochnumberofblock)
 - [getEpochProcessingStatus](wrappers_EpochManager.EpochManagerWrapper.md#getepochprocessingstatus)
 - [getFirstBlockAtEpoch](wrappers_EpochManager.EpochManagerWrapper.md#getfirstblockatepoch)
 - [getLastBlockAtEpoch](wrappers_EpochManager.EpochManagerWrapper.md#getlastblockatepoch)
@@ -71,7 +72,7 @@ Contract handling epoch management.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts#L23)
+[packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts:25](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts#L25)
 
 ## Properties
 
@@ -160,7 +161,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:61](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L61)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:66](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L66)
 
 ___
 
@@ -212,9 +213,9 @@ ___
 
 ___
 
-### getElected
+### getElectedAccounts
 
-• **getElected**: (...`args`: []) => `Promise`\<`string`[]\>
+• **getElectedAccounts**: (...`args`: []) => `Promise`\<`string`[]\>
 
 #### Type declaration
 
@@ -232,7 +233,31 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:45](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L45)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:50](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L50)
+
+___
+
+### getEpochNumberOfBlock
+
+• **getEpochNumberOfBlock**: (...`args`: [\_blockNumber: string \| number]) => `Promise`\<`number`\>
+
+#### Type declaration
+
+▸ (`...args`): `Promise`\<`number`\>
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `...args` | [\_blockNumber: string \| number] |
+
+##### Returns
+
+`Promise`\<`number`\>
+
+#### Defined in
+
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:43](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L43)
 
 ___
 
@@ -256,7 +281,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:46](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L46)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:51](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L51)
 
 ___
 
@@ -328,7 +353,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:43](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L43)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:48](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L48)
 
 ___
 
@@ -352,13 +377,13 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:44](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L44)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:49](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L49)
 
 ___
 
 ### methodIds
 
-• **methodIds**: `Record`\<``"epochDuration"`` \| ``"isTimeForNextEpoch"`` \| ``"initialized"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"initialize"`` \| ``"getVersionNumber"`` \| ``"elected"`` \| ``"epochProcessing"`` \| ``"firstKnownEpoch"`` \| ``"isSystemInitialized"`` \| ``"oracleAddress"`` \| ``"processedGroups"`` \| ``"validatorPendingPayments"`` \| ``"initializeSystem"`` \| ``"startNextEpochProcess"`` \| ``"finishNextEpochProcess"`` \| ``"sendValidatorPayment"`` \| ``"getCurrentEpoch"`` \| ``"getCurrentEpochNumber"`` \| ``"getEpochProcessingState"`` \| ``"isBlocked"`` \| ``"getElected"`` \| ``"getFirstBlockAtEpoch"`` \| ``"getLastBlockAtEpoch"`` \| ``"setEpochDuration"`` \| ``"setOracleAddress"`` \| ``"isOnEpochProcess"`` \| ``"systemAlreadyInitialized"``, `string`\>
+• **methodIds**: `Record`\<``"epochDuration"`` \| ``"isTimeForNextEpoch"`` \| ``"getEpochNumberOfBlock"`` \| ``"initialized"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"initialize"`` \| ``"getVersionNumber"`` \| ``"electedAccounts"`` \| ``"electedSigners"`` \| ``"epochProcessing"`` \| ``"firstKnownEpoch"`` \| ``"isSystemInitialized"`` \| ``"oracleAddress"`` \| ``"processedGroups"`` \| ``"toProcessGroups"`` \| ``"validatorPendingPayments"`` \| ``"initializeSystem"`` \| ``"startNextEpochProcess"`` \| ``"setToProcessGroups"`` \| ``"processGroups"`` \| ``"processGroup"`` \| ``"finishNextEpochProcess"`` \| ``"sendValidatorPayment"`` \| ``"getCurrentEpoch"`` \| ``"getCurrentEpochNumber"`` \| ``"getEpochProcessingState"`` \| ``"isBlocked"`` \| ``"numberOfElectedInCurrentSet"`` \| ``"getElectedAccounts"`` \| ``"getElectedAccountByIndex"`` \| ``"getElectedSigners"`` \| ``"getElectedSignerByIndex"`` \| ``"getFirstBlockAtEpoch"`` \| ``"getLastBlockAtEpoch"`` \| ``"getEpochByBlockNumber"`` \| ``"setEpochDuration"`` \| ``"setOracleAddress"`` \| ``"isOnEpochProcess"`` \| ``"systemAlreadyInitialized"`` \| ``"getEpochByNumber"``, `string`\>
 
 #### Inherited from
 
@@ -390,7 +415,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:60](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L60)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:65](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L65)
 
 ## Accessors
 
@@ -424,7 +449,7 @@ BaseWrapperForGoverning.address
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:63](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L63)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:68](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L68)
 
 ___
 
@@ -438,7 +463,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:125](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L125)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:130](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L130)
 
 ___
 
@@ -458,7 +483,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:76](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L76)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:81](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L81)
 
 ___
 
