@@ -13,8 +13,8 @@ export default class ValidatorRegister extends BaseCommand {
     ...BaseCommand.flags,
     from: CustomFlags.address({ required: true, description: 'Address for the Validator' }),
     ecdsaKey: CustomFlags.ecdsaPublicKey({ required: true }),
-    blsKey: CustomFlags.blsPublicKey({ required: true }),
-    blsSignature: CustomFlags.blsProofOfPossession({ required: true }),
+    blsKey: CustomFlags.blsPublicKey({ required: false }),
+    blsSignature: CustomFlags.blsProofOfPossession({ required: false }),
     yes: Flags.boolean({ description: 'Answer yes to prompt' }),
   }
 
@@ -63,8 +63,8 @@ export default class ValidatorRegister extends BaseCommand {
         validators.registerValidator(
           // @ts-ignore incorrect typing for bytes type
           res.flags.ecdsaKey,
-          res.flags.blsKey,
-          res.flags.blsSignature
+          res.flags.blsKey as string,
+          res.flags.blsSignature as string
         )
       )
     }
