@@ -68,15 +68,16 @@ testWithAnvilL2('validator:deregister', (web3: Web3) => {
         web3
       )
     })
-    // 1 day in seconds
-    await timeTravel(60 * 24 * 60, web3)
   })
 
   afterEach(() => {
     jest.clearAllMocks()
   })
 
-  test('can deregister validator', async () => {
+  it('can deregister validator', async () => {
+    // precondition
+    const groupAtSettup = await validatorContract.getValidatorGroup(groupAddress, false)
+    expect(groupAtSettup.members).toContain(account)
     await withImpersonatedAccount(web3, groupAddress, async () => {
       await testLocallyWithWeb3Node(
         ValidatorGroupMembers,
@@ -86,13 +87,25 @@ testWithAnvilL2('validator:deregister', (web3: Web3) => {
     })
 
     const { duration } = await validatorContract.getValidatorLockedGoldRequirements()
+    const { lastRemovedFromGroupTimestamp } =
+      await validatorContract.getValidatorMembershipHistoryExtraData(account)
     // travel in the evm
     await timeTravel(duration.multipliedBy(2).toNumber(), web3)
     // time travel in node land
-    const jestTime = jest.getRealSystemTime()
-    jest.setSystemTime(jestTime + duration.multipliedBy(2).toNumber())
-    const logMock = jest.spyOn(console, 'log')
+    const jestTime = lastRemovedFromGroupTimestamp * 1000
+    const futureTime = jestTime + duration.multipliedBy(2000).toNumber()
+    global.Date.now = jest.fn(() => futureTime)
 
+    const logMock = jest.spyOn(console, 'log')
+    console.warn(
+      'time is',
+      Date.now(),
+      'left at',
+      lastRemovedFromGroupTimestamp * 1000,
+      Date.now() / 1000 - lastRemovedFromGroupTimestamp,
+      'vs',
+      duration.toNumber()
+    )
     await expect(
       testLocallyWithWeb3Node(ValidatorDeRegister, ['--from', account], web3)
     ).resolves.toMatchInlineSnapshot(`undefined`)
@@ -114,6 +127,9 @@ testWithAnvilL2('validator:deregister', (web3: Web3) => {
           "   ✔  Account isn't a member of a validator group ",
         ],
         [
+          "   ✔  Enough time has passed since the account was removed from a validator group ",
+        ],
+        [
           "All checks passed",
         ],
         [
@@ -125,10 +141,17 @@ testWithAnvilL2('validator:deregister', (web3: Web3) => {
       ]
     `)
     expect(validatorContract.isValidator(account)).resolves.toEqual(false)
+    // @ts-expect-error
+    global.Date.now.mockReset()
   })
 
-  test('fails if is still a member', async () => {
+  it('fails if is still a member', async () => {
+    const groupAtSettup = await validatorContract.getValidatorGroup(groupAddress, false)
+
+    // precondition
+    expect(groupAtSettup.members).toContain(account)
     const logMock = jest.spyOn(console, 'log')
+
     await expect(
       testLocallyWithWeb3Node(ValidatorDeRegister, ['--from', account], web3)
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
@@ -269,6 +292,9 @@ testWithAnvilL2('validator:deregister', (web3: Web3) => {
         ],
         [
           "   ✘  Account isn't a member of a validator group ",
+        ],
+        [
+          "   ✘  Enough time has passed since the account was removed from a validator group ",
         ],
       ]
     `)
