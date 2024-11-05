@@ -68,7 +68,7 @@ export class LedgerSigner implements Signer {
         v = addToV + _v
       } else if (_v === 27 || _v === 28) {
         const parity = _v - 27 // transforming v into 0 or 1 to become the parity
-        v = addToV + _v + parity
+        v = addToV + parity
       } else {
         v = _v
       }

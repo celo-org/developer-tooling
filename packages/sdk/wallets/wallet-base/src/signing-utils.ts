@@ -564,12 +564,15 @@ export function determineTXType(serializedTransaction: string): OldTransactionTy
 }
 
 function vrsForRecovery(vRaw: string, r: string, s: string) {
-  const v = vRaw === '0x' || hexToNumber(vRaw) === 0 ? Y_PARITY_EIP_2098 : Y_PARITY_EIP_2098 + 1
+  const v =
+    vRaw === '0x' || hexToNumber(vRaw) === 0 || hexToNumber(vRaw) === 27
+      ? Y_PARITY_EIP_2098
+      : Y_PARITY_EIP_2098 + 1
   return {
     v,
     r,
     s,
-    yParity: v === Y_PARITY_EIP_2098 ? 0 : 1,
+    yParity: (v - Y_PARITY_EIP_2098) as 0 | 1,
   } as const
 }
 
