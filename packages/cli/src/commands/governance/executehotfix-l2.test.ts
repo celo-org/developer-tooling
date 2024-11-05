@@ -36,7 +36,7 @@ testWithAnvilL2('governance:executehotfix cmd', (web3: Web3) => {
       value: 0,
     },
   ]
-  const HOTFIX_TRANSACTIONS_FILE_PATH = path.join(__dirname, 'transactions.json')
+  const HOTFIX_TRANSACTIONS_FILE_PATH = path.join(__dirname, 'executehotfix-l2-transactions.json')
   const SALT = '0x614dccb5ac13cba47c2430bdee7829bb8c8f3603a8ace22e7680d317b39e3658'
   const TEST_TRANSACTIONS_ABI = [
     {

@@ -47,7 +47,7 @@ export async function deployReleaseGoldContract(
           releaseOwner,
           refundAddress,
           true, // subjectToLiquidityProvision needs to be true, because in the withdraw test we set the liquidity provision and it will fail otherwise
-          1000,
+          500, // distribution ratio
           canValidate,
           true,
           REGISTRY_CONTRACT_ADDRESS

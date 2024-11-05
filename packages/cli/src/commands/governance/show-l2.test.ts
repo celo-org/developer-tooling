@@ -21,7 +21,7 @@ testWithAnvilL2('governance:show cmd', (web3: Web3) => {
       value: '0',
     },
   ] as Proposal
-  const PROPOSAL_TRANSACTIONS_FILE_PATH = path.join(__dirname, 'proposal-transactions.json')
+  const PROPOSAL_TRANSACTIONS_FILE_PATH = path.join(__dirname, 'show-l2-transactions.json')
 
   beforeAll(async () => {
     fs.writeFileSync(PROPOSAL_TRANSACTIONS_FILE_PATH, JSON.stringify(PROPOSAL_TRANSACTIONS), {
