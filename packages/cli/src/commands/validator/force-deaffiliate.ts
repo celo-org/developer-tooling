@@ -17,6 +17,9 @@ export default class ValidatorForceDeaffiliate extends BaseCommand {
     'force-deaffiliate --from 0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95 --validator 0xb7ef0985bdb4f19460A29d9829aA1514B181C4CD',
   ]
 
+  /*
+   * @deprecated this method is only callable by approved slasher contracts so AFAIKT it this command is not usable
+   */
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(ValidatorForceDeaffiliate)
