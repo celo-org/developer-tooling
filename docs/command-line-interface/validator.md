@@ -260,13 +260,12 @@ Register a new Validator
 ```
 USAGE
   $ celocli validator:register --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
-    --ecdsaKey 0x --blsKey 0x --blsSignature 0x [--gasCurrency
-    0x1234567890123456789012345678901234567890] [--globalHelp] [--yes]
+    --ecdsaKey 0x [--gasCurrency 0x1234567890123456789012345678901234567890]
+    [--globalHelp] [--blsKey 0x] [--blsSignature 0x] [--yes]
 
 FLAGS
-  --blsKey=0x                                               (required) BLS Public Key
-  --blsSignature=0x                                         (required) BLS
-                                                            Proof-of-Possession
+  --blsKey=0x                                               BLS Public Key
+  --blsSignature=0x                                         BLS Proof-of-Possession
   --ecdsaKey=0x                                             (required) ECDSA Public Key
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Address for the
                                                             Validator
