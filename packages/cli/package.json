@@ -22,7 +22,7 @@
     "node": ">=16"
   },
   "scripts": {
-    "clean": "yarn run --top-level tsc -b . --clean",
+    "clean": "rm tsconfig.tsbuildinfo && yarn run --top-level tsc -b . --clean",
     "dev": "yarn build && ts-node ./bin/dev.js",
     "build": "yarn run --top-level tsc -b .",
     "docs": "./generate_docs.sh",
