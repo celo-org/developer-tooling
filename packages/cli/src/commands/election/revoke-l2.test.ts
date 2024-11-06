@@ -32,7 +32,7 @@ testWithAnvilL2('election:revoke', (web3: Web3) => {
         ['--from', fromAddress, '--for', groupAddress, '--value', '1'],
         web3
       )
-    ).rejects.toThrow()
+    ).rejects.toMatchInlineSnapshot(`[Error: Some checks didn't pass!]`)
     expect(logMock.mock.calls[1][0]).toContain(
       `${fromAddress} is not a signer or registered as an account`
     )
