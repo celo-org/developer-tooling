@@ -485,7 +485,8 @@ class CheckBuilder {
         if (!affiliation || eqAddress(affiliation, NULL_ADDRESS)) {
           return true
         }
-        const { members } = await validators.getValidatorGroup(affiliation!)
+        // passing false opts out of fetching affilliates which we dont use anyway
+        const { members } = await validators.getValidatorGroup(affiliation!, false)
         return !members.includes(account)
       })
     )

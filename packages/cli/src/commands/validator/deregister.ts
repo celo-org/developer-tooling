@@ -4,6 +4,7 @@ import { displaySendTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class ValidatorDeregister extends BaseCommand {
+  // TODO time period to deregister might have changed for L2 consider adding a wait to show the actual
   static description =
     "Deregister a Validator. Approximately 60 days after the validator is no longer part of any group, it will be possible to deregister the validator and start unlocking the CELO. If you wish to deregister your validator, you must first remove it from it's group, such as by deaffiliating it, then wait the required 60 days before running this command."
 

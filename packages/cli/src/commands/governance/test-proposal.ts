@@ -37,6 +37,8 @@ export default class TestProposal extends BaseCommand {
     jsonTransactions.forEach((tx) => builder.addJsonTx(tx))
 
     const proposal = await builder.build()
+
+    // TODO proposalToJSON shouldn't fail when it cannot fetch data from block explorer(s)
     printValueMapRecursive(await proposalToJSON(kit, proposal))
 
     await executeProposal(proposal, kit, account)

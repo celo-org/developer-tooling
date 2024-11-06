@@ -50,6 +50,14 @@ export default class Authorize extends ReleaseGoldBaseCommand {
 
     const role = flags.role
 
+    if (flags.role === 'validator') {
+      if (await this.isCel2()) {
+        if (flags.blsKey || flags.blsPop) {
+          this.error('BLS keys are not supported in L2', { exit: 1 })
+        }
+      }
+    }
+
     // Check that the account is registered on-chain.
     // Additionally, if the authorization is for a validator, the BLS key must be provided when the
     // validator is already registered, and cannot be provided if the validator is not registered.
@@ -80,6 +88,7 @@ export default class Authorize extends ReleaseGoldBaseCommand {
     if (role === 'vote') {
       tx = await this.releaseGoldWrapper.authorizeVoteSigner(flags.signer, sig)
     } else if (role === 'validator' && flags.blsKey && flags.blsPop) {
+      // TODO(L2): this is deprecated and not supported in L2
       tx = await this.releaseGoldWrapper.authorizeValidatorSignerAndBls(
         flags.signer,
         sig,
