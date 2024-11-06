@@ -15,6 +15,7 @@ process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvilL2('election:show', (web3: Web3) => {
   beforeEach(async () => {
+    const logMock = jest.spyOn(console, 'log')
     const kit = newKitFromWeb3(web3)
     const [voterAddress] = await web3.eth.getAccounts()
     const validatorsWrapper = await kit.contracts.getValidators()
@@ -41,6 +42,8 @@ testWithAnvilL2('election:show', (web3: Web3) => {
       ['--from', voterAddress, '--for', group2.address, '--value', web3.utils.toWei('9', 'ether')],
       web3
     )
+
+    logMock.mockClear()
   })
 
   afterEach(async () => {
@@ -74,17 +77,17 @@ testWithAnvilL2('election:show', (web3: Web3) => {
 
   it('fails when provided address is not a voter', async () => {
     const logMock = jest.spyOn(console, 'log')
-    const [voterAddress] = await web3.eth.getAccounts()
+    const [_, nonVoterAddress] = await web3.eth.getAccounts()
 
-    await expect(testLocallyWithWeb3Node(Show, [voterAddress, '--voter'], web3)).rejects.toThrow(
+    await expect(testLocallyWithWeb3Node(Show, [nonVoterAddress, '--voter'], web3)).rejects.toThrow(
       "Some checks didn't pass!"
     )
     expect(stripAnsiCodesAndTxHashes(logMock.mock.calls[1][0])).toContain(
-      `${voterAddress} is not registered as an account. Try running account:register`
+      `${nonVoterAddress} is not registered as an account. Try running account:register`
     )
   })
 
-  it.only('shows data for a group', async () => {
+  it('shows data for a group', async () => {
     const kit = newKitFromWeb3(web3)
     const logMock = jest.spyOn(console, 'log')
     const validatorsWrapper = await kit.contracts.getValidators()
@@ -116,8 +119,8 @@ testWithAnvilL2('election:show', (web3: Web3) => {
   })
 
   it('shows data for an account', async () => {
-    const [voterAddress] = await web3.eth.getAccounts()
     const logMock = jest.spyOn(console, 'log')
+    const [voterAddress] = await web3.eth.getAccounts()
 
     await testLocallyWithWeb3Node(Show, [voterAddress, '--voter'], web3)
 
