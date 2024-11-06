@@ -88,7 +88,7 @@ export default class Authorize extends ReleaseGoldBaseCommand {
     if (role === 'vote') {
       tx = await this.releaseGoldWrapper.authorizeVoteSigner(flags.signer, sig)
     } else if (role === 'validator' && flags.blsKey && flags.blsPop) {
-      // TODO this is deprecated and not supported in L2
+      // TODO(L2): this is deprecated and not supported in L2
       tx = await this.releaseGoldWrapper.authorizeValidatorSignerAndBls(
         flags.signer,
         sig,
