@@ -16,7 +16,7 @@
     "build": "yarn run --top-level tsc -b .",
     "clean": "yarn run --top-level tsc -b . --clean",
     "docs": "yarn run --top-level typedoc",
-    "test": "yarn run --top-level jest --runInBand --passWithNoTests",
+    "test": "NODE_OPTIONS='--experimental-vm-modules' yarn run --top-level jest --runInBand s --workerIdleMemoryLimit=0.1",
     "lint": "yarn run --top-level eslint -c .eslintrc.js ",
     "prepublishOnly": "yarn build"
   },
@@ -32,12 +32,13 @@
     "@types/inquirer": "^6.5.0",
     "bignumber.js": "^9.0.0",
     "debug": "^4.1.1",
-    "inquirer": "^7.0.5"
+    "inquirer": "^7.3.3"
   },
   "engines": {
     "node": ">=8.14.2"
   },
   "devDependencies": {
+    "@celo/dev-utils": "0.0.6-beta.0",
     "@celo/typescript": "workspace:^",
     "@types/debug": "^4.1.12"
   }
