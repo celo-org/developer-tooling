@@ -4,6 +4,8 @@ import debugFactory from 'debug'
 import { Connection } from './connection'
 import {
   Callback,
+  Eip1193Provider,
+  Eip1193RequestArguments,
   EncodedTransaction,
   Error,
   JsonRpcPayload,
@@ -165,6 +167,30 @@ export class CeloProvider implements Provider {
       this.alreadyStopped = true
     } catch (error) {
       debug(`Failed to close the connection: ${error}`)
+    }
+  }
+
+  toEip1193Provider(): Eip1193Provider {
+    return {
+      request: async (args: Eip1193RequestArguments) => {
+        return new Promise((resolve, reject) => {
+          this.send(
+            {
+              id: 0,
+              jsonrpc: '2.0',
+              method: args.method,
+              params: args.params as any[],
+            },
+            (error: Error | null, result: unknown) => {
+              if (error) {
+                reject(error)
+              } else {
+                resolve((result as any).result)
+              }
+            }
+          )
+        })
+      },
     }
   }
 

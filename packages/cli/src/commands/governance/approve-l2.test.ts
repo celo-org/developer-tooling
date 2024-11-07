@@ -2,6 +2,7 @@ import { hexToBuffer, StrongAddress } from '@celo/base'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import {
   DEFAULT_OWNER_ADDRESS,
+  setBalance,
   setCode,
   testWithAnvilL2,
   withImpersonatedAccount,
@@ -552,22 +553,18 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
       await setCode(web3, FALLBACK_HANDLER_ADDRESS, FALLBACK_HANDLER_CODE)
 
       const kit = newKitFromWeb3(web3)
-      const [
-        approver,
-        securityCouncilSafeSignatory1,
-        securityCouncilSafeSignatory2,
-        securityCouncilSafeSignatory3,
-      ] = (await web3.eth.getAccounts()) as StrongAddress[]
+      const [approver, securityCouncilSafeSignatory1] =
+        (await web3.eth.getAccounts()) as StrongAddress[]
+      const securityCouncilSafeSignatory2: StrongAddress =
+        '0x6C666E57A5E8715cFE93f92790f98c4dFf7b69e2'
+      const securityCouncilSafeSignatory2PrivateKey =
+        '0xe99303048756f2eac145377ebffdeec6747b8de31c1d34e004e1ee62f2b3d7a5'
       const governance = await kit.contracts.getGovernance()
       const writeMock = jest.spyOn(ux.write, 'stdout')
       const logMock = jest.spyOn(console, 'log')
 
       const safeAccountConfig: SafeAccountConfig = {
-        owners: [
-          securityCouncilSafeSignatory1,
-          securityCouncilSafeSignatory2,
-          securityCouncilSafeSignatory3,
-        ],
+        owners: [securityCouncilSafeSignatory1, securityCouncilSafeSignatory2],
         threshold: 2,
       }
 
@@ -625,7 +622,6 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
       expect(await protocolKit.getOwners()).toEqual([
         securityCouncilSafeSignatory1,
         securityCouncilSafeSignatory2,
-        securityCouncilSafeSignatory3,
       ])
 
       expect(await governance.getHotfixRecord(HOTFIX_BUFFER)).toMatchInlineSnapshot(`
@@ -637,6 +633,23 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
         }
       `)
 
+      // We want to test if integration works for accounts that are not added to the node
+      await testLocallyWithWeb3Node(
+        Approve,
+        [
+          '--from',
+          securityCouncilSafeSignatory1,
+          '--hotfix',
+          HOTFIX_HASH,
+          '--useSafe',
+          '--type',
+          'securityCouncil',
+        ],
+        web3
+      )
+
+      // Make sure the account has enough balance to pay for the transaction
+      await setBalance(web3, securityCouncilSafeSignatory2, BigInt(web3.utils.toWei('1', 'ether')))
       await testLocallyWithWeb3Node(
         Approve,
         [
@@ -647,20 +660,8 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
           '--useSafe',
           '--type',
           'securityCouncil',
-        ],
-        web3
-      )
-
-      await testLocallyWithWeb3Node(
-        Approve,
-        [
-          '--from',
-          securityCouncilSafeSignatory3,
-          '--hotfix',
-          HOTFIX_HASH,
-          '--useSafe',
-          '--type',
-          'securityCouncil',
+          '--privateKey',
+          securityCouncilSafeSignatory2PrivateKey,
         ],
         web3
       )
@@ -682,7 +683,7 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
             "Running Checks:",
           ],
           [
-            "   ✔  0xE36Ea790bc9d7AB70C55260C66D52b1eca985f84 is security council safe signatory ",
+            "   ✔  0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb is security council safe signatory ",
           ],
           [
             "   ✔  Hotfix 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d is not already approved by security council ",
@@ -697,7 +698,7 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
             "Running Checks:",
           ],
           [
-            "   ✔  0xE834EC434DABA538cd1b9Fe1582052B880BD7e63 is security council safe signatory ",
+            "   ✔  0x6C666E57A5E8715cFE93f92790f98c4dFf7b69e2 is security council safe signatory ",
           ],
           [
             "   ✔  Hotfix 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d is not already approved by security council ",

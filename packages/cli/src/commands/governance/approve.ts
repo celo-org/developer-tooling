@@ -1,5 +1,6 @@
 import { StrongAddress } from '@celo/base'
 import { CeloTransactionObject } from '@celo/connect'
+import { CeloProvider } from '@celo/connect/lib/celo-provider'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { MultiSigWrapper } from '@celo/contractkit/lib/wrappers/MultiSig'
 import { toBuffer } from '@ethereumjs/util'
@@ -123,13 +124,14 @@ export default class Approve extends BaseCommand {
 
     // TODO find out if we need to use api-kit so that Safe UI can be used
     if (isCel2 && approvalType === 'securityCouncil' && useSafe) {
+      const web3 = await this.getWeb3()
+
+      if (!(web3.currentProvider instanceof CeloProvider)) {
+        throw new Error('Unexpected web3 provider')
+      }
+
       const protocolKit = await Safe.init({
-        // TODO cannot use existingProvider, we need to pass the web3 instance here somehow
-        // maybe a wrapper/exposing additional methods to be EIP-1193 compatible?
-        // @ts-expect-error
-        provider: governance.connection.web3.currentProvider.existingProvider.host,
-        // TODO this works only for accounts that are added directly to the node
-        // which won't work in real life
+        provider: web3.currentProvider.toEip1193Provider(),
         signer: account,
         safeAddress: await governance.getSecurityCouncil(),
       })
@@ -145,7 +147,6 @@ export default class Approve extends BaseCommand {
       })
 
       const txHash = await protocolKit.getTransactionHash(safeTransaction)
-
       if (!(await protocolKit.getOwnersWhoApprovedTx(txHash)).includes(account)) {
         await protocolKit.approveTransactionHash(txHash)
       }
@@ -155,8 +156,18 @@ export default class Approve extends BaseCommand {
         (await protocolKit.getThreshold())
       ) {
         const executeTxResponse = await protocolKit.executeTransaction(safeTransaction)
-        // @ts-expect-error
-        const receipt = await executeTxResponse.transactionResponse?.wait()
+
+        if (!executeTxResponse.transactionResponse) {
+          throw new Error('Transaction failed')
+        }
+
+        if (
+          'wait' in (executeTxResponse.transactionResponse as any) &&
+          typeof (executeTxResponse.transactionResponse as any).wait === 'function'
+        ) {
+          // @ts-expect-error
+          const receipt = await executeTxResponse.transactionResponse?.wait()
+        }
       }
 
       // TODO: displaySendTx
