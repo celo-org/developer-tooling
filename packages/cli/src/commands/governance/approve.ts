@@ -4,6 +4,7 @@ import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { MultiSigWrapper } from '@celo/contractkit/lib/wrappers/MultiSig'
 import { toBuffer } from '@ethereumjs/util'
 import { Flags } from '@oclif/core'
+import Safe from '@safe-global/protocol-kit'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx, failWith } from '../../utils/cli'
@@ -32,6 +33,9 @@ export default class Approve extends BaseCommand {
     useMultiSig: Flags.boolean({
       description: 'True means the request will be sent through multisig.',
     }),
+    useSafe: Flags.boolean({
+      description: 'True means the request will be sent through safe.',
+    }),
     hotfix: Flags.string({
       exclusive: ['proposalID'],
       description: 'Hash of hotfix proposal',
@@ -59,6 +63,7 @@ export default class Approve extends BaseCommand {
     const res = await this.parse(Approve)
     const account = res.flags.from
     const useMultiSig = res.flags.useMultiSig
+    const useSafe = res.flags.useSafe
     const id = res.flags.proposalID
     const hotfix = res.flags.hotfix
     const approvalType = res.flags.type
@@ -78,6 +83,7 @@ export default class Approve extends BaseCommand {
       isCel2,
       !!hotfix,
       useMultiSig,
+      useSafe,
       approvalType as HotfixApprovalType,
       hotfix as string,
       approver,
@@ -115,6 +121,48 @@ export default class Approve extends BaseCommand {
       failWith('Proposal ID or hotfix must be provided')
     }
 
+    // TODO find out if we need to use api-kit so that Safe UI can be used
+    if (isCel2 && approvalType === 'securityCouncil' && useSafe) {
+      const protocolKit = await Safe.init({
+        // TODO cannot use existingProvider, we need to pass the web3 instance here somehow
+        // maybe a wrapper/exposing additional methods to be EIP-1193 compatible?
+        // @ts-expect-error
+        provider: governance.connection.web3.currentProvider.existingProvider.host,
+        // TODO this works only for accounts that are added directly to the node
+        // which won't work in real life
+        signer: account,
+        safeAddress: await governance.getSecurityCouncil(),
+      })
+
+      const safeTransaction = await protocolKit.createTransaction({
+        transactions: [
+          {
+            to: governance.address,
+            data: governanceTx.txo.encodeABI(),
+            value: '0',
+          },
+        ],
+      })
+
+      const txHash = await protocolKit.getTransactionHash(safeTransaction)
+
+      if (!(await protocolKit.getOwnersWhoApprovedTx(txHash)).includes(account)) {
+        await protocolKit.approveTransactionHash(txHash)
+      }
+
+      if (
+        (await protocolKit.getOwnersWhoApprovedTx(txHash)).length >=
+        (await protocolKit.getThreshold())
+      ) {
+        const executeTxResponse = await protocolKit.executeTransaction(safeTransaction)
+        // @ts-expect-error
+        const receipt = await executeTxResponse.transactionResponse?.wait()
+      }
+
+      // TODO: displaySendTx
+      return
+    }
+
     if (
       isCel2 &&
       approvalType === 'securityCouncil' &&
@@ -145,6 +193,7 @@ const addDefaultChecks = async (
   isCel2: boolean,
   isHotfix: boolean,
   useMultiSig: boolean,
+  useSafe: boolean,
   approvalType: HotfixApprovalType,
   hotfix: string,
   approver: StrongAddress,
@@ -178,6 +227,17 @@ const addDefaultChecks = async (
           .addCheck(`${account} is security council multisig signatory`, async () => {
             return await securityCouncilMultisig.isOwner(account)
           })
+      } else if (useSafe) {
+        checkBuilder.addCheck(`${account} is security council safe signatory`, async () => {
+          const protocolKit = await Safe.init({
+            // @ts-expect-error
+            provider: governance.connection.web3.currentProvider.existingProvider.host,
+            // signer,
+            safeAddress: await governance.getSecurityCouncil(),
+          })
+
+          return await protocolKit.isOwner(account)
+        })
       } else {
         checkBuilder.isSecurityCouncil(account)
       }
