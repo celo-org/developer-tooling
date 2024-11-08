@@ -52,5 +52,7 @@
   "engines": {
     "node": ">=8.14.2"
   },
-  "bundleDependencies": ["@ledgerhq/hw-app-eth"]
+  "bundleDependencies": [
+    "@ledgerhq/hw-app-eth"
+  ]
 }
