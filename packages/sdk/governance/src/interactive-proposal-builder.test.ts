@@ -32,7 +32,6 @@ testWithAnvilL2('InteractiveProposalBuilder', (web3) => {
   describe('promptTransactions', () => {
     it('should prompt for transactions and return them', async () => {
       const mockPrompt = jest.spyOn(inquirer, 'prompt')
-      // TODO the mock order is not right for the inputs
       mockPrompt
         .mockResolvedValueOnce({ 'Celo Contract': 'Governance' })
         .mockResolvedValueOnce({ 'Governance Function': 'setConstitution' })
