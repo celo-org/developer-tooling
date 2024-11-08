@@ -1,10 +1,21 @@
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromWeb3, RegisteredContracts } from '@celo/contractkit'
 import inquirer from 'inquirer'
-import { InteractiveProposalBuilder } from './interactive-proposal-builder'
-import { ProposalBuilder } from './proposals'
+import { InteractiveProposalBuilder, requireABI } from './interactive-proposal-builder'
+import { ProposalBuilder } from './proposal-builder'
 jest.mock('inquirer')
 
 import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
+
+describe('all registered contracts can be required', () => {
+  RegisteredContracts.forEach((contract) => {
+    it(`required ${contract} contract`, async () => {
+      const contractABI = requireABI(contract)
+      expect(contractABI).toBeDefined()
+      expect(Array.isArray(contractABI)).toBeTruthy()
+      expect(contractABI.filter).toBeDefined()
+    })
+  })
+})
 
 testWithAnvilL2('InteractiveProposalBuilder', (web3) => {
   let builder: ProposalBuilder

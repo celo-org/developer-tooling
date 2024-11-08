@@ -4,8 +4,9 @@ import { CeloContract, RegisteredContracts } from '@celo/contractkit'
 import { isValidAddress } from '@celo/utils/lib/address'
 import BigNumber from 'bignumber.js'
 import inquirer from 'inquirer'
-import type { ProposalTransactionJSON } from './proposals'
-import { ProposalBuilder } from './proposals'
+import { ProposalBuilder } from './proposal-builder'
+
+import type { ProposalTransactionJSON } from './'
 
 const DONE_CHOICE = '✔ done'
 
@@ -36,9 +37,8 @@ export class InteractiveProposalBuilder {
       }
 
       const contractName = choice as CeloContract
-      console.warn('DEBUG', contractPromptName, contractName, contractAnswer)
 
-      const contractABI = require('@celo/abis/web3/' + contractName).ABI as ABIDefinition[]
+      const contractABI = requireABI(contractName)
 
       const txMethods = contractABI.filter(
         (def) => def.type === 'function' && def.stateMutability !== 'view'
@@ -117,5 +117,23 @@ export class InteractiveProposalBuilder {
     }
 
     return transactions
+  }
+}
+export function requireABI(contractName: CeloContract): ABIDefinition[] {
+  // search thru multiple paths to find the ABI
+  for (const path of ['', '0.8/', 'mento/']) {
+    const abi = safeRequire(contractName, path)
+    if (abi !== null) {
+      return abi
+    }
+  }
+  throw new Error(`Cannot require ABI for ${contractName}`)
+}
+
+function safeRequire(contractName: CeloContract, subPath?: string) {
+  try {
+    return require(`@celo/abis-12/web3/${subPath ?? ''}${contractName}`).ABI as ABIDefinition[]
+  } catch {
+    return null
   }
 }
