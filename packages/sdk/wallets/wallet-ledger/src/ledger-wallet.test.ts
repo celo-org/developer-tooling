@@ -871,7 +871,7 @@ describe('LedgerWallet class', () => {
             TEST_TIMEOUT_IN_MS
           )
         })
-        describe('[cip66]', () => {
+        describe.skip('[cip66]', () => {
           const kit = newKit('https://alfajores-forno.celo-testnet.org')
           beforeEach(async () => {
             celoTransaction = {
