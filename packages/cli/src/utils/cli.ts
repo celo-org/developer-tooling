@@ -7,6 +7,7 @@ import {
   parseDecodedParams,
 } from '@celo/connect'
 import { Errors, ux } from '@oclif/core'
+import Safe from '@safe-global/protocol-kit'
 import BigNumber from 'bignumber.js'
 import chalk from 'chalk'
 import { ethers } from 'ethers'
@@ -21,6 +22,37 @@ export async function displayWeb3Tx(name: string, txObj: any, tx?: Omit<CeloTx, 
   console.log(result)
   ux.action.stop()
 }
+
+export async function displaySendSafeTx(
+  name: string,
+  safeTx: ReturnType<Safe['approveTransactionHash'] | Safe['executeTransaction']>
+) {
+  ux.action.start(`Sending Transaction: ${name}`)
+
+  try {
+    const txResult = await safeTx
+
+    if (!txResult.transactionResponse) {
+      throw new Error('Transaction failed')
+    }
+
+    if (
+      'wait' in (txResult.transactionResponse as any) &&
+      typeof (txResult.transactionResponse as any).wait === 'function'
+    ) {
+      // @ts-expect-error example taken from the docs and works fine (covered by tests)
+      const receipt = await txResult.transactionResponse?.wait()
+
+      printValueMap({ txHash: receipt.transactionHash })
+    }
+
+    ux.action.stop()
+  } catch (e) {
+    ux.action.stop(`failed: ${(e as Error).message}`)
+    throw e
+  }
+}
+
 // allows building a tx with ethers but signing and sending with celo Connection
 // cant use displaySendTx because it expects a CeloTransactionObject which isnt really possible to convert to from ethers
 export async function displaySendEthersTxViaCK(

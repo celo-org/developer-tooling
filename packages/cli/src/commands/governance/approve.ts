@@ -1,15 +1,19 @@
 import { StrongAddress } from '@celo/base'
 import { CeloTransactionObject } from '@celo/connect'
-import { CeloProvider } from '@celo/connect/lib/celo-provider'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { MultiSigWrapper } from '@celo/contractkit/lib/wrappers/MultiSig'
 import { toBuffer } from '@ethereumjs/util'
 import { Flags } from '@oclif/core'
-import Safe from '@safe-global/protocol-kit'
+import Web3 from 'web3'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx, failWith } from '../../utils/cli'
+import { displaySendSafeTx, displaySendTx, failWith } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
+import {
+  createApproveSafeTransactionIfNotApproved,
+  createExecuteSafeTransactionIfThresholdMet,
+  createSafeFromWeb3,
+} from '../../utils/safe'
 
 enum HotfixApprovalType {
   APPROVER = 'approver',
@@ -33,9 +37,11 @@ export default class Approve extends BaseCommand {
     from: CustomFlags.address({ required: true, description: "Approver's address" }),
     useMultiSig: Flags.boolean({
       description: 'True means the request will be sent through multisig.',
+      exclusive: ['useSafe'],
     }),
     useSafe: Flags.boolean({
       description: 'True means the request will be sent through safe.',
+      exclusive: ['useMultiSig'],
     }),
     hotfix: Flags.string({
       exclusive: ['proposalID'],
@@ -79,6 +85,7 @@ export default class Approve extends BaseCommand {
     const approver = useMultiSig ? governanceApproverMultiSig!.address : account
 
     await addDefaultChecks(
+      await this.getWeb3(),
       checkBuilder,
       governance,
       isCel2,
@@ -122,59 +129,33 @@ export default class Approve extends BaseCommand {
       failWith('Proposal ID or hotfix must be provided')
     }
 
-    // TODO find out if we need to use api-kit so that Safe UI can be used
     if (isCel2 && approvalType === 'securityCouncil' && useSafe) {
       const web3 = await this.getWeb3()
+      const safe = await createSafeFromWeb3(web3, account, await governance.getSecurityCouncil())
 
-      if (!(web3.currentProvider instanceof CeloProvider)) {
-        throw new Error('Unexpected web3 provider')
+      const approveTx = await createApproveSafeTransactionIfNotApproved(
+        safe,
+        governanceTx,
+        governance.address,
+        account
+      )
+
+      if (approveTx !== null) {
+        // @ts-expect-error
+        await displaySendSafeTx('approveTx', approveTx)
       }
 
-      const protocolKit = await Safe.init({
-        provider: web3.currentProvider.toEip1193Provider(),
-        signer: account,
-        safeAddress: await governance.getSecurityCouncil(),
-      })
+      const executeTx = await createExecuteSafeTransactionIfThresholdMet(
+        safe,
+        governanceTx,
+        governance.address
+      )
 
-      const safeTransaction = await protocolKit.createTransaction({
-        transactions: [
-          {
-            to: governance.address,
-            data: governanceTx.txo.encodeABI(),
-            value: '0',
-          },
-        ],
-      })
-
-      const txHash = await protocolKit.getTransactionHash(safeTransaction)
-      if (!(await protocolKit.getOwnersWhoApprovedTx(txHash)).includes(account)) {
-        await protocolKit.approveTransactionHash(txHash)
+      if (executeTx !== null) {
+        // @ts-expect-error
+        await displaySendSafeTx('executeTx', executeTx)
       }
-
-      if (
-        (await protocolKit.getOwnersWhoApprovedTx(txHash)).length >=
-        (await protocolKit.getThreshold())
-      ) {
-        const executeTxResponse = await protocolKit.executeTransaction(safeTransaction)
-
-        if (!executeTxResponse.transactionResponse) {
-          throw new Error('Transaction failed')
-        }
-
-        if (
-          'wait' in (executeTxResponse.transactionResponse as any) &&
-          typeof (executeTxResponse.transactionResponse as any).wait === 'function'
-        ) {
-          // @ts-expect-error
-          const receipt = await executeTxResponse.transactionResponse?.wait()
-        }
-      }
-
-      // TODO: displaySendTx
-      return
-    }
-
-    if (
+    } else if (
       isCel2 &&
       approvalType === 'securityCouncil' &&
       useMultiSig &&
@@ -199,6 +180,7 @@ export default class Approve extends BaseCommand {
 }
 
 const addDefaultChecks = async (
+  web3: Web3,
   checkBuilder: ReturnType<typeof newCheckBuilder>,
   governance: GovernanceWrapper,
   isCel2: boolean,
@@ -240,12 +222,11 @@ const addDefaultChecks = async (
           })
       } else if (useSafe) {
         checkBuilder.addCheck(`${account} is security council safe signatory`, async () => {
-          const protocolKit = await Safe.init({
-            // @ts-expect-error
-            provider: governance.connection.web3.currentProvider.existingProvider.host,
-            // signer,
-            safeAddress: await governance.getSecurityCouncil(),
-          })
+          const protocolKit = await createSafeFromWeb3(
+            web3,
+            account,
+            await governance.getSecurityCouncil()
+          )
 
           return await protocolKit.isOwner(account)
         })

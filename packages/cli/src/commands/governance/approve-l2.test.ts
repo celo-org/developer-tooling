@@ -633,7 +633,6 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
         }
       `)
 
-      // We want to test if integration works for accounts that are not added to the node
       await testLocallyWithWeb3Node(
         Approve,
         [
@@ -648,6 +647,30 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
         web3
       )
 
+      // Run the same command twice with same arguments to make sure it doesn't have any effect
+      await testLocallyWithWeb3Node(
+        Approve,
+        [
+          '--from',
+          securityCouncilSafeSignatory1,
+          '--hotfix',
+          HOTFIX_HASH,
+          '--useSafe',
+          '--type',
+          'securityCouncil',
+        ],
+        web3
+      )
+
+      expect(await governance.getHotfixRecord(HOTFIX_BUFFER)).toMatchInlineSnapshot(`
+        {
+          "approved": false,
+          "councilApproved": false,
+          "executed": false,
+          "executionTimeLimit": "0",
+        }
+      `)
+
       // Make sure the account has enough balance to pay for the transaction
       await setBalance(web3, securityCouncilSafeSignatory2, BigInt(web3.utils.toWei('1', 'ether')))
       await testLocallyWithWeb3Node(
@@ -660,6 +683,7 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
           '--useSafe',
           '--type',
           'securityCouncil',
+          // We want to test if integration works for accounts that are not added to the node
           '--privateKey',
           securityCouncilSafeSignatory2PrivateKey,
         ],
@@ -695,6 +719,24 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
             "All checks passed",
           ],
           [
+            "txHash: 0xtxhash",
+          ],
+          [
+            "Running Checks:",
+          ],
+          [
+            "   ✔  0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb is security council safe signatory ",
+          ],
+          [
+            "   ✔  Hotfix 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d is not already approved by security council ",
+          ],
+          [
+            "   ✔  Hotfix 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d is not already executed ",
+          ],
+          [
+            "All checks passed",
+          ],
+          [
             "Running Checks:",
           ],
           [
@@ -707,13 +749,13 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
             "   ✔  Hotfix 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d is not already executed ",
           ],
           [
-            "SendTransaction: approveTx",
+            "All checks passed",
           ],
           [
             "txHash: 0xtxhash",
           ],
           [
-            "All checks passed",
+            "txHash: 0xtxhash",
           ],
         ]
       `)
