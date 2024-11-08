@@ -32,7 +32,6 @@ import { AddressValidation, LedgerWallet } from './ledger-wallet'
 const USE_PHYSICAL_LEDGER = process.env.USE_PHYSICAL_LEDGER === 'true'
 const hardwareDescribe = USE_PHYSICAL_LEDGER ? describe : describe.skip
 const syntheticDescribe = USE_PHYSICAL_LEDGER ? describe.skip : describe
-// const USE_PHYSICAL_LEDGER = true
 // Increase timeout to give developer time to respond on device
 const TEST_TIMEOUT_IN_MS = USE_PHYSICAL_LEDGER ? 30 * 1000 : 1 * 1000
 
