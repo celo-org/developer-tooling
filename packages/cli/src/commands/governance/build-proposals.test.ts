@@ -1,6 +1,6 @@
 import CeloTokenABI from '@celo/abis/GoldToken.json'
 import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
-import { readJSON } from 'fs-extra'
+import { readJSON, removeSync } from 'fs-extra'
 import inquirer from 'inquirer'
 import Web3 from 'web3'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
@@ -9,6 +9,8 @@ import BuildProposal from './build-proposal'
 process.env.NO_SYNCCHECK = 'true'
 
 jest.mock('inquirer')
+
+const TX_PATH_FOR_TEST = './test-tx.json'
 
 testWithAnvilL2('governance:build-proposal cmd', (web3: Web3) => {
   describe('building proposal to transfer funds from governance', () => {
@@ -34,8 +36,8 @@ testWithAnvilL2('governance:build-proposal cmd', (web3: Web3) => {
       promptSpy.mockResolvedValueOnce({ 'Celo Contract': '✔ done' })
     })
     it('generates the json', async () => {
-      await testLocallyWithWeb3Node(BuildProposal, ['--output', './transactions.json'], web3)
-      const result = await readJSON('./transactions.json')
+      await testLocallyWithWeb3Node(BuildProposal, ['--output', TX_PATH_FOR_TEST], web3)
+      const result = await readJSON(TX_PATH_FOR_TEST)
       expect(result).toMatchInlineSnapshot(`
         [
           {
@@ -50,5 +52,9 @@ testWithAnvilL2('governance:build-proposal cmd', (web3: Web3) => {
         ]
       `)
     })
+  })
+  afterAll(() => {
+    jest.restoreAllMocks()
+    removeSync(TX_PATH_FOR_TEST)
   })
 })
