@@ -43,7 +43,7 @@ export class LedgerSigner implements Signer {
   }
 
   async signTransaction(
-    addToV: number,
+    _addToV: number,
     encodedTx: RLPEncodedTx | LegacyEncodedTx
   ): Promise<{ v: number; r: Buffer; s: Buffer }> {
     try {
@@ -55,27 +55,8 @@ export class LedgerSigner implements Signer {
         null
       )
 
-      // EIP155 support. check/recalc signature v value.
-      const _v = parseInt(signature.v, 16)
-      // // eslint-disable-next-line no-bitwise
-      // if (_v !== addToV && (_v & addToV) !== _v) {
-      //   addToV += 1 // add signature v bit.
-      // }
-
-      let v: number
-      if (_v === 0 || _v === 1) {
-        // if v is 0 or 1, it's already representing parity
-        v = addToV + _v
-      } else if (_v === 27 || _v === 28) {
-        const parity = _v - 27 // transforming v into 0 or 1 to become the parity
-        v = addToV + parity
-      } else {
-        v = _v
-      }
-
-      console.log({ addToV, v: v!, _v, signature })
       return {
-        v: v!,
+        v: parseInt(signature.v, 16),
         r: ethUtil.toBuffer(ensureLeading0x(signature.r)),
         s: ethUtil.toBuffer(ensureLeading0x(signature.s)),
       }

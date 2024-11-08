@@ -95,8 +95,16 @@ function signatureFormatter(
 } {
   let v = signature.v
   if (type !== 'celo-legacy' && type !== 'ethereum-legacy') {
-    v = BigInt(signature.v) === BigInt(Y_PARITY_EIP_2098) ? 0 : 1
+    const vn = BigInt(signature.v)
+    if (vn === BigInt(Y_PARITY_EIP_2098) || vn === BigInt(0)) {
+      v = 0
+    } else if (vn === BigInt(Y_PARITY_EIP_2098 + 1) || vn === BigInt(1)) {
+      v = 1
+    } else {
+      throw new Error('Invalid v ' + signature.v)
+    }
   }
+
   return {
     v: trimLeading0x(stringNumberToHex(v)),
     r: trimLeading0x(makeEven(trimLeadingZero(ensureLeading0x(signature.r.toString('hex'))))),
