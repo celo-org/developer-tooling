@@ -32,7 +32,7 @@
     "web3-core-helpers": "1.10.4"
   },
   "devDependencies": {
-    "@celo/devchain-anvil": "12.0.0-canary.8",
+    "@celo/devchain-anvil": "12.0.0-canary.33",
     "@celo/typescript": "workspace:^",
     "@tsconfig/recommended": "^1.0.3",
     "@types/fs-extra": "^8.1.0",

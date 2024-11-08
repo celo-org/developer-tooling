@@ -7,7 +7,6 @@ View and manage Validators
 * [`celocli validator:deaffiliate`](#celocli-validatordeaffiliate)
 * [`celocli validator:deregister`](#celocli-validatorderegister)
 * [`celocli validator:downtime-slash`](#celocli-validatordowntime-slash)
-* [`celocli validator:force-deaffiliate`](#celocli-validatorforce-deaffiliate)
 * [`celocli validator:list`](#celocli-validatorlist)
 * [`celocli validator:register`](#celocli-validatorregister)
 * [`celocli validator:requirements`](#celocli-validatorrequirements)
@@ -164,41 +163,6 @@ EXAMPLES
 
 _See code: [src/commands/validator/downtime-slash.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/downtime-slash.ts)_
 
-## `celocli validator:force-deaffiliate`
-
-Force deaffiliate a Validator from a Validator Group, and remove it from the Group if it is also a member.  Used by stake-off admins in order to remove validators from the next epoch's validator set if they are down and consistently unresponsive, in order to preserve the health of the network. This feature will be removed once slashing for downtime is implemented.
-
-```
-USAGE
-  $ celocli validator:force-deaffiliate --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
-    --validator 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [--gasCurrency
-    0x1234567890123456789012345678901234567890] [--globalHelp]
-
-FLAGS
-  --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Initiator
-  --gasCurrency=0x1234567890123456789012345678901234567890  Use a specific gas currency
-                                                            for transaction fees
-                                                            (defaults to CELO if no gas
-                                                            currency is supplied). It
-                                                            must be a whitelisted token.
-  --globalHelp                                              View all available global
-                                                            flags
-  --validator=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d    (required) Validator's
-                                                            address
-
-DESCRIPTION
-  Force deaffiliate a Validator from a Validator Group, and remove it from the Group if
-  it is also a member.  Used by stake-off admins in order to remove validators from the
-  next epoch's validator set if they are down and consistently unresponsive, in order to
-  preserve the health of the network. This feature will be removed once slashing for
-  downtime is implemented.
-
-EXAMPLES
-  force-deaffiliate --from 0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95 --validator 0xb7ef0985bdb4f19460A29d9829aA1514B181C4CD
-```
-
-_See code: [src/commands/validator/force-deaffiliate.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/force-deaffiliate.ts)_
-
 ## `celocli validator:list`
 
 List registered Validators, their name (if provided), affiliation, uptime score, and public keys used for validating.
@@ -260,13 +224,12 @@ Register a new Validator
 ```
 USAGE
   $ celocli validator:register --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
-    --ecdsaKey 0x --blsKey 0x --blsSignature 0x [--gasCurrency
-    0x1234567890123456789012345678901234567890] [--globalHelp] [--yes]
+    --ecdsaKey 0x [--gasCurrency 0x1234567890123456789012345678901234567890]
+    [--globalHelp] [--blsKey 0x] [--blsSignature 0x] [--yes]
 
 FLAGS
-  --blsKey=0x                                               (required) BLS Public Key
-  --blsSignature=0x                                         (required) BLS
-                                                            Proof-of-Possession
+  --blsKey=0x                                               BLS Public Key
+  --blsSignature=0x                                         BLS Proof-of-Possession
   --ecdsaKey=0x                                             (required) ECDSA Public Key
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Address for the
                                                             Validator

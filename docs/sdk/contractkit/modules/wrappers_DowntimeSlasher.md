@@ -25,4 +25,4 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:223](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L223)
+[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:229](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L229)

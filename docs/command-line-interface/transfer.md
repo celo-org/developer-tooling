@@ -7,7 +7,6 @@ Transfer CELO and Celo Dollars
 * [`celocli transfer:dollars`](#celocli-transferdollars)
 * [`celocli transfer:erc20`](#celocli-transfererc20)
 * [`celocli transfer:euros`](#celocli-transfereuros)
-* [`celocli transfer:gold`](#celocli-transfergold)
 * [`celocli transfer:reals`](#celocli-transferreals)
 * [`celocli transfer:stable`](#celocli-transferstable)
 
@@ -156,42 +155,6 @@ EXAMPLES
 ```
 
 _See code: [src/commands/transfer/euros.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/transfer/euros.ts)_
-
-## `celocli transfer:gold`
-
-Transfer CELO to a specified address. *DEPRECATION WARNING* Use the "transfer:celo" command instead
-
-```
-USAGE
-  $ celocli transfer:gold --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --to
-    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --value <value> [--gasCurrency
-    0x1234567890123456789012345678901234567890] [--globalHelp] [--comment <value>]
-
-FLAGS
-  --comment=<value>                                         Transfer comment
-  --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Address of the
-                                                            sender
-  --gasCurrency=0x1234567890123456789012345678901234567890  Use a specific gas currency
-                                                            for transaction fees
-                                                            (defaults to CELO if no gas
-                                                            currency is supplied). It
-                                                            must be a whitelisted token.
-  --globalHelp                                              View all available global
-                                                            flags
-  --to=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d           (required) Address of the
-                                                            receiver
-  --value=<value>                                           (required) Amount to
-                                                            transfer (in wei)
-
-DESCRIPTION
-  Transfer CELO to a specified address. *DEPRECATION WARNING* Use the "transfer:celo"
-  command instead
-
-EXAMPLES
-  gold --from 0xa0Af2E71cECc248f4a7fD606F203467B500Dd53B --to 0x5409ed021d9299bf6814279a6a1411a7e866a631 --value 10000000000000000000
-```
-
-_See code: [src/commands/transfer/gold.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/transfer/gold.ts)_
 
 ## `celocli transfer:reals`
 

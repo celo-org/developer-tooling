@@ -26,7 +26,7 @@ testWithAnvilL1('network:parameters', (web3: Web3) => {
         currentThreshold: 60000000000000000000 (~6.000e+19)
         electabilityThreshold: 0.001 
         electableValidators: 
-          max: 100 
+          max: 110 
           min: 1 
         maxNumGroupsVotedFor: 10 
         totalVotes: 60000000000000000000000 (~6.000e+22)
@@ -67,7 +67,7 @@ testWithAnvilL1('network:parameters', (web3: Web3) => {
       Reserve: 
         frozenReserveGoldDays: 0 
         frozenReserveGoldStartBalance: 0 
-        frozenReserveGoldStartDay: 19991 (~1.999e+4)
+        frozenReserveGoldStartDay: 20013 (~2.001e+4)
         otherReserveAddresses: 
 
         tobinTaxStalenessThreshold: 3153600000 (~3.154e+9)

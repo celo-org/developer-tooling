@@ -196,9 +196,9 @@ testWithAnvilL1('transfer:celo cmd', (web3: Web3) => {
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`
       "0x1234567890123456789012345678901234567890 is not a valid fee currency. Available currencies:
-      0x06f60E083aDf016a98E3c7A1aFfa1c097B617aB9 - Celo Euro (cEUR)
-      0x9cA64d4663B4A623C3E9a7F9155451647592bEc7 - Celo Dollar (cUSD)
-      0xC458f5ab25a47741205722d465cDea9aB1E1154A - Celo Brazilian Real (cREAL)"
+      0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1 - Celo Dollar (cUSD)
+      0x5930519559Ffa7528a00BE445734036471c443a2 - Celo Euro (cEUR)
+      0xB2Fd9852Ca3D69678286A8635d661690906A3E9d - Celo Brazilian Real (cREAL)"
     `)
   })
 })

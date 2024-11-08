@@ -13,6 +13,7 @@ import { createMultisig } from '../../test-utils/multisigUtils'
 import { deployReleaseGoldContract } from '../../test-utils/release-gold'
 import CreateAccount from './create-account'
 import SetLiquidityProvision from './set-liquidity-provision'
+import SetMaxDistribution from './set-max-distribution'
 import RGTransferDollars from './transfer-dollars'
 import Withdraw from './withdraw'
 
@@ -33,10 +34,16 @@ testWithAnvilL1('releasegold:withdraw cmd', (web3: Web3) => {
       accounts[0],
       accounts[2]
     )
+    // make the whole balance available for withdrawal
+    await testLocallyWithWeb3Node(
+      SetMaxDistribution,
+      ['--contract', contractAddress, '--yesreally', '--distributionRatio', '1000'],
+      web3
+    )
     await testLocallyWithWeb3Node(CreateAccount, ['--contract', contractAddress], web3)
   })
 
-  test.only('can withdraw released celo to beneficiary', async () => {
+  test('can withdraw released celo to beneficiary', async () => {
     await testLocallyWithWeb3Node(
       SetLiquidityProvision,
       ['--contract', contractAddress, '--yesreally'],
