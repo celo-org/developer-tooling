@@ -20,9 +20,9 @@ jobs:
       fail-fast: false
       matrix:
         package:
-        - '@celo/utils@beta'
-        - '@celo/contractkit@beta'
-        - '@celo/celocli@beta'
+          - '@celo/utils@beta'
+          - '@celo/contractkit@beta'
+          - '@celo/celocli@beta'
     steps:
       - name: Install @celo/celocli dependencies
         if: matrix.package == '@celo/celocli@beta'
@@ -30,6 +30,8 @@ jobs:
           apt update
           apt install -y libusb-1.0-0-dev libudev-dev
           npm install node-gyp --global
+          git config --global url."https://".insteadOf ssh://
+
       - name: Installing npm package
         run: npm install ${{ matrix.package }} --global
       - name: Test celocli command
