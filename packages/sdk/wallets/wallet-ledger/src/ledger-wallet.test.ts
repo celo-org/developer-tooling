@@ -846,7 +846,9 @@ describe('LedgerWallet class', () => {
           test(
             'succeeds',
             async () => {
-              jest.spyOn(wallet.ledger!, 'provideERC20TokenInformation')
+              jest
+                .spyOn(wallet.ledger!, 'provideERC20TokenInformation')
+                .mockImplementation(() => Promise.resolve(true))
 
               await expect(wallet.signTransaction(celoTransaction)).resolves.toMatchInlineSnapshot(`
                   {
@@ -871,7 +873,7 @@ describe('LedgerWallet class', () => {
                 `)
 
               expect(wallet.ledger!.provideERC20TokenInformation).toHaveBeenCalledWith(
-                `0x06612063555344874069fa1eb16d44d622f2e0ca25eea172369bc1000000120000aef33045022100a885480c357fd6ec64ed532656a7e988198fdf4e2cf4632408f2d65561189872022009fd78725055fc68af16e151516ba29625e3e1c74ceab3da1bcabd6015e3f6e8`
+                `06612063555344874069fa1eb16d44d622f2e0ca25eea172369bc1000000120000aef33045022100a885480c357fd6ec64ed532656a7e988198fdf4e2cf4632408f2d65561189872022009fd78725055fc68af16e151516ba29625e3e1c74ceab3da1bcabd6015e3f6e8`
               )
             },
             TEST_TIMEOUT_IN_MS
