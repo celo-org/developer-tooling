@@ -1926,6 +1926,7 @@ __metadata:
   resolution: "@celo/governance@workspace:packages/sdk/governance"
   dependencies:
     "@celo/abis": "npm:11.0.0"
+    "@celo/abis-12": "npm:@celo/abis@12.0.0-canary.60"
     "@celo/base": "npm:^7.0.0-beta.0"
     "@celo/connect": "npm:^6.0.3-beta.0"
     "@celo/contractkit": "npm:^9.0.0-beta.0"
@@ -1938,7 +1939,7 @@ __metadata:
     "@types/inquirer": "npm:^6.5.0"
     bignumber.js: "npm:^9.0.0"
     debug: "npm:^4.1.1"
-    inquirer: "npm:^7.0.5"
+    inquirer: "npm:^7.3.3"
   languageName: unknown
   linkType: soft
 
@@ -12556,7 +12557,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inquirer@npm:^7.0.5":
+"inquirer@npm:^7.3.3":
   version: 7.3.3
   resolution: "inquirer@npm:7.3.3"
   dependencies:
