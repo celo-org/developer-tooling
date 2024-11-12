@@ -28,16 +28,24 @@
     "@celo/viem-account-ledger": "0.0.1"
   },
   "changesets": [
+    "calm-sheep-tie",
+    "chilled-cycles-smell",
     "dry-gifts-love",
+    "dull-windows-travel",
     "fair-points-beg",
     "fifty-roses-explain",
     "gold-pumas-fry",
+    "good-trees-reply",
     "hot-pugs-nail",
     "hungry-cups-juggle",
+    "little-carpets-argue",
     "many-cobras-live",
     "moody-falcons-remain",
     "polite-pets-push",
     "rude-parrots-know",
-    "thirty-pugs-smile"
+    "smart-berries-accept",
+    "smart-guests-refuse",
+    "thirty-pugs-smile",
+    "twenty-rocks-pull"
   ]
 }

@@ -1,6 +1,6 @@
 {
   "name": "@celo/wallet-hsm",
-  "version": "6.0.2-beta.0",
+  "version": "6.0.2-beta.1",
   "description": "HSM wallet implementation utils",
   "author": "Celo",
   "license": "Apache-2.0",

@@ -1,5 +1,11 @@
 # @celo/dev-utils
 
+## 0.0.6-beta.1
+
+### Patch Changes
+
+- [#400](https://github.com/celo-org/developer-tooling/pull/400) [`38fe4d0`](https://github.com/celo-org/developer-tooling/commit/38fe4d018d1b9ed5954a17501bdaa59b0aeec2f2) Thanks [@shazarre](https://github.com/shazarre)! - Upgrades to latest devchain
+
 ## 0.0.6-beta.0
 
 ### Patch Changes
