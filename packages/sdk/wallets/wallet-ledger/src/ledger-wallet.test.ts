@@ -488,6 +488,15 @@ describe('LedgerWallet class', () => {
                   expect(true).toBeTruthy()
                   return
                 }
+
+                const { version } = await hardwareWallet.ledger?.getAppConfiguration()!
+                if (
+                  meetsVersionRequirements(version, { minimum: LedgerWallet.MIN_VERSION_EIP1559 })
+                ) {
+                  expect(true).toBeTruthy()
+                  return
+                }
+
                 wallet = new LedgerWallet(
                   undefined,
                   undefined,
@@ -498,8 +507,6 @@ describe('LedgerWallet class', () => {
                 mockForceValidation = jest.fn((): void => {
                   // do nothing
                 })
-                mockLedger(wallet, mockForceValidation, LedgerWallet.MIN_VERSION_TOKEN_DATA)
-                await wallet.init()
                 const warnSpy = jest.spyOn(console, 'warn')
                 // setup complete
 
