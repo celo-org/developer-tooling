@@ -193,15 +193,6 @@ export class LedgerSigner implements Signer {
   }
 
   private provideERC20TokenInformation(tokenInfoData: Buffer) {
-    // it looks like legacy might need it WITHOUT 0x prefix
-    const isModern = meetsVersionRequirements(this.appConfiguration.version, {
-      minimum: LedgerWallet.MIN_VERSION_EIP1559,
-    })
-
-    const hexStringTokenInfo = isModern
-      ? ensureLeading0x(tokenInfoData.toString('hex'))
-      : trimLeading0x(tokenInfoData.toString('hex'))
-
-    return this.ledger!.provideERC20TokenInformation(hexStringTokenInfo)
+    return this.ledger!.provideERC20TokenInformation(trimLeading0x(tokenInfoData.toString('hex')))
   }
 }
