@@ -1723,6 +1723,7 @@ __metadata:
     "@oclif/plugin-plugins": "npm:^4.3.10"
     "@oclif/plugin-warn-if-update-available": "npm:^3.1.11"
     "@safe-global/protocol-kit": "npm:^5.0.4"
+    "@safe-global/types-kit": "npm:^1.0.0"
     "@types/command-exists": "npm:^1.2.3"
     "@types/debug": "npm:^4.1.4"
     "@types/fs-extra": "npm:^8.0.0"

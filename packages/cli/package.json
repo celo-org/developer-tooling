@@ -63,6 +63,7 @@
     "@oclif/plugin-plugins": "^4.3.10",
     "@oclif/plugin-warn-if-update-available": "^3.1.11",
     "@safe-global/protocol-kit": "^5.0.4",
+    "@safe-global/types-kit": "^1.0.0",
     "@types/command-exists": "^1.2.3",
     "bignumber.js": "9.0.0",
     "chalk": "^2.4.2",

@@ -7,12 +7,12 @@ import { Flags } from '@oclif/core'
 import Web3 from 'web3'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendSafeTx, displaySendTx, failWith } from '../../utils/cli'
+import { displaySendTx, failWith } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import {
-  createApproveSafeTransactionIfNotApproved,
-  createExecuteSafeTransactionIfThresholdMet,
   createSafeFromWeb3,
+  performSafeTransaction,
+  safeTransactionMetadataFromCeloTransactionObject,
 } from '../../utils/safe'
 
 enum HotfixApprovalType {
@@ -130,31 +130,12 @@ export default class Approve extends BaseCommand {
     }
 
     if (isCel2 && approvalType === 'securityCouncil' && useSafe) {
-      const web3 = await this.getWeb3()
-      const safe = await createSafeFromWeb3(web3, account, await governance.getSecurityCouncil())
-
-      const approveTx = await createApproveSafeTransactionIfNotApproved(
-        safe,
-        governanceTx,
-        governance.address,
-        account
+      await performSafeTransaction(
+        await this.getWeb3(),
+        await governance.getSecurityCouncil(),
+        account,
+        await safeTransactionMetadataFromCeloTransactionObject(governanceTx, governance.address)
       )
-
-      if (approveTx !== null) {
-        // @ts-expect-error
-        await displaySendSafeTx('approveTx', approveTx)
-      }
-
-      const executeTx = await createExecuteSafeTransactionIfThresholdMet(
-        safe,
-        governanceTx,
-        governance.address
-      )
-
-      if (executeTx !== null) {
-        // @ts-expect-error
-        await displaySendSafeTx('executeTx', executeTx)
-      }
     } else if (
       isCel2 &&
       approvalType === 'securityCouncil' &&

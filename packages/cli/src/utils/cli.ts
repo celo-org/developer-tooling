@@ -7,7 +7,6 @@ import {
   parseDecodedParams,
 } from '@celo/connect'
 import { Errors, ux } from '@oclif/core'
-import Safe from '@safe-global/protocol-kit'
 import BigNumber from 'bignumber.js'
 import chalk from 'chalk'
 import { ethers } from 'ethers'
@@ -23,21 +22,23 @@ export async function displayWeb3Tx(name: string, txObj: any, tx?: Omit<CeloTx, 
   ux.action.stop()
 }
 
-export async function displaySendSafeTx(
-  name: string,
-  safeTx: ReturnType<Safe['approveTransactionHash'] | Safe['executeTransaction']>
-) {
+export async function displaySendSafeTx(name: string, safeTx: Promise<TransactionResult>) {
   ux.action.start(`Sending Transaction: ${name}`)
 
+  // TODO resolve errors
   try {
     const txResult = await safeTx
 
+    // @ts-ignore
     if (!txResult.transactionResponse) {
       throw new Error('Transaction failed')
     }
 
+    // @ts-ignore
     if (
+      // @ts-ignore
       'wait' in (txResult.transactionResponse as any) &&
+      // @ts-ignore
       typeof (txResult.transactionResponse as any).wait === 'function'
     ) {
       // @ts-expect-error example taken from the docs and works fine (covered by tests)
