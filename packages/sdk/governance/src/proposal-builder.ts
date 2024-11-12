@@ -103,7 +103,6 @@ export class ProposalBuilder {
     if (!to || !value) {
       throw new Error("Transaction parameters 'to' and/or 'value' not provided")
     }
-    // TODO fix type of value
     this.addWeb3Tx(tx.txo, { to, value: valueToString(value.toString()) })
   }
 
