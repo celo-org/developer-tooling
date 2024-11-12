@@ -3,10 +3,11 @@ import {
   CeloTx,
   Connection,
   EventLog,
-  TransactionResult,
   parseDecodedParams,
+  TransactionResult,
 } from '@celo/connect'
 import { Errors, ux } from '@oclif/core'
+import { TransactionResult as SafeTransactionResult } from '@safe-global/types-kit'
 import BigNumber from 'bignumber.js'
 import chalk from 'chalk'
 import { ethers } from 'ethers'
@@ -22,27 +23,26 @@ export async function displayWeb3Tx(name: string, txObj: any, tx?: Omit<CeloTx, 
   ux.action.stop()
 }
 
-export async function displaySendSafeTx(name: string, safeTx: Promise<TransactionResult>) {
+export async function displaySafeTx(name: string, safeTxResult: SafeTransactionResult) {
   ux.action.start(`Sending Transaction: ${name}`)
 
-  // TODO resolve errors
   try {
-    const txResult = await safeTx
-
-    // @ts-ignore
-    if (!txResult.transactionResponse) {
+    if (!safeTxResult.transactionResponse) {
       throw new Error('Transaction failed')
     }
 
-    // @ts-ignore
+    /**
+     * wait() method does not exists in the types, but according to the docs
+     * https://docs.safe.global/sdk/protocol-kit/reference/safe#executetransaction
+     * this actually exists
+     *
+     * It is covered by tests though and working fine
+     */
     if (
-      // @ts-ignore
-      'wait' in (txResult.transactionResponse as any) &&
-      // @ts-ignore
-      typeof (txResult.transactionResponse as any).wait === 'function'
+      'wait' in (safeTxResult.transactionResponse as any) &&
+      typeof (safeTxResult.transactionResponse as any).wait === 'function'
     ) {
-      // @ts-expect-error example taken from the docs and works fine (covered by tests)
-      const receipt = await txResult.transactionResponse?.wait()
+      const receipt = await (safeTxResult.transactionResponse as any).wait()
 
       printValueMap({ txHash: receipt.transactionHash })
     }
@@ -50,6 +50,7 @@ export async function displaySendSafeTx(name: string, safeTx: Promise<Transactio
     ux.action.stop()
   } catch (e) {
     ux.action.stop(`failed: ${(e as Error).message}`)
+
     throw e
   }
 }

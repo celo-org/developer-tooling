@@ -4,9 +4,8 @@ import { CeloProvider } from '@celo/connect/lib/celo-provider'
 import Safe from '@safe-global/protocol-kit'
 import { MetaTransactionData, TransactionResult } from '@safe-global/types-kit'
 import Web3 from 'web3'
-import { displaySendSafeTx } from './cli'
+import { displaySafeTx } from './cli'
 
-// TODO require CeloProvider directly
 export const createSafeFromWeb3 = async (
   web3: Web3,
   signer: StrongAddress,
@@ -41,19 +40,16 @@ export const performSafeTransaction = async (
   txData: MetaTransactionData
 ) => {
   const safe = await createSafeFromWeb3(web3, safeSigner, safeAddress)
+  const approveTxPromise = await createApproveSafeTransactionIfNotApproved(safe, txData, safeSigner)
 
-  const approveTx = await createApproveSafeTransactionIfNotApproved(safe, txData, safeSigner)
-
-  if (approveTx !== null) {
-    // @ts-ignore
-    await displaySendSafeTx('approveTx', approveTx)
+  if (approveTxPromise) {
+    await displaySafeTx('approveTx', approveTxPromise)
   }
 
-  const executeTx = await createExecuteSafeTransactionIfThresholdMet(safe, txData)
+  const executeTxPromise = await createExecuteSafeTransactionIfThresholdMet(safe, txData)
 
-  if (executeTx !== null) {
-    // @ts-expect-error
-    await displaySendSafeTx('executeTx', executeTx)
+  if (executeTxPromise) {
+    await displaySafeTx('executeTx', executeTxPromise)
   }
 }
 
@@ -61,7 +57,7 @@ const createApproveSafeTransactionIfNotApproved = async (
   safe: Safe,
   txData: MetaTransactionData,
   ownerAddress: StrongAddress
-): Promise<Promise<TransactionResult> | null> => {
+): Promise<TransactionResult | null> => {
   const txHash = await safe.getTransactionHash(
     await safe.createTransaction({
       transactions: [txData],
@@ -69,7 +65,7 @@ const createApproveSafeTransactionIfNotApproved = async (
   )
 
   if (!(await safe.getOwnersWhoApprovedTx(txHash)).includes(ownerAddress)) {
-    return safe.approveTransactionHash(txHash)
+    return await safe.approveTransactionHash(txHash)
   }
 
   return null
@@ -78,14 +74,14 @@ const createApproveSafeTransactionIfNotApproved = async (
 const createExecuteSafeTransactionIfThresholdMet = async (
   safe: Safe,
   txData: MetaTransactionData
-): Promise<Promise<TransactionResult> | null> => {
+): Promise<TransactionResult | null> => {
   const tx = await safe.createTransaction({
     transactions: [txData],
   })
   const txHash = await safe.getTransactionHash(tx)
 
   if ((await safe.getOwnersWhoApprovedTx(txHash)).length >= (await safe.getThreshold())) {
-    return safe.executeTransaction(tx)
+    return await safe.executeTransaction(tx)
   }
 
   return null
