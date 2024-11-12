@@ -30,11 +30,20 @@ export default class Switch extends BaseCommand {
       console.info(chalk.red.bold(msg))
       return msg
     }
-
     const isEpochProcessStarted = await epochManager.isOnEpochProcess()
     if (!isEpochProcessStarted) {
-      await displaySendTx('startNextEpoch', epochManager.startNextEpochProcess())
+      await displaySendTx(
+        'startNextEpoch',
+        epochManager.startNextEpochProcess(),
+        {},
+        'EpochProcessingStarted'
+      )
     }
-    await displaySendTx('finishNextEpoch', await epochManager.finishNextEpochProcessTx())
+    await displaySendTx(
+      'finishNextEpoch',
+      await epochManager.finishNextEpochProcessTx(),
+      {},
+      'EpochProcessingEnded'
+    )
   }
 }

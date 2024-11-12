@@ -2,7 +2,7 @@ import { newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import BigNumber from 'bignumber.js'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Start from './start'
 import Switch from './switch'
 
@@ -32,10 +32,41 @@ testWithAnvilL2('epochs:switch cmd', (web3) => {
     expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(4)
     expect(await epochManagerWrapper.isTimeForNextEpoch()).toEqual(true)
 
+    const logMock = jest.spyOn(console, 'log').mockClear()
+
     await testLocallyWithWeb3Node(Switch, ['--from', accounts[0]], web3)
 
     expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(5)
     expect(await epochManagerWrapper.isTimeForNextEpoch()).toEqual(false)
+
+    expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
+      [
+        [
+          "SendTransaction: startNextEpoch",
+        ],
+        [
+          "txHash: 0xtxhash",
+        ],
+        [
+          "EpochProcessingStarted:",
+        ],
+        [
+          "epochNumber: 4",
+        ],
+        [
+          "SendTransaction: finishNextEpoch",
+        ],
+        [
+          "txHash: 0xtxhash",
+        ],
+        [
+          "EpochProcessingEnded:",
+        ],
+        [
+          "epochNumber: 4",
+        ],
+      ]
+    `)
   })
 
   it('switches epoch successfully which already has started process', async () => {
