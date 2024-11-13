@@ -63,7 +63,7 @@ testWithAnvilL2('governance:show cmd', (web3: Web3) => {
     await testLocallyWithWeb3Node(Show, ['--proposalID', proposalId.toString()], web3)
 
     const schedule = await governanceWrapper.proposalSchedule(proposalId)
-    const timestamp = await (await governanceWrapper.getProposalMetadata(proposalId)).timestamp
+    const timestamp = (await governanceWrapper.getProposalMetadata(proposalId)).timestamp
 
     expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
       .toMatchInlineSnapshot(`

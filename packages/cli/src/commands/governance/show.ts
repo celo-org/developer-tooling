@@ -1,5 +1,4 @@
 import { ProposalBuilder, proposalToJSON } from '@celo/governance'
-import { concurrentMap } from '@celo/utils/lib/async'
 import { toBuffer } from '@ethereumjs/util'
 import { Flags } from '@oclif/core'
 import chalk from 'chalk'
@@ -43,17 +42,6 @@ export default class Show extends BaseCommand {
       exclusive: ['account', 'proposalID'],
       description: 'Hash of hotfix proposal',
     }),
-    notwhitelisted: Flags.boolean({
-      description: 'List validators who have not whitelisted the specified hotfix',
-    }),
-    whitelisters: Flags.boolean({
-      description: 'If set, displays validators that have whitelisted the hotfix.',
-      exclusive: ['nonwhitelisters', 'account', 'proposalID'],
-    }),
-    nonwhitelisters: Flags.boolean({
-      description: 'If set, displays validators that have not whitelisted the hotfix.',
-      exclusive: ['whitelisters', 'account', 'proposalID'],
-    }),
     afterExecutingProposal: Flags.string({
       required: false,
       description: 'Path to proposal which will be executed prior to proposal',
@@ -70,8 +58,6 @@ export default class Show extends BaseCommand {
     'show --proposalID 99',
     'show --proposalID 99 --raw',
     'show --hotfix 0x614dccb5ac13cba47c2430bdee7829bb8c8f3603a8ace22e7680d317b39e3658',
-    'show --hotfix 0x614dccb5ac13cba47c2430bdee7829bb8c8f3603a8ace22e7680d317b39e3658 --whitelisters',
-    'show --hotfix 0x614dccb5ac13cba47c2430bdee7829bb8c8f3603a8ace22e7680d317b39e3658 --nonwhitelisters',
     'show --account 0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95',
   ]
 
@@ -158,22 +144,6 @@ export default class Show extends BaseCommand {
         tally,
         quorum,
       })
-
-      if (res.flags.whitelisters || res.flags.nonwhitelisters) {
-        const validators = await kit.contracts.getValidators()
-        const accounts = await validators.currentValidatorAccountsSet()
-        const whitelist = await concurrentMap(
-          5,
-          accounts,
-          async (validator) =>
-            (await governance.isHotfixWhitelistedBy(hotfixBuf, validator.signer)) ||
-            /* eslint-disable-next-line no-return-await */
-            (await governance.isHotfixWhitelistedBy(hotfixBuf, validator.account))
-        )
-        printValueMapRecursive({
-          Validators: accounts.filter((_, idx) => !!res.flags.whitelisters === whitelist[idx]),
-        })
-      }
     } else if (account) {
       const accounts = await kit.contracts.getAccounts()
       printValueMapRecursive(await governance.getVoter(await accounts.signerToAccount(account)))
