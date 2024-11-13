@@ -1873,6 +1873,24 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@celo/dev-utils@npm:0.0.6-beta.0":
+  version: 0.0.6-beta.0
+  resolution: "@celo/dev-utils@npm:0.0.6-beta.0"
+  dependencies:
+    "@celo/abis": "npm:^11.0.0"
+    "@celo/connect": "npm:^6.0.3-beta.0"
+    "@viem/anvil": "npm:^0.0.9"
+    bignumber.js: "npm:^9.0.0"
+    fs-extra: "npm:^8.1.0"
+    ganache: "npm:@celo/ganache@7.8.0-unofficial.0"
+    targz: "npm:^1.0.1"
+    tmp: "npm:^0.1.0"
+    web3: "npm:1.10.4"
+    web3-core-helpers: "npm:1.10.4"
+  checksum: bd190c7a37c378ccac11de145749a842dde716e169feeb7dcbde637bd5d902f384b41e91bbe8487e962dcc0ad871b234b910839544bc216a591420af40a674f7
+  languageName: node
+  linkType: hard
+
 "@celo/dev-utils@npm:0.0.6-beta.1, @celo/dev-utils@workspace:packages/dev-utils":
   version: 0.0.0-use.local
   resolution: "@celo/dev-utils@workspace:packages/dev-utils"
