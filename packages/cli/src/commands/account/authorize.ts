@@ -26,11 +26,13 @@ export default class Authorize extends BaseCommand {
       description:
         'The BLS public key that the validator is using for consensus, should pass proof of possession. 96 bytes.',
       dependsOn: ['blsPop'],
+      required: false,
     }),
     blsPop: CustomFlags.blsProofOfPossession({
       description:
         'The BLS public key proof-of-possession, which consists of a signature on the account address. 48 bytes.',
       dependsOn: ['blsKey'],
+      required: false,
     }),
     force: Flags.boolean({
       description:
@@ -56,6 +58,15 @@ export default class Authorize extends BaseCommand {
       res.flags.signer,
       res.flags.signature
     )
+    const isCel2 = await this.isCel2()
+
+    if (res.flags.role === 'validator') {
+      if (isCel2) {
+        if (res.flags.blsKey || res.flags.blsPop) {
+          this.error('BLS keys are not supported on L2', { exit: 1 })
+        }
+      }
+    }
 
     // Check that the account is registered on-chain.
     // Additionally, if the authorization is for a validator, the BLS key must be provided when the
@@ -63,7 +74,7 @@ export default class Authorize extends BaseCommand {
     // (Because the BLS key is stored on the validator entry, which would not exist yet)
     // Using the --force flag allows setting the ECDSA key on the validator without the BLS key.
     const checker = newCheckBuilder(this).isAccount(res.flags.from)
-    if (res.flags.role === 'validator' && !res.flags.force) {
+    if (res.flags.role === 'validator' && !res.flags.force && !isCel2) {
       if (res.flags.blsKey && res.flags.blsPop) {
         checker.isValidator(res.flags.from)
       } else {
@@ -75,7 +86,8 @@ export default class Authorize extends BaseCommand {
     let tx: any
     if (res.flags.role === 'vote') {
       tx = await accounts.authorizeVoteSigner(res.flags.signer, sig)
-    } else if (res.flags.role === 'validator' && res.flags.blsKey && res.flags.blsPop) {
+    } else if (res.flags.role === 'validator' && res.flags.blsKey && res.flags.blsPop && !isCel2) {
+      // TODO(L2): this is deprecated and not supported in L2
       tx = await accounts.authorizeValidatorSignerAndBls(
         res.flags.signer,
         sig,
