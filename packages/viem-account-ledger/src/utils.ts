@@ -1,4 +1,4 @@
-import Eth from '@ledgerhq/hw-app-eth'
+import Eth from '@celo/hw-app-eth'
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
 import { SemVer } from 'semver'
 import { tokenInfoByAddressAndChainId } from './tokens.js'

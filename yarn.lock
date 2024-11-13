@@ -1699,9 +1699,9 @@ __metadata:
     "@celo/celo-devchain": "npm:^7.0.0"
     "@celo/compliance": "npm:~1.0.23"
     "@celo/connect": "npm:^6.0.3-beta.0"
-    "@celo/contractkit": "npm:^9.0.0-beta.0"
+    "@celo/contractkit": "npm:^9.0.0-beta.1"
     "@celo/cryptographic-utils": "npm:^5.1.1-beta.0"
-    "@celo/dev-utils": "npm:0.0.6-beta.0"
+    "@celo/dev-utils": "npm:0.0.6-beta.1"
     "@celo/explorer": "npm:^5.0.13-beta.0"
     "@celo/governance": "npm:^5.1.4-beta.0"
     "@celo/identity": "npm:^5.1.2"
@@ -1709,9 +1709,9 @@ __metadata:
     "@celo/phone-utils": "npm:^6.0.4-beta.0"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.0-beta.0"
-    "@celo/wallet-hsm-azure": "npm:^6.0.2-beta.0"
-    "@celo/wallet-ledger": "npm:^6.0.2-beta.0"
-    "@celo/wallet-local": "npm:^6.0.2-beta.0"
+    "@celo/wallet-hsm-azure": "npm:^6.0.2-beta.2"
+    "@celo/wallet-ledger": "npm:^6.0.2-beta.2"
+    "@celo/wallet-local": "npm:^6.0.2-beta.2"
     "@ethereumjs/util": "npm:8.0.5"
     "@ledgerhq/hw-transport-node-hid": "npm:^6.28.5"
     "@mento-protocol/mento-sdk": "npm:^1.0.1"
@@ -1830,7 +1830,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/contractkit@npm:^9.0.0-beta.0, @celo/contractkit@workspace:^, @celo/contractkit@workspace:packages/sdk/contractkit":
+"@celo/contractkit@npm:^9.0.0-beta.0, @celo/contractkit@npm:^9.0.0-beta.1, @celo/contractkit@workspace:^, @celo/contractkit@workspace:packages/sdk/contractkit":
   version: 0.0.0-use.local
   resolution: "@celo/contractkit@workspace:packages/sdk/contractkit"
   dependencies:
@@ -1839,11 +1839,11 @@ __metadata:
     "@celo/base": "npm:^7.0.0-beta.0"
     "@celo/celo-devchain": "npm:^7.0.0"
     "@celo/connect": "npm:^6.0.3-beta.0"
-    "@celo/dev-utils": "npm:0.0.6-beta.0"
+    "@celo/dev-utils": "npm:0.0.6-beta.1"
     "@celo/odis-identifiers": "npm:^1.0.1"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.0-beta.0"
-    "@celo/wallet-local": "npm:^6.0.2-beta.0"
+    "@celo/wallet-local": "npm:^6.0.2-beta.1"
     "@truffle/contract": "npm:4.6.31"
     "@types/bn.js": "npm:^5.1.0"
     "@types/debug": "npm:^4.1.5"
@@ -1882,7 +1882,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/dev-utils@npm:0.0.6-beta.0, @celo/dev-utils@workspace:packages/dev-utils":
+"@celo/dev-utils@npm:0.0.6-beta.1, @celo/dev-utils@workspace:packages/dev-utils":
   version: 0.0.0-use.local
   resolution: "@celo/dev-utils@workspace:packages/dev-utils"
   dependencies:
@@ -1917,8 +1917,8 @@ __metadata:
   dependencies:
     "@celo/base": "npm:^7.0.0-beta.0"
     "@celo/connect": "npm:^6.0.3-beta.0"
-    "@celo/contractkit": "npm:^9.0.0-beta.0"
-    "@celo/dev-utils": "npm:0.0.6-beta.0"
+    "@celo/contractkit": "npm:^9.0.0-beta.1"
+    "@celo/dev-utils": "npm:0.0.6-beta.1"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.0-beta.0"
     "@types/debug": "npm:^4.1.12"
@@ -1949,6 +1949,29 @@ __metadata:
     inquirer: "npm:^7.0.5"
   languageName: unknown
   linkType: soft
+
+"@celo/hw-app-eth@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@celo/hw-app-eth@npm:1.0.0"
+  dependencies:
+    "@changesets/changelog-github": "npm:^0.5.0"
+    "@changesets/cli": "npm:^2.27.7"
+    "@ethersproject/abi": "npm:^5.5.0"
+    "@ethersproject/rlp": "npm:^5.5.0"
+    "@ledgerhq/cryptoassets-evm-signatures": "npm:^13.5.1"
+    "@ledgerhq/domain-service": "npm:^1.2.10"
+    "@ledgerhq/errors": "npm:^6.19.1"
+    "@ledgerhq/evm-tools": "npm:^1.2.4"
+    "@ledgerhq/hw-transport": "npm:^6.31.4"
+    "@ledgerhq/hw-transport-mocker": "npm:^6.29.4"
+    "@ledgerhq/logs": "npm:^6.12.0"
+    "@ledgerhq/types-live": "npm:^6.52.4"
+    axios: "npm:1.7.7"
+    bignumber.js: "npm:^9.1.2"
+    semver: "npm:^7.3.5"
+  checksum: 88f8626bd74ef18691b0073275cec86aa79eff2aa01cc08188ec3fc008eb445c05de228baee194a8126dcbdc9661ddce15fc5e01a8dbe2d18455c282b34eea6c
+  languageName: node
+  linkType: hard
 
 "@celo/identity@npm:^5.1.2":
   version: 5.1.2
@@ -1999,7 +2022,7 @@ __metadata:
     "@celo/base": "npm:^7.0.0-beta.0"
     "@celo/celo-devchain": "npm:^7.0.0"
     "@celo/contractkit": "workspace:^"
-    "@celo/dev-utils": "npm:0.0.6-beta.0"
+    "@celo/dev-utils": "npm:0.0.6-beta.1"
     "@celo/odis-identifiers": "npm:^1.0.1"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.0-beta.0"
@@ -2018,7 +2041,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/network-utils@workspace:packages/sdk/network-utils"
   dependencies:
-    "@celo/dev-utils": "npm:0.0.6-beta.0"
+    "@celo/dev-utils": "npm:0.0.6-beta.1"
     "@celo/typescript": "workspace:^"
     "@types/debug": "npm:^4.1.12"
     cross-fetch: "npm:3.1.5"
@@ -2081,8 +2104,8 @@ __metadata:
   dependencies:
     "@celo/base": "npm:^7.0.0-beta.0"
     "@celo/connect": "npm:^6.0.3-beta.0"
-    "@celo/contractkit": "npm:^9.0.0-beta.0"
-    "@celo/dev-utils": "npm:0.0.6-beta.0"
+    "@celo/contractkit": "npm:^9.0.0-beta.1"
+    "@celo/dev-utils": "npm:0.0.6-beta.1"
     "@celo/typescript": "workspace:^"
     "@types/bn.js": "npm:^5.1.0"
     "@types/debug": "npm:^4.1.5"
@@ -2148,6 +2171,7 @@ __metadata:
   resolution: "@celo/viem-account-ledger@workspace:packages/viem-account-ledger"
   dependencies:
     "@celo/base": "npm:^7.0.0-beta.0"
+    "@celo/hw-app-eth": "npm:^1.0.0"
     "@celo/ledger-token-signer": "npm:^0.4.0"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "workspace:^"
@@ -2155,7 +2179,6 @@ __metadata:
     "@celo/wallet-remote": "workspace:^"
     "@ethereumjs/util": "npm:8.0.5"
     "@ledgerhq/errors": "npm:^6.16.4"
-    "@ledgerhq/hw-app-eth": "git+https://github.com:celo-org/ledgerjs-hw-app-eth.git"
     "@ledgerhq/hw-transport-node-hid": "npm:^6.29.5"
     "@vitest/coverage-v8": "npm:2.1.2"
     dotenv: "npm:^8.2.0"
@@ -2188,7 +2211,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/wallet-base@npm:^6.0.2-beta.0, @celo/wallet-base@workspace:^, @celo/wallet-base@workspace:packages/sdk/wallets/wallet-base":
+"@celo/wallet-base@npm:^6.0.2-beta.2, @celo/wallet-base@workspace:^, @celo/wallet-base@workspace:packages/sdk/wallets/wallet-base":
   version: 0.0.0-use.local
   resolution: "@celo/wallet-base@workspace:packages/sdk/wallets/wallet-base"
   dependencies:
@@ -2216,9 +2239,9 @@ __metadata:
     "@celo/connect": "npm:^6.0.3-beta.0"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.0-beta.0"
-    "@celo/wallet-base": "npm:^6.0.2-beta.0"
-    "@celo/wallet-hsm": "npm:^6.0.2-beta.0"
-    "@celo/wallet-remote": "npm:^6.0.2-beta.0"
+    "@celo/wallet-base": "npm:^6.0.2-beta.2"
+    "@celo/wallet-hsm": "npm:^6.0.2-beta.2"
+    "@celo/wallet-remote": "npm:^6.0.2-beta.2"
     "@ethereumjs/util": "npm:8.0.5"
     "@noble/ciphers": "npm:0.4.1"
     "@noble/curves": "npm:1.3.0"
@@ -2233,7 +2256,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/wallet-hsm-azure@npm:^6.0.2-beta.0, @celo/wallet-hsm-azure@workspace:packages/sdk/wallets/wallet-hsm-azure":
+"@celo/wallet-hsm-azure@npm:^6.0.2-beta.2, @celo/wallet-hsm-azure@workspace:packages/sdk/wallets/wallet-hsm-azure":
   version: 0.0.0-use.local
   resolution: "@celo/wallet-hsm-azure@workspace:packages/sdk/wallets/wallet-hsm-azure"
   dependencies:
@@ -2244,9 +2267,9 @@ __metadata:
     "@celo/connect": "npm:^6.0.3-beta.0"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.0-beta.0"
-    "@celo/wallet-base": "npm:^6.0.2-beta.0"
-    "@celo/wallet-hsm": "npm:^6.0.2-beta.0"
-    "@celo/wallet-remote": "npm:^6.0.2-beta.0"
+    "@celo/wallet-base": "npm:^6.0.2-beta.2"
+    "@celo/wallet-hsm": "npm:^6.0.2-beta.2"
+    "@celo/wallet-remote": "npm:^6.0.2-beta.2"
     "@ethereumjs/util": "npm:8.0.5"
     "@noble/ciphers": "npm:0.4.1"
     "@noble/curves": "npm:1.3.0"
@@ -2267,9 +2290,9 @@ __metadata:
     "@celo/connect": "npm:^6.0.3-beta.0"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.0-beta.0"
-    "@celo/wallet-base": "npm:^6.0.2-beta.0"
-    "@celo/wallet-hsm": "npm:^6.0.2-beta.0"
-    "@celo/wallet-remote": "npm:^6.0.2-beta.0"
+    "@celo/wallet-base": "npm:^6.0.2-beta.2"
+    "@celo/wallet-hsm": "npm:^6.0.2-beta.2"
+    "@celo/wallet-remote": "npm:^6.0.2-beta.2"
     "@ethereumjs/util": "npm:8.0.5"
     "@google-cloud/kms": "npm:~2.9.0"
     "@noble/ciphers": "npm:0.4.1"
@@ -2284,7 +2307,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/wallet-hsm@npm:^6.0.2-beta.0, @celo/wallet-hsm@workspace:packages/sdk/wallets/wallet-hsm":
+"@celo/wallet-hsm@npm:^6.0.2-beta.2, @celo/wallet-hsm@workspace:packages/sdk/wallets/wallet-hsm":
   version: 0.0.0-use.local
   resolution: "@celo/wallet-hsm@workspace:packages/sdk/wallets/wallet-hsm"
   dependencies:
@@ -2303,21 +2326,21 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/wallet-ledger@npm:^6.0.2-beta.0, @celo/wallet-ledger@workspace:packages/sdk/wallets/wallet-ledger":
+"@celo/wallet-ledger@npm:^6.0.2-beta.2, @celo/wallet-ledger@workspace:packages/sdk/wallets/wallet-ledger":
   version: 0.0.0-use.local
   resolution: "@celo/wallet-ledger@workspace:packages/sdk/wallets/wallet-ledger"
   dependencies:
     "@celo/base": "npm:^7.0.0-beta.0"
     "@celo/connect": "npm:^6.0.3-beta.0"
-    "@celo/contractkit": "npm:^9.0.0-beta.0"
+    "@celo/contractkit": "npm:^9.0.0-beta.1"
+    "@celo/hw-app-eth": "npm:^1.0.0"
     "@celo/ledger-token-signer": "npm:^0.4.0"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.0-beta.0"
-    "@celo/wallet-base": "npm:^6.0.2-beta.0"
-    "@celo/wallet-remote": "npm:^6.0.2-beta.0"
+    "@celo/wallet-base": "npm:^6.0.2-beta.2"
+    "@celo/wallet-remote": "npm:^6.0.2-beta.2"
     "@ethereumjs/util": "npm:8.0.5"
     "@ledgerhq/errors": "npm:^6.16.4"
-    "@ledgerhq/hw-app-eth": "git+https://github.com:celo-org/ledgerjs-hw-app-eth.git"
     "@ledgerhq/hw-transport": "npm:^6.30.6"
     "@ledgerhq/hw-transport-node-hid": "npm:^6.28.5"
     "@noble/curves": "npm:^1.4.0"
@@ -2345,7 +2368,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/wallet-local@npm:^6.0.2-beta.0, @celo/wallet-local@workspace:packages/sdk/wallets/wallet-local":
+"@celo/wallet-local@npm:^6.0.2-beta.0, @celo/wallet-local@npm:^6.0.2-beta.1, @celo/wallet-local@npm:^6.0.2-beta.2, @celo/wallet-local@workspace:packages/sdk/wallets/wallet-local":
   version: 0.0.0-use.local
   resolution: "@celo/wallet-local@workspace:packages/sdk/wallets/wallet-local"
   dependencies:
@@ -2353,7 +2376,7 @@ __metadata:
     "@celo/connect": "npm:^6.0.3-beta.0"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.0-beta.0"
-    "@celo/wallet-base": "npm:^6.0.2-beta.0"
+    "@celo/wallet-base": "npm:^6.0.2-beta.2"
     "@ethereumjs/util": "npm:8.0.5"
     "@types/debug": "npm:^4.1.12"
     debug: "npm:^4.3.5"
@@ -2362,14 +2385,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/wallet-remote@npm:^6.0.2-beta.0, @celo/wallet-remote@workspace:^, @celo/wallet-remote@workspace:packages/sdk/wallets/wallet-remote":
+"@celo/wallet-remote@npm:^6.0.2-beta.2, @celo/wallet-remote@workspace:^, @celo/wallet-remote@workspace:packages/sdk/wallets/wallet-remote":
   version: 0.0.0-use.local
   resolution: "@celo/wallet-remote@workspace:packages/sdk/wallets/wallet-remote"
   dependencies:
     "@celo/connect": "npm:^6.0.3-beta.0"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.0-beta.0"
-    "@celo/wallet-base": "npm:^6.0.2-beta.0"
+    "@celo/wallet-base": "npm:^6.0.2-beta.2"
     "@ethereumjs/util": "npm:8.0.5"
     "@types/debug": "npm:^4.1.5"
     web3: "npm:1.10.4"
@@ -2424,6 +2447,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@changesets/apply-release-plan@npm:^7.0.5":
+  version: 7.0.5
+  resolution: "@changesets/apply-release-plan@npm:7.0.5"
+  dependencies:
+    "@changesets/config": "npm:^3.0.3"
+    "@changesets/get-version-range-type": "npm:^0.4.0"
+    "@changesets/git": "npm:^3.0.1"
+    "@changesets/should-skip-package": "npm:^0.1.1"
+    "@changesets/types": "npm:^6.0.0"
+    "@manypkg/get-packages": "npm:^1.1.3"
+    detect-indent: "npm:^6.0.0"
+    fs-extra: "npm:^7.0.1"
+    lodash.startcase: "npm:^4.4.0"
+    outdent: "npm:^0.5.0"
+    prettier: "npm:^2.7.1"
+    resolve-from: "npm:^5.0.0"
+    semver: "npm:^7.5.3"
+  checksum: 4a983e3afb6c3dcd885820eba96189c9e77173ccae94e291cf2eb2264bd9000b4264d1c5295d62f490731beead30dcb6830fcc69e401d3eb80bdd425fb6413c4
+  languageName: node
+  linkType: hard
+
 "@changesets/assemble-release-plan@npm:^5.2.4":
   version: 5.2.4
   resolution: "@changesets/assemble-release-plan@npm:5.2.4"
@@ -2438,12 +2482,35 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@changesets/assemble-release-plan@npm:^6.0.4":
+  version: 6.0.4
+  resolution: "@changesets/assemble-release-plan@npm:6.0.4"
+  dependencies:
+    "@changesets/errors": "npm:^0.2.0"
+    "@changesets/get-dependents-graph": "npm:^2.1.2"
+    "@changesets/should-skip-package": "npm:^0.1.1"
+    "@changesets/types": "npm:^6.0.0"
+    "@manypkg/get-packages": "npm:^1.1.3"
+    semver: "npm:^7.5.3"
+  checksum: 280f31625bf39763136814a7cf2c0eefa3099c9048a6cdb8ac346fc3c420b111f62186ac436f83fe005ed8384afb3f7e2e88651511c4d9270fcea79ad66bdde7
+  languageName: node
+  linkType: hard
+
 "@changesets/changelog-git@npm:^0.1.14":
   version: 0.1.14
   resolution: "@changesets/changelog-git@npm:0.1.14"
   dependencies:
     "@changesets/types": "npm:^5.2.1"
   checksum: 7dde49aced9760c425e10f3c2e83b2fce08bced455476bbaddf929b96d35ee62d2e6bec442b98dc9ea99a771bfdda3706587111578c42d6025e15d32d8f164e8
+  languageName: node
+  linkType: hard
+
+"@changesets/changelog-git@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "@changesets/changelog-git@npm:0.2.0"
+  dependencies:
+    "@changesets/types": "npm:^6.0.0"
+  checksum: 631fcb73cab584fefad30f0e7cc8f7624b36be0f199e526c0d53538da16df2776bef8f8eb6511247b8040d011a2582bdb4840275d3f90a046bacbbd717da6c83
   languageName: node
   linkType: hard
 
@@ -2501,6 +2568,44 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@changesets/cli@npm:^2.27.7":
+  version: 2.27.9
+  resolution: "@changesets/cli@npm:2.27.9"
+  dependencies:
+    "@changesets/apply-release-plan": "npm:^7.0.5"
+    "@changesets/assemble-release-plan": "npm:^6.0.4"
+    "@changesets/changelog-git": "npm:^0.2.0"
+    "@changesets/config": "npm:^3.0.3"
+    "@changesets/errors": "npm:^0.2.0"
+    "@changesets/get-dependents-graph": "npm:^2.1.2"
+    "@changesets/get-release-plan": "npm:^4.0.4"
+    "@changesets/git": "npm:^3.0.1"
+    "@changesets/logger": "npm:^0.1.1"
+    "@changesets/pre": "npm:^2.0.1"
+    "@changesets/read": "npm:^0.6.1"
+    "@changesets/should-skip-package": "npm:^0.1.1"
+    "@changesets/types": "npm:^6.0.0"
+    "@changesets/write": "npm:^0.3.2"
+    "@manypkg/get-packages": "npm:^1.1.3"
+    ansi-colors: "npm:^4.1.3"
+    ci-info: "npm:^3.7.0"
+    enquirer: "npm:^2.3.0"
+    external-editor: "npm:^3.1.0"
+    fs-extra: "npm:^7.0.1"
+    mri: "npm:^1.2.0"
+    p-limit: "npm:^2.2.0"
+    package-manager-detector: "npm:^0.2.0"
+    picocolors: "npm:^1.1.0"
+    resolve-from: "npm:^5.0.0"
+    semver: "npm:^7.5.3"
+    spawndamnit: "npm:^2.0.0"
+    term-size: "npm:^2.1.0"
+  bin:
+    changeset: bin.js
+  checksum: 3bb61ae64d6a7740f96a7bc32676eca8180aa2b17b321f66ed889f8a5f805c7dc351ce7b66a6982065e5c7e4faba131d03deb4ac393c68d7d0b9fd0a86c94de2
+  languageName: node
+  linkType: hard
+
 "@changesets/config@npm:^2.3.1":
   version: 2.3.1
   resolution: "@changesets/config@npm:2.3.1"
@@ -2516,12 +2621,36 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@changesets/config@npm:^3.0.3":
+  version: 3.0.3
+  resolution: "@changesets/config@npm:3.0.3"
+  dependencies:
+    "@changesets/errors": "npm:^0.2.0"
+    "@changesets/get-dependents-graph": "npm:^2.1.2"
+    "@changesets/logger": "npm:^0.1.1"
+    "@changesets/types": "npm:^6.0.0"
+    "@manypkg/get-packages": "npm:^1.1.3"
+    fs-extra: "npm:^7.0.1"
+    micromatch: "npm:^4.0.2"
+  checksum: 4c5bc9f4ea3c8f086a2cf1d83d3b949560ccbc988107d53d4515186373d0c25112d531b2f661fd913a85c8b0b4173a2c4ddae528f70fbd5efacc6e5f652896c5
+  languageName: node
+  linkType: hard
+
 "@changesets/errors@npm:^0.1.4":
   version: 0.1.4
   resolution: "@changesets/errors@npm:0.1.4"
   dependencies:
     extendable-error: "npm:^0.1.5"
   checksum: 10734f1379715bf5a70b566dd42b50a75964d76f382bb67332776614454deda6d04a43dd7e727cd7cba56d7f2f7c95a07c7c0a19dd5d64fb1980b28322840733
+  languageName: node
+  linkType: hard
+
+"@changesets/errors@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "@changesets/errors@npm:0.2.0"
+  dependencies:
+    extendable-error: "npm:^0.1.5"
+  checksum: 4b79373f92287af4f723e8dbbccaf0299aa8735fc043243d0ad587f04a7614615ea50180be575d4438b9f00aa82d1cf85e902b77a55bdd3e0a8dd97e77b18c60
   languageName: node
   linkType: hard
 
@@ -2535,6 +2664,18 @@ __metadata:
     fs-extra: "npm:^7.0.1"
     semver: "npm:^7.5.3"
   checksum: 04626cdc4039fee66b3b828f1c29026c5607d2d35fa05ce6489f257178ab1283ebffe8c9b9b19378d40d310674538677cdc21d10cdf4953b0d86edeb7265f06b
+  languageName: node
+  linkType: hard
+
+"@changesets/get-dependents-graph@npm:^2.1.2":
+  version: 2.1.2
+  resolution: "@changesets/get-dependents-graph@npm:2.1.2"
+  dependencies:
+    "@changesets/types": "npm:^6.0.0"
+    "@manypkg/get-packages": "npm:^1.1.3"
+    picocolors: "npm:^1.1.0"
+    semver: "npm:^7.5.3"
+  checksum: 36d9877b0b071183b253d894e0dbef56f764fe2ff592064489d4f122c419ab97f0d023c9e078849d0f48b4129f5018c7c81cb380b02d975db5e0768ab29226c1
   languageName: node
   linkType: hard
 
@@ -2563,10 +2704,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@changesets/get-release-plan@npm:^4.0.4":
+  version: 4.0.4
+  resolution: "@changesets/get-release-plan@npm:4.0.4"
+  dependencies:
+    "@changesets/assemble-release-plan": "npm:^6.0.4"
+    "@changesets/config": "npm:^3.0.3"
+    "@changesets/pre": "npm:^2.0.1"
+    "@changesets/read": "npm:^0.6.1"
+    "@changesets/types": "npm:^6.0.0"
+    "@manypkg/get-packages": "npm:^1.1.3"
+  checksum: d371f557556d5d8a4cb35f403304581bc8c236cd3fd9d848246382052fe37ec34d741b107f7f1bd6b76f47cf74e66377bf1d3919db61f64647dce34d365818a7
+  languageName: node
+  linkType: hard
+
 "@changesets/get-version-range-type@npm:^0.3.2":
   version: 0.3.2
   resolution: "@changesets/get-version-range-type@npm:0.3.2"
   checksum: 2b82db1eb373546cca646d57da0e32f24455bcb74b7c2dfc262e8e7a744b0aef3d669e2141c08a17192637594466f55cb6ff04f4eb4dec972656646d331c99aa
+  languageName: node
+  linkType: hard
+
+"@changesets/get-version-range-type@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "@changesets/get-version-range-type@npm:0.4.0"
+  checksum: 9868e99b31af652d3fa08fc33d55b9636f2feed1f4efdb318a6dbb4bb061281868de089b93041ce7f2775ab9cf454b92b1199767d0f4f228d8bbc483e61d2fd8
   languageName: node
   linkType: hard
 
@@ -2585,12 +2747,34 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@changesets/git@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "@changesets/git@npm:3.0.1"
+  dependencies:
+    "@changesets/errors": "npm:^0.2.0"
+    "@manypkg/get-packages": "npm:^1.1.3"
+    is-subdir: "npm:^1.1.1"
+    micromatch: "npm:^4.0.2"
+    spawndamnit: "npm:^2.0.0"
+  checksum: 19831196f5e3138dcbb037fd19d641fe1e428e3e4efac3cb25888e3cf8f3f269fab2b1ed270b173a0104b5d1a76d3599232836c75fbc60f4104f8f30141ed9ed
+  languageName: node
+  linkType: hard
+
 "@changesets/logger@npm:^0.0.5":
   version: 0.0.5
   resolution: "@changesets/logger@npm:0.0.5"
   dependencies:
     chalk: "npm:^2.1.0"
   checksum: f0edc1edd6bef23d78f4f3fd2028e5230c67d74c00a7318a3ae2aac167a46edaf0701c2cabd441dc10081722e9d6b85ad13e6103a1b08d7fa3b5aca6f5db65b3
+  languageName: node
+  linkType: hard
+
+"@changesets/logger@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "@changesets/logger@npm:0.1.1"
+  dependencies:
+    picocolors: "npm:^1.1.0"
+  checksum: bbfc050ddd0afdaa95bb790e81894b7548a2def059deeaed1685e22c10ede245ec2264df42bb2200cc0c8bd040e427bcd68a7afcca2633dc263a28e923d7c175
   languageName: node
   linkType: hard
 
@@ -2601,6 +2785,16 @@ __metadata:
     "@changesets/types": "npm:^5.2.1"
     js-yaml: "npm:^3.13.1"
   checksum: 769eaceff362748bbfcf3f6a0790cd56b7ee01abee59e03d0a150d66cfcd55e85d276e13c18dd4a9c68cb48140f1cebcabf94c49e72e734febc8eaf34b3e72f8
+  languageName: node
+  linkType: hard
+
+"@changesets/parse@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "@changesets/parse@npm:0.4.0"
+  dependencies:
+    "@changesets/types": "npm:^6.0.0"
+    js-yaml: "npm:^3.13.1"
+  checksum: 0a824582306b198cd775048876e62bd39193b921515608504777407d78f1dcc700ec15e1a6bccd8a3514c5acc6c3fb060238fbfeae94e698aa17dad1121c2d43
   languageName: node
   linkType: hard
 
@@ -2617,6 +2811,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@changesets/pre@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "@changesets/pre@npm:2.0.1"
+  dependencies:
+    "@changesets/errors": "npm:^0.2.0"
+    "@changesets/types": "npm:^6.0.0"
+    "@manypkg/get-packages": "npm:^1.1.3"
+    fs-extra: "npm:^7.0.1"
+  checksum: e26ca45a1accc4c79890220acf4c85ff716bc09a8e534c91f08bf7d5272408bd76f54ddf6a01765a1aab2517b7447285ae0a9787a6f2135011ad37bcf3f70e48
+  languageName: node
+  linkType: hard
+
 "@changesets/read@npm:^0.5.9":
   version: 0.5.9
   resolution: "@changesets/read@npm:0.5.9"
@@ -2630,6 +2836,31 @@ __metadata:
     fs-extra: "npm:^7.0.1"
     p-filter: "npm:^2.1.0"
   checksum: f12ee06dec2def36d3f6b6d0166fdfcbb95593c6eb911ba516989c304029d4fe9fcb60d3edd36c07f12e95cfa8a807c9b0096d45c74876d896a50ee8dfb721f8
+  languageName: node
+  linkType: hard
+
+"@changesets/read@npm:^0.6.1":
+  version: 0.6.1
+  resolution: "@changesets/read@npm:0.6.1"
+  dependencies:
+    "@changesets/git": "npm:^3.0.1"
+    "@changesets/logger": "npm:^0.1.1"
+    "@changesets/parse": "npm:^0.4.0"
+    "@changesets/types": "npm:^6.0.0"
+    fs-extra: "npm:^7.0.1"
+    p-filter: "npm:^2.1.0"
+    picocolors: "npm:^1.1.0"
+  checksum: 022e4162e3491144549d9e1e1c2dda92ba7b3bbe9ea5552359b75e52d93e6ad0750f9e5215681a18850178e46fe493bb024b84026ac10ede5c6cddd54aa4c9d0
+  languageName: node
+  linkType: hard
+
+"@changesets/should-skip-package@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "@changesets/should-skip-package@npm:0.1.1"
+  dependencies:
+    "@changesets/types": "npm:^6.0.0"
+    "@manypkg/get-packages": "npm:^1.1.3"
+  checksum: d187ef22495deb63e678d0ff65e8627701e2b52c25bd59dde10ce8646be8d605c0ed0a6af020dd825b137c2fc748fdc6cef52e7774bad4c7a4f404bf182a85cf
   languageName: node
   linkType: hard
 
@@ -2664,6 +2895,18 @@ __metadata:
     human-id: "npm:^1.0.2"
     prettier: "npm:^2.7.1"
   checksum: 40858ffcda3827f312312fbededbdd58d7ecb20547a501c8eaeedf88453fd3102de431f174beaf8b87adf382528951e223e93af77fc81cf34d184a543d77de26
+  languageName: node
+  linkType: hard
+
+"@changesets/write@npm:^0.3.2":
+  version: 0.3.2
+  resolution: "@changesets/write@npm:0.3.2"
+  dependencies:
+    "@changesets/types": "npm:^6.0.0"
+    fs-extra: "npm:^7.0.1"
+    human-id: "npm:^1.0.2"
+    prettier: "npm:^2.7.1"
+  checksum: c16b0a731fa43ae0028fd1f956c7b080030c42ff763f8dac74da8b178a4ea65632831c30550b784286277bdc75a3c44dda46aad8db97f43bb1eb4d61922152aa
   languageName: node
   linkType: hard
 
@@ -3953,14 +4196,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/cryptoassets@npm:^13.1.1":
-  version: 13.1.1
-  resolution: "@ledgerhq/cryptoassets@npm:13.1.1"
+"@ledgerhq/cryptoassets-evm-signatures@npm:^13.5.1":
+  version: 13.5.1
+  resolution: "@ledgerhq/cryptoassets-evm-signatures@npm:13.5.1"
   dependencies:
-    axios: "npm:^1.6.0"
-    bs58check: "npm:^2.1.2"
-    invariant: "npm:2"
-  checksum: c0c8cf6181b3f4e39a3cb5f248615aeb068152c1104aca2d11c1faed027b708c4c81d757afca566fa78f93d6d52f231b62637d43e678708df449ce9e82bb6221
+    "@ledgerhq/live-env": "npm:^2.4.0"
+    axios: "npm:1.7.7"
+  checksum: 8e9889a0a4c53afcbac0d42eeff5617ac37d9a69528861080a6dbada0a4fced10b5e7157c27224fb854776f5f248d2a77baa33c39525064b440285434422b83b
   languageName: node
   linkType: hard
 
@@ -3988,18 +4230,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/devices@npm:^8.4.0":
-  version: 8.4.0
-  resolution: "@ledgerhq/devices@npm:8.4.0"
-  dependencies:
-    "@ledgerhq/errors": "npm:^6.17.0"
-    "@ledgerhq/logs": "npm:^6.12.0"
-    rxjs: "npm:^7.8.1"
-    semver: "npm:^7.3.5"
-  checksum: 2e1f6a95b4a5fe74eb50bbc2451ba121fe43818c2f77a5cb8b9dd61f113938c423b37ed32b5c35af70f4880af7d3f78e1f24d397da28ab62efa28ad1cd3f0594
-  languageName: node
-  linkType: hard
-
 "@ledgerhq/devices@npm:^8.4.4":
   version: 8.4.4
   resolution: "@ledgerhq/devices@npm:8.4.4"
@@ -4012,18 +4242,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/domain-service@npm:^1.2.1":
-  version: 1.2.1
-  resolution: "@ledgerhq/domain-service@npm:1.2.1"
+"@ledgerhq/domain-service@npm:^1.2.10":
+  version: 1.2.10
+  resolution: "@ledgerhq/domain-service@npm:1.2.10"
   dependencies:
-    "@ledgerhq/errors": "npm:^6.17.0"
+    "@ledgerhq/errors": "npm:^6.19.1"
     "@ledgerhq/logs": "npm:^6.12.0"
-    "@ledgerhq/types-live": "npm:^6.48.1"
-    axios: "npm:^1.3.4"
+    "@ledgerhq/types-live": "npm:^6.52.4"
+    axios: "npm:1.7.7"
     eip55: "npm:^2.1.1"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
-  checksum: 91296ccd82ff69820139a8f3c8470b909535280dedd502230645e6d1186fa48006661f89fda41bba136eb042348598a8abacd634cbb40435d76ee175397190ed
+  checksum: a46d546bd68ee3f7247e63e89b3425ab7df9d62f75501b6db7a13b1a319fb40cb2272c638ddc6c1bee973f66bd70fa4156d3287fa31e20a5bb2d0164d59aaf61
   languageName: node
   linkType: hard
 
@@ -4041,13 +4271,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/errors@npm:^6.17.0":
-  version: 6.17.0
-  resolution: "@ledgerhq/errors@npm:6.17.0"
-  checksum: 97f746a7a57144b93ce914b2dd89e5c430b2fe743fc4ce26ead498a5dca36096c7a1a39258c7ee1837e4a17c4eaf31047c606828e059b089275605da6bd8a6ec
-  languageName: node
-  linkType: hard
-
 "@ledgerhq/errors@npm:^6.19.1":
   version: 6.19.1
   resolution: "@ledgerhq/errors@npm:6.19.1"
@@ -4055,49 +4278,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/evm-tools@npm:^1.1.1":
-  version: 1.1.1
-  resolution: "@ledgerhq/evm-tools@npm:1.1.1"
+"@ledgerhq/evm-tools@npm:^1.2.4":
+  version: 1.2.4
+  resolution: "@ledgerhq/evm-tools@npm:1.2.4"
   dependencies:
-    "@ledgerhq/cryptoassets": "npm:^13.1.1"
-    "@ledgerhq/live-env": "npm:^2.1.0"
-    axios: "npm:^1.6.5"
+    "@ledgerhq/cryptoassets-evm-signatures": "npm:^13.5.1"
+    "@ledgerhq/live-env": "npm:^2.4.0"
+    axios: "npm:1.7.7"
     crypto-js: "npm:4.2.0"
     ethers: "npm:5.7.2"
-  checksum: 98bd3ca2e4ffb2ae3a16f53ed27443efe2988c2bc70b834c0f501afddc08e866f497d3b9861923356369b8f078ad2f749c9731362a583c7a93e01a3e90ce8cbd
+  checksum: 5e1e213f39b337a91858ba94418ed816d7fd7591c2798da1754cca6ac96f395c80fbb5e8c41ed568383b669c7eed59e998e5a5f81bee1c92f17f1a4895f97772
   languageName: node
   linkType: hard
 
-"@ledgerhq/hw-app-eth@git+https://github.com:celo-org/ledgerjs-hw-app-eth.git":
-  version: 6.37.1
-  resolution: "@ledgerhq/hw-app-eth@https://github.com:celo-org/ledgerjs-hw-app-eth.git#commit=49bdd4f163f5ff73daa9f54f8e46aa2882b85f44"
+"@ledgerhq/hw-transport-mocker@npm:^6.29.4":
+  version: 6.29.4
+  resolution: "@ledgerhq/hw-transport-mocker@npm:6.29.4"
   dependencies:
-    "@ethersproject/abi": "npm:^5.5.0"
-    "@ethersproject/rlp": "npm:^5.5.0"
-    "@ledgerhq/cryptoassets": "npm:^13.1.1"
-    "@ledgerhq/domain-service": "npm:^1.2.1"
-    "@ledgerhq/errors": "npm:^6.17.0"
-    "@ledgerhq/evm-tools": "npm:^1.1.1"
-    "@ledgerhq/hw-transport": "npm:^6.31.0"
-    "@ledgerhq/hw-transport-mocker": "npm:^6.29.0"
-    "@ledgerhq/logs": "npm:^6.12.0"
-    "@ledgerhq/types-cryptoassets": "npm:^7.13.0"
-    "@ledgerhq/types-devices": "npm:^6.25.0"
-    "@ledgerhq/types-live": "npm:^6.48.1"
-    axios: "npm:^1.3.4"
-    bignumber.js: "npm:^9.1.2"
-  checksum: 0400c03ea713e671361f38bcae29345eace47e719b0ab17fedad9aded127bd572c7d8546b6ff320feb7859af50fbfc1227eb983038cbf24aa9fa432d3cc88a6b
-  languageName: node
-  linkType: hard
-
-"@ledgerhq/hw-transport-mocker@npm:^6.29.0":
-  version: 6.29.0
-  resolution: "@ledgerhq/hw-transport-mocker@npm:6.29.0"
-  dependencies:
-    "@ledgerhq/hw-transport": "npm:^6.31.0"
+    "@ledgerhq/hw-transport": "npm:^6.31.4"
     "@ledgerhq/logs": "npm:^6.12.0"
     rxjs: "npm:^7.8.1"
-  checksum: 794b8e6b1a3406d867eceb33b1b263540aca64a42959f198566889a824608e2b24a4f47921b2b5e5915accb234c48bcd49c36efbf1c67ef6aecdea3b983ce0c9
+  checksum: 6f1568b1723ee6964872b09b712714bacf33c87e83413a33420b7ba11e3c30fa6786f02d2cf7b8bc9b3560f4b5c3b166017d5e0a960267a7824a153687fe32ed
   languageName: node
   linkType: hard
 
@@ -4183,18 +4384,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/hw-transport@npm:^6.31.0":
-  version: 6.31.0
-  resolution: "@ledgerhq/hw-transport@npm:6.31.0"
-  dependencies:
-    "@ledgerhq/devices": "npm:^8.4.0"
-    "@ledgerhq/errors": "npm:^6.17.0"
-    "@ledgerhq/logs": "npm:^6.12.0"
-    events: "npm:^3.3.0"
-  checksum: aceae60c98515696d08007d9c54a5f85b04fe1d14362cd672997a7fcd24422bcbf19ef1bed1ac4cc2d0b164b2226d1b3420250389f9694f2e77c7395da97982b
-  languageName: node
-  linkType: hard
-
 "@ledgerhq/hw-transport@npm:^6.31.4":
   version: 6.31.4
   resolution: "@ledgerhq/hw-transport@npm:6.31.4"
@@ -4207,13 +4396,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/live-env@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "@ledgerhq/live-env@npm:2.1.0"
+"@ledgerhq/live-env@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "@ledgerhq/live-env@npm:2.4.0"
   dependencies:
     rxjs: "npm:^7.8.1"
     utility-types: "npm:^3.10.0"
-  checksum: 9f1cbc8e652ff8c9f3c0095e8765814d2a43046487f111502b03aae7a22f14e88e666e4ae45023407e627f0cc2f809a2f235798a9eb306c1cc42c3ee72893075
+  checksum: 825337025181bb97ac9c55f413a0cf0b2fff2be62f53b5230d328f592fd0b8b9ee4e2d979bf55f576361b880dd5f1424a9331b2da597414c111c213ab7a15dba
   languageName: node
   linkType: hard
 
@@ -4224,27 +4413,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/types-cryptoassets@npm:^7.13.0":
-  version: 7.13.0
-  resolution: "@ledgerhq/types-cryptoassets@npm:7.13.0"
-  checksum: 8bf42d1d06518bb0c6abaca0119a821d0c819a46860fa2fcae3dd414f9bc0af3086ec3f71917b4012e855c98e8bad91ab79c250dffda4e8625b0e3464cfe603a
-  languageName: node
-  linkType: hard
-
-"@ledgerhq/types-devices@npm:^6.25.0":
-  version: 6.25.0
-  resolution: "@ledgerhq/types-devices@npm:6.25.0"
-  checksum: ac8dbdf6f5b468528c261731732bb1d14026b7901e6a0b86ca4d347f8b2d2420f4625be826ce727238d0b1d4ebbdfb71a1b85c35a1833747fe179920ccb137e8
-  languageName: node
-  linkType: hard
-
-"@ledgerhq/types-live@npm:^6.48.1":
-  version: 6.48.1
-  resolution: "@ledgerhq/types-live@npm:6.48.1"
+"@ledgerhq/types-live@npm:^6.52.4":
+  version: 6.52.4
+  resolution: "@ledgerhq/types-live@npm:6.52.4"
   dependencies:
     bignumber.js: "npm:^9.1.2"
     rxjs: "npm:^7.8.1"
-  checksum: 79305d3718398ce82c61752b94dc0428553a60d0c74a006b878fea0863b1f40cd2de2b9730839d1a20c2929546a9680427d9d698bb4a2c32f79afe67250ec04b
+  checksum: 54288b5b334f0e9e57e5dbea9e8f9a86391e2e2daea2db755ee812dd9e687d45e426aab8737bac1c1fe308281ec170f75aca8845f2a3dba0201dc32a3dcdec1a
   languageName: node
   linkType: hard
 
@@ -7639,14 +7814,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.3.4, axios@npm:^1.6.0, axios@npm:^1.6.5":
-  version: 1.6.8
-  resolution: "axios@npm:1.6.8"
+"axios@npm:1.7.7":
+  version: 1.7.7
+  resolution: "axios@npm:1.7.7"
   dependencies:
     follow-redirects: "npm:^1.15.6"
     form-data: "npm:^4.0.0"
     proxy-from-env: "npm:^1.1.0"
-  checksum: 3f9a79eaf1d159544fca9576261ff867cbbff64ed30017848e4210e49f3b01e97cf416390150e6fdf6633f336cd43dc1151f890bbd09c3c01ad60bb0891eee63
+  checksum: 7f875ea13b9298cd7b40fd09985209f7a38d38321f1118c701520939de2f113c4ba137832fe8e3f811f99a38e12c8225481011023209a77b0c0641270e20cde1
   languageName: node
   linkType: hard
 
@@ -8667,7 +8842,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ci-info@npm:^3.1.0":
+"ci-info@npm:^3.1.0, ci-info@npm:^3.7.0":
   version: 3.9.0
   resolution: "ci-info@npm:3.9.0"
   checksum: 75bc67902b4d1c7b435497adeb91598f6d52a3389398e44294f6601b20cfef32cf2176f7be0eb961d9e085bb333a8a5cae121cb22f81cf238ae7f58eb80e9397
@@ -12503,15 +12678,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"invariant@npm:2":
-  version: 2.2.4
-  resolution: "invariant@npm:2.2.4"
-  dependencies:
-    loose-envify: "npm:^1.0.0"
-  checksum: cc3182d793aad82a8d1f0af697b462939cb46066ec48bbf1707c150ad5fad6406137e91a262022c269702e01621f35ef60269f6c0d7fd178487959809acdfb14
-  languageName: node
-  linkType: hard
-
 "invert-kv@npm:^1.0.0":
   version: 1.0.0
   resolution: "invert-kv@npm:1.0.0"
@@ -14367,7 +14533,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"loose-envify@npm:^1.0.0, loose-envify@npm:^1.1.0":
+"loose-envify@npm:^1.1.0":
   version: 1.4.0
   resolution: "loose-envify@npm:1.4.0"
   dependencies:
@@ -15024,7 +15190,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mri@npm:^1.1.4":
+"mri@npm:^1.1.4, mri@npm:^1.2.0":
   version: 1.2.0
   resolution: "mri@npm:1.2.0"
   checksum: 6775a1d2228bb9d191ead4efc220bd6be64f943ad3afd4dcb3b3ac8fc7b87034443f666e38805df38e8d047b29f910c3cc7810da0109af83e42c82c73bd3f6bc
@@ -16125,6 +16291,13 @@ __metadata:
   version: 1.0.1
   resolution: "package-json-from-dist@npm:1.0.1"
   checksum: 58ee9538f2f762988433da00e26acc788036914d57c71c246bf0be1b60cdbd77dd60b6a3e1a30465f0b248aeb80079e0b34cb6050b1dfa18c06953bb1cbc7602
+  languageName: node
+  linkType: hard
+
+"package-manager-detector@npm:^0.2.0":
+  version: 0.2.2
+  resolution: "package-manager-detector@npm:0.2.2"
+  checksum: 2dc2914aeff0729c37c1cf9762f65c0a6f09d6c64f666cc187e34de95bca54f16b4ca2e3c1e9ced87ea0637cfdb3c98261a838de04d9f1b1b26b6ae72bd55b80
   languageName: node
   linkType: hard
 

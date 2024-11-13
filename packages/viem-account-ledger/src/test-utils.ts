@@ -2,7 +2,7 @@ import { ensureLeading0x, normalizeAddressWith0x, trimLeading0x } from '@celo/ba
 import { generateTypedDataHash } from '@celo/utils/lib/sign-typed-data-utils.js'
 import { getHashFromEncoded, signTransaction } from '@celo/wallet-base'
 import * as ethUtil from '@ethereumjs/util'
-import Eth from '@ledgerhq/hw-app-eth'
+import Eth from '@celo/hw-app-eth'
 import { createVerify, VerifyPublicKeyInput } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
