@@ -411,9 +411,8 @@ Show information about a governance proposal, hotfix, or account.
 USAGE
   $ celocli governance:show [--gasCurrency
     0x1234567890123456789012345678901234567890] [--globalHelp] [--raw]
-    [--jsonTransactions <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters
-    |  | [--proposalID <value> | --account <value> | --hotfix <value>]]
-    [--afterExecutingProposal <value> | --afterExecutingID <value>]
+    [--jsonTransactions <value>] [--proposalID <value> | --account <value> | --hotfix
+    <value>] [--afterExecutingProposal <value> | --afterExecutingID <value>]
 
 FLAGS
   --account=<value>                                         Address of account or voter
@@ -433,18 +432,9 @@ FLAGS
   --hotfix=<value>                                          Hash of hotfix proposal
   --jsonTransactions=<value>                                Output proposal JSON to
                                                             provided file
-  --nonwhitelisters                                         If set, displays validators
-                                                            that have not whitelisted
-                                                            the hotfix.
-  --notwhitelisted                                          List validators who have not
-                                                            whitelisted the specified
-                                                            hotfix
   --proposalID=<value>                                      UUID of proposal to view
   --raw                                                     Display proposal in raw
                                                             bytes format
-  --whitelisters                                            If set, displays validators
-                                                            that have whitelisted the
-                                                            hotfix.
 
 DESCRIPTION
   Show information about a governance proposal, hotfix, or account.
@@ -463,10 +453,6 @@ EXAMPLES
   show --proposalID 99 --raw
 
   show --hotfix 0x614dccb5ac13cba47c2430bdee7829bb8c8f3603a8ace22e7680d317b39e3658
-
-  show --hotfix 0x614dccb5ac13cba47c2430bdee7829bb8c8f3603a8ace22e7680d317b39e3658 --whitelisters
-
-  show --hotfix 0x614dccb5ac13cba47c2430bdee7829bb8c8f3603a8ace22e7680d317b39e3658 --nonwhitelisters
 
   show --account 0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95
 ```
@@ -481,9 +467,8 @@ Show information about a governance proposal, hotfix, or account.
 USAGE
   $ celocli governance:showaccount [--gasCurrency
     0x1234567890123456789012345678901234567890] [--globalHelp] [--raw]
-    [--jsonTransactions <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters
-    |  | [--proposalID <value> | --account <value> | --hotfix <value>]]
-    [--afterExecutingProposal <value> | --afterExecutingID <value>]
+    [--jsonTransactions <value>] [--proposalID <value> | --account <value> | --hotfix
+    <value>] [--afterExecutingProposal <value> | --afterExecutingID <value>]
 
 FLAGS
   --account=<value>                                         Address of account or voter
@@ -503,18 +488,9 @@ FLAGS
   --hotfix=<value>                                          Hash of hotfix proposal
   --jsonTransactions=<value>                                Output proposal JSON to
                                                             provided file
-  --nonwhitelisters                                         If set, displays validators
-                                                            that have not whitelisted
-                                                            the hotfix.
-  --notwhitelisted                                          List validators who have not
-                                                            whitelisted the specified
-                                                            hotfix
   --proposalID=<value>                                      UUID of proposal to view
   --raw                                                     Display proposal in raw
                                                             bytes format
-  --whitelisters                                            If set, displays validators
-                                                            that have whitelisted the
-                                                            hotfix.
 
 DESCRIPTION
   Show information about a governance proposal, hotfix, or account.
@@ -533,10 +509,6 @@ EXAMPLES
   show --proposalID 99 --raw
 
   show --hotfix 0x614dccb5ac13cba47c2430bdee7829bb8c8f3603a8ace22e7680d317b39e3658
-
-  show --hotfix 0x614dccb5ac13cba47c2430bdee7829bb8c8f3603a8ace22e7680d317b39e3658 --whitelisters
-
-  show --hotfix 0x614dccb5ac13cba47c2430bdee7829bb8c8f3603a8ace22e7680d317b39e3658 --nonwhitelisters
 
   show --account 0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95
 ```
@@ -549,9 +521,8 @@ Show information about a governance proposal, hotfix, or account.
 USAGE
   $ celocli governance:showhotfix [--gasCurrency
     0x1234567890123456789012345678901234567890] [--globalHelp] [--raw]
-    [--jsonTransactions <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters
-    |  | [--proposalID <value> | --account <value> | --hotfix <value>]]
-    [--afterExecutingProposal <value> | --afterExecutingID <value>]
+    [--jsonTransactions <value>] [--proposalID <value> | --account <value> | --hotfix
+    <value>] [--afterExecutingProposal <value> | --afterExecutingID <value>]
 
 FLAGS
   --account=<value>                                         Address of account or voter
@@ -571,18 +542,9 @@ FLAGS
   --hotfix=<value>                                          Hash of hotfix proposal
   --jsonTransactions=<value>                                Output proposal JSON to
                                                             provided file
-  --nonwhitelisters                                         If set, displays validators
-                                                            that have not whitelisted
-                                                            the hotfix.
-  --notwhitelisted                                          List validators who have not
-                                                            whitelisted the specified
-                                                            hotfix
   --proposalID=<value>                                      UUID of proposal to view
   --raw                                                     Display proposal in raw
                                                             bytes format
-  --whitelisters                                            If set, displays validators
-                                                            that have whitelisted the
-                                                            hotfix.
 
 DESCRIPTION
   Show information about a governance proposal, hotfix, or account.
@@ -601,10 +563,6 @@ EXAMPLES
   show --proposalID 99 --raw
 
   show --hotfix 0x614dccb5ac13cba47c2430bdee7829bb8c8f3603a8ace22e7680d317b39e3658
-
-  show --hotfix 0x614dccb5ac13cba47c2430bdee7829bb8c8f3603a8ace22e7680d317b39e3658 --whitelisters
-
-  show --hotfix 0x614dccb5ac13cba47c2430bdee7829bb8c8f3603a8ace22e7680d317b39e3658 --nonwhitelisters
 
   show --account 0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95
 ```
@@ -648,9 +606,8 @@ Show information about a governance proposal, hotfix, or account.
 USAGE
   $ celocli governance:view [--gasCurrency
     0x1234567890123456789012345678901234567890] [--globalHelp] [--raw]
-    [--jsonTransactions <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters
-    |  | [--proposalID <value> | --account <value> | --hotfix <value>]]
-    [--afterExecutingProposal <value> | --afterExecutingID <value>]
+    [--jsonTransactions <value>] [--proposalID <value> | --account <value> | --hotfix
+    <value>] [--afterExecutingProposal <value> | --afterExecutingID <value>]
 
 FLAGS
   --account=<value>                                         Address of account or voter
@@ -670,18 +627,9 @@ FLAGS
   --hotfix=<value>                                          Hash of hotfix proposal
   --jsonTransactions=<value>                                Output proposal JSON to
                                                             provided file
-  --nonwhitelisters                                         If set, displays validators
-                                                            that have not whitelisted
-                                                            the hotfix.
-  --notwhitelisted                                          List validators who have not
-                                                            whitelisted the specified
-                                                            hotfix
   --proposalID=<value>                                      UUID of proposal to view
   --raw                                                     Display proposal in raw
                                                             bytes format
-  --whitelisters                                            If set, displays validators
-                                                            that have whitelisted the
-                                                            hotfix.
 
 DESCRIPTION
   Show information about a governance proposal, hotfix, or account.
@@ -700,10 +648,6 @@ EXAMPLES
   show --proposalID 99 --raw
 
   show --hotfix 0x614dccb5ac13cba47c2430bdee7829bb8c8f3603a8ace22e7680d317b39e3658
-
-  show --hotfix 0x614dccb5ac13cba47c2430bdee7829bb8c8f3603a8ace22e7680d317b39e3658 --whitelisters
-
-  show --hotfix 0x614dccb5ac13cba47c2430bdee7829bb8c8f3603a8ace22e7680d317b39e3658 --nonwhitelisters
 
   show --account 0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95
 ```
@@ -716,9 +660,8 @@ Show information about a governance proposal, hotfix, or account.
 USAGE
   $ celocli governance:viewaccount [--gasCurrency
     0x1234567890123456789012345678901234567890] [--globalHelp] [--raw]
-    [--jsonTransactions <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters
-    |  | [--proposalID <value> | --account <value> | --hotfix <value>]]
-    [--afterExecutingProposal <value> | --afterExecutingID <value>]
+    [--jsonTransactions <value>] [--proposalID <value> | --account <value> | --hotfix
+    <value>] [--afterExecutingProposal <value> | --afterExecutingID <value>]
 
 FLAGS
   --account=<value>                                         Address of account or voter
@@ -738,18 +681,9 @@ FLAGS
   --hotfix=<value>                                          Hash of hotfix proposal
   --jsonTransactions=<value>                                Output proposal JSON to
                                                             provided file
-  --nonwhitelisters                                         If set, displays validators
-                                                            that have not whitelisted
-                                                            the hotfix.
-  --notwhitelisted                                          List validators who have not
-                                                            whitelisted the specified
-                                                            hotfix
   --proposalID=<value>                                      UUID of proposal to view
   --raw                                                     Display proposal in raw
                                                             bytes format
-  --whitelisters                                            If set, displays validators
-                                                            that have whitelisted the
-                                                            hotfix.
 
 DESCRIPTION
   Show information about a governance proposal, hotfix, or account.
@@ -768,10 +702,6 @@ EXAMPLES
   show --proposalID 99 --raw
 
   show --hotfix 0x614dccb5ac13cba47c2430bdee7829bb8c8f3603a8ace22e7680d317b39e3658
-
-  show --hotfix 0x614dccb5ac13cba47c2430bdee7829bb8c8f3603a8ace22e7680d317b39e3658 --whitelisters
-
-  show --hotfix 0x614dccb5ac13cba47c2430bdee7829bb8c8f3603a8ace22e7680d317b39e3658 --nonwhitelisters
 
   show --account 0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95
 ```
@@ -784,9 +714,8 @@ Show information about a governance proposal, hotfix, or account.
 USAGE
   $ celocli governance:viewhotfix [--gasCurrency
     0x1234567890123456789012345678901234567890] [--globalHelp] [--raw]
-    [--jsonTransactions <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters
-    |  | [--proposalID <value> | --account <value> | --hotfix <value>]]
-    [--afterExecutingProposal <value> | --afterExecutingID <value>]
+    [--jsonTransactions <value>] [--proposalID <value> | --account <value> | --hotfix
+    <value>] [--afterExecutingProposal <value> | --afterExecutingID <value>]
 
 FLAGS
   --account=<value>                                         Address of account or voter
@@ -806,18 +735,9 @@ FLAGS
   --hotfix=<value>                                          Hash of hotfix proposal
   --jsonTransactions=<value>                                Output proposal JSON to
                                                             provided file
-  --nonwhitelisters                                         If set, displays validators
-                                                            that have not whitelisted
-                                                            the hotfix.
-  --notwhitelisted                                          List validators who have not
-                                                            whitelisted the specified
-                                                            hotfix
   --proposalID=<value>                                      UUID of proposal to view
   --raw                                                     Display proposal in raw
                                                             bytes format
-  --whitelisters                                            If set, displays validators
-                                                            that have whitelisted the
-                                                            hotfix.
 
 DESCRIPTION
   Show information about a governance proposal, hotfix, or account.
@@ -836,10 +756,6 @@ EXAMPLES
   show --proposalID 99 --raw
 
   show --hotfix 0x614dccb5ac13cba47c2430bdee7829bb8c8f3603a8ace22e7680d317b39e3658
-
-  show --hotfix 0x614dccb5ac13cba47c2430bdee7829bb8c8f3603a8ace22e7680d317b39e3658 --whitelisters
-
-  show --hotfix 0x614dccb5ac13cba47c2430bdee7829bb8c8f3603a8ace22e7680d317b39e3658 --nonwhitelisters
 
   show --account 0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95
 ```
