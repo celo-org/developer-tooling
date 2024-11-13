@@ -300,6 +300,11 @@ describe('Local wallet class', () => {
                 "type": "cip66",
               }
             `)
+            expect(
+              recoverTransaction(
+                '0x7af88382ad5a8063630a94588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a764000083abcdefc094cd2a3d9f938e13cd947ec05abc7fe734df8dd8265c01a00fb404c1a62ab54b47b4ca07f5ac7e7b233be6cd173294c0b1f3a209c36f6265a05ac38f9ddd67ecf936f2dfea2be5f641959e2a66545fffb01ebd8c925ac23b89'
+              )[1].toLowerCase()
+            ).toBe(wallet.getAccounts()[0].toLowerCase())
           })
           test('succeeds with cip64', async () => {
             const recoverTransactionCIP64 = {

@@ -43,7 +43,7 @@ export class LedgerSigner implements Signer {
   }
 
   async signTransaction(
-    addToV: number,
+    _addToV: number,
     encodedTx: RLPEncodedTx | LegacyEncodedTx
   ): Promise<{ v: number; r: Buffer; s: Buffer }> {
     try {
@@ -55,15 +55,8 @@ export class LedgerSigner implements Signer {
         null
       )
 
-      // EIP155 support. check/recalc signature v value.
-      const _v = parseInt(signature.v, 16)
-      // eslint-disable-next-line no-bitwise
-      if (_v !== addToV && (_v & addToV) !== _v) {
-        addToV += 1 // add signature v bit.
-      }
-
       return {
-        v: _v,
+        v: parseInt(signature.v, 16),
         r: ethUtil.toBuffer(ensureLeading0x(signature.r)),
         s: ethUtil.toBuffer(ensureLeading0x(signature.s)),
       }
@@ -200,15 +193,6 @@ export class LedgerSigner implements Signer {
   }
 
   private provideERC20TokenInformation(tokenInfoData: Buffer) {
-    // it looks like legacy might need it WITHOUT 0x prefix
-    const isModern = meetsVersionRequirements(this.appConfiguration.version, {
-      minimum: LedgerWallet.MIN_VERSION_EIP1559,
-    })
-
-    const hexStringTokenInfo = isModern
-      ? ensureLeading0x(tokenInfoData.toString('hex'))
-      : trimLeading0x(tokenInfoData.toString('hex'))
-
-    return this.ledger!.provideERC20TokenInformation(hexStringTokenInfo)
+    return this.ledger!.provideERC20TokenInformation(trimLeading0x(tokenInfoData.toString('hex')))
   }
 }

@@ -2201,7 +2201,7 @@ __metadata:
     "@celo/wallet-remote": "npm:^6.0.2"
     "@ethereumjs/util": "npm:8.0.5"
     "@ledgerhq/errors": "npm:^6.16.4"
-    "@ledgerhq/hw-app-eth": "git+https://github.com:celo-org/ledgerjs-hw-app-eth.git"
+    "@ledgerhq/hw-app-eth": "git+https://github.com:celo-org/ledgerjs-hw-app-eth.git#commit=67c6c3e10929c06e5afd169c16fb8e52f6fda4de"
     "@ledgerhq/hw-transport": "npm:^6.30.6"
     "@ledgerhq/hw-transport-node-hid": "npm:^6.28.5"
     "@noble/curves": "npm:^1.4.0"
@@ -3662,14 +3662,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/cryptoassets@npm:^13.1.1":
-  version: 13.1.1
-  resolution: "@ledgerhq/cryptoassets@npm:13.1.1"
+"@ledgerhq/cryptoassets-evm-signatures@npm:^13.5.1":
+  version: 13.5.1
+  resolution: "@ledgerhq/cryptoassets-evm-signatures@npm:13.5.1"
   dependencies:
-    axios: "npm:^1.6.0"
-    bs58check: "npm:^2.1.2"
-    invariant: "npm:2"
-  checksum: c0c8cf6181b3f4e39a3cb5f248615aeb068152c1104aca2d11c1faed027b708c4c81d757afca566fa78f93d6d52f231b62637d43e678708df449ce9e82bb6221
+    "@ledgerhq/live-env": "npm:^2.4.0"
+    axios: "npm:1.7.7"
+  checksum: 8e9889a0a4c53afcbac0d42eeff5617ac37d9a69528861080a6dbada0a4fced10b5e7157c27224fb854776f5f248d2a77baa33c39525064b440285434422b83b
   languageName: node
   linkType: hard
 
@@ -3697,30 +3696,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/devices@npm:^8.4.0":
-  version: 8.4.0
-  resolution: "@ledgerhq/devices@npm:8.4.0"
+"@ledgerhq/devices@npm:^8.4.4":
+  version: 8.4.4
+  resolution: "@ledgerhq/devices@npm:8.4.4"
   dependencies:
-    "@ledgerhq/errors": "npm:^6.17.0"
+    "@ledgerhq/errors": "npm:^6.19.1"
     "@ledgerhq/logs": "npm:^6.12.0"
     rxjs: "npm:^7.8.1"
     semver: "npm:^7.3.5"
-  checksum: 2e1f6a95b4a5fe74eb50bbc2451ba121fe43818c2f77a5cb8b9dd61f113938c423b37ed32b5c35af70f4880af7d3f78e1f24d397da28ab62efa28ad1cd3f0594
+  checksum: 57136fc45ae2fa42b3cf93eb7cc3542fd84010390b3d0a536d342c7e92f90e475d608b1774f17a547419edddd7df0d0b1b1dbd6d2c778009ebab0fc3ec313f67
   languageName: node
   linkType: hard
 
-"@ledgerhq/domain-service@npm:^1.2.1":
-  version: 1.2.1
-  resolution: "@ledgerhq/domain-service@npm:1.2.1"
+"@ledgerhq/domain-service@npm:^1.2.10":
+  version: 1.2.10
+  resolution: "@ledgerhq/domain-service@npm:1.2.10"
   dependencies:
-    "@ledgerhq/errors": "npm:^6.17.0"
+    "@ledgerhq/errors": "npm:^6.19.1"
     "@ledgerhq/logs": "npm:^6.12.0"
-    "@ledgerhq/types-live": "npm:^6.48.1"
-    axios: "npm:^1.3.4"
+    "@ledgerhq/types-live": "npm:^6.52.4"
+    axios: "npm:1.7.7"
     eip55: "npm:^2.1.1"
     react: "npm:^18.2.0"
     react-dom: "npm:^18.2.0"
-  checksum: 91296ccd82ff69820139a8f3c8470b909535280dedd502230645e6d1186fa48006661f89fda41bba136eb042348598a8abacd634cbb40435d76ee175397190ed
+  checksum: a46d546bd68ee3f7247e63e89b3425ab7df9d62f75501b6db7a13b1a319fb40cb2272c638ddc6c1bee973f66bd70fa4156d3287fa31e20a5bb2d0164d59aaf61
   languageName: node
   linkType: hard
 
@@ -3738,56 +3737,55 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/errors@npm:^6.17.0":
-  version: 6.17.0
-  resolution: "@ledgerhq/errors@npm:6.17.0"
-  checksum: 97f746a7a57144b93ce914b2dd89e5c430b2fe743fc4ce26ead498a5dca36096c7a1a39258c7ee1837e4a17c4eaf31047c606828e059b089275605da6bd8a6ec
+"@ledgerhq/errors@npm:^6.19.1":
+  version: 6.19.1
+  resolution: "@ledgerhq/errors@npm:6.19.1"
+  checksum: 8265c6d73c314a4aabbe060ec29e2feebb4e904fe811bf7a9c53cde08e713dcbceded9d927ebb2f0ffc47a7b16524379d4a7e9aa3d61945b8a832be7cd5cf69b
   languageName: node
   linkType: hard
 
-"@ledgerhq/evm-tools@npm:^1.1.1":
-  version: 1.1.1
-  resolution: "@ledgerhq/evm-tools@npm:1.1.1"
+"@ledgerhq/evm-tools@npm:^1.2.4":
+  version: 1.2.4
+  resolution: "@ledgerhq/evm-tools@npm:1.2.4"
   dependencies:
-    "@ledgerhq/cryptoassets": "npm:^13.1.1"
-    "@ledgerhq/live-env": "npm:^2.1.0"
-    axios: "npm:^1.6.5"
+    "@ledgerhq/cryptoassets-evm-signatures": "npm:^13.5.1"
+    "@ledgerhq/live-env": "npm:^2.4.0"
+    axios: "npm:1.7.7"
     crypto-js: "npm:4.2.0"
     ethers: "npm:5.7.2"
-  checksum: 98bd3ca2e4ffb2ae3a16f53ed27443efe2988c2bc70b834c0f501afddc08e866f497d3b9861923356369b8f078ad2f749c9731362a583c7a93e01a3e90ce8cbd
+  checksum: 5e1e213f39b337a91858ba94418ed816d7fd7591c2798da1754cca6ac96f395c80fbb5e8c41ed568383b669c7eed59e998e5a5f81bee1c92f17f1a4895f97772
   languageName: node
   linkType: hard
 
-"@ledgerhq/hw-app-eth@git+https://github.com:celo-org/ledgerjs-hw-app-eth.git":
-  version: 6.37.1
-  resolution: "@ledgerhq/hw-app-eth@https://github.com:celo-org/ledgerjs-hw-app-eth.git#commit=49bdd4f163f5ff73daa9f54f8e46aa2882b85f44"
+"@ledgerhq/hw-app-eth@git+https://github.com:celo-org/ledgerjs-hw-app-eth.git#commit=67c6c3e10929c06e5afd169c16fb8e52f6fda4de":
+  version: 6.40.3
+  resolution: "@ledgerhq/hw-app-eth@https://github.com:celo-org/ledgerjs-hw-app-eth.git#commit=67c6c3e10929c06e5afd169c16fb8e52f6fda4de"
   dependencies:
     "@ethersproject/abi": "npm:^5.5.0"
     "@ethersproject/rlp": "npm:^5.5.0"
-    "@ledgerhq/cryptoassets": "npm:^13.1.1"
-    "@ledgerhq/domain-service": "npm:^1.2.1"
-    "@ledgerhq/errors": "npm:^6.17.0"
-    "@ledgerhq/evm-tools": "npm:^1.1.1"
-    "@ledgerhq/hw-transport": "npm:^6.31.0"
-    "@ledgerhq/hw-transport-mocker": "npm:^6.29.0"
+    "@ledgerhq/cryptoassets-evm-signatures": "npm:^13.5.1"
+    "@ledgerhq/domain-service": "npm:^1.2.10"
+    "@ledgerhq/errors": "npm:^6.19.1"
+    "@ledgerhq/evm-tools": "npm:^1.2.4"
+    "@ledgerhq/hw-transport": "npm:^6.31.4"
+    "@ledgerhq/hw-transport-mocker": "npm:^6.29.4"
     "@ledgerhq/logs": "npm:^6.12.0"
-    "@ledgerhq/types-cryptoassets": "npm:^7.13.0"
-    "@ledgerhq/types-devices": "npm:^6.25.0"
-    "@ledgerhq/types-live": "npm:^6.48.1"
-    axios: "npm:^1.3.4"
+    "@ledgerhq/types-live": "npm:^6.52.4"
+    axios: "npm:1.7.7"
     bignumber.js: "npm:^9.1.2"
-  checksum: 0400c03ea713e671361f38bcae29345eace47e719b0ab17fedad9aded127bd572c7d8546b6ff320feb7859af50fbfc1227eb983038cbf24aa9fa432d3cc88a6b
+    semver: "npm:^7.3.5"
+  checksum: f4385680d1fd003bb95eb8bf4baeabccd01a08d9ced3d28a2bf78b6ac7000b45f07cc829beab9e5bbaf423fd2d41befff3e3e6110ac5606e81cd5a1b5ae14f15
   languageName: node
   linkType: hard
 
-"@ledgerhq/hw-transport-mocker@npm:^6.29.0":
-  version: 6.29.0
-  resolution: "@ledgerhq/hw-transport-mocker@npm:6.29.0"
+"@ledgerhq/hw-transport-mocker@npm:^6.29.4":
+  version: 6.29.4
+  resolution: "@ledgerhq/hw-transport-mocker@npm:6.29.4"
   dependencies:
-    "@ledgerhq/hw-transport": "npm:^6.31.0"
+    "@ledgerhq/hw-transport": "npm:^6.31.4"
     "@ledgerhq/logs": "npm:^6.12.0"
     rxjs: "npm:^7.8.1"
-  checksum: 794b8e6b1a3406d867eceb33b1b263540aca64a42959f198566889a824608e2b24a4f47921b2b5e5915accb234c48bcd49c36efbf1c67ef6aecdea3b983ce0c9
+  checksum: 6f1568b1723ee6964872b09b712714bacf33c87e83413a33420b7ba11e3c30fa6786f02d2cf7b8bc9b3560f4b5c3b166017d5e0a960267a7824a153687fe32ed
   languageName: node
   linkType: hard
 
@@ -3844,25 +3842,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/hw-transport@npm:^6.31.0":
-  version: 6.31.0
-  resolution: "@ledgerhq/hw-transport@npm:6.31.0"
+"@ledgerhq/hw-transport@npm:^6.31.4":
+  version: 6.31.4
+  resolution: "@ledgerhq/hw-transport@npm:6.31.4"
   dependencies:
-    "@ledgerhq/devices": "npm:^8.4.0"
-    "@ledgerhq/errors": "npm:^6.17.0"
+    "@ledgerhq/devices": "npm:^8.4.4"
+    "@ledgerhq/errors": "npm:^6.19.1"
     "@ledgerhq/logs": "npm:^6.12.0"
     events: "npm:^3.3.0"
-  checksum: aceae60c98515696d08007d9c54a5f85b04fe1d14362cd672997a7fcd24422bcbf19ef1bed1ac4cc2d0b164b2226d1b3420250389f9694f2e77c7395da97982b
+  checksum: cf101e5b818e95e59031241d556dbec24658f54104910e414be493bc4b90b0aea50f5d4b3339a237dd0b12845bb2683c845f3a82f2ea9da4e077b68d1e1f7e48
   languageName: node
   linkType: hard
 
-"@ledgerhq/live-env@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "@ledgerhq/live-env@npm:2.1.0"
+"@ledgerhq/live-env@npm:^2.4.0":
+  version: 2.4.0
+  resolution: "@ledgerhq/live-env@npm:2.4.0"
   dependencies:
     rxjs: "npm:^7.8.1"
     utility-types: "npm:^3.10.0"
-  checksum: 9f1cbc8e652ff8c9f3c0095e8765814d2a43046487f111502b03aae7a22f14e88e666e4ae45023407e627f0cc2f809a2f235798a9eb306c1cc42c3ee72893075
+  checksum: 825337025181bb97ac9c55f413a0cf0b2fff2be62f53b5230d328f592fd0b8b9ee4e2d979bf55f576361b880dd5f1424a9331b2da597414c111c213ab7a15dba
   languageName: node
   linkType: hard
 
@@ -3873,27 +3871,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/types-cryptoassets@npm:^7.13.0":
-  version: 7.13.0
-  resolution: "@ledgerhq/types-cryptoassets@npm:7.13.0"
-  checksum: 8bf42d1d06518bb0c6abaca0119a821d0c819a46860fa2fcae3dd414f9bc0af3086ec3f71917b4012e855c98e8bad91ab79c250dffda4e8625b0e3464cfe603a
-  languageName: node
-  linkType: hard
-
-"@ledgerhq/types-devices@npm:^6.25.0":
-  version: 6.25.0
-  resolution: "@ledgerhq/types-devices@npm:6.25.0"
-  checksum: ac8dbdf6f5b468528c261731732bb1d14026b7901e6a0b86ca4d347f8b2d2420f4625be826ce727238d0b1d4ebbdfb71a1b85c35a1833747fe179920ccb137e8
-  languageName: node
-  linkType: hard
-
-"@ledgerhq/types-live@npm:^6.48.1":
-  version: 6.48.1
-  resolution: "@ledgerhq/types-live@npm:6.48.1"
+"@ledgerhq/types-live@npm:^6.52.4":
+  version: 6.52.4
+  resolution: "@ledgerhq/types-live@npm:6.52.4"
   dependencies:
     bignumber.js: "npm:^9.1.2"
     rxjs: "npm:^7.8.1"
-  checksum: 79305d3718398ce82c61752b94dc0428553a60d0c74a006b878fea0863b1f40cd2de2b9730839d1a20c2929546a9680427d9d698bb4a2c32f79afe67250ec04b
+  checksum: 54288b5b334f0e9e57e5dbea9e8f9a86391e2e2daea2db755ee812dd9e687d45e426aab8737bac1c1fe308281ec170f75aca8845f2a3dba0201dc32a3dcdec1a
   languageName: node
   linkType: hard
 
@@ -6913,14 +6897,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.3.4, axios@npm:^1.6.0, axios@npm:^1.6.5":
-  version: 1.6.8
-  resolution: "axios@npm:1.6.8"
+"axios@npm:1.7.7":
+  version: 1.7.7
+  resolution: "axios@npm:1.7.7"
   dependencies:
     follow-redirects: "npm:^1.15.6"
     form-data: "npm:^4.0.0"
     proxy-from-env: "npm:^1.1.0"
-  checksum: 3f9a79eaf1d159544fca9576261ff867cbbff64ed30017848e4210e49f3b01e97cf416390150e6fdf6633f336cd43dc1151f890bbd09c3c01ad60bb0891eee63
+  checksum: 7f875ea13b9298cd7b40fd09985209f7a38d38321f1118c701520939de2f113c4ba137832fe8e3f811f99a38e12c8225481011023209a77b0c0641270e20cde1
   languageName: node
   linkType: hard
 
@@ -11612,15 +11596,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"invariant@npm:2":
-  version: 2.2.4
-  resolution: "invariant@npm:2.2.4"
-  dependencies:
-    loose-envify: "npm:^1.0.0"
-  checksum: cc3182d793aad82a8d1f0af697b462939cb46066ec48bbf1707c150ad5fad6406137e91a262022c269702e01621f35ef60269f6c0d7fd178487959809acdfb14
-  languageName: node
-  linkType: hard
-
 "invert-kv@npm:^1.0.0":
   version: 1.0.0
   resolution: "invert-kv@npm:1.0.0"
@@ -13406,7 +13381,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"loose-envify@npm:^1.0.0, loose-envify@npm:^1.1.0":
+"loose-envify@npm:^1.1.0":
   version: 1.4.0
   resolution: "loose-envify@npm:1.4.0"
   dependencies:

@@ -127,23 +127,25 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
         )
       }
       // but if not celo as layer 2 and as layer 1 are different
-    } else if (this.isCel2) {
-      throw new Error(
-        `celo ledger app version must be at least ${LedgerWallet.MIN_VERSION_EIP1559} to sign transactions supported on celo after the L2 upgrade`
-      )
     } else {
-      // the l1 legacy case
-      console.warn(
-        `Upgrade your celo ledger app to at least ${LedgerWallet.MIN_VERSION_EIP1559} before cel2 transition`
-      )
-      if (!txParams.gasPrice) {
-        // this version of app only supports legacy so must have gasPrice
-        txParams.gasPrice = txParams.maxFeePerGas
-        delete txParams.maxFeePerGas
-        delete txParams.maxPriorityFeePerGas
-        console.info('automatically converting to legacy transaction')
+      if (this.isCel2) {
+        throw new Error(
+          `celo ledger app version must be at least ${LedgerWallet.MIN_VERSION_EIP1559} to sign transactions supported on celo after the L2 upgrade`
+        )
+      } else {
+        // the l1 legacy case
+        console.warn(
+          `Upgrade your celo ledger app to at least ${LedgerWallet.MIN_VERSION_EIP1559} before cel2 transition`
+        )
+        if (!txParams.gasPrice) {
+          // this version of app only supports legacy so must have gasPrice
+          txParams.gasPrice = txParams.maxFeePerGas
+          delete txParams.maxFeePerGas
+          delete txParams.maxPriorityFeePerGas
+          console.info('automatically converting to legacy transaction')
+        }
+        return encode_deprecated_celo_legacy_type_only_for_temporary_ledger_compat(txParams)
       }
-      return encode_deprecated_celo_legacy_type_only_for_temporary_ledger_compat(txParams)
     }
   }
 
