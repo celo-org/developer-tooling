@@ -1,7 +1,22 @@
 import { multiSigABI, proxyABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
 import { ContractKit } from '@celo/contractkit'
-import { multiSigBytecode, proxyBytecode } from './constants'
+import { setCode } from '@celo/dev-utils/lib/anvil-test'
+import Web3 from 'web3'
+import {
+  multiSigBytecode,
+  proxyBytecode,
+  SAFE_FALLBACK_HANDLER_ADDRESS,
+  SAFE_FALLBACK_HANDLER_CODE,
+  SAFE_MULTISEND_ADDRESS,
+  SAFE_MULTISEND_CALL_ONLY_ADDRESS,
+  SAFE_MULTISEND_CALL_ONLY_CODE,
+  SAFE_MULTISEND_CODE,
+  SAFE_PROXY_ADDRESS,
+  SAFE_PROXY_CODE,
+  SAFE_PROXY_FACTORY_ADDRESS,
+  SAFE_PROXY_FACTORY_CODE,
+} from './constants'
 
 export async function createMultisig(
   kit: ContractKit,
@@ -53,4 +68,13 @@ export async function createMultisig(
   })
 
   return proxyAddress as StrongAddress
+}
+
+export const setupSafeContracts = async (web3: Web3) => {
+  // Set up safe 1.3.0 in devchain
+  await setCode(web3, SAFE_MULTISEND_ADDRESS, SAFE_MULTISEND_CODE)
+  await setCode(web3, SAFE_MULTISEND_CALL_ONLY_ADDRESS, SAFE_MULTISEND_CALL_ONLY_CODE)
+  await setCode(web3, SAFE_PROXY_FACTORY_ADDRESS, SAFE_PROXY_FACTORY_CODE)
+  await setCode(web3, SAFE_PROXY_ADDRESS, SAFE_PROXY_CODE)
+  await setCode(web3, SAFE_FALLBACK_HANDLER_ADDRESS, SAFE_FALLBACK_HANDLER_CODE)
 }

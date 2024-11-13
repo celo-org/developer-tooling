@@ -33,7 +33,7 @@ Approve a dequeued governance proposal (or hotfix)
 USAGE
   $ celocli governance:approvehotfix --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
     [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
-    [--proposalID <value> | --hotfix <value>] [--useMultiSig] [--type
+    [--proposalID <value> | --hotfix <value>] [--useMultiSig | --useSafe] [--type
     approver|securityCouncil ]
 
 FLAGS
@@ -55,6 +55,8 @@ FLAGS
                                                             approver|securityCouncil>
   --useMultiSig                                             True means the request will
                                                             be sent through multisig.
+  --useSafe                                                 True means the request will
+                                                            be sent through safe.
 
 DESCRIPTION
   Approve a dequeued governance proposal (or hotfix)

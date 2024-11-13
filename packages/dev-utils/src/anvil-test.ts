@@ -32,7 +32,7 @@ export enum LinkedLibraryAddress {
   Signatures = '0xe7f1725e7734ce288f8367e1bb143e90bb3f0512',
 }
 
-function createInstance(stateFilePath: string): Anvil {
+function createInstance(stateFilePath: string, chainId?: number): Anvil {
   const port = ANVIL_PORT + (process.pid - process.ppid)
   const options: CreateAnvilOptions = {
     port,
@@ -43,6 +43,7 @@ function createInstance(stateFilePath: string): Anvil {
     gasLimit: TEST_GAS_LIMIT,
     blockBaseFeePerGas: 0,
     stopTimeout: 1000,
+    chainId,
   }
 
   instance = createAnvil(options)
@@ -50,16 +51,33 @@ function createInstance(stateFilePath: string): Anvil {
   return instance
 }
 
-export function testWithAnvilL1(name: string, fn: (web3: Web3) => void) {
-  return testWithAnvil(require.resolve('@celo/devchain-anvil/devchain.json'), name, fn)
+type TestWithAnvilOptions = {
+  chainId?: number
 }
 
-export function testWithAnvilL2(name: string, fn: (web3: Web3) => void) {
-  return testWithAnvil(require.resolve('@celo/devchain-anvil/l2-devchain.json'), name, fn)
+export function testWithAnvilL1(
+  name: string,
+  fn: (web3: Web3) => void,
+  options?: TestWithAnvilOptions
+) {
+  return testWithAnvil(require.resolve('@celo/devchain-anvil/devchain.json'), name, fn, options)
 }
 
-function testWithAnvil(stateFilePath: string, name: string, fn: (web3: Web3) => void) {
-  const anvil = createInstance(stateFilePath)
+export function testWithAnvilL2(
+  name: string,
+  fn: (web3: Web3) => void,
+  options?: TestWithAnvilOptions
+) {
+  return testWithAnvil(require.resolve('@celo/devchain-anvil/l2-devchain.json'), name, fn, options)
+}
+
+function testWithAnvil(
+  stateFilePath: string,
+  name: string,
+  fn: (web3: Web3) => void,
+  options?: TestWithAnvilOptions
+) {
+  const anvil = createInstance(stateFilePath, options?.chainId)
 
   // for each test suite, we start and stop a new anvil instance
   return testWithWeb3(name, `http://127.0.0.1:${anvil.port}`, fn, {

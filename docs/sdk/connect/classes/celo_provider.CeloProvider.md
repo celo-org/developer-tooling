@@ -32,6 +32,7 @@
 - [send](celo_provider.CeloProvider.md#send)
 - [stop](celo_provider.CeloProvider.md#stop)
 - [supportsSubscriptions](celo_provider.CeloProvider.md#supportssubscriptions)
+- [toEip1193Provider](celo_provider.CeloProvider.md#toeip1193provider)
 
 ## Constructors
 
@@ -52,7 +53,7 @@
 
 #### Defined in
 
-[packages/sdk/connect/src/celo-provider.ts:54](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L54)
+[packages/sdk/connect/src/celo-provider.ts:56](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L56)
 
 ## Properties
 
@@ -62,7 +63,7 @@
 
 #### Defined in
 
-[packages/sdk/connect/src/celo-provider.ts:54](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L54)
+[packages/sdk/connect/src/celo-provider.ts:56](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L56)
 
 ___
 
@@ -72,7 +73,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/celo-provider.ts:54](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L54)
+[packages/sdk/connect/src/celo-provider.ts:56](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L56)
 
 ## Accessors
 
@@ -86,7 +87,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/celo-provider.ts:261](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L261)
+[packages/sdk/connect/src/celo-provider.ts:287](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L287)
 
 ## Methods
 
@@ -106,7 +107,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/celo-provider.ts:59](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L59)
+[packages/sdk/connect/src/celo-provider.ts:61](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L61)
 
 ___
 
@@ -120,7 +121,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/celo-provider.ts:69](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L69)
+[packages/sdk/connect/src/celo-provider.ts:71](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L71)
 
 ___
 
@@ -140,7 +141,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/celo-provider.ts:73](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L73)
+[packages/sdk/connect/src/celo-provider.ts:75](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L75)
 
 ___
 
@@ -160,7 +161,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/celo-provider.ts:64](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L64)
+[packages/sdk/connect/src/celo-provider.ts:66](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L66)
 
 ___
 
@@ -187,7 +188,7 @@ Send method as expected by web3.js
 
 #### Defined in
 
-[packages/sdk/connect/src/celo-provider.ts:80](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L80)
+[packages/sdk/connect/src/celo-provider.ts:82](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L82)
 
 ___
 
@@ -201,7 +202,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/celo-provider.ts:159](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L159)
+[packages/sdk/connect/src/celo-provider.ts:161](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L161)
 
 ___
 
@@ -215,4 +216,18 @@ ___
 
 #### Defined in
 
-[packages/sdk/connect/src/celo-provider.ts:265](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L265)
+[packages/sdk/connect/src/celo-provider.ts:291](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L291)
+
+___
+
+### toEip1193Provider
+
+▸ **toEip1193Provider**(): [`Eip1193Provider`](../interfaces/types.Eip1193Provider.md)
+
+#### Returns
+
+[`Eip1193Provider`](../interfaces/types.Eip1193Provider.md)
+
+#### Defined in
+
+[packages/sdk/connect/src/celo-provider.ts:173](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/celo-provider.ts#L173)

@@ -30,6 +30,8 @@
 - [DecodedParamsArray](index.md#decodedparamsarray)
 - [DecodedParamsObject](index.md#decodedparamsobject)
 - [EIP1559TXProperties](index.md#eip1559txproperties)
+- [Eip1193Provider](index.md#eip1193provider)
+- [Eip1193RequestArguments](index.md#eip1193requestarguments)
 - [EncodedTransaction](index.md#encodedtransaction)
 - [Error](index.md#error)
 - [EthereumLegacyTXProperties](index.md#ethereumlegacytxproperties)
@@ -223,6 +225,18 @@ ___
 ### EIP1559TXProperties
 
 Re-exports [EIP1559TXProperties](../interfaces/types.EIP1559TXProperties.md)
+
+___
+
+### Eip1193Provider
+
+Re-exports [Eip1193Provider](../interfaces/types.Eip1193Provider.md)
+
+___
+
+### Eip1193RequestArguments
+
+Re-exports [Eip1193RequestArguments](../interfaces/types.Eip1193RequestArguments.md)
 
 ___
 
