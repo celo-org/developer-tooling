@@ -1,5 +1,18 @@
 # @celo/contractkit
 
+## 9.0.0-beta.1
+
+### Minor Changes
+
+- [`76045eb`](https://github.com/celo-org/developer-tooling/commit/76045ebff0df9c1c9fa75121dab4e910c9026976) Thanks [@shazarre](https://github.com/shazarre)! - ValidatorsWrapper: add registerValidatorNoBls to allow registration without BLS keys which are not supported in L2
+
+### Patch Changes
+
+- [#400](https://github.com/celo-org/developer-tooling/pull/400) [`38fe4d0`](https://github.com/celo-org/developer-tooling/commit/38fe4d018d1b9ed5954a17501bdaa59b0aeec2f2) Thanks [@shazarre](https://github.com/shazarre)! - Renames `getElected` and its usages to `getElectedAccounts` for `EpochManagerWrapper`
+
+- Updated dependencies [[`d988d31`](https://github.com/celo-org/developer-tooling/commit/d988d317582daed57bf05a4c4d9d087e5e732f0d)]:
+  - @celo/wallet-local@6.0.2-beta.1
+
 ## 9.0.0-beta.0
 
 ### Major Changes

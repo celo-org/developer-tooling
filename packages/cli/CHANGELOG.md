@@ -1,5 +1,33 @@
 # Changelog
 
+## 6.0.0-beta.1
+
+### Major Changes
+
+- [#407](https://github.com/celo-org/developer-tooling/pull/407) [`3890220`](https://github.com/celo-org/developer-tooling/commit/389022056be15c0677b37d4cfaf332afcb652e02) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Remove transfer:gold -- this was an old alias for transfer:celo which has the same functionality
+
+- [#412](https://github.com/celo-org/developer-tooling/pull/412) [`23d36cc`](https://github.com/celo-org/developer-tooling/commit/23d36cc7f843fdf95a88da0515c65e512d68f400) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Remove `celocli validator:force-deaffiliate`
+
+  This command was only ever usable pre mainnet launch. The force deaffiliate method it would call is only callable by one of the whitelisted Slasher Contracts.
+
+  To force removal of validator with poor uptime use `celocli validator:downtime-slash` or to sever association with a validator from your group use `celocli validator:deaffiliate`
+
+- [#407](https://github.com/celo-org/developer-tooling/pull/407) [`3890220`](https://github.com/celo-org/developer-tooling/commit/389022056be15c0677b37d4cfaf332afcb652e02) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Remove account:recover-old
+
+  This was meant to be a temporary command for migrating account from a beta version of Valora to the release version. Please use a previous version of celocli if you need to make this one time recovery.
+
+### Minor Changes
+
+- [`76045eb`](https://github.com/celo-org/developer-tooling/commit/76045ebff0df9c1c9fa75121dab4e910c9026976) Thanks [@shazarre](https://github.com/shazarre)! - BLS keys are now optional as being deprecated on L2, validator:register and releasecelo:authorize no longer require them in L2 context
+
+### Patch Changes
+
+- Updated dependencies [[`d988d31`](https://github.com/celo-org/developer-tooling/commit/d988d317582daed57bf05a4c4d9d087e5e732f0d), [`76045eb`](https://github.com/celo-org/developer-tooling/commit/76045ebff0df9c1c9fa75121dab4e910c9026976), [`38fe4d0`](https://github.com/celo-org/developer-tooling/commit/38fe4d018d1b9ed5954a17501bdaa59b0aeec2f2)]:
+  - @celo/wallet-ledger@6.0.2-beta.1
+  - @celo/wallet-local@6.0.2-beta.1
+  - @celo/contractkit@9.0.0-beta.1
+  - @celo/wallet-hsm-azure@6.0.2-beta.1
+
 ## 6.0.0-beta.0
 
 ### Major Changes
