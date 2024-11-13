@@ -1,5 +1,14 @@
 # @celo/wallet-hsm-azure
 
+## 6.0.2-beta.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @celo/wallet-base@6.0.2-beta.2
+  - @celo/wallet-hsm@6.0.2-beta.2
+  - @celo/wallet-remote@6.0.2-beta.2
+
 ## 6.0.2-beta.1
 
 ### Patch Changes
