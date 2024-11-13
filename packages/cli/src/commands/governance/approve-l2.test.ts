@@ -671,7 +671,6 @@ testWithAnvilL2('governance:approve cmd', (web3: Web3) => {
         }
       `)
 
-      // TODO: this fails for now because of not displaying the txHash
       expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
         .toMatchInlineSnapshot(`
         [
