@@ -26,13 +26,13 @@
   "dependencies": {
     "@celo/base": "^6.1.0",
     "@celo/connect": "^6.0.1",
+    "@celo/hw-app-eth": "^1.0.0",
     "@celo/ledger-token-signer": "^0.4.0",
     "@celo/utils": "^7.0.0",
     "@celo/wallet-base": "^6.0.2",
     "@celo/wallet-remote": "^6.0.2",
     "@ethereumjs/util": "8.0.5",
     "@ledgerhq/errors": "^6.16.4",
-    "@ledgerhq/hw-app-eth": "git+https://github.com:celo-org/ledgerjs-hw-app-eth.git#commit=67c6c3e10929c06e5afd169c16fb8e52f6fda4de",
     "@ledgerhq/hw-transport": "^6.30.6",
     "debug": "^4.1.1",
     "semver": "^7.6.0"
@@ -51,8 +51,5 @@
   },
   "engines": {
     "node": ">=8.14.2"
-  },
-  "bundleDependencies": [
-    "@ledgerhq/hw-app-eth"
-  ]
+  }
 }
