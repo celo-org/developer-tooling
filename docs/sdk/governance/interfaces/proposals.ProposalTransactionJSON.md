@@ -35,7 +35,7 @@ Example:
 
 #### Defined in
 
-[proposals.ts:75](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L75)
+[packages/sdk/governance/src/proposals.ts:55](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L55)
 
 ___
 
@@ -45,7 +45,7 @@ ___
 
 #### Defined in
 
-[proposals.ts:77](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L77)
+[packages/sdk/governance/src/proposals.ts:57](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L57)
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 #### Defined in
 
-[proposals.ts:74](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L74)
+[packages/sdk/governance/src/proposals.ts:54](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L54)
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 #### Defined in
 
-[proposals.ts:76](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L76)
+[packages/sdk/governance/src/proposals.ts:56](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L56)
 
 ___
 
@@ -75,7 +75,7 @@ ___
 
 #### Defined in
 
-[proposals.ts:78](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L78)
+[packages/sdk/governance/src/proposals.ts:58](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L58)
 
 ___
 
@@ -85,4 +85,4 @@ ___
 
 #### Defined in
 
-[proposals.ts:79](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L79)
+[packages/sdk/governance/src/proposals.ts:59](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L59)
