@@ -4,7 +4,7 @@ import { EIP712TypedData, structHash } from '@celo/utils/lib/sign-typed-data-uti
 import { LegacyEncodedTx } from '@celo/wallet-base'
 import * as ethUtil from '@ethereumjs/util'
 import { TransportStatusError } from '@ledgerhq/errors'
-import Ledger from '@ledgerhq/hw-app-eth'
+import Ledger from '@celo/hw-app-eth'
 import debugFactory from 'debug'
 import { SemVer } from 'semver'
 import { meetsVersionRequirements, transportErrorFriendlyMessage } from './ledger-utils'

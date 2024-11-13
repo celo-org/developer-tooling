@@ -18,7 +18,7 @@ import {
   verifyEIP712TypedDataSigner,
 } from '@celo/wallet-base'
 import * as ethUtil from '@ethereumjs/util'
-import Ledger from '@ledgerhq/hw-app-eth'
+import Ledger from '@celo/hw-app-eth'
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
 import { VerifyPublicKeyInput, createVerify } from 'crypto'
 import { readFileSync } from 'fs'
