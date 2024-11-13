@@ -32,8 +32,10 @@ jobs:
           npm install node-gyp --global
           git config --global url."https://".insteadOf ssh://
 
+      - name: List package information
+        run: npm info ${{ matrix.package }} --global --json
       - name: Installing npm package
-        run: npm install ${{ matrix.package }} --global
+        run: npm install ${{ matrix.package }} --global --verbose
       - name: Test celocli command
         if: matrix.package == '@celo/celocli@beta'
         run: |
