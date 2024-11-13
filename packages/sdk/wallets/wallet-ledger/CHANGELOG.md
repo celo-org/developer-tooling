@@ -1,5 +1,15 @@
 # @celo/wallet-ledger
 
+## 6.0.2-beta.2
+
+### Patch Changes
+
+- [#427](https://github.com/celo-org/developer-tooling/pull/427) [`ee33677`](https://github.com/celo-org/developer-tooling/commit/ee33677287905076daafe39087283fe2434d729e) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Change a dependency to use npm rather than github
+
+- Updated dependencies []:
+  - @celo/wallet-base@6.0.2-beta.2
+  - @celo/wallet-remote@6.0.2-beta.2
+
 ## 6.0.2-beta.1
 
 ### Patch Changes

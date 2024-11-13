@@ -1,5 +1,7 @@
 # @celo/wallet-hsm
 
+## 6.0.2-beta.2
+
 ## 6.0.2-beta.1
 
 ## 6.0.2-beta.0
