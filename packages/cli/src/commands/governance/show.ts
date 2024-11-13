@@ -136,6 +136,7 @@ export default class Show extends BaseCommand {
         return
       }
 
+      // TODO: remove this bit when L2 launches
       const passing = await governance.isHotfixPassing(hotfixBuf)
       printValueMap({ passing })
       const tally = await governance.hotfixWhitelistValidatorTally(hotfixBuf)
