@@ -11,7 +11,7 @@ import Show from './show'
 process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvilL1('election:show', (web3: Web3) => {
-  afterEach(async () => {
+  afterEach(() => {
     jest.clearAllMocks()
   })
 

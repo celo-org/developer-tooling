@@ -1,5 +1,13 @@
 # @celo/wallet-base
 
+## 6.0.2-beta.2
+
+## 6.0.2-beta.1
+
+### Patch Changes
+
+- [#408](https://github.com/celo-org/developer-tooling/pull/408) [`d988d31`](https://github.com/celo-org/developer-tooling/commit/d988d317582daed57bf05a4c4d9d087e5e732f0d) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Improve support for celo-legacy and modern txs within ledger
+
 ## 6.0.2-beta.0
 
 ### Patch Changes
