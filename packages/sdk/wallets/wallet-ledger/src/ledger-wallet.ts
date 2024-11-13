@@ -11,7 +11,7 @@ import {
 } from '@celo/wallet-base'
 import { RemoteWallet } from '@celo/wallet-remote'
 import { TransportError, TransportStatusError } from '@ledgerhq/errors'
-import Ledger from '@ledgerhq/hw-app-eth'
+import Ledger from '@celo/hw-app-eth'
 import debugFactory from 'debug'
 import { SemVer } from 'semver'
 import { LedgerSigner } from './ledger-signer'
