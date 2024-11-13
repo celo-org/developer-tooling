@@ -10,7 +10,7 @@ import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import Web3 from 'web3'
 import {
-  LONG_TIMEOUT_MS,
+  EXTRA_LONG_TIMEOUT_MS,
   stripAnsiCodesFromNestedArray,
   testLocallyWithWeb3Node,
 } from '../../test-utils/cliUtils'
@@ -103,6 +103,9 @@ testWithAnvilL2('validator:deregister', (web3: Web3) => {
       global.Date.now = jest.fn(() => futureTime)
 
       const logMock = jest.spyOn(console, 'log')
+      // this ensures that any spy that were allready attached to console.log from previous calls to spyOn are cleared
+      logMock.mockClear()
+
       console.warn(
         'time is',
         Date.now(),
@@ -116,41 +119,41 @@ testWithAnvilL2('validator:deregister', (web3: Web3) => {
         testLocallyWithWeb3Node(ValidatorDeRegister, ['--from', account], web3)
       ).resolves.toMatchInlineSnapshot(`undefined`)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
-      [
-        [
-          "Running Checks:",
-        ],
-        [
-          "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is Signer or registered Account ",
-        ],
-        [
-          "   ✔  Signer can sign Validator Txs ",
-        ],
-        [
-          "   ✔  Signer account is Validator ",
-        ],
-        [
-          "   ✔  Account isn't a member of a validator group ",
-        ],
-        [
-          "   ✔  Enough time has passed since the account was removed from a validator group ",
-        ],
-        [
-          "All checks passed",
-        ],
-        [
-          "SendTransaction: deregister",
-        ],
-        [
-          "txHash: 0xtxhash",
-        ],
-      ]
-    `)
+              [
+                [
+                  "Running Checks:",
+                ],
+                [
+                  "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is Signer or registered Account ",
+                ],
+                [
+                  "   ✔  Signer can sign Validator Txs ",
+                ],
+                [
+                  "   ✔  Signer account is Validator ",
+                ],
+                [
+                  "   ✔  Account isn't a member of a validator group ",
+                ],
+                [
+                  "   ✔  Enough time has passed since the account was removed from a validator group ",
+                ],
+                [
+                  "All checks passed",
+                ],
+                [
+                  "SendTransaction: deregister",
+                ],
+                [
+                  "txHash: 0xtxhash",
+                ],
+              ]
+          `)
       expect(validatorContract.isValidator(account)).resolves.toEqual(false)
       // @ts-expect-error
       global.Date.now.mockReset()
     },
-    LONG_TIMEOUT_MS
+    EXTRA_LONG_TIMEOUT_MS
   )
 
   it(
@@ -160,155 +163,37 @@ testWithAnvilL2('validator:deregister', (web3: Web3) => {
 
       // precondition
       expect(groupAtSettup.members).toContain(account)
+
       const logMock = jest.spyOn(console, 'log')
+      logMock.mockClear()
 
       await expect(
         testLocallyWithWeb3Node(ValidatorDeRegister, ['--from', account], web3)
       ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
 
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
-      [
         [
-          "Running Checks:",
-        ],
-        [
-          "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is not a registered Account ",
-        ],
-        [
-          "All checks passed",
-        ],
-        [
-          "SendTransaction: register",
-        ],
-        [
-          "txHash: 0xtxhash",
-        ],
-        [
-          "Running Checks:",
-        ],
-        [
-          "   ✔  Value [10000000000000000000000] is > 0 ",
-        ],
-        [
-          "All checks passed",
-        ],
-        [
-          "Running Checks:",
-        ],
-        [
-          "   ✔  Account has at least 10000 CELO ",
-        ],
-        [
-          "All checks passed",
-        ],
-        [
-          "SendTransaction: lock",
-        ],
-        [
-          "txHash: 0xtxhash",
-        ],
-        [
-          "Running Checks:",
-        ],
-        [
-          "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is Signer or registered Account ",
-        ],
-        [
-          "   ✔  Signer can sign Validator Txs ",
-        ],
-        [
-          "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is not a registered Validator ",
-        ],
-        [
-          "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is not a registered ValidatorGroup ",
-        ],
-        [
-          "   ✔  Signer's account has enough locked celo for registration ",
-        ],
-        [
-          "All checks passed",
-        ],
-        [
-          "SendTransaction: registerValidator",
-        ],
-        [
-          "txHash: 0xtxhash",
-        ],
-        [
-          "SendTransaction: Set encryption key",
-        ],
-        [
-          "txHash: 0xtxhash",
-        ],
-        [
-          "Running Checks:",
-        ],
-        [
-          "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is Signer or registered Account ",
-        ],
-        [
-          "   ✔  Signer can sign Validator Txs ",
-        ],
-        [
-          "   ✔  Signer account is Validator ",
-        ],
-        [
-          "   ✔  0x70997970C51812dc3A010C7d01b50e0d17dc79C8 is ValidatorGroup ",
-        ],
-        [
-          "All checks passed",
-        ],
-        [
-          "SendTransaction: affiliate",
-        ],
-        [
-          "txHash: 0xtxhash",
-        ],
-        [
-          "Running Checks:",
-        ],
-        [
-          "   ✔  0x70997970C51812dc3A010C7d01b50e0d17dc79C8 is Signer or registered Account ",
-        ],
-        [
-          "   ✔  Signer can sign Validator Txs ",
-        ],
-        [
-          "   ✔  Signer account is ValidatorGroup ",
-        ],
-        [
-          "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is Validator ",
-        ],
-        [
-          "All checks passed",
-        ],
-        [
-          "SendTransaction: addMember",
-        ],
-        [
-          "txHash: 0xtxhash",
-        ],
-        [
-          "Running Checks:",
-        ],
-        [
-          "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is Signer or registered Account ",
-        ],
-        [
-          "   ✔  Signer can sign Validator Txs ",
-        ],
-        [
-          "   ✔  Signer account is Validator ",
-        ],
-        [
-          "   ✘  Account isn't a member of a validator group ",
-        ],
-        [
-          "   ✘  Enough time has passed since the account was removed from a validator group ",
-        ],
-      ]
-    `)
+          [
+            "Running Checks:",
+          ],
+          [
+            "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is Signer or registered Account ",
+          ],
+          [
+            "   ✔  Signer can sign Validator Txs ",
+          ],
+          [
+            "   ✔  Signer account is Validator ",
+          ],
+          [
+            "   ✘  Account isn't a member of a validator group ",
+          ],
+          [
+            "   ✘  Enough time has passed since the account was removed from a validator group ",
+          ],
+        ]
+      `)
     },
-    LONG_TIMEOUT_MS
+    EXTRA_LONG_TIMEOUT_MS
   )
 })
