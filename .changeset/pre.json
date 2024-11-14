@@ -28,25 +28,33 @@
     "@celo/viem-account-ledger": "0.0.1"
   },
   "changesets": [
+    "afraid-seas-cross",
     "calm-sheep-tie",
     "chilled-cycles-smell",
     "dry-gifts-love",
     "dull-windows-travel",
     "fair-points-beg",
+    "famous-cherries-kick",
+    "few-seals-matter",
     "fifty-roses-explain",
     "gold-pumas-fry",
     "good-trees-reply",
     "hot-pugs-nail",
     "hungry-cups-juggle",
+    "lemon-gorillas-explain",
     "little-carpets-argue",
     "many-cobras-live",
     "moody-falcons-remain",
+    "orange-penguins-sneeze",
     "polite-pets-push",
     "rude-parrots-know",
+    "sharp-shirts-count",
     "smart-berries-accept",
     "smart-guests-refuse",
     "thirty-pugs-smile",
     "twenty-rocks-pull",
+    "warm-papayas-smile",
+    "weak-beers-itch",
     "wild-impalas-smoke"
   ]
 }
