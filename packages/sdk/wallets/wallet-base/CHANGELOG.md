@@ -16,6 +16,7 @@
   - @celo/base@7.0.0-beta.0
   - @celo/utils@8.0.0-beta.0
   - @celo/connect@6.0.3-beta.0
+## 6.0.2
 
 ## 6.0.1
 

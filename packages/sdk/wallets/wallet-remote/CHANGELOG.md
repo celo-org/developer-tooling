@@ -1,6 +1,7 @@
 # @celo/wallet-remote
 
 ## 6.0.2-beta.2
+## 6.0.2
 
 ### Patch Changes
 
@@ -22,6 +23,7 @@
   - @celo/utils@8.0.0-beta.0
   - @celo/connect@6.0.3-beta.0
   - @celo/wallet-base@6.0.2-beta.0
+  - @celo/wallet-base@6.0.2
 
 ## 6.0.1
 

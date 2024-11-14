@@ -10,6 +10,7 @@
 
 - Updated dependencies [[`4ef76eb`](https://github.com/celo-org/developer-tooling/commit/4ef76eb174454f60304080d0ef63a859cd8d931b)]:
   - @celo/base@7.0.0-beta.0
+## 6.0.2
 
 ## 6.0.1
 
