@@ -1,5 +1,17 @@
 # @celo/wallet-ledger
 
+## 6.0.3
+
+### Patch Changes
+
+- [#430](https://github.com/celo-org/developer-tooling/pull/430) [`4efb02c`](https://github.com/celo-org/developer-tooling/commit/4efb02c29066bef421f8ab9b4741f35bf4b62b51) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Improve support for celo-legacy and modern txs within ledger
+
+- [#430](https://github.com/celo-org/developer-tooling/pull/430) [`4efb02c`](https://github.com/celo-org/developer-tooling/commit/4efb02c29066bef421f8ab9b4741f35bf4b62b51) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Change a dependency to use npm rather than github
+
+- Updated dependencies [[`4efb02c`](https://github.com/celo-org/developer-tooling/commit/4efb02c29066bef421f8ab9b4741f35bf4b62b51)]:
+  - @celo/wallet-base@6.0.3
+  - @celo/wallet-remote@6.0.3
+
 ## 6.0.2
 
 ### Patch Changes
