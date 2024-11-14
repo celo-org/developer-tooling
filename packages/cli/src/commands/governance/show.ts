@@ -44,14 +44,20 @@ export default class Show extends BaseCommand {
       description: 'Hash of hotfix proposal',
     }),
     notwhitelisted: Flags.boolean({
-      description: 'List validators who have not whitelisted the specified hotfix',
+      description:
+        'List validators who have not whitelisted the specified hotfix (will be removed when L2 launches',
+      deprecated: true,
     }),
     whitelisters: Flags.boolean({
-      description: 'If set, displays validators that have whitelisted the hotfix.',
+      description:
+        'If set, displays validators that have whitelisted the hotfix.(will be removed when L2 launches',
+      deprecated: true,
       exclusive: ['nonwhitelisters', 'account', 'proposalID'],
     }),
     nonwhitelisters: Flags.boolean({
-      description: 'If set, displays validators that have not whitelisted the hotfix.',
+      description:
+        'If set, displays validators that have not whitelisted the hotfix.(will be removed when L2 launches',
+      deprecated: true,
       exclusive: ['whitelisters', 'account', 'proposalID'],
     }),
     afterExecutingProposal: Flags.string({
