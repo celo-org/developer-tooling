@@ -1,5 +1,26 @@
 # Changelog
 
+## 6.0.0-beta.3
+
+### Minor Changes
+
+- [#420](https://github.com/celo-org/developer-tooling/pull/420) [`fb08485`](https://github.com/celo-org/developer-tooling/commit/fb08485ae337e796a442b781632ae2123c4f4444) Thanks [@shazarre](https://github.com/shazarre)! - Adds support for safe integration for L2 hotfix security council approvals
+
+- [#429](https://github.com/celo-org/developer-tooling/pull/429) [`5b02036`](https://github.com/celo-org/developer-tooling/commit/5b0203634e14697ffbe1e93491bf7c35bbf1ef52) Thanks [@shazarre](https://github.com/shazarre)! - Removes L2 BLS keys support for account:authorize
+
+### Patch Changes
+
+- [#421](https://github.com/celo-org/developer-tooling/pull/421) [`7d42a05`](https://github.com/celo-org/developer-tooling/commit/7d42a059f1effa8953ee1fe2e66f7e26bca73181) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - fix governance:build-proposal with contracts from mento or which use solidity 0.8
+
+- Updated dependencies [[`7d42a05`](https://github.com/celo-org/developer-tooling/commit/7d42a059f1effa8953ee1fe2e66f7e26bca73181), [`c4b9c6d`](https://github.com/celo-org/developer-tooling/commit/c4b9c6d60bf938950007a67df4e7c8ec35066fb3), [`fb08485`](https://github.com/celo-org/developer-tooling/commit/fb08485ae337e796a442b781632ae2123c4f4444), [`7d42a05`](https://github.com/celo-org/developer-tooling/commit/7d42a059f1effa8953ee1fe2e66f7e26bca73181)]:
+  - @celo/governance@5.1.4-beta.1
+  - @celo/wallet-hsm-azure@6.0.3-beta.1
+  - @celo/wallet-ledger@6.0.3-beta.1
+  - @celo/wallet-local@6.0.3-beta.1
+  - @celo/connect@6.1.0-beta.1
+  - @celo/contractkit@9.0.0-beta.2
+  - @celo/explorer@5.0.13-beta.1
+
 ## 6.0.0-beta.2
 
 ### Patch Changes
@@ -72,6 +93,7 @@
   - @celo/phone-utils@6.0.4-beta.0
   - @celo/wallet-hsm-azure@6.0.2-beta.0
   - @celo/wallet-local@6.0.2-beta.0
+
 ## 5.2.2
 
 ### Patch Changes

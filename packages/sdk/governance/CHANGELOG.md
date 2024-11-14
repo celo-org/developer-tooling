@@ -1,5 +1,18 @@
 # @celo/governance
 
+## 5.1.4-beta.1
+
+### Patch Changes
+
+- [#421](https://github.com/celo-org/developer-tooling/pull/421) [`7d42a05`](https://github.com/celo-org/developer-tooling/commit/7d42a059f1effa8953ee1fe2e66f7e26bca73181) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - minor update to inquirer lib
+
+- [#421](https://github.com/celo-org/developer-tooling/pull/421) [`7d42a05`](https://github.com/celo-org/developer-tooling/commit/7d42a059f1effa8953ee1fe2e66f7e26bca73181) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Fix being unable to use 08 and mento contracts with proposal builder
+
+- Updated dependencies [[`fb08485`](https://github.com/celo-org/developer-tooling/commit/fb08485ae337e796a442b781632ae2123c4f4444)]:
+  - @celo/connect@6.1.0-beta.1
+  - @celo/contractkit@9.0.0-beta.2
+  - @celo/explorer@5.0.13-beta.1
+
 ## 5.1.4-beta.0
 
 ### Patch Changes
