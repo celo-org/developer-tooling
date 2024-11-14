@@ -60,7 +60,7 @@
     "@oclif/plugin-commands": "^3.3.4",
     "@oclif/plugin-help": "^6.2.8",
     "@oclif/plugin-not-found": "^3.2.15",
-    "@oclif/plugin-plugins": "^4.3.10",
+    "@oclif/plugin-plugins": "^5.4.15",
     "@oclif/plugin-warn-if-update-available": "^3.1.11",
     "@safe-global/protocol-kit": "^5.0.4",
     "@safe-global/types-kit": "^1.0.0",
