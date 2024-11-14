@@ -1,6 +1,7 @@
 # @celo/wallet-hsm-aws
 
 ## 6.0.2-beta.2
+## 6.0.2
 
 ### Patch Changes
 
@@ -28,6 +29,9 @@
   - @celo/wallet-base@6.0.2-beta.0
   - @celo/wallet-hsm@6.0.2-beta.0
   - @celo/wallet-remote@6.0.2-beta.0
+  - @celo/wallet-base@6.0.2
+  - @celo/wallet-hsm@6.0.2
+  - @celo/wallet-remote@6.0.2
 
 ## 6.0.1
 

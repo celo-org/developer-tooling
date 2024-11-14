@@ -6,6 +6,7 @@ import {
 } from '@celo/base/lib/address'
 import { CeloTx, EncodedTransaction, Hex } from '@celo/connect'
 import { StableToken, newKit } from '@celo/contractkit'
+import Ledger from '@celo/hw-app-eth'
 import { privateKeyToAddress, privateKeyToPublicKey } from '@celo/utils/lib/address'
 import { generateTypedDataHash } from '@celo/utils/lib/sign-typed-data-utils'
 import { verifySignature } from '@celo/utils/lib/signatureUtils'
@@ -18,7 +19,6 @@ import {
   verifyEIP712TypedDataSigner,
 } from '@celo/wallet-base'
 import * as ethUtil from '@ethereumjs/util'
-import Ledger from '@celo/hw-app-eth'
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
 import { VerifyPublicKeyInput, createVerify } from 'crypto'
 import { readFileSync } from 'fs'

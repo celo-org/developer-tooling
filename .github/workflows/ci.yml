@@ -10,6 +10,7 @@ on:
       - master
       - changeset-release/master
       - prerelease/*
+      - hotfixes
   pull_request:
     types: [opened, reopened, synchronize, edited, ready_for_review]
 
