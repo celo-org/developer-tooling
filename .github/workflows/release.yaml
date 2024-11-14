@@ -55,10 +55,36 @@ jobs:
           # This expects you to have a script called release which does a build for your packages and calls changeset publish
           publish: yarn release
           version: yarn version-and-reinstall
+  
+  install-released-packages:
+    name: Install Released Packages
+    runs-on: ubuntu-latest
+    container:
+      image: node:18-bullseye
+    needs: release
+    strategy:
+      fail-fast: false
+      matrix: 
+        package: ${{fromJson(needs.release.outputs.publishedPackages).*.name}}
+        version: ${{fromJson(needs.release.outputs.publishedPackages).*.version}}   
+    steps:
+      - name: Install @celo/celocli dependencies
+        if: matrix.package == '@celo/celocli'
+        run: |
+          apt update
+          apt install -y libusb-1.0-0-dev libudev-dev
+          npm install node-gyp --global
 
+      - name: Installing ${{ matrix.package }} package
+        run: npm install ${{ matrix.package }}@{{ matrix.version }} --global
+      - name: Test celocli command
+        if: matrix.package == '@celo/celocli'
+        run: |
+          celocli account:new
+     
   open-docs-pr:
     needs: release
-    if: ${{ contains(fromJson(needs.release.outputs.publishedPackages).*.name, '@celo/cli') }}
+    if: ${{ contains(fromJson(needs.release.outputs.publishedPackages).*.name, '@celo/celocli') }}
     uses: celo-org/developer-tooling/.github/workflows/open-docs-pr.yml@master
     with:
       commit: ${{ github.sha }}
