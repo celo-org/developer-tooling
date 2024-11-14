@@ -1,5 +1,11 @@
 # @celo/wallet-hsm
 
+## 6.0.3-beta.1
+
+### Patch Changes
+
+- [#434](https://github.com/celo-org/developer-tooling/pull/434) [`c4b9c6d`](https://github.com/celo-org/developer-tooling/commit/c4b9c6d60bf938950007a67df4e7c8ec35066fb3) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Force patch bump wallets to deal with version conflict
+
 ## 6.0.2-beta.2
 
 ## 6.0.2-beta.1
@@ -10,6 +16,8 @@
 
 - Updated dependencies [[`4ef76eb`](https://github.com/celo-org/developer-tooling/commit/4ef76eb174454f60304080d0ef63a859cd8d931b)]:
   - @celo/base@7.0.0-beta.0
+
+## 6.0.2
 
 ## 6.0.1
 

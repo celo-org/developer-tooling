@@ -147,3 +147,13 @@ export interface RLPEncodedTx {
   rlpEncode: Hex
   type: TransactionTypes
 }
+
+// Based on https://eips.ethereum.org/EIPS/eip-1193
+export interface Eip1193RequestArguments {
+  readonly method: string
+  readonly params?: readonly unknown[] | object
+}
+
+export interface Eip1193Provider {
+  request(args: Eip1193RequestArguments): Promise<unknown>
+}

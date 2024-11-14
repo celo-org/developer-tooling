@@ -1,5 +1,14 @@
 # @celo/wallet-base
 
+## 6.0.3-beta.1
+
+### Patch Changes
+
+- [#434](https://github.com/celo-org/developer-tooling/pull/434) [`c4b9c6d`](https://github.com/celo-org/developer-tooling/commit/c4b9c6d60bf938950007a67df4e7c8ec35066fb3) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Force patch bump wallets to deal with version conflict
+
+- Updated dependencies [[`fb08485`](https://github.com/celo-org/developer-tooling/commit/fb08485ae337e796a442b781632ae2123c4f4444)]:
+  - @celo/connect@6.1.0-beta.1
+
 ## 6.0.2-beta.2
 
 ## 6.0.2-beta.1
@@ -16,6 +25,8 @@
   - @celo/base@7.0.0-beta.0
   - @celo/utils@8.0.0-beta.0
   - @celo/connect@6.0.3-beta.0
+
+## 6.0.2
 
 ## 6.0.1
 

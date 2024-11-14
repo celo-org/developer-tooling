@@ -4,10 +4,16 @@ import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { MultiSigWrapper } from '@celo/contractkit/lib/wrappers/MultiSig'
 import { toBuffer } from '@ethereumjs/util'
 import { Flags } from '@oclif/core'
+import Web3 from 'web3'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx, failWith } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
+import {
+  createSafeFromWeb3,
+  performSafeTransaction,
+  safeTransactionMetadataFromCeloTransactionObject,
+} from '../../utils/safe'
 
 enum HotfixApprovalType {
   APPROVER = 'approver',
@@ -31,6 +37,11 @@ export default class Approve extends BaseCommand {
     from: CustomFlags.address({ required: true, description: "Approver's address" }),
     useMultiSig: Flags.boolean({
       description: 'True means the request will be sent through multisig.',
+      exclusive: ['useSafe'],
+    }),
+    useSafe: Flags.boolean({
+      description: 'True means the request will be sent through safe.',
+      exclusive: ['useMultiSig'],
     }),
     hotfix: Flags.string({
       exclusive: ['proposalID'],
@@ -59,6 +70,7 @@ export default class Approve extends BaseCommand {
     const res = await this.parse(Approve)
     const account = res.flags.from
     const useMultiSig = res.flags.useMultiSig
+    const useSafe = res.flags.useSafe
     const id = res.flags.proposalID
     const hotfix = res.flags.hotfix
     const approvalType = res.flags.type
@@ -73,11 +85,13 @@ export default class Approve extends BaseCommand {
     const approver = useMultiSig ? governanceApproverMultiSig!.address : account
 
     await addDefaultChecks(
+      await this.getWeb3(),
       checkBuilder,
       governance,
       isCel2,
       !!hotfix,
       useMultiSig,
+      useSafe,
       approvalType as HotfixApprovalType,
       hotfix as string,
       approver,
@@ -115,7 +129,14 @@ export default class Approve extends BaseCommand {
       failWith('Proposal ID or hotfix must be provided')
     }
 
-    if (
+    if (isCel2 && approvalType === 'securityCouncil' && useSafe) {
+      await performSafeTransaction(
+        await this.getWeb3(),
+        await governance.getSecurityCouncil(),
+        account,
+        await safeTransactionMetadataFromCeloTransactionObject(governanceTx, governance.address)
+      )
+    } else if (
       isCel2 &&
       approvalType === 'securityCouncil' &&
       useMultiSig &&
@@ -140,11 +161,13 @@ export default class Approve extends BaseCommand {
 }
 
 const addDefaultChecks = async (
+  web3: Web3,
   checkBuilder: ReturnType<typeof newCheckBuilder>,
   governance: GovernanceWrapper,
   isCel2: boolean,
   isHotfix: boolean,
   useMultiSig: boolean,
+  useSafe: boolean,
   approvalType: HotfixApprovalType,
   hotfix: string,
   approver: StrongAddress,
@@ -178,6 +201,16 @@ const addDefaultChecks = async (
           .addCheck(`${account} is security council multisig signatory`, async () => {
             return await securityCouncilMultisig.isOwner(account)
           })
+      } else if (useSafe) {
+        checkBuilder.addCheck(`${account} is security council safe signatory`, async () => {
+          const protocolKit = await createSafeFromWeb3(
+            web3,
+            account,
+            await governance.getSecurityCouncil()
+          )
+
+          return await protocolKit.isOwner(account)
+        })
       } else {
         checkBuilder.isSecurityCouncil(account)
       }

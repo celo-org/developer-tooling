@@ -3,10 +3,11 @@ import {
   CeloTx,
   Connection,
   EventLog,
-  TransactionResult,
   parseDecodedParams,
+  TransactionResult,
 } from '@celo/connect'
 import { Errors, ux } from '@oclif/core'
+import { TransactionResult as SafeTransactionResult } from '@safe-global/types-kit'
 import BigNumber from 'bignumber.js'
 import chalk from 'chalk'
 import { ethers } from 'ethers'
@@ -21,6 +22,39 @@ export async function displayWeb3Tx(name: string, txObj: any, tx?: Omit<CeloTx, 
   console.log(result)
   ux.action.stop()
 }
+
+export async function displaySafeTx(name: string, safeTxResult: SafeTransactionResult) {
+  ux.action.start(`Sending Transaction: ${name}`)
+
+  try {
+    if (!safeTxResult.transactionResponse) {
+      throw new Error('Transaction failed')
+    }
+
+    /**
+     * wait() method does not exists in the types, but according to the docs
+     * https://docs.safe.global/sdk/protocol-kit/reference/safe#executetransaction
+     * this actually exists
+     *
+     * It is covered by tests though and working fine
+     */
+    if (
+      'wait' in (safeTxResult.transactionResponse as any) &&
+      typeof (safeTxResult.transactionResponse as any).wait === 'function'
+    ) {
+      const receipt = await (safeTxResult.transactionResponse as any).wait()
+
+      printValueMap({ txHash: receipt.transactionHash })
+    }
+
+    ux.action.stop()
+  } catch (e) {
+    ux.action.stop(`failed: ${(e as Error).message}`)
+
+    throw e
+  }
+}
+
 // allows building a tx with ethers but signing and sending with celo Connection
 // cant use displaySendTx because it expects a CeloTransactionObject which isnt really possible to convert to from ethers
 export async function displaySendEthersTxViaCK(

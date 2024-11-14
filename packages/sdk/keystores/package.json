@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@celo/utils": "^8.0.0-beta.0",
-    "@celo/wallet-local": "^6.0.2-beta.0",
+    "@celo/wallet-local": "^6.0.4-beta.0",
     "ethereumjs-wallet": "^1.0.1"
   },
   "devDependencies": {

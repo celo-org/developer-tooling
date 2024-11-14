@@ -1,6 +1,6 @@
 {
   "name": "@celo/governance",
-  "version": "5.1.4-beta.0",
+  "version": "5.1.4-beta.1",
   "description": "Celo's governance proposals",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -16,28 +16,30 @@
     "build": "yarn run --top-level tsc -b .",
     "clean": "yarn run --top-level tsc -b . --clean",
     "docs": "yarn run --top-level typedoc",
-    "test": "yarn run --top-level jest --runInBand --passWithNoTests",
+    "test": "NODE_OPTIONS='--experimental-vm-modules' yarn run --top-level jest --runInBand s --workerIdleMemoryLimit=0.1",
     "lint": "yarn run --top-level eslint -c .eslintrc.js ",
     "prepublishOnly": "yarn build"
   },
   "dependencies": {
     "@celo/abis": "11.0.0",
+    "@celo/abis-12": "npm:@celo/abis@12.0.0-canary.60",
     "@celo/base": "^7.0.0-beta.0",
-    "@celo/connect": "^6.0.3-beta.0",
-    "@celo/contractkit": "^9.0.0-beta.0",
-    "@celo/explorer": "^5.0.13-beta.0",
+    "@celo/connect": "^6.1.0-beta.1",
+    "@celo/contractkit": "^9.0.0-beta.2",
+    "@celo/explorer": "^5.0.13-beta.1",
     "@celo/utils": "^8.0.0-beta.0",
     "@ethereumjs/util": "8.0.5",
     "@types/debug": "^4.1.5",
     "@types/inquirer": "^6.5.0",
     "bignumber.js": "^9.0.0",
     "debug": "^4.1.1",
-    "inquirer": "^7.0.5"
+    "inquirer": "^7.3.3"
   },
   "engines": {
     "node": ">=8.14.2"
   },
   "devDependencies": {
+    "@celo/dev-utils": "0.0.7-beta.1",
     "@celo/typescript": "workspace:^",
     "@types/debug": "^4.1.12"
   }

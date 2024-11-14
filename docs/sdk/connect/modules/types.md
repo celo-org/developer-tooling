@@ -25,6 +25,8 @@
 - [CeloParams](../interfaces/types.CeloParams.md)
 - [CeloTxObject](../interfaces/types.CeloTxObject.md)
 - [EIP1559TXProperties](../interfaces/types.EIP1559TXProperties.md)
+- [Eip1193Provider](../interfaces/types.Eip1193Provider.md)
+- [Eip1193RequestArguments](../interfaces/types.Eip1193RequestArguments.md)
 - [EncodedTransaction](../interfaces/types.EncodedTransaction.md)
 - [Error](../interfaces/types.Error.md)
 - [EthereumLegacyTXProperties](../interfaces/types.EthereumLegacyTXProperties.md)

@@ -1,5 +1,13 @@
 # @celo/contractkit
 
+## 9.0.0-beta.2
+
+### Patch Changes
+
+- Updated dependencies [[`c4b9c6d`](https://github.com/celo-org/developer-tooling/commit/c4b9c6d60bf938950007a67df4e7c8ec35066fb3), [`fb08485`](https://github.com/celo-org/developer-tooling/commit/fb08485ae337e796a442b781632ae2123c4f4444)]:
+  - @celo/wallet-local@6.0.3-beta.1
+  - @celo/connect@6.1.0-beta.1
+
 ## 9.0.0-beta.1
 
 ### Minor Changes
@@ -63,6 +71,12 @@
   - @celo/utils@8.0.0-beta.0
   - @celo/connect@6.0.3-beta.0
   - @celo/wallet-local@6.0.2-beta.0
+
+## 8.3.1
+
+### Patch Changes
+
+- [#409](https://github.com/celo-org/developer-tooling/pull/409) [`e709b88`](https://github.com/celo-org/developer-tooling/commit/e709b8821315e354e418649320b5f93a7a464c16) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Renames `getElected` and its usages to `getElectedAccounts` for `EpochManagerWrapper`
 
 ## 8.3.0
 
