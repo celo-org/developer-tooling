@@ -4,7 +4,7 @@ import { CustomFlags } from '../../utils/command'
 
 export default class DeletePaymentDelegation extends BaseCommand {
   static description =
-    "Removes a validator's payment delegation by setting benficiary and fraction to 0."
+    "Removes a validator's payment delegation by setting beneficiary and fraction to 0."
 
   static flags = {
     ...BaseCommand.flags,
