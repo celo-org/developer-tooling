@@ -1,6 +1,6 @@
 {
   "name": "@celo/wallet-local",
-  "version": "6.0.2",
+  "version": "6.0.3",
   "description": "Local wallet implementation",
   "author": "Celo",
   "license": "Apache-2.0",
@@ -25,7 +25,7 @@
     "@celo/base": "^6.1.0",
     "@celo/connect": "^6.0.1",
     "@celo/utils": "^7.0.0",
-    "@celo/wallet-base": "^6.0.2",
+    "@celo/wallet-base": "^6.0.3",
     "@ethereumjs/util": "8.0.5"
   },
   "devDependencies": {
