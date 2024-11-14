@@ -437,16 +437,19 @@ FLAGS
                                                             provided file
   --nonwhitelisters                                         If set, displays validators
                                                             that have not whitelisted
-                                                            the hotfix.
+                                                            the hotfix.(will be removed
+                                                            when L2 launches
   --notwhitelisted                                          List validators who have not
                                                             whitelisted the specified
-                                                            hotfix
+                                                            hotfix (will be removed when
+                                                            L2 launches
   --proposalID=<value>                                      UUID of proposal to view
   --raw                                                     Display proposal in raw
                                                             bytes format
   --whitelisters                                            If set, displays validators
                                                             that have whitelisted the
-                                                            hotfix.
+                                                            hotfix.(will be removed when
+                                                            L2 launches
 
 DESCRIPTION
   Show information about a governance proposal, hotfix, or account.
@@ -507,16 +510,19 @@ FLAGS
                                                             provided file
   --nonwhitelisters                                         If set, displays validators
                                                             that have not whitelisted
-                                                            the hotfix.
+                                                            the hotfix.(will be removed
+                                                            when L2 launches
   --notwhitelisted                                          List validators who have not
                                                             whitelisted the specified
-                                                            hotfix
+                                                            hotfix (will be removed when
+                                                            L2 launches
   --proposalID=<value>                                      UUID of proposal to view
   --raw                                                     Display proposal in raw
                                                             bytes format
   --whitelisters                                            If set, displays validators
                                                             that have whitelisted the
-                                                            hotfix.
+                                                            hotfix.(will be removed when
+                                                            L2 launches
 
 DESCRIPTION
   Show information about a governance proposal, hotfix, or account.
@@ -575,16 +581,19 @@ FLAGS
                                                             provided file
   --nonwhitelisters                                         If set, displays validators
                                                             that have not whitelisted
-                                                            the hotfix.
+                                                            the hotfix.(will be removed
+                                                            when L2 launches
   --notwhitelisted                                          List validators who have not
                                                             whitelisted the specified
-                                                            hotfix
+                                                            hotfix (will be removed when
+                                                            L2 launches
   --proposalID=<value>                                      UUID of proposal to view
   --raw                                                     Display proposal in raw
                                                             bytes format
   --whitelisters                                            If set, displays validators
                                                             that have whitelisted the
-                                                            hotfix.
+                                                            hotfix.(will be removed when
+                                                            L2 launches
 
 DESCRIPTION
   Show information about a governance proposal, hotfix, or account.
@@ -674,16 +683,19 @@ FLAGS
                                                             provided file
   --nonwhitelisters                                         If set, displays validators
                                                             that have not whitelisted
-                                                            the hotfix.
+                                                            the hotfix.(will be removed
+                                                            when L2 launches
   --notwhitelisted                                          List validators who have not
                                                             whitelisted the specified
-                                                            hotfix
+                                                            hotfix (will be removed when
+                                                            L2 launches
   --proposalID=<value>                                      UUID of proposal to view
   --raw                                                     Display proposal in raw
                                                             bytes format
   --whitelisters                                            If set, displays validators
                                                             that have whitelisted the
-                                                            hotfix.
+                                                            hotfix.(will be removed when
+                                                            L2 launches
 
 DESCRIPTION
   Show information about a governance proposal, hotfix, or account.
@@ -742,16 +754,19 @@ FLAGS
                                                             provided file
   --nonwhitelisters                                         If set, displays validators
                                                             that have not whitelisted
-                                                            the hotfix.
+                                                            the hotfix.(will be removed
+                                                            when L2 launches
   --notwhitelisted                                          List validators who have not
                                                             whitelisted the specified
-                                                            hotfix
+                                                            hotfix (will be removed when
+                                                            L2 launches
   --proposalID=<value>                                      UUID of proposal to view
   --raw                                                     Display proposal in raw
                                                             bytes format
   --whitelisters                                            If set, displays validators
                                                             that have whitelisted the
-                                                            hotfix.
+                                                            hotfix.(will be removed when
+                                                            L2 launches
 
 DESCRIPTION
   Show information about a governance proposal, hotfix, or account.
@@ -810,16 +825,19 @@ FLAGS
                                                             provided file
   --nonwhitelisters                                         If set, displays validators
                                                             that have not whitelisted
-                                                            the hotfix.
+                                                            the hotfix.(will be removed
+                                                            when L2 launches
   --notwhitelisted                                          List validators who have not
                                                             whitelisted the specified
-                                                            hotfix
+                                                            hotfix (will be removed when
+                                                            L2 launches
   --proposalID=<value>                                      UUID of proposal to view
   --raw                                                     Display proposal in raw
                                                             bytes format
   --whitelisters                                            If set, displays validators
                                                             that have whitelisted the
-                                                            hotfix.
+                                                            hotfix.(will be removed when
+                                                            L2 launches
 
 DESCRIPTION
   Show information about a governance proposal, hotfix, or account.
