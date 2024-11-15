@@ -27,7 +27,7 @@ export async function ledgerToAccount({
   derivationPathIndex = 0,
   baseDerivationPath = DEFAULT_DERIVATION_PATH,
 }: {
-  transport: TransportNodeHid.default
+  transport: TransportNodeHid
   derivationPathIndex?: number | string
   baseDerivationPath?: string
 }): Promise<LedgerAccount> {

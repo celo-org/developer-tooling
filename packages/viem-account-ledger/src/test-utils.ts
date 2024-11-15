@@ -1,8 +1,8 @@
 import { ensureLeading0x, normalizeAddressWith0x, trimLeading0x } from '@celo/base'
+import Eth from '@celo/hw-app-eth'
 import { generateTypedDataHash } from '@celo/utils/lib/sign-typed-data-utils.js'
 import { getHashFromEncoded, signTransaction } from '@celo/wallet-base'
 import * as ethUtil from '@ethereumjs/util'
-import Eth from '@celo/hw-app-eth'
 import { createVerify, VerifyPublicKeyInput } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
@@ -90,7 +90,7 @@ const TYPED_DATA = {
   },
 }
 
-interface Config extends Partial<Awaited<ReturnType<Eth.default['getAppConfiguration']>>> {}
+interface Config extends Partial<Awaited<ReturnType<Eth['getAppConfiguration']>>> {}
 
 export const mockLedger = (config?: Config) => {
   const _ledger = {
@@ -201,6 +201,6 @@ export const mockLedger = (config?: Config) => {
       }
       return verified
     },
-  } as unknown as Eth.default
+  } as unknown as Eth
   return _ledger
 }

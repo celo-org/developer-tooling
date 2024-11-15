@@ -24,7 +24,7 @@ export function meetsVersionRequirements(
   return min && max
 }
 
-export async function assertCompat(ledger: Eth.default): Promise<{
+export async function assertCompat(ledger: Eth): Promise<{
   arbitraryDataEnabled: number
   version: string
 }> {
@@ -44,24 +44,24 @@ export async function assertCompat(ledger: Eth.default): Promise<{
 }
 
 export async function checkForKnownToken(
-  ledger: Eth.default,
+  ledger: Eth,
   { to, chainId, feeCurrency }: { to: string; chainId: number; feeCurrency?: Hex }
 ) {
   const tokenInfo = tokenInfoByAddressAndChainId(to, chainId)
   if (tokenInfo) {
-    await ledger.provideERC20TokenInformation(`0x${tokenInfo.data.toString('hex')}`)
+    await ledger.provideERC20TokenInformation(tokenInfo.data.toString('hex'))
   }
 
   if (!feeCurrency || feeCurrency === '0x') return
 
   const feeTokenInfo = tokenInfoByAddressAndChainId(feeCurrency, chainId)
   if (feeTokenInfo) {
-    await ledger.provideERC20TokenInformation(`0x${feeTokenInfo.data.toString('hex')}`)
+    await ledger.provideERC20TokenInformation(feeTokenInfo.data.toString('hex'))
   }
 }
 
-export async function generateLedger(transport: TransportNodeHid.default) {
-  const ledger = new Eth.default(transport)
+export async function generateLedger(transport: TransportNodeHid) {
+  const ledger = new Eth(transport)
   await assertCompat(ledger)
   return ledger
 }
