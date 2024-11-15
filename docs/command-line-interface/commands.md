@@ -13,7 +13,7 @@ list all the commands
 USAGE
   $ celocli commands [--json] [--deprecated] [-h] [--hidden] [--tree]
     [--columns <value> | -x] [--filter <value>] [--no-header | [--csv | --no-truncate]]
-    [--output csv|json|yaml |  | ] [--sort <value>]
+   [--output csv|json|yaml] [--sort <value>]
 
 FLAGS
   -h, --help             Show CLI help.
