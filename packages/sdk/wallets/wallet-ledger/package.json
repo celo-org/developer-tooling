@@ -14,6 +14,7 @@
     "sdk"
   ],
   "scripts": {
+    "make": "yarn pack",
     "prebuild": "ts-node scripts/generate-tokens-all-networks.ts",
     "build": "yarn run --top-level tsc -b .",
     "clean": "yarn run --top-level tsc -b . --clean",

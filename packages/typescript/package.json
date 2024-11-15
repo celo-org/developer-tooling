@@ -6,6 +6,7 @@
   "license": "Apache-2.0",
   "main": "tsconfig.json",
   "scripts": {
+    "make": "yarn pack",
     "build-rules": "tsc"
   }
 }
