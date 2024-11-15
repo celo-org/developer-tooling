@@ -64,6 +64,7 @@ jobs:
     needs: release
     strategy:
       fail-fast: false
+      max-parallel: 8
       matrix: 
         package: ${{fromJson(needs.release.outputs.publishedPackages).*.name}}
         version: ${{fromJson(needs.release.outputs.publishedPackages).*.version}}   
