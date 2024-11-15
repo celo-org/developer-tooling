@@ -13,7 +13,7 @@ export default class RegisterDataEncryptionKey extends BaseCommand {
     ...BaseCommand.flags,
     from: CustomFlags.address({
       required: true,
-      description: 'Addess of the account to set the data encryption key for',
+      description: 'Address of the account to set the data encryption key for',
     }),
     publicKey: Flags.string({
       required: true,
