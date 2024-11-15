@@ -439,7 +439,7 @@ jobs:
           artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
       - name: Pack all packages into tarballs
         run: |
-          mkdir -p ~/artifacts
+          mkdir -p ${{ github.workspace }}/artifacts
           yarn workspaces foreach --all run make --out ${{ github.workspace }}/artifacts/%s-%v.tgz
       - name: Test tarballs in fresh container
         uses: addnab/docker-run-action@v3
