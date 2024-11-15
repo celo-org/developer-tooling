@@ -1,17 +1,47 @@
 coverage:
   status:
-    project:
+    patch:
       default:
+        # basic
         target: auto
-        threshold: null
-        removed_code_behavior: adjust_base
-      celotool:
-        paths:
-          - packages/celotool
-      celocli:
-        paths:
-          - packages/cli
-      sdk:
-        paths:
-          - packages/sdk
-    patch: off
+        threshold: 0%
+        base: auto
+        only_pulls: true
+comment:
+  layout: 'header, diff, flags, components'
+
+ignore:
+  - "packages/typescript"
+  - "docs"
+  - ".github"
+  - ".changeset"
+
+component_management:
+  default_rules:
+    statuses:
+      - type: project
+        target: auto
+        branches:
+          - '!master'
+  individual_components:
+    - component_id: celocli
+      name: celocli
+      paths:
+        - packages/cli
+    - component_id: dev-utils
+      name: dev-utils
+      paths:
+        - packages/dev-utils
+    - component_id: sdks
+      name: sdk
+      paths:
+        - '!packages/sdk/wallets'
+        - packages/sdk/*
+    - component_id: wallets
+      name: wallets
+      paths:
+        - 'packages/sdk/wallets/*'
+    - component_id: viem-sdks
+      name: viem-sdks
+      paths:
+        - 'packages/viem-*
