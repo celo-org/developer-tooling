@@ -10,6 +10,7 @@
   "homepage": "https://celo-sdk-docs.readthedocs.io/en/latest/cryptographic-utils",
   "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/sdk/cryptographic-utils",
   "scripts": {
+    "make": "yarn pack",
     "prepublishOnly": "yarn build",
     "build": "yarn run --top-level tsc -b .",
     "docs": "yarn run --top-level typedoc",
