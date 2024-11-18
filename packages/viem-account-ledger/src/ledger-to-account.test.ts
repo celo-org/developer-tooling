@@ -2,7 +2,7 @@ import { recoverTransaction } from '@celo/wallet-base'
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
 import { beforeAll, describe, expect, it, test, vi } from 'vitest'
 import { ledgerToAccount } from './ledger-to-account.js'
-import { mockLedger, TEST_CHAIN_ID } from './test-utils.js'
+import { mockLedger, TEST_CHAIN_ID, test_ledger } from './test-utils.js'
 import { generateLedger } from './utils.js'
 
 const USE_PHYSICAL_LEDGER = process.env.USE_PHYSICAL_LEDGER === 'true'
@@ -13,23 +13,23 @@ const transport = USE_PHYSICAL_LEDGER
   ? TransportNodeHid.open('')
   : Promise.resolve(undefined as unknown as TransportNodeHid)
 
+vi.mock('./utils.js', async () => {
+  const module = await vi.importActual('./utils.js')
+
+  return {
+    ...module,
+    generateLedger: vi.fn((...args) =>
+      // @ts-expect-error
+      USE_PHYSICAL_LEDGER ? module.generateLedger(...args) : Promise.resolve(mockLedger())
+    ),
+  }
+})
+
 syntheticDescribe('ledgerToAccount (mocked ledger)', () => {
   let account: Awaited<ReturnType<typeof ledgerToAccount>>
   beforeAll(async () => {
     account = await ledgerToAccount({
       transport: await transport,
-    })
-
-    vi.mock('./utils.js', async () => {
-      const module = await vi.importActual('./utils.js')
-
-      return {
-        ...module,
-        generateLedger: vi.fn((...args) =>
-          // @ts-expect-error
-          USE_PHYSICAL_LEDGER ? module.generateLedger(...args) : Promise.resolve(mockLedger())
-        ),
-      }
     })
   })
 
@@ -47,7 +47,7 @@ syntheticDescribe('ledgerToAccount (mocked ledger)', () => {
       maxPriorityFeePerGas: BigInt(100),
     } as const
 
-    describe('eip1559', async () => {
+    describe('eip1559', () => {
       test('v=0', async () => {
         const txHash = await account.signTransaction(txData)
         expect(txHash).toMatchInlineSnapshot(
@@ -70,7 +70,7 @@ syntheticDescribe('ledgerToAccount (mocked ledger)', () => {
       })
     })
 
-    describe('cip64', async () => {
+    describe('cip64', () => {
       test('v=0', async () => {
         const account = await ledgerToAccount({
           transport: await transport,
@@ -98,6 +98,32 @@ syntheticDescribe('ledgerToAccount (mocked ledger)', () => {
         expect(signer.toLowerCase()).toBe(account.address.toLowerCase())
         // @ts-expect-error
         expect(decoded.yParity).toMatchInlineSnapshot(`1`)
+      })
+    })
+
+    describe('malformed v values', () => {
+      test('empty string', async () => {
+        const test_vs_0_and_1 = [
+          [0, '', '00', '0x', '0x0', '0x00', '0x1b', 27], // yParity 0
+          [1, '1', '0x1', '0x01', '01', '0x1c', 28], // vParity 1
+        ]
+        for (const expectedyParity in test_vs_0_and_1) {
+          const test_vs = test_vs_0_and_1[+expectedyParity]
+          for (const v of test_vs) {
+            vi.spyOn(test_ledger, 'signTransaction').mockImplementationOnce(() =>
+              // @ts-expect-error
+              Promise.resolve({
+                v,
+                r: '0x1',
+                s: '0x1',
+              })
+            )
+            const txHash = await account.signTransaction(txData)
+            const [recovered] = recoverTransaction(txHash)
+            // @ts-expect-error
+            expect(recovered.yParity).toBe(+expectedyParity)
+          }
+        }
       })
     })
   })

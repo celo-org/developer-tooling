@@ -49,16 +49,33 @@ export class LedgerSigner implements Signer {
     try {
       const validatedDerivationPath = await this.getValidatedDerivationPath()
       await this.checkForKnownToken(encodedTx)
-      const signature = await this.ledger!.signTransaction(
+      let {
+        r,
+        s,
+        v: _v,
+      } = await this.ledger!.signTransaction(
         validatedDerivationPath,
         trimLeading0x(encodedTx.rlpEncode), // the ledger requires the rlpEncode without the leading 0x
         null
       )
 
+      if (typeof _v === 'string' && (_v === '' || _v === '0x')) {
+        console.warn(
+          `ledger-signer@signTransaction: signature \`v\` was malformed \`${_v}\`. Replaced with "0x0"`
+        )
+        _v = '0x0'
+      }
+      const v = typeof _v === 'string' ? parseInt(ensureLeading0x(_v), 16) : _v
+      if (isNaN(v)) {
+        throw new Error(
+          `ledger-signer@signTransaction: signature \`v\` was malformed and was parsed to NaN \`${_v}\``
+        )
+      }
+
       return {
-        v: parseInt(signature.v, 16),
-        r: ethUtil.toBuffer(ensureLeading0x(signature.r)),
-        s: ethUtil.toBuffer(ensureLeading0x(signature.s)),
+        v,
+        r: ethUtil.toBuffer(ensureLeading0x(r)),
+        s: ethUtil.toBuffer(ensureLeading0x(s)),
       }
     } catch (error: unknown) {
       if (error instanceof TransportStatusError) {
