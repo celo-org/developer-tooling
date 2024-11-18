@@ -15,6 +15,7 @@
   "types": "./lib/index.d.ts",
   "sideEffects": false,
   "scripts": {
+    "make": "yarn pack",
     "build": "yarn tsc -b .",
     "clean": "rm -rf lib ; yarn run tsc -b . --clean",
     "prepublishOnly": "yarn build",

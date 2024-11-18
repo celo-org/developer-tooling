@@ -93,3 +93,4 @@ gha-creds-*.json
 transactions.json
 packages/sdk/metadata-claims/lib
 packages/cli/key
+package.tgz
