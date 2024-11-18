@@ -8674,7 +8674,7 @@ __metadata:
     "@types/semver": "npm:7.3.8"
     "@typescript-eslint/eslint-plugin": "npm:^6.17.0"
     "@typescript-eslint/parser": "npm:^6.17.0"
-    codecov: "npm:^3.6.5"
+    codecov: "npm:^3.8.3"
     colors: "npm:1.4.0"
     eslint: "npm:^8.56.0"
     eslint-config-prettier: "npm:^9.1.0"
@@ -9091,7 +9091,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"codecov@npm:^3.6.5":
+"codecov@npm:^3.8.3":
   version: 3.8.3
   resolution: "codecov@npm:3.8.3"
   dependencies:
