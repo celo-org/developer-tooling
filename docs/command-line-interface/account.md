@@ -387,7 +387,7 @@ _See code: [src/commands/account/deauthorize.ts](https://github.com/celo-org/dev
 
 ## `celocli account:delete-payment-delegation`
 
-Removes a validator's payment delegation by setting benficiary and fraction to 0.
+Removes a validator's payment delegation by setting beneficiary and fraction to 0.
 
 ```
 USAGE
@@ -405,7 +405,7 @@ FLAGS
                                                             flags
 
 DESCRIPTION
-  Removes a validator's payment delegation by setting benficiary and fraction to 0.
+  Removes a validator's payment delegation by setting beneficiary and fraction to 0.
 
 EXAMPLES
   delete-payment-delegation --account 0x5409ED021D9299bf6814279A6A1411A7e866A631
@@ -825,7 +825,7 @@ USAGE
     [--globalHelp]
 
 FLAGS
-  --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Addess of the
+  --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Address of the
                                                             account to set the data
                                                             encryption key for
   --gasCurrency=0x1234567890123456789012345678901234567890  Use a specific gas currency

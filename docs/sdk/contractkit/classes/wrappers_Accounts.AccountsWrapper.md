@@ -127,14 +127,14 @@ ___
 
 • **deletePaymentDelegation**: (...`args`: []) => `CeloTransactionObject`\<`void`\>
 
-Remove a validator's payment delegation by setting benficiary and
+Remove a validator's payment delegation by setting beneficiary and
 fraction to 0.
 
 #### Type declaration
 
 ▸ (`...args`): `CeloTransactionObject`\<`void`\>
 
-Remove a validator's payment delegation by setting benficiary and
+Remove a validator's payment delegation by setting beneficiary and
 fraction to 0.
 
 ##### Parameters

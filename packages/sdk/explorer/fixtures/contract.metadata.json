@@ -2546,7 +2546,7 @@
           "notice": "Creates an account."
         },
         "deletePaymentDelegation()": {
-          "notice": "Removes a validator's payment delegation by setting benficiary and fraction to 0."
+          "notice": "Removes a validator's payment delegation by setting beneficiary and fraction to 0."
         },
         "getAttestationSigner(address)": {
           "notice": "Returns the attestation signer for the specified account."
