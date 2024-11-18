@@ -85,7 +85,7 @@ exports[`network:contracts runs 1`] = `
   {
     "contract": "FeeHandler",
     "proxy": "0xeaEEC408eCbCdF9CDF21d0B1880419dF7290E2c9",
-    "implementation": "0x82106CcC8feAE0bEc797281ae4dDf5F77E3E6156",
+    "implementation": "0x2e647D9D128c89D7239fdF47ca290453ad5869df",
     "version": "1.2.0.0"
   },
   {
