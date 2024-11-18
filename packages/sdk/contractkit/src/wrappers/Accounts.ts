@@ -453,7 +453,7 @@ export class AccountsWrapper extends BaseWrapper<Accounts> {
   setPaymentDelegation = proxySend(this.connection, this.contract.methods.setPaymentDelegation)
 
   /**
-   * Remove a validator's payment delegation by setting benficiary and
+   * Remove a validator's payment delegation by setting beneficiary and
    * fraction to 0.
    */
   deletePaymentDelegation = proxySend(

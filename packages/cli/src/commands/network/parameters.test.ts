@@ -67,7 +67,7 @@ testWithAnvilL1('network:parameters', (web3: Web3) => {
       Reserve: 
         frozenReserveGoldDays: 0 
         frozenReserveGoldStartBalance: 0 
-        frozenReserveGoldStartDay: 20013 (~2.001e+4)
+        frozenReserveGoldStartDay: 20042 (~2.004e+4)
         otherReserveAddresses: 
 
         tobinTaxStalenessThreshold: 3153600000 (~3.154e+9)

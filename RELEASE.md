@@ -10,7 +10,7 @@ Being assigned as the release steward means you are expected to deliver
 * Release notes on github for every package (automatically created by changesets bot)
 * If the release is significant a forum post with the highlights and link back to release notes
 
-### What is a signicant release
+### What is a significant release
 
 This is intentionally not defined. Some guiding principles: if it has been a long time, if someone will be asking about the release, if there are big fixes. 
 
@@ -45,7 +45,7 @@ require a patch, minor, or major update.
 
 ## Package Versioning
 
-Based on [semantic versioning best practices](semver.org),g iven a version number
+Based on [semantic versioning best practices](semver.org), given a version number
 `MAJOR.MINOR.PATCH`, increment the:
 
 - `MAJOR` version when you make incompatible API changes
