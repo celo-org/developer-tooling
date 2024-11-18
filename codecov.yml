@@ -11,10 +11,10 @@ comment:
   layout: 'header, diff, flags, components'
 
 ignore:
-  - "packages/typescript"
-  - "docs"
-  - ".github"
-  - ".changeset"
+  - 'packages/typescript'
+  - 'docs'
+  - '.github'
+  - '.changeset'
 
 component_management:
   default_rules:
@@ -36,7 +36,7 @@ component_management:
       name: sdk
       paths:
         - '!packages/sdk/wallets'
-        - packages/sdk/*
+        - 'packages/sdk/*'
     - component_id: wallets
       name: wallets
       paths:
@@ -44,4 +44,4 @@ component_management:
     - component_id: viem-sdks
       name: viem-sdks
       paths:
-        - 'packages/viem-*
+        - 'packages/viem-*'
