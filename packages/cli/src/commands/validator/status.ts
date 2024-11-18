@@ -1,7 +1,7 @@
 import { Address } from '@celo/connect'
+import { IstanbulUtils } from '@celo/utils'
 import { eqAddress } from '@celo/utils/lib/address'
 import { concurrentMap } from '@celo/utils/lib/async'
-import { bitIsSet, parseBlockExtraData } from '@celo/utils/lib/istanbul'
 import { Flags, ux } from '@oclif/core'
 
 import { BaseCommand } from '../../base'
@@ -15,7 +15,7 @@ interface ValidatorStatusEntry {
   signer: Address
   elected: boolean
   frontRunner: boolean
-  signatures: number
+  signatures?: number
 }
 
 export const statusTable: ux.Table.table.Columns<Record<'status', ValidatorStatusEntry>> = {
@@ -23,9 +23,14 @@ export const statusTable: ux.Table.table.Columns<Record<'status', ValidatorStatu
   signer: { get: ({ status }) => status.signer },
   elected: { get: ({ status }) => status.elected },
   frontRunner: { get: ({ status }) => status.frontRunner },
+}
+
+// TODO(L2): Remove once migrated to L2
+export const statusTableL1 = {
+  ...statusTable,
   signatures: {
     get: (vs: { status: ValidatorStatusEntry }) =>
-      isNaN(vs.status.signatures) ? '' : (vs.status.signatures * 100).toFixed(2) + '%',
+      isNaN(vs.status.signatures!) ? '' : (vs.status.signatures! * 100).toFixed(2) + '%',
   },
 }
 
@@ -36,11 +41,11 @@ export default class ValidatorStatus extends BaseCommand {
   static flags = {
     ...BaseCommand.flags,
     validator: CustomFlags.address({
-      description: 'address of the validator to check if elected and validating',
+      description: 'address of the validator to check if elected (and validating)',
       exclusive: ['all', 'signer'],
     }),
     signer: CustomFlags.address({
-      description: 'address of the signer to check if elected and validating',
+      description: 'address of the signer to check if elected (and validating)',
       exclusive: ['validator', 'all'],
     }),
     all: Flags.boolean({
@@ -97,12 +102,27 @@ export default class ValidatorStatus extends BaseCommand {
     const latest = await kit.web3.eth.getBlockNumber()
     const endBlock = res.flags.end === -1 ? latest : res.flags.end
     const startBlock = res.flags.start === -1 ? endBlock - 100 : res.flags.start
+
+    const currentEpoch = await kit.getEpochNumberOfBlock(latest)
+    const firstBlockOfCurrentEpoch = await kit.getFirstBlockNumberForEpoch(currentEpoch)
+
+    const isCel2 = await this.isCel2()
+
+    if (isCel2 && startBlock < firstBlockOfCurrentEpoch) {
+      this.error('Start and end blocks must be in the current epoch')
+    }
+
     if (startBlock > endBlock || endBlock > latest) {
       this.error('invalid values for start/end')
     }
 
-    const epochSize = (await validators.getEpochSize()).toNumber()
-    const electionCache = new ElectionResultsCache(election, epochSize)
+    const epochSize = await kit.getEpochSize()
+    const electionCache = new ElectionResultsCache(
+      kit,
+      isCel2,
+      election,
+      isCel2 ? await kit.contracts.getEpochManager() : undefined
+    )
     let frontRunnerSigners: string[] = []
     ux.action.start(`Running mock election`)
     try {
@@ -111,7 +131,10 @@ export default class ValidatorStatus extends BaseCommand {
       console.warn('Warning: Elections not available')
     }
     ux.action.stop()
-    const signatureCounts = await this.getSignatureCounts(startBlock, endBlock, electionCache)
+
+    const signatureCounts = isCel2
+      ? new Map()
+      : await this.getSignatureCounts(startBlock, endBlock, electionCache)
     const electedCounts = await this.getElectedCounts(
       startBlock,
       endBlock,
@@ -120,13 +143,13 @@ export default class ValidatorStatus extends BaseCommand {
     )
     ux.action.start(`Fetching validator information`)
     const validatorStatuses = await concurrentMap(10, signers, (s) =>
-      this.getStatus(s, signatureCounts, electedCounts, electionCache, frontRunnerSigners)
+      this.getStatus(isCel2, s, signatureCounts, electedCounts, electionCache, frontRunnerSigners)
     )
     ux.action.stop()
 
     ux.table(
       validatorStatuses.map((vs) => ({ status: vs })),
-      statusTable,
+      isCel2 ? statusTable : statusTableL1,
       res.flags
     )
   }
@@ -147,10 +170,10 @@ export default class ValidatorStatus extends BaseCommand {
       }
       const web3 = await this.getWeb3()
       const block = await web3.eth.getBlock(blockNumber)
-      const bitmap = parseBlockExtraData(block.extraData).parentAggregatedSeal.bitmap
+      const bitmap = IstanbulUtils.parseBlockExtraData(block.extraData).parentAggregatedSeal.bitmap
       const signers = await electionCache.electedSigners(blockNumber)
       signers.map((s, i) => {
-        if (bitIsSet(bitmap, i)) {
+        if (IstanbulUtils.bitIsSet(bitmap, i)) {
           const count = countsBySigner.get(s) === undefined ? 0 : countsBySigner.get(s)
           countsBySigner.set(s, count + 1)
         }
@@ -221,6 +244,7 @@ export default class ValidatorStatus extends BaseCommand {
   }
 
   private async getStatus(
+    isCel2: boolean,
     signer: Address,
     signatureCounts: Map<Address, number>,
     electedCounts: Map<Address, number>,
@@ -245,13 +269,23 @@ export default class ValidatorStatus extends BaseCommand {
     if (elected === undefined) {
       elected = 0
     }
-    return {
+
+    const result = {
       name,
       address: validator,
       signer,
       elected: await electionCache.elected(signer, await kit.web3.eth.getBlockNumber()),
       frontRunner: frontRunnerSigners.some(eqAddress.bind(null, signer)),
-      signatures: signatures / elected, // may be NaN
     }
+
+    // TODO(L2): Remove once migrated to L2
+    if (!isCel2) {
+      return {
+        ...result,
+        signatures: signatures / elected, // may be NaN
+      }
+    }
+
+    return result
   }
 }

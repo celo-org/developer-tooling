@@ -60,13 +60,17 @@ export default class ValidatorSignedBlocks extends BaseCommand {
   ]
 
   async run() {
+    const isCel2 = await this.isCel2()
+
+    if (isCel2) {
+      this.error('This command is not available on L2 and might be removed in the future')
+    }
+
     const kit = await this.getKit()
     const res = await this.parse(ValidatorSignedBlocks)
     const web3 = await this.getWeb3()
     const election = await kit.contracts.getElection()
-    const validators = await kit.contracts.getValidators()
-    const epochSize = await validators.getEpochSize()
-    const electionCache = new ElectionResultsCache(election, epochSize.toNumber())
+    const electionCache = new ElectionResultsCache(kit, isCel2, election)
 
     if (res.flags.follow) {
       console.info('Follow mode, press q or ctrl-c to quit')
