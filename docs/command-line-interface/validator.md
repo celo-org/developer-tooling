@@ -23,22 +23,39 @@ Affiliate a Validator with a Validator Group. This allows the Validator Group to
 ```
 USAGE
   $ celocli validator:affiliate ARG1 --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
-    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp] [--yes]
+    [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
+    [--globalHelp] [--yes]
 
 ARGUMENTS
   ARG1  ValidatorGroup's address
 
 FLAGS
-  --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Signer or
-                                                            Validator's address
-  --gasCurrency=0x1234567890123456789012345678901234567890  Use a specific gas currency
-                                                            for transaction fees
-                                                            (defaults to CELO if no gas
-                                                            currency is supplied). It
-                                                            must be a whitelisted token.
-  --globalHelp                                              View all available global
-                                                            flags
-  --yes                                                     Answer yes to prompt
+  -k, --privateKey=<value>
+      Use a private key to sign local transactions with
+
+  -n, --node=<value>
+      URL of the node to run commands against or an alias
+
+  --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+      (required) Signer or Validator's address
+
+  --gasCurrency=0x1234567890123456789012345678901234567890
+      Use a specific gas currency for transaction fees (defaults to CELO if no gas
+      currency is supplied). It must be a whitelisted token.
+
+  --globalHelp
+      View all available global flags
+
+  --ledgerAddresses=<value>
+      [default: 1] If --useLedger is set, this will get the first N addresses for local
+      signing
+
+  --useLedger
+      Set it to use a ledger wallet
+
+  --yes
+      Answer yes to prompt
 
 DESCRIPTION
   Affiliate a Validator with a Validator Group. This allows the Validator Group to add
@@ -48,6 +65,16 @@ DESCRIPTION
 
 EXAMPLES
   affiliate --from 0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95 0x97f7333c51897469e8d98e7af8653aab468050a3
+
+FLAG DESCRIPTIONS
+  -n, --node=<value>  URL of the node to run commands against or an alias
+
+    Can be a full url like https://forno.celo.org or an alias. default:
+    http://localhost:8545
+    Alias options:
+    local, localhost => 'http://localhost:8545'
+    alfajores => Celo Alfajores Testnet,
+    mainnet, celo, forno => Celo Mainnet chain',
 ```
 
 _See code: [src/commands/validator/affiliate.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/affiliate.ts)_
@@ -58,19 +85,34 @@ Deaffiliate a Validator from a Validator Group, and remove it from the Group if 
 
 ```
 USAGE
-  $ celocli validator:deaffiliate --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
-    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
+  $ celocli validator:deaffiliate --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [-k
+    <value> | --useLedger | ] [-n <value>] [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
+    [--globalHelp]
 
 FLAGS
-  --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Signer or
-                                                            Validator's address
-  --gasCurrency=0x1234567890123456789012345678901234567890  Use a specific gas currency
-                                                            for transaction fees
-                                                            (defaults to CELO if no gas
-                                                            currency is supplied). It
-                                                            must be a whitelisted token.
-  --globalHelp                                              View all available global
-                                                            flags
+  -k, --privateKey=<value>
+      Use a private key to sign local transactions with
+
+  -n, --node=<value>
+      URL of the node to run commands against or an alias
+
+  --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+      (required) Signer or Validator's address
+
+  --gasCurrency=0x1234567890123456789012345678901234567890
+      Use a specific gas currency for transaction fees (defaults to CELO if no gas
+      currency is supplied). It must be a whitelisted token.
+
+  --globalHelp
+      View all available global flags
+
+  --ledgerAddresses=<value>
+      [default: 1] If --useLedger is set, this will get the first N addresses for local
+      signing
+
+  --useLedger
+      Set it to use a ledger wallet
 
 DESCRIPTION
   Deaffiliate a Validator from a Validator Group, and remove it from the Group if it is
@@ -78,6 +120,16 @@ DESCRIPTION
 
 EXAMPLES
   deaffiliate --from 0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95
+
+FLAG DESCRIPTIONS
+  -n, --node=<value>  URL of the node to run commands against or an alias
+
+    Can be a full url like https://forno.celo.org or an alias. default:
+    http://localhost:8545
+    Alias options:
+    local, localhost => 'http://localhost:8545'
+    alfajores => Celo Alfajores Testnet,
+    mainnet, celo, forno => Celo Mainnet chain',
 ```
 
 _See code: [src/commands/validator/deaffiliate.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/deaffiliate.ts)_
@@ -88,19 +140,34 @@ Deregister a Validator. Approximately 60 days after the validator is no longer p
 
 ```
 USAGE
-  $ celocli validator:deregister --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
-    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
+  $ celocli validator:deregister --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [-k
+    <value> | --useLedger | ] [-n <value>] [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
+    [--globalHelp]
 
 FLAGS
-  --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Signer or
-                                                            Validator's address
-  --gasCurrency=0x1234567890123456789012345678901234567890  Use a specific gas currency
-                                                            for transaction fees
-                                                            (defaults to CELO if no gas
-                                                            currency is supplied). It
-                                                            must be a whitelisted token.
-  --globalHelp                                              View all available global
-                                                            flags
+  -k, --privateKey=<value>
+      Use a private key to sign local transactions with
+
+  -n, --node=<value>
+      URL of the node to run commands against or an alias
+
+  --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+      (required) Signer or Validator's address
+
+  --gasCurrency=0x1234567890123456789012345678901234567890
+      Use a specific gas currency for transaction fees (defaults to CELO if no gas
+      currency is supplied). It must be a whitelisted token.
+
+  --globalHelp
+      View all available global flags
+
+  --ledgerAddresses=<value>
+      [default: 1] If --useLedger is set, this will get the first N addresses for local
+      signing
+
+  --useLedger
+      Set it to use a ledger wallet
 
 DESCRIPTION
   Deregister a Validator. Approximately 60 days after the validator is no longer part of
@@ -111,6 +178,16 @@ DESCRIPTION
 
 EXAMPLES
   deregister --from 0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95
+
+FLAG DESCRIPTIONS
+  -n, --node=<value>  URL of the node to run commands against or an alias
+
+    Can be a full url like https://forno.celo.org or an alias. default:
+    http://localhost:8545
+    Alias options:
+    local, localhost => 'http://localhost:8545'
+    alfajores => Celo Alfajores Testnet,
+    mainnet, celo, forno => Celo Mainnet chain',
 ```
 
 _See code: [src/commands/validator/deregister.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/deregister.ts)_
@@ -121,14 +198,21 @@ Downtime slash a validator
 
 ```
 USAGE
-  $ celocli validator:downtime-slash --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
-    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
-    [--validator 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d | --validators
-    '["0xb7ef0985bdb4f19460A29d9829aA1514B181C4CD",
+  $ celocli validator:downtime-slash --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [-k
+    <value> | --useLedger | ] [-n <value>] [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
+    [--globalHelp] [--validator 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d |
+    --validators '["0xb7ef0985bdb4f19460A29d9829aA1514B181C4CD",
     "0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95"]'] [--intervals '[0:1], [1:2]' |
     --beforeBlock <value>]
 
 FLAGS
+  -k, --privateKey=<value>
+      Use a private key to sign local transactions with
+
+  -n, --node=<value>
+      URL of the node to run commands against or an alias
+
   --beforeBlock=<value>
       Slash for slashable downtime window before provided block
 
@@ -145,6 +229,13 @@ FLAGS
   --intervals='[0:1], [1:2]'
       Array of intervals, ordered by min start to max end
 
+  --ledgerAddresses=<value>
+      [default: 1] If --useLedger is set, this will get the first N addresses for local
+      signing
+
+  --useLedger
+      Set it to use a ledger wallet
+
   --validator=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
       Validator (signer or account) address
 
@@ -159,6 +250,16 @@ EXAMPLES
   downtime-slash     --from 0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95     --validator 0xb7ef0985bdb4f19460A29d9829aA1514B181C4CD     --intervals "[100:150), [150:200)"
 
   downtime-slash     --from 0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95     --validator 0xb7ef0985bdb4f19460A29d9829aA1514B181C4CD     --slashableDowntimeBeforeBlock 200
+
+FLAG DESCRIPTIONS
+  -n, --node=<value>  URL of the node to run commands against or an alias
+
+    Can be a full url like https://forno.celo.org or an alias. default:
+    http://localhost:8545
+    Alias options:
+    local, localhost => 'http://localhost:8545'
+    alfajores => Celo Alfajores Testnet,
+    mainnet, celo, forno => Celo Mainnet chain',
 ```
 
 _See code: [src/commands/validator/downtime-slash.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/downtime-slash.ts)_
@@ -169,12 +270,18 @@ List registered Validators, their name (if provided), affiliation, uptime score,
 
 ```
 USAGE
-  $ celocli validator:list [--gasCurrency
-    0x1234567890123456789012345678901234567890] [--globalHelp] [--columns <value> | -x]
-    [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output csv|json|yaml |
-    | ] [--sort <value>]
+  $ celocli validator:list [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
+    [--globalHelp] [--columns <value> | -x] [--filter <value>] [--no-header | [--csv |
+    --no-truncate]] [--output csv|json|yaml |  | ] [--sort <value>]
 
 FLAGS
+  -k, --privateKey=<value>
+      Use a private key to sign local transactions with
+
+  -n, --node=<value>
+      URL of the node to run commands against or an alias
+
   -x, --extended
       show extra columns
 
@@ -194,6 +301,10 @@ FLAGS
   --globalHelp
       View all available global flags
 
+  --ledgerAddresses=<value>
+      [default: 1] If --useLedger is set, this will get the first N addresses for local
+      signing
+
   --no-header
       hide table header from output
 
@@ -207,12 +318,25 @@ FLAGS
   --sort=<value>
       property to sort by (prepend '-' for descending)
 
+  --useLedger
+      Set it to use a ledger wallet
+
 DESCRIPTION
   List registered Validators, their name (if provided), affiliation, uptime score, and
   public keys used for validating.
 
 EXAMPLES
   list
+
+FLAG DESCRIPTIONS
+  -n, --node=<value>  URL of the node to run commands against or an alias
+
+    Can be a full url like https://forno.celo.org or an alias. default:
+    http://localhost:8545
+    Alias options:
+    local, localhost => 'http://localhost:8545'
+    alfajores => Celo Alfajores Testnet,
+    mainnet, celo, forno => Celo Mainnet chain',
 ```
 
 _See code: [src/commands/validator/list.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/list.ts)_
@@ -224,29 +348,61 @@ Register a new Validator
 ```
 USAGE
   $ celocli validator:register --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
-    --ecdsaKey 0x [--gasCurrency 0x1234567890123456789012345678901234567890]
+    --ecdsaKey 0x [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
     [--globalHelp] [--blsKey 0x] [--blsSignature 0x] [--yes]
 
 FLAGS
-  --blsKey=0x                                               BLS Public Key
-  --blsSignature=0x                                         BLS Proof-of-Possession
-  --ecdsaKey=0x                                             (required) ECDSA Public Key
-  --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Address for the
-                                                            Validator
-  --gasCurrency=0x1234567890123456789012345678901234567890  Use a specific gas currency
-                                                            for transaction fees
-                                                            (defaults to CELO if no gas
-                                                            currency is supplied). It
-                                                            must be a whitelisted token.
-  --globalHelp                                              View all available global
-                                                            flags
-  --yes                                                     Answer yes to prompt
+  -k, --privateKey=<value>
+      Use a private key to sign local transactions with
+
+  -n, --node=<value>
+      URL of the node to run commands against or an alias
+
+  --blsKey=0x
+      BLS Public Key
+
+  --blsSignature=0x
+      BLS Proof-of-Possession
+
+  --ecdsaKey=0x
+      (required) ECDSA Public Key
+
+  --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+      (required) Address for the Validator
+
+  --gasCurrency=0x1234567890123456789012345678901234567890
+      Use a specific gas currency for transaction fees (defaults to CELO if no gas
+      currency is supplied). It must be a whitelisted token.
+
+  --globalHelp
+      View all available global flags
+
+  --ledgerAddresses=<value>
+      [default: 1] If --useLedger is set, this will get the first N addresses for local
+      signing
+
+  --useLedger
+      Set it to use a ledger wallet
+
+  --yes
+      Answer yes to prompt
 
 DESCRIPTION
   Register a new Validator
 
 EXAMPLES
   register --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95 --ecdsaKey 0x049b7291ab8813a095d6b7913a7930ede5ea17466abd5e1a26c6c44f6df9a400a6f474080098b2c752c6c4871978ca977b90dcd3aed92bc9d564137c8dfa14ee72 --blsKey 0x4fa3f67fc913878b068d1fa1cdddc54913d3bf988dbe5a36a20fa888f20d4894c408a6773f3d7bde11154f2a3076b700d345a42fd25a0e5e83f4db5586ac7979ac2053cd95d8f2efd3e959571ceccaa743e02cf4be3f5d7aaddb0b06fc9aff00 --blsSignature 0xcdb77255037eb68897cd487fdd85388cbda448f617f874449d4b11588b0b7ad8ddc20d9bb450b513bb35664ea3923900
+
+FLAG DESCRIPTIONS
+  -n, --node=<value>  URL of the node to run commands against or an alias
+
+    Can be a full url like https://forno.celo.org or an alias. default:
+    http://localhost:8545
+    Alias options:
+    local, localhost => 'http://localhost:8545'
+    alfajores => Celo Alfajores Testnet,
+    mainnet, celo, forno => Celo Mainnet chain',
 ```
 
 _See code: [src/commands/validator/register.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/register.ts)_
@@ -257,17 +413,30 @@ List the Locked Gold requirements for registering a Validator. This consists of 
 
 ```
 USAGE
-  $ celocli validator:requirements [--gasCurrency
-    0x1234567890123456789012345678901234567890] [--globalHelp]
+  $ celocli validator:requirements [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
+    [--globalHelp]
 
 FLAGS
-  --gasCurrency=0x1234567890123456789012345678901234567890  Use a specific gas currency
-                                                            for transaction fees
-                                                            (defaults to CELO if no gas
-                                                            currency is supplied). It
-                                                            must be a whitelisted token.
-  --globalHelp                                              View all available global
-                                                            flags
+  -k, --privateKey=<value>
+      Use a private key to sign local transactions with
+
+  -n, --node=<value>
+      URL of the node to run commands against or an alias
+
+  --gasCurrency=0x1234567890123456789012345678901234567890
+      Use a specific gas currency for transaction fees (defaults to CELO if no gas
+      currency is supplied). It must be a whitelisted token.
+
+  --globalHelp
+      View all available global flags
+
+  --ledgerAddresses=<value>
+      [default: 1] If --useLedger is set, this will get the first N addresses for local
+      signing
+
+  --useLedger
+      Set it to use a ledger wallet
 
 DESCRIPTION
   List the Locked Gold requirements for registering a Validator. This consists of a
@@ -277,6 +446,16 @@ DESCRIPTION
 
 EXAMPLES
   requirements
+
+FLAG DESCRIPTIONS
+  -n, --node=<value>  URL of the node to run commands against or an alias
+
+    Can be a full url like https://forno.celo.org or an alias. default:
+    http://localhost:8545
+    Alias options:
+    local, localhost => 'http://localhost:8545'
+    alfajores => Celo Alfajores Testnet,
+    mainnet, celo, forno => Celo Mainnet chain',
 ```
 
 _See code: [src/commands/validator/requirements.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/requirements.ts)_
@@ -287,29 +466,44 @@ Set validator signature bitmaps for provided intervals
 
 ```
 USAGE
-  $ celocli validator:set-bitmaps --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
-    [--gasCurrency 0x1234567890123456789012345678901234567890] [--globalHelp]
-    [--slashableDowntimeBeforeBlock <value> | --intervals '[0:1], [1:2]' |
-    --slashableDowntimeBeforeLatest]
+  $ celocli validator:set-bitmaps --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [-k
+    <value> | --useLedger | ] [-n <value>] [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
+    [--globalHelp] [--slashableDowntimeBeforeBlock <value> | --intervals '[0:1], [1:2]'
+    | --slashableDowntimeBeforeLatest]
 
 FLAGS
-  --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) From address to
-                                                            sign set bitmap transactions
-  --gasCurrency=0x1234567890123456789012345678901234567890  Use a specific gas currency
-                                                            for transaction fees
-                                                            (defaults to CELO if no gas
-                                                            currency is supplied). It
-                                                            must be a whitelisted token.
-  --globalHelp                                              View all available global
-                                                            flags
-  --intervals='[0:1], [1:2]'                                Array of intervals, ordered
-                                                            by min start to max end
-  --slashableDowntimeBeforeBlock=<value>                    Set all bitmaps for
-                                                            slashable downtime window
-                                                            before provided block
-  --slashableDowntimeBeforeLatest                           Set all bitmaps for
-                                                            slashable downtime window
-                                                            before latest block
+  -k, --privateKey=<value>
+      Use a private key to sign local transactions with
+
+  -n, --node=<value>
+      URL of the node to run commands against or an alias
+
+  --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+      (required) From address to sign set bitmap transactions
+
+  --gasCurrency=0x1234567890123456789012345678901234567890
+      Use a specific gas currency for transaction fees (defaults to CELO if no gas
+      currency is supplied). It must be a whitelisted token.
+
+  --globalHelp
+      View all available global flags
+
+  --intervals='[0:1], [1:2]'
+      Array of intervals, ordered by min start to max end
+
+  --ledgerAddresses=<value>
+      [default: 1] If --useLedger is set, this will get the first N addresses for local
+      signing
+
+  --slashableDowntimeBeforeBlock=<value>
+      Set all bitmaps for slashable downtime window before provided block
+
+  --slashableDowntimeBeforeLatest
+      Set all bitmaps for slashable downtime window before latest block
+
+  --useLedger
+      Set it to use a ledger wallet
 
 DESCRIPTION
   Set validator signature bitmaps for provided intervals
@@ -318,6 +512,16 @@ EXAMPLES
   set-bitmaps --from 0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95 --slashableDowntimeBeforeBlock 10000
 
   set-bitmaps --from 0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95 --intervals "[0:100], (100:200]"
+
+FLAG DESCRIPTIONS
+  -n, --node=<value>  URL of the node to run commands against or an alias
+
+    Can be a full url like https://forno.celo.org or an alias. default:
+    http://localhost:8545
+    Alias options:
+    local, localhost => 'http://localhost:8545'
+    alfajores => Celo Alfajores Testnet,
+    mainnet, celo, forno => Celo Mainnet chain',
 ```
 
 _See code: [src/commands/validator/set-bitmaps.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/set-bitmaps.ts)_
@@ -328,26 +532,49 @@ Show information about a registered Validator.
 
 ```
 USAGE
-  $ celocli validator:show ARG1 [--gasCurrency
-    0x1234567890123456789012345678901234567890] [--globalHelp]
+  $ celocli validator:show ARG1 [-k <value> | --useLedger | ] [-n <value>]
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--ledgerAddresses
+    <value> ] [--globalHelp]
 
 ARGUMENTS
   ARG1  Validator's address
 
 FLAGS
-  --gasCurrency=0x1234567890123456789012345678901234567890  Use a specific gas currency
-                                                            for transaction fees
-                                                            (defaults to CELO if no gas
-                                                            currency is supplied). It
-                                                            must be a whitelisted token.
-  --globalHelp                                              View all available global
-                                                            flags
+  -k, --privateKey=<value>
+      Use a private key to sign local transactions with
+
+  -n, --node=<value>
+      URL of the node to run commands against or an alias
+
+  --gasCurrency=0x1234567890123456789012345678901234567890
+      Use a specific gas currency for transaction fees (defaults to CELO if no gas
+      currency is supplied). It must be a whitelisted token.
+
+  --globalHelp
+      View all available global flags
+
+  --ledgerAddresses=<value>
+      [default: 1] If --useLedger is set, this will get the first N addresses for local
+      signing
+
+  --useLedger
+      Set it to use a ledger wallet
 
 DESCRIPTION
   Show information about a registered Validator.
 
 EXAMPLES
   show 0x97f7333c51897469E8D98E7af8653aAb468050a3
+
+FLAG DESCRIPTIONS
+  -n, --node=<value>  URL of the node to run commands against or an alias
+
+    Can be a full url like https://forno.celo.org or an alias. default:
+    http://localhost:8545
+    Alias options:
+    local, localhost => 'http://localhost:8545'
+    alfajores => Celo Alfajores Testnet,
+    mainnet, celo, forno => Celo Mainnet chain',
 ```
 
 _See code: [src/commands/validator/show.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/show.ts)_
@@ -358,15 +585,21 @@ Display a graph of blocks and whether the given signer's signature is included i
 
 ```
 USAGE
-  $ celocli validator:signed-blocks [--gasCurrency
-    0x1234567890123456789012345678901234567890] [--globalHelp] [--signer
-    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d | --signers
+  $ celocli validator:signed-blocks [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
+    [--globalHelp] [--signer 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d | --signers
     '["0xb7ef0985bdb4f19460A29d9829aA1514B181C4CD",
     "0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95"]'] [--wasDownWhileElected] [--at-block
     <value> | ] [--slashableDowntimeLookback | [--lookback <value> | ]] [--width
     <value>]
 
 FLAGS
+  -k, --privateKey=<value>
+      Use a private key to sign local transactions with
+
+  -n, --node=<value>
+      URL of the node to run commands against or an alias
+
   --at-block=<value>
       latest block to examine for signer activity
 
@@ -376,6 +609,10 @@ FLAGS
 
   --globalHelp
       View all available global flags
+
+  --ledgerAddresses=<value>
+      [default: 1] If --useLedger is set, this will get the first N addresses for local
+      signing
 
   --lookback=<value>
       [default: 120] how many blocks to look back for signer activity
@@ -389,6 +626,9 @@ FLAGS
 
   --slashableDowntimeLookback
       lookback of slashableDowntime
+
+  --useLedger
+      Set it to use a ledger wallet
 
   --wasDownWhileElected
       indicate whether a validator was down while elected for range
@@ -412,6 +652,16 @@ EXAMPLES
   signed-blocks --lookback 500 --signer 0x5409ED021D9299bf6814279A6A1411A7e866A631
 
   signed-blocks --lookback 50 --width 10 --signer 0x5409ED021D9299bf6814279A6A1411A7e866A631
+
+FLAG DESCRIPTIONS
+  -n, --node=<value>  URL of the node to run commands against or an alias
+
+    Can be a full url like https://forno.celo.org or an alias. default:
+    http://localhost:8545
+    Alias options:
+    local, localhost => 'http://localhost:8545'
+    alfajores => Celo Alfajores Testnet,
+    mainnet, celo, forno => Celo Mainnet chain',
 ```
 
 _See code: [src/commands/validator/signed-blocks.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/signed-blocks.ts)_
@@ -422,14 +672,20 @@ Shows the consensus status of a validator. This command will show whether a vali
 
 ```
 USAGE
-  $ celocli validator:status [--gasCurrency
-    0x1234567890123456789012345678901234567890] [--globalHelp] [--validator
-    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d | --all | --signer
-    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d] [--start <value>] [--end <value>]
-    [--columns <value> | -x] [--filter <value>] [--no-header | [--csv | --no-truncate]]
-    [--output csv|json|yaml |  | ] [--sort <value>]
+  $ celocli validator:status [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
+    [--globalHelp] [--validator 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d | --all |
+    --signer 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d] [--start <value>] [--end
+    <value>] [--columns <value> | -x] [--filter <value>] [--no-header | [--csv |
+    --no-truncate]] [--output csv|json|yaml |  | ] [--sort <value>]
 
 FLAGS
+  -k, --privateKey=<value>
+      Use a private key to sign local transactions with
+
+  -n, --node=<value>
+      URL of the node to run commands against or an alias
+
   -x, --extended
       show extra columns
 
@@ -456,6 +712,10 @@ FLAGS
   --globalHelp
       View all available global flags
 
+  --ledgerAddresses=<value>
+      [default: 1] If --useLedger is set, this will get the first N addresses for local
+      signing
+
   --no-header
       hide table header from output
 
@@ -476,6 +736,9 @@ FLAGS
       [default: -1] what block to start at when looking at signer activity. defaults to
       the last 100 blocks
 
+  --useLedger
+      Set it to use a ledger wallet
+
   --validator=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
       address of the validator to check if elected (and validating)
 
@@ -491,6 +754,16 @@ EXAMPLES
   status --validator 0x5409ED021D9299bf6814279A6A1411A7e866A631 --start 1480000
 
   status --all --start 1480000 --end 1490000
+
+FLAG DESCRIPTIONS
+  -n, --node=<value>  URL of the node to run commands against or an alias
+
+    Can be a full url like https://forno.celo.org or an alias. default:
+    http://localhost:8545
+    Alias options:
+    local, localhost => 'http://localhost:8545'
+    alfajores => Celo Alfajores Testnet,
+    mainnet, celo, forno => Celo Mainnet chain',
 ```
 
 _See code: [src/commands/validator/status.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/status.ts)_
@@ -502,22 +775,39 @@ Update the BLS public key for a Validator to be used in consensus.
 ```
 USAGE
   $ celocli validator:update-bls-public-key --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
-    --blsKey 0x --blsPop 0x [--gasCurrency 0x1234567890123456789012345678901234567890]
+    --blsKey 0x --blsPop 0x [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
     [--globalHelp]
 
 FLAGS
-  --blsKey=0x                                               (required) BLS Public Key
-  --blsPop=0x                                               (required) BLS
-                                                            Proof-of-Possession
-  --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d         (required) Validator's
-                                                            address
-  --gasCurrency=0x1234567890123456789012345678901234567890  Use a specific gas currency
-                                                            for transaction fees
-                                                            (defaults to CELO if no gas
-                                                            currency is supplied). It
-                                                            must be a whitelisted token.
-  --globalHelp                                              View all available global
-                                                            flags
+  -k, --privateKey=<value>
+      Use a private key to sign local transactions with
+
+  -n, --node=<value>
+      URL of the node to run commands against or an alias
+
+  --blsKey=0x
+      (required) BLS Public Key
+
+  --blsPop=0x
+      (required) BLS Proof-of-Possession
+
+  --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+      (required) Validator's address
+
+  --gasCurrency=0x1234567890123456789012345678901234567890
+      Use a specific gas currency for transaction fees (defaults to CELO if no gas
+      currency is supplied). It must be a whitelisted token.
+
+  --globalHelp
+      View all available global flags
+
+  --ledgerAddresses=<value>
+      [default: 1] If --useLedger is set, this will get the first N addresses for local
+      signing
+
+  --useLedger
+      Set it to use a ledger wallet
 
 DESCRIPTION
   Update the BLS public key for a Validator to be used in consensus.
@@ -532,6 +822,16 @@ DESCRIPTION
 
 EXAMPLES
   update-bls-key --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95 --blsKey 0x4fa3f67fc913878b068d1fa1cdddc54913d3bf988dbe5a36a20fa888f20d4894c408a6773f3d7bde11154f2a3076b700d345a42fd25a0e5e83f4db5586ac7979ac2053cd95d8f2efd3e959571ceccaa743e02cf4be3f5d7aaddb0b06fc9aff00 --blsPop 0xcdb77255037eb68897cd487fdd85388cbda448f617f874449d4b11588b0b7ad8ddc20d9bb450b513bb35664ea3923900
+
+FLAG DESCRIPTIONS
+  -n, --node=<value>  URL of the node to run commands against or an alias
+
+    Can be a full url like https://forno.celo.org or an alias. default:
+    http://localhost:8545
+    Alias options:
+    local, localhost => 'http://localhost:8545'
+    alfajores => Celo Alfajores Testnet,
+    mainnet, celo, forno => Celo Mainnet chain',
 ```
 
 _See code: [src/commands/validator/update-bls-public-key.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/update-bls-public-key.ts)_
