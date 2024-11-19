@@ -2,11 +2,9 @@ coverage:
   status:
     patch:
       default:
-        # basic
-        target: auto
-        threshold: 0%
-        base: auto
+        target: 80%
         only_pulls: true
+
 comment:
   layout: 'header, diff, flags, components'
 
