@@ -7,6 +7,7 @@ import { LocalWallet } from '@celo/wallet-local'
 import _TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
 import { Command, Flags } from '@oclif/core'
 import { CLIError } from '@oclif/core/lib/errors'
+import { FlagInput } from '@oclif/core/lib/interfaces/parser'
 import chalk from 'chalk'
 import net from 'net'
 import Web3 from 'web3'
@@ -16,16 +17,23 @@ import { getFeeCurrencyContractWrapper } from './utils/fee-currency'
 import { requireNodeIsSynced } from './utils/helpers'
 
 export abstract class BaseCommand extends Command {
-  static flags = {
+  static flags: FlagInput = {
     privateKey: Flags.string({
       char: 'k',
       description: 'Use a private key to sign local transactions with',
-      hidden: true,
+      hidden: false,
+      exclusive: ['useLedger', 'useAKV'],
     }),
     node: Flags.string({
       char: 'n',
-      description: "URL of the node to run commands against (defaults to 'http://localhost:8545')",
-      hidden: true,
+      summary: 'URL of the node to run commands against or an alias',
+      description: `Can be a full url like https://forno.celo.org or an alias. default: http://localhost:8545 
+      Alias options:
+      local, localhost => 'http://localhost:8545'
+      alfajores => Celo Alfajores Testnet, 
+      mainnet, celo, forno => Celo Mainnet chain',
+      `,
+      hidden: false,
       parse: async (nodeUrl: string) => {
         switch (nodeUrl) {
           case 'local':
@@ -36,6 +44,7 @@ export abstract class BaseCommand extends Command {
           case 'alfajores':
             return 'https://alfajores-forno.celo-testnet.org'
           case 'mainnet':
+          case 'celo':
           case 'forno':
             return 'https://forno.celo.org'
           default:
@@ -49,16 +58,19 @@ export abstract class BaseCommand extends Command {
     }),
     useLedger: Flags.boolean({
       default: false,
-      hidden: true,
+      hidden: false,
+      exclusive: ['privateKey'],
       description: 'Set it to use a ledger wallet',
     }),
     ledgerAddresses: Flags.integer({
+      dependsOn: ['useLedger'],
       default: 1,
-      hidden: true,
+      hidden: false,
       exclusive: ['ledgerCustomAddresses'],
       description: 'If --useLedger is set, this will get the first N addresses for local signing',
     }),
     ledgerCustomAddresses: Flags.string({
+      dependsOn: ['useLedger'],
       default: '[0]',
       hidden: true,
       exclusive: ['ledgerAddresses'],
@@ -75,6 +87,7 @@ export abstract class BaseCommand extends Command {
       description: 'If --useAKV is set, this is used to connect to the Azure KeyVault',
     }),
     ledgerConfirmAddress: Flags.boolean({
+      dependsOn: ['useLedger'],
       default: false,
       hidden: true,
       description: 'Set it to ask confirmation for the address of the transaction from the ledger',

@@ -24,6 +24,18 @@ export default class NewAccount extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
+    privateKey: {
+      ...BaseCommand.flags.privateKey,
+      hidden: true,
+    },
+    useLedger: {
+      ...BaseCommand.flags.useLedger,
+      hidden: true,
+    },
+    ledgerAddresses: {
+      ...BaseCommand.flags.useLedger,
+      hidden: true,
+    },
     passphrasePath: Flags.string({
       description:
         'Path to a file that contains the BIP39 passphrase to combine with the mnemonic specified using the mnemonicPath flag and the index specified using the addressIndex flag. Every passphrase generates a different private key and wallet address.',
