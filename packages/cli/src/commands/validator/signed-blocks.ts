@@ -63,7 +63,9 @@ export default class ValidatorSignedBlocks extends BaseCommand {
     const isCel2 = await this.isCel2()
 
     if (isCel2) {
-      this.error('This command is not available on L2 and might be removed in the future')
+      this.error(
+        'This command is not supported after CEL2 hardfork as the BFT consensus has been removed, see https://docs.celo.org/cel2/whats-changed/l1-l2 for more details'
+      )
     }
 
     const kit = await this.getKit()

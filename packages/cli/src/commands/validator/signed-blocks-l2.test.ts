@@ -12,7 +12,7 @@ testWithAnvilL2('validator:signed-blocks', (web3: Web3) => {
     await expect(
       testLocallyWithWeb3Node(ValidatorSignedBlocks, ['--signer', KNOWN_DEVCHAIN_VALIDATOR], web3)
     ).rejects.toMatchInlineSnapshot(
-      `[Error: This command is not available on L2 and might be removed in the future]`
+      `[Error: This command is not supported after CEL2 hardfork as the BFT consensus has been removed, see https://docs.celo.org/cel2/whats-changed/l1-l2 for more details]`
     )
   })
 })
