@@ -12,20 +12,43 @@ Output network node configuration
 
 ```
 USAGE
-  $ celocli config:get [--gasCurrency
-    0x1234567890123456789012345678901234567890] [--globalHelp]
+  $ celocli config:get [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
+    [--globalHelp]
 
 FLAGS
-  --gasCurrency=0x1234567890123456789012345678901234567890  Use a specific gas currency
-                                                            for transaction fees
-                                                            (defaults to CELO if no gas
-                                                            currency is supplied). It
-                                                            must be a whitelisted token.
-  --globalHelp                                              View all available global
-                                                            flags
+  -k, --privateKey=<value>
+      Use a private key to sign local transactions with
+
+  -n, --node=<value>
+      URL of the node to run commands against or an alias
+
+  --gasCurrency=0x1234567890123456789012345678901234567890
+      Use a specific gas currency for transaction fees (defaults to CELO if no gas
+      currency is supplied). It must be a whitelisted token.
+
+  --globalHelp
+      View all available global flags
+
+  --ledgerAddresses=<value>
+      [default: 1] If --useLedger is set, this will get the first N addresses for local
+      signing
+
+  --useLedger
+      Set it to use a ledger wallet
 
 DESCRIPTION
   Output network node configuration
+
+FLAG DESCRIPTIONS
+  -n, --node=<value>  URL of the node to run commands against or an alias
+
+    Can be a full url like https://forno.celo.org or an alias. default:
+    http://localhost:8545
+    Alias options:
+    local, localhost => 'http://localhost:8545'
+    alfajores => Celo Alfajores Testnet,
+    mainnet, celo, forno => Celo Mainnet chain',
 ```
 
 _See code: [src/commands/config/get.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/config/get.ts)_
@@ -36,12 +59,16 @@ Configure running node information for propagating transactions to network
 
 ```
 USAGE
-  $ celocli config:set [-n <value>] [--gasCurrency
-    0x1234567890123456789012345678901234567890] [--globalHelp]
+  $ celocli config:set [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
+    [--globalHelp]
 
 FLAGS
+  -k, --privateKey=<value>
+      Use a private key to sign local transactions with
+
   -n, --node=<value>
-      URL of the node to run commands against (defaults to 'http://localhost:8545')
+      URL of the node to run commands against or an alias
 
   --gasCurrency=0x1234567890123456789012345678901234567890
       Use a specific gas currency for transaction fees (defaults to CELO if no gas
@@ -49,6 +76,13 @@ FLAGS
 
   --globalHelp
       View all available global flags
+
+  --ledgerAddresses=<value>
+      [default: 1] If --useLedger is set, this will get the first N addresses for local
+      signing
+
+  --useLedger
+      Set it to use a ledger wallet
 
 DESCRIPTION
   Configure running node information for propagating transactions to network
@@ -69,6 +103,16 @@ EXAMPLES
   set --node ws://localhost:2500
 
   set --node <geth-location>/geth.ipc
+
+FLAG DESCRIPTIONS
+  -n, --node=<value>  URL of the node to run commands against or an alias
+
+    Can be a full url like https://forno.celo.org or an alias. default:
+    http://localhost:8545
+    Alias options:
+    local, localhost => 'http://localhost:8545'
+    alfajores => Celo Alfajores Testnet,
+    mainnet, celo, forno => Celo Mainnet chain',
 ```
 
 _See code: [src/commands/config/set.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/config/set.ts)_
