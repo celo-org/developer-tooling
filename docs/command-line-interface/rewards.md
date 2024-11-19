@@ -11,15 +11,21 @@ Show rewards information about a voter, registered Validator, or Validator Group
 
 ```
 USAGE
-  $ celocli rewards:show [--gasCurrency
-    0x1234567890123456789012345678901234567890] [--globalHelp] [--estimate] [--voter
-    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d] [--validator
-    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d] [--group
+  $ celocli rewards:show [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
+    [--globalHelp] [--estimate] [--voter 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d]
+    [--validator 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d] [--group
     0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d] [--slashing] [--epochs <value>]
     [--columns <value> | -x] [--filter <value>] [--no-header | [--csv | --no-truncate]]
     [--output csv|json|yaml |  | ] [--sort <value>]
 
 FLAGS
+  -k, --privateKey=<value>
+      Use a private key to sign local transactions with
+
+  -n, --node=<value>
+      URL of the node to run commands against or an alias
+
   -x, --extended
       show extra columns
 
@@ -48,6 +54,10 @@ FLAGS
   --group=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
       Validator Group to show rewards for
 
+  --ledgerAddresses=<value>
+      [default: 1] If --useLedger is set, this will get the first N addresses for local
+      signing
+
   --no-header
       hide table header from output
 
@@ -64,6 +74,9 @@ FLAGS
   --sort=<value>
       property to sort by (prepend '-' for descending)
 
+  --useLedger
+      Set it to use a ledger wallet
+
   --validator=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
       Validator to show rewards for
 
@@ -75,6 +88,16 @@ DESCRIPTION
 
 EXAMPLES
   show --voter 0x5409ed021d9299bf6814279a6a1411a7e866a631
+
+FLAG DESCRIPTIONS
+  -n, --node=<value>  URL of the node to run commands against or an alias
+
+    Can be a full url like https://forno.celo.org or an alias. default:
+    http://localhost:8545
+    Alias options:
+    local, localhost => 'http://localhost:8545'
+    alfajores => Celo Alfajores Testnet,
+    mainnet, celo, forno => Celo Mainnet chain',
 ```
 
 _See code: [src/commands/rewards/show.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/rewards/show.ts)_
