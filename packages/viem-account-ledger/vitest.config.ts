@@ -5,7 +5,7 @@ export default defineConfig({
   test: {
     coverage: {
       reporter: ['json', 'clover', 'lcov'],
-      exclude: ['**/data**', '**/tokens**', ...coverageConfigDefaults.exclude],
+      exclude: ['**/data**', '**/tokens**', '**/test-utils**', ...coverageConfigDefaults.exclude],
     },
   },
 })
