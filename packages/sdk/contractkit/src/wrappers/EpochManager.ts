@@ -48,6 +48,7 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
   isOnEpochProcess = proxyCall(this.contract.methods.isOnEpochProcess)
   isTimeForNextEpoch = proxyCall(this.contract.methods.isTimeForNextEpoch)
   getElectedAccounts = proxyCall(this.contract.methods.getElectedAccounts)
+  getElectedSigners = proxyCall(this.contract.methods.getElectedSigners)
   getEpochProcessingStatus = proxyCall(
     this.contract.methods.epochProcessing,
     undefined,

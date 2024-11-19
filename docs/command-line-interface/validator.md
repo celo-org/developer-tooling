@@ -727,7 +727,7 @@ FLAGS
       <options: csv|json|yaml>
 
   --signer=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
-      address of the signer to check if elected and validating
+      address of the signer to check if elected (and validating)
 
   --sort=<value>
       property to sort by (prepend '-' for descending)
@@ -740,7 +740,7 @@ FLAGS
       Set it to use a ledger wallet
 
   --validator=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
-      address of the validator to check if elected and validating
+      address of the validator to check if elected (and validating)
 
 DESCRIPTION
   Shows the consensus status of a validator. This command will show whether a validator

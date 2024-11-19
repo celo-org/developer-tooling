@@ -60,13 +60,19 @@ export default class ValidatorSignedBlocks extends BaseCommand {
   ]
 
   async run() {
+    const isCel2 = await this.isCel2()
+
+    if (isCel2) {
+      this.error(
+        'This command is not supported after CEL2 hardfork as the BFT consensus has been removed, see https://docs.celo.org/cel2/whats-changed/l1-l2 for more details'
+      )
+    }
+
     const kit = await this.getKit()
     const res = await this.parse(ValidatorSignedBlocks)
     const web3 = await this.getWeb3()
     const election = await kit.contracts.getElection()
-    const validators = await kit.contracts.getValidators()
-    const epochSize = await validators.getEpochSize()
-    const electionCache = new ElectionResultsCache(election, epochSize.toNumber())
+    const electionCache = new ElectionResultsCache(kit, election, isCel2)
 
     if (res.flags.follow) {
       console.info('Follow mode, press q or ctrl-c to quit')
