@@ -1,5 +1,6 @@
-import { recoverTransaction } from '@celo/wallet-base'
+import { recoverMessageSigner, recoverTransaction } from '@celo/wallet-base'
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
+import { recoverMessageAddress } from 'viem'
 import { beforeAll, describe, expect, it, test, vi } from 'vitest'
 import { ledgerToAccount } from './ledger-to-account.js'
 import { mockLedger, TEST_CHAIN_ID, test_ledger } from './test-utils.js'
@@ -56,7 +57,7 @@ syntheticDescribe('ledgerToAccount (mocked ledger)', () => {
         const [decoded, signer] = recoverTransaction(txHash)
         expect(signer.toLowerCase()).toBe(account.address.toLowerCase())
         // @ts-expect-error
-        expect(decoded.yParity).toMatchInlineSnapshot(`0`)
+        expect(decoded.yParity).toBe(0)
       })
       test('v=1', async () => {
         const txHash = await account.signTransaction({ ...txData, nonce: 100 })
@@ -66,7 +67,7 @@ syntheticDescribe('ledgerToAccount (mocked ledger)', () => {
         const [decoded, signer] = recoverTransaction(txHash)
         expect(signer.toLowerCase()).toBe(account.address.toLowerCase())
         // @ts-expect-error
-        expect(decoded.yParity).toMatchInlineSnapshot(`1`)
+        expect(decoded.yParity).toBe(1)
       })
     })
 
@@ -83,7 +84,7 @@ syntheticDescribe('ledgerToAccount (mocked ledger)', () => {
         const [decoded, signer] = recoverTransaction(txHash)
         expect(signer.toLowerCase()).toBe(account.address.toLowerCase())
         // @ts-expect-error
-        expect(decoded.yParity).toMatchInlineSnapshot(`0`)
+        expect(decoded.yParity).toBe(0)
       })
       test('v=1', async () => {
         const account = await ledgerToAccount({
@@ -97,7 +98,7 @@ syntheticDescribe('ledgerToAccount (mocked ledger)', () => {
         const [decoded, signer] = recoverTransaction(txHash)
         expect(signer.toLowerCase()).toBe(account.address.toLowerCase())
         // @ts-expect-error
-        expect(decoded.yParity).toMatchInlineSnapshot(`1`)
+        expect(decoded.yParity).toBe(1)
       })
     })
 
@@ -145,9 +146,14 @@ syntheticDescribe('ledgerToAccount (mocked ledger)', () => {
   })
 
   it('signs messages', async () => {
-    await expect(account.signMessage({ message: 'Hello World' })).resolves.toMatchInlineSnapshot(
-      `"0x2f9a547e69592e98114263c08c6f7a6e6cd2f991fc29f442947179419233fe9641c8e4c86975a2722b54313e47768d2ffe2608c497ff9fe7f8c61b12e6257e571c"`
+    const message = 'Hello World clabs'
+    const signedMessage = await account.signMessage({ message })
+    expect((await recoverMessageAddress({ message, signature: signedMessage })).toLowerCase()).toBe(
+      account.address.toLowerCase()
     )
+    expect(
+      recoverMessageSigner(`0x${Buffer.from(message).toString('hex')}`, signedMessage).toLowerCase()
+    ).toBe(account.address.toLowerCase())
   })
 
   it('signs typed data', async () => {
@@ -197,18 +203,18 @@ hardwareDescribe('ledgerToAccount (device ledger)', () => {
 
     describe('eip1559', async () => {
       test('v=0', async () => {
-        const txHash = await account.signTransaction(txData)
+        const txHash = await account.signTransaction({ ...txData, nonce: 5 })
         const [decoded, signer] = recoverTransaction(txHash)
         expect(signer.toLowerCase()).toBe(account.address.toLowerCase())
         // @ts-expect-error
-        expect(decoded.yParity).toMatchInlineSnapshot(`1`)
+        expect(decoded.yParity).toBe(0)
       }, 20_000)
       test('v=1', async () => {
         const txHash = await account.signTransaction({ ...txData, nonce: 100 })
         const [decoded, signer] = recoverTransaction(txHash)
         expect(signer.toLowerCase()).toBe(account.address.toLowerCase())
         // @ts-expect-error
-        expect(decoded.yParity).toMatchInlineSnapshot(`1`)
+        expect(decoded.yParity).toBe(1)
       }, 20_000)
     })
 
@@ -218,31 +224,39 @@ hardwareDescribe('ledgerToAccount (device ledger)', () => {
           transport: await transport,
         })
         const cUSDa = '0x874069fa1eb16d44d622f2e0ca25eea172369bc1'
+        // NOTE: this is device-specific
+        // play with the nonce to produce a different tx with a yParity==0
         const txHash = await account.signTransaction({ ...txData, feeCurrency: cUSDa, nonce: 0 })
         const [decoded, signer] = recoverTransaction(txHash)
         expect(signer.toLowerCase()).toBe(account.address.toLowerCase())
         // @ts-expect-error
-        expect(decoded.yParity).toMatchInlineSnapshot(`0`)
+        expect(decoded.yParity).toBe(0)
       }, 20_000)
       test('v=1', async () => {
         const account = await ledgerToAccount({
           transport: await transport,
         })
         const cUSDa = '0x874069fa1eb16d44d622f2e0ca25eea172369bc1'
+        // NOTE: this is device-specific
+        // play with the nonce to produce a different tx with a yParity==1
         const txHash = await account.signTransaction({ ...txData, feeCurrency: cUSDa, nonce: 100 })
         const [decoded, signer] = recoverTransaction(txHash)
         expect(signer.toLowerCase()).toBe(account.address.toLowerCase())
         // @ts-expect-error
-        expect(decoded.yParity).toMatchInlineSnapshot(`1`)
+        expect(decoded.yParity).toBe(1)
       }, 20_000)
     })
   })
 
   it('signs messages', async () => {
-    // TODO: refactor to check signer rather than snapshot to be device-agnostic
-    await expect(account.signMessage({ message: 'Hello World' })).resolves.toMatchInlineSnapshot(
-      `"0x15859cf38f7b58d98e330b1d105add503a31c88f02104d43b4f9cc7cb08dbb483e51abc79881d0f8562073ad57dc60a4a567ddedc1176bf94d4dccc69fce09c51c"`
+    const message = 'Hello World clabs'
+    const signedMessage = await account.signMessage({ message })
+    expect((await recoverMessageAddress({ message, signature: signedMessage })).toLowerCase()).toBe(
+      account.address.toLowerCase()
     )
+    expect(
+      recoverMessageSigner(`0x${Buffer.from(message).toString('hex')}`, signedMessage).toLowerCase()
+    ).toBe(account.address.toLowerCase())
   }, 20_000)
 
   it('signs typed data', async () => {

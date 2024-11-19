@@ -6,8 +6,8 @@ import * as ethUtil from '@ethereumjs/util'
 import { createVerify, VerifyPublicKeyInput } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
-import { Hex } from 'viem'
-import { privateKeyToAccount, privateKeyToAddress } from 'viem/accounts'
+import { Hex, parseSignature } from 'viem'
+import { privateKeyToAccount, privateKeyToAddress, signMessage } from 'viem/accounts'
 import { legacyLedgerPublicKeyHex } from './data.js'
 import { DEFAULT_DERIVATION_PATH } from './ledger-to-account.js'
 import { meetsVersionRequirements, MIN_VERSION_EIP1559 } from './utils.js'
@@ -124,17 +124,11 @@ export const test_ledger = {
   },
   signPersonalMessage: async (derivationPath: string, data: string) => {
     if (ledgerAddresses[derivationPath]) {
-      const dataBuff = ethUtil.toBuffer(ensureLeading0x(data))
-      const msgHashBuff = ethUtil.hashPersonalMessage(dataBuff)
-
-      const trimmedKey = trimLeading0x(ledgerAddresses[derivationPath].privateKey)
-      const pkBuffer = Buffer.from(trimmedKey, 'hex')
-      const signature = ethUtil.ecsign(msgHashBuff, pkBuffer)
-      return {
-        v: Number(signature.v),
-        r: signature.r.toString('hex'),
-        s: signature.s.toString('hex'),
-      }
+      const signedMessage = await signMessage({
+        privateKey: ledgerAddresses[derivationPath].privateKey,
+        message: { raw: ensureLeading0x(data) },
+      })
+      return parseSignature(signedMessage)
     }
     throw new Error('Invalid Path')
   },
