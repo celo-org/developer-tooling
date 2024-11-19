@@ -3,8 +3,6 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "lib",
-    "moduleResolution": "Node16",
-    "module": "Node16",
     "declaration": true,
     "types": ["vitest/globals"]
   },

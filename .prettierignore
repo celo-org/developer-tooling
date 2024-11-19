@@ -7,6 +7,7 @@ package.json
 
 packages/**/dist
 packages/**/lib
+packages/**/lib-es
 
 # Needed because we have packages/celotool/src/lib
 !packages/celotool/src/**

@@ -1,13 +1,13 @@
 import { ensureLeading0x, normalizeAddressWith0x, trimLeading0x } from '@celo/base'
+import Eth from '@celo/hw-app-eth'
 import { generateTypedDataHash } from '@celo/utils/lib/sign-typed-data-utils.js'
 import { getHashFromEncoded, signTransaction } from '@celo/wallet-base'
 import * as ethUtil from '@ethereumjs/util'
-import Eth from '@celo/hw-app-eth'
 import { createVerify, VerifyPublicKeyInput } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
-import { Hex } from 'viem'
-import { privateKeyToAccount, privateKeyToAddress } from 'viem/accounts'
+import { Hex, parseSignature } from 'viem'
+import { privateKeyToAccount, privateKeyToAddress, signMessage } from 'viem/accounts'
 import { legacyLedgerPublicKeyHex } from './data.js'
 import { DEFAULT_DERIVATION_PATH } from './ledger-to-account.js'
 import { meetsVersionRequirements, MIN_VERSION_EIP1559 } from './utils.js'
@@ -90,117 +90,122 @@ const TYPED_DATA = {
   },
 }
 
-interface Config extends Partial<Awaited<ReturnType<Eth.default['getAppConfiguration']>>> {}
+interface Config extends Partial<Awaited<ReturnType<Eth['getAppConfiguration']>>> {}
+
+export const test_ledger = {
+  isMock: true,
+  getAddress: async (derivationPath: string) => {
+    if (ledgerAddresses[derivationPath]) {
+      const { address, privateKey } = ledgerAddresses[derivationPath]
+      return {
+        address,
+        derivationPath,
+        publicKey: privateKeyToAccount(privateKey).publicKey,
+      }
+    }
+    return {
+      address: '',
+      derivationPath,
+      publicKey: '',
+    }
+  },
+  signTransaction: async (derivationPath: string, data: string) => {
+    if (ledgerAddresses[derivationPath]) {
+      const hash = getHashFromEncoded(ensureLeading0x(data))
+      const { r, s, v } = signTransaction(hash, ledgerAddresses[derivationPath].privateKey)
+
+      return {
+        v: v.toString(16),
+        r: r.toString('hex'),
+        s: s.toString('hex'),
+      }
+    }
+    throw new Error('Invalid Path')
+  },
+  signPersonalMessage: async (derivationPath: string, data: string) => {
+    if (ledgerAddresses[derivationPath]) {
+      const signedMessage = await signMessage({
+        privateKey: ledgerAddresses[derivationPath].privateKey,
+        message: { raw: ensureLeading0x(data) },
+      })
+      return parseSignature(signedMessage)
+    }
+    throw new Error('Invalid Path')
+  },
+  signEIP712HashedMessage: async (
+    derivationPath: string,
+    _domainSeparator: string,
+    _structHash: string
+  ) => {
+    const messageHash = generateTypedDataHash(TYPED_DATA)
+
+    const trimmedKey = trimLeading0x(ledgerAddresses[derivationPath].privateKey)
+    const pkBuffer = Buffer.from(trimmedKey, 'hex')
+    const signature = ethUtil.ecsign(messageHash, pkBuffer)
+    return {
+      v: Number(signature.v),
+      r: signature.r.toString('hex'),
+      s: signature.s.toString('hex'),
+    }
+  },
+  getAppConfiguration: async () => {
+    return {
+      arbitraryDataEnabled: 1,
+      version: MIN_VERSION_EIP1559,
+      erc20ProvisioningNecessary: 1,
+      starkEnabled: 1,
+      starkv2Supported: 1,
+    }
+  },
+  provideERC20TokenInformation: async (tokenData: string) => {
+    let pubkey: VerifyPublicKeyInput
+    const version = (await test_ledger.getAppConfiguration()).version
+    if (
+      meetsVersionRequirements(version, {
+        minimum: MIN_VERSION_EIP1559,
+      })
+    ) {
+      // verify with new pubkey
+      const pubDir = dirname(require.resolve('@celo/ledger-token-signer'))
+      pubkey = { key: readFileSync(join(pubDir, 'pubkey.pem')).toString() }
+    } else {
+      // verify with oldpubkey
+      pubkey = { key: legacyLedgerPublicKeyHex }
+    }
+
+    const verify = createVerify('sha256')
+    const tokenDataBuf = Buffer.from(trimLeading0x(tokenData), 'hex')
+    const BASE_DATA_LENGTH =
+      20 + // contract address, 20 bytes
+      4 + // decimals, uint32, 4 bytes
+      4 // chainId, uint32, 4 bytes
+    // first byte of data is the ticker length, so we add that to base data length
+    const dataLen = BASE_DATA_LENGTH + tokenDataBuf.readUint8(0)
+
+    // start at 1 since the first byte was just informative
+    const data = tokenDataBuf.slice(1, dataLen + 1)
+    verify.update(data)
+    verify.end()
+    // read from end of data til the end
+    const signature = tokenDataBuf.slice(dataLen + 1)
+    const verified = verify.verify(pubkey, signature)
+
+    if (!verified) {
+      throw new Error('couldnt verify data sent to MockLedger')
+    }
+    return verified
+  },
+} as unknown as Eth
 
 export const mockLedger = (config?: Config) => {
-  const _ledger = {
-    getAddress: async (derivationPath: string) => {
-      if (ledgerAddresses[derivationPath]) {
-        const { address, privateKey } = ledgerAddresses[derivationPath]
-        return {
-          address,
-          derivationPath,
-          publicKey: privateKeyToAccount(privateKey).publicKey,
-        }
-      }
-      return {
-        address: '',
-        derivationPath,
-        publicKey: '',
-      }
-    },
-    signTransaction: async (derivationPath: string, data: string) => {
-      if (ledgerAddresses[derivationPath]) {
-        const hash = getHashFromEncoded(ensureLeading0x(data))
-        const { r, s, v } = signTransaction(hash, ledgerAddresses[derivationPath].privateKey)
+  test_ledger.getAppConfiguration = () =>
+    Promise.resolve({
+      arbitraryDataEnabled: config?.arbitraryDataEnabled ?? 1,
+      version: config?.version ?? MIN_VERSION_EIP1559,
+      erc20ProvisioningNecessary: config?.erc20ProvisioningNecessary ?? 1,
+      starkEnabled: config?.starkEnabled ?? 1,
+      starkv2Supported: config?.starkv2Supported ?? 1,
+    })
 
-        return {
-          v: v.toString(16),
-          r: r.toString('hex'),
-          s: s.toString('hex'),
-        }
-      }
-      throw new Error('Invalid Path')
-    },
-    signPersonalMessage: async (derivationPath: string, data: string) => {
-      if (ledgerAddresses[derivationPath]) {
-        const dataBuff = ethUtil.toBuffer(ensureLeading0x(data))
-        const msgHashBuff = ethUtil.hashPersonalMessage(dataBuff)
-
-        const trimmedKey = trimLeading0x(ledgerAddresses[derivationPath].privateKey)
-        const pkBuffer = Buffer.from(trimmedKey, 'hex')
-        const signature = ethUtil.ecsign(msgHashBuff, pkBuffer)
-        return {
-          v: Number(signature.v),
-          r: signature.r.toString('hex'),
-          s: signature.s.toString('hex'),
-        }
-      }
-      throw new Error('Invalid Path')
-    },
-    signEIP712HashedMessage: async (
-      derivationPath: string,
-      _domainSeparator: string,
-      _structHash: string
-    ) => {
-      const messageHash = generateTypedDataHash(TYPED_DATA)
-
-      const trimmedKey = trimLeading0x(ledgerAddresses[derivationPath].privateKey)
-      const pkBuffer = Buffer.from(trimmedKey, 'hex')
-      const signature = ethUtil.ecsign(messageHash, pkBuffer)
-      return {
-        v: Number(signature.v),
-        r: signature.r.toString('hex'),
-        s: signature.s.toString('hex'),
-      }
-    },
-    getAppConfiguration: async () => {
-      return {
-        arbitraryDataEnabled: config?.arbitraryDataEnabled ?? 1,
-        version: config?.version ?? MIN_VERSION_EIP1559,
-        erc20ProvisioningNecessary: config?.erc20ProvisioningNecessary ?? 1,
-        starkEnabled: config?.starkEnabled ?? 1,
-        starkv2Supported: config?.starkv2Supported ?? 1,
-      }
-    },
-    provideERC20TokenInformation: async (tokenData: string) => {
-      let pubkey: VerifyPublicKeyInput
-      const version = (await _ledger.getAppConfiguration()).version
-      if (
-        meetsVersionRequirements(version, {
-          minimum: MIN_VERSION_EIP1559,
-        })
-      ) {
-        // verify with new pubkey
-        const pubDir = dirname(require.resolve('@celo/ledger-token-signer'))
-        pubkey = { key: readFileSync(join(pubDir, 'pubkey.pem')).toString() }
-      } else {
-        // verify with oldpubkey
-        pubkey = { key: legacyLedgerPublicKeyHex }
-      }
-
-      const verify = createVerify('sha256')
-      const tokenDataBuf = Buffer.from(trimLeading0x(tokenData), 'hex')
-      const BASE_DATA_LENGTH =
-        20 + // contract address, 20 bytes
-        4 + // decimals, uint32, 4 bytes
-        4 // chainId, uint32, 4 bytes
-      // first byte of data is the ticker length, so we add that to base data length
-      const dataLen = BASE_DATA_LENGTH + tokenDataBuf.readUint8(0)
-
-      // start at 1 since the first byte was just informative
-      const data = tokenDataBuf.slice(1, dataLen + 1)
-      verify.update(data)
-      verify.end()
-      // read from end of data til the end
-      const signature = tokenDataBuf.slice(dataLen + 1)
-      const verified = verify.verify(pubkey, signature)
-
-      if (!verified) {
-        throw new Error('couldnt verify data sent to MockLedger')
-      }
-      return verified
-    },
-  } as unknown as Eth.default
-  return _ledger
+  return test_ledger
 }

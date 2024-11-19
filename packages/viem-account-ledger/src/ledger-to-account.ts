@@ -1,7 +1,7 @@
 import { CELO_DERIVATION_PATH_BASE, trimLeading0x } from '@celo/base'
 import { ensureLeading0x } from '@celo/base/lib/address.js'
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
-import { hashMessage, serializeSignature } from 'viem'
+import { serializeSignature } from 'viem'
 import { LocalAccount, toAccount } from 'viem/accounts'
 import { CeloTransactionSerializable, serializeTransaction } from 'viem/celo'
 
@@ -27,7 +27,7 @@ export async function ledgerToAccount({
   derivationPathIndex = 0,
   baseDerivationPath = DEFAULT_DERIVATION_PATH,
 }: {
-  transport: TransportNodeHid.default
+  transport: TransportNodeHid
   derivationPathIndex?: number | string
   baseDerivationPath?: string
 }): Promise<LedgerAccount> {
@@ -46,17 +46,30 @@ export async function ledgerToAccount({
       })
 
       const hash = serializeTransaction(transaction)
-      const { r, s, v } = await ledger!.signTransaction(derivationPath, trimLeading0x(hash), null)
+      let { r, s, v: _v } = await ledger!.signTransaction(derivationPath, trimLeading0x(hash), null)
+      if (typeof _v === 'string' && (_v === '' || _v === '0x')) {
+        _v = '0x0'
+      }
+      let v: bigint
+      try {
+        v = BigInt(typeof _v === 'string' ? ensureLeading0x(_v) : _v)
+      } catch (err) {
+        throw new Error(
+          `Ledger signature \`v\` was malformed and couldn't be parsed \`${_v}\` (Original error: ${err})`
+        )
+      }
       return serializeTransaction(transaction, {
         r: ensureLeading0x(r),
         s: ensureLeading0x(s),
-        v: BigInt(ensureLeading0x(v)),
+        v,
       })
     },
 
     async signMessage({ message }) {
-      const hash = hashMessage(message)
-      const { r, s, v } = await ledger!.signPersonalMessage(derivationPath, trimLeading0x(hash))
+      const { r, s, v } = await ledger!.signPersonalMessage(
+        derivationPath,
+        Buffer.from(message as string).toString('hex')
+      )
       return serializeSignature({
         r: ensureLeading0x(r),
         s: ensureLeading0x(s),

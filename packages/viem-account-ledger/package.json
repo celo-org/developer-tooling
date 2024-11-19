@@ -3,10 +3,9 @@
   "version": "1.0.0-beta.1",
   "description": "Helper library to make ledger<->viem interactions easier",
   "type": "module",
-  "exports": {
-    ".": "./lib/index.js"
-  },
-  "types": "./lib/index.d.ts",
+  "main": "lib/index.js",
+  "module": "lib-es/index.js",
+  "types": "lib/index.d.ts",
   "author": "cLabs",
   "license": "Apache-2.0",
   "homepage": "https://docs.celo.org/developer/tools",
@@ -18,12 +17,14 @@
     "ledger"
   ],
   "scripts": {
-    "build": "yarn run --top-level tsc -b .",
-    "clean": "yarn run --top-level tsc -b . --clean",
-    "docs": "yarn run --top-level typedoc",
+    "build": "yarn build:cjs && yarn build:esm",
+    "build:cjs": "yarn --top-level run tsc -m commonjs",
+    "build:esm": "yarn --top-level run tsc -m ES6 --outDir lib-es",
+    "clean": "yarn --top-level run tsc -b . --clean && yarn run rimraf lib lib-es",
+    "docs": "yarn --top-level run typedoc",
     "test": "yarn run vitest",
-    "lint": "yarn run --top-level eslint -c .eslintrc.cjs ",
-    "prepublishOnly": "yarn build"
+    "lint": "yarn --top-level run eslint -c .eslintrc.cjs ",
+    "prepublishOnly": "yarn clean && yarn build"
   },
   "peerDependencies": {
     "@ledgerhq/hw-transport-node-hid": "^6.x",
@@ -45,6 +46,7 @@
     "@ledgerhq/hw-transport-node-hid": "^6.29.5",
     "@vitest/coverage-v8": "2.1.2",
     "dotenv": "^8.2.0",
+    "rimraf": "^4.4.1",
     "viem": "^2.21.14",
     "vitest": "^2.1.2"
   },
