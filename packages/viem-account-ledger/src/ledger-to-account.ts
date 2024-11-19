@@ -48,7 +48,6 @@ export async function ledgerToAccount({
       const hash = serializeTransaction(transaction)
       let { r, s, v: _v } = await ledger!.signTransaction(derivationPath, trimLeading0x(hash), null)
       if (typeof _v === 'string' && (_v === '' || _v === '0x')) {
-        console.warn(`Ledger signature \`v\` was malformed \`${_v}\`. Replaced with "0x0"`)
         _v = '0x0'
       }
       let v: bigint

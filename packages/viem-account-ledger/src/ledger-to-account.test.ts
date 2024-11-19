@@ -102,7 +102,7 @@ syntheticDescribe('ledgerToAccount (mocked ledger)', () => {
     })
 
     describe('malformed v values', () => {
-      test('empty string', async () => {
+      test('recoverable formats', async () => {
         const test_vs_0_and_1 = [
           [0, '', '00', '0x', '0x0', '0x00', '0x1b', 27], // yParity 0
           [1, '1', '0x1', '0x01', '01', '0x1c', 28], // vParity 1
@@ -123,6 +123,22 @@ syntheticDescribe('ledgerToAccount (mocked ledger)', () => {
             // @ts-expect-error
             expect(recovered.yParity).toBe(+expectedyParity)
           }
+        }
+      })
+      test('unrecoverable', async () => {
+        const test_vs = [NaN, 'asdf', null, undefined, {}]
+        for (const v of test_vs) {
+          vi.spyOn(test_ledger, 'signTransaction').mockImplementationOnce(() =>
+            // @ts-expect-error
+            Promise.resolve({
+              v,
+              r: '0x1',
+              s: '0x1',
+            })
+          )
+          await expect(account.signTransaction(txData)).rejects.toThrowError(
+            "Ledger signature `v` was malformed and couldn't be parsed"
+          )
         }
       })
     })
