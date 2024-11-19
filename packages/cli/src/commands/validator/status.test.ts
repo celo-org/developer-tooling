@@ -1,5 +1,5 @@
 import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
-import { IstanbulUtils } from '@celo/utils/lib/istanbul'
+import { IstanbulUtils } from '@celo/utils'
 import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'

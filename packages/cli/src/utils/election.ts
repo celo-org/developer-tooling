@@ -13,12 +13,12 @@ export class ElectionResultsCache {
 
   constructor(
     private readonly kit: ContractKit,
-    private readonly isCel2: boolean,
     private readonly electionWrapper: ElectionWrapper,
+    private readonly isCel2: boolean,
     private readonly epochManagerWrapper?: EpochManagerWrapper
   ) {
     if (isCel2 && !epochManagerWrapper) {
-      throw new Error('EpochManagerWrapper is required for L2')
+      throw new Error('EpochManagerWrapper is required')
     }
   }
 

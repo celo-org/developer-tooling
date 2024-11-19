@@ -119,8 +119,8 @@ export default class ValidatorStatus extends BaseCommand {
     const epochSize = await kit.getEpochSize()
     const electionCache = new ElectionResultsCache(
       kit,
-      isCel2,
       election,
+      isCel2,
       isCel2 ? await kit.contracts.getEpochManager() : undefined
     )
     let frontRunnerSigners: string[] = []

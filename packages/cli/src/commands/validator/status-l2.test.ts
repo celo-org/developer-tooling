@@ -18,7 +18,11 @@ testWithAnvilL2('validator:status', (web3: Web3) => {
   })
 
   it('displays status of the validator', async () => {
-    await testLocallyWithWeb3Node(Status, ['--validator', KNOWN_DEVCHAIN_VALIDATOR, '--csv'], web3)
+    await testLocallyWithWeb3Node(
+      Status,
+      ['--validator', KNOWN_DEVCHAIN_VALIDATOR, '--csv', '--start', '349'],
+      web3
+    )
 
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [
@@ -51,7 +55,7 @@ testWithAnvilL2('validator:status', (web3: Web3) => {
   })
 
   it('displays status for all validators', async () => {
-    await testLocallyWithWeb3Node(Status, ['--all', '--csv'], web3)
+    await testLocallyWithWeb3Node(Status, ['--all', '--csv', '--start', '349'], web3)
 
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`[]`)
     expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`

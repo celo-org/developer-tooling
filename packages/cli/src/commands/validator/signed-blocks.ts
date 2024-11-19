@@ -70,7 +70,7 @@ export default class ValidatorSignedBlocks extends BaseCommand {
     const res = await this.parse(ValidatorSignedBlocks)
     const web3 = await this.getWeb3()
     const election = await kit.contracts.getElection()
-    const electionCache = new ElectionResultsCache(kit, isCel2, election)
+    const electionCache = new ElectionResultsCache(kit, election, isCel2)
 
     if (res.flags.follow) {
       console.info('Follow mode, press q or ctrl-c to quit')
