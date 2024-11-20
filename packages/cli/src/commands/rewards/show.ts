@@ -89,18 +89,22 @@ export default class Show extends BaseCommand {
         const electedValidators = await election.getElectedValidators(epochNumber)
         if (!filter) {
           const useBlockNumber = !res.flags.estimate
-          const epochGroupVoterRewards = await election.getGroupVoterRewards(
-            epochNumber,
-            useBlockNumber
-          )
-          groupVoterRewards = groupVoterRewards.concat(
-            epochGroupVoterRewards.map(
-              (e: GroupVoterReward): ExplainedGroupVoterReward => ({
-                ...e,
-                validators: filterValidatorsByGroup(electedValidators, e.group.address),
-              })
+          try {
+            const epochGroupVoterRewards = await election.getGroupVoterRewards(
+              epochNumber,
+              useBlockNumber
             )
-          )
+            groupVoterRewards = groupVoterRewards.concat(
+              epochGroupVoterRewards.map(
+                (e: GroupVoterReward): ExplainedGroupVoterReward => ({
+                  ...e,
+                  validators: filterValidatorsByGroup(electedValidators, e.group.address),
+                })
+              )
+            )
+          } catch (err) {
+            throw decorateMissingTrieError(err)
+          }
         } else if (res.flags.voter) {
           const address = res.flags.voter
           try {
