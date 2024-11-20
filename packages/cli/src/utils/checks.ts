@@ -142,6 +142,18 @@ class CheckBuilder {
     return this
   }
 
+  async addAsyncConditionalCheck(
+    name: string,
+    runCondition: () => Promise<boolean>,
+    predicate: () => Promise<boolean> | boolean,
+    errorMessage?: string
+  ) {
+    if (await runCondition()) {
+      return this.addCheck(name, predicate, errorMessage)
+    }
+    return this
+  }
+
   isApprover = (account: Address) =>
     this.addCheck(
       `${account} is approver address`,
@@ -494,12 +506,41 @@ class CheckBuilder {
 
   validatorDeregisterDurationPassed = () => {
     return this.addCheck(
-      `Enough time has passed since the account was removed from a validator group`,
+      `Enough time has passed since the account was removed from a validator group?`,
       this.withValidators(async (validators, _signer, account) => {
         const { lastRemovedFromGroupTimestamp } =
           await validators.getValidatorMembershipHistoryExtraData(account)
         const { duration } = await validators.getValidatorLockedGoldRequirements()
-        return duration.toNumber() + lastRemovedFromGroupTimestamp < Date.now() / 1000
+        const waitPeriodEnd = lastRemovedFromGroupTimestamp + duration.toNumber()
+        const isDeregisterable = waitPeriodEnd < Date.now() / 1000
+        if (!isDeregisterable) {
+          console.warn(
+            `Validator will be able to be deregistered: ${new Date(
+              waitPeriodEnd * 1000
+            ).toUTCString()}`
+          )
+        }
+        return isDeregisterable
+      })
+    )
+  }
+  validatorGroupDeregisterDurationPassed = () => {
+    return this.addAsyncConditionalCheck(
+      'Enough time has passed since the validator group removed its last member? ',
+      this.withValidators(async (validators, _signer, account) => {
+        return validators.isValidatorGroup(account)
+      }),
+      this.withValidators(async (validators, _signer, account) => {
+        const group = await validators.getValidatorGroup(account)
+        const { duration } = await validators.getGroupLockedGoldRequirements()
+        const waitPeriodEnd = group.membersUpdated + duration.toNumber()
+        const isDeregisterable = waitPeriodEnd < Date.now() / 1000
+        if (!isDeregisterable) {
+          console.warn(
+            `Group will be able to be deregistered: ${new Date(waitPeriodEnd * 1000).toUTCString()}`
+          )
+        }
+        return isDeregisterable
       })
     )
   }

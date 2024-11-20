@@ -2,7 +2,7 @@ import { Flags } from '@oclif/core'
 import prompts from 'prompts'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displaySendTx, huamnizeRequirements } from '../../utils/cli'
 import { CustomArgs, CustomFlags } from '../../utils/command'
 
 export default class ValidatorGroupMembers extends BaseCommand {
@@ -57,11 +57,13 @@ export default class ValidatorGroupMembers extends BaseCommand {
     const validatorGroup = await validators.signerToAccount(res.flags.from)
     if (res.flags.accept) {
       if (!res.flags.yes) {
+        const requirements = await validators.getGroupLockedGoldRequirements()
+        const { requiredCelo, requiredDays } = huamnizeRequirements(requirements)
         const response = await prompts({
           type: 'confirm',
           name: 'confirmation',
-          message:
-            'Are you sure you want to accept this member?\nValidator Group Locked Gold requirements increase per member. Adding an additional member could result in an increase in Locked Gold requirements of up to 10,000 CELO for 180 days. (y/n)',
+          message: `Are you sure you want to accept this member?
+  Validator Group Locked Gold requirements increase per member. Adding an additional member could result in an increase in Locked Gold requirements of up to ${requiredCelo} CELO for ${requiredDays} days. (y/n)`,
         })
 
         if (!response.confirmation) {

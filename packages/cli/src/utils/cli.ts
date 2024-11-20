@@ -6,11 +6,13 @@ import {
   parseDecodedParams,
   TransactionResult,
 } from '@celo/connect'
+import { LockedGoldRequirements } from '@celo/contractkit/lib/wrappers/Validators'
 import { Errors, ux } from '@oclif/core'
 import { TransactionResult as SafeTransactionResult } from '@safe-global/types-kit'
 import BigNumber from 'bignumber.js'
 import chalk from 'chalk'
 import { ethers } from 'ethers'
+import { formatEther } from 'ethers/lib/utils'
 import { convertEthersToCeloTx } from './mento-broker-adaptor'
 
 const CLIError = Errors.CLIError
@@ -174,4 +176,10 @@ export async function binaryPrompt(promptMessage: string, defaultToNo?: boolean)
 
 export function getCurrentTimestamp() {
   return Math.floor(Date.now() / 1000)
+}
+
+export function huamnizeRequirements(requirements: LockedGoldRequirements) {
+  const requiredCelo = formatEther(requirements.value.toString())
+  const requiredDays = requirements.duration.toNumber() / (60 * 60 * 24)
+  return { requiredCelo, requiredDays }
 }
