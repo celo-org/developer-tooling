@@ -179,7 +179,7 @@ export function getCurrentTimestamp() {
 }
 
 export function huamnizeRequirements(requirements: LockedGoldRequirements) {
-  const requiredCelo = formatEther(requirements.value.toString())
+  const requiredCelo = formatEther(requirements.value.toFixed())
   const requiredDays = requirements.duration.toNumber() / (60 * 60 * 24)
   return { requiredCelo, requiredDays }
 }
