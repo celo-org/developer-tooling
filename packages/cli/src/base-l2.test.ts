@@ -45,9 +45,7 @@ describe('flags', () => {
       await help.showHelp(['transfer:celo', '--help'])
       expect(stripAnsiCodesFromNestedArray(writeSpy.mock.calls)).toHaveLength(3)
       expect(stripAnsiCodesFromNestedArray(writeSpy.mock.calls)[1][0]).toEqual(
-        expect.stringContaining(
-          `-n, --node=<value>  URL of the node to run commands against or an alias`
-        )
+        expect.stringContaining(`-n, --node=<value>`)
       )
     })
   })

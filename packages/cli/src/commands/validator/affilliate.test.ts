@@ -43,7 +43,7 @@ testWithAnvilL2('validator:affiliate', (web3: Web3) => {
   })
 
   test('affiliates validator with a group', async () => {
-    const logMock = jest.spyOn(console, 'log')
+    const logMock = jest.spyOn(console, 'log').mockClear()
 
     await testLocallyWithWeb3Node(
       ValidatorAffiliate,

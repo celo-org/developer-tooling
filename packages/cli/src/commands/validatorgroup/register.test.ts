@@ -24,8 +24,8 @@ testWithAnvilL2('validatorgroup:register cmd', (web3: Web3) => {
   })
 
   it('registers a group', async () => {
-    const logSpy = jest.spyOn(console, 'log')
-    const writeMock = jest.spyOn(ux.write, 'stdout')
+    const logSpy = jest.spyOn(console, 'log').mockClear()
+    const writeMock = jest.spyOn(ux.write, 'stdout').mockClear()
 
     const accounts = await web3.eth.getAccounts()
 

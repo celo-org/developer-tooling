@@ -29,8 +29,8 @@ testWithAnvilL2('validatorgroup:deregister cmd', (web3: Web3) => {
   })
   describe('when group never had members', () => {
     it('deregisters a group', async () => {
-      const logSpy = jest.spyOn(console, 'log')
-      const writeMock = jest.spyOn(ux.write, 'stdout')
+      const logSpy = jest.spyOn(console, 'log').mockClear()
+      const writeMock = jest.spyOn(ux.write, 'stdout').mockClear()
       const accounts = await web3.eth.getAccounts()
 
       await testLocallyWithWeb3Node(DeRegisterValidatorGroup, ['--from', accounts[0]], web3)
@@ -77,97 +77,13 @@ testWithAnvilL2('validatorgroup:deregister cmd', (web3: Web3) => {
       await testLocallyWithWeb3Node(AccountRegister, ['--from', accounts[1]], web3)
     })
     it('fails', async () => {
-      const logSpy = jest.spyOn(console, 'log')
+      const logSpy = jest.spyOn(console, 'log').mockClear()
       const accounts = await web3.eth.getAccounts()
       await expect(
         testLocallyWithWeb3Node(DeRegisterValidatorGroup, ['--from', accounts[1]], web3)
       ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
       expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls)).toMatchInlineSnapshot(`
         [
-          [
-            "Running Checks:",
-          ],
-          [
-            "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is not a registered Account ",
-          ],
-          [
-            "All checks passed",
-          ],
-          [
-            "SendTransaction: register",
-          ],
-          [
-            "txHash: 0xtxhash",
-          ],
-          [
-            "Running Checks:",
-          ],
-          [
-            "   ✔  Value [10000000000000000000000] is > 0 ",
-          ],
-          [
-            "All checks passed",
-          ],
-          [
-            "Running Checks:",
-          ],
-          [
-            "   ✔  Account has at least 10000 CELO ",
-          ],
-          [
-            "All checks passed",
-          ],
-          [
-            "SendTransaction: lock",
-          ],
-          [
-            "txHash: 0xtxhash",
-          ],
-          [
-            "Running Checks:",
-          ],
-          [
-            "   ✔  Commission is in range [0,1] ",
-          ],
-          [
-            "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is Signer or registered Account ",
-          ],
-          [
-            "   ✔  Signer can sign Validator Txs ",
-          ],
-          [
-            "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is not a registered Validator ",
-          ],
-          [
-            "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is not a registered ValidatorGroup ",
-          ],
-          [
-            "   ✔  Signer's account has enough locked celo for group registration ",
-          ],
-          [
-            "All checks passed",
-          ],
-          [
-            "SendTransaction: registerValidatorGroup",
-          ],
-          [
-            "txHash: 0xtxhash",
-          ],
-          [
-            "Running Checks:",
-          ],
-          [
-            "   ✔  0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb is not a registered Account ",
-          ],
-          [
-            "All checks passed",
-          ],
-          [
-            "SendTransaction: register",
-          ],
-          [
-            "txHash: 0xtxhash",
-          ],
           [
             "Running Checks:",
           ],

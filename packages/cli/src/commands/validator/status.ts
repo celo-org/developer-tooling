@@ -170,6 +170,10 @@ export default class ValidatorStatus extends BaseCommand {
       }
       const web3 = await this.getWeb3()
       const block = await web3.eth.getBlock(blockNumber)
+      if (block === null) {
+        const last = await web3.eth.getBlockNumber()
+        throw new Error(`Block ${blockNumber} not found, last block is ${last}`)
+      }
       const bitmap = IstanbulUtils.parseBlockExtraData(block.extraData).parentAggregatedSeal.bitmap
       const signers = await electionCache.electedSigners(blockNumber)
       signers.map((s, i) => {
