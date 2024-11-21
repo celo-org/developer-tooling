@@ -28,7 +28,7 @@ testWithAnvilL2('account:deauthorize cmd', (web3) => {
       web3
     )
 
-    const logMock = jest.spyOn(console, 'log')
+    const logMock = jest.spyOn(console, 'log').mockClear()
 
     await testLocallyWithWeb3Node(
       Deauthorize,

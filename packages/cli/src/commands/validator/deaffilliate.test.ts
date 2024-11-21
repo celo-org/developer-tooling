@@ -51,7 +51,7 @@ testWithAnvilL2('validator:deaffiliate', (web3: Web3) => {
 
   test('deaffiliates validator from a group', async () => {
     const validator = await validatorContract.getValidator(account)
-    const logMock = jest.spyOn(console, 'log')
+    const logMock = jest.spyOn(console, 'log').mockClear()
     expect(validator.affiliation).toEqual(groupAddress)
 
     await testLocallyWithWeb3Node(ValidatorDeAffiliate, ['--from', account], web3)
