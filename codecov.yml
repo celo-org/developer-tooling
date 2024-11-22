@@ -19,8 +19,6 @@ component_management:
     statuses:
       - type: project
         target: auto
-        branches:
-          - '!master'
   individual_components:
     - component_id: celocli
       name: celocli
