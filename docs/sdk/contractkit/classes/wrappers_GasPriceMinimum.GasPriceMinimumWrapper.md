@@ -6,6 +6,10 @@
 
 Stores the gas price minimum
 
+**`Deprecated`**
+
+Contract will be complete removed
+
 ## Hierarchy
 
 - [`BaseWrapper`](wrappers_BaseWrapper.BaseWrapper.md)\<`GasPriceMinimum`\>
@@ -91,7 +95,7 @@ multiplier that impacts how quickly gas price minimum is adjusted.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/GasPriceMinimum.ts:44](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/GasPriceMinimum.ts#L44)
+[packages/sdk/contractkit/src/wrappers/GasPriceMinimum.ts:45](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/GasPriceMinimum.ts#L45)
 
 ___
 
@@ -162,7 +166,7 @@ current gas price minimum in CELO
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/GasPriceMinimum.ts:19](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/GasPriceMinimum.ts#L19)
+[packages/sdk/contractkit/src/wrappers/GasPriceMinimum.ts:20](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/GasPriceMinimum.ts#L20)
 
 ___
 
@@ -192,7 +196,7 @@ current gas price minimum in the requested currency
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/GasPriceMinimum.ts:25](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/GasPriceMinimum.ts#L25)
+[packages/sdk/contractkit/src/wrappers/GasPriceMinimum.ts:26](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/GasPriceMinimum.ts#L26)
 
 ___
 
@@ -236,7 +240,7 @@ the current block density targeted by the gas price minimum algorithm.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/GasPriceMinimum.ts:35](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/GasPriceMinimum.ts#L35)
+[packages/sdk/contractkit/src/wrappers/GasPriceMinimum.ts:36](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/GasPriceMinimum.ts#L36)
 
 ## Accessors
 
@@ -272,7 +276,7 @@ Returns current configuration parameters.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/GasPriceMinimum.ts:52](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/GasPriceMinimum.ts#L52)
+[packages/sdk/contractkit/src/wrappers/GasPriceMinimum.ts:53](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/GasPriceMinimum.ts#L53)
 
 ___
 

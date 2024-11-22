@@ -9,7 +9,7 @@ export interface BlockchainParametersConfig {
 
 /**
  * Network parameters that are configurable by governance.
- * @deprecated Contract will be complete removed
+ * @deprecated Contract will be complete removed see https://specs.celo.org/smart_contract_updates_from_l1.html
  */
 export class BlockchainParametersWrapper extends BaseWrapper<BlockchainParameters> {
   /**

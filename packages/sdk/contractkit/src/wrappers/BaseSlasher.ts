@@ -23,7 +23,7 @@ interface SlasherContract extends Contract {
   }
 }
 /**
- * @deprecated --
+ * @deprecated Contract will be complete removed see https://specs.celo.org/smart_contract_updates_from_l1.html
  */
 export class BaseSlasher<T extends SlasherContract> extends BaseWrapperForGoverning<T> {
   protected async signerIndexAtBlock(address: string, blockNumber: number) {

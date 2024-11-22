@@ -154,7 +154,7 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
   /**
    * Returns the current validator signers using the precompiles.
    * @return List of current validator signers.
-   * @deprecated use EpochManagerWrapper.getElectedSigners instead
+   * @deprecated use EpochManagerWrapper.getElectedSigners instead. see see https://specs.celo.org/smart_contract_updates_from_l1.html
    */
   getCurrentValidatorSigners: () => Promise<Address[]> = proxyCall(
     this.contract.methods.getCurrentValidatorSigners
@@ -164,7 +164,7 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
    * Returns the validator signers for block `blockNumber`.
    * @param blockNumber Block number to retrieve signers for.
    * @return Address of each signer in the validator set.
-   * @deprecated
+   * @deprecated see https://specs.celo.org/smart_contract_updates_from_l1.html
    */
   async getValidatorSigners(blockNumber: number): Promise<Address[]> {
     const numValidators = await this.numberValidatorsInSet(blockNumber)
