@@ -178,7 +178,7 @@ export function getCurrentTimestamp() {
   return Math.floor(Date.now() / 1000)
 }
 
-export function huamnizeRequirements(requirements: LockedGoldRequirements) {
+export function humanizeRequirements(requirements: LockedGoldRequirements) {
   const requiredCelo = formatEther(requirements.value.toFixed())
   const requiredDays = requirements.duration.toNumber() / (60 * 60 * 24)
   return { requiredCelo, requiredDays }

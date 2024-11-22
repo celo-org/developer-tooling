@@ -2,7 +2,7 @@ import { Flags } from '@oclif/core'
 import prompts from 'prompts'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx, huamnizeRequirements } from '../../utils/cli'
+import { displaySendTx, humanizeRequirements } from '../../utils/cli'
 import { CustomArgs, CustomFlags } from '../../utils/command'
 
 export default class ValidatorAffiliate extends BaseCommand {
@@ -40,7 +40,7 @@ export default class ValidatorAffiliate extends BaseCommand {
       .runChecks()
 
     const requirements = await validators.getValidatorLockedGoldRequirements()
-    const { requiredCelo, requiredDays } = huamnizeRequirements(requirements)
+    const { requiredCelo, requiredDays } = humanizeRequirements(requirements)
     if (!res.flags.yes) {
       const response = await prompts({
         type: 'confirm',

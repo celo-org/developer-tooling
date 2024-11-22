@@ -2,7 +2,7 @@ import { Flags } from '@oclif/core'
 import prompts from 'prompts'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx, huamnizeRequirements } from '../../utils/cli'
+import { displaySendTx, humanizeRequirements } from '../../utils/cli'
 import { CustomArgs, CustomFlags } from '../../utils/command'
 
 export default class ValidatorGroupMembers extends BaseCommand {
@@ -58,7 +58,7 @@ export default class ValidatorGroupMembers extends BaseCommand {
     if (res.flags.accept) {
       if (!res.flags.yes) {
         const requirements = await validators.getGroupLockedGoldRequirements()
-        const { requiredCelo, requiredDays } = huamnizeRequirements(requirements)
+        const { requiredCelo, requiredDays } = humanizeRequirements(requirements)
         const response = await prompts({
           type: 'confirm',
           name: 'confirmation',
