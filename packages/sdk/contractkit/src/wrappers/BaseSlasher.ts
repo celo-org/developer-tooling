@@ -22,7 +22,9 @@ interface SlasherContract extends Contract {
     }>
   }
 }
-
+/**
+ * @deprecated --
+ */
 export class BaseSlasher<T extends SlasherContract> extends BaseWrapperForGoverning<T> {
   protected async signerIndexAtBlock(address: string, blockNumber: number) {
     const election = await this.contracts.getElection()
