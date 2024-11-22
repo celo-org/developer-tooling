@@ -13,6 +13,7 @@
 - [KEYBASE](types.ClaimTypes.md#keybase)
 - [NAME](types.ClaimTypes.md#name)
 - [PROFILE\_PICTURE](types.ClaimTypes.md#profile_picture)
+- [RPC\_URL](types.ClaimTypes.md#rpc_url)
 - [STORAGE](types.ClaimTypes.md#storage)
 - [TWITTER](types.ClaimTypes.md#twitter)
 
@@ -44,7 +45,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/types.ts:14](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/types.ts#L14)
+[packages/sdk/metadata-claims/src/types.ts:15](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/types.ts#L15)
 
 ___
 
@@ -54,7 +55,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/types.ts:15](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/types.ts#L15)
+[packages/sdk/metadata-claims/src/types.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/types.ts#L16)
 
 ___
 
@@ -64,7 +65,17 @@ ___
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/types.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/types.ts#L16)
+[packages/sdk/metadata-claims/src/types.ts:17](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/types.ts#L17)
+
+___
+
+### RPC\_URL
+
+• **RPC\_URL** = ``"RPC_URL"``
+
+#### Defined in
+
+[packages/sdk/metadata-claims/src/types.ts:14](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/types.ts#L14)
 
 ___
 
@@ -74,7 +85,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/types.ts:17](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/types.ts#L17)
+[packages/sdk/metadata-claims/src/types.ts:18](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/types.ts#L18)
 
 ___
 
@@ -84,4 +95,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/types.ts:18](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/types.ts#L18)
+[packages/sdk/metadata-claims/src/types.ts:19](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/types.ts#L19)
