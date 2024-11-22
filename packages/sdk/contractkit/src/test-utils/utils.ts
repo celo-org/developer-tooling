@@ -1,6 +1,6 @@
 import { StableToken } from '@celo/base'
 import { STABLES_ADDRESS, withImpersonatedAccount } from '@celo/dev-utils/lib/anvil-test'
-import { mineBlocks } from '@celo/dev-utils/lib/ganache-test'
+import { mineBlocks, timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { ContractKit } from '../kit'
@@ -47,6 +47,8 @@ export const startAndFinishEpochProcess = async (kit: ContractKit) => {
   await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
     from: accounts[0],
   })
+
+  await timeTravel((await epochManagerWrapper.epochDuration()) + 1, kit.connection.web3)
 
   await (
     await epochManagerWrapper.finishNextEpochProcessTx()

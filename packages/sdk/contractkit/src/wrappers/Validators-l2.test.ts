@@ -1,15 +1,14 @@
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { setCommissionUpdateDelay } from '@celo/dev-utils/lib/chain-setup'
 import { mineBlocks } from '@celo/dev-utils/lib/ganache-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { newKitFromWeb3 } from '../kit'
-import { mineToNextEpoch } from '../test-utils/utils'
+import { startAndFinishEpochProcess } from '../test-utils/utils'
 import { AccountsWrapper } from './Accounts'
 import { LockedGoldWrapper } from './LockedGold'
 import { ValidatorsWrapper } from './Validators'
-
 /*
 TEST NOTES:
 - In migrations: The only account that has cUSD is accounts[0]
@@ -17,12 +16,7 @@ TEST NOTES:
 
 const minLockedGoldValue = Web3.utils.toWei('10000', 'ether') // 10k gold
 
-const blsPublicKey =
-  '0x4fa3f67fc913878b068d1fa1cdddc54913d3bf988dbe5a36a20fa888f20d4894c408a6773f3d7bde11154f2a3076b700d345a42fd25a0e5e83f4db5586ac7979ac2053cd95d8f2efd3e959571ceccaa743e02cf4be3f5d7aaddb0b06fc9aff00'
-const blsPoP =
-  '0xcdb77255037eb68897cd487fdd85388cbda448f617f874449d4b11588b0b7ad8ddc20d9bb450b513bb35664ea3923900'
-
-testWithAnvilL1('Validators Wrapper', (web3) => {
+testWithAnvilL2('Validators Wrapper', (web3) => {
   const kit = newKitFromWeb3(web3)
   let accounts: string[] = []
   let accountsInstance: AccountsWrapper
@@ -63,7 +57,7 @@ testWithAnvilL1('Validators Wrapper', (web3) => {
     const ecdsaPublicKey = await addressToPublicKey(validatorAccount, kit.connection.sign)
     await validators
       // @ts-ignore
-      .registerValidator(ecdsaPublicKey, blsPublicKey, blsPoP)
+      .registerValidatorNoBls(ecdsaPublicKey)
       .sendAndWaitForReceipt({
         from: validatorAccount,
       })
@@ -208,12 +202,12 @@ testWithAnvilL1('Validators Wrapper', (web3) => {
 
   it("can fetch epoch's last block information", async () => {
     const lastEpoch = (await validators.getEpochNumber()).toNumber()
-    await mineToNextEpoch(kit.connection.web3)
+    await startAndFinishEpochProcess(kit)
     const lastBlockNumberForEpochPromise = validators.getLastBlockNumberForEpoch(lastEpoch)
     expect(typeof (await lastBlockNumberForEpochPromise)).toBe('number')
   })
   it("can fetch block's epoch information", async () => {
-    await mineToNextEpoch(kit.connection.web3)
+    await startAndFinishEpochProcess(kit)
     const epochNumberOfBlockPromise = validators.getEpochNumberOfBlock(
       await kit.connection.getBlockNumber()
     )
