@@ -3,7 +3,7 @@ import { Flags } from '@oclif/core'
 import { ClaimCommand } from '../../utils/identity'
 
 export default class ClaimRpcUrl extends ClaimCommand {
-  static description = 'Claim a domain and add the claim to a local metadata file'
+  static description = 'Claim a RPC URL and add the claim to a local metadata file'
   static flags = {
     ...ClaimCommand.flags,
     rpcUrl: Flags.string({
