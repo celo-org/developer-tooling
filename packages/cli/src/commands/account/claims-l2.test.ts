@@ -1,5 +1,5 @@
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { ClaimTypes, IdentityMetadataWrapper } from '@celo/metadata-claims'
 import { now } from '@celo/metadata-claims/lib/types'
 import { ux } from '@oclif/core'
@@ -17,7 +17,7 @@ import RegisterMetadata from './register-metadata'
 import ShowMetadata from './show-metadata'
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL1('account metadata cmds', (web3: Web3) => {
+testWithAnvilL2('account metadata cmds', (web3: Web3) => {
   let account: string
   let accounts: string[]
   let kit: ContractKit
