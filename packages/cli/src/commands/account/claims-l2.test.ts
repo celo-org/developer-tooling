@@ -29,7 +29,7 @@ testWithAnvilL2('account metadata cmds', (web3: Web3) => {
   })
 
   describe('Modifying the metadata file', () => {
-    const emptyFilePath = `${tmpdir()}/metadata.json`
+    const emptyFilePath = `${tmpdir()}/metadata-l2.json`
     const generateEmptyMetadataFile = () => {
       writeFileSync(emptyFilePath, IdentityMetadataWrapper.fromEmpty(account).toString())
     }
