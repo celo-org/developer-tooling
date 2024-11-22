@@ -418,7 +418,7 @@ _See code: [src/commands/account/claim-name.ts](https://github.com/celo-org/deve
 
 ## `celocli account:claim-rpc-url ARG1`
 
-Claim a domain and add the claim to a local metadata file
+Claim a RPC URL and add the claim to a local metadata file
 
 ```
 USAGE
@@ -438,8 +438,8 @@ FLAGS
       URL of the node to run commands against or an alias
 
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
-      (required) Address of the account to set metadata for or an authorized signer for
-      the address in the metadata
+      (required) Address of the account to set metadata for. Claiming address must be
+      registered as validator
 
   --gasCurrency=0x1234567890123456789012345678901234567890
       Use a specific gas currency for transaction fees (defaults to CELO if no gas
@@ -453,13 +453,13 @@ FLAGS
       signing
 
   --rpcUrl=<value>
-      (required) The RPC URL you want to claim
+      (required) The RPC URL to claim
 
   --useLedger
       Set it to use a ledger wallet
 
 DESCRIPTION
-  Claim a domain and add the claim to a local metadata file
+  Claim a RPC URL and add the claim to a local metadata file
 
 EXAMPLES
   claim-rpc-url ~/metadata.json --rpc-url example.com --from 0x5409ED021D9299bf6814279A6A1411A7e866A631

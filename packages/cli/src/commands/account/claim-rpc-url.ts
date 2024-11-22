@@ -1,14 +1,21 @@
 import { createRpcUrlClaim } from '@celo/metadata-claims/lib/claim'
 import { Flags } from '@oclif/core'
+import { BaseCommand } from '../../base'
+import { CustomFlags } from '../../utils/command'
 import { ClaimCommand } from '../../utils/identity'
 
 export default class ClaimRpcUrl extends ClaimCommand {
   static description = 'Claim a RPC URL and add the claim to a local metadata file'
   static flags = {
-    ...ClaimCommand.flags,
+    ...BaseCommand.flags,
+    from: CustomFlags.address({
+      required: true,
+      description:
+        'Address of the account to set metadata for. Claiming address must be registered as validator',
+    }),
     rpcUrl: Flags.string({
       required: true,
-      description: 'The RPC URL you want to claim',
+      description: 'The RPC URL to claim',
     }),
   }
   static args = ClaimCommand.args
