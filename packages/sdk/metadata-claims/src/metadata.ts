@@ -187,6 +187,13 @@ export class IdentityMetadataWrapper {
         }
         break
       }
+      case ClaimTypes.RPC_URL: {
+        const existingClaims = this.data.claims.filter((el: any) => el.rpcUrl === claim.rpcUrl)
+        if (existingClaims.length > 0) {
+          return existingClaims[0]
+        }
+        break
+      }
       case ClaimTypes.KEYBASE: {
         const existingClaims = this.data.claims.filter((el: any) => el.username === claim.username)
         if (existingClaims.length > 0) {
