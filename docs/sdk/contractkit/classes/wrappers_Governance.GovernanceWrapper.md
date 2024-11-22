@@ -163,7 +163,7 @@ Only the `approver` address will succeed in sending this transaction
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:989](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L989)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:990](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L990)
 
 ___
 
@@ -361,7 +361,7 @@ keccak256 hash of abi encoded transactions computed on-chain
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:1011](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L1011)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:1012](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L1012)
 
 ___
 
@@ -690,7 +690,7 @@ Returns the number of validators that whitelisted the hotfix
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:969](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L969)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:970](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L970)
 
 ___
 
@@ -786,7 +786,7 @@ Returns whether a given hotfix can be passed.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:954](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L954)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:955](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L955)
 
 ___
 
@@ -822,7 +822,7 @@ Returns whether a given hotfix has been whitelisted by a given address.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:945](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L945)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:946](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L946)
 
 ___
 
@@ -1054,7 +1054,7 @@ Returns the number of validators required to reach a Byzantine quorum
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:959](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L959)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:960](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L960)
 
 ___
 
@@ -1086,7 +1086,7 @@ Marks the given hotfix prepared for current epoch if quorum of validators have w
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:999](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L999)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:1000](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L1000)
 
 ___
 
@@ -1240,7 +1240,7 @@ Marks the given hotfix whitelisted by `sender`.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:978](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L978)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:979](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L979)
 
 ___
 

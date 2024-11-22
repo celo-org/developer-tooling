@@ -141,7 +141,7 @@ De-affiliates with the previously affiliated group if present.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:493](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L493)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:499](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L499)
 
 ___
 
@@ -171,7 +171,7 @@ Fails if the account is not a validator with non-zero affiliation.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:503](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L503)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:509](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L509)
 
 ___
 
@@ -260,7 +260,7 @@ Removes a validator from the group for which it is a member.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:509](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L509)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:515](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L515)
 
 ___
 
@@ -290,7 +290,7 @@ The Locked Gold requirements for a specific account.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:129](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L129)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:135](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L135)
 
 ___
 
@@ -318,7 +318,7 @@ Returns the update delay, in blocks, for the group commission.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:147](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L147)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:153](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L153)
 
 ___
 
@@ -346,7 +346,7 @@ Returns the validator downtime grace period
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:156](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L156)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:162](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L162)
 
 ___
 
@@ -370,7 +370,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:442](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L442)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:448](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L448)
 
 ___
 
@@ -394,7 +394,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:444](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L444)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:450](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L450)
 
 ___
 
@@ -416,7 +416,7 @@ Get list of registered validator group addresses
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:397](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L397)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:403](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L403)
 
 ___
 
@@ -444,7 +444,7 @@ Returns the reset period, in seconds, for slashing multiplier.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:138](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L138)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:144](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L144)
 
 ___
 
@@ -472,7 +472,7 @@ Get the size (amount of members) of a ValidatorGroup
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:384](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L384)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:390](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L390)
 
 ___
 
@@ -506,7 +506,7 @@ The group membership history of a validator.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:363](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L363)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:369](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L369)
 
 ___
 
@@ -540,7 +540,7 @@ The group membership history of a validator.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:375](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L375)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:381](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L381)
 
 ___
 
@@ -574,7 +574,7 @@ Whether a particular address is a registered validator.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:251](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L251)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:257](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L257)
 
 ___
 
@@ -608,7 +608,7 @@ Whether a particular address is a registered validator group.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:258](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L258)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:264](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L264)
 
 ___
 
@@ -675,7 +675,7 @@ Fails if the account is already a validator or validator group.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:426](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L426)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:432](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L432)
 
 ___
 
@@ -699,7 +699,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:436](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L436)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:442](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L442)
 
 ___
 
@@ -733,7 +733,7 @@ The ValidatorGroup is specified by the `from` of the tx.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:550](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L550)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:556](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L556)
 
 ___
 
@@ -763,7 +763,7 @@ the last time the group was slashed.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:518](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L518)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:524](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L524)
 
 ___
 
@@ -796,7 +796,7 @@ Queues an update to a validator group's commission.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:87](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L87)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:93](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L93)
 
 ___
 
@@ -837,7 +837,7 @@ True upon success.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:239](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L239)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:245](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L245)
 
 ___
 
@@ -859,7 +859,7 @@ Updates a validator group's commission based on the previously queued update
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:96](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L96)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:102](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L102)
 
 ## Accessors
 
@@ -903,7 +903,7 @@ Fails if `validator` has not set their affiliation to this account.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:528](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L528)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:534](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L534)
 
 ___
 
@@ -919,7 +919,7 @@ Returns the current set of validator signer addresses
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:643](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L643)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:659](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L659)
 
 ___
 
@@ -935,7 +935,7 @@ Returns the current set of validator signer and account addresses
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:653](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L653)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:669](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L669)
 
 ___
 
@@ -957,7 +957,7 @@ De-registers a validator, removing it from the group for which it is a member.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:450](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L450)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:456](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L456)
 
 ___
 
@@ -979,7 +979,7 @@ De-registers a validator Group
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:478](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L478)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:484](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L484)
 
 ___
 
@@ -1004,7 +1004,7 @@ Index for epoch or -1.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:686](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L686)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:702](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L702)
 
 ___
 
@@ -1020,7 +1020,7 @@ Returns current configuration parameters.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:165](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L165)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:171](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L171)
 
 ___
 
@@ -1040,7 +1040,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:600](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L600)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:611](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L611)
 
 ___
 
@@ -1054,7 +1054,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:588](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L588)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:594](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L594)
 
 ___
 
@@ -1072,7 +1072,7 @@ The Locked Gold requirements for validator groups.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:117](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L117)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:123](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L123)
 
 ___
 
@@ -1092,7 +1092,7 @@ Returns human readable configuration of the validators contract
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:190](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L190)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:196](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L196)
 
 ___
 
@@ -1112,7 +1112,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:594](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L594)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:600](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L600)
 
 ___
 
@@ -1155,7 +1155,7 @@ Get list of registered validator groups
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:408](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L408)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:414](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L414)
 
 ___
 
@@ -1177,7 +1177,7 @@ Get list of registered validators
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:402](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L402)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:408](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L408)
 
 ___
 
@@ -1199,7 +1199,7 @@ Get list of registered validator addresses
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:391](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L391)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:397](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L397)
 
 ___
 
@@ -1222,7 +1222,7 @@ Get Validator information
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:286](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L286)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:292](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L292)
 
 ___
 
@@ -1243,7 +1243,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:307](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L307)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:313](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L313)
 
 ___
 
@@ -1267,7 +1267,7 @@ Get ValidatorGroup information
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:325](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L325)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:331](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L331)
 
 ___
 
@@ -1285,7 +1285,7 @@ The Locked Gold requirements for validators.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:105](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L105)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:111](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L111)
 
 ___
 
@@ -1310,7 +1310,7 @@ Group and membership history index for `validator`.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:667](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L667)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:683](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L683)
 
 ___
 
@@ -1333,7 +1333,7 @@ Retrieves ValidatorRewards for epochNumber.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:610](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L610)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:626](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L626)
 
 ___
 
@@ -1353,7 +1353,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:303](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L303)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:309](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L309)
 
 ___
 
@@ -1377,7 +1377,7 @@ Whether an account meets the requirements to register a validator.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:265](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L265)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:271](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L271)
 
 ___
 
@@ -1401,7 +1401,7 @@ Whether an account meets the requirements to register a group.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:278](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L278)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:284](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L284)
 
 ___
 
@@ -1425,7 +1425,7 @@ Fails if the account does not have sufficient weight.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:467](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L467)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:473](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L473)
 
 ___
 
@@ -1450,7 +1450,7 @@ Fails if `validator` is not a member of the account's validator group.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:559](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L559)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:565](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L565)
 
 ___
 
@@ -1478,7 +1478,7 @@ Fails if the `signer` is not an account or previously authorized signer.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:226](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L226)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:232](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L232)
 
 ___
 
@@ -1506,7 +1506,7 @@ Fails if the `signer` is not an account or currently authorized validator.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Validators.ts:215](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L215)
+[packages/sdk/contractkit/src/wrappers/Validators.ts:221](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Validators.ts#L221)
 
 ___
 

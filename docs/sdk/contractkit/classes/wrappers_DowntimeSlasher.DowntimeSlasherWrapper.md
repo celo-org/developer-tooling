@@ -205,7 +205,7 @@ the specific interval.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:132](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L132)
+[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:133](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L133)
 
 ___
 
@@ -229,7 +229,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:146](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L146)
+[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:147](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L147)
 
 ___
 
@@ -457,7 +457,7 @@ True if the user already called the `setBitmapForInterval` for intervals.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:139](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L139)
+[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:140](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L140)
 
 ___
 
@@ -481,7 +481,7 @@ intervals.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:180](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L180)
+[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:181](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L181)
 
 ___
 
@@ -551,7 +551,7 @@ Tests if the given validator or signer did not sign any blocks in the interval.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:153](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L153)
+[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:154](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L154)
 
 ___
 
@@ -577,4 +577,4 @@ True if the validator signature does not appear in any block within the window.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:167](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L167)
+[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:168](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L168)
