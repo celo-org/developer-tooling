@@ -32,7 +32,8 @@ export default class Show extends BaseCommand {
       description: 'Validator Group to show rewards for',
     }),
     slashing: Flags.boolean({
-      description: 'Show rewards for slashing',
+      description: 'Show rewards for slashing (will be removed in L2)',
+      deprecated: true,
       default: true,
     }),
     epochs: Flags.integer({
@@ -54,7 +55,16 @@ export default class Show extends BaseCommand {
     const election = await kit.contracts.getElection()
     const validators = await kit.contracts.getValidators()
     const lockedGold = await kit.contracts.getLockedGold()
-    const currentEpoch = (await validators.getEpochNumber()).toNumber()
+    const isCel2 = await this.isCel2()
+    const epochManager = isCel2 ? await kit.contracts.getEpochManager() : null
+    const governanceSlasher = isCel2 ? await kit.contracts.getScoreManager() : null
+    let currentEpoch
+    if (isCel2) {
+      res.flags.slashing = false
+      currentEpoch = await epochManager!.getCurrentEpochNumber()
+    } else {
+      currentEpoch = (await validators.getEpochNumber()).toNumber()
+    }
     const checkBuilder = newCheckBuilder(this)
     const epochs = Math.max(1, res.flags.epochs || 1)
 
@@ -86,7 +96,19 @@ export default class Show extends BaseCommand {
       epochNumber++
     ) {
       if (!filter || res.flags.voter) {
-        const electedValidators = await election.getElectedValidators(epochNumber)
+        let electedValidators: Validator[]
+        if (isCel2) {
+          electedValidators = (await Promise.all(
+            (
+              await epochManager!.getElectedSigners()
+            ).map(async (x) => ({
+              address: x,
+              score: await governanceSlasher!.getValidatorScore(x),
+            }))
+          )) as Validator[]
+        } else {
+          electedValidators = await election.getElectedValidators(epochNumber)
+        }
         if (!filter) {
           const useBlockNumber = !res.flags.estimate
           try {
@@ -319,7 +341,7 @@ export default class Show extends BaseCommand {
 function decorateMissingTrieError(error: unknown) {
   return (error as Error).message.includes('missing trie node')
     ? new Error(
-        'Exact voter information is avaiable only for 1024 blocks after each epoch.\n' +
+        'Exact voter information is available only for 1024 blocks after each epoch.\n' +
           'Supply --estimate to estimate rewards based on current votes, or use an archive node.'
       )
     : (error as Error)

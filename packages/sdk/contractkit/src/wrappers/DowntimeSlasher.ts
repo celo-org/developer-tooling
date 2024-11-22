@@ -107,6 +107,7 @@ export class DowntimeSlasherWrapper extends BaseSlasher<DowntimeSlasher> {
 
     let end = window.end
     const intervals: Interval[] = []
+    // TODO(L2): this is deprecated and not supported in L2
     const isL2 = await isCel2(this.connection.web3)
     while (end > window.start) {
       const epochNumber = isL2

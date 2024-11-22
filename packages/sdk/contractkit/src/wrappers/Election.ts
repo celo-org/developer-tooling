@@ -13,6 +13,7 @@ import {
   CeloTransactionObject,
   CeloTxObject,
   EventLog,
+  isCel2,
   toTransactionObject,
 } from '@celo/connect'
 import BigNumber from 'bignumber.js'
@@ -509,9 +510,15 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
     epochNumber: number,
     useBlockNumber?: boolean
   ): Promise<GroupVoterReward[]> {
-    const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
-
-    const blockNumber = await blockchainParamsWrapper.getLastBlockNumberForEpoch(epochNumber)
+    let blockNumber: number
+    // TODO(L2): this is deprecated and not supported in L2
+    if (await isCel2(this.connection.web3)) {
+      const epochManager = await this.contracts.getEpochManager()
+      blockNumber = await epochManager.getLastBlockAtEpoch(epochNumber)
+    } else {
+      const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
+      blockNumber = await blockchainParamsWrapper.getLastBlockNumberForEpoch(epochNumber)
+    }
     const events = await this.getPastEvents('EpochRewardsDistributedToVoters', {
       fromBlock: blockNumber,
       toBlock: blockNumber,

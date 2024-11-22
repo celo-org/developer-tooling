@@ -905,6 +905,7 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<Governance> {
     const version = await this.version()
 
     if (version.isAtLeast(new ContractVersion(1, 4, 2, 0))) {
+      // TODO(L2): this is deprecated and not supported in L2
       if (await isCel2(this.connection.web3)) {
         // is L2
         const res = await this.contract.methods.getL2HotfixRecord(bufferToHex(hash)).call()
