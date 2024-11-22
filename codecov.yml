@@ -6,7 +6,7 @@ coverage:
         only_pulls: true
 
 comment:
-  layout: 'header, diff, flags, components'
+  layout: 'header, diff, components'
 
 ignore:
   - 'packages/typescript'
@@ -24,20 +24,16 @@ component_management:
       name: celocli
       paths:
         - packages/cli
-    - component_id: dev-utils
-      name: dev-utils
-      paths:
-        - packages/dev-utils
     - component_id: sdks
       name: sdk
       paths:
-        - '!packages/sdk/wallets'
-        - 'packages/sdk/*'
+        - '!packages/sdk/wallets/**'
+        - 'packages/sdk/**'
     - component_id: wallets
       name: wallets
       paths:
-        - 'packages/sdk/wallets/*'
+        - 'packages/sdk/wallets/**'
     - component_id: viem-sdks
       name: viem-sdks
       paths:
-        - 'packages/viem-*'
+        - 'packages/viem-**'
