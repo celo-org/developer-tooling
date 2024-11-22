@@ -10,6 +10,7 @@ export interface GasPriceMinimumConfig {
 
 /**
  * Stores the gas price minimum
+ * @deprecated Contract will be complete removed
  */
 export class GasPriceMinimumWrapper extends BaseWrapper<GasPriceMinimum> {
   /**

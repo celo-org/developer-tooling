@@ -5,6 +5,7 @@ import { valueToInt } from './BaseWrapper'
 
 /**
  * Contract handling slashing for Validator double-signing
+ * @deprecated Contract will be complete removed
  */
 export class DoubleSigningSlasherWrapper extends BaseSlasher<DoubleSigningSlasher> {
   /**

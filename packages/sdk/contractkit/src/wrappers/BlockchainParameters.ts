@@ -9,6 +9,7 @@ export interface BlockchainParametersConfig {
 
 /**
  * Network parameters that are configurable by governance.
+ * @deprecated Contract will be complete removed
  */
 export class BlockchainParametersWrapper extends BaseWrapper<BlockchainParameters> {
   /**
