@@ -227,11 +227,6 @@ testWithAnvilL2('rewards:show cmd', (web3: Web3) => {
           [
             "All checks passed",
           ],
-          [
-            {
-              "epochNumber": 4,
-            },
-          ], 
         ]
       `)
       expect(stripAnsiCodesFromNestedArray(infoMock.mock.calls)).toMatchInlineSnapshot(`
