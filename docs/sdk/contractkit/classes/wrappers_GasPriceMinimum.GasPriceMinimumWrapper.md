@@ -8,7 +8,7 @@ Stores the gas price minimum
 
 **`Deprecated`**
 
-Contract will be complete removed
+Contract will be complete removed see https://specs.celo.org/smart_contract_updates_from_l1.html
 
 ## Hierarchy
 
