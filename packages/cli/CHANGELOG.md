@@ -1,5 +1,32 @@
 # Changelog
 
+## 6.0.0-beta.4
+
+### Minor Changes
+
+- [#447](https://github.com/celo-org/developer-tooling/pull/447) [`7bc05c2`](https://github.com/celo-org/developer-tooling/commit/7bc05c219c7c3bbb764b4741595c57da523bb388) Thanks [@shazarre](https://github.com/shazarre)! - validator:signed-blocks not supported on L2 anymore, fixes validator:status L2
+
+### Patch Changes
+
+- [#425](https://github.com/celo-org/developer-tooling/pull/425) [`952bc81`](https://github.com/celo-org/developer-tooling/commit/952bc81dc1bdd4c7abb40306768c50b75e681733) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - deprecates the flags --whitelisters and --nonwhitelisters from the governance:show command
+
+- [#456](https://github.com/celo-org/developer-tooling/pull/456) [`d5c9204`](https://github.com/celo-org/developer-tooling/commit/d5c920491b2b6efec5f4637a4343bfb6f606c56f) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Fix rewards:show for L2
+
+- [#452](https://github.com/celo-org/developer-tooling/pull/452) [`2283374`](https://github.com/celo-org/developer-tooling/commit/2283374d74b2260c3cc81d19500502f6e6b685cd) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Show deprecated warning on flags which will be removed after cel2 launch
+
+- [#449](https://github.com/celo-org/developer-tooling/pull/449) [`97f0a53`](https://github.com/celo-org/developer-tooling/commit/97f0a53cab5162365be0c175361943351cf4eb2f) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Show --node and --useLedger flags when --help is called. Show aliases for networks in --node help
+
+- [#452](https://github.com/celo-org/developer-tooling/pull/452) [`2283374`](https://github.com/celo-org/developer-tooling/commit/2283374d74b2260c3cc81d19500502f6e6b685cd) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - use onchain values instead of static for lock requirements
+
+- [#450](https://github.com/celo-org/developer-tooling/pull/450) [`9558b56`](https://github.com/celo-org/developer-tooling/commit/9558b56aff2886fb860194a04fd284b4caca74dc) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Gracefully throw if --estimate wasnt passed on L1
+
+- Updated dependencies [[`7bc05c2`](https://github.com/celo-org/developer-tooling/commit/7bc05c219c7c3bbb764b4741595c57da523bb388), [`42d091f`](https://github.com/celo-org/developer-tooling/commit/42d091fbc2ab71ce4ec2fb5c57ca266a20a96b6e), [`36c4369`](https://github.com/celo-org/developer-tooling/commit/36c436980583396ca407fef511942c9a77279470), [`a23246e`](https://github.com/celo-org/developer-tooling/commit/a23246e82e17424cb22c04cce197eb84a2cac54c), [`d5c9204`](https://github.com/celo-org/developer-tooling/commit/d5c920491b2b6efec5f4637a4343bfb6f606c56f)]:
+  - @celo/contractkit@9.0.0-beta.3
+  - @celo/governance@5.1.4-beta.2
+  - @celo/wallet-ledger@6.0.4-beta.1
+  - @celo/wallet-hsm-azure@6.0.4-beta.1
+  - @celo/wallet-local@6.0.4-beta.1
+
 ## 6.0.0-beta.3
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # @celo/viem-account-ledger
 
+## 1.0.0-beta.2
+
+### Patch Changes
+
+- [#443](https://github.com/celo-org/developer-tooling/pull/443) [`a23246e`](https://github.com/celo-org/developer-tooling/commit/a23246e82e17424cb22c04cce197eb84a2cac54c) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Safer handling of v from device
+
 ## 1.0.0-beta.1
 
 ### Patch Changes
