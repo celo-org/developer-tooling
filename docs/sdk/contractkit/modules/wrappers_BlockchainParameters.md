@@ -24,4 +24,4 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts:109](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts#L109)
+[packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts:110](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts#L110)

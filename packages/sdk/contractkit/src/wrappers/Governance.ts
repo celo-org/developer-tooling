@@ -942,6 +942,7 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<Governance> {
    * Returns whether a given hotfix has been whitelisted by a given address.
    * @param hash keccak256 hash of hotfix's associated abi encoded transactions
    * @param whitelister address of whitelister
+   * @deprecated see https://specs.celo.org/smart_contract_updates_from_l1.html
    */
   isHotfixWhitelistedBy = proxyCall(
     this.contract.methods.isHotfixWhitelistedBy,
@@ -951,6 +952,7 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<Governance> {
   /**
    * Returns whether a given hotfix can be passed.
    * @param hash keccak256 hash of hotfix's associated abi encoded transactions
+   * @deprecated see https://specs.celo.org/smart_contract_updates_from_l1.html
    */
   isHotfixPassing = proxyCall(this.contract.methods.isHotfixPassing, tupleParser(bufferToHex))
 
@@ -966,6 +968,7 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<Governance> {
   /**
    * Returns the number of validators that whitelisted the hotfix
    * @param hash keccak256 hash of hotfix's associated abi encoded transactions
+   * @deprecated see https://specs.celo.org/smart_contract_updates_from_l1.html
    */
   hotfixWhitelistValidatorTally = proxyCall(
     this.contract.methods.hotfixWhitelistValidatorTally,
@@ -975,6 +978,7 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<Governance> {
   /**
    * Marks the given hotfix whitelisted by `sender`.
    * @param hash keccak256 hash of hotfix's associated abi encoded transactions
+   * @deprecated see https://specs.celo.org/smart_contract_updates_from_l1.html
    */
   whitelistHotfix = proxySend(
     this.connection,

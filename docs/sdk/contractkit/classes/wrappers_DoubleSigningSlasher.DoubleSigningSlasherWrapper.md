@@ -6,6 +6,10 @@
 
 Contract handling slashing for Validator double-signing
 
+**`Deprecated`**
+
+Contract will be complete removed see https://specs.celo.org/smart_contract_updates_from_l1.html
+
 ## Hierarchy
 
 - [`BaseSlasher`](wrappers_BaseSlasher.BaseSlasher.md)\<`DoubleSigningSlasher`\>
@@ -147,7 +151,7 @@ Rewards and penalties for slashing.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/BaseSlasher.ts:70](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BaseSlasher.ts#L70)
+[packages/sdk/contractkit/src/wrappers/BaseSlasher.ts:72](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BaseSlasher.ts#L72)
 
 ## Accessors
 
@@ -191,7 +195,7 @@ Block number.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/DoubleSigningSlasher.ts:15](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DoubleSigningSlasher.ts#L15)
+[packages/sdk/contractkit/src/wrappers/DoubleSigningSlasher.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DoubleSigningSlasher.ts#L16)
 
 ___
 
@@ -242,7 +246,7 @@ Slash a Validator signer for double-signing.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/DoubleSigningSlasher.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DoubleSigningSlasher.ts#L38)
+[packages/sdk/contractkit/src/wrappers/DoubleSigningSlasher.ts:39](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DoubleSigningSlasher.ts#L39)
 
 ___
 
@@ -266,7 +270,7 @@ Slash a Validator for double-signing.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/DoubleSigningSlasher.ts:26](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DoubleSigningSlasher.ts#L26)
+[packages/sdk/contractkit/src/wrappers/DoubleSigningSlasher.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DoubleSigningSlasher.ts#L27)
 
 ___
 

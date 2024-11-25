@@ -20,4 +20,4 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/DoubleSigningSlasher.ts:51](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DoubleSigningSlasher.ts#L51)
+[packages/sdk/contractkit/src/wrappers/DoubleSigningSlasher.ts:52](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DoubleSigningSlasher.ts#L52)

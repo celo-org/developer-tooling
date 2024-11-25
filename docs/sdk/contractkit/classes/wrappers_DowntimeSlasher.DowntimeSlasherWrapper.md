@@ -6,6 +6,10 @@
 
 Contract handling slashing for Validator downtime using intervals.
 
+**`Deprecated`**
+
+Contract will be complete removed https://github.com/celo-org/celo-monorepo/blob/release/core-contracts/12/packages/protocol/contracts/governance/DowntimeSlasher.sol
+
 ## Hierarchy
 
 - [`BaseSlasher`](wrappers_BaseSlasher.BaseSlasher.md)\<`DowntimeSlasher`\>
@@ -168,7 +172,7 @@ the current block.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:73](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L73)
+[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:74](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L74)
 
 ___
 
@@ -205,7 +209,7 @@ the specific interval.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:133](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L133)
+[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:134](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L134)
 
 ___
 
@@ -229,7 +233,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:147](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L147)
+[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:148](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L148)
 
 ___
 
@@ -285,7 +289,7 @@ interval.start and interval.end must be in the same epoch.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:85](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L85)
+[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:86](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L86)
 
 ___
 
@@ -316,7 +320,7 @@ can be slashed.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:37](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L37)
+[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L38)
 
 ___
 
@@ -350,7 +354,7 @@ Rewards and penalties for slashing.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/BaseSlasher.ts:70](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BaseSlasher.ts#L70)
+[packages/sdk/contractkit/src/wrappers/BaseSlasher.ts:72](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BaseSlasher.ts#L72)
 
 ## Accessors
 
@@ -386,7 +390,7 @@ Returns current configuration parameters.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:42](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L42)
+[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:43](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L43)
 
 ___
 
@@ -406,7 +410,7 @@ Returns human readable configuration of the downtime slasher contract
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:54](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L54)
+[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:55](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L55)
 
 ___
 
@@ -457,7 +461,7 @@ True if the user already called the `setBitmapForInterval` for intervals.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:140](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L140)
+[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:141](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L141)
 
 ___
 
@@ -481,7 +485,7 @@ intervals.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:181](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L181)
+[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:182](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L182)
 
 ___
 
@@ -510,7 +514,7 @@ if block is undefined, latest will be used
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:98](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L98)
+[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:99](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L99)
 
 ___
 
@@ -551,7 +555,7 @@ Tests if the given validator or signer did not sign any blocks in the interval.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:154](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L154)
+[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:155](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L155)
 
 ___
 
@@ -577,4 +581,4 @@ True if the validator signature does not appear in any block within the window.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:168](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L168)
+[packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts:169](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/DowntimeSlasher.ts#L169)

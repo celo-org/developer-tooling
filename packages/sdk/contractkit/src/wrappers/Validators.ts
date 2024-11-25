@@ -241,6 +241,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
    * @param blsPop The BLS public key proof-of-possession, which consists of a signature on the
    *   account address. 96 bytes.
    * @return True upon success.
+   * @deprecated bls keys are not used anymore
    */
   updateBlsPublicKey: (blsPublicKey: string, blsPop: string) => CeloTransactionObject<boolean> =
     proxySend(
@@ -428,6 +429,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
    *   of possession. 48 bytes.
    * @param blsPop The BLS public key proof-of-possession, which consists of a signature on the
    *   account address. 96 bytes.
+   * @deprecated use registerValidatorNoBls
    */
   registerValidator: (
     ecdsaPublicKey: string,
