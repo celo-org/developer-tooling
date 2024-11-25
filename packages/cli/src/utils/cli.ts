@@ -13,6 +13,7 @@ import BigNumber from 'bignumber.js'
 import chalk from 'chalk'
 import { ethers } from 'ethers'
 import { formatEther } from 'ethers/lib/utils'
+import humanizeDuration from 'humanize-duration'
 import { convertEthersToCeloTx } from './mento-broker-adaptor'
 
 const CLIError = Errors.CLIError
@@ -180,6 +181,9 @@ export function getCurrentTimestamp() {
 
 export function humanizeRequirements(requirements: LockedGoldRequirements) {
   const requiredCelo = formatEther(requirements.value.toFixed())
-  const requiredDays = requirements.duration.toNumber() / (60 * 60 * 24)
+  const requiredDays = humanizeDuration(requirements.duration.toNumber() * 1000, {
+    round: true,
+    maxDecimalPoints: 1,
+  })
   return { requiredCelo, requiredDays }
 }

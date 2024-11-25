@@ -1,6 +1,7 @@
 import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
+import BigNumber from 'bignumber.js'
 import { stripAnsiCodesFromNestedArray } from '../test-utils/cliUtils'
-import { printValueMapRecursive } from './cli'
+import { humanizeRequirements, printValueMapRecursive } from './cli'
 testWithAnvilL2('printValueMapRecursive', async () => {
   it('should print the key-value pairs in the value map recursively', () => {
     const valueMap = {
@@ -67,5 +68,52 @@ testWithAnvilL2('printValueMapRecursive', async () => {
         ],
       ]
     `)
+  })
+})
+
+describe('humanizeRequirements', () => {
+  describe('requiredDuration', () => {
+    const celoINWei = new BigNumber('1000000000000000000000')
+    it('shows when duration is hours ', () => {
+      const { requiredDays } = humanizeRequirements({
+        duration: new BigNumber(60 * 60),
+        value: celoINWei,
+      })
+      expect(requiredDays).toEqual('1 hour')
+    })
+    it('shows when duration is days ', () => {
+      const { requiredDays } = humanizeRequirements({
+        duration: new BigNumber(60 * 60 * 24 * 2),
+        value: celoINWei,
+      })
+      expect(requiredDays).toEqual('2 days')
+    })
+    it('shows when duration is weeks ', () => {
+      const { requiredDays } = humanizeRequirements({
+        duration: new BigNumber(60 * 60 * 24 * 15),
+        value: celoINWei,
+      })
+      expect(requiredDays).toEqual('2 weeks, 1 day')
+    })
+    it('shows when duration is months ', () => {
+      const { requiredDays } = humanizeRequirements({
+        duration: new BigNumber(60 * 60 * 24 * 65),
+        value: celoINWei,
+      })
+      expect(requiredDays).toEqual('2 months, 4 days, 3 hours')
+    })
+  })
+  describe('requiredCELO', () => {
+    const duration = new BigNumber(1000 * 60 * 60)
+    it('shows when value is small ', () => {
+      const celoINWei = new BigNumber('1e18')
+      const { requiredCelo } = humanizeRequirements({ duration, value: celoINWei })
+      expect(requiredCelo).toEqual('1.0')
+    })
+    it('shows when value is big ', () => {
+      const celoINWei = new BigNumber('1e23')
+      const { requiredCelo } = humanizeRequirements({ duration, value: celoINWei })
+      expect(requiredCelo).toEqual('100000.0')
+    })
   })
 })
