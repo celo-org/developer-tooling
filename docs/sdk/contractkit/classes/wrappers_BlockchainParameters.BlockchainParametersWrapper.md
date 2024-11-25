@@ -6,6 +6,10 @@
 
 Network parameters that are configurable by governance.
 
+**`Deprecated`**
+
+Contract will be complete removed see https://specs.celo.org/smart_contract_updates_from_l1.html
+
 ## Hierarchy
 
 - [`BaseWrapper`](wrappers_BaseWrapper.BaseWrapper.md)\<`BlockchainParameters`\>
@@ -135,7 +139,7 @@ Getting the block gas limit.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts:34](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts#L34)
+[packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts:35](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts#L35)
 
 ___
 
@@ -159,7 +163,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts:104](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts#L104)
+[packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts:105](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts#L105)
 
 ___
 
@@ -183,7 +187,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts:106](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts#L106)
+[packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts:107](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts#L107)
 
 ___
 
@@ -211,7 +215,7 @@ Get the extra intrinsic gas for transactions, where gas is paid using non-gold c
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts:17](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts#L17)
+[packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts:18](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts#L18)
 
 ___
 
@@ -239,7 +243,7 @@ Getting the uptime lookback window.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts:54](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts#L54)
+[packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts:55](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts#L55)
 
 ___
 
@@ -281,7 +285,7 @@ Setting the block gas limit.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts:39](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts#L39)
+[packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts:40](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts#L40)
 
 ___
 
@@ -309,7 +313,7 @@ Setting the extra intrinsic gas for transactions, where gas is paid using non-go
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts:26](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts#L26)
+[packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts#L27)
 
 ___
 
@@ -337,7 +341,7 @@ Setting the uptime lookback window.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts:62](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts#L62)
+[packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts:63](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts#L63)
 
 ## Accessors
 
@@ -373,7 +377,7 @@ Returns current configuration parameters.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts:44](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts#L44)
+[packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts:45](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts#L45)
 
 ___
 
@@ -393,7 +397,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts:93](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts#L93)
+[packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts:94](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts#L94)
 
 ___
 
@@ -407,7 +411,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts:67](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts#L67)
+[packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts:68](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts#L68)
 
 ___
 
@@ -427,7 +431,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts:73](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts#L73)
+[packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts:74](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts#L74)
 
 ___
 
@@ -447,7 +451,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts:83](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts#L83)
+[packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts:84](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BlockchainParameters.ts#L84)
 
 ___
 

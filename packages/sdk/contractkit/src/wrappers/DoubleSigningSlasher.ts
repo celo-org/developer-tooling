@@ -5,6 +5,7 @@ import { valueToInt } from './BaseWrapper'
 
 /**
  * Contract handling slashing for Validator double-signing
+ * @deprecated Contract will be complete removed see https://specs.celo.org/smart_contract_updates_from_l1.html
  */
 export class DoubleSigningSlasherWrapper extends BaseSlasher<DoubleSigningSlasher> {
   /**
