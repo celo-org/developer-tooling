@@ -1,12 +1,12 @@
 import { StrongAddress } from '@celo/base'
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import BigNumber from 'bignumber.js'
 import { newKitFromWeb3 } from '../kit'
-import { mineToNextEpoch } from '../test-utils/utils'
+import { startAndFinishEpochProcess } from '../test-utils/utils'
 import { AccountsWrapper } from './Accounts'
 import { LockedGoldWrapper } from './LockedGold'
 
-testWithAnvilL1('LockedGold Wrapper', (web3) => {
+testWithAnvilL2('LockedGold Wrapper', (web3) => {
   const kit = newKitFromWeb3(web3)
   let accounts: AccountsWrapper
   let lockedGold: LockedGoldWrapper
@@ -76,10 +76,12 @@ testWithAnvilL1('LockedGold Wrapper', (web3) => {
       'Bad pending withdrawal index'
     )
   })
+
   test('get accounts slashed', async () => {
-    const epoch = (
-      await (await kit.contracts.getBlockchainParameters()).getEpochNumber()
-    ).toNumber()
+    // const epoch = (
+    //   await (await kit.contracts.getBlockchainParameters()).getEpochNumber()
+    // ).toNumber()
+    const epoch = await (await kit.contracts.getEpochManager()).getCurrentEpochNumber()
     jest.spyOn(lockedGold, 'getPastEvents').mockResolvedValueOnce([
       // @ts-expect-error
       {
@@ -100,7 +102,7 @@ testWithAnvilL1('LockedGold Wrapper', (web3) => {
         },
       },
     ])
-    await mineToNextEpoch(kit.connection.web3)
+    await startAndFinishEpochProcess(kit)
     await expect(lockedGold.getAccountsSlashed(epoch)).resolves.toMatchInlineSnapshot(`
       [
         {

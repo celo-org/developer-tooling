@@ -163,7 +163,7 @@ Only the `approver` address will succeed in sending this transaction
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:993](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L993)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:994](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L994)
 
 ___
 
@@ -361,7 +361,7 @@ keccak256 hash of abi encoded transactions computed on-chain
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:1015](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L1015)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:1016](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L1016)
 
 ___
 
@@ -698,7 +698,7 @@ see https://specs.celo.org/smart_contract_updates_from_l1.html
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:972](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L972)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:973](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L973)
 
 ___
 
@@ -802,7 +802,7 @@ see https://specs.celo.org/smart_contract_updates_from_l1.html
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:956](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L956)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:957](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L957)
 
 ___
 
@@ -846,7 +846,7 @@ see https://specs.celo.org/smart_contract_updates_from_l1.html
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:946](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L946)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:947](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L947)
 
 ___
 
@@ -1078,7 +1078,7 @@ Returns the number of validators required to reach a Byzantine quorum
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:961](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L961)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:962](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L962)
 
 ___
 
@@ -1110,7 +1110,7 @@ Marks the given hotfix prepared for current epoch if quorum of validators have w
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:1003](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L1003)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:1004](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L1004)
 
 ___
 
@@ -1272,7 +1272,7 @@ see https://specs.celo.org/smart_contract_updates_from_l1.html
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:982](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L982)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:983](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L983)
 
 ___
 
