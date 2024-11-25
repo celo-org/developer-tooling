@@ -136,7 +136,7 @@ testWithAnvilL2('validator:deregister', (web3: Web3) => {
                   "   ✔  Account isn't a member of a validator group ",
                 ],
                 [
-                  "   ✔  Enough time has passed since the account was removed from a validator group ",
+                  "   ✔  Enough time has passed since the account was removed from a validator group? ",
                 ],
                 [
                   "All checks passed",
@@ -189,7 +189,7 @@ testWithAnvilL2('validator:deregister', (web3: Web3) => {
             "   ✘  Account isn't a member of a validator group ",
           ],
           [
-            "   ✘  Enough time has passed since the account was removed from a validator group ",
+            "   ✘  Enough time has passed since the account was removed from a validator group? ",
           ],
         ]
       `)

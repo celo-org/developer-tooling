@@ -136,7 +136,7 @@ _See code: [src/commands/validator/deaffiliate.ts](https://github.com/celo-org/d
 
 ## `celocli validator:deregister`
 
-Deregister a Validator. Approximately 60 days after the validator is no longer part of any group, it will be possible to deregister the validator and start unlocking the CELO. If you wish to deregister your validator, you must first remove it from it's group, such as by deaffiliating it, then wait the required 60 days before running this command.
+Deregister a Validator. Wait the require lock period after the validator is no longer part of any group, then it will be possible to deregister the validator and start unlocking the CELO. If you wish to deregister your validator, you must first remove it from it's group, such as by deaffiliating it, then wait the required days before running this command.
 
 ```
 USAGE
@@ -170,11 +170,11 @@ FLAGS
       Set it to use a ledger wallet
 
 DESCRIPTION
-  Deregister a Validator. Approximately 60 days after the validator is no longer part of
-  any group, it will be possible to deregister the validator and start unlocking the
-  CELO. If you wish to deregister your validator, you must first remove it from it's
-  group, such as by deaffiliating it, then wait the required 60 days before running this
-  command.
+  Deregister a Validator. Wait the require lock period after the validator is no longer
+  part of any group, then it will be possible to deregister the validator and start
+  unlocking the CELO. If you wish to deregister your validator, you must first remove it
+  from it's group, such as by deaffiliating it, then wait the required days before
+  running this command.
 
 EXAMPLES
   deregister --from 0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95

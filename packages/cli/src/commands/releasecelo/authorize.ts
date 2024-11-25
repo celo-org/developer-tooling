@@ -19,11 +19,13 @@ export default class Authorize extends ReleaseGoldBaseCommand {
       required: true,
     }),
     blsKey: CustomFlags.blsPublicKey({
+      deprecated: true,
       description:
         'The BLS public key that the validator is using for consensus, should pass proof of possession. 96 bytes.',
       dependsOn: ['blsPop'],
     }),
     blsPop: CustomFlags.blsProofOfPossession({
+      deprecated: true,
       description:
         'The BLS public key proof-of-possession, which consists of a signature on the account address. 48 bytes.',
       dependsOn: ['blsKey'],

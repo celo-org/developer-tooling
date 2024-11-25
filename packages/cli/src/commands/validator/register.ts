@@ -13,8 +13,8 @@ export default class ValidatorRegister extends BaseCommand {
     ...BaseCommand.flags,
     from: CustomFlags.address({ required: true, description: 'Address for the Validator' }),
     ecdsaKey: CustomFlags.ecdsaPublicKey({ required: true }),
-    blsKey: CustomFlags.blsPublicKey({ required: false }),
-    blsSignature: CustomFlags.blsProofOfPossession({ required: false }),
+    blsKey: CustomFlags.blsPublicKey({ required: false, deprecated: true }),
+    blsSignature: CustomFlags.blsProofOfPossession({ required: false, deprecated: true }),
     yes: Flags.boolean({ description: 'Answer yes to prompt' }),
   }
 
