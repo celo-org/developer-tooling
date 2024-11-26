@@ -39,7 +39,7 @@ Use CeloTokenContract instead
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:48](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L48)
+[packages/sdk/contractkit/src/base.ts:49](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L49)
 
 ___
 
@@ -49,7 +49,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:43](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L43)
+[packages/sdk/contractkit/src/base.ts:44](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L44)
 
 ___
 
@@ -59,7 +59,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L38)
+[packages/sdk/contractkit/src/base.ts:39](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L39)
 
 ## Variables
 
@@ -69,7 +69,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:50](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L50)
+[packages/sdk/contractkit/src/base.ts:51](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L51)
 
 ___
 
@@ -79,7 +79,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:61](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L61)
+[packages/sdk/contractkit/src/base.ts:62](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L62)
 
 ___
 
@@ -89,7 +89,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:52](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L52)
+[packages/sdk/contractkit/src/base.ts:53](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L53)
 
 ## Functions
 
@@ -109,7 +109,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:55](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L55)
+[packages/sdk/contractkit/src/base.ts:56](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L56)
 
 ___
 
@@ -129,4 +129,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:58](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L58)
+[packages/sdk/contractkit/src/base.ts:59](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L59)
