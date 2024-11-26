@@ -2,7 +2,13 @@ import { Validators } from '@celo/abis-12/web3/Validators'
 import { eqAddress, findAddressIndex, NULL_ADDRESS } from '@celo/base/lib/address'
 import { concurrentMap } from '@celo/base/lib/async'
 import { zeroRange, zip } from '@celo/base/lib/collections'
-import { Address, CeloTransactionObject, EventLog, toTransactionObject } from '@celo/connect'
+import {
+  Address,
+  CeloTransactionObject,
+  EventLog,
+  isCel2,
+  toTransactionObject,
+} from '@celo/connect'
 import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
 import {
@@ -235,6 +241,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
    * @param blsPop The BLS public key proof-of-possession, which consists of a signature on the
    *   account address. 96 bytes.
    * @return True upon success.
+   * @deprecated bls keys are not used anymore
    */
   updateBlsPublicKey: (blsPublicKey: string, blsPop: string) => CeloTransactionObject<boolean> =
     proxySend(
@@ -422,6 +429,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
    *   of possession. 48 bytes.
    * @param blsPop The BLS public key proof-of-possession, which consists of a signature on the
    *   account address. 96 bytes.
+   * @deprecated use registerValidatorNoBls
    */
   registerValidator: (
     ecdsaPublicKey: string,
@@ -592,15 +600,25 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
   }
 
   async getLastBlockNumberForEpoch(epochNumber: number): Promise<number> {
-    const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
-
-    return blockchainParamsWrapper.getLastBlockNumberForEpoch(epochNumber)
+    // TODO(L2): this is deprecated and not supported in L2
+    if (await isCel2(this.connection.web3)) {
+      const epochManagerWrapper = await this.contracts.getEpochManager()
+      return epochManagerWrapper.getLastBlockAtEpoch(epochNumber)
+    } else {
+      const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
+      return blockchainParamsWrapper.getLastBlockNumberForEpoch(epochNumber)
+    }
   }
 
   async getEpochNumberOfBlock(blockNumber: number): Promise<number> {
-    const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
-
-    return blockchainParamsWrapper.getEpochNumberOfBlock(blockNumber)
+    // TODO(L2): this is deprecated and not supported in L2
+    if (await isCel2(this.connection.web3)) {
+      const epochManagerWrapper = await this.contracts.getEpochManager()
+      return epochManagerWrapper.getEpochNumberOfBlock(blockNumber)
+    } else {
+      const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
+      return blockchainParamsWrapper.getEpochNumberOfBlock(blockNumber)
+    }
   }
 
   /**

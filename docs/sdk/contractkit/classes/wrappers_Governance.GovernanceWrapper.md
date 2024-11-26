@@ -163,7 +163,7 @@ Only the `approver` address will succeed in sending this transaction
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:989](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L989)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:994](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L994)
 
 ___
 
@@ -361,7 +361,7 @@ keccak256 hash of abi encoded transactions computed on-chain
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:1011](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L1011)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:1016](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L1016)
 
 ___
 
@@ -672,6 +672,10 @@ Returns the number of validators that whitelisted the hotfix
 
 keccak256 hash of hotfix's associated abi encoded transactions
 
+**`Deprecated`**
+
+see https://specs.celo.org/smart_contract_updates_from_l1.html
+
 #### Type declaration
 
 ▸ (`...args`): `Promise`\<`string`\>
@@ -688,9 +692,13 @@ Returns the number of validators that whitelisted the hotfix
 
 `Promise`\<`string`\>
 
+**`Deprecated`**
+
+see https://specs.celo.org/smart_contract_updates_from_l1.html
+
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:969](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L969)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:973](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L973)
 
 ___
 
@@ -768,6 +776,10 @@ Returns whether a given hotfix can be passed.
 
 keccak256 hash of hotfix's associated abi encoded transactions
 
+**`Deprecated`**
+
+see https://specs.celo.org/smart_contract_updates_from_l1.html
+
 #### Type declaration
 
 ▸ (`...args`): `Promise`\<`boolean`\>
@@ -784,9 +796,13 @@ Returns whether a given hotfix can be passed.
 
 `Promise`\<`boolean`\>
 
+**`Deprecated`**
+
+see https://specs.celo.org/smart_contract_updates_from_l1.html
+
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:954](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L954)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:957](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L957)
 
 ___
 
@@ -804,6 +820,10 @@ keccak256 hash of hotfix's associated abi encoded transactions
 
 address of whitelister
 
+**`Deprecated`**
+
+see https://specs.celo.org/smart_contract_updates_from_l1.html
+
 #### Type declaration
 
 ▸ (`...args`): `Promise`\<`boolean`\>
@@ -820,9 +840,13 @@ Returns whether a given hotfix has been whitelisted by a given address.
 
 `Promise`\<`boolean`\>
 
+**`Deprecated`**
+
+see https://specs.celo.org/smart_contract_updates_from_l1.html
+
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:945](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L945)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:947](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L947)
 
 ___
 
@@ -1054,7 +1078,7 @@ Returns the number of validators required to reach a Byzantine quorum
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:959](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L959)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:962](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L962)
 
 ___
 
@@ -1086,7 +1110,7 @@ Marks the given hotfix prepared for current epoch if quorum of validators have w
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:999](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L999)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:1004](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L1004)
 
 ___
 
@@ -1222,6 +1246,10 @@ Marks the given hotfix whitelisted by `sender`.
 
 keccak256 hash of hotfix's associated abi encoded transactions
 
+**`Deprecated`**
+
+see https://specs.celo.org/smart_contract_updates_from_l1.html
+
 #### Type declaration
 
 ▸ (`...args`): `CeloTransactionObject`\<`void`\>
@@ -1238,9 +1266,13 @@ Marks the given hotfix whitelisted by `sender`.
 
 `CeloTransactionObject`\<`void`\>
 
+**`Deprecated`**
+
+see https://specs.celo.org/smart_contract_updates_from_l1.html
+
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:978](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L978)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:983](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L983)
 
 ___
 

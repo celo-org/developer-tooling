@@ -4,9 +4,8 @@ import { displaySendTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class ValidatorGroupDeRegister extends BaseCommand {
-  // TODO with L2 the wait time may have changed on this.
   static description =
-    'Deregister a Validator Group. Approximately 180 days after the validator group is empty, it will be possible to deregister it start unlocking the CELO. If you wish to deregister your validator group, you must first remove all members, then wait the required 180 days before running this command.'
+    'Deregister a Validator Group. After the group lock perioid has passed it will be possible to deregister it start unlocking the CELO. If you wish to deregister your validator group, you must first remove all members, then wait the required time before running this command.'
 
   static flags = {
     ...BaseCommand.flags,
@@ -30,7 +29,8 @@ export default class ValidatorGroupDeRegister extends BaseCommand {
       .isSignerOrAccount()
       .canSignValidatorTxs()
       .signerAccountIsValidatorGroup()
-      .runChecks()
+      .validatorGroupDeregisterDurationPassed()
+      .then((checks) => checks.runChecks())
 
     await displaySendTx('deregister', await validators.deregisterValidatorGroup(account))
   }

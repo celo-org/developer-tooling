@@ -13,6 +13,7 @@ import {
   CeloTransactionObject,
   CeloTxObject,
   EventLog,
+  isCel2,
   toTransactionObject,
 } from '@celo/connect'
 import BigNumber from 'bignumber.js'
@@ -154,6 +155,7 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
   /**
    * Returns the current validator signers using the precompiles.
    * @return List of current validator signers.
+   * @deprecated use EpochManagerWrapper.getElectedSigners instead. see see https://specs.celo.org/smart_contract_updates_from_l1.html
    */
   getCurrentValidatorSigners: () => Promise<Address[]> = proxyCall(
     this.contract.methods.getCurrentValidatorSigners
@@ -163,6 +165,7 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
    * Returns the validator signers for block `blockNumber`.
    * @param blockNumber Block number to retrieve signers for.
    * @return Address of each signer in the validator set.
+   * @deprecated see https://specs.celo.org/smart_contract_updates_from_l1.html
    */
   async getValidatorSigners(blockNumber: number): Promise<Address[]> {
     const numValidators = await this.numberValidatorsInSet(blockNumber)
@@ -509,9 +512,15 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
     epochNumber: number,
     useBlockNumber?: boolean
   ): Promise<GroupVoterReward[]> {
-    const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
-
-    const blockNumber = await blockchainParamsWrapper.getLastBlockNumberForEpoch(epochNumber)
+    let blockNumber: number
+    // TODO(L2): this is deprecated and not supported in L2
+    if (await isCel2(this.connection.web3)) {
+      const epochManager = await this.contracts.getEpochManager()
+      blockNumber = await epochManager.getLastBlockAtEpoch(epochNumber)
+    } else {
+      const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
+      blockNumber = await blockchainParamsWrapper.getLastBlockNumberForEpoch(epochNumber)
+    }
     const events = await this.getPastEvents('EpochRewardsDistributedToVoters', {
       fromBlock: blockNumber,
       toBlock: blockNumber,

@@ -12,7 +12,7 @@ export default class DKGRegister extends BaseCommand {
 
   static flags = {
     ...BaseCommand.flags,
-    blsKey: Flags.string({ required: true }),
+    blsKey: Flags.string({ required: true, deprecated: true }),
     address: CustomFlags.address({ required: true, description: 'DKG Contract Address' }),
     from: CustomFlags.address({ required: true, description: 'Address of the sender' }),
   }

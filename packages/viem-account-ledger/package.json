@@ -1,6 +1,6 @@
 {
   "name": "@celo/viem-account-ledger",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "Helper library to make ledger<->viem interactions easier",
   "type": "module",
   "main": "lib/index.js",

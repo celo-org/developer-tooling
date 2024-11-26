@@ -1,5 +1,33 @@
 # @celo/contractkit
 
+## 9.0.0-beta.3
+
+### Minor Changes
+
+- [#447](https://github.com/celo-org/developer-tooling/pull/447) [`7bc05c2`](https://github.com/celo-org/developer-tooling/commit/7bc05c219c7c3bbb764b4741595c57da523bb388) Thanks [@shazarre](https://github.com/shazarre)! - Exposes EpochManager.getElectedSigners contract method
+
+### Patch Changes
+
+- [#446](https://github.com/celo-org/developer-tooling/pull/446) [`42d091f`](https://github.com/celo-org/developer-tooling/commit/42d091fbc2ab71ce4ec2fb5c57ca266a20a96b6e) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Bump @celo/abis-12
+
+- [#455](https://github.com/celo-org/developer-tooling/pull/455) [`36c4369`](https://github.com/celo-org/developer-tooling/commit/36c436980583396ca407fef511942c9a77279470) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Mark contract wrapper methods that will not work on L2 because solidity contracts have onlyL1 modifier as deprecated.
+
+  | Deprecated Contract / Method                 | Replacement or none                       |
+  | -------------------------------------------- | ----------------------------------------- |
+  | Validators#registerValidator                 | Validators#registerValidatorNoBLS         |
+  | BlockchainParams#getEpochNumberOfBlock       | EpochManager#getEpochNumberOfBlock        |
+  | BlockchainParams#getFirstBlockNumberForEpoch | EpochManager#getFirstBlockAtEpoch         |
+  | Election#getCurrentValidatorSigners          | EpochManager#getElectedSigners            |
+  | Election#getGroupEpochRewards                | Election#getGroupEpochRewardsBasedOnScore |
+  | GovernanceSlasher#slash                      | GovernanceSlasher#slashL2                 |
+  | DoubleSigningSlasher                         | X                                         |
+  | DowntimeSlasher                              | X                                         |
+
+- [#456](https://github.com/celo-org/developer-tooling/pull/456) [`d5c9204`](https://github.com/celo-org/developer-tooling/commit/d5c920491b2b6efec5f4637a4343bfb6f606c56f) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Backwards compat for some methods using epoch's block numbers
+
+- Updated dependencies []:
+  - @celo/wallet-local@6.0.4-beta.1
+
 ## 9.0.0-beta.2
 
 ### Patch Changes

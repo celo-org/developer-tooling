@@ -51,7 +51,7 @@ testWithAnvilL1('rewards:show cmd', (web3: Web3) => {
       })
       await expect(testLocallyWithWeb3Node(Show, [], web3)).rejects
         .toThrowErrorMatchingInlineSnapshot(`
-        "Exact voter information is avaiable only for 1024 blocks after each epoch.
+        "Exact voter information is available only for 1024 blocks after each epoch.
         Supply --estimate to estimate rewards based on current votes, or use an archive node."
       `)
     })
