@@ -12,9 +12,10 @@ import chalk from 'chalk'
 import net from 'net'
 import Web3 from 'web3'
 import { CustomFlags } from './utils/command'
-import { getNodeUrl } from './utils/config'
+import { getNodeUrl, readConfig } from './utils/config'
 import { getFeeCurrencyContractWrapper } from './utils/fee-currency'
 import { requireNodeIsSynced } from './utils/helpers'
+import { reportUsageStatisticsIfTelemetryEnabled } from './utils/telemetry'
 
 export abstract class BaseCommand extends Command {
   static flags: FlagInput = {
@@ -247,6 +248,12 @@ export abstract class BaseCommand extends Command {
     try {
       if (arg) {
         if (!(arg instanceof CLIError)) {
+          await reportUsageStatisticsIfTelemetryEnabled(
+            readConfig(this.config.configDir),
+            false,
+            this.id
+          )
+
           console.error(
             `
 Received an error during command execution, if you believe this is a bug you can create an issue here: 
