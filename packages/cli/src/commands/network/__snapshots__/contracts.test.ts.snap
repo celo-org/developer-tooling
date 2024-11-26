@@ -113,6 +113,12 @@ exports[`network:contracts runs 1`] = `
     "version": "1.4.2.0"
   },
   {
+    "contract": "GovernanceSlasher",
+    "proxy": "0xDDA88a8ebeaaB19d2a58374D8c72200AFAF94bB4",
+    "implementation": "0x76C05a43234EB2804aa83Cd40BA10080a43d07AE",
+    "version": "1.1.1.0"
+  },
+  {
     "contract": "LockedGold",
     "proxy": "0x619b4767f6A955E63ED7d334DF3384bc4eacFdB8",
     "implementation": "0xaEeE10944B805Bda8Ef6d41645aDb36b24B3F9E1",
