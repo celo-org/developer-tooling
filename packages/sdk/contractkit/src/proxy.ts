@@ -86,10 +86,27 @@ export const SET_AND_INITIALIZE_IMPLEMENTATION_ABI: ABIDefinition = {
   signature: '0x03386ba3',
 }
 
+export const TRANSFER_OWNERSHIP_ABI: ABIDefinition = {
+  constant: false,
+  inputs: [
+    {
+      name: 'newOwner',
+      type: 'address',
+    },
+  ],
+  name: '_transferOwnership',
+  outputs: [],
+  payable: false,
+  stateMutability: 'nonpayable',
+  type: 'function',
+  signature: '0xd29d44ee',
+}
+
 export const PROXY_ABI: ABIDefinition[] = [
   GET_IMPLEMENTATION_ABI,
   SET_IMPLEMENTATION_ABI,
   SET_AND_INITIALIZE_IMPLEMENTATION_ABI,
+  TRANSFER_OWNERSHIP_ABI,
 ]
 
 export const PROXY_SET_IMPLEMENTATION_SIGNATURE = SET_IMPLEMENTATION_ABI.signature
