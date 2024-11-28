@@ -75,7 +75,7 @@ testWithAnvilL1('account metadata cmds', (web3: Web3) => {
 
     test('account:claim-rpc-url cmd', async () => {
       generateEmptyMetadataFile()
-      const rpcUrl = 'http://127.0.0.1:8545'
+      const rpcUrl = 'http://example.com:8545'
 
       await testLocallyWithWeb3Node(
         ClaimRpcUrl,
@@ -109,7 +109,7 @@ testWithAnvilL1('account metadata cmds', (web3: Web3) => {
         ",
           ],
           [
-            "RPC_URL,RPC URL: http://127.0.0.1:8545,N/A,${humanizeDuration(
+            "RPC_URL,RPC URL: http://example.com:8545,N/A,${humanizeDuration(
               (now() - claim!.timestamp) * 1000
             )} ago
         ",
