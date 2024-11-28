@@ -12,6 +12,7 @@
 - [PROXY\_SET\_IMPLEMENTATION\_SIGNATURE](proxy.md#proxy_set_implementation_signature)
 - [SET\_AND\_INITIALIZE\_IMPLEMENTATION\_ABI](proxy.md#set_and_initialize_implementation_abi)
 - [SET\_IMPLEMENTATION\_ABI](proxy.md#set_implementation_abi)
+- [TRANSFER\_OWNERSHIP\_ABI](proxy.md#transfer_ownership_abi)
 
 ### Functions
 
@@ -36,7 +37,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/proxy.ts:89](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L89)
+[packages/sdk/contractkit/src/proxy.ts:105](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L105)
 
 ___
 
@@ -46,7 +47,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/proxy.ts:96](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L96)
+[packages/sdk/contractkit/src/proxy.ts:113](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L113)
 
 ___
 
@@ -56,7 +57,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/proxy.ts:95](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L95)
+[packages/sdk/contractkit/src/proxy.ts:112](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L112)
 
 ___
 
@@ -78,6 +79,16 @@ ___
 
 [packages/sdk/contractkit/src/proxy.ts:53](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L53)
 
+___
+
+### TRANSFER\_OWNERSHIP\_ABI
+
+• `Const` **TRANSFER\_OWNERSHIP\_ABI**: `ABIDefinition`
+
+#### Defined in
+
+[packages/sdk/contractkit/src/proxy.ts:89](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L89)
+
 ## Functions
 
 ### getInitializeAbiOfImplementation
@@ -96,7 +107,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/proxy.ts:138](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L138)
+[packages/sdk/contractkit/src/proxy.ts:155](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L155)
 
 ___
 
@@ -117,4 +128,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/proxy.ts:148](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L148)
+[packages/sdk/contractkit/src/proxy.ts:165](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/proxy.ts#L165)
