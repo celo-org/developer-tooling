@@ -32,7 +32,7 @@
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/types.ts:31](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/types.ts#L31)
+[packages/sdk/metadata-claims/src/types.ts:32](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/types.ts#L32)
 
 ___
 
@@ -51,7 +51,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/types.ts:24](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/types.ts#L24)
+[packages/sdk/metadata-claims/src/types.ts:25](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/types.ts#L25)
 
 ## Variables
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/types.ts:22](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/types.ts#L22)
+[packages/sdk/metadata-claims/src/types.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/types.ts#L23)
 
 ___
 
@@ -91,7 +91,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/types.ts:21](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/types.ts#L21)
+[packages/sdk/metadata-claims/src/types.ts:22](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/types.ts#L22)
 
 ## Functions
 

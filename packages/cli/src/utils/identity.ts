@@ -138,6 +138,9 @@ export const displayMetadata = async (
       case ClaimTypes.DOMAIN:
         extra = `Domain: ${claim.domain}`
         break
+      case ClaimTypes.RPC_URL:
+        extra = `RPC URL: ${claim.rpcUrl}`
+        break
       case ClaimTypes.KEYBASE:
         extra = `Username: ${claim.username}`
         break

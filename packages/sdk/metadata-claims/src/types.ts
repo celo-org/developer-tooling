@@ -11,6 +11,7 @@ export const now = () => Math.round(new Date().getTime() / 1000)
 export enum ClaimTypes {
   ACCOUNT = 'ACCOUNT',
   DOMAIN = 'DOMAIN',
+  RPC_URL = 'RPC_URL',
   KEYBASE = 'KEYBASE',
   NAME = 'NAME',
   PROFILE_PICTURE = 'PROFILE_PICTURE',

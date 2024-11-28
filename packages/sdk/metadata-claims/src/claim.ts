@@ -17,6 +17,12 @@ const DomainClaimType = t.type({
   domain: t.string,
 })
 
+const RpcUrlClaimType = t.type({
+  type: t.literal(ClaimTypes.RPC_URL),
+  timestamp: TimestampType,
+  rpcUrl: t.string,
+})
+
 const NameClaimType = t.type({
   type: t.literal(ClaimTypes.NAME),
   timestamp: TimestampType,
@@ -33,6 +39,7 @@ const StorageClaimType = t.type({
 export const ClaimType = t.union([
   AccountClaimType,
   DomainClaimType,
+  RpcUrlClaimType,
   KeybaseClaimType,
   NameClaimType,
   StorageClaimType,
@@ -45,12 +52,21 @@ export const SignedClaimType = t.type({
 
 export const DOMAIN_TXT_HEADER = 'celo-site-verification'
 export type DomainClaim = t.TypeOf<typeof DomainClaimType>
+export type RpcUrlClaim = t.TypeOf<typeof RpcUrlClaimType>
 export type NameClaim = t.TypeOf<typeof NameClaimType>
 export type StorageClaim = t.TypeOf<typeof StorageClaimType>
-export type Claim = DomainClaim | KeybaseClaim | NameClaim | AccountClaim | StorageClaim
+export type Claim =
+  | DomainClaim
+  | RpcUrlClaim
+  | KeybaseClaim
+  | NameClaim
+  | AccountClaim
+  | StorageClaim
 
 export type ClaimPayload<K extends ClaimTypes> = K extends typeof ClaimTypes.DOMAIN
   ? DomainClaim
+  : K extends typeof ClaimTypes.RPC_URL
+  ? RpcUrlClaim
   : K extends typeof ClaimTypes.NAME
   ? NameClaim
   : K extends typeof ClaimTypes.KEYBASE
@@ -88,6 +104,12 @@ export const createDomainClaim = (domain: string): DomainClaim => ({
   domain,
   timestamp: now(),
   type: ClaimTypes.DOMAIN,
+})
+
+export const createRpcUrlClaim = (rpcUrl: string): RpcUrlClaim => ({
+  rpcUrl,
+  timestamp: now(),
+  type: ClaimTypes.RPC_URL,
 })
 
 export const createStorageClaim = (storageURL: string): StorageClaim => ({
