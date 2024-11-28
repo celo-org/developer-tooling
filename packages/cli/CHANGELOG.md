@@ -1,5 +1,20 @@
 # Changelog
 
+## 6.0.0-beta.5
+
+### Minor Changes
+
+- [#459](https://github.com/celo-org/developer-tooling/pull/459) [`0e559c7`](https://github.com/celo-org/developer-tooling/commit/0e559c73f1d0dee80ee01e9ddd38481a3a8e10b1) Thanks [@shazarre](https://github.com/shazarre)! - Introduces a new command `account:claim-rpc-url` allowing to claim RPC URLs
+
+### Patch Changes
+
+- [#463](https://github.com/celo-org/developer-tooling/pull/463) [`eba89a3`](https://github.com/celo-org/developer-tooling/commit/eba89a3102706cfe6492b0dc44f583a36d320a15) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Add GovernanceSlasher to RegisteredContractsEnum
+
+- Updated dependencies [[`eba89a3`](https://github.com/celo-org/developer-tooling/commit/eba89a3102706cfe6492b0dc44f583a36d320a15), [`43e8474`](https://github.com/celo-org/developer-tooling/commit/43e8474ecd245af3ec1e3d28f45d2de211e481e2), [`0e559c7`](https://github.com/celo-org/developer-tooling/commit/0e559c73f1d0dee80ee01e9ddd38481a3a8e10b1)]:
+  - @celo/contractkit@9.0.0-beta.4
+  - @celo/governance@5.1.4-beta.3
+  - @celo/metadata-claims@1.0.0-beta.1
+
 ## 6.0.0-beta.4
 
 ### Minor Changes
