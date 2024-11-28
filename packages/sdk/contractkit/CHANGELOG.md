@@ -1,5 +1,13 @@
 # @celo/contractkit
 
+## 9.0.0-beta.4
+
+### Patch Changes
+
+- [#463](https://github.com/celo-org/developer-tooling/pull/463) [`eba89a3`](https://github.com/celo-org/developer-tooling/commit/eba89a3102706cfe6492b0dc44f583a36d320a15) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Add GovernanceSlasher to RegisteredContractsEnum
+
+- [#467](https://github.com/celo-org/developer-tooling/pull/467) [`43e8474`](https://github.com/celo-org/developer-tooling/commit/43e8474ecd245af3ec1e3d28f45d2de211e481e2) Thanks [@shazarre](https://github.com/shazarre)! - fix: add transferOwnership() to proxy abi list
+
 ## 9.0.0-beta.3
 
 ### Minor Changes

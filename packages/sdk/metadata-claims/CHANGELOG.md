@@ -1,5 +1,11 @@
 # @celo/metadata-claims
 
+## 1.0.0-beta.1
+
+### Minor Changes
+
+- [#459](https://github.com/celo-org/developer-tooling/pull/459) [`0e559c7`](https://github.com/celo-org/developer-tooling/commit/0e559c73f1d0dee80ee01e9ddd38481a3a8e10b1) Thanks [@shazarre](https://github.com/shazarre)! - Add support for RPC_URL claim type
+
 ## 1.0.0-beta.0
 
 ### Major Changes
