@@ -1,5 +1,15 @@
 # @celo/wallet-ledger
 
+## 6.0.4-beta.1
+
+### Patch Changes
+
+- [#443](https://github.com/celo-org/developer-tooling/pull/443) [`a23246e`](https://github.com/celo-org/developer-tooling/commit/a23246e82e17424cb22c04cce197eb84a2cac54c) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Safer handling of v from device
+
+- Updated dependencies []:
+  - @celo/wallet-base@6.0.4-beta.1
+  - @celo/wallet-remote@6.0.4-beta.1
+
 ## 6.0.3-beta.1
 
 ### Patch Changes

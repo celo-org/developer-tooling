@@ -4,6 +4,10 @@
 
 [wrappers/BaseSlasher](../modules/wrappers_BaseSlasher.md).BaseSlasher
 
+**`Deprecated`**
+
+Contract will be complete removed see https://specs.celo.org/smart_contract_updates_from_l1.html
+
 ## Type parameters
 
 | Name | Type |
@@ -144,7 +148,7 @@ Rewards and penalties for slashing.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/BaseSlasher.ts:70](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BaseSlasher.ts#L70)
+[packages/sdk/contractkit/src/wrappers/BaseSlasher.ts:72](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BaseSlasher.ts#L72)
 
 ## Accessors
 

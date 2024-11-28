@@ -1,5 +1,11 @@
 # @celo/dev-utils
 
+## 0.0.7-beta.2
+
+### Patch Changes
+
+- [#446](https://github.com/celo-org/developer-tooling/pull/446) [`42d091f`](https://github.com/celo-org/developer-tooling/commit/42d091fbc2ab71ce4ec2fb5c57ca266a20a96b6e) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Bump @celo/abis-12
+
 ## 0.0.7-beta.1
 
 ### Patch Changes

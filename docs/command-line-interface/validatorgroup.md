@@ -80,7 +80,7 @@ _See code: [src/commands/validatorgroup/commission.ts](https://github.com/celo-o
 
 ## `celocli validatorgroup:deregister`
 
-Deregister a Validator Group. Approximately 180 days after the validator group is empty, it will be possible to deregister it start unlocking the CELO. If you wish to deregister your validator group, you must first remove all members, then wait the required 180 days before running this command.
+Deregister a Validator Group. After the group lock perioid has passed it will be possible to deregister it start unlocking the CELO. If you wish to deregister your validator group, you must first remove all members, then wait the required time before running this command.
 
 ```
 USAGE
@@ -114,10 +114,10 @@ FLAGS
       Set it to use a ledger wallet
 
 DESCRIPTION
-  Deregister a Validator Group. Approximately 180 days after the validator group is
-  empty, it will be possible to deregister it start unlocking the CELO. If you wish to
-  deregister your validator group, you must first remove all members, then wait the
-  required 180 days before running this command.
+  Deregister a Validator Group. After the group lock perioid has passed it will be
+  possible to deregister it start unlocking the CELO. If you wish to deregister your
+  validator group, you must first remove all members, then wait the required time before
+  running this command.
 
 EXAMPLES
   deregister --from 0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95

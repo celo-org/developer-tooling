@@ -1,19 +1,129 @@
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL2, withImpersonatedAccount } from '@celo/dev-utils/lib/anvil-test'
+import { ux } from '@oclif/core'
 import Web3 from 'web3'
+import {
+  setupGroup,
+  setupValidator,
+  setupValidatorAndAddToGroup,
+} from '../../test-utils/chain-setup'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import ValidatorAffiliate from '../validator/affiliate'
 import Member from './member'
 
 process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvilL2('validatorgroup:member cmd', (web3: Web3) => {
-  beforeEach(async () => {})
   afterEach(() => {
     jest.clearAllMocks()
   })
+  describe('with group', () => {
+    let groupAddress: string
+    let validatorAddress: string
+    let kit: ContractKit
+    const logSpy = jest.spyOn(console, 'log').mockImplementation()
+    beforeEach(async () => {
+      kit = newKitFromWeb3(web3)
+      const addresses = await web3.eth.getAccounts()
+      groupAddress = addresses[0]
+      validatorAddress = addresses[1]
+      await setupGroup(kit, groupAddress)
+    })
+    describe('when --accept called from the group signer', () => {
+      beforeEach(async () => {
+        await setupValidator(kit, validatorAddress)
+        await testLocallyWithWeb3Node(
+          ValidatorAffiliate,
+          [groupAddress, '--from', validatorAddress, '--yes'],
+          web3
+        )
+      })
+      it('accepts a new member to the group', async () => {
+        const writeMock = jest.spyOn(ux.write, 'stdout').mockImplementation()
+        logSpy.mockClear()
+        await testLocallyWithWeb3Node(
+          Member,
+          ['--yes', '--from', groupAddress, '--accept', validatorAddress],
+          web3
+        )
+        expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`[]`)
+        expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls)).toMatchInlineSnapshot(`
+          [
+            [
+              "Running Checks:",
+            ],
+            [
+              "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is Signer or registered Account ",
+            ],
+            [
+              "   ✔  Signer can sign Validator Txs ",
+            ],
+            [
+              "   ✔  Signer account is ValidatorGroup ",
+            ],
+            [
+              "   ✔  0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb is Validator ",
+            ],
+            [
+              "All checks passed",
+            ],
+            [
+              "SendTransaction: addMember",
+            ],
+            [
+              "txHash: 0xtxhash",
+            ],
+          ]
+        `)
+      })
+    })
+    describe('when --remove called from the group signer', () => {
+      beforeEach(async () => {
+        await setupValidatorAndAddToGroup(kit, validatorAddress, groupAddress)
+      })
+      it('removes a member from the group', async () => {
+        const writeMock = jest.spyOn(ux.write, 'stdout').mockImplementation()
+        logSpy.mockClear()
+        await testLocallyWithWeb3Node(
+          Member,
+          ['--yes', '--from', groupAddress, '--remove', validatorAddress],
+          web3
+        )
+        expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`[]`)
+        expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls)).toMatchInlineSnapshot(`
+          [
+            [
+              "Running Checks:",
+            ],
+            [
+              "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is Signer or registered Account ",
+            ],
+            [
+              "   ✔  Signer can sign Validator Txs ",
+            ],
+            [
+              "   ✔  Signer account is ValidatorGroup ",
+            ],
+            [
+              "   ✔  0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb is Validator ",
+            ],
+            [
+              "All checks passed",
+            ],
+            [
+              "SendTransaction: removeMember",
+            ],
+            [
+              "txHash: 0xtxhash",
+            ],
+          ]
+        `)
+      })
+    })
+  })
   describe('when --reorder called from the group signer', () => {
     it('orders member to new position in group rank', async () => {
-      const logSpy = jest.spyOn(console, 'log')
+      const logSpy = jest.spyOn(console, 'log').mockImplementation()
       const kit = newKitFromWeb3(web3)
 
       const ValidatorsWrapper = await kit.contracts.getValidators()

@@ -27,6 +27,7 @@ const unpackInterval = (interval: Interval) => [interval.start, interval.end] as
 
 /**
  * Contract handling slashing for Validator downtime using intervals.
+ * @deprecated Contract will be complete removed https://github.com/celo-org/celo-monorepo/blob/release/core-contracts/12/packages/protocol/contracts/governance/DowntimeSlasher.sol
  */
 export class DowntimeSlasherWrapper extends BaseSlasher<DowntimeSlasher> {
   /**
@@ -107,6 +108,7 @@ export class DowntimeSlasherWrapper extends BaseSlasher<DowntimeSlasher> {
 
     let end = window.end
     const intervals: Interval[] = []
+    // TODO(L2): this is deprecated and not supported in L2
     const isL2 = await isCel2(this.connection.web3)
     while (end > window.start) {
       const epochNumber = isL2

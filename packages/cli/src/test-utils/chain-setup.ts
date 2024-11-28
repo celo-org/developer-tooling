@@ -7,7 +7,7 @@ import {
   impersonateAccount,
   stopImpersonatingAccount,
 } from '@celo/dev-utils/lib/anvil-test'
-import { mineBlocks } from '@celo/dev-utils/lib/ganache-test'
+import { mineBlocks, timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
@@ -63,7 +63,7 @@ export const setupGroup = async (
   })
 }
 
-const setupValidator = async (kit: ContractKit, validatorAccount: string) => {
+export const setupValidator = async (kit: ContractKit, validatorAccount: string) => {
   await registerAccountWithLockedGold(kit, validatorAccount)
 
   const ecdsaPublicKey = await addressToPublicKey(validatorAccount, kit.connection.sign)
@@ -90,17 +90,7 @@ export const setupGroupAndAffiliateValidator = async (
   validatorAccount: string
 ) => {
   await setupGroup(kit, groupAccount)
-  await setupValidator(kit, validatorAccount)
-
-  const validators = await kit.contracts.getValidators()
-
-  await validators.affiliate(groupAccount).sendAndWaitForReceipt({ from: validatorAccount })
-
-  await (
-    await validators.addMember(groupAccount, validatorAccount)
-  ).sendAndWaitForReceipt({
-    from: groupAccount,
-  })
+  await setupValidatorAndAddToGroup(kit, validatorAccount, groupAccount)
 }
 
 export const voteForGroupFrom = async (
@@ -174,4 +164,31 @@ export const changeMultiSigOwner = async (kit: ContractKit, toAccount: StrongAdd
     .replaceOwner(DEFAULT_OWNER_ADDRESS, toAccount)
     .sendAndWaitForReceipt({ from: multisig.address })
   await stopImpersonatingAccount(kit.web3, multisig.address)
+}
+
+export async function setupValidatorAndAddToGroup(
+  kit: ContractKit,
+  validatorAccount: string,
+  groupAccount: string
+) {
+  await setupValidator(kit, validatorAccount)
+
+  const validators = await kit.contracts.getValidators()
+
+  await validators.affiliate(groupAccount).sendAndWaitForReceipt({ from: validatorAccount })
+
+  await (
+    await validators.addMember(groupAccount, validatorAccount)
+  ).sendAndWaitForReceipt({
+    from: groupAccount,
+  })
+}
+// you MUST call clearMock after using this function!
+export async function mockTimeForwardBy(seconds: number, web3: Web3) {
+  const now = Date.now()
+  await timeTravel(seconds, web3)
+  const spy = jest.spyOn(global.Date, 'now').mockImplementation(() => now + seconds * 1000)
+
+  console.warn('mockTimeForwardBy', seconds, 'seconds', 'call clearMock after using this function')
+  return spy
 }

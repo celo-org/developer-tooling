@@ -9,6 +9,7 @@ export const validatorTable: ux.Table.table.Columns<Record<'v', Validator>> = {
   affiliation: { get: (row) => row.v.affiliation },
   score: { get: (row) => row.v.score.toFixed() },
   ecdsaPublicKey: { get: (row) => row.v.ecdsaPublicKey },
+  // TODO(L2) remove
   blsPublicKey: { get: (row) => row.v.blsPublicKey },
   signer: { get: (row) => row.v.signer },
 }

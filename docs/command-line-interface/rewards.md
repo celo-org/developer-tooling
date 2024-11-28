@@ -69,7 +69,7 @@ FLAGS
       <options: csv|json|yaml>
 
   --slashing
-      Show rewards for slashing
+      Show rewards for slashing (will be removed in L2)
 
   --sort=<value>
       property to sort by (prepend '-' for descending)

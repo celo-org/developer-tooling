@@ -2,7 +2,7 @@ import { Flags } from '@oclif/core'
 import prompts from 'prompts'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displaySendTx, humanizeRequirements } from '../../utils/cli'
 import { CustomArgs, CustomFlags } from '../../utils/command'
 
 export default class ValidatorAffiliate extends BaseCommand {
@@ -39,12 +39,14 @@ export default class ValidatorAffiliate extends BaseCommand {
       .isValidatorGroup(groupAddress)
       .runChecks()
 
+    const requirements = await validators.getValidatorLockedGoldRequirements()
+    const { requiredCelo, requiredDays } = humanizeRequirements(requirements)
     if (!res.flags.yes) {
       const response = await prompts({
         type: 'confirm',
         name: 'confirmation',
-        message:
-          'Are you sure you want to affiliate with this group?\nAffiliating with a Validator Group could result in Locked Gold requirements of up to 10,000 CELO for 60 days. (y/n)',
+        message: `Are you sure you want to affiliate with this group?
+Affiliating with a Validator Group could result in Locked Gold requirements of up to ${requiredCelo} CELO for ${requiredDays}. (y/n)`,
       })
 
       if (!response.confirmation) {

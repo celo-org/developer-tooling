@@ -106,7 +106,7 @@ Contract for handling deposits needed for voting.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:402](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L402)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:416](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L416)
 
 ___
 
@@ -529,7 +529,7 @@ List of (group, voting gold) to decrement from `account`.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:341](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L341)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:355](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L355)
 
 ___
 
@@ -551,7 +551,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:348](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L348)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:362](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L362)
 
 ___
 
@@ -809,7 +809,7 @@ The count of pending withdrawals.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:398](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L398)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:412](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L412)
 
 ___
 
