@@ -423,9 +423,9 @@ Claim a RPC URL and add the claim to a local metadata file
 ```
 USAGE
   $ celocli account:claim-rpc-url ARG1 --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
-    --rpcUrl <value> [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
-    0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp]
+    --rpcUrl https://www.celo.org [-k <value> | --useLedger | ] [-n <value>]
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--ledgerAddresses
+    <value> ] [--globalHelp]
 
 ARGUMENTS
   ARG1  Path of the metadata file
@@ -452,7 +452,7 @@ FLAGS
       [default: 1] If --useLedger is set, this will get the first N addresses for local
       signing
 
-  --rpcUrl=<value>
+  --rpcUrl=https://www.celo.org
       (required) The RPC URL to claim
 
   --useLedger
