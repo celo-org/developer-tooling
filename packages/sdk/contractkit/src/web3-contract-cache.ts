@@ -5,6 +5,7 @@ import { newEpochManagerEnabler } from '@celo/abis-12/web3/EpochManagerEnabler'
 import { newFeeCurrencyDirectory } from '@celo/abis-12/web3/FeeCurrencyDirectory'
 import { newGoldToken } from '@celo/abis-12/web3/GoldToken'
 import { newGovernance } from '@celo/abis-12/web3/Governance'
+import { newGovernanceSlasher } from '@celo/abis-12/web3/GovernanceSlasher'
 import { newLockedGold } from '@celo/abis-12/web3/LockedGold'
 import { newScoreManager } from '@celo/abis-12/web3/ScoreManager'
 import { newValidators } from '@celo/abis-12/web3/Validators'
@@ -61,6 +62,7 @@ export const ContractFactories = {
   [CeloContract.GasPriceMinimum]: newGasPriceMinimum,
   [CeloContract.GoldToken]: newGoldToken,
   [CeloContract.Governance]: newGovernance,
+  [CeloContract.GovernanceSlasher]: newGovernanceSlasher,
   [CeloContract.LockedGold]: newLockedGold,
   [CeloContract.MultiSig]: newMultiSig,
   [CeloContract.OdisPayments]: newOdisPayments,

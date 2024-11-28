@@ -24,7 +24,7 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:84](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L84)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:86](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L86)
 
 ## Variables
 
@@ -56,6 +56,7 @@
 | `GasPriceMinimum` | (`web3`: `default`, `address`: `string`) => `GasPriceMinimum` |
 | `GoldToken` | (`web3`: `default`, `address`: `string`) => `GoldToken` |
 | `Governance` | (`web3`: `default`, `address`: `string`) => `Governance` |
+| `GovernanceSlasher` | (`web3`: `default`, `address`: `string`) => `GovernanceSlasher` |
 | `LockedGold` | (`web3`: `default`, `address`: `string`) => `LockedGold` |
 | `MentoFeeHandlerSeller` | (`web3`: `default`, `address`: `string`) => `MentoFeeHandlerSeller` |
 | `MultiSig` | (`web3`: `default`, `address`: `string`) => `MultiSig` |
@@ -73,4 +74,4 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:41](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L41)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:42](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L42)
