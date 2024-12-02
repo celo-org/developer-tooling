@@ -25,7 +25,7 @@ export const reportUsageStatisticsIfTelemetryEnabled = (
   command: string = '_unknown',
   fetchHandler: typeof fetch = fetch
 ) => {
-  if (config.telemetry) {
+  if (config.telemetry === true) {
     const telemetry = getTelemetryOptions(command, success)
 
     printTelemetryInformation()
@@ -37,30 +37,31 @@ export const reportUsageStatisticsIfTelemetryEnabled = (
 
     debug(`Sending telemetry data: ${telemetryData}`)
 
-    // node waits for promise to resolve before exiting, so we can assume
-    // it will be sent before the process exits, but we don't want it
-    // to block other operations
-    //
-    // TODO add a reasonable timeout
+    const controller = new AbortController()
+    const timeout = setTimeout(() => {
+      controller.abort()
+    }, 1000)
+
     fetchHandler(process.env.TELEMETRY_URL!, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/octet-stream',
       },
+      signal: controller.signal,
       body: `
 ${telemetryData}
 `,
     })
       .then((response) => {
-        if (!response.ok) {
-          if (!response.ok && response.body) {
-            debug(`Failed to send telemetry data: ${response.statusText}`)
+        clearTimeout(timeout)
 
-            return
-          }
+        if (!response.ok && response.body) {
+          debug(`Failed to send telemetry data: ${response.statusText}`)
 
-          debug(`Telemetry data sent successfully`)
+          return
         }
+
+        debug(`Telemetry data sent successfuly`)
       })
       .catch((err) => {
         debug(`Failed to send telemetry data: ${err}`)
