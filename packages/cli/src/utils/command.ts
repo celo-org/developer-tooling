@@ -89,6 +89,12 @@ const parsePhoneNumber: ParseFn<string> = async (input) => {
 
 const parseUrl: ParseFn<string> = async (input) => {
   if (URL_REGEX.test(input)) {
+    const url = new URL(input)
+
+    if (url.hostname === 'localhost' || url.hostname === '127.0.0.1') {
+      throw new CLIError('Provided URL is a localhost address. Please provide a public URL.')
+    }
+
     return input
   } else {
     throw new CLIError(`"${input}" is not a valid URL`)

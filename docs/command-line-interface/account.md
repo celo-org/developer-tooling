@@ -9,6 +9,7 @@ Manage your account, keys, and metadata
 * [`celocli account:claim-domain ARG1`](#celocli-accountclaim-domain-arg1)
 * [`celocli account:claim-keybase ARG1`](#celocli-accountclaim-keybase-arg1)
 * [`celocli account:claim-name ARG1`](#celocli-accountclaim-name-arg1)
+* [`celocli account:claim-rpc-url ARG1`](#celocli-accountclaim-rpc-url-arg1)
 * [`celocli account:claim-storage ARG1`](#celocli-accountclaim-storage-arg1)
 * [`celocli account:create-metadata ARG1`](#celocli-accountcreate-metadata-arg1)
 * [`celocli account:deauthorize`](#celocli-accountdeauthorize)
@@ -414,6 +415,67 @@ FLAG DESCRIPTIONS
 ```
 
 _See code: [src/commands/account/claim-name.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/claim-name.ts)_
+
+## `celocli account:claim-rpc-url ARG1`
+
+Claim a RPC URL and add the claim to a local metadata file
+
+```
+USAGE
+  $ celocli account:claim-rpc-url ARG1 --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+    --rpcUrl https://www.celo.org [-k <value> | --useLedger | ] [-n <value>]
+    [--gasCurrency 0x1234567890123456789012345678901234567890] [--ledgerAddresses
+    <value> ] [--globalHelp]
+
+ARGUMENTS
+  ARG1  Path of the metadata file
+
+FLAGS
+  -k, --privateKey=<value>
+      Use a private key to sign local transactions with
+
+  -n, --node=<value>
+      URL of the node to run commands against or an alias
+
+  --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+      (required) Address of the account to set metadata for. Claiming address must be
+      registered as validator
+
+  --gasCurrency=0x1234567890123456789012345678901234567890
+      Use a specific gas currency for transaction fees (defaults to CELO if no gas
+      currency is supplied). It must be a whitelisted token.
+
+  --globalHelp
+      View all available global flags
+
+  --ledgerAddresses=<value>
+      [default: 1] If --useLedger is set, this will get the first N addresses for local
+      signing
+
+  --rpcUrl=https://www.celo.org
+      (required) The RPC URL to claim
+
+  --useLedger
+      Set it to use a ledger wallet
+
+DESCRIPTION
+  Claim a RPC URL and add the claim to a local metadata file
+
+EXAMPLES
+  claim-rpc-url ~/metadata.json --rpc-url example.com --from 0x5409ED021D9299bf6814279A6A1411A7e866A631
+
+FLAG DESCRIPTIONS
+  -n, --node=<value>  URL of the node to run commands against or an alias
+
+    Can be a full url like https://forno.celo.org or an alias. default:
+    http://localhost:8545
+    Alias options:
+    local, localhost => 'http://localhost:8545'
+    alfajores => Celo Alfajores Testnet,
+    mainnet, celo, forno => Celo Mainnet chain',
+```
+
+_See code: [src/commands/account/claim-rpc-url.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/claim-rpc-url.ts)_
 
 ## `celocli account:claim-storage ARG1`
 

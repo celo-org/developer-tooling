@@ -34,7 +34,7 @@ export default class Propose extends BaseCommand {
     }),
     force: Flags.boolean({ description: 'Skip execution check', default: false }),
     noInfo: Flags.boolean({ description: 'Skip printing the proposal info', default: false }),
-    descriptionURL: Flags.string({
+    descriptionURL: CustomFlags.url({
       required: true,
       description: 'A URL where further information about the proposal can be viewed',
     }),

@@ -1,5 +1,5 @@
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { ClaimTypes, IdentityMetadataWrapper } from '@celo/metadata-claims'
 import { now } from '@celo/metadata-claims/lib/types'
 import { ux } from '@oclif/core'
@@ -17,7 +17,7 @@ import RegisterMetadata from './register-metadata'
 import ShowMetadata from './show-metadata'
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL1('account metadata cmds', (web3: Web3) => {
+testWithAnvilL2('account metadata cmds', (web3: Web3) => {
   let account: string
   let accounts: string[]
   let kit: ContractKit
@@ -29,7 +29,7 @@ testWithAnvilL1('account metadata cmds', (web3: Web3) => {
   })
 
   describe('Modifying the metadata file', () => {
-    const emptyFilePath = `${tmpdir()}/metadata.json`
+    const emptyFilePath = `${tmpdir()}/metadata-l2.json`
     const generateEmptyMetadataFile = () => {
       writeFileSync(emptyFilePath, IdentityMetadataWrapper.fromEmpty(account).toString())
     }
@@ -76,6 +76,18 @@ testWithAnvilL1('account metadata cmds', (web3: Web3) => {
     test('account:claim-rpc-url cmd', async () => {
       generateEmptyMetadataFile()
       const rpcUrl = 'http://example.com:8545'
+
+      await expect(
+        testLocallyWithWeb3Node(
+          ClaimRpcUrl,
+          [emptyFilePath, '--from', account, '--rpcUrl', 'http://127.0.0.1:8545'],
+          web3
+        )
+      ).rejects.toMatchInlineSnapshot(`
+        [Error: Parsing --rpcUrl 
+        	Provided URL is a localhost address. Please provide a public URL.
+        See more help with --help]
+      `)
 
       await testLocallyWithWeb3Node(
         ClaimRpcUrl,

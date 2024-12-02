@@ -19,6 +19,7 @@ export enum CeloContract {
   GasPriceMinimum = 'GasPriceMinimum',
   GoldToken = 'GoldToken',
   Governance = 'Governance',
+  GovernanceSlasher = 'GovernanceSlasher',
   LockedGold = 'LockedGold',
   MentoFeeHandlerSeller = 'MentoFeeHandlerSeller',
   UniswapFeeHandlerSeller = 'UniswapFeeHandlerSeller',

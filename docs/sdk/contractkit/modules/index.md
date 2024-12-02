@@ -25,6 +25,7 @@
 - [SET\_AND\_INITIALIZE\_IMPLEMENTATION\_ABI](index.md#set_and_initialize_implementation_abi)
 - [SET\_IMPLEMENTATION\_ABI](index.md#set_implementation_abi)
 - [StableToken](index.md#stabletoken)
+- [TRANSFER\_OWNERSHIP\_ABI](index.md#transfer_ownership_abi)
 - [Token](index.md#token)
 - [getInitializeAbiOfImplementation](index.md#getinitializeabiofimplementation)
 - [newKit](index.md#newkit)
@@ -153,6 +154,12 @@ ___
 ### StableToken
 
 Re-exports [StableToken](../enums/celo_tokens.StableToken.md)
+
+___
+
+### TRANSFER\_OWNERSHIP\_ABI
+
+Re-exports [TRANSFER_OWNERSHIP_ABI](proxy.md#transfer_ownership_abi)
 
 ___
 

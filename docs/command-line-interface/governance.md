@@ -535,8 +535,8 @@ Submit a governance proposal
 ```
 USAGE
   $ celocli governance:propose --jsonTransactions <value> --deposit <value> --from
-    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --descriptionURL <value> [-k <value> |
-    --useLedger | ] [-n <value>] [--gasCurrency
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --descriptionURL https://www.celo.org [-k
+    <value> | --useLedger | ] [-n <value>] [--gasCurrency
     0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
     [--globalHelp] [--for 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --useMultiSig]
     [--force] [--noInfo] [--afterExecutingProposal <value> | --afterExecutingID <value>]
@@ -557,7 +557,7 @@ FLAGS
   --deposit=<value>
       (required) Amount of Celo to attach to proposal
 
-  --descriptionURL=<value>
+  --descriptionURL=https://www.celo.org
       (required) A URL where further information about the proposal can be viewed
 
   --for=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
