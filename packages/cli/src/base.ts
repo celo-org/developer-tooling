@@ -247,13 +247,9 @@ export abstract class BaseCommand extends Command {
   async finally(arg: Error | undefined): Promise<any> {
     try {
       if (arg) {
-        if (!(arg instanceof CLIError)) {
-          await reportUsageStatisticsIfTelemetryEnabled(
-            readConfig(this.config.configDir),
-            false,
-            this.id
-          )
+        reportUsageStatisticsIfTelemetryEnabled(readConfig(this.config.configDir), false, this.id)
 
+        if (!(arg instanceof CLIError)) {
           console.error(
             `
 Received an error during command execution, if you believe this is a bug you can create an issue here: 
@@ -264,6 +260,8 @@ https://github.com/celo-org/developer-tooling/issues/new?assignees=&labels=bug+r
             arg
           )
         }
+      } else {
+        reportUsageStatisticsIfTelemetryEnabled(readConfig(this.config.configDir), true, this.id)
       }
 
       if (this._kit !== null) {
