@@ -1,9 +1,6 @@
 import {
-  CELO_DERIVATION_PATH_BASE,
   generateKeys,
   generateMnemonic,
-  MnemonicLanguages,
-  MnemonicStrength,
   normalizeMnemonic,
   validateMnemonic,
 } from '@celo/cryptographic-utils/lib/account'
@@ -15,7 +12,13 @@ import * as fs from 'fs-extra'
 import { BaseCommand } from '../../base'
 import { printValueMap } from '../../utils/cli'
 
-const ETHEREUM_DERIVATION_PATH = "m/44'/60'/0'"
+import {
+  CELO_DERIVATION_PATH_BASE,
+  DerivationPathAliases,
+  ETHEREUM_DERIVATION_PATH,
+  MnemonicLanguages,
+  MnemonicStrength,
+} from '@celo/base'
 
 export default class NewAccount extends BaseCommand {
   static description =
@@ -98,7 +101,13 @@ export default class NewAccount extends BaseCommand {
     if (derivationPath) {
       derivationPath = derivationPath.endsWith('/') ? derivationPath.slice(0, -1) : derivationPath
     }
-    return derivationPath === 'eth' ? ETHEREUM_DERIVATION_PATH : derivationPath
+
+    const namedPath = DerivationPathAliases[derivationPath as keyof typeof DerivationPathAliases]
+
+    if (namedPath) {
+      return namedPath
+    }
+    return derivationPath
   }
 
   static readFile(file?: string): string | undefined {
@@ -147,7 +156,7 @@ export default class NewAccount extends BaseCommand {
     if (derivationPath === CELO_DERIVATION_PATH_BASE) {
       this.log(
         chalk.magenta(
-          `\nUsing celo-legacy path (${CELO_DERIVATION_PATH_BASE}) for derivation. This will be switched to eth derivation path (${ETHEREUM_DERIVATION_PATH}) next major version.\n`
+          `\nUsing celoLegacy path (${CELO_DERIVATION_PATH_BASE}) for derivation. This will be switched to eth derivation path (${ETHEREUM_DERIVATION_PATH}) next major version.\n`
         )
       )
     }

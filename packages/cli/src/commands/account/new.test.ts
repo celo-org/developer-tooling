@@ -59,6 +59,19 @@ testWithAnvilL2('account:set-name cmd', (web3: Web3) => {
     `)
   })
 
+  it(`when called with "--derivationPath celoLegacy" it generates with "m/44'/52752'/0'"`, async () => {
+    await testLocallyWithWeb3Node(NewAccount, ['--derivationPath', 'celoLegacy'], web3)
+
+    expect(deRandomize(consoleMock.mock.lastCall?.[0])).toMatchInlineSnapshot(`
+      "mnemonic: *** *** 
+      derivationPath: m/44'/52752'/0'
+      accountAddress: ADDRESS
+      privateKey: PUBLIC_KEY
+      publicKey: PRIVATE_KEY
+      address: ADDRESS"
+    `)
+  })
+
   describe('when called with --mnemonicPath', () => {
     const MNEMONIC_PATH = path.join(__dirname, 'public_mnemonic')
     const TEST_mnemonic =
