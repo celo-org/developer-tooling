@@ -141,56 +141,22 @@ List registered Validator Groups, their names (if provided), commission, and mem
 
 ```
 USAGE
-  $ celocli validatorgroup:list [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
-    0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp] [--columns <value> | -x] [--filter <value>] [--no-header | [--csv |
-    --no-truncate]] [--output csv|json|yaml |  | ] [--sort <value>]
+  $ celocli validatorgroup:list [-n <value>] [--globalHelp] [--columns <value> | -x]
+    [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output csv|json|yaml |
+    | ] [--sort <value>]
 
 FLAGS
-  -k, --privateKey=<value>
-      Use a private key to sign local transactions with
-
-  -n, --node=<value>
-      URL of the node to run commands against or an alias
-
-  -x, --extended
-      show extra columns
-
-  --columns=<value>
-      only show provided columns (comma-separated)
-
-  --csv
-      output is csv format [alias: --output=csv]
-
-  --filter=<value>
-      filter property by partial string matching, ex: name=foo
-
-  --gasCurrency=0x1234567890123456789012345678901234567890
-      Use a specific gas currency for transaction fees (defaults to CELO if no gas
-      currency is supplied). It must be a whitelisted token.
-
-  --globalHelp
-      View all available global flags
-
-  --ledgerAddresses=<value>
-      [default: 1] If --useLedger is set, this will get the first N addresses for local
-      signing
-
-  --no-header
-      hide table header from output
-
-  --no-truncate
-      do not truncate output to fit screen
-
-  --output=<option>
-      output in a more machine friendly format
-      <options: csv|json|yaml>
-
-  --sort=<value>
-      property to sort by (prepend '-' for descending)
-
-  --useLedger
-      Set it to use a ledger wallet
+  -n, --node=<value>     URL of the node to run commands against or an alias
+  -x, --extended         show extra columns
+      --columns=<value>  only show provided columns (comma-separated)
+      --csv              output is csv format [alias: --output=csv]
+      --filter=<value>   filter property by partial string matching, ex: name=foo
+      --globalHelp       View all available global flags
+      --no-header        hide table header from output
+      --no-truncate      do not truncate output to fit screen
+      --output=<option>  output in a more machine friendly format
+                         <options: csv|json|yaml>
+      --sort=<value>     property to sort by (prepend '-' for descending)
 
 DESCRIPTION
   List registered Validator Groups, their names (if provided), commission, and members.
@@ -404,33 +370,14 @@ Show information about an existing Validator Group
 
 ```
 USAGE
-  $ celocli validatorgroup:show ARG1 [-k <value> | --useLedger | ] [-n <value>]
-    [--gasCurrency 0x1234567890123456789012345678901234567890] [--ledgerAddresses
-    <value> ] [--globalHelp]
+  $ celocli validatorgroup:show ARG1 [-n <value>] [--globalHelp]
 
 ARGUMENTS
   ARG1  ValidatorGroup's address
 
 FLAGS
-  -k, --privateKey=<value>
-      Use a private key to sign local transactions with
-
-  -n, --node=<value>
-      URL of the node to run commands against or an alias
-
-  --gasCurrency=0x1234567890123456789012345678901234567890
-      Use a specific gas currency for transaction fees (defaults to CELO if no gas
-      currency is supplied). It must be a whitelisted token.
-
-  --globalHelp
-      View all available global flags
-
-  --ledgerAddresses=<value>
-      [default: 1] If --useLedger is set, this will get the first N addresses for local
-      signing
-
-  --useLedger
-      Set it to use a ledger wallet
+  -n, --node=<value>  URL of the node to run commands against or an alias
+      --globalHelp    View all available global flags
 
 DESCRIPTION
   Show information about an existing Validator Group

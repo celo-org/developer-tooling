@@ -673,65 +673,33 @@ Show information about a governance proposal, hotfix, or account.
 
 ```
 USAGE
-  $ celocli governance:show [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
-    0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp] [--raw] [--jsonTransactions <value>] [--notwhitelisted]
-    [--whitelisters | --nonwhitelisters |  | [--proposalID <value> | --account <value> |
-    --hotfix <value>]] [--afterExecutingProposal <value> | --afterExecutingID <value>]
+  $ celocli governance:show [-n <value>] [--globalHelp] [--raw] [--jsonTransactions
+    <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters |  | [--proposalID
+    <value> | --account <value> | --hotfix <value>]] [--afterExecutingProposal <value> |
+    --afterExecutingID <value>]
 
 FLAGS
-  -k, --privateKey=<value>
-      Use a private key to sign local transactions with
-
-  -n, --node=<value>
-      URL of the node to run commands against or an alias
-
-  --account=<value>
-      Address of account or voter
-
-  --afterExecutingID=<value>
-      Governance proposal identifier which will be executed prior to proposal
-
-  --afterExecutingProposal=<value>
-      Path to proposal which will be executed prior to proposal
-
-  --gasCurrency=0x1234567890123456789012345678901234567890
-      Use a specific gas currency for transaction fees (defaults to CELO if no gas
-      currency is supplied). It must be a whitelisted token.
-
-  --globalHelp
-      View all available global flags
-
-  --hotfix=<value>
-      Hash of hotfix proposal
-
-  --jsonTransactions=<value>
-      Output proposal JSON to provided file
-
-  --ledgerAddresses=<value>
-      [default: 1] If --useLedger is set, this will get the first N addresses for local
-      signing
-
-  --nonwhitelisters
-      If set, displays validators that have not whitelisted the hotfix.(will be removed
-      when L2 launches
-
-  --notwhitelisted
-      List validators who have not whitelisted the specified hotfix (will be removed when
-      L2 launches
-
-  --proposalID=<value>
-      UUID of proposal to view
-
-  --raw
-      Display proposal in raw bytes format
-
-  --useLedger
-      Set it to use a ledger wallet
-
-  --whitelisters
-      If set, displays validators that have whitelisted the hotfix.(will be removed when
-      L2 launches
+  -n, --node=<value>                    URL of the node to run commands against or an
+                                        alias
+      --account=<value>                 Address of account or voter
+      --afterExecutingID=<value>        Governance proposal identifier which will be
+                                        executed prior to proposal
+      --afterExecutingProposal=<value>  Path to proposal which will be executed prior to
+                                        proposal
+      --globalHelp                      View all available global flags
+      --hotfix=<value>                  Hash of hotfix proposal
+      --jsonTransactions=<value>        Output proposal JSON to provided file
+      --nonwhitelisters                 If set, displays validators that have not
+                                        whitelisted the hotfix.(will be removed when L2
+                                        launches
+      --notwhitelisted                  List validators who have not whitelisted the
+                                        specified hotfix (will be removed when L2
+                                        launches
+      --proposalID=<value>              UUID of proposal to view
+      --raw                             Display proposal in raw bytes format
+      --whitelisters                    If set, displays validators that have
+                                        whitelisted the hotfix.(will be removed when L2
+                                        launches
 
 DESCRIPTION
   Show information about a governance proposal, hotfix, or account.
@@ -776,65 +744,33 @@ Show information about a governance proposal, hotfix, or account.
 
 ```
 USAGE
-  $ celocli governance:showaccount [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
-    0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp] [--raw] [--jsonTransactions <value>] [--notwhitelisted]
-    [--whitelisters | --nonwhitelisters |  | [--proposalID <value> | --account <value> |
-    --hotfix <value>]] [--afterExecutingProposal <value> | --afterExecutingID <value>]
+  $ celocli governance:showaccount [-n <value>] [--globalHelp] [--raw] [--jsonTransactions
+    <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters |  | [--proposalID
+    <value> | --account <value> | --hotfix <value>]] [--afterExecutingProposal <value> |
+    --afterExecutingID <value>]
 
 FLAGS
-  -k, --privateKey=<value>
-      Use a private key to sign local transactions with
-
-  -n, --node=<value>
-      URL of the node to run commands against or an alias
-
-  --account=<value>
-      Address of account or voter
-
-  --afterExecutingID=<value>
-      Governance proposal identifier which will be executed prior to proposal
-
-  --afterExecutingProposal=<value>
-      Path to proposal which will be executed prior to proposal
-
-  --gasCurrency=0x1234567890123456789012345678901234567890
-      Use a specific gas currency for transaction fees (defaults to CELO if no gas
-      currency is supplied). It must be a whitelisted token.
-
-  --globalHelp
-      View all available global flags
-
-  --hotfix=<value>
-      Hash of hotfix proposal
-
-  --jsonTransactions=<value>
-      Output proposal JSON to provided file
-
-  --ledgerAddresses=<value>
-      [default: 1] If --useLedger is set, this will get the first N addresses for local
-      signing
-
-  --nonwhitelisters
-      If set, displays validators that have not whitelisted the hotfix.(will be removed
-      when L2 launches
-
-  --notwhitelisted
-      List validators who have not whitelisted the specified hotfix (will be removed when
-      L2 launches
-
-  --proposalID=<value>
-      UUID of proposal to view
-
-  --raw
-      Display proposal in raw bytes format
-
-  --useLedger
-      Set it to use a ledger wallet
-
-  --whitelisters
-      If set, displays validators that have whitelisted the hotfix.(will be removed when
-      L2 launches
+  -n, --node=<value>                    URL of the node to run commands against or an
+                                        alias
+      --account=<value>                 Address of account or voter
+      --afterExecutingID=<value>        Governance proposal identifier which will be
+                                        executed prior to proposal
+      --afterExecutingProposal=<value>  Path to proposal which will be executed prior to
+                                        proposal
+      --globalHelp                      View all available global flags
+      --hotfix=<value>                  Hash of hotfix proposal
+      --jsonTransactions=<value>        Output proposal JSON to provided file
+      --nonwhitelisters                 If set, displays validators that have not
+                                        whitelisted the hotfix.(will be removed when L2
+                                        launches
+      --notwhitelisted                  List validators who have not whitelisted the
+                                        specified hotfix (will be removed when L2
+                                        launches
+      --proposalID=<value>              UUID of proposal to view
+      --raw                             Display proposal in raw bytes format
+      --whitelisters                    If set, displays validators that have
+                                        whitelisted the hotfix.(will be removed when L2
+                                        launches
 
 DESCRIPTION
   Show information about a governance proposal, hotfix, or account.
@@ -877,65 +813,33 @@ Show information about a governance proposal, hotfix, or account.
 
 ```
 USAGE
-  $ celocli governance:showhotfix [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
-    0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp] [--raw] [--jsonTransactions <value>] [--notwhitelisted]
-    [--whitelisters | --nonwhitelisters |  | [--proposalID <value> | --account <value> |
-    --hotfix <value>]] [--afterExecutingProposal <value> | --afterExecutingID <value>]
+  $ celocli governance:showhotfix [-n <value>] [--globalHelp] [--raw] [--jsonTransactions
+    <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters |  | [--proposalID
+    <value> | --account <value> | --hotfix <value>]] [--afterExecutingProposal <value> |
+    --afterExecutingID <value>]
 
 FLAGS
-  -k, --privateKey=<value>
-      Use a private key to sign local transactions with
-
-  -n, --node=<value>
-      URL of the node to run commands against or an alias
-
-  --account=<value>
-      Address of account or voter
-
-  --afterExecutingID=<value>
-      Governance proposal identifier which will be executed prior to proposal
-
-  --afterExecutingProposal=<value>
-      Path to proposal which will be executed prior to proposal
-
-  --gasCurrency=0x1234567890123456789012345678901234567890
-      Use a specific gas currency for transaction fees (defaults to CELO if no gas
-      currency is supplied). It must be a whitelisted token.
-
-  --globalHelp
-      View all available global flags
-
-  --hotfix=<value>
-      Hash of hotfix proposal
-
-  --jsonTransactions=<value>
-      Output proposal JSON to provided file
-
-  --ledgerAddresses=<value>
-      [default: 1] If --useLedger is set, this will get the first N addresses for local
-      signing
-
-  --nonwhitelisters
-      If set, displays validators that have not whitelisted the hotfix.(will be removed
-      when L2 launches
-
-  --notwhitelisted
-      List validators who have not whitelisted the specified hotfix (will be removed when
-      L2 launches
-
-  --proposalID=<value>
-      UUID of proposal to view
-
-  --raw
-      Display proposal in raw bytes format
-
-  --useLedger
-      Set it to use a ledger wallet
-
-  --whitelisters
-      If set, displays validators that have whitelisted the hotfix.(will be removed when
-      L2 launches
+  -n, --node=<value>                    URL of the node to run commands against or an
+                                        alias
+      --account=<value>                 Address of account or voter
+      --afterExecutingID=<value>        Governance proposal identifier which will be
+                                        executed prior to proposal
+      --afterExecutingProposal=<value>  Path to proposal which will be executed prior to
+                                        proposal
+      --globalHelp                      View all available global flags
+      --hotfix=<value>                  Hash of hotfix proposal
+      --jsonTransactions=<value>        Output proposal JSON to provided file
+      --nonwhitelisters                 If set, displays validators that have not
+                                        whitelisted the hotfix.(will be removed when L2
+                                        launches
+      --notwhitelisted                  List validators who have not whitelisted the
+                                        specified hotfix (will be removed when L2
+                                        launches
+      --proposalID=<value>              UUID of proposal to view
+      --raw                             Display proposal in raw bytes format
+      --whitelisters                    If set, displays validators that have
+                                        whitelisted the hotfix.(will be removed when L2
+                                        launches
 
 DESCRIPTION
   Show information about a governance proposal, hotfix, or account.
@@ -1035,65 +939,33 @@ Show information about a governance proposal, hotfix, or account.
 
 ```
 USAGE
-  $ celocli governance:view [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
-    0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp] [--raw] [--jsonTransactions <value>] [--notwhitelisted]
-    [--whitelisters | --nonwhitelisters |  | [--proposalID <value> | --account <value> |
-    --hotfix <value>]] [--afterExecutingProposal <value> | --afterExecutingID <value>]
+  $ celocli governance:view [-n <value>] [--globalHelp] [--raw] [--jsonTransactions
+    <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters |  | [--proposalID
+    <value> | --account <value> | --hotfix <value>]] [--afterExecutingProposal <value> |
+    --afterExecutingID <value>]
 
 FLAGS
-  -k, --privateKey=<value>
-      Use a private key to sign local transactions with
-
-  -n, --node=<value>
-      URL of the node to run commands against or an alias
-
-  --account=<value>
-      Address of account or voter
-
-  --afterExecutingID=<value>
-      Governance proposal identifier which will be executed prior to proposal
-
-  --afterExecutingProposal=<value>
-      Path to proposal which will be executed prior to proposal
-
-  --gasCurrency=0x1234567890123456789012345678901234567890
-      Use a specific gas currency for transaction fees (defaults to CELO if no gas
-      currency is supplied). It must be a whitelisted token.
-
-  --globalHelp
-      View all available global flags
-
-  --hotfix=<value>
-      Hash of hotfix proposal
-
-  --jsonTransactions=<value>
-      Output proposal JSON to provided file
-
-  --ledgerAddresses=<value>
-      [default: 1] If --useLedger is set, this will get the first N addresses for local
-      signing
-
-  --nonwhitelisters
-      If set, displays validators that have not whitelisted the hotfix.(will be removed
-      when L2 launches
-
-  --notwhitelisted
-      List validators who have not whitelisted the specified hotfix (will be removed when
-      L2 launches
-
-  --proposalID=<value>
-      UUID of proposal to view
-
-  --raw
-      Display proposal in raw bytes format
-
-  --useLedger
-      Set it to use a ledger wallet
-
-  --whitelisters
-      If set, displays validators that have whitelisted the hotfix.(will be removed when
-      L2 launches
+  -n, --node=<value>                    URL of the node to run commands against or an
+                                        alias
+      --account=<value>                 Address of account or voter
+      --afterExecutingID=<value>        Governance proposal identifier which will be
+                                        executed prior to proposal
+      --afterExecutingProposal=<value>  Path to proposal which will be executed prior to
+                                        proposal
+      --globalHelp                      View all available global flags
+      --hotfix=<value>                  Hash of hotfix proposal
+      --jsonTransactions=<value>        Output proposal JSON to provided file
+      --nonwhitelisters                 If set, displays validators that have not
+                                        whitelisted the hotfix.(will be removed when L2
+                                        launches
+      --notwhitelisted                  List validators who have not whitelisted the
+                                        specified hotfix (will be removed when L2
+                                        launches
+      --proposalID=<value>              UUID of proposal to view
+      --raw                             Display proposal in raw bytes format
+      --whitelisters                    If set, displays validators that have
+                                        whitelisted the hotfix.(will be removed when L2
+                                        launches
 
 DESCRIPTION
   Show information about a governance proposal, hotfix, or account.
@@ -1136,65 +1008,33 @@ Show information about a governance proposal, hotfix, or account.
 
 ```
 USAGE
-  $ celocli governance:viewaccount [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
-    0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp] [--raw] [--jsonTransactions <value>] [--notwhitelisted]
-    [--whitelisters | --nonwhitelisters |  | [--proposalID <value> | --account <value> |
-    --hotfix <value>]] [--afterExecutingProposal <value> | --afterExecutingID <value>]
+  $ celocli governance:viewaccount [-n <value>] [--globalHelp] [--raw] [--jsonTransactions
+    <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters |  | [--proposalID
+    <value> | --account <value> | --hotfix <value>]] [--afterExecutingProposal <value> |
+    --afterExecutingID <value>]
 
 FLAGS
-  -k, --privateKey=<value>
-      Use a private key to sign local transactions with
-
-  -n, --node=<value>
-      URL of the node to run commands against or an alias
-
-  --account=<value>
-      Address of account or voter
-
-  --afterExecutingID=<value>
-      Governance proposal identifier which will be executed prior to proposal
-
-  --afterExecutingProposal=<value>
-      Path to proposal which will be executed prior to proposal
-
-  --gasCurrency=0x1234567890123456789012345678901234567890
-      Use a specific gas currency for transaction fees (defaults to CELO if no gas
-      currency is supplied). It must be a whitelisted token.
-
-  --globalHelp
-      View all available global flags
-
-  --hotfix=<value>
-      Hash of hotfix proposal
-
-  --jsonTransactions=<value>
-      Output proposal JSON to provided file
-
-  --ledgerAddresses=<value>
-      [default: 1] If --useLedger is set, this will get the first N addresses for local
-      signing
-
-  --nonwhitelisters
-      If set, displays validators that have not whitelisted the hotfix.(will be removed
-      when L2 launches
-
-  --notwhitelisted
-      List validators who have not whitelisted the specified hotfix (will be removed when
-      L2 launches
-
-  --proposalID=<value>
-      UUID of proposal to view
-
-  --raw
-      Display proposal in raw bytes format
-
-  --useLedger
-      Set it to use a ledger wallet
-
-  --whitelisters
-      If set, displays validators that have whitelisted the hotfix.(will be removed when
-      L2 launches
+  -n, --node=<value>                    URL of the node to run commands against or an
+                                        alias
+      --account=<value>                 Address of account or voter
+      --afterExecutingID=<value>        Governance proposal identifier which will be
+                                        executed prior to proposal
+      --afterExecutingProposal=<value>  Path to proposal which will be executed prior to
+                                        proposal
+      --globalHelp                      View all available global flags
+      --hotfix=<value>                  Hash of hotfix proposal
+      --jsonTransactions=<value>        Output proposal JSON to provided file
+      --nonwhitelisters                 If set, displays validators that have not
+                                        whitelisted the hotfix.(will be removed when L2
+                                        launches
+      --notwhitelisted                  List validators who have not whitelisted the
+                                        specified hotfix (will be removed when L2
+                                        launches
+      --proposalID=<value>              UUID of proposal to view
+      --raw                             Display proposal in raw bytes format
+      --whitelisters                    If set, displays validators that have
+                                        whitelisted the hotfix.(will be removed when L2
+                                        launches
 
 DESCRIPTION
   Show information about a governance proposal, hotfix, or account.
@@ -1237,65 +1077,33 @@ Show information about a governance proposal, hotfix, or account.
 
 ```
 USAGE
-  $ celocli governance:viewhotfix [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
-    0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp] [--raw] [--jsonTransactions <value>] [--notwhitelisted]
-    [--whitelisters | --nonwhitelisters |  | [--proposalID <value> | --account <value> |
-    --hotfix <value>]] [--afterExecutingProposal <value> | --afterExecutingID <value>]
+  $ celocli governance:viewhotfix [-n <value>] [--globalHelp] [--raw] [--jsonTransactions
+    <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters |  | [--proposalID
+    <value> | --account <value> | --hotfix <value>]] [--afterExecutingProposal <value> |
+    --afterExecutingID <value>]
 
 FLAGS
-  -k, --privateKey=<value>
-      Use a private key to sign local transactions with
-
-  -n, --node=<value>
-      URL of the node to run commands against or an alias
-
-  --account=<value>
-      Address of account or voter
-
-  --afterExecutingID=<value>
-      Governance proposal identifier which will be executed prior to proposal
-
-  --afterExecutingProposal=<value>
-      Path to proposal which will be executed prior to proposal
-
-  --gasCurrency=0x1234567890123456789012345678901234567890
-      Use a specific gas currency for transaction fees (defaults to CELO if no gas
-      currency is supplied). It must be a whitelisted token.
-
-  --globalHelp
-      View all available global flags
-
-  --hotfix=<value>
-      Hash of hotfix proposal
-
-  --jsonTransactions=<value>
-      Output proposal JSON to provided file
-
-  --ledgerAddresses=<value>
-      [default: 1] If --useLedger is set, this will get the first N addresses for local
-      signing
-
-  --nonwhitelisters
-      If set, displays validators that have not whitelisted the hotfix.(will be removed
-      when L2 launches
-
-  --notwhitelisted
-      List validators who have not whitelisted the specified hotfix (will be removed when
-      L2 launches
-
-  --proposalID=<value>
-      UUID of proposal to view
-
-  --raw
-      Display proposal in raw bytes format
-
-  --useLedger
-      Set it to use a ledger wallet
-
-  --whitelisters
-      If set, displays validators that have whitelisted the hotfix.(will be removed when
-      L2 launches
+  -n, --node=<value>                    URL of the node to run commands against or an
+                                        alias
+      --account=<value>                 Address of account or voter
+      --afterExecutingID=<value>        Governance proposal identifier which will be
+                                        executed prior to proposal
+      --afterExecutingProposal=<value>  Path to proposal which will be executed prior to
+                                        proposal
+      --globalHelp                      View all available global flags
+      --hotfix=<value>                  Hash of hotfix proposal
+      --jsonTransactions=<value>        Output proposal JSON to provided file
+      --nonwhitelisters                 If set, displays validators that have not
+                                        whitelisted the hotfix.(will be removed when L2
+                                        launches
+      --notwhitelisted                  List validators who have not whitelisted the
+                                        specified hotfix (will be removed when L2
+                                        launches
+      --proposalID=<value>              UUID of proposal to view
+      --raw                             Display proposal in raw bytes format
+      --whitelisters                    If set, displays validators that have
+                                        whitelisted the hotfix.(will be removed when L2
+                                        launches
 
 DESCRIPTION
   Show information about a governance proposal, hotfix, or account.

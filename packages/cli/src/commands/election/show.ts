@@ -3,12 +3,13 @@ import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { printValueMapRecursive } from '../../utils/cli'
 import { CustomArgs } from '../../utils/command'
+import { ViewCommmandFlags } from '../../utils/flags'
 
 export default class ElectionShow extends BaseCommand {
   static description = 'Show election information about a voter or registered Validator Group'
 
   static flags = {
-    ...BaseCommand.flags,
+    ...ViewCommmandFlags,
     voter: Flags.boolean({
       exclusive: ['group'],
       description: 'Show information about an account voting in Validator elections',

@@ -3,12 +3,13 @@ import { ux } from '@oclif/core'
 
 import { BaseCommand } from '../../base'
 import { CustomArgs } from '../../utils/command'
+import { ViewCommmandFlags } from '../../utils/flags'
 import { displayMetadata } from '../../utils/identity'
 
 export default class ShowMetadata extends BaseCommand {
   static description = 'Show the data in a local metadata file'
   static flags = {
-    ...BaseCommand.flags,
+    ...ViewCommmandFlags,
     ...(ux.table.flags() as object),
   }
   static args = {

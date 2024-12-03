@@ -5,6 +5,7 @@ import { CeloContract } from '@celo/contractkit'
 import { ux } from '@oclif/core'
 
 import { BaseCommand } from '../../base'
+import { ViewCommmandFlags } from '../../utils/flags'
 
 const UNVERSIONED_CONTRACTS = [
   CeloContract.Registry,
@@ -20,7 +21,7 @@ export default class Contracts extends BaseCommand {
   static description = 'Lists Celo core contracts and their addresses.'
 
   static flags = {
-    ...BaseCommand.flags,
+    ...ViewCommmandFlags,
     ...(ux.table.flags() as object),
   }
 
