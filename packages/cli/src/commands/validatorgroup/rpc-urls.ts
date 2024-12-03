@@ -8,8 +8,8 @@ export default class RpcUrls extends BaseCommand {
     'Displays a list of community RPC nodes for the currently elected validator groups'
 
   static aliases: string[] = [
+    'network:rpc-urls',
     'validator:rpc-urls',
-    'validatorgroup:rpc-urls',
     'network:community-rpc-nodes',
     'validator:community-rpc-nodes',
     'validatorgroup:community-rpc-nodes',
@@ -20,7 +20,7 @@ export default class RpcUrls extends BaseCommand {
     ...(ux.table.flags() as object),
     all: Flags.boolean({
       description:
-        'Display all community RC nodes, not just the ones from currently elected validator groups',
+        'Display all community RPC nodes, not just the ones from currently elected validator groups',
       required: false,
       default: false,
     }),
@@ -50,6 +50,18 @@ export default class RpcUrls extends BaseCommand {
       }
     }
 
+    const validatorToGroup: { [key: StrongAddress]: string } = Object.fromEntries(
+      await concurrentMap(5, validatorAddresses, async (address) => {
+        return [address, await validatorsWrapper.getValidatorsGroup(address)]
+      })
+    )
+
+    const validatorGroupNames = Object.fromEntries(
+      await concurrentMap(5, [...new Set(Object.values(validatorToGroup))], async (address) => {
+        return [address, (await validatorsWrapper.getValidatorGroup(address)).name]
+      })
+    )
+
     const metadataURLs = await concurrentMap(5, validatorAddresses, async (address) => {
       const metadataURL = await accountsWrapper.getMetadataURL(address)
 
@@ -62,19 +74,10 @@ export default class RpcUrls extends BaseCommand {
       return metadata.findClaim(ClaimTypes.RPC_URL)?.rpcUrl
     })
 
-    // TODO cache so we don't have to fetch the same validator group name multiple times
-    const validatorGroupNames = await concurrentMap(5, validatorAddresses, async (address) => {
-      return (
-        await validatorsWrapper.getValidatorGroup(
-          await validatorsWrapper.getValidatorsGroup(address)
-        )
-      ).name
-    })
-
     ux.table(
       validatorAddresses
         .map((address, idx) => ({
-          validatorGroupName: validatorGroupNames[idx],
+          validatorGroupName: validatorGroupNames[validatorToGroup[address]],
           rpcUrl: metadataURLs[idx],
           validatorAddress: address,
         }))
