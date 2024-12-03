@@ -4,11 +4,13 @@
 View and manage Validator Groups
 
 * [`celocli validatorgroup:commission`](#celocli-validatorgroupcommission)
+* [`celocli validatorgroup:community-rpc-nodes`](#celocli-validatorgroupcommunity-rpc-nodes)
 * [`celocli validatorgroup:deregister`](#celocli-validatorgroupderegister)
 * [`celocli validatorgroup:list`](#celocli-validatorgrouplist)
 * [`celocli validatorgroup:member ARG1`](#celocli-validatorgroupmember-arg1)
 * [`celocli validatorgroup:register`](#celocli-validatorgroupregister)
 * [`celocli validatorgroup:reset-slashing-multiplier ARG1`](#celocli-validatorgroupreset-slashing-multiplier-arg1)
+* [`celocli validatorgroup:rpc-urls`](#celocli-validatorgrouprpc-urls)
 * [`celocli validatorgroup:show ARG1`](#celocli-validatorgroupshow-arg1)
 
 ## `celocli validatorgroup:commission`
@@ -77,6 +79,88 @@ FLAG DESCRIPTIONS
 ```
 
 _See code: [src/commands/validatorgroup/commission.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validatorgroup/commission.ts)_
+
+## `celocli validatorgroup:community-rpc-nodes`
+
+Displays a list of community RPC nodes for the currently elected validator groups
+
+```
+USAGE
+  $ celocli validatorgroup:community-rpc-nodes [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
+    [--globalHelp] [--columns <value> | -x] [--filter <value>] [--no-header | [--csv |
+    --no-truncate]] [--output csv|json|yaml |  | ] [--sort <value>] [--all]
+
+FLAGS
+  -k, --privateKey=<value>
+      Use a private key to sign local transactions with
+
+  -n, --node=<value>
+      URL of the node to run commands against or an alias
+
+  -x, --extended
+      show extra columns
+
+  --all
+      Display all community RPC nodes, not just the ones from currently elected validator
+      groups
+
+  --columns=<value>
+      only show provided columns (comma-separated)
+
+  --csv
+      output is csv format [alias: --output=csv]
+
+  --filter=<value>
+      filter property by partial string matching, ex: name=foo
+
+  --gasCurrency=0x1234567890123456789012345678901234567890
+      Use a specific gas currency for transaction fees (defaults to CELO if no gas
+      currency is supplied). It must be a whitelisted token.
+
+  --globalHelp
+      View all available global flags
+
+  --ledgerAddresses=<value>
+      [default: 1] If --useLedger is set, this will get the first N addresses for local
+      signing
+
+  --no-header
+      hide table header from output
+
+  --no-truncate
+      do not truncate output to fit screen
+
+  --output=<option>
+      output in a more machine friendly format
+      <options: csv|json|yaml>
+
+  --sort=<value>
+      property to sort by (prepend '-' for descending)
+
+  --useLedger
+      Set it to use a ledger wallet
+
+DESCRIPTION
+  Displays a list of community RPC nodes for the currently elected validator groups
+
+ALIASES
+  $ celocli network:rpc-urls
+  $ celocli validator:rpc-urls
+  $ celocli network:community-rpc-nodes
+  $ celocli validator:community-rpc-nodes
+  $ celocli validatorgroup:community-rpc-nodes
+
+FLAG DESCRIPTIONS
+  -n, --node=<value>  URL of the node to run commands against or an alias
+
+    Can be a full url like https://forno.celo.org or an alias. default:
+    http://localhost:8545
+    Alias options:
+    local, localhost => 'http://localhost:8545'
+    alfajores => Celo Alfajores Testnet,
+    mainnet, celo, forno => Celo Mainnet chain',
+```
 
 ## `celocli validatorgroup:deregister`
 
@@ -397,6 +481,90 @@ FLAG DESCRIPTIONS
 ```
 
 _See code: [src/commands/validatorgroup/reset-slashing-multiplier.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validatorgroup/reset-slashing-multiplier.ts)_
+
+## `celocli validatorgroup:rpc-urls`
+
+Displays a list of community RPC nodes for the currently elected validator groups
+
+```
+USAGE
+  $ celocli validatorgroup:rpc-urls [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
+    0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
+    [--globalHelp] [--columns <value> | -x] [--filter <value>] [--no-header | [--csv |
+    --no-truncate]] [--output csv|json|yaml |  | ] [--sort <value>] [--all]
+
+FLAGS
+  -k, --privateKey=<value>
+      Use a private key to sign local transactions with
+
+  -n, --node=<value>
+      URL of the node to run commands against or an alias
+
+  -x, --extended
+      show extra columns
+
+  --all
+      Display all community RPC nodes, not just the ones from currently elected validator
+      groups
+
+  --columns=<value>
+      only show provided columns (comma-separated)
+
+  --csv
+      output is csv format [alias: --output=csv]
+
+  --filter=<value>
+      filter property by partial string matching, ex: name=foo
+
+  --gasCurrency=0x1234567890123456789012345678901234567890
+      Use a specific gas currency for transaction fees (defaults to CELO if no gas
+      currency is supplied). It must be a whitelisted token.
+
+  --globalHelp
+      View all available global flags
+
+  --ledgerAddresses=<value>
+      [default: 1] If --useLedger is set, this will get the first N addresses for local
+      signing
+
+  --no-header
+      hide table header from output
+
+  --no-truncate
+      do not truncate output to fit screen
+
+  --output=<option>
+      output in a more machine friendly format
+      <options: csv|json|yaml>
+
+  --sort=<value>
+      property to sort by (prepend '-' for descending)
+
+  --useLedger
+      Set it to use a ledger wallet
+
+DESCRIPTION
+  Displays a list of community RPC nodes for the currently elected validator groups
+
+ALIASES
+  $ celocli network:rpc-urls
+  $ celocli validator:rpc-urls
+  $ celocli network:community-rpc-nodes
+  $ celocli validator:community-rpc-nodes
+  $ celocli validatorgroup:community-rpc-nodes
+
+FLAG DESCRIPTIONS
+  -n, --node=<value>  URL of the node to run commands against or an alias
+
+    Can be a full url like https://forno.celo.org or an alias. default:
+    http://localhost:8545
+    Alias options:
+    local, localhost => 'http://localhost:8545'
+    alfajores => Celo Alfajores Testnet,
+    mainnet, celo, forno => Celo Mainnet chain',
+```
+
+_See code: [src/commands/validatorgroup/rpc-urls.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validatorgroup/rpc-urls.ts)_
 
 ## `celocli validatorgroup:show ARG1`
 
