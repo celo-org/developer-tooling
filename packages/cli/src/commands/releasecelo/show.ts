@@ -1,4 +1,5 @@
 import { printValueMapRecursive } from '../../utils/cli'
+import { ViewCommmandFlags } from '../../utils/flags'
 import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
 
 export default class Show extends ReleaseGoldBaseCommand {
@@ -6,6 +7,7 @@ export default class Show extends ReleaseGoldBaseCommand {
 
   static flags = {
     ...ReleaseGoldBaseCommand.flags,
+    ...ViewCommmandFlags,
   }
 
   static examples = ['show --contract 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95']

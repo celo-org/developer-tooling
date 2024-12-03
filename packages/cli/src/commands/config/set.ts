@@ -2,11 +2,12 @@ import { ux } from '@oclif/core'
 import chalk from 'chalk'
 import { BaseCommand } from '../../base'
 import { CeloConfig, readConfig, writeConfig } from '../../utils/config'
+import { ViewCommmandFlags } from '../../utils/flags'
 export default class Set extends BaseCommand {
   static description = 'Configure running node information for propagating transactions to network'
 
   static flags = {
-    ...BaseCommand.flags,
+    ...ViewCommmandFlags,
     node: {
       ...BaseCommand.flags.node,
       hidden: false,
@@ -14,7 +15,7 @@ export default class Set extends BaseCommand {
   }
 
   static examples = [
-    'set --node mainnet # alias for `forno`',
+    'set --node celo # alias for `forno`',
     'set --node forno # alias for https://forno.celo.org',
     'set --node baklava # alias for https://baklava-forno.celo-testnet.org',
     'set --node alfajores # alias for https://alfajores-forno.celo-testnet.org',

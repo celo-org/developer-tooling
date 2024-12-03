@@ -5,12 +5,13 @@ import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { printValueMapRecursive } from '../../utils/cli'
 import { CustomArgs } from '../../utils/command'
+import { ViewCommmandFlags } from '../../utils/flags'
 
 export default class ShowMultiSig extends BaseCommand {
   static description = 'Shows information about multi-sig contract'
 
   static flags = {
-    ...BaseCommand.flags,
+    ...ViewCommmandFlags,
     tx: Flags.integer({
       default: undefined,
       description: 'Show info for a transaction',

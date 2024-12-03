@@ -8,6 +8,7 @@ import BigNumber from 'bignumber.js'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { CustomFlags } from '../../utils/command'
+import { ViewCommmandFlags } from '../../utils/flags'
 
 interface ExplainedVoterReward extends VoterReward {
   validators: Validator[]
@@ -22,7 +23,7 @@ export default class Show extends BaseCommand {
     'Show rewards information about a voter, registered Validator, or Validator Group'
 
   static flags = {
-    ...BaseCommand.flags,
+    ...ViewCommmandFlags,
     estimate: Flags.boolean({
       description: 'Estimate voter rewards from current votes',
     }),

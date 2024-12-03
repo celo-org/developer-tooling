@@ -2,12 +2,13 @@ import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { printValueMap } from '../../utils/cli'
 import { CustomArgs } from '../../utils/command'
+import { ViewCommmandFlags } from '../../utils/flags'
 
 export default class ValidatorGroupShow extends BaseCommand {
   static description = 'Show information about an existing Validator Group'
 
   static flags = {
-    ...BaseCommand.flags,
+    ...ViewCommmandFlags,
   }
 
   static args = {
