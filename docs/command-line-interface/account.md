@@ -1032,6 +1032,12 @@ EXAMPLES
 
   new --passphrasePath some_folder/my_passphrase_file --mnemonicPath some_folder/my_mnemonic_file --addressIndex 5
 
+  new --derivationPath eth
+
+  new --derivationPath celoLegacy
+
+  new --derivationPath "m/44'/60'/0'"
+
 FLAG DESCRIPTIONS
   -n, --node=<value>  URL of the node to run commands against or an alias
 
