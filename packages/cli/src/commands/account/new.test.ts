@@ -11,7 +11,7 @@ import NewAccount from './new'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('account:set-name cmd', (web3: Web3) => {
+testWithAnvilL2('account:new cmd', (web3: Web3) => {
   const writeMock = jest.spyOn(NewAccount.prototype, 'log')
   const consoleMock = jest.spyOn(console, 'log')
 
@@ -26,7 +26,7 @@ testWithAnvilL2('account:set-name cmd', (web3: Web3) => {
       [
         [
           "
-      Using celo-legacy path (m/44'/52752'/0') for derivation. This will be switched to eth derivation path (m/44'/60'/0') next major version.
+      Using celoLegacy path (m/44'/52752'/0') for derivation. This will be switched to eth derivation path (m/44'/60'/0') next major version.
       ",
         ],
         [
@@ -70,6 +70,24 @@ testWithAnvilL2('account:set-name cmd', (web3: Web3) => {
       publicKey: PRIVATE_KEY
       address: ADDRESS"
     `)
+  })
+  describe('--derivationPath with bad data', () => {
+    it(`called with invalid alias "notARealPath" then throws"`, async () => {
+      await expect(testLocallyWithWeb3Node(NewAccount, ['--derivationPath', 'notARealPath'], web3))
+        .rejects.toThrowErrorMatchingInlineSnapshot(`
+        "Parsing --derivationPath 
+        	Invalid derivationPath: notARealPath
+        See more help with --help"
+      `)
+    })
+    it(`called with invalid bip44 then throws"`, async () => {
+      await expect(testLocallyWithWeb3Node(NewAccount, ['--derivationPath', 'm/44/1/1/2/10'], web3))
+        .rejects.toThrowErrorMatchingInlineSnapshot(`
+        "Parsing --derivationPath 
+        	Invalid derivationPath: m/44/1/1/2/10
+        See more help with --help"
+      `)
+    })
   })
 
   describe('when called with --mnemonicPath', () => {

@@ -60,6 +60,9 @@ export default class NewAccount extends BaseCommand {
         'Instead of generating a new mnemonic (seed phrase), use the user-supplied mnemonic instead. Path to a file that contains all the mnemonic words separated by a space (example: "word1 word2 word3 ... word24"). If the words are a language other than English, the --language flag must be used. Only BIP39 mnemonics are supported',
     }),
     derivationPath: Flags.string({
+      parse: async (input: string) => {
+        return NewAccount.sanitizeDerivationPath(input)
+      },
       description:
         "Choose a different derivation Path (Celo's default is \"m/44'/52752'/0'\"). Use \"eth\" as an alias of the Ethereum derivation path (\"m/44'/60'/0'\"). Recreating the same account requires knowledge of the mnemonic, passphrase (if any), and the derivation path",
     }),
@@ -71,6 +74,9 @@ export default class NewAccount extends BaseCommand {
     'new --language spanish',
     'new --passphrasePath some_folder/my_passphrase_file --language japanese --addressIndex 5',
     'new --passphrasePath some_folder/my_passphrase_file --mnemonicPath some_folder/my_mnemonic_file --addressIndex 5',
+    'new --derivationPath eth',
+    'new --derivationPath celoLegacy',
+    "new --derivationPath \"m/44'/60'/0'\"",
   ]
 
   async init() {
@@ -91,12 +97,18 @@ export default class NewAccount extends BaseCommand {
       derivationPath = derivationPath.endsWith('/') ? derivationPath.slice(0, -1) : derivationPath
     }
 
-    const namedPath = DerivationPathAliases[derivationPath as keyof typeof DerivationPathAliases]
+    // if it is an alias then it will match the keys in DerivationPathAliases and be returned
 
-    if (namedPath) {
-      return namedPath
+    if (Object.keys(DerivationPathAliases).includes(derivationPath!)) {
+      return DerivationPathAliases[derivationPath as keyof typeof DerivationPathAliases]
     }
-    return derivationPath
+
+    // if it is a valid BIP 44 it will be returned thanks mr robot
+    if (derivationPath && /^m\/44'\/\d+'\/\d+'(?:\/\d+)*$/.test(derivationPath)) {
+      return derivationPath
+    }
+
+    throw new Error(`Invalid derivationPath: ${derivationPath}`)
   }
 
   static readFile(file?: string): string | undefined {
@@ -143,9 +155,10 @@ export default class NewAccount extends BaseCommand {
     const accountAddress = toChecksumAddress(privateKeyToAddress(keys.privateKey))
 
     if (derivationPath === CELO_DERIVATION_PATH_BASE) {
+      // TODO tell them they can configure the default derivation path
       this.log(
         chalk.magenta(
-          `\nUsing celoLegacy path (${CELO_DERIVATION_PATH_BASE}) for derivation. This will be switched to eth derivation path (${ETHEREUM_DERIVATION_PATH}) next major version.\n`
+          `\nUsing celoLegacy path (${CELO_DERIVATION_PATH_BASE}) for derivation. This will default to eth derivation path (${ETHEREUM_DERIVATION_PATH}) next major version.\n`
         )
       )
     }
