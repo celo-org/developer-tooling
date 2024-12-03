@@ -2,13 +2,14 @@ import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { printValueMapRecursive } from '../../utils/cli'
 import { CustomArgs } from '../../utils/command'
+import { ViewCommmandFlags } from '../../utils/flags'
 
 export default class Show extends BaseCommand {
   static description =
     'Show information for an account, including name, authorized vote, validator, and attestation signers, the URL at which account metadata is hosted, the address the account is using with the mobile wallet, and a public key that can be used to encrypt information for the account.'
 
   static flags = {
-    ...BaseCommand.flags,
+    ...ViewCommmandFlags,
   }
 
   static args = {

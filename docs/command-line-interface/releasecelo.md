@@ -785,34 +785,17 @@ Show info on a ReleaseGold instance contract.
 
 ```
 USAGE
-  $ celocli releasecelo:show --contract 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [-k
-    <value> | --useLedger | ] [-n <value>] [--gasCurrency
-    0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp]
+  $ celocli releasecelo:show --contract 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [-n
+    <value>] [--globalHelp]
 
 FLAGS
-  -k, --privateKey=<value>
-      Use a private key to sign local transactions with
-
-  -n, --node=<value>
-      URL of the node to run commands against or an alias
-
-  --contract=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
-      (required) Address of the ReleaseGold Contract
-
-  --gasCurrency=0x1234567890123456789012345678901234567890
-      Use a specific gas currency for transaction fees (defaults to CELO if no gas
-      currency is supplied). It must be a whitelisted token.
-
-  --globalHelp
-      View all available global flags
-
-  --ledgerAddresses=<value>
-      [default: 1] If --useLedger is set, this will get the first N addresses for local
-      signing
-
-  --useLedger
-      Set it to use a ledger wallet
+  -n, --node=<value>                                         URL of the node to run
+                                                             commands against or an
+                                                             alias
+      --contract=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d  (required) Address of the
+                                                             ReleaseGold Contract
+      --globalHelp                                           View all available global
+                                                             flags
 
 DESCRIPTION
   Show info on a ReleaseGold instance contract.

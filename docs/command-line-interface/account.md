@@ -119,33 +119,18 @@ View Celo Stables and CELO balances for an address
 
 ```
 USAGE
-  $ celocli account:balance ARG1 [-k <value> | --useLedger | ] [-n <value>]
-    [--gasCurrency 0x1234567890123456789012345678901234567890] [--ledgerAddresses
-    <value> ] [--globalHelp] [--erc20Address 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d]
+  $ celocli account:balance ARG1 [-n <value>] [--globalHelp] [--erc20Address
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d]
 
 FLAGS
-  -k, --privateKey=<value>
-      Use a private key to sign local transactions with
-
-  -n, --node=<value>
-      URL of the node to run commands against or an alias
-
-  --erc20Address=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
-      Address of generic ERC-20 token to also check balance for
-
-  --gasCurrency=0x1234567890123456789012345678901234567890
-      Use a specific gas currency for transaction fees (defaults to CELO if no gas
-      currency is supplied). It must be a whitelisted token.
-
-  --globalHelp
-      View all available global flags
-
-  --ledgerAddresses=<value>
-      [default: 1] If --useLedger is set, this will get the first N addresses for local
-      signing
-
-  --useLedger
-      Set it to use a ledger wallet
+  -n, --node=<value>                                             URL of the node to run
+                                                                 commands against or an
+                                                                 alias
+      --erc20Address=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d  Address of generic
+                                                                 ERC-20 token to also
+                                                                 check balance for
+      --globalHelp                                               View all available
+                                                                 global flags
 
 DESCRIPTION
   View Celo Stables and CELO balances for an address
@@ -985,11 +970,10 @@ Creates a new account locally using the Celo Derivation Path (m/44'/52752'/0/cha
 
 ```
 USAGE
-  $ celocli account:new [-n <value>] [--gasCurrency
-    0x1234567890123456789012345678901234567890] [--globalHelp] [--passphrasePath
-    <value>] [--changeIndex <value>] [--addressIndex <value>] [--language chinese_simpli
-    fied|chinese_traditional|english|french|italian|japanese|korean|spanish]
-    [--mnemonicPath <value>] [--derivationPath <value>]
+  $ celocli account:new [-n <value>] [--globalHelp] [--passphrasePath <value>]
+    [--changeIndex <value>] [--addressIndex <value>] [--language chinese_simplified|chin
+    ese_traditional|english|french|italian|japanese|korean|spanish] [--mnemonicPath
+    <value>] [--derivationPath <value>]
 
 FLAGS
   -n, --node=<value>
@@ -1006,10 +990,6 @@ FLAGS
       as an alias of the Ethereum derivation path ("m/44'/60'/0'"). Recreating the same
       account requires knowledge of the mnemonic, passphrase (if any), and the derivation
       path
-
-  --gasCurrency=0x1234567890123456789012345678901234567890
-      Use a specific gas currency for transaction fees (defaults to CELO if no gas
-      currency is supplied). It must be a whitelisted token.
 
   --globalHelp
       View all available global flags
@@ -1660,30 +1640,11 @@ Show information for an account, including name, authorized vote, validator, and
 
 ```
 USAGE
-  $ celocli account:show ARG1 [-k <value> | --useLedger | ] [-n <value>]
-    [--gasCurrency 0x1234567890123456789012345678901234567890] [--ledgerAddresses
-    <value> ] [--globalHelp]
+  $ celocli account:show ARG1 [-n <value>] [--globalHelp]
 
 FLAGS
-  -k, --privateKey=<value>
-      Use a private key to sign local transactions with
-
-  -n, --node=<value>
-      URL of the node to run commands against or an alias
-
-  --gasCurrency=0x1234567890123456789012345678901234567890
-      Use a specific gas currency for transaction fees (defaults to CELO if no gas
-      currency is supplied). It must be a whitelisted token.
-
-  --globalHelp
-      View all available global flags
-
-  --ledgerAddresses=<value>
-      [default: 1] If --useLedger is set, this will get the first N addresses for local
-      signing
-
-  --useLedger
-      Set it to use a ledger wallet
+  -n, --node=<value>  URL of the node to run commands against or an alias
+      --globalHelp    View all available global flags
 
 DESCRIPTION
   Show information for an account, including name, authorized vote, validator, and
@@ -1763,59 +1724,25 @@ Show the data in a local metadata file
 
 ```
 USAGE
-  $ celocli account:show-metadata ARG1 [-k <value> | --useLedger | ] [-n <value>]
-    [--gasCurrency 0x1234567890123456789012345678901234567890] [--ledgerAddresses
-    <value> ] [--globalHelp] [--columns <value> | -x] [--filter <value>] [--no-header |
-    [--csv | --no-truncate]] [--output csv|json|yaml |  | ] [--sort <value>]
+  $ celocli account:show-metadata ARG1 [-n <value>] [--globalHelp] [--columns <value> | -x]
+    [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output csv|json|yaml |
+    | ] [--sort <value>]
 
 ARGUMENTS
   ARG1  Path of the metadata file
 
 FLAGS
-  -k, --privateKey=<value>
-      Use a private key to sign local transactions with
-
-  -n, --node=<value>
-      URL of the node to run commands against or an alias
-
-  -x, --extended
-      show extra columns
-
-  --columns=<value>
-      only show provided columns (comma-separated)
-
-  --csv
-      output is csv format [alias: --output=csv]
-
-  --filter=<value>
-      filter property by partial string matching, ex: name=foo
-
-  --gasCurrency=0x1234567890123456789012345678901234567890
-      Use a specific gas currency for transaction fees (defaults to CELO if no gas
-      currency is supplied). It must be a whitelisted token.
-
-  --globalHelp
-      View all available global flags
-
-  --ledgerAddresses=<value>
-      [default: 1] If --useLedger is set, this will get the first N addresses for local
-      signing
-
-  --no-header
-      hide table header from output
-
-  --no-truncate
-      do not truncate output to fit screen
-
-  --output=<option>
-      output in a more machine friendly format
-      <options: csv|json|yaml>
-
-  --sort=<value>
-      property to sort by (prepend '-' for descending)
-
-  --useLedger
-      Set it to use a ledger wallet
+  -n, --node=<value>     URL of the node to run commands against or an alias
+  -x, --extended         show extra columns
+      --columns=<value>  only show provided columns (comma-separated)
+      --csv              output is csv format [alias: --output=csv]
+      --filter=<value>   filter property by partial string matching, ex: name=foo
+      --globalHelp       View all available global flags
+      --no-header        hide table header from output
+      --no-truncate      do not truncate output to fit screen
+      --output=<option>  output in a more machine friendly format
+                         <options: csv|json|yaml>
+      --sort=<value>     property to sort by (prepend '-' for descending)
 
 DESCRIPTION
   Show the data in a local metadata file
