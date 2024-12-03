@@ -23,19 +23,7 @@ export default class NewAccount extends BaseCommand {
     "\n\nWARN: In 7.0 the default derivation path will be Eth (\"m/44'/60'/0'\") forum.celo.org/t/deprecating-the-celo-derivation-path/9229"
 
   static flags = {
-    ...BaseCommand.flags,
-    privateKey: {
-      ...BaseCommand.flags.privateKey,
-      hidden: true,
-    },
-    useLedger: {
-      ...BaseCommand.flags.useLedger,
-      hidden: true,
-    },
-    ledgerAddresses: {
-      ...BaseCommand.flags.useLedger,
-      hidden: true,
-    },
+    ...ViewCommmandFlags,
     passphrasePath: Flags.string({
       description:
         'Path to a file that contains the BIP39 passphrase to combine with the mnemonic specified using the mnemonicPath flag and the index specified using the addressIndex flag. Every passphrase generates a different private key and wallet address.',

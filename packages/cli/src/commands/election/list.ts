@@ -1,13 +1,14 @@
 import { ux } from '@oclif/core'
 
 import { BaseCommand } from '../../base'
+import { ViewCommmandFlags } from '../../utils/flags'
 
 export default class ElectionList extends BaseCommand {
   static description =
     'Prints the list of validator groups, the number of votes they have received, the number of additional votes they are able to receive, and whether or not they are eligible to elect validators.'
 
   static flags = {
-    ...BaseCommand.flags,
+    ...ViewCommmandFlags,
     ...(ux.table.flags() as object),
   }
 

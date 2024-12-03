@@ -1,13 +1,14 @@
 import { ux } from '@oclif/core'
 
 import { BaseCommand } from '../../base'
+import { ViewCommmandFlags } from '../../utils/flags'
 
 export default class ValidatorGroupList extends BaseCommand {
   static description =
     'List registered Validator Groups, their names (if provided), commission, and members.'
 
   static flags = {
-    ...BaseCommand.flags,
+    ...ViewCommmandFlags,
     ...(ux.table.flags() as object),
   }
 

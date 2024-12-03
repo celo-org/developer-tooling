@@ -1,12 +1,13 @@
 import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { printValueMapRecursive } from '../../utils/cli'
+import { ViewCommmandFlags } from '../../utils/flags'
 
 export default class Info extends BaseCommand {
   static description = 'View general network information such as the current block number'
 
   static flags = {
-    ...BaseCommand.flags,
+    ...ViewCommmandFlags,
     lastN: Flags.integer({
       // We cannot use char: 'n' here because it conflicts with the node flag
       description: 'Fetch info about the last n epochs',

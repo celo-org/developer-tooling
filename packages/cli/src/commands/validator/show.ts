@@ -2,12 +2,13 @@ import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { printValueMap } from '../../utils/cli'
 import { CustomArgs } from '../../utils/command'
+import { ViewCommmandFlags } from '../../utils/flags'
 
 export default class ValidatorShow extends BaseCommand {
   static description = 'Show information about a registered Validator.'
 
   static flags = {
-    ...BaseCommand.flags,
+    ...ViewCommmandFlags,
   }
 
   static args = {
