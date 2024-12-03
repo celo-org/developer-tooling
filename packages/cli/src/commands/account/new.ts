@@ -14,6 +14,7 @@ import chalk from 'chalk'
 import * as fs from 'fs-extra'
 import { BaseCommand } from '../../base'
 import { printValueMap } from '../../utils/cli'
+import { ViewCommmandFlags } from '../../utils/flags'
 
 const ETHEREUM_DERIVATION_PATH = "m/44'/60'/0'"
 

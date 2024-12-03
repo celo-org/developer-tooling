@@ -73,39 +73,15 @@ Shows information about multi-sig contract
 
 ```
 USAGE
-  $ celocli multisig:show ARG1 [-k <value> | --useLedger | ] [-n <value>]
-    [--gasCurrency 0x1234567890123456789012345678901234567890] [--ledgerAddresses
-    <value> ] [--globalHelp] [--tx <value>] [--all] [--raw]
+  $ celocli multisig:show ARG1 [-n <value>] [--globalHelp] [--tx <value>] [--all]
+    [--raw]
 
 FLAGS
-  -k, --privateKey=<value>
-      Use a private key to sign local transactions with
-
-  -n, --node=<value>
-      URL of the node to run commands against or an alias
-
-  --all
-      Show info about all transactions
-
-  --gasCurrency=0x1234567890123456789012345678901234567890
-      Use a specific gas currency for transaction fees (defaults to CELO if no gas
-      currency is supplied). It must be a whitelisted token.
-
-  --globalHelp
-      View all available global flags
-
-  --ledgerAddresses=<value>
-      [default: 1] If --useLedger is set, this will get the first N addresses for local
-      signing
-
-  --raw
-      Do not attempt to parse transactions
-
-  --tx=<value>
-      Show info for a transaction
-
-  --useLedger
-      Set it to use a ledger wallet
+  -n, --node=<value>  URL of the node to run commands against or an alias
+      --all           Show info about all transactions
+      --globalHelp    View all available global flags
+      --raw           Do not attempt to parse transactions
+      --tx=<value>    Show info for a transaction
 
 DESCRIPTION
   Shows information about multi-sig contract

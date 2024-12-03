@@ -14,33 +14,14 @@ List oracle addresses for a given token
 
 ```
 USAGE
-  $ celocli oracle:list ARG1 [-k <value> | --useLedger | ] [-n <value>]
-    [--gasCurrency 0x1234567890123456789012345678901234567890] [--ledgerAddresses
-    <value> ] [--globalHelp]
+  $ celocli oracle:list ARG1 [-n <value>] [--globalHelp]
 
 ARGUMENTS
   ARG1  [default: StableToken] Token to list the oracles for
 
 FLAGS
-  -k, --privateKey=<value>
-      Use a private key to sign local transactions with
-
-  -n, --node=<value>
-      URL of the node to run commands against or an alias
-
-  --gasCurrency=0x1234567890123456789012345678901234567890
-      Use a specific gas currency for transaction fees (defaults to CELO if no gas
-      currency is supplied). It must be a whitelisted token.
-
-  --globalHelp
-      View all available global flags
-
-  --ledgerAddresses=<value>
-      [default: 1] If --useLedger is set, this will get the first N addresses for local
-      signing
-
-  --useLedger
-      Set it to use a ledger wallet
+  -n, --node=<value>  URL of the node to run commands against or an alias
+      --globalHelp    View all available global flags
 
 DESCRIPTION
   List oracle addresses for a given token
