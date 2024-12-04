@@ -46,7 +46,7 @@
 
 #### Defined in
 
-[packages/sdk/base/src/account.ts:28](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/account.ts#L28)
+[packages/sdk/base/src/account.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/account.ts#L27)
 
 ## Variables
 
