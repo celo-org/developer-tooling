@@ -22,13 +22,13 @@
     "node": ">=16"
   },
   "scripts": {
-    "clean": "rm -f tsconfig.tsbuildinfo && yarn run --top-level tsc -b . --clean",
+    "clean": "rm -f tsconfig.tsbuildinfo && rm -rf lib/ && yarn run --top-level tsc -b . --clean",
     "dev": "yarn build && ts-node ./bin/dev.js",
-    "build": "yarn run --top-level tsc -b .",
+    "build": "yarn run --top-level tsc -b . && yarn oclif manifest",
     "docs": "./generate_docs.sh",
     "lint": "yarn run --top-level eslint -c .eslintrc.js ",
     "prepublish": "",
-    "prepack": "yarn run build && oclif manifest && oclif readme",
+    "prepack": "yarn build && oclif readme",
     "test": "TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --runInBand --forceExit",
     "test-anvil": "RUN_GANACHE_TESTS=false RUN_ANVIL_TESTS=true TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --forceExit",
     "test-ganache": "RUN_GANACHE_TESTS=true RUN_ANVIL_TESTS=false TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --runInBand --forceExit",
