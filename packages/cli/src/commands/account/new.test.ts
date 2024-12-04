@@ -26,7 +26,7 @@ testWithAnvilL2('account:new cmd', (web3: Web3) => {
       [
         [
           "
-      Using celoLegacy path (m/44'/52752'/0') for derivation. This will be switched to eth derivation path (m/44'/60'/0') next major version.
+      Using celoLegacy path (m/44'/52752'/0') for derivation. This will default to eth derivation path (m/44'/60'/0') next major version.
       ",
         ],
         [
