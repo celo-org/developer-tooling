@@ -3,8 +3,9 @@ import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { ACCOUNT_ADDRESSES } from '@celo/dev-utils/lib/ganache-setup'
 import { Address } from '@celo/utils/lib/address'
 import { NativeSigner } from '@celo/utils/lib/signatureUtils'
-import { createNameClaim } from './claim'
+import { Claim, createNameClaim } from './claim'
 import { ClaimTypes, IdentityMetadataWrapper } from './metadata'
+import { now } from './types'
 
 testWithAnvilL1('Metadata', (web3) => {
   const kit = newKitFromWeb3(web3)
@@ -88,5 +89,19 @@ testWithAnvilL1('Metadata', (web3) => {
     } catch (e: any) {
       expect(e.toString()).toContain('Signature could not be validated')
     }
+  })
+
+  it('throws an error while trying to add a ATTESTAION_SERVICE_URL claim ', async () => {
+    const metadata = IdentityMetadataWrapper.fromEmpty(address)
+
+    const claim = {
+      url: 'https://example.com/',
+      timestamp: now(),
+      type: ClaimTypes.ATTESTATION_SERVICE_URL,
+    }
+
+    await expect(
+      metadata.addClaim(claim as Claim, NativeSigner(kit.connection.sign, address))
+    ).rejects.toThrow('ATTESTATION_SERVICE_URL claims are not supported')
   })
 })

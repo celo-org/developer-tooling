@@ -17,10 +17,14 @@ export enum ClaimTypes {
   PROFILE_PICTURE = 'PROFILE_PICTURE',
   STORAGE = 'STORAGE',
   TWITTER = 'TWITTER',
+  /**
+   * @deprecated Not used anymore, here only for backwards compatibility with old metadata files
+   */
+  ATTESTATION_SERVICE_URL = 'ATTESTATION_SERVICE_URL',
 }
 
 export const VERIFIABLE_CLAIM_TYPES = [ClaimTypes.KEYBASE, ClaimTypes.ACCOUNT, ClaimTypes.DOMAIN]
-export const SINGULAR_CLAIM_TYPES = [ClaimTypes.NAME]
+export const SINGULAR_CLAIM_TYPES = [ClaimTypes.NAME, ClaimTypes.ATTESTATION_SERVICE_URL]
 
 export type AccountSignerGetters = {
   isAccount: (address: Address) => Promise<boolean>

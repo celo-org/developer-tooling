@@ -200,6 +200,9 @@ export class IdentityMetadataWrapper {
           return existingClaims[0]
         }
       }
+      case ClaimTypes.ATTESTATION_SERVICE_URL: {
+        throw new Error('ATTESTATION_SERVICE_URL claims are not supported')
+      }
       default:
         break
     }

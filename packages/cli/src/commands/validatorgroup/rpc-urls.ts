@@ -2,21 +2,23 @@ import { concurrentMap, StrongAddress } from '@celo/base'
 import { ClaimTypes, IdentityMetadataWrapper } from '@celo/metadata-claims'
 import { Flags, ux } from '@oclif/core'
 import { BaseCommand } from '../../base'
+import { ViewCommmandFlags } from '../../utils/flags'
 
 export default class RpcUrls extends BaseCommand {
   static description =
     'Displays a list of community RPC nodes for the currently elected validator groups'
 
   static aliases: string[] = [
-    'network:rpc-urls',
-    'validator:rpc-urls',
     'network:community-rpc-nodes',
+    'network:rpc-urls',
+    'node:list',
     'validator:community-rpc-nodes',
+    'validator:rpc-urls',
     'validatorgroup:community-rpc-nodes',
   ]
 
   static flags = {
-    ...BaseCommand.flags,
+    ...ViewCommmandFlags,
     ...(ux.table.flags() as object),
     all: Flags.boolean({
       description:
@@ -27,10 +29,11 @@ export default class RpcUrls extends BaseCommand {
   }
 
   async run() {
+    const CONCURRENCY_LEVEL = 5
+
     const res = await this.parse(RpcUrls)
     const kit = await this.getKit()
     const isL2 = await this.isCel2()
-    const epochManagerWrapper = await kit.contracts.getEpochManager()
     const validatorsWrapper = await kit.contracts.getValidators()
     const accountsWrapper = await kit.contracts.getAccounts()
 
@@ -42,6 +45,8 @@ export default class RpcUrls extends BaseCommand {
       )
     } else {
       if (isL2) {
+        const epochManagerWrapper = await kit.contracts.getEpochManager()
+
         validatorAddresses = (await epochManagerWrapper.getElectedAccounts()) as StrongAddress[]
       } else {
         validatorAddresses = (await validatorsWrapper.currentValidatorAccountsSet()).map(
@@ -50,35 +55,46 @@ export default class RpcUrls extends BaseCommand {
       }
     }
 
+    // Fetch the validator group address for each validator
     const validatorToGroup: { [key: StrongAddress]: string } = Object.fromEntries(
-      await concurrentMap(5, validatorAddresses, async (address) => {
-        return [address, await validatorsWrapper.getValidatorsGroup(address)]
+      await concurrentMap(CONCURRENCY_LEVEL, validatorAddresses, async (address) => {
+        return [address, (await validatorsWrapper.getValidator(address)).affiliation || '']
       })
     )
 
+    // Fetch the validator group name for each group
     const validatorGroupNames = Object.fromEntries(
-      await concurrentMap(5, [...new Set(Object.values(validatorToGroup))], async (address) => {
-        return [address, (await validatorsWrapper.getValidatorGroup(address)).name]
-      })
+      await concurrentMap(
+        CONCURRENCY_LEVEL,
+        [...new Set(Object.values(validatorToGroup))],
+        async (address) => {
+          return [address, await accountsWrapper.getName(address)]
+        }
+      )
     )
 
-    const metadataURLs = await concurrentMap(5, validatorAddresses, async (address) => {
+    // Fetch the RPC URL for each validator
+    const rpcUrls = await concurrentMap(CONCURRENCY_LEVEL, validatorAddresses, async (address) => {
       const metadataURL = await accountsWrapper.getMetadataURL(address)
 
       if (!metadataURL) {
         return undefined
       }
 
-      const metadata = await IdentityMetadataWrapper.fetchFromURL(accountsWrapper, metadataURL)
+      try {
+        const metadata = await IdentityMetadataWrapper.fetchFromURL(accountsWrapper, metadataURL)
 
-      return metadata.findClaim(ClaimTypes.RPC_URL)?.rpcUrl
+        return metadata.findClaim(ClaimTypes.RPC_URL)?.rpcUrl
+      } catch (_) {
+        return undefined
+      }
     })
 
     ux.table(
       validatorAddresses
         .map((address, idx) => ({
           validatorGroupName: validatorGroupNames[validatorToGroup[address]],
-          rpcUrl: metadataURLs[idx],
+          rpcUrl: rpcUrls[idx],
           validatorAddress: address,
         }))
         .filter((row) => row.rpcUrl),
