@@ -43,7 +43,7 @@
 | Name | Type | Default value |
 | :------ | :------ | :------ |
 | `data` | `Object` | `undefined` |
-| `data.claims` | (\{ `address`: `string` = AddressType; `publicKey`: `undefined` \| `string` ; `timestamp`: `number` = TimestampType; `type`: [`ACCOUNT`](../enums/types.ClaimTypes.md#account)  } \| \{ `timestamp`: `number` = TimestampType; `type`: [`KEYBASE`](../enums/types.ClaimTypes.md#keybase) ; `username`: `string` = t.string } \| \{ `domain`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`DOMAIN`](../enums/types.ClaimTypes.md#domain)  } \| \{ `rpcUrl`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`RPC_URL`](../enums/types.ClaimTypes.md#rpc_url)  } \| \{ `name`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`NAME`](../enums/types.ClaimTypes.md#name)  } \| \{ `address`: `string` = t.string; `filteredDataPaths`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`STORAGE`](../enums/types.ClaimTypes.md#storage)  })[] | `undefined` |
+| `data.claims` | (\{ `address`: `string` = AddressType; `publicKey`: `undefined` \| `string` ; `timestamp`: `number` = TimestampType; `type`: [`ACCOUNT`](../enums/types.ClaimTypes.md#account)  } \| \{ `timestamp`: `number` = TimestampType; `type`: [`KEYBASE`](../enums/types.ClaimTypes.md#keybase) ; `username`: `string` = t.string } \| \{ `domain`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`DOMAIN`](../enums/types.ClaimTypes.md#domain)  } \| \{ `rpcUrl`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`RPC_URL`](../enums/types.ClaimTypes.md#rpc_url)  } \| \{ `name`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`NAME`](../enums/types.ClaimTypes.md#name)  } \| \{ `address`: `string` = t.string; `filteredDataPaths`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`STORAGE`](../enums/types.ClaimTypes.md#storage)  } \| \{ `timestamp`: `number` = TimestampType; `type`: [`ATTESTATION_SERVICE_URL`](../enums/types.ClaimTypes.md#attestation_service_url) ; `url`: `string` = UrlType })[] | `undefined` |
 | `data.meta` | `Object` | `MetaType` |
 | `data.meta.address` | `string` | `AddressType` |
 | `data.meta.signature` | `string` | `SignatureType` |
@@ -66,7 +66,7 @@
 
 | Name | Type |
 | :------ | :------ |
-| `claims` | (\{ `address`: `string` = AddressType; `publicKey`: `undefined` \| `string` ; `timestamp`: `number` = TimestampType; `type`: [`ACCOUNT`](../enums/types.ClaimTypes.md#account)  } \| \{ `timestamp`: `number` = TimestampType; `type`: [`KEYBASE`](../enums/types.ClaimTypes.md#keybase) ; `username`: `string` = t.string } \| \{ `domain`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`DOMAIN`](../enums/types.ClaimTypes.md#domain)  } \| \{ `rpcUrl`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`RPC_URL`](../enums/types.ClaimTypes.md#rpc_url)  } \| \{ `name`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`NAME`](../enums/types.ClaimTypes.md#name)  } \| \{ `address`: `string` = t.string; `filteredDataPaths`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`STORAGE`](../enums/types.ClaimTypes.md#storage)  })[] |
+| `claims` | (\{ `address`: `string` = AddressType; `publicKey`: `undefined` \| `string` ; `timestamp`: `number` = TimestampType; `type`: [`ACCOUNT`](../enums/types.ClaimTypes.md#account)  } \| \{ `timestamp`: `number` = TimestampType; `type`: [`KEYBASE`](../enums/types.ClaimTypes.md#keybase) ; `username`: `string` = t.string } \| \{ `domain`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`DOMAIN`](../enums/types.ClaimTypes.md#domain)  } \| \{ `rpcUrl`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`RPC_URL`](../enums/types.ClaimTypes.md#rpc_url)  } \| \{ `name`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`NAME`](../enums/types.ClaimTypes.md#name)  } \| \{ `address`: `string` = t.string; `filteredDataPaths`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`STORAGE`](../enums/types.ClaimTypes.md#storage)  } \| \{ `timestamp`: `number` = TimestampType; `type`: [`ATTESTATION_SERVICE_URL`](../enums/types.ClaimTypes.md#attestation_service_url) ; `url`: `string` = UrlType })[] |
 | `meta` | \{ `address`: `string` = AddressType; `signature`: `string` = SignatureType } |
 | `meta.address` | `string` |
 | `meta.signature` | `string` |
@@ -79,11 +79,11 @@
 
 ### claims
 
-• `get` **claims**(): (\{ `address`: `string` = AddressType; `publicKey`: `undefined` \| `string` ; `timestamp`: `number` = TimestampType; `type`: [`ACCOUNT`](../enums/types.ClaimTypes.md#account)  } \| \{ `timestamp`: `number` = TimestampType; `type`: [`KEYBASE`](../enums/types.ClaimTypes.md#keybase) ; `username`: `string` = t.string } \| \{ `domain`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`DOMAIN`](../enums/types.ClaimTypes.md#domain)  } \| \{ `rpcUrl`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`RPC_URL`](../enums/types.ClaimTypes.md#rpc_url)  } \| \{ `name`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`NAME`](../enums/types.ClaimTypes.md#name)  } \| \{ `address`: `string` = t.string; `filteredDataPaths`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`STORAGE`](../enums/types.ClaimTypes.md#storage)  })[]
+• `get` **claims**(): (\{ `address`: `string` = AddressType; `publicKey`: `undefined` \| `string` ; `timestamp`: `number` = TimestampType; `type`: [`ACCOUNT`](../enums/types.ClaimTypes.md#account)  } \| \{ `timestamp`: `number` = TimestampType; `type`: [`KEYBASE`](../enums/types.ClaimTypes.md#keybase) ; `username`: `string` = t.string } \| \{ `domain`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`DOMAIN`](../enums/types.ClaimTypes.md#domain)  } \| \{ `rpcUrl`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`RPC_URL`](../enums/types.ClaimTypes.md#rpc_url)  } \| \{ `name`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`NAME`](../enums/types.ClaimTypes.md#name)  } \| \{ `address`: `string` = t.string; `filteredDataPaths`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`STORAGE`](../enums/types.ClaimTypes.md#storage)  } \| \{ `timestamp`: `number` = TimestampType; `type`: [`ATTESTATION_SERVICE_URL`](../enums/types.ClaimTypes.md#attestation_service_url) ; `url`: `string` = UrlType })[]
 
 #### Returns
 
-(\{ `address`: `string` = AddressType; `publicKey`: `undefined` \| `string` ; `timestamp`: `number` = TimestampType; `type`: [`ACCOUNT`](../enums/types.ClaimTypes.md#account)  } \| \{ `timestamp`: `number` = TimestampType; `type`: [`KEYBASE`](../enums/types.ClaimTypes.md#keybase) ; `username`: `string` = t.string } \| \{ `domain`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`DOMAIN`](../enums/types.ClaimTypes.md#domain)  } \| \{ `rpcUrl`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`RPC_URL`](../enums/types.ClaimTypes.md#rpc_url)  } \| \{ `name`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`NAME`](../enums/types.ClaimTypes.md#name)  } \| \{ `address`: `string` = t.string; `filteredDataPaths`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`STORAGE`](../enums/types.ClaimTypes.md#storage)  })[]
+(\{ `address`: `string` = AddressType; `publicKey`: `undefined` \| `string` ; `timestamp`: `number` = TimestampType; `type`: [`ACCOUNT`](../enums/types.ClaimTypes.md#account)  } \| \{ `timestamp`: `number` = TimestampType; `type`: [`KEYBASE`](../enums/types.ClaimTypes.md#keybase) ; `username`: `string` = t.string } \| \{ `domain`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`DOMAIN`](../enums/types.ClaimTypes.md#domain)  } \| \{ `rpcUrl`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`RPC_URL`](../enums/types.ClaimTypes.md#rpc_url)  } \| \{ `name`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`NAME`](../enums/types.ClaimTypes.md#name)  } \| \{ `address`: `string` = t.string; `filteredDataPaths`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`STORAGE`](../enums/types.ClaimTypes.md#storage)  } \| \{ `timestamp`: `number` = TimestampType; `type`: [`ATTESTATION_SERVICE_URL`](../enums/types.ClaimTypes.md#attestation_service_url) ; `url`: `string` = UrlType })[]
 
 #### Defined in
 
@@ -93,7 +93,7 @@
 
 ### addClaim
 
-▸ **addClaim**(`claim`, `signer`): `Promise`\<[`Claim`](../modules/claim.md#claim)\>
+▸ **addClaim**(`claim`, `signer`): `Promise`\<\{ `address`: `string` = AddressType; `publicKey`: `undefined` \| `string` ; `timestamp`: `number` = TimestampType; `type`: [`ACCOUNT`](../enums/types.ClaimTypes.md#account)  } \| \{ `timestamp`: `number` = TimestampType; `type`: [`KEYBASE`](../enums/types.ClaimTypes.md#keybase) ; `username`: `string` = t.string } \| \{ `domain`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`DOMAIN`](../enums/types.ClaimTypes.md#domain)  } \| \{ `rpcUrl`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`RPC_URL`](../enums/types.ClaimTypes.md#rpc_url)  } \| \{ `name`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`NAME`](../enums/types.ClaimTypes.md#name)  } \| \{ `address`: `string` = t.string; `filteredDataPaths`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`STORAGE`](../enums/types.ClaimTypes.md#storage)  } \| \{ `timestamp`: `number` = TimestampType; `type`: [`ATTESTATION_SERVICE_URL`](../enums/types.ClaimTypes.md#attestation_service_url) ; `url`: `string` = UrlType }\>
 
 #### Parameters
 
@@ -104,7 +104,7 @@
 
 #### Returns
 
-`Promise`\<[`Claim`](../modules/claim.md#claim)\>
+`Promise`\<\{ `address`: `string` = AddressType; `publicKey`: `undefined` \| `string` ; `timestamp`: `number` = TimestampType; `type`: [`ACCOUNT`](../enums/types.ClaimTypes.md#account)  } \| \{ `timestamp`: `number` = TimestampType; `type`: [`KEYBASE`](../enums/types.ClaimTypes.md#keybase) ; `username`: `string` = t.string } \| \{ `domain`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`DOMAIN`](../enums/types.ClaimTypes.md#domain)  } \| \{ `rpcUrl`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`RPC_URL`](../enums/types.ClaimTypes.md#rpc_url)  } \| \{ `name`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`NAME`](../enums/types.ClaimTypes.md#name)  } \| \{ `address`: `string` = t.string; `filteredDataPaths`: `string` = t.string; `timestamp`: `number` = TimestampType; `type`: [`STORAGE`](../enums/types.ClaimTypes.md#storage)  } \| \{ `timestamp`: `number` = TimestampType; `type`: [`ATTESTATION_SERVICE_URL`](../enums/types.ClaimTypes.md#attestation_service_url) ; `url`: `string` = UrlType }\>
 
 #### Defined in
 
@@ -134,7 +134,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/metadata.ts:223](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/metadata.ts#L223)
+[packages/sdk/metadata-claims/src/metadata.ts:226](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/metadata.ts#L226)
 
 ___
 
@@ -160,7 +160,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/metadata.ts:219](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/metadata.ts#L219)
+[packages/sdk/metadata-claims/src/metadata.ts:222](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/metadata.ts#L222)
 
 ___
 
