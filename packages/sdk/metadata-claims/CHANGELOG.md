@@ -1,5 +1,11 @@
 # @celo/metadata-claims
 
+## 1.0.0-beta.2
+
+### Patch Changes
+
+- [#475](https://github.com/celo-org/developer-tooling/pull/475) [`b366827`](https://github.com/celo-org/developer-tooling/commit/b3668273f0ae1ac4363d0fa6f23de089d18dd77c) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Publish lib instead of src
+
 ## 1.0.0-beta.1
 
 ### Minor Changes
