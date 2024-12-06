@@ -7,6 +7,7 @@ import { writeFileSync } from 'fs'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { printValueMap, printValueMapRecursive } from '../../utils/cli'
+import { ViewCommmandFlags } from '../../utils/flags'
 import {
   addExistingProposalIDToBuilder,
   addExistingProposalJSONFileToBuilder,
@@ -25,7 +26,7 @@ export default class Show extends BaseCommand {
   static description = 'Show information about a governance proposal, hotfix, or account.'
 
   static flags = {
-    ...BaseCommand.flags,
+    ...ViewCommmandFlags,
     raw: Flags.boolean({ required: false, description: 'Display proposal in raw bytes format' }),
     jsonTransactions: Flags.string({
       required: false,

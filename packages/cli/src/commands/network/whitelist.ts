@@ -1,12 +1,13 @@
 import { ux } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { getFeeCurrencyContractWrapper } from '../../utils/fee-currency'
+import { ViewCommmandFlags } from '../../utils/flags'
 
 export default class Whitelist extends BaseCommand {
   static description = 'List the whitelisted fee currencies'
 
   static flags = {
-    ...BaseCommand.flags,
+    ...ViewCommmandFlags,
     ...(ux.table.flags() as object),
   }
 

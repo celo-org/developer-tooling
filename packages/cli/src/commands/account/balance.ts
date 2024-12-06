@@ -1,12 +1,13 @@
 import { BaseCommand } from '../../base'
 import { failWith, printValueMap } from '../../utils/cli'
 import { CustomArgs, CustomFlags } from '../../utils/command'
+import { ViewCommmandFlags } from '../../utils/flags'
 
 export default class Balance extends BaseCommand {
   static description = 'View Celo Stables and CELO balances for an address'
 
   static flags = {
-    ...BaseCommand.flags,
+    ...ViewCommmandFlags,
     erc20Address: CustomFlags.address({
       description: 'Address of generic ERC-20 token to also check balance for',
     }),

@@ -2,6 +2,7 @@ import { ContractKit } from '@celo/contractkit/lib'
 import { ux } from '@oclif/core'
 
 import { BaseCommand } from '../../base'
+import { ViewCommmandFlags } from '../../utils/flags'
 import { validatorTable } from '../validator/list'
 
 async function performElections(kit: ContractKit) {
@@ -21,7 +22,7 @@ export default class ElectionRun extends BaseCommand {
     'Runs a "mock" election and prints out the validators that would be elected if the epoch ended right now.'
 
   static flags = {
-    ...BaseCommand.flags,
+    ...ViewCommmandFlags,
     ...(ux.table.flags() as object),
   }
 

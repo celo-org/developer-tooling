@@ -2,6 +2,7 @@ import { Validator } from '@celo/contractkit/lib/wrappers/Validators'
 import { ux } from '@oclif/core'
 
 import { BaseCommand } from '../../base'
+import { ViewCommmandFlags } from '../../utils/flags'
 
 export const validatorTable: ux.Table.table.Columns<Record<'v', Validator>> = {
   address: { get: (row) => row.v.address },
@@ -19,7 +20,7 @@ export default class ValidatorList extends BaseCommand {
     'List registered Validators, their name (if provided), affiliation, uptime score, and public keys used for validating.'
 
   static flags = {
-    ...BaseCommand.flags,
+    ...ViewCommmandFlags,
     ...(ux.table.flags() as object),
   }
 

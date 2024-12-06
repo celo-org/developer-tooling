@@ -12,30 +12,11 @@ Output network node configuration
 
 ```
 USAGE
-  $ celocli config:get [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
-    0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp]
+  $ celocli config:get [-n <value>] [--globalHelp]
 
 FLAGS
-  -k, --privateKey=<value>
-      Use a private key to sign local transactions with
-
-  -n, --node=<value>
-      URL of the node to run commands against or an alias
-
-  --gasCurrency=0x1234567890123456789012345678901234567890
-      Use a specific gas currency for transaction fees (defaults to CELO if no gas
-      currency is supplied). It must be a whitelisted token.
-
-  --globalHelp
-      View all available global flags
-
-  --ledgerAddresses=<value>
-      [default: 1] If --useLedger is set, this will get the first N addresses for local
-      signing
-
-  --useLedger
-      Set it to use a ledger wallet
+  -n, --node=<value>  URL of the node to run commands against or an alias
+      --globalHelp    View all available global flags
 
 DESCRIPTION
   Output network node configuration
@@ -59,36 +40,17 @@ Configure running node information for propagating transactions to network
 
 ```
 USAGE
-  $ celocli config:set [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
-    0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp]
+  $ celocli config:set [-n <value>] [--globalHelp]
 
 FLAGS
-  -k, --privateKey=<value>
-      Use a private key to sign local transactions with
-
-  -n, --node=<value>
-      URL of the node to run commands against or an alias
-
-  --gasCurrency=0x1234567890123456789012345678901234567890
-      Use a specific gas currency for transaction fees (defaults to CELO if no gas
-      currency is supplied). It must be a whitelisted token.
-
-  --globalHelp
-      View all available global flags
-
-  --ledgerAddresses=<value>
-      [default: 1] If --useLedger is set, this will get the first N addresses for local
-      signing
-
-  --useLedger
-      Set it to use a ledger wallet
+  -n, --node=<value>  URL of the node to run commands against or an alias
+      --globalHelp    View all available global flags
 
 DESCRIPTION
   Configure running node information for propagating transactions to network
 
 EXAMPLES
-  set --node mainnet # alias for `forno`
+  set --node celo # alias for `forno`
 
   set --node forno # alias for https://forno.celo.org
 
