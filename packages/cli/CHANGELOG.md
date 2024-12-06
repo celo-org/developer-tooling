@@ -1,5 +1,14 @@
 # Changelog
 
+## 6.0.0-beta.6
+
+### Patch Changes
+
+- [#472](https://github.com/celo-org/developer-tooling/pull/472) [`1df8688`](https://github.com/celo-org/developer-tooling/commit/1df86886f953910026a8fd0d7d4d60967dca780b) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Dont show flags for privateKey, gasCurrency, useLedger, and related flags in help for commands which dont actually make use of them.
+
+- Updated dependencies [[`b366827`](https://github.com/celo-org/developer-tooling/commit/b3668273f0ae1ac4363d0fa6f23de089d18dd77c)]:
+  - @celo/metadata-claims@1.0.0-beta.2
+
 ## 6.0.0-beta.5
 
 ### Minor Changes
