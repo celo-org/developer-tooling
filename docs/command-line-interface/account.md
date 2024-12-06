@@ -986,10 +986,7 @@ FLAGS
       Choose the change index for the derivation path
 
   --derivationPath=<value>
-      Choose a different derivation Path (Celo's default is "m/44'/52752'/0'"). Use "eth"
-      as an alias of the Ethereum derivation path ("m/44'/60'/0'"). Recreating the same
-      account requires knowledge of the mnemonic, passphrase (if any), and the derivation
-      path
+      Derivation path in the format "m/44'/coin_type'/account'" or an alias
 
   --globalHelp
       View all available global flags
@@ -1047,6 +1044,16 @@ FLAG DESCRIPTIONS
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
+
+
+  --derivationPath=<value>
+
+    Derivation path in the format "m/44'/coin_type'/account'" or an alias
+
+    Choose a different derivation Path (Celo's default is "m/44'/52752'/0'"). Use "eth"
+    as an alias of the Ethereum derivation path ("m/44'/60'/0'"). Recreating the same
+    account requires knowledge of the mnemonic, passphrase (if any), and the derivation
+    path. (use changeIndex, and addressIndex flags to change BIP44 positions 4 and 5)
 ```
 
 _See code: [src/commands/account/new.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/account/new.ts)_
