@@ -13,5 +13,10 @@
 
 /src
 
+.eslintrc.js
+eslint.tsconfig.json
+typedoc.json
+jestSetup.ts
+
 /lib/**/*.test.*
 /lib/test-utils
