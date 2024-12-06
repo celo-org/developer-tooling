@@ -91,7 +91,7 @@ testWithAnvilL1('Metadata', (web3) => {
     }
   })
 
-  it('throws an error while trying to add a ATTESTAION_SERVICE_URL claim ', async () => {
+  it('throws an error while trying to add a ATTESTATION_SERVICE_URL claim ', async () => {
     const metadata = IdentityMetadataWrapper.fromEmpty(address)
 
     const claim = {
@@ -103,5 +103,32 @@ testWithAnvilL1('Metadata', (web3) => {
     await expect(
       metadata.addClaim(claim as Claim, NativeSigner(kit.connection.sign, address))
     ).rejects.toThrow('ATTESTATION_SERVICE_URL claims are not supported')
+  })
+
+  it('allows to add a new valid claim and hashes it even if the existing claims contains deprecated ATTESTATION_SERVICE_URL', async () => {
+    const metadata = await IdentityMetadataWrapper.fromRawString(
+      await kit.contracts.getAccounts(),
+      `{
+        "claims": [
+          {
+            "url": "https://example.com/attestations",
+            "timestamp": 1733488714,
+            "type": "ATTESTATION_SERVICE_URL"
+          }
+        ],
+        "meta": {
+          "address": "0x5409ED021D9299bf6814279A6A1411A7e866A631",
+          "signature": "0x48b156db90446fcc0587575ad4913c40184cae119ef40e17652c66641f6fef4611d4be7b7940d36b46ac8803ba26ea608e6009c12bf9361e2e149fee33ecbbf11c"
+        }
+      }`
+    )
+
+    await expect(
+      metadata.addClaim(createNameClaim('Test name'), NativeSigner(kit.connection.sign, address))
+    ).resolves.toMatchObject({
+      // Not checking timestamp here on purpose
+      name: 'Test name',
+      type: 'NAME',
+    })
   })
 })

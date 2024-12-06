@@ -24,7 +24,7 @@ export enum ClaimTypes {
 }
 
 export const VERIFIABLE_CLAIM_TYPES = [ClaimTypes.KEYBASE, ClaimTypes.ACCOUNT, ClaimTypes.DOMAIN]
-export const SINGULAR_CLAIM_TYPES = [ClaimTypes.NAME, ClaimTypes.ATTESTATION_SERVICE_URL]
+export const SINGULAR_CLAIM_TYPES = [ClaimTypes.NAME]
 
 export type AccountSignerGetters = {
   isAccount: (address: Address) => Promise<boolean>
