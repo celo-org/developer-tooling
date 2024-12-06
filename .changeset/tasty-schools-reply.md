@@ -2,4 +2,5 @@
 '@celo/celocli': minor
 ---
 
-Add derivation alias for celoLegacy in account:new
+For `account:new` command add alias "celoLegacy" to the `--derivationPath` flag 
+
