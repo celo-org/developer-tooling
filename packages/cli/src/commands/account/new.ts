@@ -158,7 +158,6 @@ export default class NewAccount extends BaseCommand {
     const accountAddress = toChecksumAddress(privateKeyToAddress(keys.privateKey))
 
     if (derivationPath === CELO_DERIVATION_PATH_BASE) {
-      // TODO tell them they can configure the default derivation path
       this.log(
         chalk.magenta(
           `\nUsing celoLegacy path (${CELO_DERIVATION_PATH_BASE}) for derivation. This will default to eth derivation path (${ETHEREUM_DERIVATION_PATH}) next major version.\n`
