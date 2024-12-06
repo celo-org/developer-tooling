@@ -76,7 +76,7 @@ testWithAnvilL2('account:new cmd', (web3: Web3) => {
       await expect(testLocallyWithWeb3Node(NewAccount, ['--derivationPath', 'notARealPath'], web3))
         .rejects.toThrowErrorMatchingInlineSnapshot(`
         "Parsing --derivationPath 
-        	Invalid derivationPath: notARealPath
+        	Invalid derivationPath: notARealPath. should be in format  "m / 44' / coin_type' / account'"
         See more help with --help"
       `)
     })
@@ -84,7 +84,25 @@ testWithAnvilL2('account:new cmd', (web3: Web3) => {
       await expect(testLocallyWithWeb3Node(NewAccount, ['--derivationPath', 'm/44/1/1/2/10'], web3))
         .rejects.toThrowErrorMatchingInlineSnapshot(`
         "Parsing --derivationPath 
-        	Invalid derivationPath: m/44/1/1/2/10
+        	Invalid derivationPath: m/44/1/1/2/10. should be in format  "m / 44' / coin_type' / account'"
+        See more help with --help"
+      `)
+    })
+    it('call with bip44 with changeIndex 4', async () => {
+      await expect(
+        testLocallyWithWeb3Node(NewAccount, ['--derivationPath', "m/44'/52752'/0/0'"], web3)
+      ).rejects.toThrowErrorMatchingInlineSnapshot(`
+        "Parsing --derivationPath 
+        	Invalid derivationPath: m/44'/52752'/0/0'. should be in format  "m / 44' / coin_type' / account'"
+        See more help with --help"
+      `)
+    })
+    it('call with bip44 with changeIndex 4 and addressIndex 5', async () => {
+      await expect(
+        testLocallyWithWeb3Node(NewAccount, ['--derivationPath', "m/44'/52752'/0/0/0'"], web3)
+      ).rejects.toThrowErrorMatchingInlineSnapshot(`
+        "Parsing --derivationPath 
+        	Invalid derivationPath: m/44'/52752'/0/0/0'. should be in format  "m / 44' / coin_type' / account'"
         See more help with --help"
       `)
     })

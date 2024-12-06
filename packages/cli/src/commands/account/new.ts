@@ -63,8 +63,9 @@ export default class NewAccount extends BaseCommand {
       parse: async (input: string) => {
         return NewAccount.sanitizeDerivationPath(input)
       },
+      summary: 'Derivation path in the format "m/44\'/coin_type\'/account\'" or an alias',
       description:
-        "Choose a different derivation Path (Celo's default is \"m/44'/52752'/0'\"). Use \"eth\" as an alias of the Ethereum derivation path (\"m/44'/60'/0'\"). Recreating the same account requires knowledge of the mnemonic, passphrase (if any), and the derivation path",
+        "Choose a different derivation Path (Celo's default is \"m/44'/52752'/0'\"). Use \"eth\" as an alias of the Ethereum derivation path (\"m/44'/60'/0'\"). Recreating the same account requires knowledge of the mnemonic, passphrase (if any), and the derivation path. (use changeIndex, and addressIndex flags to change BIP44 positions 4 and 5)",
     }),
   }
 
@@ -76,7 +77,7 @@ export default class NewAccount extends BaseCommand {
     'new --passphrasePath some_folder/my_passphrase_file --mnemonicPath some_folder/my_mnemonic_file --addressIndex 5',
     'new --derivationPath eth',
     'new --derivationPath celoLegacy',
-    "new --derivationPath \"m/44'/60'/0'\"",
+    `new --derivationPath "m/44'/60'/0'"`,
   ]
 
   async init() {
@@ -103,12 +104,12 @@ export default class NewAccount extends BaseCommand {
       return DerivationPathAliases[derivationPath as keyof typeof DerivationPathAliases]
     }
 
-    // if it is a valid BIP 44 it will be returned thanks mr robot
+    // if it is a valid BIP 44 it will be returned
     if (derivationPath && /^m\/44'\/\d+'\/\d+'(?:\/\d+)*$/.test(derivationPath)) {
       return derivationPath
     }
 
-    throw new Error(`Invalid derivationPath: ${derivationPath}`)
+    throw new Error(`Invalid derivationPath: ${derivationPath}. should be in format  "m / 44' / coin_type' / account'"`)
   }
 
   static readFile(file?: string): string | undefined {
