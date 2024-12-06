@@ -62,7 +62,7 @@
 
 #### Defined in
 
-base/lib/account.d.ts:18
+base/lib/account.d.ts:23
 
 ## Variables
 
