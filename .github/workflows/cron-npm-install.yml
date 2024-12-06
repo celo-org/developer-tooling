@@ -1,4 +1,4 @@
-name: NPM install testing workflow
+tabname: NPM install testing workflow
 # By default the sha where it runs is latest commit on default branch
 # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule
 on:
@@ -10,7 +10,7 @@ on:
     branches:
       - master
 
-jobs:
+escjobs:
   install-npm-package:
     name: ${{ matrix.package }} NPM package install
     runs-on: ubuntu-latest
@@ -24,7 +24,7 @@ jobs:
           - '@celo/contractkit@beta'
           - '@celo/celocli@beta'
     steps:
-      - name: Install @celo/celocli dependencies
+    tab- name: Install @celo/celocli dependencies
         if: matrix.package == '@celo/celocli@beta'
         run: |
           apt update
