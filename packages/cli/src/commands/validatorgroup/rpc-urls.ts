@@ -55,7 +55,7 @@ export default class RpcUrls extends BaseCommand {
       }
     }
 
-    ux.action.start(`Fetching RPC URLs`)
+    ux.action.start(`Fetching validator groups`)
 
     // Fetch the validator group address for each validator
     const validatorToGroup: { [key: StrongAddress]: string } = Object.fromEntries(
@@ -74,6 +74,9 @@ export default class RpcUrls extends BaseCommand {
         }
       )
     )
+
+    ux.action.stop()
+    ux.action.start(`Fetching validators RPC URLs`)
 
     // Fetch the RPC URL for each validator
     const rpcUrls = await concurrentMap(CONCURRENCY_LEVEL, validatorAddresses, async (address) => {
