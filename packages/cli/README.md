@@ -20,7 +20,7 @@ For the cutting edge of development you can install the latest beta
 npm install -g @celo/celocli@beta
 ```
 
-## Using the celo
+## Using celocli
 
 To see available commands
 
