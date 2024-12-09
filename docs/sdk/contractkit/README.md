@@ -13,23 +13,17 @@ ContractKit supports the following functionality:
 ## User Guide
 
 > [!TIP]
-> You might not need the ContractKit. We for new projects we recommened [viem](https://viem.sh/docs/chains/celo) or [web3](https://www.npmjs.com/package/web3) optionally with [our celo plugin](https://www.npmjs.com/package/@celo/web3-plugin-transaction-types). 
-
-:::
+> You might not need the ContractKit. For new projects we recommened [viem](https://viem.sh/docs/chains/celo) or [web3](https://www.npmjs.com/package/web3) optionally with [our celo plugin](https://www.npmjs.com/package/@celo/web3-plugin-transaction-types). 
 
 ### Getting Started
 
-To install you will need Node.js v18.14.2. or greater.
+To install you will need Node.js v18.14.2. or greater. v20 reccomended.
 
 ```bash
 npm install @celo/contractkit
 // or
 yarn add @celo/contractkit
 ```
-
-
-
-
 
 ### Examples
 
@@ -61,11 +55,9 @@ const summary = lockedGoldContractWrapper.getAccountSummary(accountAddress!)
 
 ```
 
-
 ### More Information
 
 You can find more information about the ContractKit in the Celo docs at [https://docs.celo.org/developer-guide/contractkit](https://docs.celo.org/developer-guide/contractkit).
-
 
 ## How we work
 
@@ -86,8 +78,6 @@ Please use GitHub to:
 >
 > Please avoid messaging us via Slack, Telegram, or email. We are more likely to respond to you on
 > GitHub than if you message us anywhere else. We actively monitor GitHub, and will get back to you shortly 🌟
-
-
 
 ### Debugging
 
