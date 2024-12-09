@@ -4,7 +4,7 @@ Tool for interacting with the Celo Protocol.
 
 ## Installation
 
-We are currently deploying the CLI with only Node.js v18.14.2 support.
+celocli is tested on node 20, although we find it works with warnings on 18 and 22 as well.
 
 To install globally, run:
 
@@ -13,6 +13,45 @@ npm install -g @celo/celocli
 ```
 
 If you have trouble installing globally (i.e. with the `-g` flag), try installing to a local directory instead with `npm install @celo/celocli` and run with `npx celocli`.
+
+For the cutting edge of development you can install the latest beta
+
+```
+npm install -g @celo/celocli@beta
+```
+
+## Using celocli
+
+To see available commands
+
+```bash
+
+celocli commands 
+
+```
+
+Check version
+
+```bash
+
+celocli --version 
+
+```
+
+Example of running a command.
+
+```bash
+
+celocli network:whitelist --node celo 
+
+```
+
+### Documentation
+
+[Head to the documentation](https://docs.celo.org/cli) to read and learn more about the Celo 
+CLI.
+
+
 
 ## How we work
 
@@ -34,18 +73,7 @@ Please use GitHub to:
 > Please avoid messaging us via Slack, Telegram, or email. We are more likely to respond to you on 
 > GitHub than if you message us anywhere else. We actively monitor GitHub, and will get back to you shortly 🌟
 
-### Documentation
 
-[Head to the documentation](https://docs.celo.org/) to read and learn more about the Celo 
-CLI.
-
-### Plugins
-
-Additional plugins can be installed which make the CLI experience smoother. Currently, `celocli` only supports installing plugins published on NPM within the `@celo/*` and `@clabs/*` scopes.
-
-> ⚠️ **Warning**
->
-> Installing a 3rd party plugin can be dangerous! Please always be sure that you trust the plugin provider.
 
 ## Development
 

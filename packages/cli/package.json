@@ -19,7 +19,7 @@
     "celo-cli"
   ],
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "scripts": {
     "clean": "rm -f tsconfig.tsbuildinfo && rm -rf lib/ && yarn run --top-level tsc -b . --clean",
