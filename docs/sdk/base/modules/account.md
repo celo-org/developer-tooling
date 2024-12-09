@@ -6,6 +6,7 @@
 
 ### Enumerations
 
+- [DerivationPathAliases](../enums/account.DerivationPathAliases.md)
 - [MnemonicLanguages](../enums/account.MnemonicLanguages.md)
 - [MnemonicStrength](../enums/account.MnemonicStrength.md)
 
@@ -20,6 +21,7 @@
 ### Variables
 
 - [CELO\_DERIVATION\_PATH\_BASE](account.md#celo_derivation_path_base)
+- [ETHEREUM\_DERIVATION\_PATH](account.md#ethereum_derivation_path)
 
 ## Type Aliases
 
@@ -44,7 +46,7 @@
 
 #### Defined in
 
-[packages/sdk/base/src/account.ts:20](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/account.ts#L20)
+[packages/sdk/base/src/account.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/account.ts#L27)
 
 ## Variables
 
@@ -55,3 +57,13 @@
 #### Defined in
 
 [packages/sdk/base/src/account.ts:1](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/account.ts#L1)
+
+___
+
+### ETHEREUM\_DERIVATION\_PATH
+
+• `Const` **ETHEREUM\_DERIVATION\_PATH**: ``"m/44'/60'/0'"``
+
+#### Defined in
+
+[packages/sdk/base/src/account.ts:3](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/account.ts#L3)

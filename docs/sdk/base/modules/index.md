@@ -14,6 +14,8 @@
 - [CELO\_DERIVATION\_PATH\_BASE](index.md#celo_derivation_path_base)
 - [CeloTokenType](index.md#celotokentype)
 - [Comparator](index.md#comparator)
+- [DerivationPathAliases](index.md#derivationpathaliases)
+- [ETHEREUM\_DERIVATION\_PATH](index.md#ethereum_derivation_path)
 - [Err](index.md#err)
 - [ErrorResult](index.md#errorresult)
 - [Future](index.md#future)
@@ -145,6 +147,18 @@ ___
 ### Comparator
 
 Re-exports [Comparator](collections.md#comparator)
+
+___
+
+### DerivationPathAliases
+
+Re-exports [DerivationPathAliases](../enums/account.DerivationPathAliases.md)
+
+___
+
+### ETHEREUM\_DERIVATION\_PATH
+
+Re-exports [ETHEREUM_DERIVATION_PATH](account.md#ethereum_derivation_path)
 
 ___
 
