@@ -12,9 +12,8 @@ ContractKit supports the following functionality:
 
 ## User Guide
 
-:::tip
-
-You might not need the ContractKit. We for new projects we recommened [viem](https://viem.sh/docs/chains/celo) or [web3](https://www.npmjs.com/package/web3) optionally with [our celo plugin](https://www.npmjs.com/package/@celo/web3-plugin-transaction-types). 
+> [!TIP]
+> You might not need the ContractKit. We for new projects we recommened [viem](https://viem.sh/docs/chains/celo) or [web3](https://www.npmjs.com/package/web3) optionally with [our celo plugin](https://www.npmjs.com/package/@celo/web3-plugin-transaction-types). 
 
 :::
 
