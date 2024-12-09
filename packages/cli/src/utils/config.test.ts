@@ -34,7 +34,7 @@ describe('writeConfig', () => {
   })
   it('accepts node', async () => {
     const [dir] = getPaths()
-    await writeConfig(dir, { node: 'SOME_URL' })
+    await writeConfig(dir, { node: 'SOME_URL', telemetry: true })
     expect(spy.mock.calls[0][1]).toMatchInlineSnapshot(`
         {
           "node": "SOME_URL",
