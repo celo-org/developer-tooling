@@ -27,19 +27,21 @@ describe('writeConfig', () => {
     expect(spy.mock.calls[0]).toHaveLength(2)
     expect(spy.mock.calls[0][0]).toEqual(file)
     expect(spy.mock.calls[0][1]).toMatchInlineSnapshot(`
-        {
-          "node": "http://localhost:8545",
-        }
-      `)
+      {
+        "derivationPath": "m/44'/52752'/0'",
+        "node": "http://localhost:8545",
+      }
+    `)
   })
   it('accepts node', async () => {
     const [dir] = getPaths()
-    await writeConfig(dir, { node: 'SOME_URL' })
+    await writeConfig(dir, { node: 'SOME_URL', derivationPath: "m/44'/52752'/0'/0/0" })
     expect(spy.mock.calls[0][1]).toMatchInlineSnapshot(`
-        {
-          "node": "SOME_URL",
-        }
-      `)
+      {
+        "derivationPath": "m/44'/52752'/0'/0/0",
+        "node": "SOME_URL",
+      }
+    `)
   })
 })
 
@@ -49,6 +51,7 @@ describe('readConfig', () => {
     fs.writeJsonSync(file, { foo: 'bar' })
     expect(readConfig(dir)).toMatchInlineSnapshot(`
       {
+        "derivationPath": "m/44'/52752'/0'",
         "foo": "bar",
         "node": "http://localhost:8545",
       }
@@ -59,6 +62,7 @@ describe('readConfig', () => {
     fs.writeJsonSync(file, { nodeUrl: 'bar' })
     expect(readConfig(dir)).toMatchInlineSnapshot(`
       {
+        "derivationPath": "m/44'/52752'/0'",
         "node": "bar",
       }
     `)
@@ -68,6 +72,7 @@ describe('readConfig', () => {
     fs.writeJsonSync(file, { gasCurrency: 'CELO' })
     expect(readConfig(dir)).toMatchInlineSnapshot(`
       {
+        "derivationPath": "m/44'/52752'/0'",
         "node": "http://localhost:8545",
       }
     `)
