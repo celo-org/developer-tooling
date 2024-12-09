@@ -1,0 +1,13 @@
+secret:
+  ignored_matches:
+  - match: dbccfd558fe041f8b370e82596f2732b61703b74b92f777b005807bdc2889364
+    name: account:new test private key
+  - match: 48f5aabb105a51bb5c24546a6083448f95f7b01f6abe28e101b64ecca905f474
+    name: account:new test private key
+  - match: e0f4a80756dc55c69bb4068ed44c41b7629e7f40558437889105bc721764e275
+    name: account:new test private key
+  - match: fcfdf730d67ee3413e4cbe560bc545427b74caddadbac7bea0cf0e0d9698a79c
+    name: account:new test private key
+  - match: eb04975ce604ca9ccf7348eb4c6baf299760b4ddcf8ad35b77f23c601c8b7242
+    name: wallet-rpc private test key
+version: 2
