@@ -15,11 +15,13 @@ import { ViewCommmandFlags } from '../../utils/flags'
 
 import {
   CELO_DERIVATION_PATH_BASE,
+  DerivationPath,
   DerivationPathAliases,
   ETHEREUM_DERIVATION_PATH,
   MnemonicLanguages,
   MnemonicStrength,
 } from '@celo/base'
+import { getDefaultDerivationPath } from '../../utils/config'
 
 export default class NewAccount extends BaseCommand {
   static description =
@@ -93,7 +95,7 @@ export default class NewAccount extends BaseCommand {
     return undefined
   }
 
-  static sanitizeDerivationPath(derivationPath?: string) {
+  static sanitizeDerivationPath(derivationPath?: string): DerivationPath {
     if (derivationPath) {
       derivationPath = derivationPath.endsWith('/') ? derivationPath.slice(0, -1) : derivationPath
     }
@@ -106,7 +108,7 @@ export default class NewAccount extends BaseCommand {
 
     // if it is a valid BIP 44 it will be returned
     if (derivationPath && /^m\/44'\/\d+'\/\d+'(?:\/\d+)*$/.test(derivationPath)) {
-      return derivationPath
+      return derivationPath as DerivationPath
     }
 
     throw new Error(
@@ -144,7 +146,7 @@ export default class NewAccount extends BaseCommand {
       )
     }
     const derivationPath = NewAccount.sanitizeDerivationPath(
-      res.flags.derivationPath ?? CELO_DERIVATION_PATH_BASE
+      res.flags.derivationPath ?? getDefaultDerivationPath(this.config.configDir)
     )
     const passphrase = NewAccount.readFile(res.flags.passphrasePath)
     const keys = await generateKeys(
@@ -160,7 +162,7 @@ export default class NewAccount extends BaseCommand {
     if (derivationPath === CELO_DERIVATION_PATH_BASE) {
       this.log(
         chalk.magenta(
-          `\nUsing celoLegacy path (${CELO_DERIVATION_PATH_BASE}) for derivation. This will default to eth derivation path (${ETHEREUM_DERIVATION_PATH}) next major version.\n`
+          `\nUsing celoLegacy path (${CELO_DERIVATION_PATH_BASE}) for derivation. This will default to eth derivation path (${ETHEREUM_DERIVATION_PATH}) next major version.\n use "config:set --derivationPath <path>" to set your preffered default\n`
         )
       )
     }

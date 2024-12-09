@@ -1,8 +1,10 @@
+import { CELO_DERIVATION_PATH_BASE } from '@celo/base'
 import * as fs from 'fs-extra'
 import * as path from 'path'
 
 export interface CeloConfig {
   node: string
+  derivationPath: string
 }
 
 // NOTE: this mapping should stay updated as CeloConfig evolves
@@ -13,6 +15,7 @@ const LEGACY_MAPPING: Record<string, keyof CeloConfig | undefined> = {
 
 export const defaultConfig: CeloConfig = {
   node: 'http://localhost:8545',
+  derivationPath: CELO_DERIVATION_PATH_BASE,
 }
 
 const configFile = 'config.json'
@@ -44,8 +47,15 @@ export function getNodeUrl(configDir: string): string {
   return readConfig(configDir).node
 }
 
+export function getDefaultDerivationPath(configDir: string): string {
+  return readConfig(configDir).derivationPath
+}
+
 export async function writeConfig(configDir: string, configObj: CeloConfig) {
   const config = { ...defaultConfig, ...configObj }
 
-  fs.outputJSONSync(configPath(configDir), config)
+  fs.outputJSONSync(configPath(configDir), {
+    node: config.node,
+    derivationPath: config.derivationPath,
+  })
 }

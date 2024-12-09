@@ -69,6 +69,12 @@ export abstract class BaseCommand extends Command {
       exclusive: ['ledgerCustomAddresses'],
       description: 'If --useLedger is set, this will get the first N addresses for local signing',
     }),
+    ledgerLiveMode: Flags.boolean({
+      dependsOn: ['useLedger'],
+      default: false,
+      description:
+        'When set, the 4th postion of the derivation path will be iterated over instead of the 5th. This is useful to use same address on you Ledger with celocli as you do on Ledger Live',
+    }),
     ledgerCustomAddresses: Flags.string({
       dependsOn: ['useLedger'],
       default: '[0]',
@@ -185,13 +191,11 @@ export abstract class BaseCommand extends Command {
         if (res.flags.ledgerConfirmAddress) {
           ledgerConfirmation = AddressValidation.everyTransaction
         }
-        this._wallet = await newLedgerWalletWithSetup(
-          transport,
+        this._wallet = await newLedgerWalletWithSetup(transport, {
           derivationPathIndexes,
-          undefined,
-          ledgerConfirmation,
-          await this.isCel2()
-        )
+          ledgerAddressValidation: ledgerConfirmation,
+          isCel2: await this.isCel2(),
+        })
       } catch (err) {
         console.log('Check if the ledger is connected and logged.')
         throw err
