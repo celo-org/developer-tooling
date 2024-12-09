@@ -1652,7 +1652,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/base@npm:^7.0.0-beta.0, @celo/base@workspace:packages/sdk/base":
+"@celo/base@npm:^7.0.0-beta.0, @celo/base@npm:^7.0.0-beta.1, @celo/base@workspace:packages/sdk/base":
   version: 0.0.0-use.local
   resolution: "@celo/base@workspace:packages/sdk/base"
   dependencies:
@@ -1695,7 +1695,7 @@ __metadata:
   resolution: "@celo/celocli@workspace:packages/cli"
   dependencies:
     "@celo/abis": "npm:11.0.0"
-    "@celo/base": "npm:^7.0.0-beta.0"
+    "@celo/base": "npm:^7.0.0-beta.1"
     "@celo/celo-devchain": "npm:^7.0.0"
     "@celo/compliance": "npm:~1.0.23"
     "@celo/connect": "npm:^6.1.0-beta.1"

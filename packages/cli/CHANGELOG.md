@@ -1,5 +1,18 @@
 # Changelog
 
+## 6.0.0-beta.7
+
+### Minor Changes
+
+- [#471](https://github.com/celo-org/developer-tooling/pull/471) [`26b9779`](https://github.com/celo-org/developer-tooling/commit/26b9779071ecb0283644412587d5a6d8bd6fd5a0) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - For `account:new` command add alias "celoLegacy" to the `--derivationPath` flag
+
+### Patch Changes
+
+- [#471](https://github.com/celo-org/developer-tooling/pull/471) [`26b9779`](https://github.com/celo-org/developer-tooling/commit/26b9779071ecb0283644412587d5a6d8bd6fd5a0) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - when account:new is called it displays the full bip44 derivation path in the output. Before it would miss the last 2 positions.
+
+- Updated dependencies [[`26b9779`](https://github.com/celo-org/developer-tooling/commit/26b9779071ecb0283644412587d5a6d8bd6fd5a0)]:
+  - @celo/base@7.0.0-beta.1
+
 ## 6.0.0-beta.6
 
 ### Patch Changes
