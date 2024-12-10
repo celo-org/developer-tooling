@@ -20,7 +20,7 @@ jobs:
       pull-requests: write
       repository-projects: write
     outputs:
-      publishedPackages: '[{"name": "@celo/celocli", "version": "5.0.0"}, {"name": "@celo/contractkit", "version": "8.0.0"}]'
+      publishedPackages: '[{"name": "@celo/celocli", "version": "beta"}, {"name": "@celo/contractkit", "version": "latest"}]'
       # publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
     steps:
       - name: Checkout Repo
@@ -61,7 +61,7 @@ jobs:
       #     version: yarn version-and-reinstall
   
   prepare:
-    name: Prepare for Install
+    name: Format output for Install
     needs: release
     runs-on: ubuntu-latest
     container:
@@ -80,12 +80,7 @@ jobs:
           input: '${{ needs.release.outputs.publishedPackages }}'
           script: |-
             map("\(.name)@\(.version)")
-  example:
-    name: Example
-    runs-on: ubuntu-latest
-    steps: 
-      - name: Print Output
-        run: echo ${{needs.prepare.outputs.result}}
+
 
   install-released-packages:
     name: Install Released Packages
