@@ -60,12 +60,27 @@ jobs:
       #     publish: yarn release
       #     version: yarn version-and-reinstall
   
+  prepare-for-install:
+    name: Prepare for Install
+    needs: release
+    outputs:  
+      result: "${{ steps.current.outputs.output }}"
+    steps:
+      - uses: cloudposse/github-action-jq@main
+        id: current
+        with:
+          compact: true
+          input: '${{ needs.release.outputs.publishedPackages }}'
+          script: |-
+            .[] | "\(.name)@\(.version)"
+
+
   install-released-packages:
     name: Install Released Packages
     runs-on: ubuntu-latest
     container:
       image: node:20-bullseye
-    needs: release
+    needs: prepare-for-install
     strategy:
       fail-fast: false
       max-parallel: 12
