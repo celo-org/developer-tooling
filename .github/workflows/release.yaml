@@ -48,24 +48,24 @@ jobs:
       - name: Install Dependencies
         shell: bash
         run: yarn
-      - name: Create Release Pull Request or Publish to npm
-        if: false
-        id: changesets
-        uses: changesets/action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ env.NPM_TOKEN }}
-        with:
-          # This expects you to have a script called release which does a build for your packages and calls changeset publish
-          publish: yarn release
-          version: yarn version-and-reinstall
+      # - name: Create Release Pull Request or Publish to npm
+      #   if: false
+      #   id: changesets
+      #   uses: changesets/action@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #     NPM_TOKEN: ${{ env.NPM_TOKEN }}
+      #   with:
+      #     # This expects you to have a script called release which does a build for your packages and calls changeset publish
+      #     publish: yarn release
+      #     version: yarn version-and-reinstall
   
   install-released-packages:
     name: Install Released Packages
     runs-on: ubuntu-latest
     container:
       image: node:20-bullseye
-    # needs: release
+    needs: release
     strategy:
       fail-fast: false
       max-parallel: 12
