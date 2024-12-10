@@ -79,7 +79,7 @@ jobs:
           raw-output: true
           input: '${{ needs.release.outputs.publishedPackages }}'
           script: |-
-            .[] | map("\(.name)@\(.version)")
+            map("\(.name)@\(.version)")
   example:
     name: Example
     runs-on: ubuntu-latest
