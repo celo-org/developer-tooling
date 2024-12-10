@@ -76,10 +76,16 @@ jobs:
         id: map
         with:
           compact: true
+          
           input: '${{ needs.release.outputs.publishedPackages }}'
           script: |-
             .[] | "\(.name)@\(.version)"
-
+  example:
+    name: Example
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Print Output
+        run: echo ${{needs.prepare.outputs.result}}
 
   install-released-packages:
     name: Install Released Packages
