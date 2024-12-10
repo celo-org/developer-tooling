@@ -22,6 +22,7 @@ jobs:
     outputs:
       # publishedPackages: '[{"name": "@celo/celocli", "version": "beta"}, {"name": "@celo/contractkit", "version": "latest"}]'
       publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
+      published: ${{ steps.changesets.outputs.published }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
@@ -62,7 +63,8 @@ jobs:
   
   prepare:
     name: Format output for Install
-    needs: release
+    if: ${{ needs.release.outputs.published }} === 'true' 
+    needs: release 
     runs-on: ubuntu-latest
     container:
       image: node:20-bullseye
@@ -84,6 +86,7 @@ jobs:
   # last line of defense to ensure that the packages were published correctly
   install-released-packages:
     name: Install Released Packages
+    if: ${{ needs.release.outputs.published }} === 'true' 
     runs-on: ubuntu-latest
     container:
       image: node:20-bullseye
