@@ -67,10 +67,13 @@ jobs:
     container:
       image: node:20-bullseye
     outputs:  
-      result: "${{ steps.current.outputs.output }}"
-    steps:
-      - uses: cloudposse/github-action-jq@main
-        id: current
+      result: "${{ steps.map.outputs.output }}"
+    steps:              
+      - name: Install jq
+        uses: dcarbone/install-jq-action@v3.0.1
+      - name: Format Published Packages Array
+        uses: cloudposse/github-action-jq@main
+        id: map
         with:
           compact: true
           input: '${{ needs.release.outputs.publishedPackages }}'
