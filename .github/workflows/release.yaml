@@ -20,7 +20,7 @@ jobs:
       pull-requests: write
       repository-projects: write
     outputs:
-      publishedPackages: [{"name": "@celo/celocli", "version": "5.0.0"}, {"name": "@celo/contractkit", "version": "8.0.0"}]
+      publishedPackages: '{"name": "@celo/celocli", "version": "5.0.0"}, {"name": "@celo/contractkit", "version": "8.0.0"}]'
       # publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
     steps:
       - name: Checkout Repo
