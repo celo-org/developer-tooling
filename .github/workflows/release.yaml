@@ -49,7 +49,7 @@ jobs:
         shell: bash
         run: yarn
       - name: Create Release Pull Request or Publish to npm
-        if: !always()
+        if: ${{ github.event_name == 'nevereverever' }}
         id: changesets
         uses: changesets/action@v1
         env:
