@@ -64,7 +64,7 @@ jobs:
     needs: release
     strategy:
       fail-fast: false
-      max-parallel: 8
+      max-parallel: 12
       matrix: 
         package: ${{fromJson(needs.release.outputs.publishedPackages).*.name}}
         version: ${{fromJson(needs.release.outputs.publishedPackages).*.version}}   
@@ -78,15 +78,14 @@ jobs:
 
       - name: Installing ${{ matrix.package }} package
         run: npm install ${{ matrix.package }}@{{ matrix.version }} --global
-      - name: Ensure sameple of celocli commands run
+      - name: Ensure sample of celocli commands run
         if: matrix.package == '@celo/celocli'
         run: |
           celocli --version
           celocli account:new
-          celocli account:balance 0x19B19C7e9aaBa9e54AF653653e42bFbe58Dba192 --node alfajores
+          echo "checking celo community fund balance"
+          celocli account:balance 0xD533Ca259b330c7A88f74E000a3FaEa2d63B7972  --node celo
           celocli network:whitelist --node alfajores
-
-  
 
   open-docs-pr:
     needs: release
