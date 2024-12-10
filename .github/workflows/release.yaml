@@ -1,6 +1,7 @@
 name: Release Packages
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
@@ -18,7 +19,8 @@ jobs:
       pull-requests: write
       repository-projects: write
     outputs:
-      publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
+      publishedPackages: [{"name": "@celo/celocli", "version": "5.0.0"}, {"name": "@celo/contractkit", "version": "8.0.0"}]
+      # publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
@@ -46,6 +48,7 @@ jobs:
         shell: bash
         run: yarn
       - name: Create Release Pull Request or Publish to npm
+        if: false
         id: changesets
         uses: changesets/action@v1
         env:
@@ -61,7 +64,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: node:20-bullseye
-    needs: release
+    # needs: release
     strategy:
       fail-fast: false
       max-parallel: 12
