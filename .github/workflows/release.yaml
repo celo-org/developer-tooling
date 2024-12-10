@@ -60,9 +60,12 @@ jobs:
       #     publish: yarn release
       #     version: yarn version-and-reinstall
   
-  prepare-for-install:
+  prepare:
     name: Prepare for Install
     needs: release
+    runs-on: ubuntu-latest
+    container:
+      image: node:20-bullseye
     outputs:  
       result: "${{ steps.current.outputs.output }}"
     steps:
@@ -80,24 +83,24 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: node:20-bullseye
-    needs: prepare-for-install
+    needs: prepare
     strategy:
       fail-fast: false
       max-parallel: 12
       matrix:
-        package: ${{fromJson(needs.release.outputs.publishedPackages)}}
+        package: ${{fromJson(needs.prepare.outputs.result)}}
     steps:
       - name: Install @celo/celocli dependencies
-        if: matrix.package.name == '@celo/celocli'
+        if: contains(matrix.package, '@celo/celocli')
         run: |
           apt update
           apt install -y libusb-1.0-0-dev libudev-dev
           npm install node-gyp --global
 
-      - name: Installing ${{ matrix.package.name }} package
-        run: npm install ${{ matrix.package.name }}@${{ matrix.package.version }} --global
+      - name: Installing ${{ matrix.package }} package
+        run: npm install ${{ matrix.package }} --global
       - name: Ensure sample of celocli commands run
-        if: matrix.package == '@celo/celocli'
+        if: contains(matrix.package, '@celo/celocli')
         run: |
           celocli --version
           celocli account:new
