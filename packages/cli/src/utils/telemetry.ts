@@ -1,7 +1,9 @@
 import { ux } from '@oclif/core'
 import chalk from 'chalk'
+import fs from 'fs'
+import path from 'path'
 import packageJson from '../../package.json'
-import { CeloConfig } from './config'
+import { readConfig } from './config'
 
 const debug = require('debug')('celocli:telemetry')
 
@@ -19,16 +21,32 @@ const getTelemetryOptions = (command: string, success: boolean): TelemetryOption
   }
 }
 
+const TELEMETRY_PRINTED_FILE = '.telemetry'
+
+const telemetryInformationAlreadyPrinted = (configDir: string) => {
+  return fs.existsSync(path.join(configDir, TELEMETRY_PRINTED_FILE))
+}
+
+const markTelemetryInformationAsPrinted = (configDir: string) => {
+  fs.writeFileSync(path.join(configDir, TELEMETRY_PRINTED_FILE), '')
+}
+
 export const reportUsageStatisticsIfTelemetryEnabled = (
-  config: CeloConfig,
+  configDir: string,
   success: boolean,
   command: string = '_unknown',
   fetchHandler: typeof fetch = fetch
 ) => {
+  const config = readConfig(configDir)
+
   if (config.telemetry === true) {
     const telemetry = getTelemetryOptions(command, success)
 
-    printTelemetryInformation()
+    // Only show the information upon first usage
+    if (!telemetryInformationAlreadyPrinted(configDir)) {
+      printTelemetryInformation()
+      markTelemetryInformationAsPrinted(configDir)
+    }
 
     // TODO alfajores needs to be hardcoded for now
     const telemetryData = `test_pag_celocli{success="${
@@ -75,7 +93,7 @@ export const printTelemetryInformation = () => {
     chalk.green(
       `\ncelocli is now gathering anonymous usage statistics. 
 
-None of the data being gathered is personally identifiable and no flags or arguments are being stored.
+None of the data being collected is personally identifiable and no flags or arguments are being stored.
       
 Data being reported is:
   - command (for example ${chalk.bold('network:info')})
