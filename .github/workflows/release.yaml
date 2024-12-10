@@ -1,7 +1,7 @@
 name: Release Packages
 
 on:
-  workflow_dispatch:
+  # REMOVE
   pull_request:
   push:
     branches:
@@ -20,8 +20,8 @@ jobs:
       pull-requests: write
       repository-projects: write
     outputs:
-      publishedPackages: '[{"name": "@celo/celocli", "version": "beta"}, {"name": "@celo/contractkit", "version": "latest"}]'
-      # publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
+      # publishedPackages: '[{"name": "@celo/celocli", "version": "beta"}, {"name": "@celo/contractkit", "version": "latest"}]'
+      publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
@@ -33,32 +33,32 @@ jobs:
           api-url: https://api.gateway.akeyless.celo-networks-dev.org
           access-id: p-kf9vjzruht6l
           static-secrets: '{"/static-secrets/NPM/npm-publish-token":"NPM_TOKEN"}'
-      - name: Setup Node.js 18.x
+      - name: Setup Node.js 20.x
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 20.x
       - name: 'enable corepack for yarn'
         run: sudo corepack enable yarn
         shell: bash
       # must call twice because of chicken and egg problem with yarn and node
       - uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'yarn'
       - name: Install Dependencies
         shell: bash
         run: yarn
-      # - name: Create Release Pull Request or Publish to npm
-      #   if: false
-      #   id: changesets
-      #   uses: changesets/action@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     NPM_TOKEN: ${{ env.NPM_TOKEN }}
-      #   with:
-      #     # This expects you to have a script called release which does a build for your packages and calls changeset publish
-      #     publish: yarn release
-      #     version: yarn version-and-reinstall
+      - name: Create Release Pull Request or Publish to npm
+        if: !always()
+        id: changesets
+        uses: changesets/action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ env.NPM_TOKEN }}
+        with:
+          # This expects you to have a script called release which does a build for your packages and calls changeset publish
+          publish: yarn release
+          version: yarn version-and-reinstall
   
   prepare:
     name: Format output for Install
@@ -81,7 +81,7 @@ jobs:
           script: |-
             map("\(.name)@\(.version)")
 
-
+  # last line of defense to ensure that the packages were published correctly
   install-released-packages:
     name: Install Released Packages
     runs-on: ubuntu-latest
