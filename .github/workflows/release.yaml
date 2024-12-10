@@ -2,6 +2,7 @@ name: Release Packages
 
 on:
   workflow_dispatch:
+  pull-requests:
   push:
     branches:
       - master
