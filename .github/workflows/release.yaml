@@ -76,10 +76,10 @@ jobs:
         id: map
         with:
           compact: true
-          
+          raw-output: true
           input: '${{ needs.release.outputs.publishedPackages }}'
           script: |-
-            .[] | "\(.name)@\(.version)"
+            .[] | map("\(.name)@\(.version)")
   example:
     name: Example
     runs-on: ubuntu-latest
