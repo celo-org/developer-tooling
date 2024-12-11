@@ -20,9 +20,10 @@ jobs:
       pull-requests: write
       repository-projects: write
     outputs:
+      # published: ${{ steps.changesets.outputs.published }}
       # publishedPackages: '[{"name": "@celo/celocli", "version": "beta"}, {"name": "@celo/contractkit", "version": "latest"}]'
+      published: 'true'
       publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
-      published: ${{ steps.changesets.outputs.published }}
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
@@ -61,8 +62,9 @@ jobs:
           publish: yarn release
           version: yarn version-and-reinstall
   
+  # release gives an array of published packages as jsob objects, we need an array of strings for installing
   prepare:
-    name: Format output for Install
+    name: Format Output for Install
     if: needs.release.outputs.published
     needs: release 
     runs-on: ubuntu-latest
