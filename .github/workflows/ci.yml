@@ -439,6 +439,7 @@ jobs:
           artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
       - name: Pack all packages into tarballs
         run: |
+          pwd
           mkdir -p ${{ github.workspace }}/artifacts
           yarn workspaces foreach --all run make --out ${{ github.workspace }}/artifacts/%s-%v.tgz
       - name: Test tarballs in fresh container
@@ -447,9 +448,11 @@ jobs:
           image: node:22
           options: --entrypoint /bin/bash
           run: |
+            pwd
             mkdir /artifacts
             cp -r ${{ github.workspace }}/artifacts /artifacts
             cd /artifacts
+            ls -la
             for tarball in *.tgz; do
               npm install $tarball
             done
