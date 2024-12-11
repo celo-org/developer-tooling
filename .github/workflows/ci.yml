@@ -442,12 +442,7 @@ jobs:
           pwd
           mkdir -p ${{ github.workspace }}/artifacts
           yarn workspaces foreach --all run make --out ${{ github.workspace }}/artifacts/%s-%v.tgz
-      - name: Insall package tarballs
-        run: |
-          cd ${{ github.workspace }}/artifacts
-          for p in *.tgz; do
-            npm install $p
-          done    
+
 
   validate-renovate-config:
     name: Validate Renovate Config

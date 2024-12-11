@@ -63,7 +63,7 @@ jobs:
   
   prepare:
     name: Format output for Install
-    if: ${{ needs.release.outputs.published }} == 'true' 
+    if: needs.release.outputs.published
     needs: release 
     runs-on: ubuntu-latest
     container:
@@ -72,10 +72,10 @@ jobs:
       result: "${{ steps.map.outputs.output }}"
     steps:              
       - name: Install jq
-        if: ${{ needs.release.outputs.published }} == 'true' 
+        if: needs.release.outputs.published
         uses: dcarbone/install-jq-action@v3.0.1
       - name: Format Published Packages Array
-        if: ${{ needs.release.outputs.published }} == 'true' 
+        if: needs.release.outputs.published
         uses: cloudposse/github-action-jq@main
         id: map
         with:
