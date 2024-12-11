@@ -1,7 +1,7 @@
 {
   "name": "@celo/celocli",
   "description": "CLI Tool for transacting with the Celo protocol",
-  "version": "6.0.0-beta.6",
+  "version": "6.0.0-beta.7",
   "author": "Celo",
   "license": "Apache-2.0",
   "repository": "celo-org/developer-tooling",
@@ -38,10 +38,10 @@
   },
   "dependencies": {
     "@celo/abis": "11.0.0",
-    "@celo/base": "^7.0.0-beta.0",
+    "@celo/base": "^7.0.0-beta.1",
     "@celo/compliance": "~1.0.23",
     "@celo/connect": "^6.1.0-beta.1",
-    "@celo/contractkit": "^9.0.0-beta.4",
+    "@celo/contractkit": "^9.0.0-beta.5",
     "@celo/cryptographic-utils": "^5.1.1-beta.0",
     "@celo/explorer": "^5.0.13-beta.1",
     "@celo/governance": "^5.1.4-beta.3",

@@ -24,7 +24,7 @@
     "lint": "yarn run --top-level eslint -c .eslintrc.js "
   },
   "dependencies": {
-    "@celo/base": "^7.0.0-beta.0",
+    "@celo/base": "^7.0.0-beta.1",
     "@celo/utils": "^8.0.0-beta.0",
     "cross-fetch": "3.1.5",
     "fp-ts": "2.1.1",

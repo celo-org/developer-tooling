@@ -1,5 +1,11 @@
 # @celo/base
 
+## 7.0.0-beta.1
+
+### Minor Changes
+
+- [#471](https://github.com/celo-org/developer-tooling/pull/471) [`26b9779`](https://github.com/celo-org/developer-tooling/commit/26b9779071ecb0283644412587d5a6d8bd6fd5a0) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - add DerivationPathAliases export
+
 ## 7.0.0-beta.0
 
 ### Major Changes
