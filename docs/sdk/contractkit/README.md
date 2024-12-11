@@ -6,7 +6,7 @@ Celo's ContractKit is a library to help developers and validators to interact wi
 
 ContractKit supports the following functionality:
 
-- Interact with json RPC API
+- Interact with JSON RPC API
 - Send Transaction with celo's extra fields: (feeCurrency)
 - Build apps to interact with governance and staking
 
