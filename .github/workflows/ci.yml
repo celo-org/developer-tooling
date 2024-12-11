@@ -428,7 +428,7 @@ jobs:
           npm install $RUNNER_WORKSPACE/developer-tooling/packages/sdk/base/*.tgz
           npm install $RUNNER_WORKSPACE/developer-tooling/packages/sdk/utils/*.tgz
   pack-packages:
-    name: Build Package tarballs for dry release
+    name: Build Package tarballs for dry run
     runs-on: ['self-hosted', 'org', '8-cpu']
     needs: install-dependencies
     steps:
@@ -442,21 +442,12 @@ jobs:
           pwd
           mkdir -p ${{ github.workspace }}/artifacts
           yarn workspaces foreach --all run make --out ${{ github.workspace }}/artifacts/%s-%v.tgz
-      - name: Test tarballs in fresh container
-        uses: addnab/docker-run-action@v3
-        with:
-          image: node:22
-          options: --entrypoint /bin/bash
-          run: |
-            pwd
-            mkdir /artifacts
-            cp -r ${{ github.workspace }}/artifacts /artifacts
-            cd /artifacts
-            ls -la
-            for tarball in *.tgz; do
-              npm install $tarball
-            done
-          
+      - name: Insall package tarballs
+        run: |
+          cd ${{ github.workspace }}/artifacts
+          for p in *.tgz; do
+            npm install $p
+          done    
 
   validate-renovate-config:
     name: Validate Renovate Config

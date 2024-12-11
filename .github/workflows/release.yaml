@@ -63,7 +63,7 @@ jobs:
   
   prepare:
     name: Format output for Install
-    if: ${{ needs.release.outputs.published }} === 'true' 
+    if: ${{ needs.release.outputs.published }} == 'true' 
     needs: release 
     runs-on: ubuntu-latest
     container:
@@ -86,11 +86,11 @@ jobs:
   # last line of defense to ensure that the packages were published correctly
   install-released-packages:
     name: Install Released Packages
-    if: ${{ needs.release.outputs.published }} === 'true' 
+    needs: [prepare, release]
+    if: ${{ needs.release.outputs.published }} == 'true' 
     runs-on: ubuntu-latest
     container:
       image: node:20-bullseye
-    needs: prepare
     strategy:
       fail-fast: false
       max-parallel: 12
