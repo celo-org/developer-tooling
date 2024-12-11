@@ -17,7 +17,6 @@
     "ledger"
   ],
   "scripts": {
-    "make": "yarn pack",
     "build": "yarn build:cjs && yarn build:esm",
     "build:cjs": "yarn --top-level run tsc -m commonjs",
     "build:esm": "yarn --top-level run tsc -m ES6 --outDir lib-es",

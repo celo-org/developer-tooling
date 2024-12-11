@@ -28,7 +28,6 @@
     "docs": "./generate_docs.sh",
     "lint": "yarn run --top-level eslint -c .eslintrc.js ",
     "prepublish": "",
-    "make": "yarn pack",
     "prepack": "yarn run build && oclif readme",
     "test": "TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --runInBand --forceExit",
     "test-anvil": "RUN_GANACHE_TESTS=false RUN_ANVIL_TESTS=true TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --forceExit",

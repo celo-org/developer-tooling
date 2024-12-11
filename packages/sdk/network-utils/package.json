@@ -14,7 +14,6 @@
     "contractkit"
   ],
   "scripts": {
-    "make": "yarn pack",
     "build": "yarn run --top-level tsc -b .",
     "clean": "yarn run --top-level tsc -b . --clean",
     "docs": "yarn run --top-level typedoc",

@@ -10,7 +10,6 @@
   "homepage": "https://docs.celo.org/developer/tools#celo-sdk-reference-docs",
   "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/sdk/base",
   "scripts": {
-    "make": "yarn pack",
     "prepublishOnly": "yarn build",
     "build": "yarn run --top-level tsc -b .",
     "clean": "yarn run --top-level tsc -b . --clean",
