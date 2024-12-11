@@ -1,8 +1,6 @@
 name: Release Packages
 
 on:
-  # REMOVE
-  pull_request:
   push:
     branches:
       - master
@@ -19,11 +17,9 @@ jobs:
       id-token: write
       pull-requests: write
       repository-projects: write
-    outputs:
-      publishedPackages: '[{"name": "@celo/celocli", "version": "beta"}, {"name": "@celo/viem-account-ledger", "version": "1.0.0-beta.2"}, {"name": "@celo/utils", "version": "7.0.0"}, {"name": "@celo/contractkit", "version": "8.3.1"}]'
-      published: 'true'
-      # publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
-      # published: ${{ steps.changesets.outputs.published }}
+    outputs: 
+      publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
+      published: ${{ steps.changesets.outputs.published }}
 
     steps:
       - name: Checkout Repo
@@ -52,7 +48,6 @@ jobs:
         shell: bash
         run: yarn
       - name: Create Release Pull Request or Publish to npm
-        if: ${{ github.event_name == 'nevereverever' }}
         id: changesets
         uses: changesets/action@v1
         env:
@@ -92,7 +87,7 @@ jobs:
   install-released-packages:
     name: Install Released Packages
     needs: [prepare, release]
-    if: ${{ needs.release.outputs.published }} == 'true' 
+    if: needs.release.outputs.published
     runs-on: ubuntu-latest
     container:
       image: node:20-bullseye
