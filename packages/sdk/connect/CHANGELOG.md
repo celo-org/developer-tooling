@@ -1,5 +1,17 @@
 # @celo/connect
 
+## 6.1.0
+
+### Minor Changes
+
+- [#420](https://github.com/celo-org/developer-tooling/pull/420) [`fb08485`](https://github.com/celo-org/developer-tooling/commit/fb08485ae337e796a442b781632ae2123c4f4444) Thanks [@shazarre](https://github.com/shazarre)! - Now CeloProvider can be wrapped in EIP-1193 partially compatible object (request + args)
+
+### Patch Changes
+
+- Updated dependencies [[`4ef76eb`](https://github.com/celo-org/developer-tooling/commit/4ef76eb174454f60304080d0ef63a859cd8d931b), [`26b9779`](https://github.com/celo-org/developer-tooling/commit/26b9779071ecb0283644412587d5a6d8bd6fd5a0)]:
+  - @celo/base@7.0.0
+  - @celo/utils@8.0.0
+
 ## 6.1.0-beta.1
 
 ### Minor Changes
