@@ -20,10 +20,11 @@ jobs:
       pull-requests: write
       repository-projects: write
     outputs:
-      published: ${{ steps.changesets.outputs.published }}
       publishedPackages: '[{"name": "@celo/celocli", "version": "beta"}, {"name": "@celo/viem-account-ledger", "version": "1.0.0-beta.2"}, {"name": "@celo/utils", "version": "7.0.0"}, {"name": "@celo/contractkit", "version": "8.3.1"}]'
-      # published: 'true'
+      published: 'true'
       # publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
+      # published: ${{ steps.changesets.outputs.published }}
+
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
