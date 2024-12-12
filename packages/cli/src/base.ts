@@ -15,6 +15,7 @@ import { CustomFlags } from './utils/command'
 import { getNodeUrl } from './utils/config'
 import { getFeeCurrencyContractWrapper } from './utils/fee-currency'
 import { requireNodeIsSynced } from './utils/helpers'
+import { reportUsageStatisticsIfTelemetryEnabled } from './utils/telemetry'
 
 export abstract class BaseCommand extends Command {
   static flags: FlagInput = {
@@ -246,6 +247,8 @@ export abstract class BaseCommand extends Command {
   async finally(arg: Error | undefined): Promise<any> {
     try {
       if (arg) {
+        reportUsageStatisticsIfTelemetryEnabled(this.config.configDir, false, this.id)
+
         if (!(arg instanceof CLIError)) {
           console.error(
             `
@@ -257,6 +260,8 @@ https://github.com/celo-org/developer-tooling/issues/new?assignees=&labels=bug+r
             arg
           )
         }
+      } else {
+        reportUsageStatisticsIfTelemetryEnabled(this.config.configDir, true, this.id)
       }
 
       if (this._kit !== null) {

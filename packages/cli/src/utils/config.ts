@@ -3,6 +3,7 @@ import * as path from 'path'
 
 export interface CeloConfig {
   node: string
+  telemetry: boolean
 }
 
 // NOTE: this mapping should stay updated as CeloConfig evolves
@@ -13,6 +14,7 @@ const LEGACY_MAPPING: Record<string, keyof CeloConfig | undefined> = {
 
 export const defaultConfig: CeloConfig = {
   node: 'http://localhost:8545',
+  telemetry: true,
 }
 
 const configFile = 'config.json'
