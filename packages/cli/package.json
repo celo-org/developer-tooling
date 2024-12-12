@@ -35,7 +35,7 @@
     "test-ci": "TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --runInBand --workerIdleMemoryLimit=0.1 --forceExit",
     "test-ci-anvil": "yarn test-anvil --workerIdleMemoryLimit=0.1",
     "test-ci-ganache": "yarn test-ganache --workerIdleMemoryLimit=0.1",
-    "postinstall": "node ./lib/scripts/postinstall.js"
+    "postinstall": "./scripts/telemetry-notice.js"
   },
   "dependencies": {
     "@celo/abis": "11.0.0",
