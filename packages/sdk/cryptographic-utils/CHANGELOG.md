@@ -1,5 +1,15 @@
 # @celo/cryptographic-utils
 
+## 5.1.1
+
+### Patch Changes
+
+- [#389](https://github.com/celo-org/developer-tooling/pull/389) [`5a0a922`](https://github.com/celo-org/developer-tooling/commit/5a0a922f4965336849b33d5f90234766db55b2e5) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Add warning that ETH derivation path will be the default in a future major breaking change.
+
+- Updated dependencies [[`4ef76eb`](https://github.com/celo-org/developer-tooling/commit/4ef76eb174454f60304080d0ef63a859cd8d931b), [`26b9779`](https://github.com/celo-org/developer-tooling/commit/26b9779071ecb0283644412587d5a6d8bd6fd5a0)]:
+  - @celo/base@7.0.0
+  - @celo/utils@8.0.0
+
 ## 5.1.1-beta.0
 
 ### Patch Changes

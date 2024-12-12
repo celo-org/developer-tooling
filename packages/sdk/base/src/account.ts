@@ -1,5 +1,12 @@
 export const CELO_DERIVATION_PATH_BASE = "m/44'/52752'/0'"
 
+export const ETHEREUM_DERIVATION_PATH = "m/44'/60'/0'"
+
+export enum DerivationPathAliases {
+  eth = ETHEREUM_DERIVATION_PATH,
+  celoLegacy = CELO_DERIVATION_PATH_BASE,
+}
+
 export enum MnemonicStrength {
   s128_12words = 128,
   s256_24words = 256,
