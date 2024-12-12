@@ -146,7 +146,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
     expect(fetchSpy.mock.calls[0][1]?.signal).toBeInstanceOf(AbortSignal)
   })
 
-  it.only('sends telemetry data successfuly on error', async () => {
+  it('sends telemetry data successfuly on error', async () => {
     class TestTelemetryCommand extends BaseCommand {
       id = 'test:telemetry-error'
 
