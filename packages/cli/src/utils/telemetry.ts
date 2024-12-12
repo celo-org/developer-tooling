@@ -1,4 +1,5 @@
-import { execSync } from 'child_process'
+import { ux } from '@oclif/core'
+import chalk from 'chalk'
 import fs from 'fs'
 import path from 'path'
 import packageJson from '../../package.json'
@@ -87,13 +88,21 @@ ${telemetryData}
 }
 
 export const printTelemetryInformation = () => {
-  try {
-    // This approach makes sure that we don't have redundant printing logic
-    // with an extra benefit of this output not being captured by tests
-    execSync(path.join(__dirname, '../../scripts/telemetry-notice.js'), {
-      stdio: 'inherit',
-    })
-  } catch (_) {
-    // Ignore errors
-  }
+  ux.info(
+    chalk.green(
+      `\ncelocli is now gathering anonymous usage statistics. 
+    
+None of the data being collected is personally identifiable and no flags or arguments are being stored nor transmitted.
+          
+Data being reported is:
+  - command (for example ${chalk.bold('network:info')})
+  - celocli version (for example ${chalk.bold('5.2.3')})
+  - success status (0/1)
+          
+If you would like to opt out of this data collection, you can do so by running:
+    
+${chalk.bold('celocli config:set --telemetry 0')}
+    `
+    )
+  )
 }
