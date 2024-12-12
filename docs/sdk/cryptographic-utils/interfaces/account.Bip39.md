@@ -37,7 +37,7 @@
 
 #### Defined in
 
-base/lib/account.d.ts:22
+base/lib/account.d.ts:27
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 #### Defined in
 
-base/lib/account.d.ts:21
+base/lib/account.d.ts:26
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 #### Defined in
 
-base/lib/account.d.ts:20
+base/lib/account.d.ts:25
 
 ___
 
@@ -112,4 +112,4 @@ ___
 
 #### Defined in
 
-base/lib/account.d.ts:23
+base/lib/account.d.ts:28

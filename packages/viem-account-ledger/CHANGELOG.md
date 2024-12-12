@@ -1,5 +1,20 @@
 # @celo/viem-account-ledger
 
+## 1.0.0
+
+### Major Changes
+
+- [#344](https://github.com/celo-org/developer-tooling/pull/344) [`6bba5e3`](https://github.com/celo-org/developer-tooling/commit/6bba5e377cded1c8216c5cd1cadeb4b8b764df55) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Initial release
+
+### Patch Changes
+
+- [#443](https://github.com/celo-org/developer-tooling/pull/443) [`a23246e`](https://github.com/celo-org/developer-tooling/commit/a23246e82e17424cb22c04cce197eb84a2cac54c) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Safer handling of v from device
+
+- [#427](https://github.com/celo-org/developer-tooling/pull/427) [`ee33677`](https://github.com/celo-org/developer-tooling/commit/ee33677287905076daafe39087283fe2434d729e) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Change a dependency to use npm rather than github
+
+- Updated dependencies [[`4ef76eb`](https://github.com/celo-org/developer-tooling/commit/4ef76eb174454f60304080d0ef63a859cd8d931b), [`26b9779`](https://github.com/celo-org/developer-tooling/commit/26b9779071ecb0283644412587d5a6d8bd6fd5a0)]:
+  - @celo/base@7.0.0
+
 ## 1.0.0-beta.2
 
 ### Patch Changes

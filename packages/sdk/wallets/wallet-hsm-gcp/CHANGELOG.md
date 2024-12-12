@@ -1,5 +1,18 @@
 # @celo/wallet-hsm-gcp
 
+## 6.0.4
+
+### Patch Changes
+
+- [#434](https://github.com/celo-org/developer-tooling/pull/434) [`c4b9c6d`](https://github.com/celo-org/developer-tooling/commit/c4b9c6d60bf938950007a67df4e7c8ec35066fb3) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Force patch bump wallets to deal with version conflict
+
+- Updated dependencies [[`c4b9c6d`](https://github.com/celo-org/developer-tooling/commit/c4b9c6d60bf938950007a67df4e7c8ec35066fb3), [`d988d31`](https://github.com/celo-org/developer-tooling/commit/d988d317582daed57bf05a4c4d9d087e5e732f0d), [`4ef76eb`](https://github.com/celo-org/developer-tooling/commit/4ef76eb174454f60304080d0ef63a859cd8d931b), [`fb08485`](https://github.com/celo-org/developer-tooling/commit/fb08485ae337e796a442b781632ae2123c4f4444)]:
+  - @celo/wallet-remote@6.0.4
+  - @celo/wallet-base@6.0.4
+  - @celo/wallet-hsm@6.0.4
+  - @celo/utils@8.0.0
+  - @celo/connect@6.1.0
+
 ## 6.0.4-beta.1
 
 ### Patch Changes

@@ -52,14 +52,14 @@ jobs:
     steps:
       - uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
       - name: 'enable corepack for yarn'
         run: sudo corepack enable yarn
       - uses: actions/checkout@v4
       # must call twice because of chicken and egg problem with yarn and node
       - uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'yarn'
       - name: Restore node cache
         uses: actions/cache@v4
@@ -169,7 +169,7 @@ jobs:
             -ip \
             run test --coverage
       - name: Upload Jest Test Results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Jest Test Results
           path: test-results/jest

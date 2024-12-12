@@ -1,5 +1,13 @@
 # @celo/phone-utils
 
+## 6.0.4
+
+### Patch Changes
+
+- Updated dependencies [[`4ef76eb`](https://github.com/celo-org/developer-tooling/commit/4ef76eb174454f60304080d0ef63a859cd8d931b), [`26b9779`](https://github.com/celo-org/developer-tooling/commit/26b9779071ecb0283644412587d5a6d8bd6fd5a0)]:
+  - @celo/base@7.0.0
+  - @celo/utils@8.0.0
+
 ## 6.0.4-beta.0
 
 ### Patch Changes
