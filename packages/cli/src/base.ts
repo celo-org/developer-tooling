@@ -246,9 +246,9 @@ export abstract class BaseCommand extends Command {
 
   async finally(arg: Error | undefined): Promise<any> {
     try {
-      if (arg) {
-        reportUsageStatisticsIfTelemetryEnabled(this.config.configDir, false, this.id)
+      await reportUsageStatisticsIfTelemetryEnabled(this.config.configDir, !arg, this.id)
 
+      if (arg) {
         if (!(arg instanceof CLIError)) {
           console.error(
             `
@@ -260,8 +260,6 @@ https://github.com/celo-org/developer-tooling/issues/new?assignees=&labels=bug+r
             arg
           )
         }
-      } else {
-        reportUsageStatisticsIfTelemetryEnabled(this.config.configDir, true, this.id)
       }
 
       if (this._kit !== null) {

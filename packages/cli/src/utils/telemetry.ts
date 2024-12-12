@@ -21,7 +21,9 @@ const getTelemetryOptions = (command: string, success: boolean): TelemetryOption
   }
 }
 
+const TIMEOUT = 1000 // 1 second
 const TELEMETRY_PRINTED_FILE = '.telemetry'
+const UNKNOWN_COMMAND = '_unknown'
 
 const telemetryInformationAlreadyPrinted = (configDir: string) => {
   return fs.existsSync(path.join(configDir, TELEMETRY_PRINTED_FILE))
@@ -34,8 +36,7 @@ const markTelemetryInformationAsPrinted = (configDir: string) => {
 export const reportUsageStatisticsIfTelemetryEnabled = (
   configDir: string,
   success: boolean,
-  command: string = '_unknown',
-  fetchHandler: typeof fetch = fetch
+  command: string = UNKNOWN_COMMAND
 ) => {
   const config = readConfig(configDir)
 
@@ -58,9 +59,10 @@ export const reportUsageStatisticsIfTelemetryEnabled = (
     const controller = new AbortController()
     const timeout = setTimeout(() => {
       controller.abort()
-    }, 1000)
+    }, TIMEOUT)
 
-    fetchHandler(process.env.TELEMETRY_URL!, {
+    // TODO either create an .env file or use a default value
+    return fetch(process.env.TELEMETRY_URL!, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/octet-stream',
@@ -97,7 +99,7 @@ None of the data being collected is personally identifiable and no flags or argu
 Data being reported is:
   - command (for example ${chalk.bold('network:info')})
   - celocli version (for example ${chalk.bold('5.2.3')})
-  - success status (0/1)
+  - success status (true/false)
           
 If you would like to opt out of this data collection, you can do so by running:
     

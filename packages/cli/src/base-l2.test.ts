@@ -112,4 +112,70 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
       ]
     `)
   })
+
+  it('sends telemetry data successfuly on success', async () => {
+    class TestTelemetryCommand extends BaseCommand {
+      id = 'test:telemetry-success'
+
+      async run() {
+        console.log('Successful run')
+      }
+    }
+
+    process.env.TELEMETRY_URL = 'https://telemetry.example.com'
+
+    const fetchMock = jest.fn().mockResolvedValue({
+      ok: true,
+    })
+    const fetchSpy = jest.spyOn(global, 'fetch').mockImplementation(fetchMock)
+
+    await TestTelemetryCommand.run([])
+
+    expect(fetchSpy.mock.calls[0][0]).toMatchInlineSnapshot(`"https://telemetry.example.com"`)
+    expect(fetchSpy.mock.calls[0][1]?.body).toMatchInlineSnapshot(`
+      "
+      test_pag_celocli{success="true", version="telemetry-test", command="test:telemetry-success", network="alfajores"} 1
+      "
+    `)
+    expect(fetchSpy.mock.calls[0][1]?.headers).toMatchInlineSnapshot(`
+      {
+        "Content-Type": "application/octet-stream",
+      }
+    `)
+    expect(fetchSpy.mock.calls[0][1]?.method).toMatchInlineSnapshot(`"POST"`)
+    expect(fetchSpy.mock.calls[0][1]?.signal).toBeInstanceOf(AbortSignal)
+  })
+
+  it.only('sends telemetry data successfuly on error', async () => {
+    class TestTelemetryCommand extends BaseCommand {
+      id = 'test:telemetry-error'
+
+      async run() {
+        throw new Error('test error')
+      }
+    }
+
+    process.env.TELEMETRY_URL = 'https://telemetry.example.com'
+
+    const fetchMock = jest.fn().mockResolvedValue({
+      ok: true,
+    })
+    const fetchSpy = jest.spyOn(global, 'fetch').mockImplementation(fetchMock)
+
+    await expect(TestTelemetryCommand.run([])).rejects.toMatchInlineSnapshot(`[Error: test error]`)
+
+    expect(fetchSpy.mock.calls[0][0]).toMatchInlineSnapshot(`"https://telemetry.example.com"`)
+    expect(fetchSpy.mock.calls[0][1]?.body).toMatchInlineSnapshot(`
+      "
+      test_pag_celocli{success="false", version="telemetry-test", command="test:telemetry-error", network="alfajores"} 1
+      "
+    `)
+    expect(fetchSpy.mock.calls[0][1]?.headers).toMatchInlineSnapshot(`
+      {
+        "Content-Type": "application/octet-stream",
+      }
+    `)
+    expect(fetchSpy.mock.calls[0][1]?.method).toMatchInlineSnapshot(`"POST"`)
+    expect(fetchSpy.mock.calls[0][1]?.signal).toBeInstanceOf(AbortSignal)
+  })
 })
