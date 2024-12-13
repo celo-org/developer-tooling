@@ -20,13 +20,13 @@ afterEach(async () => {
 testWithAnvilL2('config:set cmd', (web3: Web3) => {
   it('shows a warning if gasCurrency is passed', async () => {
     const kit = newKitFromWeb3(web3)
-    const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyWhitelist()
+    const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyDirectory()
     const consoleMock = jest.spyOn(ux, 'warn')
     const writeMock = jest.spyOn(config, 'writeConfig')
 
     await testLocallyWithWeb3Node(
       Set,
-      ['--gasCurrency', (await feeCurrencyWhitelist.getWhitelist())[0]],
+      ['--gasCurrency', (await feeCurrencyWhitelist.getCurrencies())[0]],
       web3
     )
     expect(stripAnsiCodesFromNestedArray(consoleMock.mock.calls as string[][]))
@@ -42,6 +42,7 @@ testWithAnvilL2('config:set cmd', (web3: Web3) => {
     expect(writeMock.mock.calls[0][1]).toMatchInlineSnapshot(`
       {
         "node": "${extractHostFromWeb3(web3)}",
+        "telemetry": true,
       }
     `)
   })

@@ -42,6 +42,7 @@ testWithAnvilL1('config:set cmd', (web3: Web3) => {
     expect(writeMock.mock.calls[0][1]).toMatchInlineSnapshot(`
       {
         "node": "${extractHostFromWeb3(web3)}",
+        "telemetry": true,
       }
     `)
   })
