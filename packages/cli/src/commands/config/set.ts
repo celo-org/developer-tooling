@@ -49,8 +49,6 @@ export default class Set extends BaseCommand {
       )
     }
 
-    // TODO caveat: won't give us visibility into how many people opted-out from telemetry
-    // and that's something to consider
     await writeConfig(this.config.configDir, {
       node,
       telemetry,

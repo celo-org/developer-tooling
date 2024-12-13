@@ -40,11 +40,13 @@ Configure running node information for propagating transactions to network
 
 ```
 USAGE
-  $ celocli config:set [-n <value>] [--globalHelp]
+  $ celocli config:set [-n <value>] [--globalHelp] [--telemetry 1|0]
 
 FLAGS
-  -n, --node=<value>  URL of the node to run commands against or an alias
-      --globalHelp    View all available global flags
+  -n, --node=<value>        URL of the node to run commands against or an alias
+      --globalHelp          View all available global flags
+      --telemetry=<option>  Whether to enable or disable telemetry
+                            <options: 1|0>
 
 DESCRIPTION
   Configure running node information for propagating transactions to network
@@ -65,6 +67,10 @@ EXAMPLES
   set --node ws://localhost:2500
 
   set --node <geth-location>/geth.ipc
+
+  set --telemetry 0 # disable telemetry
+
+  set --telemetry 1 # enable telemetry
 
 FLAG DESCRIPTIONS
   -n, --node=<value>  URL of the node to run commands against or an alias

@@ -53,6 +53,10 @@ describe('flags', () => {
   })
 })
 
+jest.mock('../package.json', () => ({
+  version: '5.2.3',
+}))
+
 testWithAnvilL2('BaseCommand', (web3: Web3) => {
   afterEach(() => {
     jest.clearAllMocks()
@@ -150,7 +154,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
     expect(fetchSpy.mock.calls[0][0]).toMatchInlineSnapshot(`"https://telemetry.example.com"`)
     expect(fetchSpy.mock.calls[0][1]?.body).toMatchInlineSnapshot(`
       "
-      test_pag_celocli{success="true", version="telemetry-test", command="test:telemetry-success", network="alfajores"} 1
+      test_pag_celocli{success="true", version="5.2.3", command="test:telemetry-success", network="alfajores"} 1
       "
     `)
     expect(fetchSpy.mock.calls[0][1]?.headers).toMatchInlineSnapshot(`
@@ -194,7 +198,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
     expect(fetchSpy.mock.calls[0][0]).toMatchInlineSnapshot(`"https://telemetry.example.com"`)
     expect(fetchSpy.mock.calls[0][1]?.body).toMatchInlineSnapshot(`
       "
-      test_pag_celocli{success="false", version="telemetry-test", command="test:telemetry-error", network="alfajores"} 1
+      test_pag_celocli{success="false", version="5.2.3", command="test:telemetry-error", network="alfajores"} 1
       "
     `)
     expect(fetchSpy.mock.calls[0][1]?.headers).toMatchInlineSnapshot(`
@@ -271,7 +275,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
         expect(fetchSpy.mock.calls[0][0]).toMatchInlineSnapshot(`"http://localhost:3000/"`)
         expect(fetchSpy.mock.calls[0][1]?.body).toMatchInlineSnapshot(`
                   "
-                  test_pag_celocli{success="true", version="telemetry-test", command="test:telemetry-timeout", network="alfajores"} 1
+                  test_pag_celocli{success="true", version="5.2.3", command="test:telemetry-timeout", network="alfajores"} 1
                   "
               `)
         expect(fetchSpy.mock.calls[0][1]?.headers).toMatchInlineSnapshot(`
