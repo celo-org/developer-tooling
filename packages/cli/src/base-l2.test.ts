@@ -122,6 +122,8 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
       }
     }
 
+    // here we test also that it works without this env var
+    delete process.env.TELEMETRY_ENABLED
     process.env.TELEMETRY_URL = 'https://telemetry.example.com'
 
     const fetchMock = jest.fn().mockResolvedValue({
@@ -130,6 +132,9 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
     const fetchSpy = jest.spyOn(global, 'fetch').mockImplementation(fetchMock)
 
     await TestTelemetryCommand.run([])
+
+    // Assert it was called at all in the first place
+    expect(fetchSpy.mock.calls.length).toEqual(1)
 
     expect(fetchSpy.mock.calls[0][0]).toMatchInlineSnapshot(`"https://telemetry.example.com"`)
     expect(fetchSpy.mock.calls[0][1]?.body).toMatchInlineSnapshot(`
@@ -155,6 +160,8 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
       }
     }
 
+    // here we test also that it works with this env var set to 1 explicitly
+    process.env.TELEMETRY_ENABLED = '1'
     process.env.TELEMETRY_URL = 'https://telemetry.example.com'
 
     const fetchMock = jest.fn().mockResolvedValue({
@@ -163,6 +170,9 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
     const fetchSpy = jest.spyOn(global, 'fetch').mockImplementation(fetchMock)
 
     await expect(TestTelemetryCommand.run([])).rejects.toMatchInlineSnapshot(`[Error: test error]`)
+
+    // Assert it was called at all in the first place
+    expect(fetchSpy.mock.calls.length).toEqual(1)
 
     expect(fetchSpy.mock.calls[0][0]).toMatchInlineSnapshot(`"https://telemetry.example.com"`)
     expect(fetchSpy.mock.calls[0][1]?.body).toMatchInlineSnapshot(`
@@ -178,4 +188,6 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
     expect(fetchSpy.mock.calls[0][1]?.method).toMatchInlineSnapshot(`"POST"`)
     expect(fetchSpy.mock.calls[0][1]?.signal).toBeInstanceOf(AbortSignal)
   })
+
+  // add timeout scenario test
 })

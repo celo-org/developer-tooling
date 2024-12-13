@@ -26,11 +26,21 @@ const TELEMETRY_PRINTED_FILE = '.telemetry'
 const UNKNOWN_COMMAND = '_unknown'
 
 const telemetryInformationAlreadyPrinted = (configDir: string) => {
-  return fs.existsSync(path.join(configDir, TELEMETRY_PRINTED_FILE))
+  try {
+    return fs.existsSync(path.join(configDir, TELEMETRY_PRINTED_FILE))
+  } catch (err) {
+    debug(`Failed to check if .telemetry file exists: ${err}`)
+  }
+
+  return false
 }
 
 const markTelemetryInformationAsPrinted = (configDir: string) => {
-  fs.writeFileSync(path.join(configDir, TELEMETRY_PRINTED_FILE), '')
+  try {
+    fs.writeFileSync(path.join(configDir, TELEMETRY_PRINTED_FILE), '')
+  } catch (err) {
+    debug(`Failed to write .telemetry file: ${err}`)
+  }
 }
 
 export const reportUsageStatisticsIfTelemetryEnabled = (
@@ -38,6 +48,10 @@ export const reportUsageStatisticsIfTelemetryEnabled = (
   success: boolean,
   command: string = UNKNOWN_COMMAND
 ) => {
+  if (process.env.TELEMETRY_ENABLED === '0') {
+    return
+  }
+
   const config = readConfig(configDir)
 
   if (config.telemetry === true) {
