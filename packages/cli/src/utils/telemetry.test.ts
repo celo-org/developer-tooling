@@ -19,7 +19,7 @@ describe('telemetry', () => {
       Data being reported is:
         - command (for example network:info)
         - celocli version (for example 5.2.3)
-        - success status (0/1)
+        - success status (false/true)
                 
       If you would like to opt out of this data collection, you can do so by running:
           

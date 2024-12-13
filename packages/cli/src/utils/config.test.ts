@@ -27,19 +27,36 @@ describe('writeConfig', () => {
     expect(spy.mock.calls[0]).toHaveLength(2)
     expect(spy.mock.calls[0][0]).toEqual(file)
     expect(spy.mock.calls[0][1]).toMatchInlineSnapshot(`
-        {
-          "node": "http://localhost:8545",
-        }
-      `)
+      {
+        "node": "http://localhost:8545",
+        "telemetry": true,
+      }
+    `)
   })
   it('accepts node', async () => {
     const [dir] = getPaths()
     await writeConfig(dir, { node: 'SOME_URL', telemetry: true })
     expect(spy.mock.calls[0][1]).toMatchInlineSnapshot(`
-        {
-          "node": "SOME_URL",
-        }
-      `)
+      {
+        "node": "SOME_URL",
+        "telemetry": true,
+      }
+    `)
+  })
+
+  it('accepts telemetry', async () => {
+    const [dir] = getPaths()
+    await writeConfig(dir, {
+      node: 'http://localhost:8545',
+      telemetry: false,
+    })
+
+    expect(spy.mock.calls[0][1]).toMatchInlineSnapshot(`
+      {
+        "node": "http://localhost:8545",
+        "telemetry": false,
+      }
+    `)
   })
 })
 
@@ -51,6 +68,7 @@ describe('readConfig', () => {
       {
         "foo": "bar",
         "node": "http://localhost:8545",
+        "telemetry": true,
       }
     `)
   })
@@ -60,6 +78,7 @@ describe('readConfig', () => {
     expect(readConfig(dir)).toMatchInlineSnapshot(`
       {
         "node": "bar",
+        "telemetry": true,
       }
     `)
   })
@@ -69,6 +88,7 @@ describe('readConfig', () => {
     expect(readConfig(dir)).toMatchInlineSnapshot(`
       {
         "node": "http://localhost:8545",
+        "telemetry": true,
       }
     `)
   })

@@ -1,10 +1,12 @@
 import { Connection } from '@celo/connect'
 import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { Config, ux } from '@oclif/core'
+import http from 'http'
 import Web3 from 'web3'
 import { BaseCommand } from './base'
 import CustomHelp from './help'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from './test-utils/cliUtils'
+import * as config from './utils/config'
 
 process.env.NO_SYNCCHECK = 'true'
 
@@ -52,6 +54,11 @@ describe('flags', () => {
 })
 
 testWithAnvilL2('BaseCommand', (web3: Web3) => {
+  afterEach(() => {
+    jest.clearAllMocks()
+    jest.restoreAllMocks()
+  })
+
   it('logs command execution error', async () => {
     class TestErrorCommand extends BaseCommand {
       async run() {
@@ -126,6 +133,10 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
     delete process.env.TELEMETRY_ENABLED
     process.env.TELEMETRY_URL = 'https://telemetry.example.com'
 
+    jest.spyOn(config, 'readConfig').mockImplementation((_: string) => {
+      return { telemetry: true } as config.CeloConfig
+    })
+
     const fetchMock = jest.fn().mockResolvedValue({
       ok: true,
     })
@@ -149,6 +160,8 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
     `)
     expect(fetchSpy.mock.calls[0][1]?.method).toMatchInlineSnapshot(`"POST"`)
     expect(fetchSpy.mock.calls[0][1]?.signal).toBeInstanceOf(AbortSignal)
+    // Make sure the request was not aborted
+    expect(fetchSpy.mock.calls[0][1]?.signal?.aborted).toBe(false)
   })
 
   it('sends telemetry data successfuly on error', async () => {
@@ -159,6 +172,10 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
         throw new Error('test error')
       }
     }
+
+    jest.spyOn(config, 'readConfig').mockImplementation((_: string) => {
+      return { telemetry: true } as config.CeloConfig
+    })
 
     // here we test also that it works with this env var set to 1 explicitly
     process.env.TELEMETRY_ENABLED = '1'
@@ -187,7 +204,89 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
     `)
     expect(fetchSpy.mock.calls[0][1]?.method).toMatchInlineSnapshot(`"POST"`)
     expect(fetchSpy.mock.calls[0][1]?.signal).toBeInstanceOf(AbortSignal)
+    // Make sure the request was not aborted
+    expect(fetchSpy.mock.calls[0][1]?.signal?.aborted).toBe(false)
   })
 
-  // add timeout scenario test
+  it('does not send telemetry when disabled by config', async () => {
+    class TestTelemetryCommand extends BaseCommand {
+      id = 'test:telemetry-should-not-be-sent'
+
+      async run() {
+        console.log('Successful run')
+      }
+    }
+
+    jest.spyOn(config, 'readConfig').mockImplementation((_: string) => {
+      return { telemetry: false } as config.CeloConfig
+    })
+
+    // we leave it here to double check that it is not sent even if the env var is set
+    process.env.TELEMETRY_ENABLED = '1'
+    process.env.TELEMETRY_URL = 'https://telemetry.example.com'
+
+    const fetchMock = jest.fn().mockResolvedValue({
+      ok: true,
+    })
+    const fetchSpy = jest.spyOn(global, 'fetch').mockImplementation(fetchMock)
+
+    await TestTelemetryCommand.run([])
+
+    expect(fetchSpy).not.toHaveBeenCalled()
+  })
+
+  it('times out after TIMEOUT', async () => {
+    return new Promise<void>((resolve, _) => {
+      const EXPECTED_COMMAND_RESULT = 'Successful run'
+
+      class TestTelemetryCommand extends BaseCommand {
+        id = 'test:telemetry-timeout'
+
+        async run() {
+          return EXPECTED_COMMAND_RESULT
+        }
+      }
+
+      jest.spyOn(config, 'readConfig').mockImplementation((_: string) => {
+        return { telemetry: true } as config.CeloConfig
+      })
+
+      delete process.env.TELEMETRY_ENABLED
+      process.env.TELEMETRY_URL = 'http://localhost:3000/'
+
+      const fetchSpy = jest.spyOn(global, 'fetch')
+
+      const server = http.createServer((_, res) => {
+        setTimeout(() => {
+          res.end()
+        }, 5000) // Higher timeout than the telemetry logic uses
+      })
+
+      server.listen(3000, async () => {
+        // Make sure the command actually returns
+        await expect(TestTelemetryCommand.run([])).resolves.toBe(EXPECTED_COMMAND_RESULT)
+
+        expect(fetchSpy.mock.calls.length).toEqual(1)
+
+        expect(fetchSpy.mock.calls[0][0]).toMatchInlineSnapshot(`"http://localhost:3000/"`)
+        expect(fetchSpy.mock.calls[0][1]?.body).toMatchInlineSnapshot(`
+                  "
+                  test_pag_celocli{success="true", version="telemetry-test", command="test:telemetry-timeout", network="alfajores"} 1
+                  "
+              `)
+        expect(fetchSpy.mock.calls[0][1]?.headers).toMatchInlineSnapshot(`
+                  {
+                    "Content-Type": "application/octet-stream",
+                  }
+              `)
+        expect(fetchSpy.mock.calls[0][1]?.method).toMatchInlineSnapshot(`"POST"`)
+        expect(fetchSpy.mock.calls[0][1]?.signal).toBeInstanceOf(AbortSignal)
+        // Make sure the request was aborted
+        expect(fetchSpy.mock.calls[0][1]?.signal?.aborted).toBe(true)
+
+        server.close()
+        resolve()
+      })
+    })
+  })
 })
