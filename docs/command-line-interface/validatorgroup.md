@@ -20,7 +20,7 @@ USAGE
   $ celocli validatorgroup:commission --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [-k
     <value> | --useLedger | ] [-n <value>] [--gasCurrency
     0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp] [--apply | --queue-update <value>]
+    [--ledgerLiveMode ] [--globalHelp] [--apply | --queue-update <value>]
 
 FLAGS
   -k, --privateKey=<value>
@@ -45,6 +45,11 @@ FLAGS
   --ledgerAddresses=<value>
       [default: 1] If --useLedger is set, this will get the first N addresses for local
       signing
+
+  --ledgerLiveMode
+      When set, the 4th postion of the derivation path will be iterated over instead of
+      the 5th. This is useful to use same address on you Ledger with celocli as you do on
+      Ledger Live
 
   --queue-update=<value>
       Queues an update to the commission, which can be applied after the update delay.
@@ -87,7 +92,7 @@ USAGE
   $ celocli validatorgroup:deregister --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [-k
     <value> | --useLedger | ] [-n <value>] [--gasCurrency
     0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp]
+    [--ledgerLiveMode ] [--globalHelp]
 
 FLAGS
   -k, --privateKey=<value>
@@ -109,6 +114,11 @@ FLAGS
   --ledgerAddresses=<value>
       [default: 1] If --useLedger is set, this will get the first N addresses for local
       signing
+
+  --ledgerLiveMode
+      When set, the 4th postion of the derivation path will be iterated over instead of
+      the 5th. This is useful to use same address on you Ledger with celocli as you do on
+      Ledger Live
 
   --useLedger
       Set it to use a ledger wallet
@@ -141,9 +151,9 @@ List registered Validator Groups, their names (if provided), commission, and mem
 
 ```
 USAGE
-  $ celocli validatorgroup:list [-n <value>] [--globalHelp] [--columns <value> | -x]
-    [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output csv|json|yaml |
-    | ] [--sort <value>]
+  $ celocli validatorgroup:list [-n <value>] [--ledgerLiveMode ] [--globalHelp]
+    [--columns <value> | -x] [--filter <value>] [--no-header | [--csv | --no-truncate]]
+    [--output csv|json|yaml |  | ] [--sort <value>]
 
 FLAGS
   -n, --node=<value>     URL of the node to run commands against or an alias
@@ -152,6 +162,9 @@ FLAGS
       --csv              output is csv format [alias: --output=csv]
       --filter=<value>   filter property by partial string matching, ex: name=foo
       --globalHelp       View all available global flags
+      --ledgerLiveMode   When set, the 4th postion of the derivation path will be
+                         iterated over instead of the 5th. This is useful to use same
+                         address on you Ledger with celocli as you do on Ledger Live
       --no-header        hide table header from output
       --no-truncate      do not truncate output to fit screen
       --output=<option>  output in a more machine friendly format
@@ -186,7 +199,7 @@ USAGE
   $ celocli validatorgroup:member ARG1 --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
     [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
     0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp] [--yes] [--accept | --remove | --reorder <value>]
+    [--ledgerLiveMode ] [--globalHelp] [--yes] [--accept | --remove | --reorder <value>]
 
 ARGUMENTS
   ARG1  Validator's address
@@ -214,6 +227,11 @@ FLAGS
   --ledgerAddresses=<value>
       [default: 1] If --useLedger is set, this will get the first N addresses for local
       signing
+
+  --ledgerLiveMode
+      When set, the 4th postion of the derivation path will be iterated over instead of
+      the 5th. This is useful to use same address on you Ledger with celocli as you do on
+      Ledger Live
 
   --remove
       Remove a validator from the members list
@@ -259,7 +277,7 @@ USAGE
   $ celocli validatorgroup:register --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
     --commission <value> [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
     0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp] [--yes]
+    [--ledgerLiveMode ] [--globalHelp] [--yes]
 
 FLAGS
   -k, --privateKey=<value>
@@ -285,6 +303,11 @@ FLAGS
   --ledgerAddresses=<value>
       [default: 1] If --useLedger is set, this will get the first N addresses for local
       signing
+
+  --ledgerLiveMode
+      When set, the 4th postion of the derivation path will be iterated over instead of
+      the 5th. This is useful to use same address on you Ledger with celocli as you do on
+      Ledger Live
 
   --useLedger
       Set it to use a ledger wallet
@@ -319,7 +342,7 @@ Reset validator group slashing multiplier.
 USAGE
   $ celocli validatorgroup:reset-slashing-multiplier ARG1 [-k <value> | --useLedger | ] [-n <value>]
     [--gasCurrency 0x1234567890123456789012345678901234567890] [--ledgerAddresses
-    <value> ] [--globalHelp]
+    <value> ] [--ledgerLiveMode ] [--globalHelp]
 
 ARGUMENTS
   ARG1  ValidatorGroup's address
@@ -341,6 +364,11 @@ FLAGS
   --ledgerAddresses=<value>
       [default: 1] If --useLedger is set, this will get the first N addresses for local
       signing
+
+  --ledgerLiveMode
+      When set, the 4th postion of the derivation path will be iterated over instead of
+      the 5th. This is useful to use same address on you Ledger with celocli as you do on
+      Ledger Live
 
   --useLedger
       Set it to use a ledger wallet
@@ -370,14 +398,17 @@ Show information about an existing Validator Group
 
 ```
 USAGE
-  $ celocli validatorgroup:show ARG1 [-n <value>] [--globalHelp]
+  $ celocli validatorgroup:show ARG1 [-n <value>] [--ledgerLiveMode ] [--globalHelp]
 
 ARGUMENTS
   ARG1  ValidatorGroup's address
 
 FLAGS
-  -n, --node=<value>  URL of the node to run commands against or an alias
-      --globalHelp    View all available global flags
+  -n, --node=<value>    URL of the node to run commands against or an alias
+      --globalHelp      View all available global flags
+      --ledgerLiveMode  When set, the 4th postion of the derivation path will be
+                        iterated over instead of the 5th. This is useful to use same
+                        address on you Ledger with celocli as you do on Ledger Live
 
 DESCRIPTION
   Show information about an existing Validator Group

@@ -14,9 +14,9 @@ Lists Celo core contracts and their addresses.
 
 ```
 USAGE
-  $ celocli network:contracts [-n <value>] [--globalHelp] [--columns <value> | -x]
-    [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output csv|json|yaml |
-    | ] [--sort <value>]
+  $ celocli network:contracts [-n <value>] [--ledgerLiveMode ] [--globalHelp]
+    [--columns <value> | -x] [--filter <value>] [--no-header | [--csv | --no-truncate]]
+    [--output csv|json|yaml |  | ] [--sort <value>]
 
 FLAGS
   -n, --node=<value>     URL of the node to run commands against or an alias
@@ -25,6 +25,9 @@ FLAGS
       --csv              output is csv format [alias: --output=csv]
       --filter=<value>   filter property by partial string matching, ex: name=foo
       --globalHelp       View all available global flags
+      --ledgerLiveMode   When set, the 4th postion of the derivation path will be
+                         iterated over instead of the 5th. This is useful to use same
+                         address on you Ledger with celocli as you do on Ledger Live
       --no-header        hide table header from output
       --no-truncate      do not truncate output to fit screen
       --output=<option>  output in a more machine friendly format
@@ -53,12 +56,16 @@ View general network information such as the current block number
 
 ```
 USAGE
-  $ celocli network:info [-n <value>] [--globalHelp] [--lastN <value>]
+  $ celocli network:info [-n <value>] [--ledgerLiveMode ] [--globalHelp] [--lastN
+    <value>]
 
 FLAGS
-  -n, --node=<value>   URL of the node to run commands against or an alias
-      --globalHelp     View all available global flags
-      --lastN=<value>  [default: 1] Fetch info about the last n epochs
+  -n, --node=<value>    URL of the node to run commands against or an alias
+      --globalHelp      View all available global flags
+      --lastN=<value>   [default: 1] Fetch info about the last n epochs
+      --ledgerLiveMode  When set, the 4th postion of the derivation path will be
+                        iterated over instead of the 5th. This is useful to use same
+                        address on you Ledger with celocli as you do on Ledger Live
 
 DESCRIPTION
   View general network information such as the current block number
@@ -82,12 +89,15 @@ View parameters of the network, including but not limited to configuration for t
 
 ```
 USAGE
-  $ celocli network:parameters [-n <value>] [--globalHelp] [--raw]
+  $ celocli network:parameters [-n <value>] [--ledgerLiveMode ] [--globalHelp] [--raw]
 
 FLAGS
-  -n, --node=<value>  URL of the node to run commands against or an alias
-      --globalHelp    View all available global flags
-      --raw           Display raw numerical configuration
+  -n, --node=<value>    URL of the node to run commands against or an alias
+      --globalHelp      View all available global flags
+      --ledgerLiveMode  When set, the 4th postion of the derivation path will be
+                        iterated over instead of the 5th. This is useful to use same
+                        address on you Ledger with celocli as you do on Ledger Live
+      --raw             Display raw numerical configuration
 
 DESCRIPTION
   View parameters of the network, including but not limited to configuration for the
@@ -112,9 +122,9 @@ List the whitelisted fee currencies
 
 ```
 USAGE
-  $ celocli network:whitelist [-n <value>] [--globalHelp] [--columns <value> | -x]
-    [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output csv|json|yaml |
-    | ] [--sort <value>]
+  $ celocli network:whitelist [-n <value>] [--ledgerLiveMode ] [--globalHelp]
+    [--columns <value> | -x] [--filter <value>] [--no-header | [--csv | --no-truncate]]
+    [--output csv|json|yaml |  | ] [--sort <value>]
 
 FLAGS
   -n, --node=<value>     URL of the node to run commands against or an alias
@@ -123,6 +133,9 @@ FLAGS
       --csv              output is csv format [alias: --output=csv]
       --filter=<value>   filter property by partial string matching, ex: name=foo
       --globalHelp       View all available global flags
+      --ledgerLiveMode   When set, the 4th postion of the derivation path will be
+                         iterated over instead of the 5th. This is useful to use same
+                         address on you Ledger with celocli as you do on Ledger Live
       --no-header        hide table header from output
       --no-truncate      do not truncate output to fit screen
       --output=<option>  output in a more machine friendly format

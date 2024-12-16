@@ -23,7 +23,7 @@ USAGE
     0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --percent <value> [-k <value> |
     --useLedger | ] [-n <value>] [--gasCurrency
     0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp]
+    [--ledgerLiveMode ] [--globalHelp]
 
 FLAGS
   -k, --privateKey=<value>
@@ -45,6 +45,11 @@ FLAGS
   --ledgerAddresses=<value>
       [default: 1] If --useLedger is set, this will get the first N addresses for local
       signing
+
+  --ledgerLiveMode
+      When set, the 4th postion of the derivation path will be iterated over instead of
+      the 5th. This is useful to use same address on you Ledger with celocli as you do on
+      Ledger Live
 
   --percent=<value>
       (required) 1-100% of locked celo to be delegated
@@ -83,7 +88,7 @@ USAGE
   $ celocli lockedgold:delegate-info --account 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [-k
     <value> | --useLedger | ] [-n <value>] [--gasCurrency
     0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp]
+    [--ledgerLiveMode ] [--globalHelp]
 
 FLAGS
   -k, --privateKey=<value>
@@ -105,6 +110,11 @@ FLAGS
   --ledgerAddresses=<value>
       [default: 1] If --useLedger is set, this will get the first N addresses for local
       signing
+
+  --ledgerLiveMode
+      When set, the 4th postion of the derivation path will be iterated over instead of
+      the 5th. This is useful to use same address on you Ledger with celocli as you do on
+      Ledger Live
 
   --useLedger
       Set it to use a ledger wallet
@@ -137,7 +147,7 @@ USAGE
   $ celocli lockedgold:lock --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --value
     <value> [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
     0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp]
+    [--ledgerLiveMode ] [--globalHelp]
 
 FLAGS
   -k, --privateKey=<value>
@@ -159,6 +169,11 @@ FLAGS
   --ledgerAddresses=<value>
       [default: 1] If --useLedger is set, this will get the first N addresses for local
       signing
+
+  --ledgerLiveMode
+      When set, the 4th postion of the derivation path will be iterated over instead of
+      the 5th. This is useful to use same address on you Ledger with celocli as you do on
+      Ledger Live
 
   --useLedger
       Set it to use a ledger wallet
@@ -193,7 +208,7 @@ Returns the maximum number of delegates allowed per account.
 USAGE
   $ celocli lockedgold:max-delegatees-count [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
     0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp]
+    [--ledgerLiveMode ] [--globalHelp]
 
 FLAGS
   -k, --privateKey=<value>
@@ -212,6 +227,11 @@ FLAGS
   --ledgerAddresses=<value>
       [default: 1] If --useLedger is set, this will get the first N addresses for local
       signing
+
+  --ledgerLiveMode
+      When set, the 4th postion of the derivation path will be iterated over instead of
+      the 5th. This is useful to use same address on you Ledger with celocli as you do on
+      Ledger Live
 
   --useLedger
       Set it to use a ledger wallet
@@ -245,7 +265,7 @@ USAGE
     0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --percent <value> [-k <value> |
     --useLedger | ] [-n <value>] [--gasCurrency
     0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp]
+    [--ledgerLiveMode ] [--globalHelp]
 
 FLAGS
   -k, --privateKey=<value>
@@ -267,6 +287,11 @@ FLAGS
   --ledgerAddresses=<value>
       [default: 1] If --useLedger is set, this will get the first N addresses for local
       signing
+
+  --ledgerLiveMode
+      When set, the 4th postion of the derivation path will be iterated over instead of
+      the 5th. This is useful to use same address on you Ledger with celocli as you do on
+      Ledger Live
 
   --percent=<value>
       (required) 1-100% of locked celo to be revoked from currently delegated amount
@@ -302,11 +327,14 @@ Show Locked Gold information for a given account. This includes the total amount
 
 ```
 USAGE
-  $ celocli lockedgold:show ARG1 [-n <value>] [--globalHelp]
+  $ celocli lockedgold:show ARG1 [-n <value>] [--ledgerLiveMode ] [--globalHelp]
 
 FLAGS
-  -n, --node=<value>  URL of the node to run commands against or an alias
-      --globalHelp    View all available global flags
+  -n, --node=<value>    URL of the node to run commands against or an alias
+      --globalHelp      View all available global flags
+      --ledgerLiveMode  When set, the 4th postion of the derivation path will be
+                        iterated over instead of the 5th. This is useful to use same
+                        address on you Ledger with celocli as you do on Ledger Live
 
 DESCRIPTION
   Show Locked Gold information for a given account. This includes the total amount of
@@ -340,7 +368,7 @@ USAGE
   $ celocli lockedgold:unlock --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --value
     <value> [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
     0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp]
+    [--ledgerLiveMode ] [--globalHelp]
 
 FLAGS
   -k, --privateKey=<value>
@@ -362,6 +390,11 @@ FLAGS
   --ledgerAddresses=<value>
       [default: 1] If --useLedger is set, this will get the first N addresses for local
       signing
+
+  --ledgerLiveMode
+      When set, the 4th postion of the derivation path will be iterated over instead of
+      the 5th. This is useful to use same address on you Ledger with celocli as you do on
+      Ledger Live
 
   --useLedger
       Set it to use a ledger wallet
@@ -399,7 +432,7 @@ USAGE
   $ celocli lockedgold:update-delegated-amount --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --to
     0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [-k <value> | --useLedger | ] [-n
     <value>] [--gasCurrency 0x1234567890123456789012345678901234567890]
-    [--ledgerAddresses <value> ] [--globalHelp]
+    [--ledgerAddresses <value> ] [--ledgerLiveMode ] [--globalHelp]
 
 FLAGS
   -k, --privateKey=<value>
@@ -421,6 +454,11 @@ FLAGS
   --ledgerAddresses=<value>
       [default: 1] If --useLedger is set, this will get the first N addresses for local
       signing
+
+  --ledgerLiveMode
+      When set, the 4th postion of the derivation path will be iterated over instead of
+      the 5th. This is useful to use same address on you Ledger with celocli as you do on
+      Ledger Live
 
   --to=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
       (required) Account Address
@@ -458,7 +496,7 @@ USAGE
   $ celocli lockedgold:withdraw --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [-k
     <value> | --useLedger | ] [-n <value>] [--gasCurrency
     0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp]
+    [--ledgerLiveMode ] [--globalHelp]
 
 FLAGS
   -k, --privateKey=<value>
@@ -480,6 +518,11 @@ FLAGS
   --ledgerAddresses=<value>
       [default: 1] If --useLedger is set, this will get the first N addresses for local
       signing
+
+  --ledgerLiveMode
+      When set, the 4th postion of the derivation path will be iterated over instead of
+      the 5th. This is useful to use same address on you Ledger with celocli as you do on
+      Ledger Live
 
   --useLedger
       Set it to use a ledger wallet
