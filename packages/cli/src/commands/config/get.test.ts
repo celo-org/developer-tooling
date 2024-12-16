@@ -17,8 +17,8 @@ testWithAnvilL2('config:get cmd', (web3: Web3) => {
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
       [
         [
-          "node: http://127.0.0.1:8617
-      derivationPath: m/44'/52752'/0'",
+          "node: http://127.0.0.1:8620
+      derivationPath: m/44'/60'/0'",
         ],
       ]
     `)
