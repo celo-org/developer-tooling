@@ -21,7 +21,7 @@
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:28](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L28)
+[wallet-ledger/src/ledger-wallet.ts:31](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L31)
 
 ___
 
@@ -31,7 +31,7 @@ ___
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:30](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L30)
+[wallet-ledger/src/ledger-wallet.ts:33](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L33)
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:26](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L26)
+[wallet-ledger/src/ledger-wallet.ts:29](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L29)
 
 ___
 
@@ -51,4 +51,4 @@ ___
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:32](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L32)
+[wallet-ledger/src/ledger-wallet.ts:35](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L35)

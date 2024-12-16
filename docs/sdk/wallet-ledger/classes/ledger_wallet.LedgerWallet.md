@@ -23,6 +23,7 @@
 ### Properties
 
 - [baseDerivationPath](ledger_wallet.LedgerWallet.md#basederivationpath)
+- [changeIndexes](ledger_wallet.LedgerWallet.md#changeindexes)
 - [derivationPathIndexes](ledger_wallet.LedgerWallet.md#derivationpathindexes)
 - [isCel2](ledger_wallet.LedgerWallet.md#iscel2)
 - [isSetupFinished](ledger_wallet.LedgerWallet.md#issetupfinished)
@@ -50,16 +51,17 @@
 
 ### constructor
 
-• **new LedgerWallet**(`derivationPathIndexes?`, `baseDerivationPath?`, `transport?`, `ledgerAddressValidation?`, `isCel2?`): [`LedgerWallet`](ledger_wallet.LedgerWallet.md)
+• **new LedgerWallet**(`transport?`, `derivationPathIndexes?`, `baseDerivationPath?`, `changeIndexes?`, `ledgerAddressValidation?`, `isCel2?`): [`LedgerWallet`](ledger_wallet.LedgerWallet.md)
 
 #### Parameters
 
 | Name | Type | Default value | Description |
 | :------ | :------ | :------ | :------ |
-| `derivationPathIndexes` | `number`[] | `undefined` | number array of "address_index" for the base derivation path. Default: Array[0..9]. Example: [3, 99, 53] will retrieve the derivation paths of [`${baseDerivationPath}/3`, `${baseDerivationPath}/99`, `${baseDerivationPath}/53`] |
-| `baseDerivationPath` | `string` | `CELO_BASE_DERIVATION_PATH` | base derivation path. Default: "44'/52752'/0'/0" |
 | `transport` | `any` | `{}` | Transport to connect the ledger device |
-| `ledgerAddressValidation` | [`AddressValidation`](../enums/ledger_wallet.AddressValidation.md) | `AddressValidation.firstTransactionPerAddress` | - |
+| `derivationPathIndexes` | `number`[] | `undefined` | number array of "address_index" for the base derivation path. Default: Array[0..5]. Example: [3, 99, 53] will retrieve the derivation paths of [`${baseDerivationPath}/0/3`, `${baseDerivationPath}/0/99`, `${baseDerivationPath}/0/53`] |
+| `baseDerivationPath` | `string` | `CELO_BASE_DERIVATION_PATH` | base derivation path. Default: "44'/52752'/0'" |
+| `changeIndexes` | `number`[] | `undefined` | number array of "change" for the base derivation path. Default: [0]. Example: [0, 1] will retrieve the derivation paths of [`${baseDerivationPath}/0/${address_index}`, `${baseDerivationPath}/1/${address_index}`, `${baseDerivationPath}/2/${address_index}`] |
+| `ledgerAddressValidation` | [`AddressValidation`](../enums/ledger_wallet.AddressValidation.md) | `AddressValidation.firstTransactionPerAddress` | AddressValidation enum to validate addresses. Default: AddressValidation.firstTransactionPerAddress |
 | `isCel2?` | `boolean` | `undefined` | - |
 
 #### Returns
@@ -72,7 +74,7 @@ RemoteWallet\&lt;LedgerSigner\&gt;.constructor
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:69](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L69)
+[wallet-ledger/src/ledger-wallet.ts:88](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L88)
 
 ## Properties
 
@@ -80,11 +82,25 @@ RemoteWallet\&lt;LedgerSigner\&gt;.constructor
 
 • `Readonly` **baseDerivationPath**: `string` = `CELO_BASE_DERIVATION_PATH`
 
-base derivation path. Default: "44'/52752'/0'/0"
+base derivation path. Default: "44'/52752'/0'"
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:71](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L71)
+[wallet-ledger/src/ledger-wallet.ts:91](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L91)
+
+___
+
+### changeIndexes
+
+• `Readonly` **changeIndexes**: `number`[]
+
+number array of "change" for the base derivation path.
+Default: [0].
+Example: [0, 1] will retrieve the derivation paths of [`${baseDerivationPath}/0/${address_index}`, `${baseDerivationPath}/1/${address_index}`, `${baseDerivationPath}/2/${address_index}`]
+
+#### Defined in
+
+[wallet-ledger/src/ledger-wallet.ts:92](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L92)
 
 ___
 
@@ -93,13 +109,13 @@ ___
 • `Readonly` **derivationPathIndexes**: `number`[]
 
 number array of "address_index" for the base derivation path.
-Default: Array[0..9].
+Default: Array[0..5].
 Example: [3, 99, 53] will retrieve the derivation paths of
-[`${baseDerivationPath}/3`, `${baseDerivationPath}/99`, `${baseDerivationPath}/53`]
+[`${baseDerivationPath}/0/3`, `${baseDerivationPath}/0/99`, `${baseDerivationPath}/0/53`]
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:70](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L70)
+[wallet-ledger/src/ledger-wallet.ts:90](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L90)
 
 ___
 
@@ -109,7 +125,7 @@ ___
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:74](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L74)
+[wallet-ledger/src/ledger-wallet.ts:94](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L94)
 
 ___
 
@@ -141,7 +157,7 @@ ___
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:59](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L59)
+[wallet-ledger/src/ledger-wallet.ts:74](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L74)
 
 ___
 
@@ -149,9 +165,11 @@ ___
 
 • `Readonly` **ledgerAddressValidation**: [`AddressValidation`](../enums/ledger_wallet.AddressValidation.md) = `AddressValidation.firstTransactionPerAddress`
 
+AddressValidation enum to validate addresses. Default: AddressValidation.firstTransactionPerAddress
+
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:73](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L73)
+[wallet-ledger/src/ledger-wallet.ts:93](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L93)
 
 ___
 
@@ -163,7 +181,7 @@ Transport to connect the ledger device
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:72](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L72)
+[wallet-ledger/src/ledger-wallet.ts:89](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L89)
 
 ___
 
@@ -173,7 +191,7 @@ ___
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:58](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L58)
+[wallet-ledger/src/ledger-wallet.ts:73](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L73)
 
 ___
 
@@ -183,7 +201,7 @@ ___
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:56](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L56)
+[wallet-ledger/src/ledger-wallet.ts:71](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L71)
 
 ___
 
@@ -193,7 +211,7 @@ ___
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:57](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L57)
+[wallet-ledger/src/ledger-wallet.ts:72](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L72)
 
 ## Methods
 
@@ -378,7 +396,7 @@ ___
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:98](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L98)
+[wallet-ledger/src/ledger-wallet.ts:119](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L119)
 
 ___
 
@@ -437,7 +455,7 @@ RemoteWallet.signTransaction
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:85](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L85)
+[wallet-ledger/src/ledger-wallet.ts:106](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L106)
 
 ___
 
