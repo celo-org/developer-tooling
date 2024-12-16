@@ -17,7 +17,10 @@ import { SemVer } from 'semver'
 import { LedgerSigner } from './ledger-signer'
 import { meetsVersionRequirements, transportErrorFriendlyMessage } from './ledger-utils'
 
-export const CELO_BASE_DERIVATION_PATH = CELO_DERIVATION_PATH_BASE.slice(2)
+/*
+ * @deprecated this constant hardcodes the change index to 0. However we actually ignore that.
+ */
+export const CELO_BASE_DERIVATION_PATH = `${CELO_DERIVATION_PATH_BASE.slice(2)}/0`
 const ADDRESS_QTY = 5
 
 // Validates an address using the Ledger
