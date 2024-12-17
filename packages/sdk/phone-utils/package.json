@@ -29,7 +29,7 @@
     "@types/node": "^18.7.16",
     "country-data": "^0.0.31",
     "fp-ts": "2.1.1",
-    "google-libphonenumber": "^3.2.27",
+    "google-libphonenumber": "^3.2.40",
     "io-ts": "2.0.1",
     "web3-utils": "^1.10.0"
   },
