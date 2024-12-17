@@ -1,5 +1,12 @@
 # @celo/wallet-remote
 
+## 7.0.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @celo/wallet-base@7.0.0
+
 ## 6.0.4
 
 ### Patch Changes
