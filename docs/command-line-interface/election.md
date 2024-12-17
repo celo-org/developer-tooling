@@ -173,9 +173,9 @@ Prints the list of validator groups, the number of votes they have received, the
 
 ```
 USAGE
-  $ celocli election:list [-n <value>] [--ledgerLiveMode ] [--globalHelp]
-    [--columns <value> | -x] [--filter <value>] [--no-header | [--csv | --no-truncate]]
-    [--output csv|json|yaml |  | ] [--sort <value>]
+  $ celocli election:list [-n <value>] [--globalHelp] [--columns <value> | -x]
+    [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output csv|json|yaml |
+    | ] [--sort <value>]
 
 FLAGS
   -n, --node=<value>     URL of the node to run commands against or an alias
@@ -184,9 +184,6 @@ FLAGS
       --csv              output is csv format [alias: --output=csv]
       --filter=<value>   filter property by partial string matching, ex: name=foo
       --globalHelp       View all available global flags
-      --ledgerLiveMode   When set, the 4th postion of the derivation path will be
-                         iterated over instead of the 5th. This is useful to use same
-                         address on you Ledger with celocli as you do on Ledger Live
       --no-header        hide table header from output
       --no-truncate      do not truncate output to fit screen
       --output=<option>  output in a more machine friendly format
@@ -285,9 +282,9 @@ Runs a "mock" election and prints out the validators that would be elected if th
 
 ```
 USAGE
-  $ celocli election:run [-n <value>] [--ledgerLiveMode ] [--globalHelp]
-    [--columns <value> | -x] [--filter <value>] [--no-header | [--csv | --no-truncate]]
-    [--output csv|json|yaml |  | ] [--sort <value>]
+  $ celocli election:run [-n <value>] [--globalHelp] [--columns <value> | -x]
+    [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output csv|json|yaml |
+    | ] [--sort <value>]
 
 FLAGS
   -n, --node=<value>     URL of the node to run commands against or an alias
@@ -296,9 +293,6 @@ FLAGS
       --csv              output is csv format [alias: --output=csv]
       --filter=<value>   filter property by partial string matching, ex: name=foo
       --globalHelp       View all available global flags
-      --ledgerLiveMode   When set, the 4th postion of the derivation path will be
-                         iterated over instead of the 5th. This is useful to use same
-                         address on you Ledger with celocli as you do on Ledger Live
       --no-header        hide table header from output
       --no-truncate      do not truncate output to fit screen
       --output=<option>  output in a more machine friendly format
@@ -328,20 +322,16 @@ Show election information about a voter or registered Validator Group
 
 ```
 USAGE
-  $ celocli election:show ARG1 [-n <value>] [--ledgerLiveMode ] [--globalHelp]
-    [--voter | --group]
+  $ celocli election:show ARG1 [-n <value>] [--globalHelp] [--voter | --group]
 
 ARGUMENTS
   ARG1  Voter or Validator Groups's address
 
 FLAGS
-  -n, --node=<value>    URL of the node to run commands against or an alias
-      --globalHelp      View all available global flags
-      --group           Show information about a group running in Validator elections
-      --ledgerLiveMode  When set, the 4th postion of the derivation path will be
-                        iterated over instead of the 5th. This is useful to use same
-                        address on you Ledger with celocli as you do on Ledger Live
-      --voter           Show information about an account voting in Validator elections
+  -n, --node=<value>  URL of the node to run commands against or an alias
+      --globalHelp    View all available global flags
+      --group         Show information about a group running in Validator elections
+      --voter         Show information about an account voting in Validator elections
 
 DESCRIPTION
   Show election information about a voter or registered Validator Group

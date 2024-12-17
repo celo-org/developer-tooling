@@ -327,14 +327,11 @@ Show Locked Gold information for a given account. This includes the total amount
 
 ```
 USAGE
-  $ celocli lockedgold:show ARG1 [-n <value>] [--ledgerLiveMode ] [--globalHelp]
+  $ celocli lockedgold:show ARG1 [-n <value>] [--globalHelp]
 
 FLAGS
-  -n, --node=<value>    URL of the node to run commands against or an alias
-      --globalHelp      View all available global flags
-      --ledgerLiveMode  When set, the 4th postion of the derivation path will be
-                        iterated over instead of the 5th. This is useful to use same
-                        address on you Ledger with celocli as you do on Ledger Live
+  -n, --node=<value>  URL of the node to run commands against or an alias
+      --globalHelp    View all available global flags
 
 DESCRIPTION
   Show Locked Gold information for a given account. This includes the total amount of

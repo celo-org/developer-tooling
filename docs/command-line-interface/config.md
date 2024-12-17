@@ -12,14 +12,11 @@ Output network node configuration
 
 ```
 USAGE
-  $ celocli config:get [-n <value>] [--ledgerLiveMode ] [--globalHelp]
+  $ celocli config:get [-n <value>] [--globalHelp]
 
 FLAGS
-  -n, --node=<value>    URL of the node to run commands against or an alias
-      --globalHelp      View all available global flags
-      --ledgerLiveMode  When set, the 4th postion of the derivation path will be
-                        iterated over instead of the 5th. This is useful to use same
-                        address on you Ledger with celocli as you do on Ledger Live
+  -n, --node=<value>  URL of the node to run commands against or an alias
+      --globalHelp    View all available global flags
 
 DESCRIPTION
   Output network node configuration
@@ -43,8 +40,7 @@ Configure running node information for propagating transactions to network
 
 ```
 USAGE
-  $ celocli config:set [-n <value>] [--ledgerLiveMode ] [--globalHelp]
-    [--derivationPath <value>]
+  $ celocli config:set [-n <value>] [--globalHelp] [--derivationPath <value>]
 
 FLAGS
   -n, --node=<value>            URL of the node to run commands against or an alias
@@ -52,10 +48,6 @@ FLAGS
                                 when using --useLedger flag. Options: 'eth',
                                 'celoLegacy', or a custom derivation path
       --globalHelp              View all available global flags
-      --ledgerLiveMode          When set, the 4th postion of the derivation path will be
-                                iterated over instead of the 5th. This is useful to use
-                                same address on you Ledger with celocli as you do on
-                                Ledger Live
 
 DESCRIPTION
   Configure running node information for propagating transactions to network

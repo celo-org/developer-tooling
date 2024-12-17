@@ -14,17 +14,14 @@ List oracle addresses for a given token
 
 ```
 USAGE
-  $ celocli oracle:list ARG1 [-n <value>] [--ledgerLiveMode ] [--globalHelp]
+  $ celocli oracle:list ARG1 [-n <value>] [--globalHelp]
 
 ARGUMENTS
   ARG1  [default: StableToken] Token to list the oracles for
 
 FLAGS
-  -n, --node=<value>    URL of the node to run commands against or an alias
-      --globalHelp      View all available global flags
-      --ledgerLiveMode  When set, the 4th postion of the derivation path will be
-                        iterated over instead of the 5th. This is useful to use same
-                        address on you Ledger with celocli as you do on Ledger Live
+  -n, --node=<value>  URL of the node to run commands against or an alias
+      --globalHelp    View all available global flags
 
 DESCRIPTION
   List oracle addresses for a given token

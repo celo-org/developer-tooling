@@ -725,10 +725,10 @@ Show information about a governance proposal, hotfix, or account.
 
 ```
 USAGE
-  $ celocli governance:show [-n <value>] [--ledgerLiveMode ] [--globalHelp] [--raw]
-    [--jsonTransactions <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters
-    |  | [--proposalID <value> | --account <value> | --hotfix <value>]]
-    [--afterExecutingProposal <value> | --afterExecutingID <value>]
+  $ celocli governance:show [-n <value>] [--globalHelp] [--raw] [--jsonTransactions
+    <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters |  | [--proposalID
+    <value> | --account <value> | --hotfix <value>]] [--afterExecutingProposal <value> |
+    --afterExecutingID <value>]
 
 FLAGS
   -n, --node=<value>                    URL of the node to run commands against or an
@@ -741,10 +741,6 @@ FLAGS
       --globalHelp                      View all available global flags
       --hotfix=<value>                  Hash of hotfix proposal
       --jsonTransactions=<value>        Output proposal JSON to provided file
-      --ledgerLiveMode                  When set, the 4th postion of the derivation path
-                                        will be iterated over instead of the 5th. This
-                                        is useful to use same address on you Ledger with
-                                        celocli as you do on Ledger Live
       --nonwhitelisters                 If set, displays validators that have not
                                         whitelisted the hotfix.(will be removed when L2
                                         launches
@@ -800,10 +796,10 @@ Show information about a governance proposal, hotfix, or account.
 
 ```
 USAGE
-  $ celocli governance:showaccount [-n <value>] [--ledgerLiveMode ] [--globalHelp] [--raw]
-    [--jsonTransactions <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters
-    |  | [--proposalID <value> | --account <value> | --hotfix <value>]]
-    [--afterExecutingProposal <value> | --afterExecutingID <value>]
+  $ celocli governance:showaccount [-n <value>] [--globalHelp] [--raw] [--jsonTransactions
+    <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters |  | [--proposalID
+    <value> | --account <value> | --hotfix <value>]] [--afterExecutingProposal <value> |
+    --afterExecutingID <value>]
 
 FLAGS
   -n, --node=<value>                    URL of the node to run commands against or an
@@ -816,10 +812,6 @@ FLAGS
       --globalHelp                      View all available global flags
       --hotfix=<value>                  Hash of hotfix proposal
       --jsonTransactions=<value>        Output proposal JSON to provided file
-      --ledgerLiveMode                  When set, the 4th postion of the derivation path
-                                        will be iterated over instead of the 5th. This
-                                        is useful to use same address on you Ledger with
-                                        celocli as you do on Ledger Live
       --nonwhitelisters                 If set, displays validators that have not
                                         whitelisted the hotfix.(will be removed when L2
                                         launches
@@ -873,10 +865,10 @@ Show information about a governance proposal, hotfix, or account.
 
 ```
 USAGE
-  $ celocli governance:showhotfix [-n <value>] [--ledgerLiveMode ] [--globalHelp] [--raw]
-    [--jsonTransactions <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters
-    |  | [--proposalID <value> | --account <value> | --hotfix <value>]]
-    [--afterExecutingProposal <value> | --afterExecutingID <value>]
+  $ celocli governance:showhotfix [-n <value>] [--globalHelp] [--raw] [--jsonTransactions
+    <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters |  | [--proposalID
+    <value> | --account <value> | --hotfix <value>]] [--afterExecutingProposal <value> |
+    --afterExecutingID <value>]
 
 FLAGS
   -n, --node=<value>                    URL of the node to run commands against or an
@@ -889,10 +881,6 @@ FLAGS
       --globalHelp                      View all available global flags
       --hotfix=<value>                  Hash of hotfix proposal
       --jsonTransactions=<value>        Output proposal JSON to provided file
-      --ledgerLiveMode                  When set, the 4th postion of the derivation path
-                                        will be iterated over instead of the 5th. This
-                                        is useful to use same address on you Ledger with
-                                        celocli as you do on Ledger Live
       --nonwhitelisters                 If set, displays validators that have not
                                         whitelisted the hotfix.(will be removed when L2
                                         launches
@@ -1008,10 +996,10 @@ Show information about a governance proposal, hotfix, or account.
 
 ```
 USAGE
-  $ celocli governance:view [-n <value>] [--ledgerLiveMode ] [--globalHelp] [--raw]
-    [--jsonTransactions <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters
-    |  | [--proposalID <value> | --account <value> | --hotfix <value>]]
-    [--afterExecutingProposal <value> | --afterExecutingID <value>]
+  $ celocli governance:view [-n <value>] [--globalHelp] [--raw] [--jsonTransactions
+    <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters |  | [--proposalID
+    <value> | --account <value> | --hotfix <value>]] [--afterExecutingProposal <value> |
+    --afterExecutingID <value>]
 
 FLAGS
   -n, --node=<value>                    URL of the node to run commands against or an
@@ -1024,10 +1012,6 @@ FLAGS
       --globalHelp                      View all available global flags
       --hotfix=<value>                  Hash of hotfix proposal
       --jsonTransactions=<value>        Output proposal JSON to provided file
-      --ledgerLiveMode                  When set, the 4th postion of the derivation path
-                                        will be iterated over instead of the 5th. This
-                                        is useful to use same address on you Ledger with
-                                        celocli as you do on Ledger Live
       --nonwhitelisters                 If set, displays validators that have not
                                         whitelisted the hotfix.(will be removed when L2
                                         launches
@@ -1081,10 +1065,10 @@ Show information about a governance proposal, hotfix, or account.
 
 ```
 USAGE
-  $ celocli governance:viewaccount [-n <value>] [--ledgerLiveMode ] [--globalHelp] [--raw]
-    [--jsonTransactions <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters
-    |  | [--proposalID <value> | --account <value> | --hotfix <value>]]
-    [--afterExecutingProposal <value> | --afterExecutingID <value>]
+  $ celocli governance:viewaccount [-n <value>] [--globalHelp] [--raw] [--jsonTransactions
+    <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters |  | [--proposalID
+    <value> | --account <value> | --hotfix <value>]] [--afterExecutingProposal <value> |
+    --afterExecutingID <value>]
 
 FLAGS
   -n, --node=<value>                    URL of the node to run commands against or an
@@ -1097,10 +1081,6 @@ FLAGS
       --globalHelp                      View all available global flags
       --hotfix=<value>                  Hash of hotfix proposal
       --jsonTransactions=<value>        Output proposal JSON to provided file
-      --ledgerLiveMode                  When set, the 4th postion of the derivation path
-                                        will be iterated over instead of the 5th. This
-                                        is useful to use same address on you Ledger with
-                                        celocli as you do on Ledger Live
       --nonwhitelisters                 If set, displays validators that have not
                                         whitelisted the hotfix.(will be removed when L2
                                         launches
@@ -1154,10 +1134,10 @@ Show information about a governance proposal, hotfix, or account.
 
 ```
 USAGE
-  $ celocli governance:viewhotfix [-n <value>] [--ledgerLiveMode ] [--globalHelp] [--raw]
-    [--jsonTransactions <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters
-    |  | [--proposalID <value> | --account <value> | --hotfix <value>]]
-    [--afterExecutingProposal <value> | --afterExecutingID <value>]
+  $ celocli governance:viewhotfix [-n <value>] [--globalHelp] [--raw] [--jsonTransactions
+    <value>] [--notwhitelisted] [--whitelisters | --nonwhitelisters |  | [--proposalID
+    <value> | --account <value> | --hotfix <value>]] [--afterExecutingProposal <value> |
+    --afterExecutingID <value>]
 
 FLAGS
   -n, --node=<value>                    URL of the node to run commands against or an
@@ -1170,10 +1150,6 @@ FLAGS
       --globalHelp                      View all available global flags
       --hotfix=<value>                  Hash of hotfix proposal
       --jsonTransactions=<value>        Output proposal JSON to provided file
-      --ledgerLiveMode                  When set, the 4th postion of the derivation path
-                                        will be iterated over instead of the 5th. This
-                                        is useful to use same address on you Ledger with
-                                        celocli as you do on Ledger Live
       --nonwhitelisters                 If set, displays validators that have not
                                         whitelisted the hotfix.(will be removed when L2
                                         launches

@@ -291,9 +291,9 @@ List registered Validators, their name (if provided), affiliation, uptime score,
 
 ```
 USAGE
-  $ celocli validator:list [-n <value>] [--ledgerLiveMode ] [--globalHelp]
-    [--columns <value> | -x] [--filter <value>] [--no-header | [--csv | --no-truncate]]
-    [--output csv|json|yaml |  | ] [--sort <value>]
+  $ celocli validator:list [-n <value>] [--globalHelp] [--columns <value> | -x]
+    [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output csv|json|yaml |
+    | ] [--sort <value>]
 
 FLAGS
   -n, --node=<value>     URL of the node to run commands against or an alias
@@ -302,9 +302,6 @@ FLAGS
       --csv              output is csv format [alias: --output=csv]
       --filter=<value>   filter property by partial string matching, ex: name=foo
       --globalHelp       View all available global flags
-      --ledgerLiveMode   When set, the 4th postion of the derivation path will be
-                         iterated over instead of the 5th. This is useful to use same
-                         address on you Ledger with celocli as you do on Ledger Live
       --no-header        hide table header from output
       --no-truncate      do not truncate output to fit screen
       --output=<option>  output in a more machine friendly format
@@ -537,17 +534,14 @@ Show information about a registered Validator.
 
 ```
 USAGE
-  $ celocli validator:show ARG1 [-n <value>] [--ledgerLiveMode ] [--globalHelp]
+  $ celocli validator:show ARG1 [-n <value>] [--globalHelp]
 
 ARGUMENTS
   ARG1  Validator's address
 
 FLAGS
-  -n, --node=<value>    URL of the node to run commands against or an alias
-      --globalHelp      View all available global flags
-      --ledgerLiveMode  When set, the 4th postion of the derivation path will be
-                        iterated over instead of the 5th. This is useful to use same
-                        address on you Ledger with celocli as you do on Ledger Live
+  -n, --node=<value>  URL of the node to run commands against or an alias
+      --globalHelp    View all available global flags
 
 DESCRIPTION
   Show information about a registered Validator.

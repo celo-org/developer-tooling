@@ -78,18 +78,15 @@ Shows information about multi-sig contract
 
 ```
 USAGE
-  $ celocli multisig:show ARG1 [-n <value>] [--ledgerLiveMode ] [--globalHelp]
-    [--tx <value>] [--all] [--raw]
+  $ celocli multisig:show ARG1 [-n <value>] [--globalHelp] [--tx <value>] [--all]
+    [--raw]
 
 FLAGS
-  -n, --node=<value>    URL of the node to run commands against or an alias
-      --all             Show info about all transactions
-      --globalHelp      View all available global flags
-      --ledgerLiveMode  When set, the 4th postion of the derivation path will be
-                        iterated over instead of the 5th. This is useful to use same
-                        address on you Ledger with celocli as you do on Ledger Live
-      --raw             Do not attempt to parse transactions
-      --tx=<value>      Show info for a transaction
+  -n, --node=<value>  URL of the node to run commands against or an alias
+      --all           Show info about all transactions
+      --globalHelp    View all available global flags
+      --raw           Do not attempt to parse transactions
+      --tx=<value>    Show info for a transaction
 
 DESCRIPTION
   Shows information about multi-sig contract

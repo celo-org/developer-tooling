@@ -125,23 +125,18 @@ View Celo Stables and CELO balances for an address
 
 ```
 USAGE
-  $ celocli account:balance ARG1 [-n <value>] [--ledgerLiveMode ] [--globalHelp]
-    [--erc20Address 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d]
+  $ celocli account:balance ARG1 [-n <value>] [--globalHelp] [--erc20Address
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d]
 
 FLAGS
-  -n, --node=<value>
-      URL of the node to run commands against or an alias
-
-  --erc20Address=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
-      Address of generic ERC-20 token to also check balance for
-
-  --globalHelp
-      View all available global flags
-
-  --ledgerLiveMode
-      When set, the 4th postion of the derivation path will be iterated over instead of
-      the 5th. This is useful to use same address on you Ledger with celocli as you do on
-      Ledger Live
+  -n, --node=<value>                                             URL of the node to run
+                                                                 commands against or an
+                                                                 alias
+      --erc20Address=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d  Address of generic
+                                                                 ERC-20 token to also
+                                                                 check balance for
+      --globalHelp                                               View all available
+                                                                 global flags
 
 DESCRIPTION
   View Celo Stables and CELO balances for an address
@@ -1048,10 +1043,10 @@ Creates a new account locally using the Celo Derivation Path (m/44'/52752'/0/cha
 
 ```
 USAGE
-  $ celocli account:new [-n <value>] [--ledgerLiveMode ] [--globalHelp]
-    [--passphrasePath <value>] [--changeIndex <value>] [--addressIndex <value>]
-    [--language chinese_simplified|chinese_traditional|english|french|italian|japanese|k
-    orean|spanish] [--mnemonicPath <value>] [--derivationPath <value>]
+  $ celocli account:new [-n <value>] [--globalHelp] [--passphrasePath <value>]
+    [--changeIndex <value>] [--addressIndex <value>] [--language chinese_simplified|chin
+    ese_traditional|english|french|italian|japanese|korean|spanish] [--mnemonicPath
+    <value>] [--derivationPath <value>]
 
 FLAGS
   -n, --node=<value>
@@ -1074,11 +1069,6 @@ FLAGS
       wallets don't support other languages
       <options: chinese_simplified|chinese_traditional|english|french|italian|japanese|kor
       ean|spanish>
-
-  --ledgerLiveMode
-      When set, the 4th postion of the derivation path will be iterated over instead of
-      the 5th. This is useful to use same address on you Ledger with celocli as you do on
-      Ledger Live
 
   --mnemonicPath=<value>
       Instead of generating a new mnemonic (seed phrase), use the user-supplied mnemonic
@@ -1783,14 +1773,11 @@ Show information for an account, including name, authorized vote, validator, and
 
 ```
 USAGE
-  $ celocli account:show ARG1 [-n <value>] [--ledgerLiveMode ] [--globalHelp]
+  $ celocli account:show ARG1 [-n <value>] [--globalHelp]
 
 FLAGS
-  -n, --node=<value>    URL of the node to run commands against or an alias
-      --globalHelp      View all available global flags
-      --ledgerLiveMode  When set, the 4th postion of the derivation path will be
-                        iterated over instead of the 5th. This is useful to use same
-                        address on you Ledger with celocli as you do on Ledger Live
+  -n, --node=<value>  URL of the node to run commands against or an alias
+      --globalHelp    View all available global flags
 
 DESCRIPTION
   Show information for an account, including name, authorized vote, validator, and
@@ -1875,9 +1862,9 @@ Show the data in a local metadata file
 
 ```
 USAGE
-  $ celocli account:show-metadata ARG1 [-n <value>] [--ledgerLiveMode ] [--globalHelp]
-    [--columns <value> | -x] [--filter <value>] [--no-header | [--csv | --no-truncate]]
-    [--output csv|json|yaml |  | ] [--sort <value>]
+  $ celocli account:show-metadata ARG1 [-n <value>] [--globalHelp] [--columns <value> | -x]
+    [--filter <value>] [--no-header | [--csv | --no-truncate]] [--output csv|json|yaml |
+    | ] [--sort <value>]
 
 ARGUMENTS
   ARG1  Path of the metadata file
@@ -1889,9 +1876,6 @@ FLAGS
       --csv              output is csv format [alias: --output=csv]
       --filter=<value>   filter property by partial string matching, ex: name=foo
       --globalHelp       View all available global flags
-      --ledgerLiveMode   When set, the 4th postion of the derivation path will be
-                         iterated over instead of the 5th. This is useful to use same
-                         address on you Ledger with celocli as you do on Ledger Live
       --no-header        hide table header from output
       --no-truncate      do not truncate output to fit screen
       --output=<option>  output in a more machine friendly format

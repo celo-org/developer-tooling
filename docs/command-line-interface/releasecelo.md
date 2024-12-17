@@ -848,22 +848,16 @@ Show info on a ReleaseGold instance contract.
 ```
 USAGE
   $ celocli releasecelo:show --contract 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [-n
-    <value>] [--ledgerLiveMode ] [--globalHelp]
+    <value>] [--globalHelp]
 
 FLAGS
-  -n, --node=<value>
-      URL of the node to run commands against or an alias
-
-  --contract=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
-      (required) Address of the ReleaseGold Contract
-
-  --globalHelp
-      View all available global flags
-
-  --ledgerLiveMode
-      When set, the 4th postion of the derivation path will be iterated over instead of
-      the 5th. This is useful to use same address on you Ledger with celocli as you do on
-      Ledger Live
+  -n, --node=<value>                                         URL of the node to run
+                                                             commands against or an
+                                                             alias
+      --contract=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d  (required) Address of the
+                                                             ReleaseGold Contract
+      --globalHelp                                           View all available global
+                                                             flags
 
 DESCRIPTION
   Show info on a ReleaseGold instance contract.
