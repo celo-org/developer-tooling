@@ -28,23 +28,20 @@
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:20](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L20)
+[wallet-ledger/src/ledger-wallet.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L23)
 
 ## Functions
 
 ### newLedgerWalletWithSetup
 
-▸ **newLedgerWalletWithSetup**(`transport`, `derivationPathIndexes?`, `baseDerivationPath?`, `ledgerAddressValidation?`, `isCel2?`): `Promise`\<[`LedgerWallet`](../classes/ledger_wallet.LedgerWallet.md)\>
+▸ **newLedgerWalletWithSetup**(`transport`, `«destructured»`): `Promise`\<[`LedgerWallet`](../classes/ledger_wallet.LedgerWallet.md)\>
 
 #### Parameters
 
 | Name | Type |
 | :------ | :------ |
 | `transport` | `any` |
-| `derivationPathIndexes?` | `number`[] |
-| `baseDerivationPath?` | `string` |
-| `ledgerAddressValidation?` | [`AddressValidation`](../enums/ledger_wallet.AddressValidation.md) |
-| `isCel2?` | `boolean` |
+| `«destructured»` | `LedgerWalletSetup` |
 
 #### Returns
 
@@ -52,4 +49,4 @@
 
 #### Defined in
 
-[wallet-ledger/src/ledger-wallet.ts:35](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L35)
+[wallet-ledger/src/ledger-wallet.ts:46](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/wallets/wallet-ledger/src/ledger-wallet.ts#L46)

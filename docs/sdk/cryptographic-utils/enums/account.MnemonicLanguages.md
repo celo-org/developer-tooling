@@ -26,7 +26,7 @@
 
 #### Defined in
 
-base/lib/account.d.ts:13
+base/lib/account.d.ts:14
 
 ___
 
@@ -36,7 +36,7 @@ ___
 
 #### Defined in
 
-base/lib/account.d.ts:14
+base/lib/account.d.ts:15
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 #### Defined in
 
-base/lib/account.d.ts:15
+base/lib/account.d.ts:16
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-base/lib/account.d.ts:16
+base/lib/account.d.ts:17
 
 ___
 
@@ -66,7 +66,7 @@ ___
 
 #### Defined in
 
-base/lib/account.d.ts:17
+base/lib/account.d.ts:18
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 #### Defined in
 
-base/lib/account.d.ts:18
+base/lib/account.d.ts:19
 
 ___
 
@@ -86,7 +86,7 @@ ___
 
 #### Defined in
 
-base/lib/account.d.ts:19
+base/lib/account.d.ts:20
 
 ___
 
@@ -96,7 +96,7 @@ ___
 
 #### Defined in
 
-base/lib/account.d.ts:21
+base/lib/account.d.ts:22
 
 ___
 
@@ -106,4 +106,4 @@ ___
 
 #### Defined in
 
-base/lib/account.d.ts:20
+base/lib/account.d.ts:21
