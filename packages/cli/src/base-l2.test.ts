@@ -3,7 +3,6 @@ import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import * as WalletLedgerExports from '@celo/wallet-ledger'
 import { Config, ux } from '@oclif/core'
 import { tmpdir } from 'os'
-import { join } from 'path'
 import Web3 from 'web3'
 import { BaseCommand } from './base'
 import Set from './commands/config/set'
@@ -75,19 +74,10 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
   })
 
   describe('with --useLedger', () => {
-    // prevent setting to affect other tests
     describe('derivationPath tests', () => {
-      let originalConfigDir: string
-      beforeEach(() => {
-        originalConfigDir = Set.prototype.config.configDir
-        Set.prototype.config.configDir = join(tmpdir(), 'test_only')
-      })
-      afterEach(() => {
-        Set.prototype.config.configDir = originalConfigDir
-      })
       it('uses default derivationPath from config', async () => {
         const storedDerivationPath = readConfig(tmpdir()).derivationPath
-        console.log('storedDerivationPath', storedDerivationPath)
+        console.info('storedDerivationPath', storedDerivationPath)
         expect(storedDerivationPath).not.toBe(undefined)
         await testLocallyWithWeb3Node(BasicCommand, ['--useLedger'], web3)
         expect(WalletLedgerExports.newLedgerWalletWithSetup).toHaveBeenCalledWith(
@@ -98,7 +88,8 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
         )
       })
       it('uses custom derivationPath', async () => {
-        const customPath = "m/44'/9000'/0'/0/0 "
+        const storedDerivationPath = readConfig(tmpdir()).derivationPath
+        const customPath = "m/44'/9000'/0'"
         await testLocallyWithWeb3Node(Set, ['--derivationPath', customPath], web3)
         await testLocallyWithWeb3Node(BasicCommand, ['--useLedger'], web3)
         expect(WalletLedgerExports.newLedgerWalletWithSetup).toHaveBeenCalledWith(
@@ -107,6 +98,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
             baseDerivationPath: customPath,
           })
         )
+        await testLocallyWithWeb3Node(Set, ['--derivationPath', storedDerivationPath], web3)
       })
     })
 
