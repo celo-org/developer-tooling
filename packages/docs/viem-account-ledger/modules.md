@@ -1,10 +1,10 @@
-[@celo/viem-account-ledger](README.md) / Modules
+[**@celo/viem-account-ledger**](README.md)
+
+***
 
 # @celo/viem-account-ledger
 
-## Table of contents
+## Modules
 
-### Modules
-
-- [index](modules/index.md)
-- [ledger-to-account](modules/ledger_to_account.md)
+- [index](index/README.md)
+- [ledger-to-account](ledger-to-account/README.md)

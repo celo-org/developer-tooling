@@ -2,7 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "lib": ["es2015", "es2016"],
-    "target": "es6",
+    "target": "ES2018",
     "module": "commonjs",
     "moduleResolution": "node",
     "composite": true,
