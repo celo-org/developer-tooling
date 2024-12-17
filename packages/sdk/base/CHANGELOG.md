@@ -1,5 +1,11 @@
 # @celo/base
 
+## 7.0.1
+
+### Patch Changes
+
+- [#488](https://github.com/celo-org/developer-tooling/pull/488) [`07c4c78`](https://github.com/celo-org/developer-tooling/commit/07c4c7854f419dd07fbf09fe966fb5b378a139d1) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - New export type DerivationPath. Useful for when a value Must match first part of BIP44
+
 ## 7.0.0
 
 ### Major Changes
