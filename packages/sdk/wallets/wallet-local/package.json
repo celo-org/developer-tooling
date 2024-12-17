@@ -26,13 +26,13 @@
     "@celo/connect": "^6.1.0",
     "@celo/utils": "^8.0.0",
     "@celo/wallet-base": "^6.0.4",
-    "@ethereumjs/util": "8.0.5"
+    "@ethereumjs/util": "8.1.0"
   },
   "devDependencies": {
     "@celo/typescript": "workspace:^",
     "@types/debug": "^4.1.12",
     "debug": "^4.3.5",
-    "viem": "~1.5.4",
+    "viem": "~2.21.55",
     "web3": "1.10.4"
   },
   "engines": {

@@ -31,7 +31,7 @@
     "@celo/utils": "^8.0.0",
     "@celo/wallet-base": "^6.0.4",
     "@celo/wallet-remote": "^6.0.4",
-    "@ethereumjs/util": "8.0.5",
+    "@ethereumjs/util": "8.1.0",
     "@ledgerhq/errors": "^6.16.4",
     "@ledgerhq/hw-transport": "^6.30.6",
     "debug": "^4.1.1",

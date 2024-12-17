@@ -24,7 +24,7 @@
     "@celo/connect": "^6.1.0",
     "@viem/anvil": "^0.0.9",
     "bignumber.js": "^9.0.0",
-    "fs-extra": "^8.1.0",
+    "fs-extra": "^11.2.0",
     "ganache": "npm:@celo/ganache@7.8.0-unofficial.0",
     "targz": "^1.0.1",
     "tmp": "^0.2.3",
@@ -35,7 +35,7 @@
     "@celo/devchain-anvil": "12.0.0-canary.39",
     "@celo/typescript": "workspace:^",
     "@tsconfig/recommended": "^1.0.8",
-    "@types/fs-extra": "^8.1.0",
+    "@types/fs-extra": "^11.0.4",
     "@types/targz": "1.0.0"
   },
   "engines": {
