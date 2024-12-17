@@ -2,7 +2,7 @@ import baseSetup from '@celo/dev-utils/lib/ganache-setup'
 import { shouldRunGanacheTests } from '@celo/dev-utils/lib/ganache-test'
 // Has to import the matchers somewhere so that typescript knows the matchers have been made available
 import _unused from '@celo/dev-utils/lib/matchers'
-import * as path from 'path'
+import * as path from 'node:path'
 
 // Warning: There should be an unused import of '@celo/dev-utils/lib/matchers' above.
 // If there is not, then your editor probably deleted it automatically.

@@ -9,7 +9,7 @@ import {
 } from '@celo/dev-utils/lib/anvil-test'
 import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import fs from 'fs'
-import path from 'path'
+import path from 'node:path'
 import Web3 from 'web3'
 import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Execute from './execute'

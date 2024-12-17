@@ -73,9 +73,7 @@
     "ethers": "5",
     "fs-extra": "^8.1.0",
     "humanize-duration": "^3.32.1",
-    "path": "^0.12.7",
     "prompts": "^2.0.1",
-    "randombytes": "^2.0.1",
     "web3": "1.10.4",
     "web3-utils": "^1.10.4"
   },

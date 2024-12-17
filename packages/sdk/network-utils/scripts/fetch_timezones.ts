@@ -1,6 +1,6 @@
 import fs from 'fs'
 import 'isomorphic-fetch'
-import path from 'path'
+import path from 'node:path'
 import { Timezone } from '../src/utils/timezone'
 
 const TZ_URL = 'https://data.iana.org/time-zones/tzdb/zone.tab'

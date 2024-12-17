@@ -1,5 +1,5 @@
-import { mkdirSync, promises as fsPromises, readFileSync, unlinkSync, writeFileSync } from 'fs'
-import path from 'path'
+import { promises as fsPromises, mkdirSync, readFileSync, unlinkSync, writeFileSync } from 'fs'
+import path from 'node:path'
 import { KeystoreBase } from './keystore-base'
 
 export class FileKeystore extends KeystoreBase {

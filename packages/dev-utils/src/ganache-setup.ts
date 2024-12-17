@@ -1,6 +1,6 @@
 import * as fs from 'fs-extra'
 import * as ganache from 'ganache'
-import * as path from 'path'
+import * as path from 'node:path'
 import * as targz from 'targz'
 import { TEST_BALANCE, TEST_GAS_LIMIT, TEST_GAS_PRICE, TEST_MNEMONIC } from './test-utils'
 

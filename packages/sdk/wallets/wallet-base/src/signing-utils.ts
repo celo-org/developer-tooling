@@ -411,6 +411,7 @@ export async function encodeTransaction(
   if (rlpEncoded.type === 'eip1559' || rlpEncoded.type === 'cip64') {
     tx = {
       ...tx,
+      // @ts-expect-error
       maxFeePerGas: rlpEncoded.transaction.maxFeePerGas!.toString(),
       maxPriorityFeePerGas: rlpEncoded.transaction.maxPriorityFeePerGas!.toString(),
       accessList: parseAccessList(rlpEncoded.transaction.accessList || []),
@@ -419,12 +420,14 @@ export async function encodeTransaction(
   if (rlpEncoded.type === 'cip64' || rlpEncoded.type === 'celo-legacy') {
     tx = {
       ...tx,
+      // @ts-expect-error
       feeCurrency: rlpEncoded.transaction.feeCurrency!.toString(),
     }
   }
   if (rlpEncoded.type === 'ethereum-legacy') {
     tx = {
       ...tx,
+      // @ts-expect-error
       gasPrice: rlpEncoded.transaction.gasPrice!.toString(),
     }
   }

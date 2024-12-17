@@ -1,6 +1,6 @@
 import { trimLeading0x } from '@celo/utils/lib/address'
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'fs'
-import path from 'path'
+import path from 'node:path'
 import { rimraf } from 'rimraf'
 import { FileKeystore } from './file-keystore'
 import { ADDRESS1, GETH_GEN_KEYSTORE1, KEYSTORE_NAME1, PASSPHRASE1, PK1 } from './test-constants'
