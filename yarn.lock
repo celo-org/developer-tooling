@@ -1734,9 +1734,9 @@ __metadata:
     path: "npm:^0.12.7"
     prompts: "npm:^2.0.1"
     randombytes: "npm:^2.0.1"
-    ts-jest: "npm:^29.2.5"
-    ts-node: "npm:^10.9.2"
-    typescript: "npm:5.7.2"
+    ts-jest: "npm:^29.1.5"
+    ts-node: "npm:^10.9.1"
+    typescript: "npm:5.3.3"
     web3: "npm:1.10.4"
     web3-utils: "npm:^1.10.4"
   bin:
@@ -1845,8 +1845,8 @@ __metadata:
     ganache: "npm:@celo/ganache@7.8.0-unofficial.0"
     jest: "npm:^29.7.0"
     semver: "npm:^7.6.3"
-    ts-node: "npm:^10.9.2"
-    typescript: "npm:5.7.2"
+    ts-node: "npm:^10.9.1"
+    typescript: "npm:5.3.3"
     web3: "npm:1.10.4"
     web3-core-helpers: "npm:1.10.4"
   languageName: unknown
@@ -2020,8 +2020,8 @@ __metadata:
     fp-ts: "npm:2.1.1"
     io-ts: "npm:2.0.1"
     jest: "npm:^29.7.0"
-    ts-node: "npm:^10.9.2"
-    typescript: "npm:5.7.2"
+    ts-node: "npm:^10.9.1"
+    typescript: "npm:5.3.3"
   languageName: unknown
   linkType: soft
 
@@ -2338,7 +2338,7 @@ __metadata:
     debug: "npm:^4.1.1"
     semver: "npm:^7.6.3"
     ts-node: "npm:^10.9.2"
-    typescript: "npm:5.7.2"
+    typescript: "npm:5.3.3"
     web3: "npm:1.10.4"
   languageName: unknown
   linkType: soft
@@ -18543,7 +18543,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-jest@npm:^29.2.5":
+"ts-jest@npm:^29.1.5, ts-jest@npm:^29.2.5":
   version: 29.2.5
   resolution: "ts-jest@npm:29.2.5"
   dependencies:
@@ -18580,7 +18580,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-node@npm:^10.9.2":
+"ts-node@npm:^10.9.1, ts-node@npm:^10.9.2":
   version: 10.9.2
   resolution: "ts-node@npm:10.9.2"
   dependencies:
@@ -18917,6 +18917,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"typescript@npm:5.3.3":
+  version: 5.3.3
+  resolution: "typescript@npm:5.3.3"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 6e4e6a14a50c222b3d14d4ea2f729e79f972fa536ac1522b91202a9a65af3605c2928c4a790a4a50aa13694d461c479ba92cedaeb1e7b190aadaa4e4b96b8e18
+  languageName: node
+  linkType: hard
+
 "typescript@npm:5.7.2":
   version: 5.7.2
   resolution: "typescript@npm:5.7.2"
@@ -18924,6 +18934,16 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 4caa3904df69db9d4a8bedc31bafc1e19ffb7b24fbde2997a1633ae1398d0de5bdbf8daf602ccf3b23faddf1aeeb9b795223a2ed9c9a4fdcaf07bfde114a401a
+  languageName: node
+  linkType: hard
+
+"typescript@patch:typescript@npm%3A5.3.3#optional!builtin<compat/typescript>":
+  version: 5.3.3
+  resolution: "typescript@patch:typescript@npm%3A5.3.3#optional!builtin<compat/typescript>::version=5.3.3&hash=e012d7"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: c93786fcc9a70718ba1e3819bab56064ead5817004d1b8186f8ca66165f3a2d0100fee91fa64c840dcd45f994ca5d615d8e1f566d39a7470fc1e014dbb4cf15d
   languageName: node
   linkType: hard
 
