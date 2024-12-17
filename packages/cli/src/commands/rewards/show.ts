@@ -100,9 +100,7 @@ export default class Show extends BaseCommand {
         let electedValidators: Validator[]
         if (isCel2) {
           electedValidators = (await Promise.all(
-            (
-              await epochManager!.getElectedSigners()
-            ).map(async (x) => ({
+            (await epochManager!.getElectedSigners()).map(async (x) => ({
               address: x,
               score: await governanceSlasher!.getValidatorScore(x),
             }))

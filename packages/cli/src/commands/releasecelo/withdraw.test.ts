@@ -71,9 +71,7 @@ testWithAnvilL1('releasegold:withdraw cmd', (web3: Web3) => {
     const balanceAfter = (await kit.getTotalBalance(beneficiary)).CELO!
 
     const latestTransactionReceipt = await web3.eth.getTransactionReceipt(
-      (
-        await web3.eth.getBlock('latest')
-      ).transactions[0]
+      (await web3.eth.getBlock('latest')).transactions[0]
     )
 
     // Safety check if the latest transaction was originated by the beneficiary

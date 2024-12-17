@@ -53,9 +53,8 @@ testWithAnvilL1('releasegold:locked-gold cmd', (web3: Web3) => {
         ['--contract', contractAddress, '--action', 'unlock', '--value', '50'],
         web3
       )
-      const pendingWithdrawalsTotalValue = await lockedGold.getPendingWithdrawalsTotalValue(
-        contractAddress
-      )
+      const pendingWithdrawalsTotalValue =
+        await lockedGold.getPendingWithdrawalsTotalValue(contractAddress)
       expect(pendingWithdrawalsTotalValue.toFixed()).toBe('50')
     },
     LONG_TIMEOUT_MS * 2

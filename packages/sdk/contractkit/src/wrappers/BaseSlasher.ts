@@ -10,7 +10,7 @@ type TrailingSlasherParams = [
   (number | string)[],
   string[],
   string[],
-  (number | string)[]
+  (number | string)[],
 ]
 
 interface SlasherContract extends Contract {

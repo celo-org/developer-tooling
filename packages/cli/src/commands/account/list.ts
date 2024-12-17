@@ -20,7 +20,7 @@ export default class AccountList extends BaseCommand {
     const allAddresses = !res.flags.local ? await kit.connection.getAccounts() : []
 
     // Get addresses from the local wallet.
-    const localAddresses = res.flags.local ?? true ? kit.connection.getLocalAccounts() : []
+    const localAddresses = (res.flags.local ?? true) ? kit.connection.getLocalAccounts() : []
 
     // Display the addresses.
     const localName = res.flags.useLedger ? 'Ledger' : 'Local'

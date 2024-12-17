@@ -37,7 +37,7 @@ export function makeThrowable<
   TArgs extends any[],
   TResult,
   TError extends Error,
-  TModifiedError extends Error
+  TModifiedError extends Error,
 >(
   f: (...args: TArgs) => Result<TResult, TError>,
   errorModifier?: (error: TError) => TModifiedError
@@ -49,7 +49,7 @@ export function makeAsyncThrowable<
   TArgs extends any[],
   TResult,
   TError extends Error,
-  TModifiedError extends Error
+  TModifiedError extends Error,
 >(
   f: (...args: TArgs) => Promise<Result<TResult, TError>>,
   errorModifier?: (error: TError) => TModifiedError

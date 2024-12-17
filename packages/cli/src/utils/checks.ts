@@ -53,7 +53,10 @@ export function newCheckBuilder(cmd: BaseCommand, signer?: Address) {
 class CheckBuilder {
   private checks: CommandCheck[] = []
 
-  constructor(private cmd: BaseCommand, private signer?: Address) {}
+  constructor(
+    private cmd: BaseCommand,
+    private signer?: Address
+  ) {}
 
   async getWeb3() {
     return this.cmd.getWeb3()

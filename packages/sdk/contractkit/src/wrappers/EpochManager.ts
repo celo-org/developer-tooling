@@ -93,9 +93,7 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
         const groupScore = await scoreManager.getGroupScore(group)
         return await election.getGroupEpochRewards(
           group,
-          (
-            await processingStatusPromise
-          ).totalRewardsVoter,
+          (await processingStatusPromise).totalRewardsVoter,
           groupScore
         )
       })

@@ -31,7 +31,10 @@ export abstract class BaseWrapper<T extends Contract> {
     ? ContractVersion
     : never
 
-  constructor(protected readonly connection: Connection, protected readonly contract: T) {}
+  constructor(
+    protected readonly connection: Connection,
+    protected readonly contract: T
+  ) {}
 
   /** Contract address */
   get address(): StrongAddress {
@@ -220,13 +223,13 @@ type ProxyCallArgs<
   InputArgs extends any[],
   ParsedInputArgs extends any[],
   PreParsedOutput,
-  Output
+  Output,
 > =
   // parseInputArgs => methodFn => parseOutput
   | [
       Method<ParsedInputArgs, PreParsedOutput>,
       (...arg: InputArgs) => ParsedInputArgs,
-      (arg: PreParsedOutput) => Output
+      (arg: PreParsedOutput) => Output,
     ]
   // methodFn => parseOutput
   | [Method<InputArgs, PreParsedOutput>, undefined, (arg: PreParsedOutput) => Output]
@@ -252,7 +255,7 @@ export function proxyCall<
   InputArgs extends any[],
   ParsedInputArgs extends any[],
   PreParsedOutput,
-  Output
+  Output,
 >(
   methodFn: Method<ParsedInputArgs, PreParsedOutput>,
   parseInputArgs: (...args: InputArgs) => ParsedInputArgs,
@@ -275,7 +278,7 @@ export function proxyCall<
   InputArgs extends any[],
   ParsedInputArgs extends any[],
   PreParsedOutput,
-  Output
+  Output,
 >(
   ...callArgs: ProxyCallArgs<InputArgs, ParsedInputArgs, PreParsedOutput, Output>
 ): (...args: InputArgs) => Promise<Output> {

@@ -166,8 +166,8 @@ testWithAnvilL1('governance:approve cmd', (web3: Web3) => {
           ],
           [
             "Expiration: ${schedule.Expiration?.toString()} (~${schedule.Expiration?.toExponential(
-        3
-      )})
+              3
+            )})
         Queued: ${schedule.Queued?.toString()} (~${schedule.Queued?.toExponential(3)})",
           ],
           [
