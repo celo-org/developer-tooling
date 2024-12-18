@@ -5,7 +5,7 @@ import {
   Encrypt as ECIESEncrypt,
 } from '@celo/utils/lib/ecies'
 import { u8 } from '@noble/ciphers/utils'
-import { randomBytes } from '@noble/ciphers/webcrypto/utils'
+import { randomBytes } from '@noble/ciphers/webcrypto'
 import { decompressPublicKey } from './dataEncryptionKey'
 
 const ECIES_SESSION_KEY_LEN = 129
