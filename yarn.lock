@@ -1842,7 +1842,7 @@ __metadata:
     cross-fetch: "npm:3.1.5"
     debug: "npm:^4.1.1"
     fetch-mock: "npm:^10.0.7"
-    fp-ts: "npm:2.1.1"
+    fp-ts: "npm:2.16.9"
     ganache: "npm:@celo/ganache@7.8.0-unofficial.0"
     jest: "npm:^29.7.0"
     semver: "npm:^7.3.5"
@@ -2018,7 +2018,7 @@ __metadata:
     "@types/node": "npm:18.7.6"
     cross-fetch: "npm:3.1.5"
     fetch-mock: "npm:^10.0.7"
-    fp-ts: "npm:2.1.1"
+    fp-ts: "npm:2.16.9"
     io-ts: "npm:2.0.1"
     jest: "npm:^29.7.0"
     ts-node: "npm:^10.9.1"
@@ -2080,7 +2080,7 @@ __metadata:
     "@types/google-libphonenumber": "npm:^7.4.23"
     "@types/node": "npm:^18.7.16"
     country-data: "npm:^0.0.31"
-    fp-ts: "npm:2.1.1"
+    fp-ts: "npm:2.16.9"
     google-libphonenumber: "npm:^3.2.27"
     io-ts: "npm:2.0.1"
     web3-utils: "npm:^1.10.0"
@@ -2148,7 +2148,7 @@ __metadata:
     "@types/bn.js": "npm:^5.1.0"
     "@types/node": "npm:^18.7.16"
     bignumber.js: "npm:^9.0.0"
-    fp-ts: "npm:2.1.1"
+    fp-ts: "npm:2.16.9"
     io-ts: "npm:2.0.1"
     web3-eth-abi: "npm:1.10.4"
     web3-utils: "npm:1.10.4"
@@ -10670,6 +10670,13 @@ __metadata:
   version: 2.1.1
   resolution: "fp-ts@npm:2.1.1"
   checksum: 57ca78ccf3b46ed589f196a6f41365598357c7c2b4ddc8a8d1709b8f11b0841105c7238594bc563d9efb37497b8cf7b96a197a76000b0446b78dcbc921b16826
+  languageName: node
+  linkType: hard
+
+"fp-ts@npm:2.16.9":
+  version: 2.16.9
+  resolution: "fp-ts@npm:2.16.9"
+  checksum: af5c3fa829456da60ed63b5288907868f0df01a7215acfc5697f621a21f76b0a0f7b7c08ac81f2bcf7ecae13a6c6d41047e739a79cf239db19cd49afd7e8e015
   languageName: node
   linkType: hard
 
