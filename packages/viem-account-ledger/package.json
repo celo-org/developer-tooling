@@ -22,7 +22,7 @@
     "build:esm": "yarn --top-level run tsc -m ES6 --outDir lib-es",
     "clean": "yarn --top-level run tsc -b . --clean && yarn run rimraf lib lib-es",
     "docs": "yarn --top-level run typedoc",
-    "test": "yarn run vitest",
+    "test": "yarn run vitest --run",
     "lint": "yarn --top-level run eslint -c .eslintrc.cjs ",
     "prepublishOnly": "yarn clean && yarn build"
   },
