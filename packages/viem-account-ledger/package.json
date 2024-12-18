@@ -47,7 +47,7 @@
     "@vitest/coverage-v8": "2.1.2",
     "dotenv": "^8.2.0",
     "rimraf": "^4.4.1",
-    "viem": "^2.21.14",
+    "viem": "^2.21.55",
     "vitest": "^2.1.2"
   },
   "engines": {
