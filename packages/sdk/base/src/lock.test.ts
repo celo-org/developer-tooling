@@ -31,5 +31,5 @@ test('lock', async () => {
   }
   await Promise.all(promises)
   expect(race).toHaveBeenCalledTimes(CONCURRENT_CALLS)
-  expect(lock.tryAcquire()).toBe(true)
+  expect(lock.listenersCount).toBe(0)
 })
