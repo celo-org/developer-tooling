@@ -1,5 +1,13 @@
 # @celo/keystores
 
+## 5.0.13-beta.0
+
+### Patch Changes
+
+- Updated dependencies [[`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733), [`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733)]:
+  - @celo/utils@8.0.1-beta.0
+  - @celo/wallet-local@7.0.0-beta.0
+
 ## 5.0.12
 
 ### Patch Changes

@@ -1,5 +1,31 @@
 # Changelog
 
+## 6.1.0-beta.0
+
+### Minor Changes
+
+- [#488](https://github.com/celo-org/developer-tooling/pull/488) [`07c4c78`](https://github.com/celo-org/developer-tooling/commit/07c4c7854f419dd07fbf09fe966fb5b378a139d1) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - add --derivationPath to config:set for setting global deriviationPath. Usefull when using ledger devices and when generated new accounts.
+
+- [#488](https://github.com/celo-org/developer-tooling/pull/488) [`07c4c78`](https://github.com/celo-org/developer-tooling/commit/07c4c7854f419dd07fbf09fe966fb5b378a139d1) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Add --ledgerLiveMode flag for use with --useLedger flag. This is useful for using same addresses on celocli as LedgerLive uses.
+
+### Patch Changes
+
+- [#492](https://github.com/celo-org/developer-tooling/pull/492) [`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Bump dependncies up
+
+- Updated dependencies [[`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733), [`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733), [`07c4c78`](https://github.com/celo-org/developer-tooling/commit/07c4c7854f419dd07fbf09fe966fb5b378a139d1), [`07c4c78`](https://github.com/celo-org/developer-tooling/commit/07c4c7854f419dd07fbf09fe966fb5b378a139d1), [`07c4c78`](https://github.com/celo-org/developer-tooling/commit/07c4c7854f419dd07fbf09fe966fb5b378a139d1)]:
+  - @celo/wallet-hsm-azure@7.0.0-beta.0
+  - @celo/cryptographic-utils@5.1.2-beta.0
+  - @celo/utils@8.0.1-beta.0
+  - @celo/base@7.0.1-beta.0
+  - @celo/wallet-ledger@7.0.0-beta.0
+  - @celo/metadata-claims@1.0.1-beta.0
+  - @celo/contractkit@9.0.1-beta.0
+  - @celo/phone-utils@6.0.5-beta.0
+  - @celo/connect@6.1.1-beta.0
+  - @celo/explorer@5.0.14-beta.0
+  - @celo/governance@5.1.5-beta.0
+  - @celo/wallet-local@7.0.0-beta.0
+
 ## 6.0.0
 
 ### Major Changes
