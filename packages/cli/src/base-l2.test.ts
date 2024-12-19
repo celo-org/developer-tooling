@@ -1,24 +1,40 @@
 import { Connection } from '@celo/connect'
 import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
+import * as WalletLedgerExports from '@celo/wallet-ledger'
 import { Config, ux } from '@oclif/core'
 import http from 'http'
+import { tmpdir } from 'os'
 import Web3 from 'web3'
 import { BaseCommand } from './base'
+import Set from './commands/config/set'
 import CustomHelp from './help'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from './test-utils/cliUtils'
 import * as config from './utils/config'
+import { readConfig } from './utils/config'
 
 process.env.NO_SYNCCHECK = 'true'
 
+jest.mock('@ledgerhq/hw-transport-node-hid')
+
+jest.mock('@celo/wallet-ledger', () => {
+  const originalModule = jest.requireActual('@celo/wallet-ledger')
+  originalModule.LedgerWallet.prototype.signTransaction = jest.fn()
+  return {
+    __esModule: true,
+    ...originalModule,
+    newLedgerWalletWithSetup: jest.fn(),
+  }
+})
+class BasicCommand extends BaseCommand {
+  async run() {
+    // just parsing flags nothing to see
+  }
+}
 // doesnt use anvil because we are testing the connection to chain
 // doesnt use testLocally because that messes with the node connection
 describe('flags', () => {
   let config: Config
-  class BasicCommand extends BaseCommand {
-    async run() {
-      console.log('Hello, world!')
-    }
-  }
+
   beforeEach(async () => {
     // copied from Commaand.run to load config
     config = await Config.load(require.main?.filename || __dirname)
@@ -41,7 +57,7 @@ describe('flags', () => {
   })
   describe('--help', () => {
     it('it shows help', async () => {
-      const writeSpy = jest.spyOn(ux.write, 'stdout')
+      const writeSpy = jest.spyOn(ux.write, 'stdout').mockImplementation()
       const help = new CustomHelp(config)
       // transfer:celo could be ANY command --help is the important part
       await help.showHelp(['transfer:celo', '--help'])
@@ -59,9 +75,156 @@ jest.mock('../package.json', () => ({
 }))
 
 testWithAnvilL2('BaseCommand', (web3: Web3) => {
-  afterEach(() => {
-    jest.clearAllMocks()
-    jest.restoreAllMocks()
+  const logSpy = jest.spyOn(console, 'log').mockImplementation()
+
+  beforeEach(() => {
+    logSpy.mockClear()
+  })
+
+  describe('with --useLedger', () => {
+    describe('derivationPath tests', () => {
+      it('uses default derivationPath from config', async () => {
+        const storedDerivationPath = readConfig(tmpdir()).derivationPath
+        console.info('storedDerivationPath', storedDerivationPath)
+        expect(storedDerivationPath).not.toBe(undefined)
+        await testLocallyWithWeb3Node(BasicCommand, ['--useLedger'], web3)
+        expect(WalletLedgerExports.newLedgerWalletWithSetup).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            baseDerivationPath: storedDerivationPath,
+          })
+        )
+      })
+      it('uses custom derivationPath', async () => {
+        const storedDerivationPath = readConfig(tmpdir()).derivationPath
+        const customPath = "m/44'/9000'/0'"
+        await testLocallyWithWeb3Node(Set, ['--derivationPath', customPath], web3)
+        await testLocallyWithWeb3Node(BasicCommand, ['--useLedger'], web3)
+        expect(WalletLedgerExports.newLedgerWalletWithSetup).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            baseDerivationPath: customPath,
+          })
+        )
+        await testLocallyWithWeb3Node(Set, ['--derivationPath', storedDerivationPath], web3)
+      })
+    })
+
+    it('--ledgerAddresses passes derivationPathIndexes to LedgerWallet', async () => {
+      await testLocallyWithWeb3Node(BasicCommand, ['--useLedger', '--ledgerAddresses', '5'], web3)
+
+      expect(WalletLedgerExports.newLedgerWalletWithSetup).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          changeIndexes: [0],
+          derivationPathIndexes: [0, 1, 2, 3, 4],
+        })
+      )
+      expect(logSpy.mock.calls).toMatchInlineSnapshot(`
+        [
+          [
+            "Retrieving derivation Paths",
+            [
+              0,
+              1,
+              2,
+              3,
+              4,
+            ],
+          ],
+        ]
+      `)
+    })
+
+    describe('with --ledgerLiveMode', () => {
+      it('--ledgerAddresses passes changeIndexes to LedgerWallet', async () => {
+        await testLocallyWithWeb3Node(
+          BasicCommand,
+          ['--useLedger', '--ledgerLiveMode', '--ledgerAddresses', '5'],
+          web3
+        )
+
+        expect(WalletLedgerExports.newLedgerWalletWithSetup).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            changeIndexes: [0, 1, 2, 3, 4],
+            derivationPathIndexes: [0],
+          })
+        )
+        expect(logSpy.mock.calls).toMatchInlineSnapshot(`
+          [
+            [
+              "Retrieving derivation Paths",
+              [
+                0,
+                1,
+                2,
+                3,
+                4,
+              ],
+            ],
+          ]
+        `)
+      })
+      describe('with --ledgerCustomAddresses', () => {
+        it('passes custom changeIndexes to LedgerWallet', async () => {
+          await testLocallyWithWeb3Node(
+            BasicCommand,
+            ['--useLedger', '--ledgerLiveMode', '--ledgerCustomAddresses', '[1,8,9]'],
+            web3
+          )
+
+          expect(WalletLedgerExports.newLedgerWalletWithSetup).toHaveBeenCalledWith(
+            expect.anything(),
+            expect.objectContaining({
+              changeIndexes: [1, 8, 9],
+              derivationPathIndexes: [0],
+            })
+          )
+          expect(logSpy.mock.calls).toMatchInlineSnapshot(`
+            [
+              [
+                "Retrieving derivation Paths",
+                [
+                  1,
+                  8,
+                  9,
+                ],
+              ],
+            ]
+          `)
+        })
+      })
+    })
+    describe('with --ledgerCustomAddresses', () => {
+      it('passes custom derivationPathIndexes to LedgerWallet', async () => {
+        await testLocallyWithWeb3Node(
+          BasicCommand,
+          ['--useLedger', '--ledgerCustomAddresses', '[1,8,9]'],
+          web3
+        )
+
+        expect(WalletLedgerExports.newLedgerWalletWithSetup).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            changeIndexes: [0],
+            derivationPathIndexes: [1, 8, 9],
+          })
+        )
+        expect(logSpy.mock.calls).toMatchInlineSnapshot(`
+          [
+            [
+              "Retrieving derivation Paths",
+              [
+                1,
+                8,
+                9,
+              ],
+            ],
+          ]
+        `)
+      })
+    })
   })
 
   it('logs command execution error', async () => {
@@ -71,9 +234,11 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
       }
     }
 
-    const errorSpy = jest.spyOn(console, 'error')
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation()
 
-    await expect(testLocallyWithWeb3Node(TestErrorCommand, [], web3)).rejects.toThrow()
+    await expect(
+      testLocallyWithWeb3Node(TestErrorCommand, [], web3)
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`"test error"`)
 
     expect(errorSpy.mock.calls).toMatchInlineSnapshot(`
       [
@@ -97,9 +262,9 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
       }
     }
 
-    const writeMock = jest.spyOn(ux.write, 'stdout')
-    const logSpy = jest.spyOn(console, 'log')
-    const errorSpy = jest.spyOn(console, 'error')
+    const writeMock = jest.spyOn(ux.write, 'stdout').mockImplementation()
+    const logSpy = jest.spyOn(console, 'log').mockImplementation()
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation()
 
     jest.spyOn(Connection.prototype, 'stop').mockImplementation(() => {
       throw new Error('Mock connection stop error')
@@ -125,130 +290,62 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
     `)
   })
 
-  it('sends telemetry data successfuly on success', async () => {
-    class TestTelemetryCommand extends BaseCommand {
-      id = 'test:telemetry-success'
-
-      async run() {
-        console.log('Successful run')
-      }
-    }
-
-    // here we test also that it works without this env var
-    delete process.env.TELEMETRY_ENABLED
-    process.env.TELEMETRY_URL = 'https://telemetry.example.org'
-
-    jest.spyOn(config, 'readConfig').mockImplementation((_: string) => {
-      return { telemetry: true } as config.CeloConfig
+  describe('telemetry', () => {
+    afterEach(() => {
+      jest.clearAllMocks()
+      jest.restoreAllMocks()
     })
 
-    const fetchMock = jest.fn().mockResolvedValue({
-      ok: true,
-    })
-    const fetchSpy = jest.spyOn(global, 'fetch').mockImplementation(fetchMock)
-
-    await TestTelemetryCommand.run([])
-
-    // Assert it was called at all in the first place
-    expect(fetchSpy.mock.calls.length).toEqual(1)
-
-    expect(fetchSpy.mock.calls[0][0]).toMatchInlineSnapshot(`"https://telemetry.example.org"`)
-    expect(fetchSpy.mock.calls[0][1]?.body).toMatchInlineSnapshot(`
-      "
-      celocli_invocation{success="true", version="5.2.3", command="test:telemetry-success"} 1
-      "
-    `)
-    expect(fetchSpy.mock.calls[0][1]?.headers).toMatchInlineSnapshot(`
-      {
-        "Content-Type": "application/octet-stream",
-      }
-    `)
-    expect(fetchSpy.mock.calls[0][1]?.method).toMatchInlineSnapshot(`"POST"`)
-    expect(fetchSpy.mock.calls[0][1]?.signal).toBeInstanceOf(AbortSignal)
-    // Make sure the request was not aborted
-    expect(fetchSpy.mock.calls[0][1]?.signal?.aborted).toBe(false)
-  })
-
-  it('sends telemetry data successfuly on error', async () => {
-    class TestTelemetryCommand extends BaseCommand {
-      id = 'test:telemetry-error'
-
-      async run() {
-        throw new Error('test error')
-      }
-    }
-
-    jest.spyOn(config, 'readConfig').mockImplementation((_: string) => {
-      return { telemetry: true } as config.CeloConfig
-    })
-
-    // here we test also that it works with this env var set to 1 explicitly
-    process.env.TELEMETRY_ENABLED = '1'
-    process.env.TELEMETRY_URL = 'https://telemetry.example.org'
-
-    const fetchMock = jest.fn().mockResolvedValue({
-      ok: true,
-    })
-    const fetchSpy = jest.spyOn(global, 'fetch').mockImplementation(fetchMock)
-
-    await expect(TestTelemetryCommand.run([])).rejects.toMatchInlineSnapshot(`[Error: test error]`)
-
-    // Assert it was called at all in the first place
-    expect(fetchSpy.mock.calls.length).toEqual(1)
-
-    expect(fetchSpy.mock.calls[0][0]).toMatchInlineSnapshot(`"https://telemetry.example.org"`)
-    expect(fetchSpy.mock.calls[0][1]?.body).toMatchInlineSnapshot(`
-      "
-      celocli_invocation{success="false", version="5.2.3", command="test:telemetry-error"} 1
-      "
-    `)
-    expect(fetchSpy.mock.calls[0][1]?.headers).toMatchInlineSnapshot(`
-      {
-        "Content-Type": "application/octet-stream",
-      }
-    `)
-    expect(fetchSpy.mock.calls[0][1]?.method).toMatchInlineSnapshot(`"POST"`)
-    expect(fetchSpy.mock.calls[0][1]?.signal).toBeInstanceOf(AbortSignal)
-    // Make sure the request was not aborted
-    expect(fetchSpy.mock.calls[0][1]?.signal?.aborted).toBe(false)
-  })
-
-  it('does not send telemetry when disabled by config', async () => {
-    class TestTelemetryCommand extends BaseCommand {
-      id = 'test:telemetry-should-not-be-sent'
-
-      async run() {
-        console.log('Successful run')
-      }
-    }
-
-    jest.spyOn(config, 'readConfig').mockImplementation((_: string) => {
-      return { telemetry: false } as config.CeloConfig
-    })
-
-    // we leave it here to double check that it is not sent even if the env var is set
-    process.env.TELEMETRY_ENABLED = '1'
-    process.env.TELEMETRY_URL = 'https://telemetry.example.org'
-
-    const fetchMock = jest.fn().mockResolvedValue({
-      ok: true,
-    })
-    const fetchSpy = jest.spyOn(global, 'fetch').mockImplementation(fetchMock)
-
-    await TestTelemetryCommand.run([])
-
-    expect(fetchSpy).not.toHaveBeenCalled()
-  })
-
-  it('times out after TIMEOUT', async () => {
-    return new Promise<void>((resolve, _) => {
-      const EXPECTED_COMMAND_RESULT = 'Successful run'
-
+    it('sends telemetry data successfuly on success', async () => {
       class TestTelemetryCommand extends BaseCommand {
-        id = 'test:telemetry-timeout'
+        id = 'test:telemetry-success'
 
         async run() {
-          return EXPECTED_COMMAND_RESULT
+          console.log('Successful run')
+        }
+      }
+
+      // here we test also that it works without this env var
+      delete process.env.TELEMETRY_ENABLED
+      process.env.TELEMETRY_URL = 'https://telemetry.example.org'
+
+      jest.spyOn(config, 'readConfig').mockImplementation((_: string) => {
+        return { telemetry: true } as config.CeloConfig
+      })
+
+      const fetchMock = jest.fn().mockResolvedValue({
+        ok: true,
+      })
+      const fetchSpy = jest.spyOn(global, 'fetch').mockImplementation(fetchMock)
+
+      await TestTelemetryCommand.run([])
+
+      // Assert it was called at all in the first place
+      expect(fetchSpy.mock.calls.length).toEqual(1)
+
+      expect(fetchSpy.mock.calls[0][0]).toMatchInlineSnapshot(`"https://telemetry.example.org"`)
+      expect(fetchSpy.mock.calls[0][1]?.body).toMatchInlineSnapshot(`
+        "
+        celocli_invocation{success="true", version="5.2.3", command="test:telemetry-success"} 1
+        "
+      `)
+      expect(fetchSpy.mock.calls[0][1]?.headers).toMatchInlineSnapshot(`
+        {
+          "Content-Type": "application/octet-stream",
+        }
+      `)
+      expect(fetchSpy.mock.calls[0][1]?.method).toMatchInlineSnapshot(`"POST"`)
+      expect(fetchSpy.mock.calls[0][1]?.signal).toBeInstanceOf(AbortSignal)
+      // Make sure the request was not aborted
+      expect(fetchSpy.mock.calls[0][1]?.signal?.aborted).toBe(false)
+    })
+
+    it('sends telemetry data successfuly on error', async () => {
+      class TestTelemetryCommand extends BaseCommand {
+        id = 'test:telemetry-error'
+
+        async run() {
+          throw new Error('test error')
         }
       }
 
@@ -256,41 +353,118 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
         return { telemetry: true } as config.CeloConfig
       })
 
-      delete process.env.TELEMETRY_ENABLED
-      process.env.TELEMETRY_URL = 'http://localhost:3000/'
+      // here we test also that it works with this env var set to 1 explicitly
+      process.env.TELEMETRY_ENABLED = '1'
+      process.env.TELEMETRY_URL = 'https://telemetry.example.org'
 
-      const fetchSpy = jest.spyOn(global, 'fetch')
+      const fetchMock = jest.fn().mockResolvedValue({
+        ok: true,
+      })
+      const fetchSpy = jest.spyOn(global, 'fetch').mockImplementation(fetchMock)
 
-      const server = http.createServer((_, res) => {
-        setTimeout(() => {
-          res.end()
-        }, 5000) // Higher timeout than the telemetry logic uses
+      await expect(TestTelemetryCommand.run([])).rejects.toMatchInlineSnapshot(
+        `[Error: test error]`
+      )
+
+      // Assert it was called at all in the first place
+      expect(fetchSpy.mock.calls.length).toEqual(1)
+
+      expect(fetchSpy.mock.calls[0][0]).toMatchInlineSnapshot(`"https://telemetry.example.org"`)
+      expect(fetchSpy.mock.calls[0][1]?.body).toMatchInlineSnapshot(`
+        "
+        celocli_invocation{success="false", version="5.2.3", command="test:telemetry-error"} 1
+        "
+      `)
+      expect(fetchSpy.mock.calls[0][1]?.headers).toMatchInlineSnapshot(`
+        {
+          "Content-Type": "application/octet-stream",
+        }
+      `)
+      expect(fetchSpy.mock.calls[0][1]?.method).toMatchInlineSnapshot(`"POST"`)
+      expect(fetchSpy.mock.calls[0][1]?.signal).toBeInstanceOf(AbortSignal)
+      // Make sure the request was not aborted
+      expect(fetchSpy.mock.calls[0][1]?.signal?.aborted).toBe(false)
+    })
+
+    it('does not send telemetry when disabled by config', async () => {
+      class TestTelemetryCommand extends BaseCommand {
+        id = 'test:telemetry-should-not-be-sent'
+
+        async run() {
+          console.log('Successful run')
+        }
+      }
+
+      jest.spyOn(config, 'readConfig').mockImplementation((_: string) => {
+        return { telemetry: false } as config.CeloConfig
       })
 
-      server.listen(3000, async () => {
-        // Make sure the command actually returns
-        await expect(TestTelemetryCommand.run([])).resolves.toBe(EXPECTED_COMMAND_RESULT)
+      // we leave it here to double check that it is not sent even if the env var is set
+      process.env.TELEMETRY_ENABLED = '1'
+      process.env.TELEMETRY_URL = 'https://telemetry.example.org'
 
-        expect(fetchSpy.mock.calls.length).toEqual(1)
+      const fetchMock = jest.fn().mockResolvedValue({
+        ok: true,
+      })
+      const fetchSpy = jest.spyOn(global, 'fetch').mockImplementation(fetchMock)
 
-        expect(fetchSpy.mock.calls[0][0]).toMatchInlineSnapshot(`"http://localhost:3000/"`)
-        expect(fetchSpy.mock.calls[0][1]?.body).toMatchInlineSnapshot(`
-          "
-          celocli_invocation{success="true", version="5.2.3", command="test:telemetry-timeout"} 1
-          "
-        `)
-        expect(fetchSpy.mock.calls[0][1]?.headers).toMatchInlineSnapshot(`
-                  {
-                    "Content-Type": "application/octet-stream",
-                  }
-              `)
-        expect(fetchSpy.mock.calls[0][1]?.method).toMatchInlineSnapshot(`"POST"`)
-        expect(fetchSpy.mock.calls[0][1]?.signal).toBeInstanceOf(AbortSignal)
-        // Make sure the request was aborted
-        expect(fetchSpy.mock.calls[0][1]?.signal?.aborted).toBe(true)
+      await TestTelemetryCommand.run([])
 
-        server.close()
-        resolve()
+      expect(fetchSpy).not.toHaveBeenCalled()
+    })
+
+    it('times out after TIMEOUT', async () => {
+      return new Promise<void>((resolve, _) => {
+        const EXPECTED_COMMAND_RESULT = 'Successful run'
+
+        class TestTelemetryCommand extends BaseCommand {
+          id = 'test:telemetry-timeout'
+
+          async run() {
+            return EXPECTED_COMMAND_RESULT
+          }
+        }
+
+        jest.spyOn(config, 'readConfig').mockImplementation((_: string) => {
+          return { telemetry: true } as config.CeloConfig
+        })
+
+        delete process.env.TELEMETRY_ENABLED
+        process.env.TELEMETRY_URL = 'http://localhost:3000/'
+
+        const fetchSpy = jest.spyOn(global, 'fetch')
+
+        const server = http.createServer((_, res) => {
+          setTimeout(() => {
+            res.end()
+          }, 5000) // Higher timeout than the telemetry logic uses
+        })
+
+        server.listen(3000, async () => {
+          // Make sure the command actually returns
+          await expect(TestTelemetryCommand.run([])).resolves.toBe(EXPECTED_COMMAND_RESULT)
+
+          expect(fetchSpy.mock.calls.length).toEqual(1)
+
+          expect(fetchSpy.mock.calls[0][0]).toMatchInlineSnapshot(`"http://localhost:3000/"`)
+          expect(fetchSpy.mock.calls[0][1]?.body).toMatchInlineSnapshot(`
+            "
+            celocli_invocation{success="true", version="5.2.3", command="test:telemetry-timeout"} 1
+            "
+          `)
+          expect(fetchSpy.mock.calls[0][1]?.headers).toMatchInlineSnapshot(`
+                    {
+                      "Content-Type": "application/octet-stream",
+                    }
+                `)
+          expect(fetchSpy.mock.calls[0][1]?.method).toMatchInlineSnapshot(`"POST"`)
+          expect(fetchSpy.mock.calls[0][1]?.signal).toBeInstanceOf(AbortSignal)
+          // Make sure the request was aborted
+          expect(fetchSpy.mock.calls[0][1]?.signal?.aborted).toBe(true)
+
+          server.close()
+          resolve()
+        })
       })
     })
   })

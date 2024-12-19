@@ -1,3 +1,4 @@
+import { ETHEREUM_DERIVATION_PATH } from '@celo/base'
 import {
   StrongAddress,
   ensureLeading0x,
@@ -69,6 +70,23 @@ const ledgerAddresses: { [myKey: string]: { address: Hex; privateKey: Hex } } = 
     address: ACCOUNT_ADDRESS5,
     privateKey: PRIVATE_KEY5,
   },
+  // change addresses
+  "44'/52752'/0'/1/0": {
+    address: '0x3c21B4d5b7E945149F30B078c261F2c349A5A195',
+    privateKey: '0xf879c2b42fb2e945123ba0340227c20123bceba5ebb4873a6999921afe938de5',
+  },
+  "44'/52752'/0'/1/1": {
+    address: '0x4CD07D5b5E35a06c3B8077dF6a43572077BB0E28',
+    privateKey: '0x361a3334abb2555c1de8319ffd143efea08306c5b490179e3c74155adf683dc0',
+  },
+  "44'/52752'/0'/2/0": {
+    address: '0xDE27268d1672Abd7F7493399cD0348273Bd76C93',
+    privateKey: '0xc49318225cfcf96f8297b24507284f1815b7625dd8f035c2e3f495e6c61bce1b',
+  },
+  "44'/52752'/0'/2/1": {
+    address: '0xE81Bc4b00fe4913418BBC747620e1f1e7fb8E5cE',
+    privateKey: '0xe2faeec7b7fcd599c5c6ed8921d48d982c75bcbc9fc8b8aabf9b0c68d4bcb95c',
+  },
 }
 
 const CHAIN_ID = 44787
@@ -124,7 +142,7 @@ interface ILedger {
 
 const mockLedgerImplementation = (mockForceValidation: () => void, version: string): ILedger => {
   const _ledger = {
-    getAddress: async (derivationPath: string, forceValidation?: boolean) => {
+    getAddress: jest.fn(async (derivationPath: string, forceValidation?: boolean) => {
       if (forceValidation) {
         mockForceValidation()
       }
@@ -140,7 +158,7 @@ const mockLedgerImplementation = (mockForceValidation: () => void, version: stri
         derivationPath,
         publicKey: '',
       }
-    },
+    }),
     signTransaction: async (derivationPath: string, data: string) => {
       if (ledgerAddresses[derivationPath]) {
         const type = determineTXType(ensureLeading0x(data))
@@ -248,7 +266,7 @@ function mockLedger(
   mockForceValidation: () => void,
   version = LedgerWallet.MIN_VERSION_EIP1559
 ) {
-  jest
+  return jest
     .spyOn<any, any>(wallet, 'generateNewLedger')
     .mockClear()
     .mockImplementation((_transport: any): ILedger => {
@@ -273,7 +291,7 @@ describe('LedgerWallet class', () => {
         // Recreation of the connection will fail, therefore we use a single object
         if (!hardwareWallet) {
           const transport = await TransportNodeHid.open('')
-          hardwareWallet = new LedgerWallet(undefined, undefined, transport)
+          hardwareWallet = new LedgerWallet(transport)
         }
       } catch (e) {
         throw new Error(
@@ -324,15 +342,83 @@ describe('LedgerWallet class', () => {
     })
 
     test('fails calling signTransaction', async () => {
-      await expect(wallet.signTransaction(celoTransaction)).rejects.toThrowError()
+      await expect(
+        wallet.signTransaction(celoTransaction)
+      ).rejects.toThrowErrorMatchingInlineSnapshot(
+        `"Cannot read properties of undefined (reading 'getAppConfiguration')"`
+      )
     })
 
     test('fails calling signPersonalMessage', async () => {
-      await expect(wallet.signPersonalMessage(ACCOUNT_ADDRESS1, 'test')).rejects.toThrowError()
+      await expect(
+        wallet.signPersonalMessage(ACCOUNT_ADDRESS1, 'test')
+      ).rejects.toThrowErrorMatchingInlineSnapshot(`"wallet needs to be initialized first"`)
     })
 
     test('fails calling signTypedData', async () => {
-      await expect(wallet.signTypedData(ACCOUNT_ADDRESS1, TYPED_DATA)).rejects.toThrowError()
+      await expect(
+        wallet.signTypedData(ACCOUNT_ADDRESS1, TYPED_DATA)
+      ).rejects.toThrowErrorMatchingInlineSnapshot(`"wallet needs to be initialized first"`)
+    })
+  })
+
+  describe('while initializing', () => {
+    it('can be used with eth derivation path', async () => {
+      wallet = new LedgerWallet({}, [0, 1, 2, 3], ETHEREUM_DERIVATION_PATH, [6, 7, 8])
+      mockLedger(wallet, mockForceValidation)
+      await wallet.init()
+      // @ts-expect-error
+      wallet.ledger!.getAddress.mock.calls.forEach((params: string[]) => {
+        expect(params[0]).toMatch(/^44'/)
+        expect(params[0].split('/').length).toBe(5)
+      })
+      expect(wallet.ledger!.getAddress).toHaveBeenCalledTimes(12)
+    })
+    it('can be used with derivation path without the master node', async () => {
+      wallet = new LedgerWallet({}, [0, 3], "44'/52752'/0'/0", [0])
+      mockLedger(wallet, mockForceValidation)
+      await wallet.init()
+      // @ts-expect-error
+      wallet.ledger!.getAddress.mock.calls.forEach((params: string[]) => {
+        expect(params[0]).toMatch(/^44'/)
+        expect(params[0].split('/').length).toBe(5)
+      })
+      expect(wallet.ledger!.getAddress).toHaveBeenCalledTimes(2)
+    })
+    it('iterates over change indices and address indexes', async () => {
+      wallet = new LedgerWallet({}, [0, 1], "m/44'/52752'/0'/0", [0, 1, 2])
+      mockLedger(wallet, mockForceValidation)
+      await wallet.init()
+      // @ts-expect-error (mock.calls)
+      expect(wallet.ledger!.getAddress.mock.calls).toMatchInlineSnapshot(`
+        [
+          [
+            "44'/52752'/0'/0/0",
+            false,
+          ],
+          [
+            "44'/52752'/0'/0/1",
+            false,
+          ],
+          [
+            "44'/52752'/0'/1/0",
+            false,
+          ],
+          [
+            "44'/52752'/0'/1/1",
+            false,
+          ],
+          [
+            "44'/52752'/0'/2/0",
+            false,
+          ],
+          [
+            "44'/52752'/0'/2/1",
+            false,
+          ],
+        ]
+      `)
+      expect(wallet.ledger!.getAddress).toHaveBeenCalledTimes(6)
     })
   })
 
@@ -379,7 +465,11 @@ describe('LedgerWallet class', () => {
       describe('signing', () => {
         describe('using an unknown address', () => {
           test('fails calling signTransaction', async () => {
-            await expect(wallet.signTransaction(celoTransaction)).rejects.toThrowError()
+            await expect(
+              wallet.signTransaction(celoTransaction)
+            ).rejects.toThrowErrorMatchingInlineSnapshot(
+              `"Could not find address 0x45984831e3614fe5e06cd23b8f7f5c381e32b8ff"`
+            )
           })
 
           test(
@@ -388,7 +478,9 @@ describe('LedgerWallet class', () => {
               const hexStr: string = '0xa1'
               await expect(
                 wallet.signPersonalMessage(unknownAddress, hexStr)
-              ).rejects.toThrowError()
+              ).rejects.toThrowErrorMatchingInlineSnapshot(
+                `"Could not find address 0x45984831e3614fe5e06cd23b8f7f5c381e32b8ff"`
+              )
             },
             TEST_TIMEOUT_IN_MS
           )
@@ -396,7 +488,11 @@ describe('LedgerWallet class', () => {
           test(
             'fails calling signTypedData',
             async () => {
-              await expect(wallet.signTypedData(unknownAddress, TYPED_DATA)).rejects.toThrowError()
+              await expect(
+                wallet.signTypedData(unknownAddress, TYPED_DATA)
+              ).rejects.toThrowErrorMatchingInlineSnapshot(
+                `"Could not find address 0x45984831e3614fe5e06cd23b8f7f5c381e32b8ff"`
+              )
             },
             TEST_TIMEOUT_IN_MS
           )
@@ -464,6 +560,7 @@ describe('LedgerWallet class', () => {
                   undefined,
                   undefined,
                   undefined,
+                  undefined,
                   AddressValidation.never,
                   true
                 )
@@ -498,6 +595,7 @@ describe('LedgerWallet class', () => {
                 }
 
                 wallet = new LedgerWallet(
+                  undefined,
                   undefined,
                   undefined,
                   undefined,
@@ -626,6 +724,7 @@ describe('LedgerWallet class', () => {
                     undefined,
                     undefined,
                     undefined,
+                    undefined,
                     AddressValidation.never,
                     true
                   )
@@ -653,6 +752,7 @@ describe('LedgerWallet class', () => {
                       undefined,
                       undefined,
                       undefined,
+                      undefined,
                       AddressValidation.never,
                       false
                     )
@@ -677,6 +777,7 @@ describe('LedgerWallet class', () => {
               syntheticDescribe('synthetic', () => {
                 beforeEach(async () => {
                   wallet = new LedgerWallet(
+                    undefined,
                     undefined,
                     undefined,
                     undefined,
@@ -989,7 +1090,7 @@ describe('LedgerWallet class', () => {
 
     describe('never', () => {
       beforeEach(() => {
-        wallet = new LedgerWallet(undefined, undefined, {}, AddressValidation.never)
+        wallet = new LedgerWallet({}, undefined, undefined, undefined, AddressValidation.never)
         mockForceValidation = jest.fn((): void => {
           // do nothing
         })
@@ -1006,7 +1107,13 @@ describe('LedgerWallet class', () => {
 
     describe('only in the initialization legacy (version < 1.2.0)', () => {
       beforeEach(() => {
-        wallet = new LedgerWallet(undefined, undefined, {}, AddressValidation.initializationOnly)
+        wallet = new LedgerWallet(
+          {},
+          undefined,
+          undefined,
+          undefined,
+          AddressValidation.initializationOnly
+        )
         mockForceValidation = jest.fn((): void => {
           // do nothing
         })
@@ -1023,7 +1130,13 @@ describe('LedgerWallet class', () => {
 
     describe('only in the initialization', () => {
       beforeEach(() => {
-        wallet = new LedgerWallet(undefined, undefined, {}, AddressValidation.initializationOnly)
+        wallet = new LedgerWallet(
+          {},
+          undefined,
+          undefined,
+          undefined,
+          AddressValidation.initializationOnly
+        )
         mockForceValidation = jest.fn((): void => {
           // do nothing
         })
@@ -1040,7 +1153,13 @@ describe('LedgerWallet class', () => {
 
     describe('every transaction', () => {
       beforeEach(() => {
-        wallet = new LedgerWallet(undefined, undefined, {}, AddressValidation.everyTransaction)
+        wallet = new LedgerWallet(
+          {},
+          undefined,
+          undefined,
+          undefined,
+          AddressValidation.everyTransaction
+        )
         mockForceValidation = jest.fn((): void => {
           // do nothing
         })
@@ -1060,9 +1179,10 @@ describe('LedgerWallet class', () => {
     describe('once per address', () => {
       beforeEach(() => {
         wallet = new LedgerWallet(
-          undefined,
-          undefined,
           {},
+          undefined,
+          undefined,
+          undefined,
           AddressValidation.firstTransactionPerAddress
         )
         mockForceValidation = jest.fn((): void => {

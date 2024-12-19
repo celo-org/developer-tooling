@@ -275,6 +275,7 @@ jobs:
       - name: Test that it prints out alfajores contracts
         run: |
           celocli network:info --node alfajores
+          celocli account:new
 
   cli-tests-anvil:
     name: CeloCli Tests (Anvil)

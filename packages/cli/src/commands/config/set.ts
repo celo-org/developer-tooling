@@ -3,6 +3,7 @@ import chalk from 'chalk'
 import { BaseCommand } from '../../base'
 import { CeloConfig, readConfig, writeConfig } from '../../utils/config'
 import { ViewCommmandFlags } from '../../utils/flags'
+import NewAccount from '../account/new'
 export default class Set extends BaseCommand {
   static description = 'Configure running node information for propagating transactions to network'
 
@@ -12,6 +13,13 @@ export default class Set extends BaseCommand {
       ...BaseCommand.flags.node,
       hidden: false,
     },
+    derivationPath: Flags.string({
+      parse: async (input: string) => {
+        return NewAccount.sanitizeDerivationPath(input)
+      },
+      description:
+        "Set the default derivation path used by account:new and when using --useLedger flag. Options: 'eth', 'celoLegacy', or a custom derivation path",
+    }),
     telemetry: Flags.string({
       options: ['1', '0'],
       description: 'Whether to enable or disable telemetry',
@@ -28,6 +36,9 @@ export default class Set extends BaseCommand {
     'set --node local # alias for http://localhost:8545',
     'set --node ws://localhost:2500',
     'set --node <geth-location>/geth.ipc',
+    "set --derivationPath \"m/44'/52752'/0'/0\"",
+    'set --derivationPath eth',
+    'set --derivationPath celoLegacy',
     'set --telemetry 0 # disable telemetry',
     'set --telemetry 1 # enable telemetry',
   ]
@@ -38,6 +49,7 @@ export default class Set extends BaseCommand {
     const res = await this.parse(Set)
     const curr = readConfig(this.config.configDir)
     const node = res.flags.node ?? curr.node
+    const derivationPath = res.flags.derivationPath ?? curr.derivationPath
     const telemetry = res.flags.telemetry === '0' ? false : true
     const gasCurrency = res.flags.gasCurrency
 
@@ -51,6 +63,7 @@ export default class Set extends BaseCommand {
 
     await writeConfig(this.config.configDir, {
       node,
+      derivationPath,
       telemetry,
     } as CeloConfig)
   }

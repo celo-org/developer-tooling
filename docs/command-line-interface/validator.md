@@ -25,7 +25,7 @@ USAGE
   $ celocli validator:affiliate ARG1 --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
     [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
     0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp] [--yes]
+    [--ledgerLiveMode ] [--globalHelp] [--yes]
 
 ARGUMENTS
   ARG1  ValidatorGroup's address
@@ -50,6 +50,11 @@ FLAGS
   --ledgerAddresses=<value>
       [default: 1] If --useLedger is set, this will get the first N addresses for local
       signing
+
+  --ledgerLiveMode
+      When set, the 4th postion of the derivation path will be iterated over instead of
+      the 5th. This is useful to use same address on you Ledger with celocli as you do on
+      Ledger Live
 
   --useLedger
       Set it to use a ledger wallet
@@ -88,7 +93,7 @@ USAGE
   $ celocli validator:deaffiliate --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [-k
     <value> | --useLedger | ] [-n <value>] [--gasCurrency
     0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp]
+    [--ledgerLiveMode ] [--globalHelp]
 
 FLAGS
   -k, --privateKey=<value>
@@ -110,6 +115,11 @@ FLAGS
   --ledgerAddresses=<value>
       [default: 1] If --useLedger is set, this will get the first N addresses for local
       signing
+
+  --ledgerLiveMode
+      When set, the 4th postion of the derivation path will be iterated over instead of
+      the 5th. This is useful to use same address on you Ledger with celocli as you do on
+      Ledger Live
 
   --useLedger
       Set it to use a ledger wallet
@@ -143,7 +153,7 @@ USAGE
   $ celocli validator:deregister --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [-k
     <value> | --useLedger | ] [-n <value>] [--gasCurrency
     0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp]
+    [--ledgerLiveMode ] [--globalHelp]
 
 FLAGS
   -k, --privateKey=<value>
@@ -165,6 +175,11 @@ FLAGS
   --ledgerAddresses=<value>
       [default: 1] If --useLedger is set, this will get the first N addresses for local
       signing
+
+  --ledgerLiveMode
+      When set, the 4th postion of the derivation path will be iterated over instead of
+      the 5th. This is useful to use same address on you Ledger with celocli as you do on
+      Ledger Live
 
   --useLedger
       Set it to use a ledger wallet
@@ -201,8 +216,9 @@ USAGE
   $ celocli validator:downtime-slash --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [-k
     <value> | --useLedger | ] [-n <value>] [--gasCurrency
     0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp] [--validator 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d |
-    --validators '["0xb7ef0985bdb4f19460A29d9829aA1514B181C4CD",
+    [--ledgerLiveMode ] [--globalHelp] [--validator
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d | --validators
+    '["0xb7ef0985bdb4f19460A29d9829aA1514B181C4CD",
     "0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95"]'] [--intervals '[0:1], [1:2]' |
     --beforeBlock <value>]
 
@@ -232,6 +248,11 @@ FLAGS
   --ledgerAddresses=<value>
       [default: 1] If --useLedger is set, this will get the first N addresses for local
       signing
+
+  --ledgerLiveMode
+      When set, the 4th postion of the derivation path will be iterated over instead of
+      the 5th. This is useful to use same address on you Ledger with celocli as you do on
+      Ledger Live
 
   --useLedger
       Set it to use a ledger wallet
@@ -316,7 +337,7 @@ USAGE
   $ celocli validator:register --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
     --ecdsaKey 0x [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
     0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp] [--blsKey 0x] [--blsSignature 0x] [--yes]
+    [--ledgerLiveMode ] [--globalHelp] [--blsKey 0x] [--blsSignature 0x] [--yes]
 
 FLAGS
   -k, --privateKey=<value>
@@ -347,6 +368,11 @@ FLAGS
   --ledgerAddresses=<value>
       [default: 1] If --useLedger is set, this will get the first N addresses for local
       signing
+
+  --ledgerLiveMode
+      When set, the 4th postion of the derivation path will be iterated over instead of
+      the 5th. This is useful to use same address on you Ledger with celocli as you do on
+      Ledger Live
 
   --useLedger
       Set it to use a ledger wallet
@@ -381,7 +407,7 @@ List the Locked Gold requirements for registering a Validator. This consists of 
 USAGE
   $ celocli validator:requirements [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
     0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp]
+    [--ledgerLiveMode ] [--globalHelp]
 
 FLAGS
   -k, --privateKey=<value>
@@ -400,6 +426,11 @@ FLAGS
   --ledgerAddresses=<value>
       [default: 1] If --useLedger is set, this will get the first N addresses for local
       signing
+
+  --ledgerLiveMode
+      When set, the 4th postion of the derivation path will be iterated over instead of
+      the 5th. This is useful to use same address on you Ledger with celocli as you do on
+      Ledger Live
 
   --useLedger
       Set it to use a ledger wallet
@@ -435,8 +466,8 @@ USAGE
   $ celocli validator:set-bitmaps --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d [-k
     <value> | --useLedger | ] [-n <value>] [--gasCurrency
     0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp] [--slashableDowntimeBeforeBlock <value> | --intervals '[0:1], [1:2]'
-    | --slashableDowntimeBeforeLatest]
+    [--ledgerLiveMode ] [--globalHelp] [--slashableDowntimeBeforeBlock <value> |
+    --intervals '[0:1], [1:2]' | --slashableDowntimeBeforeLatest]
 
 FLAGS
   -k, --privateKey=<value>
@@ -461,6 +492,11 @@ FLAGS
   --ledgerAddresses=<value>
       [default: 1] If --useLedger is set, this will get the first N addresses for local
       signing
+
+  --ledgerLiveMode
+      When set, the 4th postion of the derivation path will be iterated over instead of
+      the 5th. This is useful to use same address on you Ledger with celocli as you do on
+      Ledger Live
 
   --slashableDowntimeBeforeBlock=<value>
       Set all bitmaps for slashable downtime window before provided block
@@ -534,7 +570,8 @@ Display a graph of blocks and whether the given signer's signature is included i
 USAGE
   $ celocli validator:signed-blocks [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
     0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp] [--signer 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d | --signers
+    [--ledgerLiveMode ] [--globalHelp] [--signer
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d | --signers
     '["0xb7ef0985bdb4f19460A29d9829aA1514B181C4CD",
     "0x47e172f6cfb6c7d01c1574fa3e2be7cc73269d95"]'] [--wasDownWhileElected] [--at-block
     <value> | ] [--slashableDowntimeLookback | [--lookback <value> | ]] [--width
@@ -560,6 +597,11 @@ FLAGS
   --ledgerAddresses=<value>
       [default: 1] If --useLedger is set, this will get the first N addresses for local
       signing
+
+  --ledgerLiveMode
+      When set, the 4th postion of the derivation path will be iterated over instead of
+      the 5th. This is useful to use same address on you Ledger with celocli as you do on
+      Ledger Live
 
   --lookback=<value>
       [default: 120] how many blocks to look back for signer activity
@@ -621,10 +663,11 @@ Shows the consensus status of a validator. This command will show whether a vali
 USAGE
   $ celocli validator:status [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
     0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp] [--validator 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d | --all |
-    --signer 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d] [--start <value>] [--end
-    <value>] [--columns <value> | -x] [--filter <value>] [--no-header | [--csv |
-    --no-truncate]] [--output csv|json|yaml |  | ] [--sort <value>]
+    [--ledgerLiveMode ] [--globalHelp] [--validator
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d | --all | --signer
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d] [--start <value>] [--end <value>]
+    [--columns <value> | -x] [--filter <value>] [--no-header | [--csv | --no-truncate]]
+    [--output csv|json|yaml |  | ] [--sort <value>]
 
 FLAGS
   -k, --privateKey=<value>
@@ -662,6 +705,11 @@ FLAGS
   --ledgerAddresses=<value>
       [default: 1] If --useLedger is set, this will get the first N addresses for local
       signing
+
+  --ledgerLiveMode
+      When set, the 4th postion of the derivation path will be iterated over instead of
+      the 5th. This is useful to use same address on you Ledger with celocli as you do on
+      Ledger Live
 
   --no-header
       hide table header from output
@@ -724,7 +772,7 @@ USAGE
   $ celocli validator:update-bls-public-key --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
     --blsKey 0x --blsPop 0x [-k <value> | --useLedger | ] [-n <value>] [--gasCurrency
     0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
-    [--globalHelp]
+    [--ledgerLiveMode ] [--globalHelp]
 
 FLAGS
   -k, --privateKey=<value>
@@ -752,6 +800,11 @@ FLAGS
   --ledgerAddresses=<value>
       [default: 1] If --useLedger is set, this will get the first N addresses for local
       signing
+
+  --ledgerLiveMode
+      When set, the 4th postion of the derivation path will be iterated over instead of
+      the 5th. This is useful to use same address on you Ledger with celocli as you do on
+      Ledger Live
 
   --useLedger
       Set it to use a ledger wallet

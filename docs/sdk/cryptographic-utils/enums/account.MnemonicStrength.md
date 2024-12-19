@@ -19,7 +19,7 @@
 
 #### Defined in
 
-base/lib/account.d.ts:9
+base/lib/account.d.ts:10
 
 ___
 
@@ -29,4 +29,4 @@ ___
 
 #### Defined in
 
-base/lib/account.d.ts:10
+base/lib/account.d.ts:11
