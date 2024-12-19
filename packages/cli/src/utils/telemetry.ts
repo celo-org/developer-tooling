@@ -21,8 +21,10 @@ const getTelemetryOptions = (command: string, success: boolean): TelemetryOption
   }
 }
 
-const TIMEOUT = 1000 // 1 second
+const TELEMETRY_TIMEOUT = 1000 // 1 second
 const TELEMETRY_PRINTED_FILE = '.telemetry'
+const TELEMETRY_URL = 'https://pag.alfajores.celo-testnet.org/metrics'
+
 const UNKNOWN_COMMAND = '_unknown'
 
 const telemetryInformationAlreadyPrinted = (configDir: string) => {
@@ -63,20 +65,18 @@ export const reportUsageStatisticsIfTelemetryEnabled = (
       markTelemetryInformationAsPrinted(configDir)
     }
 
-    // TODO alfajores needs to be hardcoded for now
-    const telemetryData = `test_pag_celocli{success="${
+    const telemetryData = `celocli_invocation{success="${
       telemetry.success ? 'true' : 'false'
-    }", version="${telemetry.version}", command="${telemetry.command}", network="alfajores"} 1`
+    }", version="${telemetry.version}", command="${telemetry.command}"} 1`
 
     debug(`Sending telemetry data: ${telemetryData}`)
 
     const controller = new AbortController()
     const timeout = setTimeout(() => {
       controller.abort()
-    }, TIMEOUT)
+    }, TELEMETRY_TIMEOUT)
 
-    // TODO either create an .env file or use a default value
-    return fetch(process.env.TELEMETRY_URL!, {
+    return fetch(process.env.TELEMETRY_URL ?? TELEMETRY_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/octet-stream',

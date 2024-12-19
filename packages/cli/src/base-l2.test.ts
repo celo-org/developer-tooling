@@ -53,6 +53,7 @@ describe('flags', () => {
   })
 })
 
+// Make sure telemetry tests are deterministic, otherwise we'd have to update tests every release
 jest.mock('../package.json', () => ({
   version: '5.2.3',
 }))
@@ -135,7 +136,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
 
     // here we test also that it works without this env var
     delete process.env.TELEMETRY_ENABLED
-    process.env.TELEMETRY_URL = 'https://telemetry.example.com'
+    process.env.TELEMETRY_URL = 'https://telemetry.example.org'
 
     jest.spyOn(config, 'readConfig').mockImplementation((_: string) => {
       return { telemetry: true } as config.CeloConfig
@@ -151,10 +152,10 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
     // Assert it was called at all in the first place
     expect(fetchSpy.mock.calls.length).toEqual(1)
 
-    expect(fetchSpy.mock.calls[0][0]).toMatchInlineSnapshot(`"https://telemetry.example.com"`)
+    expect(fetchSpy.mock.calls[0][0]).toMatchInlineSnapshot(`"https://telemetry.example.org"`)
     expect(fetchSpy.mock.calls[0][1]?.body).toMatchInlineSnapshot(`
       "
-      test_pag_celocli{success="true", version="5.2.3", command="test:telemetry-success", network="alfajores"} 1
+      celocli_invocation{success="true", version="5.2.3", command="test:telemetry-success"} 1
       "
     `)
     expect(fetchSpy.mock.calls[0][1]?.headers).toMatchInlineSnapshot(`
@@ -183,7 +184,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
 
     // here we test also that it works with this env var set to 1 explicitly
     process.env.TELEMETRY_ENABLED = '1'
-    process.env.TELEMETRY_URL = 'https://telemetry.example.com'
+    process.env.TELEMETRY_URL = 'https://telemetry.example.org'
 
     const fetchMock = jest.fn().mockResolvedValue({
       ok: true,
@@ -195,10 +196,10 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
     // Assert it was called at all in the first place
     expect(fetchSpy.mock.calls.length).toEqual(1)
 
-    expect(fetchSpy.mock.calls[0][0]).toMatchInlineSnapshot(`"https://telemetry.example.com"`)
+    expect(fetchSpy.mock.calls[0][0]).toMatchInlineSnapshot(`"https://telemetry.example.org"`)
     expect(fetchSpy.mock.calls[0][1]?.body).toMatchInlineSnapshot(`
       "
-      test_pag_celocli{success="false", version="5.2.3", command="test:telemetry-error", network="alfajores"} 1
+      celocli_invocation{success="false", version="5.2.3", command="test:telemetry-error"} 1
       "
     `)
     expect(fetchSpy.mock.calls[0][1]?.headers).toMatchInlineSnapshot(`
@@ -227,7 +228,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
 
     // we leave it here to double check that it is not sent even if the env var is set
     process.env.TELEMETRY_ENABLED = '1'
-    process.env.TELEMETRY_URL = 'https://telemetry.example.com'
+    process.env.TELEMETRY_URL = 'https://telemetry.example.org'
 
     const fetchMock = jest.fn().mockResolvedValue({
       ok: true,
@@ -274,10 +275,10 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
 
         expect(fetchSpy.mock.calls[0][0]).toMatchInlineSnapshot(`"http://localhost:3000/"`)
         expect(fetchSpy.mock.calls[0][1]?.body).toMatchInlineSnapshot(`
-                  "
-                  test_pag_celocli{success="true", version="5.2.3", command="test:telemetry-timeout", network="alfajores"} 1
-                  "
-              `)
+          "
+          celocli_invocation{success="true", version="5.2.3", command="test:telemetry-timeout"} 1
+          "
+        `)
         expect(fetchSpy.mock.calls[0][1]?.headers).toMatchInlineSnapshot(`
                   {
                     "Content-Type": "application/octet-stream",
