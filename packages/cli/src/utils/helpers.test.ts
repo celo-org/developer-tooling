@@ -24,9 +24,9 @@ testWithAnvilL2('nodeIsSynced', (web3) => {
   describe('when syncing is done', () => {
     it('returns true', async () => {
       const syncSpy = jest.spyOn(web3.eth, 'isSyncing').mockResolvedValue(false)
-      // @ts-expect-error
       const blockSpy = jest
         .spyOn(web3.eth, 'getBlock')
+        // @ts-expect-error block has more properties but that are not used in the test
         .mockResolvedValue({ number: 1, timestamp: (Date.now() / 1000).toString() })
       // Act
       const result = await nodeIsSynced(web3)
