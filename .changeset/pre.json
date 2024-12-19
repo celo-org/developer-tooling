@@ -27,5 +27,13 @@
     "@celo/typescript": "0.0.1",
     "@celo/viem-account-ledger": "1.0.0"
   },
-  "changesets": []
+  "changesets": [
+    "brave-brooms-report",
+    "early-sloths-approve",
+    "healthy-days-reply",
+    "kind-cups-reflect",
+    "nasty-feet-clean",
+    "neat-seahorses-admire",
+    "yellow-cameras-talk"
+  ]
 }
