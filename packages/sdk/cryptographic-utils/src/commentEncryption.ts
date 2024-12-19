@@ -5,7 +5,7 @@ import {
   Encrypt as ECIESEncrypt,
 } from '@celo/utils/lib/ecies'
 import { u8 } from '@noble/ciphers/utils'
-import { randomBytes } from '@noble/ciphers/webcrypto/utils'
+import { randomBytes } from '@noble/ciphers/webcrypto'
 import { decompressPublicKey } from './dataEncryptionKey'
 
 const ECIES_SESSION_KEY_LEN = 129
@@ -52,9 +52,6 @@ export function decryptData(data: Buffer, key: Buffer, sender: boolean): Buffer 
     ? data.subarray(ECIES_SESSION_KEY_LEN, ECIES_SESSION_KEY_LEN * 2)
     : data.subarray(0, ECIES_SESSION_KEY_LEN)
   const sessionKey = ECIESDecrypt(u8(key), sessionKeyEncrypted)
-  if (sender) {
-    console.log(sessionKeyEncrypted)
-  }
 
   const encryptedMessage = data.subarray(ECIES_SESSION_KEY_LEN * 2)
   return Buffer.from(AES128DecryptAndHMAC(u8(sessionKey), u8(sessionKey), u8(encryptedMessage)))

@@ -1,5 +1,5 @@
 import { bytesToUtf8, u8, utf8ToBytes } from '@noble/ciphers/utils'
-import { randomBytes } from '@noble/ciphers/webcrypto/utils'
+import { randomBytes } from '@noble/ciphers/webcrypto'
 import { secp256k1 } from '@noble/curves/secp256k1'
 import { ECIES } from './ecies'
 

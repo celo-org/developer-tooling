@@ -44,7 +44,6 @@
     "@types/semver": "7.3.8",
     "@typescript-eslint/eslint-plugin": "^6.17.0",
     "@typescript-eslint/parser": "^6.17.0",
-    "codecov": "^3.8.3",
     "colors": "1.4.0",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
@@ -71,7 +70,7 @@
     "bignumber.js": "9.0.0"
   },
   "dependencies": {
-    "@changesets/cli": "^2.26.2"
+    "@changesets/cli": "^2.27.11"
   },
   "packageManager": "yarn@4.0.2",
   "publishConfig": {

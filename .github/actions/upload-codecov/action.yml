@@ -16,7 +16,7 @@ runs:
         access-id: p-kf9vjzruht6l
         static-secrets: '{"/static-secrets/dev-tooling-circle/codecov/developer-tooling":"CODECOV_TOKEN"}'
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v5
       with:
         verbose: true
         name: ${{ inputs.report-name }}
