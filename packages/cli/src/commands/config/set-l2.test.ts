@@ -41,7 +41,8 @@ testWithAnvilL2('config:set cmd', (web3: Web3) => {
     `)
     expect(writeMock.mock.calls[0][1]).toMatchInlineSnapshot(`
       {
-        "node": "${extractHostFromWeb3(web3)}",
+        "derivationPath": "m/44'/52752'/0'",
+        "node": "http://127.0.0.1:8562",
         "telemetry": true,
       }
     `)
@@ -56,7 +57,8 @@ testWithAnvilL2('config:set cmd', (web3: Web3) => {
     // in the config as well
     expect(writeMock.mock.calls[0][1]).toMatchInlineSnapshot(`
       {
-        "node": "${extractHostFromWeb3(web3)}",
+        "derivationPath": "m/44'/52752'/0'",
+        "node": "http://127.0.0.1:8562",
         "telemetry": false,
       }
     `)
