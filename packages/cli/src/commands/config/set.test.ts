@@ -2,7 +2,11 @@ import { newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { ux } from '@oclif/core'
 import Web3 from 'web3'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import {
+  extractHostFromWeb3,
+  stripAnsiCodesFromNestedArray,
+  testLocallyWithWeb3Node,
+} from '../../test-utils/cliUtils'
 import * as config from '../../utils/config'
 import Set from './set'
 
@@ -79,6 +83,14 @@ testWithAnvilL1('config:set cmd', (web3: Web3) => {
         ],
       ]
     `)
+    expect(writeMock.mock.calls[0][1]).toMatchInlineSnapshot(`
+      {
+        "derivationPath": "m/44'/52752'/0'",
+        "node": ${extractHostFromWeb3(web3)},
+        "telemetry": true,
+      }
+    `)
+
     expect(writeMock).toHaveBeenCalledTimes(1)
     expect(writeMock.mock.calls[0][0]).toMatch('.config/@celo/celocli')
     expect(writeMock.mock.calls[0][1]).toMatchObject({ derivationPath: "m/44'/52752'/0'" })
