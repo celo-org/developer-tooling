@@ -15,6 +15,10 @@ export class Lock {
     this.emitter = new EventEmitter()
   }
 
+  get listenersCount(): number {
+    return this.emitter.listenerCount(LockEvent.Unlock)
+  }
+
   // Attempt to acquire the lock without blocking.
   // @returns {boolean} True if the lock was acquired.
   tryAcquire(): boolean {
