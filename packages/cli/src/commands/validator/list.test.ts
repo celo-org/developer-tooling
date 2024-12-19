@@ -13,9 +13,10 @@ process.env.NO_SYNCCHECK = 'true'
 testWithAnvilL2('validator:list', (web3: Web3) => {
   let account: string
   let ecdsaPublicKey: string
-  const writeMock = jest.spyOn(ux.write, 'stdout')
+  const writeMock = jest.spyOn(ux.write, 'stdout').mockImplementation(() => {})
 
   beforeEach(async () => {
+    jest.spyOn(console, 'log').mockImplementation(() => {})
     const accounts = await web3.eth.getAccounts()
     account = accounts[0]
     ecdsaPublicKey = await addressToPublicKey(account, web3.eth.sign)
@@ -43,6 +44,7 @@ testWithAnvilL2('validator:list', (web3: Web3) => {
   })
 
   afterEach(() => {
+    jest.resetAllMocks()
     jest.clearAllMocks()
   })
 

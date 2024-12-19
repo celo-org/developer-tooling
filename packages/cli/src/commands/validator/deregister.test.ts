@@ -30,6 +30,8 @@ testWithAnvilL2('validator:deregister', (web3: Web3) => {
   let validatorContract: ValidatorsWrapper
 
   beforeEach(async () => {
+    jest.spyOn(console, 'log').mockImplementation(() => {})
+    jest.spyOn(console, 'error').mockImplementation(() => {})
     const accounts = await web3.eth.getAccounts()
     account = accounts[0]
     const kit = newKitFromWeb3(web3)
@@ -75,6 +77,7 @@ testWithAnvilL2('validator:deregister', (web3: Web3) => {
   })
 
   afterEach(() => {
+    jest.resetAllMocks()
     jest.clearAllMocks()
   })
 

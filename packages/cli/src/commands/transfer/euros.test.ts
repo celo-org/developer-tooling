@@ -19,9 +19,9 @@ testWithAnvilL1('transfer:euros cmd', (web3: Web3) => {
   beforeEach(async () => {
     kit = newKitFromWeb3(web3)
     accounts = await web3.eth.getAccounts()
-  })
+    jest.spyOn(console, 'log').mockImplementation(() => {})
+    jest.spyOn(console, 'error').mockImplementation(() => {})
 
-  test('can transfer ceur', async () => {
     await topUpWithToken(
       kit,
       StableToken.cEUR,
@@ -34,7 +34,13 @@ testWithAnvilL1('transfer:euros cmd', (web3: Web3) => {
       accounts[1],
       new BigNumber('1000000000000000000000')
     )
+  })
 
+  afterEach(() => {
+    jest.restoreAllMocks()
+  })
+
+  test('can transfer ceur', async () => {
     const balanceBefore = await kit.getTotalBalance(accounts[0])
     const receiverBalanceBefore = await kit.getTotalBalance(accounts[1])
     const amountToTransfer = '500000000000000000000'
@@ -67,7 +73,7 @@ testWithAnvilL1('transfer:euros cmd', (web3: Web3) => {
         ['--from', accounts[1], '--to', SANCTIONED_ADDRESSES[0], '--value', '1'],
         web3
       )
-    ).rejects.toThrow()
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     expect(spy).toHaveBeenCalledWith(expect.stringContaining(COMPLIANT_ERROR_RESPONSE))
   })
 })

@@ -12,9 +12,10 @@ export function enumEntriesDupWithLowercase<T>(entries: [string, T][]) {
 }
 
 export async function nodeIsSynced(web3: Web3): Promise<boolean> {
-  if (process.env.NO_SYNCCHECK) {
+  if (process.env.NO_SYNCCHECK === 'true' || process.env.NO_SYNCCHECK === '1') {
     return true
   }
+
   try {
     // isSyncing() returns an object describing sync progress if syncing is actively
     // happening, and the boolean value `false` if not.

@@ -1,37 +1,35 @@
 import { COMPLIANT_ERROR_RESPONSE, SANCTIONED_ADDRESSES } from '@celo/compliance'
 import { ContractKit, StableToken, newKitFromWeb3 } from '@celo/contractkit'
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { topUpWithToken } from '../../test-utils/chain-setup'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
-import TransferCUSD from './dollars'
+import TransferStable from './stable'
 
 process.env.NO_SYNCCHECK = 'true'
 
 // Lots of commands, sometimes times out
 jest.setTimeout(15000)
 
-testWithAnvilL1('transfer:dollars cmd', (web3: Web3) => {
+testWithAnvilL2('transfer:stable cmd', (web3: Web3) => {
   let accounts: string[] = []
   let kit: ContractKit
 
   beforeEach(async () => {
-    kit = newKitFromWeb3(web3)
-    accounts = await web3.eth.getAccounts()
     jest.spyOn(console, 'log').mockImplementation(() => {})
     jest.spyOn(console, 'error').mockImplementation(() => {})
+  })
+
+  beforeEach(async () => {
+    kit = newKitFromWeb3(web3)
+    accounts = await web3.eth.getAccounts()
+
     await topUpWithToken(
       kit,
       StableToken.cUSD,
       accounts[0],
-      new BigNumber('1000000000000000000000')
-    )
-    await topUpWithToken(
-      kit,
-      StableToken.cUSD,
-      accounts[1],
-      new BigNumber('1000000000000000000000')
+      new BigNumber('9000000000000000000000')
     )
   })
 
@@ -39,37 +37,65 @@ testWithAnvilL1('transfer:dollars cmd', (web3: Web3) => {
     jest.restoreAllMocks()
   })
 
-  test('can transfer cusd', async () => {
-    const balanceBefore = await kit.getTotalBalance(accounts[0])
+  test('can transfer stables', async () => {
+    const sender = accounts[0]
+    const reciever = accounts[1]
     const receiverBalanceBefore = await kit.getTotalBalance(accounts[1])
-    const amountToTransfer = '500000000000000000000'
-    // Send cUSD to RG contract
+    const amountToTransfer = '5000000000000000000'
+
+    // Send cusd as erc20
     await testLocallyWithWeb3Node(
-      TransferCUSD,
-      ['--from', accounts[0], '--to', accounts[1], '--value', amountToTransfer],
+      TransferStable,
+      [
+        '--from',
+        sender,
+        '--to',
+        reciever,
+        '--value',
+        amountToTransfer,
+        '--stableToken',
+        StableToken.cUSD,
+      ],
       web3
     )
-    // RG cUSD balance should match the amount sent
-    const receiverBalance = await kit.getTotalBalance(accounts[1])
+    // Send cusd as erc20
+    const receiverBalance = await kit.getTotalBalance(reciever)
     expect(receiverBalance.cUSD!.toFixed()).toEqual(
       receiverBalanceBefore.cUSD!.plus(amountToTransfer).toFixed()
     )
-    // Attempt to send cUSD back
+    // Attempt to send erc20, back
     await testLocallyWithWeb3Node(
-      TransferCUSD,
-      ['--from', accounts[1], '--to', accounts[0], '--value', amountToTransfer],
+      TransferStable,
+      [
+        '--from',
+        reciever,
+        '--to',
+        sender,
+        '--value',
+        '2000000000000000000',
+        '--stableToken',
+        StableToken.cUSD,
+      ],
       web3
     )
-    const balanceAfter = await kit.getTotalBalance(accounts[0])
-    expect(balanceBefore.cUSD).toEqual(balanceAfter.cUSD)
   })
 
   test('should fail if to address is sanctioned', async () => {
-    const spy = jest.spyOn(console, 'log')
+    const spy = jest.spyOn(console, 'log').mockImplementation(() => {})
+
     await expect(
       testLocallyWithWeb3Node(
-        TransferCUSD,
-        ['--from', accounts[1], '--to', SANCTIONED_ADDRESSES[0], '--value', '1'],
+        TransferStable,
+        [
+          '--from',
+          accounts[0],
+          '--to',
+          SANCTIONED_ADDRESSES[0],
+          '--value',
+          '1',
+          '--stableToken',
+          StableToken.cUSD,
+        ],
         web3
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)

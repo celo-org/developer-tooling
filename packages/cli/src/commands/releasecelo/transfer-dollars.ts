@@ -32,7 +32,10 @@ export default class TransferDollars extends ReleaseGoldBaseCommand {
     kit.defaultAccount = isRevoked
       ? await this.releaseGoldWrapper.getReleaseOwner()
       : await this.releaseGoldWrapper.getBeneficiary()
-    newCheckBuilder(this).isNotSanctioned(kit.defaultAccount).isNotSanctioned(flags.to).runChecks()
+    await newCheckBuilder(this)
+      .isNotSanctioned(kit.defaultAccount)
+      .isNotSanctioned(flags.to)
+      .runChecks()
     await displaySendTx('transfer', this.releaseGoldWrapper.transfer(flags.to, flags.value))
   }
 }
