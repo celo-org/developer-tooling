@@ -36,7 +36,7 @@
     "@types/debug": "^4.1.5",
     "bignumber.js": "^9.0.0",
     "debug": "^4.1.1",
-    "fp-ts": "2.1.1",
+    "fp-ts": "2.16.9",
     "semver": "^7.3.5",
     "web3": "1.10.4",
     "web3-core-helpers": "1.10.4"
@@ -46,7 +46,6 @@
     "@celo/dev-utils": "0.0.7",
     "@celo/odis-identifiers": "^1.0.1",
     "@celo/typescript": "workspace:^",
-    "@truffle/contract": "4.6.31",
     "@types/debug": "^4.1.5",
     "@types/node": "18.7.16",
     "bn.js": "^5.1.0",

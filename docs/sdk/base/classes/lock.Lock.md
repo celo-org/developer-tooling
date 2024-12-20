@@ -10,6 +10,10 @@
 
 - [constructor](lock.Lock.md#constructor)
 
+### Accessors
+
+- [listenersCount](lock.Lock.md#listenerscount)
+
 ### Methods
 
 - [acquire](lock.Lock.md#acquire)
@@ -30,6 +34,20 @@
 
 [packages/sdk/base/src/lock.ts:14](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/lock.ts#L14)
 
+## Accessors
+
+### listenersCount
+
+• `get` **listenersCount**(): `number`
+
+#### Returns
+
+`number`
+
+#### Defined in
+
+[packages/sdk/base/src/lock.ts:18](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/lock.ts#L18)
+
 ## Methods
 
 ### acquire
@@ -42,7 +60,7 @@
 
 #### Defined in
 
-[packages/sdk/base/src/lock.ts:29](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/lock.ts#L29)
+[packages/sdk/base/src/lock.ts:33](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/lock.ts#L33)
 
 ___
 
@@ -56,7 +74,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/base/src/lock.ts:54](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/lock.ts#L54)
+[packages/sdk/base/src/lock.ts:58](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/lock.ts#L58)
 
 ___
 
@@ -70,4 +88,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/base/src/lock.ts:20](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/lock.ts#L20)
+[packages/sdk/base/src/lock.ts:24](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/lock.ts#L24)
