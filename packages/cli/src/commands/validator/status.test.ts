@@ -11,26 +11,31 @@ process.env.NO_SYNCCHECK = 'true'
 const KNOWN_DEVCHAIN_VALIDATOR = '0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f'
 
 testWithAnvilL1('validator:status', (web3: Web3) => {
-  const writeMock = jest.spyOn(ux.write, 'stdout')
-  const logMock = jest.spyOn(console, 'log')
-
-  // In anvil the blocks don't have any extraData on them
-  // This is a bare minimum needed by status command to work
-  jest.spyOn(IstanbulUtils, 'parseBlockExtraData').mockImplementation(() => {
-    return {
-      parentAggregatedSeal: {
-        bitmap: new BigNumber(0),
-      },
-    } as any
+  let writeMock = jest.spyOn(ux.write, 'stdout')
+  let logMock = jest.spyOn(console, 'log')
+  beforeEach(() => {
+    writeMock = jest.spyOn(ux.write, 'stdout').mockImplementation(() => {})
+    logMock = jest.spyOn(console, 'log').mockImplementation(() => {})
+    // In anvil the blocks don't have any extraData on them
+    // This is a bare minimum needed by status command to work
+    jest.spyOn(IstanbulUtils, 'parseBlockExtraData').mockImplementation(() => {
+      return {
+        parentAggregatedSeal: {
+          bitmap: new BigNumber(0),
+        },
+      } as any
+    })
+    jest.spyOn(IstanbulUtils, 'bitIsSet').mockImplementation(() => false)
   })
-
-  jest.spyOn(IstanbulUtils, 'bitIsSet').mockImplementation(() => false)
 
   afterEach(() => {
     jest.clearAllMocks()
   })
 
   it('displays status of the validator', async () => {
+    const blockNumber = await web3.eth.getBlockNumber()
+    const block = await web3.eth.getBlock(blockNumber)
+    console.info('current block number', blockNumber, block)
     await testLocallyWithWeb3Node(Status, ['--validator', KNOWN_DEVCHAIN_VALIDATOR, '--csv'], web3)
 
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
