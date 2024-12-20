@@ -2,12 +2,10 @@ import { newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { ux } from '@oclif/core'
 import Web3 from 'web3'
-import {
-  extractHostFromWeb3,
-  stripAnsiCodesFromNestedArray,
-  testLocallyWithWeb3Node,
-} from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import * as cliUtils from '../../utils/cli'
 import * as config from '../../utils/config'
+import Get from './get'
 import Set from './set'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -83,17 +81,42 @@ testWithAnvilL1('config:set cmd', (web3: Web3) => {
         ],
       ]
     `)
-    expect(writeMock.mock.calls[0][1]).toMatchInlineSnapshot(`
-      {
-        "derivationPath": "m/44'/52752'/0'",
-        "node": ${extractHostFromWeb3(web3)},
-        "telemetry": true,
-      }
-    `)
 
     expect(writeMock).toHaveBeenCalledTimes(1)
     expect(writeMock.mock.calls[0][0]).toMatch('.config/@celo/celocli')
     expect(writeMock.mock.calls[0][1]).toMatchObject({ derivationPath: "m/44'/52752'/0'" })
     expect(writeMock.mock.calls[0][1]).not.toHaveProperty('gasCurrency')
+  })
+
+  it('allows to disable telemetry', async () => {
+    const writeMock = jest.spyOn(config, 'writeConfig')
+    const configDir = '.config/@celo/celocli'
+    const printValueMapSpy = jest.spyOn(cliUtils, 'printValueMap')
+
+    await testLocallyWithWeb3Node(Set, ['--telemetry', '0'], web3)
+
+    expect(writeMock).toHaveBeenCalledTimes(1)
+    expect(writeMock.mock.calls[0][0]).toMatch(configDir)
+    expect(writeMock.mock.calls[0][1]).toMatchObject({
+      telemetry: false,
+    })
+
+    await testLocallyWithWeb3Node(Get, [], web3)
+    expect(printValueMapSpy.mock.calls[0][0].telemetry).toEqual(false)
+
+    // Setting other config value should not change telemetry
+    // In this case --node flag is passed by default so we don't
+    // need to specify any other flags
+    await testLocallyWithWeb3Node(Set, [], web3)
+
+    expect(writeMock).toHaveBeenCalledTimes(2)
+    expect(writeMock.mock.calls[1][0]).toMatch(configDir)
+    expect(writeMock.mock.calls[1][1]).toMatchObject({
+      telemetry: false,
+    })
+
+    // Check that it's not overwritten
+    await testLocallyWithWeb3Node(Get, [], web3)
+    expect(printValueMapSpy.mock.calls[0][0].telemetry).toEqual(false)
   })
 })

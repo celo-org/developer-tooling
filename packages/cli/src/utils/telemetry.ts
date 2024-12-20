@@ -23,7 +23,7 @@ const getTelemetryOptions = (command: string, success: boolean): TelemetryOption
 
 const TELEMETRY_TIMEOUT = 1000 // 1 second
 const TELEMETRY_PRINTED_FILE = '.telemetry'
-const TELEMETRY_URL = 'https://pag.alfajores.celo-testnet.org/metrics'
+const TELEMETRY_URL = 'https://pag.mainnet.celo-testnet.org/metrics'
 
 const UNKNOWN_COMMAND = '_unknown'
 
