@@ -18,7 +18,7 @@ testWithAnvilL2('config:get cmd', (web3: Web3) => {
       .toMatchInlineSnapshot(`
       "node: http://127.0.0.1:PORT
       derivationPath: m/44'/52752'/0'
-      telemetry: false"
+      telemetry: true"
     `)
   })
 })

@@ -50,7 +50,8 @@ export default class Set extends BaseCommand {
     const curr = readConfig(this.config.configDir)
     const node = res.flags.node ?? curr.node
     const derivationPath = res.flags.derivationPath ?? curr.derivationPath
-    const telemetry = res.flags.telemetry === '0' ? false : curr.telemetry
+    const telemetry =
+      res.flags.telemetry === '0' ? false : res.flags.telemetry === '1' ? true : curr.telemetry
     const gasCurrency = res.flags.gasCurrency
 
     if (gasCurrency) {
