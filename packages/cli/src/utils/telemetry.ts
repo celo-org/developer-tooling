@@ -100,6 +100,8 @@ ${telemetryData}
       .catch((err) => {
         debug(`Failed to send telemetry data: ${err}`)
       })
+  } else {
+    debug('Telemetry is disabled')
   }
 }
 
