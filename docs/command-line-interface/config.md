@@ -41,6 +41,7 @@ Configure running node information for propagating transactions to network
 ```
 USAGE
   $ celocli config:set [-n <value>] [--globalHelp] [--derivationPath <value>]
+    [--telemetry 1|0]
 
 FLAGS
   -n, --node=<value>            URL of the node to run commands against or an alias
@@ -48,6 +49,8 @@ FLAGS
                                 when using --useLedger flag. Options: 'eth',
                                 'celoLegacy', or a custom derivation path
       --globalHelp              View all available global flags
+      --telemetry=<option>      Whether to enable or disable telemetry
+                                <options: 1|0>
 
 DESCRIPTION
   Configure running node information for propagating transactions to network
@@ -74,6 +77,10 @@ EXAMPLES
   set --derivationPath eth
 
   set --derivationPath celoLegacy
+
+  set --telemetry 0 # disable telemetry
+
+  set --telemetry 1 # enable telemetry
 
 FLAG DESCRIPTIONS
   -n, --node=<value>  URL of the node to run commands against or an alias

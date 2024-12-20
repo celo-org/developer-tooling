@@ -20,6 +20,11 @@ export default class Set extends BaseCommand {
       description:
         "Set the default derivation path used by account:new and when using --useLedger flag. Options: 'eth', 'celoLegacy', or a custom derivation path",
     }),
+    telemetry: Flags.string({
+      options: ['1', '0'],
+      description: 'Whether to enable or disable telemetry',
+      required: false,
+    }),
   }
 
   static examples = [
@@ -34,6 +39,8 @@ export default class Set extends BaseCommand {
     "set --derivationPath \"m/44'/52752'/0'/0\"",
     'set --derivationPath eth',
     'set --derivationPath celoLegacy',
+    'set --telemetry 0 # disable telemetry',
+    'set --telemetry 1 # enable telemetry',
   ]
 
   requireSynced = false
@@ -43,6 +50,8 @@ export default class Set extends BaseCommand {
     const curr = readConfig(this.config.configDir)
     const node = res.flags.node ?? curr.node
     const derivationPath = res.flags.derivationPath ?? curr.derivationPath
+    const telemetry =
+      res.flags.telemetry === '0' ? false : res.flags.telemetry === '1' ? true : curr.telemetry
     const gasCurrency = res.flags.gasCurrency
 
     if (gasCurrency) {
@@ -56,6 +65,7 @@ export default class Set extends BaseCommand {
     await writeConfig(this.config.configDir, {
       node,
       derivationPath,
+      telemetry,
     } as CeloConfig)
   }
 }

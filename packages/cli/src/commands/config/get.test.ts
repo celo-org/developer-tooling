@@ -14,10 +14,11 @@ testWithAnvilL2('config:get cmd', (web3: Web3) => {
   it('shows the config', async () => {
     const logMock = jest.spyOn(console, 'log').mockImplementation()
     await testLocallyWithWeb3Node(Get, [], web3)
-    expect(stripAnsiCodesAndTxHashes(logMock.mock.calls[0][0].replace(/:\d\d\d\d/, ':PORT')))
+    expect(stripAnsiCodesAndTxHashes(logMock.mock.calls[0][0].replace(/:\d+/, ':PORT')))
       .toMatchInlineSnapshot(`
       "node: http://127.0.0.1:PORT
-      derivationPath: m/44'/52752'/0'"
+      derivationPath: m/44'/52752'/0'
+      telemetry: true"
     `)
   })
 })
