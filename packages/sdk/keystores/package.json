@@ -12,7 +12,11 @@
     "sdk"
   ],
   "homepage": "https://docs.celo.org/developer/tools",
-  "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/sdk/keystores",
+  "repository": {
+   "type": "git",
+   "url": "git+https:/github.com/celo-org/developer-tooling.git",
+   "directory": "packages/sdk/keystores"
+  },
   "scripts": {
     "build": "yarn run --top-level tsc -b .",
     "clean": "yarn run --top-level tsc -b . --clean",
