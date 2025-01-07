@@ -16,6 +16,7 @@
 
 ### Type Aliases
 
+- [DerivationPath](account.md#derivationpath)
 - [RandomNumberGenerator](account.md#randomnumbergenerator)
 
 ### Variables
@@ -24,6 +25,16 @@
 - [ETHEREUM\_DERIVATION\_PATH](account.md#ethereum_derivation_path)
 
 ## Type Aliases
+
+### DerivationPath
+
+Ƭ **DerivationPath**: \`m/44'/$\{string}'/$\{string}\`
+
+#### Defined in
+
+[packages/sdk/base/src/account.ts:5](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/account.ts#L5)
+
+___
 
 ### RandomNumberGenerator
 
@@ -46,7 +57,7 @@
 
 #### Defined in
 
-[packages/sdk/base/src/account.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/account.ts#L27)
+[packages/sdk/base/src/account.ts:29](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/account.ts#L29)
 
 ## Variables
 

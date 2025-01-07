@@ -19,7 +19,7 @@
 
 #### Defined in
 
-[packages/sdk/base/src/account.ts:7](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/account.ts#L7)
+[packages/sdk/base/src/account.ts:9](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/account.ts#L9)
 
 ___
 
@@ -29,4 +29,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/base/src/account.ts:6](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/account.ts#L6)
+[packages/sdk/base/src/account.ts:8](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/account.ts#L8)

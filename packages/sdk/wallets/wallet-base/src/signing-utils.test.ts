@@ -602,7 +602,7 @@ describe('recoverTransaction', () => {
     expect(recoverTransaction(signed)[1]).toEqual(account.address)
   })
 
-  test.only('cip42 serialized by viem (v=1)', async () => {
+  test('cip42 serialized by viem (v=1)', async () => {
     const account = privateKeyToAccount(PRIVATE_KEY1)
     const signed = await account.signTransaction(
       {

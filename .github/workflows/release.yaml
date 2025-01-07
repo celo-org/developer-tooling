@@ -17,8 +17,10 @@ jobs:
       id-token: write
       pull-requests: write
       repository-projects: write
-    outputs:
+    outputs: 
       publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
+      published: ${{ steps.changesets.outputs.published }}
+
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
@@ -30,17 +32,17 @@ jobs:
           api-url: https://api.gateway.akeyless.celo-networks-dev.org
           access-id: p-kf9vjzruht6l
           static-secrets: '{"/static-secrets/NPM/npm-publish-token":"NPM_TOKEN"}'
-      - name: Setup Node.js 18.x
+      - name: Setup Node.js 20.x
         uses: actions/setup-node@v4
         with:
-          node-version: 18.x
+          node-version: 20.x
       - name: 'enable corepack for yarn'
         run: sudo corepack enable yarn
         shell: bash
       # must call twice because of chicken and egg problem with yarn and node
       - uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'yarn'
       - name: Install Dependencies
         shell: bash
@@ -55,10 +57,67 @@ jobs:
           # This expects you to have a script called release which does a build for your packages and calls changeset publish
           publish: yarn release
           version: yarn version-and-reinstall
+  
+  # release gives an array of published packages as jsob objects, we need an array of strings for installing
+  prepare:
+    name: Format Output for Install
+    if: needs.release.outputs.published
+    needs: release 
+    runs-on: ubuntu-latest
+    container:
+      image: node:20-bullseye
+    outputs:  
+      result: "${{ steps.map.outputs.output }}"
+    steps:              
+      - name: Install jq
+        if: needs.release.outputs.published
+        uses: dcarbone/install-jq-action@v3.0.1
+      - name: Format Published Packages Array
+        if: needs.release.outputs.published
+        uses: cloudposse/github-action-jq@main
+        id: map
+        with:
+          compact: true
+          raw-output: true
+          input: '${{ needs.release.outputs.publishedPackages }}'
+          script: |-
+            map("\(.name)@\(.version)")
+
+  # last line of defense to ensure that the packages were published correctly
+  install-released-packages:
+    name: Install Released Packages
+    needs: [prepare, release]
+    if: needs.release.outputs.published
+    runs-on: ubuntu-latest
+    container:
+      image: node:20-bullseye
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        package: ${{fromJson(needs.prepare.outputs.result)}}
+    steps:
+      - name: Install @celo/celocli dependencies
+        if: contains(matrix.package, '@celo/celocli')
+        run: |
+          apt update
+          apt install -y libusb-1.0-0-dev libudev-dev
+          npm install node-gyp --global
+
+      - name: Installing ${{ matrix.package }} package
+        run: npm install ${{ matrix.package }} --global
+      - name: Ensure sample of celocli commands run
+        if: contains(matrix.package, '@celo/celocli')
+        run: |
+          celocli --version
+          celocli account:new
+          echo "checking celo community fund balance"
+          celocli account:balance 0xD533Ca259b330c7A88f74E000a3FaEa2d63B7972  --node celo
+          celocli network:whitelist --node alfajores
 
   open-docs-pr:
     needs: release
-    if: ${{ contains(fromJson(needs.release.outputs.publishedPackages).*.name, '@celo/cli') }}
+    if: ${{ contains(fromJson(needs.release.outputs.publishedPackages).*.name, '@celo/celocli') }}
     uses: celo-org/developer-tooling/.github/workflows/open-docs-pr.yml@master
     with:
       commit: ${{ github.sha }}

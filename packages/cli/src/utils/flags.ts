@@ -10,6 +10,10 @@ export const ViewCommmandFlags = {
     ...BaseCommand.flags.useLedger,
     hidden: true,
   },
+  ledgerLiveMode: {
+    ...BaseCommand.flags.ledgerLiveMode,
+    hidden: true,
+  },
   ledgerAddresses: {
     ...BaseCommand.flags.ledgerAddresses,
     hidden: true,

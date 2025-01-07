@@ -12,8 +12,8 @@ import NewAccount from './new'
 process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvilL2('account:new cmd', (web3: Web3) => {
-  const writeMock = jest.spyOn(NewAccount.prototype, 'log')
-  const consoleMock = jest.spyOn(console, 'log')
+  const writeMock = jest.spyOn(NewAccount.prototype, 'log').mockImplementation(() => {})
+  const consoleMock = jest.spyOn(console, 'log').mockImplementation(() => {})
 
   beforeEach(() => {
     writeMock.mockClear()
@@ -27,6 +27,7 @@ testWithAnvilL2('account:new cmd', (web3: Web3) => {
         [
           "
       Using celoLegacy path (m/44'/52752'/0') for derivation. This will default to eth derivation path (m/44'/60'/0') next major version.
+       use "config:set --derivationPath <path>" to set your preffered default
       ",
         ],
         [

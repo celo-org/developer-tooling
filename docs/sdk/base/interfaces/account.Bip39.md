@@ -37,7 +37,7 @@
 
 #### Defined in
 
-[packages/sdk/base/src/account.ts:35](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/account.ts#L35)
+[packages/sdk/base/src/account.ts:37](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/account.ts#L37)
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/base/src/account.ts:34](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/account.ts#L34)
+[packages/sdk/base/src/account.ts:36](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/account.ts#L36)
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/base/src/account.ts:33](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/account.ts#L33)
+[packages/sdk/base/src/account.ts:35](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/account.ts#L35)
 
 ___
 
@@ -112,4 +112,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/base/src/account.ts:40](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/account.ts#L40)
+[packages/sdk/base/src/account.ts:42](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/account.ts#L42)
