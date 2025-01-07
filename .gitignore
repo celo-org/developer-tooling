@@ -90,7 +90,9 @@ package.json-e
 
 # Ignore generated credentials from google-github-actions/auth
 gha-creds-*.json
-transactions.json
 packages/sdk/metadata-claims/lib
 packages/cli/key
 package.tgz
+
+transactions.json
+*.test.json
