@@ -120,12 +120,7 @@ export abstract class BaseCommand extends Command {
 
   async getWeb3() {
     if (!this._web3) {
-      const res = await this.parse()
-      const nodeUrl = (res.flags && res.flags.node) || getNodeUrl(this.config.configDir)
-      this._web3 =
-        nodeUrl && nodeUrl.endsWith('.ipc')
-          ? new Web3(new Web3.providers.IpcProvider(nodeUrl, net))
-          : new Web3(nodeUrl)
+      this._web3 = await this.newWeb3()
     }
     return this._web3
   }

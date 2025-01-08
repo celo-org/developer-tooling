@@ -43,7 +43,7 @@ exports[`network:contracts runs 1`] = `
   {
     "contract": "EpochManager",
     "proxy": "0x2E290D8c2D6b26985f2826A63Aa103963DbAca23",
-    "implementation": "0x3D70ab096AF8892b4C3CB652E9D7e1CceA6e25FC",
+    "implementation": "0x7B6F67483366a3D328B17055afcD664Cf0FFAE4E",
     "version": "1.1.0.0"
   },
   {
@@ -73,7 +73,7 @@ exports[`network:contracts runs 1`] = `
   {
     "contract": "FeeCurrencyDirectory",
     "proxy": "0x5a7D21C9255DAA32109c8136661D7e853Fc5BF63",
-    "implementation": "0xD1F6cdb1E576395076Eb1aF4E2b76037cbb59C95",
+    "implementation": "0x4f9BaCe3eaC4917Ee4427a376E84d9A47428ce19",
     "version": "1.1.0.0"
   },
   {
@@ -121,7 +121,7 @@ exports[`network:contracts runs 1`] = `
   {
     "contract": "LockedGold",
     "proxy": "0x619b4767f6A955E63ED7d334DF3384bc4eacFdB8",
-    "implementation": "0xaEeE10944B805Bda8Ef6d41645aDb36b24B3F9E1",
+    "implementation": "0x3E526b2BD8A56696C0370daE4CB023eDb19DC647",
     "version": "1.1.5.0"
   },
   {

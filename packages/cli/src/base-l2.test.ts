@@ -47,9 +47,17 @@ describe('flags', () => {
       expect(connectdChain).toBe(44787)
     })
   })
-  describe('--node  celo', () => {
+  describe('--node  baklava', () => {
+    it('it connects to 62320', async () => {
+      const command = new BasicCommand(['--node', 'baklava'], config)
+      const runnerWeb3 = await command.getWeb3()
+      const connectdChain = await runnerWeb3.eth.getChainId()
+      expect(connectdChain).toBe(62320)
+    })
+  })
+  describe.each(['celo', 'mainnet'])('--node  %s', (node) => {
     it('it connects to 42220', async () => {
-      const command = new BasicCommand(['--node', 'celo'], config)
+      const command = new BasicCommand(['--node', node], config)
       const runnerWeb3 = await command.getWeb3()
       const connectdChain = await runnerWeb3.eth.getChainId()
       expect(connectdChain).toBe(42220)

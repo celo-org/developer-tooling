@@ -150,6 +150,9 @@ export const displayMetadata = async (
       case ClaimTypes.STORAGE:
         extra = `URL: "${claim.address}"`
         break
+      case ClaimTypes.ATTESTATION_SERVICE_URL:
+        extra = `Attestation Service URL: ${claim.url}`
+        break
       default:
         extra = JSON.stringify(claim)
         break

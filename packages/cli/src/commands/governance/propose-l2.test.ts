@@ -138,6 +138,8 @@ const structAbiDefinition = {
 }
 
 testWithAnvilL2('governance:propose cmd', (web3: Web3) => {
+  const TRANSACTION_FILE_PATH = 'governance-propose-l2.test.json'
+
   let governance: GovernanceWrapper
   let goldToken: GoldTokenWrapper
   let minDeposit: string
@@ -158,7 +160,7 @@ testWithAnvilL2('governance:propose cmd', (web3: Web3) => {
     'will successfully create proposal based on Core contract',
     async () => {
       const transactionsToBeSaved = JSON.stringify(transactions)
-      fs.writeFileSync('transactions.json', transactionsToBeSaved, { flag: 'w' })
+      fs.writeFileSync(TRANSACTION_FILE_PATH, transactionsToBeSaved, { flag: 'w' })
 
       await (
         await kit.sendTransaction({
@@ -175,7 +177,7 @@ testWithAnvilL2('governance:propose cmd', (web3: Web3) => {
         Propose,
         [
           '--jsonTransactions',
-          'transactions.json',
+          TRANSACTION_FILE_PATH,
           '--deposit',
           minDeposit,
           '--from',
@@ -203,7 +205,7 @@ testWithAnvilL2('governance:propose cmd', (web3: Web3) => {
     'will successfully create proposal based on Core contract with multisig (1 signer)',
     async () => {
       const transactionsToBeSaved = JSON.stringify(transactions)
-      fs.writeFileSync('transactions.json', transactionsToBeSaved, { flag: 'w' })
+      fs.writeFileSync(TRANSACTION_FILE_PATH, transactionsToBeSaved, { flag: 'w' })
 
       await (
         await kit.sendTransaction({
@@ -236,7 +238,7 @@ testWithAnvilL2('governance:propose cmd', (web3: Web3) => {
         Propose,
         [
           '--jsonTransactions',
-          'transactions.json',
+          TRANSACTION_FILE_PATH,
           '--deposit',
           '10000e18',
           '--from',
@@ -267,7 +269,7 @@ testWithAnvilL2('governance:propose cmd', (web3: Web3) => {
     'will successfully create proposal based on Core contract with multisig (2 signers)',
     async () => {
       const transactionsToBeSaved = JSON.stringify(transactions)
-      fs.writeFileSync('transactions.json', transactionsToBeSaved, { flag: 'w' })
+      fs.writeFileSync(TRANSACTION_FILE_PATH, transactionsToBeSaved, { flag: 'w' })
 
       await (
         await kit.sendTransaction({
@@ -301,7 +303,7 @@ testWithAnvilL2('governance:propose cmd', (web3: Web3) => {
         Propose,
         [
           '--jsonTransactions',
-          'transactions.json',
+          TRANSACTION_FILE_PATH,
           '--deposit',
           '10000e18',
           '--from',
@@ -342,7 +344,7 @@ testWithAnvilL2('governance:propose cmd', (web3: Web3) => {
     'will successfully create proposal with random contract',
     async () => {
       const transactionsToBeSaved = JSON.stringify(transactionsUnknownAddress)
-      fs.writeFileSync('transactions.json', transactionsToBeSaved, { flag: 'w' })
+      fs.writeFileSync(TRANSACTION_FILE_PATH, transactionsToBeSaved, { flag: 'w' })
 
       await (
         await kit.sendTransaction({
@@ -359,7 +361,7 @@ testWithAnvilL2('governance:propose cmd', (web3: Web3) => {
         Propose,
         [
           '--jsonTransactions',
-          'transactions.json',
+          TRANSACTION_FILE_PATH,
           '--deposit',
           minDeposit,
           '--from',
@@ -389,7 +391,7 @@ testWithAnvilL2('governance:propose cmd', (web3: Web3) => {
     'will successfully create proposal with struct as input',
     async () => {
       const transactionsToBeSaved = JSON.stringify(transactionsWithStruct)
-      fs.writeFileSync('transactions.json', transactionsToBeSaved, { flag: 'w' })
+      fs.writeFileSync(TRANSACTION_FILE_PATH, transactionsToBeSaved, { flag: 'w' })
 
       await (
         await kit.sendTransaction({
@@ -406,7 +408,7 @@ testWithAnvilL2('governance:propose cmd', (web3: Web3) => {
         Propose,
         [
           '--jsonTransactions',
-          'transactions.json',
+          TRANSACTION_FILE_PATH,
           '--deposit',
           minDeposit,
           '--from',

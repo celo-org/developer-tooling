@@ -1,4 +1,5 @@
 import { StableToken, StrongAddress } from '@celo/base'
+import { COMPLIANT_ERROR_RESPONSE, SANCTIONED_ADDRESSES } from '@celo/compliance'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import BigNumber from 'bignumber.js'
@@ -25,6 +26,8 @@ testWithAnvilL1('releasegold:transfer-dollars cmd', (web3: Web3) => {
   beforeEach(async () => {
     accounts = (await web3.eth.getAccounts()) as StrongAddress[]
     kit = newKitFromWeb3(web3)
+    jest.spyOn(console, 'log').mockImplementation(() => {})
+    jest.spyOn(console, 'error').mockImplementation(() => {})
 
     contractAddress = await deployReleaseGoldContract(
       web3,
@@ -82,6 +85,34 @@ testWithAnvilL1('releasegold:transfer-dollars cmd', (web3: Web3) => {
         ['--contract', contractAddress, '--to', accounts[0], '--value', '1'],
         web3
       )
-    ).rejects.toThrow()
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Error: execution reverted: revert: transfer value exceeded balance of sender"`
+    )
+  })
+
+  test('should fail if to address is sanctioned', async () => {
+    await topUpWithToken(
+      kit,
+      StableToken.cUSD,
+      accounts[0],
+      new BigNumber(web3.utils.toWei('1000', 'ether'))
+    )
+    const spy = jest.spyOn(console, 'log')
+    const cUSDToTransfer = '500000000000000000000'
+    // Send cUSD to RG contract
+    await testLocallyWithWeb3Node(
+      TransferDollars,
+      ['--from', accounts[0], '--to', contractAddress, '--value', cUSDToTransfer],
+      web3
+    )
+
+    await expect(
+      testLocallyWithWeb3Node(
+        RGTransferDollars,
+        ['--contract', contractAddress, '--to', SANCTIONED_ADDRESSES[0], '--value', '10'],
+        web3
+      )
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
+    expect(spy).toHaveBeenCalledWith(expect.stringContaining(COMPLIANT_ERROR_RESPONSE))
   })
 })

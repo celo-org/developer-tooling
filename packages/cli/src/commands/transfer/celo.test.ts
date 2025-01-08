@@ -40,6 +40,13 @@ testWithAnvilL1('transfer:celo cmd', (web3: Web3) => {
   beforeEach(async () => {
     kit = newKitFromWeb3(web3)
     accounts = await web3.eth.getAccounts()
+
+    jest.spyOn(console, 'log').mockImplementation(() => {})
+    jest.spyOn(console, 'error').mockImplementation(() => {})
+  })
+
+  afterEach(() => {
+    jest.restoreAllMocks()
   })
 
   test('can transfer celo', async () => {
@@ -68,12 +75,8 @@ testWithAnvilL1('transfer:celo cmd', (web3: Web3) => {
     expect(receiverBalance.CELO!.toFixed()).toEqual(
       receiverBalanceBefore.CELO!.plus(amountToTransfer).toFixed()
     )
-
-    const transactionReceipt = await web3.eth.getTransactionReceipt(
-      (
-        await web3.eth.getBlock('latest')
-      ).transactions[0]
-    )
+    const block = await web3.eth.getBlock('latest')
+    const transactionReceipt = await web3.eth.getTransactionReceipt(block.transactions[0])
 
     // Safety check if the latest transaction was originated by expected account
     expect(transactionReceipt.from.toLowerCase()).toEqual(accounts[0].toLowerCase())

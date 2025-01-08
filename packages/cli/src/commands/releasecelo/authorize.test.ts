@@ -18,6 +18,16 @@ testWithAnvilL1('releasegold:authorize cmd', (web3: Web3) => {
   let contractAddress: string
   let kit: any
 
+  beforeEach(() => {
+    jest.spyOn(console, 'log').mockImplementation(() => {})
+    jest.spyOn(console, 'error').mockImplementation(() => {})
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks()
+    jest.resetAllMocks()
+  })
+
   beforeEach(async () => {
     const accounts = (await web3.eth.getAccounts()) as StrongAddress[]
     kit = newKitFromWeb3(web3)

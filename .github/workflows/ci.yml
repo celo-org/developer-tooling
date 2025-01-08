@@ -174,6 +174,7 @@ jobs:
           name: Jest Test Results
           path: test-results/jest
       - uses: ./.github/actions/upload-codecov
+        name: Upload Code Coverage
         with:
           report-name: "general_test"
   
@@ -196,6 +197,7 @@ jobs:
         run: |
           yarn workspaces foreach -ip --all --include '@celo/wallet-*' run test --coverage
       - uses: ./.github/actions/upload-codecov
+        name: Upload Code Coverage
         with:
           report-name: "wallet"
 
@@ -223,6 +225,7 @@ jobs:
         run: |
           yarn workspace @celo/contractkit test-anvil --coverage
       - uses: ./.github/actions/upload-codecov
+        name: Upload Code Coverage
         with:
           report-name: "contractkit-anvil"
 
@@ -249,6 +252,7 @@ jobs:
         run: |
           yarn workspace @celo/contractkit test-ganache --coverage
       - uses: ./.github/actions/upload-codecov
+        name: Upload Code Coverage
         with:
           report-name: "contractkit-ganache"
 
@@ -305,6 +309,7 @@ jobs:
         run: |
           yarn workspace @celo/celocli run celocli releasecelo --help
       - uses: ./.github/actions/upload-codecov
+        name: Upload Code Coverage
         with:
           report-name: "celocli-anvil"
 
@@ -330,6 +335,7 @@ jobs:
         run: |
           yarn workspace @celo/celocli test-ci-ganache --coverage
       - uses: ./.github/actions/upload-codecov
+        name: Upload Code Coverage
         with:
           report-name: "celocli-ganache"
         
