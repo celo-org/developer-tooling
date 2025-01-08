@@ -9,6 +9,7 @@
 ### Enumeration Members
 
 - [ACCOUNT](types.ClaimTypes.md#account)
+- [ATTESTATION\_SERVICE\_URL](types.ClaimTypes.md#attestation_service_url)
 - [DOMAIN](types.ClaimTypes.md#domain)
 - [KEYBASE](types.ClaimTypes.md#keybase)
 - [NAME](types.ClaimTypes.md#name)
@@ -26,6 +27,20 @@
 #### Defined in
 
 [packages/sdk/metadata-claims/src/types.ts:12](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/types.ts#L12)
+
+___
+
+### ATTESTATION\_SERVICE\_URL
+
+• **ATTESTATION\_SERVICE\_URL** = ``"ATTESTATION_SERVICE_URL"``
+
+**`Deprecated`**
+
+Not used anymore, here only for backwards compatibility with old metadata files
+
+#### Defined in
+
+[packages/sdk/metadata-claims/src/types.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/types.ts#L23)
 
 ___
 
