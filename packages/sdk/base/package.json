@@ -8,7 +8,11 @@
   "types": "./lib/index.d.ts",
   "sideEffects": false,
   "homepage": "https://docs.celo.org/developer/tools#celo-sdk-reference-docs",
-  "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/sdk/base",
+  "repository": {
+   "type": "git",
+   "url": "git+https:/github.com/celo-org/developer-tooling.git",
+   "directory": "packages/sdk/base"
+  },
   "scripts": {
     "prepublishOnly": "yarn build",
     "build": "yarn run --top-level tsc -b .",

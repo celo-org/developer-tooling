@@ -4,7 +4,11 @@
   "description": "AWS HSM wallet implementation",
   "author": "Celo",
   "license": "Apache-2.0",
-  "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/sdk/wallets/",
+  "repository": {
+   "type": "git",
+   "url": "git+https:/github.com/celo-org/developer-tooling.git",
+   "directory": "packages/sdk/wallets/"
+  },
   "homepage": "https://docs.celo.org",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",

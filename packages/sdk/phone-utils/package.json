@@ -8,7 +8,11 @@
   "types": "./lib/index.d.ts",
   "sideEffects": false,
   "homepage": "https://docs.celo.org/developer/tools",
-  "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/sdk/phone-utils",
+  "repository": {
+   "type": "git",
+   "url": "git+https:/github.com/celo-org/developer-tooling.git",
+   "directory": "packages/sdk/phone-utils"
+  },
   "scripts": {
     "prepublishOnly": "yarn build",
     "build": "yarn run --top-level tsc -b .",
