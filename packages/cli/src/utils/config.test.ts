@@ -30,16 +30,39 @@ describe('writeConfig', () => {
       {
         "derivationPath": "m/44'/52752'/0'",
         "node": "http://localhost:8545",
+        "telemetry": true,
       }
     `)
   })
   it('accepts node', async () => {
     const [dir] = getPaths()
-    await writeConfig(dir, { node: 'SOME_URL', derivationPath: "m/44'/52752'/0'/0/0" })
+    await writeConfig(dir, {
+      node: 'SOME_URL',
+      derivationPath: "m/44'/52752'/0'/0/0",
+      telemetry: true,
+    })
     expect(spy.mock.calls[0][1]).toMatchInlineSnapshot(`
       {
         "derivationPath": "m/44'/52752'/0'/0/0",
         "node": "SOME_URL",
+        "telemetry": true,
+      }
+    `)
+  })
+
+  it('accepts telemetry', async () => {
+    const [dir] = getPaths()
+    await writeConfig(dir, {
+      derivationPath: "m/44'/52752'/0'/0/0",
+      node: 'http://localhost:8545',
+      telemetry: false,
+    })
+
+    expect(spy.mock.calls[0][1]).toMatchInlineSnapshot(`
+      {
+        "derivationPath": "m/44'/52752'/0'/0/0",
+        "node": "http://localhost:8545",
+        "telemetry": false,
       }
     `)
   })
@@ -54,6 +77,7 @@ describe('readConfig', () => {
         "derivationPath": "m/44'/52752'/0'",
         "foo": "bar",
         "node": "http://localhost:8545",
+        "telemetry": true,
       }
     `)
   })
@@ -64,6 +88,7 @@ describe('readConfig', () => {
       {
         "derivationPath": "m/44'/52752'/0'",
         "node": "bar",
+        "telemetry": true,
       }
     `)
   })
@@ -74,6 +99,7 @@ describe('readConfig', () => {
       {
         "derivationPath": "m/44'/52752'/0'",
         "node": "http://localhost:8545",
+        "telemetry": true,
       }
     `)
   })

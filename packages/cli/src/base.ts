@@ -15,6 +15,7 @@ import { CustomFlags } from './utils/command'
 import { getDefaultDerivationPath, getNodeUrl } from './utils/config'
 import { getFeeCurrencyContractWrapper } from './utils/fee-currency'
 import { requireNodeIsSynced } from './utils/helpers'
+import { reportUsageStatisticsIfTelemetryEnabled } from './utils/telemetry'
 
 export abstract class BaseCommand extends Command {
   static flags: FlagInput = {
@@ -247,6 +248,8 @@ export abstract class BaseCommand extends Command {
 
   async finally(arg: Error | undefined): Promise<any> {
     try {
+      await reportUsageStatisticsIfTelemetryEnabled(this.config.configDir, !arg, this.id)
+
       if (arg) {
         if (!(arg instanceof CLIError)) {
           console.error(

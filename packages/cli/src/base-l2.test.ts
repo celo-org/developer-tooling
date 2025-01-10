@@ -2,12 +2,14 @@ import { Connection } from '@celo/connect'
 import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import * as WalletLedgerExports from '@celo/wallet-ledger'
 import { Config, ux } from '@oclif/core'
+import http from 'http'
 import { tmpdir } from 'os'
 import Web3 from 'web3'
 import { BaseCommand } from './base'
 import Set from './commands/config/set'
 import CustomHelp from './help'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from './test-utils/cliUtils'
+import * as config from './utils/config'
 import { readConfig } from './utils/config'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -75,8 +77,14 @@ describe('flags', () => {
   })
 })
 
+// Make sure telemetry tests are deterministic, otherwise we'd have to update tests every release
+jest.mock('../package.json', () => ({
+  version: '5.2.3',
+}))
+
 testWithAnvilL2('BaseCommand', (web3: Web3) => {
   const logSpy = jest.spyOn(console, 'log').mockImplementation()
+
   beforeEach(() => {
     logSpy.mockClear()
   })
@@ -288,5 +296,184 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
         ],
       ]
     `)
+  })
+
+  describe('telemetry', () => {
+    afterEach(() => {
+      jest.clearAllMocks()
+      jest.restoreAllMocks()
+    })
+
+    it('sends telemetry data successfuly on success', async () => {
+      class TestTelemetryCommand extends BaseCommand {
+        id = 'test:telemetry-success'
+
+        async run() {
+          console.log('Successful run')
+        }
+      }
+
+      // here we test also that it works without this env var
+      delete process.env.TELEMETRY_ENABLED
+      process.env.TELEMETRY_URL = 'https://telemetry.example.org'
+
+      jest.spyOn(config, 'readConfig').mockImplementation((_: string) => {
+        return { telemetry: true } as config.CeloConfig
+      })
+
+      const fetchMock = jest.fn().mockResolvedValue({
+        ok: true,
+      })
+      const fetchSpy = jest.spyOn(global, 'fetch').mockImplementation(fetchMock)
+
+      await TestTelemetryCommand.run([])
+
+      // Assert it was called at all in the first place
+      expect(fetchSpy.mock.calls.length).toEqual(1)
+
+      expect(fetchSpy.mock.calls[0][0]).toMatchInlineSnapshot(`"https://telemetry.example.org"`)
+      expect(fetchSpy.mock.calls[0][1]?.body).toMatchInlineSnapshot(`
+        "
+        celocli_invocation{success="true", version="5.2.3", command="test:telemetry-success"} 1
+        "
+      `)
+      expect(fetchSpy.mock.calls[0][1]?.headers).toMatchInlineSnapshot(`
+        {
+          "Content-Type": "application/octet-stream",
+        }
+      `)
+      expect(fetchSpy.mock.calls[0][1]?.method).toMatchInlineSnapshot(`"POST"`)
+      expect(fetchSpy.mock.calls[0][1]?.signal).toBeInstanceOf(AbortSignal)
+      // Make sure the request was not aborted
+      expect(fetchSpy.mock.calls[0][1]?.signal?.aborted).toBe(false)
+    })
+
+    it('sends telemetry data successfuly on error', async () => {
+      class TestTelemetryCommand extends BaseCommand {
+        id = 'test:telemetry-error'
+
+        async run() {
+          throw new Error('test error')
+        }
+      }
+
+      jest.spyOn(config, 'readConfig').mockImplementation((_: string) => {
+        return { telemetry: true } as config.CeloConfig
+      })
+
+      // here we test also that it works with this env var set to 1 explicitly
+      process.env.TELEMETRY_ENABLED = '1'
+      process.env.TELEMETRY_URL = 'https://telemetry.example.org'
+
+      const fetchMock = jest.fn().mockResolvedValue({
+        ok: true,
+      })
+      const fetchSpy = jest.spyOn(global, 'fetch').mockImplementation(fetchMock)
+
+      await expect(TestTelemetryCommand.run([])).rejects.toMatchInlineSnapshot(
+        `[Error: test error]`
+      )
+
+      // Assert it was called at all in the first place
+      expect(fetchSpy.mock.calls.length).toEqual(1)
+
+      expect(fetchSpy.mock.calls[0][0]).toMatchInlineSnapshot(`"https://telemetry.example.org"`)
+      expect(fetchSpy.mock.calls[0][1]?.body).toMatchInlineSnapshot(`
+        "
+        celocli_invocation{success="false", version="5.2.3", command="test:telemetry-error"} 1
+        "
+      `)
+      expect(fetchSpy.mock.calls[0][1]?.headers).toMatchInlineSnapshot(`
+        {
+          "Content-Type": "application/octet-stream",
+        }
+      `)
+      expect(fetchSpy.mock.calls[0][1]?.method).toMatchInlineSnapshot(`"POST"`)
+      expect(fetchSpy.mock.calls[0][1]?.signal).toBeInstanceOf(AbortSignal)
+      // Make sure the request was not aborted
+      expect(fetchSpy.mock.calls[0][1]?.signal?.aborted).toBe(false)
+    })
+
+    it('does not send telemetry when disabled by config', async () => {
+      class TestTelemetryCommand extends BaseCommand {
+        id = 'test:telemetry-should-not-be-sent'
+
+        async run() {
+          console.log('Successful run')
+        }
+      }
+
+      jest.spyOn(config, 'readConfig').mockImplementation((_: string) => {
+        return { telemetry: false } as config.CeloConfig
+      })
+
+      // we leave it here to double check that it is not sent even if the env var is set
+      process.env.TELEMETRY_ENABLED = '1'
+      process.env.TELEMETRY_URL = 'https://telemetry.example.org'
+
+      const fetchMock = jest.fn().mockResolvedValue({
+        ok: true,
+      })
+      const fetchSpy = jest.spyOn(global, 'fetch').mockImplementation(fetchMock)
+
+      await TestTelemetryCommand.run([])
+
+      expect(fetchSpy).not.toHaveBeenCalled()
+    })
+
+    it('times out after TIMEOUT', async () => {
+      return new Promise<void>((resolve, _) => {
+        const EXPECTED_COMMAND_RESULT = 'Successful run'
+
+        class TestTelemetryCommand extends BaseCommand {
+          id = 'test:telemetry-timeout'
+
+          async run() {
+            return EXPECTED_COMMAND_RESULT
+          }
+        }
+
+        jest.spyOn(config, 'readConfig').mockImplementation((_: string) => {
+          return { telemetry: true } as config.CeloConfig
+        })
+
+        delete process.env.TELEMETRY_ENABLED
+        process.env.TELEMETRY_URL = 'http://localhost:3000/'
+
+        const fetchSpy = jest.spyOn(global, 'fetch')
+
+        const server = http.createServer((_, res) => {
+          setTimeout(() => {
+            res.end()
+          }, 5000) // Higher timeout than the telemetry logic uses
+        })
+
+        server.listen(3000, async () => {
+          // Make sure the command actually returns
+          await expect(TestTelemetryCommand.run([])).resolves.toBe(EXPECTED_COMMAND_RESULT)
+
+          expect(fetchSpy.mock.calls.length).toEqual(1)
+
+          expect(fetchSpy.mock.calls[0][0]).toMatchInlineSnapshot(`"http://localhost:3000/"`)
+          expect(fetchSpy.mock.calls[0][1]?.body).toMatchInlineSnapshot(`
+            "
+            celocli_invocation{success="true", version="5.2.3", command="test:telemetry-timeout"} 1
+            "
+          `)
+          expect(fetchSpy.mock.calls[0][1]?.headers).toMatchInlineSnapshot(`
+                    {
+                      "Content-Type": "application/octet-stream",
+                    }
+                `)
+          expect(fetchSpy.mock.calls[0][1]?.method).toMatchInlineSnapshot(`"POST"`)
+          expect(fetchSpy.mock.calls[0][1]?.signal).toBeInstanceOf(AbortSignal)
+          // Make sure the request was aborted
+          expect(fetchSpy.mock.calls[0][1]?.signal?.aborted).toBe(true)
+
+          server.close()
+          resolve()
+        })
+      })
+    })
   })
 })

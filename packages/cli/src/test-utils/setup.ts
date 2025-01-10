@@ -11,3 +11,5 @@ jest.mock('@ledgerhq/hw-transport-node-hid', () => {
     },
   }
 })
+
+process.env.TELEMETRY_ENABLED = '0'
