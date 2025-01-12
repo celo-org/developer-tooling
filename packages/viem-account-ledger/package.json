@@ -10,9 +10,9 @@
   "license": "Apache-2.0",
   "homepage": "https://docs.celo.org/developer/tools",
   "repository": {
-   "type": "git",
-   "url": "git+https:/github.com/celo-org/developer-tooling.git",
-   "directory": "packages/viem-account-ledger"
+    "type": "git",
+    "url": "git+https:/github.com/celo-org/developer-tooling.git",
+    "directory": "packages/viem-account-ledger"
   },
   "keywords": [
     "celo",
