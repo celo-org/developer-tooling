@@ -1,24 +1,19 @@
 import { StrongAddress } from '@celo/base'
-import { Flags } from '@oclif/core'
+import { ContractKit } from '@celo/contractkit'
+import { MultiSigWrapper } from '@celo/contractkit/lib/wrappers/MultiSig'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
+import { MultiSigFlags } from '../../utils/flags'
 
 export default class Withdraw extends BaseCommand {
   static description = 'Withdraw refunded governance proposal deposits.'
 
   static flags = {
     ...BaseCommand.flags,
+    ...MultiSigFlags,
     from: CustomFlags.address({ required: true, description: "Proposer's address" }),
-    // TODO move the flags to a separate file vide ViewCommmandFlags
-    useMultiSig: Flags.boolean({
-      description: 'True means the request will be sent through multisig.',
-    }),
-    for: CustomFlags.address({
-      dependsOn: ['useMultiSig'],
-      description: 'Address of the multi-sig contract',
-    }),
   }
 
   static examples = ['withdraw --from 0x5409ed021d9299bf6814279a6a1411a7e866a631']
@@ -26,38 +21,50 @@ export default class Withdraw extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(Withdraw)
-    const addressToRefund = res.flags.useMultiSig
-      ? (res.flags.for as StrongAddress)
-      : res.flags.from
-    const multisigWrapper = res.flags.for
-      ? await kit.contracts.getMultiSig(res.flags.for)
-      : undefined
+    const addressToRefund = this.getAddressToRefund(res.flags)
+    const multiSigWrapper = await this.getMultiSigWrapper(kit, res.flags)
 
-    await newCheckBuilder(this, res.flags.from)
-      .hasRefundedDeposits(addressToRefund)
-      .addConditionalCheck(`${res.flags.from} is multisig signatory`, res.flags.useMultiSig, () => {
-        // This should essentialy never happen
-        if (!multisigWrapper) {
-          throw new Error('Invalid multisig address')
-        }
+    const checkBuilder = newCheckBuilder(this, res.flags.from).hasRefundedDeposits(addressToRefund)
 
-        return multisigWrapper.isOwner(res.flags.from)
-      })
-      .runChecks()
+    if (multiSigWrapper) {
+      checkBuilder.isMultiSigOwner(res.flags.from, multiSigWrapper)
+    }
+
+    await checkBuilder.runChecks()
 
     const governance = await kit.contracts.getGovernance()
-    const tx = governance.withdraw()
+    const withdrawTx = governance.withdraw()
 
-    if (res.flags.useMultiSig) {
-      // TODO don't like the forcing here
-      const multiSigTx = await multisigWrapper!.submitOrConfirmTransaction(
+    if (multiSigWrapper) {
+      const multiSigTx = await multiSigWrapper.submitOrConfirmTransaction(
         governance.address,
-        tx.txo
+        withdrawTx.txo
       )
 
-      await displaySendTx<string | void | boolean>('withdraw', multiSigTx, {}, 'DepositWithdrawn')
+      // "Deposit" event is emitted when the MultiSig contract receives the funds
+      await displaySendTx<string | void | boolean>('withdraw', multiSigTx, {}, 'Deposit')
     } else {
-      await displaySendTx('withdraw', tx, {}, 'DepositWithdrawn')
+      // No event is emited otherwise
+      await displaySendTx('withdraw', withdrawTx)
     }
+  }
+
+  private async getMultiSigWrapper(
+    kit: ContractKit,
+    flags: { useMultiSig: boolean; for?: StrongAddress }
+  ): Promise<MultiSigWrapper | null> {
+    if (flags.useMultiSig) {
+      return await kit.contracts.getMultiSig(flags.for as StrongAddress)
+    }
+
+    return null
+  }
+
+  private getAddressToRefund(flags: {
+    from: StrongAddress
+    useMultiSig: boolean
+    for?: StrongAddress
+  }): StrongAddress {
+    return flags.useMultiSig ? (flags.for as StrongAddress) : flags.from
   }
 }
