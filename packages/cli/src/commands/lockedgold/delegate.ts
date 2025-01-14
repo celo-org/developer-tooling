@@ -37,9 +37,9 @@ export default class Delegate extends BaseCommand {
     const percent = new BigNumber(res.flags.percent).div(100)
     const percentFixed = toFixed(percent)
 
-    await newCheckBuilder(this)
+    await newCheckBuilder(this, address)
       .addCheck(`Value [${percentFixed}] is > 0 and <=100`, () => percent.gt(0) && percent.lte(100))
-      .isAccount(address)
+      .isVoteSignerOrAccount()
       .isAccount(to)
       .runChecks()
 
