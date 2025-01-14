@@ -1,5 +1,18 @@
 # @celo/wallet-hsm-gcp
 
+## 7.0.0-beta.0
+
+### Patch Changes
+
+- [#492](https://github.com/celo-org/developer-tooling/pull/492) [`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Bump @noble/ciphers to use audited version
+
+- Updated dependencies [[`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733), [`79cd947`](https://github.com/celo-org/developer-tooling/commit/79cd94725582be0c62133e98b922d19ed9c0b5de), [`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733)]:
+  - @celo/wallet-hsm@7.0.0-beta.0
+  - @celo/utils@8.0.1-beta.0
+  - @celo/wallet-remote@7.0.0-beta.0
+  - @celo/wallet-base@7.0.0-beta.0
+  - @celo/connect@6.1.1-beta.0
+
 ## 6.0.4
 
 ### Patch Changes
