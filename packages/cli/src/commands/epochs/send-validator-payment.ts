@@ -23,6 +23,8 @@ export default class SendValidatorPayment extends BaseCommand {
 
   static examples = ['send-validator-payment --for 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95']
 
+  static aliases: string[] = ['validator:send-payment']
+
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(SendValidatorPayment)

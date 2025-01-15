@@ -114,6 +114,9 @@ DESCRIPTION
   Sends the allocated epoch payment to a validator, their group, and delegation
   beneficiary.
 
+ALIASES
+  $ celocli validator:send-payment
+
 EXAMPLES
   send-validator-payment --for 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95
 
