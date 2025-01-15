@@ -210,8 +210,8 @@ export const activateAllValidatorGroupsVotes = async (kit: ContractKit) => {
   ).sendAndWaitForReceipt({ from: sender })
 
   for (const validatorGroup of validatorGroups) {
-    // @ts-expect-error we need to call the method directly as it's not exposed (and no need to) via the wrapper
     const pendingVotesForGroup = new BigNumber(
+      // @ts-expect-error we need to call the method directly as it's not exposed (and no need to) via the wrapper
       await electionWrapper.contract.methods.getPendingVotesForGroup(validatorGroup).call()
     )
 
