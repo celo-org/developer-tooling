@@ -3,9 +3,10 @@ import { isCel2 } from '@celo/connect'
 import { ContractKit, StableToken } from '@celo/contractkit'
 import {
   DEFAULT_OWNER_ADDRESS,
-  STABLES_ADDRESS,
   impersonateAccount,
+  STABLES_ADDRESS,
   stopImpersonatingAccount,
+  withImpersonatedAccount,
 } from '@celo/dev-utils/lib/anvil-test'
 import { mineBlocks, timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
@@ -191,4 +192,41 @@ export async function mockTimeForwardBy(seconds: number, web3: Web3) {
 
   console.warn('mockTimeForwardBy', seconds, 'seconds', 'call clearMock after using this function')
   return spy
+}
+
+export const activateAllValidatorGroupsVotes = async (kit: ContractKit) => {
+  const [sender] = await kit.web3.eth.getAccounts()
+  const validatorsContract = await kit.contracts.getValidators()
+  const electionWrapper = await kit.contracts.getElection()
+  const epochManagerWrapper = await kit.contracts.getEpochManager()
+  const validatorGroups = await validatorsContract.getRegisteredValidatorGroupsAddresses()
+
+  await timeTravel((await epochManagerWrapper.epochDuration()) + 1, kit.web3)
+
+  // Make sure we are in the next epoch to activate the votes
+  await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({ from: sender })
+  await (
+    await epochManagerWrapper.finishNextEpochProcessTx()
+  ).sendAndWaitForReceipt({ from: sender })
+
+  for (const validatorGroup of validatorGroups) {
+    // @ts-expect-error we need to call the method directly as it's not exposed (and no need to) via the wrapper
+    const pendingVotesForGroup = new BigNumber(
+      await electionWrapper.contract.methods.getPendingVotesForGroup(validatorGroup).call()
+    )
+
+    if (pendingVotesForGroup.gt(0)) {
+      await withImpersonatedAccount(
+        kit.web3,
+        validatorGroup,
+        async () => {
+          // @ts-expect-error here as well
+          await electionWrapper.contract.methods
+            .activate(validatorGroup)
+            .send({ from: validatorGroup })
+        },
+        new BigNumber(kit.web3.utils.toWei('1', 'ether'))
+      )
+    }
+  }
 }
