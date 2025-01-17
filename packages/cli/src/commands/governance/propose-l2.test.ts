@@ -14,7 +14,7 @@ import * as fs from 'fs'
 import Web3 from 'web3'
 import { EXTRA_LONG_TIMEOUT_MS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import { createMultisig, setupSafeContracts } from '../../test-utils/multisigUtils'
-import Approve from './approve'
+import Approve from '../multisig/approve'
 import Propose from './propose'
 
 process.env.NO_SYNCCHECK = 'true'
