@@ -6,7 +6,7 @@ import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx, printValueMapRecursive } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
-import { MultiSigFlags } from '../../utils/flags'
+import { MultiSigFlags, SafeFlags } from '../../utils/flags'
 import {
   addExistingProposalIDToBuilder,
   addExistingProposalJSONFileToBuilder,
@@ -23,6 +23,7 @@ export default class Propose extends BaseCommand {
   static flags = {
     ...BaseCommand.flags,
     ...MultiSigFlags,
+    ...SafeFlags,
     jsonTransactions: Flags.string({
       required: true,
       description: 'Path to json transactions',
@@ -32,22 +33,6 @@ export default class Propose extends BaseCommand {
       description: 'Amount of Celo to attach to proposal',
     }),
     from: CustomFlags.address({ required: true, description: "Proposer's address" }),
-    useMultiSig: Flags.boolean({
-      description: 'True means the request will be sent through multisig.',
-      exclusive: ['useSafe'],
-    }),
-    for: CustomFlags.address({
-      dependsOn: ['useMultiSig'],
-      description: 'Address of the multi-sig contract',
-    }),
-    useSafe: Flags.boolean({
-      description: 'True means the request will be sent through safe.',
-      exclusive: ['useMultiSig'],
-    }),
-    safeAddress: CustomFlags.address({
-      dependsOn: ['useSafe'],
-      description: 'Address of the safe.',
-    }),
     force: Flags.boolean({ description: 'Skip execution check', default: false }),
     noInfo: Flags.boolean({ description: 'Skip printing the proposal info', default: false }),
     descriptionURL: CustomFlags.url({
