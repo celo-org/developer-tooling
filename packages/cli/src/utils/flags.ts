@@ -43,7 +43,7 @@ export const MultiSigFlags = {
 
 export const SafeFlags = {
   useSafe: Flags.boolean({
-    description: 'True means the request will be sent through safe.',
+    description: 'True means the request will be sent through SAFE (http://safe.global).',
     exclusive: ['useMultiSig'],
   }),
   safeAddress: CustomFlags.address({
