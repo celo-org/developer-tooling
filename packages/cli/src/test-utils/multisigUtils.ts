@@ -70,6 +70,20 @@ export async function createMultisig(
   return proxyAddress as StrongAddress
 }
 
+/**
+ *
+ * # Warning
+ *
+ * For future users: safe expects hardcoded/deterministic
+ * addresses according to the chainId
+ * This means your tests may fail with the following error:
+ * > `Invalid multiSend contract address`
+ *
+ * In that case, please add the additional paramater `{ chainId: 42220 }` to the
+ * `testWithAnvil` options (last parameter).
+ *
+ * A working example can be found in packages/cli/src/commands/governance/approve-l2.test.ts`
+ */
 export const setupSafeContracts = async (web3: Web3) => {
   // Set up safe 1.3.0 in devchain
   await setCode(web3, SAFE_MULTISEND_ADDRESS, SAFE_MULTISEND_CODE)
