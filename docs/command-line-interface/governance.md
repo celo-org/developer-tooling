@@ -80,7 +80,7 @@ FLAGS
       True means the request will be sent through multisig.
 
   --useSafe
-      True means the request will be sent through safe.
+      True means the request will be sent through SAFE (http://safe.global)
 
 DESCRIPTION
   Approve a dequeued governance proposal (or hotfix)
@@ -580,8 +580,9 @@ USAGE
     <value> | --useLedger | ] [-n <value>] [--gasCurrency
     0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
     [--ledgerLiveMode ] [--globalHelp] [--for 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
-    --useMultiSig] [--force] [--noInfo] [--afterExecutingProposal <value> |
-    --afterExecutingID <value>]
+    [--useMultiSig | --useSafe]] [--safeAddress
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d ] [--force] [--noInfo]
+    [--afterExecutingProposal <value> | --afterExecutingID <value>]
 
 FLAGS
   -k, --privateKey=<value>
@@ -633,11 +634,17 @@ FLAGS
   --noInfo
       Skip printing the proposal info
 
+  --safeAddress=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+      Address of the safe.
+
   --useLedger
       Set it to use a ledger wallet
 
   --useMultiSig
       True means the request will be sent through multisig.
+
+  --useSafe
+      True means the request will be sent through SAFE (http://safe.global).
 
 DESCRIPTION
   Submit a governance proposal
@@ -1407,7 +1414,8 @@ USAGE
     <value> | --useLedger | ] [-n <value>] [--gasCurrency
     0x1234567890123456789012345678901234567890] [--ledgerAddresses <value> ]
     [--ledgerLiveMode ] [--globalHelp] [--for 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
-    --useMultiSig]
+    [--useMultiSig | --useSafe]] [--safeAddress
+    0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d ]
 
 FLAGS
   -k, --privateKey=<value>
@@ -1438,11 +1446,17 @@ FLAGS
       the 5th. This is useful to use same address on you Ledger with celocli as you do on
       Ledger Live
 
+  --safeAddress=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
+      Address of the safe.
+
   --useLedger
       Set it to use a ledger wallet
 
   --useMultiSig
       True means the request will be sent through multisig.
+
+  --useSafe
+      True means the request will be sent through SAFE (http://safe.global).
 
 DESCRIPTION
   Withdraw refunded governance proposal deposits.
