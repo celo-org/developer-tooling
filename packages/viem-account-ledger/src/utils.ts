@@ -24,15 +24,46 @@ export function meetsVersionRequirements(
   return min && max
 }
 
+export async function readAppName(ledger: Eth): Promise<string> {
+  const response = await ledger.transport.send(0xb0, 0x01, 0x00, 0x00)
+  try {
+    let results = [] // (name, version)
+    let i = 1
+    while (i < response.length + 1) {
+      const len = response[i]
+      i += 1
+      const bufValue = response.subarray(i, i + len)
+      i += len
+      results.push(bufValue.toString('ascii').trim())
+    }
+
+    return results[0]!.toLowerCase()
+  } catch (err) {
+    console.error('The appName couldnt be infered from the device')
+    throw err
+  }
+}
+
 export async function assertCompat(ledger: Eth): Promise<{
   arbitraryDataEnabled: number
   version: string
 }> {
-  // TODO: check version only for CELO and not ETH if we wanna be eth compatible
   const appConfiguration = await ledger.getAppConfiguration()
-  if (!meetsVersionRequirements(appConfiguration.version, { minimum: MIN_VERSION_EIP1559 })) {
+  const appName = await readAppName(ledger)
+  if (appName === 'celo') {
+    // only check version for Celo
+    if (!meetsVersionRequirements(appConfiguration.version, { minimum: MIN_VERSION_EIP1559 })) {
+      throw new Error(
+        `Due to technical issues, we require the users to update their ledger celo-app to >= ${MIN_VERSION_EIP1559}. You can do this on ledger-live by updating the celo-app in the app catalog.`
+      )
+    }
+  } else if (appName === 'ethereum') {
+    console.warn(
+      `Beware, you opened the Ethereum app instead of the Celo app. Some features may not work correctly, including token transfers.`
+    )
+  } else {
     throw new Error(
-      `Due to technical issues, we require the users to update their ledger celo-app to >= ${MIN_VERSION_EIP1559}. You can do this on ledger-live by updating the celo-app in the app catalog.`
+      `Beware, you opened the ${appName} app instead of the Celo app. We cannot ensure the safety of using this SDK with ${appName}.`
     )
   }
   if (!appConfiguration.arbitraryDataEnabled) {

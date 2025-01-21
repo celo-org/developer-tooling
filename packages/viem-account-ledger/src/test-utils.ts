@@ -90,11 +90,41 @@ const TYPED_DATA = {
   },
 }
 
-interface Config extends Partial<Awaited<ReturnType<Eth['getAppConfiguration']>>> {}
+interface Config extends Partial<Awaited<ReturnType<Eth['getAppConfiguration']>>> {
+  name?: string
+}
 
-export const test_ledger = {
-  isMock: true,
-  getAddress: async (derivationPath: string) => {
+export class TestLedger {
+  isMock = true
+  transport: Eth['transport']
+
+  constructor(readonly config?: Config) {
+    this.transport = {
+      send: async (_cla: number, ins: number, _p1: number, _p2: number): Promise<Buffer> => {
+        if (ins === 0x01) {
+          // get app information INS
+          const version = Buffer.from((await this.getAppConfiguration()).version, 'ascii')
+          // @ts-expect-error
+          const name = Buffer.from(config.name ?? 'Celo', 'ascii')
+          return Buffer.from([0x01, name.byteLength, ...name, version.byteLength, ...version])
+        }
+
+        throw new Error('Unsupport INS ' + ins + ' in mock')
+      },
+    } as Eth['transport']
+  }
+
+  getAppConfiguration = () => {
+    return Promise.resolve({
+      arbitraryDataEnabled: this.config?.arbitraryDataEnabled ?? 1,
+      version: this.config?.version ?? MIN_VERSION_EIP1559,
+      erc20ProvisioningNecessary: this.config?.erc20ProvisioningNecessary ?? 1,
+      starkEnabled: this.config?.starkEnabled ?? 1,
+      starkv2Supported: this.config?.starkv2Supported ?? 1,
+    })
+  }
+
+  getAddress = async (derivationPath: string) => {
     if (ledgerAddresses[derivationPath]) {
       const { address, privateKey } = ledgerAddresses[derivationPath]
       return {
@@ -108,8 +138,9 @@ export const test_ledger = {
       derivationPath,
       publicKey: '',
     }
-  },
-  signTransaction: async (derivationPath: string, data: string) => {
+  }
+
+  signTransaction = async (derivationPath: string, data: string) => {
     if (ledgerAddresses[derivationPath]) {
       const hash = getHashFromEncoded(ensureLeading0x(data))
       const { r, s, v } = signTransaction(hash, ledgerAddresses[derivationPath].privateKey)
@@ -121,8 +152,9 @@ export const test_ledger = {
       }
     }
     throw new Error('Invalid Path')
-  },
-  signPersonalMessage: async (derivationPath: string, data: string) => {
+  }
+
+  signPersonalMessage = async (derivationPath: string, data: string) => {
     if (ledgerAddresses[derivationPath]) {
       const signedMessage = await signMessage({
         privateKey: ledgerAddresses[derivationPath].privateKey,
@@ -131,8 +163,9 @@ export const test_ledger = {
       return parseSignature(signedMessage)
     }
     throw new Error('Invalid Path')
-  },
-  signEIP712HashedMessage: async (
+  }
+
+  signEIP712HashedMessage = async (
     derivationPath: string,
     _domainSeparator: string,
     _structHash: string
@@ -147,19 +180,11 @@ export const test_ledger = {
       r: signature.r.toString('hex'),
       s: signature.s.toString('hex'),
     }
-  },
-  getAppConfiguration: async () => {
-    return {
-      arbitraryDataEnabled: 1,
-      version: MIN_VERSION_EIP1559,
-      erc20ProvisioningNecessary: 1,
-      starkEnabled: 1,
-      starkv2Supported: 1,
-    }
-  },
-  provideERC20TokenInformation: async (tokenData: string) => {
+  }
+
+  provideERC20TokenInformation = async (tokenData: string) => {
     let pubkey: VerifyPublicKeyInput
-    const version = (await test_ledger.getAppConfiguration()).version
+    const version = (await this.getAppConfiguration()).version
     if (
       meetsVersionRequirements(version, {
         minimum: MIN_VERSION_EIP1559,
@@ -194,18 +219,9 @@ export const test_ledger = {
       throw new Error('couldnt verify data sent to MockLedger')
     }
     return verified
-  },
-} as unknown as Eth
+  }
+}
 
-export const mockLedger = (config?: Config) => {
-  test_ledger.getAppConfiguration = () =>
-    Promise.resolve({
-      arbitraryDataEnabled: config?.arbitraryDataEnabled ?? 1,
-      version: config?.version ?? MIN_VERSION_EIP1559,
-      erc20ProvisioningNecessary: config?.erc20ProvisioningNecessary ?? 1,
-      starkEnabled: config?.starkEnabled ?? 1,
-      starkv2Supported: config?.starkv2Supported ?? 1,
-    })
-
-  return test_ledger
+export const mockLedger = (config: Config = {}): Eth => {
+  return new TestLedger(config) as unknown as Eth
 }

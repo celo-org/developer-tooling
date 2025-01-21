@@ -3,7 +3,7 @@ import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
 import { recoverMessageAddress } from 'viem'
 import { beforeAll, describe, expect, it, test, vi } from 'vitest'
 import { ledgerToAccount } from './ledger-to-account.js'
-import { mockLedger, TEST_CHAIN_ID, test_ledger } from './test-utils.js'
+import { mockLedger, TEST_CHAIN_ID, TestLedger } from './test-utils.js'
 import { generateLedger } from './utils.js'
 
 const USE_PHYSICAL_LEDGER = process.env.USE_PHYSICAL_LEDGER === 'true'
@@ -25,6 +25,46 @@ vi.mock('./utils.js', async () => {
     ),
   }
 })
+
+// Sample data from the official EIP-712 example:
+// https://github.com/ethereum/EIPs/blob/master/assets/eip-712/Example.js
+const TYPED_DATA = {
+  types: {
+    EIP712Domain: [
+      { name: 'name', type: 'string' },
+      { name: 'version', type: 'string' },
+      { name: 'chainId', type: 'uint256' },
+      { name: 'verifyingContract', type: 'address' },
+    ],
+    Person: [
+      { name: 'name', type: 'string' },
+      { name: 'wallet', type: 'address' },
+    ],
+    Mail: [
+      { name: 'from', type: 'Person' },
+      { name: 'to', type: 'Person' },
+      { name: 'contents', type: 'string' },
+    ],
+  },
+  primaryType: 'Mail',
+  domain: {
+    name: 'Ether Mail',
+    version: '1',
+    chainId: BigInt(1),
+    verifyingContract: '0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC',
+  },
+  message: {
+    from: {
+      name: 'Cow',
+      wallet: '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826',
+    },
+    to: {
+      name: 'Bob',
+      wallet: '0xbBbBBBBbbBBBbbbBbbBbbbbBBbBbbbbBbBbbBBbB',
+    },
+    contents: 'Hello, Bob!',
+  },
+} as const
 
 syntheticDescribe('ledgerToAccount (mocked ledger)', () => {
   let account: Awaited<ReturnType<typeof ledgerToAccount>>
@@ -111,7 +151,7 @@ syntheticDescribe('ledgerToAccount (mocked ledger)', () => {
         for (const expectedyParity in test_vs_0_and_1) {
           const test_vs = test_vs_0_and_1[+expectedyParity]
           for (const v of test_vs) {
-            vi.spyOn(test_ledger, 'signTransaction').mockImplementationOnce(() =>
+            vi.spyOn(TestLedger.prototype, 'signTransaction').mockImplementationOnce(() =>
               // @ts-expect-error
               Promise.resolve({
                 v,
@@ -129,7 +169,7 @@ syntheticDescribe('ledgerToAccount (mocked ledger)', () => {
       test('unrecoverable', async () => {
         const test_vs = [NaN, 'asdf', null, undefined, {}]
         for (const v of test_vs) {
-          vi.spyOn(test_ledger, 'signTransaction').mockImplementationOnce(() =>
+          vi.spyOn(TestLedger.prototype, 'signTransaction').mockImplementationOnce(() =>
             // @ts-expect-error
             Promise.resolve({
               v,
@@ -157,25 +197,9 @@ syntheticDescribe('ledgerToAccount (mocked ledger)', () => {
   })
 
   it('signs typed data', async () => {
-    await expect(
-      account.signTypedData({
-        domain: {
-          name: 'foo',
-          version: '0.0.0',
-          chainId: BigInt(42),
-          verifyingContract: '0x123',
-        },
-        primaryType: 'EIP712Domain',
-        types: {
-          EIP712Domain: [
-            { name: 'name', type: 'string' },
-            { name: 'version', type: 'string' },
-            { name: 'chainId', type: 'uint256' },
-            { name: 'verifyingContract', type: 'address' },
-          ],
-        },
-      })
-    ).rejects.toMatchInlineSnapshot(`[Error: Not implemented as of this release.]`)
+    await expect(account.signTypedData(TYPED_DATA)).resolves.toMatchInlineSnapshot(
+      `"0x51a454925c2ff4cad0a09cc64fc970685a17f39b2c3a843323f0cc08942d413d15e1ee8c7ff2e12e85eaf1f887cadfbb20b270a579f0945f30de2a73cad4d8ce1c"`
+    )
   })
 })
 
@@ -260,24 +284,6 @@ hardwareDescribe('ledgerToAccount (device ledger)', () => {
   }, 20_000)
 
   it('signs typed data', async () => {
-    await expect(
-      account.signTypedData({
-        domain: {
-          name: 'foo',
-          version: '0.0.0',
-          chainId: BigInt(42),
-          verifyingContract: '0x123',
-        },
-        primaryType: 'EIP712Domain',
-        types: {
-          EIP712Domain: [
-            { name: 'name', type: 'string' },
-            { name: 'version', type: 'string' },
-            { name: 'chainId', type: 'uint256' },
-            { name: 'verifyingContract', type: 'address' },
-          ],
-        },
-      })
-    ).rejects.toMatchInlineSnapshot(`[Error: Not implemented as of this release.]`)
+    await expect(account.signTypedData(TYPED_DATA)).resolves.toMatch(/0x[0-9a-fA-F]{130}/)
   }, 20_000)
 })

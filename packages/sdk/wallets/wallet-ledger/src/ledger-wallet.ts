@@ -125,7 +125,10 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
     const version = new SemVer(deviceApp.version)
 
     // if the app is of minimum version it doesnt matter if chain is cel2 or not
-    if (meetsVersionRequirements(version, { minimum: LedgerWallet.MIN_VERSION_EIP1559 })) {
+    if (
+      deviceApp.appName !== 'celo' ||
+      meetsVersionRequirements(version, { minimum: LedgerWallet.MIN_VERSION_EIP1559 })
+    ) {
       if (txParams.gasPrice && txParams.feeCurrency && txParams.feeCurrency !== '0x') {
         throw new Error(
           `celo ledger app above ${LedgerWallet.MIN_VERSION_EIP1559} cannot serialize legacy celo transactions. Replace "gasPrice" with "maxFeePerGas".`
@@ -140,7 +143,13 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
       // by deleting/ adding properties instead of throwing.
       // TODO when cip66 is implemented ensure it is not that
       // @ts-expect-error -- 66 isnt in this branch but will be in the release so future proof
-      if (isEIP1559(txParams) || (isCIP64(txParams) && !isPresent(txParams.maxFeePerFeeCurrency))) {
+      const isCeloSpecificTx = isCIP64(txParams) && !isPresent(txParams.maxFeePerFeeCurrency)
+      if (isEIP1559(txParams) || isCeloSpecificTx) {
+        if (isCeloSpecificTx && deviceApp.appName !== 'celo') {
+          throw new Error(
+            'To submit celo-specific transactions you must use the celo app on your ledger device.'
+          )
+        }
         return rlpEncodedTx(txParams)
       } else {
         throw new Error(
@@ -221,11 +230,23 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
   private async retrieveAppConfiguration(): Promise<{
     arbitraryDataEnabled: number
     version: string
+    appName: string
   }> {
+    const appName = await this.retrieveAppName()
     const appConfiguration = await this.ledger!.getAppConfiguration()
-    if (new SemVer(appConfiguration.version).compare(LedgerWallet.MIN_VERSION_SUPPORTED) === -1) {
+    if (appName === 'celo') {
+      if (new SemVer(appConfiguration.version).compare(LedgerWallet.MIN_VERSION_SUPPORTED) === -1) {
+        throw new Error(
+          `Due to technical issues, we require the users to update their ledger celo-app to >= ${LedgerWallet.MIN_VERSION_SUPPORTED}. You can do this on ledger-live by updating the celo-app in the app catalog.`
+        )
+      }
+    } else if (appName === 'ethereum') {
+      console.warn(
+        `Beware, you opened the Ethereum app instead of the Celo app. Some features may not work correctly, including token transfers.`
+      )
+    } else {
       throw new Error(
-        `Due to technical issues, we require the users to update their ledger celo-app to >= ${LedgerWallet.MIN_VERSION_SUPPORTED}. You can do this on ledger-live by updating the celo-app in the app catalog.`
+        `Beware, you opened the ${appName} app instead of the Celo app. We cannot ensure the safety of using this SDK with ${appName}.`
       )
     }
     if (!appConfiguration.arbitraryDataEnabled) {
@@ -233,9 +254,30 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
         'Beware, your ledger does not allow the use of contract data. Some features may not work correctly, including token transfers. You can enable it from the ledger app settings.'
       )
     }
-    return appConfiguration
+    return { ...appConfiguration, appName }
+  }
+
+  private async retrieveAppName(): Promise<string> {
+    const response = await this.ledger!.transport.send(0xb0, 0x01, 0x00, 0x00)
+    try {
+      let results = [] // (name, version)
+      let i = 1
+      while (i < response.length + 1) {
+        const len = response[i]
+        i += 1
+        const bufValue = response.subarray(i, i + len)
+        i += len
+        results.push(bufValue.toString('ascii').trim())
+      }
+
+      return results[0]!.toLowerCase()
+    } catch (err) {
+      console.error('The appName couldnt be infered from the device')
+      throw err
+    }
   }
 }
+
 function validateIndexes(indexes: number[], label: string = 'address index') {
   if (indexes.length === 0) {
     throw new Error(`ledger-wallet: No ${label} provided`)
