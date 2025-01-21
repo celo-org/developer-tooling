@@ -1,4 +1,6 @@
+import { Flags } from '@oclif/core'
 import { BaseCommand } from '../base'
+import { CustomFlags } from './command'
 
 export const ViewCommmandFlags = {
   ...BaseCommand.flags,
@@ -26,4 +28,14 @@ export const ViewCommmandFlags = {
     ...BaseCommand.flags.privateKey,
     hidden: true,
   },
+}
+
+export const MultiSigFlags = {
+  useMultiSig: Flags.boolean({
+    description: 'True means the request will be sent through multisig.',
+  }),
+  for: CustomFlags.address({
+    dependsOn: ['useMultiSig'],
+    description: 'Address of the multi-sig contract',
+  }),
 }

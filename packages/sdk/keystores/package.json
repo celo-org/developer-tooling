@@ -1,6 +1,6 @@
 {
   "name": "@celo/keystores",
-  "version": "5.0.12",
+  "version": "5.0.13-beta.0",
   "description": "keystore implementation",
   "author": "Celo",
   "license": "Apache-2.0",
@@ -13,9 +13,9 @@
   ],
   "homepage": "https://docs.celo.org/developer/tools",
   "repository": {
-   "type": "git",
-   "url": "git+https:/github.com/celo-org/developer-tooling.git",
-   "directory": "packages/sdk/keystores"
+    "type": "git",
+    "url": "git+https:/github.com/celo-org/developer-tooling.git",
+    "directory": "packages/sdk/keystores"
   },
   "scripts": {
     "build": "yarn run --top-level tsc -b .",
@@ -26,8 +26,8 @@
     "prepublishOnly": "yarn build"
   },
   "dependencies": {
-    "@celo/utils": "^8.0.0",
-    "@celo/wallet-local": "^6.0.4",
+    "@celo/utils": "^8.0.1-beta.0",
+    "@celo/wallet-local": "^7.0.0-beta.0",
     "ethereumjs-wallet": "^1.0.1"
   },
   "devDependencies": {

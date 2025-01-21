@@ -1,6 +1,6 @@
 {
   "name": "@celo/network-utils",
-  "version": "5.0.6",
+  "version": "5.0.7-beta.0",
   "description": "Utilities for fetching static information about the Celo network",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -8,9 +8,9 @@
   "license": "Apache-2.0",
   "homepage": "https://docs.celo.org/developer/tools",
   "repository": {
-   "type": "git",
-   "url": "git+https:/github.com/celo-org/developer-tooling.git",
-   "directory": "packages/sdk/network-utils"
+    "type": "git",
+    "url": "git+https:/github.com/celo-org/developer-tooling.git",
+    "directory": "packages/sdk/network-utils"
   },
   "keywords": [
     "celo",
@@ -31,7 +31,7 @@
     "debug": "^4.1.1"
   },
   "devDependencies": {
-    "@celo/dev-utils": "0.0.7",
+    "@celo/dev-utils": "0.0.8-beta.0",
     "@celo/typescript": "workspace:^",
     "@types/debug": "^4.1.12",
     "fetch-mock": "^10.0.7"

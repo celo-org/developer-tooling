@@ -1,5 +1,11 @@
 # @celo/network-utils
 
+## 5.0.7-beta.0
+
+### Patch Changes
+
+- [#497](https://github.com/celo-org/developer-tooling/pull/497) [`79cd947`](https://github.com/celo-org/developer-tooling/commit/79cd94725582be0c62133e98b922d19ed9c0b5de) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - chore: package.json link fixes
+
 ## 5.0.6
 
 ### Patch Changes
