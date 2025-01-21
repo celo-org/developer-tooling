@@ -1,7 +1,13 @@
 import { CELO_DERIVATION_PATH_BASE, trimLeading0x } from '@celo/base'
 import { ensureLeading0x } from '@celo/base/lib/address.js'
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
-import { serializeSignature } from 'viem'
+import {
+  getTypesForEIP712Domain,
+  hashDomain,
+  hashStruct,
+  HashTypedDataParameters,
+  serializeSignature,
+} from 'viem'
 import { LocalAccount, toAccount } from 'viem/accounts'
 import { CeloTransactionSerializable, serializeTransaction } from 'viem/celo'
 
@@ -12,6 +18,12 @@ export type LedgerAccount = LocalAccount<'ledger'>
 export const ETH_DERIVATION_PATH_BASE = "m/44'/60'/0'" as const
 export const CELO_BASE_DERIVATION_PATH = `${CELO_DERIVATION_PATH_BASE.slice(2)}/0`
 export const DEFAULT_DERIVATION_PATH = `${ETH_DERIVATION_PATH_BASE.slice(2)}/0`
+
+// not exported from viem...
+interface MessageTypeProperty {
+  name: string
+  type: string
+}
 
 /**
  * A function to create a ledger account for viem
@@ -77,8 +89,34 @@ export async function ledgerToAccount({
       })
     },
 
-    async signTypedData(_parameters) {
-      throw new Error('Not implemented as of this release.')
+    async signTypedData(parameters) {
+      const { domain = {}, message, primaryType } = parameters as HashTypedDataParameters
+      const types = {
+        EIP712Domain: getTypesForEIP712Domain({ domain }),
+        ...parameters.types,
+      }
+
+      const domainSeperator = hashDomain({
+        domain,
+        types: types as Record<string, MessageTypeProperty[]>,
+      })
+      const messageHash = hashStruct({
+        data: message,
+        primaryType,
+        types: types as Record<string, MessageTypeProperty[]>,
+      })
+
+      const { r, s, v } = await ledger.signEIP712HashedMessage(
+        derivationPath,
+        domainSeperator,
+        messageHash
+      )
+
+      return serializeSignature({
+        r: ensureLeading0x(r),
+        s: ensureLeading0x(s),
+        v: BigInt(v),
+      })
     },
   })
 
