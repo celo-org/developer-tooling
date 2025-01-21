@@ -51,10 +51,15 @@ export default class Contracts extends BaseCommand {
         if (UNVERSIONED_CONTRACTS.includes(contract) || implementation === 'NONE') {
           version = 'NONE'
         } else {
-          const raw = await newICeloVersionedContract(kit.web3, implementation)
-            .methods.getVersionNumber()
-            .call()
-          version = `${raw[0]}.${raw[1]}.${raw[2]}.${raw[3]}`
+          try {
+            const raw = await newICeloVersionedContract(kit.web3, implementation)
+              .methods.getVersionNumber()
+              .call()
+            version = `${raw[0]}.${raw[1]}.${raw[2]}.${raw[3]}`
+          } catch (e) {
+            console.warn(`Failed to get version for ${contract} at ${proxy}`)
+            version = contract === CeloContract.GovernanceSlasher ? '1.1.0.0' : 'NONE'
+          }
         }
 
         const balances = await kit.celoTokens.balancesOf(proxy)
