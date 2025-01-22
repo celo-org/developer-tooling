@@ -104,8 +104,7 @@ export class TestLedger {
         if (ins === 0x01) {
           // get app information INS
           const version = Buffer.from((await this.getAppConfiguration()).version, 'ascii')
-          // @ts-expect-error
-          const name = Buffer.from(config.name ?? 'Celo', 'ascii')
+          const name = Buffer.from(this.getName() ?? 'Celo', 'ascii')
           return Buffer.from([0x01, name.byteLength, ...name, version.byteLength, ...version])
         }
 
@@ -114,7 +113,11 @@ export class TestLedger {
     } as Eth['transport']
   }
 
-  getAppConfiguration = () => {
+  getName() {
+    return this.config?.name
+  }
+
+  getAppConfiguration() {
     return Promise.resolve({
       arbitraryDataEnabled: this.config?.arbitraryDataEnabled ?? 1,
       version: this.config?.version ?? MIN_VERSION_EIP1559,
@@ -124,7 +127,7 @@ export class TestLedger {
     })
   }
 
-  getAddress = async (derivationPath: string) => {
+  async getAddress(derivationPath: string) {
     if (ledgerAddresses[derivationPath]) {
       const { address, privateKey } = ledgerAddresses[derivationPath]
       return {
@@ -140,7 +143,7 @@ export class TestLedger {
     }
   }
 
-  signTransaction = async (derivationPath: string, data: string) => {
+  async signTransaction(derivationPath: string, data: string) {
     if (ledgerAddresses[derivationPath]) {
       const hash = getHashFromEncoded(ensureLeading0x(data))
       const { r, s, v } = signTransaction(hash, ledgerAddresses[derivationPath].privateKey)
@@ -154,7 +157,7 @@ export class TestLedger {
     throw new Error('Invalid Path')
   }
 
-  signPersonalMessage = async (derivationPath: string, data: string) => {
+  async signPersonalMessage(derivationPath: string, data: string) {
     if (ledgerAddresses[derivationPath]) {
       const signedMessage = await signMessage({
         privateKey: ledgerAddresses[derivationPath].privateKey,
@@ -165,11 +168,11 @@ export class TestLedger {
     throw new Error('Invalid Path')
   }
 
-  signEIP712HashedMessage = async (
+  async signEIP712HashedMessage(
     derivationPath: string,
     _domainSeparator: string,
     _structHash: string
-  ) => {
+  ) {
     const messageHash = generateTypedDataHash(TYPED_DATA)
 
     const trimmedKey = trimLeading0x(ledgerAddresses[derivationPath].privateKey)
@@ -182,7 +185,7 @@ export class TestLedger {
     }
   }
 
-  provideERC20TokenInformation = async (tokenData: string) => {
+  async provideERC20TokenInformation(tokenData: string) {
     let pubkey: VerifyPublicKeyInput
     const version = (await this.getAppConfiguration()).version
     if (

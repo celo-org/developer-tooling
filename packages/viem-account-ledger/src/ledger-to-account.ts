@@ -13,9 +13,7 @@ import { CeloTransactionSerializable, serializeTransaction } from 'viem/celo'
 
 import { checkForKnownToken, generateLedger, readAppName } from './utils.js'
 
-export interface LedgerAccount extends LocalAccount<'ledger'> {
-  ledgerAppName: string
-}
+export type LedgerAccount = LocalAccount<'ledger'>
 
 const CIP64_PREFIX = '0x7b'
 export const ETH_DERIVATION_PATH_BASE = "m/44'/60'/0'" as const
@@ -49,12 +47,11 @@ export async function ledgerToAccount({
   const derivationPath = `${baseDerivationPath}/${derivationPathIndex}`
   const ledger = await generateLedger(transport)
   const { address, publicKey } = await ledger.getAddress(derivationPath, true)
-  const ledgerAppName = await readAppName(ledger)
-
   const account = toAccount({
     address: ensureLeading0x(address),
 
     async signTransaction(transaction: CeloTransactionSerializable) {
+      const ledgerAppName = await readAppName(ledger)
       const hash = serializeTransaction(transaction)
       if (hash.startsWith(CIP64_PREFIX) && ledgerAppName !== 'celo') {
         throw new Error(
@@ -101,6 +98,7 @@ export async function ledgerToAccount({
     },
 
     async signTypedData(parameters) {
+      const ledgerAppName = await readAppName(ledger)
       if (ledgerAppName === 'celo') {
         throw new Error('Not implemented as of this release.')
       }
@@ -138,7 +136,6 @@ export async function ledgerToAccount({
   return {
     ...account,
     publicKey: ensureLeading0x(publicKey),
-    ledgerAppName,
     source: 'ledger',
   }
 }
