@@ -58,7 +58,7 @@ export default class Contracts extends BaseCommand {
             version = `${raw[0]}.${raw[1]}.${raw[2]}.${raw[3]}`
           } catch (e) {
             console.warn(`Failed to get version for ${contract} at ${proxy}`)
-            version = contract === CeloContract.GovernanceSlasher ? '1.1.0.0' : 'NONE'
+            version = contract === CeloContract.GovernanceSlasher ? '1.1.1.0' : 'UNKNOWN'
           }
         }
 
