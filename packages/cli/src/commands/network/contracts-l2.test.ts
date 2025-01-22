@@ -50,7 +50,6 @@ testWithAnvilL2('network:contracts', (web3) => {
       const spy = jest.spyOn(write, 'stdout')
       const warnSpy = jest.spyOn(console, 'warn')
 
-      // @ts-ignore
       await testLocallyWithWeb3Node(Contracts, ['--output', 'json'], web3)
       expect(warnSpy.mock.calls).toMatchInlineSnapshot(`
         [
