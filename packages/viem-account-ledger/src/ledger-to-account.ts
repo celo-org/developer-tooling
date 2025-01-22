@@ -1,4 +1,4 @@
-import { CELO_DERIVATION_PATH_BASE, trimLeading0x } from '@celo/base'
+import { CELO_DERIVATION_PATH_BASE, ETHEREUM_DERIVATION_PATH, trimLeading0x } from '@celo/base'
 import { ensureLeading0x } from '@celo/base/lib/address.js'
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
 import {
@@ -16,9 +16,8 @@ import { checkForKnownToken, generateLedger, readAppName } from './utils.js'
 export type LedgerAccount = LocalAccount<'ledger'>
 
 const CIP64_PREFIX = '0x7b'
-export const ETH_DERIVATION_PATH_BASE = "m/44'/60'/0'" as const
 export const CELO_BASE_DERIVATION_PATH = `${CELO_DERIVATION_PATH_BASE.slice(2)}/0`
-export const DEFAULT_DERIVATION_PATH = `${ETH_DERIVATION_PATH_BASE.slice(2)}/0`
+export const DEFAULT_DERIVATION_PATH = `${ETHEREUM_DERIVATION_PATH.slice(2)}/0`
 
 // not exported from viem...
 interface MessageTypeProperty {
