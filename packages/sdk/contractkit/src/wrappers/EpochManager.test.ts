@@ -118,7 +118,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
     }
   }
 
-  it('starts and finishes a number of epochs', async () => {
+  it('starts and finishes a number of epochs and sends validator rewards', async () => {
     const accounts = await kit.web3.eth.getAccounts()
     const epochManagerWrapper = await kit.contracts.getEpochManager()
     const EPOCH_COUNT = 5
@@ -152,5 +152,26 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
     expect(status.perValidatorReward.toNumber()).toBeGreaterThan(0)
     expect(status.totalRewardsCommunity.toNumber()).toBeGreaterThan(0)
     expect(status.totalRewardsCarbonFund.toNumber()).toBeGreaterThan(0)
+
+    // Make sure the payments are sent out
+    const validatorsWrapper = await kit.contracts.getValidators()
+    const validatorAddress = (await epochManagerWrapper.getElectedAccounts())[0]
+    const validatorGroupAddress = await validatorsWrapper.getValidatorsGroup(validatorAddress)
+
+    const validatorBalanceBefore = (await kit.getTotalBalance(validatorAddress)).cUSD!
+    const validatorGroupBalanceBefore = (await kit.getTotalBalance(validatorGroupAddress)).cUSD!
+
+    await epochManagerWrapper.sendValidatorPayment(validatorAddress).sendAndWaitForReceipt({
+      from: accounts[0],
+    })
+
+    expect(
+      (await kit.getTotalBalance(validatorAddress)).cUSD!.isGreaterThan(validatorBalanceBefore)
+    ).toBeTruthy()
+    expect(
+      (await kit.getTotalBalance(validatorGroupAddress)).cUSD!.isGreaterThan(
+        validatorGroupBalanceBefore
+      )
+    ).toBeTruthy()
   })
 })
