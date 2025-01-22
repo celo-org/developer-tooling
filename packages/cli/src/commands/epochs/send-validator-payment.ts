@@ -32,7 +32,7 @@ export default class SendValidatorPayment extends BaseCommand {
     const epochManager = await kit.contracts.getEpochManager()
 
     // TODO(L2): Remove once migrated to L2
-    if (!(await epochManager.systemAlreadyInitialized())) {
+    if (!(await this.isCel2())) {
       this.error('This command is only available on L2')
     }
 
