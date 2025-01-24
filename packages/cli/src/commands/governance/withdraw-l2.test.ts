@@ -198,7 +198,7 @@ testWithAnvilL2(
       })
     })
 
-    describe.only('useSafe', () => {
+    describe('useSafe', () => {
       let safeAddress: StrongAddress
       let owners: StrongAddress[]
 
@@ -251,7 +251,7 @@ testWithAnvilL2(
         await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
       })
 
-      it('can withdraw using --useMultiSig', async () => {
+      it('can withdraw using --useSafe', async () => {
         // Safety check
         const amountBeforeRefund = await kit.connection.getBalance(safeAddress)
 
