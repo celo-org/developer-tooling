@@ -5,7 +5,12 @@ import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
-import { MultiSigFlags } from '../../utils/flags'
+import { MultiSigFlags, SafeFlags } from '../../utils/flags'
+import {
+  createSafeFromWeb3,
+  performSafeTransaction,
+  safeTransactionMetadataFromCeloTransactionObject,
+} from '../../utils/safe'
 
 export default class Withdraw extends BaseCommand {
   static description = 'Withdraw refunded governance proposal deposits.'
@@ -13,6 +18,8 @@ export default class Withdraw extends BaseCommand {
   static flags = {
     ...BaseCommand.flags,
     ...MultiSigFlags,
+    ...SafeFlags,
+
     from: CustomFlags.address({ required: true, description: "Proposer's address" }),
   }
 
@@ -28,6 +35,15 @@ export default class Withdraw extends BaseCommand {
 
     if (multiSigWrapper) {
       checkBuilder.isMultiSigOwner(res.flags.from, multiSigWrapper)
+    } else if (res.flags.useSafe) {
+      checkBuilder.addCheck(`${res.flags.from} is a safe owner`, async () => {
+        const safe = await createSafeFromWeb3(
+          await this.getWeb3(),
+          res.flags.from,
+          res.flags.safeAddress!
+        )
+        return safe.isOwner(res.flags.from)
+      })
     }
 
     await checkBuilder.runChecks()
@@ -43,6 +59,13 @@ export default class Withdraw extends BaseCommand {
 
       // "Deposit" event is emitted when the MultiSig contract receives the funds
       await displaySendTx<string | void | boolean>('withdraw', multiSigTx, {}, 'Deposit')
+    } else if (res.flags.useSafe) {
+      await performSafeTransaction(
+        await this.getWeb3(),
+        res.flags.safeAddress!,
+        res.flags.from,
+        await safeTransactionMetadataFromCeloTransactionObject(withdrawTx, governance.address)
+      )
     } else {
       // No event is emited otherwise
       await displaySendTx('withdraw', withdrawTx)
@@ -64,7 +87,13 @@ export default class Withdraw extends BaseCommand {
     from: StrongAddress
     useMultiSig: boolean
     for?: StrongAddress
+    useSafe: boolean
+    safeAddress?: StrongAddress
   }): StrongAddress {
-    return flags.useMultiSig ? (flags.for as StrongAddress) : flags.from
+    return flags.useMultiSig
+      ? (flags.for as StrongAddress)
+      : flags.useSafe
+      ? flags.safeAddress!
+      : flags.from
   }
 }
