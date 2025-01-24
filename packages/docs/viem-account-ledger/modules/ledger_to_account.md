@@ -12,7 +12,6 @@
 
 - [CELO\_BASE\_DERIVATION\_PATH](ledger_to_account.md#celo_base_derivation_path)
 - [DEFAULT\_DERIVATION\_PATH](ledger_to_account.md#default_derivation_path)
-- [ETH\_DERIVATION\_PATH\_BASE](ledger_to_account.md#eth_derivation_path_base)
 
 ### Functions
 
@@ -26,7 +25,7 @@
 
 #### Defined in
 
-[ledger-to-account.ts:10](https://github.com/celo-org/developer-tooling/blob/master/packages/viem-account-ledger/src/ledger-to-account.ts#L10)
+[ledger-to-account.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/viem-account-ledger/src/ledger-to-account.ts#L16)
 
 ## Variables
 
@@ -36,7 +35,7 @@
 
 #### Defined in
 
-[ledger-to-account.ts:13](https://github.com/celo-org/developer-tooling/blob/master/packages/viem-account-ledger/src/ledger-to-account.ts#L13)
+[ledger-to-account.ts:19](https://github.com/celo-org/developer-tooling/blob/master/packages/viem-account-ledger/src/ledger-to-account.ts#L19)
 
 ___
 
@@ -46,17 +45,7 @@ ___
 
 #### Defined in
 
-[ledger-to-account.ts:14](https://github.com/celo-org/developer-tooling/blob/master/packages/viem-account-ledger/src/ledger-to-account.ts#L14)
-
-___
-
-### ETH\_DERIVATION\_PATH\_BASE
-
-• `Const` **ETH\_DERIVATION\_PATH\_BASE**: ``"m/44'/60'/0'"``
-
-#### Defined in
-
-[ledger-to-account.ts:12](https://github.com/celo-org/developer-tooling/blob/master/packages/viem-account-ledger/src/ledger-to-account.ts#L12)
+[ledger-to-account.ts:20](https://github.com/celo-org/developer-tooling/blob/master/packages/viem-account-ledger/src/ledger-to-account.ts#L20)
 
 ## Functions
 
@@ -83,4 +72,4 @@ a viem LocalAccount<"ledger">
 
 #### Defined in
 
-[ledger-to-account.ts:25](https://github.com/celo-org/developer-tooling/blob/master/packages/viem-account-ledger/src/ledger-to-account.ts#L25)
+[ledger-to-account.ts:37](https://github.com/celo-org/developer-tooling/blob/master/packages/viem-account-ledger/src/ledger-to-account.ts#L37)

@@ -11,4 +11,5 @@
 - [ledger-signer](modules/ledger_signer.md)
 - [ledger-utils](modules/ledger_utils.md)
 - [ledger-wallet](modules/ledger_wallet.md)
+- [test-utils](modules/test_utils.md)
 - [tokens](modules/tokens.md)

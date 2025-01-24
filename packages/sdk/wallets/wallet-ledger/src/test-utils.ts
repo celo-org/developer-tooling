@@ -1,16 +1,27 @@
-import { ensureLeading0x, normalizeAddressWith0x, trimLeading0x } from '@celo/base'
+import {
+  CELO_DERIVATION_PATH_BASE,
+  ensureLeading0x,
+  normalizeAddressWith0x,
+  trimLeading0x,
+} from '@celo/base'
 import Eth from '@celo/hw-app-eth'
-import { generateTypedDataHash } from '@celo/utils/lib/sign-typed-data-utils.js'
-import { getHashFromEncoded, signTransaction } from '@celo/wallet-base'
+import { generateTypedDataHash } from '@celo/utils/lib/sign-typed-data-utils'
+import {
+  chainIdTransformationForSigning,
+  determineTXType,
+  getHashFromEncoded,
+  signTransaction,
+} from '@celo/wallet-base'
 import * as ethUtil from '@ethereumjs/util'
 import { createVerify, VerifyPublicKeyInput } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
-import { Hex, parseSignature } from 'viem'
-import { privateKeyToAccount, privateKeyToAddress, signMessage } from 'viem/accounts'
-import { legacyLedgerPublicKeyHex } from './data.js'
-import { DEFAULT_DERIVATION_PATH } from './ledger-to-account.js'
-import { meetsVersionRequirements, MIN_VERSION_EIP1559 } from './utils.js'
+
+import { Hex } from '@celo/connect'
+import { privateKeyToAddress, privateKeyToPublicKey } from '@celo/utils/lib/address'
+import { legacyLedgerPublicKeyHex } from './data'
+import { meetsVersionRequirements } from './ledger-utils'
+import { LedgerWallet } from './ledger-wallet'
 
 const PRIVATE_KEY1 = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
 export const ACCOUNT_ADDRESS1 = normalizeAddressWith0x(privateKeyToAddress(PRIVATE_KEY1))
@@ -25,6 +36,7 @@ export const ACCOUNT_ADDRESS5 = normalizeAddressWith0x(privateKeyToAddress(PRIVA
 const PRIVATE_KEY_NEVER = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890ffffff'
 export const ACCOUNT_ADDRESS_NEVER = normalizeAddressWith0x(privateKeyToAddress(PRIVATE_KEY_NEVER))
 
+const DEFAULT_DERIVATION_PATH = `${CELO_DERIVATION_PATH_BASE.slice(2)}/0`
 const ledgerAddresses: { [myKey: string]: { address: Hex; privateKey: Hex } } = {
   [`${DEFAULT_DERIVATION_PATH}/0`]: {
     address: ACCOUNT_ADDRESS1,
@@ -98,7 +110,7 @@ export class TestLedger {
   isMock = true
   transport: Eth['transport']
 
-  constructor(readonly config?: Config) {
+  constructor(readonly mockForceValidation: () => void, readonly config?: Config) {
     this.transport = {
       send: async (_cla: number, ins: number, _p1: number, _p2: number): Promise<Buffer> => {
         if (ins === 0x01) {
@@ -120,20 +132,22 @@ export class TestLedger {
   getAppConfiguration() {
     return Promise.resolve({
       arbitraryDataEnabled: this.config?.arbitraryDataEnabled ?? 1,
-      version: this.config?.version ?? MIN_VERSION_EIP1559,
+      version: this.config?.version ?? LedgerWallet.MIN_VERSION_EIP1559,
       erc20ProvisioningNecessary: this.config?.erc20ProvisioningNecessary ?? 1,
       starkEnabled: this.config?.starkEnabled ?? 1,
       starkv2Supported: this.config?.starkv2Supported ?? 1,
     })
   }
 
-  async getAddress(derivationPath: string) {
+  async getAddress(derivationPath: string, forceValidation?: boolean) {
+    if (forceValidation) {
+      this.mockForceValidation()
+    }
     if (ledgerAddresses[derivationPath]) {
-      const { address, privateKey } = ledgerAddresses[derivationPath]
       return {
-        address,
+        address: ledgerAddresses[derivationPath].address,
         derivationPath,
-        publicKey: privateKeyToAccount(privateKey).publicKey,
+        publicKey: privateKeyToPublicKey(ledgerAddresses[derivationPath].privateKey),
       }
     }
     return {
@@ -145,8 +159,11 @@ export class TestLedger {
 
   async signTransaction(derivationPath: string, data: string) {
     if (ledgerAddresses[derivationPath]) {
+      const type = determineTXType(ensureLeading0x(data))
+      // replicate logic from wallet-base/src/wallet-base.ts
+      const addToV = type === 'celo-legacy' ? chainIdTransformationForSigning(TEST_CHAIN_ID) : 0
       const hash = getHashFromEncoded(ensureLeading0x(data))
-      const { r, s, v } = signTransaction(hash, ledgerAddresses[derivationPath].privateKey)
+      const { r, s, v } = signTransaction(hash, ledgerAddresses[derivationPath].privateKey, addToV)
 
       return {
         v: v.toString(16),
@@ -159,11 +176,17 @@ export class TestLedger {
 
   async signPersonalMessage(derivationPath: string, data: string) {
     if (ledgerAddresses[derivationPath]) {
-      const signedMessage = await signMessage({
-        privateKey: ledgerAddresses[derivationPath].privateKey,
-        message: { raw: ensureLeading0x(data) },
-      })
-      return parseSignature(signedMessage)
+      const dataBuff = ethUtil.toBuffer(ensureLeading0x(data))
+      const msgHashBuff = ethUtil.hashPersonalMessage(dataBuff)
+
+      const trimmedKey = trimLeading0x(ledgerAddresses[derivationPath].privateKey)
+      const pkBuffer = Buffer.from(trimmedKey, 'hex')
+      const signature = ethUtil.ecsign(msgHashBuff, pkBuffer)
+      return {
+        v: Number(signature.v),
+        r: signature.r.toString('hex'),
+        s: signature.s.toString('hex'),
+      }
     }
     throw new Error('Invalid Path')
   }
@@ -190,7 +213,7 @@ export class TestLedger {
     const version = (await this.getAppConfiguration()).version
     if (
       meetsVersionRequirements(version, {
-        minimum: MIN_VERSION_EIP1559,
+        minimum: LedgerWallet.MIN_VERSION_EIP1559,
       })
     ) {
       // verify with new pubkey
@@ -225,6 +248,12 @@ export class TestLedger {
   }
 }
 
-export const mockLedger = (config: Config = {}): Eth => {
-  return new TestLedger(config) as unknown as Eth
+export const mockLedgerImplementation = (
+  mockForceValidation: () => void,
+  config: Config = {}
+): Eth => {
+  const testLedger = new TestLedger(mockForceValidation, config) as unknown as Eth
+
+  jest.spyOn(testLedger, 'getAddress')
+  return testLedger
 }

@@ -21,15 +21,16 @@ export class LedgerSigner implements Signer {
   private derivationPath: string
   private validated: boolean = false
   private ledgerAddressValidation: AddressValidation
-  private appConfiguration: { arbitraryDataEnabled: number; version: string }
+  private appConfiguration: { arbitraryDataEnabled: number; version: string; appName: string }
 
   constructor(
     ledger: Ledger,
     derivationPath: string,
     ledgerAddressValidation: AddressValidation,
-    appConfiguration: { arbitraryDataEnabled: number; version: string } = {
+    appConfiguration: { arbitraryDataEnabled: number; version: string; appName: string } = {
       arbitraryDataEnabled: 0,
       version: '0.0.0',
+      appName: 'unknown',
     }
   ) {
     this.ledger = ledger
@@ -114,6 +115,10 @@ export class LedgerSigner implements Signer {
   }
 
   async signTypedData(typedData: EIP712TypedData): Promise<{ v: number; r: Buffer; s: Buffer }> {
+    if (this.appConfiguration.appName === 'celo') {
+      throw new Error('Not implemented as of this release.')
+    }
+
     try {
       const domainSeparator = structHash('EIP712Domain', typedData.domain, typedData.types)
       const hashStructMessage = structHash(
