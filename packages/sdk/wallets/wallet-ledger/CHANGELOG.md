@@ -1,5 +1,18 @@
 # @celo/wallet-ledger
 
+## 7.0.0-beta.1
+
+### Minor Changes
+
+- [#516](https://github.com/celo-org/developer-tooling/pull/516) [`a8e5099`](https://github.com/celo-org/developer-tooling/commit/a8e50990e71f5d45522d11995836fbee820564c1) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Add (Beta) support for signTypedData in @celo/viem-account-ledger and @celo/wallet-ledger when using with the `ethereum` ledger app.
+  when using with the `ethereum` ledger app.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @celo/wallet-base@7.0.0-beta.1
+  - @celo/wallet-remote@7.0.0-beta.1
+
 ## 7.0.0-beta.0
 
 ### Major Changes
