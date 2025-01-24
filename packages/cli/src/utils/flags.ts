@@ -33,9 +33,21 @@ export const ViewCommmandFlags = {
 export const MultiSigFlags = {
   useMultiSig: Flags.boolean({
     description: 'True means the request will be sent through multisig.',
+    exclusive: ['useSafe'],
   }),
   for: CustomFlags.address({
     dependsOn: ['useMultiSig'],
     description: 'Address of the multi-sig contract',
+  }),
+}
+
+export const SafeFlags = {
+  useSafe: Flags.boolean({
+    description: 'True means the request will be sent through SAFE (http://safe.global).',
+    exclusive: ['useMultiSig'],
+  }),
+  safeAddress: CustomFlags.address({
+    dependsOn: ['useSafe'],
+    description: 'Address of the safe.',
   }),
 }

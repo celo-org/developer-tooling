@@ -24,12 +24,13 @@ export const createSafeFromWeb3 = async (
 
 export const safeTransactionMetadataFromCeloTransactionObject = async (
   tx: CeloTransactionObject<any>,
-  toAddress: StrongAddress
+  toAddress: StrongAddress,
+  value = '0'
 ): Promise<MetaTransactionData> => {
   return {
     to: toAddress,
     data: tx.txo.encodeABI(),
-    value: '0',
+    value,
   }
 }
 
