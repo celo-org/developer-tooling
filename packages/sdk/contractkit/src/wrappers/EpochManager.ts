@@ -65,6 +65,7 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
 
   startNextEpochProcess = proxySend(this.connection, this.contract.methods.startNextEpochProcess)
   finishNextEpochProcess = proxySend(this.connection, this.contract.methods.finishNextEpochProcess)
+  sendValidatorPayment = proxySend(this.connection, this.contract.methods.sendValidatorPayment)
 
   finishNextEpochProcessTx = async () => {
     const elected = await this.getElectedAccounts()
