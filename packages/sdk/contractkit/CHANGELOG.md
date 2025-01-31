@@ -1,5 +1,14 @@
 # @celo/contractkit
 
+## 9.0.1-beta.1
+
+### Patch Changes
+
+- [#510](https://github.com/celo-org/developer-tooling/pull/510) [`0d307db`](https://github.com/celo-org/developer-tooling/commit/0d307db42f4c4a221c8a30682cddc99f2012c2e2) Thanks [@shazarre](https://github.com/shazarre)! - Expose `sendValidatorPayment` methods for `EpochManager` contract wrapper
+
+- Updated dependencies []:
+  - @celo/wallet-local@7.0.0-beta.1
+
 ## 9.0.1-beta.0
 
 ### Patch Changes

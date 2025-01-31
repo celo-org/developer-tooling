@@ -1,5 +1,23 @@
 # Changelog
 
+## 6.1.0-beta.1
+
+### Minor Changes
+
+- [#511](https://github.com/celo-org/developer-tooling/pull/511) [`be62336`](https://github.com/celo-org/developer-tooling/commit/be6233688d412ff2279fb9bef2b7df7749b8f095) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Add useSafe flags for governance:propose and governance:withdraw commands
+
+- [#510](https://github.com/celo-org/developer-tooling/pull/510) [`0d307db`](https://github.com/celo-org/developer-tooling/commit/0d307db42f4c4a221c8a30682cddc99f2012c2e2) Thanks [@shazarre](https://github.com/shazarre)! - Add `epochs:send-validator-payment` command to support sending validator, their group and delegation beneficiary allocated epoch payments
+
+### Patch Changes
+
+- [#514](https://github.com/celo-org/developer-tooling/pull/514) [`4a1d9e7`](https://github.com/celo-org/developer-tooling/commit/4a1d9e764a67b16324da996eb73d514e4b215959) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Fix bug with GovernanceSlasher missing version causing failure. defend against exceptions when printing contracts info
+
+- Updated dependencies [[`0d307db`](https://github.com/celo-org/developer-tooling/commit/0d307db42f4c4a221c8a30682cddc99f2012c2e2), [`a8e5099`](https://github.com/celo-org/developer-tooling/commit/a8e50990e71f5d45522d11995836fbee820564c1)]:
+  - @celo/contractkit@9.0.1-beta.1
+  - @celo/wallet-ledger@7.0.0-beta.1
+  - @celo/wallet-hsm-azure@7.0.0-beta.1
+  - @celo/wallet-local@7.0.0-beta.1
+
 ## 6.1.0-beta.0
 
 ### Minor Changes
