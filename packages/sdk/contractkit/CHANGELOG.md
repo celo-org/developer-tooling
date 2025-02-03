@@ -1,5 +1,11 @@
 # @celo/contractkit
 
+## 9.0.1-beta.2
+
+### Patch Changes
+
+- [#517](https://github.com/celo-org/developer-tooling/pull/517) [`ce6a493`](https://github.com/celo-org/developer-tooling/commit/ce6a493ab6c82893595cde6a8ee9485d9bc9e033) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Bump abis to latest
+
 ## 9.0.1-beta.1
 
 ### Patch Changes
