@@ -29,12 +29,12 @@ export default class SendValidatorPayment extends BaseCommand {
     const kit = await this.getKit()
     const res = await this.parse(SendValidatorPayment)
 
-    const epochManager = await kit.contracts.getEpochManager()
-
     // TODO(L2): Remove once migrated to L2
     if (!(await this.isCel2())) {
       this.error('This command is only available on L2')
     }
+
+    const epochManager = await kit.contracts.getEpochManager()
 
     await newCheckBuilder(this).isValidator(res.flags.for).runChecks()
 
