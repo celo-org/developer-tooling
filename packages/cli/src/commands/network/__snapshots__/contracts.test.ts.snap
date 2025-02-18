@@ -37,7 +37,7 @@ exports[`network:contracts runs 1`] = `
   {
     "contract": "Election",
     "proxy": "0xcB4E4A207DC1C220bd54B2A983E32e923c32E544",
-    "implementation": "0x6710D9980C55D7963B4dA671A159523BB5b4F6d1",
+    "implementation": "0x5343E67178598d1157Aa7f3F2f7Fe6977bD1EC21",
     "version": "1.1.4.0"
   },
   {
@@ -55,7 +55,7 @@ exports[`network:contracts runs 1`] = `
   {
     "contract": "EpochRewards",
     "proxy": "0x535D5EbB846832A2d876380dBccCb84eE5521d3f",
-    "implementation": "0xB4C3e97Ee2acaeb7D840Fde692465903239f213E",
+    "implementation": "0xB8B08E2c2C1582D678bfe68E27DA8360eAc3E1aA",
     "version": "1.1.2.0"
   },
   {
@@ -109,7 +109,7 @@ exports[`network:contracts runs 1`] = `
   {
     "contract": "Governance",
     "proxy": "0x2EB25B5eb9d5A4f61deb1e4F846343F862eB67D9",
-    "implementation": "0x063BDb2e9A86e8aD2ad9fc488e9E45Dc2a845c3a",
+    "implementation": "0x91175ff600759122459c80b907b6980261D71BE7",
     "version": "1.4.2.0"
   },
   {

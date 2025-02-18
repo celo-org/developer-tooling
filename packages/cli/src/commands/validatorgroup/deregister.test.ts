@@ -106,7 +106,7 @@ testWithAnvilL2('validatorgroup:deregister cmd', (web3: Web3) => {
           ]
         `)
         const validators = await kit.contracts.getValidators()
-        expect(validators.isValidatorGroup(groupAddress)).resolves.toBe(true)
+        await expect(validators.isValidatorGroup(groupAddress)).resolves.toBe(true)
       })
     })
     describe('when wait duration for unlocking is over', () => {
