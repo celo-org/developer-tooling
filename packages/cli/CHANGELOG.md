@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.1.0-beta.2
+
+### Patch Changes
+
+- [#523](https://github.com/celo-org/developer-tooling/pull/523) [`13c4220`](https://github.com/celo-org/developer-tooling/commit/13c4220c21f1e83d9ebf01a5a19e423cbfc1acbc) Thanks [@shazarre](https://github.com/shazarre)! - Fixes EpochManager not available error for some L1 commands
+
 ## 6.1.0-beta.1
 
 ### Minor Changes
