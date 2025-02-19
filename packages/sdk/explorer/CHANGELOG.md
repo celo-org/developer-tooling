@@ -1,5 +1,17 @@
 # @celo/explorer
 
+## 5.0.14
+
+### Patch Changes
+
+- [#497](https://github.com/celo-org/developer-tooling/pull/497) [`79cd947`](https://github.com/celo-org/developer-tooling/commit/79cd94725582be0c62133e98b922d19ed9c0b5de) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - chore: package.json link fixes
+
+- Updated dependencies [[`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733), [`79cd947`](https://github.com/celo-org/developer-tooling/commit/79cd94725582be0c62133e98b922d19ed9c0b5de), [`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733), [`0d307db`](https://github.com/celo-org/developer-tooling/commit/0d307db42f4c4a221c8a30682cddc99f2012c2e2), [`ce6a493`](https://github.com/celo-org/developer-tooling/commit/ce6a493ab6c82893595cde6a8ee9485d9bc9e033), [`07c4c78`](https://github.com/celo-org/developer-tooling/commit/07c4c7854f419dd07fbf09fe966fb5b378a139d1)]:
+  - @celo/utils@8.0.1
+  - @celo/base@7.0.1
+  - @celo/contractkit@9.0.1
+  - @celo/connect@6.1.1
+
 ## 5.0.14-beta.0
 
 ### Patch Changes
