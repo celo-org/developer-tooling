@@ -1,5 +1,49 @@
 # Changelog
 
+## 6.1.0
+
+### Minor Changes
+
+- [#470](https://github.com/celo-org/developer-tooling/pull/470) [`770bfa4`](https://github.com/celo-org/developer-tooling/commit/770bfa47af12ce8fbe0a4884481034ca26d3b29d) Thanks [@shazarre](https://github.com/shazarre)! - Introduce `validatorgroup:rpc-urls` command to list community RPC nodes
+
+- [#488](https://github.com/celo-org/developer-tooling/pull/488) [`07c4c78`](https://github.com/celo-org/developer-tooling/commit/07c4c7854f419dd07fbf09fe966fb5b378a139d1) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - add --derivationPath to config:set for setting global deriviationPath. Usefull when using ledger devices and when generated new accounts.
+
+- [#511](https://github.com/celo-org/developer-tooling/pull/511) [`be62336`](https://github.com/celo-org/developer-tooling/commit/be6233688d412ff2279fb9bef2b7df7749b8f095) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Add useSafe flags for governance:propose and governance:withdraw commands
+
+- [#488](https://github.com/celo-org/developer-tooling/pull/488) [`07c4c78`](https://github.com/celo-org/developer-tooling/commit/07c4c7854f419dd07fbf09fe966fb5b378a139d1) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Add --ledgerLiveMode flag for use with --useLedger flag. This is useful for using same addresses on celocli as LedgerLive uses.
+
+- [#508](https://github.com/celo-org/developer-tooling/pull/508) [`8fb95c9`](https://github.com/celo-org/developer-tooling/commit/8fb95c904ee2fd96220658b067ac60193b22a2d9) Thanks [@shazarre](https://github.com/shazarre)! - Support delegation for vote signers
+
+- [#507](https://github.com/celo-org/developer-tooling/pull/507) [`0517378`](https://github.com/celo-org/developer-tooling/commit/0517378e1160990238b4cf670e0fed841eb953ea) Thanks [@shazarre](https://github.com/shazarre)! - --useMultiSig support for governance:withdraw command
+
+- [#510](https://github.com/celo-org/developer-tooling/pull/510) [`0d307db`](https://github.com/celo-org/developer-tooling/commit/0d307db42f4c4a221c8a30682cddc99f2012c2e2) Thanks [@shazarre](https://github.com/shazarre)! - Add `epochs:send-validator-payment` command to support sending validator, their group and delegation beneficiary allocated epoch payments
+
+### Patch Changes
+
+- [#497](https://github.com/celo-org/developer-tooling/pull/497) [`79cd947`](https://github.com/celo-org/developer-tooling/commit/79cd94725582be0c62133e98b922d19ed9c0b5de) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - chore: package.json link fixes
+
+- [#492](https://github.com/celo-org/developer-tooling/pull/492) [`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Bump dependncies up
+
+- [#493](https://github.com/celo-org/developer-tooling/pull/493) [`075a270`](https://github.com/celo-org/developer-tooling/commit/075a270b98c806046226ee151de4027040ae4b05) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Fix releasegold:transfer-dollars bug with pre run checks
+
+- [#523](https://github.com/celo-org/developer-tooling/pull/523) [`13c4220`](https://github.com/celo-org/developer-tooling/commit/13c4220c21f1e83d9ebf01a5a19e423cbfc1acbc) Thanks [@shazarre](https://github.com/shazarre)! - Fixes EpochManager not available error for some L1 commands
+
+- [#514](https://github.com/celo-org/developer-tooling/pull/514) [`4a1d9e7`](https://github.com/celo-org/developer-tooling/commit/4a1d9e764a67b16324da996eb73d514e4b215959) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Fix bug with GovernanceSlasher missing version causing failure. defend against exceptions when printing contracts info
+
+- Updated dependencies [[`770bfa4`](https://github.com/celo-org/developer-tooling/commit/770bfa47af12ce8fbe0a4884481034ca26d3b29d), [`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733), [`79cd947`](https://github.com/celo-org/developer-tooling/commit/79cd94725582be0c62133e98b922d19ed9c0b5de), [`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733), [`0d307db`](https://github.com/celo-org/developer-tooling/commit/0d307db42f4c4a221c8a30682cddc99f2012c2e2), [`07c4c78`](https://github.com/celo-org/developer-tooling/commit/07c4c7854f419dd07fbf09fe966fb5b378a139d1), [`a8e5099`](https://github.com/celo-org/developer-tooling/commit/a8e50990e71f5d45522d11995836fbee820564c1), [`07c4c78`](https://github.com/celo-org/developer-tooling/commit/07c4c7854f419dd07fbf09fe966fb5b378a139d1), [`ce6a493`](https://github.com/celo-org/developer-tooling/commit/ce6a493ab6c82893595cde6a8ee9485d9bc9e033), [`07c4c78`](https://github.com/celo-org/developer-tooling/commit/07c4c7854f419dd07fbf09fe966fb5b378a139d1)]:
+  - @celo/metadata-claims@1.0.1
+  - @celo/wallet-hsm-azure@7.0.0
+  - @celo/cryptographic-utils@5.1.2
+  - @celo/utils@8.0.1
+  - @celo/base@7.0.1
+  - @celo/wallet-ledger@7.0.0
+  - @celo/wallet-local@7.0.0
+  - @celo/contractkit@9.0.1
+  - @celo/phone-utils@6.0.5
+  - @celo/governance@5.1.5
+  - @celo/explorer@5.0.14
+  - @celo/connect@6.1.1
+
 ## 6.1.0-beta.2
 
 ### Patch Changes

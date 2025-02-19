@@ -1,5 +1,67 @@
 # @celo/wallet-ledger
 
+## 7.0.0
+
+### Major Changes
+
+- [#488](https://github.com/celo-org/developer-tooling/pull/488) [`07c4c78`](https://github.com/celo-org/developer-tooling/commit/07c4c7854f419dd07fbf09fe966fb5b378a139d1) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Interfaces for newLedgerWalletWithSetup and LedgerWallet constructor have changed.
+
+  `newLedgerWalletWithSetup` replaced positional arguments for named arguments and added changeIndexes
+
+  ```diff
+    newLedgerWalletWithSetup(
+      transport: any,
+  -    derivationPathIndexes?: number[],
+  -    baseDerivationPath?: string,
+  -    ledgerAddressValidation?: AddressValidation,
+  -    isCel2?: boolean
+  +    options: LedgerWalletSetup
+    )
+
+  + interface LedgerWalletSetup {
+  +   derivationPathIndexes?: number[]
+  +   changeIndexes?: number[]
+  +   baseDerivationPath?: string
+  +   ledgerAddressValidation?: AddressValidation
+  +   isCel2?: boolean
+  + }
+
+  ```
+
+  `new LedgerWallet` moved transport to first position and added changeIndexes in 4th
+
+  ```diff
+  new LedgerWallet(
+  +    transport,
+      derivationPathIndexes,
+      baseDerivationPath,
+  -    transport,
+  +    changeIndexes,
+      ledgerAddressValidation,
+      isCel2
+    )
+  ```
+
+### Minor Changes
+
+- [#488](https://github.com/celo-org/developer-tooling/pull/488) [`07c4c78`](https://github.com/celo-org/developer-tooling/commit/07c4c7854f419dd07fbf09fe966fb5b378a139d1) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - It is now possible to iterate over both the change and address indexes to look thru more bip44 paths for addresses. just pass changeIndexes into LedgerWallet.
+
+- [#516](https://github.com/celo-org/developer-tooling/pull/516) [`a8e5099`](https://github.com/celo-org/developer-tooling/commit/a8e50990e71f5d45522d11995836fbee820564c1) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Add (Beta) support for signTypedData in @celo/viem-account-ledger and @celo/wallet-ledger when using with the `ethereum` ledger app.
+  when using with the `ethereum` ledger app.
+
+### Patch Changes
+
+- [#497](https://github.com/celo-org/developer-tooling/pull/497) [`79cd947`](https://github.com/celo-org/developer-tooling/commit/79cd94725582be0c62133e98b922d19ed9c0b5de) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - chore: package.json link fixes
+
+- [#492](https://github.com/celo-org/developer-tooling/pull/492) [`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Bump dependncies up
+
+- Updated dependencies [[`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733), [`79cd947`](https://github.com/celo-org/developer-tooling/commit/79cd94725582be0c62133e98b922d19ed9c0b5de), [`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733), [`07c4c78`](https://github.com/celo-org/developer-tooling/commit/07c4c7854f419dd07fbf09fe966fb5b378a139d1)]:
+  - @celo/utils@8.0.1
+  - @celo/base@7.0.1
+  - @celo/wallet-remote@7.0.0
+  - @celo/wallet-base@7.0.0
+  - @celo/connect@6.1.1
+
 ## 7.0.0-beta.1
 
 ### Minor Changes

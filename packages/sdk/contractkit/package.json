@@ -1,6 +1,6 @@
 {
   "name": "@celo/contractkit",
-  "version": "9.0.1-beta.2",
+  "version": "9.0.1",
   "description": "Celo's ContractKit to interact with Celo network",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -32,10 +32,10 @@
   "dependencies": {
     "@celo/abis": "11.0.0",
     "@celo/abis-12": "npm:@celo/abis@12.0.0-canary.87",
-    "@celo/base": "^7.0.1-beta.0",
-    "@celo/connect": "^6.1.1-beta.0",
-    "@celo/utils": "^8.0.1-beta.0",
-    "@celo/wallet-local": "^7.0.0-beta.1",
+    "@celo/base": "^7.0.1",
+    "@celo/connect": "^6.1.1",
+    "@celo/utils": "^8.0.1",
+    "@celo/wallet-local": "^7.0.0",
     "@types/bn.js": "^5.1.0",
     "@types/debug": "^4.1.5",
     "bignumber.js": "^9.0.0",
@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "@celo/celo-devchain": "^7.0.0",
-    "@celo/dev-utils": "0.0.8-beta.0",
+    "@celo/dev-utils": "0.0.8",
     "@celo/odis-identifiers": "^1.0.1",
     "@celo/typescript": "workspace:^",
     "@types/debug": "^4.1.5",
