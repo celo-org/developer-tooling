@@ -1,4 +1,5 @@
-import { eqAddress, NULL_ADDRESS } from '@celo/base/lib/address'
+import { accountsABI, goldTokenABI, governanceABI, lockedGoldABI, stableTokenABI, validatorsABI } from '@celo/abis-12'
+import { eqAddress, NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
 import {
   COMPLIANT_ERROR_RESPONSE,
   OFAC_SANCTIONS_LIST_URL,
@@ -20,9 +21,15 @@ import { verifySignature } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
 import chalk from 'chalk'
 import { fetch } from 'cross-fetch'
+import { erc20Abi, getContract, GetContractReturnType, PublicClient } from 'viem'
 import utils from 'web3-utils'
-import { BaseCommand } from '../base'
+import { resolveAddress } from '../packages-to-be/address-resolver'
 import { getCurrentTimestamp, printValueMapRecursive } from './cli'
+import { meetsValidatorBalanceRequirements } from '../packages-to-be/validators'
+import { AccountsContract, getAccountsContract, getGovernanceContract, getLockedGoldContract, getValidatorsContract, GovernanceContract, LockedGoldContract, ValidatorsContract } from '../packages-to-be/contracts'
+import { CeloClient, getClient } from '../packages-to-be/client'
+import { signerToAccount } from '../packages-to-be/account'
+import { resolve } from 'path'
 
 export interface CommandCheck {
   name: string
@@ -46,76 +53,78 @@ const negate = (x: Promise<boolean>) => x.then((y) => !y)
 
 type Resolve<A> = A extends Promise<infer T> ? T : A
 
-export function newCheckBuilder(cmd: BaseCommand, signer?: Address) {
-  return new CheckBuilder(cmd, signer)
+export function newCheckBuilder(signer?: StrongAddress) {
+  return new CheckBuilder(signer)
 }
 
 class CheckBuilder {
   private checks: CommandCheck[] = []
+  private client: CeloClient;
 
-  constructor(private cmd: BaseCommand, private signer?: Address) {}
-
-  async getWeb3() {
-    return this.cmd.getWeb3()
-  }
-
-  async getKit() {
-    return this.cmd.getKit()
+  constructor(
+    private signer?: StrongAddress
+  ) {
+    this.client = getClient()
   }
 
   withValidators<A>(
-    f: (validators: ValidatorsWrapper, signer: Address, account: Address, ctx: CheckBuilder) => A
+    f: (validators: ValidatorsContract, signer: StrongAddress, account: StrongAddress, ctx: CheckBuilder) => A
   ): () => Promise<Resolve<A>> {
     return async () => {
-      const kit = await this.getKit()
-      const validators = await kit.contracts.getValidators()
+      const validatorsContract = await getValidatorsContract()
+
       if (this.signer) {
-        const account = await validators.signerToAccount(this.signer)
-        return f(validators, this.signer, account, this) as Resolve<A>
+        const account = await this.client.readContract({
+          address: await resolveAddress('Accounts'),
+          abi: accountsABI,
+          functionName: 'signerToAccount',
+          args: [this.signer]
+        })
+
+        return f(validatorsContract, this.signer, account, this) as Resolve<A>
       } else {
-        return f(validators, '', '', this) as Resolve<A>
+        // TODO resolve
+        return f(validatorsContract, '', '', this) as Resolve<A>
       }
     }
   }
 
   withLockedGold<A>(
     f: (
-      lockedGold: LockedGoldWrapper,
+      lockedGold: LockedGoldContract,
       signer: Address,
       account: Address,
-      validators: ValidatorsWrapper
+      validators: ValidatorsContract
     ) => A
   ): () => Promise<Resolve<A>> {
     return async () => {
-      const kit = await this.getKit()
-      const [lockedGold, validators] = await Promise.all([
-        kit.contracts.getLockedGold(),
-        kit.contracts.getValidators(),
-      ])
+      const lockedCeloContract = await getLockedGoldContract()
+      const validatorsContract = await getValidatorsContract()
+
       if (this.signer) {
-        const account = await validators.signerToAccount(this.signer)
-        return f(lockedGold, this.signer, account, validators) as Resolve<A>
+        const account = await signerToAccount(this.signer)
+        return f(lockedCeloContract, this.signer, account, validatorsContract) as Resolve<A>
       } else {
-        return f(lockedGold, '', '', validators) as Resolve<A>
+        return f(lockedCeloContract, '', '', validatorsContract) as Resolve<A>
       }
     }
   }
 
-  withAccounts<A>(f: (accounts: AccountsWrapper) => A): () => Promise<Resolve<A>> {
+  withAccounts<A>(f: (accounts: AccountsContract) => A): () => Promise<Resolve<A>> {
     return async () => {
-      const kit = await this.getKit()
-      const accounts = await kit.contracts.getAccounts()
-      return f(accounts) as Resolve<A>
+      const accountsContract = await getAccountsContract()
+
+      return f(accountsContract) as Resolve<A>
     }
   }
 
   withGovernance<A>(
-    f: (governance: GovernanceWrapper, signer: Address, account: Address, ctx: CheckBuilder) => A
+    f: (governance: GovernanceContract, signer: Address, account: Address, ctx: CheckBuilder) => A
   ): () => Promise<Resolve<A>> {
     return async () => {
-      const kit = await this.getKit()
-      const governance = await kit.contracts.getGovernance()
-      return f(governance, '', '', this) as Resolve<A>
+      const governanceContract = await getGovernanceContract()
+
+      return f(governanceContract, '', '', this) as Resolve<A>
     }
   }
 
@@ -157,21 +166,21 @@ class CheckBuilder {
   isApprover = (account: Address) =>
     this.addCheck(
       `${account} is approver address`,
-      this.withGovernance(async (governance) => eqAddress(await governance.getApprover(), account))
+      this.withGovernance(async (governance) => eqAddress(await governance.read.approver(), account))
     )
 
   isSecurityCouncil = (account: Address) =>
     this.addCheck(
       `${account} is security council address`,
       this.withGovernance(async (governance) =>
-        eqAddress(await governance.getSecurityCouncil(), account)
+        eqAddress(await governance.read.securityCouncil(), account)
       )
     )
 
   proposalExists = (proposalID: string) =>
     this.addCheck(
       `${proposalID} is an existing proposal`,
-      this.withGovernance((governance) => governance.proposalExists(proposalID))
+      this.withGovernance((governance) => governance.read.proposalExists([BigInt(proposalID)]))
     )
 
   proposalInStage = (proposalID: string, stage: keyof typeof ProposalStage) =>
@@ -181,7 +190,7 @@ class CheckBuilder {
     this.addCheck(
       `${proposalID} is in stage ${stages.join(' or ')}`,
       this.withGovernance(async (governance) => {
-        const stage = await governance.getProposalStage(proposalID)
+        const stage = await governance.read.getProposalStage([BigInt(proposalID)])
         let match = false
         for (const allowedStage of stages) {
           match = stage === allowedStage || match
@@ -280,46 +289,45 @@ class CheckBuilder {
   signerAccountIsValidator = () =>
     this.addCheck(
       `Signer account is Validator`,
-      this.withValidators((validators, _s, account) => validators.isValidator(account))
+      this.withValidators((validators, _s, account) => validators.read.isValidator([account]))
     )
 
   signerAccountIsValidatorGroup = () =>
     this.addCheck(
       `Signer account is ValidatorGroup`,
-      this.withValidators((validators, _s, account) => validators.isValidatorGroup(account))
+      this.withValidators((validators, _s, account) => validators.read.isValidatorGroup([account]))
     )
 
-  isValidator = (account?: Address) =>
+  isValidator = (account?: StrongAddress) =>
     this.addCheck(
       `${account} is Validator`,
-      this.withValidators((validators, _, _account) => validators.isValidator(account ?? _account))
+      this.withValidators((validators, _, _account) => validators.read.isValidator([account ?? _account]))
     )
 
-  isValidatorGroup = (account: Address) =>
+  isValidatorGroup = (account: StrongAddress) =>
     this.addCheck(
       `${account} is ValidatorGroup`,
-      this.withValidators((validators) => validators.isValidatorGroup(account))
+      this.withValidators((validators) => validators.read.isValidatorGroup([account]))
     )
 
-  isNotValidator = (account?: Address) =>
+  isNotValidator = (account?: StrongAddress) =>
     this.addCheck(
       `${this.signer!} is not a registered Validator`,
       this.withValidators((validators, _, _account) =>
-        negate(validators.isValidator(account ?? _account))
+        negate(validators.read.isValidator([account ?? _account]))
       )
     )
 
   isNotValidatorGroup = () =>
     this.addCheck(
       `${this.signer!} is not a registered ValidatorGroup`,
-      this.withValidators((validators, _, account) => negate(validators.isValidatorGroup(account)))
+      this.withValidators((validators, _, account) => negate(validators.read.isValidatorGroup([account])))
     )
 
   signerMeetsValidatorBalanceRequirements = () =>
     this.addCheck(
       `Signer's account has enough locked celo for registration`,
-      this.withValidators((validators, _signer, account) =>
-        validators.meetsValidatorBalanceRequirements(account)
+      this.withValidators((validators, _signer, account) => meetsValidatorBalanceRequirements(account))
       )
     )
 
@@ -327,22 +335,24 @@ class CheckBuilder {
     this.addCheck(
       `Signer's account has enough locked celo for group registration`,
       this.withValidators((validators, _signer, account) =>
-        validators.meetsValidatorGroupBalanceRequirements(account)
+        validators.read.meetsValidatorGroupBalanceRequirements([account])
       )
     )
 
-  meetsValidatorBalanceRequirements = (account: Address) =>
+  meetsValidatorBalanceRequirements = (account: StrongAddress) =>
     this.addCheck(
       `${account} has enough locked celo for registration`,
-      this.withValidators((validators) => validators.meetsValidatorBalanceRequirements(account))
+      meetsValidatorBalanceRequirements(account)
     )
 
   meetsValidatorGroupBalanceRequirements = (account: Address) =>
     this.addCheck(
       `${account} has enough locked celo for group registration`,
-      this.withValidators((validators) =>
-        validators.meetsValidatorGroupBalanceRequirements(account)
-      )
+      this.withValidators((validators) => {
+        const
+        return validators.read.meetsValidatorGroupBalanceRequirements([account])
+
+      })
     )
   isNotSanctioned = (address: Address) => {
     return this.addCheck(
@@ -361,7 +371,8 @@ class CheckBuilder {
   isNotAccount = (address: Address) =>
     this.addCheck(
       `${address} is not a registered Account`,
-      this.withAccounts((accounts) => negate(accounts.isAccount(address)))
+      // TODO remove as
+      this.withAccounts((accounts) => negate(accounts.read.isAccount([address as StrongAddress])))
     )
 
   isSignerOrAccount = () =>
@@ -369,7 +380,7 @@ class CheckBuilder {
       `${this.signer!} is Signer or registered Account`,
       this.withAccounts(async (accounts) => {
         const res =
-          (await accounts.isAccount(this.signer!)) || (await accounts.isSigner(this.signer!))
+          (await accounts.read.isAccount([this.signer!])) || (await accounts.read.isSigner([this.signer!]))
         return res
       }),
       `${this.signer} is not a signer or registered as an account. Try authorizing as a signer or running account:register.`
@@ -386,64 +397,80 @@ class CheckBuilder {
       })
     )
 
-  isAccount = (address: Address) =>
+  isAccount = (address: StrongAddress) =>
     this.addCheck(
       `${address} is a registered Account`,
-      this.withAccounts((accounts) => accounts.isAccount(address)),
+      this.withAccounts((accounts) => accounts.read.isAccount([address])),
       `${address} is not registered as an account. Try running account:register`
     )
 
-  isNotVoting = (address: Address) =>
+  isNotVoting = (address: StrongAddress) =>
     this.addCheck(
       `${address} is not currently voting on a governance proposal`,
-      this.withGovernance((governance) => negate(governance.isVoting(address))),
+      this.withGovernance((governance) => negate(governance.read.isVoting([address]))),
       `${address} is currently voting in governance. Revoke your upvotes or wait for the referendum to end.`
     )
 
-  hasEnoughCelo = (account: Address, value: BigNumber) => {
-    const valueInEth = utils.fromWei(value.toFixed(), 'ether')
-    return this.addCheck(`Account has at least ${valueInEth} CELO`, () =>
-      this.getKit().then((kit) =>
-        kit.contracts
-          .getGoldToken()
-          .then((goldToken) => goldToken.balanceOf(account))
-          .then((balance) => balance.gte(value))
-      )
-    )
+  // TODO interface changed - fix usages
+  hasEnoughCelo = (account: StrongAddress, value: bigint) => {
+    // TODO is this toString necessary?
+    const valueInEth = utils.fromWei(value.toString(), 'ether')
+
+    return this.addCheck(`Account has at least ${valueInEth} CELO`, () => {
+      const balance = await this.client.readContract({
+        // TODO GoldToken is being renamed to CeloToken
+        address: await resolveAddress('GoldToken'),
+        abi: goldTokenABI,
+        functionName: 'balanceOf',
+        args: [account],
+      })
+
+      return balance >= value;
+    });
   }
 
   hasEnoughStable = (
-    account: Address,
-    value: BigNumber,
+    account: StrongAddress,
+    // TODO interface changed - fix usages
+    value: bigint,
     stable: StableToken = StableToken.cUSD
   ) => {
-    const valueInEth = utils.fromWei(value.toFixed(), 'ether')
-    return this.addCheck(`Account has at least ${valueInEth} ${stable}`, () =>
-      this.getKit().then((kit) =>
-        kit.contracts
-          .getStableToken(stable)
-          .then((stableToken) => stableToken.balanceOf(account))
-          .then((balance) => balance.gte(value))
-      )
-    )
+    // TODO is this toString necessary?
+    const valueInEth = utils.fromWei(value.toString(), 'ether')
+
+    return this.addCheck(`Account has at least ${valueInEth} ${stable}`, () => {
+      const balance = await this.client.readContract({
+        address: await resolveAddress('StableToken'),
+        abi: stableTokenABI,
+        functionName: 'balanceOf',
+        args: [account],
+      })
+
+      return balance >= value;
+    });
   }
 
-  hasEnoughErc20 = (account: Address, value: BigNumber, erc20: Address) => {
-    const valueInEth = utils.fromWei(value.toFixed(), 'ether')
-    return this.addCheck(`Account has at least ${valueInEth} erc20 token`, () =>
-      this.getKit().then((kit) =>
-        kit.contracts
-          .getErc20(erc20)
-          .then((goldToken) => goldToken.balanceOf(account))
-          .then((balance) => balance.gte(value))
-      )
-    )
+  // TODO interface changed - fix usages
+  hasEnoughErc20 = (account: StrongAddress, value: bigint, erc20: StrongAddress) => {
+    // TODO is this toString necessary?
+    const valueInEth = utils.fromWei(value.toString(), 'ether')
+
+    return this.addCheck(`Account has at least ${valueInEth} erc20 token`, () => {
+      const balance = await this.client.readContract({
+        address: erc20,
+        abi: erc20Abi, // this is the viem's erc20 abi, check it
+        functionName: 'balanceOf',
+        args: [account],
+      })
+
+      return balance >= value;
+    });
   }
 
   exceedsProposalMinDeposit = (deposit: BigNumber) =>
     this.addCheck(
       `Deposit is greater than or equal to governance proposal minDeposit`,
-      this.withGovernance(async (governance) => deposit.gte(await governance.minDeposit()))
+      this.withGovernance(async (governance) => deposit.gte(await governance.read.minDeposit()))
     )
 
   hasRefundedDeposits = (account: Address) =>
@@ -459,7 +486,7 @@ class CheckBuilder {
     return this.addCheck(
       `Account has at least ${valueInEth} Locked Gold`,
       this.withLockedGold(async (lockedGold, _signer, account) =>
-        value.isLessThanOrEqualTo(await lockedGold.getAccountTotalLockedGold(account))
+        value.isLessThanOrEqualTo(await lockedGold.read.getAccountTotalLockedGold([account]))
       )
     )
   }
@@ -469,7 +496,7 @@ class CheckBuilder {
     return this.addCheck(
       `Account has at least ${valueInEth} non-voting Locked Gold`,
       this.withLockedGold(async (lockedGold, _signer, account) =>
-        value.isLessThanOrEqualTo(await lockedGold.getAccountNonvotingLockedGold(account))
+        value.isLessThanOrEqualTo(await lockedGold.read.getAccountNonvotingLockedGold([account]))
       )
     )
   }
