@@ -66,18 +66,17 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
   startNextEpochProcess = proxySend(this.connection, this.contract.methods.startNextEpochProcess)
   finishNextEpochProcess = proxySend(this.connection, this.contract.methods.finishNextEpochProcess)
   sendValidatorPayment = proxySend(this.connection, this.contract.methods.sendValidatorPayment)
+  setToProcessGroups = proxySend(this.connection, this.contract.methods.setToProcessGroups)
+  processGroups = proxySend(this.connection, this.contract.methods.processGroups)
 
   finishNextEpochProcessTx = async () => {
-    const elected = await this.getElectedAccounts()
-    const validators = await this.contracts.getValidators()
-
-    const electedGroups = new Set(
-      await Promise.all(elected.map(async (validator) => validators.getValidatorsGroup(validator)))
-    )
-    const groups = Array.from(electedGroups)
-    const [lessers, greaters] = await this.getLessersAndGreaters(groups)
-
+    const { groups, lessers, greaters } = await this.getEpochGroupsAndSorting()
     return this.finishNextEpochProcess(groups, lessers, greaters)
+  }
+
+  processGroupsTx = async () => {
+    const { groups, lessers, greaters } = await this.getEpochGroupsAndSorting()
+    return this.processGroups(groups, lessers, greaters)
   }
 
   getLessersAndGreaters = async (groups: string[]) => {
@@ -127,6 +126,19 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
     }
 
     return [lessers, greaters]
+  }
+
+  getEpochGroupsAndSorting = async () => {
+    const elected = await this.getElectedAccounts()
+    const validators = await this.contracts.getValidators()
+
+    const electedGroups = new Set(
+      await Promise.all(elected.map(async (validator) => validators.getValidatorsGroup(validator)))
+    )
+    const groups = Array.from(electedGroups)
+    const [lessers, greaters] = await this.getLessersAndGreaters(groups)
+
+    return { groups, lessers, greaters }
   }
 
   async getConfig(): Promise<EpochManagerConfig> {

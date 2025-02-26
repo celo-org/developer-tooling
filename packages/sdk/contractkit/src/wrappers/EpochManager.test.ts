@@ -174,4 +174,46 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
       )
     ).toBeTruthy()
   })
+
+  it('processes elected validator groups', async () => {
+    const accounts = await kit.web3.eth.getAccounts()
+    const epochManagerWrapper = await kit.contracts.getEpochManager()
+
+    await timeTravel(EPOCH_DURATION, web3)
+
+    await startAndFinishEpochProcess(kit)
+
+    await activateValidators()
+
+    // Start a new epoch process, but diont process it, so we can compare the amounts
+    await timeTravel(EPOCH_DURATION + 1, web3)
+
+    await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
+      from: accounts[0],
+    })
+
+    const statusBeforeProcessing = await epochManagerWrapper.getEpochProcessingStatus()
+
+    expect(statusBeforeProcessing.totalRewardsVoter.toNumber()).toBeGreaterThan(0)
+    expect(statusBeforeProcessing.perValidatorReward.toNumber()).toBeGreaterThan(0)
+    expect(statusBeforeProcessing.totalRewardsCommunity.toNumber()).toBeGreaterThan(0)
+    expect(statusBeforeProcessing.totalRewardsCarbonFund.toNumber()).toBeGreaterThan(0)
+
+    await epochManagerWrapper.setToProcessGroups().sendAndWaitForReceipt({
+      from: accounts[0],
+    })
+
+    await (
+      await epochManagerWrapper.processGroupsTx()
+    ).sendAndWaitForReceipt({
+      from: accounts[0],
+    })
+
+    const statusAfterProcessing = await epochManagerWrapper.getEpochProcessingStatus()
+
+    expect(statusAfterProcessing.totalRewardsVoter.toNumber()).toEqual(0)
+    expect(statusAfterProcessing.perValidatorReward.toNumber()).toEqual(0)
+    expect(statusAfterProcessing.totalRewardsCommunity.toNumber()).toEqual(0)
+    expect(statusAfterProcessing.totalRewardsCarbonFund.toNumber()).toEqual(0)
+  })
 })
