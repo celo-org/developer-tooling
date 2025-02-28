@@ -1,7 +1,7 @@
 import { EpochManager } from '@celo/abis-12/web3/EpochManager'
 import { NULL_ADDRESS } from '@celo/base'
 import BigNumber from 'bignumber.js'
-import { proxyCall, proxySend, valueToInt } from './BaseWrapper'
+import { proxyCall, proxySend, valueToInt, valueToString } from './BaseWrapper'
 import { BaseWrapperForGoverning } from './BaseWrapperForGoverning'
 
 export enum EpochProcessStatus {
@@ -45,6 +45,7 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
     undefined,
     valueToInt
   )
+  processedGroups = proxyCall(this.contract.methods.processedGroups, undefined, valueToString)
   isOnEpochProcess = proxyCall(this.contract.methods.isOnEpochProcess)
   isTimeForNextEpoch = proxyCall(this.contract.methods.isTimeForNextEpoch)
   getElectedAccounts = proxyCall(this.contract.methods.getElectedAccounts)
@@ -135,7 +136,18 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
     const electedGroups = new Set(
       await Promise.all(elected.map(async (validator) => validators.getValidatorsGroup(validator)))
     )
-    const groups = Array.from(electedGroups)
+    let groups = Array.from(electedGroups)
+
+    // Filter out groups that may have already been processed.
+    const processedGroups = await Promise.all(
+      groups.map(async (group) => {
+        const processed = await this.processedGroups(group)
+        return processed === '0' ? null : group
+      })
+    )
+    // Remove null values
+    groups = processedGroups.filter((group): group is string => group !== null)
+
     const [lessers, greaters] = await this.getLessersAndGreaters(groups)
 
     return { groups, lessers, greaters }
