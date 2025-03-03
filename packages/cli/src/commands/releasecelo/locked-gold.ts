@@ -34,7 +34,7 @@ export default class LockedGold extends ReleaseGoldBaseCommand {
 
   async run() {
     const kit = await this.getKit()
-    const { flags } = await this.parse(LockedGold)
+    const { flags } = await this.parse(LockedCelo)
     const value = new BigNumber(flags.value)
     const contractAddress = await this.contractAddress()
     const checkBuilder = newCheckBuilder(this, contractAddress).isAccount(contractAddress)

@@ -37,7 +37,7 @@ describe('ProposalBuilder', () => {
 
   describe('addProxyRepointingTx', () => {
     it('adds and builds a proxy repointing transaction', async () => {
-      const contract = CeloContract.GoldToken
+      const contract = CeloContract.CeloToken
       const newImplementationAddress = '0x471ece3750da237f93b8e339c536989b8978a438'
 
       proposalBuilder.addProxyRepointingTx(contract, newImplementationAddress)
@@ -51,7 +51,7 @@ describe('ProposalBuilder', () => {
 
   describe('setRegistryAddition', () => {
     it('sets and gets registry addition', () => {
-      const contract = CeloContract.GoldToken
+      const contract = CeloContract.CeloToken
       const address = '0x471ece3750da237f93b8e339c536989b8978a438'
 
       proposalBuilder.setRegistryAddition(contract, address)
@@ -63,7 +63,7 @@ describe('ProposalBuilder', () => {
 
   describe('isRegistryContract', () => {
     it('identifies registry contracts', () => {
-      const contract = CeloContract.GoldToken
+      const contract = CeloContract.CeloToken
       const address = '0x471ece3750da237f93b8e339c536989b8978a438'
 
       proposalBuilder.setRegistryAddition(contract, address)
@@ -104,7 +104,7 @@ describe('ProposalBuilder', () => {
   describe('buildCallToCoreContract', () => {
     it('builds call to core contract', async () => {
       const tx = {
-        contract: CeloContract.GoldToken,
+        contract: CeloContract.CeloToken,
         function: 'transfer',
         args: ['0xa435d2BaBDF80A66eD06A8D981edFE6f5DdAeCfB', '1000'],
         value: '0',
@@ -120,7 +120,7 @@ describe('ProposalBuilder', () => {
   describe('addJsonTx', () => {
     it('adds and builds a JSON transaction', async () => {
       const tx = {
-        contract: CeloContract.GoldToken,
+        contract: CeloContract.CeloToken,
         function: 'transfer',
         args: ['0xa435d2BaBDF80A66eD06A8D981edFE6f5DdAeCfB', '1000'],
         value: '0',

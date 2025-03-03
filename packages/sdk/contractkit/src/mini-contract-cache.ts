@@ -20,11 +20,12 @@ const MINIMUM_CONTRACTS = {
     newInstance: newAccounts,
     wrapper: AccountsWrapper,
   },
+  // TODO(L2): remove
   [CeloContract.GasPriceMinimum]: {
     newInstance: newGasPriceMinimum,
     wrapper: GasPriceMinimumWrapper,
   },
-  [CeloContract.GoldToken]: {
+  [CeloContract.CeloToken]: {
     newInstance: newGoldToken,
     wrapper: GoldTokenWrapper,
   },
@@ -54,7 +55,7 @@ const contractsWhichRequireCache = new Set([
   CeloContract.DowntimeSlasher,
   CeloContract.Election,
   CeloContract.Governance,
-  CeloContract.LockedGold,
+  CeloContract.LockedCelo,
   CeloContract.Validators,
 ])
 

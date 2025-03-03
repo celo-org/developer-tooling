@@ -17,10 +17,14 @@ export enum CeloContract {
   FeeHandler = 'FeeHandler',
   Freezer = 'Freezer',
   GasPriceMinimum = 'GasPriceMinimum',
-  GoldToken = 'GoldToken',
+  /* @deprecated use CeloToken */
+  GoldToken = 'CeloToken',
+  CeloToken = 'CeloToken',
   Governance = 'Governance',
   GovernanceSlasher = 'GovernanceSlasher',
-  LockedGold = 'LockedGold',
+  /* @deprecated use LockedCelo */
+  LockedGold = 'LockedCelo',
+  LockedCelo = 'LockedCelo',
   MentoFeeHandlerSeller = 'MentoFeeHandlerSeller',
   UniswapFeeHandlerSeller = 'UniswapFeeHandlerSeller',
   MultiSig = 'MultiSig',
