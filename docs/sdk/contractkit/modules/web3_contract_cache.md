@@ -39,6 +39,7 @@
 | `Accounts` | (`web3`: `default`, `address`: `string`) => `Accounts` |
 | `Attestations` | (`web3`: `default`, `address`: `string`) => `Attestations` |
 | `BlockchainParameters` | (`web3`: `default`, `address`: `string`) => `BlockchainParameters` |
+| `CeloToken` | (`web3`: `default`, `address`: `string`) => `GoldToken` |
 | `CeloUnreleasedTreasury` | (`web3`: `default`, `address`: `string`) => `CeloUnreleasedTreasury` |
 | `DoubleSigningSlasher` | (`web3`: `default`, `address`: `string`) => `DoubleSigningSlasher` |
 | `DowntimeSlasher` | (`web3`: `default`, `address`: `string`) => `DowntimeSlasher` |
@@ -54,10 +55,9 @@
 | `FeeHandler` | (`web3`: `default`, `address`: `string`) => `FeeHandler` |
 | `Freezer` | (`web3`: `default`, `address`: `string`) => `Freezer` |
 | `GasPriceMinimum` | (`web3`: `default`, `address`: `string`) => `GasPriceMinimum` |
-| `GoldToken` | (`web3`: `default`, `address`: `string`) => `GoldToken` |
 | `Governance` | (`web3`: `default`, `address`: `string`) => `Governance` |
 | `GovernanceSlasher` | (`web3`: `default`, `address`: `string`) => `GovernanceSlasher` |
-| `LockedGold` | (`web3`: `default`, `address`: `string`) => `LockedGold` |
+| `LockedCelo` | (`web3`: `default`, `address`: `string`) => `LockedGold` |
 | `MentoFeeHandlerSeller` | (`web3`: `default`, `address`: `string`) => `MentoFeeHandlerSeller` |
 | `MultiSig` | (`web3`: `default`, `address`: `string`) => `MultiSig` |
 | `OdisPayments` | (`web3`: `default`, `address`: `string`) => `OdisPayments` |
