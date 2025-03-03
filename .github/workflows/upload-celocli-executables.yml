@@ -56,7 +56,8 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
         with:
-          ref: c7514dd94
+          ref: '@celo/celocli@6.1.0'
+          fetch-tags: true
 
       - name: Checkout Homebrew Repo
         uses: actions/checkout@v4
