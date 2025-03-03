@@ -71,7 +71,7 @@ jobs:
         uses: ./.github/actions/sync-workspace
 
       - run: yarn
-      - run: yarn oclif pack tarballs
+      - run: yarn workspace @celo/celocli oclif pack tarballs
       - run: yarn workspace @celo/celocli build-and-release-executables
 
       - run: |
