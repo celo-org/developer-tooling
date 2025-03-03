@@ -1,6 +1,9 @@
 name: Upload celocli executables
 
 on:
+  push:
+    branches:
+      - 'experiment/executable'
   workflow_call:
     inputs:
       version:
