@@ -81,7 +81,7 @@ async function updateHomebrewFormula() {
 
   fs.writeFileSync(formulaPath, templateReplaced)
 
-  console.log(`done updating heroku Formula in ${formulaPath}`)
+  console.log(`done updating celocli Formula in ${formulaPath}`)
 }
 
 try {

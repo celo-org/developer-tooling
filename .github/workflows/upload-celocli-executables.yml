@@ -1,0 +1,117 @@
+name: Upload celocli executables
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        description: 'Version of the @celo/celocli to update or upload executables to'
+        type: string
+        required: true
+      force:
+        description: |
+          Whether or not to override the files on the release if they exist. 
+          Does nothing if no files were uploaded'
+        type: boolean
+        default: false
+
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version of the @celo/celocli to update or upload executables to'
+        type: string
+        required: true
+      force:
+        description: |
+          Whether or not to override the files on the release if they exist. 
+          Does nothing if no files were uploaded'
+        type: boolean
+        default: false
+jobs:
+  upload:
+    name: Upload executables to a specific @celo/celocli release
+    runs-on: [macos-latest]
+    permissions:
+      contents: write
+      id-token: write
+      pull-requests: write
+      repository-projects: write
+    steps:
+      # - name: Fetch secrets from AKeyless
+      #   id: fetch-secrets
+      #   uses: docker://us-west1-docker.pkg.dev/devopsre/akeyless-public/akeyless-action:latest
+      #   with:
+      #     access-id: p-kf9vjzruht6l
+      #     api-url: https://api.gateway.akeyless.celo-networks-dev.org
+      #     dynamic-secrets: '{"/dynamic-secrets/keys/github/homebrew-core/contents=write,pull_requests=write":"HOMEBREW_TOKEN"}'
+
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Checkout Homebrew Repo
+        uses: actions/checkout@v4
+        with:
+          repository: 'Homebrew/homebrew-core'
+          path: '/tmp/homebrew'
+          fetch-depth: 0
+          ref: master
+
+      - name: Sync workspace
+        uses: ./.github/actions/sync-workspace
+
+      - run: yarn workspace @celo/celocli build-and-release-executables\
+
+      - name: Upload executables on the github release
+        run: |
+          # TODO: remove the flag --clobber if --force is NOT set
+          gh release \
+            upload @celo/celocli@${{ inputs.version }} \
+            --clobber \ 
+            packages/cli/dist/*.tar.xz
+
+      - run: brew update
+      - run: brew cleanup
+      - run: ./packages/cli/homebrew/test.sh
+
+      - name: Open pull-request on Homebrew repo
+        if: ${{env.HOMEBREW_TOKEN}}
+        env:
+          BOT_NAME: 'celo-org'
+          BOT_EMAIL: 'celo-org@github.com'
+          FORK_REPOSITORY: 'celo-org/homebrew-core'
+          UPSTREAM_REPOSITORY: 'Homebrew/homebrew-core'
+          BASE_BRANCH: master
+          NEW_BRANCH: 'ci/${{ github.run_id }}-${{ github.run_attempt }}'
+        run: |
+          set -x
+
+          devtooling=$(pwd)
+          cd /tmp/homebrew
+
+          # Setup the committers identity.
+          git config --global user.name $BOT_NAME
+          git config --global user.email $BOT_EMAIL
+          git remote add fork $FORK_REPOSITORY
+
+          # Create a new feature branch for the changes.
+          git checkout -b $NEW_BRANCH
+          git fetch --all
+          git status
+          cp $devtooling/packages/cli/homebrew/Formula/celocli.rb ./Formula/c/
+          git add ./Formula/c/celocli.rb
+          git commit -m "chore: update celocli to ${{ inputs.version }}"
+          git push fork $NEW_BRANCH
+
+          RELEASE_URL="https://github.com/celo-org/developer-tooling/releases/download/%40celo%2Fcelocli%40${{ inputs.version }}"
+          cat >/tmp/pr-body.md <<EOL
+          Update celocli formula to [${{ inputs.version }}]($RELEASE_URL).
+
+          🤖 _This pull-request was opened by a robot beep boop from https://github.com/celo-org_ 🤖
+          EOL
+
+          echo "$HOMEBREW_TOKEN" > token.txt
+          gh auth login --with-token < token.txt
+          gh pr create \
+            --body-file /tmp/pr-body.md \
+            --title "celocli ${{ inputs.version }}" \
+            --head "$FORK_REPOSITORY/$NEW_BRANCH" \
+            --base "$UPSTREAM_REPOSITORY/$BASE_BRANCH"
