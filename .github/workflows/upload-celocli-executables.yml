@@ -10,6 +10,9 @@ on:
         description: 'Version of the @celo/celocli to update or upload executables to'
         type: string
         required: true
+      # commit:
+      #   type: string
+      #   required: true
       force:
         description: |
           Whether or not to override the files on the release if they exist. 
@@ -21,6 +24,9 @@ on:
     inputs:
       version:
         description: 'Version of the @celo/celocli to update or upload executables to'
+        type: string
+        required: true
+      commit:
         type: string
         required: true
       force:
@@ -49,6 +55,8 @@ jobs:
 
       - name: Checkout Repo
         uses: actions/checkout@v4
+        with:
+          ref: c7514dd94
 
       - name: Checkout Homebrew Repo
         uses: actions/checkout@v4
