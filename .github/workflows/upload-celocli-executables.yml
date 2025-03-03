@@ -71,6 +71,8 @@ jobs:
         uses: ./.github/actions/sync-workspace
 
       - run: yarn
+      - run: |
+          echo unsafe-perm=true >> .npmrc
       - run: yarn workspace @celo/celocli oclif pack tarballs
       - run: yarn workspace @celo/celocli build-and-release-executables
 
