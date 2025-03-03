@@ -46,7 +46,7 @@ testWithAnvilL2('network:parameters', (web3) => {
         stageDurations: 
           Execution: 1 week
           Referendum: 1 day
-      LockedGold: 
+      LockedCelo: 
         totalLockedGold: 120000000000000000000000 (~1.200e+23)
         unlockingPeriod: 6 hours
       Reserve: 

@@ -186,7 +186,11 @@ export class WrapperCache implements ContractCacheType {
   getGovernance() {
     return this.getContract(CeloContract.Governance)
   }
+  /* @deprecated use getLockedCelo */
   getLockedGold() {
+    return this.getContract(CeloContract.LockedCelo)
+  }
+  getLockedCelo() {
     return this.getContract(CeloContract.LockedCelo)
   }
   getMultiSig(address: string) {

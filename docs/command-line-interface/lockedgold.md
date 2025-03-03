@@ -63,6 +63,9 @@ FLAGS
 DESCRIPTION
   Delegate locked celo.
 
+ALIASES
+  $ celocli lockedcelo:delegate
+
 EXAMPLES
   delegate --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95 --to 0xc0ffee254729296a45a3885639AC7E10F9d54979 --percent 100
 
@@ -121,6 +124,9 @@ FLAGS
 
 DESCRIPTION
   Delegate info about account.
+
+ALIASES
+  $ celocli lockedcelo:delegate-info
 
 EXAMPLES
   delegate-info --account 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95
@@ -184,6 +190,9 @@ FLAGS
 DESCRIPTION
   Locks CELO to be used in governance and validator elections.
 
+ALIASES
+  $ celocli lockedcelo:lock
+
 EXAMPLES
   lock --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95 --value 10000000000000000000000
 
@@ -238,6 +247,9 @@ FLAGS
 
 DESCRIPTION
   Returns the maximum number of delegates allowed per account.
+
+ALIASES
+  $ celocli lockedcelo:max-delegatees-count
 
 EXAMPLES
   max-delegatees-count
@@ -305,6 +317,9 @@ FLAGS
 DESCRIPTION
   Revoke delegated locked celo.
 
+ALIASES
+  $ celocli lockedcelo:revoke-delegate
+
 EXAMPLES
   revoke-delegate --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95 --to 0xc0ffee254729296a45a3885639AC7E10F9d54979 --percent 100
 
@@ -339,6 +354,9 @@ DESCRIPTION
   balance this account is required to maintain due to a registered Validator or
   Validator Group, and any pending withdrawals that have been initiated via
   "lockedgold:unlock".
+
+ALIASES
+  $ celocli lockedcelo:show
 
 EXAMPLES
   show 0x5409ed021d9299bf6814279a6a1411a7e866a631
@@ -403,6 +421,9 @@ DESCRIPTION
   Unlocks CELO, which can be withdrawn after the unlocking period. Unlocked celo will
   appear as a "pending withdrawal" until the unlocking period is over, after which it
   can be withdrawn via "lockedgold:withdraw".
+
+ALIASES
+  $ celocli lockedcelo:unlock
 
 EXAMPLES
   unlock --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95 --value 500000000
@@ -527,6 +548,9 @@ FLAGS
 DESCRIPTION
   Withdraw any pending withdrawals created via "lockedgold:unlock" that have become
   available.
+
+ALIASES
+  $ celocli lockedcelo:withdraw
 
 EXAMPLES
   withdraw --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95

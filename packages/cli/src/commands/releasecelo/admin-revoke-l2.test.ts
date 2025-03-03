@@ -19,7 +19,7 @@ import GovernanceVote from '../governance/vote'
 import AdminRevoke from './admin-revoke'
 import Authorize from './authorize'
 import CreateAccount from './create-account'
-import LockedGold from './locked-gold'
+import LockedCelo from './locked-gold'
 
 process.env.NO_SYNCCHECK = 'true'
 
@@ -83,7 +83,7 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (web3: Web3) => {
       await setBalance(web3, contractAddress, new BigNumber(web3.utils.toWei('10', 'ether')))
       await testLocallyWithWeb3Node(CreateAccount, ['--contract', contractAddress], web3)
       await testLocallyWithWeb3Node(
-        LockedGold,
+        LockedCelo,
         ['--contract', contractAddress, '--action', 'lock', '--value', value, '--yes'],
         web3
       )
@@ -123,7 +123,7 @@ testWithGanache('releasegold:admin-revoke cmd', (web3: Web3) => {
 
     beforeEach(async () => {
       await testLocally(CreateAccount, ['--contract', contractAddress])
-      await testLocally(LockedGold, [
+      await testLocally(LockedCelo, [
         '--contract',
         contractAddress,
         '--action',

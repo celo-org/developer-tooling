@@ -12,6 +12,8 @@ export default class Withdraw extends BaseCommand {
     from: CustomFlags.address({ required: true }),
   }
 
+  static aliases = ['lockedcelo:withdraw']
+
   static examples = ['withdraw --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95']
 
   async run() {

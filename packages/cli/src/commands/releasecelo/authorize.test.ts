@@ -10,7 +10,7 @@ import { deployReleaseGoldContract } from '../../test-utils/release-gold'
 import ValidatorRegister from '../validator/register'
 import Authorize from './authorize'
 import CreateAccount from './create-account'
-import LockedGold from './locked-gold'
+import LockedCelo from './locked-gold'
 
 process.env.NO_SYNCCHECK = 'true'
 
@@ -119,7 +119,7 @@ testWithAnvilL1('releasegold:authorize cmd', (web3: Web3) => {
     const pop = await accountsWrapper.generateProofOfKeyPossession(contractAddress, signer)
     const ecdsaPublicKey = await addressToPublicKey(signer, web3.eth.sign)
     await testLocallyWithWeb3Node(
-      LockedGold,
+      LockedCelo,
       [
         '--contract',
         contractAddress,
@@ -175,7 +175,7 @@ testWithAnvilL1('releasegold:authorize cmd', (web3: Web3) => {
     const newBlsPoP = web3.utils.randomHex(48)
 
     await testLocallyWithWeb3Node(
-      LockedGold,
+      LockedCelo,
       [
         '--contract',
         contractAddress,
@@ -247,7 +247,7 @@ testWithAnvilL1('releasegold:authorize cmd', (web3: Web3) => {
     const popNew = await accountsWrapper.generateProofOfKeyPossession(contractAddress, signerNew)
 
     await testLocallyWithWeb3Node(
-      LockedGold,
+      LockedCelo,
       [
         '--contract',
         contractAddress,

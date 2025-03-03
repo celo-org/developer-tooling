@@ -45,14 +45,14 @@ export type StableTokenContract =
   | CeloContract.StableTokenEUR
   | CeloContract.StableTokenBRL
 
-export type CeloTokenContract = StableTokenContract | CeloContract.GoldToken
+export type CeloTokenContract = StableTokenContract | CeloContract.CeloToken
 /**
  * Deprecated alias for CeloTokenContract.
  * @deprecated Use CeloTokenContract instead
  */
 export type CeloToken = CeloTokenContract
 
-export const AllContracts = Object.keys(CeloContract) as CeloContract[]
+export const AllContracts = Object.values(CeloContract) as CeloContract[]
 const AuxiliaryContracts = [CeloContract.MultiSig, CeloContract.ERC20]
 export const RegisteredContracts = AllContracts.filter((v) => !AuxiliaryContracts.includes(v))
 

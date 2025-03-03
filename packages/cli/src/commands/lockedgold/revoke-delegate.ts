@@ -10,6 +10,8 @@ import { LockedGoldArgs } from '../../utils/lockedgold'
 export default class RevokeDelegate extends BaseCommand {
   static description = 'Revoke delegated locked celo.'
 
+  static aliases = ['lockedcelo:revoke-delegate']
+
   static flags = {
     ...BaseCommand.flags,
     from: CustomFlags.address({ required: true }),

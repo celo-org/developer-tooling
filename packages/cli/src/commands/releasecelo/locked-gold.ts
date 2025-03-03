@@ -7,9 +7,11 @@ import { binaryPrompt, displaySendTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
 
-export default class LockedGold extends ReleaseGoldBaseCommand {
+export default class LockedCelo extends ReleaseGoldBaseCommand {
   static description =
     'Perform actions [lock, unlock, withdraw] on CELO that has been locked via the provided ReleaseGold contract.'
+
+  static aliases = ['releasecelo:locked-celo']
 
   static flags = {
     ...ReleaseGoldBaseCommand.flags,
@@ -27,9 +29,9 @@ export default class LockedGold extends ReleaseGoldBaseCommand {
   }
 
   static examples = [
-    'locked-gold --contract 0xCcc8a47BE435F1590809337BB14081b256Ae26A8 --action lock --value 10000000000000000000000',
-    'locked-gold --contract 0xCcc8a47BE435F1590809337BB14081b256Ae26A8 --action unlock --value 10000000000000000000000',
-    'locked-gold --contract 0xCcc8a47BE435F1590809337BB14081b256Ae26A8 --action withdraw --value 10000000000000000000000',
+    'locked-celo --contract 0xCcc8a47BE435F1590809337BB14081b256Ae26A8 --action lock --value 10000000000000000000000',
+    'locked-celo --contract 0xCcc8a47BE435F1590809337BB14081b256Ae26A8 --action unlock --value 10000000000000000000000',
+    'locked-celo --contract 0xCcc8a47BE435F1590809337BB14081b256Ae26A8 --action withdraw --value 10000000000000000000000',
   ]
 
   async run() {

@@ -10,6 +10,8 @@ import { LockedGoldArgs } from '../../utils/lockedgold'
 export default class Delegate extends BaseCommand {
   static description = 'Delegate locked celo.'
 
+  static aliases = ['lockedcelo:delegate']
+
   static flags = {
     ...BaseCommand.flags,
     from: CustomFlags.address({ required: true }),
