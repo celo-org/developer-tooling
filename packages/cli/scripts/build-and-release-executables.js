@@ -1,9 +1,16 @@
+import url from 'url'
 import crypto from 'crypto'
 import fs from 'fs'
 import path from 'path'
 import { parse } from 'semver'
 import { pipeline } from 'stream/promises'
-import { description, homepage, name, version } from '../package.json'
+
+const __filename = url.fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+const { description, homepage, name, version } = JSON.parse(
+  fs.readFileSync(path.join(__dirname, '..', 'package.json'))
+)
 
 const { GITHUB_SHA_SHORT } = process.env
 
@@ -12,7 +19,7 @@ if (parse(version)?.prerelease.length) {
   process.exit(0)
 }
 
-async function calculateSHA256(fileName: string) {
+async function calculateSHA256(fileName) {
   const hash = crypto.createHash('sha256')
   hash.setEncoding('hex')
   await pipeline(fs.createReadStream(fileName), hash)
@@ -30,7 +37,7 @@ const urlPrefix = `https://github.com/celo-org/developer-tooling/releases/downlo
   versionedName
 )}`
 
-async function uploadExecutableToGithubRelease(filePath: string) {
+async function uploadExecutableToGithubRelease(filePath) {
   console.log(`Upload ${filePath}`)
   await Promise.resolve()
 }
@@ -85,12 +92,10 @@ async function updateHomebrewFormula() {
 }
 
 try {
-  // TODO: run the follow command beforehand:
+  // NOTE: this expects the follow command beforehand:
   // yarn oclif pack tarballs
   await uploadAllExecutablesToGithub()
   await updateHomebrewFormula()
-  console.log('TODO: open a PR automagically')
-  // open PR with the updated formula
 } catch (error) {
   console.error(`error running ${__filename}`, error)
   process.exit(1)

@@ -62,7 +62,12 @@ jobs:
         uses: ./.github/actions/sync-workspace
 
       - run: yarn
-      - run: yarn workspace @celo/celocli build-and-release-executables\
+      - run: yarn oclif pack tarballs
+      - run: yarn workspace @celo/celocli build-and-release-executables
+
+      - run: |
+          ls packages/cli/dist
+          cat packages/cli/Formula/celocli.rb
 
       - name: Upload executables on the github release
         run: |
@@ -77,7 +82,7 @@ jobs:
       - run: ./packages/cli/homebrew/test.sh
 
       - name: Open pull-request on Homebrew repo
-        if: ${{env.HOMEBREW_TOKEN}}
+        if: ${{ env.HOMEBREW_TOKEN }}
         env:
           BOT_NAME: 'celo-org'
           BOT_EMAIL: 'celo-org@github.com'
