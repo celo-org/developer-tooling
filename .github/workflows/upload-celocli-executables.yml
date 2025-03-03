@@ -61,6 +61,7 @@ jobs:
       - name: Sync workspace
         uses: ./.github/actions/sync-workspace
 
+      - run: yarn
       - run: yarn workspace @celo/celocli build-and-release-executables\
 
       - name: Upload executables on the github release
