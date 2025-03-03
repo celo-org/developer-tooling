@@ -71,10 +71,7 @@ jobs:
         uses: ./.github/actions/sync-workspace
 
       - run: yarn
-      - run: |
-          echo unsafe-perm=true >> .npmrc
-      - run: yarn workspace @celo/celocli oclif pack tarballs
-      - run: yarn workspace @celo/celocli build-and-release-executables
+      - run: yarn workspace @celo/celocli homebrew
 
       - run: |
           ls packages/cli/dist
@@ -90,7 +87,7 @@ jobs:
 
       - run: brew update
       - run: brew cleanup
-      - run: ./packages/cli/homebrew/test.sh
+      - run: ./packages/cli/homebrew/scripts/test.sh
 
       - name: Open pull-request on Homebrew repo
         if: ${{ env.HOMEBREW_TOKEN }}

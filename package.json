@@ -28,6 +28,7 @@
     "release": "yarn clean && yarn build && yarn workspace @celo/celocli run prepack && yarn cs publish",
     "version-and-reinstall": "yarn changeset version && yarn install --no-immutable",
     "celocli": "yarn workspace @celo/celocli run --silent celocli"
+    
   },
   "workspaces": {
     "packages": [

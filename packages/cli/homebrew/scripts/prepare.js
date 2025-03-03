@@ -8,8 +8,10 @@ import { pipeline } from 'stream/promises'
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
+const CLI_ROOT = path.join(__dirname, '..', '..')
+
 const { description, homepage, name, version } = JSON.parse(
-  fs.readFileSync(path.join(__dirname, '..', 'package.json'))
+  fs.readFileSync(path.join(CLI_ROOT, 'package.json'))
 )
 
 const { GITHUB_SHA_SHORT } = process.env
@@ -27,8 +29,7 @@ async function calculateSHA256(fileName) {
   return hash.read()
 }
 
-const ROOT = path.join(__dirname, '..')
-const TEMPLATES = path.join(ROOT, 'homebrew', 'templates')
+const TEMPLATES = path.join(CLI_ROOT, 'homebrew', 'templates')
 const fileSuffix = '.tar.xz'
 const ARCH_INTEL = 'x64'
 const ARCH_ARM = 'arm64'
@@ -50,23 +51,23 @@ const fileNameLinuxArm = `${fileNamePrefix}-linux-arm${fileSuffix}`
 
 async function uploadAllExecutablesToGithub() {
   await Promise.all([
-    uploadExecutableToGithubRelease(path.join(ROOT, 'dist', fileNameMacIntel)),
-    uploadExecutableToGithubRelease(path.join(ROOT, 'dist', fileNameMacArm)),
-    uploadExecutableToGithubRelease(path.join(ROOT, 'dist', fileNameLinuxIntel)),
-    uploadExecutableToGithubRelease(path.join(ROOT, 'dist', fileNameLinuxArm)),
+    uploadExecutableToGithubRelease(path.join(CLI_ROOT, 'dist', fileNameMacIntel)),
+    uploadExecutableToGithubRelease(path.join(CLI_ROOT, 'dist', fileNameMacArm)),
+    uploadExecutableToGithubRelease(path.join(CLI_ROOT, 'dist', fileNameLinuxIntel)),
+    uploadExecutableToGithubRelease(path.join(CLI_ROOT, 'dist', fileNameLinuxArm)),
   ])
 }
 
 async function updateHomebrewFormula() {
   const templatePath = path.join(TEMPLATES, 'celocli.rb')
   const template = fs.readFileSync(templatePath).toString('utf-8')
-  const formulaPath = path.join(ROOT, 'homebrew', 'Formula', 'celocli.rb')
+  const formulaPath = path.join(CLI_ROOT, 'homebrew', 'Formula', 'celocli.rb')
 
   const [sha256MacIntel, sha256MacArm, sha256LinuxIntel, sha256LinuxArm] = await Promise.all([
-    calculateSHA256(path.join(ROOT, 'dist', fileNameMacIntel)),
-    calculateSHA256(path.join(ROOT, 'dist', fileNameMacArm)),
-    calculateSHA256(path.join(ROOT, 'dist', fileNameLinuxIntel)),
-    calculateSHA256(path.join(ROOT, 'dist', fileNameLinuxArm)),
+    calculateSHA256(path.join(CLI_ROOT, 'dist', fileNameMacIntel)),
+    calculateSHA256(path.join(CLI_ROOT, 'dist', fileNameMacArm)),
+    calculateSHA256(path.join(CLI_ROOT, 'dist', fileNameLinuxIntel)),
+    calculateSHA256(path.join(CLI_ROOT, 'dist', fileNameLinuxArm)),
   ])
 
   const templateReplaced = template

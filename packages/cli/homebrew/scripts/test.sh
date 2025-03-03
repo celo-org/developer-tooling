@@ -3,6 +3,6 @@
 set -ex
 
 brew update
-brew install Formula/celocli.rb
+brew install ../Formula/celocli.rb
 celocli version
 celocli help

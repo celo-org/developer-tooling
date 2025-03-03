@@ -33,7 +33,7 @@
     "lint": "yarn run --top-level eslint -c .eslintrc.js ",
     "prepublish": "",
     "prepack": "yarn run build && oclif readme",
-    "build-and-release-executables": "ts-node ./scripts/build-and-release-executables.ts",
+    "homebrew": "yarn oclif pack tarballs && node ./homebrew/scripts/prepare.js",
     "test": "TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --runInBand --forceExit",
     "test-anvil": "RUN_GANACHE_TESTS=false RUN_ANVIL_TESTS=true TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --forceExit",
     "test-ganache": "RUN_GANACHE_TESTS=true RUN_ANVIL_TESTS=false TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --runInBand --forceExit",
