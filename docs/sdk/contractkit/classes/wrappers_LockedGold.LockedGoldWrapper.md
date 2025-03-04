@@ -669,7 +669,7 @@ LockedGoldConfig object
 
 **`Dev`**
 
-Returns human readable configuration of the lockedgold contract
+Returns human readable configuration of the lockedcelo contract
 
 #### Defined in
 
