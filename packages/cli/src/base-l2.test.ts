@@ -39,7 +39,8 @@ describe('flags', () => {
     // copied from Commaand.run to load config
     config = await Config.load(require.main?.filename || __dirname)
   })
-  describe('--node  alfajores', () => {
+  // TODO(L2) add these back after march 2025 or when holsky returns
+  describe.skip('--node  alfajores', () => {
     it('it connects to 44787', async () => {
       const command = new BasicCommand(['--node', 'alfajores'], config)
       const runnerWeb3 = await command.getWeb3()
@@ -47,7 +48,8 @@ describe('flags', () => {
       expect(connectdChain).toBe(44787)
     })
   })
-  describe('--node  baklava', () => {
+  // TODO(L2) add these back after march 2025 or when holsky returns
+  describe.skip('--node  baklava', () => {
     it('it connects to 62320', async () => {
       const command = new BasicCommand(['--node', 'baklava'], config)
       const runnerWeb3 = await command.getWeb3()

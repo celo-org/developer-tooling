@@ -193,7 +193,7 @@ export class WrapperCache implements ContractCacheType {
   }
   /* @deprecated use getLockedCelo */
   getLockedGold() {
-    return this.getContract(CeloContract.LockedCelo)
+    return this.getContract(CeloContract.LockedGold)
   }
   getLockedCelo() {
     return this.getContract(CeloContract.LockedCelo)

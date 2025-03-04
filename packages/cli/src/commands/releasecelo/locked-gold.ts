@@ -59,7 +59,7 @@ export default class LockedCelo extends ReleaseGoldBaseCommand {
         .runChecks()
       const txos = await this.releaseGoldWrapper.relockGold(relockValue)
       for (const txo of txos) {
-        await displaySendTx('lockedGoldRelock', txo, { from: beneficiary })
+        await displaySendTx('lockedCeloRelock', txo, { from: beneficiary })
       }
       if (lockValue.gt(new BigNumber(0))) {
         const accounts = await kit.contracts.getAccounts()
@@ -83,11 +83,11 @@ export default class LockedCelo extends ReleaseGoldBaseCommand {
             return
           }
         }
-        await displaySendTx('lockedGoldLock', this.releaseGoldWrapper.lockGold(lockValue))
+        await displaySendTx('lockedCeloLock', this.releaseGoldWrapper.lockGold(lockValue))
       }
     } else if (flags.action === 'unlock') {
       await checkBuilder.isNotVoting(contractAddress).hasEnoughLockedGoldToUnlock(value).runChecks()
-      await displaySendTx('lockedGoldUnlock', this.releaseGoldWrapper.unlockGold(flags.value))
+      await displaySendTx('lockedCeloUnlock', this.releaseGoldWrapper.unlockGold(flags.value))
     } else if (flags.action === 'withdraw') {
       await checkBuilder.runChecks()
       const currentTime = Math.round(new Date().getTime() / 1000)
