@@ -16,9 +16,13 @@ const { description, homepage, name, version } = JSON.parse(
 
 const { GITHUB_SHA_SHORT } = process.env
 
+if (!GITHUB_SHA_SHORT) {
+  console.log('Missing GITHUB_SHA_SHORT in environement; exiting')
+  process.exit(1)
+}
 if (parse(version)?.prerelease.length) {
-  console.log('Not on stable release; skipping releasing on homebrew')
-  process.exit(0)
+  console.log('Not on stable release; exiting')
+  process.exit(1)
 }
 
 async function calculateSHA256(fileName) {
