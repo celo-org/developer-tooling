@@ -17,7 +17,7 @@ const { description, homepage, name, version } = JSON.parse(
 const { GITHUB_SHA_SHORT } = process.env
 
 if (!GITHUB_SHA_SHORT) {
-  console.log('Missing GITHUB_SHA_SHORT in environement; exiting')
+  console.log('Missing GITHUB_SHA_SHORT in environment; exiting')
   process.exit(1)
 }
 if (parse(version)?.prerelease.length) {
@@ -42,25 +42,11 @@ const urlPrefix = `https://github.com/celo-org/developer-tooling/releases/downlo
   versionedName
 )}`
 
-async function uploadExecutableToGithubRelease(filePath) {
-  console.log(`Upload ${filePath}`)
-  await Promise.resolve()
-}
-
 const fileNamePrefix = `celocli-v${version}-${GITHUB_SHA_SHORT}`
 const fileNameMacIntel = `${fileNamePrefix}-darwin-${ARCH_INTEL}${fileSuffix}`
 const fileNameMacArm = `${fileNamePrefix}-darwin-${ARCH_ARM}${fileSuffix}`
 const fileNameLinuxIntel = `${fileNamePrefix}-linux-${ARCH_INTEL}${fileSuffix}`
 const fileNameLinuxArm = `${fileNamePrefix}-linux-arm${fileSuffix}`
-
-async function uploadAllExecutablesToGithub() {
-  await Promise.all([
-    uploadExecutableToGithubRelease(path.join(CLI_ROOT, 'dist', fileNameMacIntel)),
-    uploadExecutableToGithubRelease(path.join(CLI_ROOT, 'dist', fileNameMacArm)),
-    uploadExecutableToGithubRelease(path.join(CLI_ROOT, 'dist', fileNameLinuxIntel)),
-    uploadExecutableToGithubRelease(path.join(CLI_ROOT, 'dist', fileNameLinuxArm)),
-  ])
-}
 
 async function updateHomebrewFormula() {
   const templatePath = path.join(TEMPLATES, 'celocli.rb')
@@ -99,7 +85,6 @@ async function updateHomebrewFormula() {
 try {
   // NOTE: this expects the follow command beforehand:
   // yarn oclif pack tarballs
-  await uploadAllExecutablesToGithub()
   await updateHomebrewFormula()
 } catch (error) {
   console.error(`error running ${__filename}`, error)
