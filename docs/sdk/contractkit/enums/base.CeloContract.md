@@ -324,7 +324,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:32](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L32)
+[packages/sdk/contractkit/src/base.ts:34](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L34)
 
 ___
 
@@ -334,7 +334,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:33](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L33)
+[packages/sdk/contractkit/src/base.ts:35](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L35)
 
 ___
 
@@ -344,7 +344,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:34](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L34)
+[packages/sdk/contractkit/src/base.ts:36](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L36)
 
 ___
 
@@ -354,7 +354,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:35](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L35)
+[packages/sdk/contractkit/src/base.ts:37](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L37)
 
 ___
 
@@ -364,7 +364,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:36](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L36)
+[packages/sdk/contractkit/src/base.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L38)
 
 ___
 
@@ -374,7 +374,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:37](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L37)
+[packages/sdk/contractkit/src/base.ts:39](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L39)
 
 ___
 
@@ -384,7 +384,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:39](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L39)
+[packages/sdk/contractkit/src/base.ts:41](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L41)
 
 ___
 
@@ -394,7 +394,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:38](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L38)
+[packages/sdk/contractkit/src/base.ts:40](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L40)
 
 ___
 
@@ -414,4 +414,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/base.ts:40](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L40)
+[packages/sdk/contractkit/src/base.ts:42](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/base.ts#L42)
