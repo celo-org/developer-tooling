@@ -83,7 +83,7 @@ export class MiniContractCache implements ContractCacheType {
   }
 
   getGoldToken(): Promise<GoldTokenWrapper> {
-    return this.getContract(CeloContract.GoldToken)
+    return this.getContract(CeloContract.CeloToken)
   }
 
   getStableToken(stableToken: StableToken = StableToken.cUSD): Promise<StableTokenWrapper> {

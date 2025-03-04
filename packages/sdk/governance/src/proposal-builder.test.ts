@@ -1,13 +1,14 @@
 import { AbiItem } from '@celo/connect'
-import { CeloContract, ContractKit, newKit } from '@celo/contractkit'
+import { CeloContract, ContractKit, newKitFromWeb3 } from '@celo/contractkit'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import BigNumber from 'bignumber.js'
 import { ProposalBuilder } from './proposal-builder'
-describe('ProposalBuilder', () => {
+testWithAnvilL2('ProposalBuilder', (web3) => {
   let kit: ContractKit
   let proposalBuilder: ProposalBuilder
 
   beforeEach(() => {
-    kit = newKit('https://alfajores-forno.celo-testnet.org')
+    kit = newKitFromWeb3(web3)
     proposalBuilder = new ProposalBuilder(kit)
   })
 
@@ -21,6 +22,10 @@ describe('ProposalBuilder', () => {
   describe('addWeb3Tx', () => {
     it('adds and builds a Web3 transaction', async () => {
       const wrapper = await kit.contracts.getGovernance()
+      // if we wan to keep input in the expectation the same the dequeue index needs to be same length as on alfajores
+      const dequeue = new Array(56).fill(0)
+      dequeue.push(125)
+      jest.spyOn(wrapper, 'getDequeue').mockResolvedValue(dequeue.map((x) => new BigNumber(x)))
       const tx = await wrapper.approve(new BigNumber('125'))
       proposalBuilder.addWeb3Tx(tx.txo, { to: '0x5678', value: '1000' })
       const proposal = await proposalBuilder.build()

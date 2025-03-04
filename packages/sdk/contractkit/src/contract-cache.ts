@@ -41,8 +41,10 @@ const WrapperFactories = {
   [CeloContract.FeeCurrencyDirectory]: FeeCurrencyDirectoryWrapper,
   [CeloContract.FeeCurrencyWhitelist]: FeeCurrencyWhitelistWrapper,
   [CeloContract.Freezer]: FreezerWrapper,
+  // TODO(L2) remove after April 2025
   [CeloContract.GasPriceMinimum]: GasPriceMinimumWrapper,
   [CeloContract.GoldToken]: GoldTokenWrapper,
+  [CeloContract.CeloToken]: GoldTokenWrapper,
   // [CeloContract.Random]: RandomWrapper,
   // [CeloContract.Registry]: RegistryWrapper,
   [CeloContract.MultiSig]: MultiSigWrapper,
@@ -66,6 +68,7 @@ const WrapperFactoriesWhichNeedCache = {
   [CeloContract.EpochManager]: EpochManagerWrapper,
   [CeloContract.Governance]: GovernanceWrapper,
   [CeloContract.LockedCelo]: LockedGoldWrapper,
+  [CeloContract.LockedGold]: LockedGoldWrapper,
   [CeloContract.Validators]: ValidatorsWrapper,
 }
 
@@ -96,8 +99,10 @@ interface WrapperCacheMap {
   [CeloContract.Freezer]?: FreezerWrapper
   [CeloContract.GasPriceMinimum]?: GasPriceMinimumWrapper
   [CeloContract.CeloToken]?: GoldTokenWrapper
+  [CeloContract.GoldToken]?: GoldTokenWrapper
   [CeloContract.Governance]?: GovernanceWrapper
   [CeloContract.LockedCelo]?: LockedGoldWrapper
+  [CeloContract.LockedGold]?: LockedGoldWrapper
   [CeloContract.MultiSig]?: MultiSigWrapper
   [CeloContract.OdisPayments]?: OdisPaymentsWrapper
   // [CeloContract.Random]?: RandomWrapper,
@@ -178,7 +183,7 @@ export class WrapperCache implements ContractCacheType {
   }
   /* @deprecated use getCeloToken */
   getGoldToken() {
-    return this.getContract(CeloContract.CeloToken)
+    return this.getContract(CeloContract.GoldToken)
   }
   getCeloToken() {
     return this.getContract(CeloContract.CeloToken)

@@ -61,9 +61,11 @@ export const ContractFactories = {
   [CeloContract.UniswapFeeHandlerSeller]: newUniswapFeeHandlerSeller,
   [CeloContract.GasPriceMinimum]: newGasPriceMinimum,
   [CeloContract.CeloToken]: newGoldToken,
+  [CeloContract.GoldToken]: newGoldToken,
   [CeloContract.Governance]: newGovernance,
   [CeloContract.GovernanceSlasher]: newGovernanceSlasher,
   [CeloContract.LockedCelo]: newLockedGold,
+  [CeloContract.LockedGold]: newLockedGold,
   [CeloContract.MultiSig]: newMultiSig,
   [CeloContract.OdisPayments]: newOdisPayments,
   [CeloContract.Random]: newRandom,
@@ -162,7 +164,7 @@ export class Web3ContractCache {
   }
   /* @deprecated use getLockedCelo */
   getLockedGold() {
-    return this.getContract(CeloContract.LockedCelo)
+    return this.getContract(CeloContract.LockedGold)
   }
   getLockedCelo() {
     return this.getContract(CeloContract.LockedCelo)

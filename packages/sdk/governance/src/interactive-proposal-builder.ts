@@ -121,6 +121,11 @@ export class InteractiveProposalBuilder {
 }
 export function requireABI(contractName: CeloContract): ABIDefinition[] {
   // search thru multiple paths to find the ABI
+  if (contractName === CeloContract.CeloToken) {
+    contractName = CeloContract.GoldToken
+  } else if (contractName === CeloContract.LockedCelo) {
+    contractName = CeloContract.LockedGold
+  }
   for (const path of ['', '0.8/', 'mento/']) {
     const abi = safeRequire(contractName, path)
     if (abi !== null) {

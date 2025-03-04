@@ -18,12 +18,12 @@ export enum CeloContract {
   Freezer = 'Freezer',
   GasPriceMinimum = 'GasPriceMinimum',
   /* @deprecated use CeloToken */
-  GoldToken = 'CeloToken',
+  GoldToken = 'GoldToken',
   CeloToken = 'CeloToken',
   Governance = 'Governance',
   GovernanceSlasher = 'GovernanceSlasher',
   /* @deprecated use LockedCelo */
-  LockedGold = 'LockedCelo',
+  LockedGold = 'LockedGold',
   LockedCelo = 'LockedCelo',
   MentoFeeHandlerSeller = 'MentoFeeHandlerSeller',
   UniswapFeeHandlerSeller = 'UniswapFeeHandlerSeller',
@@ -45,7 +45,10 @@ export type StableTokenContract =
   | CeloContract.StableTokenEUR
   | CeloContract.StableTokenBRL
 
-export type CeloTokenContract = StableTokenContract | CeloContract.CeloToken
+export type CeloTokenContract =
+  | StableTokenContract
+  | CeloContract.CeloToken
+  | CeloContract.GoldToken
 /**
  * Deprecated alias for CeloTokenContract.
  * @deprecated Use CeloTokenContract instead
