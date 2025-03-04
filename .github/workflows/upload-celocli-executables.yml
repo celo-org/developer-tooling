@@ -1,44 +1,21 @@
 name: Upload celocli executables
 
 on:
-  push:
-    branches:
-      - 'experiment/executable'
-  workflow_call:
-    inputs:
-      version:
-        description: 'Version of the @celo/celocli to update or upload executables to'
-        type: string
-        required: true
-      # commit:
-      #   type: string
-      #   required: true
-      force:
-        description: |
-          Whether or not to override the files on the release if they exist. 
-          Does nothing if no files were uploaded'
-        type: boolean
-        default: false
+  release:
+    types: [released]
 
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version of the @celo/celocli to update or upload executables to'
-        type: string
-        required: true
-      commit:
-        type: string
-        required: true
-      force:
-        description: |
-          Whether or not to override the files on the release if they exist. 
-          Does nothing if no files were uploaded'
-        type: boolean
-        default: false
 jobs:
+  should_run:
+    runs-on: [ubuntu-latest]
+    steps:
+      - if: contains(github.ref_name, 'celocli') == true
+        run: |
+          echo "New @celo/celocli@${{ github.ref_name }} release!"
+
   upload:
     name: Upload executables to a specific @celo/celocli release
     runs-on: [macos-latest]
+    needs: [should_run]
     permissions:
       contents: write
       id-token: write
@@ -56,7 +33,7 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
         with:
-          ref: '@celo/celocli@6.1.0'
+          ref: ${{ github.ref_name }}
           fetch-tags: true
 
       - name: Checkout Homebrew Repo
@@ -69,6 +46,13 @@ jobs:
 
       - name: Sync workspace
         uses: ./.github/actions/sync-workspace
+
+      - name: Extract celocli published version
+        id: extractCelocliVersion
+        run: |
+          full_version=echo ${{ github.ref_name }}
+          version=$(echo $full_version | cut -d' ' -f1 | cut -d'/' -f3)
+          echo "celocliVersion=$version" >> "$GITHUB_OUTPUT"
 
       - run: yarn
       - run: yarn build
@@ -83,7 +67,7 @@ jobs:
         run: |
           # TODO: remove the flag --clobber if --force is NOT set
           gh release \
-            upload @celo/celocli@${{ inputs.version }} \
+            upload @celo/celocli@${{ steps.extractCelocliVersion.outputs.version }} \
             --clobber \ 
             packages/cli/dist/*.tar.xz
 
@@ -117,12 +101,12 @@ jobs:
           git status
           cp $cli_workspace/homebrew/Formula/celocli.rb ./Formula/c/
           git add ./Formula/c/celocli.rb
-          git commit -m "chore: update celocli to ${{ inputs.version }}"
+          git commit -m "chore: update celocli to ${{ steps.extractCelocliVersion.outputs.version }}"
           git push fork $NEW_BRANCH
 
-          RELEASE_URL="https://github.com/celo-org/developer-tooling/releases/download/%40celo%2Fcelocli%40${{ inputs.version }}"
+          RELEASE_URL="https://github.com/celo-org/developer-tooling/releases/download/%40celo%2Fcelocli%40${{ steps.extractCelocliVersion.outputs.version }}"
           cat >/tmp/pr-body.md <<EOL
-          Update celocli formula to [${{ inputs.version }}]($RELEASE_URL).
+          Update celocli formula to [${{ steps.extractCelocliVersion.outputs.version }}]($RELEASE_URL).
 
           🤖 _This pull-request was opened by a robot beep boop from https://github.com/celo-org_ 🤖
           EOL
@@ -131,6 +115,6 @@ jobs:
           gh auth login --with-token < token.txt
           gh pr create \
             --body-file /tmp/pr-body.md \
-            --title "celocli ${{ inputs.version }}" \
+            --title "celocli ${{ steps.extractCelocliVersion.outputs.version }}" \
             --head "$FORK_REPOSITORY/$NEW_BRANCH" \
             --base "$UPSTREAM_REPOSITORY/$BASE_BRANCH"
