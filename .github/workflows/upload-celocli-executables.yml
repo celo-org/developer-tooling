@@ -72,11 +72,11 @@ jobs:
 
       - run: yarn
       - run: yarn build
-      - run: yarn workspace @celo/celocli homebrew
-
       - run: |
-          ls packages/cli/dist
-          cat packages/cli/Formula/celocli.rb
+          cd packages/cli
+          yarn homebrew
+          ls dist
+          cat Formula/celocli.rb
 
       - name: Upload executables on the github release
         run: |
@@ -88,7 +88,7 @@ jobs:
 
       - run: brew update
       - run: brew cleanup
-      - run: ./packages/cli/homebrew/scripts/test.sh
+      - run: ./homebrew/scripts/test.sh
 
       - name: Open pull-request on Homebrew repo
         if: ${{ env.HOMEBREW_TOKEN }}
@@ -102,7 +102,7 @@ jobs:
         run: |
           set -x
 
-          devtooling=$(pwd)
+          cli_workspace=$(pwd)
           cd /Users/runner/work/developer-tooling/developer-tooling/homebrew
 
           # Setup the committers identity.
@@ -114,7 +114,7 @@ jobs:
           git checkout -b $NEW_BRANCH
           git fetch --all
           git status
-          cp $devtooling/packages/cli/homebrew/Formula/celocli.rb ./Formula/c/
+          cp $cli_workspace/homebrew/Formula/celocli.rb ./Formula/c/
           git add ./Formula/c/celocli.rb
           git commit -m "chore: update celocli to ${{ inputs.version }}"
           git push fork $NEW_BRANCH
