@@ -74,6 +74,7 @@ jobs:
       - run: yarn build
       - run: |
           cd packages/cli
+          yarn run # list all commands, why does it not find homebrew???
           yarn run homebrew
           ls dist
           cat Formula/celocli.rb
