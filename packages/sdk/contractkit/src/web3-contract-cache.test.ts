@@ -33,4 +33,21 @@ testWithAnvilL2('web3-contract-cache', (web3: Web3) => {
       expect(contract).toBe(contractBis)
     }
   })
+  describe('getLockedCelo()', () => {
+    it('returns the LockedCelo contract', async () => {
+      const contractCache = newWeb3ContractCache()
+      const contract = await contractCache.getLockedCelo()
+      expect(contract).not.toBeNull()
+      expect(contract).toBeDefined()
+      expect
+    })
+  })
+  describe('getCeloToken()', () => {
+    it('returns the CELO token contract', async () => {
+      const contractCache = newWeb3ContractCache()
+      const contract = await contractCache.getCeloToken()
+      expect(contract).not.toBeNull()
+      expect(contract).toBeDefined()
+    })
+  })
 })

@@ -42,6 +42,33 @@ describe('getContract()', () => {
     const contract2 = await contractCache.getContract(CeloContract.MultiSig, address2)
     expect(contract1?.address).not.toEqual(contract2?.address)
   })
+  describe('get contract methods', () => {
+    const exclusionList = new Set([
+      'StableTokenEUR',
+      'StableTokenBRL',
+      'Registry',
+      'Random',
+      'UniswapFeeHandlerSeller',
+      'MentoFeeHandlerSeller',
+      'GovernanceSlasher',
+      'FeeHandler',
+      'EpochManagerEnabler',
+      'CeloUnreleasedTreasury',
+      'ERC20',
+    ])
+    const eligableMethods = Object.values(CeloContract).filter((name) => !exclusionList.has(name))
+    for (const contractName of eligableMethods) {
+      const method = `get${contractName}`
+      it(`has a method ${method}`, async () => {
+        // @ts-ignore
+        expect(contractCache[method]).toBeDefined()
+        // @ts-ignore
+        expect(typeof contractCache[method]).toBe('function')
+        // @ts-ignore
+        expect(contractCache[method]()).resolves.toBeDefined()
+      })
+    }
+  })
 })
 
 test('should cache contracts', async () => {
