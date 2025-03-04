@@ -240,7 +240,7 @@ ___
 
 ### GoldToken
 
-• **GoldToken** = ``"CeloToken"``
+• **GoldToken** = ``"GoldToken"``
 
 #### Defined in
 
@@ -280,7 +280,7 @@ ___
 
 ### LockedGold
 
-• **LockedGold** = ``"LockedCelo"``
+• **LockedGold** = ``"LockedGold"``
 
 #### Defined in
 

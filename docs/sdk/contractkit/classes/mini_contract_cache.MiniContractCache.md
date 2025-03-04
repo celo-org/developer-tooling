@@ -130,7 +130,7 @@ Get Contract wrapper
 
 | Name | Type |
 | :------ | :------ |
-| `ContractKey` | extends [`Accounts`](../enums/base.CeloContract.md#accounts) \| [`GasPriceMinimum`](../enums/base.CeloContract.md#gaspriceminimum) \| [`GoldToken`](../enums/base.CeloContract.md#goldtoken) \| [`StableToken`](../enums/base.CeloContract.md#stabletoken) \| [`StableTokenEUR`](../enums/base.CeloContract.md#stabletokeneur) \| [`StableTokenBRL`](../enums/base.CeloContract.md#stabletokenbrl) |
+| `ContractKey` | extends [`Accounts`](../enums/base.CeloContract.md#accounts) \| [`GasPriceMinimum`](../enums/base.CeloContract.md#gaspriceminimum) \| [`CeloToken`](../enums/base.CeloContract.md#celotoken) \| [`StableToken`](../enums/base.CeloContract.md#stabletoken) \| [`StableTokenEUR`](../enums/base.CeloContract.md#stabletokeneur) \| [`StableTokenBRL`](../enums/base.CeloContract.md#stabletokenbrl) |
 
 #### Parameters
 
@@ -203,7 +203,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `C` | extends [`Accounts`](../enums/base.CeloContract.md#accounts) \| [`GasPriceMinimum`](../enums/base.CeloContract.md#gaspriceminimum) \| [`GoldToken`](../enums/base.CeloContract.md#goldtoken) \| [`StableToken`](../enums/base.CeloContract.md#stabletoken) \| [`StableTokenEUR`](../enums/base.CeloContract.md#stabletokeneur) \| [`StableTokenBRL`](../enums/base.CeloContract.md#stabletokenbrl) |
+| `C` | extends [`Accounts`](../enums/base.CeloContract.md#accounts) \| [`GasPriceMinimum`](../enums/base.CeloContract.md#gaspriceminimum) \| [`CeloToken`](../enums/base.CeloContract.md#celotoken) \| [`StableToken`](../enums/base.CeloContract.md#stabletoken) \| [`StableTokenEUR`](../enums/base.CeloContract.md#stabletokeneur) \| [`StableTokenBRL`](../enums/base.CeloContract.md#stabletokenbrl) |
 
 #### Parameters
 
