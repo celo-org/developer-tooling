@@ -34,7 +34,6 @@ jobs:
         with:
           repository: 'Homebrew/homebrew-core'
           path: '/Users/runner/work/developer-tooling/developer-tooling/homebrew'
-          fetch-depth: 0
           ref: master
 
       - name: Extract celocli published version
