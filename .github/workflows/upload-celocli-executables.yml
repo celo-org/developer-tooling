@@ -71,16 +71,17 @@ jobs:
           echo $commit
 
       - run: |
-          cd packages/cli
           # yarn oclif pack tarballs --tarball=${{ steps.setupVars.outputs.tarballPath }}
           yarn oclif pack tarballs --targets=darwin-x64 --tarball=${{ steps.setupVars.outputs.tarballPath }} 
           yarn run homebrew
           ls dist
           cat ./homebrew/Formula/celocli.rb
+        working-directory: packages/cli
         env:
           GITHUB_SHA_SHORT: ${{ steps.setupVars.outputs.commit }}
 
       - name: Upload executables on the github release
+        working-directory: packages/cli
         run: |
           # TODO: remove the flag --clobber if --force is NOT set
           gh release \
@@ -93,9 +94,11 @@ jobs:
       - run: brew update
       - run: brew cleanup
       - run: ./homebrew/scripts/test.sh
+        working-directory: packages/cli
 
       - name: Open pull-request on Homebrew repo
         # if: ${{ env.HOMEBREW_TOKEN }}
+        working-directory: packages/cli
         env:
           BOT_NAME: 'celo-org'
           BOT_EMAIL: 'celo-org@github.com'
