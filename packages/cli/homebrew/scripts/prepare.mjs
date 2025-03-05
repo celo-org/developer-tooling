@@ -9,6 +9,7 @@ const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const CLI_ROOT = path.join(__dirname, '..', '..')
+const DIST_ASSETS = path.join(CLI_ROOT, 'dist')
 
 const { description, homepage, name, version } = JSON.parse(
   fs.readFileSync(path.join(CLI_ROOT, 'package.json'))
@@ -54,10 +55,10 @@ async function updateHomebrewFormula() {
   const formulaPath = path.join(CLI_ROOT, 'homebrew', 'Formula', 'celocli.rb')
 
   const [sha256MacIntel, sha256MacArm, sha256LinuxIntel, sha256LinuxArm] = await Promise.all([
-    calculateSHA256(path.join(CLI_ROOT, 'dist', fileNameMacIntel)),
-    calculateSHA256(path.join(CLI_ROOT, 'dist', fileNameMacArm)),
-    calculateSHA256(path.join(CLI_ROOT, 'dist', fileNameLinuxIntel)),
-    calculateSHA256(path.join(CLI_ROOT, 'dist', fileNameLinuxArm)),
+    calculateSHA256(path.join(DIST_ASSETS, fileNameMacIntel)),
+    // calculateSHA256(path.join(DIST_ASSETS, fileNameMacArm)),
+    // calculateSHA256(path.join(DIST_ASSETS, fileNameLinuxIntel)),
+    // calculateSHA256(path.join(DIST_ASSETS, fileNameLinuxArm)),
   ])
 
   const templateReplaced = template

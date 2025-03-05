@@ -71,7 +71,8 @@ jobs:
 
       - run: |
           cd packages/cli
-          yarn oclif pack tarballs --tarball=${{ steps.setupVars.outputs.tarballPath }}
+          # yarn oclif pack tarballs --tarball=${{ steps.setupVars.outputs.tarballPath }} --parallel
+          yarn oclif pack tarballs --targets=darwin-x64 --tarball=${{ steps.setupVars.outputs.tarballPath }} 
           yarn run homebrew
           ls dist
           cat ./homebrew/Formula/celocli.rb
