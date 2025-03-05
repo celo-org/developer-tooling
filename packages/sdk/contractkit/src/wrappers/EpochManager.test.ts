@@ -185,7 +185,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
 
     await activateValidators()
 
-    // Start a new epoch process, but diont process it, so we can compare the amounts
+    // Start a new epoch process, but don't process it, so we can compare the amounts
     await timeTravel(EPOCH_DURATION + 1, web3)
 
     await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
