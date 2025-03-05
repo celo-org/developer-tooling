@@ -74,7 +74,7 @@ jobs:
           yarn oclif pack tarballs --tarball=${{ steps.setupVars.outputs.tarballPath }}
           yarn run homebrew
           ls dist
-          cat Formula/celocli.rb
+          cat homebrew/Formula/celocli.rb
         env:
           GITHUB_SHA_SHORT: ${{ steps.setupVars.outputs.commit }}
 
