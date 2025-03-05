@@ -52,6 +52,7 @@ jobs:
         shell: bash
         run: yarn
       - id: setupVars
+        name: Setup variables
         run: |
           tarballPath=$(npm pack @celo/celocli \
           --json \
@@ -62,7 +63,7 @@ jobs:
           echo /tmp/$tarballPath
 
           version=$(echo ${{ github.ref_name }} | cut -d' ' -f1 | cut -d'/' -f3)
-          echo "celocliVersion=$version" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
           echo $version
 
           commit=$(git rev-parse --short ${{ github.sha }})
@@ -71,7 +72,7 @@ jobs:
 
       - run: |
           cd packages/cli
-          # yarn oclif pack tarballs --tarball=${{ steps.setupVars.outputs.tarballPath }} --parallel
+          # yarn oclif pack tarballs --tarball=${{ steps.setupVars.outputs.tarballPath }}
           yarn oclif pack tarballs --targets=darwin-x64 --tarball=${{ steps.setupVars.outputs.tarballPath }} 
           yarn run homebrew
           ls dist
@@ -85,7 +86,7 @@ jobs:
           gh release \
             upload @celo/celocli@${{ steps.setupVars.outputs.version }} \
             --clobber \ 
-            ./dist/*.tar.xz
+            ./dist/*.xz
         env:
           GH_TOKEN: ${{ github.token }}
 
