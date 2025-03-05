@@ -8,7 +8,7 @@ import Start from './start'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('epochs:finish cmd', (web3) => {
+testWithAnvilL2('epochs:process-groups cmd', (web3) => {
   it('Warns when epoch process is not yet started', async () => {
     const kit = newKitFromWeb3(web3)
     const accounts = await kit.web3.eth.getAccounts()
