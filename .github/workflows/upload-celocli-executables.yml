@@ -71,8 +71,8 @@ jobs:
           echo $commit
 
       - run: |
-          # yarn oclif pack tarballs --tarball=${{ steps.setupVars.outputs.tarballPath }}
-          yarn oclif pack tarballs --targets=darwin-x64 --tarball=${{ steps.setupVars.outputs.tarballPath }} 
+          yarn oclif pack tarballs --tarball=${{ steps.setupVars.outputs.tarballPath }}
+          # yarn oclif pack tarballs --targets=darwin-x64 --tarball=${{ steps.setupVars.outputs.tarballPath }}
           yarn run homebrew
           ls dist
           cat ./homebrew/Formula/celocli.rb
@@ -83,7 +83,6 @@ jobs:
       - name: Upload executables on the github release
         working-directory: packages/cli
         run: |
-          # TODO: remove the flag --clobber if --force is NOT set
           ls -la ./dist/
           gh release upload --clobber @celo/celocli@${{ steps.setupVars.outputs.version }} ./dist/*.xz
         env:

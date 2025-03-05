@@ -56,9 +56,9 @@ async function updateHomebrewFormula() {
 
   const [sha256MacIntel, sha256MacArm, sha256LinuxIntel, sha256LinuxArm] = await Promise.all([
     calculateSHA256(path.join(DIST_ASSETS, fileNameMacIntel)),
-    // calculateSHA256(path.join(DIST_ASSETS, fileNameMacArm)),
-    // calculateSHA256(path.join(DIST_ASSETS, fileNameLinuxIntel)),
-    // calculateSHA256(path.join(DIST_ASSETS, fileNameLinuxArm)),
+    calculateSHA256(path.join(DIST_ASSETS, fileNameMacArm)),
+    calculateSHA256(path.join(DIST_ASSETS, fileNameLinuxIntel)),
+    calculateSHA256(path.join(DIST_ASSETS, fileNameLinuxArm)),
   ])
 
   const templateReplaced = template
