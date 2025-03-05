@@ -84,11 +84,8 @@ jobs:
         working-directory: packages/cli
         run: |
           # TODO: remove the flag --clobber if --force is NOT set
-          ls ./dist/*.xz
-          gh release \
-            upload @celo/celocli@${{ steps.setupVars.outputs.version }} \
-            --clobber \ 
-            ./dist/*.xz
+          ls -la ./dist/
+          gh release upload --clobber @celo/celocli@${{ steps.setupVars.outputs.version }} ./dist/*.xz
         env:
           GH_TOKEN: ${{ github.token }}
 
