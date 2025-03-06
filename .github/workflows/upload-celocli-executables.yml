@@ -71,20 +71,22 @@ jobs:
           echo $commit
 
       - run: |
-          yarn oclif pack tarballs --tarball=${{ steps.setupVars.outputs.tarballPath }}
+          # yarn oclif pack tarballs --tarball=${{ steps.setupVars.outputs.tarballPath }}
           # yarn oclif pack tarballs --targets=darwin-x64 --tarball=${{ steps.setupVars.outputs.tarballPath }}
+          gh release download -R celo-org/developer-tooling -D dist --clobber @celo/celocli@6.1.0
           yarn run homebrew
           ls dist
           cat ./homebrew/Formula/celocli.rb
         working-directory: packages/cli
         env:
           GITHUB_SHA_SHORT: ${{ steps.setupVars.outputs.commit }}
+          GH_TOKEN: ${{ github.token }}
 
       - name: Upload executables on the github release
         working-directory: packages/cli
         run: |
           ls -la ./dist/
-          gh release upload --clobber @celo/celocli@${{ steps.setupVars.outputs.version }} ./dist/*.xz
+          # gh release upload --clobber @celo/celocli@${{ steps.setupVars.outputs.version }} ./dist/*.xz
         env:
           GH_TOKEN: ${{ github.token }}
 
