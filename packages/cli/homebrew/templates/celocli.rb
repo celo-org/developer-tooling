@@ -1,4 +1,4 @@
-class CeloCli < Formula
+class Celocli < Formula
   desc "__CLI__DESC__"
   homepage "__CLI__HOMEPAGE__"
   url "__CLI_MAC_INTEL_DOWNLOAD_URL__"
