@@ -80,8 +80,6 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/lockedgold/delegate.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/lockedgold/delegate.ts)_
-
 ## `celocli lockedgold:delegate-info`
 
 Delegate info about account.
@@ -141,8 +139,6 @@ FLAG DESCRIPTIONS
     alfajores => Celo Alfajores Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
-
-_See code: [src/commands/lockedgold/delegate-info.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/lockedgold/delegate-info.ts)_
 
 ## `celocli lockedgold:lock`
 
@@ -207,8 +203,6 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/lockedgold/lock.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/lockedgold/lock.ts)_
-
 ## `celocli lockedgold:max-delegatees-count`
 
 Returns the maximum number of delegates allowed per account.
@@ -264,8 +258,6 @@ FLAG DESCRIPTIONS
     alfajores => Celo Alfajores Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
-
-_See code: [src/commands/lockedgold/max-delegatees-count.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/lockedgold/max-delegatees-count.ts)_
 
 ## `celocli lockedgold:revoke-delegate`
 
@@ -334,8 +326,6 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/lockedgold/revoke-delegate.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/lockedgold/revoke-delegate.ts)_
-
 ## `celocli lockedgold:show ARG1`
 
 Show Locked Gold information for a given account. This includes the total amount of locked celo, the amount being used for voting in Validator Elections, the Locked Gold balance this account is required to maintain due to a registered Validator or Validator Group, and any pending withdrawals that have been initiated via "lockedcelo:unlock".
@@ -371,8 +361,6 @@ FLAG DESCRIPTIONS
     alfajores => Celo Alfajores Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
-
-_See code: [src/commands/lockedgold/show.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/lockedgold/show.ts)_
 
 ## `celocli lockedgold:unlock`
 
@@ -439,8 +427,6 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/lockedgold/unlock.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/lockedgold/unlock.ts)_
-
 ## `celocli lockedgold:update-delegated-amount`
 
 Updates the amount of delegated locked celo. There might be discrepancy between the amount of locked celo and the amount of delegated locked celo because of received rewards.
@@ -489,6 +475,9 @@ DESCRIPTION
   amount of locked celo and the amount of delegated locked celo because of received
   rewards.
 
+ALIASES
+  $ celocli lockedgold:update-delegated-amount
+
 EXAMPLES
   update-delegated-amount --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95 --to 0xc0ffee254729296a45a3885639AC7E10F9d54979
 
@@ -502,8 +491,6 @@ FLAG DESCRIPTIONS
     alfajores => Celo Alfajores Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
-
-_See code: [src/commands/lockedgold/update-delegated-amount.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/lockedgold/update-delegated-amount.ts)_
 
 ## `celocli lockedgold:withdraw`
 
@@ -565,5 +552,3 @@ FLAG DESCRIPTIONS
     alfajores => Celo Alfajores Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
-
-_See code: [src/commands/lockedgold/withdraw.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/lockedgold/withdraw.ts)_
