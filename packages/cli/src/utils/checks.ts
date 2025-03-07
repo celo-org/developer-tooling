@@ -1,4 +1,4 @@
-import { accountsABI, goldTokenABI, stableTokenABI } from '@celo/abis-12'
+import { accountsABI, goldTokenABI, multiSigABI, stableTokenABI } from '@celo/abis-12'
 import { bufferToHex, eqAddress, NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
 import {
   COMPLIANT_ERROR_RESPONSE,
@@ -8,9 +8,7 @@ import {
 import { Address } from '@celo/connect'
 import { StableToken } from '@celo/contractkit'
 import { HotfixRecord, ProposalStage } from '@celo/contractkit/lib/wrappers/Governance'
-import { MultiSigWrapper } from '@celo/contractkit/lib/wrappers/MultiSig'
 import { isValidAddress } from '@celo/utils/lib/address'
-import { verifySignature } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
 import chalk from 'chalk'
 import { fetch } from 'cross-fetch'
@@ -68,6 +66,7 @@ const negate = (x: Promise<boolean>) => x.then((y) => !y)
 
 type Resolve<A> = A extends Promise<infer T> ? T : A
 
+// TODO move it outside this file
 export function bigintToBigNumber(value: bigint) {
   return new BigNumber(value.toString())
 }
@@ -84,6 +83,11 @@ class CheckBuilder {
   private client?: CeloClient
 
   constructor(private command: BaseCommand, client?: CeloClient, private signer?: StrongAddress) {
+    // this has to be done explicitly because otherwise it results in a typescript error:
+    //
+    // ```error TS2742: The inferred type of 'client' cannot be named without a reference to
+    // '../../node_modules/viem/_types/actions/public/createAccessList'. This is likely not portable.
+    // A type annotation is necessary.```
     this.client = client
   }
 
@@ -267,29 +271,22 @@ class CheckBuilder {
   hotfixNotExecuted = (hash: Buffer) =>
     this.addCheck(
       `Hotfix 0x${hash.toString('hex')} is not already executed`,
-      // TODO withGovernance not needed
-      this.withGovernance(
-        async (_governance) => !(await getHotfixRecord(await this.getClient(), hash)).executed
-      )
+      async () => !(await getHotfixRecord(await this.getClient(), hash)).executed
     )
 
   hotfixExecutionTimeLimitNotReached = (hash: Buffer) =>
     this.addCheck(
       `Hotfix 0x${hash.toString('hex')} is still in its execution time limit window`,
-      // TODO withGovernance not needed
-      this.withGovernance(async (_governance) =>
+      async () =>
         (
           (await getHotfixRecord(await this.getClient(), hash)) as HotfixRecord
         ).executionTimeLimit.gt(getCurrentTimestamp())
-      )
     )
 
   hotfixApproved = (hash: Buffer) =>
     this.addCheck(
       `Hotfix 0x${hash.toString('hex')} is approved by approver`,
-      this.withGovernance(
-        async (_governance) => (await getHotfixRecord(await this.getClient(), hash)).approved
-      )
+      async () => (await getHotfixRecord(await this.getClient(), hash)).approved
     )
 
   hotfixCouncilApproved = (hash: Buffer) =>
@@ -304,34 +301,18 @@ class CheckBuilder {
   hotfixNotApproved = (hash: Buffer) =>
     this.addCheck(
       `Hotfix 0x${hash.toString('hex')} is not already approved`,
-      this.withGovernance(
-        async (_governance) => !(await getHotfixRecord(await this.getClient(), hash)).approved
-      )
+      async () => !(await getHotfixRecord(await this.getClient(), hash)).approved
     )
 
   hotfixNotApprovedBySecurityCouncil = (hash: Buffer) =>
     this.addCheck(
       `Hotfix 0x${hash.toString('hex')} is not already approved by security council`,
-      this.withGovernance(async (_governance) => {
+      async () => {
         const record = await getHotfixRecord(await this.getClient(), hash)
 
         return !(record as HotfixRecord).councilApproved
-      })
-    )
-
-  canSign = (account: Address) =>
-    this.addCheck('Account can sign', async () => {
-      try {
-        const message = 'test'
-        // @ts-ignore(fix)
-        const kit = await this.getKit()
-        const signature = await kit.connection.sign(message, account)
-        return verifySignature(message, signature, account)
-      } catch (error) {
-        console.error(error)
-        return false
       }
-    })
+    )
 
   canSignValidatorTxs = () =>
     this.addCheck(
@@ -536,7 +517,6 @@ class CheckBuilder {
     })
   }
 
-  // TODO interface changed - fix usages
   hasEnoughErc20 = (account: Address, value: BigNumber, erc20: Address) => {
     // possibly remove usage of utils?
     const valueInEth = utils.fromWei(value.toFixed(), 'ether')
@@ -590,10 +570,10 @@ class CheckBuilder {
     const valueInEth = utils.fromWei(value.toFixed(), 'ether')
     return this.addCheck(
       `Account has at least ${valueInEth} non-voting Locked Gold`,
-      // @ts-ignore(fix)
       this.withLockedGold(async (lockedGold, _signer, account) =>
-        // @ts-ignore(fix)
-        value.isLessThanOrEqualTo(await lockedGold.read.getAccountNonvotingLockedGold([account]))
+        value.isLessThanOrEqualTo(
+          bigintToBigNumber(await lockedGold.read.getAccountNonvotingLockedGold([account]))
+        )
       )
     )
   }
@@ -715,9 +695,17 @@ class CheckBuilder {
       })
     )
 
-  isMultiSigOwner = (from: string, multisig: MultiSigWrapper) => {
+  // This is the only required API change (because of dropping the usage of MultiSigWrapper)
+  isMultiSigOwner = (from: StrongAddress, address: StrongAddress) => {
     return this.addCheck('The provided address is an owner of the multisig', async () => {
-      const owners = await multisig.getOwners()
+      const owners = await (
+        await this.getClient()
+      ).readContract({
+        address,
+        abi: multiSigABI,
+        functionName: 'getOwners',
+      })
+
       return owners.indexOf(from) > -1
     })
   }
@@ -769,15 +757,4 @@ class CheckBuilder {
     }
     return this.SANCTIONED_SET.data.has(address)
   }
-
-  // async executeValidatorTx(
-  //   name: string,
-  //   f: (
-  //     validators: ValidatorsWrapper,
-  //     signer: Address,
-  //     account: Address
-  //   ) => Promise<CeloTransactionObject<any>> | CeloTransactionObject<any>
-  // ) {
-
-  // }
 }

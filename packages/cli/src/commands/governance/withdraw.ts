@@ -34,7 +34,7 @@ export default class Withdraw extends BaseCommand {
     const checkBuilder = newCheckBuilder(this, res.flags.from).hasRefundedDeposits(addressToRefund)
 
     if (multiSigWrapper) {
-      checkBuilder.isMultiSigOwner(res.flags.from, multiSigWrapper)
+      checkBuilder.isMultiSigOwner(res.flags.from, res.flags.for as StrongAddress)
     } else if (res.flags.useSafe) {
       checkBuilder.addCheck(`${res.flags.from} is a safe owner`, async () => {
         const safe = await createSafeFromWeb3(
