@@ -1,5 +1,5 @@
-import { accountsABI, goldTokenABI, governanceABI, lockedGoldABI, stableTokenABI, validatorsABI } from '@celo/abis-12'
-import { eqAddress, NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
+import { accountsABI, goldTokenABI, stableTokenABI } from '@celo/abis-12'
+import { bufferToHex, eqAddress, NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
 import {
   COMPLIANT_ERROR_RESPONSE,
   OFAC_SANCTIONS_LIST_URL,
@@ -7,29 +7,44 @@ import {
 } from '@celo/compliance'
 import { Address } from '@celo/connect'
 import { StableToken } from '@celo/contractkit'
-import { AccountsWrapper } from '@celo/contractkit/lib/wrappers/Accounts'
-import {
-  GovernanceWrapper,
-  HotfixRecord,
-  ProposalStage,
-} from '@celo/contractkit/lib/wrappers/Governance'
-import { LockedGoldWrapper } from '@celo/contractkit/lib/wrappers/LockedGold'
+import { HotfixRecord, ProposalStage } from '@celo/contractkit/lib/wrappers/Governance'
 import { MultiSigWrapper } from '@celo/contractkit/lib/wrappers/MultiSig'
-import { ValidatorsWrapper } from '@celo/contractkit/lib/wrappers/Validators'
 import { isValidAddress } from '@celo/utils/lib/address'
 import { verifySignature } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
 import chalk from 'chalk'
 import { fetch } from 'cross-fetch'
-import { erc20Abi, getContract, GetContractReturnType, PublicClient } from 'viem'
+import { erc20Abi } from 'viem'
 import utils from 'web3-utils'
-import { resolveAddress } from '../packages-to-be/address-resolver'
-import { getCurrentTimestamp, printValueMapRecursive } from './cli'
-import { meetsValidatorBalanceRequirements } from '../packages-to-be/validators'
-import { AccountsContract, getAccountsContract, getGovernanceContract, getLockedGoldContract, getValidatorsContract, GovernanceContract, LockedGoldContract, ValidatorsContract } from '../packages-to-be/contracts'
-import { CeloClient, getClient } from '../packages-to-be/client'
+import { BaseCommand } from '../base'
 import { signerToAccount } from '../packages-to-be/account'
-import { resolve } from 'path'
+import { resolveAddress } from '../packages-to-be/address-resolver'
+import { CeloClient, createCeloClient } from '../packages-to-be/client'
+import {
+  AccountsContract,
+  getAccountsContract,
+  getGovernanceContract,
+  getLockedGoldContract,
+  getValidatorsContract,
+  GovernanceContract,
+  LockedGoldContract,
+  ValidatorsContract,
+} from '../packages-to-be/contracts'
+import {
+  getHotfixRecord,
+  getProposalSchedule,
+  getProposalStage,
+} from '../packages-to-be/governance'
+import {
+  getValidator,
+  getValidatorGroup,
+  getValidatorLockedGoldRequirements,
+  getValidatorMembershipHistoryExtraData,
+  meetsValidatorBalanceRequirements,
+  meetsValidatorGroupBalanceRequirements,
+} from '../packages-to-be/validators'
+import { extractHostFromWeb3 } from '../test-utils/cliUtils'
+import { getCurrentTimestamp, printValueMapRecursive } from './cli'
 
 export interface CommandCheck {
   name: string
@@ -53,38 +68,61 @@ const negate = (x: Promise<boolean>) => x.then((y) => !y)
 
 type Resolve<A> = A extends Promise<infer T> ? T : A
 
-export function newCheckBuilder(signer?: StrongAddress) {
-  return new CheckBuilder(signer)
+export function bigintToBigNumber(value: bigint) {
+  return new BigNumber(value.toString())
+}
+
+// Adding client as an optional and last argument to avoid breaking changes, by default
+// it will instansiate a new client using createCeloClient() implicitly
+// that allows us not to change the API of newCheckBuilder at all
+export function newCheckBuilder(command: BaseCommand, signer?: Address, client?: CeloClient) {
+  return new CheckBuilder(command, client, signer as StrongAddress)
 }
 
 class CheckBuilder {
   private checks: CommandCheck[] = []
-  private client: CeloClient;
 
   constructor(
+    private command: BaseCommand,
+    private client?: CeloClient,
     private signer?: StrongAddress
-  ) {
-    this.client = getClient()
+  ) {}
+
+  private async getClient(): Promise<CeloClient> {
+    if (!this.client) {
+      // TODO this is just for the transition period until we can inject the client from the command
+      this.client = createCeloClient(extractHostFromWeb3(await this.command.getWeb3()))
+    }
+
+    return this.client
   }
 
   withValidators<A>(
-    f: (validators: ValidatorsContract, signer: StrongAddress, account: StrongAddress, ctx: CheckBuilder) => A
+    f: (
+      validators: ValidatorsContract,
+      signer: StrongAddress,
+      account: StrongAddress,
+      ctx: CheckBuilder
+    ) => A
   ): () => Promise<Resolve<A>> {
     return async () => {
-      const validatorsContract = await getValidatorsContract()
+      const validatorsContract = await getValidatorsContract(await this.getClient())
 
       if (this.signer) {
-        const account = await this.client.readContract({
-          address: await resolveAddress('Accounts'),
+        const account = await (
+          await this.getClient()
+        ).readContract({
+          address: await resolveAddress(await this.getClient(), 'Accounts'),
           abi: accountsABI,
           functionName: 'signerToAccount',
-          args: [this.signer]
+          args: [this.signer],
         })
 
         return f(validatorsContract, this.signer, account, this) as Resolve<A>
       } else {
-        // TODO resolve
-        return f(validatorsContract, '', '', this) as Resolve<A>
+        // TODO fix
+        // @ts-ignore(fix)
+        return f(validatorsContract, '' as StrongAddress, '', this) as Resolve<A>
       }
     }
   }
@@ -92,19 +130,22 @@ class CheckBuilder {
   withLockedGold<A>(
     f: (
       lockedGold: LockedGoldContract,
-      signer: Address,
-      account: Address,
+      signer: StrongAddress,
+      account: StrongAddress,
       validators: ValidatorsContract
     ) => A
   ): () => Promise<Resolve<A>> {
     return async () => {
-      const lockedCeloContract = await getLockedGoldContract()
-      const validatorsContract = await getValidatorsContract()
+      const lockedCeloContract = await getLockedGoldContract(await this.getClient())
+      const validatorsContract = await getValidatorsContract(await this.getClient())
 
       if (this.signer) {
-        const account = await signerToAccount(this.signer)
+        const account = await signerToAccount(await this.getClient(), this.signer)
+
         return f(lockedCeloContract, this.signer, account, validatorsContract) as Resolve<A>
       } else {
+        // @ts-ignore TODO(fix)
+        // TODO(not-covered)
         return f(lockedCeloContract, '', '', validatorsContract) as Resolve<A>
       }
     }
@@ -112,18 +153,24 @@ class CheckBuilder {
 
   withAccounts<A>(f: (accounts: AccountsContract) => A): () => Promise<Resolve<A>> {
     return async () => {
-      const accountsContract = await getAccountsContract()
+      const accountsContract = await getAccountsContract(await this.getClient())
 
       return f(accountsContract) as Resolve<A>
     }
   }
 
   withGovernance<A>(
-    f: (governance: GovernanceContract, signer: Address, account: Address, ctx: CheckBuilder) => A
+    f: (
+      governance: GovernanceContract,
+      signer: StrongAddress,
+      account: StrongAddress,
+      ctx: CheckBuilder
+    ) => A
   ): () => Promise<Resolve<A>> {
     return async () => {
-      const governanceContract = await getGovernanceContract()
+      const governanceContract = await getGovernanceContract(await this.getClient())
 
+      // @ts-ignore TODO(fix)
       return f(governanceContract, '', '', this) as Resolve<A>
     }
   }
@@ -166,15 +213,17 @@ class CheckBuilder {
   isApprover = (account: Address) =>
     this.addCheck(
       `${account} is approver address`,
-      this.withGovernance(async (governance) => eqAddress(await governance.read.approver(), account))
+      this.withGovernance(async (governance) =>
+        eqAddress(await governance.read.approver(), account)
+      )
     )
 
   isSecurityCouncil = (account: Address) =>
     this.addCheck(
       `${account} is security council address`,
-      this.withGovernance(async (governance) =>
-        eqAddress(await governance.read.securityCouncil(), account)
-      )
+      this.withGovernance(async (governance) => {
+        return eqAddress(await governance.read.securityCouncil(), account)
+      })
     )
 
   proposalExists = (proposalID: string) =>
@@ -189,14 +238,15 @@ class CheckBuilder {
   proposalInStages = (proposalID: string, stages: (keyof typeof ProposalStage)[]) =>
     this.addCheck(
       `${proposalID} is in stage ${stages.join(' or ')}`,
-      this.withGovernance(async (governance) => {
-        const stage = await governance.read.getProposalStage([BigInt(proposalID)])
+      this.withGovernance(async (_governance) => {
+        const stage = await getProposalStage(await this.getClient(), BigInt(proposalID))
         let match = false
         for (const allowedStage of stages) {
           match = stage === allowedStage || match
         }
         if (!match) {
-          const schedule = await governance.proposalSchedule(proposalID)
+          const schedule = await getProposalSchedule(await this.getClient(), BigInt(proposalID))
+
           printValueMapRecursive(schedule)
         }
         return match
@@ -206,57 +256,65 @@ class CheckBuilder {
   proposalIsPassing = (proposalID: string) =>
     this.addCheck(
       `Proposal ${proposalID} is passing corresponding constitutional quorum`,
-      this.withGovernance((governance) => governance.isProposalPassing(proposalID))
+      this.withGovernance((governance) => governance.read.isProposalPassing([BigInt(proposalID)]))
     )
 
   hotfixIsPassing = (hash: Buffer) =>
     this.addCheck(
       `Hotfix 0x${hash.toString('hex')} is whitelisted by quorum of validators`,
-      this.withGovernance((governance) => governance.isHotfixPassing(hash))
+      this.withGovernance((governance) => governance.read.isHotfixPassing([bufferToHex(hash)]))
     )
 
   hotfixNotExecuted = (hash: Buffer) =>
     this.addCheck(
       `Hotfix 0x${hash.toString('hex')} is not already executed`,
-      this.withGovernance(async (governance) => !(await governance.getHotfixRecord(hash)).executed)
+      // TODO withGovernance not needed
+      this.withGovernance(
+        async (_governance) => !(await getHotfixRecord(await this.getClient(), hash)).executed
+      )
     )
 
   hotfixExecutionTimeLimitNotReached = (hash: Buffer) =>
     this.addCheck(
       `Hotfix 0x${hash.toString('hex')} is still in its execution time limit window`,
-      this.withGovernance(async (governance) =>
-        ((await governance.getHotfixRecord(hash)) as HotfixRecord).executionTimeLimit.gt(
-          getCurrentTimestamp()
-        )
+      // TODO withGovernance not needed
+      this.withGovernance(async (_governance) =>
+        (
+          (await getHotfixRecord(await this.getClient(), hash)) as HotfixRecord
+        ).executionTimeLimit.gt(getCurrentTimestamp())
       )
     )
 
   hotfixApproved = (hash: Buffer) =>
     this.addCheck(
       `Hotfix 0x${hash.toString('hex')} is approved by approver`,
-      this.withGovernance(async (governance) => (await governance.getHotfixRecord(hash)).approved)
+      this.withGovernance(
+        async (_governance) => (await getHotfixRecord(await this.getClient(), hash)).approved
+      )
     )
 
   hotfixCouncilApproved = (hash: Buffer) =>
     this.addCheck(
       `Hotfix 0x${hash.toString('hex')} is approved by security council`,
       this.withGovernance(
-        async (governance) =>
-          ((await governance.getHotfixRecord(hash)) as HotfixRecord).councilApproved
+        async (_governance) =>
+          ((await getHotfixRecord(await this.getClient(), hash)) as HotfixRecord).councilApproved
       )
     )
 
   hotfixNotApproved = (hash: Buffer) =>
     this.addCheck(
       `Hotfix 0x${hash.toString('hex')} is not already approved`,
-      this.withGovernance(async (governance) => !(await governance.getHotfixRecord(hash)).approved)
+      this.withGovernance(
+        async (_governance) => !(await getHotfixRecord(await this.getClient(), hash)).approved
+      )
     )
 
   hotfixNotApprovedBySecurityCouncil = (hash: Buffer) =>
     this.addCheck(
       `Hotfix 0x${hash.toString('hex')} is not already approved by security council`,
-      this.withGovernance(async (governance) => {
-        const record = await governance.getHotfixRecord(hash)
+      this.withGovernance(async (_governance) => {
+        const record = await getHotfixRecord(await this.getClient(), hash)
 
         return !(record as HotfixRecord).councilApproved
       })
@@ -266,6 +324,7 @@ class CheckBuilder {
     this.addCheck('Account can sign', async () => {
       try {
         const message = 'test'
+        // @ts-ignore(fix)
         const kit = await this.getKit()
         const signature = await kit.connection.sign(message, account)
         return verifySignature(message, signature, account)
@@ -279,8 +338,8 @@ class CheckBuilder {
     this.addCheck(
       'Signer can sign Validator Txs',
       this.withAccounts((accounts) =>
-        accounts
-          .validatorSignerToAccount(this.signer!)
+        accounts.read
+          .validatorSignerToAccount([this.signer!])
           .then(() => true)
           .catch(() => false)
       )
@@ -298,16 +357,20 @@ class CheckBuilder {
       this.withValidators((validators, _s, account) => validators.read.isValidatorGroup([account]))
     )
 
-  isValidator = (account?: StrongAddress) =>
+  isValidator = (account?: Address) =>
     this.addCheck(
       `${account} is Validator`,
-      this.withValidators((validators, _, _account) => validators.read.isValidator([account ?? _account]))
+      this.withValidators((validators, _, _account) =>
+        validators.read.isValidator([(account ?? _account) as StrongAddress])
+      )
     )
 
-  isValidatorGroup = (account: StrongAddress) =>
+  isValidatorGroup = (account: Address) =>
     this.addCheck(
       `${account} is ValidatorGroup`,
-      this.withValidators((validators) => validators.read.isValidatorGroup([account]))
+      this.withValidators((validators) =>
+        validators.read.isValidatorGroup([account as StrongAddress])
+      )
     )
 
   isNotValidator = (account?: StrongAddress) =>
@@ -321,38 +384,40 @@ class CheckBuilder {
   isNotValidatorGroup = () =>
     this.addCheck(
       `${this.signer!} is not a registered ValidatorGroup`,
-      this.withValidators((validators, _, account) => negate(validators.read.isValidatorGroup([account])))
+      this.withValidators((validators, _, account) =>
+        negate(validators.read.isValidatorGroup([account]))
+      )
     )
 
   signerMeetsValidatorBalanceRequirements = () =>
     this.addCheck(
       `Signer's account has enough locked celo for registration`,
-      this.withValidators((validators, _signer, account) => meetsValidatorBalanceRequirements(account))
+      this.withValidators(async (_validators, _signer, account) =>
+        meetsValidatorBalanceRequirements(await this.getClient(), account)
       )
     )
 
   signerMeetsValidatorGroupBalanceRequirements = () =>
     this.addCheck(
       `Signer's account has enough locked celo for group registration`,
-      this.withValidators((validators, _signer, account) =>
-        validators.read.meetsValidatorGroupBalanceRequirements([account])
+      this.withValidators(async (_validators, _signer, account) =>
+        meetsValidatorGroupBalanceRequirements(await this.getClient(), account)
       )
     )
 
   meetsValidatorBalanceRequirements = (account: StrongAddress) =>
-    this.addCheck(
-      `${account} has enough locked celo for registration`,
-      meetsValidatorBalanceRequirements(account)
-    )
+    this.addCheck(`${account} has enough locked celo for registration`, async () => {
+      return meetsValidatorBalanceRequirements(await this.getClient(), account)
+    })
 
   meetsValidatorGroupBalanceRequirements = (account: Address) =>
     this.addCheck(
       `${account} has enough locked celo for group registration`,
-      this.withValidators((validators) => {
-        const
-        return validators.read.meetsValidatorGroupBalanceRequirements([account])
-
-      })
+      // TODO possibly another wrapper function could be called because we just need
+      // signerToAccount logic and not actual validators contract in this case
+      this.withValidators(async () =>
+        meetsValidatorGroupBalanceRequirements(await this.getClient(), account as StrongAddress)
+      )
     )
   isNotSanctioned = (address: Address) => {
     return this.addCheck(
@@ -371,7 +436,6 @@ class CheckBuilder {
   isNotAccount = (address: Address) =>
     this.addCheck(
       `${address} is not a registered Account`,
-      // TODO remove as
       this.withAccounts((accounts) => negate(accounts.read.isAccount([address as StrongAddress])))
     )
 
@@ -380,7 +444,8 @@ class CheckBuilder {
       `${this.signer!} is Signer or registered Account`,
       this.withAccounts(async (accounts) => {
         const res =
-          (await accounts.read.isAccount([this.signer!])) || (await accounts.read.isSigner([this.signer!]))
+          (await accounts.read.isAccount([this.signer!])) ||
+          (await accounts.read.isAuthorizedSigner([this.signer!]))
         return res
       }),
       `${this.signer} is not a signer or registered as an account. Try authorizing as a signer or running account:register.`
@@ -390,94 +455,123 @@ class CheckBuilder {
     this.addCheck(
       `${this.signer!} is vote signer or registered account`,
       this.withAccounts(async (accounts) => {
-        return accounts.voteSignerToAccount(this.signer!).then(
+        return accounts.read.voteSignerToAccount([this.signer!]).then(
           (addr) => !eqAddress(addr, NULL_ADDRESS),
           () => false
         )
       })
     )
 
-  isAccount = (address: StrongAddress) =>
+  isAccount = (address: Address) =>
     this.addCheck(
       `${address} is a registered Account`,
-      this.withAccounts((accounts) => accounts.read.isAccount([address])),
+      this.withAccounts(async (accounts) => {
+        return accounts.read.isAccount([address as StrongAddress])
+      }),
       `${address} is not registered as an account. Try running account:register`
     )
 
-  isNotVoting = (address: StrongAddress) =>
+  isNotVoting = (address: Address) =>
     this.addCheck(
       `${address} is not currently voting on a governance proposal`,
-      this.withGovernance((governance) => negate(governance.read.isVoting([address]))),
+      this.withGovernance((governance) =>
+        negate(governance.read.isVoting([address as StrongAddress]))
+      ),
       `${address} is currently voting in governance. Revoke your upvotes or wait for the referendum to end.`
     )
 
-  // TODO interface changed - fix usages
-  hasEnoughCelo = (account: StrongAddress, value: bigint) => {
-    // TODO is this toString necessary?
-    const valueInEth = utils.fromWei(value.toString(), 'ether')
+  hasEnoughCelo = (account: Address, value: BigNumber) => {
+    const valueInEth = utils.fromWei(value.toFixed(), 'ether')
 
-    return this.addCheck(`Account has at least ${valueInEth} CELO`, () => {
-      const balance = await this.client.readContract({
+    return this.addCheck(`Account has at least ${valueInEth} CELO`, async () => {
+      const balance = await (
+        await this.getClient()
+      ).readContract({
         // TODO GoldToken is being renamed to CeloToken
-        address: await resolveAddress('GoldToken'),
+        address: await resolveAddress(await this.getClient(), 'GoldToken'),
         abi: goldTokenABI,
         functionName: 'balanceOf',
-        args: [account],
+        args: [account as StrongAddress],
       })
 
-      return balance >= value;
-    });
+      return bigintToBigNumber(balance).gte(value)
+    })
   }
 
   hasEnoughStable = (
-    account: StrongAddress,
-    // TODO interface changed - fix usages
-    value: bigint,
+    account: Address,
+    value: BigNumber,
     stable: StableToken = StableToken.cUSD
   ) => {
-    // TODO is this toString necessary?
-    const valueInEth = utils.fromWei(value.toString(), 'ether')
+    const valueInEth = utils.fromWei(value.toFixed(), 'ether')
 
-    return this.addCheck(`Account has at least ${valueInEth} ${stable}`, () => {
-      const balance = await this.client.readContract({
-        address: await resolveAddress('StableToken'),
+    return this.addCheck(`Account has at least ${valueInEth} ${stable}`, async () => {
+      const stableTokenAddress = await resolveAddress(
+        await this.getClient(),
+        getStableTokenContractName(stable)
+      )
+      const balance = await (
+        await this.getClient()
+      ).readContract({
+        address: stableTokenAddress,
         abi: stableTokenABI,
         functionName: 'balanceOf',
-        args: [account],
+        args: [account as StrongAddress],
       })
 
-      return balance >= value;
-    });
+      // TODO move outside
+      function getStableTokenContractName(stable: StableToken): string {
+        switch (stable) {
+          case StableToken.cUSD:
+            return 'StableToken'
+          case StableToken.cEUR:
+            return 'StableTokenEUR'
+          case StableToken.cREAL:
+            return 'StableTokenBRL'
+          default:
+            throw new Error(`Unsupported stable token: ${stable}`)
+        }
+      }
+
+      return bigintToBigNumber(balance).gte(value)
+    })
   }
 
   // TODO interface changed - fix usages
-  hasEnoughErc20 = (account: StrongAddress, value: bigint, erc20: StrongAddress) => {
-    // TODO is this toString necessary?
-    const valueInEth = utils.fromWei(value.toString(), 'ether')
+  hasEnoughErc20 = (account: Address, value: BigNumber, erc20: Address) => {
+    // possibly remove usage of utils?
+    const valueInEth = utils.fromWei(value.toFixed(), 'ether')
 
-    return this.addCheck(`Account has at least ${valueInEth} erc20 token`, () => {
-      const balance = await this.client.readContract({
-        address: erc20,
+    return this.addCheck(`Account has at least ${valueInEth} erc20 token`, async () => {
+      const balance = await (
+        await this.getClient()
+      ).readContract({
+        address: erc20 as StrongAddress,
         abi: erc20Abi, // this is the viem's erc20 abi, check it
         functionName: 'balanceOf',
-        args: [account],
+        args: [account as StrongAddress],
       })
 
-      return balance >= value;
-    });
+      return bigintToBigNumber(balance).gte(value)
+    })
   }
 
   exceedsProposalMinDeposit = (deposit: BigNumber) =>
     this.addCheck(
       `Deposit is greater than or equal to governance proposal minDeposit`,
-      this.withGovernance(async (governance) => deposit.gte(await governance.read.minDeposit()))
+      this.withGovernance(async (governance) =>
+        deposit.gte(bigintToBigNumber(await governance.read.minDeposit()))
+      )
     )
 
   hasRefundedDeposits = (account: Address) =>
     this.addCheck(
       `${account} has refunded governance deposits`,
       this.withGovernance(
-        async (governance) => !(await governance.getRefundedDeposits(account)).isZero()
+        async (governance) =>
+          !bigintToBigNumber(
+            await governance.read.refundedDeposits([account as StrongAddress])
+          ).isZero()
       )
     )
 
@@ -486,7 +580,9 @@ class CheckBuilder {
     return this.addCheck(
       `Account has at least ${valueInEth} Locked Gold`,
       this.withLockedGold(async (lockedGold, _signer, account) =>
-        value.isLessThanOrEqualTo(await lockedGold.read.getAccountTotalLockedGold([account]))
+        value.isLessThanOrEqualTo(
+          bigintToBigNumber(await lockedGold.read.getAccountTotalLockedGold([account]))
+        )
       )
     )
   }
@@ -495,7 +591,9 @@ class CheckBuilder {
     const valueInEth = utils.fromWei(value.toFixed(), 'ether')
     return this.addCheck(
       `Account has at least ${valueInEth} non-voting Locked Gold`,
+      // @ts-ignore(fix)
       this.withLockedGold(async (lockedGold, _signer, account) =>
+        // @ts-ignore(fix)
         value.isLessThanOrEqualTo(await lockedGold.read.getAccountNonvotingLockedGold([account]))
       )
     )
@@ -506,11 +604,20 @@ class CheckBuilder {
     return this.addCheck(
       `Account has at least ${valueInEth} non-voting Locked Gold over requirement`,
       this.withLockedGold(async (lockedGold, _signer, account, validators) => {
-        const requirement = await validators.getAccountLockedGoldRequirement(account)
+        const requirement = bigintToBigNumber(
+          await validators.read.getAccountLockedGoldRequirement([account])
+        )
+
         return (
           (requirement.eq(0) ||
-            value.plus(requirement).lte(await lockedGold.getAccountTotalLockedGold(account))) &&
-          value.lte(await lockedGold.getAccountNonvotingLockedGold(account))
+            value
+              .plus(requirement)
+              .lte(
+                bigintToBigNumber(await lockedGold.read.getAccountTotalLockedGold([account]))
+              )) &&
+          value.lte(
+            bigintToBigNumber(await lockedGold.read.getAccountNonvotingLockedGold([account]))
+          )
         )
       })
     )
@@ -519,13 +626,13 @@ class CheckBuilder {
   isNotValidatorGroupMember = () => {
     return this.addCheck(
       `Account isn't a member of a validator group`,
-      this.withValidators(async (validators, _signer, account) => {
-        const { affiliation } = await validators.getValidator(account)
+      this.withValidators(async (_validators, _signer, account) => {
+        const { affiliation } = await getValidator(await this.getClient(), account)
         if (!affiliation || eqAddress(affiliation, NULL_ADDRESS)) {
           return true
         }
         // passing false opts out of fetching affilliates which we dont use anyway
-        const { members } = await validators.getValidatorGroup(affiliation!, false)
+        const { members } = await getValidatorGroup(await this.getClient(), affiliation!, false)
         return !members.includes(account)
       })
     )
@@ -534,10 +641,12 @@ class CheckBuilder {
   validatorDeregisterDurationPassed = () => {
     return this.addCheck(
       `Enough time has passed since the account was removed from a validator group?`,
-      this.withValidators(async (validators, _signer, account) => {
-        const { lastRemovedFromGroupTimestamp } =
-          await validators.getValidatorMembershipHistoryExtraData(account)
-        const { duration } = await validators.getValidatorLockedGoldRequirements()
+      this.withValidators(async (_validators, _signer, account) => {
+        const { lastRemovedFromGroupTimestamp } = await getValidatorMembershipHistoryExtraData(
+          await this.getClient(),
+          account
+        )
+        const { duration } = await getValidatorLockedGoldRequirements(await this.getClient())
         const waitPeriodEnd = lastRemovedFromGroupTimestamp + duration.toNumber()
         const isDeregisterable = waitPeriodEnd < Date.now() / 1000
         if (!isDeregisterable) {
@@ -555,12 +664,13 @@ class CheckBuilder {
     return this.addAsyncConditionalCheck(
       'Enough time has passed since the validator group removed its last member? ',
       this.withValidators(async (validators, _signer, account) => {
-        return validators.isValidatorGroup(account)
+        return validators.read.isValidatorGroup([account])
       }),
       this.withValidators(async (validators, _signer, account) => {
-        const group = await validators.getValidatorGroup(account)
-        const { duration } = await validators.getGroupLockedGoldRequirements()
-        const waitPeriodEnd = group.membersUpdated + duration.toNumber()
+        const group = await getValidatorGroup(await this.getClient(), account)
+        // TODO check the other indexes, something might be off?
+        const [_, duration] = await validators.read.getGroupLockedGoldRequirements()
+        const waitPeriodEnd = group.membersUpdated + bigintToBigNumber(duration).toNumber()
         const isDeregisterable = waitPeriodEnd < Date.now() / 1000
         if (!isDeregisterable) {
           console.warn(
@@ -576,8 +686,9 @@ class CheckBuilder {
     return this.addCheck(
       `Enough time has passed since the last halving of the slashing multiplier`,
       this.withValidators(async (validators, _signer, account) => {
-        const { lastSlashed } = await validators.getValidatorGroup(account)
-        const duration = await validators.getSlashingMultiplierResetPeriod()
+        const { lastSlashed } = await getValidatorGroup(await this.getClient(), account)
+        const duration = bigintToBigNumber(await validators.read.slashingMultiplierResetPeriod())
+
         return duration.toNumber() + lastSlashed.toNumber() < Date.now() / 1000
       })
     )
@@ -586,8 +697,10 @@ class CheckBuilder {
   hasACommissionUpdateQueued = () =>
     this.addCheck(
       "There's a commision update queued",
-      this.withValidators(async (validators, _signer, account) => {
-        const vg = await validators.getValidatorGroup(account)
+      // TODO consider introducing something for just signer and account
+      this.withValidators(async (_validators, _signer, account) => {
+        const vg = await getValidatorGroup(await this.getClient(), account)
+
         return !vg.nextCommissionBlock.eq(0)
       })
     )
@@ -595,11 +708,11 @@ class CheckBuilder {
   hasCommissionUpdateDelayPassed = () =>
     this.addCheck(
       'The Commission update delay has already passed',
-      this.withValidators(async (validators, _signer, account, ctx) => {
-        const web3 = await ctx.getWeb3()
-        const blockNumber = await web3.eth.getBlockNumber()
-        const vg = await validators.getValidatorGroup(account)
-        return vg.nextCommissionBlock.lte(blockNumber)
+      this.withValidators(async (_validators, _signer, account) => {
+        const blockNumber = await (await this.getClient()).getBlockNumber()
+        const group = await getValidatorGroup(await this.getClient(), account)
+
+        return group.nextCommissionBlock.lte(bigintToBigNumber(blockNumber))
       })
     )
 
@@ -623,7 +736,10 @@ class CheckBuilder {
     }
 
     if (!allPassed) {
-      return this.cmd.error("Some checks didn't pass!")
+      // TODO leaving this for now not to change the API more than injecting a client
+      // but in the future this should throw and the error/logging logic should be
+      // in a BaseCommand method wrapping runChecks()
+      return this.command.error("Some checks didn't pass!")
     } else {
       console.log(`All checks passed`)
     }

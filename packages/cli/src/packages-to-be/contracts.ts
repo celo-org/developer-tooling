@@ -1,39 +1,39 @@
 import { accountsABI, governanceABI, lockedGoldABI, validatorsABI } from '@celo/abis-12'
 import { getContract, GetContractReturnType } from 'viem'
 import { resolveAddress } from './address-resolver'
-import { CeloClient, getClient } from './client'
+import { CeloClient } from './client'
 
 // TODO a bit of redundancy here for typing, find a way to generalise this
 
-export const getAccountsContract = async (): Promise<AccountsContract> => {
+export const getAccountsContract = async (client: CeloClient): Promise<AccountsContract> => {
   return getContract({
-    address: await resolveAddress('Accounts'),
+    address: await resolveAddress(client, 'Accounts'),
     abi: accountsABI,
-    client: getClient(),
+    client,
   })
 }
 
-export const getGovernanceContract = async (): Promise<GovernanceContract> => {
+export const getGovernanceContract = async (client: CeloClient): Promise<GovernanceContract> => {
   return getContract({
-    address: await resolveAddress('Governance'),
+    address: await resolveAddress(client, 'Governance'),
     abi: governanceABI,
-    client: getClient(),
+    client,
   })
 }
 
-export const getLockedGoldContract = async (): Promise<LockedGoldContract> => {
+export const getLockedGoldContract = async (client: CeloClient): Promise<LockedGoldContract> => {
   return getContract({
-    address: await resolveAddress('LockedGold'),
+    address: await resolveAddress(client, 'LockedGold'),
     abi: lockedGoldABI,
-    client: getClient(),
+    client,
   })
 }
 
-export const getValidatorsContract = async (): Promise<ValidatorsContract> => {
+export const getValidatorsContract = async (client: CeloClient): Promise<ValidatorsContract> => {
   return getContract({
-    address: await resolveAddress('Validators'),
+    address: await resolveAddress(client, 'Validators'),
     abi: validatorsABI,
-    client: getClient(),
+    client,
   })
 }
 
