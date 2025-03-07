@@ -81,12 +81,11 @@ export function newCheckBuilder(command: BaseCommand, signer?: Address, client?:
 
 class CheckBuilder {
   private checks: CommandCheck[] = []
+  private client?: CeloClient
 
-  constructor(
-    private command: BaseCommand,
-    private client?: CeloClient,
-    private signer?: StrongAddress
-  ) {}
+  constructor(private command: BaseCommand, client?: CeloClient, private signer?: StrongAddress) {
+    this.client = client
+  }
 
   private async getClient(): Promise<CeloClient> {
     if (!this.client) {
