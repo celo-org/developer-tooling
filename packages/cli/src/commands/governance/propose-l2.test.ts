@@ -12,7 +12,11 @@ import { ux } from '@oclif/core'
 import Safe, { getSafeAddressFromDeploymentTx } from '@safe-global/protocol-kit'
 import * as fs from 'fs'
 import Web3 from 'web3'
-import { EXTRA_LONG_TIMEOUT_MS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import {
+  EXTRA_LONG_TIMEOUT_MS,
+  stripAnsiCodesAndTxHashes,
+  testLocallyWithWeb3Node,
+} from '../../test-utils/cliUtils'
 import { createMultisig, setupSafeContracts } from '../../test-utils/multisigUtils'
 import Approve from '../multisig/approve'
 import Propose from './propose'
@@ -191,7 +195,7 @@ testWithAnvilL2(
             '--from',
             accounts[0],
             '--descriptionURL',
-            'https://example.com',
+            'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
           ],
           web3
         )
@@ -255,7 +259,7 @@ testWithAnvilL2(
             '--for',
             multisigWithOneSigner,
             '--descriptionURL',
-            'https://dummyurl.com',
+            'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
           ],
           web3
         )
@@ -320,7 +324,7 @@ testWithAnvilL2(
             '--for',
             multisigWithTwoSigners,
             '--descriptionURL',
-            'https://dummyurl.com',
+            'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
           ],
           web3
         )
@@ -407,7 +411,7 @@ testWithAnvilL2(
               '--safeAddress',
               safeAddress,
               '--descriptionURL',
-              'https://dummyurl.com',
+              'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
             ],
             web3
           )
@@ -480,7 +484,7 @@ testWithAnvilL2(
               '--safeAddress',
               safeAddress,
               '--descriptionURL',
-              'https://dummyurl.com',
+              'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
             ],
             web3
           )
@@ -501,7 +505,7 @@ testWithAnvilL2(
                 '--safeAddress',
                 safeAddress,
                 '--descriptionURL',
-                'https://dummyurl.com',
+                'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
               ],
               web3
             )
@@ -548,7 +552,7 @@ testWithAnvilL2(
             '--from',
             accounts[0],
             '--descriptionURL',
-            'https://dummyurl.com',
+            'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
             '--force',
             '--noInfo',
           ],
@@ -595,7 +599,7 @@ testWithAnvilL2(
             '--from',
             accounts[0],
             '--descriptionURL',
-            'https://dummyurl.com',
+            'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
             '--force',
             '--noInfo',
           ],
@@ -638,6 +642,35 @@ testWithAnvilL2(
     )
 
     test(
+      'fails when descriptionURl is invalid',
+      async () => {
+        const logMock = jest.spyOn(console, 'log')
+        await expect(
+          testLocallyWithWeb3Node(
+            Propose,
+            [
+              '--from',
+              accounts[0],
+              '--deposit',
+              '0',
+              '--jsonTransactions',
+              './exampleProposal.json',
+              '--descriptionURL',
+              'https://github.com/suspicious-org/governance/blob/main/CGPs/cgp-123.md',
+            ],
+            web3
+          )
+        ).rejects.toThrow("Some checks didn't pass!")
+        expect(logMock.mock.calls.at(-1)!.map(stripAnsiCodesAndTxHashes)).toMatchInlineSnapshot(`
+              [
+                "   ✘  descriptionURL is a valid url on the celo-org/governance repository descriptionURL needs to starts with \`https://github.com/celo-org/governance/blob/main/CGPs/\`",
+              ]
+          `)
+      },
+      EXTRA_LONG_TIMEOUT_MS
+    )
+
+    test(
       'can submit empty proposal',
       async () => {
         await testLocallyWithWeb3Node(
@@ -650,7 +683,7 @@ testWithAnvilL2(
             '--jsonTransactions',
             './exampleProposal.json',
             '--descriptionURL',
-            'https://example.com',
+            'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
           ],
           web3
         )
@@ -673,7 +706,7 @@ testWithAnvilL2(
             '--jsonTransactions',
             './exampleProposal.json',
             '--descriptionURL',
-            'https://example.com',
+            'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
           ],
           web3
         )
@@ -699,7 +732,7 @@ testWithAnvilL2(
             '--jsonTransactions',
             './exampleProposal.json',
             '--descriptionURL',
-            'https://example.com',
+            'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
           ],
           web3
         )
