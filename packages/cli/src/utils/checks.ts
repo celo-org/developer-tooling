@@ -459,6 +459,17 @@ class CheckBuilder {
     })
   }
 
+  private getStableTokenContractName(stable: StableToken): string {
+    switch (stable) {
+      case StableToken.cUSD:
+        return 'StableToken'
+      case StableToken.cEUR:
+        return 'StableTokenEUR'
+      case StableToken.cREAL:
+        return 'StableTokenBRL'
+    }
+  }
+
   hasEnoughStable = (
     account: Address,
     value: BigNumber,
@@ -469,7 +480,7 @@ class CheckBuilder {
     return this.addCheck(`Account has at least ${valueInEth} ${stable}`, async () => {
       const stableTokenAddress = await resolveAddress(
         await this.getClient(),
-        getStableTokenContractName(stable)
+        this.getStableTokenContractName(stable)
       )
       const balance = await (
         await this.getClient()
@@ -479,20 +490,6 @@ class CheckBuilder {
         functionName: 'balanceOf',
         args: [account as StrongAddress],
       })
-
-      // TODO move outside
-      function getStableTokenContractName(stable: StableToken): string {
-        switch (stable) {
-          case StableToken.cUSD:
-            return 'StableToken'
-          case StableToken.cEUR:
-            return 'StableTokenEUR'
-          case StableToken.cREAL:
-            return 'StableTokenBRL'
-          default:
-            throw new Error(`Unsupported stable token: ${stable}`)
-        }
-      }
 
       return bigintToBigNumber(balance).gte(value)
     })
