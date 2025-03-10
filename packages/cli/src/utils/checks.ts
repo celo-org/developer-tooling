@@ -17,7 +17,7 @@ import utils from 'web3-utils'
 import { BaseCommand } from '../base'
 import { signerToAccount } from '../packages-to-be/account'
 import { resolveAddress } from '../packages-to-be/address-resolver'
-import { CeloClient, createCeloClient } from '../packages-to-be/client'
+import { CeloClient } from '../packages-to-be/client'
 import {
   AccountsContract,
   getAccountsContract,
@@ -41,7 +41,6 @@ import {
   meetsValidatorBalanceRequirements,
   meetsValidatorGroupBalanceRequirements,
 } from '../packages-to-be/validators'
-import { extractHostFromWeb3 } from '../test-utils/cliUtils'
 import { getCurrentTimestamp, printValueMapRecursive } from './cli'
 
 export interface CommandCheck {
@@ -74,30 +73,18 @@ export function bigintToBigNumber(value: bigint) {
 // Adding client as an optional and last argument to avoid breaking changes, by default
 // it will instansiate a new client using createCeloClient() implicitly
 // that allows us not to change the API of newCheckBuilder at all
-export function newCheckBuilder(command: BaseCommand, signer?: Address, client?: CeloClient) {
-  return new CheckBuilder(command, client, signer as StrongAddress)
+export function newCheckBuilder(command: BaseCommand, signer?: Address) {
+  return new CheckBuilder(command, signer as StrongAddress)
 }
 
 class CheckBuilder {
   private checks: CommandCheck[] = []
-  private client?: CeloClient
 
-  constructor(private command: BaseCommand, client?: CeloClient, private signer?: StrongAddress) {
-    // this has to be done explicitly because otherwise it results in a typescript error:
-    //
-    // ```error TS2742: The inferred type of 'client' cannot be named without a reference to
-    // '../../node_modules/viem/_types/actions/public/createAccessList'. This is likely not portable.
-    // A type annotation is necessary.```
-    this.client = client
-  }
+  constructor(private command: BaseCommand, private signer?: StrongAddress) {}
 
+  // TODO(viem): client should be directly injected in the contructor
   private async getClient(): Promise<CeloClient> {
-    if (!this.client) {
-      // TODO this is just for the transition period until we can inject the client from the command
-      this.client = createCeloClient(extractHostFromWeb3(await this.command.getWeb3()))
-    }
-
-    return this.client
+    return this.command.getPublicClient()
   }
 
   withValidators<A>(
@@ -723,7 +710,7 @@ class CheckBuilder {
     }
 
     if (!allPassed) {
-      // TODO leaving this for now not to change the API more than injecting a client
+      // TODO(viem): leaving this for now not to change the API more than injecting a client
       // but in the future this should throw and the error/logging logic should be
       // in a BaseCommand method wrapping runChecks()
       return this.command.error("Some checks didn't pass!")
