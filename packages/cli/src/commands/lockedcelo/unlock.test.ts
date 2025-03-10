@@ -14,7 +14,7 @@ import Unlock from './unlock'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL1('lockedgold:unlock cmd', (web3: Web3) => {
+testWithAnvilL1('lockedcelo:unlock cmd', (web3: Web3) => {
   test(
     'can unlock correctly from registered validator group',
     async () => {

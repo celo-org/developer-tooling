@@ -149,7 +149,7 @@ export class ContractKit {
       configContracts = [
         CeloContract.Election,
         CeloContract.Governance,
-        CeloContract.LockedGold,
+        CeloContract.LockedCelo,
         CeloContract.SortedOracles,
         CeloContract.Reserve,
         CeloContract.Validators,
@@ -162,7 +162,7 @@ export class ContractKit {
         CeloContract.Election,
         CeloContract.Attestations,
         CeloContract.Governance,
-        CeloContract.LockedGold,
+        CeloContract.LockedCelo,
         CeloContract.SortedOracles,
         CeloContract.GasPriceMinimum,
         CeloContract.Reserve,

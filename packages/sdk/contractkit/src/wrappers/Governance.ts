@@ -269,7 +269,8 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<Governance> {
     // but we don't have access to proposal.networkWeight
     const networkWeight = await lockedGold.getTotalLockedGold()
     const required = networkWeight.times(quorum)
-    const support = votes.Yes.div(votes.Yes.plus(votes.No))
+    let support = votes.Yes.div(votes.Yes.plus(votes.No))
+    support = isNaN(support.toNumber()) ? new BigNumber(0) : support
     return {
       support,
       required,

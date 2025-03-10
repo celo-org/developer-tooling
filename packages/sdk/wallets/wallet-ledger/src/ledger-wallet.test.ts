@@ -1,7 +1,6 @@
 import { ETHEREUM_DERIVATION_PATH } from '@celo/base'
 import { StrongAddress, normalizeAddressWith0x } from '@celo/base/lib/address'
 import { CeloTx, EncodedTransaction } from '@celo/connect'
-import { StableToken, newKit } from '@celo/contractkit'
 import { verifySignature } from '@celo/utils/lib/signatureUtils'
 import {
   chainIdTransformationForSigning,
@@ -517,9 +516,9 @@ describe('LedgerWallet class', () => {
             )
           })
 
+          //TODO(L2) remove after march 26th 2025
           describe('[celo-legacy]', () => {
             beforeEach(async () => {
-              const kit = newKit('https://alfajores-forno.celo-testnet.org')
               celoTransaction = {
                 from: knownAddress,
                 to: otherAddress,
@@ -528,7 +527,7 @@ describe('LedgerWallet class', () => {
                 nonce: 0,
                 gas: 99,
                 gasPrice: 99,
-                feeCurrency: (await kit.contracts.getStableToken(StableToken.cUSD)).address,
+                feeCurrency: '0x874069fa1eb16d44d622f2e0ca25eea172369bc1',
               }
             })
             describe('on Cel2 with old app version', () => {
@@ -560,6 +559,7 @@ describe('LedgerWallet class', () => {
                 TEST_TIMEOUT_IN_MS
               )
             })
+            //TODO(L2) remove after march 26th 2025
             describe('on celo l1 with old app version', () => {
               test(
                 'succeeds',
@@ -750,7 +750,6 @@ describe('LedgerWallet class', () => {
         })
 
         syntheticDescribe('[cip64] synthetic', () => {
-          const kit = newKit('https://alfajores-forno.celo-testnet.org')
           beforeEach(async () => {
             celoTransaction = {
               from: knownAddress,
@@ -761,7 +760,7 @@ describe('LedgerWallet class', () => {
               gas: 99,
               maxFeePerGas: 99,
               maxPriorityFeePerGas: 99,
-              feeCurrency: (await kit.contracts.getStableToken(StableToken.cUSD)).address,
+              feeCurrency: '0x874069fa1eb16d44d622f2e0ca25eea172369bc1',
             }
           })
 
@@ -803,7 +802,6 @@ describe('LedgerWallet class', () => {
         })
 
         hardwareDescribe('[cip64] device', () => {
-          const kit = newKit('https://alfajores-forno.celo-testnet.org')
           beforeEach(async () => {
             celoTransaction = {
               from: knownAddress,
@@ -814,7 +812,7 @@ describe('LedgerWallet class', () => {
               gas: 99,
               maxFeePerGas: 99,
               maxPriorityFeePerGas: 99,
-              feeCurrency: (await kit.contracts.getStableToken(StableToken.cUSD)).address,
+              feeCurrency: '0x874069fa1eb16d44d622f2e0ca25eea172369bc1',
             }
           })
 
@@ -846,7 +844,6 @@ describe('LedgerWallet class', () => {
         })
 
         describe.skip('[cip66]', () => {
-          const kit = newKit('https://alfajores-forno.celo-testnet.org')
           beforeEach(async () => {
             celoTransaction = {
               from: knownAddress,
@@ -857,7 +854,7 @@ describe('LedgerWallet class', () => {
               gas: 99,
               maxFeePerGas: 99,
               maxPriorityFeePerGas: 99,
-              feeCurrency: (await kit.contracts.getStableToken(StableToken.cUSD)).address,
+              feeCurrency: '0x874069fa1eb16d44d622f2e0ca25eea172369bc1',
             }
           })
 

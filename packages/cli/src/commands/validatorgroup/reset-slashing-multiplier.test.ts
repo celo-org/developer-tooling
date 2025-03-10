@@ -3,7 +3,7 @@ import { ux } from '@oclif/core'
 import Web3 from 'web3'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import AccountRegister from '../account/register'
-import Lock from '../lockedgold/lock'
+import Lock from '../lockedcelo/lock'
 import ValidatorGroupRegister from './register'
 import ResetSlashingMultiplier from './reset-slashing-multiplier'
 

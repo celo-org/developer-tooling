@@ -11,6 +11,8 @@ export default class DelegateInfo extends BaseCommand {
     account: CustomFlags.address({ required: true }),
   }
 
+  static aliases = ['lockedgold:delegate-info']
+
   static args = {}
 
   static examples = ['delegate-info --account 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95']

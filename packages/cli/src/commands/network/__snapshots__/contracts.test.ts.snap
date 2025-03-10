@@ -17,6 +17,12 @@ exports[`network:contracts runs 1`] = `
     "version": "1.3.1.0"
   },
   {
+    "contract": "CeloToken",
+    "proxy": "0x84afC656f046C38D6022C2f02b9F667f028e1ef0",
+    "implementation": "0xd83c2018543B661B6e96810ca1B8b87a4B01e1a8",
+    "version": "1.1.3.0"
+  },
+  {
     "contract": "CeloUnreleasedTreasury",
     "proxy": "0x621b99D7698395aD1A677d981a7F7Ae66cB4861f",
     "implementation": "0x4657793c02091974B42d28aA46225A81c113C0C2",
@@ -117,6 +123,12 @@ exports[`network:contracts runs 1`] = `
     "proxy": "0xDDA88a8ebeaaB19d2a58374D8c72200AFAF94bB4",
     "implementation": "0x76C05a43234EB2804aa83Cd40BA10080a43d07AE",
     "version": "1.1.1.0"
+  },
+  {
+    "contract": "LockedCelo",
+    "proxy": "0x619b4767f6A955E63ED7d334DF3384bc4eacFdB8",
+    "implementation": "0x3E526b2BD8A56696C0370daE4CB023eDb19DC647",
+    "version": "1.1.5.0"
   },
   {
     "contract": "LockedGold",

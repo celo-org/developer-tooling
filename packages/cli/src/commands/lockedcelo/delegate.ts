@@ -7,8 +7,10 @@ import { displaySendTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { LockedGoldArgs } from '../../utils/lockedgold'
 
-export default class RevokeDelegate extends BaseCommand {
-  static description = 'Revoke delegated locked celo.'
+export default class Delegate extends BaseCommand {
+  static description = 'Delegate locked celo.'
+
+  static aliases = ['lockedgold:delegate']
 
   static flags = {
     ...BaseCommand.flags,
@@ -17,19 +19,19 @@ export default class RevokeDelegate extends BaseCommand {
     percent: Flags.string({
       ...LockedGoldArgs.valueArg,
       required: true,
-      description: '1-100% of locked celo to be revoked from currently delegated amount',
+      description: '1-100% of locked celo to be delegated',
     }),
   }
 
   static args = {}
 
   static examples = [
-    'revoke-delegate --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95 --to 0xc0ffee254729296a45a3885639AC7E10F9d54979 --percent 100',
+    'delegate --from 0x47e172F6CfB6c7D01C1574fa3E2Be7CC73269D95 --to 0xc0ffee254729296a45a3885639AC7E10F9d54979 --percent 100',
   ]
 
   async run() {
     const kit = await this.getKit()
-    const res = await this.parse(RevokeDelegate)
+    const res = await this.parse(Delegate)
     const address = res.flags.from
     const to = res.flags.to
 
@@ -37,18 +39,18 @@ export default class RevokeDelegate extends BaseCommand {
     const percent = new BigNumber(res.flags.percent).div(100)
     const percentFixed = toFixed(percent)
 
-    await newCheckBuilder(this)
-      .addCheck(
-        `Value [${percentFixed}] is >= 0 and <=100`,
-        () => percent.gte(0) && percent.lte(100)
-      )
-      .isAccount(address)
+    await newCheckBuilder(this, address)
+      .addCheck(`Value [${percentFixed}] is > 0 and <=100`, () => percent.gt(0) && percent.lte(100))
+      .isVoteSignerOrAccount()
       .isAccount(to)
       .runChecks()
 
     const lockedGold = await kit.contracts.getLockedGold()
 
-    const tx = lockedGold.revokeDelegated(to, percentFixed.toFixed())
-    await displaySendTx('revokeDelegated', tx)
+    console.log('value', percent.toString())
+    console.log('valueFixed', percentFixed.toFixed())
+
+    const tx = lockedGold.delegate(to, percentFixed.toFixed())
+    await displaySendTx('delegate', tx)
   }
 }

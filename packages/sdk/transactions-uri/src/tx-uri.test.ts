@@ -31,7 +31,7 @@ testWithAnvilL1('URI utils', (web3) => {
       data: transferData,
     }
 
-    const lockedGoldAddr = await kit.registry.addressFor(CeloContract.LockedGold)
+    const lockedGoldAddr = await kit.registry.addressFor(CeloContract.LockedCelo)
     lockGoldUri = `celo:${lockedGoldAddr}/lock()?value=${value}`
     const lockedGold = await kit.contracts.getLockedGold()
     const lockData = lockedGold.lock().txo.encodeABI()

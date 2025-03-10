@@ -10,6 +10,8 @@ import { LockedGoldArgs } from '../../utils/lockedgold'
 export default class Lock extends BaseCommand {
   static description = 'Locks CELO to be used in governance and validator elections.'
 
+  static aliases = ['lockedgold:lock']
+
   static flags = {
     ...BaseCommand.flags,
     from: CustomFlags.address({ required: true }),
