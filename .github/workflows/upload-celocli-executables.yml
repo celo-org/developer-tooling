@@ -104,7 +104,7 @@ jobs:
           FORK_REPOSITORY: 'celo-org/homebrew-core'
           UPSTREAM_REPOSITORY: 'Homebrew/homebrew-core'
           BASE_BRANCH: master
-          NEW_BRANCH: 'ci/${{ github.run_id }}-${{ github.run_attempt }}'
+          NEW_BRANCH: 'ci/celocli-${{ steps.setupVars.outputs.version }}'
         run: |
           set -x
 
@@ -117,8 +117,10 @@ jobs:
           git remote add fork $FORK_REPOSITORY
 
           # Create a new feature branch for the changes.
+          git fetch origin main
+          git checkout origin/main
+          git reset --hard origin/main
           git checkout -b $NEW_BRANCH
-          git fetch --all
           git status
           cp $cli_workspace/homebrew/Formula/celocli.rb ./Formula/c/
           git add ./Formula/c/celocli.rb
