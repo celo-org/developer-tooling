@@ -20,6 +20,8 @@ import {
 export default class Propose extends BaseCommand {
   static description = 'Submit a governance proposal'
 
+  static baseDescriptionURL = 'https://github.com/celo-org/governance/blob/main/CGPs/' as const
+
   static flags = {
     ...BaseCommand.flags,
     ...MultiSigFlags,
@@ -119,11 +121,9 @@ export default class Propose extends BaseCommand {
       .addCheck(
         'descriptionURL is a valid url on the celo-org/governance repository',
         () => {
-          return res.flags.descriptionURL.startsWith(
-            'https://github.com/celo-org/governance/blob/main/CGPs/'
-          )
+          return res.flags.descriptionURL.startsWith(Propose.baseDescriptionURL)
         },
-        'descriptionURL needs to starts with `https://github.com/celo-org/governance/blob/main/CGPs/`'
+        `descriptionURL needs to starts with \`${Propose.baseDescriptionURL}\``
       )
       .runChecks()
 
