@@ -6,7 +6,7 @@ import { gte } from 'semver'
 import { PublicClient } from 'viem'
 import { bigintToBigNumber } from '../utils/checks'
 import { resolveAddress } from './address-resolver'
-import { isCel2 } from './client'
+import { isCel2 } from './utils'
 
 export interface ProposalMetadata {
   proposer: Address
