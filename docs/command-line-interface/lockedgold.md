@@ -328,7 +328,7 @@ FLAG DESCRIPTIONS
 
 ## `celocli lockedgold:show ARG1`
 
-Show Locked Gold information for a given account. This includes the total amount of locked celo, the amount being used for voting in Validator Elections, the Locked Gold balance this account is required to maintain due to a registered Validator or Validator Group, and any pending withdrawals that have been initiated via "lockedcelo:unlock".
+Show Locked Celo information for a given account. This includes the total amount of locked celo, the amount being used for voting in Validator Elections, the Locked Celo balance this account is required to maintain due to a registered Validator or Validator Group, and any pending withdrawals that have been initiated via "lockedcelo:unlock".
 
 ```
 USAGE
@@ -339,8 +339,8 @@ FLAGS
       --globalHelp    View all available global flags
 
 DESCRIPTION
-  Show Locked Gold information for a given account. This includes the total amount of
-  locked celo, the amount being used for voting in Validator Elections, the Locked Gold
+  Show Locked Celo information for a given account. This includes the total amount of
+  locked celo, the amount being used for voting in Validator Elections, the Locked Celo
   balance this account is required to maintain due to a registered Validator or
   Validator Group, and any pending withdrawals that have been initiated via
   "lockedcelo:unlock".
