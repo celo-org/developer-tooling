@@ -6,7 +6,7 @@ import { ViewCommmandFlags } from '../../utils/flags'
 
 export default class Show extends BaseCommand {
   static description =
-    'Show Locked Gold information for a given account. This includes the total amount of locked celo, the amount being used for voting in Validator Elections, the Locked Gold balance this account is required to maintain due to a registered Validator or Validator Group, and any pending withdrawals that have been initiated via "lockedcelo:unlock".'
+    'Show Locked Celo information for a given account. This includes the total amount of locked celo, the amount being used for voting in Validator Elections, the Locked Celo balance this account is required to maintain due to a registered Validator or Validator Group, and any pending withdrawals that have been initiated via "lockedcelo:unlock".'
 
   static aliases = ['lockedgold:show']
 
