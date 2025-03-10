@@ -532,18 +532,6 @@ class CheckBuilder {
       )
     )
 
-  hasEnoughLockedGold = (value: BigNumber) => {
-    const valueInEth = utils.fromWei(value.toFixed(), 'ether')
-    return this.addCheck(
-      `Account has at least ${valueInEth} Locked Gold`,
-      this.withLockedGold(async (lockedGold, _signer, account) =>
-        value.isLessThanOrEqualTo(
-          bigintToBigNumber(await lockedGold.read.getAccountTotalLockedGold([account]))
-        )
-      )
-    )
-  }
-
   hasEnoughNonvotingLockedGold = (value: BigNumber) => {
     const valueInEth = utils.fromWei(value.toFixed(), 'ether')
     return this.addCheck(
