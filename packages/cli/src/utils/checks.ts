@@ -12,12 +12,11 @@ import { isValidAddress } from '@celo/utils/lib/address'
 import BigNumber from 'bignumber.js'
 import chalk from 'chalk'
 import { fetch } from 'cross-fetch'
-import { erc20Abi } from 'viem'
+import { erc20Abi, PublicClient } from 'viem'
 import utils from 'web3-utils'
 import { BaseCommand } from '../base'
 import { signerToAccount } from '../packages-to-be/account'
 import { resolveAddress } from '../packages-to-be/address-resolver'
-import { CeloClient } from '../packages-to-be/client'
 import {
   AccountsContract,
   getAccountsContract,
@@ -70,9 +69,6 @@ export function bigintToBigNumber(value: bigint) {
   return new BigNumber(value.toString())
 }
 
-// Adding client as an optional and last argument to avoid breaking changes, by default
-// it will instansiate a new client using createCeloClient() implicitly
-// that allows us not to change the API of newCheckBuilder at all
 export function newCheckBuilder(command: BaseCommand, signer?: Address) {
   return new CheckBuilder(command, signer as StrongAddress)
 }
@@ -83,8 +79,10 @@ class CheckBuilder {
   constructor(private command: BaseCommand, private signer?: StrongAddress) {}
 
   // TODO(viem): client should be directly injected in the contructor
-  private async getClient(): Promise<CeloClient> {
-    return this.command.getPublicClient()
+  private async getClient(): Promise<PublicClient> {
+    // In this case we're not using any Celo-specific client features, so it can be
+    // safely casted to PublicClient
+    return this.command.getPublicClient() as unknown as PublicClient
   }
 
   withValidators<A>(

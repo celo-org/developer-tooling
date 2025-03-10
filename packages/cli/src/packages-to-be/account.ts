@@ -1,10 +1,10 @@
 import { accountsABI } from '@celo/abis-12'
 import { StrongAddress } from '@celo/base'
+import { PublicClient } from 'viem'
 import { resolveAddress } from './address-resolver'
-import { CeloClient } from './client'
 
 export const signerToAccount = async (
-  client: CeloClient,
+  client: PublicClient,
   signer: StrongAddress
 ): Promise<StrongAddress> => {
   return await client.readContract({

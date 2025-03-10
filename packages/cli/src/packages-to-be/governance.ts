@@ -3,9 +3,10 @@ import { governanceABI } from '@celo/abis-12'
 import { Address, bufferToHex, zip } from '@celo/base'
 import BigNumber from 'bignumber.js'
 import { gte } from 'semver'
+import { PublicClient } from 'viem'
 import { bigintToBigNumber } from '../utils/checks'
 import { resolveAddress } from './address-resolver'
-import { CeloClient, isCel2 } from './client'
+import { isCel2 } from './client'
 
 export interface ProposalMetadata {
   proposer: Address
@@ -35,7 +36,7 @@ type DequeuedStageDurations = Pick<
 >
 
 export const getProposalStage = async (
-  client: CeloClient,
+  client: PublicClient,
   proposalId: bigint
 ): Promise<ProposalStage> => {
   const queue = await getQueue(client)
@@ -62,7 +63,7 @@ export const getProposalStage = async (
   return Object.keys(ProposalStage)[stage] as ProposalStage
 }
 
-export const getQueue = async (client: CeloClient) => {
+export const getQueue = async (client: PublicClient) => {
   const queue = await client.readContract({
     address: await resolveAddress(client, 'Governance'),
     abi: governanceABI,
@@ -81,7 +82,7 @@ export const getQueue = async (client: CeloClient) => {
 }
 
 export const getHotfixRecord = async (
-  client: CeloClient,
+  client: PublicClient,
   hash: Buffer
 ): Promise<L1HotfixRecord | HotfixRecord> => {
   const address = await resolveAddress(client, 'Governance')
@@ -145,7 +146,7 @@ type StageDurations<V> = {
 }
 
 export const getProposalSchedule = async (
-  client: CeloClient,
+  client: PublicClient,
   proposalId: bigint
 ): Promise<Partial<StageDurations<BigNumber>>> => {
   const meta = await getProposalMetadata(client, proposalId)
@@ -179,7 +180,7 @@ export const getProposalSchedule = async (
 }
 
 export const getProposalMetadata = async (
-  client: CeloClient,
+  client: PublicClient,
   proposalId: bigint
 ): Promise<ProposalMetadata> => {
   const proposal = await client.readContract({
@@ -198,7 +199,7 @@ export const getProposalMetadata = async (
   }
 }
 
-export const stageDurations = async (client: CeloClient): Promise<DequeuedStageDurations> => {
+export const stageDurations = async (client: PublicClient): Promise<DequeuedStageDurations> => {
   const durations = await client.readContract({
     address: await resolveAddress(client, 'Governance'),
     abi: governanceABI,

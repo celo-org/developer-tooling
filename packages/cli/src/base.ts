@@ -1,5 +1,5 @@
 import { StrongAddress } from '@celo/base'
-import { ReadOnlyWallet, isCel2 } from '@celo/connect'
+import { isCel2, ReadOnlyWallet } from '@celo/connect'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { AzureHSMWallet } from '@celo/wallet-hsm-azure'
 import { AddressValidation, newLedgerWalletWithSetup } from '@celo/wallet-ledger'
@@ -178,7 +178,6 @@ export abstract class BaseCommand extends Command {
       const intermediateClient = createPublicClient({
         transport,
       })
-      // TODO: what about baklava?
       const extractedChain = extractChain({
         chains: [celo, celoAlfajores],
         id: (await intermediateClient.getChainId()) as 42220 | 44787,

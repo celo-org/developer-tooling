@@ -1,6 +1,6 @@
 import { registryABI } from '@celo/abis'
 import { NULL_ADDRESS, StrongAddress } from '@celo/base'
-import { CeloClient } from './client'
+import { PublicClient } from 'viem'
 
 export const REGISTRY_CONTRACT_ADDRESS = '0x000000000000000000000000000000000000ce10'
 
@@ -8,7 +8,7 @@ const cache: Record<string, StrongAddress> = {}
 
 // TODO should use the enum for contract names?
 export const resolveAddress = async (
-  client: CeloClient,
+  client: PublicClient,
   contractName: string
 ): Promise<StrongAddress> => {
   if (cache[contractName]) {
