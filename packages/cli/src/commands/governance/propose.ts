@@ -20,8 +20,6 @@ import {
 export default class Propose extends BaseCommand {
   static description = 'Submit a governance proposal'
 
-  static baseDescriptionURL = 'https://github.com/celo-org/governance/blob/main/CGPs/' as const
-
   static flags = {
     ...BaseCommand.flags,
     ...MultiSigFlags,
@@ -37,10 +35,8 @@ export default class Propose extends BaseCommand {
     from: CustomFlags.address({ required: true, description: "Proposer's address" }),
     force: Flags.boolean({ description: 'Skip execution check', default: false }),
     noInfo: Flags.boolean({ description: 'Skip printing the proposal info', default: false }),
-    descriptionURL: CustomFlags.url({
+    descriptionURL: CustomFlags.proposalDescriptionURL({
       required: true,
-      description:
-        'A URL where further information about the proposal can be viewed. This needs to be a valid proposal URL on https://github.com/celo-org/governance',
     }),
     afterExecutingProposal: Flags.string({
       required: false,
@@ -118,13 +114,6 @@ export default class Propose extends BaseCommand {
         const safe = await createSafeFromWeb3(await this.getWeb3(), account, proposer)
         return safe.isOwner(account)
       })
-      .addCheck(
-        'descriptionURL is a valid url on the celo-org/governance repository',
-        () => {
-          return res.flags.descriptionURL.startsWith(Propose.baseDescriptionURL)
-        },
-        `descriptionURL needs to starts with \`${Propose.baseDescriptionURL}\``
-      )
       .runChecks()
 
     if (!res.flags.force) {

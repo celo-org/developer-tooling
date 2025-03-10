@@ -6,11 +6,7 @@ import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { ux } from '@oclif/core'
 import * as fs from 'fs'
 import Web3 from 'web3'
-import {
-  EXTRA_LONG_TIMEOUT_MS,
-  stripAnsiCodesAndTxHashes,
-  testLocallyWithWeb3Node,
-} from '../../test-utils/cliUtils'
+import { EXTRA_LONG_TIMEOUT_MS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import { createMultisig } from '../../test-utils/multisigUtils'
 import Approve from '../multisig/approve'
 import Propose from './propose'
@@ -457,7 +453,6 @@ testWithAnvilL1('governance:propose cmd', (web3: Web3) => {
   test(
     'fails when descriptionURl is invalid',
     async () => {
-      const logMock = jest.spyOn(console, 'log')
       await expect(
         testLocallyWithWeb3Node(
           Propose,
@@ -471,13 +466,13 @@ testWithAnvilL1('governance:propose cmd', (web3: Web3) => {
             '--descriptionURL',
             'https://github.com/suspicious-org/governance/blob/main/CGPs/cgp-123.md',
           ],
+
           web3
         )
-      ).rejects.toThrow("Some checks didn't pass!")
-      expect(logMock.mock.calls.at(-1)!.map(stripAnsiCodesAndTxHashes)).toMatchInlineSnapshot(`
-          [
-            "   ✘  descriptionURL is a valid url on the celo-org/governance repository descriptionURL needs to starts with \`https://github.com/celo-org/governance/blob/main/CGPs/\`",
-          ]
+      ).rejects.toThrowErrorMatchingInlineSnapshot(`
+        "Parsing --descriptionURL 
+        	\`https://github.com/suspicious-org/governance/blob/main/CGPs/cgp-123.md\` is not a valid descriptionURL, it must start with \`https://github.com/celo-org/governance/blob/main/CGPs/\`
+        See more help with --help"
       `)
     },
     EXTRA_LONG_TIMEOUT_MS
