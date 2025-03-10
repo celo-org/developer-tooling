@@ -7,9 +7,11 @@ import { binaryPrompt, displaySendTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
 
-export default class LockedGold extends ReleaseGoldBaseCommand {
+export default class LockedCelo extends ReleaseGoldBaseCommand {
   static description =
     'Perform actions [lock, unlock, withdraw] on CELO that has been locked via the provided ReleaseGold contract.'
+
+  static aliases = ['releasecelo:locked-celo']
 
   static flags = {
     ...ReleaseGoldBaseCommand.flags,
@@ -27,14 +29,14 @@ export default class LockedGold extends ReleaseGoldBaseCommand {
   }
 
   static examples = [
-    'locked-gold --contract 0xCcc8a47BE435F1590809337BB14081b256Ae26A8 --action lock --value 10000000000000000000000',
-    'locked-gold --contract 0xCcc8a47BE435F1590809337BB14081b256Ae26A8 --action unlock --value 10000000000000000000000',
-    'locked-gold --contract 0xCcc8a47BE435F1590809337BB14081b256Ae26A8 --action withdraw --value 10000000000000000000000',
+    'locked-celo --contract 0xCcc8a47BE435F1590809337BB14081b256Ae26A8 --action lock --value 10000000000000000000000',
+    'locked-celo --contract 0xCcc8a47BE435F1590809337BB14081b256Ae26A8 --action unlock --value 10000000000000000000000',
+    'locked-celo --contract 0xCcc8a47BE435F1590809337BB14081b256Ae26A8 --action withdraw --value 10000000000000000000000',
   ]
 
   async run() {
     const kit = await this.getKit()
-    const { flags } = await this.parse(LockedGold)
+    const { flags } = await this.parse(LockedCelo)
     const value = new BigNumber(flags.value)
     const contractAddress = await this.contractAddress()
     const checkBuilder = newCheckBuilder(this, contractAddress).isAccount(contractAddress)
@@ -57,7 +59,7 @@ export default class LockedGold extends ReleaseGoldBaseCommand {
         .runChecks()
       const txos = await this.releaseGoldWrapper.relockGold(relockValue)
       for (const txo of txos) {
-        await displaySendTx('lockedGoldRelock', txo, { from: beneficiary })
+        await displaySendTx('lockedCeloRelock', txo, { from: beneficiary })
       }
       if (lockValue.gt(new BigNumber(0))) {
         const accounts = await kit.contracts.getAccounts()
@@ -81,11 +83,11 @@ export default class LockedGold extends ReleaseGoldBaseCommand {
             return
           }
         }
-        await displaySendTx('lockedGoldLock', this.releaseGoldWrapper.lockGold(lockValue))
+        await displaySendTx('lockedCeloLock', this.releaseGoldWrapper.lockGold(lockValue))
       }
     } else if (flags.action === 'unlock') {
       await checkBuilder.isNotVoting(contractAddress).hasEnoughLockedGoldToUnlock(value).runChecks()
-      await displaySendTx('lockedGoldUnlock', this.releaseGoldWrapper.unlockGold(flags.value))
+      await displaySendTx('lockedCeloUnlock', this.releaseGoldWrapper.unlockGold(flags.value))
     } else if (flags.action === 'withdraw') {
       await checkBuilder.runChecks()
       const currentTime = Math.round(new Date().getTime() / 1000)

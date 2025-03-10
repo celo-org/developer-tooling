@@ -41,8 +41,10 @@ const WrapperFactories = {
   [CeloContract.FeeCurrencyDirectory]: FeeCurrencyDirectoryWrapper,
   [CeloContract.FeeCurrencyWhitelist]: FeeCurrencyWhitelistWrapper,
   [CeloContract.Freezer]: FreezerWrapper,
+  // TODO(L2) remove after April 2025
   [CeloContract.GasPriceMinimum]: GasPriceMinimumWrapper,
   [CeloContract.GoldToken]: GoldTokenWrapper,
+  [CeloContract.CeloToken]: GoldTokenWrapper,
   // [CeloContract.Random]: RandomWrapper,
   // [CeloContract.Registry]: RegistryWrapper,
   [CeloContract.MultiSig]: MultiSigWrapper,
@@ -65,6 +67,7 @@ const WrapperFactoriesWhichNeedCache = {
   [CeloContract.Election]: ElectionWrapper,
   [CeloContract.EpochManager]: EpochManagerWrapper,
   [CeloContract.Governance]: GovernanceWrapper,
+  [CeloContract.LockedCelo]: LockedGoldWrapper,
   [CeloContract.LockedGold]: LockedGoldWrapper,
   [CeloContract.Validators]: ValidatorsWrapper,
 }
@@ -95,8 +98,10 @@ interface WrapperCacheMap {
   [CeloContract.FeeCurrencyWhitelist]?: FeeCurrencyWhitelistWrapper
   [CeloContract.Freezer]?: FreezerWrapper
   [CeloContract.GasPriceMinimum]?: GasPriceMinimumWrapper
+  [CeloContract.CeloToken]?: GoldTokenWrapper
   [CeloContract.GoldToken]?: GoldTokenWrapper
   [CeloContract.Governance]?: GovernanceWrapper
+  [CeloContract.LockedCelo]?: LockedGoldWrapper
   [CeloContract.LockedGold]?: LockedGoldWrapper
   [CeloContract.MultiSig]?: MultiSigWrapper
   [CeloContract.OdisPayments]?: OdisPaymentsWrapper
@@ -176,14 +181,22 @@ export class WrapperCache implements ContractCacheType {
   getGasPriceMinimum() {
     return this.getContract(CeloContract.GasPriceMinimum)
   }
+  /* @deprecated use getCeloToken */
   getGoldToken() {
     return this.getContract(CeloContract.GoldToken)
+  }
+  getCeloToken() {
+    return this.getContract(CeloContract.CeloToken)
   }
   getGovernance() {
     return this.getContract(CeloContract.Governance)
   }
+  /* @deprecated use getLockedCelo */
   getLockedGold() {
     return this.getContract(CeloContract.LockedGold)
+  }
+  getLockedCelo() {
+    return this.getContract(CeloContract.LockedCelo)
   }
   getMultiSig(address: string) {
     return this.getContract(CeloContract.MultiSig, address)

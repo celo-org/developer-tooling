@@ -15,7 +15,7 @@ import {
   testLocallyWithWeb3Node,
 } from '../../test-utils/cliUtils'
 import Register from '../account/register'
-import Lock from '../lockedgold/lock'
+import Lock from '../lockedcelo/lock'
 import ValidatorGroupMembers from '../validatorgroup/member'
 import ValidatorAffiliate from './affiliate'
 import { default as ValidatorDeRegister } from './deregister'

@@ -7,6 +7,8 @@ export default class UpdateDelegatedAmount extends BaseCommand {
   static description =
     'Updates the amount of delegated locked celo. There might be discrepancy between the amount of locked celo and the amount of delegated locked celo because of received rewards.'
 
+  static aliases = ['lockedgold:update-delegated-amount']
+
   static flags = {
     ...BaseCommand.flags,
     from: CustomFlags.address({ required: true }),

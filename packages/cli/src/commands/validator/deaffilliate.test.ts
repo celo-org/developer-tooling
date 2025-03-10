@@ -6,7 +6,7 @@ import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import Web3 from 'web3'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Register from '../account/register'
-import Lock from '../lockedgold/lock'
+import Lock from '../lockedcelo/lock'
 import ValidatorAffiliate from './affiliate'
 import ValidatorDeAffiliate from './deaffiliate'
 

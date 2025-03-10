@@ -17,14 +17,20 @@ export enum CeloContract {
   FeeHandler = 'FeeHandler',
   Freezer = 'Freezer',
   GasPriceMinimum = 'GasPriceMinimum',
+  /* @deprecated use CeloToken */
   GoldToken = 'GoldToken',
+  CeloToken = 'CeloToken',
   Governance = 'Governance',
   GovernanceSlasher = 'GovernanceSlasher',
+  /* @deprecated use LockedCelo */
   LockedGold = 'LockedGold',
+  LockedCelo = 'LockedCelo',
   MentoFeeHandlerSeller = 'MentoFeeHandlerSeller',
   UniswapFeeHandlerSeller = 'UniswapFeeHandlerSeller',
   MultiSig = 'MultiSig',
   OdisPayments = 'OdisPayments',
+  // TODO(L2): remove random contract from enum
+  /* @deprecated */
   Random = 'Random',
   Registry = 'Registry',
   Reserve = 'Reserve',
@@ -41,14 +47,17 @@ export type StableTokenContract =
   | CeloContract.StableTokenEUR
   | CeloContract.StableTokenBRL
 
-export type CeloTokenContract = StableTokenContract | CeloContract.GoldToken
+export type CeloTokenContract =
+  | StableTokenContract
+  | CeloContract.CeloToken
+  | CeloContract.GoldToken
 /**
  * Deprecated alias for CeloTokenContract.
  * @deprecated Use CeloTokenContract instead
  */
 export type CeloToken = CeloTokenContract
 
-export const AllContracts = Object.keys(CeloContract) as CeloContract[]
+export const AllContracts = Object.values(CeloContract) as CeloContract[]
 const AuxiliaryContracts = [CeloContract.MultiSig, CeloContract.ERC20]
 export const RegisteredContracts = AllContracts.filter((v) => !AuxiliaryContracts.includes(v))
 

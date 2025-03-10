@@ -163,7 +163,7 @@ Only the `approver` address will succeed in sending this transaction
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:994](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L994)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:995](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L995)
 
 ___
 
@@ -251,7 +251,7 @@ Dequeues any queued proposals if `dequeueFrequency` seconds have elapsed since t
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:711](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L711)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:712](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L712)
 
 ___
 
@@ -361,7 +361,7 @@ keccak256 hash of abi encoded transactions computed on-chain
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:1016](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L1016)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:1017](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L1017)
 
 ___
 
@@ -389,7 +389,7 @@ Returns the approver address for proposals and hotfixes.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:407](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L407)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:408](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L408)
 
 ___
 
@@ -413,7 +413,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:898](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L898)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:899](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L899)
 
 ___
 
@@ -445,7 +445,7 @@ Returns the metadata associated with a given proposal.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:335](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L335)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:336](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L336)
 
 ___
 
@@ -482,7 +482,7 @@ Returns the transaction at the given index associated with a given proposal.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:364](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L364)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:365](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L365)
 
 ___
 
@@ -510,7 +510,7 @@ Returns the proposal queue as list of upvote records.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:657](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L657)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:658](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L658)
 
 ___
 
@@ -542,7 +542,7 @@ Returns the value of proposal deposits that have been refunded.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:624](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L624)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:625](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L625)
 
 ___
 
@@ -570,7 +570,7 @@ Returns the security council address for hotfixes.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:418](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L418)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:419](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L419)
 
 ___
 
@@ -602,7 +602,7 @@ Returns the current upvoted governance proposal ID and applied vote weight (zero
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:572](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L572)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:573](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L573)
 
 ___
 
@@ -626,7 +626,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:634](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L634)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:635](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L635)
 
 ___
 
@@ -658,7 +658,7 @@ Returns the yes, no, and abstain votes applied to a given proposal.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:644](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L644)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:645](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L645)
 
 ___
 
@@ -698,7 +698,7 @@ see https://specs.celo.org/smart_contract_updates_from_l1.html
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:973](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L973)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:974](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L974)
 
 ___
 
@@ -730,7 +730,7 @@ Returns whether a given proposal is approved.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:381](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L381)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:382](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L382)
 
 ___
 
@@ -762,7 +762,7 @@ Returns whether a dequeued proposal is expired.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:390](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L390)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:391](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L391)
 
 ___
 
@@ -802,7 +802,7 @@ see https://specs.celo.org/smart_contract_updates_from_l1.html
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:957](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L957)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:958](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L958)
 
 ___
 
@@ -846,7 +846,7 @@ see https://specs.celo.org/smart_contract_updates_from_l1.html
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:947](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L947)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:948](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L948)
 
 ___
 
@@ -878,7 +878,7 @@ Returns whether a given proposal is passing relative to the constitution's thres
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:545](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L545)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:546](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L546)
 
 ___
 
@@ -910,7 +910,7 @@ Returns whether a given proposal is queued.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:618](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L618)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:619](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L619)
 
 ___
 
@@ -942,7 +942,7 @@ Returns whether a dequeued proposal is expired.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:399](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L399)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:400](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L400)
 
 ___
 
@@ -976,7 +976,7 @@ Whether or not the account is voting on proposals.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:285](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L285)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:286](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L286)
 
 ___
 
@@ -1078,7 +1078,7 @@ Returns the number of validators required to reach a Byzantine quorum
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:962](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L962)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:963](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L963)
 
 ___
 
@@ -1110,7 +1110,7 @@ Marks the given hotfix prepared for current epoch if quorum of validators have w
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:1004](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L1004)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:1005](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L1005)
 
 ___
 
@@ -1142,7 +1142,7 @@ Returns whether a governance proposal exists with the given ID.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:563](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L563)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:564](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L564)
 
 ___
 
@@ -1178,7 +1178,7 @@ Submits a new governance proposal.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:557](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L557)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:558](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L558)
 
 ___
 
@@ -1232,7 +1232,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:884](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L884)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:885](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L885)
 
 ___
 
@@ -1272,7 +1272,7 @@ see https://specs.celo.org/smart_contract_updates_from_l1.html
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:983](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L983)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:984](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L984)
 
 ___
 
@@ -1300,7 +1300,7 @@ Withdraws refunded proposal deposits.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:550](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L550)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:551](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L551)
 
 ## Accessors
 
@@ -1346,7 +1346,7 @@ Only the `approver` address will succeed in sending this transaction
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:836](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L836)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:837](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L837)
 
 ___
 
@@ -1368,7 +1368,7 @@ Executes a given proposal's associated transactions.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:890](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L890)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:891](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L891)
 
 ___
 
@@ -1388,7 +1388,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:485](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L485)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:486](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L486)
 
 ___
 
@@ -1404,7 +1404,7 @@ Returns the approver multisig contract for proposals and hotfixes.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:412](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L412)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:413](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L413)
 
 ___
 
@@ -1420,7 +1420,7 @@ Returns current configuration parameters.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:290](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L290)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:291](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L291)
 
 ___
 
@@ -1464,7 +1464,7 @@ Returns the (existing) proposal dequeue as list of proposal IDs.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:671](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L671)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:672](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L672)
 
 ___
 
@@ -1486,7 +1486,7 @@ Returns approved, executed, and prepared status associated with a given hotfix.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:904](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L904)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:905](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L905)
 
 ___
 
@@ -1506,7 +1506,7 @@ Returns human readable configuration of the governance contract
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:313](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L313)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:314](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L314)
 
 ___
 
@@ -1528,7 +1528,7 @@ Returns the human readable metadata associated with a given proposal.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:351](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L351)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:352](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L352)
 
 ___
 
@@ -1595,7 +1595,7 @@ Returns the proposal associated with a given id.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:479](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L479)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:480](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L480)
 
 ___
 
@@ -1617,7 +1617,7 @@ Returns the stage, metadata, upvotes, votes, and transactions associated with a 
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:509](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L509)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:510](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L510)
 
 ___
 
@@ -1637,7 +1637,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:428](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L428)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:429](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L429)
 
 ___
 
@@ -1653,7 +1653,7 @@ Returns the security council multisig contract for hotfixes.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:425](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L425)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:426](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L426)
 
 ___
 
@@ -1739,7 +1739,7 @@ Returns the corresponding vote record
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:595](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L595)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:596](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L596)
 
 ___
 
@@ -1759,7 +1759,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:681](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L681)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:682](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L682)
 
 ___
 
@@ -1781,7 +1781,7 @@ Returns the number of votes that will be applied to a proposal for a given voter
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:720](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L720)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:721](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L721)
 
 ___
 
@@ -1801,7 +1801,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:695](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L695)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:696](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L696)
 
 ___
 
@@ -1821,7 +1821,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:465](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L465)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:466](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L466)
 
 ___
 
@@ -1841,7 +1841,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:581](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L581)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:582](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L582)
 
 ___
 
@@ -1861,7 +1861,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:687](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L687)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:688](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L688)
 
 ___
 
@@ -1881,7 +1881,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:440](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L440)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:441](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L441)
 
 ___
 
@@ -1903,7 +1903,7 @@ Revokes provided upvoter's upvote.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:823](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L823)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:824](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L824)
 
 ___
 
@@ -1923,7 +1923,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:761](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L761)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:762](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L762)
 
 ___
 
@@ -1964,7 +1964,7 @@ Applies provided upvoter's upvote to given proposal.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:807](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L807)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:808](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L808)
 
 ___
 
@@ -2005,7 +2005,7 @@ Applies `sender`'s vote choice to a given proposal.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:849](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L849)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:850](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L850)
 
 ___
 
@@ -2030,4 +2030,4 @@ Applies `sender`'s vote choice to a given proposal.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:865](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L865)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:866](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L866)
