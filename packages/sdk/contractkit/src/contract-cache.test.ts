@@ -56,8 +56,8 @@ describe('getContract()', () => {
       'CeloUnreleasedTreasury',
       'ERC20',
     ])
-    const eligableMethods = Object.values(CeloContract).filter((name) => !exclusionList.has(name))
-    for (const contractName of eligableMethods) {
+    const eligibleMethods = Object.values(CeloContract).filter((name) => !exclusionList.has(name))
+    for (const contractName of eligibleMethods) {
       const method = `get${contractName}`
       it(`has a method ${method}`, async () => {
         // @ts-ignore
