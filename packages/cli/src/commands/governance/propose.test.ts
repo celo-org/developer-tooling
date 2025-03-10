@@ -183,7 +183,7 @@ testWithAnvilL1('governance:propose cmd', (web3: Web3) => {
           '--from',
           accounts[0],
           '--descriptionURL',
-          'https://example.com',
+          'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
         ],
         web3
       )
@@ -247,7 +247,7 @@ testWithAnvilL1('governance:propose cmd', (web3: Web3) => {
           '--for',
           multisigWithOneSigner,
           '--descriptionURL',
-          'https://dummyurl.com',
+          'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
         ],
         web3
       )
@@ -312,7 +312,7 @@ testWithAnvilL1('governance:propose cmd', (web3: Web3) => {
           '--for',
           multisigWithTwoSigners,
           '--descriptionURL',
-          'https://dummyurl.com',
+          'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
         ],
         web3
       )
@@ -367,7 +367,7 @@ testWithAnvilL1('governance:propose cmd', (web3: Web3) => {
           '--from',
           accounts[0],
           '--descriptionURL',
-          'https://dummyurl.com',
+          'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
           '--force',
           '--noInfo',
         ],
@@ -415,7 +415,7 @@ testWithAnvilL1('governance:propose cmd', (web3: Web3) => {
           '--from',
           accounts[0],
           '--descriptionURL',
-          'https://dummyurl.com',
+          'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
           '--force',
           '--noInfo',
         ],
@@ -451,6 +451,34 @@ testWithAnvilL1('governance:propose cmd', (web3: Web3) => {
   )
 
   test(
+    'fails when descriptionURl is invalid',
+    async () => {
+      await expect(
+        testLocallyWithWeb3Node(
+          Propose,
+          [
+            '--from',
+            accounts[0],
+            '--deposit',
+            '0',
+            '--jsonTransactions',
+            './exampleProposal.json',
+            '--descriptionURL',
+            'https://github.com/suspicious-org/governance/blob/main/CGPs/cgp-123.md',
+          ],
+
+          web3
+        )
+      ).rejects.toThrowErrorMatchingInlineSnapshot(`
+        "Parsing --descriptionURL 
+        	\`https://github.com/suspicious-org/governance/blob/main/CGPs/cgp-123.md\` is not a valid descriptionURL, it must start with \`https://github.com/celo-org/governance/blob/main/CGPs/\`
+        See more help with --help"
+      `)
+    },
+    EXTRA_LONG_TIMEOUT_MS
+  )
+
+  test(
     'can submit empty proposal',
     async () => {
       await testLocallyWithWeb3Node(
@@ -463,7 +491,7 @@ testWithAnvilL1('governance:propose cmd', (web3: Web3) => {
           '--jsonTransactions',
           './exampleProposal.json',
           '--descriptionURL',
-          'https://example.com',
+          'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
         ],
         web3
       )
@@ -486,7 +514,7 @@ testWithAnvilL1('governance:propose cmd', (web3: Web3) => {
           '--jsonTransactions',
           './exampleProposal.json',
           '--descriptionURL',
-          'https://example.com',
+          'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
         ],
         web3
       )
@@ -512,7 +540,7 @@ testWithAnvilL1('governance:propose cmd', (web3: Web3) => {
           '--jsonTransactions',
           './exampleProposal.json',
           '--descriptionURL',
-          'https://example.com',
+          'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
         ],
         web3
       )
