@@ -3,8 +3,8 @@ import { Address, concurrentMap, eqAddress, StrongAddress } from '@celo/base'
 import { fromFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
 import { PublicClient } from 'viem'
-import { bigintToBigNumber } from '../utils/checks'
 import { resolveAddress } from './address-resolver'
+import { bigintToBigNumber } from './utils'
 
 export interface Validator {
   name: string

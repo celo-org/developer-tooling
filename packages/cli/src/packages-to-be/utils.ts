@@ -1,4 +1,5 @@
 import { PROXY_ADMIN_ADDRESS } from '@celo/connect'
+import BigNumber from 'bignumber.js'
 import { Address, Hex, PublicClient } from 'viem'
 
 type RequestGetCodeParams = {
@@ -25,4 +26,8 @@ export const isCel2 = async (client: PublicClient): Promise<boolean> => {
   }
 
   return false
+}
+
+export function bigintToBigNumber(value: bigint) {
+  return new BigNumber(value.toString())
 }

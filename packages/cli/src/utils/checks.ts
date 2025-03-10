@@ -32,6 +32,7 @@ import {
   getProposalSchedule,
   getProposalStage,
 } from '../packages-to-be/governance'
+import { bigintToBigNumber } from '../packages-to-be/utils'
 import {
   getValidator,
   getValidatorGroup,
@@ -63,11 +64,6 @@ export function check(
 const negate = (x: Promise<boolean>) => x.then((y) => !y)
 
 type Resolve<A> = A extends Promise<infer T> ? T : A
-
-// TODO move it outside this file
-export function bigintToBigNumber(value: bigint) {
-  return new BigNumber(value.toString())
-}
 
 export function newCheckBuilder(command: BaseCommand, signer?: Address) {
   return new CheckBuilder(command, signer as StrongAddress)
