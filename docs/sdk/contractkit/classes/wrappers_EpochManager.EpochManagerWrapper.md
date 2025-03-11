@@ -35,6 +35,7 @@ Contract handling epoch management.
 - [isOnEpochProcess](wrappers_EpochManager.EpochManagerWrapper.md#isonepochprocess)
 - [isTimeForNextEpoch](wrappers_EpochManager.EpochManagerWrapper.md#istimefornextepoch)
 - [methodIds](wrappers_EpochManager.EpochManagerWrapper.md#methodids)
+- [sendValidatorPayment](wrappers_EpochManager.EpochManagerWrapper.md#sendvalidatorpayment)
 - [startNextEpochProcess](wrappers_EpochManager.EpochManagerWrapper.md#startnextepochprocess)
 
 ### Accessors
@@ -126,6 +127,8 @@ ___
 | `EpochDurationSet` | `ContractEvent`\<`string`\> |
 | `EpochProcessingEnded` | `ContractEvent`\<`string`\> |
 | `EpochProcessingStarted` | `ContractEvent`\<`string`\> |
+| `GroupMarkedForProcessing` | `ContractEvent`\<\{ `0`: `string` ; `1`: `string` ; `epochNumber`: `string` ; `group`: `string`  }\> |
+| `GroupProcessed` | `ContractEvent`\<\{ `0`: `string` ; `1`: `string` ; `epochNumber`: `string` ; `group`: `string`  }\> |
 | `OracleAddressSet` | `ContractEvent`\<`string`\> |
 | `OwnershipTransferred` | `ContractEvent`\<\{ `0`: `string` ; `1`: `string` ; `newOwner`: `string` ; `previousOwner`: `string`  }\> |
 | `RegistrySet` | `ContractEvent`\<`string`\> |
@@ -408,7 +411,7 @@ ___
 
 ### methodIds
 
-• **methodIds**: `Record`\<``"epochDuration"`` \| ``"isTimeForNextEpoch"`` \| ``"getEpochNumberOfBlock"`` \| ``"initialized"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"initialize"`` \| ``"getVersionNumber"`` \| ``"electedAccounts"`` \| ``"electedSigners"`` \| ``"epochProcessing"`` \| ``"firstKnownEpoch"`` \| ``"isSystemInitialized"`` \| ``"oracleAddress"`` \| ``"processedGroups"`` \| ``"toProcessGroups"`` \| ``"validatorPendingPayments"`` \| ``"initializeSystem"`` \| ``"startNextEpochProcess"`` \| ``"setToProcessGroups"`` \| ``"processGroups"`` \| ``"processGroup"`` \| ``"finishNextEpochProcess"`` \| ``"sendValidatorPayment"`` \| ``"getCurrentEpoch"`` \| ``"getCurrentEpochNumber"`` \| ``"getEpochProcessingState"`` \| ``"isBlocked"`` \| ``"numberOfElectedInCurrentSet"`` \| ``"getElectedAccounts"`` \| ``"getElectedAccountByIndex"`` \| ``"getElectedSigners"`` \| ``"getElectedSignerByIndex"`` \| ``"getFirstBlockAtEpoch"`` \| ``"getLastBlockAtEpoch"`` \| ``"getEpochByBlockNumber"`` \| ``"setEpochDuration"`` \| ``"setOracleAddress"`` \| ``"isOnEpochProcess"`` \| ``"systemAlreadyInitialized"`` \| ``"getEpochByNumber"``, `string`\>
+• **methodIds**: `Record`\<``"epochDuration"`` \| ``"isTimeForNextEpoch"`` \| ``"getEpochNumberOfBlock"`` \| ``"initialized"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"initialize"`` \| ``"getVersionNumber"`` \| ``"electedAccounts"`` \| ``"electedSigners"`` \| ``"epochProcessing"`` \| ``"firstKnownEpoch"`` \| ``"isSystemInitialized"`` \| ``"oracleAddress"`` \| ``"processedGroups"`` \| ``"toProcessGroups"`` \| ``"validatorPendingPayments"`` \| ``"initializeSystem"`` \| ``"startNextEpochProcess"`` \| ``"setToProcessGroups"`` \| ``"processGroups"`` \| ``"processGroup"`` \| ``"finishNextEpochProcess"`` \| ``"sendValidatorPayment"`` \| ``"getCurrentEpoch"`` \| ``"getCurrentEpochNumber"`` \| ``"getEpochProcessingState"`` \| ``"isBlocked"`` \| ``"numberOfElectedInCurrentSet"`` \| ``"getElectedAccounts"`` \| ``"getElectedAccountByIndex"`` \| ``"getElectedSigners"`` \| ``"getElectedSignerByIndex"`` \| ``"getFirstBlockAtEpoch"`` \| ``"getLastBlockAtEpoch"`` \| ``"getEpochByBlockNumber"`` \| ``"setEpochDuration"`` \| ``"setOracleAddress"`` \| ``"isIndividualProcessing"`` \| ``"isEpochProcessingStarted"`` \| ``"isOnEpochProcess"`` \| ``"systemAlreadyInitialized"`` \| ``"getEpochByNumber"``, `string`\>
 
 #### Inherited from
 
@@ -417,6 +420,30 @@ ___
 #### Defined in
 
 [packages/sdk/contractkit/src/wrappers/BaseWrapper.ts:68](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BaseWrapper.ts#L68)
+
+___
+
+### sendValidatorPayment
+
+• **sendValidatorPayment**: (...`args`: [validator: string]) => `CeloTransactionObject`\<`void`\>
+
+#### Type declaration
+
+▸ (`...args`): `CeloTransactionObject`\<`void`\>
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `...args` | [validator: string] |
+
+##### Returns
+
+`CeloTransactionObject`\<`void`\>
+
+#### Defined in
+
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:68](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L68)
 
 ___
 
@@ -474,7 +501,7 @@ BaseWrapperForGoverning.address
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:69](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L69)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:70](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L70)
 
 ___
 
@@ -488,7 +515,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:131](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L131)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:132](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L132)
 
 ___
 
@@ -508,7 +535,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:82](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L82)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:83](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L83)
 
 ___
 
@@ -522,7 +549,7 @@ Contract getPastEvents
 
 | Name | Type |
 | :------ | :------ |
-| `event` | ``"OwnershipTransferred"`` \| ``"RegistrySet"`` \| ``"ValidatorEpochPaymentDistributed"`` \| ``"allEvents"`` \| ``"EpochDurationSet"`` \| ``"EpochProcessingEnded"`` \| ``"EpochProcessingStarted"`` \| ``"OracleAddressSet"`` |
+| `event` | ``"OwnershipTransferred"`` \| ``"RegistrySet"`` \| ``"ValidatorEpochPaymentDistributed"`` \| ``"allEvents"`` \| ``"EpochDurationSet"`` \| ``"EpochProcessingEnded"`` \| ``"EpochProcessingStarted"`` \| ``"GroupMarkedForProcessing"`` \| ``"GroupProcessed"`` \| ``"OracleAddressSet"`` |
 | `options` | `PastEventOptions` |
 
 #### Returns

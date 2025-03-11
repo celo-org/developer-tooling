@@ -1,13 +1,19 @@
 import { StrongAddress } from '@celo/base'
+import { CeloProvider } from '@celo/connect/lib/celo-provider'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { GoldTokenWrapper } from '@celo/contractkit/lib/wrappers/GoldTokenWrapper'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
-import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
+import {
+  setBalance,
+  testWithAnvilL2,
+  withImpersonatedAccount,
+} from '@celo/dev-utils/lib/anvil-test'
 import { ux } from '@oclif/core'
+import Safe, { getSafeAddressFromDeploymentTx } from '@safe-global/protocol-kit'
 import * as fs from 'fs'
 import Web3 from 'web3'
 import { EXTRA_LONG_TIMEOUT_MS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
-import { createMultisig } from '../../test-utils/multisigUtils'
+import { createMultisig, setupSafeContracts } from '../../test-utils/multisigUtils'
 import Approve from '../multisig/approve'
 import Propose from './propose'
 
@@ -137,385 +143,573 @@ const structAbiDefinition = {
   type: 'function',
 }
 
-testWithAnvilL2('governance:propose cmd', (web3: Web3) => {
-  let governance: GovernanceWrapper
-  let goldToken: GoldTokenWrapper
-  let minDeposit: string
+testWithAnvilL2(
+  'governance:propose cmd',
+  (web3: Web3) => {
+    const TRANSACTION_FILE_PATH = 'governance-propose-l2.test.json'
 
-  const kit = newKitFromWeb3(web3)
+    let governance: GovernanceWrapper
+    let goldToken: GoldTokenWrapper
+    let minDeposit: string
 
-  let accounts: StrongAddress[] = []
+    const kit = newKitFromWeb3(web3)
 
-  beforeEach(async () => {
-    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
-    kit.defaultAccount = accounts[0]
-    governance = await kit.contracts.getGovernance()
-    goldToken = await kit.contracts.getGoldToken()
-    minDeposit = (await governance.minDeposit()).toFixed()
-  })
+    let accounts: StrongAddress[] = []
 
-  test(
-    'will successfully create proposal based on Core contract',
-    async () => {
-      const transactionsToBeSaved = JSON.stringify(transactions)
-      fs.writeFileSync('transactions.json', transactionsToBeSaved, { flag: 'w' })
+    beforeEach(async () => {
+      accounts = (await web3.eth.getAccounts()) as StrongAddress[]
+      kit.defaultAccount = accounts[0]
+      governance = await kit.contracts.getGovernance()
+      goldToken = await kit.contracts.getGoldToken()
+      minDeposit = (await governance.minDeposit()).toFixed()
+    })
 
-      await (
-        await kit.sendTransaction({
-          to: governance.address,
-          from: accounts[0],
-          value: web3.utils.toWei('1', 'ether'),
-        })
-      ).waitReceipt()
+    test(
+      'will successfully create proposal based on Core contract',
+      async () => {
+        const transactionsToBeSaved = JSON.stringify(transactions)
+        fs.writeFileSync(TRANSACTION_FILE_PATH, transactionsToBeSaved, { flag: 'w' })
 
-      const proposalBefore = await governance.getProposal(1)
-      expect(proposalBefore).toEqual([])
+        await (
+          await kit.sendTransaction({
+            to: governance.address,
+            from: accounts[0],
+            value: web3.utils.toWei('1', 'ether'),
+          })
+        ).waitReceipt()
 
-      await testLocallyWithWeb3Node(
-        Propose,
-        [
-          '--jsonTransactions',
-          'transactions.json',
-          '--deposit',
-          minDeposit,
-          '--from',
-          accounts[0],
-          '--descriptionURL',
-          'https://example.com',
-        ],
-        web3
-      )
+        const proposalBefore = await governance.getProposal(1)
+        expect(proposalBefore).toEqual([])
 
-      const proposal = await governance.getProposal(1)
-      expect(proposal.length).toEqual(transactions.length)
-      expect(proposal[0].to).toEqual(goldToken.address)
-      expect(proposal[0].value).toEqual(transactions[0].value)
-      const expectedInput = goldToken['contract'].methods['transfer'](
-        transactions[0].args[0],
-        transactions[0].args[1]
-      ).encodeABI()
-      expect(proposal[0].input).toEqual(expectedInput)
-    },
-    EXTRA_LONG_TIMEOUT_MS * 2
-  )
-
-  test(
-    'will successfully create proposal based on Core contract with multisig (1 signer)',
-    async () => {
-      const transactionsToBeSaved = JSON.stringify(transactions)
-      fs.writeFileSync('transactions.json', transactionsToBeSaved, { flag: 'w' })
-
-      await (
-        await kit.sendTransaction({
-          from: accounts[0],
-          to: governance.address,
-          value: web3.utils.toWei('1', 'ether'),
-        })
-      ).waitReceipt()
-
-      const multisigWithOneSigner = await createMultisig(kit, [accounts[0]], 1, 1)
-      /**
-       * Faucet the multisig with 20,000 CELO so it has more than sufficient CELO
-       * to submit governance proposals (2x minDeposit in this case).
-       * In practice, `minDeposit` is currently 1 CELO on the devchain, so practically 20,000 CELO
-       * is too much. But I'm leaving this in case we update the devchain to match
-       * Alfajores or Mainnet parameters in the future.
-       */
-      await (
-        await kit.sendTransaction({
-          from: accounts[2],
-          to: multisigWithOneSigner,
-          value: web3.utils.toWei('20000', 'ether'), // 2x min deposit on Mainnet
-        })
-      ).waitReceipt()
-
-      const proposalBefore = await governance.getProposal(1)
-      expect(proposalBefore).toEqual([])
-
-      await testLocallyWithWeb3Node(
-        Propose,
-        [
-          '--jsonTransactions',
-          'transactions.json',
-          '--deposit',
-          '10000e18',
-          '--from',
-          accounts[0],
-          '--useMultiSig',
-          '--for',
-          multisigWithOneSigner,
-          '--descriptionURL',
-          'https://dummyurl.com',
-        ],
-        web3
-      )
-
-      const proposal = await governance.getProposal(1)
-      expect(proposal.length).toEqual(transactions.length)
-      expect(proposal[0].to).toEqual(goldToken.address)
-      expect(proposal[0].value).toEqual(transactions[0].value)
-      const expectedInput = goldToken['contract'].methods['transfer'](
-        transactions[0].args[0],
-        transactions[0].args[1]
-      ).encodeABI()
-      expect(proposal[0].input).toEqual(expectedInput)
-    },
-    EXTRA_LONG_TIMEOUT_MS
-  )
-
-  test(
-    'will successfully create proposal based on Core contract with multisig (2 signers)',
-    async () => {
-      const transactionsToBeSaved = JSON.stringify(transactions)
-      fs.writeFileSync('transactions.json', transactionsToBeSaved, { flag: 'w' })
-
-      await (
-        await kit.sendTransaction({
-          to: governance.address,
-          from: accounts[0],
-          value: web3.utils.toWei('1', 'ether'),
-        })
-      ).waitReceipt()
-
-      const multisigWithTwoSigners = await createMultisig(kit, [accounts[0], accounts[1]], 2, 2)
-      /**
-       * Faucet the multisig with 20,000 CELO so it has more than sufficient CELO
-       * to submit governance proposals (2x minDeposit in this case).
-       * In practice, `minDeposit` is currently 1 CELO on the devchain, so practically 20,000 CELO
-       * is too much. But I'm leaving this in case we update the devchain to match
-       * Alfajores or Mainnet parameters in the future.
-       */
-      await (
-        await kit.sendTransaction({
-          from: accounts[2],
-          to: multisigWithTwoSigners,
-          value: web3.utils.toWei('20000', 'ether'), // 2x min deposit on Mainnet
-        })
-      ).waitReceipt()
-
-      const proposalBefore = await governance.getProposal(1)
-      expect(proposalBefore).toEqual([])
-
-      // Submit proposal from signer A
-      await testLocallyWithWeb3Node(
-        Propose,
-        [
-          '--jsonTransactions',
-          'transactions.json',
-          '--deposit',
-          '10000e18',
-          '--from',
-          accounts[0],
-          '--useMultiSig',
-          '--for',
-          multisigWithTwoSigners,
-          '--descriptionURL',
-          'https://dummyurl.com',
-        ],
-        web3
-      )
-
-      const proposalBetween = await governance.getProposal(1)
-      expect(proposalBetween).toEqual([])
-
-      // Approve proposal from signer B
-      await testLocallyWithWeb3Node(
-        Approve,
-        ['--from', accounts[1], '--for', multisigWithTwoSigners, '--tx', '0'],
-        web3
-      )
-
-      const proposal = await governance.getProposal(1)
-      expect(proposal.length).toEqual(transactions.length)
-      expect(proposal[0].to).toEqual(goldToken.address)
-      expect(proposal[0].value).toEqual(transactions[0].value)
-      const expectedInput = goldToken['contract'].methods['transfer'](
-        transactions[0].args[0],
-        transactions[0].args[1]
-      ).encodeABI()
-      expect(proposal[0].input).toEqual(expectedInput)
-    },
-    EXTRA_LONG_TIMEOUT_MS
-  )
-
-  test(
-    'will successfully create proposal with random contract',
-    async () => {
-      const transactionsToBeSaved = JSON.stringify(transactionsUnknownAddress)
-      fs.writeFileSync('transactions.json', transactionsToBeSaved, { flag: 'w' })
-
-      await (
-        await kit.sendTransaction({
-          to: governance.address,
-          from: accounts[0],
-          value: web3.utils.toWei('1', 'ether'),
-        })
-      ).waitReceipt()
-
-      const proposalBefore = await governance.getProposal(1)
-      expect(proposalBefore).toEqual([])
-
-      await testLocallyWithWeb3Node(
-        Propose,
-        [
-          '--jsonTransactions',
-          'transactions.json',
-          '--deposit',
-          minDeposit,
-          '--from',
-          accounts[0],
-          '--descriptionURL',
-          'https://dummyurl.com',
-          '--force',
-          '--noInfo',
-        ],
-        web3
-      )
-
-      const proposal = await governance.getProposal(1)
-      expect(proposal.length).toEqual(transactions.length)
-      expect(proposal[0].to).toEqual(randomAddress)
-      expect(proposal[0].value).toEqual(transactions[0].value)
-      const expectedInput = goldToken['contract'].methods['transfer'](
-        transactions[0].args[0],
-        transactions[0].args[1]
-      ).encodeABI()
-      expect(proposal[0].input).toEqual(expectedInput)
-    },
-    EXTRA_LONG_TIMEOUT_MS
-  )
-
-  test(
-    'will successfully create proposal with struct as input',
-    async () => {
-      const transactionsToBeSaved = JSON.stringify(transactionsWithStruct)
-      fs.writeFileSync('transactions.json', transactionsToBeSaved, { flag: 'w' })
-
-      await (
-        await kit.sendTransaction({
-          to: governance.address,
-          from: accounts[0],
-          value: web3.utils.toWei('1', 'ether'),
-        })
-      ).waitReceipt()
-
-      const proposalBefore = await governance.getProposal(1)
-      expect(proposalBefore).toEqual([])
-
-      await testLocallyWithWeb3Node(
-        Propose,
-        [
-          '--jsonTransactions',
-          'transactions.json',
-          '--deposit',
-          minDeposit,
-          '--from',
-          accounts[0],
-          '--descriptionURL',
-          'https://dummyurl.com',
-          '--force',
-          '--noInfo',
-        ],
-        web3
-      )
-
-      const proposal = await governance.getProposal(1)
-      expect(proposal.length).toEqual(transactions.length)
-      expect(proposal[0].to).toEqual('0x3d79EdAaBC0EaB6F08ED885C05Fc0B014290D95A')
-      expect(proposal[0].value).toEqual(transactions[0].value)
-
-      const expectedInput = kit.connection
-        .getAbiCoder()
-        .encodeFunctionCall(structAbiDefinition, [JSON.parse(transactionsWithStruct[0].args[0])])
-
-      expect(proposal[0].input).toEqual(expectedInput)
-    },
-    EXTRA_LONG_TIMEOUT_MS
-  )
-
-  test(
-    'fails when descriptionURl is missing',
-    async () => {
-      await expect(
-        testLocallyWithWeb3Node(
+        await testLocallyWithWeb3Node(
           Propose,
-          ['--from', accounts[0], '--deposit', '0', '--jsonTransactions', './exampleProposal.json'],
+          [
+            '--jsonTransactions',
+            TRANSACTION_FILE_PATH,
+            '--deposit',
+            minDeposit,
+            '--from',
+            accounts[0],
+            '--descriptionURL',
+            'https://example.com',
+          ],
           web3
         )
-      ).rejects.toThrow('Missing required flag descriptionURL')
-    },
-    EXTRA_LONG_TIMEOUT_MS
-  )
 
-  test(
-    'can submit empty proposal',
-    async () => {
-      await testLocallyWithWeb3Node(
-        Propose,
-        [
-          '--from',
-          accounts[0],
-          '--deposit',
-          minDeposit,
-          '--jsonTransactions',
-          './exampleProposal.json',
-          '--descriptionURL',
-          'https://example.com',
-        ],
-        web3
+        const proposal = await governance.getProposal(1)
+        expect(proposal.length).toEqual(transactions.length)
+        expect(proposal[0].to).toEqual(goldToken.address)
+        expect(proposal[0].value).toEqual(transactions[0].value)
+        const expectedInput = goldToken['contract'].methods['transfer'](
+          transactions[0].args[0],
+          transactions[0].args[1]
+        ).encodeABI()
+        expect(proposal[0].input).toEqual(expectedInput)
+      },
+      EXTRA_LONG_TIMEOUT_MS * 2
+    )
+
+    test(
+      'will successfully create proposal based on Core contract with multisig (1 signer)',
+      async () => {
+        const transactionsToBeSaved = JSON.stringify(transactions)
+        fs.writeFileSync(TRANSACTION_FILE_PATH, transactionsToBeSaved, { flag: 'w' })
+
+        await (
+          await kit.sendTransaction({
+            from: accounts[0],
+            to: governance.address,
+            value: web3.utils.toWei('1', 'ether'),
+          })
+        ).waitReceipt()
+
+        const multisigWithOneSigner = await createMultisig(kit, [accounts[0]], 1, 1)
+        /**
+         * Faucet the multisig with 20,000 CELO so it has more than sufficient CELO
+         * to submit governance proposals (2x minDeposit in this case).
+         * In practice, `minDeposit` is currently 1 CELO on the devchain, so practically 20,000 CELO
+         * is too much. But I'm leaving this in case we update the devchain to match
+         * Alfajores or Mainnet parameters in the future.
+         */
+        await (
+          await kit.sendTransaction({
+            from: accounts[2],
+            to: multisigWithOneSigner,
+            value: web3.utils.toWei('20000', 'ether'), // 2x min deposit on Mainnet
+          })
+        ).waitReceipt()
+
+        const proposalBefore = await governance.getProposal(1)
+        expect(proposalBefore).toEqual([])
+
+        await testLocallyWithWeb3Node(
+          Propose,
+          [
+            '--jsonTransactions',
+            TRANSACTION_FILE_PATH,
+            '--deposit',
+            '10000e18',
+            '--from',
+            accounts[0],
+            '--useMultiSig',
+            '--for',
+            multisigWithOneSigner,
+            '--descriptionURL',
+            'https://dummyurl.com',
+          ],
+          web3
+        )
+
+        const proposal = await governance.getProposal(1)
+        expect(proposal.length).toEqual(transactions.length)
+        expect(proposal[0].to).toEqual(goldToken.address)
+        expect(proposal[0].value).toEqual(transactions[0].value)
+        const expectedInput = goldToken['contract'].methods['transfer'](
+          transactions[0].args[0],
+          transactions[0].args[1]
+        ).encodeABI()
+        expect(proposal[0].input).toEqual(expectedInput)
+      },
+      EXTRA_LONG_TIMEOUT_MS
+    )
+
+    test(
+      'will successfully create proposal based on Core contract with multisig (2 signers)',
+      async () => {
+        const transactionsToBeSaved = JSON.stringify(transactions)
+        fs.writeFileSync(TRANSACTION_FILE_PATH, transactionsToBeSaved, { flag: 'w' })
+
+        await (
+          await kit.sendTransaction({
+            to: governance.address,
+            from: accounts[0],
+            value: web3.utils.toWei('1', 'ether'),
+          })
+        ).waitReceipt()
+
+        const multisigWithTwoSigners = await createMultisig(kit, [accounts[0], accounts[1]], 2, 2)
+        /**
+         * Faucet the multisig with 20,000 CELO so it has more than sufficient CELO
+         * to submit governance proposals (2x minDeposit in this case).
+         * In practice, `minDeposit` is currently 1 CELO on the devchain, so practically 20,000 CELO
+         * is too much. But I'm leaving this in case we update the devchain to match
+         * Alfajores or Mainnet parameters in the future.
+         */
+        await (
+          await kit.sendTransaction({
+            from: accounts[2],
+            to: multisigWithTwoSigners,
+            value: web3.utils.toWei('20000', 'ether'), // 2x min deposit on Mainnet
+          })
+        ).waitReceipt()
+
+        const proposalBefore = await governance.getProposal(1)
+        expect(proposalBefore).toEqual([])
+
+        // Submit proposal from signer A
+        await testLocallyWithWeb3Node(
+          Propose,
+          [
+            '--jsonTransactions',
+            TRANSACTION_FILE_PATH,
+            '--deposit',
+            '10000e18',
+            '--from',
+            accounts[0],
+            '--useMultiSig',
+            '--for',
+            multisigWithTwoSigners,
+            '--descriptionURL',
+            'https://dummyurl.com',
+          ],
+          web3
+        )
+
+        const proposalBetween = await governance.getProposal(1)
+        expect(proposalBetween).toEqual([])
+
+        // Approve proposal from signer B
+        await testLocallyWithWeb3Node(
+          Approve,
+          ['--from', accounts[1], '--for', multisigWithTwoSigners, '--tx', '0'],
+          web3
+        )
+
+        const proposal = await governance.getProposal(1)
+        expect(proposal.length).toEqual(transactions.length)
+        expect(proposal[0].to).toEqual(goldToken.address)
+        expect(proposal[0].value).toEqual(transactions[0].value)
+        const expectedInput = goldToken['contract'].methods['transfer'](
+          transactions[0].args[0],
+          transactions[0].args[1]
+        ).encodeABI()
+        expect(proposal[0].input).toEqual(expectedInput)
+      },
+      EXTRA_LONG_TIMEOUT_MS
+    )
+
+    describe('with safe', () => {
+      beforeEach(async () => {
+        await setupSafeContracts(web3)
+      })
+
+      test(
+        'will successfully create proposal based on Core contract (1 owner)',
+        async () => {
+          const [owner1] = (await web3.eth.getAccounts()) as StrongAddress[]
+          const safeAccountConfig = {
+            owners: [owner1],
+            threshold: 1,
+          }
+
+          const predictSafe = {
+            safeAccountConfig,
+          }
+          const protocolKit = await Safe.init({
+            predictedSafe: predictSafe,
+            provider: (web3.currentProvider as any as CeloProvider).toEip1193Provider(),
+            signer: owner1,
+          })
+          const deploymentTransaction = await protocolKit.createSafeDeploymentTransaction()
+          const receipt = await web3.eth.sendTransaction({
+            from: owner1,
+            ...deploymentTransaction,
+          })
+          const safeAddress = getSafeAddressFromDeploymentTx(
+            receipt as unknown as Parameters<typeof getSafeAddressFromDeploymentTx>[0],
+            '1.3.0'
+          ) as StrongAddress
+          await protocolKit.connect({ safeAddress })
+
+          const balance = BigInt(web3.utils.toWei('100', 'ether'))
+          await setBalance(web3, goldToken.address, balance)
+          await setBalance(web3, governance.address, balance)
+          await setBalance(web3, owner1, balance)
+          await setBalance(web3, safeAddress, balance)
+
+          const transactionsToBeSaved = JSON.stringify(transactions)
+          fs.writeFileSync(TRANSACTION_FILE_PATH, transactionsToBeSaved, { flag: 'w' })
+          const deposit = await governance.minDeposit()
+          const proposalBefore = await governance.getProposal(1)
+          expect(proposalBefore).toEqual([])
+
+          // Submit proposal from signer A
+          await testLocallyWithWeb3Node(
+            Propose,
+            [
+              '--jsonTransactions',
+              TRANSACTION_FILE_PATH,
+              '--deposit',
+              deposit.toString(),
+              '--from',
+              owner1,
+              '--useSafe',
+              '--safeAddress',
+              safeAddress,
+              '--descriptionURL',
+              'https://dummyurl.com',
+            ],
+            web3
+          )
+          const proposal = await governance.getProposal(1)
+          expect(proposal.length).toEqual(transactions.length)
+          expect(proposal[0].to).toEqual(goldToken.address)
+          expect(proposal[0].value).toEqual(transactions[0].value)
+          const expectedInput = goldToken['contract'].methods['transfer'](
+            transactions[0].args[0],
+            transactions[0].args[1]
+          ).encodeABI()
+          expect(proposal[0].input).toEqual(expectedInput)
+        },
+        EXTRA_LONG_TIMEOUT_MS
       )
-    },
-    EXTRA_LONG_TIMEOUT_MS
-  )
 
-  test(
-    'can submit proposal using e notion for deposit',
-    async () => {
-      const spyStart = jest.spyOn(ux.action, 'start')
-      const spyStop = jest.spyOn(ux.action, 'stop')
-      await testLocallyWithWeb3Node(
-        Propose,
-        [
-          '--from',
-          accounts[0],
-          '--deposit',
-          '10000e18',
-          '--jsonTransactions',
-          './exampleProposal.json',
-          '--descriptionURL',
-          'https://example.com',
-        ],
-        web3
+      test(
+        'will successfully create proposal based on Core contract (2 owners)',
+        async () => {
+          const [owner1] = (await web3.eth.getAccounts()) as StrongAddress[]
+          const owner2 = '0x6C666E57A5E8715cFE93f92790f98c4dFf7b69e2'
+          const safeAccountConfig = {
+            owners: [owner1, owner2],
+            threshold: 2,
+          }
+
+          const predictSafe = {
+            safeAccountConfig,
+          }
+          const protocolKit = await Safe.init({
+            predictedSafe: predictSafe,
+            provider: (web3.currentProvider as any as CeloProvider).toEip1193Provider(),
+            signer: owner1,
+          })
+          const deploymentTransaction = await protocolKit.createSafeDeploymentTransaction()
+          const receipt = await web3.eth.sendTransaction({
+            from: owner1,
+            ...deploymentTransaction,
+          })
+          const safeAddress = getSafeAddressFromDeploymentTx(
+            receipt as unknown as Parameters<typeof getSafeAddressFromDeploymentTx>[0],
+            '1.3.0'
+          ) as StrongAddress
+          await protocolKit.connect({ safeAddress })
+
+          const balance = BigInt(web3.utils.toWei('100', 'ether'))
+          await setBalance(web3, goldToken.address, balance)
+          await setBalance(web3, governance.address, balance)
+          await setBalance(web3, owner1, balance)
+          await setBalance(web3, owner2, balance)
+          await setBalance(web3, safeAddress, balance)
+
+          const transactionsToBeSaved = JSON.stringify(transactions)
+          fs.writeFileSync(TRANSACTION_FILE_PATH, transactionsToBeSaved, { flag: 'w' })
+          const deposit = await governance.minDeposit()
+          const proposalBefore = await governance.getProposal(1)
+          expect(proposalBefore).toEqual([])
+
+          // Submit proposal from signer 1
+          await testLocallyWithWeb3Node(
+            Propose,
+            [
+              '--jsonTransactions',
+              TRANSACTION_FILE_PATH,
+              '--deposit',
+              deposit.toString(),
+              '--from',
+              owner1,
+              '--useSafe',
+              '--safeAddress',
+              safeAddress,
+              '--descriptionURL',
+              'https://dummyurl.com',
+            ],
+            web3
+          )
+          const proposalBefore2ndOwner = await governance.getProposal(1)
+          expect(proposalBefore2ndOwner).toEqual([])
+
+          await withImpersonatedAccount(web3, owner2, async () => {
+            await testLocallyWithWeb3Node(
+              Propose,
+              [
+                '--jsonTransactions',
+                TRANSACTION_FILE_PATH,
+                '--deposit',
+                deposit.toString(),
+                '--from',
+                owner2,
+                '--useSafe',
+                '--safeAddress',
+                safeAddress,
+                '--descriptionURL',
+                'https://dummyurl.com',
+              ],
+              web3
+            )
+          })
+
+          const proposal = await governance.getProposal(1)
+          expect(proposal.length).toEqual(transactions.length)
+          expect(proposal[0].to).toEqual(goldToken.address)
+          expect(proposal[0].value).toEqual(transactions[0].value)
+          const expectedInput = goldToken['contract'].methods['transfer'](
+            transactions[0].args[0],
+            transactions[0].args[1]
+          ).encodeABI()
+          expect(proposal[0].input).toEqual(expectedInput)
+        },
+        EXTRA_LONG_TIMEOUT_MS
       )
-      expect(spyStart).toHaveBeenCalledWith('Sending Transaction: proposeTx')
-      expect(spyStop).toHaveBeenCalled()
-    },
-    EXTRA_LONG_TIMEOUT_MS
-  )
+    })
 
-  test(
-    'when deposit is 10K it succeeds',
-    async () => {
-      const spyStart = jest.spyOn(ux.action, 'start')
-      const spyStop = jest.spyOn(ux.action, 'stop')
+    test(
+      'will successfully create proposal with random contract',
+      async () => {
+        const transactionsToBeSaved = JSON.stringify(transactionsUnknownAddress)
+        fs.writeFileSync(TRANSACTION_FILE_PATH, transactionsToBeSaved, { flag: 'w' })
 
-      await testLocallyWithWeb3Node(
-        Propose,
-        [
-          '--from',
-          accounts[0],
-          '--deposit',
-          '10000000000000000000000',
-          '--jsonTransactions',
-          './exampleProposal.json',
-          '--descriptionURL',
-          'https://example.com',
-        ],
-        web3
-      )
-      expect(spyStart).toHaveBeenCalledWith('Sending Transaction: proposeTx')
-      expect(spyStop).toHaveBeenCalled()
-    },
-    EXTRA_LONG_TIMEOUT_MS
-  )
-})
+        await (
+          await kit.sendTransaction({
+            to: governance.address,
+            from: accounts[0],
+            value: web3.utils.toWei('1', 'ether'),
+          })
+        ).waitReceipt()
+
+        const proposalBefore = await governance.getProposal(1)
+        expect(proposalBefore).toEqual([])
+
+        await testLocallyWithWeb3Node(
+          Propose,
+          [
+            '--jsonTransactions',
+            TRANSACTION_FILE_PATH,
+            '--deposit',
+            minDeposit,
+            '--from',
+            accounts[0],
+            '--descriptionURL',
+            'https://dummyurl.com',
+            '--force',
+            '--noInfo',
+          ],
+          web3
+        )
+
+        const proposal = await governance.getProposal(1)
+        expect(proposal.length).toEqual(transactions.length)
+        expect(proposal[0].to).toEqual(randomAddress)
+        expect(proposal[0].value).toEqual(transactions[0].value)
+        const expectedInput = goldToken['contract'].methods['transfer'](
+          transactions[0].args[0],
+          transactions[0].args[1]
+        ).encodeABI()
+        expect(proposal[0].input).toEqual(expectedInput)
+      },
+      EXTRA_LONG_TIMEOUT_MS
+    )
+
+    test(
+      'will successfully create proposal with struct as input',
+      async () => {
+        const transactionsToBeSaved = JSON.stringify(transactionsWithStruct)
+        fs.writeFileSync(TRANSACTION_FILE_PATH, transactionsToBeSaved, { flag: 'w' })
+
+        await (
+          await kit.sendTransaction({
+            to: governance.address,
+            from: accounts[0],
+            value: web3.utils.toWei('1', 'ether'),
+          })
+        ).waitReceipt()
+
+        const proposalBefore = await governance.getProposal(1)
+        expect(proposalBefore).toEqual([])
+
+        await testLocallyWithWeb3Node(
+          Propose,
+          [
+            '--jsonTransactions',
+            TRANSACTION_FILE_PATH,
+            '--deposit',
+            minDeposit,
+            '--from',
+            accounts[0],
+            '--descriptionURL',
+            'https://dummyurl.com',
+            '--force',
+            '--noInfo',
+          ],
+          web3
+        )
+
+        const proposal = await governance.getProposal(1)
+        expect(proposal.length).toEqual(transactions.length)
+        expect(proposal[0].to).toEqual('0x3d79EdAaBC0EaB6F08ED885C05Fc0B014290D95A')
+        expect(proposal[0].value).toEqual(transactions[0].value)
+
+        const expectedInput = kit.connection
+          .getAbiCoder()
+          .encodeFunctionCall(structAbiDefinition, [JSON.parse(transactionsWithStruct[0].args[0])])
+
+        expect(proposal[0].input).toEqual(expectedInput)
+      },
+      EXTRA_LONG_TIMEOUT_MS
+    )
+
+    test(
+      'fails when descriptionURl is missing',
+      async () => {
+        await expect(
+          testLocallyWithWeb3Node(
+            Propose,
+            [
+              '--from',
+              accounts[0],
+              '--deposit',
+              '0',
+              '--jsonTransactions',
+              './exampleProposal.json',
+            ],
+            web3
+          )
+        ).rejects.toThrow('Missing required flag descriptionURL')
+      },
+      EXTRA_LONG_TIMEOUT_MS
+    )
+
+    test(
+      'can submit empty proposal',
+      async () => {
+        await testLocallyWithWeb3Node(
+          Propose,
+          [
+            '--from',
+            accounts[0],
+            '--deposit',
+            minDeposit,
+            '--jsonTransactions',
+            './exampleProposal.json',
+            '--descriptionURL',
+            'https://example.com',
+          ],
+          web3
+        )
+      },
+      EXTRA_LONG_TIMEOUT_MS
+    )
+
+    test(
+      'can submit proposal using e notion for deposit',
+      async () => {
+        const spyStart = jest.spyOn(ux.action, 'start')
+        const spyStop = jest.spyOn(ux.action, 'stop')
+        await testLocallyWithWeb3Node(
+          Propose,
+          [
+            '--from',
+            accounts[0],
+            '--deposit',
+            '10000e18',
+            '--jsonTransactions',
+            './exampleProposal.json',
+            '--descriptionURL',
+            'https://example.com',
+          ],
+          web3
+        )
+        expect(spyStart).toHaveBeenCalledWith('Sending Transaction: proposeTx')
+        expect(spyStop).toHaveBeenCalled()
+      },
+      EXTRA_LONG_TIMEOUT_MS
+    )
+
+    test(
+      'when deposit is 10K it succeeds',
+      async () => {
+        const spyStart = jest.spyOn(ux.action, 'start')
+        const spyStop = jest.spyOn(ux.action, 'stop')
+
+        await testLocallyWithWeb3Node(
+          Propose,
+          [
+            '--from',
+            accounts[0],
+            '--deposit',
+            '10000000000000000000000',
+            '--jsonTransactions',
+            './exampleProposal.json',
+            '--descriptionURL',
+            'https://example.com',
+          ],
+          web3
+        )
+        expect(spyStart).toHaveBeenCalledWith('Sending Transaction: proposeTx')
+        expect(spyStop).toHaveBeenCalled()
+      },
+      EXTRA_LONG_TIMEOUT_MS
+    )
+  },
+  {
+    chainId: 42220,
+  }
+)

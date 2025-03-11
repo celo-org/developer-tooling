@@ -52,14 +52,14 @@ jobs:
     steps:
       - uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
       - name: 'enable corepack for yarn'
         run: sudo corepack enable yarn
       - uses: actions/checkout@v4
       # must call twice because of chicken and egg problem with yarn and node
       - uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
           cache: 'yarn'
       - name: Restore node cache
         uses: actions/cache@v4
@@ -78,9 +78,6 @@ jobs:
       - name: Install yarn dependencies
         run: git config --global url."https://".insteadOf ssh:// && yarn install
         if: steps.cache_node.outputs.cache-hit != 'true'
-      - name: Run yarn postinstall if cache hitted
-        run: yarn run postinstall
-        if: steps.cache_node.outputs.cache-hit == 'true'
       - name: Build packages
         run: yarn build
       - name: Check licenses
@@ -123,7 +120,7 @@ jobs:
             code-${{ github.sha }}
       - name: Detect files changed in PR (or commit), and expose as output
         id: changed-files
-        uses: tj-actions/changed-files@v41
+        uses: tj-actions/changed-files@v44
         with:
           # Using comma as separator to be able to easily match full paths (using ,<path>)
           separator: ','
@@ -177,6 +174,7 @@ jobs:
           name: Jest Test Results
           path: test-results/jest
       - uses: ./.github/actions/upload-codecov
+        name: Upload Code Coverage
         with:
           report-name: "general_test"
   
@@ -199,6 +197,7 @@ jobs:
         run: |
           yarn workspaces foreach -ip --all --include '@celo/wallet-*' run test --coverage
       - uses: ./.github/actions/upload-codecov
+        name: Upload Code Coverage
         with:
           report-name: "wallet"
 
@@ -226,6 +225,7 @@ jobs:
         run: |
           yarn workspace @celo/contractkit test-anvil --coverage
       - uses: ./.github/actions/upload-codecov
+        name: Upload Code Coverage
         with:
           report-name: "contractkit-anvil"
 
@@ -252,6 +252,7 @@ jobs:
         run: |
           yarn workspace @celo/contractkit test-ganache --coverage
       - uses: ./.github/actions/upload-codecov
+        name: Upload Code Coverage
         with:
           report-name: "contractkit-ganache"
 
@@ -278,6 +279,7 @@ jobs:
       - name: Test that it prints out alfajores contracts
         run: |
           celocli network:info --node alfajores
+          celocli account:new
 
   cli-tests-anvil:
     name: CeloCli Tests (Anvil)
@@ -307,6 +309,7 @@ jobs:
         run: |
           yarn workspace @celo/celocli run celocli releasecelo --help
       - uses: ./.github/actions/upload-codecov
+        name: Upload Code Coverage
         with:
           report-name: "celocli-anvil"
 
@@ -332,6 +335,7 @@ jobs:
         run: |
           yarn workspace @celo/celocli test-ci-ganache --coverage
       - uses: ./.github/actions/upload-codecov
+        name: Upload Code Coverage
         with:
           report-name: "celocli-ganache"
         

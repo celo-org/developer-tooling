@@ -1,5 +1,50 @@
 # @celo/wallet-local
 
+## 7.0.0
+
+### Patch Changes
+
+- [#497](https://github.com/celo-org/developer-tooling/pull/497) [`79cd947`](https://github.com/celo-org/developer-tooling/commit/79cd94725582be0c62133e98b922d19ed9c0b5de) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - chore: package.json link fixes
+
+- Updated dependencies [[`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733), [`79cd947`](https://github.com/celo-org/developer-tooling/commit/79cd94725582be0c62133e98b922d19ed9c0b5de), [`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733), [`07c4c78`](https://github.com/celo-org/developer-tooling/commit/07c4c7854f419dd07fbf09fe966fb5b378a139d1)]:
+  - @celo/utils@8.0.1
+  - @celo/base@7.0.1
+  - @celo/wallet-base@7.0.0
+  - @celo/connect@6.1.1
+
+## 7.0.0-beta.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @celo/wallet-base@7.0.0-beta.1
+
+## 7.0.0-beta.0
+
+### Patch Changes
+
+- [#497](https://github.com/celo-org/developer-tooling/pull/497) [`79cd947`](https://github.com/celo-org/developer-tooling/commit/79cd94725582be0c62133e98b922d19ed9c0b5de) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - chore: package.json link fixes
+
+- Updated dependencies [[`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733), [`79cd947`](https://github.com/celo-org/developer-tooling/commit/79cd94725582be0c62133e98b922d19ed9c0b5de), [`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733), [`07c4c78`](https://github.com/celo-org/developer-tooling/commit/07c4c7854f419dd07fbf09fe966fb5b378a139d1)]:
+  - @celo/utils@8.0.1-beta.0
+  - @celo/base@7.0.1-beta.0
+  - @celo/wallet-base@7.0.0-beta.0
+  - @celo/connect@6.1.1-beta.0
+
+## 6.0.4
+
+### Patch Changes
+
+- [#434](https://github.com/celo-org/developer-tooling/pull/434) [`c4b9c6d`](https://github.com/celo-org/developer-tooling/commit/c4b9c6d60bf938950007a67df4e7c8ec35066fb3) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Force patch bump wallets to deal with version conflict
+
+- [#408](https://github.com/celo-org/developer-tooling/pull/408) [`d988d31`](https://github.com/celo-org/developer-tooling/commit/d988d317582daed57bf05a4c4d9d087e5e732f0d) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Improve support for celo-legacy and modern txs within ledger
+
+- Updated dependencies [[`c4b9c6d`](https://github.com/celo-org/developer-tooling/commit/c4b9c6d60bf938950007a67df4e7c8ec35066fb3), [`d988d31`](https://github.com/celo-org/developer-tooling/commit/d988d317582daed57bf05a4c4d9d087e5e732f0d), [`4ef76eb`](https://github.com/celo-org/developer-tooling/commit/4ef76eb174454f60304080d0ef63a859cd8d931b), [`26b9779`](https://github.com/celo-org/developer-tooling/commit/26b9779071ecb0283644412587d5a6d8bd6fd5a0), [`fb08485`](https://github.com/celo-org/developer-tooling/commit/fb08485ae337e796a442b781632ae2123c4f4444)]:
+  - @celo/wallet-base@6.0.4
+  - @celo/base@7.0.0
+  - @celo/utils@8.0.0
+  - @celo/connect@6.1.0
+
 ## 6.0.4-beta.1
 
 ### Patch Changes

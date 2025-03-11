@@ -1,5 +1,32 @@
 # @celo/dev-utils
 
+## 0.0.8
+
+### Patch Changes
+
+- Updated dependencies [[`79cd947`](https://github.com/celo-org/developer-tooling/commit/79cd94725582be0c62133e98b922d19ed9c0b5de)]:
+  - @celo/connect@6.1.1
+
+## 0.0.8-beta.0
+
+### Patch Changes
+
+- Updated dependencies [[`79cd947`](https://github.com/celo-org/developer-tooling/commit/79cd94725582be0c62133e98b922d19ed9c0b5de)]:
+  - @celo/connect@6.1.1-beta.0
+
+## 0.0.7
+
+### Patch Changes
+
+- [#400](https://github.com/celo-org/developer-tooling/pull/400) [`38fe4d0`](https://github.com/celo-org/developer-tooling/commit/38fe4d018d1b9ed5954a17501bdaa59b0aeec2f2) Thanks [@shazarre](https://github.com/shazarre)! - Upgrades to latest devchain
+
+- [#446](https://github.com/celo-org/developer-tooling/pull/446) [`42d091f`](https://github.com/celo-org/developer-tooling/commit/42d091fbc2ab71ce4ec2fb5c57ca266a20a96b6e) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Bump @celo/abis-12
+
+- [#420](https://github.com/celo-org/developer-tooling/pull/420) [`fb08485`](https://github.com/celo-org/developer-tooling/commit/fb08485ae337e796a442b781632ae2123c4f4444) Thanks [@shazarre](https://github.com/shazarre)! - Adds actual Celo chain id when running anvil
+
+- Updated dependencies [[`fb08485`](https://github.com/celo-org/developer-tooling/commit/fb08485ae337e796a442b781632ae2123c4f4444)]:
+  - @celo/connect@6.1.0
+
 ## 0.0.7-beta.2
 
 ### Patch Changes

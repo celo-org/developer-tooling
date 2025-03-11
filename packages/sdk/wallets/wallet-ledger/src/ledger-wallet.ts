@@ -1,6 +1,7 @@
 import { CELO_DERIVATION_PATH_BASE } from '@celo/base/lib/account'
 import { zeroRange } from '@celo/base/lib/collections'
 import { Address, CeloTx, EncodedTransaction, ReadOnlyWallet, isPresent } from '@celo/connect'
+import Ledger from '@celo/hw-app-eth'
 import {
   chainIdTransformationForSigning,
   encodeTransaction,
@@ -11,12 +12,14 @@ import {
 } from '@celo/wallet-base'
 import { RemoteWallet } from '@celo/wallet-remote'
 import { TransportError, TransportStatusError } from '@ledgerhq/errors'
-import Ledger from '@celo/hw-app-eth'
 import debugFactory from 'debug'
 import { SemVer } from 'semver'
 import { LedgerSigner } from './ledger-signer'
 import { meetsVersionRequirements, transportErrorFriendlyMessage } from './ledger-utils'
 
+/*
+ * @deprecated this constant hardcodes the change index to 0. However we actually ignore that.
+ */
 export const CELO_BASE_DERIVATION_PATH = `${CELO_DERIVATION_PATH_BASE.slice(2)}/0`
 const ADDRESS_QTY = 5
 
@@ -32,17 +35,29 @@ export enum AddressValidation {
   never,
 }
 
+interface LedgerWalletSetup {
+  derivationPathIndexes?: number[]
+  changeIndexes?: number[]
+  baseDerivationPath?: string
+  ledgerAddressValidation?: AddressValidation
+  isCel2?: boolean
+}
+
 export async function newLedgerWalletWithSetup(
   transport: any,
-  derivationPathIndexes?: number[],
-  baseDerivationPath?: string,
-  ledgerAddressValidation?: AddressValidation,
-  isCel2?: boolean
-): Promise<LedgerWallet> {
-  const wallet = new LedgerWallet(
+  {
     derivationPathIndexes,
     baseDerivationPath,
+    ledgerAddressValidation,
+    changeIndexes,
+    isCel2,
+  }: LedgerWalletSetup
+): Promise<LedgerWallet> {
+  const wallet = new LedgerWallet(
     transport,
+    derivationPathIndexes,
+    baseDerivationPath,
+    changeIndexes,
     ledgerAddressValidation,
     isCel2
   )
@@ -59,27 +74,33 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
   ledger: Ledger | undefined
 
   /**
-   * @param derivationPathIndexes number array of "address_index" for the base derivation path.
-   * Default: Array[0..9].
-   * Example: [3, 99, 53] will retrieve the derivation paths of
-   * [`${baseDerivationPath}/3`, `${baseDerivationPath}/99`, `${baseDerivationPath}/53`]
-   * @param baseDerivationPath base derivation path. Default: "44'/52752'/0'/0"
    * @param transport Transport to connect the ledger device
+   * @param derivationPathIndexes number array of "address_index" for the base derivation path.
+   * Default: Array[0..5].
+   * Example: [3, 99, 53] will retrieve the derivation paths of
+   * [`${baseDerivationPath}/0/3`, `${baseDerivationPath}/0/99`, `${baseDerivationPath}/0/53`]
+   * @param baseDerivationPath base derivation path. Default: "44'/52752'/0'"
+   * @param changeIndexes number array of "change" for the base derivation path.
+   * Default: [0].
+   * Example: [0, 1] will retrieve the derivation paths of [`${baseDerivationPath}/0/${address_index}`, `${baseDerivationPath}/1/${address_index}`, `${baseDerivationPath}/2/${address_index}`]
+   * @param ledgerAddressValidation AddressValidation enum to validate addresses. Default: AddressValidation.firstTransactionPerAddress
    */
   constructor(
+    readonly transport: any = {},
     readonly derivationPathIndexes: number[] = zeroRange(ADDRESS_QTY),
     readonly baseDerivationPath: string = CELO_BASE_DERIVATION_PATH,
-    readonly transport: any = {},
+    readonly changeIndexes: number[] = [0],
     readonly ledgerAddressValidation: AddressValidation = AddressValidation.firstTransactionPerAddress,
     readonly isCel2?: boolean
   ) {
     super()
-    const invalidDPs = derivationPathIndexes.some(
-      (value) => !(Number.isInteger(value) && value >= 0)
-    )
-    if (invalidDPs) {
-      throw new Error('ledger-wallet: Invalid address index')
-    }
+
+    validateIndexes(derivationPathIndexes, 'address index')
+    validateIndexes(changeIndexes, 'change index')
+    // Remove the 'm/' prefix if it exists since we dont expect it here but that is how derivaiton path is used in the rest of the code
+    this.baseDerivationPath = baseDerivationPath.startsWith('m/')
+      ? baseDerivationPath.slice(2)
+      : baseDerivationPath
   }
 
   async signTransaction(txParams: CeloTx): Promise<EncodedTransaction> {
@@ -104,7 +125,10 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
     const version = new SemVer(deviceApp.version)
 
     // if the app is of minimum version it doesnt matter if chain is cel2 or not
-    if (meetsVersionRequirements(version, { minimum: LedgerWallet.MIN_VERSION_EIP1559 })) {
+    if (
+      deviceApp.appName !== 'celo' ||
+      meetsVersionRequirements(version, { minimum: LedgerWallet.MIN_VERSION_EIP1559 })
+    ) {
       if (txParams.gasPrice && txParams.feeCurrency && txParams.feeCurrency !== '0x') {
         throw new Error(
           `celo ledger app above ${LedgerWallet.MIN_VERSION_EIP1559} cannot serialize legacy celo transactions. Replace "gasPrice" with "maxFeePerGas".`
@@ -119,7 +143,13 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
       // by deleting/ adding properties instead of throwing.
       // TODO when cip66 is implemented ensure it is not that
       // @ts-expect-error -- 66 isnt in this branch but will be in the release so future proof
-      if (isEIP1559(txParams) || (isCIP64(txParams) && !isPresent(txParams.maxFeePerFeeCurrency))) {
+      const isCeloSpecificTx = isCIP64(txParams) && !isPresent(txParams.maxFeePerFeeCurrency)
+      if (isEIP1559(txParams) || isCeloSpecificTx) {
+        if (isCeloSpecificTx && deviceApp.appName !== 'celo') {
+          throw new Error(
+            'To submit celo-specific transactions you must use the celo app on your ledger device.'
+          )
+        }
         return rlpEncodedTx(txParams)
       } else {
         throw new Error(
@@ -175,20 +205,24 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
     const addressToSigner = new Map<Address, LedgerSigner>()
     const appConfiguration = await this.retrieveAppConfiguration()
     const validationRequired = this.ledgerAddressValidation === AddressValidation.initializationOnly
-
+    // https://trezor.io/learn/a/what-is-bip44
+    const [purpose, coinType, account] = this.baseDerivationPath.split('/')
     // Each address must be retrieved synchronously, (ledger lock)
-    for (const value of this.derivationPathIndexes) {
-      const derivationPath = `${this.baseDerivationPath}/${value}`
-      const addressInfo = await this.ledger!.getAddress(derivationPath, validationRequired)
-      addressToSigner.set(
-        addressInfo.address!,
-        new LedgerSigner(
-          this.ledger!,
-          derivationPath,
-          this.ledgerAddressValidation,
-          appConfiguration
+    for (const changeIndex of this.changeIndexes) {
+      for (const addressIndex of this.derivationPathIndexes) {
+        const derivationPath = `${purpose}/${coinType}/${account}/${changeIndex}/${addressIndex}`
+        console.info(`Fetching address for derivation path ${derivationPath}`)
+        const addressInfo = await this.ledger!.getAddress(derivationPath, validationRequired)
+        addressToSigner.set(
+          addressInfo.address!,
+          new LedgerSigner(
+            this.ledger!,
+            derivationPath,
+            this.ledgerAddressValidation,
+            appConfiguration
+          )
         )
-      )
+      }
     }
     return addressToSigner
   }
@@ -196,11 +230,23 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
   private async retrieveAppConfiguration(): Promise<{
     arbitraryDataEnabled: number
     version: string
+    appName: string
   }> {
+    const appName = await this.retrieveAppName()
     const appConfiguration = await this.ledger!.getAppConfiguration()
-    if (new SemVer(appConfiguration.version).compare(LedgerWallet.MIN_VERSION_SUPPORTED) === -1) {
+    if (appName === 'celo') {
+      if (new SemVer(appConfiguration.version).compare(LedgerWallet.MIN_VERSION_SUPPORTED) === -1) {
+        throw new Error(
+          `Due to technical issues, we require the users to update their ledger celo-app to >= ${LedgerWallet.MIN_VERSION_SUPPORTED}. You can do this on ledger-live by updating the celo-app in the app catalog.`
+        )
+      }
+    } else if (appName === 'ethereum') {
+      console.warn(
+        `Beware, you opened the Ethereum app instead of the Celo app. Some features may not work correctly, including token transfers.`
+      )
+    } else {
       throw new Error(
-        `Due to technical issues, we require the users to update their ledger celo-app to >= ${LedgerWallet.MIN_VERSION_SUPPORTED}. You can do this on ledger-live by updating the celo-app in the app catalog.`
+        `Beware, you opened the ${appName} app instead of the Celo app. We cannot ensure the safety of using this SDK with ${appName}.`
       )
     }
     if (!appConfiguration.arbitraryDataEnabled) {
@@ -208,6 +254,38 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
         'Beware, your ledger does not allow the use of contract data. Some features may not work correctly, including token transfers. You can enable it from the ledger app settings.'
       )
     }
-    return appConfiguration
+    return { ...appConfiguration, appName }
+  }
+
+  private async retrieveAppName(): Promise<string> {
+    //                                                 acl   ins   p1    p2
+    const response = await this.ledger!.transport.send(0xb0, 0x01, 0x00, 0x00)
+    try {
+      let results = [] // (name, version)
+      let i = 1
+      while (i < response.length + 1) {
+        const len = response[i]
+        i += 1
+        const bufValue = response.subarray(i, i + len)
+        i += len
+        results.push(bufValue.toString('ascii').trim())
+      }
+
+      return results[0]!.toLowerCase()
+    } catch (err) {
+      console.error('The appName couldnt be infered from the device')
+      throw err
+    }
+  }
+}
+
+function validateIndexes(indexes: number[], label: string = 'address index') {
+  if (indexes.length === 0) {
+    throw new Error(`ledger-wallet: No ${label} provided`)
+  }
+
+  const invalidDPs = indexes.some((value) => !(Number.isInteger(value) && value >= 0))
+  if (invalidDPs) {
+    throw new Error(`ledger-wallet: Invalid ${label} provided`)
   }
 }

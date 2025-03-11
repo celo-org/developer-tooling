@@ -36,17 +36,17 @@
 
 ### Claim
 
-Ƭ **Claim**: [`DomainClaim`](claim.md#domainclaim) \| [`RpcUrlClaim`](claim.md#rpcurlclaim) \| [`KeybaseClaim`](claim.md#keybaseclaim) \| [`NameClaim`](claim.md#nameclaim) \| [`AccountClaim`](account.md#accountclaim) \| [`StorageClaim`](claim.md#storageclaim)
+Ƭ **Claim**: [`DomainClaim`](claim.md#domainclaim) \| [`RpcUrlClaim`](claim.md#rpcurlclaim) \| [`KeybaseClaim`](claim.md#keybaseclaim) \| [`NameClaim`](claim.md#nameclaim) \| [`AccountClaim`](account.md#accountclaim) \| [`StorageClaim`](claim.md#storageclaim) \| `AttestationServiceUrlClaim`
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/claim.ts:58](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L58)
+[packages/sdk/metadata-claims/src/claim.ts:75](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L75)
 
 ___
 
 ### ClaimPayload
 
-Ƭ **ClaimPayload**\<`K`\>: `K` extends typeof [`DOMAIN`](../enums/types.ClaimTypes.md#domain) ? [`DomainClaim`](claim.md#domainclaim) : `K` extends typeof [`RPC_URL`](../enums/types.ClaimTypes.md#rpc_url) ? [`RpcUrlClaim`](claim.md#rpcurlclaim) : `K` extends typeof [`NAME`](../enums/types.ClaimTypes.md#name) ? [`NameClaim`](claim.md#nameclaim) : `K` extends typeof [`KEYBASE`](../enums/types.ClaimTypes.md#keybase) ? [`KeybaseClaim`](claim.md#keybaseclaim) : `K` extends typeof [`ACCOUNT`](../enums/types.ClaimTypes.md#account) ? [`AccountClaim`](account.md#accountclaim) : [`StorageClaim`](claim.md#storageclaim)
+Ƭ **ClaimPayload**\<`K`\>: `K` extends typeof [`DOMAIN`](../enums/types.ClaimTypes.md#domain) ? [`DomainClaim`](claim.md#domainclaim) : `K` extends typeof [`ATTESTATION_SERVICE_URL`](../enums/types.ClaimTypes.md#attestation_service_url) ? `AttestationServiceUrlClaim` : `K` extends typeof [`RPC_URL`](../enums/types.ClaimTypes.md#rpc_url) ? [`RpcUrlClaim`](claim.md#rpcurlclaim) : `K` extends typeof [`NAME`](../enums/types.ClaimTypes.md#name) ? [`NameClaim`](claim.md#nameclaim) : `K` extends typeof [`KEYBASE`](../enums/types.ClaimTypes.md#keybase) ? [`KeybaseClaim`](claim.md#keybaseclaim) : `K` extends typeof [`ACCOUNT`](../enums/types.ClaimTypes.md#account) ? [`AccountClaim`](account.md#accountclaim) : [`StorageClaim`](claim.md#storageclaim)
 
 #### Type parameters
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/claim.ts:66](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L66)
+[packages/sdk/metadata-claims/src/claim.ts:84](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L84)
 
 ___
 
@@ -66,7 +66,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/claim.ts:54](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L54)
+[packages/sdk/metadata-claims/src/claim.ts:65](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L65)
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/claim.ts:12](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L12)
+[packages/sdk/metadata-claims/src/claim.ts:13](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L13)
 
 ___
 
@@ -86,7 +86,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/claim.ts:56](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L56)
+[packages/sdk/metadata-claims/src/claim.ts:67](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L67)
 
 ___
 
@@ -96,7 +96,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/claim.ts:55](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L55)
+[packages/sdk/metadata-claims/src/claim.ts:66](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L66)
 
 ___
 
@@ -106,17 +106,17 @@ ___
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/claim.ts:57](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L57)
+[packages/sdk/metadata-claims/src/claim.ts:68](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L68)
 
 ## Variables
 
 ### ClaimType
 
-• `Const` **ClaimType**: `UnionC`\<[`Type`\<\{ `address`: `string` = AddressType; `publicKey`: `undefined` \| `string` ; `timestamp`: `number` = TimestampType; `type`: [`ACCOUNT`](../enums/types.ClaimTypes.md#account)  }, `any`, `unknown`\>, `TypeC`\<\{ `domain`: `StringC` = t.string; `timestamp`: `NumberC` = TimestampType; `type`: `LiteralC`\<[`DOMAIN`](../enums/types.ClaimTypes.md#domain)\>  }\>, `TypeC`\<\{ `rpcUrl`: `StringC` = t.string; `timestamp`: `NumberC` = TimestampType; `type`: `LiteralC`\<[`RPC_URL`](../enums/types.ClaimTypes.md#rpc_url)\>  }\>, `TypeC`\<\{ `timestamp`: `NumberC` = TimestampType; `type`: `LiteralC`\<[`KEYBASE`](../enums/types.ClaimTypes.md#keybase)\> ; `username`: `StringC` = t.string }\>, `TypeC`\<\{ `name`: `StringC` = t.string; `timestamp`: `NumberC` = TimestampType; `type`: `LiteralC`\<[`NAME`](../enums/types.ClaimTypes.md#name)\>  }\>, `TypeC`\<\{ `address`: `StringC` = t.string; `filteredDataPaths`: `StringC` = t.string; `timestamp`: `NumberC` = TimestampType; `type`: `LiteralC`\<[`STORAGE`](../enums/types.ClaimTypes.md#storage)\>  }\>]\>
+• `Const` **ClaimType**: `UnionC`\<[`Type`\<\{ `address`: `string` = AddressType; `publicKey`: `undefined` \| `string` ; `timestamp`: `number` = TimestampType; `type`: [`ACCOUNT`](../enums/types.ClaimTypes.md#account)  }, `any`, `unknown`\>, `TypeC`\<\{ `domain`: `StringC` = t.string; `timestamp`: `NumberC` = TimestampType; `type`: `LiteralC`\<[`DOMAIN`](../enums/types.ClaimTypes.md#domain)\>  }\>, `TypeC`\<\{ `rpcUrl`: `StringC` = t.string; `timestamp`: `NumberC` = TimestampType; `type`: `LiteralC`\<[`RPC_URL`](../enums/types.ClaimTypes.md#rpc_url)\>  }\>, `TypeC`\<\{ `timestamp`: `NumberC` = TimestampType; `type`: `LiteralC`\<[`KEYBASE`](../enums/types.ClaimTypes.md#keybase)\> ; `username`: `StringC` = t.string }\>]\>
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/claim.ts:39](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L39)
+[packages/sdk/metadata-claims/src/claim.ts:49](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L49)
 
 ___
 
@@ -126,7 +126,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/claim.ts:53](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L53)
+[packages/sdk/metadata-claims/src/claim.ts:64](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L64)
 
 ___
 
@@ -136,17 +136,17 @@ ___
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/claim.ts:6](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L6)
+[packages/sdk/metadata-claims/src/claim.ts:7](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L7)
 
 ___
 
 ### SignedClaimType
 
-• `Const` **SignedClaimType**: `TypeC`\<\{ `claim`: `UnionC`\<[`Type`\<\{ `address`: `string` = AddressType; `publicKey`: `undefined` \| `string` ; `timestamp`: `number` = TimestampType; `type`: [`ACCOUNT`](../enums/types.ClaimTypes.md#account)  }, `any`, `unknown`\>, `TypeC`\<\{ `domain`: `StringC` = t.string; `timestamp`: `NumberC` = TimestampType; `type`: `LiteralC`\<[`DOMAIN`](../enums/types.ClaimTypes.md#domain)\>  }\>, `TypeC`\<\{ `rpcUrl`: `StringC` = t.string; `timestamp`: `NumberC` = TimestampType; `type`: `LiteralC`\<[`RPC_URL`](../enums/types.ClaimTypes.md#rpc_url)\>  }\>, `TypeC`\<\{ `timestamp`: `NumberC` = TimestampType; `type`: `LiteralC`\<[`KEYBASE`](../enums/types.ClaimTypes.md#keybase)\> ; `username`: `StringC` = t.string }\>, `TypeC`\<\{ `name`: `StringC` = t.string; `timestamp`: `NumberC` = TimestampType; `type`: `LiteralC`\<[`NAME`](../enums/types.ClaimTypes.md#name)\>  }\>, `TypeC`\<\{ `address`: `StringC` = t.string; `filteredDataPaths`: `StringC` = t.string; `timestamp`: `NumberC` = TimestampType; `type`: `LiteralC`\<[`STORAGE`](../enums/types.ClaimTypes.md#storage)\>  }\>]\> = ClaimType; `signature`: `StringC` = SignatureType }\>
+• `Const` **SignedClaimType**: `TypeC`\<\{ `claim`: `UnionC`\<[`Type`\<\{ `address`: `string` = AddressType; `publicKey`: `undefined` \| `string` ; `timestamp`: `number` = TimestampType; `type`: [`ACCOUNT`](../enums/types.ClaimTypes.md#account)  }, `any`, `unknown`\>, `TypeC`\<\{ `domain`: `StringC` = t.string; `timestamp`: `NumberC` = TimestampType; `type`: `LiteralC`\<[`DOMAIN`](../enums/types.ClaimTypes.md#domain)\>  }\>, `TypeC`\<\{ `rpcUrl`: `StringC` = t.string; `timestamp`: `NumberC` = TimestampType; `type`: `LiteralC`\<[`RPC_URL`](../enums/types.ClaimTypes.md#rpc_url)\>  }\>, `TypeC`\<\{ `timestamp`: `NumberC` = TimestampType; `type`: `LiteralC`\<[`KEYBASE`](../enums/types.ClaimTypes.md#keybase)\> ; `username`: `StringC` = t.string }\>]\> = ClaimType; `signature`: `StringC` = SignatureType }\>
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/claim.ts:48](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L48)
+[packages/sdk/metadata-claims/src/claim.ts:59](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L59)
 
 ## Functions
 
@@ -172,7 +172,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/claim.ts:103](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L103)
+[packages/sdk/metadata-claims/src/claim.ts:123](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L123)
 
 ___
 
@@ -198,7 +198,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/claim.ts:97](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L97)
+[packages/sdk/metadata-claims/src/claim.ts:117](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L117)
 
 ___
 
@@ -224,7 +224,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/claim.ts:109](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L109)
+[packages/sdk/metadata-claims/src/claim.ts:129](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L129)
 
 ___
 
@@ -251,7 +251,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/claim.ts:115](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L115)
+[packages/sdk/metadata-claims/src/claim.ts:135](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L135)
 
 ___
 
@@ -271,7 +271,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/claim.ts:84](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L84)
+[packages/sdk/metadata-claims/src/claim.ts:104](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L104)
 
 ___
 
@@ -291,7 +291,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/claim.ts:88](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L88)
+[packages/sdk/metadata-claims/src/claim.ts:108](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L108)
 
 ___
 
@@ -329,7 +329,7 @@ data is ClaimPayload\<K\>
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/claim.ts:80](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L80)
+[packages/sdk/metadata-claims/src/claim.ts:100](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L100)
 
 ___
 
@@ -349,4 +349,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/claim.ts:93](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L93)
+[packages/sdk/metadata-claims/src/claim.ts:113](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/claim.ts#L113)

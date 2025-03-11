@@ -4,6 +4,7 @@ import {
   assertCompat,
   checkForKnownToken,
   meetsVersionRequirements,
+  readAppName,
   transportErrorFriendlyMessage,
 } from './utils.js'
 
@@ -50,6 +51,20 @@ describe('utils', () => {
     })
   })
 
+  describe('readAppName', () => {
+    it('works', async () => {
+      await expect(readAppName(mockLedger({ name: 'unknown' }))).resolves.toMatchInlineSnapshot(
+        `"unknown"`
+      )
+      await expect(
+        readAppName(mockLedger({ version: '1.0.0', name: 'Ethereum' }))
+      ).resolves.toMatchInlineSnapshot(`"ethereum"`)
+      await expect(readAppName(mockLedger({ name: 'Celo' }))).resolves.toMatchInlineSnapshot(
+        `"celo"`
+      )
+    })
+  })
+
   describe('assertCompat', () => {
     it("throws if it doesn't meet the requirements", async () => {
       await expect(assertCompat(mockLedger({ version: '1.0.0' }))).rejects.toMatchInlineSnapshot(
@@ -62,6 +77,15 @@ describe('utils', () => {
       expect(warn.mock.lastCall).toMatchInlineSnapshot(`
         [
           "Beware, your ledger does not allow the use of contract data. Some features may not work correctly, including token transfers. You can enable it from the ledger app settings.",
+        ]
+      `)
+    })
+    it('warns if it using Ethereum', async () => {
+      const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
+      await expect(assertCompat(mockLedger({ name: 'ethereum' }))).resolves.toBeTruthy()
+      expect(warn.mock.lastCall).toMatchInlineSnapshot(`
+        [
+          "Beware, you opened the Ethereum app instead of the Celo app. Some features may not work correctly, including token transfers.",
         ]
       `)
     })

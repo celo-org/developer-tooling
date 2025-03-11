@@ -1,17 +1,29 @@
-import { CELO_DERIVATION_PATH_BASE, trimLeading0x } from '@celo/base'
+import { CELO_DERIVATION_PATH_BASE, ETHEREUM_DERIVATION_PATH, trimLeading0x } from '@celo/base'
 import { ensureLeading0x } from '@celo/base/lib/address.js'
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
-import { serializeSignature } from 'viem'
+import {
+  getTypesForEIP712Domain,
+  hashDomain,
+  hashStruct,
+  HashTypedDataParameters,
+  serializeSignature,
+} from 'viem'
 import { LocalAccount, toAccount } from 'viem/accounts'
 import { CeloTransactionSerializable, serializeTransaction } from 'viem/celo'
 
-import { checkForKnownToken, generateLedger } from './utils.js'
+import { checkForKnownToken, generateLedger, readAppName } from './utils.js'
 
 export type LedgerAccount = LocalAccount<'ledger'>
 
-export const ETH_DERIVATION_PATH_BASE = "m/44'/60'/0'" as const
+const CIP64_PREFIX = '0x7b'
 export const CELO_BASE_DERIVATION_PATH = `${CELO_DERIVATION_PATH_BASE.slice(2)}/0`
-export const DEFAULT_DERIVATION_PATH = `${ETH_DERIVATION_PATH_BASE.slice(2)}/0`
+export const DEFAULT_DERIVATION_PATH = `${ETHEREUM_DERIVATION_PATH.slice(2)}/0`
+
+// not exported from viem...
+interface MessageTypeProperty {
+  name: string
+  type: string
+}
 
 /**
  * A function to create a ledger account for viem
@@ -34,18 +46,25 @@ export async function ledgerToAccount({
   const derivationPath = `${baseDerivationPath}/${derivationPathIndex}`
   const ledger = await generateLedger(transport)
   const { address, publicKey } = await ledger.getAddress(derivationPath, true)
-
   const account = toAccount({
     address: ensureLeading0x(address),
 
     async signTransaction(transaction: CeloTransactionSerializable) {
-      await checkForKnownToken(ledger, {
-        to: transaction.to!,
-        chainId: transaction.chainId!,
-        feeCurrency: transaction.feeCurrency,
-      })
-
+      const ledgerAppName = await readAppName(ledger)
       const hash = serializeTransaction(transaction)
+      if (hash.startsWith(CIP64_PREFIX) && ledgerAppName !== 'celo') {
+        throw new Error(
+          'To submit celo-specific transactions you must use the celo app on your ledger device.'
+        )
+      }
+      if (ledgerAppName === 'celo') {
+        await checkForKnownToken(ledger, {
+          to: transaction.to!,
+          chainId: transaction.chainId!,
+          feeCurrency: transaction.feeCurrency,
+        })
+      }
+
       let { r, s, v: _v } = await ledger!.signTransaction(derivationPath, trimLeading0x(hash), null)
       if (typeof _v === 'string' && (_v === '' || _v === '0x')) {
         _v = '0x0'
@@ -77,8 +96,39 @@ export async function ledgerToAccount({
       })
     },
 
-    async signTypedData(_parameters) {
-      throw new Error('Not implemented as of this release.')
+    async signTypedData(parameters) {
+      const ledgerAppName = await readAppName(ledger)
+      if (ledgerAppName === 'celo') {
+        throw new Error('Not implemented as of this release.')
+      }
+
+      const { domain = {}, message, primaryType } = parameters as HashTypedDataParameters
+      const types = {
+        EIP712Domain: getTypesForEIP712Domain({ domain }),
+        ...parameters.types,
+      }
+
+      const domainSeperator = hashDomain({
+        domain,
+        types: types as Record<string, MessageTypeProperty[]>,
+      })
+      const messageHash = hashStruct({
+        data: message,
+        primaryType,
+        types: types as Record<string, MessageTypeProperty[]>,
+      })
+
+      const { r, s, v } = await ledger.signEIP712HashedMessage(
+        derivationPath,
+        domainSeperator,
+        messageHash
+      )
+
+      return serializeSignature({
+        r: ensureLeading0x(r),
+        s: ensureLeading0x(s),
+        v: BigInt(v),
+      })
     },
   })
 

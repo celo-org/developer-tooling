@@ -12,9 +12,10 @@ import chalk from 'chalk'
 import net from 'net'
 import Web3 from 'web3'
 import { CustomFlags } from './utils/command'
-import { getNodeUrl } from './utils/config'
+import { getDefaultDerivationPath, getNodeUrl } from './utils/config'
 import { getFeeCurrencyContractWrapper } from './utils/fee-currency'
 import { requireNodeIsSynced } from './utils/helpers'
+import { reportUsageStatisticsIfTelemetryEnabled } from './utils/telemetry'
 
 export abstract class BaseCommand extends Command {
   static flags: FlagInput = {
@@ -69,6 +70,12 @@ export abstract class BaseCommand extends Command {
       exclusive: ['ledgerCustomAddresses'],
       description: 'If --useLedger is set, this will get the first N addresses for local signing',
     }),
+    ledgerLiveMode: Flags.boolean({
+      dependsOn: ['useLedger'],
+      default: false,
+      description:
+        'When set, the 4th postion of the derivation path will be iterated over instead of the 5th. This is useful to use same address on you Ledger with celocli as you do on Ledger Live',
+    }),
     ledgerCustomAddresses: Flags.string({
       dependsOn: ['useLedger'],
       default: '[0]',
@@ -113,12 +120,7 @@ export abstract class BaseCommand extends Command {
 
   async getWeb3() {
     if (!this._web3) {
-      const res = await this.parse()
-      const nodeUrl = (res.flags && res.flags.node) || getNodeUrl(this.config.configDir)
-      this._web3 =
-        nodeUrl && nodeUrl.endsWith('.ipc')
-          ? new Web3(new Web3.providers.IpcProvider(nodeUrl, net))
-          : new Web3(nodeUrl)
+      this._web3 = await this.newWeb3()
     }
     return this._web3
   }
@@ -169,29 +171,30 @@ export abstract class BaseCommand extends Command {
 
     if (res.flags.useLedger) {
       try {
+        const isLedgerLiveMode = res.flags.ledgerLiveMode
         // types seem to be suggesting 2 defaults but js is otherwise for TransportNodeHid
         const TransportNodeHid: typeof _TransportNodeHid =
           // @ts-expect-error
           _TransportNodeHid.default || _TransportNodeHid
         const transport = await TransportNodeHid.open('')
-        const derivationPathIndexes = res.raw.some(
+        const indicesToIterateOver: number[] = res.raw.some(
           (value) => (value as any).flag === 'ledgerCustomAddresses'
         )
           ? JSON.parse(res.flags.ledgerCustomAddresses)
           : Array.from(Array(res.flags.ledgerAddresses).keys())
 
-        console.log('Retrieving derivation Paths', derivationPathIndexes)
+        console.log('Retrieving derivation Paths', indicesToIterateOver)
         let ledgerConfirmation = AddressValidation.never
         if (res.flags.ledgerConfirmAddress) {
           ledgerConfirmation = AddressValidation.everyTransaction
         }
-        this._wallet = await newLedgerWalletWithSetup(
-          transport,
-          derivationPathIndexes,
-          undefined,
-          ledgerConfirmation,
-          await this.isCel2()
-        )
+        this._wallet = await newLedgerWalletWithSetup(transport, {
+          baseDerivationPath: getDefaultDerivationPath(this.config.configDir),
+          derivationPathIndexes: isLedgerLiveMode ? [0] : indicesToIterateOver,
+          changeIndexes: isLedgerLiveMode ? indicesToIterateOver : [0],
+          ledgerAddressValidation: ledgerConfirmation,
+          isCel2: await this.isCel2(),
+        })
       } catch (err) {
         console.log('Check if the ledger is connected and logged.')
         throw err
@@ -245,6 +248,8 @@ export abstract class BaseCommand extends Command {
 
   async finally(arg: Error | undefined): Promise<any> {
     try {
+      await reportUsageStatisticsIfTelemetryEnabled(this.config.configDir, !arg, this.id)
+
       if (arg) {
         if (!(arg instanceof CLIError)) {
           console.error(

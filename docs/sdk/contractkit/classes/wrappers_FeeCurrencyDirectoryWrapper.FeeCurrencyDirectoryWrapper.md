@@ -88,6 +88,8 @@ ___
 
 | Name | Type |
 | :------ | :------ |
+| `CurrencyConfigSet` | `ContractEvent`\<\{ `0`: `string` ; `1`: `string` ; `2`: `string` ; `intrinsicGas`: `string` ; `oracle`: `string` ; `token`: `string`  }\> |
+| `CurrencyRemoved` | `ContractEvent`\<`string`\> |
 | `OwnershipTransferred` | `ContractEvent`\<\{ `0`: `string` ; `1`: `string` ; `newOwner`: `string` ; `previousOwner`: `string`  }\> |
 | `allEvents` | (`options?`: `EventOptions`, `cb?`: `Callback`\<`EventLog`\>) => `EventEmitter` |
 
@@ -275,7 +277,7 @@ Contract getPastEvents
 
 | Name | Type |
 | :------ | :------ |
-| `event` | ``"OwnershipTransferred"`` \| ``"allEvents"`` |
+| `event` | ``"OwnershipTransferred"`` \| ``"allEvents"`` \| ``"CurrencyConfigSet"`` \| ``"CurrencyRemoved"`` |
 | `options` | `PastEventOptions` |
 
 #### Returns

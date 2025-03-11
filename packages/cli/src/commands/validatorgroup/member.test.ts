@@ -140,7 +140,7 @@ testWithAnvilL2('validatorgroup:member cmd', (web3: Web3) => {
             "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65",
             "0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc",
           ],
-          "membersUpdated": 1731689623,
+          "membersUpdated": 1738619402,
           "name": "cLabs",
           "nextCommission": "0",
           "nextCommissionBlock": "0",

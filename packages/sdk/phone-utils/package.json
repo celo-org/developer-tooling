@@ -1,6 +1,6 @@
 {
   "name": "@celo/phone-utils",
-  "version": "6.0.4-beta.0",
+  "version": "6.0.5",
   "description": "Celo phone utils",
   "author": "Celo",
   "license": "Apache-2.0",
@@ -8,7 +8,11 @@
   "types": "./lib/index.d.ts",
   "sideEffects": false,
   "homepage": "https://docs.celo.org/developer/tools",
-  "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/sdk/phone-utils",
+  "repository": {
+    "type": "git",
+    "url": "git+https:/github.com/celo-org/developer-tooling.git",
+    "directory": "packages/sdk/phone-utils"
+  },
   "scripts": {
     "prepublishOnly": "yarn build",
     "build": "yarn run --top-level tsc -b .",
@@ -22,13 +26,13 @@
     "lib/**/*"
   ],
   "dependencies": {
-    "@celo/base": "^7.0.0-beta.0",
-    "@celo/utils": "^8.0.0-beta.0",
+    "@celo/base": "^7.0.1",
+    "@celo/utils": "^8.0.1",
     "@types/country-data": "^0.0.0",
     "@types/google-libphonenumber": "^7.4.23",
     "@types/node": "^18.7.16",
     "country-data": "^0.0.31",
-    "fp-ts": "2.1.1",
+    "fp-ts": "2.16.9",
     "google-libphonenumber": "^3.2.27",
     "io-ts": "2.0.1",
     "web3-utils": "^1.10.0"

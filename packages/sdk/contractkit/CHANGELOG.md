@@ -1,5 +1,143 @@
 # @celo/contractkit
 
+## 9.0.1
+
+### Patch Changes
+
+- [#497](https://github.com/celo-org/developer-tooling/pull/497) [`79cd947`](https://github.com/celo-org/developer-tooling/commit/79cd94725582be0c62133e98b922d19ed9c0b5de) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - chore: package.json link fixes
+
+- [#492](https://github.com/celo-org/developer-tooling/pull/492) [`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Bump dependncies up
+
+- [#510](https://github.com/celo-org/developer-tooling/pull/510) [`0d307db`](https://github.com/celo-org/developer-tooling/commit/0d307db42f4c4a221c8a30682cddc99f2012c2e2) Thanks [@shazarre](https://github.com/shazarre)! - Expose `sendValidatorPayment` methods for `EpochManager` contract wrapper
+
+- [#517](https://github.com/celo-org/developer-tooling/pull/517) [`ce6a493`](https://github.com/celo-org/developer-tooling/commit/ce6a493ab6c82893595cde6a8ee9485d9bc9e033) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Bump abis to latest
+
+- Updated dependencies [[`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733), [`79cd947`](https://github.com/celo-org/developer-tooling/commit/79cd94725582be0c62133e98b922d19ed9c0b5de), [`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733), [`07c4c78`](https://github.com/celo-org/developer-tooling/commit/07c4c7854f419dd07fbf09fe966fb5b378a139d1)]:
+  - @celo/utils@8.0.1
+  - @celo/base@7.0.1
+  - @celo/wallet-local@7.0.0
+  - @celo/connect@6.1.1
+
+## 9.0.1-beta.2
+
+### Patch Changes
+
+- [#517](https://github.com/celo-org/developer-tooling/pull/517) [`ce6a493`](https://github.com/celo-org/developer-tooling/commit/ce6a493ab6c82893595cde6a8ee9485d9bc9e033) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Bump abis to latest
+
+## 9.0.1-beta.1
+
+### Patch Changes
+
+- [#510](https://github.com/celo-org/developer-tooling/pull/510) [`0d307db`](https://github.com/celo-org/developer-tooling/commit/0d307db42f4c4a221c8a30682cddc99f2012c2e2) Thanks [@shazarre](https://github.com/shazarre)! - Expose `sendValidatorPayment` methods for `EpochManager` contract wrapper
+
+- Updated dependencies []:
+  - @celo/wallet-local@7.0.0-beta.1
+
+## 9.0.1-beta.0
+
+### Patch Changes
+
+- [#497](https://github.com/celo-org/developer-tooling/pull/497) [`79cd947`](https://github.com/celo-org/developer-tooling/commit/79cd94725582be0c62133e98b922d19ed9c0b5de) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - chore: package.json link fixes
+
+- [#492](https://github.com/celo-org/developer-tooling/pull/492) [`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Bump dependncies up
+
+- Updated dependencies [[`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733), [`79cd947`](https://github.com/celo-org/developer-tooling/commit/79cd94725582be0c62133e98b922d19ed9c0b5de), [`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733), [`07c4c78`](https://github.com/celo-org/developer-tooling/commit/07c4c7854f419dd07fbf09fe966fb5b378a139d1)]:
+  - @celo/utils@8.0.1-beta.0
+  - @celo/base@7.0.1-beta.0
+  - @celo/wallet-local@7.0.0-beta.0
+  - @celo/connect@6.1.1-beta.0
+
+## 9.0.0
+
+### Major Changes
+
+- [#340](https://github.com/celo-org/developer-tooling/pull/340) [`33ad4aa`](https://github.com/celo-org/developer-tooling/commit/33ad4aaf6b9edc33d1ce19833dbea626798cfb88) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Removes all exports under the lib/identity folder. These have been move to a new @celo/metadata-claims package and should be imported from there.
+
+  Note that folder structure is also flattened slightly. so replace `@celo/contractkit/lib/identity/claims/` with `@celo/metadata-claims/lib/`
+
+  example
+
+  ```diff
+  - import { createAccountClaim } from '@celo/contractkit/lib/identity/claims/account'
+  + import { createAccountClaim } from '@celo/metadata-claims/lib/account'
+  ```
+
+  ```diff
+  - import { ContractKit, IdentityMetadataWrapper, newKitFromWeb3 } from '@celo/contractkit'
+  - import { ClaimTypes } from '@celo/contractkit/lib/identity'
+  + import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
+  + import { ClaimTypes, IdentityMetadataWrapper } from '@celo/metadata-claims'
+
+  ```
+
+  Note that Contractkit is Not a dependency. Instead when using `IdentityMetadataWrapper` you should make an object that satisfis the `AccountMetadataSignerGetters` type
+
+  ```typescript
+  import { AccountMetadataSignerGetters } from '@celo/metadata-claims/lib/types'
+  ```
+
+  using viem it would be like
+
+  ```typescript
+  const accountsMetaDataSignerGetters: AccountMetadataSignerGetters = {
+    isAccount: async (address: string) => accounts.read.isAccount([address as Address]),
+    getValidatorSigner: async (address: string) =>
+      accounts.read.getValidatorSigner([address as Address]),
+    getVoteSigner: async (address: string) =>
+      accounts.read.getValidatorSigner([address as Address]),
+    getAttestationSigner: async (address: string) =>
+      accounts.read.getValidatorSigner([address as Address]),
+  }
+  ```
+
+### Minor Changes
+
+- [#447](https://github.com/celo-org/developer-tooling/pull/447) [`7bc05c2`](https://github.com/celo-org/developer-tooling/commit/7bc05c219c7c3bbb764b4741595c57da523bb388) Thanks [@shazarre](https://github.com/shazarre)! - Exposes EpochManager.getElectedSigners contract method
+
+- [`76045eb`](https://github.com/celo-org/developer-tooling/commit/76045ebff0df9c1c9fa75121dab4e910c9026976) Thanks [@shazarre](https://github.com/shazarre)! - ValidatorsWrapper: add registerValidatorNoBls to allow registration without BLS keys which are not supported in L2
+
+### Patch Changes
+
+- [#463](https://github.com/celo-org/developer-tooling/pull/463) [`eba89a3`](https://github.com/celo-org/developer-tooling/commit/eba89a3102706cfe6492b0dc44f583a36d320a15) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Add GovernanceSlasher to RegisteredContractsEnum
+
+- [#467](https://github.com/celo-org/developer-tooling/pull/467) [`43e8474`](https://github.com/celo-org/developer-tooling/commit/43e8474ecd245af3ec1e3d28f45d2de211e481e2) Thanks [@shazarre](https://github.com/shazarre)! - fix: add transferOwnership() to proxy abi list
+
+- [#446](https://github.com/celo-org/developer-tooling/pull/446) [`42d091f`](https://github.com/celo-org/developer-tooling/commit/42d091fbc2ab71ce4ec2fb5c57ca266a20a96b6e) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Bump @celo/abis-12
+
+- [#480](https://github.com/celo-org/developer-tooling/pull/480) [`b83d8c4`](https://github.com/celo-org/developer-tooling/commit/b83d8c4bd34feebdc4994dbbae198a1aa5b7eb34) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Recommended node version is now node 20
+
+- [#455](https://github.com/celo-org/developer-tooling/pull/455) [`36c4369`](https://github.com/celo-org/developer-tooling/commit/36c436980583396ca407fef511942c9a77279470) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Mark contract wrapper methods that will not work on L2 because solidity contracts have onlyL1 modifier as deprecated.
+
+  | Deprecated Contract / Method                 | Replacement or none                       |
+  | -------------------------------------------- | ----------------------------------------- |
+  | Validators#registerValidator                 | Validators#registerValidatorNoBLS         |
+  | BlockchainParams#getEpochNumberOfBlock       | EpochManager#getEpochNumberOfBlock        |
+  | BlockchainParams#getFirstBlockNumberForEpoch | EpochManager#getFirstBlockAtEpoch         |
+  | Election#getCurrentValidatorSigners          | EpochManager#getElectedSigners            |
+  | Election#getGroupEpochRewards                | Election#getGroupEpochRewardsBasedOnScore |
+  | GovernanceSlasher#slash                      | GovernanceSlasher#slashL2                 |
+  | DoubleSigningSlasher                         | X                                         |
+  | DowntimeSlasher                              | X                                         |
+
+- [#400](https://github.com/celo-org/developer-tooling/pull/400) [`38fe4d0`](https://github.com/celo-org/developer-tooling/commit/38fe4d018d1b9ed5954a17501bdaa59b0aeec2f2) Thanks [@shazarre](https://github.com/shazarre)! - Renames `getElected` and its usages to `getElectedAccounts` for `EpochManagerWrapper`
+
+- [#456](https://github.com/celo-org/developer-tooling/pull/456) [`d5c9204`](https://github.com/celo-org/developer-tooling/commit/d5c920491b2b6efec5f4637a4343bfb6f606c56f) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Backwards compat for some methods using epoch's block numbers
+
+- Updated dependencies [[`c4b9c6d`](https://github.com/celo-org/developer-tooling/commit/c4b9c6d60bf938950007a67df4e7c8ec35066fb3), [`d988d31`](https://github.com/celo-org/developer-tooling/commit/d988d317582daed57bf05a4c4d9d087e5e732f0d), [`4ef76eb`](https://github.com/celo-org/developer-tooling/commit/4ef76eb174454f60304080d0ef63a859cd8d931b), [`26b9779`](https://github.com/celo-org/developer-tooling/commit/26b9779071ecb0283644412587d5a6d8bd6fd5a0), [`fb08485`](https://github.com/celo-org/developer-tooling/commit/fb08485ae337e796a442b781632ae2123c4f4444)]:
+  - @celo/wallet-local@6.0.4
+  - @celo/base@7.0.0
+  - @celo/utils@8.0.0
+  - @celo/connect@6.1.0
+
+## 9.0.0-beta.5
+
+### Patch Changes
+
+- [#480](https://github.com/celo-org/developer-tooling/pull/480) [`b83d8c4`](https://github.com/celo-org/developer-tooling/commit/b83d8c4bd34feebdc4994dbbae198a1aa5b7eb34) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Recommended node version is now node 20
+
+- Updated dependencies [[`26b9779`](https://github.com/celo-org/developer-tooling/commit/26b9779071ecb0283644412587d5a6d8bd6fd5a0)]:
+  - @celo/base@7.0.0-beta.1
+
 ## 9.0.0-beta.4
 
 ### Patch Changes

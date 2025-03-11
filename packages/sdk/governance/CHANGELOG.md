@@ -1,5 +1,61 @@
 # @celo/governance
 
+## 5.1.5
+
+### Patch Changes
+
+- [#497](https://github.com/celo-org/developer-tooling/pull/497) [`79cd947`](https://github.com/celo-org/developer-tooling/commit/79cd94725582be0c62133e98b922d19ed9c0b5de) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - chore: package.json link fixes
+
+- [#517](https://github.com/celo-org/developer-tooling/pull/517) [`ce6a493`](https://github.com/celo-org/developer-tooling/commit/ce6a493ab6c82893595cde6a8ee9485d9bc9e033) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Bump abis to latest
+
+- Updated dependencies [[`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733), [`79cd947`](https://github.com/celo-org/developer-tooling/commit/79cd94725582be0c62133e98b922d19ed9c0b5de), [`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733), [`0d307db`](https://github.com/celo-org/developer-tooling/commit/0d307db42f4c4a221c8a30682cddc99f2012c2e2), [`ce6a493`](https://github.com/celo-org/developer-tooling/commit/ce6a493ab6c82893595cde6a8ee9485d9bc9e033), [`07c4c78`](https://github.com/celo-org/developer-tooling/commit/07c4c7854f419dd07fbf09fe966fb5b378a139d1)]:
+  - @celo/utils@8.0.1
+  - @celo/base@7.0.1
+  - @celo/contractkit@9.0.1
+  - @celo/explorer@5.0.14
+  - @celo/connect@6.1.1
+
+## 5.1.5-beta.1
+
+### Patch Changes
+
+- [#517](https://github.com/celo-org/developer-tooling/pull/517) [`ce6a493`](https://github.com/celo-org/developer-tooling/commit/ce6a493ab6c82893595cde6a8ee9485d9bc9e033) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Bump abis to latest
+
+- Updated dependencies [[`ce6a493`](https://github.com/celo-org/developer-tooling/commit/ce6a493ab6c82893595cde6a8ee9485d9bc9e033)]:
+  - @celo/contractkit@9.0.1-beta.2
+
+## 5.1.5-beta.0
+
+### Patch Changes
+
+- [#497](https://github.com/celo-org/developer-tooling/pull/497) [`79cd947`](https://github.com/celo-org/developer-tooling/commit/79cd94725582be0c62133e98b922d19ed9c0b5de) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - chore: package.json link fixes
+
+- Updated dependencies [[`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733), [`79cd947`](https://github.com/celo-org/developer-tooling/commit/79cd94725582be0c62133e98b922d19ed9c0b5de), [`2e02d94`](https://github.com/celo-org/developer-tooling/commit/2e02d943adb859b3a5b71432d1d232f3dca44733), [`07c4c78`](https://github.com/celo-org/developer-tooling/commit/07c4c7854f419dd07fbf09fe966fb5b378a139d1)]:
+  - @celo/utils@8.0.1-beta.0
+  - @celo/base@7.0.1-beta.0
+  - @celo/contractkit@9.0.1-beta.0
+  - @celo/explorer@5.0.14-beta.0
+  - @celo/connect@6.1.1-beta.0
+
+## 5.1.4
+
+### Patch Changes
+
+- [#463](https://github.com/celo-org/developer-tooling/pull/463) [`eba89a3`](https://github.com/celo-org/developer-tooling/commit/eba89a3102706cfe6492b0dc44f583a36d320a15) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Add GovernanceSlasher to RegisteredContractsEnum
+
+- [#421](https://github.com/celo-org/developer-tooling/pull/421) [`7d42a05`](https://github.com/celo-org/developer-tooling/commit/7d42a059f1effa8953ee1fe2e66f7e26bca73181) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - minor update to inquirer lib
+
+- [#446](https://github.com/celo-org/developer-tooling/pull/446) [`42d091f`](https://github.com/celo-org/developer-tooling/commit/42d091fbc2ab71ce4ec2fb5c57ca266a20a96b6e) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Bump @celo/abis-12
+
+- [#421](https://github.com/celo-org/developer-tooling/pull/421) [`7d42a05`](https://github.com/celo-org/developer-tooling/commit/7d42a059f1effa8953ee1fe2e66f7e26bca73181) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Fix being unable to use 08 and mento contracts with proposal builder
+
+- Updated dependencies [[`eba89a3`](https://github.com/celo-org/developer-tooling/commit/eba89a3102706cfe6492b0dc44f583a36d320a15), [`43e8474`](https://github.com/celo-org/developer-tooling/commit/43e8474ecd245af3ec1e3d28f45d2de211e481e2), [`7bc05c2`](https://github.com/celo-org/developer-tooling/commit/7bc05c219c7c3bbb764b4741595c57da523bb388), [`33ad4aa`](https://github.com/celo-org/developer-tooling/commit/33ad4aaf6b9edc33d1ce19833dbea626798cfb88), [`42d091f`](https://github.com/celo-org/developer-tooling/commit/42d091fbc2ab71ce4ec2fb5c57ca266a20a96b6e), [`b83d8c4`](https://github.com/celo-org/developer-tooling/commit/b83d8c4bd34feebdc4994dbbae198a1aa5b7eb34), [`36c4369`](https://github.com/celo-org/developer-tooling/commit/36c436980583396ca407fef511942c9a77279470), [`4ef76eb`](https://github.com/celo-org/developer-tooling/commit/4ef76eb174454f60304080d0ef63a859cd8d931b), [`76045eb`](https://github.com/celo-org/developer-tooling/commit/76045ebff0df9c1c9fa75121dab4e910c9026976), [`38fe4d0`](https://github.com/celo-org/developer-tooling/commit/38fe4d018d1b9ed5954a17501bdaa59b0aeec2f2), [`26b9779`](https://github.com/celo-org/developer-tooling/commit/26b9779071ecb0283644412587d5a6d8bd6fd5a0), [`fb08485`](https://github.com/celo-org/developer-tooling/commit/fb08485ae337e796a442b781632ae2123c4f4444), [`d5c9204`](https://github.com/celo-org/developer-tooling/commit/d5c920491b2b6efec5f4637a4343bfb6f606c56f)]:
+  - @celo/contractkit@9.0.0
+  - @celo/base@7.0.0
+  - @celo/utils@8.0.0
+  - @celo/connect@6.1.0
+  - @celo/explorer@5.0.13
+
 ## 5.1.4-beta.3
 
 ### Patch Changes

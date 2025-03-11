@@ -40,7 +40,7 @@ export default class Approve extends BaseCommand {
       exclusive: ['useSafe'],
     }),
     useSafe: Flags.boolean({
-      description: 'True means the request will be sent through safe.',
+      description: 'True means the request will be sent through SAFE (http://safe.global)',
       exclusive: ['useMultiSig'],
     }),
     hotfix: Flags.string({

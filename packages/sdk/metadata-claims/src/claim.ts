@@ -1,3 +1,4 @@
+import { UrlType } from '@celo/utils/lib/io'
 import { hashMessage } from '@celo/utils/lib/signatureUtils'
 import * as t from 'io-ts'
 import { AccountClaim, AccountClaimType } from './account'
@@ -36,6 +37,15 @@ const StorageClaimType = t.type({
   filteredDataPaths: t.string,
 })
 
+/**
+ * @deprecated Not used anymore, here only for backwards compatibility with old metadata files
+ */
+const AttestationServiceUrlClaimType = t.type({
+  type: t.literal(ClaimTypes.ATTESTATION_SERVICE_URL),
+  timestamp: TimestampType,
+  url: UrlType,
+})
+
 export const ClaimType = t.union([
   AccountClaimType,
   DomainClaimType,
@@ -43,6 +53,7 @@ export const ClaimType = t.union([
   KeybaseClaimType,
   NameClaimType,
   StorageClaimType,
+  AttestationServiceUrlClaimType,
 ])
 
 export const SignedClaimType = t.type({
@@ -55,6 +66,12 @@ export type DomainClaim = t.TypeOf<typeof DomainClaimType>
 export type RpcUrlClaim = t.TypeOf<typeof RpcUrlClaimType>
 export type NameClaim = t.TypeOf<typeof NameClaimType>
 export type StorageClaim = t.TypeOf<typeof StorageClaimType>
+
+/**
+ * @deprecated Not used anymore, here only for backwards compatibility with old metadata files
+ */
+type AttestationServiceUrlClaim = t.TypeOf<typeof AttestationServiceUrlClaimType>
+
 export type Claim =
   | DomainClaim
   | RpcUrlClaim
@@ -62,9 +79,12 @@ export type Claim =
   | NameClaim
   | AccountClaim
   | StorageClaim
+  | AttestationServiceUrlClaim
 
 export type ClaimPayload<K extends ClaimTypes> = K extends typeof ClaimTypes.DOMAIN
   ? DomainClaim
+  : K extends typeof ClaimTypes.ATTESTATION_SERVICE_URL
+  ? AttestationServiceUrlClaim
   : K extends typeof ClaimTypes.RPC_URL
   ? RpcUrlClaim
   : K extends typeof ClaimTypes.NAME

@@ -34,7 +34,7 @@
 
 #### Defined in
 
-[cryptographic-utils/src/commentEncryption.ts:119](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/commentEncryption.ts#L119)
+[cryptographic-utils/src/commentEncryption.ts:116](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/commentEncryption.ts#L116)
 
 ## Functions
 
@@ -61,7 +61,7 @@ Decrypted comment if can decrypt, otherwise comment.
 
 #### Defined in
 
-[cryptographic-utils/src/commentEncryption.ts:108](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/commentEncryption.ts#L108)
+[cryptographic-utils/src/commentEncryption.ts:105](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/commentEncryption.ts#L105)
 
 ___
 
@@ -115,7 +115,7 @@ base64 string of encrypted comment if can encrypt, otherwise comment.
 
 #### Defined in
 
-[cryptographic-utils/src/commentEncryption.ts:73](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/commentEncryption.ts#L73)
+[cryptographic-utils/src/commentEncryption.ts:70](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/commentEncryption.ts#L70)
 
 ___
 

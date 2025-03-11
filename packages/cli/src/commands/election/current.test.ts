@@ -1,8 +1,9 @@
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newRegistry } from '@celo/abis/web3/Registry'
+import { newKitFromWeb3, NULL_ADDRESS, REGISTRY_CONTRACT_ADDRESS } from '@celo/contractkit'
 import { WrapperCache } from '@celo/contractkit/lib/contract-cache'
 import { ElectionWrapper } from '@celo/contractkit/lib/wrappers/Election'
 import { ValidatorsWrapper } from '@celo/contractkit/lib/wrappers/Validators'
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { asCoreContractsOwner, testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
@@ -18,6 +19,14 @@ afterEach(async () => {
 })
 
 testWithAnvilL1('election:current cmd', async (web3: Web3) => {
+  beforeEach(async () => {
+    const registryContract = newRegistry(web3, REGISTRY_CONTRACT_ADDRESS)
+
+    await asCoreContractsOwner(web3, async (from) => {
+      await registryContract.methods.setAddressFor('EpochManager', NULL_ADDRESS).send({ from })
+    })
+  })
+
   it('shows list with no --valset provided', async () => {
     const kit = newKitFromWeb3(web3)
     const [

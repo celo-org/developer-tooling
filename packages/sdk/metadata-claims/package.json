@@ -1,9 +1,13 @@
 {
   "name": "@celo/metadata-claims",
-  "version": "1.0.0-beta.2",
+  "version": "1.0.1",
   "author": "cLabs",
   "license": "Apache-2.0",
-  "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/sdk/metadata-claims",
+  "repository": {
+    "type": "git",
+    "url": "git+https:/github.com/celo-org/developer-tooling.git",
+    "directory": "packages/sdk/metadata-claims"
+  },
   "keywords": [
     "celo",
     "identity",
@@ -24,16 +28,16 @@
     "lint": "yarn run --top-level eslint -c .eslintrc.js "
   },
   "dependencies": {
-    "@celo/base": "^7.0.0-beta.0",
-    "@celo/utils": "^8.0.0-beta.0",
+    "@celo/base": "^7.0.1",
+    "@celo/utils": "^8.0.1",
     "cross-fetch": "3.1.5",
-    "fp-ts": "2.1.1",
+    "fp-ts": "2.16.9",
     "io-ts": "2.0.1"
   },
   "devDependencies": {
     "@celo/celo-devchain": "^7.0.0",
     "@celo/contractkit": "workspace:^",
-    "@celo/dev-utils": "0.0.7-beta.2",
+    "@celo/dev-utils": "0.0.8",
     "@celo/odis-identifiers": "^1.0.1",
     "@celo/typescript": "workspace:^",
     "@types/node": "18.7.6",

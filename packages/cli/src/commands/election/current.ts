@@ -28,9 +28,9 @@ export default class ElectionCurrent extends BaseCommand {
     const kit = await this.getKit()
     const res = await this.parse(ElectionCurrent)
     ux.action.start('Fetching currently elected Validators')
-    const election = await kit.contracts.getElection()
     const validators = await kit.contracts.getValidators()
-    const signers = await election.getCurrentValidatorSigners()
+    const signers = await this.getSigners()
+
     if (res.flags.valset) {
       const validatorList = await Promise.all(
         signers.map(async (addr) => {
@@ -55,5 +55,20 @@ export default class ElectionCurrent extends BaseCommand {
         res.flags
       )
     }
+  }
+
+  private async getSigners() {
+    const kit = await this.getKit()
+
+    // TODO(L2): remove this check once migrated
+    if (!(await this.isCel2())) {
+      const election = await kit.contracts.getElection()
+
+      return await election.getCurrentValidatorSigners()
+    }
+
+    const epochManagerWrapper = await kit.contracts.getEpochManager()
+
+    return await epochManagerWrapper.getElectedSigners()
   }
 }

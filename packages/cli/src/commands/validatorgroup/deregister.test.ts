@@ -106,11 +106,11 @@ testWithAnvilL2('validatorgroup:deregister cmd', (web3: Web3) => {
           ]
         `)
         const validators = await kit.contracts.getValidators()
-        expect(validators.isValidatorGroup(groupAddress)).resolves.toBe(true)
+        await expect(validators.isValidatorGroup(groupAddress)).resolves.toBe(true)
       })
     })
     describe('when wait duration for unlocking is over', () => {
-      it.only('deregisters the group', async () => {
+      it('deregisters the group', async () => {
         const validators = await kit.contracts.getValidators()
         const group = await validators.getValidatorGroup(groupAddress)
         expect(group.members).toHaveLength(0)
@@ -123,6 +123,30 @@ testWithAnvilL2('validatorgroup:deregister cmd', (web3: Web3) => {
         ).resolves.toBeUndefined()
         expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
           [
+            [
+              "Running Checks:",
+            ],
+            [
+              "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is Signer or registered Account ",
+            ],
+            [
+              "   ✔  Signer can sign Validator Txs ",
+            ],
+            [
+              "   ✔  Signer account is ValidatorGroup ",
+            ],
+            [
+              "   ✔  0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb is Validator ",
+            ],
+            [
+              "All checks passed",
+            ],
+            [
+              "SendTransaction: removeMember",
+            ],
+            [
+              "txHash: 0xtxhash",
+            ],
             [
               "Running Checks:",
             ],

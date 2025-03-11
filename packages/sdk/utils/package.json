@@ -1,6 +1,6 @@
 {
   "name": "@celo/utils",
-  "version": "8.0.0-beta.0",
+  "version": "8.0.1",
   "description": "Celo common utils",
   "author": "Celo",
   "license": "Apache-2.0",
@@ -8,7 +8,11 @@
   "types": "./lib/index.d.ts",
   "sideEffects": false,
   "homepage": "https://docs.celo.org/developer/tools",
-  "repository": "https://github.com/celo-org/developer-tooling/tree/master/packages/sdk/utils",
+  "repository": {
+    "type": "git",
+    "url": "git+https:/github.com/celo-org/developer-tooling.git",
+    "directory": "packages/sdk/utils"
+  },
   "scripts": {
     "prepublishOnly": "yarn build",
     "build": "yarn run --top-level tsc -b .",
@@ -22,16 +26,16 @@
     "lib/**/*"
   ],
   "dependencies": {
-    "@celo/base": "^7.0.0-beta.0",
+    "@celo/base": "^7.0.1",
     "@ethereumjs/rlp": "^5.0.2",
     "@ethereumjs/util": "8.0.5",
-    "@noble/ciphers": "0.4.1",
+    "@noble/ciphers": "1.1.3",
     "@noble/curves": "1.3.0",
     "@noble/hashes": "1.3.3",
     "@types/bn.js": "^5.1.0",
     "@types/node": "^18.7.16",
     "bignumber.js": "^9.0.0",
-    "fp-ts": "2.1.1",
+    "fp-ts": "2.16.9",
     "io-ts": "2.0.1",
     "web3-eth-abi": "1.10.4",
     "web3-utils": "1.10.4"
