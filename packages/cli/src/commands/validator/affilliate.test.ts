@@ -87,6 +87,8 @@ testWithAnvilL2('validator:affiliate', (web3: Web3) => {
     const logMock = jest.spyOn(console, 'log')
     const [_, nonSignerAccount] = await web3.eth.getAccounts()
 
+    logMock.mockClear()
+
     await expect(
       testLocallyWithWeb3Node(
         ValidatorAffiliate,
