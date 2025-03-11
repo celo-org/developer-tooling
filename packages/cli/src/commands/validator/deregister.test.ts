@@ -199,4 +199,81 @@ testWithAnvilL2('validator:deregister', (web3: Web3) => {
     },
     EXTRA_LONG_TIMEOUT_MS
   )
+
+  it(
+    'succeeds if not a mamber of any group',
+    async () => {
+      const [_, notAffiliatedValidator] = await web3.eth.getAccounts()
+      const groupAtSetup = await validatorContract.getValidatorGroup(groupAddress, false)
+
+      // Sanity check
+      expect(groupAtSetup.members).not.toContain(notAffiliatedValidator)
+
+      // Register, but not affiliate
+      await testLocallyWithWeb3Node(
+        Lock,
+        ['--from', notAffiliatedValidator, '--value', '10000000000000000000000'],
+        web3
+      )
+      await testLocallyWithWeb3Node(
+        ValidatorRegister,
+        [
+          '--from',
+          notAffiliatedValidator,
+          '--ecdsaKey',
+          await addressToPublicKey(notAffiliatedValidator, web3.eth.sign),
+          '--yes',
+        ],
+        web3
+      )
+
+      const { duration } = await validatorContract.getValidatorLockedGoldRequirements()
+      const { lastRemovedFromGroupTimestamp } =
+        await validatorContract.getValidatorMembershipHistoryExtraData(account)
+      // travel in the evm
+      await timeTravel(duration.multipliedBy(2).toNumber(), web3)
+      // time travel in node land
+      const jestTime = lastRemovedFromGroupTimestamp * 1000
+      const futureTime = jestTime + duration.multipliedBy(2000).toNumber()
+      global.Date.now = jest.fn(() => futureTime)
+
+      const logMock = jest.spyOn(console, 'log')
+      logMock.mockClear()
+
+      await testLocallyWithWeb3Node(ValidatorDeRegister, ['--from', notAffiliatedValidator], web3)
+
+      expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
+        [
+          [
+            "Running Checks:",
+          ],
+          [
+            "   ✔  0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb is Signer or registered Account ",
+          ],
+          [
+            "   ✔  Signer can sign Validator Txs ",
+          ],
+          [
+            "   ✔  Signer account is Validator ",
+          ],
+          [
+            "   ✔  Account isn't a member of a validator group ",
+          ],
+          [
+            "   ✔  Enough time has passed since the account was removed from a validator group? ",
+          ],
+          [
+            "All checks passed",
+          ],
+          [
+            "SendTransaction: deregister",
+          ],
+          [
+            "txHash: 0xtxhash",
+          ],
+        ]
+      `)
+    },
+    EXTRA_LONG_TIMEOUT_MS
+  )
 })
