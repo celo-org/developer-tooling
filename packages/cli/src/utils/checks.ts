@@ -93,21 +93,21 @@ class CheckBuilder {
       const validatorsContract = await getValidatorsContract(await this.getClient())
 
       if (this.signer) {
-        const account = await (
-          await this.getClient()
-        ).readContract({
-          address: await resolveAddress(await this.getClient(), 'Accounts'),
-          abi: accountsABI,
-          functionName: 'signerToAccount',
-          args: [this.signer],
-        })
+        try {
+          const account = await (
+            await this.getClient()
+          ).readContract({
+            address: await resolveAddress(await this.getClient(), 'Accounts'),
+            abi: accountsABI,
+            functionName: 'signerToAccount',
+            args: [this.signer],
+          })
 
-        return f(validatorsContract, this.signer, account, this) as Resolve<A>
-      } else {
-        // TODO fix
-        // @ts-ignore(fix)
-        return f(validatorsContract, '' as StrongAddress, '', this) as Resolve<A>
+          return f(validatorsContract, this.signer, account, this) as Resolve<A>
+        } catch (_) {}
       }
+
+      return f(validatorsContract, NULL_ADDRESS, NULL_ADDRESS, this) as Resolve<A>
     }
   }
 
@@ -298,12 +298,17 @@ class CheckBuilder {
   canSignValidatorTxs = () =>
     this.addCheck(
       'Signer can sign Validator Txs',
-      this.withAccounts((accounts) =>
-        accounts.read
-          .validatorSignerToAccount([this.signer!])
-          .then(() => true)
-          .catch(() => false)
-      )
+      this.withAccounts(async (accounts) => {
+        // TODO ok so the error doesn't originate here!!!
+        try {
+          // This reverts if account cannot sign validator txs
+          await accounts.read.validatorSignerToAccount([this.signer!])
+
+          return true
+        } catch (_) {
+          return false
+        }
+      })
     )
 
   signerAccountIsValidator = () =>

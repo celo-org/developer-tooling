@@ -1,4 +1,4 @@
-import { StrongAddress } from '@celo/base'
+import { NULL_ADDRESS, StrongAddress } from '@celo/base'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { ValidatorsWrapper } from '@celo/contractkit/lib/wrappers/Validators'
 import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
@@ -81,5 +81,42 @@ testWithAnvilL2('validator:affiliate', (web3: Web3) => {
     `)
     const validator = await validatorContract.getValidator(account)
     expect(validator.affiliation).toEqual(groupAddress)
+  })
+
+  it('fails when not a validator signer', async () => {
+    const logMock = jest.spyOn(console, 'log')
+    const [_, nonSignerAccount] = await web3.eth.getAccounts()
+
+    await expect(
+      testLocallyWithWeb3Node(
+        ValidatorAffiliate,
+        ['--from', nonSignerAccount, groupAddress, '--yes'],
+        web3
+      )
+    ).rejects.toMatchInlineSnapshot(`[Error: Some checks didn't pass!]`)
+
+    expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
+      [
+        [
+          "Running Checks:",
+        ],
+        [
+          "   ✘  0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb is Signer or registered Account 0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb is not a signer or registered as an account. Try authorizing as a signer or running account:register.",
+        ],
+        [
+          "   ✘  Signer can sign Validator Txs ",
+        ],
+        [
+          "   ✘  Signer account is Validator ",
+        ],
+        [
+          "   ✔  0x70997970C51812dc3A010C7d01b50e0d17dc79C8 is ValidatorGroup ",
+        ],
+      ]
+    `)
+
+    // Make sure no affiliation happened
+    const validator = await validatorContract.getValidator(account)
+    expect(validator.affiliation).toEqual(NULL_ADDRESS)
   })
 })
