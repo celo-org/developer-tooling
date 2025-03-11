@@ -2,7 +2,6 @@ import { accountsABI, governanceABI, lockedGoldABI, validatorsABI } from '@celo/
 import { getContract, GetContractReturnType, PublicClient } from 'viem'
 import { resolveAddress } from './address-resolver'
 
-// TODO a bit of redundancy here for typing, find a way to generalise this
 export const getAccountsContract = async (client: PublicClient): Promise<AccountsContract> => {
   return getContract({
     address: await resolveAddress(client, 'Accounts'),
@@ -35,7 +34,6 @@ export const getValidatorsContract = async (client: PublicClient): Promise<Valid
   })
 }
 
-// TODO a way to generalise this?
 export type AccountsContract = GetContractReturnType<typeof accountsABI, PublicClient>
 export type GovernanceContract = GetContractReturnType<typeof governanceABI, PublicClient>
 export type LockedGoldContract = GetContractReturnType<typeof lockedGoldABI, PublicClient>

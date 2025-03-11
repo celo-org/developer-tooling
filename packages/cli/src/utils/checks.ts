@@ -463,7 +463,7 @@ class CheckBuilder {
     })
   }
 
-  private getStableTokenContractName(stable: StableToken): string {
+  private getStableTokenContractName(stable: StableToken) {
     switch (stable) {
       case StableToken.cUSD:
         return 'StableToken'

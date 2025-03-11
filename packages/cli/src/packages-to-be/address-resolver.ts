@@ -6,10 +6,21 @@ export const REGISTRY_CONTRACT_ADDRESS = '0x000000000000000000000000000000000000
 
 const cache: Record<string, StrongAddress> = {}
 
-// TODO should use the enum for contract names?
+// When we need more contracts here we can either list them or fetch all values of an Enum,
+// but by abstracting the type we have flexibility and single point of change
+export type ContractName =
+  | 'Accounts'
+  | 'Governance'
+  | 'LockedGold'
+  | 'Validators'
+  | 'GoldToken'
+  | 'StableToken'
+  | 'StableTokenEUR'
+  | 'StableTokenBRL'
+
 export const resolveAddress = async (
   client: PublicClient,
-  contractName: string
+  contractName: ContractName
 ): Promise<StrongAddress> => {
   if (cache[contractName]) {
     return cache[contractName]
