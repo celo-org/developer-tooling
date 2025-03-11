@@ -7,7 +7,7 @@ on:
 jobs:
   upload:
     name: Upload executables to a specific @celo/celocli release
-    runs-on: [macos-latest]
+    runs-on: [ubuntu-latest]
     permissions:
       contents: write
       id-token: write
@@ -15,19 +15,23 @@ jobs:
       repository-projects: write
     if: contains(github.ref_name, 'celocli') == true
     steps:
-      # - name: Fetch secrets from AKeyless
-      #   id: fetch-secrets
-      #   uses: docker://us-west1-docker.pkg.dev/devopsre/akeyless-public/akeyless-action:latest
-      #   with:
-      #     access-id: p-kf9vjzruht6l
-      #     api-url: https://api.gateway.akeyless.celo-networks-dev.org
-      #     dynamic-secrets: '{"/dynamic-secrets/keys/github/homebrew-core/contents=write,pull_requests=write":"HOMEBREW_TOKEN"}'
+      - name: Get Token from Akeyless
+        id: get_token
+        uses: docker://us-west1-docker.pkg.dev/devopsre/akeyless-public/akeyless-action:latest
+        with:
+          api-url: https://api.gateway.akeyless.celo-networks-dev.org
+          access-id: p-kf9vjzruht6l
+          static-secrets: '{"/dynamic-secrets/keys/github/celo-homebrew/contents=write":"HOMEBREW_TOKEN"}'
 
       - name: Checkout Repo
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref_name }}
           fetch-tags: true
+
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
 
       - name: Checkout Homebrew Repo
         uses: actions/checkout@v4
@@ -66,14 +70,15 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo $version
 
-          commit=$(git rev-parse --short ${{ github.sha }})
+          # commit=$(git rev-parse --short ${{ github.sha }})
+          commit="ffdb836"
           echo "commit=$commit" >> "$GITHUB_OUTPUT"
           echo $commit
 
       - run: |
-          yarn oclif pack tarballs --tarball=${{ steps.setupVars.outputs.tarballPath }}
+          # yarn oclif pack tarballs --tarball=${{ steps.setupVars.outputs.tarballPath }}
           # yarn oclif pack tarballs --targets=darwin-x64 --tarball=${{ steps.setupVars.outputs.tarballPath }}
-          # gh release download -R celo-org/developer-tooling -D dist --clobber @celo/celocli@6.1.0
+          gh release download -R celo-org/developer-tooling -D dist @celo/celocli@6.1.0
           yarn run homebrew
           ls dist
           cat ./homebrew/Formula/celocli.rb
@@ -96,7 +101,7 @@ jobs:
         working-directory: packages/cli
 
       - name: Open pull-request on Homebrew repo
-        # if: ${{ env.HOMEBREW_TOKEN }}
+        if: ${{ env.HOMEBREW_TOKEN }}
         working-directory: packages/cli
         env:
           BOT_NAME: 'celo-org'
