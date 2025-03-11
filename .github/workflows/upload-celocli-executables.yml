@@ -15,14 +15,6 @@ jobs:
       repository-projects: write
     if: contains(github.ref_name, 'celocli') == true
     steps:
-      - name: Get Token from Akeyless
-        id: get_token
-        uses: docker://us-west1-docker.pkg.dev/devopsre/akeyless-public/akeyless-action:latest
-        with:
-          api-url: https://api.gateway.akeyless.celo-networks-dev.org
-          access-id: p-kf9vjzruht6l
-          static-secrets: '{"/dynamic-secrets/keys/github/celo-homebrew/contents=write":"HOMEBREW_TOKEN"}'
-
       - name: Checkout Repo
         uses: actions/checkout@v4
         with:
@@ -99,6 +91,14 @@ jobs:
       - run: brew cleanup
       - run: ./homebrew/scripts/test.sh
         working-directory: packages/cli
+
+      - name: Get Token from Akeyless
+        id: get_token
+        uses: docker://us-west1-docker.pkg.dev/devopsre/akeyless-public/akeyless-action:latest
+        with:
+          api-url: https://api.gateway.akeyless.celo-networks-dev.org
+          access-id: p-kf9vjzruht6l
+          static-secrets: '{"/dynamic-secrets/keys/github/celo-homebrew/contents=write":"HOMEBREW_TOKEN"}'
 
       - name: Open pull-request on Homebrew repo
         if: ${{ env.HOMEBREW_TOKEN }}
