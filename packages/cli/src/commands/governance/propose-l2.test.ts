@@ -191,7 +191,7 @@ testWithAnvilL2(
             '--from',
             accounts[0],
             '--descriptionURL',
-            'https://example.com',
+            'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
           ],
           web3
         )
@@ -255,7 +255,7 @@ testWithAnvilL2(
             '--for',
             multisigWithOneSigner,
             '--descriptionURL',
-            'https://dummyurl.com',
+            'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
           ],
           web3
         )
@@ -320,7 +320,7 @@ testWithAnvilL2(
             '--for',
             multisigWithTwoSigners,
             '--descriptionURL',
-            'https://dummyurl.com',
+            'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
           ],
           web3
         )
@@ -407,7 +407,7 @@ testWithAnvilL2(
               '--safeAddress',
               safeAddress,
               '--descriptionURL',
-              'https://dummyurl.com',
+              'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
             ],
             web3
           )
@@ -480,7 +480,7 @@ testWithAnvilL2(
               '--safeAddress',
               safeAddress,
               '--descriptionURL',
-              'https://dummyurl.com',
+              'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
             ],
             web3
           )
@@ -501,7 +501,7 @@ testWithAnvilL2(
                 '--safeAddress',
                 safeAddress,
                 '--descriptionURL',
-                'https://dummyurl.com',
+                'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
               ],
               web3
             )
@@ -548,7 +548,7 @@ testWithAnvilL2(
             '--from',
             accounts[0],
             '--descriptionURL',
-            'https://dummyurl.com',
+            'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
             '--force',
             '--noInfo',
           ],
@@ -595,7 +595,7 @@ testWithAnvilL2(
             '--from',
             accounts[0],
             '--descriptionURL',
-            'https://dummyurl.com',
+            'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
             '--force',
             '--noInfo',
           ],
@@ -638,6 +638,34 @@ testWithAnvilL2(
     )
 
     test(
+      'fails when descriptionURl is invalid',
+      async () => {
+        await expect(
+          testLocallyWithWeb3Node(
+            Propose,
+            [
+              '--from',
+              accounts[0],
+              '--deposit',
+              '0',
+              '--jsonTransactions',
+              './exampleProposal.json',
+              '--descriptionURL',
+              'https://github.com/suspicious-org/governance/blob/main/CGPs/cgp-123.md',
+            ],
+
+            web3
+          )
+        ).rejects.toThrowErrorMatchingInlineSnapshot(`
+          "Parsing --descriptionURL 
+          	\`https://github.com/suspicious-org/governance/blob/main/CGPs/cgp-123.md\` is not a valid descriptionURL, it must start with \`https://github.com/celo-org/governance/blob/main/CGPs/\`
+          See more help with --help"
+        `)
+      },
+      EXTRA_LONG_TIMEOUT_MS
+    )
+
+    test(
       'can submit empty proposal',
       async () => {
         await testLocallyWithWeb3Node(
@@ -650,7 +678,7 @@ testWithAnvilL2(
             '--jsonTransactions',
             './exampleProposal.json',
             '--descriptionURL',
-            'https://example.com',
+            'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
           ],
           web3
         )
@@ -673,7 +701,7 @@ testWithAnvilL2(
             '--jsonTransactions',
             './exampleProposal.json',
             '--descriptionURL',
-            'https://example.com',
+            'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
           ],
           web3
         )
@@ -699,7 +727,7 @@ testWithAnvilL2(
             '--jsonTransactions',
             './exampleProposal.json',
             '--descriptionURL',
-            'https://example.com',
+            'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
           ],
           web3
         )

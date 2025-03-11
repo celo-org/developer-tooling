@@ -21,12 +21,10 @@ enum HotfixApprovalType {
 }
 
 export default class Approve extends BaseCommand {
-  static description = 'Approve a dequeued governance proposal (or hotfix)'
+  static description =
+    'Approve a dequeued governance proposal (or hotfix). Only authorized approvers may use this command'
 
-  static aliases = ['governance:approve', 'governance:approvehotfix']
-
-  // Only authorized approvers need to know about this command.
-  static hidden = true
+  static aliases = ['governance:approvehotfix']
 
   static flags = {
     ...BaseCommand.flags,

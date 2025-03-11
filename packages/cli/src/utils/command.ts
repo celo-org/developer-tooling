@@ -101,6 +101,16 @@ const parseUrl: ParseFn<string> = async (input) => {
   }
 }
 
+const parseProposalDescriptionURL: ParseFn<string> = async (input) => {
+  const baseDescriptionURL = 'https://github.com/celo-org/governance/blob/main/CGPs/'
+  if (input.startsWith(baseDescriptionURL)) {
+    return input
+  }
+  throw new CLIError(
+    `\`${input}\` is not a valid descriptionURL, it must start with \`${baseDescriptionURL}\``
+  )
+}
+
 function parseArray<T>(parseElement: ParseFn<T>): ParseFn<T[]> {
   return async (input) => {
     const array = JSON.parse(input)
@@ -218,6 +228,11 @@ export const CustomFlags = {
     parse: parseWei,
     description: 'Token value without decimals',
     helpValue: '10000000000000000000000',
+  }),
+  proposalDescriptionURL: Flags.custom({
+    parse: parseProposalDescriptionURL,
+    description:
+      'A URL where further information about the proposal can be viewed. This needs to be a valid proposal URL on https://github.com/celo-org/governance',
   }),
 }
 
