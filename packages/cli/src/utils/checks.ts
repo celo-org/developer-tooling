@@ -371,20 +371,6 @@ class CheckBuilder {
       )
     )
 
-  meetsValidatorBalanceRequirements = (account: StrongAddress) =>
-    this.addCheck(`${account} has enough locked celo for registration`, async () => {
-      return meetsValidatorBalanceRequirements(await this.getClient(), account)
-    })
-
-  meetsValidatorGroupBalanceRequirements = (account: Address) =>
-    this.addCheck(
-      `${account} has enough locked celo for group registration`,
-      // TODO possibly another wrapper function could be called because we just need
-      // signerToAccount logic and not actual validators contract in this case
-      this.withValidators(async () =>
-        meetsValidatorGroupBalanceRequirements(await this.getClient(), account as StrongAddress)
-      )
-    )
   isNotSanctioned = (address: Address) => {
     return this.addCheck(
       'Compliant Address',
