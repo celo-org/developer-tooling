@@ -98,7 +98,7 @@ jobs:
         with:
           api-url: https://api.gateway.akeyless.celo-networks-dev.org
           access-id: p-kf9vjzruht6l
-          static-secrets: '{"/dynamic-secrets/keys/github/celo-homebrew/contents=write":"HOMEBREW_TOKEN"}'
+          dynamic-secrets: '{"/dynamic-secrets/keys/github/homebrew-core/contents=write":"HOMEBREW_TOKEN"}'
 
       - name: Open pull-request on Homebrew repo
         if: ${{ env.HOMEBREW_TOKEN }}
