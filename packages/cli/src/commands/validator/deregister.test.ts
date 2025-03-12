@@ -201,7 +201,7 @@ testWithAnvilL2('validator:deregister', (web3: Web3) => {
   )
 
   it(
-    'succeeds if not a mamber of any group',
+    'succeeds if not a member of any group',
     async () => {
       const [_, notAffiliatedValidator] = await web3.eth.getAccounts()
       const groupAtSetup = await validatorContract.getValidatorGroup(groupAddress, false)
