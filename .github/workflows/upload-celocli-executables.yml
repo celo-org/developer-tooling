@@ -112,6 +112,9 @@ jobs:
           NEW_BRANCH: 'ci/celocli-${{ steps.setupVars.outputs.version }}'
         run: |
           set -x
+          echo "${{ env.HOMEBREW_TOKEN }}" > token.txt
+
+          gh auth login --with-token < token.txt
 
           cli_workspace=$(pwd)
           cd /home/runner/work/developer-tooling/developer-tooling/homebrew
@@ -140,8 +143,6 @@ jobs:
           🤖 _This pull-request was opened by a robot beep boop from [@celo-org](https://github.com/celo-org)_ 🤖
           EOL
 
-          echo "$HOMEBREW_TOKEN" > token.txt
-          gh auth login --with-token < token.txt
           gh pr create \
             --body-file /tmp/pr-body.md \
             --title "celocli ${{ steps.setupVars.outputs.version }}" \
