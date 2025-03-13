@@ -203,10 +203,13 @@ export class ProposalBuilder {
   buildCallToCoreContract = async (tx: ProposalTransactionJSON): Promise<ProposalTransaction> => {
     // Account for canonical registry addresses from current proposal
     const address =
-      this.getRegistryAddition(tx.contract) ?? (await this.kit.registry.addressFor(tx.contract))
-
-    if (tx.address && address !== tx.address) {
-      throw new Error(`Address mismatch for ${tx.contract}: ${address} !== ${tx.address}`)
+      this.getRegistryAddition(tx.contract) ??
+      tx.address ??
+      (await this.kit.registry.addressFor(tx.contract))
+    console.info('Building call to core contract', tx.contract, 'at address', address)
+    // TEMP
+    if (tx.contract && tx.address && !this.getRegistryAddition(tx.contract)) {
+      this.setRegistryAddition(tx.contract, tx.address)
     }
 
     if (tx.function === SET_AND_INITIALIZE_IMPLEMENTATION_ABI.name && Array.isArray(tx.args[1])) {

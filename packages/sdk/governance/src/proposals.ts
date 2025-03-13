@@ -144,7 +144,7 @@ export const proposalToJSON = async (
   for (const tx of proposal) {
     const parsedTx = await blockExplorer.tryParseTx(tx as CeloTxPending)
     if (parsedTx == null) {
-      throw new Error(`Unable to parse ${JSON.stringify(tx)} with block explorer`)
+      throw new Error(`Unable to parse ${JSON.stringify(tx, null, 2)} with block explorer`)
     }
     if (isRegistryRepointRaw(abiCoder, tx) && parsedTx.callDetails.isCoreContract) {
       const args = registryRepointRawArgs(abiCoder, tx)
