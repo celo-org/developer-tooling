@@ -115,6 +115,7 @@ jobs:
           echo "${{ env.HOMEBREW_TOKEN }}" > token.txt
 
           gh auth login --with-token < token.txt
+          gh auth setup-git 
 
           cli_workspace=$(pwd)
           cd /home/runner/work/developer-tooling/developer-tooling/homebrew
