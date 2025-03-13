@@ -112,8 +112,6 @@ jobs:
           NEW_BRANCH: 'ci/celocli-${{ steps.setupVars.outputs.version }}'
         run: |
           set -x
-          echo "${{ env.HOMEBREW_FORK_TOKEN }}" > token.txt
-
 
           cli_workspace=$(pwd)
           cd /home/runner/work/developer-tooling/developer-tooling/homebrew
@@ -124,7 +122,9 @@ jobs:
           git remote add fork https://github.com/${{ env.HOMEBREW_FORK }}.git
           git remote -v
 
+          echo "${{ env.HOMEBREW_FORK_TOKEN }}" > token.txt
           gh auth login --git-protocol https --with-token < token.txt
+          rm token.txt
           gh auth setup-git
 
           # Create a new feature branch for the changes.
