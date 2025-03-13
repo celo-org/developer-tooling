@@ -98,21 +98,21 @@ jobs:
         with:
           api-url: https://api.gateway.akeyless.celo-networks-dev.org
           access-id: p-kf9vjzruht6l
-          dynamic-secrets: '{"/dynamic-secrets/keys/github/homebrew-core/contents=write":"HOMEBREW_TOKEN"}'
+          dynamic-secrets: '{"/dynamic-secrets/keys/github/homebrew-core/contents=write":"HOMEBREW_FORK_TOKEN"}'
 
       - name: Open pull-request on Homebrew repo
-        if: ${{ env.HOMEBREW_TOKEN }}
+        if: ${{ env.HOMEBREW_FORK_TOKEN }}
         working-directory: packages/cli
         env:
-          BOT_NAME: 'celo-org'
+          BOT_NAME: 'celo-org[bot]'
           BOT_EMAIL: 'celo-org@github.com'
-          FORK_REPOSITORY: 'celo-org/homebrew-core'
-          UPSTREAM_REPOSITORY: 'Homebrew/homebrew-core'
+          HOMEBREW_FORK: 'celo-org/homebrew-core'
+          HOMEBREW_UPSTREAM: 'Homebrew/homebrew-core'
           BASE_BRANCH: master
           NEW_BRANCH: 'ci/celocli-${{ steps.setupVars.outputs.version }}'
         run: |
           set -x
-          echo "${{ env.HOMEBREW_TOKEN }}" > token.txt
+          echo "${{ env.HOMEBREW_FORK_TOKEN }}" > token.txt
 
           gh auth login --with-token < token.txt
           gh auth setup-git 
@@ -123,8 +123,13 @@ jobs:
           # Setup the committers identity.
           git config --global user.name ${{ env.BOT_NAME }}
           git config --global user.email ${{ env.BOT_EMAIL }}
-          git remote add fork https://github.com/${{ env.FORK_REPOSITORY }}.git
+          git remote add fork https://celo-org:${{ env.HOMEBREW_FORK_TOKEN }}@github.com/${{ env.HOMEBREW_FORK }}.git
           git remote -v
+
+          echo "${{ env.HOMEBREW_FORK_TOKEN }}" > token.txt
+          gh auth login --git-protocol https --with-token < token.txt
+          rm token.txt
+          gh auth setup-git
 
           # Create a new feature branch for the changes.
           git fetch origin ${{ env.BASE_BRANCH }}
@@ -134,6 +139,7 @@ jobs:
           git status
           cp $cli_workspace/homebrew/Formula/celocli.rb ./Formula/c/
           git add ./Formula/c/celocli.rb
+          git diff --cached
           git commit -m "chore: update celocli to ${{ steps.setupVars.outputs.version }}"
           git push fork ${{ env.NEW_BRANCH }}
 
@@ -147,5 +153,5 @@ jobs:
           gh pr create \
             --body-file /tmp/pr-body.md \
             --title "celocli ${{ steps.setupVars.outputs.version }}" \
-            --head "${{ env.FORK_REPOSITORY }}/${{ env.NEW_BRANCH }}" \
-            --base "${{ env.UPSTREAM_REPOSITORY }}/${{ env.BASE_BRANCH }}"
+            --head "${{ env.HOMEBREW_FORK }}/${{ env.NEW_BRANCH }}" \
+            --base "${{ env.HOMEBREW_UPSTREAM }}/${{ env.BASE_BRANCH }}"
