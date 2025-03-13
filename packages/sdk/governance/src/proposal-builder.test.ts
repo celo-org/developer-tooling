@@ -169,7 +169,8 @@ testWithAnvilL2('ProposalBuilder', (web3) => {
       }
       await expect(proposalBuilder.fromJsonTx(tx)).rejects.toThrowErrorMatchingInlineSnapshot(`
         "Couldn't build call for transaction:
-         {
+
+        {
           "contract": "SuperContract",
           "function": "superFunction",
           "args": [
@@ -178,9 +179,10 @@ testWithAnvilL2('ProposalBuilder', (web3) => {
           ],
           "value": "0"
         }
-        Due to Failures:
-         1. SuperContract not (yet) registered
-         2. SuperContract is not a core celo contract so address must be specified
+
+        At least one of the following issues must be corrected:
+          1. SuperContract not (yet) registered
+          2. SuperContract is not a core celo contract so address must be specified
         "
       `)
     })

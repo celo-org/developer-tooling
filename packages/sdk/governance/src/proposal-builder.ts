@@ -246,24 +246,24 @@ export class ProposalBuilder {
 
     const strategies = [this.buildCallToCoreContract, this.buildCallToExternalContract]
 
-    // store failures to display if all fail but show none if any succeeds
-    const failures = []
+    // store issues to display if all fail but show none if any succeeds
+    const issues = []
 
     for (const strategy of strategies) {
       try {
         return await strategy(tx as ProposalTransactionJSON)
       } catch (e) {
-        failures.push(`${isNativeError(e) ? e.message : e}`)
+        issues.push(`${isNativeError(e) ? e.message : e}`)
       }
     }
 
     throw new Error(
-      `Couldn't build call for transaction:\n ${JSON.stringify(
+      `Couldn't build call for transaction:\n\n${JSON.stringify(
         tx,
         undefined,
         2
-      )}\nDue to Failures:\n${failures
-        .map((error, index) => ` ${index + 1}. ${error}`)
+      )}\n\nAt least one of the following issues must be corrected:\n${issues
+        .map((error, index) => `  ${index + 1}. ${error}`)
         .join('\n')}\n`
     )
   }
