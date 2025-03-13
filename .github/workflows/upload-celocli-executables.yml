@@ -123,7 +123,7 @@ jobs:
           # Setup the committers identity.
           git config --global user.name ${{ env.BOT_NAME }}
           git config --global user.email ${{ env.BOT_EMAIL }}
-          git remote add fork https://github.com/${{ env.FORK_REPOSITORY }}.git
+          git remote add fork https://${{ env.HOMEBREW_TOKEN }}@github.com/${{ env.FORK_REPOSITORY }}.git
           git remote -v
 
           # Create a new feature branch for the changes.
