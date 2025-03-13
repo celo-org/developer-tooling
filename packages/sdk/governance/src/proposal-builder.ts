@@ -18,12 +18,12 @@ import { valueToString } from '@celo/contractkit/lib/wrappers/BaseWrapper'
 import { ProposalTransaction } from '@celo/contractkit/lib/wrappers/Governance'
 import { fetchMetadata, tryGetProxyImplementation } from '@celo/explorer/lib/sourcify'
 import { isValidAddress } from '@celo/utils/lib/address'
+import { isNativeError } from 'util/types'
 import {
   ExternalProposalTransactionJSON,
   ProposalTransactionJSON,
   ProposalTxParams,
   RegistryAdditions,
-  debug,
   isProxySetAndInitFunction,
   isProxySetFunction,
   isRegistryRepoint,
@@ -246,15 +246,26 @@ export class ProposalBuilder {
 
     const strategies = [this.buildCallToCoreContract, this.buildCallToExternalContract]
 
+    // store failures to display if all fail but show none if any succeeds
+    const failures = []
+
     for (const strategy of strategies) {
       try {
         return await strategy(tx as ProposalTransactionJSON)
       } catch (e) {
-        debug("Couldn't build transaction with strategy %s: %O", strategy.name, e)
+        failures.push(`${isNativeError(e) ? e.message : e}`)
       }
     }
 
-    throw new Error(`Couldn't build call for transaction: ${JSON.stringify(tx)}`)
+    throw new Error(
+      `Couldn't build call for transaction:\n ${JSON.stringify(
+        tx,
+        undefined,
+        2
+      )}\nDue to Failures:\n${failures
+        .map((error, index) => ` ${index + 1}. ${error}`)
+        .join('\n')}\n`
+    )
   }
 
   addJsonTx = (tx: ProposalTransactionJSON) => this.builders.push(async () => this.fromJsonTx(tx))
