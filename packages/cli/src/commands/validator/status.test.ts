@@ -33,9 +33,6 @@ testWithAnvilL1('validator:status', (web3: Web3) => {
   })
 
   it('displays status of the validator', async () => {
-    const blockNumber = await web3.eth.getBlockNumber()
-    const block = await web3.eth.getBlock(blockNumber)
-    console.info('current block number', blockNumber, block)
     await testLocallyWithWeb3Node(Status, ['--validator', KNOWN_DEVCHAIN_VALIDATOR, '--csv'], web3)
 
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
