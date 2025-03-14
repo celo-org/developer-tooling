@@ -1,5 +1,17 @@
 # @celo/governance
 
+## 5.1.6-beta.0
+
+### Patch Changes
+
+- [#535](https://github.com/celo-org/developer-tooling/pull/535) [`c184fb1`](https://github.com/celo-org/developer-tooling/commit/c184fb1f17666e436f5261d048c2c9884b678388) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Ensure CeloToken and LockedCelo can be used as aliases for GoldToken and LockedGold
+
+- [#542](https://github.com/celo-org/developer-tooling/pull/542) [`55f1e99`](https://github.com/celo-org/developer-tooling/commit/55f1e99670134b5c885ee8debb22c7d370a7a11a) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - When building proposals if there is a failure show more informational error messages
+
+- Updated dependencies [[`c184fb1`](https://github.com/celo-org/developer-tooling/commit/c184fb1f17666e436f5261d048c2c9884b678388)]:
+  - @celo/contractkit@9.1.0-beta.0
+  - @celo/explorer@5.0.15-beta.0
+
 ## 5.1.5
 
 ### Patch Changes
