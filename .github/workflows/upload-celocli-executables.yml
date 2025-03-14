@@ -112,6 +112,7 @@ jobs:
           BASE_BRANCH: master
           NEW_BRANCH: 'ci/celocli-${{ steps.setupVars.outputs.version }}'
           GH_TOKEN: ${{ env.HOMEBREW_FORK_TOKEN }}
+          RELEASE_URL: 'https://github.com/celo-org/developer-tooling/releases/download/%40celo%2Fcelocli%40${{ steps.setupVars.outputs.version }}'
         run: |
           set -x
 
@@ -138,18 +139,14 @@ jobs:
           git commit -m "chore: update celocli to ${{ steps.setupVars.outputs.version }}"
           git push origin ${{ env.NEW_BRANCH }}
 
-          RELEASE_URL="https://github.com/celo-org/developer-tooling/releases/download/%40celo%2Fcelocli%40${{ steps.setupVars.outputs.version }}"
           cat >/tmp/pr-body.md <<EOL
-          Update celocli formula to [${{ steps.setupVars.outputs.version }}]($RELEASE_URL).
+          Update celocli formula to [${{ steps.setupVars.outputs.version }}](${{ env.RELEASE_URL }}).
 
           🤖 _This pull-request was opened by a robot beep boop from [@celo-org](https://github.com/celo-org)_ 🤖
           EOL
 
-          echo "${{ env.HOMEBREW_FORK_TOKEN }}" > token.txt
-          gh auth login --git-protocol https --with-token < token.txt
           gh pr create \
             --body-file /tmp/pr-body.md \
             --title "celocli ${{ steps.setupVars.outputs.version }}" \
             --head "${{ env.HOMEBREW_FORK }}/${{ env.NEW_BRANCH }}" \
-            --base "${{ env.HOMEBREW_UPSTREAM }}/${{ env.BASE_BRANCH }}" \
-            --repo "${{ env.HOMEBREW_UPSTREAM }}"
+            --base "${{ env.HOMEBREW_UPSTREAM }}/${{ env.BASE_BRANCH }}"
