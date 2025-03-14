@@ -1,4 +1,3 @@
-import chalk from 'chalk'
 import { BaseCommand } from '../../base'
 import { displaySendTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
@@ -24,11 +23,8 @@ export default class Switch extends BaseCommand {
 
     const epochManager = await kit.contracts.getEpochManager()
 
-    const isTimeForNextEpoch = await epochManager.isTimeForNextEpoch()
-    if (!isTimeForNextEpoch) {
-      const msg = 'It is not time for the next epoch yet'
-      console.info(chalk.red.bold(msg))
-      return msg
+    if (!(await epochManager.isTimeForNextEpoch())) {
+      this.error('It is not time for the next epoch yet')
     }
 
     const isEpochProcessStarted = await epochManager.isOnEpochProcess()

@@ -94,4 +94,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/test-utils/utils.ts:58](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/test-utils/utils.ts#L58)
+[packages/sdk/contractkit/src/test-utils/utils.ts:52](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/test-utils/utils.ts#L52)

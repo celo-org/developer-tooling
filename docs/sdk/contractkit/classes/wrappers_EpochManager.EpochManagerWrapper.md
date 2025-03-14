@@ -32,10 +32,15 @@ Contract handling epoch management.
 - [getEpochProcessingStatus](wrappers_EpochManager.EpochManagerWrapper.md#getepochprocessingstatus)
 - [getFirstBlockAtEpoch](wrappers_EpochManager.EpochManagerWrapper.md#getfirstblockatepoch)
 - [getLastBlockAtEpoch](wrappers_EpochManager.EpochManagerWrapper.md#getlastblockatepoch)
+- [isEpochProcessingStarted](wrappers_EpochManager.EpochManagerWrapper.md#isepochprocessingstarted)
+- [isIndividualProcessing](wrappers_EpochManager.EpochManagerWrapper.md#isindividualprocessing)
 - [isOnEpochProcess](wrappers_EpochManager.EpochManagerWrapper.md#isonepochprocess)
 - [isTimeForNextEpoch](wrappers_EpochManager.EpochManagerWrapper.md#istimefornextepoch)
 - [methodIds](wrappers_EpochManager.EpochManagerWrapper.md#methodids)
+- [processGroups](wrappers_EpochManager.EpochManagerWrapper.md#processgroups)
+- [processedGroups](wrappers_EpochManager.EpochManagerWrapper.md#processedgroups)
 - [sendValidatorPayment](wrappers_EpochManager.EpochManagerWrapper.md#sendvalidatorpayment)
+- [setToProcessGroups](wrappers_EpochManager.EpochManagerWrapper.md#settoprocessgroups)
 - [startNextEpochProcess](wrappers_EpochManager.EpochManagerWrapper.md#startnextepochprocess)
 
 ### Accessors
@@ -46,8 +51,10 @@ Contract handling epoch management.
 
 - [finishNextEpochProcessTx](wrappers_EpochManager.EpochManagerWrapper.md#finishnextepochprocesstx)
 - [getConfig](wrappers_EpochManager.EpochManagerWrapper.md#getconfig)
+- [getEpochGroupsAndSorting](wrappers_EpochManager.EpochManagerWrapper.md#getepochgroupsandsorting)
 - [getLessersAndGreaters](wrappers_EpochManager.EpochManagerWrapper.md#getlessersandgreaters)
 - [getPastEvents](wrappers_EpochManager.EpochManagerWrapper.md#getpastevents)
+- [processGroupsTx](wrappers_EpochManager.EpochManagerWrapper.md#processgroupstx)
 - [version](wrappers_EpochManager.EpochManagerWrapper.md#version)
 
 ## Constructors
@@ -165,7 +172,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:67](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L67)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:70](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L70)
 
 ___
 
@@ -237,7 +244,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:50](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L50)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:53](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L53)
 
 ___
 
@@ -261,7 +268,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:51](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L51)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:54](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L54)
 
 ___
 
@@ -309,7 +316,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:52](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L52)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:55](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L55)
 
 ___
 
@@ -361,6 +368,54 @@ ___
 
 ___
 
+### isEpochProcessingStarted
+
+• **isEpochProcessingStarted**: (...`args`: []) => `Promise`\<`boolean`\>
+
+#### Type declaration
+
+▸ (`...args`): `Promise`\<`boolean`\>
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `...args` | [] |
+
+##### Returns
+
+`Promise`\<`boolean`\>
+
+#### Defined in
+
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:50](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L50)
+
+___
+
+### isIndividualProcessing
+
+• **isIndividualProcessing**: (...`args`: []) => `Promise`\<`boolean`\>
+
+#### Type declaration
+
+▸ (`...args`): `Promise`\<`boolean`\>
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `...args` | [] |
+
+##### Returns
+
+`Promise`\<`boolean`\>
+
+#### Defined in
+
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:51](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L51)
+
+___
+
 ### isOnEpochProcess
 
 • **isOnEpochProcess**: (...`args`: []) => `Promise`\<`boolean`\>
@@ -381,7 +436,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:48](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L48)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:49](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L49)
 
 ___
 
@@ -405,7 +460,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:49](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L49)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:52](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L52)
 
 ___
 
@@ -420,6 +475,54 @@ ___
 #### Defined in
 
 [packages/sdk/contractkit/src/wrappers/BaseWrapper.ts:68](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BaseWrapper.ts#L68)
+
+___
+
+### processGroups
+
+• **processGroups**: (...`args`: [groups: string[], lessers: string[], greaters: string[]]) => `CeloTransactionObject`\<`void`\>
+
+#### Type declaration
+
+▸ (`...args`): `CeloTransactionObject`\<`void`\>
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `...args` | [groups: string[], lessers: string[], greaters: string[]] |
+
+##### Returns
+
+`CeloTransactionObject`\<`void`\>
+
+#### Defined in
+
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:73](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L73)
+
+___
+
+### processedGroups
+
+• **processedGroups**: (...`args`: [arg0: string]) => `Promise`\<`string`\>
+
+#### Type declaration
+
+▸ (`...args`): `Promise`\<`string`\>
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `...args` | [arg0: string] |
+
+##### Returns
+
+`Promise`\<`string`\>
+
+#### Defined in
+
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:48](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L48)
 
 ___
 
@@ -443,7 +546,31 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:68](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L68)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:71](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L71)
+
+___
+
+### setToProcessGroups
+
+• **setToProcessGroups**: (...`args`: []) => `CeloTransactionObject`\<`void`\>
+
+#### Type declaration
+
+▸ (`...args`): `CeloTransactionObject`\<`void`\>
+
+##### Parameters
+
+| Name | Type |
+| :------ | :------ |
+| `...args` | [] |
+
+##### Returns
+
+`CeloTransactionObject`\<`void`\>
+
+#### Defined in
+
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:72](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L72)
 
 ___
 
@@ -467,7 +594,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:66](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L66)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:69](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L69)
 
 ## Accessors
 
@@ -501,7 +628,7 @@ BaseWrapperForGoverning.address
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:70](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L70)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:75](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L75)
 
 ___
 
@@ -515,7 +642,21 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:132](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L132)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:162](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L162)
+
+___
+
+### getEpochGroupsAndSorting
+
+▸ **getEpochGroupsAndSorting**(): `Promise`\<\{ `greaters`: `string`[] ; `groups`: `string`[] ; `lessers`: `string`[]  }\>
+
+#### Returns
+
+`Promise`\<\{ `greaters`: `string`[] ; `groups`: `string`[] ; `lessers`: `string`[]  }\>
+
+#### Defined in
+
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:136](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L136)
 
 ___
 
@@ -535,7 +676,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:83](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L83)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:87](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L87)
 
 ___
 
@@ -549,7 +690,7 @@ Contract getPastEvents
 
 | Name | Type |
 | :------ | :------ |
-| `event` | ``"OwnershipTransferred"`` \| ``"RegistrySet"`` \| ``"ValidatorEpochPaymentDistributed"`` \| ``"allEvents"`` \| ``"EpochDurationSet"`` \| ``"EpochProcessingEnded"`` \| ``"EpochProcessingStarted"`` \| ``"GroupMarkedForProcessing"`` \| ``"GroupProcessed"`` \| ``"OracleAddressSet"`` |
+| `event` | ``"OwnershipTransferred"`` \| ``"RegistrySet"`` \| ``"ValidatorEpochPaymentDistributed"`` \| ``"allEvents"`` \| ``"GroupProcessed"`` \| ``"EpochDurationSet"`` \| ``"EpochProcessingEnded"`` \| ``"EpochProcessingStarted"`` \| ``"GroupMarkedForProcessing"`` \| ``"OracleAddressSet"`` |
 | `options` | `PastEventOptions` |
 
 #### Returns
@@ -563,6 +704,20 @@ Contract getPastEvents
 #### Defined in
 
 [packages/sdk/contractkit/src/wrappers/BaseWrapper.ts:57](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BaseWrapper.ts#L57)
+
+___
+
+### processGroupsTx
+
+▸ **processGroupsTx**(): `Promise`\<`CeloTransactionObject`\<`void`\>\>
+
+#### Returns
+
+`Promise`\<`CeloTransactionObject`\<`void`\>\>
+
+#### Defined in
+
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:81](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L81)
 
 ___
 

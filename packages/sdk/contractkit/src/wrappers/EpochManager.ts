@@ -1,7 +1,7 @@
 import { EpochManager } from '@celo/abis-12/web3/EpochManager'
 import { NULL_ADDRESS } from '@celo/base'
 import BigNumber from 'bignumber.js'
-import { proxyCall, proxySend, valueToInt } from './BaseWrapper'
+import { proxyCall, proxySend, valueToInt, valueToString } from './BaseWrapper'
 import { BaseWrapperForGoverning } from './BaseWrapperForGoverning'
 
 export enum EpochProcessStatus {
@@ -45,7 +45,10 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
     undefined,
     valueToInt
   )
+  processedGroups = proxyCall(this.contract.methods.processedGroups, undefined, valueToString)
   isOnEpochProcess = proxyCall(this.contract.methods.isOnEpochProcess)
+  isEpochProcessingStarted = proxyCall(this.contract.methods.isEpochProcessingStarted)
+  isIndividualProcessing = proxyCall(this.contract.methods.isIndividualProcessing)
   isTimeForNextEpoch = proxyCall(this.contract.methods.isTimeForNextEpoch)
   getElectedAccounts = proxyCall(this.contract.methods.getElectedAccounts)
   getElectedSigners = proxyCall(this.contract.methods.getElectedSigners)
@@ -66,18 +69,19 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
   startNextEpochProcess = proxySend(this.connection, this.contract.methods.startNextEpochProcess)
   finishNextEpochProcess = proxySend(this.connection, this.contract.methods.finishNextEpochProcess)
   sendValidatorPayment = proxySend(this.connection, this.contract.methods.sendValidatorPayment)
+  setToProcessGroups = proxySend(this.connection, this.contract.methods.setToProcessGroups)
+  processGroups = proxySend(this.connection, this.contract.methods.processGroups)
 
   finishNextEpochProcessTx = async () => {
-    const elected = await this.getElectedAccounts()
-    const validators = await this.contracts.getValidators()
-
-    const electedGroups = new Set(
-      await Promise.all(elected.map(async (validator) => validators.getValidatorsGroup(validator)))
-    )
-    const groups = Array.from(electedGroups)
-    const [lessers, greaters] = await this.getLessersAndGreaters(groups)
+    const { groups, lessers, greaters } = await this.getEpochGroupsAndSorting()
 
     return this.finishNextEpochProcess(groups, lessers, greaters)
+  }
+
+  processGroupsTx = async () => {
+    const { groups, lessers, greaters } = await this.getEpochGroupsAndSorting()
+
+    return this.processGroups(groups, lessers, greaters)
   }
 
   getLessersAndGreaters = async (groups: string[]) => {
@@ -127,6 +131,32 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
     }
 
     return [lessers, greaters]
+  }
+
+  getEpochGroupsAndSorting = async () => {
+    const elected = await this.getElectedAccounts()
+    const validators = await this.contracts.getValidators()
+    const electedGroups = Array.from(
+      new Set(
+        await Promise.all(
+          elected.map(async (validator) => validators.getValidatorsGroup(validator))
+        )
+      )
+    )
+
+    const groupProcessedEvents = await this.contract.getPastEvents('GroupProcessed', {
+      // We need +1 because events are emitted on the first block of the new epoch
+      fromBlock: (await this.getFirstBlockAtEpoch(await this.getCurrentEpochNumber())) + 1,
+    })
+
+    // Filter out groups that have been processed
+    const groups = electedGroups.filter((group) => {
+      return !groupProcessedEvents.some((event) => event.returnValues.group === group)
+    })
+
+    const [lessers, greaters] = await this.getLessersAndGreaters(groups)
+
+    return { groups, lessers, greaters }
   }
 
   async getConfig(): Promise<EpochManagerConfig> {
