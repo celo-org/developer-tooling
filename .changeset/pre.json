@@ -27,5 +27,13 @@
     "@celo/typescript": "0.0.1",
     "@celo/viem-account-ledger": "1.1.0"
   },
-  "changesets": []
+  "changesets": [
+    "four-ligers-know",
+    "grumpy-schools-judge",
+    "moody-monkeys-admire",
+    "sharp-fishes-allow",
+    "short-elephants-grab",
+    "thin-dryers-compare",
+    "yellow-mails-flash"
+  ]
 }
