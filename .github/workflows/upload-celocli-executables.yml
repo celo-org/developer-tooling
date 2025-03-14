@@ -146,4 +146,4 @@ jobs:
             --title "celocli ${{ steps.setupVars.outputs.version }}" \
             --head "${{ env.HOMEBREW_FORK }}/${{ env.NEW_BRANCH }}" \
             --base "${{ env.HOMEBREW_UPSTREAM }}/${{ env.BASE_BRANCH }}" \
-            --repo "${{ env.HOMEBREW_FORK }}"
+            --repo "${{ env.HOMEBREW_UPSTREAM }}"
