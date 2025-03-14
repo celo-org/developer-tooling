@@ -10,7 +10,7 @@ import {
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
 import Web3 from 'web3'
 import { meetsVersionRequirements } from './ledger-utils'
-import { AddressValidation, LedgerWallet } from './ledger-wallet'
+import { AddressValidation, CELO_BASE_DERIVATION_PATH, LedgerWallet } from './ledger-wallet'
 import {
   ACCOUNT_ADDRESS1,
   ACCOUNT_ADDRESS2,
@@ -225,6 +225,46 @@ describe('LedgerWallet class', () => {
         ]
       `)
       expect(wallet.ledger!.getAddress).toHaveBeenCalledTimes(6)
+    })
+    describe('with other ledger apps', () => {
+      describe('with the ethereum-recovery app', () => {
+        beforeEach(() => {
+          wallet = new LedgerWallet({}, [0], CELO_BASE_DERIVATION_PATH, [1, 2])
+          mockLedger(wallet, mockForceValidation, { name: 'ethereum-recovery' })
+        })
+        it('shows warning on initialization but still initalizes', async () => {
+          const logMock = jest.spyOn(console, 'error')
+          await wallet.init()
+          expect(logMock.mock.calls).toMatchInlineSnapshot(`
+            [
+              [
+                "
+            ---
+            Beware, you opened the ethereum-recovery app instead of the Celo app. We cannot ensure the safety of using this SDK with ethereum-recovery. USE AT YOUR OWN RISK.
+            ---
+            ",
+              ],
+            ]
+          `)
+        })
+      })
+      describe('with the ethereum app', () => {
+        beforeEach(() => {
+          wallet = new LedgerWallet({}, [0, 1, 2, 3], ETHEREUM_DERIVATION_PATH, [6, 7, 8])
+          mockLedger(wallet, mockForceValidation, { name: 'ethereum' })
+        })
+        it('shows warning on initialization but still initalizes', async () => {
+          const warnMock = jest.spyOn(console, 'warn')
+          await wallet.init()
+          expect(warnMock.mock.calls).toMatchInlineSnapshot(`
+            [
+              [
+                "Beware, you opened the Ethereum app instead of the Celo app. Some features may not work correctly, including token transfers.",
+              ],
+            ]
+          `)
+        })
+      })
     })
   })
 
