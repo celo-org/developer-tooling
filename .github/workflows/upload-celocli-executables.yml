@@ -119,14 +119,10 @@ jobs:
           cli_workspace=$(pwd)
           cd /home/runner/work/developer-tooling/developer-tooling/homebrew
 
-          # gh auth setup-git
-
-          # # Setup the committers identity.
+          # Setup the committers identity.
           git config --global user.name ${{ env.BOT_NAME }}
           git config --global user.email ${{ env.BOT_EMAIL }}
-          # git remote add fork https://celo-org:${{ env.HOMEBREW_FORK_TOKEN }}@github.com/${{ env.HOMEBREW_FORK }}.git
           git remote add upstream https://github.com/${{ env.HOMEBREW_UPSTREAM }}.git
-          # git remote -v
 
           # Create a new feature branch for the changes.
           git fetch upstream ${{ env.BASE_BRANCH }}
@@ -150,3 +146,4 @@ jobs:
             --title "celocli ${{ steps.setupVars.outputs.version }}" \
             --head "${{ env.HOMEBREW_FORK }}/${{ env.NEW_BRANCH }}" \
             --base "${{ env.HOMEBREW_UPSTREAM }}/${{ env.BASE_BRANCH }}"
+            --repo "${{ env.HOMEBREW_FORK }}"
