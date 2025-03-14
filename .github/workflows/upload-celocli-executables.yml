@@ -117,7 +117,7 @@ jobs:
           cli_workspace=$(pwd)
           cd /home/runner/work/developer-tooling/developer-tooling/homebrew
 
-          # gh auth setup-git
+          gh auth setup-git
 
           # Setup the committers identity.
           # git config --global user.name ${{ env.BOT_NAME }}
