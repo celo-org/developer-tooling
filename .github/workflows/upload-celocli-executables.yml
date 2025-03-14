@@ -137,7 +137,7 @@ jobs:
           git add ./Formula/c/celocli.rb
           git diff --cached
           git commit -m "chore: update celocli to ${{ steps.setupVars.outputs.version }}"
-          git push origin ${{ env.NEW_BRANCH }}
+          git push origin ${{ env.NEW_BRANCH }} -f
 
           cat >/tmp/pr-body.md <<EOL
           Update celocli formula to [${{ steps.setupVars.outputs.version }}](${{ env.RELEASE_URL }}).
