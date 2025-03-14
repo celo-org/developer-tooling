@@ -120,8 +120,8 @@ jobs:
           gh auth setup-git
 
           # Setup the committers identity.
-          # git config --global user.name ${{ env.BOT_NAME }}
-          # git config --global user.email ${{ env.BOT_EMAIL }}
+          git config --global user.name ${{ env.BOT_NAME }}
+          git config --global user.email ${{ env.BOT_EMAIL }}
           # git remote add fork https://celo-org:${{ env.HOMEBREW_FORK_TOKEN }}@github.com/${{ env.HOMEBREW_FORK }}.git
           git remote add fork https://github.com/${{ env.HOMEBREW_FORK }}.git
           git remote -v
