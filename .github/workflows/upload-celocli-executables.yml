@@ -143,6 +143,6 @@ jobs:
 
           gh pr create \
             --body-file /tmp/pr-body.md \
-            --title "celocli ${{ steps.setupVars.outputs.version }}" 
+            --title "celocli ${{ steps.setupVars.outputs.version }}" \
             --base "${{ env.HOMEBREW_UPSTREAM }}/${{ env.BASE_BRANCH }}" \
             --repo "${{ env.HOMEBREW_UPSTREAM }}"
