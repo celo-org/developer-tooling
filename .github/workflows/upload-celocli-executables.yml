@@ -105,7 +105,7 @@ jobs:
         if: ${{ env.HOMEBREW_FORK_TOKEN }}
         working-directory: packages/cli
         env:
-          BOT_NAME: 'celo-org[bot]'
+          BOT_NAME: 'celo-org'
           BOT_EMAIL: 'celo-org@github.com'
           HOMEBREW_FORK: 'celo-org/homebrew-core'
           HOMEBREW_UPSTREAM: 'Homebrew/homebrew-core'
