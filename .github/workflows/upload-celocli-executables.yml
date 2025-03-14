@@ -112,10 +112,6 @@ jobs:
           NEW_BRANCH: 'ci/celocli-${{ steps.setupVars.outputs.version }}'
         run: |
           set -x
-          echo "${{ env.HOMEBREW_FORK_TOKEN }}" > token.txt
-
-          gh auth login --with-token < token.txt
-          gh auth setup-git 
 
           cli_workspace=$(pwd)
           cd /home/runner/work/developer-tooling/developer-tooling/homebrew
@@ -125,11 +121,6 @@ jobs:
           git config --global user.email ${{ env.BOT_EMAIL }}
           git remote add fork https://celo-org:${{ env.HOMEBREW_FORK_TOKEN }}@github.com/${{ env.HOMEBREW_FORK }}.git
           git remote -v
-
-          echo "${{ env.HOMEBREW_FORK_TOKEN }}" > token.txt
-          gh auth login --git-protocol https --with-token < token.txt
-          rm token.txt
-          gh auth setup-git
 
           # Create a new feature branch for the changes.
           git fetch origin ${{ env.BASE_BRANCH }}
@@ -150,6 +141,8 @@ jobs:
           🤖 _This pull-request was opened by a robot beep boop from [@celo-org](https://github.com/celo-org)_ 🤖
           EOL
 
+          echo "${{ env.HOMEBREW_FORK_TOKEN }}" > token.txt
+          gh auth login --git-protocol https --with-token < token.txt
           gh pr create \
             --body-file /tmp/pr-body.md \
             --title "celocli ${{ steps.setupVars.outputs.version }}" \
