@@ -145,7 +145,8 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
     )
 
     const groupProcessedEvents = await this.contract.getPastEvents('GroupProcessed', {
-      fromBlock: await this.getFirstBlockAtEpoch(await this.getCurrentEpochNumber()),
+      // We need +1 because events are emitted on the first block of the new epoch
+      fromBlock: (await this.getFirstBlockAtEpoch(await this.getCurrentEpochNumber())) + 1,
     })
 
     // Filter out groups that have been processed
