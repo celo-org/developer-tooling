@@ -145,8 +145,8 @@ jobs:
           🤖 _This pull-request was opened by a robot beep boop from [@celo-org](https://github.com/celo-org)_ 🤖
           EOL
 
-          # echo "${{ env.HOMEBREW_FORK_TOKEN }}" > token.txt
-          # gh auth login --git-protocol https --with-token < token.txt
+          echo "${{ env.HOMEBREW_FORK_TOKEN }}" > token.txt
+          gh auth login --git-protocol https --with-token < token.txt
           gh pr create \
             --body-file /tmp/pr-body.md \
             --title "celocli ${{ steps.setupVars.outputs.version }}" \
