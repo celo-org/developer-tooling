@@ -1,4 +1,3 @@
-import chalk from 'chalk'
 import { BaseCommand } from '../../base'
 import { displaySendTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
@@ -24,14 +23,14 @@ export default class ProcessGroups extends BaseCommand {
 
     const epochManager = await kit.contracts.getEpochManager()
 
-    const isEpochProcessStarted = await epochManager.isOnEpochProcess()
-    if (!isEpochProcessStarted) {
-      const msg = 'Epoch process is not started yet'
-      console.info(chalk.red.bold(msg))
-      return msg
+    // This checks if epoch processing is either started or on individual group processing
+    if (!(await epochManager.isEpochProcessingStarted())) {
+      this.error('Epoch process is not started yet')
     }
 
-    await displaySendTx('setToProcessGroups', epochManager.setToProcessGroups())
+    if (!(await epochManager.isIndividualProcessing())) {
+      await displaySendTx('setToProcessGroups', epochManager.setToProcessGroups())
+    }
 
     await displaySendTx('processGroups', await epochManager.processGroupsTx())
   }

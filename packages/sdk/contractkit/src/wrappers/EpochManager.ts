@@ -47,6 +47,8 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
   )
   processedGroups = proxyCall(this.contract.methods.processedGroups, undefined, valueToString)
   isOnEpochProcess = proxyCall(this.contract.methods.isOnEpochProcess)
+  isEpochProcessingStarted = proxyCall(this.contract.methods.isEpochProcessingStarted)
+  isIndividualProcessing = proxyCall(this.contract.methods.isIndividualProcessing)
   isTimeForNextEpoch = proxyCall(this.contract.methods.isTimeForNextEpoch)
   getElectedAccounts = proxyCall(this.contract.methods.getElectedAccounts)
   getElectedSigners = proxyCall(this.contract.methods.getElectedSigners)
@@ -72,11 +74,13 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
 
   finishNextEpochProcessTx = async () => {
     const { groups, lessers, greaters } = await this.getEpochGroupsAndSorting()
+
     return this.finishNextEpochProcess(groups, lessers, greaters)
   }
 
   processGroupsTx = async () => {
     const { groups, lessers, greaters } = await this.getEpochGroupsAndSorting()
+
     return this.processGroups(groups, lessers, greaters)
   }
 
@@ -132,21 +136,22 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
   getEpochGroupsAndSorting = async () => {
     const elected = await this.getElectedAccounts()
     const validators = await this.contracts.getValidators()
-
-    const electedGroups = new Set(
-      await Promise.all(elected.map(async (validator) => validators.getValidatorsGroup(validator)))
+    const electedGroups = Array.from(
+      new Set(
+        await Promise.all(
+          elected.map(async (validator) => validators.getValidatorsGroup(validator))
+        )
+      )
     )
-    let groups = Array.from(electedGroups)
 
-    // Filter out groups that may have already been processed.
-    const processedGroups = await Promise.all(
-      groups.map(async (group) => {
-        const processed = await this.processedGroups(group)
-        return processed === '0' ? null : group
-      })
-    )
-    // Remove null values
-    groups = processedGroups.filter((group): group is string => group !== null)
+    const groupProcessedEvents = await this.contract.getPastEvents('GroupProcessed', {
+      fromBlock: await this.getFirstBlockAtEpoch(await this.getCurrentEpochNumber()),
+    })
+
+    // Filter out groups that have been processed
+    const groups = electedGroups.filter((group) => {
+      return !groupProcessedEvents.some((event) => event.returnValues.group === group)
+    })
 
     const [lessers, greaters] = await this.getLessersAndGreaters(groups)
 
