@@ -15,6 +15,14 @@ jobs:
       repository-projects: write
     if: contains(github.ref_name, 'celocli') == true
     steps:
+      - name: Get Token from Akeyless
+        id: get_token
+        uses: docker://us-west1-docker.pkg.dev/devopsre/akeyless-public/akeyless-action:latest
+        with:
+          api-url: https://api.gateway.akeyless.celo-networks-dev.org
+          access-id: p-kf9vjzruht6l
+          dynamic-secrets: '{"/dynamic-secrets/keys/github/homebrew-core/contents=write":"HOMEBREW_FORK_TOKEN"}'
+
       - name: Checkout Repo
         uses: actions/checkout@v4
         with:
@@ -28,9 +36,10 @@ jobs:
       - name: Checkout Homebrew Repo
         uses: actions/checkout@v4
         with:
-          repository: 'Homebrew/homebrew-core'
+          repository: 'celo-org/homebrew-core'
           path: '/home/runner/work/developer-tooling/developer-tooling/homebrew'
           ref: master
+          token: ${{ env.HOMEBREW_FORK_TOKEN }}
 
       - name: Setup Node.js 20.x
         uses: actions/setup-node@v4
@@ -92,14 +101,6 @@ jobs:
       - run: ./homebrew/scripts/test.sh
         working-directory: packages/cli
 
-      - name: Get Token from Akeyless
-        id: get_token
-        uses: docker://us-west1-docker.pkg.dev/devopsre/akeyless-public/akeyless-action:latest
-        with:
-          api-url: https://api.gateway.akeyless.celo-networks-dev.org
-          access-id: p-kf9vjzruht6l
-          dynamic-secrets: '{"/dynamic-secrets/keys/github/homebrew-core/contents=write":"HOMEBREW_FORK_TOKEN"}'
-
       - name: Open pull-request on Homebrew repo
         if: ${{ env.HOMEBREW_FORK_TOKEN }}
         working-directory: packages/cli
@@ -117,26 +118,25 @@ jobs:
           cli_workspace=$(pwd)
           cd /home/runner/work/developer-tooling/developer-tooling/homebrew
 
-          gh auth setup-git
+          # gh auth setup-git
 
-          # Setup the committers identity.
-          git config --global user.name ${{ env.BOT_NAME }}
-          git config --global user.email ${{ env.BOT_EMAIL }}
-          # git remote add fork https://celo-org:${{ env.HOMEBREW_FORK_TOKEN }}@github.com/${{ env.HOMEBREW_FORK }}.git
-          git remote add fork https://github.com/${{ env.HOMEBREW_FORK }}.git
-          git remote -v
+          # # Setup the committers identity.
+          # git config --global user.name ${{ env.BOT_NAME }}
+          # git config --global user.email ${{ env.BOT_EMAIL }}
+          # # git remote add fork https://celo-org:${{ env.HOMEBREW_FORK_TOKEN }}@github.com/${{ env.HOMEBREW_FORK }}.git
+          git remote add upstream https://github.com/${{ env.HOMEBREW_UPSTREAM }}.git
+          # git remote -v
 
           # Create a new feature branch for the changes.
-          git fetch origin ${{ env.BASE_BRANCH }}
-          git checkout origin/${{ env.BASE_BRANCH }}
-          git reset --hard origin/${{ env.BASE_BRANCH }}
+          git fetch upstream ${{ env.BASE_BRANCH }}
           git checkout -b ${{ env.NEW_BRANCH }}
+          git reset --hard upstream/${{ env.BASE_BRANCH }}
           git status
           cp $cli_workspace/homebrew/Formula/celocli.rb ./Formula/c/
           git add ./Formula/c/celocli.rb
           git diff --cached
           git commit -m "chore: update celocli to ${{ steps.setupVars.outputs.version }}"
-          git push fork ${{ env.NEW_BRANCH }}
+          git push origin ${{ env.NEW_BRANCH }}
 
           RELEASE_URL="https://github.com/celo-org/developer-tooling/releases/download/%40celo%2Fcelocli%40${{ steps.setupVars.outputs.version }}"
           cat >/tmp/pr-body.md <<EOL
