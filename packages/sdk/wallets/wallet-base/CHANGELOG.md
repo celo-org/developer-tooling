@@ -1,5 +1,7 @@
 # @celo/wallet-base
 
+## 7.0.1-beta.0
+
 ## 7.0.0
 
 ### Patch Changes

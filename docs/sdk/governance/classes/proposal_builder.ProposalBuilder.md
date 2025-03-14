@@ -144,7 +144,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/governance/src/proposal-builder.ts:260](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L260)
+[packages/sdk/governance/src/proposal-builder.ts:271](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L271)
 
 ___
 
