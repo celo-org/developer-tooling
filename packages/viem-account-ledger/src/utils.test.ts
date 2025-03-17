@@ -66,11 +66,6 @@ describe('utils', () => {
   })
 
   describe('assertCompat', () => {
-    it("throws if it doesn't meet the requirements", async () => {
-      await expect(assertCompat(mockLedger({ version: '1.0.0' }))).rejects.toMatchInlineSnapshot(
-        `[Error: Due to technical issues, we require the users to update their ledger celo-app to >= 1.2.0. You can do this on ledger-live by updating the celo-app in the app catalog.]`
-      )
-    })
     it('warns if it doesnt enable `arbitraryDataEnabled`', async () => {
       const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined)
       await expect(assertCompat(mockLedger({ arbitraryDataEnabled: 0 }))).resolves.toBeTruthy()
@@ -86,6 +81,19 @@ describe('utils', () => {
       expect(warn.mock.lastCall).toMatchInlineSnapshot(`
         [
           "Beware, you opened the Ethereum app instead of the Celo app. Some features may not work correctly, including token transfers.",
+        ]
+      `)
+    })
+    it('warns if it using with unknown apps', async () => {
+      const error = vi.spyOn(console, 'error').mockImplementation(() => undefined)
+      await expect(assertCompat(mockLedger({ name: 'unknown' }))).resolves.toBeTruthy()
+      expect(error.mock.lastCall).toMatchInlineSnapshot(`
+        [
+          "
+        ---
+        Beware, you opened the unknown app instead of the Celo app. We cannot ensure the safety of using this SDK with unknown. USE AT YOUR OWN RISK.
+        ---
+        ",
         ]
       `)
     })

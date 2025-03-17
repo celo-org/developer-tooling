@@ -1,5 +1,15 @@
 # @celo/wallet-ledger
 
+## 7.0.1-beta.0
+
+### Patch Changes
+
+- [#544](https://github.com/celo-org/developer-tooling/pull/544) [`170e91c`](https://github.com/celo-org/developer-tooling/commit/170e91cbdcdf6d8e398c423355b78f31d4c9e33c) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Allow users to use other apps than ethereum or celo, namely "eth recovery" in order to recovery funds or signTypedData which isnt supported by celo but would require the correct derivationPath
+
+- Updated dependencies []:
+  - @celo/wallet-base@7.0.1-beta.0
+  - @celo/wallet-remote@7.0.1-beta.0
+
 ## 7.0.0
 
 ### Major Changes

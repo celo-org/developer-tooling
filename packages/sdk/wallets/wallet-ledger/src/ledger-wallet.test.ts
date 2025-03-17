@@ -1,7 +1,6 @@
 import { ETHEREUM_DERIVATION_PATH } from '@celo/base'
 import { StrongAddress, normalizeAddressWith0x } from '@celo/base/lib/address'
 import { CeloTx, EncodedTransaction } from '@celo/connect'
-import { StableToken, newKit } from '@celo/contractkit'
 import { verifySignature } from '@celo/utils/lib/signatureUtils'
 import {
   chainIdTransformationForSigning,
@@ -11,7 +10,7 @@ import {
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
 import Web3 from 'web3'
 import { meetsVersionRequirements } from './ledger-utils'
-import { AddressValidation, LedgerWallet } from './ledger-wallet'
+import { AddressValidation, CELO_BASE_DERIVATION_PATH, LedgerWallet } from './ledger-wallet'
 import {
   ACCOUNT_ADDRESS1,
   ACCOUNT_ADDRESS2,
@@ -226,6 +225,46 @@ describe('LedgerWallet class', () => {
         ]
       `)
       expect(wallet.ledger!.getAddress).toHaveBeenCalledTimes(6)
+    })
+    describe('with other ledger apps', () => {
+      describe('with the ethereum-recovery app', () => {
+        beforeEach(() => {
+          wallet = new LedgerWallet({}, [0], CELO_BASE_DERIVATION_PATH, [1, 2])
+          mockLedger(wallet, mockForceValidation, { name: 'ethereum-recovery' })
+        })
+        it('shows warning on initialization but still initalizes', async () => {
+          const logMock = jest.spyOn(console, 'error')
+          await wallet.init()
+          expect(logMock.mock.calls).toMatchInlineSnapshot(`
+            [
+              [
+                "
+            ---
+            Beware, you opened the ethereum-recovery app instead of the Celo app. We cannot ensure the safety of using this SDK with ethereum-recovery. USE AT YOUR OWN RISK.
+            ---
+            ",
+              ],
+            ]
+          `)
+        })
+      })
+      describe('with the ethereum app', () => {
+        beforeEach(() => {
+          wallet = new LedgerWallet({}, [0, 1, 2, 3], ETHEREUM_DERIVATION_PATH, [6, 7, 8])
+          mockLedger(wallet, mockForceValidation, { name: 'ethereum' })
+        })
+        it('shows warning on initialization but still initalizes', async () => {
+          const warnMock = jest.spyOn(console, 'warn')
+          await wallet.init()
+          expect(warnMock.mock.calls).toMatchInlineSnapshot(`
+            [
+              [
+                "Beware, you opened the Ethereum app instead of the Celo app. Some features may not work correctly, including token transfers.",
+              ],
+            ]
+          `)
+        })
+      })
     })
   })
 
@@ -517,9 +556,9 @@ describe('LedgerWallet class', () => {
             )
           })
 
+          //TODO(L2) remove after march 26th 2025
           describe('[celo-legacy]', () => {
             beforeEach(async () => {
-              const kit = newKit('https://alfajores-forno.celo-testnet.org')
               celoTransaction = {
                 from: knownAddress,
                 to: otherAddress,
@@ -528,7 +567,7 @@ describe('LedgerWallet class', () => {
                 nonce: 0,
                 gas: 99,
                 gasPrice: 99,
-                feeCurrency: (await kit.contracts.getStableToken(StableToken.cUSD)).address,
+                feeCurrency: '0x874069fa1eb16d44d622f2e0ca25eea172369bc1',
               }
             })
             describe('on Cel2 with old app version', () => {
@@ -560,6 +599,7 @@ describe('LedgerWallet class', () => {
                 TEST_TIMEOUT_IN_MS
               )
             })
+            //TODO(L2) remove after march 26th 2025
             describe('on celo l1 with old app version', () => {
               test(
                 'succeeds',
@@ -750,7 +790,6 @@ describe('LedgerWallet class', () => {
         })
 
         syntheticDescribe('[cip64] synthetic', () => {
-          const kit = newKit('https://alfajores-forno.celo-testnet.org')
           beforeEach(async () => {
             celoTransaction = {
               from: knownAddress,
@@ -761,7 +800,7 @@ describe('LedgerWallet class', () => {
               gas: 99,
               maxFeePerGas: 99,
               maxPriorityFeePerGas: 99,
-              feeCurrency: (await kit.contracts.getStableToken(StableToken.cUSD)).address,
+              feeCurrency: '0x874069fa1eb16d44d622f2e0ca25eea172369bc1',
             }
           })
 
@@ -803,7 +842,6 @@ describe('LedgerWallet class', () => {
         })
 
         hardwareDescribe('[cip64] device', () => {
-          const kit = newKit('https://alfajores-forno.celo-testnet.org')
           beforeEach(async () => {
             celoTransaction = {
               from: knownAddress,
@@ -814,7 +852,7 @@ describe('LedgerWallet class', () => {
               gas: 99,
               maxFeePerGas: 99,
               maxPriorityFeePerGas: 99,
-              feeCurrency: (await kit.contracts.getStableToken(StableToken.cUSD)).address,
+              feeCurrency: '0x874069fa1eb16d44d622f2e0ca25eea172369bc1',
             }
           })
 
@@ -846,7 +884,6 @@ describe('LedgerWallet class', () => {
         })
 
         describe.skip('[cip66]', () => {
-          const kit = newKit('https://alfajores-forno.celo-testnet.org')
           beforeEach(async () => {
             celoTransaction = {
               from: knownAddress,
@@ -857,7 +894,7 @@ describe('LedgerWallet class', () => {
               gas: 99,
               maxFeePerGas: 99,
               maxPriorityFeePerGas: 99,
-              feeCurrency: (await kit.contracts.getStableToken(StableToken.cUSD)).address,
+              feeCurrency: '0x874069fa1eb16d44d622f2e0ca25eea172369bc1',
             }
           })
 

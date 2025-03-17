@@ -5,7 +5,7 @@ import { mineBlocks } from '@celo/dev-utils/lib/ganache-test'
 import Web3 from 'web3'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import AccountRegister from '../account/register'
-import Lock from '../lockedgold/lock'
+import Lock from '../lockedcelo/lock'
 import Commission from './commission'
 import ValidatorGroupRegister from './register'
 

@@ -24,7 +24,7 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/web3-contract-cache.ts:86](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L86)
+[packages/sdk/contractkit/src/web3-contract-cache.ts:88](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/web3-contract-cache.ts#L88)
 
 ## Variables
 
@@ -39,6 +39,7 @@
 | `Accounts` | (`web3`: `default`, `address`: `string`) => `Accounts` |
 | `Attestations` | (`web3`: `default`, `address`: `string`) => `Attestations` |
 | `BlockchainParameters` | (`web3`: `default`, `address`: `string`) => `BlockchainParameters` |
+| `CeloToken` | (`web3`: `default`, `address`: `string`) => `GoldToken` |
 | `CeloUnreleasedTreasury` | (`web3`: `default`, `address`: `string`) => `CeloUnreleasedTreasury` |
 | `DoubleSigningSlasher` | (`web3`: `default`, `address`: `string`) => `DoubleSigningSlasher` |
 | `DowntimeSlasher` | (`web3`: `default`, `address`: `string`) => `DowntimeSlasher` |
@@ -57,6 +58,7 @@
 | `GoldToken` | (`web3`: `default`, `address`: `string`) => `GoldToken` |
 | `Governance` | (`web3`: `default`, `address`: `string`) => `Governance` |
 | `GovernanceSlasher` | (`web3`: `default`, `address`: `string`) => `GovernanceSlasher` |
+| `LockedCelo` | (`web3`: `default`, `address`: `string`) => `LockedGold` |
 | `LockedGold` | (`web3`: `default`, `address`: `string`) => `LockedGold` |
 | `MentoFeeHandlerSeller` | (`web3`: `default`, `address`: `string`) => `MentoFeeHandlerSeller` |
 | `MultiSig` | (`web3`: `default`, `address`: `string`) => `MultiSig` |

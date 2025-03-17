@@ -1,5 +1,16 @@
 # @celo/contractkit
 
+## 9.1.0-beta.0
+
+### Minor Changes
+
+- [#535](https://github.com/celo-org/developer-tooling/pull/535) [`c184fb1`](https://github.com/celo-org/developer-tooling/commit/c184fb1f17666e436f5261d048c2c9884b678388) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Add CeloToken and LockedCelo aliases for deprecated GoldToken and LockedCelo Contracts enum
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @celo/wallet-local@7.0.1-beta.0
+
 ## 9.0.1
 
 ### Patch Changes

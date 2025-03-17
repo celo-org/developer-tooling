@@ -6,11 +6,11 @@ import { LONG_TIMEOUT_MS, testLocallyWithWeb3Node } from '../../test-utils/cliUt
 import { createMultisig } from '../../test-utils/multisigUtils'
 import { deployReleaseGoldContract } from '../../test-utils/release-gold'
 import CreateAccount from './create-account'
-import LockedGold from './locked-gold'
+import LockedCelo from './locked-gold'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL1('releasegold:locked-gold cmd', (web3: Web3) => {
+testWithAnvilL1('releasegold:locked-celo cmd', (web3: Web3) => {
   let contractAddress: string
   let kit: ContractKit
 
@@ -34,22 +34,22 @@ testWithAnvilL1('releasegold:locked-gold cmd', (web3: Web3) => {
     async () => {
       const lockedGold = await kit.contracts.getLockedGold()
       await testLocallyWithWeb3Node(
-        LockedGold,
+        LockedCelo,
         ['--contract', contractAddress, '--action', 'lock', '--value', '100'],
         web3
       )
       await testLocallyWithWeb3Node(
-        LockedGold,
+        LockedCelo,
         ['--contract', contractAddress, '--action', 'unlock', '--value', '50'],
         web3
       )
       await testLocallyWithWeb3Node(
-        LockedGold,
+        LockedCelo,
         ['--contract', contractAddress, '--action', 'lock', '--value', '75'],
         web3
       )
       await testLocallyWithWeb3Node(
-        LockedGold,
+        LockedCelo,
         ['--contract', contractAddress, '--action', 'unlock', '--value', '50'],
         web3
       )

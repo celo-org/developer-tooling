@@ -60,9 +60,11 @@ export const ContractFactories = {
   [CeloContract.MentoFeeHandlerSeller]: newMentoFeeHandlerSeller,
   [CeloContract.UniswapFeeHandlerSeller]: newUniswapFeeHandlerSeller,
   [CeloContract.GasPriceMinimum]: newGasPriceMinimum,
+  [CeloContract.CeloToken]: newGoldToken,
   [CeloContract.GoldToken]: newGoldToken,
   [CeloContract.Governance]: newGovernance,
   [CeloContract.GovernanceSlasher]: newGovernanceSlasher,
+  [CeloContract.LockedCelo]: newLockedGold,
   [CeloContract.LockedGold]: newLockedGold,
   [CeloContract.MultiSig]: newMultiSig,
   [CeloContract.OdisPayments]: newOdisPayments,
@@ -150,15 +152,22 @@ export class Web3ContractCache {
   getGasPriceMinimum() {
     return this.getContract(CeloContract.GasPriceMinimum)
   }
+  /* @deprecated use getLockedCelo */
   getGoldToken() {
-    return this.getContract(CeloContract.GoldToken)
+    return this.getContract(CeloContract.CeloToken)
+  }
+  getCeloToken() {
+    return this.getContract(CeloContract.CeloToken)
   }
   getGovernance() {
     return this.getContract(CeloContract.Governance)
   }
-
+  /* @deprecated use getLockedCelo */
   getLockedGold() {
     return this.getContract(CeloContract.LockedGold)
+  }
+  getLockedCelo() {
+    return this.getContract(CeloContract.LockedCelo)
   }
   getMultiSig(address: string) {
     return this.getContract(CeloContract.MultiSig, address)

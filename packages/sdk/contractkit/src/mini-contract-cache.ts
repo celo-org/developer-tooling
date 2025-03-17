@@ -20,11 +20,12 @@ const MINIMUM_CONTRACTS = {
     newInstance: newAccounts,
     wrapper: AccountsWrapper,
   },
+  // TODO(L2): remove
   [CeloContract.GasPriceMinimum]: {
     newInstance: newGasPriceMinimum,
     wrapper: GasPriceMinimumWrapper,
   },
-  [CeloContract.GoldToken]: {
+  [CeloContract.CeloToken]: {
     newInstance: newGoldToken,
     wrapper: GoldTokenWrapper,
   },
@@ -54,7 +55,7 @@ const contractsWhichRequireCache = new Set([
   CeloContract.DowntimeSlasher,
   CeloContract.Election,
   CeloContract.Governance,
-  CeloContract.LockedGold,
+  CeloContract.LockedCelo,
   CeloContract.Validators,
 ])
 
@@ -82,7 +83,7 @@ export class MiniContractCache implements ContractCacheType {
   }
 
   getGoldToken(): Promise<GoldTokenWrapper> {
-    return this.getContract(CeloContract.GoldToken)
+    return this.getContract(CeloContract.CeloToken)
   }
 
   getStableToken(stableToken: StableToken = StableToken.cUSD): Promise<StableTokenWrapper> {

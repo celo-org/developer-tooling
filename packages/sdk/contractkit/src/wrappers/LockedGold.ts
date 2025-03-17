@@ -237,7 +237,7 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<LockedGold> {
   }
 
   /**
-   * @dev Returns human readable configuration of the lockedgold contract
+   * @dev Returns human readable configuration of the lockedcelo contract
    * @return LockedGoldConfig object
    */
   async getHumanReadableConfig() {

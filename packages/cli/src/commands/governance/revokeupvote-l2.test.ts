@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Register from '../account/register'
-import Lock from '../lockedgold/lock'
+import Lock from '../lockedcelo/lock'
 import RevokeUpvote from './revokeupvote'
 
 process.env.NO_SYNCCHECK = 'true'
