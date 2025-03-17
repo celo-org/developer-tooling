@@ -71,15 +71,12 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo $version
 
-          # commit=$(git rev-parse --short ${{ github.sha }})
-          commit="ffdb836"
+          commit=$(git rev-parse --short ${{ github.sha }})
           echo "commit=$commit" >> "$GITHUB_OUTPUT"
           echo $commit
 
       - run: |
-          # yarn oclif pack tarballs --tarball=${{ steps.setupVars.outputs.tarballPath }}
-          # yarn oclif pack tarballs --targets=darwin-x64 --tarball=${{ steps.setupVars.outputs.tarballPath }}
-          gh release download -R celo-org/developer-tooling -D dist @celo/celocli@6.1.0
+          yarn oclif pack tarballs --tarball=${{ steps.setupVars.outputs.tarballPath }}
           yarn run homebrew
           ls dist
           cat ./homebrew/Formula/celocli.rb
@@ -135,7 +132,10 @@ jobs:
           cat >/tmp/pr-body.md <<EOL
           Update celocli formula to [${{ steps.setupVars.outputs.version }}](${{ env.RELEASE_URL }}).
 
-          @celo-org/devtooling  [Please open a follow-up pr upstream](https://github.com/${{ env.HOMEBREW_UPSTREAM }}/compare/${{ env.BASE_BRANCH }}...${{ env.HOMEBREW_FORK }}:${{ env.NEW_BRANCH }}).
+          @celo-org/devtooling:
+          - [Please open a follow-up pr upstream](https://github.com/${{ env.HOMEBREW_UPSTREAM }}/compare/${{ env.BASE_BRANCH }}...${{ env.HOMEBREW_FORK }}:${{ env.NEW_BRANCH }}?title=celocli%20${{ steps.setupVars.outputs.celocliVersion }}).
+
+          _PS: you don't actually need to merge this PR, only upstream matters._
 
           🤖 _This pull-request was opened by a robot beep boop from [@${{ env.BOT_NAME }}](https://github.com/celo-org)_ 🤖
           EOL
