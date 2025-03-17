@@ -11,6 +11,7 @@ import CustomHelp from './help'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from './test-utils/cliUtils'
 import * as config from './utils/config'
 import { readConfig } from './utils/config'
+import * as telemetry from './utils/telemetry'
 
 process.env.NO_SYNCCHECK = 'true'
 
@@ -265,6 +266,27 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
     `)
   })
 
+  it('does not log command execution error when in silent mode', async () => {
+    class TestErrorCommand extends BaseCommand {
+      static flags = {
+        ...BaseCommand.flags,
+        ...(ux.table.flags() as object),
+      }
+
+      async run() {
+        throw new Error('test error')
+      }
+    }
+
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation()
+
+    await expect(
+      testLocallyWithWeb3Node(TestErrorCommand, ['--output', 'csv'], web3)
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`"test error"`)
+
+    expect(errorSpy.mock.calls).toMatchInlineSnapshot(`[]`)
+  })
+
   it('logs connection close error', async () => {
     class TestConnectionStopErrorCommand extends BaseCommand {
       async run() {
@@ -475,6 +497,70 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
           server.close()
           resolve()
         })
+      })
+    })
+
+    describe('hide extra output when using --output flag', () => {
+      beforeEach(() => {
+        process.env.TELEMETRY_ENABLED = '1'
+        process.env.TELEMETRY_URL = 'https://telemetry.example.org'
+
+        const fetchMock = jest.fn().mockResolvedValue({
+          ok: true,
+        })
+
+        jest.spyOn(global, 'fetch').mockImplementation(fetchMock)
+      })
+
+      it('does not display telemetry information when --output flag is specified', async () => {
+        class TestTelemetryCommand extends BaseCommand {
+          id = 'test:telemetry-output'
+
+          static flags = {
+            ...BaseCommand.flags,
+            ...(ux.table.flags() as object),
+          }
+
+          async run() {
+            console.log('Successful run')
+          }
+        }
+
+        jest.spyOn(telemetry, 'telemetryInformationAlreadyPrinted').mockImplementation(() => false)
+        jest.spyOn(config, 'readConfig').mockImplementation((_: string) => {
+          return { telemetry: true } as config.CeloConfig
+        })
+
+        const printTelemetryInformation = jest
+          .spyOn(telemetry, 'printTelemetryInformation')
+          .mockImplementation()
+
+        await TestTelemetryCommand.run(['--output', 'json'])
+
+        expect(printTelemetryInformation).not.toHaveBeenCalled()
+      })
+
+      it('displays telemetry information when --output flag is not specified', async () => {
+        class TestTelemetryCommand extends BaseCommand {
+          id = 'test:telemetry-no-output'
+
+          async run() {
+            console.log('Successful run')
+          }
+        }
+
+        jest.spyOn(config, 'readConfig').mockImplementation((_: string) => {
+          return { telemetry: true } as config.CeloConfig
+        })
+
+        jest.spyOn(telemetry, 'telemetryInformationAlreadyPrinted').mockImplementation(() => false)
+        const printTelemetryInformation = jest
+          .spyOn(telemetry, 'printTelemetryInformation')
+          .mockImplementation()
+
+        await TestTelemetryCommand.run([])
+
+        expect(printTelemetryInformation).toHaveBeenCalled()
       })
     })
   })

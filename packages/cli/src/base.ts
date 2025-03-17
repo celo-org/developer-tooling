@@ -246,11 +246,31 @@ export abstract class BaseCommand extends Command {
     }
   }
 
-  async finally(arg: Error | undefined): Promise<any> {
-    try {
-      await reportUsageStatisticsIfTelemetryEnabled(this.config.configDir, !arg, this.id)
+  // We want to not display any additional output when the user has specified
+  // --output flag explicitly
+  private async shouldHideExtraOutput(arg: Error | undefined): Promise<boolean> {
+    if (!arg || !(arg instanceof CLIError)) {
+      const { flags } = await this.parse()
 
-      if (arg) {
+      return flags.hasOwnProperty('output')
+    }
+
+    return false
+  }
+
+  async finally(arg: Error | undefined): Promise<any> {
+    const hideExtraOutput = await this.shouldHideExtraOutput(arg)
+
+    try {
+      await reportUsageStatisticsIfTelemetryEnabled(
+        this.config.configDir,
+        !arg,
+        hideExtraOutput,
+        this.id
+      )
+
+      // don't display the error if the user has specified --output flag
+      if (arg && !hideExtraOutput) {
         if (!(arg instanceof CLIError)) {
           console.error(
             `
