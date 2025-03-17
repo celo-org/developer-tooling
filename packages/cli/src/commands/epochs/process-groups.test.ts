@@ -88,11 +88,23 @@ testWithAnvilL2('epochs:process-groups cmd', (web3) => {
     // @ts-expect-error we're accessing a private property
     await epochManagerWrapper.contract.methods.setToProcessGroups().send({ from })
     const [lessers, greaters] = await epochManagerWrapper.getLessersAndGreaters([electedGroup])
-    // TODO is this lessers/greaters here even correct?
+
+    // Making sure the group has not been processed yet
+    // @ts-ignore accessing a private property
+    expect(
+      await epochManagerWrapper.contract.methods.processedGroups(electedGroup).call()
+    ).not.toEqual('0')
+
     // @ts-expect-error we're accessing a private property
     await epochManagerWrapper.contract.methods
       .processGroup(electedGroup, lessers[0], greaters[0])
       .send({ from })
+
+    // Making sure the group has not been processed yet
+    // @ts-ignore accessing a private property
+    expect(await epochManagerWrapper.contract.methods.processedGroups(electedGroup).call()).toEqual(
+      '0'
+    )
 
     await testLocallyWithWeb3Node(ProcessGroups, ['--from', from], web3)
 
