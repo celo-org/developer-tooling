@@ -1,5 +1,11 @@
 # @celo/viem-account-ledger
 
+## 1.1.1-beta.0
+
+### Patch Changes
+
+- [#544](https://github.com/celo-org/developer-tooling/pull/544) [`170e91c`](https://github.com/celo-org/developer-tooling/commit/170e91cbdcdf6d8e398c423355b78f31d4c9e33c) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Allow users to use other apps than ethereum or celo, namely eth recovery in order to recovery funds or signTypedData which isnt supported by celo but would require the correct derivationPath (which, in turn, isn't supported by ethereum)
+
 ## 1.1.0
 
 ### Minor Changes

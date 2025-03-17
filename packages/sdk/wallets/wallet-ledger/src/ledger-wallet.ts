@@ -245,8 +245,8 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
         `Beware, you opened the Ethereum app instead of the Celo app. Some features may not work correctly, including token transfers.`
       )
     } else {
-      throw new Error(
-        `Beware, you opened the ${appName} app instead of the Celo app. We cannot ensure the safety of using this SDK with ${appName}.`
+      console.error(
+        `\n---\nBeware, you opened the ${appName} app instead of the Celo app. We cannot ensure the safety of using this SDK with ${appName}. USE AT YOUR OWN RISK.\n---\n`
       )
     }
     if (!appConfiguration.arbitraryDataEnabled) {
