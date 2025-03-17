@@ -90,8 +90,8 @@ testWithAnvilL2('epochs:process-groups cmd', (web3) => {
     const [lessers, greaters] = await epochManagerWrapper.getLessersAndGreaters([electedGroup])
 
     // Making sure the group has not been processed yet
-    // @ts-ignore accessing a private property
     expect(
+      // @ts-ignore accessing a private property
       await epochManagerWrapper.contract.methods.processedGroups(electedGroup).call()
     ).not.toEqual('0')
 
