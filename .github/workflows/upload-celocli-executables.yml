@@ -144,5 +144,5 @@ jobs:
           gh pr create \
             --body-file /tmp/pr-body.md \
             --title "celocli ${{ steps.setupVars.outputs.version }}" \
-            --base "upstream/${{ env.BASE_BRANCH }}" \
+            --base "origin/${{ env.BASE_BRANCH }}" \
             --head "origin/${{ env.NEW_BRANCH }}"
