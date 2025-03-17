@@ -1,4 +1,3 @@
-import chalk from 'chalk'
 import { BaseCommand } from '../../base'
 import { displaySendTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
@@ -24,11 +23,8 @@ export default class Finish extends BaseCommand {
 
     const epochManager = await kit.contracts.getEpochManager()
 
-    const isEpochProcessStarted = await epochManager.isOnEpochProcess()
-    if (!isEpochProcessStarted) {
-      const msg = 'Epoch process is not started yet'
-      console.info(chalk.red.bold(msg))
-      return msg
+    if (!(await epochManager.isOnEpochProcess())) {
+      this.error('Epoch process is not started yet')
     }
 
     await displaySendTx('finishNextEpoch', await epochManager.finishNextEpochProcessTx())
