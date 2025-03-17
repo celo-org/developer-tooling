@@ -122,12 +122,9 @@ jobs:
           # Setup the committers identity.
           git config --global user.name ${{ env.BOT_NAME }}
           git config --global user.email ${{ env.BOT_EMAIL }}
-          git remote add upstream https://github.com/${{ env.HOMEBREW_UPSTREAM }}.git
 
           # Create a new feature branch for the changes.
-          git fetch upstream ${{ env.BASE_BRANCH }}
           git checkout -b ${{ env.NEW_BRANCH }}
-          git reset --hard upstream/${{ env.BASE_BRANCH }}
           git status
           cp $cli_workspace/homebrew/Formula/celocli.rb ./Formula/c/
           git add ./Formula/c/celocli.rb
