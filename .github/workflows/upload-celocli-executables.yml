@@ -107,7 +107,7 @@ jobs:
         env:
           BOT_NAME: 'celo-org'
           BOT_EMAIL: 'celo-org@github.com'
-          HOMEBREW_FORK: 'celo-org/homebrew-core'
+          HOMEBREW_FORK: 'celo-org:homebrew-core'
           HOMEBREW_UPSTREAM: 'Homebrew/homebrew-core'
           BASE_BRANCH: master
           NEW_BRANCH: 'ci/celocli-${{ steps.setupVars.outputs.version }}'
@@ -138,11 +138,14 @@ jobs:
           cat >/tmp/pr-body.md <<EOL
           Update celocli formula to [${{ steps.setupVars.outputs.version }}](${{ env.RELEASE_URL }}).
 
-          🤖 _This pull-request was opened by a robot beep boop from [@celo-org](https://github.com/celo-org)_ 🤖
+          @celo-org/devtooling  [Please open a follow-up pr upstream](https://github.com/${{ env.HOMEBREW_UPSTREAM }}/compare/${{ env.BASE_BRANCH }}...${{ env.HOMEBREW_FORK }}:${{ env.NEW_BRANCH }}).
+
+          🤖 _This pull-request was opened by a robot beep boop from [@${{ env.BOT_NAME }}](https://github.com/celo-org)_ 🤖
           EOL
 
           gh pr create \
             --body-file /tmp/pr-body.md \
+            --reviewer @celo-org/devtooling \
             --title "celocli ${{ steps.setupVars.outputs.version }}" \
-            --base "origin/${{ env.BASE_BRANCH }}" \
-            --head "origin/${{ env.NEW_BRANCH }}"
+            --base "${{ env.BASE_BRANCH }}" \
+            --head "${{ env.NEW_BRANCH }}"
