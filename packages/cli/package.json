@@ -66,7 +66,6 @@
     "@oclif/plugin-help": "^6.2.8",
     "@oclif/plugin-not-found": "^3.2.15",
     "@oclif/plugin-plugins": "^5.4.34",
-    "@oclif/plugin-update": "^4.6.33",
     "@oclif/plugin-warn-if-update-available": "^3.1.11",
     "@safe-global/protocol-kit": "^5.0.4",
     "@safe-global/types-kit": "^1.0.0",
@@ -128,7 +127,6 @@
       "@oclif/plugin-help",
       "@oclif/plugin-not-found",
       "@oclif/plugin-plugins",
-      "@oclif/plugin-update",
       "@oclif/plugin-warn-if-update-available"
     ],
     "topics": {
