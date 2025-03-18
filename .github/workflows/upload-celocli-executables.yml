@@ -71,7 +71,8 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo $version
 
-          commit=$(git rev-parse --short ${{ github.sha }})
+          # commit=$(git rev-parse --short ${{ github.sha }})
+          commit=6.1.0
           echo "commit=$commit" >> "$GITHUB_OUTPUT"
           echo $commit
 
