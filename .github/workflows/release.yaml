@@ -114,7 +114,7 @@ jobs:
           celocli account:new
           echo "checking celo community fund balance"
           celocli account:balance 0xD533Ca259b330c7A88f74E000a3FaEa2d63B7972  --node celo
-          celocli networkyes :whitelist --node alfajores
+          celocli network :whitelist --node alfajores
 
   open-docs-pr:
     needs: release
