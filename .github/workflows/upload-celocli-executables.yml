@@ -59,6 +59,7 @@ jobs:
       - id: setupVars
         name: Setup variables
         run: |
+          # Download tarball from published release on NPM and save path
           tarballPath=$(npm pack @celo/celocli \
           --json \
           --pack-destination /tmp/ \
@@ -67,17 +68,26 @@ jobs:
           echo "tarballPath=/tmp/$tarballPath" >> "$GITHUB_OUTPUT"
           echo /tmp/$tarballPath
 
+
+          # Parse version from the release name (eg: @celo/celocli@6.1.0)
           version=$(echo ${{ github.ref_name }} | cut -d' ' -f1 | cut -d'/' -f3)
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo $version
 
+          # Get the short commit version from git
           commit=$(git rev-parse --short ${{ github.sha }})
           echo "commit=$commit" >> "$GITHUB_OUTPUT"
           echo $commit
 
-      - run: |
+      - name: Package the released tarball into platform-specific executables
+        run: |
+          # Pack the tarballs from NPM into platform specific executables
           yarn oclif pack tarballs --tarball=${{ steps.setupVars.outputs.tarballPath }}
+
+          # Run the package.json's homebrew script
           yarn run homebrew
+
+          # Sanity checks
           ls dist
           cat ./homebrew/Formula/celocli.rb
         working-directory: packages/cli
@@ -93,10 +103,12 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
 
-      - run: brew update
-      - run: brew cleanup
-      - run: ./homebrew/scripts/test.sh
-        working-directory: packages/cli
+      - name: Homebrew tests
+        run: |
+          brew update
+          brew cleanup
+          ./homebrew/scripts/test.sh
+          working-directory: packages/cli
 
       - name: Open pull-request on Homebrew repo
         if: ${{ env.HOMEBREW_FORK_TOKEN }}
@@ -126,9 +138,13 @@ jobs:
           cp $cli_workspace/homebrew/Formula/celocli.rb ./Formula/c/
           git add ./Formula/c/celocli.rb
           git diff --cached
+
+          # Commit the new Formula
           git commit -m "celocli ${{ steps.setupVars.outputs.version }}"
           git push origin ${{ env.NEW_BRANCH }} -f
 
+
+          # Write the commit message into a file
           cat >/tmp/pr-body.md <<EOL
           Update celocli formula to [${{ steps.setupVars.outputs.version }}](${{ env.RELEASE_URL }}).
 
@@ -140,9 +156,10 @@ jobs:
           🤖 _This pull-request was opened by a robot beep boop from [@${{ env.BOT_NAME }}](https://github.com/celo-org)_ 🤖
           EOL
 
+          # Open a pull-request
           gh pr create \
             --body-file /tmp/pr-body.md \
-            --reviewer @celo-org/devtooling \
+            --reviewer "celo-org/devtooling" \
             --title "celocli ${{ steps.setupVars.outputs.version }}" \
             --base "${{ env.BASE_BRANCH }}" \
             --head "${{ env.NEW_BRANCH }}"
