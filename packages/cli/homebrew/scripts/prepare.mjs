@@ -11,17 +11,17 @@ const __dirname = path.dirname(__filename)
 const CLI_ROOT = path.join(__dirname, '..', '..')
 const DIST_ASSETS = path.join(CLI_ROOT, 'dist')
 
-const { description, homepage, name, version } = JSON.parse(
+const { description, homepage, name } = JSON.parse(
   fs.readFileSync(path.join(CLI_ROOT, 'package.json'))
 )
 
-const { GITHUB_SHA_SHORT } = process.env
+const { GITHUB_SHA_SHORT, TARBALL_VERSION } = process.env
 
 if (!GITHUB_SHA_SHORT) {
   console.log('Missing GITHUB_SHA_SHORT in environment; exiting')
   process.exit(1)
 }
-if (parse(version)?.prerelease.length) {
+if (parse(TARBALL_VERSION)?.prerelease.length) {
   console.log('Not on stable release; exiting')
   process.exit(1)
 }
@@ -38,12 +38,12 @@ const TEMPLATES = path.join(CLI_ROOT, 'homebrew', 'templates')
 const fileSuffix = '.tar.xz'
 const ARCH_INTEL = 'x64'
 const ARCH_ARM = 'arm64'
-const versionedName = `${name}@${version}`
+const versionedName = `${name}@${TARBALL_VERSION}`
 const urlPrefix = `https://github.com/celo-org/developer-tooling/releases/download/${encodeURIComponent(
   versionedName
 )}`
 
-const fileNamePrefix = `celocli-v${version}-${GITHUB_SHA_SHORT}`
+const fileNamePrefix = `celocli-v${TARBALL_VERSION}-${GITHUB_SHA_SHORT}`
 const fileNameMacIntel = `${fileNamePrefix}-darwin-${ARCH_INTEL}${fileSuffix}`
 const fileNameMacArm = `${fileNamePrefix}-darwin-${ARCH_ARM}${fileSuffix}`
 const fileNameLinuxIntel = `${fileNamePrefix}-linux-${ARCH_INTEL}${fileSuffix}`
@@ -62,7 +62,7 @@ async function updateHomebrewFormula() {
   ])
 
   const templateReplaced = template
-    .replace('__CLI_VERSION__', version)
+    .replace('__CLI_VERSION__', TARBALL_VERSION)
     .replace('__CLI__HOMEPAGE__', homepage)
     .replace('__CLI__DESC__', description)
 

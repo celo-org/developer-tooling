@@ -27,6 +27,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref_name }}
+          fetch-depth: 0
           fetch-tags: true
 
       - name: Set up Homebrew
@@ -58,31 +59,37 @@ jobs:
         run: yarn
       - id: setupVars
         name: Setup variables
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          # Download tarball from published release on NPM and save path
-          tarballPath=$(npm pack @celo/celocli \
-          --json \
-          --pack-destination /tmp/ \
-          | jq 'first.filename' -r)
-
-          echo "tarballPath=/tmp/$tarballPath" >> "$GITHUB_OUTPUT"
-          echo /tmp/$tarballPath
-
-
           # Parse version from the release name (eg: @celo/celocli@6.1.0)
           version=$(echo ${{ github.ref_name }} | cut -d' ' -f1 | cut -d'/' -f3)
           echo "version=$version" >> "$GITHUB_OUTPUT"
           echo $version
 
-          # Get the short commit version from git
-          commit=$(git rev-parse --short ${{ github.sha }})
+          # Get the short commit from github release
+          commit=$(gh release view @celo/celocli@$version --json tagName \
+            | jq '.tagName' \
+            | xargs git rev-list -n 1 --abbrev-commit)
           echo "commit=$commit" >> "$GITHUB_OUTPUT"
           echo $commit
 
+          # Download tarball from published release on NPM and save path
+          tarballPath=$(npm pack @celo/celocli@$version \
+          --json \
+          --pack-destination /tmp/ \
+          | jq 'first.filename' -r)
+          echo "tarballPath=/tmp/$tarballPath" >> "$GITHUB_OUTPUT"
+          echo /tmp/$tarballPath
+
       - name: Package the released tarball into platform-specific executables
         run: |
+          # Make sure oclif uses the right pkg.version and commit_sha
+          # because they aren't configurable
+          git checkout ${{ env.GITHUB_SHA_SHORT }}
           # Pack the tarballs from NPM into platform specific executables
           yarn oclif pack tarballs --tarball=${{ steps.setupVars.outputs.tarballPath }}
+          git checkout -
 
           # Run the package.json's homebrew script
           yarn run homebrew
@@ -93,6 +100,7 @@ jobs:
         working-directory: packages/cli
         env:
           GITHUB_SHA_SHORT: ${{ steps.setupVars.outputs.commit }}
+          TARBALL_VERSION: ${{ steps.setupVars.outputs.version }}
           GH_TOKEN: ${{ github.token }}
 
       - name: Upload executables on the github release
