@@ -86,10 +86,11 @@ jobs:
         run: |
           # Make sure oclif uses the right pkg.version and commit_sha
           # because they aren't configurable
+          # this is only useful when manually triggering a release, this does nothing when
+          # dispatched by a standard release
           git checkout ${{ env.GITHUB_SHA_SHORT }}
           # Pack the tarballs from NPM into platform specific executables
-          cmd="../../node_modules/oclif/bin/run.js"
-          $cmd pack tarballs --tarball=${{ steps.setupVars.outputs.tarballPath }}
+          yarn oclif pack tarballs --tarball=${{ steps.setupVars.outputs.tarballPath }}
           git checkout -
 
           # Run the package.json's homebrew script
