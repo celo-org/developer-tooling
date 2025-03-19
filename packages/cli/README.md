@@ -20,13 +20,18 @@ For the cutting edge of development you can install the latest beta
 npm install -g @celo/celocli@beta
 ```
 
+> [!TIP]
+> IF you're on macOS or Linux, you may use [Homebrew](https://brew.sh/) to install this. `brew install celocli`
+> Other binaries are directly attached to the Github releases (eg: the [6.1.0 release](https://github.com/celo-org/developer-tooling/releases/tag/%40celo%2Fcelocli%406.1.0)).
+> Please open up an issue if you'd like to see this CLI distributed elsewhere.
+
 ## Using celocli
 
 To see available commands
 
 ```bash
 
-celocli commands 
+celocli commands
 
 ```
 
@@ -34,7 +39,7 @@ Check version
 
 ```bash
 
-celocli --version 
+celocli --version
 
 ```
 
@@ -42,20 +47,18 @@ Example of running a command.
 
 ```bash
 
-celocli network:whitelist --node celo 
+celocli network:whitelist --node celo
 
 ```
 
 ### Documentation
 
-[Head to the documentation](https://docs.celo.org/cli) to read and learn more about the Celo 
+[Head to the documentation](https://docs.celo.org/cli) to read and learn more about the Celo
 CLI.
-
-
 
 ## How we work
 
-We are a GitHub-first team, which means we have a strong preference for communicating via GitHub. 
+We are a GitHub-first team, which means we have a strong preference for communicating via GitHub.
 Please use GitHub to:
 
 🐞 [File a bug report](https://github.com/celo-org/developer-tooling/issues/new/choose)
@@ -69,11 +72,9 @@ Please use GitHub to:
 🚔 [Report a security vulnerability](https://github.com/celo-org/developer-tooling/issues/new/choose)
 
 > [!TIP]
-> 
-> Please avoid messaging us via Slack, Telegram, or email. We are more likely to respond to you on 
+>
+> Please avoid messaging us via Slack, Telegram, or email. We are more likely to respond to you on
 > GitHub than if you message us anywhere else. We actively monitor GitHub, and will get back to you shortly 🌟
-
-
 
 ## Development
 

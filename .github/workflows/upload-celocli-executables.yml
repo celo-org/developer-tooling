@@ -1,0 +1,173 @@
+name: Upload celocli executables
+
+on:
+  release:
+    types: [released]
+
+jobs:
+  upload:
+    name: Upload executables to a specific @celo/celocli release
+    runs-on: [ubuntu-latest]
+    permissions:
+      contents: write
+      id-token: write
+      pull-requests: write
+      repository-projects: write
+    if: contains(github.ref_name, 'celocli') == true
+    steps:
+      - name: Get Token from Akeyless
+        id: get_token
+        uses: docker://us-west1-docker.pkg.dev/devopsre/akeyless-public/akeyless-action:latest
+        with:
+          api-url: https://api.gateway.akeyless.celo-networks-dev.org
+          access-id: p-kf9vjzruht6l
+          dynamic-secrets: '{"/dynamic-secrets/keys/github/homebrew-core/contents=write":"HOMEBREW_FORK_TOKEN"}'
+
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+
+      - name: Checkout Homebrew Repo
+        uses: actions/checkout@v4
+        with:
+          repository: 'celo-org/homebrew-core'
+          path: '/home/runner/work/developer-tooling/developer-tooling/homebrew'
+          ref: master
+          token: ${{ env.HOMEBREW_FORK_TOKEN }}
+
+      - name: Setup Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+      - name: 'enable corepack for yarn'
+        run: sudo corepack enable yarn
+        shell: bash
+      # must call twice because of chicken and egg problem with yarn and node
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+      - name: Install Dependencies
+        shell: bash
+        run: yarn
+      - id: setupVars
+        name: Setup variables
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Parse version from the release name (eg: @celo/celocli@6.1.0)
+          version=$(echo ${{ github.ref_name }} | cut -d' ' -f1 | cut -d'/' -f3)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo $version
+
+          # Get the short commit from github release
+          commit=$(gh release view @celo/celocli@$version --json tagName \
+            | jq '.tagName' \
+            | xargs git rev-list -n 1 --abbrev-commit)
+          echo "commit=$commit" >> "$GITHUB_OUTPUT"
+          echo $commit
+
+          # Download tarball from published release on NPM and save path
+          tarballPath=$(npm pack @celo/celocli@$version \
+          --json \
+          --pack-destination /tmp/ \
+          | jq 'first.filename' -r)
+          echo "tarballPath=/tmp/$tarballPath" >> "$GITHUB_OUTPUT"
+          echo /tmp/$tarballPath
+
+      - name: Package the released tarball into platform-specific executables
+        run: |
+          # Pack the tarballs from NPM into platform specific executables
+          yarn oclif pack tarballs --tarball=${{ steps.setupVars.outputs.tarballPath }}
+
+          # Uncomment the following line and comment the one above
+          # if you wanna speed up without compiling for testing purposes
+          # gh release download -R celo-org/developer-tooling -D dist @celo/celocli@${{ steps.setupVars.outputs.version }}
+
+          # Run the package.json's homebrew script
+          yarn run homebrew
+
+          # Sanity checks
+          ls dist
+          cat ./homebrew/Formula/celocli.rb
+        working-directory: packages/cli
+        env:
+          GITHUB_SHA_SHORT: ${{ steps.setupVars.outputs.commit }}
+          TARBALL_VERSION: ${{ steps.setupVars.outputs.version }}
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Upload executables on the github release
+        working-directory: packages/cli
+        run: |
+          ls -la ./dist/
+          gh release upload --clobber @celo/celocli@${{ steps.setupVars.outputs.version }} ./dist/*.xz
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Homebrew tests
+        working-directory: packages/cli
+        run: |
+          brew update
+          brew cleanup
+          ./homebrew/scripts/test.sh
+
+      - name: Open pull-request on Homebrew repo
+        if: ${{ env.HOMEBREW_FORK_TOKEN }}
+        working-directory: packages/cli
+        env:
+          BOT_NAME: 'celo-org'
+          BOT_EMAIL: 'celo-org@github.com'
+          HOMEBREW_FORK: 'celo-org:homebrew-core'
+          HOMEBREW_UPSTREAM: 'Homebrew/homebrew-core'
+          BASE_BRANCH: master
+          NEW_BRANCH: 'ci/celocli-${{ steps.setupVars.outputs.version }}'
+          GH_TOKEN: ${{ env.HOMEBREW_FORK_TOKEN }}
+          RELEASE_URL: 'https://github.com/celo-org/developer-tooling/releases/download/%40celo%2Fcelocli%40${{ steps.setupVars.outputs.version }}'
+        run: |
+          set -x
+
+          cli_workspace=$(pwd)
+          cd /home/runner/work/developer-tooling/developer-tooling/homebrew
+
+          # Setup the committers identity.
+          git config --global user.name ${{ env.BOT_NAME }}
+          git config --global user.email ${{ env.BOT_EMAIL }}
+
+          # Create a new feature branch for the changes.
+          git checkout -b ${{ env.NEW_BRANCH }}
+          git status
+          cp $cli_workspace/homebrew/Formula/celocli.rb ./Formula/c/
+          git add ./Formula/c/celocli.rb
+          git diff --cached
+
+          # Commit the new Formula
+          git commit -m "celocli ${{ steps.setupVars.outputs.version }}"
+          git push origin ${{ env.NEW_BRANCH }} -f
+
+
+          # Write the commit message into a file
+          cat >/tmp/pr-body.md <<EOL
+          Update celocli formula to [${{ steps.setupVars.outputs.version }}](${{ env.RELEASE_URL }}).
+
+          @celo-org/devtooling:
+          - [Please open a follow-up pr upstream](https://github.com/${{ env.HOMEBREW_UPSTREAM }}/compare/${{ env.BASE_BRANCH }}...${{ env.HOMEBREW_FORK }}:${{ env.NEW_BRANCH }}?title=celocli%20${{ steps.setupVars.outputs.celocliVersion }}).
+
+          _PS: you don't actually need to merge this PR, only upstream matters._
+
+          🤖 _This pull-request was opened by a robot beep boop from [@${{ env.BOT_NAME }}](https://github.com/celo-org)_ 🤖
+          EOL
+
+          # Open a pull-request
+          gh pr create \
+            --body-file /tmp/pr-body.md \
+            --reviewer "celo-org/devtooling" \
+            --title "celocli ${{ steps.setupVars.outputs.version }}" \
+            --base "${{ env.BASE_BRANCH }}" \
+            --head "${{ env.NEW_BRANCH }}"

@@ -17,9 +17,10 @@ jobs:
       id-token: write
       pull-requests: write
       repository-projects: write
-    outputs: 
+    outputs:
       publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
       published: ${{ steps.changesets.outputs.published }}
+      celocliVersion: ${{ steps.extractCelocliVersion.outputs.celocliVersion }}
 
     steps:
       - name: Checkout Repo
@@ -57,18 +58,18 @@ jobs:
           # This expects you to have a script called release which does a build for your packages and calls changeset publish
           publish: yarn release
           version: yarn version-and-reinstall
-  
+
   # release gives an array of published packages as jsob objects, we need an array of strings for installing
   prepare:
     name: Format Output for Install
     if: needs.release.outputs.published
-    needs: release 
+    needs: release
     runs-on: ubuntu-latest
     container:
       image: node:20-bullseye
-    outputs:  
-      result: "${{ steps.map.outputs.output }}"
-    steps:              
+    outputs:
+      result: '${{ steps.map.outputs.output }}'
+    steps:
       - name: Install jq
         if: needs.release.outputs.published
         uses: dcarbone/install-jq-action@v3.0.1
