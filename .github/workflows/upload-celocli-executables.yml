@@ -84,14 +84,9 @@ jobs:
 
       - name: Package the released tarball into platform-specific executables
         run: |
-          # Make sure oclif uses the right pkg.version and commit_sha
-          # because they aren't configurable
-          # this is only useful when manually triggering a release, this does nothing when
-          # dispatched by a standard release
-          git checkout ${{ env.GITHUB_SHA_SHORT }}
           # Pack the tarballs from NPM into platform specific executables
-          yarn oclif pack tarballs --tarball=${{ steps.setupVars.outputs.tarballPath }}
-          git checkout -
+          # yarn oclif pack tarballs --tarball=${{ steps.setupVars.outputs.tarballPath }}
+          gh release download -R celo-org/developer-tooling -D dist @celo/celocli@${{ steps.setupVars.outputs.version }}
 
           # Run the package.json's homebrew script
           yarn run homebrew
@@ -114,11 +109,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
 
       - name: Homebrew tests
+        working-directory: packages/cli
         run: |
           brew update
           brew cleanup
           ./homebrew/scripts/test.sh
-          working-directory: packages/cli
 
       - name: Open pull-request on Homebrew repo
         if: ${{ env.HOMEBREW_FORK_TOKEN }}
