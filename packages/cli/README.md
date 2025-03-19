@@ -21,7 +21,7 @@ npm install -g @celo/celocli@beta
 ```
 
 > [!TIP]
-> IF you're on macOS or Linux, you may use [Homebrew](https://brew.sh/) to install this. `brew install celocli`
+> IF you're on macOS or Linux, you may use [Homebrew](https://brew.sh/) to install this. `brew install celo-org/brew/celocli`
 > Other binaries are directly attached to the Github releases (eg: the [6.1.0 release](https://github.com/celo-org/developer-tooling/releases/tag/%40celo%2Fcelocli%406.1.0)).
 > Please open up an issue if you'd like to see this CLI distributed elsewhere.
 
