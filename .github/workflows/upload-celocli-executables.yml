@@ -85,8 +85,11 @@ jobs:
       - name: Package the released tarball into platform-specific executables
         run: |
           # Pack the tarballs from NPM into platform specific executables
-          # yarn oclif pack tarballs --tarball=${{ steps.setupVars.outputs.tarballPath }}
-          gh release download -R celo-org/developer-tooling -D dist @celo/celocli@${{ steps.setupVars.outputs.version }}
+          yarn oclif pack tarballs --tarball=${{ steps.setupVars.outputs.tarballPath }}
+
+          # Uncomment the following line and comment the one above
+          # if you wanna speed up without compiling for testing purposes
+          # gh release download -R celo-org/developer-tooling -D dist @celo/celocli@${{ steps.setupVars.outputs.version }}
 
           # Run the package.json's homebrew script
           yarn run homebrew
