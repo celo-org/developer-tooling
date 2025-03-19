@@ -179,8 +179,7 @@
     },
     "repositoryPrefix": "https://github.com/celo-org/developer-tooling/tree/master/packages/cli/<%- commandPath %>",
     "hooks": {
-      "prerun": "./lib/hooks/prerun/plugin-warning",
-      "postrun": "./lib/hooks/postrun/feedback"
+      "prerun": "./lib/hooks/prerun/plugin-warning"
     }
   }
 }
