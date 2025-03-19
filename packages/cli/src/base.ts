@@ -246,11 +246,35 @@ export abstract class BaseCommand extends Command {
     }
   }
 
-  async finally(arg: Error | undefined): Promise<any> {
-    try {
-      await reportUsageStatisticsIfTelemetryEnabled(this.config.configDir, !arg, this.id)
+  // We want to not display any additional output when the user has specified
+  // --output flag explicitly
+  private async shouldHideExtraOutput(arg: Error | undefined): Promise<boolean> {
+    // This check is needed because we depend on this.parse() and it might throw
+    // if there's a flag validation error (which is an absolutely valid error)
+    // and so we need to make sure that the error is of a different kind or
+    // there's no error at all
+    if (!arg || !(arg instanceof CLIError)) {
+      const { flags } = await this.parse()
 
-      if (arg) {
+      return flags.hasOwnProperty('output')
+    }
+
+    return false
+  }
+
+  async finally(arg: Error | undefined): Promise<any> {
+    const hideExtraOutput = await this.shouldHideExtraOutput(arg)
+
+    try {
+      await reportUsageStatisticsIfTelemetryEnabled(
+        this.config.configDir,
+        !arg,
+        hideExtraOutput,
+        this.id
+      )
+
+      // don't display the error if the user has specified --output flag
+      if (arg && !hideExtraOutput) {
         if (!(arg instanceof CLIError)) {
           console.error(
             `
