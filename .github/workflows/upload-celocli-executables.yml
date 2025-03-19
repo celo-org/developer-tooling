@@ -88,7 +88,8 @@ jobs:
           # because they aren't configurable
           git checkout ${{ env.GITHUB_SHA_SHORT }}
           # Pack the tarballs from NPM into platform specific executables
-          yarn oclif pack tarballs --tarball=${{ steps.setupVars.outputs.tarballPath }}
+          cmd="../../node_modules/oclif/bin/run.js"
+          $cmd pack tarballs --tarball=${{ steps.setupVars.outputs.tarballPath }}
           git checkout -
 
           # Run the package.json's homebrew script
