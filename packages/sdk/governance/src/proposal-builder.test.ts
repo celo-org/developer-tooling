@@ -140,4 +140,51 @@ testWithAnvilL2('ProposalBuilder', (web3) => {
       expect(proposal[0].input).toBeDefined()
     })
   })
+  describe('fromJsonTx', () => {
+    it('checks CoreContract JSON transaction', async () => {
+      const tx = {
+        contract: 'FeeCurrencyDirectory',
+        function: 'setCurrencyConfig',
+        args: [
+          '0x765DE816845861e75A25fCA122bb6898B8B1282a',
+          '0xefB84935239dAcdecF7c5bA76d8dE40b077B7b33',
+          '50000',
+        ],
+        value: '0',
+      }
+      await expect(proposalBuilder.fromJsonTx(tx)).resolves.toMatchInlineSnapshot(`
+        {
+          "input": "0x216ab7df000000000000000000000000765de816845861e75a25fca122bb6898b8b1282a000000000000000000000000efb84935239dacdecf7c5ba76d8de40b077b7b33000000000000000000000000000000000000000000000000000000000000c350",
+          "to": "0x5a7D21C9255DAA32109c8136661D7e853Fc5BF63",
+          "value": "0",
+        }
+      `)
+    })
+    it('gives info when it fails to build transaction', async () => {
+      const tx = {
+        contract: 'SuperContract',
+        function: 'superFunction',
+        args: ['0xa435d2BaBDF80A66eD06A8D981edFE6f5DdAeCfB', '1000'],
+        value: '0',
+      }
+      await expect(proposalBuilder.fromJsonTx(tx)).rejects.toThrowErrorMatchingInlineSnapshot(`
+        "Couldn't build call for transaction:
+
+        {
+          "contract": "SuperContract",
+          "function": "superFunction",
+          "args": [
+            "0xa435d2BaBDF80A66eD06A8D981edFE6f5DdAeCfB",
+            "1000"
+          ],
+          "value": "0"
+        }
+
+        At least one of the following issues must be corrected:
+          1. SuperContract not (yet) registered
+          2. SuperContract is not a core celo contract so address must be specified
+        "
+      `)
+    })
+  })
 })

@@ -27,7 +27,7 @@ const TELEMETRY_URL = 'https://pag.mainnet.celo-testnet.org/metrics'
 
 const UNKNOWN_COMMAND = '_unknown'
 
-const telemetryInformationAlreadyPrinted = (configDir: string) => {
+export const telemetryInformationAlreadyPrinted = (configDir: string) => {
   try {
     return fs.existsSync(path.join(configDir, TELEMETRY_PRINTED_FILE))
   } catch (err) {
@@ -48,6 +48,7 @@ const markTelemetryInformationAsPrinted = (configDir: string) => {
 export const reportUsageStatisticsIfTelemetryEnabled = (
   configDir: string,
   success: boolean,
+  hideUsageInformation: boolean = false,
   command: string = UNKNOWN_COMMAND
 ) => {
   if (process.env.TELEMETRY_ENABLED === '0') {
@@ -59,8 +60,9 @@ export const reportUsageStatisticsIfTelemetryEnabled = (
   if (config.telemetry === true) {
     const telemetry = getTelemetryOptions(command, success)
 
-    // Only show the information upon first usage
-    if (!telemetryInformationAlreadyPrinted(configDir)) {
+    // Only show the information upon first usage and when it shouldn't be hidden according to
+    // hideUsageInformation flag
+    if (!hideUsageInformation && !telemetryInformationAlreadyPrinted(configDir)) {
       printTelemetryInformation()
       markTelemetryInformationAsPrinted(configDir)
     }

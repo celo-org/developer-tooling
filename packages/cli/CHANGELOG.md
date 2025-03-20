@@ -1,5 +1,25 @@
 # Changelog
 
+## 6.2.0-beta.0
+
+### Minor Changes
+
+- [#540](https://github.com/celo-org/developer-tooling/pull/540) [`a92fa0c`](https://github.com/celo-org/developer-tooling/commit/a92fa0c6471e5d2903e9e1d2508b667a7d24cf0e) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Add a check to governance:propose for the flag descriptionURL. The checks verifies that the URL points to the correct governance repository.
+
+- [#535](https://github.com/celo-org/developer-tooling/pull/535) [`c184fb1`](https://github.com/celo-org/developer-tooling/commit/c184fb1f17666e436f5261d048c2c9884b678388) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - add lockedcelo:**_ alias for all lockedgold:_** commands
+
+  (tiny break): network:paramamters will output the contract name LockedGold as LockedCelo now
+
+### Patch Changes
+
+- Updated dependencies [[`c184fb1`](https://github.com/celo-org/developer-tooling/commit/c184fb1f17666e436f5261d048c2c9884b678388), [`170e91c`](https://github.com/celo-org/developer-tooling/commit/170e91cbdcdf6d8e398c423355b78f31d4c9e33c), [`c184fb1`](https://github.com/celo-org/developer-tooling/commit/c184fb1f17666e436f5261d048c2c9884b678388), [`55f1e99`](https://github.com/celo-org/developer-tooling/commit/55f1e99670134b5c885ee8debb22c7d370a7a11a)]:
+  - @celo/contractkit@9.1.0-beta.0
+  - @celo/wallet-ledger@7.0.1-beta.0
+  - @celo/governance@5.1.6-beta.0
+  - @celo/explorer@5.0.15-beta.0
+  - @celo/wallet-hsm-azure@7.0.1-beta.0
+  - @celo/wallet-local@7.0.1-beta.0
+
 ## 6.1.0
 
 ### Minor Changes
