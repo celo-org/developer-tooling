@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@celo/abis": "11.0.0",
-    "@celo/abis-12": "npm:@celo/abis@12.0.0-canary.87",
+    "@celo/abis-12": "npm:@celo/abis@12.0.1",
     "@celo/base": "^7.0.1",
     "@celo/connect": "^6.1.1",
     "@celo/contractkit": "^9.1.0-beta.0",
