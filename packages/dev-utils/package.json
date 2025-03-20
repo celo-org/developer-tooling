@@ -28,6 +28,7 @@
     "ganache": "npm:@celo/ganache@7.8.0-unofficial.0",
     "targz": "^1.0.1",
     "tmp": "^0.1.0",
+    "viem": "^2.23.5",
     "web3": "1.10.4",
     "web3-core-helpers": "1.10.4"
   },

@@ -213,8 +213,8 @@ export abstract class BaseCommand extends Command {
 
   async init() {
     if (this.requireSynced) {
-      const web3 = await this.getWeb3()
-      await requireNodeIsSynced(web3)
+      const { chain } = await this.getPublicClient()
+      await requireNodeIsSynced(chain)
     }
     const kit = await this.getKit()
     const res = await this.parse()

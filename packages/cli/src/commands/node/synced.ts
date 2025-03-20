@@ -1,6 +1,6 @@
 import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
-import { nodeIsSynced } from '../../utils/helpers'
+import { nodeIsSynced, nodeIsSyncedRaw } from '../../utils/helpers'
 
 export default class NodeSynced extends BaseCommand {
   static description = 'Check if the node is synced'
@@ -15,15 +15,15 @@ export default class NodeSynced extends BaseCommand {
   requireSynced = false
 
   async run() {
-    const web3 = await this.getWeb3()
     const res = await this.parse(NodeSynced)
+    const { chain } = await this.getPublicClient()
 
     if (res.flags.verbose) {
-      const status = await web3.eth.isSyncing()
+      const status = await nodeIsSyncedRaw(chain)
       if (typeof status !== 'boolean') {
         console.log(status)
       }
     }
-    console.log(await nodeIsSynced(web3))
+    console.log(await nodeIsSynced(chain))
   }
 }
