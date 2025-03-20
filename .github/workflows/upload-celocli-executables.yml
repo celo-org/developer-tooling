@@ -21,7 +21,7 @@ jobs:
         with:
           api-url: https://api.gateway.akeyless.celo-networks-dev.org
           access-id: p-kf9vjzruht6l
-          dynamic-secrets: '{"/dynamic-secrets/keys/github/homebrew-core/contents=write":"HOMEBREW_FORK_TOKEN"}'
+          dynamic-secrets: '{"/dynamic-secrets/keys/github/homebrew-brew/contents=write":"HOMEBREW_BREW_TOKEN"}'
 
       - name: Checkout Repo
         uses: actions/checkout@v4
@@ -34,13 +34,13 @@ jobs:
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@master
 
-      - name: Checkout Homebrew Repo
+      - name: Checkout Celo Homebrew Tap
         uses: actions/checkout@v4
         with:
-          repository: 'celo-org/homebrew-core'
-          path: '/home/runner/work/developer-tooling/developer-tooling/homebrew'
-          ref: master
-          token: ${{ env.HOMEBREW_FORK_TOKEN }}
+          repository: 'celo-org/homebrew-brew'
+          path: '/home/runner/work/developer-tooling/developer-tooling/homebrew-brew'
+          ref: main
+          token: ${{ env.HOMEBREW_BREW_TOKEN }}
 
       - name: Setup Node.js 20.x
         uses: actions/setup-node@v4
@@ -65,22 +65,20 @@ jobs:
           # Parse version from the release name (eg: @celo/celocli@6.1.0)
           version=$(echo ${{ github.ref_name }} | cut -d' ' -f1 | cut -d'/' -f3)
           echo "version=$version" >> "$GITHUB_OUTPUT"
-          echo $version
 
           # Get the short commit from github release
           commit=$(gh release view @celo/celocli@$version --json tagName \
             | jq '.tagName' \
             | xargs git rev-list -n 1 --abbrev-commit)
           echo "commit=$commit" >> "$GITHUB_OUTPUT"
-          echo $commit
-
           # Download tarball from published release on NPM and save path
-          tarballPath=$(npm pack @celo/celocli@$version \
+          tarballPath=/tmp/$(npm pack @celo/celocli@$version \
           --json \
           --pack-destination /tmp/ \
           | jq 'first.filename' -r)
-          echo "tarballPath=/tmp/$tarballPath" >> "$GITHUB_OUTPUT"
-          echo /tmp/$tarballPath
+          echo "tarballPath=$tarballPath" >> "$GITHUB_OUTPUT"
+
+          echo $GITHUB_OUTPUT
 
       - name: Package the released tarball into platform-specific executables
         run: |
@@ -119,22 +117,21 @@ jobs:
           ./homebrew/scripts/test.sh
 
       - name: Open pull-request on Homebrew repo
-        if: ${{ env.HOMEBREW_FORK_TOKEN }}
+        if: ${{ env.HOMEBREW_BREW_TOKEN }}
         working-directory: packages/cli
         env:
           BOT_NAME: 'celo-org'
           BOT_EMAIL: 'celo-org@github.com'
-          HOMEBREW_FORK: 'celo-org:homebrew-core'
-          HOMEBREW_UPSTREAM: 'Homebrew/homebrew-core'
-          BASE_BRANCH: master
+          HOMEBREW_FORK: 'celo-org:homebrew-brew'
+          BASE_BRANCH: main
           NEW_BRANCH: 'ci/celocli-${{ steps.setupVars.outputs.version }}'
-          GH_TOKEN: ${{ env.HOMEBREW_FORK_TOKEN }}
+          GH_TOKEN: ${{ env.HOMEBREW_BREW_TOKEN }}
           RELEASE_URL: 'https://github.com/celo-org/developer-tooling/releases/download/%40celo%2Fcelocli%40${{ steps.setupVars.outputs.version }}'
         run: |
           set -x
 
           cli_workspace=$(pwd)
-          cd /home/runner/work/developer-tooling/developer-tooling/homebrew
+          cd /home/runner/work/developer-tooling/developer-tooling/homebrew-brew
 
           # Setup the committers identity.
           git config --global user.name ${{ env.BOT_NAME }}
@@ -143,7 +140,7 @@ jobs:
           # Create a new feature branch for the changes.
           git checkout -b ${{ env.NEW_BRANCH }}
           git status
-          cp $cli_workspace/homebrew/Formula/celocli.rb ./Formula/c/
+          cp $cli_workspace/homebrew/Formula/celocli.rb ./Formula/celocli.rb
           git add ./Formula/c/celocli.rb
           git diff --cached
 
@@ -155,11 +152,6 @@ jobs:
           # Write the commit message into a file
           cat >/tmp/pr-body.md <<EOL
           Update celocli formula to [${{ steps.setupVars.outputs.version }}](${{ env.RELEASE_URL }}).
-
-          @celo-org/devtooling:
-          - [Please open a follow-up pr upstream](https://github.com/${{ env.HOMEBREW_UPSTREAM }}/compare/${{ env.BASE_BRANCH }}...${{ env.HOMEBREW_FORK }}:${{ env.NEW_BRANCH }}?title=celocli%20${{ steps.setupVars.outputs.celocliVersion }}).
-
-          _PS: you don't actually need to merge this PR, only upstream matters._
 
           🤖 _This pull-request was opened by a robot beep boop from [@${{ env.BOT_NAME }}](https://github.com/celo-org)_ 🤖
           EOL

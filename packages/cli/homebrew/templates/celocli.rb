@@ -4,6 +4,7 @@ class Celocli < Formula
   url "__CLI_MAC_INTEL_DOWNLOAD_URL__"
   sha256 "__CLI_MAC_INTEL_SHA256__"
   version "__CLI_VERSION__"
+  license "Apache-2.0"
   version_scheme 1
 
   on_macos do
