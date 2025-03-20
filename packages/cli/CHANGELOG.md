@@ -1,5 +1,21 @@
 # Changelog
 
+## 6.2.0-beta.1
+
+### Minor Changes
+
+- [#533](https://github.com/celo-org/developer-tooling/pull/533) [`549450f`](https://github.com/celo-org/developer-tooling/commit/549450f312ffa8a61f2af081df39e11c1a9d4500) Thanks [@soloseng](https://github.com/soloseng)! - added support for epochManager processGroups function to contractkit && celocli
+
+### Patch Changes
+
+- [#549](https://github.com/celo-org/developer-tooling/pull/549) [`b6e4716`](https://github.com/celo-org/developer-tooling/commit/b6e4716e8ea6263120fd8da964bdebba45ee4114) Thanks [@shazarre](https://github.com/shazarre)! - Hide extra output, remove feedback postrun hook
+
+- [#532](https://github.com/celo-org/developer-tooling/pull/532) [`b4f560c`](https://github.com/celo-org/developer-tooling/commit/b4f560c17fcf100def9ca9682859a32a84f1e632) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Update oclif dependencies
+
+- Updated dependencies [[`78f9831`](https://github.com/celo-org/developer-tooling/commit/78f9831f43b13853a32d697eb3b1626ad52ced42), [`549450f`](https://github.com/celo-org/developer-tooling/commit/549450f312ffa8a61f2af081df39e11c1a9d4500)]:
+  - @celo/contractkit@9.1.0-beta.1
+  - @celo/governance@5.1.6-beta.1
+
 ## 6.2.0-beta.0
 
 ### Minor Changes

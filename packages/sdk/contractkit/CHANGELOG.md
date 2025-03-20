@@ -1,5 +1,15 @@
 # @celo/contractkit
 
+## 9.1.0-beta.1
+
+### Minor Changes
+
+- [#533](https://github.com/celo-org/developer-tooling/pull/533) [`549450f`](https://github.com/celo-org/developer-tooling/commit/549450f312ffa8a61f2af081df39e11c1a9d4500) Thanks [@soloseng](https://github.com/soloseng)! - added support for epochManager processGroups function to contractkit && celocli
+
+### Patch Changes
+
+- [#553](https://github.com/celo-org/developer-tooling/pull/553) [`78f9831`](https://github.com/celo-org/developer-tooling/commit/78f9831f43b13853a32d697eb3b1626ad52ced42) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Use production release of @celo/abis
+
 ## 9.1.0-beta.0
 
 ### Minor Changes
