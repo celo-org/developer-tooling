@@ -13,7 +13,7 @@ import {
 
 let instance: null | Anvil = null
 
-const ANVIL_PORT = 8546
+export const ANVIL_PORT = 8546
 
 export const STABLES_ADDRESS = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
 

@@ -14,29 +14,11 @@ import {
   walletActions,
 } from 'viem'
 import { celo, celoAlfajores } from 'viem/chains'
+import { ANVIL_PORT, DEFAULT_OWNER_ADDRESS } from '../anvil-test'
 import { TEST_BALANCE, TEST_GAS_LIMIT, TEST_GAS_PRICE, TEST_MNEMONIC } from '../test-utils'
 import { testWithViem } from './test-utils'
 
 let instance: null | Anvil = null
-
-const ANVIL_PORT = 8546
-
-export const STABLES_ADDRESS = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
-
-// Introducing a different name for the same address to avoid confusion
-export const DEFAULT_OWNER_ADDRESS = STABLES_ADDRESS
-
-export const GROUP_ADDRESSES = [
-  '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
-  '0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC',
-  '0x90F79bf6EB2c4f870365E785982E1f101E93b906',
-]
-
-// Addresses are generated during migrations and need to be extracted from logs
-export enum LinkedLibraryAddress {
-  AddressSortedLinkedListWithMedian = '0x5fbdb2315678afecb367f032d93f642f64180aa3',
-  Signatures = '0xe7f1725e7734ce288f8367e1bb143e90bb3f0512',
-}
 
 type chains = typeof celo | typeof celoAlfajores
 export type TestClientExtended<account extends Account | undefined = Account | undefined> = Client<
@@ -92,23 +74,33 @@ type TestWithAnvilOptions = {
   chainId?: number
 }
 
-export function testWithAnvilL1(
+export function viem_testWithAnvilL1(
   name: string,
   fn: (client: TestClientExtended) => void,
   options?: TestWithAnvilOptions
 ) {
-  return testWithAnvil(require.resolve('@celo/devchain-anvil/devchain.json'), name, fn, options)
+  return viem_testWithAnvil(
+    require.resolve('@celo/devchain-anvil/devchain.json'),
+    name,
+    fn,
+    options
+  )
 }
 
-export function testWithAnvilL2(
+export function viem_testWithAnvilL2(
   name: string,
   fn: (client: TestClientExtended) => void,
   options?: TestWithAnvilOptions
 ) {
-  return testWithAnvil(require.resolve('@celo/devchain-anvil/l2-devchain.json'), name, fn, options)
+  return viem_testWithAnvil(
+    require.resolve('@celo/devchain-anvil/l2-devchain.json'),
+    name,
+    fn,
+    options
+  )
 }
 
-function testWithAnvil(
+function viem_testWithAnvil(
   stateFilePath: string,
   name: string,
   fn: (client: TestClientExtended) => void,

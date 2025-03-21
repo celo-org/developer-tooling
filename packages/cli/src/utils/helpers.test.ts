@@ -1,8 +1,8 @@
-import { testWithAnvilL2 } from '@celo/dev-utils/lib/viem/anvil-test'
+import { viem_testWithAnvilL2 } from '@celo/dev-utils/lib/viem/anvil-test'
 import { CeloClient } from '../packages-to-be/client'
 import { enumEntriesDupWithLowercase, nodeIsSynced } from './helpers'
 
-testWithAnvilL2('nodeIsSynced', (client) => {
+viem_testWithAnvilL2('nodeIsSynced', (client) => {
   describe('when NO_SYNCCHECK is set', () => {
     it('returns true', async () => {
       // Arrange
@@ -15,7 +15,7 @@ testWithAnvilL2('nodeIsSynced', (client) => {
   })
 })
 
-testWithAnvilL2('nodeIsSynced', (client) => {
+viem_testWithAnvilL2('nodeIsSynced', (client) => {
   beforeEach(() => {
     process.env.NO_SYNCCHECK = undefined
   })
