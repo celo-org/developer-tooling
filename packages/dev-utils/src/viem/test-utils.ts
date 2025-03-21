@@ -1,4 +1,4 @@
-import { CeloTestClient } from './anvil-test'
+import { TestClientExtended } from './anvil-test'
 
 type Hooks = {
   beforeAll?: () => Promise<void>
@@ -16,8 +16,8 @@ type Hooks = {
  */
 export function testWithViem(
   name: string,
-  client: CeloTestClient,
-  fn: (testClient: CeloTestClient) => void,
+  client: TestClientExtended,
+  fn: (testClient: TestClientExtended) => void,
   options: {
     hooks?: Hooks
     runIf?: boolean

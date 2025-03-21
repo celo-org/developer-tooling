@@ -1,6 +1,18 @@
 import { StrongAddress } from '@celo/base'
 import { Anvil, createAnvil, CreateAnvilOptions } from '@viem/anvil'
-import { createTestClient, http, publicActions, TestClient, walletActions } from 'viem'
+import {
+  Account,
+  Client,
+  createTestClient,
+  http,
+  HttpTransport,
+  PublicActions,
+  publicActions,
+  RpcSchema,
+  TestActions,
+  WalletActions,
+  walletActions,
+} from 'viem'
 import { celo } from 'viem/chains'
 import { TEST_BALANCE, TEST_GAS_LIMIT, TEST_GAS_PRICE, TEST_MNEMONIC } from '../test-utils'
 import { testWithViem } from './test-utils'
@@ -26,7 +38,23 @@ export enum LinkedLibraryAddress {
   Signatures = '0xe7f1725e7734ce288f8367e1bb143e90bb3f0512',
 }
 
-function createInstance(stateFilePath: string, chainId?: number) {
+export type TestClientExtended<account extends Account | undefined = Account | undefined> = Client<
+  HttpTransport,
+  typeof celo,
+  account,
+  RpcSchema,
+  TestActions &
+    PublicActions<HttpTransport, typeof celo, account> &
+    WalletActions<typeof celo, account>
+>
+
+function createInstance(
+  stateFilePath: string,
+  chainId?: number
+): {
+  instance: Anvil
+  client: TestClientExtended
+} {
   const port = ANVIL_PORT + (process.pid - process.ppid)
   const options: CreateAnvilOptions = {
     port,
@@ -53,7 +81,7 @@ function createInstance(stateFilePath: string, chainId?: number) {
     },
   })
     .extend(walletActions)
-    .extend(publicActions)
+    .extend(publicActions) as unknown as TestClientExtended
 
   return {
     instance,
@@ -65,11 +93,9 @@ type TestWithAnvilOptions = {
   chainId?: number
 }
 
-export type CeloTestClient = ReturnType<typeof createInstance>['client']
-
 export function testWithAnvilL1(
   name: string,
-  fn: (client: CeloTestClient) => void,
+  fn: (client: TestClientExtended) => void,
   options?: TestWithAnvilOptions
 ) {
   return testWithAnvil(require.resolve('@celo/devchain-anvil/devchain.json'), name, fn, options)
@@ -77,7 +103,7 @@ export function testWithAnvilL1(
 
 export function testWithAnvilL2(
   name: string,
-  fn: (client: CeloTestClient) => void,
+  fn: (client: TestClientExtended) => void,
   options?: TestWithAnvilOptions
 ) {
   return testWithAnvil(require.resolve('@celo/devchain-anvil/l2-devchain.json'), name, fn, options)
@@ -86,7 +112,7 @@ export function testWithAnvilL2(
 function testWithAnvil(
   stateFilePath: string,
   name: string,
-  fn: (client: CeloTestClient) => void,
+  fn: (client: TestClientExtended) => void,
   options?: TestWithAnvilOptions
 ) {
   const { instance, client } = createInstance(stateFilePath, options?.chainId)
@@ -107,7 +133,7 @@ function testWithAnvil(
 }
 
 export function impersonateAccount(
-  testClient: CeloTestClient,
+  testClient: TestClientExtended,
   address: `0x${string}`,
   withBalance?: number | bigint
 ) {
@@ -122,12 +148,12 @@ export function impersonateAccount(
   ])
 }
 
-export function stopImpersonatingAccount(testClient: TestClient, address: `0x${string}`) {
+export function stopImpersonatingAccount(testClient: TestClientExtended, address: `0x${string}`) {
   return testClient.stopImpersonatingAccount({ address })
 }
 
 export const withImpersonatedAccount = async (
-  testClient: CeloTestClient,
+  testClient: TestClientExtended,
   account: `0x${string}`,
   fn: () => Promise<void>,
   withBalance?: number | bigint
@@ -138,7 +164,7 @@ export const withImpersonatedAccount = async (
 }
 
 export const asCoreContractsOwner = async (
-  testClient: CeloTestClient,
+  testClient: TestClientExtended,
   fn: (ownerAddress: StrongAddress) => Promise<void>,
   withBalance?: number | bigint
 ) => {
@@ -152,16 +178,20 @@ export const asCoreContractsOwner = async (
   )
 }
 
-export function setCode(testClient: CeloTestClient, address: `0x${string}`, code: `0x${string}`) {
+export function setCode(
+  testClient: TestClientExtended,
+  address: `0x${string}`,
+  code: `0x${string}`
+) {
   return testClient.setCode({ address, bytecode: code })
 }
 
-export function setNextBlockTimestamp(testClient: CeloTestClient, timestamp: number | bigint) {
+export function setNextBlockTimestamp(testClient: TestClientExtended, timestamp: number | bigint) {
   return testClient.setNextBlockTimestamp({ timestamp: BigInt(timestamp) })
 }
 
 export function setBalance(
-  testClient: CeloTestClient,
+  testClient: TestClientExtended,
   address: `0x${string}`,
   balance: number | bigint
 ) {
