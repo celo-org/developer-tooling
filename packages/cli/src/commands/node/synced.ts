@@ -16,14 +16,14 @@ export default class NodeSynced extends BaseCommand {
 
   async run() {
     const res = await this.parse(NodeSynced)
-    const { chain } = await this.getPublicClient()
+    const client = await this.getPublicClient()
 
     if (res.flags.verbose) {
-      const status = await nodeIsSyncedRaw(chain)
+      const status = await nodeIsSyncedRaw(client)
       if (typeof status !== 'boolean') {
         console.log(status)
       }
     }
-    console.log(await nodeIsSynced(chain))
+    console.log(await nodeIsSynced(client))
   }
 }

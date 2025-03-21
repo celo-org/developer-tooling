@@ -1,5 +1,5 @@
 import { StableToken } from '@celo/base'
-import { Chain, createPublicClient, http, rpcSchema } from 'viem'
+import { CeloClient } from '../packages-to-be/client'
 import { failWith } from './cli'
 
 export function enumEntriesDupWithLowercase<T>(entries: [string, T][]) {
@@ -11,39 +11,33 @@ export function enumEntriesDupWithLowercase<T>(entries: [string, T][]) {
   return enumMap
 }
 
-export type EthSyncingRpcSchema = [
-  {
-    Method: 'eth_syncing'
-    Parameters: []
-    ReturnType: false | { startingBlock: bigint; currentBlock: bigint; highestBlock: bigint }
-  }
-]
-
-const ethSyncingClientFactory = (chain: Chain) =>
-  createPublicClient({
-    chain,
-    transport: http(),
-    rpcSchema: rpcSchema<EthSyncingRpcSchema>(),
-  })
-
-export async function nodeIsSyncedRaw(chain: Chain) {
-  const client = ethSyncingClientFactory(chain)
-  return client.request({ method: 'eth_syncing', params: [] })
+export type EthSyncingRpcSchema = {
+  Parameters: []
+  Method: 'eth_syncing'
+  ReturnType: false | { startingBlock: bigint; currentBlock: bigint; highestBlock: bigint }
 }
 
-export async function nodeIsSynced(chain: Chain): Promise<boolean> {
+export async function nodeIsSyncedRaw(client: CeloClient) {
+  return client.request<EthSyncingRpcSchema>({
+    method: 'eth_syncing',
+    params: [],
+  })
+}
+
+export async function nodeIsSynced(client: CeloClient): Promise<boolean> {
   if (process.env.NO_SYNCCHECK === 'true' || process.env.NO_SYNCCHECK === '1') {
     return true
   }
-
-  const client = ethSyncingClientFactory(chain)
 
   try {
     // isSyncing() returns an object describing sync progress if syncing is actively
     // happening, and the boolean value `false` if not.
     // However, `false` can also indicate the syncing hasn't started, so here we
     // also need to check the latest block number
-    const syncProgress = await client.request({ method: 'eth_syncing', params: [] })
+    const syncProgress = await client.request<EthSyncingRpcSchema>({
+      method: 'eth_syncing',
+      params: [],
+    })
     if (typeof syncProgress === 'boolean' && !syncProgress) {
       const latestBlock = await client.getBlock({
         blockTag: 'latest',
@@ -73,8 +67,8 @@ export async function nodeIsSynced(chain: Chain): Promise<boolean> {
   }
 }
 
-export async function requireNodeIsSynced(chain: Chain) {
-  if (!(await nodeIsSynced(chain))) {
+export async function requireNodeIsSynced(client: CeloClient) {
+  if (!(await nodeIsSynced(client))) {
     failWith('Node is not currently synced. Run node:synced to check its status.')
   }
 }
