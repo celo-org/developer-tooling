@@ -194,8 +194,7 @@ export abstract class BaseCommand extends Command {
 
   async init() {
     if (this.requireSynced) {
-      const { chain } = await this.getPublicClient()
-      await requireNodeIsSynced(chain)
+      await requireNodeIsSynced(await this.getPublicClient())
     }
     const kit = await this.getKit()
     const res = await this.parse()

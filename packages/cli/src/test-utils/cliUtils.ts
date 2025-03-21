@@ -1,3 +1,4 @@
+import { TestClientExtended } from '@celo/dev-utils/lib/viem/anvil-test'
 import { Interfaces } from '@oclif/core'
 import Web3 from 'web3'
 import { BaseCommand } from '../base'
@@ -32,6 +33,15 @@ export const extractHostFromWeb3 = (web3: Web3): string => {
   }
 
   throw new Error(`Unsupported provider, ${web3.currentProvider?.constructor.name}`)
+}
+
+export async function testLocallyWithViemNode(
+  command: Runner,
+  argv: string[],
+  client: TestClientExtended,
+  config?: Interfaces.LoadOptions
+) {
+  return testLocally(command, [...argv, '--node', client.chain.rpcUrls.default.http[0]], config)
 }
 
 export async function testLocally(

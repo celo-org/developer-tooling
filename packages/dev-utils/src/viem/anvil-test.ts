@@ -13,7 +13,7 @@ import {
   WalletActions,
   walletActions,
 } from 'viem'
-import { celo } from 'viem/chains'
+import { celo, celoAlfajores } from 'viem/chains'
 import { TEST_BALANCE, TEST_GAS_LIMIT, TEST_GAS_PRICE, TEST_MNEMONIC } from '../test-utils'
 import { testWithViem } from './test-utils'
 
@@ -38,14 +38,13 @@ export enum LinkedLibraryAddress {
   Signatures = '0xe7f1725e7734ce288f8367e1bb143e90bb3f0512',
 }
 
+type chains = typeof celo | typeof celoAlfajores
 export type TestClientExtended<account extends Account | undefined = Account | undefined> = Client<
   HttpTransport,
-  typeof celo,
+  chains,
   account,
   RpcSchema,
-  TestActions &
-    PublicActions<HttpTransport, typeof celo, account> &
-    WalletActions<typeof celo, account>
+  TestActions & PublicActions<HttpTransport, chains, account> & WalletActions<chains, account>
 >
 
 function createInstance(
