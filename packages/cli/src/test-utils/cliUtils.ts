@@ -1,6 +1,8 @@
+import { TestClientExtended } from '@celo/dev-utils/lib/viem/anvil-test'
 import { Interfaces } from '@oclif/core'
 import Web3 from 'web3'
 import { BaseCommand } from '../base'
+import { CeloClient } from '../packages-to-be/client'
 
 type AbstractConstructor<T> = new (...args: any[]) => T
 interface Runner extends AbstractConstructor<BaseCommand> {
@@ -32,6 +34,16 @@ export const extractHostFromWeb3 = (web3: Web3): string => {
   }
 
   throw new Error(`Unsupported provider, ${web3.currentProvider?.constructor.name}`)
+}
+
+export async function testLocallyWithViemNode(
+  command: Runner,
+  argv: string[],
+  client: TestClientExtended,
+  config?: Interfaces.LoadOptions
+) {
+  jest.spyOn(BaseCommand.prototype, 'getPublicClient').mockResolvedValue(client as CeloClient)
+  return testLocally(command, [...argv, '--node', client.chain.rpcUrls.default.http[0]], config)
 }
 
 export async function testLocally(
