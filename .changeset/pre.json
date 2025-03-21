@@ -28,9 +28,13 @@
     "@celo/viem-account-ledger": "1.1.0"
   },
   "changesets": [
+    "cold-carpets-hide",
     "four-ligers-know",
     "grumpy-schools-judge",
+    "healthy-poets-agree",
     "moody-monkeys-admire",
+    "polite-cheetahs-yell",
+    "rude-mayflies-itch",
     "sharp-fishes-allow",
     "short-elephants-grab",
     "thin-dryers-compare",

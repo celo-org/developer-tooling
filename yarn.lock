@@ -1642,11 +1642,11 @@ __metadata:
     "@celo/celo-devchain": "npm:^7.0.0"
     "@celo/compliance": "npm:~1.0.25"
     "@celo/connect": "npm:^6.1.1"
-    "@celo/contractkit": "npm:^9.1.0-beta.0"
+    "@celo/contractkit": "npm:^9.1.0-beta.1"
     "@celo/cryptographic-utils": "npm:^5.1.2"
     "@celo/dev-utils": "npm:0.0.8"
     "@celo/explorer": "npm:^5.0.15-beta.0"
-    "@celo/governance": "npm:^5.1.6-beta.0"
+    "@celo/governance": "npm:^5.1.6-beta.1"
     "@celo/identity": "npm:^5.1.2"
     "@celo/metadata-claims": "npm:^1.0.1"
     "@celo/phone-utils": "npm:^6.0.5"
@@ -1772,7 +1772,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/contractkit@npm:^9.1.0-beta.0, @celo/contractkit@workspace:^, @celo/contractkit@workspace:packages/sdk/contractkit":
+"@celo/contractkit@npm:^9.1.0-beta.0, @celo/contractkit@npm:^9.1.0-beta.1, @celo/contractkit@workspace:^, @celo/contractkit@workspace:packages/sdk/contractkit":
   version: 0.0.0-use.local
   resolution: "@celo/contractkit@workspace:packages/sdk/contractkit"
   dependencies:
@@ -1871,7 +1871,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/governance@npm:^5.1.6-beta.0, @celo/governance@workspace:packages/sdk/governance":
+"@celo/governance@npm:^5.1.6-beta.1, @celo/governance@workspace:packages/sdk/governance":
   version: 0.0.0-use.local
   resolution: "@celo/governance@workspace:packages/sdk/governance"
   dependencies:
@@ -1879,7 +1879,7 @@ __metadata:
     "@celo/abis-12": "npm:@celo/abis@12.0.1"
     "@celo/base": "npm:^7.0.1"
     "@celo/connect": "npm:^6.1.1"
-    "@celo/contractkit": "npm:^9.1.0-beta.0"
+    "@celo/contractkit": "npm:^9.1.0-beta.1"
     "@celo/dev-utils": "npm:0.0.8"
     "@celo/explorer": "npm:^5.0.15-beta.0"
     "@celo/typescript": "workspace:^"
