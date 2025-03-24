@@ -10,7 +10,7 @@
   "homepage": "https://docs.celo.org/developer/tools#celo-sdk-reference-docs",
   "repository": {
     "type": "git",
-    "url": "git+https:/github.com/celo-org/developer-tooling.git",
+    "url": "git+https://github.com/celo-org/developer-tooling.git",
     "directory": "packages/sdk/base"
   },
   "scripts": {
