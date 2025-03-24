@@ -10,7 +10,7 @@
   "homepage": "https://github.com/celo-org/developer-tooling/tree/master/packages/sdk/cryptographic-utils",
   "repository": {
     "type": "git",
-    "url": "git+https:/github.com/celo-org/developer-tooling.git",
+    "url": "git+https://github.com/celo-org/developer-tooling.git",
     "directory": "packages/sdk/cryptographic-utils"
   },
   "scripts": {

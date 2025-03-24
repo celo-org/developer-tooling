@@ -9,7 +9,7 @@
   "homepage": "https://celo-sdk-docs.readthedocs.io/en/latest/governance",
   "repository": {
     "type": "git",
-    "url": "git+https:/github.com/celo-org/developer-tooling.git",
+    "url": "git+https://github.com/celo-org/developer-tooling.git",
     "directory": "packages/sdk/governance"
   },
   "keywords": [
