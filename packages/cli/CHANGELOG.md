@@ -1,5 +1,39 @@
 # Changelog
 
+## 6.2.0
+
+### Minor Changes
+
+- [#540](https://github.com/celo-org/developer-tooling/pull/540) [`a92fa0c`](https://github.com/celo-org/developer-tooling/commit/a92fa0c6471e5d2903e9e1d2508b667a7d24cf0e) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Add a check to governance:propose for the flag descriptionURL. The checks verifies that the URL points to the correct governance repository.
+
+- [#535](https://github.com/celo-org/developer-tooling/pull/535) [`c184fb1`](https://github.com/celo-org/developer-tooling/commit/c184fb1f17666e436f5261d048c2c9884b678388) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - add lockedcelo:**_ alias for all lockedgold:_** commands
+
+  (tiny break): network:paramamters will output the contract name LockedGold as LockedCelo now
+
+- [#533](https://github.com/celo-org/developer-tooling/pull/533) [`549450f`](https://github.com/celo-org/developer-tooling/commit/549450f312ffa8a61f2af081df39e11c1a9d4500) Thanks [@soloseng](https://github.com/soloseng)! - added support for epochManager processGroups function to contractkit && celocli
+
+### Patch Changes
+
+- [#558](https://github.com/celo-org/developer-tooling/pull/558) [`f11a069`](https://github.com/celo-org/developer-tooling/commit/f11a069b152cb34c18f12b6535f4b217a631079d) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Fix incorrect repo link in package.json
+
+- [#549](https://github.com/celo-org/developer-tooling/pull/549) [`b6e4716`](https://github.com/celo-org/developer-tooling/commit/b6e4716e8ea6263120fd8da964bdebba45ee4114) Thanks [@shazarre](https://github.com/shazarre)! - Hide extra output, remove feedback postrun hook
+
+- [#532](https://github.com/celo-org/developer-tooling/pull/532) [`b4f560c`](https://github.com/celo-org/developer-tooling/commit/b4f560c17fcf100def9ca9682859a32a84f1e632) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Update oclif dependencies
+
+- Updated dependencies [[`78f9831`](https://github.com/celo-org/developer-tooling/commit/78f9831f43b13853a32d697eb3b1626ad52ced42), [`f11a069`](https://github.com/celo-org/developer-tooling/commit/f11a069b152cb34c18f12b6535f4b217a631079d), [`c184fb1`](https://github.com/celo-org/developer-tooling/commit/c184fb1f17666e436f5261d048c2c9884b678388), [`549450f`](https://github.com/celo-org/developer-tooling/commit/549450f312ffa8a61f2af081df39e11c1a9d4500), [`170e91c`](https://github.com/celo-org/developer-tooling/commit/170e91cbdcdf6d8e398c423355b78f31d4c9e33c), [`c184fb1`](https://github.com/celo-org/developer-tooling/commit/c184fb1f17666e436f5261d048c2c9884b678388), [`55f1e99`](https://github.com/celo-org/developer-tooling/commit/55f1e99670134b5c885ee8debb22c7d370a7a11a)]:
+  - @celo/contractkit@9.1.0
+  - @celo/governance@5.1.6
+  - @celo/base@7.0.2
+  - @celo/wallet-hsm-azure@7.0.1
+  - @celo/wallet-ledger@7.0.1
+  - @celo/wallet-local@7.0.1
+  - @celo/cryptographic-utils@5.1.3
+  - @celo/metadata-claims@1.0.2
+  - @celo/phone-utils@6.0.6
+  - @celo/explorer@5.0.15
+  - @celo/connect@6.1.2
+  - @celo/utils@8.0.2
+
 ## 6.2.0-beta.1
 
 ### Minor Changes
