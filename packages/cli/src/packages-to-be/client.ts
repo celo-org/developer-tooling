@@ -1,4 +1,8 @@
-import { PublicClient, Transport } from 'viem'
+import { Account, PublicClient, Transport } from 'viem'
 import { celo, celoAlfajores } from 'viem/chains'
 
-export type CeloClient = PublicClient<Transport, typeof celo | typeof celoAlfajores>
+export type CeloClient = PublicClient<
+  Transport,
+  typeof celo | typeof celoAlfajores,
+  Account | undefined
+>

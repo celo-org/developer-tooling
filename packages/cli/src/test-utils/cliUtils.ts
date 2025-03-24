@@ -42,7 +42,7 @@ export async function testLocallyWithViemNode(
   client: TestClientExtended,
   config?: Interfaces.LoadOptions
 ) {
-  jest.spyOn(BaseCommand.prototype, 'getPublicClient').mockResolvedValue(client as CeloClient)
+  jest.spyOn(BaseCommand.prototype, 'getPublicClient').mockResolvedValue(client)
   return testLocally(command, [...argv, '--node', client.chain.rpcUrls.default.http[0]], config)
 }
 

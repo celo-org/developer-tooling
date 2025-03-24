@@ -1,21 +1,20 @@
-import { viem_testWithAnvilL2 } from '@celo/dev-utils/lib/viem/anvil-test'
-import { CeloClient } from '../packages-to-be/client'
+import { viem_testWithAnvil } from '@celo/dev-utils/lib/viem/anvil-test'
 import { enumEntriesDupWithLowercase, nodeIsSynced } from './helpers'
 
-viem_testWithAnvilL2('nodeIsSynced', (client) => {
+viem_testWithAnvil('nodeIsSynced', (client) => {
   describe('when NO_SYNCCHECK is set', () => {
     it('returns true', async () => {
       // Arrange
       process.env.NO_SYNCCHECK = 'true'
       // Act
-      const result = await nodeIsSynced(client as CeloClient)
+      const result = await nodeIsSynced(client)
       // Assert
       expect(result).toBe(true)
     })
   })
 })
 
-viem_testWithAnvilL2('nodeIsSynced', (client) => {
+viem_testWithAnvil('nodeIsSynced', (client) => {
   beforeEach(() => {
     process.env.NO_SYNCCHECK = undefined
   })
@@ -30,7 +29,7 @@ viem_testWithAnvilL2('nodeIsSynced', (client) => {
         // @ts-expect-error block has more properties but that are not used in the test
         .mockResolvedValueOnce({ number: 1n, timestamp: BigInt(Date.now()) / 1000n })
       // Act
-      const result = await nodeIsSynced(client as CeloClient)
+      const result = await nodeIsSynced(client)
       // Assert
       expect(syncSpy).toHaveBeenCalled()
       expect(blockSpy).toHaveBeenCalled()
@@ -42,7 +41,7 @@ viem_testWithAnvilL2('nodeIsSynced', (client) => {
       const syncSpy = jest.spyOn(client, 'request').mockResolvedValueOnce(true)
 
       // Act
-      const result = await nodeIsSynced(client as CeloClient)
+      const result = await nodeIsSynced(client)
       // Assert
       expect(syncSpy).toHaveBeenCalled()
       expect(result).toBe(false)
