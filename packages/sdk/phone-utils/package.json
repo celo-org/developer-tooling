@@ -10,7 +10,7 @@
   "homepage": "https://docs.celo.org/developer/tools",
   "repository": {
     "type": "git",
-    "url": "git+https:/github.com/celo-org/developer-tooling.git",
+    "url": "git+https://github.com/celo-org/developer-tooling.git",
     "directory": "packages/sdk/phone-utils"
   },
   "scripts": {
