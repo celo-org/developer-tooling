@@ -29,17 +29,14 @@ export type TestClientExtended<account extends Account | undefined = Account | u
   TestActions & PublicActions<HttpTransport, chains, account> & WalletActions<chains, account>
 >
 
-function createInstance(
-  stateFilePath: string,
-  chainId?: number
-): {
+function createInstance(chainId?: number): {
   instance: Anvil
   client: TestClientExtended
 } {
   const port = ANVIL_PORT + (process.pid - process.ppid)
   const options: CreateAnvilOptions = {
     port,
-    loadState: stateFilePath,
+    loadState: require.resolve('@celo/devchain-anvil/devchain.json'),
     mnemonic: TEST_MNEMONIC,
     balance: TEST_BALANCE,
     gasPrice: TEST_GAS_PRICE,
@@ -70,43 +67,14 @@ function createInstance(
   }
 }
 
-type TestWithAnvilOptions = {
-  chainId?: number
-}
-
-export function viem_testWithAnvilL1(
+function testWithAnvil(
   name: string,
   fn: (client: TestClientExtended) => void,
-  options?: TestWithAnvilOptions
+  options?: {
+    chainId?: number
+  }
 ) {
-  return viem_testWithAnvil(
-    require.resolve('@celo/devchain-anvil/devchain.json'),
-    name,
-    fn,
-    options
-  )
-}
-
-export function viem_testWithAnvilL2(
-  name: string,
-  fn: (client: TestClientExtended) => void,
-  options?: TestWithAnvilOptions
-) {
-  return viem_testWithAnvil(
-    require.resolve('@celo/devchain-anvil/l2-devchain.json'),
-    name,
-    fn,
-    options
-  )
-}
-
-function viem_testWithAnvil(
-  stateFilePath: string,
-  name: string,
-  fn: (client: TestClientExtended) => void,
-  options?: TestWithAnvilOptions
-) {
-  const { instance, client } = createInstance(stateFilePath, options?.chainId)
+  const { instance, client } = createInstance(options?.chainId)
 
   // for each test suite, we start and stop a new anvil instance
   return testWithViem(name, client, fn, {
@@ -123,7 +91,7 @@ function viem_testWithAnvil(
   })
 }
 
-export function impersonateAccount(
+function impersonateAccount(
   testClient: TestClientExtended,
   address: `0x${string}`,
   withBalance?: number | bigint
@@ -139,26 +107,26 @@ export function impersonateAccount(
   ])
 }
 
-export function stopImpersonatingAccount(testClient: TestClientExtended, address: `0x${string}`) {
+function stopImpersonatingAccount(testClient: TestClientExtended, address: `0x${string}`) {
   return testClient.stopImpersonatingAccount({ address })
 }
 
-export const withImpersonatedAccount = async (
+async function withImpersonatedAccount(
   testClient: TestClientExtended,
   account: `0x${string}`,
   fn: () => Promise<void>,
   withBalance?: number | bigint
-) => {
+) {
   await impersonateAccount(testClient, account, withBalance)
   await fn()
   await stopImpersonatingAccount(testClient, account)
 }
 
-export const asCoreContractsOwner = async (
+async function asCoreContractsOwner(
   testClient: TestClientExtended,
   fn: (ownerAddress: StrongAddress) => Promise<void>,
   withBalance?: number | bigint
-) => {
+) {
   await withImpersonatedAccount(
     testClient,
     DEFAULT_OWNER_ADDRESS,
@@ -169,22 +137,29 @@ export const asCoreContractsOwner = async (
   )
 }
 
-export function setCode(
-  testClient: TestClientExtended,
-  address: `0x${string}`,
-  code: `0x${string}`
-) {
+function setCode(testClient: TestClientExtended, address: `0x${string}`, code: `0x${string}`) {
   return testClient.setCode({ address, bytecode: code })
 }
 
-export function setNextBlockTimestamp(testClient: TestClientExtended, timestamp: number | bigint) {
+function setNextBlockTimestamp(testClient: TestClientExtended, timestamp: number | bigint) {
   return testClient.setNextBlockTimestamp({ timestamp: BigInt(timestamp) })
 }
 
-export function setBalance(
+function setBalance(
   testClient: TestClientExtended,
   address: `0x${string}`,
   balance: number | bigint
 ) {
   return testClient.setBalance({ address, value: BigInt(balance) })
+}
+
+export {
+  asCoreContractsOwner as viem_asCoreContractsOwner,
+  impersonateAccount as viem_impersonateAccount,
+  setBalance as viem_setBalance,
+  setCode as viem_setCode,
+  setNextBlockTimestamp as viem_setNextBlockTimestamp,
+  stopImpersonatingAccount as viem_stopImpersonatingAccount,
+  testWithAnvil as viem_testWithAnvil,
+  withImpersonatedAccount as viem_withImpersonatedAccount,
 }

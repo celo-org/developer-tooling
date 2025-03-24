@@ -1,4 +1,4 @@
-import { viem_testWithAnvilL2 } from '@celo/dev-utils/lib/viem/anvil-test'
+import { viem_testWithAnvil } from '@celo/dev-utils/lib/viem/anvil-test'
 import { stripAnsiCodesFromNestedArray, testLocallyWithViemNode } from '../../test-utils/cliUtils'
 import Synced from './synced'
 
@@ -10,7 +10,7 @@ jest.mock('../../utils/helpers', () => ({
   nodeIsSynced: () => nodeIsSynced(),
 }))
 
-viem_testWithAnvilL2('node:synced cmd', (client) => {
+viem_testWithAnvil('node:synced cmd', (client) => {
   beforeEach(() => {
     process.env.NO_SYNCCHECK = undefined
   })
