@@ -1,5 +1,20 @@
 # @celo/wallet-ledger
 
+## 7.0.1
+
+### Patch Changes
+
+- [#558](https://github.com/celo-org/developer-tooling/pull/558) [`f11a069`](https://github.com/celo-org/developer-tooling/commit/f11a069b152cb34c18f12b6535f4b217a631079d) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Fix incorrect repo link in package.json
+
+- [#544](https://github.com/celo-org/developer-tooling/pull/544) [`170e91c`](https://github.com/celo-org/developer-tooling/commit/170e91cbdcdf6d8e398c423355b78f31d4c9e33c) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Allow users to use other apps than ethereum or celo, namely "eth recovery" in order to recovery funds or signTypedData which isnt supported by celo but would require the correct derivationPath
+
+- Updated dependencies [[`f11a069`](https://github.com/celo-org/developer-tooling/commit/f11a069b152cb34c18f12b6535f4b217a631079d)]:
+  - @celo/base@7.0.2
+  - @celo/wallet-remote@7.0.1
+  - @celo/wallet-base@7.0.1
+  - @celo/connect@6.1.2
+  - @celo/utils@8.0.2
+
 ## 7.0.1-beta.0
 
 ### Patch Changes

@@ -1,5 +1,25 @@
 # @celo/contractkit
 
+## 9.1.0
+
+### Minor Changes
+
+- [#535](https://github.com/celo-org/developer-tooling/pull/535) [`c184fb1`](https://github.com/celo-org/developer-tooling/commit/c184fb1f17666e436f5261d048c2c9884b678388) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Add CeloToken and LockedCelo aliases for deprecated GoldToken and LockedCelo Contracts enum
+
+- [#533](https://github.com/celo-org/developer-tooling/pull/533) [`549450f`](https://github.com/celo-org/developer-tooling/commit/549450f312ffa8a61f2af081df39e11c1a9d4500) Thanks [@soloseng](https://github.com/soloseng)! - added support for epochManager processGroups function to contractkit && celocli
+
+### Patch Changes
+
+- [#553](https://github.com/celo-org/developer-tooling/pull/553) [`78f9831`](https://github.com/celo-org/developer-tooling/commit/78f9831f43b13853a32d697eb3b1626ad52ced42) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Use production release of @celo/abis
+
+- [#558](https://github.com/celo-org/developer-tooling/pull/558) [`f11a069`](https://github.com/celo-org/developer-tooling/commit/f11a069b152cb34c18f12b6535f4b217a631079d) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Fix incorrect repo link in package.json
+
+- Updated dependencies [[`f11a069`](https://github.com/celo-org/developer-tooling/commit/f11a069b152cb34c18f12b6535f4b217a631079d)]:
+  - @celo/base@7.0.2
+  - @celo/wallet-local@7.0.1
+  - @celo/connect@6.1.2
+  - @celo/utils@8.0.2
+
 ## 9.1.0-beta.1
 
 ### Minor Changes
