@@ -137,4 +137,4 @@ jobs:
     if: ${{ needs.install-released-packages.outputs.assertStableVersionOutcome != 'failure' }}
     uses: celo-org/developer-tooling/.github/workflows/upload-celocli-executables.yml@master
     with:
-      commit: ${{ github.sha }}
+      ref: ${{ github.sha }}
