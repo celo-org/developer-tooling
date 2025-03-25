@@ -11,7 +11,7 @@ export function enumEntriesDupWithLowercase<T>(entries: [string, T][]) {
   return enumMap
 }
 
-export type EthSyncingRpcSchema = {
+type EthSyncingRpcSchema = {
   Parameters: []
   Method: 'eth_syncing'
   ReturnType: false | { startingBlock: bigint; currentBlock: bigint; highestBlock: bigint }
