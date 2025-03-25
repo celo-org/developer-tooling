@@ -1,6 +1,6 @@
 import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
-import { nodeIsSynced, nodeIsSyncedRaw } from '../../utils/helpers'
+import { ethNodeIsSyncing, nodeIsSynced } from '../../utils/helpers'
 
 export default class NodeSynced extends BaseCommand {
   static description = 'Check if the node is synced'
@@ -19,7 +19,7 @@ export default class NodeSynced extends BaseCommand {
     const client = await this.getPublicClient()
 
     if (res.flags.verbose) {
-      const status = await nodeIsSyncedRaw(client)
+      const status = await ethNodeIsSyncing(client)
       if (typeof status !== 'boolean') {
         console.log(status)
       }

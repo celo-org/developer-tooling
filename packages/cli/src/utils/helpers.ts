@@ -16,7 +16,7 @@ export type EthSyncingRpcSchema = {
   ReturnType: false | { startingBlock: bigint; currentBlock: bigint; highestBlock: bigint }
 }
 
-export async function nodeIsSyncedRaw(client: CeloClient) {
+export async function ethNodeIsSyncing(client: CeloClient) {
   return client.request<EthSyncingRpcSchema>({
     method: 'eth_syncing',
     params: [],
@@ -33,10 +33,7 @@ export async function nodeIsSynced(client: CeloClient): Promise<boolean> {
     // happening, and the boolean value `false` if not.
     // However, `false` can also indicate the syncing hasn't started, so here we
     // also need to check the latest block number
-    const syncProgress = await client.request<EthSyncingRpcSchema>({
-      method: 'eth_syncing',
-      params: [],
-    })
+    const syncProgress = await ethNodeIsSyncing(client)
     if (typeof syncProgress === 'boolean' && !syncProgress) {
       const latestBlock = await client.getBlock({
         blockTag: 'latest',
