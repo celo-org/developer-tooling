@@ -121,9 +121,8 @@ jobs:
         if: contains(matrix.package, '@celo/celocli')
         continue-on-error: true
         run: |
-          ./scripts/assert_stable_version $CELO_CLI_VERSION
-        env:
-          CELO_CLI_VERSION: ${{ fromJson(needs.release.outputs.publishedPackages).*.version }}
+          version=$(echo "${{ matrix.package }}" | cut -d "@" -f3)
+          ./scripts/assert_stable_version "$version"
 
   open-docs-pr:
     needs: release
