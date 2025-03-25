@@ -20,7 +20,6 @@ jobs:
     outputs:
       publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
       published: ${{ steps.changesets.outputs.published }}
-      celocliVersion: ${{ steps.extractCelocliVersion.outputs.celocliVersion }}
 
     steps:
       - name: Checkout Repo
@@ -88,6 +87,8 @@ jobs:
   install-released-packages:
     name: Install Released Packages
     needs: [prepare, release]
+    outputs:
+      assertStableVersionOutcome: ${{ steps.assertStableVersion.outcome }}
     if: needs.release.outputs.published
     runs-on: ubuntu-latest
     container:
@@ -113,12 +114,27 @@ jobs:
           celocli --version
           celocli account:new
           echo "checking celo community fund balance"
-          celocli account:balance 0xD533Ca259b330c7A88f74E000a3FaEa2d63B7972  --node celo
+          celocli account:balance 0xD533Ca259b330c7A88f74E000a3FaEa2d63B7972 --node celo
           celocli network:whitelist --node alfajores
+      - name: Is stable celocli release
+        id: assertStableVersion
+        if: contains(matrix.package, '@celo/celocli')
+        continue-on-error: true
+        run: |
+          ./scripts/assert_stable_version $CELO_CLI_VERSION
+        env:
+          CELO_CLI_VERSION: ${{ fromJson(needs.release.outputs.publishedPackages).*.version }}
 
   open-docs-pr:
     needs: release
     if: ${{ contains(fromJson(needs.release.outputs.publishedPackages).*.name, '@celo/celocli') }}
     uses: celo-org/developer-tooling/.github/workflows/open-docs-pr.yml@master
+    with:
+      commit: ${{ github.sha }}
+
+  upload-executables:
+    needs: install-released-packages
+    if: ${{ needs.install-released-packages.outputs.assertStableVersionOutcome != 'failure' }}
+    uses: celo-org/developer-tooling/.github/workflows/upload-celocli-executables.yml@master
     with:
       commit: ${{ github.sha }}
