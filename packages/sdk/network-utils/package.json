@@ -1,6 +1,6 @@
 {
   "name": "@celo/network-utils",
-  "version": "5.0.7",
+  "version": "5.0.8",
   "description": "Utilities for fetching static information about the Celo network",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -9,7 +9,7 @@
   "homepage": "https://docs.celo.org/developer/tools",
   "repository": {
     "type": "git",
-    "url": "git+https:/github.com/celo-org/developer-tooling.git",
+    "url": "git+https://github.com/celo-org/developer-tooling.git",
     "directory": "packages/sdk/network-utils"
   },
   "keywords": [
