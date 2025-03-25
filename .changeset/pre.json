@@ -27,5 +27,8 @@
     "@celo/typescript": "0.0.1",
     "@celo/viem-account-ledger": "1.1.1"
   },
-  "changesets": []
+  "changesets": [
+    "bright-lions-flash",
+    "mean-trainers-punch"
+  ]
 }
