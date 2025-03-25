@@ -90,6 +90,12 @@ jobs:
 
           cat $GITHUB_OUTPUT
 
+      - name: Assert stable release
+        run: |
+          ./scripts/assert_stable_version $TARBALL_VERSION
+        env:
+          TARBALL_VERSION: ${{ steps.setupVars.outputs.version }}
+
       - name: Package the released tarball into platform-specific executables
         run: |
           # Pack the tarballs from NPM into platform specific executables
