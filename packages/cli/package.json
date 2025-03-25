@@ -44,7 +44,7 @@
   "dependencies": {
     "@celo/abis": "11.0.0",
     "@celo/base": "^7.0.2",
-    "@celo/compliance": "1.0.25",
+    "@celo/compliance": "1.0.28",
     "@celo/connect": "^6.1.2",
     "@celo/contractkit": "^9.1.0",
     "@celo/cryptographic-utils": "^5.1.3",
