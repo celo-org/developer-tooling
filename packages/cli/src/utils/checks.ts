@@ -1,9 +1,4 @@
 import { eqAddress, NULL_ADDRESS } from '@celo/base/lib/address'
-import {
-  COMPLIANT_ERROR_RESPONSE,
-  OFAC_SANCTIONS_LIST_URL,
-  SANCTIONED_ADDRESSES,
-} from '@celo/compliance'
 import { Address } from '@celo/connect'
 import { StableToken } from '@celo/contractkit'
 import { AccountsWrapper } from '@celo/contractkit/lib/wrappers/Accounts'
@@ -52,7 +47,7 @@ export function newCheckBuilder(cmd: BaseCommand, signer?: Address) {
 
 class CheckBuilder {
   private checks: CommandCheck[] = []
-
+  private COMPLIANT_ERROR_RESPONSE = 'Address is on the OFAC sanctions list'
   constructor(private cmd: BaseCommand, private signer?: Address) {}
 
   async getWeb3() {
@@ -351,7 +346,7 @@ class CheckBuilder {
         const isSanctioned = await this.fetchIsSanctioned(address)
         return !isSanctioned
       },
-      COMPLIANT_ERROR_RESPONSE
+      this.COMPLIANT_ERROR_RESPONSE
     )
   }
 
@@ -605,15 +600,18 @@ class CheckBuilder {
   // SANCTIONED_ADDRESSES is so well typed that if you call includes with a string it gives a type error.
   // same if you make it a set or use indexOf so concat it with an empty string to give type without needing to ts-ignore
   private readonly SANCTIONED_SET = {
-    data: new Set([''].concat(SANCTIONED_ADDRESSES)),
+    data: new Set([''].concat()),
     wasRefreshed: false,
   }
 
   private async fetchIsSanctioned(address: string) {
+    const { COMPLIANT_ERROR_RESPONSE, OFAC_SANCTIONS_LIST_URL, SANCTIONED_ADDRESSES } =
+      await import('@celo/compliance')
+
     // Would like to avoid calling this EVERY run. but at least calling
     // twice in a row (such as when checking from and to addresses) should be cached
     // using boolean because either it's been refreshed or this is the first run of the invocation. its short lived
-    if (!this.SANCTIONED_SET.wasRefreshed) {
+    if (!this.SANCTIONED_SET.wasRefreshed || this.SANCTIONED_SET.data.size === 0) {
       try {
         const result = await fetch(OFAC_SANCTIONS_LIST_URL)
         const data = await result.json()
@@ -622,8 +620,13 @@ class CheckBuilder {
           this.SANCTIONED_SET.wasRefreshed = true
         }
       } catch (e) {
-        console.error('Error fetching OFAC sanctions list', e)
+        ;(this.SANCTIONED_SET.data =
+          this.SANCTIONED_SET.data.size === 0
+            ? new Set([''].concat(SANCTIONED_ADDRESSES))
+            : this.SANCTIONED_SET.data),
+          console.error('Error fetching OFAC sanctions list', e)
       }
+      this.COMPLIANT_ERROR_RESPONSE = COMPLIANT_ERROR_RESPONSE
     }
     return this.SANCTIONED_SET.data.has(address)
   }
