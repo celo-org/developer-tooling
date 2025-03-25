@@ -2,4 +2,4 @@
 '@celo/celocli': patch
 ---
 
-Update oclif dependencies
+Migrate node:synced to viem
