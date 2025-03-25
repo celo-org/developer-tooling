@@ -3,10 +3,10 @@ import { stripAnsiCodesFromNestedArray, testLocallyWithViemNode } from '../../te
 import Synced from './synced'
 
 let nodeIsSynced = jest.fn()
-let nodeIsSyncedRaw = jest.fn()
+let ethNodeIsSyncing = jest.fn()
 jest.mock('../../utils/helpers', () => ({
   ...jest.requireActual('../../utils/helpers'),
-  nodeIsSyncedRaw: () => nodeIsSyncedRaw(),
+  ethNodeIsSyncing: () => ethNodeIsSyncing(),
   nodeIsSynced: () => nodeIsSynced(),
 }))
 
@@ -47,7 +47,7 @@ viem_testWithAnvil('node:synced cmd', (client) => {
 
   it("logs if it's synced w/ flag", async () => {
     const logMock = jest.spyOn(console, 'log')
-    nodeIsSyncedRaw.mockResolvedValueOnce({
+    ethNodeIsSyncing.mockResolvedValueOnce({
       startingBlock: 1n,
       currentBlock: 42n,
       highestBlock: 69n,
