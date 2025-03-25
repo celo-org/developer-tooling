@@ -47,7 +47,8 @@ export function newCheckBuilder(cmd: BaseCommand, signer?: Address) {
 
 class CheckBuilder {
   private checks: CommandCheck[] = []
-  private COMPLIANT_ERROR_RESPONSE = 'Address is on the OFAC sanctions list'
+  private COMPLIANT_ERROR_RESPONSE =
+    "'The wallet address has been sanctioned by the U.S. Department of the Treasury.''All U.S. persons are prohibited from accessing, receiving, accepting, or facilitating any property 'and interests in property (including use of any technology, software or software patch(es)) of these'designated digital wallet addresses.  These prohibitions include the making of any contribution or''provision of funds, goods, or services by, to, or for the benefit of any blocked person and the ''receipt of any contribution or provision of funds, goods, or services from any such person and ' 'all designated digital asset wallets.'"
   constructor(private cmd: BaseCommand, private signer?: Address) {}
 
   async getWeb3() {
@@ -607,7 +608,7 @@ class CheckBuilder {
   private async fetchIsSanctioned(address: string) {
     const { COMPLIANT_ERROR_RESPONSE, OFAC_SANCTIONS_LIST_URL, SANCTIONED_ADDRESSES } =
       await import('@celo/compliance')
-
+    this.COMPLIANT_ERROR_RESPONSE = COMPLIANT_ERROR_RESPONSE
     // Would like to avoid calling this EVERY run. but at least calling
     // twice in a row (such as when checking from and to addresses) should be cached
     // using boolean because either it's been refreshed or this is the first run of the invocation. its short lived
@@ -618,6 +619,8 @@ class CheckBuilder {
         if (Array.isArray(data)) {
           this.SANCTIONED_SET.data = new Set(data)
           this.SANCTIONED_SET.wasRefreshed = true
+        } else {
+          this.SANCTIONED_SET.data = new Set([''].concat(SANCTIONED_ADDRESSES))
         }
       } catch (e) {
         ;(this.SANCTIONED_SET.data =
@@ -626,7 +629,6 @@ class CheckBuilder {
             : this.SANCTIONED_SET.data),
           console.error('Error fetching OFAC sanctions list', e)
       }
-      this.COMPLIANT_ERROR_RESPONSE = COMPLIANT_ERROR_RESPONSE
     }
     return this.SANCTIONED_SET.data.has(address)
   }

@@ -1,10 +1,10 @@
-import { COMPLIANT_ERROR_RESPONSE, SANCTIONED_ADDRESSES } from '@celo/compliance'
+import { COMPLIANT_ERROR_RESPONSE } from '@celo/compliance'
 import { ContractKit, StableToken, newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { topUpWithToken } from '../../test-utils/chain-setup'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { TEST_SANCTIONED_ADDRESS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import TransferReals from './reals'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -74,7 +74,7 @@ testWithAnvilL2('transfer:reals cmd', (web3: Web3) => {
     await expect(
       testLocallyWithWeb3Node(
         TransferReals,
-        ['--from', accounts[1], '--to', SANCTIONED_ADDRESSES[0], '--value', '1'],
+        ['--from', accounts[1], '--to', TEST_SANCTIONED_ADDRESS, '--value', '1'],
         web3
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
