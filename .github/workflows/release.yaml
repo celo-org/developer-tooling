@@ -5,7 +5,6 @@ on:
     branches:
       - master
       - hotfixes
-      - chore/release-3-26
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
