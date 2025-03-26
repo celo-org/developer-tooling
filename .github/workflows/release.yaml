@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - hotfixes
+      - chore/release-3-26
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
@@ -61,7 +62,7 @@ jobs:
   # release gives an array of published packages as jsob objects, we need an array of strings for installing
   prepare:
     name: Format Output for Install
-    if: needs.publish.outputs.published == 'true'
+    if: needs.release.outputs.published == 'true'
     needs: release
     runs-on: ubuntu-latest
     container:
@@ -87,7 +88,7 @@ jobs:
     needs: [prepare, release]
     outputs:
       assertStableVersionOutcome: ${{ steps.assertStableVersion.outcome }}
-    if: needs.publish.outputs.published == 'true' && needs.prepare.outputs.result
+    if: needs.release.outputs.published == 'true' && needs.prepare.outputs.result
     runs-on: ubuntu-latest
     container:
       image: node:20-bullseye
