@@ -1,5 +1,13 @@
 # Changelog
 
+## 6.2.1
+
+### Patch Changes
+
+- [#567](https://github.com/celo-org/developer-tooling/pull/567) [`ad1f900`](https://github.com/celo-org/developer-tooling/commit/ad1f90055e88b689d0bb376a61952278f735c9e7) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - lock celo compliance version
+
+- [#562](https://github.com/celo-org/developer-tooling/pull/562) [`086622c`](https://github.com/celo-org/developer-tooling/commit/086622c42a090c2b099338c052e53df6da18e375) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Fixes issues with using celocli with specific versions of node (20.19 and 22)
+
 ## 6.2.1-beta.0
 
 ### Patch Changes
