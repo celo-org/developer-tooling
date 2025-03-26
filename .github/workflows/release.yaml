@@ -86,7 +86,7 @@ jobs:
     name: Install Released Packages
     needs: [prepare, release]
     outputs:
-      assertStableVersionOutcome: ${{ steps.assertStableVersion.outcome }}
+      assetStableCLIRelease: ${{ steps.assertStableVersion.outcome }}
     if: needs.release.outputs.published == 'true' && needs.prepare.outputs.result
     runs-on: ubuntu-latest
     container:
@@ -124,14 +124,14 @@ jobs:
 
   open-docs-pr:
     needs: [install-released-packages]
-    if: ${{ needs.install-released-packages.outputs.assertStableVersionOutcome != 'failure' }}
+    if: ${{ needs.install-released-packages.outputs.assetStableCLIRelease != 'failure' }}
     uses: celo-org/developer-tooling/.github/workflows/open-docs-pr.yml@master
     with:
       commit: ${{ github.sha }}
 
   upload-executables:
     needs: [install-released-packages]
-    if: ${{ needs.install-released-packages.outputs.assertStableVersionOutcome != 'failure' }}
+    if: ${{ needs.install-released-packages.outputs.assetStableCLIRelease != 'failure' }}
     uses: celo-org/developer-tooling/.github/workflows/upload-celocli-executables.yml@master
     with:
       ref: ${{ github.sha }}
