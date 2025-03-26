@@ -1,5 +1,15 @@
 # @celo/phone-utils
 
+## 6.0.6
+
+### Patch Changes
+
+- [#558](https://github.com/celo-org/developer-tooling/pull/558) [`f11a069`](https://github.com/celo-org/developer-tooling/commit/f11a069b152cb34c18f12b6535f4b217a631079d) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Fix incorrect repo link in package.json
+
+- Updated dependencies [[`f11a069`](https://github.com/celo-org/developer-tooling/commit/f11a069b152cb34c18f12b6535f4b217a631079d)]:
+  - @celo/base@7.0.2
+  - @celo/utils@8.0.2
+
 ## 6.0.5
 
 ### Patch Changes

@@ -1,9 +1,9 @@
-import { COMPLIANT_ERROR_RESPONSE, SANCTIONED_ADDRESSES } from '@celo/compliance'
+import { COMPLIANT_ERROR_RESPONSE } from '@celo/compliance'
 import { HttpRpcCaller } from '@celo/connect'
 import { ContractKit, StableToken, newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import Web3 from 'web3'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { TEST_SANCTIONED_ADDRESS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import TransferCelo from './celo'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -112,7 +112,7 @@ testWithAnvilL1('transfer:celo cmd', (web3: Web3) => {
     await expect(
       testLocallyWithWeb3Node(
         TransferCelo,
-        ['--from', accounts[1], '--to', SANCTIONED_ADDRESSES[0], '--value', '1'],
+        ['--from', accounts[1], '--to', TEST_SANCTIONED_ADDRESS, '--value', '1'],
         web3
       )
     ).rejects.toThrow()
@@ -123,7 +123,7 @@ testWithAnvilL1('transfer:celo cmd', (web3: Web3) => {
     await expect(
       testLocallyWithWeb3Node(
         TransferCelo,
-        ['--from', SANCTIONED_ADDRESSES[0], '--to', accounts[0], '--value', '1'],
+        ['--from', TEST_SANCTIONED_ADDRESS, '--to', accounts[0], '--value', '1'],
         web3
       )
     ).rejects.toThrow()

@@ -1,0 +1,26 @@
+#!/usr/bin/env perl
+
+
+use warnings;
+
+my ($version) = @ARGV;
+
+if (not defined $version) {
+  die "Need version\n";
+}
+
+# https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
+my $regex = qr/^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/p;
+
+if ( $version =~ /$regex/g ) {
+  if (defined $+{prerelease}) {
+    die "Not a stable release ($version)\n";
+  }
+  else {
+    print "Stable release ($version)\n";
+    exit(0);
+  }
+}
+else {
+  die "Not a valid SemVer ($version)\n";
+}

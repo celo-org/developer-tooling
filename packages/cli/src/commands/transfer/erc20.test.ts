@@ -1,10 +1,10 @@
-import { COMPLIANT_ERROR_RESPONSE, SANCTIONED_ADDRESSES } from '@celo/compliance'
+import { COMPLIANT_ERROR_RESPONSE } from '@celo/compliance'
 import { ContractKit, StableToken, newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { topUpWithToken } from '../../test-utils/chain-setup'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { TEST_SANCTIONED_ADDRESS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import TransferERC20 from './erc20'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -101,7 +101,7 @@ testWithAnvilL2('transfer:erc20 cmd', (web3: Web3) => {
           '--from',
           accounts[0],
           '--to',
-          SANCTIONED_ADDRESSES[0],
+          TEST_SANCTIONED_ADDRESS,
           '--value',
           '1',
           '--erc20Address',

@@ -2,4 +2,4 @@
 '@celo/celocli': patch
 ---
 
-Update oclif dependencies
+lock celo compliance version
