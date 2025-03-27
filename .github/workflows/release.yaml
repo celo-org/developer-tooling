@@ -114,6 +114,13 @@ jobs:
           echo "checking celo community fund balance"
           celocli account:balance 0xD533Ca259b330c7A88f74E000a3FaEa2d63B7972 --node celo
           celocli network:whitelist --node alfajores
+
+      - name: Checkout Repo
+        if: contains(matrix.package, '@celo/celocli')
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            scripts
       - name: Is stable celocli release
         id: assertStableVersion
         if: contains(matrix.package, '@celo/celocli')
