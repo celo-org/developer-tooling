@@ -1,5 +1,7 @@
+import { Address, erc20Abi, getContract, PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
-import { failWith, printValueMap } from '../../utils/cli'
+import { getTotalBalance } from '../../packages-to-be/account'
+import { failWith, printValueMapRecursive } from '../../utils/cli'
 import { CustomArgs, CustomFlags } from '../../utils/command'
 import { ViewCommmandFlags } from '../../utils/flags'
 
@@ -23,15 +25,27 @@ export default class Balance extends BaseCommand {
   ]
 
   async run() {
-    const kit = await this.getKit()
+    const client = await this.getPublicClient()
     const { args, flags } = await this.parse(Balance)
 
-    console.log('All balances expressed in units of 10^-18.')
-    printValueMap(await kit.getTotalBalance(args.arg1 as string))
+    console.log('All balances expressed in units of wei.')
+
+    // TODO this typing needs to be handled better...
+    printValueMapRecursive(
+      await getTotalBalance(client as any as PublicClient, args.arg1 as Address)
+    )
+
     if (flags.erc20Address) {
+      const erc20Contract = getContract({
+        client,
+        address: flags.erc20Address,
+        abi: erc20Abi,
+      })
+
       try {
-        const erc20 = await kit.contracts.getErc20(flags.erc20Address)
-        printValueMap({ erc20: await erc20.balanceOf(args.arg1 as string) })
+        printValueMapRecursive({
+          erc20: await erc20Contract.read.balanceOf([args.arg1 as Address]),
+        })
       } catch {
         failWith('Invalid erc20 address')
       }

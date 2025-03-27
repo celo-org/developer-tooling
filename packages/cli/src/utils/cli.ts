@@ -150,6 +150,13 @@ function toStringValueMapRecursive(valueMap: Record<string, any>, prefix: string
       }
       return '\n' + toStringValueMapRecursive(v, prefix + '  ')
     }
+
+    if (typeof v === 'bigint') {
+      const extra = v > 1000n ? `(~${bigintToExponential(v)})` : ''
+
+      return `${v} ${extra}`
+    }
+
     return chalk`${v}`
   }
   return Object.keys(valueMap)
@@ -186,4 +193,15 @@ export function humanizeRequirements(requirements: LockedGoldRequirements) {
     maxDecimalPoints: 1,
   })
   return { requiredCelo, requiredDays }
+}
+
+// TODO this will have to be refactored not to use BigNumber
+// once we drop its usage
+function bigintToExponential(value: bigint) {
+  // as per the check in `toStringValueMapRecursive`
+  if (value <= 1000n) {
+    return value.toString()
+  }
+
+  return new BigNumber(value.toString()).toExponential()
 }

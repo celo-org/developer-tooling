@@ -1,6 +1,6 @@
-import { accountsABI } from '@celo/abis-12'
+import { accountsABI, lockedGoldABI } from '@celo/abis-12'
 import { StrongAddress } from '@celo/base'
-import { PublicClient } from 'viem'
+import { erc20Abi, PublicClient } from 'viem'
 import { resolveAddress } from './address-resolver'
 
 export const signerToAccount = async (
@@ -13,4 +13,57 @@ export const signerToAccount = async (
     functionName: 'signerToAccount',
     args: [signer],
   })
+}
+
+export const getTotalBalance = async (
+  client: PublicClient,
+  address: StrongAddress
+): Promise<{
+  lockedCELO: bigint
+  pending: bigint
+  CELO: bigint
+  cUSD: bigint
+  cEUR: bigint
+  cREAL: bigint
+}> => {
+  const lockedCeloAddress = await resolveAddress(client, 'LockedGold')
+
+  return {
+    lockedCELO: await client.readContract({
+      address: lockedCeloAddress,
+      abi: lockedGoldABI,
+      functionName: 'getAccountTotalLockedGold',
+      args: [address],
+    }),
+    pending: await client.readContract({
+      address: lockedCeloAddress,
+      abi: lockedGoldABI,
+      functionName: 'getTotalPendingWithdrawals',
+      args: [address],
+    }),
+    CELO: await client.readContract({
+      address: await resolveAddress(client, 'GoldToken'),
+      abi: erc20Abi,
+      functionName: 'balanceOf',
+      args: [address],
+    }),
+    cUSD: await client.readContract({
+      address: await resolveAddress(client, 'StableToken'),
+      abi: erc20Abi,
+      functionName: 'balanceOf',
+      args: [address],
+    }),
+    cEUR: await client.readContract({
+      address: await resolveAddress(client, 'StableTokenEUR'),
+      abi: erc20Abi,
+      functionName: 'balanceOf',
+      args: [address],
+    }),
+    cREAL: await client.readContract({
+      address: await resolveAddress(client, 'StableTokenBRL'),
+      abi: erc20Abi,
+      functionName: 'balanceOf',
+      args: [address],
+    }),
+  }
 }
