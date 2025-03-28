@@ -14,6 +14,7 @@ import { createPublicClient, extractChain, http } from 'viem'
 import { celo, celoAlfajores } from 'viem/chains'
 import { ipc } from 'viem/node'
 import Web3 from 'web3'
+import { celoBaklava } from './packages-to-be/chains'
 import { CeloClient } from './packages-to-be/client'
 import { CustomFlags } from './utils/command'
 import { getDefaultDerivationPath, getNodeUrl } from './utils/config'
@@ -178,15 +179,32 @@ export abstract class BaseCommand extends Command {
       const intermediateClient = createPublicClient({
         transport,
       })
+      const chainId = await intermediateClient.getChainId()
       const extractedChain = extractChain({
-        chains: [celo, celoAlfajores],
-        id: (await intermediateClient.getChainId()) as 42220 | 44787,
+        chains: [celo, celoAlfajores, celoBaklava],
+        id: chainId as 42_220 | 44_787 | 62_320,
       })
 
-      this.publicClient = createPublicClient({
-        transport,
-        chain: extractedChain ?? celo,
-      })
+      if (extractedChain) {
+        this.publicClient = createPublicClient({
+          transport,
+          chain: extractedChain,
+        })
+      } else {
+        this.publicClient = createPublicClient({
+          transport,
+          chain: {
+            name: 'Custom Chain',
+            id: chainId,
+            nativeCurrency: celo.nativeCurrency,
+            formatters: celo.formatters,
+            serializers: celo.serializers,
+            rpcUrls: {
+              default: { http: [nodeUrl] },
+            },
+          },
+        }) as any as CeloClient
+      }
     }
 
     return this.publicClient
