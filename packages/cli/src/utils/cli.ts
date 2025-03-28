@@ -152,9 +152,10 @@ function toStringValueMapRecursive(valueMap: Record<string, any>, prefix: string
     }
 
     if (typeof v === 'bigint') {
-      const extra = v > 1000n ? `(~${bigintToExponential(v)})` : ''
 
-      return `${v} ${extra}`
+      const asSciNotation = v > 1000n ? `(~${bigintToExponential(v)})` : ''
+
+      return `${v} ${asSciNotation}`
     }
 
     return chalk`${v}`
