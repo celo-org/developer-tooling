@@ -1,4 +1,10 @@
-import { accountsABI, governanceABI, lockedGoldABI, validatorsABI } from '@celo/abis-12'
+import {
+  accountsABI,
+  epochManagerABI,
+  governanceABI,
+  lockedGoldABI,
+  validatorsABI,
+} from '@celo/abis-12'
 import { getContract, GetContractReturnType, PublicClient } from 'viem'
 import { resolveAddress } from './address-resolver'
 
@@ -34,7 +40,16 @@ export const getValidatorsContract = async (client: PublicClient): Promise<Valid
   })
 }
 
+export const getEpochManagerContract = async (client: PublicClient): Promise<EpochManager> => {
+  return getContract({
+    address: await resolveAddress(client, 'EpochManager'),
+    abi: epochManagerABI,
+    client,
+  })
+}
+
 export type AccountsContract = GetContractReturnType<typeof accountsABI, PublicClient>
 export type GovernanceContract = GetContractReturnType<typeof governanceABI, PublicClient>
 export type LockedGoldContract = GetContractReturnType<typeof lockedGoldABI, PublicClient>
 export type ValidatorsContract = GetContractReturnType<typeof validatorsABI, PublicClient>
+export type EpochManager = GetContractReturnType<typeof epochManagerABI, PublicClient>
