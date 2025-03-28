@@ -36,7 +36,7 @@ export default class ApproveMultiSig extends BaseCommand {
     const multisig = await kit.contracts.getMultiSig(res.flags.for)
 
     const checkBuilder = newCheckBuilder(this)
-      .isMultiSigOwner(account, multisig)
+      .isMultiSigOwner(account, res.flags.for)
       .addCheck(
         `Checking that ${res.flags.tx} is an existing transaction.`,
         async () => {
