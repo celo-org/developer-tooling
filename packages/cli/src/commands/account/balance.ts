@@ -1,4 +1,5 @@
-import { Address, erc20Abi, getContract, PublicClient } from 'viem'
+import { StrongAddress } from '@celo/base'
+import { erc20Abi, getContract, PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
 import { getTotalBalance } from '../../packages-to-be/account'
 import { failWith, printValueMapRecursive } from '../../utils/cli'
@@ -32,7 +33,7 @@ export default class Balance extends BaseCommand {
 
     // TODO this typing needs to be handled better...
     printValueMapRecursive(
-      await getTotalBalance(client as any as PublicClient, args.arg1 as Address)
+      await getTotalBalance(client as any as PublicClient, args.arg1 as StrongAddress)
     )
 
     if (flags.erc20Address) {
@@ -44,7 +45,7 @@ export default class Balance extends BaseCommand {
 
       try {
         printValueMapRecursive({
-          erc20: await erc20Contract.read.balanceOf([args.arg1 as Address]),
+          erc20: await erc20Contract.read.balanceOf([args.arg1 as StrongAddress]),
         })
       } catch {
         failWith('Invalid erc20 address')
