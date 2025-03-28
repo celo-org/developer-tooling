@@ -152,7 +152,6 @@ function toStringValueMapRecursive(valueMap: Record<string, any>, prefix: string
     }
 
     if (typeof v === 'bigint') {
-
       const asSciNotation = v > 1000n ? `(~${bigintToExponential(v)})` : ''
 
       return `${v} ${asSciNotation}`
@@ -199,10 +198,5 @@ export function humanizeRequirements(requirements: LockedGoldRequirements) {
 // TODO this will have to be refactored not to use BigNumber
 // once we drop its usage
 function bigintToExponential(value: bigint) {
-  // as per the check in `toStringValueMapRecursive`
-  if (value <= 1000n) {
-    return value.toString()
-  }
-
   return new BigNumber(value.toString()).toExponential()
 }

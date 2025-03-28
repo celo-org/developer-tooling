@@ -26,44 +26,58 @@ export const getTotalBalance = async (
   cEUR: bigint
   cREAL: bigint
 }> => {
-  const lockedCeloAddress = await resolveAddress(client, 'LockedGold')
+  const [lockedCeloAddress, celoTokenAddress, cUSDAddress, cEURAddress, cREALAddress] =
+    await Promise.all(
+      (['LockedGold', 'GoldToken', 'StableToken', 'StableTokenEUR', 'StableTokenBRL'] as const).map(
+        (contractName) => resolveAddress(client, contractName)
+      )
+    )
 
-  return {
-    lockedCELO: await client.readContract({
+  const [lockedCELO, pending, CELO, cUSD, cEUR, cREAL] = await Promise.all([
+    client.readContract({
       address: lockedCeloAddress,
       abi: lockedGoldABI,
       functionName: 'getAccountTotalLockedGold',
       args: [address],
     }),
-    pending: await client.readContract({
+    client.readContract({
       address: lockedCeloAddress,
       abi: lockedGoldABI,
       functionName: 'getTotalPendingWithdrawals',
       args: [address],
     }),
-    CELO: await client.readContract({
-      address: await resolveAddress(client, 'GoldToken'),
+    client.readContract({
+      address: celoTokenAddress,
       abi: erc20Abi,
       functionName: 'balanceOf',
       args: [address],
     }),
-    cUSD: await client.readContract({
-      address: await resolveAddress(client, 'StableToken'),
+    client.readContract({
+      address: cUSDAddress,
       abi: erc20Abi,
       functionName: 'balanceOf',
       args: [address],
     }),
-    cEUR: await client.readContract({
-      address: await resolveAddress(client, 'StableTokenEUR'),
+    client.readContract({
+      address: cEURAddress,
       abi: erc20Abi,
       functionName: 'balanceOf',
       args: [address],
     }),
-    cREAL: await client.readContract({
-      address: await resolveAddress(client, 'StableTokenBRL'),
+    client.readContract({
+      address: cREALAddress,
       abi: erc20Abi,
       functionName: 'balanceOf',
       args: [address],
     }),
+  ] as const)
+
+  return {
+    lockedCELO,
+    pending,
+    CELO,
+    cUSD,
+    cEUR,
+    cREAL,
   }
 }
