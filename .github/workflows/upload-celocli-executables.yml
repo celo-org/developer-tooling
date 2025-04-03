@@ -16,9 +16,131 @@ on:
         required: true
 
 jobs:
+  setupVariables:
+    name: Asserts and setup
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.setupVars.outputs.version }}
+      commit: ${{ steps.setupVars.outputs.commit }}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Setup Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: 'enable corepack for yarn'
+        run: sudo corepack enable yarn
+        shell: bash
+      # must call twice because of chicken and egg problem with yarn and node
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+
+      - name: Install Dependencies
+        shell: bash
+        run: yarn
+
+      - id: setupVars
+        name: Setup variables
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Parse version from the package.json
+          version=$(cat packages/cli/package.json | jq -r .version)
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+          # Get the short commit from github release
+          commit=$(gh release view @celo/celocli@$version --json tagName \
+            | jq '.tagName' \
+            | xargs git rev-list -n 1 --abbrev-commit)
+          echo "commit=$commit" >> "$GITHUB_OUTPUT"
+
+          cat $GITHUB_OUTPUT
+
+      - name: Assert stable release
+        run: |
+          ./scripts/assert_stable_version $TARBALL_VERSION
+        env:
+          TARBALL_VERSION: ${{ steps.setupVars.outputs.version }}
+  compile:
+    needs: [setupVariables]
+    name: Compile executables for each platform and uplod to github release
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    env:
+      targets: |
+        {
+          \"ubuntu-latest\": [
+            \"linux-arm\", 
+            \"linux-arm64\", 
+            \"linux-x64\"
+          ],
+          \"macos-latest\": [
+            \"darwin-arm64\", 
+            \"darwin-x64\"
+          ],
+          \"windows-latest\": [
+            \"win32-arm64\",
+            \"win32-x64\",
+            \"win32-x86\"
+          ]
+        }
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref }}
+          fetch-depth: 0
+          fetch-tags: true
+      - name: Setup Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+      - name: 'enable corepack for yarn'
+        run: sudo corepack enable yarn
+        shell: bash
+      # must call twice because of chicken and egg problem with yarn and node
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'yarn'
+      - name: Install Dependencies
+        shell: bash
+        run: yarn
+
+      - name: Upload executables on the github release
+        working-directory: packages/cli
+        run: |
+          # Download tarball from published release on NPM and save path
+          tarballPath=/tmp/$(npm pack @celo/celocli@$version \
+            --json \
+            --pack-destination /tmp/ \
+            | jq 'first.filename' -r)
+
+          targets=$(echo "${{ env.targets }}" | jq -r '.${{ matrix.os }}' | join(","))
+
+          # Pack the tarballs from NPM into platform specific executables
+          yarn oclif pack tarballs --tarball=$tarballPath --targets=$targets
+
+          ls -la ./dist/
+          gh release upload --clobber @celo/celocli@${{ needs.setupVariables.outputs.version }} ./dist/*.xz
+        env:
+          GH_TOKEN: ${{ github.token }}
+
   upload:
-    name: Upload executables to a specific @celo/celocli release
-    runs-on: [ubuntu-latest]
+    needs: [setupVariables, compile]
+    name: Submit homebrew PR
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       id-token: write
@@ -67,43 +189,11 @@ jobs:
       - name: Install Dependencies
         shell: bash
         run: yarn
-      - id: setupVars
-        name: Setup variables
-        env:
-          GH_TOKEN: ${{ github.token }}
+
+      - name: Prepare the homebrew PR
         run: |
-          # Parse version from the package.json
-          version=$(cat packages/cli/package.json | jq -r .version)
-          echo "version=$version" >> "$GITHUB_OUTPUT"
-
-          # Get the short commit from github release
-          commit=$(gh release view @celo/celocli@$version --json tagName \
-            | jq '.tagName' \
-            | xargs git rev-list -n 1 --abbrev-commit)
-          echo "commit=$commit" >> "$GITHUB_OUTPUT"
-          # Download tarball from published release on NPM and save path
-          tarballPath=/tmp/$(npm pack @celo/celocli@$version \
-          --json \
-          --pack-destination /tmp/ \
-          | jq 'first.filename' -r)
-          echo "tarballPath=$tarballPath" >> "$GITHUB_OUTPUT"
-
-          cat $GITHUB_OUTPUT
-
-      - name: Assert stable release
-        run: |
-          ./scripts/assert_stable_version $TARBALL_VERSION
-        env:
-          TARBALL_VERSION: ${{ steps.setupVars.outputs.version }}
-
-      - name: Package the released tarball into platform-specific executables
-        run: |
-          # Pack the tarballs from NPM into platform specific executables
-          yarn oclif pack tarballs --tarball=${{ steps.setupVars.outputs.tarballPath }}
-
-          # Uncomment the following line and comment the one above
-          # if you wanna speed up without compiling for testing purposes
-          # gh release download -R celo-org/developer-tooling -D dist @celo/celocli@${{ steps.setupVars.outputs.version }}
+          # Fetch the platform-specific executables from github release
+          gh release download -R celo-org/developer-tooling -D dist @celo/celocli@${{ needs.setupVariables.outputs.version }}
 
           # Run the package.json's homebrew script
           yarn run homebrew
@@ -113,16 +203,8 @@ jobs:
           cat ./homebrew/Formula/celocli.rb
         working-directory: packages/cli
         env:
-          GITHUB_SHA_SHORT: ${{ steps.setupVars.outputs.commit }}
-          TARBALL_VERSION: ${{ steps.setupVars.outputs.version }}
-          GH_TOKEN: ${{ github.token }}
-
-      - name: Upload executables on the github release
-        working-directory: packages/cli
-        run: |
-          ls -la ./dist/
-          gh release upload --clobber @celo/celocli@${{ steps.setupVars.outputs.version }} ./dist/*.xz
-        env:
+          GITHUB_SHA_SHORT: ${{ needs.setupVariables.outputs.commit }}
+          TARBALL_VERSION: ${{ needs.setupVariables.outputs.version }}
           GH_TOKEN: ${{ github.token }}
 
       - name: Homebrew tests
@@ -140,9 +222,9 @@ jobs:
           BOT_EMAIL: 'celo-org@github.com'
           HOMEBREW_FORK: 'celo-org:homebrew-brew'
           BASE_BRANCH: main
-          NEW_BRANCH: 'ci/celocli-${{ steps.setupVars.outputs.version }}'
+          NEW_BRANCH: 'ci/celocli-${{ needs.setupVariables.outputs.version }}'
           GH_TOKEN: ${{ env.HOMEBREW_BREW_TOKEN }}
-          RELEASE_URL: 'https://github.com/celo-org/developer-tooling/releases/download/%40celo%2Fcelocli%40${{ steps.setupVars.outputs.version }}'
+          RELEASE_URL: 'https://github.com/celo-org/developer-tooling/releases/download/%40celo%2Fcelocli%40${{ needs.setupVariables.outputs.version }}'
         run: |
           set -x
 
@@ -161,13 +243,13 @@ jobs:
           git diff --cached
 
           # Commit the new Formula
-          git commit -m "celocli ${{ steps.setupVars.outputs.version }}"
+          git commit -m "celocli ${{ needs.setupVariables.outputs.version }}"
           git push origin ${{ env.NEW_BRANCH }} -f
 
 
           # Write the commit message into a file
           cat >/tmp/pr-body.md <<EOL
-          Update celocli formula to [${{ steps.setupVars.outputs.version }}](${{ env.RELEASE_URL }}).
+          Update celocli formula to [${{ needs.setupVariables.outputs.version }}](${{ env.RELEASE_URL }}).
 
           🤖 _This pull-request was opened by a robot beep boop from [@${{ env.BOT_NAME }}](https://github.com/celo-org)_ 🤖
           EOL
@@ -176,6 +258,6 @@ jobs:
           gh pr create \
             --body-file /tmp/pr-body.md \
             --reviewer "celo-org/devtooling" \
-            --title "celocli ${{ steps.setupVars.outputs.version }}" \
+            --title "celocli ${{ needs.setupVariables.outputs.version }}" \
             --base "${{ env.BASE_BRANCH }}" \
             --head "${{ env.NEW_BRANCH }}"
