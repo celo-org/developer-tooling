@@ -128,7 +128,7 @@ jobs:
             --pack-destination /tmp/ \
             | jq 'first.filename' -r)
 
-          targets=$(echo "${{ env.targets }}" | jq -r '.${{ matrix.os }}' | join(","))
+          targets=$(echo "${{ env.targets }}" | jq -r '."${{ matrix.os }}" | join(",")')
 
           # Pack the tarballs from NPM into platform specific executables
           yarn oclif pack tarballs --tarball=$tarballPath --targets=$targets
