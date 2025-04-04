@@ -311,6 +311,10 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
     return this.contract.methods.getValidatorsGroup(address).call()
   }
 
+  async getMembershipInLastEpoch(address: Address): Promise<Address> {
+    return this.contract.methods.getMembershipInLastEpoch(address).call()
+  }
+
   async getValidatorFromSigner(address: Address, blockNumber?: number): Promise<Validator> {
     const account = await this.signerToAccount(address)
     if (eqAddress(account, NULL_ADDRESS) || !(await this.isValidator(account))) {
