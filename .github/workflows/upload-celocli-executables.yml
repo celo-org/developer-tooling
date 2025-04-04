@@ -72,7 +72,7 @@ jobs:
           TARBALL_VERSION: ${{ steps.setupVars.outputs.version }}
   compile:
     needs: [setupVariables]
-    name: Compile executables for each platform and uplod to github release
+    name: Compile executables for ${{ matrix.os }} and upload to github release
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
@@ -107,7 +107,7 @@ jobs:
         with:
           node-version: 20.x
       - name: 'enable corepack for yarn'
-        run: sudo corepack enable yarn
+        run: corepack enable yarn
         shell: bash
       # must call twice because of chicken and egg problem with yarn and node
       - uses: actions/setup-node@v4
@@ -120,6 +120,7 @@ jobs:
 
       - name: Upload executables on the github release
         working-directory: packages/cli
+        shell: bash
         run: |
           # Download tarball from published release on NPM and save path
           tarballPath=/tmp/$(npm pack @celo/celocli@$version \
