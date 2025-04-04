@@ -75,17 +75,26 @@ jobs:
     name: Compile executables for ${{ matrix.os }} and upload to github release
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os:
+          - ubuntu-latest
+          - ubuntu-24.04-arm
+          - windows-latest
+          - macos-latest # arm
+          - macos-latest-large # intel
     env:
       targets: |
         {
           \"ubuntu-latest\": [
-            \"linux-arm\", 
-            \"linux-arm64\", 
             \"linux-x64\"
           ],
+          \"ubuntu-24.04-arm": [
+            \"linux-arm\",
+            \"linux-arm64\",
+          ],
           \"macos-latest\": [
-            \"darwin-arm64\", 
+            \"darwin-arm64\"
+          ],
+          \"macos-latest-large\": [
             \"darwin-x64\"
           ],
           \"windows-latest\": [
