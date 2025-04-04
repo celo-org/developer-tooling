@@ -139,7 +139,7 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
     const electedGroups = Array.from(
       new Set(
         await Promise.all(
-          elected.map(async (validator) => validators.getValidatorsGroup(validator))
+          elected.map(async (validator) => validators.getMembershipInLastEpoch(validator))
         )
       )
     )
