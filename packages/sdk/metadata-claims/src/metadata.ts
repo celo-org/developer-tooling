@@ -172,7 +172,12 @@ export class IdentityMetadataWrapper {
       meta: this.data.meta,
     })
   }
-
+  /*
+   * @param claim the claim to add
+   * @param signer the signer to use to sign the claim
+   * @returns the claim that was added
+   * @dev - the claim is appended to the claims array, for some claim types an existing claim of same will be removed
+   */
   async addClaim(claim: Claim, signer: Signer) {
     switch (claim.type) {
       case ClaimTypes.ACCOUNT:
@@ -188,9 +193,15 @@ export class IdentityMetadataWrapper {
         break
       }
       case ClaimTypes.RPC_URL: {
-        const existingClaims = this.data.claims.filter((el: any) => el.rpcUrl === claim.rpcUrl)
-        if (existingClaims.length > 0) {
-          return existingClaims[0]
+        const existingIndex = this.data.claims.findIndex((el: any) => el.rpcUrl === claim.rpcUrl)
+        if (existingIndex !== -1) {
+          // remove the existing claim so that there are no duplicates for the same url
+          // it will be pushed back in later in this function
+          // that will move it to the end
+          // this allows case where a rpc url is claimed, then another but we want to go back to the former.
+          // the reason to keep allowing multiple rpc urls to be claimed is that technically
+          // validators could use these as fall back urls.
+          this.data.claims.splice(existingIndex, 1)
         }
         break
       }
@@ -220,8 +231,12 @@ export class IdentityMetadataWrapper {
     return claim
   }
 
+  /*
+   * @param type the type of claim to find
+   * @returns the most recent claim of the type
+   */
   findClaim<K extends ClaimTypes>(type: K): ClaimPayload<K> | undefined {
-    return this.data.claims.find(isOfType(type))
+    return this.filterClaims(type).at(-1)
   }
 
   filterClaims<K extends ClaimTypes>(type: K): ClaimPayload<K>[] {
