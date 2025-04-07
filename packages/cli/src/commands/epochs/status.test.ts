@@ -1,10 +1,12 @@
+import { epochManagerABI } from '@celo/abis-12'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { ux } from '@oclif/core'
+import { UnknownRpcError } from 'viem'
+import * as contracts from '../../packages-to-be/contracts'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Start from './start'
 import Status from './status'
-
 process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvilL2('epochs:status cmd', (web3) => {
@@ -28,10 +30,6 @@ testWithAnvilL2('epochs:status cmd', (web3) => {
         ],
         [
           "First Block of Epoch,300n
-      ",
-        ],
-        [
-          "Last Block of Epoch,0n
       ",
         ],
         [
@@ -85,10 +83,6 @@ testWithAnvilL2('epochs:status cmd', (web3) => {
         ",
           ],
           [
-            "Last Block of Epoch,0n
-        ",
-          ],
-          [
             "Has Epoch Processing Begun?,true
         ",
           ],
@@ -106,6 +100,74 @@ testWithAnvilL2('epochs:status cmd', (web3) => {
           ],
           [
             "Epoch Start Time,2025-02-03T21:50:43.000Z
+        ",
+          ],
+        ]
+      `)
+    })
+  })
+
+  describe('epochManager contract interactions', () => {
+    let mockEpochManager: any
+    beforeEach(() => {
+      mockEpochManager = Promise.resolve({
+        abi: epochManagerABI,
+        address: `0x`,
+        read: {
+          getCurrentEpoch: jest
+            .fn()
+            .mockRejectedValue(new UnknownRpcError(new Error('Unknown error'))),
+          getCurrentEpochNumber: jest.fn().mockResolvedValue(4n),
+          isEpochProcessingStarted: jest.fn().mockRejectedValue('Error: Epoch process not started'),
+          isOnEpochProcess: jest.fn().mockResolvedValue(false),
+          isIndividualProcessing: jest.fn().mockResolvedValue(false),
+          isTimeForNextEpoch: jest.fn().mockResolvedValue(false),
+        },
+      })
+
+      jest.mock('../../packages-to-be/contracts', () => ({
+        getEpochManagerContract: jest.fn(() => mockEpochManager),
+      }))
+    })
+    afterEach(() => jest.unmock('../../packages-to-be/contracts'))
+    it('handles successful responses from epochManager methods', async () => {
+      const consoleMock = jest.spyOn(ux.write, 'stdout')
+      jest.spyOn(contracts, 'getEpochManagerContract').mockResolvedValue(mockEpochManager as any)
+
+      await expect(testLocallyWithWeb3Node(Status, ['--output', 'csv'], web3)).resolves.toBe(true)
+
+      expect(consoleMock.mock.calls).toMatchInlineSnapshot(`
+        [
+          [
+            "Query,Response
+        ",
+          ],
+          [
+            "Current Epoch Number,4n
+        ",
+          ],
+          [
+            "First Block of Epoch,An unknown RPC error occurred.
+        ",
+          ],
+          [
+            "Has Epoch Processing Begun?,Error: Epoch process not started
+        ",
+          ],
+          [
+            "Is In Epoch Process?,false
+        ",
+          ],
+          [
+            "Is Processing Individually?,false
+        ",
+          ],
+          [
+            "Is Time for Next Epoch,false
+        ",
+          ],
+          [
+            "Epoch Start Time,An unknown RPC error occurred.
         ",
           ],
         ]

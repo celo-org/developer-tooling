@@ -1,7 +1,7 @@
 import { ux } from '@oclif/core'
-import { PublicClient } from 'viem'
+import { BaseError, PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
-import { getEpochManagerContract } from '../../packages-to-be/contracts'
+import { getEpochInfo } from '../../packages-to-be/getEpochInfo'
 
 export default class EpochStatus extends BaseCommand {
   static description = 'View epoch info.'
@@ -22,19 +22,6 @@ export default class EpochStatus extends BaseCommand {
 
     const client = await this.getPublicClient()
     ux.action.start('Fetching current epoch information')
-
-    const epochManager = await getEpochManagerContract(client as unknown as PublicClient)
-
-    const results = await Promise.allSettled([
-      epochManager.read.getCurrentEpoch(),
-      epochManager.read.getCurrentEpochNumber(),
-      epochManager.read.isEpochProcessingStarted(),
-      epochManager.read.isOnEpochProcess(),
-      epochManager.read.isIndividualProcessing(),
-      epochManager.read.isTimeForNextEpoch(),
-    ])
-    ux.action.stop('Done\n')
-
     const [
       currentEpoch,
       currentEpochNumber,
@@ -42,15 +29,22 @@ export default class EpochStatus extends BaseCommand {
       isOnEpochProcess,
       isIndividualProcessing,
       isTimeForNextEpoch,
-    ] = results.map((result) => (result.status === 'fulfilled' ? result.value : result.reason))
+    ] = await getEpochInfo(client as unknown as PublicClient)
+    ux.action.stop('Done\n')
 
-    const [firstBlock, lastBlock, startTimestamp] = currentEpoch
+    // if currentEpoch is a tuple, destructure it otherwise it would be an error message
+    const [firstBlock, _, startTimestamp] = Array.isArray(currentEpoch)
+      ? currentEpoch
+      : [
+          extractErrorMessage(currentEpoch),
+          extractErrorMessage(currentEpoch),
+          extractErrorMessage(currentEpoch),
+        ]
 
     ux.table(
       [
         { key: 'Current Epoch Number', value: currentEpochNumber },
         { key: 'First Block of Epoch', value: firstBlock },
-        { key: 'Last Block of Epoch', value: lastBlock },
         { key: 'Has Epoch Processing Begun?', value: isEpochProcessingStarted },
         { key: 'Is In Epoch Process?', value: isOnEpochProcess },
         { key: 'Is Processing Individually?', value: isIndividualProcessing },
@@ -74,5 +68,17 @@ export default class EpochStatus extends BaseCommand {
       res.flags
     )
     return true
+  }
+}
+
+function extractErrorMessage(error: unknown): string {
+  if (error instanceof BaseError) {
+    return error.shortMessage
+  } else if (error instanceof Error) {
+    return error.message
+  } else if (typeof error === 'string') {
+    return error
+  } else {
+    return 'Unknown error'
   }
 }
