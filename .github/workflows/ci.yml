@@ -345,11 +345,7 @@ jobs:
     timeout-minutes: 30
     needs: [install-dependencies]
     if: |
-      github.base_ref == 'master' || contains(github.base_ref, 'staging') || contains(github.base_ref, 'production') ||
-      contains(needs.install-dependencies.outputs.all_modified_files, 'packages/**') ||
-      contains(needs.install-dependencies.outputs.all_modified_files, 'packages/sdk') ||
-      contains(needs.install-dependencies.outputs.all_modified_files, ',package.json') ||
-      contains(needs.install-dependencies.outputs.all_modified_files, ',yarn.lock') ||
+      github.base_ref == 'master' || contains(github.base_ref, 'changeset-release') ||
       false
     steps:
       - uses: actions/checkout@v4
@@ -362,7 +358,7 @@ jobs:
         uses: ./.github/actions/sync-workspace
         with:
           artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
-      - name: Fail if someone forgot to commit docs
+      - name: Fail if docs were not updated
         run: |
           yarn docs
           if [[ $(git status docs --porcelain) ]]; then
