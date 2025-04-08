@@ -40,7 +40,10 @@ export default class Delegate extends BaseCommand {
     const percentFixed = toFixed(percent)
 
     await newCheckBuilder(this, address)
-      .addCheck(`Value [${percentFixed}] is > 0 and <=100`, () => percent.gt(0) && percent.lte(100))
+      .addCheck(
+        `Value [${percent.multipliedBy(100).toFixed()}] is > 0 and <=100`,
+        () => percent.gt(0) && percent.lte(100)
+      )
       .isVoteSignerOrAccount()
       .isAccount(to)
       .runChecks()
