@@ -1,5 +1,11 @@
 # @celo/metadata-claims
 
+## 1.0.3
+
+### Patch Changes
+
+- [#584](https://github.com/celo-org/developer-tooling/pull/584) [`d57c692`](https://github.com/celo-org/developer-tooling/commit/d57c6924e6a8d0a73b1a68193b417a22b803c117) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Fix claims not returning the most recently added claim for a type
+
 ## 1.0.2
 
 ### Patch Changes
