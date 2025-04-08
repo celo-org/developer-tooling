@@ -3,7 +3,7 @@ import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import { ACCOUNT_ADDRESSES } from '@celo/dev-utils/lib/ganache-setup'
 import { Address } from '@celo/utils/lib/address'
 import { NativeSigner } from '@celo/utils/lib/signatureUtils'
-import { Claim, createNameClaim } from './claim'
+import { Claim, createNameClaim, createRpcUrlClaim } from './claim'
 import { ClaimTypes, IdentityMetadataWrapper } from './metadata'
 import { now } from './types'
 
@@ -129,6 +129,29 @@ testWithAnvilL1('Metadata', (web3) => {
       // Not checking timestamp here on purpose
       name: 'Test name',
       type: 'NAME',
+    })
+  })
+  describe('when multiple rpc urls claims have been made', () => {
+    let metadata: IdentityMetadataWrapper
+    const claim: Claim = createRpcUrlClaim('https:/example.com/rpc1')
+    const claim2: Claim = createRpcUrlClaim('https:/example.com/rpc2')
+    const claim3: Claim = createRpcUrlClaim('https:/example.com/rpc3')
+
+    beforeEach(async () => {
+      metadata = IdentityMetadataWrapper.fromEmpty(address)
+
+      await metadata.addClaim(claim, NativeSigner(kit.connection.sign, address))
+      await metadata.addClaim(claim2, NativeSigner(kit.connection.sign, address))
+      await metadata.addClaim(claim3, NativeSigner(kit.connection.sign, address))
+    })
+    it('shows the latest claim of a type when more than one claim exists', async () => {
+      expect(metadata.findClaim(ClaimTypes.RPC_URL)).toEqual(claim3)
+      expect(metadata.filterClaims(ClaimTypes.RPC_URL)).toEqual([claim, claim2, claim3])
+    })
+    it('and same rpc url was already claimed, it moves it  the end so its returned as the latest', async () => {
+      await metadata.addClaim(claim2, NativeSigner(kit.connection.sign, address))
+      expect(metadata.filterClaims(ClaimTypes.RPC_URL)).toEqual([claim, claim3, claim2])
+      expect(metadata.findClaim(ClaimTypes.RPC_URL)).toEqual(claim2)
     })
   })
 })

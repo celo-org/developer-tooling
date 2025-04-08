@@ -108,7 +108,7 @@
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/metadata.ts:176](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/metadata.ts#L176)
+[packages/sdk/metadata-claims/src/metadata.ts:181](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/metadata.ts#L181)
 
 ___
 
@@ -134,7 +134,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/metadata.ts:227](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/metadata.ts#L227)
+[packages/sdk/metadata-claims/src/metadata.ts:242](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/metadata.ts#L242)
 
 ___
 
@@ -160,7 +160,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/metadata-claims/src/metadata.ts:223](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/metadata.ts#L223)
+[packages/sdk/metadata-claims/src/metadata.ts:238](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/metadata-claims/src/metadata.ts#L238)
 
 ___
 
