@@ -1,5 +1,15 @@
 # Changelog
 
+## 6.2.2
+
+### Patch Changes
+
+- [#583](https://github.com/celo-org/developer-tooling/pull/583) [`398dc75`](https://github.com/celo-org/developer-tooling/commit/398dc75b69d01a6ab83fec584a6c42905e3fc790) Thanks [@pahor167](https://github.com/pahor167)! - fixes epoch switch to use group from previous epoch not current
+
+- Updated dependencies [[`398dc75`](https://github.com/celo-org/developer-tooling/commit/398dc75b69d01a6ab83fec584a6c42905e3fc790), [`d57c692`](https://github.com/celo-org/developer-tooling/commit/d57c6924e6a8d0a73b1a68193b417a22b803c117)]:
+  - @celo/contractkit@9.1.1
+  - @celo/metadata-claims@1.0.3
+
 ## 6.2.1
 
 ### Patch Changes
