@@ -81,18 +81,71 @@ testWithAnvilL1('transfer:dollars cmd', (web3: Web3) => {
     expect(balanceAfter.toFixed()).toEqBigNumber('0')
   })
 
-  describe('when --gasCurrency matches transfer currency', () => {
+  describe('when --gasCurrency', () => {
     beforeEach(() => {
       // need to call this send sending gasCurrency address to the gas price rpc is not supported on anvil.
       mockRpc()
     })
-    it('checks that the sender has enough of the token to cover both transfer and pay for gas', async () => {
-      const cusdWrapper = await kit.contracts.getStableToken(StableToken.cUSD)
-      const cusdAddress = cusdWrapper.address
-      const balance = await cusdWrapper.balanceOf(accounts[0])
-      expect(balance.toFixed()).toEqBigNumber('1000000000000000000000')
-      await expect(
-        testLocallyWithWeb3Node(
+    describe('matches transfer currency', () => {
+      it('checks that the sender has enough of the token to cover both transfer and pay for gas', async () => {
+        const cusdWrapper = await kit.contracts.getStableToken(StableToken.cUSD)
+        const cusdAddress = cusdWrapper.address
+        const balance = await cusdWrapper.balanceOf(accounts[0])
+        expect(balance.toFixed()).toEqBigNumber('1000000000000000000000')
+        await expect(
+          testLocallyWithWeb3Node(
+            TransferCUSD,
+            [
+              '--from',
+              accounts[0],
+              '--to',
+              accounts[1],
+              '--value',
+              balance.toFixed(),
+              '--gasCurrency',
+              cusdAddress,
+            ],
+
+            web3
+          )
+        ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
+
+        expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
+          [
+            [
+              "Running Checks:",
+            ],
+            [
+              "   ✔  Account has at least 1000 cUSD ",
+            ],
+            [
+              "   ✔  Compliant Address ",
+            ],
+            [
+              "   ✔  Compliant Address ",
+            ],
+            [
+              "   ✘  Account can afford to transfer cUSD with gas paid in 0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1 Cannot afford to transfer cUSD with 0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1 gasCurrency; try reducing value slightly or using a different gasCurrency",
+            ],
+          ]
+        `)
+      })
+    })
+    describe('is different from transfer currency', () => {
+      beforeEach(async () => {
+        await topUpWithToken(
+          kit,
+          StableToken.cEUR,
+          accounts[0],
+          new BigNumber('1000000000000000000000')
+        )
+      })
+      it('will transfer all the cusd an address has', async () => {
+        const cusdWrapper = await kit.contracts.getStableToken(StableToken.cUSD)
+        const euroWrapper = await kit.contracts.getStableToken(StableToken.cEUR)
+        const balance = await cusdWrapper.balanceOf(accounts[0])
+        expect(balance.toFixed()).toEqBigNumber('1000000000000000000000')
+        await testLocallyWithWeb3Node(
           TransferCUSD,
           [
             '--from',
@@ -102,32 +155,13 @@ testWithAnvilL1('transfer:dollars cmd', (web3: Web3) => {
             '--value',
             balance.toFixed(),
             '--gasCurrency',
-            cusdAddress,
+            euroWrapper.address,
           ],
-
           web3
         )
-      ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
-
-      expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
-        [
-          [
-            "Running Checks:",
-          ],
-          [
-            "   ✔  Account has at least 1000 cUSD ",
-          ],
-          [
-            "   ✔  Compliant Address ",
-          ],
-          [
-            "   ✔  Compliant Address ",
-          ],
-          [
-            "   ✘  Account can afford to transfer cUSD with gas paid in 0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1 Cannot afford to transfer cUSD with 0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1 gasCurrency; try reducing value slightly or using a different gasCurrency",
-          ],
-        ]
-      `)
+        const balanceAfter = await cusdWrapper.balanceOf(accounts[0])
+        expect(balanceAfter.toFixed()).toEqBigNumber('0')
+      })
     })
   })
 
