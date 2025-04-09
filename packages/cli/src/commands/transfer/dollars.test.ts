@@ -109,22 +109,22 @@ testWithAnvilL1('transfer:dollars cmd', (web3: Web3) => {
         )
       ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
 
-      expect(logMock.mock.calls).toMatchInlineSnapshot(`
+      expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
           ],
           [
-            "[32m   [1m✔[22m  Account has at least 1000 cUSD [39m",
+            "   ✔  Account has at least 1000 cUSD ",
           ],
           [
-            "[32m   [1m✔[22m  Compliant Address [39m",
+            "   ✔  Compliant Address ",
           ],
           [
-            "[32m   [1m✔[22m  Compliant Address [39m",
+            "   ✔  Compliant Address ",
           ],
           [
-            "[31m   [1m✘[22m  Account can afford to transfer cUSD with gas paid in 0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1 Cannot afford to transfer cUSD with 0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1 gasCurrency; try reducing value slightly or using a different gasCurrency[39m",
+            "   ✘  Account can afford to transfer cUSD with gas paid in 0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1 Cannot afford to transfer cUSD with 0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1 gasCurrency; try reducing value slightly or using a different gasCurrency",
           ],
         ]
       `)
