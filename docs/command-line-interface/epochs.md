@@ -3,52 +3,11 @@
 
 Finishes next epoch process.
 
-* [`celocli epochs:current`](#celocli-epochscurrent)
 * [`celocli epochs:finish`](#celocli-epochsfinish)
 * [`celocli epochs:process-groups`](#celocli-epochsprocess-groups)
 * [`celocli epochs:send-validator-payment`](#celocli-epochssend-validator-payment)
 * [`celocli epochs:start`](#celocli-epochsstart)
-* [`celocli epochs:status`](#celocli-epochsstatus)
 * [`celocli epochs:switch`](#celocli-epochsswitch)
-
-## `celocli epochs:current`
-
-View epoch info.
-
-```
-USAGE
-  $ celocli epochs:current [-n <value>] [--columns <value> | -x] [--filter <value>]
-    [--no-header | [--csv | --no-truncate]] [--output csv|json|yaml |  | ] [--sort
-    <value>]
-
-FLAGS
-  -n, --node=<value>     URL of the node to run commands against or an alias
-  -x, --extended         show extra columns
-      --columns=<value>  only show provided columns (comma-separated)
-      --csv              output is csv format [alias: --output=csv]
-      --filter=<value>   filter property by partial string matching, ex: name=foo
-      --no-header        hide table header from output
-      --no-truncate      do not truncate output to fit screen
-      --output=<option>  output in a more machine friendly format
-                         <options: csv|json|yaml>
-      --sort=<value>     property to sort by (prepend '-' for descending)
-
-DESCRIPTION
-  View epoch info.
-
-ALIASES
-  $ celocli epochs:current
-
-FLAG DESCRIPTIONS
-  -n, --node=<value>  URL of the node to run commands against or an alias
-
-    Can be a full url like https://forno.celo.org or an alias. default:
-    http://localhost:8545
-    Alias options:
-    local, localhost => 'http://localhost:8545'
-    alfajores => Celo Alfajores Testnet,
-    mainnet, celo, forno => Celo Mainnet chain',
-```
 
 ## `celocli epochs:finish`
 
@@ -292,47 +251,6 @@ FLAG DESCRIPTIONS
 ```
 
 _See code: [src/commands/epochs/start.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/epochs/start.ts)_
-
-## `celocli epochs:status`
-
-View epoch info.
-
-```
-USAGE
-  $ celocli epochs:status [-n <value>] [--columns <value> | -x] [--filter <value>]
-    [--no-header | [--csv | --no-truncate]] [--output csv|json|yaml |  | ] [--sort
-    <value>]
-
-FLAGS
-  -n, --node=<value>     URL of the node to run commands against or an alias
-  -x, --extended         show extra columns
-      --columns=<value>  only show provided columns (comma-separated)
-      --csv              output is csv format [alias: --output=csv]
-      --filter=<value>   filter property by partial string matching, ex: name=foo
-      --no-header        hide table header from output
-      --no-truncate      do not truncate output to fit screen
-      --output=<option>  output in a more machine friendly format
-                         <options: csv|json|yaml>
-      --sort=<value>     property to sort by (prepend '-' for descending)
-
-DESCRIPTION
-  View epoch info.
-
-ALIASES
-  $ celocli epochs:current
-
-FLAG DESCRIPTIONS
-  -n, --node=<value>  URL of the node to run commands against or an alias
-
-    Can be a full url like https://forno.celo.org or an alias. default:
-    http://localhost:8545
-    Alias options:
-    local, localhost => 'http://localhost:8545'
-    alfajores => Celo Alfajores Testnet,
-    mainnet, celo, forno => Celo Mainnet chain',
-```
-
-_See code: [src/commands/epochs/status.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/epochs/status.ts)_
 
 ## `celocli epochs:switch`
 
