@@ -1,8 +1,15 @@
 import { newElection } from '@celo/abis-12/web3/Election'
-import { testWithAnvilL2, withImpersonatedAccount } from '@celo/dev-utils/lib/anvil-test'
+import { newRegistry } from '@celo/abis/web3/Registry'
+import { StrongAddress } from '@celo/base'
+import {
+  asCoreContractsOwner,
+  testWithAnvilL2,
+  withImpersonatedAccount,
+} from '@celo/dev-utils/lib/anvil-test'
 import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
+import { REGISTRY_CONTRACT_ADDRESS } from '../address-registry'
 import { newKitFromWeb3 } from '../kit'
 import { startAndFinishEpochProcess } from '../test-utils/utils'
 
@@ -94,6 +101,59 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
 
     expect(await epochManagerWrapper.getLastBlockAtEpoch(currentEpochNumber)).toEqual(352)
   })
+
+  it(
+    'finishes epoch correctly when validator group is not eligable any more',
+    async () => {
+      const epochManagerWrapper = await kit.contracts.getEpochManager()
+      const currentEpochNumber = await epochManagerWrapper.getCurrentEpochNumber()
+      const accounts = await web3.eth.getAccounts()
+
+      expect(await epochManagerWrapper.getFirstBlockAtEpoch(currentEpochNumber)).toEqual(300)
+      await expect(
+        epochManagerWrapper.getLastBlockAtEpoch(currentEpochNumber)
+      ).rejects.toMatchInlineSnapshot(`[Error: execution reverted: revert: Epoch not finished yet]`)
+
+      // Let the epoch pass and start another one
+      await timeTravel(EPOCH_DURATION + 1, web3)
+      await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
+        from: accounts[0],
+      })
+
+      const validatorsContract = await kit.contracts.getValidators()
+      const electionContract = await kit.contracts.getElection()
+      const validatorGroups = await validatorsContract.getRegisteredValidatorGroupsAddresses()
+
+      await asCoreContractsOwner(
+        web3,
+        async (ownerAdress: StrongAddress) => {
+          const registryContract = newRegistry(web3, REGISTRY_CONTRACT_ADDRESS)
+
+          await registryContract.methods.setAddressFor('Validators', accounts[0]).send({
+            from: ownerAdress,
+          })
+
+          await electionContract['contract'].methods
+            .markGroupIneligible(validatorGroups[0])
+            .send({ from: accounts[0] })
+
+          await registryContract.methods
+            .setAddressFor('Validators', validatorsContract.address)
+            .send({
+              from: ownerAdress,
+            })
+        },
+        new BigNumber(web3.utils.toWei('1', 'ether'))
+      )
+
+      await (
+        await epochManagerWrapper.finishNextEpochProcessTx()
+      ).sendAndWaitForReceipt({
+        from: accounts[0],
+      })
+    },
+    1000 * 60 * 5
+  )
 
   async function activateValidators() {
     const validatorsContract = await kit.contracts.getValidators()
