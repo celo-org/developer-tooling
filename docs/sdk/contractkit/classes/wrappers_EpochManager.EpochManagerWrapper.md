@@ -55,6 +55,7 @@ Contract handling epoch management.
 - [getLessersAndGreaters](wrappers_EpochManager.EpochManagerWrapper.md#getlessersandgreaters)
 - [getPastEvents](wrappers_EpochManager.EpochManagerWrapper.md#getpastevents)
 - [processGroupsTx](wrappers_EpochManager.EpochManagerWrapper.md#processgroupstx)
+- [startNextEpochProcessTx](wrappers_EpochManager.EpochManagerWrapper.md#startnextepochprocesstx)
 - [version](wrappers_EpochManager.EpochManagerWrapper.md#version)
 
 ## Constructors
@@ -628,7 +629,7 @@ BaseWrapperForGoverning.address
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:75](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L75)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:104](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L104)
 
 ___
 
@@ -642,7 +643,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:162](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L162)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:191](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L191)
 
 ___
 
@@ -656,7 +657,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:136](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L136)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:165](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L165)
 
 ___
 
@@ -676,7 +677,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:87](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L87)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:116](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L116)
 
 ___
 
@@ -717,7 +718,21 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/EpochManager.ts:81](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L81)
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:110](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L110)
+
+___
+
+### startNextEpochProcessTx
+
+▸ **startNextEpochProcessTx**(): `Promise`\<`undefined` \| `CeloTransactionObject`\<`void`\>\>
+
+#### Returns
+
+`Promise`\<`undefined` \| `CeloTransactionObject`\<`void`\>\>
+
+#### Defined in
+
+[packages/sdk/contractkit/src/wrappers/EpochManager.ts:75](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/EpochManager.ts#L75)
 
 ___
 

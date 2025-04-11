@@ -30,7 +30,10 @@ export default class Start extends BaseCommand {
     if (await epochManager.isOnEpochProcess()) {
       this.error('Epoch process has already started.')
     }
-
-    await displaySendTx('startNextEpoch', epochManager.startNextEpochProcess())
+    const startProcessTx = await epochManager.startNextEpochProcessTx()
+    if (startProcessTx === undefined) {
+      return
+    }
+    await displaySendTx('startNextEpoch', startProcessTx)
   }
 }
