@@ -1,5 +1,14 @@
 # Changelog
 
+## 6.2.3
+
+### Patch Changes
+
+- [#590](https://github.com/celo-org/developer-tooling/pull/590) [`790cf2a`](https://github.com/celo-org/developer-tooling/commit/790cf2a32b140d4071fcce3ad84664dc22a359d8) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Fix bug in epoch switching
+
+- Updated dependencies [[`790cf2a`](https://github.com/celo-org/developer-tooling/commit/790cf2a32b140d4071fcce3ad84664dc22a359d8)]:
+  - @celo/contractkit@9.2.0
+
 ## 6.2.2
 
 ### Patch Changes
