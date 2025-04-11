@@ -1,9 +1,9 @@
 import { COMPLIANT_ERROR_RESPONSE } from '@celo/compliance'
-import { HttpRpcCaller } from '@celo/connect'
 import { ContractKit, StableToken, newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
 import Web3 from 'web3'
 import { TEST_SANCTIONED_ADDRESS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { mockRpc } from '../../test-utils/mockRpc'
 import TransferCelo from './celo'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -11,28 +11,6 @@ process.env.NO_SYNCCHECK = 'true'
 // Lots of commands, sometimes times out
 jest.setTimeout(15000)
 
-const mockRpc = () =>
-  jest.spyOn(HttpRpcCaller.prototype, 'call').mockImplementation(async (method, _args) => {
-    if (method === 'eth_maxPriorityFeePerGas') {
-      return {
-        result: '20000',
-        id: 1,
-        jsonrpc: '2.0',
-      }
-    }
-    if (method === 'eth_gasPrice') {
-      return {
-        result: '30000',
-        id: 1,
-        jsonrpc: '2.0',
-      }
-    }
-    return {
-      result: 0,
-      id: Math.random(),
-      jsonrpc: '2.0',
-    }
-  })
 testWithAnvilL1('transfer:celo cmd', (web3: Web3) => {
   let accounts: string[] = []
   let kit: ContractKit
