@@ -3,6 +3,7 @@ import { concurrentMap, NULL_ADDRESS } from '@celo/base'
 import BigNumber from 'bignumber.js'
 import { proxyCall, proxySend, valueToInt, valueToString } from './BaseWrapper'
 import { BaseWrapperForGoverning } from './BaseWrapperForGoverning'
+import { ValidatorGroupVote } from './Election'
 
 export enum EpochProcessStatus {
   NotStarted,
@@ -136,6 +137,22 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
     )
 
     const groupWithVotes = await groupWithVotesPromise
+    const groupWithVotesMap = new Map<string, { address: string; votes: BigNumber }>(
+      groupWithVotes.map((group) => [group.address, group])
+    )
+
+    const missingGroups = groups.filter((group) => !groupWithVotesMap.has(group))
+
+    const missingGroupsLoaded = await Promise.all(
+      missingGroups.map(async (group) => {
+        const votes = await election.getTotalVotesForGroup(group)
+        return { group, votes }
+      })
+    )
+
+    for (const group of missingGroupsLoaded) {
+      groupWithVotes.push({ address: group.group, votes: group.votes } as ValidatorGroupVote)
+    }
 
     for (let i = 0; i < groups.length; i++) {
       const reward = rewards[i]
