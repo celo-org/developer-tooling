@@ -34,7 +34,12 @@ export default class Switch extends BaseCommand {
         return
       }
       await displaySendTx('startNextEpoch', startProcessTx)
+      await this.delay(2000) // wait for 2 seconds since we sometimes get error that suggests node is not synced
     }
     await displaySendTx('finishNextEpoch', await epochManager.finishNextEpochProcessTx())
+  }
+
+  delay(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms))
   }
 }
