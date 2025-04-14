@@ -1,3 +1,4 @@
+import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { displaySendTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
@@ -8,6 +9,10 @@ export default class Switch extends BaseCommand {
   static flags = {
     ...BaseCommand.flags,
     from: CustomFlags.address({ required: true }),
+    delay: Flags.integer({
+      description: 'Delay in milliseconds before finishing the epoch',
+      default: 2000,
+    }),
   }
 
   static args = {}
@@ -34,7 +39,7 @@ export default class Switch extends BaseCommand {
         return
       }
       await displaySendTx('startNextEpoch', startProcessTx)
-      await this.delay(2000) // wait for 2 seconds since we sometimes get error that suggests node is not synced
+      await this.delay(res.flags.delay)
     }
     await displaySendTx('finishNextEpoch', await epochManager.finishNextEpochProcessTx())
   }
