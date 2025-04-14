@@ -1,3 +1,4 @@
+import { sleep } from '@celo/base'
 import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { displaySendTx } from '../../utils/cli'
@@ -39,12 +40,8 @@ export default class Switch extends BaseCommand {
         return
       }
       await displaySendTx('startNextEpoch', startProcessTx)
-      await this.delay(res.flags.delay)
+      await sleep(res.flags.delay)
     }
     await displaySendTx('finishNextEpoch', await epochManager.finishNextEpochProcessTx())
-  }
-
-  delay(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms))
   }
 }
