@@ -1,5 +1,14 @@
 # Changelog
 
+## 6.2.4
+
+### Patch Changes
+
+- [#592](https://github.com/celo-org/developer-tooling/pull/592) [`321c56d`](https://github.com/celo-org/developer-tooling/commit/321c56d31a22291829de01f97b527ad13e1ae748) Thanks [@pahor167](https://github.com/pahor167)! - Load ineligable groups in EpochManager when switching
+
+- Updated dependencies [[`321c56d`](https://github.com/celo-org/developer-tooling/commit/321c56d31a22291829de01f97b527ad13e1ae748)]:
+  - @celo/contractkit@9.2.1
+
 ## 6.2.3
 
 ### Patch Changes
