@@ -1,5 +1,41 @@
 # Changelog
 
+## 6.2.4
+
+### Patch Changes
+
+- [#592](https://github.com/celo-org/developer-tooling/pull/592) [`321c56d`](https://github.com/celo-org/developer-tooling/commit/321c56d31a22291829de01f97b527ad13e1ae748) Thanks [@pahor167](https://github.com/pahor167)! - Load ineligable groups in EpochManager when switching
+
+- Updated dependencies [[`321c56d`](https://github.com/celo-org/developer-tooling/commit/321c56d31a22291829de01f97b527ad13e1ae748)]:
+  - @celo/contractkit@9.2.1
+
+## 6.2.3
+
+### Patch Changes
+
+- [#590](https://github.com/celo-org/developer-tooling/pull/590) [`790cf2a`](https://github.com/celo-org/developer-tooling/commit/790cf2a32b140d4071fcce3ad84664dc22a359d8) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Fix bug in epoch switching
+
+- Updated dependencies [[`790cf2a`](https://github.com/celo-org/developer-tooling/commit/790cf2a32b140d4071fcce3ad84664dc22a359d8)]:
+  - @celo/contractkit@9.2.0
+
+## 6.2.2
+
+### Patch Changes
+
+- [#583](https://github.com/celo-org/developer-tooling/pull/583) [`398dc75`](https://github.com/celo-org/developer-tooling/commit/398dc75b69d01a6ab83fec584a6c42905e3fc790) Thanks [@pahor167](https://github.com/pahor167)! - fixes epoch switch to use group from previous epoch not current
+
+- Updated dependencies [[`398dc75`](https://github.com/celo-org/developer-tooling/commit/398dc75b69d01a6ab83fec584a6c42905e3fc790), [`d57c692`](https://github.com/celo-org/developer-tooling/commit/d57c6924e6a8d0a73b1a68193b417a22b803c117)]:
+  - @celo/contractkit@9.1.1
+  - @celo/metadata-claims@1.0.3
+
+## 6.2.1
+
+### Patch Changes
+
+- [#567](https://github.com/celo-org/developer-tooling/pull/567) [`ad1f900`](https://github.com/celo-org/developer-tooling/commit/ad1f90055e88b689d0bb376a61952278f735c9e7) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - lock celo compliance version
+
+- [#562](https://github.com/celo-org/developer-tooling/pull/562) [`086622c`](https://github.com/celo-org/developer-tooling/commit/086622c42a090c2b099338c052e53df6da18e375) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Fixes issues with using celocli with specific versions of node (20.19 and 22)
+
 ## 6.2.1-beta.0
 
 ### Patch Changes

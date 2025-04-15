@@ -1,3 +1,5 @@
+import { sleep } from '@celo/base'
+import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { displaySendTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
@@ -8,6 +10,10 @@ export default class Switch extends BaseCommand {
   static flags = {
     ...BaseCommand.flags,
     from: CustomFlags.address({ required: true }),
+    delay: Flags.integer({
+      description: 'Delay in milliseconds before finishing the epoch',
+      default: 2000,
+    }),
   }
 
   static args = {}
@@ -29,7 +35,12 @@ export default class Switch extends BaseCommand {
 
     const isEpochProcessStarted = await epochManager.isOnEpochProcess()
     if (!isEpochProcessStarted) {
-      await displaySendTx('startNextEpoch', epochManager.startNextEpochProcess())
+      const startProcessTx = await epochManager.startNextEpochProcessTx()
+      if (startProcessTx === undefined) {
+        return
+      }
+      await displaySendTx('startNextEpoch', startProcessTx)
+      await sleep(res.flags.delay)
     }
     await displaySendTx('finishNextEpoch', await epochManager.finishNextEpochProcessTx())
   }

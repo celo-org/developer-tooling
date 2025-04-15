@@ -16,7 +16,7 @@ testWithAnvilL2('network:info', (web3) => {
     // Switch epochs 3 times
     for (let i = 0; i < 3; i++) {
       await timeTravel(epochDuration * 2, web3)
-      await testLocallyWithWeb3Node(EpochsSwitch, ['--from', accounts[0]], web3)
+      await testLocallyWithWeb3Node(EpochsSwitch, ['--from', accounts[0], '--delay', '1'], web3)
     }
   })
 

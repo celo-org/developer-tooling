@@ -61,7 +61,7 @@ jobs:
   # release gives an array of published packages as jsob objects, we need an array of strings for installing
   prepare:
     name: Format Output for Install
-    if: needs.release.outputs.published
+    if: needs.release.outputs.published == 'true'
     needs: release
     runs-on: ubuntu-latest
     container:
@@ -70,10 +70,8 @@ jobs:
       result: '${{ steps.map.outputs.output }}'
     steps:
       - name: Install jq
-        if: needs.release.outputs.published
         uses: dcarbone/install-jq-action@v3.0.1
       - name: Format Published Packages Array
-        if: needs.release.outputs.published
         uses: cloudposse/github-action-jq@main
         id: map
         with:
@@ -88,8 +86,8 @@ jobs:
     name: Install Released Packages
     needs: [prepare, release]
     outputs:
-      assertStableVersionOutcome: ${{ steps.assertStableVersion.outcome }}
-    if: needs.release.outputs.published
+      assetStableCLIRelease: ${{ steps.assertStableVersion.outcome }}
+    if: needs.release.outputs.published == 'true' && needs.prepare.outputs.result
     runs-on: ubuntu-latest
     container:
       image: node:20-bullseye
@@ -116,25 +114,31 @@ jobs:
           echo "checking celo community fund balance"
           celocli account:balance 0xD533Ca259b330c7A88f74E000a3FaEa2d63B7972 --node celo
           celocli network:whitelist --node alfajores
+
+      - name: Checkout Repo
+        if: contains(matrix.package, '@celo/celocli')
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            scripts
       - name: Is stable celocli release
         id: assertStableVersion
         if: contains(matrix.package, '@celo/celocli')
         continue-on-error: true
         run: |
-          ./scripts/assert_stable_version $CELO_CLI_VERSION
-        env:
-          CELO_CLI_VERSION: ${{ fromJson(needs.release.outputs.publishedPackages).*.version }}
+          version=$(echo "${{ matrix.package }}" | cut -d "@" -f3)
+          ./scripts/assert_stable_version "$version"
 
   open-docs-pr:
-    needs: release
-    if: ${{ contains(fromJson(needs.release.outputs.publishedPackages).*.name, '@celo/celocli') }}
+    needs: [install-released-packages]
+    if: ${{ needs.install-released-packages.outputs.assetStableCLIRelease != 'failure' }}
     uses: celo-org/developer-tooling/.github/workflows/open-docs-pr.yml@master
     with:
       commit: ${{ github.sha }}
 
   upload-executables:
-    needs: install-released-packages
-    if: ${{ needs.install-released-packages.outputs.assertStableVersionOutcome != 'failure' }}
+    needs: [install-released-packages]
+    if: ${{ needs.install-released-packages.outputs.assetStableCLIRelease != 'failure' }}
     uses: celo-org/developer-tooling/.github/workflows/upload-celocli-executables.yml@master
     with:
       ref: ${{ github.sha }}

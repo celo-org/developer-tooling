@@ -1,8 +1,9 @@
 import { EpochManager } from '@celo/abis-12/web3/EpochManager'
-import { NULL_ADDRESS } from '@celo/base'
+import { concurrentMap, NULL_ADDRESS } from '@celo/base'
 import BigNumber from 'bignumber.js'
 import { proxyCall, proxySend, valueToInt, valueToString } from './BaseWrapper'
 import { BaseWrapperForGoverning } from './BaseWrapperForGoverning'
+import { ValidatorGroupVote } from './Election'
 
 export enum EpochProcessStatus {
   NotStarted,
@@ -72,6 +73,35 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
   setToProcessGroups = proxySend(this.connection, this.contract.methods.setToProcessGroups)
   processGroups = proxySend(this.connection, this.contract.methods.processGroups)
 
+  startNextEpochProcessTx = async () => {
+    // check that elected accounts are affiliated with a group
+    const electedAccounts = await this.getElectedAccounts()
+    try {
+      await concurrentMap(16, electedAccounts, async (account) => {
+        const validators = await this.contracts.getValidators()
+        const isValidator = await validators.isValidator(account)
+        if (!isValidator) {
+          throw new Error(`Elected account ${account} is not a validator`)
+        }
+        const group = await validators.getValidatorsGroup(account)
+        if (group === NULL_ADDRESS) {
+          throw new Error(`Elected account ${account} is not affiliated with a group`)
+        }
+        return group
+      })
+    } catch (error) {
+      console.error('Aborting start of epoch processing. Issue while checking accounts:', error)
+      return
+    }
+    // check that the epoch process is not already started since some time has passed
+    const isEpochProcessStarted = await this.isOnEpochProcess()
+    if (isEpochProcessStarted) {
+      console.warn('Epoch process has already started.')
+      return
+    }
+    return this.startNextEpochProcess()
+  }
+
   finishNextEpochProcessTx = async () => {
     const { groups, lessers, greaters } = await this.getEpochGroupsAndSorting()
 
@@ -107,6 +137,22 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
     )
 
     const groupWithVotes = await groupWithVotesPromise
+    const groupWithVotesMap = new Map<string, { address: string; votes: BigNumber }>(
+      groupWithVotes.map((group) => [group.address, group])
+    )
+
+    const missingGroups = groups.filter((group) => !groupWithVotesMap.has(group))
+
+    const missingGroupsLoaded = await Promise.all(
+      missingGroups.map(async (group) => {
+        const votes = await election.getTotalVotesForGroup(group)
+        return { group, votes }
+      })
+    )
+
+    for (const group of missingGroupsLoaded) {
+      groupWithVotes.push({ address: group.group, votes: group.votes } as ValidatorGroupVote)
+    }
 
     for (let i = 0; i < groups.length; i++) {
       const reward = rewards[i]
@@ -139,7 +185,7 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
     const electedGroups = Array.from(
       new Set(
         await Promise.all(
-          elected.map(async (validator) => validators.getValidatorsGroup(validator))
+          elected.map(async (validator) => validators.getMembershipInLastEpoch(validator))
         )
       )
     )

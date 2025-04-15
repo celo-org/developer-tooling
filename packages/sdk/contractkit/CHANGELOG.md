@@ -1,5 +1,23 @@
 # @celo/contractkit
 
+## 9.2.1
+
+### Patch Changes
+
+- [#592](https://github.com/celo-org/developer-tooling/pull/592) [`321c56d`](https://github.com/celo-org/developer-tooling/commit/321c56d31a22291829de01f97b527ad13e1ae748) Thanks [@pahor167](https://github.com/pahor167)! - Load ineligable groups in EpochManager when switching
+
+## 9.2.0
+
+### Minor Changes
+
+- [#590](https://github.com/celo-org/developer-tooling/pull/590) [`790cf2a`](https://github.com/celo-org/developer-tooling/commit/790cf2a32b140d4071fcce3ad84664dc22a359d8) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Add startNextEpochProcessTx that will throw early if needed
+
+## 9.1.1
+
+### Patch Changes
+
+- [#583](https://github.com/celo-org/developer-tooling/pull/583) [`398dc75`](https://github.com/celo-org/developer-tooling/commit/398dc75b69d01a6ab83fec584a6c42905e3fc790) Thanks [@pahor167](https://github.com/pahor167)! - fixes epoch switch to use group from previous epoch not current
+
 ## 9.1.0
 
 ### Minor Changes
