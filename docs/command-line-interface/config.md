@@ -32,7 +32,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/config/get.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%406.2.1/packages/cli/src/commands/config/get.ts)_
+_See code: [src/commands/config/get.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%406.2.5/packages/cli/src/commands/config/get.ts)_
 
 ## `celocli config:set`
 
@@ -93,4 +93,4 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/config/set.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%406.2.1/packages/cli/src/commands/config/set.ts)_
+_See code: [src/commands/config/set.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%406.2.5/packages/cli/src/commands/config/set.ts)_
