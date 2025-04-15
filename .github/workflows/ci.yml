@@ -345,8 +345,7 @@ jobs:
     timeout-minutes: 30
     needs: [install-dependencies]
     if: |
-      github.base_ref == 'master' || contains(github.base_ref, 'changeset-release') ||
-      false
+      contains(github.base_ref, 'changeset-release') || false
     steps:
       - uses: actions/checkout@v4
       - name: Sync workspace
