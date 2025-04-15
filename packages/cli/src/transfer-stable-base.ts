@@ -70,20 +70,16 @@ export abstract class TransferStableBase extends BaseCommand {
       ? stableToken.transferWithComment(to, value.toFixed(), res.flags.comment)
       : stableToken.transfer(to, value.toFixed())
 
-    let gas: number
-    let gasPrice: string
-    let gasBalance: BigNumber
-    let valueBalance: BigNumber
     await newCheckBuilder(this)
       .hasEnoughStable(from, value, this._stableCurrency)
       .isNotSanctioned(from)
       .isNotSanctioned(to)
       .addCheck(
-        `Account can afford to transfer ${this._stableCurrency} and gas paid in ${
-          res.flags.gasCurrency || 'CELO'
+        `Account can afford to transfer ${this._stableCurrency} with gas paid in ${
+          kit.connection.defaultFeeCurrency || 'CELO'
         }`,
         async () => {
-          ;[gas, gasPrice, gasBalance, valueBalance] = await Promise.all([
+          const [gas, gasPrice, balanceOfTokenForGas, balanceOfTokenToSend] = await Promise.all([
             tx.txo.estimateGas(baseParams),
             kit.connection.gasPrice(kit.connection.defaultFeeCurrency),
             kit.connection.defaultFeeCurrency
@@ -97,11 +93,11 @@ export abstract class TransferStableBase extends BaseCommand {
               .getStableToken(this._stableCurrency!)
               .then((token) => token.balanceOf(from)),
           ])
-          const gasValue = new BigNumber(gas).times(gasPrice as string)
-          if (kit.connection.defaultFeeCurrency) {
-            return gasBalance.gte(gasValue) && valueBalance.gte(value)
+          const totalSpentOnGas = new BigNumber(gas).times(gasPrice as string)
+          if (kit.connection.defaultFeeCurrency === stableToken.address) {
+            return balanceOfTokenToSend.gte(value.plus(totalSpentOnGas))
           }
-          return valueBalance.gte(value.plus(gasValue))
+          return balanceOfTokenForGas.gte(totalSpentOnGas) && balanceOfTokenToSend.gte(value)
         },
         `Cannot afford to transfer ${this._stableCurrency} ${
           res.flags.gasCurrency ? 'with' + ' ' + res.flags.gasCurrency + ' ' + 'gasCurrency' : ''
