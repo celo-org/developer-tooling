@@ -80,6 +80,7 @@
     "humanize-duration": "^3.32.1",
     "path": "^0.12.7",
     "prompts": "^2.0.1",
+    "viem": "^2.23.5",
     "web3": "1.10.4",
     "web3-utils": "^1.10.4"
   },

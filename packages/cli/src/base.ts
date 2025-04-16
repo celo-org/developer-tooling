@@ -1,5 +1,5 @@
 import { StrongAddress } from '@celo/base'
-import { ReadOnlyWallet, isCel2 } from '@celo/connect'
+import { isCel2, ReadOnlyWallet } from '@celo/connect'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { AzureHSMWallet } from '@celo/wallet-hsm-azure'
 import { AddressValidation, newLedgerWalletWithSetup } from '@celo/wallet-ledger'
@@ -10,7 +10,12 @@ import { CLIError } from '@oclif/core/lib/errors'
 import { FlagInput } from '@oclif/core/lib/interfaces/parser'
 import chalk from 'chalk'
 import net from 'net'
+import { createPublicClient, extractChain, http } from 'viem'
+import { celo, celoAlfajores } from 'viem/chains'
+import { ipc } from 'viem/node'
 import Web3 from 'web3'
+import { celoBaklava } from './packages-to-be/chains'
+import { CeloClient } from './packages-to-be/client'
 import { CustomFlags } from './utils/command'
 import { getDefaultDerivationPath, getNodeUrl } from './utils/config'
 import { getFeeCurrencyContractWrapper } from './utils/fee-currency'
@@ -118,6 +123,8 @@ export abstract class BaseCommand extends Command {
   // Indicates if celocli running in L2 context
   private cel2: boolean | null = null
 
+  private publicClient: CeloClient | null = null
+
   async getWeb3() {
     if (!this._web3) {
       this._web3 = await this.newWeb3()
@@ -133,9 +140,15 @@ export abstract class BaseCommand extends Command {
     this._kit!.connection.wallet = wallet
   }
 
-  async newWeb3() {
+  protected async getNodeUrl(): Promise<string> {
     const res = await this.parse()
-    const nodeUrl = (res.flags && res.flags.node) || getNodeUrl(this.config.configDir)
+
+    return (res.flags && res.flags.node) || getNodeUrl(this.config.configDir)
+  }
+
+  async newWeb3() {
+    const nodeUrl = await this.getNodeUrl()
+
     return nodeUrl && nodeUrl.endsWith('.ipc')
       ? new Web3(new Web3.providers.IpcProvider(nodeUrl, net))
       : new Web3(nodeUrl)
@@ -152,6 +165,50 @@ export abstract class BaseCommand extends Command {
     }
 
     return this._kit
+  }
+
+  // TODO(viem): This shouldn't be public, but for the time being to be called
+  // from CheckBuilder to allow smooth transitions it is public.
+  public async getPublicClient(): Promise<CeloClient> {
+    if (!this.publicClient) {
+      const nodeUrl = await this.getNodeUrl()
+
+      const transport = nodeUrl && nodeUrl.endsWith('.ipc') ? ipc(nodeUrl) : http(nodeUrl)
+
+      // Create an intermediate client to get the chain id
+      const intermediateClient = createPublicClient({
+        transport,
+      })
+      const chainId = await intermediateClient.getChainId()
+      const extractedChain = extractChain({
+        chains: [celo, celoAlfajores, celoBaklava],
+        id: chainId as 42_220 | 44_787 | 62_320,
+      })
+
+      if (extractedChain) {
+        this.publicClient = createPublicClient({
+          transport,
+          chain: extractedChain,
+        })
+      } else {
+        // we might be connecting to a dev chain or anvil fork or another testnet
+        this.publicClient = createPublicClient({
+          transport,
+          chain: {
+            name: 'Custom Chain',
+            id: chainId,
+            nativeCurrency: celo.nativeCurrency,
+            formatters: celo.formatters,
+            serializers: celo.serializers,
+            rpcUrls: {
+              default: { http: [nodeUrl] },
+            },
+          },
+        }) as any as CeloClient
+      }
+    }
+
+    return this.publicClient
   }
 
   async init() {
