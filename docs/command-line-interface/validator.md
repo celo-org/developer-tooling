@@ -85,7 +85,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/validator/affiliate.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/affiliate.ts)_
+_See code: [src/commands/validator/affiliate.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%406.2.5/packages/cli/src/commands/validator/affiliate.ts)_
 
 ## `celocli validator:community-rpc-nodes`
 
@@ -192,7 +192,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/validator/deaffiliate.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/deaffiliate.ts)_
+_See code: [src/commands/validator/deaffiliate.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%406.2.5/packages/cli/src/commands/validator/deaffiliate.ts)_
 
 ## `celocli validator:deregister`
 
@@ -255,7 +255,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/validator/deregister.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/deregister.ts)_
+_See code: [src/commands/validator/deregister.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%406.2.5/packages/cli/src/commands/validator/deregister.ts)_
 
 ## `celocli validator:downtime-slash`
 
@@ -333,7 +333,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/validator/downtime-slash.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/downtime-slash.ts)_
+_See code: [src/commands/validator/downtime-slash.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%406.2.5/packages/cli/src/commands/validator/downtime-slash.ts)_
 
 ## `celocli validator:list`
 
@@ -376,7 +376,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/validator/list.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/list.ts)_
+_See code: [src/commands/validator/list.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%406.2.5/packages/cli/src/commands/validator/list.ts)_
 
 ## `celocli validator:register`
 
@@ -447,7 +447,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/validator/register.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/register.ts)_
+_See code: [src/commands/validator/register.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%406.2.5/packages/cli/src/commands/validator/register.ts)_
 
 ## `celocli validator:requirements`
 
@@ -505,7 +505,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/validator/requirements.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/requirements.ts)_
+_See code: [src/commands/validator/requirements.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%406.2.5/packages/cli/src/commands/validator/requirements.ts)_
 
 ## `celocli validator:rpc-urls`
 
@@ -687,7 +687,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/validator/set-bitmaps.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/set-bitmaps.ts)_
+_See code: [src/commands/validator/set-bitmaps.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%406.2.5/packages/cli/src/commands/validator/set-bitmaps.ts)_
 
 ## `celocli validator:show ARG1`
 
@@ -721,7 +721,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/validator/show.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/show.ts)_
+_See code: [src/commands/validator/show.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%406.2.5/packages/cli/src/commands/validator/show.ts)_
 
 ## `celocli validator:signed-blocks`
 
@@ -814,7 +814,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/validator/signed-blocks.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/signed-blocks.ts)_
+_See code: [src/commands/validator/signed-blocks.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%406.2.5/packages/cli/src/commands/validator/signed-blocks.ts)_
 
 ## `celocli validator:status`
 
@@ -922,7 +922,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/validator/status.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/status.ts)_
+_See code: [src/commands/validator/status.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%406.2.5/packages/cli/src/commands/validator/status.ts)_
 
 ## `celocli validator:update-bls-public-key`
 
@@ -995,4 +995,4 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/validator/update-bls-public-key.ts](https://github.com/celo-org/developer-tooling/tree/master/packages/cli/src/commands/validator/update-bls-public-key.ts)_
+_See code: [src/commands/validator/update-bls-public-key.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%406.2.5/packages/cli/src/commands/validator/update-bls-public-key.ts)_
