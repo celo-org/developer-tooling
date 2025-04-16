@@ -6,8 +6,7 @@ import { HotfixRecord, ProposalStage } from '@celo/contractkit/lib/wrappers/Gove
 import BigNumber from 'bignumber.js'
 import chalk from 'chalk'
 import { fetch } from 'cross-fetch'
-import { erc20Abi, PublicClient } from 'viem'
-import utils from 'web3-utils'
+import { erc20Abi, formatEther, PublicClient } from 'viem'
 import { BaseCommand } from '../base'
 import { signerToAccount } from '../packages-to-be/account'
 import { resolveAddress } from '../packages-to-be/address-resolver'
@@ -26,7 +25,7 @@ import {
   getProposalSchedule,
   getProposalStage,
 } from '../packages-to-be/governance'
-import { bigintToBigNumber } from '../packages-to-be/utils'
+import { bigintToBigNumber, bigNumberToBigInt } from '../packages-to-be/utils'
 import {
   getValidator,
   getValidatorGroup,
@@ -36,7 +35,7 @@ import {
   meetsValidatorGroupBalanceRequirements,
 } from '../packages-to-be/validators'
 import { getCurrentTimestamp, printValueMapRecursive } from './cli'
-
+import { getStableTokenContractName } from './helpers'
 export interface CommandCheck {
   name: string
   errorMessage?: string
@@ -69,7 +68,6 @@ class CheckBuilder {
     "'The wallet address has been sanctioned by the U.S. Department of the Treasury.''All U.S. persons are prohibited from accessing, receiving, accepting, or facilitating any property 'and interests in property (including use of any technology, software or software patch(es)) of these'designated digital wallet addresses.  These prohibitions include the making of any contribution or''provision of funds, goods, or services by, to, or for the benefit of any blocked person and the ''receipt of any contribution or provision of funds, goods, or services from any such person and ' 'all designated digital asset wallets.'"
   constructor(private command: BaseCommand, private signer?: StrongAddress) {}
 
-  // TODO(viem): client should be directly injected in the contructor
   private async getClient(): Promise<PublicClient> {
     // In this case we're not using any Celo-specific client features, so it can be
     // safely casted to PublicClient
@@ -309,7 +307,6 @@ class CheckBuilder {
     this.addCheck(
       'Signer can sign Validator Txs',
       this.withAccounts(async (accounts) => {
-        // TODO ok so the error doesn't originate here!!!
         try {
           // This reverts if account cannot sign validator txs
           await accounts.read.validatorSignerToAccount([this.signer!])
@@ -443,7 +440,7 @@ class CheckBuilder {
     )
 
   hasEnoughCelo = (account: Address, value: BigNumber) => {
-    const valueInEth = utils.fromWei(value.toFixed(), 'ether')
+    const valueInEth = formatEther(bigNumberToBigInt(value))
 
     return this.addCheck(`Account has at least ${valueInEth} CELO`, async () => {
       const balance = await (
@@ -459,24 +456,13 @@ class CheckBuilder {
     })
   }
 
-  private getStableTokenContractName(stable: StableToken) {
-    switch (stable) {
-      case StableToken.cUSD:
-        return 'StableToken'
-      case StableToken.cEUR:
-        return 'StableTokenEUR'
-      case StableToken.cREAL:
-        return 'StableTokenBRL'
-    }
-  }
-
   hasEnoughStable = (account: Address, value: BigNumber, stable: StableToken) => {
-    const valueInEth = utils.fromWei(value.toFixed(), 'ether')
+    const valueInEth = formatEther(bigNumberToBigInt(value))
 
     return this.addCheck(`Account has at least ${valueInEth} ${stable}`, async () => {
       const stableTokenAddress = await resolveAddress(
         await this.getClient(),
-        this.getStableTokenContractName(stable)
+        getStableTokenContractName(stable)
       )
       const balance = await (
         await this.getClient()
@@ -492,8 +478,7 @@ class CheckBuilder {
   }
 
   hasEnoughErc20 = (account: Address, value: BigNumber, erc20: Address) => {
-    // possibly remove usage of utils?
-    const valueInEth = utils.fromWei(value.toFixed(), 'ether')
+    const valueInEth = formatEther(bigNumberToBigInt(value))
 
     return this.addCheck(`Account has at least ${valueInEth} erc20 token`, async () => {
       const balance = await (
@@ -529,7 +514,7 @@ class CheckBuilder {
     )
 
   hasEnoughNonvotingLockedGold = (value: BigNumber) => {
-    const valueInEth = utils.fromWei(value.toFixed(), 'ether')
+    const valueInEth = formatEther(bigNumberToBigInt(value))
 
     return this.addCheck(
       `Account has at least ${valueInEth} non-voting Locked Gold`,
@@ -542,7 +527,8 @@ class CheckBuilder {
   }
 
   hasEnoughLockedGoldToUnlock = (value: BigNumber) => {
-    const valueInEth = utils.fromWei(value.toFixed(), 'ether')
+    const valueInEth = formatEther(bigNumberToBigInt(value))
+
     return this.addCheck(
       `Account has at least ${valueInEth} non-voting Locked Gold over requirement`,
       this.withLockedGold(async (lockedGold, _signer, account, validators) => {

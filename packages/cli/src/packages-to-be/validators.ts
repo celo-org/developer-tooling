@@ -90,8 +90,7 @@ export const getValidatorGroup = async (
   getAffiliates: boolean = true,
   blockNumber?: number
 ) => {
-  // TODO rename
-  const res = await client.readContract({
+  const validatorGroupTuple = await client.readContract({
     address: await resolveAddress(client, 'Validators'),
     abi: validatorsABI,
     functionName: 'getValidatorGroup',
@@ -110,23 +109,21 @@ export const getValidatorGroup = async (
     const validators = await getRegisteredValidators(client, blockNumber)
     affiliates = validators
       .filter((v) => v.affiliation && eqAddress(v.affiliation, address))
-      .filter((v) => !res[0].includes(v.address as StrongAddress))
+      .filter((v) => !validatorGroupTuple[0].includes(v.address as StrongAddress))
   }
   return {
     name,
     address,
-    members: Array.from(res[0]),
-    commission: fromFixed(new BigNumber(res[1].toString())),
-    nextCommission: fromFixed(new BigNumber(res[2].toString())),
-    nextCommissionBlock: new BigNumber(res[3].toString()),
-    // TODO expose in some utils the bigintToBigNumber and reuse it here instead of
-    // casting back and forth
-    membersUpdated: res[4]
-      .map((value) => new BigNumber(value.toString()))
-      .reduce((a: number, b: BigNumber.Value) => Math.max(a, new BigNumber(b).toNumber()), 0),
+    members: Array.from(validatorGroupTuple[0]),
+    commission: fromFixed(bigintToBigNumber(validatorGroupTuple[1])),
+    nextCommission: fromFixed(bigintToBigNumber(validatorGroupTuple[2])),
+    nextCommissionBlock: bigintToBigNumber(validatorGroupTuple[3]),
+    membersUpdated: bigintToBigNumber(
+      validatorGroupTuple[4].reduce((a: bigint, b: bigint) => (a < b ? b : a), 0n)
+    ),
     affiliates: affiliates.map((v) => v.address),
-    slashingMultiplier: fromFixed(new BigNumber(res[5].toString())),
-    lastSlashed: new BigNumber(res[6].toString()),
+    slashingMultiplier: fromFixed(bigintToBigNumber(validatorGroupTuple[5])),
+    lastSlashed: bigintToBigNumber(validatorGroupTuple[6]),
   }
 }
 
@@ -156,7 +153,7 @@ export const getValidator = async (
   address: Address,
   blockNumber?: number
 ): Promise<Validator> => {
-  const res = await client.readContract({
+  const validatorTuple = await client.readContract({
     address: await resolveAddress(client, 'Validators'),
     abi: validatorsABI,
     functionName: 'getValidator',
@@ -174,11 +171,11 @@ export const getValidator = async (
   return {
     name,
     address,
-    ecdsaPublicKey: res[0],
-    blsPublicKey: res[1],
-    affiliation: res[2],
-    score: fromFixed(new BigNumber(res[3].toString())),
-    signer: res[4],
+    ecdsaPublicKey: validatorTuple[0],
+    blsPublicKey: validatorTuple[1],
+    affiliation: validatorTuple[2],
+    score: fromFixed(bigintToBigNumber(validatorTuple[3])),
+    signer: validatorTuple[4],
   }
 }
 

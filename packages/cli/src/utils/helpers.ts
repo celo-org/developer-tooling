@@ -1,3 +1,4 @@
+import { StableToken } from '@celo/base'
 import { Block } from '@celo/connect'
 import Web3 from 'web3'
 import { failWith } from './cli'
@@ -52,5 +53,16 @@ export async function nodeIsSynced(web3: Web3): Promise<boolean> {
 export async function requireNodeIsSynced(web3: Web3) {
   if (!(await nodeIsSynced(web3))) {
     failWith('Node is not currently synced. Run node:synced to check its status.')
+  }
+}
+
+export function getStableTokenContractName(stable: StableToken) {
+  switch (stable) {
+    case StableToken.cUSD:
+      return 'StableToken'
+    case StableToken.cEUR:
+      return 'StableTokenEUR'
+    case StableToken.cREAL:
+      return 'StableTokenBRL'
   }
 }

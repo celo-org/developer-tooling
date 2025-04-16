@@ -31,3 +31,7 @@ export const isCel2 = async (client: PublicClient): Promise<boolean> => {
 export function bigintToBigNumber(value: bigint) {
   return new BigNumber(value.toString())
 }
+
+export function bigNumberToBigInt(value: BigNumber) {
+  return BigInt(value.toFixed())
+}
