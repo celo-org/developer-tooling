@@ -26,7 +26,7 @@
     "test:watch": "node node_modules/jest/bin/jest.js --watch",
     "postinstall": "husky install",
     "release": "yarn clean && yarn build && yarn workspace @celo/celocli run prepack && yarn cs publish",
-    "version-and-reinstall": "yarn changeset version && yarn install --no-immutable",
+    "version-then-update-files": "yarn changeset version && yarn install --no-immutable && yarn build && yarn docs",
     "celocli": "yarn workspace @celo/celocli run --silent celocli"
   },
   "workspaces": {
