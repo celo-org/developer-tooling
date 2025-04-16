@@ -191,6 +191,7 @@ export abstract class BaseCommand extends Command {
           chain: extractedChain,
         })
       } else {
+        // we might be connecting to a dev chain or anvil fork or another testnet
         this.publicClient = createPublicClient({
           transport,
           chain: {
