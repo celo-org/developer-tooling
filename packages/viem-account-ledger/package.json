@@ -48,11 +48,11 @@
     "@celo/wallet-remote": "workspace:^",
     "@ethereumjs/util": "8.0.5",
     "@ledgerhq/hw-transport-node-hid": "^6.29.5",
-    "@vitest/coverage-v8": "2.1.2",
+    "@vitest/coverage-v8": "2.1.9",
     "dotenv": "^8.2.0",
     "rimraf": "^4.4.1",
     "viem": "^2.21.55",
-    "vitest": "^2.1.2"
+    "vitest": "^2.1.9"
   },
   "engines": {
     "node": ">=18"

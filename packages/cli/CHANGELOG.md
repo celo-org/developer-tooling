@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.2.5
+
+### Patch Changes
+
+- [#589](https://github.com/celo-org/developer-tooling/pull/589) [`10ca254`](https://github.com/celo-org/developer-tooling/commit/10ca2548c2c1427f7c6a960e6cf9f571994e5269) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Fix incorrect insufficient balance check for transfers
+
 ## 6.2.4
 
 ### Patch Changes
