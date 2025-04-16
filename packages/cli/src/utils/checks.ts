@@ -599,7 +599,7 @@ class CheckBuilder {
       this.withValidators(async (validators, _signer, account) => {
         const group = await getValidatorGroup(await this.getClient(), account)
         const [_, duration] = await validators.read.getGroupLockedGoldRequirements()
-        const waitPeriodEnd = group.membersUpdated + bigintToBigNumber(duration).toNumber()
+        const waitPeriodEnd = group.membersUpdated.plus(bigintToBigNumber(duration)).toNumber()
         const isDeregisterable = waitPeriodEnd < Date.now() / 1000
         if (!isDeregisterable) {
           console.warn(
