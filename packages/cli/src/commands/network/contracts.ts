@@ -9,7 +9,6 @@ import { ViewCommmandFlags } from '../../utils/flags'
 
 const UNVERSIONED_CONTRACTS = [
   CeloContract.Registry,
-  CeloContract.FeeCurrencyWhitelist,
   CeloContract.Freezer,
   CeloContract.StableToken,
   CeloContract.StableTokenBRL,

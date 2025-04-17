@@ -44,8 +44,6 @@ type Wrappers<T extends Keys> = InstanceType<ContractsBroughtBase[T]['wrapper']>
 
 const contractsWhichRequireCache = new Set([
   CeloContract.Attestations,
-  CeloContract.DoubleSigningSlasher,
-  CeloContract.DowntimeSlasher,
   CeloContract.Election,
   CeloContract.Governance,
   CeloContract.LockedCelo,

@@ -2,8 +2,6 @@ export enum CeloContract {
   Accounts = 'Accounts',
   Attestations = 'Attestations',
   CeloUnreleasedTreasury = 'CeloUnreleasedTreasury',
-  DoubleSigningSlasher = 'DoubleSigningSlasher',
-  DowntimeSlasher = 'DowntimeSlasher',
   Election = 'Election',
   EpochRewards = 'EpochRewards',
   ERC20 = 'ERC20',

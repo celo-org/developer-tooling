@@ -11,8 +11,6 @@ import { newScoreManager } from '@celo/abis-12/web3/ScoreManager'
 import { newValidators } from '@celo/abis-12/web3/Validators'
 import { newAccounts } from '@celo/abis/web3/Accounts'
 import { newAttestations } from '@celo/abis/web3/Attestations'
-import { newDoubleSigningSlasher } from '@celo/abis/web3/DoubleSigningSlasher'
-import { newDowntimeSlasher } from '@celo/abis/web3/DowntimeSlasher'
 import { newEpochRewards } from '@celo/abis/web3/EpochRewards'
 import { newEscrow } from '@celo/abis/web3/Escrow'
 import { newFederatedAttestations } from '@celo/abis/web3/FederatedAttestations'
@@ -39,8 +37,6 @@ export const ContractFactories = {
   [CeloContract.Accounts]: newAccounts,
   [CeloContract.Attestations]: newAttestations,
   [CeloContract.CeloUnreleasedTreasury]: newCeloUnreleasedTreasury,
-  [CeloContract.DoubleSigningSlasher]: newDoubleSigningSlasher,
-  [CeloContract.DowntimeSlasher]: newDowntimeSlasher,
   [CeloContract.Election]: newElection,
   [CeloContract.EpochManager]: newEpochManager,
   [CeloContract.EpochManagerEnabler]: newEpochManagerEnabler,
@@ -100,12 +96,6 @@ export class Web3ContractCache {
   }
   getCeloUnreleasedTreasury() {
     return this.getContract(CeloContract.CeloUnreleasedTreasury)
-  }
-  getDoubleSigningSlasher() {
-    return this.getContract(CeloContract.DoubleSigningSlasher)
-  }
-  getDowntimeSlasher() {
-    return this.getContract(CeloContract.DowntimeSlasher)
   }
   getElection() {
     return this.getContract(CeloContract.Election)

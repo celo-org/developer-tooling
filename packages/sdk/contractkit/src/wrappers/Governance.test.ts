@@ -80,7 +80,7 @@ testWithAnvilL1('Governance Wrapper', (web3: Web3) => {
 
   describe('Proposals', () => {
     const repoints: Repoint[] = [
-      [CeloContract.Random, '0x0000000000000000000000000000000000000001'],
+      [CeloContract.Freezer, '0x0000000000000000000000000000000000000001'],
       [CeloContract.Escrow, '0x0000000000000000000000000000000000000002'],
     ]
     const proposalID = new BigNumber(1)

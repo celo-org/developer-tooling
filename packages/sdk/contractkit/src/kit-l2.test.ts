@@ -1,4 +1,3 @@
-import { StrongAddress } from '@celo/base'
 import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import Web3 from 'web3'
@@ -7,13 +6,9 @@ import { startAndFinishEpochProcess } from './test-utils/utils'
 
 testWithAnvilL2('kit', (web3: Web3) => {
   let kit: ContractKit
-  let feeToken: StrongAddress
 
   beforeAll(async () => {
     kit = newKitFromWeb3(web3)
-    const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyDirectory()
-    const gasOptions = await feeCurrencyWhitelist.getAddresses()
-    feeToken = gasOptions[0]
   })
 
   describe('epochs', () => {
