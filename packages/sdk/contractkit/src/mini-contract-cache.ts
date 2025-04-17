@@ -1,4 +1,3 @@
-import { newGasPriceMinimum } from '@celo/abis/web3/0.8/GasPriceMinimum'
 import { newAccounts } from '@celo/abis/web3/Accounts'
 import { newGoldToken } from '@celo/abis/web3/GoldToken'
 import { newStableToken } from '@celo/abis/web3/mento/StableToken'
@@ -19,11 +18,6 @@ const MINIMUM_CONTRACTS = {
   [CeloContract.Accounts]: {
     newInstance: newAccounts,
     wrapper: AccountsWrapper,
-  },
-  // TODO(L2): remove
-  [CeloContract.GasPriceMinimum]: {
-    newInstance: newGasPriceMinimum,
-    wrapper: GasPriceMinimumWrapper,
   },
   [CeloContract.CeloToken]: {
     newInstance: newGoldToken,

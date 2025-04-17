@@ -1,5 +1,4 @@
 import { Governance } from '@celo/abis-12/web3/Governance'
-import { newGovernance } from '@celo/abis/web3/Governance'
 import {
   bufferToHex,
   ensureLeading0x,
@@ -10,10 +9,9 @@ import {
 } from '@celo/base/lib/address'
 import { concurrentMap } from '@celo/base/lib/async'
 import { zeroRange, zip } from '@celo/base/lib/collections'
-import { Address, CeloTxObject, CeloTxPending, isCel2, toTransactionObject } from '@celo/connect'
+import { Address, CeloTxObject, CeloTxPending, toTransactionObject } from '@celo/connect'
 import { fromFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
-import { ContractVersion } from '../versions'
 import {
   bufferToSolidityBytes,
   identity,
@@ -903,39 +901,12 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<Governance> {
    * @param hash keccak256 hash of hotfix's associated abi encoded transactions
    */
   async getHotfixRecord(hash: Buffer): Promise<L1HotfixRecord | HotfixRecord> {
-    const version = await this.version()
-
-    if (version.isAtLeast(new ContractVersion(1, 4, 2, 0))) {
-      // TODO(L2): this is deprecated and not supported in L2
-      if (await isCel2(this.connection.web3)) {
-        // is L2
-        const res = await this.contract.methods.getL2HotfixRecord(bufferToHex(hash)).call()
-
-        return {
-          approved: res[0],
-          councilApproved: res[1],
-          executed: res[2],
-          executionTimeLimit: valueToBigNumber(res[3]),
-        }
-      } else {
-        // is L1
-        const res = await this.contract.methods.getL1HotfixRecord(bufferToHex(hash)).call()
-
-        return {
-          approved: res[0],
-          executed: res[1],
-          preparedEpoch: valueToBigNumber(res[2]),
-        }
-      }
-    } else {
-      const governancePre1500Contract = newGovernance(this.connection.web3, this.address)
-      const res = await governancePre1500Contract.methods.getHotfixRecord(bufferToHex(hash)).call()
-
-      return {
-        approved: res[0],
-        executed: res[1],
-        preparedEpoch: valueToBigNumber(res[2]),
-      }
+    const res = await this.contract.methods.getL2HotfixRecord(bufferToHex(hash)).call()
+    return {
+      approved: res[0],
+      councilApproved: res[1],
+      executed: res[2],
+      executionTimeLimit: valueToBigNumber(res[3]),
     }
   }
 

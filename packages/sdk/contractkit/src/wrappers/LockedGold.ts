@@ -5,7 +5,7 @@ import {
   linkedListChanges as baseLinkedListChanges,
   zip,
 } from '@celo/base/lib/collections'
-import { Address, BlockNumber, CeloTransactionObject, EventLog, isCel2 } from '@celo/connect'
+import { Address, CeloTransactionObject, EventLog } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import {
   proxyCall,
@@ -316,23 +316,11 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<LockedGold> {
    * @param epochNumber The epoch to retrieve AccountSlashed at.
    */
   async getAccountsSlashed(epochNumber: number): Promise<AccountSlashed[]> {
-    let fromBlock: BlockNumber
-    let toBlock: BlockNumber
-
-    // TODO(L2): this is deprecated and not supported in L2
-    if (await isCel2(this.connection.web3)) {
-      const epochManagerWrapper = await this.contracts.getEpochManager()
-      ;[fromBlock, toBlock] = await Promise.all([
-        epochManagerWrapper.getFirstBlockAtEpoch(epochNumber),
-        epochManagerWrapper.getLastBlockAtEpoch(epochNumber),
-      ])
-    } else {
-      const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
-      ;[fromBlock, toBlock] = await Promise.all([
-        blockchainParamsWrapper.getFirstBlockNumberForEpoch(epochNumber),
-        blockchainParamsWrapper.getLastBlockNumberForEpoch(epochNumber),
-      ])
-    }
+    const epochManagerWrapper = await this.contracts.getEpochManager()
+    const [fromBlock, toBlock] = await Promise.all([
+      epochManagerWrapper.getFirstBlockAtEpoch(epochNumber),
+      epochManagerWrapper.getLastBlockAtEpoch(epochNumber),
+    ])
 
     const events = await this.getPastEvents('AccountSlashed', { fromBlock, toBlock })
     return events.map(

@@ -19,7 +19,6 @@ import { FederatedAttestationsWrapper } from './wrappers/FederatedAttestations'
 import { FeeCurrencyDirectoryWrapper } from './wrappers/FeeCurrencyDirectoryWrapper'
 import { FeeCurrencyWhitelistWrapper } from './wrappers/FeeCurrencyWhitelistWrapper'
 import { FreezerWrapper } from './wrappers/Freezer'
-import { GasPriceMinimumWrapper } from './wrappers/GasPriceMinimum'
 import { GoldTokenWrapper } from './wrappers/GoldTokenWrapper'
 import { GovernanceWrapper } from './wrappers/Governance'
 import { LockedGoldWrapper } from './wrappers/LockedGold'
@@ -41,8 +40,6 @@ const WrapperFactories = {
   [CeloContract.FeeCurrencyDirectory]: FeeCurrencyDirectoryWrapper,
   [CeloContract.FeeCurrencyWhitelist]: FeeCurrencyWhitelistWrapper,
   [CeloContract.Freezer]: FreezerWrapper,
-  // TODO(L2) remove after April 2025
-  [CeloContract.GasPriceMinimum]: GasPriceMinimumWrapper,
   [CeloContract.GoldToken]: GoldTokenWrapper,
   [CeloContract.CeloToken]: GoldTokenWrapper,
   // [CeloContract.Random]: RandomWrapper,
@@ -97,7 +94,6 @@ interface WrapperCacheMap {
   [CeloContract.FeeCurrencyDirectory]?: FeeCurrencyDirectoryWrapper
   [CeloContract.FeeCurrencyWhitelist]?: FeeCurrencyWhitelistWrapper
   [CeloContract.Freezer]?: FreezerWrapper
-  [CeloContract.GasPriceMinimum]?: GasPriceMinimumWrapper
   [CeloContract.CeloToken]?: GoldTokenWrapper
   [CeloContract.GoldToken]?: GoldTokenWrapper
   [CeloContract.Governance]?: GovernanceWrapper
@@ -105,8 +101,6 @@ interface WrapperCacheMap {
   [CeloContract.LockedGold]?: LockedGoldWrapper
   [CeloContract.MultiSig]?: MultiSigWrapper
   [CeloContract.OdisPayments]?: OdisPaymentsWrapper
-  // [CeloContract.Random]?: RandomWrapper,
-  // [CeloContract.Registry]?: RegistryWrapper,
   [CeloContract.Reserve]?: ReserveWrapper
   [CeloContract.ScoreManager]?: ScoreManagerWrapper
   [CeloContract.SortedOracles]?: SortedOraclesWrapper
@@ -177,9 +171,6 @@ export class WrapperCache implements ContractCacheType {
   }
   getFeeCurrencyWhitelist() {
     return this.getContract(CeloContract.FeeCurrencyWhitelist)
-  }
-  getGasPriceMinimum() {
-    return this.getContract(CeloContract.GasPriceMinimum)
   }
   /* @deprecated use getCeloToken */
   getGoldToken() {

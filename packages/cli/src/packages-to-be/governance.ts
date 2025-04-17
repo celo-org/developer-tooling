@@ -1,11 +1,9 @@
-import { governanceABI as governanceABI11 } from '@celo/abis'
 import { governanceABI } from '@celo/abis-12'
 import { Address, bufferToHex, zip } from '@celo/base'
 import BigNumber from 'bignumber.js'
-import { gte } from 'semver'
 import { PublicClient } from 'viem'
 import { resolveAddress } from './address-resolver'
-import { bigintToBigNumber, isCel2 } from './utils'
+import { bigintToBigNumber } from './utils'
 
 export interface ProposalMetadata {
   proposer: Address
@@ -85,58 +83,19 @@ export const getHotfixRecord = async (
   hash: Buffer
 ): Promise<L1HotfixRecord | HotfixRecord> => {
   const address = await resolveAddress(client, 'Governance')
-  const version = await client.readContract({
+
+  const res = await client.readContract({
     address,
     abi: governanceABI,
-    functionName: 'getVersionNumber',
-    args: [],
+    functionName: 'getL2HotfixRecord',
+    args: [bufferToHex(hash)],
   })
 
-  if (gte(version.slice(0, -1).join('.'), '1.4.2')) {
-    // TODO(L2): this is deprecated and not supported in L2
-    if (await isCel2(client)) {
-      // is L2
-      const res = await client.readContract({
-        address,
-        abi: governanceABI,
-        functionName: 'getL2HotfixRecord',
-        args: [bufferToHex(hash)],
-      })
-
-      return {
-        approved: res[0],
-        councilApproved: res[1],
-        executed: res[2],
-        executionTimeLimit: bigintToBigNumber(res[3]),
-      }
-    } else {
-      // is L1
-      const res = await client.readContract({
-        address,
-        abi: governanceABI,
-        functionName: 'getL1HotfixRecord',
-        args: [bufferToHex(hash)],
-      })
-
-      return {
-        approved: res[0],
-        executed: res[1],
-        preparedEpoch: bigintToBigNumber(res[2]),
-      }
-    }
-  } else {
-    const res = await client.readContract({
-      address,
-      abi: governanceABI11,
-      functionName: 'getHotfixRecord',
-      args: [bufferToHex(hash)],
-    })
-
-    return {
-      approved: res[0],
-      executed: res[1],
-      preparedEpoch: bigintToBigNumber(res[2]),
-    }
+  return {
+    approved: res[0],
+    councilApproved: res[1],
+    executed: res[2],
+    executionTimeLimit: bigintToBigNumber(res[3]),
   }
 }
 

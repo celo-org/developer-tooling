@@ -88,14 +88,6 @@ export default class Authorize extends BaseCommand {
     let tx: any
     if (res.flags.role === 'vote') {
       tx = await accounts.authorizeVoteSigner(res.flags.signer, sig)
-    } else if (res.flags.role === 'validator' && res.flags.blsKey && res.flags.blsPop && !isCel2) {
-      // TODO(L2): this is deprecated and not supported in L2
-      tx = await accounts.authorizeValidatorSignerAndBls(
-        res.flags.signer,
-        sig,
-        res.flags.blsKey,
-        res.flags.blsPop
-      )
     } else if (res.flags.role === 'validator') {
       const validatorsWrapper = await kit.contracts.getValidators()
       tx = await accounts.authorizeValidatorSigner(res.flags.signer, sig, validatorsWrapper)
