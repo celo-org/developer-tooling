@@ -538,9 +538,7 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
       voterShare ||
       (await this.getVoterShare(
         address,
-        await (
-          await this.contracts.getBlockchainParameters()
-        ).getLastBlockNumberForEpoch(epochNumber)
+        await (await this.contracts.getEpochManager()).getLastBlockAtEpoch(epochNumber)
       ))
     const groupVoterRewards = await this.getGroupVoterRewards(epochNumber, useBlockNumber)
     const voterRewards = groupVoterRewards.filter(

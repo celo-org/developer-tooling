@@ -18,7 +18,6 @@ import {
 } from './setupForKits'
 import { Web3ContractCache } from './web3-contract-cache'
 import { AttestationsConfig } from './wrappers/Attestations'
-import { DowntimeSlasherConfig } from './wrappers/DowntimeSlasher'
 import { ElectionConfig } from './wrappers/Election'
 import { GovernanceConfig } from './wrappers/Governance'
 import { LockedGoldConfig } from './wrappers/LockedGold'
@@ -67,7 +66,6 @@ export interface NetworkConfig {
   sortedOracles: SortedOraclesConfig
   reserve: ReserveConfig
   validators: ValidatorsConfig
-  downtimeSlasher: DowntimeSlasherConfig
 }
 
 interface AccountBalance extends EachCeloToken<BigNumber> {
@@ -138,7 +136,6 @@ export class ContractKit {
       CeloContract.SortedOracles,
       CeloContract.Reserve,
       CeloContract.Validators,
-      CeloContract.DowntimeSlasher,
       CeloContract.FeeCurrencyDirectory,
       CeloContract.EpochManager,
     ]

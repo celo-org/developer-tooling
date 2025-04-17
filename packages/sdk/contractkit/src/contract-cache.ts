@@ -7,8 +7,6 @@ import { StableToken, stableTokenInfos } from './celo-tokens'
 import { Web3ContractCache } from './web3-contract-cache'
 import { AccountsWrapper } from './wrappers/Accounts'
 import { AttestationsWrapper } from './wrappers/Attestations'
-import { DoubleSigningSlasherWrapper } from './wrappers/DoubleSigningSlasher'
-import { DowntimeSlasherWrapper } from './wrappers/DowntimeSlasher'
 import { ElectionWrapper } from './wrappers/Election'
 import { EpochManagerWrapper } from './wrappers/EpochManager'
 import { EpochRewardsWrapper } from './wrappers/EpochRewards'
@@ -38,8 +36,6 @@ const WrapperFactories = {
   [CeloContract.Freezer]: FreezerWrapper,
   [CeloContract.GoldToken]: GoldTokenWrapper,
   [CeloContract.CeloToken]: GoldTokenWrapper,
-  // [CeloContract.Random]: RandomWrapper,
-  // [CeloContract.Registry]: RegistryWrapper,
   [CeloContract.MultiSig]: MultiSigWrapper,
   [CeloContract.OdisPayments]: OdisPaymentsWrapper,
   [CeloContract.Reserve]: ReserveWrapper,
@@ -55,8 +51,6 @@ const WithRegistry = {
 
 const WrapperFactoriesWhichNeedCache = {
   [CeloContract.Attestations]: AttestationsWrapper,
-  [CeloContract.DoubleSigningSlasher]: DoubleSigningSlasherWrapper,
-  [CeloContract.DowntimeSlasher]: DowntimeSlasherWrapper,
   [CeloContract.Election]: ElectionWrapper,
   [CeloContract.EpochManager]: EpochManagerWrapper,
   [CeloContract.Governance]: GovernanceWrapper,
@@ -78,8 +72,6 @@ const contractsWhichRequireCache = new Set(Object.keys(WrapperFactoriesWhichNeed
 interface WrapperCacheMap {
   [CeloContract.Accounts]?: AccountsWrapper
   [CeloContract.Attestations]?: AttestationsWrapper
-  [CeloContract.DoubleSigningSlasher]?: DoubleSigningSlasherWrapper
-  [CeloContract.DowntimeSlasher]?: DowntimeSlasherWrapper
   [CeloContract.Election]?: ElectionWrapper
   [CeloContract.EpochManager]?: EpochManagerWrapper
   [CeloContract.EpochRewards]?: EpochRewardsWrapper
@@ -128,12 +120,6 @@ export class WrapperCache implements ContractCacheType {
   }
   getAttestations() {
     return this.getContract(CeloContract.Attestations)
-  }
-  getDoubleSigningSlasher() {
-    return this.getContract<CeloContract.DoubleSigningSlasher>(CeloContract.DoubleSigningSlasher)
-  }
-  getDowntimeSlasher() {
-    return this.getContract(CeloContract.DowntimeSlasher)
   }
   getElection() {
     return this.getContract(CeloContract.Election)
