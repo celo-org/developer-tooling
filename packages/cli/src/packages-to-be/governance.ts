@@ -81,7 +81,7 @@ export const getQueue = async (client: PublicClient) => {
 export const getHotfixRecord = async (
   client: PublicClient,
   hash: Buffer
-): Promise<L1HotfixRecord | HotfixRecord> => {
+): Promise<HotfixRecord> => {
   const address = await resolveAddress(client, 'Governance')
 
   const res = await client.readContract({
@@ -170,15 +170,6 @@ export const stageDurations = async (client: PublicClient): Promise<DequeuedStag
   }
 }
 
-// TODO remove this once no longer needed, consider this as legacy
-export interface L1HotfixRecord {
-  approved: boolean
-  executed: boolean
-  preparedEpoch: BigNumber
-}
-
-// Purposfully not named L2HotfixRecord to signal that this is a new and valid going forward
-// interface
 export interface HotfixRecord {
   approved: boolean
   councilApproved: boolean

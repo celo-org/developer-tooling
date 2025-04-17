@@ -26,7 +26,7 @@ import {
   valueToInt,
 } from './BaseWrapper'
 import { BaseWrapperForGoverning } from './BaseWrapperForGoverning'
-import { Validator, ValidatorGroup } from './Validators'
+import { ValidatorGroup } from './Validators'
 
 export interface ValidatorGroupVote {
   address: Address
@@ -489,18 +489,6 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
     }
 
     return { lesser: lesserKey, greater: greaterKey }
-  }
-
-  /**
-   * Retrieves the set of validatorsparticipating in BFT at epochNumber.
-   * @param epochNumber The epoch to retrieve the elected validator set at.
-   */
-  async getElectedValidators(epochNumber: number): Promise<Validator[]> {
-    const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
-    const blockNumber = await blockchainParamsWrapper.getFirstBlockNumberForEpoch(epochNumber)
-    const signers = await this.getValidatorSigners(blockNumber)
-    const validators = await this.contracts.getValidators()
-    return concurrentMap(10, signers, (addr) => validators.getValidatorFromSigner(addr))
   }
 
   /**

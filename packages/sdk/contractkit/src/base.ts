@@ -1,7 +1,6 @@
 export enum CeloContract {
   Accounts = 'Accounts',
   Attestations = 'Attestations',
-  BlockchainParameters = 'BlockchainParameters',
   CeloUnreleasedTreasury = 'CeloUnreleasedTreasury',
   DoubleSigningSlasher = 'DoubleSigningSlasher',
   DowntimeSlasher = 'DowntimeSlasher',
@@ -13,7 +12,6 @@ export enum CeloContract {
   EpochManagerEnabler = 'EpochManagerEnabler',
   FederatedAttestations = 'FederatedAttestations',
   FeeCurrencyDirectory = 'FeeCurrencyDirectory',
-  FeeCurrencyWhitelist = 'FeeCurrencyWhitelist',
   FeeHandler = 'FeeHandler',
   Freezer = 'Freezer',
   /* @deprecated use CeloToken */

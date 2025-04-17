@@ -1,37 +1,15 @@
 import { Registry } from '@celo/abis/web3/Registry'
 import { Address, StrongAddress } from '@celo/base/lib/address'
 import { asCoreContractsOwner, testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
-import { testWithGanache, timeTravel } from '@celo/dev-utils/lib/ganache-test'
+import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { CeloContract } from '..'
 import { newKitFromWeb3 } from '../kit'
-import { ContractVersion } from '../versions'
 import { AccountsWrapper } from './Accounts'
 import { GovernanceWrapper, Proposal, ProposalTransaction, VoteValue } from './Governance'
 import { LockedGoldWrapper } from './LockedGold'
 import { MultiSigWrapper } from './MultiSig'
-
-// Only on ganache we can test 1.4.1.0 version
-testWithGanache('Governance Wrapper', (web3: Web3) => {
-  describe('Hotfixes', () => {
-    it('gets L1 hotfix record pre 1.4.2.0', async () => {
-      const kit = newKitFromWeb3(web3)
-      const governance = await kit.contracts.getGovernance()
-      // Sanity check to make sure we're pre 1.4.2.0
-      expect((await governance.version()).toString()).toBe('1.4.1.0')
-
-      const hotfixRecord = await governance.getHotfixRecord(Buffer.from('0x', 'hex'))
-      expect(hotfixRecord).toMatchInlineSnapshot(`
-        {
-          "approved": false,
-          "executed": false,
-          "preparedEpoch": "0",
-        }
-      `)
-    })
-  })
-})
 
 testWithAnvilL1('Governance Wrapper', (web3: Web3) => {
   const ONE_SEC = 1000
@@ -292,27 +270,6 @@ testWithAnvilL1('Governance Wrapper', (web3: Web3) => {
         yesVotes: new BigNumber('1000000000000000000'),
       }
       expect(voter.votes[0]).toEqual(expectedVoteRecord)
-    })
-  })
-
-  describe('Hotfixes', () => {
-    it('gets L1 hotfix record for version >= 1.4.2.0', async () => {
-      const kit = newKitFromWeb3(web3)
-      const governance = await kit.contracts.getGovernance()
-      const hotfixHash = Buffer.from('0x', 'hex')
-
-      // Sanity check to make sure we're on at least 1.4.2.0 version
-      expect((await governance.version()).isAtLeast(new ContractVersion(1, 4, 2, 0))).toBeTruthy()
-
-      // Test L1 context
-      const hotfixRecordL1 = await governance.getHotfixRecord(hotfixHash)
-      expect(hotfixRecordL1).toMatchInlineSnapshot(`
-        {
-          "approved": false,
-          "executed": false,
-          "preparedEpoch": "0",
-        }
-      `)
     })
   })
 })

@@ -101,12 +101,6 @@ exports[`network:contracts when version can be obtained runs 2`] = `
     "version": "NONE"
   },
   {
-    "contract": "GasPriceMinimum",
-    "proxy": "0x9220E1A69bF1b9A26041ff582b7AdC4124D8364f",
-    "implementation": "0x541Cdf8Dd40cEC9bAF3824001776A0C4f842c08B",
-    "version": "1.2.1.0"
-  },
-  {
     "contract": "GoldToken",
     "proxy": "0x84afC656f046C38D6022C2f02b9F667f028e1ef0",
     "implementation": "0xd83c2018543B661B6e96810ca1B8b87a4B01e1a8",
@@ -147,12 +141,6 @@ exports[`network:contracts when version can be obtained runs 2`] = `
     "proxy": "0x8Cc7e63482Ca6Ee77E0D1820395289D07249de77",
     "implementation": "0x5683019ff6BCEaaC2badD1d73F6Ff28500079b41",
     "version": "1.1.0.0"
-  },
-  {
-    "contract": "Random",
-    "proxy": "0xA9DB88ADd5d6910183F38D5d0A451868898C7C82",
-    "implementation": "0x93D3Af5d5aAb66fAeF41A9242E12307D1813d2B3",
-    "version": "1.1.2.0"
   },
   {
     "contract": "Registry",
@@ -315,12 +303,6 @@ exports[`network:contracts when version cant be obtained still prints rest of co
     "version": "NONE"
   },
   {
-    "contract": "GasPriceMinimum",
-    "proxy": "0x9220E1A69bF1b9A26041ff582b7AdC4124D8364f",
-    "implementation": "0x541Cdf8Dd40cEC9bAF3824001776A0C4f842c08B",
-    "version": "1.2.3.4"
-  },
-  {
     "contract": "GoldToken",
     "proxy": "0x84afC656f046C38D6022C2f02b9F667f028e1ef0",
     "implementation": "0xd83c2018543B661B6e96810ca1B8b87a4B01e1a8",
@@ -360,12 +342,6 @@ exports[`network:contracts when version cant be obtained still prints rest of co
     "contract": "OdisPayments",
     "proxy": "0x8Cc7e63482Ca6Ee77E0D1820395289D07249de77",
     "implementation": "0x5683019ff6BCEaaC2badD1d73F6Ff28500079b41",
-    "version": "1.2.3.4"
-  },
-  {
-    "contract": "Random",
-    "proxy": "0xA9DB88ADd5d6910183F38D5d0A451868898C7C82",
-    "implementation": "0x93D3Af5d5aAb66fAeF41A9242E12307D1813d2B3",
     "version": "1.2.3.4"
   },
   {

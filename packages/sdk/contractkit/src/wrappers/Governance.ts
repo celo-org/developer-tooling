@@ -126,13 +126,6 @@ export const hotfixToParams = (proposal: Proposal, salt: Buffer): HotfixParams =
   return [p[0], p[1], p[2], p[3], bufferToHex(salt)]
 }
 
-// TODO remove this once no longer needed, consider this as legacy
-export interface L1HotfixRecord {
-  approved: boolean
-  executed: boolean
-  preparedEpoch: BigNumber
-}
-
 // Purposfully not named L2HotfixRecord to signal that this is a new and valid going forward
 // interface
 export interface HotfixRecord {
@@ -900,7 +893,7 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<Governance> {
    * Returns approved, executed, and prepared status associated with a given hotfix.
    * @param hash keccak256 hash of hotfix's associated abi encoded transactions
    */
-  async getHotfixRecord(hash: Buffer): Promise<L1HotfixRecord | HotfixRecord> {
+  async getHotfixRecord(hash: Buffer): Promise<HotfixRecord> {
     const res = await this.contract.methods.getL2HotfixRecord(bufferToHex(hash)).call()
     return {
       approved: res[0],

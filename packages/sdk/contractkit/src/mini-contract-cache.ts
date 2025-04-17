@@ -10,7 +10,6 @@ import { CeloContract } from './base'
 import { ContractCacheType } from './basic-contract-cache-type'
 import { stableTokenInfos } from './celo-tokens'
 import { AccountsWrapper } from './wrappers/Accounts'
-import { GasPriceMinimumWrapper } from './wrappers/GasPriceMinimum'
 import { GoldTokenWrapper } from './wrappers/GoldTokenWrapper'
 import { StableTokenWrapper } from './wrappers/StableTokenWrapper'
 

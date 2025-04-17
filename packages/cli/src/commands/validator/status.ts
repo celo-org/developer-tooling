@@ -105,12 +105,7 @@ export default class ValidatorStatus extends BaseCommand {
     }
 
     const epochSize = await kit.getEpochSize()
-    const electionCache = new ElectionResultsCache(
-      kit,
-      election,
-      true,
-      await kit.contracts.getEpochManager()
-    )
+    const electionCache = new ElectionResultsCache(kit, await kit.contracts.getEpochManager())
     let frontRunnerSigners: string[] = []
     ux.action.start(`Running mock election`)
     try {

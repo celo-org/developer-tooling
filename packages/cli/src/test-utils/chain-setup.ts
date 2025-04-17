@@ -1,5 +1,4 @@
 import { StrongAddress } from '@celo/base'
-import { isCel2 } from '@celo/connect'
 import { ContractKit, StableToken } from '@celo/contractkit'
 import {
   DEFAULT_OWNER_ADDRESS,
@@ -19,10 +18,6 @@ export const GANACHE_EPOCH_SIZE = 100
 export const MIN_LOCKED_CELO_VALUE = new BigNumber(Web3.utils.toWei('10000', 'ether')) // 10k CELO
 
 const GROUP_COMMISION = new BigNumber(0.1)
-const BLS_PUBLIC_KEY =
-  '0x4fa3f67fc913878b068d1fa1cdddc54913d3bf988dbe5a36a20fa888f20d4894c408a6773f3d7bde11154f2a3076b700d345a42fd25a0e5e83f4db5586ac7979ac2053cd95d8f2efd3e959571ceccaa743e02cf4be3f5d7aaddb0b06fc9aff00'
-const BLS_POP =
-  '0xcdb77255037eb68897cd487fdd85388cbda448f617f874449d4b11588b0b7ad8ddc20d9bb450b513bb35664ea3923900'
 
 export const registerAccount = async (kit: ContractKit, address: string) => {
   const accounts = await kit.contracts.getAccounts()
@@ -70,16 +65,6 @@ export const setupValidator = async (kit: ContractKit, validatorAccount: string)
   const ecdsaPublicKey = await addressToPublicKey(validatorAccount, kit.connection.sign)
   const validators = await kit.contracts.getValidators()
 
-  if (!(await isCel2(kit.web3))) {
-    await validators
-      .registerValidator(ecdsaPublicKey, BLS_PUBLIC_KEY, BLS_POP)
-      .sendAndWaitForReceipt({
-        from: validatorAccount,
-      })
-
-    return
-  }
-
   await validators.registerValidatorNoBls(ecdsaPublicKey).sendAndWaitForReceipt({
     from: validatorAccount,
   })
@@ -114,11 +99,7 @@ export const voteForGroupFromAndActivateVotes = async (
   const accounts = await kit.web3.eth.getAccounts()
   await voteForGroupFrom(kit, fromAddress, groupAddress, amount)
 
-  if (!(await isCel2(kit.web3))) {
-    await mineEpoch(kit)
-  } else {
-    await testLocallyWithWeb3Node(Switch, ['--from', accounts[0]], kit.web3)
-  }
+  await testLocallyWithWeb3Node(Switch, ['--from', accounts[0]], kit.web3)
 
   const election = await kit.contracts.getElection()
 

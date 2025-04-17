@@ -5,7 +5,6 @@ import { verifySignature } from '@celo/utils/lib/signatureUtils'
 import { recoverTransaction, verifyEIP712TypedDataSigner } from '@celo/wallet-base'
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
 import Web3 from 'web3'
-import { meetsVersionRequirements } from './ledger-utils'
 import { AddressValidation, CELO_BASE_DERIVATION_PATH, LedgerWallet } from './ledger-wallet'
 import {
   ACCOUNT_ADDRESS1,
@@ -409,8 +408,7 @@ describe('LedgerWallet class', () => {
                   undefined,
                   undefined,
                   undefined,
-                  AddressValidation.never,
-                  true
+                  AddressValidation.never
                 )
                 mockForceValidation = jest.fn((): void => {
                   // do nothing
@@ -424,61 +422,6 @@ describe('LedgerWallet class', () => {
                   wallet.signTransaction(celoTransaction)
                 ).rejects.toThrowErrorMatchingInlineSnapshot(
                   `"celo ledger app version must be at least 1.2.0 to sign transactions supported on celo after the L2 upgrade"`
-                )
-              },
-              TEST_TIMEOUT_IN_MS
-            )
-            test(
-              'on cel1 with old ledger converts to legacy tx',
-              async () => {
-                if (!hardwareWallet) {
-                  expect(true).toBeTruthy()
-                  return
-                }
-
-                const { version } = await hardwareWallet.ledger?.getAppConfiguration()!
-                if (
-                  meetsVersionRequirements(version, { minimum: LedgerWallet.MIN_VERSION_EIP1559 })
-                ) {
-                  expect(true).toBeTruthy()
-                  return
-                }
-
-                wallet = new LedgerWallet(
-                  undefined,
-                  undefined,
-                  undefined,
-                  undefined,
-                  AddressValidation.never,
-                  false
-                )
-                mockForceValidation = jest.fn((): void => {
-                  // do nothing
-                })
-                const warnSpy = jest.spyOn(console, 'warn')
-                // setup complete
-
-                await expect(wallet.signTransaction(celoTransaction)).resolves
-                  .toMatchInlineSnapshot(`
-                  {
-                    "raw": "0xf86b80636380808094588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a76400008083015e09a0dc9e278c10d4b3416f436ef1c3e7ab913391771fee82f7d7f5a810d01561ba34a07d9d09088d2cfe05345fede2fdfb837be7b5e2ae428e4dda94c042d3dd246e1e",
-                    "tx": {
-                      "feeCurrency": "0x",
-                      "gas": "0x63",
-                      "hash": "0x3c764c8b7e35fb841b57d8409a9210df87b10d6e6334a43ce936cdf569f20d01",
-                      "input": "0x",
-                      "nonce": "0",
-                      "r": "0xdc9e278c10d4b3416f436ef1c3e7ab913391771fee82f7d7f5a810d01561ba34",
-                      "s": "0x7d9d09088d2cfe05345fede2fdfb837be7b5e2ae428e4dda94c042d3dd246e1e",
-                      "to": "0x588e4b68193001e4d10928660ab4165b813717c0",
-                      "v": "0x015e09",
-                      "value": "0x0de0b6b3a7640000",
-                    },
-                    "type": "celo-legacy",
-                  }
-                `)
-                expect(warnSpy).toHaveBeenCalledWith(
-                  'Upgrade your celo ledger app to at least 1.2.0 before cel2 transition'
                 )
               },
               TEST_TIMEOUT_IN_MS
