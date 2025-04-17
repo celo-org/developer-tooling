@@ -1,20 +1,20 @@
-import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
+import { viem_testWithAnvil } from '@celo/dev-utils/lib/viem/anvil-test'
 import { enumEntriesDupWithLowercase, nodeIsSynced } from './helpers'
 
-testWithAnvilL2('nodeIsSynced', (web3) => {
+viem_testWithAnvil('nodeIsSynced', (client) => {
   describe('when NO_SYNCCHECK is set', () => {
     it('returns true', async () => {
       // Arrange
       process.env.NO_SYNCCHECK = 'true'
       // Act
-      const result = await nodeIsSynced(web3)
+      const result = await nodeIsSynced(client)
       // Assert
       expect(result).toBe(true)
     })
   })
 })
 
-testWithAnvilL2('nodeIsSynced', (web3) => {
+viem_testWithAnvil('nodeIsSynced', (client) => {
   beforeEach(() => {
     process.env.NO_SYNCCHECK = undefined
   })
@@ -23,13 +23,13 @@ testWithAnvilL2('nodeIsSynced', (web3) => {
   })
   describe('when syncing is done', () => {
     it('returns true', async () => {
-      const syncSpy = jest.spyOn(web3.eth, 'isSyncing').mockResolvedValue(false)
+      const syncSpy = jest.spyOn(client, 'request').mockResolvedValueOnce(false)
       const blockSpy = jest
-        .spyOn(web3.eth, 'getBlock')
+        .spyOn(client, 'getBlock')
         // @ts-expect-error block has more properties but that are not used in the test
-        .mockResolvedValue({ number: 1, timestamp: (Date.now() / 1000).toString() })
+        .mockResolvedValueOnce({ number: 1n, timestamp: BigInt(Date.now()) / 1000n })
       // Act
-      const result = await nodeIsSynced(web3)
+      const result = await nodeIsSynced(client)
       // Assert
       expect(syncSpy).toHaveBeenCalled()
       expect(blockSpy).toHaveBeenCalled()
@@ -38,10 +38,10 @@ testWithAnvilL2('nodeIsSynced', (web3) => {
   })
   describe('when syncing is happening', () => {
     it('returns false', async () => {
-      const syncSpy = jest.spyOn(web3.eth, 'isSyncing').mockResolvedValue(true)
+      const syncSpy = jest.spyOn(client, 'request').mockResolvedValueOnce(true)
 
       // Act
-      const result = await nodeIsSynced(web3)
+      const result = await nodeIsSynced(client)
       // Assert
       expect(syncSpy).toHaveBeenCalled()
       expect(result).toBe(false)
