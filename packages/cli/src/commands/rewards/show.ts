@@ -32,11 +32,7 @@ export default class Show extends BaseCommand {
     group: CustomFlags.address({
       description: 'Validator Group to show rewards for',
     }),
-    slashing: Flags.boolean({
-      description: 'Show rewards for slashing (will be removed in L2)',
-      deprecated: true,
-      default: true,
-    }),
+
     epochs: Flags.integer({
       default: 1,
       description: 'Show results for the last N epochs',
@@ -56,16 +52,9 @@ export default class Show extends BaseCommand {
     const election = await kit.contracts.getElection()
     const validators = await kit.contracts.getValidators()
     const lockedGold = await kit.contracts.getLockedGold()
-    const isCel2 = await this.isCel2()
-    const epochManager = isCel2 ? await kit.contracts.getEpochManager() : null
-    const governanceSlasher = isCel2 ? await kit.contracts.getScoreManager() : null
-    let currentEpoch
-    if (isCel2) {
-      res.flags.slashing = false
-      currentEpoch = await epochManager!.getCurrentEpochNumber()
-    } else {
-      currentEpoch = (await validators.getEpochNumber()).toNumber()
-    }
+    const epochManager = await kit.contracts.getEpochManager()
+    const scoreManager = await kit.contracts.getScoreManager()
+    const currentEpoch = await epochManager.getCurrentEpochNumber()
     const checkBuilder = newCheckBuilder(this)
     const epochs = Math.max(1, res.flags.epochs || 1)
 
@@ -98,18 +87,15 @@ export default class Show extends BaseCommand {
     ) {
       if (!filter || res.flags.voter) {
         let electedValidators: Validator[]
-        if (isCel2) {
-          electedValidators = (await Promise.all(
-            (
-              await epochManager!.getElectedSigners()
-            ).map(async (x) => ({
-              address: x,
-              score: await governanceSlasher!.getValidatorScore(x),
-            }))
-          )) as Validator[]
-        } else {
-          electedValidators = await election.getElectedValidators(epochNumber)
-        }
+        electedValidators = (await Promise.all(
+          (
+            await epochManager!.getElectedSigners()
+          ).map(async (x) => ({
+            address: x,
+            score: await scoreManager.getValidatorScore(x),
+          }))
+        )) as Validator[]
+
         if (!filter) {
           const useBlockNumber = !res.flags.estimate
           try {

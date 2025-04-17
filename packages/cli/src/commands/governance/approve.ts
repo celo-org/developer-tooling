@@ -77,16 +77,15 @@ export default class Approve extends BaseCommand {
     const governanceApproverMultiSig = useMultiSig
       ? await governance.getApproverMultisig()
       : undefined
-    const isCel2 = await this.isCel2()
-    const governanceSecurityCouncilMultiSig =
-      useMultiSig && isCel2 ? await governance.getSecurityCouncilMultisig() : undefined
+    const governanceSecurityCouncilMultiSig = useMultiSig
+      ? await governance.getSecurityCouncilMultisig()
+      : undefined
     const approver = useMultiSig ? governanceApproverMultiSig!.address : account
 
     await addDefaultChecks(
       await this.getWeb3(),
       checkBuilder,
       governance,
-      isCel2,
       !!hotfix,
       useMultiSig,
       useSafe,
@@ -112,12 +111,6 @@ export default class Approve extends BaseCommand {
       governanceTx = await governance.approve(id)
       logEvent = 'ProposalApproved'
     } else if (hotfix) {
-      if (!isCel2) {
-        const hotfixBuf = toBuffer(hotfix) as Buffer
-
-        checkBuilder.hotfixNotApproved(hotfixBuf).hotfixNotExecuted(hotfixBuf)
-      }
-
       await checkBuilder.runChecks()
 
       // TODO dedup toBuffer
@@ -127,7 +120,7 @@ export default class Approve extends BaseCommand {
       failWith('Proposal ID or hotfix must be provided')
     }
 
-    if (isCel2 && approvalType === 'securityCouncil' && useSafe) {
+    if (approvalType === 'securityCouncil' && useSafe) {
       await performSafeTransaction(
         await this.getWeb3(),
         await governance.getSecurityCouncil(),
@@ -135,7 +128,6 @@ export default class Approve extends BaseCommand {
         await safeTransactionMetadataFromCeloTransactionObject(governanceTx, governance.address)
       )
     } else if (
-      isCel2 &&
       approvalType === 'securityCouncil' &&
       useMultiSig &&
       governanceSecurityCouncilMultiSig
@@ -162,7 +154,6 @@ const addDefaultChecks = async (
   web3: Web3,
   checkBuilder: ReturnType<typeof newCheckBuilder>,
   governance: GovernanceWrapper,
-  isCel2: boolean,
   isHotfix: boolean,
   useMultiSig: boolean,
   useSafe: boolean,
@@ -172,7 +163,7 @@ const addDefaultChecks = async (
   account: StrongAddress,
   governanceApproverMultiSig: MultiSigWrapper | undefined
 ) => {
-  if (isHotfix && isCel2) {
+  if (isHotfix) {
     const hotfixBuf = toBuffer(hotfix) as Buffer
 
     if (approvalType === HotfixApprovalType.APPROVER || approvalType === undefined) {

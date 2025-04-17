@@ -18,18 +18,6 @@ export default class Authorize extends ReleaseGoldBaseCommand {
       description: 'Signature (a.k.a. proof-of-possession) of the signer key',
       required: true,
     }),
-    blsKey: CustomFlags.blsPublicKey({
-      deprecated: true,
-      description:
-        'The BLS public key that the validator is using for consensus, should pass proof of possession. 96 bytes.',
-      dependsOn: ['blsPop'],
-    }),
-    blsPop: CustomFlags.blsProofOfPossession({
-      deprecated: true,
-      description:
-        'The BLS public key proof-of-possession, which consists of a signature on the account address. 48 bytes.',
-      dependsOn: ['blsKey'],
-    }),
     force: oclifFlags.boolean({
       description:
         'Allow rotation of validator ECDSA key without rotating the BLS key. Only intended for validators with a special reason to do so.',
@@ -53,10 +41,8 @@ export default class Authorize extends ReleaseGoldBaseCommand {
     const role = flags.role
 
     if (flags.role === 'validator') {
-      if (await this.isCel2()) {
-        if (flags.blsKey || flags.blsPop) {
-          this.error('BLS keys are not supported in L2', { exit: 1 })
-        }
+      if (flags.blsKey || flags.blsPop) {
+        this.error('BLS keys are not supported in L2', { exit: 1 })
       }
     }
 
@@ -89,14 +75,6 @@ export default class Authorize extends ReleaseGoldBaseCommand {
     let tx: any
     if (role === 'vote') {
       tx = await this.releaseGoldWrapper.authorizeVoteSigner(flags.signer, sig)
-    } else if (role === 'validator' && flags.blsKey && flags.blsPop) {
-      // TODO(L2): this is deprecated and not supported in L2
-      tx = await this.releaseGoldWrapper.authorizeValidatorSignerAndBls(
-        flags.signer,
-        sig,
-        flags.blsKey,
-        flags.blsPop
-      )
     } else if (role === 'validator') {
       tx = await this.releaseGoldWrapper.authorizeValidatorSigner(flags.signer, sig)
     } else if (role === 'attestation') {

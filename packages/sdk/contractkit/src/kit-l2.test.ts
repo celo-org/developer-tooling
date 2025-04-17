@@ -1,4 +1,3 @@
-import { StrongAddress } from '@celo/base'
 import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import Web3 from 'web3'
@@ -7,68 +6,9 @@ import { startAndFinishEpochProcess } from './test-utils/utils'
 
 testWithAnvilL2('kit', (web3: Web3) => {
   let kit: ContractKit
-  let feeToken: StrongAddress
 
   beforeAll(async () => {
     kit = newKitFromWeb3(web3)
-
-    const feeCurrencyWhitelist = await kit.contracts.getFeeCurrencyDirectory()
-    const gasOptions = await feeCurrencyWhitelist.getAddresses()
-    feeToken = gasOptions[0]
-  })
-
-  describe('when on cel2', () => {
-    describe('when gas is missing', () => {
-      it('fills the gas and works as normal', async () => {
-        await expect(
-          kit.populateMaxFeeInToken({
-            feeCurrency: feeToken,
-          })
-        ).resolves.toMatchInlineSnapshot(`
-          {
-            "feeCurrency": "0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1",
-            "gas": 53001,
-            "maxFeeInFeeCurrency": "54061020000000",
-            "maxFeePerGas": "1000000000",
-            "maxPriorityFeePerGas": "1000000000",
-          }
-        `)
-      })
-    })
-    describe('when maxFeePerFeeCurrency exists', () => {
-      it('returns without modification', async () => {
-        const maxFeeInFeeCurrency = '2000000'
-        await expect(
-          kit.populateMaxFeeInToken({
-            maxFeeInFeeCurrency,
-            feeCurrency: feeToken,
-            gas: '102864710371401736267367367',
-          })
-        ).resolves.toMatchObject({
-          maxFeeInFeeCurrency,
-          feeCurrency: feeToken,
-          gas: '102864710371401736267367367',
-        })
-      })
-    })
-    describe('when feeCurrency provided with gas', () => {
-      it('returns with maxFeePerFeeCurrency estimated', async () => {
-        await expect(
-          kit.populateMaxFeeInToken({
-            feeCurrency: feeToken,
-            gas: '102864710371401736267367367',
-          })
-        ).resolves.toMatchInlineSnapshot(`
-          {
-            "feeCurrency": "0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1",
-            "gas": "102864710371401736267367367",
-            "maxFeeInFeeCurrency": "104922004578829770992714714340000000",
-            "maxFeePerGas": "1000000000",
-            "maxPriorityFeePerGas": "1000000000",
-          }
-        `)
-      })
-    })
   })
 
   describe('epochs', () => {

@@ -19,7 +19,7 @@ export default class Whitelist extends BaseCommand {
     const kit = await this.getKit()
     const { flags } = await this.parse(Whitelist)
 
-    const feeCurrencyContract = await getFeeCurrencyContractWrapper(kit, await this.isCel2())
+    const feeCurrencyContract = await getFeeCurrencyContractWrapper(kit)
     const validFeeCurrencies = await feeCurrencyContract.getAddresses()
 
     const pairs = await feeCurrencyContract.getFeeCurrencyInformation(validFeeCurrencies)

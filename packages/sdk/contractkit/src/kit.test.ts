@@ -210,68 +210,6 @@ testWithAnvilL1('kit', (web3: Web3) => {
       })
     })
   })
-  describe('populateMaxFeeInToken', () => {
-    describe('when not on cel2', () => {
-      it('throws not L2 error', async () => {
-        await expect(
-          kit.populateMaxFeeInToken({ feeCurrency: feeToken, gas: '10000000034230982772378193726' })
-        ).rejects.toMatchInlineSnapshot(
-          `[Error: Can't populate \`maxFeeInFeeCurrency\` if not on a CEL2 network]`
-        )
-      })
-    })
-    describe('estimateMaxFeeInFeeToken', () => {
-      it('returns the right estimation (1/2)', async () => {
-        const spy = jest.spyOn(await kit.contracts.getFeeCurrencyDirectory(), 'getExchangeRate')
-        //@ts-expect-error
-        spy.mockImplementation(() =>
-          Promise.resolve({ numerator: BigInt(1), denominator: BigInt(2) })
-        )
-
-        await expect(
-          kit.estimateMaxFeeInFeeToken({
-            feeCurrency: feeToken,
-            gasLimit: BigInt(10),
-            maxFeePerGas: BigInt(10),
-          })
-          // 10 * 10 * 1.2 * 2
-        ).resolves.toEqual(BigInt(204))
-      })
-      it('returns the right estimation (1/1)', async () => {
-        const spy = jest.spyOn(await kit.contracts.getFeeCurrencyDirectory(), 'getExchangeRate')
-        //@ts-expect-error
-        spy.mockImplementation(() =>
-          Promise.resolve({ numerator: BigInt(1), denominator: BigInt(1) })
-        )
-
-        await expect(
-          kit.estimateMaxFeeInFeeToken({
-            feeCurrency: feeToken,
-            gasLimit: BigInt(10),
-            maxFeePerGas: BigInt(10),
-          })
-          // 10 * 10 * 1.2 * 1
-        ).resolves.toEqual(BigInt(102))
-      })
-    })
-
-    it('returns the right estimation (1/1)', async () => {
-      const spy = jest.spyOn(await kit.contracts.getFeeCurrencyDirectory(), 'getExchangeRate')
-      //@ts-expect-error
-      spy.mockImplementation(() =>
-        Promise.resolve({ numerator: BigInt(2), denominator: BigInt(1) })
-      )
-
-      await expect(
-        kit.estimateMaxFeeInFeeToken({
-          feeCurrency: feeToken,
-          gasLimit: BigInt(10),
-          maxFeePerGas: BigInt(10),
-        })
-        // 10 * 10 * 1.2 * 1/2
-      ).resolves.toEqual(BigInt(51))
-    })
-  })
 
   describe('epochs', () => {
     it('gets the current epoch size', async () => {

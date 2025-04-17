@@ -19,48 +19,32 @@ export default class Info extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(Info)
-    const isL2 = await this.isCel2()
     let latestEpochNumber: number
     let epochSize: number
 
     const blockNumber = await kit.connection.getBlockNumber()
 
-    if (isL2) {
-      const epochManagerWrapper = await kit.contracts.getEpochManager()
+    const epochManagerWrapper = await kit.contracts.getEpochManager()
 
-      latestEpochNumber = await epochManagerWrapper.getCurrentEpochNumber()
-      epochSize = await epochManagerWrapper.epochDuration()
-    } else {
-      latestEpochNumber = await kit.getEpochNumberOfBlock(blockNumber)
-      epochSize = await kit.getEpochSize()
-    }
+    latestEpochNumber = await epochManagerWrapper.getCurrentEpochNumber()
+    epochSize = await epochManagerWrapper.epochDuration()
 
     const fetchEpochInfo = async (epochNumber: number) => {
-      if (isL2) {
-        const epochManagerWrapper = await kit.contracts.getEpochManager()
-
-        const epochData: Record<string, number> = {
-          number: epochNumber,
-          start: await epochManagerWrapper.getFirstBlockAtEpoch(epochNumber),
-        }
-
-        // for L2 we cannot fetch the end block of the current epoch
-        if (epochNumber < latestEpochNumber) {
-          epochData.end = await epochManagerWrapper.getLastBlockAtEpoch(epochNumber)
-        }
-
-        return epochData
-      }
-
-      return {
+      const epochData: Record<string, number> = {
         number: epochNumber,
-        start: await kit.getFirstBlockNumberForEpoch(epochNumber),
-        end: await kit.getLastBlockNumberForEpoch(epochNumber),
+        start: await epochManagerWrapper.getFirstBlockAtEpoch(epochNumber),
       }
+
+      // for L2 we cannot fetch the end block of the current epoch
+      if (epochNumber < latestEpochNumber) {
+        epochData.end = await epochManagerWrapper.getLastBlockAtEpoch(epochNumber)
+      }
+
+      return epochData
     }
 
     const n = res.flags.lastN
-    const minEpoch = isL2 ? await (await kit.contracts.getEpochManager()).firstKnownEpoch() : 1
+    const minEpoch = await epochManagerWrapper.firstKnownEpoch()
     const epochs = []
     for (let i = latestEpochNumber; i > latestEpochNumber - n && i >= minEpoch; i--) {
       epochs.push(await fetchEpochInfo(i))
@@ -69,8 +53,7 @@ export default class Info extends BaseCommand {
     printValueMapRecursive({
       blockNumber,
       epochs: epochs.length === 1 ? epochs[0] : epochs,
-      ...(isL2 && { epochDuration: epochSize }),
-      ...(!isL2 && { epochSize }),
+      epochDuration: epochSize,
     })
   }
 }

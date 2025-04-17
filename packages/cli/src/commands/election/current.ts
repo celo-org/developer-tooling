@@ -60,13 +60,6 @@ export default class ElectionCurrent extends BaseCommand {
   private async getSigners() {
     const kit = await this.getKit()
 
-    // TODO(L2): remove this check once migrated
-    if (!(await this.isCel2())) {
-      const election = await kit.contracts.getElection()
-
-      return await election.getCurrentValidatorSigners()
-    }
-
     const epochManagerWrapper = await kit.contracts.getEpochManager()
 
     return await epochManagerWrapper.getElectedSigners()

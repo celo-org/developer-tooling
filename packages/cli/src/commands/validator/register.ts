@@ -13,8 +13,6 @@ export default class ValidatorRegister extends BaseCommand {
     ...BaseCommand.flags,
     from: CustomFlags.address({ required: true, description: 'Address for the Validator' }),
     ecdsaKey: CustomFlags.ecdsaPublicKey({ required: true }),
-    blsKey: CustomFlags.blsPublicKey({ required: false, deprecated: true }),
-    blsSignature: CustomFlags.blsProofOfPossession({ required: false, deprecated: true }),
     yes: Flags.boolean({ description: 'Answer yes to prompt' }),
   }
 
@@ -52,28 +50,12 @@ export default class ValidatorRegister extends BaseCommand {
       .signerMeetsValidatorBalanceRequirements()
       .runChecks()
 
-    if (await this.isCel2()) {
-      await displaySendTx(
-        'registerValidator',
-        validators.registerValidatorNoBls(res.flags.ecdsaKey)
-      )
-    } else {
-      await displaySendTx(
-        'registerValidator',
-        validators.registerValidator(
-          // @ts-ignore incorrect typing for bytes type
-          res.flags.ecdsaKey,
-          res.flags.blsKey as string,
-          res.flags.blsSignature as string
-        )
-      )
-    }
+    await displaySendTx('registerValidator', validators.registerValidatorNoBls(res.flags.ecdsaKey))
 
     // register encryption key on accounts contract
     // TODO: Use a different key data encryption
     const pubKey = await addressToPublicKey(res.flags.from, kit.web3.eth.sign)
-    // TODO fix typing
-    const setKeyTx = accounts.setAccountDataEncryptionKey(pubKey as any)
+    const setKeyTx = accounts.setAccountDataEncryptionKey(pubKey)
     await displaySendTx('Set encryption key', setKeyTx)
   }
 }

@@ -78,9 +78,6 @@ testWithAnvilL2('LockedGold Wrapper', (web3) => {
   })
 
   test('get accounts slashed', async () => {
-    // const epoch = (
-    //   await (await kit.contracts.getBlockchainParameters()).getEpochNumber()
-    // ).toNumber()
     const epoch = await (await kit.contracts.getEpochManager()).getCurrentEpochNumber()
     jest.spyOn(lockedGold, 'getPastEvents').mockResolvedValueOnce([
       // @ts-expect-error

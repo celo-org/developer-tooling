@@ -13,7 +13,6 @@ import {
   CeloTransactionObject,
   CeloTxObject,
   EventLog,
-  isCel2,
   toTransactionObject,
 } from '@celo/connect'
 import BigNumber from 'bignumber.js'
@@ -27,7 +26,7 @@ import {
   valueToInt,
 } from './BaseWrapper'
 import { BaseWrapperForGoverning } from './BaseWrapperForGoverning'
-import { Validator, ValidatorGroup } from './Validators'
+import { ValidatorGroup } from './Validators'
 
 export interface ValidatorGroupVote {
   address: Address
@@ -493,18 +492,6 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
   }
 
   /**
-   * Retrieves the set of validatorsparticipating in BFT at epochNumber.
-   * @param epochNumber The epoch to retrieve the elected validator set at.
-   */
-  async getElectedValidators(epochNumber: number): Promise<Validator[]> {
-    const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
-    const blockNumber = await blockchainParamsWrapper.getFirstBlockNumberForEpoch(epochNumber)
-    const signers = await this.getValidatorSigners(blockNumber)
-    const validators = await this.contracts.getValidators()
-    return concurrentMap(10, signers, (addr) => validators.getValidatorFromSigner(addr))
-  }
-
-  /**
    * Retrieves GroupVoterRewards at epochNumber.
    * @param epochNumber The epoch to retrieve GroupVoterRewards at.
    */
@@ -512,15 +499,8 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
     epochNumber: number,
     useBlockNumber?: boolean
   ): Promise<GroupVoterReward[]> {
-    let blockNumber: number
-    // TODO(L2): this is deprecated and not supported in L2
-    if (await isCel2(this.connection.web3)) {
-      const epochManager = await this.contracts.getEpochManager()
-      blockNumber = await epochManager.getLastBlockAtEpoch(epochNumber)
-    } else {
-      const blockchainParamsWrapper = await this.contracts.getBlockchainParameters()
-      blockNumber = await blockchainParamsWrapper.getLastBlockNumberForEpoch(epochNumber)
-    }
+    const epochManager = await this.contracts.getEpochManager()
+    const blockNumber = await epochManager.getLastBlockAtEpoch(epochNumber)
     const events = await this.getPastEvents('EpochRewardsDistributedToVoters', {
       fromBlock: blockNumber,
       toBlock: blockNumber,
@@ -558,9 +538,7 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
       voterShare ||
       (await this.getVoterShare(
         address,
-        await (
-          await this.contracts.getBlockchainParameters()
-        ).getLastBlockNumberForEpoch(epochNumber)
+        await (await this.contracts.getEpochManager()).getLastBlockAtEpoch(epochNumber)
       ))
     const groupVoterRewards = await this.getGroupVoterRewards(epochNumber, useBlockNumber)
     const voterRewards = groupVoterRewards.filter(
