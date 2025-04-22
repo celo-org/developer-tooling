@@ -11,6 +11,7 @@ on:
       - changeset-release/master
       - prerelease/*
       - hotfixes
+      - aaronmgdr/goodbyeL1*
   pull_request:
     types: [opened, reopened, synchronize, edited, ready_for_review]
 
