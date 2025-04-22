@@ -1,5 +1,5 @@
 import { StrongAddress } from '@celo/base'
-import { isCel2, ReadOnlyWallet } from '@celo/connect'
+import { ReadOnlyWallet } from '@celo/connect'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { AzureHSMWallet } from '@celo/wallet-hsm-azure'
 import { AddressValidation, newLedgerWalletWithSetup } from '@celo/wallet-ledger'
@@ -119,9 +119,6 @@ export abstract class BaseCommand extends Command {
 
   private _web3: Web3 | null = null
   private _kit: ContractKit | null = null
-
-  // Indicates if celocli running in L2 context
-  private cel2: boolean | null = null
 
   private publicClient: CeloClient | null = null
 
@@ -249,7 +246,6 @@ export abstract class BaseCommand extends Command {
           derivationPathIndexes: isLedgerLiveMode ? [0] : indicesToIterateOver,
           changeIndexes: isLedgerLiveMode ? indicesToIterateOver : [0],
           ledgerAddressValidation: ledgerConfirmation,
-          isCel2: await this.isCel2(),
         })
       } catch (err) {
         console.log('Check if the ledger is connected and logged.')
@@ -276,7 +272,7 @@ export abstract class BaseCommand extends Command {
     const gasCurrencyFlag = res.flags.gasCurrency as StrongAddress | undefined
 
     if (gasCurrencyFlag) {
-      const feeCurrencyContract = await getFeeCurrencyContractWrapper(kit, await this.isCel2())
+      const feeCurrencyContract = await getFeeCurrencyContractWrapper(kit)
       const validFeeCurrencies = await feeCurrencyContract.getAddresses()
 
       if (
@@ -352,13 +348,5 @@ https://github.com/celo-org/developer-tooling/issues/new?assignees=&labels=bug+r
     }
 
     return super.finally(arg)
-  }
-
-  protected async isCel2(): Promise<boolean> {
-    if (this.cel2 === null) {
-      this.cel2 = await isCel2(await this.getWeb3())
-    }
-
-    return !!this.cel2
   }
 }

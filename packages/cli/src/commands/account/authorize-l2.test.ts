@@ -251,7 +251,10 @@ testWithAnvilL2('account:authorize cmd', (web3: Web3) => {
 
         web3
       )
-    ).rejects.toMatchInlineSnapshot(`[Error: BLS keys are not supported on L2]`)
+    ).rejects.toMatchInlineSnapshot(`
+      [Error: Nonexistent flags: --blsKey, --blsPop
+      See more help with --help]
+    `)
 
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`[]`)
   })

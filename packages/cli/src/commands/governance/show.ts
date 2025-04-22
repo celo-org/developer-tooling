@@ -1,5 +1,4 @@
 import { ProposalBuilder, proposalToJSON } from '@celo/governance'
-import { concurrentMap } from '@celo/utils/lib/async'
 import { toBuffer } from '@ethereumjs/util'
 import { Flags } from '@oclif/core'
 import chalk from 'chalk'
@@ -152,36 +151,6 @@ export default class Show extends BaseCommand {
       const hotfixBuf = toBuffer(hotfix) as Buffer
       const record = await governance.getHotfixRecord(hotfixBuf)
       printValueMap(record)
-
-      if (await this.isCel2()) {
-        return
-      }
-
-      // TODO: remove this bit when L2 launches
-      const passing = await governance.isHotfixPassing(hotfixBuf)
-      printValueMap({ passing })
-      const tally = await governance.hotfixWhitelistValidatorTally(hotfixBuf)
-      const quorum = await governance.minQuorumSize()
-      printValueMap({
-        tally,
-        quorum,
-      })
-
-      if (res.flags.whitelisters || res.flags.nonwhitelisters) {
-        const validators = await kit.contracts.getValidators()
-        const accounts = await validators.currentValidatorAccountsSet()
-        const whitelist = await concurrentMap(
-          5,
-          accounts,
-          async (validator) =>
-            (await governance.isHotfixWhitelistedBy(hotfixBuf, validator.signer)) ||
-            /* eslint-disable-next-line no-return-await */
-            (await governance.isHotfixWhitelistedBy(hotfixBuf, validator.account))
-        )
-        printValueMapRecursive({
-          Validators: accounts.filter((_, idx) => !!res.flags.whitelisters === whitelist[idx]),
-        })
-      }
     } else if (account) {
       const accounts = await kit.contracts.getAccounts()
       printValueMapRecursive(await governance.getVoter(await accounts.signerToAccount(account)))

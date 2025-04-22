@@ -1,7 +1,6 @@
 import { StrongAddress } from '@celo/base'
 import { URL_REGEX } from '@celo/base/lib/io'
 import { CeloContract, RegisteredContracts } from '@celo/contractkit'
-import { Interval } from '@celo/contractkit/lib/wrappers/DowntimeSlasher'
 import { BLS_POP_SIZE, BLS_PUBLIC_KEY_SIZE } from '@celo/cryptographic-utils/lib/bls'
 import { isE164NumberStrict } from '@celo/phone-utils/lib/phoneNumbers'
 import { ensureLeading0x, trimLeading0x } from '@celo/utils/lib/address'
@@ -162,13 +161,8 @@ export function argBuilder<T>(parser: ParseFn<T>) {
       parse: parser,
     })()
 }
-const parseIntervalArray = async (s: string) => s.split(',').map((r) => parseIntRange(r.trim()))
 
 export const CustomFlags = {
-  intRangeArray: Flags.custom<Interval[]>({
-    parse: parseIntervalArray,
-    helpValue: "'[0:1], [1:2]'",
-  }),
   addressArray: Flags.custom({
     parse: parseAddressArray,
     helpValue:
@@ -202,12 +196,12 @@ export const CustomFlags = {
   contract: Flags.custom({
     parse: parseCoreContract,
     description: 'Core Contract Name',
-    helpValue: `${CeloContract.BlockchainParameters}`,
+    helpValue: `${CeloContract.Accounts}`,
   }),
   contractsArray: Flags.custom({
     parse: parseArray(parseCoreContract),
     description: 'Array of Registered Core Contracts',
-    helpValue: `\'["${CeloContract.BlockchainParameters}", "${CeloContract.Governance}", "${CeloContract.Validators}"]\'`,
+    helpValue: `\'["${CeloContract.Accounts}", "${CeloContract.Governance}", "${CeloContract.Validators}"]\'`,
   }),
   phoneNumber: Flags.custom({
     parse: parsePhoneNumber,
