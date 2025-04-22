@@ -330,6 +330,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
 
     it('sends telemetry data successfuly on success', async () => {
       class TestTelemetryCommand extends BaseCommand {
+        requireSynced = false
         id = 'test:telemetry-success'
 
         async run() {
@@ -374,6 +375,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
 
     it('sends telemetry data successfuly on error', async () => {
       class TestTelemetryCommand extends BaseCommand {
+        requireSynced = false
         id = 'test:telemetry-error'
 
         async run() {
@@ -420,6 +422,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
 
     it('does not send telemetry when disabled by config', async () => {
       class TestTelemetryCommand extends BaseCommand {
+        requireSynced = false
         id = 'test:telemetry-should-not-be-sent'
 
         async run() {
@@ -450,6 +453,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
         const EXPECTED_COMMAND_RESULT = 'Successful run'
 
         class TestTelemetryCommand extends BaseCommand {
+          requireSynced = false
           id = 'test:telemetry-timeout'
 
           async run() {
@@ -514,6 +518,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
 
       it('does not display telemetry information when --output flag is specified', async () => {
         class TestTelemetryCommand extends BaseCommand {
+          requireSynced = false
           id = 'test:telemetry-output'
 
           static flags = {
@@ -542,6 +547,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
 
       it('displays telemetry information when --output flag is not specified', async () => {
         class TestTelemetryCommand extends BaseCommand {
+          requireSynced = false
           id = 'test:telemetry-no-output'
 
           async run() {
