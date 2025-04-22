@@ -1,5 +1,5 @@
 import { newKitFromWeb3 } from '@celo/contractkit'
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { ux } from '@oclif/core'
 import Web3 from 'web3'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
@@ -10,7 +10,7 @@ import Set from './set'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL1('config:set cmd', (web3: Web3) => {
+testWithAnvilL2('config:set cmd', (web3: Web3) => {
   afterEach(async () => {
     jest.clearAllMocks()
     jest.restoreAllMocks()

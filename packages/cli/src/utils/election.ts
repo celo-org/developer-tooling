@@ -1,6 +1,5 @@
 import { Address, BlockHeader } from '@celo/connect'
 import { ContractKit } from '@celo/contractkit'
-import { ElectionWrapper } from '@celo/contractkit/lib/wrappers/Election'
 import { EpochManagerWrapper } from '@celo/contractkit/lib/wrappers/EpochManager'
 import { eqAddress } from '@celo/utils/lib/address'
 import { bitIsSet, parseBlockExtraData } from '@celo/utils/lib/istanbul'
@@ -13,14 +12,8 @@ export class ElectionResultsCache {
 
   constructor(
     private readonly kit: ContractKit,
-    private readonly electionWrapper: ElectionWrapper,
-    private readonly isCel2: boolean,
-    private readonly epochManagerWrapper?: EpochManagerWrapper
-  ) {
-    if (isCel2 && !epochManagerWrapper) {
-      throw new Error('EpochManagerWrapper is required')
-    }
-  }
+    private readonly epochManagerWrapper: EpochManagerWrapper
+  ) {}
 
   /**
    * Returns the list of elected signers for a given block.
@@ -33,12 +26,7 @@ export class ElectionResultsCache {
       return cached
     }
 
-    const electedSigners = this.isCel2
-      ? await this.epochManagerWrapper!.getElectedSigners()
-      : await this.electionWrapper.getValidatorSigners(
-          // For the first epoch, the contract might be unavailable
-          epoch === 1 ? blockNumber : await this.kit.getFirstBlockNumberForEpoch(epoch)
-        )
+    const electedSigners = this.epochManagerWrapper.getElectedSigners()
 
     this.cache.set(epoch, electedSigners)
     return electedSigners

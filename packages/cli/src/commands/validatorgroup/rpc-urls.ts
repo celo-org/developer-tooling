@@ -33,7 +33,6 @@ export default class RpcUrls extends BaseCommand {
 
     const res = await this.parse(RpcUrls)
     const kit = await this.getKit()
-    const isL2 = await this.isCel2()
     const validatorsWrapper = await kit.contracts.getValidators()
     const accountsWrapper = await kit.contracts.getAccounts()
 
@@ -44,15 +43,8 @@ export default class RpcUrls extends BaseCommand {
         (v) => v.address as StrongAddress
       )
     } else {
-      if (isL2) {
-        const epochManagerWrapper = await kit.contracts.getEpochManager()
-
-        validatorAddresses = (await epochManagerWrapper.getElectedAccounts()) as StrongAddress[]
-      } else {
-        validatorAddresses = (await validatorsWrapper.currentValidatorAccountsSet()).map(
-          (v) => v.account as StrongAddress
-        )
-      }
+      const epochManagerWrapper = await kit.contracts.getEpochManager()
+      validatorAddresses = (await epochManagerWrapper.getElectedAccounts()) as StrongAddress[]
     }
 
     ux.action.start(`Fetching validator groups`)
