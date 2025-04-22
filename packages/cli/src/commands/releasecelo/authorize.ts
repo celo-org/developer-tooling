@@ -18,6 +18,18 @@ export default class Authorize extends ReleaseGoldBaseCommand {
       description: 'Signature (a.k.a. proof-of-possession) of the signer key',
       required: true,
     }),
+    blsKey: CustomFlags.blsPublicKey({
+      deprecated: true,
+      description:
+        'The BLS public key that the validator is using for consensus, should pass proof of possession. 96 bytes.',
+      dependsOn: ['blsPop'],
+    }),
+    blsPop: CustomFlags.blsProofOfPossession({
+      deprecated: true,
+      description:
+        'The BLS public key proof-of-possession, which consists of a signature on the account address. 48 bytes.',
+      dependsOn: ['blsKey'],
+    }),
     force: oclifFlags.boolean({
       description:
         'Allow rotation of validator ECDSA key without rotating the BLS key. Only intended for validators with a special reason to do so.',

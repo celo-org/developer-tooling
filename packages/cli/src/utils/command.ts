@@ -1,6 +1,7 @@
 import { StrongAddress } from '@celo/base'
 import { URL_REGEX } from '@celo/base/lib/io'
 import { CeloContract, RegisteredContracts } from '@celo/contractkit'
+import { BLS_POP_SIZE, BLS_PUBLIC_KEY_SIZE } from '@celo/cryptographic-utils/lib/bls'
 import { isE164NumberStrict } from '@celo/phone-utils/lib/phoneNumbers'
 import { ensureLeading0x, trimLeading0x } from '@celo/utils/lib/address'
 import { POP_SIZE } from '@celo/utils/lib/signatureUtils'
@@ -30,7 +31,12 @@ const parseEcdsaPublicKey: ParseFn<string> = async (input) => {
     ? parseBytes(stripped.slice(2), 64, `${input} is not an ECDSA public key`)
     : parseBytes(input, 64, `${input} is not an ECDSA public key`)
 }
-
+const parseBlsPublicKey: ParseFn<string> = async (input) => {
+  return parseBytes(input, BLS_PUBLIC_KEY_SIZE, `${input} is not a BLS public key`)
+}
+const parseBlsProofOfPossession: ParseFn<string> = async (input) => {
+  return parseBytes(input, BLS_POP_SIZE, `${input} is not a BLS proof-of-possession`)
+}
 const parseProofOfPossession: ParseFn<string> = async (input) => {
   return parseBytes(input, POP_SIZE, `${input} is not a proof-of-possession`)
 }
@@ -175,6 +181,16 @@ export const CustomFlags = {
   ecdsaPublicKey: Flags.custom({
     parse: parseEcdsaPublicKey,
     description: 'ECDSA Public Key',
+    helpValue: '0x',
+  }),
+  blsPublicKey: Flags.custom({
+    parse: parseBlsPublicKey,
+    description: 'BLS Public Key',
+    helpValue: '0x',
+  }),
+  blsProofOfPossession: Flags.custom({
+    parse: parseBlsProofOfPossession,
+    description: 'BLS Proof-of-Possession',
     helpValue: '0x',
   }),
   contract: Flags.custom({
