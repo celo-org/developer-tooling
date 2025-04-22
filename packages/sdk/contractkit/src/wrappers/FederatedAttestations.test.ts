@@ -1,9 +1,9 @@
 import { StrongAddress } from '@celo/base'
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { newKitFromWeb3 } from '../kit'
 import { FederatedAttestationsWrapper } from './FederatedAttestations'
 
-testWithAnvilL1('FederatedAttestations Wrapper', (web3) => {
+testWithAnvilL2('FederatedAttestations Wrapper', (web3) => {
   const kit = newKitFromWeb3(web3)
   const TIME_STAMP = 1665080820
   let accounts: StrongAddress[] = []

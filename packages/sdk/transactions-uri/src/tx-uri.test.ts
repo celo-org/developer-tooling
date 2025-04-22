@@ -1,9 +1,9 @@
 import { CeloTx } from '@celo/connect'
 import { CeloContract, newKitFromWeb3 } from '@celo/contractkit'
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { buildUri, parseUri } from './tx-uri'
 
-testWithAnvilL1('URI utils', (web3) => {
+testWithAnvilL2('URI utils', (web3) => {
   const recipient = '0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef'
   const value = '100'
 

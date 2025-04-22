@@ -18,9 +18,12 @@ process.env.NO_SYNCCHECK = 'true'
 testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
   const kit = newKitFromWeb3(web3)
 
-  const SECONDS_PER_BLOCK = 5
-  const BLOCKS_PER_EPOCH = 17280
-  const EPOCH_DURATION = BLOCKS_PER_EPOCH * SECONDS_PER_BLOCK
+  let epochDuration: number
+
+  beforeAll(async () => {
+    const epochManagerWrapper = await kit.contracts.getEpochManager()
+    epochDuration = await epochManagerWrapper.epochDuration()
+  })
 
   it('has the correct address for the EpochManager contract', async () => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
@@ -33,7 +36,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
   it('indicates that it is time for next epoch', async () => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
 
-    await timeTravel(EPOCH_DURATION + 1, web3)
+    await timeTravel(epochDuration + 1, web3)
 
     expect(await epochManagerWrapper.isTimeForNextEpoch()).toBeTruthy()
 
@@ -64,7 +67,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
     expect((await epochManagerWrapper.getEpochProcessingStatus()).status).toEqual(0)
 
     // Let the epoch pass and start another one
-    await timeTravel(EPOCH_DURATION, web3)
+    await timeTravel(epochDuration, web3)
     await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
       from: accounts[0],
     })
@@ -89,7 +92,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
     ).rejects.toMatchInlineSnapshot(`[Error: execution reverted: revert: Epoch not finished yet]`)
 
     // Let the epoch pass and start another one
-    await timeTravel(EPOCH_DURATION + 1, web3)
+    await timeTravel(epochDuration + 1, web3)
     await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
       from: accounts[0],
     })
@@ -115,7 +118,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
       ).rejects.toMatchInlineSnapshot(`[Error: execution reverted: revert: Epoch not finished yet]`)
 
       // Let the epoch pass and start another one
-      await timeTravel(EPOCH_DURATION + 1, web3)
+      await timeTravel(epochDuration + 1, web3)
       await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
         from: accounts[0],
       })
@@ -183,7 +186,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
     const EPOCH_COUNT = 5
 
-    await timeTravel(EPOCH_DURATION, web3)
+    await timeTravel(epochDuration, web3)
 
     await startAndFinishEpochProcess(kit)
 
@@ -192,7 +195,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
     expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(5)
 
     for (let i = 0; i < EPOCH_COUNT; i++) {
-      await timeTravel(EPOCH_DURATION + 1, web3)
+      await timeTravel(epochDuration + 1, web3)
 
       await startAndFinishEpochProcess(kit)
     }
@@ -201,7 +204,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
     expect((await epochManagerWrapper.getEpochProcessingStatus()).status).toEqual(0)
 
     // Start a new epoch process, but not finish it, so we can check the amounts
-    await timeTravel(EPOCH_DURATION + 1, web3)
+    await timeTravel(epochDuration + 1, web3)
     await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
       from: accounts[0],
     })
@@ -239,14 +242,14 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
     const accounts = await kit.web3.eth.getAccounts()
     const epochManagerWrapper = await kit.contracts.getEpochManager()
 
-    await timeTravel(EPOCH_DURATION, web3)
+    await timeTravel(epochDuration, web3)
 
     await startAndFinishEpochProcess(kit)
 
     await activateValidators()
 
     // Start a new epoch process, but don't process it, so we can compare the amounts
-    await timeTravel(EPOCH_DURATION + 1, web3)
+    await timeTravel(epochDuration + 1, web3)
 
     await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
       from: accounts[0],
