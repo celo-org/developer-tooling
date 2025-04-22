@@ -1,15 +1,8 @@
 import { CELO_DERIVATION_PATH_BASE } from '@celo/base/lib/account'
 import { zeroRange } from '@celo/base/lib/collections'
-import { Address, CeloTx, EncodedTransaction, ReadOnlyWallet, isPresent } from '@celo/connect'
+import { Address, CeloTx, EncodedTransaction, ReadOnlyWallet } from '@celo/connect'
 import Ledger from '@celo/hw-app-eth'
-import {
-  chainIdTransformationForSigning,
-  encodeTransaction,
-  encode_deprecated_celo_legacy_type_only_for_temporary_ledger_compat,
-  isCIP64,
-  isEIP1559,
-  rlpEncodedTx,
-} from '@celo/wallet-base'
+import { encodeTransaction, isCIP64, isEIP1559, rlpEncodedTx } from '@celo/wallet-base'
 import { RemoteWallet } from '@celo/wallet-remote'
 import { TransportError, TransportStatusError } from '@ledgerhq/errors'
 import debugFactory from 'debug'
@@ -40,7 +33,6 @@ interface LedgerWalletSetup {
   changeIndexes?: number[]
   baseDerivationPath?: string
   ledgerAddressValidation?: AddressValidation
-  isCel2?: boolean
 }
 
 export async function newLedgerWalletWithSetup(
@@ -50,7 +42,6 @@ export async function newLedgerWalletWithSetup(
     baseDerivationPath,
     ledgerAddressValidation,
     changeIndexes,
-    isCel2,
   }: LedgerWalletSetup
 ): Promise<LedgerWallet> {
   const wallet = new LedgerWallet(
@@ -58,8 +49,7 @@ export async function newLedgerWalletWithSetup(
     derivationPathIndexes,
     baseDerivationPath,
     changeIndexes,
-    ledgerAddressValidation,
-    isCel2
+    ledgerAddressValidation
   )
   await wallet.init()
   return wallet
@@ -90,8 +80,7 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
     readonly derivationPathIndexes: number[] = zeroRange(ADDRESS_QTY),
     readonly baseDerivationPath: string = CELO_BASE_DERIVATION_PATH,
     readonly changeIndexes: number[] = [0],
-    readonly ledgerAddressValidation: AddressValidation = AddressValidation.firstTransactionPerAddress,
-    readonly isCel2?: boolean
+    readonly ledgerAddressValidation: AddressValidation = AddressValidation.firstTransactionPerAddress
   ) {
     super()
 
@@ -105,8 +94,7 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
 
   async signTransaction(txParams: CeloTx): Promise<EncodedTransaction> {
     const rlpEncoded = await this.rlpEncodedTxForLedger(txParams)
-    const addToV =
-      rlpEncoded.type === 'celo-legacy' ? chainIdTransformationForSigning(txParams.chainId!) : 27
+    const addToV = 27
 
     // Get the signer from the 'from' field
     const fromAddress = txParams.from!.toString()
@@ -124,14 +112,13 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
     const deviceApp = await this.retrieveAppConfiguration()
     const version = new SemVer(deviceApp.version)
 
-    // if the app is of minimum version it doesnt matter if chain is cel2 or not
     if (
       deviceApp.appName !== 'celo' ||
       meetsVersionRequirements(version, { minimum: LedgerWallet.MIN_VERSION_EIP1559 })
     ) {
       if (txParams.gasPrice && txParams.feeCurrency && txParams.feeCurrency !== '0x') {
         throw new Error(
-          `celo ledger app above ${LedgerWallet.MIN_VERSION_EIP1559} cannot serialize legacy celo transactions. Replace "gasPrice" with "maxFeePerGas".`
+          `celo no longer supports legacy celo transactions. Replace "gasPrice" with "maxFeePerGas".`
         )
       }
       if (txParams.gasPrice) {
@@ -139,11 +126,7 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
           'ethereum-legacy transactions are not supported, please try sending a more modern transaction instead (eip1559, cip64, etc.)'
         )
       }
-      // TODO ensure it is building a 1559 or cip64 tx, possibly force it
-      // by deleting/ adding properties instead of throwing.
-      // TODO when cip66 is implemented ensure it is not that
-      // @ts-expect-error -- 66 isnt in this branch but will be in the release so future proof
-      const isCeloSpecificTx = isCIP64(txParams) && !isPresent(txParams.maxFeePerFeeCurrency)
+      const isCeloSpecificTx = isCIP64(txParams)
       if (isEIP1559(txParams) || isCeloSpecificTx) {
         if (isCeloSpecificTx && deviceApp.appName !== 'celo') {
           throw new Error(
@@ -158,24 +141,9 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
       }
       // but if not celo as layer 2 and as layer 1 are different
     } else {
-      if (this.isCel2) {
-        throw new Error(
-          `celo ledger app version must be at least ${LedgerWallet.MIN_VERSION_EIP1559} to sign transactions supported on celo after the L2 upgrade`
-        )
-      } else {
-        // the l1 legacy case
-        console.warn(
-          `Upgrade your celo ledger app to at least ${LedgerWallet.MIN_VERSION_EIP1559} before cel2 transition`
-        )
-        if (!txParams.gasPrice) {
-          // this version of app only supports legacy so must have gasPrice
-          txParams.gasPrice = txParams.maxFeePerGas
-          delete txParams.maxFeePerGas
-          delete txParams.maxPriorityFeePerGas
-          console.info('automatically converting to legacy transaction')
-        }
-        return encode_deprecated_celo_legacy_type_only_for_temporary_ledger_compat(txParams)
-      }
+      throw new Error(
+        `celo ledger app version must be at least ${LedgerWallet.MIN_VERSION_EIP1559} to sign transactions supported on celo after the L2 upgrade`
+      )
     }
   }
 
