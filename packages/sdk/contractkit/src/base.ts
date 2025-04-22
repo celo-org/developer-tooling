@@ -1,10 +1,7 @@
 export enum CeloContract {
   Accounts = 'Accounts',
   Attestations = 'Attestations',
-  BlockchainParameters = 'BlockchainParameters',
   CeloUnreleasedTreasury = 'CeloUnreleasedTreasury',
-  DoubleSigningSlasher = 'DoubleSigningSlasher',
-  DowntimeSlasher = 'DowntimeSlasher',
   Election = 'Election',
   EpochRewards = 'EpochRewards',
   ERC20 = 'ERC20',
@@ -13,10 +10,8 @@ export enum CeloContract {
   EpochManagerEnabler = 'EpochManagerEnabler',
   FederatedAttestations = 'FederatedAttestations',
   FeeCurrencyDirectory = 'FeeCurrencyDirectory',
-  FeeCurrencyWhitelist = 'FeeCurrencyWhitelist',
   FeeHandler = 'FeeHandler',
   Freezer = 'Freezer',
-  GasPriceMinimum = 'GasPriceMinimum',
   /* @deprecated use CeloToken */
   GoldToken = 'GoldToken',
   CeloToken = 'CeloToken',
@@ -29,9 +24,6 @@ export enum CeloContract {
   UniswapFeeHandlerSeller = 'UniswapFeeHandlerSeller',
   MultiSig = 'MultiSig',
   OdisPayments = 'OdisPayments',
-  // TODO(L2): remove random contract from enum
-  /* @deprecated */
-  Random = 'Random',
   Registry = 'Registry',
   Reserve = 'Reserve',
   ScoreManager = 'ScoreManager',

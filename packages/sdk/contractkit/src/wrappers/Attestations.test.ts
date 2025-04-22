@@ -1,12 +1,12 @@
 import { newAttestations } from '@celo/abis/web3/Attestations'
 import { StrongAddress } from '@celo/base'
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { deployAttestationsContract } from '@celo/dev-utils/lib/contracts'
 import { getIdentifierHash, IdentifierPrefix } from '@celo/odis-identifiers'
 import { newKitFromWeb3 } from '../kit'
 import { AttestationsWrapper } from './Attestations'
 
-testWithAnvilL1('AttestationsWrapper', (web3) => {
+testWithAnvilL2('AttestationsWrapper', (web3) => {
   const PHONE_NUMBER = '+15555555555'
   const IDENTIFIER = getIdentifierHash(
     web3.utils.sha3,
