@@ -1,5 +1,5 @@
 import { newKitFromWeb3 } from '@celo/contractkit'
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { ACCOUNT_ADDRESSES, ACCOUNT_PRIVATE_KEYS } from '@celo/dev-utils/lib/ganache-setup'
 import { privateKeyToAddress, privateKeyToPublicKey } from '@celo/utils/lib/address'
 import { NativeSigner } from '@celo/utils/lib/signatureUtils'
@@ -9,7 +9,7 @@ import { IdentityMetadataWrapper } from './metadata'
 import { AccountMetadataSignerGetters } from './types'
 import { verifyClaim } from './verify'
 
-testWithAnvilL1('Account claims', (web3) => {
+testWithAnvilL2('Account claims', (web3) => {
   const kit = newKitFromWeb3(web3)
   const address = ACCOUNT_ADDRESSES[0]
   const otherAddress = ACCOUNT_ADDRESSES[1]
