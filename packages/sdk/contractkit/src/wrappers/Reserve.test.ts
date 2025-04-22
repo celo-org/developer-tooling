@@ -5,7 +5,7 @@ import {
   asCoreContractsOwner,
   DEFAULT_OWNER_ADDRESS,
   setBalance,
-  testWithAnvilL1,
+  testWithAnvilL2,
   withImpersonatedAccount,
 } from '@celo/dev-utils/lib/anvil-test'
 import BigNumber from 'bignumber.js'
@@ -14,7 +14,7 @@ import { newKitFromWeb3 } from '../kit'
 import { MultiSigWrapper } from './MultiSig'
 import { ReserveWrapper } from './Reserve'
 
-testWithAnvilL1('Reserve Wrapper', (web3) => {
+testWithAnvilL2('Reserve Wrapper', (web3) => {
   const kit = newKitFromWeb3(web3)
   let accounts: StrongAddress[] = []
   let reserve: ReserveWrapper

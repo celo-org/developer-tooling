@@ -1,12 +1,12 @@
 import { StableToken, StrongAddress } from '@celo/base'
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import BigNumber from 'bignumber.js'
 import { newKitFromWeb3 } from '../kit'
 import { topUpWithToken } from '../test-utils/utils'
 import { OdisPaymentsWrapper } from './OdisPayments'
 import { StableTokenWrapper } from './StableTokenWrapper'
 
-testWithAnvilL1('OdisPayments Wrapper', (web3) => {
+testWithAnvilL2('OdisPayments Wrapper', (web3) => {
   const kit = newKitFromWeb3(web3)
   let accounts: StrongAddress[] = []
   let odisPayments: OdisPaymentsWrapper
