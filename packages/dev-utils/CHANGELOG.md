@@ -1,5 +1,11 @@
 # @celo/dev-utils
 
+## 0.1.0-beta.0
+
+### Minor Changes
+
+- [#554](https://github.com/celo-org/developer-tooling/pull/554) [`feef9ac`](https://github.com/celo-org/developer-tooling/commit/feef9ac013e5fbf2acc3b5941a6cbd72df2825b2) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Add viem+anvil utils
+
 ## 0.0.8
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # Changelog
 
+## 6.3.0-beta.0
+
+### Minor Changes
+
+- [#531](https://github.com/celo-org/developer-tooling/pull/531) [`e1306b7`](https://github.com/celo-org/developer-tooling/commit/e1306b746fc069af86974e15b618eaba955c3774) Thanks [@shazarre](https://github.com/shazarre)! - Add epoch:status command to view information on the current epoch
+
+### Patch Changes
+
+- [#554](https://github.com/celo-org/developer-tooling/pull/554) [`feef9ac`](https://github.com/celo-org/developer-tooling/commit/feef9ac013e5fbf2acc3b5941a6cbd72df2825b2) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Migrate node:synced to viem
+
+- [#531](https://github.com/celo-org/developer-tooling/pull/531) [`e1306b7`](https://github.com/celo-org/developer-tooling/commit/e1306b746fc069af86974e15b618eaba955c3774) Thanks [@shazarre](https://github.com/shazarre)! - Parts of celocli now use viem instead of contractkit/web3.
+
 ## 6.2.5
 
 ### Patch Changes
