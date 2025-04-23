@@ -10,4 +10,6 @@ secret:
     name: account:new test private key
   - match: eb04975ce604ca9ccf7348eb4c6baf299760b4ddcf8ad35b77f23c601c8b7242
     name: wallet-rpc private test key
-version: 2
+  - match: 0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef
+    name: admin-revoke test key 
+version: 3
