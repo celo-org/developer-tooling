@@ -1,8 +1,8 @@
 import { serializeSignature, StrongAddress } from '@celo/base'
 import { newKitFromWeb3 } from '@celo/contractkit'
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import Web3 from 'web3'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import { deployReleaseGoldContract } from '../../test-utils/release-gold'
 import Register from '../account/register'
 import Authorize from '../releasecelo/authorize'
@@ -12,7 +12,51 @@ import Lock from './lock'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL1('lockedgold:delegate cmd', (web3: Web3) => {
+testWithAnvilL2('lockedgold:delegate cmd', (web3: Web3) => {
+  it('can not delegate when not an account or a vote signer', async () => {
+    const [delegator, delegatee] = await web3.eth.getAccounts()
+    const kit = newKitFromWeb3(web3)
+    const lockedGold = await kit.contracts.getLockedGold()
+
+    await testLocallyWithWeb3Node(Register, ['--from', delegatee], web3)
+
+    const delegateeVotingPower = await lockedGold.getAccountTotalGovernanceVotingPower(delegatee)
+
+    // Sanity check
+    expect(delegateeVotingPower.toFixed()).toBe('0')
+
+    const logMock = jest.spyOn(console, 'log')
+
+    await expect(
+      testLocallyWithWeb3Node(
+        Delegate,
+        ['--from', delegator, '--to', delegatee, '--percent', '45'],
+        web3
+      )
+    ).rejects.toMatchInlineSnapshot(`[Error: Some checks didn't pass!]`)
+
+    // Make sure nothing has changed
+    expect(await lockedGold.getAccountTotalGovernanceVotingPower(delegatee)).toEqual(
+      delegateeVotingPower
+    )
+    expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
+      [
+        [
+          "Running Checks:",
+        ],
+        [
+          "   ✔  Value [45] is > 0 and <=100 ",
+        ],
+        [
+          "   ✘  0x5409ED021D9299bf6814279A6A1411A7e866A631 is vote signer or registered account ",
+        ],
+        [
+          "   ✔  0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb is a registered Account ",
+        ],
+      ]
+    `)
+  })
+
   test('can delegate', async () => {
     const accounts = await web3.eth.getAccounts()
     const account = accounts[0]

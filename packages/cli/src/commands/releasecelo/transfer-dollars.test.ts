@@ -1,11 +1,11 @@
 import { StableToken, StrongAddress } from '@celo/base'
-import { COMPLIANT_ERROR_RESPONSE } from '@celo/compliance'
+import { COMPLIANT_ERROR_RESPONSE, SANCTIONED_ADDRESSES } from '@celo/compliance'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { topUpWithToken } from '../../test-utils/chain-setup'
-import { TEST_SANCTIONED_ADDRESS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import { createMultisig } from '../../test-utils/multisigUtils'
 import { deployReleaseGoldContract } from '../../test-utils/release-gold'
 import Register from '../account/register'
@@ -18,7 +18,7 @@ process.env.NO_SYNCCHECK = 'true'
 // Lots of commands, sometimes times out
 jest.setTimeout(15000)
 
-testWithAnvilL1('releasegold:transfer-dollars cmd', (web3: Web3) => {
+testWithAnvilL2('releasegold:transfer-dollars cmd', (web3: Web3) => {
   let accounts: StrongAddress[] = []
   let contractAddress: any
   let kit: ContractKit
@@ -89,7 +89,6 @@ testWithAnvilL1('releasegold:transfer-dollars cmd', (web3: Web3) => {
       `"Error: execution reverted: revert: transfer value exceeded balance of sender"`
     )
   })
-
   test('should fail if to address is sanctioned', async () => {
     await topUpWithToken(
       kit,
@@ -109,7 +108,7 @@ testWithAnvilL1('releasegold:transfer-dollars cmd', (web3: Web3) => {
     await expect(
       testLocallyWithWeb3Node(
         RGTransferDollars,
-        ['--contract', contractAddress, '--to', TEST_SANCTIONED_ADDRESS, '--value', '10'],
+        ['--contract', contractAddress, '--to', SANCTIONED_ADDRESSES[0], '--value', '10'],
         web3
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)

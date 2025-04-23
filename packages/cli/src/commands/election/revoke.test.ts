@@ -1,5 +1,5 @@
 import { newKitFromWeb3 } from '@celo/contractkit'
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import {
@@ -13,7 +13,7 @@ import Revoke from './revoke'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL1('election:revoke', (web3: Web3) => {
+testWithAnvilL2('election:revoke', (web3: Web3) => {
   afterEach(async () => {
     jest.clearAllMocks()
   })
@@ -32,7 +32,7 @@ testWithAnvilL1('election:revoke', (web3: Web3) => {
         ['--from', fromAddress, '--for', groupAddress, '--value', '1'],
         web3
       )
-    ).rejects.toThrow()
+    ).rejects.toMatchInlineSnapshot(`[Error: Some checks didn't pass!]`)
     expect(logMock.mock.calls[1][0]).toContain(
       `${fromAddress} is not a signer or registered as an account`
     )

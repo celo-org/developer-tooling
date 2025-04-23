@@ -1,5 +1,5 @@
 import { ElectionWrapper, ValidatorGroupVote } from '@celo/contractkit/lib/wrappers/Election'
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
@@ -8,7 +8,7 @@ import ElectionList from './list'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL1('election:list cmd', (web3: Web3) => {
+testWithAnvilL2('election:list cmd', (web3: Web3) => {
   test('shows list when no arguments provided', async () => {
     const getValidatorGroupsVotesMock = jest.spyOn(
       ElectionWrapper.prototype,

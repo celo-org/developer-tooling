@@ -1,6 +1,5 @@
-import { Flags } from '@oclif/core'
-
 import { StrongAddress } from '@celo/base'
+import { Flags } from '@oclif/core'
 import prompts from 'prompts'
 import { displaySendTx, printValueMap } from '../../utils/cli'
 import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
@@ -22,7 +21,6 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
   async run() {
     const kit = await this.getKit()
     const { flags: _flags } = await this.parse(AdminRevoke)
-    const web3 = await this.getWeb3()
     if (!_flags.yesreally) {
       const response = await prompts({
         type: 'confirm',
@@ -49,15 +47,13 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
     }
 
     const accounts = await kit.contracts.getAccounts()
-    const contractAddress = await this.contractAddress()
+    const contractAddress = (await this.contractAddress()) as StrongAddress
     const isAccount = await accounts.isAccount(contractAddress)
     if (isAccount) {
       // rotate vote signers
       let voteSigner = await accounts.getVoteSigner(contractAddress)
       if (voteSigner !== contractAddress) {
-        const password = 'bad_password'
-        voteSigner = (await web3.eth.personal.newAccount(password)) as StrongAddress
-        await web3.eth.personal.unlockAccount(voteSigner, password, 1000)
+        voteSigner = kit.defaultAccount
         const pop = await accounts.generateProofOfKeyPossession(contractAddress, voteSigner)
         await displaySendTx(
           'accounts: rotateVoteSigner',
@@ -74,6 +70,7 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
       // handle election votes
       if (isElectionVoting) {
         const txos = await this.releaseGoldWrapper.revokeAllVotesForAllGroups()
+
         for (const txo of txos) {
           await displaySendTx('election: revokeVotes', txo, { from: voteSigner }, [
             'ValidatorGroupPendingVoteRevoked',

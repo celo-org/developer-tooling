@@ -1,4 +1,5 @@
 import { newReleaseGold } from '@celo/abis/web3/ReleaseGold'
+import { StrongAddress } from '@celo/base'
 import { ReleaseGoldWrapper } from '@celo/contractkit/lib/wrappers/ReleaseGold'
 import { BaseCommand } from '../base'
 import { CustomFlags } from './command'
@@ -20,7 +21,7 @@ export abstract class ReleaseGoldBaseCommand extends BaseCommand {
       const res = await this.parse()
       this._contractAddress = String(res.flags.contract)
     }
-    return this._contractAddress
+    return this._contractAddress as StrongAddress
   }
 
   get releaseGoldWrapper() {

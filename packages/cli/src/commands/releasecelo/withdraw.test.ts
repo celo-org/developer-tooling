@@ -2,7 +2,7 @@ import { newReleaseGold } from '@celo/abis/web3/ReleaseGold'
 import { StableToken, StrongAddress } from '@celo/base'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { ReleaseGoldWrapper } from '@celo/contractkit/lib/wrappers/ReleaseGold'
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { getContractFromEvent, timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import { DAY, MONTH } from '@celo/dev-utils/lib/test-utils'
 import BigNumber from 'bignumber.js'
@@ -19,7 +19,7 @@ import Withdraw from './withdraw'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL1('releasegold:withdraw cmd', (web3: Web3) => {
+testWithAnvilL2('releasegold:withdraw cmd', (web3: Web3) => {
   let contractAddress: string
   let kit: ContractKit
 
@@ -34,13 +34,13 @@ testWithAnvilL1('releasegold:withdraw cmd', (web3: Web3) => {
       accounts[0],
       accounts[2]
     )
+    await testLocallyWithWeb3Node(CreateAccount, ['--contract', contractAddress], web3)
     // make the whole balance available for withdrawal
     await testLocallyWithWeb3Node(
       SetMaxDistribution,
       ['--contract', contractAddress, '--yesreally', '--distributionRatio', '1000'],
       web3
     )
-    await testLocallyWithWeb3Node(CreateAccount, ['--contract', contractAddress], web3)
   })
 
   test('can withdraw released celo to beneficiary', async () => {

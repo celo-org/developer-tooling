@@ -5,12 +5,17 @@ import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { AccountsWrapper } from '@celo/contractkit/lib/wrappers/Accounts'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { ReleaseGoldWrapper } from '@celo/contractkit/lib/wrappers/ReleaseGold'
-import { setBalance, testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
-import { getContractFromEvent, testWithGanache, timeTravel } from '@celo/dev-utils/lib/ganache-test'
+import {
+  setBalance,
+  testWithAnvilL2,
+  withImpersonatedAccount,
+} from '@celo/dev-utils/lib/anvil-test'
+import { getContractFromEvent, timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import BigNumber from 'bignumber.js'
+import { privateKeyToAddress } from 'viem/accounts'
 import Web3 from 'web3'
 import { topUpWithToken } from '../../test-utils/chain-setup'
-import { testLocally, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import { createMultisig } from '../../test-utils/multisigUtils'
 import { deployReleaseGoldContract } from '../../test-utils/release-gold'
 import Approve from '../governance/approve'
@@ -23,7 +28,7 @@ import LockedCelo from './locked-gold'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL1('releasegold:admin-revoke cmd', (web3: Web3) => {
+testWithAnvilL2('releasegold:admin-revoke cmd', (web3: Web3) => {
   let kit: ContractKit
   let contractAddress: StrongAddress
   let releaseGoldWrapper: ReleaseGoldWrapper
@@ -99,63 +104,43 @@ testWithAnvilL1('releasegold:admin-revoke cmd', (web3: Web3) => {
       const lockedAmount = await lockedGold.getAccountTotalLockedGold(releaseGoldWrapper.address)
       expect(lockedAmount.isZero()).toBeTruthy()
     })
-  })
-})
-
-// Following tests rely on using personal_* RPC methods which are not supported in anvil
-testWithGanache('releasegold:admin-revoke cmd', (web3: Web3) => {
-  let kit: ContractKit
-  let contractAddress: string
-  let accounts: string[]
-
-  beforeEach(async () => {
-    contractAddress = await getContractFromEvent(
-      'ReleaseGoldInstanceCreated(address,address)',
-      web3,
-      { index: 1 } // revocable: true
-    )
-    kit = newKitFromWeb3(web3)
-    accounts = await web3.eth.getAccounts()
-  })
-
-  describe('#when account exists with locked celo', () => {
-    const value = '10'
-
-    beforeEach(async () => {
-      await testLocally(CreateAccount, ['--contract', contractAddress])
-      await testLocally(LockedCelo, [
-        '--contract',
-        contractAddress,
-        '--action',
-        'lock',
-        '--value',
-        value,
-        '--yes',
-      ])
-    })
 
     describe('#when account has authorized a vote signer', () => {
       let voteSigner: string
       let accountsWrapper: AccountsWrapper
+      //
+      const PRIVATE_KEY1 = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
 
       beforeEach(async () => {
-        voteSigner = accounts[2]
+        voteSigner = privateKeyToAddress(PRIVATE_KEY1)
         accountsWrapper = await kit.contracts.getAccounts()
-        const pop = await accountsWrapper.generateProofOfKeyPossession(contractAddress, voteSigner)
-        await testLocally(Authorize, [
-          '--contract',
+        const pop = await accountsWrapper.generateProofOfKeyPossessionLocally(
           contractAddress,
-          '--role',
-          'vote',
-          '--signer',
           voteSigner,
-          '--signature',
-          serializeSignature(pop),
-        ])
+          PRIVATE_KEY1
+        )
+        await testLocallyWithWeb3Node(
+          Authorize,
+          [
+            '--contract',
+            contractAddress,
+            '--role',
+            'vote',
+            '--signer',
+            voteSigner,
+            '--signature',
+            serializeSignature(pop),
+          ],
+          web3
+        )
       })
 
-      test('will rotate vote signer', async () => {
-        await testLocally(AdminRevoke, ['--contract', contractAddress, '--yesreally'])
+      it('will rotate vote signer', async () => {
+        await testLocallyWithWeb3Node(
+          AdminRevoke,
+          ['--contract', contractAddress, '--yesreally'],
+          web3
+        )
         const newVoteSigner = await accountsWrapper.getVoteSigner(contractAddress)
         expect(newVoteSigner).not.toEqual(voteSigner)
       })
@@ -173,52 +158,57 @@ testWithGanache('releasegold:admin-revoke cmd', (web3: Web3) => {
 
           const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
           await timeTravel(dequeueFrequency + 1, web3)
-
-          await testLocally(Approve, ['--from', accounts[0], '--proposalID', '1', '--useMultiSig'])
-          await testLocally(GovernanceVote, [
-            '--from',
-            voteSigner,
-            '--proposalID',
-            '1',
-            '--value',
-            'Yes',
-          ])
+          const multiApprover = await governance.getApproverMultisig()
+          await setBalance(
+            web3,
+            multiApprover.address,
+            new BigNumber(web3.utils.toWei('10', 'ether'))
+          )
+          await withImpersonatedAccount(web3, multiApprover.address, async () => {
+            await testLocallyWithWeb3Node(
+              Approve,
+              ['--from', multiApprover.address, '--proposalID', '1'],
+              web3
+            )
+          })
+          await testLocallyWithWeb3Node(
+            GovernanceVote,
+            [
+              '--from',
+              voteSigner,
+              '--proposalID',
+              '1',
+              '--value',
+              'Yes',
+              '--privateKey',
+              PRIVATE_KEY1,
+            ],
+            web3
+          )
           await governance
             .propose([], 'URL')
             .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
           await governance
             .propose([], 'URL')
             .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
-          await testLocally(GovernanceUpvote, ['--from', voteSigner, '--proposalID', '3'])
-
-          // const validators = await kit.contracts.getValidators()
-          // const groups = await validators.getRegisteredValidatorGroupsAddresses()
-          // await testLocally(ElectionVote, [
-          //   '--from',
-          //   voteSigner,
-          //   '--for',
-          //   groups[0],
-          //   '--value',
-          //   value
-          // ])
+          await testLocallyWithWeb3Node(
+            GovernanceUpvote,
+            ['--from', voteSigner, '--proposalID', '3', '--privateKey', PRIVATE_KEY1],
+            web3
+          )
         })
 
-        test('will revoke governance votes and upvotes', async () => {
+        it('will revoke governance votes and upvotes', async () => {
           const isVotingBefore = await governance.isVoting(contractAddress)
           expect(isVotingBefore).toBeTruthy()
-          await testLocally(AdminRevoke, ['--contract', contractAddress, '--yesreally'])
+          await testLocallyWithWeb3Node(
+            AdminRevoke,
+            ['--contract', contractAddress, '--yesreally'],
+            web3
+          )
           const isVotingAfter = await governance.isVoting(contractAddress)
           expect(isVotingAfter).toBeFalsy()
         })
-
-        // test.only('will revoke election votes', async () => {
-        //   const election = await kit.contracts.getElection()
-        //   const votesBefore = await election.getTotalVotesByAccount(contractAddress)
-        //   expect(votesBefore.isZero).toBeFalsy()
-        //   await testLocally(AdminRevoke, ['--contract', contractAddress, '--yesreally'])
-        //   const votesAfter = await election.getTotalVotesByAccount(contractAddress)
-        //   expect(votesAfter.isZero()).toBeTruthy()
-        // })
       })
     })
   })

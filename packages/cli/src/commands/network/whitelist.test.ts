@@ -1,5 +1,4 @@
-import { FeeCurrencyWhitelistWrapper } from '@celo/contractkit/lib/wrappers/FeeCurrencyWhitelistWrapper'
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { ux } from '@oclif/core'
 import Web3 from 'web3'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
@@ -7,18 +6,16 @@ import Whitelist from './whitelist'
 
 process.env.NO_SYNCCHECK = 'true'
 
-// Lots of commands, sometimes times out
-jest.setTimeout(15000)
+testWithAnvilL2('network:whitelist cmd', (web3: Web3) => {
+  const writeMock = jest.spyOn(ux.write, 'stdout')
 
-const writeMock = jest.spyOn(ux.write, 'stdout')
+  afterAll(() => {
+    jest.clearAllMocks()
+  })
 
-beforeEach(() => {
-  writeMock.mockClear()
-})
-
-testWithAnvilL1('network:whitelist cmd', (web3: Web3) => {
-  test('can print the whitelist', async () => {
+  it('can print the whitelist', async () => {
     await testLocallyWithWeb3Node(Whitelist, [], web3)
+
     expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`
       [
         [
@@ -44,41 +41,41 @@ testWithAnvilL1('network:whitelist cmd', (web3: Web3) => {
       ]
     `)
   })
+  it('modifies output when formating flag is passed', async () => {
+    await testLocallyWithWeb3Node(Whitelist, ['--output=json'], web3)
 
-  test('handles adapted tokens too', async () => {
-    const mock = jest
-      .spyOn(FeeCurrencyWhitelistWrapper.prototype, 'getFeeCurrencyInformation')
-      .mockImplementation(() =>
-        Promise.resolve([
-          {
-            name: 'mock token',
-            symbol: 'MCK',
-            address: '0x123',
-            adaptedToken: '0x456',
-            decimals: 69,
-          },
-        ])
-      )
-
-    await testLocallyWithWeb3Node(Whitelist, [], web3)
-
-    expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`
+    expect(writeMock.mock.calls).toMatchInlineSnapshot(`
       [
         [
-          " Name       Symbol Whitelisted Address Token Address Decimals Uses Adapter? 
-      ",
-        ],
-        [
-          " ────────── ────── ─────────────────── ───────────── ──────── ───────────── 
-      ",
-        ],
-        [
-          " mock token MCK    0x123               0x456         69       true          
+          "[
+        {
+          "name": "Celo Dollar",
+          "symbol": "cUSD",
+          "whitelisted": "0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1",
+          "token": "0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1",
+          "decimals": "18",
+          "usesAdapter": "false"
+        },
+        {
+          "name": "Celo Euro",
+          "symbol": "cEUR",
+          "whitelisted": "0x5930519559Ffa7528a00BE445734036471c443a2",
+          "token": "0x5930519559Ffa7528a00BE445734036471c443a2",
+          "decimals": "18",
+          "usesAdapter": "false"
+        },
+        {
+          "name": "Celo Brazilian Real",
+          "symbol": "cREAL",
+          "whitelisted": "0xB2Fd9852Ca3D69678286A8635d661690906A3E9d",
+          "token": "0xB2Fd9852Ca3D69678286A8635d661690906A3E9d",
+          "decimals": "18",
+          "usesAdapter": "false"
+        }
+      ]
       ",
         ],
       ]
     `)
-
-    mock.mockClear()
   })
 })

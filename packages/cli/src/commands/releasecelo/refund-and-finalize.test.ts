@@ -2,7 +2,7 @@ import { newReleaseGold } from '@celo/abis/web3/ReleaseGold'
 import { StrongAddress } from '@celo/base'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { ReleaseGoldWrapper } from '@celo/contractkit/lib/wrappers/ReleaseGold'
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { getContractFromEvent } from '@celo/dev-utils/lib/ganache-test'
 import Web3 from 'web3'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
@@ -13,7 +13,7 @@ import Revoke from './revoke'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL1('releasegold:refund-and-finalize cmd', (web3: Web3) => {
+testWithAnvilL2('releasegold:refund-and-finalize cmd', (web3: Web3) => {
   let contractAddress: any
   let kit: ContractKit
 

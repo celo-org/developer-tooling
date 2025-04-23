@@ -2,7 +2,7 @@ import { newReleaseGold } from '@celo/abis/web3/ReleaseGold'
 import { StrongAddress } from '@celo/base'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { ReleaseGoldWrapper } from '@celo/contractkit/lib/wrappers/ReleaseGold'
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import Web3 from 'web3'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import { createMultisig } from '../../test-utils/multisigUtils'
@@ -11,7 +11,7 @@ import SetBeneficiary from './set-beneficiary'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL1('releasegold:set-beneficiary cmd', (web3: Web3) => {
+testWithAnvilL2('releasegold:set-beneficiary cmd', (web3: Web3) => {
   let contractAddress: any
   let kit: ContractKit
   let releaseGoldWrapper: ReleaseGoldWrapper
