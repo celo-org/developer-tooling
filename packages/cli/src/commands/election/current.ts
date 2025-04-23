@@ -1,7 +1,8 @@
-import { eqAddress } from '@celo/utils/lib/address'
 import { Flags, ux } from '@oclif/core'
 
+import { PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
+import { getElectedValidators } from '../../packages-to-be/elected'
 import { validatorTable } from '../validator/list'
 
 export const otherValidatorTable: ux.Table.table.Columns<{ address: string }> = {
@@ -13,7 +14,7 @@ export const otherValidatorTable: ux.Table.table.Columns<{ address: string }> = 
 }
 export default class ElectionCurrent extends BaseCommand {
   static description =
-    'Outputs the set of validators currently participating in BFT to create blocks. An election is run to select the validator set at the end of every epoch.'
+    'Outputs the set of validators currently elected. An election is run to select the validator set at the end of every epoch.'
 
   static flags = {
     ...BaseCommand.flags,
@@ -25,43 +26,22 @@ export default class ElectionCurrent extends BaseCommand {
   }
 
   async run() {
-    const kit = await this.getKit()
+    const client = await this.getPublicClient()
     const res = await this.parse(ElectionCurrent)
     ux.action.start('Fetching currently elected Validators')
-    const validators = await kit.contracts.getValidators()
-    const signers = await this.getSigners()
-
+    const validatorList = await getElectedValidators(client as unknown as PublicClient, {
+      showChanges: res.flags.valset,
+    })
+    ux.action.stop()
     if (res.flags.valset) {
-      const validatorList = await Promise.all(
-        signers.map(async (addr) => {
-          const v = await validators.getValidatorFromSigner(addr)
-          return {
-            ...v,
-            currentSigner: addr,
-            changed: eqAddress(addr, v.signer) ? 'no' : 'CHANGING',
-          }
-        })
-      )
-      ux.action.stop()
       ux.table(validatorList, otherValidatorTable, res.flags)
     } else {
-      const validatorList = await Promise.all(
-        signers.map((addr) => validators.getValidatorFromSigner(addr))
-      )
-      ux.action.stop()
       ux.table(
         validatorList.map((v) => ({ v })),
+        // @ts-ignore
         validatorTable,
         res.flags
       )
     }
-  }
-
-  private async getSigners() {
-    const kit = await this.getKit()
-
-    const epochManagerWrapper = await kit.contracts.getEpochManager()
-
-    return await epochManagerWrapper.getElectedSigners()
   }
 }
