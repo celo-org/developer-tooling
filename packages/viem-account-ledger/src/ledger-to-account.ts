@@ -1,4 +1,4 @@
-import { CELO_DERIVATION_PATH_BASE, ETHEREUM_DERIVATION_PATH, trimLeading0x } from '@celo/base'
+import { trimLeading0x } from '@celo/base'
 import { ensureLeading0x } from '@celo/base/lib/address.js'
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
 import {
@@ -8,16 +8,13 @@ import {
   HashTypedDataParameters,
   serializeSignature,
 } from 'viem'
-import { LocalAccount, toAccount } from 'viem/accounts'
+import { toAccount } from 'viem/accounts'
 import { CeloTransactionSerializable, serializeTransaction } from 'viem/celo'
 
+import Eth from '@celo/hw-app-eth'
+import { CIP64_PREFIX, DEFAULT_DERIVATION_PATH } from './constants.js'
+import { AddressValidation, LedgerAccount } from './types.js'
 import { checkForKnownToken, generateLedger, readAppName } from './utils.js'
-
-export type LedgerAccount = LocalAccount<'ledger'>
-
-const CIP64_PREFIX = '0x7b'
-export const CELO_BASE_DERIVATION_PATH = `${CELO_DERIVATION_PATH_BASE.slice(2)}/0`
-export const DEFAULT_DERIVATION_PATH = `${ETHEREUM_DERIVATION_PATH.slice(2)}/0`
 
 // not exported from viem...
 interface MessageTypeProperty {
@@ -25,32 +22,53 @@ interface MessageTypeProperty {
   type: string
 }
 
+interface BaseParameters {
+  derivationPathIndex?: number
+  baseDerivationPath?: string
+  ledgerAddressValidation?: AddressValidation
+}
+type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never }
+type XOR<T, U> = T | U extends object ? (Without<T, U> & U) | (Without<U, T> & T) : T | U
+
+type Parameters = BaseParameters & XOR<{ transport: TransportNodeHid }, { ledger: Eth }>
+
 /**
  * A function to create a ledger account for viem
  * @param options
  * @param options.transport a Ledger Transport
+ * @param options.ledger a Ledger Eth instance
  * @param options.derivationPathIndex aka addressIndex
  * @param options.baseDerivationPath defaults to "m/44'/60'/0"
  *
  * @returns a viem LocalAccount<"ledger">
  */
 export async function ledgerToAccount({
-  transport,
   derivationPathIndex = 0,
   baseDerivationPath = DEFAULT_DERIVATION_PATH,
-}: {
-  transport: TransportNodeHid
-  derivationPathIndex?: number | string
-  baseDerivationPath?: string
-}): Promise<LedgerAccount> {
+  ledgerAddressValidation = AddressValidation.never,
+  ledger,
+  transport,
+}: Parameters): Promise<LedgerAccount> {
+  if (!ledger && !transport) {
+    throw new Error('either `transport` or `ledger` must be defined')
+  }
+  if (ledger && transport) {
+    throw new Error('only one of `transport` and `ledger` must be defined')
+  }
+
+  const _ledger = ledger || (await generateLedger(transport))
+
   const derivationPath = `${baseDerivationPath}/${derivationPathIndex}`
-  const ledger = await generateLedger(transport)
-  const { address, publicKey } = await ledger.getAddress(derivationPath, true)
+  console.log(_ledger, _ledger.getAddress)
+  const { address, publicKey } = await _ledger.getAddress(
+    derivationPath,
+    ledgerAddressValidation !== AddressValidation.never
+  )
   const account = toAccount({
     address: ensureLeading0x(address),
 
     async signTransaction(transaction: CeloTransactionSerializable) {
-      const ledgerAppName = await readAppName(ledger)
+      const ledgerAppName = await readAppName(_ledger)
       const hash = serializeTransaction(transaction)
       if (hash.startsWith(CIP64_PREFIX) && ledgerAppName !== 'celo') {
         throw new Error(
@@ -58,14 +76,14 @@ export async function ledgerToAccount({
         )
       }
       if (ledgerAppName === 'celo') {
-        await checkForKnownToken(ledger, {
+        await checkForKnownToken(_ledger, {
           to: transaction.to!,
           chainId: transaction.chainId!,
           feeCurrency: transaction.feeCurrency,
         })
       }
 
-      let { r, s, v: _v } = await ledger!.signTransaction(derivationPath, trimLeading0x(hash), null)
+      let { r, s, v: _v } = await _ledger.signTransaction(derivationPath, trimLeading0x(hash), null)
       if (typeof _v === 'string' && (_v === '' || _v === '0x')) {
         _v = '0x0'
       }
@@ -85,7 +103,7 @@ export async function ledgerToAccount({
     },
 
     async signMessage({ message }) {
-      const { r, s, v } = await ledger!.signPersonalMessage(
+      const { r, s, v } = await _ledger.signPersonalMessage(
         derivationPath,
         Buffer.from(message as string).toString('hex')
       )
@@ -97,7 +115,7 @@ export async function ledgerToAccount({
     },
 
     async signTypedData(parameters) {
-      const ledgerAppName = await readAppName(ledger)
+      const ledgerAppName = await readAppName(_ledger)
       if (ledgerAppName === 'celo') {
         throw new Error('Not implemented as of this release.')
       }
@@ -118,7 +136,7 @@ export async function ledgerToAccount({
         types: types as Record<string, MessageTypeProperty[]>,
       })
 
-      const { r, s, v } = await ledger.signEIP712HashedMessage(
+      const { r, s, v } = await _ledger.signEIP712HashedMessage(
         derivationPath,
         domainSeperator,
         messageHash

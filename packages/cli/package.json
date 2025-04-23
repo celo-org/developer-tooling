@@ -54,6 +54,7 @@
     "@celo/metadata-claims": "^1.0.3",
     "@celo/phone-utils": "^6.0.6",
     "@celo/utils": "^8.0.2",
+    "@celo/viem-account-ledger": "^1.1.1",
     "@celo/wallet-hsm-azure": "^7.0.1",
     "@celo/wallet-ledger": "^7.0.1",
     "@celo/wallet-local": "^7.0.1",
