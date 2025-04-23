@@ -87,7 +87,7 @@
   },
   "devDependencies": {
     "@celo/celo-devchain": "^7.0.0",
-    "@celo/dev-utils": "0.1.0-beta.0",
+    "@celo/dev-utils": "workspace:^",
     "@celo/typescript": "workspace:^",
     "@types/debug": "^4.1.4",
     "@types/fs-extra": "^8.0.0",

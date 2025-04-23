@@ -22,6 +22,7 @@ import { getDefaultDerivationPath, getNodeUrl } from './utils/config'
 import { getFeeCurrencyContractWrapper } from './utils/fee-currency'
 import { requireNodeIsSynced } from './utils/helpers'
 import { reportUsageStatisticsIfTelemetryEnabled } from './utils/telemetry'
+import { celoBaklava } from './packages-to-be/chains'
 
 export abstract class BaseCommand extends Command {
   static flags: FlagInput = {
@@ -199,8 +200,8 @@ export abstract class BaseCommand extends Command {
       })
       const chainId = await intermediateClient.getChainId()
       const extractedChain = extractChain({
-        chains: [celo, celoAlfajores],
-        id: chainId as typeof celo.id | typeof celoAlfajores.id,
+        chains: [celo, celoAlfajores, celoBaklava],
+        id: chainId as typeof celo.id | typeof celoAlfajores.id | typeof celoBaklava.id,
       })
 
       if (extractedChain) {

@@ -1,6 +1,6 @@
-import { celoBaklava } from '@celo/dev-utils/src/viem/chains'
 import { Account, PublicClient, Transport, WalletClient } from 'viem'
 import { celo, celoAlfajores } from 'viem/chains'
+import { celoBaklava } from './chains'
 
 export type CeloClient = PublicClient<
   Transport,

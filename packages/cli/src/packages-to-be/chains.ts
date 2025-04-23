@@ -1,9 +1,5 @@
 import { defineChain } from 'viem'
 
-/**
- * NOTE: to prevent cyclic imports copied from cli/src/package-to-be/chains.ts
- * TODO: remove this
- */
 export const celoBaklava = /*#__PURE__*/ defineChain({
   id: 62_320,
   name: 'Baklava',
