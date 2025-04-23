@@ -5,6 +5,12 @@
   "main": "lib/index.js",
   "module": "lib-es/index.js",
   "types": "lib/index.d.ts",
+  "exports": {
+    ".": {
+        "import": "./dist/lib-es/index.js",
+        "require": "./dist/lib/index.js"
+    }
+  },
   "author": "cLabs",
   "license": "Apache-2.0",
   "homepage": "https://docs.celo.org/developer/tools",
@@ -20,9 +26,10 @@
     "ledger"
   ],
   "scripts": {
-    "build": "yarn build:cjs && yarn build:esm",
-    "build:cjs": "yarn --top-level run tsc -m commonjs",
-    "build:esm": "yarn --top-level run tsc -m ES6 --outDir lib-es",
+    "build": "yarn build:cjs && yarn build:esm && yarn build:postbuild",
+    "build:cjs": "yarn --top-level run tsc -m commonjs --target es2015",
+    "build:esm": "yarn --top-level run tsc -m esnext --target esnext --outDir lib-es",
+    "build:postbuild": "node ./scripts/post-build.mjs",
     "clean": "yarn --top-level run tsc -b . --clean && yarn run rimraf lib lib-es",
     "docs": "yarn --top-level run typedoc",
     "test": "yarn run vitest --run",
