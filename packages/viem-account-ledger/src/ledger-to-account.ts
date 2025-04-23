@@ -59,7 +59,6 @@ export async function ledgerToAccount({
   const _ledger = ledger || (await generateLedger(transport))
 
   const derivationPath = `${baseDerivationPath}/${derivationPathIndex}`
-  console.log(_ledger, _ledger.getAddress)
   const { address, publicKey } = await _ledger.getAddress(
     derivationPath,
     ledgerAddressValidation !== AddressValidation.never

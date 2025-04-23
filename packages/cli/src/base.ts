@@ -1,6 +1,7 @@
 import { ensureLeading0x, StrongAddress } from '@celo/base'
 import { isCel2, ReadOnlyWallet } from '@celo/connect'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
+import { ledgerToWalletClient } from '@celo/viem-account-ledger'
 import { AzureHSMWallet } from '@celo/wallet-hsm-azure'
 import { AddressValidation, newLedgerWalletWithSetup } from '@celo/wallet-ledger'
 import { LocalWallet } from '@celo/wallet-local'
@@ -250,11 +251,6 @@ export abstract class BaseCommand extends Command {
           ledgerConfirmation = AddressValidation.everyTransaction
         }
 
-        // TODO: figure out why i can't either:
-        // import('@celo/viem-account-ledger')
-        // or import at top level
-        const { ledgerToWalletClient } = await import('@celo/viem-account-ledger/lib/index.js')
-
         const walletClient = await ledgerToWalletClient({
           transport: await this.openLedgerTransport(),
           baseDerivationPath: getDefaultDerivationPath(this.config.configDir),
@@ -262,9 +258,7 @@ export abstract class BaseCommand extends Command {
           changeIndexes: isLedgerLiveMode ? indicesToIterateOver : [0],
           ledgerAddressValidation: ledgerConfirmation,
           walletClientOptions: {
-            // @ts-expect-error
             transport,
-            // @ts-expect-error
             chain: publicClient.chain,
           },
         })

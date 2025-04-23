@@ -16,11 +16,12 @@ import {
 import { celo, celoAlfajores } from 'viem/chains'
 import { ANVIL_PORT, DEFAULT_OWNER_ADDRESS } from '../anvil-test'
 import { TEST_BALANCE, TEST_GAS_LIMIT, TEST_GAS_PRICE, TEST_MNEMONIC } from '../test-utils'
+import { celoBaklava } from './chains'
 import { testWithViem } from './test-utils'
 
 let instance: null | Anvil = null
 
-type chains = typeof celo | typeof celoAlfajores
+type chains = typeof celo | typeof celoAlfajores | typeof celoBaklava
 export type TestClientExtended<account extends Account | undefined = Account | undefined> = Client<
   HttpTransport,
   chains,
