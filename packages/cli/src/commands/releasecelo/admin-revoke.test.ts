@@ -159,7 +159,6 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (web3: Web3) => {
           const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
           await timeTravel(dequeueFrequency + 1, web3)
           const multiApprover = await governance.getApproverMultisig()
-          console.warn('Approve...')
           await setBalance(
             web3,
             multiApprover.address,
@@ -171,7 +170,6 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (web3: Web3) => {
               ['--from', multiApprover.address, '--proposalID', '1'],
               web3
             )
-            console.warn('GovernanceVote...')
           })
           await testLocallyWithWeb3Node(
             GovernanceVote,
@@ -193,7 +191,6 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (web3: Web3) => {
           await governance
             .propose([], 'URL')
             .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
-          console.warn('Upvotin...')
           await testLocallyWithWeb3Node(
             GovernanceUpvote,
             ['--from', voteSigner, '--proposalID', '3', '--privateKey', PRIVATE_KEY1],
@@ -204,7 +201,6 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (web3: Web3) => {
         it('will revoke governance votes and upvotes', async () => {
           const isVotingBefore = await governance.isVoting(contractAddress)
           expect(isVotingBefore).toBeTruthy()
-          console.warn('Revoking...')
           await testLocallyWithWeb3Node(
             AdminRevoke,
             ['--contract', contractAddress, '--yesreally'],
