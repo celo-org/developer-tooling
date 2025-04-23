@@ -185,7 +185,7 @@ export abstract class BaseCommand extends Command {
       if (extractedChain) {
         this.publicClient = createPublicClient({
           transport,
-          batch: { multicall: true, },
+          batch: { multicall: true },
           chain: extractedChain,
         })
       } else {
