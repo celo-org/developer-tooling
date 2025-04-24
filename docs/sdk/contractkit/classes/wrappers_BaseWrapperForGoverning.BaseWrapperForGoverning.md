@@ -16,8 +16,6 @@
 
   ↳ **`BaseWrapperForGoverning`**
 
-  ↳↳ [`BaseSlasher`](wrappers_BaseSlasher.BaseSlasher.md)
-
   ↳↳ [`ElectionWrapper`](wrappers_Election.ElectionWrapper.md)
 
   ↳↳ [`EpochManagerWrapper`](wrappers_EpochManager.EpochManagerWrapper.md)
@@ -81,7 +79,7 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts:25](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts#L25)
+[packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts#L23)
 
 ## Properties
 

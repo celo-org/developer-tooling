@@ -24,8 +24,6 @@
 
   ↳ [`BaseWrapperForGoverning`](wrappers_BaseWrapperForGoverning.BaseWrapperForGoverning.md)
 
-  ↳ [`BlockchainParametersWrapper`](wrappers_BlockchainParameters.BlockchainParametersWrapper.md)
-
   ↳ [`EpochRewardsWrapper`](wrappers_EpochRewards.EpochRewardsWrapper.md)
 
   ↳ [`Erc20Wrapper`](wrappers_Erc20Wrapper.Erc20Wrapper.md)
@@ -37,8 +35,6 @@
   ↳ [`FeeHandlerWrapper`](wrappers_FeeHandler.FeeHandlerWrapper.md)
 
   ↳ [`FreezerWrapper`](wrappers_Freezer.FreezerWrapper.md)
-
-  ↳ [`GasPriceMinimumWrapper`](wrappers_GasPriceMinimum.GasPriceMinimumWrapper.md)
 
   ↳ [`MultiSigWrapper`](wrappers_MultiSig.MultiSigWrapper.md)
 
