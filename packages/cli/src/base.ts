@@ -16,13 +16,13 @@ import { privateKeyToAccount } from 'viem/accounts'
 import { celo, celoAlfajores } from 'viem/chains'
 import { ipc } from 'viem/node'
 import Web3 from 'web3'
+import { celoBaklava } from './packages-to-be/chains'
 import { CeloClient, WalletCeloClient } from './packages-to-be/client'
 import { CustomFlags } from './utils/command'
 import { getDefaultDerivationPath, getNodeUrl } from './utils/config'
 import { getFeeCurrencyContractWrapper } from './utils/fee-currency'
 import { requireNodeIsSynced } from './utils/helpers'
 import { reportUsageStatisticsIfTelemetryEnabled } from './utils/telemetry'
-import { celoBaklava } from './packages-to-be/chains'
 
 export abstract class BaseCommand extends Command {
   static flags: FlagInput = {

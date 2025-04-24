@@ -139,4 +139,8 @@ describe('utils', () => {
       expect(spy.mock.calls.length).toBe(2)
     })
   })
+
+  describe('Mutex', () => {
+    it.fails('works')
+  })
 })

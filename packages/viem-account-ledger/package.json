@@ -33,6 +33,7 @@
     "clean": "yarn --top-level run tsc -b . --clean && yarn run rimraf dist",
     "docs": "yarn --top-level run typedoc",
     "test": "yarn run vitest --run",
+    "test:watch": "yarn run vitest --watch",
     "lint": "yarn --top-level run eslint -c .eslintrc.cjs ",
     "prepublishOnly": "yarn clean && yarn build"
   },

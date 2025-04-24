@@ -49,9 +49,6 @@ export async function ledgerToAccount({
   ledger,
   transport,
 }: Parameters): Promise<LedgerAccount> {
-  if (!ledger && !transport) {
-    throw new Error('either `transport` or `ledger` must be defined')
-  }
   if (ledger && transport) {
     throw new Error('only one of `transport` and `ledger` must be defined')
   }

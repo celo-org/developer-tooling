@@ -6,9 +6,9 @@ import { ledgerToAccount } from './ledger-to-account'
 import { AddressValidation, LedgerAccount, LedgerWalletClient } from './types'
 import { generateLedger } from './utils'
 
-const ADDRESS_QTY = 5
+const ADDRESS_QTY = 1
 
-export async function ledgerToWalletClient({
+export async function ledgerToWalletClient<T extends Chain | undefined = undefined>({
   transport,
   derivationPathIndexes = zeroRange(ADDRESS_QTY),
   changeIndexes = [0],
@@ -21,8 +21,8 @@ export async function ledgerToWalletClient({
   changeIndexes?: number[]
   baseDerivationPath?: string
   ledgerAddressValidation?: AddressValidation
-  walletClientOptions: WalletClientConfig<Transport, Chain, undefined>
-}): Promise<LedgerWalletClient> {
+  walletClientOptions: Omit<WalletClientConfig<Transport, T>, 'account'>
+}): Promise<LedgerWalletClient<T>> {
   const ledger = await generateLedger(transport)
   const accounts: Promise<LedgerAccount>[] = []
   validateIndexes(derivationPathIndexes, 'address index')

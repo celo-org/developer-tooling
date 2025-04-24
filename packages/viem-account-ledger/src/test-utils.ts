@@ -8,9 +8,9 @@ import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { Hex, parseSignature } from 'viem'
 import { privateKeyToAccount, privateKeyToAddress, signMessage } from 'viem/accounts'
+import { DEFAULT_DERIVATION_PATH } from './constants.js'
 import { legacyLedgerPublicKeyHex } from './data.js'
 import { meetsVersionRequirements, MIN_VERSION_EIP1559 } from './utils.js'
-import { DEFAULT_DERIVATION_PATH } from './constants.js'
 
 const PRIVATE_KEY1 = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
 export const ACCOUNT_ADDRESS1 = normalizeAddressWith0x(privateKeyToAddress(PRIVATE_KEY1))
@@ -132,13 +132,11 @@ export class TestLedger {
       const { address, privateKey } = ledgerAddresses[derivationPath]
       return {
         address,
-        derivationPath,
         publicKey: privateKeyToAccount(privateKey).publicKey,
       }
     }
     return {
       address: '',
-      derivationPath,
       publicKey: '',
     }
   }

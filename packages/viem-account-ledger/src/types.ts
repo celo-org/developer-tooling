@@ -1,7 +1,11 @@
 import { Chain, LocalAccount, Transport, WalletClient } from 'viem'
 
 export type LedgerAccount = LocalAccount<'ledger'>
-export type LedgerWalletClient = WalletClient<Transport, Chain | undefined, LedgerAccount>
+export type LedgerWalletClient<T extends Chain | undefined = undefined> = WalletClient<
+  Transport,
+  T,
+  LedgerAccount
+>
 
 export enum AddressValidation {
   // Validates every address required only when the ledger is initialized
