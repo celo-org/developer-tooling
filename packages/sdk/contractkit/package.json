@@ -24,9 +24,8 @@
     "clean": "yarn run --top-level tsc -b . --clean",
     "prepublishOnly": "yarn build",
     "docs": "yarn run --top-level typedoc",
-    "test": "NODE_OPTIONS=--experimental-vm-modules yarn run --top-level jest --runInBand --forceExit",
-    "test-anvil": "RUN_GANACHE_TESTS=false RUN_ANVIL_TESTS=true NODE_OPTIONS=--experimental-vm-modules yarn run --top-level jest --forceExit",
-    "test-ganache": "RUN_GANACHE_TESTS=true RUN_ANVIL_TESTS=false NODE_OPTIONS=--experimental-vm-modules yarn run --top-level jest --runInBand --forceExit",
+    "test": "NODE_OPTIONS=--experimental-vm-modules yarn run --top-level jest --maxWorkers=50% --forceExit",
+    "test-anvil": "RUN_ANVIL_TESTS=true NODE_OPTIONS=--experimental-vm-modules yarn run --top-level jest --forceExit",
     "lint": "yarn run --top-level eslint -c .eslintrc.js "
   },
   "dependencies": {
