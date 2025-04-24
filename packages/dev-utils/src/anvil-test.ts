@@ -55,6 +55,14 @@ type TestWithAnvilOptions = {
   chainId?: number
 }
 
+export function testWithAnvilL1(
+  name: string,
+  fn: (web3: Web3) => void,
+  options?: TestWithAnvilOptions
+) {
+  return testWithAnvil(require.resolve('@celo/devchain-anvil/devchain.json'), name, fn, options)
+}
+
 export function testWithAnvilL2(
   name: string,
   fn: (web3: Web3) => void,
