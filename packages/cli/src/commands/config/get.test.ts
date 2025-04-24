@@ -14,7 +14,7 @@ describe('config:get cmd', () => {
     await testLocally(Get, [])
     expect(stripAnsiCodesAndTxHashes(logMock.mock.calls[0][0].replace(/:\d+/, ':PORT')))
       .toMatchInlineSnapshot(`
-      "node: http://localhost:8545
+      "node: http://localhost:PORT
       derivationPath: m/44'/52752'/0'
       telemetry: true"
     `)
