@@ -267,7 +267,7 @@ syntheticDescribe('ledgerToWalletClient (mocked ledger)', () => {
             expect(params[0].split('/').length).toBe(5)
           })
           expect(spy).toHaveBeenCalledTimes(12)
-          expect(client.getAddresses()).resolves.toHaveLength(12)
+          await expect(client.getAddresses()).resolves.toHaveLength(12)
         })
         it('can be used with derivation path without the master node', async () => {
           client = await ledgerToWalletClient<typeof celo>({

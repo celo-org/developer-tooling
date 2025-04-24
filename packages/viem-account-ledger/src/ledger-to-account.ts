@@ -53,13 +53,43 @@ export async function ledgerToAccount({
     throw new Error('only one of `transport` and `ledger` must be defined')
   }
 
+  let alreadyValidated = ledgerAddressValidation !== AddressValidation.never
   const _ledger = ledger || (await generateLedger(transport))
+  const _derivationPath = `${baseDerivationPath}/${derivationPathIndex}`
 
-  const derivationPath = `${baseDerivationPath}/${derivationPathIndex}`
   const { address, publicKey } = await _ledger.getAddress(
-    derivationPath,
-    ledgerAddressValidation !== AddressValidation.never
+    _derivationPath,
+    ledgerAddressValidation === AddressValidation.initializationOnly
   )
+
+  async function getValidatedDerivationPath(): Promise<string> {
+    if (validationRequired()) {
+      await _ledger.getAddress(_derivationPath, true)
+      alreadyValidated = true
+    }
+    return _derivationPath
+  }
+
+  function validationRequired(): boolean {
+    switch (ledgerAddressValidation) {
+      case AddressValidation.initializationOnly: {
+        return false
+      }
+      case AddressValidation.never: {
+        return false
+      }
+      case AddressValidation.everyTransaction: {
+        return true
+      }
+      case AddressValidation.firstTransactionPerAddress: {
+        return !alreadyValidated
+      }
+      default: {
+        throw new Error('ledger-signer@validationRequired: invalid ledgerValidation value')
+      }
+    }
+  }
+
   const account = toAccount({
     address: ensureLeading0x(address),
 
@@ -79,7 +109,15 @@ export async function ledgerToAccount({
         })
       }
 
-      let { r, s, v: _v } = await _ledger.signTransaction(derivationPath, trimLeading0x(hash), null)
+      let {
+        r,
+        s,
+        v: _v,
+      } = await _ledger.signTransaction(
+        await getValidatedDerivationPath(),
+        trimLeading0x(hash),
+        null
+      )
       if (typeof _v === 'string' && (_v === '' || _v === '0x')) {
         _v = '0x0'
       }
@@ -100,7 +138,7 @@ export async function ledgerToAccount({
 
     async signMessage({ message }) {
       const { r, s, v } = await _ledger.signPersonalMessage(
-        derivationPath,
+        await getValidatedDerivationPath(),
         Buffer.from(message as string).toString('hex')
       )
       return serializeSignature({
@@ -133,7 +171,7 @@ export async function ledgerToAccount({
       })
 
       const { r, s, v } = await _ledger.signEIP712HashedMessage(
-        derivationPath,
+        await getValidatedDerivationPath(),
         domainSeperator,
         messageHash
       )
