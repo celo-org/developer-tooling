@@ -2,7 +2,11 @@ import { newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { ux } from '@oclif/core'
 import Web3 from 'web3'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import {
+  stripAnsiCodesFromNestedArray,
+  testLocally,
+  testLocallyWithWeb3Node,
+} from '../../test-utils/cliUtils'
 import * as cliUtils from '../../utils/cli'
 import * as config from '../../utils/config'
 import Get from './get'
@@ -114,7 +118,7 @@ testWithAnvilL2('config:set cmd', (web3: Web3) => {
       telemetry: false,
     })
 
-    await testLocallyWithWeb3Node(Get, [], web3)
+    await testLocally(Get, [])
     expect(printValueMapSpy).toHaveBeenCalledTimes(1)
     expect(printValueMapSpy.mock.calls[0][0].telemetry).toEqual(false)
 
@@ -130,7 +134,7 @@ testWithAnvilL2('config:set cmd', (web3: Web3) => {
     })
 
     // Check that it's not overwritten
-    await testLocallyWithWeb3Node(Get, [], web3)
+    await testLocally(Get, [])
     expect(printValueMapSpy).toHaveBeenCalledTimes(2)
     expect(printValueMapSpy.mock.calls[1][0].telemetry).toEqual(false)
 
@@ -143,7 +147,7 @@ testWithAnvilL2('config:set cmd', (web3: Web3) => {
       telemetry: true,
     })
 
-    await testLocallyWithWeb3Node(Get, [], web3)
+    await testLocally(Get, [])
     expect(printValueMapSpy).toHaveBeenCalledTimes(3)
     expect(printValueMapSpy.mock.calls[2][0].telemetry).toEqual(true)
   })
