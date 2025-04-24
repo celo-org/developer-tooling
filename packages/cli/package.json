@@ -1,7 +1,7 @@
 {
   "name": "@celo/celocli",
   "description": "CLI Tool for interacting with the Celo protocol",
-  "version": "6.2.5",
+  "version": "6.3.0-beta.0",
   "author": "Celo",
   "license": "Apache-2.0",
   "repository": {
@@ -36,10 +36,8 @@
     "homebrew": "node ./homebrew/scripts/prepare.mjs",
     "test": "TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --runInBand --forceExit",
     "test-anvil": "RUN_GANACHE_TESTS=false RUN_ANVIL_TESTS=true TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --forceExit",
-    "test-ganache": "RUN_GANACHE_TESTS=true RUN_ANVIL_TESTS=false TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --runInBand --forceExit",
     "test-ci": "TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --runInBand --workerIdleMemoryLimit=0.1 --forceExit",
-    "test-ci-anvil": "yarn test-anvil --workerIdleMemoryLimit=0.1",
-    "test-ci-ganache": "yarn test-ganache --workerIdleMemoryLimit=0.1"
+    "test-ci-anvil": "yarn test-anvil --workerIdleMemoryLimit=0.1"
   },
   "dependencies": {
     "@celo/abis": "11.0.0",
@@ -86,7 +84,7 @@
   },
   "devDependencies": {
     "@celo/celo-devchain": "^7.0.0",
-    "@celo/dev-utils": "0.0.8",
+    "@celo/dev-utils": "0.1.0-beta.0",
     "@celo/typescript": "workspace:^",
     "@types/debug": "^4.1.4",
     "@types/fs-extra": "^8.0.0",
