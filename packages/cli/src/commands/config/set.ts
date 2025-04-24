@@ -1,14 +1,11 @@
-import { Flags, ux } from '@oclif/core'
-import chalk from 'chalk'
+import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { CeloConfig, readConfig, writeConfig } from '../../utils/config'
-import { ViewCommmandFlags } from '../../utils/flags'
 import NewAccount from '../account/new'
 export default class Set extends BaseCommand {
   static description = 'Configure running node information for propagating transactions to network'
 
   static flags = {
-    ...ViewCommmandFlags,
     node: {
       ...BaseCommand.flags.node,
       hidden: false,
@@ -45,6 +42,10 @@ export default class Set extends BaseCommand {
 
   requireSynced = false
 
+  async init() {
+    // no op -- this is here to overwrite connecting to a node which this command does not need to do
+  }
+
   async run() {
     const res = await this.parse(Set)
     const curr = readConfig(this.config.configDir)
@@ -52,15 +53,6 @@ export default class Set extends BaseCommand {
     const derivationPath = res.flags.derivationPath ?? curr.derivationPath
     const telemetry =
       res.flags.telemetry === '0' ? false : res.flags.telemetry === '1' ? true : curr.telemetry
-    const gasCurrency = res.flags.gasCurrency
-
-    if (gasCurrency) {
-      ux.warn(
-        `\nSetting a default gasCurrency has been removed from the config, you may still use the --gasCurrency on every command.\nDid you value this feature a lot and would like to see it back? Let us know at ${chalk.cyan(
-          chalk.bold(`https://github.com/celo-org/developer-tooling/discussions/92`)
-        )}`
-      )
-    }
 
     await writeConfig(this.config.configDir, {
       node,

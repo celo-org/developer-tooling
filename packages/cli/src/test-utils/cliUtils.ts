@@ -6,6 +6,7 @@ import { BaseCommand } from '../base'
 type AbstractConstructor<T> = new (...args: any[]) => T
 interface Runner extends AbstractConstructor<BaseCommand> {
   run: typeof BaseCommand.run
+  flags: typeof BaseCommand.flags
 }
 
 export async function testLocallyWithWeb3Node(
@@ -54,7 +55,7 @@ export async function testLocally(
     return command.run(argv, config)
   }
 
-  const extendedArgv = [...argv, '--node', 'local']
+  const extendedArgv = command.flags.node ? [...argv, '--node', 'local'] : argv
   return command.run(extendedArgv, config)
 }
 
