@@ -1,7 +1,6 @@
 import { Connection, Contract } from '@celo/connect'
 import { AccountsWrapper } from './Accounts'
 import { BaseWrapper } from './BaseWrapper'
-import { BlockchainParametersWrapper } from './BlockchainParameters'
 import { ElectionWrapper } from './Election'
 import { EpochManagerWrapper } from './EpochManager'
 import { LockedGoldWrapper } from './LockedGold'
@@ -16,7 +15,6 @@ interface ContractWrappersForVotingAndRules {
   getLockedGold: () => Promise<LockedGoldWrapper>
   getScoreManager: () => Promise<ScoreManagerWrapper>
   getMultiSig: (address: string) => Promise<MultiSigWrapper>
-  getBlockchainParameters: () => Promise<BlockchainParametersWrapper>
   getEpochManager: () => Promise<EpochManagerWrapper>
 }
 

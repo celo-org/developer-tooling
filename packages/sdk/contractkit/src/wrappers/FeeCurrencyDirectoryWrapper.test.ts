@@ -1,8 +1,8 @@
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import BigNumber from 'bignumber.js'
 import { newKitFromWeb3 } from '../kit'
 
-testWithAnvilL1('FeeCurrencyDirectory', (web3) => {
+testWithAnvilL2('FeeCurrencyDirectory', (web3) => {
   const kit = newKitFromWeb3(web3)
 
   it('fetches fee currency information', async () => {

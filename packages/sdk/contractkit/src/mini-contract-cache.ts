@@ -1,4 +1,3 @@
-import { newGasPriceMinimum } from '@celo/abis/web3/0.8/GasPriceMinimum'
 import { newAccounts } from '@celo/abis/web3/Accounts'
 import { newGoldToken } from '@celo/abis/web3/GoldToken'
 import { newStableToken } from '@celo/abis/web3/mento/StableToken'
@@ -11,7 +10,6 @@ import { CeloContract } from './base'
 import { ContractCacheType } from './basic-contract-cache-type'
 import { stableTokenInfos } from './celo-tokens'
 import { AccountsWrapper } from './wrappers/Accounts'
-import { GasPriceMinimumWrapper } from './wrappers/GasPriceMinimum'
 import { GoldTokenWrapper } from './wrappers/GoldTokenWrapper'
 import { StableTokenWrapper } from './wrappers/StableTokenWrapper'
 
@@ -19,11 +17,6 @@ const MINIMUM_CONTRACTS = {
   [CeloContract.Accounts]: {
     newInstance: newAccounts,
     wrapper: AccountsWrapper,
-  },
-  // TODO(L2): remove
-  [CeloContract.GasPriceMinimum]: {
-    newInstance: newGasPriceMinimum,
-    wrapper: GasPriceMinimumWrapper,
   },
   [CeloContract.CeloToken]: {
     newInstance: newGoldToken,
@@ -51,8 +44,6 @@ type Wrappers<T extends Keys> = InstanceType<ContractsBroughtBase[T]['wrapper']>
 
 const contractsWhichRequireCache = new Set([
   CeloContract.Attestations,
-  CeloContract.DoubleSigningSlasher,
-  CeloContract.DowntimeSlasher,
   CeloContract.Election,
   CeloContract.Governance,
   CeloContract.LockedCelo,

@@ -5,10 +5,8 @@ import { ABI as EpochManagerEnablerABI } from '@celo/abis-12/web3/EpochManagerEn
 import { ABI as FeeCurrencyDirectoryABI } from '@celo/abis-12/web3/FeeCurrencyDirectory'
 import { ABI as LockedGoldABI } from '@celo/abis-12/web3/LockedGold'
 import { ABI as ScoreManagerABI } from '@celo/abis-12/web3/ScoreManager'
-import { ABI as GasPriceMinimumABI } from '@celo/abis/web3/0.8/GasPriceMinimum'
 import { ABI as AccountsABI } from '@celo/abis/web3/Accounts'
 import { ABI as AttestationsABI } from '@celo/abis/web3/Attestations'
-import { ABI as BlockchainParametersABI } from '@celo/abis/web3/BlockchainParameters'
 import { ABI as DoubleSigningSlasherABI } from '@celo/abis/web3/DoubleSigningSlasher'
 import { ABI as DowntimeSlasherABI } from '@celo/abis/web3/DowntimeSlasher'
 import { ABI as ElectionABI } from '@celo/abis/web3/Election'
@@ -24,7 +22,6 @@ import { ABI as MentoFeeHandlerSellerABI } from '@celo/abis/web3/MentoFeeHandler
 import { ABI as MultiSigABI } from '@celo/abis/web3/MultiSig'
 import { ABI as OdisPaymentsABI } from '@celo/abis/web3/OdisPayments'
 import { ABI as ProxyABI } from '@celo/abis/web3/Proxy'
-import { ABI as RandomABI } from '@celo/abis/web3/Random'
 import { ABI as RegistryABI } from '@celo/abis/web3/Registry'
 import { ABI as SortedOraclesABI } from '@celo/abis/web3/SortedOracles'
 import { ABI as UniswapFeeHandlerSellerABI } from '@celo/abis/web3/UniswapFeeHandlerSeller'
@@ -118,7 +115,6 @@ const findInitializeAbi = (items: AbiItem[]) => items.find((item) => item.name =
 const initializeAbiMap = {
   AccountsProxy: findInitializeAbi(AccountsABI),
   AttestationsProxy: findInitializeAbi(AttestationsABI),
-  BlockchainParametersProxy: findInitializeAbi(BlockchainParametersABI),
   CeloUnreleasedTreasuryProxy: findInitializeAbi(CeloUnreleasedTreasuryABI),
   DoubleSigningSlasherProxy: findInitializeAbi(DoubleSigningSlasherABI),
   DowntimeSlasherProxy: findInitializeAbi(DowntimeSlasherABI),
@@ -134,14 +130,12 @@ const initializeAbiMap = {
   MentoFeeHandlerSellerProxy: findInitializeAbi(MentoFeeHandlerSellerABI),
   UniswapFeeHandlerSellerProxy: findInitializeAbi(UniswapFeeHandlerSellerABI),
   FreezerProxy: findInitializeAbi(FreezerABI),
-  GasPriceMinimumProxy: findInitializeAbi(GasPriceMinimumABI),
   GoldTokenProxy: findInitializeAbi(GoldTokenABI),
   GovernanceProxy: findInitializeAbi(GovernanceABI),
   LockedGoldProxy: findInitializeAbi(LockedGoldABI),
   MultiSigProxy: findInitializeAbi(MultiSigABI),
   OdisPaymentsProxy: findInitializeAbi(OdisPaymentsABI),
   ProxyProxy: findInitializeAbi(ProxyABI),
-  RandomProxy: findInitializeAbi(RandomABI),
   RegistryProxy: findInitializeAbi(RegistryABI),
   ReserveProxy: findInitializeAbi(ReserveABI),
   ScoreManagerProxy: findInitializeAbi(ScoreManagerABI),

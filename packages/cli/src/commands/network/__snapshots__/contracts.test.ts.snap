@@ -11,12 +11,6 @@ exports[`network:contracts when version can be obtained runs 2`] = `
     "version": "1.1.4.2"
   },
   {
-    "contract": "BlockchainParameters",
-    "proxy": "0xff32a62a9f303e3cB4985CCbEA9122f320EcD154",
-    "implementation": "0x981E260e7a2d7a83C8F4bA78B40cc97AAB95EDF7",
-    "version": "1.3.1.0"
-  },
-  {
     "contract": "CeloToken",
     "proxy": "0x84afC656f046C38D6022C2f02b9F667f028e1ef0",
     "implementation": "0xd83c2018543B661B6e96810ca1B8b87a4B01e1a8",
@@ -27,18 +21,6 @@ exports[`network:contracts when version can be obtained runs 2`] = `
     "proxy": "0x621b99D7698395aD1A677d981a7F7Ae66cB4861f",
     "implementation": "0x4657793c02091974B42d28aA46225A81c113C0C2",
     "version": "1.1.0.0"
-  },
-  {
-    "contract": "DoubleSigningSlasher",
-    "proxy": "0x96402dEDCcA832F2874E0fD9626cba302B7495bB",
-    "implementation": "0x1e96753a534436d7D09bB5f0c9f2e7081A35bd4E",
-    "version": "1.1.1.1"
-  },
-  {
-    "contract": "DowntimeSlasher",
-    "proxy": "0x1c82668A47EF53655fC7b473e39a6f8E46E8C154",
-    "implementation": "0xa1F0F1F2138007695f943872A502ae96ff1Ee9df",
-    "version": "2.0.0.1"
   },
   {
     "contract": "Election",
@@ -83,12 +65,6 @@ exports[`network:contracts when version can be obtained runs 2`] = `
     "version": "1.1.0.0"
   },
   {
-    "contract": "FeeCurrencyWhitelist",
-    "proxy": "0xdc2aFCA04340Ff16Bf0ac722568F1F9832Cc6154",
-    "implementation": "0xcA4009932604dfe05A0bD453f31a55770016E681",
-    "version": "1.1.2.0"
-  },
-  {
     "contract": "FeeHandler",
     "proxy": "0xeaEEC408eCbCdF9CDF21d0B1880419dF7290E2c9",
     "implementation": "0x2e647D9D128c89D7239fdF47ca290453ad5869df",
@@ -99,12 +75,6 @@ exports[`network:contracts when version can be obtained runs 2`] = `
     "proxy": "0x1ab1c5cd627d5e51aD093FF6F9433309CD68597e",
     "implementation": "0x5b782AF0BCFbA4a66b6441a9cE05A7954a6d9913",
     "version": "NONE"
-  },
-  {
-    "contract": "GasPriceMinimum",
-    "proxy": "0x9220E1A69bF1b9A26041ff582b7AdC4124D8364f",
-    "implementation": "0x541Cdf8Dd40cEC9bAF3824001776A0C4f842c08B",
-    "version": "1.2.1.0"
   },
   {
     "contract": "GoldToken",
@@ -147,12 +117,6 @@ exports[`network:contracts when version can be obtained runs 2`] = `
     "proxy": "0x8Cc7e63482Ca6Ee77E0D1820395289D07249de77",
     "implementation": "0x5683019ff6BCEaaC2badD1d73F6Ff28500079b41",
     "version": "1.1.0.0"
-  },
-  {
-    "contract": "Random",
-    "proxy": "0xA9DB88ADd5d6910183F38D5d0A451868898C7C82",
-    "implementation": "0x93D3Af5d5aAb66fAeF41A9242E12307D1813d2B3",
-    "version": "1.1.2.0"
   },
   {
     "contract": "Registry",
@@ -225,12 +189,6 @@ exports[`network:contracts when version cant be obtained still prints rest of co
     "version": "1.2.3.4"
   },
   {
-    "contract": "BlockchainParameters",
-    "proxy": "0xff32a62a9f303e3cB4985CCbEA9122f320EcD154",
-    "implementation": "0x981E260e7a2d7a83C8F4bA78B40cc97AAB95EDF7",
-    "version": "1.2.3.4"
-  },
-  {
     "contract": "CeloToken",
     "proxy": "0x84afC656f046C38D6022C2f02b9F667f028e1ef0",
     "implementation": "0xd83c2018543B661B6e96810ca1B8b87a4B01e1a8",
@@ -240,18 +198,6 @@ exports[`network:contracts when version cant be obtained still prints rest of co
     "contract": "CeloUnreleasedTreasury",
     "proxy": "0x621b99D7698395aD1A677d981a7F7Ae66cB4861f",
     "implementation": "0x4657793c02091974B42d28aA46225A81c113C0C2",
-    "version": "1.2.3.4"
-  },
-  {
-    "contract": "DoubleSigningSlasher",
-    "proxy": "0x96402dEDCcA832F2874E0fD9626cba302B7495bB",
-    "implementation": "0x1e96753a534436d7D09bB5f0c9f2e7081A35bd4E",
-    "version": "1.2.3.4"
-  },
-  {
-    "contract": "DowntimeSlasher",
-    "proxy": "0x1c82668A47EF53655fC7b473e39a6f8E46E8C154",
-    "implementation": "0xa1F0F1F2138007695f943872A502ae96ff1Ee9df",
     "version": "1.2.3.4"
   },
   {
@@ -297,12 +243,6 @@ exports[`network:contracts when version cant be obtained still prints rest of co
     "version": "1.2.3.4"
   },
   {
-    "contract": "FeeCurrencyWhitelist",
-    "proxy": "0xdc2aFCA04340Ff16Bf0ac722568F1F9832Cc6154",
-    "implementation": "0xcA4009932604dfe05A0bD453f31a55770016E681",
-    "version": "1.2.3.4"
-  },
-  {
     "contract": "FeeHandler",
     "proxy": "0xeaEEC408eCbCdF9CDF21d0B1880419dF7290E2c9",
     "implementation": "0x2e647D9D128c89D7239fdF47ca290453ad5869df",
@@ -313,12 +253,6 @@ exports[`network:contracts when version cant be obtained still prints rest of co
     "proxy": "0x1ab1c5cd627d5e51aD093FF6F9433309CD68597e",
     "implementation": "0x5b782AF0BCFbA4a66b6441a9cE05A7954a6d9913",
     "version": "NONE"
-  },
-  {
-    "contract": "GasPriceMinimum",
-    "proxy": "0x9220E1A69bF1b9A26041ff582b7AdC4124D8364f",
-    "implementation": "0x541Cdf8Dd40cEC9bAF3824001776A0C4f842c08B",
-    "version": "1.2.3.4"
   },
   {
     "contract": "GoldToken",
@@ -360,12 +294,6 @@ exports[`network:contracts when version cant be obtained still prints rest of co
     "contract": "OdisPayments",
     "proxy": "0x8Cc7e63482Ca6Ee77E0D1820395289D07249de77",
     "implementation": "0x5683019ff6BCEaaC2badD1d73F6Ff28500079b41",
-    "version": "1.2.3.4"
-  },
-  {
-    "contract": "Random",
-    "proxy": "0xA9DB88ADd5d6910183F38D5d0A451868898C7C82",
-    "implementation": "0x93D3Af5d5aAb66fAeF41A9242E12307D1813d2B3",
     "version": "1.2.3.4"
   },
   {

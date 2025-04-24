@@ -4,7 +4,7 @@ import { AbiItem, Address } from '@celo/connect'
 import {
   asCoreContractsOwner,
   LinkedLibraryAddress,
-  testWithAnvilL1,
+  testWithAnvilL2,
 } from '@celo/dev-utils/lib/anvil-test'
 import { describeEach } from '@celo/dev-utils/lib/describeEach'
 import { NetworkConfig, timeTravel } from '@celo/dev-utils/lib/ganache-test'
@@ -16,7 +16,7 @@ import { OracleRate, ReportTarget, SortedOraclesWrapper } from './SortedOracles'
 // set timeout to 10 seconds
 jest.setTimeout(10 * 1000)
 
-testWithAnvilL1('SortedOracles Wrapper', (web3) => {
+testWithAnvilL2('SortedOracles Wrapper', (web3) => {
   const kit = newKitFromWeb3(web3)
 
   const reportAsOracles = async (
