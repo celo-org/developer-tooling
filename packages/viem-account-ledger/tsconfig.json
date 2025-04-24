@@ -1,11 +1,8 @@
 {
-  "extends": "@celo/typescript/tsconfig.library.json",
+  "extends": "./tsconfig-base.json",
   "compilerOptions": {
-    "rootDir": "src",
-    "outDir": "lib",
-    "declaration": true,
-    "types": ["vitest/globals"]
-  },
-  "include": ["src/**/*", "types/**/*"],
-  "exclude": ["**/*.test.ts"]
+    "module": "esnext",
+    "outDir": "dist/mjs",
+    "target": "esnext"
+  }
 }
