@@ -1,7 +1,7 @@
 import { newAttestations } from '@celo/abis/web3/Attestations'
 import { newRegistry } from '@celo/abis/web3/Registry'
 import { StableToken, StrongAddress } from '@celo/base'
-import { asCoreContractsOwner, setBalance, testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { asCoreContractsOwner, setBalance, testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { deployAttestationsContract } from '@celo/dev-utils/lib/contracts'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
@@ -13,7 +13,7 @@ import { EscrowWrapper } from './Escrow'
 import { FederatedAttestationsWrapper } from './FederatedAttestations'
 import { StableTokenWrapper } from './StableTokenWrapper'
 
-testWithAnvilL1('Escrow Wrapper', (web3: Web3) => {
+testWithAnvilL2('Escrow Wrapper', (web3: Web3) => {
   const kit = newKitFromWeb3(web3)
   const TEN_CUSD = kit.web3.utils.toWei('10', 'ether')
   const TIMESTAMP = 1665080820

@@ -1,5 +1,5 @@
 import { StrongAddress } from '@celo/base'
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import BigNumber from 'bignumber.js'
 import { StableToken } from '../celo-tokens'
 import { ContractKit, newKitFromWeb3 } from '../kit'
@@ -8,7 +8,7 @@ import { StableTokenWrapper } from './StableTokenWrapper'
 
 // TEST NOTES: balances defined in test-utils/migration-override
 
-testWithAnvilL1('StableToken Wrapper', async (web3) => {
+testWithAnvilL2('StableToken Wrapper', async (web3) => {
   const kit = newKitFromWeb3(web3)
 
   const stableTokenInfos: {

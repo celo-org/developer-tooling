@@ -11,12 +11,7 @@ testWithAnvilL2('network:parameters', (web3) => {
     expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
       [
         [
-          "DowntimeSlasher: 
-        slashableDowntime: 5 minutes
-        slashingIncentives: 
-          penalty: 100000000000000000000 (~1.000e+20)
-          reward: 10000000000000000000 (~1.000e+19)
-      Election: 
+          "Election: 
         currentThreshold: 60000000000000000000 (~6.000e+19)
         electabilityThreshold: 0.001 
         electableValidators: 
