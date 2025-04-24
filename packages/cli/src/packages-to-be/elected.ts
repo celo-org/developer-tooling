@@ -83,7 +83,7 @@ async function decorateWithName(
   const name = await accountsContract.read.getName([validator.address])
   return {
     ...validator,
-    name: name || 'Unnamed',
+    name: name,
   }
 }
 
