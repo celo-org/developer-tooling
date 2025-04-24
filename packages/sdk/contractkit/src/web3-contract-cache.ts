@@ -9,16 +9,11 @@ import { newGovernanceSlasher } from '@celo/abis-12/web3/GovernanceSlasher'
 import { newLockedGold } from '@celo/abis-12/web3/LockedGold'
 import { newScoreManager } from '@celo/abis-12/web3/ScoreManager'
 import { newValidators } from '@celo/abis-12/web3/Validators'
-import { newGasPriceMinimum } from '@celo/abis/web3/0.8/GasPriceMinimum'
 import { newAccounts } from '@celo/abis/web3/Accounts'
 import { newAttestations } from '@celo/abis/web3/Attestations'
-import { newBlockchainParameters } from '@celo/abis/web3/BlockchainParameters'
-import { newDoubleSigningSlasher } from '@celo/abis/web3/DoubleSigningSlasher'
-import { newDowntimeSlasher } from '@celo/abis/web3/DowntimeSlasher'
 import { newEpochRewards } from '@celo/abis/web3/EpochRewards'
 import { newEscrow } from '@celo/abis/web3/Escrow'
 import { newFederatedAttestations } from '@celo/abis/web3/FederatedAttestations'
-import { newFeeCurrencyWhitelist } from '@celo/abis/web3/FeeCurrencyWhitelist'
 import { newFeeHandler } from '@celo/abis/web3/FeeHandler'
 import { newFreezer } from '@celo/abis/web3/Freezer'
 import { newIERC20 } from '@celo/abis/web3/IERC20'
@@ -28,7 +23,6 @@ import { newMentoFeeHandlerSeller } from '@celo/abis/web3/MentoFeeHandlerSeller'
 import { newMultiSig } from '@celo/abis/web3/MultiSig'
 import { newOdisPayments } from '@celo/abis/web3/OdisPayments'
 import { newProxy } from '@celo/abis/web3/Proxy'
-import { newRandom } from '@celo/abis/web3/Random'
 import { newRegistry } from '@celo/abis/web3/Registry'
 import { newSortedOracles } from '@celo/abis/web3/SortedOracles'
 import { newUniswapFeeHandlerSeller } from '@celo/abis/web3/UniswapFeeHandlerSeller'
@@ -42,10 +36,7 @@ const debug = debugFactory('kit:web3-contract-cache')
 export const ContractFactories = {
   [CeloContract.Accounts]: newAccounts,
   [CeloContract.Attestations]: newAttestations,
-  [CeloContract.BlockchainParameters]: newBlockchainParameters,
   [CeloContract.CeloUnreleasedTreasury]: newCeloUnreleasedTreasury,
-  [CeloContract.DoubleSigningSlasher]: newDoubleSigningSlasher,
-  [CeloContract.DowntimeSlasher]: newDowntimeSlasher,
   [CeloContract.Election]: newElection,
   [CeloContract.EpochManager]: newEpochManager,
   [CeloContract.EpochManagerEnabler]: newEpochManagerEnabler,
@@ -54,12 +45,10 @@ export const ContractFactories = {
   [CeloContract.Escrow]: newEscrow,
   [CeloContract.FederatedAttestations]: newFederatedAttestations,
   [CeloContract.FeeCurrencyDirectory]: newFeeCurrencyDirectory,
-  [CeloContract.FeeCurrencyWhitelist]: newFeeCurrencyWhitelist,
   [CeloContract.Freezer]: newFreezer,
   [CeloContract.FeeHandler]: newFeeHandler,
   [CeloContract.MentoFeeHandlerSeller]: newMentoFeeHandlerSeller,
   [CeloContract.UniswapFeeHandlerSeller]: newUniswapFeeHandlerSeller,
-  [CeloContract.GasPriceMinimum]: newGasPriceMinimum,
   [CeloContract.CeloToken]: newGoldToken,
   [CeloContract.GoldToken]: newGoldToken,
   [CeloContract.Governance]: newGovernance,
@@ -68,7 +57,6 @@ export const ContractFactories = {
   [CeloContract.LockedGold]: newLockedGold,
   [CeloContract.MultiSig]: newMultiSig,
   [CeloContract.OdisPayments]: newOdisPayments,
-  [CeloContract.Random]: newRandom,
   [CeloContract.Registry]: newRegistry,
   [CeloContract.Reserve]: newReserve,
   [CeloContract.ScoreManager]: newScoreManager,
@@ -106,17 +94,8 @@ export class Web3ContractCache {
   getAttestations() {
     return this.getContract(CeloContract.Attestations)
   }
-  getBlockchainParameters() {
-    return this.getContract(CeloContract.BlockchainParameters)
-  }
   getCeloUnreleasedTreasury() {
     return this.getContract(CeloContract.CeloUnreleasedTreasury)
-  }
-  getDoubleSigningSlasher() {
-    return this.getContract(CeloContract.DoubleSigningSlasher)
-  }
-  getDowntimeSlasher() {
-    return this.getContract(CeloContract.DowntimeSlasher)
   }
   getElection() {
     return this.getContract(CeloContract.Election)
@@ -136,21 +115,14 @@ export class Web3ContractCache {
   getEscrow() {
     return this.getContract(CeloContract.Escrow)
   }
-
   getFederatedAttestations() {
     return this.getContract(CeloContract.FederatedAttestations)
-  }
-  getFeeCurrencyWhitelist() {
-    return this.getContract(CeloContract.FeeCurrencyWhitelist)
   }
   getFreezer() {
     return this.getContract(CeloContract.Freezer)
   }
   getFeeHandler() {
     return this.getContract(CeloContract.FeeHandler)
-  }
-  getGasPriceMinimum() {
-    return this.getContract(CeloContract.GasPriceMinimum)
   }
   /* @deprecated use getLockedCelo */
   getGoldToken() {
@@ -174,9 +146,6 @@ export class Web3ContractCache {
   }
   getOdisPayments() {
     return this.getContract(CeloContract.OdisPayments)
-  }
-  getRandom() {
-    return this.getContract(CeloContract.Random)
   }
   getRegistry() {
     return this.getContract(CeloContract.Registry)

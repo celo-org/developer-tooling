@@ -1,13 +1,13 @@
 import { GoldToken, newGoldToken } from '@celo/abis-12/web3/GoldToken'
 import { StrongAddress } from '@celo/base'
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { newKitFromWeb3 } from '../kit'
 import { GoldTokenWrapper } from './GoldTokenWrapper'
 
 // TODO checking for account balance directly won't work because of missing transfer precompile
 // instead we can check for the Transfer event instead and/or lowered allowance value (they both
 // happen after the call to transfer precompile)
-testWithAnvilL1('GoldToken Wrapper', (web3) => {
+testWithAnvilL2('GoldToken Wrapper', (web3) => {
   const ONE_GOLD = web3.utils.toWei('1', 'ether')
 
   const kit = newKitFromWeb3(web3)

@@ -1,12 +1,12 @@
 import { newKitFromWeb3 } from '@celo/contractkit'
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import Web3 from 'web3'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Register from './register'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL1('account:register cmd', (web3: Web3) => {
+testWithAnvilL2('account:register cmd', (web3: Web3) => {
   test('can register account', async () => {
     const accounts = await web3.eth.getAccounts()
 

@@ -1,6 +1,6 @@
 import { StrongAddress } from '@celo/base'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import Web3 from 'web3'
 import { LONG_TIMEOUT_MS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import { createMultisig } from '../../test-utils/multisigUtils'
@@ -10,7 +10,7 @@ import LockedCelo from './locked-gold'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL1('releasegold:locked-celo cmd', (web3: Web3) => {
+testWithAnvilL2('releasegold:locked-gold cmd', (web3: Web3) => {
   let contractAddress: string
   let kit: ContractKit
 

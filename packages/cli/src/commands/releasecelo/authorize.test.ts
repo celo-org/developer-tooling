@@ -1,6 +1,6 @@
 import { NULL_ADDRESS, StrongAddress } from '@celo/base'
 import { newKitFromWeb3 } from '@celo/contractkit'
-import { setBalance, testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { setBalance, testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { addressToPublicKey, serializeSignature } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
@@ -14,19 +14,9 @@ import LockedCelo from './locked-gold'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL1('releasegold:authorize cmd', (web3: Web3) => {
+testWithAnvilL2('releasegold:authorize cmd', (web3: Web3) => {
   let contractAddress: string
   let kit: any
-
-  beforeEach(() => {
-    jest.spyOn(console, 'log').mockImplementation(() => {})
-    jest.spyOn(console, 'error').mockImplementation(() => {})
-  })
-
-  afterEach(() => {
-    jest.clearAllMocks()
-    jest.resetAllMocks()
-  })
 
   beforeEach(async () => {
     const accounts = (await web3.eth.getAccounts()) as StrongAddress[]
@@ -147,17 +137,7 @@ testWithAnvilL1('releasegold:authorize cmd', (web3: Web3) => {
     )
     await testLocallyWithWeb3Node(
       ValidatorRegister,
-      [
-        '--from',
-        signer,
-        '--ecdsaKey',
-        ecdsaPublicKey,
-        '--blsKey',
-        '0x4fa3f67fc913878b068d1fa1cdddc54913d3bf988dbe5a36a20fa888f20d4894c408a6773f3d7bde11154f2a3076b700d345a42fd25a0e5e83f4db5586ac7979ac2053cd95d8f2efd3e959571ceccaa743e02cf4be3f5d7aaddb0b06fc9aff00',
-        '--blsSignature',
-        '0xcdb77255037eb68897cd487fdd85388cbda448f617f874449d4b11588b0b7ad8ddc20d9bb450b513bb35664ea3923900',
-        '--yes',
-      ],
+      ['--from', signer, '--ecdsaKey', ecdsaPublicKey, '--yes'],
       web3
     )
   })
@@ -203,37 +183,31 @@ testWithAnvilL1('releasegold:authorize cmd', (web3: Web3) => {
     )
     await testLocallyWithWeb3Node(
       ValidatorRegister,
-      [
-        '--from',
-        signer,
-        '--ecdsaKey',
-        ecdsaPublicKey,
-        '--blsKey',
-        '0x4fa3f67fc913878b068d1fa1cdddc54913d3bf988dbe5a36a20fa888f20d4894c408a6773f3d7bde11154f2a3076b700d345a42fd25a0e5e83f4db5586ac7979ac2053cd95d8f2efd3e959571ceccaa743e02cf4be3f5d7aaddb0b06fc9aff00',
-        '--blsSignature',
-        '0xcdb77255037eb68897cd487fdd85388cbda448f617f874449d4b11588b0b7ad8ddc20d9bb450b513bb35664ea3923900',
-        '--yes',
-      ],
+      ['--from', signer, '--ecdsaKey', ecdsaPublicKey, '--yes'],
       web3
     )
-    await testLocallyWithWeb3Node(
-      Authorize,
-      [
-        '--contract',
-        contractAddress,
-        '--role',
-        'validator',
-        '--signer',
-        signerBLS,
-        '--signature',
-        serializeSignature(popBLS),
-        '--blsKey',
-        newBlsPublicKey,
-        '--blsPop',
-        newBlsPoP,
-      ],
-      web3
-    )
+
+    await expect(
+      testLocallyWithWeb3Node(
+        Authorize,
+        [
+          '--contract',
+          contractAddress,
+          '--role',
+          'validator',
+          '--signer',
+          signerBLS,
+          '--signature',
+          serializeSignature(popBLS),
+          '--blsKey',
+          newBlsPublicKey,
+          '--blsPop',
+          newBlsPoP,
+        ],
+
+        web3
+      )
+    ).rejects.toMatchInlineSnapshot(`[Error: BLS keys are not supported in L2]`)
   })
 
   test('cannot authorize signer without BLS keys after registering as validator', async () => {
@@ -275,17 +249,7 @@ testWithAnvilL1('releasegold:authorize cmd', (web3: Web3) => {
     )
     await testLocallyWithWeb3Node(
       ValidatorRegister,
-      [
-        '--from',
-        signer,
-        '--ecdsaKey',
-        ecdsaPublicKey,
-        '--blsKey',
-        '0x4fa3f67fc913878b068d1fa1cdddc54913d3bf988dbe5a36a20fa888f20d4894c408a6773f3d7bde11154f2a3076b700d345a42fd25a0e5e83f4db5586ac7979ac2053cd95d8f2efd3e959571ceccaa743e02cf4be3f5d7aaddb0b06fc9aff00',
-        '--blsSignature',
-        '0xcdb77255037eb68897cd487fdd85388cbda448f617f874449d4b11588b0b7ad8ddc20d9bb450b513bb35664ea3923900',
-        '--yes',
-      ],
+      ['--from', signer, '--ecdsaKey', ecdsaPublicKey, '--yes'],
       web3
     )
     await expect(

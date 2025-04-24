@@ -11,7 +11,6 @@
 There are 2 more yarn commands:
 
 - `yarn test-anvil`
-- `yarn test-ganache`
 
 Please note that it is necessary to have node version 20.0 or higher to run the tests.
 

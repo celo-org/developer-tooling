@@ -36,10 +36,8 @@
     "homebrew": "node ./homebrew/scripts/prepare.mjs",
     "test": "TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --runInBand --forceExit",
     "test-anvil": "RUN_GANACHE_TESTS=false RUN_ANVIL_TESTS=true TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --forceExit",
-    "test-ganache": "RUN_GANACHE_TESTS=true RUN_ANVIL_TESTS=false TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --runInBand --forceExit",
     "test-ci": "TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --runInBand --workerIdleMemoryLimit=0.1 --forceExit",
-    "test-ci-anvil": "yarn test-anvil --workerIdleMemoryLimit=0.1",
-    "test-ci-ganache": "yarn test-ganache --workerIdleMemoryLimit=0.1"
+    "test-ci-anvil": "yarn test-anvil --workerIdleMemoryLimit=0.1"
   },
   "dependencies": {
     "@celo/abis": "11.0.0",

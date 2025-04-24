@@ -1,5 +1,5 @@
 import { newKitFromWeb3 } from '@celo/contractkit'
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import Web3 from 'web3'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Register from '../account/register'
@@ -9,7 +9,7 @@ import RevokeDelegate from './revoke-delegate'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL1('lockedgold:revoke-delegate cmd', (web3: Web3) => {
+testWithAnvilL2('lockedgold:revoke-delegate cmd', (web3: Web3) => {
   test('can revoke delegate', async () => {
     const accounts = await web3.eth.getAccounts()
     const account = accounts[0]

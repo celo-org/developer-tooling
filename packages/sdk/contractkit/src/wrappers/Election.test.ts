@@ -2,9 +2,10 @@ import { CeloTxReceipt } from '@celo/connect/lib/types'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
-import { mineToNextEpoch } from '../test-utils/utils'
+import { startAndFinishEpochProcess } from '../test-utils/utils'
 
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
+import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import { zeroAddress } from '@ethereumjs/util'
 import { newKitFromWeb3 } from '../kit'
 import { AccountsWrapper } from './Accounts'
@@ -14,14 +15,9 @@ import { ValidatorsWrapper } from './Validators'
 
 const minLockedGoldValue = Web3.utils.toWei('10000', 'ether') // 10k gold
 
-const blsPublicKey =
-  '0x4fa3f67fc913878b068d1fa1cdddc54913d3bf988dbe5a36a20fa888f20d4894c408a6773f3d7bde11154f2a3076b700d345a42fd25a0e5e83f4db5586ac7979ac2053cd95d8f2efd3e959571ceccaa743e02cf4be3f5d7aaddb0b06fc9aff00'
-const blsPoP =
-  '0xcdb77255037eb68897cd487fdd85388cbda448f617f874449d4b11588b0b7ad8ddc20d9bb450b513bb35664ea3923900'
-
 jest.setTimeout(20000)
 
-testWithAnvilL1('Election Wrapper', (web3) => {
+testWithAnvilL2('Election Wrapper', (web3) => {
   const ZERO_GOLD = new BigNumber(web3.utils.toWei('0', 'ether'))
   const ONE_HUNDRED_GOLD = new BigNumber(web3.utils.toWei('100', 'ether'))
   const ONE_HUNDRED_ONE_GOLD = new BigNumber(web3.utils.toWei('101', 'ether'))
@@ -74,12 +70,9 @@ testWithAnvilL1('Election Wrapper', (web3) => {
   const setupValidator = async (validatorAccount: string) => {
     await registerAccountWithLockedGold(validatorAccount)
     const ecdsaPublicKey = await addressToPublicKey(validatorAccount, kit.connection.sign)
-    await validators
-      // @ts-ignore
-      .registerValidator(ecdsaPublicKey, blsPublicKey, blsPoP)
-      .sendAndWaitForReceipt({
-        from: validatorAccount,
-      })
+    await validators.registerValidatorNoBls(ecdsaPublicKey).sendAndWaitForReceipt({
+      from: validatorAccount,
+    })
   }
 
   const setupGroupAndAffiliateValidator = async (
@@ -98,7 +91,9 @@ testWithAnvilL1('Election Wrapper', (web3) => {
 
   const activateAndVote = async (groupAccount: string, userAccount: string, amount: BigNumber) => {
     await (await election.vote(groupAccount, amount)).sendAndWaitForReceipt({ from: userAccount })
-    await mineToNextEpoch(web3)
+    const epochDuraction = await kit.getEpochSize()
+    await timeTravel(epochDuraction + 1, web3)
+    await startAndFinishEpochProcess(kit)
 
     const txList = await election.activate(userAccount)
 
@@ -167,7 +162,11 @@ testWithAnvilL1('Election Wrapper', (web3) => {
         ).sendAndWaitForReceipt({
           from: userAccount,
         })
-        await mineToNextEpoch(web3)
+        const epochDuraction = await kit.getEpochSize()
+
+        await timeTravel(epochDuraction + 1, web3)
+
+        await startAndFinishEpochProcess(kit)
 
         const txList = await election.activate(userAccount)
         const promises: Promise<CeloTxReceipt>[] = []

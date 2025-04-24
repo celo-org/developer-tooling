@@ -94,11 +94,6 @@ export default class Propose extends BaseCommand {
     const jsonTransactions: ProposalTransactionJSON[] = JSON.parse(jsonString)
     jsonTransactions.forEach((tx) => builder.addJsonTx(tx))
 
-    // BUILD FROM CONTRACTKIT FUNCTIONS
-    // const params = await kit.contracts.getBlockchainParameters()
-    // builder.addTx(params.setMinimumClientVersion(1, 8, 24), { to: params.address })
-    // builder.addWeb3Tx()
-    // builder.addProxyRepointingTx
     const proposal = await builder.build()
     if (!res.flags.noInfo) {
       printValueMapRecursive(await proposalToJSON(kit, proposal, builder.registryAdditions))

@@ -1,7 +1,7 @@
 import { StrongAddress } from '@celo/base'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
-import { testWithAnvilL1 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
@@ -13,7 +13,7 @@ import Upvote from './upvote'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL1('governance:upvote cmd', (web3: Web3) => {
+testWithAnvilL2('governance:upvote cmd', (web3: Web3) => {
   let minDeposit: string
   const kit = newKitFromWeb3(web3)
   const proposalID = new BigNumber(1)
