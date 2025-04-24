@@ -21,7 +21,7 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:141](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L141)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:132](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L132)
 
 ___
 
@@ -31,7 +31,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:142](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L142)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:133](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L133)
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:143](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L143)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:134](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L134)
 
 ___
 
@@ -51,4 +51,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Governance.ts:144](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L144)
+[packages/sdk/contractkit/src/wrappers/Governance.ts:135](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Governance.ts#L135)

@@ -42,7 +42,6 @@
 - [HttpRpcCaller](index.md#httprpccaller)
 - [JsonRpcPayload](index.md#jsonrpcpayload)
 - [JsonRpcResponse](index.md#jsonrpcresponse)
-- [PROXY\_ADMIN\_ADDRESS](index.md#proxy_admin_address)
 - [Provider](index.md#provider)
 - [RLPEncodedTx](index.md#rlpencodedtx)
 - [ReadOnlyWallet](index.md#readonlywallet)
@@ -54,7 +53,6 @@
 - [decodeStringParameter](index.md#decodestringparameter)
 - [getAbiByName](index.md#getabibyname)
 - [getRandomId](index.md#getrandomid)
-- [isCel2](index.md#iscel2)
 - [isPresent](index.md#ispresent)
 - [parseDecodedParams](index.md#parsedecodedparams)
 - [rpcCallHandler](index.md#rpccallhandler)
@@ -81,6 +79,10 @@
 ### Type Aliases
 
 - [BlockNumber](index.md#blocknumber)
+
+### Variables
+
+- [PROXY\_ADMIN\_ADDRESS](index.md#proxy_admin_address)
 
 ## References
 
@@ -300,12 +302,6 @@ Re-exports [JsonRpcResponse](../interfaces/types.JsonRpcResponse.md)
 
 ___
 
-### PROXY\_ADMIN\_ADDRESS
-
-Re-exports [PROXY_ADMIN_ADDRESS](utils_is_cel2.md#proxy_admin_address)
-
-___
-
 ### Provider
 
 Re-exports [Provider](../interfaces/types.Provider.md)
@@ -372,12 +368,6 @@ Re-exports [getRandomId](utils_rpc_caller.md#getrandomid)
 
 ___
 
-### isCel2
-
-Re-exports [isCel2](utils_is_cel2.md#iscel2)
-
-___
-
 ### isPresent
 
 Re-exports [isPresent](connection.md#ispresent)
@@ -421,3 +411,13 @@ Re-exports [toTxResult](utils_tx_result.md#totxresult)
 #### Defined in
 
 node_modules/web3-core/types/index.d.ts:442
+
+## Variables
+
+### PROXY\_ADMIN\_ADDRESS
+
+• `Const` **PROXY\_ADMIN\_ADDRESS**: ``"0x4200000000000000000000000000000000000018"``
+
+#### Defined in
+
+[packages/sdk/connect/src/index.ts:11](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/index.ts#L11)

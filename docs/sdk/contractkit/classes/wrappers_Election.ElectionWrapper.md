@@ -46,7 +46,6 @@ Contract for voting for validators and managing validator groups.
 - [findLesserAndGreaterAfterVote](wrappers_Election.ElectionWrapper.md#findlesserandgreateraftervote)
 - [getActiveVotesForGroup](wrappers_Election.ElectionWrapper.md#getactivevotesforgroup)
 - [getConfig](wrappers_Election.ElectionWrapper.md#getconfig)
-- [getElectedValidators](wrappers_Election.ElectionWrapper.md#getelectedvalidators)
 - [getEligibleValidatorGroupsVotes](wrappers_Election.ElectionWrapper.md#geteligiblevalidatorgroupsvotes)
 - [getGroupEpochRewards](wrappers_Election.ElectionWrapper.md#getgroupepochrewards)
 - [getGroupVoterRewards](wrappers_Election.ElectionWrapper.md#getgroupvoterrewards)
@@ -91,7 +90,7 @@ Contract for voting for validators and managing validator groups.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts:25](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts#L25)
+[packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts#L23)
 
 ## Properties
 
@@ -121,7 +120,7 @@ Election threshold.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:94](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L94)
+[packages/sdk/contractkit/src/wrappers/Election.ts:93](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L93)
 
 ___
 
@@ -201,7 +200,7 @@ use EpochManagerWrapper.getElectedSigners instead. see see https://specs.celo.or
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:160](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L160)
+[packages/sdk/contractkit/src/wrappers/Election.ts:159](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L159)
 
 ___
 
@@ -235,7 +234,7 @@ The groups that `account` has voted for.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:234](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L234)
+[packages/sdk/contractkit/src/wrappers/Election.ts:233](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L233)
 
 ___
 
@@ -265,7 +264,7 @@ The total votes received across all groups.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:153](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L153)
+[packages/sdk/contractkit/src/wrappers/Election.ts:152](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L152)
 
 ___
 
@@ -289,7 +288,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:272](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L272)
+[packages/sdk/contractkit/src/wrappers/Election.ts:271](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L271)
 
 ___
 
@@ -327,13 +326,13 @@ The total votes for `group` made by `account`.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:212](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L212)
+[packages/sdk/contractkit/src/wrappers/Election.ts:211](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L211)
 
 ___
 
 ### methodIds
 
-• **methodIds**: `Record`\<``"electableValidators"`` \| ``"electabilityThreshold"`` \| ``"maxNumGroupsVotedFor"`` \| ``"checkProofOfPossession"`` \| ``"fractionMulExp"`` \| ``"getBlockNumberFromHeader"`` \| ``"getEpochNumber"`` \| ``"getEpochNumberOfBlock"`` \| ``"getEpochSize"`` \| ``"getParentSealBitmap"`` \| ``"getVerifiedSealBitmapFromHeader"`` \| ``"hashHeader"`` \| ``"initialized"`` \| ``"isOwner"`` \| ``"minQuorumSize"`` \| ``"minQuorumSizeInCurrentSet"`` \| ``"numberValidatorsInCurrentSet"`` \| ``"numberValidatorsInSet"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"validatorAddressFromCurrentSet"`` \| ``"validatorSignerAddressFromCurrentSet"`` \| ``"validatorSignerAddressFromSet"`` \| ``"initialize"`` \| ``"vote"`` \| ``"getVersionNumber"`` \| ``"isBlocked"`` \| ``"allowedToVoteOverMaxNumberOfGroups"`` \| ``"cachedVotesByAccount"`` \| ``"getBlockedByContract"`` \| ``"activate"`` \| ``"activateForAccount"`` \| ``"revokePending"`` \| ``"revokeAllActive"`` \| ``"revokeActive"`` \| ``"distributeEpochRewards"`` \| ``"markGroupIneligible"`` \| ``"markGroupEligible"`` \| ``"forceDecrementVotes"`` \| ``"setBlockedByContract"`` \| ``"getGroupsVotedForByAccount"`` \| ``"getNumVotesReceivable"`` \| ``"getEligibleValidatorGroups"`` \| ``"getTotalVotesForEligibleValidatorGroups"`` \| ``"electValidatorSigners"`` \| ``"electValidatorAccounts"`` \| ``"getTotalVotesByAccount"`` \| ``"getActiveVoteUnitsForGroupByAccount"`` \| ``"getActiveVoteUnitsForGroup"`` \| ``"getGroupEligibility"`` \| ``"getGroupEpochRewards"`` \| ``"getGroupEpochRewardsBasedOnScore"`` \| ``"hasActivatablePendingVotes"`` \| ``"getElectabilityThreshold"`` \| ``"getElectableValidators"`` \| ``"setElectableValidators"`` \| ``"setMaxNumGroupsVotedFor"`` \| ``"setElectabilityThreshold"`` \| ``"updateTotalVotesByAccountForGroup"`` \| ``"setAllowedToVoteOverMaxNumberOfGroups"`` \| ``"canReceiveVotes"`` \| ``"getTotalVotes"`` \| ``"getActiveVotes"`` \| ``"electNValidatorSigners"`` \| ``"electNValidatorAccounts"`` \| ``"getCurrentValidatorSigners"`` \| ``"getPendingVotesForGroupByAccount"`` \| ``"getActiveVotesForGroupByAccount"`` \| ``"getTotalVotesForGroupByAccount"`` \| ``"getTotalVotesForGroup"`` \| ``"getActiveVotesForGroup"`` \| ``"getPendingVotesForGroup"``, `string`\>
+• **methodIds**: `Record`\<``"electableValidators"`` \| ``"electabilityThreshold"`` \| ``"maxNumGroupsVotedFor"`` \| ``"checkProofOfPossession"`` \| ``"fractionMulExp"`` \| ``"getBlockNumberFromHeader"`` \| ``"getEpochNumber"`` \| ``"getEpochNumberOfBlock"`` \| ``"getEpochSize"`` \| ``"getParentSealBitmap"`` \| ``"getVerifiedSealBitmapFromHeader"`` \| ``"hashHeader"`` \| ``"initialized"`` \| ``"isOwner"`` \| ``"minQuorumSize"`` \| ``"minQuorumSizeInCurrentSet"`` \| ``"numberValidatorsInCurrentSet"`` \| ``"numberValidatorsInSet"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"validatorAddressFromCurrentSet"`` \| ``"validatorSignerAddressFromCurrentSet"`` \| ``"validatorSignerAddressFromSet"`` \| ``"initialize"`` \| ``"vote"`` \| ``"getVersionNumber"`` \| ``"allowedToVoteOverMaxNumberOfGroups"`` \| ``"cachedVotesByAccount"`` \| ``"getBlockedByContract"`` \| ``"isBlocked"`` \| ``"activate"`` \| ``"activateForAccount"`` \| ``"revokePending"`` \| ``"revokeAllActive"`` \| ``"revokeActive"`` \| ``"distributeEpochRewards"`` \| ``"markGroupIneligible"`` \| ``"markGroupEligible"`` \| ``"forceDecrementVotes"`` \| ``"setBlockedByContract"`` \| ``"getGroupsVotedForByAccount"`` \| ``"getNumVotesReceivable"`` \| ``"getEligibleValidatorGroups"`` \| ``"getTotalVotesForEligibleValidatorGroups"`` \| ``"electValidatorSigners"`` \| ``"electValidatorAccounts"`` \| ``"getTotalVotesByAccount"`` \| ``"getActiveVoteUnitsForGroupByAccount"`` \| ``"getActiveVoteUnitsForGroup"`` \| ``"getGroupEligibility"`` \| ``"getGroupEpochRewards"`` \| ``"getGroupEpochRewardsBasedOnScore"`` \| ``"hasActivatablePendingVotes"`` \| ``"getElectabilityThreshold"`` \| ``"getElectableValidators"`` \| ``"setElectableValidators"`` \| ``"setMaxNumGroupsVotedFor"`` \| ``"setElectabilityThreshold"`` \| ``"updateTotalVotesByAccountForGroup"`` \| ``"setAllowedToVoteOverMaxNumberOfGroups"`` \| ``"canReceiveVotes"`` \| ``"getTotalVotes"`` \| ``"getActiveVotes"`` \| ``"electNValidatorSigners"`` \| ``"electNValidatorAccounts"`` \| ``"getCurrentValidatorSigners"`` \| ``"getPendingVotesForGroupByAccount"`` \| ``"getActiveVotesForGroupByAccount"`` \| ``"getTotalVotesForGroupByAccount"`` \| ``"getTotalVotesForGroup"`` \| ``"getActiveVotesForGroup"`` \| ``"getPendingVotesForGroup"``, `string`\>
 
 #### Inherited from
 
@@ -371,7 +370,7 @@ Size of the current elected validator set.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:143](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L143)
+[packages/sdk/contractkit/src/wrappers/Election.ts:142](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L142)
 
 ___
 
@@ -405,7 +404,7 @@ Size of the validator set.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:133](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L133)
+[packages/sdk/contractkit/src/wrappers/Election.ts:132](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L132)
 
 ___
 
@@ -439,7 +438,7 @@ Address of validator at the requested index.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:121](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L121)
+[packages/sdk/contractkit/src/wrappers/Election.ts:120](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L120)
 
 ___
 
@@ -478,7 +477,7 @@ Address of validator at the requested index.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:106](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L106)
+[packages/sdk/contractkit/src/wrappers/Election.ts:105](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L105)
 
 ## Accessors
 
@@ -521,7 +520,7 @@ Activates any activatable pending votes.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:353](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L353)
+[packages/sdk/contractkit/src/wrappers/Election.ts:352](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L352)
 
 ___
 
@@ -550,7 +549,7 @@ See https://en.wikipedia.org/wiki/D%27Hondt_method#Allocation for more informati
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:182](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L182)
+[packages/sdk/contractkit/src/wrappers/Election.ts:181](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L181)
 
 ___
 
@@ -568,7 +567,7 @@ The minimum and maximum number of validators that can be elected.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:85](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L85)
+[packages/sdk/contractkit/src/wrappers/Election.ts:84](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L84)
 
 ___
 
@@ -589,7 +588,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:470](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L470)
+[packages/sdk/contractkit/src/wrappers/Election.ts:469](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L469)
 
 ___
 
@@ -614,7 +613,7 @@ The active votes for `group`.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:223](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L223)
+[packages/sdk/contractkit/src/wrappers/Election.ts:222](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L222)
 
 ___
 
@@ -630,29 +629,7 @@ Returns current configuration parameters.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:306](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L306)
-
-___
-
-### getElectedValidators
-
-▸ **getElectedValidators**(`epochNumber`): `Promise`\<[`Validator`](../interfaces/wrappers_Validators.Validator.md)[]\>
-
-Retrieves the set of validatorsparticipating in BFT at epochNumber.
-
-#### Parameters
-
-| Name | Type | Description |
-| :------ | :------ | :------ |
-| `epochNumber` | `number` | The epoch to retrieve the elected validator set at. |
-
-#### Returns
-
-`Promise`\<[`Validator`](../interfaces/wrappers_Validators.Validator.md)[]\>
-
-#### Defined in
-
-[packages/sdk/contractkit/src/wrappers/Election.ts:499](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L499)
+[packages/sdk/contractkit/src/wrappers/Election.ts:305](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L305)
 
 ___
 
@@ -668,7 +645,7 @@ Returns the current eligible validator groups and their total votes.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:455](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L455)
+[packages/sdk/contractkit/src/wrappers/Election.ts:454](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L454)
 
 ___
 
@@ -690,7 +667,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:600](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L600)
+[packages/sdk/contractkit/src/wrappers/Election.ts:578](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L578)
 
 ___
 
@@ -713,7 +690,7 @@ Retrieves GroupVoterRewards at epochNumber.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:511](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L511)
+[packages/sdk/contractkit/src/wrappers/Election.ts:498](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L498)
 
 ___
 
@@ -765,7 +742,7 @@ The total votes for `group`.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:200](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L200)
+[packages/sdk/contractkit/src/wrappers/Election.ts:199](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L199)
 
 ___
 
@@ -785,7 +762,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:322](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L322)
+[packages/sdk/contractkit/src/wrappers/Election.ts:321](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L321)
 
 ___
 
@@ -801,7 +778,7 @@ Returns the current registered validator groups and their total votes and eligib
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:339](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L339)
+[packages/sdk/contractkit/src/wrappers/Election.ts:338](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L338)
 
 ___
 
@@ -829,7 +806,7 @@ see https://specs.celo.org/smart_contract_updates_from_l1.html
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:170](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L170)
+[packages/sdk/contractkit/src/wrappers/Election.ts:169](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L169)
 
 ___
 
@@ -850,7 +827,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:260](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L260)
+[packages/sdk/contractkit/src/wrappers/Election.ts:259](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L259)
 
 ___
 
@@ -875,7 +852,7 @@ Retrieves VoterRewards for address at epochNumber.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:551](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L551)
+[packages/sdk/contractkit/src/wrappers/Election.ts:531](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L531)
 
 ___
 
@@ -898,7 +875,7 @@ Retrieves a voter's share of active votes.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:585](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L585)
+[packages/sdk/contractkit/src/wrappers/Election.ts:563](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L563)
 
 ___
 
@@ -920,7 +897,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:238](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L238)
+[packages/sdk/contractkit/src/wrappers/Election.ts:237](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L237)
 
 ___
 
@@ -940,7 +917,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:295](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L295)
+[packages/sdk/contractkit/src/wrappers/Election.ts:294](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L294)
 
 ___
 
@@ -964,7 +941,7 @@ The groups that `account` has voted for.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:283](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L283)
+[packages/sdk/contractkit/src/wrappers/Election.ts:282](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L282)
 
 ___
 
@@ -986,7 +963,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:416](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L416)
+[packages/sdk/contractkit/src/wrappers/Election.ts:415](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L415)
 
 ___
 
@@ -1016,7 +993,7 @@ Must pass both `lesserAfterVote` and `greaterAfterVote` or neither.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:391](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L391)
+[packages/sdk/contractkit/src/wrappers/Election.ts:390](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L390)
 
 ___
 
@@ -1038,7 +1015,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:367](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L367)
+[packages/sdk/contractkit/src/wrappers/Election.ts:366](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L366)
 
 ___
 
@@ -1079,4 +1056,4 @@ Increments the number of total and pending votes for `group`.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/Election.ts:443](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L443)
+[packages/sdk/contractkit/src/wrappers/Election.ts:442](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/Election.ts#L442)

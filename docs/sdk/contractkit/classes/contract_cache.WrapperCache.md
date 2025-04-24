@@ -33,11 +33,8 @@ Consider Using MiniWrapperCache, building your own, or if you only need one Wrap
 
 - [getAccounts](contract_cache.WrapperCache.md#getaccounts)
 - [getAttestations](contract_cache.WrapperCache.md#getattestations)
-- [getBlockchainParameters](contract_cache.WrapperCache.md#getblockchainparameters)
 - [getCeloToken](contract_cache.WrapperCache.md#getcelotoken)
 - [getContract](contract_cache.WrapperCache.md#getcontract)
-- [getDoubleSigningSlasher](contract_cache.WrapperCache.md#getdoublesigningslasher)
-- [getDowntimeSlasher](contract_cache.WrapperCache.md#getdowntimeslasher)
 - [getElection](contract_cache.WrapperCache.md#getelection)
 - [getEpochManager](contract_cache.WrapperCache.md#getepochmanager)
 - [getEpochRewards](contract_cache.WrapperCache.md#getepochrewards)
@@ -45,9 +42,7 @@ Consider Using MiniWrapperCache, building your own, or if you only need one Wrap
 - [getEscrow](contract_cache.WrapperCache.md#getescrow)
 - [getFederatedAttestations](contract_cache.WrapperCache.md#getfederatedattestations)
 - [getFeeCurrencyDirectory](contract_cache.WrapperCache.md#getfeecurrencydirectory)
-- [getFeeCurrencyWhitelist](contract_cache.WrapperCache.md#getfeecurrencywhitelist)
 - [getFreezer](contract_cache.WrapperCache.md#getfreezer)
-- [getGasPriceMinimum](contract_cache.WrapperCache.md#getgaspriceminimum)
 - [getGoldToken](contract_cache.WrapperCache.md#getgoldtoken)
 - [getGovernance](contract_cache.WrapperCache.md#getgovernance)
 - [getLockedCelo](contract_cache.WrapperCache.md#getlockedcelo)
@@ -81,7 +76,7 @@ Consider Using MiniWrapperCache, building your own, or if you only need one Wrap
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:132](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L132)
+[packages/sdk/contractkit/src/contract-cache.ts:112](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L112)
 
 ## Properties
 
@@ -91,7 +86,7 @@ Consider Using MiniWrapperCache, building your own, or if you only need one Wrap
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:134](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L134)
+[packages/sdk/contractkit/src/contract-cache.ts:114](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L114)
 
 ___
 
@@ -101,7 +96,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:133](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L133)
+[packages/sdk/contractkit/src/contract-cache.ts:113](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L113)
 
 ___
 
@@ -111,7 +106,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:135](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L135)
+[packages/sdk/contractkit/src/contract-cache.ts:115](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L115)
 
 ## Methods
 
@@ -129,7 +124,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:138](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L138)
+[packages/sdk/contractkit/src/contract-cache.ts:118](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L118)
 
 ___
 
@@ -143,21 +138,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:141](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L141)
-
-___
-
-### getBlockchainParameters
-
-▸ **getBlockchainParameters**(): `Promise`\<[`BlockchainParametersWrapper`](wrappers_BlockchainParameters.BlockchainParametersWrapper.md)\>
-
-#### Returns
-
-`Promise`\<[`BlockchainParametersWrapper`](wrappers_BlockchainParameters.BlockchainParametersWrapper.md)\>
-
-#### Defined in
-
-[packages/sdk/contractkit/src/contract-cache.ts:144](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L144)
+[packages/sdk/contractkit/src/contract-cache.ts:121](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L121)
 
 ___
 
@@ -171,7 +152,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:188](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L188)
+[packages/sdk/contractkit/src/contract-cache.ts:153](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L153)
 
 ___
 
@@ -204,35 +185,7 @@ Get Contract wrapper
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:226](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L226)
-
-___
-
-### getDoubleSigningSlasher
-
-▸ **getDoubleSigningSlasher**(): `Promise`\<[`DoubleSigningSlasherWrapper`](wrappers_DoubleSigningSlasher.DoubleSigningSlasherWrapper.md)\>
-
-#### Returns
-
-`Promise`\<[`DoubleSigningSlasherWrapper`](wrappers_DoubleSigningSlasher.DoubleSigningSlasherWrapper.md)\>
-
-#### Defined in
-
-[packages/sdk/contractkit/src/contract-cache.ts:147](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L147)
-
-___
-
-### getDowntimeSlasher
-
-▸ **getDowntimeSlasher**(): `Promise`\<[`DowntimeSlasherWrapper`](wrappers_DowntimeSlasher.DowntimeSlasherWrapper.md)\>
-
-#### Returns
-
-`Promise`\<[`DowntimeSlasherWrapper`](wrappers_DowntimeSlasher.DowntimeSlasherWrapper.md)\>
-
-#### Defined in
-
-[packages/sdk/contractkit/src/contract-cache.ts:150](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L150)
+[packages/sdk/contractkit/src/contract-cache.ts:191](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L191)
 
 ___
 
@@ -246,7 +199,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:153](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L153)
+[packages/sdk/contractkit/src/contract-cache.ts:124](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L124)
 
 ___
 
@@ -260,7 +213,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:159](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L159)
+[packages/sdk/contractkit/src/contract-cache.ts:130](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L130)
 
 ___
 
@@ -274,7 +227,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:156](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L156)
+[packages/sdk/contractkit/src/contract-cache.ts:127](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L127)
 
 ___
 
@@ -294,7 +247,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:162](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L162)
+[packages/sdk/contractkit/src/contract-cache.ts:133](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L133)
 
 ___
 
@@ -308,7 +261,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:165](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L165)
+[packages/sdk/contractkit/src/contract-cache.ts:136](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L136)
 
 ___
 
@@ -322,7 +275,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:172](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L172)
+[packages/sdk/contractkit/src/contract-cache.ts:143](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L143)
 
 ___
 
@@ -336,21 +289,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:175](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L175)
-
-___
-
-### getFeeCurrencyWhitelist
-
-▸ **getFeeCurrencyWhitelist**(): `Promise`\<[`FeeCurrencyWhitelistWrapper`](wrappers_FeeCurrencyWhitelistWrapper.FeeCurrencyWhitelistWrapper.md)\>
-
-#### Returns
-
-`Promise`\<[`FeeCurrencyWhitelistWrapper`](wrappers_FeeCurrencyWhitelistWrapper.FeeCurrencyWhitelistWrapper.md)\>
-
-#### Defined in
-
-[packages/sdk/contractkit/src/contract-cache.ts:178](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L178)
+[packages/sdk/contractkit/src/contract-cache.ts:146](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L146)
 
 ___
 
@@ -364,21 +303,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:169](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L169)
-
-___
-
-### getGasPriceMinimum
-
-▸ **getGasPriceMinimum**(): `Promise`\<[`GasPriceMinimumWrapper`](wrappers_GasPriceMinimum.GasPriceMinimumWrapper.md)\>
-
-#### Returns
-
-`Promise`\<[`GasPriceMinimumWrapper`](wrappers_GasPriceMinimum.GasPriceMinimumWrapper.md)\>
-
-#### Defined in
-
-[packages/sdk/contractkit/src/contract-cache.ts:181](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L181)
+[packages/sdk/contractkit/src/contract-cache.ts:140](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L140)
 
 ___
 
@@ -396,7 +321,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:185](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L185)
+[packages/sdk/contractkit/src/contract-cache.ts:150](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L150)
 
 ___
 
@@ -410,7 +335,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:191](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L191)
+[packages/sdk/contractkit/src/contract-cache.ts:156](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L156)
 
 ___
 
@@ -424,7 +349,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:198](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L198)
+[packages/sdk/contractkit/src/contract-cache.ts:163](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L163)
 
 ___
 
@@ -438,7 +363,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:195](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L195)
+[packages/sdk/contractkit/src/contract-cache.ts:160](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L160)
 
 ___
 
@@ -458,7 +383,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:201](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L201)
+[packages/sdk/contractkit/src/contract-cache.ts:166](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L166)
 
 ___
 
@@ -472,7 +397,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:204](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L204)
+[packages/sdk/contractkit/src/contract-cache.ts:169](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L169)
 
 ___
 
@@ -486,7 +411,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:207](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L207)
+[packages/sdk/contractkit/src/contract-cache.ts:172](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L172)
 
 ___
 
@@ -500,7 +425,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:210](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L210)
+[packages/sdk/contractkit/src/contract-cache.ts:175](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L175)
 
 ___
 
@@ -514,7 +439,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:213](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L213)
+[packages/sdk/contractkit/src/contract-cache.ts:178](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L178)
 
 ___
 
@@ -538,7 +463,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:216](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L216)
+[packages/sdk/contractkit/src/contract-cache.ts:181](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L181)
 
 ___
 
@@ -552,7 +477,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:219](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L219)
+[packages/sdk/contractkit/src/contract-cache.ts:184](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L184)
 
 ___
 
@@ -578,4 +503,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/contract-cache.ts:250](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L250)
+[packages/sdk/contractkit/src/contract-cache.ts:215](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/contract-cache.ts#L215)

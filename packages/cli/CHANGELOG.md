@@ -1,5 +1,34 @@
 # Changelog
 
+## 7.0.0-beta.1
+
+### Major Changes
+
+- [#599](https://github.com/celo-org/developer-tooling/pull/599) [`bec048f`](https://github.com/celo-org/developer-tooling/commit/bec048f2b39c620428ce62ea1e6c20f348203012) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Remove validator commands with L1 only usecases. set-bitmaps, signed-blocks, status, update-bls-key
+
+- [#599](https://github.com/celo-org/developer-tooling/pull/599) [`bec048f`](https://github.com/celo-org/developer-tooling/commit/bec048f2b39c620428ce62ea1e6c20f348203012) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Remove bls flags from account:authorize and releasecelo:authorize commands, and validator:list/register commands
+
+- [#599](https://github.com/celo-org/developer-tooling/pull/599) [`bec048f`](https://github.com/celo-org/developer-tooling/commit/bec048f2b39c620428ce62ea1e6c20f348203012) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Remove slashing flag from rewards:show (no longer relevent post L2 upgrade)
+
+### Patch Changes
+
+- [#599](https://github.com/celo-org/developer-tooling/pull/599) [`bec048f`](https://github.com/celo-org/developer-tooling/commit/bec048f2b39c620428ce62ea1e6c20f348203012) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Fix releasecelo/admin-revoke to work on L2
+
+- [#606](https://github.com/celo-org/developer-tooling/pull/606) [`4a6da4f`](https://github.com/celo-org/developer-tooling/commit/4a6da4f443a65d5600707262d01daf1c368f5adb) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - gasCurrency flag now completely removed from config. celocli config:set no longer tries to connect to a node
+
+- [#606](https://github.com/celo-org/developer-tooling/pull/606) [`4a6da4f`](https://github.com/celo-org/developer-tooling/commit/4a6da4f443a65d5600707262d01daf1c368f5adb) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Getting config no longer requires a node
+
+- [#599](https://github.com/celo-org/developer-tooling/pull/599) [`bec048f`](https://github.com/celo-org/developer-tooling/commit/bec048f2b39c620428ce62ea1e6c20f348203012) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Remove L1 code paths
+
+- Updated dependencies [[`66c8ad4`](https://github.com/celo-org/developer-tooling/commit/66c8ad4e1dc03fbc478cbf046bd0a9cb3712b8d8), [`66c8ad4`](https://github.com/celo-org/developer-tooling/commit/66c8ad4e1dc03fbc478cbf046bd0a9cb3712b8d8), [`66c8ad4`](https://github.com/celo-org/developer-tooling/commit/66c8ad4e1dc03fbc478cbf046bd0a9cb3712b8d8)]:
+  - @celo/contractkit@10.0.0-beta.0
+  - @celo/connect@7.0.0-beta.0
+  - @celo/explorer@5.0.16-beta.0
+  - @celo/governance@5.1.7-beta.0
+  - @celo/wallet-ledger@7.0.2-beta.0
+  - @celo/wallet-hsm-azure@7.0.2-beta.0
+  - @celo/wallet-local@7.0.2-beta.0
+
 ## 6.3.0-beta.0
 
 ### Minor Changes

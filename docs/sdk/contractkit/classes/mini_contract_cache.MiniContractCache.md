@@ -6,7 +6,7 @@
 
 Alternative Contract Cache with Minimal Contracts
 
-Provides access to a subset of wrappers: [AccountsWrapper](wrappers_Accounts.AccountsWrapper.md), [GasPriceMinimumWrapper](wrappers_GasPriceMinimum.GasPriceMinimumWrapper.md) and Celo Token contracts
+Provides access to a subset of wrappers: [AccountsWrapper](wrappers_Accounts.AccountsWrapper.md), GasPriceMinimumWrapper and Celo Token contracts
 Used internally by MiniContractKit
 
 **`Param`**
@@ -59,9 +59,6 @@ Used internally by MiniContractKit
 | `contractClasses.CeloToken` | `Object` | `undefined` |
 | `contractClasses.CeloToken.newInstance` | (`web3`: `default`, `address`: `string`) => `GoldToken` | `newGoldToken` |
 | `contractClasses.CeloToken.wrapper` | typeof [`GoldTokenWrapper`](wrappers_GoldTokenWrapper.GoldTokenWrapper.md) | `GoldTokenWrapper` |
-| `contractClasses.GasPriceMinimum` | `Object` | `undefined` |
-| `contractClasses.GasPriceMinimum.newInstance` | (`web3`: `default`, `address`: `string`) => `GasPriceMinimum` | `newGasPriceMinimum` |
-| `contractClasses.GasPriceMinimum.wrapper` | typeof [`GasPriceMinimumWrapper`](wrappers_GasPriceMinimum.GasPriceMinimumWrapper.md) | `GasPriceMinimumWrapper` |
 | `contractClasses.StableToken` | `Object` | `undefined` |
 | `contractClasses.StableToken.newInstance` | (`web3`: `default`, `address`: `string`) => `StableToken` | `newStableToken` |
 | `contractClasses.StableToken.wrapper` | typeof [`StableTokenWrapper`](wrappers_StableTokenWrapper.StableTokenWrapper.md) | `StableTokenWrapper` |
@@ -78,7 +75,7 @@ Used internally by MiniContractKit
 
 #### Defined in
 
-[packages/sdk/contractkit/src/mini-contract-cache.ts:75](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/mini-contract-cache.ts#L75)
+[packages/sdk/contractkit/src/mini-contract-cache.ts:66](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/mini-contract-cache.ts#L66)
 
 ## Properties
 
@@ -88,7 +85,7 @@ Used internally by MiniContractKit
 
 #### Defined in
 
-[packages/sdk/contractkit/src/mini-contract-cache.ts:76](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/mini-contract-cache.ts#L76)
+[packages/sdk/contractkit/src/mini-contract-cache.ts:67](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/mini-contract-cache.ts#L67)
 
 ___
 
@@ -98,7 +95,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/mini-contract-cache.ts:77](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/mini-contract-cache.ts#L77)
+[packages/sdk/contractkit/src/mini-contract-cache.ts:68](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/mini-contract-cache.ts#L68)
 
 ## Methods
 
@@ -116,13 +113,13 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/mini-contract-cache.ts:81](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/mini-contract-cache.ts#L81)
+[packages/sdk/contractkit/src/mini-contract-cache.ts:72](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/mini-contract-cache.ts#L72)
 
 ___
 
 ### getContract
 
-▸ **getContract**\<`ContractKey`\>(`contract`, `address?`): `Promise`\<`InstanceType`\<\{ `Accounts`: \{ `newInstance`: (`web3`: `default`, `address`: `string`) => `Accounts` = newAccounts; `wrapper`: typeof [`AccountsWrapper`](wrappers_Accounts.AccountsWrapper.md) = AccountsWrapper } ; `CeloToken`: \{ `newInstance`: (`web3`: `default`, `address`: `string`) => `GoldToken` = newGoldToken; `wrapper`: typeof [`GoldTokenWrapper`](wrappers_GoldTokenWrapper.GoldTokenWrapper.md) = GoldTokenWrapper } ; `GasPriceMinimum`: \{ `newInstance`: (`web3`: `default`, `address`: `string`) => `GasPriceMinimum` = newGasPriceMinimum; `wrapper`: typeof [`GasPriceMinimumWrapper`](wrappers_GasPriceMinimum.GasPriceMinimumWrapper.md) = GasPriceMinimumWrapper } ; `StableToken`: \{ `newInstance`: (`web3`: `default`, `address`: `string`) => `StableToken` = newStableToken; `wrapper`: typeof [`StableTokenWrapper`](wrappers_StableTokenWrapper.StableTokenWrapper.md) = StableTokenWrapper } ; `StableTokenBRL`: \{ `newInstance`: (`web3`: `default`, `address`: `string`) => `StableTokenBRL` = newStableTokenBRL; `wrapper`: typeof [`StableTokenWrapper`](wrappers_StableTokenWrapper.StableTokenWrapper.md) = StableTokenWrapper } ; `StableTokenEUR`: \{ `newInstance`: (`web3`: `default`, `address`: `string`) => `StableTokenEUR` = newStableTokenEUR; `wrapper`: typeof [`StableTokenWrapper`](wrappers_StableTokenWrapper.StableTokenWrapper.md) = StableTokenWrapper }  }[`ContractKey`][``"wrapper"``]\>\>
+▸ **getContract**\<`ContractKey`\>(`contract`, `address?`): `Promise`\<`InstanceType`\<\{ `Accounts`: \{ `newInstance`: (`web3`: `default`, `address`: `string`) => `Accounts` = newAccounts; `wrapper`: typeof [`AccountsWrapper`](wrappers_Accounts.AccountsWrapper.md) = AccountsWrapper } ; `CeloToken`: \{ `newInstance`: (`web3`: `default`, `address`: `string`) => `GoldToken` = newGoldToken; `wrapper`: typeof [`GoldTokenWrapper`](wrappers_GoldTokenWrapper.GoldTokenWrapper.md) = GoldTokenWrapper } ; `StableToken`: \{ `newInstance`: (`web3`: `default`, `address`: `string`) => `StableToken` = newStableToken; `wrapper`: typeof [`StableTokenWrapper`](wrappers_StableTokenWrapper.StableTokenWrapper.md) = StableTokenWrapper } ; `StableTokenBRL`: \{ `newInstance`: (`web3`: `default`, `address`: `string`) => `StableTokenBRL` = newStableTokenBRL; `wrapper`: typeof [`StableTokenWrapper`](wrappers_StableTokenWrapper.StableTokenWrapper.md) = StableTokenWrapper } ; `StableTokenEUR`: \{ `newInstance`: (`web3`: `default`, `address`: `string`) => `StableTokenEUR` = newStableTokenEUR; `wrapper`: typeof [`StableTokenWrapper`](wrappers_StableTokenWrapper.StableTokenWrapper.md) = StableTokenWrapper }  }[`ContractKey`][``"wrapper"``]\>\>
 
 Get Contract wrapper
 
@@ -130,7 +127,7 @@ Get Contract wrapper
 
 | Name | Type |
 | :------ | :------ |
-| `ContractKey` | extends [`Accounts`](../enums/base.CeloContract.md#accounts) \| [`GasPriceMinimum`](../enums/base.CeloContract.md#gaspriceminimum) \| [`CeloToken`](../enums/base.CeloContract.md#celotoken) \| [`StableToken`](../enums/base.CeloContract.md#stabletoken) \| [`StableTokenEUR`](../enums/base.CeloContract.md#stabletokeneur) \| [`StableTokenBRL`](../enums/base.CeloContract.md#stabletokenbrl) |
+| `ContractKey` | extends [`Accounts`](../enums/base.CeloContract.md#accounts) \| [`CeloToken`](../enums/base.CeloContract.md#celotoken) \| [`StableToken`](../enums/base.CeloContract.md#stabletoken) \| [`StableTokenEUR`](../enums/base.CeloContract.md#stabletokeneur) \| [`StableTokenBRL`](../enums/base.CeloContract.md#stabletokenbrl) |
 
 #### Parameters
 
@@ -141,7 +138,7 @@ Get Contract wrapper
 
 #### Returns
 
-`Promise`\<`InstanceType`\<\{ `Accounts`: \{ `newInstance`: (`web3`: `default`, `address`: `string`) => `Accounts` = newAccounts; `wrapper`: typeof [`AccountsWrapper`](wrappers_Accounts.AccountsWrapper.md) = AccountsWrapper } ; `CeloToken`: \{ `newInstance`: (`web3`: `default`, `address`: `string`) => `GoldToken` = newGoldToken; `wrapper`: typeof [`GoldTokenWrapper`](wrappers_GoldTokenWrapper.GoldTokenWrapper.md) = GoldTokenWrapper } ; `GasPriceMinimum`: \{ `newInstance`: (`web3`: `default`, `address`: `string`) => `GasPriceMinimum` = newGasPriceMinimum; `wrapper`: typeof [`GasPriceMinimumWrapper`](wrappers_GasPriceMinimum.GasPriceMinimumWrapper.md) = GasPriceMinimumWrapper } ; `StableToken`: \{ `newInstance`: (`web3`: `default`, `address`: `string`) => `StableToken` = newStableToken; `wrapper`: typeof [`StableTokenWrapper`](wrappers_StableTokenWrapper.StableTokenWrapper.md) = StableTokenWrapper } ; `StableTokenBRL`: \{ `newInstance`: (`web3`: `default`, `address`: `string`) => `StableTokenBRL` = newStableTokenBRL; `wrapper`: typeof [`StableTokenWrapper`](wrappers_StableTokenWrapper.StableTokenWrapper.md) = StableTokenWrapper } ; `StableTokenEUR`: \{ `newInstance`: (`web3`: `default`, `address`: `string`) => `StableTokenEUR` = newStableTokenEUR; `wrapper`: typeof [`StableTokenWrapper`](wrappers_StableTokenWrapper.StableTokenWrapper.md) = StableTokenWrapper }  }[`ContractKey`][``"wrapper"``]\>\>
+`Promise`\<`InstanceType`\<\{ `Accounts`: \{ `newInstance`: (`web3`: `default`, `address`: `string`) => `Accounts` = newAccounts; `wrapper`: typeof [`AccountsWrapper`](wrappers_Accounts.AccountsWrapper.md) = AccountsWrapper } ; `CeloToken`: \{ `newInstance`: (`web3`: `default`, `address`: `string`) => `GoldToken` = newGoldToken; `wrapper`: typeof [`GoldTokenWrapper`](wrappers_GoldTokenWrapper.GoldTokenWrapper.md) = GoldTokenWrapper } ; `StableToken`: \{ `newInstance`: (`web3`: `default`, `address`: `string`) => `StableToken` = newStableToken; `wrapper`: typeof [`StableTokenWrapper`](wrappers_StableTokenWrapper.StableTokenWrapper.md) = StableTokenWrapper } ; `StableTokenBRL`: \{ `newInstance`: (`web3`: `default`, `address`: `string`) => `StableTokenBRL` = newStableTokenBRL; `wrapper`: typeof [`StableTokenWrapper`](wrappers_StableTokenWrapper.StableTokenWrapper.md) = StableTokenWrapper } ; `StableTokenEUR`: \{ `newInstance`: (`web3`: `default`, `address`: `string`) => `StableTokenEUR` = newStableTokenEUR; `wrapper`: typeof [`StableTokenWrapper`](wrappers_StableTokenWrapper.StableTokenWrapper.md) = StableTokenWrapper }  }[`ContractKey`][``"wrapper"``]\>\>
 
 #### Implementation of
 
@@ -149,7 +146,7 @@ Get Contract wrapper
 
 #### Defined in
 
-[packages/sdk/contractkit/src/mini-contract-cache.ts:96](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/mini-contract-cache.ts#L96)
+[packages/sdk/contractkit/src/mini-contract-cache.ts:87](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/mini-contract-cache.ts#L87)
 
 ___
 
@@ -167,7 +164,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/mini-contract-cache.ts:85](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/mini-contract-cache.ts#L85)
+[packages/sdk/contractkit/src/mini-contract-cache.ts:76](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/mini-contract-cache.ts#L76)
 
 ___
 
@@ -191,7 +188,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/mini-contract-cache.ts:89](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/mini-contract-cache.ts#L89)
+[packages/sdk/contractkit/src/mini-contract-cache.ts:80](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/mini-contract-cache.ts#L80)
 
 ___
 
@@ -203,7 +200,7 @@ ___
 
 | Name | Type |
 | :------ | :------ |
-| `C` | extends [`Accounts`](../enums/base.CeloContract.md#accounts) \| [`GasPriceMinimum`](../enums/base.CeloContract.md#gaspriceminimum) \| [`CeloToken`](../enums/base.CeloContract.md#celotoken) \| [`StableToken`](../enums/base.CeloContract.md#stabletoken) \| [`StableTokenEUR`](../enums/base.CeloContract.md#stabletokeneur) \| [`StableTokenBRL`](../enums/base.CeloContract.md#stabletokenbrl) |
+| `C` | extends [`Accounts`](../enums/base.CeloContract.md#accounts) \| [`CeloToken`](../enums/base.CeloContract.md#celotoken) \| [`StableToken`](../enums/base.CeloContract.md#stabletoken) \| [`StableTokenEUR`](../enums/base.CeloContract.md#stabletokeneur) \| [`StableTokenBRL`](../enums/base.CeloContract.md#stabletokenbrl) |
 
 #### Parameters
 
@@ -217,4 +214,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/mini-contract-cache.ts:136](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/mini-contract-cache.ts#L136)
+[packages/sdk/contractkit/src/mini-contract-cache.ts:127](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/mini-contract-cache.ts#L127)

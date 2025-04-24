@@ -82,7 +82,7 @@ Contract handling epoch management.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts:25](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts#L25)
+[packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts#L23)
 
 ## Properties
 
@@ -467,7 +467,7 @@ ___
 
 ### methodIds
 
-• **methodIds**: `Record`\<``"epochDuration"`` \| ``"isTimeForNextEpoch"`` \| ``"getEpochNumberOfBlock"`` \| ``"initialized"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"initialize"`` \| ``"getVersionNumber"`` \| ``"electedAccounts"`` \| ``"electedSigners"`` \| ``"epochProcessing"`` \| ``"firstKnownEpoch"`` \| ``"isSystemInitialized"`` \| ``"oracleAddress"`` \| ``"processedGroups"`` \| ``"toProcessGroups"`` \| ``"validatorPendingPayments"`` \| ``"initializeSystem"`` \| ``"startNextEpochProcess"`` \| ``"setToProcessGroups"`` \| ``"processGroups"`` \| ``"processGroup"`` \| ``"finishNextEpochProcess"`` \| ``"sendValidatorPayment"`` \| ``"getCurrentEpoch"`` \| ``"getCurrentEpochNumber"`` \| ``"getEpochProcessingState"`` \| ``"isBlocked"`` \| ``"numberOfElectedInCurrentSet"`` \| ``"getElectedAccounts"`` \| ``"getElectedAccountByIndex"`` \| ``"getElectedSigners"`` \| ``"getElectedSignerByIndex"`` \| ``"getFirstBlockAtEpoch"`` \| ``"getLastBlockAtEpoch"`` \| ``"getEpochByBlockNumber"`` \| ``"setEpochDuration"`` \| ``"setOracleAddress"`` \| ``"isIndividualProcessing"`` \| ``"isEpochProcessingStarted"`` \| ``"isOnEpochProcess"`` \| ``"systemAlreadyInitialized"`` \| ``"getEpochByNumber"``, `string`\>
+• **methodIds**: `Record`\<``"epochDuration"`` \| ``"isTimeForNextEpoch"`` \| ``"getEpochNumberOfBlock"`` \| ``"initialized"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"initialize"`` \| ``"getVersionNumber"`` \| ``"isBlocked"`` \| ``"electedAccounts"`` \| ``"electedSigners"`` \| ``"epochProcessing"`` \| ``"firstKnownEpoch"`` \| ``"isSystemInitialized"`` \| ``"oracleAddress"`` \| ``"processedGroups"`` \| ``"toProcessGroups"`` \| ``"validatorPendingPayments"`` \| ``"initializeSystem"`` \| ``"startNextEpochProcess"`` \| ``"setToProcessGroups"`` \| ``"processGroups"`` \| ``"processGroup"`` \| ``"finishNextEpochProcess"`` \| ``"sendValidatorPayment"`` \| ``"getCurrentEpoch"`` \| ``"getCurrentEpochNumber"`` \| ``"getEpochProcessingState"`` \| ``"numberOfElectedInCurrentSet"`` \| ``"getElectedAccounts"`` \| ``"getElectedAccountByIndex"`` \| ``"getElectedSigners"`` \| ``"getElectedSignerByIndex"`` \| ``"getFirstBlockAtEpoch"`` \| ``"getLastBlockAtEpoch"`` \| ``"getEpochByBlockNumber"`` \| ``"setEpochDuration"`` \| ``"setOracleAddress"`` \| ``"isIndividualProcessing"`` \| ``"isEpochProcessingStarted"`` \| ``"isOnEpochProcess"`` \| ``"systemAlreadyInitialized"`` \| ``"getEpochByNumber"``, `string`\>
 
 #### Inherited from
 
@@ -691,7 +691,7 @@ Contract getPastEvents
 
 | Name | Type |
 | :------ | :------ |
-| `event` | ``"OwnershipTransferred"`` \| ``"RegistrySet"`` \| ``"ValidatorEpochPaymentDistributed"`` \| ``"allEvents"`` \| ``"GroupProcessed"`` \| ``"EpochDurationSet"`` \| ``"EpochProcessingEnded"`` \| ``"EpochProcessingStarted"`` \| ``"GroupMarkedForProcessing"`` \| ``"OracleAddressSet"`` |
+| `event` | ``"GroupProcessed"`` \| ``"OwnershipTransferred"`` \| ``"RegistrySet"`` \| ``"allEvents"`` \| ``"ValidatorEpochPaymentDistributed"`` \| ``"EpochDurationSet"`` \| ``"EpochProcessingEnded"`` \| ``"EpochProcessingStarted"`` \| ``"GroupMarkedForProcessing"`` \| ``"OracleAddressSet"`` |
 | `options` | `PastEventOptions` |
 
 #### Returns

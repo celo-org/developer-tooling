@@ -28,9 +28,19 @@
     "@celo/viem-account-ledger": "1.1.1"
   },
   "changesets": [
+    "beige-socks-camp",
+    "blue-cobras-explode",
+    "fifty-berries-wash",
     "gold-colts-whisper",
     "heavy-rice-chew",
+    "kind-lions-type",
     "lovely-pigs-flash",
-    "short-cobras-deny"
+    "many-yaks-explain",
+    "sharp-pears-sell",
+    "short-cobras-deny",
+    "soft-bulldogs-draw",
+    "soft-hotels-stare",
+    "sweet-grapes-design",
+    "tiny-chairs-tease"
   ]
 }

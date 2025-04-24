@@ -9,10 +9,7 @@
 ### Properties
 
 - [attestations](kit.NetworkConfig.md#attestations)
-- [blockchainParameters](kit.NetworkConfig.md#blockchainparameters)
-- [downtimeSlasher](kit.NetworkConfig.md#downtimeslasher)
 - [election](kit.NetworkConfig.md#election)
-- [gasPriceMinimum](kit.NetworkConfig.md#gaspriceminimum)
 - [governance](kit.NetworkConfig.md#governance)
 - [lockedGold](kit.NetworkConfig.md#lockedgold)
 - [reserve](kit.NetworkConfig.md#reserve)
@@ -28,27 +25,7 @@
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:74](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L74)
-
-___
-
-### blockchainParameters
-
-• **blockchainParameters**: [`BlockchainParametersConfig`](wrappers_BlockchainParameters.BlockchainParametersConfig.md)
-
-#### Defined in
-
-[packages/sdk/contractkit/src/kit.ts:82](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L82)
-
-___
-
-### downtimeSlasher
-
-• **downtimeSlasher**: [`DowntimeSlasherConfig`](wrappers_DowntimeSlasher.DowntimeSlasherConfig.md)
-
-#### Defined in
-
-[packages/sdk/contractkit/src/kit.ts:81](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L81)
+[packages/sdk/contractkit/src/kit.ts:63](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L63)
 
 ___
 
@@ -58,17 +35,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:73](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L73)
-
-___
-
-### gasPriceMinimum
-
-• **gasPriceMinimum**: [`GasPriceMinimumConfig`](wrappers_GasPriceMinimum.GasPriceMinimumConfig.md)
-
-#### Defined in
-
-[packages/sdk/contractkit/src/kit.ts:78](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L78)
+[packages/sdk/contractkit/src/kit.ts:62](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L62)
 
 ___
 
@@ -78,7 +45,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:75](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L75)
+[packages/sdk/contractkit/src/kit.ts:64](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L64)
 
 ___
 
@@ -88,7 +55,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:76](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L76)
+[packages/sdk/contractkit/src/kit.ts:65](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L65)
 
 ___
 
@@ -98,7 +65,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:79](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L79)
+[packages/sdk/contractkit/src/kit.ts:67](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L67)
 
 ___
 
@@ -108,7 +75,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:77](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L77)
+[packages/sdk/contractkit/src/kit.ts:66](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L66)
 
 ___
 
@@ -118,7 +85,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:72](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L72)
+[packages/sdk/contractkit/src/kit.ts:61](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L61)
 
 ___
 
@@ -128,4 +95,4 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/kit.ts:80](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L80)
+[packages/sdk/contractkit/src/kit.ts:68](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L68)

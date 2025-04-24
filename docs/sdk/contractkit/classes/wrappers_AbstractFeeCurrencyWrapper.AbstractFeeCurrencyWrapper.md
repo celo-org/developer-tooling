@@ -20,8 +20,6 @@
 
   ↳↳ [`FeeCurrencyDirectoryWrapper`](wrappers_FeeCurrencyDirectoryWrapper.FeeCurrencyDirectoryWrapper.md)
 
-  ↳↳ [`FeeCurrencyWhitelistWrapper`](wrappers_FeeCurrencyWhitelistWrapper.FeeCurrencyWhitelistWrapper.md)
-
 ## Table of contents
 
 ### Constructors

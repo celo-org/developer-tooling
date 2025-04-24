@@ -82,7 +82,7 @@ Contract for handling deposits needed for voting.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts:25](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts#L25)
+[packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts:23](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts#L23)
 
 ## Properties
 
@@ -106,7 +106,7 @@ Contract for handling deposits needed for voting.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:416](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L416)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:404](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L404)
 
 ___
 
@@ -354,7 +354,7 @@ ___
 
 ### methodIds
 
-• **methodIds**: `Record`\<``"unlockingPeriod"`` \| ``"slash"`` \| ``"initialized"`` \| ``"isOwner"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"initialize"`` \| ``"withdraw"`` \| ``"getVersionNumber"`` \| ``"slashingWhitelist"`` \| ``"totalDelegatedCelo"`` \| ``"totalNonvoting"`` \| ``"isSlasher"`` \| ``"setUnlockingPeriod"`` \| ``"setMaxDelegateesCount"`` \| ``"lock"`` \| ``"incrementNonvotingAccountBalance"`` \| ``"decrementNonvotingAccountBalance"`` \| ``"unlock"`` \| ``"relock"`` \| ``"getTotalLockedGold"`` \| ``"getNonvotingLockedGold"`` \| ``"delegateGovernanceVotes"`` \| ``"revokeDelegatedGovernanceVotes"`` \| ``"updateDelegatedAmount"`` \| ``"getAccountTotalDelegatedFraction"`` \| ``"getAccountTotalLockedGold"`` \| ``"getAccountTotalGovernanceVotingPower"`` \| ``"getDelegatorDelegateeInfo"`` \| ``"getDelegatorDelegateeExpectedAndRealAmount"`` \| ``"getDelegateesOfDelegator"`` \| ``"getAccountNonvotingLockedGold"`` \| ``"getPendingWithdrawals"`` \| ``"getPendingWithdrawal"`` \| ``"getTotalPendingWithdrawalsCount"`` \| ``"getTotalPendingWithdrawals"`` \| ``"getSlashingWhitelist"`` \| ``"addSlasher"`` \| ``"removeSlasher"``, `string`\>
+• **methodIds**: `Record`\<``"unlockingPeriod"`` \| ``"initialized"`` \| ``"isOwner"`` \| ``"owner"`` \| ``"registry"`` \| ``"renounceOwnership"`` \| ``"setRegistry"`` \| ``"transferOwnership"`` \| ``"initialize"`` \| ``"withdraw"`` \| ``"getVersionNumber"`` \| ``"slashingWhitelist"`` \| ``"totalDelegatedCelo"`` \| ``"totalNonvoting"`` \| ``"isSlasher"`` \| ``"setUnlockingPeriod"`` \| ``"setMaxDelegateesCount"`` \| ``"lock"`` \| ``"incrementNonvotingAccountBalance"`` \| ``"decrementNonvotingAccountBalance"`` \| ``"unlock"`` \| ``"relock"`` \| ``"getTotalLockedGold"`` \| ``"getNonvotingLockedGold"`` \| ``"delegateGovernanceVotes"`` \| ``"revokeDelegatedGovernanceVotes"`` \| ``"updateDelegatedAmount"`` \| ``"getAccountTotalDelegatedFraction"`` \| ``"getAccountTotalLockedGold"`` \| ``"getAccountTotalGovernanceVotingPower"`` \| ``"getDelegatorDelegateeInfo"`` \| ``"getDelegatorDelegateeExpectedAndRealAmount"`` \| ``"getDelegateesOfDelegator"`` \| ``"getAccountNonvotingLockedGold"`` \| ``"getPendingWithdrawals"`` \| ``"getPendingWithdrawal"`` \| ``"getTotalPendingWithdrawalsCount"`` \| ``"getTotalPendingWithdrawals"`` \| ``"getSlashingWhitelist"`` \| ``"addSlasher"`` \| ``"removeSlasher"`` \| ``"slash"``, `string`\>
 
 #### Inherited from
 
@@ -529,7 +529,7 @@ List of (group, voting gold) to decrement from `account`.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:355](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L355)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:343](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L343)
 
 ___
 
@@ -551,7 +551,7 @@ ___
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:362](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L362)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:350](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L350)
 
 ___
 
@@ -701,7 +701,7 @@ Contract getPastEvents
 
 | Name | Type |
 | :------ | :------ |
-| `event` | ``"OwnershipTransferred"`` \| ``"RegistrySet"`` \| ``"allEvents"`` \| ``"AccountSlashed"`` \| ``"CeloDelegated"`` \| ``"DelegatedCeloRevoked"`` \| ``"GoldLocked"`` \| ``"GoldRelocked"`` \| ``"GoldUnlocked"`` \| ``"GoldWithdrawn"`` \| ``"MaxDelegateesCountSet"`` \| ``"SlasherWhitelistAdded"`` \| ``"SlasherWhitelistRemoved"`` \| ``"UnlockingPeriodSet"`` |
+| `event` | ``"AccountSlashed"`` \| ``"CeloDelegated"`` \| ``"DelegatedCeloRevoked"`` \| ``"GoldLocked"`` \| ``"GoldRelocked"`` \| ``"GoldUnlocked"`` \| ``"GoldWithdrawn"`` \| ``"MaxDelegateesCountSet"`` \| ``"OwnershipTransferred"`` \| ``"RegistrySet"`` \| ``"SlasherWhitelistAdded"`` \| ``"SlasherWhitelistRemoved"`` \| ``"UnlockingPeriodSet"`` \| ``"allEvents"`` |
 | `options` | `PastEventOptions` |
 
 #### Returns
@@ -809,7 +809,7 @@ The count of pending withdrawals.
 
 #### Defined in
 
-[packages/sdk/contractkit/src/wrappers/LockedGold.ts:412](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L412)
+[packages/sdk/contractkit/src/wrappers/LockedGold.ts:400](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/wrappers/LockedGold.ts#L400)
 
 ___
 
