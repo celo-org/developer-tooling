@@ -1,12 +1,6 @@
-import { newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
-import { ux } from '@oclif/core'
 import Web3 from 'web3'
-import {
-  stripAnsiCodesFromNestedArray,
-  testLocally,
-  testLocallyWithWeb3Node,
-} from '../../test-utils/cliUtils'
+import { testLocally, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import * as cliUtils from '../../utils/cli'
 import * as config from '../../utils/config'
 import Get from './get'
@@ -76,33 +70,6 @@ testWithAnvilL2('config:set cmd', (web3: Web3) => {
         `)
       })
     })
-  })
-  it('shows a warning if gasCurrency is passed', async () => {
-    const kit = newKitFromWeb3(web3)
-    const feeCurrencyDirectory = await kit.contracts.getFeeCurrencyDirectory()
-    const consoleMock = jest.spyOn(ux, 'warn')
-    const writeMock = jest.spyOn(config, 'writeConfig')
-
-    await testLocallyWithWeb3Node(
-      Set,
-      ['--gasCurrency', (await feeCurrencyDirectory.getCurrencies())[0]],
-      web3
-    )
-    expect(stripAnsiCodesFromNestedArray(consoleMock.mock.calls as string[][]))
-      .toMatchInlineSnapshot(`
-      [
-        [
-          "
-      Setting a default gasCurrency has been removed from the config, you may still use the --gasCurrency on every command.
-      Did you value this feature a lot and would like to see it back? Let us know at https://github.com/celo-org/developer-tooling/discussions/92",
-        ],
-      ]
-    `)
-
-    expect(writeMock).toHaveBeenCalledTimes(1)
-    expect(writeMock.mock.calls[0][0]).toMatch('.config/@celo/celocli')
-    expect(writeMock.mock.calls[0][1]).toMatchObject({ derivationPath: "m/44'/52752'/0'" })
-    expect(writeMock.mock.calls[0][1]).not.toHaveProperty('gasCurrency')
   })
 
   it('allows to disable telemetry', async () => {
