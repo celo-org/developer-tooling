@@ -60,7 +60,6 @@
     "typescript": "5.3.3"
   },
   "resolutions": {
-    "ganache": "npm:@celo/ganache@7.8.0-unofficial.0",
     "web3": "1.10.4",
     "web3-utils": "1.10.4",
     "blind-threshold-bls": "npm:@celo/blind-threshold-bls@1.0.0-beta",
