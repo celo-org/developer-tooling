@@ -1,5 +1,11 @@
 # @celo/connect
 
+## 7.0.0-beta.0
+
+### Major Changes
+
+- [#600](https://github.com/celo-org/developer-tooling/pull/600) [`66c8ad4`](https://github.com/celo-org/developer-tooling/commit/66c8ad4e1dc03fbc478cbf046bd0a9cb3712b8d8) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Removes isCel2 helper function
+
 ## 6.1.2
 
 ### Patch Changes

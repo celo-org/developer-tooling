@@ -1,5 +1,7 @@
 # @celo/wallet-hsm
 
+## 7.0.2-beta.0
+
 ## 7.0.1
 
 ### Patch Changes

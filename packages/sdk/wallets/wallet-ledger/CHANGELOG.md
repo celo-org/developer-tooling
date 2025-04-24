@@ -1,5 +1,14 @@
 # @celo/wallet-ledger
 
+## 7.0.2-beta.0
+
+### Patch Changes
+
+- Updated dependencies [[`66c8ad4`](https://github.com/celo-org/developer-tooling/commit/66c8ad4e1dc03fbc478cbf046bd0a9cb3712b8d8)]:
+  - @celo/connect@7.0.0-beta.0
+  - @celo/wallet-base@7.0.2-beta.0
+  - @celo/wallet-remote@7.0.2-beta.0
+
 ## 7.0.1
 
 ### Patch Changes
