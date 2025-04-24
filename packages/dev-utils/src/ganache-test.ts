@@ -1,6 +1,6 @@
 import Web3 from 'web3'
 import migrationOverride from './migration-override.json'
-import { jsonRpcCall, testWithWeb3 } from './test-utils'
+import { jsonRpcCall } from './test-utils'
 
 export const NetworkConfig = migrationOverride
 
@@ -14,19 +14,6 @@ export async function mineBlocks(blocks: number, web3: Web3) {
     await jsonRpcCall(web3, 'evm_mine', [])
   }
 }
-
-export function testWithGanache(name: string, fn: (web3: Web3) => void) {
-  return testWithWeb3(name, 'http://localhost:8545', fn, {
-    runIf: shouldRunGanacheTests(),
-  })
-}
-
-export function shouldRunGanacheTests(): boolean {
-  return (
-    process.env.RUN_GANACHE_TESTS === 'true' || typeof process.env.RUN_GANACHE_TESTS === 'undefined'
-  )
-}
-
 /**
  * Gets a contract address by parsing blocks and matching event signatures against the given event.
  */
