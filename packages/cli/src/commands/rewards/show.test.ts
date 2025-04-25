@@ -175,15 +175,15 @@ testWithAnvilL2('rewards:show cmd', (web3: Web3) => {
       expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`
         [
           [
-            " Validatorname  Validator                                  Validatorpayment Validatorscore Group                                      Epochnumber 
+            " Validatorname  Validator                                  Validatorpayment Validatorscore Group                        Epochnumber 
         ",
           ],
           [
-            " ────────────── ────────────────────────────────────────── ──────────────── ────────────── ────────────────────────────────────────── ─────────── 
+            " ────────────── ────────────────────────────────────────── ──────────────── ────────────── ──────────────────────────── ─────────── 
         ",
           ],
           [
-            " test-validator 0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f 1234567890       1337           0x4242424242424242424242424242424242424242             
+            " test-validator 0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f 1234567890       1337           0x4242424242424242424242424…             
         ",
           ],
         ]
