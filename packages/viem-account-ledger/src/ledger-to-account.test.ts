@@ -2,9 +2,20 @@ import Eth from '@celo/hw-app-eth'
 import { recoverMessageSigner, recoverTransaction } from '@celo/wallet-base'
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
 import { recoverMessageAddress } from 'viem'
-import { beforeAll, describe, expect, it, test, vi } from 'vitest'
+import {
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  MockInstance,
+  test,
+  vi,
+} from 'vitest'
 import { ledgerToAccount } from './ledger-to-account.js'
 import { mockLedger, TEST_CHAIN_ID, TestLedger } from './test-utils.js'
+import { AddressValidation } from './types.js'
 import { generateLedger, readAppName } from './utils.js'
 
 const USE_PHYSICAL_LEDGER = process.env.USE_PHYSICAL_LEDGER === 'true'
@@ -78,6 +89,15 @@ syntheticDescribe('ledgerToAccount (mocked ledger)', () => {
         vi.spyOn(TestLedger.prototype, 'getName').mockReturnValue(supportedApp)
       })
 
+      const txData = {
+        to: '0x1234567890123456789012345678901234567890',
+        value: BigInt(123),
+        chainId: TEST_CHAIN_ID,
+        nonce: 42,
+        maxFeePerGas: BigInt(100),
+        maxPriorityFeePerGas: BigInt(100),
+      } as const
+
       describe('signs txs', () => {
         it('signs messages', async () => {
           const message = 'Hello World clabs'
@@ -104,14 +124,6 @@ syntheticDescribe('ledgerToAccount (mocked ledger)', () => {
             )
           }
         })
-        const txData = {
-          to: '0x1234567890123456789012345678901234567890',
-          value: BigInt(123),
-          chainId: TEST_CHAIN_ID,
-          nonce: 42,
-          maxFeePerGas: BigInt(100),
-          maxPriorityFeePerGas: BigInt(100),
-        } as const
 
         describe('eip1559', () => {
           test('v=0', async () => {
@@ -211,6 +223,85 @@ syntheticDescribe('ledgerToAccount (mocked ledger)', () => {
               )
             }
           })
+        })
+      })
+
+      describe('respects the `AddressValidation` enum', () => {
+        let spy: MockInstance<
+          (
+            derivationPath: string,
+            shouldValidate: boolean
+          ) => Promise<{
+            address: string
+            publicKey: string
+          }>
+        >
+        beforeEach(async () => {
+          account = await ledgerToAccount({
+            transport: await transport,
+          })
+          spy = vi.spyOn(TestLedger.prototype, 'getAddress')
+        })
+        afterEach(() => {
+          spy.mockClear()
+        })
+        test('AddressValidation.never', async () => {
+          account = await ledgerToAccount({
+            transport: await transport,
+            ledgerAddressValidation: AddressValidation.never,
+          })
+          await account.signMessage({ message: 'Hello World clabs' })
+          await account.signTransaction(txData)
+          expect(spy.mock.calls.length).toBe(1) // init
+          spy.mock.calls.forEach(([_, shouldValidate]) => {
+            expect(shouldValidate).toBe(false)
+          })
+        })
+        test('AddressValidation.initializationOnly', async () => {
+          account = await ledgerToAccount({
+            transport: await transport,
+            ledgerAddressValidation: AddressValidation.initializationOnly,
+          })
+          await account.signMessage({ message: 'Hello World clabs' })
+          await account.signTransaction(txData)
+          expect(spy.mock.calls.length).toBe(1) // init
+          spy.mock.calls.forEach(([_, shouldValidate]) => {
+            expect(shouldValidate).toBe(true)
+          })
+        })
+        test('AddressValidation.firstTransactionPerAddress', async () => {
+          account = await ledgerToAccount({
+            transport: await transport,
+            ledgerAddressValidation: AddressValidation.firstTransactionPerAddress,
+          })
+          await account.signMessage({ message: 'Hello World clabs' })
+          await account.signTransaction(txData)
+          expect(spy.mock.calls.length).toBe(2) // init + signMsg
+          spy.mock.calls.forEach(([_, shouldValidate], i) => {
+            expect(shouldValidate).toBe(i === 0 ? false : true)
+          })
+        })
+        test('AddressValidation.everyTransaction', async () => {
+          account = await ledgerToAccount({
+            transport: await transport,
+            ledgerAddressValidation: AddressValidation.everyTransaction,
+          })
+          await account.signMessage({ message: 'Hello World clabs' })
+          await account.signTransaction(txData)
+          expect(spy.mock.calls.length).toBe(3) // init + signMsg + signTx
+          spy.mock.calls.forEach(([_, shouldValidate], i) => {
+            expect(shouldValidate).toBe(i === 0 ? false : true)
+          })
+        })
+        test('AddressValidation.unknown', async () => {
+          account = await ledgerToAccount({
+            transport: await transport,
+            // @ts-expect-error
+            ledgerAddressValidation: 'unknown',
+          })
+          await expect(account.signMessage({ message: 'Hello World clabs' })).rejects.toThrowError(
+            'ledger-to-account: invalid AddressValidation value'
+          )
         })
       })
     })
@@ -323,5 +414,3 @@ hardwareDescribe('ledgerToAccount (device ledger)', () => {
     }
   }, 20_000)
 })
-
-// TODO: address validation tests

@@ -53,7 +53,7 @@ export async function ledgerToAccount({
     throw new Error('only one of `transport` and `ledger` must be defined')
   }
 
-  let alreadyValidated = ledgerAddressValidation !== AddressValidation.never
+  let alreadyValidated = ledgerAddressValidation === AddressValidation.never
   const _ledger = ledger || (await generateLedger(transport))
   const _derivationPath = `${baseDerivationPath}/${derivationPathIndex}`
 
@@ -85,7 +85,7 @@ export async function ledgerToAccount({
         return !alreadyValidated
       }
       default: {
-        throw new Error('ledger-signer@validationRequired: invalid ledgerValidation value')
+        throw new Error('ledger-to-account: invalid AddressValidation value')
       }
     }
   }
