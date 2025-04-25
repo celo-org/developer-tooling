@@ -123,6 +123,7 @@ export abstract class BaseCommand extends Command {
   private _kit: ContractKit | null = null
 
   private publicClient: CeloClient | null = null
+  private walletClient: WalletCeloClient | null = null
 
   private ledgerTransport: Awaited<ReturnType<(typeof _TransportNodeHid)['open']>> | null = null
 
@@ -228,58 +229,64 @@ export abstract class BaseCommand extends Command {
   }
 
   public async getWalletClient(): Promise<WalletCeloClient | null> {
-    const [transport, publicClient, res] = await Promise.all([
-      this.getTransport(),
-      this.getPublicClient(),
-      this.parse(),
-    ])
+    if (!this.walletClient) {
+      const [transport, publicClient, res] = await Promise.all([
+        this.getTransport(),
+        this.getPublicClient(),
+        this.parse(),
+      ])
 
-    if (res.flags.useLedger) {
-      try {
-        const isLedgerLiveMode = res.flags.ledgerLiveMode
-        const indicesToIterateOver: number[] = res.raw.some(
-          (value: any) => value.flag === 'ledgerCustomAddresses'
-        )
-          ? JSON.parse(res.flags.ledgerCustomAddresses)
-          : Array.from(Array(res.flags.ledgerAddresses).keys())
+      console.log(res.flags)
 
-        console.log('Retrieving derivation Paths', indicesToIterateOver)
-        let ledgerConfirmation = AddressValidation.never
-        if (res.flags.ledgerConfirmAddress) {
-          ledgerConfirmation = AddressValidation.everyTransaction
+      if (res.flags.useLedger) {
+        try {
+          const isLedgerLiveMode = res.flags.ledgerLiveMode
+          const indicesToIterateOver: number[] = res.raw.some(
+            (value: any) => value.flag === 'ledgerCustomAddresses'
+          )
+            ? JSON.parse(res.flags.ledgerCustomAddresses)
+            : Array.from(Array(res.flags.ledgerAddresses).keys())
+
+          console.log('Retrieving derivation Paths', indicesToIterateOver)
+          let ledgerConfirmation = AddressValidation.never
+          if (res.flags.ledgerConfirmAddress) {
+            ledgerConfirmation = AddressValidation.everyTransaction
+          }
+
+          this.walletClient = await ledgerToWalletClient({
+            transport: await this.openLedgerTransport(),
+            baseDerivationPath: getDefaultDerivationPath(this.config.configDir),
+            derivationPathIndexes: isLedgerLiveMode ? [0] : indicesToIterateOver,
+            changeIndexes: isLedgerLiveMode ? indicesToIterateOver : [0],
+            ledgerAddressValidation: ledgerConfirmation,
+            walletClientOptions: {
+              transport,
+              chain: publicClient.chain,
+            },
+          })
+        } catch (err) {
+          console.log('Check if the ledger is connected and logged.')
+          throw err
         }
-
-        const walletClient = await ledgerToWalletClient({
-          transport: await this.openLedgerTransport(),
-          baseDerivationPath: getDefaultDerivationPath(this.config.configDir),
-          derivationPathIndexes: isLedgerLiveMode ? [0] : indicesToIterateOver,
-          changeIndexes: isLedgerLiveMode ? indicesToIterateOver : [0],
-          ledgerAddressValidation: ledgerConfirmation,
-          walletClientOptions: {
-            transport,
-            chain: publicClient.chain,
-          },
+      } else if (res.flags.useAKV) {
+        // NOTE: Fallback to web3
+        this.walletClient = null
+      } else if (res.flags.privateKey) {
+        this.walletClient = createWalletClient({
+          transport,
+          chain: publicClient.chain,
+          account: privateKeyToAccount(ensureLeading0x(res.flags.privateKey)),
         })
-        return walletClient as WalletCeloClient
-      } catch (err) {
-        console.log('Check if the ledger is connected and logged.')
-        throw err
+      } else {
+        throw new Error('Didnt find --useLedger nor --privateKey nor --useAKV')
       }
-    } else if (res.flags.useAKV) {
-      // NOTE: Fallback to web3
-      return null
-    } else if (res.flags.privateKey) {
-      return createWalletClient({
-        transport,
-        chain: publicClient.chain,
-        account: privateKeyToAccount(ensureLeading0x(res.flags.privateKey)),
-      })
     }
 
-    throw new Error('Didnt find --useLedger nor --privateKey nor --useAKV')
+    return this.walletClient
   }
 
   async init() {
+    console.log('hello?')
     if (this.requireSynced) {
       await requireNodeIsSynced(await this.getPublicClient())
     }

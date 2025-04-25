@@ -91,10 +91,14 @@ export async function checkForKnownToken(
   }
 }
 
+const transports = new WeakMap()
 export async function generateLedger(transport: TransportNodeHid) {
+  if (!transports.has(transport)) {
+    transports.set(transport, new Mutex())
+  }
+  const mutex = transports.get(transport)
   const ledger = new Eth(transport)
   await assertCompat(ledger)
-  const mutex = new Mutex()
 
   // NOTE: this is important because ledger doesnt handle concurrent requests
   // due to a USB bus lock, so you can't use Promise.all

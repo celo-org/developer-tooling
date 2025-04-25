@@ -37,8 +37,7 @@ export default class AccountList extends BaseCommand {
       addresses = await kit.connection.getAccounts()
     }
     // Display the addresses.
-    const localName = res.flags.useLedger ? 'Ledger' : 'Local'
-    const prefix = res.flags.local === undefined ? 'All' : !res.flags.local ? 'Keystore' : localName
+    const prefix = res.flags.useLedger ? 'Ledger' : !res.flags.local ? 'Keystore' : 'Local'
     console.log(`${prefix} Addresses: `, addresses)
   }
 }
