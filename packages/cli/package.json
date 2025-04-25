@@ -34,10 +34,11 @@
     "prepublish": "",
     "prepack": "yarn run build && oclif readme",
     "homebrew": "node ./homebrew/scripts/prepare.mjs",
-    "test": "TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --runInBand --forceExit",
-    "test-anvil": "RUN_GANACHE_TESTS=false RUN_ANVIL_TESTS=true TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --forceExit",
+    "test": "TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --maxWorkers 50% --forceExit",
+    "test-anvil": "RUN_ANVIL_TESTS=true TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --forceExit",
     "test-ci": "TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --runInBand --workerIdleMemoryLimit=0.1 --forceExit",
-    "test-ci-anvil": "yarn test-anvil --workerIdleMemoryLimit=0.1"
+    "test-ci-anvil": "yarn test-anvil --workerIdleMemoryLimit=0.1",
+    "cs": "yarn --top-level run cs"
   },
   "dependencies": {
     "@celo/abis": "11.0.0",

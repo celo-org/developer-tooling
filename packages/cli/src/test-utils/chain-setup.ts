@@ -14,7 +14,6 @@ import Web3 from 'web3'
 import Switch from '../commands/epochs/switch'
 import { testLocallyWithWeb3Node } from './cliUtils'
 
-export const GANACHE_EPOCH_SIZE = 100
 export const MIN_LOCKED_CELO_VALUE = new BigNumber(Web3.utils.toWei('10000', 'ether')) // 10k CELO
 
 const GROUP_COMMISION = new BigNumber(0.1)

@@ -25,7 +25,6 @@
     "@viem/anvil": "^0.0.9",
     "bignumber.js": "^9.0.0",
     "fs-extra": "^8.1.0",
-    "ganache": "npm:@celo/ganache@7.8.0-unofficial.0",
     "targz": "^1.0.1",
     "tmp": "^0.1.0",
     "viem": "^2.23.5",

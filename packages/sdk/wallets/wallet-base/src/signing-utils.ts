@@ -241,48 +241,6 @@ export interface LegacyEncodedTx {
   transaction: FormattedCeloTx
 }
 
-// dont use this its in snake case specifically to make you hesitate.
-export function encode_deprecated_celo_legacy_type_only_for_temporary_ledger_compat(
-  tx: CeloTx
-): LegacyEncodedTx {
-  const transaction = inputCeloTxFormatter(tx)
-  transaction.to = ensureLeading0x((tx.to || '0x').toLowerCase())
-  transaction.nonce = Number(((tx.nonce as any) !== '0x' ? tx.nonce : 0) || 0)
-  transaction.data = (tx.data || '0x').toLowerCase()
-  transaction.value = stringNumberOrBNToHex(tx.value)
-  transaction.gas = stringNumberOrBNToHex(tx.gas)
-  transaction.chainId = tx.chainId || 1
-  // Celo Specific
-  transaction.feeCurrency = ensureLeading0x((tx.feeCurrency || '0x').toLowerCase())
-  // we arent supporting the full classic celo tx so we can zero out these fields.
-
-  // @ts-expect-error
-  transaction.gatewayFeeRecipient = '0x'
-  // @ts-expect-error
-  transaction.gatewayFee = '0x'
-  // Legacy
-  transaction.gasPrice = stringNumberOrBNToHex(tx.gasPrice)
-  // This order should match the order in Geth.
-  // https://github.com/celo-org/celo-blockchain/blob/027dba2e4584936cc5a8e8993e4e27d28d5247b8/core/types/transaction.go#L65
-  const rlpEncode = rlpEncodeHex([
-    stringNumberToHex(transaction.nonce),
-    transaction.gasPrice,
-    transaction.gas,
-    transaction.feeCurrency,
-    // @ts-expect-error
-    transaction.gatewayFeeRecipient,
-    // @ts-expect-error
-    transaction.gatewayFee,
-    transaction.to,
-    transaction.value,
-    transaction.data,
-    stringNumberToHex(transaction.chainId),
-    '0x',
-    '0x',
-  ])
-  return { transaction, rlpEncode, type: 'celo-legacy' }
-}
-
 function concatTypePrefixHex(
   rawTransaction: string,
   txType: (RLPEncodedTx | LegacyEncodedTx)['type']
