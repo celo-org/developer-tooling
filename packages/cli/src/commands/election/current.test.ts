@@ -1,12 +1,8 @@
 import { newKitFromWeb3 } from '@celo/contractkit'
-import { WrapperCache } from '@celo/contractkit/lib/contract-cache'
-import { ElectionWrapper } from '@celo/contractkit/lib/wrappers/Election'
-import { ValidatorsWrapper } from '@celo/contractkit/lib/wrappers/Validators'
-import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
+import { impersonateAccount, testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { ux } from '@oclif/core'
-import BigNumber from 'bignumber.js'
+import { Address } from 'viem'
 import Web3 from 'web3'
-import { registerAccount, setupGroupAndAffiliateValidator } from '../../test-utils/chain-setup'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Current from './current'
 
@@ -18,27 +14,15 @@ afterEach(async () => {
 })
 
 testWithAnvilL2('election:current cmd', async (web3: Web3) => {
+  let logMock: ReturnType<typeof jest.spyOn>
+  let warnMock: ReturnType<typeof jest.spyOn>
+  let writeMock: ReturnType<typeof jest.spyOn>
+  beforeEach(() => {
+    logMock = jest.spyOn(console, 'log')
+    warnMock = jest.spyOn(console, 'warn')
+    writeMock = jest.spyOn(ux.write, 'stdout')
+  })
   it('shows list with no --valset provided', async () => {
-    const kit = newKitFromWeb3(web3)
-    const [
-      signerAddress,
-      anotherSignerAddress,
-      groupAddress,
-      anotherGroupAddress,
-      validatorAddress,
-      anotherValidatorAddress,
-    ] = await web3.eth.getAccounts()
-
-    await setupGroupAndAffiliateValidator(kit, groupAddress, validatorAddress)
-    await setupGroupAndAffiliateValidator(kit, anotherGroupAddress, anotherValidatorAddress)
-
-    await registerAccount(kit, signerAddress)
-    await registerAccount(kit, anotherSignerAddress)
-
-    const logMock = jest.spyOn(console, 'log')
-    const warnMock = jest.spyOn(console, 'warn')
-    const writeMock = jest.spyOn(ux.write, 'stdout')
-
     await testLocallyWithWeb3Node(Current, ['--csv'], web3)
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`
@@ -79,58 +63,37 @@ testWithAnvilL2('election:current cmd', async (web3: Web3) => {
 
   it('shows list with --valset provided', async () => {
     const kit = newKitFromWeb3(web3)
-    const [
-      signerAddress,
-      anotherSignerAddress,
-      groupAddress,
-      anotherGroupAddress,
-      validatorAddress,
-      anotherValidatorAddress,
-      changingSignerAddress,
-    ] = await web3.eth.getAccounts()
+    const epochManager = await kit.contracts.getEpochManager()
+    const accountsContract = await kit.contracts.getAccounts()
 
-    const electionMock = {
-      getCurrentValidatorSigners: jest.fn().mockImplementation(async () => {
-        return [signerAddress, anotherSignerAddress]
-      }),
-    }
-    const getValidatorFromSignerMock = jest.spyOn(
-      ValidatorsWrapper.prototype,
-      'getValidatorFromSigner'
+    const [signer1, signer2] = await epochManager.getElectedSigners()
+
+    const [changingSignerAddress] = await kit.connection.getAccounts()
+
+    const [validator1, validator2] = await Promise.all(
+      [signer1, signer2].map((signer) => accountsContract.signerToAccount(signer))
     )
 
-    getValidatorFromSignerMock
-      .mockImplementationOnce(async () => ({
-        address: validatorAddress,
-        affiliation: groupAddress,
-        blsPublicKey: '0x-bls-public-key-1',
-        ecdsaPublicKey: '0x-ecdsa-public-key-1',
-        name: 'Validator #1',
-        score: new BigNumber(85),
-        signer: signerAddress,
-      }))
-      .mockImplementationOnce(async () => ({
-        address: anotherValidatorAddress,
-        affiliation: anotherGroupAddress,
-        blsPublicKey: '0x-bls-public-key-2',
-        ecdsaPublicKey: '0x-ecdsa-public-key-2',
-        name: 'Validator #2',
-        score: new BigNumber(100),
-        // it's not anotherSignerAddress to emulate changing of the signer and get different output
-        signer: changingSignerAddress,
-      }))
-    await setupGroupAndAffiliateValidator(kit, groupAddress, validatorAddress)
-    await setupGroupAndAffiliateValidator(kit, anotherGroupAddress, anotherValidatorAddress)
+    // Set the names
+    await impersonateAccount(web3, validator1)
+    await accountsContract.setName('Validator #1').sendAndWaitForReceipt({ from: validator1 }),
+      await impersonateAccount(web3, validator2)
+    await accountsContract.setName('Validator #2').sendAndWaitForReceipt({ from: validator2 })
 
-    await registerAccount(kit, signerAddress)
-    await registerAccount(kit, anotherSignerAddress)
+    // // change the signer
+    kit.connection.defaultAccount = validator2 as Address
+    const proof = await accountsContract.generateProofOfKeyPossession(
+      validator2,
+      changingSignerAddress
+    )
+    const txo = await accountsContract.authorizeValidatorSigner(
+      changingSignerAddress,
+      proof,
+      await kit.contracts.getValidators()
+    )
+    await txo.sendAndWaitForReceipt({ from: validator2 })
 
-    const getElectionMock = jest.spyOn(WrapperCache.prototype, 'getElection')
-    getElectionMock.mockImplementation(async () => electionMock as any as ElectionWrapper)
-
-    const logMock = jest.spyOn(console, 'log')
-    const warnMock = jest.spyOn(console, 'warn')
-    const writeMock = jest.spyOn(ux.write, 'stdout')
+    // The actual test
 
     await testLocallyWithWeb3Node(Current, ['--csv', '--valset'], web3)
 
