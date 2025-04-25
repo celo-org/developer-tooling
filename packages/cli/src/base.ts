@@ -119,6 +119,12 @@ export abstract class BaseCommand extends Command {
   //   requireSynced = false
   public requireSynced = true
 
+  // NOTE: this is false by default to prevent breaking changes
+  // but eventually should be true by default
+  // this flag indicates that the WalletClient won't submit txs, it's escpially
+  // useful for the LedgerWalletClient which sometimes needs user input on reads
+  public isReadOnlyWallet = false
+
   private _web3: Web3 | null = null
   private _kit: ContractKit | null = null
 
@@ -250,7 +256,11 @@ export abstract class BaseCommand extends Command {
           console.log('Retrieving derivation Paths', indicesToIterateOver)
           let ledgerConfirmation = AddressValidation.never
           if (res.flags.ledgerConfirmAddress) {
-            ledgerConfirmation = AddressValidation.everyTransaction
+            if (this.isReadOnlyWallet) {
+              ledgerConfirmation = AddressValidation.initializationOnly
+            } else {
+              ledgerConfirmation = AddressValidation.everyTransaction
+            }
           }
 
           this.walletClient = await ledgerToWalletClient({
@@ -312,7 +322,11 @@ export abstract class BaseCommand extends Command {
         console.log('Retrieving derivation Paths', indicesToIterateOver)
         let ledgerConfirmation = AddressValidation.never
         if (res.flags.ledgerConfirmAddress) {
-          ledgerConfirmation = AddressValidation.everyTransaction
+          if (this.isReadOnlyWallet) {
+            ledgerConfirmation = AddressValidation.initializationOnly
+          } else {
+            ledgerConfirmation = AddressValidation.everyTransaction
+          }
         }
         this._wallet = await newLedgerWalletWithSetup(await this.openLedgerTransport(), {
           baseDerivationPath: getDefaultDerivationPath(this.config.configDir),
