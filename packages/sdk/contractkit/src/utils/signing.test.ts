@@ -1,5 +1,5 @@
 import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
-import { ACCOUNT_ADDRESSES, ACCOUNT_PRIVATE_KEYS } from '@celo/dev-utils/lib/ganache-setup'
+import { ACCOUNT_ADDRESSES, ACCOUNT_PRIVATE_KEYS } from '@celo/dev-utils/lib/test-accounts'
 import { LocalSigner, NativeSigner, parseSignature } from '@celo/utils/lib/signatureUtils'
 
 // This only really tests signatureUtils in @celo/utils, but is tested here

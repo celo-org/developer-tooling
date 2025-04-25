@@ -6,7 +6,6 @@ import { privateKeyToAccount } from 'viem/accounts'
 import { celo } from 'viem/chains'
 import Web3 from 'web3'
 import {
-  encode_deprecated_celo_legacy_type_only_for_temporary_ledger_compat,
   extractSignature,
   getSignerFromTxEIP2718TX,
   handleBigInt,
@@ -302,44 +301,6 @@ describe('rlpEncodedTx', () => {
       expect(parsedCK).toEqual(parsedViem)
       expect(serialized.rlpEncode).toEqual(viemSerialized)
     })
-  })
-})
-
-describe('encode_deprecated_celo_legacy_type_only_for_temporary_ledger_compat', () => {
-  test('serializes the deprecated tx type correctly', () => {
-    const legacyTransaction = {
-      feeCurrency: '0x5409ED021D9299bf6814279A6A1411A7e866A631',
-      from: ACCOUNT_ADDRESS1,
-      to: ACCOUNT_ADDRESS1,
-      chainId: 2,
-      value: Web3.utils.toWei('1000', 'ether'),
-      nonce: 1,
-      gas: '1500000000',
-      gasPrice: '9900000000',
-      data: '0xabcdef',
-    } as const
-
-    const result =
-      encode_deprecated_celo_legacy_type_only_for_temporary_ledger_compat(legacyTransaction)
-    expect(result).toMatchInlineSnapshot(`
-      {
-        "rlpEncode": "0xf8490185024e1603008459682f00945409ed021d9299bf6814279a6a1411a7e866a6318080941be31a94361a391bbafb2a4ccd704f57dc04d4bb893635c9adc5dea0000083abcdef028080",
-        "transaction": {
-          "chainId": 2,
-          "data": "0xabcdef",
-          "feeCurrency": "0x5409ed021d9299bf6814279a6a1411a7e866a631",
-          "from": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
-          "gas": "0x59682f00",
-          "gasPrice": "0x024e160300",
-          "gatewayFee": "0x",
-          "gatewayFeeRecipient": "0x",
-          "nonce": 1,
-          "to": "0x1be31a94361a391bbafb2a4ccd704f57dc04d4bb",
-          "value": "0x3635c9adc5dea00000",
-        },
-        "type": "celo-legacy",
-      }
-    `)
   })
 })
 
