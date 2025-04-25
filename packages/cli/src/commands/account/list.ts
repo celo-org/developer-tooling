@@ -14,6 +14,15 @@ export default class AccountList extends BaseCommand {
   }
   requireSynced = false
 
+  async init() {
+    const wallet = await this.getWalletClient()
+    if (!wallet) {
+      return super.init()
+    } else {
+      // noop - this maybe skips the --node check?
+    }
+  }
+
   async run() {
     const res = await this.parse(AccountList)
     const wallet = await this.getWalletClient()
