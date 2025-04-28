@@ -161,7 +161,7 @@ testWithAnvilL2(
     beforeEach(async () => {
       // need to set multical deployment on the address it is found on alfajores
       // since this test impersonates alfajores chain id
-      deployMultiCall(web3, celoAlfajores.contracts.multicall3.address)
+      await deployMultiCall(web3, celoAlfajores.contracts.multicall3.address)
 
       accounts = (await web3.eth.getAccounts()) as StrongAddress[]
       kit.defaultAccount = accounts[0]

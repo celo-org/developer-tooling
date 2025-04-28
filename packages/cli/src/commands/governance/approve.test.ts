@@ -28,10 +28,10 @@ testWithAnvilL2(
   (web3: Web3) => {
     const HOTFIX_HASH = '0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d'
     const HOTFIX_BUFFER = hexToBuffer(HOTFIX_HASH)
-    beforeEach(() => {
+    beforeEach(async () => {
       // need to set multical deployment on the address it is found on alfajores
       // since this test impersonates alfajores chain id
-      deployMultiCall(web3, celoAlfajores.contracts.multicall3.address)
+      await deployMultiCall(web3, celoAlfajores.contracts.multicall3.address)
       jest.spyOn(console, 'log').mockImplementation(() => {})
       jest.spyOn(console, 'error').mockImplementation(() => {})
     })

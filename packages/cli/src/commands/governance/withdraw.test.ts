@@ -36,7 +36,7 @@ testWithAnvilL2(
       logMock.mockClear().mockImplementation()
       errorMock.mockClear().mockImplementation()
 
-      deployMultiCall(web3, celoAlfajores.contracts.multicall3.address)
+      await deployMultiCall(web3, celoAlfajores.contracts.multicall3.address)
 
       accounts = (await web3.eth.getAccounts()) as StrongAddress[]
       kit.defaultAccount = accounts[0]
