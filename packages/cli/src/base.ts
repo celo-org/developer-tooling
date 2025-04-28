@@ -1,6 +1,7 @@
-import { StrongAddress } from '@celo/base'
+import { ensureLeading0x, StrongAddress } from '@celo/base'
 import { ReadOnlyWallet } from '@celo/connect'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
+import { ledgerToWalletClient } from '@celo/viem-account-ledger'
 import { AzureHSMWallet } from '@celo/wallet-hsm-azure'
 import { AddressValidation, newLedgerWalletWithSetup } from '@celo/wallet-ledger'
 import { LocalWallet } from '@celo/wallet-local'
@@ -10,12 +11,13 @@ import { CLIError } from '@oclif/core/lib/errors'
 import { FlagInput } from '@oclif/core/lib/interfaces/parser'
 import chalk from 'chalk'
 import net from 'net'
-import { createPublicClient, extractChain, http } from 'viem'
+import { createPublicClient, createWalletClient, extractChain, http, Transport } from 'viem'
+import { privateKeyToAccount } from 'viem/accounts'
 import { celo, celoAlfajores } from 'viem/chains'
 import { ipc } from 'viem/node'
 import Web3 from 'web3'
 import { celoBaklava } from './packages-to-be/chains'
-import { CeloClient } from './packages-to-be/client'
+import { CeloClient, WalletCeloClient } from './packages-to-be/client'
 import { CustomFlags } from './utils/command'
 import { getDefaultDerivationPath, getNodeUrl } from './utils/config'
 import { getFeeCurrencyContractWrapper } from './utils/fee-currency'
@@ -117,10 +119,19 @@ export abstract class BaseCommand extends Command {
   //   requireSynced = false
   public requireSynced = true
 
+  // NOTE: this is false by default to prevent breaking changes
+  // but eventually should be true by default
+  // this flag indicates that the WalletClient won't submit txs, it's escpially
+  // useful for the LedgerWalletClient which sometimes needs user input on reads
+  public isOnlyReadingWallet = false
+
   private _web3: Web3 | null = null
   private _kit: ContractKit | null = null
 
   private publicClient: CeloClient | null = null
+  private walletClient: WalletCeloClient | null = null
+
+  private ledgerTransport: Awaited<ReturnType<(typeof _TransportNodeHid)['open']>> | null = null
 
   async getWeb3() {
     if (!this._web3) {
@@ -164,13 +175,28 @@ export abstract class BaseCommand extends Command {
     return this._kit
   }
 
+  private async getTransport(): Promise<Transport> {
+    const nodeUrl = await this.getNodeUrl()
+    return nodeUrl && nodeUrl.endsWith('.ipc') ? ipc(nodeUrl) : http(nodeUrl)
+  }
+
+  private async openLedgerTransport() {
+    if (!this.ledgerTransport) {
+      // types seem to be suggesting 2 defaults but js is otherwise for TransportNodeHid
+      const TransportNodeHid: typeof _TransportNodeHid =
+        // @ts-expect-error
+        _TransportNodeHid.default || _TransportNodeHid
+      this.ledgerTransport = await TransportNodeHid.open('')
+    }
+    return this.ledgerTransport!
+  }
+
   // TODO(viem): This shouldn't be public, but for the time being to be called
   // from CheckBuilder to allow smooth transitions it is public.
   public async getPublicClient(): Promise<CeloClient> {
     if (!this.publicClient) {
       const nodeUrl = await this.getNodeUrl()
-
-      const transport = nodeUrl && nodeUrl.endsWith('.ipc') ? ipc(nodeUrl) : http(nodeUrl)
+      const transport = await this.getTransport()
 
       // Create an intermediate client to get the chain id
       const intermediateClient = createPublicClient({
@@ -179,7 +205,7 @@ export abstract class BaseCommand extends Command {
       const chainId = await intermediateClient.getChainId()
       const extractedChain = extractChain({
         chains: [celo, celoAlfajores, celoBaklava],
-        id: chainId as 42_220 | 44_787 | 62_320,
+        id: chainId as typeof celo.id | typeof celoAlfajores.id | typeof celoBaklava.id,
       })
 
       if (extractedChain) {
@@ -209,6 +235,68 @@ export abstract class BaseCommand extends Command {
     return this.publicClient
   }
 
+  public async getWalletClient(): Promise<WalletCeloClient | null> {
+    if (!this.walletClient) {
+      const [transport, publicClient, res] = await Promise.all([
+        this.getTransport(),
+        this.getPublicClient(),
+        this.parse(),
+      ])
+
+      if (res.flags.useLedger) {
+        try {
+          const isLedgerLiveMode = res.flags.ledgerLiveMode
+          const indicesToIterateOver: number[] = res.raw.some(
+            (value: any) => value.flag === 'ledgerCustomAddresses'
+          )
+            ? JSON.parse(res.flags.ledgerCustomAddresses)
+            : Array.from(Array(res.flags.ledgerAddresses).keys())
+
+          console.log('Retrieving derivation Paths', indicesToIterateOver)
+          let ledgerConfirmation = AddressValidation.never
+          if (res.flags.ledgerConfirmAddress) {
+            if (this.isOnlyReadingWallet) {
+              ledgerConfirmation = AddressValidation.initializationOnly
+            } else {
+              ledgerConfirmation = AddressValidation.everyTransaction
+            }
+          }
+
+          this.walletClient = await ledgerToWalletClient({
+            transport: await this.openLedgerTransport(),
+            baseDerivationPath: getDefaultDerivationPath(this.config.configDir),
+            derivationPathIndexes: isLedgerLiveMode ? [0] : indicesToIterateOver,
+            changeIndexes: isLedgerLiveMode ? indicesToIterateOver : [0],
+            ledgerAddressValidation: ledgerConfirmation,
+            walletClientOptions: {
+              transport,
+              chain: publicClient.chain,
+            },
+          })
+        } catch (err) {
+          console.log('Check if the ledger is connected and logged.')
+          throw err
+        }
+      } else if (res.flags.useAKV) {
+        // NOTE: Fallback to web3
+        this.walletClient = null
+      } else if (res.flags.privateKey) {
+        this.walletClient = createWalletClient({
+          transport,
+          chain: publicClient.chain,
+          account: privateKeyToAccount(ensureLeading0x(res.flags.privateKey)),
+        })
+      } else {
+        this.walletClient = createWalletClient({
+          transport,
+          chain: publicClient.chain,
+        })
+      }
+    }
+
+    return this.walletClient
+  }
+
   async init() {
     if (this.requireSynced) {
       await requireNodeIsSynced(await this.getPublicClient())
@@ -226,11 +314,6 @@ export abstract class BaseCommand extends Command {
     if (res.flags.useLedger) {
       try {
         const isLedgerLiveMode = res.flags.ledgerLiveMode
-        // types seem to be suggesting 2 defaults but js is otherwise for TransportNodeHid
-        const TransportNodeHid: typeof _TransportNodeHid =
-          // @ts-expect-error
-          _TransportNodeHid.default || _TransportNodeHid
-        const transport = await TransportNodeHid.open('')
         const indicesToIterateOver: number[] = res.raw.some(
           (value) => (value as any).flag === 'ledgerCustomAddresses'
         )
@@ -240,9 +323,13 @@ export abstract class BaseCommand extends Command {
         console.log('Retrieving derivation Paths', indicesToIterateOver)
         let ledgerConfirmation = AddressValidation.never
         if (res.flags.ledgerConfirmAddress) {
-          ledgerConfirmation = AddressValidation.everyTransaction
+          if (this.isOnlyReadingWallet) {
+            ledgerConfirmation = AddressValidation.initializationOnly
+          } else {
+            ledgerConfirmation = AddressValidation.everyTransaction
+          }
         }
-        this._wallet = await newLedgerWalletWithSetup(transport, {
+        this._wallet = await newLedgerWalletWithSetup(await this.openLedgerTransport(), {
           baseDerivationPath: getDefaultDerivationPath(this.config.configDir),
           derivationPathIndexes: isLedgerLiveMode ? [0] : indicesToIterateOver,
           changeIndexes: isLedgerLiveMode ? indicesToIterateOver : [0],

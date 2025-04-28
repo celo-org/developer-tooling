@@ -18,7 +18,7 @@
     "build": "yarn run --top-level tsc -b .",
     "clean": "yarn run --top-level tsc -b . --clean",
     "docs": "yarn run --top-level typedoc",
-    "test": "yarn run --top-level jest --ci --forceExit",
+    "test": "yarn run --top-level jest",
     "test:verbose": "yarn run --top-level jest --verbose",
     "lint": "yarn run --top-level eslint -c .eslintrc.js "
   },

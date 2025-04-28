@@ -34,10 +34,8 @@
     "prepublish": "",
     "prepack": "yarn run build && oclif readme",
     "homebrew": "node ./homebrew/scripts/prepare.mjs",
-    "test": "TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --maxWorkers 50% --forceExit",
-    "test-anvil": "RUN_ANVIL_TESTS=true TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --forceExit",
-    "test-ci": "TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --runInBand --workerIdleMemoryLimit=0.1 --forceExit",
-    "test-ci-anvil": "yarn test-anvil --workerIdleMemoryLimit=0.1",
+    "test": "TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --maxWorkers 50% --silent --forceExit",
+    "test-ci": "TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --workerIdleMemoryLimit=0.1 --forceExit --ci",
     "cs": "yarn --top-level run cs"
   },
   "dependencies": {
@@ -53,6 +51,7 @@
     "@celo/metadata-claims": "^1.0.3",
     "@celo/phone-utils": "^6.0.6",
     "@celo/utils": "^8.0.2",
+    "@celo/viem-account-ledger": "^1.1.1",
     "@celo/wallet-hsm-azure": "^7.0.2-beta.0",
     "@celo/wallet-ledger": "^7.0.2-beta.0",
     "@celo/wallet-local": "^7.0.2-beta.0",
@@ -85,7 +84,7 @@
   },
   "devDependencies": {
     "@celo/celo-devchain": "^7.0.0",
-    "@celo/dev-utils": "0.1.0-beta.1",
+    "@celo/dev-utils": "workspace:^",
     "@celo/typescript": "workspace:^",
     "@types/debug": "^4.1.4",
     "@types/fs-extra": "^8.0.0",
