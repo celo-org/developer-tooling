@@ -20,7 +20,7 @@
     "build": "yarn run --top-level tsc -b .",
     "clean": "yarn run --top-level tsc -b . --clean",
     "docs": "yarn run --top-level typedoc",
-    "test": "NODE_OPTIONS='--experimental-vm-modules' yarn run --top-level jest --runInBand s --workerIdleMemoryLimit=0.1",
+    "test": "NODE_OPTIONS='--experimental-vm-modules' yarn run --top-level jest --workerIdleMemoryLimit=0.1",
     "lint": "yarn run --top-level eslint -c .eslintrc.js ",
     "prepublishOnly": "yarn build"
   },
