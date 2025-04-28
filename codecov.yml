@@ -13,6 +13,7 @@ ignore:
   - 'docs'
   - '.github'
   - '.changeset'
+  - '**/scripts/*'
 
 component_management:
   default_rules:

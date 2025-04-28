@@ -2,10 +2,15 @@
   "name": "@celo/viem-account-ledger",
   "version": "1.1.1",
   "description": "Helper library to make ledger<->viem interactions easier",
-  "type": "module",
-  "main": "lib/index.js",
-  "module": "lib-es/index.js",
-  "types": "lib/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "module": "dist/mjs/index.js",
+  "types": "dist/mjs/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/mjs/index.js",
+      "require": "./dist/cjs/index.js"
+    }
+  },
   "author": "cLabs",
   "license": "Apache-2.0",
   "homepage": "https://docs.celo.org/developer/tools",
@@ -21,12 +26,14 @@
     "ledger"
   ],
   "scripts": {
-    "build": "yarn build:cjs && yarn build:esm",
-    "build:cjs": "yarn --top-level run tsc -m commonjs",
-    "build:esm": "yarn --top-level run tsc -m ES6 --outDir lib-es",
-    "clean": "yarn --top-level run tsc -b . --clean && yarn run rimraf lib lib-es",
+    "build": "yarn clean && yarn build:cjs && yarn build:mjs && yarn postbuild",
+    "build:cjs": "yarn --top-level run tsc -p tsconfig-cjs.json",
+    "build:mjs": "yarn --top-level run tsc -p tsconfig.json",
+    "postbuild": "node ./scripts/post-build.mjs",
+    "clean": "yarn --top-level run tsc -b . --clean && yarn run rimraf dist",
     "docs": "yarn --top-level run typedoc",
     "test": "yarn run vitest --run",
+    "test:watch": "yarn run vitest --watch",
     "lint": "yarn --top-level run eslint -c .eslintrc.cjs ",
     "prepublishOnly": "yarn clean && yarn build"
   },
@@ -51,7 +58,7 @@
     "@vitest/coverage-v8": "2.1.9",
     "dotenv": "^8.2.0",
     "rimraf": "^4.4.1",
-    "viem": "^2.21.55",
+    "viem": "^2.23.5",
     "vitest": "^2.1.9"
   },
   "engines": {

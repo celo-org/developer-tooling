@@ -1,9 +1,11 @@
+import { sleep } from '@celo/base'
 import { describe, expect, it, test, vi } from 'vitest'
 import { ACCOUNT_ADDRESS1, mockLedger, TEST_CHAIN_ID } from './test-utils'
 import {
   assertCompat,
   checkForKnownToken,
   meetsVersionRequirements,
+  Mutex,
   readAppName,
   transportErrorFriendlyMessage,
 } from './utils.js'
@@ -138,5 +140,20 @@ describe('utils', () => {
       ).resolves.toBeUndefined()
       expect(spy.mock.calls.length).toBe(2)
     })
+  })
+
+  describe('Mutex', () => {
+    it('prevents simultaenous promises', async () => {
+      const mutex = new Mutex()
+
+      const lockedSleep = async (ms: number) => {
+        const unlock = await mutex.lock()
+        await sleep(ms)
+        await unlock()
+      }
+      const start = Date.now()
+      await Promise.all([lockedSleep(500), lockedSleep(500), lockedSleep(500)])
+      expect(Date.now()).toBeGreaterThanOrEqual(start + 1500)
+    }, 2_000)
   })
 })

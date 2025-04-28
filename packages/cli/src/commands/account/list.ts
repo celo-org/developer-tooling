@@ -1,3 +1,4 @@
+import { StrongAddress } from '@celo/base'
 import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 export default class AccountList extends BaseCommand {
@@ -12,27 +13,32 @@ export default class AccountList extends BaseCommand {
     }),
   }
   requireSynced = false
+  isOnlyReadingWallet = true
+
+  async init() {
+    const wallet = await this.getWalletClient()
+    if (!wallet) {
+      return super.init()
+    } else {
+      // noop - this maybe skips the --node check?
+    }
+  }
 
   async run() {
-    const kit = await this.getKit()
     const res = await this.parse(AccountList)
-    // Retrieve accounts from the connected Celo node.
-    const allAddresses = !res.flags.local ? await kit.connection.getAccounts() : []
-
-    // Get addresses from the local wallet.
-    const localAddresses = res.flags.local ?? true ? kit.connection.getLocalAccounts() : []
-
+    const wallet = await this.getWalletClient()
+    let addresses: StrongAddress[]
+    if (wallet) {
+      // Retrieve accounts from the connected Celo node.
+      addresses = await wallet.getAddresses()
+    } else {
+      // TODO: remove me when useAKV implemented or deprecated
+      // NOTE: Fallback to web3 for `useAKV` flag
+      const kit = await this.getKit()
+      addresses = await kit.connection.getAccounts()
+    }
     // Display the addresses.
-    const localName = res.flags.useLedger ? 'Ledger' : 'Local'
-    if (res.flags.local === undefined) {
-      console.log('All Addresses: ', allAddresses)
-    }
-    if (!res.flags.local) {
-      const nodeAddresses = allAddresses.filter((address) => !localAddresses.includes(address))
-      console.log('Keystore Addresses: ', nodeAddresses)
-    }
-    if (res.flags.local ?? true) {
-      console.log(`${localName} Addresses: `, localAddresses)
-    }
+    const prefix = res.flags.useLedger ? 'Ledger' : 'All'
+    console.log(`${prefix} Addresses: `, addresses)
   }
 }
