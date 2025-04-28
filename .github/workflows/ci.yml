@@ -223,7 +223,7 @@ jobs:
           version: "nightly-f625d0fa7c51e65b4bf1e8f7931cd1c6e2e285e9"
       - name: Run tests
         run: |
-          yarn workspace @celo/contractkit test-anvil --coverage
+          yarn workspace @celo/contractkit test-ci --coverage
       - uses: ./.github/actions/upload-codecov
         name: Upload Code Coverage
         with:
@@ -274,7 +274,7 @@ jobs:
           version: ${{ env.SUPPORTED_FOUNDRY_VERSION }}
       - name: Run tests
         run: |
-          yarn workspace @celo/celocli test-ci-anvil --coverage
+          yarn workspace @celo/celocli test-ci --coverage
       - name: Verify that a new account can be created
         run: |
           yarn workspace @celo/celocli run celocli account:new

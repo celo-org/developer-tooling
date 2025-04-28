@@ -25,7 +25,7 @@
     "prepublishOnly": "yarn build",
     "docs": "yarn run --top-level typedoc",
     "test": "NODE_OPTIONS=--experimental-vm-modules yarn run --top-level jest --maxWorkers=50% --forceExit",
-    "test-anvil": "RUN_ANVIL_TESTS=true NODE_OPTIONS=--experimental-vm-modules yarn run --top-level jest --forceExit",
+    "test-ci": "NODE_OPTIONS=--experimental-vm-modules yarn run --top-level jest --forceExit --ci",
     "lint": "yarn run --top-level eslint -c .eslintrc.js "
   },
   "dependencies": {
