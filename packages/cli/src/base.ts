@@ -123,7 +123,7 @@ export abstract class BaseCommand extends Command {
   // but eventually should be true by default
   // this flag indicates that the WalletClient won't submit txs, it's escpially
   // useful for the LedgerWalletClient which sometimes needs user input on reads
-  public isReadOnlyWallet = false
+  public isOnlyReadingWallet = false
 
   private _web3: Web3 | null = null
   private _kit: ContractKit | null = null
@@ -254,7 +254,7 @@ export abstract class BaseCommand extends Command {
           console.log('Retrieving derivation Paths', indicesToIterateOver)
           let ledgerConfirmation = AddressValidation.never
           if (res.flags.ledgerConfirmAddress) {
-            if (this.isReadOnlyWallet) {
+            if (this.isOnlyReadingWallet) {
               ledgerConfirmation = AddressValidation.initializationOnly
             } else {
               ledgerConfirmation = AddressValidation.everyTransaction
@@ -322,7 +322,7 @@ export abstract class BaseCommand extends Command {
         console.log('Retrieving derivation Paths', indicesToIterateOver)
         let ledgerConfirmation = AddressValidation.never
         if (res.flags.ledgerConfirmAddress) {
-          if (this.isReadOnlyWallet) {
+          if (this.isOnlyReadingWallet) {
             ledgerConfirmation = AddressValidation.initializationOnly
           } else {
             ledgerConfirmation = AddressValidation.everyTransaction

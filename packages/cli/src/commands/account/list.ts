@@ -13,7 +13,7 @@ export default class AccountList extends BaseCommand {
     }),
   }
   requireSynced = false
-  isReadOnlyWallet = true
+  isOnlyReadingWallet = true
 
   async init() {
     const wallet = await this.getWalletClient()
