@@ -11,8 +11,10 @@ import {
 import { ux } from '@oclif/core'
 import Safe, { getSafeAddressFromDeploymentTx } from '@safe-global/protocol-kit'
 import * as fs from 'fs'
+import { celoAlfajores } from 'viem/chains'
 import Web3 from 'web3'
 import { EXTRA_LONG_TIMEOUT_MS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { deployMultiCall } from '../../test-utils/multicall'
 import { createMultisig, setupSafeContracts } from '../../test-utils/multisigUtils'
 import Approve from '../multisig/approve'
 import Propose from './propose'
@@ -157,6 +159,10 @@ testWithAnvilL2(
     let accounts: StrongAddress[] = []
 
     beforeEach(async () => {
+      // need to set multical deployment on the address it is found on alfajores
+      // since this test impersonates alfajores chain id
+      deployMultiCall(web3, celoAlfajores.contracts.multicall3.address)
+
       accounts = (await web3.eth.getAccounts()) as StrongAddress[]
       kit.defaultAccount = accounts[0]
       governance = await kit.contracts.getGovernance()
