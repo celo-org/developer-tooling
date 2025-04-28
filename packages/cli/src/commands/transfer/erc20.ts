@@ -1,10 +1,11 @@
-import { IERC20 } from '@celo/abis/web3/IERC20'
-import { Erc20Wrapper } from '@celo/contractkit/lib/wrappers/Erc20Wrapper'
 import { Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
+import assert from 'node:assert'
+import { erc20Abi } from 'viem'
 import { BaseCommand } from '../../base'
+import { bigNumberToBigInt } from '../../packages-to-be/utils'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx, failWith } from '../../utils/cli'
+import { displayViemTx, failWith } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 export default class TransferErc20 extends BaseCommand {
   static description = 'Transfer ERC20 to a specified address'
@@ -34,19 +35,34 @@ export default class TransferErc20 extends BaseCommand {
   ]
 
   async run() {
-    const kit = await this.getKit()
     const res = await this.parse(TransferErc20)
+    const client = await this.getPublicClient()
+    const wallet = await this.getWalletClient()
+
+    if (!wallet) {
+      throw new Error('TODO: only AKV doesnt return a wallet')
+    }
 
     const from = res.flags.from
     const to = res.flags.to
     const value = new BigNumber(res.flags.value)
 
-    kit.defaultAccount = from
-    let celoToken: Erc20Wrapper<IERC20>
+    assert(
+      wallet.account.address === res.flags.from,
+      '--from address doesnt correspond to the wallet being used'
+    )
+
+    const erc20Contract = {
+      abi: erc20Abi,
+      address: res.flags.erc20Address,
+    } as const
+
     try {
-      celoToken = await kit.contracts.getErc20(res.flags.erc20Address)
-      // this call allow us to check if it is a valid erc20
-      await celoToken.balanceOf(res.flags.from)
+      await client.readContract({
+        ...erc20Contract,
+        functionName: 'balanceOf',
+        args: [wallet.account.address],
+      })
     } catch {
       failWith('Invalid erc20 address')
     }
@@ -56,6 +72,13 @@ export default class TransferErc20 extends BaseCommand {
       .hasEnoughErc20(from, value, res.flags.erc20Address)
       .runChecks()
 
-    await displaySendTx('transfer', celoToken.transfer(to, value.toFixed()))
+    const { request } = await client.simulateContract({
+      ...erc20Contract,
+      functionName: 'transfer',
+      args: [to, bigNumberToBigInt(value)],
+      account: wallet.account,
+    })
+
+    await displayViemTx('transfer', wallet.writeContract(request), client)
   }
 }
