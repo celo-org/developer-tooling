@@ -296,7 +296,6 @@ export abstract class BaseCommand extends Command {
   }
 
   async init() {
-    console.log('hello?')
     if (this.requireSynced) {
       await requireNodeIsSynced(await this.getPublicClient())
     }
