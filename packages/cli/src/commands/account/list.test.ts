@@ -1,54 +1,51 @@
-import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
-import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
-import { AddressValidation } from '@celo/wallet-ledger/lib/ledger-wallet'
-import { LocalWallet } from '@celo/wallet-local'
-import Web3 from 'web3'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { ACCOUNT_ADDRESSES, ACCOUNT_PRIVATE_KEYS } from '@celo/dev-utils/lib/test-accounts'
+import { viem_testWithAnvil } from '@celo/dev-utils/lib/viem/anvil-test'
+
+import { StrongAddress } from '@celo/base'
+import { getAddress } from 'viem'
+import { testLocallyWithViemNode } from '../../test-utils/cliUtils'
 import List from './list'
 
 process.env.NO_SYNCCHECK = 'true'
 
-jest.mock('@celo/wallet-ledger', () => {
+jest.mock('@celo/viem-account-ledger', () => {
   return {
-    AddressValidation,
-    newLedgerWalletWithSetup: jest.fn(() => {
-      const wallet = new LocalWallet()
-      jest.spyOn(wallet, 'getAccounts').mockImplementation(() => {
-        return [
+    ledgerToWalletClient: jest.fn(() => {
+      return {
+        getAddresses: async () => [
           '0x7457d5E02197480Db681D3fdF256c7acA21bDc12',
           '0x91c987bf62D25945dB517BDAa840A6c661374402',
-        ]
-      })
-      return wallet
+        ],
+      }
     }),
   }
 })
 
-testWithAnvilL2('account:list', (web3: Web3) => {
-  let account: string
-  let accounts: string[]
-  let kit: ContractKit
-
-  beforeEach(async () => {
-    accounts = await web3.eth.getAccounts()
-    kit = newKitFromWeb3(web3)
-    account = accounts[0]
-
-    const accountsInstance = await kit.contracts.getAccounts()
-    await accountsInstance.createAccount().sendAndWaitForReceipt({ from: account })
+viem_testWithAnvil('account:list', (client) => {
+  test('shows the list of accounts', async () => {
+    const accounts: StrongAddress[] = await client.request({
+      method: 'eth_requestAccounts',
+      params: [],
+    })
+    const spy = jest.spyOn(console, 'log')
+    await testLocallyWithViemNode(List, [], client)
+    expect(spy).toHaveBeenCalledWith(
+      'All Addresses: ',
+      accounts.map((x) => getAddress(x)) // checksums
+    )
   })
 
-  test('shows the list of accounts', async () => {
+  test('shows the list of accounts when --privateKey given', async () => {
     const spy = jest.spyOn(console, 'log')
 
-    await testLocallyWithWeb3Node(List, [], web3)
-    expect(spy).toHaveBeenCalledWith('All Addresses: ', accounts)
+    await testLocallyWithViemNode(List, ['-k', ACCOUNT_PRIVATE_KEYS[0]], client)
+    expect(spy).toHaveBeenCalledWith('All Addresses: ', [ACCOUNT_ADDRESSES[0]])
   })
 
   test('shows the list of accounts when --useLedger given', async () => {
     const spy = jest.spyOn(console, 'log')
 
-    await testLocallyWithWeb3Node(List, ['--useLedger'], web3)
+    await testLocallyWithViemNode(List, ['--useLedger'], client)
     expect(spy).toHaveBeenCalledWith('Ledger Addresses: ', [
       '0x7457d5E02197480Db681D3fdF256c7acA21bDc12',
       '0x91c987bf62D25945dB517BDAa840A6c661374402',
