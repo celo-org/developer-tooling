@@ -1,5 +1,4 @@
 import { eqAddress, NULL_ADDRESS } from '@celo/base'
-import BigNumber from 'bignumber.js'
 import { Address, PublicClient } from 'viem'
 import {
   AccountsContract,
@@ -8,22 +7,21 @@ import {
   getValidatorsContract,
   ValidatorsContract,
 } from './contracts'
-import { bigintToBigNumber } from './utils'
 
-interface UnnamedValidator {
+interface UnnamedRpcNode {
   address: Address
   ecdsaPublicKey: string
   affiliation: string
-  score: BigNumber
+  score: bigint
   signer: Address
   name?: string
 }
 
-interface NamedValidator extends UnnamedValidator {
+export interface ElectedRpcNode extends UnnamedRpcNode {
   name: string
 }
 
-export async function getElectedValidators(
+export async function getElectedRpcNodes(
   client: PublicClient,
   options: { showChanges?: boolean } = {}
 ) {
@@ -60,7 +58,7 @@ export async function getElectedValidators(
 }
 
 function decorateWithChangedStatus(
-  electedValidatorsWithNames: NamedValidator[],
+  electedValidatorsWithNames: ElectedRpcNode[],
   electedSigners: readonly Address[]
 ) {
   return electedValidatorsWithNames.map((validator, index) => {
@@ -74,11 +72,11 @@ function decorateWithChangedStatus(
 }
 
 async function decorateWithName(
-  validator: UnnamedValidator,
+  validator: UnnamedRpcNode,
   accountsContract: AccountsContract
-): Promise<NamedValidator> {
+): Promise<ElectedRpcNode> {
   if (validator.name) {
-    return validator as NamedValidator
+    return validator as ElectedRpcNode
   }
   const name = await accountsContract.read.getName([validator.address])
   return {
@@ -98,11 +96,11 @@ async function accountToValidator({
 }) {
   if (eqAddress(account, NULL_ADDRESS) || !(await validators.read.isValidator([account]))) {
     return {
-      name: 'Unregistered validator',
+      name: 'Unregistered rpc node',
       address: account,
       ecdsaPublicKey: '',
       affiliation: '',
-      score: new BigNumber(0),
+      score: 0n,
       signer: signer,
     }
   } else {
@@ -113,7 +111,7 @@ async function accountToValidator({
       address: account,
       ecdsaPublicKey: ecdsaPublicKey,
       affiliation: affiliation,
-      score: bigintToBigNumber(score),
+      score: score,
       signer: signer,
     }
   }

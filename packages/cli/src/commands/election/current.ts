@@ -1,9 +1,7 @@
 import { Flags, ux } from '@oclif/core'
 
-import { PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
-import { getElectedValidators } from '../../packages-to-be/elected'
-import { validatorTable } from '../validator/list'
+import { ElectedRpcNode, getElectedRpcNodes } from '../../packages-to-be/elected'
 
 export const otherValidatorTable: ux.Table.table.Columns<{ address: string }> = {
   address: {},
@@ -12,9 +10,19 @@ export const otherValidatorTable: ux.Table.table.Columns<{ address: string }> = 
   signer: {},
   changed: {},
 }
+
+export const validatorTable: ux.Table.table.Columns<Record<'rpc', ElectedRpcNode>> = {
+  address: { get: ({ rpc }) => rpc.address },
+  name: { get: ({ rpc }) => rpc.name },
+  affiliation: { get: ({ rpc }) => rpc.affiliation },
+  score: { get: ({ rpc }) => rpc.score.toString() },
+  ecdsaPublicKey: { get: ({ rpc }) => rpc.ecdsaPublicKey },
+  signer: { get: ({ rpc }) => rpc.signer },
+}
+
 export default class ElectionCurrent extends BaseCommand {
   static description =
-    'Outputs the set of validators currently elected. An election is run to select the validator set at the end of every epoch.'
+    'Outputs the set of rpc nodes currently elected. An election is run to select the community rpc node set at the end of every epoch.'
 
   static flags = {
     ...BaseCommand.flags,
@@ -28,8 +36,9 @@ export default class ElectionCurrent extends BaseCommand {
   async run() {
     const client = await this.getPublicClient()
     const res = await this.parse(ElectionCurrent)
-    ux.action.start('Fetching currently elected Validators')
-    const validatorList = await getElectedValidators(client as unknown as PublicClient, {
+    ux.action.start('Fetching currently Elected Community Rpc Nodes')
+    // @ts-expect-error - remove when nicos branch is merged
+    const validatorList = await getElectedRpcNodes(client, {
       showChanges: res.flags.valset,
     })
     ux.action.stop()
@@ -37,8 +46,7 @@ export default class ElectionCurrent extends BaseCommand {
       ux.table(validatorList, otherValidatorTable, res.flags)
     } else {
       ux.table(
-        validatorList.map((v) => ({ v })),
-        // @ts-ignore
+        validatorList.map((rpc) => ({ rpc })),
         validatorTable,
         res.flags
       )
