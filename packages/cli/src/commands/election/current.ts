@@ -3,7 +3,7 @@ import { Flags, ux } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { ElectedRpcNode, getElectedRpcNodes } from '../../packages-to-be/elected'
 
-export const otherValidatorTable: ux.Table.table.Columns<{ address: string }> = {
+export const valSetRpcNodeTable: ux.Table.table.Columns<{ address: string }> = {
   address: {},
   name: {},
   currentSigner: {},
@@ -11,7 +11,7 @@ export const otherValidatorTable: ux.Table.table.Columns<{ address: string }> = 
   changed: {},
 }
 
-export const validatorTable: ux.Table.table.Columns<Record<'rpc', ElectedRpcNode>> = {
+export const rpcNodeTable: ux.Table.table.Columns<Record<'rpc', ElectedRpcNode>> = {
   address: { get: ({ rpc }) => rpc.address },
   name: { get: ({ rpc }) => rpc.name },
   affiliation: { get: ({ rpc }) => rpc.affiliation },
@@ -43,11 +43,11 @@ export default class ElectionCurrent extends BaseCommand {
     })
     ux.action.stop()
     if (res.flags.valset) {
-      ux.table(validatorList, otherValidatorTable, res.flags)
+      ux.table(validatorList, valSetRpcNodeTable, res.flags)
     } else {
       ux.table(
         validatorList.map((rpc) => ({ rpc })),
-        validatorTable,
+        rpcNodeTable,
         res.flags
       )
     }
