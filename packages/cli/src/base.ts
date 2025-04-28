@@ -242,8 +242,6 @@ export abstract class BaseCommand extends Command {
         this.parse(),
       ])
 
-      console.log(res.flags)
-
       if (res.flags.useLedger) {
         try {
           const isLedgerLiveMode = res.flags.ledgerLiveMode
@@ -288,7 +286,10 @@ export abstract class BaseCommand extends Command {
           account: privateKeyToAccount(ensureLeading0x(res.flags.privateKey)),
         })
       } else {
-        throw new Error('Didnt find --useLedger nor --privateKey nor --useAKV')
+        this.walletClient = createWalletClient({
+          transport,
+          chain: publicClient.chain,
+        })
       }
     }
 
