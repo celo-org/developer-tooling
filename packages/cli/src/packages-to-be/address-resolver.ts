@@ -5,28 +5,27 @@ import { ContractName } from './contract-name'
 
 export const REGISTRY_CONTRACT_ADDRESS = '0x000000000000000000000000000000000000ce10'
 
-const cache: Record<string, StrongAddress> = {}
+const cache = new Map<string, Promise<StrongAddress>>()
 
 export const resolveAddress = async (
   client: PublicClient,
   contractName: ContractName
 ): Promise<StrongAddress> => {
-  if (cache[contractName]) {
-    return cache[contractName]
+  if (cache.has(contractName)) {
+    const address = await cache.get(contractName)
+    if (!address || address === NULL_ADDRESS) {
+      throw new Error(`${contractName} not (yet) registered`)
+    }
+    return address
   }
 
-  const address = await client.readContract({
+  const addressPromise = client.readContract({
     address: REGISTRY_CONTRACT_ADDRESS,
     abi: registryABI,
     functionName: 'getAddressForString',
     args: [contractName],
   })
+  cache.set(contractName, addressPromise)
 
-  if (address && address !== NULL_ADDRESS) {
-    cache[contractName] = address
-
-    return address
-  }
-
-  throw new Error(`${contractName} not (yet) registered`)
+  return addressPromise
 }
