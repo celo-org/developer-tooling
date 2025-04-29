@@ -4,6 +4,7 @@ import { fromFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
 import { PublicClient } from 'viem'
 import { resolveAddress } from './address-resolver'
+import { getValidatorsContract } from './contracts'
 import { bigintToBigNumber } from './utils'
 
 export interface Validator {
@@ -84,6 +85,22 @@ export const meetsValidatorGroupBalanceRequirements = async (
   return validatorLockedGoldRequirements[1] <= accountTotalLockedGold
 }
 
+/* 
+  @param validatorAddress - address of validator/community-rpc node affiliated with an Group
+  @returns the group the given address is affiliated with
+ */
+export async function getValidatorsGroup(
+  client: PublicClient,
+  validatorAddress: StrongAddress
+): Promise<StrongAddress> {
+  const contract = await getValidatorsContract(client)
+  return contract.read.getValidatorsGroup([validatorAddress])
+}
+
+/* 
+  @param address - address of a group
+  @returns 
+ */
 export const getValidatorGroup = async (
   client: PublicClient,
   address: Address,

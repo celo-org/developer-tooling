@@ -1,7 +1,15 @@
 import { concurrentMap, StrongAddress } from '@celo/base'
 import { ClaimTypes, IdentityMetadataWrapper } from '@celo/metadata-claims'
+import { AccountMetadataSignerGetters } from '@celo/metadata-claims/lib/types'
 import { Flags, ux } from '@oclif/core'
+import { PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
+import { getMetadataURLs, getNames } from '../../packages-to-be/account'
+import { getAccountsContract, getEpochManagerContract } from '../../packages-to-be/contracts'
+import {
+  getRegisteredValidatorsAddresses,
+  getValidatorsGroup,
+} from '../../packages-to-be/validators'
 import { ViewCommmandFlags } from '../../utils/flags'
 
 export default class RpcUrls extends BaseCommand {
@@ -29,50 +37,65 @@ export default class RpcUrls extends BaseCommand {
   }
 
   async run() {
-    const CONCURRENCY_LEVEL = 5
+    const CONCURRENCY_LEVEL = 50
 
     const res = await this.parse(RpcUrls)
-    const kit = await this.getKit()
-    const validatorsWrapper = await kit.contracts.getValidators()
-    const accountsWrapper = await kit.contracts.getAccounts()
+
+    const client = (await this.getPublicClient()) as PublicClient
 
     let validatorAddresses: StrongAddress[] = []
 
+    ux.action.start(`Fetching validator groups`)
     if (res.flags.all) {
-      validatorAddresses = (await validatorsWrapper.getRegisteredValidators()).map(
-        (v) => v.address as StrongAddress
-      )
+      validatorAddresses = await getRegisteredValidatorsAddresses(client)
     } else {
-      const epochManagerWrapper = await kit.contracts.getEpochManager()
-      validatorAddresses = (await epochManagerWrapper.getElectedAccounts()) as StrongAddress[]
+      const epochManager = await getEpochManagerContract(client)
+      validatorAddresses = (await epochManager.read.getElectedAccounts()) as StrongAddress[]
     }
 
-    ux.action.start(`Fetching validator groups`)
-
-    // Fetch the validator group address for each validator
-    const validatorToGroup: { [key: StrongAddress]: string } = Object.fromEntries(
-      await concurrentMap(CONCURRENCY_LEVEL, validatorAddresses, async (address) => {
-        return [address, (await validatorsWrapper.getValidator(address)).affiliation || '']
-      })
-    )
-
-    // Fetch the validator group name for each group
-    const validatorGroupNames = Object.fromEntries(
-      await concurrentMap(
-        CONCURRENCY_LEVEL,
-        [...new Set(Object.values(validatorToGroup))],
-        async (address) => {
-          return [address, await accountsWrapper.getName(address)]
-        }
+    const validatorGroups = (
+      await Promise.allSettled(
+        validatorAddresses.map(async (address) => {
+          const groupAddress = await getValidatorsGroup(client, address)
+          return [address, groupAddress]
+        })
       )
     )
-
+      .filter((result) => result.status === 'fulfilled')
+      .map(
+        (result) =>
+          (result as unknown as PromiseFulfilledResult<string[]>).value as [
+            StrongAddress,
+            StrongAddress
+          ]
+      )
+    const validatorToGroup = new Map(validatorGroups)
     ux.action.stop()
-    ux.action.start(`Fetching validators RPC URLs`)
 
-    // Fetch the RPC URL for each validator
+    ux.action.start(`Fetching Group Metadata`)
+    const accountsConract = await getAccountsContract(client)
+    // Fetch the name for each group
+    const validatorGroupNames = await getNames(client, [
+      ...new Set(validatorToGroup.values()),
+    ] as StrongAddress[])
+    // Fetch the metadata url for each group
+    const rpcNodeMetaDataUrls = await getMetadataURLs(client, validatorAddresses)
+    ux.action.stop()
+
+    const accountsWrapper: AccountMetadataSignerGetters = {
+      getAttestationSigner: (address: string) =>
+        accountsConract.read.getAttestationSigner([address as StrongAddress]),
+      getMetadataURL: (address: string) =>
+        accountsConract.read.getMetadataURL([address as StrongAddress]),
+      getValidatorSigner: (address: string) =>
+        accountsConract.read.getValidatorSigner([address as StrongAddress]),
+      getVoteSigner: (address: string) =>
+        accountsConract.read.getVoteSigner([address as StrongAddress]),
+      isAccount: (address: string) => accountsConract.read.isAccount([address as StrongAddress]),
+    }
+    ux.action.start(`Fetching RPC URLs`)
     const rpcUrls = await concurrentMap(CONCURRENCY_LEVEL, validatorAddresses, async (address) => {
-      const metadataURL = await accountsWrapper.getMetadataURL(address)
+      const metadataURL = rpcNodeMetaDataUrls.get(address)
 
       if (!metadataURL) {
         return undefined
@@ -86,16 +109,21 @@ export default class RpcUrls extends BaseCommand {
         return undefined
       }
     })
-
     ux.action.stop()
 
     ux.table(
       validatorAddresses
-        .map((address, idx) => ({
-          validatorGroupName: validatorGroupNames[validatorToGroup[address]],
-          rpcUrl: rpcUrls[idx],
-          validatorAddress: address,
-        }))
+        .map((address, idx) => {
+          const groupAddress = validatorToGroup.get(address)
+          const validatorGroupName = groupAddress
+            ? validatorGroupNames.get(groupAddress)
+            : undefined
+          return {
+            validatorGroupName: validatorGroupName,
+            rpcUrl: rpcUrls[idx],
+            validatorAddress: address,
+          }
+        })
         .filter((row) => row.rpcUrl),
       {
         validatorGroupName: { header: 'Validator Group Name' },
