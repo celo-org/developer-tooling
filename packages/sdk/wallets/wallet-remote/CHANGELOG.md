@@ -1,5 +1,12 @@
 # @celo/wallet-remote
 
+## 8.0.0-beta.1
+
+### Patch Changes
+
+- Updated dependencies [[`a0efb2f`](https://github.com/celo-org/developer-tooling/commit/a0efb2fad370e350a3a4ea0ee10413628487fa47)]:
+  - @celo/wallet-base@8.0.0-beta.1
+
 ## 7.0.2-beta.0
 
 ### Patch Changes

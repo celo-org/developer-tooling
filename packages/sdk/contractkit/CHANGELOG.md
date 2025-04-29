@@ -1,5 +1,12 @@
 # @celo/contractkit
 
+## 10.0.0-beta.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @celo/wallet-local@8.0.0-beta.1
+
 ## 10.0.0-beta.0
 
 ### Major Changes

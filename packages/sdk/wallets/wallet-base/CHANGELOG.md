@@ -1,5 +1,11 @@
 # @celo/wallet-base
 
+## 8.0.0-beta.1
+
+### Major Changes
+
+- [#598](https://github.com/celo-org/developer-tooling/pull/598) [`a0efb2f`](https://github.com/celo-org/developer-tooling/commit/a0efb2fad370e350a3a4ea0ee10413628487fa47) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - remove function for serializing celo legacy transactions
+
 ## 7.0.2-beta.0
 
 ### Patch Changes
