@@ -1,21 +1,21 @@
-[@celo/connect](README.md) / Exports
+[**@celo/connect**](README.md)
+
+***
 
 # @celo/connect
 
-## Table of contents
+## Modules
 
-### Modules
-
-- [abi-types](modules/abi_types.md)
-- [celo-provider](modules/celo_provider.md)
-- [connection](modules/connection.md)
-- [index](modules/index.md)
-- [types](modules/types.md)
-- [utils/abi-utils](modules/utils_abi_utils.md)
-- [utils/celo-transaction-object](modules/utils_celo_transaction_object.md)
-- [utils/formatter](modules/utils_formatter.md)
-- [utils/provider-utils](modules/utils_provider_utils.md)
-- [utils/rpc-caller](modules/utils_rpc_caller.md)
-- [utils/tx-params-normalizer](modules/utils_tx_params_normalizer.md)
-- [utils/tx-result](modules/utils_tx_result.md)
-- [wallet](modules/wallet.md)
+- [abi-types](abi-types/README.md)
+- [celo-provider](celo-provider/README.md)
+- [connection](connection/README.md)
+- [index](index/README.md)
+- [types](types/README.md)
+- [utils/abi-utils](utils/abi-utils/README.md)
+- [utils/celo-transaction-object](utils/celo-transaction-object/README.md)
+- [utils/formatter](utils/formatter/README.md)
+- [utils/provider-utils](utils/provider-utils/README.md)
+- [utils/rpc-caller](utils/rpc-caller/README.md)
+- [utils/tx-params-normalizer](utils/tx-params-normalizer/README.md)
+- [utils/tx-result](utils/tx-result/README.md)
+- [wallet](wallet/README.md)

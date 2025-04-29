@@ -1,4 +1,6 @@
-@celo/contractkit / [Exports](modules.md)
+**@celo/contractkit**
+
+***
 
 # ContractKit
 

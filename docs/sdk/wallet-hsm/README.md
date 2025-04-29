@@ -1,11 +1,11 @@
-@celo/wallet-hsm
+**@celo/wallet-hsm**
+
+***
 
 # @celo/wallet-hsm
 
-## Table of contents
+## Modules
 
-### Modules
-
-- [ber-utils](modules/ber_utils.md)
-- [index](modules/index.md)
-- [signature-utils](modules/signature_utils.md)
+- [ber-utils](ber-utils/README.md)
+- [index](index/README.md)
+- [signature-utils](signature-utils/README.md)

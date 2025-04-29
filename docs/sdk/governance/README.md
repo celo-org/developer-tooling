@@ -1,14 +1,14 @@
-@celo/governance
+**@celo/governance**
+
+***
 
 # @celo/governance
 
-## Table of contents
+## Modules
 
-### Modules
-
-- [index](modules/index.md)
-- [interactive-proposal-builder](modules/interactive_proposal_builder.md)
-- [proposal-builder](modules/proposal_builder.md)
-- [proposals](modules/proposals.md)
-- [test-utils/globals](modules/test_utils_globals.md)
-- [test-utils/setup.global](modules/test_utils_setup_global.md)
+- [index](index/README.md)
+- [interactive-proposal-builder](interactive-proposal-builder/README.md)
+- [proposal-builder](proposal-builder/README.md)
+- [proposals](proposals/README.md)
+- [test-utils/globals](test-utils/globals/README.md)
+- [test-utils/setup.global](test-utils/setup.global/README.md)

@@ -1,29 +1,29 @@
-@celo/utils
+**@celo/utils**
+
+***
 
 # @celo/utils
 
-## Table of contents
+## Modules
 
-### Modules
-
-- [address](modules/address.md)
-- [async](modules/async.md)
-- [celoHistory](modules/celoHistory.md)
-- [collections](modules/collections.md)
-- [ecdh](modules/ecdh.md)
-- [ecies](modules/ecies.md)
-- [fixidity](modules/fixidity.md)
-- [future](modules/future.md)
-- [index](modules/index.md)
-- [inputValidation](modules/inputValidation.md)
-- [io](modules/io.md)
-- [istanbul](modules/istanbul.md)
-- [levenshtein](modules/levenshtein.md)
-- [logger](modules/logger.md)
-- [parsing](modules/parsing.md)
-- [sign-typed-data-utils](modules/sign_typed_data_utils.md)
-- [signatureUtils](modules/signatureUtils.md)
-- [solidity](modules/solidity.md)
-- [string](modules/string.md)
-- [task](modules/task.md)
-- [typed-data-constructors](modules/typed_data_constructors.md)
+- [address](address/README.md)
+- [async](async/README.md)
+- [celoHistory](celoHistory/README.md)
+- [collections](collections/README.md)
+- [ecdh](ecdh/README.md)
+- [ecies](ecies/README.md)
+- [fixidity](fixidity/README.md)
+- [future](future/README.md)
+- [index](index/README.md)
+- [inputValidation](inputValidation/README.md)
+- [io](io/README.md)
+- [istanbul](istanbul/README.md)
+- [levenshtein](levenshtein/README.md)
+- [logger](logger/README.md)
+- [parsing](parsing/README.md)
+- [sign-typed-data-utils](sign-typed-data-utils/README.md)
+- [signatureUtils](signatureUtils/README.md)
+- [solidity](solidity/README.md)
+- [string](string/README.md)
+- [task](task/README.md)
+- [typed-data-constructors](typed-data-constructors/README.md)

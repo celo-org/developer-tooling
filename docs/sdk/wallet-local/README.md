@@ -1,11 +1,11 @@
-@celo/wallet-local
+**@celo/wallet-local**
+
+***
 
 # @celo/wallet-local
 
-## Table of contents
+## Modules
 
-### Modules
-
-- [index](modules/index.md)
-- [local-signer](modules/local_signer.md)
-- [local-wallet](modules/local_wallet.md)
+- [index](index/README.md)
+- [local-signer](local-signer/README.md)
+- [local-wallet](local-wallet/README.md)

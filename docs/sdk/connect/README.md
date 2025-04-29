@@ -1,4 +1,6 @@
-@celo/connect / [Exports](modules.md)
+**@celo/connect**
+
+***
 
 # @celo/connect
 

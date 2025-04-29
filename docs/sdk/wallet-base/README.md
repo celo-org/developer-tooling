@@ -1,11 +1,11 @@
-@celo/wallet-base
+**@celo/wallet-base**
+
+***
 
 # @celo/wallet-base
 
-## Table of contents
+## Modules
 
-### Modules
-
-- [index](modules/index.md)
-- [signing-utils](modules/signing_utils.md)
-- [wallet-base](modules/wallet_base.md)
+- [index](index/README.md)
+- [signing-utils](signing-utils/README.md)
+- [wallet-base](wallet-base/README.md)

@@ -1,11 +1,11 @@
-@celo/wallet-hsm-gcp
+**@celo/wallet-hsm-gcp**
+
+***
 
 # @celo/wallet-hsm-gcp
 
-## Table of contents
+## Modules
 
-### Modules
-
-- [gcp-hsm-signer](modules/gcp_hsm_signer.md)
-- [gcp-hsm-wallet](modules/gcp_hsm_wallet.md)
-- [index](modules/index.md)
+- [gcp-hsm-signer](gcp-hsm-signer/README.md)
+- [gcp-hsm-wallet](gcp-hsm-wallet/README.md)
+- [index](index/README.md)

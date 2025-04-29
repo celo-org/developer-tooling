@@ -1,11 +1,11 @@
-@celo/wallet-hsm-aws
+**@celo/wallet-hsm-aws**
+
+***
 
 # @celo/wallet-hsm-aws
 
-## Table of contents
+## Modules
 
-### Modules
-
-- [aws-hsm-signer](modules/aws_hsm_signer.md)
-- [aws-hsm-wallet](modules/aws_hsm_wallet.md)
-- [index](modules/index.md)
+- [aws-hsm-signer](aws-hsm-signer/README.md)
+- [aws-hsm-wallet](aws-hsm-wallet/README.md)
+- [index](index/README.md)

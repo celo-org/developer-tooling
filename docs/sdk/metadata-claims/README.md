@@ -1,15 +1,15 @@
-@celo/metadata-claims
+**@celo/metadata-claims**
+
+***
 
 # @celo/metadata-claims
 
-## Table of contents
+## Modules
 
-### Modules
-
-- [account](modules/account.md)
-- [claim](modules/claim.md)
-- [index](modules/index.md)
-- [keybase](modules/keybase.md)
-- [metadata](modules/metadata.md)
-- [types](modules/types.md)
-- [verify](modules/verify.md)
+- [account](account/README.md)
+- [claim](claim/README.md)
+- [index](index/README.md)
+- [keybase](keybase/README.md)
+- [metadata](metadata/README.md)
+- [types](types/README.md)
+- [verify](verify/README.md)

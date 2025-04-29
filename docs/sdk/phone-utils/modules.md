@@ -1,14 +1,14 @@
-[@celo/phone-utils](README.md) / Exports
+[**@celo/phone-utils**](README.md)
+
+***
 
 # @celo/phone-utils
 
-## Table of contents
+## Modules
 
-### Modules
-
-- [countries](modules/countries.md)
-- [getCountryEmoji](modules/getCountryEmoji.md)
-- [index](modules/index.md)
-- [inputValidation](modules/inputValidation.md)
-- [io](modules/io.md)
-- [phoneNumbers](modules/phoneNumbers.md)
+- [countries](countries/README.md)
+- [getCountryEmoji](getCountryEmoji/README.md)
+- [index](index/README.md)
+- [inputValidation](inputValidation/README.md)
+- [io](io/README.md)
+- [phoneNumbers](phoneNumbers/README.md)

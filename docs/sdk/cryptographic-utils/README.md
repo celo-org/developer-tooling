@@ -1,4 +1,6 @@
-@celo/cryptographic-utils / [Exports](modules.md)
+**@celo/cryptographic-utils**
+
+***
 
 # @celo/cryptographic-utils
 

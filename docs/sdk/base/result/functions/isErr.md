@@ -1,0 +1,31 @@
+[**@celo/base**](../../README.md)
+
+***
+
+[@celo/base](../../README.md) / [result](../README.md) / isErr
+
+# Function: isErr()
+
+> **isErr**\<`TResult`, `TError`\>(`result`): `result is ErrorResult<TError>`
+
+Defined in: [packages/sdk/base/src/result.ts:98](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L98)
+
+## Type Parameters
+
+### TResult
+
+`TResult`
+
+### TError
+
+`TError` *extends* `Error`
+
+## Parameters
+
+### result
+
+[`Result`](../type-aliases/Result.md)\<`TResult`, `TError`\>
+
+## Returns
+
+`result is ErrorResult<TError>`

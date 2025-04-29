@@ -1,14 +1,14 @@
-@celo/keystores
+**@celo/keystores**
+
+***
 
 # @celo/keystores
 
-## Table of contents
+## Modules
 
-### Modules
-
-- [file-keystore](modules/file_keystore.md)
-- [index](modules/index.md)
-- [inmemory-keystore](modules/inmemory_keystore.md)
-- [keystore-base](modules/keystore_base.md)
-- [keystore-wallet-wrapper](modules/keystore_wallet_wrapper.md)
-- [test-constants](modules/test_constants.md)
+- [file-keystore](file-keystore/README.md)
+- [index](index/README.md)
+- [inmemory-keystore](inmemory-keystore/README.md)
+- [keystore-base](keystore-base/README.md)
+- [keystore-wallet-wrapper](keystore-wallet-wrapper/README.md)
+- [test-constants](test-constants/README.md)

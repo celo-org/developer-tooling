@@ -1,4 +1,6 @@
-@celo/phone-utils / [Exports](modules.md)
+**@celo/phone-utils**
+
+***
 
 # @celo/phone-utils
 

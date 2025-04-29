@@ -1,15 +1,15 @@
-[@celo/cryptographic-utils](README.md) / Exports
+[**@celo/cryptographic-utils**](README.md)
+
+***
 
 # @celo/cryptographic-utils
 
-## Table of contents
+## Modules
 
-### Modules
-
-- [account](modules/account.md)
-- [bls](modules/bls.md)
-- [commentEncryption](modules/commentEncryption.md)
-- [dataEncryptionKey](modules/dataEncryptionKey.md)
-- [index](modules/index.md)
-- [types](modules/types.md)
-- [wordlists](modules/wordlists.md)
+- [account](account/README.md)
+- [bls](bls/README.md)
+- [commentEncryption](commentEncryption/README.md)
+- [dataEncryptionKey](dataEncryptionKey/README.md)
+- [index](index/README.md)
+- [types](types/README.md)
+- [wordlists](wordlists/README.md)
