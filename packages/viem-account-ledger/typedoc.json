@@ -1,5 +1,6 @@
 {
-  "exclude": ["**/generated/*.ts", "**/*+(index|.test).ts"],
+  "$schema": "https://typedoc.org/schema.json",
+  "exclude": ["**/*+(index|.test).ts"],
   "excludePrivate": true,
   "excludeProtected": true,
   "hideGenerator": true,

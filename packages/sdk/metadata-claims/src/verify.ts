@@ -10,7 +10,7 @@ import { AccountMetadataSignerGetters, ClaimTypes } from './types'
 
 /**
  * Verifies a claim made by an account, i.e. whether a claim can be verified to be correct
- * @param kit AccountMetadataSignerGetters object
+ * @param accountMeta AccountMetadataSignerGetters object
  * @param claim The claim to verify
  * @param address The address that is making the claim
  * @returns If valid, returns undefined. If invalid or unable to verify, returns a string with the error
