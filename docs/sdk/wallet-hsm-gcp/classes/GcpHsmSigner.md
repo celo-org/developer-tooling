@@ -1,4 +1,4 @@
-[**@celo/wallet-hsm-gcp v7.0.2-beta.0**](../README.md)
+[**@celo/wallet-hsm-gcp v8.0.0-beta.1**](../README.md)
 
 ***
 

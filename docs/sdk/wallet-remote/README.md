@@ -1,8 +1,8 @@
-**@celo/wallet-remote v7.0.2-beta.0**
+**@celo/wallet-remote v8.0.0-beta.1**
 
 ***
 
-# @celo/wallet-remote v7.0.2-beta.0
+# @celo/wallet-remote v8.0.0-beta.1
 
 ## Classes
 
