@@ -1,4 +1,4 @@
-**@celo/cryptographic-utils**
+**@celo/cryptographic-utils v5.1.3**
 
 ***
 

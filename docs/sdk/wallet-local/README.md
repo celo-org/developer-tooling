@@ -1,11 +1,10 @@
-**@celo/wallet-local**
+**@celo/wallet-local v7.0.2-beta.0**
 
 ***
 
-# @celo/wallet-local
+# @celo/wallet-local v7.0.2-beta.0
 
-## Modules
+## Classes
 
-- [index](index/README.md)
-- [local-signer](local-signer/README.md)
-- [local-wallet](local-wallet/README.md)
+- [LocalSigner](classes/LocalSigner.md)
+- [LocalWallet](classes/LocalWallet.md)

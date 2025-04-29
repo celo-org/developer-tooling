@@ -1,14 +1,16 @@
-**@celo/keystores**
+**@celo/keystores v5.0.15-beta.0**
 
 ***
 
-# @celo/keystores
+# @celo/keystores v5.0.15-beta.0
 
-## Modules
+## Enumerations
 
-- [file-keystore](file-keystore/README.md)
-- [index](index/README.md)
-- [inmemory-keystore](inmemory-keystore/README.md)
-- [keystore-base](keystore-base/README.md)
-- [keystore-wallet-wrapper](keystore-wallet-wrapper/README.md)
-- [test-constants](test-constants/README.md)
+- [ErrorMessages](enumerations/ErrorMessages.md)
+
+## Classes
+
+- [FileKeystore](classes/FileKeystore.md)
+- [InMemoryKeystore](classes/InMemoryKeystore.md)
+- [KeystoreBase](classes/KeystoreBase.md)
+- [KeystoreWalletWrapper](classes/KeystoreWalletWrapper.md)

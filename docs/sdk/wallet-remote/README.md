@@ -1,10 +1,9 @@
-**@celo/wallet-remote**
+**@celo/wallet-remote v7.0.2-beta.0**
 
 ***
 
-# @celo/wallet-remote
+# @celo/wallet-remote v7.0.2-beta.0
 
-## Modules
+## Classes
 
-- [index](index/README.md)
-- [remote-wallet](remote-wallet/README.md)
+- [RemoteWallet](classes/RemoteWallet.md)

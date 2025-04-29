@@ -1,15 +1,24 @@
 {
   "$schema": "https://typedoc.org/schema.json",
-  "exclude": ["**/*+(index|.test).ts"],
+  "exclude": ["**/*.test.ts"],
   "excludePrivate": true,
   "excludeProtected": true,
   "hideGenerator": true,
   "out": "../docs/viem-account-ledger",
   "gitRevision": "master",
   "readme": "./README.md",
-  "entryPoints": ["./src/index.ts", "./src/ledger-to-account.ts"],
+  "entryPoints": ["./src/index.ts"],
   "excludeInternal": true,
   "githubPages": false,
+  "excludeReferences": true,
+  "includeVersion": true,
   "plugin": ["typedoc-plugin-markdown"],
-  "entryPointStrategy": "expand"
+  "entryPointStrategy": "resolve",
+  "validation": {
+    "notExported": false,
+    "invalidLink": false,
+    "rewrittenLink": false,
+    "notDocumented": false,
+    "unusedMergeModuleWith": false
+  }
 }

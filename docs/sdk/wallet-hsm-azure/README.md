@@ -1,12 +1,11 @@
-**@celo/wallet-hsm-azure**
+**@celo/wallet-hsm-azure v7.0.2-beta.0**
 
 ***
 
-# @celo/wallet-hsm-azure
+# @celo/wallet-hsm-azure v7.0.2-beta.0
 
-## Modules
+## Classes
 
-- [azure-hsm-signer](azure-hsm-signer/README.md)
-- [azure-hsm-wallet](azure-hsm-wallet/README.md)
-- [azure-key-vault-client](azure-key-vault-client/README.md)
-- [index](index/README.md)
+- [AzureHSMSigner](classes/AzureHSMSigner.md)
+- [AzureHSMWallet](classes/AzureHSMWallet.md)
+- [AzureKeyVaultClient](classes/AzureKeyVaultClient.md)

@@ -1,4 +1,4 @@
-[**@celo/metadata-claims**](../README.md)
+[**@celo/metadata-claims v1.0.3**](../README.md)
 
 ***
 
@@ -17,9 +17,3 @@
 ## Variables
 
 - [IdentityMetadataType](variables/IdentityMetadataType.md)
-
-## References
-
-### ClaimTypes
-
-Re-exports [ClaimTypes](../types/enumerations/ClaimTypes.md)

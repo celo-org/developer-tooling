@@ -1,12 +1,11 @@
-**@celo/transactions-uri**
+**@celo/transactions-uri v5.0.15-beta.0**
 
 ***
 
-# @celo/transactions-uri
+# @celo/transactions-uri v5.0.15-beta.0
 
-## Modules
+## Functions
 
-- [index](index/README.md)
-- [test-utils/setup.global](test-utils/setup.global/README.md)
-- [test-utils/teardown.global](test-utils/teardown.global/README.md)
-- [tx-uri](tx-uri/README.md)
+- [buildUri](functions/buildUri.md)
+- [parseUri](functions/parseUri.md)
+- [QrFromUri](functions/QrFromUri.md)

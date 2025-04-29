@@ -10,10 +10,12 @@
   "entryPoints": [
     "./src"
   ],
-  "githubPages": false,
+  "githubPages": false,  
+  "excludeReferences": true,
+  "includeVersion": true,
   "plugin": [
     "typedoc-plugin-markdown"
   ],
   "readme": "none",
-  "entryPointStrategy": "expand"
+  "entryPointStrategy": "resolve"
 }

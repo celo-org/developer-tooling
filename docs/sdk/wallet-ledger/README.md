@@ -1,15 +1,22 @@
-**@celo/wallet-ledger**
+**@celo/wallet-ledger v7.0.2-beta.0**
 
 ***
 
-# @celo/wallet-ledger
+# @celo/wallet-ledger v7.0.2-beta.0
 
-## Modules
+## Enumerations
 
-- [data](data/README.md)
-- [index](index/README.md)
-- [ledger-signer](ledger-signer/README.md)
-- [ledger-utils](ledger-utils/README.md)
-- [ledger-wallet](ledger-wallet/README.md)
-- [test-utils](test-utils/README.md)
-- [tokens](tokens/README.md)
+- [AddressValidation](enumerations/AddressValidation.md)
+
+## Classes
+
+- [LedgerSigner](classes/LedgerSigner.md)
+- [LedgerWallet](classes/LedgerWallet.md)
+
+## Variables
+
+- [CELO\_BASE\_DERIVATION\_PATH](variables/CELO_BASE_DERIVATION_PATH.md)
+
+## Functions
+
+- [newLedgerWalletWithSetup](functions/newLedgerWalletWithSetup.md)

@@ -1,8 +1,8 @@
-**@celo/metadata-claims**
+**@celo/metadata-claims v1.0.3**
 
 ***
 
-# @celo/metadata-claims
+# @celo/metadata-claims v1.0.3
 
 ## Modules
 
