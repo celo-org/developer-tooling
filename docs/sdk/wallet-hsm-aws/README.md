@@ -1,11 +1,10 @@
-@celo/wallet-hsm-aws
+**@celo/wallet-hsm-aws v7.0.2-beta.0**
 
-# @celo/wallet-hsm-aws
+***
 
-## Table of contents
+# @celo/wallet-hsm-aws v7.0.2-beta.0
 
-### Modules
+## Classes
 
-- [aws-hsm-signer](modules/aws_hsm_signer.md)
-- [aws-hsm-wallet](modules/aws_hsm_wallet.md)
-- [index](modules/index.md)
+- [AwsHsmSigner](classes/AwsHsmSigner.md)
+- [AwsHsmWallet](classes/AwsHsmWallet.md)

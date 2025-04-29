@@ -1,14 +1,35 @@
-@celo/governance
+**@celo/governance v5.1.7-beta.0**
 
-# @celo/governance
+***
 
-## Table of contents
+# @celo/governance v5.1.7-beta.0
 
-### Modules
+## Classes
 
-- [index](modules/index.md)
-- [interactive-proposal-builder](modules/interactive_proposal_builder.md)
-- [proposal-builder](modules/proposal_builder.md)
-- [proposals](modules/proposals.md)
-- [test-utils/globals](modules/test_utils_globals.md)
-- [test-utils/setup.global](modules/test_utils_setup_global.md)
+- [InteractiveProposalBuilder](classes/InteractiveProposalBuilder.md)
+- [ProposalBuilder](classes/ProposalBuilder.md)
+
+## Interfaces
+
+- [ProposalTransactionJSON](interfaces/ProposalTransactionJSON.md)
+- [RegistryAdditions](interfaces/RegistryAdditions.md)
+
+## Type Aliases
+
+- [ExternalProposalTransactionJSON](type-aliases/ExternalProposalTransactionJSON.md)
+- [ProposalTxParams](type-aliases/ProposalTxParams.md)
+
+## Variables
+
+- [debug](variables/debug.md)
+- [hotfixExecuteAbi](variables/hotfixExecuteAbi.md)
+
+## Functions
+
+- [hotfixToEncodedParams](functions/hotfixToEncodedParams.md)
+- [hotfixToHash](functions/hotfixToHash.md)
+- [isProxySetAndInitFunction](functions/isProxySetAndInitFunction.md)
+- [isProxySetFunction](functions/isProxySetFunction.md)
+- [isRegistryRepoint](functions/isRegistryRepoint.md)
+- [proposalToJSON](functions/proposalToJSON.md)
+- [registryRepointArgs](functions/registryRepointArgs.md)

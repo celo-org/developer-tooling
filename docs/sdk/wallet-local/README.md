@@ -1,11 +1,10 @@
-@celo/wallet-local
+**@celo/wallet-local v7.0.2-beta.0**
 
-# @celo/wallet-local
+***
 
-## Table of contents
+# @celo/wallet-local v7.0.2-beta.0
 
-### Modules
+## Classes
 
-- [index](modules/index.md)
-- [local-signer](modules/local_signer.md)
-- [local-wallet](modules/local_wallet.md)
+- [LocalSigner](classes/LocalSigner.md)
+- [LocalWallet](classes/LocalWallet.md)

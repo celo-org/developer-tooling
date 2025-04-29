@@ -30,7 +30,7 @@ export abstract class WalletBase<TSigner extends Signer> implements ReadOnlyWall
 
   /**
    * Removes the account with the given address. Needs to be implemented by subclass, otherwise throws error
-   * @param address The address of the account to be removed
+   * @param _address The address of the account to be removed
    */
   removeAccount(_address: string) {
     throw new Error('removeAccount is not supported for this wallet')

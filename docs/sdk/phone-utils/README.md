@@ -1,4 +1,6 @@
-@celo/phone-utils / [Exports](modules.md)
+**@celo/phone-utils v6.0.6**
+
+***
 
 # @celo/phone-utils
 

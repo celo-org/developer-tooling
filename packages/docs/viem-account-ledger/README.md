@@ -1,4 +1,6 @@
-@celo/viem-account-ledger / [Modules](modules.md)
+**@celo/viem-account-ledger v1.1.1**
+
+***
 
 # @celo/viem-account-ledger
 

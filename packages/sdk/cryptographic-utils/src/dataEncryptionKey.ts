@@ -27,7 +27,7 @@ export function decompressPublicKey(publicKey: Buffer): Buffer {
 /**
  * Derives a data encryption key from the mnemonic
  *
- * @param {string} privateKey Hex encoded private account key.
+ * @param {string} mnemonic
  * @returns {Buffer} Comment Encryption Private key.
  */
 export function deriveDek(mnemonic: string, bip39ToUse?: Bip39) {

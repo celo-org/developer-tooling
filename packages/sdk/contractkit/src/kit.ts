@@ -30,8 +30,8 @@ export { API_KEY_HEADER_KEY, HttpProviderOptions } from './setupForKits'
 /**
  * Creates a new instance of `ContractKit` given a nodeUrl
  * @param url CeloBlockchain node url
- * @optional wallet to reuse or add a wallet different than the default (example ledger-wallet)
- * @optional options to pass to the Web3 HttpProvider constructor
+ * @param wallet to reuse or add a wallet different than the default (example ledger-wallet)
+ * @param options to pass to the Web3 HttpProvider constructor
  */
 export function newKit(url: string, wallet?: ReadOnlyWallet, options?: HttpProviderOptions) {
   const web3: Web3 = getWeb3ForKit(url, options)
@@ -42,7 +42,7 @@ export function newKit(url: string, wallet?: ReadOnlyWallet, options?: HttpProvi
  * Creates a new instance of `ContractKit` given a nodeUrl and apiKey
  * @param url CeloBlockchain node url
  * @param apiKey to include in the http request header
- * @optional wallet to reuse or add a wallet different than the default (example ledger-wallet)
+ * @param wallet to reuse or add a wallet different than the default (example ledger-wallet)
  */
 export function newKitWithApiKey(url: string, apiKey: string, wallet?: ReadOnlyWallet) {
   const options: HttpProviderOptions = setupAPIKey(apiKey)

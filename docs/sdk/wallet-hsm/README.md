@@ -1,11 +1,27 @@
-@celo/wallet-hsm
+**@celo/wallet-hsm v7.0.2-beta.0**
 
-# @celo/wallet-hsm
+***
 
-## Table of contents
+# @celo/wallet-hsm v7.0.2-beta.0
 
-### Modules
+## Classes
 
-- [ber-utils](modules/ber_utils.md)
-- [index](modules/index.md)
-- [signature-utils](modules/signature_utils.md)
+- [Signature](classes/Signature.md)
+
+## Variables
+
+- [publicKeyPrefix](variables/publicKeyPrefix.md)
+- [sixtyFour](variables/sixtyFour.md)
+- [thirtyTwo](variables/thirtyTwo.md)
+
+## Functions
+
+- [asn1FromPublicKey](functions/asn1FromPublicKey.md)
+- [bigNumberToBuffer](functions/bigNumberToBuffer.md)
+- [bufferToBigNumber](functions/bufferToBigNumber.md)
+- [getAddressFromPublicKey](functions/getAddressFromPublicKey.md)
+- [makeCanonical](functions/makeCanonical.md)
+- [parseBERSignature](functions/parseBERSignature.md)
+- [publicKeyFromAsn1](functions/publicKeyFromAsn1.md)
+- [recoverKeyIndex](functions/recoverKeyIndex.md)
+- [toArrayBuffer](functions/toArrayBuffer.md)

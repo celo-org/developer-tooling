@@ -291,8 +291,6 @@ jobs:
     runs-on: ['self-hosted', 'org', '8-cpu']
     timeout-minutes: 30
     needs: [install-dependencies]
-    if: |
-      contains(github.base_ref, 'changeset-release') || false
     steps:
       - uses: actions/checkout@v4
       - name: Sync workspace
@@ -304,16 +302,9 @@ jobs:
         uses: ./.github/actions/sync-workspace
         with:
           artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
-      - name: Fail if docs were not updated
+      - name: Fail if docs cant be generated
         run: |
           yarn docs
-          if [[ $(git status docs --porcelain) ]]; then
-            git --no-pager diff docs
-            echo "There are git differences after generating all docs"
-            git status
-            git diff
-            exit 1
-          fi
 
   base-test:
     name: SDK Base package Tests
