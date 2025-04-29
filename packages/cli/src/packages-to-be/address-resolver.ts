@@ -1,6 +1,7 @@
 import { registryABI } from '@celo/abis'
 import { NULL_ADDRESS, StrongAddress } from '@celo/base'
 import { PublicClient } from 'viem'
+import { CeloClient } from './client'
 import { ContractName } from './contract-name'
 
 export const REGISTRY_CONTRACT_ADDRESS = '0x000000000000000000000000000000000000ce10'
@@ -8,7 +9,7 @@ export const REGISTRY_CONTRACT_ADDRESS = '0x000000000000000000000000000000000000
 const cache: Record<string, StrongAddress> = {}
 
 export const resolveAddress = async (
-  client: PublicClient,
+  client: PublicClient | CeloClient,
   contractName: ContractName
 ): Promise<StrongAddress> => {
   if (cache[contractName]) {

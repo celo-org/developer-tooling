@@ -35,6 +35,7 @@ export default class TransferErc20 extends BaseCommand {
   ]
 
   async run() {
+    const kit = await this.getKit()
     const res = await this.parse(TransferErc20)
     const client = await this.getPublicClient()
     const wallet = await this.getWalletClient()
@@ -55,6 +56,10 @@ export default class TransferErc20 extends BaseCommand {
     const erc20Contract = {
       abi: erc20Abi,
       address: res.flags.erc20Address,
+      // TODO: get rid of kit here
+      ...(kit.connection.defaultFeeCurrency
+        ? { feeCurrency: kit.connection.defaultFeeCurrency }
+        : {}),
     } as const
 
     try {
@@ -72,13 +77,17 @@ export default class TransferErc20 extends BaseCommand {
       .hasEnoughErc20(from, value, res.flags.erc20Address)
       .runChecks()
 
-    const { request } = await client.simulateContract({
-      ...erc20Contract,
-      functionName: 'transfer',
-      args: [to, bigNumberToBigInt(value)],
-      account: wallet.account,
-    })
-
-    await displayViemTx('transfer', wallet.writeContract(request), client)
+    await displayViemTx(
+      'transfer',
+      {
+        ...erc20Contract,
+        functionName: 'transfer',
+        // TODO: check why this doesn't typecheck properly
+        args: [to, bigNumberToBigInt(value)],
+        account: wallet.account,
+      },
+      client,
+      wallet
+    )
   }
 }

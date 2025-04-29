@@ -17,7 +17,7 @@ import humanizeDuration from 'humanize-duration'
 import { convertEthersToCeloTx } from './mento-broker-adaptor'
 
 import { TransactionReceipt } from 'viem'
-import { CeloClient } from '../packages-to-be/client'
+import { CeloClient, WalletCeloClient } from '../packages-to-be/client'
 
 const CLIError = Errors.CLIError
 
@@ -63,12 +63,15 @@ export async function displaySafeTx(name: string, safeTxResult: SafeTransactionR
 
 export async function displayViemTx(
   name: string,
-  hash: Promise<`0x${string}`>,
-  client: CeloClient
+  txData: Parameters<CeloClient['simulateContract']>[0],
+  client: CeloClient,
+  wallet: WalletCeloClient
 ) {
   ux.action.start(`Sending Transaction: ${name}`)
   try {
-    const txResult = client.waitForTransactionReceipt({ hash: await hash })
+    const { request } = await client.simulateContract(txData)
+    const hash = await wallet.writeContract(request)
+    const txResult = client.waitForTransactionReceipt({ hash })
     await innerDisplaySendTx(name, txResult)
   } catch (e) {
     ux.action.stop(`failed: ${(e as Error).message}`)
