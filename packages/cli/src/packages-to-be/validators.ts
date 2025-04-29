@@ -99,7 +99,7 @@ export async function getValidatorsGroup(
 
 /* 
   @param address - address of a group
-  @returns 
+  @returns group info including name, commission, affiliates + members and slash data. 
  */
 export const getValidatorGroup = async (
   client: PublicClient,
