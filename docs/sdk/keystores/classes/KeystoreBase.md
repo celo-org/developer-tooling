@@ -1,4 +1,4 @@
-[**@celo/keystores v5.0.15-beta.0**](../README.md)
+[**@celo/keystores v5.0.15-beta.1**](../README.md)
 
 ***
 

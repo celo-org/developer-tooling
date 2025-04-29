@@ -1,4 +1,4 @@
-[**@celo/wallet-remote v7.0.2-beta.0**](../README.md)
+[**@celo/wallet-remote v8.0.0-beta.1**](../README.md)
 
 ***
 
@@ -194,6 +194,8 @@ Removes the account with the given address. Needs to be implemented by subclass,
 ##### \_address
 
 `string`
+
+The address of the account to be removed
 
 #### Returns
 

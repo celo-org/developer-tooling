@@ -1,5 +1,24 @@
 # Changelog
 
+## 7.0.0-beta.2
+
+### Minor Changes
+
+- [#602](https://github.com/celo-org/developer-tooling/pull/602) [`a270c1a`](https://github.com/celo-org/developer-tooling/commit/a270c1aa0c9d5b282396af8812ea9ddbcb7fec9c) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Change the behaviour of --ledgerConfirmAddress to also verify on first read if no txs are submitted in the command
+
+### Patch Changes
+
+- [#602](https://github.com/celo-org/developer-tooling/pull/602) [`a270c1a`](https://github.com/celo-org/developer-tooling/commit/a270c1aa0c9d5b282396af8812ea9ddbcb7fec9c) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Account:list now uses viem
+
+- [#604](https://github.com/celo-org/developer-tooling/pull/604) [`e84bc3c`](https://github.com/celo-org/developer-tooling/commit/e84bc3c3daebcfc6b69bfb26e27cedd37ee52dea) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Multicall is now generally used where available. Election:current now runs on viem
+
+- Updated dependencies [[`a270c1a`](https://github.com/celo-org/developer-tooling/commit/a270c1aa0c9d5b282396af8812ea9ddbcb7fec9c)]:
+  - @celo/viem-account-ledger@1.2.0-beta.0
+  - @celo/wallet-hsm-azure@8.0.0-beta.1
+  - @celo/wallet-ledger@8.0.0-beta.1
+  - @celo/wallet-local@8.0.0-beta.1
+  - @celo/contractkit@10.0.0-beta.1
+
 ## 7.0.0-beta.1
 
 ### Major Changes
