@@ -1,16 +1,16 @@
-import { StableToken } from '@celo/contractkit'
 import { Flags } from '@oclif/core'
+import { StableToken, StableTokens } from '../../packages-to-be/contracts'
 import { TransferStableBase } from '../../transfer-stable-base'
 import { enumEntriesDupWithLowercase } from '../../utils/helpers'
 
-const stableTokenOptions = enumEntriesDupWithLowercase(Object.entries(StableToken))
+const stableTokenOptions = enumEntriesDupWithLowercase(Object.entries(StableTokens))
 export default class TransferStable extends TransferStableBase {
   static description = 'Transfer a stable token to a specified address.'
 
   static flags = {
     ...TransferStableBase.flags,
     stableToken: Flags.option({
-      options: Object.keys(stableTokenOptions) as (StableToken | Lowercase<StableToken>)[],
+      options: Object.keys(stableTokenOptions),
       description: 'Name of the stable to be transferred',
     })(),
   }
@@ -21,8 +21,8 @@ export default class TransferStable extends TransferStableBase {
 
   async init() {
     const res = await this.parse(TransferStable)
-    const stableName = res.flags.stableToken
-    this._stableCurrency = stableTokenOptions[stableName as StableToken]
+    const stableName = res.flags.stableToken as StableToken
+    this._stableCurrencyContract = stableTokenOptions[stableName]
     await super.init()
   }
 }

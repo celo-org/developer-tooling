@@ -5,7 +5,7 @@ import { erc20Abi } from 'viem'
 import { BaseCommand } from '../../base'
 import { bigNumberToBigInt } from '../../packages-to-be/utils'
 import { newCheckBuilder } from '../../utils/checks'
-import { displayViemTx, failWith } from '../../utils/cli'
+import { displaySendViemContractCall, failWith } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 export default class TransferErc20 extends BaseCommand {
   static description = 'Transfer ERC20 to a specified address'
@@ -77,8 +77,8 @@ export default class TransferErc20 extends BaseCommand {
       .hasEnoughErc20(from, value, res.flags.erc20Address)
       .runChecks()
 
-    await displayViemTx(
-      'transfer',
+    await displaySendViemContractCall(
+      'ERC20',
       {
         ...erc20Contract,
         functionName: 'transfer',

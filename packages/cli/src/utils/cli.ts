@@ -16,7 +16,6 @@ import { formatEther } from 'ethers/lib/utils'
 import humanizeDuration from 'humanize-duration'
 import { convertEthersToCeloTx } from './mento-broker-adaptor'
 
-import { TransactionReceipt } from 'viem'
 import { CeloClient, WalletCeloClient } from '../packages-to-be/client'
 
 const CLIError = Errors.CLIError
@@ -61,18 +60,35 @@ export async function displaySafeTx(name: string, safeTxResult: SafeTransactionR
   }
 }
 
-export async function displayViemTx(
-  name: string,
+export async function displaySendViemContractCall(
+  contractName: string,
   txData: Parameters<CeloClient['simulateContract']>[0],
   client: CeloClient,
   wallet: WalletCeloClient
 ) {
-  ux.action.start(`Sending Transaction: ${name}`)
+  ux.action.start(`Sending contract call: ${contractName}->${txData.functionName}`)
   try {
     const { request } = await client.simulateContract(txData)
-    const hash = await wallet.writeContract(request)
-    const txResult = client.waitForTransactionReceipt({ hash })
-    await innerDisplaySendTx(name, txResult)
+    await displayViemTxHash(txData.functionName, wallet.writeContract(request), client)
+  } catch (e) {
+    ux.action.stop(`failed: ${(e as Error).message}`)
+    throw e
+  }
+}
+
+export async function displayViemTxHash(
+  name: string,
+  hash: Promise<`0x${string}`>,
+  client: CeloClient
+) {
+  if (!ux.action.running) {
+    ux.action.start(`Sending Transaction: ${name}`)
+  }
+  try {
+    console.log(chalk`SendTransaction: {red.bold ${name}}`)
+    const { transactionHash } = await client.waitForTransactionReceipt({ hash: await hash })
+    printValueMap({ txHash: transactionHash })
+    ux.action.stop()
   } catch (e) {
     ux.action.stop(`failed: ${(e as Error).message}`)
     throw e
@@ -118,36 +134,29 @@ export async function displaySendTx<A>(
 // to share between displaySendTx and displaySendEthersTxViaCK
 async function innerDisplaySendTx(
   name: string,
-  txResult: TransactionResult | Promise<TransactionReceipt>,
+  txResult: TransactionResult,
   displayEventName?: string | string[] | undefined
 ) {
-  if (txResult instanceof TransactionResult) {
-    const txHash = await txResult.getHash()
+  const txHash = await txResult.getHash()
 
-    console.log(chalk`SendTransaction: {red.bold ${name}}`)
-    printValueMap({ txHash })
+  console.log(chalk`SendTransaction: {red.bold ${name}}`)
+  printValueMap({ txHash })
 
-    const txReceipt = await txResult.waitReceipt()
-    ux.action.stop()
+  const txReceipt = await txResult.waitReceipt()
+  ux.action.stop()
 
-    if (displayEventName && txReceipt.events) {
-      Object.entries(txReceipt.events)
-        .filter(
-          ([eventName]) =>
-            (typeof displayEventName === 'string' && eventName === displayEventName) ||
-            displayEventName.includes(eventName)
-        )
-        .forEach(([eventName, log]) => {
-          const { params } = parseDecodedParams((log as EventLog).returnValues)
-          console.log(chalk.magenta.bold(`${eventName}:`))
-          printValueMap(params, chalk.magenta)
-        })
-    }
-  } else {
-    console.log(chalk`SendTransaction: {red.bold ${name}}`)
-    const txReceipt = await txResult
-    printValueMap({ txHash: txReceipt.transactionHash })
-    ux.action.stop()
+  if (displayEventName && txReceipt.events) {
+    Object.entries(txReceipt.events)
+      .filter(
+        ([eventName]) =>
+          (typeof displayEventName === 'string' && eventName === displayEventName) ||
+          displayEventName.includes(eventName)
+      )
+      .forEach(([eventName, log]) => {
+        const { params } = parseDecodedParams((log as EventLog).returnValues)
+        console.log(chalk.magenta.bold(`${eventName}:`))
+        printValueMap(params, chalk.magenta)
+      })
   }
 }
 

@@ -6,7 +6,7 @@ import { BaseCommand } from '../../base'
 import { resolveAddress } from '../../packages-to-be/address-resolver'
 import { bigNumberToBigInt } from '../../packages-to-be/utils'
 import { newCheckBuilder } from '../../utils/checks'
-import { displayViemTx } from '../../utils/cli'
+import { displaySendViemContractCall, displayViemTxHash } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class TransferCelo extends BaseCommand {
@@ -50,18 +50,19 @@ export default class TransferCelo extends BaseCommand {
       .hasEnoughCelo(from, value)
       .runChecks()
 
+    const params =
+      // TODO: get rid of kit here
+      kit.connection.defaultFeeCurrency ? { feeCurrency: kit.connection.defaultFeeCurrency } : {}
+
     const celoContract = {
       address: await resolveAddress(client, 'GoldToken'),
       abi: goldTokenABI,
-      // TODO: get rid of kit here
-      ...(kit.connection.defaultFeeCurrency
-        ? { feeCurrency: kit.connection.defaultFeeCurrency }
-        : {}),
+      ...params,
     } as const
 
     await (res.flags.comment
-      ? displayViemTx(
-          'transferWithComment',
+      ? displaySendViemContractCall(
+          'GoldToken',
           {
             ...celoContract,
             functionName: 'transferWithComment',
@@ -71,23 +72,13 @@ export default class TransferCelo extends BaseCommand {
           client,
           wallet
         )
-      : displayViemTx(
+      : displayViemTxHash(
           'transfer',
           // NOTE: this used to be celoToken.transfer
           // but this way ledger considers this a native transfer and show the to and value properly
           // instead of a contract call
-          // send: (_params) =>
-          //   kit.sendTransaction({ to, value: value.toFixed(), from, ..._params }),
-
-          // NOTE: refactor displayViemTx to accept raw txs
-          {
-            ...celoContract,
-            functionName: 'transfer',
-            args: [to, bigNumberToBigInt(value)],
-            account: wallet.account,
-          },
-          client,
-          wallet
+          wallet.sendTransaction({ to, value: bigNumberToBigInt(value), from, ...params }),
+          client
         ))
   }
 }

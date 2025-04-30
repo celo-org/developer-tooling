@@ -1,7 +1,6 @@
-import { accountsABI, goldTokenABI, multiSigABI, stableTokenABI } from '@celo/abis-12'
+import { accountsABI, goldTokenABI, multiSigABI } from '@celo/abis-12'
 import { bufferToHex, eqAddress, NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
 import { Address } from '@celo/connect'
-import { StableToken } from '@celo/contractkit'
 import { HotfixRecord, ProposalStage } from '@celo/contractkit/lib/wrappers/Governance'
 import BigNumber from 'bignumber.js'
 import chalk from 'chalk'
@@ -18,6 +17,8 @@ import {
   getValidatorsContract,
   GovernanceContract,
   LockedGoldContract,
+  StableToken,
+  StableTokens,
   ValidatorsContract,
 } from '../packages-to-be/contracts'
 import {
@@ -35,7 +36,6 @@ import {
   meetsValidatorGroupBalanceRequirements,
 } from '../packages-to-be/validators'
 import { getCurrentTimestamp, printValueMapRecursive } from './cli'
-import { getStableTokenContractName } from './helpers'
 export interface CommandCheck {
   name: string
   errorMessage?: string
@@ -456,24 +456,15 @@ class CheckBuilder {
     })
   }
 
-  hasEnoughStable = (account: Address, value: BigNumber, stable: StableToken) => {
-    const valueInEth = formatEther(bigNumberToBigInt(value))
+  hasEnoughStable = (account: Address, _value: BigNumber | bigint, stable: StableToken) => {
+    const value = typeof _value === 'bigint' ? _value : bigNumberToBigInt(_value)
+    const valueInEth = formatEther(value)
 
     return this.addCheck(`Account has at least ${valueInEth} ${stable}`, async () => {
-      const stableTokenAddress = await resolveAddress(
-        await this.getClient(),
-        getStableTokenContractName(stable)
-      )
-      const balance = await (
-        await this.getClient()
-      ).readContract({
-        address: stableTokenAddress,
-        abi: stableTokenABI,
-        functionName: 'balanceOf',
-        args: [account as StrongAddress],
-      })
+      const stableTokenContract = await StableTokens[stable](await this.getClient())
+      const balance = await stableTokenContract.read.balanceOf([account as StrongAddress])
 
-      return bigintToBigNumber(balance).gte(value)
+      return balance >= value
     })
   }
 
