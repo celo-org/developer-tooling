@@ -1,11 +1,15 @@
 import { BaseCommand } from '../../base'
 import { displayWeb3Tx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
+import { deprecationOptions } from '../../utils/notice'
 
 const DKG = require('./DKG.json')
 
 export default class DKGStart extends BaseCommand {
-  static description = 'Starts the DKG'
+  static description = 'Starts the Decentralized Key Generation process'
+
+  static hidden = true
+  static deprecationOptions = deprecationOptions
 
   static flags = {
     ...BaseCommand.flags,

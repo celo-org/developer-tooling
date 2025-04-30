@@ -1,6 +1,7 @@
 import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { CustomFlags } from '../../utils/command'
+import { deprecationOptions } from '../../utils/notice'
 const DKG = require('./DKG.json')
 
 export enum Method {
@@ -14,6 +15,9 @@ export enum Method {
 
 export default class DKGGet extends BaseCommand {
   static description = 'Gets data from the contract to run the next phase'
+
+  static hidden = true
+  static deprecationOptions = deprecationOptions
 
   static options = ['shares', 'responses', 'justifications', 'participants', 'phase', 'group']
 
