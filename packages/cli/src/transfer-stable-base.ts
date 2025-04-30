@@ -99,7 +99,7 @@ export abstract class TransferStableBase extends BaseCommand {
             ),
             stableTokenContract.read.balanceOf([from]),
           ])
-          const totalSpentOnGas = gas! * gasPrice
+          const totalSpentOnGas = gas * gasPrice
           if (kit.connection.defaultFeeCurrency === stableTokenContract.address) {
             return balanceOfTokenToSend >= value + totalSpentOnGas
           }

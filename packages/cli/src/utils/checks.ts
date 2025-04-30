@@ -71,7 +71,7 @@ class CheckBuilder {
   private async getClient(): Promise<PublicClient> {
     // In this case we're not using any Celo-specific client features, so it can be
     // safely casted to PublicClient
-    return this.command.getPublicClient() as unknown as PublicClient
+    return this.command.getPublicClient() as Promise<PublicClient>
   }
 
   private withSignerToAccount<A>(
@@ -439,8 +439,9 @@ class CheckBuilder {
       `${address} is currently voting in governance. Revoke your upvotes or wait for the referendum to end.`
     )
 
-  hasEnoughCelo = (account: Address, value: BigNumber) => {
-    const valueInEth = formatEther(bigNumberToBigInt(value))
+  hasEnoughCelo = (account: Address, _value: BigNumber | bigint) => {
+    const value = typeof _value === 'bigint' ? _value : bigNumberToBigInt(_value)
+    const valueInEth = formatEther(value)
 
     return this.addCheck(`Account has at least ${valueInEth} CELO`, async () => {
       const balance = await (
@@ -452,7 +453,7 @@ class CheckBuilder {
         args: [account as StrongAddress],
       })
 
-      return bigintToBigNumber(balance).gte(value)
+      return balance >= value
     })
   }
 
