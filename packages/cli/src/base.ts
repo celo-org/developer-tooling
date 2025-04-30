@@ -94,6 +94,7 @@ export abstract class BaseCommand extends Command {
     useAKV: Flags.boolean({
       default: false,
       hidden: true,
+      deprecated: true,
       description: 'Set it to use an Azure KeyVault HSM',
     }),
     azureVaultName: Flags.string({
