@@ -4,11 +4,15 @@ import fs from 'fs'
 import { BaseCommand } from '../../base'
 import { displayWeb3Tx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
+import { deprecationOptions } from '../../utils/notice'
 
 const DKG = require('./DKG.json')
 
 export default class DKGRegister extends BaseCommand {
   static description = 'Register a public key in the DKG'
+
+  static hidden = true
+  static deprecationOptions = deprecationOptions
 
   static flags = {
     ...BaseCommand.flags,

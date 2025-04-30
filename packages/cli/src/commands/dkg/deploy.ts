@@ -2,10 +2,15 @@ import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { displayWeb3Tx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
+import { deprecationOptions } from '../../utils/notice'
 const DKG = require('./DKG.json')
 
 export default class DKGDeploy extends BaseCommand {
   static description = 'Deploys the DKG smart contract'
+
+  static hidden = true
+
+  static deprecationOptions = deprecationOptions
 
   static flags = {
     ...BaseCommand.flags,
