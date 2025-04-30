@@ -1,7 +1,9 @@
 import { Validator } from '@celo/contractkit/lib/wrappers/Validators'
 import { ux } from '@oclif/core'
 
+import { PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
+import { getRegisteredValidators } from '../../packages-to-be/validators'
 import { ViewCommmandFlags } from '../../utils/flags'
 
 export const validatorTable: ux.Table.table.Columns<Record<'v', Validator>> = {
@@ -15,7 +17,7 @@ export const validatorTable: ux.Table.table.Columns<Record<'v', Validator>> = {
 
 export default class ValidatorList extends BaseCommand {
   static description =
-    'List registered Validators, their name (if provided), affiliation, uptime score, and public keys used for validating.'
+    'List registered Community Rpc Nodes (Formerly Validators), their name (if provided), affiliation, uptime score, and public keys. For rpc urls use "network:rpc-urls"'
 
   static flags = {
     ...ViewCommmandFlags,
@@ -25,12 +27,12 @@ export default class ValidatorList extends BaseCommand {
   static examples = ['list']
 
   async run() {
-    const kit = await this.getKit()
+    const client = await this.getPublicClient()
     const res = await this.parse(ValidatorList)
 
-    ux.action.start('Fetching Validators')
-    const validators = await kit.contracts.getValidators()
-    const validatorList = await validators.getRegisteredValidators()
+    ux.action.start('Fetching Registered Community Rpc Nodes')
+
+    const validatorList = await getRegisteredValidators(client as PublicClient)
 
     ux.action.stop()
     ux.table(

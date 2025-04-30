@@ -91,6 +91,7 @@ testWithAnvilL2('lockedgold:lock cmd', (web3: Web3) => {
         [
           [],
           [],
+          [],
         ]
       `)
 
