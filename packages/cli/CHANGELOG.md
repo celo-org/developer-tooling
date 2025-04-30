@@ -1,5 +1,13 @@
 # Changelog
 
+## 7.0.0-beta.3
+
+### Patch Changes
+
+- [#611](https://github.com/celo-org/developer-tooling/pull/611) [`9069df7`](https://github.com/celo-org/developer-tooling/commit/9069df7cf51559ccbcdd5502d045ccc1ab238199) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Migrate validator:list to viem
+
+- [#611](https://github.com/celo-org/developer-tooling/pull/611) [`9069df7`](https://github.com/celo-org/developer-tooling/commit/9069df7cf51559ccbcdd5502d045ccc1ab238199) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Migrate validator:rpc-urls to viem, speed up due to multicall and higher concurrancy
+
 ## 7.0.0-beta.2
 
 ### Minor Changes
