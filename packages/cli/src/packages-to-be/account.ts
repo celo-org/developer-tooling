@@ -92,12 +92,7 @@ export async function getMetadataURLs(client: PublicClient, addresses: Address[]
       return [address, url]
     })
   )
-  const filtered = urlResults
-    .filter((result) => result.status === 'fulfilled')
-    .map((result) => {
-      // we know its fulfilled but the types are not so sure
-      return (result as unknown as PromiseFulfilledResult<string[]>).value as [Address, string]
-    })
+  const filtered = selectFulfilled(urlResults)
 
   return new Map(filtered)
 }
@@ -111,12 +106,13 @@ export async function getNames(client: PublicClient, addresses: Address[]) {
       return [address, name]
     })
   )
-  const filtered = nameResults
-    .filter((result) => result.status === 'fulfilled')
-    .map((result) => {
-      // we know its fulfilled but the types are not so sure
-      return (result as unknown as PromiseFulfilledResult<string[]>).value as [Address, string]
-    })
+  const filtered = selectFulfilled(nameResults)
 
   return new Map(filtered)
+}
+
+function selectFulfilled(results: Array<PromiseSettledResult<string[]>>) {
+  return results
+    .filter((result): result is PromiseFulfilledResult<string[]> => result.status === 'fulfilled')
+    .map((result) => result.value as [Address, string])
 }
