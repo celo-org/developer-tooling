@@ -3,10 +3,14 @@ import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { displayWeb3Tx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
+import { deprecationOptions } from '../../utils/notice'
 import DKG from './DKG.json'
-
 export default class DKGRegister extends BaseCommand {
   static description = 'Allowlist an address in the DKG'
+
+  static hidden = true
+
+  static deprecationOptions = deprecationOptions
 
   static flags = {
     ...BaseCommand.flags,

@@ -134,7 +134,7 @@
         "description": "Configure CLI options which persist across commands"
       },
       "dkg": {
-        "description": "Publish your locally computed DKG results to the blockchain"
+        "description": "Publish your locally computed Decentralized Key Generation results to the blockchain"
       },
       "election": {
         "description": "Participate in and view the state of Validator Elections"
