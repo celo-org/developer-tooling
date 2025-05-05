@@ -148,7 +148,7 @@
       "identity": {
         "description": "Interact with ODIS and the attestations service"
       },
-      "lockedgold": {
+      "lockedcelo": {
         "description": "View and manage locked CELO"
       },
       "network": {

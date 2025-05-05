@@ -1,7 +1,7 @@
 `celocli lockedcelo`
 ====================
 
-Delegate locked celo.
+View and manage locked CELO
 
 * [`celocli lockedcelo:delegate`](#celocli-lockedcelodelegate)
 * [`celocli lockedcelo:delegate-info`](#celocli-lockedcelodelegate-info)
