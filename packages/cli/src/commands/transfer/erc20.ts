@@ -1,7 +1,6 @@
 import assert from 'node:assert'
 import { erc20Abi } from 'viem'
 import { BaseCommand } from '../../base'
-import { bigintToBigNumber, bigNumberToBigInt } from '../../packages-to-be/utils'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendViemContractCall, failWith } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
@@ -60,11 +59,12 @@ export default class TransferErc20 extends BaseCommand {
         : {}),
     } as const
 
+    let decimals: number
     try {
-      await client.readContract({
+      decimals = await client.readContract({
         ...erc20Contract,
-        functionName: 'balanceOf',
-        args: [res.flags.from],
+        functionName: 'decimals',
+        args: [],
       })
     } catch {
       failWith('Invalid erc20 address')
@@ -72,7 +72,7 @@ export default class TransferErc20 extends BaseCommand {
     await newCheckBuilder(this)
       .isNotSanctioned(from)
       .isNotSanctioned(to)
-      .hasEnoughErc20(from, value, res.flags.erc20Address)
+      .hasEnoughErc20(from, value, res.flags.erc20Address, decimals)
       .runChecks()
 
     await displaySendViemContractCall(

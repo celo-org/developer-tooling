@@ -5,7 +5,7 @@ import { HotfixRecord, ProposalStage } from '@celo/contractkit/lib/wrappers/Gove
 import BigNumber from 'bignumber.js'
 import chalk from 'chalk'
 import { fetch } from 'cross-fetch'
-import { erc20Abi, formatEther, PublicClient } from 'viem'
+import { erc20Abi, formatEther, formatUnits, PublicClient } from 'viem'
 import { BaseCommand } from '../base'
 import { signerToAccount } from '../packages-to-be/account'
 import { resolveAddress } from '../packages-to-be/address-resolver'
@@ -479,9 +479,14 @@ class CheckBuilder {
     })
   }
 
-  hasEnoughErc20 = (account: Address, _value: BigNumber | bigint, erc20: Address) => {
+  hasEnoughErc20 = (
+    account: Address,
+    _value: BigNumber | bigint,
+    erc20: Address,
+    decimals = 18
+  ) => {
     const value = typeof _value === 'bigint' ? _value : bigNumberToBigInt(_value)
-    const valueInEth = formatEther(value)
+    const valueInEth = formatUnits(value, decimals)
 
     return this.addCheck(`Account has at least ${valueInEth} erc20 token`, async () => {
       const balance = await (
