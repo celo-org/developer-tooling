@@ -1,9 +1,7 @@
-import { Flags } from '@oclif/core'
-import BigNumber from 'bignumber.js'
 import assert from 'node:assert'
 import { erc20Abi } from 'viem'
 import { BaseCommand } from '../../base'
-import { bigNumberToBigInt } from '../../packages-to-be/utils'
+import { bigintToBigNumber, bigNumberToBigInt } from '../../packages-to-be/utils'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendViemContractCall, failWith } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
@@ -24,7 +22,7 @@ export default class TransferErc20 extends BaseCommand {
       required: true,
       description: 'Address of the receiver',
     }),
-    value: Flags.string({
+    value: CustomFlags.bigint({
       required: true,
       description: 'Amount to transfer (in wei)',
     }),
@@ -46,10 +44,10 @@ export default class TransferErc20 extends BaseCommand {
 
     const from = res.flags.from
     const to = res.flags.to
-    const value = new BigNumber(res.flags.value)
+    const value = res.flags.value
 
     assert(
-      wallet.account.address === res.flags.from,
+      (await wallet.getAddresses()).includes(res.flags.from),
       '--from address doesnt correspond to the wallet being used'
     )
 
@@ -66,7 +64,7 @@ export default class TransferErc20 extends BaseCommand {
       await client.readContract({
         ...erc20Contract,
         functionName: 'balanceOf',
-        args: [wallet.account.address],
+        args: [res.flags.from],
       })
     } catch {
       failWith('Invalid erc20 address')
@@ -83,7 +81,7 @@ export default class TransferErc20 extends BaseCommand {
         ...erc20Contract,
         functionName: 'transfer',
         // TODO: check why this doesn't typecheck properly
-        args: [to, bigNumberToBigInt(value)],
+        args: [to, value],
         account: wallet.account,
       },
       client,

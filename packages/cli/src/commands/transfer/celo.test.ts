@@ -1,9 +1,12 @@
+import { goldTokenABI } from '@celo/abis'
 import { COMPLIANT_ERROR_RESPONSE } from '@celo/compliance'
 import { ContractKit, StableToken, newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
+import BigNumber from 'bignumber.js'
+import { createPublicClient, http } from 'viem'
 import Web3 from 'web3'
+import { topUpWithToken } from '../../test-utils/chain-setup'
 import { TEST_SANCTIONED_ADDRESS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
-import { mockRpc } from '../../test-utils/mockRpc'
 import TransferCelo from './celo'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -21,6 +24,19 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
 
     jest.spyOn(console, 'log').mockImplementation(() => {})
     jest.spyOn(console, 'error').mockImplementation(() => {})
+
+    await topUpWithToken(
+      kit,
+      StableToken.cUSD,
+      accounts[0],
+      new BigNumber('9000000000000000000000')
+    )
+    await topUpWithToken(
+      kit,
+      StableToken.cUSD,
+      accounts[1],
+      new BigNumber('9000000000000000000000')
+    )
   })
 
   afterEach(() => {
@@ -32,7 +48,6 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
     const receiverBalanceBefore = await kit.getTotalBalance(accounts[1])
     const amountToTransfer = '500000000000000000000'
     // Send cUSD to RG contract
-    let mock = mockRpc()
     await testLocallyWithWeb3Node(
       TransferCelo,
       [
@@ -47,7 +62,6 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
       ],
       web3
     )
-    mock.mockRestore()
     // RG cUSD balance should match the amount sent
     const receiverBalance = await kit.getTotalBalance(accounts[1])
     expect(receiverBalance.CELO!.toFixed()).toEqual(
@@ -59,7 +73,6 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
     // Safety check if the latest transaction was originated by expected account
     expect(transactionReceipt.from.toLowerCase()).toEqual(accounts[0].toLowerCase())
 
-    mock = mockRpc()
     // Attempt to send cUSD back
     await testLocallyWithWeb3Node(
       TransferCelo,
@@ -75,14 +88,60 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
       ],
       web3
     )
-    mock.mockRestore()
 
-    const balanceAfterWithoutFees = (await kit.getTotalBalance(accounts[0])).CELO!
-    const balanceAfterWithFees = balanceAfterWithoutFees.plus(
-      transactionReceipt.effectiveGasPrice * transactionReceipt.gasUsed
+    const balanceAfter = (await kit.getTotalBalance(accounts[0])).CELO!
+    expect(balanceBefore.toFixed()).toEqual(balanceAfter.toFixed())
+  })
+
+  test('can transfer celo with comment', async () => {
+    const start = await web3.eth.getBlock('latest')
+    const amountToTransfer = '500000000000000000000'
+    // Send cUSD to RG contract
+    await testLocallyWithWeb3Node(
+      TransferCelo,
+      [
+        '--from',
+        accounts[0],
+        '--to',
+        accounts[1],
+        '--value',
+        amountToTransfer,
+        '--comment',
+        'Hello World',
+      ],
+      web3
     )
 
-    expect(balanceBefore).toEqual(balanceAfterWithFees)
+    // Attempt to send cUSD back
+    await testLocallyWithWeb3Node(
+      TransferCelo,
+      [
+        '--from',
+        accounts[1],
+        '--to',
+        accounts[0],
+        '--value',
+        amountToTransfer,
+        '--comment',
+        'Hello World Back',
+      ],
+      web3
+    )
+
+    const client = createPublicClient({
+      // @ts-expect-error
+      transport: http(kit.web3.currentProvider.existingProvider.host),
+    })
+    const events = await client.getContractEvents({
+      abi: goldTokenABI,
+      eventName: 'TransferComment',
+      fromBlock: BigInt(start.number),
+      address: (await kit.contracts.getCeloToken()).address,
+    })
+
+    expect(events.length).toEqual(2)
+    expect(events[0].args).toEqual({ comment: 'Hello World' })
+    expect(events[1].args).toEqual({ comment: 'Hello World Back' })
   })
 
   test('should fail if to address is sanctioned', async () => {
@@ -96,6 +155,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
     ).rejects.toThrow()
     expect(spy).toHaveBeenCalledWith(expect.stringContaining(COMPLIANT_ERROR_RESPONSE))
   })
+
   test('should fail if from address is sanctioned', async () => {
     const spy = jest.spyOn(console, 'log')
     await expect(
@@ -127,7 +187,6 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
     const balanceBefore = await kit.getTotalBalance(accounts[0])
     const receiverBalanceBefore = await kit.getTotalBalance(accounts[1])
     const amountToTransfer = '1'
-    let mock = mockRpc()
     await expect(
       testLocallyWithWeb3Node(
         TransferCelo,
@@ -144,7 +203,6 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
         web3
       )
     ).resolves.toBeUndefined()
-    mock.mockRestore()
 
     const balanceAfter = await kit.getTotalBalance(accounts[0])
     const receiverBalanceAfter = await kit.getTotalBalance(accounts[1])

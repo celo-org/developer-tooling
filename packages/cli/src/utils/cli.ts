@@ -16,6 +16,7 @@ import { formatEther } from 'ethers/lib/utils'
 import humanizeDuration from 'humanize-duration'
 import { convertEthersToCeloTx } from './mento-broker-adaptor'
 
+import { CeloTransactionRequest } from 'viem/celo'
 import { CeloClient, WalletCeloClient } from '../packages-to-be/client'
 
 const CLIError = Errors.CLIError
@@ -64,19 +65,42 @@ export async function displaySendViemContractCall(
   contractName: string,
   txData: Parameters<CeloClient['simulateContract']>[0],
   client: CeloClient,
-  wallet: WalletCeloClient
+  wallet: WalletCeloClient,
+  params: { feeCurrency?: `0x${string}` } = {}
 ) {
   ux.action.start(`Sending contract call: ${contractName}->${txData.functionName}`)
   try {
     const { request } = await client.simulateContract(txData)
-    await displayViemTxHash(txData.functionName, wallet.writeContract(request), client)
+    await innerDisplayViemTxHash(
+      txData.functionName,
+      wallet.writeContract({ ...request, ...params }),
+      client
+    )
   } catch (e) {
     ux.action.stop(`failed: ${(e as Error).message}`)
     throw e
   }
 }
 
-export async function displayViemTxHash(
+export async function displayViemTx(
+  name: string,
+  request: CeloTransactionRequest,
+  client: CeloClient,
+  wallet: WalletCeloClient
+) {
+  if (!ux.action.running) {
+    ux.action.start(`Sending Transaction: ${name}`)
+  }
+  try {
+    console.log(chalk`SendTransaction: {red.bold ${name}}`)
+    await innerDisplayViemTxHash(name, wallet.sendTransaction(request), client)
+  } catch (e) {
+    ux.action.stop(`failed: ${(e as Error).message}`)
+    throw e
+  }
+}
+
+async function innerDisplayViemTxHash(
   name: string,
   hash: Promise<`0x${string}`>,
   client: CeloClient
@@ -85,7 +109,7 @@ export async function displayViemTxHash(
     ux.action.start(`Sending Transaction: ${name}`)
   }
   try {
-    console.log(chalk`SendTransaction: {red.bold ${name}}`)
+    console.log(chalk`Awaiting receipt: {red.bold ${name}}`)
     const { transactionHash } = await client.waitForTransactionReceipt({ hash: await hash })
     printValueMap({ txHash: transactionHash })
     ux.action.stop()

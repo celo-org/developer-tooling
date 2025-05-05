@@ -54,7 +54,7 @@ export abstract class TransferStableBase extends BaseCommand {
       failWith(`The ${stableToken} token was not deployed yet`)
     }
 
-    const params = {
+    const stableContract = {
       abi: stableTokenContract.abi,
       address: stableTokenContract.address,
       account: wallet.account,
@@ -92,7 +92,7 @@ export abstract class TransferStableBase extends BaseCommand {
 
           const [gas, gasPrice, balanceOfTokenForGas, balanceOfTokenToSend] = await Promise.all([
             // @ts-expect-error - TODO fix args being 2 or 3 arguments
-            client.estimateContractGas(params),
+            client.estimateContractGas(stableContract),
             client.getGasPrice(),
             tokenForGasContract(client as PublicClient, kit.connection.defaultFeeCurrency!).then(
               (contract) => contract.read.balanceOf([from])
@@ -111,6 +111,6 @@ export abstract class TransferStableBase extends BaseCommand {
       )
       .runChecks()
 
-    await displaySendViemContractCall(stableToken, params, client, wallet)
+    await displaySendViemContractCall(stableToken, stableContract, client, wallet)
   }
 }

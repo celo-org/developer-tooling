@@ -8,7 +8,7 @@ import { POP_SIZE } from '@celo/utils/lib/signatureUtils'
 import { Args, Errors, Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { pathExistsSync } from 'fs-extra'
-import Web3 from 'web3'
+import { getAddress, isAddress, isHex } from 'viem'
 
 const CLIError = Errors.CLIError
 
@@ -17,7 +17,7 @@ type ParseFn<T> = (input: any) => Promise<T>
 const parseBytes = (input: string, length: number, msg: string) => {
   // Check that the string is hex and and has byte length of `length`.
   const expectedLength = input.startsWith('0x') ? length * 2 + 2 : length * 2
-  if (Web3.utils.isHex(input) && input.length === expectedLength) {
+  if (isHex(input) && input.length === expectedLength) {
     return ensureLeading0x(input)
   } else {
     throw new CLIError(msg)
@@ -41,15 +41,15 @@ const parseProofOfPossession: ParseFn<string> = async (input) => {
   return parseBytes(input, POP_SIZE, `${input} is not a proof-of-possession`)
 }
 const parseAddress: ParseFn<StrongAddress> = async (input) => {
-  if (Web3.utils.isAddress(input)) {
-    return input as StrongAddress
+  if (isAddress(input.toLowerCase(), { strict: false })) {
+    return getAddress(input.toLowerCase())
   } else {
     throw new CLIError(`${input} is not a valid address`)
   }
 }
 const parseGasCurrency: ParseFn<StrongAddress> = async (input) => {
-  if (Web3.utils.isAddress(input)) {
-    return input as StrongAddress
+  if (isAddress(input.toLowerCase(), { strict: false })) {
+    return input.toLowerCase()
   } else {
     throw new CLIError(`${input} is not a valid address`)
   }
@@ -67,6 +67,14 @@ const parseWei: ParseFn<BigNumber> = async (input) => {
     return new BigNumber(input)
   } catch (_err) {
     throw new CLIError(`${input} is not a valid token amount`)
+  }
+}
+
+const parseBigInt: ParseFn<bigint> = async (input) => {
+  try {
+    return BigInt(input)
+  } catch (_err) {
+    throw new CLIError(`${input} is not a valid bigint amount`)
   }
 }
 
@@ -220,6 +228,11 @@ export const CustomFlags = {
   }),
   wei: Flags.custom({
     parse: parseWei,
+    description: 'Token value without decimals',
+    helpValue: '10000000000000000000000',
+  }),
+  bigint: Flags.custom({
+    parse: parseBigInt,
     description: 'Token value without decimals',
     helpValue: '10000000000000000000000',
   }),

@@ -106,7 +106,9 @@ class CheckBuilder {
     ) => A
   ): () => Promise<Resolve<A>> {
     return async () => {
-      const validatorsContract = await getValidatorsContract(await this.getClient())
+      const validatorsContract = (await getValidatorsContract(
+        await this.getClient()
+      )) as ValidatorsContract<PublicClient>
 
       if (this.signer) {
         try {
@@ -136,8 +138,12 @@ class CheckBuilder {
     ) => A
   ): () => Promise<Resolve<A>> {
     return async () => {
-      const lockedCeloContract = await getLockedGoldContract(await this.getClient())
-      const validatorsContract = await getValidatorsContract(await this.getClient())
+      const lockedCeloContract = (await getLockedGoldContract(
+        await this.getClient()
+      )) as LockedGoldContract<PublicClient>
+      const validatorsContract = (await getValidatorsContract(
+        await this.getClient()
+      )) as ValidatorsContract<PublicClient>
 
       if (this.signer) {
         try {
@@ -153,7 +159,9 @@ class CheckBuilder {
 
   private withAccounts<A>(f: (accounts: AccountsContract) => A): () => Promise<Resolve<A>> {
     return async () => {
-      const accountsContract = await getAccountsContract(await this.getClient())
+      const accountsContract = (await getAccountsContract(
+        await this.getClient()
+      )) as AccountsContract<PublicClient>
 
       return f(accountsContract) as Resolve<A>
     }
@@ -161,7 +169,9 @@ class CheckBuilder {
 
   private withGovernance<A>(f: (governance: GovernanceContract) => A): () => Promise<Resolve<A>> {
     return async () => {
-      const governanceContract = await getGovernanceContract(await this.getClient())
+      const governanceContract = (await getGovernanceContract(
+        await this.getClient()
+      )) as GovernanceContract<PublicClient>
 
       return f(governanceContract) as Resolve<A>
     }
@@ -469,20 +479,21 @@ class CheckBuilder {
     })
   }
 
-  hasEnoughErc20 = (account: Address, value: BigNumber, erc20: Address) => {
-    const valueInEth = formatEther(bigNumberToBigInt(value))
+  hasEnoughErc20 = (account: Address, _value: BigNumber | bigint, erc20: Address) => {
+    const value = typeof _value === 'bigint' ? _value : bigNumberToBigInt(_value)
+    const valueInEth = formatEther(value)
 
     return this.addCheck(`Account has at least ${valueInEth} erc20 token`, async () => {
       const balance = await (
         await this.getClient()
       ).readContract({
         address: erc20 as StrongAddress,
-        abi: erc20Abi, // this is the viem's erc20 abi, check it
+        abi: erc20Abi,
         functionName: 'balanceOf',
         args: [account as StrongAddress],
       })
 
-      return bigintToBigNumber(balance).gte(value)
+      return balance >= value
     })
   }
 
@@ -660,6 +671,9 @@ class CheckBuilder {
       const color = passed ? chalk.green : chalk.red
       const msg = !passed && aCheck.errorMessage ? aCheck.errorMessage : ''
       console.log(color(`   ${status︎Str}  ${aCheck.name} ${msg}`))
+      if (!passed) {
+        throw new Error(aCheck.name + '' + msg)
+      }
       allPassed = allPassed && passed
     }
 
@@ -684,6 +698,7 @@ class CheckBuilder {
     const { COMPLIANT_ERROR_RESPONSE, OFAC_SANCTIONS_LIST_URL, SANCTIONED_ADDRESSES } =
       await import('@celo/compliance')
     this.COMPLIANT_ERROR_RESPONSE = COMPLIANT_ERROR_RESPONSE
+    console.error('ICI', SANCTIONED_ADDRESSES, this.SANCTIONED_SET.data, address)
     // Would like to avoid calling this EVERY run. but at least calling
     // twice in a row (such as when checking from and to addresses) should be cached
     // using boolean because either it's been refreshed or this is the first run of the invocation. its short lived
@@ -705,6 +720,6 @@ class CheckBuilder {
           console.error('Error fetching OFAC sanctions list', e)
       }
     }
-    return this.SANCTIONED_SET.data.has(address)
+    return this.SANCTIONED_SET.data.has(address.toLowerCase())
   }
 }

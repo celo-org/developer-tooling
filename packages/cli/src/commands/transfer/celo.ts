@@ -1,14 +1,12 @@
 import { goldTokenABI } from '@celo/abis'
 import { Flags } from '@oclif/core'
-import BigNumber from 'bignumber.js'
 import assert from 'node:assert'
 import { PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
 import { resolveAddress } from '../../packages-to-be/address-resolver'
 import { getERC20Contract, getGoldTokenContract } from '../../packages-to-be/contracts'
-import { bigNumberToBigInt } from '../../packages-to-be/utils'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendViemContractCall, displayViemTxHash } from '../../utils/cli'
+import { displaySendViemContractCall, displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class TransferCelo extends BaseCommand {
@@ -19,7 +17,7 @@ export default class TransferCelo extends BaseCommand {
     ...BaseCommand.flags,
     from: CustomFlags.address({ required: true, description: 'Address of the sender' }),
     to: CustomFlags.address({ required: true, description: 'Address of the receiver' }),
-    value: Flags.string({ required: true, description: 'Amount to transfer (in wei)' }),
+    value: CustomFlags.bigint({ required: true, description: 'Amount to transfer (in wei)' }),
     comment: Flags.string({ description: 'Transfer comment' }),
   }
 
@@ -37,12 +35,12 @@ export default class TransferCelo extends BaseCommand {
       throw new Error('TODO: only AKV doesnt return a wallet')
     }
 
-    const from = res.flags.from as `0x${string}`
-    const to = res.flags.to as `0x${string}`
-    const value = bigNumberToBigInt(new BigNumber(res.flags.value))
+    const from = res.flags.from
+    const to = res.flags.to
+    const value = res.flags.value
 
     assert(
-      wallet.account.address === res.flags.from,
+      (await wallet.getAddresses()).includes(res.flags.from),
       '--from address doesnt correspond to the wallet being used'
     )
 
@@ -56,6 +54,8 @@ export default class TransferCelo extends BaseCommand {
       account: wallet.account,
       ...params,
     } as const
+
+    const transferParams = { to, value: value, ...params } as const
 
     await newCheckBuilder(this)
       .isNotSanctioned(from)
@@ -77,7 +77,7 @@ export default class TransferCelo extends BaseCommand {
                   functionName: 'transferWithComment',
                   args: [to, value, res.flags.comment],
                 })
-              : client.estimateGas({ to, value, ...params }),
+              : client.estimateGas(transferParams),
             client.getGasPrice(),
             tokenForGasContract(client as PublicClient, kit.connection.defaultFeeCurrency!).then(
               (contract) => contract.read.balanceOf([from])
@@ -100,15 +100,17 @@ export default class TransferCelo extends BaseCommand {
             args: [to, value, res.flags.comment],
           },
           client,
-          wallet
+          wallet,
+          params
         )
-      : displayViemTxHash(
+      : displayViemTx(
           'transfer',
           // NOTE: this used to be celoToken.transfer
           // but this way ledger considers this a native transfer and show the to and value properly
           // instead of a contract call
-          wallet.sendTransaction({ to, value: value, from, ...params }),
-          client
+          transferParams,
+          client,
+          wallet
         ))
   }
 }

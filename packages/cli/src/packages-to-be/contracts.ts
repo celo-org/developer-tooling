@@ -21,10 +21,8 @@ export const getAccountsContract = async (
     client,
   })
 }
-export type AccountsContract<T extends WalletClient | PublicClient> = GetContractReturnType<
-  typeof accountsABI,
-  T
->
+export type AccountsContract<T extends WalletClient | PublicClient = PublicClient> =
+  GetContractReturnType<typeof accountsABI, T>
 
 export const getGovernanceContract = async (
   client: PublicClient | WalletClient
@@ -35,10 +33,8 @@ export const getGovernanceContract = async (
     client,
   })
 }
-export type GovernanceContract<T extends WalletClient | PublicClient> = GetContractReturnType<
-  typeof governanceABI,
-  T
->
+export type GovernanceContract<T extends WalletClient | PublicClient = PublicClient> =
+  GetContractReturnType<typeof governanceABI, T>
 
 export const getLockedGoldContract = async (
   client: PublicClient | WalletClient
@@ -49,10 +45,8 @@ export const getLockedGoldContract = async (
     client,
   })
 }
-export type LockedGoldContract<T extends WalletClient | PublicClient> = GetContractReturnType<
-  typeof lockedGoldABI,
-  T
->
+export type LockedGoldContract<T extends WalletClient | PublicClient = PublicClient> =
+  GetContractReturnType<typeof lockedGoldABI, T>
 
 export const getValidatorsContract = async (
   client: PublicClient | WalletClient
@@ -63,10 +57,8 @@ export const getValidatorsContract = async (
     client,
   })
 }
-export type ValidatorsContract<T extends WalletClient | PublicClient> = GetContractReturnType<
-  typeof validatorsABI,
-  T
->
+export type ValidatorsContract<T extends WalletClient | PublicClient = PublicClient> =
+  GetContractReturnType<typeof validatorsABI, T>
 
 export const getEpochManagerContract = async (
   client: PublicClient | WalletClient
@@ -77,10 +69,8 @@ export const getEpochManagerContract = async (
     client,
   })
 }
-export type EpochManager<T extends WalletClient | PublicClient> = GetContractReturnType<
-  typeof epochManagerABI,
-  T
->
+export type EpochManager<T extends WalletClient | PublicClient = PublicClient> =
+  GetContractReturnType<typeof epochManagerABI, T>
 
 export const getERC20Contract = async (
   client: PublicClient | WalletClient,
@@ -92,7 +82,10 @@ export const getERC20Contract = async (
     client,
   })
 }
-export type ERC20<T extends WalletClient | PublicClient> = GetContractReturnType<typeof erc20Abi, T>
+export type ERC20<T extends WalletClient | PublicClient = PublicClient> = GetContractReturnType<
+  typeof erc20Abi,
+  T
+>
 
 export const getGoldTokenContract = async (
   client: PublicClient | WalletClient
@@ -103,7 +96,7 @@ export const getGoldTokenContract = async (
     client,
   })
 }
-export type GoldToken<T extends WalletClient | PublicClient> = GetContractReturnType<
+export type GoldToken<T extends WalletClient | PublicClient = PublicClient> = GetContractReturnType<
   typeof goldTokenABI,
   T
 >
@@ -117,10 +110,8 @@ export const getStableTokenUSDContract = async (
     client,
   })
 }
-export type StableTokenUSD<T extends WalletClient | PublicClient> = GetContractReturnType<
-  typeof stableTokenABI,
-  T
->
+export type StableTokenUSD<T extends WalletClient | PublicClient = PublicClient> =
+  GetContractReturnType<typeof stableTokenABI, T>
 
 export const getStableTokenEurContract = async (
   client: PublicClient | WalletClient
@@ -131,10 +122,8 @@ export const getStableTokenEurContract = async (
     client,
   })
 }
-export type StableTokenEUR<T extends WalletClient | PublicClient> = GetContractReturnType<
-  typeof stableTokenEurABI,
-  T
->
+export type StableTokenEUR<T extends WalletClient | PublicClient = PublicClient> =
+  GetContractReturnType<typeof stableTokenEurABI, T>
 
 export const getStableTokenBrlContract = async (
   client: PublicClient | WalletClient
@@ -145,10 +134,8 @@ export const getStableTokenBrlContract = async (
     client,
   })
 }
-export type StableTokenBRL<T extends WalletClient | PublicClient> = GetContractReturnType<
-  typeof stableTokenBrlABI,
-  T
->
+export type StableTokenBRL<T extends WalletClient | PublicClient = PublicClient> =
+  GetContractReturnType<typeof stableTokenBrlABI, T>
 
 export const StableTokens = {
   cUSD: getStableTokenUSDContract,

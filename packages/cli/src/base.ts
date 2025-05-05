@@ -286,9 +286,20 @@ export abstract class BaseCommand extends Command {
           account: privateKeyToAccount(ensureLeading0x(res.flags.privateKey)),
         })
       } else {
+        type EthRequestAccountsRpcSchema = {
+          Parameters: []
+          Method: 'eth_requestAccounts'
+          ReturnType: `0x${string}`[]
+        }
+        const [address] = await publicClient.request<EthRequestAccountsRpcSchema>({
+          method: 'eth_requestAccounts',
+          params: [],
+        })
+
         this.walletClient = createWalletClient({
           transport,
           chain: publicClient.chain,
+          account: address,
         })
       }
     }
