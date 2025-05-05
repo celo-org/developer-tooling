@@ -1,6 +1,5 @@
 import { goldTokenABI } from '@celo/abis'
 import { Flags } from '@oclif/core'
-import assert from 'node:assert'
 import { PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
 import { resolveAddress } from '../../packages-to-be/address-resolver'
@@ -39,11 +38,6 @@ export default class TransferCelo extends BaseCommand {
     const to = res.flags.to
     const value = res.flags.value
 
-    assert(
-      (await wallet.getAddresses()).includes(res.flags.from),
-      '--from address doesnt correspond to the wallet being used'
-    )
-
     const params =
       // TODO: get rid of kit here
       kit.connection.defaultFeeCurrency ? { feeCurrency: kit.connection.defaultFeeCurrency } : {}
@@ -60,6 +54,7 @@ export default class TransferCelo extends BaseCommand {
     await newCheckBuilder(this)
       .isNotSanctioned(from)
       .isNotSanctioned(to)
+      .isValidWalletSigner(from)
       .hasEnoughCelo(from, value)
       .addCheck(
         `Account can afford to transfer CELO with gas paid in ${

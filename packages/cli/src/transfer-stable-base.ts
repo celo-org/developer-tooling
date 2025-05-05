@@ -81,6 +81,7 @@ export abstract class TransferStableBase extends BaseCommand {
       .hasEnoughStable(from, value, stableToken)
       .isNotSanctioned(from)
       .isNotSanctioned(to)
+      .isValidWalletSigner(from)
       .addCheck(
         `Account can afford to transfer ${stableToken} with gas paid in ${
           kit.connection.defaultFeeCurrency || 'CELO'

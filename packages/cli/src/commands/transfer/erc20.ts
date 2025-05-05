@@ -1,4 +1,3 @@
-import assert from 'node:assert'
 import { erc20Abi } from 'viem'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
@@ -45,11 +44,6 @@ export default class TransferErc20 extends BaseCommand {
     const to = res.flags.to
     const value = res.flags.value
 
-    assert(
-      (await wallet.getAddresses()).includes(res.flags.from),
-      '--from address doesnt correspond to the wallet being used'
-    )
-
     const erc20Contract = {
       abi: erc20Abi,
       address: res.flags.erc20Address,
@@ -72,6 +66,7 @@ export default class TransferErc20 extends BaseCommand {
     await newCheckBuilder(this)
       .isNotSanctioned(from)
       .isNotSanctioned(to)
+      .isValidWalletSigner(from)
       .hasEnoughErc20(from, value, res.flags.erc20Address, decimals)
       .runChecks()
 

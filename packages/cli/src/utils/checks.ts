@@ -5,7 +5,7 @@ import { HotfixRecord, ProposalStage } from '@celo/contractkit/lib/wrappers/Gove
 import BigNumber from 'bignumber.js'
 import chalk from 'chalk'
 import { fetch } from 'cross-fetch'
-import { erc20Abi, formatEther, formatUnits, PublicClient } from 'viem'
+import { erc20Abi, formatEther, formatUnits, PublicClient, WalletClient } from 'viem'
 import { BaseCommand } from '../base'
 import { signerToAccount } from '../packages-to-be/account'
 import { resolveAddress } from '../packages-to-be/address-resolver'
@@ -72,6 +72,12 @@ class CheckBuilder {
     // In this case we're not using any Celo-specific client features, so it can be
     // safely casted to PublicClient
     return this.command.getPublicClient() as Promise<PublicClient>
+  }
+
+  private async getWalletClient(): Promise<WalletClient> {
+    // In this case we're not using any Celo-specific client features, so it can be
+    // safely casted to WalletClient
+    return this.command.getWalletClient() as Promise<WalletClient>
   }
 
   private withSignerToAccount<A>(
@@ -211,6 +217,13 @@ class CheckBuilder {
     }
     return this
   }
+
+  isValidWalletSigner = (account: Address) =>
+    this.addCheck(`${account} can sign txs`, async () => {
+      const wallet = await this.getWalletClient()
+      const addresses = await wallet.getAddresses()
+      return addresses.map((x) => x.toLowerCase()).includes(account.toLowerCase())
+    })
 
   isApprover = (account: Address) =>
     this.addCheck(
@@ -676,9 +689,6 @@ class CheckBuilder {
       const color = passed ? chalk.green : chalk.red
       const msg = !passed && aCheck.errorMessage ? aCheck.errorMessage : ''
       console.log(color(`   ${status︎Str}  ${aCheck.name} ${msg}`))
-      if (!passed) {
-        throw new Error(aCheck.name + '' + msg)
-      }
       allPassed = allPassed && passed
     }
 
