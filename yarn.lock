@@ -1649,7 +1649,6 @@ __metadata:
     "@celo/governance": "npm:^5.1.7-beta.0"
     "@celo/identity": "npm:^5.1.2"
     "@celo/metadata-claims": "npm:^1.0.3"
-    "@celo/phone-utils": "npm:^6.0.6"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.2"
     "@celo/viem-account-ledger": "npm:^1.2.0-beta.0"
@@ -1693,7 +1692,6 @@ __metadata:
     typescript: "npm:5.3.3"
     viem: "npm:^2.23.5"
     web3: "npm:1.10.4"
-    web3-utils: "npm:^1.10.4"
   bin:
     celocli: ./bin/run.js
     dev: .bin/dev.js
@@ -2022,7 +2020,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/phone-utils@npm:^6.0.6, @celo/phone-utils@workspace:packages/sdk/phone-utils":
+"@celo/phone-utils@workspace:packages/sdk/phone-utils":
   version: 0.0.0-use.local
   resolution: "@celo/phone-utils@workspace:packages/sdk/phone-utils"
   dependencies:
