@@ -69,4 +69,4 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/rewards/show.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.1/packages/cli/src/commands/rewards/show.ts)_
+_See code: [src/commands/rewards/show.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.3/packages/cli/src/commands/rewards/show.ts)_

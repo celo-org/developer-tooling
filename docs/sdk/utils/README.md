@@ -1,29 +1,16 @@
-@celo/utils
+**@celo/utils v8.0.2**
 
-# @celo/utils
+***
 
-## Table of contents
+# @celo/utils v8.0.2
 
-### Modules
+## Namespaces
 
-- [address](modules/address.md)
-- [async](modules/async.md)
-- [celoHistory](modules/celoHistory.md)
-- [collections](modules/collections.md)
-- [ecdh](modules/ecdh.md)
-- [ecies](modules/ecies.md)
-- [fixidity](modules/fixidity.md)
-- [future](modules/future.md)
-- [index](modules/index.md)
-- [inputValidation](modules/inputValidation.md)
-- [io](modules/io.md)
-- [istanbul](modules/istanbul.md)
-- [levenshtein](modules/levenshtein.md)
-- [logger](modules/logger.md)
-- [parsing](modules/parsing.md)
-- [sign-typed-data-utils](modules/sign_typed_data_utils.md)
-- [signatureUtils](modules/signatureUtils.md)
-- [solidity](modules/solidity.md)
-- [string](modules/string.md)
-- [task](modules/task.md)
-- [typed-data-constructors](modules/typed_data_constructors.md)
+- [AddressUtils](@celo/namespaces/AddressUtils/README.md)
+
+## Variables
+
+- [ECIES](variables/ECIES.md)
+- [IstanbulUtils](variables/IstanbulUtils.md)
+- [SignatureUtils](variables/SignatureUtils.md)
+- [StringUtils](variables/StringUtils.md)

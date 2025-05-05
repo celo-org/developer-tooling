@@ -81,11 +81,11 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/election/activate.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.1/packages/cli/src/commands/election/activate.ts)_
+_See code: [src/commands/election/activate.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.3/packages/cli/src/commands/election/activate.ts)_
 
 ## `celocli election:current`
 
-Outputs the set of validators currently participating in BFT to create blocks. An election is run to select the validator set at the end of every epoch.
+Outputs the set of rpc nodes currently elected. An election is run to select the community rpc node set at the end of every epoch.
 
 ```
 USAGE
@@ -151,8 +151,8 @@ FLAGS
       are shown). Useful for checking if keys have been rotated.
 
 DESCRIPTION
-  Outputs the set of validators currently participating in BFT to create blocks. An
-  election is run to select the validator set at the end of every epoch.
+  Outputs the set of rpc nodes currently elected. An election is run to select the
+  community rpc node set at the end of every epoch.
 
 FLAG DESCRIPTIONS
   -n, --node=<value>  URL of the node to run commands against or an alias
@@ -165,7 +165,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/election/current.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.1/packages/cli/src/commands/election/current.ts)_
+_See code: [src/commands/election/current.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.3/packages/cli/src/commands/election/current.ts)_
 
 ## `celocli election:list`
 
@@ -209,7 +209,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/election/list.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.1/packages/cli/src/commands/election/list.ts)_
+_See code: [src/commands/election/list.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.3/packages/cli/src/commands/election/list.ts)_
 
 ## `celocli election:revoke`
 
@@ -274,7 +274,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/election/revoke.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.1/packages/cli/src/commands/election/revoke.ts)_
+_See code: [src/commands/election/revoke.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.3/packages/cli/src/commands/election/revoke.ts)_
 
 ## `celocli election:run`
 
@@ -314,7 +314,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/election/run.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.1/packages/cli/src/commands/election/run.ts)_
+_See code: [src/commands/election/run.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.3/packages/cli/src/commands/election/run.ts)_
 
 ## `celocli election:show ARG1`
 
@@ -352,7 +352,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/election/show.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.1/packages/cli/src/commands/election/show.ts)_
+_See code: [src/commands/election/show.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.3/packages/cli/src/commands/election/show.ts)_
 
 ## `celocli election:vote`
 
@@ -417,4 +417,4 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/election/vote.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.1/packages/cli/src/commands/election/vote.ts)_
+_See code: [src/commands/election/vote.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.3/packages/cli/src/commands/election/vote.ts)_

@@ -1,5 +1,19 @@
 # @celo/dev-utils
 
+## 0.1.0-beta.2
+
+### Minor Changes
+
+- [#598](https://github.com/celo-org/developer-tooling/pull/598) [`a0efb2f`](https://github.com/celo-org/developer-tooling/commit/a0efb2fad370e350a3a4ea0ee10413628487fa47) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Remove TestWithAnvilL1
+
+- [#598](https://github.com/celo-org/developer-tooling/pull/598) [`a0efb2f`](https://github.com/celo-org/developer-tooling/commit/a0efb2fad370e350a3a4ea0ee10413628487fa47) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Remove ganache. Change lib/ganache-setup.js to lib/test-accounts.js
+
+- [#602](https://github.com/celo-org/developer-tooling/pull/602) [`a270c1a`](https://github.com/celo-org/developer-tooling/commit/a270c1aa0c9d5b282396af8812ea9ddbcb7fec9c) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Add some viem helpers
+
+### Patch Changes
+
+- [#598](https://github.com/celo-org/developer-tooling/pull/598) [`a0efb2f`](https://github.com/celo-org/developer-tooling/commit/a0efb2fad370e350a3a4ea0ee10413628487fa47) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Remove testWithGanache
+
 ## 0.1.0-beta.1
 
 ### Patch Changes

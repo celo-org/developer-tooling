@@ -1,6 +1,7 @@
 {
+  "$schema": "https://typedoc.org/schema.json",
   "exclude": [
-    "**/*+(index|.test).ts"
+    "**/*.test.ts"
   ],
   "excludePrivate": true,
   "excludeProtected": true,
@@ -9,11 +10,16 @@
   "gitRevision": "master",
   "readme": "none",
   "entryPoints": [
-    "./src"
+    "./src/*.ts",
   ],
-  "githubPages": false,
+  "githubPages": false,  
+  "excludeReferences": true,
+  "includeVersion": true,
   "plugin": [
     "typedoc-plugin-markdown"
   ],
-  "entryPointStrategy": "expand"
+  "entryPointStrategy": "resolve",
+  "validation": {
+    "notExported": false,
+  }
 }

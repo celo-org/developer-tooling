@@ -11,8 +11,10 @@ import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import { ProposalBuilder } from '@celo/governance'
 import Safe, { getSafeAddressFromDeploymentTx } from '@safe-global/protocol-kit'
 import BigNumber from 'bignumber.js'
+import { celoAlfajores } from 'viem/chains'
 import Web3 from 'web3'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { deployMultiCall } from '../../test-utils/multicall'
 import { createMultisig, setupSafeContracts } from '../../test-utils/multisigUtils'
 import Withdraw from './withdraw'
 
@@ -33,6 +35,8 @@ testWithAnvilL2(
     beforeEach(async () => {
       logMock.mockClear().mockImplementation()
       errorMock.mockClear().mockImplementation()
+
+      await deployMultiCall(web3, celoAlfajores.contracts.multicall3.address)
 
       accounts = (await web3.eth.getAccounts()) as StrongAddress[]
       kit.defaultAccount = accounts[0]

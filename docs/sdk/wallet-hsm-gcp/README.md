@@ -1,11 +1,10 @@
-@celo/wallet-hsm-gcp
+**@celo/wallet-hsm-gcp v8.0.0-beta.1**
 
-# @celo/wallet-hsm-gcp
+***
 
-## Table of contents
+# @celo/wallet-hsm-gcp v8.0.0-beta.1
 
-### Modules
+## Classes
 
-- [gcp-hsm-signer](modules/gcp_hsm_signer.md)
-- [gcp-hsm-wallet](modules/gcp_hsm_wallet.md)
-- [index](modules/index.md)
+- [GcpHsmSigner](classes/GcpHsmSigner.md)
+- [GcpHsmWallet](classes/GcpHsmWallet.md)

@@ -2,7 +2,6 @@ import { StrongAddress } from '@celo/base'
 import { URL_REGEX } from '@celo/base/lib/io'
 import { CeloContract, RegisteredContracts } from '@celo/contractkit'
 import { BLS_POP_SIZE, BLS_PUBLIC_KEY_SIZE } from '@celo/cryptographic-utils/lib/bls'
-import { isE164NumberStrict } from '@celo/phone-utils/lib/phoneNumbers'
 import { ensureLeading0x, trimLeading0x } from '@celo/utils/lib/address'
 import { POP_SIZE } from '@celo/utils/lib/signatureUtils'
 import { Args, Errors, Flags } from '@oclif/core'
@@ -83,14 +82,6 @@ export const parsePath: ParseFn<string> = async (input: string) => {
     return input
   } else {
     throw new CLIError(`File at "${input}" does not exist`)
-  }
-}
-
-const parsePhoneNumber: ParseFn<string> = async (input) => {
-  if (isE164NumberStrict(input)) {
-    return input
-  } else {
-    throw new CLIError(`PhoneNumber "${input}" is not a valid E164 number`)
   }
 }
 
@@ -210,11 +201,6 @@ export const CustomFlags = {
     parse: parseArray(parseCoreContract),
     description: 'Array of Registered Core Contracts',
     helpValue: `\'["${CeloContract.Accounts}", "${CeloContract.Governance}", "${CeloContract.Validators}"]\'`,
-  }),
-  phoneNumber: Flags.custom({
-    parse: parsePhoneNumber,
-    description: 'Phone Number in E164 Format',
-    helpValue: '+14152223333',
   }),
   proofOfPossession: Flags.custom({
     parse: parseProofOfPossession,

@@ -71,7 +71,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/dkg/allowlist.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.1/packages/cli/src/commands/dkg/allowlist.ts)_
+_See code: [src/commands/dkg/allowlist.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.3/packages/cli/src/commands/dkg/allowlist.ts)_
 
 ## `celocli dkg:deploy`
 
@@ -133,7 +133,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/dkg/deploy.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.1/packages/cli/src/commands/dkg/deploy.ts)_
+_See code: [src/commands/dkg/deploy.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.3/packages/cli/src/commands/dkg/deploy.ts)_
 
 ## `celocli dkg:get`
 
@@ -194,7 +194,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/dkg/get.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.1/packages/cli/src/commands/dkg/get.ts)_
+_See code: [src/commands/dkg/get.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.3/packages/cli/src/commands/dkg/get.ts)_
 
 ## `celocli dkg:publish`
 
@@ -257,7 +257,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/dkg/publish.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.1/packages/cli/src/commands/dkg/publish.ts)_
+_See code: [src/commands/dkg/publish.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.3/packages/cli/src/commands/dkg/publish.ts)_
 
 ## `celocli dkg:register`
 
@@ -320,7 +320,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/dkg/register.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.1/packages/cli/src/commands/dkg/register.ts)_
+_See code: [src/commands/dkg/register.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.3/packages/cli/src/commands/dkg/register.ts)_
 
 ## `celocli dkg:start`
 
@@ -379,4 +379,4 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/dkg/start.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.1/packages/cli/src/commands/dkg/start.ts)_
+_See code: [src/commands/dkg/start.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.3/packages/cli/src/commands/dkg/start.ts)_

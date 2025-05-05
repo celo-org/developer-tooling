@@ -1,10 +1,9 @@
-@celo/wallet-remote
+**@celo/wallet-remote v8.0.0-beta.1**
 
-# @celo/wallet-remote
+***
 
-## Table of contents
+# @celo/wallet-remote v8.0.0-beta.1
 
-### Modules
+## Classes
 
-- [index](modules/index.md)
-- [remote-wallet](modules/remote_wallet.md)
+- [RemoteWallet](classes/RemoteWallet.md)

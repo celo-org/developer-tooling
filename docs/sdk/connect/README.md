@@ -1,4 +1,6 @@
-@celo/connect / [Exports](modules.md)
+**@celo/connect v7.0.0-beta.0**
+
+***
 
 # @celo/connect
 

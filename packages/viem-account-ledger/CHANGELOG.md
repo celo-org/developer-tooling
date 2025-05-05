@@ -1,5 +1,11 @@
 # @celo/viem-account-ledger
 
+## 1.2.0-beta.0
+
+### Minor Changes
+
+- [#602](https://github.com/celo-org/developer-tooling/pull/602) [`a270c1a`](https://github.com/celo-org/developer-tooling/commit/a270c1aa0c9d5b282396af8812ea9ddbcb7fec9c) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Export a WalletClient
+
 ## 1.1.1
 
 ### Patch Changes

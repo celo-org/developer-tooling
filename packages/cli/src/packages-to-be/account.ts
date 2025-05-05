@@ -1,7 +1,8 @@
 import { accountsABI, lockedGoldABI } from '@celo/abis-12'
 import { StrongAddress } from '@celo/base'
-import { erc20Abi, PublicClient } from 'viem'
+import { Address, erc20Abi, PublicClient } from 'viem'
 import { resolveAddress } from './address-resolver'
+import { getAccountsContract } from './contracts'
 
 export const signerToAccount = async (
   client: PublicClient,
@@ -80,4 +81,38 @@ export const getTotalBalance = async (
     cEUR,
     cREAL,
   }
+}
+
+export async function getMetadataURLs(client: PublicClient, addresses: Address[]) {
+  const contract = await getAccountsContract(client)
+
+  const urlResults = await Promise.allSettled(
+    addresses.map(async (address) => {
+      const url = await contract.read.getMetadataURL([address])
+      return [address, url]
+    })
+  )
+  const filtered = selectFulfilled(urlResults)
+
+  return new Map(filtered)
+}
+
+export async function getNames(client: PublicClient, addresses: Address[]) {
+  const contract = await getAccountsContract(client)
+
+  const nameResults = await Promise.allSettled(
+    addresses.map(async (address) => {
+      const name = await contract.read.getName([address])
+      return [address, name]
+    })
+  )
+  const filtered = selectFulfilled(nameResults)
+
+  return new Map(filtered)
+}
+
+function selectFulfilled(results: Array<PromiseSettledResult<string[]>>) {
+  return results
+    .filter((result): result is PromiseFulfilledResult<string[]> => result.status === 'fulfilled')
+    .map((result) => result.value as [Address, string])
 }

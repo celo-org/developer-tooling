@@ -1,14 +1,30 @@
-@celo/explorer
+**@celo/explorer v5.0.16-beta.0**
 
-# @celo/explorer
+***
 
-## Table of contents
+# @celo/explorer v5.0.16-beta.0
 
-### Modules
+## Classes
 
-- [base](modules/base.md)
-- [block-explorer](modules/block_explorer.md)
-- [globals](modules/globals.md)
-- [index](modules/index.md)
-- [log-explorer](modules/log_explorer.md)
-- [sourcify](modules/sourcify.md)
+- [BlockExplorer](classes/BlockExplorer.md)
+- [LogExplorer](classes/LogExplorer.md)
+
+## Interfaces
+
+- [CallDetails](interfaces/CallDetails.md)
+- [ContractDetails](interfaces/ContractDetails.md)
+- [ContractMapping](interfaces/ContractMapping.md)
+- [ContractNameAndMethodAbi](interfaces/ContractNameAndMethodAbi.md)
+- [ParsedBlock](interfaces/ParsedBlock.md)
+- [ParsedTx](interfaces/ParsedTx.md)
+
+## Variables
+
+- [getContractDetailsFromContract](variables/getContractDetailsFromContract.md)
+
+## Functions
+
+- [mapFromPairs](functions/mapFromPairs.md)
+- [newBlockExplorer](functions/newBlockExplorer.md)
+- [newLogExplorer](functions/newLogExplorer.md)
+- [obtainKitContractDetails](functions/obtainKitContractDetails.md)

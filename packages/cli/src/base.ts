@@ -6,7 +6,7 @@ import { AzureHSMWallet } from '@celo/wallet-hsm-azure'
 import { AddressValidation, newLedgerWalletWithSetup } from '@celo/wallet-ledger'
 import { LocalWallet } from '@celo/wallet-local'
 import _TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
-import { Command, Flags } from '@oclif/core'
+import { Command, Flags, ux } from '@oclif/core'
 import { CLIError } from '@oclif/core/lib/errors'
 import { FlagInput } from '@oclif/core/lib/interfaces/parser'
 import chalk from 'chalk'
@@ -196,6 +196,7 @@ export abstract class BaseCommand extends Command {
   public async getPublicClient(): Promise<CeloClient> {
     if (!this.publicClient) {
       const nodeUrl = await this.getNodeUrl()
+      ux.action.start(`Connecting to Node ${nodeUrl}`)
       const transport = await this.getTransport()
 
       // Create an intermediate client to get the chain id
@@ -211,6 +212,7 @@ export abstract class BaseCommand extends Command {
       if (extractedChain) {
         this.publicClient = createPublicClient({
           transport,
+          batch: { multicall: true },
           chain: extractedChain,
         })
       } else {
@@ -229,6 +231,7 @@ export abstract class BaseCommand extends Command {
           },
         }) as any as CeloClient
       }
+      ux.action.stop()
     }
 
     return this.publicClient
