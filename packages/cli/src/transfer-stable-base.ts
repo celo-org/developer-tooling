@@ -3,6 +3,7 @@ import { isAddressEqual, PublicClient } from 'viem'
 import { BaseCommand } from './base'
 import {
   getERC20Contract,
+  getGoldTokenContract,
   StableToken,
   StableTokenContract,
   StableTokenContractGetter,
@@ -11,7 +12,9 @@ import {
 import { newCheckBuilder } from './utils/checks'
 import { displaySendViemContractCall, failWith } from './utils/cli'
 import { CustomFlags } from './utils/command'
+import { enumEntriesDupWithLowercase } from './utils/helpers'
 
+const stableTokenOptions = enumEntriesDupWithLowercase(Object.entries(StableTokens))
 export abstract class TransferStableBase extends BaseCommand {
   static flags = {
     ...BaseCommand.flags,
@@ -19,6 +22,15 @@ export abstract class TransferStableBase extends BaseCommand {
     to: CustomFlags.address({ required: true, description: 'Address of the receiver' }),
     value: CustomFlags.bigint({ required: true, description: 'Amount to transfer (in wei)' }),
     comment: Flags.string({ description: 'Transfer comment' }),
+
+    // NOTE: adding the stableToken here as hidden to be used in TransferStable
+    // solves lots of typing headaches related to oclif and
+    // `this.parse(TransferStableBase)` throwing NonExistentFlag --stableToken
+    stableToken: Flags.option({
+      options: Object.keys(stableTokenOptions) as StableToken[],
+      description: 'Name of the stable to be transferred',
+      hidden: true,
+    })(),
   } as const
 
   protected _stableCurrencyContract: StableTokenContractGetter | null = null
@@ -49,8 +61,9 @@ export abstract class TransferStableBase extends BaseCommand {
     } catch {
       failWith(`The ${stableToken} token was not deployed yet`)
     }
+    const goldTokenContract = await getGoldTokenContract(client as PublicClient)
 
-    const stableContract = {
+    const stableContractData = {
       abi: stableTokenContract.abi,
       address: stableTokenContract.address,
       account: from,
@@ -74,19 +87,23 @@ export abstract class TransferStableBase extends BaseCommand {
       .addCheck(
         `Account can afford to transfer ${stableToken} with gas paid in ${feeCurrency || 'CELO'}`,
         async () => {
+          const feeInSameStableTokenAsTransfer =
+            feeCurrency && isAddressEqual(feeCurrency, stableTokenContract.address)
+
           const [gas, gasPrice, balanceOfTokenForGas, balanceOfTokenToSend] = await Promise.all([
-            client.estimateContractGas(stableContract),
+            client.estimateContractGas(stableContractData),
             client.getGasPrice(),
-            feeCurrency
-              ? getERC20Contract(client as PublicClient, feeCurrency).then((contract) =>
-                  contract.read.balanceOf([from])
-                )
-              : client.getBalance({ address: from }),
+            (feeCurrency
+              ? feeInSameStableTokenAsTransfer
+                ? stableTokenContract
+                : await getERC20Contract(client as PublicClient, feeCurrency)
+              : goldTokenContract
+            ).read.balanceOf([from]),
             stableTokenContract.read.balanceOf([from]),
           ])
           const totalSpentOnGas = gas * gasPrice
 
-          if (feeCurrency && isAddressEqual(feeCurrency, stableTokenContract.address)) {
+          if (feeInSameStableTokenAsTransfer) {
             return balanceOfTokenToSend >= value + totalSpentOnGas
           }
           return balanceOfTokenForGas >= totalSpentOnGas && balanceOfTokenToSend >= value
@@ -97,6 +114,6 @@ export abstract class TransferStableBase extends BaseCommand {
       )
       .runChecks()
 
-    await displaySendViemContractCall(stableToken, stableContract, client, wallet)
+    await displaySendViemContractCall(stableToken, stableContractData, client, wallet)
   }
 }

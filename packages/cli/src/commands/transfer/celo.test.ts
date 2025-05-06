@@ -1,12 +1,17 @@
 import { goldTokenABI } from '@celo/abis'
 import { COMPLIANT_ERROR_RESPONSE } from '@celo/compliance'
-import { ContractKit, StableToken, newKitFromWeb3 } from '@celo/contractkit'
+import { ContractKit, newKitFromWeb3, StableToken } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import BigNumber from 'bignumber.js'
-import { createPublicClient, http } from 'viem'
+import { createPublicClient, decodeFunctionData, http } from 'viem'
 import Web3 from 'web3'
+import { bigNumberToBigInt } from '../../packages-to-be/utils'
 import { topUpWithToken } from '../../test-utils/chain-setup'
-import { TEST_SANCTIONED_ADDRESS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import {
+  stripAnsiCodesFromNestedArray,
+  TEST_SANCTIONED_ADDRESS,
+  testLocallyWithWeb3Node,
+} from '../../test-utils/cliUtils'
 import TransferCelo from './celo'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -96,6 +101,89 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
 
     const balanceAfter = (await kit.getTotalBalance(accounts[0])).CELO!
     expect(balanceBefore.toFixed()).toEqual(balanceAfter.toFixed())
+  })
+
+  test('cant transfer full balance without feeCurrency', async () => {
+    const spy = jest.spyOn(console, 'log')
+    const balance = (await kit.getTotalBalance(accounts[0])).CELO!
+    await expect(
+      testLocallyWithWeb3Node(
+        TransferCelo,
+        ['--from', accounts[0], '--to', accounts[1], '--value', balance.toFixed()],
+        web3
+      )
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
+    expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
+      [
+        [
+          "Running Checks:",
+        ],
+        [
+          "   ✔  Compliant Address ",
+        ],
+        [
+          "   ✔  Compliant Address ",
+        ],
+        [
+          "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 can sign txs ",
+        ],
+        [
+          "   ✔  Account has at least 1000000 CELO ",
+        ],
+        [
+          "   ✘  Account can afford to transfer CELO with gas paid in CELO Cannot afford to transfer CELO ; try reducing value slightly or using a different gasCurrency",
+        ],
+      ]
+    `)
+  })
+
+  test('can transfer full balance with feeCurrency', async () => {
+    const start = await web3.eth.getBlock('latest')
+    const balance = (await kit.getTotalBalance(accounts[0])).CELO!
+    await expect(
+      testLocallyWithWeb3Node(
+        TransferCelo,
+        [
+          '--from',
+          accounts[0],
+          '--to',
+          accounts[1],
+          '--value',
+          balance.toFixed(),
+          '--gasCurrency',
+          (await kit.contracts.getStableToken(StableToken.cUSD)).address,
+          '--comment',
+          'Goodbye balance',
+        ],
+        web3
+      )
+    ).resolves.toBeUndefined()
+
+    const client = createPublicClient({
+      // @ts-expect-error
+      transport: http(kit.web3.currentProvider.existingProvider.host),
+    })
+    const events = await client.getContractEvents({
+      abi: goldTokenABI,
+      eventName: 'TransferComment',
+      fromBlock: BigInt(start.number),
+      address: (await kit.contracts.getCeloToken()).address,
+    })
+
+    expect(events.length).toEqual(1)
+    expect(events[0].args).toEqual({ comment: 'Goodbye balance' })
+
+    const tx = await client.getTransaction({ hash: events[0]!.transactionHash })
+    expect(tx.from.toLowerCase()).toEqual(accounts[0].toLowerCase())
+    expect(
+      decodeFunctionData({
+        abi: goldTokenABI,
+        data: tx.input,
+      })
+    ).toEqual({
+      args: [accounts[1], bigNumberToBigInt(balance), 'Goodbye balance'],
+      functionName: 'transferWithComment',
+    })
   })
 
   test('can transfer celo with comment', async () => {

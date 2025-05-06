@@ -1,9 +1,7 @@
-import { goldTokenABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
 import { Flags } from '@oclif/core'
 import { PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
-import { resolveAddress } from '../../packages-to-be/address-resolver'
 import { getERC20Contract, getGoldTokenContract } from '../../packages-to-be/contracts'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendViemContractCall, displayViemTx } from '../../utils/cli'
@@ -41,10 +39,13 @@ export default class TransferCelo extends BaseCommand {
 
     const params = feeCurrency ? { feeCurrency } : {}
 
-    const celoContract = {
-      address: await resolveAddress(client, 'GoldToken'),
-      abi: goldTokenABI,
+    const goldTokenContract = await getGoldTokenContract(client as PublicClient)
+    const transferWithCommentContractData = {
+      address: goldTokenContract.address,
+      abi: goldTokenContract.abi,
       account: from,
+      functionName: 'transferWithComment',
+      args: [to, value, res.flags.comment!],
       ...params,
     } as const
 
@@ -58,24 +59,22 @@ export default class TransferCelo extends BaseCommand {
       .addCheck(
         `Account can afford to transfer CELO with gas paid in ${feeCurrency || 'CELO'}`,
         async () => {
-          const tokenForGasContract = feeCurrency ? getERC20Contract : getGoldTokenContract
-
           const [gas, gasPrice, balanceOfTokenForGas] = await Promise.all([
             res.flags.comment
-              ? client.estimateContractGas({
-                  ...celoContract,
-                  functionName: 'transferWithComment',
-                  args: [to, value, res.flags.comment],
-                })
+              ? client.estimateContractGas(transferWithCommentContractData)
               : client.estimateGas(transferParams),
             client.getGasPrice(),
-            feeCurrency
-              ? tokenForGasContract(client as PublicClient, feeCurrency).then((contract) =>
-                  contract.read.balanceOf([from])
-                )
-              : client.getBalance({ address: from }),
+            (feeCurrency
+              ? await getERC20Contract(client as PublicClient, feeCurrency)
+              : goldTokenContract
+            ).read.balanceOf([from]),
           ])
-          return balanceOfTokenForGas >= gas * gasPrice
+
+          const totalSpentOnGas = gas * gasPrice
+          if (feeCurrency) {
+            return balanceOfTokenForGas >= totalSpentOnGas
+          }
+          return balanceOfTokenForGas >= totalSpentOnGas + value
         },
         `Cannot afford to transfer CELO ${
           feeCurrency ? 'with' + ' ' + feeCurrency + ' ' + 'gasCurrency' : ''
@@ -86,11 +85,7 @@ export default class TransferCelo extends BaseCommand {
     await (res.flags.comment
       ? displaySendViemContractCall(
           'GoldToken',
-          {
-            ...celoContract,
-            functionName: 'transferWithComment',
-            args: [to, value, res.flags.comment],
-          },
+          transferWithCommentContractData,
           client,
           wallet,
           params
