@@ -19,6 +19,22 @@ process.env.NO_SYNCCHECK = 'true'
 // Lots of commands, sometimes times out
 jest.setTimeout(15000)
 
+const _fetch = global.fetch
+// @ts-expect-error
+jest.spyOn(global, 'fetch').mockImplementation(async (...args) => {
+  if (args[1]?.body) {
+    const body = JSON.parse(args[1].body.toString())
+    if (body.method === 'eth_gasPrice') {
+      return {
+        ok: true,
+        headers: new Map([['Content-Type', 'application/json']]),
+        json: () => Promise.resolve({ result: '30000', id: 1, jsonrpc: '2.0' }),
+      }
+    }
+  }
+  return _fetch(...args)
+})
+
 testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
   let accounts: string[] = []
   let kit: ContractKit

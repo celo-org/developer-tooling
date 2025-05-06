@@ -9,6 +9,7 @@ import {
   StableTokenContractGetter,
   StableTokens,
 } from './packages-to-be/contracts'
+import { getGasPriceOnCelo } from './packages-to-be/utils'
 import { newCheckBuilder } from './utils/checks'
 import { displaySendViemContractCall, failWith } from './utils/cli'
 import { CustomFlags } from './utils/command'
@@ -97,7 +98,7 @@ export abstract class TransferStableBase extends BaseCommand {
 
           const [gas, gasPrice, balanceOfTokenForGas, balanceOfTokenToSend] = await Promise.all([
             client.estimateContractGas(stableContractData),
-            client.getGasPrice(),
+            getGasPriceOnCelo(client, feeCurrency),
             (feeCurrency
               ? feeInSameStableTokenAsTransfer
                 ? stableTokenContract

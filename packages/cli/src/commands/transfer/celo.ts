@@ -2,6 +2,7 @@ import { Flags } from '@oclif/core'
 import { PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
 import { getERC20Contract, getGoldTokenContract } from '../../packages-to-be/contracts'
+import { getGasPriceOnCelo } from '../../packages-to-be/utils'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendViemContractCall, displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
@@ -63,7 +64,7 @@ export default class TransferCelo extends BaseCommand {
             res.flags.comment
               ? client.estimateContractGas(transferWithCommentContractData)
               : client.estimateGas(transferParams),
-            client.getGasPrice(),
+            getGasPriceOnCelo(client, feeCurrency),
             (feeCurrency
               ? await getERC20Contract(client as PublicClient, feeCurrency)
               : goldTokenContract
