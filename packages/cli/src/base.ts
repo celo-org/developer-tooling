@@ -8,7 +8,6 @@ import { LocalWallet } from '@celo/wallet-local'
 import _TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
 import { Command, Flags, ux } from '@oclif/core'
 import { CLIError } from '@oclif/core/lib/errors'
-import { FlagInput } from '@oclif/core/lib/interfaces/parser'
 import chalk from 'chalk'
 import net from 'net'
 import { createPublicClient, createWalletClient, extractChain, http, Transport } from 'viem'
@@ -25,7 +24,7 @@ import { requireNodeIsSynced } from './utils/helpers'
 import { reportUsageStatisticsIfTelemetryEnabled } from './utils/telemetry'
 
 export abstract class BaseCommand extends Command {
-  static flags: FlagInput = {
+  static flags = {
     privateKey: Flags.string({
       char: 'k',
       description: 'Use a private key to sign local transactions with',
@@ -111,7 +110,7 @@ export abstract class BaseCommand extends Command {
       hidden: false,
       description: 'View all available global flags',
     }),
-  }
+  } as const
   // This specifies whether the node needs to be synced before the command
   // can be run. In most cases, this should be `true`, so that's the default.
   // For commands that don't require the node is synced, add the following line

@@ -1,17 +1,13 @@
-import { StrongAddress } from '@celo/base'
 import { Flags } from '@oclif/core'
-import BigNumber from 'bignumber.js'
-import { PublicClient } from 'viem'
+import { isAddressEqual, PublicClient } from 'viem'
 import { BaseCommand } from './base'
 import {
   getERC20Contract,
-  getGoldTokenContract,
   StableToken,
   StableTokenContract,
   StableTokenContractGetter,
   StableTokens,
 } from './packages-to-be/contracts'
-import { bigNumberToBigInt } from './packages-to-be/utils'
 import { newCheckBuilder } from './utils/checks'
 import { displaySendViemContractCall, failWith } from './utils/cli'
 import { CustomFlags } from './utils/command'
@@ -21,25 +17,25 @@ export abstract class TransferStableBase extends BaseCommand {
     ...BaseCommand.flags,
     from: CustomFlags.address({ required: true, description: 'Address of the sender' }),
     to: CustomFlags.address({ required: true, description: 'Address of the receiver' }),
-    value: Flags.string({ required: true, description: 'Amount to transfer (in wei)' }),
+    value: CustomFlags.bigint({ required: true, description: 'Amount to transfer (in wei)' }),
     comment: Flags.string({ description: 'Transfer comment' }),
-  }
+  } as const
 
   protected _stableCurrencyContract: StableTokenContractGetter | null = null
 
   async run() {
-    const kit = await this.getKit()
     const client = await this.getPublicClient()
     const wallet = await this.getWalletClient()!
-    const res = await this.parse()
+    const res = await this.parse(TransferStableBase)
 
     if (!wallet) {
       throw new Error('TODO: only AKV doesnt return a wallet')
     }
 
-    const from: StrongAddress = res.flags.from
-    const to: StrongAddress = res.flags.to
-    const value = bigNumberToBigInt(new BigNumber(res.flags.value))
+    const from = res.flags.from
+    const to = res.flags.to
+    const value = res.flags.value
+    const feeCurrency = res.flags.gasCurrency
 
     if (!this._stableCurrencyContract) {
       throw new Error('Stable currency not set')
@@ -57,15 +53,8 @@ export abstract class TransferStableBase extends BaseCommand {
     const stableContract = {
       abi: stableTokenContract.abi,
       address: stableTokenContract.address,
-      account: wallet.account,
-      // NOTE 1: if --gasCurrency is not set, defaults to eip1559 tx
-      // NOTE 2: if --gasCurrency is set by the user, then
-      //     `kit.connection.defaultFeeCurrency` is set in base.ts via
-      //     `kit.setFeeCurrency()`
-      // TODO: get rid of kit here
-      ...(kit.connection.defaultFeeCurrency
-        ? { feeCurrency: kit.connection.defaultFeeCurrency }
-        : {}),
+      account: from,
+      ...(feeCurrency ? { feeCurrency: feeCurrency } : {}),
       ...(res.flags.comment
         ? ({
             functionName: 'transferWithComment',
@@ -83,32 +72,28 @@ export abstract class TransferStableBase extends BaseCommand {
       .isNotSanctioned(to)
       .isValidWalletSigner(from)
       .addCheck(
-        `Account can afford to transfer ${stableToken} with gas paid in ${
-          kit.connection.defaultFeeCurrency || 'CELO'
-        }`,
+        `Account can afford to transfer ${stableToken} with gas paid in ${feeCurrency || 'CELO'}`,
         async () => {
-          const tokenForGasContract = kit.connection.defaultFeeCurrency
-            ? getERC20Contract
-            : getGoldTokenContract
-
           const [gas, gasPrice, balanceOfTokenForGas, balanceOfTokenToSend] = await Promise.all([
-            // @ts-expect-error - TODO fix args being 2 or 3 arguments
             client.estimateContractGas(stableContract),
             client.getGasPrice(),
-            tokenForGasContract(client as PublicClient, kit.connection.defaultFeeCurrency!).then(
-              (contract) => contract.read.balanceOf([from])
-            ),
+            feeCurrency
+              ? getERC20Contract(client as PublicClient, feeCurrency).then((contract) =>
+                  contract.read.balanceOf([from])
+                )
+              : client.getBalance({ address: from }),
             stableTokenContract.read.balanceOf([from]),
           ])
           const totalSpentOnGas = gas * gasPrice
-          if (kit.connection.defaultFeeCurrency === stableTokenContract.address) {
+
+          if (feeCurrency && isAddressEqual(feeCurrency, stableTokenContract.address)) {
             return balanceOfTokenToSend >= value + totalSpentOnGas
           }
           return balanceOfTokenForGas >= totalSpentOnGas && balanceOfTokenToSend >= value
         },
         `Cannot afford to transfer ${stableToken} ${
-          res.flags.gasCurrency ? 'with' + ' ' + res.flags.gasCurrency + ' ' + 'gasCurrency' : ''
-        }; try reducing value slightly or using a different gasCurrency`
+          res.flags.feeCurrency ? 'with' + ' ' + res.flags.feeCurrency + ' ' + 'feeCurrency' : ''
+        }; try reducing value slightly or using a different feeCurrency`
       )
       .runChecks()
 

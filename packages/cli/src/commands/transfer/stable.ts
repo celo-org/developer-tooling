@@ -10,8 +10,9 @@ export default class TransferStable extends TransferStableBase {
   static flags = {
     ...TransferStableBase.flags,
     stableToken: Flags.option({
-      options: Object.keys(stableTokenOptions),
+      options: Object.keys(stableTokenOptions) as StableToken[],
       description: 'Name of the stable to be transferred',
+      required: true,
     })(),
   }
 
@@ -21,7 +22,7 @@ export default class TransferStable extends TransferStableBase {
 
   async init() {
     const res = await this.parse(TransferStable)
-    const stableName = res.flags.stableToken as StableToken
+    const stableName = res.flags.stableToken
     this._stableCurrencyContract = stableTokenOptions[stableName]
     await super.init()
   }

@@ -48,7 +48,7 @@ const parseAddress: ParseFn<StrongAddress> = async (input) => {
 }
 const parseGasCurrency: ParseFn<StrongAddress> = async (input) => {
   if (isAddress(input.toLowerCase(), { strict: false })) {
-    return input.toLowerCase()
+    return getAddress(input.toLowerCase())
   } else {
     throw new CLIError(`${input} is not a valid address`)
   }

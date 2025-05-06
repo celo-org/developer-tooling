@@ -67,8 +67,8 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
     expect(receiverBalance.CELO!.toFixed()).toEqual(
       receiverBalanceBefore.CELO!.plus(amountToTransfer).toFixed()
     )
-    const block = await web3.eth.getBlock('latest')
-    const transactionReceipt = await web3.eth.getTransactionReceipt(block.transactions[0])
+    let block = await web3.eth.getBlock('latest')
+    let transactionReceipt = await web3.eth.getTransactionReceipt(block.transactions[0])
 
     // Safety check if the latest transaction was originated by expected account
     expect(transactionReceipt.from.toLowerCase()).toEqual(accounts[0].toLowerCase())
@@ -88,6 +88,11 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
       ],
       web3
     )
+    block = await web3.eth.getBlock('latest')
+    transactionReceipt = await web3.eth.getTransactionReceipt(block.transactions[0])
+
+    // Safety check if the latest transaction was originated by expected account
+    expect(transactionReceipt.from.toLowerCase()).toEqual(accounts[1].toLowerCase())
 
     const balanceAfter = (await kit.getTotalBalance(accounts[0])).CELO!
     expect(balanceBefore.toFixed()).toEqual(balanceAfter.toFixed())

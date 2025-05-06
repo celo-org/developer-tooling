@@ -1,11 +1,19 @@
 import { accountsABI, goldTokenABI, multiSigABI } from '@celo/abis-12'
-import { bufferToHex, eqAddress, NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
+import { bufferToHex, ensureLeading0x, NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
 import { Address } from '@celo/connect'
 import { HotfixRecord, ProposalStage } from '@celo/contractkit/lib/wrappers/Governance'
 import BigNumber from 'bignumber.js'
 import chalk from 'chalk'
 import { fetch } from 'cross-fetch'
-import { erc20Abi, formatEther, formatUnits, PublicClient, WalletClient } from 'viem'
+import {
+  erc20Abi,
+  formatEther,
+  formatUnits,
+  getAddress,
+  isAddressEqual,
+  PublicClient,
+  WalletClient,
+} from 'viem'
 import { BaseCommand } from '../base'
 import { signerToAccount } from '../packages-to-be/account'
 import { resolveAddress } from '../packages-to-be/address-resolver'
@@ -220,16 +228,23 @@ class CheckBuilder {
 
   isValidWalletSigner = (account: Address) =>
     this.addCheck(`${account} can sign txs`, async () => {
+      const address = getAddress(account)
       const wallet = await this.getWalletClient()
       const addresses = await wallet.getAddresses()
-      return addresses.map((x) => x.toLowerCase()).includes(account.toLowerCase())
+      const validSigner = Boolean(addresses.find((x) => isAddressEqual(address, x)))
+
+      if (validSigner && !isAddressEqual(wallet.account?.address!, address)) {
+        wallet.account!.address = address
+      }
+
+      return validSigner
     })
 
   isApprover = (account: Address) =>
     this.addCheck(
       `${account} is approver address`,
       this.withGovernance(async (governance) =>
-        eqAddress(await governance.read.approver(), account)
+        isAddressEqual(await governance.read.approver(), ensureLeading0x(account))
       )
     )
 
@@ -237,7 +252,7 @@ class CheckBuilder {
     this.addCheck(
       `${account} is security council address`,
       this.withGovernance(async (governance) => {
-        return eqAddress(await governance.read.securityCouncil(), account)
+        return isAddressEqual(await governance.read.securityCouncil(), ensureLeading0x(account))
       })
     )
 
@@ -437,7 +452,7 @@ class CheckBuilder {
         try {
           const address = await accountsContract.read.voteSignerToAccount([this.signer!])
 
-          return !eqAddress(address, NULL_ADDRESS)
+          return !isAddressEqual(address, NULL_ADDRESS)
         } catch (_) {}
 
         return false
@@ -577,7 +592,7 @@ class CheckBuilder {
       `Account isn't a member of a validator group`,
       this.withSignerToAccount(async (account) => {
         const { affiliation } = await getValidator(await this.getClient(), account)
-        if (!affiliation || eqAddress(affiliation, NULL_ADDRESS)) {
+        if (!affiliation || isAddressEqual(affiliation, NULL_ADDRESS)) {
           return true
         }
 

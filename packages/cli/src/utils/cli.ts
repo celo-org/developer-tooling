@@ -109,7 +109,7 @@ async function innerDisplayViemTxHash(
     ux.action.start(`Sending Transaction: ${name}`)
   }
   try {
-    console.log(chalk`Awaiting receipt: {red.bold ${name}}`)
+    console.log(chalk`SendTransaction: {red.bold ${name}}`)
     const { transactionHash } = await client.waitForTransactionReceipt({ hash: await hash })
     printValueMap({ txHash: transactionHash })
     ux.action.stop()

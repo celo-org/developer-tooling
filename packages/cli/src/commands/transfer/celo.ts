@@ -1,4 +1,5 @@
 import { goldTokenABI } from '@celo/abis'
+import { StrongAddress } from '@celo/base'
 import { Flags } from '@oclif/core'
 import { PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
@@ -25,7 +26,6 @@ export default class TransferCelo extends BaseCommand {
   ]
 
   async run() {
-    const kit = await this.getKit()
     const client = await this.getPublicClient()
     const wallet = await this.getWalletClient()
     const res = await this.parse(TransferCelo)
@@ -37,15 +37,14 @@ export default class TransferCelo extends BaseCommand {
     const from = res.flags.from
     const to = res.flags.to
     const value = res.flags.value
+    const feeCurrency = res.flags.gasCurrency as StrongAddress | null
 
-    const params =
-      // TODO: get rid of kit here
-      kit.connection.defaultFeeCurrency ? { feeCurrency: kit.connection.defaultFeeCurrency } : {}
+    const params = feeCurrency ? { feeCurrency } : {}
 
     const celoContract = {
       address: await resolveAddress(client, 'GoldToken'),
       abi: goldTokenABI,
-      account: wallet.account,
+      account: from,
       ...params,
     } as const
 
@@ -57,13 +56,9 @@ export default class TransferCelo extends BaseCommand {
       .isValidWalletSigner(from)
       .hasEnoughCelo(from, value)
       .addCheck(
-        `Account can afford to transfer CELO with gas paid in ${
-          kit.connection.defaultFeeCurrency || 'CELO'
-        }`,
+        `Account can afford to transfer CELO with gas paid in ${feeCurrency || 'CELO'}`,
         async () => {
-          const tokenForGasContract = kit.connection.defaultFeeCurrency
-            ? getERC20Contract
-            : getGoldTokenContract
+          const tokenForGasContract = feeCurrency ? getERC20Contract : getGoldTokenContract
 
           const [gas, gasPrice, balanceOfTokenForGas] = await Promise.all([
             res.flags.comment
@@ -74,14 +69,16 @@ export default class TransferCelo extends BaseCommand {
                 })
               : client.estimateGas(transferParams),
             client.getGasPrice(),
-            tokenForGasContract(client as PublicClient, kit.connection.defaultFeeCurrency!).then(
-              (contract) => contract.read.balanceOf([from])
-            ),
+            feeCurrency
+              ? tokenForGasContract(client as PublicClient, feeCurrency).then((contract) =>
+                  contract.read.balanceOf([from])
+                )
+              : client.getBalance({ address: from }),
           ])
           return balanceOfTokenForGas >= gas * gasPrice
         },
         `Cannot afford to transfer CELO ${
-          res.flags.gasCurrency ? 'with' + ' ' + res.flags.gasCurrency + ' ' + 'gasCurrency' : ''
+          feeCurrency ? 'with' + ' ' + feeCurrency + ' ' + 'gasCurrency' : ''
         }; try reducing value slightly or using a different gasCurrency`
       )
       .runChecks()
