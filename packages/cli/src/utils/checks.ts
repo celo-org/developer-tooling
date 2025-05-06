@@ -724,13 +724,12 @@ class CheckBuilder {
     wasRefreshed: false,
   }
 
-  private _formatAddress = (str: string) => ensureLeading0x(str.toLowerCase())
   private async fetchIsSanctioned(address: string) {
     const { COMPLIANT_ERROR_RESPONSE, OFAC_SANCTIONS_LIST_URL, SANCTIONED_ADDRESSES } =
       await import('@celo/compliance')
     this.COMPLIANT_ERROR_RESPONSE = COMPLIANT_ERROR_RESPONSE
 
-    const lowercasedAddresses = SANCTIONED_ADDRESSES.map(this._formatAddress)
+    const lowercasedAddresses = SANCTIONED_ADDRESSES.map(_formatAddressForCompare)
 
     // Would like to avoid calling this EVERY run. but at least calling
     // twice in a row (such as when checking from and to addresses) should be cached
@@ -740,7 +739,7 @@ class CheckBuilder {
         const result = await fetch(OFAC_SANCTIONS_LIST_URL)
         const data = await result.json()
         if (Array.isArray(data)) {
-          this.SANCTIONED_SET.data = new Set(data.map(this._formatAddress))
+          this.SANCTIONED_SET.data = new Set(data.map(_formatAddressForCompare))
           this.SANCTIONED_SET.wasRefreshed = true
         } else {
           this.SANCTIONED_SET.data = new Set(lowercasedAddresses)
@@ -753,6 +752,8 @@ class CheckBuilder {
           console.error('Error fetching OFAC sanctions list', e)
       }
     }
-    return this.SANCTIONED_SET.data.has(this._formatAddress(address))
+    return this.SANCTIONED_SET.data.has(_formatAddressForCompare(address))
   }
 }
+
+const _formatAddressForCompare = (str: string) => ensureLeading0x(str.toLowerCase())
