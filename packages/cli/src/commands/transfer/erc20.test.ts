@@ -113,7 +113,7 @@ testWithAnvilL2('transfer:erc20 cmd', (web3: Web3) => {
     expect(spy).toHaveBeenCalledWith(expect.stringContaining(COMPLIANT_ERROR_RESPONSE))
   })
 
-  test('should fail if erc20 address isn\t correct', async () => {
+  test('should fail if erc20 address isn\'t correct', async () => {
     await expect(
       testLocallyWithWeb3Node(
         TransferERC20,
