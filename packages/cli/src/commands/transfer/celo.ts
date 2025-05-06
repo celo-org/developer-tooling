@@ -1,4 +1,3 @@
-import { StrongAddress } from '@celo/base'
 import { Flags } from '@oclif/core'
 import { PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
@@ -35,7 +34,7 @@ export default class TransferCelo extends BaseCommand {
     const from = res.flags.from
     const to = res.flags.to
     const value = res.flags.value
-    const feeCurrency = res.flags.gasCurrency as StrongAddress | null
+    const feeCurrency = res.flags.gasCurrency
 
     const params = feeCurrency ? { feeCurrency } : {}
 

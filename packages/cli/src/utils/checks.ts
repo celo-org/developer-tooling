@@ -67,7 +67,7 @@ const negate = (x: Promise<boolean>) => x.then((y) => !y)
 type Resolve<A> = A extends Promise<infer T> ? T : A
 
 export function newCheckBuilder(command: BaseCommand, signer?: Address) {
-  return new CheckBuilder(command, signer as StrongAddress)
+  return new CheckBuilder(command, signer ? ensureLeading0x(signer) : undefined)
 }
 
 class CheckBuilder {
@@ -372,7 +372,7 @@ class CheckBuilder {
     this.addCheck(
       `${account} is Validator`,
       this.withValidators((validators, _, _account) =>
-        validators.read.isValidator([(account ?? _account) as StrongAddress])
+        validators.read.isValidator([ensureLeading0x(account ?? _account)])
       )
     )
 
@@ -380,7 +380,7 @@ class CheckBuilder {
     this.addCheck(
       `${account} is ValidatorGroup`,
       this.withValidators((validators) =>
-        validators.read.isValidatorGroup([account as StrongAddress])
+        validators.read.isValidatorGroup([ensureLeading0x(account)])
       )
     )
 
@@ -430,7 +430,7 @@ class CheckBuilder {
   isNotAccount = (address: Address) =>
     this.addCheck(
       `${address} is not a registered Account`,
-      this.withAccounts((accounts) => negate(accounts.read.isAccount([address as StrongAddress])))
+      this.withAccounts((accounts) => negate(accounts.read.isAccount([ensureLeading0x(address)])))
     )
 
   isSignerOrAccount = () =>
@@ -463,7 +463,7 @@ class CheckBuilder {
     this.addCheck(
       `${address} is a registered Account`,
       this.withAccounts(async (accounts) => {
-        return accounts.read.isAccount([address as StrongAddress])
+        return accounts.read.isAccount([ensureLeading0x(address)])
       }),
       `${address} is not registered as an account. Try running account:register`
     )
@@ -472,7 +472,7 @@ class CheckBuilder {
     this.addCheck(
       `${address} is not currently voting on a governance proposal`,
       this.withGovernance((governance) =>
-        negate(governance.read.isVoting([address as StrongAddress]))
+        negate(governance.read.isVoting([ensureLeading0x(address)]))
       ),
       `${address} is currently voting in governance. Revoke your upvotes or wait for the referendum to end.`
     )
@@ -488,7 +488,7 @@ class CheckBuilder {
         address: await resolveAddress(await this.getClient(), 'GoldToken'),
         abi: goldTokenABI,
         functionName: 'balanceOf',
-        args: [account as StrongAddress],
+        args: [ensureLeading0x(account)],
       })
 
       return balance >= value
@@ -501,7 +501,7 @@ class CheckBuilder {
 
     return this.addCheck(`Account has at least ${valueInEth} ${stable}`, async () => {
       const stableTokenContract = await StableTokens[stable](await this.getClient())
-      const balance = await stableTokenContract.read.balanceOf([account as StrongAddress])
+      const balance = await stableTokenContract.read.balanceOf([ensureLeading0x(account)])
 
       return balance >= value
     })
@@ -520,10 +520,10 @@ class CheckBuilder {
       const balance = await (
         await this.getClient()
       ).readContract({
-        address: erc20 as StrongAddress,
+        address: ensureLeading0x(erc20),
         abi: erc20Abi,
         functionName: 'balanceOf',
-        args: [account as StrongAddress],
+        args: [ensureLeading0x(account)],
       })
 
       return balance >= value
@@ -544,7 +544,7 @@ class CheckBuilder {
       this.withGovernance(
         async (governance) =>
           !bigintToBigNumber(
-            await governance.read.refundedDeposits([account as StrongAddress])
+            await governance.read.refundedDeposits([ensureLeading0x(account)])
           ).isZero()
       )
     )
@@ -720,15 +720,18 @@ class CheckBuilder {
   // SANCTIONED_ADDRESSES is so well typed that if you call includes with a string it gives a type error.
   // same if you make it a set or use indexOf so concat it with an empty string to give type without needing to ts-ignore
   private readonly SANCTIONED_SET = {
-    data: new Set([''].concat()),
+    data: new Set<StrongAddress>(),
     wasRefreshed: false,
   }
 
+  private _formatAddress = (str: string) => ensureLeading0x(str.toLowerCase())
   private async fetchIsSanctioned(address: string) {
     const { COMPLIANT_ERROR_RESPONSE, OFAC_SANCTIONS_LIST_URL, SANCTIONED_ADDRESSES } =
       await import('@celo/compliance')
     this.COMPLIANT_ERROR_RESPONSE = COMPLIANT_ERROR_RESPONSE
-    console.error('ICI', SANCTIONED_ADDRESSES, this.SANCTIONED_SET.data, address)
+
+    const lowercasedAddresses = SANCTIONED_ADDRESSES.map(this._formatAddress)
+
     // Would like to avoid calling this EVERY run. but at least calling
     // twice in a row (such as when checking from and to addresses) should be cached
     // using boolean because either it's been refreshed or this is the first run of the invocation. its short lived
@@ -737,19 +740,19 @@ class CheckBuilder {
         const result = await fetch(OFAC_SANCTIONS_LIST_URL)
         const data = await result.json()
         if (Array.isArray(data)) {
-          this.SANCTIONED_SET.data = new Set(data)
+          this.SANCTIONED_SET.data = new Set(data.map(this._formatAddress))
           this.SANCTIONED_SET.wasRefreshed = true
         } else {
-          this.SANCTIONED_SET.data = new Set([''].concat(SANCTIONED_ADDRESSES))
+          this.SANCTIONED_SET.data = new Set(lowercasedAddresses)
         }
       } catch (e) {
         ;(this.SANCTIONED_SET.data =
           this.SANCTIONED_SET.data.size === 0
-            ? new Set([''].concat(SANCTIONED_ADDRESSES))
+            ? new Set(lowercasedAddresses)
             : this.SANCTIONED_SET.data),
           console.error('Error fetching OFAC sanctions list', e)
       }
     }
-    return this.SANCTIONED_SET.data.has(address.toLowerCase())
+    return this.SANCTIONED_SET.data.has(this._formatAddress(address))
   }
 }
