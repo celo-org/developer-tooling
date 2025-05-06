@@ -122,4 +122,25 @@ testWithAnvilL2('transfer:erc20 cmd', (web3: Web3) => {
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Invalid erc20 address"`)
   })
+
+  test('should fail if using with --useAKV', async () => {
+    await expect(
+      testLocallyWithWeb3Node(
+        TransferERC20,
+        [
+          '--from',
+          accounts[0],
+          '--to',
+          accounts[1],
+          '--value',
+          '1',
+          '--erc20Address',
+          accounts[2],
+          '--useAKV',
+        ],
+
+        web3
+      )
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`"--useAKV flag is no longer supported"`)
+  })
 })

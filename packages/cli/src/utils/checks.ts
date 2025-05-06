@@ -19,7 +19,9 @@ import { signerToAccount } from '../packages-to-be/account'
 import { resolveAddress } from '../packages-to-be/address-resolver'
 import {
   AccountsContract,
+  FeeCurrencyDirectory,
   getAccountsContract,
+  getFeeCurrencyDirectoryContract,
   getGovernanceContract,
   getLockedGoldContract,
   getValidatorsContract,
@@ -188,6 +190,18 @@ class CheckBuilder {
       )) as GovernanceContract<PublicClient>
 
       return f(governanceContract) as Resolve<A>
+    }
+  }
+
+  private withFeeCurrencyDirectory<A>(
+    f: (feeCurrencyDirectory: FeeCurrencyDirectory) => A
+  ): () => Promise<Resolve<A>> {
+    return async () => {
+      const feeCurrencyDirectoryContract = (await getFeeCurrencyDirectoryContract(
+        await this.getClient()
+      )) as FeeCurrencyDirectory<PublicClient>
+
+      return f(feeCurrencyDirectoryContract) as Resolve<A>
     }
   }
 
@@ -695,6 +709,20 @@ class CheckBuilder {
     })
   }
 
+  usesWhitelistedFeeCurrency = (feeCurrency?: StrongAddress) => {
+    return this.addConditionalCheck(
+      'The provided feeCurrency is whitelisted',
+      Boolean(feeCurrency),
+      this.withFeeCurrencyDirectory(async (feeCurrencyDirectory) => {
+        const whitelist = await feeCurrencyDirectory.read.getCurrencies()
+        return whitelist
+          .map(_formatAddressForCompare)
+          .includes(_formatAddressForCompare(feeCurrency!))
+      }),
+      `${feeCurrency!} is not a valid fee currency.`
+    )
+  }
+
   async runChecks() {
     console.log(`Running Checks:`)
     let allPassed = true
@@ -705,6 +733,9 @@ class CheckBuilder {
       const msg = !passed && aCheck.errorMessage ? aCheck.errorMessage : ''
       console.log(color(`   ${status︎Str}  ${aCheck.name} ${msg}`))
       allPassed = allPassed && passed
+      if (!passed) {
+        break
+      }
     }
 
     if (!allPassed) {

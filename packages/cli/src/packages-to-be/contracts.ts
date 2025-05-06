@@ -1,6 +1,7 @@
 import {
   accountsABI,
   epochManagerABI,
+  feeCurrencyDirectoryABI,
   goldTokenABI,
   governanceABI,
   lockedGoldABI,
@@ -71,6 +72,18 @@ export async function getEpochManagerContract<T extends WalletClient | PublicCli
 }
 export type EpochManager<T extends WalletClient | PublicClient = PublicClient> =
   GetContractReturnType<typeof epochManagerABI, T>
+
+export async function getFeeCurrencyDirectoryContract<
+  T extends WalletClient | PublicClient = PublicClient
+>(client: T): Promise<FeeCurrencyDirectory<T>> {
+  return getContract({
+    address: await resolveAddress(client, 'FeeCurrencyDirectory'),
+    abi: feeCurrencyDirectoryABI,
+    client,
+  })
+}
+export type FeeCurrencyDirectory<T extends WalletClient | PublicClient = PublicClient> =
+  GetContractReturnType<typeof feeCurrencyDirectoryABI, T>
 
 export async function getERC20Contract<T extends WalletClient | PublicClient = PublicClient>(
   client: T,

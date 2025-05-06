@@ -17,6 +17,7 @@ import { ipc } from 'viem/node'
 import Web3 from 'web3'
 import { celoBaklava } from './packages-to-be/chains'
 import { CeloClient, WalletCeloClient } from './packages-to-be/client'
+import { failWith } from './utils/cli'
 import { CustomFlags } from './utils/command'
 import { getDefaultDerivationPath, getNodeUrl } from './utils/config'
 import { getFeeCurrencyContractWrapper } from './utils/fee-currency'
@@ -236,7 +237,7 @@ export abstract class BaseCommand extends Command {
     return this.publicClient
   }
 
-  public async getWalletClient(): Promise<WalletCeloClient | null> {
+  public async getWalletClient(): Promise<WalletCeloClient> {
     if (!this.walletClient) {
       const [transport, publicClient, res] = await Promise.all([
         this.getTransport(),
@@ -279,8 +280,7 @@ export abstract class BaseCommand extends Command {
           throw err
         }
       } else if (res.flags.useAKV) {
-        // NOTE: Fallback to web3
-        this.walletClient = null
+        failWith('--useAKV flag is no longer supported')
       } else if (res.flags.privateKey) {
         this.walletClient = createWalletClient({
           transport,

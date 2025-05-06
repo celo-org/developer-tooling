@@ -319,6 +319,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
   })
 
   test("should fail if the feeCurrency isn't whitelisted", async () => {
+    const spy = jest.spyOn(console, 'log')
     const wrongFee = '0x1234567890123456789012345678901234567890'
     await expect(
       testLocallyWithWeb3Node(
@@ -326,11 +327,20 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
         ['--from', accounts[0], '--to', accounts[1], '--value', '1', '--gasCurrency', wrongFee],
         web3
       )
-    ).rejects.toThrowErrorMatchingInlineSnapshot(`
-      "0x1234567890123456789012345678901234567890 is not a valid fee currency. Available currencies:
-      0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1 - Celo Dollar (cUSD)
-      0x5930519559Ffa7528a00BE445734036471c443a2 - Celo Euro (cEUR)
-      0xB2Fd9852Ca3D69678286A8635d661690906A3E9d - Celo Brazilian Real (cREAL)"
-    `)
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
+    expect(spy).toHaveBeenCalledWith(
+      expect.stringContaining(`${wrongFee} is not a valid fee currency.`)
+    )
+  })
+
+  test('should fail if using with --useAKV', async () => {
+    await expect(
+      testLocallyWithWeb3Node(
+        TransferCelo,
+        ['--from', accounts[0], '--to', accounts[1], '--value', '1', '--useAKV'],
+
+        web3
+      )
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`"--useAKV flag is no longer supported"`)
   })
 })

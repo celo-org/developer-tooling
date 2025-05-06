@@ -35,6 +35,10 @@ export abstract class TransferStableBase extends BaseCommand {
 
   protected _stableCurrencyContract: StableTokenContractGetter | null = null
 
+  async init() {
+    // noop - skips ContractKit initialization
+  }
+
   async run() {
     const client = await this.getPublicClient()
     const wallet = await this.getWalletClient()!
@@ -84,6 +88,7 @@ export abstract class TransferStableBase extends BaseCommand {
       .isNotSanctioned(from)
       .isNotSanctioned(to)
       .isValidWalletSigner(from)
+      .usesWhitelistedFeeCurrency(feeCurrency)
       .addCheck(
         `Account can afford to transfer ${stableToken} with gas paid in ${feeCurrency || 'CELO'}`,
         async () => {

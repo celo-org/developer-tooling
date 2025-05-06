@@ -3,6 +3,7 @@ import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendViemContractCall, failWith } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
+
 export default class TransferErc20 extends BaseCommand {
   static description = 'Transfer ERC20 to a specified address'
 
@@ -30,14 +31,14 @@ export default class TransferErc20 extends BaseCommand {
     'erc20 --erc20Address 0x765DE816845861e75A25fCA122bb6898B8B1282a --from 0xa0Af2E71cECc248f4a7fD606F203467B500Dd53B --to 0x5409ed021d9299bf6814279a6a1411a7e866a631 --value 10000000000000000000',
   ]
 
+  async init() {
+    // noop - skips ContractKit initialization
+  }
+
   async run() {
     const res = await this.parse(TransferErc20)
     const client = await this.getPublicClient()
     const wallet = await this.getWalletClient()
-
-    if (!wallet) {
-      failWith('--useAKV flag is no longer support on transfer commands')
-    }
 
     const from = res.flags.from
     const to = res.flags.to
@@ -51,12 +52,18 @@ export default class TransferErc20 extends BaseCommand {
     } as const
 
     let decimals: number
+    let name: string
+    let symbol: string
     try {
-      decimals = await client.readContract({
-        ...erc20Contract,
-        functionName: 'decimals',
-        args: [],
-      })
+      ;[decimals, name, symbol] = (await Promise.all(
+        (['decimals', 'name', 'symbol'] as const).map((functionName) =>
+          client.readContract({
+            ...erc20Contract,
+            functionName,
+            args: [],
+          })
+        )
+      )) as [number, string, string]
     } catch {
       failWith('Invalid erc20 address')
     }
@@ -65,14 +72,14 @@ export default class TransferErc20 extends BaseCommand {
       .isNotSanctioned(to)
       .isValidWalletSigner(from)
       .hasEnoughErc20(from, value, res.flags.erc20Address, decimals)
+      .usesWhitelistedFeeCurrency(feeCurrency)
       .runChecks()
 
     await displaySendViemContractCall(
-      'ERC20',
+      `${name}(${symbol})`,
       {
         ...erc20Contract,
         functionName: 'transfer',
-        // TODO: check why this doesn't typecheck properly
         args: [to, value],
         account: wallet.account,
       },

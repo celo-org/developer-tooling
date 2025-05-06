@@ -128,6 +128,9 @@ testWithAnvilL2('transfer:dollars cmd', (web3: Web3) => {
               "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 can sign txs ",
             ],
             [
+              "   ✔  The provided feeCurrency is whitelisted ",
+            ],
+            [
               "   ✘  Account can afford to transfer cUSD with gas paid in 0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1 Cannot afford to transfer cUSD ; try reducing value slightly or using a different feeCurrency",
             ],
           ]

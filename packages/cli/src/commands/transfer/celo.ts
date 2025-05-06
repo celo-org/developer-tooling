@@ -3,7 +3,7 @@ import { PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
 import { getERC20Contract, getGoldTokenContract } from '../../packages-to-be/contracts'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendViemContractCall, displayViemTx, failWith } from '../../utils/cli'
+import { displaySendViemContractCall, displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class TransferCelo extends BaseCommand {
@@ -22,14 +22,14 @@ export default class TransferCelo extends BaseCommand {
     'celo --from 0xa0Af2E71cECc248f4a7fD606F203467B500Dd53B --to 0x5409ed021d9299bf6814279a6a1411a7e866a631 --value 10000000000000000000',
   ]
 
+  async init() {
+    // noop - skips ContractKit initialization
+  }
+
   async run() {
     const client = await this.getPublicClient()
     const wallet = await this.getWalletClient()
     const res = await this.parse(TransferCelo)
-
-    if (!wallet) {
-      failWith('--useAKV flag is no longer support on transfer commands')
-    }
 
     const from = res.flags.from
     const to = res.flags.to
@@ -55,6 +55,7 @@ export default class TransferCelo extends BaseCommand {
       .isNotSanctioned(to)
       .isValidWalletSigner(from)
       .hasEnoughCelo(from, value)
+      .usesWhitelistedFeeCurrency(feeCurrency)
       .addCheck(
         `Account can afford to transfer CELO with gas paid in ${feeCurrency || 'CELO'}`,
         async () => {
