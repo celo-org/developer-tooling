@@ -3,7 +3,7 @@ import { PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
 import { getERC20Contract, getGoldTokenContract } from '../../packages-to-be/contracts'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendViemContractCall, displayViemTx } from '../../utils/cli'
+import { displaySendViemContractCall, displayViemTx, failWith } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class TransferCelo extends BaseCommand {
@@ -28,7 +28,7 @@ export default class TransferCelo extends BaseCommand {
     const res = await this.parse(TransferCelo)
 
     if (!wallet) {
-      throw new Error('TODO: only AKV doesnt return a wallet')
+      failWith('--useAKV flag is no longer support on transfer commands')
     }
 
     const from = res.flags.from

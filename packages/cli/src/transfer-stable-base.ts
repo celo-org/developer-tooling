@@ -41,7 +41,7 @@ export abstract class TransferStableBase extends BaseCommand {
     const res = await this.parse(TransferStableBase)
 
     if (!wallet) {
-      throw new Error('TODO: only AKV doesnt return a wallet')
+      failWith('--useAKV flag is no longer support on transfer commands')
     }
 
     const from = res.flags.from
