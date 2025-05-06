@@ -112,4 +112,14 @@ testWithAnvilL2('transfer:erc20 cmd', (web3: Web3) => {
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     expect(spy).toHaveBeenCalledWith(expect.stringContaining(COMPLIANT_ERROR_RESPONSE))
   })
+
+  test('should fail if erc20 address isn\t correct', async () => {
+    await expect(
+      testLocallyWithWeb3Node(
+        TransferERC20,
+        ['--from', accounts[0], '--to', accounts[1], '--value', '1', '--erc20Address', accounts[2]],
+        web3
+      )
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`"Invalid erc20 address"`)
+  })
 })

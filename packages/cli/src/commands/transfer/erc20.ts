@@ -31,7 +31,6 @@ export default class TransferErc20 extends BaseCommand {
   ]
 
   async run() {
-    const kit = await this.getKit()
     const res = await this.parse(TransferErc20)
     const client = await this.getPublicClient()
     const wallet = await this.getWalletClient()
@@ -43,14 +42,12 @@ export default class TransferErc20 extends BaseCommand {
     const from = res.flags.from
     const to = res.flags.to
     const value = res.flags.value
+    const feeCurrency = res.flags.gasCurrency
 
     const erc20Contract = {
       abi: erc20Abi,
       address: res.flags.erc20Address,
-      // TODO: get rid of kit here
-      ...(kit.connection.defaultFeeCurrency
-        ? { feeCurrency: kit.connection.defaultFeeCurrency }
-        : {}),
+      ...(feeCurrency ? { feeCurrency } : {}),
     } as const
 
     let decimals: number
