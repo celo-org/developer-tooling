@@ -16,7 +16,7 @@
     "reset-yarn": "yarn cache clean",
     "test": "yarn workspaces foreach -pv --all --exclude celo run test",
     "test:watch": "yarn workspaces foreach -piv --since --exclude celo run test --watch",
-    "test:changes": "yarn workspaces foreach -piv --since --exclude celo --exclude @celo/viem-account-ledger run test --onlyChanged --bail=4",
+    "test:changes": "yarn workspaces foreach -piv --since --exclude celo --exclude @celo/viem-account-ledger --exclude @celo/core run test --onlyChanged --bail=4",
     "build": "yarn workspaces foreach -piv --all --topological-dev run build",
     "clean": "yarn workspaces foreach -piv --all run clean",
     "docs": "yarn workspaces foreach -piv --all run docs",
