@@ -12,6 +12,7 @@ import {
   TEST_SANCTIONED_ADDRESS,
   testLocallyWithWeb3Node,
 } from '../../test-utils/cliUtils'
+import { mockRpcFetch } from '../../test-utils/mockRpc'
 import TransferCelo from './celo'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -19,29 +20,13 @@ process.env.NO_SYNCCHECK = 'true'
 // Lots of commands, sometimes times out
 jest.setTimeout(15000)
 
-const originalFetch = global.fetch
-const fetchMock = jest.fn(async (...args) => {
-  if (args[1]?.body) {
-    const body = JSON.parse(args[1].body.toString())
-    if (body.method === 'eth_gasPrice') {
-      return {
-        ok: true,
-        headers: new Map([['Content-Type', 'application/json']]),
-        json: () => Promise.resolve({ result: '30000', id: 1, jsonrpc: '2.0' }),
-      }
-    }
-  }
-  // @ts-expect-error
-  return originalFetch(...args)
-})
-// @ts-expect-error
-global.fetch = fetchMock
-
 testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
   let accounts: string[] = []
   let kit: ContractKit
+  let restoreMock: () => void
 
   beforeEach(async () => {
+    restoreMock = mockRpcFetch({ method: 'eth_gasPrice', result: '30000' })
     kit = newKitFromWeb3(web3)
     accounts = await web3.eth.getAccounts()
 
@@ -63,6 +48,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
   })
 
   afterEach(() => {
+    restoreMock()
     jest.restoreAllMocks()
   })
 
