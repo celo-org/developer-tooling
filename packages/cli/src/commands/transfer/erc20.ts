@@ -62,7 +62,7 @@ export default class TransferErc20 extends BaseCommand {
     let symbol: string
     try {
       ;[decimals, name, symbol] = (await Promise.all(
-        (['decimals', 'name', 'symbol', 'balanceOf'] as const).map((functionName) =>
+        (['decimals', 'name', 'symbol'] as const).map((functionName) =>
           client.readContract({
             ...erc20ContractData,
             functionName,
