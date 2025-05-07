@@ -8,6 +8,7 @@ import { Args, Errors, Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { pathExistsSync } from 'fs-extra'
 import { getAddress, isAddress, isHex } from 'viem'
+import { bigNumberToBigInt } from '../packages-to-be/utils'
 
 const CLIError = Errors.CLIError
 
@@ -71,7 +72,9 @@ const parseWei: ParseFn<BigNumber> = async (input) => {
 
 const parseBigInt: ParseFn<bigint> = async (input) => {
   try {
-    return BigInt(input)
+    // NOTE: this allows easy parsing of exponential notation
+    // which `BigInt(input)` doesnt do
+    return bigNumberToBigInt(new BigNumber(input))
   } catch (_err) {
     throw new CLIError(`${input} is not a valid bigint amount`)
   }

@@ -81,7 +81,9 @@ export default class TransferCelo extends BaseCommand {
           feeCurrency ? 'with' + ' ' + feeCurrency + ' ' + 'gasCurrency' : ''
         }; try reducing value slightly or using a different gasCurrency`
       )
-      .runChecks()
+      // NOTE: fast fail in case feeCurrency isn't whitelisted or invalid
+      // the gas estimation will fail
+      .runChecks({ failFast: true })
 
     await (res.flags.comment
       ? displaySendViemContractCall(

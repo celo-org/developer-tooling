@@ -723,7 +723,7 @@ class CheckBuilder {
     )
   }
 
-  async runChecks() {
+  async runChecks({ failFast = false }: { failFast?: boolean } = {}) {
     console.log(`Running Checks:`)
     let allPassed = true
     for (const aCheck of this.checks) {
@@ -733,7 +733,7 @@ class CheckBuilder {
       const msg = !passed && aCheck.errorMessage ? aCheck.errorMessage : ''
       console.log(color(`   ${status︎Str}  ${aCheck.name} ${msg}`))
       allPassed = allPassed && passed
-      if (!passed) {
+      if (!passed && failFast) {
         break
       }
     }

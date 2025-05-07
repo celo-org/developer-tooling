@@ -1,5 +1,7 @@
-import { erc20Abi } from 'viem'
+import { erc20Abi, PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
+import { getERC20Contract, getGoldTokenContract } from '../../packages-to-be/contracts'
+import { getGasPriceOnCelo } from '../../packages-to-be/utils'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendViemContractCall, failWith } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
@@ -45,9 +47,13 @@ export default class TransferErc20 extends BaseCommand {
     const value = res.flags.value
     const feeCurrency = res.flags.gasCurrency
 
-    const erc20Contract = {
+    const erc20ContractData = {
       abi: erc20Abi,
       address: res.flags.erc20Address,
+      account: wallet.account,
+
+      functionName: 'transfer',
+      args: [to, value],
       ...(feeCurrency ? { feeCurrency } : {}),
     } as const
 
@@ -56,9 +62,9 @@ export default class TransferErc20 extends BaseCommand {
     let symbol: string
     try {
       ;[decimals, name, symbol] = (await Promise.all(
-        (['decimals', 'name', 'symbol'] as const).map((functionName) =>
+        (['decimals', 'name', 'symbol', 'balanceOf'] as const).map((functionName) =>
           client.readContract({
-            ...erc20Contract,
+            ...erc20ContractData,
             functionName,
             args: [],
           })
@@ -73,18 +79,29 @@ export default class TransferErc20 extends BaseCommand {
       .isValidWalletSigner(from)
       .hasEnoughErc20(from, value, res.flags.erc20Address, decimals)
       .usesWhitelistedFeeCurrency(feeCurrency)
-      .runChecks()
+      .addCheck(
+        `Account can afford to transfer CELO with gas paid in ${feeCurrency || 'CELO'}`,
+        async () => {
+          const [gas, gasPrice, balanceOfTokenForGas] = await Promise.all([
+            client.estimateContractGas(erc20ContractData),
+            getGasPriceOnCelo(client, feeCurrency),
+            (feeCurrency
+              ? await getERC20Contract(client as PublicClient, feeCurrency)
+              : await getGoldTokenContract(client as PublicClient)
+            ).read.balanceOf([from]),
+          ])
 
-    await displaySendViemContractCall(
-      `${name}(${symbol})`,
-      {
-        ...erc20Contract,
-        functionName: 'transfer',
-        args: [to, value],
-        account: wallet.account,
-      },
-      client,
-      wallet
-    )
+          const totalSpentOnGas = gas * gasPrice
+          return balanceOfTokenForGas >= totalSpentOnGas
+        },
+        `Cannot afford to transfer ${name}(${symbol}) ${
+          feeCurrency ? 'with' + ' ' + feeCurrency + ' ' + 'gasCurrency' : ''
+        }; try reducing value slightly or using a different gasCurrency`
+      )
+      // NOTE: fast fail in case feeCurrency isn't whitelisted or invalid
+      // the gas estimation will fail
+      .runChecks({ failFast: true })
+
+    await displaySendViemContractCall(`${name}(${symbol})`, erc20ContractData, client, wallet)
   }
 }

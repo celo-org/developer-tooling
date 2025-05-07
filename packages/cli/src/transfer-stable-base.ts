@@ -118,7 +118,9 @@ export abstract class TransferStableBase extends BaseCommand {
           res.flags.feeCurrency ? 'with' + ' ' + res.flags.feeCurrency + ' ' + 'feeCurrency' : ''
         }; try reducing value slightly or using a different feeCurrency`
       )
-      .runChecks()
+      // NOTE: fast fail in case feeCurrency isn't whitelisted or invalid
+      // the gas estimation will fail
+      .runChecks({ failFast: true })
 
     await displaySendViemContractCall(stableToken, stableContractData, client, wallet)
   }
