@@ -1,4 +1,5 @@
 import { StrongAddress } from '@celo/base'
+import { Hex } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import { CeloClient } from './client'
 
@@ -25,7 +26,7 @@ export async function getGasPriceOnCelo(client: CeloClient, feeCurrency?: Strong
   const gasPrice = await client.request<{
     Parameters: [StrongAddress] | []
     Method: 'eth_gasPrice'
-    ReturnType: StrongAddress
+    ReturnType: Hex
   }>({
     method: 'eth_gasPrice',
     params: feeCurrency ? [feeCurrency] : [],
