@@ -2,6 +2,7 @@ import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { CeloConfig, readConfig, writeConfig } from '../../utils/config'
 import NewAccount from '../account/new'
+
 export default class Set extends BaseCommand {
   static description = 'Configure running node information for propagating transactions to network'
 
@@ -22,7 +23,7 @@ export default class Set extends BaseCommand {
       description: 'Whether to enable or disable telemetry',
       required: false,
     }),
-  }
+  } as unknown as (typeof BaseCommand)['flags']
 
   static examples = [
     'set --node celo # alias for `forno`',

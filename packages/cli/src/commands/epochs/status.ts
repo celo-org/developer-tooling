@@ -2,14 +2,13 @@ import { ux } from '@oclif/core'
 import { BaseError, PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
 import { getEpochInfo } from '../../packages-to-be/getEpochInfo'
-
 export default class EpochStatus extends BaseCommand {
   static description = 'View epoch info.'
 
   static flags = {
     node: BaseCommand.flags.node,
     ...(ux.table.flags() as object),
-  }
+  } as (typeof BaseCommand)['flags']
 
   static aliases: string[] = ['epochs:current']
 

@@ -1,4 +1,4 @@
-import { StableToken } from '@celo/contractkit'
+import { getStableTokenBrlContract } from '../../packages-to-be/contracts'
 import { TransferStableBase } from '../../transfer-stable-base'
 
 export default class TransferEuros extends TransferStableBase {
@@ -13,7 +13,7 @@ export default class TransferEuros extends TransferStableBase {
   ]
 
   async init() {
-    this._stableCurrency = StableToken.cREAL
+    this._stableCurrencyContract = getStableTokenBrlContract
     await super.init()
   }
 }

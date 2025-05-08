@@ -22,3 +22,27 @@ export const mockRpc = () =>
       jsonrpc: '2.0',
     }
   })
+
+const actualFetch = global.fetch
+export const mockRpcFetch = ({ method, result }: { method: string; result: any }) => {
+  const fetchMock = jest.fn(async (...args) => {
+    if (args[1]?.body) {
+      const body = JSON.parse(args[1].body.toString())
+      if (body.method === method) {
+        return {
+          ok: true,
+          headers: new Map([['Content-Type', 'application/json']]),
+          json: () => Promise.resolve({ result, id: 1, jsonrpc: '2.0' }),
+        }
+      }
+    }
+    // @ts-expect-error
+    return actualFetch(...args)
+  })
+  // @ts-expect-error
+  global.fetch = fetchMock
+
+  return function restoreFetch() {
+    global.fetch = actualFetch
+  }
+}

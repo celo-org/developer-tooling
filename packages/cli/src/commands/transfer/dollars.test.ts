@@ -9,7 +9,7 @@ import {
   TEST_SANCTIONED_ADDRESS,
   testLocallyWithWeb3Node,
 } from '../../test-utils/cliUtils'
-import { mockRpc } from '../../test-utils/mockRpc'
+import { mockRpcFetch } from '../../test-utils/mockRpc'
 import TransferCUSD from './dollars'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -82,9 +82,13 @@ testWithAnvilL2('transfer:dollars cmd', (web3: Web3) => {
   })
 
   describe('when --gasCurrency', () => {
+    let restoreMock: () => void
     beforeEach(() => {
       // need to call this send sending gasCurrency address to the gas price rpc is not supported on anvil.
-      mockRpc()
+      restoreMock = mockRpcFetch({ method: 'eth_gasPrice', result: '30000' })
+    })
+    afterEach(() => {
+      restoreMock()
     })
     describe('matches transfer currency', () => {
       it('checks that the sender has enough of the token to cover both transfer and pay for gas', async () => {
@@ -125,7 +129,13 @@ testWithAnvilL2('transfer:dollars cmd', (web3: Web3) => {
               "   ✔  Compliant Address ",
             ],
             [
-              "   ✘  Account can afford to transfer cUSD with gas paid in 0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1 Cannot afford to transfer cUSD with 0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1 gasCurrency; try reducing value slightly or using a different gasCurrency",
+              "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 can sign txs ",
+            ],
+            [
+              "   ✔  The provided feeCurrency is whitelisted ",
+            ],
+            [
+              "   ✘  Account can afford to transfer cUSD with gas paid in 0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1 Cannot afford to transfer cUSD ; try reducing value slightly or using a different feeCurrency",
             ],
           ]
         `)
@@ -198,6 +208,9 @@ testWithAnvilL2('transfer:dollars cmd', (web3: Web3) => {
           ],
           [
             "   ✔  Compliant Address ",
+          ],
+          [
+            "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 can sign txs ",
           ],
           [
             "   ✔  Account can afford to transfer cUSD with gas paid in CELO ",

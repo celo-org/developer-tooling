@@ -1,5 +1,6 @@
 import { StableToken } from '@celo/base'
 import { CeloClient } from '../packages-to-be/client'
+import { ethNodeIsSyncing } from '../packages-to-be/utils'
 import { failWith } from './cli'
 
 export function enumEntriesDupWithLowercase<T>(entries: [string, T][]) {
@@ -11,18 +12,7 @@ export function enumEntriesDupWithLowercase<T>(entries: [string, T][]) {
   return enumMap
 }
 
-type EthSyncingRpcSchema = {
-  Parameters: []
-  Method: 'eth_syncing'
-  ReturnType: false | { startingBlock: bigint; currentBlock: bigint; highestBlock: bigint }
-}
-
-export async function ethNodeIsSyncing(client: CeloClient) {
-  return client.request<EthSyncingRpcSchema>({
-    method: 'eth_syncing',
-    params: [],
-  })
-}
+export { ethNodeIsSyncing }
 
 export async function nodeIsSynced(client: CeloClient): Promise<boolean> {
   if (process.env.NO_SYNCCHECK === 'true' || process.env.NO_SYNCCHECK === '1') {

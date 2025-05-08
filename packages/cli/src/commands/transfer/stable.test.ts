@@ -101,4 +101,25 @@ testWithAnvilL2('transfer:stable cmd', (web3: Web3) => {
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     expect(spy).toHaveBeenCalledWith(expect.stringContaining(COMPLIANT_ERROR_RESPONSE))
   })
+
+  test('should fail if using with --useAKV', async () => {
+    await expect(
+      testLocallyWithWeb3Node(
+        TransferStable,
+        [
+          '--from',
+          accounts[0],
+          '--to',
+          accounts[1],
+          '--value',
+          '1',
+          '--stableToken',
+          StableToken.cEUR,
+          '--useAKV',
+        ],
+
+        web3
+      )
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`"--useAKV flag is no longer supported"`)
+  })
 })

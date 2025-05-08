@@ -11,3 +11,4 @@ export type ContractName =
   | 'StableToken'
   | 'StableTokenEUR'
   | 'StableTokenBRL'
+  | 'FeeCurrencyDirectory'
