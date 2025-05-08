@@ -1,5 +1,7 @@
 import { Flags } from '@oclif/core'
+import { PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
+import { getEpochManagerContract } from '../../packages-to-be/contracts'
 import { printValueMapRecursive } from '../../utils/cli'
 import { ViewCommmandFlags } from '../../utils/flags'
 
@@ -17,43 +19,43 @@ export default class Info extends BaseCommand {
   }
 
   async run() {
-    const kit = await this.getKit()
+    const client = (await this.getPublicClient()) as PublicClient
     const res = await this.parse(Info)
-    let latestEpochNumber: number
-    let epochSize: number
+    let latestEpochNumber: bigint
+    let epochSize: bigint
 
-    const blockNumber = await kit.connection.getBlockNumber()
+    const blockNumber = await client.getBlockNumber()
 
-    const epochManagerWrapper = await kit.contracts.getEpochManager()
+    const epochManagerContract = await getEpochManagerContract(client)
 
-    latestEpochNumber = await epochManagerWrapper.getCurrentEpochNumber()
-    epochSize = await epochManagerWrapper.epochDuration()
+    latestEpochNumber = await epochManagerContract.read.getCurrentEpochNumber()
+    epochSize = await epochManagerContract.read.epochDuration()
 
-    const fetchEpochInfo = async (epochNumber: number) => {
+    const fetchEpochInfo = async (epochNumber: bigint) => {
       const epochData: Record<string, number> = {
-        number: epochNumber,
-        start: await epochManagerWrapper.getFirstBlockAtEpoch(epochNumber),
+        number: Number(epochNumber),
+        start: Number(await epochManagerContract.read.getFirstBlockAtEpoch([epochNumber])),
       }
 
       // for L2 we cannot fetch the end block of the current epoch
       if (epochNumber < latestEpochNumber) {
-        epochData.end = await epochManagerWrapper.getLastBlockAtEpoch(epochNumber)
+        epochData.end = Number(await epochManagerContract.read.getLastBlockAtEpoch([epochNumber]))
       }
 
       return epochData
     }
 
-    const n = res.flags.lastN
-    const minEpoch = await epochManagerWrapper.firstKnownEpoch()
+    const n = BigInt(res.flags.lastN)
+    const minEpoch = await epochManagerContract.read.firstKnownEpoch()
     const epochs = []
     for (let i = latestEpochNumber; i > latestEpochNumber - n && i >= minEpoch; i--) {
       epochs.push(await fetchEpochInfo(i))
     }
 
     printValueMapRecursive({
-      blockNumber,
+      blockNumber: Number(blockNumber),
       epochs: epochs.length === 1 ? epochs[0] : epochs,
-      epochDuration: epochSize,
+      epochDuration: Number(epochSize),
     })
   }
 }
