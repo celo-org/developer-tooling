@@ -1,5 +1,13 @@
 # Changelog
 
+## 7.0.0-beta.4
+
+### Patch Changes
+
+- [#621](https://github.com/celo-org/developer-tooling/pull/621) [`87e6ffb`](https://github.com/celo-org/developer-tooling/commit/87e6ffb2b6381d9e171795ff65501ad9030dc278) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Migrates network:info command to use viem
+
+- [#617](https://github.com/celo-org/developer-tooling/pull/617) [`8e76ba4`](https://github.com/celo-org/developer-tooling/commit/8e76ba4cd85cd4ecd188d50bff6a718c8dd36c8b) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - chore: Remove web3-utils and @celo/phone-number-utils dependencies
+
 ## 7.0.0-beta.3
 
 ### Patch Changes
