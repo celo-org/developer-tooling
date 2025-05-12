@@ -90,7 +90,7 @@ syntheticDescribe('ledgerToWalletClient (mocked ledger)', () => {
   let client: LedgerWalletClient<typeof celo>
   for (const supportedApp of ['celo', 'ethereum']) {
     describe(supportedApp, () => {
-      beforeAll(async () => {
+      beforeEach(async () => {
         client = await ledgerToWalletClient<typeof celo>({
           transport: await transport,
           walletClientOptions: defaultWalletClientOptions,
@@ -111,6 +111,27 @@ syntheticDescribe('ledgerToWalletClient (mocked ledger)', () => {
               signedMessage
             ).toLowerCase()
           ).toBe(client.account.address.toLowerCase())
+        })
+
+        it('signs messages from all accounts', async () => {
+          client = await ledgerToWalletClient<typeof celo>({
+            transport: await transport,
+            walletClientOptions: defaultWalletClientOptions,
+            derivationPathIndexes: [0, 1, 2],
+          })
+
+          console.log(client.accounts.map((x) => x.address))
+          const message = 'Hello World clabs 2'
+          const signedMessage = await client.signMessage({ message, account: client.accounts[2] })
+          expect(
+            (await recoverMessageAddress({ message, signature: signedMessage })).toLowerCase()
+          ).toBe(client.accounts[2].address.toLowerCase())
+          expect(
+            recoverMessageSigner(
+              `0x${Buffer.from(message).toString('hex')}`,
+              signedMessage
+            ).toLowerCase()
+          ).toBe(client.accounts[2].address.toLowerCase())
         })
 
         it('signs typed data', async () => {
@@ -153,6 +174,21 @@ syntheticDescribe('ledgerToWalletClient (mocked ledger)', () => {
             expect(signer.toLowerCase()).toBe(client.account.address.toLowerCase())
             // @ts-expect-error
             expect(decoded.yParity).toBe(1)
+          })
+          test('different account', async () => {
+            client = await ledgerToWalletClient<typeof celo>({
+              transport: await transport,
+              walletClientOptions: defaultWalletClientOptions,
+              derivationPathIndexes: [0, 1, 2],
+            })
+
+            const txHash = await client.signTransaction({
+              ...txData,
+              nonce: 2,
+              account: client.accounts[2],
+            })
+            const [_, signer] = recoverTransaction(txHash)
+            expect(signer.toLowerCase()).toBe(client.accounts[2].address.toLowerCase())
           })
         })
 
@@ -406,6 +442,23 @@ hardwareDescribe('ledgerToWalletClient (device ledger)', () => {
     expect(
       recoverMessageSigner(`0x${Buffer.from(message).toString('hex')}`, signedMessage).toLowerCase()
     ).toBe(client.account.address.toLowerCase())
+  }, 20_000)
+
+  it('signs messages from all accounts', async () => {
+    client = await ledgerToWalletClient<typeof celo>({
+      transport: await transport,
+      walletClientOptions: defaultWalletClientOptions,
+      derivationPathIndexes: [0, 1, 2],
+    })
+
+    const message = 'Hello World clabs 2'
+    const signedMessage = await client.signMessage({ message, account: client.accounts[2] })
+    expect((await recoverMessageAddress({ message, signature: signedMessage })).toLowerCase()).toBe(
+      client.accounts[2].address.toLowerCase()
+    )
+    expect(
+      recoverMessageSigner(`0x${Buffer.from(message).toString('hex')}`, signedMessage).toLowerCase()
+    ).toBe(client.accounts[2].address.toLowerCase())
   }, 20_000)
 
   it('signs typed data', async () => {

@@ -5,7 +5,9 @@ export type LedgerWalletClient<T extends Chain | undefined = undefined> = Wallet
   Transport,
   T,
   LedgerAccount
->
+> & {
+  accounts: LedgerAccount[]
+}
 
 export enum AddressValidation {
   // Validates every address required only when the ledger is initialized

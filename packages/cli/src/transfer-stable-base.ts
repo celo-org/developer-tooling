@@ -71,7 +71,7 @@ export abstract class TransferStableBase extends BaseCommand {
     const stableContractData = {
       abi: stableTokenContract.abi,
       address: stableTokenContract.address,
-      account: from,
+      account: wallet.account,
       ...(feeCurrency ? { feeCurrency: feeCurrency } : {}),
       ...(res.flags.comment
         ? ({

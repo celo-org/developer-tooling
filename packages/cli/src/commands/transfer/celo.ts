@@ -1,5 +1,6 @@
 import { Flags } from '@oclif/core'
 import { PublicClient } from 'viem'
+import { CeloTransactionRequest } from 'viem/celo'
 import { BaseCommand } from '../../base'
 import { getERC20Contract, getGoldTokenContract } from '../../packages-to-be/contracts'
 import { getGasPriceOnCelo } from '../../packages-to-be/utils'
@@ -43,13 +44,13 @@ export default class TransferCelo extends BaseCommand {
     const transferWithCommentContractData = {
       address: goldTokenContract.address,
       abi: goldTokenContract.abi,
-      account: from,
+      account: wallet.account,
       functionName: 'transferWithComment',
       args: [to, value, res.flags.comment!],
       ...params,
-    } as const
+    } as Parameters<typeof client.estimateContractGas>[0]
 
-    const transferParams = { to, value: value, ...params } as const
+    const transferParams = { to, value: value, ...params } as CeloTransactionRequest
 
     await newCheckBuilder(this)
       .isNotSanctioned(from)
@@ -70,6 +71,8 @@ export default class TransferCelo extends BaseCommand {
               : goldTokenContract
             ).read.balanceOf([from]),
           ])
+          transferParams.gas = gas
+          transferParams.maxFeePerGas = gasPrice
 
           const totalSpentOnGas = gas * gasPrice
           if (feeCurrency) {

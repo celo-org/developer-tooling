@@ -24,7 +24,7 @@ export async function ledgerToWalletClient<T extends Chain | undefined = undefin
   walletClientOptions: Omit<WalletClientConfig<Transport, T>, 'account'>
 }): Promise<LedgerWalletClient<T>> {
   const ledger = await generateLedger(transport)
-  const accounts: Promise<LedgerAccount>[] = []
+  const accounts: LedgerAccount[] = []
   validateIndexes(derivationPathIndexes, 'address index')
   validateIndexes(changeIndexes, 'change index')
 
@@ -37,7 +37,7 @@ export async function ledgerToWalletClient<T extends Chain | undefined = undefin
   for (const changeIndex of changeIndexes) {
     for (const addressIndex of derivationPathIndexes) {
       accounts.push(
-        ledgerToAccount({
+        await ledgerToAccount({
           ledger,
           derivationPathIndex: addressIndex,
           baseDerivationPath: `${purpose}/${coinType}/${accountIndex}/${changeIndex}`,
@@ -48,12 +48,14 @@ export async function ledgerToWalletClient<T extends Chain | undefined = undefin
   }
   const walletClient = createWalletClient({
     ...walletClientOptions,
-    account: await accounts[0],
+    account: accounts[derivationPathIndexes[0]],
   })
-  walletClient.getAddresses = () =>
-    Promise.all(accounts).then((xs) => xs.map((account) => account.address))
+  walletClient.getAddresses = async () => accounts.map((account) => account.address)
 
-  return walletClient
+  return {
+    ...walletClient,
+    accounts,
+  }
 }
 
 function validateIndexes(indexes: number[], label: string = 'address index') {

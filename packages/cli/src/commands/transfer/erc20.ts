@@ -51,7 +51,6 @@ export default class TransferErc20 extends BaseCommand {
       abi: erc20Abi,
       address: res.flags.erc20Address,
       account: wallet.account,
-
       functionName: 'transfer',
       args: [to, value],
       ...(feeCurrency ? { feeCurrency } : {}),

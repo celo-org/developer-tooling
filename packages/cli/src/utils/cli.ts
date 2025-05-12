@@ -88,11 +88,7 @@ export async function displayViemTx(
   client: CeloClient,
   wallet: WalletCeloClient
 ) {
-  if (!ux.action.running) {
-    ux.action.start(`Sending Transaction: ${name}`)
-  }
   try {
-    console.log(chalk`SendTransaction: {red.bold ${name}}`)
     await innerDisplayViemTxHash(name, wallet.sendTransaction(request), client)
   } catch (e) {
     ux.action.stop(`failed: ${(e as Error).message}`)

@@ -264,7 +264,7 @@ export abstract class BaseCommand extends Command {
             }
           }
 
-          this.walletClient = await ledgerToWalletClient({
+          const ledgerWalletClient = await ledgerToWalletClient({
             transport: await this.openLedgerTransport(),
             baseDerivationPath: getDefaultDerivationPath(this.config.configDir),
             derivationPathIndexes: isLedgerLiveMode ? [0] : indicesToIterateOver,
@@ -275,6 +275,13 @@ export abstract class BaseCommand extends Command {
               chain: publicClient.chain,
             },
           })
+          if (res.flags.from) {
+            // NOTE: set a default account from the --from flag
+            ledgerWalletClient.account = ledgerWalletClient.accounts.find(
+              (x) => x.address.toLowerCase() === ensureLeading0x(res.flags.from).toLowerCase()
+            )!
+          }
+          this.walletClient = ledgerWalletClient
         } catch (err) {
           console.log('Check if the ledger is connected and logged.')
           throw err
@@ -293,16 +300,27 @@ export abstract class BaseCommand extends Command {
           Method: 'eth_requestAccounts'
           ReturnType: `0x${string}`[]
         }
-        const [address] = await publicClient.request<EthRequestAccountsRpcSchema>({
+        const accounts = await publicClient.request<EthRequestAccountsRpcSchema>({
           method: 'eth_requestAccounts',
           params: [],
         })
 
-        this.walletClient = createWalletClient({
+        const rpcWalletClient = createWalletClient({
           transport,
           chain: publicClient.chain,
-          account: address,
+          account: accounts[0],
         })
+
+        if (res.flags.from) {
+          // NOTE: set a default account from the --from flag
+          rpcWalletClient.account = {
+            type: 'json-rpc',
+            address: accounts.find(
+              (x) => x.toLowerCase() === ensureLeading0x(res.flags.from).toLowerCase()
+            )!,
+          }
+        }
+        this.walletClient = rpcWalletClient
       }
     }
 
