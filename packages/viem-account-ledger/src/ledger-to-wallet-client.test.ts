@@ -16,7 +16,14 @@ import {
   vi,
 } from 'vitest'
 import { ledgerToWalletClient } from './ledger-to-wallet-client.js'
-import { ACCOUNT_ADDRESS1, mockLedger, TEST_CHAIN_ID, TestLedger } from './test-utils.js'
+import {
+  ACCOUNT_ADDRESS1,
+  ACCOUNT_ADDRESS2,
+  ACCOUNT_ADDRESS3,
+  mockLedger,
+  TEST_CHAIN_ID,
+  TestLedger,
+} from './test-utils.js'
 import { LedgerWalletClient } from './types.js'
 import { generateLedger, readAppName } from './utils.js'
 
@@ -98,6 +105,68 @@ syntheticDescribe('ledgerToWalletClient (mocked ledger)', () => {
         vi.spyOn(TestLedger.prototype, 'getName').mockReturnValue(supportedApp)
       })
 
+      describe('accounts', () => {
+        it('has a default', async () => {
+          expect(client.account).toBe(client.accounts[0])
+          expect(client.account.address).toBe(ACCOUNT_ADDRESS1)
+        })
+        it('checks the account exists in the ledger', async () => {
+          await expect(
+            ledgerToWalletClient<typeof celo>({
+              transport: await transport,
+              walletClientOptions: defaultWalletClientOptions,
+              derivationPathIndexes: [0, 1],
+              account: '0x123',
+            })
+          ).rejects.toThrowError(
+            'The given `account` doesnt match any of the addresses retrieved by your ledger and the given derivation path(s)'
+          )
+        })
+
+        it('signs messages from all accounts', async () => {
+          client = await ledgerToWalletClient<typeof celo>({
+            transport: await transport,
+            walletClientOptions: defaultWalletClientOptions,
+            derivationPathIndexes: [0, 1],
+            account: ACCOUNT_ADDRESS2,
+          })
+
+          expect(client.account).toBe(client.accounts[1])
+          expect(client.accounts[1].address).toEqual(ACCOUNT_ADDRESS2)
+          const message = 'Hello World clabs 2'
+          const signedMessage = await client.signMessage({ message })
+          expect(
+            (await recoverMessageAddress({ message, signature: signedMessage })).toLowerCase()
+          ).toBe(client.accounts[1].address.toLowerCase())
+          expect(
+            recoverMessageSigner(
+              `0x${Buffer.from(message).toString('hex')}`,
+              signedMessage
+            ).toLowerCase()
+          ).toBe(client.accounts[1].address.toLowerCase())
+        })
+
+        it('can override the default account in each request', async () => {
+          client = await ledgerToWalletClient<typeof celo>({
+            transport: await transport,
+            walletClientOptions: defaultWalletClientOptions,
+            derivationPathIndexes: [0, 1, 2],
+          })
+
+          const message = 'Hello World clabs 3'
+          const signedMessage = await client.signMessage({ message, account: client.accounts[2] })
+          expect(
+            (await recoverMessageAddress({ message, signature: signedMessage })).toLowerCase()
+          ).toBe(client.accounts[2].address.toLowerCase())
+          expect(
+            recoverMessageSigner(
+              `0x${Buffer.from(message).toString('hex')}`,
+              signedMessage
+            ).toLowerCase()
+          ).toBe(client.accounts[2].address.toLowerCase())
+        })
+      })
+
       describe('signs txs', () => {
         it('signs messages', async () => {
           const message = 'Hello World clabs'
@@ -111,27 +180,6 @@ syntheticDescribe('ledgerToWalletClient (mocked ledger)', () => {
               signedMessage
             ).toLowerCase()
           ).toBe(client.account.address.toLowerCase())
-        })
-
-        it('signs messages from all accounts', async () => {
-          client = await ledgerToWalletClient<typeof celo>({
-            transport: await transport,
-            walletClientOptions: defaultWalletClientOptions,
-            derivationPathIndexes: [0, 1, 2],
-          })
-
-          console.log(client.accounts.map((x) => x.address))
-          const message = 'Hello World clabs 2'
-          const signedMessage = await client.signMessage({ message, account: client.accounts[2] })
-          expect(
-            (await recoverMessageAddress({ message, signature: signedMessage })).toLowerCase()
-          ).toBe(client.accounts[2].address.toLowerCase())
-          expect(
-            recoverMessageSigner(
-              `0x${Buffer.from(message).toString('hex')}`,
-              signedMessage
-            ).toLowerCase()
-          ).toBe(client.accounts[2].address.toLowerCase())
         })
 
         it('signs typed data', async () => {
@@ -180,12 +228,12 @@ syntheticDescribe('ledgerToWalletClient (mocked ledger)', () => {
               transport: await transport,
               walletClientOptions: defaultWalletClientOptions,
               derivationPathIndexes: [0, 1, 2],
+              account: ACCOUNT_ADDRESS3,
             })
 
             const txHash = await client.signTransaction({
               ...txData,
               nonce: 2,
-              account: client.accounts[2],
             })
             const [_, signer] = recoverTransaction(txHash)
             expect(signer.toLowerCase()).toBe(client.accounts[2].address.toLowerCase())
@@ -287,7 +335,7 @@ syntheticDescribe('ledgerToWalletClient (mocked ledger)', () => {
         })
 
         afterEach(() => {
-          spy.mockClear()
+          spy.mockRestore()
         })
 
         it('can be used with eth derivation path', async () => {
