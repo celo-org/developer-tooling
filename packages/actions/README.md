@@ -7,13 +7,13 @@ Functions are in the form of `(client: Client, ...params) => Promise<Result>`
 
 ## Goals of @celo/actions
 
-* share 
-* Limited dependencies
+* share well tested reusable code used by celocli with other projects
+* an easy to use package for interacting with celo core contracts with limited dependencies
 
 
 ## Antigoals of @celo/actions
 
-* 
+* rebuild contractkit
 
 ## Consumers 
 
@@ -22,8 +22,6 @@ Functions are in the form of `(client: Client, ...params) => Promise<Result>`
 
 
 ## Usage
-
-
 
 
 ### Structure 
