@@ -1588,6 +1588,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@celo/actions@workspace:packages/actions":
+  version: 0.0.0-use.local
+  resolution: "@celo/actions@workspace:packages/actions"
+  dependencies:
+    "@celo/typescript": "workspace:^"
+    "@size-limit/preset-small-lib": "npm:^11.2.0"
+    "@vitest/coverage-v8": "npm:2.1.9"
+    dotenv: "npm:^8.2.0"
+    rimraf: "npm:^4.4.1"
+    size-limit: "npm:^11.2.0"
+    viem: "npm:^2.23.5"
+    vitest: "npm:^2.1.9"
+  languageName: unknown
+  linkType: soft
+
 "@celo/base@npm:^6.0.0, @celo/base@npm:^6.0.1":
   version: 6.1.0
   resolution: "@celo/base@npm:6.1.0"

@@ -42,10 +42,10 @@
   "devDependencies": {
     "@celo/typescript": "workspace:^",
     "@size-limit/preset-small-lib": "^11.2.0",
-    "size-limit": "^11.2.0",
     "@vitest/coverage-v8": "2.1.9",
     "dotenv": "^8.2.0",
     "rimraf": "^4.4.1",
+    "size-limit": "^11.2.0",
     "viem": "^2.23.5",
     "vitest": "^2.1.9"
   },
