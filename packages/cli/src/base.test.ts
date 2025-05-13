@@ -1,5 +1,6 @@
 import { Connection } from '@celo/connect'
 import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
+import * as ViemAccountLedgerExports from '@celo/viem-account-ledger'
 import * as WalletLedgerExports from '@celo/wallet-ledger'
 import { Config, ux } from '@oclif/core'
 import http from 'http'
@@ -9,6 +10,7 @@ import { BaseCommand } from './base'
 import Set from './commands/config/set'
 import CustomHelp from './help'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from './test-utils/cliUtils'
+import { CustomFlags } from './utils/command'
 import * as config from './utils/config'
 import { readConfig } from './utils/config'
 import * as telemetry from './utils/telemetry'
@@ -26,11 +28,25 @@ jest.mock('@celo/wallet-ledger', () => {
     newLedgerWalletWithSetup: jest.fn(),
   }
 })
+
+jest.mock('@celo/viem-account-ledger', () => {
+  const originalModule = jest.requireActual('@celo/viem-account-ledger')
+  return {
+    __esModule: true,
+    ...originalModule,
+    ledgerToWalletClient: jest.fn(),
+  }
+})
 class BasicCommand extends BaseCommand {
+  static flags = {
+    ...BaseCommand.flags,
+    from: CustomFlags.address({ required: false }),
+  }
   async run() {
-    // just parsing flags nothing to see
+    await this.getWalletClient()
   }
 }
+
 // doesnt use anvil because we are testing the connection to chain
 // doesnt use testLocally because that messes with the node connection
 describe('flags', () => {
@@ -103,6 +119,11 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
             baseDerivationPath: storedDerivationPath,
           })
         )
+        expect(ViemAccountLedgerExports.ledgerToWalletClient).toHaveBeenCalledWith(
+          expect.objectContaining({
+            baseDerivationPath: storedDerivationPath,
+          })
+        )
       })
       it('uses custom derivationPath', async () => {
         const storedDerivationPath = readConfig(tmpdir()).derivationPath
@@ -111,6 +132,11 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
         await testLocallyWithWeb3Node(BasicCommand, ['--useLedger'], web3)
         expect(WalletLedgerExports.newLedgerWalletWithSetup).toHaveBeenCalledWith(
           expect.anything(),
+          expect.objectContaining({
+            baseDerivationPath: customPath,
+          })
+        )
+        expect(ViemAccountLedgerExports.ledgerToWalletClient).toHaveBeenCalledWith(
           expect.objectContaining({
             baseDerivationPath: customPath,
           })
@@ -129,17 +155,34 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
           derivationPathIndexes: [0, 1, 2, 3, 4],
         })
       )
-      expect(logSpy.mock.calls).toMatchInlineSnapshot(`
+      expect(ViemAccountLedgerExports.ledgerToWalletClient).toHaveBeenCalledWith(
+        expect.objectContaining({
+          changeIndexes: [0],
+          derivationPathIndexes: [0, 1, 2, 3, 4],
+        })
+      )
+      expect(logSpy.mock.calls).toHaveLength(2)
+      expect(logSpy.mock.calls[0]).toMatchInlineSnapshot(`
         [
+          "Retrieving derivation Paths",
           [
-            "Retrieving derivation Paths",
-            [
-              0,
-              1,
-              2,
-              3,
-              4,
-            ],
+            0,
+            1,
+            2,
+            3,
+            4,
+          ],
+        ]
+      `)
+      expect(logSpy.mock.calls[1]).toMatchInlineSnapshot(`
+        [
+          "Retrieving derivation Paths",
+          [
+            0,
+            1,
+            2,
+            3,
+            4,
           ],
         ]
       `)
@@ -160,17 +203,35 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
             derivationPathIndexes: [0],
           })
         )
-        expect(logSpy.mock.calls).toMatchInlineSnapshot(`
+
+        expect(ViemAccountLedgerExports.ledgerToWalletClient).toHaveBeenCalledWith(
+          expect.objectContaining({
+            changeIndexes: [0, 1, 2, 3, 4],
+            derivationPathIndexes: [0],
+          })
+        )
+        expect(logSpy.mock.calls).toHaveLength(2)
+        expect(logSpy.mock.calls[0]).toMatchInlineSnapshot(`
           [
+            "Retrieving derivation Paths",
             [
-              "Retrieving derivation Paths",
-              [
-                0,
-                1,
-                2,
-                3,
-                4,
-              ],
+              0,
+              1,
+              2,
+              3,
+              4,
+            ],
+          ]
+        `)
+        expect(logSpy.mock.calls[1]).toMatchInlineSnapshot(`
+          [
+            "Retrieving derivation Paths",
+            [
+              0,
+              1,
+              2,
+              3,
+              4,
             ],
           ]
         `)
@@ -190,15 +251,31 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
               derivationPathIndexes: [0],
             })
           )
-          expect(logSpy.mock.calls).toMatchInlineSnapshot(`
+
+          expect(ViemAccountLedgerExports.ledgerToWalletClient).toHaveBeenCalledWith(
+            expect.objectContaining({
+              changeIndexes: [1, 8, 9],
+              derivationPathIndexes: [0],
+            })
+          )
+          expect(logSpy.mock.calls).toHaveLength(2)
+          expect(logSpy.mock.calls[0]).toMatchInlineSnapshot(`
             [
+              "Retrieving derivation Paths",
               [
-                "Retrieving derivation Paths",
-                [
-                  1,
-                  8,
-                  9,
-                ],
+                1,
+                8,
+                9,
+              ],
+            ]
+          `)
+          expect(logSpy.mock.calls[1]).toMatchInlineSnapshot(`
+            [
+              "Retrieving derivation Paths",
+              [
+                1,
+                8,
+                9,
               ],
             ]
           `)
@@ -220,18 +297,59 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
             derivationPathIndexes: [1, 8, 9],
           })
         )
-        expect(logSpy.mock.calls).toMatchInlineSnapshot(`
+
+        expect(ViemAccountLedgerExports.ledgerToWalletClient).toHaveBeenCalledWith(
+          expect.objectContaining({
+            changeIndexes: [0],
+            derivationPathIndexes: [1, 8, 9],
+          })
+        )
+
+        expect(logSpy.mock.calls).toHaveLength(2)
+        expect(logSpy.mock.calls[0]).toMatchInlineSnapshot(`
           [
+            "Retrieving derivation Paths",
             [
-              "Retrieving derivation Paths",
-              [
-                1,
-                8,
-                9,
-              ],
+              1,
+              8,
+              9,
             ],
           ]
         `)
+        expect(logSpy.mock.calls[1]).toMatchInlineSnapshot(`
+          [
+            "Retrieving derivation Paths",
+            [
+              1,
+              8,
+              9,
+            ],
+          ]
+        `)
+      })
+    })
+
+    describe('with --from', () => {
+      it('uses it as the default account', async () => {
+        await testLocallyWithWeb3Node(
+          BasicCommand,
+          [
+            '--useLedger',
+            '--ledgerCustomAddresses',
+            '[1,8,9]',
+            '--from',
+            '0x1234567890123456789012345678901234567890',
+          ],
+          web3
+        )
+
+        expect(ViemAccountLedgerExports.ledgerToWalletClient).toHaveBeenCalledWith(
+          expect.objectContaining({
+            changeIndexes: [0],
+            derivationPathIndexes: [1, 8, 9],
+            account: '0x1234567890123456789012345678901234567890',
+          })
+        )
       })
     })
   })
