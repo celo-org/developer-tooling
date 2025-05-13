@@ -1,0 +1,61 @@
+{
+  "name": "@celo/actions",
+  "version": "0.0.0",
+  "description": "",
+  "main": "dist/cjs/index.js",
+  "module": "dist/mjs/index.js",
+  "types": "dist/mjs/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/mjs/index.js",
+      "require": "./dist/cjs/index.js"
+    }
+  },
+  "author": "cLabs",
+  "license": "Apache-2.0",
+  "homepage": "https://docs.celo.org/developer/tools",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/celo-org/developer-tooling.git",
+    "directory": "packages/actions"
+  },
+  "keywords": [
+    "celo",
+    "blockchain",
+    "actions",
+    "contract",
+    "viem"
+  ],
+  "scripts": {
+    "build": "yarn clean && yarn build:cjs && yarn build:mjs && yarn postbuild",
+    "build:cjs": "yarn --top-level run tsc -p tsconfig-cjs.json",
+    "build:mjs": "yarn --top-level run tsc -p tsconfig.json",
+    "postbuild": "node ./scripts/post-build.mjs",
+    "clean": "yarn --top-level run tsc -b . --clean && yarn run rimraf dist",
+    "docs": "yarn --top-level run typedoc",
+    "test": "yarn run vitest --run",
+    "check-size": "size-limit",
+    "test:watch": "yarn run vitest --watch",
+    "lint": "yarn --top-level run eslint -c .eslintrc.cjs ",
+    "prepublishOnly": "yarn clean && yarn build"
+  },
+  "devDependencies": {
+    "@celo/typescript": "workspace:^",
+    "@size-limit/preset-small-lib": "^11.2.0",
+    "size-limit": "^11.2.0",
+    "@vitest/coverage-v8": "2.1.9",
+    "dotenv": "^8.2.0",
+    "rimraf": "^4.4.1",
+    "viem": "^2.23.5",
+    "vitest": "^2.1.9"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "size-limit": [
+    {
+      "path": "dist/index.js",
+      "limit": "10 kB"
+    }
+  ]
+}
