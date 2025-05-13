@@ -17,6 +17,7 @@ import { ipc } from 'viem/node'
 import Web3 from 'web3'
 import { celoBaklava } from './packages-to-be/chains'
 import { CeloClient, WalletCeloClient } from './packages-to-be/client'
+import createRpcWalletClient from './packages-to-be/rpc-client'
 import { failWith } from './utils/cli'
 import { CustomFlags } from './utils/command'
 import { getDefaultDerivationPath, getNodeUrl } from './utils/config'
@@ -245,6 +246,11 @@ export abstract class BaseCommand extends Command {
         this.parse(),
       ])
 
+      // NOTE: adjust logic here later to take in account commands which
+      // don't use --from but --account or other flags to pass in which account
+      // should be used
+      const account = res.flags.from as StrongAddress
+
       if (res.flags.useLedger) {
         try {
           const isLedgerLiveMode = res.flags.ledgerLiveMode
@@ -264,24 +270,18 @@ export abstract class BaseCommand extends Command {
             }
           }
 
-          const ledgerWalletClient = await ledgerToWalletClient({
+          this.walletClient = await ledgerToWalletClient({
             transport: await this.openLedgerTransport(),
             baseDerivationPath: getDefaultDerivationPath(this.config.configDir),
             derivationPathIndexes: isLedgerLiveMode ? [0] : indicesToIterateOver,
             changeIndexes: isLedgerLiveMode ? indicesToIterateOver : [0],
             ledgerAddressValidation: ledgerConfirmation,
+            account,
             walletClientOptions: {
               transport,
               chain: publicClient.chain,
             },
           })
-          if (res.flags.from) {
-            // NOTE: set a default account from the --from flag
-            ledgerWalletClient.account = ledgerWalletClient.accounts.find(
-              (x) => x.address.toLowerCase() === ensureLeading0x(res.flags.from).toLowerCase()
-            )!
-          }
-          this.walletClient = ledgerWalletClient
         } catch (err) {
           console.log('Check if the ledger is connected and logged.')
           throw err
@@ -295,32 +295,12 @@ export abstract class BaseCommand extends Command {
           account: privateKeyToAccount(ensureLeading0x(res.flags.privateKey)),
         })
       } else {
-        type EthRequestAccountsRpcSchema = {
-          Parameters: []
-          Method: 'eth_requestAccounts'
-          ReturnType: `0x${string}`[]
-        }
-        const accounts = await publicClient.request<EthRequestAccountsRpcSchema>({
-          method: 'eth_requestAccounts',
-          params: [],
-        })
-
-        const rpcWalletClient = createWalletClient({
+        this.walletClient = await createRpcWalletClient({
+          publicClient,
           transport,
           chain: publicClient.chain,
-          account: accounts[0],
+          account,
         })
-
-        if (res.flags.from) {
-          // NOTE: set a default account from the --from flag
-          rpcWalletClient.account = {
-            type: 'json-rpc',
-            address: accounts.find(
-              (x) => x.toLowerCase() === ensureLeading0x(res.flags.from).toLowerCase()
-            )!,
-          }
-        }
-        this.walletClient = rpcWalletClient
       }
     }
 
