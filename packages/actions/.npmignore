@@ -1,5 +1,4 @@
-/.devchain/
-/.devchain.tar.gz
+
 /coverage/
 /node_modules/
 /src/
@@ -12,8 +11,7 @@
 
 /src
 
-/lib/**/*.test.*
-/lib/test-utils
+/dist/**/*.test.*
 
 eslint.tsconfig.json
 typedoc.json

@@ -1,5 +1,4 @@
-lib/
-lib-es/
+dist/
 tmp/
 .tmp/
 .env

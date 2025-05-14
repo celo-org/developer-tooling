@@ -34,6 +34,7 @@
     "docs": "yarn --top-level run typedoc",
     "test": "yarn run vitest --run",
     "test:watch": "yarn run vitest --watch",
+    "test:changes": "yarn run vitest --run --changed",
     "lint": "yarn --top-level run eslint -c .eslintrc.cjs ",
     "prepublishOnly": "yarn clean && yarn build"
   },
