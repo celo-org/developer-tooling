@@ -93,7 +93,6 @@ export abstract class BaseCommand extends Command {
         'If --useLedger is set, this will get the array of index addresses for local signing. Example --ledgerCustomAddresses "[4,99]"',
     }),
     useAKV: Flags.boolean({
-      default: false,
       hidden: true,
       deprecated: true,
       description: 'Set it to use an Azure KeyVault HSM',
