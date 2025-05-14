@@ -90,7 +90,7 @@ export default class TransferCelo extends BaseCommand {
 
     await (res.flags.comment
       ? displaySendViemContractCall(
-          'GoldToken',
+          'CeloToken',
           transferWithCommentContractData,
           client,
           wallet,
