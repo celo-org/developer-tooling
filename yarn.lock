@@ -1651,7 +1651,7 @@ __metadata:
     "@celo/metadata-claims": "npm:^1.0.3"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.2"
-    "@celo/viem-account-ledger": "npm:^1.2.0-beta.0"
+    "@celo/viem-account-ledger": "npm:^1.2.0-beta.1"
     "@celo/wallet-hsm-azure": "npm:^8.0.0-beta.1"
     "@celo/wallet-ledger": "npm:^8.0.0-beta.1"
     "@celo/wallet-local": "npm:^8.0.0-beta.1"
@@ -2106,7 +2106,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/viem-account-ledger@npm:^1.2.0-beta.0, @celo/viem-account-ledger@workspace:packages/viem-account-ledger":
+"@celo/viem-account-ledger@npm:^1.2.0-beta.1, @celo/viem-account-ledger@workspace:packages/viem-account-ledger":
   version: 0.0.0-use.local
   resolution: "@celo/viem-account-ledger@workspace:packages/viem-account-ledger"
   dependencies:

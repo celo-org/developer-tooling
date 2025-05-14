@@ -1,4 +1,4 @@
-[**@celo/viem-account-ledger v1.2.0-beta.0**](../README.md)
+[**@celo/viem-account-ledger v1.2.0-beta.1**](../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Enumeration: AddressValidation
 
-Defined in: [packages/viem-account-ledger/src/types.ts:10](https://github.com/celo-org/developer-tooling/blob/master/packages/viem-account-ledger/src/types.ts#L10)
+Defined in: [packages/viem-account-ledger/src/types.ts:12](https://github.com/celo-org/developer-tooling/blob/master/packages/viem-account-ledger/src/types.ts#L12)
 
 ## Enumeration Members
 
@@ -14,7 +14,7 @@ Defined in: [packages/viem-account-ledger/src/types.ts:10](https://github.com/ce
 
 > **everyTransaction**: `1`
 
-Defined in: [packages/viem-account-ledger/src/types.ts:14](https://github.com/celo-org/developer-tooling/blob/master/packages/viem-account-ledger/src/types.ts#L14)
+Defined in: [packages/viem-account-ledger/src/types.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/viem-account-ledger/src/types.ts#L16)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [packages/viem-account-ledger/src/types.ts:14](https://github.com/ce
 
 > **firstTransactionPerAddress**: `2`
 
-Defined in: [packages/viem-account-ledger/src/types.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/viem-account-ledger/src/types.ts#L16)
+Defined in: [packages/viem-account-ledger/src/types.ts:18](https://github.com/celo-org/developer-tooling/blob/master/packages/viem-account-ledger/src/types.ts#L18)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [packages/viem-account-ledger/src/types.ts:16](https://github.com/ce
 
 > **initializationOnly**: `0`
 
-Defined in: [packages/viem-account-ledger/src/types.ts:12](https://github.com/celo-org/developer-tooling/blob/master/packages/viem-account-ledger/src/types.ts#L12)
+Defined in: [packages/viem-account-ledger/src/types.ts:14](https://github.com/celo-org/developer-tooling/blob/master/packages/viem-account-ledger/src/types.ts#L14)
 
 ***
 
@@ -38,4 +38,4 @@ Defined in: [packages/viem-account-ledger/src/types.ts:12](https://github.com/ce
 
 > **never**: `3`
 
-Defined in: [packages/viem-account-ledger/src/types.ts:18](https://github.com/celo-org/developer-tooling/blob/master/packages/viem-account-ledger/src/types.ts#L18)
+Defined in: [packages/viem-account-ledger/src/types.ts:20](https://github.com/celo-org/developer-tooling/blob/master/packages/viem-account-ledger/src/types.ts#L20)
