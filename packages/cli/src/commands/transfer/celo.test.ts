@@ -1,9 +1,18 @@
+import { goldTokenABI } from '@celo/abis'
 import { COMPLIANT_ERROR_RESPONSE } from '@celo/compliance'
-import { ContractKit, StableToken, newKitFromWeb3 } from '@celo/contractkit'
+import { ContractKit, newKitFromWeb3, StableToken } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
+import BigNumber from 'bignumber.js'
+import { createPublicClient, decodeFunctionData, http } from 'viem'
 import Web3 from 'web3'
-import { TEST_SANCTIONED_ADDRESS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
-import { mockRpc } from '../../test-utils/mockRpc'
+import { bigNumberToBigInt } from '../../packages-to-be/utils'
+import { topUpWithToken } from '../../test-utils/chain-setup'
+import {
+  stripAnsiCodesFromNestedArray,
+  TEST_SANCTIONED_ADDRESS,
+  testLocallyWithWeb3Node,
+} from '../../test-utils/cliUtils'
+import { mockRpcFetch } from '../../test-utils/mockRpc'
 import TransferCelo from './celo'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -14,16 +23,32 @@ jest.setTimeout(15000)
 testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
   let accounts: string[] = []
   let kit: ContractKit
+  let restoreMock: () => void
 
   beforeEach(async () => {
+    restoreMock = mockRpcFetch({ method: 'eth_gasPrice', result: '30000' })
     kit = newKitFromWeb3(web3)
     accounts = await web3.eth.getAccounts()
 
     jest.spyOn(console, 'log').mockImplementation(() => {})
     jest.spyOn(console, 'error').mockImplementation(() => {})
+
+    await topUpWithToken(
+      kit,
+      StableToken.cUSD,
+      accounts[0],
+      new BigNumber('9000000000000000000000')
+    )
+    await topUpWithToken(
+      kit,
+      StableToken.cUSD,
+      accounts[1],
+      new BigNumber('9000000000000000000000')
+    )
   })
 
   afterEach(() => {
+    restoreMock()
     jest.restoreAllMocks()
   })
 
@@ -32,7 +57,6 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
     const receiverBalanceBefore = await kit.getTotalBalance(accounts[1])
     const amountToTransfer = '500000000000000000000'
     // Send cUSD to RG contract
-    let mock = mockRpc()
     await testLocallyWithWeb3Node(
       TransferCelo,
       [
@@ -47,19 +71,17 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
       ],
       web3
     )
-    mock.mockRestore()
     // RG cUSD balance should match the amount sent
     const receiverBalance = await kit.getTotalBalance(accounts[1])
     expect(receiverBalance.CELO!.toFixed()).toEqual(
       receiverBalanceBefore.CELO!.plus(amountToTransfer).toFixed()
     )
-    const block = await web3.eth.getBlock('latest')
-    const transactionReceipt = await web3.eth.getTransactionReceipt(block.transactions[0])
+    let block = await web3.eth.getBlock('latest')
+    let transactionReceipt = await web3.eth.getTransactionReceipt(block.transactions[0])
 
     // Safety check if the latest transaction was originated by expected account
     expect(transactionReceipt.from.toLowerCase()).toEqual(accounts[0].toLowerCase())
 
-    mock = mockRpc()
     // Attempt to send cUSD back
     await testLocallyWithWeb3Node(
       TransferCelo,
@@ -75,14 +97,148 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
       ],
       web3
     )
-    mock.mockRestore()
+    block = await web3.eth.getBlock('latest')
+    transactionReceipt = await web3.eth.getTransactionReceipt(block.transactions[0])
 
-    const balanceAfterWithoutFees = (await kit.getTotalBalance(accounts[0])).CELO!
-    const balanceAfterWithFees = balanceAfterWithoutFees.plus(
-      transactionReceipt.effectiveGasPrice * transactionReceipt.gasUsed
+    // Safety check if the latest transaction was originated by expected account
+    expect(transactionReceipt.from.toLowerCase()).toEqual(accounts[1].toLowerCase())
+
+    const balanceAfter = (await kit.getTotalBalance(accounts[0])).CELO!
+    expect(balanceBefore.toFixed()).toEqual(balanceAfter.toFixed())
+  })
+
+  test('cant transfer full balance without feeCurrency', async () => {
+    const spy = jest.spyOn(console, 'log')
+    const balance = (await kit.getTotalBalance(accounts[0])).CELO!
+    await expect(
+      testLocallyWithWeb3Node(
+        TransferCelo,
+        ['--from', accounts[0], '--to', accounts[1], '--value', balance.toFixed()],
+        web3
+      )
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
+    expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
+      [
+        [
+          "Running Checks:",
+        ],
+        [
+          "   ✔  Compliant Address ",
+        ],
+        [
+          "   ✔  Compliant Address ",
+        ],
+        [
+          "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 can sign txs ",
+        ],
+        [
+          "   ✔  Account has at least 1000000 CELO ",
+        ],
+        [
+          "   ✘  Account can afford to transfer CELO with gas paid in CELO Cannot afford to transfer CELO ; try reducing value slightly or using a different gasCurrency",
+        ],
+      ]
+    `)
+  })
+
+  test('can transfer full balance with feeCurrency', async () => {
+    const start = await web3.eth.getBlock('latest')
+    const balance = (await kit.getTotalBalance(accounts[0])).CELO!
+    await expect(
+      testLocallyWithWeb3Node(
+        TransferCelo,
+        [
+          '--from',
+          accounts[0],
+          '--to',
+          accounts[1],
+          '--value',
+          balance.toFixed(),
+          '--gasCurrency',
+          (await kit.contracts.getStableToken(StableToken.cUSD)).address,
+          '--comment',
+          'Goodbye balance',
+        ],
+        web3
+      )
+    ).resolves.toBeUndefined()
+
+    const client = createPublicClient({
+      // @ts-expect-error
+      transport: http(kit.web3.currentProvider.existingProvider.host),
+    })
+    const events = await client.getContractEvents({
+      abi: goldTokenABI,
+      eventName: 'TransferComment',
+      fromBlock: BigInt(start.number),
+      address: (await kit.contracts.getCeloToken()).address,
+    })
+
+    expect(events.length).toEqual(1)
+    expect(events[0].args).toEqual({ comment: 'Goodbye balance' })
+
+    const tx = await client.getTransaction({ hash: events[0]!.transactionHash })
+    expect(tx.from.toLowerCase()).toEqual(accounts[0].toLowerCase())
+    expect(
+      decodeFunctionData({
+        abi: goldTokenABI,
+        data: tx.input,
+      })
+    ).toEqual({
+      args: [accounts[1], bigNumberToBigInt(balance), 'Goodbye balance'],
+      functionName: 'transferWithComment',
+    })
+  })
+
+  test('can transfer celo with comment', async () => {
+    const start = await web3.eth.getBlock('latest')
+    const amountToTransfer = '500000000000000000000'
+    // Send cUSD to RG contract
+    await testLocallyWithWeb3Node(
+      TransferCelo,
+      [
+        '--from',
+        accounts[0],
+        '--to',
+        accounts[1],
+        '--value',
+        amountToTransfer,
+        '--comment',
+        'Hello World',
+      ],
+      web3
     )
 
-    expect(balanceBefore).toEqual(balanceAfterWithFees)
+    // Attempt to send cUSD back
+    await testLocallyWithWeb3Node(
+      TransferCelo,
+      [
+        '--from',
+        accounts[1],
+        '--to',
+        accounts[0],
+        '--value',
+        amountToTransfer,
+        '--comment',
+        'Hello World Back',
+      ],
+      web3
+    )
+
+    const client = createPublicClient({
+      // @ts-expect-error
+      transport: http(kit.web3.currentProvider.existingProvider.host),
+    })
+    const events = await client.getContractEvents({
+      abi: goldTokenABI,
+      eventName: 'TransferComment',
+      fromBlock: BigInt(start.number),
+      address: (await kit.contracts.getCeloToken()).address,
+    })
+
+    expect(events.length).toEqual(2)
+    expect(events[0].args).toEqual({ comment: 'Hello World' })
+    expect(events[1].args).toEqual({ comment: 'Hello World Back' })
   })
 
   test('should fail if to address is sanctioned', async () => {
@@ -96,6 +252,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
     ).rejects.toThrow()
     expect(spy).toHaveBeenCalledWith(expect.stringContaining(COMPLIANT_ERROR_RESPONSE))
   })
+
   test('should fail if from address is sanctioned', async () => {
     const spy = jest.spyOn(console, 'log')
     await expect(
@@ -127,7 +284,6 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
     const balanceBefore = await kit.getTotalBalance(accounts[0])
     const receiverBalanceBefore = await kit.getTotalBalance(accounts[1])
     const amountToTransfer = '1'
-    let mock = mockRpc()
     await expect(
       testLocallyWithWeb3Node(
         TransferCelo,
@@ -144,7 +300,6 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
         web3
       )
     ).resolves.toBeUndefined()
-    mock.mockRestore()
 
     const balanceAfter = await kit.getTotalBalance(accounts[0])
     const receiverBalanceAfter = await kit.getTotalBalance(accounts[1])
@@ -168,6 +323,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
   })
 
   test("should fail if the feeCurrency isn't whitelisted", async () => {
+    const spy = jest.spyOn(console, 'log')
     const wrongFee = '0x1234567890123456789012345678901234567890'
     await expect(
       testLocallyWithWeb3Node(
@@ -175,11 +331,20 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
         ['--from', accounts[0], '--to', accounts[1], '--value', '1', '--gasCurrency', wrongFee],
         web3
       )
-    ).rejects.toThrowErrorMatchingInlineSnapshot(`
-      "0x1234567890123456789012345678901234567890 is not a valid fee currency. Available currencies:
-      0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1 - Celo Dollar (cUSD)
-      0x5930519559Ffa7528a00BE445734036471c443a2 - Celo Euro (cEUR)
-      0xB2Fd9852Ca3D69678286A8635d661690906A3E9d - Celo Brazilian Real (cREAL)"
-    `)
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
+    expect(spy).toHaveBeenCalledWith(
+      expect.stringContaining(`${wrongFee} is not a valid fee currency.`)
+    )
+  })
+
+  test('should fail if using with --useAKV', async () => {
+    await expect(
+      testLocallyWithWeb3Node(
+        TransferCelo,
+        ['--from', accounts[0], '--to', accounts[1], '--value', '1', '--useAKV'],
+
+        web3
+      )
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`"--useAKV flag is no longer supported"`)
   })
 })

@@ -1,6 +1,6 @@
 import { zeroRange } from '@celo/base'
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
-import { Chain, createWalletClient, Transport, WalletClientConfig } from 'viem'
+import { Address, Chain, createWalletClient, Transport, WalletClientConfig } from 'viem'
 import { DEFAULT_DERIVATION_PATH } from './constants'
 import { ledgerToAccount } from './ledger-to-account'
 import { AddressValidation, LedgerAccount, LedgerWalletClient } from './types'
@@ -14,6 +14,7 @@ export async function ledgerToWalletClient<T extends Chain | undefined = undefin
   changeIndexes = [0],
   baseDerivationPath = DEFAULT_DERIVATION_PATH,
   ledgerAddressValidation,
+  account,
   walletClientOptions,
 }: {
   transport: TransportNodeHid
@@ -21,10 +22,11 @@ export async function ledgerToWalletClient<T extends Chain | undefined = undefin
   changeIndexes?: number[]
   baseDerivationPath?: string
   ledgerAddressValidation?: AddressValidation
+  account?: Address
   walletClientOptions: Omit<WalletClientConfig<Transport, T>, 'account'>
 }): Promise<LedgerWalletClient<T>> {
   const ledger = await generateLedger(transport)
-  const accounts: Promise<LedgerAccount>[] = []
+  const accounts: LedgerAccount[] = []
   validateIndexes(derivationPathIndexes, 'address index')
   validateIndexes(changeIndexes, 'change index')
 
@@ -37,7 +39,7 @@ export async function ledgerToWalletClient<T extends Chain | undefined = undefin
   for (const changeIndex of changeIndexes) {
     for (const addressIndex of derivationPathIndexes) {
       accounts.push(
-        ledgerToAccount({
+        await ledgerToAccount({
           ledger,
           derivationPathIndex: addressIndex,
           baseDerivationPath: `${purpose}/${coinType}/${accountIndex}/${changeIndex}`,
@@ -46,14 +48,29 @@ export async function ledgerToWalletClient<T extends Chain | undefined = undefin
       )
     }
   }
+  let ledgerAccount: LedgerAccount | undefined
+  if (account) {
+    ledgerAccount = accounts.find((x) => x.address.toLowerCase() === account.toLowerCase())
+    if (!ledgerAccount) {
+      throw new Error(
+        'The given `account` doesnt match any of the addresses retrieved by your ledger and the given derivation path(s)'
+      )
+    }
+  } else {
+    // NOTE: defaults to the first ledger account
+    ledgerAccount = accounts[0]
+  }
+
   const walletClient = createWalletClient({
     ...walletClientOptions,
-    account: await accounts[0],
+    account: ledgerAccount,
   })
-  walletClient.getAddresses = () =>
-    Promise.all(accounts).then((xs) => xs.map((account) => account.address))
+  walletClient.getAddresses = async () => accounts.map((account) => account.address)
 
-  return walletClient
+  return {
+    ...walletClient,
+    accounts,
+  }
 }
 
 function validateIndexes(indexes: number[], label: string = 'address index') {

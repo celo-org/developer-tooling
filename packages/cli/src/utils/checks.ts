@@ -1,23 +1,34 @@
-import { accountsABI, goldTokenABI, multiSigABI, stableTokenABI } from '@celo/abis-12'
-import { bufferToHex, eqAddress, NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
+import { accountsABI, goldTokenABI, multiSigABI } from '@celo/abis-12'
+import { bufferToHex, ensureLeading0x, NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
 import { Address } from '@celo/connect'
-import { StableToken } from '@celo/contractkit'
 import { HotfixRecord, ProposalStage } from '@celo/contractkit/lib/wrappers/Governance'
 import BigNumber from 'bignumber.js'
 import chalk from 'chalk'
 import { fetch } from 'cross-fetch'
-import { erc20Abi, formatEther, PublicClient } from 'viem'
+import {
+  erc20Abi,
+  formatEther,
+  formatUnits,
+  getAddress,
+  isAddressEqual,
+  PublicClient,
+  WalletClient,
+} from 'viem'
 import { BaseCommand } from '../base'
 import { signerToAccount } from '../packages-to-be/account'
 import { resolveAddress } from '../packages-to-be/address-resolver'
 import {
   AccountsContract,
+  FeeCurrencyDirectory,
   getAccountsContract,
+  getFeeCurrencyDirectoryContract,
   getGovernanceContract,
   getLockedGoldContract,
   getValidatorsContract,
   GovernanceContract,
   LockedGoldContract,
+  StableToken,
+  StableTokens,
   ValidatorsContract,
 } from '../packages-to-be/contracts'
 import {
@@ -35,7 +46,6 @@ import {
   meetsValidatorGroupBalanceRequirements,
 } from '../packages-to-be/validators'
 import { getCurrentTimestamp, printValueMapRecursive } from './cli'
-import { getStableTokenContractName } from './helpers'
 export interface CommandCheck {
   name: string
   errorMessage?: string
@@ -59,7 +69,7 @@ const negate = (x: Promise<boolean>) => x.then((y) => !y)
 type Resolve<A> = A extends Promise<infer T> ? T : A
 
 export function newCheckBuilder(command: BaseCommand, signer?: Address) {
-  return new CheckBuilder(command, signer as StrongAddress)
+  return new CheckBuilder(command, signer ? ensureLeading0x(signer) : undefined)
 }
 
 class CheckBuilder {
@@ -71,7 +81,13 @@ class CheckBuilder {
   private async getClient(): Promise<PublicClient> {
     // In this case we're not using any Celo-specific client features, so it can be
     // safely casted to PublicClient
-    return this.command.getPublicClient() as unknown as PublicClient
+    return this.command.getPublicClient() as Promise<PublicClient>
+  }
+
+  private async getWalletClient(): Promise<WalletClient> {
+    // In this case we're not using any Celo-specific client features, so it can be
+    // safely casted to WalletClient
+    return this.command.getWalletClient() as Promise<WalletClient>
   }
 
   private withSignerToAccount<A>(
@@ -106,7 +122,9 @@ class CheckBuilder {
     ) => A
   ): () => Promise<Resolve<A>> {
     return async () => {
-      const validatorsContract = await getValidatorsContract(await this.getClient())
+      const validatorsContract = (await getValidatorsContract(
+        await this.getClient()
+      )) as ValidatorsContract<PublicClient>
 
       if (this.signer) {
         try {
@@ -136,8 +154,12 @@ class CheckBuilder {
     ) => A
   ): () => Promise<Resolve<A>> {
     return async () => {
-      const lockedCeloContract = await getLockedGoldContract(await this.getClient())
-      const validatorsContract = await getValidatorsContract(await this.getClient())
+      const lockedCeloContract = (await getLockedGoldContract(
+        await this.getClient()
+      )) as LockedGoldContract<PublicClient>
+      const validatorsContract = (await getValidatorsContract(
+        await this.getClient()
+      )) as ValidatorsContract<PublicClient>
 
       if (this.signer) {
         try {
@@ -153,7 +175,9 @@ class CheckBuilder {
 
   private withAccounts<A>(f: (accounts: AccountsContract) => A): () => Promise<Resolve<A>> {
     return async () => {
-      const accountsContract = await getAccountsContract(await this.getClient())
+      const accountsContract = (await getAccountsContract(
+        await this.getClient()
+      )) as AccountsContract<PublicClient>
 
       return f(accountsContract) as Resolve<A>
     }
@@ -161,9 +185,23 @@ class CheckBuilder {
 
   private withGovernance<A>(f: (governance: GovernanceContract) => A): () => Promise<Resolve<A>> {
     return async () => {
-      const governanceContract = await getGovernanceContract(await this.getClient())
+      const governanceContract = (await getGovernanceContract(
+        await this.getClient()
+      )) as GovernanceContract<PublicClient>
 
       return f(governanceContract) as Resolve<A>
+    }
+  }
+
+  private withFeeCurrencyDirectory<A>(
+    f: (feeCurrencyDirectory: FeeCurrencyDirectory) => A
+  ): () => Promise<Resolve<A>> {
+    return async () => {
+      const feeCurrencyDirectoryContract = (await getFeeCurrencyDirectoryContract(
+        await this.getClient()
+      )) as FeeCurrencyDirectory<PublicClient>
+
+      return f(feeCurrencyDirectoryContract) as Resolve<A>
     }
   }
 
@@ -202,11 +240,25 @@ class CheckBuilder {
     return this
   }
 
+  isValidWalletSigner = (account: Address) =>
+    this.addCheck(`${account} can sign txs`, async () => {
+      const address = getAddress(account)
+      const wallet = await this.getWalletClient()
+      const addresses = await wallet.getAddresses()
+      const validSigner = Boolean(addresses.find((x) => isAddressEqual(address, x)))
+
+      if (validSigner && !isAddressEqual(wallet.account?.address!, address)) {
+        wallet.account!.address = address
+      }
+
+      return validSigner
+    })
+
   isApprover = (account: Address) =>
     this.addCheck(
       `${account} is approver address`,
       this.withGovernance(async (governance) =>
-        eqAddress(await governance.read.approver(), account)
+        isAddressEqual(await governance.read.approver(), ensureLeading0x(account))
       )
     )
 
@@ -214,7 +266,7 @@ class CheckBuilder {
     this.addCheck(
       `${account} is security council address`,
       this.withGovernance(async (governance) => {
-        return eqAddress(await governance.read.securityCouncil(), account)
+        return isAddressEqual(await governance.read.securityCouncil(), ensureLeading0x(account))
       })
     )
 
@@ -334,7 +386,7 @@ class CheckBuilder {
     this.addCheck(
       `${account} is Validator`,
       this.withValidators((validators, _, _account) =>
-        validators.read.isValidator([(account ?? _account) as StrongAddress])
+        validators.read.isValidator([ensureLeading0x(account ?? _account)])
       )
     )
 
@@ -342,7 +394,7 @@ class CheckBuilder {
     this.addCheck(
       `${account} is ValidatorGroup`,
       this.withValidators((validators) =>
-        validators.read.isValidatorGroup([account as StrongAddress])
+        validators.read.isValidatorGroup([ensureLeading0x(account)])
       )
     )
 
@@ -392,7 +444,7 @@ class CheckBuilder {
   isNotAccount = (address: Address) =>
     this.addCheck(
       `${address} is not a registered Account`,
-      this.withAccounts((accounts) => negate(accounts.read.isAccount([address as StrongAddress])))
+      this.withAccounts((accounts) => negate(accounts.read.isAccount([ensureLeading0x(address)])))
     )
 
   isSignerOrAccount = () =>
@@ -414,7 +466,7 @@ class CheckBuilder {
         try {
           const address = await accountsContract.read.voteSignerToAccount([this.signer!])
 
-          return !eqAddress(address, NULL_ADDRESS)
+          return !isAddressEqual(address, NULL_ADDRESS)
         } catch (_) {}
 
         return false
@@ -425,7 +477,7 @@ class CheckBuilder {
     this.addCheck(
       `${address} is a registered Account`,
       this.withAccounts(async (accounts) => {
-        return accounts.read.isAccount([address as StrongAddress])
+        return accounts.read.isAccount([ensureLeading0x(address)])
       }),
       `${address} is not registered as an account. Try running account:register`
     )
@@ -434,13 +486,14 @@ class CheckBuilder {
     this.addCheck(
       `${address} is not currently voting on a governance proposal`,
       this.withGovernance((governance) =>
-        negate(governance.read.isVoting([address as StrongAddress]))
+        negate(governance.read.isVoting([ensureLeading0x(address)]))
       ),
       `${address} is currently voting in governance. Revoke your upvotes or wait for the referendum to end.`
     )
 
-  hasEnoughCelo = (account: Address, value: BigNumber) => {
-    const valueInEth = formatEther(bigNumberToBigInt(value))
+  hasEnoughCelo = (account: Address, _value: BigNumber | bigint) => {
+    const value = typeof _value === 'bigint' ? _value : bigNumberToBigInt(_value)
+    const valueInEth = formatEther(value)
 
     return this.addCheck(`Account has at least ${valueInEth} CELO`, async () => {
       const balance = await (
@@ -449,48 +502,45 @@ class CheckBuilder {
         address: await resolveAddress(await this.getClient(), 'GoldToken'),
         abi: goldTokenABI,
         functionName: 'balanceOf',
-        args: [account as StrongAddress],
+        args: [ensureLeading0x(account)],
       })
 
-      return bigintToBigNumber(balance).gte(value)
+      return balance >= value
     })
   }
 
-  hasEnoughStable = (account: Address, value: BigNumber, stable: StableToken) => {
-    const valueInEth = formatEther(bigNumberToBigInt(value))
+  hasEnoughStable = (account: Address, _value: BigNumber | bigint, stable: StableToken) => {
+    const value = typeof _value === 'bigint' ? _value : bigNumberToBigInt(_value)
+    const valueInEth = formatEther(value)
 
     return this.addCheck(`Account has at least ${valueInEth} ${stable}`, async () => {
-      const stableTokenAddress = await resolveAddress(
-        await this.getClient(),
-        getStableTokenContractName(stable)
-      )
-      const balance = await (
-        await this.getClient()
-      ).readContract({
-        address: stableTokenAddress,
-        abi: stableTokenABI,
-        functionName: 'balanceOf',
-        args: [account as StrongAddress],
-      })
+      const stableTokenContract = await StableTokens[stable](await this.getClient())
+      const balance = await stableTokenContract.read.balanceOf([ensureLeading0x(account)])
 
-      return bigintToBigNumber(balance).gte(value)
+      return balance >= value
     })
   }
 
-  hasEnoughErc20 = (account: Address, value: BigNumber, erc20: Address) => {
-    const valueInEth = formatEther(bigNumberToBigInt(value))
+  hasEnoughErc20 = (
+    account: Address,
+    _value: BigNumber | bigint,
+    erc20: Address,
+    decimals = 18
+  ) => {
+    const value = typeof _value === 'bigint' ? _value : bigNumberToBigInt(_value)
+    const valueInEth = formatUnits(value, decimals)
 
     return this.addCheck(`Account has at least ${valueInEth} erc20 token`, async () => {
       const balance = await (
         await this.getClient()
       ).readContract({
-        address: erc20 as StrongAddress,
-        abi: erc20Abi, // this is the viem's erc20 abi, check it
+        address: ensureLeading0x(erc20),
+        abi: erc20Abi,
         functionName: 'balanceOf',
-        args: [account as StrongAddress],
+        args: [ensureLeading0x(account)],
       })
 
-      return bigintToBigNumber(balance).gte(value)
+      return balance >= value
     })
   }
 
@@ -508,7 +558,7 @@ class CheckBuilder {
       this.withGovernance(
         async (governance) =>
           !bigintToBigNumber(
-            await governance.read.refundedDeposits([account as StrongAddress])
+            await governance.read.refundedDeposits([ensureLeading0x(account)])
           ).isZero()
       )
     )
@@ -556,7 +606,7 @@ class CheckBuilder {
       `Account isn't a member of a validator group`,
       this.withSignerToAccount(async (account) => {
         const { affiliation } = await getValidator(await this.getClient(), account)
-        if (!affiliation || eqAddress(affiliation, NULL_ADDRESS)) {
+        if (!affiliation || isAddressEqual(affiliation, NULL_ADDRESS)) {
           return true
         }
 
@@ -659,7 +709,21 @@ class CheckBuilder {
     })
   }
 
-  async runChecks() {
+  usesWhitelistedFeeCurrency = (feeCurrency?: StrongAddress) => {
+    return this.addConditionalCheck(
+      'The provided feeCurrency is whitelisted',
+      Boolean(feeCurrency),
+      this.withFeeCurrencyDirectory(async (feeCurrencyDirectory) => {
+        const whitelist = await feeCurrencyDirectory.read.getCurrencies()
+        return whitelist
+          .map(_formatAddressForCompare)
+          .includes(_formatAddressForCompare(feeCurrency!))
+      }),
+      `${feeCurrency!} is not a valid fee currency.`
+    )
+  }
+
+  async runChecks({ failFast = false }: { failFast?: boolean } = {}) {
     console.log(`Running Checks:`)
     let allPassed = true
     for (const aCheck of this.checks) {
@@ -669,6 +733,9 @@ class CheckBuilder {
       const msg = !passed && aCheck.errorMessage ? aCheck.errorMessage : ''
       console.log(color(`   ${status︎Str}  ${aCheck.name} ${msg}`))
       allPassed = allPassed && passed
+      if (!passed && failFast) {
+        break
+      }
     }
 
     if (!allPassed) {
@@ -684,7 +751,7 @@ class CheckBuilder {
   // SANCTIONED_ADDRESSES is so well typed that if you call includes with a string it gives a type error.
   // same if you make it a set or use indexOf so concat it with an empty string to give type without needing to ts-ignore
   private readonly SANCTIONED_SET = {
-    data: new Set([''].concat()),
+    data: new Set<StrongAddress>(),
     wasRefreshed: false,
   }
 
@@ -692,6 +759,9 @@ class CheckBuilder {
     const { COMPLIANT_ERROR_RESPONSE, OFAC_SANCTIONS_LIST_URL, SANCTIONED_ADDRESSES } =
       await import('@celo/compliance')
     this.COMPLIANT_ERROR_RESPONSE = COMPLIANT_ERROR_RESPONSE
+
+    const lowercasedAddresses = SANCTIONED_ADDRESSES.map(_formatAddressForCompare)
+
     // Would like to avoid calling this EVERY run. but at least calling
     // twice in a row (such as when checking from and to addresses) should be cached
     // using boolean because either it's been refreshed or this is the first run of the invocation. its short lived
@@ -700,19 +770,21 @@ class CheckBuilder {
         const result = await fetch(OFAC_SANCTIONS_LIST_URL)
         const data = await result.json()
         if (Array.isArray(data)) {
-          this.SANCTIONED_SET.data = new Set(data)
+          this.SANCTIONED_SET.data = new Set(data.map(_formatAddressForCompare))
           this.SANCTIONED_SET.wasRefreshed = true
         } else {
-          this.SANCTIONED_SET.data = new Set([''].concat(SANCTIONED_ADDRESSES))
+          this.SANCTIONED_SET.data = new Set(lowercasedAddresses)
         }
       } catch (e) {
         ;(this.SANCTIONED_SET.data =
           this.SANCTIONED_SET.data.size === 0
-            ? new Set([''].concat(SANCTIONED_ADDRESSES))
+            ? new Set(lowercasedAddresses)
             : this.SANCTIONED_SET.data),
           console.error('Error fetching OFAC sanctions list', e)
       }
     }
-    return this.SANCTIONED_SET.data.has(address)
+    return this.SANCTIONED_SET.data.has(_formatAddressForCompare(address))
   }
 }
+
+const _formatAddressForCompare = (str: string) => ensureLeading0x(str.toLowerCase())

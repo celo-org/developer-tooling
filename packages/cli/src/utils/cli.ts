@@ -16,6 +16,9 @@ import { formatEther } from 'ethers/lib/utils'
 import humanizeDuration from 'humanize-duration'
 import { convertEthersToCeloTx } from './mento-broker-adaptor'
 
+import { CeloTransactionRequest } from 'viem/celo'
+import { CeloClient, WalletCeloClient } from '../packages-to-be/client'
+
 const CLIError = Errors.CLIError
 
 // TODO: How can we deploy contracts with the Celo provider w/o a CeloTransactionObject?
@@ -54,6 +57,60 @@ export async function displaySafeTx(name: string, safeTxResult: SafeTransactionR
   } catch (e) {
     ux.action.stop(`failed: ${(e as Error).message}`)
 
+    throw e
+  }
+}
+
+export async function displaySendViemContractCall(
+  contractName: string,
+  txData: Parameters<CeloClient['simulateContract']>[0],
+  client: CeloClient,
+  wallet: WalletCeloClient,
+  params: { feeCurrency?: `0x${string}` } = {}
+) {
+  ux.action.start(`Sending contract call: ${contractName}->${txData.functionName}`)
+  try {
+    const { request } = await client.simulateContract(txData)
+    await innerDisplayViemTxHash(
+      txData.functionName,
+      wallet.writeContract({ ...request, ...params }),
+      client
+    )
+  } catch (e) {
+    ux.action.stop(`failed: ${(e as Error).message}`)
+    throw e
+  }
+}
+
+export async function displayViemTx(
+  name: string,
+  request: CeloTransactionRequest,
+  client: CeloClient,
+  wallet: WalletCeloClient
+) {
+  try {
+    await innerDisplayViemTxHash(name, wallet.sendTransaction(request), client)
+  } catch (e) {
+    ux.action.stop(`failed: ${(e as Error).message}`)
+    throw e
+  }
+}
+
+async function innerDisplayViemTxHash(
+  name: string,
+  hash: Promise<`0x${string}`>,
+  client: CeloClient
+) {
+  if (!ux.action.running) {
+    ux.action.start(`Sending Transaction: ${name}`)
+  }
+  try {
+    console.log(chalk`SendTransaction: {red.bold ${name}}`)
+    const { transactionHash } = await client.waitForTransactionReceipt({ hash: await hash })
+    printValueMap({ txHash: transactionHash })
+    ux.action.stop()
+  } catch (e) {
+    ux.action.stop(`failed: ${(e as Error).message}`)
     throw e
   }
 }

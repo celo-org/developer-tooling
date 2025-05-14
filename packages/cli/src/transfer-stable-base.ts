@@ -1,111 +1,127 @@
-import { StableToken } from '@celo/contractkit'
-import { StableTokenWrapper } from '@celo/contractkit/lib/wrappers/StableTokenWrapper'
 import { Flags } from '@oclif/core'
-import BigNumber from 'bignumber.js'
+import { isAddressEqual, PublicClient } from 'viem'
 import { BaseCommand } from './base'
+import {
+  getERC20Contract,
+  getGoldTokenContract,
+  StableToken,
+  StableTokenContract,
+  StableTokenContractGetter,
+  StableTokens,
+} from './packages-to-be/contracts'
+import { getGasPriceOnCelo } from './packages-to-be/utils'
 import { newCheckBuilder } from './utils/checks'
-import { displaySendTx, failWith } from './utils/cli'
+import { displaySendViemContractCall, failWith } from './utils/cli'
 import { CustomFlags } from './utils/command'
+import { enumEntriesDupWithLowercase } from './utils/helpers'
 
-const ERC20_MOCK_ABI = [
-  {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-    ],
-    name: 'balanceOf',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-] as const
-
+const stableTokenOptions = enumEntriesDupWithLowercase(Object.entries(StableTokens))
 export abstract class TransferStableBase extends BaseCommand {
   static flags = {
     ...BaseCommand.flags,
     from: CustomFlags.address({ required: true, description: 'Address of the sender' }),
     to: CustomFlags.address({ required: true, description: 'Address of the receiver' }),
-    value: Flags.string({ required: true, description: 'Amount to transfer (in wei)' }),
+    value: CustomFlags.bigint({ required: true, description: 'Amount to transfer (in wei)' }),
     comment: Flags.string({ description: 'Transfer comment' }),
+
+    // NOTE: adding the stableToken here as hidden to be used in TransferStable
+    // solves lots of typing headaches related to oclif and
+    // `this.parse(TransferStableBase)` throwing NonExistentFlag --stableToken
+    stableToken: Flags.option({
+      options: Object.keys(stableTokenOptions) as StableToken[],
+      description: 'Name of the stable to be transferred',
+      hidden: true,
+    })(),
+  } as const
+
+  protected _stableCurrencyContract: StableTokenContractGetter | null = null
+
+  async init() {
+    // noop - skips ContractKit initialization
   }
 
-  protected _stableCurrency: StableToken | null = null
-
   async run() {
-    const kit = await this.getKit()
-    const res = await this.parse()
+    const client = await this.getPublicClient()
+    const wallet = await this.getWalletClient()!
+    const res = await this.parse(TransferStableBase)
 
-    const from: string = res.flags.from
-    const to: string = res.flags.to
-    const value = new BigNumber(res.flags.value)
+    if (!wallet) {
+      failWith('--useAKV flag is no longer support on transfer commands')
+    }
 
-    if (!this._stableCurrency) {
+    const from = res.flags.from
+    const to = res.flags.to
+    const value = res.flags.value
+    const feeCurrency = res.flags.gasCurrency
+
+    if (!this._stableCurrencyContract) {
       throw new Error('Stable currency not set')
     }
-    let stableToken: StableTokenWrapper
+    const stableToken = Object.entries(StableTokens).find(
+      ([_, fn]) => fn === this._stableCurrencyContract
+    )![0] as StableToken
+    let stableTokenContract: StableTokenContract
     try {
-      stableToken = await kit.contracts.getStableToken(this._stableCurrency)
+      stableTokenContract = await this._stableCurrencyContract(client as PublicClient)
     } catch {
-      failWith(`The ${this._stableCurrency} token was not deployed yet`)
+      failWith(`The ${stableToken} token was not deployed yet`)
     }
+    const goldTokenContract = await getGoldTokenContract(client as PublicClient)
 
-    // NOTE 1: if --gasCurrency is not set, defaults to eip1559 tx
-    // NOTE 2: if --gasCurrency is set by the user, then
-    //     `kit.connection.defaultFeeCurrency` is set in base.ts via
-    //     `kit.setFeeCurrency()`
-    const baseParams = kit.connection.defaultFeeCurrency
-      ? { feeCurrency: kit.connection.defaultFeeCurrency }
-      : {}
-
-    const tx = res.flags.comment
-      ? stableToken.transferWithComment(to, value.toFixed(), res.flags.comment)
-      : stableToken.transfer(to, value.toFixed())
+    const stableContractData = {
+      abi: stableTokenContract.abi,
+      address: stableTokenContract.address,
+      account: wallet.account,
+      ...(feeCurrency ? { feeCurrency: feeCurrency } : {}),
+      ...(res.flags.comment
+        ? ({
+            functionName: 'transferWithComment',
+            args: [to, value, res.flags.comment as string],
+          } as const)
+        : ({
+            functionName: 'transfer',
+            args: [to, value],
+          } as const)),
+    } as const
 
     await newCheckBuilder(this)
-      .hasEnoughStable(from, value, this._stableCurrency)
+      .hasEnoughStable(from, value, stableToken)
       .isNotSanctioned(from)
       .isNotSanctioned(to)
+      .isValidWalletSigner(from)
+      .usesWhitelistedFeeCurrency(feeCurrency)
       .addCheck(
-        `Account can afford to transfer ${this._stableCurrency} with gas paid in ${
-          kit.connection.defaultFeeCurrency || 'CELO'
-        }`,
+        `Account can afford to transfer ${stableToken} with gas paid in ${feeCurrency || 'CELO'}`,
         async () => {
-          const [gas, gasPrice, balanceOfTokenForGas, balanceOfTokenToSend] = await Promise.all([
-            tx.txo.estimateGas(baseParams),
-            kit.connection.gasPrice(kit.connection.defaultFeeCurrency),
-            kit.connection.defaultFeeCurrency
-              ? // @ts-expect-error abi typing is not 100% correct but works
-                new kit.web3.eth.Contract(ERC20_MOCK_ABI, kit.connection.defaultFeeCurrency).methods
-                  .balanceOf(from)
-                  .call()
-                  .then((x: string) => new BigNumber(x))
-              : kit.contracts.getGoldToken().then((celo) => celo.balanceOf(from)),
-            kit.contracts
-              .getStableToken(this._stableCurrency!)
-              .then((token) => token.balanceOf(from)),
-          ])
-          const totalSpentOnGas = new BigNumber(gas).times(gasPrice as string)
-          if (kit.connection.defaultFeeCurrency === stableToken.address) {
-            return balanceOfTokenToSend.gte(value.plus(totalSpentOnGas))
-          }
-          return balanceOfTokenForGas.gte(totalSpentOnGas) && balanceOfTokenToSend.gte(value)
-        },
-        `Cannot afford to transfer ${this._stableCurrency} ${
-          res.flags.gasCurrency ? 'with' + ' ' + res.flags.gasCurrency + ' ' + 'gasCurrency' : ''
-        }; try reducing value slightly or using a different gasCurrency`
-      )
-      .runChecks()
+          const feeInSameStableTokenAsTransfer =
+            feeCurrency && isAddressEqual(feeCurrency, stableTokenContract.address)
 
-    const params = await kit.connection.setFeeMarketGas(baseParams)
-    await displaySendTx(res.flags.comment ? 'transferWithComment' : 'transfer', tx, params)
+          const [gas, gasPrice, balanceOfTokenForGas, balanceOfTokenToSend] = await Promise.all([
+            client.estimateContractGas(stableContractData),
+            getGasPriceOnCelo(client, feeCurrency),
+            (feeCurrency
+              ? feeInSameStableTokenAsTransfer
+                ? stableTokenContract
+                : await getERC20Contract(client as PublicClient, feeCurrency)
+              : goldTokenContract
+            ).read.balanceOf([from]),
+            stableTokenContract.read.balanceOf([from]),
+          ])
+          const totalSpentOnGas = gas * gasPrice
+
+          if (feeInSameStableTokenAsTransfer) {
+            return balanceOfTokenToSend >= value + totalSpentOnGas
+          }
+          return balanceOfTokenForGas >= totalSpentOnGas && balanceOfTokenToSend >= value
+        },
+        `Cannot afford to transfer ${stableToken} ${
+          res.flags.feeCurrency ? 'with' + ' ' + res.flags.feeCurrency + ' ' + 'feeCurrency' : ''
+        }; try reducing value slightly or using a different feeCurrency`
+      )
+      // NOTE: fast fail in case feeCurrency isn't whitelisted or invalid
+      // the gas estimation will fail
+      .runChecks({ failFast: true })
+
+    await displaySendViemContractCall(stableToken, stableContractData, client, wallet)
   }
 }

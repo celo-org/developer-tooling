@@ -1,5 +1,5 @@
 import { accountsABI, lockedGoldABI, validatorsABI } from '@celo/abis-12'
-import { Address, concurrentMap, eqAddress, StrongAddress } from '@celo/base'
+import { Address, concurrentMap, ensureLeading0x, eqAddress, StrongAddress } from '@celo/base'
 import { fromFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
 import { PublicClient } from 'viem'
@@ -9,10 +9,10 @@ import { bigintToBigNumber } from './utils'
 
 export interface Validator {
   name: string
-  address: Address
+  address: StrongAddress
   ecdsaPublicKey: string
   blsPublicKey: string
-  affiliation: string | null
+  affiliation: StrongAddress | null
   score: BigNumber
   signer: Address
 }
@@ -21,7 +21,7 @@ export interface ValidatorGroup {
   address: Address
   members: Address[]
   membersUpdated: number
-  affiliates: Address[]
+  affiliates: StrongAddress[]
   commission: BigNumber
   nextCommission: BigNumber
   nextCommissionBlock: BigNumber
@@ -187,7 +187,7 @@ export const getValidator = async (
 
   return {
     name,
-    address,
+    address: ensureLeading0x(address),
     ecdsaPublicKey: validatorTuple[0],
     blsPublicKey: validatorTuple[1],
     affiliation: validatorTuple[2],

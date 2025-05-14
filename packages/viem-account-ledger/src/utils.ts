@@ -91,55 +91,9 @@ export async function checkForKnownToken(
   }
 }
 
-const transports = new WeakMap()
 export async function generateLedger(transport: TransportNodeHid) {
-  if (!transports.has(transport)) {
-    transports.set(transport, new Mutex())
-  }
-  const mutex = transports.get(transport)
   const ledger = new Eth(transport)
   await assertCompat(ledger)
 
-  // NOTE: this is important because ledger doesnt handle concurrent requests
-  // due to a USB bus lock, so you can't use Promise.all
-  // However consumers may not know this, thus we hide that behind a mutex
-  // making sure there's only 1 concurrent promise at a given time
-  return new Proxy(ledger, {
-    get(target, propertyName, receiver) {
-      const originalProperty = Reflect.get(
-        target,
-        propertyName,
-        receiver
-      ) as Eth[keyof typeof Eth.prototype]
-
-      if (typeof originalProperty !== 'function') {
-        return originalProperty
-      }
-
-      return async (...args: unknown[]) => {
-        const unlock = await mutex.lock()
-        // @ts-expect-error - not sure how to properly type this
-        const result = await originalProperty(...args)
-        await unlock()
-        return result
-      }
-    },
-  })
-}
-
-export class Mutex {
-  private current: Promise<unknown> = Promise.resolve()
-  lock = () => {
-    let _resolve: () => Promise<void>
-    const p = new Promise<void>((resolve) => {
-      _resolve = async () => resolve()
-    })
-    // Caller gets a promise that resolves when the current outstanding
-    // lock resolves
-    const rv = this.current.then(() => _resolve)
-    // Don't allow the next request until the new promise is done
-    this.current = p
-    // Return the new promise
-    return rv
-  }
+  return ledger
 }
