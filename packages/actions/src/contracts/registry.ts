@@ -1,17 +1,17 @@
 import { registryABI } from '@celo/abis'
-import { NULL_ADDRESS, StrongAddress } from '@celo/base'
-import { PublicClient, WalletClient, publicActions } from 'viem'
-import { CeloClient, WalletCeloClient } from './client'
-import { ContractName } from './contract-name'
+import { NULL_ADDRESS } from '@celo/base'
+import { Address, PublicClient, WalletClient, publicActions } from 'viem'
+import { CeloClient, WalletCeloClient } from '../setup/client'
+import { ContractName } from '../types/contract-name'
 
 export const REGISTRY_CONTRACT_ADDRESS = '0x000000000000000000000000000000000000ce10'
 
-const cache: Record<string, StrongAddress> = {}
+const cache: Record<string, Address> = {}
 
 export const resolveAddress = async (
   client: PublicClient | CeloClient | WalletClient | WalletCeloClient,
   contractName: ContractName
-): Promise<StrongAddress> => {
+): Promise<Address> => {
   if (cache[contractName]) {
     return cache[contractName]
   }

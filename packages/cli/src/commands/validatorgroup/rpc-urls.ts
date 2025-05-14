@@ -1,3 +1,5 @@
+import { getAccountsContract } from '@celo/actions/accounts-contract'
+import { getEpochManagerContract } from '@celo/actions/epoch-manager-contract'
 import { concurrentMap, StrongAddress } from '@celo/base'
 import { ClaimTypes, IdentityMetadataWrapper } from '@celo/metadata-claims'
 import { AccountMetadataSignerGetters } from '@celo/metadata-claims/lib/types'
@@ -5,7 +7,6 @@ import { Flags, ux } from '@oclif/core'
 import { PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
 import { getMetadataURLs, getNames } from '../../packages-to-be/account'
-import { getAccountsContract, getEpochManagerContract } from '../../packages-to-be/contracts'
 import {
   getRegisteredValidatorsAddresses,
   getValidatorsGroup,

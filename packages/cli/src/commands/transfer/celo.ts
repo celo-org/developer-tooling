@@ -1,9 +1,10 @@
+import { getGasPriceOnCelo } from '@celo/actions'
+import { getCeloERC20Contract } from '@celo/actions/celo-contract'
+import { getERC20Contract } from '@celo/actions/erc20-contract'
 import { Flags } from '@oclif/core'
 import { PublicClient } from 'viem'
 import { CeloTransactionRequest } from 'viem/celo'
 import { BaseCommand } from '../../base'
-import { getERC20Contract, getGoldTokenContract } from '../../packages-to-be/contracts'
-import { getGasPriceOnCelo } from '../../packages-to-be/utils'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendViemContractCall, displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
@@ -40,7 +41,7 @@ export default class TransferCelo extends BaseCommand {
 
     const params = feeCurrency ? { feeCurrency } : {}
 
-    const goldTokenContract = await getGoldTokenContract(client as PublicClient)
+    const goldTokenContract = await getCeloERC20Contract(client as PublicClient)
     const transferWithCommentContractData = {
       address: goldTokenContract.address,
       abi: goldTokenContract.abi,

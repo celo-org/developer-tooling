@@ -1,14 +1,65 @@
 {
   "name": "@celo/actions",
   "version": "0.0.0",
-  "description": "",
+  "description": "Celo actions for use with Viem. Easily interact with Celo core contracts",
   "main": "dist/cjs/index.js",
   "module": "dist/mjs/index.js",
   "types": "dist/mjs/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/mjs/index.js",
-      "require": "./dist/cjs/index.js"
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/cjs/index.d.ts"
+    },
+     "./accounts-contract":{
+      "import": "./dist/mjs/contracts/accounts.js",
+      "require": "./dist/cjs/contracts/accounts.js",
+      "types": "./dist/cjs/contracts/accounts.d.ts"
+    },
+     "./celo-contract":{
+      "import": "./dist/mjs/contracts/celo-erc20.js",
+      "require": "./dist/cjs/contracts/celo-erc20.js",
+      "types": "./dist/cjs/contracts/celo-erc20.d.ts"
+    },
+     "./epoch-manager-contract":{
+      "import": "./dist/mjs/contracts/epoch-manager.js",
+      "require": "./dist/cjs/contracts/epoch-manager.js",
+      "types": "./dist/cjs/contracts/epoch-manager.d.ts"
+    },
+     "./erc20-contract":{
+      "import": "./dist/mjs/contracts/erc20.js",
+      "require": "./dist/cjs/contracts/erc20.js",
+      "types": "./dist/cjs/contracts/erc20.d.ts"
+    },
+     "./governance-contract":{
+      "import": "./dist/mjs/contracts/governance.js",
+      "require": "./dist/cjs/contracts/governance.js",
+      "types": "./dist/cjs/contracts/governance.d.ts"
+    },
+      "./feecurrency-directory-contract":{
+      "import": "./dist/mjs/contracts/feecurrency-directory.js",
+      "require": "./dist/cjs/contracts/feecurrency-directory.js",
+      "types": "./dist/cjs/contracts/feecurrency-directory.d.ts"
+    },
+      "./locked-celo-contract":{
+      "import": "./dist/mjs/contracts/locked-celo.js",
+      "require": "./dist/cjs/contracts/locked-celo.js",
+      "types": "./dist/cjs/contracts/locked-celo.d.ts"
+    },
+      "./validators-contract":{
+      "import": "./dist/mjs/contracts/validators.js",
+      "require": "./dist/cjs/contracts/validators.js",
+      "types": "./dist/cjs/contracts/validators.d.ts"
+    },
+      "./stake":{
+      "import": "./dist/mjs/multicontract-interactions/stake/index.js",
+      "require": "./dist/cjs/multicontract-interactions/stake/index.js",
+      "types": "./dist/cjs/multicontract-interactions/stake/index.d.ts"
+    },
+      "./setup":{
+      "import": "./dist/mjs/setup/index.js",
+      "require": "./dist/cjs/setup/index.js",
+      "types": "./dist/cjs/setup/index.d.ts"
     }
   },
   "author": "cLabs",
@@ -39,6 +90,9 @@
     "test:changes": "yarn run vitest --run --changed",
     "lint": "yarn --top-level run eslint -c .eslintrc.cjs ",
     "prepublishOnly": "yarn clean && yarn build"
+  },
+  "dependencies": {
+    "@celo/abis": "^12.0.3"
   },
   "devDependencies": {
     "@celo/typescript": "workspace:^",

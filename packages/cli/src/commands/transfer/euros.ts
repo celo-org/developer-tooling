@@ -1,4 +1,4 @@
-import { getStableTokenEurContract } from '../../packages-to-be/contracts'
+import { getStableTokenEurContract } from '../../packages-to-be/stable-tokens'
 import { TransferStableBase } from '../../transfer-stable-base'
 
 export default class TransferEuros extends TransferStableBase {

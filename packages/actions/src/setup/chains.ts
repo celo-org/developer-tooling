@@ -10,14 +10,14 @@ export const celoBaklava = /*#__PURE__*/ defineChain({
   },
   rpcUrls: {
     default: {
-      http: ['https://baklava-forno.celo-testnet.org'],
+      http: ['https://baklava-forno.celo-testnet.org' as string],
     },
   },
   blockExplorers: {
     default: {
-      name: 'Celo Baklava Explorer',
-      url: 'https://celo-baklava.blockscout.com',
-      apiUrl: 'https://celo-baklava.blockscout.com/api',
+      name: 'Celo Baklava Explorer' as string,
+      url: 'https://celo-baklava.blockscout.com' as string,
+      apiUrl: 'https://celo-baklava.blockscout.com/api' as string,
     },
   },
   contracts: {

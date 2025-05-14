@@ -1,7 +1,8 @@
+import { getGasPriceOnCelo } from '@celo/actions/'
+import { getCeloERC20Contract } from '@celo/actions/celo-contract'
+import { getERC20Contract } from '@celo/actions/erc20-contract'
 import { erc20Abi, PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
-import { getERC20Contract, getGoldTokenContract } from '../../packages-to-be/contracts'
-import { getGasPriceOnCelo } from '../../packages-to-be/utils'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendViemContractCall, failWith } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
@@ -86,7 +87,7 @@ export default class TransferErc20 extends BaseCommand {
             getGasPriceOnCelo(client, feeCurrency),
             (feeCurrency
               ? await getERC20Contract(client as PublicClient, feeCurrency)
-              : await getGoldTokenContract(client as PublicClient)
+              : await getCeloERC20Contract(client as PublicClient)
             ).read.balanceOf([from]),
           ])
 

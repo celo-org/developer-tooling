@@ -1,8 +1,8 @@
 import { governanceABI } from '@celo/abis-12'
+import { resolveAddress } from '@celo/actions'
 import { Address, bufferToHex, zip } from '@celo/base'
 import BigNumber from 'bignumber.js'
 import { PublicClient } from 'viem'
-import { resolveAddress } from './address-resolver'
 import { bigintToBigNumber } from './utils'
 
 export interface ProposalMetadata {

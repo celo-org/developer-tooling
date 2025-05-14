@@ -1,5 +1,5 @@
+import { CeloClient } from '@celo/actions/setup'
 import { viem_testWithAnvil } from '@celo/dev-utils/lib/viem/anvil-test'
-import { CeloClient } from '../packages-to-be/client'
 import { enumEntriesDupWithLowercase, nodeIsSynced } from './helpers'
 
 viem_testWithAnvil('nodeIsSynced', (client) => {

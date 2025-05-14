@@ -1,4 +1,17 @@
 import { accountsABI, goldTokenABI, multiSigABI } from '@celo/abis-12'
+import { resolveAddress } from '@celo/actions'
+import {
+  AccountsContract,
+  getAccountsContract,
+  signerToAccount,
+} from '@celo/actions/accounts-contract'
+import {
+  FeeCurrencyDirectory,
+  getFeeCurrencyDirectoryContract,
+} from '@celo/actions/feecurrency-directory-contract'
+import { getGovernanceContract, GovernanceContract } from '@celo/actions/governance-contract'
+import { getLockedGoldContract, LockedGoldContract } from '@celo/actions/locked-celo-contract'
+import { getValidatorsContract, ValidatorsContract } from '@celo/actions/validators-contract'
 import { bufferToHex, ensureLeading0x, NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
 import { Address } from '@celo/connect'
 import { HotfixRecord, ProposalStage } from '@celo/contractkit/lib/wrappers/Governance'
@@ -15,27 +28,12 @@ import {
   WalletClient,
 } from 'viem'
 import { BaseCommand } from '../base'
-import { signerToAccount } from '../packages-to-be/account'
-import { resolveAddress } from '../packages-to-be/address-resolver'
-import {
-  AccountsContract,
-  FeeCurrencyDirectory,
-  getAccountsContract,
-  getFeeCurrencyDirectoryContract,
-  getGovernanceContract,
-  getLockedGoldContract,
-  getValidatorsContract,
-  GovernanceContract,
-  LockedGoldContract,
-  StableToken,
-  StableTokens,
-  ValidatorsContract,
-} from '../packages-to-be/contracts'
 import {
   getHotfixRecord,
   getProposalSchedule,
   getProposalStage,
 } from '../packages-to-be/governance'
+import { StableToken, StableTokens } from '../packages-to-be/stable-tokens'
 import { bigintToBigNumber, bigNumberToBigInt } from '../packages-to-be/utils'
 import {
   getValidator,
@@ -96,15 +94,7 @@ class CheckBuilder {
     return async () => {
       if (this.signer) {
         try {
-          const account = await (
-            await this.getClient()
-          ).readContract({
-            address: await resolveAddress(await this.getClient(), 'Accounts'),
-            abi: accountsABI,
-            functionName: 'signerToAccount',
-            args: [this.signer],
-          })
-
+          const account = await signerToAccount(await this.getClient(), this.signer)
           return f(account, this) as Resolve<A>
         } catch (_) {}
       }

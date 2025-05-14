@@ -1,3 +1,4 @@
+import { celoBaklava, CeloClient, WalletCeloClient } from '@celo/actions/setup'
 import { ensureLeading0x, StrongAddress } from '@celo/base'
 import { ReadOnlyWallet } from '@celo/connect'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
@@ -15,8 +16,6 @@ import { privateKeyToAccount } from 'viem/accounts'
 import { celo, celoAlfajores } from 'viem/chains'
 import { ipc } from 'viem/node'
 import Web3 from 'web3'
-import { celoBaklava } from './packages-to-be/chains'
-import { CeloClient, WalletCeloClient } from './packages-to-be/client'
 import createRpcWalletClient from './packages-to-be/rpc-client'
 import { failWith } from './utils/cli'
 import { CustomFlags } from './utils/command'
@@ -229,8 +228,8 @@ export abstract class BaseCommand extends Command {
             rpcUrls: {
               default: { http: [nodeUrl] },
             },
-          },
-        }) as any as CeloClient
+          } as unknown as CeloClient['chain'],
+        })
       }
       ux.action.stop()
     }

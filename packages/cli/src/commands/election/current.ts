@@ -1,7 +1,8 @@
 import { Flags, ux } from '@oclif/core'
 
+import { ElectedRpcNode, getElectedRpcNodes } from '@celo/actions/stake'
+import { PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
-import { ElectedRpcNode, getElectedRpcNodes } from '../../packages-to-be/elected'
 
 export const valSetRpcNodeTable: ux.Table.table.Columns<{ address: string }> = {
   address: {},
@@ -34,10 +35,9 @@ export default class ElectionCurrent extends BaseCommand {
   }
 
   async run() {
-    const client = await this.getPublicClient()
+    const client = (await this.getPublicClient()) as PublicClient
     const res = await this.parse(ElectionCurrent)
     ux.action.start('Fetching currently Elected Community Rpc Nodes')
-    // @ts-expect-error - remove when nicos branch is merged
     const validatorList = await getElectedRpcNodes(client, {
       showChanges: res.flags.valset,
     })

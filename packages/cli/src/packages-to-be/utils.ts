@@ -1,7 +1,5 @@
-import { StrongAddress } from '@celo/base'
-import { Hex } from '@celo/connect'
+import { CeloClient } from '@celo/actions/setup'
 import BigNumber from 'bignumber.js'
-import { CeloClient } from './client'
 
 export function bigintToBigNumber(value: bigint) {
   return new BigNumber(value.toString())
@@ -20,17 +18,4 @@ export async function ethNodeIsSyncing(client: CeloClient) {
     method: 'eth_syncing',
     params: [],
   })
-}
-
-export async function getGasPriceOnCelo(client: CeloClient, feeCurrency?: StrongAddress) {
-  const gasPrice = await client.request<{
-    Parameters: [StrongAddress] | []
-    Method: 'eth_gasPrice'
-    ReturnType: Hex
-  }>({
-    method: 'eth_gasPrice',
-    params: feeCurrency ? [feeCurrency] : [],
-  })
-
-  return BigInt(gasPrice)
 }
