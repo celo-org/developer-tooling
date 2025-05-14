@@ -81,7 +81,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/exchange/celo.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.4/packages/cli/src/commands/exchange/celo.ts)_
+_See code: [src/commands/exchange/celo.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.5/packages/cli/src/commands/exchange/celo.ts)_
 
 ## `celocli exchange:dollars`
 
@@ -148,7 +148,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/exchange/dollars.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.4/packages/cli/src/commands/exchange/dollars.ts)_
+_See code: [src/commands/exchange/dollars.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.5/packages/cli/src/commands/exchange/dollars.ts)_
 
 ## `celocli exchange:euros`
 
@@ -215,7 +215,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/exchange/euros.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.4/packages/cli/src/commands/exchange/euros.ts)_
+_See code: [src/commands/exchange/euros.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.5/packages/cli/src/commands/exchange/euros.ts)_
 
 ## `celocli exchange:reals`
 
@@ -282,7 +282,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/exchange/reals.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.4/packages/cli/src/commands/exchange/reals.ts)_
+_See code: [src/commands/exchange/reals.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.5/packages/cli/src/commands/exchange/reals.ts)_
 
 ## `celocli exchange:show`
 
@@ -341,7 +341,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/exchange/show.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.4/packages/cli/src/commands/exchange/show.ts)_
+_See code: [src/commands/exchange/show.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.5/packages/cli/src/commands/exchange/show.ts)_
 
 ## `celocli exchange:stable`
 
@@ -413,4 +413,4 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/exchange/stable.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.4/packages/cli/src/commands/exchange/stable.ts)_
+_See code: [src/commands/exchange/stable.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.5/packages/cli/src/commands/exchange/stable.ts)_

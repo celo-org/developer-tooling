@@ -1,5 +1,22 @@
 # Changelog
 
+## 7.0.0-beta.5
+
+### Major Changes
+
+- [#610](https://github.com/celo-org/developer-tooling/pull/610) [`6ca357b`](https://github.com/celo-org/developer-tooling/commit/6ca357bfbbb1075d73c2b8000e01db70959e08f5) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Remove support for --useAKV for transfer methods
+
+### Patch Changes
+
+- [#615](https://github.com/celo-org/developer-tooling/pull/615) [`2abf861`](https://github.com/celo-org/developer-tooling/commit/2abf8612e48eba9ef88a2bfef252ccdce8605072) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Deprecate the DKG command group
+
+- [#615](https://github.com/celo-org/developer-tooling/pull/615) [`2abf861`](https://github.com/celo-org/developer-tooling/commit/2abf8612e48eba9ef88a2bfef252ccdce8605072) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Deprecate useAKV flag with intent to remove. This was for connecting to AzureKeyVault for storing key to sign trnsactions. We hope to streamline and remove this functionality.
+
+- [#610](https://github.com/celo-org/developer-tooling/pull/610) [`6ca357b`](https://github.com/celo-org/developer-tooling/commit/6ca357bfbbb1075d73c2b8000e01db70959e08f5) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Refactor transfer methods to use viem internally
+
+- Updated dependencies [[`6ca357b`](https://github.com/celo-org/developer-tooling/commit/6ca357bfbbb1075d73c2b8000e01db70959e08f5)]:
+  - @celo/viem-account-ledger@1.2.0-beta.1
+
 ## 7.0.0-beta.4
 
 ### Patch Changes
