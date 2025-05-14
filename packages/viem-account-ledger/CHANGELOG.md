@@ -1,5 +1,11 @@
 # @celo/viem-account-ledger
 
+## 1.2.0-beta.1
+
+### Patch Changes
+
+- [#610](https://github.com/celo-org/developer-tooling/pull/610) [`6ca357b`](https://github.com/celo-org/developer-tooling/commit/6ca357bfbbb1075d73c2b8000e01db70959e08f5) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Remove unintuitive mutex impl which resulted in `transport` error in the hw-app-eth
+
 ## 1.2.0-beta.0
 
 ### Minor Changes
