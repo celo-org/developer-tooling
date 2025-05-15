@@ -9,7 +9,11 @@ import {
   FeeCurrencyDirectory,
   getFeeCurrencyDirectoryContract,
 } from '@celo/actions/feecurrency-directory-contract'
-import { getGovernanceContract, GovernanceContract } from '@celo/actions/governance-contract'
+import {
+  getGovernanceContract,
+  getProposalStage,
+  GovernanceContract,
+} from '@celo/actions/governance-contract'
 import { getLockedGoldContract, LockedGoldContract } from '@celo/actions/locked-celo-contract'
 import { getValidatorsContract, ValidatorsContract } from '@celo/actions/validators-contract'
 import { bufferToHex, ensureLeading0x, NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
@@ -28,11 +32,7 @@ import {
   WalletClient,
 } from 'viem'
 import { BaseCommand } from '../base'
-import {
-  getHotfixRecord,
-  getProposalSchedule,
-  getProposalStage,
-} from '../packages-to-be/governance'
+import { getHotfixRecord, getProposalSchedule } from '../packages-to-be/governance'
 import { StableToken, StableTokens } from '../packages-to-be/stable-tokens'
 import { bigintToBigNumber, bigNumberToBigInt } from '../packages-to-be/utils'
 import {
