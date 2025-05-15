@@ -36,7 +36,7 @@
     "@celo/typescript": "workspace:^",
     "@types/debug": "^4.1.12",
     "debug": "^4.3.5",
-    "viem": "~1.5.4",
+    "viem": "^2.23.5",
     "web3": "1.10.4"
   },
   "engines": {

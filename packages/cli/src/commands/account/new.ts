@@ -4,8 +4,6 @@ import {
   normalizeMnemonic,
   validateMnemonic,
 } from '@celo/cryptographic-utils/lib/account'
-import { privateKeyToAddress } from '@celo/utils/lib/address'
-import { toChecksumAddress } from '@ethereumjs/util'
 import { Flags } from '@oclif/core'
 import chalk from 'chalk'
 import * as fs from 'fs-extra'
@@ -157,7 +155,6 @@ export default class NewAccount extends BaseCommand {
       undefined,
       derivationPath
     )
-    const accountAddress = toChecksumAddress(privateKeyToAddress(keys.privateKey))
 
     if (derivationPath === CELO_DERIVATION_PATH_BASE) {
       this.log(
@@ -168,7 +165,7 @@ export default class NewAccount extends BaseCommand {
     }
     const fullDerivationPath = `${derivationPath}/${res.flags.changeIndex}/${res.flags.addressIndex}`
 
-    printValueMap({ mnemonic, derivationPath: fullDerivationPath, accountAddress, ...keys })
+    printValueMap({ mnemonic, derivationPath: fullDerivationPath, ...keys })
 
     this.log(
       chalk.green.bold(
