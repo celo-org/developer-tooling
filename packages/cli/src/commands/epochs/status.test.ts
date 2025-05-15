@@ -1,5 +1,5 @@
 import { epochManagerABI } from '@celo/abis-12'
-import epochManager from '@celo/actions/epoch-manager-contract'
+import * as epochManager from '@celo/actions/epoch-manager-contract'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { ux } from '@oclif/core'
@@ -125,11 +125,12 @@ testWithAnvilL2('epochs:status cmd', (web3) => {
         },
       })
 
-      jest.mock('../../packages-to-be/contracts', () => ({
+      jest.mock('@celo/actions/epoch-manager-contract', () => ({
         getEpochManagerContract: jest.fn(() => mockEpochManager),
       }))
     })
-    afterEach(() => jest.unmock('../../packages-to-be/contracts'))
+    afterEach(() => jest.unmock('@celo/actions/epoch-manager-contract'))
+
     it('handles successful responses from epochManager methods', async () => {
       const consoleMock = jest.spyOn(ux.write, 'stdout')
       jest.spyOn(epochManager, 'getEpochManagerContract').mockResolvedValue(mockEpochManager as any)
