@@ -1,5 +1,4 @@
 {
-  "extends": "@celo/typescript/tsconfig.library.json",
   "compilerOptions": {
     "rootDir": "src",
     "declaration": true,

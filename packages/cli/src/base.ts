@@ -1,4 +1,4 @@
-import { celoBaklava, CeloClient, WalletCeloClient } from '@celo/actions/setup'
+import { celoBaklava, type CeloClient, type WalletCeloClient } from '@celo/actions/setup'
 import { ensureLeading0x, StrongAddress } from '@celo/base'
 import { ReadOnlyWallet } from '@celo/connect'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'

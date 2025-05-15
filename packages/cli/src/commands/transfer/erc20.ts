@@ -1,4 +1,4 @@
-import { getGasPriceOnCelo } from '@celo/actions/'
+import { getGasPriceOnCelo } from '@celo/actions'
 import { getCeloERC20Contract } from '@celo/actions/celo-contract'
 import { getERC20Contract } from '@celo/actions/erc20-contract'
 import { erc20Abi, PublicClient } from 'viem'

@@ -11,52 +11,52 @@
       "require": "./dist/cjs/index.js",
       "types": "./dist/cjs/index.d.ts"
     },
-     "./accounts-contract":{
+    "./accounts-contract": {
       "import": "./dist/mjs/contracts/accounts.js",
       "require": "./dist/cjs/contracts/accounts.js",
       "types": "./dist/cjs/contracts/accounts.d.ts"
     },
-     "./celo-contract":{
+    "./celo-contract": {
       "import": "./dist/mjs/contracts/celo-erc20.js",
       "require": "./dist/cjs/contracts/celo-erc20.js",
       "types": "./dist/cjs/contracts/celo-erc20.d.ts"
     },
-     "./epoch-manager-contract":{
+    "./epoch-manager-contract": {
       "import": "./dist/mjs/contracts/epoch-manager.js",
       "require": "./dist/cjs/contracts/epoch-manager.js",
       "types": "./dist/cjs/contracts/epoch-manager.d.ts"
     },
-     "./erc20-contract":{
+    "./erc20-contract": {
       "import": "./dist/mjs/contracts/erc20.js",
       "require": "./dist/cjs/contracts/erc20.js",
       "types": "./dist/cjs/contracts/erc20.d.ts"
     },
-     "./governance-contract":{
+    "./governance-contract": {
       "import": "./dist/mjs/contracts/governance.js",
       "require": "./dist/cjs/contracts/governance.js",
       "types": "./dist/cjs/contracts/governance.d.ts"
     },
-      "./feecurrency-directory-contract":{
+    "./feecurrency-directory-contract": {
       "import": "./dist/mjs/contracts/feecurrency-directory.js",
       "require": "./dist/cjs/contracts/feecurrency-directory.js",
       "types": "./dist/cjs/contracts/feecurrency-directory.d.ts"
     },
-      "./locked-celo-contract":{
+    "./locked-celo-contract": {
       "import": "./dist/mjs/contracts/locked-celo.js",
       "require": "./dist/cjs/contracts/locked-celo.js",
       "types": "./dist/cjs/contracts/locked-celo.d.ts"
     },
-      "./validators-contract":{
+    "./validators-contract": {
       "import": "./dist/mjs/contracts/validators.js",
       "require": "./dist/cjs/contracts/validators.js",
       "types": "./dist/cjs/contracts/validators.d.ts"
     },
-      "./stake":{
+    "./stake": {
       "import": "./dist/mjs/multicontract-interactions/stake/index.js",
       "require": "./dist/cjs/multicontract-interactions/stake/index.js",
       "types": "./dist/cjs/multicontract-interactions/stake/index.d.ts"
     },
-      "./setup":{
+    "./setup": {
       "import": "./dist/mjs/setup/index.js",
       "require": "./dist/cjs/setup/index.js",
       "types": "./dist/cjs/setup/index.d.ts"
