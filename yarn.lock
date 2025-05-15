@@ -1593,6 +1593,7 @@ __metadata:
   resolution: "@celo/actions@workspace:packages/actions"
   dependencies:
     "@celo/abis": "npm:^12.0.3"
+    "@celo/base": "npm:^7.0.2"
     "@celo/typescript": "workspace:^"
     "@size-limit/preset-small-lib": "npm:^11.2.0"
     "@vitest/coverage-v8": "npm:2.1.9"
@@ -1701,7 +1702,7 @@ __metadata:
     fs-extra: "npm:^8.1.0"
     humanize-duration: "npm:^3.32.1"
     jest: "npm:^29.7.0"
-    oclif: "npm:^4.17.46"
+    oclif: "npm:^4.17.32"
     path: "npm:^0.12.7"
     prompts: "npm:^2.0.1"
     ts-jest: "npm:^29.1.5"
@@ -15902,7 +15903,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"oclif@npm:^4.17.46":
+"oclif@npm:^4.17.32":
   version: 4.17.46
   resolution: "oclif@npm:4.17.46"
   dependencies:
