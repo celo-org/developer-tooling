@@ -23,7 +23,7 @@ export const ensureLeading0x = (input: string): StrongAddress =>
 export const getAddressChunks = (input: string): string[] =>
   trimLeading0x(input).match(/.{1,4}/g) || []
 
-export const isHexString = (input: string) => HEX_REGEX.test(input)
+export const isHexString = (input: string): input is StrongAddress => HEX_REGEX.test(input)
 
 export const hexToBuffer = (input: string) => Buffer.from(trimLeading0x(input), 'hex')
 
