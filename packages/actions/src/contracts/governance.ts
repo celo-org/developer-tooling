@@ -1,4 +1,4 @@
-import { governanceABI } from '@celo/abis-12'
+import { governanceABI } from '@celo/abis'
 import { getContract, GetContractReturnType, PublicClient, WalletClient } from 'viem'
 import { resolveAddress } from './registry'
 

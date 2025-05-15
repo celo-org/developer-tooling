@@ -1,4 +1,4 @@
-import { lockedGoldABI } from '@celo/abis-12'
+import { lockedGoldABI } from '@celo/abis'
 import { getContract, GetContractReturnType, PublicClient, WalletClient } from 'viem'
 import { resolveAddress } from './registry'
 

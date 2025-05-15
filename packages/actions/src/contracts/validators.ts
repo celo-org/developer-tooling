@@ -1,4 +1,4 @@
-import { validatorsABI } from '@celo/abis-12'
+import { validatorsABI } from '@celo/abis'
 import { getContract, GetContractReturnType, PublicClient, WalletClient } from 'viem'
 import { resolveAddress } from './registry'
 

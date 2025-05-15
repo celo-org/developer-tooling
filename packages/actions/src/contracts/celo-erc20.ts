@@ -1,4 +1,4 @@
-import { goldTokenABI } from '@celo/abis-12'
+import { goldTokenABI } from '@celo/abis'
 import { getContract, GetContractReturnType, PublicClient, WalletClient } from 'viem'
 import { resolveAddress } from './registry'
 
