@@ -69,7 +69,8 @@ export async function displaySendViemContractCall<const abi extends Abi>(
   txData: Optional<WriteContractParameters<abi>, 'chain' | 'account'>,
   client: CeloClient,
   wallet: WalletCeloClient,
-  params: { feeCurrency?: `0x${string}` } = {}
+  params: { feeCurrency?: `0x${string}` } = {},
+  displayEventName?: string | string[]
 ) {
   ux.action.start(`Sending contract call: ${contractName}->${txData.functionName}`)
   try {
@@ -84,7 +85,8 @@ export async function displaySendViemContractCall<const abi extends Abi>(
           account: txData.account || wallet.account,
         },
       }),
-      client
+      client,
+      displayEventName
     )
   } catch (e) {
     ux.action.stop(`failed: ${(e as Error).message}`)
@@ -96,10 +98,11 @@ export async function displayViemTx(
   name: string,
   request: CeloTransactionRequest,
   client: CeloClient,
-  wallet: WalletCeloClient
+  wallet: WalletCeloClient,
+  displayEventName?: string | string[]
 ) {
   try {
-    await innerDisplayViemTxHash(name, wallet.sendTransaction(request), client)
+    await innerDisplayViemTxHash(name, wallet.sendTransaction(request), client, displayEventName)
   } catch (e) {
     ux.action.stop(`failed: ${(e as Error).message}`)
     throw e
@@ -109,15 +112,36 @@ export async function displayViemTx(
 async function innerDisplayViemTxHash(
   name: string,
   hash: Promise<`0x${string}`>,
-  client: CeloClient
+  client: CeloClient,
+  displayEventName?: string | string[]
 ) {
   if (!ux.action.running) {
     ux.action.start(`Sending Transaction: ${name}`)
   }
   try {
     console.log(chalk`SendTransaction: {red.bold ${name}}`)
-    const { transactionHash } = await client.waitForTransactionReceipt({ hash: await hash })
+    const { transactionHash, logs } = await client.waitForTransactionReceipt({ hash: await hash })
     printValueMap({ txHash: transactionHash })
+
+    if (displayEventName && logs) {
+      Object.entries(logs)
+        .filter(
+          ([eventName]) =>
+            (typeof displayEventName === 'string' && eventName === displayEventName) ||
+            displayEventName.includes(eventName)
+        )
+        .forEach(([eventName, log]) => {
+          const eventLog = {
+            __length__: log.topics.length,
+            // TODO: what do we even print here
+            ...log,
+          }
+          const { params } = parseDecodedParams(eventLog)
+          console.log(chalk.magenta.bold(`${eventName}:`))
+          printValueMap(params, chalk.magenta)
+        })
+    }
+
     ux.action.stop()
   } catch (e) {
     ux.action.stop(`failed: ${(e as Error).message}`)
