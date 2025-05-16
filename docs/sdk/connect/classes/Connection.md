@@ -1,4 +1,4 @@
-[**@celo/connect v7.0.0-beta.0**](../README.md)
+[**@celo/connect v7.0.0-beta.1**](../README.md)
 
 ***
 
