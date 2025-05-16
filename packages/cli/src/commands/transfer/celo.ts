@@ -48,7 +48,7 @@ export default class TransferCelo extends BaseCommand {
       functionName: 'transferWithComment',
       args: [to, value, res.flags.comment!],
       ...params,
-    } as Parameters<typeof client.estimateContractGas>[0]
+    } as const
 
     const transferParams = { to, value: value, ...params } as CeloTransactionRequest
 
@@ -89,7 +89,7 @@ export default class TransferCelo extends BaseCommand {
       .runChecks({ failFast: true })
 
     await (res.flags.comment
-      ? displaySendViemContractCall(
+      ? displaySendViemContractCall<typeof goldTokenContract.abi>(
           'CeloToken',
           transferWithCommentContractData,
           client,

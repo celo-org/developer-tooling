@@ -1,6 +1,7 @@
 import { BaseCommand } from '../../base'
+import { getEpochManagerContract } from '../../packages-to-be/contracts'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displaySendViemContractCall } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class SendValidatorPayment extends BaseCommand {
@@ -26,15 +27,26 @@ export default class SendValidatorPayment extends BaseCommand {
   static aliases: string[] = ['validator:send-payment']
 
   async run() {
-    const kit = await this.getKit()
+    const client = await this.getPublicClient()
+    const wallet = await this.getWalletClient()
     const res = await this.parse(SendValidatorPayment)
 
-    const epochManager = await kit.contracts.getEpochManager()
+    const epochManagerContract = await getEpochManagerContract(wallet)
 
     await newCheckBuilder(this).isValidator(res.flags.for).runChecks()
 
-    const tx = epochManager.sendValidatorPayment(res.flags.for)
+    const sendValidatorPaymentContractData = {
+      address: epochManagerContract.address,
+      abi: epochManagerContract.abi,
+      functionName: 'sendValidatorPayment',
+      args: [res.flags.for],
+    } as const
 
-    await displaySendTx('sendValidatorPayment', tx, {}, 'ValidatorEpochPaymentDistributed')
+    await displaySendViemContractCall<typeof epochManagerContract.abi>(
+      'EpochManager',
+      sendValidatorPaymentContractData,
+      client,
+      wallet
+    )
   }
 }

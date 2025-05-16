@@ -50,7 +50,6 @@ export default class TransferErc20 extends BaseCommand {
     const erc20ContractData = {
       abi: erc20Abi,
       address: res.flags.erc20Address,
-      account: wallet.account,
       functionName: 'transfer',
       args: [to, value],
       ...(feeCurrency ? { feeCurrency } : {}),
@@ -63,7 +62,8 @@ export default class TransferErc20 extends BaseCommand {
       ;[decimals, name, symbol] = (await Promise.all(
         (['decimals', 'name', 'symbol'] as const).map((functionName) =>
           client.readContract({
-            ...erc20ContractData,
+            abi: erc20Abi,
+            address: res.flags.erc20Address,
             functionName,
             args: [],
           })
@@ -101,6 +101,11 @@ export default class TransferErc20 extends BaseCommand {
       // the gas estimation will fail
       .runChecks({ failFast: true })
 
-    await displaySendViemContractCall(`${name}(${symbol})`, erc20ContractData, client, wallet)
+    await displaySendViemContractCall<typeof erc20Abi>(
+      `${name}(${symbol})`,
+      erc20ContractData,
+      client,
+      wallet
+    )
   }
 }

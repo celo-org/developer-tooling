@@ -16,6 +16,7 @@ import { formatEther } from 'ethers/lib/utils'
 import humanizeDuration from 'humanize-duration'
 import { convertEthersToCeloTx } from './mento-broker-adaptor'
 
+import { Abi, SimulateContractParameters, WriteContractParameters } from 'viem'
 import { CeloTransactionRequest } from 'viem/celo'
 import { CeloClient, WalletCeloClient } from '../packages-to-be/client'
 
@@ -61,19 +62,28 @@ export async function displaySafeTx(name: string, safeTxResult: SafeTransactionR
   }
 }
 
-export async function displaySendViemContractCall(
+type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>
+
+export async function displaySendViemContractCall<const abi extends Abi>(
   contractName: string,
-  txData: Parameters<CeloClient['simulateContract']>[0],
+  txData: Optional<WriteContractParameters<abi>, 'chain' | 'account'>,
   client: CeloClient,
   wallet: WalletCeloClient,
   params: { feeCurrency?: `0x${string}` } = {}
 ) {
   ux.action.start(`Sending contract call: ${contractName}->${txData.functionName}`)
   try {
-    const { request } = await client.simulateContract(txData)
+    const { request } = await client.simulateContract(txData as SimulateContractParameters)
     await innerDisplayViemTxHash(
       txData.functionName,
-      wallet.writeContract({ ...request, ...params }),
+      wallet.writeContract({
+        ...request,
+        ...params,
+        ...{
+          chain: txData.chain || client.chain,
+          account: txData.account || wallet.account,
+        },
+      }),
       client
     )
   } catch (e) {

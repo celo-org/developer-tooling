@@ -122,6 +122,11 @@ export abstract class TransferStableBase extends BaseCommand {
       // the gas estimation will fail
       .runChecks({ failFast: true })
 
-    await displaySendViemContractCall(stableToken, stableContractData, client, wallet)
+    await displaySendViemContractCall<typeof stableTokenContract.abi>(
+      stableToken,
+      stableContractData,
+      client,
+      wallet
+    )
   }
 }
