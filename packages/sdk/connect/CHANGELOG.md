@@ -1,5 +1,13 @@
 # @celo/connect
 
+## 7.0.0-beta.1
+
+### Patch Changes
+
+- Updated dependencies [[`7d84a5a`](https://github.com/celo-org/developer-tooling/commit/7d84a5a9a23f72572999dc17f24d9b70bf6ca9f6)]:
+  - @celo/base@7.0.3-beta.0
+  - @celo/utils@8.0.3-beta.0
+
 ## 7.0.0-beta.0
 
 ### Major Changes

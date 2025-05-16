@@ -1,5 +1,16 @@
 # @celo/wallet-hsm-aws
 
+## 8.0.0-beta.2
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @celo/connect@7.0.0-beta.1
+  - @celo/utils@8.0.3-beta.0
+  - @celo/wallet-base@8.0.0-beta.2
+  - @celo/wallet-hsm@8.0.0-beta.2
+  - @celo/wallet-remote@8.0.0-beta.2
+
 ## 8.0.0-beta.1
 
 ### Patch Changes

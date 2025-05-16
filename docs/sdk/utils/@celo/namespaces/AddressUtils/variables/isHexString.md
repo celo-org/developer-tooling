@@ -1,4 +1,4 @@
-[**@celo/utils v8.0.2**](../../../../README.md)
+[**@celo/utils v8.0.3-beta.0**](../../../../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Variable: isHexString()
 
-> `const` **isHexString**: (`input`) => `boolean`
+> `const` **isHexString**: (`input`) => `` input is `0x${string}` ``
 
 Defined in: packages/sdk/base/lib/address.d.ts:11
 
@@ -18,4 +18,4 @@ Defined in: packages/sdk/base/lib/address.d.ts:11
 
 ## Returns
 
-`boolean`
+`` input is `0x${string}` ``

@@ -1,6 +1,6 @@
 {
   "name": "@celo/core",
-  "version": "0.0.0",
+  "version": "0.0.1-beta.0",
   "description": "Agnostic Library for Common yet complicated Celo core contract interactions",
   "main": "dist/cjs/index.js",
   "module": "dist/mjs/index.js",
@@ -39,7 +39,7 @@
     "prepublishOnly": "yarn clean && yarn build"
   },
   "dependencies": {
-    "@celo/base": "7.0.2"
+    "@celo/base": "7.0.3-beta.0"
   },
   "devDependencies": {
     "@celo/typescript": "workspace:^",
