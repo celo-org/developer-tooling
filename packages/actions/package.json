@@ -49,7 +49,7 @@
     "postbuild": "node ./scripts/post-build.mjs",
     "clean": "yarn --top-level run tsc -b . --clean && yarn run rimraf dist",
     "docs": "yarn --top-level run typedoc",
-    "test": "yarn run vitest --run",
+    "test": "yarn run vitest --run --passWithNoTests",
     "check-size": "size-limit",
     "test:watch": "yarn run vitest --watch",
     "test:changes": "yarn run vitest --run --changed",
