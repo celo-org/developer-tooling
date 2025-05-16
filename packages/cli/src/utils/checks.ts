@@ -557,7 +557,7 @@ class CheckBuilder {
     const valueInEth = formatEther(value)
 
     return this.addCheck(
-      `Account has at least ${valueInEth} non-voting Locked Gold`,
+      `Account has at least ${valueInEth} non-voting Locked Celo`,
       this.withLockedGold(
         async (lockedGold, _signer, account) =>
           value <= (await lockedGold.read.getAccountNonvotingLockedGold([account]))

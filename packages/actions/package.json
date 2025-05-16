@@ -12,8 +12,8 @@
       "types": "./dist/cjs/index.d.ts"
     },
     "./contracts/*": {
-      "import": "./dist/mjs/contracts/*",
-      "require": "./dist/cjs/contracts/*",
+      "import": "./dist/mjs/contracts/*.js",
+      "require": "./dist/cjs/contracts/*.js",
       "types": "./dist/cjs/contracts/*.d.ts"
     },
     "./staking": {

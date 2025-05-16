@@ -1594,6 +1594,8 @@ __metadata:
   dependencies:
     "@celo/abis": "npm:^12.0.3"
     "@celo/base": "npm:^7.0.2"
+    "@celo/core": "npm:0.0.0"
+    "@celo/dev-utils": "workspace:^"
     "@celo/typescript": "workspace:^"
     "@size-limit/preset-small-lib": "npm:^11.2.0"
     "@vitest/coverage-v8": "npm:2.1.9"
@@ -1605,14 +1607,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/base@npm:^6.0.0, @celo/base@npm:^6.0.1":
-  version: 6.1.0
-  resolution: "@celo/base@npm:6.1.0"
-  checksum: e70a5b1313d5fafc2b048a0badc31d9de8f48dfe00eba60b45f6275f46a68ff82e90c5388dbbdd9eb6bdbed8dc91b7c86750587989e469c8dd94b71942951b7f
-  languageName: node
-  linkType: hard
-
-"@celo/base@npm:^7.0.2, @celo/base@workspace:packages/sdk/base":
+"@celo/base@npm:7.0.2, @celo/base@npm:^7.0.2, @celo/base@workspace:packages/sdk/base":
   version: 0.0.0-use.local
   resolution: "@celo/base@workspace:packages/sdk/base"
   dependencies:
@@ -1624,6 +1619,13 @@ __metadata:
     web3-utils: "npm:1.10.4"
   languageName: unknown
   linkType: soft
+
+"@celo/base@npm:^6.0.0, @celo/base@npm:^6.0.1":
+  version: 6.1.0
+  resolution: "@celo/base@npm:6.1.0"
+  checksum: e70a5b1313d5fafc2b048a0badc31d9de8f48dfe00eba60b45f6275f46a68ff82e90c5388dbbdd9eb6bdbed8dc91b7c86750587989e469c8dd94b71942951b7f
+  languageName: node
+  linkType: hard
 
 "@celo/bls12377js@npm:0.1.1":
   version: 0.1.1
@@ -1822,10 +1824,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/core@workspace:packages/core":
+"@celo/core@npm:0.0.0, @celo/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@celo/core@workspace:packages/core"
   dependencies:
+    "@celo/base": "npm:7.0.2"
     "@celo/typescript": "workspace:^"
     "@size-limit/preset-small-lib": "npm:^11.2.0"
     "@vitest/coverage-v8": "npm:2.1.9"

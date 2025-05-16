@@ -1,10 +1,34 @@
-import { registryABI } from '@celo/abis'
 import { NULL_ADDRESS } from '@celo/base'
 import { Address, PublicClient, WalletClient, publicActions } from 'viem'
 import { CeloClient, WalletCeloClient } from '../client'
 import { ContractName } from '../contract-name'
 
 export const REGISTRY_CONTRACT_ADDRESS = '0x000000000000000000000000000000000000ce10'
+
+// we only use this one function from the registry so we don't need the whole ABI
+const ABI = [
+  {
+    constant: true,
+    inputs: [
+      {
+        internalType: 'string',
+        name: 'identifier',
+        type: 'string',
+      },
+    ],
+    name: 'getAddressForString',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    payable: false,
+    stateMutability: 'view',
+    type: 'function',
+  },
+] as const
 
 const cache: Record<string, Address> = {}
 
@@ -22,7 +46,7 @@ export const resolveAddress = async (
 
   const address = await (client as PublicClient).readContract({
     address: REGISTRY_CONTRACT_ADDRESS,
-    abi: registryABI,
+    abi: ABI,
     functionName: 'getAddressForString',
     args: [contractName],
   })

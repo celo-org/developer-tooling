@@ -15,7 +15,7 @@ export default class ElectionVote extends BaseCommand {
       description: "ValidatorGroup's address",
       required: true,
     }),
-    value: Flags.string({ description: 'Amount of Gold used to vote for group', required: true }),
+    value: Flags.string({ description: 'Amount of CELO used to vote for group', required: true }),
   }
 
   static examples = [
@@ -29,7 +29,7 @@ export default class ElectionVote extends BaseCommand {
     await newCheckBuilder(this, res.flags.from)
       .isSignerOrAccount()
       .isValidatorGroup(res.flags.for)
-      .hasEnoughNonvotingLockedGold(value)
+      .hasEnoughNonvotingLockedCelo(BigInt(res.flags.value))
       .runChecks()
 
     const election = await kit.contracts.getElection()
