@@ -39,7 +39,7 @@ export default class TransferCelo extends BaseCommand {
     const value = res.flags.value
     const feeCurrency = res.flags.gasCurrency
 
-    const goldTokenContract = await getCeloERC20Contract(wallet.extend(publicActions))
+    const celoERC20Contract = await getCeloERC20Contract(wallet.extend(publicActions))
 
     const transferParams = (feeCurrency ? { feeCurrency } : {}) as Pick<
       CeloTransactionRequest,
@@ -57,14 +57,14 @@ export default class TransferCelo extends BaseCommand {
         async () => {
           const [gas, gasPrice, balanceOfTokenForGas] = await Promise.all([
             res.flags.comment
-              ? goldTokenContract.estimateGas.transferWithComment([to, value, res.flags.comment!], {
+              ? celoERC20Contract.estimateGas.transferWithComment([to, value, res.flags.comment!], {
                   feeCurrency,
                 })
               : client.estimateGas({ to, value }),
             getGasPriceOnCelo(client, feeCurrency),
             (feeCurrency
               ? await getERC20Contract(client as PublicClient, feeCurrency)
-              : goldTokenContract
+              : celoERC20Contract
             ).read.balanceOf([from]),
           ])
           transferParams.gas = gas
@@ -87,7 +87,7 @@ export default class TransferCelo extends BaseCommand {
     await (res.flags.comment
       ? displayViemTx(
           'CeloToken->TransferWithComment',
-          goldTokenContract.write.transferWithComment(
+          celoERC20Contract.write.transferWithComment(
             [to, value, res.flags.comment],
             transferParams
           ),
