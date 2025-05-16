@@ -1,4 +1,4 @@
-import { CeloClient } from '@celo/actions'
+import { PublicCeloClient } from '@celo/actions'
 import { StableToken } from '@celo/base'
 import { ethNodeIsSyncing } from '../packages-to-be/utils'
 import { failWith } from './cli'
@@ -14,7 +14,7 @@ export function enumEntriesDupWithLowercase<T>(entries: [string, T][]) {
 
 export { ethNodeIsSyncing }
 
-export async function nodeIsSynced(client: CeloClient): Promise<boolean> {
+export async function nodeIsSynced(client: PublicCeloClient): Promise<boolean> {
   if (process.env.NO_SYNCCHECK === 'true' || process.env.NO_SYNCCHECK === '1') {
     return true
   }
@@ -54,7 +54,7 @@ export async function nodeIsSynced(client: CeloClient): Promise<boolean> {
   }
 }
 
-export async function requireNodeIsSynced(client: CeloClient) {
+export async function requireNodeIsSynced(client: PublicCeloClient) {
   if (!(await nodeIsSynced(client))) {
     failWith('Node is not currently synced. Run node:synced to check its status.')
   }

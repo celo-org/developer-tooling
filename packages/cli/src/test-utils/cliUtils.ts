@@ -1,4 +1,4 @@
-import { CeloClient } from '@celo/actions'
+import { PublicCeloClient } from '@celo/actions'
 import { TestClientExtended } from '@celo/dev-utils/lib/viem/anvil-test'
 import { Interfaces } from '@oclif/core'
 import Web3 from 'web3'
@@ -43,7 +43,7 @@ export async function testLocallyWithViemNode(
   client: TestClientExtended,
   config?: Interfaces.LoadOptions
 ) {
-  jest.spyOn(BaseCommand.prototype, 'getPublicClient').mockResolvedValue(client as CeloClient)
+  jest.spyOn(BaseCommand.prototype, 'getPublicClient').mockResolvedValue(client as PublicCeloClient)
   return testLocally(command, [...argv, '--node', client.chain.rpcUrls.default.http[0]], config)
 }
 

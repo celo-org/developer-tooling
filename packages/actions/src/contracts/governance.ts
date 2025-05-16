@@ -1,10 +1,12 @@
 import { governanceABI } from '@celo/abis'
 import { zip } from '@celo/base'
-import { getContract, GetContractReturnType, PublicClient, WalletClient } from 'viem'
+import { Client, getContract, GetContractReturnType, PublicClient } from 'viem'
 import { resolveAddress } from './registry'
 
-export type GovernanceContract<T extends WalletClient | PublicClient = PublicClient> =
-  GetContractReturnType<typeof governanceABI, T>
+export type GovernanceContract<T extends Client = PublicClient> = GetContractReturnType<
+  typeof governanceABI,
+  T
+>
 
 export enum ProposalStage {
   None = 'None',
@@ -20,7 +22,7 @@ export interface UpvoteRecord {
   upvotes: bigint
 }
 
-export async function getGovernanceContract<T extends WalletClient | PublicClient = PublicClient>(
+export async function getGovernanceContract<T extends Client = PublicClient>(
   client: T
 ): Promise<GovernanceContract<T>> {
   return getContract({

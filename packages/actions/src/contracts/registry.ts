@@ -1,6 +1,5 @@
 import { NULL_ADDRESS } from '@celo/base/lib/address'
-import { Address, PublicClient, WalletClient, publicActions } from 'viem'
-import { CeloClient, WalletCeloClient } from '../client'
+import { Address, Client, PublicClient, publicActions } from 'viem'
 import { ContractName } from '../contract-name'
 
 export const REGISTRY_CONTRACT_ADDRESS = '0x000000000000000000000000000000000000ce10'
@@ -33,7 +32,7 @@ const ABI = [
 const cache: Record<string, Address> = {}
 
 export const resolveAddress = async (
-  client: PublicClient | CeloClient | WalletClient | WalletCeloClient,
+  client: Client,
   contractName: ContractName
 ): Promise<Address> => {
   if (cache[contractName]) {
@@ -41,7 +40,7 @@ export const resolveAddress = async (
   }
 
   if (!('readContract' in client)) {
-    client = (client as WalletClient).extend(publicActions)
+    client = client.extend(publicActions)
   }
 
   const address = await (client as PublicClient).readContract({

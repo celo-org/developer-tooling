@@ -1,8 +1,8 @@
 import { validatorsABI } from '@celo/abis'
-import { getContract, GetContractReturnType, PublicClient, WalletClient } from 'viem'
+import { Client, getContract, GetContractReturnType, PublicClient } from 'viem'
 import { resolveAddress } from './registry'
 
-export async function getValidatorsContract<T extends PublicClient | WalletClient = PublicClient>(
+export async function getValidatorsContract<T extends Client = PublicClient>(
   client: T
 ): Promise<ValidatorsContract<T>> {
   return getContract({
@@ -11,5 +11,7 @@ export async function getValidatorsContract<T extends PublicClient | WalletClien
     client,
   })
 }
-export type ValidatorsContract<T extends WalletClient | PublicClient = PublicClient> =
-  GetContractReturnType<typeof validatorsABI, T>
+export type ValidatorsContract<T extends Client = PublicClient> = GetContractReturnType<
+  typeof validatorsABI,
+  T
+>

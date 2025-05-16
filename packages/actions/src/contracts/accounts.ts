@@ -1,12 +1,14 @@
 import { accountsABI } from '@celo/abis'
-import { Address, getContract, GetContractReturnType, PublicClient, WalletClient } from 'viem'
+import { Address, Client, getContract, GetContractReturnType, PublicClient } from 'viem'
 
 import { resolveAddress } from './registry'
 
-export type AccountsContract<T extends WalletClient | PublicClient = PublicClient> =
-  GetContractReturnType<typeof accountsABI, T>
+export type AccountsContract<T extends Client = PublicClient> = GetContractReturnType<
+  typeof accountsABI,
+  T
+>
 
-export async function getAccountsContract<T extends WalletClient | PublicClient = PublicClient>(
+export async function getAccountsContract<T extends Client = PublicClient>(
   client: T
 ): Promise<AccountsContract<T>> {
   return getContract({

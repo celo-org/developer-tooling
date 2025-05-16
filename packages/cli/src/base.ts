@@ -1,4 +1,4 @@
-import { type CeloClient, type WalletCeloClient } from '@celo/actions'
+import { type PublicCeloClient, type WalletCeloClient } from '@celo/actions'
 import { celoBaklava } from '@celo/actions/chains'
 import { ensureLeading0x, StrongAddress } from '@celo/base'
 import { ReadOnlyWallet } from '@celo/connect'
@@ -129,7 +129,7 @@ export abstract class BaseCommand extends Command {
   private _web3: Web3 | null = null
   private _kit: ContractKit | null = null
 
-  private publicClient: CeloClient | null = null
+  private publicClient: PublicCeloClient | null = null
   private walletClient: WalletCeloClient | null = null
 
   private ledgerTransport: Awaited<ReturnType<(typeof _TransportNodeHid)['open']>> | null = null
@@ -194,7 +194,7 @@ export abstract class BaseCommand extends Command {
 
   // TODO(viem): This shouldn't be public, but for the time being to be called
   // from CheckBuilder to allow smooth transitions it is public.
-  public async getPublicClient(): Promise<CeloClient> {
+  public async getPublicClient(): Promise<PublicCeloClient> {
     if (!this.publicClient) {
       const nodeUrl = await this.getNodeUrl()
       ux.action.start(`Connecting to Node ${nodeUrl}`)
@@ -229,7 +229,7 @@ export abstract class BaseCommand extends Command {
             rpcUrls: {
               default: { http: [nodeUrl] },
             },
-          } as unknown as CeloClient['chain'],
+          } as unknown as PublicCeloClient['chain'],
         })
       }
       ux.action.stop()

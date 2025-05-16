@@ -1,10 +1,11 @@
 import { getGasPriceOnCelo } from '@celo/actions'
 import { getCeloERC20Contract } from '@celo/actions/contracts/celo-erc20'
 import { getERC20Contract } from '@celo/actions/contracts/erc20'
-import { erc20Abi, PublicClient } from 'viem'
+import { PublicClient } from 'viem'
+import { CeloTransactionRequest } from 'viem/celo'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendViemContractCall, failWith } from '../../utils/cli'
+import { displayViemTx, failWith } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class TransferErc20 extends BaseCommand {
@@ -48,14 +49,11 @@ export default class TransferErc20 extends BaseCommand {
     const value = res.flags.value
     const feeCurrency = res.flags.gasCurrency
 
-    const erc20ContractData = {
-      abi: erc20Abi,
-      address: res.flags.erc20Address,
-      account: wallet.account,
-      functionName: 'transfer',
-      args: [to, value],
-      ...(feeCurrency ? { feeCurrency } : {}),
-    } as const
+    const erc20Contract = await getERC20Contract(wallet, res.flags.erc20Address)
+    const transferParams = (feeCurrency ? { feeCurrency } : {}) as Pick<
+      CeloTransactionRequest,
+      'gas' | 'feeCurrency' | 'maxFeePerGas'
+    >
 
     let decimals: number
     let name: string
@@ -63,11 +61,7 @@ export default class TransferErc20 extends BaseCommand {
     try {
       ;[decimals, name, symbol] = (await Promise.all(
         (['decimals', 'name', 'symbol'] as const).map((functionName) =>
-          client.readContract({
-            ...erc20ContractData,
-            functionName,
-            args: [],
-          })
+          erc20Contract.read[functionName]()
         )
       )) as [number, string, string]
     } catch {
@@ -83,13 +77,16 @@ export default class TransferErc20 extends BaseCommand {
         `Account can afford to transfer CELO with gas paid in ${feeCurrency || 'CELO'}`,
         async () => {
           const [gas, gasPrice, balanceOfTokenForGas] = await Promise.all([
-            client.estimateContractGas(erc20ContractData),
+            erc20Contract.estimateGas.transfer([to, value], transferParams),
             getGasPriceOnCelo(client, feeCurrency),
             (feeCurrency
               ? await getERC20Contract(client as PublicClient, feeCurrency)
               : await getCeloERC20Contract(client as PublicClient)
             ).read.balanceOf([from]),
           ])
+
+          transferParams.gas = gas
+          transferParams.maxFeePerGas = gasPrice
 
           const totalSpentOnGas = gas * gasPrice
           return balanceOfTokenForGas >= totalSpentOnGas
@@ -102,6 +99,10 @@ export default class TransferErc20 extends BaseCommand {
       // the gas estimation will fail
       .runChecks({ failFast: true })
 
-    await displaySendViemContractCall(`${name}(${symbol})`, erc20ContractData, client, wallet)
+    await displayViemTx(
+      `${name}(${symbol})`,
+      erc20Contract.write.transfer([to, value], transferParams),
+      client
+    )
   }
 }

@@ -1,6 +1,6 @@
-import { erc20Abi, getContract, GetContractReturnType, PublicClient, WalletClient } from 'viem'
+import { Client, erc20Abi, getContract, GetContractReturnType, PublicClient } from 'viem'
 
-export async function getERC20Contract<T extends WalletClient | PublicClient = PublicClient>(
+export async function getERC20Contract<T extends Client = PublicClient>(
   client: T,
   address: `0x${string}`
 ): Promise<ERC20<T>> {
@@ -10,7 +10,4 @@ export async function getERC20Contract<T extends WalletClient | PublicClient = P
     client,
   })
 }
-export type ERC20<T extends WalletClient | PublicClient = PublicClient> = GetContractReturnType<
-  typeof erc20Abi,
-  T
->
+export type ERC20<T extends Client = PublicClient> = GetContractReturnType<typeof erc20Abi, T>

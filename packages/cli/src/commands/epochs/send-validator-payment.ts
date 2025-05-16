@@ -1,6 +1,7 @@
+import { getEpochManagerContract } from '@celo/actions/contracts/epoch-manager'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class SendValidatorPayment extends BaseCommand {
@@ -26,15 +27,21 @@ export default class SendValidatorPayment extends BaseCommand {
   static aliases: string[] = ['validator:send-payment']
 
   async run() {
-    const kit = await this.getKit()
+    const client = await this.getPublicClient()
+    const wallet = await this.getWalletClient()
     const res = await this.parse(SendValidatorPayment)
 
-    const epochManager = await kit.contracts.getEpochManager()
+    const epochManagerContract = await getEpochManagerContract(wallet)
 
     await newCheckBuilder(this).isValidator(res.flags.for).runChecks()
 
-    const tx = epochManager.sendValidatorPayment(res.flags.for)
+    const { request } = await epochManagerContract.simulate.sendValidatorPayment([res.flags.for])
 
-    await displaySendTx('sendValidatorPayment', tx, {}, 'ValidatorEpochPaymentDistributed')
+    await displayViemTx<typeof epochManagerContract.abi>(
+      'EpochManager->sendValidatorPayment',
+      wallet.writeContract(request),
+      client,
+      { abi: epochManagerContract.abi, displayEventName: 'ValidatorEpochPaymentDistributed' }
+    )
   }
 }

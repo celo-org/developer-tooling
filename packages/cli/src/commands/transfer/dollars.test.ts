@@ -219,7 +219,7 @@ testWithAnvilL2('transfer:dollars cmd', (web3: Web3) => {
             "All checks passed",
           ],
           [
-            "SendTransaction: transferWithComment",
+            "SendTransaction: cUSD->TransferWithComment",
           ],
           [
             "txHash: 0xtxhash",

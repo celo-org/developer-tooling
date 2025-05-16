@@ -81,7 +81,7 @@
       "path": "dist/cjs/index.js",
       "limit": "100 kB"
     },
-       {
+    {
       "name": "import * from '@celo/actions' (esm)",
       "path": "dist/mjs/index.js",
       "limit": "80 kB",

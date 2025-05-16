@@ -2,11 +2,11 @@ import { getGasPriceOnCelo } from '@celo/actions'
 import { getCeloERC20Contract } from '@celo/actions/contracts/celo-erc20'
 import { getERC20Contract } from '@celo/actions/contracts/erc20'
 import { Flags } from '@oclif/core'
-import { PublicClient } from 'viem'
+import { PublicClient, publicActions } from 'viem'
 import { CeloTransactionRequest } from 'viem/celo'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendViemContractCall, displayViemTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class TransferCelo extends BaseCommand {
@@ -39,19 +39,12 @@ export default class TransferCelo extends BaseCommand {
     const value = res.flags.value
     const feeCurrency = res.flags.gasCurrency
 
-    const params = feeCurrency ? { feeCurrency } : {}
+    const celoERC20Contract = await getCeloERC20Contract(wallet.extend(publicActions))
 
-    const goldTokenContract = await getCeloERC20Contract(client as PublicClient)
-    const transferWithCommentContractData = {
-      address: goldTokenContract.address,
-      abi: goldTokenContract.abi,
-      account: wallet.account,
-      functionName: 'transferWithComment',
-      args: [to, value, res.flags.comment!],
-      ...params,
-    } as Parameters<typeof client.estimateContractGas>[0]
-
-    const transferParams = { to, value: value, ...params } as CeloTransactionRequest
+    const transferParams = (feeCurrency ? { feeCurrency } : {}) as Pick<
+      CeloTransactionRequest,
+      'gas' | 'feeCurrency' | 'maxFeePerGas'
+    >
 
     await newCheckBuilder(this)
       .isNotSanctioned(from)
@@ -64,12 +57,14 @@ export default class TransferCelo extends BaseCommand {
         async () => {
           const [gas, gasPrice, balanceOfTokenForGas] = await Promise.all([
             res.flags.comment
-              ? client.estimateContractGas(transferWithCommentContractData)
-              : client.estimateGas(transferParams),
+              ? celoERC20Contract.estimateGas.transferWithComment([to, value, res.flags.comment!], {
+                  feeCurrency,
+                })
+              : client.estimateGas({ to, value }),
             getGasPriceOnCelo(client, feeCurrency),
             (feeCurrency
               ? await getERC20Contract(client as PublicClient, feeCurrency)
-              : goldTokenContract
+              : celoERC20Contract
             ).read.balanceOf([from]),
           ])
           transferParams.gas = gas
@@ -90,21 +85,21 @@ export default class TransferCelo extends BaseCommand {
       .runChecks({ failFast: true })
 
     await (res.flags.comment
-      ? displaySendViemContractCall(
-          'CeloToken',
-          transferWithCommentContractData,
-          client,
-          wallet,
-          params
+      ? displayViemTx(
+          'CeloToken->TransferWithComment',
+          celoERC20Contract.write.transferWithComment(
+            [to, value, res.flags.comment],
+            transferParams
+          ),
+          client
         )
       : displayViemTx(
           'transfer',
           // NOTE: this used to be celoToken.transfer
           // but this way ledger considers this a native transfer and show the to and value properly
           // instead of a contract call
-          transferParams,
-          client,
-          wallet
+          wallet.sendTransaction({ to, value, ...transferParams }),
+          client
         ))
   }
 }

@@ -16,8 +16,8 @@ import { formatEther } from 'ethers/lib/utils'
 import humanizeDuration from 'humanize-duration'
 import { convertEthersToCeloTx } from './mento-broker-adaptor'
 
-import { CeloClient, WalletCeloClient } from '@celo/actions'
-import { CeloTransactionRequest } from 'viem/celo'
+import { PublicCeloClient } from '@celo/actions'
+import { Abi, ContractEventName, decodeEventLog, DecodeEventLogReturnType } from 'viem'
 
 const CLIError = Errors.CLIError
 
@@ -61,53 +61,72 @@ export async function displaySafeTx(name: string, safeTxResult: SafeTransactionR
   }
 }
 
-export async function displaySendViemContractCall(
-  contractName: string,
-  txData: Parameters<CeloClient['simulateContract']>[0],
-  client: CeloClient,
-  wallet: WalletCeloClient,
-  params: { feeCurrency?: `0x${string}` } = {}
-) {
-  ux.action.start(`Sending contract call: ${contractName}->${txData.functionName}`)
-  try {
-    const { request } = await client.simulateContract(txData)
-    await innerDisplayViemTxHash(
-      txData.functionName,
-      wallet.writeContract({ ...request, ...params }),
-      client
-    )
-  } catch (e) {
-    ux.action.stop(`failed: ${(e as Error).message}`)
-    throw e
-  }
-}
-
-export async function displayViemTx(
-  name: string,
-  request: CeloTransactionRequest,
-  client: CeloClient,
-  wallet: WalletCeloClient
-) {
-  try {
-    await innerDisplayViemTxHash(name, wallet.sendTransaction(request), client)
-  } catch (e) {
-    ux.action.stop(`failed: ${(e as Error).message}`)
-    throw e
-  }
-}
-
-async function innerDisplayViemTxHash(
+export async function displayViemTx<const abi extends Abi | undefined = undefined>(
   name: string,
   hash: Promise<`0x${string}`>,
-  client: CeloClient
+  client: PublicCeloClient,
+  decodeEventsOpts?: abi extends Abi
+    ? {
+        abi: abi
+        displayEventName: ContractEventName<abi> | ContractEventName<abi>[]
+      }
+    : never
 ) {
   if (!ux.action.running) {
     ux.action.start(`Sending Transaction: ${name}`)
   }
   try {
     console.log(chalk`SendTransaction: {red.bold ${name}}`)
-    const { transactionHash } = await client.waitForTransactionReceipt({ hash: await hash })
+    const { transactionHash, logs } = await client.waitForTransactionReceipt({ hash: await hash })
     printValueMap({ txHash: transactionHash })
+
+    if (decodeEventsOpts?.displayEventName && logs.length) {
+      const { abi, displayEventName } = decodeEventsOpts
+
+      const decodedLogs = logs.map((log) => {
+        let decodedLog: DecodeEventLogReturnType | undefined
+        try {
+          const eventNames =
+            typeof displayEventName === 'string' ? [displayEventName] : displayEventName
+
+          decodedLog = eventNames
+            .map((eventName) => {
+              try {
+                return decodeEventLog({
+                  abi,
+                  data: log.data,
+                  topics: log.topics,
+                  eventName,
+                })
+              } catch (e) {
+                // unknown event, it's a-ok
+              }
+            })
+            .filter(Boolean)
+            .at(0)
+        } catch (e) {}
+
+        return decodedLog
+      })
+
+      const filteredLogs = decodedLogs.filter(
+        (decodedLog): decodedLog is DecodeEventLogReturnType => {
+          if (!decodedLog) {
+            return false
+          }
+          return (
+            (typeof displayEventName === 'string' && decodedLog.eventName === displayEventName) ||
+            displayEventName.includes(decodedLog.eventName)
+          )
+        }
+      )
+
+      filteredLogs.forEach(({ eventName, args }) => {
+        console.log(chalk.magenta.bold(`${eventName}:`))
+        printValueMap(args!, chalk.magenta)
+      })
+    }
+
     ux.action.stop()
   } catch (e) {
     ux.action.stop(`failed: ${(e as Error).message}`)

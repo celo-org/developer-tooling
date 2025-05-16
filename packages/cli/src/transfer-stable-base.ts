@@ -2,7 +2,8 @@ import { getGasPriceOnCelo } from '@celo/actions'
 import { getCeloERC20Contract } from '@celo/actions/contracts/celo-erc20'
 import { getERC20Contract } from '@celo/actions/contracts/erc20'
 import { Flags } from '@oclif/core'
-import { isAddressEqual, PublicClient } from 'viem'
+import { isAddressEqual, publicActions, PublicClient } from 'viem'
+import { CeloTransactionRequest } from 'viem/celo'
 import { BaseCommand } from './base'
 import {
   StableToken,
@@ -11,7 +12,7 @@ import {
   StableTokens,
 } from './packages-to-be/stable-tokens'
 import { newCheckBuilder } from './utils/checks'
-import { displaySendViemContractCall, failWith } from './utils/cli'
+import { displayViemTx, failWith } from './utils/cli'
 import { CustomFlags } from './utils/command'
 import { enumEntriesDupWithLowercase } from './utils/helpers'
 
@@ -60,29 +61,20 @@ export abstract class TransferStableBase extends BaseCommand {
     const stableToken = Object.entries(StableTokens).find(
       ([_, fn]) => fn === this._stableCurrencyContract
     )![0] as StableToken
-    let stableTokenContract: StableTokenContract
+    let stableTokenContract: StableTokenContract<typeof wallet>
     try {
-      stableTokenContract = await this._stableCurrencyContract(client as PublicClient)
+      // @ts-expect-error - this should be StableTokenContract by for some
+      // reason it returns `any`
+      stableTokenContract = await this._stableCurrencyContract(wallet.extend(publicActions))
     } catch {
       failWith(`The ${stableToken} token was not deployed yet`)
     }
-    const goldTokenContract = await getCeloERC20Contract(client as PublicClient)
+    const celoContract = await getCeloERC20Contract(wallet.extend(publicActions))
 
-    const stableContractData = {
-      abi: stableTokenContract.abi,
-      address: stableTokenContract.address,
-      account: wallet.account,
-      ...(feeCurrency ? { feeCurrency: feeCurrency } : {}),
-      ...(res.flags.comment
-        ? ({
-            functionName: 'transferWithComment',
-            args: [to, value, res.flags.comment as string],
-          } as const)
-        : ({
-            functionName: 'transfer',
-            args: [to, value],
-          } as const)),
-    } as const
+    const transferParams = (feeCurrency ? { feeCurrency } : {}) as Pick<
+      CeloTransactionRequest,
+      'gas' | 'feeCurrency' | 'maxFeePerGas'
+    >
 
     await newCheckBuilder(this)
       .hasEnoughStable(from, value, stableToken)
@@ -97,16 +89,24 @@ export abstract class TransferStableBase extends BaseCommand {
             feeCurrency && isAddressEqual(feeCurrency, stableTokenContract.address)
 
           const [gas, gasPrice, balanceOfTokenForGas, balanceOfTokenToSend] = await Promise.all([
-            client.estimateContractGas(stableContractData),
+            res.flags.comment
+              ? stableTokenContract.estimateGas.transferWithComment(
+                  [to, value, res.flags.comment],
+                  transferParams
+                )
+              : stableTokenContract.estimateGas.transfer([to, value], transferParams),
             getGasPriceOnCelo(client, feeCurrency),
             (feeCurrency
               ? feeInSameStableTokenAsTransfer
                 ? stableTokenContract
                 : await getERC20Contract(client as PublicClient, feeCurrency)
-              : goldTokenContract
+              : celoContract
             ).read.balanceOf([from]),
             stableTokenContract.read.balanceOf([from]),
           ])
+          transferParams.gas = gas
+          transferParams.maxFeePerGas = gasPrice
+
           const totalSpentOnGas = gas * gasPrice
 
           if (feeInSameStableTokenAsTransfer) {
@@ -122,6 +122,22 @@ export abstract class TransferStableBase extends BaseCommand {
       // the gas estimation will fail
       .runChecks({ failFast: true })
 
-    await displaySendViemContractCall(stableToken, stableContractData, client, wallet)
+    await (res.flags.comment
+      ? displayViemTx(
+          `${stableToken}->TransferWithComment`,
+          stableTokenContract.write.transferWithComment(
+            [to, value, res.flags.comment],
+            transferParams
+          ),
+          client
+        )
+      : displayViemTx(
+          `${stableToken}->TransferWithComment`,
+          // NOTE: this used to be celoToken.transfer
+          // but this way ledger considers this a native transfer and show the to and value properly
+          // instead of a contract call
+          stableTokenContract.write.transfer([to, value], transferParams),
+          client
+        ))
   }
 }

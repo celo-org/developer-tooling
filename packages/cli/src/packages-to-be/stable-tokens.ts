@@ -1,42 +1,48 @@
 import { stableTokenABI, stableTokenBrlABI, stableTokenEurABI } from '@celo/abis-12'
 import { resolveAddress } from '@celo/actions'
-import { getContract, GetContractReturnType, PublicClient, WalletClient } from 'viem'
+import { Client, getContract, GetContractReturnType, PublicClient } from 'viem'
 
-export async function getStableTokenUSDContract<
-  T extends WalletClient | PublicClient = PublicClient
->(client: T): Promise<StableTokenUSD<T>> {
+export async function getStableTokenUSDContract<T extends Client = PublicClient>(
+  client: T
+): Promise<StableTokenUSD<T>> {
   return getContract({
     address: await resolveAddress(client, 'StableToken'),
     abi: stableTokenABI,
     client,
   })
 }
-export type StableTokenUSD<T extends WalletClient | PublicClient = PublicClient> =
-  GetContractReturnType<typeof stableTokenABI, T>
+export type StableTokenUSD<T extends Client = PublicClient> = GetContractReturnType<
+  typeof stableTokenABI,
+  T
+>
 
-export async function getStableTokenEurContract<
-  T extends WalletClient | PublicClient = PublicClient
->(client: T): Promise<StableTokenEUR<T>> {
+export async function getStableTokenEurContract<T extends Client = PublicClient>(
+  client: T
+): Promise<StableTokenEUR<T>> {
   return getContract({
     address: await resolveAddress(client, 'StableTokenEUR'),
     abi: stableTokenEurABI,
     client,
   })
 }
-export type StableTokenEUR<T extends WalletClient | PublicClient = PublicClient> =
-  GetContractReturnType<typeof stableTokenEurABI, T>
+export type StableTokenEUR<T extends Client = PublicClient> = GetContractReturnType<
+  typeof stableTokenEurABI,
+  T
+>
 
-export async function getStableTokenBrlContract<
-  T extends WalletClient | PublicClient = PublicClient
->(client: T): Promise<StableTokenBRL<T>> {
+export async function getStableTokenBrlContract<T extends Client = PublicClient>(
+  client: T
+): Promise<StableTokenBRL<T>> {
   return getContract({
     address: await resolveAddress(client, 'StableTokenBRL'),
     abi: stableTokenBrlABI,
     client,
   })
 }
-export type StableTokenBRL<T extends WalletClient | PublicClient = PublicClient> =
-  GetContractReturnType<typeof stableTokenBrlABI, T>
+export type StableTokenBRL<T extends Client = PublicClient> = GetContractReturnType<
+  typeof stableTokenBrlABI,
+  T
+>
 
 export const StableTokens = {
   cUSD: getStableTokenUSDContract,
@@ -45,4 +51,5 @@ export const StableTokens = {
 } as const
 export type StableToken = keyof typeof StableTokens
 export type StableTokenContractGetter = (typeof StableTokens)[StableToken]
-export type StableTokenContract = Awaited<ReturnType<StableTokenContractGetter>>
+// all stables are the same type, this heavily simplifies the typings
+export type StableTokenContract<T extends Client = PublicClient> = StableTokenUSD<T>

@@ -1,4 +1,4 @@
-import { CeloClient } from '@celo/actions'
+import { PublicCeloClient } from '@celo/actions'
 import { viem_testWithAnvil } from '@celo/dev-utils/lib/viem/anvil-test'
 import { enumEntriesDupWithLowercase, nodeIsSynced } from './helpers'
 
@@ -8,7 +8,7 @@ viem_testWithAnvil('nodeIsSynced', (client) => {
       // Arrange
       process.env.NO_SYNCCHECK = 'true'
       // Act
-      const result = await nodeIsSynced(client as CeloClient)
+      const result = await nodeIsSynced(client as PublicCeloClient)
       // Assert
       expect(result).toBe(true)
     })
@@ -30,7 +30,7 @@ viem_testWithAnvil('nodeIsSynced', (client) => {
         // @ts-expect-error block has more properties but that are not used in the test
         .mockResolvedValueOnce({ number: 1n, timestamp: BigInt(Date.now()) / 1000n })
       // Act
-      const result = await nodeIsSynced(client as CeloClient)
+      const result = await nodeIsSynced(client as PublicCeloClient)
       // Assert
       expect(syncSpy).toHaveBeenCalled()
       expect(blockSpy).toHaveBeenCalled()
@@ -42,7 +42,7 @@ viem_testWithAnvil('nodeIsSynced', (client) => {
       const syncSpy = jest.spyOn(client, 'request').mockResolvedValueOnce(true)
 
       // Act
-      const result = await nodeIsSynced(client as CeloClient)
+      const result = await nodeIsSynced(client as PublicCeloClient)
       // Assert
       expect(syncSpy).toHaveBeenCalled()
       expect(result).toBe(false)
