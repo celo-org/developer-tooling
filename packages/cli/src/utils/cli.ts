@@ -16,7 +16,13 @@ import { formatEther } from 'ethers/lib/utils'
 import humanizeDuration from 'humanize-duration'
 import { convertEthersToCeloTx } from './mento-broker-adaptor'
 
-import { Abi, SimulateContractParameters, WriteContractParameters } from 'viem'
+import {
+  Abi,
+  decodeEventLog,
+  DecodeEventLogReturnType,
+  SimulateContractParameters,
+  WriteContractParameters,
+} from 'viem'
 import { CeloTransactionRequest } from 'viem/celo'
 import { CeloClient, WalletCeloClient } from '../packages-to-be/client'
 
@@ -86,7 +92,7 @@ export async function displaySendViemContractCall<const abi extends Abi>(
         },
       }),
       client,
-      displayEventName
+      displayEventName?.length ? { abi: txData.abi, displayEventName } : undefined
     )
   } catch (e) {
     ux.action.stop(`failed: ${(e as Error).message}`)
@@ -98,11 +104,10 @@ export async function displayViemTx(
   name: string,
   request: CeloTransactionRequest,
   client: CeloClient,
-  wallet: WalletCeloClient,
-  displayEventName?: string | string[]
+  wallet: WalletCeloClient
 ) {
   try {
-    await innerDisplayViemTxHash(name, wallet.sendTransaction(request), client, displayEventName)
+    await innerDisplayViemTxHash(name, wallet.sendTransaction(request), client)
   } catch (e) {
     ux.action.stop(`failed: ${(e as Error).message}`)
     throw e
@@ -113,7 +118,7 @@ async function innerDisplayViemTxHash(
   name: string,
   hash: Promise<`0x${string}`>,
   client: CeloClient,
-  displayEventName?: string | string[]
+  options?: { abi: Abi; displayEventName: string | string[] }
 ) {
   if (!ux.action.running) {
     ux.action.start(`Sending Transaction: ${name}`)
@@ -123,23 +128,51 @@ async function innerDisplayViemTxHash(
     const { transactionHash, logs } = await client.waitForTransactionReceipt({ hash: await hash })
     printValueMap({ txHash: transactionHash })
 
-    if (displayEventName && logs) {
-      Object.entries(logs)
-        .filter(
-          ([eventName]) =>
-            (typeof displayEventName === 'string' && eventName === displayEventName) ||
-            displayEventName.includes(eventName)
-        )
-        .forEach(([eventName, log]) => {
-          const eventLog = {
-            __length__: log.topics.length,
-            // TODO: what do we even print here
-            ...log,
+    if (options?.displayEventName && logs.length) {
+      const { abi, displayEventName } = options
+
+      const decodedLogs = logs.map((log) => {
+        let decodedLog: DecodeEventLogReturnType | undefined
+        try {
+          const eventNames =
+            typeof displayEventName === 'string' ? [displayEventName] : displayEventName
+          decodedLog = eventNames
+            .map((eventName) => {
+              try {
+                return decodeEventLog({
+                  abi,
+                  data: log.data,
+                  topics: log.topics,
+                  eventName,
+                })
+              } catch (e) {
+                // unknown event, it's a-ok
+                process.stderr.write(`\n${(e as Error).message}\n`)
+              }
+            })
+            .filter(Boolean)
+            .at(0)
+        } catch (e) {}
+
+        return decodedLog
+      })
+
+      const filteredLogs = decodedLogs.filter(
+        (decodedLog): decodedLog is DecodeEventLogReturnType => {
+          if (!decodedLog) {
+            return false
           }
-          const { params } = parseDecodedParams(eventLog)
-          console.log(chalk.magenta.bold(`${eventName}:`))
-          printValueMap(params, chalk.magenta)
-        })
+          return (
+            (typeof displayEventName === 'string' && decodedLog.eventName === displayEventName) ||
+            displayEventName.includes(decodedLog.eventName)
+          )
+        }
+      )
+
+      filteredLogs.forEach(({ eventName, args }) => {
+        console.log(chalk.magenta.bold(`${eventName}:`))
+        printValueMap(args!, chalk.magenta)
+      })
     }
 
     ux.action.stop()

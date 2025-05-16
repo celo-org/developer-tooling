@@ -46,7 +46,9 @@ export default class SendValidatorPayment extends BaseCommand {
       'EpochManager',
       sendValidatorPaymentContractData,
       client,
-      wallet
+      wallet,
+      undefined,
+      'ValidatorEpochPaymentDistributed'
     )
   }
 }
