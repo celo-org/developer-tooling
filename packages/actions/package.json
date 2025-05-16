@@ -10,19 +10,16 @@
       "types": "./dist/cjs/index.d.ts",
       "import": "./dist/mjs/index.js",
       "require": "./dist/cjs/index.js"
-      
     },
     "./contracts/*": {
       "types": "./dist/cjs/contracts/*.d.ts",
       "import": "./dist/mjs/contracts/*.js",
       "require": "./dist/cjs/contracts/*.js"
-     
     },
     "./staking": {
       "types": "./dist/cjs/multicontract-interactions/stake/index.d.ts",
       "import": "./dist/mjs/multicontract-interactions/stake/index.js",
       "require": "./dist/cjs/multicontract-interactions/stake/index.js"
-     
     },
     "./chains": {
       "types": "./dist/cjs/chains.d.ts",
