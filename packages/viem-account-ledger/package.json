@@ -29,11 +29,12 @@
     "build": "yarn clean && yarn build:cjs && yarn build:mjs && yarn postbuild",
     "build:cjs": "yarn --top-level run tsc -p tsconfig-cjs.json",
     "build:mjs": "yarn --top-level run tsc -p tsconfig.json",
-    "postbuild": "node ./scripts/post-build.mjs",
+    "postbuild": "node ../../scripts/post-build.mjs",
     "clean": "yarn --top-level run tsc -b . --clean && yarn run rimraf dist",
     "docs": "yarn --top-level run typedoc",
     "test": "yarn run vitest --run",
     "test:watch": "yarn run vitest --watch",
+    "test:changes": "yarn run vitest --run --changed",
     "lint": "yarn --top-level run eslint -c .eslintrc.cjs ",
     "prepublishOnly": "yarn clean && yarn build"
   },
@@ -58,7 +59,7 @@
     "@vitest/coverage-v8": "2.1.9",
     "dotenv": "^8.2.0",
     "rimraf": "^4.4.1",
-    "viem": "^2.23.5",
+    "viem": "^2.29.2",
     "vitest": "^2.1.9"
   },
   "engines": {

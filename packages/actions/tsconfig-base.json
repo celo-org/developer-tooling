@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "rootDir": "src",
+    "declaration": true,
+    "esModuleInterop": true,
+    "types": ["node", "vitest/globals"],
+    "lib": ["esnext"],
+    "skipLibCheck": true,
+    "strict": true,
+    "moduleResolution": "node"
+  },
+  "include": ["src/**/*"],
+  "exclude": ["**/*.test.ts"]
+}

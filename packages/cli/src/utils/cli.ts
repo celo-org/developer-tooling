@@ -16,8 +16,8 @@ import { formatEther } from 'ethers/lib/utils'
 import humanizeDuration from 'humanize-duration'
 import { convertEthersToCeloTx } from './mento-broker-adaptor'
 
+import { CeloClient, WalletCeloClient } from '@celo/actions'
 import { CeloTransactionRequest } from 'viem/celo'
-import { CeloClient, WalletCeloClient } from '../packages-to-be/client'
 
 const CLIError = Errors.CLIError
 

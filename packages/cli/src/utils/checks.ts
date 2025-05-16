@@ -1,4 +1,21 @@
 import { accountsABI, goldTokenABI, multiSigABI } from '@celo/abis-12'
+import { resolveAddress } from '@celo/actions'
+import {
+  AccountsContract,
+  getAccountsContract,
+  signerToAccount,
+} from '@celo/actions/contracts/accounts'
+import {
+  FeeCurrencyDirectory,
+  getFeeCurrencyDirectoryContract,
+} from '@celo/actions/contracts/feecurrency-directory'
+import {
+  getGovernanceContract,
+  getProposalStage,
+  GovernanceContract,
+} from '@celo/actions/contracts/governance'
+import { getLockedCeloContract, LockedCeloContract } from '@celo/actions/contracts/locked-celo'
+import { getValidatorsContract, ValidatorsContract } from '@celo/actions/contracts/validators'
 import { bufferToHex, ensureLeading0x, NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
 import { Address } from '@celo/connect'
 import { HotfixRecord, ProposalStage } from '@celo/contractkit/lib/wrappers/Governance'
@@ -15,27 +32,8 @@ import {
   WalletClient,
 } from 'viem'
 import { BaseCommand } from '../base'
-import { signerToAccount } from '../packages-to-be/account'
-import { resolveAddress } from '../packages-to-be/address-resolver'
-import {
-  AccountsContract,
-  FeeCurrencyDirectory,
-  getAccountsContract,
-  getFeeCurrencyDirectoryContract,
-  getGovernanceContract,
-  getLockedGoldContract,
-  getValidatorsContract,
-  GovernanceContract,
-  LockedGoldContract,
-  StableToken,
-  StableTokens,
-  ValidatorsContract,
-} from '../packages-to-be/contracts'
-import {
-  getHotfixRecord,
-  getProposalSchedule,
-  getProposalStage,
-} from '../packages-to-be/governance'
+import { getHotfixRecord, getProposalSchedule } from '../packages-to-be/governance'
+import { StableToken, StableTokens } from '../packages-to-be/stable-tokens'
 import { bigintToBigNumber, bigNumberToBigInt } from '../packages-to-be/utils'
 import {
   getValidator,
@@ -96,15 +94,7 @@ class CheckBuilder {
     return async () => {
       if (this.signer) {
         try {
-          const account = await (
-            await this.getClient()
-          ).readContract({
-            address: await resolveAddress(await this.getClient(), 'Accounts'),
-            abi: accountsABI,
-            functionName: 'signerToAccount',
-            args: [this.signer],
-          })
-
+          const account = await signerToAccount(await this.getClient(), this.signer)
           return f(account, this) as Resolve<A>
         } catch (_) {}
       }
@@ -147,16 +137,16 @@ class CheckBuilder {
 
   private withLockedGold<A>(
     f: (
-      lockedGold: LockedGoldContract,
+      lockedGold: LockedCeloContract,
       signer: StrongAddress,
       account: StrongAddress,
       validators: ValidatorsContract
     ) => A
   ): () => Promise<Resolve<A>> {
     return async () => {
-      const lockedCeloContract = (await getLockedGoldContract(
+      const lockedCeloContract = (await getLockedCeloContract(
         await this.getClient()
-      )) as LockedGoldContract<PublicClient>
+      )) as LockedCeloContract<PublicClient>
       const validatorsContract = (await getValidatorsContract(
         await this.getClient()
       )) as ValidatorsContract<PublicClient>
@@ -563,15 +553,14 @@ class CheckBuilder {
       )
     )
 
-  hasEnoughNonvotingLockedGold = (value: BigNumber) => {
-    const valueInEth = formatEther(bigNumberToBigInt(value))
+  hasEnoughNonvotingLockedCelo = (value: bigint) => {
+    const valueInEth = formatEther(value)
 
     return this.addCheck(
-      `Account has at least ${valueInEth} non-voting Locked Gold`,
-      this.withLockedGold(async (lockedGold, _signer, account) =>
-        value.isLessThanOrEqualTo(
-          bigintToBigNumber(await lockedGold.read.getAccountNonvotingLockedGold([account]))
-        )
+      `Account has at least ${valueInEth} non-voting Locked Celo`,
+      this.withLockedGold(
+        async (lockedGold, _signer, account) =>
+          value <= (await lockedGold.read.getAccountNonvotingLockedGold([account]))
       )
     )
   }

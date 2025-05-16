@@ -1,20 +1,8 @@
-import { accountsABI, lockedGoldABI } from '@celo/abis-12'
+import { lockedGoldABI } from '@celo/abis-12'
+import { resolveAddress } from '@celo/actions'
+import { getAccountsContract } from '@celo/actions/contracts/accounts'
 import { StrongAddress } from '@celo/base'
 import { Address, erc20Abi, PublicClient } from 'viem'
-import { resolveAddress } from './address-resolver'
-import { getAccountsContract } from './contracts'
-
-export const signerToAccount = async (
-  client: PublicClient,
-  signer: StrongAddress
-): Promise<StrongAddress> => {
-  return await client.readContract({
-    address: await resolveAddress(client, 'Accounts'),
-    abi: accountsABI,
-    functionName: 'signerToAccount',
-    args: [signer],
-  })
-}
 
 export const getTotalBalance = async (
   client: PublicClient,

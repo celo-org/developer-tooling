@@ -25,11 +25,13 @@ Please use GitHub to:
 
 ## Code
 
-This repository contains source code for: 
+This repository contains source code for:
 
 - [`@celo/celocli`](https://www.npmjs.com/package/@celo/celocli)
+- [`@celo/actions`](https://www.npmjs.com/package/@celo/actions)
 - [`@celo/base`](https://www.npmjs.com/package/@celo/base)
 - [`@celo/connect`](https://www.npmjs.com/package/@celo/connect)
+- [`@celo/core`](https://www.npmjs.com/package/@celo/core)
 - [`@celo/contractkit`](https://www.npmjs.com/package/@celo/contractkit)
 - [`@celo/cryptographic-utils`](https://www.npmjs.com/package/@celo/cryptographic-utils)
 - [`@celo/explorer`](https://www.npmjs.com/package/@celo/explorer)
@@ -48,7 +50,6 @@ This repository contains source code for:
   - [`@celo/wallet-hsm-gcp`](https://www.npmjs.com/package/@celo/wallet-hsm-gcp)
   - [`@celo/wallet-ledger`](https://www.npmjs.com/package/@celo/wallet-ledger)
   - [`@celo/wallet-local`](https://www.npmjs.com/package/@celo/wallet-local)
-  - [`@celo/wallet-remote`](https://www.npmjs.com/package/@celo/wallet-remote)
 
 ## Contributing
 
@@ -72,4 +73,3 @@ Check out the following places for more developer tooling-related content:
 
 - [@aaronmgdr](https://github.com/aaronmgdr)
 - [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)
-- [@shazarre](https://github.com/shazarre)

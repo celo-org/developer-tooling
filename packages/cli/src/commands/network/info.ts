@@ -1,7 +1,7 @@
+import { getEpochManagerContract } from '@celo/actions/contracts/epoch-manager'
 import { Flags } from '@oclif/core'
 import { PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
-import { getEpochManagerContract } from '../../packages-to-be/contracts'
 import { printValueMapRecursive } from '../../utils/cli'
 import { ViewCommmandFlags } from '../../utils/flags'
 

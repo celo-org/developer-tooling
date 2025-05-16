@@ -28,7 +28,7 @@
   "devDependencies": {
     "@celo/typescript": "workspace:^",
     "@types/debug": "^4.1.12",
-    "viem": "^2.23.5"
+    "viem": "~2.29.2"
   },
   "dependencies": {
     "@celo/base": "^7.0.2",

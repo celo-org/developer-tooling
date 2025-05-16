@@ -7,6 +7,7 @@ export type ContractName =
   | 'LockedGold'
   | 'Validators'
   | 'EpochManager'
+  | 'Election'
   | 'GoldToken'
   | 'StableToken'
   | 'StableTokenEUR'

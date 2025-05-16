@@ -26,15 +26,13 @@ export default class Balance extends BaseCommand {
   ]
 
   async run() {
-    const client = await this.getPublicClient()
+    const client = (await this.getPublicClient()) as PublicClient
     const { args, flags } = await this.parse(Balance)
 
     console.log('All balances expressed in units of wei.')
 
     // TODO this typing needs to be handled better...
-    printValueMapRecursive(
-      await getTotalBalance(client as any as PublicClient, args.arg1 as StrongAddress)
-    )
+    printValueMapRecursive(await getTotalBalance(client, args.arg1 as StrongAddress))
 
     if (flags.erc20Address) {
       const erc20Contract = getContract({

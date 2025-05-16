@@ -1,12 +1,8 @@
 import { eqAddress, NULL_ADDRESS } from '@celo/base'
 import { Address, PublicClient } from 'viem'
-import {
-  AccountsContract,
-  getAccountsContract,
-  getEpochManagerContract,
-  getValidatorsContract,
-  ValidatorsContract,
-} from './contracts'
+import { AccountsContract, getAccountsContract } from '../../contracts/accounts'
+import { getEpochManagerContract } from '../../contracts/epoch-manager'
+import { getValidatorsContract, ValidatorsContract } from '../../contracts/validators'
 
 interface UnnamedRpcNode {
   address: Address
@@ -100,7 +96,7 @@ async function accountToValidator({
       address: account,
       ecdsaPublicKey: '',
       affiliation: '',
-      score: 0n,
+      score: BigInt(0),
       signer: signer,
     }
   } else {

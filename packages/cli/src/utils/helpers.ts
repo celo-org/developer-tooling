@@ -1,5 +1,5 @@
+import { CeloClient } from '@celo/actions'
 import { StableToken } from '@celo/base'
-import { CeloClient } from '../packages-to-be/client'
 import { ethNodeIsSyncing } from '../packages-to-be/utils'
 import { failWith } from './cli'
 
