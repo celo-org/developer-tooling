@@ -7,24 +7,27 @@
   "types": "dist/mjs/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/cjs/index.d.ts",
       "import": "./dist/mjs/index.js",
-      "require": "./dist/cjs/index.js",
-      "types": "./dist/cjs/index.d.ts"
+      "require": "./dist/cjs/index.js"
+      
     },
     "./contracts/*": {
+      "types": "./dist/cjs/contracts/*.d.ts",
       "import": "./dist/mjs/contracts/*.js",
-      "require": "./dist/cjs/contracts/*.js",
-      "types": "./dist/cjs/contracts/*.d.ts"
+      "require": "./dist/cjs/contracts/*.js"
+     
     },
     "./staking": {
+      "types": "./dist/cjs/multicontract-interactions/stake/index.d.ts",
       "import": "./dist/mjs/multicontract-interactions/stake/index.js",
-      "require": "./dist/cjs/multicontract-interactions/stake/index.js",
-      "types": "./dist/cjs/multicontract-interactions/stake/index.d.ts"
+      "require": "./dist/cjs/multicontract-interactions/stake/index.js"
+     
     },
     "./chains": {
+      "types": "./dist/cjs/chains.d.ts",
       "import": "./dist/mjs/chains.js",
-      "require": "./dist/cjs/chains.js",
-      "types": "./dist/cjs/chains.d.ts"
+      "require": "./dist/cjs/chains.js"
     }
   },
   "author": "cLabs",
@@ -78,7 +81,7 @@
   "size-limit": [
     {
       "name": "import * from '@celo/actions'",
-      "path": "dist/esm/index.js",
+      "path": "dist/cjs/index.js",
       "limit": "20 kB",
       "import": "*"
     },

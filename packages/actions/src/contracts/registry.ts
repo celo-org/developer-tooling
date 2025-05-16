@@ -1,4 +1,4 @@
-import { NULL_ADDRESS } from '@celo/base'
+import { NULL_ADDRESS } from '@celo/base/lib/address'
 import { Address, PublicClient, WalletClient, publicActions } from 'viem'
 import { CeloClient, WalletCeloClient } from '../client'
 import { ContractName } from '../contract-name'
