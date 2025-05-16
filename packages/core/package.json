@@ -56,8 +56,15 @@
   },
   "size-limit": [
     {
-      "path": "dist/mjs/index.js",
+      "name": "import * from '@celo/core' (csj)",
+      "path": "dist/cjs/index.js",
       "limit": "15 kB"
+    },
+     {
+      "name": "import * from '@celo/core' (esm)",
+      "path": "dist/mjs/index.js",
+      "limit": "10 kB",
+      "import": "*"
     }
   ]
 }

@@ -77,15 +77,32 @@
   },
   "size-limit": [
     {
-      "name": "import * from '@celo/actions'",
+      "name": "require('@celo/actions') (cjs)",
       "path": "dist/cjs/index.js",
-      "limit": "20 kB",
+      "limit": "100 kB"
+    },
+       {
+      "name": "import * from '@celo/actions' (esm)",
+      "path": "dist/mjs/index.js",
+      "limit": "80 kB",
       "import": "*"
     },
     {
-      "name": "import * from '@celo/actions/staking'",
-      "path": "dist/cjs/multicontract-interactions/stake/index.js",
-      "limit": "20 kB",
+      "name": "import * from '@celo/actions/chains' (esm)",
+      "path": "dist/mjs/chains.js",
+      "limit": "2 kB",
+      "import": "*"
+    },
+    {
+      "name": "import { getAccountsContract } from '@celo/actions/contracts/accounts' (esm)",
+      "path": "dist/mjs/contracts/accounts.js",
+      "limit": "65 kB",
+      "import": "{ getAccountsContract }"
+    },
+    {
+      "name": "import * from '@celo/actions/staking' (esm)",
+      "path": "dist/mjs/multicontract-interactions/stake/index.js",
+      "limit": "80 kB",
       "import": "*"
     }
   ]
