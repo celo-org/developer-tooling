@@ -16,7 +16,7 @@ import { celo, celoAlfajores } from 'viem/chains'
 import { ipc } from 'viem/node'
 import Web3 from 'web3'
 import { celoBaklava } from './packages-to-be/chains'
-import { CeloClient, WalletCeloClient } from './packages-to-be/client'
+import { PublicCeloClient, WalletCeloClient } from './packages-to-be/client'
 import createRpcWalletClient from './packages-to-be/rpc-client'
 import { failWith } from './utils/cli'
 import { CustomFlags } from './utils/command'
@@ -129,7 +129,7 @@ export abstract class BaseCommand extends Command {
   private _web3: Web3 | null = null
   private _kit: ContractKit | null = null
 
-  private publicClient: CeloClient | null = null
+  private publicClient: PublicCeloClient | null = null
   private walletClient: WalletCeloClient | null = null
 
   private ledgerTransport: Awaited<ReturnType<(typeof _TransportNodeHid)['open']>> | null = null
@@ -194,7 +194,7 @@ export abstract class BaseCommand extends Command {
 
   // TODO(viem): This shouldn't be public, but for the time being to be called
   // from CheckBuilder to allow smooth transitions it is public.
-  public async getPublicClient(): Promise<CeloClient> {
+  public async getPublicClient(): Promise<PublicCeloClient> {
     if (!this.publicClient) {
       const nodeUrl = await this.getNodeUrl()
       ux.action.start(`Connecting to Node ${nodeUrl}`)
@@ -230,7 +230,7 @@ export abstract class BaseCommand extends Command {
               default: { http: [nodeUrl] },
             },
           },
-        }) as any as CeloClient
+        }) as any as PublicCeloClient
       }
       ux.action.stop()
     }

@@ -47,7 +47,7 @@ testWithAnvilL2('epochs:send-validator-payment cmd', (web3) => {
           "All checks passed",
         ],
         [
-          "SendTransaction: sendValidatorPayment",
+          "SendTransaction: EpochManager->sendValidatorPayment",
         ],
         [
           "txHash: 0xtxhash",

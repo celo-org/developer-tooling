@@ -16,15 +16,8 @@ import { formatEther } from 'ethers/lib/utils'
 import humanizeDuration from 'humanize-duration'
 import { convertEthersToCeloTx } from './mento-broker-adaptor'
 
-import {
-  Abi,
-  decodeEventLog,
-  DecodeEventLogReturnType,
-  SimulateContractParameters,
-  WriteContractParameters,
-} from 'viem'
-import { CeloTransactionRequest } from 'viem/celo'
-import { CeloClient, WalletCeloClient } from '../packages-to-be/client'
+import { Abi, ContractEventName, decodeEventLog, DecodeEventLogReturnType } from 'viem'
+import { PublicCeloClient } from '../packages-to-be/client'
 
 const CLIError = Errors.CLIError
 
@@ -68,57 +61,16 @@ export async function displaySafeTx(name: string, safeTxResult: SafeTransactionR
   }
 }
 
-type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>
-
-export async function displaySendViemContractCall<const abi extends Abi>(
-  contractName: string,
-  txData: Optional<WriteContractParameters<abi>, 'chain' | 'account'>,
-  client: CeloClient,
-  wallet: WalletCeloClient,
-  params: { feeCurrency?: `0x${string}` } = {},
-  displayEventName?: string | string[]
-) {
-  ux.action.start(`Sending contract call: ${contractName}->${txData.functionName}`)
-  try {
-    const { request } = await client.simulateContract(txData as SimulateContractParameters)
-    await innerDisplayViemTxHash(
-      txData.functionName,
-      wallet.writeContract({
-        ...request,
-        ...params,
-        ...{
-          chain: txData.chain || client.chain,
-          account: txData.account || wallet.account,
-        },
-      }),
-      client,
-      displayEventName?.length ? { abi: txData.abi, displayEventName } : undefined
-    )
-  } catch (e) {
-    ux.action.stop(`failed: ${(e as Error).message}`)
-    throw e
-  }
-}
-
-export async function displayViemTx(
-  name: string,
-  request: CeloTransactionRequest,
-  client: CeloClient,
-  wallet: WalletCeloClient
-) {
-  try {
-    await innerDisplayViemTxHash(name, wallet.sendTransaction(request), client)
-  } catch (e) {
-    ux.action.stop(`failed: ${(e as Error).message}`)
-    throw e
-  }
-}
-
-async function innerDisplayViemTxHash(
+export async function displayViemTx<const abi extends Abi | undefined = undefined>(
   name: string,
   hash: Promise<`0x${string}`>,
-  client: CeloClient,
-  options?: { abi: Abi; displayEventName: string | string[] }
+  client: PublicCeloClient,
+  decodeEventsOpts?: abi extends Abi
+    ? {
+        abi: abi
+        displayEventName: ContractEventName<abi> | ContractEventName<abi>[]
+      }
+    : never
 ) {
   if (!ux.action.running) {
     ux.action.start(`Sending Transaction: ${name}`)
@@ -128,14 +80,15 @@ async function innerDisplayViemTxHash(
     const { transactionHash, logs } = await client.waitForTransactionReceipt({ hash: await hash })
     printValueMap({ txHash: transactionHash })
 
-    if (options?.displayEventName && logs.length) {
-      const { abi, displayEventName } = options
+    if (decodeEventsOpts?.displayEventName && logs.length) {
+      const { abi, displayEventName } = decodeEventsOpts
 
       const decodedLogs = logs.map((log) => {
         let decodedLog: DecodeEventLogReturnType | undefined
         try {
           const eventNames =
             typeof displayEventName === 'string' ? [displayEventName] : displayEventName
+
           decodedLog = eventNames
             .map((eventName) => {
               try {

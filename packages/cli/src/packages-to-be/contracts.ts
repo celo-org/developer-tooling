@@ -10,10 +10,10 @@ import {
   stableTokenEurABI,
   validatorsABI,
 } from '@celo/abis-12'
-import { erc20Abi, getContract, GetContractReturnType, PublicClient, WalletClient } from 'viem'
+import { Client, erc20Abi, getContract, GetContractReturnType, PublicClient } from 'viem'
 import { resolveAddress } from './address-resolver'
 
-export async function getAccountsContract<T extends WalletClient | PublicClient = PublicClient>(
+export async function getAccountsContract<T extends Client = PublicClient>(
   client: T
 ): Promise<AccountsContract<T>> {
   return getContract({
@@ -22,10 +22,12 @@ export async function getAccountsContract<T extends WalletClient | PublicClient 
     client,
   })
 }
-export type AccountsContract<T extends WalletClient | PublicClient = PublicClient> =
-  GetContractReturnType<typeof accountsABI, T>
+export type AccountsContract<T extends Client = PublicClient> = GetContractReturnType<
+  typeof accountsABI,
+  T
+>
 
-export async function getGovernanceContract<T extends WalletClient | PublicClient = PublicClient>(
+export async function getGovernanceContract<T extends Client = PublicClient>(
   client: T
 ): Promise<GovernanceContract<T>> {
   return getContract({
@@ -34,10 +36,12 @@ export async function getGovernanceContract<T extends WalletClient | PublicClien
     client,
   })
 }
-export type GovernanceContract<T extends WalletClient | PublicClient = PublicClient> =
-  GetContractReturnType<typeof governanceABI, T>
+export type GovernanceContract<T extends Client = PublicClient> = GetContractReturnType<
+  typeof governanceABI,
+  T
+>
 
-export async function getLockedGoldContract<T extends WalletClient | PublicClient = PublicClient>(
+export async function getLockedGoldContract<T extends Client = PublicClient>(
   client: T
 ): Promise<LockedGoldContract<T>> {
   return getContract({
@@ -46,10 +50,12 @@ export async function getLockedGoldContract<T extends WalletClient | PublicClien
     client,
   })
 }
-export type LockedGoldContract<T extends WalletClient | PublicClient = PublicClient> =
-  GetContractReturnType<typeof lockedGoldABI, T>
+export type LockedGoldContract<T extends Client = PublicClient> = GetContractReturnType<
+  typeof lockedGoldABI,
+  T
+>
 
-export async function getValidatorsContract<T extends PublicClient | WalletClient = PublicClient>(
+export async function getValidatorsContract<T extends Client = PublicClient>(
   client: T
 ): Promise<ValidatorsContract<T>> {
   return getContract({
@@ -58,10 +64,12 @@ export async function getValidatorsContract<T extends PublicClient | WalletClien
     client,
   })
 }
-export type ValidatorsContract<T extends WalletClient | PublicClient = PublicClient> =
-  GetContractReturnType<typeof validatorsABI, T>
+export type ValidatorsContract<T extends Client = PublicClient> = GetContractReturnType<
+  typeof validatorsABI,
+  T
+>
 
-export async function getEpochManagerContract<T extends WalletClient | PublicClient = PublicClient>(
+export async function getEpochManagerContract<T extends Client = PublicClient>(
   client: T
 ): Promise<EpochManager<T>> {
   return getContract({
@@ -70,22 +78,26 @@ export async function getEpochManagerContract<T extends WalletClient | PublicCli
     client,
   })
 }
-export type EpochManager<T extends WalletClient | PublicClient = PublicClient> =
-  GetContractReturnType<typeof epochManagerABI, T>
+export type EpochManager<T extends Client = PublicClient> = GetContractReturnType<
+  typeof epochManagerABI,
+  T
+>
 
-export async function getFeeCurrencyDirectoryContract<
-  T extends WalletClient | PublicClient = PublicClient
->(client: T): Promise<FeeCurrencyDirectory<T>> {
+export async function getFeeCurrencyDirectoryContract<T extends Client = PublicClient>(
+  client: T
+): Promise<FeeCurrencyDirectory<T>> {
   return getContract({
     address: await resolveAddress(client, 'FeeCurrencyDirectory'),
     abi: feeCurrencyDirectoryABI,
     client,
   })
 }
-export type FeeCurrencyDirectory<T extends WalletClient | PublicClient = PublicClient> =
-  GetContractReturnType<typeof feeCurrencyDirectoryABI, T>
+export type FeeCurrencyDirectory<T extends Client = PublicClient> = GetContractReturnType<
+  typeof feeCurrencyDirectoryABI,
+  T
+>
 
-export async function getERC20Contract<T extends WalletClient | PublicClient = PublicClient>(
+export async function getERC20Contract<T extends Client = PublicClient>(
   client: T,
   address: `0x${string}`
 ): Promise<ERC20<T>> {
@@ -95,12 +107,9 @@ export async function getERC20Contract<T extends WalletClient | PublicClient = P
     client,
   })
 }
-export type ERC20<T extends WalletClient | PublicClient = PublicClient> = GetContractReturnType<
-  typeof erc20Abi,
-  T
->
+export type ERC20<T extends Client = PublicClient> = GetContractReturnType<typeof erc20Abi, T>
 
-export async function getGoldTokenContract<T extends WalletClient | PublicClient = PublicClient>(
+export async function getGoldTokenContract<T extends Client = PublicClient>(
   client: T
 ): Promise<GoldToken<T>> {
   return getContract({
@@ -109,46 +118,52 @@ export async function getGoldTokenContract<T extends WalletClient | PublicClient
     client,
   })
 }
-export type GoldToken<T extends WalletClient | PublicClient = PublicClient> = GetContractReturnType<
+export type GoldToken<T extends Client = PublicClient> = GetContractReturnType<
   typeof goldTokenABI,
   T
 >
 
-export async function getStableTokenUSDContract<
-  T extends WalletClient | PublicClient = PublicClient
->(client: T): Promise<StableTokenUSD<T>> {
+export async function getStableTokenUSDContract<T extends Client = PublicClient>(
+  client: T
+): Promise<StableTokenUSD<T>> {
   return getContract({
     address: await resolveAddress(client, 'StableToken'),
     abi: stableTokenABI,
     client,
   })
 }
-export type StableTokenUSD<T extends WalletClient | PublicClient = PublicClient> =
-  GetContractReturnType<typeof stableTokenABI, T>
+export type StableTokenUSD<T extends Client = PublicClient> = GetContractReturnType<
+  typeof stableTokenABI,
+  T
+>
 
-export async function getStableTokenEurContract<
-  T extends WalletClient | PublicClient = PublicClient
->(client: T): Promise<StableTokenEUR<T>> {
+export async function getStableTokenEurContract<T extends Client = PublicClient>(
+  client: T
+): Promise<StableTokenEUR<T>> {
   return getContract({
     address: await resolveAddress(client, 'StableTokenEUR'),
     abi: stableTokenEurABI,
     client,
   })
 }
-export type StableTokenEUR<T extends WalletClient | PublicClient = PublicClient> =
-  GetContractReturnType<typeof stableTokenEurABI, T>
+export type StableTokenEUR<T extends Client = PublicClient> = GetContractReturnType<
+  typeof stableTokenEurABI,
+  T
+>
 
-export async function getStableTokenBrlContract<
-  T extends WalletClient | PublicClient = PublicClient
->(client: T): Promise<StableTokenBRL<T>> {
+export async function getStableTokenBrlContract<T extends Client = PublicClient>(
+  client: T
+): Promise<StableTokenBRL<T>> {
   return getContract({
     address: await resolveAddress(client, 'StableTokenBRL'),
     abi: stableTokenBrlABI,
     client,
   })
 }
-export type StableTokenBRL<T extends WalletClient | PublicClient = PublicClient> =
-  GetContractReturnType<typeof stableTokenBrlABI, T>
+export type StableTokenBRL<T extends Client = PublicClient> = GetContractReturnType<
+  typeof stableTokenBrlABI,
+  T
+>
 
 export const StableTokens = {
   cUSD: getStableTokenUSDContract,
@@ -157,4 +172,5 @@ export const StableTokens = {
 } as const
 export type StableToken = keyof typeof StableTokens
 export type StableTokenContractGetter = (typeof StableTokens)[StableToken]
-export type StableTokenContract = Awaited<ReturnType<StableTokenContractGetter>>
+// all stables are the same type, this heavily simplifies the typings
+export type StableTokenContract<T extends Client = PublicClient> = StableTokenUSD<T>
