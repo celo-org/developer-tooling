@@ -117,7 +117,7 @@ testWithAnvilL2('election:vote', (web3: Web3) => {
           "   ✔  0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb is ValidatorGroup ",
         ],
         [
-          "   ✔  Account has at least 0.000000000000012345 non-voting Locked Gold ",
+          "   ✔  Account has at least 0.000000000000012345 non-voting Locked Celo ",
         ],
         [
           "All checks passed",
