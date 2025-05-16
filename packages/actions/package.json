@@ -46,7 +46,7 @@
     "build": "yarn clean && yarn build:cjs && yarn build:mjs && yarn postbuild",
     "build:cjs": "yarn --top-level run tsc -p tsconfig-cjs.json",
     "build:mjs": "yarn --top-level run tsc -p tsconfig.json",
-    "postbuild": "node ./scripts/post-build.mjs",
+    "postbuild": "node ../../scripts/post-build.mjs",
     "clean": "yarn --top-level run tsc -b . --clean && yarn run rimraf dist",
     "docs": "yarn --top-level run typedoc",
     "test": "yarn run vitest --run --passWithNoTests",
