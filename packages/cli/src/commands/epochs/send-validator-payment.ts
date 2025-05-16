@@ -1,5 +1,5 @@
+import { getEpochManagerContract } from '@celo/actions/contracts/epoch-manager'
 import { BaseCommand } from '../../base'
-import { getEpochManagerContract } from '../../packages-to-be/contracts'
 import { newCheckBuilder } from '../../utils/checks'
 import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'

@@ -1,9 +1,10 @@
+import { getGasPriceOnCelo } from '@celo/actions'
+import { getCeloERC20Contract } from '@celo/actions/contracts/celo-erc20'
+import { getERC20Contract } from '@celo/actions/contracts/erc20'
 import { Flags } from '@oclif/core'
 import { PublicClient, publicActions } from 'viem'
 import { CeloTransactionRequest } from 'viem/celo'
 import { BaseCommand } from '../../base'
-import { getERC20Contract, getGoldTokenContract } from '../../packages-to-be/contracts'
-import { getGasPriceOnCelo } from '../../packages-to-be/utils'
 import { newCheckBuilder } from '../../utils/checks'
 import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
@@ -38,7 +39,7 @@ export default class TransferCelo extends BaseCommand {
     const value = res.flags.value
     const feeCurrency = res.flags.gasCurrency
 
-    const goldTokenContract = await getGoldTokenContract(wallet.extend(publicActions))
+    const goldTokenContract = await getCeloERC20Contract(wallet.extend(publicActions))
 
     const transferParams = (feeCurrency ? { feeCurrency } : {}) as Pick<
       CeloTransactionRequest,

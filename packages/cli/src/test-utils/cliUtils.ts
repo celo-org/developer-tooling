@@ -1,8 +1,8 @@
+import { PublicCeloClient } from '@celo/actions'
 import { TestClientExtended } from '@celo/dev-utils/lib/viem/anvil-test'
 import { Interfaces } from '@oclif/core'
 import Web3 from 'web3'
 import { BaseCommand } from '../base'
-import { PublicCeloClient } from '../packages-to-be/client'
 
 type AbstractConstructor<T> = new (...args: any[]) => T
 interface Runner extends AbstractConstructor<BaseCommand> {

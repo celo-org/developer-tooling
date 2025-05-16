@@ -1,5 +1,5 @@
+import { getEpochManagerContract } from '@celo/actions/contracts/epoch-manager'
 import { PublicClient } from 'viem'
-import { getEpochManagerContract } from './contracts'
 
 export async function getEpochInfo(client: PublicClient) {
   const epochManager = await getEpochManagerContract(client)

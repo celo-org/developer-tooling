@@ -2,7 +2,7 @@
   "extends": "../typescript/tsconfig.library.json",
   "compilerOptions": {
     "resolveJsonModule": true,
-    "moduleResolution": "node16",
+    "moduleResolution": "nodenext",
     "declarationMap": true,
     "module": "Node16",
     "rootDir": "src",

@@ -1,3 +1,4 @@
+import { CeloClient } from '@celo/actions'
 import { ensureLeading0x, StrongAddress } from '@celo/base'
 import {
   Address,
@@ -7,7 +8,6 @@ import {
   WalletClient,
   WalletClientConfig,
 } from 'viem'
-import { CeloClient } from './client'
 
 export default async function createRpcWalletClient<T extends Chain | undefined = undefined>({
   publicClient,

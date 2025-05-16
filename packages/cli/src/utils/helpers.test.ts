@@ -1,5 +1,5 @@
+import { PublicCeloClient } from '@celo/actions'
 import { viem_testWithAnvil } from '@celo/dev-utils/lib/viem/anvil-test'
-import { PublicCeloClient } from '../packages-to-be/client'
 import { enumEntriesDupWithLowercase, nodeIsSynced } from './helpers'
 
 viem_testWithAnvil('nodeIsSynced', (client) => {

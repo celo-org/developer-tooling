@@ -1,9 +1,9 @@
 import { epochManagerABI } from '@celo/abis-12'
+import * as epochManager from '@celo/actions/contracts/epoch-manager'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { ux } from '@oclif/core'
 import { UnknownRpcError } from 'viem'
-import * as contracts from '../../packages-to-be/contracts'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Start from './start'
 import Status from './status'
@@ -125,14 +125,15 @@ testWithAnvilL2('epochs:status cmd', (web3) => {
         },
       })
 
-      jest.mock('../../packages-to-be/contracts', () => ({
+      jest.mock('@celo/actions/contracts/epoch-manager', () => ({
         getEpochManagerContract: jest.fn(() => mockEpochManager),
       }))
     })
-    afterEach(() => jest.unmock('../../packages-to-be/contracts'))
+    afterEach(() => jest.unmock('@celo/actions/contracts/epoch-manager'))
+
     it('handles successful responses from epochManager methods', async () => {
       const consoleMock = jest.spyOn(ux.write, 'stdout')
-      jest.spyOn(contracts, 'getEpochManagerContract').mockResolvedValue(mockEpochManager as any)
+      jest.spyOn(epochManager, 'getEpochManagerContract').mockResolvedValue(mockEpochManager as any)
 
       await expect(testLocallyWithWeb3Node(Status, ['--output', 'csv'], web3)).resolves.toBe(true)
 

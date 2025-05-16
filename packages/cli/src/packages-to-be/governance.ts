@@ -1,9 +1,15 @@
 import { governanceABI } from '@celo/abis-12'
-import { Address, bufferToHex, zip } from '@celo/base'
+import { resolveAddress } from '@celo/actions'
+import { getProposalStage, ProposalStage } from '@celo/actions/contracts/governance'
+import { Address, bufferToHex } from '@celo/base'
 import BigNumber from 'bignumber.js'
 import { PublicClient } from 'viem'
-import { resolveAddress } from './address-resolver'
 import { bigintToBigNumber } from './utils'
+
+type DequeuedStageDurations = Pick<
+  StageDurations<BigNumber>,
+  ProposalStage.Referendum | ProposalStage.Execution
+>
 
 export interface ProposalMetadata {
   proposer: Address
@@ -11,71 +17,6 @@ export interface ProposalMetadata {
   timestamp: BigNumber
   transactionCount: number
   descriptionURL: string
-}
-
-export enum ProposalStage {
-  None = 'None',
-  Queued = 'Queued',
-  Approval = 'Approval',
-  Referendum = 'Referendum',
-  Execution = 'Execution',
-  Expiration = 'Expiration',
-}
-
-export interface UpvoteRecord {
-  proposalID: bigint
-  upvotes: bigint
-}
-
-type DequeuedStageDurations = Pick<
-  StageDurations<BigNumber>,
-  ProposalStage.Referendum | ProposalStage.Execution
->
-
-export const getProposalStage = async (
-  client: PublicClient,
-  proposalId: bigint
-): Promise<ProposalStage> => {
-  const queue = await getQueue(client)
-
-  const existsInQueue = queue.find((u) => u.proposalID === proposalId) !== undefined
-  if (existsInQueue) {
-    const expired = await client.readContract({
-      address: await resolveAddress(client, 'Governance'),
-      abi: governanceABI,
-      functionName: 'isQueuedProposalExpired',
-      args: [proposalId],
-    })
-
-    return expired ? ProposalStage.Expiration : ProposalStage.Queued
-  }
-
-  const stage = await client.readContract({
-    address: await resolveAddress(client, 'Governance'),
-    abi: governanceABI,
-    functionName: 'getProposalStage',
-    args: [proposalId],
-  })
-
-  return Object.keys(ProposalStage)[stage] as ProposalStage
-}
-
-export const getQueue = async (client: PublicClient) => {
-  const queue = await client.readContract({
-    address: await resolveAddress(client, 'Governance'),
-    abi: governanceABI,
-    functionName: 'getQueue',
-  })
-
-  return zip<bigint, bigint, UpvoteRecord>(
-    (_id, _upvotes) => ({
-      proposalID: _id,
-      upvotes: _upvotes,
-    }),
-    // TODO check if this works correctly after changing the types?!
-    queue[0] as bigint[],
-    queue[1] as bigint[]
-  )
 }
 
 export const getHotfixRecord = async (

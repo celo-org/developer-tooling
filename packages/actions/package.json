@@ -1,0 +1,109 @@
+{
+  "name": "@celo/actions",
+  "version": "0.0.0",
+  "description": "Celo actions for use with Viem. Easily interact with Celo core contracts",
+  "main": "dist/cjs/index.js",
+  "module": "dist/mjs/index.js",
+  "types": "dist/mjs/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/cjs/index.d.ts",
+      "import": "./dist/mjs/index.js",
+      "require": "./dist/cjs/index.js"
+    },
+    "./contracts/*": {
+      "types": "./dist/cjs/contracts/*.d.ts",
+      "import": "./dist/mjs/contracts/*.js",
+      "require": "./dist/cjs/contracts/*.js"
+    },
+    "./staking": {
+      "types": "./dist/cjs/multicontract-interactions/stake/index.d.ts",
+      "import": "./dist/mjs/multicontract-interactions/stake/index.js",
+      "require": "./dist/cjs/multicontract-interactions/stake/index.js"
+    },
+    "./chains": {
+      "types": "./dist/cjs/chains.d.ts",
+      "import": "./dist/mjs/chains.js",
+      "require": "./dist/cjs/chains.js"
+    }
+  },
+  "author": "cLabs",
+  "license": "Apache-2.0",
+  "homepage": "https://docs.celo.org/developer/tools",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/celo-org/developer-tooling.git",
+    "directory": "packages/actions"
+  },
+  "keywords": [
+    "celo",
+    "blockchain",
+    "actions",
+    "contract",
+    "viem"
+  ],
+  "scripts": {
+    "build": "yarn clean && yarn build:cjs && yarn build:mjs && yarn postbuild",
+    "build:cjs": "yarn --top-level run tsc -p tsconfig-cjs.json",
+    "build:mjs": "yarn --top-level run tsc -p tsconfig.json",
+    "postbuild": "node ../../scripts/post-build.mjs",
+    "clean": "yarn --top-level run tsc -b . --clean && yarn run rimraf dist",
+    "docs": "yarn --top-level run typedoc",
+    "test": "yarn run vitest --run --passWithNoTests",
+    "check-size": "size-limit",
+    "test:watch": "yarn run vitest --watch",
+    "test:changes": "yarn run vitest --run --changed",
+    "lint": "yarn --top-level run eslint -c .eslintrc.cjs ",
+    "prepublishOnly": "yarn clean && yarn build"
+  },
+  "dependencies": {
+    "@celo/abis": "^12.0.3",
+    "@celo/base": "^7.0.2",
+    "@celo/core": "0.0.0"
+  },
+  "devDependencies": {
+    "@celo/dev-utils": "workspace:^",
+    "@celo/typescript": "workspace:^",
+    "@size-limit/preset-small-lib": "^11.2.0",
+    "@vitest/coverage-v8": "2.1.9",
+    "dotenv": "^8.2.0",
+    "rimraf": "^4.4.1",
+    "size-limit": "^11.2.0",
+    "viem": "^2.29.2",
+    "vitest": "^2.1.9"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "size-limit": [
+    {
+      "name": "require('@celo/actions') (cjs)",
+      "path": "dist/cjs/index.js",
+      "limit": "100 kB"
+    },
+    {
+      "name": "import * from '@celo/actions' (esm)",
+      "path": "dist/mjs/index.js",
+      "limit": "80 kB",
+      "import": "*"
+    },
+    {
+      "name": "import * from '@celo/actions/chains' (esm)",
+      "path": "dist/mjs/chains.js",
+      "limit": "2 kB",
+      "import": "*"
+    },
+    {
+      "name": "import { getAccountsContract } from '@celo/actions/contracts/accounts' (esm)",
+      "path": "dist/mjs/contracts/accounts.js",
+      "limit": "65 kB",
+      "import": "{ getAccountsContract }"
+    },
+    {
+      "name": "import * from '@celo/actions/staking' (esm)",
+      "path": "dist/mjs/multicontract-interactions/stake/index.js",
+      "limit": "80 kB",
+      "import": "*"
+    }
+  ]
+}

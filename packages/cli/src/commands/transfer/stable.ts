@@ -1,4 +1,4 @@
-import { StableTokens } from '../../packages-to-be/contracts'
+import { StableTokens } from '../../packages-to-be/stable-tokens'
 import { TransferStableBase } from '../../transfer-stable-base'
 import { enumEntriesDupWithLowercase } from '../../utils/helpers'
 
