@@ -100,7 +100,6 @@ export async function displayViemTx<const abi extends Abi | undefined = undefine
                 })
               } catch (e) {
                 // unknown event, it's a-ok
-                process.stderr.write(`\n${(e as Error).message}\n`)
               }
             })
             .filter(Boolean)
