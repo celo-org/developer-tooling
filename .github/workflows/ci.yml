@@ -144,12 +144,12 @@ jobs:
   size_checks: 
     name: Size checks
     runs-on: ['self-hosted', 'org', '8-cpu']
-    timeout-minutes: 30
     needs: install-dependencies
+    timeout-minutes: 3
     strategy:
       fail-fast: false
       matrix:
-        # We need to run this job for all the packages that are not @celo/actions and @celo/core
+        # We need to run this job for @celo/actions and @celo/core
         folder: ["actions", "core"]
     steps:
       - uses: actions/checkout@v4
@@ -157,11 +157,15 @@ jobs:
         uses: ./.github/actions/sync-workspace
         with:
           artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
-      - uses: andresz1/size-limit-action@v1
+       
+      - uses: andresz1/size-limit-action@v1.8.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          skip_step: install 
+          package_manager: yarn
+          skip_step: 'build'
+          script: 'yarn check-size --json' 
           directory: packages/${{ matrix.folder }}
+         
 
   general_test:
     name: General jest test
