@@ -1,8 +1,8 @@
 import { registryABI } from '@celo/abis'
 import { NULL_ADDRESS } from '@celo/base'
 import { Address, PublicClient, WalletClient, publicActions } from 'viem'
-import { CeloClient, WalletCeloClient } from '../setup/client'
-import { ContractName } from '../types/contract-name'
+import { CeloClient, WalletCeloClient } from '../client'
+import { ContractName } from '../contract-name'
 
 export const REGISTRY_CONTRACT_ADDRESS = '0x000000000000000000000000000000000000ce10'
 

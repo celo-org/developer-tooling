@@ -1,6 +1,6 @@
 import { governanceABI } from '@celo/abis-12'
 import { resolveAddress } from '@celo/actions'
-import { getProposalStage, ProposalStage } from '@celo/actions/governance-contract'
+import { getProposalStage, ProposalStage } from '@celo/actions/contracts/governance'
 import { Address, bufferToHex } from '@celo/base'
 import BigNumber from 'bignumber.js'
 import { PublicClient } from 'viem'

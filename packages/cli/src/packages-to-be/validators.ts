@@ -1,6 +1,6 @@
 import { accountsABI, lockedGoldABI, validatorsABI } from '@celo/abis-12'
 import { resolveAddress } from '@celo/actions'
-import { getValidatorsContract } from '@celo/actions/validators-contract'
+import { getValidatorsContract } from '@celo/actions/contracts/validators'
 import { Address, concurrentMap, ensureLeading0x, eqAddress, StrongAddress } from '@celo/base'
 import { fromFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'

@@ -1,4 +1,4 @@
-import { CeloClient } from '@celo/actions/setup'
+import { CeloClient } from '@celo/actions'
 import BigNumber from 'bignumber.js'
 
 export function bigintToBigNumber(value: bigint) {

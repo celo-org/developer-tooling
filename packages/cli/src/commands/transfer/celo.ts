@@ -1,6 +1,6 @@
 import { getGasPriceOnCelo } from '@celo/actions'
-import { getCeloERC20Contract } from '@celo/actions/celo-contract'
-import { getERC20Contract } from '@celo/actions/erc20-contract'
+import { getCeloERC20Contract } from '@celo/actions/contracts/celo-erc20'
+import { getERC20Contract } from '@celo/actions/contracts/erc20'
 import { Flags } from '@oclif/core'
 import { PublicClient } from 'viem'
 import { CeloTransactionRequest } from 'viem/celo'

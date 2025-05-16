@@ -1,4 +1,4 @@
-import { CeloClient } from '@celo/actions/setup'
+import { CeloClient } from '@celo/actions'
 import { TestClientExtended } from '@celo/dev-utils/lib/viem/anvil-test'
 import { Interfaces } from '@oclif/core'
 import Web3 from 'web3'

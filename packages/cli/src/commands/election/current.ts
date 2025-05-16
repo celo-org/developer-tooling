@@ -1,6 +1,6 @@
 import { Flags, ux } from '@oclif/core'
 
-import { ElectedRpcNode, getElectedRpcNodes } from '@celo/actions/stake'
+import { ElectedRpcNode, getElectedRpcNodes } from '@celo/actions/staking'
 import { PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
 

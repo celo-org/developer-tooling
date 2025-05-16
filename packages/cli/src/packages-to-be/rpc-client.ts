@@ -1,4 +1,4 @@
-import { CeloClient } from '@celo/actions/setup'
+import { CeloClient } from '@celo/actions'
 import { ensureLeading0x, StrongAddress } from '@celo/base'
 import {
   Address,

@@ -1,6 +1,6 @@
 import { lockedGoldABI } from '@celo/abis-12'
 import { resolveAddress } from '@celo/actions'
-import { getAccountsContract } from '@celo/actions/accounts-contract'
+import { getAccountsContract } from '@celo/actions/contracts/accounts'
 import { StrongAddress } from '@celo/base'
 import { Address, erc20Abi, PublicClient } from 'viem'
 

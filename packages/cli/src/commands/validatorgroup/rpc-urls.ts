@@ -1,5 +1,5 @@
-import { getAccountsContract } from '@celo/actions/accounts-contract'
-import { getEpochManagerContract } from '@celo/actions/epoch-manager-contract'
+import { getAccountsContract } from '@celo/actions/contracts/accounts'
+import { getEpochManagerContract } from '@celo/actions/contracts/epoch-manager'
 import { concurrentMap, StrongAddress } from '@celo/base'
 import { ClaimTypes, IdentityMetadataWrapper } from '@celo/metadata-claims'
 import { AccountMetadataSignerGetters } from '@celo/metadata-claims/lib/types'

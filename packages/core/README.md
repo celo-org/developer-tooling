@@ -1,6 +1,6 @@
 # @celo/core
 
-@celo/core is a rpc client agnostic, dependency free, library which abstracts away the logic for common but complicated interactions with Celo Core contracts. 
+@celo/core is a rpc client agnostic, nearly dependency free, library which abstracts away the logic for common but complicated interactions with Celo Core contracts. 
 
 Each interaction is handled via an async function with interface like `(adapter, params, options) => Promise<Result>`
 
@@ -26,8 +26,7 @@ Because @celo/core doesnt care how you connect to your rpc node it is up to you 
 core operations are grouped by theme. 
 
 
-#### Stake
+* staking
+* governing
 
-
-### Govern
 

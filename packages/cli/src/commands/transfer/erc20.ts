@@ -1,6 +1,6 @@
 import { getGasPriceOnCelo } from '@celo/actions'
-import { getCeloERC20Contract } from '@celo/actions/celo-contract'
-import { getERC20Contract } from '@celo/actions/erc20-contract'
+import { getCeloERC20Contract } from '@celo/actions/contracts/celo-erc20'
+import { getERC20Contract } from '@celo/actions/contracts/erc20'
 import { erc20Abi, PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'

@@ -38,6 +38,9 @@
     "lint": "yarn --top-level run eslint -c .eslintrc.cjs ",
     "prepublishOnly": "yarn clean && yarn build"
   },
+  "dependencies": {
+    "@celo/base": "7.0.2"
+  },
   "devDependencies": {
     "@celo/typescript": "workspace:^",
     "@size-limit/preset-small-lib": "^11.2.0",
@@ -53,8 +56,8 @@
   },
   "size-limit": [
     {
-      "path": "dist/bundle.js",
-      "limit": "10 kB"
+      "path": "dist/mjs/index.js",
+      "limit": "15 kB"
     }
   ]
 }

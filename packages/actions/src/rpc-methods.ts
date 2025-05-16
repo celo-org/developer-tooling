@@ -1,5 +1,5 @@
 import type { Address, Hex } from 'viem'
-import { CeloClient } from './setup/client'
+import { CeloClient } from './client'
 
 export async function getGasPriceOnCelo(client: CeloClient, feeCurrency?: Address) {
   const gasPrice = await client.request<{

@@ -1,4 +1,4 @@
-import { getEpochManagerContract } from '@celo/actions/epoch-manager-contract'
+import { getEpochManagerContract } from '@celo/actions/contracts/epoch-manager'
 import { Flags } from '@oclif/core'
 import { PublicClient } from 'viem'
 import { BaseCommand } from '../../base'

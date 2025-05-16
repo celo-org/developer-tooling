@@ -4,18 +4,18 @@ import {
   AccountsContract,
   getAccountsContract,
   signerToAccount,
-} from '@celo/actions/accounts-contract'
+} from '@celo/actions/contracts/accounts'
 import {
   FeeCurrencyDirectory,
   getFeeCurrencyDirectoryContract,
-} from '@celo/actions/feecurrency-directory-contract'
+} from '@celo/actions/contracts/feecurrency-directory'
 import {
   getGovernanceContract,
   getProposalStage,
   GovernanceContract,
-} from '@celo/actions/governance-contract'
-import { getLockedGoldContract, LockedGoldContract } from '@celo/actions/locked-celo-contract'
-import { getValidatorsContract, ValidatorsContract } from '@celo/actions/validators-contract'
+} from '@celo/actions/contracts/governance'
+import { getLockedCeloContract, LockedCeloContract } from '@celo/actions/contracts/locked-celo'
+import { getValidatorsContract, ValidatorsContract } from '@celo/actions/contracts/validators'
 import { bufferToHex, ensureLeading0x, NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
 import { Address } from '@celo/connect'
 import { HotfixRecord, ProposalStage } from '@celo/contractkit/lib/wrappers/Governance'
@@ -137,16 +137,16 @@ class CheckBuilder {
 
   private withLockedGold<A>(
     f: (
-      lockedGold: LockedGoldContract,
+      lockedGold: LockedCeloContract,
       signer: StrongAddress,
       account: StrongAddress,
       validators: ValidatorsContract
     ) => A
   ): () => Promise<Resolve<A>> {
     return async () => {
-      const lockedCeloContract = (await getLockedGoldContract(
+      const lockedCeloContract = (await getLockedCeloContract(
         await this.getClient()
-      )) as LockedGoldContract<PublicClient>
+      )) as LockedCeloContract<PublicClient>
       const validatorsContract = (await getValidatorsContract(
         await this.getClient()
       )) as ValidatorsContract<PublicClient>
@@ -553,15 +553,14 @@ class CheckBuilder {
       )
     )
 
-  hasEnoughNonvotingLockedGold = (value: BigNumber) => {
-    const valueInEth = formatEther(bigNumberToBigInt(value))
+  hasEnoughNonvotingLockedCelo = (value: bigint) => {
+    const valueInEth = formatEther(value)
 
     return this.addCheck(
       `Account has at least ${valueInEth} non-voting Locked Gold`,
-      this.withLockedGold(async (lockedGold, _signer, account) =>
-        value.isLessThanOrEqualTo(
-          bigintToBigNumber(await lockedGold.read.getAccountNonvotingLockedGold([account]))
-        )
+      this.withLockedGold(
+        async (lockedGold, _signer, account) =>
+          value <= (await lockedGold.read.getAccountNonvotingLockedGold([account]))
       )
     )
   }
