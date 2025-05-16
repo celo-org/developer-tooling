@@ -1,5 +1,11 @@
 # @celo/base
 
+## 7.0.3-beta.0
+
+### Patch Changes
+
+- [#628](https://github.com/celo-org/developer-tooling/pull/628) [`7d84a5a`](https://github.com/celo-org/developer-tooling/commit/7d84a5a9a23f72572999dc17f24d9b70bf6ca9f6) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Minor typing improvement"
+
 ## 7.0.2
 
 ### Patch Changes

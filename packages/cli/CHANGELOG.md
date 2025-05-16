@@ -1,5 +1,28 @@
 # Changelog
 
+## 7.0.0-beta.6
+
+### Patch Changes
+
+- [#628](https://github.com/celo-org/developer-tooling/pull/628) [`7d84a5a`](https://github.com/celo-org/developer-tooling/commit/7d84a5a9a23f72572999dc17f24d9b70bf6ca9f6) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Minor changes in the account:new output
+
+- [#629](https://github.com/celo-org/developer-tooling/pull/629) [`bd32521`](https://github.com/celo-org/developer-tooling/commit/bd32521b76872cdbe72de0f9c8a032469f428a41) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Refactor epoch:send-validator-payment to use viem
+
+- Updated dependencies [[`7d84a5a`](https://github.com/celo-org/developer-tooling/commit/7d84a5a9a23f72572999dc17f24d9b70bf6ca9f6), [`1c4925f`](https://github.com/celo-org/developer-tooling/commit/1c4925f1275bf78323b5eb4822078ac3572eca44)]:
+  - @celo/base@7.0.3-beta.0
+  - @celo/actions@0.0.1-beta.0
+  - @celo/connect@7.0.0-beta.1
+  - @celo/contractkit@10.0.0-beta.2
+  - @celo/cryptographic-utils@5.1.4-beta.0
+  - @celo/explorer@5.0.16-beta.1
+  - @celo/governance@5.1.7-beta.1
+  - @celo/metadata-claims@1.0.4-beta.0
+  - @celo/utils@8.0.3-beta.0
+  - @celo/wallet-hsm-azure@8.0.0-beta.2
+  - @celo/wallet-ledger@8.0.0-beta.2
+  - @celo/wallet-local@8.0.0-beta.2
+  - @celo/viem-account-ledger@1.2.0-beta.2
+
 ## 7.0.0-beta.5
 
 ### Major Changes
