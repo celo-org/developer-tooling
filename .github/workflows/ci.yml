@@ -162,7 +162,8 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           package_manager: yarn
-          script: 'yarn check-size' 
+          skip_step: 'build'
+          script: 'yarn check-size --json' 
           directory: packages/${{ matrix.folder }}
          
 
