@@ -5,11 +5,13 @@ import * as WalletLedgerExports from '@celo/wallet-ledger'
 import { Config, ux } from '@oclif/core'
 import http from 'http'
 import { tmpdir } from 'os'
+import { MethodNotFoundRpcError } from 'viem'
 import Web3 from 'web3'
 import { BaseCommand } from './base'
 import Set from './commands/config/set'
 import CustomHelp from './help'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from './test-utils/cliUtils'
+import { mockRpcFetch } from './test-utils/mockRpc'
 import { CustomFlags } from './utils/command'
 import * as config from './utils/config'
 import { readConfig } from './utils/config'
@@ -352,6 +354,29 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
         )
       })
     })
+  })
+
+  it("logs a helpful message if the node isn't unlocked", async () => {
+    const clearMock = mockRpcFetch({
+      method: 'eth_requestAccounts',
+      error: { code: MethodNotFoundRpcError.code },
+    })
+    class TestErrorCommand extends BaseCommand {
+      async init() {}
+      async run() {
+        await this.getWalletClient()
+      }
+    }
+
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation()
+
+    await expect(
+      testLocallyWithWeb3Node(TestErrorCommand, [], web3)
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Unable to create an RPC Wallet Client, the node is not unlocked. Did you forget to use \`--privateKey\` or \`--useLedger\`?"`
+    )
+    expect(errorSpy.mock.calls).toMatchInlineSnapshot(`[]`)
+    clearMock()
   })
 
   it('logs command execution error', async () => {
