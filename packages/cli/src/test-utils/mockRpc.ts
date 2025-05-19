@@ -1,4 +1,5 @@
 import { HttpRpcCaller } from '@celo/connect'
+import { RpcErrorCode } from 'viem'
 
 export const mockRpc = () =>
   jest.spyOn(HttpRpcCaller.prototype, 'call').mockImplementation(async (method, _args) => {
@@ -24,15 +25,29 @@ export const mockRpc = () =>
   })
 
 const actualFetch = global.fetch
-export const mockRpcFetch = ({ method, result }: { method: string; result: any }) => {
+export const mockRpcFetch = ({
+  method,
+  result,
+  error,
+}: {
+  method: string
+  result?: any
+  error?: { code: RpcErrorCode; message?: string }
+}) => {
   const fetchMock = jest.fn(async (...args) => {
     if (args[1]?.body) {
       const body = JSON.parse(args[1].body.toString())
       if (body.method === method) {
         return {
-          ok: true,
+          ok: !error,
           headers: new Map([['Content-Type', 'application/json']]),
-          json: () => Promise.resolve({ result, id: 1, jsonrpc: '2.0' }),
+          json: () => {
+            if (error) {
+              return Promise.resolve({ error })
+            } else {
+              return Promise.resolve({ result, id: 1, jsonrpc: '2.0' })
+            }
+          },
         }
       }
     }

@@ -12,7 +12,14 @@ import { Command, Flags, ux } from '@oclif/core'
 import { CLIError } from '@oclif/core/lib/errors'
 import chalk from 'chalk'
 import net from 'net'
-import { createPublicClient, createWalletClient, extractChain, http, Transport } from 'viem'
+import {
+  createPublicClient,
+  createWalletClient,
+  extractChain,
+  http,
+  MethodNotFoundRpcError,
+  Transport,
+} from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { celo, celoAlfajores } from 'viem/chains'
 import { ipc } from 'viem/node'
@@ -295,12 +302,28 @@ export abstract class BaseCommand extends Command {
           account: privateKeyToAccount(ensureLeading0x(res.flags.privateKey)),
         })
       } else {
-        this.walletClient = await createRpcWalletClient({
-          publicClient,
-          transport,
-          chain: publicClient.chain,
-          account,
-        })
+        try {
+          this.walletClient = await createRpcWalletClient({
+            publicClient,
+            transport,
+            chain: publicClient.chain,
+            account,
+          })
+        } catch (e) {
+          let code: number | undefined = undefined
+          try {
+            const error = JSON.parse((e as any).details) as { code: number; message: string }
+            code = error.code
+          } catch (_) {}
+
+          if (code === MethodNotFoundRpcError.code) {
+            failWith(
+              'Unable to create an RPC Wallet Client, the node is not unlocked. Did you forget to use `--privateKey` or `--useLedger`?'
+            )
+          }
+
+          throw e
+        }
       }
     }
 

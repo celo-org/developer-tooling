@@ -9,6 +9,10 @@ import {
   WalletClientConfig,
 } from 'viem'
 
+/**
+ *
+ * @throws {import('viem').MethodNotFoundRpcError} if the RPC node isn't unlocked
+ */
 export default async function createRpcWalletClient<T extends Chain | undefined = undefined>({
   publicClient,
   account,
