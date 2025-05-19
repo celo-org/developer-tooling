@@ -1,3 +1,4 @@
+import * as vitest from 'vitest'
 import Web3 from 'web3'
 import { JsonRpcResponse } from 'web3-core-helpers'
 import migrationOverride from './migration-override.json'
@@ -90,11 +91,36 @@ export function testWithWeb3(
   web3.eth.transactionPollingInterval = 10
 
   // By default we run all the tests
-  let describeFn = describe
+  let describeFn = global.describe
+  if (typeof describeFn === 'undefined') {
+    describeFn = vitest.describe
+  }
 
   // and only skip them if explicitly stated
   if (options.runIf === false) {
-    describeFn = describe.skip
+    describeFn = describeFn.skip
+  }
+
+  let beforeAll = global.beforeAll
+  if (!beforeAll) {
+    // @ts-expect-error - jest and vitest differ in typing
+    beforeAll = vitest.beforeAll
+  }
+
+  let beforeEach = global.beforeEach
+  if (!beforeEach) {
+    beforeEach = vitest.beforeEach
+  }
+
+  let afterAll = global.afterAll
+  if (!afterAll) {
+    // @ts-expect-error - jest and vitest differ in typing
+    afterAll = vitest.afterAll
+  }
+
+  let afterEach = global.afterEach
+  if (!afterEach) {
+    afterEach = vitest.afterEach
   }
 
   describeFn(name, () => {

@@ -1868,13 +1868,16 @@ __metadata:
     "@celo/typescript": "workspace:^"
     "@tsconfig/recommended": "npm:^1.0.3"
     "@types/fs-extra": "npm:^8.1.0"
+    "@types/jest": "npm:29.5.14"
     "@types/targz": "npm:1.0.0"
     "@viem/anvil": "npm:^0.0.9"
     bignumber.js: "npm:^9.0.0"
     fs-extra: "npm:^8.1.0"
+    jest: "npm:^29.7.0"
     targz: "npm:^1.0.1"
     tmp: "npm:^0.1.0"
     viem: "npm:^2.29.2"
+    vitest: "npm:^2.1.9"
     web3: "npm:1.10.4"
     web3-core-helpers: "npm:1.10.4"
   languageName: unknown
@@ -6853,13 +6856,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:^29.1.1":
-  version: 29.5.11
-  resolution: "@types/jest@npm:29.5.11"
+"@types/jest@npm:29.5.14":
+  version: 29.5.14
+  resolution: "@types/jest@npm:29.5.14"
   dependencies:
     expect: "npm:^29.0.0"
     pretty-format: "npm:^29.0.0"
-  checksum: 798f4c89407d9457bea1256de74c26f2b279f6c789c0e3311cd604cc75cdab333b9a29b00c51b0090d31abdf11cc788b4103282851a653bef6daf72edf97eef2
+  checksum: 59ec7a9c4688aae8ee529316c43853468b6034f453d08a2e1064b281af9c81234cec986be796288f1bbb29efe943bc950e70c8fa8faae1e460d50e3cf9760f9b
   languageName: node
   linkType: hard
 
@@ -8832,7 +8835,6 @@ __metadata:
     "@celo/typescript": "workspace:^"
     "@changesets/changelog-github": "npm:^0.5.0"
     "@changesets/cli": "npm:^2.27.11"
-    "@types/jest": "npm:^29.1.1"
     "@types/node": "npm:18.7.16"
     "@types/semver": "npm:7.3.8"
     "@typescript-eslint/eslint-plugin": "npm:^6.17.0"

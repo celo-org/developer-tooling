@@ -4,7 +4,7 @@
     "rootDir": "src",
     "declaration": true,
     "esModuleInterop": true,
-    "types": ["node", "vitest/globals"],
+    "types": ["node"],
     "lib": ["esnext"],
     "skipLibCheck": true,
     "strict": true,

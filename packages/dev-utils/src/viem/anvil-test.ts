@@ -76,7 +76,6 @@ function testWithAnvil(
   }
 ) {
   const { instance, client } = createInstance(options?.chainId)
-
   // for each test suite, we start and stop a new anvil instance
   return testWithViem(name, client, fn, {
     runIf:
