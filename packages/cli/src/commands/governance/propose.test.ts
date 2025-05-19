@@ -3,11 +3,7 @@ import { CeloProvider } from '@celo/connect/lib/celo-provider'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { GoldTokenWrapper } from '@celo/contractkit/lib/wrappers/GoldTokenWrapper'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
-import {
-  setBalance,
-  testWithAnvilL2,
-  withImpersonatedAccount,
-} from '@celo/dev-utils/lib/anvil-test'
+import { setBalance, testWithAnvilL2, withImpersonatedAccount } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
 import Safe, { getSafeAddressFromDeploymentTx } from '@safe-global/protocol-kit'
 import * as fs from 'fs'

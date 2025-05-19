@@ -1,6 +1,6 @@
 import { newKitFromWeb3 } from '@celo/contractkit'
-import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
-import { ACCOUNT_ADDRESSES } from '@celo/dev-utils/lib/test-accounts'
+import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
+import { ACCOUNT_ADDRESSES } from '@celo/dev-utils/test-accounts'
 import { Address } from '@celo/utils/lib/address'
 import { NativeSigner } from '@celo/utils/lib/signatureUtils'
 import { Claim, createNameClaim, createRpcUrlClaim } from './claim'

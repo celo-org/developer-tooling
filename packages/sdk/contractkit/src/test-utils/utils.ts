@@ -1,5 +1,5 @@
 import { StableToken } from '@celo/base'
-import { STABLES_ADDRESS, withImpersonatedAccount } from '@celo/dev-utils/lib/anvil-test'
+import { STABLES_ADDRESS, withImpersonatedAccount } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
 import { ContractKit } from '../kit'
 

@@ -1,5 +1,5 @@
 import { ElectionWrapper, ValidatorGroupVote } from '@celo/contractkit/lib/wrappers/Election'
-import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'

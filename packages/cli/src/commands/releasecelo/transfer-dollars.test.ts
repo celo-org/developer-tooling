@@ -1,7 +1,7 @@
 import { StableToken, StrongAddress } from '@celo/base'
 import { COMPLIANT_ERROR_RESPONSE, SANCTIONED_ADDRESSES } from '@celo/compliance'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
-import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { topUpWithToken } from '../../test-utils/chain-setup'

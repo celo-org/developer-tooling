@@ -1,6 +1,6 @@
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { AccountsWrapper } from '@celo/contractkit/lib/wrappers/Accounts'
-import { testWithAnvilL2, withImpersonatedAccount } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2, withImpersonatedAccount } from '@celo/dev-utils/anvil-test'
 import { ClaimTypes, IdentityMetadataWrapper } from '@celo/metadata-claims'
 import { ux } from '@oclif/core'
 import { setupGroupAndAffiliateValidator, setupValidator } from '../../test-utils/chain-setup'

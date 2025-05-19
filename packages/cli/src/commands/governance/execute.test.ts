@@ -6,8 +6,8 @@ import {
   setCode,
   testWithAnvilL2,
   withImpersonatedAccount,
-} from '@celo/dev-utils/lib/anvil-test'
-import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
+} from '@celo/dev-utils/anvil-test'
+import { timeTravel } from '@celo/dev-utils/ganache-test'
 import fs from 'fs'
 import path from 'path'
 import Web3 from 'web3'

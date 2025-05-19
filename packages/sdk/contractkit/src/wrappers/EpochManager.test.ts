@@ -5,8 +5,8 @@ import {
   asCoreContractsOwner,
   testWithAnvilL2,
   withImpersonatedAccount,
-} from '@celo/dev-utils/lib/anvil-test'
-import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
+} from '@celo/dev-utils/anvil-test'
+import { timeTravel } from '@celo/dev-utils/ganache-test'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { REGISTRY_CONTRACT_ADDRESS } from '../address-registry'

@@ -1,5 +1,5 @@
 import { PROXY_ADMIN_ADDRESS } from '@celo/connect'
-import { setCode, testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
+import { setCode, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import fs from 'fs'
 import path from 'path'
 import Web3 from 'web3'

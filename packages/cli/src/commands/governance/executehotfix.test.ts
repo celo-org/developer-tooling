@@ -7,7 +7,7 @@ import {
   setNextBlockTimestamp,
   testWithAnvilL2,
   withImpersonatedAccount,
-} from '@celo/dev-utils/lib/anvil-test'
+} from '@celo/dev-utils/anvil-test'
 import fs from 'fs'
 import path from 'path'
 import Web3 from 'web3'

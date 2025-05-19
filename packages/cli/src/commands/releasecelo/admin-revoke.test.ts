@@ -5,12 +5,8 @@ import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { AccountsWrapper } from '@celo/contractkit/lib/wrappers/Accounts'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { ReleaseGoldWrapper } from '@celo/contractkit/lib/wrappers/ReleaseGold'
-import {
-  setBalance,
-  testWithAnvilL2,
-  withImpersonatedAccount,
-} from '@celo/dev-utils/lib/anvil-test'
-import { getContractFromEvent, timeTravel } from '@celo/dev-utils/lib/ganache-test'
+import { setBalance, testWithAnvilL2, withImpersonatedAccount } from '@celo/dev-utils/anvil-test'
+import { getContractFromEvent, timeTravel } from '@celo/dev-utils/ganache-test'
 import BigNumber from 'bignumber.js'
 import { privateKeyToAddress } from 'viem/accounts'
 import Web3 from 'web3'

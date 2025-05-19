@@ -1,5 +1,5 @@
 import { StrongAddress } from '@celo/base'
-import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { newKitFromWeb3 } from '../kit'
 import { FederatedAttestationsWrapper } from './FederatedAttestations'
 

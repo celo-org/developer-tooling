@@ -5,9 +5,9 @@ import {
   asCoreContractsOwner,
   LinkedLibraryAddress,
   testWithAnvilL2,
-} from '@celo/dev-utils/lib/anvil-test'
-import { describeEach } from '@celo/dev-utils/lib/describeEach'
-import { NetworkConfig, timeTravel } from '@celo/dev-utils/lib/ganache-test'
+} from '@celo/dev-utils/anvil-test'
+import { describeEach } from '@celo/dev-utils/describeEach'
+import { NetworkConfig, timeTravel } from '@celo/dev-utils/ganache-test'
 import { CeloContract } from '../base'
 import { StableToken } from '../celo-tokens'
 import { newKitFromWeb3 } from '../kit'

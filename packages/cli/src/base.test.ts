@@ -1,5 +1,5 @@
 import { Connection } from '@celo/connect'
-import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import * as ViemAccountLedgerExports from '@celo/viem-account-ledger'
 import * as WalletLedgerExports from '@celo/wallet-ledger'
 import { Config, ux } from '@oclif/core'

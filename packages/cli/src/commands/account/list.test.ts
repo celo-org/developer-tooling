@@ -1,5 +1,5 @@
-import { ACCOUNT_ADDRESSES, ACCOUNT_PRIVATE_KEYS } from '@celo/dev-utils/lib/test-accounts'
-import { viem_testWithAnvil } from '@celo/dev-utils/lib/viem/anvil-test'
+import { ACCOUNT_ADDRESSES, ACCOUNT_PRIVATE_KEYS } from '@celo/dev-utils/test-accounts'
+import { viem_testWithAnvil } from '@celo/dev-utils/viem/anvil-test'
 
 import { StrongAddress } from '@celo/base'
 import { getAddress } from 'viem'

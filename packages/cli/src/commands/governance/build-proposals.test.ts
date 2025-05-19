@@ -1,5 +1,5 @@
 import CeloTokenABI from '@celo/abis/GoldToken.json'
-import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { readJSON, removeSync } from 'fs-extra'
 import inquirer from 'inquirer'
 import Web3 from 'web3'

@@ -1,4 +1,4 @@
-import { viem_testWithAnvil } from '@celo/dev-utils/lib/viem/anvil-test'
+import { viem_testWithAnvil } from '@celo/dev-utils/viem/anvil-test'
 import { stripAnsiCodesFromNestedArray, testLocallyWithViemNode } from '../../test-utils/cliUtils'
 import Synced from './synced'
 
