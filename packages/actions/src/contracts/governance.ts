@@ -1,6 +1,8 @@
 import { governanceABI } from '@celo/abis'
 import { zip } from '@celo/base'
+import { voteProposal, VoteProposalTypes } from '@celo/core'
 import { Client, getContract, GetContractReturnType, PublicClient } from 'viem'
+import { WalletCeloClient } from '../client'
 import { resolveAddress } from './registry'
 
 export type GovernanceContract<T extends Client = PublicClient> = GetContractReturnType<
@@ -30,6 +32,28 @@ export async function getGovernanceContract<T extends Client = PublicClient>(
     abi: governanceABI,
     client,
   })
+}
+
+export async function vote<T extends WalletCeloClient = WalletCeloClient>(
+  client: T,
+  proposalId: bigint,
+  voteValue: VoteProposalTypes
+) {
+  const contract = await getGovernanceContract(client)
+  return voteProposal(
+    {
+      vote: async (proposalID, proposalIndex, voteValue) => {
+        const { request } = await contract.simulate.vote([proposalID, proposalIndex, voteValue])
+        return contract.write.vote(request.args)
+      },
+      getDequeue: async () => {
+        const dequeue = await contract.read.getDequeue()
+        return dequeue as bigint[] // remove readonly
+      },
+    },
+    proposalId,
+    voteValue
+  )
 }
 
 export const getQueue = async (client: PublicClient) => {
