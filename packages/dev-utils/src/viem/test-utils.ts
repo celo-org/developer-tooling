@@ -1,4 +1,3 @@
-import * as vitest from 'vitest'
 import { TestClientExtended } from './anvil-test'
 
 type Hooks = {
@@ -26,35 +25,10 @@ export function testWithViem(
 ) {
   // By default we run all the tests
   let describeFn = global.describe
-  if (typeof describeFn === 'undefined') {
-    describeFn = vitest.describe
-  }
 
   // and only skip them if explicitly stated
   if (options.runIf === false) {
     describeFn = describeFn.skip
-  }
-
-  let beforeAll = global.beforeAll
-  if (!beforeAll) {
-    // @ts-expect-error - jest and vitest differ in typing
-    beforeAll = vitest.beforeAll
-  }
-
-  let beforeEach = global.beforeEach
-  if (!beforeEach) {
-    beforeEach = vitest.beforeEach
-  }
-
-  let afterAll = global.afterAll
-  if (!afterAll) {
-    // @ts-expect-error - jest and vitest differ in typing
-    afterAll = vitest.afterAll
-  }
-
-  let afterEach = global.afterEach
-  if (!afterEach) {
-    afterEach = vitest.afterEach
   }
 
   describeFn(name, () => {

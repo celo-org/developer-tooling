@@ -1,4 +1,3 @@
-import * as vitest from 'vitest'
 import Web3 from 'web3'
 import { JsonRpcResponse } from 'web3-core-helpers'
 import migrationOverride from './migration-override.json'
@@ -20,6 +19,7 @@ export const NetworkConfig = migrationOverride
 export function jsonRpcCall<O>(web3: Web3, method: string, params: any[]): Promise<O> {
   return new Promise<O>((resolve, reject) => {
     if (web3.currentProvider && typeof web3.currentProvider !== 'string') {
+      // @ts-expect-error
       web3.currentProvider.send(
         {
           id: new Date().getTime(),
@@ -92,35 +92,10 @@ export function testWithWeb3(
 
   // By default we run all the tests
   let describeFn = global.describe
-  if (typeof describeFn === 'undefined') {
-    describeFn = vitest.describe
-  }
 
   // and only skip them if explicitly stated
   if (options.runIf === false) {
     describeFn = describeFn.skip
-  }
-
-  let beforeAll = global.beforeAll
-  if (!beforeAll) {
-    // @ts-expect-error - jest and vitest differ in typing
-    beforeAll = vitest.beforeAll
-  }
-
-  let beforeEach = global.beforeEach
-  if (!beforeEach) {
-    beforeEach = vitest.beforeEach
-  }
-
-  let afterAll = global.afterAll
-  if (!afterAll) {
-    // @ts-expect-error - jest and vitest differ in typing
-    afterAll = vitest.afterAll
-  }
-
-  let afterEach = global.afterEach
-  if (!afterEach) {
-    afterEach = vitest.afterEach
   }
 
   describeFn(name, () => {
