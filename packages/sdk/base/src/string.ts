@@ -15,3 +15,5 @@ export const StringBase = {
   appendPath,
   normalizeAccents,
 }
+
+export type HexString = `0x${string}`

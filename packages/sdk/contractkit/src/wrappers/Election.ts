@@ -481,10 +481,10 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
     for (const vote of currentVotes) {
       if (!eqAddress(vote.address, votedGroup)) {
         if (vote.votes.isLessThanOrEqualTo(voteTotal)) {
-          lesserKey = vote.address
+          lesserKey = vote.address as StrongAddress
           break
         }
-        greaterKey = vote.address
+        greaterKey = vote.address as StrongAddress
       }
     }
 

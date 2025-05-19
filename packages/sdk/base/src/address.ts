@@ -29,7 +29,7 @@ export const hexToBuffer = (input: string) => Buffer.from(trimLeading0x(input), 
 
 export const bufferToHex = (buf: Buffer) => ensureLeading0x(buf.toString('hex'))
 
-export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000'
+export const NULL_ADDRESS = '0x0000000000000000000000000000000000000000' as StrongAddress
 
 export const findAddressIndex = (address: Address, addresses: Address[]) =>
   addresses.findIndex((x) => eqAddress(x, address))

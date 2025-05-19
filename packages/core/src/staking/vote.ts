@@ -1,11 +1,15 @@
-import { eqAddress, NULL_ADDRESS } from '@celo/base/lib/address'
+import { StrongAddress as Address, eqAddress, NULL_ADDRESS } from '@celo/base/lib/address'
 import { zip } from '@celo/base/lib/collections'
-type Address = `0x${string}`
-type Hex = `0x${string}`
+import { HexString } from '@celo/base/lib/string'
 
 export type VoteAdapter = {
   // Todo what is the right return type for this? maybe the hash of the transaction?
-  vote: (validatorGroup: Address, value: bigint, lesser: Address, greater: Address) => Promise<Hex>
+  vote: (
+    validatorGroup: Address,
+    value: bigint,
+    lesser: Address,
+    greater: Address
+  ) => Promise<HexString>
   getTotalVotesForEligibleValidatorGroups: () => Promise<
     Readonly<[Readonly<Address[]>, Readonly<bigint[]>]>
   >
@@ -20,7 +24,7 @@ export async function vote(
   adapter: VoteAdapter,
   validatorGroup: Address,
   value: bigint
-): Promise<Hex> {
+): Promise<HexString> {
   const [groups, votes] = await adapter.getTotalVotesForEligibleValidatorGroups()
 
   const currentVotes = zip(

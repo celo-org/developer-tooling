@@ -294,10 +294,10 @@ export class SortedOraclesWrapper extends BaseWrapper<SortedOracles> {
     for (const rate of currentRates) {
       if (!eqAddress(rate.address, oracleAddress)) {
         if (rate.rate.isLessThanOrEqualTo(value)) {
-          lesserKey = rate.address
+          lesserKey = rate.address as StrongAddress
           break
         }
-        greaterKey = rate.address
+        greaterKey = rate.address as StrongAddress
       }
     }
 
