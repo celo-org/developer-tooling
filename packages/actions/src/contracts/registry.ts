@@ -1,7 +1,7 @@
 import { NULL_ADDRESS } from '@celo/base/lib/address'
-import { Address, Client, PublicClient, publicActions } from 'viem'
+import { Address, Client } from 'viem'
+import { readContract } from 'viem/actions'
 import { ContractName } from '../contract-name'
-
 export const REGISTRY_CONTRACT_ADDRESS = '0x000000000000000000000000000000000000ce10'
 
 // we only use this one function from the registry so we don't need the whole ABI
@@ -39,11 +39,7 @@ export const resolveAddress = async (
     return cache[contractName]
   }
 
-  if (!('readContract' in client)) {
-    client = client.extend(publicActions)
-  }
-
-  const address = await (client as PublicClient).readContract({
+  const address = await readContract(client, {
     address: REGISTRY_CONTRACT_ADDRESS,
     abi: ABI,
     functionName: 'getAddressForString',
