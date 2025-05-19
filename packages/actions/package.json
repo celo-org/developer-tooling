@@ -84,8 +84,20 @@
     {
       "name": "import * from '@celo/actions' (esm)",
       "path": "dist/mjs/index.js",
-      "limit": "80 kB",
+      "limit": "25 kB",
       "import": "*"
+    },
+    {
+      "name": "import { resolveAddress } from '@celo/actions' (esm)",
+      "path": "dist/mjs/index.js",
+      "limit": "25 kB",
+      "import": "{ resolveAddress }"
+    },
+    {
+      "name": "import { getGasPriceOnCelo } from '@celo/actions' (esm)",
+      "path": "dist/mjs/index.js",
+      "limit": "1 kB",
+      "import": "{ getGasPriceOnCelo }"
     },
     {
       "name": "import * from '@celo/actions/chains' (esm)",
@@ -96,13 +108,13 @@
     {
       "name": "import { getAccountsContract } from '@celo/actions/contracts/accounts' (esm)",
       "path": "dist/mjs/contracts/accounts.js",
-      "limit": "65 kB",
+      "limit": "50 kB",
       "import": "{ getAccountsContract }"
     },
     {
       "name": "import * from '@celo/actions/staking' (esm)",
       "path": "dist/mjs/multicontract-interactions/stake/index.js",
-      "limit": "80 kB",
+      "limit": "60 kB",
       "import": "*"
     }
   ]
