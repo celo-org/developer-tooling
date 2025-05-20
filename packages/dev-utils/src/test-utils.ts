@@ -91,11 +91,11 @@ export function testWithWeb3(
   web3.eth.transactionPollingInterval = 10
 
   // By default we run all the tests
-  let describeFn = global.describe
+  let describeFn = describe
 
   // and only skip them if explicitly stated
   if (options.runIf === false) {
-    describeFn = describeFn.skip
+    describeFn = describe.skip
   }
 
   describeFn(name, () => {
