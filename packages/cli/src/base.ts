@@ -260,29 +260,10 @@ export abstract class BaseCommand extends Command {
 
       if (res.flags.useLedger) {
         try {
-          const isLedgerLiveMode = res.flags.ledgerLiveMode
-          const indicesToIterateOver: number[] = res.raw.some(
-            (value: any) => value.flag === 'ledgerCustomAddresses'
-          )
-            ? JSON.parse(res.flags.ledgerCustomAddresses)
-            : Array.from(Array(res.flags.ledgerAddresses).keys())
-
-          console.log('Retrieving derivation Paths', indicesToIterateOver)
-          let ledgerConfirmation = AddressValidation.never
-          if (res.flags.ledgerConfirmAddress) {
-            if (this.isOnlyReadingWallet) {
-              ledgerConfirmation = AddressValidation.initializationOnly
-            } else {
-              ledgerConfirmation = AddressValidation.everyTransaction
-            }
-          }
+          const ledgerOptions = await this.ledgerOptions()
 
           this.walletClient = await ledgerToWalletClient({
-            transport: await this.openLedgerTransport(),
-            baseDerivationPath: getDefaultDerivationPath(this.config.configDir),
-            derivationPathIndexes: isLedgerLiveMode ? [0] : indicesToIterateOver,
-            changeIndexes: isLedgerLiveMode ? indicesToIterateOver : [0],
-            ledgerAddressValidation: ledgerConfirmation,
+            ...ledgerOptions,
             account,
             walletClientOptions: {
               transport,
@@ -328,6 +309,35 @@ export abstract class BaseCommand extends Command {
     }
 
     return this.walletClient
+  }
+
+  protected async ledgerOptions() {
+    const res = await this.parse()
+    const isLedgerLiveMode = res.flags.ledgerLiveMode
+    const indicesToIterateOver: number[] = res.raw.some(
+      (value: any) => value.flag === 'ledgerCustomAddresses'
+    )
+      ? JSON.parse(res.flags.ledgerCustomAddresses)
+      : Array.from(Array(res.flags.ledgerAddresses).keys())
+
+    console.log('Retrieving derivation Paths', indicesToIterateOver)
+    let ledgerConfirmation = AddressValidation.never
+    if (res.flags.ledgerConfirmAddress) {
+      if (this.isOnlyReadingWallet) {
+        ledgerConfirmation = AddressValidation.initializationOnly
+      } else {
+        ledgerConfirmation = AddressValidation.everyTransaction
+      }
+    }
+
+    const ledgerOptions = {
+      transport: await this.openLedgerTransport(),
+      baseDerivationPath: getDefaultDerivationPath(this.config.configDir),
+      derivationPathIndexes: isLedgerLiveMode ? [0] : indicesToIterateOver,
+      changeIndexes: isLedgerLiveMode ? indicesToIterateOver : [0],
+      ledgerAddressValidation: ledgerConfirmation,
+    }
+    return ledgerOptions
   }
 
   async init() {

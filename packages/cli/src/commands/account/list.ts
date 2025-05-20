@@ -1,4 +1,5 @@
 import { StrongAddress } from '@celo/base'
+import { deriveLedgerAccounts } from '@celo/viem-account-ledger'
 import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 export default class AccountList extends BaseCommand {
@@ -16,18 +17,22 @@ export default class AccountList extends BaseCommand {
   isOnlyReadingWallet = true
 
   async init() {
-    const wallet = await this.getWalletClient()
-    if (!wallet) {
-      return super.init()
-    } else {
-      // noop - this maybe skips the --node check?
-    }
+    // noop - this skip the --node
   }
 
   async run() {
-    const res = await this.parse(AccountList)
-    const wallet = await this.getWalletClient()
     let addresses: StrongAddress[]
+    const res = await this.parse(AccountList)
+
+    if (res.flags.useLedger) {
+      const ledgerOptions = await this.ledgerOptions()
+      const accounts = await deriveLedgerAccounts(ledgerOptions)
+      addresses = accounts.map((account) => account.address)
+      console.log(`Ledger Addresses: `, addresses)
+      return
+    }
+
+    const wallet = await this.getWalletClient()
     if (wallet) {
       // Retrieve accounts from the connected Celo node.
       addresses = await wallet.getAddresses()
@@ -38,7 +43,6 @@ export default class AccountList extends BaseCommand {
       addresses = await kit.connection.getAccounts()
     }
     // Display the addresses.
-    const prefix = res.flags.useLedger ? 'Ledger' : 'All'
-    console.log(`${prefix} Addresses: `, addresses)
+    console.log(`All Addresses: `, addresses)
   }
 }
