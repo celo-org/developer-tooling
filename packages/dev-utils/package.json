@@ -51,7 +51,9 @@
     "@tsconfig/recommended": "^1.0.3",
     "@types/fs-extra": "^8.1.0",
     "@types/jest": "29.5.14",
-    "@types/targz": "1.0.0",
+    "@types/targz": "1.0.0"
+  },
+  "peerDependencies": {
     "jest": "^29.7.0",
     "vitest": "^3.1.3"
   },

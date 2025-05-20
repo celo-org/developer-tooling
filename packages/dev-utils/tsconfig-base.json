@@ -3,7 +3,7 @@
     "rootDir": "src",
     "declaration": true,
     "esModuleInterop": true,
-    "types": ["node", "@types/jest", "vitest/globals"],
+    "types": ["node", "@types/jest"],
     "lib": ["esnext"],
     "skipLibCheck": true,
     "strict": true,
