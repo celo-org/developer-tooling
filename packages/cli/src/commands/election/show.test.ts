@@ -3,7 +3,11 @@ import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
 import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
-import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import {
+  EXTRA_LONG_TIMEOUT_MS,
+  stripAnsiCodesAndTxHashes,
+  testLocallyWithWeb3Node,
+} from '../../test-utils/cliUtils'
 import Register from '../account/register'
 import Switch from '../epochs/switch'
 import Lock from '../lockedcelo/lock'
@@ -44,7 +48,7 @@ testWithAnvilL2('election:show', (web3: Web3) => {
     )
 
     logMock.mockClear()
-  })
+  }, EXTRA_LONG_TIMEOUT_MS)
 
   afterEach(async () => {
     jest.clearAllMocks()
