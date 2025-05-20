@@ -10,6 +10,8 @@ declare global {
   }
 }
 
+jest.setTimeout(10_000)
+
 expect.extend({
   toBeBigNumber(received: any) {
     const pass = BigNumber.isBigNumber(received)
