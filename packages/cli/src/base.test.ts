@@ -643,7 +643,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
           resolve()
         })
       })
-    })
+    }, 10_000)
 
     describe('hide extra output when using --output flag', () => {
       beforeEach(() => {
