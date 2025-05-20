@@ -21,7 +21,7 @@
     "build": "yarn run --top-level tsc -b .",
     "clean": "yarn run --top-level tsc -b . --clean",
     "docs": "yarn run --top-level typedoc",
-    "test": "yarn run --top-level jest --runInBand --passWithNoTests",
+    "test": "yarn run jest --runInBand --passWithNoTests",
     "lint": "yarn run --top-level eslint -c .eslintrc.js ",
     "prepublishOnly": "yarn build"
   },
@@ -40,6 +40,8 @@
     "@celo/typescript": "workspace:^",
     "@types/debug": "^4.1.12",
     "fetch-mock": "^10.0.7",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.5",
     "web3": "1.10.4"
   },
   "engines": {

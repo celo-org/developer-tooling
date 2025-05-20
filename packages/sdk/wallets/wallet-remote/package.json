@@ -21,7 +21,7 @@
     "build": "yarn run --top-level tsc -b .",
     "clean": "yarn run --top-level tsc -b . --clean",
     "docs": "yarn run --top-level typedoc",
-    "test": "yarn run --top-level jest",
+    "test": "yarn run jest",
     "lint": "yarn run --top-level eslint -c .eslintrc.js ",
     "prepublishOnly": "yarn build"
   },
@@ -34,6 +34,8 @@
   },
   "devDependencies": {
     "@celo/typescript": "workspace:^",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.5",
     "web3": "1.10.4"
   },
   "engines": {

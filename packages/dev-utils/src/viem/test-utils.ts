@@ -24,6 +24,7 @@ export function testWithViem(
   } = {}
 ) {
   // By default we run all the tests
+  // @ts-expect-error
   let describeFn = global.describe
 
   // and only skip them if explicitly stated
@@ -35,9 +36,11 @@ export function testWithViem(
     let snapId: `0x${string}` | null = null
 
     if (options.hooks?.beforeAll) {
+      // @ts-expect-error
       beforeAll(options.hooks.beforeAll)
     }
 
+    // @ts-expect-error
     beforeEach(async () => {
       if (snapId != null) {
         await client.revert({ id: snapId })
@@ -45,6 +48,7 @@ export function testWithViem(
       snapId = await client.snapshot()
     })
 
+    // @ts-expect-error
     afterAll(async () => {
       if (snapId != null) {
         await client.revert({ id: snapId })

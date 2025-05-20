@@ -18,8 +18,8 @@
     "build": "yarn run --top-level tsc -b .",
     "clean": "yarn run --top-level tsc -b . --clean",
     "docs": "yarn run --top-level typedoc",
-    "test": "yarn run --top-level jest --ci",
-    "test:verbose": "yarn run --top-level jest --verbose",
+    "test": "yarn run --ci",
+    "test:verbose": "yarn run --verbose",
     "lint": "yarn run --top-level eslint -c .eslintrc.js "
   },
   "files": [
@@ -38,6 +38,8 @@
     "web3-utils": "^1.10.0"
   },
   "devDependencies": {
-    "@celo/typescript": "workspace:^"
+    "@celo/typescript": "workspace:^",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.5"
   }
 }

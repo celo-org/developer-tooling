@@ -10,11 +10,16 @@ declare global {
   }
 }
 
+// @ts-expect-error
 if (typeof global.jest !== 'undefined') {
+  // @ts-expect-error
   global.jest.setTimeout(10_000)
+} else {
+  throw new Error('This file was written for jest and not for vitest.')
 }
 
-expect.extend({
+// @ts-expect-error
+global.expect.extend({
   toBeBigNumber(received: any) {
     const pass = BigNumber.isBigNumber(received)
     if (pass) {
