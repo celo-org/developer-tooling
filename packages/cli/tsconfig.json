@@ -11,6 +11,7 @@
     "target": "es2020"
   },
   "include": ["src/**/*", "src/commands/dkg/DKG.json", "../dev-utils/dist/cjs/matchers.d.ts"],
+  "exclude": ["src/**.test.ts"],
   "ts-node": {
     "esm": true
   }
