@@ -1,4 +1,5 @@
 import { privateKeyToAddress, trimLeading0x } from '@celo/utils/lib/address'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { InMemoryKeystore } from './inmemory-keystore'
 import { ErrorMessages } from './keystore-base'
 import {
@@ -13,7 +14,7 @@ import {
   PK1,
 } from './test-constants'
 
-jest.setTimeout(20000)
+vi.setConfig({ testTimeout: 20000 })
 
 describe('KeystoreBase functionality via InMemoryKeystore (mock)', () => {
   let keystore: InMemoryKeystore

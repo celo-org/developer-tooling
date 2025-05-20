@@ -21,8 +21,8 @@
     "build": "yarn run --top-level tsc -b .",
     "clean": "yarn run --top-level tsc -b . --clean",
     "docs": "yarn run --top-level typedoc",
-    "test": "yarn run jest --forceExit",
-    "lint": "yarn run --top-level eslint -c .eslintrc.js ",
+    "test": "yarn run vitest --run",
+    "lint": "yarn run --top-level eslinyarnt -c .eslintrc.js ",
     "prepublishOnly": "yarn build"
   },
   "dependencies": {
@@ -32,8 +32,7 @@
   },
   "devDependencies": {
     "@celo/typescript": "workspace:^",
-    "jest": "^29.7.0",
-    "ts-jest": "^29.1.5"
+    "vitest": "^3.1.3"
   },
   "engines": {
     "node": ">=10"

@@ -10,9 +10,7 @@ declare global {
   }
 }
 
-// @ts-expect-error
 if (typeof global.jest !== 'undefined') {
-  // @ts-expect-error
   global.jest.setTimeout(10_000)
 } else {
   throw new Error('This file was written for jest and not for vitest.')

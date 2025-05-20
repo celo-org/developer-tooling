@@ -2,10 +2,11 @@ import { trimLeading0x } from '@celo/utils/lib/address'
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'fs'
 import path from 'path'
 import { rimrafSync } from 'rimraf'
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import { FileKeystore } from './file-keystore'
 import { ADDRESS1, GETH_GEN_KEYSTORE1, KEYSTORE_NAME1, PASSPHRASE1, PK1 } from './test-constants'
 
-jest.setTimeout(20000)
+vi.setConfig({ testTimeout: 20000 })
 
 describe('FileKeystore tests', () => {
   const parentWorkdir = path.join(__dirname, 'wallet-keystore-workdir')

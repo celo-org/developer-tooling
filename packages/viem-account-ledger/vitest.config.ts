@@ -1,11 +1,13 @@
-// vitest.config.ts
-import { coverageConfigDefaults, defineConfig } from 'vitest/config'
+import { defineConfig } from 'vitest/config'
+import config from '../../vitest.config.mjs'
 
 export default defineConfig({
+  ...config,
   test: {
+    ...config.test,
     coverage: {
-      reporter: ['json', 'clover', 'lcov'],
-      exclude: ['**/data**', '**/tokens**', '**/test-utils**', ...coverageConfigDefaults.exclude],
+      ...config!.test!.coverage,
+      exclude: ['**/data**', '**/tokens**', ...config.test!.coverage!.exclude!],
     },
   },
 })

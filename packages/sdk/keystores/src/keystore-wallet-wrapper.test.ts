@@ -1,4 +1,5 @@
 import { normalizeAddressWith0x, privateKeyToAddress } from '@celo/utils/lib/address'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { InMemoryKeystore } from './inmemory-keystore'
 import { KeystoreWalletWrapper } from './keystore-wallet-wrapper'
 
@@ -8,7 +9,7 @@ const GETH_GEN_KEYSTORE1 = `{"address":"8233d802bdc645d0d1b9b2e6face6e5825905081
 const KEYSTORE_NAME1 = 'PK1 keystore name'
 const ADDRESS1 = normalizeAddressWith0x(privateKeyToAddress(PK1))
 
-jest.setTimeout(30000)
+vi.setConfig({ testTimeout: 30000 })
 
 describe('KeystoreWalletWrapper using InMemoryKeystore', () => {
   let keystoreWalletWrapper: KeystoreWalletWrapper
