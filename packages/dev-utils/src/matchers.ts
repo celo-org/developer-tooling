@@ -9,7 +9,6 @@ declare global {
     }
   }
 }
-jest.setTimeout(10000)
 
 expect.extend({
   toBeBigNumber(received: any) {

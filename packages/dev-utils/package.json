@@ -2,9 +2,6 @@
   "name": "@celo/dev-utils",
   "version": "0.1.0-beta.2",
   "description": "util package for celo packages that should only be a devDependency",
-  "main": "dist/cjs/index.js",
-  "module": "dist/mjs/index.js",
-  "types": "dist/mjs/index.d.ts",
   "exports": {
     "./*": {
       "types": "./dist/cjs/*.d.ts",

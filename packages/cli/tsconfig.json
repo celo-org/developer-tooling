@@ -10,7 +10,7 @@
     "esModuleInterop": true,
     "target": "es2020"
   },
-  "include": ["src/**/*", "src/commands/dkg/DKG.json"],
+  "include": ["src/**/*", "src/commands/dkg/DKG.json", "../dev-utils/dist/cjs/matchers.d.ts"],
   "ts-node": {
     "esm": true
   }

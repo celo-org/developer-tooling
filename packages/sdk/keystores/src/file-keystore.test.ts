@@ -20,10 +20,8 @@ describe('FileKeystore tests', () => {
     mkdirSync(testWorkdir)
   })
 
-  afterAll((done) => {
-    rimraf(parentWorkdir, () => {
-      done()
-    })
+  afterAll(async () => {
+    await rimraf(parentWorkdir)
   })
   it('initializes keystore, imports key into keystore file, and deletes', async () => {
     const keystore = new FileKeystore(testWorkdir)
