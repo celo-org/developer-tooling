@@ -7,15 +7,17 @@ import {
   timeout,
 } from './async'
 
+import { describe, expect, it, test, vi } from 'vitest'
+
 describe('retryAsync()', () => {
   test('tries once if it works', async () => {
-    const mockFunction = jest.fn()
+    const mockFunction = vi.fn()
     await retryAsync(mockFunction, 3, [], 1)
     expect(mockFunction).toHaveBeenCalledTimes(1)
   })
 
   test('retries n times', async () => {
-    const mockFunction = jest.fn(() => {
+    const mockFunction = vi.fn(() => {
       throw new Error('error')
     })
 
@@ -32,7 +34,7 @@ describe('retryAsync()', () => {
 
 describe('selectiveRetryAsyncWithBackOff()', () => {
   test('tries only once if error is in dontRetry array', async () => {
-    const mockFunction = jest.fn()
+    const mockFunction = vi.fn()
     mockFunction.mockImplementation(() => {
       throw new Error('test error 400')
     })
@@ -49,7 +51,7 @@ describe('selectiveRetryAsyncWithBackOff()', () => {
 
 describe('retryAsyncWithBackOffAndTimeout()', () => {
   test('tries once if it works', async () => {
-    const mockFunction = jest.fn(async () => {
+    const mockFunction = vi.fn(async () => {
       await sleep(10)
       return true
     })
@@ -64,7 +66,7 @@ describe('retryAsyncWithBackOffAndTimeout()', () => {
   })
 
   test('retries n times on failure', async () => {
-    const mockFunction = jest.fn(() => {
+    const mockFunction = vi.fn(() => {
       throw new Error('forced error')
     })
 
@@ -78,7 +80,7 @@ describe('retryAsyncWithBackOffAndTimeout()', () => {
   })
 
   test('fails on timeout', async () => {
-    const mockFunction = jest.fn(async () => {
+    const mockFunction = vi.fn(async () => {
       await sleep(1000)
     })
 
@@ -151,7 +153,7 @@ describe('concurrentMap()', () => {
 
 describe('timeout()', () => {
   test('fails on timeout', async () => {
-    const mockFunction = jest.fn(async () => {
+    const mockFunction = vi.fn(async () => {
       await sleep(1000)
     })
 

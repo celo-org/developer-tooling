@@ -1,4 +1,5 @@
 import { readFileSync } from 'fs'
+import { describe, expect, it } from 'vitest'
 
 const packageJson = JSON.parse(readFileSync('./package.json', 'utf-8'))
 

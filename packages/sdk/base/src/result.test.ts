@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { Err, isOk, Ok, Result } from '.'
 
 // These tests are just to check the typescript compiler

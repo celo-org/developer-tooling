@@ -1,4 +1,5 @@
 import { EventEmitter } from 'stream'
+import { expect, test, vi } from 'vitest'
 import { sleep } from './async'
 import { Lock } from './lock'
 
@@ -15,7 +16,7 @@ test('lock', async () => {
   // Increase the default limit of listeners to avoid warnings.
   EventEmitter.defaultMaxListeners = CONCURRENT_CALLS
 
-  const race = jest.fn(async (id: number) => {
+  const race = vi.fn(async (id: number) => {
     await pause()
     await lock.acquire()
     canary = id

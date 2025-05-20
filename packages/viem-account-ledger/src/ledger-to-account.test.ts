@@ -319,7 +319,7 @@ hardwareDescribe('ledgerToAccount (device ledger)', () => {
   })
 
   it('can be setup', async () => {
-    expect((generateLedger as ReturnType<(typeof jest)['fn']>).mock.calls.length).toBe(1)
+    expect((generateLedger as ReturnType<typeof vi.fn>).mock.calls.length).toBe(1)
   })
 
   describe('signs txs', () => {

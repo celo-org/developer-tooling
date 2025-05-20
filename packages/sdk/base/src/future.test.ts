@@ -1,3 +1,4 @@
+import { expect, test } from 'vitest'
 import { Future } from './future'
 
 test('it should expose resolve/reject inmediately', async () => {

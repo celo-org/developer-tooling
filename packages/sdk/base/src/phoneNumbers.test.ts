@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { isE164Number } from './phoneNumbers'
 
 const TEST_PHONE_NUMBERS = {

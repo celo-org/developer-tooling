@@ -1,3 +1,4 @@
+import { describe, expect, test } from 'vitest'
 import { getAddressChunks, isNullAddress } from './address'
 
 describe(getAddressChunks, () => {

@@ -1,9 +1,10 @@
+import { describe, expect, test, vi } from 'vitest'
 import { sleep } from './async'
 import { conditionWatcher, repeatTask, RepeatTaskContext, tryObtainValueWithRetries } from './task'
 
 describe('repeatTask()', () => {
   test("should repeat task until it't stopped", async () => {
-    const fn = jest.fn().mockResolvedValue(null)
+    const fn = vi.fn().mockResolvedValue(null)
 
     const task = repeatTask(
       {
@@ -22,7 +23,7 @@ describe('repeatTask()', () => {
   })
 
   test('should keep repeating even if task fails', async () => {
-    const fn = jest.fn().mockRejectedValue(new Error('Failed'))
+    const fn = vi.fn().mockRejectedValue(new Error('Failed'))
 
     const task = repeatTask(
       {
@@ -38,7 +39,7 @@ describe('repeatTask()', () => {
 
   test('should set and increment execution number', async () => {
     const executionsNumbers: number[] = []
-    const fn = jest.fn(async (ctx: RepeatTaskContext) => {
+    const fn = vi.fn(async (ctx: RepeatTaskContext) => {
       executionsNumbers.push(ctx.executionNumber)
     })
 
@@ -64,7 +65,7 @@ describe('repeatTask()', () => {
       throw new Error('MESSAGE')
     }
 
-    const logger = jest.fn()
+    const logger = vi.fn()
     repeatTask(
       {
         name: 'testTask',
@@ -81,7 +82,7 @@ describe('repeatTask()', () => {
   })
 
   test('should be able to stop repetitions from ctx', async () => {
-    const fn = jest.fn(async (ctx: RepeatTaskContext) => {
+    const fn = vi.fn(async (ctx: RepeatTaskContext) => {
       if (ctx.executionNumber === 2) {
         ctx.stopTask()
       }
@@ -101,7 +102,7 @@ describe('repeatTask()', () => {
   })
 
   test('should use initialDelayMS', async () => {
-    const fn = jest.fn().mockResolvedValue(null)
+    const fn = vi.fn().mockResolvedValue(null)
 
     const task = repeatTask(
       {
@@ -122,8 +123,8 @@ describe('repeatTask()', () => {
 
 describe('conditionWatcher()', () => {
   test('will execute onSuccess when condition triggers', async () => {
-    const pollCondition = jest.fn().mockResolvedValueOnce(false).mockResolvedValueOnce(true)
-    const onSuccess = jest.fn()
+    const pollCondition = vi.fn().mockResolvedValueOnce(false).mockResolvedValueOnce(true)
+    const onSuccess = vi.fn()
 
     const task = conditionWatcher({
       name: 'testCondition',
@@ -139,11 +140,11 @@ describe('conditionWatcher()', () => {
   })
 
   test('will work ok if pollCondition throws', async () => {
-    const pollCondition = jest
+    const pollCondition = vi
       .fn()
       .mockRejectedValueOnce(new Error('pepe'))
       .mockResolvedValueOnce(true)
-    const onSuccess = jest.fn()
+    const onSuccess = vi.fn()
 
     const task = conditionWatcher({
       name: 'testCondition',
@@ -159,8 +160,8 @@ describe('conditionWatcher()', () => {
   })
 
   test('will work ok if onSuccess throws', async () => {
-    const pollCondition = jest.fn().mockResolvedValue(true)
-    const onSuccess = jest.fn().mockRejectedValue(new Error('fail'))
+    const pollCondition = vi.fn().mockResolvedValue(true)
+    const onSuccess = vi.fn().mockRejectedValue(new Error('fail'))
 
     const task = conditionWatcher({
       name: 'testCondition',
@@ -180,7 +181,7 @@ describe('tryObtainValueWithRetries()', () => {
     const task = tryObtainValueWithRetries({
       name: 'testGet',
       maxAttemps: 2,
-      tryGetValue: jest.fn().mockResolvedValueOnce(null).mockResolvedValueOnce('HELLO'),
+      tryGetValue: vi.fn().mockResolvedValueOnce(null).mockResolvedValueOnce('HELLO'),
       timeInBetweenMS: 7,
     })
 
@@ -191,7 +192,7 @@ describe('tryObtainValueWithRetries()', () => {
     const task = tryObtainValueWithRetries({
       name: 'testGet',
       maxAttemps: 2,
-      tryGetValue: jest
+      tryGetValue: vi
         .fn()
         .mockResolvedValueOnce(null)
         .mockResolvedValueOnce(null)
@@ -206,10 +207,7 @@ describe('tryObtainValueWithRetries()', () => {
     const task = tryObtainValueWithRetries({
       name: 'testGet',
       maxAttemps: 2,
-      tryGetValue: jest
-        .fn()
-        .mockRejectedValueOnce(new Error('error'))
-        .mockResolvedValueOnce('HELLO'),
+      tryGetValue: vi.fn().mockRejectedValueOnce(new Error('error')).mockResolvedValueOnce('HELLO'),
       timeInBetweenMS: 7,
     })
 
@@ -217,7 +215,7 @@ describe('tryObtainValueWithRetries()', () => {
   })
 
   test('stops when task.stop() is called', async () => {
-    const tryGetValue = jest.fn().mockResolvedValue(null)
+    const tryGetValue = vi.fn().mockResolvedValue(null)
     const task = tryObtainValueWithRetries({
       name: 'testGet',
       maxAttemps: 15,
