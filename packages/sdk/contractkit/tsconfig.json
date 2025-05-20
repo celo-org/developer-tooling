@@ -7,7 +7,7 @@
     "outDir": "lib",
     "resolveJsonModule": true
   },
-  "include": ["src/**/*", "types/**/*", "../dev-utils/dist/cjs/matchers.d.ts"],
+  "include": ["src/**/*", "types/**/*", "../../dev-utils/dist/cjs/matchers.d.ts"],
   "references": [{ "path": "../utils" }],
   "exclude": ["**/*.test.ts"]
 }
