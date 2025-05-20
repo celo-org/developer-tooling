@@ -3,7 +3,6 @@ import { zip } from '@celo/base/lib/collections'
 import { HexString } from '@celo/base/lib/string'
 
 export type VoteAdapter = {
-  // Todo what is the right return type for this? maybe the hash of the transaction?
   vote: (
     validatorGroup: Address,
     value: bigint,

@@ -23,7 +23,6 @@ export async function voteProposal(
   return adapater.vote(proposalId, proposalIndex, voteValuesMap[voteValue])
 }
 
-// todo i feel wierd returning a bigint when actually the index will always be a number
 function getDequeueIndex(proposalID: bigint, dequeue: bigint[]): bigint {
   const index = dequeue.findIndex((bn) => bn === proposalID)
 
