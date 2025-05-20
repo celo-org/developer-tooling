@@ -1,4 +1,5 @@
 import { ensureLeading0x } from '@celo/base'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import Web3 from 'web3'
 import { Connection } from './connection'
 
@@ -43,7 +44,7 @@ describe('Connection', () => {
       const PRIORITYFEE = 200000
       const multiple = BigInt(120)
       beforeEach(() => {
-        connection.rpcCaller.call = jest.fn(async (method) => {
+        connection.rpcCaller.call = vi.fn(async (method) => {
           if (method === 'eth_gasPrice') {
             return {
               result: ensureLeading0x(ETH_GAS_PRICE.toString(16)),

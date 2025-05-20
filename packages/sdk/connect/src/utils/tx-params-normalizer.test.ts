@@ -1,9 +1,9 @@
+import { beforeEach, describe, expect, test, vi } from 'vitest'
 import Web3 from 'web3'
 import { Connection } from '../connection'
 import { Callback, CeloTx, JsonRpcPayload, JsonRpcResponse } from '../types'
 import { RpcCaller } from './rpc-caller'
 import { TxParamsNormalizer } from './tx-params-normalizer'
-
 describe('TxParamsNormalizer class', () => {
   let populator: TxParamsNormalizer
   let mockRpcCall: any
@@ -23,7 +23,7 @@ describe('TxParamsNormalizer class', () => {
   }
 
   beforeEach(() => {
-    mockRpcCall = jest.fn((method: string, _params: any[]): Promise<JsonRpcResponse> => {
+    mockRpcCall = vi.fn((method: string, _params: any[]): Promise<JsonRpcResponse> => {
       return new Promise((resolve, _reject) =>
         resolve({
           jsonrpc: '2.0',
@@ -35,11 +35,12 @@ describe('TxParamsNormalizer class', () => {
     const rpcMock: RpcCaller = {
       call: mockRpcCall,
       // eslint-disable-next-line @typescript-eslint/no-empty-function
+      // @ts-expect-error
       send: (_payload: JsonRpcPayload, _callback: Callback<JsonRpcResponse>): void => {},
     }
     const connection = new Connection(new Web3('http://localhost:8545'))
     connection.rpcCaller = rpcMock
-    mockGasEstimation = jest.fn(
+    mockGasEstimation = vi.fn(
       (
         _tx: CeloTx,
         _gasEstimator?: (tx: CeloTx) => Promise<number>,

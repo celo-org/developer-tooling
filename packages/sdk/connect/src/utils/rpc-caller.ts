@@ -1,5 +1,11 @@
 import debugFactory from 'debug'
-import { Callback, Error, HttpProvider, JsonRpcPayload, JsonRpcResponse } from '../types'
+import {
+  Callback,
+  Error as ErrorType,
+  HttpProvider,
+  JsonRpcPayload,
+  JsonRpcResponse,
+} from '../types'
 
 const debugRpcPayload = debugFactory('rpc:payload')
 const debugRpcResponse = debugFactory('rpc:response')
@@ -96,10 +102,10 @@ export class HttpRpcCaller implements RpcCaller {
     debugRpcPayload('%O', payload)
 
     const decoratedCallback: Callback<JsonRpcResponse> = (
-      error: Error | null,
+      error: ErrorType | null,
       result?: JsonRpcResponse
     ): void => {
-      let err: Error | null = null
+      let err: ErrorType | null = null
       // error could be false
       if (error) {
         err = error
@@ -116,6 +122,7 @@ export class HttpRpcCaller implements RpcCaller {
       ) {
         err = new Error(result.error.message)
       }
+      // @ts-expect-error ErrorType !== Error
       callback(err, result)
     }
 

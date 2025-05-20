@@ -1,5 +1,7 @@
-import { Callback, Error, JsonRpcPayload, JsonRpcResponse, Provider } from '../types'
+import { Callback, Error as ErrorType, JsonRpcPayload, JsonRpcResponse, Provider } from '../types'
 import { HttpRpcCaller, RpcCaller, rpcCallHandler } from './rpc-caller'
+
+import { beforeEach, describe, expect, it } from 'vitest'
 
 const mockProvider: Provider = {
   send: (payload: JsonRpcPayload, callback: Callback<JsonRpcResponse>): any => {
@@ -87,51 +89,54 @@ describe('rpcCallHandler function', () => {
   })
 
   describe('when the handle promise fails', () => {
-    it('the callback receives a response with the error', (done) => {
-      const callback = (_error: Error | null, response?: JsonRpcResponse) => {
-        try {
-          expect((response as any).error.code).toBe(-32000)
-          done()
-        } catch (error) {
-          done(error)
+    it('the callback receives a response with the error', () =>
+      new Promise<void>((done, reject) => {
+        const callback = (_error: ErrorType | null, response?: JsonRpcResponse) => {
+          try {
+            expect((response as any).error.code).toBe(-32000)
+            done()
+          } catch (error) {
+            reject(error)
+          }
         }
-      }
-      expect.assertions(1)
-      payload.method = 'fail_promise'
-      rpcCallHandler(payload, handleMock, callback)
-    })
+        expect.assertions(1)
+        payload.method = 'fail_promise'
+        rpcCallHandler(payload, handleMock, callback)
+      }))
   })
 
   describe('when the handle fails (not the promise)', () => {
-    it('the callback receives a response with the error', (done) => {
-      const callback = (_error: Error | null, response?: JsonRpcResponse) => {
-        try {
-          expect(response).toBeUndefined()
-          expect(_error).not.toBeNull()
-          done()
-        } catch (error) {
-          done(error)
+    it('the callback receives a response with the error', () =>
+      new Promise<void>((done, reject) => {
+        const callback = (_error: ErrorType | null, response?: JsonRpcResponse) => {
+          try {
+            expect(response).toBeUndefined()
+            expect(_error).not.toBeNull()
+            done()
+          } catch (error) {
+            reject(error)
+          }
         }
-      }
-      expect.assertions(2)
-      payload.method = 'fail_not_promise'
-      rpcCallHandler(payload, handleMock, callback)
-    })
+        expect.assertions(2)
+        payload.method = 'fail_not_promise'
+        rpcCallHandler(payload, handleMock, callback)
+      }))
   })
 
   describe('when the handle succeeds', () => {
-    it('the callback receives a response with a result', (done) => {
-      const callback = (_error: Error | null, response?: JsonRpcResponse) => {
-        try {
-          expect((response as any).error).toBeUndefined()
-          expect(response!.result).toBe('mock_response')
-          done()
-        } catch (error) {
-          done(error)
+    it('the callback receives a response with a result', () =>
+      new Promise<void>((done, reject) => {
+        const callback = (_error: ErrorType | null, response?: JsonRpcResponse) => {
+          try {
+            expect((response as any).error).toBeUndefined()
+            expect(response!.result).toBe('mock_response')
+            done()
+          } catch (error) {
+            reject(error)
+          }
         }
-      }
-      expect.assertions(2)
-      rpcCallHandler(payload, handleMock, callback)
-    })
+        expect.assertions(2)
+        rpcCallHandler(payload, handleMock, callback)
+      }))
   })
 })
