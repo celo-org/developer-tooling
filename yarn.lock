@@ -1713,6 +1713,7 @@ __metadata:
     oclif: "npm:^4.17.32"
     path: "npm:^0.12.7"
     prompts: "npm:^2.0.1"
+    semver: "npm:^7.7.2"
     ts-jest: "npm:^29.1.5"
     ts-node: "npm:^10.9.1"
     typescript: "npm:5.3.3"
@@ -2166,7 +2167,7 @@ __metadata:
     "@ledgerhq/hw-transport-node-hid": "npm:^6.29.5"
     "@vitest/coverage-v8": "npm:^3.1.3"
     dotenv: "npm:^8.2.0"
-    semver: "npm:^7.6.0"
+    semver: "npm:^7.7.2"
     viem: "npm:^2.29.2"
     vitest: "npm:^3.1.3"
   peerDependencies:
@@ -2331,7 +2332,7 @@ __metadata:
     "@types/debug": "npm:^4.1.12"
     "@types/node": "npm:18.7.16"
     debug: "npm:^4.1.1"
-    semver: "npm:^7.6.0"
+    semver: "npm:^7.7.2"
     ts-node: "npm:^10.9.2"
     typescript: "npm:5.3.3"
     web3: "npm:1.10.4"
@@ -8727,7 +8728,6 @@ __metadata:
     prettier: "npm:^2.7.1"
     pretty-quick: "npm:^2.0.1"
     rimraf: "npm:^4.4.1"
-    semver: "npm:7.5.2"
     ts-jest: "npm:^29.1.5"
     ts-node: "npm:^10.9.1"
     tsconfig-paths: "npm:^3.8.0"
@@ -17477,17 +17477,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:7.5.2":
-  version: 7.5.2
-  resolution: "semver@npm:7.5.2"
-  dependencies:
-    lru-cache: "npm:^6.0.0"
-  bin:
-    semver: bin/semver.js
-  checksum: f77b3a1842e19b78e5864a175d62699a17c0c25f6223366684041e8c7dd6a55f0091887f405c534895dfe69e1d770528d072b32d9ed866ab24392fe34344d3b5
-  languageName: node
-  linkType: hard
-
 "semver@npm:^6.0.0, semver@npm:^6.3.0, semver@npm:^6.3.1":
   version: 6.3.1
   resolution: "semver@npm:6.3.1"
@@ -17534,6 +17523,15 @@ __metadata:
   bin:
     semver: bin/semver.js
   checksum: 4cfa1eb91ef3751e20fc52e47a935a0118d56d6f15a837ab814da0c150778ba2ca4f1a4d9068b33070ea4273629e615066664c2cfcd7c272caf7a8a0f6518b2c
+  languageName: node
+  linkType: hard
+
+"semver@npm:^7.7.2":
+  version: 7.7.2
+  resolution: "semver@npm:7.7.2"
+  bin:
+    semver: bin/semver.js
+  checksum: 7a24cffcaa13f53c09ce55e05efe25cd41328730b2308678624f8b9f5fc3093fc4d189f47950f0b811ff8f3c3039c24a2c36717ba7961615c682045bf03e1dda
   languageName: node
   linkType: hard
 
