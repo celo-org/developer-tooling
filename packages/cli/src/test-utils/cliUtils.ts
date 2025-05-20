@@ -60,6 +60,14 @@ export async function testLocally(
   return command.run(extendedArgv, config)
 }
 
+export async function testWithoutChain(
+  command: Runner,
+  argv: string[],
+  config?: Interfaces.LoadOptions
+) {
+  return command.run(argv, config)
+}
+
 // Removes font-formatting ANSI codes (colors/styles) and transaction hashes from a string
 export const stripAnsiCodesAndTxHashes = (text: string): string => {
   if (typeof text !== 'string') {

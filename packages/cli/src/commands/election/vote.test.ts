@@ -123,13 +123,28 @@ testWithAnvilL2('election:vote', (web3: Web3) => {
           "All checks passed",
         ],
         [
-          "SendTransaction: vote",
+          "SendTransaction: Electon -> Vote",
         ],
         [
           "txHash: 0xtxhash",
         ],
+        [
+          "ValidatorGroupVoteCast:",
+        ],
+        [
+          "account: 0x5409ED021D9299bf6814279A6A1411A7e866A631
+      group: 0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb
+      value: 12345",
+        ],
       ]
     `)
-    expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
+    expect(writeMock.mock.calls).toMatchInlineSnapshot(`
+      [
+        [
+          "Remember to activate your vote next epoch
+      ",
+        ],
+      ]
+    `)
   })
 })

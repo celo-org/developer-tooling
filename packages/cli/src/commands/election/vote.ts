@@ -1,12 +1,12 @@
-import { Flags } from '@oclif/core'
-import BigNumber from 'bignumber.js'
+import { electionABI } from '@celo/abis'
+import { vote } from '@celo/actions/staking'
+import { ux } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
-
 export default class ElectionVote extends BaseCommand {
-  static description = 'Vote for a Validator Group in validator elections.'
+  static description = 'Vote for a Validator Group in elections.'
 
   static flags = {
     ...BaseCommand.flags,
@@ -15,25 +15,32 @@ export default class ElectionVote extends BaseCommand {
       description: "ValidatorGroup's address",
       required: true,
     }),
-    value: Flags.string({ description: 'Amount of CELO used to vote for group', required: true }),
+    value: CustomFlags.bigint({
+      description: 'Amount of CELO used to vote for group',
+      required: true,
+    }),
   }
 
   static examples = [
     'vote --from 0x4443d0349e8b3075cba511a0a87796597602a0f1 --for 0x932fee04521f5fcb21949041bf161917da3f588b, --value 1000000',
   ]
   async run() {
-    const kit = await this.getKit()
     const res = await this.parse(ElectionVote)
-    const value = new BigNumber(res.flags.value)
+    const publicClient = await this.getPublicClient()
+    const walletClient = await this.getWalletClient()
+    const value = res.flags.value
 
     await newCheckBuilder(this, res.flags.from)
       .isSignerOrAccount()
       .isValidatorGroup(res.flags.for)
-      .hasEnoughNonvotingLockedCelo(BigInt(res.flags.value))
+      .hasEnoughNonvotingLockedCelo(value)
       .runChecks()
 
-    const election = await kit.contracts.getElection()
-    const tx = await election.vote(res.flags.for, value)
-    await displaySendTx('vote', tx)
+    const pendingTxHash = vote(walletClient, res.flags.for, value)
+    await displayViemTx('Electon -> Vote', pendingTxHash, publicClient, {
+      abi: electionABI,
+      displayEventName: 'ValidatorGroupVoteCast',
+    })
+    ux.log('Remember to activate your vote next epoch')
   }
 }
