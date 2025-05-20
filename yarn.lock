@@ -2089,7 +2089,7 @@ __metadata:
     "@celo/base": "npm:^7.0.2"
     "@celo/connect": "npm:^7.0.0-beta.0"
     "@celo/contractkit": "npm:^10.0.0-beta.1"
-    "@celo/dev-utils": "npm:0.1.0-beta.2"
+    "@celo/dev-utils": "workspace:^"
     "@celo/typescript": "workspace:^"
     "@types/bn.js": "npm:^5.1.0"
     "@types/debug": "npm:^4.1.5"
