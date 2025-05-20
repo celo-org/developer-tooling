@@ -17,7 +17,12 @@ export default class AccountList extends BaseCommand {
   isOnlyReadingWallet = true
 
   async init() {
-    // noop - this skip the --node
+    const res = await this.parse(AccountList)
+    if (res.flags.useLedger) {
+      // noop - this skip the --node
+      return
+    }
+    return super.init()
   }
 
   async run() {
