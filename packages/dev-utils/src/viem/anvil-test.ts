@@ -5,6 +5,7 @@ import {
   Address,
   Client,
   createTestClient,
+  Hex,
   http,
   HttpTransport,
   PublicActions,
@@ -145,7 +146,7 @@ async function asCoreContractsOwner(
   )
 }
 
-function setCode(testClient: TestClientExtended, address: Address, code: Address) {
+function setCode(testClient: TestClientExtended, address: Address, code: Hex) {
   return testClient.setCode({ address, bytecode: code })
 }
 

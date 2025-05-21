@@ -1,4 +1,4 @@
-import { Address } from 'viem'
+import { Hex } from 'viem'
 import { TestClientExtended } from './anvil-test'
 
 type Hooks = {
@@ -33,7 +33,7 @@ export function testWithViem(
   }
 
   describeFn(name, () => {
-    let snapId: Address | null = null
+    let snapId: Hex | null = null
 
     if (options.hooks?.beforeAll) {
       beforeAll(options.hooks.beforeAll)
