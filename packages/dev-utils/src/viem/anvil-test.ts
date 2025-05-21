@@ -30,21 +30,26 @@ export type TestClientExtended<account extends Account | undefined = Account | u
   TestActions & PublicActions<HttpTransport, chains, account> & WalletActions<chains, account>
 >
 
-function createInstance(chainId?: number): {
+function createInstance(opts?: { chainId?: number; forkUrl?: string; forkBlockNumber?: number }): {
   instance: Anvil
   client: TestClientExtended
 } {
+  const forkUrl = opts?.forkUrl
+  const forkBlockNumber = opts?.forkBlockNumber
+
   const port = ANVIL_PORT + (process.pid - process.ppid)
   const options: CreateAnvilOptions = {
     port,
-    loadState: require.resolve('@celo/devchain-anvil/devchain.json'),
     mnemonic: TEST_MNEMONIC,
     balance: TEST_BALANCE,
     gasPrice: TEST_GAS_PRICE,
     gasLimit: TEST_GAS_LIMIT,
     blockBaseFeePerGas: 0,
     stopTimeout: 1000,
-    chainId,
+    chainId: opts?.chainId,
+    ...(forkUrl
+      ? { forkUrl, forkBlockNumber }
+      : { loadState: require.resolve('@celo/devchain-anvil/devchain.json') }),
   }
 
   instance = createAnvil(options)
@@ -73,9 +78,11 @@ function testWithAnvil(
   fn: (client: TestClientExtended) => void,
   options?: {
     chainId?: number
+    forkUrl?: string
+    forkBlockNumber?: number
   }
 ) {
-  const { instance, client } = createInstance(options?.chainId)
+  const { instance, client } = createInstance(options)
   // for each test suite, we start and stop a new anvil instance
   return testWithViem(name, client, fn, {
     runIf:
