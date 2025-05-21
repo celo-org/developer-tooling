@@ -169,7 +169,7 @@ jobs:
 
   general_test:
     name: General jest test
-    runs-on: ['self-hosted', 'org', '8-cpu']
+    runs-on: ['self-hosted', 'org', '16-cpu']
     permissions: # Must change the job token permissions to use Akeyless JWT auth
       id-token: write
       contents: read
@@ -318,7 +318,7 @@ jobs:
 
   cli-tests-anvil:
     name: CeloCli Tests (Anvil)
-    runs-on: ['self-hosted', 'org', '8-cpu']
+    runs-on: ['self-hosted', 'org', '16-cpu']
     timeout-minutes: 30
     permissions: # Must change the job token permissions to use Akeyless JWT auth
       id-token: write

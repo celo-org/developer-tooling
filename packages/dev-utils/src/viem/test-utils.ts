@@ -24,7 +24,7 @@ export function testWithViem(
   } = {}
 ) {
   // By default we run all the tests
-  let describeFn = global.describe
+  let describeFn = describe
 
   // and only skip them if explicitly stated
   if (options.runIf === false) {
