@@ -29,7 +29,8 @@ export default class TransferDollars extends ReleaseGoldBaseCommand {
   async run() {
     const { flags } = await this.parse(TransferDollars)
     const client = await this.getPublicClient()
-    const releaseCeloContract = await getReleaseCeloContract(client, flags.contract)
+    const wallet = await this.getWalletClient()
+    const releaseCeloContract = await getReleaseCeloContract(wallet, flags.contract)
 
     const isRevoked = await releaseCeloContract.read.isRevoked()
 
