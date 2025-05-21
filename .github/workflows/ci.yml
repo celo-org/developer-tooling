@@ -47,7 +47,7 @@ jobs:
       all_modified_files: ',${{ steps.changed-files.outputs.all_modified_files }}'
       artifacts_to_cache: ${{ steps.get_artifacts_to_cache.outputs.artifacts_to_cache }}
     # runs-on: ubuntu-latest
-    runs-on: ['self-hosted', 'org', '16-cpu']
+    runs-on: ['self-hosted', 'org', '8-cpu']
     timeout-minutes: 30
     steps:
       - uses: actions/setup-node@v4
@@ -169,7 +169,7 @@ jobs:
 
   general_test:
     name: General jest test
-    runs-on: ['self-hosted', 'org', '16-cpu']
+    runs-on: ['self-hosted', 'org', '8-cpu']
     permissions: # Must change the job token permissions to use Akeyless JWT auth
       id-token: write
       contents: read
@@ -205,7 +205,7 @@ jobs:
           report-name: "general_test"
   general_vi_test:
     name: General vitest
-    runs-on: ['self-hosted', 'org', '16-cpu']
+    runs-on: ['self-hosted', 'org', '8-cpu']
     permissions: # Must change the job token permissions to use Akeyless JWT auth
       id-token: write
       contents: read
@@ -266,7 +266,7 @@ jobs:
 
   contractkit-tests-anvil:
     name: ContractKit Tests (Anvil)
-    runs-on: ['self-hosted', 'org', '16-cpu']
+    runs-on: ['self-hosted', 'org', '8-cpu']
     timeout-minutes: 30
     permissions: # Must change the job token permissions to use Akeyless JWT auth
       id-token: write
@@ -318,7 +318,7 @@ jobs:
 
   cli-tests-anvil:
     name: CeloCli Tests (Anvil)
-    runs-on: ['self-hosted', 'org', '16-cpu']
+    runs-on: ['self-hosted', 'org', '8-cpu']
     timeout-minutes: 30
     permissions: # Must change the job token permissions to use Akeyless JWT auth
       id-token: write
