@@ -9,7 +9,10 @@ declare global {
     }
   }
 }
-jest.setTimeout(10000)
+
+if (typeof jest !== 'undefined') {
+  jest.setTimeout(10_000)
+}
 
 expect.extend({
   toBeBigNumber(received: any) {

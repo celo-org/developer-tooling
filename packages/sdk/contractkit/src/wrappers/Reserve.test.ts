@@ -7,7 +7,7 @@ import {
   setBalance,
   testWithAnvilL2,
   withImpersonatedAccount,
-} from '@celo/dev-utils/lib/anvil-test'
+} from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
 import { CeloContract } from '../base'
 import { newKitFromWeb3 } from '../kit'

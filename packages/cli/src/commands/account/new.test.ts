@@ -1,4 +1,4 @@
-import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import fs from 'node:fs'
 import path from 'node:path'
 import Web3 from 'web3'

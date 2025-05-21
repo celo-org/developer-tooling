@@ -19,6 +19,7 @@ export const NetworkConfig = migrationOverride
 export function jsonRpcCall<O>(web3: Web3, method: string, params: any[]): Promise<O> {
   return new Promise<O>((resolve, reject) => {
     if (web3.currentProvider && typeof web3.currentProvider !== 'string') {
+      // @ts-expect-error
       web3.currentProvider.send(
         {
           id: new Date().getTime(),

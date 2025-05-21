@@ -6,8 +6,8 @@ import {
   STABLES_ADDRESS,
   stopImpersonatingAccount,
   withImpersonatedAccount,
-} from '@celo/dev-utils/lib/anvil-test'
-import { mineBlocks, timeTravel } from '@celo/dev-utils/lib/ganache-test'
+} from '@celo/dev-utils/anvil-test'
+import { mineBlocks, timeTravel } from '@celo/dev-utils/ganache-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'

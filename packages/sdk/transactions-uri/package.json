@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "@celo/contractkit": "^10.0.0-beta.1",
-    "@celo/dev-utils": "0.1.0-beta.2",
+    "@celo/dev-utils": "workspace:^",
     "@celo/typescript": "workspace:^",
     "cross-fetch": "3.1.5",
     "dotenv": "^8.2.0",

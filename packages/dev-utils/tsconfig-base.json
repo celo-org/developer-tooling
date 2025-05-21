@@ -3,12 +3,13 @@
     "rootDir": "src",
     "declaration": true,
     "esModuleInterop": true,
-    "types": ["node"],
+    "types": ["node", "@types/jest"],
     "lib": ["esnext"],
     "skipLibCheck": true,
     "strict": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "resolveJsonModule": true
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "src/migration-override.json"],
   "exclude": ["**/*.test.ts"]
 }

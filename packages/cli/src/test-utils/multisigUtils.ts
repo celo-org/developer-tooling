@@ -1,7 +1,7 @@
 import { multiSigABI, proxyABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
 import { ContractKit } from '@celo/contractkit'
-import { setCode } from '@celo/dev-utils/lib/anvil-test'
+import { setCode } from '@celo/dev-utils/anvil-test'
 import Web3 from 'web3'
 import {
   multiSigBytecode,

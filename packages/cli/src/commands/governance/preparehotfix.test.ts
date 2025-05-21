@@ -5,7 +5,7 @@ import {
   setNextBlockTimestamp,
   testWithAnvilL2,
   withImpersonatedAccount,
-} from '@celo/dev-utils/lib/anvil-test'
+} from '@celo/dev-utils/anvil-test'
 import Web3 from 'web3'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import { getCurrentTimestamp } from '../../utils/cli'

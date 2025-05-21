@@ -1,7 +1,7 @@
 import { epochManagerABI } from '@celo/abis-12'
 import * as epochManager from '@celo/actions/contracts/epoch-manager'
 import { newKitFromWeb3 } from '@celo/contractkit'
-import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
 import { UnknownRpcError } from 'viem'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'

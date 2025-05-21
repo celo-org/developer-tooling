@@ -1,8 +1,4 @@
-import {
-  asCoreContractsOwner,
-  GROUP_ADDRESSES,
-  testWithAnvilL2,
-} from '@celo/dev-utils/lib/anvil-test'
+import { asCoreContractsOwner, GROUP_ADDRESSES, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
 import { newKitFromWeb3 } from '../kit'
 import { valueToFixidityString } from './BaseWrapper'

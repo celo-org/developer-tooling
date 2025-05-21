@@ -2,12 +2,8 @@ import { StrongAddress } from '@celo/base'
 import { CeloProvider } from '@celo/connect/lib/celo-provider'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { GovernanceWrapper, Proposal } from '@celo/contractkit/lib/wrappers/Governance'
-import {
-  setBalance,
-  testWithAnvilL2,
-  withImpersonatedAccount,
-} from '@celo/dev-utils/lib/anvil-test'
-import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
+import { setBalance, testWithAnvilL2, withImpersonatedAccount } from '@celo/dev-utils/anvil-test'
+import { timeTravel } from '@celo/dev-utils/ganache-test'
 import { ProposalBuilder } from '@celo/governance'
 import Safe, { getSafeAddressFromDeploymentTx } from '@safe-global/protocol-kit'
 import BigNumber from 'bignumber.js'

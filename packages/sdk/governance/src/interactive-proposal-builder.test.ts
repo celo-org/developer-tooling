@@ -4,7 +4,7 @@ import { InteractiveProposalBuilder, requireABI } from './interactive-proposal-b
 import { ProposalBuilder } from './proposal-builder'
 jest.mock('inquirer')
 
-import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 
 describe('all registered contracts can be required', () => {
   RegisteredContracts.forEach((contract) => {

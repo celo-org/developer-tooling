@@ -6,7 +6,7 @@ import {
   setBalance,
   testWithAnvilL2,
   withImpersonatedAccount,
-} from '@celo/dev-utils/lib/anvil-test'
+} from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
 import Safe, {
   getSafeAddressFromDeploymentTx,

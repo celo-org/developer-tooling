@@ -1,6 +1,6 @@
 import { NULL_ADDRESS, StrongAddress } from '@celo/base'
 import { newKitFromWeb3 } from '@celo/contractkit'
-import { setBalance, testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
+import { setBalance, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { addressToPublicKey, serializeSignature } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'

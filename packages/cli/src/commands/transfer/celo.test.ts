@@ -1,7 +1,7 @@
 import { goldTokenABI } from '@celo/abis'
 import { COMPLIANT_ERROR_RESPONSE } from '@celo/compliance'
 import { ContractKit, newKitFromWeb3, StableToken } from '@celo/contractkit'
-import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
 import { createPublicClient, decodeFunctionData, http } from 'viem'
 import Web3 from 'web3'

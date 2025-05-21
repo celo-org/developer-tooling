@@ -1,5 +1,5 @@
 import { StrongAddress } from '@celo/base'
-import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
 import { StableToken } from '../celo-tokens'
 import { ContractKit, newKitFromWeb3 } from '../kit'

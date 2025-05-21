@@ -1,6 +1,6 @@
 import { CeloTx, CeloTxObject, CeloTxReceipt, PromiEvent } from '@celo/connect'
-import { testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
-import { timeTravel } from '@celo/dev-utils/lib/ganache-test'
+import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
+import { timeTravel } from '@celo/dev-utils/ganache-test'
 import Web3 from 'web3'
 import {
   ContractKit,

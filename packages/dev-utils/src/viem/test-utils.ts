@@ -28,7 +28,7 @@ export function testWithViem(
 
   // and only skip them if explicitly stated
   if (options.runIf === false) {
-    describeFn = describe.skip
+    describeFn = describeFn.skip
   }
 
   describeFn(name, () => {

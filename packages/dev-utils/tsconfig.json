@@ -1,19 +1,8 @@
 {
-  "extends": "../typescript/tsconfig.library.json",
+  "extends": "./tsconfig-base.json",
   "compilerOptions": {
-    "resolveJsonModule": true,
-    "moduleResolution": "node16",
-    "declarationMap": true,
-    "module": "Node16",
-    "rootDir": "src",
-    "outDir": "lib",
-    "esModuleInterop": true,
-    "target": "es2020",
-    "strict": false,
-    "declaration": true,
-  },
-  "include": [
-    "src/**/*", 
-    "src/migration-override.json",
-  ]
+    "module": "esnext",
+    "outDir": "dist/mjs",
+    "target": "esnext"
+  }
 }

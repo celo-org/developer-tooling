@@ -1,5 +1,5 @@
 import { newKitFromWeb3 } from '@celo/contractkit'
-import { impersonateAccount, testWithAnvilL2 } from '@celo/dev-utils/lib/anvil-test'
+import { impersonateAccount, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
 import { Address } from 'viem'
 import Web3 from 'web3'

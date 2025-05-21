@@ -1,5 +1,4 @@
-import { newGovernance } from '@celo/abis/web3/Governance'
-import { newValidators } from '@celo/abis/web3/Validators'
+import { governanceABI, validatorsABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
 import Web3 from 'web3'
 import { DEFAULT_OWNER_ADDRESS, withImpersonatedAccount } from './anvil-test'
@@ -10,7 +9,8 @@ export async function setCommissionUpdateDelay(
   delayInBlocks: number
 ) {
   await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
-    const validators = newValidators(web3, validatorsContractAddress)
+    // @ts-expect-error
+    const validators = new web3.eth.Contract(validatorsABI, validatorsContractAddress)
 
     const { transactionHash } = await validators.methods
       .setCommissionUpdateDelay(delayInBlocks)
@@ -27,7 +27,8 @@ export async function setDequeueFrequency(
   frequency: number
 ) {
   await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
-    const governance = newGovernance(web3, governanceContractAddress)
+    // @ts-expect-error
+    const governance = new web3.eth.Contract(governanceABI, governanceContractAddress)
 
     const { transactionHash } = await governance.methods.setDequeueFrequency(frequency).send({
       from: DEFAULT_OWNER_ADDRESS,
@@ -42,7 +43,8 @@ export async function setReferendumStageDuration(
   duration: number
 ) {
   await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
-    const governance = newGovernance(web3, governanceContractAddress)
+    // @ts-expect-error
+    const governance = new web3.eth.Contract(governanceABI, governanceContractAddress)
 
     const { transactionHash } = await governance.methods.setReferendumStageDuration(duration).send({
       from: DEFAULT_OWNER_ADDRESS,
