@@ -26,7 +26,7 @@ export default async function createRpcWalletClient<T extends Chain | undefined 
   const accounts = await publicClient.request<{
     Parameters: []
     Method: 'eth_requestAccounts'
-    ReturnType: `0x${string}`[]
+    ReturnType: Address[]
   }>({
     method: 'eth_requestAccounts',
     params: [],

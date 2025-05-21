@@ -1,8 +1,8 @@
-import { Client, erc20Abi, getContract, GetContractReturnType, PublicClient } from 'viem'
+import { Address, Client, erc20Abi, getContract, GetContractReturnType, PublicClient } from 'viem'
 
 export async function getERC20Contract<T extends Client = PublicClient>(
   client: T,
-  address: `0x${string}`
+  address: Address
 ): Promise<ERC20<T>> {
   return getContract({
     address,

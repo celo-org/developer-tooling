@@ -1,9 +1,9 @@
 import { releaseGoldABI } from '@celo/abis'
-import { Client, getContract, GetContractReturnType, PublicClient } from 'viem'
+import { Address, Client, getContract, GetContractReturnType, PublicClient } from 'viem'
 
 export async function getReleaseCeloContract<T extends Client = PublicClient>(
   client: T,
-  address: `0x${string}`
+  address: Address
 ): Promise<ReleaseCeloContract<T>> {
   return getContract({
     address,
