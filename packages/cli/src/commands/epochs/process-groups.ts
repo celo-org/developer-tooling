@@ -25,7 +25,7 @@ export default class ProcessGroups extends BaseCommand {
 
     // This checks if epoch processing is either started or on individual group processing
     if (!(await epochManager.isEpochProcessingStarted())) {
-      this.error('Epoch process is not started yet')
+      return this.warn('Epoch process is not started yet')
     }
 
     if (!(await epochManager.isIndividualProcessing())) {

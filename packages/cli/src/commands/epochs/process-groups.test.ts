@@ -19,7 +19,7 @@ testWithAnvilL2('epochs:process-groups cmd', (web3) => {
 
     await expect(
       testLocallyWithWeb3Node(ProcessGroups, ['--from', accounts[0]], web3)
-    ).rejects.toMatchInlineSnapshot(`[Error: Epoch process is not started yet]`)
+    ).resolves.toMatchInlineSnapshot(`"Epoch process is not started yet"`)
 
     expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(4)
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`[]`)

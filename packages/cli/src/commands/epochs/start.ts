@@ -24,11 +24,11 @@ export default class Start extends BaseCommand {
     const epochManager = await kit.contracts.getEpochManager()
 
     if (!(await epochManager.isTimeForNextEpoch())) {
-      this.error('It is not time for the next epoch yet')
+      return this.warn('It is not time for the next epoch yet')
     }
 
     if (await epochManager.isOnEpochProcess()) {
-      this.error('Epoch process has already started.')
+      return this.warn('Epoch process has already started.')
     }
     const startProcessTx = await epochManager.startNextEpochProcessTx()
     if (startProcessTx === undefined) {

@@ -17,7 +17,7 @@ testWithAnvilL2('epochs:start cmd', (web3) => {
     expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(4)
     await expect(
       testLocallyWithWeb3Node(Start, ['--from', accounts[0]], web3)
-    ).rejects.toMatchInlineSnapshot(`[Error: It is not time for the next epoch yet]`)
+    ).resolves.toMatchInlineSnapshot(`"It is not time for the next epoch yet"`)
     expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(4)
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`[]`)
   })
