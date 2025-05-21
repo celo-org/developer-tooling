@@ -60,9 +60,13 @@ viem_testWithAnvil(
       'throws if proposalId is not in dequeue',
       async () => {
         const invalidProposalId = 999999n
-        await expect(vote(walletClient, invalidProposalId, 'Yes')).rejects.toThrow()
+        await expect(
+          vote(walletClient, invalidProposalId, 'Yes')
+        ).rejects.toThrowErrorMatchingInlineSnapshot(
+          `[Error: ID 999999 not found in array 36,47,72,32,33,37,38,44,46,45,52,51,58,59,65,64,112,70,73,78,75,74,84,79,81,82,95,87,94,110,90,92,93,97,98,104,100,106,113,108,109,114,126,125,122,124,129,153,146,154,141,152,149,148,155,156,192,184,166,173,186,185,196,230,203,0,207,0,224,206]`
+        )
       },
-      TIMEOUT
+      TIMEOUT * 2
     )
   },
   { forkUrl, forkBlockNumber: forkBlockNumber }
