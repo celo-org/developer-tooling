@@ -1,7 +1,7 @@
 import { governanceABI } from '@celo/abis-12'
 import { resolveAddress } from '@celo/actions'
 import { getProposalStage, ProposalStage } from '@celo/actions/contracts/governance'
-import { Address, bufferToHex } from '@celo/base'
+import { bufferToHex, StrongAddress } from '@celo/base'
 import BigNumber from 'bignumber.js'
 import { PublicClient } from 'viem'
 import { bigintToBigNumber } from './utils'
@@ -12,7 +12,7 @@ type DequeuedStageDurations = Pick<
 >
 
 export interface ProposalMetadata {
-  proposer: Address
+  proposer: StrongAddress
   deposit: BigNumber
   timestamp: BigNumber
   transactionCount: number

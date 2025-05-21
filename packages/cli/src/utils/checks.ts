@@ -260,16 +260,16 @@ class CheckBuilder {
       })
     )
 
-  proposalExists = (proposalID: string) =>
+  proposalExists = (proposalID: string | bigint) =>
     this.addCheck(
       `${proposalID} is an existing proposal`,
       this.withGovernance((governance) => governance.read.proposalExists([BigInt(proposalID)]))
     )
 
-  proposalInStage = (proposalID: string, stage: keyof typeof ProposalStage) =>
+  proposalInStage = (proposalID: string | bigint, stage: keyof typeof ProposalStage) =>
     this.proposalInStages(proposalID, [stage])
 
-  proposalInStages = (proposalID: string, stages: (keyof typeof ProposalStage)[]) =>
+  proposalInStages = (proposalID: string | bigint, stages: (keyof typeof ProposalStage)[]) =>
     this.addCheck(
       `${proposalID} is in stage ${stages.join(' or ')}`,
       this.withGovernance(async (_governance) => {
