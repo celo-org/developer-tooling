@@ -35,7 +35,7 @@
     "prepack": "yarn run build && oclif readme",
     "homebrew": "node ./homebrew/scripts/prepare.mjs",
     "test": "TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --maxWorkers 50% --silent --forceExit",
-    "test-ci": "TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --maxWorkers 50% --workerIdleMemoryLimit=0.1 --workerIdleMemoryLimit=0.1 --forceExit --ci",
+    "test-ci": "TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --workerIdleMemoryLimit=0.1 --forceExit --ci",
     "cs": "yarn --top-level run cs"
   },
   "dependencies": {
