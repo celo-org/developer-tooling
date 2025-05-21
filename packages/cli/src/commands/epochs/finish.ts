@@ -24,7 +24,7 @@ export default class Finish extends BaseCommand {
     const epochManager = await kit.contracts.getEpochManager()
 
     if (!(await epochManager.isOnEpochProcess())) {
-      this.error('Epoch process is not started yet')
+      return this.warn('Epoch process is not started yet')
     }
 
     await displaySendTx('finishNextEpoch', await epochManager.finishNextEpochProcessTx())

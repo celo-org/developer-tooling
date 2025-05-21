@@ -143,6 +143,7 @@ jobs:
       - run: yarn run lint
   size_checks: 
     name: Size checks
+    if: github.event_name == 'pull_request'
     runs-on: ['self-hosted', 'org', '8-cpu']
     needs: install-dependencies
     timeout-minutes: 3

@@ -30,7 +30,7 @@ export default class Switch extends BaseCommand {
     const epochManager = await kit.contracts.getEpochManager()
 
     if (!(await epochManager.isTimeForNextEpoch())) {
-      this.error('It is not time for the next epoch yet')
+      return this.warn('It is not time for the next epoch yet')
     }
 
     const isEpochProcessStarted = await epochManager.isOnEpochProcess()
