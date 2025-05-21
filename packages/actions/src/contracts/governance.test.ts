@@ -28,17 +28,14 @@ viem_testWithAnvil(
     afterEach(async () => {
       await client.stopImpersonatingAccount({ address: voter })
     })
-    // Assume a proposal is already created and in the dequeue
-    // For this test, we need a valid proposalId in the dequeue
-    // We'll use a placeholder proposalId for demonstration
-    // In a real test, you would create a proposal and get its ID
+    const txHashRegex = /^0x([A-Fa-f0-9]{64})$/
 
     it(
       'votes Yes on a proposal',
       async () => {
         // This will throw if proposalId is not in the dequeue
         // In a real test, ensure proposalId is valid and in the dequeue
-        await expect(vote(walletClient, proposalId, 'Yes')).resolves.toBeDefined()
+        await expect(vote(walletClient, proposalId, 'Yes')).resolves.toMatch(txHashRegex)
       },
       TIMEOUT
     )
@@ -46,7 +43,7 @@ viem_testWithAnvil(
     it(
       'votes No on a proposal',
       async () => {
-        await expect(vote(walletClient, proposalId, 'No')).resolves.toBeDefined()
+        await expect(vote(walletClient, proposalId, 'No')).resolves.toMatch(txHashRegex)
       },
       TIMEOUT
     )
@@ -54,7 +51,7 @@ viem_testWithAnvil(
     it(
       'votes Abstain on a proposal',
       async () => {
-        await expect(vote(walletClient, proposalId, 'Abstain')).resolves.toBeDefined()
+        await expect(vote(walletClient, proposalId, 'Abstain')).resolves.toMatch(txHashRegex)
       },
       TIMEOUT
     )
