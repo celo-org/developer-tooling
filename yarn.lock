@@ -1886,6 +1886,11 @@ __metadata:
   peerDependencies:
     jest: ^29.7.0
     vitest: ^3.1.3
+  peerDependenciesMeta:
+    jest:
+      optional: true
+    vitest:
+      optional: true
   languageName: unknown
   linkType: soft
 
@@ -6979,13 +6984,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/semver@npm:7.3.8":
-  version: 7.3.8
-  resolution: "@types/semver@npm:7.3.8"
-  checksum: 222494c8bfc8defe2683d34ebd03df44502cd0bf481cebe5e686a1ce03674f4aaf43c5016364b2c2b9f44817ba9fd5f0433e349ff93901e473d9986aedb74852
-  languageName: node
-  linkType: hard
-
 "@types/semver@npm:^7.5.0":
   version: 7.5.4
   resolution: "@types/semver@npm:7.5.4"
@@ -8714,7 +8712,6 @@ __metadata:
     "@changesets/changelog-github": "npm:^0.5.0"
     "@changesets/cli": "npm:^2.27.11"
     "@types/node": "npm:18.7.16"
-    "@types/semver": "npm:7.3.8"
     "@typescript-eslint/eslint-plugin": "npm:^6.17.0"
     "@typescript-eslint/parser": "npm:^6.17.0"
     colors: "npm:1.4.0"
@@ -8727,7 +8724,6 @@ __metadata:
     prettier: "npm:^2.7.1"
     pretty-quick: "npm:^2.0.1"
     rimraf: "npm:^4.4.1"
-    semver: "npm:7.5.2"
     ts-jest: "npm:^29.1.5"
     ts-node: "npm:^10.9.1"
     tsconfig-paths: "npm:^3.8.0"
@@ -17474,17 +17470,6 @@ __metadata:
   bin:
     semver: bin/semver
   checksum: fca14418a174d4b4ef1fecb32c5941e3412d52a4d3d85165924ce3a47fbc7073372c26faf7484ceb4bbc2bde25880c6b97e492473dc7e9708fdfb1c6a02d546e
-  languageName: node
-  linkType: hard
-
-"semver@npm:7.5.2":
-  version: 7.5.2
-  resolution: "semver@npm:7.5.2"
-  dependencies:
-    lru-cache: "npm:^6.0.0"
-  bin:
-    semver: bin/semver.js
-  checksum: f77b3a1842e19b78e5864a175d62699a17c0c25f6223366684041e8c7dd6a55f0091887f405c534895dfe69e1d770528d072b32d9ed866ab24392fe34344d3b5
   languageName: node
   linkType: hard
 
