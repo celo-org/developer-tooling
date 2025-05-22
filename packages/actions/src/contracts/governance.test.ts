@@ -2,7 +2,7 @@ import { viem_testWithAnvil } from '@celo/dev-utils/viem/anvil-test'
 import { createWalletClient, http } from 'viem'
 import { celo } from 'viem/chains'
 import { expect, it } from 'vitest'
-import { WalletCeloClient } from '../client'
+import { PublicCeloClient, WalletCeloClient } from '../client'
 import { vote } from './governance'
 
 const TIMEOUT = 10_000
@@ -16,14 +16,18 @@ const forkUrl = celo.rpcUrls.default.http[0]
 viem_testWithAnvil(
   'vote',
   async (client) => {
-    let walletClient: WalletCeloClient
+    let clients: { public: PublicCeloClient; wallet: WalletCeloClient }
     beforeEach(async () => {
-      client.impersonateAccount({ address: voter })
-      walletClient = createWalletClient({
+      await client.impersonateAccount({ address: voter })
+      const walletClient = createWalletClient({
         account: voter,
         chain: client.chain,
         transport: http(client.chain.rpcUrls.default.http[0]),
       })
+      clients = {
+        public: client,
+        wallet: walletClient,
+      }
     })
     afterEach(async () => {
       await client.stopImpersonatingAccount({ address: voter })
@@ -35,7 +39,7 @@ viem_testWithAnvil(
       async () => {
         // This will throw if proposalId is not in the dequeue
         // In a real test, ensure proposalId is valid and in the dequeue
-        await expect(vote(walletClient, proposalId, 'Yes')).resolves.toMatch(txHashRegex)
+        await expect(vote(clients, proposalId, 'Yes')).resolves.toMatch(txHashRegex)
       },
       TIMEOUT
     )
@@ -43,7 +47,7 @@ viem_testWithAnvil(
     it(
       'votes No on a proposal',
       async () => {
-        await expect(vote(walletClient, proposalId, 'No')).resolves.toMatch(txHashRegex)
+        await expect(vote(clients, proposalId, 'No')).resolves.toMatch(txHashRegex)
       },
       TIMEOUT
     )
@@ -51,7 +55,7 @@ viem_testWithAnvil(
     it(
       'votes Abstain on a proposal',
       async () => {
-        await expect(vote(walletClient, proposalId, 'Abstain')).resolves.toMatch(txHashRegex)
+        await expect(vote(clients, proposalId, 'Abstain')).resolves.toMatch(txHashRegex)
       },
       TIMEOUT
     )
@@ -61,7 +65,7 @@ viem_testWithAnvil(
       async () => {
         const invalidProposalId = 999999n
         await expect(
-          vote(walletClient, invalidProposalId, 'Yes')
+          vote(clients, invalidProposalId, 'Yes')
         ).rejects.toThrowErrorMatchingInlineSnapshot(
           `[Error: ID 999999 not found in array 36,47,72,32,33,37,38,44,46,45,52,51,58,59,65,64,112,70,73,78,75,74,84,79,81,82,95,87,94,110,90,92,93,97,98,104,100,106,113,108,109,114,126,125,122,124,129,153,146,154,141,152,149,148,155,156,192,184,166,173,186,185,196,230,203,0,207,0,224,206]`
         )

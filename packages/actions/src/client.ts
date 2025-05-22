@@ -12,7 +12,7 @@ type CeloChain = typeof celo | typeof celoAlfajores | typeof celoBaklava
 
 export type CeloClient = Client<Transport, CeloChain>
 
-export type PublicCeloClient = PublicClient<Transport, CeloChain, undefined>
+export type PublicCeloClient = PublicClient<Transport, CeloChain, Account | undefined>
 
 export type WalletCeloClient = WalletClient<Transport, CeloChain, Account>
 
