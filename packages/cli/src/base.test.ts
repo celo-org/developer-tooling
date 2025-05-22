@@ -178,6 +178,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
       expect(logSpy.mock.calls[0]).toMatchInlineSnapshot(`
         [
           "Retrieving derivation Paths",
+          "m/44'/60'/0'",
           [
             0,
             1,
@@ -227,6 +228,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
         expect(logSpy.mock.calls[0]).toMatchInlineSnapshot(`
           [
             "Retrieving derivation Paths",
+            "m/44'/60'/0'",
             [
               0,
               1,
@@ -275,6 +277,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
           expect(logSpy.mock.calls[0]).toMatchInlineSnapshot(`
             [
               "Retrieving derivation Paths",
+              "m/44'/60'/0'",
               [
                 1,
                 8,
@@ -322,6 +325,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
         expect(logSpy.mock.calls[0]).toMatchInlineSnapshot(`
           [
             "Retrieving derivation Paths",
+            "m/44'/60'/0'",
             [
               1,
               8,

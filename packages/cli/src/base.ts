@@ -1,6 +1,11 @@
 import { type PublicCeloClient, type WalletCeloClient } from '@celo/actions'
 import { celoBaklava } from '@celo/actions/chains'
-import { ensureLeading0x, StrongAddress } from '@celo/base'
+import {
+  CELO_DERIVATION_PATH_BASE,
+  ensureLeading0x,
+  ETHEREUM_DERIVATION_PATH,
+  StrongAddress,
+} from '@celo/base'
 import { ReadOnlyWallet } from '@celo/connect'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { ledgerToWalletClient } from '@celo/viem-account-ledger'
@@ -28,7 +33,7 @@ import Web3 from 'web3'
 import createRpcWalletClient from './packages-to-be/rpc-client'
 import { failWith } from './utils/cli'
 import { CustomFlags } from './utils/command'
-import { getDefaultDerivationPath, getNodeUrl } from './utils/config'
+import { configExists, getDefaultDerivationPath, getNodeUrl } from './utils/config'
 import { getFeeCurrencyContractWrapper } from './utils/fee-currency'
 import { requireNodeIsSynced } from './utils/helpers'
 import { reportUsageStatisticsIfTelemetryEnabled } from './utils/telemetry'
@@ -375,7 +380,15 @@ export abstract class BaseCommand extends Command {
           ? JSON.parse(res.flags.ledgerCustomAddresses)
           : Array.from(Array(res.flags.ledgerAddresses).keys())
 
-        console.log('Retrieving derivation Paths', indicesToIterateOver)
+        const baseDerivationPath = getDefaultDerivationPath(this.config.configDir)
+        console.log('Retrieving derivation Paths', baseDerivationPath, indicesToIterateOver)
+        if (await this.usingDefaultEthDerivationPath(baseDerivationPath)) {
+          console.info(
+            chalk.yellow(
+              `Using ${ETHEREUM_DERIVATION_PATH}. This used to default to ${CELO_DERIVATION_PATH_BASE}. use config:set --derivationPath celoLegacy for the old behavior.`
+            )
+          )
+        }
         let ledgerConfirmation = AddressValidation.never
         if (res.flags.ledgerConfirmAddress) {
           if (this.isOnlyReadingWallet) {
@@ -385,7 +398,7 @@ export abstract class BaseCommand extends Command {
           }
         }
         this._wallet = await newLedgerWalletWithSetup(await this.openLedgerTransport(), {
-          baseDerivationPath: getDefaultDerivationPath(this.config.configDir),
+          baseDerivationPath: baseDerivationPath,
           derivationPathIndexes: isLedgerLiveMode ? [0] : indicesToIterateOver,
           changeIndexes: isLedgerLiveMode ? indicesToIterateOver : [0],
           ledgerAddressValidation: ledgerConfirmation,
@@ -439,6 +452,17 @@ export abstract class BaseCommand extends Command {
         )
       }
     }
+  }
+
+  // since we switched from using CELO_DERIVATION_PATH_BASE to ETHEREUM_DERIVATION_PATH
+  // we check if the derivation path they are using was explicitly set by the user (config exists) or just happens to be the used
+  // because we changed defaults.
+  // if a user ever used config:set even with --node then the config will exist but prior to 10.0.0 it will be set to CELO_DERIVATION_PATH_BASE
+  protected async usingDefaultEthDerivationPath(baseDerivationPath: string) {
+    return (
+      baseDerivationPath === ETHEREUM_DERIVATION_PATH &&
+      !(await configExists(this.config.configDir))
+    )
   }
 
   // We want to not display any additional output when the user has specified

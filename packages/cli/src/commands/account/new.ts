@@ -12,19 +12,17 @@ import { printValueMap } from '../../utils/cli'
 import { ViewCommmandFlags } from '../../utils/flags'
 
 import {
-  CELO_DERIVATION_PATH_BASE,
   DerivationPath,
   DerivationPathAliases,
   ETHEREUM_DERIVATION_PATH,
   MnemonicLanguages,
   MnemonicStrength,
 } from '@celo/base'
+import { CELO_BASE_DERIVATION_PATH } from '@celo/wallet-ledger'
 import { getDefaultDerivationPath } from '../../utils/config'
 
 export default class NewAccount extends BaseCommand {
-  static description =
-    "Creates a new account locally using the Celo Derivation Path (m/44'/52752'/0/changeIndex/addressIndex) and print out the key information. Save this information for local transaction signing or import into a Celo node. Ledger: this command has been tested swapping mnemonics with the Ledger successfully (only supports english)" +
-    "\n\nWARN: In 7.0 the default derivation path will be Eth (\"m/44'/60'/0'\") forum.celo.org/t/deprecating-the-celo-derivation-path/9229"
+  static description = `Creates a new account locally using the --derivationPath if passed or the one set with config:set (defaults to ${DerivationPathAliases.eth})  and print out the key information. Save this information for local transaction signing or import into a Celo node. Ledger: this command has been tested swapping mnemonics with the Ledger successfully (only supports english)`
 
   static flags = {
     ...ViewCommmandFlags,
@@ -64,8 +62,7 @@ export default class NewAccount extends BaseCommand {
         return NewAccount.sanitizeDerivationPath(input)
       },
       summary: "Derivation path in the format \"m/44'/coin_type'/account'\" or an alias",
-      description:
-        "Choose a different derivation Path (Celo's default is \"m/44'/52752'/0'\"). Use \"eth\" as an alias of the Ethereum derivation path (\"m/44'/60'/0'\"). Recreating the same account requires knowledge of the mnemonic, passphrase (if any), and the derivation path. (use changeIndex, and addressIndex flags to change BIP44 positions 4 and 5)",
+      description: `Choose a different derivation Path (default is ${DerivationPathAliases.eth}). Also aliased as "eth". Use "celoLegacy" as alias for old default: ${DerivationPathAliases.celoLegacy}. Recreating the same account requires knowledge of the mnemonic, passphrase (if any), and the derivation path. (use changeIndex, and addressIndex flags to change BIP44 positions 4 and 5)`,
     }),
   }
 
@@ -156,10 +153,13 @@ export default class NewAccount extends BaseCommand {
       derivationPath
     )
 
-    if (derivationPath === CELO_DERIVATION_PATH_BASE) {
+    if (
+      res.flags.derivationPath === undefined &&
+      (await this.usingDefaultEthDerivationPath(derivationPath))
+    ) {
       this.log(
         chalk.magenta(
-          `\nUsing celoLegacy path (${CELO_DERIVATION_PATH_BASE}) for derivation. This will default to eth derivation path (${ETHEREUM_DERIVATION_PATH}) next major version.\n use "config:set --derivationPath <path>" to set your preffered default\n`
+          `\nUsing eth path (${ETHEREUM_DERIVATION_PATH}) for derivation. This used to default to ${CELO_BASE_DERIVATION_PATH} but changed in version 10.0.0. use "config:set --derivationPath <path>" to set your preffered default\n`
         )
       )
     }
