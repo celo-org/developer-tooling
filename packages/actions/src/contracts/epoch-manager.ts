@@ -1,17 +1,19 @@
 import { epochManagerABI } from '@celo/abis'
-import { Client, getContract, GetContractReturnType, PublicClient } from 'viem'
+import { getContract, GetContractReturnType } from 'viem'
+import { Clients } from '../client'
 import { resolveAddress } from './registry'
 
-export async function getEpochManagerContract<T extends Client = PublicClient>(
-  client: T
-): Promise<EpochManager<T>> {
-  return getContract({
-    address: await resolveAddress(client, 'EpochManager'),
-    abi: epochManagerABI,
-    client,
-  })
-}
-export type EpochManager<T extends Client = PublicClient> = GetContractReturnType<
+export type EpochManager<T extends Clients = Clients> = GetContractReturnType<
   typeof epochManagerABI,
   T
 >
+
+export async function getEpochManagerContract<T extends Clients = Clients>(
+  clients: T
+): Promise<EpochManager<T>> {
+  return getContract({
+    address: await resolveAddress(clients.public, 'EpochManager'),
+    abi: epochManagerABI,
+    client: clients,
+  })
+}

@@ -1,6 +1,6 @@
 import { vote as coreVote, VoteAdapter } from '@celo/core'
 import { Address, Hex } from 'viem'
-import { WalletCeloClient } from '../../client'
+import { Clients } from '../../client'
 import { getElectionContract } from '../../contracts/election'
 
 /**
@@ -16,11 +16,11 @@ import { getElectionContract } from '../../contracts/election'
  * @returns A promise that resolves to a Hex string representing the transaction hash.
  */
 export async function vote(
-  client: WalletCeloClient,
+  clients: Required<Clients>,
   validatorGroup: Address,
   value: bigint
 ): Promise<Hex> {
-  const election = await getElectionContract(client)
+  const election = await getElectionContract(clients)
   const adapter: VoteAdapter = {
     vote: async (validatorGroup, value, lesser, greater) => {
       const { request } = await election.simulate.vote([validatorGroup, value, lesser, greater])
