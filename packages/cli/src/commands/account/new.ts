@@ -159,7 +159,7 @@ export default class NewAccount extends BaseCommand {
     ) {
       this.log(
         chalk.magenta(
-          `\nUsing eth path (${ETHEREUM_DERIVATION_PATH}) for derivation. This used to default to ${CELO_BASE_DERIVATION_PATH} but changed in version 10.0.0. use "config:set --derivationPath <path>" to set your preffered default\n`
+          `\nUsing eth path (${ETHEREUM_DERIVATION_PATH}) for derivation. This used to default to ${CELO_BASE_DERIVATION_PATH} but changed in version 10.0.0. use "config:set --derivationPath <path>" to set your preferred default\n`
         )
       )
     }
