@@ -1,8 +1,6 @@
 {
   "$schema": "https://typedoc.org/schema.json",
-  "exclude": [
-    "**/*+(test).ts"
-  ],
+  "exclude": ["**/*+(test).ts"],
   "excludePrivate": true,
   "excludeProtected": true,
   "hideGenerator": true,
@@ -13,17 +11,15 @@
   "entryPoints": [
     "./src/index.ts",
     "./src/contracts/*.ts",
-    "./src/multicontract-interactions/**/index.ts",
+    "./src/multicontract-interactions/**/index.ts"
   ],
-  "githubPages": false,  
+  "githubPages": false,
   "excludeExternals": true,
-  "excludeNotDocumented":true,
+  "excludeNotDocumented": true,
   "excludeInternal": true,
   "excludeReferences": true,
   "includeVersion": true,
   "disableSources": true,
-  "plugin": [
-    "typedoc-plugin-markdown"
-  ],
+  "plugin": ["typedoc-plugin-markdown"],
   "entryPointStrategy": "resolve"
 }
