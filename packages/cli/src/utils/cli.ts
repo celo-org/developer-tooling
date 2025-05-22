@@ -17,7 +17,7 @@ import humanizeDuration from 'humanize-duration'
 import { convertEthersToCeloTx } from './mento-broker-adaptor'
 
 import { PublicCeloClient } from '@celo/actions'
-import { Abi, ContractEventName, decodeEventLog, DecodeEventLogReturnType } from 'viem'
+import { Abi, Address, ContractEventName, decodeEventLog, DecodeEventLogReturnType } from 'viem'
 
 const CLIError = Errors.CLIError
 
@@ -63,7 +63,7 @@ export async function displaySafeTx(name: string, safeTxResult: SafeTransactionR
 
 export async function displayViemTx<const abi extends Abi | undefined = undefined>(
   name: string,
-  hash: Promise<`0x${string}`>,
+  hash: Promise<Address>,
   client: PublicCeloClient,
   decodeEventsOpts?: abi extends Abi
     ? {

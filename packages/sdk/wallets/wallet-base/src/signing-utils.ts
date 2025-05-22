@@ -237,7 +237,7 @@ enum TxTypeToPrefix {
 
 export interface LegacyEncodedTx {
   type: 'celo-legacy'
-  rlpEncode: `0x${string}`
+  rlpEncode: Hex
   transaction: FormattedCeloTx
 }
 

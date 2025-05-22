@@ -2,8 +2,10 @@ import { StrongAddress } from '@celo/base'
 import { Anvil, createAnvil, CreateAnvilOptions } from '@viem/anvil'
 import {
   Account,
+  Address,
   Client,
   createTestClient,
+  Hex,
   http,
   HttpTransport,
   PublicActions,
@@ -100,7 +102,7 @@ function testWithAnvil(
 
 function impersonateAccount(
   testClient: TestClientExtended,
-  address: `0x${string}`,
+  address: Address,
   withBalance?: number | bigint
 ) {
   return Promise.all([
@@ -114,13 +116,13 @@ function impersonateAccount(
   ])
 }
 
-function stopImpersonatingAccount(testClient: TestClientExtended, address: `0x${string}`) {
+function stopImpersonatingAccount(testClient: TestClientExtended, address: Address) {
   return testClient.stopImpersonatingAccount({ address })
 }
 
 async function withImpersonatedAccount(
   testClient: TestClientExtended,
-  account: `0x${string}`,
+  account: Address,
   fn: () => Promise<void>,
   withBalance?: number | bigint
 ) {
@@ -144,7 +146,7 @@ async function asCoreContractsOwner(
   )
 }
 
-function setCode(testClient: TestClientExtended, address: `0x${string}`, code: `0x${string}`) {
+function setCode(testClient: TestClientExtended, address: Address, code: Hex) {
   return testClient.setCode({ address, bytecode: code })
 }
 
@@ -152,11 +154,7 @@ function setNextBlockTimestamp(testClient: TestClientExtended, timestamp: number
   return testClient.setNextBlockTimestamp({ timestamp: BigInt(timestamp) })
 }
 
-function setBalance(
-  testClient: TestClientExtended,
-  address: `0x${string}`,
-  balance: number | bigint
-) {
+function setBalance(testClient: TestClientExtended, address: Address, balance: number | bigint) {
   return testClient.setBalance({ address, value: BigInt(balance) })
 }
 

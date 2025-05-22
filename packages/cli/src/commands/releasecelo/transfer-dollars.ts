@@ -1,5 +1,6 @@
+import { getReleaseCeloContract } from '@celo/actions/contracts/release-celo'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
 
@@ -13,7 +14,7 @@ export default class TransferDollars extends ReleaseGoldBaseCommand {
       required: true,
       description: 'Address of the recipient of Celo Dollars transfer',
     }),
-    value: CustomFlags.wei({
+    value: CustomFlags.bigint({
       required: true,
       description: 'Value (in Wei) of Celo Dollars to transfer',
     }),
@@ -26,16 +27,27 @@ export default class TransferDollars extends ReleaseGoldBaseCommand {
   ]
 
   async run() {
-    const kit = await this.getKit()
     const { flags } = await this.parse(TransferDollars)
-    const isRevoked = await this.releaseGoldWrapper.isRevoked()
-    kit.defaultAccount = isRevoked
-      ? await this.releaseGoldWrapper.getReleaseOwner()
-      : await this.releaseGoldWrapper.getBeneficiary()
+    const client = await this.getPublicClient()
+    const wallet = await this.getWalletClient()
+    const releaseCeloContract = await getReleaseCeloContract(wallet, flags.contract)
+
+    const isRevoked = await releaseCeloContract.read.isRevoked()
+
+    const account = isRevoked
+      ? await releaseCeloContract.read.releaseOwner()
+      : await releaseCeloContract.read.beneficiary()
+
     await newCheckBuilder(this)
-      .isNotSanctioned(kit.defaultAccount)
+      .isNotSanctioned(account)
       .isNotSanctioned(flags.to)
+      .hasEnoughStable(flags.contract, flags.value, 'cUSD')
       .runChecks()
-    await displaySendTx('transfer', this.releaseGoldWrapper.transfer(flags.to, flags.value))
+
+    await displayViemTx(
+      'transfer',
+      releaseCeloContract.write.transfer([flags.to, flags.value], { account }),
+      client
+    )
   }
 }
