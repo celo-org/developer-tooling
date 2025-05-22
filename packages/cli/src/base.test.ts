@@ -82,6 +82,17 @@ describe('flags', () => {
       expect(connectdChain).toBe(42220)
     })
   })
+  describe('--node websockets', () => {
+    it('it connects to 62320', async () => {
+      const command = new BasicCommand(
+        ['--node', 'wss://baklava-forno.celo-testnet.org/ws'],
+        config
+      )
+      const runnerClient = await command.getPublicClient()
+      const connectdChain = runnerClient.chain
+      expect(connectdChain.id).toBe(62320)
+    })
+  })
   describe('--help', () => {
     it('it shows help', async () => {
       const writeSpy = jest.spyOn(ux.write, 'stdout').mockImplementation()
