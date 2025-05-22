@@ -19,6 +19,7 @@ import {
   http,
   MethodNotFoundRpcError,
   Transport,
+  webSocket,
 } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { celo, celoAlfajores } from 'viem/chains'
@@ -185,7 +186,18 @@ export abstract class BaseCommand extends Command {
 
   private async getTransport(): Promise<Transport> {
     const nodeUrl = await this.getNodeUrl()
-    return nodeUrl && nodeUrl.endsWith('.ipc') ? ipc(nodeUrl) : http(nodeUrl)
+    if (nodeUrl?.endsWith('.ipc')) {
+      return ipc(nodeUrl)
+    } else if (nodeUrl?.startsWith('http')) {
+      return http(nodeUrl)
+    } else if (nodeUrl?.startsWith('ws')) {
+      return webSocket(nodeUrl)
+    } else {
+      console.error(`Invalid node URL: ${nodeUrl}`)
+      throw new Error(
+        "Invalid ---node. It should start with 'http', 'ws', end with '.ipc' or be a known alias"
+      )
+    }
   }
 
   private async openLedgerTransport() {
