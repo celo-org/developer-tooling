@@ -3,6 +3,18 @@ import { Address, Hex } from 'viem'
 import { WalletCeloClient } from '../../client'
 import { getElectionContract } from '../../contracts/election'
 
+/**
+ * Casts a vote for a specified validator group using the provided wallet client.
+ *
+ * This function interacts with the Election contract to submit a vote for the given
+ * validator group with the specified value. It uses a VoteAdapter to abstract the
+ * voting logic and gas estimation, and delegates the business logic of voting to `@celo/vote`.
+ *
+ * @param client - The WalletCeloClient instance used to interact with the blockchain.
+ * @param validatorGroup - The address of the validator group to vote for.
+ * @param value - The amount of votes in wei (as a bigint) to cast for the validator group.
+ * @returns A promise that resolves to a Hex string representing the transaction hash.
+ */
 export async function vote(
   client: WalletCeloClient,
   validatorGroup: Address,

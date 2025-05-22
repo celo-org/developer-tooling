@@ -1,0 +1,29 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "exclude": [
+    "**/*+(test).ts"
+  ],
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "hideGenerator": true,
+  "out": "./docs",
+  "gitRevision": "master",
+  "readme": "README.md",
+  "name": "@Celo/Actions",
+  "entryPoints": [
+    "./src/index.ts",
+    "./src/contracts/*.ts",
+    "./src/multicontract-interactions/**/index.ts",
+  ],
+  "githubPages": false,  
+  "excludeExternals": true,
+  "excludeNotDocumented":true,
+  "excludeInternal": true,
+  "excludeReferences": true,
+  "includeVersion": true,
+  "disableSources": true,
+  "plugin": [
+    "typedoc-plugin-markdown"
+  ],
+  "entryPointStrategy": "resolve"
+}
