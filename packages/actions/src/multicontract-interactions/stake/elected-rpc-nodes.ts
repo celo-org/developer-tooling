@@ -17,6 +17,19 @@ export interface ElectedRpcNode extends UnnamedRpcNode {
   name: string
 }
 
+/**
+ * Retrieves the list of currently elected RPC nodes (validators) along with their associated metadata.
+ *
+ * This function fetches the elected validator signers from the epoch manager contract,
+ * maps them to their corresponding accounts, and then decorates each validator with additional
+ * information such as their name. Optionally, it can also include information about changes
+ * in validator status if the `showChanges` option is enabled.
+ *
+ * @param client - The public client instance used to interact with the blockchain.
+ * @param options - Optional settings for the function.
+ * @param options.showChanges - If true, includes information about changes in validator status.
+ * @returns A promise that resolves to an array of elected validator objects, each decorated with additional metadata.
+ */
 export async function getElectedRpcNodes(
   client: PublicClient,
   options: { showChanges?: boolean } = {}

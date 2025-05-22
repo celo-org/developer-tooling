@@ -13,6 +13,33 @@ export type VoteProposalAdapter = {
   getDequeue: () => Promise<bigint[]>
 }
 
+/**
+ * Casts a vote on a specified proposal using the provided adapter.
+ *
+ * @param adapater - The adapter responsible for handling proposal voting operations. See Example for implementation.
+ * @param proposalId - The unique identifier of the proposal to vote on.
+ * @param voteValue - The value representing the type of vote to cast (e.g., Abstain, No, Yes).
+ * @example 
+ * ```ts
+ * const governanceAddress = "0x1234" 
+ * const contract = getContract({client, address: governanceAddress, abi: governanceABI})
+ * const adapter: VoteProposalAdapter =
+ * {
+ *  vote: async (proposalID, proposalIndex, voteValue) => {
+ *    const { request } = await contract.simulate.vote([proposalID, proposalIndex, voteValue])
+ *    const gasLimit = await contract.estimateGas.vote(request.args)
+ *    return contract.write.vote(request.args, { gas: gasLimit })
+ * },
+ *  getDequeue: async () => {
+ *     contract.read.getDequeue()}
+ * }
+ * 
+ * voteProposal(adapter, proposalId, 'Yes')
+ * ```     
+ 
+ 
+ * @returns A promise that resolves with the has of the vote transaction.
+ */
 export async function voteProposal(
   adapater: VoteProposalAdapter,
   proposalId: bigint,
