@@ -1,6 +1,6 @@
 import { accountsABI } from '@celo/abis'
-import { Address, getContract, GetContractReturnType, PublicClient } from 'viem'
-import { Clients } from '../client'
+import { Address, getContract, GetContractReturnType } from 'viem'
+import { Clients, PublicCeloClient } from '../client'
 import { resolveAddress } from './registry'
 
 export type AccountsContract<C extends Clients = Clients> = GetContractReturnType<
@@ -18,7 +18,10 @@ export async function getAccountsContract(clients: Clients): Promise<AccountsCon
 
 // METHODS
 
-export const signerToAccount = async (client: PublicClient, signer: Address): Promise<Address> => {
+export const signerToAccount = async (
+  client: PublicCeloClient,
+  signer: Address
+): Promise<Address> => {
   return await client.readContract({
     address: await resolveAddress(client, 'Accounts'),
     abi: accountsABI,
