@@ -89,13 +89,16 @@ export abstract class TransferStableBase extends BaseCommand {
             feeCurrency && isAddressEqual(feeCurrency, stableTokenContract.address)
 
           const [gas, gasPrice, balanceOfTokenForGas, balanceOfTokenToSend] = await Promise.all([
+            // gas estimation
             res.flags.comment
               ? stableTokenContract.estimateGas.transferWithComment(
                   [to, value, res.flags.comment],
                   transferParams
                 )
               : stableTokenContract.estimateGas.transfer([to, value], transferParams),
+            // fee estimation
             getGasPriceOnCelo(client, feeCurrency),
+            //  balanceOfTokenForGas
             (feeCurrency
               ? feeInSameStableTokenAsTransfer
                 ? stableTokenContract
