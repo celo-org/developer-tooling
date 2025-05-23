@@ -52,14 +52,14 @@ jobs:
     steps:
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
       - name: 'enable corepack for yarn'
         run: sudo corepack enable yarn
       - uses: actions/checkout@v4
       # must call twice because of chicken and egg problem with yarn and node
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'yarn'
       - name: Restore node cache
         uses: actions/cache@v4
