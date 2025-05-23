@@ -38,11 +38,15 @@ viem_testWithAnvil(
     const txHashRegex = /^0x([A-Fa-f0-9]{64})$/
 
     it(
-      'votes Yes/No on a proposal',
+      'votes Yes on a proposal',
       async () => {
-        // This will throw if proposalId is not in the dequeue
-        // In a real test, ensure proposalId is valid and in the dequeue
         await expect(vote(clients, proposalId, 'Yes')).resolves.toMatch(txHashRegex)
+      },
+      TIMEOUT
+    )
+    it(
+      'votes No on a proposal',
+      async () => {
         await expect(vote(clients, proposalId, 'No')).resolves.toMatch(txHashRegex)
       },
       TIMEOUT
