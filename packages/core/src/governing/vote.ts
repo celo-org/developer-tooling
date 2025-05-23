@@ -26,7 +26,8 @@ export type VoteProposalAdapter = {
  * const adapter: VoteProposalAdapter =
  * {
  *  vote: async (proposalID, proposalIndex, voteValue) => {
- *    const { request } = await contract.simulate.vote([proposalID, proposalIndex, voteValue])
+ *    const { request } = await contract.simulate.vote([proposalID, proposalIndex, voteValue], {
+ *      account: client.wallet.account.address})
  *    const gasLimit = await contract.estimateGas.vote(request.args)
  *    return contract.write.vote(request.args, { gas: gasLimit })
  * },

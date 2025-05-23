@@ -23,7 +23,9 @@ export async function vote(
   const election = await getElectionContract(clients)
   const adapter: VoteAdapter = {
     vote: async (validatorGroup, value, lesser, greater) => {
-      const { request } = await election.simulate.vote([validatorGroup, value, lesser, greater])
+      const { request } = await election.simulate.vote([validatorGroup, value, lesser, greater], {
+        account: clients.wallet.account.address,
+      })
       const gasLimit = await election.estimateGas.vote(request.args)
       return election.write.vote(request.args, { gas: gasLimit })
     },
