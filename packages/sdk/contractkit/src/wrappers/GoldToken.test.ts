@@ -1,4 +1,4 @@
-import { GoldToken, newGoldToken } from '@celo/abis-12/web3/GoldToken'
+import { GoldToken, newGoldToken } from '@celo/abis/web3/GoldToken'
 import { StrongAddress } from '@celo/base'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { newKitFromWeb3 } from '../kit'

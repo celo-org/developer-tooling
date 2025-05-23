@@ -1,4 +1,4 @@
-import { Governance } from '@celo/abis-12/web3/Governance'
+import { Governance } from '@celo/abis/web3/Governance'
 import {
   bufferToHex,
   ensureLeading0x,

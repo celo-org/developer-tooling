@@ -1574,21 +1574,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/abis-12@npm:@celo/abis@12.0.1":
-  version: 12.0.1
-  resolution: "@celo/abis@npm:12.0.1"
-  checksum: eaf7eebf7b8e26512438f0caefdaf0f130b0ca277d2333afa73e6c44e12a525af403fd78ca70b4f6fc0b4dc26162e34e5f2c52bf31b4ee2aec7574e1a4d3fddb
-  languageName: node
-  linkType: hard
-
-"@celo/abis@npm:11.0.0, @celo/abis@npm:^11.0.0":
+"@celo/abis@npm:11.0.0":
   version: 11.0.0
   resolution: "@celo/abis@npm:11.0.0"
   checksum: f54204d2fad17e01201b03efbea02837c9b360130d201f229cca6f048031ca20aeea964599ac8ba8c3a367f8dba861f79ace4d47376cbd5379f9987fec4a10c8
   languageName: node
   linkType: hard
 
-"@celo/abis@npm:^12.0.3":
+"@celo/abis@npm:12.0.3, @celo/abis@npm:^12.0.3":
   version: 12.0.3
   resolution: "@celo/abis@npm:12.0.3"
   checksum: ef3ea15a7a48ce842f77ca5357e818301f44c9f13498937de78646f4dad04e193d032697b1efc09bc33c0951d85850cdbf60ab9b9bad7ddea73b155d23242795
@@ -1622,7 +1615,6 @@ __metadata:
     "@noble/curves": "npm:1.3.0"
     "@noble/hashes": "npm:1.3.3"
     bignumber.js: "npm:^9.0.0"
-    web3-utils: "npm:1.10.4"
   languageName: unknown
   linkType: soft
 
@@ -1662,10 +1654,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/celocli@workspace:packages/cli"
   dependencies:
-    "@celo/abis": "npm:11.0.0"
+    "@celo/abis": "npm:12.0.3"
     "@celo/actions": "npm:0.0.0"
     "@celo/base": "npm:^7.0.2"
-    "@celo/celo-devchain": "npm:^7.0.0"
     "@celo/compliance": "npm:1.0.28"
     "@celo/connect": "npm:^7.0.0-beta.0"
     "@celo/contractkit": "npm:^10.0.0-beta.1"
@@ -1675,7 +1666,6 @@ __metadata:
     "@celo/governance": "npm:^5.1.7-beta.0"
     "@celo/identity": "npm:^5.1.2"
     "@celo/metadata-claims": "npm:^1.0.3"
-    "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.2"
     "@celo/viem-account-ledger": "npm:^1.2.0-beta.1"
     "@celo/wallet-hsm-azure": "npm:^8.0.0-beta.1"
@@ -1711,8 +1701,8 @@ __metadata:
     humanize-duration: "npm:^3.32.1"
     jest: "npm:^29.7.0"
     oclif: "npm:^4.17.32"
-    path: "npm:^0.12.7"
     prompts: "npm:^2.0.1"
+    semver: "npm:^7.7.2"
     ts-jest: "npm:^29.1.5"
     ts-node: "npm:^10.9.1"
     typescript: "npm:5.3.3"
@@ -1779,8 +1769,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/contractkit@workspace:packages/sdk/contractkit"
   dependencies:
-    "@celo/abis": "npm:11.0.0"
-    "@celo/abis-12": "npm:@celo/abis@12.0.1"
+    "@celo/abis": "npm:12.0.3"
     "@celo/base": "npm:^7.0.2"
     "@celo/celo-devchain": "npm:^7.0.0"
     "@celo/connect": "npm:^7.0.0-beta.0"
@@ -1799,7 +1788,7 @@ __metadata:
     fetch-mock: "npm:^10.0.7"
     fp-ts: "npm:2.16.9"
     jest: "npm:^29.7.0"
-    semver: "npm:^7.3.5"
+    semver: "npm:^7.7.2"
     ts-node: "npm:^10.9.1"
     typescript: "npm:5.3.3"
     web3: "npm:1.10.4"
@@ -1867,7 +1856,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/dev-utils@workspace:packages/dev-utils"
   dependencies:
-    "@celo/abis": "npm:^11.0.0"
+    "@celo/abis": "npm:12.0.3"
     "@celo/connect": "npm:^7.0.0-beta.0"
     "@celo/devchain-anvil": "npm:12.0.0-canary.59"
     "@celo/typescript": "workspace:^"
@@ -1924,8 +1913,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/governance@workspace:packages/sdk/governance"
   dependencies:
-    "@celo/abis": "npm:11.0.0"
-    "@celo/abis-12": "npm:@celo/abis@12.0.1"
+    "@celo/abis": "npm:12.0.3"
     "@celo/base": "npm:^7.0.2"
     "@celo/connect": "npm:^7.0.0-beta.0"
     "@celo/contractkit": "npm:^10.0.0-beta.1"
@@ -1933,7 +1921,7 @@ __metadata:
     "@celo/explorer": "npm:^5.0.16-beta.0"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.2"
-    "@ethereumjs/util": "npm:8.0.5"
+    "@noble/hashes": "npm:1.3.3"
     "@types/debug": "npm:^4.1.12"
     "@types/inquirer": "npm:^6.5.0"
     bignumber.js: "npm:^9.0.0"
@@ -2009,7 +1997,6 @@ __metadata:
   resolution: "@celo/metadata-claims@workspace:packages/sdk/metadata-claims"
   dependencies:
     "@celo/base": "npm:^7.0.2"
-    "@celo/celo-devchain": "npm:^7.0.0"
     "@celo/contractkit": "workspace:^"
     "@celo/dev-utils": "npm:0.1.0-beta.2"
     "@celo/odis-identifiers": "npm:^1.0.1"
@@ -2083,7 +2070,6 @@ __metadata:
     fp-ts: "npm:2.16.9"
     google-libphonenumber: "npm:^3.2.27"
     io-ts: "npm:2.0.1"
-    web3-utils: "npm:^1.10.0"
   languageName: unknown
   linkType: soft
 
@@ -2171,7 +2157,7 @@ __metadata:
     "@ledgerhq/hw-transport-node-hid": "npm:^6.29.5"
     "@vitest/coverage-v8": "npm:^3.1.3"
     dotenv: "npm:^8.2.0"
-    semver: "npm:^7.6.0"
+    semver: "npm:^7.7.2"
     viem: "npm:^2.29.2"
     vitest: "npm:^3.1.3"
   peerDependencies:
@@ -2217,7 +2203,6 @@ __metadata:
     debug: "npm:^4.1.1"
     viem: "npm:~2.29.2"
     web3: "npm:1.10.4"
-    web3-eth-accounts: "npm:1.10.4"
   languageName: unknown
   linkType: soft
 
@@ -2336,7 +2321,7 @@ __metadata:
     "@types/debug": "npm:^4.1.12"
     "@types/node": "npm:18.7.16"
     debug: "npm:^4.1.1"
-    semver: "npm:^7.6.0"
+    semver: "npm:^7.7.2"
     ts-node: "npm:^10.9.2"
     typescript: "npm:5.3.3"
     web3: "npm:1.10.4"
@@ -12337,13 +12322,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inherits@npm:2.0.3":
-  version: 2.0.3
-  resolution: "inherits@npm:2.0.3"
-  checksum: 8771303d66c51be433b564427c16011a8e3fbc3449f1f11ea50efb30a4369495f1d0e89f0fc12bdec0bd7e49102ced5d137e031d39ea09821cb3c717fcf21e69
-  languageName: node
-  linkType: hard
-
 "ini@npm:^1.3.4, ini@npm:~1.3.0":
   version: 1.3.8
   resolution: "ini@npm:1.3.8"
@@ -16191,16 +16169,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"path@npm:^0.12.7":
-  version: 0.12.7
-  resolution: "path@npm:0.12.7"
-  dependencies:
-    process: "npm:^0.11.1"
-    util: "npm:^0.10.3"
-  checksum: d49d101f9596613cf4cd1d4ebc4e64ba9a9df5d9cd75a410cfe87a88ce4bf0e2617ff44b92025376f7ecb02e88a6308b27f7f39d810f2335a5126f762487adfb
-  languageName: node
-  linkType: hard
-
 "pathe@npm:^2.0.3":
   version: 2.0.3
   resolution: "pathe@npm:2.0.3"
@@ -16423,7 +16391,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"process@npm:^0.11.1, process@npm:^0.11.10":
+"process@npm:^0.11.10":
   version: 0.11.10
   resolution: "process@npm:0.11.10"
   checksum: dbaa7e8d1d5cf375c36963ff43116772a989ef2bb47c9bdee20f38fd8fc061119cf38140631cf90c781aca4d3f0f0d2c834711952b728953f04fd7d238f59f5b
@@ -17519,6 +17487,15 @@ __metadata:
   bin:
     semver: bin/semver.js
   checksum: 4cfa1eb91ef3751e20fc52e47a935a0118d56d6f15a837ab814da0c150778ba2ca4f1a4d9068b33070ea4273629e615066664c2cfcd7c272caf7a8a0f6518b2c
+  languageName: node
+  linkType: hard
+
+"semver@npm:^7.7.2":
+  version: 7.7.2
+  resolution: "semver@npm:7.7.2"
+  bin:
+    semver: bin/semver.js
+  checksum: 7a24cffcaa13f53c09ce55e05efe25cd41328730b2308678624f8b9f5fc3093fc4d189f47950f0b811ff8f3c3039c24a2c36717ba7961615c682045bf03e1dda
   languageName: node
   linkType: hard
 
@@ -19253,15 +19230,6 @@ __metadata:
   version: 1.0.2
   resolution: "util-deprecate@npm:1.0.2"
   checksum: 474acf1146cb2701fe3b074892217553dfcf9a031280919ba1b8d651a068c9b15d863b7303cb15bd00a862b498e6cf4ad7b4a08fb134edd5a6f7641681cb54a2
-  languageName: node
-  linkType: hard
-
-"util@npm:^0.10.3":
-  version: 0.10.4
-  resolution: "util@npm:0.10.4"
-  dependencies:
-    inherits: "npm:2.0.3"
-  checksum: 1200a1ca2b474758342b3a0c5261c56f14ef09ad7eeaec3e6f449f5776ecdfce09a153cad62652b823e74647cdcfd2918552eadd2434783dfb58dabc5061803a
   languageName: node
   linkType: hard
 

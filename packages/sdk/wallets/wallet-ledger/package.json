@@ -39,7 +39,7 @@
     "@ledgerhq/errors": "^6.16.4",
     "@ledgerhq/hw-transport": "^6.30.6",
     "debug": "^4.1.1",
-    "semver": "^7.6.0"
+    "semver": "^7.7.2"
   },
   "devDependencies": {
     "@celo/contractkit": "^10.0.0-beta.1",

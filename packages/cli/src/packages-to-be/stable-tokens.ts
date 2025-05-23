@@ -1,4 +1,4 @@
-import { stableTokenABI, stableTokenBrlABI, stableTokenEurABI } from '@celo/abis-12'
+import { stableTokenABI, stableTokenBrlABI, stableTokenEurABI } from '@celo/abis'
 import { resolveAddress } from '@celo/actions'
 import { Client, getContract, GetContractReturnType, PublicClient } from 'viem'
 

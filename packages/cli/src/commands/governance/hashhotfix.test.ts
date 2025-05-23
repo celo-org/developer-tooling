@@ -1,7 +1,7 @@
 import { PROXY_ADMIN_ADDRESS } from '@celo/connect'
 import { setCode, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import fs from 'fs'
-import path from 'path'
+import path from 'node:path'
 import Web3 from 'web3'
 import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import HashHotfix from './hashhotfix'

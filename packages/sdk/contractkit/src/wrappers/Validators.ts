@@ -1,4 +1,4 @@
-import { Validators } from '@celo/abis-12/web3/Validators'
+import { Validators } from '@celo/abis/web3/Validators'
 import { eqAddress, findAddressIndex, NULL_ADDRESS } from '@celo/base/lib/address'
 import { concurrentMap } from '@celo/base/lib/async'
 import { zeroRange, zip } from '@celo/base/lib/collections'

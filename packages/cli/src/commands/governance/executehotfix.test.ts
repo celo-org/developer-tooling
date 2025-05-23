@@ -9,7 +9,7 @@ import {
   withImpersonatedAccount,
 } from '@celo/dev-utils/anvil-test'
 import fs from 'fs'
-import path from 'path'
+import path from 'node:path'
 import Web3 from 'web3'
 import { AbiItem, PROXY_ADMIN_ADDRESS } from '../../../../sdk/connect/lib'
 import {
