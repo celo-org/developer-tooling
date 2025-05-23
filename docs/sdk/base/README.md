@@ -1,8 +1,8 @@
-**@celo/base v7.0.2**
+**@celo/base v7.0.3-beta.0**
 
 ***
 
-# @celo/base v7.0.2
+# @celo/base v7.0.3-beta.0
 
 ## Enumerations
 
@@ -42,6 +42,7 @@
 - [CeloTokenType](type-aliases/CeloTokenType.md)
 - [Comparator](type-aliases/Comparator.md)
 - [DerivationPath](type-aliases/DerivationPath.md)
+- [HexString](type-aliases/HexString.md)
 - [Logger](type-aliases/Logger.md)
 - [RandomNumberGenerator](type-aliases/RandomNumberGenerator.md)
 - [Result](type-aliases/Result.md)

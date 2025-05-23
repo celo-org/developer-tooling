@@ -1,4 +1,4 @@
-[**@celo/base v7.0.2**](../README.md)
+[**@celo/base v7.0.3-beta.0**](../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Function: isHexString()
 
-> **isHexString**(`input`): `boolean`
+> **isHexString**(`input`): `` input is `0x${string}` ``
 
 Defined in: [packages/sdk/base/src/address.ts:26](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/address.ts#L26)
 
@@ -18,4 +18,4 @@ Defined in: [packages/sdk/base/src/address.ts:26](https://github.com/celo-org/de
 
 ## Returns
 
-`boolean`
+`` input is `0x${string}` ``
