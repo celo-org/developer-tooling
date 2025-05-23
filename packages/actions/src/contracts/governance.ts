@@ -43,7 +43,9 @@ export async function vote<C extends Required<Clients> = Required<Clients>>(
   return voteProposal(
     {
       vote: async (proposalID, proposalIndex, voteValue) => {
-        const { request } = await contract.simulate.vote([proposalID, proposalIndex, voteValue])
+        const { request } = await contract.simulate.vote([proposalID, proposalIndex, voteValue], {
+          account: clients.wallet.account.address,
+        })
         return contract.write.vote(request.args)
       },
       getDequeue: async () => {

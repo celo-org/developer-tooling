@@ -1,5 +1,5 @@
 import { viem_testWithAnvil } from '@celo/dev-utils/viem/anvil-test'
-import { createWalletClient, http } from 'viem'
+import { createPublicClient, createWalletClient, http } from 'viem'
 import { celo } from 'viem/chains'
 import { expect, it } from 'vitest'
 import { PublicCeloClient, WalletCeloClient } from '../client'
@@ -25,7 +25,10 @@ viem_testWithAnvil(
         transport: http(client.chain.rpcUrls.default.http[0]),
       })
       clients = {
-        public: client,
+        public: createPublicClient({
+          chain: client.chain,
+          transport: http(client.chain.rpcUrls.default.http[0]),
+        }),
         wallet: walletClient,
       }
     })
@@ -35,25 +38,18 @@ viem_testWithAnvil(
     const txHashRegex = /^0x([A-Fa-f0-9]{64})$/
 
     it(
-      'votes Yes on a proposal',
+      'votes Yes/No on a proposal',
       async () => {
         // This will throw if proposalId is not in the dequeue
         // In a real test, ensure proposalId is valid and in the dequeue
         await expect(vote(clients, proposalId, 'Yes')).resolves.toMatch(txHashRegex)
-      },
-      TIMEOUT
-    )
-
-    it(
-      'votes No on a proposal',
-      async () => {
         await expect(vote(clients, proposalId, 'No')).resolves.toMatch(txHashRegex)
       },
       TIMEOUT
     )
 
     it(
-      'votes Abstain on a proposal',
+      'votes Abstain a proposal',
       async () => {
         await expect(vote(clients, proposalId, 'Abstain')).resolves.toMatch(txHashRegex)
       },
