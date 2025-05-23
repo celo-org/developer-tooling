@@ -38,7 +38,7 @@ export default class Vote extends BaseCommand {
     const publicClient = await this.getPublicClient()
 
     // do not wait this. it will be awiated in the displayViemTx
-    const pendingVote = vote(walletClient, id, voteValue)
+    const pendingVote = vote({ public: publicClient, wallet: walletClient }, id, voteValue)
     await displayViemTx('Governance -> vote', pendingVote, publicClient, {
       abi: governanceABI,
       displayEventName: 'ProposalVoted',

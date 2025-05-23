@@ -1,7 +1,6 @@
 import { getGasPriceOnCelo } from '@celo/actions'
 import { getCeloERC20Contract } from '@celo/actions/contracts/celo-erc20'
 import { getERC20Contract } from '@celo/actions/contracts/erc20'
-import { PublicClient } from 'viem'
 import { CeloTransactionRequest } from 'viem/celo'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
@@ -49,7 +48,7 @@ export default class TransferErc20 extends BaseCommand {
     const value = res.flags.value
     const feeCurrency = res.flags.gasCurrency
 
-    const erc20Contract = await getERC20Contract(wallet, res.flags.erc20Address)
+    const erc20Contract = await getERC20Contract({ public: client, wallet }, res.flags.erc20Address)
     const transferParams = (feeCurrency ? { feeCurrency } : {}) as Pick<
       CeloTransactionRequest,
       'gas' | 'feeCurrency' | 'maxFeePerGas'
@@ -80,8 +79,8 @@ export default class TransferErc20 extends BaseCommand {
             erc20Contract.estimateGas.transfer([to, value], transferParams),
             getGasPriceOnCelo(client, feeCurrency),
             (feeCurrency
-              ? await getERC20Contract(client as PublicClient, feeCurrency)
-              : await getCeloERC20Contract(client as PublicClient)
+              ? await getERC20Contract({ public: client }, feeCurrency)
+              : await getCeloERC20Contract({ public: client })
             ).read.balanceOf([from]),
           ])
 

@@ -1,10 +1,9 @@
 import { accountsABI, lockedGoldABI, validatorsABI } from '@celo/abis'
-import { resolveAddress } from '@celo/actions'
+import { PublicCeloClient, resolveAddress } from '@celo/actions'
 import { getValidatorsContract } from '@celo/actions/contracts/validators'
 import { Address, concurrentMap, ensureLeading0x, eqAddress, StrongAddress } from '@celo/base'
 import { fromFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
-import { PublicClient } from 'viem'
 import { bigintToBigNumber } from './utils'
 
 export interface Validator {
@@ -34,7 +33,7 @@ export interface MembershipHistoryExtraData {
   tail: number
 }
 
-export const getValidatorLockedGoldRequirements = async (client: PublicClient) => {
+export const getValidatorLockedGoldRequirements = async (client: PublicCeloClient) => {
   const requirements = await client.readContract({
     address: await resolveAddress(client, 'Validators'),
     abi: validatorsABI,
@@ -48,7 +47,7 @@ export const getValidatorLockedGoldRequirements = async (client: PublicClient) =
 }
 
 export const meetsValidatorBalanceRequirements = async (
-  client: PublicClient,
+  client: PublicCeloClient,
   address: StrongAddress
 ) => {
   const accountTotalLockedGold = await client.readContract({
@@ -67,7 +66,7 @@ export const meetsValidatorBalanceRequirements = async (
 }
 
 export const meetsValidatorGroupBalanceRequirements = async (
-  client: PublicClient,
+  client: PublicCeloClient,
   address: StrongAddress
 ) => {
   const accountTotalLockedGold = await client.readContract({
@@ -90,10 +89,10 @@ export const meetsValidatorGroupBalanceRequirements = async (
   @returns the group the given address is affiliated with
  */
 export async function getValidatorsGroup(
-  client: PublicClient,
+  client: PublicCeloClient,
   validatorAddress: StrongAddress
 ): Promise<StrongAddress> {
-  const contract = await getValidatorsContract(client)
+  const contract = await getValidatorsContract({ public: client })
   return contract.read.getValidatorsGroup([validatorAddress])
 }
 
@@ -102,7 +101,7 @@ export async function getValidatorsGroup(
   @returns group info including name, commission, affiliates + members and slash data. 
  */
 export const getValidatorGroup = async (
-  client: PublicClient,
+  client: PublicCeloClient,
   address: Address,
   getAffiliates: boolean = true,
   blockNumber?: number
@@ -145,7 +144,7 @@ export const getValidatorGroup = async (
 }
 
 export const getRegisteredValidators = async (
-  client: PublicClient,
+  client: PublicCeloClient,
   blockNumber?: number
 ): Promise<Validator[]> => {
   const vgAddresses = await getRegisteredValidatorsAddresses(client, blockNumber)
@@ -154,7 +153,7 @@ export const getRegisteredValidators = async (
 }
 
 export const getRegisteredValidatorsAddresses = async (
-  client: PublicClient,
+  client: PublicCeloClient,
   blockNumber?: number
 ): Promise<StrongAddress[]> => {
   return (await client.readContract({
@@ -166,7 +165,7 @@ export const getRegisteredValidatorsAddresses = async (
 }
 
 export const getValidator = async (
-  client: PublicClient,
+  client: PublicCeloClient,
   address: Address,
   blockNumber?: number
 ): Promise<Validator> => {
@@ -197,7 +196,7 @@ export const getValidator = async (
 }
 
 export const getValidatorMembershipHistoryExtraData = async (
-  client: PublicClient,
+  client: PublicCeloClient,
   validator: StrongAddress
 ): Promise<MembershipHistoryExtraData> => {
   const history = await client.readContract({

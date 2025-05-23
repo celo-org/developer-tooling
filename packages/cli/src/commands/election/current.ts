@@ -1,7 +1,6 @@
 import { Flags, ux } from '@oclif/core'
 
 import { ElectedRpcNode, getElectedRpcNodes } from '@celo/actions/staking'
-import { PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
 
 export const valSetRpcNodeTable: ux.Table.table.Columns<{ address: string }> = {
@@ -35,7 +34,7 @@ export default class ElectionCurrent extends BaseCommand {
   }
 
   async run() {
-    const client = (await this.getPublicClient()) as PublicClient
+    const client = await this.getPublicClient()
     const res = await this.parse(ElectionCurrent)
     ux.action.start('Fetching currently Elected Community Rpc Nodes')
     const validatorList = await getElectedRpcNodes(client, {

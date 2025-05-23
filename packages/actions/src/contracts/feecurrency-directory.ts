@@ -1,17 +1,18 @@
 import { feeCurrencyDirectoryABI } from '@celo/abis'
-import { Client, getContract, GetContractReturnType, PublicClient } from 'viem'
+import { getContract, GetContractReturnType } from 'viem'
+import { Clients } from '../client'
 import { resolveAddress } from './registry'
 
-export async function getFeeCurrencyDirectoryContract<T extends Client = PublicClient>(
-  client: T
+export async function getFeeCurrencyDirectoryContract<T extends Clients = Clients>(
+  clients: T
 ): Promise<FeeCurrencyDirectory<T>> {
   return getContract({
-    address: await resolveAddress(client, 'FeeCurrencyDirectory'),
+    address: await resolveAddress(clients.public, 'FeeCurrencyDirectory'),
     abi: feeCurrencyDirectoryABI,
-    client,
+    client: clients,
   })
 }
-export type FeeCurrencyDirectory<T extends Client = PublicClient> = GetContractReturnType<
+export type FeeCurrencyDirectory<T extends Clients = Clients> = GetContractReturnType<
   typeof feeCurrencyDirectoryABI,
   T
 >

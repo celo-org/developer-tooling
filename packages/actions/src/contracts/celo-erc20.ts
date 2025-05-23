@@ -1,17 +1,16 @@
 import { goldTokenABI } from '@celo/abis'
-import { Client, getContract, GetContractReturnType, PublicClient } from 'viem'
+import { getContract, GetContractReturnType } from 'viem'
+import { Clients } from '../client'
 import { resolveAddress } from './registry'
 
-export async function getCeloERC20Contract<T extends Client = PublicClient>(
-  client: T
+export type CeloERC20<T extends Clients = Clients> = GetContractReturnType<typeof goldTokenABI, T>
+
+export async function getCeloERC20Contract<T extends Clients = Clients>(
+  clients: T
 ): Promise<CeloERC20<T>> {
   return getContract({
-    address: await resolveAddress(client, 'GoldToken'),
+    address: await resolveAddress(clients.public, 'GoldToken'),
     abi: goldTokenABI,
-    client,
+    client: clients,
   })
 }
-export type CeloERC20<T extends Client = PublicClient> = GetContractReturnType<
-  typeof goldTokenABI,
-  T
->

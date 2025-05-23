@@ -31,7 +31,7 @@ export default class SendValidatorPayment extends BaseCommand {
     const wallet = await this.getWalletClient()
     const res = await this.parse(SendValidatorPayment)
 
-    const epochManagerContract = await getEpochManagerContract(wallet)
+    const epochManagerContract = await getEpochManagerContract({ wallet, public: client })
 
     await newCheckBuilder(this).isValidator(res.flags.for).runChecks()
 

@@ -46,11 +46,11 @@ function createInstance(opts?: { chainId?: number; forkUrl?: string; forkBlockNu
     balance: TEST_BALANCE,
     gasPrice: TEST_GAS_PRICE,
     gasLimit: TEST_GAS_LIMIT,
-    blockBaseFeePerGas: 0,
-    stopTimeout: 1000,
+    blockBaseFeePerGas: 25000000000,
+    stopTimeout: 3000,
     chainId: opts?.chainId,
     ...(forkUrl
-      ? { forkUrl, forkBlockNumber }
+      ? { forkUrl, forkBlockNumber, forkHeader: { 'User-Agent': 'anvil/devtooling' } }
       : { loadState: require.resolve('@celo/devchain-anvil/devchain.json') }),
   }
 

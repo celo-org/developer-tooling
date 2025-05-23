@@ -22,15 +22,7 @@ import { HotfixRecord, ProposalStage } from '@celo/contractkit/lib/wrappers/Gove
 import BigNumber from 'bignumber.js'
 import chalk from 'chalk'
 import { fetch } from 'cross-fetch'
-import {
-  erc20Abi,
-  formatEther,
-  formatUnits,
-  getAddress,
-  isAddressEqual,
-  PublicClient,
-  WalletClient,
-} from 'viem'
+import { erc20Abi, formatEther, formatUnits, getAddress, isAddressEqual, WalletClient } from 'viem'
 import { BaseCommand } from '../base'
 import { getHotfixRecord, getProposalSchedule } from '../packages-to-be/governance'
 import { StableToken, StableTokens } from '../packages-to-be/stable-tokens'
@@ -76,10 +68,10 @@ class CheckBuilder {
     "'The wallet address has been sanctioned by the U.S. Department of the Treasury.''All U.S. persons are prohibited from accessing, receiving, accepting, or facilitating any property 'and interests in property (including use of any technology, software or software patch(es)) of these'designated digital wallet addresses.  These prohibitions include the making of any contribution or''provision of funds, goods, or services by, to, or for the benefit of any blocked person and the ''receipt of any contribution or provision of funds, goods, or services from any such person and ' 'all designated digital asset wallets.'"
   constructor(private command: BaseCommand, private signer?: StrongAddress) {}
 
-  private async getClient(): Promise<PublicClient> {
+  private async getClient() {
     // In this case we're not using any Celo-specific client features, so it can be
     // safely casted to PublicClient
-    return this.command.getPublicClient() as Promise<PublicClient>
+    return this.command.getPublicClient()
   }
 
   private async getWalletClient(): Promise<WalletClient> {
@@ -112,9 +104,7 @@ class CheckBuilder {
     ) => A
   ): () => Promise<Resolve<A>> {
     return async () => {
-      const validatorsContract = (await getValidatorsContract(
-        await this.getClient()
-      )) as ValidatorsContract<PublicClient>
+      const validatorsContract = await getValidatorsContract({ public: await this.getClient() })
 
       if (this.signer) {
         try {
@@ -144,12 +134,8 @@ class CheckBuilder {
     ) => A
   ): () => Promise<Resolve<A>> {
     return async () => {
-      const lockedCeloContract = (await getLockedCeloContract(
-        await this.getClient()
-      )) as LockedCeloContract<PublicClient>
-      const validatorsContract = (await getValidatorsContract(
-        await this.getClient()
-      )) as ValidatorsContract<PublicClient>
+      const lockedCeloContract = await getLockedCeloContract({ public: await this.getClient() })
+      const validatorsContract = await getValidatorsContract({ public: await this.getClient() })
 
       if (this.signer) {
         try {
@@ -165,9 +151,7 @@ class CheckBuilder {
 
   private withAccounts<A>(f: (accounts: AccountsContract) => A): () => Promise<Resolve<A>> {
     return async () => {
-      const accountsContract = (await getAccountsContract(
-        await this.getClient()
-      )) as AccountsContract<PublicClient>
+      const accountsContract = await getAccountsContract({ public: await this.getClient() })
 
       return f(accountsContract) as Resolve<A>
     }
@@ -175,9 +159,7 @@ class CheckBuilder {
 
   private withGovernance<A>(f: (governance: GovernanceContract) => A): () => Promise<Resolve<A>> {
     return async () => {
-      const governanceContract = (await getGovernanceContract(
-        await this.getClient()
-      )) as GovernanceContract<PublicClient>
+      const governanceContract = await getGovernanceContract({ public: await this.getClient() })
 
       return f(governanceContract) as Resolve<A>
     }
@@ -187,9 +169,8 @@ class CheckBuilder {
     f: (feeCurrencyDirectory: FeeCurrencyDirectory) => A
   ): () => Promise<Resolve<A>> {
     return async () => {
-      const feeCurrencyDirectoryContract = (await getFeeCurrencyDirectoryContract(
-        await this.getClient()
-      )) as FeeCurrencyDirectory<PublicClient>
+      const client = await this.getClient()
+      const feeCurrencyDirectoryContract = await getFeeCurrencyDirectoryContract({ public: client })
 
       return f(feeCurrencyDirectoryContract) as Resolve<A>
     }

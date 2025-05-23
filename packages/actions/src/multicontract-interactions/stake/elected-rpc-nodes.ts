@@ -1,5 +1,6 @@
 import { eqAddress, NULL_ADDRESS } from '@celo/base'
-import { Address, PublicClient } from 'viem'
+import { Address } from 'viem'
+import { PublicCeloClient } from '../../client'
 import { AccountsContract, getAccountsContract } from '../../contracts/accounts'
 import { getEpochManagerContract } from '../../contracts/epoch-manager'
 import { getValidatorsContract, ValidatorsContract } from '../../contracts/validators'
@@ -31,13 +32,13 @@ export interface ElectedRpcNode extends UnnamedRpcNode {
  * @returns A promise that resolves to an array of elected validator objects, each decorated with additional metadata.
  */
 export async function getElectedRpcNodes(
-  client: PublicClient,
+  client: PublicCeloClient,
   options: { showChanges?: boolean } = {}
 ) {
   const [validators, epochManager, accountsContract] = await Promise.all([
-    getValidatorsContract(client),
-    getEpochManagerContract(client),
-    getAccountsContract(client),
+    getValidatorsContract({ public: client }),
+    getEpochManagerContract({ public: client }),
+    getAccountsContract({ public: client }),
   ])
 
   const electedSigners = await epochManager.read.getElectedSigners()
