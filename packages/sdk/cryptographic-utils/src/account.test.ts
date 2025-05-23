@@ -1,4 +1,5 @@
-import { MnemonicLanguages } from '@celo/base/lib/account'
+import { CELO_DERIVATION_PATH_BASE, MnemonicLanguages } from '@celo/base/lib/account'
+
 import * as bip39 from '@scure/bip39'
 import {
   generateKeys,
@@ -139,9 +140,30 @@ describe('AccountUtils', () => {
       expect(mnemonics.length).toEqual(expectedPrivateKeys.length)
       for (let i = 0; i < mnemonics.length; ++i) {
         expect(validateMnemonic(mnemonics[i])).toBe(true)
-        const derivation0 = await generateKeys(mnemonics[i])
-        const derivation1 = await generateKeys(mnemonics[i], undefined, 0, 1)
-        const password = await generateKeys(mnemonics[i], 'password')
+        const derivation0 = await generateKeys(
+          mnemonics[i],
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          CELO_DERIVATION_PATH_BASE
+        )
+        const derivation1 = await generateKeys(
+          mnemonics[i],
+          undefined,
+          0,
+          1,
+          undefined,
+          CELO_DERIVATION_PATH_BASE
+        )
+        const password = await generateKeys(
+          mnemonics[i],
+          'password',
+          0,
+          0,
+          undefined,
+          CELO_DERIVATION_PATH_BASE
+        )
         expect({ derivation0, derivation1, password }).toEqual(expectedPrivateKeys[i])
       }
     })

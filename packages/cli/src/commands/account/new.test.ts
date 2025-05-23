@@ -26,12 +26,6 @@ testWithAnvilL2('account:new cmd', (web3: Web3) => {
       [
         [
           "
-      Using celoLegacy path (m/44'/52752'/0') for derivation. This will default to eth derivation path (m/44'/60'/0') next major version.
-       use "config:set --derivationPath <path>" to set your preffered default
-      ",
-        ],
-        [
-          "
       This is not being stored anywhere. Save the mnemonic somewhere to use this account at a later point.
       ",
         ],
@@ -40,7 +34,7 @@ testWithAnvilL2('account:new cmd', (web3: Web3) => {
 
     expect(deRandomize(consoleMock.mock.lastCall?.[0])).toMatchInlineSnapshot(`
       "mnemonic: *** *** 
-      derivationPath: m/44'/52752'/0'/0/0
+      derivationPath: m/44'/60'/0'/0/0
       privateKey: PUBLIC_KEY
       publicKey: PRIVATE_KEY
       address: ADDRESS"
@@ -132,8 +126,24 @@ testWithAnvilL2('account:new cmd', (web3: Web3) => {
       fs.rmSync(MNEMONIC_PATH)
     })
 
-    it('generates using celo derivation path', async () => {
+    it('generates using eth derivation path', async () => {
       await testLocallyWithWeb3Node(NewAccount, [`--mnemonicPath`, MNEMONIC_PATH], web3)
+
+      expect(stripAnsiCodesAndTxHashes(consoleMock.mock.lastCall?.[0])).toMatchInlineSnapshot(`
+        "mnemonic: hamster label near volume denial spawn stable orbit trade only crawl learn forest fire test feel bubble found angle also olympic obscure fork venue
+        derivationPath: m/44'/60'/0'/0/0
+        privateKey: e4816cbb93346760921264ea38a7fc54903f4dd688ae0923fefd89a43c5f58cc
+        publicKey: 034b3036d657a6dc2f322db52cca29ae72101a9cf56de4765d17b0507ea1e87b7c
+        address: 0x35A4d54B541fc7b2047fb5357cC706191E105cd3"
+      `)
+    })
+
+    it('and "--derivationPath celoLegacy" generates using celo-legacy derivation path', async () => {
+      await testLocallyWithWeb3Node(
+        NewAccount,
+        ['--derivationPath', 'celoLegacy', `--mnemonicPath`, MNEMONIC_PATH],
+        web3
+      )
 
       expect(stripAnsiCodesAndTxHashes(consoleMock.mock.lastCall?.[0])).toMatchInlineSnapshot(`
         "mnemonic: hamster label near volume denial spawn stable orbit trade only crawl learn forest fire test feel bubble found angle also olympic obscure fork venue

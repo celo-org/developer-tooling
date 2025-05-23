@@ -28,7 +28,7 @@ describe('writeConfig', () => {
     expect(spy.mock.calls[0][0]).toEqual(file)
     expect(spy.mock.calls[0][1]).toMatchInlineSnapshot(`
       {
-        "derivationPath": "m/44'/52752'/0'",
+        "derivationPath": "m/44'/60'/0'",
         "node": "http://localhost:8545",
         "telemetry": true,
       }
@@ -74,7 +74,7 @@ describe('readConfig', () => {
     fs.writeJsonSync(file, { foo: 'bar' })
     expect(readConfig(dir)).toMatchInlineSnapshot(`
       {
-        "derivationPath": "m/44'/52752'/0'",
+        "derivationPath": "m/44'/60'/0'",
         "foo": "bar",
         "node": "http://localhost:8545",
         "telemetry": true,
@@ -86,7 +86,7 @@ describe('readConfig', () => {
     fs.writeJsonSync(file, { nodeUrl: 'bar' })
     expect(readConfig(dir)).toMatchInlineSnapshot(`
       {
-        "derivationPath": "m/44'/52752'/0'",
+        "derivationPath": "m/44'/60'/0'",
         "node": "bar",
         "telemetry": true,
       }
@@ -97,7 +97,7 @@ describe('readConfig', () => {
     fs.writeJsonSync(file, { gasCurrency: 'CELO' })
     expect(readConfig(dir)).toMatchInlineSnapshot(`
       {
-        "derivationPath": "m/44'/52752'/0'",
+        "derivationPath": "m/44'/60'/0'",
         "node": "http://localhost:8545",
         "telemetry": true,
       }
