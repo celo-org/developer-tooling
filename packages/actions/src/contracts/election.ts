@@ -1,20 +1,14 @@
 import { electionABI } from '@celo/abis'
-import {
-  Address,
-  Client,
-  getContract,
-  GetContractReturnType,
-  PublicClient,
-  WalletClient,
-} from 'viem'
+import { Address, Client, getContract, GetContractReturnType } from 'viem'
+import { PublicCeloClient, WalletCeloClient } from '../client'
 import { resolveAddress } from './registry'
 
-export type ElectionContract<T extends Client = PublicClient> = GetContractReturnType<
+export type ElectionContract<T extends Client = PublicCeloClient> = GetContractReturnType<
   typeof electionABI,
   T
 >
 
-export async function getElectionContract<T extends Client = PublicClient>(
+export async function getElectionContract<T extends Client = PublicCeloClient>(
   client: T
 ): Promise<ElectionContract<T>> {
   return getContract({
@@ -26,22 +20,22 @@ export async function getElectionContract<T extends Client = PublicClient>(
 
 // METHODS
 
-async function getGroups(client: PublicClient, account: Address) {
-  return client.readContract({
-    address: await resolveAddress(client, 'Election'),
-    abi: electionABI,
-    functionName: 'getGroupsVotedForByAccount',
-    args: [account],
-  })
-}
-
-export async function hasPendingVotes(client: PublicClient, account: Address): Promise<Address[]> {
+export async function getGroupsWithPendingVotes(
+  client: PublicCeloClient,
+  account: Address
+): Promise<Address[]> {
   const contract = {
     address: await resolveAddress(client, 'Election'),
     abi: electionABI,
   } as const
 
-  const groups = await getGroups(client, account)
+  const groups = await client.readContract({
+    address: await resolveAddress(client, 'Election'),
+    abi: electionABI,
+    functionName: 'getGroupsVotedForByAccount',
+    args: [account],
+  })
+
   const pendingVotes = await client.multicall({
     allowFailure: false,
     contracts: groups.map(
@@ -57,10 +51,10 @@ export async function hasPendingVotes(client: PublicClient, account: Address): P
   return groupsWithPendingVotes
 }
 
-export async function getActivatableGroups(
-  clients: { public: PublicClient; wallet: WalletClient },
+async function getActivatableGroups(
+  clients: { public: PublicCeloClient },
   groups: Address[],
-  account: Address = clients.wallet.account!.address
+  account: Address
 ): Promise<Address[]> {
   const contract = {
     address: await resolveAddress(clients.public, 'Election'),
@@ -82,38 +76,30 @@ export async function getActivatableGroups(
   return activatableGroups
 }
 
-export async function getActivatePendingVotesRequests(
-  clients: { public: PublicClient; wallet: WalletClient },
+export async function getActivatablePendingVotes(
+  clients: { public: PublicCeloClient; wallet: WalletCeloClient },
   groups: Address[],
   account: Address = clients.wallet.account!.address
 ) {
-  const contract = {
-    address: await resolveAddress(clients.public, 'Election'),
-    abi: electionABI,
-  } as const
-
+  const contract = await getElectionContract(clients.wallet)
   const onBehalfOfAccount = clients.wallet.account!.address !== account
   const activatableGroups = await getActivatableGroups(clients, groups, account)
 
   return Promise.all(
     activatableGroups.map((group) =>
-      clients.public.simulateContract({
-        ...contract,
-        chain: clients.wallet.chain,
-        account: clients.wallet.account!,
-        functionName: onBehalfOfAccount ? 'activateForAccount' : 'activate',
-        args: onBehalfOfAccount ? [group, account] : [group],
-      } as const)
+      onBehalfOfAccount
+        ? contract.simulate.activateForAccount([group, account])
+        : contract.simulate.activate([group])
     )
   )
 }
 
 export async function activatePendingVotes(
-  clients: { public: PublicClient; wallet: WalletClient },
+  clients: { public: PublicCeloClient; wallet: WalletCeloClient },
   groups: Address[],
   account: Address = clients.wallet.account!.address
 ) {
-  const requests = await getActivatePendingVotesRequests(clients, groups, account)
+  const requests = await getActivatablePendingVotes(clients, groups, account)
   const txHashes = await Promise.all(
     // @ts-expect-error - TODO why this is incorrect?
     requests.map((request) => clients.wallet.writeContract(request))

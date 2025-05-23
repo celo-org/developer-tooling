@@ -4,10 +4,10 @@ import { Flags, ux } from '@oclif/core'
 import { signerToAccount } from '@celo/actions/contracts/accounts'
 import {
   activatePendingVotes,
-  getActivatableGroups,
-  getActivatePendingVotesRequests,
-  hasPendingVotes,
+  getActivatablePendingVotes,
+  getGroupsWithPendingVotes,
 } from '@celo/actions/contracts/election'
+import { getEpochManagerContract } from '@celo/actions/contracts/epoch-manager'
 import { Hex, PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
@@ -46,38 +46,47 @@ export default class ElectionActivate extends BaseCommand {
     await newCheckBuilder(this, forAccount).isSignerOrAccount().runChecks()
 
     const signerAccount = await signerToAccount(client as PublicClient, forAccount)
-    const groupsWithPendingVotes = await hasPendingVotes(client as PublicClient, signerAccount)
+    const groupsWithPendingVotes = await getGroupsWithPendingVotes(client, signerAccount)
     if (groupsWithPendingVotes.length > 0) {
       let txHashes: Hex[]
       if (res.flags.wait) {
-        const requests = await getActivatePendingVotesRequests(
-          { public: client as PublicClient, wallet },
+        const requests = await getActivatablePendingVotes(
+          { public: client, wallet },
           groupsWithPendingVotes,
           forAccount
         )
 
+        const epochManager = await getEpochManagerContract(client)
+        const [currentEpochNumber, [_startBlock, _endBlock, startTimestamp], epochDuration] =
+          await Promise.all([
+            epochManager.read.getCurrentEpochNumber(),
+            epochManager.read.getCurrentEpoch(),
+            epochManager.read.epochDuration(),
+          ])
+
+        // @ts-expect-error
+        const rawTxs = await Promise.all(requests.map((request) => wallet.signTransaction(request)))
+
         // Spin until pending votes become activatable.
-        ux.action.start(`Waiting until pending votes can be activated`)
-        while (
-          (
-            await getActivatableGroups(
-              { public: client as PublicClient, wallet },
-              groupsWithPendingVotes,
-              signerAccount
-            )
-          ).length === 0
-        ) {
-          await sleep(1000)
+        ux.action.start(
+          `Waiting until pending votes can be activated.\nDO NOT SUBMIT FURTHER TRANSACTIONS FROM THIS WALLET until this command has completed.`
+        )
+        const endTimestamp = startTimestamp + epochDuration
+        const remaining = Number(endTimestamp) - Date.now() / 1000
+        await sleep(remaining)
+        // It takes an epoch for pending votes to be activatable
+        while (currentEpochNumber === (await epochManager.read.getCurrentEpochNumber())) {
+          await sleep(1_000)
         }
         ux.action.stop()
 
+        // NOTE: these may fail if the wallet submit txs meanwhile (eg: nonce would change)
         txHashes = await Promise.all(
-          // @ts-expect-error - TODO why this is incorrect?
-          requests.map((request) => wallet.writeContract(request))
+          rawTxs.map((rawTx) => wallet.sendRawTransaction({ serializedTransaction: rawTx }))
         )
       } else {
         txHashes = await activatePendingVotes(
-          { public: client as PublicClient, wallet },
+          { public: client, wallet },
           groupsWithPendingVotes,
           forAccount
         )
