@@ -58,7 +58,7 @@
     "typescript": "5.3.3"
   },
   "engines": {
-    "node": ">=8.14.2"
+    "node": ">=20"
   },
   "browser": {
     "child_process": false
