@@ -1,4 +1,4 @@
-import { lockedGoldABI } from '@celo/abis-12'
+import { lockedGoldABI } from '@celo/abis'
 import { resolveAddress } from '@celo/actions'
 import { getAccountsContract } from '@celo/actions/contracts/accounts'
 import { StrongAddress } from '@celo/base'

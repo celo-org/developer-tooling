@@ -137,7 +137,7 @@ export function requireABI(contractName: CeloContract): ABIDefinition[] {
 
 function safeRequire(contractName: CeloContract, subPath?: string) {
   try {
-    return require(`@celo/abis-12/web3/${subPath ?? ''}${contractName}`).ABI as ABIDefinition[]
+    return require(`@celo/abis/web3/${subPath ?? ''}${contractName}`).ABI as ABIDefinition[]
   } catch {
     return null
   }

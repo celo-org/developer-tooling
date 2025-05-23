@@ -1,7 +1,7 @@
 import url from 'url'
 import crypto from 'crypto'
 import fs from 'fs'
-import path from 'path'
+import path from 'node:path'
 import { parse } from 'semver'
 import { pipeline } from 'stream/promises'
 

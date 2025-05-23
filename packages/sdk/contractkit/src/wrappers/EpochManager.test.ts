@@ -1,4 +1,4 @@
-import { newElection } from '@celo/abis-12/web3/Election'
+import { newElection } from '@celo/abis/web3/Election'
 import { newRegistry } from '@celo/abis/web3/Registry'
 import { StrongAddress } from '@celo/base'
 import {

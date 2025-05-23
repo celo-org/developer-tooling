@@ -1,4 +1,4 @@
-import { governanceABI } from '@celo/abis-12'
+import { governanceABI } from '@celo/abis'
 import { resolveAddress } from '@celo/actions'
 import { getProposalStage, ProposalStage } from '@celo/actions/contracts/governance'
 import { bufferToHex, StrongAddress } from '@celo/base'

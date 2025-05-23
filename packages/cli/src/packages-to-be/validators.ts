@@ -1,4 +1,4 @@
-import { accountsABI, lockedGoldABI, validatorsABI } from '@celo/abis-12'
+import { accountsABI, lockedGoldABI, validatorsABI } from '@celo/abis'
 import { resolveAddress } from '@celo/actions'
 import { getValidatorsContract } from '@celo/actions/contracts/validators'
 import { Address, concurrentMap, ensureLeading0x, eqAddress, StrongAddress } from '@celo/base'

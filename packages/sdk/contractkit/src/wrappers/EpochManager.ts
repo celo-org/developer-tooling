@@ -1,4 +1,4 @@
-import { EpochManager } from '@celo/abis-12/web3/EpochManager'
+import { EpochManager } from '@celo/abis/web3/EpochManager'
 import { concurrentMap, NULL_ADDRESS } from '@celo/base'
 import BigNumber from 'bignumber.js'
 import { proxyCall, proxySend, valueToInt, valueToString } from './BaseWrapper'

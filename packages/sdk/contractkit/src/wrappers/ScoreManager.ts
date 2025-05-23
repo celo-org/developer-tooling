@@ -1,4 +1,4 @@
-import { ScoreManager } from '@celo/abis-12/web3/ScoreManager'
+import { ScoreManager } from '@celo/abis/web3/ScoreManager'
 import { BaseWrapper, fixidityValueToBigNumber, proxyCall } from './BaseWrapper'
 
 /**

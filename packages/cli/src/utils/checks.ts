@@ -1,4 +1,4 @@
-import { accountsABI, goldTokenABI, multiSigABI } from '@celo/abis-12'
+import { accountsABI, goldTokenABI, multiSigABI } from '@celo/abis'
 import { resolveAddress } from '@celo/actions'
 import {
   AccountsContract,

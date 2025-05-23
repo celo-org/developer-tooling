@@ -1,6 +1,6 @@
 import * as fs from 'fs-extra'
+import { join } from 'node:path'
 import { tmpdir } from 'os'
-import { join } from 'path'
 import { CeloConfig, readConfig, writeConfig } from './config'
 
 // NOTE: for some reason if I don't mock the whole module, jest fails

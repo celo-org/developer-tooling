@@ -182,7 +182,7 @@
 
 - [#467](https://github.com/celo-org/developer-tooling/pull/467) [`43e8474`](https://github.com/celo-org/developer-tooling/commit/43e8474ecd245af3ec1e3d28f45d2de211e481e2) Thanks [@shazarre](https://github.com/shazarre)! - fix: add transferOwnership() to proxy abi list
 
-- [#446](https://github.com/celo-org/developer-tooling/pull/446) [`42d091f`](https://github.com/celo-org/developer-tooling/commit/42d091fbc2ab71ce4ec2fb5c57ca266a20a96b6e) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Bump @celo/abis-12
+- [#446](https://github.com/celo-org/developer-tooling/pull/446) [`42d091f`](https://github.com/celo-org/developer-tooling/commit/42d091fbc2ab71ce4ec2fb5c57ca266a20a96b6e) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Bump @celo/abis
 
 - [#480](https://github.com/celo-org/developer-tooling/pull/480) [`b83d8c4`](https://github.com/celo-org/developer-tooling/commit/b83d8c4bd34feebdc4994dbbae198a1aa5b7eb34) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Recommended node version is now node 20
 
@@ -234,7 +234,7 @@
 
 ### Patch Changes
 
-- [#446](https://github.com/celo-org/developer-tooling/pull/446) [`42d091f`](https://github.com/celo-org/developer-tooling/commit/42d091fbc2ab71ce4ec2fb5c57ca266a20a96b6e) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Bump @celo/abis-12
+- [#446](https://github.com/celo-org/developer-tooling/pull/446) [`42d091f`](https://github.com/celo-org/developer-tooling/commit/42d091fbc2ab71ce4ec2fb5c57ca266a20a96b6e) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Bump @celo/abis
 
 - [#455](https://github.com/celo-org/developer-tooling/pull/455) [`36c4369`](https://github.com/celo-org/developer-tooling/commit/36c436980583396ca407fef511942c9a77279470) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Mark contract wrapper methods that will not work on L2 because solidity contracts have onlyL1 modifier as deprecated.
 

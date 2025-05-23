@@ -34,7 +34,6 @@
     "io-ts": "2.0.1"
   },
   "devDependencies": {
-    "@celo/celo-devchain": "^7.0.0",
     "@celo/contractkit": "workspace:^",
     "@celo/dev-utils": "0.1.0-beta.2",
     "@celo/odis-identifiers": "^1.0.1",
