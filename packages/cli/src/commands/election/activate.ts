@@ -8,7 +8,7 @@ import {
   getGroupsWithPendingVotes,
 } from '@celo/actions/contracts/election'
 import { getEpochManagerContract } from '@celo/actions/contracts/epoch-manager'
-import { Hex, PublicClient } from 'viem'
+import { Hex } from 'viem'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displayViemTx } from '../../utils/cli'
@@ -40,13 +40,14 @@ export default class ElectionActivate extends BaseCommand {
   async run() {
     const client = await this.getPublicClient()
     const wallet = await this.getWalletClient()
+    const clients = { public: client, wallet }
     const res = await this.parse(ElectionActivate)
 
     const forAccount = res.flags.for ?? res.flags.from
     await newCheckBuilder(this, forAccount).isSignerOrAccount().runChecks()
 
-    const signerAccount = await signerToAccount(client as PublicClient, forAccount)
-    const groupsWithPendingVotes = await getGroupsWithPendingVotes(client, signerAccount)
+    const signerAccount = await signerToAccount(client, forAccount)
+    const groupsWithPendingVotes = await getGroupsWithPendingVotes(clients, signerAccount)
     if (groupsWithPendingVotes.length > 0) {
       let txHashes: Hex[]
       if (res.flags.wait) {
@@ -56,7 +57,7 @@ export default class ElectionActivate extends BaseCommand {
           forAccount
         )
 
-        const epochManager = await getEpochManagerContract(client)
+        const epochManager = await getEpochManagerContract(clients)
         const [currentEpochNumber, [_startBlock, _endBlock, startTimestamp], epochDuration] =
           await Promise.all([
             epochManager.read.getCurrentEpochNumber(),
