@@ -1,8 +1,8 @@
-**@celo/keystores v5.0.15-beta.1**
+**@celo/keystores v5.0.15-beta.2**
 
 ***
 
-# @celo/keystores v5.0.15-beta.1
+# @celo/keystores v5.0.15-beta.2
 
 ## Enumerations
 

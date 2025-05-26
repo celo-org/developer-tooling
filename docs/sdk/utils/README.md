@@ -1,8 +1,8 @@
-**@celo/utils v8.0.2**
+**@celo/utils v8.0.3-beta.0**
 
 ***
 
-# @celo/utils v8.0.2
+# @celo/utils v8.0.3-beta.0
 
 ## Namespaces
 
