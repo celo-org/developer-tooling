@@ -1,6 +1,5 @@
 import { getEpochManagerContract } from '@celo/actions/contracts/epoch-manager'
 import { Flags } from '@oclif/core'
-import { PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
 import { printValueMapRecursive } from '../../utils/cli'
 import { ViewCommmandFlags } from '../../utils/flags'
@@ -19,14 +18,14 @@ export default class Info extends BaseCommand {
   }
 
   async run() {
-    const client = (await this.getPublicClient()) as PublicClient
+    const client = await this.getPublicClient()
     const res = await this.parse(Info)
     let latestEpochNumber: bigint
     let epochSize: bigint
 
     const blockNumber = await client.getBlockNumber()
 
-    const epochManagerContract = await getEpochManagerContract(client)
+    const epochManagerContract = await getEpochManagerContract({ public: client })
 
     latestEpochNumber = await epochManagerContract.read.getCurrentEpochNumber()
     epochSize = await epochManagerContract.read.epochDuration()

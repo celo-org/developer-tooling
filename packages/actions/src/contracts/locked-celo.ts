@@ -1,17 +1,18 @@
 import { lockedGoldABI } from '@celo/abis'
-import { Client, getContract, GetContractReturnType, PublicClient } from 'viem'
+import { getContract, GetContractReturnType } from 'viem'
+import { Clients } from '../client'
 import { resolveAddress } from './registry'
 
-export async function getLockedCeloContract<T extends Client = PublicClient>(
-  client: T
+export async function getLockedCeloContract<T extends Clients = Clients>(
+  clients: T
 ): Promise<LockedCeloContract<T>> {
   return getContract({
-    address: await resolveAddress(client, 'LockedGold'),
+    address: await resolveAddress(clients.public, 'LockedGold'),
     abi: lockedGoldABI,
-    client,
+    client: clients,
   })
 }
-export type LockedCeloContract<T extends Client = PublicClient> = GetContractReturnType<
+export type LockedCeloContract<T extends Clients = Clients> = GetContractReturnType<
   typeof lockedGoldABI,
   T
 >

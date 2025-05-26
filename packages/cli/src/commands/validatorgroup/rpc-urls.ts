@@ -4,7 +4,6 @@ import { concurrentMap, StrongAddress } from '@celo/base'
 import { ClaimTypes, IdentityMetadataWrapper } from '@celo/metadata-claims'
 import { AccountMetadataSignerGetters } from '@celo/metadata-claims/lib/types'
 import { Flags, ux } from '@oclif/core'
-import { PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
 import { getMetadataURLs, getNames } from '../../packages-to-be/account'
 import {
@@ -42,7 +41,7 @@ export default class RpcUrls extends BaseCommand {
 
     const res = await this.parse(RpcUrls)
 
-    const client = (await this.getPublicClient()) as PublicClient
+    const client = await this.getPublicClient()
 
     let validatorAddresses: StrongAddress[] = []
 
@@ -50,7 +49,7 @@ export default class RpcUrls extends BaseCommand {
     if (res.flags.all) {
       validatorAddresses = await getRegisteredValidatorsAddresses(client)
     } else {
-      const epochManager = await getEpochManagerContract(client)
+      const epochManager = await getEpochManagerContract({ public: client })
       validatorAddresses = (await epochManager.read.getElectedAccounts()) as StrongAddress[]
     }
 
@@ -74,7 +73,7 @@ export default class RpcUrls extends BaseCommand {
     ux.action.stop()
 
     ux.action.start(`Fetching Group Metadata`)
-    const accountsConract = await getAccountsContract(client)
+    const accountsConract = await getAccountsContract({ public: client })
     // Fetch the name for each group
     const validatorGroupNames = await getNames(client, [
       ...new Set(validatorToGroup.values()),

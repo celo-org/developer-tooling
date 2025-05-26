@@ -1,3 +1,5 @@
+import * as fs from 'fs-extra'
+jest.mock('fs-extra')
 import { stripAnsiCodesAndTxHashes, testLocally } from '../../test-utils/cliUtils'
 import Get from './get'
 
@@ -9,6 +11,10 @@ afterEach(async () => {
 })
 
 describe('config:get cmd', () => {
+  beforeEach(() => {
+    ;(fs.pathExistsSync as jest.Mock).mockReturnValue(false)
+  })
+
   it('shows the config', async () => {
     const logMock = jest.spyOn(console, 'log').mockImplementation()
     await testLocally(Get, [])

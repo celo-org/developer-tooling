@@ -2,7 +2,7 @@ import { getGasPriceOnCelo } from '@celo/actions'
 import { getCeloERC20Contract } from '@celo/actions/contracts/celo-erc20'
 import { getERC20Contract } from '@celo/actions/contracts/erc20'
 import { Flags } from '@oclif/core'
-import { isAddressEqual, publicActions, PublicClient } from 'viem'
+import { isAddressEqual, publicActions } from 'viem'
 import { CeloTransactionRequest } from 'viem/celo'
 import { BaseCommand } from './base'
 import {
@@ -69,7 +69,7 @@ export abstract class TransferStableBase extends BaseCommand {
     } catch {
       failWith(`The ${stableToken} token was not deployed yet`)
     }
-    const celoContract = await getCeloERC20Contract(wallet.extend(publicActions))
+    const celoContract = await getCeloERC20Contract({ public: client, wallet })
 
     const transferParams = (feeCurrency ? { feeCurrency } : {}) as Pick<
       CeloTransactionRequest,
@@ -89,17 +89,20 @@ export abstract class TransferStableBase extends BaseCommand {
             feeCurrency && isAddressEqual(feeCurrency, stableTokenContract.address)
 
           const [gas, gasPrice, balanceOfTokenForGas, balanceOfTokenToSend] = await Promise.all([
+            // gas estimation
             res.flags.comment
               ? stableTokenContract.estimateGas.transferWithComment(
                   [to, value, res.flags.comment],
                   transferParams
                 )
               : stableTokenContract.estimateGas.transfer([to, value], transferParams),
+            // fee estimation
             getGasPriceOnCelo(client, feeCurrency),
+            //  balanceOfTokenForGas
             (feeCurrency
               ? feeInSameStableTokenAsTransfer
                 ? stableTokenContract
-                : await getERC20Contract(client as PublicClient, feeCurrency)
+                : await getERC20Contract({ public: client }, feeCurrency)
               : celoContract
             ).read.balanceOf([from]),
             stableTokenContract.read.balanceOf([from]),

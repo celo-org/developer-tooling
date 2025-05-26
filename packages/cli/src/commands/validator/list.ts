@@ -1,7 +1,6 @@
 import { Validator } from '@celo/contractkit/lib/wrappers/Validators'
 import { ux } from '@oclif/core'
 
-import { PublicClient } from 'viem'
 import { BaseCommand } from '../../base'
 import { getRegisteredValidators } from '../../packages-to-be/validators'
 import { ViewCommmandFlags } from '../../utils/flags'
@@ -32,7 +31,7 @@ export default class ValidatorList extends BaseCommand {
 
     ux.action.start('Fetching Registered Community Rpc Nodes')
 
-    const validatorList = await getRegisteredValidators(client as PublicClient)
+    const validatorList = await getRegisteredValidators(client)
 
     ux.action.stop()
     ux.table(

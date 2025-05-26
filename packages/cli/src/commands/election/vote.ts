@@ -36,7 +36,7 @@ export default class ElectionVote extends BaseCommand {
       .hasEnoughNonvotingLockedCelo(value)
       .runChecks()
 
-    const pendingTxHash = vote(walletClient, res.flags.for, value)
+    const pendingTxHash = vote({ public: publicClient, wallet: walletClient }, res.flags.for, value)
     await displayViemTx('Electon -> Vote', pendingTxHash, publicClient, {
       abi: electionABI,
       displayEventName: 'ValidatorGroupVoteCast',
