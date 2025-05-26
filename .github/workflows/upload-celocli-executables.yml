@@ -41,7 +41,7 @@ jobs:
       # must call twice because of chicken and egg problem with yarn and node
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'yarn'
 
       - name: Install Dependencies
@@ -121,7 +121,7 @@ jobs:
       # must call twice because of chicken and egg problem with yarn and node
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'yarn'
       - name: Install Dependencies
         shell: bash
@@ -194,7 +194,7 @@ jobs:
       # must call twice because of chicken and egg problem with yarn and node
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'yarn'
       - name: Install Dependencies
         shell: bash
