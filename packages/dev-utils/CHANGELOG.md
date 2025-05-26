@@ -1,5 +1,14 @@
 # @celo/dev-utils
 
+## 0.1.0-beta.3
+
+### Patch Changes
+
+- [#651](https://github.com/celo-org/developer-tooling/pull/651) [`5a2fa51`](https://github.com/celo-org/developer-tooling/commit/5a2fa5196976fffd7c89c804c68b7507e9c48f92) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Removes unused dependencies
+
+- Updated dependencies []:
+  - @celo/connect@7.0.0-beta.1
+
 ## 0.1.0-beta.2
 
 ### Minor Changes

@@ -1,5 +1,44 @@
 # Changelog
 
+## 7.0.0-beta.6
+
+### Major Changes
+
+- [#650](https://github.com/celo-org/developer-tooling/pull/650) [`8b30dc5`](https://github.com/celo-org/developer-tooling/commit/8b30dc57bdcae34146a1f9a139b89dc21c13d3c5) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Now defaults to using "m/44'/60'/0'" as base derivation path for account:new and any command using --useLedger. use celocli `config:set --derivationPath celoLegacy` for old behavior.
+
+- [#640](https://github.com/celo-org/developer-tooling/pull/640) [`04c89f7`](https://github.com/celo-org/developer-tooling/commit/04c89f739b1056330c5ca287234c9336c19b11e9) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Remove node:accounts command (use account:list)
+
+- [#646](https://github.com/celo-org/developer-tooling/pull/646) [`7cd2320`](https://github.com/celo-org/developer-tooling/commit/7cd2320a26ee3139ebf1be9788a27551fefe327a) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - epoch:\* commands will not warn and exit instead of erroring if Epoch is not in correct state for the given command
+
+### Patch Changes
+
+- [#640](https://github.com/celo-org/developer-tooling/pull/640) [`04c89f7`](https://github.com/celo-org/developer-tooling/commit/04c89f739b1056330c5ca287234c9336c19b11e9) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - fix: account:list --useLedger no longer requires --node to be passed in.
+
+- [#636](https://github.com/celo-org/developer-tooling/pull/636) [`d50bcdd`](https://github.com/celo-org/developer-tooling/commit/d50bcdd6108350238bda84c106b86b2762e4580d) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - (chore): Migrate election:vote to viem
+
+- [#639](https://github.com/celo-org/developer-tooling/pull/639) [`99717e9`](https://github.com/celo-org/developer-tooling/commit/99717e93c640e37e4e67020d973a2a13d5af2ac3) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - migrate governance:vote commands to viem
+
+- [#651](https://github.com/celo-org/developer-tooling/pull/651) [`5a2fa51`](https://github.com/celo-org/developer-tooling/commit/5a2fa5196976fffd7c89c804c68b7507e9c48f92) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Removes unused dependencies
+
+- [#628](https://github.com/celo-org/developer-tooling/pull/628) [`7d84a5a`](https://github.com/celo-org/developer-tooling/commit/7d84a5a9a23f72572999dc17f24d9b70bf6ca9f6) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Minor changes in the account:new output
+
+- [#629](https://github.com/celo-org/developer-tooling/pull/629) [`bd32521`](https://github.com/celo-org/developer-tooling/commit/bd32521b76872cdbe72de0f9c8a032469f428a41) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Refactor epoch:send-validator-payment to use viem
+
+- Updated dependencies [[`7d84a5a`](https://github.com/celo-org/developer-tooling/commit/7d84a5a9a23f72572999dc17f24d9b70bf6ca9f6), [`99717e9`](https://github.com/celo-org/developer-tooling/commit/99717e93c640e37e4e67020d973a2a13d5af2ac3), [`04c89f7`](https://github.com/celo-org/developer-tooling/commit/04c89f739b1056330c5ca287234c9336c19b11e9), [`1c4925f`](https://github.com/celo-org/developer-tooling/commit/1c4925f1275bf78323b5eb4822078ac3572eca44), [`5a2fa51`](https://github.com/celo-org/developer-tooling/commit/5a2fa5196976fffd7c89c804c68b7507e9c48f92), [`8b30dc5`](https://github.com/celo-org/developer-tooling/commit/8b30dc57bdcae34146a1f9a139b89dc21c13d3c5)]:
+  - @celo/base@7.0.3-beta.0
+  - @celo/viem-account-ledger@1.2.0-beta.2
+  - @celo/actions@0.0.1-beta.0
+  - @celo/wallet-ledger@8.0.0-beta.2
+  - @celo/metadata-claims@1.0.4-beta.0
+  - @celo/contractkit@10.0.0-beta.2
+  - @celo/governance@5.1.7-beta.1
+  - @celo/cryptographic-utils@6.0.0-beta.0
+  - @celo/connect@7.0.0-beta.1
+  - @celo/explorer@5.0.16-beta.1
+  - @celo/utils@8.0.3-beta.0
+  - @celo/wallet-hsm-azure@8.0.0-beta.2
+  - @celo/wallet-local@8.0.0-beta.2
+
 ## 7.0.0-beta.5
 
 ### Major Changes
