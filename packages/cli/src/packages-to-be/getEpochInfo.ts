@@ -1,8 +1,8 @@
+import { PublicCeloClient } from '@celo/actions'
 import { getEpochManagerContract } from '@celo/actions/contracts/epoch-manager'
-import { PublicClient } from 'viem'
 
-export async function getEpochInfo(client: PublicClient) {
-  const epochManager = await getEpochManagerContract(client)
+export async function getEpochInfo(client: PublicCeloClient) {
+  const epochManager = await getEpochManagerContract({ public: client })
 
   const results = await Promise.allSettled([
     epochManager.read.getCurrentEpoch(),

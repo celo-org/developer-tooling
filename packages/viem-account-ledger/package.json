@@ -47,7 +47,7 @@
     "@celo/hw-app-eth": "^1.0.1",
     "@celo/ledger-token-signer": "^0.4.0",
     "@ledgerhq/errors": "^6.16.4",
-    "semver": "^7.6.0"
+    "semver": "^7.7.2"
   },
   "devDependencies": {
     "@celo/typescript": "workspace:^",

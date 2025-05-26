@@ -1,9 +1,8 @@
-import { governanceABI } from '@celo/abis-12'
-import { resolveAddress } from '@celo/actions'
+import { governanceABI } from '@celo/abis'
+import { PublicCeloClient, resolveAddress } from '@celo/actions'
 import { getProposalStage, ProposalStage } from '@celo/actions/contracts/governance'
 import { bufferToHex, StrongAddress } from '@celo/base'
 import BigNumber from 'bignumber.js'
-import { PublicClient } from 'viem'
 import { bigintToBigNumber } from './utils'
 
 type DequeuedStageDurations = Pick<
@@ -20,7 +19,7 @@ export interface ProposalMetadata {
 }
 
 export const getHotfixRecord = async (
-  client: PublicClient,
+  client: PublicCeloClient,
   hash: Buffer
 ): Promise<HotfixRecord> => {
   const address = await resolveAddress(client, 'Governance')
@@ -45,7 +44,7 @@ type StageDurations<V> = {
 }
 
 export const getProposalSchedule = async (
-  client: PublicClient,
+  client: PublicCeloClient,
   proposalId: bigint
 ): Promise<Partial<StageDurations<BigNumber>>> => {
   const meta = await getProposalMetadata(client, proposalId)
@@ -79,7 +78,7 @@ export const getProposalSchedule = async (
 }
 
 export const getProposalMetadata = async (
-  client: PublicClient,
+  client: PublicCeloClient,
   proposalId: bigint
 ): Promise<ProposalMetadata> => {
   const proposal = await client.readContract({
@@ -98,7 +97,7 @@ export const getProposalMetadata = async (
   }
 }
 
-export const stageDurations = async (client: PublicClient): Promise<DequeuedStageDurations> => {
+export const stageDurations = async (client: PublicCeloClient): Promise<DequeuedStageDurations> => {
   const durations = await client.readContract({
     address: await resolveAddress(client, 'Governance'),
     abi: governanceABI,

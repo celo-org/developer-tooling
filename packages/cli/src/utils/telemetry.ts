@@ -1,7 +1,7 @@
 import { ux } from '@oclif/core'
 import chalk from 'chalk'
 import fs from 'fs'
-import path from 'path'
+import path from 'node:path'
 import packageJson from '../../package.json'
 import { readConfig } from './config'
 

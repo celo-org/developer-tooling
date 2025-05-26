@@ -1,4 +1,4 @@
-import { epochManagerABI } from '@celo/abis-12'
+import { epochManagerABI } from '@celo/abis'
 import * as epochManager from '@celo/actions/contracts/epoch-manager'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'

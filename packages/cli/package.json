@@ -35,11 +35,12 @@
     "prepack": "yarn run build && oclif readme",
     "homebrew": "node ./homebrew/scripts/prepare.mjs",
     "test": "TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --maxWorkers 50% --silent --forceExit",
-    "test-ci": "TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --workerIdleMemoryLimit=0.1 --forceExit --ci",
+    "test-ci": "yarn test-ci-base || yarn test-ci-base --onlyFailures",
+    "test-ci-base": "TZ=UTC NODE_OPTIONS='--experimental-vm-modules' yarn jest --workerIdleMemoryLimit=0.1 --forceExit --ci",
     "cs": "yarn --top-level run cs"
   },
   "dependencies": {
-    "@celo/abis": "11.0.0",
+    "@celo/abis": "12.0.3",
     "@celo/actions": "0.0.0",
     "@celo/base": "^7.0.2",
     "@celo/compliance": "1.0.28",
@@ -76,15 +77,12 @@
     "ethers": "5",
     "fs-extra": "^8.1.0",
     "humanize-duration": "^3.32.1",
-    "path": "^0.12.7",
     "prompts": "^2.0.1",
     "viem": "^2.29.2",
     "web3": "1.10.4"
   },
   "devDependencies": {
-    "@celo/celo-devchain": "^7.0.0",
     "@celo/dev-utils": "workspace:^",
-    "@celo/typescript": "workspace:^",
     "@types/debug": "^4.1.4",
     "@types/fs-extra": "^8.0.0",
     "@types/humanize-duration": "^3.27.4",
@@ -94,6 +92,7 @@
     "@types/prompts": "^1.1.1",
     "jest": "^29.7.0",
     "oclif": "^4.17.32",
+    "semver": "^7.7.2",
     "ts-jest": "^29.1.5",
     "ts-node": "^10.9.1",
     "typescript": "5.3.3"

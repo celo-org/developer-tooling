@@ -1,5 +1,5 @@
 import { ux } from '@oclif/core'
-import { BaseError, PublicClient } from 'viem'
+import { BaseError } from 'viem'
 import { BaseCommand } from '../../base'
 import { getEpochInfo } from '../../packages-to-be/getEpochInfo'
 export default class EpochStatus extends BaseCommand {
@@ -28,7 +28,7 @@ export default class EpochStatus extends BaseCommand {
       isOnEpochProcess,
       isIndividualProcessing,
       isTimeForNextEpoch,
-    ] = await getEpochInfo(client as unknown as PublicClient)
+    ] = await getEpochInfo(client)
     ux.action.stop('Done\n')
 
     // if currentEpoch is a tuple, destructure it otherwise it would be an error message

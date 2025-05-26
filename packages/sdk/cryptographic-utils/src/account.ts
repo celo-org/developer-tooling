@@ -1,6 +1,6 @@
 import {
   Bip39,
-  CELO_DERIVATION_PATH_BASE,
+  ETHEREUM_DERIVATION_PATH,
   MnemonicLanguages,
   MnemonicStrength,
   RandomNumberGenerator,
@@ -392,7 +392,7 @@ function wordSuggestions(typo: string, language: MnemonicLanguages): Suggestions
  * @param changeIndex postion 4 from https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
  * @param addressIndex postion 5 from https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
  * bip39ToUse - bip39 library
- * @param derivationPath - This will default to ETH_DERIVATION_PATH in 7.0 forum.celo.org/t/deprecating-the-celo-derivation-path/9229
+ * @param derivationPath - Defaults to ETH_DERIVATION_PATH in 7.0 forum.celo.org/t/deprecating-the-celo-derivation-path/9229
  */
 export async function generateKeys(
   mnemonic: string,
@@ -400,7 +400,7 @@ export async function generateKeys(
   changeIndex: number = 0,
   addressIndex: number = 0,
   bip39ToUse: Bip39 = bip39Wrapper,
-  derivationPath: string = CELO_DERIVATION_PATH_BASE
+  derivationPath: string = ETHEREUM_DERIVATION_PATH
 ): Promise<{ privateKey: string; publicKey: string; address: string }> {
   const seed: Buffer = await generateSeed(mnemonic, password, bip39ToUse)
   return generateKeysFromSeed(seed, changeIndex, addressIndex, derivationPath)
@@ -412,7 +412,7 @@ export function generateDeterministicInviteCode(
   recipientPepper: string,
   addressIndex: number = 0,
   changeIndex: number = 0,
-  derivationPath: string = CELO_DERIVATION_PATH_BASE
+  derivationPath: string = ETHEREUM_DERIVATION_PATH
 ): { privateKey: string; publicKey: string } {
   const seed = Buffer.from(keccak_256(utf8ToBytes(recipientPhoneHash + recipientPepper)))
   return generateKeysFromSeed(seed, changeIndex, addressIndex, derivationPath)
@@ -439,13 +439,13 @@ export async function generateSeed(
  * @param seed - Buffer created from mnemonic
  * @param changeIndex postion 4 from https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
  * @param addressIndex postion 5 from https://github.com/bitcoin/bips/blob/master/bip-0044.mediawiki
- * @param derivationPath - This will default to ETH_DERIVATION_PATH in 7.0 forum.celo.org/t/deprecating-the-celo-derivation-path/9229
+ * @param derivationPath - This defaults to ETH_DERIVATION_PATH forum.celo.org/t/deprecating-the-celo-derivation-path/9229
  */
 export function generateKeysFromSeed(
   seed: Buffer,
   changeIndex: number = 0,
   addressIndex: number = 0,
-  derivationPath: string = CELO_DERIVATION_PATH_BASE
+  derivationPath: string = ETHEREUM_DERIVATION_PATH
 ): { privateKey: string; publicKey: string; address: string } {
   const node = HDKey.fromMasterSeed(seed)
   const newNode = node.derive(

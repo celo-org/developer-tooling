@@ -35,6 +35,6 @@
     "@types/rimraf": "3.0.2"
   },
   "engines": {
-    "node": ">=10"
+    "node": ">=20"
   }
 }

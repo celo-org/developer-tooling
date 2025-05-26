@@ -4,9 +4,9 @@ import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { startAndFinishEpochProcess } from '../test-utils/utils'
 
+import { NULL_ADDRESS } from '@celo/base'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
-import { zeroAddress } from '@ethereumjs/util'
 import { newKitFromWeb3 } from '../kit'
 import { AccountsWrapper } from './Accounts'
 import { ElectionWrapper } from './Election'
@@ -334,7 +334,7 @@ testWithAnvilL2('Election Wrapper', (web3) => {
         await tx.sendAndWaitForReceipt({ from: userAccount })
       }
       const groupOrder = await election.findLesserAndGreaterAfterVote(groupAccountA, ZERO_GOLD)
-      expect(groupOrder).toEqual({ lesser: zeroAddress(), greater: groupAccountC })
+      expect(groupOrder).toEqual({ lesser: NULL_ADDRESS, greater: groupAccountC })
     })
   })
 })

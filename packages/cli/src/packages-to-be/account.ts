@@ -1,5 +1,5 @@
-import { lockedGoldABI } from '@celo/abis-12'
-import { resolveAddress } from '@celo/actions'
+import { lockedGoldABI } from '@celo/abis'
+import { PublicCeloClient, resolveAddress } from '@celo/actions'
 import { getAccountsContract } from '@celo/actions/contracts/accounts'
 import { StrongAddress } from '@celo/base'
 import { Address, erc20Abi, PublicClient } from 'viem'
@@ -71,8 +71,8 @@ export const getTotalBalance = async (
   }
 }
 
-export async function getMetadataURLs(client: PublicClient, addresses: Address[]) {
-  const contract = await getAccountsContract(client)
+export async function getMetadataURLs(client: PublicCeloClient, addresses: Address[]) {
+  const contract = await getAccountsContract({ public: client })
 
   const urlResults = await Promise.allSettled(
     addresses.map(async (address) => {
@@ -85,8 +85,8 @@ export async function getMetadataURLs(client: PublicClient, addresses: Address[]
   return new Map(filtered)
 }
 
-export async function getNames(client: PublicClient, addresses: Address[]) {
-  const contract = await getAccountsContract(client)
+export async function getNames(client: PublicCeloClient, addresses: Address[]) {
+  const contract = await getAccountsContract({ public: client })
 
   const nameResults = await Promise.allSettled(
     addresses.map(async (address) => {

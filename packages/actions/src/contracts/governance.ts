@@ -1,11 +1,11 @@
 import { governanceABI } from '@celo/abis'
 import { zip } from '@celo/base'
 import { voteProposal, VoteProposalTypes } from '@celo/core'
-import { Client, getContract, GetContractReturnType, PublicClient } from 'viem'
-import { WalletCeloClient } from '../client'
+import { getContract, GetContractReturnType } from 'viem'
+import { Clients, PublicCeloClient } from '../client'
 import { resolveAddress } from './registry'
 
-export type GovernanceContract<T extends Client = PublicClient> = GetContractReturnType<
+export type GovernanceContract<T extends Clients = Clients> = GetContractReturnType<
   typeof governanceABI,
   T
 >
@@ -24,26 +24,28 @@ export interface UpvoteRecord {
   upvotes: bigint
 }
 
-export async function getGovernanceContract<T extends Client = PublicClient>(
-  client: T
+export async function getGovernanceContract<T extends Clients = Clients>(
+  clients: T
 ): Promise<GovernanceContract<T>> {
   return getContract({
-    address: await resolveAddress(client, 'Governance'),
+    address: await resolveAddress(clients.public, 'Governance'),
     abi: governanceABI,
-    client,
+    client: clients,
   })
 }
 
-export async function vote<T extends WalletCeloClient = WalletCeloClient>(
-  client: T,
+export async function vote<C extends Required<Clients> = Required<Clients>>(
+  clients: C,
   proposalId: bigint,
   voteValue: VoteProposalTypes
 ) {
-  const contract = await getGovernanceContract(client)
+  const contract = await getGovernanceContract(clients)
   return voteProposal(
     {
       vote: async (proposalID, proposalIndex, voteValue) => {
-        const { request } = await contract.simulate.vote([proposalID, proposalIndex, voteValue])
+        const { request } = await contract.simulate.vote([proposalID, proposalIndex, voteValue], {
+          account: clients.wallet.account.address,
+        })
         return contract.write.vote(request.args)
       },
       getDequeue: async () => {
@@ -56,7 +58,7 @@ export async function vote<T extends WalletCeloClient = WalletCeloClient>(
   )
 }
 
-export const getQueue = async (client: PublicClient) => {
+export const getQueue = async (client: PublicCeloClient) => {
   const queue = await client.readContract({
     address: await resolveAddress(client, 'Governance'),
     abi: governanceABI,
@@ -74,7 +76,7 @@ export const getQueue = async (client: PublicClient) => {
 }
 
 export const getProposalStage = async (
-  client: PublicClient,
+  client: PublicCeloClient,
   proposalId: bigint
 ): Promise<ProposalStage> => {
   const queue = await getQueue(client)

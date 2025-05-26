@@ -1,7 +1,7 @@
 import { ensureLeading0x } from '@celo/utils/lib/address'
 import { bytesToHex } from '@noble/curves/abstract/utils'
 import { secp256k1 } from '@noble/curves/secp256k1'
-import { Bip39, generateKeys } from './account'
+import { Bip39, CELO_DERIVATION_PATH_BASE, generateKeys } from './account'
 
 /**
  * Turns a private key to a compressed public key (hex string with hex leader).
@@ -40,7 +40,8 @@ export function deriveDek(mnemonic: string, bip39ToUse?: Bip39) {
     undefined,
     1, // The DEK is derived from change index 1, not 0 like the wallet's transaction keys
     0,
-    bip39ToUse
+    bip39ToUse,
+    CELO_DERIVATION_PATH_BASE
   )
 }
 

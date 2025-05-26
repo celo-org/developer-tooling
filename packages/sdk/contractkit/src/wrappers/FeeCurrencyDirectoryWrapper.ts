@@ -1,4 +1,4 @@
-import { FeeCurrencyDirectory } from '@celo/abis-12/web3/FeeCurrencyDirectory'
+import { FeeCurrencyDirectory } from '@celo/abis/web3/FeeCurrencyDirectory'
 import { StrongAddress } from '@celo/base'
 import BigNumber from 'bignumber.js'
 import { AbstractFeeCurrencyWrapper } from './AbstractFeeCurrencyWrapper'

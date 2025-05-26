@@ -1,17 +1,18 @@
 import { releaseGoldABI } from '@celo/abis'
-import { Address, Client, getContract, GetContractReturnType, PublicClient } from 'viem'
+import { Address, getContract, GetContractReturnType } from 'viem'
+import { Clients } from '../client'
 
-export async function getReleaseCeloContract<T extends Client = PublicClient>(
-  client: T,
+export async function getReleaseCeloContract<T extends Clients = Clients>(
+  clients: T,
   address: Address
 ): Promise<ReleaseCeloContract<T>> {
   return getContract({
     address,
     abi: releaseGoldABI,
-    client,
+    client: clients,
   })
 }
-export type ReleaseCeloContract<T extends Client = PublicClient> = GetContractReturnType<
+export type ReleaseCeloContract<T extends Clients = Clients> = GetContractReturnType<
   typeof releaseGoldABI,
   T
 >

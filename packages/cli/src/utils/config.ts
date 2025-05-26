@@ -1,10 +1,10 @@
-import { CELO_DERIVATION_PATH_BASE } from '@celo/base'
+import { DerivationPath, ETHEREUM_DERIVATION_PATH } from '@celo/base'
 import * as fs from 'fs-extra'
-import * as path from 'path'
+import * as path from 'node:path'
 
 export interface CeloConfig {
   node: string
-  derivationPath: string
+  derivationPath: DerivationPath
   telemetry: boolean
 }
 
@@ -16,7 +16,7 @@ const LEGACY_MAPPING: Record<string, keyof CeloConfig | undefined> = {
 
 export const defaultConfig: CeloConfig = {
   node: 'http://localhost:8545',
-  derivationPath: CELO_DERIVATION_PATH_BASE,
+  derivationPath: ETHEREUM_DERIVATION_PATH,
   telemetry: true,
 }
 
@@ -24,6 +24,10 @@ const configFile = 'config.json'
 
 export function configPath(configDir: string) {
   return path.join(configDir, configFile)
+}
+
+export async function configExists(configDir: string): Promise<boolean> {
+  return fs.pathExists(configPath(configDir))
 }
 
 export function readConfig(configDir: string): CeloConfig {

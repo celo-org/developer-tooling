@@ -1,27 +1,27 @@
 import { electionABI } from '@celo/abis'
-import { Address, Client, getContract, GetContractReturnType } from 'viem'
-import { PublicCeloClient, WalletCeloClient } from '../client'
+import { Address, getContract, GetContractReturnType } from 'viem'
+import { Clients } from '../client'
 import { resolveAddress } from './registry'
 
-export type ElectionContract<T extends Client = PublicCeloClient> = GetContractReturnType<
+export type ElectionContract<T extends Clients = Clients> = GetContractReturnType<
   typeof electionABI,
   T
 >
 
-export async function getElectionContract<T extends Client = PublicCeloClient>(
-  client: T
+export async function getElectionContract<T extends Clients = Clients>(
+  clients: T
 ): Promise<ElectionContract<T>> {
   return getContract({
-    address: await resolveAddress(client, 'Election'),
+    address: await resolveAddress(clients.public, 'Election'),
     abi: electionABI,
-    client,
+    client: clients,
   })
 }
 
 // METHODS
 
 export async function getGroupsWithPendingVotes(
-  client: PublicCeloClient,
+  { public: client }: Clients,
   account: Address
 ): Promise<Address[]> {
   const contract = {
@@ -52,7 +52,7 @@ export async function getGroupsWithPendingVotes(
 }
 
 async function getActivatableGroups(
-  clients: { public: PublicCeloClient },
+  clients: Clients,
   groups: Address[],
   account: Address
 ): Promise<Address[]> {
@@ -77,12 +77,12 @@ async function getActivatableGroups(
 }
 
 export async function getActivatablePendingVotes(
-  clients: { public: PublicCeloClient; wallet: WalletCeloClient },
+  clients: Required<Clients>,
   groups: Address[],
-  account: Address = clients.wallet.account!.address
+  account: Address = clients.wallet.account.address
 ) {
-  const contract = await getElectionContract(clients.wallet)
-  const onBehalfOfAccount = clients.wallet.account!.address !== account
+  const contract = await getElectionContract(clients)
+  const onBehalfOfAccount = clients.wallet?.account.address !== account
   const activatableGroups = await getActivatableGroups(clients, groups, account)
 
   return Promise.all(
@@ -95,9 +95,9 @@ export async function getActivatablePendingVotes(
 }
 
 export async function activatePendingVotes(
-  clients: { public: PublicCeloClient; wallet: WalletCeloClient },
+  clients: Required<Clients>,
   groups: Address[],
-  account: Address = clients.wallet.account!.address
+  account: Address = clients.wallet.account.address
 ) {
   const requests = await getActivatablePendingVotes(clients, groups, account)
   const txHashes = await Promise.all(

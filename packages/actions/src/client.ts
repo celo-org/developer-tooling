@@ -1,4 +1,10 @@
-import type { Account, Client, PublicClient, Transport, WalletClient } from 'viem'
+import {
+  type Account,
+  type Client,
+  type PublicClient,
+  type Transport,
+  type WalletClient,
+} from 'viem'
 import type { celo, celoAlfajores } from 'viem/chains'
 import type { celoBaklava } from './chains'
 
@@ -9,3 +15,11 @@ export type CeloClient = Client<Transport, CeloChain>
 export type PublicCeloClient = PublicClient<Transport, CeloChain, undefined>
 
 export type WalletCeloClient = WalletClient<Transport, CeloChain, Account>
+
+export type Clients<
+  P extends PublicCeloClient | PublicClient = PublicCeloClient,
+  W extends WalletCeloClient | WalletClient = WalletCeloClient
+> = {
+  public: P
+  wallet?: W
+}
