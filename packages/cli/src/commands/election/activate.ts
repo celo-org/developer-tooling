@@ -69,8 +69,12 @@ export default class ElectionActivate extends BaseCommand {
             epochManager.read.epochDuration(),
           ])
 
+        ux.action.start(
+          'Signing transactions…' + res.flags.useLedger ? ' Make sure to unlock your Ledger' : ''
+        )
         const rawTxs: CeloTransactionSerialized[] = []
         for (const contractCall of contractCalls) {
+          ux.action.status = `Signing transactions… ${rawTxs.length + 1} / ${contractCalls.length}`
           rawTxs.push(
             await presignWriteContract(wallet, {
               ...contractCall,
@@ -82,24 +86,33 @@ export default class ElectionActivate extends BaseCommand {
             })
           )
         }
+        ux.action.stop()
 
-        // Spin until pending votes become activatable.
+        const message =
+          'Waiting until pending votes can be activated.' +
+          '\n' +
+          'DO NOT SUBMIT FURTHER TRANSACTIONS FROM THIS WALLET until this command has completed.' +
+          '\n' +
+          'Time until next epoch:'
+
         const endTimestamp = startTimestamp + epochDuration
         // NOTE: this is only useful for tests as the date is in the past
         // `remainingMs` should otherwise never be negative
-        const remainingMs = Math.max(Number(endTimestamp * 1000n) - Date.now(), 0)
-        ux.action.start(
-          'Waiting until pending votes can be activated.' +
-            '\n' +
-            'DO NOT SUBMIT FURTHER TRANSACTIONS FROM THIS WALLET until this command has completed.' +
-            '\n' +
-            `Time until next epoch: ~${humanizeDuration(remainingMs, {})}…`
-        )
+        let remainingMs = Math.max(Number(endTimestamp * 1000n) - Date.now(), 0)
+        // Spin until pending votes become activatable.
+        ux.action.start(`${message} ~${humanizeDuration(remainingMs)}…`)
+
+        const interval = setInterval(() => {
+          remainingMs = Math.max(Number(endTimestamp * 1000n) - Date.now(), 0)
+          ux.action.status = `${message} ~${humanizeDuration(remainingMs)}…`
+        }, 5_000)
+
         await sleep(remainingMs)
         // It takes an epoch for pending votes to be activatable
         while (currentEpochNumber === (await epochManager.read.getCurrentEpochNumber())) {
           await sleep(1_000)
         }
+        clearInterval(interval)
         ux.action.stop()
 
         // NOTE: these may fail if the wallet submit txs meanwhile (eg: nonce would be too low)
