@@ -2,17 +2,14 @@ import { sleep } from '@celo/utils/lib/async'
 import { Flags, ux } from '@oclif/core'
 
 import { signerToAccount } from '@celo/actions/contracts/accounts'
-import {
-  activatePendingVotes,
-  getAllPendingVotesParameters,
-  getGroupsWithPendingVotes,
-} from '@celo/actions/contracts/election'
+import { activatePendingVotes, getGroupsWithPendingVotes } from '@celo/actions/contracts/election'
 import { getEpochManagerContract } from '@celo/actions/contracts/epoch-manager'
-import { presignWriteContract } from '@celo/actions/utils/presignWriteContract'
 import humanizeDuration from 'humanize-duration'
 import { Hex, nonceManager } from 'viem'
 import { CeloTransactionSerialized } from 'viem/celo'
 import { BaseCommand } from '../../base'
+import { presignWriteContract } from '../../packages-to-be/actions/presignWriteContract'
+import { getAllPendingVotesParameters } from '../../packages-to-be/election'
 import { newCheckBuilder } from '../../utils/checks'
 import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
