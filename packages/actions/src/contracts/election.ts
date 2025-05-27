@@ -118,7 +118,7 @@ export async function activatePendingVotes(
   const activatableGroups = await getActivatableGroups(clients, groups, account)
   const onBehalfOfAccount = !isAddressEqual(clients.wallet.account.address, account)
 
-  const requests = await Promise.all(
+  const simulateResults = await Promise.all(
     activatableGroups.map((group) =>
       onBehalfOfAccount
         ? contract.simulate.activateForAccount([group, account], {
@@ -132,7 +132,7 @@ export async function activatePendingVotes(
   const txHashes = await Promise.all(
     // @ts-expect-error - typing is correct but differs between
     // `activateForAccount` and `activate`
-    requests.map((request) => clients.wallet.writeContract(request))
+    simulateResults.map(({ request }) => clients.wallet.writeContract(request))
   )
   return txHashes
 }
