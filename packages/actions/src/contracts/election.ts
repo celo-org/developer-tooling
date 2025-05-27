@@ -1,6 +1,7 @@
 import { electionABI } from '@celo/abis'
-import { Address, getContract, GetContractReturnType } from 'viem'
+import { Address, getContract, GetContractReturnType, isAddressEqual } from 'viem'
 import { Clients } from '../client'
+import { encodeWriteContractCall } from '../utils/encodeWriteContractCall'
 import { resolveAddress } from './registry'
 
 export type ElectionContract<T extends Clients = Clients> = GetContractReturnType<
@@ -76,22 +77,36 @@ async function getActivatableGroups(
   return activatableGroups
 }
 
-export async function getActivatablePendingVotes(
+export async function getAllPendingVotesParameters(
   clients: Required<Clients>,
   groups: Address[],
   account: Address = clients.wallet.account.address
 ) {
-  const contract = await getElectionContract(clients)
-  const onBehalfOfAccount = clients.wallet?.account.address !== account
-  const activatableGroups = await getActivatableGroups(clients, groups, account)
+  const contract = {
+    address: await resolveAddress(clients.public, 'Election'),
+    abi: electionABI,
+  } as const
+  const onBehalfOfAccount = !isAddressEqual(clients.wallet.account.address, account)
 
-  return Promise.all(
-    activatableGroups.map((group) =>
-      onBehalfOfAccount
-        ? contract.simulate.activateForAccount([group, account])
-        : contract.simulate.activate([group])
-    )
+  // NOTE: we get all groups, because we're not filtering by activatable
+  // The usage would be to pre-sign waiting for an epoch to pass
+  const contractCallParameters = groups.map((group) =>
+    onBehalfOfAccount
+      ? encodeWriteContractCall(clients.wallet, {
+          ...contract,
+          account,
+          functionName: 'activateForAccount',
+          args: [group, account],
+        })
+      : encodeWriteContractCall(clients.wallet, {
+          ...contract,
+          account,
+          functionName: 'activate',
+          args: [group],
+        })
   )
+
+  return contractCallParameters
 }
 
 export async function activatePendingVotes(
@@ -99,9 +114,24 @@ export async function activatePendingVotes(
   groups: Address[],
   account: Address = clients.wallet.account.address
 ) {
-  const requests = await getActivatablePendingVotes(clients, groups, account)
+  const contract = await getElectionContract(clients)
+  const activatableGroups = await getActivatableGroups(clients, groups, account)
+  const onBehalfOfAccount = !isAddressEqual(clients.wallet.account.address, account)
+
+  const requests = await Promise.all(
+    activatableGroups.map((group) =>
+      onBehalfOfAccount
+        ? contract.simulate.activateForAccount([group, account], {
+            account,
+          })
+        : contract.simulate.activate([group], {
+            account,
+          })
+    )
+  )
   const txHashes = await Promise.all(
-    // @ts-expect-error - TODO why this is incorrect?
+    // @ts-expect-error - typing is correct but differs between
+    // `activateForAccount` and `activate`
     requests.map((request) => clients.wallet.writeContract(request))
   )
   return txHashes

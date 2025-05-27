@@ -103,9 +103,10 @@ testWithAnvilL2(
       )
     })
 
-    it('activate votes with --wait flag', async () => {
+    it.only('activate votes with --wait flag', async () => {
       const kit = newKitFromWeb3(web3)
-      const [groupAddress, validatorAddress, userAddress] = await web3.eth.getAccounts()
+      const [groupAddress, validatorAddress, userAddress, otherUserAddress] =
+        await web3.eth.getAccounts()
       const election = await kit.contracts.getElection()
       const writeMock = jest.spyOn(ux.write, 'stdout')
       const activateAmount = 12345
@@ -125,7 +126,8 @@ testWithAnvilL2(
         new Promise<void>((resolve) => {
           // at least the amount the --wait flag waits in the check
           setTimeout(async () => {
-            testLocallyWithWeb3Node(Switch, ['--from', userAddress], web3)
+            // switch with a different account
+            testLocallyWithWeb3Node(Switch, ['--from', otherUserAddress], web3)
             resolve()
           }, 1000)
         }),

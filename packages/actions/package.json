@@ -25,6 +25,11 @@
       "types": "./dist/cjs/chains.d.ts",
       "import": "./dist/mjs/chains.js",
       "require": "./dist/cjs/chains.js"
+    },
+    "./utils/*": {
+      "types": "./dist/cjs/utils/*.d.ts",
+      "import": "./dist/mjs/utils/*.js",
+      "require": "./dist/cjs/utils/*.js"
     }
   },
   "author": "cLabs",

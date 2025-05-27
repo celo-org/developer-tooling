@@ -4,11 +4,14 @@ import { Flags, ux } from '@oclif/core'
 import { signerToAccount } from '@celo/actions/contracts/accounts'
 import {
   activatePendingVotes,
-  getActivatablePendingVotes,
+  getAllPendingVotesParameters,
   getGroupsWithPendingVotes,
 } from '@celo/actions/contracts/election'
 import { getEpochManagerContract } from '@celo/actions/contracts/epoch-manager'
-import { Hex } from 'viem'
+import { presignWriteContract } from '@celo/actions/utils/presignWriteContract'
+import humanizeDuration from 'humanize-duration'
+import { Hex, nonceManager } from 'viem'
+import { CeloTransactionSerialized } from 'viem/celo'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displayViemTx } from '../../utils/cli'
@@ -48,13 +51,14 @@ export default class ElectionActivate extends BaseCommand {
 
     const signerAccount = await signerToAccount(client, forAccount)
     const groupsWithPendingVotes = await getGroupsWithPendingVotes(clients, signerAccount)
+
     if (groupsWithPendingVotes.length > 0) {
       let txHashes: Hex[]
       if (res.flags.wait) {
-        const requests = await getActivatablePendingVotes(
+        const contractCalls = await getAllPendingVotesParameters(
           { public: client, wallet },
           groupsWithPendingVotes,
-          forAccount
+          signerAccount
         )
 
         const epochManager = await getEpochManagerContract(clients)
@@ -65,31 +69,49 @@ export default class ElectionActivate extends BaseCommand {
             epochManager.read.epochDuration(),
           ])
 
-        // @ts-expect-error
-        const rawTxs = await Promise.all(requests.map((request) => wallet.signTransaction(request)))
+        const rawTxs: CeloTransactionSerialized[] = []
+        for (const contractCall of contractCalls) {
+          rawTxs.push(
+            await presignWriteContract(wallet, {
+              ...contractCall,
+              nonce: await nonceManager.consume({
+                chainId: client.chain.id,
+                client,
+                address: signerAccount,
+              }),
+            })
+          )
+        }
 
         // Spin until pending votes become activatable.
-        ux.action.start(
-          `Waiting until pending votes can be activated.\nDO NOT SUBMIT FURTHER TRANSACTIONS FROM THIS WALLET until this command has completed.`
-        )
         const endTimestamp = startTimestamp + epochDuration
-        const remaining = Number(endTimestamp) - Date.now() / 1000
-        await sleep(remaining)
+        // NOTE: this is only useful for tests as the date is in the past
+        // `remainingMs` should otherwise never be negative
+        const remainingMs = Math.max(Number(endTimestamp * 1000n) - Date.now(), 0)
+        ux.action.start(
+          'Waiting until pending votes can be activated.' +
+            '\n' +
+            'DO NOT SUBMIT FURTHER TRANSACTIONS FROM THIS WALLET until this command has completed.' +
+            '\n' +
+            `Time until next epoch: ~${humanizeDuration(remainingMs, {})}…`
+        )
+        await sleep(remainingMs)
         // It takes an epoch for pending votes to be activatable
         while (currentEpochNumber === (await epochManager.read.getCurrentEpochNumber())) {
           await sleep(1_000)
         }
         ux.action.stop()
 
-        // NOTE: these may fail if the wallet submit txs meanwhile (eg: nonce would change)
-        txHashes = await Promise.all(
-          rawTxs.map((rawTx) => wallet.sendRawTransaction({ serializedTransaction: rawTx }))
-        )
+        // NOTE: these may fail if the wallet submit txs meanwhile (eg: nonce would be too low)
+        txHashes = []
+        for (const rawTx of rawTxs) {
+          txHashes.push(await wallet.sendRawTransaction({ serializedTransaction: rawTx }))
+        }
       } else {
         txHashes = await activatePendingVotes(
           { public: client, wallet },
           groupsWithPendingVotes,
-          forAccount
+          signerAccount
         )
       }
 
