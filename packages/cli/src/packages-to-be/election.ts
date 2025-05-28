@@ -1,36 +1,34 @@
 import { electionABI } from '@celo/abis'
-import { Clients, resolveAddress } from '@celo/actions'
-import { Address, isAddressEqual } from 'viem'
-import { encodeWriteContractCall } from './actions/encodeWriteContractCall'
+import { Clients } from '@celo/actions'
+import { Address, encodeFunctionData, isAddressEqual, prepareEncodeFunctionData } from 'viem'
 
-export async function getAllPendingVotesParameters(
+export async function getAllPendingVotesCallData(
   clients: Required<Clients>,
   groups: Address[],
   account: Address = clients.wallet.account.address
 ) {
-  const contract = {
-    address: await resolveAddress(clients.public, 'Election'),
-    abi: electionABI,
-  } as const
   const onBehalfOfAccount = !isAddressEqual(clients.wallet.account.address, account)
-
-  // NOTE: we get all groups, because we're not filtering by activatable
-  // The usage would be to pre-sign waiting for an epoch to pass
-  const contractCallParameters = groups.map((group) =>
-    onBehalfOfAccount
-      ? encodeWriteContractCall(clients.wallet, {
-          ...contract,
-          account,
-          functionName: 'activateForAccount',
-          args: [group, account],
-        })
-      : encodeWriteContractCall(clients.wallet, {
-          ...contract,
-          account,
-          functionName: 'activate',
-          args: [group],
-        })
-  )
-
-  return contractCallParameters
+  if (onBehalfOfAccount) {
+    const prepared = prepareEncodeFunctionData({
+      abi: electionABI,
+      functionName: 'activateForAccount',
+    })
+    return groups.map((group) => {
+      return encodeFunctionData({
+        ...prepared,
+        args: [group, account],
+      })
+    })
+  } else {
+    const prepared = prepareEncodeFunctionData({
+      abi: electionABI,
+      functionName: 'activate',
+    })
+    return groups.map((group) => {
+      return encodeFunctionData({
+        ...prepared,
+        args: [group],
+      })
+    })
+  }
 }

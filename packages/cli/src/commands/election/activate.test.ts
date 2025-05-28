@@ -2,6 +2,7 @@ import { newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
+import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts'
 import { celoAlfajores } from 'viem/chains'
 import Web3 from 'web3'
 import {
@@ -18,9 +19,8 @@ import {
 import { deployMultiCall } from '../../test-utils/multicall'
 import Switch from '../epochs/switch'
 import ElectionActivate from './activate'
-
-import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts'
-
+jest.mock('@celo/hw-app-eth')
+jest.mock('@celo/viem-account-ledger')
 process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvilL2(
@@ -108,6 +108,42 @@ testWithAnvilL2(
         new BigNumber(activateAmount)
       )
     })
+
+    // describe(' activate votes with the --useLedger flag', () => {
+    //     let signTransactionSpy: jest.Mock
+    //     beforeEach(() => {
+    //       signTransactionSpy = jest.fn().mockResolvedValue('0xtxhash')
+    //       jest.spyOn(ViemLedger, 'ledgerToAccount').mockImplementation(() => {
+    //         return  Promise.resolve({
+    //           address: userAddress as StrongAddress,
+    //           type: 'local',
+    //           publicKey: generatePrivateKey(),
+    //           signTransaction: signTransactionSpy,
+    //           signMessage: jest.fn(),
+    //           signTypedData: jest.fn(),
+    //           source: 'ledger',
+    //         })
+    //       })
+    //     })
+    //     it('send the transactions to ledger for signing', async () => {
+    //       const signSpy = jest.spyOn(Eth.prototype, 'signTransaction')
+    //       const web3Spy = jest.spyOn(ElectionActivate.prototype, 'getWeb3')
+    //       const walletSpy = jest.spyOn(ElectionActivate.prototype, 'getWalletClient')
+
+    //       await testLocallyWithWeb3Node(
+    //         ElectionActivate,
+    //         ['--from', userAddress, '--useLedger'],
+    //         web3
+    //       )
+    //       expect(ViemLedger.ledgerToAccount).toHaveBeenCalledWith()
+    //       expect(signTransactionSpy).toHaveBeenCalledWith()
+    //       expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
+
+    //       expect(web3Spy).not.toHaveBeenCalled()
+    //       expect(walletSpy).toHaveBeenCalled()
+    //       expect(signSpy).toHaveBeenCalledWith({})
+    //     })
+    //   })
 
     it('activate votes with --wait flag', async () => {
       const kit = newKitFromWeb3(web3)
@@ -214,7 +250,7 @@ testWithAnvilL2(
       ).toEqual(new BigNumber(0))
     })
 
-    it.only('activate votes for other address with --wait flag', async () => {
+    it('activate votes for other address with --wait flag', async () => {
       const privKey = generatePrivateKey()
       const newAccount = privateKeyToAccount(privKey)
       const kit = newKitFromWeb3(web3)
