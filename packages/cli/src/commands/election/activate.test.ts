@@ -214,7 +214,7 @@ testWithAnvilL2(
       ).toEqual(new BigNumber(0))
     })
 
-    it.only('activate votes for other address with --wait flag', async () => {
+    it('activate votes for other address with --wait flag', async () => {
       const privKey = generatePrivateKey()
       const newAccount = privateKeyToAccount(privKey)
       const kit = newKitFromWeb3(web3)
