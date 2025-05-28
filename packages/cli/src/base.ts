@@ -288,7 +288,11 @@ export abstract class BaseCommand extends Command {
             },
           })
         } catch (err) {
-          console.log('Check if the ledger is connected and logged.')
+          const error = err as Error & { statusText?: string }
+          if (error.statusText === 'LOCKED_DEVICE' || error.message.includes('NoDevice')) {
+            console.warn(chalk.yellow('Unlocked your Ledger device and try again'))
+            this.exit(0)
+          }
           throw err
         }
       } else if (res.flags.useAKV) {
@@ -404,7 +408,11 @@ export abstract class BaseCommand extends Command {
           ledgerAddressValidation: ledgerConfirmation,
         })
       } catch (err) {
-        console.log('Check if the ledger is connected and logged.')
+        const error = err as Error & { statusText?: string }
+        if (error.statusText === 'LOCKED_DEVICE') {
+          console.warn('Unlocked your Ledger device and try again')
+          this.exit(0)
+        }
         throw err
       }
     } else if (res.flags.useAKV) {
