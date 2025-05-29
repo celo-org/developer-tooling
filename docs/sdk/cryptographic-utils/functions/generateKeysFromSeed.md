@@ -1,4 +1,4 @@
-[**@celo/cryptographic-utils v5.1.3**](../README.md)
+[**@celo/cryptographic-utils v6.0.0-beta.0**](../README.md)
 
 ***
 
@@ -26,7 +26,7 @@ Defined in: [cryptographic-utils/src/account.ts:444](https://github.com/celo-org
 
 ### derivationPath
 
-`string` = `CELO_DERIVATION_PATH_BASE`
+`string` = `ETHEREUM_DERIVATION_PATH`
 
 ## Returns
 

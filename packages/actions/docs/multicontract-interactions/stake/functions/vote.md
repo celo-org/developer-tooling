@@ -1,4 +1,4 @@
-[**@Celo/Actions v0.0.0**](../../../README.md)
+[**@Celo/Actions v0.0.1-beta.0**](../../../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Function: vote()
 
-> **vote**(`client`, `validatorGroup`, `value`): `Promise`\<`` `0x${string}` ``\>
+> **vote**(`clients`, `validatorGroup`, `value`): `Promise`\<`` `0x${string}` ``\>
 
 Casts a vote for a specified validator group using the provided wallet client.
 
@@ -16,9 +16,9 @@ voting logic and gas estimation, and delegates the business logic of voting to `
 
 ## Parameters
 
-### client
+### clients
 
-The WalletCeloClient instance used to interact with the blockchain.
+`Required`\<`Clients`\>
 
 ### validatorGroup
 
