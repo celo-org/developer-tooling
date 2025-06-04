@@ -1672,7 +1672,7 @@ __metadata:
     "@celo/wallet-ledger": "npm:^8.0.0-beta.1"
     "@celo/wallet-local": "npm:^8.0.0-beta.1"
     "@ethereumjs/util": "npm:8.0.5"
-    "@ledgerhq/hw-transport-node-hid": "npm:^6.29.6"
+    "@ledgerhq/hw-transport-node-hid": "npm:^6.28.5"
     "@mento-protocol/mento-sdk": "npm:^1.0.1"
     "@oclif/core": "npm:^3.27.0"
     "@oclif/plugin-autocomplete": "npm:^3.2.0"
@@ -2313,8 +2313,8 @@ __metadata:
     "@celo/wallet-base": "npm:^8.0.0-beta.1"
     "@celo/wallet-remote": "npm:^8.0.0-beta.1"
     "@ethereumjs/util": "npm:8.0.5"
-    "@ledgerhq/errors": "npm:^6.21.0"
-    "@ledgerhq/hw-transport": "npm:^6.31.5"
+    "@ledgerhq/errors": "npm:^6.16.4"
+    "@ledgerhq/hw-transport": "npm:^6.30.6"
     "@ledgerhq/hw-transport-node-hid": "npm:^6.29.6"
     "@noble/curves": "npm:^1.4.0"
     "@noble/hashes": "npm:^1.3.3"
@@ -4247,17 +4247,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ledgerhq/errors@npm:^6.16.4, @ledgerhq/errors@npm:^6.21.0":
+  version: 6.21.0
+  resolution: "@ledgerhq/errors@npm:6.21.0"
+  checksum: c30e6723db95f8cad8740b6e9a83280088d192098aa7f5f3d7a05dc3326413e155ea55b9c8405a9ad85c26287f604046c5b05c598b157e5cd54270d4eb0b186c
+  languageName: node
+  linkType: hard
+
 "@ledgerhq/errors@npm:^6.19.1":
   version: 6.19.1
   resolution: "@ledgerhq/errors@npm:6.19.1"
   checksum: 8265c6d73c314a4aabbe060ec29e2feebb4e904fe811bf7a9c53cde08e713dcbceded9d927ebb2f0ffc47a7b16524379d4a7e9aa3d61945b8a832be7cd5cf69b
-  languageName: node
-  linkType: hard
-
-"@ledgerhq/errors@npm:^6.21.0":
-  version: 6.21.0
-  resolution: "@ledgerhq/errors@npm:6.21.0"
-  checksum: c30e6723db95f8cad8740b6e9a83280088d192098aa7f5f3d7a05dc3326413e155ea55b9c8405a9ad85c26287f604046c5b05c598b157e5cd54270d4eb0b186c
   languageName: node
   linkType: hard
 
@@ -4298,7 +4298,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/hw-transport-node-hid@npm:^6.29.6":
+"@ledgerhq/hw-transport-node-hid@npm:^6.28.5, @ledgerhq/hw-transport-node-hid@npm:^6.29.6":
   version: 6.29.6
   resolution: "@ledgerhq/hw-transport-node-hid@npm:6.29.6"
   dependencies:
@@ -4314,6 +4314,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ledgerhq/hw-transport@npm:^6.30.6, @ledgerhq/hw-transport@npm:^6.31.5":
+  version: 6.31.5
+  resolution: "@ledgerhq/hw-transport@npm:6.31.5"
+  dependencies:
+    "@ledgerhq/devices": "npm:8.4.5"
+    "@ledgerhq/errors": "npm:^6.21.0"
+    "@ledgerhq/logs": "npm:^6.12.0"
+    events: "npm:^3.3.0"
+  checksum: d91ad26ecd8ca95faf366dc097c8a66564de0730efa71977d49b07bb4e918ee1899952f32602ab17f5713063083a9b306ca6bdd4bb3c19cfd732eeee79e4e776
+  languageName: node
+  linkType: hard
+
 "@ledgerhq/hw-transport@npm:^6.31.4":
   version: 6.31.4
   resolution: "@ledgerhq/hw-transport@npm:6.31.4"
@@ -4323,18 +4335,6 @@ __metadata:
     "@ledgerhq/logs": "npm:^6.12.0"
     events: "npm:^3.3.0"
   checksum: cf101e5b818e95e59031241d556dbec24658f54104910e414be493bc4b90b0aea50f5d4b3339a237dd0b12845bb2683c845f3a82f2ea9da4e077b68d1e1f7e48
-  languageName: node
-  linkType: hard
-
-"@ledgerhq/hw-transport@npm:^6.31.5":
-  version: 6.31.5
-  resolution: "@ledgerhq/hw-transport@npm:6.31.5"
-  dependencies:
-    "@ledgerhq/devices": "npm:8.4.5"
-    "@ledgerhq/errors": "npm:^6.21.0"
-    "@ledgerhq/logs": "npm:^6.12.0"
-    events: "npm:^3.3.0"
-  checksum: d91ad26ecd8ca95faf366dc097c8a66564de0730efa71977d49b07bb4e918ee1899952f32602ab17f5713063083a9b306ca6bdd4bb3c19cfd732eeee79e4e776
   languageName: node
   linkType: hard
 

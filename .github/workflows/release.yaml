@@ -32,7 +32,7 @@ jobs:
           api-url: https://api.gateway.akeyless.celo-networks-dev.org
           access-id: p-kf9vjzruht6l
           static-secrets: '{"/static-secrets/NPM/npm-publish-token":"NPM_TOKEN"}'
-      - name: Setup Node.js 22
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
