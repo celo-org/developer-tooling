@@ -15172,9 +15172,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-hid@npm:2.2.0":
-  version: 2.2.0
-  resolution: "node-hid@npm:2.2.0"
+"node-hid@npm:2.1.2":
+  version: 2.1.2
+  resolution: "node-hid@npm:2.1.2"
   dependencies:
     bindings: "npm:^1.5.0"
     node-addon-api: "npm:^3.0.2"
@@ -15182,7 +15182,7 @@ __metadata:
     prebuild-install: "npm:^7.1.1"
   bin:
     hid-showdevices: src/show-devices.js
-  checksum: 445dbb88d50b56d9f8363583dd113341c12d333ebfdc6297656cdfeac455064aa910bd09cf4cd57f8c788573f748f800e0df691699ee86bec8ca3f53487c6ace
+  checksum: 7b424d9f049221b439cfa3a092f415b608bcd316b819ff1fb0bf5234d766348d9fdaeaafa5ccece514c045825a936cb5617080168066d16b3aaeb0e9808e38f9
   languageName: node
   linkType: hard
 
