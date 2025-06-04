@@ -2154,7 +2154,7 @@ __metadata:
     "@celo/wallet-remote": "workspace:^"
     "@ethereumjs/util": "npm:8.0.5"
     "@ledgerhq/errors": "npm:^6.16.4"
-    "@ledgerhq/hw-transport-node-hid": "npm:^6.28.5"
+    "@ledgerhq/hw-transport-node-hid": "npm:^6.29.5"
     "@vitest/coverage-v8": "npm:^3.1.3"
     dotenv: "npm:^8.2.0"
     semver: "npm:^7.7.2"
@@ -4298,7 +4298,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ledgerhq/hw-transport-node-hid@npm:^6.28.5":
+"@ledgerhq/hw-transport-node-hid@npm:^6.28.5, @ledgerhq/hw-transport-node-hid@npm:^6.29.5":
   version: 6.29.6
   resolution: "@ledgerhq/hw-transport-node-hid@npm:6.29.6"
   dependencies:
