@@ -8,7 +8,6 @@ on:
   push:
     branches:
       - master
-      - changeset-release/master
       - prerelease/*
       - hotfixes
   pull_request:
@@ -437,7 +436,7 @@ jobs:
       - name: "Setup Node"
         uses: actions/setup-node@v4
         with:
-          node-version: 20.x  
+          node-version: 22  
       - name: Validate Team Config    
         uses: suzuki-shunsuke/github-action-renovate-config-validator@v1.0.1
         with:
