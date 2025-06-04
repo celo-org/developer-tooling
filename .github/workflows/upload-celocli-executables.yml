@@ -30,10 +30,10 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
-      - name: Setup Node.js 20.x
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20.x
+          node-version: 20
 
       - name: 'enable corepack for yarn'
         run: sudo corepack enable yarn
@@ -41,7 +41,7 @@ jobs:
       # must call twice because of chicken and egg problem with yarn and node
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: 20
           cache: 'yarn'
 
       - name: Install Dependencies
@@ -114,14 +114,14 @@ jobs:
       - name: Setup Node.js 20.x
         uses: actions/setup-node@v4
         with:
-          node-version: 20.x
+          node-version: 20
       - name: 'enable corepack for yarn'
         run: corepack enable yarn
         shell: bash
       # must call twice because of chicken and egg problem with yarn and node
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '20'
           cache: 'yarn'
       - name: Install Dependencies
         shell: bash
@@ -187,14 +187,14 @@ jobs:
       - name: Setup Node.js 20.x
         uses: actions/setup-node@v4
         with:
-          node-version: 20.x
+          node-version: 20
       - name: 'enable corepack for yarn'
         run: sudo corepack enable yarn
         shell: bash
       # must call twice because of chicken and egg problem with yarn and node
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '20'
           cache: 'yarn'
       - name: Install Dependencies
         shell: bash

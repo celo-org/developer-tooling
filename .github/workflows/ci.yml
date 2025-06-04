@@ -8,7 +8,6 @@ on:
   push:
     branches:
       - master
-      - changeset-release/master
       - prerelease/*
       - hotfixes
   pull_request:
@@ -24,7 +23,7 @@ defaults:
 
 env:
   # Increment these to force cache rebuilding
-  NODE_MODULE_CACHE_VERSION: 5
+  NODE_MODULE_CACHE_VERSION: 6
   NODE_OPTIONS: '--max-old-space-size=4096'
   TERM: dumb
   # Supported Foundry version defined at celo-org (GitHub organisation) level, for consistency across workflows.
@@ -52,14 +51,14 @@ jobs:
     steps:
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '20'
       - name: 'enable corepack for yarn'
         run: sudo corepack enable yarn
       - uses: actions/checkout@v4
       # must call twice because of chicken and egg problem with yarn and node
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '20'
           cache: 'yarn'
       - name: Restore node cache
         uses: actions/cache@v4
@@ -437,7 +436,7 @@ jobs:
       - name: "Setup Node"
         uses: actions/setup-node@v4
         with:
-          node-version: 20.x  
+          node-version: 20  
       - name: Validate Team Config    
         uses: suzuki-shunsuke/github-action-renovate-config-validator@v1.0.1
         with:
