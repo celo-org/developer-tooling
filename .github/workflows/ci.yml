@@ -23,7 +23,7 @@ defaults:
 
 env:
   # Increment these to force cache rebuilding
-  NODE_MODULE_CACHE_VERSION: 5
+  NODE_MODULE_CACHE_VERSION: 6
   NODE_OPTIONS: '--max-old-space-size=4096'
   TERM: dumb
   # Supported Foundry version defined at celo-org (GitHub organisation) level, for consistency across workflows.
