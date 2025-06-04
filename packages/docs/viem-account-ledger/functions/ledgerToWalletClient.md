@@ -1,4 +1,4 @@
-[**@celo/viem-account-ledger v1.2.0-beta.1**](../README.md)
+[**@celo/viem-account-ledger v1.2.0-beta.2**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **ledgerToWalletClient**\<`T`\>(`__namedParameters`): `Promise`\<[`LedgerWalletClient`](../type-aliases/LedgerWalletClient.md)\<`T`\>\>
 
-Defined in: [packages/viem-account-ledger/src/ledger-to-wallet-client.ts:11](https://github.com/celo-org/developer-tooling/blob/master/packages/viem-account-ledger/src/ledger-to-wallet-client.ts#L11)
+Defined in: [packages/viem-account-ledger/src/ledger-to-wallet-client.ts:8](https://github.com/celo-org/developer-tooling/blob/master/packages/viem-account-ledger/src/ledger-to-wallet-client.ts#L8)
 
 ## Type Parameters
 

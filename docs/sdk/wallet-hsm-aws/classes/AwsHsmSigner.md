@@ -1,4 +1,4 @@
-[**@celo/wallet-hsm-aws v8.0.0-beta.1**](../README.md)
+[**@celo/wallet-hsm-aws v8.0.0-beta.2**](../README.md)
 
 ***
 
