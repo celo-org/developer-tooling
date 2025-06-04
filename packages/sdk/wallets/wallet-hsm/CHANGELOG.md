@@ -1,5 +1,12 @@
 # @celo/wallet-hsm
 
+## 8.0.0-beta.2
+
+### Patch Changes
+
+- Updated dependencies [[`7d84a5a`](https://github.com/celo-org/developer-tooling/commit/7d84a5a9a23f72572999dc17f24d9b70bf6ca9f6), [`99717e9`](https://github.com/celo-org/developer-tooling/commit/99717e93c640e37e4e67020d973a2a13d5af2ac3), [`5a2fa51`](https://github.com/celo-org/developer-tooling/commit/5a2fa5196976fffd7c89c804c68b7507e9c48f92)]:
+  - @celo/base@7.0.3-beta.0
+
 ## 8.0.0-beta.1
 
 ## 7.0.2-beta.0
