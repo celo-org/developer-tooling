@@ -2,7 +2,8 @@ import { newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
-import { celoAlfajores } from 'viem/chains'
+import { generatePrivateKey, privateKeyToAccount, toAccount } from 'viem/accounts'
+import { celo, celoAlfajores } from 'viem/chains'
 import Web3 from 'web3'
 import {
   registerAccount,
@@ -11,6 +12,7 @@ import {
   voteForGroupFrom,
 } from '../../test-utils/chain-setup'
 import {
+  extractHostFromWeb3,
   stripAnsiCodesAndTxHashes,
   stripAnsiCodesFromNestedArray,
   testLocallyWithWeb3Node,
@@ -19,7 +21,15 @@ import { deployMultiCall } from '../../test-utils/multicall'
 import Switch from '../epochs/switch'
 import ElectionActivate from './activate'
 
-import { generatePrivateKey, privateKeyToAccount } from 'viem/accounts'
+import { StrongAddress } from '@celo/base'
+import Eth from '@celo/hw-app-eth'
+import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
+import * as ViemLedger from '@celo/viem-account-ledger'
+import { createWalletClient, Hex, http } from 'viem'
+import { mockRpcFetch } from '../../test-utils/mockRpc'
+
+jest.mock('@celo/hw-app-eth')
+jest.mock('@celo/viem-account-ledger')
 
 process.env.NO_SYNCCHECK = 'true'
 
@@ -320,6 +330,91 @@ testWithAnvilL2(
       expect(
         (await election.getVotesForGroupByAccount(newAccount.address, secondGroupAddress)).active
       ).toEqual(new BigNumber(0))
+    })
+
+    describe('activate votes with the --useLedger flag', () => {
+      let signTransactionSpy: jest.Mock
+      beforeEach(async () => {
+        signTransactionSpy = jest.fn().mockResolvedValue('0xtxhash')
+        const [userAddress] = await web3.eth.getAccounts()
+
+        jest.spyOn(ViemLedger, 'ledgerToWalletClient').mockImplementation(async () => {
+          const accounts = [
+            {
+              ...toAccount({
+                address: userAddress as StrongAddress,
+                signTransaction: signTransactionSpy,
+                signMessage: jest.fn(),
+                signTypedData: jest.fn(),
+              }),
+              publicKey: (await addressToPublicKey(userAddress, web3.eth.sign)) as Hex,
+              source: 'ledger' as const,
+            },
+          ]
+
+          return {
+            ...createWalletClient({
+              chain: celo,
+              transport: http(extractHostFromWeb3(web3)),
+              account: accounts[0],
+            }),
+            getAddresses: async () => accounts.map((account) => account.address),
+            accounts,
+          }
+        })
+      })
+
+      it.only('send the transactions to ledger for signing', async () => {
+        const kit = newKitFromWeb3(web3)
+        const activateAmount = 1234
+        const [userAddress, groupAddress, validatorAddress] = await web3.eth.getAccounts()
+        await setupGroupAndAffiliateValidator(kit, groupAddress, validatorAddress)
+        await registerAccountWithLockedGold(kit, userAddress)
+
+        await voteForGroupFrom(kit, userAddress, groupAddress, new BigNumber(activateAmount))
+
+        await testLocallyWithWeb3Node(Switch, ['--from', userAddress], web3)
+
+        jest
+          .spyOn(console, 'log')
+          .mockImplementation((xxx) => process.stdout.write(xxx.toString() + '\n'))
+        const writeMock = jest.spyOn(ux.write, 'stdout')
+        const signSpy = jest.spyOn(Eth.prototype, 'signTransaction')
+        const web3Spy = jest.spyOn(ElectionActivate.prototype, 'getWeb3')
+        const walletSpy = jest.spyOn(ElectionActivate.prototype, 'getWalletClient')
+
+        const unmock = mockRpcFetch({
+          method: 'eth_sendRawTransaction',
+          result: {
+            transactionHash: '0x45b49a4d6a6be7267d4e2fae9126f1bb69847349091dd9f0a59838d4d094af1d',
+          },
+        })
+
+        await testLocallyWithWeb3Node(
+          ElectionActivate,
+          ['--from', userAddress, '--useLedger'],
+          web3
+        )
+        expect(ViemLedger.ledgerToWalletClient).toHaveBeenCalledWith({
+          account: userAddress,
+          baseDerivationPath: "m/44'/52752'/0'",
+          changeIndexes: [0],
+          derivationPathIndexes: [0],
+          ledgerAddressValidation: 3,
+          transport: expect.anything(),
+          walletClientOptions: {
+            chain: celo,
+            transport: expect.anything(),
+          },
+        })
+        expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
+
+        expect(web3Spy).not.toHaveBeenCalled()
+        expect(walletSpy).toHaveBeenCalled()
+        expect(signTransactionSpy).toHaveBeenCalledWith()
+        expect(signSpy).toHaveBeenCalledWith({})
+        unmock()
+      }, 15_000)
     })
   },
   { chainId: 42220 }

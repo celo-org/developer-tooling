@@ -30,7 +30,7 @@ export const mockRpcFetch = ({
   result,
   error,
 }: {
-  method: string
+  method: string | string[]
   result?: any
   error?: { code: RpcErrorCode; message?: string }
 }) => {
