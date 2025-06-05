@@ -1,5 +1,11 @@
 # @celo/actions
 
+## 0.0.1-beta.1
+
+### Patch Changes
+
+- [#652](https://github.com/celo-org/developer-tooling/pull/652) [`584c5ec`](https://github.com/celo-org/developer-tooling/commit/584c5ec440d031e6979a521b0d217be527a42580) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Add election contract actions
+
 ## 0.0.1-beta.0
 
 ### Patch Changes
