@@ -429,7 +429,9 @@ jobs:
 
   validate-renovate-config:
     name: Validate Renovate Config
+    needs: [install-dependencies]
     runs-on: ubuntu-latest
+    if: contains(needs.install-dependencies.outputs.all_modified_files, 'dt-renovate-base.json') || contains(needs.install-dependencies.outputs.all_modified_files, 'renovate.json')
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
