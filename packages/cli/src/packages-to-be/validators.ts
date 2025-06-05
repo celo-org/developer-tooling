@@ -170,22 +170,31 @@ export const getValidator = async (
   address: Address,
   blockNumber?: number
 ): Promise<Validator> => {
-  const validatorTuple = await client.readContract({
-    address: await resolveAddress(client, 'Validators'),
-    abi: validatorsABI,
-    functionName: 'getValidator',
-    args: [address as StrongAddress],
-    blockNumber: typeof blockNumber === 'undefined' ? undefined : BigInt(blockNumber),
-  })
-  const name = await client.readContract({
-    address: await resolveAddress(client, 'Accounts'),
-    abi: accountsABI,
-    functionName: 'getName',
-    args: [address as StrongAddress],
-    blockNumber: typeof blockNumber === 'undefined' ? undefined : BigInt(blockNumber),
-  })
-  const scoreManager = await getScoreManagerContract({ public: client })
-  const score = await scoreManager.read.getValidatorScore([address as StrongAddress])
+  const [validatorsAddress, accountsAddress, scoreManager] = await Promise.all([
+    resolveAddress(client, 'Validators'),
+    resolveAddress(client, 'Accounts'),
+    getScoreManagerContract({ public: client }),
+  ])
+
+  const atBlockNumber = typeof blockNumber === 'undefined' ? undefined : BigInt(blockNumber)
+
+  const [validatorTuple, name, score] = await Promise.all([
+    client.readContract({
+      address: validatorsAddress,
+      abi: validatorsABI,
+      functionName: 'getValidator',
+      args: [address as StrongAddress],
+      blockNumber: atBlockNumber,
+    }),
+    client.readContract({
+      address: accountsAddress,
+      abi: accountsABI,
+      functionName: 'getName',
+      args: [address as StrongAddress],
+      blockNumber: atBlockNumber,
+    }),
+    scoreManager.read.getValidatorScore([address as StrongAddress], { blockNumber: atBlockNumber }),
+  ])
 
   return {
     name,
