@@ -22,7 +22,6 @@ import Switch from '../epochs/switch'
 import ElectionActivate from './activate'
 
 import { StrongAddress } from '@celo/base'
-import Eth from '@celo/hw-app-eth'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import * as ViemLedger from '@celo/viem-account-ledger'
 import { createWalletClient, Hex, http } from 'viem'
@@ -364,7 +363,7 @@ testWithAnvilL2(
         })
       })
 
-      it.only('send the transactions to ledger for signing', async () => {
+      it('send the transactions to ledger for signing', async () => {
         const kit = newKitFromWeb3(web3)
         const activateAmount = 1234
         const [userAddress, groupAddress, validatorAddress] = await web3.eth.getAccounts()
@@ -375,16 +374,17 @@ testWithAnvilL2(
 
         await testLocallyWithWeb3Node(Switch, ['--from', userAddress], web3)
 
-        jest
-          .spyOn(console, 'log')
-          .mockImplementation((xxx) => process.stdout.write(xxx.toString() + '\n'))
+        jest.spyOn(console, 'log')
         const writeMock = jest.spyOn(ux.write, 'stdout')
-        const signSpy = jest.spyOn(Eth.prototype, 'signTransaction')
         const web3Spy = jest.spyOn(ElectionActivate.prototype, 'getWeb3')
         const walletSpy = jest.spyOn(ElectionActivate.prototype, 'getWalletClient')
 
         const unmock = mockRpcFetch({
-          method: 'eth_sendRawTransaction',
+          method: [
+            'eth_sendRawTransaction',
+            'eth_getTransactionReceipt',
+            'eth_getTransactionByHash',
+          ],
           result: {
             transactionHash: '0x45b49a4d6a6be7267d4e2fae9126f1bb69847349091dd9f0a59838d4d094af1d',
           },
@@ -411,8 +411,16 @@ testWithAnvilL2(
 
         expect(web3Spy).not.toHaveBeenCalled()
         expect(walletSpy).toHaveBeenCalled()
-        expect(signTransactionSpy).toHaveBeenCalledWith()
-        expect(signSpy).toHaveBeenCalledWith({})
+        expect(signTransactionSpy).toHaveBeenCalledWith(
+          expect.objectContaining({
+            account: expect.objectContaining({
+              address: userAddress,
+            }),
+            data: expect.stringMatching(/0x[0-9A-F].+/i),
+            to: (await kit.contracts.getElection()).address,
+          }),
+          { serializer: expect.anything() }
+        )
         unmock()
       }, 15_000)
     })
