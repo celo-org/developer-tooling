@@ -17,8 +17,11 @@ describe('formatFixidity', () => {
     expect(formatFixidity(small)).toBe('0.0')
   })
 
-  it('handles naught point N', () => {
+  it('handles values between 0 and 1', () => {
     const lessThan1 = 8n * 10n ** 23n
     expect(formatFixidity(lessThan1)).toBe('0.8')
+
+    const lessThanOne = 3n * 10n ** 23n
+    expect(formatFixidity(lessThanOne)).toBe('0.3')
   })
 })
