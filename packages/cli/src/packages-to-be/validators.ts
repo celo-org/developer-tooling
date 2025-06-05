@@ -1,5 +1,6 @@
 import { accountsABI, lockedGoldABI, validatorsABI } from '@celo/abis'
 import { PublicCeloClient, resolveAddress } from '@celo/actions'
+import { getScoreManagerContract } from '@celo/actions/contracts/score-manager'
 import { getValidatorsContract } from '@celo/actions/contracts/validators'
 import { Address, concurrentMap, ensureLeading0x, eqAddress, StrongAddress } from '@celo/base'
 import { fromFixed } from '@celo/utils/lib/fixidity'
@@ -183,6 +184,8 @@ export const getValidator = async (
     args: [address as StrongAddress],
     blockNumber: typeof blockNumber === 'undefined' ? undefined : BigInt(blockNumber),
   })
+  const scoreManager = await getScoreManagerContract({ public: client })
+  const score = await scoreManager.read.getValidatorScore([address as StrongAddress])
 
   return {
     name,
@@ -190,8 +193,8 @@ export const getValidator = async (
     ecdsaPublicKey: validatorTuple[0],
     blsPublicKey: validatorTuple[1],
     affiliation: validatorTuple[2],
-    score: fromFixed(bigintToBigNumber(validatorTuple[3])),
     signer: validatorTuple[4],
+    score: bigintToBigNumber(score),
   }
 }
 
