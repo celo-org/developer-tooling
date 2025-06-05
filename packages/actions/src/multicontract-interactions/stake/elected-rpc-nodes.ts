@@ -1,8 +1,9 @@
 import { eqAddress, NULL_ADDRESS } from '@celo/base'
-import { Address } from 'viem'
+import type { Address } from 'viem'
 import { PublicCeloClient } from '../../client'
 import { AccountsContract, getAccountsContract } from '../../contracts/accounts'
 import { getEpochManagerContract } from '../../contracts/epoch-manager'
+import { getScoreManagerContract } from '../../contracts/score-manager'
 import { getValidatorsContract, ValidatorsContract } from '../../contracts/validators'
 
 interface UnnamedRpcNode {
@@ -35,10 +36,11 @@ export async function getElectedRpcNodes(
   client: PublicCeloClient,
   options: { showChanges?: boolean } = {}
 ) {
-  const [validators, epochManager, accountsContract] = await Promise.all([
+  const [validators, epochManager, accountsContract, scoreManager] = await Promise.all([
     getValidatorsContract({ public: client }),
     getEpochManagerContract({ public: client }),
     getAccountsContract({ public: client }),
+    getScoreManagerContract({ public: client }),
   ])
 
   const electedSigners = await epochManager.read.getElectedSigners()
@@ -47,11 +49,23 @@ export async function getElectedRpcNodes(
     electedSigners.map((signer) => accountsContract.read.signerToAccount([signer]))
   )
 
-  const electedValidators = await Promise.all(
+  const electedValidatorsWithOutScores = await Promise.all(
     electedAccounts.map((account, index) =>
       accountToValidator({ account, signer: electedSigners[index], validators })
     )
   )
+  const scores = await Promise.all(
+    electedValidatorsWithOutScores.map((validator) =>
+      scoreManager.read.getValidatorScore([validator.address])
+    )
+  )
+
+  const electedValidators = electedValidatorsWithOutScores.map((validator, index) => {
+    return {
+      ...validator,
+      score: scores[index],
+    }
+  })
 
   const electedValidatorsWithNames = await Promise.all(
     electedValidators.map(async (validator) => decorateWithName(validator, accountsContract))
@@ -114,14 +128,13 @@ async function accountToValidator({
       signer: signer,
     }
   } else {
-    const [ecdsaPublicKey, _bls, affiliation, score, signer] = await validators.read.getValidator([
+    const [ecdsaPublicKey, _bls, affiliation, _, signer] = await validators.read.getValidator([
       account,
     ])
     return {
       address: account,
       ecdsaPublicKey: ecdsaPublicKey,
       affiliation: affiliation,
-      score: score,
       signer: signer,
     }
   }

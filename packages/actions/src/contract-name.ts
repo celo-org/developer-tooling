@@ -3,13 +3,14 @@
 
 export type ContractName =
   | 'Accounts'
-  | 'Governance'
-  | 'LockedGold'
-  | 'Validators'
   | 'EpochManager'
   | 'Election'
+  | 'FeeCurrencyDirectory'
+  | 'Governance'
   | 'GoldToken'
+  | 'LockedGold'
+  | 'ScoreManager'
   | 'StableToken'
   | 'StableTokenEUR'
   | 'StableTokenBRL'
-  | 'FeeCurrencyDirectory'
+  | 'Validators'
