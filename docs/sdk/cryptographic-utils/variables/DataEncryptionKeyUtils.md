@@ -1,4 +1,4 @@
-[**@celo/cryptographic-utils v5.1.3**](../README.md)
+[**@celo/cryptographic-utils v6.0.0-beta.0**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > `const` **DataEncryptionKeyUtils**: `object`
 
-Defined in: [cryptographic-utils/src/dataEncryptionKey.ts:47](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/dataEncryptionKey.ts#L47)
+Defined in: [cryptographic-utils/src/dataEncryptionKey.ts:48](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/cryptographic-utils/src/dataEncryptionKey.ts#L48)
 
 ## Type declaration
 

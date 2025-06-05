@@ -1,5 +1,17 @@
 # @celo/cryptographic-utils
 
+## 6.0.0-beta.0
+
+### Major Changes
+
+- [#650](https://github.com/celo-org/developer-tooling/pull/650) [`8b30dc5`](https://github.com/celo-org/developer-tooling/commit/8b30dc57bdcae34146a1f9a139b89dc21c13d3c5) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Default to using eth derivation path "m/44'/60'/0'" in generateKeysFromSeed, generateKeys, generateDeterministicInviteCode. Pass your own in if needed.
+
+### Patch Changes
+
+- Updated dependencies [[`7d84a5a`](https://github.com/celo-org/developer-tooling/commit/7d84a5a9a23f72572999dc17f24d9b70bf6ca9f6), [`99717e9`](https://github.com/celo-org/developer-tooling/commit/99717e93c640e37e4e67020d973a2a13d5af2ac3), [`5a2fa51`](https://github.com/celo-org/developer-tooling/commit/5a2fa5196976fffd7c89c804c68b7507e9c48f92)]:
+  - @celo/base@7.0.3-beta.0
+  - @celo/utils@8.0.3-beta.0
+
 ## 5.1.3
 
 ### Patch Changes
