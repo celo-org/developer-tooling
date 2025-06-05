@@ -1,9 +1,13 @@
 import { sleep } from '@celo/utils/lib/async'
 import { Flags, ux } from '@oclif/core'
 
+import { signerToAccount } from '@celo/actions/contracts/accounts'
+import { activatePendingVotes, getGroupsWithPendingVotes } from '@celo/actions/contracts/election'
+import { getEpochManagerContract } from '@celo/actions/contracts/epoch-manager'
+import humanizeDuration from 'humanize-duration'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class ElectionActivate extends BaseCommand {
@@ -29,32 +33,67 @@ export default class ElectionActivate extends BaseCommand {
     'activate --from 0x4443d0349e8b3075cba511a0a87796597602a0f1 --wait',
   ]
 
+  async init() {
+    // noop
+  }
+
   async run() {
-    const kit = await this.getKit()
+    const client = await this.getPublicClient()
+    const wallet = await this.getWalletClient()
+    const clients = { public: client, wallet }
     const res = await this.parse(ElectionActivate)
 
     const forAccount = res.flags.for ?? res.flags.from
     await newCheckBuilder(this, forAccount).isSignerOrAccount().runChecks()
 
-    const accounts = await kit.contracts.getAccounts()
-    const signerAccount = await accounts.voteSignerToAccount(forAccount)
+    const signerAccount = await signerToAccount(client, forAccount)
+    const groupsWithPendingVotes = await getGroupsWithPendingVotes(clients, signerAccount)
 
-    const election = await kit.contracts.getElection()
-    const hasPendingVotes = await election.hasPendingVotes(signerAccount)
-    if (hasPendingVotes) {
+    if (groupsWithPendingVotes.length > 0) {
       if (res.flags.wait) {
+        const epochManager = await getEpochManagerContract(clients)
+        const [currentEpochNumber, [_startBlock, _endBlock, startTimestamp], epochDuration] =
+          await Promise.all([
+            epochManager.read.getCurrentEpochNumber(),
+            epochManager.read.getCurrentEpoch(),
+            epochManager.read.epochDuration(),
+          ])
+        ux.action.stop()
+
+        const message =
+          'Waiting until pending votes can be activated.' + '\n' + 'Time until next epoch:'
+
+        const endTimestamp = startTimestamp + epochDuration
+        // NOTE: `remainingMs`can be negative as the epoch could end any time
+        // after it is allowed to end. typically a few seconds later.
+        let remainingMs = Math.max(Number(endTimestamp * 1000n) - Date.now(), 0)
         // Spin until pending votes become activatable.
-        ux.action.start(`Waiting until pending votes can be activated`)
-        while (!(await election.hasActivatablePendingVotes(signerAccount))) {
-          await sleep(1000)
+        ux.action.start(`${message}…`)
+
+        const interval = setInterval(() => {
+          remainingMs = Math.max(Number(endTimestamp * 1000n) - Date.now(), 0)
+          ux.action.status = `~${humanizeDuration(remainingMs)}`
+        }, 5_000)
+
+        await sleep(remainingMs)
+        // It takes an epoch for pending votes to be activatable
+        while (currentEpochNumber === (await epochManager.read.getCurrentEpochNumber())) {
+          await sleep(1_000)
         }
+        clearInterval(interval)
         ux.action.stop()
       }
-      const txos = await election.activate(signerAccount, res.flags.for != null)
-      for (const txo of txos) {
-        await displaySendTx('activate', txo, { from: res.flags.from })
+
+      const txHashes = await activatePendingVotes(
+        { public: client, wallet },
+        await getGroupsWithPendingVotes(clients, signerAccount),
+        signerAccount
+      )
+
+      for (const txHash of txHashes) {
+        await displayViemTx('activate', Promise.resolve(txHash), client)
       }
-      if (txos.length === 0) {
+      if (!res.flags.wait && txHashes.length === 0) {
         this.log(`Pending votes not yet activatable. Consider using the --wait flag.`)
       }
     } else {

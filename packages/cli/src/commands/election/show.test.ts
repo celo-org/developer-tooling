@@ -2,12 +2,14 @@ import { newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import BigNumber from 'bignumber.js'
+import { celoAlfajores } from 'viem/chains'
 import Web3 from 'web3'
 import {
   EXTRA_LONG_TIMEOUT_MS,
   stripAnsiCodesAndTxHashes,
   testLocallyWithWeb3Node,
 } from '../../test-utils/cliUtils'
+import { deployMultiCall } from '../../test-utils/multicall'
 import Register from '../account/register'
 import Switch from '../epochs/switch'
 import Lock from '../lockedcelo/lock'
@@ -17,90 +19,110 @@ import ElectionVote from './vote'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('election:show', (web3: Web3) => {
-  beforeEach(async () => {
-    const logMock = jest.spyOn(console, 'log')
-    const kit = newKitFromWeb3(web3)
-    const [voterAddress] = await web3.eth.getAccounts()
-    const validatorsWrapper = await kit.contracts.getValidators()
-    const epochManagerWrapper = await kit.contracts.getEpochManager()
-    const epochDuration = new BigNumber(await epochManagerWrapper.epochDuration())
-    const [group1, group2] = await validatorsWrapper.getRegisteredValidatorGroups()
+testWithAnvilL2(
+  'election:show',
+  (web3: Web3) => {
+    beforeEach(async () => {
+      // need to set multical deployment on the address it is found on alfajores
+      // since this test impersonates alfajores chain id
+      await deployMultiCall(web3, celoAlfajores.contracts.multicall3.address)
 
-    await testLocallyWithWeb3Node(Register, ['--from', voterAddress], web3)
-    await testLocallyWithWeb3Node(
-      Lock,
-      ['--value', web3.utils.toWei('10', 'ether'), '--from', voterAddress],
-      web3
-    )
-    await testLocallyWithWeb3Node(
-      ElectionVote,
-      ['--from', voterAddress, '--for', group1.address, '--value', web3.utils.toWei('1', 'ether')],
-      web3
-    )
-    await timeTravel(epochDuration.plus(1).toNumber(), web3)
-    await testLocallyWithWeb3Node(Switch, ['--from', voterAddress], web3)
-    await testLocallyWithWeb3Node(ElectionActivate, ['--from', voterAddress], web3)
-    await testLocallyWithWeb3Node(
-      ElectionVote,
-      ['--from', voterAddress, '--for', group2.address, '--value', web3.utils.toWei('9', 'ether')],
-      web3
-    )
+      const logMock = jest.spyOn(console, 'log')
+      const kit = newKitFromWeb3(web3)
+      const [voterAddress] = await web3.eth.getAccounts()
+      const validatorsWrapper = await kit.contracts.getValidators()
+      const epochManagerWrapper = await kit.contracts.getEpochManager()
+      const epochDuration = new BigNumber(await epochManagerWrapper.epochDuration())
+      const [group1, group2] = await validatorsWrapper.getRegisteredValidatorGroups()
 
-    logMock.mockClear()
-  }, EXTRA_LONG_TIMEOUT_MS)
+      await testLocallyWithWeb3Node(Register, ['--from', voterAddress], web3)
+      await testLocallyWithWeb3Node(
+        Lock,
+        ['--value', web3.utils.toWei('10', 'ether'), '--from', voterAddress],
+        web3
+      )
+      await testLocallyWithWeb3Node(
+        ElectionVote,
+        [
+          '--from',
+          voterAddress,
+          '--for',
+          group1.address,
+          '--value',
+          web3.utils.toWei('1', 'ether'),
+        ],
+        web3
+      )
+      await timeTravel(epochDuration.plus(1).toNumber(), web3)
+      await testLocallyWithWeb3Node(Switch, ['--from', voterAddress], web3)
+      await testLocallyWithWeb3Node(ElectionActivate, ['--from', voterAddress], web3)
+      await testLocallyWithWeb3Node(
+        ElectionVote,
+        [
+          '--from',
+          voterAddress,
+          '--for',
+          group2.address,
+          '--value',
+          web3.utils.toWei('9', 'ether'),
+        ],
+        web3
+      )
 
-  afterEach(async () => {
-    jest.clearAllMocks()
-  })
+      logMock.mockClear()
+    }, EXTRA_LONG_TIMEOUT_MS)
 
-  it('fails when no args are provided', async () => {
-    await expect(testLocallyWithWeb3Node(Show, [], web3)).rejects.toThrow(
-      "Voter or Validator Groups's address"
-    )
-  })
+    afterEach(async () => {
+      jest.clearAllMocks()
+    })
 
-  it('fails when no flags are provided', async () => {
-    const [groupAddress] = await web3.eth.getAccounts()
-    await expect(testLocallyWithWeb3Node(Show, [groupAddress], web3)).rejects.toThrow(
-      'Must select --voter or --group'
-    )
-  })
+    it('fails when no args are provided', async () => {
+      await expect(testLocallyWithWeb3Node(Show, [], web3)).rejects.toThrow(
+        "Voter or Validator Groups's address"
+      )
+    })
 
-  it('fails when provided address is not a group', async () => {
-    const logMock = jest.spyOn(console, 'log')
-    const [groupAddress] = await web3.eth.getAccounts()
+    it('fails when no flags are provided', async () => {
+      const [groupAddress] = await web3.eth.getAccounts()
+      await expect(testLocallyWithWeb3Node(Show, [groupAddress], web3)).rejects.toThrow(
+        'Must select --voter or --group'
+      )
+    })
 
-    await expect(testLocallyWithWeb3Node(Show, [groupAddress, '--group'], web3)).rejects.toThrow(
-      "Some checks didn't pass!"
-    )
-    expect(stripAnsiCodesAndTxHashes(logMock.mock.calls[1][0])).toContain(
-      `✘  ${groupAddress} is ValidatorGroup`
-    )
-  })
+    it('fails when provided address is not a group', async () => {
+      const logMock = jest.spyOn(console, 'log')
+      const [groupAddress] = await web3.eth.getAccounts()
 
-  it('fails when provided address is not a voter', async () => {
-    const logMock = jest.spyOn(console, 'log')
-    const [_, nonVoterAddress] = await web3.eth.getAccounts()
+      await expect(testLocallyWithWeb3Node(Show, [groupAddress, '--group'], web3)).rejects.toThrow(
+        "Some checks didn't pass!"
+      )
+      expect(stripAnsiCodesAndTxHashes(logMock.mock.calls[1][0])).toContain(
+        `✘  ${groupAddress} is ValidatorGroup`
+      )
+    })
 
-    await expect(testLocallyWithWeb3Node(Show, [nonVoterAddress, '--voter'], web3)).rejects.toThrow(
-      "Some checks didn't pass!"
-    )
-    expect(stripAnsiCodesAndTxHashes(logMock.mock.calls[1][0])).toContain(
-      `${nonVoterAddress} is not registered as an account. Try running account:register`
-    )
-  })
+    it('fails when provided address is not a voter', async () => {
+      const logMock = jest.spyOn(console, 'log')
+      const [_, nonVoterAddress] = await web3.eth.getAccounts()
 
-  it('shows data for a group', async () => {
-    const kit = newKitFromWeb3(web3)
-    const logMock = jest.spyOn(console, 'log')
-    const validatorsWrapper = await kit.contracts.getValidators()
-    const [group] = await validatorsWrapper.getRegisteredValidatorGroups()
+      await expect(
+        testLocallyWithWeb3Node(Show, [nonVoterAddress, '--voter'], web3)
+      ).rejects.toThrow("Some checks didn't pass!")
+      expect(stripAnsiCodesAndTxHashes(logMock.mock.calls[1][0])).toContain(
+        `${nonVoterAddress} is not registered as an account. Try running account:register`
+      )
+    })
 
-    await testLocallyWithWeb3Node(Show, [group.address, '--group'], web3)
+    it('shows data for a group', async () => {
+      const kit = newKitFromWeb3(web3)
+      const logMock = jest.spyOn(console, 'log')
+      const validatorsWrapper = await kit.contracts.getValidators()
+      const [group] = await validatorsWrapper.getRegisteredValidatorGroups()
 
-    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-      .toMatchInlineSnapshot(`
+      await testLocallyWithWeb3Node(Show, [group.address, '--group'], web3)
+
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+        .toMatchInlineSnapshot(`
       [
         [
           "Running Checks:",
@@ -120,16 +142,16 @@ testWithAnvilL2('election:show', (web3: Web3) => {
         ],
       ]
     `)
-  })
+    })
 
-  it('shows data for an account', async () => {
-    const logMock = jest.spyOn(console, 'log')
-    const [voterAddress] = await web3.eth.getAccounts()
+    it('shows data for an account', async () => {
+      const logMock = jest.spyOn(console, 'log')
+      const [voterAddress] = await web3.eth.getAccounts()
 
-    await testLocallyWithWeb3Node(Show, [voterAddress, '--voter'], web3)
+      await testLocallyWithWeb3Node(Show, [voterAddress, '--voter'], web3)
 
-    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-      .toMatchInlineSnapshot(`
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+        .toMatchInlineSnapshot(`
       [
         [
           "Running Checks:",
@@ -154,5 +176,7 @@ testWithAnvilL2('election:show', (web3: Web3) => {
         ],
       ]
     `)
-  })
-})
+    })
+  },
+  { chainId: 42220 }
+)

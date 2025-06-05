@@ -30,14 +30,14 @@ export const mockRpcFetch = ({
   result,
   error,
 }: {
-  method: string
+  method: string | string[]
   result?: any
   error?: { code: RpcErrorCode; message?: string }
 }) => {
   const fetchMock = jest.fn(async (...args) => {
     if (args[1]?.body) {
       const body = JSON.parse(args[1].body.toString())
-      if (body.method === method) {
+      if (typeof method === 'string' ? body.method === method : method.includes(body.method)) {
         return {
           ok: !error,
           headers: new Map([['Content-Type', 'application/json']]),
