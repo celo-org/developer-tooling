@@ -1588,7 +1588,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/actions@npm:0.0.1-beta.0, @celo/actions@workspace:packages/actions":
+"@celo/actions@npm:0.0.1-beta.1, @celo/actions@workspace:packages/actions":
   version: 0.0.0-use.local
   resolution: "@celo/actions@workspace:packages/actions"
   dependencies:
@@ -1655,7 +1655,7 @@ __metadata:
   resolution: "@celo/celocli@workspace:packages/cli"
   dependencies:
     "@celo/abis": "npm:12.0.3"
-    "@celo/actions": "npm:0.0.1-beta.0"
+    "@celo/actions": "npm:0.0.1-beta.1"
     "@celo/base": "npm:^7.0.3-beta.0"
     "@celo/compliance": "npm:1.0.28"
     "@celo/connect": "npm:^7.0.0-beta.1"
