@@ -14,7 +14,7 @@ export function bigNumberToBigInt(value: BigNumber) {
   takes a big int that represents a 24 decimal fixed point number and formats it to a string with 2 decimal places.
 */
 export function formatFixidity(value: bigint): string {
-  return (Number(formatEther(value)) / 1_000_000.0).toPrecision(2)
+  return (Number(formatEther(value)) / 1_000_000.0).toFixed(1)
 }
 
 export async function ethNodeIsSyncing(client: CeloClient) {
