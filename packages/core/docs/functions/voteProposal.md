@@ -1,4 +1,4 @@
-[**@celo/core v0.0.0**](../README.md)
+[**@celo/core v0.0.1-beta.0**](../README.md)
 
 ***
 
@@ -44,7 +44,8 @@ const contract = getContract({client, address: governanceAddress, abi: governanc
 const adapter: VoteProposalAdapter =
 {
  vote: async (proposalID, proposalIndex, voteValue) => {
-   const { request } = await contract.simulate.vote([proposalID, proposalIndex, voteValue])
+   const { request } = await contract.simulate.vote([proposalID, proposalIndex, voteValue], {
+     account: client.wallet.account.address})
    const gasLimit = await contract.estimateGas.vote(request.args)
    return contract.write.vote(request.args, { gas: gasLimit })
 },

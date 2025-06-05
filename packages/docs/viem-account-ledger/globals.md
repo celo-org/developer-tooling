@@ -1,8 +1,8 @@
-[**@celo/viem-account-ledger v1.2.0-beta.1**](README.md)
+[**@celo/viem-account-ledger v1.2.0-beta.2**](README.md)
 
 ***
 
-# @celo/viem-account-ledger v1.2.0-beta.1
+# @celo/viem-account-ledger v1.2.0-beta.2
 
 ## Enumerations
 
@@ -20,5 +20,6 @@
 
 ## Functions
 
+- [deriveLedgerAccounts](functions/deriveLedgerAccounts.md)
 - [ledgerToAccount](functions/ledgerToAccount.md)
 - [ledgerToWalletClient](functions/ledgerToWalletClient.md)
