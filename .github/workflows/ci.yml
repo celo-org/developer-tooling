@@ -8,7 +8,6 @@ on:
   push:
     branches:
       - master
-      - changeset-release/master
       - prerelease/*
       - hotfixes
   pull_request:
@@ -24,7 +23,7 @@ defaults:
 
 env:
   # Increment these to force cache rebuilding
-  NODE_MODULE_CACHE_VERSION: 5
+  NODE_MODULE_CACHE_VERSION: 6
   NODE_OPTIONS: '--max-old-space-size=4096'
   TERM: dumb
   # Supported Foundry version defined at celo-org (GitHub organisation) level, for consistency across workflows.
@@ -430,14 +429,16 @@ jobs:
 
   validate-renovate-config:
     name: Validate Renovate Config
+    needs: [install-dependencies]
     runs-on: ubuntu-latest
+    if: contains(needs.install-dependencies.outputs.all_modified_files, 'dt-renovate-base.json') || contains(needs.install-dependencies.outputs.all_modified_files, 'renovate.json')
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
       - name: "Setup Node"
         uses: actions/setup-node@v4
         with:
-          node-version: 20.x  
+          node-version: 20  
       - name: Validate Team Config    
         uses: suzuki-shunsuke/github-action-renovate-config-validator@v1.0.1
         with:
