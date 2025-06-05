@@ -1,11 +1,12 @@
 import { newKitFromWeb3 } from '@celo/contractkit'
-import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
+import { setBalance, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { generatePrivateKey, privateKeyToAccount, toAccount } from 'viem/accounts'
 import { celo, celoAlfajores } from 'viem/chains'
 import Web3 from 'web3'
 import {
+  MIN_LOCKED_CELO_VALUE,
   registerAccount,
   registerAccountWithLockedGold,
   setupGroupAndAffiliateValidator,
@@ -243,6 +244,7 @@ testWithAnvilL2(
       const activateAmountGroupTwo = 12345
       const logMock = jest.spyOn(console, 'log')
 
+      await setBalance(web3, newAccount.address, MIN_LOCKED_CELO_VALUE)
       await setupGroupAndAffiliateValidator(kit, groupAddress, validatorAddress)
       await setupGroupAndAffiliateValidator(kit, secondGroupAddress, secondValidatorAddress)
       await registerAccountWithLockedGold(kit, userAddress)

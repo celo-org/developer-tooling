@@ -1,5 +1,5 @@
 import { electionABI } from '@celo/abis'
-import { Address, getContract, GetContractReturnType, isAddressEqual } from 'viem'
+import { Address, getContract, GetContractReturnType, Hex, isAddressEqual } from 'viem'
 import { Clients } from '../client'
 import { resolveAddress } from './registry'
 
@@ -85,23 +85,33 @@ export async function activatePendingVotes(
   const activatableGroups = await getActivatableGroups(clients, groups, account)
   const onBehalfOfAccount = !isAddressEqual(clients.wallet.account.address, account)
 
-  const simulateResults = await Promise.all(
-    activatableGroups.map((group) =>
-      onBehalfOfAccount
-        ? contract.simulate.activateForAccount([group, account], {
-            account: clients.wallet.account.address,
-          })
-        : contract.simulate.activate([group], {
-            account: clients.wallet.account.address,
-          })
-    )
-  )
-  const txHashes = await Promise.all(
-    simulateResults.map(({ request }) =>
-      // @ts-expect-error - typing is correct but differs between
-      // `activateForAccount` and `activate`
-      clients.wallet.writeContract({ ...request, account: clients.wallet.account })
-    )
-  )
+  // NOTE: this code is repetitive to make sure `writeContract` has the correct
+  // typed args
+  const txHashes: Hex[] = []
+
+  for (const group of activatableGroups) {
+    if (onBehalfOfAccount) {
+      const { request } = await contract.simulate.activateForAccount([group, account], {
+        account: clients.wallet.account.address,
+      })
+      txHashes.push(
+        await clients.wallet.writeContract({
+          ...request,
+          account: clients.wallet.account,
+        })
+      )
+    } else {
+      const { request } = await contract.simulate.activate([group], {
+        account: clients.wallet.account.address,
+      })
+      txHashes.push(
+        await clients.wallet.writeContract({
+          ...request,
+          account: clients.wallet.account,
+        })
+      )
+    }
+  }
+
   return txHashes
 }
