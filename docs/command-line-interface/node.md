@@ -106,4 +106,4 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/node/synced.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.6/packages/cli/src/commands/node/synced.ts)_
+_See code: [src/commands/node/synced.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.7/packages/cli/src/commands/node/synced.ts)_
