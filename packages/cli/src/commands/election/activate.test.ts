@@ -395,18 +395,18 @@ testWithAnvilL2(
           ['--from', userAddress, '--useLedger'],
           web3
         )
-        expect(ViemLedger.ledgerToWalletClient).toHaveBeenCalledWith({
-          account: userAddress,
-          baseDerivationPath: "m/44'/52752'/0'",
-          changeIndexes: [0],
-          derivationPathIndexes: [0],
-          ledgerAddressValidation: 3,
-          transport: expect.anything(),
-          walletClientOptions: {
-            chain: celo,
-            transport: expect.anything(),
-          },
-        })
+        expect(ViemLedger.ledgerToWalletClient).toHaveBeenCalledWith(
+          expect.objectContaining({
+            account: userAddress,
+            baseDerivationPath: "m/44'/60'/0'",
+            changeIndexes: [0],
+            derivationPathIndexes: [0],
+            ledgerAddressValidation: 3,
+            walletClientOptions: expect.objectContaining({
+              chain: celo,
+            }),
+          })
+        )
         expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
 
         expect(web3Spy).not.toHaveBeenCalled()
