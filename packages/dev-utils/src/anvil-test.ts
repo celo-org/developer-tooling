@@ -77,6 +77,9 @@ function testWithAnvil(
       process.env.RUN_ANVIL_TESTS === 'true' || typeof process.env.RUN_ANVIL_TESTS === 'undefined',
     hooks: {
       beforeAll: async () => {
+        anvil.on('closed', () => {
+          process.stdout.write('\n Anvil instance closed\n')
+        })
         await anvil.start()
       },
       afterAll: async () => {
