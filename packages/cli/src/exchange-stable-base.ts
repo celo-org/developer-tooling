@@ -30,7 +30,7 @@ export default class ExchangeStableBase extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
-    const res = await this.parse()
+    const res = await this.parse(ExchangeStableBase)
     const sellAmount = res.flags.value as BigNumber
     const forAtLeast = res.flags.forAtLeast as BigNumber
 

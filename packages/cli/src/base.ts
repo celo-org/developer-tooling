@@ -15,6 +15,7 @@ import { LocalWallet } from '@celo/wallet-local'
 import _TransportNodeHid from '@ledgerhq/hw-transport-node-hid'
 import { Command, Flags, ux } from '@oclif/core'
 import { CLIError } from '@oclif/core/lib/errors'
+import { ArgOutput, FlagOutput, Input, ParserOutput } from '@oclif/core/lib/interfaces/parser'
 import chalk from 'chalk'
 import net from 'net'
 import {
@@ -107,10 +108,12 @@ export abstract class BaseCommand extends Command {
     }),
     useAKV: Flags.boolean({
       hidden: true,
+      exclusive: ['privateKey', 'useLedger'],
       deprecated: true,
       description: 'Set it to use an Azure KeyVault HSM',
     }),
     azureVaultName: Flags.string({
+      dependsOn: ['useAKV'],
       hidden: true,
       description: 'If --useAKV is set, this is used to connect to the Azure KeyVault',
     }),
@@ -144,7 +147,7 @@ export abstract class BaseCommand extends Command {
 
   private publicClient: PublicCeloClient | null = null
   private walletClient: WalletCeloClient | null = null
-
+  private _parseResult: null | ParserOutput<FlagOutput, FlagOutput> = null
   private ledgerTransport: Awaited<ReturnType<(typeof _TransportNodeHid)['open']>> | null = null
 
   async getWeb3() {
@@ -333,7 +336,7 @@ export abstract class BaseCommand extends Command {
   }
 
   protected async ledgerOptions() {
-    const res = await this.parse()
+    const res = await this.parse(BaseCommand)
     const isLedgerLiveMode = res.flags.ledgerLiveMode
     const indicesToIterateOver: number[] = res.raw.some(
       (value: any) => value.flag === 'ledgerCustomAddresses'
@@ -361,12 +364,22 @@ export abstract class BaseCommand extends Command {
     return ledgerOptions
   }
 
+  async parse<F extends FlagOutput, B extends FlagOutput, A extends ArgOutput>(
+    options?: Input<F, B, A>
+  ): Promise<ParserOutput<F, B, A>> {
+    if (!this._parseResult) {
+      this._parseResult = await super.parse(options)
+    }
+    return this._parseResult
+  }
+
   async init() {
     if (this.requireSynced) {
       await requireNodeIsSynced(await this.getPublicClient())
     }
     const kit = await this.getKit()
-    const res = await this.parse()
+    const res = await this.parse(BaseCommand)
+
     if (res.flags.globalHelp) {
       console.log(chalk.red.bold('GLOBAL OPTIONS'))
       Object.entries(BaseCommand.flags).forEach(([name, flag]) => {
@@ -417,7 +430,7 @@ export abstract class BaseCommand extends Command {
       }
     } else if (res.flags.useAKV) {
       try {
-        const akvWallet = new AzureHSMWallet(res.flags.azureVaultName)
+        const akvWallet = new AzureHSMWallet(res.flags.azureVaultName as string)
         await akvWallet.init()
         console.log(`Found addresses: ${akvWallet.getAccounts()}`)
         this._wallet = akvWallet

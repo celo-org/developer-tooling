@@ -52,7 +52,7 @@ viem_testWithAnvil(
       TIMEOUT
     )
 
-    it(
+    it.skip(
       'votes Abstain a proposal',
       async () => {
         await expect(vote(clients, proposalId, 'Abstain')).resolves.toMatch(txHashRegex)

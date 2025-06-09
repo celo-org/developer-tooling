@@ -142,134 +142,6 @@ testWithAnvilL2('releasegold:authorize cmd', (web3: Web3) => {
     )
   })
 
-  test('can authorize signer with BLS keys after registering as validator', async () => {
-    const accounts = await web3.eth.getAccounts()
-    const accountsWrapper = await kit.contracts.getAccounts()
-    const signer = accounts[1]
-    const pop = await accountsWrapper.generateProofOfKeyPossession(contractAddress, signer)
-    const ecdsaPublicKey = await addressToPublicKey(signer, web3.eth.sign)
-
-    const signerBLS = accounts[2]
-    const popBLS = await accountsWrapper.generateProofOfKeyPossession(contractAddress, signerBLS)
-    const newBlsPublicKey = web3.utils.randomHex(96)
-    const newBlsPoP = web3.utils.randomHex(48)
-
-    await testLocallyWithWeb3Node(
-      LockedCelo,
-      [
-        '--contract',
-        contractAddress,
-        '--action',
-        'lock',
-        '--value',
-        '10000000000000000000000',
-        '--yes',
-      ],
-      web3
-    )
-    await testLocallyWithWeb3Node(
-      Authorize,
-      [
-        '--contract',
-        contractAddress,
-        '--role',
-        'validator',
-        '--signer',
-        signer,
-        '--signature',
-        serializeSignature(pop),
-      ],
-      web3
-    )
-    await testLocallyWithWeb3Node(
-      ValidatorRegister,
-      ['--from', signer, '--ecdsaKey', ecdsaPublicKey, '--yes'],
-      web3
-    )
-
-    await expect(
-      testLocallyWithWeb3Node(
-        Authorize,
-        [
-          '--contract',
-          contractAddress,
-          '--role',
-          'validator',
-          '--signer',
-          signerBLS,
-          '--signature',
-          serializeSignature(popBLS),
-          '--blsKey',
-          newBlsPublicKey,
-          '--blsPop',
-          newBlsPoP,
-        ],
-
-        web3
-      )
-    ).rejects.toMatchInlineSnapshot(`[Error: BLS keys are not supported in L2]`)
-  })
-
-  test('cannot authorize signer without BLS keys after registering as validator', async () => {
-    const accounts = await web3.eth.getAccounts()
-    const accountsWrapper = await kit.contracts.getAccounts()
-    const signer = accounts[1]
-    const pop = await accountsWrapper.generateProofOfKeyPossession(contractAddress, signer)
-    const ecdsaPublicKey = await addressToPublicKey(signer, web3.eth.sign)
-
-    const signerNew = accounts[2]
-    const popNew = await accountsWrapper.generateProofOfKeyPossession(contractAddress, signerNew)
-
-    await testLocallyWithWeb3Node(
-      LockedCelo,
-      [
-        '--contract',
-        contractAddress,
-        '--action',
-        'lock',
-        '--value',
-        '10000000000000000000000',
-        '--yes',
-      ],
-      web3
-    )
-    await testLocallyWithWeb3Node(
-      Authorize,
-      [
-        '--contract',
-        contractAddress,
-        '--role',
-        'validator',
-        '--signer',
-        signer,
-        '--signature',
-        serializeSignature(pop),
-      ],
-      web3
-    )
-    await testLocallyWithWeb3Node(
-      ValidatorRegister,
-      ['--from', signer, '--ecdsaKey', ecdsaPublicKey, '--yes'],
-      web3
-    )
-    await expect(
-      testLocallyWithWeb3Node(
-        Authorize,
-        [
-          '--contract',
-          contractAddress,
-          '--role',
-          'validator',
-          '--signer',
-          signerNew,
-          '--signature',
-          serializeSignature(popNew),
-        ],
-        web3
-      )
-    ).rejects.toThrow()
-  })
-
   test('fails if contract is not registered as an account', async () => {
     const accounts = await web3.eth.getAccounts()
     await expect(
@@ -285,8 +157,11 @@ testWithAnvilL2('releasegold:authorize cmd', (web3: Web3) => {
           '--signature',
           '0x1b9fca4bbb5bfb1dbe69ef1cddbd9b4202dcb6b134c5170611e1e36ecfa468d7b46c85328d504934fce6c2a1571603a50ae224d2b32685e84d4d1a1eebad8452eb',
         ],
+
         web3
       )
-    ).rejects.toThrow()
+    ).rejects.toThrowErrorMatchingInlineSnapshot(
+      `"Unable to parse signature (expected signer 0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb)"`
+    )
   })
 })

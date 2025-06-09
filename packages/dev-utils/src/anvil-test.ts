@@ -80,6 +80,12 @@ function testWithAnvil(
         await anvil.start()
       },
       afterAll: async () => {
+        anvil.on('closed', () => {
+          process.stdout.write('\n Anvil instance closed\n')
+        })
+        anvil.on('exit', () => {
+          process.stdout.write('\n Anvil instance exiting\n')
+        })
         await anvil.stop()
       },
     },
