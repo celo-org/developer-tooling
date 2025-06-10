@@ -1,6 +1,8 @@
 import { StrongAddress } from '@celo/base'
 import { Anvil, CreateAnvilOptions, createAnvil } from '@viem/anvil'
 import BigNumber from 'bignumber.js'
+import { execSync } from 'node:child_process'
+import { resolve } from 'node:path'
 import Web3 from 'web3'
 import {
   TEST_BALANCE,
@@ -33,9 +35,10 @@ export enum LinkedLibraryAddress {
 }
 
 function createInstance(stateFilePath: string, chainId?: number): Anvil {
-  const port = ANVIL_PORT + (process.pid - process.ppid)
+  const script = resolve(__dirname, '..', '..', 'scripts', 'get_open_port.mjs')
+  const result = execSync(`node ${script}`).toString()
   const options: CreateAnvilOptions = {
-    port,
+    port: parseInt(result, 10),
     loadState: stateFilePath,
     mnemonic: TEST_MNEMONIC,
     balance: TEST_BALANCE,

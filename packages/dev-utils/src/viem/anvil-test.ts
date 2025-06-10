@@ -1,5 +1,7 @@
 import { StrongAddress } from '@celo/base'
 import { Anvil, createAnvil, CreateAnvilOptions } from '@viem/anvil'
+import { execSync } from 'node:child_process'
+import { resolve } from 'node:path'
 import {
   Account,
   Address,
@@ -16,7 +18,7 @@ import {
   walletActions,
 } from 'viem'
 import { celo, celoAlfajores } from 'viem/chains'
-import { ANVIL_PORT, DEFAULT_OWNER_ADDRESS } from '../anvil-test'
+import { DEFAULT_OWNER_ADDRESS } from '../anvil-test'
 import { TEST_BALANCE, TEST_GAS_LIMIT, TEST_GAS_PRICE, TEST_MNEMONIC } from '../test-utils'
 import { celoBaklava } from './chains'
 import { testWithViem } from './test-utils'
@@ -39,9 +41,10 @@ function createInstance(opts?: { chainId?: number; forkUrl?: string; forkBlockNu
   const forkUrl = opts?.forkUrl
   const forkBlockNumber = opts?.forkBlockNumber
 
-  const port = ANVIL_PORT + (process.pid - process.ppid)
+  const script = resolve(__dirname, '..', '..', '..', 'scripts', 'get_open_port.mjs')
+  const result = execSync(`node ${script}`).toString()
   const options: CreateAnvilOptions = {
-    port,
+    port: parseInt(result, 10),
     mnemonic: TEST_MNEMONIC,
     balance: TEST_BALANCE,
     gasPrice: TEST_GAS_PRICE,

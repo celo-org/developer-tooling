@@ -632,13 +632,16 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
           }, 5000) // Higher timeout than the telemetry logic uses
         })
 
-        server.listen(3000, async () => {
+        // NOTE: 0 gets us a random guaranteed open port
+        server.listen(0, async () => {
+          // @ts-expect-error
+          process.env.TELEMETRY_URL = `http://localhost:${server.address().port}/`
           // Make sure the command actually returns
           await expect(TestTelemetryCommand.run([])).resolves.toBe(EXPECTED_COMMAND_RESULT)
 
           expect(fetchSpy.mock.calls.length).toEqual(1)
 
-          expect(fetchSpy.mock.calls[0][0]).toMatchInlineSnapshot(`"http://localhost:3000/"`)
+          expect(fetchSpy.mock.calls[0][0]).toMatchInlineSnapshot(`"${process.env.TELEMETRY_URL}"`)
           expect(fetchSpy.mock.calls[0][1]?.body).toMatchInlineSnapshot(`
             "
             celocli_invocation{success="true", version="5.2.3", command="test:telemetry-timeout"} 1
