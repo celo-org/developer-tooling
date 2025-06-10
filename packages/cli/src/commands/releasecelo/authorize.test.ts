@@ -4,7 +4,7 @@ import { setBalance, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { addressToPublicKey, serializeSignature } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import { createMultisig } from '../../test-utils/multisigUtils'
 import { deployReleaseGoldContract } from '../../test-utils/release-gold'
 import ValidatorRegister from '../validator/register'
@@ -17,6 +17,7 @@ process.env.NO_SYNCCHECK = 'true'
 testWithAnvilL2('releasegold:authorize cmd', (web3: Web3) => {
   let contractAddress: string
   let kit: any
+  let logSpy: jest.SpyInstance
 
   beforeEach(async () => {
     const accounts = (await web3.eth.getAccounts()) as StrongAddress[]
@@ -29,14 +30,14 @@ testWithAnvilL2('releasegold:authorize cmd', (web3: Web3) => {
       NULL_ADDRESS, // when cannot be revoked and can validate then refund address needs to be NULL_ADDRESS
       true // can validate
     )
-
+    process.stdout.write(`Deployed ReleaseGold contract at ${contractAddress}\n`)
     // contract needs to have sufficient funds to lock CELO
     await setBalance(
       web3,
       contractAddress as StrongAddress,
       new BigNumber(web3.utils.toWei('100000', 'ether'))
     )
-
+    process.stdout.write(`set balance of ReleaseGold contract to 100000 CELO\n`)
     await testLocallyWithWeb3Node(CreateAccount, ['--contract', contractAddress], web3)
   })
 
@@ -47,58 +48,164 @@ testWithAnvilL2('releasegold:authorize cmd', (web3: Web3) => {
     beforeEach(async () => {
       accounts = await web3.eth.getAccounts()
       const accountsWrapper = await kit.contracts.getAccounts()
+      process.stdout.write(
+        `Generating proof of key possession for account ${accounts[1]} on contract ${contractAddress}\n`
+      )
       pop = await accountsWrapper.generateProofOfKeyPossession(contractAddress, accounts[1])
+      logSpy = jest.spyOn(console, 'log')
     })
 
     test('can authorize account vote signer ', async () => {
-      await testLocallyWithWeb3Node(
-        Authorize,
+      await expect(
+        testLocallyWithWeb3Node(
+          Authorize,
+          [
+            '--contract',
+            contractAddress,
+            '--role',
+            'vote',
+            '--signer',
+            accounts[1],
+            '--signature',
+            serializeSignature(pop),
+          ],
+          web3
+        )
+      ).resolves.toBeUndefined()
+      expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls)).toMatchInlineSnapshot(`
         [
-          '--contract',
-          contractAddress,
-          '--role',
-          'vote',
-          '--signer',
-          accounts[1],
-          '--signature',
-          serializeSignature(pop),
-        ],
-        web3
-      )
+          [
+            "Running Checks:",
+          ],
+          [
+            "   ✔  0xDdbe68bEae54dd94465C6bbA2477EE9500ce1974 is a registered Account ",
+          ],
+          [
+            "All checks passed",
+          ],
+          [
+            "SendTransaction: authorizevoteTx",
+          ],
+          [
+            "txHash: 0xtxhash",
+          ],
+        ]
+      `)
     })
 
     test('can authorize account validator signer', async () => {
-      await testLocallyWithWeb3Node(
-        Authorize,
+      await expect(
+        testLocallyWithWeb3Node(
+          Authorize,
+          [
+            '--contract',
+            contractAddress,
+            '--role',
+            'validator',
+            '--signer',
+            accounts[1],
+            '--signature',
+            serializeSignature(pop),
+          ],
+          web3
+        )
+      ).resolves.toBeUndefined()
+      expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls)).toMatchInlineSnapshot(`
         [
-          '--contract',
-          contractAddress,
-          '--role',
-          'validator',
-          '--signer',
-          accounts[1],
-          '--signature',
-          serializeSignature(pop),
-        ],
-        web3
-      )
+          [
+            "Running Checks:",
+          ],
+          [
+            "   ✔  0xDdbe68bEae54dd94465C6bbA2477EE9500ce1974 is not a registered Account ",
+          ],
+          [
+            "   ✔  Contract is not revoked ",
+          ],
+          [
+            "All checks passed",
+          ],
+          [
+            "SendTransaction: createAccount",
+          ],
+          [
+            "txHash: 0xtxhash",
+          ],
+          [
+            "Running Checks:",
+          ],
+          [
+            "   ✔  0xDdbe68bEae54dd94465C6bbA2477EE9500ce1974 is a registered Account ",
+          ],
+          [
+            "   ✔  undefined is not a registered Validator ",
+          ],
+          [
+            "All checks passed",
+          ],
+          [
+            "SendTransaction: authorizevalidatorTx",
+          ],
+          [
+            "txHash: 0xtxhash",
+          ],
+        ]
+      `)
     })
 
     test('can authorize account attestation signer', async () => {
-      await testLocallyWithWeb3Node(
-        Authorize,
+      await expect(
+        testLocallyWithWeb3Node(
+          Authorize,
+          [
+            '--contract',
+            contractAddress,
+            '--role',
+            'attestation',
+            '--signer',
+            accounts[1],
+            '--signature',
+            serializeSignature(pop),
+          ],
+          web3
+        )
+      ).resolves.toBeUndefined()
+      expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls)).toMatchInlineSnapshot(`
         [
-          '--contract',
-          contractAddress,
-          '--role',
-          'attestation',
-          '--signer',
-          accounts[1],
-          '--signature',
-          serializeSignature(pop),
-        ],
-        web3
-      )
+          [
+            "Running Checks:",
+          ],
+          [
+            "   ✔  0xDdbe68bEae54dd94465C6bbA2477EE9500ce1974 is not a registered Account ",
+          ],
+          [
+            "   ✔  Contract is not revoked ",
+          ],
+          [
+            "All checks passed",
+          ],
+          [
+            "SendTransaction: createAccount",
+          ],
+          [
+            "txHash: 0xtxhash",
+          ],
+          [
+            "Running Checks:",
+          ],
+          [
+            "   ✔  0xDdbe68bEae54dd94465C6bbA2477EE9500ce1974 is a registered Account ",
+          ],
+          [
+            "All checks passed",
+          ],
+          [
+            "SendTransaction: authorizeattestationTx",
+          ],
+          [
+            "txHash: 0xtxhash",
+          ],
+        ]
+      `)
     })
   })
 
@@ -108,38 +215,44 @@ testWithAnvilL2('releasegold:authorize cmd', (web3: Web3) => {
     const signer = accounts[1]
     const pop = await accountsWrapper.generateProofOfKeyPossession(contractAddress, signer)
     const ecdsaPublicKey = await addressToPublicKey(signer, web3.eth.sign)
-    await testLocallyWithWeb3Node(
-      LockedCelo,
-      [
-        '--contract',
-        contractAddress,
-        '--action',
-        'lock',
-        '--value',
-        '10000000000000000000000',
-        '--yes',
-      ],
-      web3
-    )
-    await testLocallyWithWeb3Node(
-      Authorize,
-      [
-        '--contract',
-        contractAddress,
-        '--role',
-        'validator',
-        '--signer',
-        signer,
-        '--signature',
-        serializeSignature(pop),
-      ],
-      web3
-    )
-    await testLocallyWithWeb3Node(
-      ValidatorRegister,
-      ['--from', signer, '--ecdsaKey', ecdsaPublicKey, '--yes'],
-      web3
-    )
+    await expect(
+      testLocallyWithWeb3Node(
+        LockedCelo,
+        [
+          '--contract',
+          contractAddress,
+          '--action',
+          'lock',
+          '--value',
+          '10000000000000000000000',
+          '--yes',
+        ],
+        web3
+      )
+    ).resolves.toBeUndefined()
+    await expect(
+      testLocallyWithWeb3Node(
+        Authorize,
+        [
+          '--contract',
+          contractAddress,
+          '--role',
+          'validator',
+          '--signer',
+          signer,
+          '--signature',
+          serializeSignature(pop),
+        ],
+        web3
+      )
+    ).resolves.toBeUndefined()
+    await expect(
+      testLocallyWithWeb3Node(
+        ValidatorRegister,
+        ['--from', signer, '--ecdsaKey', ecdsaPublicKey, '--yes'],
+        web3
+      )
+    ).resolves.toBeUndefined()
   })
 
   test('fails if contract is not registered as an account', async () => {
