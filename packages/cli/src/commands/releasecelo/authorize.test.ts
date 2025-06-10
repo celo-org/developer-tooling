@@ -30,14 +30,12 @@ testWithAnvilL2('releasegold:authorize cmd', (web3: Web3) => {
       NULL_ADDRESS, // when cannot be revoked and can validate then refund address needs to be NULL_ADDRESS
       true // can validate
     )
-    process.stdout.write(`Deployed ReleaseGold contract at ${contractAddress}\n`)
     // contract needs to have sufficient funds to lock CELO
     await setBalance(
       web3,
       contractAddress as StrongAddress,
       new BigNumber(web3.utils.toWei('100000', 'ether'))
     )
-    process.stdout.write(`set balance of ReleaseGold contract to 100000 CELO\n`)
     await testLocallyWithWeb3Node(CreateAccount, ['--contract', contractAddress], web3)
   })
 
@@ -48,9 +46,6 @@ testWithAnvilL2('releasegold:authorize cmd', (web3: Web3) => {
     beforeEach(async () => {
       accounts = await web3.eth.getAccounts()
       const accountsWrapper = await kit.contracts.getAccounts()
-      process.stdout.write(
-        `Generating proof of key possession for account ${accounts[1]} on contract ${contractAddress}\n`
-      )
       pop = await accountsWrapper.generateProofOfKeyPossession(contractAddress, accounts[1])
       logSpy = jest.spyOn(console, 'log')
     })
