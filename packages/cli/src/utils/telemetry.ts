@@ -78,6 +78,9 @@ export const reportUsageStatisticsIfTelemetryEnabled = (
       controller.abort()
     }, TELEMETRY_TIMEOUT)
 
+    // dont wait for this timer
+    timeout.unref()
+
     return fetch(process.env.TELEMETRY_URL ?? TELEMETRY_URL, {
       method: 'POST',
       headers: {

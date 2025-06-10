@@ -42,8 +42,13 @@ testWithAnvilL2(
       await deployMultiCall(web3, celoAlfajores.contracts.multicall3.address)
     })
 
+    const timers: ReturnType<typeof setTimeout>[] = []
+
     afterEach(async () => {
       jest.clearAllMocks()
+      timers.forEach((timer) => {
+        timer.unref()
+      })
     })
 
     it('fails when no flags are provided', async () => {
@@ -141,11 +146,12 @@ testWithAnvilL2(
         testLocallyWithWeb3Node(ElectionActivate, ['--from', userAddress, '--wait'], web3),
         new Promise<void>((resolve) => {
           // at least the amount the --wait flag waits in the check
-          setTimeout(async () => {
+          const timer = setTimeout(async () => {
             // switch with a different account
-            testLocallyWithWeb3Node(Switch, ['--from', otherUserAddress], web3)
+            await testLocallyWithWeb3Node(Switch, ['--from', otherUserAddress], web3)
             resolve()
           }, 1000)
+          timers.push(timer)
         }),
       ])
 
@@ -272,11 +278,12 @@ testWithAnvilL2(
         ),
         new Promise<void>((resolve) => {
           // at least the amount the --wait flag waits in the check
-          setTimeout(async () => {
+          const timer = setTimeout(async () => {
             // switch with a different account
-            testLocallyWithWeb3Node(Switch, ['--from', yetAnotherAddress], web3)
+            await testLocallyWithWeb3Node(Switch, ['--from', yetAnotherAddress], web3)
             resolve()
           }, 1000)
+          timers.push(timer)
         }),
       ])
 
