@@ -22,6 +22,7 @@ export function testWithViem(
   options: {
     hooks?: Hooks
     runIf?: boolean
+    skipRevert?: boolean // if true, the snapshot will not be reverted after each test
   } = {}
 ) {
   // By default we run all the tests
@@ -40,7 +41,7 @@ export function testWithViem(
     }
 
     beforeEach(async () => {
-      if (snapId != null) {
+      if (snapId != null && !options.skipRevert) {
         await client.revert({ id: snapId })
       }
       snapId = await client.snapshot()
