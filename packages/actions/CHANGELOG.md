@@ -1,5 +1,13 @@
 # @celo/actions
 
+## 0.0.1-beta.1
+
+### Patch Changes
+
+- [#661](https://github.com/celo-org/developer-tooling/pull/661) [`f11ff8a`](https://github.com/celo-org/developer-tooling/commit/f11ff8af38e7cc16913a476fa323908cd11137e2) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Use score from score manager
+
+- [#652](https://github.com/celo-org/developer-tooling/pull/652) [`584c5ec`](https://github.com/celo-org/developer-tooling/commit/584c5ec440d031e6979a521b0d217be527a42580) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Add election contract actions
+
 ## 0.0.1-beta.0
 
 ### Patch Changes
