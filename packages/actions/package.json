@@ -43,18 +43,18 @@
     "viem"
   ],
   "scripts": {
-    "build": "yarn clean && yarn build:cjs && yarn build:mjs && yarn postbuild",
+    "build": "yarn build:cjs && yarn build:mjs && yarn postbuild",
     "build:cjs": "yarn --top-level run tsc -p tsconfig-cjs.json",
     "build:mjs": "yarn --top-level run tsc -p tsconfig.json",
     "postbuild": "node ../../scripts/post-build.mjs",
     "clean": "yarn --top-level run tsc -b . --clean && yarn --top-level run rimraf dist",
     "docs": "yarn --top-level run typedoc",
-    "test": "yarn run vitest --run --retry=1",
+    "test": "yarn run vitest --run --retry=1 --no-file-parallelism",
     "check-size": "size-limit",
     "test:watch": "yarn run vitest --watch",
     "test:changes": "yarn run vitest --run --changed",
     "lint": "yarn --top-level run eslint -c .eslintrc.cjs ",
-    "prepublishOnly": "yarn clean && yarn build"
+    "prepublishOnly": "yarn build"
   },
   "dependencies": {
     "@celo/abis": "^12.0.3",

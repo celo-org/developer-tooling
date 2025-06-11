@@ -25,27 +25,34 @@ testWithAnvilL2('validator:register', (web3: Web3) => {
   })
 
   test('can register validator with 0x prefix', async () => {
-    await testLocallyWithWeb3Node(
-      ValidatorRegister,
-      ['--from', account, '--ecdsaKey', ecdsaPublicKey, '--yes'],
-      web3
-    )
+    await expect(
+      testLocallyWithWeb3Node(
+        ValidatorRegister,
+        ['--from', account, '--ecdsaKey', ecdsaPublicKey, '--yes'],
+        web3
+      )
+    ).resolves.toBe(undefined)
   })
 
   test('can register validator without 0x prefix', async () => {
-    await testLocallyWithWeb3Node(
-      ValidatorRegister,
-      ['--from', account, '--ecdsaKey', ecdsaPublicKey, '--yes'],
-      web3
-    )
+    await expect(
+      testLocallyWithWeb3Node(
+        ValidatorRegister,
+        ['--from', account, '--ecdsaKey', ecdsaPublicKey, '--yes'],
+        web3
+      )
+    ).resolves.toBe(undefined)
   })
 
   test('fails if validator already registered', async () => {
-    await testLocallyWithWeb3Node(
-      ValidatorRegister,
-      ['--from', account, '--ecdsaKey', ecdsaPublicKey, '--yes'],
-      web3
-    )
+    await expect(
+      testLocallyWithWeb3Node(
+        ValidatorRegister,
+        ['--from', account, '--ecdsaKey', ecdsaPublicKey, '--yes'],
+        web3
+      )
+    ).resolves.toBe(undefined)
+
     await expect(
       testLocallyWithWeb3Node(
         ValidatorRegister,

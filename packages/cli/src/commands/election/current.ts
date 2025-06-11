@@ -2,6 +2,7 @@ import { Flags, ux } from '@oclif/core'
 
 import { ElectedRpcNode, getElectedRpcNodes } from '@celo/actions/staking'
 import { BaseCommand } from '../../base'
+import { formatFixidity } from '../../packages-to-be/utils'
 
 export const valSetRpcNodeTable: ux.Table.table.Columns<{ address: string }> = {
   address: {},
@@ -15,7 +16,7 @@ export const rpcNodeTable: ux.Table.table.Columns<Record<'rpc', ElectedRpcNode>>
   address: { get: ({ rpc }) => rpc.address },
   name: { get: ({ rpc }) => rpc.name },
   affiliation: { get: ({ rpc }) => rpc.affiliation },
-  score: { get: ({ rpc }) => rpc.score.toString() },
+  score: { get: ({ rpc }) => formatFixidity(rpc.score) },
   ecdsaPublicKey: { get: ({ rpc }) => rpc.ecdsaPublicKey },
   signer: { get: ({ rpc }) => rpc.signer },
 }

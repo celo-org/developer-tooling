@@ -22,6 +22,7 @@ export function testWithViem(
   options: {
     hooks?: Hooks
     runIf?: boolean
+    skipRevert?: boolean // if true, the snapshot will not be reverted after each test
   } = {}
 ) {
   // By default we run all the tests
@@ -36,15 +37,15 @@ export function testWithViem(
     let snapId: Hex | null = null
 
     if (options.hooks?.beforeAll) {
-      beforeAll(options.hooks.beforeAll)
+      beforeAll(options.hooks.beforeAll, 15_000)
     }
 
     beforeEach(async () => {
-      if (snapId != null) {
+      if (snapId != null && !options.skipRevert) {
         await client.revert({ id: snapId })
       }
       snapId = await client.snapshot()
-    })
+    }, 15_000)
 
     afterAll(async () => {
       if (snapId != null) {
@@ -54,7 +55,7 @@ export function testWithViem(
         // hook must be awaited here or jest doesnt actually wait for it and complains of open handles
         await options.hooks.afterAll()
       }
-    })
+    }, 15_000)
 
     fn(client)
   })

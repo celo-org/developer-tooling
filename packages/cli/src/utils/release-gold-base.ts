@@ -18,7 +18,7 @@ export abstract class ReleaseGoldBaseCommand extends BaseCommand {
 
   async contractAddress() {
     if (!this._contractAddress) {
-      const res = await this.parse()
+      const res = await this.parse(ReleaseGoldBaseCommand)
       this._contractAddress = String(res.flags.contract)
     }
     return this._contractAddress as StrongAddress

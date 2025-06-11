@@ -78,6 +78,9 @@ export const reportUsageStatisticsIfTelemetryEnabled = (
       controller.abort()
     }, TELEMETRY_TIMEOUT)
 
+    // allow the cli to exit without waiting for the telemetry max time to finish
+    timeout.unref()
+
     return fetch(process.env.TELEMETRY_URL ?? TELEMETRY_URL, {
       method: 'POST',
       headers: {

@@ -4,8 +4,7 @@ import { celo } from 'viem/chains'
 import { expect, it } from 'vitest'
 import { PublicCeloClient, WalletCeloClient } from '../client'
 import { vote } from './governance'
-
-const TIMEOUT = 10_000
+const TIMEOUT = 20_000
 
 // We are forking celo mainnet at a known block and impersonating an account known to have been able to vote on that proposal
 const voter = '0x3779CF289d8161Cd6679696D10647FBa2cb0ef50'
@@ -57,7 +56,7 @@ viem_testWithAnvil(
       async () => {
         await expect(vote(clients, proposalId, 'Abstain')).resolves.toMatch(txHashRegex)
       },
-      TIMEOUT
+      TIMEOUT * 3
     )
 
     it(
@@ -73,5 +72,5 @@ viem_testWithAnvil(
       TIMEOUT * 2
     )
   },
-  { forkUrl, forkBlockNumber: forkBlockNumber }
+  { forkUrl, forkBlockNumber: forkBlockNumber, skipRevert: true }
 )

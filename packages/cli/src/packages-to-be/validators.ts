@@ -1,5 +1,6 @@
 import { accountsABI, lockedGoldABI, validatorsABI } from '@celo/abis'
 import { PublicCeloClient, resolveAddress } from '@celo/actions'
+import { getScoreManagerContract } from '@celo/actions/contracts/score-manager'
 import { getValidatorsContract } from '@celo/actions/contracts/validators'
 import { Address, concurrentMap, ensureLeading0x, eqAddress, StrongAddress } from '@celo/base'
 import { fromFixed } from '@celo/utils/lib/fixidity'
@@ -169,20 +170,31 @@ export const getValidator = async (
   address: Address,
   blockNumber?: number
 ): Promise<Validator> => {
-  const validatorTuple = await client.readContract({
-    address: await resolveAddress(client, 'Validators'),
-    abi: validatorsABI,
-    functionName: 'getValidator',
-    args: [address as StrongAddress],
-    blockNumber: typeof blockNumber === 'undefined' ? undefined : BigInt(blockNumber),
-  })
-  const name = await client.readContract({
-    address: await resolveAddress(client, 'Accounts'),
-    abi: accountsABI,
-    functionName: 'getName',
-    args: [address as StrongAddress],
-    blockNumber: typeof blockNumber === 'undefined' ? undefined : BigInt(blockNumber),
-  })
+  const [validatorsAddress, accountsAddress, scoreManager] = await Promise.all([
+    resolveAddress(client, 'Validators'),
+    resolveAddress(client, 'Accounts'),
+    getScoreManagerContract({ public: client }),
+  ])
+
+  const atBlockNumber = typeof blockNumber === 'undefined' ? undefined : BigInt(blockNumber)
+
+  const [validatorTuple, name, score] = await Promise.all([
+    client.readContract({
+      address: validatorsAddress,
+      abi: validatorsABI,
+      functionName: 'getValidator',
+      args: [address as StrongAddress],
+      blockNumber: atBlockNumber,
+    }),
+    client.readContract({
+      address: accountsAddress,
+      abi: accountsABI,
+      functionName: 'getName',
+      args: [address as StrongAddress],
+      blockNumber: atBlockNumber,
+    }),
+    scoreManager.read.getValidatorScore([address as StrongAddress], { blockNumber: atBlockNumber }),
+  ])
 
   return {
     name,
@@ -190,8 +202,8 @@ export const getValidator = async (
     ecdsaPublicKey: validatorTuple[0],
     blsPublicKey: validatorTuple[1],
     affiliation: validatorTuple[2],
-    score: fromFixed(bigintToBigNumber(validatorTuple[3])),
     signer: validatorTuple[4],
+    score: bigintToBigNumber(score),
   }
 }
 

@@ -1,6 +1,7 @@
 import { Validator } from '@celo/contractkit/lib/wrappers/Validators'
 import { ux } from '@oclif/core'
 
+import { fromFixed } from '@celo/utils/lib/fixidity'
 import { BaseCommand } from '../../base'
 import { getRegisteredValidators } from '../../packages-to-be/validators'
 import { ViewCommmandFlags } from '../../utils/flags'
@@ -9,7 +10,7 @@ export const validatorTable: ux.Table.table.Columns<Record<'v', Validator>> = {
   address: { get: (row) => row.v.address },
   name: { get: (row) => row.v.name },
   affiliation: { get: (row) => row.v.affiliation },
-  score: { get: (row) => row.v.score.toFixed() },
+  score: { get: (row) => row.v.score.toFixed(2) },
   ecdsaPublicKey: { get: (row) => row.v.ecdsaPublicKey },
   signer: { get: (row) => row.v.signer },
 }
@@ -35,7 +36,7 @@ export default class ValidatorList extends BaseCommand {
 
     ux.action.stop()
     ux.table(
-      validatorList.map((v) => ({ ['v']: v })),
+      validatorList.map((v) => ({ ['v']: { ...v, score: fromFixed(v.score) } })),
       validatorTable,
       res.flags
     )

@@ -82,6 +82,7 @@ function testWithAnvil(
     chainId?: number
     forkUrl?: string
     forkBlockNumber?: number
+    skipRevert?: boolean // if true, the snapshot will not be reverted after each test
   }
 ) {
   const { instance, client } = createInstance(options)
@@ -97,6 +98,7 @@ function testWithAnvil(
         await instance.stop()
       },
     },
+    skipRevert: options?.skipRevert,
   })
 }
 

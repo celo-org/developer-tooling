@@ -670,20 +670,22 @@ testWithAnvilL2(
     test(
       'can submit empty proposal',
       async () => {
-        await testLocallyWithWeb3Node(
-          Propose,
-          [
-            '--from',
-            accounts[0],
-            '--deposit',
-            minDeposit,
-            '--jsonTransactions',
-            './exampleProposal.json',
-            '--descriptionURL',
-            'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
-          ],
-          web3
-        )
+        await expect(
+          testLocallyWithWeb3Node(
+            Propose,
+            [
+              '--from',
+              accounts[0],
+              '--deposit',
+              minDeposit,
+              '--jsonTransactions',
+              './exampleProposal.json',
+              '--descriptionURL',
+              'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
+            ],
+            web3
+          )
+        ).resolves.toBe(undefined)
       },
       EXTRA_LONG_TIMEOUT_MS
     )
