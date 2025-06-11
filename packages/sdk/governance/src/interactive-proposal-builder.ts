@@ -1,9 +1,8 @@
 import { isHexString } from '@celo/base/lib/address'
-import { ABIDefinition } from '@celo/connect'
 import { CeloContract, RegisteredContracts } from '@celo/contractkit'
-import { isValidAddress } from '@celo/utils/lib/address'
 import BigNumber from 'bignumber.js'
 import inquirer from 'inquirer'
+import { Abi, isAddress } from 'viem'
 import { ProposalBuilder } from './proposal-builder'
 
 import type { ProposalTransactionJSON } from './'
@@ -72,7 +71,7 @@ export class InteractiveProposalBuilder {
               case 'boolean':
                 return input === 'true' || input === 'false'
               case 'address':
-                return isValidAddress(input)
+                return isAddress(input)
               case 'bytes':
                 return isHexString(input)
               default:
@@ -119,25 +118,46 @@ export class InteractiveProposalBuilder {
     return transactions
   }
 }
-export function requireABI(contractName: CeloContract): ABIDefinition[] {
-  // search thru multiple paths to find the ABI
+export function requireABI(contractName: CeloContract): Abi {
+  // Handle known aliases
   if (contractName === CeloContract.CeloToken) {
     contractName = CeloContract.GoldToken
   } else if (contractName === CeloContract.LockedCelo) {
     contractName = CeloContract.LockedGold
   }
+
+  // Attempt to load from '@celo/abis/dist/' first (preferred, raw ABI)
+  try {
+    // Construct path similar to getCoreContractAbi in proposal-builder.ts
+    const abiPath = `@celo/abis/dist/${contractName}.json`
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const abi = require(abiPath)
+    if (abi) {
+      return abi as Abi
+    }
+  } catch (e) {
+    // debug(`Failed to load ABI for ${contractName} from dist path: ${e}`)
+  }
+
+  // Fallback to legacy '@celo/abis/web3/' paths if 'dist' fails
+  // These might have the { ABI: [...] } structure
   for (const path of ['', '0.8/', 'mento/']) {
-    const abi = safeRequire(contractName, path)
-    if (abi !== null) {
-      return abi
+    const abiFromWeb3Path = safeRequireWeb3(contractName, path)
+    if (abiFromWeb3Path !== null) {
+      return abiFromWeb3Path
     }
   }
-  throw new Error(`Cannot require ABI for ${contractName}`)
+  throw new Error(
+    `Cannot require ABI for ${contractName} from either '@celo/abis/dist/' or '@celo/abis/web3/'`
+  )
 }
 
-function safeRequire(contractName: CeloContract, subPath?: string) {
+// Tries to load ABIs that are structured with a top-level 'ABI' key (legacy web3 style)
+function safeRequireWeb3(contractName: CeloContract, subPath?: string): Abi | null {
   try {
-    return require(`@celo/abis/web3/${subPath ?? ''}${contractName}`).ABI as ABIDefinition[]
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const module = require(`@celo/abis/web3/${subPath ?? ''}${contractName}`)
+    return module.ABI as Abi
   } catch {
     return null
   }
