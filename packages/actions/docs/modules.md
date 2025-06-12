@@ -1,8 +1,8 @@
-[**@Celo/Actions v0.0.1-beta.1**](README.md)
+[**@Celo/Actions v0.0.1-beta.2**](README.md)
 
 ***
 
-# @Celo/Actions v0.0.1-beta.1
+# @Celo/Actions v0.0.1-beta.2
 
 ## Modules
 
