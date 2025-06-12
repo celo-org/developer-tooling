@@ -1588,13 +1588,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/actions@npm:0.0.1-beta.1, @celo/actions@workspace:packages/actions":
+"@celo/actions@npm:0.0.1-beta.2, @celo/actions@workspace:packages/actions":
   version: 0.0.0-use.local
   resolution: "@celo/actions@workspace:packages/actions"
   dependencies:
     "@celo/abis": "npm:^12.0.3"
     "@celo/base": "npm:^7.0.3-beta.0"
-    "@celo/core": "npm:0.0.1-beta.0"
+    "@celo/core": "npm:0.0.1-beta.1"
     "@celo/dev-utils": "workspace:^"
     "@celo/typescript": "workspace:^"
     "@size-limit/preset-small-lib": "npm:^11.2.0"
@@ -1655,7 +1655,7 @@ __metadata:
   resolution: "@celo/celocli@workspace:packages/cli"
   dependencies:
     "@celo/abis": "npm:12.0.3"
-    "@celo/actions": "npm:0.0.1-beta.1"
+    "@celo/actions": "npm:0.0.1-beta.2"
     "@celo/base": "npm:^7.0.3-beta.0"
     "@celo/compliance": "npm:1.0.28"
     "@celo/connect": "npm:^7.0.0-beta.1"
@@ -1819,7 +1819,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/core@npm:0.0.1-beta.0, @celo/core@workspace:packages/core":
+"@celo/core@npm:0.0.1-beta.1, @celo/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@celo/core@workspace:packages/core"
   dependencies:

@@ -1,5 +1,11 @@
 # @celo/core
 
+## 0.0.1-beta.1
+
+### Patch Changes
+
+- [#666](https://github.com/celo-org/developer-tooling/pull/666) [`08def3f`](https://github.com/celo-org/developer-tooling/commit/08def3fd8d0fbefed9adff12c0650e23d02a6ab1) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Bump to decrease min node recommendation
+
 ## 0.0.1-beta.0
 
 ### Patch Changes
