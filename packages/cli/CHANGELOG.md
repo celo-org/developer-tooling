@@ -1,5 +1,12 @@
 # Changelog
 
+## 7.0.0-beta.8
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @celo/actions@0.0.1-beta.2
+
 ## 7.0.0-beta.7
 
 ### Major Changes
