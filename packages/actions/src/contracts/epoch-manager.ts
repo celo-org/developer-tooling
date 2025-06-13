@@ -1,7 +1,7 @@
 import { epochManagerABI } from '@celo/abis'
 import { getContract, GetContractReturnType } from 'viem'
-import { Clients } from '../client'
-import { resolveAddress } from './registry'
+import { Clients } from '../client.js'
+import { resolveAddress } from './registry.js'
 
 export type EpochManager<T extends Clients = Clients> = GetContractReturnType<
   typeof epochManagerABI,

@@ -2,8 +2,9 @@ import { viem_testWithAnvil } from '@celo/dev-utils/viem/anvil-test'
 import { createPublicClient, createWalletClient, http } from 'viem'
 import { celo } from 'viem/chains'
 import { expect, it } from 'vitest'
-import { PublicCeloClient, WalletCeloClient } from '../client'
-import { vote } from './governance'
+import { PublicCeloClient, WalletCeloClient } from '../client.js'
+import { vote } from './governance.js'
+
 const TIMEOUT = 20_000
 
 // We are forking celo mainnet at a known block and impersonating an account known to have been able to vote on that proposal

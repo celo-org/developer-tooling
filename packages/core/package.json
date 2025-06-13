@@ -11,6 +11,7 @@
       "require": "./dist/cjs/index.js"
     }
   },
+  "sideEffects": false,
   "author": "cLabs",
   "license": "Apache-2.0",
   "homepage": "https://docs.celo.org/developer/tools",
@@ -35,7 +36,7 @@
     "test": "yarn run vitest --run",
     "test:watch": "yarn run vitest --watch",
     "test:changes": "yarn run vitest --run --changed",
-    "lint": "yarn --top-level run eslint -c .eslintrc.cjs ",
+    "lint": "yarn --top-level run eslint -c .eslintrc.cjs src/**/*.ts",
     "prepublishOnly": "yarn clean && yarn build"
   },
   "dependencies": {

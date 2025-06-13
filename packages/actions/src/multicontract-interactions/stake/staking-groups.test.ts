@@ -1,7 +1,7 @@
 import { viem_testWithAnvil } from '@celo/dev-utils/viem/anvil-test'
 import { expect, it } from 'vitest'
-import { PublicCeloClient } from '../../client'
-import { getRegisteredStakingGroups } from './staking-groups'
+import { PublicCeloClient } from '../../client.js'
+import { getRegisteredStakingGroups } from './staking-groups.js'
 
 viem_testWithAnvil('getRegisteredStakingGroups', (client) => {
   it('returns registered staking groups with addresses and members', async () => {

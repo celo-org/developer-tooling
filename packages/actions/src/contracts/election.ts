@@ -1,7 +1,7 @@
 import { electionABI } from '@celo/abis'
 import { Address, getContract, GetContractReturnType, Hex, isAddressEqual } from 'viem'
-import { Clients } from '../client'
-import { resolveAddress } from './registry'
+import { Clients } from '../client.js'
+import { resolveAddress } from './registry.js'
 
 export type ElectionContract<T extends Clients = Clients> = GetContractReturnType<
   typeof electionABI,

@@ -1,6 +1,6 @@
 import { defineChain } from 'viem'
 
-export const celoBaklava = /*#__PURE__*/ defineChain({
+export const celoBaklava = /* #__PURE__ */ defineChain({
   id: 62_320,
   name: 'Baklava',
   nativeCurrency: {

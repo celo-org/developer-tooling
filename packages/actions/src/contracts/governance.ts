@@ -1,9 +1,9 @@
 import { governanceABI } from '@celo/abis'
-import { zip } from '@celo/base'
+import { zip } from '@celo/base/lib/collections.js'
 import { voteProposal, VoteProposalTypes } from '@celo/core'
 import { getContract, GetContractReturnType } from 'viem'
-import { Clients, PublicCeloClient } from '../client'
-import { resolveAddress } from './registry'
+import { Clients, PublicCeloClient } from '../client.js'
+import { resolveAddress } from './registry.js'
 
 export type GovernanceContract<T extends Clients = Clients> = GetContractReturnType<
   typeof governanceABI,
@@ -42,10 +42,13 @@ export async function vote<C extends Required<Clients> = Required<Clients>>(
   const contract = await getGovernanceContract(clients)
   return voteProposal(
     {
-      vote: async (proposalID, proposalIndex, voteValue) => {
-        const { request } = await contract.simulate.vote([proposalID, proposalIndex, voteValue], {
-          account: clients.wallet.account.address,
-        })
+      vote: async (proposalId_, proposalIndex_, voteValue_) => {
+        const { request } = await contract.simulate.vote(
+          [proposalId_, proposalIndex_, voteValue_],
+          {
+            account: clients.wallet.account.address,
+          }
+        )
         return contract.write.vote(request.args)
       },
       getDequeue: async () => {

@@ -1,6 +1,6 @@
-import { StrongAddress as Address, eqAddress, NULL_ADDRESS } from '@celo/base/lib/address'
-import { zip } from '@celo/base/lib/collections'
-import { HexString } from '@celo/base/lib/string'
+import { StrongAddress as Address, eqAddress, NULL_ADDRESS } from '@celo/base/lib/address.js'
+import { zip } from '@celo/base/lib/collections.js'
+import type { HexString } from '@celo/base/lib/string.js'
 
 export type VoteAdapter = {
   vote: (
@@ -96,13 +96,13 @@ function findLesserAndGreaterAfterVote(
 
   // This leverages the fact that the currentVotes are already sorted from
   // greatest to lowest value
-  for (const vote of currentVotes) {
-    if (!eqAddress(vote.address, votedGroup)) {
-      if (vote.votes <= voteTotal) {
-        lesserKey = vote.address
+  for (const currentVote of currentVotes) {
+    if (!eqAddress(currentVote.address, votedGroup)) {
+      if (currentVote.votes <= voteTotal) {
+        lesserKey = currentVote.address
         break
       }
-      greaterKey = vote.address
+      greaterKey = currentVote.address
     }
   }
 

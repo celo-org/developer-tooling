@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { voteProposal, VoteProposalAdapter, VoteProposalTypes } from './vote'
+import { voteProposal, VoteProposalAdapter, VoteProposalTypes } from './vote.js'
 
 describe('voteProposal', () => {
   const proposalId = 123n

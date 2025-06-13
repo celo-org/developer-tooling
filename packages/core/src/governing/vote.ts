@@ -1,4 +1,4 @@
-import { HexString } from '@celo/base'
+import type { HexString } from '@celo/base/lib/string.js'
 const voteValuesMap = {
   None: 0,
   Abstain: 1,
