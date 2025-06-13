@@ -1,4 +1,4 @@
-**@celo/core v0.0.1-beta.1**
+**@celo/core v0.0.1-beta.2**
 
 ***
 
