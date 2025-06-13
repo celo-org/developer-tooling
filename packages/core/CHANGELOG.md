@@ -1,5 +1,11 @@
 # @celo/core
 
+## 0.0.1-beta.2
+
+### Patch Changes
+
+- [#668](https://github.com/celo-org/developer-tooling/pull/668) [`d761662`](https://github.com/celo-org/developer-tooling/commit/d76166240bf558effe3e27c8a4a0027ed2a0788f) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Fixes exports/imports
+
 ## 0.0.1-beta.1
 
 ### Patch Changes
