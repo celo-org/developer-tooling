@@ -1,8 +1,8 @@
-import { concurrentMap } from '@celo/base/lib/async'
-import { PublicCeloClient } from '../../client'
-import { getAccountsContract } from '../../contracts/accounts'
-import { getScoreManagerContract } from '../../contracts/score-manager'
-import { getValidatorsContract } from '../../contracts/validators'
+import { concurrentMap } from '@celo/base/lib/async.js'
+import { PublicCeloClient } from '../../client.js'
+import { getAccountsContract } from '../../contracts/accounts.js'
+import { getScoreManagerContract } from '../../contracts/score-manager.js'
+import { getValidatorsContract } from '../../contracts/validators.js'
 
 interface Options {
   withNames?: boolean

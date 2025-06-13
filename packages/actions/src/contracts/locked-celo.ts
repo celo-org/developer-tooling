@@ -1,7 +1,7 @@
 import { lockedGoldABI } from '@celo/abis'
 import { getContract, GetContractReturnType } from 'viem'
-import { Clients } from '../client'
-import { resolveAddress } from './registry'
+import { Clients } from '../client.js'
+import { resolveAddress } from './registry.js'
 
 export async function getLockedCeloContract<T extends Clients = Clients>(
   clients: T

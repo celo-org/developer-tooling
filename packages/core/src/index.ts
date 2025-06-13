@@ -1,2 +1,2 @@
-export * from './governing'
-export * from './staking'
+export * from './governing/index.js'
+export * from './staking/index.js'

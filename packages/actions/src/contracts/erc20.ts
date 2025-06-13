@@ -1,5 +1,5 @@
 import { erc20Abi, getContract, type Address, type GetContractReturnType } from 'viem'
-import { Clients } from '../client'
+import { Clients } from '../client.js'
 
 export async function getERC20Contract<T extends Clients = Clients>(
   clients: T,

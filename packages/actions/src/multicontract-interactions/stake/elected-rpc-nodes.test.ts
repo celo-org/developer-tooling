@@ -1,8 +1,8 @@
 import { viem_testWithAnvil } from '@celo/dev-utils/viem/anvil-test'
 import { celo } from 'viem/chains'
 import { expect, it } from 'vitest'
-import { PublicCeloClient } from '../../client'
-import { getElectedRpcNodes } from './elected-rpc-nodes'
+import { PublicCeloClient } from '../../client.js'
+import { getElectedRpcNodes } from './elected-rpc-nodes.js'
 
 const forkBlockNumber = 37227707
 const forkUrl = celo.rpcUrls.default.http[0]

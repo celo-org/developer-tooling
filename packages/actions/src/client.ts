@@ -6,7 +6,7 @@ import {
   type WalletClient,
 } from 'viem'
 import type { celo, celoAlfajores } from 'viem/chains'
-import type { celoBaklava } from './chains'
+import type { celoBaklava } from './chains.js'
 
 type CeloChain = typeof celo | typeof celoAlfajores | typeof celoBaklava
 

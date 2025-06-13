@@ -1,7 +1,7 @@
 import { vote as coreVote, VoteAdapter } from '@celo/core'
 import { Address, Hex } from 'viem'
-import { Clients } from '../../client'
-import { getElectionContract } from '../../contracts/election'
+import { Clients } from '../../client.js'
+import { getElectionContract } from '../../contracts/election.js'
 
 /**
  * Casts a vote for a specified validator group using the provided wallet client.
@@ -22,8 +22,8 @@ export async function vote(
 ): Promise<Hex> {
   const election = await getElectionContract(clients)
   const adapter: VoteAdapter = {
-    vote: async (validatorGroup, value, lesser, greater) => {
-      const { request } = await election.simulate.vote([validatorGroup, value, lesser, greater], {
+    vote: async (validatorGroup_, value_, lesser, greater) => {
+      const { request } = await election.simulate.vote([validatorGroup_, value_, lesser, greater], {
         account: clients.wallet.account.address,
       })
       const gasLimit = await election.estimateGas.vote(request.args)

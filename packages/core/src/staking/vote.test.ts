@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, Mock, vi } from 'vitest'
-import { vote, VoteAdapter } from './vote'
+import { vote, VoteAdapter } from './vote.js'
 
 describe('Stake.vote', () => {
   const address1 = '0x1111111111111111111111111111111111111111' as const

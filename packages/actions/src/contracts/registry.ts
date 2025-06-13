@@ -1,7 +1,8 @@
-import { NULL_ADDRESS } from '@celo/base/lib/address'
+import { NULL_ADDRESS } from '@celo/base/lib/address.js'
 import { Address, Client } from 'viem'
 import { readContract } from 'viem/actions'
-import { ContractName } from '../contract-name'
+import { ContractName } from '../contract-name.js'
+
 export const REGISTRY_CONTRACT_ADDRESS = '0x000000000000000000000000000000000000ce10'
 
 // we only use this one function from the registry so we don't need the whole ABI

@@ -1,6 +1,6 @@
 import { viem_testWithAnvil } from '@celo/dev-utils/viem/anvil-test'
 import { describe, expect, it } from 'vitest'
-import { getGasPriceOnCelo } from './rpc-methods'
+import { getGasPriceOnCelo } from './rpc-methods.js'
 
 viem_testWithAnvil('rpc-methods', (client) => {
   describe('getGasPriceOnCelo', () => {

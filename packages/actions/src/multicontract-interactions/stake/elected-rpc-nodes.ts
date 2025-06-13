@@ -1,10 +1,10 @@
-import { eqAddress, NULL_ADDRESS } from '@celo/base'
+import { eqAddress, NULL_ADDRESS } from '@celo/base/lib/address.js'
 import type { Address } from 'viem'
-import { PublicCeloClient } from '../../client'
-import { AccountsContract, getAccountsContract } from '../../contracts/accounts'
-import { getEpochManagerContract } from '../../contracts/epoch-manager'
-import { getScoreManagerContract } from '../../contracts/score-manager'
-import { getValidatorsContract, ValidatorsContract } from '../../contracts/validators'
+import { PublicCeloClient } from '../../client.js'
+import { AccountsContract, getAccountsContract } from '../../contracts/accounts.js'
+import { getEpochManagerContract } from '../../contracts/epoch-manager.js'
+import { getScoreManagerContract } from '../../contracts/score-manager.js'
+import { getValidatorsContract, ValidatorsContract } from '../../contracts/validators.js'
 
 interface UnnamedRpcNode {
   address: Address
@@ -125,17 +125,17 @@ async function accountToValidator({
       ecdsaPublicKey: '',
       affiliation: '',
       score: BigInt(0),
-      signer: signer,
+      signer,
     }
   } else {
-    const [ecdsaPublicKey, _bls, affiliation, _, signer] = await validators.read.getValidator([
+    const [ecdsaPublicKey, _bls, affiliation, _, signer_] = await validators.read.getValidator([
       account,
     ])
     return {
       address: account,
       ecdsaPublicKey: ecdsaPublicKey,
       affiliation: affiliation,
-      signer: signer,
+      signer: signer_,
     }
   }
 }
