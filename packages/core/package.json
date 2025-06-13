@@ -1,6 +1,6 @@
 {
   "name": "@celo/core",
-  "version": "0.0.1-beta.1",
+  "version": "0.0.1-beta.2",
   "description": "Agnostic Library for Common yet complicated Celo core contract interactions",
   "main": "dist/cjs/index.js",
   "module": "dist/mjs/index.js",

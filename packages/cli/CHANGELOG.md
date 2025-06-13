@@ -1,5 +1,12 @@
 # Changelog
 
+## 7.0.0-beta.9
+
+### Patch Changes
+
+- Updated dependencies [[`d761662`](https://github.com/celo-org/developer-tooling/commit/d76166240bf558effe3e27c8a4a0027ed2a0788f)]:
+  - @celo/actions@0.0.1-beta.3
+
 ## 7.0.0-beta.8
 
 ### Patch Changes
