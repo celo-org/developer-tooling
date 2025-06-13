@@ -1,6 +1,6 @@
 import { StrongAddress as Address, eqAddress, NULL_ADDRESS } from '@celo/base/lib/address.js'
 import { zip } from '@celo/base/lib/collections.js'
-import { HexString } from '@celo/base/lib/string.js'
+import type { HexString } from '@celo/base/lib/string.js'
 
 export type VoteAdapter = {
   vote: (
