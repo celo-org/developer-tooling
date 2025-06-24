@@ -8,7 +8,9 @@ export type AccountsContract<C extends Clients = Clients> = GetContractReturnTyp
   C
 >
 
-export async function getAccountsContract(clients: Clients): Promise<AccountsContract<Clients>> {
+export async function getAccountsContract<T extends Clients = Clients>(
+  clients: T
+): Promise<AccountsContract<T>> {
   return getContract({
     address: await resolveAddress(clients.public, 'Accounts'),
     abi: accountsABI,
