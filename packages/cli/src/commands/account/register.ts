@@ -1,12 +1,13 @@
+import { getAccountsContract } from '@celo/actions/contracts/accounts'
 import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class Register extends BaseCommand {
   static description =
-    'Register an account on-chain. This allows you to lock Gold, which is a pre-requisite for registering a Validator or Group, participating in Validator elections and on-chain Governance, and earning epoch rewards.'
+    'Register an account on-chain. This allows you to lock CELO, which is a pre-requisite for registering a Validator or Group, participating in Validator elections and on-chain Governance, and earning epoch rewards.'
 
   static flags = {
     ...BaseCommand.flags,
@@ -22,15 +23,23 @@ export default class Register extends BaseCommand {
   ]
 
   async run() {
-    const kit = await this.getKit()
+    const [publicClient, walletClient] = await Promise.all([
+      this.getPublicClient(),
+      this.getWalletClient(),
+    ])
     const res = await this.parse(Register)
 
-    const accounts = await kit.contracts.getAccounts()
+    const accountsContract = await getAccountsContract({
+      public: publicClient,
+      wallet: walletClient,
+    })
 
     await newCheckBuilder(this).isNotAccount(res.flags.from).runChecks()
-    await displaySendTx('register', accounts.createAccount())
+
+    await displayViemTx('register', accountsContract.write.createAccount(), publicClient)
+
     if (res.flags.name) {
-      await displaySendTx('setName', accounts.setName(res.flags.name))
+      await displayViemTx('setName', accountsContract.write.setName([res.flags.name]), publicClient)
     }
   }
 }
