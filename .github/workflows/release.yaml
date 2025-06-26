@@ -19,9 +19,6 @@ jobs:
       attestations: write
       id-token: write
       repository-projects: write
-    concurrency:
-      group:   ${{ github.workflow }}-${{ github.head_ref || github.ref }}
-      cancel-in-progress: true
     uses: celo-org/reusable-workflows/.github/workflows/npm-publish.yaml@v3.0.0
     with:
       node-version: 20
