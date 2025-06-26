@@ -73,6 +73,8 @@
   },
   "packageManager": "yarn@4.0.2",
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://registry.npmjs.org/",
+    "access": "public",
+    "provenance": true
   }
 }
