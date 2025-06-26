@@ -11,54 +11,23 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
   release:
     name: Open Release PR or Publish Packages
-    runs-on: ['self-hosted', 'org', 'npm-publish']
     permissions:
       contents: write
-      id-token: write
+      actions: read
       pull-requests: write
+      security-events: write
+      attestations: write
+      id-token: write
       repository-projects: write
-    outputs:
-      publishedPackages: ${{ steps.changesets.outputs.publishedPackages }}
-      published: ${{ steps.changesets.outputs.published }}
+    concurrency:
+      group:   ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+      cancel-in-progress: true
+    uses: celo-org/reusable-workflows/.github/workflows/npm-publish.yaml@v3.0.0
+    with:
+      node-version: 20
+      version-command: yarn version-then-update-files
+      publish-command: yarn release
 
-    steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v4
-
-      - name: Akeyless Get Secrets
-        id: get_auth_token
-        uses: docker://us-west1-docker.pkg.dev/devopsre/akeyless-public/akeyless-action:latest
-        with:
-          api-url: https://api.gateway.akeyless.celo-networks-dev.org
-          access-id: p-kf9vjzruht6l
-          static-secrets: '{"/static-secrets/NPM/npm-publish-token":"NPM_TOKEN"}'
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - name: 'enable corepack for yarn'
-        run: sudo corepack enable yarn
-        shell: bash
-      # must call twice because of chicken and egg problem with yarn and node
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'yarn'
-      - name: Install Dependencies
-        shell: bash
-        run: yarn
-      - name: Create Release Pull Request or Publish to npm
-        id: changesets
-        uses: changesets/action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ env.NPM_TOKEN }}
-        with:
-          # This expects you to have a script called release which does a build for your packages and calls changeset publish
-          publish: yarn release
-          # docs are updated here so that the version in the doc files is correct for the release
-          version: yarn version-then-update-files
-  
   # release gives an array of published packages as json objects, we need an array of strings for installing
   prepare:
     name: Format Output for Install
