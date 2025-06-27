@@ -48,7 +48,7 @@ export const mapAddressListOnto = (oldAddress: Address[], newAddress: Address[])
 
   oldAddressIndex.sort((a, b) => a.address.localeCompare(b.address))
   newAddressIndex.sort((a, b) => a.address.localeCompare(b.address))
-  const res = [...Array(oldAddress.length).fill(-1)]
+  const res = [...new Array(oldAddress.length).fill(-1)]
 
   for (let i = 0, j = 0; i < oldAddress.length && j < newAddress.length; ) {
     const cmp = oldAddressIndex[i].address.localeCompare(newAddressIndex[j].address)
@@ -74,7 +74,7 @@ export function mapAddressListDataOnto<T>(
   newAddress: Address[],
   initialValue: T
 ): T[] {
-  const res = [...Array(oldAddress.length).fill(initialValue)]
+  const res = [...new Array(oldAddress.length).fill(initialValue)]
   if (data.length === 0) {
     return res
   }

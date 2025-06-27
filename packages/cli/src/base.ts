@@ -315,7 +315,7 @@ export abstract class BaseCommand extends Command {
             account,
           })
         } catch (e) {
-          let code: number | undefined = undefined
+          let code: number | undefined
           try {
             const error = JSON.parse((e as any).details) as { code: number; message: string }
             code = error.code
@@ -342,7 +342,7 @@ export abstract class BaseCommand extends Command {
       (value: any) => value.flag === 'ledgerCustomAddresses'
     )
       ? JSON.parse(res.flags.ledgerCustomAddresses)
-      : Array.from(Array(res.flags.ledgerAddresses).keys())
+      : Array.from(new Array(res.flags.ledgerAddresses).keys())
 
     console.log('Retrieving derivation Paths', indicesToIterateOver)
     let ledgerConfirmation = AddressValidation.never
@@ -395,7 +395,7 @@ export abstract class BaseCommand extends Command {
           (value) => (value as any).flag === 'ledgerCustomAddresses'
         )
           ? JSON.parse(res.flags.ledgerCustomAddresses)
-          : Array.from(Array(res.flags.ledgerAddresses).keys())
+          : Array.from(new Array(res.flags.ledgerAddresses).keys())
 
         const baseDerivationPath = getDefaultDerivationPath(this.config.configDir)
         console.log('Retrieving derivation Paths', baseDerivationPath, indicesToIterateOver)

@@ -40,7 +40,7 @@ export default class ElectionRun extends BaseCommand {
     ux.action.stop()
 
     ux.table(
-      validatorList.map((v) => ({ ['v']: v })),
+      validatorList.map((v) => ({ v: v })),
       validatorTable,
       res.flags
     )

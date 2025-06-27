@@ -326,7 +326,7 @@ function* suggestUnvalidatedCorrections(
     weight: number
   ): Generator<string[], undefined, undefined> {
     if (suggestionsLists.length < 1 || weight < 0) {
-      throw Error('programming error: suggestions map must have at least one entry')
+      throw new Error('programming error: suggestions map must have at least one entry')
     }
     const suggestions = suggestionsLists[0]
 

@@ -60,7 +60,7 @@ export function recoverKeyIndex(
 ): number {
   const formats = ['fromCompact', 'fromDER'] as const
 
-  for (let format of formats) {
+  for (const format of formats) {
     let sig: SignatureType
     try {
       sig = secp256k1.Signature[format](signature)

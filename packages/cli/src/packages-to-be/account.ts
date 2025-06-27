@@ -99,7 +99,7 @@ export async function getNames(client: PublicCeloClient, addresses: Address[]) {
   return new Map(filtered)
 }
 
-function selectFulfilled(results: Array<PromiseSettledResult<string[]>>) {
+function selectFulfilled(results: PromiseSettledResult<string[]>[]) {
   return results
     .filter((result): result is PromiseFulfilledResult<string[]> => result.status === 'fulfilled')
     .map((result) => result.value as [Address, string])

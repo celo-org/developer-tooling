@@ -132,7 +132,7 @@ export default class NewAccount extends BaseCommand {
     if (mnemonic) {
       mnemonic = normalizeMnemonic(mnemonic)
       if (!validateMnemonic(mnemonic)) {
-        throw Error('Invalid mnemonic. Should be a bip39 mnemonic')
+        throw new Error('Invalid mnemonic. Should be a bip39 mnemonic')
       }
     } else {
       mnemonic = await generateMnemonic(

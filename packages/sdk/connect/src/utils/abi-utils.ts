@@ -44,7 +44,7 @@ export const signatureToAbiDefinition = (fnSignature: string): ABIDefinition => 
   )
 
   const inputs = args.map((arg, index) => {
-    if (arg.indexOf('(') == 0) {
+    if (arg.indexOf('(') === 0) {
       // tuple or struct
       const tupleArgs = arg
         .substring(1, arg.length - 1)
