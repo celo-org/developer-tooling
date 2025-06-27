@@ -23,7 +23,6 @@ export const blsPrivateKeyToProcessedPrivateKey = (privateKeyHex: string) => {
     ])
     const privateKeyBLSBytes = keccak_256(keyBytes)
 
-    // eslint-disable-next-line no-bitwise
     privateKeyBLSBytes[0] &= MODULUSMASK
 
     const _privateKeyHex = `0x${bytesToHex(privateKeyBLSBytes)}`

@@ -34,8 +34,9 @@ describe('TxParamsNormalizer class', () => {
     })
     const rpcMock: RpcCaller = {
       call: mockRpcCall,
-      // eslint-disable-next-line @typescript-eslint/no-empty-function
-      send: (_payload: JsonRpcPayload, _callback: Callback<JsonRpcResponse>): void => {},
+      send: (_payload: JsonRpcPayload, _callback: Callback<JsonRpcResponse>): void => {
+        // noop
+      },
     }
     const connection = new Connection(new Web3('http://localhost:8545'))
     connection.rpcCaller = rpcMock

@@ -1,4 +1,4 @@
-/* eslint @typescript-eslint/no-floating-promises: off, eqeqeq: off */
+/** biome-ignore-all lint/suspicious/noDoubleEquals: <explanation> */
 import {
   Callback,
   CeloTx,

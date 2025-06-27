@@ -30,7 +30,6 @@
     "build:cjs": "yarn --top-level run tsc -p tsconfig-cjs.json",
     "build:mjs": "yarn --top-level run tsc -p tsconfig.json",
     "postbuild": "node ../../scripts/post-build.mjs",
-    "lint": "yarn run --top-level eslint -c .eslintrc.js ",
     "prepack": "yarn build"
   },
   "dependencies": {

@@ -76,8 +76,8 @@ testWithAnvilL2('election:current cmd', async (web3: Web3) => {
 
     // Set the names
     await impersonateAccount(web3, validator1)
-    await accountsContract.setName('Validator #1').sendAndWaitForReceipt({ from: validator1 }),
-      await impersonateAccount(web3, validator2)
+    await accountsContract.setName('Validator #1').sendAndWaitForReceipt({ from: validator1 })
+    await impersonateAccount(web3, validator2)
     await accountsContract.setName('Validator #2').sendAndWaitForReceipt({ from: validator2 })
 
     // // change the signer

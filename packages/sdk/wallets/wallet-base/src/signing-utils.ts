@@ -727,7 +727,6 @@ function recoverCeloLegacy(serializedTransaction: StrongAddress): [CeloTx, strin
   const rawValues = RLP.decode(serializedTransaction) as Uint8Array[]
   debug('signing-utils@recoverTransaction: values are %s', rawValues)
   const recovery = handleNumber(rawValues[9])
-  // eslint-disable-next-line no-bitwise
   const chainId = (recovery - 35) >> 1
   const celoTx: LegacyCeloTxWithSig = {
     type: 'celo-legacy',
@@ -769,7 +768,6 @@ function recoverEthereumLegacy(serializedTransaction: StrongAddress): [CeloTx, s
   const rawValues = RLP.decode(serializedTransaction) as Uint8Array[]
   debug('signing-utils@recoverTransaction: values are %s', rawValues)
   const recovery = handleNumber(rawValues[6])
-  // eslint-disable-next-line no-bitwise
   const chainId = (recovery - 35) >> 1
   const celoTx: CeloTx = {
     type: 'ethereum-legacy',
@@ -789,7 +787,7 @@ function recoverEthereumLegacy(serializedTransaction: StrongAddress): [CeloTx, s
     chainId: ensureLeading0x(chainId.toString(16)),
   }
   const { r, v: _v, s } = extractSignatureFromDecoded(rawValues)
-  let v = parseInt(_v || '0x0', 16)
+  const v = parseInt(_v || '0x0', 16)
   const safeChainId = trimLeading0x(
     makeEven(trimLeadingZero(ensureLeading0x(chainId.toString(16))))
   )

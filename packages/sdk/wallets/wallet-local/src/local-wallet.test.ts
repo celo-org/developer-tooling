@@ -1,4 +1,3 @@
-/* eslint @typescript-eslint/no-floating-promises: off */
 import { StrongAddress } from '@celo/base/lib/address'
 import { CeloTx, EncodedTransaction, Hex } from '@celo/connect'
 import {
@@ -10,7 +9,7 @@ import {
 import { Encrypt } from '@celo/utils/lib/ecies'
 import { verifySignature } from '@celo/utils/lib/signatureUtils'
 import { recoverTransaction, verifyEIP712TypedDataSigner } from '@celo/wallet-base'
-import { TransactionSerializableEIP1559, parseTransaction } from 'viem'
+import { parseTransaction, TransactionSerializableEIP1559 } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import Web3 from 'web3'
 import { LocalWallet } from './local-wallet'
