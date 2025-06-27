@@ -55,7 +55,10 @@ export const celoTokenInfos: {
  * A helper class to interact with all Celo tokens, ie CELO and stable tokens
  */
 export class CeloTokens {
-  constructor(readonly contracts: ContractCacheType, readonly registry: AddressRegistry) {}
+  constructor(
+    readonly contracts: ContractCacheType,
+    readonly registry: AddressRegistry
+  ) {}
 
   /**
    * Gets an address's balance for each celo token.

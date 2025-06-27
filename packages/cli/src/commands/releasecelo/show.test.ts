@@ -41,8 +41,9 @@ testWithAnvilL2('releasegold:show cmd', (web3: Web3) => {
 
     const schedule = await releaseGoldWrapper.getReleaseSchedule()
 
-    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-      .toMatchInlineSnapshot(`
+    expect(
+      logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+    ).toMatchInlineSnapshot(`
       [
         [
           "authorizedSigners: 

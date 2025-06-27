@@ -110,7 +110,10 @@ export class TestLedger {
   isMock = true
   transport: Eth['transport']
 
-  constructor(readonly mockForceValidation: () => void, readonly config?: Config) {
+  constructor(
+    readonly mockForceValidation: () => void,
+    readonly config?: Config
+  ) {
     this.transport = {
       send: async (_cla: number, ins: number, _p1: number, _p2: number): Promise<Buffer> => {
         if (ins === 0x01) {

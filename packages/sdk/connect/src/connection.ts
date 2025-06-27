@@ -60,7 +60,11 @@ export class Connection {
   readonly paramsPopulator: TxParamsNormalizer
   rpcCaller!: RpcCaller
 
-  constructor(readonly web3: Web3, public wallet?: ReadOnlyWallet, handleRevert = true) {
+  constructor(
+    readonly web3: Web3,
+    public wallet?: ReadOnlyWallet,
+    handleRevert = true
+  ) {
     web3.eth.handleRevert = handleRevert
 
     this.config = {

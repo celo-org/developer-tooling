@@ -53,7 +53,10 @@ export class CeloProvider implements Provider {
   // relation to other sign and send operations.
   private nonceLock: Lock = new Lock()
 
-  constructor(readonly existingProvider: Provider, readonly connection: Connection) {
+  constructor(
+    readonly existingProvider: Provider,
+    readonly connection: Connection
+  ) {
     this.addProviderDelegatedFunctions()
   }
 

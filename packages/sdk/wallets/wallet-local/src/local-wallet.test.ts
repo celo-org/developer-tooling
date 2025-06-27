@@ -181,8 +181,9 @@ describe('Local wallet class', () => {
           })
 
           test('succeeds with eth-legacy', async () => {
-            await expect(wallet.signTransaction(celoTransactionWithGasPrice)).resolves
-              .toMatchInlineSnapshot(`
+            await expect(
+              wallet.signTransaction(celoTransactionWithGasPrice)
+            ).resolves.toMatchInlineSnapshot(`
               {
                 "raw": "0xf86b80630a94588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a764000083abcdef83015ad7a0c6f2c698f9952bc121b64496b60aa019863388f1542f5e10271ea89d0a19682ca01f270cf24f9d16d7be5e38b52b4ba9c2d8ac73d77ba8ca28142544dee5803ba7",
                 "tx": {
@@ -281,8 +282,9 @@ describe('Local wallet class', () => {
               feeCurrency: '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826',
               maxFeeInFeeCurrency: '92',
             } as const
-            await expect(wallet.signTransaction(recoverTransactionCIP66)).resolves
-              .toMatchInlineSnapshot(`
+            await expect(
+              wallet.signTransaction(recoverTransactionCIP66)
+            ).resolves.toMatchInlineSnapshot(`
               {
                 "raw": "0x7af88382ad5a8063630a94588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a764000083abcdefc094cd2a3d9f938e13cd947ec05abc7fe734df8dd8265c01a00fb404c1a62ab54b47b4ca07f5ac7e7b233be6cd173294c0b1f3a209c36f6265a05ac38f9ddd67ecf936f2dfea2be5f641959e2a66545fffb01ebd8c925ac23b89",
                 "tx": {
@@ -313,8 +315,9 @@ describe('Local wallet class', () => {
               maxPriorityFeePerGas: '99',
               feeCurrency: '0xCD2a3d9F938E13CD947Ec05AbC7FE734Df8DD826',
             } as const
-            await expect(wallet.signTransaction(recoverTransactionCIP64)).resolves
-              .toMatchInlineSnapshot(`
+            await expect(
+              wallet.signTransaction(recoverTransactionCIP64)
+            ).resolves.toMatchInlineSnapshot(`
               {
                 "raw": "0x7bf88282ad5a8063630a94588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a764000083abcdefc094cd2a3d9f938e13cd947ec05abc7fe734df8dd82680a091b5504a59e529e7efa42dbb97fbc3311a91d035c873a94ab0789441fc989f84a02e8254d6b3101b63417e5d496833bc84f4832d4a8bf8a2b83e291d8f38c0f62d",
                 "tx": {
@@ -394,9 +397,8 @@ describe('Local wallet class', () => {
               data: '0xabcdef',
             } as const
 
-            const signedTx: EncodedTransaction = await wallet.signTransaction(
-              celoTransactionZeroPrefix
-            )
+            const signedTx: EncodedTransaction =
+              await wallet.signTransaction(celoTransactionZeroPrefix)
             expect(signedTx.tx.s.startsWith('0x00')).toBeFalsy()
             const [, recoveredSigner] = recoverTransaction(signedTx.raw)
             expect(normalizeAddressWith0x(recoveredSigner)).toBe(
