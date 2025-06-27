@@ -24,7 +24,8 @@
       "!**/.git/",
       "!packages/docs",
       "!packages/sdk/network-utils/src/utils/timezones.json",
-      "!packages/sdk/phone-utils/src/data"
+      "!packages/sdk/phone-utils/src/data",
+      "!.yarn"
     ]
   },
   "linter": {
@@ -38,7 +39,8 @@
       "!**/dist",
       "!**/lib",
       "!**/.git/",
-      "!packages/docs"
+      "!packages/docs",
+      "!.yarn"
     ],
     "rules": {
       "recommended": false,
