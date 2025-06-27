@@ -36,7 +36,7 @@ export default class ValidatorList extends BaseCommand {
 
     ux.action.stop()
     ux.table(
-      validatorList.map((v) => ({ ['v']: { ...v, score: fromFixed(v.score) } })),
+      validatorList.map((v) => ({ v: { ...v, score: fromFixed(v.score) } })),
       validatorTable,
       res.flags
     )

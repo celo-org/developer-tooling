@@ -51,7 +51,7 @@ export class FeeCurrencyDirectoryWrapper extends AbstractFeeCurrencyWrapper<FeeC
    */
   async getConfig(): Promise<FeeCurrencyDirectoryConfig> {
     const addresses = await this.getAddresses()
-    let config: FeeCurrencyDirectoryConfig = { intrinsicGasForAlternativeFeeCurrency: {} }
+    const config: FeeCurrencyDirectoryConfig = { intrinsicGasForAlternativeFeeCurrency: {} }
 
     for (const address of addresses) {
       config.intrinsicGasForAlternativeFeeCurrency[address] = (

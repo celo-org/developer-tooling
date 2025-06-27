@@ -32,8 +32,12 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
     kit = newKitFromWeb3(web3)
     accounts = await web3.eth.getAccounts()
 
-    jest.spyOn(console, 'log').mockImplementation(() => {})
-    jest.spyOn(console, 'error').mockImplementation(() => {})
+    jest.spyOn(console, 'log').mockImplementation(() => {
+      // noop
+    })
+    jest.spyOn(console, 'error').mockImplementation(() => {
+      // noop
+    })
 
     await topUpWithToken(
       kit,

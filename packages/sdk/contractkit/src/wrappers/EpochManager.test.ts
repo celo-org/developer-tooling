@@ -136,7 +136,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
             from: ownerAdress,
           })
 
-          await electionContract['contract'].methods
+          await electionContract.contract.methods
             .markGroupIneligible(validatorGroups[0])
             .send({ from: accounts[0] })
 

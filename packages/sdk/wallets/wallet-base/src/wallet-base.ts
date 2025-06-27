@@ -103,7 +103,7 @@ export abstract class WalletBase<TSigner extends Signer> implements ReadOnlyWall
    */
   async signPersonalMessage(address: Address, data: string): Promise<string> {
     if (!isHexString(data)) {
-      throw Error('wallet@signPersonalMessage: Expected data has to be a hex string ')
+      throw new Error('wallet@signPersonalMessage: Expected data has to be a hex string ')
     }
 
     const signer = this.getSigner(address)
@@ -120,7 +120,7 @@ export abstract class WalletBase<TSigner extends Signer> implements ReadOnlyWall
    */
   async signTypedData(address: Address, typedData: EIP712TypedData): Promise<string> {
     if (typedData === undefined) {
-      throw Error('wallet@signTypedData: TypedData Missing')
+      throw new Error('wallet@signTypedData: TypedData Missing')
     }
 
     const signer = this.getSigner(address)

@@ -21,7 +21,7 @@ export function zip3<A, B, C>(as: A[], bs: B[], cs: C[]) {
 }
 
 export function zeroRange(to: number): number[] {
-  return Array.from(Array(to).keys())
+  return Array.from(new Array(to).keys())
 }
 
 // https://stackoverflow.com/questions/43118692/typescript-filter-out-nulls-from-an-array

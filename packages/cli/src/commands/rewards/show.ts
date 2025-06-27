@@ -60,7 +60,7 @@ export default class Show extends BaseCommand {
 
     if (res.flags.validator) {
       if (res.flags.voter || res.flags.group) {
-        throw Error('Cannot select --validator with --voter or --group')
+        throw new Error('Cannot select --validator with --voter or --group')
       }
       checkBuilder.isValidator(res.flags.validator)
     }
