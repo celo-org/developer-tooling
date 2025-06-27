@@ -149,8 +149,9 @@ testWithAnvilL2('governance:execute cmd', (web3: Web3) => {
       await testTransactionsContract.methods.getValue(PROPOSAL_TRANSACTION_TEST_KEY).call()
     ).toEqual(PROPOSAL_TRANSACTION_TEST_VALUE)
 
-    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-      .toMatchInlineSnapshot(`
+    expect(
+      logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+    ).toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",

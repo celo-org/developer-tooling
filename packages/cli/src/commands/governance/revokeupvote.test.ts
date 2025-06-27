@@ -35,9 +35,7 @@ testWithAnvilL2('governance:revokeupvote cmd', (web3: Web3) => {
       await testLocallyWithWeb3Node(Register, ['--from', accounts[i]], web3)
       await testLocallyWithWeb3Node(Lock, ['--from', accounts[i], '--value', i.toString()], web3)
 
-      await (
-        await governance.upvote(proposalId, accounts[i])
-      ).sendAndWaitForReceipt({
+      await (await governance.upvote(proposalId, accounts[i])).sendAndWaitForReceipt({
         from: accounts[i],
       })
     }

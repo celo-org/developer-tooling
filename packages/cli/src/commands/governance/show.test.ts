@@ -65,8 +65,9 @@ testWithAnvilL2('governance:show cmd', (web3: Web3) => {
     const schedule = await governanceWrapper.proposalSchedule(proposalId)
     const timestamp = await (await governanceWrapper.getProposalMetadata(proposalId)).timestamp
 
-    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-      .toMatchInlineSnapshot(`
+    expect(
+      logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+    ).toMatchInlineSnapshot(`
       [
         [
           "Running Checks:",

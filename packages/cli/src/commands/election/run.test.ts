@@ -30,8 +30,9 @@ testWithAnvilL2('election:run', (web3: Web3) => {
     expect(
       logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
     ).toMatchInlineSnapshot(`[]`)
-    expect(warnMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-      .toMatchInlineSnapshot(`
+    expect(
+      warnMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+    ).toMatchInlineSnapshot(`
       [
         [
           "Warning: error running actual elections, retrying with minimum validators at 0",

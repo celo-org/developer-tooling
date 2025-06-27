@@ -171,8 +171,9 @@ testWithAnvilL2('governance:executehotfix cmd', (web3: Web3) => {
         await testTransactionsContract.methods.getValue(HOTFIX_TRANSACTION_TEST_KEY).call()
       ).toEqual(HOTFIX_TRANSACTION_TEST_VALUE)
 
-      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-        .toMatchInlineSnapshot(`
+      expect(
+        logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+      ).toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
@@ -322,8 +323,9 @@ testWithAnvilL2('governance:executehotfix cmd', (web3: Web3) => {
         await testTransactionsContract.methods.getValue(HOTFIX_TRANSACTION_TEST_KEY).call()
       ).toEqual('0')
 
-      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-        .toMatchInlineSnapshot(`
+      expect(
+        logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+      ).toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",

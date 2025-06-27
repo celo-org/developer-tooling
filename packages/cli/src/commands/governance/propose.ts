@@ -78,8 +78,8 @@ export default class Propose extends BaseCommand {
     const proposer = useMultiSig
       ? proposerMultiSig!.address
       : useSafe
-      ? res.flags.safeAddress!
-      : account
+        ? res.flags.safeAddress!
+        : account
 
     const builder = new ProposalBuilder(kit)
 

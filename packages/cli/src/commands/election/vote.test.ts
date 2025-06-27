@@ -104,8 +104,9 @@ testWithAnvilL2('election:vote', (web3: Web3) => {
     ).resolves.not.toThrow()
 
     expect(await election.getTotalVotesForGroupByAccount(groupAddress, fromAddress)).toEqual(amount)
-    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-      .toMatchInlineSnapshot(`
+    expect(
+      logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+    ).toMatchInlineSnapshot(`
       [
         [
           "Running Checks:",

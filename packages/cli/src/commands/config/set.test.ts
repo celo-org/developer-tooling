@@ -48,16 +48,18 @@ describe('config:set cmd', () => {
     describe('with bad data', () => {
       beforeEach(() => jest.spyOn(console, 'error').mockImplementation())
       it('fails with solana ', async () => {
-        await expect(testLocally(Set, ['--derivationPath', 'solana'])).rejects
-          .toThrowErrorMatchingInlineSnapshot(`
+        await expect(
+          testLocally(Set, ['--derivationPath', 'solana'])
+        ).rejects.toThrowErrorMatchingInlineSnapshot(`
           "Parsing --derivationPath 
           	Invalid derivationPath: solana. should be in format  "m / 44' / coin_type' / account'"
           See more help with --help"
         `)
       })
       it('fails with invalid path', async () => {
-        await expect(testLocally(Set, ['--derivationPath', "m/44'/256'/0"])).rejects
-          .toThrowErrorMatchingInlineSnapshot(`
+        await expect(
+          testLocally(Set, ['--derivationPath', "m/44'/256'/0"])
+        ).rejects.toThrowErrorMatchingInlineSnapshot(`
           "Parsing --derivationPath 
           	Invalid derivationPath: m/44'/256'/0. should be in format  "m / 44' / coin_type' / account'"
           See more help with --help"

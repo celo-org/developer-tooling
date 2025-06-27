@@ -67,9 +67,8 @@ testWithAnvilL2('lockedgold:delegate cmd', (web3: Web3) => {
     await testLocallyWithWeb3Node(Register, ['--from', account2], web3)
     await testLocallyWithWeb3Node(Lock, ['--from', account, '--value', '200'], web3)
 
-    const account2OriginalVotingPower = await lockedGold.getAccountTotalGovernanceVotingPower(
-      account2
-    )
+    const account2OriginalVotingPower =
+      await lockedGold.getAccountTotalGovernanceVotingPower(account2)
     expect(account2OriginalVotingPower.toFixed()).toBe('0')
 
     await testLocallyWithWeb3Node(
