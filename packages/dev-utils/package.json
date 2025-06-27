@@ -45,6 +45,8 @@
     "web3-core-helpers": "1.10.4"
   },
   "devDependencies": {
+    "@celo/base": "workspace:^",
+    "@celo/celo-devchain": "^8.0.0",
     "@celo/devchain-anvil": "12.0.5",
     "@celo/typescript": "workspace:^",
     "@tsconfig/recommended": "^1.0.3",

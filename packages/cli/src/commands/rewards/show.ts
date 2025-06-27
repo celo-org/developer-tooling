@@ -86,8 +86,7 @@ export default class Show extends BaseCommand {
       epochNumber++
     ) {
       if (!filter || res.flags.voter) {
-        let electedValidators: Validator[]
-        electedValidators = (await Promise.all(
+        const electedValidators = (await Promise.all(
           (
             await epochManager!.getElectedSigners()
           ).map(async (x) => ({

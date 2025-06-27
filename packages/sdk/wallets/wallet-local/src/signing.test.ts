@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/suspicious/noDoubleEquals: <explanation> */
+/** biome-ignore-all lint/suspicious/noDoubleEquals: legacy-test-file */
 import {
   Callback,
   CeloTx,

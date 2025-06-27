@@ -746,11 +746,11 @@ class CheckBuilder {
           this.SANCTIONED_SET.data = new Set(lowercasedAddresses)
         }
       } catch (e) {
-        ;(this.SANCTIONED_SET.data =
+        this.SANCTIONED_SET.data =
           this.SANCTIONED_SET.data.size === 0
             ? new Set(lowercasedAddresses)
-            : this.SANCTIONED_SET.data),
-          console.error('Error fetching OFAC sanctions list', e)
+            : this.SANCTIONED_SET.data
+        console.error('Error fetching OFAC sanctions list', e)
       }
     }
     return this.SANCTIONED_SET.data.has(_formatAddressForCompare(address))
