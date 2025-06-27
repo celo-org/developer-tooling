@@ -19,8 +19,8 @@
   "types": "./lib/index.d.ts",
   "sideEffects": false,
   "scripts": {
-    "build": "yarn tsc -b .",
-    "clean": "rm -rf lib ; yarn run tsc -b . --clean",
+    "build": "yarn run --top-level tsc -b .",
+    "clean": "rm -rf lib ; yarn --top-level run tsc -b . --clean",
     "prepublishOnly": "yarn build",
     "docs": "yarn run --top-level typedoc",
     "test": "NODE_OPTIONS=--experimental-vm-modules yarn run --top-level jest --detectOpenHandles",
@@ -40,9 +40,7 @@
     "@celo/typescript": "workspace:^",
     "@types/node": "18.7.6",
     "fetch-mock": "^10.0.7",
-    "jest": "^29.7.0",
-    "ts-node": "^10.9.1",
-    "typescript": "5.3.3"
+    "jest": "^29.7.0"
   },
   "packageManager": "yarn@4.0.2"
 }
