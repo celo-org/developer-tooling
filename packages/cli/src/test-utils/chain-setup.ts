@@ -51,9 +51,7 @@ export const setupGroup = async (
 
   const validators = await kit.contracts.getValidators()
 
-  await (
-    await validators.registerValidatorGroup(groupCommission)
-  ).sendAndWaitForReceipt({
+  await (await validators.registerValidatorGroup(groupCommission)).sendAndWaitForReceipt({
     from: groupAccount,
   })
 }
@@ -158,9 +156,7 @@ export async function setupValidatorAndAddToGroup(
 
   await validators.affiliate(groupAccount).sendAndWaitForReceipt({ from: validatorAccount })
 
-  await (
-    await validators.addMember(groupAccount, validatorAccount)
-  ).sendAndWaitForReceipt({
+  await (await validators.addMember(groupAccount, validatorAccount)).sendAndWaitForReceipt({
     from: groupAccount,
   })
 }
@@ -185,9 +181,7 @@ export const activateAllValidatorGroupsVotes = async (kit: ContractKit) => {
 
   // Make sure we are in the next epoch to activate the votes
   await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({ from: sender })
-  await (
-    await epochManagerWrapper.finishNextEpochProcessTx()
-  ).sendAndWaitForReceipt({
+  await (await epochManagerWrapper.finishNextEpochProcessTx()).sendAndWaitForReceipt({
     from: sender,
   })
 

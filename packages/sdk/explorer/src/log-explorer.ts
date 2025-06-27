@@ -14,7 +14,10 @@ export async function newLogExplorer(kit: ContractKit) {
 export class LogExplorer {
   private readonly addressMapping: Map<Address, ContractMapping>
 
-  constructor(private kit: ContractKit, readonly contractDetails: ContractDetails[]) {
+  constructor(
+    private kit: ContractKit,
+    readonly contractDetails: ContractDetails[]
+  ) {
     this.addressMapping = mapFromPairs(
       contractDetails.map((cd) => [
         cd.address,

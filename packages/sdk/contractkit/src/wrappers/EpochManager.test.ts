@@ -96,9 +96,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
     await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
       from: accounts[0],
     })
-    await (
-      await epochManagerWrapper.finishNextEpochProcessTx()
-    ).sendAndWaitForReceipt({
+    await (await epochManagerWrapper.finishNextEpochProcessTx()).sendAndWaitForReceipt({
       from: accounts[0],
     })
 
@@ -150,9 +148,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
         new BigNumber(web3.utils.toWei('1', 'ether'))
       )
 
-      await (
-        await epochManagerWrapper.finishNextEpochProcessTx()
-      ).sendAndWaitForReceipt({
+      await (await epochManagerWrapper.finishNextEpochProcessTx()).sendAndWaitForReceipt({
         from: accounts[0],
       })
     },
@@ -267,9 +263,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
       from: accounts[0],
     })
 
-    await (
-      await epochManagerWrapper.processGroupsTx()
-    ).sendAndWaitForReceipt({
+    await (await epochManagerWrapper.processGroupsTx()).sendAndWaitForReceipt({
       from: accounts[0],
     })
 

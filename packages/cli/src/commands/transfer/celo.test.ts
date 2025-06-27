@@ -356,9 +356,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
     const balanceAfter = await kit.getTotalBalance(accounts[0])
     const receiverBalanceAfter = await kit.getTotalBalance(accounts[1])
     const transactionReceipt = await web3.eth.getTransactionReceipt(
-      (
-        await web3.eth.getBlock('latest')
-      ).transactions[0]
+      (await web3.eth.getBlock('latest')).transactions[0]
     )
 
     // Safety check if the latest transaction was originated by expected account
