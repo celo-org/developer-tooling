@@ -76,7 +76,7 @@
         "noDebugger": "error",
         "noDoubleEquals": "error",
         "noDuplicateCase": "error",
-        "noEmptyBlockStatements": "error",
+        "noEmptyBlockStatements": "warn",
         "noExplicitAny": "off",
         "noFallthroughSwitchClause": "off",
         "noIrregularWhitespace": "off",

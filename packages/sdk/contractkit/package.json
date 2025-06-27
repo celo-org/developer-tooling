@@ -48,6 +48,7 @@
     "@celo/dev-utils": "0.1.0-beta.3",
     "@celo/odis-identifiers": "^1.0.1",
     "@celo/typescript": "workspace:^",
+    "@jest/test-sequencer": "^30.0.2",
     "@types/debug": "^4.1.5",
     "@types/node": "18.7.16",
     "bn.js": "^5.1.0",

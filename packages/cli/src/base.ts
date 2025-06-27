@@ -319,7 +319,9 @@ export abstract class BaseCommand extends Command {
           try {
             const error = JSON.parse((e as any).details) as { code: number; message: string }
             code = error.code
-          } catch (_) {}
+          } catch (_) {
+            // noop
+          }
 
           if (code === MethodNotFoundRpcError.code) {
             failWith(
