@@ -187,7 +187,9 @@ export const activateAllValidatorGroupsVotes = async (kit: ContractKit) => {
   await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({ from: sender })
   await (
     await epochManagerWrapper.finishNextEpochProcessTx()
-  ).sendAndWaitForReceipt({ from: sender })
+  ).sendAndWaitForReceipt({
+    from: sender,
+  })
 
   for (const validatorGroup of validatorGroups) {
     const pendingVotesForGroup = new BigNumber(

@@ -22,7 +22,6 @@
     "clean": "yarn run --top-level tsc -b . --clean",
     "docs": "yarn run --top-level typedoc",
     "test": "NODE_OPTIONS='--experimental-vm-modules' yarn run --top-level jest",
-    "lint": "yarn run --top-level eslint -c .eslintrc.js ",
     "prepublishOnly": "yarn build"
   },
   "dependencies": {

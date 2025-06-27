@@ -221,8 +221,7 @@ type ProxyCallArgs<
   ParsedInputArgs extends any[],
   PreParsedOutput,
   Output
-> =
-  // parseInputArgs => methodFn => parseOutput
+> =  // parseInputArgs => methodFn => parseOutput
   | [
       Method<ParsedInputArgs, PreParsedOutput>,
       (...arg: InputArgs) => ParsedInputArgs,
@@ -312,8 +311,7 @@ export function proxyCall<
  *  - methodFn
  *  - parseInputArgs => methodFn
  */
-type ProxySendArgs<InputArgs extends any[], ParsedInputArgs extends any[], Output> =
-  // parseInputArgs => methodFn
+type ProxySendArgs<InputArgs extends any[], ParsedInputArgs extends any[], Output> =  // parseInputArgs => methodFn
   | [Method<ParsedInputArgs, Output>, (...arg: InputArgs) => ParsedInputArgs]
   // methodFn
   | [Method<InputArgs, Output>]

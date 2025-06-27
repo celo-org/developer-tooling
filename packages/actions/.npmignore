@@ -16,5 +16,4 @@ tsconfig-*.json
 /dist/**/*.test.*
 
 typedoc.json
-.eslintrc.cjs
 vitest.config.ts

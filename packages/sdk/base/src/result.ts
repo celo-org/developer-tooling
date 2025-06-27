@@ -1,4 +1,3 @@
-/* eslint max-classes-per-file: off */
 export interface OkResult<TResult> {
   ok: true
   result: TResult

@@ -37,7 +37,9 @@ testWithAnvilL2('governance:revokeupvote cmd', (web3: Web3) => {
 
       await (
         await governance.upvote(proposalId, accounts[i])
-      ).sendAndWaitForReceipt({ from: accounts[i] })
+      ).sendAndWaitForReceipt({
+        from: accounts[i],
+      })
     }
   })
 

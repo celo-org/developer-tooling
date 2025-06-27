@@ -56,8 +56,9 @@ class MockWallet implements ReadOnlyWallet {
   decrypt(_address: string, _ciphertext: Buffer): Promise<Buffer> {
     return Promise.resolve(Buffer.from('mock'))
   }
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  removeAccount(_address: string): void {}
+  removeAccount(_address: string): void {
+    // noop
+  }
   computeSharedSecret(_address: string, _publicKey: string): Promise<Buffer> {
     return Promise.resolve(Buffer.from('mock'))
   }
