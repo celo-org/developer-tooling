@@ -42,7 +42,8 @@
     "tmp": "^0.1.0",
     "viem": "^2.29.2",
     "web3": "1.10.4",
-    "web3-core-helpers": "1.10.4"
+    "web3-core-helpers": "1.10.4",
+    "web3-utils": "1.10.4"
   },
   "devDependencies": {
     "@celo/base": "workspace:^",
