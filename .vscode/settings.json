@@ -49,5 +49,6 @@
     "editor.codeActionsOnSave": {
       "source.organizeImports": "explicit"
     }
-  }
+  },
+  "biome.lsp.bin": "./node_modules/@biomejs/biome/bin/biome"
 }
