@@ -66,7 +66,10 @@ class CheckBuilder {
   private checks: CommandCheck[] = []
   private COMPLIANT_ERROR_RESPONSE =
     "'The wallet address has been sanctioned by the U.S. Department of the Treasury.''All U.S. persons are prohibited from accessing, receiving, accepting, or facilitating any property 'and interests in property (including use of any technology, software or software patch(es)) of these'designated digital wallet addresses.  These prohibitions include the making of any contribution or''provision of funds, goods, or services by, to, or for the benefit of any blocked person and the ''receipt of any contribution or provision of funds, goods, or services from any such person and ' 'all designated digital asset wallets.'"
-  constructor(private command: BaseCommand, private signer?: StrongAddress) {}
+  constructor(
+    private command: BaseCommand,
+    private signer?: StrongAddress
+  ) {}
 
   private async getClient() {
     // In this case we're not using any Celo-specific client features, so it can be
@@ -108,9 +111,7 @@ class CheckBuilder {
 
       if (this.signer) {
         try {
-          const account = await (
-            await this.getClient()
-          ).readContract({
+          const account = await (await this.getClient()).readContract({
             address: await resolveAddress(await this.getClient(), 'Accounts'),
             abi: accountsABI,
             functionName: 'signerToAccount',
@@ -467,9 +468,7 @@ class CheckBuilder {
     const valueInEth = formatEther(value)
 
     return this.addCheck(`Account has at least ${valueInEth} CELO`, async () => {
-      const balance = await (
-        await this.getClient()
-      ).readContract({
+      const balance = await (await this.getClient()).readContract({
         address: await resolveAddress(await this.getClient(), 'GoldToken'),
         abi: goldTokenABI,
         functionName: 'balanceOf',
@@ -502,9 +501,7 @@ class CheckBuilder {
     const valueInEth = formatUnits(value, decimals)
 
     return this.addCheck(`Account has at least ${valueInEth} erc20 token`, async () => {
-      const balance = await (
-        await this.getClient()
-      ).readContract({
+      const balance = await (await this.getClient()).readContract({
         address: ensureLeading0x(erc20),
         abi: erc20Abi,
         functionName: 'balanceOf',
@@ -667,9 +664,7 @@ class CheckBuilder {
   // This is the only required API change (because of dropping the usage of MultiSigWrapper)
   isMultiSigOwner = (from: StrongAddress, address: StrongAddress) => {
     return this.addCheck('The provided address is an owner of the multisig', async () => {
-      const owners = await (
-        await this.getClient()
-      ).readContract({
+      const owners = await (await this.getClient()).readContract({
         address,
         abi: multiSigABI,
         functionName: 'getOwners',
@@ -746,11 +741,11 @@ class CheckBuilder {
           this.SANCTIONED_SET.data = new Set(lowercasedAddresses)
         }
       } catch (e) {
-        ;(this.SANCTIONED_SET.data =
+        this.SANCTIONED_SET.data =
           this.SANCTIONED_SET.data.size === 0
             ? new Set(lowercasedAddresses)
-            : this.SANCTIONED_SET.data),
-          console.error('Error fetching OFAC sanctions list', e)
+            : this.SANCTIONED_SET.data
+        console.error('Error fetching OFAC sanctions list', e)
       }
     }
     return this.SANCTIONED_SET.data.has(_formatAddressForCompare(address))

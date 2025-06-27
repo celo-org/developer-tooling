@@ -35,9 +35,8 @@ testWithAnvilL2('lockedgold:revoke-delegate cmd', (web3: Web3) => {
       web3
     )
 
-    const account2VotingPowerAfterRevoke = await lockedGold.getAccountTotalGovernanceVotingPower(
-      account2
-    )
+    const account2VotingPowerAfterRevoke =
+      await lockedGold.getAccountTotalGovernanceVotingPower(account2)
     expect(account2VotingPowerAfterRevoke.toFixed()).toBe('0')
   })
 })

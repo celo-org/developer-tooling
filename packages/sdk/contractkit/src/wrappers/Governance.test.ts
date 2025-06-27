@@ -36,7 +36,7 @@ testWithAnvilL2('Governance Wrapper', (web3: Web3) => {
     lockedGold = await kit.contracts.getLockedGold()
     accountWrapper = await kit.contracts.getAccounts()
     minDeposit = (await governance.minDeposit()).toFixed()
-    referendumStageDuration = (await governance.stageDurations())['Referendum'].toNumber()
+    referendumStageDuration = (await governance.stageDurations()).Referendum.toNumber()
     dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
 
     for (const account of accounts.slice(0, 4)) {

@@ -80,7 +80,7 @@ export const stripAnsiCodesAndTxHashes = (text: string): string => {
     .replace(/^txHash: 0x([A-Fa-f0-9]{64})$/, 'txHash: 0xtxhash')
 }
 
-export function stripAnsiCodesFromNestedArray(arrays: Array<string[]>) {
+export function stripAnsiCodesFromNestedArray(arrays: string[][]) {
   return arrays.map((level0) => level0.map((level1) => stripAnsiCodesAndTxHashes(level1)))
 }
 

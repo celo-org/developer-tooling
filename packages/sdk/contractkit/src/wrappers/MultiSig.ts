@@ -91,15 +91,13 @@ export class MultiSigWrapper extends BaseWrapper<MultiSig> {
     const data = stringToSolidityBytes(txo.encodeABI())
     const transactionCount = await this.getTransactionCount(true, true)
     const transactionsOrEmpties = await Promise.all(
-      Array(transactionCount)
-        .fill(0)
-        .map(async (_, index) => {
-          const tx = await this.getTransaction(index, false)
-          if (tx.data === data && tx.destination === destination && tx.value.isEqualTo(value)) {
-            return { index, ...tx }
-          }
-          return null
-        })
+      new Array(transactionCount).fill(0).map(async (_, index) => {
+        const tx = await this.getTransaction(index, false)
+        if (tx.data === data && tx.destination === destination && tx.value.isEqualTo(value)) {
+          return { index, ...tx }
+        }
+        return null
+      })
     )
     const wantedTransaction = transactionsOrEmpties.find((tx) => tx !== null)
     if (!wantedTransaction) {

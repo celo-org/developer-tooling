@@ -32,8 +32,12 @@ testWithAnvilL2(
       // need to set multical deployment on the address it is found on alfajores
       // since this test impersonates alfajores chain id
       await deployMultiCall(web3, celoAlfajores.contracts.multicall3.address)
-      jest.spyOn(console, 'log').mockImplementation(() => {})
-      jest.spyOn(console, 'error').mockImplementation(() => {})
+      jest.spyOn(console, 'log').mockImplementation(() => {
+        // noop
+      })
+      jest.spyOn(console, 'error').mockImplementation(() => {
+        // noop
+      })
     })
 
     describe('hotfix', () => {
@@ -92,8 +96,9 @@ testWithAnvilL2(
           "executionTimeLimit": "0",
         }
       `)
-        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-          .toMatchInlineSnapshot(`
+        expect(
+          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+        ).toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
@@ -138,8 +143,9 @@ testWithAnvilL2(
           "executionTimeLimit": "0",
         }
       `)
-        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-          .toMatchInlineSnapshot(`
+        expect(
+          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+        ).toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
@@ -206,8 +212,9 @@ testWithAnvilL2(
           "executionTimeLimit": "0",
         }
       `)
-        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-          .toMatchInlineSnapshot(`
+        expect(
+          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+        ).toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
@@ -267,8 +274,9 @@ testWithAnvilL2(
           "executionTimeLimit": "0",
         }
       `)
-        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-          .toMatchInlineSnapshot(`
+        expect(
+          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+        ).toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
@@ -330,8 +338,9 @@ testWithAnvilL2(
           "executionTimeLimit": "0",
         }
       `)
-        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-          .toMatchInlineSnapshot(`
+        expect(
+          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+        ).toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
@@ -405,8 +414,9 @@ testWithAnvilL2(
           "executionTimeLimit": "0",
         }
       `)
-        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-          .toMatchInlineSnapshot(`
+        expect(
+          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+        ).toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
@@ -502,8 +512,9 @@ testWithAnvilL2(
         }
       `)
 
-        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-          .toMatchInlineSnapshot(`
+        expect(
+          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+        ).toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
@@ -686,8 +697,9 @@ testWithAnvilL2(
         }
       `)
 
-        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-          .toMatchInlineSnapshot(`
+        expect(
+          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+        ).toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
@@ -773,8 +785,9 @@ testWithAnvilL2(
           "executionTimeLimit": "0",
         }
       `)
-        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-          .toMatchInlineSnapshot(`
+        expect(
+          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+        ).toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
@@ -861,8 +874,9 @@ testWithAnvilL2(
           "executionTimeLimit": "0",
         }
       `)
-        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-          .toMatchInlineSnapshot(`
+        expect(
+          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+        ).toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",

@@ -11,8 +11,6 @@
 /jest.config.*
 *.tgz
 
-.eslintrc.js
-eslint.tsconfig.json
 typedoc.json
 
 /src

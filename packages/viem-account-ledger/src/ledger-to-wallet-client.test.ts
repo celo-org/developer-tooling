@@ -285,8 +285,12 @@ syntheticDescribe('ledgerToWalletClient (mocked ledger)', () => {
               [0, '', '00', '0x', '0x0', '0x00', '0x1b', 27], // yParity 0
               [1, '1', '0x1', '0x01', '01', '0x1c', 28], // vParity 1
             ]
-            for (const expectedyParity in test_vs_0_and_1) {
-              const test_vs = test_vs_0_and_1[+expectedyParity]
+            for (
+              let expectedyParity = 0;
+              expectedyParity < test_vs_0_and_1.length;
+              expectedyParity++
+            ) {
+              const test_vs = test_vs_0_and_1[expectedyParity]
               for (const v of test_vs) {
                 vi.spyOn(TestLedger.prototype, 'signTransaction').mockImplementationOnce(() =>
                   Promise.resolve({

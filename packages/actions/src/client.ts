@@ -18,7 +18,7 @@ export type WalletCeloClient = WalletClient<Transport, CeloChain, Account>
 
 export type Clients<
   P extends PublicCeloClient | PublicClient = PublicCeloClient,
-  W extends WalletCeloClient | WalletClient = WalletCeloClient
+  W extends WalletCeloClient | WalletClient = WalletCeloClient,
 > = {
   public: P
   wallet?: W

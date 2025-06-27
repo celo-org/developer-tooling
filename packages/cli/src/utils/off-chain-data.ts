@@ -52,10 +52,10 @@ export abstract class OffchainDataCommand extends BaseCommand {
       provider === StorageProviders.GCP
         ? new GoogleStorageWriter(directory, bucket)
         : provider === StorageProviders.AWS
-        ? new AwsStorageWriter(directory, bucket)
-        : provider === StorageProviders.git
-        ? new GitStorageWriter(directory)
-        : new LocalStorageWriter(directory)
+          ? new AwsStorageWriter(directory, bucket)
+          : provider === StorageProviders.git
+            ? new GitStorageWriter(directory)
+            : new LocalStorageWriter(directory)
   }
 }
 

@@ -86,8 +86,9 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (web3) => {
 
     await testLocallyWithWeb3Node(RpcUrls, ['--csv'], web3)
 
-    expect(writeMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-      .toMatchInlineSnapshot(`
+    expect(
+      writeMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+    ).toMatchInlineSnapshot(`
       [
         [
           "Validator Group Name,RPC URL,Validator Address
@@ -114,8 +115,9 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (web3) => {
 
     await testLocallyWithWeb3Node(RpcUrls, ['--all', '--csv'], web3)
 
-    expect(writeMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-      .toMatchInlineSnapshot(`
+    expect(
+      writeMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+    ).toMatchInlineSnapshot(`
       [
         [
           "Validator Group Name,RPC URL,Validator Address

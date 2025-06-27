@@ -22,7 +22,7 @@ export const parseSolidityStringArray = (stringLengths: number[], data: string) 
   let offset = 0
   // @ts-ignore
   const rawData = Buffer.from(data.slice(2), 'hex')
-  // eslint-disable-next-line @typescript-eslint/prefer-for-of
+  // biome-ignore lint/style/useForOf: legacy loop
   for (let i = 0; i < stringLengths.length; i++) {
     const string = rawData.toString('utf-8', offset, offset + stringLengths[i])
     offset += stringLengths[i]

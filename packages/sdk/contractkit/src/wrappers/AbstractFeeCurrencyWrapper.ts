@@ -42,7 +42,7 @@ const MINIMAL_TOKEN_INFO_ABI = [
 ] as const
 
 export abstract class AbstractFeeCurrencyWrapper<
-  TContract extends Contract
+  TContract extends Contract,
 > extends BaseWrapper<TContract> {
   abstract getAddresses(): Promise<StrongAddress[]>
 

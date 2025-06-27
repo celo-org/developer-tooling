@@ -7,8 +7,8 @@ import SendValidatorPayment from './send-validator-payment'
 process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvilL2('epochs:send-validator-payment cmd', (web3) => {
-  let logMock = jest.spyOn(console, 'log')
-  let errorMock = jest.spyOn(console, 'error')
+  const logMock = jest.spyOn(console, 'log')
+  const errorMock = jest.spyOn(console, 'error')
 
   beforeEach(async () => {
     logMock.mockClear()

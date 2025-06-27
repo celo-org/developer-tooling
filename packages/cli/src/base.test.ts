@@ -377,7 +377,9 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
       error: { code: MethodNotFoundRpcError.code },
     })
     class TestErrorCommand extends BaseCommand {
-      async init() {}
+      async init() {
+        // noop
+      }
       async run() {
         await this.getWalletClient()
       }

@@ -5,9 +5,7 @@
 /src
 
 tsconfig.tsbuildinfo
-eslint.tsconfig.json
 jest.config.js
-.eslintrc.js
 typedoc.json
 
 # exclude ts files and sourcemaps

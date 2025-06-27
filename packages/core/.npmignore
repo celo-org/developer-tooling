@@ -15,7 +15,5 @@
 /lib/**/*.test.*
 /lib/test-utils
 
-eslint.tsconfig.json
 typedoc.json
-.eslintrc.cjs
 vitest.config.ts

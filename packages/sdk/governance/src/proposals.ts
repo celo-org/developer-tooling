@@ -1,4 +1,3 @@
-/* eslint max-classes-per-file: off */
 import { ABI as GovernanceABI } from '@celo/abis/web3/Governance'
 import { ABI as RegistryABI } from '@celo/abis/web3/Registry'
 import { Address, trimLeading0x } from '@celo/base/lib/address'

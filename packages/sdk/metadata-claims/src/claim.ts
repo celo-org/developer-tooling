@@ -84,16 +84,16 @@ export type Claim =
 export type ClaimPayload<K extends ClaimTypes> = K extends typeof ClaimTypes.DOMAIN
   ? DomainClaim
   : K extends typeof ClaimTypes.ATTESTATION_SERVICE_URL
-  ? AttestationServiceUrlClaim
-  : K extends typeof ClaimTypes.RPC_URL
-  ? RpcUrlClaim
-  : K extends typeof ClaimTypes.NAME
-  ? NameClaim
-  : K extends typeof ClaimTypes.KEYBASE
-  ? KeybaseClaim
-  : K extends typeof ClaimTypes.ACCOUNT
-  ? AccountClaim
-  : StorageClaim
+    ? AttestationServiceUrlClaim
+    : K extends typeof ClaimTypes.RPC_URL
+      ? RpcUrlClaim
+      : K extends typeof ClaimTypes.NAME
+        ? NameClaim
+        : K extends typeof ClaimTypes.KEYBASE
+          ? KeybaseClaim
+          : K extends typeof ClaimTypes.ACCOUNT
+            ? AccountClaim
+            : StorageClaim
 
 /** @internal */
 export const isOfType =

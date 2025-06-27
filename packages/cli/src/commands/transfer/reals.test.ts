@@ -17,8 +17,12 @@ testWithAnvilL2('transfer:reals cmd', (web3: Web3) => {
   let kit: ContractKit
 
   beforeEach(async () => {
-    jest.spyOn(console, 'log').mockImplementation(() => {})
-    jest.spyOn(console, 'error').mockImplementation(() => {})
+    jest.spyOn(console, 'log').mockImplementation(() => {
+      // noop
+    })
+    jest.spyOn(console, 'error').mockImplementation(() => {
+      // noop
+    })
   })
 
   beforeEach(async () => {
@@ -69,7 +73,9 @@ testWithAnvilL2('transfer:reals cmd', (web3: Web3) => {
   })
 
   test('should fail if to address is sanctioned', async () => {
-    const spy = jest.spyOn(console, 'log').mockImplementation(() => {})
+    const spy = jest.spyOn(console, 'log').mockImplementation(() => {
+      // noop
+    })
 
     await expect(
       testLocallyWithWeb3Node(

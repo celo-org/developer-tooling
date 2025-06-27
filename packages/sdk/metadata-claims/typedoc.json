@@ -1,25 +1,19 @@
 {
   "$schema": "https://typedoc.org/schema.json",
-  "exclude": [
-    "**/*.test.ts"
-  ],
+  "exclude": ["**/*.test.ts"],
   "excludePrivate": true,
   "excludeProtected": true,
   "hideGenerator": true,
   "out": "../../../docs/sdk/metadata-claims",
   "gitRevision": "master",
   "readme": "none",
-  "entryPoints": [
-    "./src/*.ts",
-  ],
-  "githubPages": false,  
+  "entryPoints": ["./src/*.ts"],
+  "githubPages": false,
   "excludeReferences": true,
   "includeVersion": true,
-  "plugin": [
-    "typedoc-plugin-markdown"
-  ],
+  "plugin": ["typedoc-plugin-markdown"],
   "entryPointStrategy": "resolve",
   "validation": {
-    "notExported": false,
+    "notExported": false
   }
 }

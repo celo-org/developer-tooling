@@ -48,8 +48,8 @@ export default class ShowMultiSig extends BaseCommand {
       tx !== undefined
         ? await process(await multisig.getTransaction(tx))
         : all
-        ? await Promise.all((await multisig.getTransactions()).map(process))
-        : txs
+          ? await Promise.all((await multisig.getTransactions()).map(process))
+          : txs
     const info = {
       Owners: await multisig.getOwners(),
       'Required confirmations': await multisig.getRequired(),

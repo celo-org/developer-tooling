@@ -229,7 +229,7 @@ export class LedgerWallet extends RemoteWallet<LedgerSigner> implements ReadOnly
     //                                                 acl   ins   p1    p2
     const response = await this.ledger!.transport.send(0xb0, 0x01, 0x00, 0x00)
     try {
-      let results = [] // (name, version)
+      const results = [] // (name, version)
       let i = 1
       while (i < response.length + 1) {
         const len = response[i]

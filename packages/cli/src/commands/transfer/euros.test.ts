@@ -1,5 +1,5 @@
 import { COMPLIANT_ERROR_RESPONSE } from '@celo/compliance'
-import { ContractKit, StableToken, newKitFromWeb3 } from '@celo/contractkit'
+import { ContractKit, newKitFromWeb3, StableToken } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
@@ -19,8 +19,12 @@ testWithAnvilL2('transfer:euros cmd', (web3: Web3) => {
   beforeEach(async () => {
     kit = newKitFromWeb3(web3)
     accounts = await web3.eth.getAccounts()
-    jest.spyOn(console, 'log').mockImplementation(() => {})
-    jest.spyOn(console, 'error').mockImplementation(() => {})
+    jest.spyOn(console, 'log').mockImplementation(() => {
+      // noop
+    })
+    jest.spyOn(console, 'error').mockImplementation(() => {
+      // noop
+    })
 
     await topUpWithToken(
       kit,

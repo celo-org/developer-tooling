@@ -72,8 +72,9 @@ testWithAnvilL2('governance:test-proposal cmd', (web3: Web3) => {
       ]
     `)
 
-    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-      .toMatchInlineSnapshot(`
+    expect(
+      logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+    ).toMatchInlineSnapshot(`
       [
         [
           "",

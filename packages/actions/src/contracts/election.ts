@@ -44,7 +44,7 @@ export async function getGroupsWithPendingVotes(
           ...contract,
           functionName: 'getPendingVotesForGroupByAccount',
           args: [group, account],
-        } as const)
+        }) as const
     ),
   })
   const groupsWithPendingVotes = groups.filter((_, i) => pendingVotes[i] >= 0)
@@ -69,7 +69,7 @@ async function getActivatableGroups(
           ...contract,
           functionName: 'hasActivatablePendingVotes',
           args: [account, group],
-        } as const)
+        }) as const
     ),
   })
   const activatableGroups = groups.filter((_, i) => groupsToHasActivatablePendingVotes[i])

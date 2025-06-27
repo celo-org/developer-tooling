@@ -22,7 +22,8 @@ import { CELO_BASE_DERIVATION_PATH } from '@celo/wallet-ledger'
 import { getDefaultDerivationPath } from '../../utils/config'
 
 export default class NewAccount extends BaseCommand {
-  static description = `Creates a new account locally using the --derivationPath if passed or the one set with config:set (defaults to ${DerivationPathAliases.eth})  and print out the key information. Save this information for local transaction signing or import into a Celo node. Ledger: this command has been tested swapping mnemonics with the Ledger successfully (only supports english)`
+  static description =
+    `Creates a new account locally using the --derivationPath if passed or the one set with config:set (defaults to ${DerivationPathAliases.eth})  and print out the key information. Save this information for local transaction signing or import into a Celo node. Ledger: this command has been tested swapping mnemonics with the Ledger successfully (only supports english)`
 
   static flags = {
     ...ViewCommmandFlags,
@@ -132,7 +133,7 @@ export default class NewAccount extends BaseCommand {
     if (mnemonic) {
       mnemonic = normalizeMnemonic(mnemonic)
       if (!validateMnemonic(mnemonic)) {
-        throw Error('Invalid mnemonic. Should be a bip39 mnemonic')
+        throw new Error('Invalid mnemonic. Should be a bip39 mnemonic')
       }
     } else {
       mnemonic = await generateMnemonic(

@@ -138,7 +138,7 @@ jobs:
         uses: ./.github/actions/sync-workspace
         with:
           artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
-      - run: yarn run prettify:diff
+      - run: yarn run fmt:diff
       - run: yarn run lint
   size_checks: 
     name: Size checks
