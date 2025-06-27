@@ -71,16 +71,18 @@ testWithAnvilL2('account:new cmd', (web3: Web3) => {
 
   describe('bad data --derivationPath', () => {
     it(`with invalid alias "notARealPath"  throws"`, async () => {
-      await expect(testLocallyWithWeb3Node(NewAccount, ['--derivationPath', 'notARealPath'], web3))
-        .rejects.toThrowErrorMatchingInlineSnapshot(`
+      await expect(
+        testLocallyWithWeb3Node(NewAccount, ['--derivationPath', 'notARealPath'], web3)
+      ).rejects.toThrowErrorMatchingInlineSnapshot(`
         "Parsing --derivationPath 
         	Invalid derivationPath: notARealPath. should be in format  "m / 44' / coin_type' / account'"
         See more help with --help"
       `)
     })
     it(`with invalid bip44 throws"`, async () => {
-      await expect(testLocallyWithWeb3Node(NewAccount, ['--derivationPath', 'm/44/1/1/2/10'], web3))
-        .rejects.toThrowErrorMatchingInlineSnapshot(`
+      await expect(
+        testLocallyWithWeb3Node(NewAccount, ['--derivationPath', 'm/44/1/1/2/10'], web3)
+      ).rejects.toThrowErrorMatchingInlineSnapshot(`
         "Parsing --derivationPath 
         	Invalid derivationPath: m/44/1/1/2/10. should be in format  "m / 44' / coin_type' / account'"
         See more help with --help"

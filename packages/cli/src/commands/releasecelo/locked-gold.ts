@@ -49,9 +49,8 @@ export default class LockedCelo extends ReleaseGoldBaseCommand {
     if (flags.action === 'lock') {
       // Must verify contract is account before checking pending withdrawals
       await checkBuilder.addCheck('Is not revoked', () => !isRevoked).runChecks()
-      const pendingWithdrawalsValue = await lockedGold.getPendingWithdrawalsTotalValue(
-        contractAddress
-      )
+      const pendingWithdrawalsValue =
+        await lockedGold.getPendingWithdrawalsTotalValue(contractAddress)
       const relockValue = BigNumber.minimum(pendingWithdrawalsValue, value)
       const lockValue = value.minus(relockValue)
       await newCheckBuilder(this, contractAddress)
