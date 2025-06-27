@@ -100,7 +100,7 @@ ${telemetryData}
           return
         }
 
-        debug(`Telemetry data sent successfuly`)
+        debug(`Telemetry data sent successfully`)
       })
       .catch((err) => {
         debug(`Failed to send telemetry data: ${err}`)
