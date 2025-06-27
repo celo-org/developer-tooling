@@ -49,7 +49,7 @@ testWithAnvilL2('epochs:status cmd', (web3) => {
       ",
         ],
         [
-          "Epoch Start Time,2025-02-03T21:50:43.000Z
+          "Epoch Start Time,2025-04-25T16:23:32.000Z
       ",
         ],
       ]
@@ -99,7 +99,7 @@ testWithAnvilL2('epochs:status cmd', (web3) => {
         ",
           ],
           [
-            "Epoch Start Time,2025-02-03T21:50:43.000Z
+            "Epoch Start Time,2025-04-25T16:23:32.000Z
         ",
           ],
         ]
