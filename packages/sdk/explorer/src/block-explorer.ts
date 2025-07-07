@@ -65,7 +65,10 @@ export class BlockExplorer {
   private addressMapping: Map<Address, ContractMapping>
   private proxyImplementationOverride: Map<Address, Address> = new Map()
 
-  constructor(private kit: ContractKit, readonly contractDetails: ContractDetails[]) {
+  constructor(
+    private kit: ContractKit,
+    readonly contractDetails: ContractDetails[]
+  ) {
     this.addressMapping = mapFromPairs(
       contractDetails
         .filter((cd) => /Proxy$/.exec(cd.name) == null)

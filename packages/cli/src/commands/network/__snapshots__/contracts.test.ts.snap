@@ -19,7 +19,7 @@ exports[`network:contracts when version can be obtained runs 2`] = `
   {
     "contract": "CeloUnreleasedTreasury",
     "proxy": "0x621b99D7698395aD1A677d981a7F7Ae66cB4861f",
-    "implementation": "0x4657793c02091974B42d28aA46225A81c113C0C2",
+    "implementation": "0x8B1a7538D557d9ba5D77B33644fF9eE1e181F408",
     "version": "1.1.0.0"
   },
   {
@@ -31,7 +31,7 @@ exports[`network:contracts when version can be obtained runs 2`] = `
   {
     "contract": "EpochManager",
     "proxy": "0x2E290D8c2D6b26985f2826A63Aa103963DbAca23",
-    "implementation": "0x7B6F67483366a3D328B17055afcD664Cf0FFAE4E",
+    "implementation": "0x56F8fDcD086a3f278113C609ecCBffc57B66E1F9",
     "version": "1.1.0.0"
   },
   {
@@ -85,7 +85,7 @@ exports[`network:contracts when version can be obtained runs 2`] = `
   {
     "contract": "Governance",
     "proxy": "0x2EB25B5eb9d5A4f61deb1e4F846343F862eB67D9",
-    "implementation": "0x91175ff600759122459c80b907b6980261D71BE7",
+    "implementation": "0xCBCb7cBd755c51EDEE66201Efc8085f448401fc4",
     "version": "1.4.2.0"
   },
   {
@@ -197,7 +197,7 @@ exports[`network:contracts when version cant be obtained still prints rest of co
   {
     "contract": "CeloUnreleasedTreasury",
     "proxy": "0x621b99D7698395aD1A677d981a7F7Ae66cB4861f",
-    "implementation": "0x4657793c02091974B42d28aA46225A81c113C0C2",
+    "implementation": "0x8B1a7538D557d9ba5D77B33644fF9eE1e181F408",
     "version": "1.2.3.4"
   },
   {
@@ -209,7 +209,7 @@ exports[`network:contracts when version cant be obtained still prints rest of co
   {
     "contract": "EpochManager",
     "proxy": "0x2E290D8c2D6b26985f2826A63Aa103963DbAca23",
-    "implementation": "0x7B6F67483366a3D328B17055afcD664Cf0FFAE4E",
+    "implementation": "0x56F8fDcD086a3f278113C609ecCBffc57B66E1F9",
     "version": "1.2.3.4"
   },
   {
@@ -263,7 +263,7 @@ exports[`network:contracts when version cant be obtained still prints rest of co
   {
     "contract": "Governance",
     "proxy": "0x2EB25B5eb9d5A4f61deb1e4F846343F862eB67D9",
-    "implementation": "0x91175ff600759122459c80b907b6980261D71BE7",
+    "implementation": "0xCBCb7cBd755c51EDEE66201Efc8085f448401fc4",
     "version": "1.2.3.4"
   },
   {

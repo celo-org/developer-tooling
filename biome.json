@@ -1,0 +1,123 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.0.5/schema.json",
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 100,
+    "attributePosition": "auto",
+    "bracketSameLine": false,
+    "bracketSpacing": true,
+    "expand": "auto",
+    "useEditorconfig": true,
+    "includes": [
+      "**",
+      "!**/package.json",
+      "!**/.next",
+      "!**/coverage",
+      "!node_modules",
+      "!**/node_modules",
+      "!**/dist",
+      "!**/lib",
+      "!**/.git/",
+      "!packages/docs",
+      "!packages/sdk/network-utils/src/utils/timezones.json",
+      "!packages/sdk/phone-utils/src/data",
+      "!.yarn"
+    ]
+  },
+  "linter": {
+    "enabled": true,
+    "includes": [
+      "**",
+      "!**/.next",
+      "!**/coverage",
+      "!node_modules",
+      "!**/node_modules",
+      "!**/dist",
+      "!**/lib",
+      "!**/.git/",
+      "!packages/docs",
+      "!.yarn"
+    ],
+    "rules": {
+      "recommended": false,
+      "complexity": {
+        "noBannedTypes": "error",
+        "noCommaOperator": "error",
+        "noUselessUndefinedInitialization": "error",
+        "useLiteralKeys": "error"
+      },
+      "correctness": {
+        "noConstantCondition": "error",
+        "noInvalidConstructorSuper": "error",
+        "noInvalidUseBeforeDeclaration": "off",
+        "noUndeclaredDependencies": "error",
+        "noUnsafeFinally": "error",
+        "noUnusedLabels": "error",
+        "useIsNan": "error",
+        "useValidTypeof": "off"
+      },
+      "security": { "noGlobalEval": "error" },
+      "style": {
+        "noNamespace": "error",
+        "useBlockStatements": "off",
+        "useConsistentArrayType": { "level": "error", "options": { "syntax": "shorthand" } },
+        "useConsistentBuiltinInstantiation": "error",
+        "useConsistentMemberAccessibility": {
+          "level": "off",
+          "options": { "accessibility": "explicit" }
+        },
+        "useConst": "error",
+        "useForOf": "error",
+        "useShorthandFunctionType": "error",
+        "useSingleVarDeclarator": "off"
+      },
+      "suspicious": {
+        "noConsole": "off",
+        "noDebugger": "error",
+        "noDoubleEquals": "error",
+        "noDuplicateCase": "error",
+        "noEmptyBlockStatements": "warn",
+        "noExplicitAny": "off",
+        "noFallthroughSwitchClause": "off",
+        "noIrregularWhitespace": "off",
+        "noMisleadingInstantiator": "error",
+        "noRedeclare": "off",
+        "noSparseArray": "off",
+        "noTemplateCurlyInString": "error",
+        "noVar": "off",
+        "useAdjacentOverloadSignatures": "error",
+        "useGuardForIn": "error",
+        "useNamespaceKeyword": "error"
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "jsxQuoteStyle": "double",
+      "quoteProperties": "asNeeded",
+      "trailingCommas": "es5",
+      "semicolons": "asNeeded",
+      "arrowParentheses": "always",
+      "bracketSameLine": false,
+      "quoteStyle": "single",
+      "attributePosition": "auto",
+      "bracketSpacing": true
+    }
+  },
+  "html": { "formatter": { "selfCloseVoidElements": "always" } },
+  "overrides": [
+    {
+      "linter": { "rules": { "correctness": { "noUndeclaredDependencies": "off" } } }
+    }
+  ],
+  "assist": { "enabled": true },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  }
+}

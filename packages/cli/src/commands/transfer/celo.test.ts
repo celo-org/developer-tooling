@@ -3,11 +3,13 @@ import { COMPLIANT_ERROR_RESPONSE } from '@celo/compliance'
 import { ContractKit, newKitFromWeb3, StableToken } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
-import { createPublicClient, decodeFunctionData, http } from 'viem'
+import { Address, createPublicClient, decodeFunctionData, http } from 'viem'
+import { celo } from 'viem/chains'
 import Web3 from 'web3'
 import { bigNumberToBigInt } from '../../packages-to-be/utils'
 import { topUpWithToken } from '../../test-utils/chain-setup'
 import {
+  extractHostFromWeb3,
   stripAnsiCodesFromNestedArray,
   TEST_SANCTIONED_ADDRESS,
   testLocallyWithWeb3Node,
@@ -30,8 +32,12 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
     kit = newKitFromWeb3(web3)
     accounts = await web3.eth.getAccounts()
 
-    jest.spyOn(console, 'log').mockImplementation(() => {})
-    jest.spyOn(console, 'error').mockImplementation(() => {})
+    jest.spyOn(console, 'log').mockImplementation(() => {
+      // noop
+    })
+    jest.spyOn(console, 'error').mockImplementation(() => {
+      // noop
+    })
 
     await topUpWithToken(
       kit,
@@ -241,6 +247,52 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
     expect(events[1].args).toEqual({ comment: 'Hello World Back' })
   })
 
+  test('passes feeCurrency to estimateGas', async () => {
+    const chainId = await kit.web3.eth.getChainId()
+    const nodeUrl = extractHostFromWeb3(web3)
+    const publicClient = createPublicClient({
+      chain: {
+        name: 'Custom Chain',
+        id: chainId,
+        nativeCurrency: celo.nativeCurrency,
+        formatters: celo.formatters,
+        serializers: celo.serializers,
+        rpcUrls: {
+          default: { http: [nodeUrl] },
+        },
+      },
+      transport: http(nodeUrl),
+    })
+
+    const estimateGasSpy = jest.spyOn(publicClient, 'estimateGas').mockResolvedValue(BigInt(100000))
+    // @ts-expect-error - clients slightly differ due to block differences.
+    jest.spyOn(TransferCelo.prototype, 'getPublicClient').mockResolvedValue(publicClient)
+
+    const amountToTransfer = '1'
+    const cUSDAddress = (await kit.contracts.getStableToken(StableToken.cUSD)).address
+
+    await testLocallyWithWeb3Node(
+      TransferCelo,
+      [
+        '--from',
+        accounts[0],
+        '--to',
+        accounts[1],
+        '--value',
+        amountToTransfer,
+        '--gasCurrency',
+        cUSDAddress,
+      ],
+      web3
+    )
+
+    expect(estimateGasSpy).toHaveBeenCalledWith({
+      to: accounts[1] as Address,
+      value: BigInt(amountToTransfer),
+      feeCurrency: cUSDAddress as Address,
+    })
+  })
+
   test('should fail if to address is sanctioned', async () => {
     const spy = jest.spyOn(console, 'log')
     await expect(
@@ -304,9 +356,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
     const balanceAfter = await kit.getTotalBalance(accounts[0])
     const receiverBalanceAfter = await kit.getTotalBalance(accounts[1])
     const transactionReceipt = await web3.eth.getTransactionReceipt(
-      (
-        await web3.eth.getBlock('latest')
-      ).transactions[0]
+      (await web3.eth.getBlock('latest')).transactions[0]
     )
 
     // Safety check if the latest transaction was originated by expected account

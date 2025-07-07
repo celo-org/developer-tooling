@@ -19,8 +19,8 @@ process.env.NO_SYNCCHECK = 'true'
 testWithAnvilL2(
   'governance:withdraw',
   (web3: Web3) => {
-    let logMock = jest.spyOn(console, 'log')
-    let errorMock = jest.spyOn(console, 'error')
+    const logMock = jest.spyOn(console, 'log')
+    const errorMock = jest.spyOn(console, 'error')
 
     let minDeposit: string
     const kit = newKitFromWeb3(web3)
@@ -54,9 +54,7 @@ testWithAnvilL2(
 
       const balanceAfter = await kit.connection.getBalance(accounts[0])
       const latestTransactionReceipt = await web3.eth.getTransactionReceipt(
-        (
-          await web3.eth.getBlock('latest')
-        ).transactions[0]
+        (await web3.eth.getBlock('latest')).transactions[0]
       )
 
       // Safety check if the latest transaction was originated by expected account

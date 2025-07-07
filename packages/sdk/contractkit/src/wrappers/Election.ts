@@ -352,7 +352,7 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
   async activate(
     account: Address,
     onBehalfOfAccount?: boolean
-  ): Promise<Array<CeloTransactionObject<boolean>>> {
+  ): Promise<CeloTransactionObject<boolean>[]> {
     const groups = await this.contract.methods.getGroupsVotedForByAccount(account).call()
     const isActivatable = await Promise.all(
       groups.map((g) => this.contract.methods.hasActivatablePendingVotes(account, g).call())

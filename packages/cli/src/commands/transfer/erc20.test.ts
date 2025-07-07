@@ -1,5 +1,5 @@
 import { COMPLIANT_ERROR_RESPONSE } from '@celo/compliance'
-import { ContractKit, StableToken, newKitFromWeb3 } from '@celo/contractkit'
+import { ContractKit, newKitFromWeb3, StableToken } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
@@ -17,8 +17,12 @@ testWithAnvilL2('transfer:erc20 cmd', (web3: Web3) => {
   let kit: ContractKit
 
   beforeEach(async () => {
-    jest.spyOn(console, 'log').mockImplementation(() => {})
-    jest.spyOn(console, 'error').mockImplementation(() => {})
+    jest.spyOn(console, 'log').mockImplementation(() => {
+      // noop
+    })
+    jest.spyOn(console, 'error').mockImplementation(() => {
+      // noop
+    })
   })
 
   beforeEach(async () => {
@@ -91,7 +95,9 @@ testWithAnvilL2('transfer:erc20 cmd', (web3: Web3) => {
   })
 
   test('should fail if to address is sanctioned', async () => {
-    const spy = jest.spyOn(console, 'log').mockImplementation(() => {})
+    const spy = jest.spyOn(console, 'log').mockImplementation(() => {
+      // noop
+    })
     const cusdAddress = await kit.celoTokens.getAddress(StableToken.cUSD)
 
     await expect(

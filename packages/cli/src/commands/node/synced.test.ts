@@ -2,8 +2,8 @@ import { viem_testWithAnvil } from '@celo/dev-utils/viem/anvil-test'
 import { stripAnsiCodesFromNestedArray, testLocallyWithViemNode } from '../../test-utils/cliUtils'
 import Synced from './synced'
 
-let nodeIsSynced = jest.fn()
-let ethNodeIsSyncing = jest.fn()
+const nodeIsSynced = jest.fn()
+const ethNodeIsSyncing = jest.fn()
 jest.mock('../../utils/helpers', () => ({
   ...jest.requireActual('../../utils/helpers'),
   ethNodeIsSyncing: () => ethNodeIsSyncing(),

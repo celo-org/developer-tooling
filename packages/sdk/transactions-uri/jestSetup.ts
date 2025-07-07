@@ -1,4 +1,5 @@
 import { URL } from 'node:url'
+
 // @ts-ignore
 global.URL = URL
 

@@ -128,9 +128,7 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
         const groupScore = await scoreManager.getGroupScore(group)
         return await election.getGroupEpochRewards(
           group,
-          (
-            await processingStatusPromise
-          ).totalRewardsVoter,
+          (await processingStatusPromise).totalRewardsVoter,
           groupScore
         )
       })
@@ -157,6 +155,7 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
     for (let i = 0; i < groups.length; i++) {
       const reward = rewards[i]
 
+      // biome-ignore lint/style/useForOf: <explanation>
       for (let j = 0; j < groupWithVotes.length; j++) {
         if (groupWithVotes[j].address === groups[i]) {
           groupWithVotes[j].votes.plus(reward)

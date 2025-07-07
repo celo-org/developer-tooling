@@ -52,12 +52,12 @@ export abstract class OffchainDataCommand extends BaseCommand {
       provider === StorageProviders.GCP
         ? new GoogleStorageWriter(directory, bucket)
         : provider === StorageProviders.AWS
-        ? new AwsStorageWriter(directory, bucket)
-        : provider === StorageProviders.git
-        ? new GitStorageWriter(directory)
-        : new LocalStorageWriter(directory)
+          ? new AwsStorageWriter(directory, bucket)
+          : provider === StorageProviders.git
+            ? new GitStorageWriter(directory)
+            : new LocalStorageWriter(directory)
   }
 }
 
 export const DEPRECATION_NOTICE =
-  'offchain-read and offchain-write commands are deprecated as CIP8 was abandonded. They will be removed next major release.'
+  'offchain-read and offchain-write commands are deprecated as CIP8 was abandoned. They will be removed next major release.'

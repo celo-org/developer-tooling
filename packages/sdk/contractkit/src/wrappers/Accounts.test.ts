@@ -61,9 +61,7 @@ testWithAnvilL2('Accounts Wrapper', (web3) => {
     const signer = accounts[1]
     await accountsInstance.createAccount().sendAndWaitForReceipt({ from: account })
     const sig = await getParsedSignatureOfAddressForTest(account, signer)
-    await (
-      await accountsInstance.authorizeAttestationSigner(signer, sig)
-    ).sendAndWaitForReceipt({
+    await (await accountsInstance.authorizeAttestationSigner(signer, sig)).sendAndWaitForReceipt({
       from: account,
     })
     const attestationSigner = await accountsInstance.getAttestationSigner(account)
@@ -75,18 +73,14 @@ testWithAnvilL2('Accounts Wrapper', (web3) => {
     const signer = accounts[1]
     await accountsInstance.createAccount().sendAndWaitForReceipt({ from: account })
     const sig = await getParsedSignatureOfAddressForTest(account, signer)
-    await (
-      await accountsInstance.authorizeAttestationSigner(signer, sig)
-    ).sendAndWaitForReceipt({
+    await (await accountsInstance.authorizeAttestationSigner(signer, sig)).sendAndWaitForReceipt({
       from: account,
     })
 
     let attestationSigner = await accountsInstance.getAttestationSigner(account)
     expect(attestationSigner).toEqual(signer)
 
-    await (
-      await accountsInstance.removeAttestationSigner()
-    ).sendAndWaitForReceipt({
+    await (await accountsInstance.removeAttestationSigner()).sendAndWaitForReceipt({
       from: account,
     })
 

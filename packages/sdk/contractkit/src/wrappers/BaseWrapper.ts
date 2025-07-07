@@ -31,7 +31,10 @@ export abstract class BaseWrapper<T extends Contract> {
     ? ContractVersion
     : never
 
-  constructor(protected readonly connection: Connection, protected readonly contract: T) {}
+  constructor(
+    protected readonly connection: Connection,
+    protected readonly contract: T
+  ) {}
 
   /** Contract address */
   get address(): StrongAddress {
@@ -220,20 +223,19 @@ type ProxyCallArgs<
   InputArgs extends any[],
   ParsedInputArgs extends any[],
   PreParsedOutput,
-  Output
-> =
-  // parseInputArgs => methodFn => parseOutput
-  | [
-      Method<ParsedInputArgs, PreParsedOutput>,
-      (...arg: InputArgs) => ParsedInputArgs,
-      (arg: PreParsedOutput) => Output
-    ]
-  // methodFn => parseOutput
-  | [Method<InputArgs, PreParsedOutput>, undefined, (arg: PreParsedOutput) => Output]
-  // parseInputArgs => methodFn
-  | [Method<ParsedInputArgs, Output>, (...arg: InputArgs) => ParsedInputArgs]
-  // methodFn
-  | [Method<InputArgs, Output>]
+  Output,
+> = // parseInputArgs => methodFn => parseOutput
+| [
+    Method<ParsedInputArgs, PreParsedOutput>,
+    (...arg: InputArgs) => ParsedInputArgs,
+    (arg: PreParsedOutput) => Output,
+  ]
+// methodFn => parseOutput
+| [Method<InputArgs, PreParsedOutput>, undefined, (arg: PreParsedOutput) => Output]
+// parseInputArgs => methodFn
+| [Method<ParsedInputArgs, Output>, (...arg: InputArgs) => ParsedInputArgs]
+// methodFn
+| [Method<InputArgs, Output>]
 
 /**
  * Creates a proxy to call a web3 native contract method.
@@ -252,7 +254,7 @@ export function proxyCall<
   InputArgs extends any[],
   ParsedInputArgs extends any[],
   PreParsedOutput,
-  Output
+  Output,
 >(
   methodFn: Method<ParsedInputArgs, PreParsedOutput>,
   parseInputArgs: (...args: InputArgs) => ParsedInputArgs,
@@ -275,7 +277,7 @@ export function proxyCall<
   InputArgs extends any[],
   ParsedInputArgs extends any[],
   PreParsedOutput,
-  Output
+  Output,
 >(
   ...callArgs: ProxyCallArgs<InputArgs, ParsedInputArgs, PreParsedOutput, Output>
 ): (...args: InputArgs) => Promise<Output> {
@@ -312,11 +314,14 @@ export function proxyCall<
  *  - methodFn
  *  - parseInputArgs => methodFn
  */
-type ProxySendArgs<InputArgs extends any[], ParsedInputArgs extends any[], Output> =
-  // parseInputArgs => methodFn
-  | [Method<ParsedInputArgs, Output>, (...arg: InputArgs) => ParsedInputArgs]
-  // methodFn
-  | [Method<InputArgs, Output>]
+type ProxySendArgs<
+  InputArgs extends any[],
+  ParsedInputArgs extends any[],
+  Output,
+> = // parseInputArgs => methodFn
+| [Method<ParsedInputArgs, Output>, (...arg: InputArgs) => ParsedInputArgs]
+// methodFn
+| [Method<InputArgs, Output>]
 
 /**
  * Creates a proxy to send a tx on a web3 native contract method.

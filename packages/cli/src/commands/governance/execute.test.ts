@@ -125,7 +125,7 @@ testWithAnvilL2('governance:execute cmd', (web3: Web3) => {
 
     await lockedGoldWrapper.lock().sendAndWaitForReceipt({ from: voter, value: minDeposit })
     await (await governanceWrapper.vote(proposalId, 'Yes')).sendAndWaitForReceipt({ from: voter })
-    await timeTravel((await governanceWrapper.stageDurations())['Referendum'].toNumber() + 1, web3)
+    await timeTravel((await governanceWrapper.stageDurations()).Referendum.toNumber() + 1, web3)
 
     const testTransactionsContract = new web3.eth.Contract(
       TEST_TRANSACTIONS_ABI,
@@ -149,8 +149,9 @@ testWithAnvilL2('governance:execute cmd', (web3: Web3) => {
       await testTransactionsContract.methods.getValue(PROPOSAL_TRANSACTION_TEST_KEY).call()
     ).toEqual(PROPOSAL_TRANSACTION_TEST_VALUE)
 
-    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-      .toMatchInlineSnapshot(`
+    expect(
+      logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+    ).toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",

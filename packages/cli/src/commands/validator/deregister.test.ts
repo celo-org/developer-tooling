@@ -30,8 +30,12 @@ testWithAnvilL2('validator:deregister', (web3: Web3) => {
   let validatorContract: ValidatorsWrapper
 
   beforeEach(async () => {
-    jest.spyOn(console, 'log').mockImplementation(() => {})
-    jest.spyOn(console, 'error').mockImplementation(() => {})
+    jest.spyOn(console, 'log').mockImplementation(() => {
+      // noop
+    })
+    jest.spyOn(console, 'error').mockImplementation(() => {
+      // noop
+    })
     const accounts = await web3.eth.getAccounts()
     account = accounts[0]
     const kit = newKitFromWeb3(web3)

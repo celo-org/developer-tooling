@@ -31,7 +31,7 @@ export async function getContractFromEvent(
     toBlock: 'latest',
   })
   if (logs.length === 0) {
-    throw Error(`Error: contract could not be found matching signature ${eventSignature}`)
+    throw new Error(`Error: contract could not be found matching signature ${eventSignature}`)
   }
   const logIndex = filter?.index ?? 0
   if (!filter?.expectedData) {
@@ -39,7 +39,7 @@ export async function getContractFromEvent(
   }
   const filteredLogs = logs.filter((log) => log.data === filter.expectedData)
   if (filteredLogs.length === 0) {
-    throw Error(
+    throw new Error(
       `Error: contract could not be found matching signature ${eventSignature} with data ${filter.expectedData}`
     )
   }

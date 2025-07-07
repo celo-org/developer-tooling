@@ -136,9 +136,6 @@ export abstract class TransferStableBase extends BaseCommand {
         )
       : displayViemTx(
           `${stableToken}->Transfer`,
-          // NOTE: this used to be celoToken.transfer
-          // but this way ledger considers this a native transfer and show the to and value properly
-          // instead of a contract call
           stableTokenContract.write.transfer([to, value], transferParams),
           client
         ))
