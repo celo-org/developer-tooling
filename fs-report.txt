@@ -1,0 +1,202 @@
+**Scan Type:** fs
+**Target:** .
+**Report Artifact Name:** developer-tooling-16119142975-fs-trivy
+<details><summary>Click to expand</summary>
+
+```
+
+For OSS Maintainers: VEX Notice
+--------------------------------
+If you're an OSS maintainer and Trivy has detected vulnerabilities in your project that you believe are not actually exploitable, consider issuing a VEX (Vulnerability Exploitability eXchange) statement.
+VEX allows you to communicate the actual status of vulnerabilities in your project, improving security transparency and reducing false positives for your users.
+Learn more and start using VEX: https://trivy.dev/v0.64/docs/supply-chain/vex/repo#publishing-vex-documents
+
+To disable this notice, set the TRIVY_DISABLE_VEX_NOTICE environment variable.
+
+
+yarn.lock (yarn)
+================
+Total: 48 (UNKNOWN: 0, LOW: 13, MEDIUM: 10, HIGH: 21, CRITICAL: 4)
+
+┌─────────────────┬─────────────────────┬──────────┬──────────┬───────────────────┬────────────────────────────────────┬──────────────────────────────────────────────────────────────┐
+│     Library     │    Vulnerability    │ Severity │  Status  │ Installed Version │           Fixed Version            │                            Title                             │
+├─────────────────┼─────────────────────┼──────────┼──────────┼───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ @babel/helpers  │ CVE-2025-27789      │ MEDIUM   │ fixed    │ 7.21.0            │ 7.26.10, 8.0.0-alpha.17            │ Babel is a compiler for writing next generation JavaScript.  │
+│                 │                     │          │          │                   │                                    │ When using ......                                            │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2025-27789                   │
+├─────────────────┤                     │          │          │                   │                                    │                                                              │
+│ @babel/runtime  │                     │          │          │                   │                                    │                                                              │
+│                 │                     │          │          │                   │                                    │                                                              │
+│                 │                     │          │          │                   │                                    │                                                              │
+├─────────────────┼─────────────────────┤          │          ├───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ @grpc/grpc-js   │ CVE-2024-37168      │          │          │ 1.6.12            │ 1.10.9, 1.9.15, 1.8.22             │ grps-js: allocate memory for incoming messages well above    │
+│                 │                     │          │          │                   │                                    │ configured limits                                            │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2024-37168                   │
+├─────────────────┼─────────────────────┼──────────┤          ├───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ axios           │ CVE-2025-27152      │ HIGH     │          │ 1.7.7             │ 1.8.2, 0.30.0                      │ axios: Possible SSRF and Credential Leakage via Absolute URL │
+│                 │                     │          │          │                   │                                    │ in axios Requests...                                         │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2025-27152                   │
+├─────────────────┼─────────────────────┤          │          ├───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ base-x          │ CVE-2025-27611      │          │          │ 3.0.9             │ 5.0.1, 4.0.1, 3.0.11               │ base-x: base-x homograph attack allows Unicode lookalike     │
+│                 │                     │          │          │                   │                                    │ characters to bypass validation.                             │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2025-27611                   │
+├─────────────────┼─────────────────────┤          │          ├───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ body-parser     │ CVE-2024-45590      │          │          │ 1.20.1            │ 1.20.3                             │ body-parser: Denial of Service Vulnerability in body-parser  │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2024-45590                   │
+│                 │                     │          │          ├───────────────────┤                                    │                                                              │
+│                 │                     │          │          │ 1.20.2            │                                    │                                                              │
+│                 │                     │          │          │                   │                                    │                                                              │
+├─────────────────┼─────────────────────┼──────────┤          ├───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ brace-expansion │ CVE-2025-5889       │ LOW      │          │ 1.1.11            │ 2.0.2, 1.1.12, 3.0.1, 4.0.1        │ brace-expansion: juliangruber brace-expansion index.js       │
+│                 │                     │          │          │                   │                                    │ expand redos                                                 │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2025-5889                    │
+│                 │                     │          │          ├───────────────────┤                                    │                                                              │
+│                 │                     │          │          │ 2.0.1             │                                    │                                                              │
+│                 │                     │          │          │                   │                                    │                                                              │
+│                 │                     │          │          │                   │                                    │                                                              │
+├─────────────────┼─────────────────────┼──────────┤          ├───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ braces          │ CVE-2024-4068       │ HIGH     │          │ 3.0.2             │ 3.0.3                              │ braces: fails to limit the number of characters it can       │
+│                 │                     │          │          │                   │                                    │ handle                                                       │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2024-4068                    │
+├─────────────────┼─────────────────────┼──────────┤          ├───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ cookie          │ CVE-2024-47764      │ LOW      │          │ 0.5.0             │ 0.7.0                              │ cookie: cookie accepts cookie name, path, and domain with    │
+│                 │                     │          │          │                   │                                    │ out of bounds...                                             │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2024-47764                   │
+├─────────────────┼─────────────────────┼──────────┤          ├───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ cross-fetch     │ CVE-2022-1365       │ MEDIUM   │          │ 3.0.6             │ 3.1.5, 2.2.6                       │ cross-fetch: Exposure of Private Personal Information to an  │
+│                 │                     │          │          │                   │                                    │ Unauthorized Actor                                           │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2022-1365                    │
+├─────────────────┼─────────────────────┼──────────┤          ├───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ cross-spawn     │ CVE-2024-21538      │ HIGH     │          │ 7.0.3             │ 7.0.5, 6.0.6                       │ cross-spawn: regular expression denial of service            │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2024-21538                   │
+├─────────────────┼─────────────────────┼──────────┤          ├───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ elliptic        │ GHSA-vjh7-7g9h-fjfh │ CRITICAL │          │ 6.5.4             │ 6.6.1                              │ Elliptic's private key extraction in ECDSA upon signing a    │
+│                 │                     │          │          │                   │                                    │ malformed input (e.g....                                     │
+│                 │                     │          │          │                   │                                    │ https://github.com/advisories/GHSA-vjh7-7g9h-fjfh            │
+│                 ├─────────────────────┼──────────┤          │                   ├────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                 │ CVE-2024-42459      │ LOW      │          │                   │ 6.5.7                              │ elliptic: nodejs/elliptic: EDDSA signature malleability due  │
+│                 │                     │          │          │                   │                                    │ to missing signature length check                            │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2024-42459                   │
+│                 ├─────────────────────┤          │          │                   │                                    ├──────────────────────────────────────────────────────────────┤
+│                 │ CVE-2024-42460      │          │          │                   │                                    │ elliptic: nodejs/elliptic: ECDSA signature malleability due  │
+│                 │                     │          │          │                   │                                    │ to missing checks                                            │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2024-42460                   │
+│                 ├─────────────────────┤          │          │                   │                                    ├──────────────────────────────────────────────────────────────┤
+│                 │ CVE-2024-42461      │          │          │                   │                                    │ elliptic: nodejs/elliptic: ECDSA implementation malleability │
+│                 │                     │          │          │                   │                                    │ due to BER-enconded signatures being allowed                 │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2024-42461                   │
+│                 ├─────────────────────┤          │          │                   ├────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                 │ CVE-2024-48948      │          │          │                   │ 6.6.0                              │ elliptic: ECDSA signature verification error may reject      │
+│                 │                     │          │          │                   │                                    │ legitimate transactions                                      │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2024-48948                   │
+│                 ├─────────────────────┤          │          │                   ├────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                 │ CVE-2024-48949      │          │          │                   │ 6.5.6                              │ elliptic: Missing Validation in Elliptic's EDDSA Signature   │
+│                 │                     │          │          │                   │                                    │ Verification                                                 │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2024-48949                   │
+├─────────────────┼─────────────────────┤          │          ├───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ es5-ext         │ CVE-2024-27088      │          │          │ 0.10.62           │ 0.10.63                            │ es5-ext contains ECMAScript 5 extensions. Passing functions  │
+│                 │                     │          │          │                   │                                    │ with very ...                                                │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2024-27088                   │
+├─────────────────┼─────────────────────┼──────────┤          ├───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ express         │ CVE-2024-29041      │ MEDIUM   │          │ 4.18.2            │ 4.19.2, 5.0.0-beta.3               │ express: cause malformed URLs to be evaluated                │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2024-29041                   │
+│                 ├─────────────────────┼──────────┤          │                   ├────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                 │ CVE-2024-43796      │ LOW      │          │                   │ 4.20.0, 5.0.0                      │ express: Improper Input Handling in Express Redirects        │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2024-43796                   │
+├─────────────────┼─────────────────────┼──────────┼──────────┼───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ ip              │ CVE-2024-29415      │ HIGH     │ affected │ 2.0.0             │                                    │ node-ip: Incomplete fix for CVE-2023-42282                   │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2024-29415                   │
+│                 ├─────────────────────┼──────────┼──────────┤                   ├────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                 │ CVE-2023-42282      │ LOW      │ fixed    │                   │ 2.0.1, 1.1.9                       │ nodejs-ip: arbitrary code execution via the isPublic()       │
+│                 │                     │          │          │                   │                                    │ function                                                     │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2023-42282                   │
+├─────────────────┼─────────────────────┼──────────┤          ├───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ micromatch      │ CVE-2024-4067       │ MEDIUM   │          │ 4.0.5             │ 4.0.8                              │ micromatch: vulnerable to Regular Expression Denial of       │
+│                 │                     │          │          │                   │                                    │ Service                                                      │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2024-4067                    │
+├─────────────────┼─────────────────────┼──────────┤          ├───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ node-fetch      │ CVE-2022-0235       │ HIGH     │          │ 2.6.1             │ 3.1.1, 2.6.7                       │ node-fetch: exposure of sensitive information to an          │
+│                 │                     │          │          │                   │                                    │ unauthorized actor                                           │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2022-0235                    │
+├─────────────────┼─────────────────────┤          │          ├───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ path-to-regexp  │ CVE-2024-45296      │          │          │ 0.1.7             │ 1.9.0, 0.1.10, 8.0.0, 3.3.0, 6.3.0 │ path-to-regexp: Backtracking regular expressions cause ReDoS │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2024-45296                   │
+│                 ├─────────────────────┤          │          │                   ├────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                 │ CVE-2024-52798      │          │          │                   │ 0.1.12                             │ path-to-regexp: path-to-regexp Unpatched `path-to-regexp`    │
+│                 │                     │          │          │                   │                                    │ ReDoS in 0.1.x                                               │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2024-52798                   │
+│                 ├─────────────────────┤          │          ├───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                 │ CVE-2024-45296      │          │          │ 2.4.0             │ 1.9.0, 0.1.10, 8.0.0, 3.3.0, 6.3.0 │ path-to-regexp: Backtracking regular expressions cause ReDoS │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2024-45296                   │
+├─────────────────┼─────────────────────┼──────────┤          ├───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ pbkdf2          │ CVE-2025-6545       │ CRITICAL │          │ 3.1.2             │ 3.1.3                              │ pbkdf2: pbkdf2 silently returns predictable key material     │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2025-6545                    │
+│                 ├─────────────────────┤          │          │                   │                                    ├──────────────────────────────────────────────────────────────┤
+│                 │ CVE-2025-6547       │          │          │                   │                                    │ pbkdf2: pbkdf2 silently returns static keys                  │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2025-6547                    │
+├─────────────────┼─────────────────────┤          │          ├───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ protobufjs      │ CVE-2023-36665      │          │          │ 6.11.3            │ 7.2.5, 6.11.4                      │ protobufjs: prototype pollution using user-controlled        │
+│                 │                     │          │          │                   │                                    │ protobuf message                                             │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2023-36665                   │
+├─────────────────┼─────────────────────┼──────────┼──────────┼───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ request         │ CVE-2023-28155      │ MEDIUM   │ affected │ 2.88.2            │                                    │ The Request package through 2.88.1 for Node.js allows a      │
+│                 │                     │          │          │                   │                                    │ bypass of SSRF...                                            │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2023-28155                   │
+├─────────────────┼─────────────────────┼──────────┼──────────┼───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ secp256k1       │ CVE-2024-48930      │ HIGH     │ fixed    │ 4.0.3             │ 5.0.1, 4.0.4, 3.8.1                │ secp256k1-node allows private key extraction over ECDH       │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2024-48930                   │
+│                 │                     │          │          ├───────────────────┤                                    │                                                              │
+│                 │                     │          │          │ 5.0.0             │                                    │                                                              │
+│                 │                     │          │          │                   │                                    │                                                              │
+├─────────────────┼─────────────────────┼──────────┤          ├───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ send            │ CVE-2024-43799      │ LOW      │          │ 0.18.0            │ 0.19.0                             │ send: Code Execution Vulnerability in Send Library           │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2024-43799                   │
+├─────────────────┼─────────────────────┤          │          ├───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ serve-static    │ CVE-2024-43800      │          │          │ 1.15.0            │ 1.16.0, 2.1.0                      │ serve-static: Improper Sanitization in serve-static          │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2024-43800                   │
+├─────────────────┼─────────────────────┼──────────┤          ├───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ tar             │ CVE-2024-28863      │ MEDIUM   │          │ 4.4.19            │ 6.2.1                              │ node-tar: denial of service while parsing a tar file due to  │
+│                 │                     │          │          │                   │                                    │ lack...                                                      │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2024-28863                   │
+│                 │                     │          │          ├───────────────────┤                                    │                                                              │
+│                 │                     │          │          │ 6.1.13            │                                    │                                                              │
+│                 │                     │          │          │                   │                                    │                                                              │
+│                 │                     │          │          │                   │                                    │                                                              │
+├─────────────────┼─────────────────────┼──────────┤          ├───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ tar-fs          │ CVE-2024-12905      │ HIGH     │          │ 1.16.3            │ 1.16.4, 2.1.2, 3.0.7               │ tar-fs: link following and path traversal via maliciously    │
+│                 │                     │          │          │                   │                                    │ crafted tar file                                             │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2024-12905                   │
+│                 ├─────────────────────┤          │          │                   ├────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                 │ CVE-2025-48387      │          │          │                   │ 1.16.5, 2.1.3, 3.0.9               │ tar-fs: tar-fs has issue where extract can write outside the │
+│                 │                     │          │          │                   │                                    │ specified dir...                                             │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2025-48387                   │
+│                 ├─────────────────────┤          │          ├───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                 │ CVE-2024-12905      │          │          │ 2.1.1             │ 1.16.4, 2.1.2, 3.0.7               │ tar-fs: link following and path traversal via maliciously    │
+│                 │                     │          │          │                   │                                    │ crafted tar file                                             │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2024-12905                   │
+│                 ├─────────────────────┤          │          │                   ├────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│                 │ CVE-2025-48387      │          │          │                   │ 1.16.5, 2.1.3, 3.0.9               │ tar-fs: tar-fs has issue where extract can write outside the │
+│                 │                     │          │          │                   │                                    │ specified dir...                                             │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2025-48387                   │
+├─────────────────┼─────────────────────┼──────────┤          ├───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ tough-cookie    │ CVE-2023-26136      │ MEDIUM   │          │ 2.5.0             │ 4.1.3                              │ tough-cookie: prototype pollution in cookie memstore         │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2023-26136                   │
+├─────────────────┼─────────────────────┼──────────┤          ├───────────────────┼────────────────────────────────────┼──────────────────────────────────────────────────────────────┤
+│ ws              │ CVE-2024-37890      │ HIGH     │          │ 3.3.3             │ 5.2.4, 6.2.3, 7.5.10, 8.17.1       │ nodejs-ws: denial of service when handling a request with    │
+│                 │                     │          │          │                   │                                    │ many HTTP headers...                                         │
+│                 │                     │          │          │                   │                                    │ https://avd.aquasec.com/nvd/cve-2024-37890                   │
+│                 │                     │          │          ├───────────────────┤                                    │                                                              │
+│                 │                     │          │          │ 7.4.6             │                                    │                                                              │
+│                 │                     │          │          │                   │                                    │                                                              │
+│                 │                     │          │          │                   │                                    │                                                              │
+│                 │                     │          │          ├───────────────────┤                                    │                                                              │
+│                 │                     │          │          │ 8.16.0            │                                    │                                                              │
+│                 │                     │          │          │                   │                                    │                                                              │
+│                 │                     │          │          │                   │                                    │                                                              │
+│                 │                     │          │          ├───────────────────┤                                    │                                                              │
+│                 │                     │          │          │ 8.2.3             │                                    │                                                              │
+│                 │                     │          │          │                   │                                    │                                                              │
+│                 │                     │          │          │                   │                                    │                                                              │
+└─────────────────┴─────────────────────┴──────────┴──────────┴───────────────────┴────────────────────────────────────┴──────────────────────────────────────────────────────────────┘
+```
+</details>

@@ -6,7 +6,7 @@
 
 # Interface: RegistryAdditions
 
-Defined in: [proposals.ts:219](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L219)
+Defined in: [proposals.ts:218](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L218)
 
 ## Indexable
 

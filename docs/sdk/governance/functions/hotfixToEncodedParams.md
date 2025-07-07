@@ -8,7 +8,7 @@
 
 > **hotfixToEncodedParams**(`kit`, `proposal`, `salt`): `string`
 
-Defined in: [proposals.ts:31](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L31)
+Defined in: [proposals.ts:30](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L30)
 
 ## Parameters
 

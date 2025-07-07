@@ -8,4 +8,4 @@
 
 > `const` **hotfixExecuteAbi**: `AbiItem`
 
-Defined in: [proposals.ts:29](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L29)
+Defined in: [proposals.ts:28](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L28)

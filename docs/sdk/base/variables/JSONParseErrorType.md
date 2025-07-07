@@ -8,4 +8,4 @@
 
 > `const` **JSONParseErrorType**: `"JsonParseError"` = `'JsonParseError'`
 
-Defined in: [packages/sdk/base/src/result.ts:78](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L78)
+Defined in: [packages/sdk/base/src/result.ts:77](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L77)

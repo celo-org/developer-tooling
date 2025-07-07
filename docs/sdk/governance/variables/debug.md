@@ -8,4 +8,4 @@
 
 > `const` **debug**: `Debugger`
 
-Defined in: [proposals.ts:27](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L27)
+Defined in: [proposals.ts:26](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L26)

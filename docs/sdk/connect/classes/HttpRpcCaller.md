@@ -40,7 +40,7 @@ Defined in: [packages/sdk/connect/src/utils/rpc-caller.ts:72](https://github.com
 
 > `readonly` **httpProvider**: [`HttpProvider`](../interfaces/HttpProvider.md)
 
-Defined in: [packages/sdk/connect/src/utils/rpc-caller.ts:72](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/rpc-caller.ts#L72)
+Defined in: [packages/sdk/connect/src/utils/rpc-caller.ts:73](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/rpc-caller.ts#L73)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [packages/sdk/connect/src/utils/rpc-caller.ts:72](https://github.com
 
 > `readonly` **jsonrpcVersion**: `string` = `'2.0'`
 
-Defined in: [packages/sdk/connect/src/utils/rpc-caller.ts:72](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/rpc-caller.ts#L72)
+Defined in: [packages/sdk/connect/src/utils/rpc-caller.ts:74](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/rpc-caller.ts#L74)
 
 ## Methods
 
@@ -56,7 +56,7 @@ Defined in: [packages/sdk/connect/src/utils/rpc-caller.ts:72](https://github.com
 
 > **call**(`method`, `params`): `Promise`\<[`JsonRpcResponse`](../interfaces/JsonRpcResponse.md)\>
 
-Defined in: [packages/sdk/connect/src/utils/rpc-caller.ts:74](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/rpc-caller.ts#L74)
+Defined in: [packages/sdk/connect/src/utils/rpc-caller.ts:77](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/rpc-caller.ts#L77)
 
 #### Parameters
 
@@ -82,7 +82,7 @@ Defined in: [packages/sdk/connect/src/utils/rpc-caller.ts:74](https://github.com
 
 > **send**(`payload`, `callback`): `void`
 
-Defined in: [packages/sdk/connect/src/utils/rpc-caller.ts:92](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/rpc-caller.ts#L92)
+Defined in: [packages/sdk/connect/src/utils/rpc-caller.ts:95](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/utils/rpc-caller.ts#L95)
 
 #### Parameters
 

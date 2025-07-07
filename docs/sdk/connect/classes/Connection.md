@@ -70,7 +70,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:61](https://github.com/celo-
 
 > `optional` **wallet**: [`ReadOnlyWallet`](../interfaces/ReadOnlyWallet.md)
 
-Defined in: [packages/sdk/connect/src/connection.ts:63](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L63)
+Defined in: [packages/sdk/connect/src/connection.ts:65](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L65)
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:63](https://github.com/celo-
 
 > `readonly` **web3**: `Web3`
 
-Defined in: [packages/sdk/connect/src/connection.ts:63](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L63)
+Defined in: [packages/sdk/connect/src/connection.ts:64](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L64)
 
 ## Accessors
 
@@ -88,7 +88,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:63](https://github.com/celo-
 
 > **get** **defaultAccount**(): `undefined` \| `` `0x${string}` ``
 
-Defined in: [packages/sdk/connect/src/connection.ts:115](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L115)
+Defined in: [packages/sdk/connect/src/connection.ts:119](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L119)
 
 Default account for generated transactions (eg. tx.from)
 
@@ -100,7 +100,7 @@ Default account for generated transactions (eg. tx.from)
 
 > **set** **defaultAccount**(`address`): `void`
 
-Defined in: [packages/sdk/connect/src/connection.ts:107](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L107)
+Defined in: [packages/sdk/connect/src/connection.ts:111](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L111)
 
 Set default account for generated transactions (eg. tx.from )
 
@@ -122,7 +122,7 @@ Set default account for generated transactions (eg. tx.from )
 
 > **get** **defaultFeeCurrency**(): `undefined` \| `` `0x${string}` ``
 
-Defined in: [packages/sdk/connect/src/connection.ts:139](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L139)
+Defined in: [packages/sdk/connect/src/connection.ts:143](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L143)
 
 ##### Returns
 
@@ -132,7 +132,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:139](https://github.com/celo
 
 > **set** **defaultFeeCurrency**(`address`): `void`
 
-Defined in: [packages/sdk/connect/src/connection.ts:135](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L135)
+Defined in: [packages/sdk/connect/src/connection.ts:139](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L139)
 
 Set the ERC20 address for the token to use to pay for transaction fees.
 The ERC20 address SHOULD be whitelisted for gas, but this is not checked or enforced.
@@ -159,7 +159,7 @@ ERC20 address
 
 > **get** **defaultGasInflationFactor**(): `number`
 
-Defined in: [packages/sdk/connect/src/connection.ts:123](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L123)
+Defined in: [packages/sdk/connect/src/connection.ts:127](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L127)
 
 ##### Returns
 
@@ -169,7 +169,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:123](https://github.com/celo
 
 > **set** **defaultGasInflationFactor**(`factor`): `void`
 
-Defined in: [packages/sdk/connect/src/connection.ts:119](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L119)
+Defined in: [packages/sdk/connect/src/connection.ts:123](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L123)
 
 ##### Parameters
 
@@ -187,7 +187,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:119](https://github.com/celo
 
 > **addAccount**(`privateKey`): `void`
 
-Defined in: [packages/sdk/connect/src/connection.ts:147](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L147)
+Defined in: [packages/sdk/connect/src/connection.ts:151](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L151)
 
 #### Parameters
 
@@ -205,7 +205,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:147](https://github.com/celo
 
 > **chainId**(): `Promise`\<`number`\>
 
-Defined in: [packages/sdk/connect/src/connection.ts:405](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L405)
+Defined in: [packages/sdk/connect/src/connection.ts:409](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L409)
 
 #### Returns
 
@@ -217,7 +217,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:405](https://github.com/celo
 
 > **coinbase**(): `Promise`\<`string`\>
 
-Defined in: [packages/sdk/connect/src/connection.ts:427](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L427)
+Defined in: [packages/sdk/connect/src/connection.ts:431](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L431)
 
 #### Returns
 
@@ -229,7 +229,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:427](https://github.com/celo
 
 > **estimateGas**(`tx`, `gasEstimator`, `caller`): `Promise`\<`number`\>
 
-Defined in: [packages/sdk/connect/src/connection.ts:357](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L357)
+Defined in: [packages/sdk/connect/src/connection.ts:361](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L361)
 
 #### Parameters
 
@@ -255,7 +255,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:357](https://github.com/celo
 
 > **estimateGasWithInflationFactor**(`tx`, `gasEstimator?`, `caller?`): `Promise`\<`number`\>
 
-Defined in: [packages/sdk/connect/src/connection.ts:388](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L388)
+Defined in: [packages/sdk/connect/src/connection.ts:392](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L392)
 
 #### Parameters
 
@@ -281,7 +281,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:388](https://github.com/celo
 
 > **gasPrice**(`feeCurrency?`): `Promise`\<`string`\>
 
-Defined in: [packages/sdk/connect/src/connection.ts:433](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L433)
+Defined in: [packages/sdk/connect/src/connection.ts:437](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L437)
 
 #### Parameters
 
@@ -299,7 +299,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:433](https://github.com/celo
 
 > **getAbiCoder**(): [`AbiCoder`](../interfaces/AbiCoder.md)
 
-Defined in: [packages/sdk/connect/src/connection.ts:384](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L384)
+Defined in: [packages/sdk/connect/src/connection.ts:388](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L388)
 
 #### Returns
 
@@ -311,7 +311,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:384](https://github.com/celo
 
 > **getAccounts**(): `Promise`\<`` `0x${string}` ``[]\>
 
-Defined in: [packages/sdk/connect/src/connection.ts:182](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L182)
+Defined in: [packages/sdk/connect/src/connection.ts:186](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L186)
 
 #### Returns
 
@@ -323,7 +323,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:182](https://github.com/celo
 
 > **getBalance**(`address`, `defaultBlock?`): `Promise`\<`string`\>
 
-Defined in: [packages/sdk/connect/src/connection.ts:483](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L483)
+Defined in: [packages/sdk/connect/src/connection.ts:487](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L487)
 
 #### Parameters
 
@@ -345,7 +345,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:483](https://github.com/celo
 
 > **getBlock**(`blockHashOrBlockNumber`, `fullTxObjects`): `Promise`\<[`Block`](../interfaces/Block.md)\>
 
-Defined in: [packages/sdk/connect/src/connection.ts:458](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L458)
+Defined in: [packages/sdk/connect/src/connection.ts:462](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L462)
 
 #### Parameters
 
@@ -367,7 +367,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:458](https://github.com/celo
 
 > **getBlockHeader**(`blockHashOrBlockNumber`): `Promise`\<[`BlockHeader`](../interfaces/BlockHeader.md)\>
 
-Defined in: [packages/sdk/connect/src/connection.ts:471](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L471)
+Defined in: [packages/sdk/connect/src/connection.ts:475](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L475)
 
 #### Parameters
 
@@ -385,7 +385,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:471](https://github.com/celo
 
 > **getBlockNumber**(): `Promise`\<`number`\>
 
-Defined in: [packages/sdk/connect/src/connection.ts:449](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L449)
+Defined in: [packages/sdk/connect/src/connection.ts:453](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L453)
 
 #### Returns
 
@@ -397,7 +397,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:449](https://github.com/celo
 
 > **getLocalAccounts**(): `` `0x${string}` ``[]
 
-Defined in: [packages/sdk/connect/src/connection.ts:176](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L176)
+Defined in: [packages/sdk/connect/src/connection.ts:180](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L180)
 
 #### Returns
 
@@ -409,7 +409,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:176](https://github.com/celo
 
 > **getMaxPriorityFeePerGas**(`feeCurrency?`): `Promise`\<`string`\>
 
-Defined in: [packages/sdk/connect/src/connection.ts:442](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L442)
+Defined in: [packages/sdk/connect/src/connection.ts:446](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L446)
 
 #### Parameters
 
@@ -427,7 +427,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:442](https://github.com/celo
 
 > **getNodeAccounts**(): `Promise`\<`` `0x${string}` ``[]\>
 
-Defined in: [packages/sdk/connect/src/connection.ts:171](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L171)
+Defined in: [packages/sdk/connect/src/connection.ts:175](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L175)
 
 #### Returns
 
@@ -439,7 +439,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:171](https://github.com/celo
 
 > **getTransaction**(`transactionHash`): `Promise`\<[`CeloTxPending`](../type-aliases/CeloTxPending.md)\>
 
-Defined in: [packages/sdk/connect/src/connection.ts:492](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L492)
+Defined in: [packages/sdk/connect/src/connection.ts:496](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L496)
 
 #### Parameters
 
@@ -457,7 +457,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:492](https://github.com/celo
 
 > **getTransactionCount**(`address`): `Promise`\<`number`\>
 
-Defined in: [packages/sdk/connect/src/connection.ts:416](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L416)
+Defined in: [packages/sdk/connect/src/connection.ts:420](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L420)
 
 #### Parameters
 
@@ -475,7 +475,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:416](https://github.com/celo
 
 > **getTransactionReceipt**(`txhash`): `Promise`\<`null` \| [`CeloTxReceipt`](../type-aliases/CeloTxReceipt.md)\>
 
-Defined in: [packages/sdk/connect/src/connection.ts:500](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L500)
+Defined in: [packages/sdk/connect/src/connection.ts:504](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L504)
 
 #### Parameters
 
@@ -493,7 +493,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:500](https://github.com/celo
 
 > **hexToAscii**(`hex`): `string`
 
-Defined in: [packages/sdk/connect/src/connection.ts:100](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L100)
+Defined in: [packages/sdk/connect/src/connection.ts:104](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L104)
 
 #### Parameters
 
@@ -511,7 +511,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:100](https://github.com/celo
 
 > **isListening**(): `Promise`\<`boolean`\>
 
-Defined in: [packages/sdk/connect/src/connection.ts:190](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L190)
+Defined in: [packages/sdk/connect/src/connection.ts:194](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L194)
 
 #### Returns
 
@@ -523,7 +523,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:190](https://github.com/celo
 
 > **isLocalAccount**(`address?`): `boolean`
 
-Defined in: [packages/sdk/connect/src/connection.ts:143](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L143)
+Defined in: [packages/sdk/connect/src/connection.ts:147](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L147)
 
 #### Parameters
 
@@ -541,7 +541,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:143](https://github.com/celo
 
 > **isSyncing**(): `Promise`\<`boolean`\>
 
-Defined in: [packages/sdk/connect/src/connection.ts:194](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L194)
+Defined in: [packages/sdk/connect/src/connection.ts:198](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L198)
 
 #### Returns
 
@@ -553,7 +553,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:194](https://github.com/celo
 
 > **keccak256**(`value`): `string`
 
-Defined in: [packages/sdk/connect/src/connection.ts:96](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L96)
+Defined in: [packages/sdk/connect/src/connection.ts:100](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L100)
 
 #### Parameters
 
@@ -571,7 +571,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:96](https://github.com/celo-
 
 > **nonce**(`address`): `Promise`\<`number`\>
 
-Defined in: [packages/sdk/connect/src/connection.ts:423](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L423)
+Defined in: [packages/sdk/connect/src/connection.ts:427](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L427)
 
 #### Parameters
 
@@ -589,7 +589,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:423](https://github.com/celo
 
 > **removeAccount**(`address`): `void`
 
-Defined in: [packages/sdk/connect/src/connection.ts:159](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L159)
+Defined in: [packages/sdk/connect/src/connection.ts:163](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L163)
 
 #### Parameters
 
@@ -607,7 +607,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:159](https://github.com/celo
 
 > **sendSignedTransaction**(`signedTransactionData`): `Promise`\<[`TransactionResult`](TransactionResult.md)\>
 
-Defined in: [packages/sdk/connect/src/connection.ts:332](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L332)
+Defined in: [packages/sdk/connect/src/connection.ts:336](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L336)
 
 #### Parameters
 
@@ -625,7 +625,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:332](https://github.com/celo
 
 > **sendTransaction**(`tx`): `Promise`\<[`TransactionResult`](TransactionResult.md)\>
 
-Defined in: [packages/sdk/connect/src/connection.ts:218](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L218)
+Defined in: [packages/sdk/connect/src/connection.ts:222](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L222)
 
 Send a transaction to celo-blockchain.
 
@@ -650,7 +650,7 @@ Similar to `web3.eth.sendTransaction()` but with following differences:
 
 > **sendTransactionObject**(`txObj`, `tx?`): `Promise`\<[`TransactionResult`](TransactionResult.md)\>
 
-Defined in: [packages/sdk/connect/src/connection.ts:234](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L234)
+Defined in: [packages/sdk/connect/src/connection.ts:238](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L238)
 
 #### Parameters
 
@@ -672,7 +672,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:234](https://github.com/celo
 
 > **setFeeMarketGas**(`tx`): `Promise`\<[`CeloTx`](../type-aliases/CeloTx.md)\>
 
-Defined in: [packages/sdk/connect/src/connection.ts:336](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L336)
+Defined in: [packages/sdk/connect/src/connection.ts:340](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L340)
 
 #### Parameters
 
@@ -690,7 +690,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:336](https://github.com/celo
 
 > **setProvider**(`provider`): `boolean`
 
-Defined in: [packages/sdk/connect/src/connection.ts:78](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L78)
+Defined in: [packages/sdk/connect/src/connection.ts:82](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L82)
 
 #### Parameters
 
@@ -708,7 +708,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:78](https://github.com/celo-
 
 > **sign**(`dataToSign`, `address`): `Promise`\<`string`\>
 
-Defined in: [packages/sdk/connect/src/connection.ts:305](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L305)
+Defined in: [packages/sdk/connect/src/connection.ts:309](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L309)
 
 #### Parameters
 
@@ -730,7 +730,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:305](https://github.com/celo
 
 > **signTypedData**(`signer`, `typedData`, `version`): `Promise`\<`Signature`\>
 
-Defined in: [packages/sdk/connect/src/connection.ts:266](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L266)
+Defined in: [packages/sdk/connect/src/connection.ts:270](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L270)
 
 #### Parameters
 
@@ -756,7 +756,7 @@ Defined in: [packages/sdk/connect/src/connection.ts:266](https://github.com/celo
 
 > **stop**(): `void`
 
-Defined in: [packages/sdk/connect/src/connection.ts:525](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L525)
+Defined in: [packages/sdk/connect/src/connection.ts:529](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L529)
 
 #### Returns
 

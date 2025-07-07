@@ -6,7 +6,7 @@
 
 # Interface: BaseError\<T\>
 
-Defined in: [packages/sdk/base/src/result.ts:63](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L63)
+Defined in: [packages/sdk/base/src/result.ts:62](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L62)
 
 ## Type Parameters
 
@@ -20,4 +20,4 @@ Defined in: [packages/sdk/base/src/result.ts:63](https://github.com/celo-org/dev
 
 > **errorType**: `T`
 
-Defined in: [packages/sdk/base/src/result.ts:64](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L64)
+Defined in: [packages/sdk/base/src/result.ts:63](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L63)

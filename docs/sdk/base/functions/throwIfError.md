@@ -8,7 +8,7 @@
 
 > **throwIfError**\<`TResult`, `TError`, `TModifiedError`\>(`result`, `errorModifier?`): `TResult`
 
-Defined in: [packages/sdk/base/src/result.ts:22](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L22)
+Defined in: [packages/sdk/base/src/result.ts:21](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L21)
 
 ## Type Parameters
 

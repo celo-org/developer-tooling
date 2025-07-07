@@ -78,7 +78,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/transfer/celo.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.9/packages/cli/src/commands/transfer/celo.ts)_
+_See code: [lib/commands/transfer/celo.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.10/packages/cli/lib/commands/transfer/celo.js)_
 
 ## `celocli transfer:dollars`
 
@@ -147,7 +147,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/transfer/dollars.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.9/packages/cli/src/commands/transfer/dollars.ts)_
+_See code: [lib/commands/transfer/dollars.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.10/packages/cli/lib/commands/transfer/dollars.js)_
 
 ## `celocli transfer:erc20`
 
@@ -217,7 +217,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/transfer/erc20.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.9/packages/cli/src/commands/transfer/erc20.ts)_
+_See code: [lib/commands/transfer/erc20.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.10/packages/cli/lib/commands/transfer/erc20.js)_
 
 ## `celocli transfer:euros`
 
@@ -286,7 +286,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/transfer/euros.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.9/packages/cli/src/commands/transfer/euros.ts)_
+_See code: [lib/commands/transfer/euros.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.10/packages/cli/lib/commands/transfer/euros.js)_
 
 ## `celocli transfer:reals`
 
@@ -355,7 +355,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/transfer/reals.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.9/packages/cli/src/commands/transfer/reals.ts)_
+_See code: [lib/commands/transfer/reals.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.10/packages/cli/lib/commands/transfer/reals.js)_
 
 ## `celocli transfer:stable`
 
@@ -428,4 +428,4 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/transfer/stable.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.9/packages/cli/src/commands/transfer/stable.ts)_
+_See code: [lib/commands/transfer/stable.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.0-beta.10/packages/cli/lib/commands/transfer/stable.js)_

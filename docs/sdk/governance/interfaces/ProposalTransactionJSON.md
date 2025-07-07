@@ -6,7 +6,7 @@
 
 # Interface: ProposalTransactionJSON
 
-Defined in: [proposals.ts:53](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L53)
+Defined in: [proposals.ts:52](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L52)
 
 JSON encoding of a proposal transaction.
 
@@ -26,7 +26,7 @@ Example:
 
 > `optional` **address**: `string`
 
-Defined in: [proposals.ts:55](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L55)
+Defined in: [proposals.ts:54](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L54)
 
 ***
 
@@ -34,7 +34,7 @@ Defined in: [proposals.ts:55](https://github.com/celo-org/developer-tooling/blob
 
 > **args**: `any`[]
 
-Defined in: [proposals.ts:57](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L57)
+Defined in: [proposals.ts:56](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L56)
 
 ***
 
@@ -42,7 +42,7 @@ Defined in: [proposals.ts:57](https://github.com/celo-org/developer-tooling/blob
 
 > **contract**: `CeloContract`
 
-Defined in: [proposals.ts:54](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L54)
+Defined in: [proposals.ts:53](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L53)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: [proposals.ts:54](https://github.com/celo-org/developer-tooling/blob
 
 > **function**: `string`
 
-Defined in: [proposals.ts:56](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L56)
+Defined in: [proposals.ts:55](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L55)
 
 ***
 
@@ -58,7 +58,7 @@ Defined in: [proposals.ts:56](https://github.com/celo-org/developer-tooling/blob
 
 > `optional` **params**: `Record`\<`string`, `any`\>
 
-Defined in: [proposals.ts:58](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L58)
+Defined in: [proposals.ts:57](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L57)
 
 ***
 
@@ -66,4 +66,4 @@ Defined in: [proposals.ts:58](https://github.com/celo-org/developer-tooling/blob
 
 > **value**: `string`
 
-Defined in: [proposals.ts:59](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L59)
+Defined in: [proposals.ts:58](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L58)

@@ -8,7 +8,7 @@
 
 > **isErr**\<`TResult`, `TError`\>(`result`): `result is ErrorResult<TError>`
 
-Defined in: [packages/sdk/base/src/result.ts:98](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L98)
+Defined in: [packages/sdk/base/src/result.ts:97](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L97)
 
 ## Type Parameters
 

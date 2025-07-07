@@ -1,4 +1,4 @@
-[**@celo/network-utils v5.0.8**](../README.md)
+[**@celo/network-utils v5.0.9-beta.0**](../README.md)
 
 ***
 
