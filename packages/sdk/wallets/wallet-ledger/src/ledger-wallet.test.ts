@@ -1,5 +1,5 @@
 import { ETHEREUM_DERIVATION_PATH } from '@celo/base'
-import { StrongAddress, normalizeAddressWith0x } from '@celo/base/lib/address'
+import { normalizeAddressWith0x, StrongAddress } from '@celo/base/lib/address'
 import { CeloTx, EncodedTransaction } from '@celo/connect'
 import { verifySignature } from '@celo/utils/lib/signatureUtils'
 import { recoverTransaction, verifyEIP712TypedDataSigner } from '@celo/wallet-base'
@@ -12,6 +12,7 @@ import {
   ACCOUNT_ADDRESS_NEVER,
   mockLedgerImplementation,
 } from './test-utils'
+import { tokenInfoByAddressAndChainId } from './tokens'
 
 // Update this variable when testing using a physical device
 const USE_PHYSICAL_LEDGER = process.env.USE_PHYSICAL_LEDGER === 'true'
@@ -553,7 +554,10 @@ describe('LedgerWallet class', () => {
                 `)
 
               expect(wallet.ledger!.provideERC20TokenInformation).toHaveBeenCalledWith(
-                `06612063555344874069fa1eb16d44d622f2e0ca25eea172369bc1000000120000aef33045022100a885480c357fd6ec64ed532656a7e988198fdf4e2cf4632408f2d65561189872022009fd78725055fc68af16e151516ba29625e3e1c74ceab3da1bcabd6015e3f6e8`
+                tokenInfoByAddressAndChainId(
+                  celoTransaction.feeCurrency!,
+                  celoTransaction.chainId!
+                )?.data.toString('hex')
               )
             },
             TEST_TIMEOUT_IN_MS
@@ -595,7 +599,10 @@ describe('LedgerWallet class', () => {
               )
 
               expect(wallet.ledger!.provideERC20TokenInformation).toHaveBeenCalledWith(
-                `06612063555344874069fa1eb16d44d622f2e0ca25eea172369bc1000000120000aef33045022100a885480c357fd6ec64ed532656a7e988198fdf4e2cf4632408f2d65561189872022009fd78725055fc68af16e151516ba29625e3e1c74ceab3da1bcabd6015e3f6e8`
+                tokenInfoByAddressAndChainId(
+                  celoTransaction.feeCurrency!,
+                  celoTransaction.chainId!
+                )?.data.toString('hex')
               )
             },
             TEST_TIMEOUT_IN_MS
