@@ -1,11 +1,5 @@
 # @celo/network-utils
 
-## 5.0.9
-
-### Patch Changes
-
-- e6291e0: adds missing dependency
-
 ## 5.0.8
 
 ### Patch Changes

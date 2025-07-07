@@ -1,13 +1,5 @@
 # @celo/base
 
-## 7.0.3
-
-### Patch Changes
-
-- 7d84a5a: Minor typing improvement"
-- 99717e9: use more explicit types for addresses in more places
-- 5a2fa51: Removes unused dependencies
-
 ## 7.0.3-beta.0
 
 ### Patch Changes

@@ -1,22 +1,5 @@
 # @celo/governance
 
-## 5.1.7
-
-### Patch Changes
-
-- 5a2fa51: Removes unused dependencies
-- Updated dependencies [66c8ad4]
-- Updated dependencies [7d84a5a]
-- Updated dependencies [99717e9]
-- Updated dependencies [5a2fa51]
-- Updated dependencies [66c8ad4]
-- Updated dependencies [66c8ad4]
-  - @celo/contractkit@10.0.0
-  - @celo/base@7.0.3
-  - @celo/connect@7.0.0
-  - @celo/explorer@5.0.16
-  - @celo/utils@8.0.3
-
 ## 5.1.7-beta.1
 
 ### Patch Changes

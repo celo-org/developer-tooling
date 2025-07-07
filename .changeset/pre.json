@@ -1,5 +1,5 @@
 {
-  "mode": "exit",
+  "mode": "pre",
   "tag": "beta",
   "initialVersions": {
     "@celo/celocli": "6.2.4",

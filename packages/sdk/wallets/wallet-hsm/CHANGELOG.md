@@ -1,14 +1,5 @@
 # @celo/wallet-hsm
 
-## 8.0.0
-
-### Patch Changes
-
-- Updated dependencies [7d84a5a]
-- Updated dependencies [99717e9]
-- Updated dependencies [5a2fa51]
-  - @celo/base@7.0.3
-
 ## 8.0.0-beta.2
 
 ### Patch Changes

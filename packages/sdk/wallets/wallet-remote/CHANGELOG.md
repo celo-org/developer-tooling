@@ -1,16 +1,5 @@
 # @celo/wallet-remote
 
-## 8.0.0
-
-### Patch Changes
-
-- Updated dependencies [a0efb2f]
-- Updated dependencies [5a2fa51]
-- Updated dependencies [66c8ad4]
-  - @celo/wallet-base@8.0.0
-  - @celo/connect@7.0.0
-  - @celo/utils@8.0.3
-
 ## 8.0.0-beta.2
 
 ### Patch Changes

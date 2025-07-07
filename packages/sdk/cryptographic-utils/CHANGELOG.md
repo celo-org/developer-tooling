@@ -1,19 +1,5 @@
 # @celo/cryptographic-utils
 
-## 6.0.0
-
-### Major Changes
-
-- 8b30dc5: Default to using eth derivation path "m/44'/60'/0'" in generateKeysFromSeed, generateKeys, generateDeterministicInviteCode. Pass your own in if needed.
-
-### Patch Changes
-
-- Updated dependencies [7d84a5a]
-- Updated dependencies [99717e9]
-- Updated dependencies [5a2fa51]
-  - @celo/base@7.0.3
-  - @celo/utils@8.0.3
-
 ## 6.0.0-beta.0
 
 ### Major Changes

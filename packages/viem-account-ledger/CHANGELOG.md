@@ -1,21 +1,5 @@
 # @celo/viem-account-ledger
 
-## 1.2.0
-
-### Minor Changes
-
-- 04c89f7: expose `deriveLedgerAccounts` function
-- a270c1a: Export a WalletClient
-
-### Patch Changes
-
-- 5a2fa51: Removes unused dependencies
-- 6ca357b: Remove unintuitive mutex impl which resulted in `transport` error in the hw-app-eth
-- Updated dependencies [7d84a5a]
-- Updated dependencies [99717e9]
-- Updated dependencies [5a2fa51]
-  - @celo/base@7.0.3
-
 ## 1.2.0-beta.2
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "@celo/network-utils",
-  "version": "5.0.9",
+  "version": "5.0.8",
   "description": "Utilities for fetching static information about the Celo network",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -31,7 +31,7 @@
     "isomorphic-fetch": "^3.0.0"
   },
   "devDependencies": {
-    "@celo/dev-utils": "0.1.0",
+    "@celo/dev-utils": "0.1.0-beta.3",
     "@celo/typescript": "workspace:^",
     "@types/debug": "^4.1.12",
     "fetch-mock": "^10.0.7"
