@@ -1,5 +1,5 @@
 import { ETHEREUM_DERIVATION_PATH } from '@celo/base'
-import { StrongAddress, normalizeAddressWith0x } from '@celo/base/lib/address'
+import { normalizeAddressWith0x, StrongAddress } from '@celo/base/lib/address'
 import { CeloTx, EncodedTransaction } from '@celo/connect'
 import { verifySignature } from '@celo/utils/lib/signatureUtils'
 import { recoverTransaction, verifyEIP712TypedDataSigner } from '@celo/wallet-base'
@@ -554,7 +554,10 @@ describe('LedgerWallet class', () => {
                 `)
 
               expect(wallet.ledger!.provideERC20TokenInformation).toHaveBeenCalledWith(
-                tokenInfoByAddressAndChainId(celoTransaction.feeCurrency!, celoTransaction.chainId!)?.data.toString('hex')
+                tokenInfoByAddressAndChainId(
+                  celoTransaction.feeCurrency!,
+                  celoTransaction.chainId!
+                )?.data.toString('hex')
               )
             },
             TEST_TIMEOUT_IN_MS
@@ -596,7 +599,10 @@ describe('LedgerWallet class', () => {
               )
 
               expect(wallet.ledger!.provideERC20TokenInformation).toHaveBeenCalledWith(
-                tokenInfoByAddressAndChainId(celoTransaction.feeCurrency!, celoTransaction.chainId!)?.data.toString('hex')
+                tokenInfoByAddressAndChainId(
+                  celoTransaction.feeCurrency!,
+                  celoTransaction.chainId!
+                )?.data.toString('hex')
               )
             },
             TEST_TIMEOUT_IN_MS
