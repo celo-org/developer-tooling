@@ -8,7 +8,7 @@
 
 > **hotfixToHash**(`kit`, `proposal`, `salt`): `Buffer`
 
-Defined in: [proposals.ts:37](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L37)
+Defined in: [proposals.ts:36](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L36)
 
 ## Parameters
 

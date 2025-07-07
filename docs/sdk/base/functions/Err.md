@@ -8,7 +8,7 @@
 
 > **Err**\<`TError`\>(`error`): [`ErrorResult`](../interfaces/ErrorResult.md)\<`TError`\>
 
-Defined in: [packages/sdk/base/src/result.ts:17](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L17)
+Defined in: [packages/sdk/base/src/result.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L16)
 
 ## Type Parameters
 

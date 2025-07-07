@@ -8,7 +8,7 @@
 
 > **isPresent**(`value`): value is string \| number \| bigint \| BN
 
-Defined in: [packages/sdk/connect/src/connection.ts:545](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L545)
+Defined in: [packages/sdk/connect/src/connection.ts:549](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/connect/src/connection.ts#L549)
 
 ## Parameters
 

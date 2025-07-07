@@ -1,7 +1,7 @@
 {
   "name": "@celo/celocli",
   "description": "CLI Tool for interacting with the Celo protocol",
-  "version": "7.0.0-beta.9",
+  "version": "7.0.0-beta.10",
   "author": "Celo",
   "license": "Apache-2.0",
   "repository": {
@@ -51,10 +51,10 @@
     "@celo/identity": "^5.1.2",
     "@celo/metadata-claims": "^1.0.4-beta.0",
     "@celo/utils": "^8.0.3-beta.0",
-    "@celo/viem-account-ledger": "^1.2.0-beta.2",
-    "@celo/wallet-hsm-azure": "^8.0.0-beta.2",
-    "@celo/wallet-ledger": "^8.0.0-beta.2",
-    "@celo/wallet-local": "^8.0.0-beta.2",
+    "@celo/viem-account-ledger": "^1.2.0-beta.3",
+    "@celo/wallet-hsm-azure": "^8.0.0-beta.3",
+    "@celo/wallet-ledger": "^8.0.0-beta.3",
+    "@celo/wallet-local": "^8.0.0-beta.3",
     "@ethereumjs/util": "8.0.5",
     "@ledgerhq/hw-transport-node-hid": "^6.28.5",
     "@mento-protocol/mento-sdk": "^1.0.1",

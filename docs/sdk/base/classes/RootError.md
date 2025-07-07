@@ -6,7 +6,7 @@
 
 # Class: RootError\<T\>
 
-Defined in: [packages/sdk/base/src/result.ts:67](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L67)
+Defined in: [packages/sdk/base/src/result.ts:66](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L66)
 
 ## Extends
 
@@ -32,7 +32,7 @@ Defined in: [packages/sdk/base/src/result.ts:67](https://github.com/celo-org/dev
 
 > **new RootError**\<`T`\>(`errorType`): `RootError`\<`T`\>
 
-Defined in: [packages/sdk/base/src/result.ts:68](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L68)
+Defined in: [packages/sdk/base/src/result.ts:67](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L67)
 
 #### Parameters
 
@@ -54,7 +54,7 @@ Defined in: [packages/sdk/base/src/result.ts:68](https://github.com/celo-org/dev
 
 > `readonly` **errorType**: `T`
 
-Defined in: [packages/sdk/base/src/result.ts:68](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L68)
+Defined in: [packages/sdk/base/src/result.ts:67](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L67)
 
 #### Implementation of
 

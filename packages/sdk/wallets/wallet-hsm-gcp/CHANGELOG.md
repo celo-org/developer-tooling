@@ -1,5 +1,14 @@
 # @celo/wallet-hsm-gcp
 
+## 8.0.0-beta.3
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @celo/wallet-base@8.0.0-beta.3
+  - @celo/wallet-hsm@8.0.0-beta.3
+  - @celo/wallet-remote@8.0.0-beta.3
+
 ## 8.0.0-beta.2
 
 ### Patch Changes

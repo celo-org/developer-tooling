@@ -8,7 +8,7 @@
 
 > **proposalToJSON**(`kit`, `proposal`, `registryAdditions?`): `Promise`\<[`ProposalTransactionJSON`](../interfaces/ProposalTransactionJSON.md)[]\>
 
-Defined in: [proposals.ts:116](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L116)
+Defined in: [proposals.ts:115](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L115)
 
 Convert a compiled proposal to a human-readable JSON form using network information.
 

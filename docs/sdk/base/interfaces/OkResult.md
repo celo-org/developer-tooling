@@ -6,7 +6,7 @@
 
 # Interface: OkResult\<TResult\>
 
-Defined in: [packages/sdk/base/src/result.ts:2](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L2)
+Defined in: [packages/sdk/base/src/result.ts:1](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L1)
 
 ## Type Parameters
 
@@ -20,7 +20,7 @@ Defined in: [packages/sdk/base/src/result.ts:2](https://github.com/celo-org/deve
 
 > **ok**: `true`
 
-Defined in: [packages/sdk/base/src/result.ts:3](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L3)
+Defined in: [packages/sdk/base/src/result.ts:2](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L2)
 
 ***
 
@@ -28,4 +28,4 @@ Defined in: [packages/sdk/base/src/result.ts:3](https://github.com/celo-org/deve
 
 > **result**: `TResult`
 
-Defined in: [packages/sdk/base/src/result.ts:4](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L4)
+Defined in: [packages/sdk/base/src/result.ts:3](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L3)

@@ -6,7 +6,7 @@
 
 # Class: JSONParseError
 
-Defined in: [packages/sdk/base/src/result.ts:79](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L79)
+Defined in: [packages/sdk/base/src/result.ts:78](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L78)
 
 ## Extends
 
@@ -18,7 +18,7 @@ Defined in: [packages/sdk/base/src/result.ts:79](https://github.com/celo-org/dev
 
 > **new JSONParseError**(`error`): `JSONParseError`
 
-Defined in: [packages/sdk/base/src/result.ts:80](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L80)
+Defined in: [packages/sdk/base/src/result.ts:79](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L79)
 
 #### Parameters
 
@@ -40,7 +40,7 @@ Defined in: [packages/sdk/base/src/result.ts:80](https://github.com/celo-org/dev
 
 > `readonly` **error**: `Error`
 
-Defined in: [packages/sdk/base/src/result.ts:80](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L80)
+Defined in: [packages/sdk/base/src/result.ts:79](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L79)
 
 ***
 
@@ -48,7 +48,7 @@ Defined in: [packages/sdk/base/src/result.ts:80](https://github.com/celo-org/dev
 
 > `readonly` **errorType**: `string`
 
-Defined in: [packages/sdk/base/src/result.ts:68](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L68)
+Defined in: [packages/sdk/base/src/result.ts:67](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L67)
 
 #### Inherited from
 

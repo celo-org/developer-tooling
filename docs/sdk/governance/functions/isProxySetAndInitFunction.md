@@ -8,7 +8,7 @@
 
 > **isProxySetAndInitFunction**(`tx`): `boolean`
 
-Defined in: [proposals.ts:103](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L103)
+Defined in: [proposals.ts:102](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L102)
 
 ## Parameters
 

@@ -8,7 +8,7 @@
 
 > **registryRepointArgs**(`tx`): `object`
 
-Defined in: [proposals.ts:74](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L74)
+Defined in: [proposals.ts:73](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposals.ts#L73)
 
 ## Parameters
 
