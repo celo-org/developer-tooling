@@ -20,15 +20,13 @@ export default class Info extends BaseCommand {
   async run() {
     const client = await this.getPublicClient()
     const res = await this.parse(Info)
-    let latestEpochNumber: bigint
-    let epochSize: bigint
 
     const blockNumber = await client.getBlockNumber()
 
     const epochManagerContract = await getEpochManagerContract({ public: client })
 
-    latestEpochNumber = await epochManagerContract.read.getCurrentEpochNumber()
-    epochSize = await epochManagerContract.read.epochDuration()
+    const latestEpochNumber = await epochManagerContract.read.getCurrentEpochNumber()
+    const epochSize = await epochManagerContract.read.epochDuration()
 
     const fetchEpochInfo = async (epochNumber: bigint) => {
       const epochData: Record<string, number> = {

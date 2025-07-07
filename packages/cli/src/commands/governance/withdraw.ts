@@ -93,7 +93,7 @@ export default class Withdraw extends BaseCommand {
     return flags.useMultiSig
       ? (flags.for as StrongAddress)
       : flags.useSafe
-      ? flags.safeAddress!
-      : flags.from
+        ? flags.safeAddress!
+        : flags.from
   }
 }

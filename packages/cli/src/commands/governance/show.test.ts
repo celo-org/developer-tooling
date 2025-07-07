@@ -65,8 +65,9 @@ testWithAnvilL2('governance:show cmd', (web3: Web3) => {
     const schedule = await governanceWrapper.proposalSchedule(proposalId)
     const timestamp = await (await governanceWrapper.getProposalMetadata(proposalId)).timestamp
 
-    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-      .toMatchInlineSnapshot(`
+    expect(
+      logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+    ).toMatchInlineSnapshot(`
       [
         [
           "Running Checks:",
@@ -101,9 +102,9 @@ testWithAnvilL2('governance:show cmd', (web3: Web3) => {
           to: 0x4200000000000000000000000000000000000018
           value: 0
       schedule: 
-        Execution: ${unixSecondsTimestampToDateString(schedule['Execution']!)}
-        Expiration: ${unixSecondsTimestampToDateString(schedule['Expiration']!)}
-        Referendum: ${unixSecondsTimestampToDateString(schedule['Referendum']!)}
+        Execution: ${unixSecondsTimestampToDateString(schedule.Execution!)}
+        Expiration: ${unixSecondsTimestampToDateString(schedule.Expiration!)}
+        Referendum: ${unixSecondsTimestampToDateString(schedule.Referendum!)}
       stage: Referendum
       votes: 
         Abstain: 0 

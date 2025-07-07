@@ -167,9 +167,7 @@ testWithAnvilL2('kit', (web3: Web3) => {
         from: accounts[0],
       })
 
-      await (
-        await epochManagerWrapper.finishNextEpochProcessTx()
-      ).sendAndWaitForReceipt({
+      await (await epochManagerWrapper.finishNextEpochProcessTx()).sendAndWaitForReceipt({
         from: accounts[0],
       })
     })

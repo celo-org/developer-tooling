@@ -66,7 +66,7 @@ export default class RpcUrls extends BaseCommand {
         (result) =>
           (result as unknown as PromiseFulfilledResult<string[]>).value as [
             StrongAddress,
-            StrongAddress
+            StrongAddress,
           ]
       )
     const validatorToGroup = new Map(validatorGroups)

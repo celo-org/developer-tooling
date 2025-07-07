@@ -299,7 +299,7 @@ export function zeroValue(primaryType: string, types: EIP712Types = {}): EIP712O
     const memberType: string = match?.groups?.memberType!
     const fixedLengthStr: string | undefined = match?.groups?.fixedLength
     const fixedLength: number = fixedLengthStr === undefined ? 0 : parseInt(fixedLengthStr, 10)
-    return [...Array(fixedLength).keys()].map(() => zeroValue(memberType, types))
+    return [...new Array(fixedLength).keys()].map(() => zeroValue(memberType, types))
   }
 
   // Must be user-defined type. Return an object with all fields set to their zero value.

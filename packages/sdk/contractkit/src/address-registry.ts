@@ -1,4 +1,3 @@
-/* eslint max-classes-per-file:off */
 import { newRegistry, Registry } from '@celo/abis/web3/Registry'
 import { NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
 import { Connection } from '@celo/connect'

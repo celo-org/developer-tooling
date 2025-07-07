@@ -43,8 +43,9 @@ testWithAnvilL2('governance:hashhotfix cmd', (web3: Web3) => {
       web3
     )
 
-    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-      .toMatchInlineSnapshot(`
+    expect(
+      logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+    ).toMatchInlineSnapshot(`
       [
         [
           "salt: 0x614dccb5ac13cba47c2430bdee7829bb8c8f3603a8ace22e7680d317b39e3658, buf: 614dccb5ac13cba47c2430bdee7829bb8c8f3603a8ace22e7680d317b39e3658",
@@ -67,8 +68,9 @@ testWithAnvilL2('governance:hashhotfix cmd', (web3: Web3) => {
       web3
     )
 
-    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-      .toMatchInlineSnapshot(`
+    expect(
+      logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+    ).toMatchInlineSnapshot(`
       [
         [
           "Simulating proposal execution",
@@ -95,8 +97,9 @@ testWithAnvilL2('governance:hashhotfix cmd', (web3: Web3) => {
       web3
     )
 
-    expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-      .toMatchInlineSnapshot(`
+    expect(
+      logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+    ).toMatchInlineSnapshot(`
       [
         [
           "Simulating proposal execution",

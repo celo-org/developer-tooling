@@ -4,9 +4,8 @@ import { CeloContract, RegisteredContracts } from '@celo/contractkit'
 import { isValidAddress } from '@celo/utils/lib/address'
 import BigNumber from 'bignumber.js'
 import inquirer from 'inquirer'
-import { ProposalBuilder } from './proposal-builder'
-
 import type { ProposalTransactionJSON } from './'
+import { ProposalBuilder } from './proposal-builder'
 
 const DONE_CHOICE = '✔ done'
 
@@ -20,7 +19,6 @@ export class InteractiveProposalBuilder {
 
   async promptTransactions() {
     const transactions: ProposalTransactionJSON[] = []
-    // eslint-disable-next-line no-constant-condition
     while (true) {
       console.log(`Transaction #${transactions.length + 1}:`)
 

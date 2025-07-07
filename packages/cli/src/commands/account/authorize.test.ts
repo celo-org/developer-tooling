@@ -11,8 +11,8 @@ import Register from './register'
 process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvilL2('account:authorize cmd', (web3: Web3) => {
-  let logMock = jest.spyOn(console, 'log')
-  let errorMock = jest.spyOn(console, 'error')
+  const logMock = jest.spyOn(console, 'log')
+  const errorMock = jest.spyOn(console, 'error')
 
   beforeEach(() => {
     logMock.mockClear().mockImplementation()

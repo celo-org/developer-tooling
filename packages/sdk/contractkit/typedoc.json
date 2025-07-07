@@ -1,26 +1,20 @@
 {
   "$schema": "https://typedoc.org/schema.json",
-  "exclude": [
-    "**/*+(index|.test).ts"
-  ],
+  "exclude": ["**/*+(index|.test).ts"],
   "excludePrivate": true,
   "excludeProtected": true,
   "hideGenerator": true,
   "out": "../../../docs/sdk/contractkit",
   "gitRevision": "master",
   "readme": "README.md",
-  "entryPoints": [
-    "./src"
-  ],
-  "githubPages": false,  
+  "entryPoints": ["./src"],
+  "githubPages": false,
   "excludeReferences": true,
   "includeVersion": true,
-  "plugin": [
-    "typedoc-plugin-markdown"
-  ],
+  "plugin": ["typedoc-plugin-markdown"],
   "entryPointStrategy": "resolve",
   "validation": {
     "notExported": false,
-    "notDocumented": false,
+    "notDocumented": false
   }
 }

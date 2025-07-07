@@ -41,7 +41,6 @@ export function jsonRpcCall<O>(web3: Web3, method: string, params: any[]): Promi
               )
             )
           } else {
-            // eslint-disable-next-line  @typescript-eslint/no-unsafe-argument
             resolve(res.result)
           }
         }

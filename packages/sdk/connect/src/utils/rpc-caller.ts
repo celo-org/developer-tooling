@@ -69,7 +69,10 @@ export interface RpcCaller {
 }
 
 export class HttpRpcCaller implements RpcCaller {
-  constructor(readonly httpProvider: HttpProvider, readonly jsonrpcVersion: string = '2.0') {}
+  constructor(
+    readonly httpProvider: HttpProvider,
+    readonly jsonrpcVersion: string = '2.0'
+  ) {}
 
   public async call(method: string, params: any[]): Promise<JsonRpcResponse> {
     return new Promise((resolve, reject) => {

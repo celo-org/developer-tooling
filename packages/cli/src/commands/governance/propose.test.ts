@@ -148,6 +148,7 @@ testWithAnvilL2(
 
     let governance: GovernanceWrapper
     let goldToken: GoldTokenWrapper
+    let goldTokenContract: GoldTokenWrapper['contract']
     let minDeposit: string
 
     const kit = newKitFromWeb3(web3)
@@ -163,6 +164,8 @@ testWithAnvilL2(
       kit.defaultAccount = accounts[0]
       governance = await kit.contracts.getGovernance()
       goldToken = await kit.contracts.getGoldToken()
+      // @ts-expect-error
+      goldTokenContract = goldToken.contract
       minDeposit = (await governance.minDeposit()).toFixed()
     })
 
@@ -202,10 +205,9 @@ testWithAnvilL2(
         expect(proposal.length).toEqual(transactions.length)
         expect(proposal[0].to).toEqual(goldToken.address)
         expect(proposal[0].value).toEqual(transactions[0].value)
-        const expectedInput = goldToken['contract'].methods['transfer'](
-          transactions[0].args[0],
-          transactions[0].args[1]
-        ).encodeABI()
+        const expectedInput = goldTokenContract.methods
+          .transfer(transactions[0].args[0], transactions[0].args[1])
+          .encodeABI()
         expect(proposal[0].input).toEqual(expectedInput)
       },
       EXTRA_LONG_TIMEOUT_MS * 2
@@ -266,10 +268,9 @@ testWithAnvilL2(
         expect(proposal.length).toEqual(transactions.length)
         expect(proposal[0].to).toEqual(goldToken.address)
         expect(proposal[0].value).toEqual(transactions[0].value)
-        const expectedInput = goldToken['contract'].methods['transfer'](
-          transactions[0].args[0],
-          transactions[0].args[1]
-        ).encodeABI()
+        const expectedInput = goldTokenContract.methods
+          .transfer(transactions[0].args[0], transactions[0].args[1])
+          .encodeABI()
         expect(proposal[0].input).toEqual(expectedInput)
       },
       EXTRA_LONG_TIMEOUT_MS
@@ -341,10 +342,9 @@ testWithAnvilL2(
         expect(proposal.length).toEqual(transactions.length)
         expect(proposal[0].to).toEqual(goldToken.address)
         expect(proposal[0].value).toEqual(transactions[0].value)
-        const expectedInput = goldToken['contract'].methods['transfer'](
-          transactions[0].args[0],
-          transactions[0].args[1]
-        ).encodeABI()
+        const expectedInput = goldTokenContract.methods
+          .transfer(transactions[0].args[0], transactions[0].args[1])
+          .encodeABI()
         expect(proposal[0].input).toEqual(expectedInput)
       },
       EXTRA_LONG_TIMEOUT_MS
@@ -417,10 +417,9 @@ testWithAnvilL2(
           expect(proposal.length).toEqual(transactions.length)
           expect(proposal[0].to).toEqual(goldToken.address)
           expect(proposal[0].value).toEqual(transactions[0].value)
-          const expectedInput = goldToken['contract'].methods['transfer'](
-            transactions[0].args[0],
-            transactions[0].args[1]
-          ).encodeABI()
+          const expectedInput = goldTokenContract.methods
+            .transfer(transactions[0].args[0], transactions[0].args[1])
+            .encodeABI()
           expect(proposal[0].input).toEqual(expectedInput)
         },
         EXTRA_LONG_TIMEOUT_MS
@@ -513,10 +512,9 @@ testWithAnvilL2(
           expect(proposal.length).toEqual(transactions.length)
           expect(proposal[0].to).toEqual(goldToken.address)
           expect(proposal[0].value).toEqual(transactions[0].value)
-          const expectedInput = goldToken['contract'].methods['transfer'](
-            transactions[0].args[0],
-            transactions[0].args[1]
-          ).encodeABI()
+          const expectedInput = goldTokenContract.methods
+            .transfer(transactions[0].args[0], transactions[0].args[1])
+            .encodeABI()
           expect(proposal[0].input).toEqual(expectedInput)
         },
         EXTRA_LONG_TIMEOUT_MS
@@ -561,10 +559,9 @@ testWithAnvilL2(
         expect(proposal.length).toEqual(transactions.length)
         expect(proposal[0].to).toEqual(randomAddress)
         expect(proposal[0].value).toEqual(transactions[0].value)
-        const expectedInput = goldToken['contract'].methods['transfer'](
-          transactions[0].args[0],
-          transactions[0].args[1]
-        ).encodeABI()
+        const expectedInput = goldTokenContract.methods
+          .transfer(transactions[0].args[0], transactions[0].args[1])
+          .encodeABI()
         expect(proposal[0].input).toEqual(expectedInput)
       },
       EXTRA_LONG_TIMEOUT_MS

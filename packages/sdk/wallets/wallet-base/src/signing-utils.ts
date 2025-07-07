@@ -341,9 +341,9 @@ export async function encodeTransaction(
   // for legacy tx we need to slice but for new ones we do not want to do that
   let decodedFields: typeof decodedTX
 
-  if (rlpEncoded.type == 'celo-legacy') {
+  if (rlpEncoded.type === 'celo-legacy') {
     decodedFields = decodedTX.slice(0, 9)
-  } else if (rlpEncoded.type == 'ethereum-legacy') {
+  } else if (rlpEncoded.type === 'ethereum-legacy') {
     decodedFields = decodedTX.slice(0, 6)
   } else {
     decodedFields = decodedTX
@@ -443,8 +443,8 @@ export function extractSignature(rawTx: string) {
 function extractSignatureFromDecoded(rawValues: Uint8Array[]) {
   // signature is always (for the tx we support so far) the last three elements of the array in order v, r, s,
   const v = rawValues.at(-3)
-  let r = rawValues.at(-2)
-  let s = rawValues.at(-1)
+  const r = rawValues.at(-2)
+  const s = rawValues.at(-1)
   // https://github.com/wagmi-dev/viem/blob/993321689b3e2220976504e7e170fe47731297ce/src/utils/transaction/parseTransaction.ts#L281
   // Account.recover cannot handle canonicalized signatures
   // A canonicalized signature may have the first byte removed if its value is 0
@@ -727,7 +727,6 @@ function recoverCeloLegacy(serializedTransaction: StrongAddress): [CeloTx, strin
   const rawValues = RLP.decode(serializedTransaction) as Uint8Array[]
   debug('signing-utils@recoverTransaction: values are %s', rawValues)
   const recovery = handleNumber(rawValues[9])
-  // eslint-disable-next-line no-bitwise
   const chainId = (recovery - 35) >> 1
   const celoTx: LegacyCeloTxWithSig = {
     type: 'celo-legacy',
@@ -750,7 +749,7 @@ function recoverCeloLegacy(serializedTransaction: StrongAddress): [CeloTx, strin
     chainId: ensureLeading0x(chainId.toString(16)),
   }
   const { r, v: _v, s } = extractSignatureFromDecoded(rawValues)
-  let v = parseInt(_v || '0x0', 16)
+  const v = parseInt(_v || '0x0', 16)
   const safeChainId = trimLeading0x(
     makeEven(trimLeadingZero(ensureLeading0x(chainId.toString(16))))
   )
@@ -769,7 +768,6 @@ function recoverEthereumLegacy(serializedTransaction: StrongAddress): [CeloTx, s
   const rawValues = RLP.decode(serializedTransaction) as Uint8Array[]
   debug('signing-utils@recoverTransaction: values are %s', rawValues)
   const recovery = handleNumber(rawValues[6])
-  // eslint-disable-next-line no-bitwise
   const chainId = (recovery - 35) >> 1
   const celoTx: CeloTx = {
     type: 'ethereum-legacy',
@@ -789,7 +787,7 @@ function recoverEthereumLegacy(serializedTransaction: StrongAddress): [CeloTx, s
     chainId: ensureLeading0x(chainId.toString(16)),
   }
   const { r, v: _v, s } = extractSignatureFromDecoded(rawValues)
-  let v = parseInt(_v || '0x0', 16)
+  const v = parseInt(_v || '0x0', 16)
   const safeChainId = trimLeading0x(
     makeEven(trimLeadingZero(ensureLeading0x(chainId.toString(16))))
   )

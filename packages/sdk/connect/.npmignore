@@ -12,8 +12,6 @@
 /lib/**/*.test.*
 /lib/test-utils
 
-.eslintrc.js
-eslint.tsconfig.json
 typedoc.json
 
 # exclude ts files and sourcemaps

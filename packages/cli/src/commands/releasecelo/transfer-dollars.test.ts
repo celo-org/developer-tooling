@@ -27,8 +27,12 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (web3: Web3) => {
   beforeEach(async () => {
     accounts = (await web3.eth.getAccounts()) as StrongAddress[]
     kit = newKitFromWeb3(web3)
-    jest.spyOn(console, 'log').mockImplementation(() => {})
-    jest.spyOn(console, 'error').mockImplementation(() => {})
+    jest.spyOn(console, 'log').mockImplementation(() => {
+      // noop
+    })
+    jest.spyOn(console, 'error').mockImplementation(() => {
+      // noop
+    })
 
     contractAddress = await deployReleaseGoldContract(
       web3,

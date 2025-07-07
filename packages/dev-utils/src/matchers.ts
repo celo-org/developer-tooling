@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js'
 
 declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
+  // biome-ignore lint/style/noNamespace: jest
   namespace jest {
     interface Matchers<R> {
       toBeBigNumber(): R
@@ -19,7 +19,6 @@ expect.extend({
     const pass = BigNumber.isBigNumber(received)
     if (pass) {
       return {
-        // eslint-disable-next-line  @typescript-eslint/no-unsafe-member-access
         message: () => `expected ${received.toJSON()} not to be BigNumber`,
         pass: true,
       }

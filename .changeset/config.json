@@ -1,15 +1,8 @@
 {
   "$schema": "https://unpkg.com/@changesets/config@2.3.1/schema.json",
-  "changelog": [
-    "@changesets/changelog-github",
-    { "repo": "celo-org/developer-tooling" }
-  ],
+  "changelog": ["@changesets/changelog-github", { "repo": "celo-org/developer-tooling" }],
   "commit": true,
-  "fixed": [
-    [
-      "@celo/wallet-*"
-    ]
-  ],
+  "fixed": [["@celo/wallet-*"]],
   "linked": [],
   "access": "public",
   "baseBranch": "master",
