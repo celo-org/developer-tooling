@@ -1,5 +1,21 @@
 # @celo/dev-utils
 
+## 0.1.0
+
+### Minor Changes
+
+- a0efb2f: Remove TestWithAnvilL1
+- feef9ac: Add viem+anvil utils
+- a0efb2f: Remove ganache. Change lib/ganache-setup.js to lib/test-accounts.js
+- a270c1a: Add some viem helpers
+
+### Patch Changes
+
+- 5a2fa51: Removes unused dependencies
+- a0efb2f: Remove testWithGanache
+- Updated dependencies [66c8ad4]
+  - @celo/connect@7.0.0
+
 ## 0.1.0-beta.3
 
 ### Patch Changes

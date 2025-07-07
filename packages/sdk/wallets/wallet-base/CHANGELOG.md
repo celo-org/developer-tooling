@@ -1,5 +1,22 @@
 # @celo/wallet-base
 
+## 8.0.0
+
+### Major Changes
+
+- a0efb2f: remove function for serializing celo legacy transactions
+
+### Patch Changes
+
+- 5a2fa51: Removes unused dependencies
+- Updated dependencies [7d84a5a]
+- Updated dependencies [99717e9]
+- Updated dependencies [5a2fa51]
+- Updated dependencies [66c8ad4]
+  - @celo/base@7.0.3
+  - @celo/connect@7.0.0
+  - @celo/utils@8.0.3
+
 ## 8.0.0-beta.2
 
 ### Patch Changes

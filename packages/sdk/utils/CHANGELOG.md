@@ -1,5 +1,14 @@
 # @celo/utils
 
+## 8.0.3
+
+### Patch Changes
+
+- Updated dependencies [7d84a5a]
+- Updated dependencies [99717e9]
+- Updated dependencies [5a2fa51]
+  - @celo/base@7.0.3
+
 ## 8.0.3-beta.0
 
 ### Patch Changes

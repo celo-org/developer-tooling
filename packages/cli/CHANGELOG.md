@@ -1,5 +1,82 @@
 # Changelog
 
+## 7.0.0
+
+### Major Changes
+
+- 8b30dc5: Now defaults to using "m/44'/60'/0'" as base derivation path for account:new and any command using --useLedger. use celocli `config:set --derivationPath celoLegacy` for old behavior.
+- 04c89f7: Remove node:accounts command (use account:list)
+- bec048f: Remove validator commands with L1 only usecases. set-bitmaps, signed-blocks, status, update-bls-key
+- bec048f: Remove bls flags from account:authorize and releasecelo:authorize commands, and validator:list/register commands
+- bec048f: Remove slashing flag from rewards:show (no longer relevent post L2 upgrade)
+- f11ff8a: Remove blsKey and blsPop from releasecelo:authorize since they are no longer used
+- 6ca357b: Remove support for --useAKV for transfer methods
+- 7cd2320: epoch:\* commands will not warn and exit instead of erroring if Epoch is not in correct state for the given command
+
+### Minor Changes
+
+- f11ff8a: Add score to validatorgroup:list, All scores are now properly fetched from ScoreManager contract
+- a270c1a: Change the behaviour of --ledgerConfirmAddress to also verify on first read if no txs are submitted in the command
+- e1306b7: Add epoch:status command to view information on the current epoch
+
+### Patch Changes
+
+- bec048f: Fix releasecelo/admin-revoke to work on L2
+- 2abf861: Deprecate the DKG command group
+- 04c89f7: fix: account:list --useLedger no longer requires --node to be passed in.
+- 4a6da4f: gasCurrency flag now completely removed from config. celocli config:set no longer tries to connect to a node
+- 15e1e03: (beta) Fix gas estimation with celo transfer with gas tokens
+- 4a6da4f: Getting config no longer requires a node
+- bec048f: Remove L1 code paths
+- 2abf861: Deprecate useAKV flag with intent to remove. This was for connecting to AzureKeyVault for storing key to sign transactions. We hope to streamline and remove this functionality.
+- 5a2fa51: Removes unused dependencies
+- 8637f38: Fix Typo in Telemetry Log and Update Deprecation Notice Message
+- 7d84a5a: Minor changes in the account:new output
+- 6ca357b: Migrats following commands to use viem internally
+
+  - account:list
+  - election:activate
+  - election:vote
+  - epoch:send-validator-payment
+  - governance:vote
+  - network:info
+  - node:synced
+  - transfer:\*
+  - validator:list
+  - validator:rpc-urls
+  - validatorgroup:list
+
+- 8e76ba4: chore: Remove web3-utils and @celo/phone-number-utils dependencies
+- 9069df7: Speed up validator:rpc-urls due to multicall and higher concurrancy
+- e84bc3c: Multicall is now generally used where available. Election:current now runs on viem
+- Updated dependencies [66c8ad4]
+- Updated dependencies [d761662]
+- Updated dependencies [7d84a5a]
+- Updated dependencies [99717e9]
+- Updated dependencies [04c89f7]
+- Updated dependencies [f11ff8a]
+- Updated dependencies [1c4925f]
+- Updated dependencies [5a2fa51]
+- Updated dependencies [6ca357b]
+- Updated dependencies [584c5ec]
+- Updated dependencies [66c8ad4]
+- Updated dependencies [a270c1a]
+- Updated dependencies [66c8ad4]
+- Updated dependencies [8b30dc5]
+  - @celo/contractkit@10.0.0
+  - @celo/actions@0.0.1
+  - @celo/base@7.0.3
+  - @celo/viem-account-ledger@1.2.0
+  - @celo/wallet-ledger@8.0.0
+  - @celo/metadata-claims@1.0.4
+  - @celo/governance@5.1.7
+  - @celo/connect@7.0.0
+  - @celo/cryptographic-utils@6.0.0
+  - @celo/explorer@5.0.16
+  - @celo/wallet-hsm-azure@8.0.0
+  - @celo/wallet-local@8.0.0
+  - @celo/utils@8.0.3
+
 ## 7.0.0-beta.9
 
 ### Patch Changes

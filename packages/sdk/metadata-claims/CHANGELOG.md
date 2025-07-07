@@ -1,5 +1,16 @@
 # @celo/metadata-claims
 
+## 1.0.4
+
+### Patch Changes
+
+- 5a2fa51: Removes unused dependencies
+- Updated dependencies [7d84a5a]
+- Updated dependencies [99717e9]
+- Updated dependencies [5a2fa51]
+  - @celo/base@7.0.3
+  - @celo/utils@8.0.3
+
 ## 1.0.4-beta.0
 
 ### Patch Changes

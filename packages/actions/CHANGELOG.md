@@ -1,5 +1,22 @@
 # @celo/actions
 
+## 0.0.1
+
+### Patch Changes
+
+- d761662: Fixes exports/imports
+- f11ff8a: Use score from score manager
+- 1c4925f: "Initial canary build"
+- 584c5ec: Add election contract actions
+- Updated dependencies [d761662]
+- Updated dependencies [7d84a5a]
+- Updated dependencies [08def3f]
+- Updated dependencies [99717e9]
+- Updated dependencies [1c4925f]
+- Updated dependencies [5a2fa51]
+  - @celo/core@0.0.1
+  - @celo/base@7.0.3
+
 ## 0.0.1-beta.3
 
 ### Patch Changes

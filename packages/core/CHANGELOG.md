@@ -1,5 +1,18 @@
 # @celo/core
 
+## 0.0.1
+
+### Patch Changes
+
+- d761662: Fixes exports/imports
+- 08def3f: Bump to decrease min node recommendation
+- 99717e9: use more explicit types for addresses in more places
+- 1c4925f: "Initial canary build"
+- Updated dependencies [7d84a5a]
+- Updated dependencies [99717e9]
+- Updated dependencies [5a2fa51]
+  - @celo/base@7.0.3
+
 ## 0.0.1-beta.2
 
 ### Patch Changes
