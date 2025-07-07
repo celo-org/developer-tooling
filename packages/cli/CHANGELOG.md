@@ -1,5 +1,19 @@
 # Changelog
 
+## 7.0.0-beta.10
+
+### Patch Changes
+
+- [#676](https://github.com/celo-org/developer-tooling/pull/676) [`15e1e03`](https://github.com/celo-org/developer-tooling/commit/15e1e031f0f79339225d860250348d0beceaa9e5) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - (beta) Fix gas estimation with celo transfer with gas tokens
+
+- [#677](https://github.com/celo-org/developer-tooling/pull/677) [`8637f38`](https://github.com/celo-org/developer-tooling/commit/8637f380eda606a5f11728089328f2ebac88bcb2) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Fix Typo in Telemetry Log and Update Deprecation Notice Message
+
+- Updated dependencies [[`6610d47`](https://github.com/celo-org/developer-tooling/commit/6610d474e364e7ae5fe1016dd44a0a8c53d0769f)]:
+  - @celo/viem-account-ledger@1.2.0-beta.3
+  - @celo/wallet-ledger@8.0.0-beta.3
+  - @celo/wallet-hsm-azure@8.0.0-beta.3
+  - @celo/wallet-local@8.0.0-beta.3
+
 ## 7.0.0-beta.9
 
 ### Patch Changes
