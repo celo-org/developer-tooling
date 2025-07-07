@@ -6,7 +6,7 @@
 
 # Interface: ErrorResult\<TError\>
 
-Defined in: [packages/sdk/base/src/result.ts:6](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L6)
+Defined in: [packages/sdk/base/src/result.ts:5](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L5)
 
 ## Type Parameters
 
@@ -20,7 +20,7 @@ Defined in: [packages/sdk/base/src/result.ts:6](https://github.com/celo-org/deve
 
 > **error**: `TError`
 
-Defined in: [packages/sdk/base/src/result.ts:8](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L8)
+Defined in: [packages/sdk/base/src/result.ts:7](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L7)
 
 ***
 
@@ -28,4 +28,4 @@ Defined in: [packages/sdk/base/src/result.ts:8](https://github.com/celo-org/deve
 
 > **ok**: `false`
 
-Defined in: [packages/sdk/base/src/result.ts:7](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L7)
+Defined in: [packages/sdk/base/src/result.ts:6](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L6)

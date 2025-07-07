@@ -8,7 +8,7 @@
 
 > **Ok**\<`TResult`\>(`result`): [`OkResult`](../interfaces/OkResult.md)\<`TResult`\>
 
-Defined in: [packages/sdk/base/src/result.ts:13](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L13)
+Defined in: [packages/sdk/base/src/result.ts:12](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L12)
 
 ## Type Parameters
 

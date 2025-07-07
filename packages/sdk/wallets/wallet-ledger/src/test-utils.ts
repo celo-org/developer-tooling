@@ -221,7 +221,7 @@ export class TestLedger {
     ) {
       // verify with new pubkey
       const pubDir = dirname(require.resolve('@celo/ledger-token-signer'))
-      pubkey = { key: readFileSync(join(pubDir, 'pubkey.pem')).toString() }
+      pubkey = { key: readFileSync(join(pubDir, '..', 'pubkey.pem')).toString() }
     } else {
       // verify with oldpubkey
       pubkey = { key: legacyLedgerPublicKeyHex }

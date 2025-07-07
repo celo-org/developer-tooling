@@ -1,5 +1,12 @@
 # @celo/wallet-local
 
+## 8.0.0-beta.3
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @celo/wallet-base@8.0.0-beta.3
+
 ## 8.0.0-beta.2
 
 ### Patch Changes

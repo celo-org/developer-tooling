@@ -8,7 +8,7 @@
 
 > **makeAsyncThrowable**\<`TArgs`, `TResult`, `TError`, `TModifiedError`\>(`f`, `errorModifier?`): (...`args`) => `Promise`\<`TResult`\>
 
-Defined in: [packages/sdk/base/src/result.ts:48](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L48)
+Defined in: [packages/sdk/base/src/result.ts:47](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L47)
 
 ## Type Parameters
 

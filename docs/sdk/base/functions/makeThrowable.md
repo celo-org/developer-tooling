@@ -8,7 +8,7 @@
 
 > **makeThrowable**\<`TArgs`, `TResult`, `TError`, `TModifiedError`\>(`f`, `errorModifier?`): (...`args`) => `TResult`
 
-Defined in: [packages/sdk/base/src/result.ts:36](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L36)
+Defined in: [packages/sdk/base/src/result.ts:35](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/result.ts#L35)
 
 ## Type Parameters
 

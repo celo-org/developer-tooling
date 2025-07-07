@@ -1,8 +1,8 @@
-**@celo/network-utils v5.0.8**
+**@celo/network-utils v5.0.9-beta.0**
 
 ***
 
-# @celo/network-utils v5.0.8
+# @celo/network-utils v5.0.9-beta.0
 
 ## Classes
 

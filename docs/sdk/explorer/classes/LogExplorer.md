@@ -36,7 +36,7 @@ Defined in: [log-explorer.ts:17](https://github.com/celo-org/developer-tooling/b
 
 > `readonly` **contractDetails**: [`ContractDetails`](../interfaces/ContractDetails.md)[]
 
-Defined in: [log-explorer.ts:17](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/log-explorer.ts#L17)
+Defined in: [log-explorer.ts:19](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/log-explorer.ts#L19)
 
 ## Methods
 
@@ -44,7 +44,7 @@ Defined in: [log-explorer.ts:17](https://github.com/celo-org/developer-tooling/b
 
 > **fetchTxReceipt**(`txhash`): `Promise`\<`null` \| `CeloTxReceipt`\>
 
-Defined in: [log-explorer.ts:47](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/log-explorer.ts#L47)
+Defined in: [log-explorer.ts:50](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/log-explorer.ts#L50)
 
 #### Parameters
 
@@ -62,7 +62,7 @@ Defined in: [log-explorer.ts:47](https://github.com/celo-org/developer-tooling/b
 
 > **getKnownLogs**(`tx`): `EventLog`[]
 
-Defined in: [log-explorer.ts:51](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/log-explorer.ts#L51)
+Defined in: [log-explorer.ts:54](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/log-explorer.ts#L54)
 
 #### Parameters
 
@@ -80,7 +80,7 @@ Defined in: [log-explorer.ts:51](https://github.com/celo-org/developer-tooling/b
 
 > **tryParseLog**(`log`): `null` \| `EventLog`
 
-Defined in: [log-explorer.ts:62](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/log-explorer.ts#L62)
+Defined in: [log-explorer.ts:65](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/explorer/src/log-explorer.ts#L65)
 
 #### Parameters
 

@@ -6,7 +6,7 @@
 
 # Class: InteractiveProposalBuilder
 
-Defined in: [interactive-proposal-builder.ts:13](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/interactive-proposal-builder.ts#L13)
+Defined in: [interactive-proposal-builder.ts:12](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/interactive-proposal-builder.ts#L12)
 
 ## Constructors
 
@@ -14,7 +14,7 @@ Defined in: [interactive-proposal-builder.ts:13](https://github.com/celo-org/dev
 
 > **new InteractiveProposalBuilder**(`builder`): `InteractiveProposalBuilder`
 
-Defined in: [interactive-proposal-builder.ts:14](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/interactive-proposal-builder.ts#L14)
+Defined in: [interactive-proposal-builder.ts:13](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/interactive-proposal-builder.ts#L13)
 
 #### Parameters
 
@@ -32,7 +32,7 @@ Defined in: [interactive-proposal-builder.ts:14](https://github.com/celo-org/dev
 
 > **outputTransactions**(): `Promise`\<`void`\>
 
-Defined in: [interactive-proposal-builder.ts:16](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/interactive-proposal-builder.ts#L16)
+Defined in: [interactive-proposal-builder.ts:15](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/interactive-proposal-builder.ts#L15)
 
 #### Returns
 
@@ -44,7 +44,7 @@ Defined in: [interactive-proposal-builder.ts:16](https://github.com/celo-org/dev
 
 > **promptTransactions**(): `Promise`\<[`ProposalTransactionJSON`](../interfaces/ProposalTransactionJSON.md)[]\>
 
-Defined in: [interactive-proposal-builder.ts:21](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/interactive-proposal-builder.ts#L21)
+Defined in: [interactive-proposal-builder.ts:20](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/interactive-proposal-builder.ts#L20)
 
 #### Returns
 

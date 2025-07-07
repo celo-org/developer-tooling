@@ -1,5 +1,11 @@
 # @celo/viem-account-ledger
 
+## 1.2.0-beta.3
+
+### Patch Changes
+
+- [#674](https://github.com/celo-org/developer-tooling/pull/674) [`6610d47`](https://github.com/celo-org/developer-tooling/commit/6610d474e364e7ae5fe1016dd44a0a8c53d0769f) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - chore: upgrade ledger-token-signer to 0.7.0
+
 ## 1.2.0-beta.2
 
 ### Minor Changes
