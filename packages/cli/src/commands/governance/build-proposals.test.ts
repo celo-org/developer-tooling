@@ -8,6 +8,7 @@ import BuildProposal from './build-proposal'
 
 process.env.NO_SYNCCHECK = 'true'
 
+// if this is failing check that the version matches between the cli and the governance package
 jest.mock('inquirer')
 
 const TX_PATH_FOR_TEST = './test-tx.json'
