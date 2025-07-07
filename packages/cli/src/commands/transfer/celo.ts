@@ -59,7 +59,7 @@ export default class TransferCelo extends BaseCommand {
               ? celoERC20Contract.estimateGas.transferWithComment([to, value, res.flags.comment!], {
                   feeCurrency,
                 })
-              : client.estimateGas({ to, value }),
+              : client.estimateGas({ to, value, ...transferParams }),
             getGasPriceOnCelo(client, feeCurrency),
             (feeCurrency
               ? await getERC20Contract({ public: client }, feeCurrency)
