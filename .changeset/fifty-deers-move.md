@@ -2,4 +2,4 @@
 '@celo/base': patch
 ---
 
-Minor typing improvement"
+Minor typing improvement
