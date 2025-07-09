@@ -1,5 +1,20 @@
 # @celo/wallet-ledger
 
+## 8.0.0
+
+### Patch Changes
+
+- [#651](https://github.com/celo-org/developer-tooling/pull/651) [`5a2fa51`](https://github.com/celo-org/developer-tooling/commit/5a2fa5196976fffd7c89c804c68b7507e9c48f92) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Removes unused dependencies
+
+- [#674](https://github.com/celo-org/developer-tooling/pull/674) [`6610d47`](https://github.com/celo-org/developer-tooling/commit/6610d474e364e7ae5fe1016dd44a0a8c53d0769f) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - chore: upgrade ledger-token-signer to 0.7.0
+
+- Updated dependencies [[`a0efb2f`](https://github.com/celo-org/developer-tooling/commit/a0efb2fad370e350a3a4ea0ee10413628487fa47), [`7d84a5a`](https://github.com/celo-org/developer-tooling/commit/7d84a5a9a23f72572999dc17f24d9b70bf6ca9f6), [`99717e9`](https://github.com/celo-org/developer-tooling/commit/99717e93c640e37e4e67020d973a2a13d5af2ac3), [`5a2fa51`](https://github.com/celo-org/developer-tooling/commit/5a2fa5196976fffd7c89c804c68b7507e9c48f92), [`66c8ad4`](https://github.com/celo-org/developer-tooling/commit/66c8ad4e1dc03fbc478cbf046bd0a9cb3712b8d8)]:
+  - @celo/wallet-base@8.0.0
+  - @celo/base@7.0.3
+  - @celo/connect@7.0.0
+  - @celo/wallet-remote@8.0.0
+  - @celo/utils@8.0.3
+
 ## 8.0.0-beta.3
 
 ### Patch Changes

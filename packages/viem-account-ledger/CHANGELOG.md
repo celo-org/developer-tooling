@@ -1,5 +1,24 @@
 # @celo/viem-account-ledger
 
+## 1.2.0
+
+### Minor Changes
+
+- [#640](https://github.com/celo-org/developer-tooling/pull/640) [`04c89f7`](https://github.com/celo-org/developer-tooling/commit/04c89f739b1056330c5ca287234c9336c19b11e9) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - expose `deriveLedgerAccounts` function
+
+- [#602](https://github.com/celo-org/developer-tooling/pull/602) [`a270c1a`](https://github.com/celo-org/developer-tooling/commit/a270c1aa0c9d5b282396af8812ea9ddbcb7fec9c) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Export a WalletClient
+
+### Patch Changes
+
+- [#651](https://github.com/celo-org/developer-tooling/pull/651) [`5a2fa51`](https://github.com/celo-org/developer-tooling/commit/5a2fa5196976fffd7c89c804c68b7507e9c48f92) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Removes unused dependencies
+
+- [#610](https://github.com/celo-org/developer-tooling/pull/610) [`6ca357b`](https://github.com/celo-org/developer-tooling/commit/6ca357bfbbb1075d73c2b8000e01db70959e08f5) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Remove unintuitive mutex impl which resulted in `transport` error in the hw-app-eth
+
+- [#674](https://github.com/celo-org/developer-tooling/pull/674) [`6610d47`](https://github.com/celo-org/developer-tooling/commit/6610d474e364e7ae5fe1016dd44a0a8c53d0769f) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - chore: upgrade ledger-token-signer to 0.7.0
+
+- Updated dependencies [[`7d84a5a`](https://github.com/celo-org/developer-tooling/commit/7d84a5a9a23f72572999dc17f24d9b70bf6ca9f6), [`99717e9`](https://github.com/celo-org/developer-tooling/commit/99717e93c640e37e4e67020d973a2a13d5af2ac3), [`5a2fa51`](https://github.com/celo-org/developer-tooling/commit/5a2fa5196976fffd7c89c804c68b7507e9c48f92)]:
+  - @celo/base@7.0.3
+
 ## 1.2.0-beta.3
 
 ### Patch Changes

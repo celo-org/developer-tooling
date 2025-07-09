@@ -1,5 +1,11 @@
 # @celo/network-utils
 
+## 5.0.9
+
+### Patch Changes
+
+- [#672](https://github.com/celo-org/developer-tooling/pull/672) [`e6291e0`](https://github.com/celo-org/developer-tooling/commit/e6291e0e81b5eb64b576688e51ea8b5f4cb7f12b) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - adds missing dependency
+
 ## 5.0.9-beta.0
 
 ### Patch Changes
