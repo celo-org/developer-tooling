@@ -1,8 +1,8 @@
-[**@celo/contractkit v10.0.0-beta.2**](README.md)
+[**@celo/contractkit v10.0.0**](README.md)
 
 ***
 
-# @celo/contractkit v10.0.0-beta.2
+# @celo/contractkit v10.0.0
 
 ## Enumerations
 

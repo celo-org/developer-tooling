@@ -1,4 +1,4 @@
-[**@celo/explorer v5.0.16-beta.1**](../README.md)
+[**@celo/explorer v5.0.16**](../README.md)
 
 ***
 

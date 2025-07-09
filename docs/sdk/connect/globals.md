@@ -1,8 +1,8 @@
-[**@celo/connect v7.0.0-beta.1**](README.md)
+[**@celo/connect v7.0.0**](README.md)
 
 ***
 
-# @celo/connect v7.0.0-beta.1
+# @celo/connect v7.0.0
 
 ## Classes
 
