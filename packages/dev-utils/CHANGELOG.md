@@ -1,5 +1,26 @@
 # @celo/dev-utils
 
+## 0.1.0
+
+### Minor Changes
+
+- [#598](https://github.com/celo-org/developer-tooling/pull/598) [`a0efb2f`](https://github.com/celo-org/developer-tooling/commit/a0efb2fad370e350a3a4ea0ee10413628487fa47) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Remove TestWithAnvilL1
+
+- [#554](https://github.com/celo-org/developer-tooling/pull/554) [`feef9ac`](https://github.com/celo-org/developer-tooling/commit/feef9ac013e5fbf2acc3b5941a6cbd72df2825b2) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Add viem+anvil utils
+
+- [#598](https://github.com/celo-org/developer-tooling/pull/598) [`a0efb2f`](https://github.com/celo-org/developer-tooling/commit/a0efb2fad370e350a3a4ea0ee10413628487fa47) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Remove ganache. Change lib/ganache-setup.js to lib/test-accounts.js
+
+- [#602](https://github.com/celo-org/developer-tooling/pull/602) [`a270c1a`](https://github.com/celo-org/developer-tooling/commit/a270c1aa0c9d5b282396af8812ea9ddbcb7fec9c) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Add some viem helpers
+
+### Patch Changes
+
+- [#651](https://github.com/celo-org/developer-tooling/pull/651) [`5a2fa51`](https://github.com/celo-org/developer-tooling/commit/5a2fa5196976fffd7c89c804c68b7507e9c48f92) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Removes unused dependencies
+
+- [#598](https://github.com/celo-org/developer-tooling/pull/598) [`a0efb2f`](https://github.com/celo-org/developer-tooling/commit/a0efb2fad370e350a3a4ea0ee10413628487fa47) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Remove testWithGanache
+
+- Updated dependencies [[`66c8ad4`](https://github.com/celo-org/developer-tooling/commit/66c8ad4e1dc03fbc478cbf046bd0a9cb3712b8d8)]:
+  - @celo/connect@7.0.0
+
 ## 0.1.0-beta.3
 
 ### Patch Changes

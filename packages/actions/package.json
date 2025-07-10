@@ -1,6 +1,6 @@
 {
   "name": "@celo/actions",
-  "version": "0.0.1-beta.3",
+  "version": "0.0.1",
   "description": "Celo actions for use with Viem. Easily interact with Celo core contracts",
   "main": "dist/cjs/index.js",
   "module": "dist/mjs/index.js",
@@ -59,8 +59,8 @@
   },
   "dependencies": {
     "@celo/abis": "^12.0.3",
-    "@celo/base": "^7.0.3-beta.0",
-    "@celo/core": "0.0.1-beta.2",
+    "@celo/base": "^7.0.3",
+    "@celo/core": "0.0.1",
     "viem": "^2.29.2"
   },
   "devDependencies": {

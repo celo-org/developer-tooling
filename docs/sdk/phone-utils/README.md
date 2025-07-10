@@ -1,4 +1,4 @@
-**@celo/phone-utils v6.0.7-beta.0**
+**@celo/phone-utils v6.0.7**
 
 ***
 

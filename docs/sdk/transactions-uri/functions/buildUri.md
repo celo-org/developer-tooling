@@ -1,4 +1,4 @@
-[**@celo/transactions-uri v5.0.15-beta.1**](../README.md)
+[**@celo/transactions-uri v5.0.15**](../README.md)
 
 ***
 

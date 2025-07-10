@@ -1,8 +1,8 @@
-[**@celo/cryptographic-utils v6.0.0-beta.0**](README.md)
+[**@celo/cryptographic-utils v6.0.0**](README.md)
 
 ***
 
-# @celo/cryptographic-utils v6.0.0-beta.0
+# @celo/cryptographic-utils v6.0.0
 
 ## Enumerations
 

@@ -1,8 +1,8 @@
-**@celo/base v7.0.3-beta.0**
+**@celo/base v7.0.3**
 
 ***
 
-# @celo/base v7.0.3-beta.0
+# @celo/base v7.0.3
 
 ## Enumerations
 
