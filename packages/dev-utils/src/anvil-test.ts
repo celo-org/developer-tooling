@@ -4,6 +4,7 @@ import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import {
   TEST_BALANCE,
+  TEST_BASE_FEE,
   TEST_GAS_LIMIT,
   TEST_GAS_PRICE,
   TEST_MNEMONIC,
@@ -41,7 +42,7 @@ function createInstance(stateFilePath: string, chainId?: number): Anvil {
     balance: TEST_BALANCE,
     gasPrice: TEST_GAS_PRICE,
     gasLimit: TEST_GAS_LIMIT,
-    blockBaseFeePerGas: 0,
+    blockBaseFeePerGas: TEST_BASE_FEE,
     stopTimeout: 1000,
     chainId,
   }
