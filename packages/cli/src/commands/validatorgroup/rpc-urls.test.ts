@@ -1,9 +1,10 @@
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { AccountsWrapper } from '@celo/contractkit/lib/wrappers/Accounts'
-import { testWithAnvilL2, withImpersonatedAccount } from '@celo/dev-utils/anvil-test'
+import { setBalance, testWithAnvilL2, withImpersonatedAccount } from '@celo/dev-utils/anvil-test'
 import { ClaimTypes, IdentityMetadataWrapper } from '@celo/metadata-claims'
 import { ux } from '@oclif/core'
-import { setupGroupAndAffiliateValidator, setupValidator } from '../../test-utils/chain-setup'
+import { Address } from 'viem'
+import { MIN_LOCKED_CELO_VALUE, setupGroupAndAffiliateValidator, setupValidator } from '../../test-utils/chain-setup'
 import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import RpcUrls from './rpc-urls'
 
@@ -45,7 +46,7 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (web3) => {
             from: validator,
           })
       },
-      1_000_000_000_000_000n
+      1_000_000_000_000_100n
     )
   }
 
@@ -64,19 +65,26 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (web3) => {
     const [nonElectedGroupAddress, validatorAddress, nonAffilatedValidatorAddress] =
       await web3.eth.getAccounts()
 
+    await setBalance(web3, nonAffilatedValidatorAddress as Address, BigInt('1100000000000000000000000')) // 100000 CELO
     await setupValidator(kit, nonAffilatedValidatorAddress)
-
+    await setBalance(web3, nonElectedGroupAddress as Address, BigInt('12000000000000000000000')) // 100000 CELO
+    await setBalance(web3, validatorAddress as Address, BigInt('110000000000000000000000')) // 100000 CELO
     await setupGroupAndAffiliateValidator(kit, nonElectedGroupAddress, validatorAddress)
+
     await accountsWrapper
       .setName('Test group')
       .sendAndWaitForReceipt({ from: nonElectedGroupAddress })
-
     for (const validator of [
       ...EXISTING_VALIDATORS,
       validatorAddress,
       nonAffilatedValidatorAddress,
     ]) {
-      await setMetadataUrlForValidator(accountsWrapper, validator)
+      await setBalance(web3, validator as Address, MIN_LOCKED_CELO_VALUE)
+      try {
+        await setMetadataUrlForValidator(accountsWrapper, validator)
+      } catch (error) {
+        process.stderr.write(`Failed to set metadata URL for ${validator}: ${error}\n`)
+      }
     }
   })
 
