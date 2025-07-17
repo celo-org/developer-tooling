@@ -111,8 +111,15 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
 
     const balanceAfter = (await kit.getTotalBalance(accounts[0])).CELO?.toFixed()!
     // the balance should be close to initial minus the fees for gas times 2 (one for each transfer)
-    const estimatedBalance = BigInt(balanceBefore.minus(transactionReceipt.effectiveGasPrice * transactionReceipt.gasUsed * 2).toFixed())
-    expect(Number(formatEther(BigInt(balanceAfter)))).toBeCloseTo(Number(formatEther(estimatedBalance)), 3)
+    const estimatedBalance = BigInt(
+      balanceBefore
+        .minus(transactionReceipt.effectiveGasPrice * transactionReceipt.gasUsed * 2)
+        .toFixed()
+    )
+    expect(Number(formatEther(BigInt(balanceAfter)))).toBeCloseTo(
+      Number(formatEther(estimatedBalance)),
+      3
+    )
   })
 
   test('cant transfer full balance without feeCurrency', async () => {
@@ -206,9 +213,9 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
         ],
       ]
     `)
-    // NOTE that because anvil doesnt understand paying with fee tokens this tx will actually revert. 
-    // alternatively in the past we used anvil with baseFee set to 0, but that makes tests generally 
-    // less accurate representations of real world. 
+    // NOTE that because anvil doesnt understand paying with fee tokens this tx will actually revert.
+    // alternatively in the past we used anvil with baseFee set to 0, but that makes tests generally
+    // less accurate representations of real world.
   })
 
   test('can transfer very large amounts of CELO', async () => {
@@ -413,9 +420,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
     const balanceAfter = await kit.getTotalBalance(accounts[0])
     const receiverBalanceAfter = await kit.getTotalBalance(accounts[1])
     const transactionReceipt = await web3.eth.getTransactionReceipt(
-      (
-        await web3.eth.getBlock('latest')
-      ).transactions[0]
+      (await web3.eth.getBlock('latest')).transactions[0]
     )
 
     // Safety check if the latest transaction was originated by expected account

@@ -76,7 +76,7 @@ export default class TransferErc20 extends BaseCommand {
         `Account can afford to transfer CELO with gas paid in ${feeCurrency || 'CELO'}`,
         async () => {
           const [gas, gasPrice, balanceOfTokenForGas] = await Promise.all([
-            erc20Contract.estimateGas.transfer([to, value], {...transferParams, account: from}),
+            erc20Contract.estimateGas.transfer([to, value], { ...transferParams, account: from }),
             getGasPriceOnCelo(client, feeCurrency),
             (feeCurrency
               ? await getERC20Contract({ public: client }, feeCurrency)
