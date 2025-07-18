@@ -33,7 +33,7 @@
     "prepack": "yarn build"
   },
   "dependencies": {
-    "@celo/abis": "12.0.3",
+    "@celo/abis": "13.0.0-post-audit.0",
     "@celo/connect": "^7.0.0",
     "@viem/anvil": "^0.0.9",
     "bignumber.js": "^9.0.0",

@@ -10,7 +10,7 @@ import {
 } from '@celo/utils/lib/signatureUtils'
 import { soliditySha3 } from '@celo/utils/lib/solidity'
 import { authorizeSigner as buildAuthorizeSignerTypedData } from '@celo/utils/lib/typed-data-constructors'
-import type BN from 'bn.js' // just the types
+import type BN from 'bn.js'; // just the types
 import { getParsedSignatureOfAddress } from '../utils/getParsedSignatureOfAddress'
 import { newContractVersion } from '../versions'
 import {
@@ -249,17 +249,11 @@ export class AccountsWrapper extends BaseWrapper<Accounts> {
    * Authorizes an address to sign consensus messages on behalf of the account. Also switch BLS key at the same time.
    * @param signer The address of the signing key to authorize.
    * @param proofOfSigningKeyPossession The account address signed by the signer address.
-   * @param blsPublicKey The BLS public key that the validator is using for consensus, should pass proof
-   *   of possession. 48 bytes.
-   * @param blsPop The BLS public key proof-of-possession, which consists of a signature on the
-   *   account address. 96 bytes.
    * @return A CeloTransactionObject
    */
   async authorizeValidatorSignerAndBls(
     signer: Address,
     proofOfSigningKeyPossession: Signature,
-    blsPublicKey: string,
-    blsPop: string
   ): Promise<CeloTransactionObject<void>> {
     const account = this.connection.defaultAccount || (await this.connection.getAccounts())[0]
     const message = this.connection.web3.utils.soliditySha3({
@@ -275,14 +269,12 @@ export class AccountsWrapper extends BaseWrapper<Accounts> {
     )
     return toTransactionObject(
       this.connection,
-      this.contract.methods.authorizeValidatorSignerWithKeys(
+      this.contract.methods.authorizeValidatorSignerWithPublicKey(
         signer,
         proofOfSigningKeyPossession.v,
         proofOfSigningKeyPossession.r,
         proofOfSigningKeyPossession.s,
         stringToSolidityBytes(pubKey),
-        stringToSolidityBytes(blsPublicKey),
-        stringToSolidityBytes(blsPop)
       )
     )
   }
