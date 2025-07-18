@@ -27,7 +27,7 @@
   },
   "scripts": {
     "clean": "rm -f tsconfig.tsbuildinfo && rm -rf lib/ && yarn run --top-level tsc -b . --clean",
-    "dev": "yarn build && ts-node ./bin/dev.js",
+    "dev": "yarn build && yarn run --top-level ts-node ./bin/dev.js",
     "build": "yarn run --top-level tsc -b . && yarn oclif manifest",
     "docs": "./generate_docs.sh",
     "prepublish": "",
