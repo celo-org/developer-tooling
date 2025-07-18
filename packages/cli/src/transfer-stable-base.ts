@@ -93,9 +93,12 @@ export abstract class TransferStableBase extends BaseCommand {
             res.flags.comment
               ? stableTokenContract.estimateGas.transferWithComment(
                   [to, value, res.flags.comment],
-                  transferParams
+                  { ...transferParams, account: from }
                 )
-              : stableTokenContract.estimateGas.transfer([to, value], transferParams),
+              : stableTokenContract.estimateGas.transfer([to, value], {
+                  ...transferParams,
+                  account: from,
+                }),
             // fee estimation
             getGasPriceOnCelo(client, feeCurrency),
             //  balanceOfTokenForGas

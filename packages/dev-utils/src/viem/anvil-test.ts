@@ -17,7 +17,13 @@ import {
 } from 'viem'
 import { celo, celoAlfajores } from 'viem/chains'
 import { ANVIL_PORT, DEFAULT_OWNER_ADDRESS } from '../anvil-test'
-import { TEST_BALANCE, TEST_GAS_LIMIT, TEST_GAS_PRICE, TEST_MNEMONIC } from '../test-utils'
+import {
+  TEST_BALANCE,
+  TEST_BASE_FEE,
+  TEST_GAS_LIMIT,
+  TEST_GAS_PRICE,
+  TEST_MNEMONIC,
+} from '../test-utils'
 import { celoBaklava } from './chains'
 import { testWithViem } from './test-utils'
 
@@ -46,7 +52,7 @@ function createInstance(opts?: { chainId?: number; forkUrl?: string; forkBlockNu
     balance: TEST_BALANCE,
     gasPrice: TEST_GAS_PRICE,
     gasLimit: TEST_GAS_LIMIT,
-    blockBaseFeePerGas: 25000000000,
+    blockBaseFeePerGas: TEST_BASE_FEE,
     stopTimeout: 3000,
     chainId: opts?.chainId,
     ...(forkUrl

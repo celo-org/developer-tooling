@@ -1,6 +1,7 @@
 import { COMPLIANT_ERROR_RESPONSE } from '@celo/compliance'
 import { ContractKit, newKitFromWeb3, StableToken } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
+import { TEST_GAS_PRICE } from '@celo/dev-utils/test-utils'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { topUpWithToken } from '../../test-utils/chain-setup'
@@ -89,7 +90,7 @@ testWithAnvilL2('transfer:dollars cmd', (web3: Web3) => {
     let restoreMock: () => void
     beforeEach(() => {
       // need to call this send sending gasCurrency address to the gas price rpc is not supported on anvil.
-      restoreMock = mockRpcFetch({ method: 'eth_gasPrice', result: '30000' })
+      restoreMock = mockRpcFetch({ method: 'eth_gasPrice', result: TEST_GAS_PRICE })
     })
     afterEach(() => {
       restoreMock()

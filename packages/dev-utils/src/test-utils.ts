@@ -11,7 +11,8 @@ export const UNLOCKING_PERIOD = 3 * DAY
 export const TEST_MNEMONIC =
   'concert load couple harbor equip island argue ramp clarify fence smart topic'
 export const TEST_BALANCE = 1000000
-export const TEST_GAS_PRICE = 0
+export const TEST_GAS_PRICE = 25001000000 // actual price on celo right now
+export const TEST_BASE_FEE = 25000000000 // actual price on celo right now
 export const TEST_GAS_LIMIT = 20000000
 
 export const NetworkConfig = migrationOverride

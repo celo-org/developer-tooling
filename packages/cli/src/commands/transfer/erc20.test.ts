@@ -1,10 +1,12 @@
 import { COMPLIANT_ERROR_RESPONSE } from '@celo/compliance'
 import { ContractKit, newKitFromWeb3, StableToken } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
+import { TEST_GAS_PRICE } from '@celo/dev-utils/test-utils'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { topUpWithToken } from '../../test-utils/chain-setup'
 import { TEST_SANCTIONED_ADDRESS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { mockRpcFetch } from '../../test-utils/mockRpc'
 import TransferERC20 from './erc20'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -41,6 +43,15 @@ testWithAnvilL2('transfer:erc20 cmd', (web3: Web3) => {
       accounts[1],
       new BigNumber('9000000000000000000000')
     )
+  })
+
+  let restoreMock: () => void
+  beforeEach(() => {
+    // need to call this send sending gasCurrency address to the gas price rpc is not supported on anvil.
+    restoreMock = mockRpcFetch({ method: 'eth_gasPrice', result: TEST_GAS_PRICE })
+  })
+  afterEach(() => {
+    restoreMock()
   })
 
   afterEach(() => {
@@ -148,5 +159,41 @@ testWithAnvilL2('transfer:erc20 cmd', (web3: Web3) => {
         web3
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"--useAKV flag is no longer supported"`)
+  })
+
+  test('should handle gas estimation correctly with CELO', async () => {
+    const sender = accounts[0]
+    const receiver = accounts[1]
+    const amountToTransfer = '500000000000000000000' // 500 tokens
+
+    const cusdAddress = await kit.celoTokens.getAddress(StableToken.cUSD)
+
+    // Transfer ERC20 with gas paid in CELO (default)
+    await testLocallyWithWeb3Node(
+      TransferERC20,
+      [
+        '--from',
+        sender,
+        '--to',
+        receiver,
+        '--value',
+        amountToTransfer,
+        '--erc20Address',
+        cusdAddress,
+      ],
+      web3
+    )
+
+    // Verify the transfer was successful
+    const receiverBalance = await kit.getTotalBalance(receiver)
+    const senderBalance = await kit.getTotalBalance(sender)
+
+    // The receiver should have received the cUSD
+    expect(receiverBalance.cUSD!.toFixed()).toEqual(amountToTransfer)
+
+    // The sender should have less cUSD (the transferred amount)
+    expect(senderBalance.cUSD!.toFixed()).toEqual(
+      new BigNumber('9000000000000000000000').minus(amountToTransfer).toFixed()
+    )
   })
 })
