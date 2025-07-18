@@ -4,7 +4,11 @@ import { setBalance, testWithAnvilL2, withImpersonatedAccount } from '@celo/dev-
 import { ClaimTypes, IdentityMetadataWrapper } from '@celo/metadata-claims'
 import { ux } from '@oclif/core'
 import { Address } from 'viem'
-import { MIN_LOCKED_CELO_VALUE, setupGroupAndAffiliateValidator, setupValidator } from '../../test-utils/chain-setup'
+import {
+  MIN_LOCKED_CELO_VALUE,
+  setupGroupAndAffiliateValidator,
+  setupValidator,
+} from '../../test-utils/chain-setup'
 import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import RpcUrls from './rpc-urls'
 
@@ -65,7 +69,11 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (web3) => {
     const [nonElectedGroupAddress, validatorAddress, nonAffilatedValidatorAddress] =
       await web3.eth.getAccounts()
 
-    await setBalance(web3, nonAffilatedValidatorAddress as Address, BigInt('1100000000000000000000000')) // 100000 CELO
+    await setBalance(
+      web3,
+      nonAffilatedValidatorAddress as Address,
+      BigInt('1100000000000000000000000')
+    ) // 100000 CELO
     await setupValidator(kit, nonAffilatedValidatorAddress)
     await setBalance(web3, nonElectedGroupAddress as Address, BigInt('12000000000000000000000')) // 100000 CELO
     await setBalance(web3, validatorAddress as Address, BigInt('110000000000000000000000')) // 100000 CELO
