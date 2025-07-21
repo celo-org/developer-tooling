@@ -69,14 +69,10 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (web3) => {
     const [nonElectedGroupAddress, validatorAddress, nonAffilatedValidatorAddress] =
       await web3.eth.getAccounts()
 
-    await setBalance(
-      web3,
-      nonAffilatedValidatorAddress as Address,
-      MIN_PRACTICAL_LOCKED_CELO_VALUE
-    ) 
+    await setBalance(web3, nonAffilatedValidatorAddress as Address, MIN_PRACTICAL_LOCKED_CELO_VALUE)
     await setupValidator(kit, nonAffilatedValidatorAddress)
-    await setBalance(web3, nonElectedGroupAddress as Address, MIN_PRACTICAL_LOCKED_CELO_VALUE) 
-    await setBalance(web3, validatorAddress as Address, MIN_PRACTICAL_LOCKED_CELO_VALUE) 
+    await setBalance(web3, nonElectedGroupAddress as Address, MIN_PRACTICAL_LOCKED_CELO_VALUE)
+    await setBalance(web3, validatorAddress as Address, MIN_PRACTICAL_LOCKED_CELO_VALUE)
     await setupGroupAndAffiliateValidator(kit, nonElectedGroupAddress, validatorAddress)
 
     await accountsWrapper
