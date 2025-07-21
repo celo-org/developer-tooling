@@ -1889,7 +1889,7 @@ __metadata:
     "@celo/base": "npm:^7.0.3"
     "@celo/celo-devchain": "npm:^7.0.0"
     "@celo/connect": "npm:^7.0.0"
-    "@celo/dev-utils": "npm:0.1.0"
+    "@celo/dev-utils": "npm:0.1.1"
     "@celo/odis-identifiers": "npm:^1.0.1"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.3"
@@ -1967,7 +1967,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/dev-utils@npm:0.1.0, @celo/dev-utils@workspace:^, @celo/dev-utils@workspace:packages/dev-utils":
+"@celo/dev-utils@npm:0.1.1, @celo/dev-utils@workspace:^, @celo/dev-utils@workspace:packages/dev-utils":
   version: 0.0.0-use.local
   resolution: "@celo/dev-utils@workspace:packages/dev-utils"
   dependencies:
@@ -2015,7 +2015,7 @@ __metadata:
     "@celo/base": "npm:^7.0.3"
     "@celo/connect": "npm:^7.0.0"
     "@celo/contractkit": "npm:^10.0.0"
-    "@celo/dev-utils": "npm:0.1.0"
+    "@celo/dev-utils": "npm:0.1.1"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.3"
     "@types/debug": "npm:^4.1.12"
@@ -2035,7 +2035,7 @@ __metadata:
     "@celo/base": "npm:^7.0.3"
     "@celo/connect": "npm:^7.0.0"
     "@celo/contractkit": "npm:^10.0.0"
-    "@celo/dev-utils": "npm:0.1.0"
+    "@celo/dev-utils": "npm:0.1.1"
     "@celo/explorer": "npm:^5.0.16"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.3"
@@ -2118,7 +2118,7 @@ __metadata:
   dependencies:
     "@celo/base": "npm:^7.0.3"
     "@celo/contractkit": "workspace:^"
-    "@celo/dev-utils": "npm:0.1.0"
+    "@celo/dev-utils": "npm:0.1.1"
     "@celo/odis-identifiers": "npm:^1.0.1"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.3"
@@ -2135,7 +2135,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/network-utils@workspace:packages/sdk/network-utils"
   dependencies:
-    "@celo/dev-utils": "npm:0.1.0"
+    "@celo/dev-utils": "npm:0.1.1"
     "@celo/typescript": "workspace:^"
     "@types/debug": "npm:^4.1.12"
     cross-fetch: "npm:3.1.5"
