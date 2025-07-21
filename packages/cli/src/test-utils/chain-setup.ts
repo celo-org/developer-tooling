@@ -15,7 +15,9 @@ import Switch from '../commands/epochs/switch'
 import { testLocallyWithWeb3Node } from './cliUtils'
 
 export const MIN_LOCKED_CELO_VALUE = new BigNumber(Web3.utils.toWei('10000', 'ether')) // 10k CELO for the group
-export const MIN_PRACTICAL_LOCKED_CELO_VALUE = MIN_LOCKED_CELO_VALUE.plus(Web3.utils.toWei('1', 'ether')) // 10k CELO for the group and 1 for gas
+export const MIN_PRACTICAL_LOCKED_CELO_VALUE = MIN_LOCKED_CELO_VALUE.plus(
+  Web3.utils.toWei('1', 'ether')
+) // 10k CELO for the group and 1 for gas
 
 const GROUP_COMMISION = new BigNumber(0.1)
 
