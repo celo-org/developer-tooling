@@ -1975,7 +1975,7 @@ __metadata:
     "@celo/base": "workspace:^"
     "@celo/celo-devchain": "npm:^8.0.0"
     "@celo/connect": "npm:^7.0.0"
-    "@celo/devchain-anvil": "npm:12.0.5"
+    "@celo/devchain-anvil": "npm:13.0.0-canary.11"
     "@celo/typescript": "workspace:^"
     "@tsconfig/recommended": "npm:^1.0.3"
     "@types/fs-extra": "npm:^8.1.0"
@@ -2001,10 +2001,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/devchain-anvil@npm:12.0.5":
-  version: 12.0.5
-  resolution: "@celo/devchain-anvil@npm:12.0.5"
-  checksum: b230e0c3543d02576b75ef063705b1e5a6213f573785778b9f0c6c5091b9c00c80abb03f963d02f42e67ecaeabc4045a6b76f8037154fa5f8b762957af46088a
+"@celo/devchain-anvil@npm:13.0.0-canary.11":
+  version: 13.0.0-canary.11
+  resolution: "@celo/devchain-anvil@npm:13.0.0-canary.11"
+  checksum: 5c4d953216c03d5cac6d7227b6757c3e59689777e083a5a38cfb53acd0e03d8bf7b6e0ddea6828e3801a19adabf789dc84a76a1c3f00e46ecfb690585d52845b
   languageName: node
   linkType: hard
 
