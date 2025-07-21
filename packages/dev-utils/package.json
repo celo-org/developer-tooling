@@ -1,6 +1,6 @@
 {
   "name": "@celo/dev-utils",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "util package for celo packages that should only be a devDependency",
   "exports": {
     "./*": {

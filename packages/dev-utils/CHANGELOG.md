@@ -1,5 +1,11 @@
 # @celo/dev-utils
 
+## 0.1.1
+
+### Patch Changes
+
+- [#683](https://github.com/celo-org/developer-tooling/pull/683) [`bbdce04`](https://github.com/celo-org/developer-tooling/commit/bbdce04c9f50b7eaa63856bc26f100d11ec2f9d0) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Use realistic values for gasPrice and baseFeePerGas in anvil instance
+
 ## 0.1.0
 
 ### Minor Changes
