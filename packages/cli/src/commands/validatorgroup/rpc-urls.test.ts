@@ -3,9 +3,9 @@ import { AccountsWrapper } from '@celo/contractkit/lib/wrappers/Accounts'
 import { setBalance, testWithAnvilL2, withImpersonatedAccount } from '@celo/dev-utils/anvil-test'
 import { ClaimTypes, IdentityMetadataWrapper } from '@celo/metadata-claims'
 import { ux } from '@oclif/core'
-import { Address } from 'viem'
+import { Address, parseEther } from 'viem'
 import {
-  MIN_LOCKED_CELO_VALUE,
+  MIN_PRACTICAL_LOCKED_CELO_VALUE,
   setupGroupAndAffiliateValidator,
   setupValidator,
 } from '../../test-utils/chain-setup'
@@ -50,7 +50,7 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (web3) => {
             from: validator,
           })
       },
-      1_000_000_000_000_100n
+      parseEther('10000000')
     )
   }
 
@@ -72,11 +72,11 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (web3) => {
     await setBalance(
       web3,
       nonAffilatedValidatorAddress as Address,
-      BigInt('1100000000000000000000000')
-    ) // 100000 CELO
+      MIN_PRACTICAL_LOCKED_CELO_VALUE
+    ) 
     await setupValidator(kit, nonAffilatedValidatorAddress)
-    await setBalance(web3, nonElectedGroupAddress as Address, BigInt('12000000000000000000000')) // 100000 CELO
-    await setBalance(web3, validatorAddress as Address, BigInt('110000000000000000000000')) // 100000 CELO
+    await setBalance(web3, nonElectedGroupAddress as Address, MIN_PRACTICAL_LOCKED_CELO_VALUE) 
+    await setBalance(web3, validatorAddress as Address, MIN_PRACTICAL_LOCKED_CELO_VALUE) 
     await setupGroupAndAffiliateValidator(kit, nonElectedGroupAddress, validatorAddress)
 
     await accountsWrapper
@@ -87,7 +87,7 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (web3) => {
       validatorAddress,
       nonAffilatedValidatorAddress,
     ]) {
-      await setBalance(web3, validator as Address, MIN_LOCKED_CELO_VALUE)
+      await setBalance(web3, validator as Address, MIN_PRACTICAL_LOCKED_CELO_VALUE)
       try {
         await setMetadataUrlForValidator(accountsWrapper, validator)
       } catch (error) {
