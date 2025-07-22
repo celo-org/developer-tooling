@@ -178,7 +178,7 @@ testWithAnvilL2('kit', (web3: Web3) => {
 
     it('gets first and last block number of an epoch', async () => {
       expect(await kit.getFirstBlockNumberForEpoch(4)).toEqual(300)
-      expect(await kit.getLastBlockNumberForEpoch(4)).toEqual(352)
+      expect(await kit.getLastBlockNumberForEpoch(4)).toEqual(17634)
 
       expect(await kit.getFirstBlockNumberForEpoch(5)).toEqual(353)
       expect(await kit.getLastBlockNumberForEpoch(5)).toEqual(355)

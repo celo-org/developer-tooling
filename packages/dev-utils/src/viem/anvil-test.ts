@@ -174,6 +174,5 @@ export {
   setNextBlockTimestamp as viem_setNextBlockTimestamp,
   stopImpersonatingAccount as viem_stopImpersonatingAccount,
   testWithAnvil as viem_testWithAnvil,
-  withImpersonatedAccount as viem_withImpersonatedAccount
+  withImpersonatedAccount as viem_withImpersonatedAccount,
 }
-
