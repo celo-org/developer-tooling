@@ -7,7 +7,7 @@ import { Logger, noopLogger, prefixLogger } from './logger'
  * Examples: A poller, a watcher.
  */
 export interface RunningTask {
-  /** Flag task to be stopped. Might not be inmediate */
+  /** Flag task to be stopped. Might not be immediate */
   stop(): void
   /** Indicates wether the task is running */
   isRunning(): boolean
@@ -39,7 +39,7 @@ interface RepeatTaskOptions extends TaskOptions {
 export interface RepeatTaskContext {
   /** Number of times the task has been executed (starts in 1) */
   executionNumber: number
-  /** Flag task to be stopped. Might not be inmediate */
+  /** Flag task to be stopped. Might not be immediate */
   stopTask(): void
 }
 /**
