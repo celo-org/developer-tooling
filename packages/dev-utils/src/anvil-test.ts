@@ -61,7 +61,7 @@ export function testWithAnvilL2(
   fn: (web3: Web3) => void,
   options?: TestWithAnvilOptions
 ) {
-  return testWithAnvil(require.resolve('@celo/devchain-anvil/l2-devchain.json'), name, fn, options)
+  return testWithAnvil(require.resolve('@celo/devchain-anvil/devchain.json'), name, fn, options)
 }
 
 function testWithAnvil(
