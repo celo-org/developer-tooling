@@ -27,7 +27,7 @@ env:
   NODE_OPTIONS: '--max-old-space-size=4096'
   TERM: dumb
   # Supported Foundry version defined at celo-org (GitHub organisation) level, for consistency across workflows.
-  SUPPORTED_FOUNDRY_VERSION: "v1.0.0"
+  SUPPORTED_FOUNDRY_VERSION: "v1.2.3"
 
 # EXAMPLE on debug ssh step
 #  - name: Setup tmate session
@@ -342,17 +342,7 @@ jobs:
         uses: ./.github/actions/sync-workspace
         with:
           artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
-      - name: "View files"
-        run: |
-          ls -la $RUNNER_WORKSPACE
-          ls -la $RUNNER_WORKSPACE/developer-tooling/packages
-          ls -la $RUNNER_WORKSPACE/developer-tooling/node_modules/@celo
-          ls -la $RUNNER_WORKSPACE/developer-tooling/node_modules/@celo/devchain-anvil  
-          
-      - uses: fawazahmed0/action-debug-vscode@main
-        with:
-            token: 'star'
-          
+
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
         with:
