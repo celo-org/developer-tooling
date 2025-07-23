@@ -23,11 +23,11 @@ defaults:
 
 env:
   # Increment these to force cache rebuilding
-  NODE_MODULE_CACHE_VERSION: 6
+  NODE_MODULE_CACHE_VERSION: 7
   NODE_OPTIONS: '--max-old-space-size=4096'
   TERM: dumb
   # Supported Foundry version defined at celo-org (GitHub organisation) level, for consistency across workflows.
-  SUPPORTED_FOUNDRY_VERSION: "v1.0.0"
+  SUPPORTED_FOUNDRY_VERSION: "nightly-fa0e0c2ca3ae75895dd19173a02faf88509c0608"
 
 # EXAMPLE on debug ssh step
 #  - name: Setup tmate session

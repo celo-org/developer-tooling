@@ -12,7 +12,6 @@ testWithAnvilL2('Metadata', (web3) => {
   const address = ACCOUNT_ADDRESSES[0]
   const otherAddress = ACCOUNT_ADDRESSES[1]
 
-
   test('correctly recovers the claims when signed by the account', async () => {
     const name = 'Celo'
     const metadata = IdentityMetadataWrapper.fromEmpty(address)
@@ -45,7 +44,7 @@ testWithAnvilL2('Metadata', (web3) => {
       action: string,
       metadata: IdentityMetadataWrapper
     ) => {
-        console.warn('testSigner generateProofOfKeyPossession', address)
+      console.warn('testSigner generateProofOfKeyPossession', address)
 
       const pop = await accounts.generateProofOfKeyPossession(address, signer)
       if (action === 'vote') {
