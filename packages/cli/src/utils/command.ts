@@ -168,7 +168,7 @@ export const parseHexString: ParseFn<Hex> = async (input) => {
   if (isHex(input)) {
     return input
   }
-  throw new CLIError(`${input} is not a valid hex string`)
+  throw new Error(`'${input}' is not a valid hex string`)
 }
 
 export const CustomFlags = {

@@ -15,6 +15,7 @@ export default class MultiSigTransfer extends BaseCommand {
     to: CustomFlags.address({ required: true, description: 'Recipient of transfer' }),
     amount: CustomFlags.bigint({ required: true, description: 'Amount to transfer, e.g. 10e18' }),
     transferFrom: Flags.boolean({
+      dependsOn: ['sender'],
       description: 'Perform transferFrom instead of transfer in the ERC-20 interface',
     }),
     sender: CustomFlags.address({ description: 'Identify sender if performing transferFrom' }),
@@ -36,7 +37,7 @@ export default class MultiSigTransfer extends BaseCommand {
   async run() {
     const {
       args,
-      flags: { to, sender, amount, transferFrom },
+      flags: { to, sender, amount, transferFrom, from },
     } = await this.parse(MultiSigTransfer)
     const wallets = {
       public: await this.getPublicClient(),
@@ -44,8 +45,16 @@ export default class MultiSigTransfer extends BaseCommand {
     }
 
     const mutlisigAddress = args.arg1 as Address
+
     const celoToken = await getCeloERC20Contract(wallets)
     const multisig = await getMultiSigContract(wallets, mutlisigAddress)
+    
+
+    const isOwner = await multisig.read.isOwner([from])
+
+    if (!isOwner) {
+      this.error(`--from address ${from} is not an owner of the multisig contract at ${mutlisigAddress}`)
+    }
 
     let transferTx
     if (transferFrom) {
