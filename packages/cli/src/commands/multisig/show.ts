@@ -43,7 +43,7 @@ export default class ShowMultiSig extends BaseCommand {
     }
 
     const multisig = await getMultiSigContract(wallets, multisigAddress)
-    const txs = await multisig.read.getTransactionCount([true, true])
+    const txCount = await multisig.read.getTransactionCount([true, true])
     const explorer = await newBlockExplorer(await this.getKit())
     await explorer.updateContractDetailsMapping(CeloContract.MultiSig, multisigAddress)
     const process = async (txdata: Awaited<ReturnType<typeof multisig.read.transactions>>) => {
@@ -58,12 +58,12 @@ export default class ShowMultiSig extends BaseCommand {
               (
                 await Promise.all(
                   (
-                    await multisig.read.getTransactionIds([BigInt(0), txs, true, true])
+                    await multisig.read.getTransactionIds([BigInt(0), txCount, true, true])
                   ).map((tx) => multisig.read.transactions([tx]))
                 )
               ).map(process)
             )
-          : txs
+          : txCount
     const info = {
       Owners: await multisig.read.getOwners(),
       'Required confirmations': await multisig.read.required(),
