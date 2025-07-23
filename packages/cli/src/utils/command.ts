@@ -237,7 +237,7 @@ export const CustomFlags = {
     description:
       'A URL where further information about the proposal can be viewed. This needs to be a valid proposal URL on https://github.com/celo-org/governance',
   }),
-  hexString: Flags.custom({ 
+  hexString: Flags.custom({
     parse: parseHexString,
     description: 'Hex string',
     helpValue: '0x',

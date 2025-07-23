@@ -1,4 +1,4 @@
-import { getMultiSigContract } from "@celo/actions/contracts/multisig"
+import { getMultiSigContract } from '@celo/actions/contracts/multisig'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displayViemTx } from '../../utils/cli'
@@ -29,7 +29,7 @@ export default class ApproveMultiSig extends BaseCommand {
 
   async run() {
     const {
-      flags: { from, for: multisigAddress, tx: txIndex }
+      flags: { from, for: multisigAddress, tx: txIndex },
     } = await this.parse(ApproveMultiSig)
 
     const wallets = {
@@ -52,8 +52,9 @@ export default class ApproveMultiSig extends BaseCommand {
 
     await checkBuilder.runChecks()
 
-    await displayViemTx('multisig.confirmTransaction', 
-      multisig.write.confirmTransaction([BigInt(txIndex)]), 
+    await displayViemTx(
+      'multisig.confirmTransaction',
+      multisig.write.confirmTransaction([BigInt(txIndex)]),
       wallets.public
     )
   }

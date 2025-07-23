@@ -1,5 +1,5 @@
-import { getMultiSigContract } from "@celo/actions/contracts/multisig"
-import { Address } from "viem"
+import { getMultiSigContract } from '@celo/actions/contracts/multisig'
+import { Address } from 'viem'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displayViemTx } from '../../utils/cli'
@@ -39,7 +39,7 @@ export default class ProposeMultiSig extends BaseCommand {
   async run() {
     const {
       args,
-      flags: { from, to, value, data }
+      flags: { from, to, value, data },
     } = await this.parse(ProposeMultiSig)
 
     const multisigAddress = args.arg1 as Address

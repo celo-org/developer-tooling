@@ -1,8 +1,8 @@
-import { getMultiSigContract } from "@celo/actions/contracts/multisig"
-import { CeloContract } from "@celo/contractkit"
+import { getMultiSigContract } from '@celo/actions/contracts/multisig'
+import { CeloContract } from '@celo/contractkit'
 import { newBlockExplorer } from '@celo/explorer/lib/block-explorer'
 import { Flags } from '@oclif/core'
-import { Address } from "viem"
+import { Address } from 'viem'
 import { BaseCommand } from '../../base'
 import { printValueMapRecursive } from '../../utils/cli'
 import { CustomArgs } from '../../utils/command'
@@ -54,7 +54,15 @@ export default class ShowMultiSig extends BaseCommand {
       tx !== undefined
         ? await process(await multisig.read.transactions([BigInt(tx)]))
         : all
-          ? (await Promise.all((await Promise.all((await multisig.read.getTransactionIds([BigInt(0), txs, true, true])).map(tx => multisig.read.transactions([tx])))).map(process)))
+          ? await Promise.all(
+              (
+                await Promise.all(
+                  (
+                    await multisig.read.getTransactionIds([BigInt(0), txs, true, true])
+                  ).map((tx) => multisig.read.transactions([tx]))
+                )
+              ).map(process)
+            )
           : txs
     const info = {
       Owners: await multisig.read.getOwners(),
