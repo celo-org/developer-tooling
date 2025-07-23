@@ -7,7 +7,7 @@ import { POP_SIZE } from '@celo/utils/lib/signatureUtils'
 import { Args, Errors, Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { pathExistsSync } from 'fs-extra'
-import { getAddress, isAddress, isHex } from 'viem'
+import { getAddress, Hex, isAddress, isHex } from 'viem'
 import { bigNumberToBigInt } from '../packages-to-be/utils'
 
 const CLIError = Errors.CLIError
@@ -164,6 +164,13 @@ export function argBuilder<T>(parser: ParseFn<T>) {
     })()
 }
 
+export const parseHexString: ParseFn<Hex> = async (input) => {
+  if (isHex(input)) {
+    return input
+  }
+  throw new CLIError(`${input} is not a valid hex string`)
+}
+
 export const CustomFlags = {
   addressArray: Flags.custom({
     parse: parseAddressArray,
@@ -229,6 +236,11 @@ export const CustomFlags = {
     parse: parseProposalDescriptionURL,
     description:
       'A URL where further information about the proposal can be viewed. This needs to be a valid proposal URL on https://github.com/celo-org/governance',
+  }),
+  hexString: Flags.custom({ 
+    parse: parseHexString,
+    description: 'Hex string',
+    helpValue: '0x',
   }),
 }
 
