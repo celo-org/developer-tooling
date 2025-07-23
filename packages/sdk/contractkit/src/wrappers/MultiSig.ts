@@ -26,6 +26,10 @@ export interface TransactionDataWithOutConfirmations {
   executed: boolean
 }
 
+interface AbiEncodable {
+  encodeABI(): string
+}
+
 /**
  * Contract for handling multisig actions
  */
@@ -36,7 +40,7 @@ export class MultiSigWrapper extends BaseWrapper<MultiSig> {
    * Otherwise, submits the `txObject` to the multisig and add confirmation.
    * @param index The index of the pending withdrawal to withdraw.
    */
-  async submitOrConfirmTransaction(destination: string, txObject: CeloTxObject<any>, value = '0') {
+  async submitOrConfirmTransaction(destination: string, txObject: AbiEncodable, value = '0') {
     const data = stringToSolidityBytes(txObject.encodeABI())
     const transactionCount = await this.contract.methods.getTransactionCount(true, true).call()
     let transactionId
