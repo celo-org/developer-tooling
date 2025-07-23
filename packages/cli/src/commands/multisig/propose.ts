@@ -1,8 +1,8 @@
-import { StrongAddress } from '@celo/base'
-import { Flags } from '@oclif/core'
+import { getMultiSigContract } from "@celo/actions/contracts/multisig"
+import { Address } from "viem"
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomArgs, CustomFlags } from '../../utils/command'
 
 export default class ProposeMultiSig extends BaseCommand {
@@ -18,11 +18,10 @@ export default class ProposeMultiSig extends BaseCommand {
       required: true,
       description: 'Destination address of the transaction',
     }),
-    value: Flags.string({
-      default: '0',
+    value: CustomFlags.bigint({
       description: 'Amount of Celo to send (in wei)',
     }),
-    data: Flags.string({
+    data: CustomFlags.hexString({
       default: '0x',
       description: 'Transaction data (hex encoded)',
     }),
@@ -38,42 +37,27 @@ export default class ProposeMultiSig extends BaseCommand {
   ]
 
   async run() {
-    const kit = await this.getKit()
     const {
       args,
-      flags: { from, to, value, data },
+      flags: { from, to, value, data }
     } = await this.parse(ProposeMultiSig)
 
-    const multisigAddress = args.arg1 as StrongAddress
-    kit.defaultAccount = from
-
-    const multisig = await kit.contracts.getMultiSig(multisigAddress)
+    const multisigAddress = args.arg1 as Address
+    const wallets = {
+      public: await this.getPublicClient(),
+      wallet: await this.getWalletClient(),
+    }
 
     // Validate that the sender is an owner of the multisig
     const checkBuilder = newCheckBuilder(this).isMultiSigOwner(from, multisigAddress)
-
-    // Additional validation for transaction data
-    if (data && !data.startsWith('0x')) {
-      this.error('Transaction data must be hex encoded and start with 0x')
-    }
-
-    // Validate value is a valid number
-    try {
-      BigInt(value)
-    } catch {
-      this.error('Value must be a valid number (in wei)')
-    }
-
     await checkBuilder.runChecks()
 
-    const tx = await multisig.submitOrConfirmTransaction(
-      to,
-      {
-        encodeABI: () => data,
-      },
-      value
-    )
+    const multisig = await getMultiSigContract(wallets, multisigAddress)
 
-    await displaySendTx<any>('submitOrConfirmTransaction', tx, {}, 'tx Sent')
+    await displayViemTx(
+      `multisig.submitTransaction`,
+      multisig.write.submitTransaction([to, value ?? 0n, data]),
+      wallets.public
+    )
   }
 }

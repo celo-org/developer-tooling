@@ -1,7 +1,9 @@
+import { getCeloERC20Contract } from '@celo/actions/contracts/celo-erc20'
+import { getMultiSigContract } from '@celo/actions/contracts/multisig'
 import { Flags } from '@oclif/core'
-import { BigNumber } from 'bignumber.js'
+import { Address, encodeFunctionData } from 'viem'
 import { BaseCommand } from '../../base'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomArgs, CustomFlags } from '../../utils/command'
 
 export default class MultiSigTransfer extends BaseCommand {
@@ -11,7 +13,7 @@ export default class MultiSigTransfer extends BaseCommand {
   static flags = {
     ...BaseCommand.flags,
     to: CustomFlags.address({ required: true, description: 'Recipient of transfer' }),
-    amount: Flags.string({ required: true, description: 'Amount to transfer, e.g. 10e18' }),
+    amount: CustomFlags.bigint({ required: true, description: 'Amount to transfer, e.g. 10e18' }),
     transferFrom: Flags.boolean({
       description: 'Perform transferFrom instead of transfer in the ERC-20 interface',
     }),
@@ -32,25 +34,39 @@ export default class MultiSigTransfer extends BaseCommand {
   ]
 
   async run() {
-    const kit = await this.getKit()
     const {
       args,
-      flags: { to, sender, from, amount, transferFrom },
+      flags: { to, sender, amount, transferFrom },
     } = await this.parse(MultiSigTransfer)
-    const amountBN = new BigNumber(amount)
-    const celoToken = await kit.contracts.getGoldToken()
-    const multisig = await kit.contracts.getMultiSig(args.arg1 as string)
+    const wallets = {
+      public: await this.getPublicClient(),
+      wallet: await this.getWalletClient(),
+    }
+
+    const mutlisigAddress = args.arg1 as Address
+    const celoToken = await getCeloERC20Contract(wallets)
+    const multisig = await getMultiSigContract(wallets, mutlisigAddress)
 
     let transferTx
     if (transferFrom) {
       if (!sender) this.error("Must submit 'sender' when submitting TransferFrom tx")
-      // @ts-ignore - function will accept BigNumber
-      transferTx = celoToken.transferFrom(sender, to, amountBN)
+      transferTx = encodeFunctionData({
+        abi: celoToken.abi,
+        functionName: 'transferFrom',
+        args: [sender, to, amount],
+      })
     } else {
-      // @ts-ignore - function will accept BigNumber
-      transferTx = celoToken.transfer(to, amountBN)
+      transferTx = encodeFunctionData({
+        abi: celoToken.abi,
+        functionName: 'transfer',
+        args: [to, amount],
+      })
     }
-    const multiSigTx = await multisig.submitOrConfirmTransaction(celoToken.address, transferTx.txo)
-    await displaySendTx<any>('submitOrApproveTransfer', multiSigTx, { from }, 'tx Sent')
+
+    await displayViemTx(
+      `multisig.transfer`,
+      multisig.write.submitTransaction([celoToken.address, 0n, transferTx]),
+      wallets.public
+    )
   }
 }
