@@ -55,7 +55,7 @@ export default class ProposeMultiSig extends BaseCommand {
     const multisig = await getMultiSigContract(wallets, multisigAddress)
 
     await displayViemTx(
-      `multisig.submitTransaction`,
+      `multisig: proposing transaction`,
       multisig.write.submitTransaction([to, value ?? 0n, data]),
       wallets.public
     )
