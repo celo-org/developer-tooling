@@ -48,12 +48,13 @@ export default class MultiSigTransfer extends BaseCommand {
 
     const celoToken = await getCeloERC20Contract(wallets)
     const multisig = await getMultiSigContract(wallets, mutlisigAddress)
-    
 
     const isOwner = await multisig.read.isOwner([from])
 
     if (!isOwner) {
-      this.error(`--from address ${from} is not an owner of the multisig contract at ${mutlisigAddress}`)
+      this.error(
+        `--from address ${from} is not an owner of the multisig contract at ${mutlisigAddress}`
+      )
     }
 
     let transferTx
@@ -78,10 +79,14 @@ export default class MultiSigTransfer extends BaseCommand {
 
     const txCount = await multisig.read.getTransactionCount([true, false])
     const txs = await multisig.read.getTransactionIds([BigInt(0), txCount, true, false])
-    const existingTx = (await Promise.all(txs.map(async tx => {
-      const [txDest, txValue, txData] = await multisig.read.transactions([tx])
-      return txDest === destination && txValue === value && txData === data ? tx : null
-    }))).find(tx => tx !== null)
+    const existingTx = (
+      await Promise.all(
+        txs.map(async (tx) => {
+          const [txDest, txValue, txData] = await multisig.read.transactions([tx])
+          return txDest === destination && txValue === value && txData === data ? tx : null
+        })
+      )
+    ).find((tx) => tx !== null)
 
     if (existingTx) {
       await displayViemTx(
@@ -96,6 +101,5 @@ export default class MultiSigTransfer extends BaseCommand {
         wallets.public
       )
     }
-
   }
 }
