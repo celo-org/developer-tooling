@@ -53,7 +53,7 @@ export default class ApproveMultiSig extends BaseCommand {
     await checkBuilder.runChecks()
 
     await displayViemTx(
-      'multisig.confirmTransaction',
+      'multisig: approving transaction',
       multisig.write.confirmTransaction([BigInt(txIndex)]),
       wallets.public
     )

@@ -63,10 +63,30 @@ export default class MultiSigTransfer extends BaseCommand {
       })
     }
 
-    await displayViemTx(
-      `multisig.transfer`,
-      multisig.write.submitTransaction([celoToken.address, 0n, transferTx]),
-      wallets.public
-    )
+    const destination = celoToken.address
+    const value = 0n
+    const data = transferTx
+
+    const txCount = await multisig.read.getTransactionCount([true, false])
+    const txs = await multisig.read.getTransactionIds([BigInt(0), txCount, true, false])
+    const existingTx = (await Promise.all(txs.map(async tx => {
+      const [txDest, txValue, txData] = await multisig.read.transactions([tx])
+      return txDest === destination && txValue === value && txData === data ? tx : null
+    }))).find(tx => tx !== null)
+
+    if (existingTx) {
+      await displayViemTx(
+        `multisig: approving existing transfer`,
+        multisig.write.confirmTransaction([existingTx]),
+        wallets.public
+      )
+    } else {
+      await displayViemTx(
+        `multisig: proposing transfer`,
+        multisig.write.submitTransaction([celoToken.address, 0n, transferTx]),
+        wallets.public
+      )
+    }
+
   }
 }
