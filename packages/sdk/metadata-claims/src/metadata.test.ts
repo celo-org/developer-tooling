@@ -12,6 +12,7 @@ testWithAnvilL2('Metadata', (web3) => {
   const address = ACCOUNT_ADDRESSES[0]
   const otherAddress = ACCOUNT_ADDRESSES[1]
 
+
   test('correctly recovers the claims when signed by the account', async () => {
     const name = 'Celo'
     const metadata = IdentityMetadataWrapper.fromEmpty(address)
@@ -27,7 +28,7 @@ testWithAnvilL2('Metadata', (web3) => {
     expect(nameClaim!.name).toEqual(name)
   })
 
-  test("correctly recovers the claims when the metadata is signed by any of the account's authorized signers", async () => {
+  test.only("correctly recovers the claims when the metadata is signed by any of the account's authorized signers", async () => {
     const validator = await kit.contracts.getValidators()
     const name = 'Celo'
     const voteMetadata = IdentityMetadataWrapper.fromEmpty(address)
@@ -37,19 +38,27 @@ testWithAnvilL2('Metadata', (web3) => {
     const voteSigner = ACCOUNT_ADDRESSES[2]
     const validatorSigner = ACCOUNT_ADDRESSES[3]
     const attestationSigner = ACCOUNT_ADDRESSES[4]
+    console.warn('Creating account', address)
     await accounts.createAccount().send({ from: address })
     const testSigner = async (
       signer: Address,
       action: string,
       metadata: IdentityMetadataWrapper
     ) => {
+        console.warn('testSigner generateProofOfKeyPossession', address)
+
       const pop = await accounts.generateProofOfKeyPossession(address, signer)
       if (action === 'vote') {
+        const fees = await kit.connection.setFeeMarketGas({})
+        console.warn('testSigner vote', address, fees)
         await (await accounts.authorizeVoteSigner(signer, pop)).sendAndWaitForReceipt({
           from: address,
           gas: 13000000,
+          maxFeePerGas: fees.maxFeePerGas,
         })
       } else if (action === 'validator') {
+        console.warn('testSigner validator', address)
+
         await (
           await accounts.authorizeValidatorSigner(signer, pop, validator)
         ).sendAndWaitForReceipt({
@@ -57,11 +66,14 @@ testWithAnvilL2('Metadata', (web3) => {
           gas: 13000000,
         })
       } else if (action === 'attestation') {
+        console.warn('testSigner attestation', address)
         await (await accounts.authorizeAttestationSigner(signer, pop)).sendAndWaitForReceipt({
           from: address,
           gas: 13000000,
         })
       }
+      console.warn('testSigner addClaim', address)
+
       await metadata.addClaim(createNameClaim(name), NativeSigner(kit.connection.sign, signer))
       const serializedMetadata = metadata.toString()
       const parsedMetadata = await IdentityMetadataWrapper.fromRawString(
