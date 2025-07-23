@@ -15,10 +15,12 @@ export default class MultiSigTransfer extends BaseCommand {
     to: CustomFlags.address({ required: true, description: 'Recipient of transfer' }),
     amount: CustomFlags.bigint({ required: true, description: 'Amount to transfer, e.g. 10e18' }),
     transferFrom: Flags.boolean({
-      dependsOn: ['sender'],
       description: 'Perform transferFrom instead of transfer in the ERC-20 interface',
     }),
-    sender: CustomFlags.address({ description: 'Identify sender if performing transferFrom' }),
+    sender: CustomFlags.address({
+      dependsOn: ['transferFrom'],
+      description: 'Identify sender if performing transferFrom',
+    }),
     from: CustomFlags.address({
       required: true,
       description: 'Account transferring value to the recipient',
