@@ -46,16 +46,16 @@ export default class MultiSigTransfer extends BaseCommand {
       wallet: await this.getWalletClient(),
     }
 
-    const mutlisigAddress = args.arg1 as Address
+    const multisigAddress = args.arg1 as Address
 
     const celoToken = await getCeloERC20Contract(wallets)
-    const multisig = await getMultiSigContract(wallets, mutlisigAddress)
+    const multisig = await getMultiSigContract(wallets, multisigAddress)
     
 
     const isOwner = await multisig.read.isOwner([from])
 
     if (!isOwner) {
-      this.error(`--from address ${from} is not an owner of the multisig contract at ${mutlisigAddress}`)
+      this.error(`--from address ${from} is not an owner of the multisig contract at ${multisigAddress}`)
     }
 
     let transferTx
