@@ -58,7 +58,6 @@ export default class MultiSigTransfer extends BaseCommand {
 
     let transferTx
     if (transferFrom) {
-      if (!sender) this.error("Must submit 'sender' when submitting TransferFrom tx")
       transferTx = encodeFunctionData({
         abi: celoToken.abi,
         functionName: 'transferFrom',
