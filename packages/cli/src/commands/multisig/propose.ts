@@ -43,7 +43,7 @@ export default class ProposeMultiSig extends BaseCommand {
     } = await this.parse(ProposeMultiSig)
 
     const multisigAddress = args.arg1 as Address
-    const wallets = {
+    const clients = {
       public: await this.getPublicClient(),
       wallet: await this.getWalletClient(),
     }
@@ -52,12 +52,12 @@ export default class ProposeMultiSig extends BaseCommand {
     const checkBuilder = newCheckBuilder(this).isMultiSigOwner(from, multisigAddress)
     await checkBuilder.runChecks()
 
-    const multisig = await getMultiSigContract(wallets, multisigAddress)
+    const multisig = await getMultiSigContract(clients, multisigAddress)
 
     await displayViemTx(
       `multisig: proposing transaction`,
       multisig.write.submitTransaction([to, value ?? 0n, data]),
-      wallets.public
+      clients.public
     )
   }
 }
