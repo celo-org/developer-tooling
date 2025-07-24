@@ -38,11 +38,11 @@ export default class ShowMultiSig extends BaseCommand {
     } = await this.parse(ShowMultiSig)
     const multisigAddress = args.arg1 as Address
 
-    const wallets = {
+    const clients = {
       public: await this.getPublicClient(),
     }
 
-    const multisig = await getMultiSigContract(wallets, multisigAddress)
+    const multisig = await getMultiSigContract(clients, multisigAddress)
     const txCount = await multisig.read.getTransactionCount([true, true])
     const explorer = await newBlockExplorer(await this.getKit())
     await explorer.updateContractDetailsMapping(CeloContract.MultiSig, multisigAddress)

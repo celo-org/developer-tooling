@@ -90,9 +90,11 @@ testWithAnvilL2('multisig:transfer integration tests', (web3: Web3) => {
 
           web3
         )
-      ).rejects.toThrowErrorMatchingInlineSnapshot(
-        `"--from address 0xE834EC434DABA538cd1b9Fe1582052B880BD7e63 is not an owner of the multisig contract at 0x1dC4c1cEFEF38a777b15aA20260a54E584b16C48"`
-      )
+      ).rejects.toThrowErrorMatchingInlineSnapshot(`
+        "The following error occurred:
+          [2mAll of the following must be provided when using --sender: --transferFrom[22m
+        See more help with --help"
+      `)
     })
 
     it('fails with invalid multisig address', async () => {
@@ -115,17 +117,16 @@ testWithAnvilL2('multisig:transfer integration tests', (web3: Web3) => {
           web3
         )
       ).rejects.toThrowErrorMatchingInlineSnapshot(`
-        "The contract function "isOwner" returned no data ("0x").
+        "The contract function "getOwners" returned no data ("0x").
 
         This could be due to any of the following:
-          - The contract does not have the function "isOwner",
+          - The contract does not have the function "getOwners",
           - The parameters passed to the contract function may be invalid, or
           - The address is not a contract.
          
         Contract Call:
           address:   0x0000000000000000000000000000000000000000
-          function:  isOwner(address)
-          args:             (0x5409ED021D9299bf6814279A6A1411A7e866A631)
+          function:  getOwners()
 
         Docs: https://viem.sh/docs/contract/readContract
         Version: viem@2.29.2"
@@ -252,6 +253,15 @@ testWithAnvilL2('multisig:transfer integration tests', (web3: Web3) => {
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [
           [
+            "Running Checks:",
+          ],
+          [
+            "   ✔  The provided address is an owner of the multisig ",
+          ],
+          [
+            "All checks passed",
+          ],
+          [
             "SendTransaction: multisig: proposing transfer",
           ],
           [
@@ -280,10 +290,28 @@ testWithAnvilL2('multisig:transfer integration tests', (web3: Web3) => {
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [
           [
+            "Running Checks:",
+          ],
+          [
+            "   ✔  The provided address is an owner of the multisig ",
+          ],
+          [
+            "All checks passed",
+          ],
+          [
             "SendTransaction: multisig: proposing transfer",
           ],
           [
             "txHash: 0xtxhash",
+          ],
+          [
+            "Running Checks:",
+          ],
+          [
+            "   ✔  The provided address is an owner of the multisig ",
+          ],
+          [
+            "All checks passed",
           ],
           [
             "SendTransaction: multisig: proposing transfer",

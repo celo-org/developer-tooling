@@ -32,12 +32,12 @@ export default class ApproveMultiSig extends BaseCommand {
       flags: { from, for: multisigAddress, tx: txIndex },
     } = await this.parse(ApproveMultiSig)
 
-    const wallets = {
+    const clients = {
       public: await this.getPublicClient(),
       wallet: await this.getWalletClient(),
     }
 
-    const multisig = await getMultiSigContract(wallets, multisigAddress)
+    const multisig = await getMultiSigContract(clients, multisigAddress)
 
     const checkBuilder = newCheckBuilder(this)
       .isMultiSigOwner(from, multisigAddress)
@@ -55,7 +55,7 @@ export default class ApproveMultiSig extends BaseCommand {
     await displayViemTx(
       'multisig: approving transaction',
       multisig.write.confirmTransaction([BigInt(txIndex)]),
-      wallets.public
+      clients.public
     )
   }
 }
