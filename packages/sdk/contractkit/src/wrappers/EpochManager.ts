@@ -28,7 +28,6 @@ export interface EpochManagerConfig {
  * Contract handling epoch management.
  */
 export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
-
   public get _contract() {
     return this.contract
   }
