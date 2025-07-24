@@ -98,6 +98,8 @@ To run tests run the following command:
 yarn workspace @celo/celocli test
 ```
 
+if you get errors it maybe because of a mismatch in foundry anvil version vs version of anvil that created the devchain 
+
 ### Known build issues on Linux
 
 > I'm getting the follow error: `Cannot find module '@celo/contractkit'`.

@@ -155,7 +155,7 @@ testWithAnvilL2('Accounts Wrapper', (web3) => {
     await expect(
       accountsInstance.setPaymentDelegation(beneficiary, fractionInvalid).sendAndWaitForReceipt({})
     ).rejects.toEqual(
-      new Error('Error: execution reverted: revert: Fraction must not be greater than 1')
+      new Error('Error: execution reverted: Fraction must not be greater than 1')
     )
   })
 

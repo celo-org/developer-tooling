@@ -30,6 +30,7 @@
     "build:cjs": "yarn --top-level run tsc -p tsconfig-cjs.json",
     "build:mjs": "yarn --top-level run tsc -p tsconfig.json",
     "postbuild": "node ../../scripts/post-build.mjs",
+    "postinstall": "echo 'expected anvil version is 1.0.0. installed is..' && anvil --version",
     "prepack": "yarn build"
   },
   "dependencies": {

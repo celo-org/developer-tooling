@@ -89,7 +89,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
     expect(await epochManagerWrapper.getFirstBlockAtEpoch(currentEpochNumber)).toEqual(300)
     await expect(
       epochManagerWrapper.getLastBlockAtEpoch(currentEpochNumber)
-    ).rejects.toMatchInlineSnapshot(`[Error: execution reverted: revert: Epoch not finished yet]`)
+    ).rejects.toMatchInlineSnapshot(`[Error: execution reverted: Epoch not finished yet]`)
 
     // Let the epoch pass and start another one
     await timeTravel(epochDuration + 1, web3)
@@ -113,7 +113,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
       expect(await epochManagerWrapper.getFirstBlockAtEpoch(currentEpochNumber)).toEqual(300)
       await expect(
         epochManagerWrapper.getLastBlockAtEpoch(currentEpochNumber)
-      ).rejects.toMatchInlineSnapshot(`[Error: execution reverted: revert: Epoch not finished yet]`)
+      ).rejects.toMatchInlineSnapshot(`[Error: execution reverted: Epoch not finished yet]`)
 
       // Let the epoch pass and start another one
       await timeTravel(epochDuration + 1, web3)
