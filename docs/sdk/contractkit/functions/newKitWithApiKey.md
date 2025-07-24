@@ -1,4 +1,4 @@
-[**@celo/contractkit v10.0.0**](../README.md)
+[**@celo/contractkit v10.0.1-cc13.0**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **newKitWithApiKey**(`url`, `apiKey`, `wallet?`): [`ContractKit`](../classes/ContractKit.md)
 
-Defined in: [contractkit/src/kit.ts:47](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L47)
+Defined in: [contractkit/src/kit.ts:48](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L48)
 
 Creates a new instance of `ContractKit` given a nodeUrl and apiKey
 
