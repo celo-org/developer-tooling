@@ -31,7 +31,7 @@ jobs:
     name: Format Output for Install
     if: needs.release.outputs.published == 'true'
     needs: release
-    runs-on: ubuntu-latest
+    runs-on: ['self-hosted', 'org', 'ubuntu-22-04']
     container:
       image: node:20-bullseye
     outputs:
@@ -56,7 +56,7 @@ jobs:
     outputs:
       assetStableCLIRelease: ${{ steps.assertStableVersion.outcome }}
     if: needs.release.outputs.published == 'true' && needs.prepare.outputs.result
-    runs-on: ubuntu-latest
+    runs-on: ['self-hosted', 'org', 'ubuntu-22-04']
     container:
       image: node:20-bullseye
     strategy:
