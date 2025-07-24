@@ -894,7 +894,7 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<Governance> {
    * @param hash keccak256 hash of hotfix's associated abi encoded transactions
    */
   async getHotfixRecord(hash: Buffer): Promise<HotfixRecord> {
-    const res = await this.contract.methods.getL2HotfixRecord(bufferToHex(hash)).call()
+    const res = await this.contract.methods.getHotfixRecord(bufferToHex(hash)).call()
     return {
       approved: res[0],
       councilApproved: res[1],
@@ -904,51 +904,12 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<Governance> {
   }
 
   /**
-   * Returns whether a given hotfix has been whitelisted by a given address.
-   * @param hash keccak256 hash of hotfix's associated abi encoded transactions
-   * @param whitelister address of whitelister
-   * @deprecated see https://specs.celo.org/smart_contract_updates_from_l1.html
-   */
-  isHotfixWhitelistedBy = proxyCall(
-    this.contract.methods.isHotfixWhitelistedBy,
-    tupleParser(bufferToHex, (s: Address) => identity<Address>(s))
-  )
-
-  /**
-   * Returns whether a given hotfix can be passed.
-   * @param hash keccak256 hash of hotfix's associated abi encoded transactions
-   * @deprecated see https://specs.celo.org/smart_contract_updates_from_l1.html
-   */
-  isHotfixPassing = proxyCall(this.contract.methods.isHotfixPassing, tupleParser(bufferToHex))
-
-  /**
    * Returns the number of validators required to reach a Byzantine quorum
    */
   minQuorumSize = proxyCall(
     this.contract.methods.minQuorumSizeInCurrentSet,
     undefined,
     valueToBigNumber
-  )
-
-  /**
-   * Returns the number of validators that whitelisted the hotfix
-   * @param hash keccak256 hash of hotfix's associated abi encoded transactions
-   * @deprecated see https://specs.celo.org/smart_contract_updates_from_l1.html
-   */
-  hotfixWhitelistValidatorTally = proxyCall(
-    this.contract.methods.hotfixWhitelistValidatorTally,
-    tupleParser(bufferToHex)
-  )
-
-  /**
-   * Marks the given hotfix whitelisted by `sender`.
-   * @param hash keccak256 hash of hotfix's associated abi encoded transactions
-   * @deprecated see https://specs.celo.org/smart_contract_updates_from_l1.html
-   */
-  whitelistHotfix = proxySend(
-    this.connection,
-    this.contract.methods.whitelistHotfix,
-    tupleParser(bufferToHex)
   )
 
   /**

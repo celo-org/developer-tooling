@@ -16,7 +16,7 @@ import {
 } from '@celo/actions/contracts/governance'
 import { getLockedCeloContract, LockedCeloContract } from '@celo/actions/contracts/locked-celo'
 import { getValidatorsContract, ValidatorsContract } from '@celo/actions/contracts/validators'
-import { bufferToHex, ensureLeading0x, NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
+import { ensureLeading0x, NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
 import { Address } from '@celo/connect'
 import { HotfixRecord, ProposalStage } from '@celo/contractkit/lib/wrappers/Governance'
 import BigNumber from 'bignumber.js'
@@ -273,12 +273,6 @@ class CheckBuilder {
     this.addCheck(
       `Proposal ${proposalID} is passing corresponding constitutional quorum`,
       this.withGovernance((governance) => governance.read.isProposalPassing([BigInt(proposalID)]))
-    )
-
-  hotfixIsPassing = (hash: Buffer) =>
-    this.addCheck(
-      `Hotfix 0x${hash.toString('hex')} is whitelisted by quorum of validators`,
-      this.withGovernance((governance) => governance.read.isHotfixPassing([bufferToHex(hash)]))
     )
 
   hotfixNotExecuted = (hash: Buffer) =>

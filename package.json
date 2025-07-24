@@ -12,7 +12,6 @@
     "reset": "yarn reset-modules && yarn reset-cache",
     "reset-cache": "yarn reset-yarn && yarn reset-rn",
     "reset-modules": "rm -rf node_modules/ packages/*/node_modules",
-    "reset-rn": "watchman watch-del-all; rm -rf $TMPDIR/metro-cache-*; rm -rf $TMPDIR/haste-map-*; rm -rf $TMPDIR/metro-symbolicate*",
     "reset-yarn": "yarn cache clean",
     "test": "yarn workspaces foreach -pv --all --exclude celo run test",
     "test:watch": "yarn workspaces foreach -piv --since --exclude celo run test --watch",

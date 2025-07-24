@@ -100,7 +100,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
       from: accounts[0],
     })
 
-    expect(await epochManagerWrapper.getLastBlockAtEpoch(currentEpochNumber)).toEqual(352)
+    expect(await epochManagerWrapper.getLastBlockAtEpoch(currentEpochNumber)).toEqual(17634)
   })
 
   it(

@@ -57,7 +57,7 @@ function createInstance(opts?: { chainId?: number; forkUrl?: string; forkBlockNu
     chainId: opts?.chainId,
     ...(forkUrl
       ? { forkUrl, forkBlockNumber, forkHeader: { 'User-Agent': 'anvil/devtooling' } }
-      : { loadState: require.resolve('@celo/devchain-anvil/devchain.json') }),
+      : { loadState: require.resolve('@celo/devchain-anvil/l2-devchain.json') }),
   }
 
   instance = createAnvil(options)
