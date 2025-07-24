@@ -28,6 +28,8 @@ env:
   TERM: dumb
   # Supported Foundry version defined at celo-org (GitHub organisation) level, for consistency across workflows.
   SUPPORTED_FOUNDRY_VERSION: "v1.2.3"
+  # Use Docker for Foundry tests to avoid GLIBC compatibility issues
+  USE_DOCKER_FOR_FOUNDRY: "true"
 
 # EXAMPLE on debug ssh step
 #  - name: Setup tmate session
@@ -176,22 +178,17 @@ jobs:
     needs: install-dependencies
     steps:
       - uses: actions/checkout@v4
-      - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@v1
-        with:
-          version: ${{ env.SUPPORTED_FOUNDRY_VERSION }}
-      - name: Sync workspace
-        uses: ./.github/actions/sync-workspace
+      - name: Run Jest Tests with Foundry
+        uses: ./.github/actions/run-with-foundry
         with:
           artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
-      - name: Run Jest Tests
-        run: |
-          mkdir -p test-results/jest
-          # Skipping packages that are tested in a specific job below
+          use_docker: ${{ env.USE_DOCKER_FOR_FOUNDRY }}
+          command: |
+            mkdir -p test-results/jest
             yarn workspaces foreach \
               --all \
               --exclude celo \
-              --exclude "@celo/{celocli,contractkit,actions,core,viem-account-ledger,wallet-*}" \
+              --exclude '@celo/{celocli,contractkit,actions,core,viem-account-ledger,wallet-*}' \
               -p \
               run test --coverage
       - name: Upload Jest Test Results
@@ -212,30 +209,25 @@ jobs:
     needs: install-dependencies
     steps:
       - uses: actions/checkout@v4
-      - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@v1
-        with:
-          version: ${{ env.SUPPORTED_FOUNDRY_VERSION }}
-      - name: Sync workspace
-        uses: ./.github/actions/sync-workspace
-        with:
-          artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
       - name: "View files"
         run: |
           ls -la $RUNNER_WORKSPACE
           ls -la $RUNNER_WORKSPACE/developer-tooling/packages
           ls -la $RUNNER_WORKSPACE/developer-tooling/node_modules/@celo
           ls -la $RUNNER_WORKSPACE/developer-tooling/node_modules/@celo/devchain-anvil
-      - name: Run Vi Tests
-        run: |
-          mkdir -p test-results/vitest
-          # Running vitest tests in parallel
-          yarn workspaces foreach \
-            --all \
-            --exclude celo \
-            --include "@celo/{actions,core,viem-account-ledger}" \
-            -vp \
-            run test --coverage
+      - name: Run Vi Tests with Foundry
+        uses: ./.github/actions/run-with-foundry
+        with:
+          artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
+          use_docker: ${{ env.USE_DOCKER_FOR_FOUNDRY }}
+          command: |
+            mkdir -p test-results/vitest
+            yarn workspaces foreach \
+              --all \
+              --exclude celo \
+              --include '@celo/{actions,core,viem-account-ledger}' \
+              -vp \
+              run test --coverage
       - name: Upload ViTest Results
         uses: actions/upload-artifact@v4
         with:
@@ -280,24 +272,19 @@ jobs:
     needs: [install-dependencies]
     steps:
       - uses: actions/checkout@v4
-      - name: Sync workspace
-        uses: ./.github/actions/sync-workspace
-        with:
-          artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
       - run: sudo corepack enable yarn
-      - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@v1
-        with:
-          version: ${{ env.SUPPORTED_FOUNDRY_VERSION }}
       - name: "View files"
         run: |
           ls -la $RUNNER_WORKSPACE
           ls -la $RUNNER_WORKSPACE/developer-tooling/packages
           ls -la $RUNNER_WORKSPACE/developer-tooling/node_modules/@celo
           ls -la $RUNNER_WORKSPACE/developer-tooling/node_modules/@celo/devchain-anvil
-      - name: Run tests
-        run: |
-          yarn workspace @celo/contractkit test-ci --coverage
+      - name: Run ContractKit tests with Foundry
+        uses: ./.github/actions/run-with-foundry
+        with:
+          artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
+          use_docker: ${{ env.USE_DOCKER_FOR_FOUNDRY }}
+          command: yarn workspace @celo/contractkit test-ci --coverage
       - uses: ./.github/actions/upload-codecov
         name: Upload Code Coverage
         with:
@@ -338,24 +325,15 @@ jobs:
     needs: [install-dependencies]
     steps:
       - uses: actions/checkout@v4
-      - name: Sync workspace
-        uses: ./.github/actions/sync-workspace
+      - name: Run CLI tests with Foundry
+        uses: ./.github/actions/run-with-foundry
         with:
           artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
-
-      - name: Install Foundry
-        uses: foundry-rs/foundry-toolchain@v1
-        with:
-          version: ${{ env.SUPPORTED_FOUNDRY_VERSION }}
-      - name: Run tests
-        run: |
-          yarn workspace @celo/celocli test-ci --coverage
-      - name: Verify that a new account can be created
-        run: |
-          yarn workspace @celo/celocli run celocli account:new
-      - name: Test that releasecelo command topic is working
-        run: |
-          yarn workspace @celo/celocli run celocli releasecelo --help
+          use_docker: ${{ env.USE_DOCKER_FOR_FOUNDRY }}
+          command: |
+            yarn workspace @celo/celocli test-ci --coverage
+            yarn workspace @celo/celocli run celocli account:new
+            yarn workspace @celo/celocli run celocli releasecelo --help
       - uses: ./.github/actions/upload-codecov
         name: Upload Code Coverage
         with:
