@@ -43,6 +43,7 @@ function createInstance(stateFilePath: string, chainId?: number): Anvil {
     gasPrice: TEST_GAS_PRICE,
     gasLimit: TEST_GAS_LIMIT,
     blockBaseFeePerGas: TEST_BASE_FEE,
+    codeSizeLimit: 50000000,
     stopTimeout: 1000,
     chainId,
   }
@@ -61,7 +62,7 @@ export function testWithAnvilL2(
   fn: (web3: Web3) => void,
   options?: TestWithAnvilOptions
 ) {
-  return testWithAnvil(require.resolve('@celo/devchain-anvil/devchain.json'), name, fn, options)
+  return testWithAnvil(require.resolve('@celo/devchain-anvil/l2-devchain.json'), name, fn, options)
 }
 
 function testWithAnvil(

@@ -48,7 +48,7 @@
   "devDependencies": {
     "@celo/base": "workspace:^",
     "@celo/celo-devchain": "^8.0.0",
-    "@celo/devchain-anvil": "13.0.0-canary.12",
+    "@celo/devchain-anvil": "13.0.0-canary.11",
     "@celo/typescript": "workspace:^",
     "@tsconfig/recommended": "^1.0.3",
     "@types/fs-extra": "^8.1.0",
