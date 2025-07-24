@@ -41,7 +41,7 @@
     "semver": "^7.7.2"
   },
   "devDependencies": {
-    "@celo/contractkit": "^10.0.0",
+    "@celo/contractkit": "^10.0.1-cc13.0",
     "@celo/typescript": "workspace:^",
     "@ledgerhq/hw-transport-node-hid": "^6.28.5",
     "@noble/curves": "^1.4.0",

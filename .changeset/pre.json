@@ -29,5 +29,8 @@
     "@celo/typescript": "0.0.1",
     "@celo/viem-account-ledger": "1.2.0"
   },
-  "changesets": []
+  "changesets": [
+    "gentle-shirts-tickle",
+    "twenty-pens-greet"
+  ]
 }
