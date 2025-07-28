@@ -199,7 +199,7 @@ testWithAnvilL2('Validators Wrapper', (web3) => {
       const epochDuration = await epochManagerWrapper.epochDuration()
       await timeTravel(epochDuration, web3)
     })
-  
+
     it("can fetch epoch's last block information", async () => {
       const lastEpoch = (await validators.getEpochNumber()).toNumber()
       await startAndFinishEpochProcess(kit)

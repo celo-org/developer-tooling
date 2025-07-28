@@ -22,7 +22,6 @@ export interface Validator {
   name: string
   address: Address
   ecdsaPublicKey: string
-  blsPublicKey: string
   affiliation: string | null
   score: BigNumber
   signer: Address
@@ -278,7 +277,6 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
       name,
       address,
       ecdsaPublicKey: res.ecdsaPublicKey as unknown as string,
-      blsPublicKey: res.blsPublicKey as unknown as string,
       affiliation: res.affiliation,
       score: fromFixed(new BigNumber(res.score)),
       signer: res.signer,
@@ -300,7 +298,6 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
         name: 'Unregistered validator',
         address,
         ecdsaPublicKey: '',
-        blsPublicKey: '',
         affiliation: '',
         score: new BigNumber(0),
         signer: address,

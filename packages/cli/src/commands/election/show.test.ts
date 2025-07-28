@@ -121,28 +121,27 @@ testWithAnvilL2(
 
       await testLocallyWithWeb3Node(Show, [group.address, '--group'], web3)
 
-      expect(
-        logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-      ).toMatchInlineSnapshot(`
-      [
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+        .toMatchInlineSnapshot(`
         [
-          "Running Checks:",
-        ],
-        [
-          "   ✔  0x70997970C51812dc3A010C7d01b50e0d17dc79C8 is ValidatorGroup ",
-        ],
-        [
-          "All checks passed",
-        ],
-        [
-          "address: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
-      capacity: 40004000000000000000000 (~4.000e+22)
-      eligible: true
-      name: cLabs
-      votes: 20001000000000000000000 (~2.000e+22)",
-        ],
-      ]
-    `)
+          [
+            "Running Checks:",
+          ],
+          [
+            "   ✔  0x70997970C51812dc3A010C7d01b50e0d17dc79C8 is ValidatorGroup ",
+          ],
+          [
+            "All checks passed",
+          ],
+          [
+            "address: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+        capacity: 40004863355006272088758 (~4.000e+22)
+        eligible: true
+        name: cLabs
+        votes: 20002726710012544177517 (~2.000e+22)",
+          ],
+        ]
+      `)
     })
 
     it('shows data for an account', async () => {
@@ -151,33 +150,32 @@ testWithAnvilL2(
 
       await testLocallyWithWeb3Node(Show, [voterAddress, '--voter'], web3)
 
-      expect(
-        logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-      ).toMatchInlineSnapshot(`
-      [
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+        .toMatchInlineSnapshot(`
         [
-          "Running Checks:",
-        ],
-        [
-          "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is a registered Account ",
-        ],
-        [
-          "All checks passed",
-        ],
-        [
-          "address: 0x5409ED021D9299bf6814279A6A1411A7e866A631
-      votes: 
-        0: 
-          active: 1000000000000000000 (~1.000e+18)
-          group: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
-          pending: 0 
-        1: 
-          active: 0 
-          group: 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC
-          pending: 9000000000000000000 (~9.000e+18)",
-        ],
-      ]
-    `)
+          [
+            "Running Checks:",
+          ],
+          [
+            "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is a registered Account ",
+          ],
+          [
+            "All checks passed",
+          ],
+          [
+            "address: 0x5409ED021D9299bf6814279A6A1411A7e866A631
+        votes: 
+          0: 
+            active: 999999999999999999 (~1.000e+18)
+            group: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+            pending: 0 
+          1: 
+            active: 0 
+            group: 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC
+            pending: 9000000000000000000 (~9.000e+18)",
+          ],
+        ]
+      `)
     })
   },
   { chainId: 42220 }
