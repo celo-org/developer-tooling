@@ -70,12 +70,15 @@ testWithAnvilL2('governance:dequeue cmd', (web3: Web3) => {
     // This sets lastDequeue to now
     await testLocallyWithWeb3Node(Dequeue, ['--from', account], web3)
 
-    expect(await governanceWrapper.getDequeue()).toMatchInlineSnapshot(`
+    expect(await governanceWrapper.getDequeue()).toMatchInlineSnapshot(`[]`)
+    expect(await governanceWrapper.getQueue()).toMatchInlineSnapshot(`
       [
-        "1",
+        {
+          "proposalID": "1",
+          "upvotes": "0",
+        },
       ]
     `)
-    expect(await governanceWrapper.getQueue()).toMatchInlineSnapshot(`[]`)
 
     await governanceWrapper
       .propose([], 'URL2')

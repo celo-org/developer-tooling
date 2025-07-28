@@ -51,13 +51,7 @@ testWithAnvilL2('network:contracts', (web3) => {
       const warnSpy = jest.spyOn(console, 'warn')
 
       await testLocallyWithWeb3Node(Contracts, ['--output', 'json'], web3)
-      expect(warnSpy.mock.calls).toMatchInlineSnapshot(`
-        [
-          [
-            "Failed to get version for GovernanceSlasher at 0xDDA88a8ebeaaB19d2a58374D8c72200AFAF94bB4",
-          ],
-        ]
-      `)
+      expect(warnSpy.mock.calls).toMatchInlineSnapshot(`[]`)
       expect(spy.mock.calls).toMatchSnapshot() // see the file for the snapshot
     })
   })

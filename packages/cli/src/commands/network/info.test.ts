@@ -27,11 +27,11 @@ testWithAnvilL2('network:info', (web3) => {
     expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
       [
         [
-          "blockNumber: 359
+          "blockNumber: 17641
       epochDuration: 86400
       epochs: 
         number: 7
-        start: 359",
+        start: 17641",
         ],
       ]
     `)
@@ -44,20 +44,20 @@ testWithAnvilL2('network:info', (web3) => {
     expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
       [
         [
-          "blockNumber: 359
+          "blockNumber: 17641
       epochDuration: 86400
       epochs: 
         0: 
           number: 7
-          start: 359
+          start: 17641
         1: 
-          end: 358
+          end: 17640
           number: 6
-          start: 356
+          start: 17638
         2: 
-          end: 355
+          end: 17637
           number: 5
-          start: 353",
+          start: 17635",
         ],
       ]
     `)
@@ -70,22 +70,22 @@ testWithAnvilL2('network:info', (web3) => {
     expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
       [
         [
-          "blockNumber: 359
+          "blockNumber: 17641
       epochDuration: 86400
       epochs: 
         0: 
           number: 7
-          start: 359
+          start: 17641
         1: 
-          end: 358
+          end: 17640
           number: 6
-          start: 356
+          start: 17638
         2: 
-          end: 355
+          end: 17637
           number: 5
-          start: 353
+          start: 17635
         3: 
-          end: 352
+          end: 17634
           number: 4
           start: 300",
         ],

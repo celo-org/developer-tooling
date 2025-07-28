@@ -14,7 +14,6 @@ import RpcUrls from './rpc-urls'
 
 process.env.NO_SYNCCHECK = 'true'
 
-
 testWithAnvilL2('validatorgroup:rpc-urls cmd', async (web3) => {
   jest.spyOn(IdentityMetadataWrapper, 'fetchFromURL').mockImplementation(async (_, url) => {
     const validatorAddress = url.split('/').pop()
