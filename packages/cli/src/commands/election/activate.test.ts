@@ -125,40 +125,42 @@ testWithAnvilL2(
       )
     })
 
-    it('activate votes with --wait flag', async () => {
-      const kit = newKitFromWeb3(web3)
-      const [groupAddress, validatorAddress, userAddress, otherUserAddress] =
-        await web3.eth.getAccounts()
-      const election = await kit.contracts.getElection()
-      const writeMock = jest.spyOn(ux.write, 'stdout')
-      const activateAmount = 12345
-      const logMock = jest.spyOn(console, 'log')
+    it(
+      'activate votes with --wait flag',
+      async () => {
+        const kit = newKitFromWeb3(web3)
+        const [groupAddress, validatorAddress, userAddress, otherUserAddress] =
+          await web3.eth.getAccounts()
+        const election = await kit.contracts.getElection()
+        const writeMock = jest.spyOn(ux.write, 'stdout')
+        const activateAmount = 12345
+        const logMock = jest.spyOn(console, 'log')
 
-      await setupGroupAndAffiliateValidator(kit, groupAddress, validatorAddress)
-      await registerAccountWithLockedGold(kit, userAddress)
+        await setupGroupAndAffiliateValidator(kit, groupAddress, validatorAddress)
+        await registerAccountWithLockedGold(kit, userAddress)
 
+        await voteForGroupFrom(kit, userAddress, groupAddress, new BigNumber(activateAmount))
 
-      await voteForGroupFrom(kit, userAddress, groupAddress, new BigNumber(activateAmount))
+        expect(
+          (await election.getVotesForGroupByAccount(userAddress, groupAddress)).active
+        ).toEqual(new BigNumber(0))
 
-      expect((await election.getVotesForGroupByAccount(userAddress, groupAddress)).active).toEqual(
-        new BigNumber(0)
-      )
+        await Promise.all([
+          testLocallyWithWeb3Node(ElectionActivate, ['--from', userAddress, '--wait'], web3),
+          new Promise<void>((resolve) => {
+            // at least the amount the --wait flag waits in the check
+            const timer = setTimeout(async () => {
+              // switch with a different account
+              await testLocallyWithWeb3Node(Switch, ['--from', otherUserAddress], web3)
+              resolve()
+            }, 1000)
+            timers.push(timer)
+          }),
+        ])
 
-      await Promise.all([
-        testLocallyWithWeb3Node(ElectionActivate, ['--from', userAddress, '--wait'], web3),
-        new Promise<void>((resolve) => {
-          // at least the amount the --wait flag waits in the check
-          const timer = setTimeout(async () => {
-            // switch with a different account
-            await testLocallyWithWeb3Node(Switch, ['--from', otherUserAddress], web3)
-            resolve()
-          }, 1000)
-          timers.push(timer)
-        }),
-      ])
-
-      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-        .toMatchInlineSnapshot(`
+        expect(
+          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+        ).toMatchInlineSnapshot(`
               [
                 [
                   "Running Checks:",
@@ -189,11 +191,13 @@ testWithAnvilL2(
                 ],
               ]
           `)
-      expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
-      expect((await election.getVotesForGroupByAccount(userAddress, groupAddress)).active).toEqual(
-        new BigNumber(activateAmount)
-      )
-    }, EXTRA_LONG_TIMEOUT_MS)
+        expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
+        expect(
+          (await election.getVotesForGroupByAccount(userAddress, groupAddress)).active
+        ).toEqual(new BigNumber(activateAmount))
+      },
+      EXTRA_LONG_TIMEOUT_MS
+    )
 
     it('activate votes for other address', async () => {
       const kit = newKitFromWeb3(web3)
@@ -207,7 +211,6 @@ testWithAnvilL2(
       await registerAccountWithLockedGold(kit, userAddress)
 
       await voteForGroupFrom(kit, userAddress, groupAddress, new BigNumber(activateAmount))
-
 
       await expect(election.hasPendingVotes(userAddress)).resolves.toBe(true)
 
@@ -444,7 +447,6 @@ testWithAnvilL2(
 async function timeTravelAndSwitchEpoch(kit: ContractKit, web3: Web3, userAddress: string) {
   const epochManagerWrapper = await kit.contracts.getEpochManager()
   const epochDuration = await epochManagerWrapper.epochDuration()
-  await timeTravel(epochDuration +1, web3)
+  await timeTravel(epochDuration + 1, web3)
   await testLocallyWithWeb3Node(Switch, ['--from', userAddress], web3)
 }
-
