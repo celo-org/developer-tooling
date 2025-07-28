@@ -54,7 +54,6 @@
     "check-size": "size-limit",
     "test:watch": "yarn run vitest --watch",
     "test:changes": "yarn run vitest --run --changed",
-    "lint": "yarn --top-level run eslint -c .eslintrc.cjs ./src/**/*.ts",
     "prepublishOnly": "yarn build"
   },
   "dependencies": {

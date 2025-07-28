@@ -25,8 +25,7 @@
     "prepublishOnly": "yarn build",
     "docs": "yarn run --top-level typedoc",
     "test": "NODE_OPTIONS=--experimental-vm-modules yarn run --top-level jest --maxWorkers=50% --forceExit",
-    "test-ci": "NODE_OPTIONS=--experimental-vm-modules yarn run --top-level jest --forceExit --ci",
-    "lint": "yarn run --top-level eslint -c .eslintrc.js "
+    "test-ci": "NODE_OPTIONS=--experimental-vm-modules yarn run --top-level jest --forceExit --ci"
   },
   "dependencies": {
     "@celo/abis": "13.0.0-post-audit.0",

@@ -23,8 +23,7 @@
     "clean": "rm -rf lib ; yarn --top-level run tsc -b . --clean",
     "prepublishOnly": "yarn build",
     "docs": "yarn run --top-level typedoc",
-    "test": "NODE_OPTIONS=--experimental-vm-modules yarn run --top-level jest --detectOpenHandles",
-    "lint": "yarn run --top-level eslint -c .eslintrc.js "
+    "test": "NODE_OPTIONS=--experimental-vm-modules yarn run --top-level jest --detectOpenHandles"
   },
   "dependencies": {
     "@celo/base": "^7.0.3",
