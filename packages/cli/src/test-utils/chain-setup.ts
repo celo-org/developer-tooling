@@ -98,7 +98,7 @@ export const voteForGroupFromAndActivateVotes = async (
 ) => {
   const accounts = await kit.web3.eth.getAccounts()
   await voteForGroupFrom(kit, fromAddress, groupAddress, amount)
-  await timeTravel((24 * 60 * 60), kit.web3) // wait for 24 hours to
+  await timeTravel(24 * 60 * 60, kit.web3) // wait for 24 hours to
   await testLocallyWithWeb3Node(Switch, ['--from', accounts[0]], kit.web3)
 
   const election = await kit.contracts.getElection()
