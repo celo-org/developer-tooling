@@ -588,9 +588,8 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
     useBlockNumber?: boolean
   ): Promise<ValidatorReward[]> {
     const blockNumber = await this.getLastBlockNumberForEpoch(epochNumber)
-    // TODO: this is wrong and needs to be changed before merging
-    // @ts-expect-error
-    const events = await this.getPastEvents('ValidatorEpochPaymentDistributed', {
+    const epochManager = await this.contracts.getEpochManager()
+    const events = await epochManager.getPastEvents('ValidatorEpochPaymentDistributed', {
       fromBlock: blockNumber,
       toBlock: blockNumber,
     })

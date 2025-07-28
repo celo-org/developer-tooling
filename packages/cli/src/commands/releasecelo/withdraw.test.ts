@@ -71,7 +71,9 @@ testWithAnvilL2('releasegold:withdraw cmd', (web3: Web3) => {
     const balanceAfter = (await kit.getTotalBalance(beneficiary)).CELO!
 
     const latestTransactionReceipt = await web3.eth.getTransactionReceipt(
-      (await web3.eth.getBlock('latest')).transactions[0]
+      (
+        await web3.eth.getBlock('latest')
+      ).transactions[0]
     )
 
     // Safety check if the latest transaction was originated by the beneficiary
@@ -117,22 +119,28 @@ testWithAnvilL2('releasegold:withdraw cmd', (web3: Web3) => {
         ['--contract', contractAddress, '--value', remainingBalance.toString()],
         web3
       )
-    ).rejects.toThrow()
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     expect(spy).toHaveBeenCalledWith(
       expect.stringContaining('The liquidity provision has not already been set')
     )
+    expect(remainingBalance.toFixed()).toMatchInlineSnapshot(`"40000000000000000000"`)
     // Move out the cUSD balance
-    await testLocallyWithWeb3Node(
-      RGTransferDollars,
-      ['--contract', contractAddress, '--to', beneficiary, '--value', '100'],
-      web3
-    )
+    await expect(
+      testLocallyWithWeb3Node(
+        RGTransferDollars,
+        ['--contract', contractAddress, '--to', beneficiary, '--value', '100'],
+        web3
+      )
+    ).resolves.toBeUndefined()
 
-    await testLocallyWithWeb3Node(
-      Withdraw,
-      ['--contract', contractAddress, '--value', remainingBalance.toString()],
-      web3
-    )
+    await expect(
+      testLocallyWithWeb3Node(
+        Withdraw,
+        ['--contract', contractAddress, '--value', remainingBalance.toFixed()],
+        web3
+      )
+    ).resolves.toBeUndefined()
+
     const balanceAfter = await kit.getTotalBalance(beneficiary)
     expect(balanceBefore.CELO!.toNumber()).toBeLessThan(balanceAfter.CELO!.toNumber())
 
