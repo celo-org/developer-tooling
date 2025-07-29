@@ -164,7 +164,7 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
           groupWithVotes[j].votes.plus(reward)
           break
         }
-      } 
+      }
 
       groupWithVotes.sort((a, b) => (b.votes.gt(a.votes) ? 1 : b.votes.lt(a.votes) ? -1 : 0))
 

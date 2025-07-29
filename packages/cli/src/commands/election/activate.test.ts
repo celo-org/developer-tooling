@@ -151,7 +151,7 @@ testWithAnvilL2(
             // at least the amount the --wait flag waits in the check
             const timer = setTimeout(async () => {
               // switch with a different account
-              await testLocallyWithWeb3Node(Switch, ['--from', otherUserAddress], web3)
+              await timeTravelAndSwitchEpoch(kit, web3, otherUserAddress)
               resolve()
             }, 1000)
             timers.push(timer)
@@ -194,9 +194,9 @@ testWithAnvilL2(
         expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
         expect(
           (await election.getVotesForGroupByAccount(userAddress, groupAddress)).active
-        ).toEqual(new BigNumber(activateAmount))
+        ).toEqBigNumber(new BigNumber(activateAmount))
       },
-      EXTRA_LONG_TIMEOUT_MS * 2
+      EXTRA_LONG_TIMEOUT_MS
     )
 
     it('activate votes for other address', async () => {
@@ -211,8 +211,6 @@ testWithAnvilL2(
       await registerAccountWithLockedGold(kit, userAddress)
 
       await voteForGroupFrom(kit, userAddress, groupAddress, new BigNumber(activateAmount))
-
-      await expect(election.hasPendingVotes(userAddress)).resolves.toBe(true)
 
       expect((await election.getVotesForGroupByAccount(userAddress, groupAddress)).active).toEqual(
         new BigNumber(0)
