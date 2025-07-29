@@ -138,7 +138,7 @@ testWithAnvilL2('releasegold:withdraw cmd', (web3: Web3) => {
           "   ✔  Contract has met liquidity provision if applicable ",
         ],
         [
-          "   ✘  No cUSD would be left when withdrawing the whole balance ",
+          "   ✘  No cUSD would be left stranded when withdrawing the entire CELO balance ",
         ],
         [
           "   ✔  Compliant Address ",
@@ -146,7 +146,6 @@ testWithAnvilL2('releasegold:withdraw cmd', (web3: Web3) => {
       ]
     `)
     spy.mockClear()
-    expect(remainingBalance.toFixed()).toMatchInlineSnapshot(`"40000000000000000000"`)
     // Move out the cUSD balance
     await expect(
       testLocallyWithWeb3Node(
@@ -157,12 +156,17 @@ testWithAnvilL2('releasegold:withdraw cmd', (web3: Web3) => {
     ).resolves.toBeUndefined()
     spy.mockClear()
 
-    const withdrawableAmount = await releaseGoldWrapper.getWithdrawableAmount()
-
+    let currentReleasedTotal = await releaseGoldWrapper.getCurrentReleasedTotalAmount()
+    const totalWithdrawn = await releaseGoldWrapper.getTotalWithdrawn()
+    expect(currentReleasedTotal.toFixed()).toMatchInlineSnapshot(`"30000000000000000000"`)
+    expect(totalWithdrawn.toFixed()).toMatchInlineSnapshot(`"0"`)
+    await timeTravel(DAY * 30, web3)
+    currentReleasedTotal = await releaseGoldWrapper.getCurrentReleasedTotalAmount()
+    expect(currentReleasedTotal.toFixed()).toMatchInlineSnapshot(`"40000000000000000000"`)
     await expect(
       testLocallyWithWeb3Node(
         Withdraw,
-        ['--contract', contractAddress, '--value', withdrawableAmount.toString()],
+        ['--contract', contractAddress, '--value', remainingBalance.toString()],
         web3
       )
     ).resolves.toBeUndefined()
@@ -179,6 +183,9 @@ testWithAnvilL2('releasegold:withdraw cmd', (web3: Web3) => {
         ],
         [
           "   ✔  Contract has met liquidity provision if applicable ",
+        ],
+        [
+          "   ✔  No cUSD would be left stranded when withdrawing the entire CELO balance ",
         ],
         [
           "   ✔  Compliant Address ",

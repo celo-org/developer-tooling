@@ -140,7 +140,6 @@ testWithAnvilL2(
         await registerAccountWithLockedGold(kit, userAddress)
 
         await voteForGroupFrom(kit, userAddress, groupAddress, new BigNumber(activateAmount))
-
         expect(
           (await election.getVotesForGroupByAccount(userAddress, groupAddress)).active
         ).toEqual(new BigNumber(0))
