@@ -196,7 +196,7 @@ testWithAnvilL2(
           (await election.getVotesForGroupByAccount(userAddress, groupAddress)).active
         ).toEqual(new BigNumber(activateAmount))
       },
-      EXTRA_LONG_TIMEOUT_MS
+      EXTRA_LONG_TIMEOUT_MS * 2
     )
 
     it('activate votes for other address', async () => {

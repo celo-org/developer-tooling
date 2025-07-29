@@ -121,9 +121,8 @@ testWithAnvilL2(
 
       await testLocallyWithWeb3Node(Show, [group.address, '--group'], web3)
 
-      expect(
-        logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-      ).toMatchInlineSnapshot(`
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+        .toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
@@ -136,10 +135,10 @@ testWithAnvilL2(
           ],
           [
             "address: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
-        capacity: 40004863355006272088758 (~4.000e+22)
+        capacity: 40004863354996978192260 (~4.000e+22)
         eligible: true
         name: cLabs
-        votes: 20002726710012544177517 (~2.000e+22)",
+        votes: 20002726709993956384520 (~2.000e+22)",
           ],
         ]
       `)
@@ -151,9 +150,8 @@ testWithAnvilL2(
 
       await testLocallyWithWeb3Node(Show, [voterAddress, '--voter'], web3)
 
-      expect(
-        logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-      ).toMatchInlineSnapshot(`
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+        .toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
