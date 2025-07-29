@@ -158,39 +158,38 @@ testWithAnvilL2(
           }),
         ])
 
-        expect(
-          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-        ).toMatchInlineSnapshot(`
-              [
-                [
-                  "Running Checks:",
-                ],
-                [
-                  "   ✔  0xE36Ea790bc9d7AB70C55260C66D52b1eca985f84 is Signer or registered Account ",
-                ],
-                [
-                  "All checks passed",
-                ],
-                [
-                  "SendTransaction: startNextEpoch",
-                ],
-                [
-                  "txHash: 0xtxhash",
-                ],
-                [
-                  "SendTransaction: finishNextEpoch",
-                ],
-                [
-                  "txHash: 0xtxhash",
-                ],
-                [
-                  "SendTransaction: activate",
-                ],
-                [
-                  "txHash: 0xtxhash",
-                ],
-              ]
-          `)
+        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+          .toMatchInlineSnapshot(`
+          [
+            [
+              "Running Checks:",
+            ],
+            [
+              "   ✔  0xE36Ea790bc9d7AB70C55260C66D52b1eca985f84 is Signer or registered Account ",
+            ],
+            [
+              "All checks passed",
+            ],
+            [
+              "SendTransaction: startNextEpoch",
+            ],
+            [
+              "txHash: 0xtxhash",
+            ],
+            [
+              "SendTransaction: finishNextEpoch",
+            ],
+            [
+              "txHash: 0xtxhash",
+            ],
+            [
+              "SendTransaction: activate",
+            ],
+            [
+              "txHash: 0xtxhash",
+            ],
+          ]
+        `)
         expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
         expect(
           (await election.getVotesForGroupByAccount(userAddress, groupAddress)).active
@@ -447,6 +446,7 @@ testWithAnvilL2(
 async function timeTravelAndSwitchEpoch(kit: ContractKit, web3: Web3, userAddress: string) {
   const epochManagerWrapper = await kit.contracts.getEpochManager()
   const epochDuration = await epochManagerWrapper.epochDuration()
-  await timeTravel(epochDuration + 1, web3)
+  await timeTravel(epochDuration + 60, web3)
   await testLocallyWithWeb3Node(Switch, ['--from', userAddress], web3)
+  await timeTravel(60, web3)
 }
