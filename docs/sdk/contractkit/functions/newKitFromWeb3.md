@@ -1,4 +1,4 @@
-[**@celo/contractkit v10.0.0**](../README.md)
+[**@celo/contractkit v10.0.1-cc13.0**](../README.md)
 
 ***
 
@@ -8,7 +8,7 @@
 
 > **newKitFromWeb3**(`web3`, `wallet`): [`ContractKit`](../classes/ContractKit.md)
 
-Defined in: [contractkit/src/kit.ts:56](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L56)
+Defined in: [contractkit/src/kit.ts:57](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L57)
 
 Creates a new instance of the `ContractKit` with a web3 instance
 

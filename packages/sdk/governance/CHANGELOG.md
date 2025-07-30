@@ -1,5 +1,15 @@
 # @celo/governance
 
+## 5.1.8-cc13.0
+
+### Patch Changes
+
+- [#684](https://github.com/celo-org/developer-tooling/pull/684) [`8cf27a1`](https://github.com/celo-org/developer-tooling/commit/8cf27a1bf22342806b917020776a877296a4b71c) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Support Core Contract Release 13
+
+- Updated dependencies [[`8cf27a1`](https://github.com/celo-org/developer-tooling/commit/8cf27a1bf22342806b917020776a877296a4b71c)]:
+  - @celo/contractkit@10.0.1-cc13.0
+  - @celo/explorer@5.0.17-cc13.0
+
 ## 5.1.7
 
 ### Patch Changes
