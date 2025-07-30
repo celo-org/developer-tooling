@@ -10,15 +10,24 @@ runs:
   steps:
     - name: Akeyless Get CODECOV_TOKEN Secrets
       id: get_codecov_token
+      if: github.ref_name == github.event.repository.default_branch
       uses: docker://us-west1-docker.pkg.dev/devopsre/akeyless-public/akeyless-action:latest
       with:
         api-url: https://api.gateway.akeyless.celo-networks-dev.org
         access-id: p-kf9vjzruht6l
         static-secrets: '{"/static-secrets/dev-tooling-circle/codecov/developer-tooling":"CODECOV_TOKEN"}'
     - name: Upload coverage to Codecov
+      if: github.ref_name == github.event.repository.default_branch
       uses: codecov/codecov-action@v5
       with:
         verbose: true
         name: ${{ inputs.report-name }}
       env:
         CODECOV_TOKEN: ${{ env.CODECOV_TOKEN }}
+
+    - name: Upload coverage to Codecov
+      if: github.ref_name != github.event.repository.default_branch
+      uses: codecov/codecov-action@v5
+      with:
+        verbose: true
+        name: ${{ inputs.report-name }}
