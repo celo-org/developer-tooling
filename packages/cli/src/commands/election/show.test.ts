@@ -115,31 +115,32 @@ testWithAnvilL2(
 
     it('shows data for a group', async () => {
       const kit = newKitFromWeb3(web3)
-      const logMock = jest.spyOn(console, 'log')
+      const logMock = jest.spyOn(console, 'log').mockClear()
       const validatorsWrapper = await kit.contracts.getValidators()
-      const [group] = await validatorsWrapper.getRegisteredValidatorGroups()
+      const [_, group] = await validatorsWrapper.getRegisteredValidatorGroups()
 
-      await testLocallyWithWeb3Node(Show, [group.address, '--group'], web3)
+      await expect(
+        testLocallyWithWeb3Node(Show, [group.address, '--group'], web3)
+      ).resolves.toBeUndefined()
 
-      expect(
-        logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-      ).toMatchInlineSnapshot(`
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+        .toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
           ],
           [
-            "   ✔  0x70997970C51812dc3A010C7d01b50e0d17dc79C8 is ValidatorGroup ",
+            "   ✔  0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC is ValidatorGroup ",
           ],
           [
             "All checks passed",
           ],
           [
-            "address: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
-        capacity: 40004863354996978192260 (~4.000e+22)
+            "address: 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC
+        capacity: 39996863354996978192260 (~4.000e+22)
         eligible: true
         name: cLabs
-        votes: 20002726709993956384520 (~2.000e+22)",
+        votes: 20010726709993956384520 (~2.001e+22)",
           ],
         ]
       `)
@@ -151,9 +152,8 @@ testWithAnvilL2(
 
       await testLocallyWithWeb3Node(Show, [voterAddress, '--voter'], web3)
 
-      expect(
-        logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-      ).toMatchInlineSnapshot(`
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+        .toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
