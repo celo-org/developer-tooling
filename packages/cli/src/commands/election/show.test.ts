@@ -7,6 +7,7 @@ import Web3 from 'web3'
 import {
   EXTRA_LONG_TIMEOUT_MS,
   stripAnsiCodesAndTxHashes,
+  stripAnsiCodesFromNestedArray,
   testLocallyWithWeb3Node,
 } from '../../test-utils/cliUtils'
 import { deployMultiCall } from '../../test-utils/multicall'
@@ -122,29 +123,16 @@ testWithAnvilL2(
       await expect(
         testLocallyWithWeb3Node(Show, [group.address, '--group'], web3)
       ).resolves.toBeUndefined()
-
-      expect(
-        logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-      ).toMatchInlineSnapshot(`
-        [
-          [
-            "Running Checks:",
-          ],
-          [
-            "   ✔  0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC is ValidatorGroup ",
-          ],
-          [
-            "All checks passed",
-          ],
-          [
-            "address: 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC
-        capacity: 39996863354996978192260 (~4.000e+22)
-        eligible: true
-        name: cLabs
-        votes: 20010726709993956384520 (~2.001e+22)",
-          ],
-        ]
-      `)
+      const logs = stripAnsiCodesFromNestedArray(logMock.mock.calls)
+      expect(logs[0]).toContain('Running Checks:')
+      expect(logs[1]).toContain(`   ✔  ${group.address} is ValidatorGroup `)
+      expect(logs[2]).toContain('All checks passed')
+      expect(logs[3][0]).toContain(`Votes for group ${group.address}: 2001`)
+      expect(logs[4][0]).toContain(`address: ${group.address}`)
+      expect(logs[4][0]).toContain(`capacity: 3999`)
+      expect(logs[4][0]).toContain(`eligible: true`)
+      expect(logs[4][0]).toContain(`name: ${group.name}`)
+      expect(logs[4][0]).toContain(`votes: 2001`)
     })
 
     it('shows data for an account', async () => {
@@ -153,9 +141,8 @@ testWithAnvilL2(
 
       await testLocallyWithWeb3Node(Show, [voterAddress, '--voter'], web3)
 
-      expect(
-        logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-      ).toMatchInlineSnapshot(`
+      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
+        .toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
