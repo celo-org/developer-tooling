@@ -13,7 +13,7 @@ testWithAnvilL2('network:parameters', (web3) => {
         [
           "Election: 
         currentThreshold: 60000000000000000000 (~6.000e+19)
-        electabilityThreshold: 0.001 
+        electabilityThreshold: 0 
         electableValidators: 
           max: 110 
           min: 1 
@@ -33,10 +33,10 @@ testWithAnvilL2('network:parameters', (web3) => {
         dequeueFrequency: 4 hours
         minDeposit: 100000000000000000000 (~1.000e+20)
         participationParameters: 
-          baseline: 0.005 
-          baselineFloor: 0.01 
+          baseline: 0 
+          baselineFloor: 0 
           baselineQuorumFactor: 1 
-          baselineUpdateFactor: 0.2 
+          baselineUpdateFactor: 0 
         queueExpiry: 4 weeks
         stageDurations: 
           Execution: 1 week
