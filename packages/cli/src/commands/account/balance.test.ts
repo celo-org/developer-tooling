@@ -35,7 +35,7 @@ testWithAnvilL2('account:balance cmd', (web3: Web3) => {
           "All balances expressed in units of wei.",
         ],
         [
-          "CELO: 999999992103850652122685 (~9.99999992103850652122685e+23)
+          "CELO: 999999999153503763061924 (~9.99999999153503763061924e+23)
       cEUR: 0 
       cREAL: 0 
       cUSD: 0 

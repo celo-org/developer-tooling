@@ -11,7 +11,6 @@ export interface Validator {
   name: string
   address: StrongAddress
   ecdsaPublicKey: string
-  blsPublicKey: string
   affiliation: StrongAddress | null
   score: BigNumber
   signer: Address
@@ -200,7 +199,6 @@ export const getValidator = async (
     name,
     address: ensureLeading0x(address),
     ecdsaPublicKey: validatorTuple[0],
-    blsPublicKey: validatorTuple[1],
     affiliation: validatorTuple[2],
     signer: validatorTuple[4],
     score: bigintToBigNumber(score),

@@ -1,6 +1,6 @@
 {
   "name": "@celo/explorer",
-  "version": "5.0.16",
+  "version": "5.0.17-cc13.0",
   "description": "Celo's block explorer consumer",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -27,7 +27,7 @@
   "dependencies": {
     "@celo/base": "^7.0.3",
     "@celo/connect": "^7.0.0",
-    "@celo/contractkit": "^10.0.0",
+    "@celo/contractkit": "^10.0.1-cc13.0",
     "@celo/utils": "^8.0.3",
     "@types/debug": "^4.1.5",
     "bignumber.js": "9.0.0",
@@ -35,7 +35,7 @@
     "debug": "^4.1.1"
   },
   "devDependencies": {
-    "@celo/dev-utils": "0.1.1",
+    "@celo/dev-utils": "workspace:^",
     "@celo/typescript": "workspace:^",
     "@types/debug": "^4.1.12",
     "fetch-mock": "^10.0.7",

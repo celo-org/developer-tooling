@@ -256,7 +256,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
 
     const balanceAfter = new BigNumber(await web3.eth.getBalance(accounts[0]))
 
-    expect(balanceAfter.toNumber()).toBeLessThan(balanceBefore.toNumber())
+    expect(BigInt(balanceAfter.toFixed())).toBeLessThan(BigInt(balanceBefore.toFixed()))
   })
 
   test('can transfer celo with comment', async () => {

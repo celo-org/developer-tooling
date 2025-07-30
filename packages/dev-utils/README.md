@@ -1,3 +1,5 @@
 # packages/dev-utils
 
-This is a `utils` package that is meant to be used as a devDependency. It's primary use case is to reuse the ganache setup currently present in `cli` and `contractkit`. Due to the way jest uses globalSetup, depending packages will still need to define their own setup/teardown files.
+This is a `utils` package that is meant to be used as a devDependency. It's primary use case is to reuse the anvil setup currently present in `cli` and `contractkit`. 
+
+The version of anvil you use should be the same as the version that generates the devchain. 

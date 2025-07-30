@@ -154,9 +154,7 @@ testWithAnvilL2('Accounts Wrapper', (web3) => {
     await accountsInstance.createAccount().sendAndWaitForReceipt({ from: account })
     await expect(
       accountsInstance.setPaymentDelegation(beneficiary, fractionInvalid).sendAndWaitForReceipt({})
-    ).rejects.toEqual(
-      new Error('Error: execution reverted: revert: Fraction must not be greater than 1')
-    )
+    ).rejects.toEqual(new Error('Error: execution reverted: Fraction must not be greater than 1'))
   })
 
   test('SNBAT beneficiary and fraction', async () => {

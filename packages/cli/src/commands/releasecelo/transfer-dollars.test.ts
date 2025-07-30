@@ -2,8 +2,9 @@ import { StableToken, StrongAddress } from '@celo/base'
 import { COMPLIANT_ERROR_RESPONSE, SANCTIONED_ADDRESSES } from '@celo/compliance'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
+import { TEST_BASE_FEE, TEST_GAS_PRICE } from '@celo/dev-utils/test-utils'
 import BigNumber from 'bignumber.js'
-import { formatEther } from 'viem'
+import { formatEther, toHex } from 'viem'
 import Web3 from 'web3'
 import { topUpWithToken } from '../../test-utils/chain-setup'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
@@ -42,10 +43,10 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (web3: Web3) => {
       accounts[2]
     )
     jest.spyOn(kit.connection, 'gasPrice').mockImplementation(async () => {
-      return '3000'
+      return toHex(TEST_GAS_PRICE)
     })
     jest.spyOn(kit.connection, 'getMaxPriorityFeePerGas').mockImplementation(async () => {
-      return '4000'
+      return toHex(TEST_GAS_PRICE - TEST_BASE_FEE)
     })
     await testLocallyWithWeb3Node(Register, ['--from', accounts[0]], web3)
     await testLocallyWithWeb3Node(CreateAccount, ['--contract', contractAddress], web3)

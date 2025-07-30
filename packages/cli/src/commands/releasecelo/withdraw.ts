@@ -40,17 +40,15 @@ export default class Withdraw extends ReleaseGoldBaseCommand {
       .addCheck('Contract has met liquidity provision if applicable', () =>
         this.releaseGoldWrapper.getLiquidityProvisionMet()
       )
-      .addCheck(
-        'Contract would self-destruct with cUSD left when withdrawing the whole balance',
+      .addConditionalCheck(
+        'No cUSD would be left stranded when withdrawing the entire CELO balance',
+        value.eq(remainingUnlockedBalance),
         async () => {
-          if (value.eq(remainingUnlockedBalance)) {
-            const stableToken = await kit.contracts.getStableToken()
-            const stableBalance = await stableToken.balanceOf(this.releaseGoldWrapper.address)
-            if (stableBalance.gt(0)) {
-              return false
-            }
+          const stableToken = await kit.contracts.getStableToken()
+          const stableBalance = await stableToken.balanceOf(this.releaseGoldWrapper.address)
+          if (stableBalance.gt(0)) {
+            return false
           }
-
           return true
         }
       )

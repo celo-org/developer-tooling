@@ -49,7 +49,7 @@ testWithAnvilL2('epochs:status cmd', (web3) => {
       ",
         ],
         [
-          "Epoch Start Time,2025-04-25T16:23:32.000Z
+          "Epoch Start Time,2025-07-09T11:53:13.000Z
       ",
         ],
       ]
@@ -83,11 +83,11 @@ testWithAnvilL2('epochs:status cmd', (web3) => {
         ",
           ],
           [
-            "Has Epoch Processing Begun?,true
+            "Has Epoch Processing Begun?,false
         ",
           ],
           [
-            "Is In Epoch Process?,true
+            "Is In Epoch Process?,false
         ",
           ],
           [
@@ -95,11 +95,11 @@ testWithAnvilL2('epochs:status cmd', (web3) => {
         ",
           ],
           [
-            "Is Time for Next Epoch,true
+            "Is Time for Next Epoch,false
         ",
           ],
           [
-            "Epoch Start Time,2025-04-25T16:23:32.000Z
+            "Epoch Start Time,2025-07-09T11:53:13.000Z
         ",
           ],
         ]

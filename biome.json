@@ -15,6 +15,7 @@
     "includes": [
       "**",
       "!**/package.json",
+      "!.changeset/**",
       "!**/.next",
       "!**/coverage",
       "!node_modules",

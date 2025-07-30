@@ -27,7 +27,7 @@ export const getHotfixRecord = async (
   const res = await client.readContract({
     address,
     abi: governanceABI,
-    functionName: 'getL2HotfixRecord',
+    functionName: 'getHotfixRecord',
     args: [bufferToHex(hash)],
   })
 

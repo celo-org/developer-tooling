@@ -6,7 +6,6 @@ import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { CeloContract } from '..'
 import { newKitFromWeb3 } from '../kit'
-import { ContractVersion } from '../versions'
 import { AccountsWrapper } from './Accounts'
 import { GovernanceWrapper, Proposal, ProposalTransaction, VoteValue } from './Governance'
 import { LockedGoldWrapper } from './LockedGold'
@@ -138,14 +137,11 @@ testWithAnvilL2('Governance Wrapper', (web3: Web3) => {
       expect(proposalRecord.stage).toBe('Queued')
     })
 
-    describe('Hotfixes', () => {
-      it('gets L2 hotfix record for version >= 1.4.2.0', async () => {
+    describe('#getHotfixRecord', () => {
+      it('gets hotfix record', async () => {
         const kit = newKitFromWeb3(web3)
         const governance = await kit.contracts.getGovernance()
         const hotfixHash = Buffer.from('0x', 'hex')
-
-        // Sanity check to make sure we're on at least 1.4.2.0 version
-        expect((await governance.version()).isAtLeast(new ContractVersion(1, 4, 2, 0))).toBeTruthy()
 
         const hotfixRecordL2 = await governance.getHotfixRecord(hotfixHash)
         expect(hotfixRecordL2).toMatchInlineSnapshot(`

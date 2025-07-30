@@ -1,3 +1,4 @@
+import { newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
 import Web3 from 'web3'
@@ -94,13 +95,22 @@ testWithAnvilL2('validator:status', (web3: Web3) => {
 
   it('fails if start and end are in different epochs', async () => {
     const [account] = await web3.eth.getAccounts()
+    const kit = newKitFromWeb3(web3)
+    const blockNumber = await kit.web3.eth.getBlockNumber()
+    const epoch = await kit.getEpochNumberOfBlock(blockNumber)
+    const firstBlockOfCurrentEpoch = await kit.getFirstBlockNumberForEpoch(epoch)
 
     await testLocallyWithWeb3Node(Switch, ['--from', account], web3)
 
     await expect(
       testLocallyWithWeb3Node(
         Status,
-        ['--validator', KNOWN_DEVCHAIN_VALIDATOR, '--start', '349'],
+        [
+          '--validator',
+          KNOWN_DEVCHAIN_VALIDATOR,
+          '--start',
+          (firstBlockOfCurrentEpoch - 2).toString(),
+        ],
         web3
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(

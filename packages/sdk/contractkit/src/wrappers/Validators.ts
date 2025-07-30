@@ -22,7 +22,6 @@ export interface Validator {
   name: string
   address: Address
   ecdsaPublicKey: string
-  blsPublicKey: string
   affiliation: string | null
   score: BigNumber
   signer: Address
@@ -154,7 +153,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
    * Returns the validator downtime grace period
    */
   getDowntimeGracePeriod = proxyCall(
-    this.contract.methods.downtimeGracePeriod,
+    this.contract.methods.deprecated_downtimeGracePeriod,
     undefined,
     valueToBigNumber
   )
@@ -229,22 +228,6 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
   }
 
   /**
-   * Updates a validator's BLS key.
-   * @param blsPublicKey The BLS public key that the validator is using for consensus, should pass proof
-   *   of possession. 48 bytes.
-   * @param blsPop The BLS public key proof-of-possession, which consists of a signature on the
-   *   account address. 96 bytes.
-   * @return True upon success.
-   * @deprecated bls keys are not used anymore
-   */
-  updateBlsPublicKey: (blsPublicKey: string, blsPop: string) => CeloTransactionObject<boolean> =
-    proxySend(
-      this.connection,
-      this.contract.methods.updateBlsPublicKey,
-      tupleParser(stringToSolidityBytes, stringToSolidityBytes)
-    )
-
-  /**
    * Returns whether a particular account has a registered validator.
    * @param account The account.
    * @return Whether a particular address is a registered validator.
@@ -294,7 +277,6 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
       name,
       address,
       ecdsaPublicKey: res.ecdsaPublicKey as unknown as string,
-      blsPublicKey: res.blsPublicKey as unknown as string,
       affiliation: res.affiliation,
       score: fromFixed(new BigNumber(res.score)),
       signer: res.signer,
@@ -316,7 +298,6 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
         name: 'Unregistered validator',
         address,
         ecdsaPublicKey: '',
-        blsPublicKey: '',
         affiliation: '',
         score: new BigNumber(0),
         signer: address,
@@ -423,20 +404,11 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
    * @param validatorAddress The address that the validator is using for consensus, should match
    *   the validator signer.
    * @param ecdsaPublicKey The ECDSA public key that the validator is using for consensus. 64 bytes.
-   * @param blsPublicKey The BLS public key that the validator is using for consensus, should pass proof
-   *   of possession. 48 bytes.
-   * @param blsPop The BLS public key proof-of-possession, which consists of a signature on the
-   *   account address. 96 bytes.
-   * @deprecated use registerValidatorNoBls
    */
-  registerValidator: (
-    ecdsaPublicKey: string,
-    blsPublicKey: string,
-    blsPop: string
-  ) => CeloTransactionObject<boolean> = proxySend(
+  registerValidator: (ecdsaPublicKey: string) => CeloTransactionObject<boolean> = proxySend(
     this.connection,
     this.contract.methods.registerValidator,
-    tupleParser(stringToSolidityBytes, stringToSolidityBytes, stringToSolidityBytes)
+    tupleParser(stringToSolidityBytes)
   )
 
   registerValidatorNoBls: (ecdsaPublicKey: string) => CeloTransactionObject<boolean> = proxySend(
@@ -616,7 +588,8 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
     useBlockNumber?: boolean
   ): Promise<ValidatorReward[]> {
     const blockNumber = await this.getLastBlockNumberForEpoch(epochNumber)
-    const events = await this.getPastEvents('ValidatorEpochPaymentDistributed', {
+    const epochManager = await this.contracts.getEpochManager()
+    const events = await epochManager.getPastEvents('ValidatorEpochPaymentDistributed', {
       fromBlock: blockNumber,
       toBlock: blockNumber,
     })

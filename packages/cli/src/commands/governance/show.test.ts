@@ -116,7 +116,7 @@ testWithAnvilL2('governance:show cmd', (web3: Web3) => {
         ],
         [
           "requirements: 
-        constitutionThreshold: 0.5 
+        constitutionThreshold: 1 
         required: 300250000000000000000 (~3.003e+20)
         support: 1 
         total: 100000000000000000000 (~1.000e+20)",

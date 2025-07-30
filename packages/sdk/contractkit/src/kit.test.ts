@@ -177,30 +177,26 @@ testWithAnvilL2('kit', (web3: Web3) => {
     })
 
     it('gets first and last block number of an epoch', async () => {
-      expect(await kit.getFirstBlockNumberForEpoch(4)).toEqual(300)
-      expect(await kit.getLastBlockNumberForEpoch(4)).toEqual(352)
+      expect(await kit.getFirstBlockNumberForEpoch(4)).toMatchInlineSnapshot(`300`)
+      expect(await kit.getLastBlockNumberForEpoch(4)).toMatchInlineSnapshot(`17634`)
 
-      expect(await kit.getFirstBlockNumberForEpoch(5)).toEqual(353)
-      expect(await kit.getLastBlockNumberForEpoch(5)).toEqual(355)
+      expect(await kit.getFirstBlockNumberForEpoch(5)).toMatchInlineSnapshot(`17635`)
+      expect(await kit.getLastBlockNumberForEpoch(5)).toMatchInlineSnapshot(`17637`)
 
-      expect(await kit.getFirstBlockNumberForEpoch(6)).toEqual(356)
-      expect(await kit.getLastBlockNumberForEpoch(6)).toEqual(358)
+      expect(await kit.getFirstBlockNumberForEpoch(6)).toMatchInlineSnapshot(`17638`)
+      expect(await kit.getLastBlockNumberForEpoch(6)).toMatchInlineSnapshot(`17640`)
 
-      expect(await kit.getFirstBlockNumberForEpoch(7)).toEqual(359)
-      expect(await kit.getLastBlockNumberForEpoch(7)).toEqual(361)
+      expect(await kit.getFirstBlockNumberForEpoch(7)).toMatchInlineSnapshot(`17641`)
+      expect(await kit.getLastBlockNumberForEpoch(7)).toMatchInlineSnapshot(`17643`)
 
-      expect(await kit.getFirstBlockNumberForEpoch(8)).toEqual(362)
+      expect(await kit.getFirstBlockNumberForEpoch(8)).toMatchInlineSnapshot(`17644`)
     })
 
     it('gets the current epoch number', async () => {
-      expect(await kit.getEpochNumberOfBlock(300)).toEqual(4)
-      expect(await kit.getEpochNumberOfBlock(357)).toEqual(6)
-      expect(await kit.getEpochNumberOfBlock(361)).toEqual(7)
-      expect(await kit.getEpochNumberOfBlock(362)).toEqual(8)
-    })
-
-    it('throws when block number is out of range for L2', async () => {
-      await expect(kit.getEpochNumberOfBlock(363)).rejects.toThrow()
+      expect(await kit.getEpochNumberOfBlock(300)).toMatchInlineSnapshot(`4`)
+      expect(await kit.getEpochNumberOfBlock(357)).toMatchInlineSnapshot(`4`)
+      expect(await kit.getEpochNumberOfBlock(361)).toMatchInlineSnapshot(`4`)
+      expect(await kit.getEpochNumberOfBlock(362)).toMatchInlineSnapshot(`4`)
     })
   })
 })
