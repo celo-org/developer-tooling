@@ -27,7 +27,7 @@ env:
   NODE_OPTIONS: '--max-old-space-size=4096'
   TERM: dumb
   # Supported Foundry version defined at celo-org (GitHub organisation) level, for consistency across workflows.
-  SUPPORTED_FOUNDRY_VERSION: ${{ vars.SUPPORTED_FOUNDRY_VERSION }}
+  SUPPORTED_FOUNDRY_VERSION: nightly-fa0e0c2ca3ae75895dd19173a02faf88509c0608
 
 # EXAMPLE on debug ssh step
 #  - name: Setup tmate session
