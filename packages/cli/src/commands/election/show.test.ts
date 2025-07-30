@@ -123,8 +123,9 @@ testWithAnvilL2(
         testLocallyWithWeb3Node(Show, [group.address, '--group'], web3)
       ).resolves.toBeUndefined()
 
-      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-        .toMatchInlineSnapshot(`
+      expect(
+        logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+      ).toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",
@@ -152,8 +153,9 @@ testWithAnvilL2(
 
       await testLocallyWithWeb3Node(Show, [voterAddress, '--voter'], web3)
 
-      expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-        .toMatchInlineSnapshot(`
+      expect(
+        logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+      ).toMatchInlineSnapshot(`
         [
           [
             "Running Checks:",

@@ -27,7 +27,7 @@ testWithAnvilL2('Metadata', (web3) => {
     expect(nameClaim!.name).toEqual(name)
   })
 
-  test.only("correctly recovers the claims when the metadata is signed by any of the account's authorized signers", async () => {
+  test("correctly recovers the claims when the metadata is signed by any of the account's authorized signers", async () => {
     const validator = await kit.contracts.getValidators()
     const name = 'Celo'
     const voteMetadata = IdentityMetadataWrapper.fromEmpty(address)
