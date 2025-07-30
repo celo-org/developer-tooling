@@ -1,5 +1,11 @@
 # @celo/dev-utils
 
+## 0.1.2-cc13.0
+
+### Patch Changes
+
+- [#684](https://github.com/celo-org/developer-tooling/pull/684) [`8cf27a1`](https://github.com/celo-org/developer-tooling/commit/8cf27a1bf22342806b917020776a877296a4b71c) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Support Core Contract Release 13
+
 ## 0.1.1
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@celo/contractkit",
-  "version": "10.0.0",
+  "version": "10.0.1-cc13.0",
   "description": "Celo's ContractKit to interact with Celo network",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
