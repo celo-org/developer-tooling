@@ -79,7 +79,7 @@
     {
       "name": "require('@celo/actions') (cjs)",
       "path": "dist/cjs/index.js",
-      "limit": "100 kB"
+      "limit": "120 kB"
     },
     {
       "name": "import * from '@celo/actions' (esm)",

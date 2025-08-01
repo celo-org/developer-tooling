@@ -239,8 +239,8 @@ export abstract class BaseCommand extends Command {
       })
       const chainId = await intermediateClient.getChainId()
       const extractedChain = extractChain({
-        chains: [celo, celoAlfajores, celoBaklava],
-        id: chainId as typeof celo.id | typeof celoAlfajores.id | typeof celoBaklava.id,
+        chains: [celo, celoAlfajores, celoSepolia, celoBaklava],
+        id: chainId as typeof celo.id | typeof celoAlfajores.id | typeof celoSepolia.id | typeof celoBaklava.id,
       })
 
       if (extractedChain) {
@@ -254,7 +254,7 @@ export abstract class BaseCommand extends Command {
         this.publicClient = createPublicClient({
           transport,
           chain: {
-            name: 'Custom Chain',
+            name: 'Custom Celo Chain',
             id: chainId,
             nativeCurrency: celo.nativeCurrency,
             formatters: celo.formatters,
