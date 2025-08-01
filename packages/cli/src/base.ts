@@ -28,7 +28,7 @@ import {
   webSocket,
 } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
-import { celo, celoAlfajores } from 'viem/chains'
+import { celo, celoAlfajores, celoSepolia } from 'viem/chains'
 import { ipc } from 'viem/node'
 import Web3 from 'web3'
 import createRpcWalletClient from './packages-to-be/rpc-client'
@@ -49,27 +49,33 @@ export abstract class BaseCommand extends Command {
     }),
     node: Flags.string({
       char: 'n',
+      aliases: ['rpc-url', 'rpc'],
       summary: 'URL of the node to run commands against or an alias',
       description: `Can be a full url like https://forno.celo.org or an alias. default: http://localhost:8545 
       Alias options:
       local, localhost => 'http://localhost:8545'
-      alfajores => Celo Alfajores Testnet, 
+      alfajores => Celo Alfajores Testnet,
+      testnet, celo-sepolia => Celo Sepolia Testnet, 
       mainnet, celo, forno => Celo Mainnet chain',
       `,
       hidden: false,
       parse: async (nodeUrl: string) => {
         switch (nodeUrl) {
+          case 'alfajores':
+            return celoAlfajores.rpcUrls.default.http[0]
+          case 'baklava':
+            return 'https://baklava-forno.celo-testnet.org'
+          case 'celo':
+          case 'forno':
+          case 'mainnet':
+            return celo.rpcUrls.default.http[0]
+          case 'celo-sepolia':
+          case 'cs':
+          case 'testnet':
+            return celoSepolia.rpcUrls.default.http[0]
           case 'local':
           case 'localhost':
             return 'http://localhost:8545'
-          case 'baklava':
-            return 'https://baklava-forno.celo-testnet.org'
-          case 'alfajores':
-            return 'https://alfajores-forno.celo-testnet.org'
-          case 'mainnet':
-          case 'celo':
-          case 'forno':
-            return 'https://forno.celo.org'
           default:
             return nodeUrl
         }
