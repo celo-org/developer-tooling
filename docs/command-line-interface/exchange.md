@@ -78,10 +78,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/exchange/celo.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/exchange/celo.js)_
+_See code: [lib/commands/exchange/celo.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/exchange/celo.js)_
 
 ## `celocli exchange:dollars`
 
@@ -145,10 +146,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/exchange/dollars.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/exchange/dollars.js)_
+_See code: [lib/commands/exchange/dollars.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/exchange/dollars.js)_
 
 ## `celocli exchange:euros`
 
@@ -212,10 +214,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/exchange/euros.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/exchange/euros.js)_
+_See code: [lib/commands/exchange/euros.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/exchange/euros.js)_
 
 ## `celocli exchange:reals`
 
@@ -279,10 +282,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/exchange/reals.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/exchange/reals.js)_
+_See code: [lib/commands/exchange/reals.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/exchange/reals.js)_
 
 ## `celocli exchange:show`
 
@@ -338,10 +342,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/exchange/show.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/exchange/show.js)_
+_See code: [lib/commands/exchange/show.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/exchange/show.js)_
 
 ## `celocli exchange:stable`
 
@@ -410,7 +415,8 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/exchange/stable.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/exchange/stable.js)_
+_See code: [lib/commands/exchange/stable.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/exchange/stable.js)_

@@ -80,10 +80,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/validatorgroup/commission.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/validatorgroup/commission.js)_
+_See code: [lib/commands/validatorgroup/commission.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/validatorgroup/commission.js)_
 
 ## `celocli validatorgroup:community-rpc-nodes`
 
@@ -129,6 +130,7 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
@@ -189,10 +191,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/validatorgroup/deregister.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/validatorgroup/deregister.js)_
+_See code: [lib/commands/validatorgroup/deregister.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/validatorgroup/deregister.js)_
 
 ## `celocli validatorgroup:list`
 
@@ -231,10 +234,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/validatorgroup/list.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/validatorgroup/list.js)_
+_See code: [lib/commands/validatorgroup/list.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/validatorgroup/list.js)_
 
 ## `celocli validatorgroup:member ARG1`
 
@@ -309,10 +313,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/validatorgroup/member.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/validatorgroup/member.js)_
+_See code: [lib/commands/validatorgroup/member.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/validatorgroup/member.js)_
 
 ## `celocli validatorgroup:register`
 
@@ -375,10 +380,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/validatorgroup/register.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/validatorgroup/register.js)_
+_See code: [lib/commands/validatorgroup/register.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/validatorgroup/register.js)_
 
 ## `celocli validatorgroup:reset-slashing-multiplier ARG1`
 
@@ -433,10 +439,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/validatorgroup/reset-slashing-multiplier.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/validatorgroup/reset-slashing-multiplier.js)_
+_See code: [lib/commands/validatorgroup/reset-slashing-multiplier.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/validatorgroup/reset-slashing-multiplier.js)_
 
 ## `celocli validatorgroup:rpc-urls`
 
@@ -482,10 +489,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/validatorgroup/rpc-urls.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/validatorgroup/rpc-urls.js)_
+_See code: [lib/commands/validatorgroup/rpc-urls.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/validatorgroup/rpc-urls.js)_
 
 ## `celocli validatorgroup:show ARG1`
 
@@ -516,7 +524,8 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/validatorgroup/show.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/validatorgroup/show.js)_
+_See code: [lib/commands/validatorgroup/show.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/validatorgroup/show.js)_

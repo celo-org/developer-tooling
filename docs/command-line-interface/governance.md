@@ -107,10 +107,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/governance/approve.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/governance/approve.js)_
+_See code: [lib/commands/governance/approve.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/governance/approve.js)_
 
 ## `celocli governance:approvehotfix`
 
@@ -193,6 +194,7 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
@@ -256,10 +258,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/governance/build-proposal.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/governance/build-proposal.js)_
+_See code: [lib/commands/governance/build-proposal.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/governance/build-proposal.js)_
 
 ## `celocli governance:dequeue`
 
@@ -315,10 +318,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/governance/dequeue.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/governance/dequeue.js)_
+_See code: [lib/commands/governance/dequeue.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/governance/dequeue.js)_
 
 ## `celocli governance:execute`
 
@@ -377,10 +381,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/governance/execute.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/governance/execute.js)_
+_See code: [lib/commands/governance/execute.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/governance/execute.js)_
 
 ## `celocli governance:executehotfix`
 
@@ -442,10 +447,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/governance/executehotfix.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/governance/executehotfix.js)_
+_See code: [lib/commands/governance/executehotfix.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/governance/executehotfix.js)_
 
 ## `celocli governance:hashhotfix`
 
@@ -507,10 +513,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/governance/hashhotfix.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/governance/hashhotfix.js)_
+_See code: [lib/commands/governance/hashhotfix.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/governance/hashhotfix.js)_
 
 ## `celocli governance:list`
 
@@ -589,10 +596,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/governance/list.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/governance/list.js)_
+_See code: [lib/commands/governance/list.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/governance/list.js)_
 
 ## `celocli governance:preparehotfix`
 
@@ -651,10 +659,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/governance/preparehotfix.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/governance/preparehotfix.js)_
+_See code: [lib/commands/governance/preparehotfix.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/governance/preparehotfix.js)_
 
 ## `celocli governance:propose`
 
@@ -750,10 +759,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/governance/propose.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/governance/propose.js)_
+_See code: [lib/commands/governance/propose.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/governance/propose.js)_
 
 ## `celocli governance:revokeupvote`
 
@@ -809,10 +819,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/governance/revokeupvote.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/governance/revokeupvote.js)_
+_See code: [lib/commands/governance/revokeupvote.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/governance/revokeupvote.js)_
 
 ## `celocli governance:show`
 
@@ -880,10 +891,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/governance/show.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/governance/show.js)_
+_See code: [lib/commands/governance/show.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/governance/show.js)_
 
 ## `celocli governance:showaccount`
 
@@ -951,6 +963,7 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
@@ -1020,6 +1033,7 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
@@ -1080,10 +1094,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/governance/upvote.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/governance/upvote.js)_
+_See code: [lib/commands/governance/upvote.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/governance/upvote.js)_
 
 ## `celocli governance:view`
 
@@ -1151,6 +1166,7 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
@@ -1220,6 +1236,7 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
@@ -1289,6 +1306,7 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
@@ -1354,10 +1372,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/governance/vote.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/governance/vote.js)_
+_See code: [lib/commands/governance/vote.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/governance/vote.js)_
 
 ## `celocli governance:votePartially`
 
@@ -1426,10 +1445,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/governance/votePartially.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/governance/votePartially.js)_
+_See code: [lib/commands/governance/votePartially.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/governance/votePartially.js)_
 
 ## `celocli governance:whitelisthotfix`
 
@@ -1488,10 +1508,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/governance/whitelisthotfix.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/governance/whitelisthotfix.js)_
+_See code: [lib/commands/governance/whitelisthotfix.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/governance/whitelisthotfix.js)_
 
 ## `celocli governance:withdraw`
 
@@ -1561,7 +1582,8 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/governance/withdraw.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/governance/withdraw.js)_
+_See code: [lib/commands/governance/withdraw.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/governance/withdraw.js)_

@@ -78,10 +78,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/election/activate.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/election/activate.js)_
+_See code: [lib/commands/election/activate.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/election/activate.js)_
 
 ## `celocli election:current`
 
@@ -162,10 +163,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/election/current.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/election/current.js)_
+_See code: [lib/commands/election/current.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/election/current.js)_
 
 ## `celocli election:list`
 
@@ -206,10 +208,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/election/list.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/election/list.js)_
+_See code: [lib/commands/election/list.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/election/list.js)_
 
 ## `celocli election:revoke`
 
@@ -271,10 +274,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/election/revoke.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/election/revoke.js)_
+_See code: [lib/commands/election/revoke.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/election/revoke.js)_
 
 ## `celocli election:run`
 
@@ -311,10 +315,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/election/run.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/election/run.js)_
+_See code: [lib/commands/election/run.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/election/run.js)_
 
 ## `celocli election:show ARG1`
 
@@ -349,10 +354,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/election/show.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/election/show.js)_
+_See code: [lib/commands/election/show.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/election/show.js)_
 
 ## `celocli election:vote`
 
@@ -415,7 +421,8 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/election/vote.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/election/vote.js)_
+_See code: [lib/commands/election/vote.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/election/vote.js)_
