@@ -91,10 +91,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/releasecelo/authorize.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/releasecelo/authorize.js)_
+_See code: [lib/commands/releasecelo/authorize.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/releasecelo/authorize.js)_
 
 ## `celocli releasecelo:create-account`
 
@@ -150,10 +151,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/releasecelo/create-account.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/releasecelo/create-account.js)_
+_See code: [lib/commands/releasecelo/create-account.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/releasecelo/create-account.js)_
 
 ## `celocli releasecelo:locked-celo`
 
@@ -227,6 +229,7 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
@@ -302,10 +305,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/releasecelo/locked-gold.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/releasecelo/locked-gold.js)_
+_See code: [lib/commands/releasecelo/locked-gold.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/releasecelo/locked-gold.js)_
 
 ## `celocli releasecelo:refund-and-finalize`
 
@@ -362,10 +366,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/releasecelo/refund-and-finalize.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/releasecelo/refund-and-finalize.js)_
+_See code: [lib/commands/releasecelo/refund-and-finalize.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/releasecelo/refund-and-finalize.js)_
 
 ## `celocli releasecelo:revoke`
 
@@ -427,10 +432,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/releasecelo/revoke.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/releasecelo/revoke.js)_
+_See code: [lib/commands/releasecelo/revoke.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/releasecelo/revoke.js)_
 
 ## `celocli releasecelo:revoke-votes`
 
@@ -502,10 +508,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/releasecelo/revoke-votes.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/releasecelo/revoke-votes.js)_
+_See code: [lib/commands/releasecelo/revoke-votes.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/releasecelo/revoke-votes.js)_
 
 ## `celocli releasecelo:set-account`
 
@@ -573,10 +580,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/releasecelo/set-account.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/releasecelo/set-account.js)_
+_See code: [lib/commands/releasecelo/set-account.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/releasecelo/set-account.js)_
 
 ## `celocli releasecelo:set-account-wallet-address`
 
@@ -639,10 +647,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/releasecelo/set-account-wallet-address.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/releasecelo/set-account-wallet-address.js)_
+_See code: [lib/commands/releasecelo/set-account-wallet-address.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/releasecelo/set-account-wallet-address.js)_
 
 ## `celocli releasecelo:set-beneficiary`
 
@@ -711,10 +720,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/releasecelo/set-beneficiary.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/releasecelo/set-beneficiary.js)_
+_See code: [lib/commands/releasecelo/set-beneficiary.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/releasecelo/set-beneficiary.js)_
 
 ## `celocli releasecelo:set-can-expire`
 
@@ -777,10 +787,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/releasecelo/set-can-expire.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/releasecelo/set-can-expire.js)_
+_See code: [lib/commands/releasecelo/set-can-expire.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/releasecelo/set-can-expire.js)_
 
 ## `celocli releasecelo:set-liquidity-provision`
 
@@ -840,10 +851,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/releasecelo/set-liquidity-provision.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/releasecelo/set-liquidity-provision.js)_
+_See code: [lib/commands/releasecelo/set-liquidity-provision.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/releasecelo/set-liquidity-provision.js)_
 
 ## `celocli releasecelo:set-max-distribution`
 
@@ -906,10 +918,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/releasecelo/set-max-distribution.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/releasecelo/set-max-distribution.js)_
+_See code: [lib/commands/releasecelo/set-max-distribution.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/releasecelo/set-max-distribution.js)_
 
 ## `celocli releasecelo:show`
 
@@ -943,10 +956,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/releasecelo/show.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/releasecelo/show.js)_
+_See code: [lib/commands/releasecelo/show.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/releasecelo/show.js)_
 
 ## `celocli releasecelo:transfer-dollars`
 
@@ -1010,10 +1024,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/releasecelo/transfer-dollars.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/releasecelo/transfer-dollars.js)_
+_See code: [lib/commands/releasecelo/transfer-dollars.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/releasecelo/transfer-dollars.js)_
 
 ## `celocli releasecelo:withdraw`
 
@@ -1073,7 +1088,8 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/releasecelo/withdraw.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/releasecelo/withdraw.js)_
+_See code: [lib/commands/releasecelo/withdraw.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/lib/commands/releasecelo/withdraw.js)_
