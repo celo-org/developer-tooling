@@ -240,7 +240,11 @@ export abstract class BaseCommand extends Command {
       const chainId = await intermediateClient.getChainId()
       const extractedChain = extractChain({
         chains: [celo, celoAlfajores, celoSepolia, celoBaklava],
-        id: chainId as typeof celo.id | typeof celoAlfajores.id | typeof celoSepolia.id | typeof celoBaklava.id,
+        id: chainId as
+          | typeof celo.id
+          | typeof celoAlfajores.id
+          | typeof celoSepolia.id
+          | typeof celoBaklava.id,
       })
 
       if (extractedChain) {
