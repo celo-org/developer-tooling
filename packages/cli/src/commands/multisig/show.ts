@@ -1,7 +1,8 @@
+import { getMultiSigContract } from '@celo/actions/contracts/multisig'
 import { CeloContract } from '@celo/contractkit'
-import { TransactionData } from '@celo/contractkit/lib/wrappers/MultiSig'
 import { newBlockExplorer } from '@celo/explorer/lib/block-explorer'
 import { Flags } from '@oclif/core'
+import { Address } from 'viem'
 import { BaseCommand } from '../../base'
 import { printValueMapRecursive } from '../../utils/cli'
 import { CustomArgs } from '../../utils/command'
@@ -31,29 +32,42 @@ export default class ShowMultiSig extends BaseCommand {
   ]
 
   async run() {
-    const kit = await this.getKit()
     const {
       args,
       flags: { tx, all, raw },
     } = await this.parse(ShowMultiSig)
-    const multisig = await kit.contracts.getMultiSig(args.arg1 as string)
-    const txs = await multisig.totalTransactionCount()
-    const explorer = await newBlockExplorer(kit)
-    await explorer.updateContractDetailsMapping(CeloContract.MultiSig, args.arg1 as string)
-    const process = async (txdata: TransactionData) => {
+    const multisigAddress = args.arg1 as Address
+
+    const clients = {
+      public: await this.getPublicClient(),
+    }
+
+    const multisig = await getMultiSigContract(clients, multisigAddress)
+    const txCount = await multisig.read.getTransactionCount([true, true])
+    const explorer = await newBlockExplorer(await this.getKit())
+    await explorer.updateContractDetailsMapping(CeloContract.MultiSig, multisigAddress)
+    const process = async (txdata: Awaited<ReturnType<typeof multisig.read.transactions>>) => {
       if (raw) return txdata
-      return { ...txdata, data: await explorer.tryParseTxInput(txdata.destination, txdata.data) }
+      return { ...txdata, data: await explorer.tryParseTxInput(txdata[0], txdata[2]) }
     }
     const txinfo =
       tx !== undefined
-        ? await process(await multisig.getTransaction(tx))
+        ? await process(await multisig.read.transactions([BigInt(tx)]))
         : all
-          ? await Promise.all((await multisig.getTransactions()).map(process))
-          : txs
+          ? await Promise.all(
+              (
+                await Promise.all(
+                  (
+                    await multisig.read.getTransactionIds([BigInt(0), txCount, true, true])
+                  ).map((tx) => multisig.read.transactions([tx]))
+                )
+              ).map(process)
+            )
+          : txCount
     const info = {
-      Owners: await multisig.getOwners(),
-      'Required confirmations': await multisig.getRequired(),
-      'Required confirmations (internal)': await multisig.getInternalRequired(),
+      Owners: await multisig.read.getOwners(),
+      'Required confirmations': await multisig.read.required(),
+      'Required confirmations (internal)': await multisig.read.internalRequired(),
       Transactions: txinfo,
     }
     printValueMapRecursive(info)
