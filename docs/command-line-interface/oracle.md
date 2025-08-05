@@ -44,7 +44,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/oracle/list.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/oracle/list.js)_
+_See code: [src/commands/oracle/list.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.2-cc13.0/packages/cli/src/commands/oracle/list.ts)_
 
 ## `celocli oracle:remove-expired-reports ARG1`
 
@@ -110,7 +110,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/oracle/remove-expired-reports.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/oracle/remove-expired-reports.js)_
+_See code: [src/commands/oracle/remove-expired-reports.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.2-cc13.0/packages/cli/src/commands/oracle/remove-expired-reports.ts)_
 
 ## `celocli oracle:report ARG1`
 
@@ -179,7 +179,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/oracle/report.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/oracle/report.js)_
+_See code: [src/commands/oracle/report.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.2-cc13.0/packages/cli/src/commands/oracle/report.ts)_
 
 ## `celocli oracle:reports ARG1`
 
@@ -268,4 +268,4 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/oracle/reports.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/oracle/reports.js)_
+_See code: [src/commands/oracle/reports.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.2-cc13.0/packages/cli/src/commands/oracle/reports.ts)_

@@ -8,6 +8,7 @@ import {
 } from '@celo/dev-utils/anvil-test'
 import { describeEach } from '@celo/dev-utils/describeEach'
 import { NetworkConfig, timeTravel } from '@celo/dev-utils/ganache-test'
+import { TEST_GAS_PRICE } from '@celo/dev-utils/test-utils'
 import { CeloContract } from '../base'
 import { StableToken } from '../celo-tokens'
 import { newKitFromWeb3 } from '../kit'
@@ -73,9 +74,8 @@ testWithAnvilL2('SortedOracles Wrapper', (web3) => {
       arguments: [NetworkConfig.oracles.reportExpiry],
     })
 
-    const txResult = await deployTx.send({ from: owner })
+    const txResult = await deployTx.send({ from: owner, gasPrice: TEST_GAS_PRICE.toFixed() })
     const deployedContract = web3NewSortedOracles(web3, txResult.options.address)
-
     await deployedContract.methods
       .initialize(NetworkConfig.oracles.reportExpiry)
       .send({ from: owner })

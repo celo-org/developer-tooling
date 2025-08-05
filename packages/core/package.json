@@ -36,7 +36,6 @@
     "test": "yarn run vitest --run",
     "test:watch": "yarn run vitest --watch",
     "test:changes": "yarn run vitest --run --changed",
-    "lint": "yarn --top-level run eslint -c .eslintrc.cjs src/**/*.ts",
     "prepublishOnly": "yarn clean && yarn build"
   },
   "dependencies": {

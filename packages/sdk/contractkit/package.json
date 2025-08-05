@@ -1,6 +1,6 @@
 {
   "name": "@celo/contractkit",
-  "version": "10.0.0",
+  "version": "10.0.1-cc13.0",
   "description": "Celo's ContractKit to interact with Celo network",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -25,11 +25,10 @@
     "prepublishOnly": "yarn build",
     "docs": "yarn run --top-level typedoc",
     "test": "NODE_OPTIONS=--experimental-vm-modules yarn run --top-level jest --maxWorkers=50% --forceExit",
-    "test-ci": "NODE_OPTIONS=--experimental-vm-modules yarn run --top-level jest --forceExit --ci",
-    "lint": "yarn run --top-level eslint -c .eslintrc.js "
+    "test-ci": "NODE_OPTIONS=--experimental-vm-modules yarn run --top-level jest --forceExit --ci"
   },
   "dependencies": {
-    "@celo/abis": "12.0.3",
+    "@celo/abis": "13.0.0-post-audit.0",
     "@celo/base": "^7.0.3",
     "@celo/connect": "^7.0.0",
     "@celo/utils": "^8.0.3",
@@ -45,7 +44,7 @@
   },
   "devDependencies": {
     "@celo/celo-devchain": "^7.0.0",
-    "@celo/dev-utils": "0.1.1",
+    "@celo/dev-utils": "workspace:^",
     "@celo/odis-identifiers": "^1.0.1",
     "@celo/typescript": "workspace:^",
     "@jest/test-sequencer": "^30.0.2",

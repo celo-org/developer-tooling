@@ -1,6 +1,6 @@
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { setCommissionUpdateDelay } from '@celo/dev-utils/chain-setup'
-import { mineBlocks } from '@celo/dev-utils/ganache-test'
+import { mineBlocks, timeTravel } from '@celo/dev-utils/ganache-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
@@ -193,18 +193,25 @@ testWithAnvilL2('Validators Wrapper', (web3) => {
       expect(membersAfter).toEqual([validator2, validator1])
     })
   })
+  describe('epoch block information', () => {
+    beforeEach(async () => {
+      const epochManagerWrapper = await kit.contracts.getEpochManager()
+      const epochDuration = await epochManagerWrapper.epochDuration()
+      await timeTravel(epochDuration, web3)
+    })
 
-  it("can fetch epoch's last block information", async () => {
-    const lastEpoch = (await validators.getEpochNumber()).toNumber()
-    await startAndFinishEpochProcess(kit)
-    const lastBlockNumberForEpochPromise = validators.getLastBlockNumberForEpoch(lastEpoch)
-    expect(typeof (await lastBlockNumberForEpochPromise)).toBe('number')
-  })
-  it("can fetch block's epoch information", async () => {
-    await startAndFinishEpochProcess(kit)
-    const epochNumberOfBlockPromise = validators.getEpochNumberOfBlock(
-      await kit.connection.getBlockNumber()
-    )
-    expect(typeof (await epochNumberOfBlockPromise)).toBe('number')
+    it("can fetch epoch's last block information", async () => {
+      const lastEpoch = (await validators.getEpochNumber()).toNumber()
+      await startAndFinishEpochProcess(kit)
+      const lastBlockNumberForEpochPromise = validators.getLastBlockNumberForEpoch(lastEpoch)
+      expect(typeof (await lastBlockNumberForEpochPromise)).toBe('number')
+    })
+    it("can fetch block's epoch information", async () => {
+      await startAndFinishEpochProcess(kit)
+      const epochNumberOfBlockPromise = validators.getEpochNumberOfBlock(
+        await kit.connection.getBlockNumber()
+      )
+      expect(typeof (await epochNumberOfBlockPromise)).toBe('number')
+    })
   })
 })

@@ -14,6 +14,9 @@ testWithAnvilL2('epochs:finish cmd', (web3) => {
     const kit = newKitFromWeb3(web3)
     const accounts = await kit.web3.eth.getAccounts()
     const epochManagerWrapper = await kit.contracts.getEpochManager()
+    expect(
+      epochManagerWrapper._contract.methods.systemAlreadyInitialized().call()
+    ).resolves.toEqual(true)
 
     expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(4)
     await expect(

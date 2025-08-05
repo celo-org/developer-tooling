@@ -1,4 +1,4 @@
-[**@celo/contractkit v10.0.0**](../README.md)
+[**@celo/contractkit v10.0.1-cc13.0**](../README.md)
 
 ***
 
@@ -6,7 +6,7 @@
 
 # Interface: NetworkConfig
 
-Defined in: [contractkit/src/kit.ts:60](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L60)
+Defined in: [contractkit/src/kit.ts:61](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L61)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [contractkit/src/kit.ts:60](https://github.com/celo-org/developer-to
 
 > **attestations**: `AttestationsConfig`
 
-Defined in: [contractkit/src/kit.ts:63](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L63)
+Defined in: [contractkit/src/kit.ts:64](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L64)
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: [contractkit/src/kit.ts:63](https://github.com/celo-org/developer-to
 
 > **election**: `ElectionConfig`
 
-Defined in: [contractkit/src/kit.ts:62](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L62)
+Defined in: [contractkit/src/kit.ts:63](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L63)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [contractkit/src/kit.ts:62](https://github.com/celo-org/developer-to
 
 > **governance**: `GovernanceConfig`
 
-Defined in: [contractkit/src/kit.ts:64](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L64)
+Defined in: [contractkit/src/kit.ts:65](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L65)
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: [contractkit/src/kit.ts:64](https://github.com/celo-org/developer-to
 
 > **lockedGold**: `LockedGoldConfig`
 
-Defined in: [contractkit/src/kit.ts:65](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L65)
+Defined in: [contractkit/src/kit.ts:66](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L66)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [contractkit/src/kit.ts:65](https://github.com/celo-org/developer-to
 
 > **reserve**: `ReserveConfig`
 
-Defined in: [contractkit/src/kit.ts:67](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L67)
+Defined in: [contractkit/src/kit.ts:68](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L68)
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: [contractkit/src/kit.ts:67](https://github.com/celo-org/developer-to
 
 > **sortedOracles**: `SortedOraclesConfig`
 
-Defined in: [contractkit/src/kit.ts:66](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L66)
+Defined in: [contractkit/src/kit.ts:67](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L67)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: [contractkit/src/kit.ts:66](https://github.com/celo-org/developer-to
 
 > **stableTokens**: `EachCeloToken`\<`StableTokenConfig`\>
 
-Defined in: [contractkit/src/kit.ts:61](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L61)
+Defined in: [contractkit/src/kit.ts:62](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L62)
 
 ***
 
@@ -70,4 +70,4 @@ Defined in: [contractkit/src/kit.ts:61](https://github.com/celo-org/developer-to
 
 > **validators**: `ValidatorsConfig`
 
-Defined in: [contractkit/src/kit.ts:68](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L68)
+Defined in: [contractkit/src/kit.ts:69](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/contractkit/src/kit.ts#L69)

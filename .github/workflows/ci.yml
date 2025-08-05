@@ -23,11 +23,12 @@ defaults:
 
 env:
   # Increment these to force cache rebuilding
-  NODE_MODULE_CACHE_VERSION: 6
+  NODE_MODULE_CACHE_VERSION: 7
   NODE_OPTIONS: '--max-old-space-size=4096'
   TERM: dumb
   # Supported Foundry version defined at celo-org (GitHub organisation) level, for consistency across workflows.
-  SUPPORTED_FOUNDRY_VERSION: nightly-fa0e0c2ca3ae75895dd19173a02faf88509c0608
+  SUPPORTED_FOUNDRY_VERSION: "v1.2.3"
+
 
 # EXAMPLE on debug ssh step
 #  - name: Setup tmate session
@@ -46,7 +47,7 @@ jobs:
       all_modified_files: ',${{ steps.changed-files.outputs.all_modified_files }}'
       artifacts_to_cache: ${{ steps.get_artifacts_to_cache.outputs.artifacts_to_cache }}
     # runs-on: ubuntu-latest
-    runs-on: ['self-hosted', 'org', '8-cpu']
+    runs-on: ['self-hosted', 'org', 'ubuntu-22-04']
     timeout-minutes: 30
     steps:
       - uses: actions/setup-node@v4
@@ -129,7 +130,7 @@ jobs:
 
   lint-checks:
     name: Lint code
-    runs-on: ['self-hosted', 'org', '8-cpu']
+    runs-on: ['self-hosted', 'org', 'ubuntu-22-04']
     timeout-minutes: 30
     needs: install-dependencies
     steps:
@@ -143,7 +144,7 @@ jobs:
   size_checks: 
     name: Size checks
     if: github.event_name == 'pull_request'
-    runs-on: ['self-hosted', 'org', '8-cpu']
+    runs-on: ['self-hosted', 'org', 'ubuntu-22-04']
     needs: install-dependencies
     timeout-minutes: 3
     strategy:
@@ -169,7 +170,7 @@ jobs:
 
   general_test:
     name: General jest test
-    runs-on: ['self-hosted', 'org', '8-cpu']
+    runs-on: ['self-hosted', 'org', 'ubuntu-22-04']
     permissions: # Must change the job token permissions to use Akeyless JWT auth
       id-token: write
       contents: read
@@ -188,12 +189,12 @@ jobs:
         run: |
           mkdir -p test-results/jest
           # Skipping packages that are tested in a specific job below
-          yarn workspaces foreach \
-            --all \
-            --exclude celo \
-            --exclude "@celo/{celocli,contractkit,actions,core,viem-account-ledger,wallet-*}" \
-            -p \
-            run test --coverage
+            yarn workspaces foreach \
+              --all \
+              --exclude celo \
+              --exclude "@celo/{celocli,contractkit,actions,core,viem-account-ledger,wallet-*}" \
+              -p \
+              run test --coverage
       - name: Upload Jest Test Results
         uses: actions/upload-artifact@v4
         with:
@@ -205,7 +206,7 @@ jobs:
           report-name: "general_test"
   general_vi_test:
     name: General vitest
-    runs-on: ['self-hosted', 'org', '8-cpu']
+    runs-on: ['self-hosted', 'org', 'ubuntu-22-04']
     permissions: # Must change the job token permissions to use Akeyless JWT auth
       id-token: write
       contents: read
@@ -220,6 +221,12 @@ jobs:
         uses: ./.github/actions/sync-workspace
         with:
           artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
+      - name: "View files"
+        run: |
+          ls -la $RUNNER_WORKSPACE
+          ls -la $RUNNER_WORKSPACE/developer-tooling/packages
+          ls -la $RUNNER_WORKSPACE/developer-tooling/node_modules/@celo
+          ls -la $RUNNER_WORKSPACE/developer-tooling/node_modules/@celo/devchain-anvil
       - name: Run Vi Tests
         run: |
           mkdir -p test-results/vitest
@@ -242,7 +249,7 @@ jobs:
 
   wallet-test:
     name: Wallet test
-    runs-on: ['self-hosted', 'org', '8-cpu']
+    runs-on: ['self-hosted', 'org', 'ubuntu-22-04']
     timeout-minutes: 30
     permissions: # Must change the job token permissions to use Akeyless JWT auth
       id-token: write
@@ -266,7 +273,7 @@ jobs:
 
   contractkit-tests-anvil:
     name: ContractKit Tests (Anvil)
-    runs-on: ['self-hosted', 'org', '8-cpu']
+    runs-on: ['self-hosted', 'org', 'ubuntu-22-04']
     timeout-minutes: 30
     permissions: # Must change the job token permissions to use Akeyless JWT auth
       id-token: write
@@ -282,7 +289,13 @@ jobs:
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
         with:
-          version: "nightly-f625d0fa7c51e65b4bf1e8f7931cd1c6e2e285e9"
+          version: ${{ env.SUPPORTED_FOUNDRY_VERSION }}
+      - name: "View files"
+        run: |
+          ls -la $RUNNER_WORKSPACE
+          ls -la $RUNNER_WORKSPACE/developer-tooling/packages
+          ls -la $RUNNER_WORKSPACE/developer-tooling/node_modules/@celo
+          ls -la $RUNNER_WORKSPACE/developer-tooling/node_modules/@celo/devchain-anvil
       - name: Run tests
         run: |
           yarn workspace @celo/contractkit test-ci --coverage
@@ -293,7 +306,7 @@ jobs:
 
   cli-package-verification:
     name: CeloCli Package Verification
-    runs-on: ['self-hosted', 'org', '8-cpu']
+    runs-on: ['self-hosted', 'org', 'ubuntu-22-04']
     timeout-minutes: 30
     permissions: # Must change the job token permissions to use Akeyless JWT auth
       id-token: write
@@ -318,7 +331,7 @@ jobs:
 
   cli-tests-anvil:
     name: CeloCli Tests (Anvil)
-    runs-on: ['self-hosted', 'org', '8-cpu']
+    runs-on: ['self-hosted', 'org', 'ubuntu-22-04']
     timeout-minutes: 30
     permissions: # Must change the job token permissions to use Akeyless JWT auth
       id-token: write
@@ -330,6 +343,7 @@ jobs:
         uses: ./.github/actions/sync-workspace
         with:
           artifacts_to_cache: ${{ needs.install-dependencies.outputs.artifacts_to_cache }}
+
       - name: Install Foundry
         uses: foundry-rs/foundry-toolchain@v1
         with:
@@ -350,7 +364,7 @@ jobs:
             
   docs-tests:
     name: Docs tests
-    runs-on: ['self-hosted', 'org', '8-cpu']
+    runs-on: ['self-hosted', 'org', 'ubuntu-22-04']
     timeout-minutes: 30
     needs: [install-dependencies]
     steps:
@@ -370,7 +384,7 @@ jobs:
 
   base-test:
     name: SDK Base package Tests
-    runs-on: ['self-hosted', 'org', '8-cpu']
+    runs-on: ['self-hosted', 'org', 'ubuntu-22-04']
     timeout-minutes: 30
     needs: [install-dependencies]
     if: |
@@ -398,7 +412,7 @@ jobs:
 
   utils-test:
     name: SDK Utils package Tests
-    runs-on: ['self-hosted', 'org', '8-cpu']
+    runs-on: ['self-hosted', 'org', 'ubuntu-22-04']
     timeout-minutes: 30
     needs: [install-dependencies]
     if: |

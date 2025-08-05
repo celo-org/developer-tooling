@@ -11,9 +11,9 @@ import { CeloContract } from './base'
 import { CeloTokens, EachCeloToken } from './celo-tokens'
 import { ValidWrappers, WrapperCache } from './contract-cache'
 import {
-  HttpProviderOptions,
   ensureCurrentProvider,
   getWeb3ForKit,
+  HttpProviderOptions,
   setupAPIKey,
 } from './setupForKits'
 import { Web3ContractCache } from './web3-contract-cache'
@@ -25,6 +25,7 @@ import { ReserveConfig } from './wrappers/Reserve'
 import { SortedOraclesConfig } from './wrappers/SortedOracles'
 import { StableTokenConfig } from './wrappers/StableTokenWrapper'
 import { ValidatorsConfig } from './wrappers/Validators'
+
 export { API_KEY_HEADER_KEY, HttpProviderOptions } from './setupForKits'
 
 /**
@@ -146,9 +147,9 @@ export class ContractKit {
         const addresses = Object.values(eachTokenAddress)
         const configContractWrapper = await this.contracts.getContract(contract)
         if (humanReadable && 'getHumanReadableConfig' in configContractWrapper) {
-          return configContractWrapper.getHumanReadableConfig(addresses)
+          return await configContractWrapper.getHumanReadableConfig(addresses)
         } else if ('getConfig' in configContractWrapper) {
-          return configContractWrapper.getConfig(addresses)
+          return await configContractWrapper.getConfig(addresses)
         } else {
           throw new Error('No config endpoint found')
         }

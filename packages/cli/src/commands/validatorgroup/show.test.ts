@@ -35,7 +35,7 @@ testWithAnvilL2('validatorgroup:show cmd', (web3: Web3) => {
       commission: 0.1
       nextCommission: 0
       nextCommissionBlock: 0
-      membersUpdated: 1745598171
+      membersUpdated: 1752057791
       affiliates: 
       slashingMultiplier: 1
       lastSlashed: 0",

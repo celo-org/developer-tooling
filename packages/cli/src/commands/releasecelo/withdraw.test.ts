@@ -8,7 +8,7 @@ import { DAY, MONTH } from '@celo/dev-utils/test-utils'
 import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { topUpWithToken } from '../../test-utils/chain-setup'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import { createMultisig } from '../../test-utils/multisigUtils'
 import { deployReleaseGoldContract } from '../../test-utils/release-gold'
 import CreateAccount from './create-account'
@@ -92,6 +92,9 @@ testWithAnvilL2('releasegold:withdraw cmd', (web3: Web3) => {
       ['--contract', contractAddress, '--yesreally'],
       web3
     )
+    expect(spy).toHaveBeenCalledWith(
+      expect.stringContaining('The liquidity provision has not already been set')
+    )
     await timeTravel(MONTH * 12 + DAY, web3)
     const releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
@@ -110,6 +113,7 @@ testWithAnvilL2('releasegold:withdraw cmd', (web3: Web3) => {
       .transfer(contractAddress, cUSDAmount)
       .sendAndWaitForReceipt({ from: beneficiary })
 
+    spy.mockClear()
     // Can't withdraw since there is cUSD balance still
     await expect(
       testLocallyWithWeb3Node(
@@ -117,22 +121,87 @@ testWithAnvilL2('releasegold:withdraw cmd', (web3: Web3) => {
         ['--contract', contractAddress, '--value', remainingBalance.toString()],
         web3
       )
-    ).rejects.toThrow()
-    expect(spy).toHaveBeenCalledWith(
-      expect.stringContaining('The liquidity provision has not already been set')
-    )
-    // Move out the cUSD balance
-    await testLocallyWithWeb3Node(
-      RGTransferDollars,
-      ['--contract', contractAddress, '--to', beneficiary, '--value', '100'],
-      web3
-    )
+    ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
 
-    await testLocallyWithWeb3Node(
-      Withdraw,
-      ['--contract', contractAddress, '--value', remainingBalance.toString()],
-      web3
-    )
+    expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
+      [
+        [
+          "Running Checks:",
+        ],
+        [
+          "   ✔  Value does not exceed available unlocked celo ",
+        ],
+        [
+          "   ✔  Value would not exceed maximum distribution ",
+        ],
+        [
+          "   ✔  Contract has met liquidity provision if applicable ",
+        ],
+        [
+          "   ✘  No cUSD would be left stranded when withdrawing the entire CELO balance ",
+        ],
+        [
+          "   ✔  Compliant Address ",
+        ],
+      ]
+    `)
+    spy.mockClear()
+    // Move out the cUSD balance
+    await expect(
+      testLocallyWithWeb3Node(
+        RGTransferDollars,
+        ['--contract', contractAddress, '--to', beneficiary, '--value', '100'],
+        web3
+      )
+    ).resolves.toBeUndefined()
+    spy.mockClear()
+
+    let currentReleasedTotal = await releaseGoldWrapper.getCurrentReleasedTotalAmount()
+    const totalWithdrawn = await releaseGoldWrapper.getTotalWithdrawn()
+    expect(currentReleasedTotal.toFixed()).toMatchInlineSnapshot(`"30000000000000000000"`)
+    expect(totalWithdrawn.toFixed()).toMatchInlineSnapshot(`"0"`)
+    await timeTravel(DAY * 30, web3)
+    currentReleasedTotal = await releaseGoldWrapper.getCurrentReleasedTotalAmount()
+    expect(currentReleasedTotal.toFixed()).toMatchInlineSnapshot(`"40000000000000000000"`)
+    await expect(
+      testLocallyWithWeb3Node(
+        Withdraw,
+        ['--contract', contractAddress, '--value', remainingBalance.toString()],
+        web3
+      )
+    ).resolves.toBeUndefined()
+    expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
+      [
+        [
+          "Running Checks:",
+        ],
+        [
+          "   ✔  Value does not exceed available unlocked celo ",
+        ],
+        [
+          "   ✔  Value would not exceed maximum distribution ",
+        ],
+        [
+          "   ✔  Contract has met liquidity provision if applicable ",
+        ],
+        [
+          "   ✔  No cUSD would be left stranded when withdrawing the entire CELO balance ",
+        ],
+        [
+          "   ✔  Compliant Address ",
+        ],
+        [
+          "All checks passed",
+        ],
+        [
+          "SendTransaction: withdrawTx",
+        ],
+        [
+          "txHash: 0xtxhash",
+        ],
+      ]
+    `)
+
     const balanceAfter = await kit.getTotalBalance(beneficiary)
     expect(balanceBefore.CELO!.toNumber()).toBeLessThan(balanceAfter.CELO!.toNumber())
 

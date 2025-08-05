@@ -83,7 +83,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/validatorgroup/commission.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/validatorgroup/commission.js)_
+_See code: [src/commands/validatorgroup/commission.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.2-cc13.0/packages/cli/src/commands/validatorgroup/commission.ts)_
 
 ## `celocli validatorgroup:community-rpc-nodes`
 
@@ -192,7 +192,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/validatorgroup/deregister.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/validatorgroup/deregister.js)_
+_See code: [src/commands/validatorgroup/deregister.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.2-cc13.0/packages/cli/src/commands/validatorgroup/deregister.ts)_
 
 ## `celocli validatorgroup:list`
 
@@ -234,7 +234,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/validatorgroup/list.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/validatorgroup/list.js)_
+_See code: [src/commands/validatorgroup/list.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.2-cc13.0/packages/cli/src/commands/validatorgroup/list.ts)_
 
 ## `celocli validatorgroup:member ARG1`
 
@@ -312,7 +312,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/validatorgroup/member.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/validatorgroup/member.js)_
+_See code: [src/commands/validatorgroup/member.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.2-cc13.0/packages/cli/src/commands/validatorgroup/member.ts)_
 
 ## `celocli validatorgroup:register`
 
@@ -378,7 +378,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/validatorgroup/register.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/validatorgroup/register.js)_
+_See code: [src/commands/validatorgroup/register.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.2-cc13.0/packages/cli/src/commands/validatorgroup/register.ts)_
 
 ## `celocli validatorgroup:reset-slashing-multiplier ARG1`
 
@@ -436,7 +436,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/validatorgroup/reset-slashing-multiplier.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/validatorgroup/reset-slashing-multiplier.js)_
+_See code: [src/commands/validatorgroup/reset-slashing-multiplier.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.2-cc13.0/packages/cli/src/commands/validatorgroup/reset-slashing-multiplier.ts)_
 
 ## `celocli validatorgroup:rpc-urls`
 
@@ -485,7 +485,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/validatorgroup/rpc-urls.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/validatorgroup/rpc-urls.js)_
+_See code: [src/commands/validatorgroup/rpc-urls.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.2-cc13.0/packages/cli/src/commands/validatorgroup/rpc-urls.ts)_
 
 ## `celocli validatorgroup:show ARG1`
 
@@ -519,4 +519,4 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [lib/commands/validatorgroup/show.js](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.1/packages/cli/lib/commands/validatorgroup/show.js)_
+_See code: [src/commands/validatorgroup/show.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.2-cc13.0/packages/cli/src/commands/validatorgroup/show.ts)_

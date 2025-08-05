@@ -23,8 +23,7 @@
     "clean": "rm -rf lib ; yarn --top-level run tsc -b . --clean",
     "prepublishOnly": "yarn build",
     "docs": "yarn run --top-level typedoc",
-    "test": "NODE_OPTIONS=--experimental-vm-modules yarn run --top-level jest --detectOpenHandles",
-    "lint": "yarn run --top-level eslint -c .eslintrc.js "
+    "test": "NODE_OPTIONS=--experimental-vm-modules yarn run --top-level jest --detectOpenHandles"
   },
   "dependencies": {
     "@celo/base": "^7.0.3",
@@ -35,7 +34,7 @@
   },
   "devDependencies": {
     "@celo/contractkit": "workspace:^",
-    "@celo/dev-utils": "0.1.1",
+    "@celo/dev-utils": "workspace:^",
     "@celo/odis-identifiers": "^1.0.1",
     "@celo/typescript": "workspace:^",
     "@types/node": "18.7.6",

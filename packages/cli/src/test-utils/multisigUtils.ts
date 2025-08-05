@@ -2,6 +2,7 @@ import { multiSigABI, proxyABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
 import { ContractKit } from '@celo/contractkit'
 import { setCode } from '@celo/dev-utils/anvil-test'
+import { TEST_GAS_PRICE } from '@celo/dev-utils/test-utils'
 import Web3 from 'web3'
 import {
   multiSigBytecode,
@@ -30,11 +31,13 @@ export async function createMultisig(
   // Deploy Proxy contract
   const proxyDeploymentTx = await kit.sendTransaction({
     data: proxyBytecode,
+    maxFeePerGas: TEST_GAS_PRICE,
   })
   const { contractAddress: proxyAddress } = await proxyDeploymentTx.waitReceipt()
   // Deploy MultiSig contract
   const multisigDeploymentTx = await kit.sendTransaction({
     data: multiSigBytecode,
+    maxFeePerGas: TEST_GAS_PRICE,
   })
   const { contractAddress: multiSigAddress } = await multisigDeploymentTx.waitReceipt()
 
@@ -44,7 +47,7 @@ export async function createMultisig(
   )
   const proxy = new kit.web3.eth.Contract(proxyABI as any, proxyAddress)
   const baseFee = await kit.web3.eth.getBlock('latest').then((block: any) => block.baseFeePerGas)
-  const priorityFee = kit.web3.utils.toWei('2', 'gwei')
+  const priorityFee = kit.web3.utils.toWei('25', 'gwei')
   const initMethod = proxy.methods._setAndInitializeImplementation
   const callData = kit.web3.eth.abi.encodeFunctionCall(initializerAbi as any, [
     owners as any,

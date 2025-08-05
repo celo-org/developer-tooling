@@ -28,6 +28,9 @@ export interface EpochManagerConfig {
  * Contract handling epoch management.
  */
 export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
+  public get _contract() {
+    return this.contract
+  }
   epochDuration = proxyCall(this.contract.methods.epochDuration, undefined, valueToInt)
   firstKnownEpoch = proxyCall(this.contract.methods.firstKnownEpoch, undefined, valueToInt)
   getCurrentEpochNumber = proxyCall(
@@ -155,7 +158,7 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
     for (let i = 0; i < groups.length; i++) {
       const reward = rewards[i]
 
-      // biome-ignore lint/style/useForOf: <explanation>
+      // biome-ignore lint/style/useForOf: unsure why we need it do it this way
       for (let j = 0; j < groupWithVotes.length; j++) {
         if (groupWithVotes[j].address === groups[i]) {
           groupWithVotes[j].votes.plus(reward)

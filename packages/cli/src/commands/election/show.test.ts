@@ -7,6 +7,7 @@ import Web3 from 'web3'
 import {
   EXTRA_LONG_TIMEOUT_MS,
   stripAnsiCodesAndTxHashes,
+  stripAnsiCodesFromNestedArray,
   testLocallyWithWeb3Node,
 } from '../../test-utils/cliUtils'
 import { deployMultiCall } from '../../test-utils/multicall'
@@ -115,34 +116,22 @@ testWithAnvilL2(
 
     it('shows data for a group', async () => {
       const kit = newKitFromWeb3(web3)
-      const logMock = jest.spyOn(console, 'log')
+      const logMock = jest.spyOn(console, 'log').mockClear()
       const validatorsWrapper = await kit.contracts.getValidators()
-      const [group] = await validatorsWrapper.getRegisteredValidatorGroups()
+      const [_, group] = await validatorsWrapper.getRegisteredValidatorGroups()
 
-      await testLocallyWithWeb3Node(Show, [group.address, '--group'], web3)
-
-      expect(
-        logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
-      ).toMatchInlineSnapshot(`
-      [
-        [
-          "Running Checks:",
-        ],
-        [
-          "   ✔  0x70997970C51812dc3A010C7d01b50e0d17dc79C8 is ValidatorGroup ",
-        ],
-        [
-          "All checks passed",
-        ],
-        [
-          "address: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
-      capacity: 40004000000000000000000 (~4.000e+22)
-      eligible: true
-      name: cLabs
-      votes: 20001000000000000000000 (~2.000e+22)",
-        ],
-      ]
-    `)
+      await expect(
+        testLocallyWithWeb3Node(Show, [group.address, '--group'], web3)
+      ).resolves.toBeUndefined()
+      const logs = stripAnsiCodesFromNestedArray(logMock.mock.calls)
+      expect(logs[0]).toContain('Running Checks:')
+      expect(logs[1]).toContain(`   ✔  ${group.address} is ValidatorGroup `)
+      expect(logs[2]).toContain('All checks passed')
+      expect(logs[3][0]).toContain(`address: ${group.address}`)
+      expect(logs[3][0]).toContain(`capacity: 3999`)
+      expect(logs[3][0]).toContain(`eligible: true`)
+      expect(logs[3][0]).toContain(`name: ${group.name}`)
+      expect(logs[3][0]).toContain(`votes: 2001`)
     })
 
     it('shows data for an account', async () => {
@@ -154,30 +143,30 @@ testWithAnvilL2(
       expect(
         logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
       ).toMatchInlineSnapshot(`
-      [
         [
-          "Running Checks:",
-        ],
-        [
-          "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is a registered Account ",
-        ],
-        [
-          "All checks passed",
-        ],
-        [
-          "address: 0x5409ED021D9299bf6814279A6A1411A7e866A631
-      votes: 
-        0: 
-          active: 1000000000000000000 (~1.000e+18)
-          group: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
-          pending: 0 
-        1: 
-          active: 0 
-          group: 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC
-          pending: 9000000000000000000 (~9.000e+18)",
-        ],
-      ]
-    `)
+          [
+            "Running Checks:",
+          ],
+          [
+            "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is a registered Account ",
+          ],
+          [
+            "All checks passed",
+          ],
+          [
+            "address: 0x5409ED021D9299bf6814279A6A1411A7e866A631
+        votes: 
+          0: 
+            active: 999999999999999999 (~1.000e+18)
+            group: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8
+            pending: 0 
+          1: 
+            active: 0 
+            group: 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC
+            pending: 9000000000000000000 (~9.000e+18)",
+          ],
+        ]
+      `)
     })
   },
   { chainId: 42220 }
