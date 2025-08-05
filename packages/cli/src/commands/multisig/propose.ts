@@ -1,3 +1,4 @@
+import { multiSigABI } from '@celo/abis'
 import { getMultiSigContract } from '@celo/actions/contracts/multisig'
 import { Address } from 'viem'
 import { BaseCommand } from '../../base'
@@ -57,7 +58,8 @@ export default class ProposeMultiSig extends BaseCommand {
     await displayViemTx(
       `multisig: proposing transaction`,
       multisig.write.submitTransaction([to, value ?? 0n, data]),
-      clients.public
+      clients.public,
+      { abi: multiSigABI, displayEventName: 'Submission' }
     )
   }
 }

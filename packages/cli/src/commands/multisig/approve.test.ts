@@ -123,7 +123,7 @@ testWithAnvilL2('multisig:approve integration tests', (web3: Web3) => {
           function:  getOwners()
 
         Docs: https://viem.sh/docs/contract/readContract
-        Version: viem@2.29.2"
+        Version: viem@2.33.2"
       `)
     })
 
@@ -156,6 +156,12 @@ testWithAnvilL2('multisig:approve integration tests', (web3: Web3) => {
           [
             "txHash: 0xtxhash",
           ],
+          [
+            "Submission:",
+          ],
+          [
+            "transactionId: 0",
+          ],
         ]
       `)
 
@@ -185,6 +191,12 @@ testWithAnvilL2('multisig:approve integration tests', (web3: Web3) => {
             "txHash: 0xtxhash",
           ],
           [
+            "Submission:",
+          ],
+          [
+            "transactionId: 0",
+          ],
+          [
             "Running Checks:",
           ],
           [
@@ -197,7 +209,7 @@ testWithAnvilL2('multisig:approve integration tests', (web3: Web3) => {
             "All checks passed",
           ],
           [
-            "SendTransaction: multisig: approving transaction",
+            "SendTransaction: multisig: approving transaction (approval 2 of 2)",
           ],
           [
             "txHash: 0xtxhash",

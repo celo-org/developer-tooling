@@ -56,7 +56,8 @@ export default class ApproveMultiSig extends BaseCommand {
     const { currentConfirmations, neededConfirmations } = await viewConfirmationStatus(
       multisig.read,
       txIndex,
-      this.log
+      // use a arrow function to bind this.log
+      (messages) => this.log(messages)
     )
 
     await displayViemTx(

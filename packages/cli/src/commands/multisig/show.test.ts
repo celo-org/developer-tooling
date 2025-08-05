@@ -97,6 +97,12 @@ testWithAnvilL2('multisig:show integration tests', (web3: Web3) => {
             "txHash: 0xtxhash",
           ],
           [
+            "Submission:",
+          ],
+          [
+            "transactionId: 0",
+          ],
+          [
             "Owners: 
           0: 0x5409ED021D9299bf6814279A6A1411A7e866A631
           1: 0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb
@@ -153,7 +159,7 @@ testWithAnvilL2('multisig:show integration tests', (web3: Web3) => {
           args:                         (true, true)
 
         Docs: https://viem.sh/docs/contract/readContract
-        Version: viem@2.29.2"
+        Version: viem@2.33.2"
       `)
     })
 
@@ -220,6 +226,12 @@ testWithAnvilL2('multisig:show integration tests', (web3: Web3) => {
           ],
           [
             "txHash: 0xtxhash",
+          ],
+          [
+            "Submission:",
+          ],
+          [
+            "transactionId: 0",
           ],
           [
             "Owners: 
