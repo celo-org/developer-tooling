@@ -1,5 +1,27 @@
 # Changelog
 
+## 7.1.0-beta.1
+
+### Minor Changes
+
+- [#695](https://github.com/celo-org/developer-tooling/pull/695) [`7360192`](https://github.com/celo-org/developer-tooling/commit/73601920c69a8ffac4d999dcc1c4b9c928a48989) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Adds rpc-url as alias for node
+
+- [#695](https://github.com/celo-org/developer-tooling/pull/695) [`7360192`](https://github.com/celo-org/developer-tooling/commit/73601920c69a8ffac4d999dcc1c4b9c928a48989) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Adds celo-sepolia + 'testnet' aliases for use with the node flag.
+
+### Patch Changes
+
+- [#695](https://github.com/celo-org/developer-tooling/pull/695) [`7360192`](https://github.com/celo-org/developer-tooling/commit/73601920c69a8ffac4d999dcc1c4b9c928a48989) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Update viem to version that includes support for celo sepolia
+
+- Updated dependencies [[`7360192`](https://github.com/celo-org/developer-tooling/commit/73601920c69a8ffac4d999dcc1c4b9c928a48989), [`7360192`](https://github.com/celo-org/developer-tooling/commit/73601920c69a8ffac4d999dcc1c4b9c928a48989), [`7360192`](https://github.com/celo-org/developer-tooling/commit/73601920c69a8ffac4d999dcc1c4b9c928a48989)]:
+  - @celo/actions@0.1.0-beta.1
+  - @celo/viem-account-ledger@1.2.1-beta.0
+  - @celo/wallet-ledger@8.0.1-beta.0
+  - @celo/wallet-local@8.0.1-beta.0
+  - @celo/contractkit@10.0.1-beta.1
+  - @celo/wallet-hsm-azure@8.0.1-beta.0
+  - @celo/explorer@5.0.17-beta.1
+  - @celo/governance@5.1.8-beta.1
+
 ## 7.0.2-cc13.0
 
 ### Patch Changes
