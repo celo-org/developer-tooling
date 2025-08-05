@@ -79,6 +79,7 @@ testWithAnvilL2('multisig:transfer integration tests', (web3: Web3) => {
     })
 
     it('fails when non-owner tries to transfer', async () => {
+      const spy = jest.spyOn(console, 'log').mockImplementation(() => {})
       const recipient = accounts[6]
       const amount = '100000000000000000'
       await expect(
@@ -94,14 +95,21 @@ testWithAnvilL2('multisig:transfer integration tests', (web3: Web3) => {
             nonOwner,
             '--sender',
             accounts[7],
+            '--transferFrom',
           ],
 
           web3
         )
-      ).rejects.toThrowErrorMatchingInlineSnapshot(`
-        "The following error occurred:
-          [2mAll of the following must be provided when using --sender: --transferFrom[22m
-        See more help with --help"
+      ).rejects.toThrow("Some checks didn't pass!")
+      expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
+        [
+          [
+            "Running Checks:",
+          ],
+          [
+            "   ✘  The provided address is an owner of the multisig ",
+          ],
+        ]
       `)
     })
 
