@@ -41,10 +41,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/oracle/list.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.2-cc13.0/packages/cli/src/commands/oracle/list.ts)_
+_See code: [src/commands/oracle/list.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0-beta.1/packages/cli/src/commands/oracle/list.ts)_
 
 ## `celocli oracle:remove-expired-reports ARG1`
 
@@ -107,10 +108,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/oracle/remove-expired-reports.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.2-cc13.0/packages/cli/src/commands/oracle/remove-expired-reports.ts)_
+_See code: [src/commands/oracle/remove-expired-reports.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0-beta.1/packages/cli/src/commands/oracle/remove-expired-reports.ts)_
 
 ## `celocli oracle:report ARG1`
 
@@ -176,10 +178,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/oracle/report.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.2-cc13.0/packages/cli/src/commands/oracle/report.ts)_
+_See code: [src/commands/oracle/report.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0-beta.1/packages/cli/src/commands/oracle/report.ts)_
 
 ## `celocli oracle:reports ARG1`
 
@@ -265,7 +268,8 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/oracle/reports.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.2-cc13.0/packages/cli/src/commands/oracle/reports.ts)_
+_See code: [src/commands/oracle/reports.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0-beta.1/packages/cli/src/commands/oracle/reports.ts)_
