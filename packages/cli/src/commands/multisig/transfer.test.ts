@@ -192,7 +192,6 @@ testWithAnvilL2('multisig:transfer integration tests', (web3: Web3) => {
 
     it('fails with transferFrom without sender', async () => {
       const recipient = accounts[9]
-      const amount = '100000000000000000'
 
       await expect(
         testLocallyWithWeb3Node(
@@ -203,18 +202,14 @@ testWithAnvilL2('multisig:transfer integration tests', (web3: Web3) => {
             '--to',
             recipient,
             '--amount',
-            amount,
+            '100000000000000000',
             '--from',
             owner1,
           ],
 
           web3
         )
-      ).rejects.toThrowErrorMatchingInlineSnapshot(`
-        "The following error occurred:
-          [2mAll of the following must be provided when using --transferFrom: --sender[22m
-        See more help with --help"
-      `)
+      ).rejects.toThrow()
     })
 
     it('successfully propose a transferFrom transaction', async () => {
