@@ -29,6 +29,7 @@ env:
   # Supported Foundry version defined at celo-org (GitHub organisation) level, for consistency across workflows.
   SUPPORTED_FOUNDRY_VERSION: "v1.2.3"
 
+
 # EXAMPLE on debug ssh step
 #  - name: Setup tmate session
 #  uses: mxschmitt/action-tmate@v3

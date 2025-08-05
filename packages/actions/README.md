@@ -35,7 +35,7 @@ Holds Common functions
 
 #### @celo/actions/*ing
 
-Groups of actions which interact with multiple contracts and simply some of the implementation proceedures so you can focus on the intent
+Groups of actions which interact with multiple contracts and simply some of the implementation procedures so you can focus on the intent
   
 * staking (elected community nodes)
 * governing (on chain governance propositions)
