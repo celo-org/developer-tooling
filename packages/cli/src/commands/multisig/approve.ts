@@ -3,6 +3,7 @@ import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
+import { viewConfirmationStatus } from '../../utils/multisig-utils'
 
 export default class ApproveMultiSig extends BaseCommand {
   static description = 'Approves an existing transaction on a multi-sig contract'
@@ -52,8 +53,14 @@ export default class ApproveMultiSig extends BaseCommand {
 
     await checkBuilder.runChecks()
 
+    const { currentConfirmations, neededConfirmations } = await viewConfirmationStatus(
+      multisig.read,
+      txIndex,
+      this.log
+    )
+
     await displayViemTx(
-      'multisig: approving transaction',
+      `multisig: approving transaction (approval ${currentConfirmations + 1} of ${neededConfirmations})`,
       multisig.write.confirmTransaction([BigInt(txIndex)]),
       clients.public
     )

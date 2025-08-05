@@ -27,8 +27,16 @@ testWithAnvilL2('multisig:transfer integration tests', (web3: Web3) => {
     owner3 = accounts[2]
     nonOwner = accounts[3]
 
+    const requireNumberOfSignatures = 2
+    const requireInternalSignatures = 1
+
     // Create a multisig with 3 owners requiring 2 signatures
-    multisigAddress = await createMultisig(kit, [owner1, owner2, owner3], 2, 1)
+    multisigAddress = await createMultisig(
+      kit,
+      [owner1, owner2, owner3],
+      requireNumberOfSignatures,
+      requireInternalSignatures
+    )
   })
 
   afterAll(async () => {
@@ -38,7 +46,7 @@ testWithAnvilL2('multisig:transfer integration tests', (web3: Web3) => {
   describe('transfer CELO', () => {
     it('successfully proposes a CELO transfer', async () => {
       const recipient = accounts[4]
-      const amount = '1000000000000000000' // 1 CELO in wei
+      const amount = (10 ** 18).toString() // 1 CELO in wei
 
       const result = await testLocallyWithWeb3Node(
         MultiSigTransfer,

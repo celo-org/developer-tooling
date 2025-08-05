@@ -6,6 +6,7 @@ import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displayViemTx } from '../../utils/cli'
 import { CustomArgs, CustomFlags } from '../../utils/command'
+import { viewConfirmationStatus } from '../../utils/multisig-utils'
 
 export default class MultiSigTransfer extends BaseCommand {
   static description =
@@ -86,8 +87,14 @@ export default class MultiSigTransfer extends BaseCommand {
     ).find((tx) => tx !== null)
 
     if (existingTx) {
+      const { currentConfirmations, neededConfirmations } = await viewConfirmationStatus(
+        multisig.read,
+        existingTx,
+        this.log
+      )
+
       await displayViemTx(
-        `multisig: approving existing transfer`,
+        `multisig: approving transfer with (${currentConfirmations} of ${neededConfirmations}) existing approvals`,
         multisig.write.confirmTransaction([existingTx]),
         clients.public
       )

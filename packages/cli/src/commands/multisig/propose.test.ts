@@ -69,8 +69,16 @@ testWithAnvilL2('multisig:propose integration tests', (web3: Web3) => {
     owner3 = accounts[2]
     nonOwner = accounts[3]
 
+    const requireNumberOfSignatures = 2
+    const requireInternalSignatures = 1
+
     // Create a multisig with 3 owners requiring 2 signatures
-    multisigAddress = await createMultisig(kit, [owner1, owner2, owner3], 2, 1)
+    multisigAddress = await createMultisig(
+      kit,
+      [owner1, owner2, owner3],
+      requireNumberOfSignatures,
+      requireInternalSignatures
+    )
   })
 
   afterAll(async () => {
@@ -90,7 +98,7 @@ testWithAnvilL2('multisig:propose integration tests', (web3: Web3) => {
 
     it('proposes a transaction with value', async () => {
       const recipient = accounts[4]
-      const value = '1000000000000000000' // 1 CELO in wei
+      const value = (10 ** 18).toString() // 1 CELO in wei
 
       const result = await testLocallyWithWeb3Node(
         ProposeMultiSig,
