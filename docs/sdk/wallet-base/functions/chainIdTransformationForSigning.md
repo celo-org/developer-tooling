@@ -1,4 +1,4 @@
-[**@celo/wallet-base v8.0.0**](../README.md)
+[**@celo/wallet-base v8.0.1-beta.0**](../README.md)
 
 ***
 

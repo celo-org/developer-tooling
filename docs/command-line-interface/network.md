@@ -54,6 +54,7 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
@@ -91,10 +92,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/network/contracts.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.2-cc13.0/packages/cli/src/commands/network/contracts.ts)_
+_See code: [src/commands/network/contracts.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0-beta.1/packages/cli/src/commands/network/contracts.ts)_
 
 ## `celocli network:info`
 
@@ -120,10 +122,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/network/info.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.2-cc13.0/packages/cli/src/commands/network/info.ts)_
+_See code: [src/commands/network/info.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0-beta.1/packages/cli/src/commands/network/info.ts)_
 
 ## `celocli network:parameters`
 
@@ -150,10 +153,11 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/network/parameters.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.2-cc13.0/packages/cli/src/commands/network/parameters.ts)_
+_See code: [src/commands/network/parameters.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0-beta.1/packages/cli/src/commands/network/parameters.ts)_
 
 ## `celocli network:rpc-urls`
 
@@ -199,6 +203,7 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
@@ -239,7 +244,8 @@ FLAG DESCRIPTIONS
     Alias options:
     local, localhost => 'http://localhost:8545'
     alfajores => Celo Alfajores Testnet,
+    testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/network/whitelist.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.0.2-cc13.0/packages/cli/src/commands/network/whitelist.ts)_
+_See code: [src/commands/network/whitelist.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0-beta.1/packages/cli/src/commands/network/whitelist.ts)_

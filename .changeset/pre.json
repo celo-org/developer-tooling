@@ -30,7 +30,14 @@
     "@celo/viem-account-ledger": "1.2.0"
   },
   "changesets": [
+    "all-carpets-arrive",
+    "chatty-carpets-bet",
+    "eighty-eels-mix",
     "gentle-shirts-tickle",
+    "late-eggs-yawn",
+    "poor-dogs-ring",
+    "tangy-moments-prove",
+    "thick-terms-float",
     "twenty-pens-greet"
   ]
 }
