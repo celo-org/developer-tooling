@@ -1,5 +1,14 @@
 # @celo/wallet-local
 
+## 8.0.1-beta.0
+
+### Patch Changes
+
+- [#695](https://github.com/celo-org/developer-tooling/pull/695) [`7360192`](https://github.com/celo-org/developer-tooling/commit/73601920c69a8ffac4d999dcc1c4b9c928a48989) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Update token signer to support celo sepolia
+
+- Updated dependencies [[`7360192`](https://github.com/celo-org/developer-tooling/commit/73601920c69a8ffac4d999dcc1c4b9c928a48989)]:
+  - @celo/wallet-base@8.0.1-beta.0
+
 ## 8.0.0
 
 ### Patch Changes
