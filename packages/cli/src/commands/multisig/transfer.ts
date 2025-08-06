@@ -1,8 +1,12 @@
+import { getCeloERC20Contract } from '@celo/actions/contracts/celo-erc20'
+import { getMultiSigContract } from '@celo/actions/contracts/multisig'
 import { Flags } from '@oclif/core'
-import { BigNumber } from 'bignumber.js'
+import { Address, encodeFunctionData } from 'viem'
 import { BaseCommand } from '../../base'
-import { displaySendTx } from '../../utils/cli'
+import { newCheckBuilder } from '../../utils/checks'
+import { displayViemTx } from '../../utils/cli'
 import { CustomArgs, CustomFlags } from '../../utils/command'
+import { viewConfirmationStatus } from '../../utils/multisig-utils'
 
 export default class MultiSigTransfer extends BaseCommand {
   static description =
@@ -11,11 +15,15 @@ export default class MultiSigTransfer extends BaseCommand {
   static flags = {
     ...BaseCommand.flags,
     to: CustomFlags.address({ required: true, description: 'Recipient of transfer' }),
-    amount: Flags.string({ required: true, description: 'Amount to transfer, e.g. 10e18' }),
+    amount: CustomFlags.bigint({ required: true, description: 'Amount to transfer, e.g. 10e18' }),
     transferFrom: Flags.boolean({
       description: 'Perform transferFrom instead of transfer in the ERC-20 interface',
+      dependsOn: ['sender'],
     }),
-    sender: CustomFlags.address({ description: 'Identify sender if performing transferFrom' }),
+    sender: CustomFlags.address({
+      description: 'Identify sender if performing transferFrom',
+      dependsOn: ['transferFrom'],
+    }),
     from: CustomFlags.address({
       required: true,
       description: 'Account transferring value to the recipient',
@@ -32,25 +40,70 @@ export default class MultiSigTransfer extends BaseCommand {
   ]
 
   async run() {
-    const kit = await this.getKit()
     const {
       args,
-      flags: { to, sender, from, amount, transferFrom },
+      flags: { to, sender, amount, transferFrom, from },
     } = await this.parse(MultiSigTransfer)
-    const amountBN = new BigNumber(amount)
-    const celoToken = await kit.contracts.getGoldToken()
-    const multisig = await kit.contracts.getMultiSig(args.arg1 as string)
+    const clients = {
+      public: await this.getPublicClient(),
+      wallet: await this.getWalletClient(),
+    }
+
+    const multisigAddress = args.arg1 as Address
+
+    const celoToken = await getCeloERC20Contract(clients)
+    const multisig = await getMultiSigContract(clients, multisigAddress)
+
+    await newCheckBuilder(this).isMultiSigOwner(from, multisigAddress).runChecks()
 
     let transferTx
-    if (transferFrom) {
-      if (!sender) this.error("Must submit 'sender' when submitting TransferFrom tx")
-      // @ts-ignore - function will accept BigNumber
-      transferTx = celoToken.transferFrom(sender, to, amountBN)
+    if (transferFrom && sender) {
+      transferTx = encodeFunctionData({
+        abi: celoToken.abi,
+        functionName: 'transferFrom',
+        args: [sender, to, amount],
+      })
     } else {
-      // @ts-ignore - function will accept BigNumber
-      transferTx = celoToken.transfer(to, amountBN)
+      transferTx = encodeFunctionData({
+        abi: celoToken.abi,
+        functionName: 'transfer',
+        args: [to, amount],
+      })
     }
-    const multiSigTx = await multisig.submitOrConfirmTransaction(celoToken.address, transferTx.txo)
-    await displaySendTx<any>('submitOrApproveTransfer', multiSigTx, { from }, 'tx Sent')
+
+    const destination = celoToken.address
+    const value = 0n
+    const data = transferTx
+
+    const txCount = await multisig.read.getTransactionCount([true, false])
+    const txs = await multisig.read.getTransactionIds([BigInt(0), txCount, true, false])
+    const existingTx = (
+      await Promise.all(
+        txs.map(async (tx) => {
+          const [txDest, txValue, txData] = await multisig.read.transactions([tx])
+          return txDest === destination && txValue === value && txData === data ? tx : null
+        })
+      )
+    ).find((tx) => tx !== null)
+
+    if (existingTx) {
+      const { currentConfirmations, neededConfirmations } = await viewConfirmationStatus(
+        multisig.read,
+        existingTx,
+        this.log
+      )
+
+      await displayViemTx(
+        `multisig: approving transfer with (${currentConfirmations} of ${neededConfirmations}) existing approvals`,
+        multisig.write.confirmTransaction([existingTx]),
+        clients.public
+      )
+    } else {
+      await displayViemTx(
+        `multisig: proposing transfer`,
+        multisig.write.submitTransaction([celoToken.address, 0n, transferTx]),
+        clients.public
+      )
+    }
   }
 }

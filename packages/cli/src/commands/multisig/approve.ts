@@ -1,8 +1,9 @@
-import { Flags } from '@oclif/core'
+import { getMultiSigContract } from '@celo/actions/contracts/multisig'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
+import { viewConfirmationStatus } from '../../utils/multisig-utils'
 
 export default class ApproveMultiSig extends BaseCommand {
   static description = 'Approves an existing transaction on a multi-sig contract'
@@ -17,9 +18,9 @@ export default class ApproveMultiSig extends BaseCommand {
       required: true,
       description: 'Address of the multi-sig contract',
     }),
-    tx: Flags.integer({
+    tx: CustomFlags.bigint({
       required: true,
-      description: 'Transaction to approve',
+      description: 'Transaction to approve (index)',
     }),
   }
 
@@ -28,27 +29,41 @@ export default class ApproveMultiSig extends BaseCommand {
   ]
 
   async run() {
-    const kit = await this.getKit()
-    const res = await this.parse(ApproveMultiSig)
-    const account = res.flags.from
-    kit.defaultAccount = account
+    const {
+      flags: { from, for: multisigAddress, tx: txIndex },
+    } = await this.parse(ApproveMultiSig)
 
-    const multisig = await kit.contracts.getMultiSig(res.flags.for)
+    const clients = {
+      public: await this.getPublicClient(),
+      wallet: await this.getWalletClient(),
+    }
+
+    const multisig = await getMultiSigContract(clients, multisigAddress)
 
     const checkBuilder = newCheckBuilder(this)
-      .isMultiSigOwner(account, res.flags.for)
+      .isMultiSigOwner(from, multisigAddress)
       .addCheck(
-        `Checking that ${res.flags.tx} is an existing transaction.`,
+        `Checking that ${txIndex} is an existing transaction.`,
         async () => {
-          const max = await multisig.getTransactionCount(true, true)
-          return res.flags.tx < max
+          const max = await multisig.read.getTransactionCount([true, true])
+          return txIndex < max
         },
-        `(Failed: No transaction with index ${res.flags.tx} found)`
+        `(Failed: No transaction with index ${txIndex} found)`
       )
 
     await checkBuilder.runChecks()
 
-    const tx = await multisig.confirmTransaction(res.flags.tx)
-    await displaySendTx<string | void | boolean>('approveTx', tx, {}, 'ApproveTx')
+    const { currentConfirmations, neededConfirmations } = await viewConfirmationStatus(
+      multisig.read,
+      txIndex,
+      // use a arrow function to bind this.log
+      (messages) => this.log(messages)
+    )
+
+    await displayViemTx(
+      `multisig: approving transaction (approval ${currentConfirmations + 1} of ${neededConfirmations})`,
+      multisig.write.confirmTransaction([BigInt(txIndex)]),
+      clients.public
+    )
   }
 }
