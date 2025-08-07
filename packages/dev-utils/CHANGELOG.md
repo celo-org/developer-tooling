@@ -1,5 +1,11 @@
 # @celo/dev-utils
 
+## 0.1.2-beta.1
+
+### Patch Changes
+
+- [#699](https://github.com/celo-org/developer-tooling/pull/699) [`3eb509d`](https://github.com/celo-org/developer-tooling/commit/3eb509d8043fabced91926b90a176f753d35cce9) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency tmp to ^0.2.0 [security]
+
 ## 0.1.2-cc13.0
 
 ### Patch Changes
