@@ -233,7 +233,7 @@ export class ProposalBuilder {
   fromJsonTx = async (
     tx: ProposalTransactionJSON | ExternalProposalTransactionJSON
   ): Promise<ProposalTransaction> => {
-    if (!tx.value) {
+    if (tx.value === undefined) {
       throw new Error('Missing tx.value')
     }
 
