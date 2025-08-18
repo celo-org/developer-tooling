@@ -234,7 +234,7 @@ export class ProposalBuilder {
     tx: ProposalTransactionJSON | ExternalProposalTransactionJSON
   ): Promise<ProposalTransaction> => {
     if (!tx.value) {
-      throw new Error("Missing tx.value");
+      throw new Error('Missing tx.value')
     }
 
     if (isRegistryRepoint(tx)) {
