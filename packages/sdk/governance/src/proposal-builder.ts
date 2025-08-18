@@ -233,6 +233,10 @@ export class ProposalBuilder {
   fromJsonTx = async (
     tx: ProposalTransactionJSON | ExternalProposalTransactionJSON
   ): Promise<ProposalTransaction> => {
+    if (!tx.value) {
+      throw new Error("Missing tx.value");
+    }
+
     if (isRegistryRepoint(tx)) {
       // Update canonical registry addresses
       const args = registryRepointArgs(tx)

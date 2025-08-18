@@ -160,6 +160,21 @@ testWithAnvilL2('ProposalBuilder', (web3) => {
         }
       `)
     })
+    it('throws error for missing value', async () => {
+      const tx = {
+        contract: 'FeeCurrencyDirectory',
+        function: 'setCurrencyConfig',
+        args: [
+          '0x765DE816845861e75A25fCA122bb6898B8B1282a',
+          '0xefB84935239dAcdecF7c5bA76d8dE40b077B7b33',
+          '50000',
+        ],
+      }
+      // @ts-expect-error (value is missing)
+      await expect(proposalBuilder.fromJsonTx(tx)).rejects.toThrowErrorMatchingInlineSnapshot(
+        `"Missing tx.value"`
+      )
+    })
     it('gives info when it fails to build transaction', async () => {
       const tx = {
         contract: 'SuperContract',
