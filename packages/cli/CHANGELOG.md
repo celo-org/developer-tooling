@@ -1,5 +1,34 @@
 # Changelog
 
+## 7.1.0
+
+### Minor Changes
+
+- [#695](https://github.com/celo-org/developer-tooling/pull/695) [`7360192`](https://github.com/celo-org/developer-tooling/commit/73601920c69a8ffac4d999dcc1c4b9c928a48989) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Adds rpc-url as alias for node
+
+- [#689](https://github.com/celo-org/developer-tooling/pull/689) [`493f73c`](https://github.com/celo-org/developer-tooling/commit/493f73c8807696b952dee675bc8f3fb31e6cf070) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Add a multisig:propose that can propose arbitrary transactions on celo multisigs.
+  Refactor all multisig commands to use `viem`.
+
+- [#695](https://github.com/celo-org/developer-tooling/pull/695) [`7360192`](https://github.com/celo-org/developer-tooling/commit/73601920c69a8ffac4d999dcc1c4b9c928a48989) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Adds celo-sepolia + 'testnet' aliases for use with the node flag.
+
+### Patch Changes
+
+- [#695](https://github.com/celo-org/developer-tooling/pull/695) [`7360192`](https://github.com/celo-org/developer-tooling/commit/73601920c69a8ffac4d999dcc1c4b9c928a48989) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Update viem to version that includes support for celo sepolia
+
+- [#684](https://github.com/celo-org/developer-tooling/pull/684) [`e058e0a`](https://github.com/celo-org/developer-tooling/commit/e058e0a5357443ae5c8359443b4bcba955524140) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Remove governance:whitelisthotfix command. Note we dont consider this breaking since it has not functioned since the cel2 transition.
+
+- [#684](https://github.com/celo-org/developer-tooling/pull/684) [`e058e0a`](https://github.com/celo-org/developer-tooling/commit/e058e0a5357443ae5c8359443b4bcba955524140) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Support Core Contract Release 13
+
+- Updated dependencies [[`7360192`](https://github.com/celo-org/developer-tooling/commit/73601920c69a8ffac4d999dcc1c4b9c928a48989), [`7360192`](https://github.com/celo-org/developer-tooling/commit/73601920c69a8ffac4d999dcc1c4b9c928a48989), [`2d997eb`](https://github.com/celo-org/developer-tooling/commit/2d997ebe5f94bbb42114a3e291ff10337be94fdf), [`7360192`](https://github.com/celo-org/developer-tooling/commit/73601920c69a8ffac4d999dcc1c4b9c928a48989), [`493f73c`](https://github.com/celo-org/developer-tooling/commit/493f73c8807696b952dee675bc8f3fb31e6cf070), [`e058e0a`](https://github.com/celo-org/developer-tooling/commit/e058e0a5357443ae5c8359443b4bcba955524140)]:
+  - @celo/actions@0.1.0
+  - @celo/viem-account-ledger@1.2.1
+  - @celo/governance@5.1.8
+  - @celo/wallet-ledger@8.0.1
+  - @celo/wallet-local@8.0.1
+  - @celo/contractkit@10.0.1
+  - @celo/wallet-hsm-azure@8.0.1
+  - @celo/explorer@5.0.17
+
 ## 7.1.0-beta.1
 
 ### Minor Changes
