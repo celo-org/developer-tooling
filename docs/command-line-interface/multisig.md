@@ -73,7 +73,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/multisig/approve.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0-beta.1/packages/cli/src/commands/multisig/approve.ts)_
+_See code: [src/commands/multisig/approve.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/multisig/approve.ts)_
 
 ## `celocli multisig:propose ARG1`
 
@@ -145,7 +145,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/multisig/propose.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0-beta.1/packages/cli/src/commands/multisig/propose.ts)_
+_See code: [src/commands/multisig/propose.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/multisig/propose.ts)_
 
 ## `celocli multisig:show ARG1`
 
@@ -185,7 +185,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/multisig/show.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0-beta.1/packages/cli/src/commands/multisig/show.ts)_
+_See code: [src/commands/multisig/show.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/multisig/show.ts)_
 
 ## `celocli multisig:transfer ARG1`
 
@@ -262,4 +262,4 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/multisig/transfer.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0-beta.1/packages/cli/src/commands/multisig/transfer.ts)_
+_See code: [src/commands/multisig/transfer.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/multisig/transfer.ts)_

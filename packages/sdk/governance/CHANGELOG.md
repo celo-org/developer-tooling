@@ -1,5 +1,17 @@
 # @celo/governance
 
+## 5.1.8
+
+### Patch Changes
+
+- [#703](https://github.com/celo-org/developer-tooling/pull/703) [`2d997eb`](https://github.com/celo-org/developer-tooling/commit/2d997ebe5f94bbb42114a3e291ff10337be94fdf) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Proposals missing value property now throw with understandable error message
+
+- [#684](https://github.com/celo-org/developer-tooling/pull/684) [`e058e0a`](https://github.com/celo-org/developer-tooling/commit/e058e0a5357443ae5c8359443b4bcba955524140) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Support Core Contract Release 13
+
+- Updated dependencies [[`e058e0a`](https://github.com/celo-org/developer-tooling/commit/e058e0a5357443ae5c8359443b4bcba955524140)]:
+  - @celo/contractkit@10.0.1
+  - @celo/explorer@5.0.17
+
 ## 5.1.8-beta.1
 
 ### Patch Changes

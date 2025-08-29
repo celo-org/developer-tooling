@@ -1,4 +1,4 @@
-[**@celo/governance v5.1.8-beta.1**](../README.md)
+[**@celo/governance v5.1.8**](../README.md)
 
 ***
 
@@ -94,7 +94,7 @@ Defined in: [proposal-builder.ts:43](https://github.com/celo-org/developer-tooli
 
 > **addJsonTx**(`tx`): `number`
 
-Defined in: [proposal-builder.ts:271](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L271)
+Defined in: [proposal-builder.ts:275](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/governance/src/proposal-builder.ts#L275)
 
 #### Parameters
 

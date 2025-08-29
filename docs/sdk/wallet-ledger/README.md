@@ -1,8 +1,8 @@
-**@celo/wallet-ledger v8.0.1-beta.0**
+**@celo/wallet-ledger v8.0.1**
 
 ***
 
-# @celo/wallet-ledger v8.0.1-beta.0
+# @celo/wallet-ledger v8.0.1
 
 ## Enumerations
 

@@ -1,4 +1,4 @@
-**@celo/viem-account-ledger v1.2.1-beta.0**
+**@celo/viem-account-ledger v1.2.1**
 
 ***
 

@@ -1,5 +1,14 @@
 # @celo/contractkit
 
+## 10.0.1
+
+### Patch Changes
+
+- [#684](https://github.com/celo-org/developer-tooling/pull/684) [`e058e0a`](https://github.com/celo-org/developer-tooling/commit/e058e0a5357443ae5c8359443b4bcba955524140) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Support Core Contract Release 13
+
+- Updated dependencies [[`7360192`](https://github.com/celo-org/developer-tooling/commit/73601920c69a8ffac4d999dcc1c4b9c928a48989)]:
+  - @celo/wallet-local@8.0.1
+
 ## 10.0.1-beta.1
 
 ### Patch Changes

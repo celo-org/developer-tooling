@@ -1,5 +1,13 @@
 # @celo/dev-utils
 
+## 0.1.2
+
+### Patch Changes
+
+- [#699](https://github.com/celo-org/developer-tooling/pull/699) [`3eb509d`](https://github.com/celo-org/developer-tooling/commit/3eb509d8043fabced91926b90a176f753d35cce9) Thanks [@renovate](https://github.com/apps/renovate)! - fix(deps): update dependency tmp to ^0.2.0 [security]
+
+- [#684](https://github.com/celo-org/developer-tooling/pull/684) [`e058e0a`](https://github.com/celo-org/developer-tooling/commit/e058e0a5357443ae5c8359443b4bcba955524140) Thanks [@nicolasbrugneaux](https://github.com/nicolasbrugneaux)! - Support Core Contract Release 13
+
 ## 0.1.2-cc13.0
 
 ### Patch Changes

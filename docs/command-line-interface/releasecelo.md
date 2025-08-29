@@ -95,7 +95,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/releasecelo/authorize.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0-beta.1/packages/cli/src/commands/releasecelo/authorize.ts)_
+_See code: [src/commands/releasecelo/authorize.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/releasecelo/authorize.ts)_
 
 ## `celocli releasecelo:create-account`
 
@@ -155,7 +155,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/releasecelo/create-account.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0-beta.1/packages/cli/src/commands/releasecelo/create-account.ts)_
+_See code: [src/commands/releasecelo/create-account.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/releasecelo/create-account.ts)_
 
 ## `celocli releasecelo:locked-celo`
 
@@ -309,7 +309,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/releasecelo/locked-gold.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0-beta.1/packages/cli/src/commands/releasecelo/locked-gold.ts)_
+_See code: [src/commands/releasecelo/locked-gold.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/releasecelo/locked-gold.ts)_
 
 ## `celocli releasecelo:refund-and-finalize`
 
@@ -370,7 +370,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/releasecelo/refund-and-finalize.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0-beta.1/packages/cli/src/commands/releasecelo/refund-and-finalize.ts)_
+_See code: [src/commands/releasecelo/refund-and-finalize.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/releasecelo/refund-and-finalize.ts)_
 
 ## `celocli releasecelo:revoke`
 
@@ -436,7 +436,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/releasecelo/revoke.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0-beta.1/packages/cli/src/commands/releasecelo/revoke.ts)_
+_See code: [src/commands/releasecelo/revoke.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/releasecelo/revoke.ts)_
 
 ## `celocli releasecelo:revoke-votes`
 
@@ -512,7 +512,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/releasecelo/revoke-votes.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0-beta.1/packages/cli/src/commands/releasecelo/revoke-votes.ts)_
+_See code: [src/commands/releasecelo/revoke-votes.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/releasecelo/revoke-votes.ts)_
 
 ## `celocli releasecelo:set-account`
 
@@ -584,7 +584,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/releasecelo/set-account.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0-beta.1/packages/cli/src/commands/releasecelo/set-account.ts)_
+_See code: [src/commands/releasecelo/set-account.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/releasecelo/set-account.ts)_
 
 ## `celocli releasecelo:set-account-wallet-address`
 
@@ -651,7 +651,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/releasecelo/set-account-wallet-address.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0-beta.1/packages/cli/src/commands/releasecelo/set-account-wallet-address.ts)_
+_See code: [src/commands/releasecelo/set-account-wallet-address.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/releasecelo/set-account-wallet-address.ts)_
 
 ## `celocli releasecelo:set-beneficiary`
 
@@ -724,7 +724,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/releasecelo/set-beneficiary.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0-beta.1/packages/cli/src/commands/releasecelo/set-beneficiary.ts)_
+_See code: [src/commands/releasecelo/set-beneficiary.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/releasecelo/set-beneficiary.ts)_
 
 ## `celocli releasecelo:set-can-expire`
 
@@ -791,7 +791,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/releasecelo/set-can-expire.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0-beta.1/packages/cli/src/commands/releasecelo/set-can-expire.ts)_
+_See code: [src/commands/releasecelo/set-can-expire.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/releasecelo/set-can-expire.ts)_
 
 ## `celocli releasecelo:set-liquidity-provision`
 
@@ -855,7 +855,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/releasecelo/set-liquidity-provision.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0-beta.1/packages/cli/src/commands/releasecelo/set-liquidity-provision.ts)_
+_See code: [src/commands/releasecelo/set-liquidity-provision.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/releasecelo/set-liquidity-provision.ts)_
 
 ## `celocli releasecelo:set-max-distribution`
 
@@ -922,7 +922,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/releasecelo/set-max-distribution.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0-beta.1/packages/cli/src/commands/releasecelo/set-max-distribution.ts)_
+_See code: [src/commands/releasecelo/set-max-distribution.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/releasecelo/set-max-distribution.ts)_
 
 ## `celocli releasecelo:show`
 
@@ -960,7 +960,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/releasecelo/show.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0-beta.1/packages/cli/src/commands/releasecelo/show.ts)_
+_See code: [src/commands/releasecelo/show.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/releasecelo/show.ts)_
 
 ## `celocli releasecelo:transfer-dollars`
 
@@ -1028,7 +1028,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/releasecelo/transfer-dollars.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0-beta.1/packages/cli/src/commands/releasecelo/transfer-dollars.ts)_
+_See code: [src/commands/releasecelo/transfer-dollars.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/releasecelo/transfer-dollars.ts)_
 
 ## `celocli releasecelo:withdraw`
 
@@ -1092,4 +1092,4 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/releasecelo/withdraw.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0-beta.1/packages/cli/src/commands/releasecelo/withdraw.ts)_
+_See code: [src/commands/releasecelo/withdraw.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/releasecelo/withdraw.ts)_
