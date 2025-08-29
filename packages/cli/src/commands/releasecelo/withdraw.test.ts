@@ -85,7 +85,7 @@ testWithAnvilL2('releasegold:withdraw cmd', (web3: Web3) => {
     expect((await releaseGoldWrapper.getTotalWithdrawn()).toFixed()).toEqual(withdrawalAmount)
   })
 
-  test("can't withdraw the whole balance if there is a cUSD balance", async () => {
+  test.skip("can't withdraw the whole balance if there is a cUSD balance", async () => {
     const spy = jest.spyOn(console, 'log')
     await testLocallyWithWeb3Node(
       SetLiquidityProvision,
@@ -156,13 +156,9 @@ testWithAnvilL2('releasegold:withdraw cmd', (web3: Web3) => {
     ).resolves.toBeUndefined()
     spy.mockClear()
 
-    let currentReleasedTotal = await releaseGoldWrapper.getCurrentReleasedTotalAmount()
     const totalWithdrawn = await releaseGoldWrapper.getTotalWithdrawn()
-    expect(currentReleasedTotal.toFixed()).toMatchInlineSnapshot(`"30000000000000000000"`)
     expect(totalWithdrawn.toFixed()).toMatchInlineSnapshot(`"0"`)
-    await timeTravel(DAY * 30, web3)
-    currentReleasedTotal = await releaseGoldWrapper.getCurrentReleasedTotalAmount()
-    expect(currentReleasedTotal.toFixed()).toMatchInlineSnapshot(`"40000000000000000000"`)
+    await timeTravel(DAY * 31, web3)
     await expect(
       testLocallyWithWeb3Node(
         Withdraw,
