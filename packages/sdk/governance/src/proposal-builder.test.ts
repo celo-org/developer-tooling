@@ -160,6 +160,41 @@ testWithAnvilL2('ProposalBuilder', (web3) => {
         }
       `)
     })
+    it('throws error for missing value', async () => {
+      const tx = {
+        contract: 'FeeCurrencyDirectory',
+        function: 'setCurrencyConfig',
+        args: [
+          '0x765DE816845861e75A25fCA122bb6898B8B1282a',
+          '0xefB84935239dAcdecF7c5bA76d8dE40b077B7b33',
+          '50000',
+        ],
+      }
+      // @ts-expect-error (value is missing)
+      await expect(proposalBuilder.fromJsonTx(tx)).rejects.toThrowErrorMatchingInlineSnapshot(
+        `"Missing tx.value"`
+      )
+    })
+    it('successed for 0 value', async () => {
+      const tx = {
+        contract: 'FeeCurrencyDirectory',
+        function: 'setCurrencyConfig',
+        args: [
+          '0x765DE816845861e75A25fCA122bb6898B8B1282a',
+          '0xefB84935239dAcdecF7c5bA76d8dE40b077B7b33',
+          '50000',
+        ],
+        value: 0,
+      }
+      // @ts-expect-error (value is missing)
+      await expect(proposalBuilder.fromJsonTx(tx)).resolves.toMatchInlineSnapshot(`
+        {
+          "input": "0x216ab7df000000000000000000000000765de816845861e75a25fca122bb6898b8b1282a000000000000000000000000efb84935239dacdecf7c5ba76d8de40b077b7b33000000000000000000000000000000000000000000000000000000000000c350",
+          "to": "0x5a7D21C9255DAA32109c8136661D7e853Fc5BF63",
+          "value": 0,
+        }
+      `)
+    })
     it('gives info when it fails to build transaction', async () => {
       const tx = {
         contract: 'SuperContract',
