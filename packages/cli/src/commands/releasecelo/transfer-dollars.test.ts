@@ -116,14 +116,23 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (web3: Web3) => {
     await expect(
       testLocallyWithWeb3Node(
         RGTransferDollars,
-        ['--contract', contractAddress, '--to', accounts[0], '--value', cUSDToTransfer, '--privateKey', ACCOUNT_PRIVATE_KEYS[1]],
+        [
+          '--contract',
+          contractAddress,
+          '--to',
+          accounts[0],
+          '--value',
+          cUSDToTransfer,
+          '--privateKey',
+          ACCOUNT_PRIVATE_KEYS[1],
+        ],
         web3
       )
     ).resolves.toBeUndefined()
-    
+
     const balanceAfter = await kit.getTotalBalance(accounts[0])
     const contractBalanceAfter = await kit.getTotalBalance(contractAddress)
-    
+
     // Verify the transfer succeeded by checking the contract is empty
     expect(contractBalanceAfter.cUSD!.toFixed()).toEqual('0') // Contract should be empty after transfer
     expect(balanceAfter.cUSD!.toFixed()).toEqual('1000000000000000000000') // Should be 1000 cUSD (500 initial + 500 transferred)

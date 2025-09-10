@@ -311,9 +311,7 @@ export abstract class BaseCommand extends Command {
       } else if (res.flags.useAKV) {
         failWith('--useAKV flag is no longer supported')
       } else if (res.flags.privateKey) {
-        const accountFromPrivateKey = privateKeyToAccount(
-          ensureLeading0x(res.flags.privateKey)
-        )
+        const accountFromPrivateKey = privateKeyToAccount(ensureLeading0x(res.flags.privateKey))
         if (accountAddress && accountAddress !== accountFromPrivateKey.address) {
           failWith(
             `The --from address ${accountAddress} does not match the address derived from the provided private key ${accountFromPrivateKey.address}.`

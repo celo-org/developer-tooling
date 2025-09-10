@@ -484,7 +484,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
     it('should fail when --from address does not match private key', async () => {
       const privateKey = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
       const wrongFromAddress = '0x0000000000000000000000000000000000000001'
-      
+
       class TestPrivateKeyCommand extends BaseCommand {
         static flags = {
           ...BaseCommand.flags,
@@ -509,7 +509,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
     it('should succeed when --from address matches private key', async () => {
       const privateKey = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
       const correctFromAddress = '0xc2D7CF95645D33006175B78989035C7c9061d3F9'
-      
+
       class TestPrivateKeyCommand extends BaseCommand {
         static flags = {
           ...BaseCommand.flags,
@@ -532,7 +532,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
 
     it('should succeed when no --from address is provided with private key', async () => {
       const privateKey = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
-      
+
       class TestPrivateKeyCommand extends BaseCommand {
         static flags = {
           ...BaseCommand.flags,
@@ -545,11 +545,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
       }
 
       await expect(
-        testLocallyWithWeb3Node(
-          TestPrivateKeyCommand,
-          ['--privateKey', privateKey],
-          web3
-        )
+        testLocallyWithWeb3Node(TestPrivateKeyCommand, ['--privateKey', privateKey], web3)
       ).resolves.not.toThrow()
     })
   })
