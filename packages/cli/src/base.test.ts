@@ -6,6 +6,7 @@ import { Config, ux } from '@oclif/core'
 import http from 'http'
 import { tmpdir } from 'os'
 import { MethodNotFoundRpcError } from 'viem'
+import { privateKeyToAddress } from 'viem/accounts'
 import Web3 from 'web3'
 import { BaseCommand } from './base'
 import Set from './commands/config/set'
@@ -502,13 +503,13 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
           web3
         )
       ).rejects.toThrowErrorMatchingInlineSnapshot(
-        `"The --from address ${wrongFromAddress} does not match the address derived from the provided private key 0xc2D7CF95645D33006175B78989035C7c9061d3F9."`
+        `"The --from address ${wrongFromAddress} does not match the address derived from the provided private key 0x1Be31A94361a391bBaFB2a4CCd704F57dc04d4bb."`
       )
     })
 
     it('should succeed when --from address matches private key', async () => {
       const privateKey = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
-      const correctFromAddress = '0xc2D7CF95645D33006175B78989035C7c9061d3F9'
+      const correctFromAddress = privateKeyToAddress(privateKey)
 
       class TestPrivateKeyCommand extends BaseCommand {
         static flags = {
@@ -540,7 +541,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
         }
         async run() {
           const walletClient = await this.getWalletClient()
-          expect(walletClient.account.address).toBe('0xc2D7CF95645D33006175B78989035C7c9061d3F9')
+          expect(walletClient.account.address).toBe('0x1Be31A94361a391bBaFB2a4CCd704F57dc04d4bb')
         }
       }
 

@@ -23,6 +23,7 @@ import {
   createWalletClient,
   extractChain,
   http,
+  isAddressEqual,
   MethodNotFoundRpcError,
   Transport,
   webSocket,
@@ -291,7 +292,6 @@ export abstract class BaseCommand extends Command {
       if (res.flags.useLedger) {
         try {
           const ledgerOptions = await this.ledgerOptions()
-
           this.walletClient = await ledgerToWalletClient({
             ...ledgerOptions,
             account: accountAddress,
@@ -312,7 +312,7 @@ export abstract class BaseCommand extends Command {
         failWith('--useAKV flag is no longer supported')
       } else if (res.flags.privateKey) {
         const accountFromPrivateKey = privateKeyToAccount(ensureLeading0x(res.flags.privateKey))
-        if (accountAddress && accountAddress !== accountFromPrivateKey.address) {
+        if (accountAddress && !isAddressEqual(accountAddress, accountFromPrivateKey.address)) {
           failWith(
             `The --from address ${accountAddress} does not match the address derived from the provided private key ${accountFromPrivateKey.address}.`
           )
@@ -324,6 +324,7 @@ export abstract class BaseCommand extends Command {
         })
       } else {
         try {
+          console.info('Creating RPC Wallet Client')
           this.walletClient = await createRpcWalletClient({
             publicClient,
             transport,
