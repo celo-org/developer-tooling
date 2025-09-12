@@ -40,7 +40,7 @@ export default class TransferDollars extends ReleaseGoldBaseCommand {
 
     const accountAddress = isRevoked
       ? await releaseCeloContract.read.releaseOwner()
-      : await releaseCeloContract.read.beneficiary()    
+      : await releaseCeloContract.read.beneficiary()
 
     await newCheckBuilder(this)
       .isNotSanctioned(accountAddress)
