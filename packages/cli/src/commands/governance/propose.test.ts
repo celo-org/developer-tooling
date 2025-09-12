@@ -14,6 +14,10 @@ import { createMultisig, setupSafeContracts } from '../../test-utils/multisigUti
 import Approve from '../multisig/approve'
 import Propose from './propose'
 
+// Mock fetch for HTTP status tests
+const originalFetch = global.fetch
+jest.mock('cross-fetch')
+
 process.env.NO_SYNCCHECK = 'true'
 
 const randomAddress = '0x13B10327aA54Cb055B0ea4B85B59b4bcf64B3B92'
@@ -733,6 +737,64 @@ testWithAnvilL2(
         )
         expect(spyStart).toHaveBeenCalledWith('Sending Transaction: proposeTx')
         expect(spyStop).toHaveBeenCalled()
+      },
+      EXTRA_LONG_TIMEOUT_MS
+    )
+
+    test(
+      'fails when descriptionURL returns non-200 status',
+      async () => {
+        const mockFetch = require('cross-fetch')
+        mockFetch.mockResolvedValue({
+          status: 404
+        })
+
+        await expect(
+          testLocallyWithWeb3Node(
+            Propose,
+            [
+              '--from',
+              accounts[0],
+              '--deposit',
+              minDeposit,
+              '--jsonTransactions',
+              './exampleProposal.json',
+              '--descriptionURL',
+              'https://github.com/celo-org/governance/blob/main/CGPs/cgp-404.md',
+            ],
+            web3
+          )
+        ).rejects.toThrow('The provided description URL "https://github.com/celo-org/governance/blob/main/CGPs/cgp-404.md" does not return HTTP 200 status code.')
+
+        mockFetch.mockRestore()
+      },
+      EXTRA_LONG_TIMEOUT_MS
+    )
+
+    test(
+      'fails when descriptionURL fetch throws error',
+      async () => {
+        const mockFetch = require('cross-fetch')
+        mockFetch.mockRejectedValue(new Error('Network error'))
+
+        await expect(
+          testLocallyWithWeb3Node(
+            Propose,
+            [
+              '--from',
+              accounts[0],
+              '--deposit',
+              minDeposit,
+              '--jsonTransactions',
+              './exampleProposal.json',
+              '--descriptionURL',
+              'https://github.com/celo-org/governance/blob/main/CGPs/cgp-error.md',
+            ],
+            web3
+          )
+        ).rejects.toThrow('The provided description URL "https://github.com/celo-org/governance/blob/main/CGPs/cgp-error.md" does not return HTTP 200 status code.')
+
+        mockFetch.mockRestore()
       },
       EXTRA_LONG_TIMEOUT_MS
     )

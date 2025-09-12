@@ -100,6 +100,7 @@ export default class Propose extends BaseCommand {
     }
 
     await newCheckBuilder(this, proposer)
+      .descriptionUrlReturns200(res.flags.descriptionURL)
       .hasEnoughCelo(proposer, deposit)
       .exceedsProposalMinDeposit(deposit)
       .addConditionalCheck(`${account} is multisig signatory`, useMultiSig, () =>

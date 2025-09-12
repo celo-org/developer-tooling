@@ -681,6 +681,20 @@ class CheckBuilder {
       `${feeCurrency!} is not a valid fee currency.`
     )
   }
+  descriptionUrlReturns200 = (url: string) => {
+    return this.addCheck(
+      `Description URL returns HTTP 200`,
+      async () => {
+        try {
+          const response = await fetch(url, { method: 'HEAD' })
+          return response.status === 200
+        } catch (error) {
+          return false
+        }
+      },
+      `The provided description URL "${url}" does not return HTTP 200 status code.`
+    )
+  }
 
   async runChecks({ failFast = false }: { failFast?: boolean } = {}) {
     console.log(`Running Checks:`)
