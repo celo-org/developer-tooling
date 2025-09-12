@@ -1,7 +1,7 @@
 {
   "name": "@celo/celocli",
   "description": "CLI Tool for interacting with the Celo protocol",
-  "version": "7.1.0",
+  "version": "7.1.1-alpha.0",
   "author": "Celo",
   "license": "Apache-2.0",
   "repository": {
