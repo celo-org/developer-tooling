@@ -23,6 +23,7 @@ import {
   createWalletClient,
   extractChain,
   http,
+  isAddressEqual,
   MethodNotFoundRpcError,
   Transport,
   webSocket,
@@ -286,15 +287,14 @@ export abstract class BaseCommand extends Command {
       // NOTE: adjust logic here later to take in account commands which
       // don't use --from but --account or other flags to pass in which account
       // should be used
-      const account = res.flags.from as StrongAddress
+      const accountAddress = res.flags.from as StrongAddress
 
       if (res.flags.useLedger) {
         try {
           const ledgerOptions = await this.ledgerOptions()
-
           this.walletClient = await ledgerToWalletClient({
             ...ledgerOptions,
-            account,
+            account: accountAddress,
             walletClientOptions: {
               transport,
               chain: publicClient.chain,
@@ -311,18 +311,25 @@ export abstract class BaseCommand extends Command {
       } else if (res.flags.useAKV) {
         failWith('--useAKV flag is no longer supported')
       } else if (res.flags.privateKey) {
+        const accountFromPrivateKey = privateKeyToAccount(ensureLeading0x(res.flags.privateKey))
+        if (accountAddress && !isAddressEqual(accountAddress, accountFromPrivateKey.address)) {
+          failWith(
+            `The --from address ${accountAddress} does not match the address derived from the provided private key ${accountFromPrivateKey.address}.`
+          )
+        }
         this.walletClient = createWalletClient({
           transport,
           chain: publicClient.chain,
-          account: privateKeyToAccount(ensureLeading0x(res.flags.privateKey)),
+          account: accountFromPrivateKey,
         })
       } else {
         try {
+          console.info('Creating RPC Wallet Client')
           this.walletClient = await createRpcWalletClient({
             publicClient,
             transport,
             chain: publicClient.chain,
-            account,
+            account: accountAddress,
           })
         } catch (e) {
           let code: number | undefined

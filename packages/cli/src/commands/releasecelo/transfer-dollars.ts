@@ -1,4 +1,5 @@
 import { getReleaseCeloContract } from '@celo/actions/contracts/release-celo'
+import { isAddressEqual } from 'viem'
 import { newCheckBuilder } from '../../utils/checks'
 import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
@@ -37,19 +38,22 @@ export default class TransferDollars extends ReleaseGoldBaseCommand {
 
     const isRevoked = await releaseCeloContract.read.isRevoked()
 
-    const account = isRevoked
+    const accountAddress = isRevoked
       ? await releaseCeloContract.read.releaseOwner()
       : await releaseCeloContract.read.beneficiary()
 
     await newCheckBuilder(this)
-      .isNotSanctioned(account)
+      .isNotSanctioned(accountAddress)
       .isNotSanctioned(flags.to)
+      .addCheck(`Signing Account is ${isRevoked ? 'Release Owner' : 'Beneficiary'}`, () =>
+        isAddressEqual(accountAddress, wallet.account.address)
+      )
       .hasEnoughStable(flags.contract, flags.value, 'cUSD')
       .runChecks()
 
     await displayViemTx(
       'transfer',
-      releaseCeloContract.write.transfer([flags.to, flags.value], { account }),
+      releaseCeloContract.write.transfer([flags.to, flags.value]),
       client
     )
   }

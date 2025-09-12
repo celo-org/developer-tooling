@@ -6,6 +6,7 @@ import { Config, ux } from '@oclif/core'
 import http from 'http'
 import { tmpdir } from 'os'
 import { MethodNotFoundRpcError } from 'viem'
+import { privateKeyToAddress } from 'viem/accounts'
 import Web3 from 'web3'
 import { BaseCommand } from './base'
 import Set from './commands/config/set'
@@ -478,6 +479,76 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
         ],
       ]
     `)
+  })
+
+  describe('privateKey validation', () => {
+    it('should fail when --from address does not match private key', async () => {
+      const privateKey = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
+      const wrongFromAddress = '0x0000000000000000000000000000000000000001'
+
+      class TestPrivateKeyCommand extends BaseCommand {
+        static flags = {
+          ...BaseCommand.flags,
+          from: CustomFlags.address({ required: false }),
+        }
+        async run() {
+          await this.getWalletClient()
+        }
+      }
+
+      await expect(
+        testLocallyWithWeb3Node(
+          TestPrivateKeyCommand,
+          ['--privateKey', privateKey, '--from', wrongFromAddress],
+          web3
+        )
+      ).rejects.toThrowErrorMatchingInlineSnapshot(
+        `"The --from address ${wrongFromAddress} does not match the address derived from the provided private key 0x1Be31A94361a391bBaFB2a4CCd704F57dc04d4bb."`
+      )
+    })
+
+    it('should succeed when --from address matches private key', async () => {
+      const privateKey = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
+      const correctFromAddress = privateKeyToAddress(privateKey)
+
+      class TestPrivateKeyCommand extends BaseCommand {
+        static flags = {
+          ...BaseCommand.flags,
+          from: CustomFlags.address({ required: false }),
+        }
+        async run() {
+          const walletClient = await this.getWalletClient()
+          expect(walletClient.account.address.toLowerCase()).toBe(correctFromAddress.toLowerCase())
+        }
+      }
+
+      await expect(
+        testLocallyWithWeb3Node(
+          TestPrivateKeyCommand,
+          ['--privateKey', privateKey, '--from', correctFromAddress],
+          web3
+        )
+      ).resolves.not.toThrow()
+    })
+
+    it('should succeed when no --from address is provided with private key', async () => {
+      const privateKey = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
+
+      class TestPrivateKeyCommand extends BaseCommand {
+        static flags = {
+          ...BaseCommand.flags,
+          from: CustomFlags.address({ required: false }),
+        }
+        async run() {
+          const walletClient = await this.getWalletClient()
+          expect(walletClient.account.address).toBe('0x1Be31A94361a391bBaFB2a4CCd704F57dc04d4bb')
+        }
+      }
+
+      await expect(
+        testLocallyWithWeb3Node(TestPrivateKeyCommand, ['--privateKey', privateKey], web3)
+      ).resolves.not.toThrow()
+    })
   })
 
   describe('telemetry', () => {
