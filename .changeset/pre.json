@@ -29,5 +29,7 @@
     "@celo/typescript": "0.0.1",
     "@celo/viem-account-ledger": "1.2.1"
   },
-  "changesets": []
+  "changesets": [
+    "fine-bushes-bow"
+  ]
 }
