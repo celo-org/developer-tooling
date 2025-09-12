@@ -1,5 +1,11 @@
 # Changelog
 
+## 7.1.1-alpha.0
+
+### Patch Changes
+
+- [#713](https://github.com/celo-org/developer-tooling/pull/713) [`3d98e81`](https://github.com/celo-org/developer-tooling/commit/3d98e81431cdecbe8da7c72322bec44eef9268a2) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Fix releasecelo:transfer-dollars to load the correct account to send from
+
 ## 7.1.0
 
 ### Minor Changes

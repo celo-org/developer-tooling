@@ -109,7 +109,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/authorize.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/authorize.ts)_
+_See code: [src/commands/account/authorize.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/authorize.ts)_
 
 ## `celocli account:balance ARG1`
 
@@ -150,7 +150,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/balance.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/balance.ts)_
+_See code: [src/commands/account/balance.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/balance.ts)_
 
 ## `celocli account:claim-account ARG1`
 
@@ -221,7 +221,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/claim-account.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/claim-account.ts)_
+_See code: [src/commands/account/claim-account.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/claim-account.ts)_
 
 ## `celocli account:claim-domain ARG1`
 
@@ -288,7 +288,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/claim-domain.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/claim-domain.ts)_
+_See code: [src/commands/account/claim-domain.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/claim-domain.ts)_
 
 ## `celocli account:claim-keybase ARG1`
 
@@ -355,7 +355,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/claim-keybase.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/claim-keybase.ts)_
+_See code: [src/commands/account/claim-keybase.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/claim-keybase.ts)_
 
 ## `celocli account:claim-name ARG1`
 
@@ -422,7 +422,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/claim-name.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/claim-name.ts)_
+_See code: [src/commands/account/claim-name.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/claim-name.ts)_
 
 ## `celocli account:claim-rpc-url ARG1`
 
@@ -489,7 +489,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/claim-rpc-url.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/claim-rpc-url.ts)_
+_See code: [src/commands/account/claim-rpc-url.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/claim-rpc-url.ts)_
 
 ## `celocli account:claim-storage ARG1`
 
@@ -556,7 +556,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/claim-storage.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/claim-storage.ts)_
+_See code: [src/commands/account/claim-storage.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/claim-storage.ts)_
 
 ## `celocli account:create-metadata ARG1`
 
@@ -622,7 +622,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/create-metadata.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/create-metadata.ts)_
+_See code: [src/commands/account/create-metadata.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/create-metadata.ts)_
 
 ## `celocli account:deauthorize`
 
@@ -690,7 +690,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/deauthorize.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/deauthorize.ts)_
+_See code: [src/commands/account/deauthorize.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/deauthorize.ts)_
 
 ## `celocli account:delete-payment-delegation`
 
@@ -750,7 +750,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/delete-payment-delegation.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/delete-payment-delegation.ts)_
+_See code: [src/commands/account/delete-payment-delegation.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/delete-payment-delegation.ts)_
 
 ## `celocli account:get-metadata ARG1`
 
@@ -837,7 +837,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/get-metadata.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/get-metadata.ts)_
+_See code: [src/commands/account/get-metadata.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/get-metadata.ts)_
 
 ## `celocli account:get-payment-delegation`
 
@@ -925,7 +925,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/get-payment-delegation.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/get-payment-delegation.ts)_
+_See code: [src/commands/account/get-payment-delegation.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/get-payment-delegation.ts)_
 
 ## `celocli account:list`
 
@@ -982,7 +982,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/list.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/list.ts)_
+_See code: [src/commands/account/list.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/list.ts)_
 
 ## `celocli account:lock ARG1`
 
@@ -1041,7 +1041,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/lock.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/lock.ts)_
+_See code: [src/commands/account/lock.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/lock.ts)_
 
 ## `celocli account:new`
 
@@ -1133,7 +1133,7 @@ FLAG DESCRIPTIONS
     path. (use changeIndex, and addressIndex flags to change BIP44 positions 4 and 5)
 ```
 
-_See code: [src/commands/account/new.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/new.ts)_
+_See code: [src/commands/account/new.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/new.ts)_
 
 ## `celocli account:offchain-read ARG1`
 
@@ -1208,7 +1208,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/offchain-read.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/offchain-read.ts)_
+_See code: [src/commands/account/offchain-read.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/offchain-read.ts)_
 
 ## `celocli account:offchain-write`
 
@@ -1285,7 +1285,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/offchain-write.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/offchain-write.ts)_
+_See code: [src/commands/account/offchain-write.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/offchain-write.ts)_
 
 ## `celocli account:proof-of-possession`
 
@@ -1349,7 +1349,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/proof-of-possession.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/proof-of-possession.ts)_
+_See code: [src/commands/account/proof-of-possession.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/proof-of-possession.ts)_
 
 ## `celocli account:register`
 
@@ -1415,7 +1415,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/register.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/register.ts)_
+_See code: [src/commands/account/register.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/register.ts)_
 
 ## `celocli account:register-data-encryption-key`
 
@@ -1479,7 +1479,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/register-data-encryption-key.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/register-data-encryption-key.ts)_
+_See code: [src/commands/account/register-data-encryption-key.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/register-data-encryption-key.ts)_
 
 ## `celocli account:register-metadata`
 
@@ -1573,7 +1573,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/register-metadata.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/register-metadata.ts)_
+_See code: [src/commands/account/register-metadata.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/register-metadata.ts)_
 
 ## `celocli account:set-name`
 
@@ -1637,7 +1637,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/set-name.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/set-name.ts)_
+_See code: [src/commands/account/set-name.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/set-name.ts)_
 
 ## `celocli account:set-payment-delegation`
 
@@ -1705,7 +1705,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/set-payment-delegation.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/set-payment-delegation.ts)_
+_See code: [src/commands/account/set-payment-delegation.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/set-payment-delegation.ts)_
 
 ## `celocli account:set-wallet`
 
@@ -1778,7 +1778,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/set-wallet.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/set-wallet.ts)_
+_See code: [src/commands/account/set-wallet.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/set-wallet.ts)_
 
 ## `celocli account:show ARG1`
 
@@ -1813,7 +1813,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/show.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/show.ts)_
+_See code: [src/commands/account/show.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/show.ts)_
 
 ## `celocli account:show-claimed-accounts ARG1`
 
@@ -1869,7 +1869,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/show-claimed-accounts.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/show-claimed-accounts.ts)_
+_See code: [src/commands/account/show-claimed-accounts.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/show-claimed-accounts.ts)_
 
 ## `celocli account:show-metadata ARG1`
 
@@ -1915,7 +1915,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/show-metadata.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/show-metadata.ts)_
+_See code: [src/commands/account/show-metadata.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/show-metadata.ts)_
 
 ## `celocli account:unlock ARG1`
 
@@ -1985,7 +1985,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/unlock.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/unlock.ts)_
+_See code: [src/commands/account/unlock.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/unlock.ts)_
 
 ## `celocli account:verify-proof-of-possession`
 
@@ -2053,4 +2053,4 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/account/verify-proof-of-possession.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.0/packages/cli/src/commands/account/verify-proof-of-possession.ts)_
+_See code: [src/commands/account/verify-proof-of-possession.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/account/verify-proof-of-possession.ts)_
