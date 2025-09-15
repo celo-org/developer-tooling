@@ -746,7 +746,7 @@ testWithAnvilL2(
       async () => {
         const mockFetch = require('cross-fetch')
         mockFetch.mockResolvedValue({
-          status: 404
+          status: 404,
         })
 
         await expect(
@@ -764,7 +764,9 @@ testWithAnvilL2(
             ],
             web3
           )
-        ).rejects.toThrow('The provided description URL "https://github.com/celo-org/governance/blob/main/CGPs/cgp-404.md" does not return HTTP 200 status code.')
+        ).rejects.toThrow(
+          'The provided description URL "https://github.com/celo-org/governance/blob/main/CGPs/cgp-404.md" does not return HTTP 200 status code.'
+        )
 
         mockFetch.mockRestore()
       },
@@ -792,7 +794,9 @@ testWithAnvilL2(
             ],
             web3
           )
-        ).rejects.toThrow('The provided description URL "https://github.com/celo-org/governance/blob/main/CGPs/cgp-error.md" does not return HTTP 200 status code.')
+        ).rejects.toThrow(
+          'The provided description URL "https://github.com/celo-org/governance/blob/main/CGPs/cgp-error.md" does not return HTTP 200 status code.'
+        )
 
         mockFetch.mockRestore()
       },
