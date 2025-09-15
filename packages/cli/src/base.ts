@@ -1,5 +1,4 @@
 import { type PublicCeloClient, type WalletCeloClient } from '@celo/actions'
-import { celoBaklava } from '@celo/actions/chains'
 import {
   CELO_DERIVATION_PATH_BASE,
   ensureLeading0x,
@@ -29,7 +28,7 @@ import {
   webSocket,
 } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
-import { celo, celoAlfajores, celoSepolia } from 'viem/chains'
+import { celo, celoSepolia } from 'viem/chains'
 import { ipc } from 'viem/node'
 import Web3 from 'web3'
 import createRpcWalletClient from './packages-to-be/rpc-client'
@@ -235,12 +234,10 @@ export abstract class BaseCommand extends Command {
       })
       const chainId = await intermediateClient.getChainId()
       const extractedChain = extractChain({
-        chains: [celo, celoAlfajores, celoSepolia, celoBaklava],
+        chains: [celo, celoSepolia],
         id: chainId as
           | typeof celo.id
-          | typeof celoAlfajores.id
           | typeof celoSepolia.id
-          | typeof celoBaklava.id,
       })
 
       if (extractedChain) {

@@ -94,12 +94,6 @@
       "import": "{ getGasPriceOnCelo }"
     },
     {
-      "name": "import * from '@celo/actions/chains' (esm)",
-      "path": "dist/mjs/chains.js",
-      "limit": "2 kB",
-      "import": "*"
-    },
-    {
       "name": "import { getAccountsContract } from '@celo/actions/contracts/accounts' (esm)",
       "path": "dist/mjs/contracts/accounts.js",
       "limit": "50 kB",
