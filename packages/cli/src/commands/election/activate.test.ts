@@ -40,8 +40,8 @@ testWithAnvilL2(
   (web3: Web3) => {
     beforeEach(async () => {
       // need to set multical deployment on the address it was found on alfajores
-      // since this test impersonates the old alfajores chain id. Even though it runs on anvil 
-      await deployMultiCall(web3, "0xcA11bde05977b3631167028862bE2a173976CA11")
+      // since this test impersonates the old alfajores chain id. Even though it runs on anvil
+      await deployMultiCall(web3, '0xcA11bde05977b3631167028862bE2a173976CA11')
     })
 
     const timers: ReturnType<typeof setTimeout>[] = []
