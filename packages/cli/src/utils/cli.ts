@@ -1,23 +1,19 @@
 import {
   CeloTransactionObject,
   CeloTx,
-  Connection,
   EventLog,
   parseDecodedParams,
-  TransactionResult,
+  TransactionResult
 } from '@celo/connect'
 import { LockedGoldRequirements } from '@celo/contractkit/lib/wrappers/Validators'
 import { Errors, ux } from '@oclif/core'
 import { TransactionResult as SafeTransactionResult } from '@safe-global/types-kit'
 import BigNumber from 'bignumber.js'
 import chalk from 'chalk'
-import { ethers } from 'ethers'
-import { formatEther } from 'ethers/lib/utils'
 import humanizeDuration from 'humanize-duration'
-import { convertEthersToCeloTx } from './mento-broker-adaptor'
 
 import { PublicCeloClient } from '@celo/actions'
-import { Abi, Address, ContractEventName, decodeEventLog, DecodeEventLogReturnType } from 'viem'
+import { Abi, Address, ContractEventName, decodeEventLog, DecodeEventLogReturnType, formatEther } from 'viem'
 
 const CLIError = Errors.CLIError
 
@@ -134,26 +130,6 @@ export async function displayViemTx<const abi extends Abi | undefined = undefine
   }
 }
 
-// allows building a tx with ethers but signing and sending with celo Connection
-// cant use displaySendTx because it expects a CeloTransactionObject which isnt really possible to convert to from ethers
-export async function displaySendEthersTxViaCK(
-  name: string,
-  txData: ethers.providers.TransactionRequest,
-  connection: Connection,
-  defaultParams: { gas?: string } = {}
-) {
-  ux.action.start(`Sending Transaction: ${name}`)
-  const tx = convertEthersToCeloTx(txData, defaultParams)
-  const txWithPrices = await connection.setFeeMarketGas(tx)
-  try {
-    const result = await connection.sendTransaction(txWithPrices)
-    await innerDisplaySendTx(name, result)
-  } catch (e) {
-    ux.action.stop(`failed: ${(e as Error).message}`)
-    throw e
-  }
-}
-
 export async function displaySendTx<A>(
   name: string,
   txObj: CeloTransactionObject<A>,
@@ -263,7 +239,7 @@ export function getCurrentTimestamp() {
 }
 
 export function humanizeRequirements(requirements: LockedGoldRequirements) {
-  const requiredCelo = formatEther(requirements.value.toFixed())
+  const requiredCelo = formatEther(BigInt(requirements.value.toFixed()))
   const requiredDays = humanizeDuration(requirements.duration.toNumber() * 1000, {
     round: true,
     maxDecimalPoints: 1,

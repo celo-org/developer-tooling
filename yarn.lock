@@ -1790,7 +1790,6 @@ __metadata:
     "@celo/wallet-local": "npm:^8.0.1"
     "@ethereumjs/util": "npm:8.0.5"
     "@ledgerhq/hw-transport-node-hid": "npm:^6.28.5"
-    "@mento-protocol/mento-sdk": "npm:^1.0.1"
     "@oclif/core": "npm:^3.27.0"
     "@oclif/plugin-autocomplete": "npm:^3.2.0"
     "@oclif/plugin-commands": "npm:^4.1.21"
@@ -1813,7 +1812,6 @@ __metadata:
     command-exists: "npm:^1.2.9"
     cross-fetch: "npm:3.1.5"
     debug: "npm:^4.1.1"
-    ethers: "npm:5"
     fs-extra: "npm:^8.1.0"
     humanize-duration: "npm:^3.32.1"
     inquirer: "npm:^7.3.3"
@@ -4497,24 +4495,6 @@ __metadata:
     globby: "npm:^11.0.0"
     read-yaml-file: "npm:^1.1.0"
   checksum: 4912e002199ff3974ec48586376a04c5f1815a4faa5f4d36b0698838eec143c9d4e3d42c41e0de009f48a1e2251802ed63c1311ab44de225b50102f85919a248
-  languageName: node
-  linkType: hard
-
-"@mento-protocol/mento-core-ts@npm:^0.2.0":
-  version: 0.2.2
-  resolution: "@mento-protocol/mento-core-ts@npm:0.2.2"
-  checksum: d4dfd636c4661edc5864ce78e44f79742cbf4e3f90594391b01aa9e351d14615d2b274f791b8529f6cfdeb13d025ace29a2799c529e6c124756ffb7049352c83
-  languageName: node
-  linkType: hard
-
-"@mento-protocol/mento-sdk@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "@mento-protocol/mento-sdk@npm:1.0.1"
-  dependencies:
-    "@mento-protocol/mento-core-ts": "npm:^0.2.0"
-  peerDependencies:
-    ethers: ^5.7
-  checksum: 64db5866ac2f562286f482775951218ca79f69c7e7edd1ecf350d55bd97ebd009f159e34b5edc5296663a260579328cd7fa59eb7e2aa10bf9b646abc50b08ede
   languageName: node
   linkType: hard
 
@@ -10013,7 +9993,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ethers@npm:5, ethers@npm:5.7.2":
+"ethers@npm:5.7.2":
   version: 5.7.2
   resolution: "ethers@npm:5.7.2"
   dependencies:
