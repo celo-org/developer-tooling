@@ -20,11 +20,6 @@
       "types": "./dist/cjs/multicontract-interactions/stake/index.d.ts",
       "import": "./dist/mjs/multicontract-interactions/stake/index.js",
       "require": "./dist/cjs/multicontract-interactions/stake/index.js"
-    },
-    "./chains": {
-      "types": "./dist/cjs/chains.d.ts",
-      "import": "./dist/mjs/chains.js",
-      "require": "./dist/cjs/chains.js"
     }
   },
   "author": "cLabs",

@@ -15,7 +15,7 @@ import {
   WalletActions,
   walletActions,
 } from 'viem'
-import { celo, celoAlfajores } from 'viem/chains'
+import { celo, celoSepolia } from 'viem/chains'
 import { ANVIL_PORT, DEFAULT_OWNER_ADDRESS } from '../anvil-test'
 import {
   TEST_BALANCE,
@@ -24,12 +24,11 @@ import {
   TEST_GAS_PRICE,
   TEST_MNEMONIC,
 } from '../test-utils'
-import { celoBaklava } from './chains'
 import { testWithViem } from './test-utils'
 
 let instance: null | Anvil = null
 
-type chains = typeof celo | typeof celoAlfajores | typeof celoBaklava
+type chains = typeof celo | typeof celoSepolia 
 export type TestClientExtended<account extends Account | undefined = Account | undefined> = Client<
   HttpTransport,
   chains,
@@ -174,5 +173,6 @@ export {
   setNextBlockTimestamp as viem_setNextBlockTimestamp,
   stopImpersonatingAccount as viem_stopImpersonatingAccount,
   testWithAnvil as viem_testWithAnvil,
-  withImpersonatedAccount as viem_withImpersonatedAccount,
+  withImpersonatedAccount as viem_withImpersonatedAccount
 }
+
