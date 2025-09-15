@@ -3,7 +3,7 @@ import {
   CeloTx,
   EventLog,
   parseDecodedParams,
-  TransactionResult
+  TransactionResult,
 } from '@celo/connect'
 import { LockedGoldRequirements } from '@celo/contractkit/lib/wrappers/Validators'
 import { Errors, ux } from '@oclif/core'
@@ -13,7 +13,14 @@ import chalk from 'chalk'
 import humanizeDuration from 'humanize-duration'
 
 import { PublicCeloClient } from '@celo/actions'
-import { Abi, Address, ContractEventName, decodeEventLog, DecodeEventLogReturnType, formatEther } from 'viem'
+import {
+  Abi,
+  Address,
+  ContractEventName,
+  decodeEventLog,
+  DecodeEventLogReturnType,
+  formatEther,
+} from 'viem'
 
 const CLIError = Errors.CLIError
 

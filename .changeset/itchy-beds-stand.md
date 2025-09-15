@@ -3,3 +3,5 @@
 ---
 
 remove all exchange:\*\*\* commands.
+
+We recommended swapping with mento app instead
