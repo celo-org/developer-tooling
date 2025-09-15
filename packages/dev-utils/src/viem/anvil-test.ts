@@ -28,7 +28,7 @@ import { testWithViem } from './test-utils'
 
 let instance: null | Anvil = null
 
-type chains = typeof celo | typeof celoSepolia 
+type chains = typeof celo | typeof celoSepolia
 export type TestClientExtended<account extends Account | undefined = Account | undefined> = Client<
   HttpTransport,
   chains,
@@ -173,6 +173,5 @@ export {
   setNextBlockTimestamp as viem_setNextBlockTimestamp,
   stopImpersonatingAccount as viem_stopImpersonatingAccount,
   testWithAnvil as viem_testWithAnvil,
-  withImpersonatedAccount as viem_withImpersonatedAccount
+  withImpersonatedAccount as viem_withImpersonatedAccount,
 }
-

@@ -28,8 +28,7 @@ export default class Set extends BaseCommand {
   static examples = [
     'set --node celo # alias for `forno`',
     'set --node forno # alias for https://forno.celo.org',
-    'set --node baklava # alias for https://baklava-forno.celo-testnet.org',
-    'set --node alfajores # alias for https://alfajores-forno.celo-testnet.org',
+    'set --node celo-sepolia # alias for https://forno.celo-sepolia.celo-testnet.org',
     'set --node localhost # alias for `local`',
     'set --node local # alias for http://localhost:8545',
     'set --node ws://localhost:2500',

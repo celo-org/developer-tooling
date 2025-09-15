@@ -8,11 +8,11 @@ Hello devs 🌱 this is a migration path away from contractkit. This aims to giv
 - import Web3 from "web3";
 - import { newKitFromWeb3 } from "@celo/contractkit";
 
-- const web3 = new Web3("https://alfajores-forno.celo-testnet.org");
+- const web3 = new Web3("https://forno.celo-sepolia.celo-testnet.org");
 - const kit = newKitFromWeb3(web3);
 + import { providers } from 'ethers'
 +
-+ const provider = new providers.JsonRpcProvider('https://alfajores-forno.celo-testnet.org')
++ const provider = new providers.JsonRpcProvider('https://forno.celo-sepolia.celo-testnet.org')
 ```
 
 ## Basic usage

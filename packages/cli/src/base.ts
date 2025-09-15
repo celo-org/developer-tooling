@@ -55,17 +55,12 @@ export abstract class BaseCommand extends Command {
       description: `Can be a full url like https://forno.celo.org or an alias. default: http://localhost:8545 
       Alias options:
       local, localhost => 'http://localhost:8545'
-      alfajores => Celo Alfajores Testnet,
       testnet, celo-sepolia => Celo Sepolia Testnet, 
       mainnet, celo, forno => Celo Mainnet chain',
       `,
       hidden: false,
       parse: async (nodeUrl: string) => {
         switch (nodeUrl) {
-          case 'alfajores':
-            return celoAlfajores.rpcUrls.default.http[0]
-          case 'baklava':
-            return 'https://baklava-forno.celo-testnet.org'
           case 'celo':
           case 'forno':
           case 'mainnet':

@@ -8,7 +8,7 @@ Hello devs 🌱 this is a migration path away from contractkit. This aims to giv
 - import Web3 from "web3";
 - import { newKitFromWeb3 } from "@celo/contractkit";
 -
-- const web3 = new Web3("https://alfajores-forno.celo-testnet.org");
+- const web3 = new Web3("https://forno.celo-sepolia.celo-testnet.org");
 - const kit = newKitFromWeb3(web3);
 + import { createPublicClient, http } from 'viem'
 + import { celo, celoAlfajores } from 'viem/chains'
@@ -165,7 +165,7 @@ While contractkit didn't directly support multicall, you could use libraries suc
 
 ```ts
 import Multicall from '@dopex-io/web3-multicall'
-const MULTICALL_ADDRESS = '0xcA11bde05977b3631167028862bE2a173976CA11' // same on mainnet and alfajores
+const MULTICALL_ADDRESS = '0xcA11bde05977b3631167028862bE2a173976CA11' // same on mainnet and celo-sepolia
 const multicall = new Multicall({
   provider,
   chainId,
