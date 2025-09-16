@@ -48,7 +48,6 @@
     "@celo/cryptographic-utils": "^6.0.0",
     "@celo/explorer": "^5.0.17",
     "@celo/governance": "^5.1.8",
-    "@celo/identity": "^5.1.2",
     "@celo/metadata-claims": "^1.0.4",
     "@celo/utils": "^8.0.3",
     "@celo/viem-account-ledger": "^1.2.1",
