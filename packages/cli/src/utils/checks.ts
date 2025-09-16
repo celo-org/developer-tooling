@@ -686,7 +686,7 @@ class CheckBuilder {
       `URL exists: `,
       async () => {
         try {
-          const response = await fetch(url, { method: 'HEAD' })
+          const response = await fetch(url)
           return response.status === 200
         } catch (error) {
           return false
