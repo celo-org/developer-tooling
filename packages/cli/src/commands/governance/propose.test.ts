@@ -8,11 +8,18 @@ import { ux } from '@oclif/core'
 import Safe, { getSafeAddressFromDeploymentTx } from '@safe-global/protocol-kit'
 import * as fs from 'fs'
 import Web3 from 'web3'
-import { EXTRA_LONG_TIMEOUT_MS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import {
+  EXTRA_LONG_TIMEOUT_MS,
+  stripAnsiCodesFromNestedArray,
+  testLocallyWithWeb3Node,
+} from '../../test-utils/cliUtils'
 import { deployMultiCall } from '../../test-utils/multicall'
 import { createMultisig, setupSafeContracts } from '../../test-utils/multisigUtils'
 import Approve from '../multisig/approve'
 import Propose from './propose'
+
+// Mock fetch for HTTP status tests
+jest.mock('cross-fetch')
 
 process.env.NO_SYNCCHECK = 'true'
 
@@ -166,6 +173,10 @@ testWithAnvilL2(
       // @ts-expect-error
       goldTokenContract = goldToken.contract
       minDeposit = (await governance.minDeposit()).toFixed()
+      const mockFetch = require('cross-fetch')
+      mockFetch.mockResolvedValue({
+        status: 200,
+      })
     })
 
     test(
@@ -733,6 +744,87 @@ testWithAnvilL2(
         )
         expect(spyStart).toHaveBeenCalledWith('Sending Transaction: proposeTx')
         expect(spyStop).toHaveBeenCalled()
+      },
+      EXTRA_LONG_TIMEOUT_MS
+    )
+
+    test(
+      'fails when descriptionURL returns non-200 status',
+      async () => {
+        const mockFetch = require('cross-fetch')
+        mockFetch.mockResolvedValue({
+          status: 404,
+        })
+
+        const mockLog = jest.spyOn(console, 'log').mockImplementation(() => {})
+
+        await expect(
+          testLocallyWithWeb3Node(
+            Propose,
+            [
+              '--from',
+              accounts[0],
+              '--deposit',
+              minDeposit,
+              '--jsonTransactions',
+              './exampleProposal.json',
+              '--descriptionURL',
+              'https://github.com/celo-org/governance/blob/main/CGPs/cgp-404.md',
+            ],
+
+            web3
+          )
+        ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
+        expect(stripAnsiCodesFromNestedArray(mockLog.mock.calls)).toMatchInlineSnapshot(`
+          [
+            [
+              "Running Checks:",
+            ],
+            [
+              "   ✘  URL exists:  The provided URL "https://github.com/celo-org/governance/blob/main/CGPs/cgp-404.md" does not exist or is not reachable.",
+            ],
+            [
+              "   ✔  Account has at least 100 CELO ",
+            ],
+            [
+              "   ✔  Deposit is greater than or equal to governance proposal minDeposit ",
+            ],
+          ]
+        `)
+        mockFetch.mockRestore()
+        mockLog.mockRestore()
+      },
+      EXTRA_LONG_TIMEOUT_MS
+    )
+
+    test(
+      'fails when descriptionURL fetch throws error',
+      async () => {
+        const mockFetch = require('cross-fetch')
+        mockFetch.mockRejectedValue(new Error('Network error'))
+
+        await expect(
+          testLocallyWithWeb3Node(
+            Propose,
+            [
+              '--from',
+              accounts[0],
+              '--deposit',
+              minDeposit,
+              '--jsonTransactions',
+              './exampleProposal.json',
+              '--descriptionURL',
+              'https://github.com/celo-org/governance/blob/main/CGPs/cgp-error.md',
+            ],
+
+            web3
+          )
+        ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
+        const mockLog = jest.spyOn(console, 'log').mockImplementation(() => {})
+
+        expect(stripAnsiCodesFromNestedArray(mockLog.mock.calls)).toMatchInlineSnapshot(`[]`)
+        mockLog.mockRestore()
+        mockFetch.mockRestore()
       },
       EXTRA_LONG_TIMEOUT_MS
     )

@@ -59,6 +59,7 @@ export default class Propose extends BaseCommand {
     const kit = await this.getKit()
     const res = await this.parse(Propose)
     const account = res.flags.from
+
     kit.defaultAccount = account
     const deposit = new BigNumber(res.flags.deposit)
     if (res.flags.useMultiSig && !res.flags.for) {
@@ -81,6 +82,19 @@ export default class Propose extends BaseCommand {
         ? res.flags.safeAddress!
         : account
 
+    await newCheckBuilder(this, proposer)
+      .urlDestinationExists(res.flags.descriptionURL)
+      .hasEnoughCelo(proposer, deposit)
+      .exceedsProposalMinDeposit(deposit)
+      .addConditionalCheck(`${account} is multisig signatory`, useMultiSig, () =>
+        proposerMultiSig!.isOwner(account)
+      )
+      .addConditionalCheck(`${account} is a safe owner`, useSafe, async () => {
+        const safe = await createSafeFromWeb3(await this.getWeb3(), account, proposer)
+        return safe.isOwner(account)
+      })
+      .runChecks()
+
     const builder = new ProposalBuilder(kit)
 
     if (res.flags.afterExecutingID) {
@@ -98,18 +112,6 @@ export default class Propose extends BaseCommand {
     if (!res.flags.noInfo) {
       printValueMapRecursive(await proposalToJSON(kit, proposal, builder.registryAdditions))
     }
-
-    await newCheckBuilder(this, proposer)
-      .hasEnoughCelo(proposer, deposit)
-      .exceedsProposalMinDeposit(deposit)
-      .addConditionalCheck(`${account} is multisig signatory`, useMultiSig, () =>
-        proposerMultiSig!.isOwner(account)
-      )
-      .addConditionalCheck(`${account} is a safe owner`, useSafe, async () => {
-        const safe = await createSafeFromWeb3(await this.getWeb3(), account, proposer)
-        return safe.isOwner(account)
-      })
-      .runChecks()
 
     if (!res.flags.force) {
       const ok = await checkProposal(proposal, kit)

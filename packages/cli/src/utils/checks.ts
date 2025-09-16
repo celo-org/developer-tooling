@@ -681,6 +681,20 @@ class CheckBuilder {
       `${feeCurrency!} is not a valid fee currency.`
     )
   }
+  urlDestinationExists = (url: string) => {
+    return this.addCheck(
+      `URL exists: `,
+      async () => {
+        try {
+          const response = await fetch(url)
+          return response.status === 200
+        } catch (error) {
+          return false
+        }
+      },
+      `The provided URL "${url}" does not exist or is not reachable.`
+    )
+  }
 
   async runChecks({ failFast = false }: { failFast?: boolean } = {}) {
     console.log(`Running Checks:`)
