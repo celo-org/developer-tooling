@@ -781,7 +781,7 @@ testWithAnvilL2(
               "Running Checks:",
             ],
             [
-              "   ✘  URL gives HTTP 200 status:  The provided URL "https://github.com/celo-org/governance/blob/main/CGPs/cgp-404.md" does not exist or is not reachable.",
+              "   ✘  URL exists:  The provided URL "https://github.com/celo-org/governance/blob/main/CGPs/cgp-404.md" does not exist or is not reachable.",
             ],
             [
               "   ✔  Account has at least 100 CELO ",
