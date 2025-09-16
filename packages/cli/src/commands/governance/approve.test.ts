@@ -13,7 +13,6 @@ import Safe, {
   PredictedSafeProps,
   SafeAccountConfig,
 } from '@safe-global/protocol-kit'
-import { celoAlfajores } from 'viem/chains'
 import Web3 from 'web3'
 import { changeMultiSigOwner } from '../../test-utils/chain-setup'
 import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
@@ -29,9 +28,9 @@ testWithAnvilL2(
     const HOTFIX_HASH = '0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d'
     const HOTFIX_BUFFER = hexToBuffer(HOTFIX_HASH)
     beforeEach(async () => {
-      // need to set multical deployment on the address it is found on alfajores
-      // since this test impersonates alfajores chain id
-      await deployMultiCall(web3, celoAlfajores.contracts.multicall3.address)
+      // need to set multical deployment on the address it was found on alfajores
+      // since this test impersonates the old alfajores chain id
+      await deployMultiCall(web3, '0xcA11bde05977b3631167028862bE2a173976CA11')
       jest.spyOn(console, 'log').mockImplementation(() => {
         // noop
       })

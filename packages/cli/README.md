@@ -113,17 +113,4 @@ Go to the `developer-tooling` root directory and
 
 If all works well, navigate to `packages/cli`.
 
-> I've got the cli built successfully but the running the `cli` yields: `Error: Returned values aren't valid, did it run Out of Gas?`.
-
-When running the `cli` against a full node, this can mean that the contract artifacts are out of date.
-Solution: switch to the `alfajores` branch and build the `developer-tooling`.
-
-Go to the `developer-tooling` root directory and
-
-```bash
-> git checkout alfajores
-> yarn
-> yarn build
-> cd packages/cli
-> ./bin/run account:balance $CELO_ACCOUNT_ADDRESS
-```
+`yarn celocli COMMAND` 

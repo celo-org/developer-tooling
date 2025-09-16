@@ -7,7 +7,6 @@ import { timeTravel } from '@celo/dev-utils/ganache-test'
 import { ProposalBuilder } from '@celo/governance'
 import Safe, { getSafeAddressFromDeploymentTx } from '@safe-global/protocol-kit'
 import BigNumber from 'bignumber.js'
-import { celoAlfajores } from 'viem/chains'
 import Web3 from 'web3'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import { deployMultiCall } from '../../test-utils/multicall'
@@ -32,7 +31,7 @@ testWithAnvilL2(
       logMock.mockClear().mockImplementation()
       errorMock.mockClear().mockImplementation()
 
-      await deployMultiCall(web3, celoAlfajores.contracts.multicall3.address)
+      await deployMultiCall(web3, '0xcA11bde05977b3631167028862bE2a173976CA11')
 
       accounts = (await web3.eth.getAccounts()) as StrongAddress[]
       kit.defaultAccount = accounts[0]

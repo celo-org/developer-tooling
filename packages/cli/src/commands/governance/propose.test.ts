@@ -7,7 +7,6 @@ import { setBalance, testWithAnvilL2, withImpersonatedAccount } from '@celo/dev-
 import { ux } from '@oclif/core'
 import Safe, { getSafeAddressFromDeploymentTx } from '@safe-global/protocol-kit'
 import * as fs from 'fs'
-import { celoAlfajores } from 'viem/chains'
 import Web3 from 'web3'
 import { EXTRA_LONG_TIMEOUT_MS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import { deployMultiCall } from '../../test-utils/multicall'
@@ -156,9 +155,9 @@ testWithAnvilL2(
     let accounts: StrongAddress[] = []
 
     beforeEach(async () => {
-      // need to set multical deployment on the address it is found on alfajores
-      // since this test impersonates alfajores chain id
-      await deployMultiCall(web3, celoAlfajores.contracts.multicall3.address)
+      // need to set multical deployment on the address it was found on alfajores
+      // since this test impersonates the old alfajores chain id
+      await deployMultiCall(web3, '0xcA11bde05977b3631167028862bE2a173976CA11')
 
       accounts = (await web3.eth.getAccounts()) as StrongAddress[]
       kit.defaultAccount = accounts[0]

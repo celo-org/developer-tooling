@@ -59,20 +59,12 @@ describe('flags', () => {
     // copied from Commaand.run to load config
     config = await Config.load(require.main?.filename || __dirname)
   })
-  describe('--node  alfajores', () => {
-    it('it connects to 44787', async () => {
-      const command = new BasicCommand(['--node', 'alfajores'], config)
+  describe('--node celo-sepolia', () => {
+    it('it connects to 11_142_220', async () => {
+      const command = new BasicCommand(['--node', 'celo-sepolia'], config)
       const runnerWeb3 = await command.getWeb3()
       const connectdChain = await runnerWeb3.eth.getChainId()
-      expect(connectdChain).toBe(44787)
-    })
-  })
-  describe('--node  baklava', () => {
-    it('it connects to 62320', async () => {
-      const command = new BasicCommand(['--node', 'baklava'], config)
-      const runnerWeb3 = await command.getWeb3()
-      const connectdChain = await runnerWeb3.eth.getChainId()
-      expect(connectdChain).toBe(62320)
+      expect(connectdChain).toBe(11_142_220)
     })
   })
   describe.each(['celo', 'mainnet'])('--node  %s', (node) => {
@@ -84,14 +76,14 @@ describe('flags', () => {
     })
   })
   describe('--node websockets', () => {
-    it('it connects to 62320', async () => {
+    it('it connects to 11_142_220', async () => {
       const command = new BasicCommand(
-        ['--node', 'wss://baklava-forno.celo-testnet.org/ws'],
+        ['--node', 'wss://forno.celo-sepolia.celo-testnet.org/ws'],
         config
       )
       const runnerClient = await command.getPublicClient()
       const connectdChain = runnerClient.chain
-      expect(connectdChain.id).toBe(62320)
+      expect(connectdChain.id).toBe(11_142_220)
     })
   })
   describe('--help', () => {

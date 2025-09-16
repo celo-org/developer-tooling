@@ -20,11 +20,6 @@
       "types": "./dist/cjs/multicontract-interactions/stake/index.d.ts",
       "import": "./dist/mjs/multicontract-interactions/stake/index.js",
       "require": "./dist/cjs/multicontract-interactions/stake/index.js"
-    },
-    "./chains": {
-      "types": "./dist/cjs/chains.d.ts",
-      "import": "./dist/mjs/chains.js",
-      "require": "./dist/cjs/chains.js"
     }
   },
   "author": "cLabs",
@@ -97,12 +92,6 @@
       "path": "dist/mjs/index.js",
       "limit": "1 kB",
       "import": "{ getGasPriceOnCelo }"
-    },
-    {
-      "name": "import * from '@celo/actions/chains' (esm)",
-      "path": "dist/mjs/chains.js",
-      "limit": "2 kB",
-      "import": "*"
     },
     {
       "name": "import { getAccountsContract } from '@celo/actions/contracts/accounts' (esm)",

@@ -5,10 +5,9 @@ import {
   type Transport,
   type WalletClient,
 } from 'viem'
-import type { celo, celoAlfajores, celoSepolia } from 'viem/chains'
-import type { celoBaklava } from './chains.js'
+import type { celo, celoSepolia } from 'viem/chains'
 
-type CeloChain = typeof celo | typeof celoAlfajores | typeof celoBaklava | typeof celoSepolia
+type CeloChain = typeof celo | typeof celoSepolia
 
 export type CeloClient = Client<Transport, CeloChain>
 

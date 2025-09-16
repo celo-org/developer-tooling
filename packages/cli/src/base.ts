@@ -1,5 +1,4 @@
 import { type PublicCeloClient, type WalletCeloClient } from '@celo/actions'
-import { celoBaklava } from '@celo/actions/chains'
 import {
   CELO_DERIVATION_PATH_BASE,
   ensureLeading0x,
@@ -29,7 +28,7 @@ import {
   webSocket,
 } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
-import { celo, celoAlfajores, celoSepolia } from 'viem/chains'
+import { celo, celoSepolia } from 'viem/chains'
 import { ipc } from 'viem/node'
 import Web3 from 'web3'
 import createRpcWalletClient from './packages-to-be/rpc-client'
@@ -55,17 +54,12 @@ export abstract class BaseCommand extends Command {
       description: `Can be a full url like https://forno.celo.org or an alias. default: http://localhost:8545 
       Alias options:
       local, localhost => 'http://localhost:8545'
-      alfajores => Celo Alfajores Testnet,
       testnet, celo-sepolia => Celo Sepolia Testnet, 
       mainnet, celo, forno => Celo Mainnet chain',
       `,
       hidden: false,
       parse: async (nodeUrl: string) => {
         switch (nodeUrl) {
-          case 'alfajores':
-            return celoAlfajores.rpcUrls.default.http[0]
-          case 'baklava':
-            return 'https://baklava-forno.celo-testnet.org'
           case 'celo':
           case 'forno':
           case 'mainnet':
@@ -240,12 +234,8 @@ export abstract class BaseCommand extends Command {
       })
       const chainId = await intermediateClient.getChainId()
       const extractedChain = extractChain({
-        chains: [celo, celoAlfajores, celoSepolia, celoBaklava],
-        id: chainId as
-          | typeof celo.id
-          | typeof celoAlfajores.id
-          | typeof celoSepolia.id
-          | typeof celoBaklava.id,
+        chains: [celo, celoSepolia],
+        id: chainId as typeof celo.id | typeof celoSepolia.id,
       })
 
       if (extractedChain) {

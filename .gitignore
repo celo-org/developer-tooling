@@ -96,3 +96,4 @@ package.tgz
 
 transactions.json
 *.test.json
+packages/sdk/network-utils

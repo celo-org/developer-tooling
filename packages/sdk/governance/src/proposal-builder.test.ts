@@ -22,7 +22,7 @@ testWithAnvilL2('ProposalBuilder', (web3) => {
   describe('addWeb3Tx', () => {
     it('adds and builds a Web3 transaction', async () => {
       const wrapper = await kit.contracts.getGovernance()
-      // if we wan to keep input in the expectation the same the dequeue index needs to be same length as on alfajores
+      // if we want to keep input in the expectation the same the dequeue index needs to be same length as it was on alfajores
       const dequeue = new Array(56).fill(0)
       dequeue.push(125)
       jest.spyOn(wrapper, 'getDequeue').mockResolvedValue(dequeue.map((x) => new BigNumber(x)))
