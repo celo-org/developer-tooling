@@ -681,9 +681,9 @@ class CheckBuilder {
       `${feeCurrency!} is not a valid fee currency.`
     )
   }
-  descriptionUrlReturns200 = (url: string) => {
+  urlDestinationExists = (url: string) => {
     return this.addCheck(
-      `Description URL returns HTTP 200`,
+      `URL gives HTTP 200 status: `,
       async () => {
         try {
           const response = await fetch(url, { method: 'HEAD' })
@@ -692,7 +692,7 @@ class CheckBuilder {
           return false
         }
       },
-      `The provided description URL "${url}" does not return HTTP 200 status code.`
+      `The provided URL "${url}" does not exist or is not reachable.`
     )
   }
 
