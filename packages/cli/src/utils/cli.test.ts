@@ -108,12 +108,12 @@ describe('humanizeRequirements', () => {
     it('shows when value is small ', () => {
       const celoINWei = new BigNumber('1e18')
       const { requiredCelo } = humanizeRequirements({ duration, value: celoINWei })
-      expect(requiredCelo).toEqual('1.0')
+      expect(requiredCelo).toEqual('1')
     })
     it('shows when value is big ', () => {
       const celoINWei = new BigNumber('1e23')
       const { requiredCelo } = humanizeRequirements({ duration, value: celoINWei })
-      expect(requiredCelo).toEqual('100000.0')
+      expect(requiredCelo).toEqual('100000')
     })
   })
 })
