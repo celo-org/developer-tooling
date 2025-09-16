@@ -683,7 +683,7 @@ class CheckBuilder {
   }
   urlDestinationExists = (url: string) => {
     return this.addCheck(
-      `URL gives HTTP 200 status: `,
+      `URL exists: `,
       async () => {
         try {
           const response = await fetch(url, { method: 'HEAD' })
