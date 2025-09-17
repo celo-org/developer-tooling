@@ -1,5 +1,11 @@
 # @celo/actions
 
+## 0.2.0-alpha.0
+
+### Minor Changes
+
+- [#715](https://github.com/celo-org/developer-tooling/pull/715) [`682adfe`](https://github.com/celo-org/developer-tooling/commit/682adfe3e9f36139634c9619f7bc0b74d768f27f) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Breaking -- removes chains entry point and celoBaklava export
+
 ## 0.1.0
 
 ### Minor Changes

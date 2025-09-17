@@ -1,6 +1,6 @@
 {
   "name": "@celo/actions",
-  "version": "0.1.0",
+  "version": "0.2.0-alpha.0",
   "description": "Celo actions for use with Viem. Easily interact with Celo core contracts",
   "main": "dist/cjs/index.js",
   "module": "dist/mjs/index.js",
