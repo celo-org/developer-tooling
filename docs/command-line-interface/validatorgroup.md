@@ -79,12 +79,11 @@ FLAG DESCRIPTIONS
     http://localhost:8545
     Alias options:
     local, localhost => 'http://localhost:8545'
-    alfajores => Celo Alfajores Testnet,
     testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/validatorgroup/commission.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/validatorgroup/commission.ts)_
+_See code: [src/commands/validatorgroup/commission.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.0-alpha.1/packages/cli/src/commands/validatorgroup/commission.ts)_
 
 ## `celocli validatorgroup:community-rpc-nodes`
 
@@ -129,7 +128,6 @@ FLAG DESCRIPTIONS
     http://localhost:8545
     Alias options:
     local, localhost => 'http://localhost:8545'
-    alfajores => Celo Alfajores Testnet,
     testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
@@ -190,12 +188,11 @@ FLAG DESCRIPTIONS
     http://localhost:8545
     Alias options:
     local, localhost => 'http://localhost:8545'
-    alfajores => Celo Alfajores Testnet,
     testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/validatorgroup/deregister.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/validatorgroup/deregister.ts)_
+_See code: [src/commands/validatorgroup/deregister.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.0-alpha.1/packages/cli/src/commands/validatorgroup/deregister.ts)_
 
 ## `celocli validatorgroup:list`
 
@@ -233,12 +230,11 @@ FLAG DESCRIPTIONS
     http://localhost:8545
     Alias options:
     local, localhost => 'http://localhost:8545'
-    alfajores => Celo Alfajores Testnet,
     testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/validatorgroup/list.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/validatorgroup/list.ts)_
+_See code: [src/commands/validatorgroup/list.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.0-alpha.1/packages/cli/src/commands/validatorgroup/list.ts)_
 
 ## `celocli validatorgroup:member ARG1`
 
@@ -312,12 +308,11 @@ FLAG DESCRIPTIONS
     http://localhost:8545
     Alias options:
     local, localhost => 'http://localhost:8545'
-    alfajores => Celo Alfajores Testnet,
     testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/validatorgroup/member.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/validatorgroup/member.ts)_
+_See code: [src/commands/validatorgroup/member.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.0-alpha.1/packages/cli/src/commands/validatorgroup/member.ts)_
 
 ## `celocli validatorgroup:register`
 
@@ -379,12 +374,11 @@ FLAG DESCRIPTIONS
     http://localhost:8545
     Alias options:
     local, localhost => 'http://localhost:8545'
-    alfajores => Celo Alfajores Testnet,
     testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/validatorgroup/register.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/validatorgroup/register.ts)_
+_See code: [src/commands/validatorgroup/register.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.0-alpha.1/packages/cli/src/commands/validatorgroup/register.ts)_
 
 ## `celocli validatorgroup:reset-slashing-multiplier ARG1`
 
@@ -438,12 +432,11 @@ FLAG DESCRIPTIONS
     http://localhost:8545
     Alias options:
     local, localhost => 'http://localhost:8545'
-    alfajores => Celo Alfajores Testnet,
     testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/validatorgroup/reset-slashing-multiplier.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/validatorgroup/reset-slashing-multiplier.ts)_
+_See code: [src/commands/validatorgroup/reset-slashing-multiplier.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.0-alpha.1/packages/cli/src/commands/validatorgroup/reset-slashing-multiplier.ts)_
 
 ## `celocli validatorgroup:rpc-urls`
 
@@ -488,12 +481,11 @@ FLAG DESCRIPTIONS
     http://localhost:8545
     Alias options:
     local, localhost => 'http://localhost:8545'
-    alfajores => Celo Alfajores Testnet,
     testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/validatorgroup/rpc-urls.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/validatorgroup/rpc-urls.ts)_
+_See code: [src/commands/validatorgroup/rpc-urls.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.0-alpha.1/packages/cli/src/commands/validatorgroup/rpc-urls.ts)_
 
 ## `celocli validatorgroup:show ARG1`
 
@@ -523,9 +515,8 @@ FLAG DESCRIPTIONS
     http://localhost:8545
     Alias options:
     local, localhost => 'http://localhost:8545'
-    alfajores => Celo Alfajores Testnet,
     testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/validatorgroup/show.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/validatorgroup/show.ts)_
+_See code: [src/commands/validatorgroup/show.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.0-alpha.1/packages/cli/src/commands/validatorgroup/show.ts)_

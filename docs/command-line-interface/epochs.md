@@ -46,7 +46,6 @@ FLAG DESCRIPTIONS
     http://localhost:8545
     Alias options:
     local, localhost => 'http://localhost:8545'
-    alfajores => Celo Alfajores Testnet,
     testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
@@ -104,12 +103,11 @@ FLAG DESCRIPTIONS
     http://localhost:8545
     Alias options:
     local, localhost => 'http://localhost:8545'
-    alfajores => Celo Alfajores Testnet,
     testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/epochs/finish.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/epochs/finish.ts)_
+_See code: [src/commands/epochs/finish.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.0-alpha.1/packages/cli/src/commands/epochs/finish.ts)_
 
 ## `celocli epochs:process-groups`
 
@@ -164,12 +162,11 @@ FLAG DESCRIPTIONS
     http://localhost:8545
     Alias options:
     local, localhost => 'http://localhost:8545'
-    alfajores => Celo Alfajores Testnet,
     testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/epochs/process-groups.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/epochs/process-groups.ts)_
+_See code: [src/commands/epochs/process-groups.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.0-alpha.1/packages/cli/src/commands/epochs/process-groups.ts)_
 
 ## `celocli epochs:send-validator-payment`
 
@@ -231,12 +228,11 @@ FLAG DESCRIPTIONS
     http://localhost:8545
     Alias options:
     local, localhost => 'http://localhost:8545'
-    alfajores => Celo Alfajores Testnet,
     testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/epochs/send-validator-payment.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/epochs/send-validator-payment.ts)_
+_See code: [src/commands/epochs/send-validator-payment.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.0-alpha.1/packages/cli/src/commands/epochs/send-validator-payment.ts)_
 
 ## `celocli epochs:start`
 
@@ -291,12 +287,11 @@ FLAG DESCRIPTIONS
     http://localhost:8545
     Alias options:
     local, localhost => 'http://localhost:8545'
-    alfajores => Celo Alfajores Testnet,
     testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/epochs/start.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/epochs/start.ts)_
+_See code: [src/commands/epochs/start.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.0-alpha.1/packages/cli/src/commands/epochs/start.ts)_
 
 ## `celocli epochs:status`
 
@@ -333,12 +328,11 @@ FLAG DESCRIPTIONS
     http://localhost:8545
     Alias options:
     local, localhost => 'http://localhost:8545'
-    alfajores => Celo Alfajores Testnet,
     testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/epochs/status.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/epochs/status.ts)_
+_See code: [src/commands/epochs/status.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.0-alpha.1/packages/cli/src/commands/epochs/status.ts)_
 
 ## `celocli epochs:switch`
 
@@ -396,9 +390,8 @@ FLAG DESCRIPTIONS
     http://localhost:8545
     Alias options:
     local, localhost => 'http://localhost:8545'
-    alfajores => Celo Alfajores Testnet,
     testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/epochs/switch.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/epochs/switch.ts)_
+_See code: [src/commands/epochs/switch.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.0-alpha.1/packages/cli/src/commands/epochs/switch.ts)_

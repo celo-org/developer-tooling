@@ -34,7 +34,7 @@ To start working with contractkit you need a `kit` instance:
 ```ts
 import { newKit } from '@celo/contractkit' // or import { newKit } from '@celo/contractkit/lib/mini-kit'
 
-const kit = newKit("https://alfajores-forno.celo-testnet.org")
+const kit = newKit("https://forno.celo-sepolia.celo-testnet.org")
 
 ```
 

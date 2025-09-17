@@ -18,7 +18,7 @@ DESCRIPTION
   Output network node configuration
 ```
 
-_See code: [src/commands/config/get.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/config/get.ts)_
+_See code: [src/commands/config/get.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.0-alpha.1/packages/cli/src/commands/config/get.ts)_
 
 ## `celocli config:set`
 
@@ -44,9 +44,7 @@ EXAMPLES
 
   set --node forno # alias for https://forno.celo.org
 
-  set --node baklava # alias for https://baklava-forno.celo-testnet.org
-
-  set --node alfajores # alias for https://alfajores-forno.celo-testnet.org
+  set --node celo-sepolia # alias for https://forno.celo-sepolia.celo-testnet.org
 
   set --node localhost # alias for `local`
 
@@ -73,9 +71,8 @@ FLAG DESCRIPTIONS
     http://localhost:8545
     Alias options:
     local, localhost => 'http://localhost:8545'
-    alfajores => Celo Alfajores Testnet,
     testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/config/set.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/config/set.ts)_
+_See code: [src/commands/config/set.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.0-alpha.1/packages/cli/src/commands/config/set.ts)_
