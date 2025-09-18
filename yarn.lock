@@ -1693,13 +1693,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/abis@npm:13.0.0":
-  version: 13.0.0
-  resolution: "@celo/abis@npm:13.0.0"
-  checksum: 1b5c939824802c52eed93d369ca810958cc1b46ba41a092814fa1a5edbc25391921aa9154ac0a4a7d887a37953ad6966babc51fa2c64244ef82e8749dcbd3657
-  languageName: node
-  linkType: hard
-
 "@celo/abis@npm:13.0.0-post-audit.0":
   version: 13.0.0-post-audit.0
   resolution: "@celo/abis@npm:13.0.0-post-audit.0"
@@ -1711,7 +1704,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/actions@workspace:packages/actions"
   dependencies:
-    "@celo/abis": "npm:13.0.0"
+    "@celo/abis": "npm:13.0.0-post-audit.0"
     "@celo/base": "npm:^7.0.3"
     "@celo/core": "npm:0.0.1"
     "@celo/dev-utils": "workspace:^"
@@ -1781,7 +1774,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/celocli@workspace:packages/cli"
   dependencies:
-    "@celo/abis": "npm:13.0.0"
+    "@celo/abis": "npm:13.0.0-post-audit.0"
     "@celo/actions": "npm:0.2.0-alpha.0"
     "@celo/base": "npm:^7.0.3"
     "@celo/compliance": "npm:1.0.29"
@@ -1871,7 +1864,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/contractkit@workspace:packages/sdk/contractkit"
   dependencies:
-    "@celo/abis": "npm:13.0.0"
+    "@celo/abis": "npm:13.0.0-post-audit.0"
     "@celo/base": "npm:^7.0.3"
     "@celo/celo-devchain": "npm:^7.0.0"
     "@celo/connect": "npm:^7.0.0"
@@ -1994,7 +1987,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@celo/governance@workspace:packages/sdk/governance"
   dependencies:
-    "@celo/abis": "npm:13.0.0"
+    "@celo/abis": "npm:13.0.0-post-audit.0"
     "@celo/base": "npm:^7.0.3"
     "@celo/connect": "npm:^7.0.0"
     "@celo/contractkit": "npm:^10.0.1"
