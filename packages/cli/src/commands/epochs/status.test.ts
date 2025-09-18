@@ -83,11 +83,11 @@ testWithAnvilL2('epochs:status cmd', (web3) => {
         ",
           ],
           [
-            "Has Epoch Processing Begun?,false
+            "Has Epoch Processing Begun?,true
         ",
           ],
           [
-            "Is In Epoch Process?,false
+            "Is In Epoch Process?,true
         ",
           ],
           [
@@ -95,7 +95,7 @@ testWithAnvilL2('epochs:status cmd', (web3) => {
         ",
           ],
           [
-            "Is Time for Next Epoch,false
+            "Is Time for Next Epoch,true
         ",
           ],
           [

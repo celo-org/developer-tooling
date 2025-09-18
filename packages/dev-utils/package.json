@@ -39,8 +39,8 @@
     "bignumber.js": "^9.0.0",
     "fs-extra": "^8.1.0",
     "targz": "^1.0.1",
-    "tmp": "^0.2.0",
-    "viem": "^2.33.2",
+    "tmp": "^0.2.5",
+    "viem": "^2.37.6",
     "web3": "1.10.4",
     "web3-core-helpers": "1.10.4",
     "web3-utils": "1.10.4"
@@ -50,8 +50,8 @@
     "@celo/celo-devchain": "^8.0.0",
     "@celo/devchain-anvil": "13.0.0-canary.11",
     "@celo/typescript": "workspace:^",
-    "@tsconfig/recommended": "^1.0.3",
-    "@types/fs-extra": "^8.1.0",
+    "@tsconfig/recommended": "^1.0.10",
+    "@types/fs-extra": "^8.1.5",
     "@types/jest": "29.5.14",
     "@types/targz": "1.0.0"
   },

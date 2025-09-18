@@ -159,7 +159,7 @@ testWithAnvilL2('multisig:show integration tests', (web3: Web3) => {
           args:                         (true, true)
 
         Docs: https://viem.sh/docs/contract/readContract
-        Version: viem@2.33.2"
+        Version: viem@2.37.6"
       `)
     })
 

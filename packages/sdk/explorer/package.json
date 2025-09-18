@@ -29,16 +29,16 @@
     "@celo/connect": "^7.0.0",
     "@celo/contractkit": "^10.0.1",
     "@celo/utils": "^8.0.3",
-    "@types/debug": "^4.1.5",
+    "@types/debug": "^4.1.12",
     "bignumber.js": "9.0.0",
     "cross-fetch": "3.1.5",
-    "debug": "^4.1.1"
+    "debug": "^4.4.3"
   },
   "devDependencies": {
     "@celo/dev-utils": "workspace:^",
     "@celo/typescript": "workspace:^",
     "@types/debug": "^4.1.12",
-    "fetch-mock": "^10.0.7",
+    "fetch-mock": "^10.1.1",
     "web3": "1.10.4"
   },
   "engines": {

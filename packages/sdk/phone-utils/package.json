@@ -28,12 +28,12 @@
     "@celo/base": "^7.0.3",
     "@celo/utils": "^8.0.3",
     "@types/country-data": "^0.0.0",
-    "@types/google-libphonenumber": "^7.4.23",
-    "@types/node": "^18.7.16",
+    "@types/google-libphonenumber": "^7.4.30",
+    "@types/node": "^18.19.127",
     "country-data": "^0.0.31",
-    "fp-ts": "2.16.9",
-    "google-libphonenumber": "^3.2.27",
-    "io-ts": "2.0.1"
+    "fp-ts": "2.16.11",
+    "google-libphonenumber": "^3.2.43",
+    "io-ts": "2.2.22"
   },
   "devDependencies": {
     "@celo/typescript": "workspace:^"

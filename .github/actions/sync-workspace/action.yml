@@ -22,7 +22,7 @@ runs:
       with:
         node-version: '20'
         cache: 'yarn'
-    - uses: actions/cache/restore@v3
+    - uses: actions/cache/restore@v4
       id: cache_node
       env:
         REBUILD_PACKAGE: ${{ inputs.rebuild-package }}
@@ -36,7 +36,7 @@ runs:
         enableCrossOsArchive: true
         fail-on-cache-miss: "!${{ fromJSON(env.REBUILD_PACKAGE) }}"
     - name: Restore build artifacts cache
-      uses: actions/cache/restore@v3
+      uses: actions/cache/restore@v4
       id: cache_build_artifacts
       env:
         REBUILD_PACKAGE: ${{ inputs.rebuild-package }}

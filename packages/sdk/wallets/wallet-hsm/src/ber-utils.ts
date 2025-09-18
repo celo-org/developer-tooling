@@ -3,7 +3,7 @@ import { BigNumber } from 'bignumber.js'
 import { bigNumberToBuffer, bufferToBigNumber } from './signature-utils'
 
 export const toArrayBuffer = (b: Buffer): ArrayBuffer => {
-  return b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength)
+  return b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength) as ArrayBuffer
 }
 
 export function publicKeyFromAsn1(b: Buffer): BigNumber {
