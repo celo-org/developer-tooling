@@ -68,12 +68,11 @@ FLAG DESCRIPTIONS
     http://localhost:8545
     Alias options:
     local, localhost => 'http://localhost:8545'
-    alfajores => Celo Alfajores Testnet,
     testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/multisig/approve.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/multisig/approve.ts)_
+_See code: [src/commands/multisig/approve.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.0-alpha.1/packages/cli/src/commands/multisig/approve.ts)_
 
 ## `celocli multisig:propose ARG1`
 
@@ -140,12 +139,11 @@ FLAG DESCRIPTIONS
     http://localhost:8545
     Alias options:
     local, localhost => 'http://localhost:8545'
-    alfajores => Celo Alfajores Testnet,
     testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/multisig/propose.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/multisig/propose.ts)_
+_See code: [src/commands/multisig/propose.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.0-alpha.1/packages/cli/src/commands/multisig/propose.ts)_
 
 ## `celocli multisig:show ARG1`
 
@@ -180,12 +178,11 @@ FLAG DESCRIPTIONS
     http://localhost:8545
     Alias options:
     local, localhost => 'http://localhost:8545'
-    alfajores => Celo Alfajores Testnet,
     testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/multisig/show.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/multisig/show.ts)_
+_See code: [src/commands/multisig/show.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.0-alpha.1/packages/cli/src/commands/multisig/show.ts)_
 
 ## `celocli multisig:transfer ARG1`
 
@@ -257,9 +254,8 @@ FLAG DESCRIPTIONS
     http://localhost:8545
     Alias options:
     local, localhost => 'http://localhost:8545'
-    alfajores => Celo Alfajores Testnet,
     testnet, celo-sepolia => Celo Sepolia Testnet,
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/multisig/transfer.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%407.1.1-alpha.0/packages/cli/src/commands/multisig/transfer.ts)_
+_See code: [src/commands/multisig/transfer.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.0-alpha.1/packages/cli/src/commands/multisig/transfer.ts)_

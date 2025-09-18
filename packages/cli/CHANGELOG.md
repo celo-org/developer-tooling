@@ -1,5 +1,26 @@
 # Changelog
 
+## 8.0.0-alpha.1
+
+### Major Changes
+
+- [#719](https://github.com/celo-org/developer-tooling/pull/719) [`f3797a3`](https://github.com/celo-org/developer-tooling/commit/f3797a3105c7cc7c930f165374501bcb1473a21e) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Removes offchain-read and offchain-write commands. These have been in deprecation for a year with no contestation. The follow the deprecated cip8 spec.
+
+- [#716](https://github.com/celo-org/developer-tooling/pull/716) [`3ddc92b`](https://github.com/celo-org/developer-tooling/commit/3ddc92b9308c40f50882446cdeab82f46d046a9c) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - remove all exchange:\*\*\* commands.
+
+  We recommended swapping with mento app instead
+
+- [#715](https://github.com/celo-org/developer-tooling/pull/715) [`682adfe`](https://github.com/celo-org/developer-tooling/commit/682adfe3e9f36139634c9619f7bc0b74d768f27f) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Remove alfajores and baklava aliases from --rpc flag
+
+### Minor Changes
+
+- [#717](https://github.com/celo-org/developer-tooling/pull/717) [`94cd236`](https://github.com/celo-org/developer-tooling/commit/94cd236c22675d6bc77f8a49e31d884447aadb3d) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - governance:propose now prevents submitting a descriptionUrl that does not exist.
+
+### Patch Changes
+
+- Updated dependencies [[`682adfe`](https://github.com/celo-org/developer-tooling/commit/682adfe3e9f36139634c9619f7bc0b74d768f27f)]:
+  - @celo/actions@0.2.0-alpha.0
+
 ## 7.1.1-alpha.0
 
 ### Patch Changes

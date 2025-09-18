@@ -30,6 +30,11 @@
     "@celo/viem-account-ledger": "1.2.1"
   },
   "changesets": [
-    "fine-bushes-bow"
+    "big-flowers-jump",
+    "busy-buttons-admire",
+    "evil-facts-join",
+    "fine-bushes-bow",
+    "itchy-beds-stand",
+    "shiny-years-leave"
   ]
 }

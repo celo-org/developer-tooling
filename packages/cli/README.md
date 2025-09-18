@@ -113,4 +113,4 @@ Go to the `developer-tooling` root directory and
 
 If all works well, navigate to `packages/cli`.
 
-`yarn celocli COMMAND` 
+`yarn celocli COMMAND`
