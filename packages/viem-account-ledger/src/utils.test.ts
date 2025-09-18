@@ -104,18 +104,17 @@ describe('utils', () => {
 
   describe('checkForKnownToken', () => {
     const ledger = mockLedger()
-    
 
     it('calls provideERC20TokenInformation when feeCurrency is used', async () => {
       const spy = vi.spyOn(ledger, 'provideERC20TokenInformation')
       const cUSDa = '0x874069fa1eb16d44d622f2e0ca25eea172369bc1'
 
       await expect(
-      checkForKnownToken(ledger, {
-        to: ACCOUNT_ADDRESS1,
-        chainId: TEST_CHAIN_ID,
-        feeCurrency: cUSDa,
-      })
+        checkForKnownToken(ledger, {
+          to: ACCOUNT_ADDRESS1,
+          chainId: TEST_CHAIN_ID,
+          feeCurrency: cUSDa,
+        })
       ).resolves.toBeUndefined()
       expect(spy).toBeCalledTimes(1)
     })
@@ -125,10 +124,10 @@ describe('utils', () => {
       const cEURa = '0x10c892a6ec43a53e45d0b916b4b7d383b1b78c0f'
 
       await expect(
-      checkForKnownToken(ledger, {
-        to: cEURa,
-        chainId: TEST_CHAIN_ID,
-      })
+        checkForKnownToken(ledger, {
+          to: cEURa,
+          chainId: TEST_CHAIN_ID,
+        })
       ).resolves.toBeUndefined()
       expect(spy).toBeCalledTimes(1)
     })
@@ -139,11 +138,11 @@ describe('utils', () => {
       const cEURa = '0x10c892a6ec43a53e45d0b916b4b7d383b1b78c0f'
 
       await expect(
-      checkForKnownToken(ledger, {
-        to: cUSDa,
-        chainId: TEST_CHAIN_ID,
-        feeCurrency: cEURa,
-      })
+        checkForKnownToken(ledger, {
+          to: cUSDa,
+          chainId: TEST_CHAIN_ID,
+          feeCurrency: cEURa,
+        })
       ).resolves.toBeUndefined()
       expect(spy).toBeCalledTimes(2)
     })
