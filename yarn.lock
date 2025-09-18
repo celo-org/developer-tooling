@@ -2039,10 +2039,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/ledger-token-signer@npm:^0.11.0":
-  version: 0.11.0
-  resolution: "@celo/ledger-token-signer@npm:0.11.0"
-  checksum: 5eb2097ca2ab481e014999268cfb5adfe03001f01901aeaaab32a2397761c8cdd15d98b0f2b46ce791e95e634b37f3efa7d3f814b566d23981a6f58f6b681aac
+"@celo/ledger-token-signer@npm:0.8.0":
+  version: 0.8.0
+  resolution: "@celo/ledger-token-signer@npm:0.8.0"
+  checksum: be064e393d89788ed82c8cba9bf087a80ef2d888dfa161b789edfb9f63add787ed55775eb2ed3dc1cd9d5e78aff9b24ffd4f7e414a4181a44277193646b87013
   languageName: node
   linkType: hard
 
@@ -2080,11 +2080,11 @@ __metadata:
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.3"
     "@types/country-data": "npm:^0.0.0"
-    "@types/google-libphonenumber": "npm:^7.4.30"
+    "@types/google-libphonenumber": "npm:7.4.23"
     "@types/node": "npm:^18.19.127"
     country-data: "npm:^0.0.31"
     fp-ts: "npm:2.16.11"
-    google-libphonenumber: "npm:^3.2.43"
+    google-libphonenumber: "npm:3.2.32"
     io-ts: "npm:2.2.22"
   languageName: unknown
   linkType: soft
@@ -2143,7 +2143,7 @@ __metadata:
   dependencies:
     "@celo/base": "npm:^7.0.3"
     "@celo/hw-app-eth": "npm:^1.0.1"
-    "@celo/ledger-token-signer": "npm:^0.11.0"
+    "@celo/ledger-token-signer": "npm:0.8.0"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "workspace:^"
     "@celo/wallet-base": "workspace:^"
@@ -2284,7 +2284,7 @@ __metadata:
     "@celo/connect": "npm:^7.0.0"
     "@celo/contractkit": "npm:^10.0.1"
     "@celo/hw-app-eth": "npm:^1.0.1"
-    "@celo/ledger-token-signer": "npm:^0.11.0"
+    "@celo/ledger-token-signer": "npm:0.8.0"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.3"
     "@celo/wallet-base": "npm:^8.0.1"
@@ -6383,10 +6383,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/google-libphonenumber@npm:^7.4.30":
-  version: 7.4.30
-  resolution: "@types/google-libphonenumber@npm:7.4.30"
-  checksum: 70e90971a6218ab2900d29e801a85e59147d6af7b9fccfbb46df6846215d7e62aa1817c0f34c800080815eed2d4eda61a43a20353290db9429dc140ab6887356
+"@types/google-libphonenumber@npm:7.4.23":
+  version: 7.4.23
+  resolution: "@types/google-libphonenumber@npm:7.4.23"
+  checksum: ddee3da7b945fbfa23d5a905be1af6911c9ae526b63d8dde2f8a3d64fc1692d096314dcac022c52cf6a14bc25e463913492204aa34cf59e6ac0a4750c292cdc0
   languageName: node
   linkType: hard
 
@@ -10709,10 +10709,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"google-libphonenumber@npm:^3.2.43":
-  version: 3.2.43
-  resolution: "google-libphonenumber@npm:3.2.43"
-  checksum: 644ae5d4a8961b03430ecc502bcab6d94f501cbbea5eb8e82257cf4fc8c6507bfb3713c718af53cae76daf2421ed87919455a22e92e8d631ecd59d213e0f20e6
+"google-libphonenumber@npm:3.2.32":
+  version: 3.2.32
+  resolution: "google-libphonenumber@npm:3.2.32"
+  checksum: 81f07d4f308170800a2b1d4e49d1fb401287e490242e43def95e1f0807ebdbcbce293247a95ba43c44ad32c04fb56c79dca8ac1b11eccd51a4fc90a78644016e
   languageName: node
   linkType: hard
 
