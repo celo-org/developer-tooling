@@ -1,7 +1,7 @@
 import { NULL_ADDRESS } from '@celo/base/lib/address.js'
-import { Address, Client } from 'viem'
+import type { Address, Client } from 'viem'
 import { readContract } from 'viem/actions'
-import { ContractName } from '../contract-name.js'
+import type { ContractName } from '../contract-name.js'
 
 export const REGISTRY_CONTRACT_ADDRESS = '0x000000000000000000000000000000000000ce10'
 

@@ -22,6 +22,8 @@ const syntheticDescribe = USE_PHYSICAL_LEDGER ? describe.skip : describe
 const TEST_TIMEOUT_IN_MS = USE_PHYSICAL_LEDGER ? 30 * 1000 : 1 * 1000
 
 const CHAIN_ID = 44787
+const SEPOLIA_CHAIN_ID = 11142220
+const SEPOLIA_CUSD = '0xEF4d55D6dE8e8d73232827Cd1e9b2F2dBb45bC80'
 
 // Sample data from the official EIP-712 example:
 // https://github.com/ethereum/EIPs/blob/master/assets/eip-712/Example.js
@@ -457,8 +459,9 @@ describe('LedgerWallet class', () => {
                   feeCurrency: '0x' as const,
                   // data: '0xabcdef',
                 }
-                const signedTx: EncodedTransaction =
-                  await wallet.signTransaction(celoTransactionZeroPrefix)
+                const signedTx: EncodedTransaction = await wallet.signTransaction(
+                  celoTransactionZeroPrefix
+                )
                 expect(signedTx.tx.s.startsWith('0x00')).toBeFalsy()
                 const [, recoveredSigner] = recoverTransaction(signedTx.raw)
                 expect(normalizeAddressWith0x(recoveredSigner)).toBe(
@@ -514,13 +517,16 @@ describe('LedgerWallet class', () => {
             celoTransaction = {
               from: knownAddress,
               to: otherAddress,
-              chainId: CHAIN_ID,
+              // we use sepolia because other tests used to have alfajores but
+              // the token-list doesnt support alfajores anymore and I didn't
+              // want to refactor ALL the tests because of that
+              chainId: SEPOLIA_CHAIN_ID,
               value: Web3.utils.toWei('1', 'ether'),
               nonce: 0,
               gas: 99,
               maxFeePerGas: 99,
               maxPriorityFeePerGas: 99,
-              feeCurrency: '0x874069fa1eb16d44d622f2e0ca25eea172369bc1',
+              feeCurrency: SEPOLIA_CUSD,
             }
           })
 
@@ -532,26 +538,26 @@ describe('LedgerWallet class', () => {
                 .mockImplementation(() => Promise.resolve(true))
 
               await expect(wallet.signTransaction(celoTransaction)).resolves.toMatchInlineSnapshot(`
-                  {
-                    "raw": "0x7bf87f82aef38063636394588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a764000080c094874069fa1eb16d44d622f2e0ca25eea172369bc101a0254f952c5223c30039f7f845778d7aac558464ce2971fd09883df34913eb6dfca037a78571ae1a44d86bac7269e3a845990a49ad5fb60a5ec1fcaba428693558c0",
-                    "tx": {
-                      "accessList": [],
-                      "feeCurrency": "0x874069fa1eb16d44d622f2e0ca25eea172369bc1",
-                      "gas": "0x63",
-                      "hash": "0xdc8347423b5310ed64e46a9abb49cd455e8049f838f93752afd122ae938e53c9",
-                      "input": "0x",
-                      "maxFeePerGas": "0x63",
-                      "maxPriorityFeePerGas": "0x63",
-                      "nonce": "0",
-                      "r": "0x254f952c5223c30039f7f845778d7aac558464ce2971fd09883df34913eb6dfc",
-                      "s": "0x37a78571ae1a44d86bac7269e3a845990a49ad5fb60a5ec1fcaba428693558c0",
-                      "to": "0x588e4b68193001e4d10928660ab4165b813717c0",
-                      "v": "0x01",
-                      "value": "0x0de0b6b3a7640000",
-                    },
-                    "type": "cip64",
-                  }
-                `)
+                {
+                  "raw": "0x7bf88083aa044c8063636394588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a764000080c094ef4d55d6de8e8d73232827cd1e9b2f2dbb45bc8001a07628a175adf2f2ae418693dadb819380d7675e82ddef38004b4c73d3b591e371a0612d5ac033789d821115dc3a6af3e605d9f3f264845e0817bde51ae752659951",
+                  "tx": {
+                    "accessList": [],
+                    "feeCurrency": "0xef4d55d6de8e8d73232827cd1e9b2f2dbb45bc80",
+                    "gas": "0x63",
+                    "hash": "0x879096a2645bc11259a775180ca6751ce7e854778a2439f15228931995e96f8e",
+                    "input": "0x",
+                    "maxFeePerGas": "0x63",
+                    "maxPriorityFeePerGas": "0x63",
+                    "nonce": "0",
+                    "r": "0x7628a175adf2f2ae418693dadb819380d7675e82ddef38004b4c73d3b591e371",
+                    "s": "0x612d5ac033789d821115dc3a6af3e605d9f3f264845e0817bde51ae752659951",
+                    "to": "0x588e4b68193001e4d10928660ab4165b813717c0",
+                    "v": "0x01",
+                    "value": "0x0de0b6b3a7640000",
+                  },
+                  "type": "cip64",
+                }
+              `)
 
               expect(wallet.ledger!.provideERC20TokenInformation).toHaveBeenCalledWith(
                 tokenInfoByAddressAndChainId(
@@ -569,13 +575,16 @@ describe('LedgerWallet class', () => {
             celoTransaction = {
               from: knownAddress,
               to: otherAddress,
-              chainId: CHAIN_ID,
+              // we use sepolia because other tests used to have alfajores but
+              // the token-list doesnt support alfajores anymore and I didn't
+              // want to refactor ALL the tests because of that
+              chainId: SEPOLIA_CHAIN_ID,
               value: Web3.utils.toWei('1', 'ether'),
               nonce: 0,
               gas: 99,
               maxFeePerGas: 99,
               maxPriorityFeePerGas: 99,
-              feeCurrency: '0x874069fa1eb16d44d622f2e0ca25eea172369bc1',
+              feeCurrency: SEPOLIA_CUSD,
             }
           })
 
