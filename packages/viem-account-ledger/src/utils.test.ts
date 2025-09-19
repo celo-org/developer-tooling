@@ -1,5 +1,5 @@
 import { describe, expect, it, test, vi } from 'vitest'
-import { ACCOUNT_ADDRESS1, mockLedger, TEST_CHAIN_ID } from './test-utils'
+import { ACCOUNT_ADDRESS1, MAINNET_CHAIN_ID, mockLedger } from './test-utils'
 import {
   assertCompat,
   checkForKnownToken,
@@ -107,13 +107,13 @@ describe('utils', () => {
 
     it('calls provideERC20TokenInformation when feeCurrency is used', async () => {
       const spy = vi.spyOn(ledger, 'provideERC20TokenInformation')
-      const cUSDa = '0x874069fa1eb16d44d622f2e0ca25eea172369bc1'
+      const USDC = '0x2F25deB3848C207fc8E0c34035B3Ba7fC157602B'
 
       await expect(
         checkForKnownToken(ledger, {
           to: ACCOUNT_ADDRESS1,
-          chainId: TEST_CHAIN_ID,
-          feeCurrency: cUSDa,
+          chainId: MAINNET_CHAIN_ID,
+          feeCurrency: USDC,
         })
       ).resolves.toBeUndefined()
       expect(spy).toBeCalledTimes(1)
@@ -121,12 +121,12 @@ describe('utils', () => {
 
     it('calls provideERC20TokenInformation when used in the "to" field', async () => {
       const spy = vi.spyOn(ledger, 'provideERC20TokenInformation')
-      const cEURa = '0x10c892a6ec43a53e45d0b916b4b7d383b1b78c0f'
+      const USDT = '0x0E2A3e05bc9A16F5292A6170456A710cb89C6f72'
 
       await expect(
         checkForKnownToken(ledger, {
-          to: cEURa,
-          chainId: TEST_CHAIN_ID,
+          to: USDT,
+          chainId: MAINNET_CHAIN_ID,
         })
       ).resolves.toBeUndefined()
       expect(spy).toBeCalledTimes(1)
@@ -134,14 +134,14 @@ describe('utils', () => {
 
     it('calls provideERC20TokenInformation when both feeCurrency and "to" field are used', async () => {
       const spy = vi.spyOn(ledger, 'provideERC20TokenInformation')
-      const cUSDa = '0x874069fa1eb16d44d622f2e0ca25eea172369bc1'
-      const cEURa = '0x10c892a6ec43a53e45d0b916b4b7d383b1b78c0f'
+      const USDC = '0x2F25deB3848C207fc8E0c34035B3Ba7fC157602B'
+      const USDT = '0x0E2A3e05bc9A16F5292A6170456A710cb89C6f72'
 
       await expect(
         checkForKnownToken(ledger, {
-          to: cUSDa,
-          chainId: TEST_CHAIN_ID,
-          feeCurrency: cEURa,
+          to: USDC,
+          chainId: MAINNET_CHAIN_ID,
+          feeCurrency: USDT,
         })
       ).resolves.toBeUndefined()
       expect(spy).toBeCalledTimes(2)

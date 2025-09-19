@@ -2039,10 +2039,10 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/ledger-token-signer@npm:0.8.0":
-  version: 0.8.0
-  resolution: "@celo/ledger-token-signer@npm:0.8.0"
-  checksum: be064e393d89788ed82c8cba9bf087a80ef2d888dfa161b789edfb9f63add787ed55775eb2ed3dc1cd9d5e78aff9b24ffd4f7e414a4181a44277193646b87013
+"@celo/ledger-token-signer@npm:^0.10.0":
+  version: 0.10.0
+  resolution: "@celo/ledger-token-signer@npm:0.10.0"
+  checksum: 123d16c6df4a54d852e4efb0a030e136de0ada36d536de50f87ba2d3cf609a34410efa852a1f9c9b8f6f6e11a5bdf478b9ede7d5c6edfa925716c6bcf6d9c51d
   languageName: node
   linkType: hard
 
@@ -2143,7 +2143,7 @@ __metadata:
   dependencies:
     "@celo/base": "npm:^7.0.3"
     "@celo/hw-app-eth": "npm:^1.0.1"
-    "@celo/ledger-token-signer": "npm:0.8.0"
+    "@celo/ledger-token-signer": "npm:^0.10.0"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "workspace:^"
     "@celo/wallet-base": "workspace:^"
@@ -2284,7 +2284,7 @@ __metadata:
     "@celo/connect": "npm:^7.0.0"
     "@celo/contractkit": "npm:^10.0.1"
     "@celo/hw-app-eth": "npm:^1.0.1"
-    "@celo/ledger-token-signer": "npm:0.8.0"
+    "@celo/ledger-token-signer": "npm:^0.10.0"
     "@celo/typescript": "workspace:^"
     "@celo/utils": "npm:^8.0.3"
     "@celo/wallet-base": "npm:^8.0.1"

@@ -49,6 +49,7 @@ const ledgerAddresses: { [myKey: string]: { address: Hex; privateKey: Hex } } = 
 }
 
 export const TEST_CHAIN_ID = 44787
+export const MAINNET_CHAIN_ID = 42220
 
 // Sample data from the official EIP-712 example:
 // https://github.com/ethereum/EIPs/blob/master/assets/eip-712/Example.js
