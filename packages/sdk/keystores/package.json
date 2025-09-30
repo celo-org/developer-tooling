@@ -27,7 +27,7 @@
   "dependencies": {
     "@celo/utils": "^8.0.3",
     "@celo/wallet-local": "^8.0.1",
-    "ethereumjs-wallet": "^1.0.1",
+    "ethereumjs-wallet": "^1.0.2",
     "rimraf": "^4.4.1"
   },
   "devDependencies": {

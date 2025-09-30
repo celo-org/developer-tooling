@@ -42,7 +42,7 @@
     "@celo/abis": "13.0.0-post-audit.0",
     "@celo/actions": "0.2.0-alpha.0",
     "@celo/base": "^7.0.3",
-    "@celo/compliance": "1.0.28",
+    "@celo/compliance": "1.0.29",
     "@celo/connect": "^7.0.0",
     "@celo/contractkit": "^10.0.1",
     "@celo/cryptographic-utils": "^6.0.0",
@@ -72,9 +72,9 @@
     "cross-fetch": "3.1.5",
     "debug": "^4.1.1",
     "fs-extra": "^8.1.0",
-    "humanize-duration": "^3.32.1",
+    "humanize-duration": "^3.33.1",
     "prompts": "^2.0.1",
-    "viem": "^2.33.2",
+    "viem": "^2.37.9",
     "web3": "1.10.4"
   },
   "devDependencies": {

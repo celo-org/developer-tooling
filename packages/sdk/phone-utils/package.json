@@ -31,7 +31,7 @@
     "@types/google-libphonenumber": "^7.4.23",
     "@types/node": "^18.7.16",
     "country-data": "^0.0.31",
-    "fp-ts": "2.16.9",
+    "fp-ts": "2.16.11",
     "google-libphonenumber": "^3.2.27",
     "io-ts": "2.0.1"
   },

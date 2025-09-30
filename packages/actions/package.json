@@ -55,7 +55,7 @@
     "@celo/abis": "13.0.0-post-audit.0",
     "@celo/base": "^7.0.3",
     "@celo/core": "0.0.1",
-    "viem": "^2.33.2"
+    "viem": "^2.37.9"
   },
   "devDependencies": {
     "@celo/dev-utils": "workspace:^",
