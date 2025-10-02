@@ -1,14 +1,14 @@
 import { PublicCeloClient } from '@celo/actions'
-import { getElectionContract } from '@celo/actions/contracts/election'
-import { getGovernanceContract } from '@celo/actions/contracts/governance'
-import { getLockedCeloContract } from '@celo/actions/contracts/locked-celo'
-import { getFeeCurrencyDirectoryContract } from '@celo/actions/contracts/feecurrency-directory'
-import { getEpochManagerContract } from '@celo/actions/contracts/epoch-manager'
-import { getValidatorsContract } from '@celo/actions/contracts/validators'
-import { getSortedOraclesContract } from '@celo/actions/contracts/sorted-oracles'
-import { getReserveContract } from '@celo/actions/contracts/reserve'
+import { ElectionContract, getElectionContract } from '@celo/actions/contracts/election'
+import { EpochManager, getEpochManagerContract } from '@celo/actions/contracts/epoch-manager'
+import { FeeCurrencyDirectory, getFeeCurrencyDirectoryContract } from '@celo/actions/contracts/feecurrency-directory'
+import { getGovernanceContract, GovernanceContract } from '@celo/actions/contracts/governance'
+import { getLockedCeloContract, LockedCeloContract } from '@celo/actions/contracts/locked-celo'
+import { getReserveContract, ReserveContract } from '@celo/actions/contracts/reserve'
+import { getSortedOraclesContract, SortedOraclesContract } from '@celo/actions/contracts/sorted-oracles'
+import { getValidatorsContract, ValidatorsContract } from '@celo/actions/contracts/validators'
 import BigNumber from 'bignumber.js'
-import { secondsToDurationString, blocksToDurationString } from './duration'
+import { blocksToDurationString, secondsToDurationString } from './duration'
 
 // Specific types for each contract's config
 export interface ElectionConfig {
@@ -37,9 +37,9 @@ export interface GovernanceConfig {
   }
 }
 
-export interface LockedGoldConfig {
+export interface LockedCeloConfig {
   unlockingPeriod: BigNumber
-  totalLockedGold: BigNumber
+  totalLockedCelo: BigNumber
 }
 
 export interface SortedOraclesConfig {
@@ -55,11 +55,11 @@ export interface ReserveConfig {
 }
 
 export interface ValidatorsConfig {
-  validatorLockedGoldRequirements: {
+  validatorLockedCeloRequirements: {
     value: BigNumber
     duration: BigNumber
   }
-  groupLockedGoldRequirements: {
+  groupLockedCeloRequirements: {
     value: BigNumber
     duration: BigNumber
   }
@@ -85,7 +85,7 @@ export interface FeeCurrencyDirectoryConfig {
 export interface NetworkConfig {
   Election?: ElectionConfig | Error
   Governance?: GovernanceConfig | Error
-  LockedGold?: LockedGoldConfig | Error
+  LockedCelo?: LockedCeloConfig | Error
   SortedOracles?: SortedOraclesConfig | Error
   Reserve?: ReserveConfig | Error
   Validators?: ValidatorsConfig | Error
@@ -97,6 +97,11 @@ function valueToBigNumber(input: string | number | bigint): BigNumber {
   return new BigNumber(input.toString())
 }
 
+function fixidityValueToBigNumber(input: string | number | bigint): BigNumber {
+  const FIXED1 = new BigNumber('1000000000000000000000000') // 10^24
+  return new BigNumber(input.toString()).dividedBy(FIXED1)
+}
+
 export async function getNetworkConfig(
   client: PublicCeloClient,
   humanReadable = false
@@ -104,7 +109,7 @@ export async function getNetworkConfig(
   const contractGetters = {
     Election: () => getElectionContract({ public: client }),
     Governance: () => getGovernanceContract({ public: client }),
-    LockedGold: () => getLockedCeloContract({ public: client }),
+    LockedCelo: () => getLockedCeloContract({ public: client }),
     SortedOracles: () => getSortedOraclesContract({ public: client }),
     Reserve: () => getReserveContract({ public: client }),
     Validators: () => getValidatorsContract({ public: client }),
@@ -119,6 +124,7 @@ export async function getNetworkConfig(
       if (humanReadable && contractName in humanReadableConfigs) {
         return await humanReadableConfigs[contractName](contract)
       } else if (contractName in configs) {
+        // @ts-expect-error
         return await configs[contractName](contract)
       } else {
         throw new Error('No config endpoint found')
@@ -140,8 +146,8 @@ export async function getNetworkConfig(
       configMap.Election = result as ElectionConfig | Error
     } else if (key === 'Governance') {
       configMap.Governance = result as GovernanceConfig | Error
-    } else if (key === 'LockedGold') {
-      configMap.LockedGold = result as LockedGoldConfig | Error
+    } else if (key === 'LockedCelo') {
+      configMap.LockedCelo = result as LockedCeloConfig | Error
     } else if (key === 'SortedOracles') {
       configMap.SortedOracles = result as SortedOraclesConfig | Error
     } else if (key === 'Reserve') {
@@ -160,29 +166,29 @@ export async function getNetworkConfig(
 
 // Exact replica of each contract's getConfig method
 const configs: {
-  Election: (contract: Awaited<ReturnType<typeof getElectionContract>>) => Promise<ElectionConfig>
+  Election: (contract: ElectionContract) => Promise<ElectionConfig>
   Governance: (
-    contract: Awaited<ReturnType<typeof getGovernanceContract>>
+    contract: GovernanceContract
   ) => Promise<GovernanceConfig>
-  LockedGold: (
-    contract: Awaited<ReturnType<typeof getLockedCeloContract>>
-  ) => Promise<LockedGoldConfig>
+  LockedCelo: (
+    contract: LockedCeloContract
+  ) => Promise<LockedCeloConfig>
   SortedOracles: (
-    contract: Awaited<ReturnType<typeof getSortedOraclesContract>>
+    contract: SortedOraclesContract
   ) => Promise<SortedOraclesConfig>
-  Reserve: (contract: Awaited<ReturnType<typeof getReserveContract>>) => Promise<ReserveConfig>
+  Reserve: (contract: ReserveContract) => Promise<ReserveConfig>
   Validators: (
-    contract: Awaited<ReturnType<typeof getValidatorsContract>>
+    contract: ValidatorsContract
   ) => Promise<ValidatorsConfig>
   FeeCurrencyDirectory: (
-    contract: Awaited<ReturnType<typeof getFeeCurrencyDirectoryContract>>
+    contract: FeeCurrencyDirectory
   ) => Promise<FeeCurrencyDirectoryConfig>
   EpochManager: (
-    contract: Awaited<ReturnType<typeof getEpochManagerContract>>
+    contract: EpochManager
   ) => Promise<EpochManagerConfig>
 } = {
   Election: async (
-    contract: Awaited<ReturnType<typeof getElectionContract>>
+    contract: ElectionContract
   ): Promise<ElectionConfig> => {
     const [electableValidators, electabilityThreshold, maxNumGroupsVotedFor, totalVotes] =
       await Promise.all([
@@ -198,17 +204,19 @@ const configs: {
     }
     const totalVotesResult = valueToBigNumber(totalVotes)
 
+    const electabilityThresholdResult = fixidityValueToBigNumber(electabilityThreshold)
+    
     return {
       electableValidators: electableValidatorsResult,
-      electabilityThreshold: valueToBigNumber(electabilityThreshold),
+      electabilityThreshold: electabilityThresholdResult,
       maxNumGroupsVotedFor: valueToBigNumber(maxNumGroupsVotedFor),
       totalVotes: totalVotesResult,
-      currentThreshold: totalVotesResult.multipliedBy(valueToBigNumber(electabilityThreshold)),
+      currentThreshold: totalVotesResult.multipliedBy(electabilityThresholdResult),
     }
   },
 
   Governance: async (
-    contract: Awaited<ReturnType<typeof getGovernanceContract>>
+    contract: GovernanceContract
   ): Promise<GovernanceConfig> => {
     const [
       concurrentProposals,
@@ -233,9 +241,9 @@ const configs: {
       queueExpiry: valueToBigNumber(queueExpiry),
       stageDurations: stageDurations
         ? {
-            approval: valueToBigNumber(stageDurations.approval || stageDurations[0]),
-            referendum: valueToBigNumber(stageDurations.referendum || stageDurations[1]),
-            execution: valueToBigNumber(stageDurations.execution || stageDurations[2]),
+            approval: valueToBigNumber( stageDurations[0]),
+            referendum: valueToBigNumber(stageDurations[1]),
+            execution: valueToBigNumber(stageDurations[2]),
           }
         : {
             approval: valueToBigNumber(0),
@@ -244,36 +252,36 @@ const configs: {
           },
       participationParameters: participationParameters
         ? {
-            baseline: valueToBigNumber(participationParameters[0] || 0),
-            baselineFloor: valueToBigNumber(participationParameters[1] || 0),
-            baselineUpdateFactor: valueToBigNumber(participationParameters[2] || 0),
-            baselineQuorumFactor: valueToBigNumber(participationParameters[3] || 0),
+            baseline: fixidityValueToBigNumber(participationParameters[0] || 0),
+            baselineFloor: fixidityValueToBigNumber(participationParameters[1] || 0),
+            baselineUpdateFactor: fixidityValueToBigNumber(participationParameters[2] || 0),
+            baselineQuorumFactor: fixidityValueToBigNumber(participationParameters[3] || 0),
           }
         : {
-            baseline: valueToBigNumber(0),
-            baselineFloor: valueToBigNumber(0),
-            baselineUpdateFactor: valueToBigNumber(0),
-            baselineQuorumFactor: valueToBigNumber(0),
+            baseline: fixidityValueToBigNumber(0),
+            baselineFloor: fixidityValueToBigNumber(0),
+            baselineUpdateFactor: fixidityValueToBigNumber(0),
+            baselineQuorumFactor: fixidityValueToBigNumber(0),
           },
     }
   },
 
-  LockedGold: async (
-    contract: Awaited<ReturnType<typeof getLockedCeloContract>>
-  ): Promise<LockedGoldConfig> => {
-    const [unlockingPeriod, totalLockedGold] = await Promise.all([
+  LockedCelo: async (
+    contract: LockedCeloContract
+  ): Promise<LockedCeloConfig> => {
+    const [unlockingPeriod, totalLockedCelo] = await Promise.all([
       contract.read.unlockingPeriod(),
       contract.read.getTotalLockedGold(),
     ])
 
     return {
       unlockingPeriod: valueToBigNumber(unlockingPeriod),
-      totalLockedGold: valueToBigNumber(totalLockedGold),
+      totalLockedCelo: valueToBigNumber(totalLockedCelo),
     }
   },
 
   SortedOracles: async (
-    contract: Awaited<ReturnType<typeof getSortedOraclesContract>>
+    contract: SortedOraclesContract
   ): Promise<SortedOraclesConfig> => {
     const reportExpirySeconds = await contract.read.reportExpirySeconds()
 
@@ -309,11 +317,11 @@ const configs: {
   },
 
   Validators: async (
-    contract: Awaited<ReturnType<typeof getValidatorsContract>>
+    contract: ValidatorsContract
   ): Promise<ValidatorsConfig> => {
     const [
-      validatorLockedGoldRequirements,
-      groupLockedGoldRequirements,
+      validatorLockedCeloRequirements,
+      groupLockedCeloRequirements,
       maxGroupSize,
       membershipHistoryLength,
       slashingMultiplierResetPeriod,
@@ -330,13 +338,13 @@ const configs: {
     ])
 
     return {
-      validatorLockedGoldRequirements: {
-        value: valueToBigNumber(validatorLockedGoldRequirements[0]),
-        duration: valueToBigNumber(validatorLockedGoldRequirements[1]),
+      validatorLockedCeloRequirements: {
+        value: valueToBigNumber(validatorLockedCeloRequirements[0]),
+        duration: valueToBigNumber(validatorLockedCeloRequirements[1]),
       },
-      groupLockedGoldRequirements: {
-        value: valueToBigNumber(groupLockedGoldRequirements[0]),
-        duration: valueToBigNumber(groupLockedGoldRequirements[1]),
+      groupLockedCeloRequirements: {
+        value: valueToBigNumber(groupLockedCeloRequirements[0]),
+        duration: valueToBigNumber(groupLockedCeloRequirements[1]),
       },
       maxGroupSize: valueToBigNumber(maxGroupSize),
       membershipHistoryLength: valueToBigNumber(membershipHistoryLength),
@@ -354,7 +362,9 @@ const configs: {
 
     for (const address of addresses) {
       const currencyConfig = await contract.read.getCurrencyConfig([address])
-      config.intrinsicGasForAlternativeFeeCurrency[address] = valueToBigNumber(currencyConfig.intrinsicGas)
+      config.intrinsicGasForAlternativeFeeCurrency[address] = valueToBigNumber(
+        currencyConfig.intrinsicGas
+      )
     }
 
     return config
@@ -379,22 +389,26 @@ const configs: {
 
 // Human readable versions - convert durations to readable strings
 const humanReadableConfigs = {
-  Election: configs.Election, // No duration fields to convert
+  Election: configs.Election,
 
-  Governance: async (contract: Awaited<ReturnType<typeof getGovernanceContract>>) => {
+  Governance: async (contract: GovernanceContract) => {
     const config = await configs.Governance(contract)
     return {
       ...config,
+      dequeueFrequency: secondsToDurationString(config.dequeueFrequency),
+      participationParameters: {
+        ...config.participationParameters,
+      },
+      queueExpiry: secondsToDurationString(config.queueExpiry),
       stageDurations: {
-        approval: blocksToDurationString(config.stageDurations.approval),
-        referendum: blocksToDurationString(config.stageDurations.referendum),
-        execution: blocksToDurationString(config.stageDurations.execution),
+        Execution: blocksToDurationString(config.stageDurations.execution),
+        Referendum: blocksToDurationString(config.stageDurations.referendum),
       },
     }
   },
 
-  LockedGold: async (contract: Awaited<ReturnType<typeof getLockedCeloContract>>) => {
-    const config = await configs.LockedGold(contract)
+  LockedCelo: async (contract: LockedCeloContract) => {
+    const config = await configs.LockedCelo(contract)
     return {
       ...config,
       unlockingPeriod: secondsToDurationString(config.unlockingPeriod),
@@ -410,25 +424,25 @@ const humanReadableConfigs = {
 
   Reserve: configs.Reserve, // No duration fields to convert
 
-  Validators: async (contract: Awaited<ReturnType<typeof getValidatorsContract>>) => {
+  Validators: async (contract: ValidatorsContract) => {
     const config = await configs.Validators(contract)
     return {
       ...config,
-      validatorLockedGoldRequirements: {
-        ...config.validatorLockedGoldRequirements,
-        duration: secondsToDurationString(config.validatorLockedGoldRequirements.duration),
+      validatorLockedCeloRequirements: {
+        ...config.validatorLockedCeloRequirements,
+        duration: secondsToDurationString(config.validatorLockedCeloRequirements.duration),
       },
-      groupLockedGoldRequirements: {
-        ...config.groupLockedGoldRequirements,
-        duration: secondsToDurationString(config.groupLockedGoldRequirements.duration),
+      groupLockedCeloRequirements: {
+        ...config.groupLockedCeloRequirements,
+        duration: secondsToDurationString(config.groupLockedCeloRequirements.duration),
       },
       slashingMultiplierResetPeriod: secondsToDurationString(config.slashingMultiplierResetPeriod),
-      commissionUpdateDelay: blocksToDurationString(config.commissionUpdateDelay),
-      downtimeGracePeriod: secondsToDurationString(config.downtimeGracePeriod),
+      commissionUpdateDelay: secondsToDurationString(config.commissionUpdateDelay),
+      downtimeGracePeriod: config.downtimeGracePeriod,
     }
   },
 
-  FeeCurrencyDirectory: configs.FeeCurrencyDirectory, // No duration fields to convert
+  FeeCurrencyDirectory: configs.FeeCurrencyDirectory, 
 
-  EpochManager: configs.EpochManager, // No duration fields to convert (currentEpochNumber and isTimeForNextEpoch are not durations)
+  EpochManager: configs.EpochManager, 
 }
