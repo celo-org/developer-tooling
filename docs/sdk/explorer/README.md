@@ -1,8 +1,8 @@
-**@celo/explorer v5.0.17**
+**@celo/explorer v5.0.18-alpha.0**
 
 ***
 
-# @celo/explorer v5.0.17
+# @celo/explorer v5.0.18-alpha.0
 
 ## Classes
 
