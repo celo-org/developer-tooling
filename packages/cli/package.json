@@ -42,7 +42,7 @@
     "@celo/abis": "13.0.0-post-audit.0",
     "@celo/actions": "0.2.0-alpha.0",
     "@celo/base": "^7.0.3",
-    "@celo/compliance": "1.0.28",
+    "@celo/compliance": "1.0.29",
     "@celo/connect": "^7.0.0",
     "@celo/contractkit": "^10.0.2-alpha.0",
     "@celo/cryptographic-utils": "^6.0.0",
