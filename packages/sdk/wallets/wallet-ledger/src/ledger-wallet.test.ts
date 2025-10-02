@@ -459,9 +459,8 @@ describe('LedgerWallet class', () => {
                   feeCurrency: '0x' as const,
                   // data: '0xabcdef',
                 }
-                const signedTx: EncodedTransaction = await wallet.signTransaction(
-                  celoTransactionZeroPrefix
-                )
+                const signedTx: EncodedTransaction =
+                  await wallet.signTransaction(celoTransactionZeroPrefix)
                 expect(signedTx.tx.s.startsWith('0x00')).toBeFalsy()
                 const [, recoveredSigner] = recoverTransaction(signedTx.raw)
                 expect(normalizeAddressWith0x(recoveredSigner)).toBe(
