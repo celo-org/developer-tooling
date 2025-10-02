@@ -77,7 +77,9 @@ export interface EpochManagerConfig {
 }
 
 export interface FeeCurrencyDirectoryConfig {
-  // Empty object as per contractkit behavior
+  intrinsicGasForAlternativeFeeCurrency: {
+    [feeCurrencyAddress: string]: BigNumber
+  }
 }
 
 export interface NetworkConfig {
@@ -107,7 +109,7 @@ export async function getNetworkConfig(
     Reserve: () => getReserveContract({ public: client }),
     Validators: () => getValidatorsContract({ public: client }),
     FeeCurrencyDirectory: () => getFeeCurrencyDirectoryContract({ public: client }),
-    EpochManager: () => getEpochManagerContract({ public: client })
+    EpochManager: () => getEpochManagerContract({ public: client }),
   }
 
   const configMethod = async (contractName: keyof typeof contractGetters) => {
@@ -126,9 +128,11 @@ export async function getNetworkConfig(
     }
   }
 
-  const configArray = await Promise.all(Object.keys(contractGetters).map(k => configMethod(k as keyof typeof contractGetters)))
+  const configArray = await Promise.all(
+    Object.keys(contractGetters).map((k) => configMethod(k as keyof typeof contractGetters))
+  )
   const configMap: NetworkConfig = {}
-  
+
   Object.keys(contractGetters).forEach((contractName, index) => {
     const result = configArray[index]
     const key = contractName as keyof NetworkConfig
@@ -154,27 +158,44 @@ export async function getNetworkConfig(
   return configMap
 }
 
-// Exact replica of each contract's getConfig method  
+// Exact replica of each contract's getConfig method
 const configs: {
   Election: (contract: Awaited<ReturnType<typeof getElectionContract>>) => Promise<ElectionConfig>
-  Governance: (contract: Awaited<ReturnType<typeof getGovernanceContract>>) => Promise<GovernanceConfig>
-  LockedGold: (contract: Awaited<ReturnType<typeof getLockedCeloContract>>) => Promise<LockedGoldConfig>
-  SortedOracles: (contract: Awaited<ReturnType<typeof getSortedOraclesContract>>) => Promise<SortedOraclesConfig>
+  Governance: (
+    contract: Awaited<ReturnType<typeof getGovernanceContract>>
+  ) => Promise<GovernanceConfig>
+  LockedGold: (
+    contract: Awaited<ReturnType<typeof getLockedCeloContract>>
+  ) => Promise<LockedGoldConfig>
+  SortedOracles: (
+    contract: Awaited<ReturnType<typeof getSortedOraclesContract>>
+  ) => Promise<SortedOraclesConfig>
   Reserve: (contract: Awaited<ReturnType<typeof getReserveContract>>) => Promise<ReserveConfig>
-  Validators: (contract: Awaited<ReturnType<typeof getValidatorsContract>>) => Promise<ValidatorsConfig>
-  FeeCurrencyDirectory: (contract: Awaited<ReturnType<typeof getFeeCurrencyDirectoryContract>>) => Promise<FeeCurrencyDirectoryConfig>
-  EpochManager: (contract: Awaited<ReturnType<typeof getEpochManagerContract>>) => Promise<EpochManagerConfig>
+  Validators: (
+    contract: Awaited<ReturnType<typeof getValidatorsContract>>
+  ) => Promise<ValidatorsConfig>
+  FeeCurrencyDirectory: (
+    contract: Awaited<ReturnType<typeof getFeeCurrencyDirectoryContract>>
+  ) => Promise<FeeCurrencyDirectoryConfig>
+  EpochManager: (
+    contract: Awaited<ReturnType<typeof getEpochManagerContract>>
+  ) => Promise<EpochManagerConfig>
 } = {
-  Election: async (contract: Awaited<ReturnType<typeof getElectionContract>>): Promise<ElectionConfig> => {
-    const [electableValidators, electabilityThreshold, maxNumGroupsVotedFor, totalVotes] = 
+  Election: async (
+    contract: Awaited<ReturnType<typeof getElectionContract>>
+  ): Promise<ElectionConfig> => {
+    const [electableValidators, electabilityThreshold, maxNumGroupsVotedFor, totalVotes] =
       await Promise.all([
         contract.read.getElectableValidators(),
         contract.read.getElectabilityThreshold(),
         contract.read.maxNumGroupsVotedFor(),
-        contract.read.getTotalVotes()
+        contract.read.getTotalVotes(),
       ])
 
-    const electableValidatorsResult = { min: valueToBigNumber(electableValidators[0]), max: valueToBigNumber(electableValidators[1]) }
+    const electableValidatorsResult = {
+      min: valueToBigNumber(electableValidators[0]),
+      max: valueToBigNumber(electableValidators[1]),
+    }
     const totalVotesResult = valueToBigNumber(totalVotes)
 
     return {
@@ -182,73 +203,100 @@ const configs: {
       electabilityThreshold: valueToBigNumber(electabilityThreshold),
       maxNumGroupsVotedFor: valueToBigNumber(maxNumGroupsVotedFor),
       totalVotes: totalVotesResult,
-      currentThreshold: totalVotesResult.multipliedBy(valueToBigNumber(electabilityThreshold))
+      currentThreshold: totalVotesResult.multipliedBy(valueToBigNumber(electabilityThreshold)),
     }
   },
 
-  Governance: async (contract: Awaited<ReturnType<typeof getGovernanceContract>>): Promise<GovernanceConfig> => {
-    const [concurrentProposals, dequeueFrequency, minDeposit, queueExpiry, stageDurations, participationParameters] = 
-      await Promise.all([
-        contract.read.concurrentProposals(),
-        contract.read.dequeueFrequency(),
-        contract.read.minDeposit(),
-        contract.read.queueExpiry(),
-        contract.read.stageDurations(),
-        contract.read.getParticipationParameters()
-      ])
+  Governance: async (
+    contract: Awaited<ReturnType<typeof getGovernanceContract>>
+  ): Promise<GovernanceConfig> => {
+    const [
+      concurrentProposals,
+      dequeueFrequency,
+      minDeposit,
+      queueExpiry,
+      stageDurations,
+      participationParameters,
+    ] = await Promise.all([
+      contract.read.concurrentProposals(),
+      contract.read.dequeueFrequency(),
+      contract.read.minDeposit(),
+      contract.read.queueExpiry(),
+      contract.read.stageDurations(),
+      contract.read.getParticipationParameters(),
+    ])
 
     return {
       concurrentProposals: valueToBigNumber(concurrentProposals),
       dequeueFrequency: valueToBigNumber(dequeueFrequency),
       minDeposit: valueToBigNumber(minDeposit),
       queueExpiry: valueToBigNumber(queueExpiry),
-      stageDurations: stageDurations ? {
-        approval: valueToBigNumber(stageDurations.approval || stageDurations[0]),
-        referendum: valueToBigNumber(stageDurations.referendum || stageDurations[1]),
-        execution: valueToBigNumber(stageDurations.execution || stageDurations[2])
-      } : { approval: valueToBigNumber(0), referendum: valueToBigNumber(0), execution: valueToBigNumber(0) },
-      participationParameters: participationParameters ? {
-        baseline: valueToBigNumber(participationParameters[0] || 0),
-        baselineFloor: valueToBigNumber(participationParameters[1] || 0),
-        baselineUpdateFactor: valueToBigNumber(participationParameters[2] || 0),
-        baselineQuorumFactor: valueToBigNumber(participationParameters[3] || 0)
-      } : { baseline: valueToBigNumber(0), baselineFloor: valueToBigNumber(0), baselineUpdateFactor: valueToBigNumber(0), baselineQuorumFactor: valueToBigNumber(0) }
+      stageDurations: stageDurations
+        ? {
+            approval: valueToBigNumber(stageDurations.approval || stageDurations[0]),
+            referendum: valueToBigNumber(stageDurations.referendum || stageDurations[1]),
+            execution: valueToBigNumber(stageDurations.execution || stageDurations[2]),
+          }
+        : {
+            approval: valueToBigNumber(0),
+            referendum: valueToBigNumber(0),
+            execution: valueToBigNumber(0),
+          },
+      participationParameters: participationParameters
+        ? {
+            baseline: valueToBigNumber(participationParameters[0] || 0),
+            baselineFloor: valueToBigNumber(participationParameters[1] || 0),
+            baselineUpdateFactor: valueToBigNumber(participationParameters[2] || 0),
+            baselineQuorumFactor: valueToBigNumber(participationParameters[3] || 0),
+          }
+        : {
+            baseline: valueToBigNumber(0),
+            baselineFloor: valueToBigNumber(0),
+            baselineUpdateFactor: valueToBigNumber(0),
+            baselineQuorumFactor: valueToBigNumber(0),
+          },
     }
   },
 
-  LockedGold: async (contract: Awaited<ReturnType<typeof getLockedCeloContract>>): Promise<LockedGoldConfig> => {
+  LockedGold: async (
+    contract: Awaited<ReturnType<typeof getLockedCeloContract>>
+  ): Promise<LockedGoldConfig> => {
     const [unlockingPeriod, totalLockedGold] = await Promise.all([
       contract.read.unlockingPeriod(),
-      contract.read.getTotalLockedGold()
+      contract.read.getTotalLockedGold(),
     ])
 
     return {
       unlockingPeriod: valueToBigNumber(unlockingPeriod),
-      totalLockedGold: valueToBigNumber(totalLockedGold)
+      totalLockedGold: valueToBigNumber(totalLockedGold),
     }
   },
 
-  SortedOracles: async (contract: Awaited<ReturnType<typeof getSortedOraclesContract>>): Promise<SortedOraclesConfig> => {
+  SortedOracles: async (
+    contract: Awaited<ReturnType<typeof getSortedOraclesContract>>
+  ): Promise<SortedOraclesConfig> => {
     const reportExpirySeconds = await contract.read.reportExpirySeconds()
-    
+
     return {
-      reportExpirySeconds: valueToBigNumber(reportExpirySeconds)
+      reportExpirySeconds: valueToBigNumber(reportExpirySeconds),
     }
   },
 
-  Reserve: async (contract: Awaited<ReturnType<typeof getReserveContract>>): Promise<ReserveConfig> => {
+  Reserve: async (
+    contract: Awaited<ReturnType<typeof getReserveContract>>
+  ): Promise<ReserveConfig> => {
     const [
       tobinTaxStalenessThreshold,
-      frozenReserveGoldStartBalance, 
+      frozenReserveGoldStartBalance,
       frozenReserveGoldStartDay,
       frozenReserveGoldDays,
-      otherReserveAddresses
+      otherReserveAddresses,
     ] = await Promise.all([
       contract.read.tobinTaxStalenessThreshold(),
       contract.read.frozenReserveGoldStartBalance(),
       contract.read.frozenReserveGoldStartDay(),
       contract.read.frozenReserveGoldDays(),
-      contract.read.getOtherReserveAddresses()
+      contract.read.getOtherReserveAddresses(),
     ])
 
     return {
@@ -256,11 +304,13 @@ const configs: {
       frozenReserveGoldStartBalance: valueToBigNumber(frozenReserveGoldStartBalance),
       frozenReserveGoldStartDay: valueToBigNumber(frozenReserveGoldStartDay),
       frozenReserveGoldDays: valueToBigNumber(frozenReserveGoldDays),
-      otherReserveAddresses
+      otherReserveAddresses,
     }
   },
 
-  Validators: async (contract: Awaited<ReturnType<typeof getValidatorsContract>>): Promise<ValidatorsConfig> => {
+  Validators: async (
+    contract: Awaited<ReturnType<typeof getValidatorsContract>>
+  ): Promise<ValidatorsConfig> => {
     const [
       validatorLockedGoldRequirements,
       groupLockedGoldRequirements,
@@ -268,7 +318,7 @@ const configs: {
       membershipHistoryLength,
       slashingMultiplierResetPeriod,
       commissionUpdateDelay,
-      downtimeGracePeriod
+      downtimeGracePeriod,
     ] = await Promise.all([
       contract.read.getValidatorLockedGoldRequirements(),
       contract.read.getGroupLockedGoldRequirements(),
@@ -276,45 +326,55 @@ const configs: {
       contract.read.membershipHistoryLength(),
       contract.read.slashingMultiplierResetPeriod(),
       contract.read.commissionUpdateDelay(),
-      contract.read.deprecated_downtimeGracePeriod()
+      contract.read.deprecated_downtimeGracePeriod(),
     ])
 
     return {
       validatorLockedGoldRequirements: {
         value: valueToBigNumber(validatorLockedGoldRequirements[0]),
-        duration: valueToBigNumber(validatorLockedGoldRequirements[1])
+        duration: valueToBigNumber(validatorLockedGoldRequirements[1]),
       },
       groupLockedGoldRequirements: {
         value: valueToBigNumber(groupLockedGoldRequirements[0]),
-        duration: valueToBigNumber(groupLockedGoldRequirements[1])
+        duration: valueToBigNumber(groupLockedGoldRequirements[1]),
       },
       maxGroupSize: valueToBigNumber(maxGroupSize),
       membershipHistoryLength: valueToBigNumber(membershipHistoryLength),
       slashingMultiplierResetPeriod: valueToBigNumber(slashingMultiplierResetPeriod),
       commissionUpdateDelay: valueToBigNumber(commissionUpdateDelay),
-      downtimeGracePeriod: valueToBigNumber(downtimeGracePeriod)
+      downtimeGracePeriod: valueToBigNumber(downtimeGracePeriod),
     }
   },
 
-  FeeCurrencyDirectory: async (_contract: Awaited<ReturnType<typeof getFeeCurrencyDirectoryContract>>): Promise<FeeCurrencyDirectoryConfig> => {
-    // FeeCurrencyDirectory doesn't have a standard config method in contractkit
-    // Return empty object to match contractkit behavior
-    return {}
+  FeeCurrencyDirectory: async (
+    contract: Awaited<ReturnType<typeof getFeeCurrencyDirectoryContract>>
+  ): Promise<FeeCurrencyDirectoryConfig> => {
+    const addresses = await contract.read.getCurrencies()
+    const config: FeeCurrencyDirectoryConfig = { intrinsicGasForAlternativeFeeCurrency: {} }
+
+    for (const address of addresses) {
+      const currencyConfig = await contract.read.getCurrencyConfig([address])
+      config.intrinsicGasForAlternativeFeeCurrency[address] = valueToBigNumber(currencyConfig.intrinsicGas)
+    }
+
+    return config
   },
 
-  EpochManager: async (contract: Awaited<ReturnType<typeof getEpochManagerContract>>): Promise<EpochManagerConfig> => {
+  EpochManager: async (
+    contract: Awaited<ReturnType<typeof getEpochManagerContract>>
+  ): Promise<EpochManagerConfig> => {
     const [currentEpochNumber, epochDuration, isTimeForNextEpoch] = await Promise.all([
       contract.read.getCurrentEpochNumber(),
       contract.read.epochDuration(),
-      contract.read.isTimeForNextEpoch()
+      contract.read.isTimeForNextEpoch(),
     ])
 
     return {
       currentEpochNumber: valueToBigNumber(currentEpochNumber),
       epochDuration: valueToBigNumber(epochDuration),
-      isTimeForNextEpoch
+      isTimeForNextEpoch,
     }
-  }
+  },
 }
 
 // Human readable versions - convert durations to readable strings
@@ -328,8 +388,8 @@ const humanReadableConfigs = {
       stageDurations: {
         approval: blocksToDurationString(config.stageDurations.approval),
         referendum: blocksToDurationString(config.stageDurations.referendum),
-        execution: blocksToDurationString(config.stageDurations.execution)
-      }
+        execution: blocksToDurationString(config.stageDurations.execution),
+      },
     }
   },
 
@@ -337,14 +397,14 @@ const humanReadableConfigs = {
     const config = await configs.LockedGold(contract)
     return {
       ...config,
-      unlockingPeriod: secondsToDurationString(config.unlockingPeriod)
+      unlockingPeriod: secondsToDurationString(config.unlockingPeriod),
     }
   },
 
   SortedOracles: async (contract: Awaited<ReturnType<typeof getSortedOraclesContract>>) => {
     const config = await configs.SortedOracles(contract)
     return {
-      reportExpiry: secondsToDurationString(config.reportExpirySeconds)
+      reportExpiry: secondsToDurationString(config.reportExpirySeconds),
     }
   },
 
@@ -356,19 +416,19 @@ const humanReadableConfigs = {
       ...config,
       validatorLockedGoldRequirements: {
         ...config.validatorLockedGoldRequirements,
-        duration: secondsToDurationString(config.validatorLockedGoldRequirements.duration)
+        duration: secondsToDurationString(config.validatorLockedGoldRequirements.duration),
       },
       groupLockedGoldRequirements: {
         ...config.groupLockedGoldRequirements,
-        duration: secondsToDurationString(config.groupLockedGoldRequirements.duration)
+        duration: secondsToDurationString(config.groupLockedGoldRequirements.duration),
       },
       slashingMultiplierResetPeriod: secondsToDurationString(config.slashingMultiplierResetPeriod),
       commissionUpdateDelay: blocksToDurationString(config.commissionUpdateDelay),
-      downtimeGracePeriod: secondsToDurationString(config.downtimeGracePeriod)
+      downtimeGracePeriod: secondsToDurationString(config.downtimeGracePeriod),
     }
   },
 
   FeeCurrencyDirectory: configs.FeeCurrencyDirectory, // No duration fields to convert
-  
-  EpochManager: configs.EpochManager // No duration fields to convert (currentEpochNumber and isTimeForNextEpoch are not durations)
+
+  EpochManager: configs.EpochManager, // No duration fields to convert (currentEpochNumber and isTimeForNextEpoch are not durations)
 }
