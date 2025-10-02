@@ -1,5 +1,5 @@
 import { EpochManager } from '@celo/abis/web3/EpochManager'
-import { concurrentMap, NULL_ADDRESS } from '@celo/base'
+import { NULL_ADDRESS } from '@celo/base'
 import BigNumber from 'bignumber.js'
 import { proxyCall, proxySend, valueToInt, valueToString } from './BaseWrapper'
 import { BaseWrapperForGoverning } from './BaseWrapperForGoverning'
@@ -77,26 +77,7 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
   processGroups = proxySend(this.connection, this.contract.methods.processGroups)
 
   startNextEpochProcessTx = async () => {
-    // check that elected accounts are affiliated with a group
-    const electedAccounts = await this.getElectedAccounts()
-    try {
-      await concurrentMap(16, electedAccounts, async (account) => {
-        const validators = await this.contracts.getValidators()
-        const isValidator = await validators.isValidator(account)
-        if (!isValidator) {
-          throw new Error(`Elected account ${account} is not a validator`)
-        }
-        const group = await validators.getValidatorsGroup(account)
-        if (group === NULL_ADDRESS) {
-          throw new Error(`Elected account ${account} is not affiliated with a group`)
-        }
-        return group
-      })
-    } catch (error) {
-      console.error('Aborting start of epoch processing. Issue while checking accounts:', error)
-      return
-    }
-    // check that the epoch process is not already started since some time has passed
+    // check that the epoch process is not already started
     const isEpochProcessStarted = await this.isOnEpochProcess()
     if (isEpochProcessStarted) {
       console.warn('Epoch process has already started.')
