@@ -28,12 +28,12 @@ testWithAnvilL2('account:balance cmd', (web3: Web3) => {
     consoleMock.mockClear()
 
     await testLocallyWithWeb3Node(Balance, [accounts[0]], web3)
-    
+
     // Instead of exact snapshot matching, let's verify the balance structure and ranges
     const calls = stripAnsiCodesFromNestedArray(consoleMock.mock.calls)
     expect(calls).toHaveLength(2)
     expect(calls[0][0]).toBe('All balances expressed in units of wei.')
-    
+
     const balanceOutput = calls[1][0]
     expect(balanceOutput).toMatch(/CELO: \d+ \(~9\.\d+e\+23\)/)
     expect(balanceOutput).toContain('cEUR: 0')

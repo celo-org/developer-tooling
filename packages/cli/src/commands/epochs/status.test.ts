@@ -70,13 +70,13 @@ testWithAnvilL2('epochs:status cmd', (web3) => {
 
       // Check that the output contains the expected structure and values, but be flexible about timing-dependent fields
       const calls = consoleMock.mock.calls
-      const output = calls.map(call => call[0]).join('')
-      
+      const output = calls.map((call) => call[0]).join('')
+
       expect(output).toContain('Query,Response')
       expect(output).toContain('Current Epoch Number,4n')
       expect(output).toContain('First Block of Epoch,300n')
       expect(output).toContain('Is Processing Individually?,false')
-      
+
       // Check timing-dependent fields are present (values can vary between environments)
       expect(output).toContain('Has Epoch Processing Begun?,')
       expect(output).toContain('Is In Epoch Process?,')
