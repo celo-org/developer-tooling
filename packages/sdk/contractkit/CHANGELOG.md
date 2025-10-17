@@ -1,5 +1,11 @@
 # @celo/contractkit
 
+## 10.0.2
+
+### Patch Changes
+
+- [#722](https://github.com/celo-org/developer-tooling/pull/722) [`05e9051`](https://github.com/celo-org/developer-tooling/commit/05e905196789bdd3407cb7193e4415f652cdafa1) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Removes checks for validation checks for elected accounts when switching epochs
+
 ## 10.0.2-alpha.0
 
 ### Patch Changes
