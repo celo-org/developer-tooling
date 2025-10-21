@@ -78,7 +78,7 @@ jobs:
           mkdir -p ./tooling/libraries-sdks/cli
           
           # Remove existing files except index.md and readme files
-          find ./tooling/libraries-sdks/cli -type f \( -name "*.md" -o -name "*.mdx" \) ! -name "index.md" ! -name "*readme*" ! -name "*README*" -delete
+          find ./tooling/libraries-sdks/cli -type f \( -name "*.md" -o -name "*.mdx" \) ! -name "index.mdx" ! -name "*readme*" ! -name "*README*" -delete
           
           # Copy files and rename .md to .mdx
           for file in ./submodules/developer-tooling/docs/command-line-interface/*.md; do
@@ -88,8 +88,34 @@ jobs:
             fi
           done
           
-          # Add warning file about generated content
-          cat > ./tooling/libraries-sdks/cli/README.txt << 'EOF'
+          # Add frontmatter to each command doc file
+          for file in ./tooling/libraries-sdks/cli/*.mdx; do
+            if [ -f "$file" ]; then
+              basename=$(basename "$file" .mdx)
+              # Skip index file and readme files
+              if [[ "$basename" != "index" && "$basename" != *"readme"* && "$basename" != *"README"* ]]; then
+                # Capitalize first letter of command name
+                capitalized=$(echo "$basename" | sed 's/^./\U&/')
+                
+                # Create temporary file with frontmatter
+                cat > "$file.tmp" << EOF
+              ---
+              title: celocli $basename
+              sidebarTitle: "$capitalized"
+              ---
+
+              EOF
+                # Append original content
+                cat "$file" >> "$file.tmp"
+                # Replace original file
+                mv "$file.tmp" "$file"
+              fi
+            fi
+          done
+          
+          # Add warning file about generated content (only if it doesn't exist)
+          if [ ! -f "./tooling/libraries-sdks/cli/README.txt" ]; then
+            cat > ./tooling/libraries-sdks/cli/README.txt << 'EOF'
           ⚠️ Do Not Edit These Files Directly
 
           The files in this directory are automatically generated from the celo-org/developer-tooling repository.
@@ -100,6 +126,7 @@ jobs:
 
           Any manual edits made directly to these files will be overwritten during the next sync.
           EOF
+          fi
 
           git status
           git add submodules/developer-tooling
