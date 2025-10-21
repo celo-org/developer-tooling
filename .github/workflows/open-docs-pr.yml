@@ -98,13 +98,11 @@ jobs:
                 capitalized=$(echo "$basename" | sed 's/^./\U&/')
                 
                 # Create temporary file with frontmatter
-                cat > "$file.tmp" << EOF
-              ---
-              title: celocli $basename
-              sidebarTitle: "$capitalized"
-              ---
-
-              EOF
+                echo "---" > "$file.tmp"
+                echo "title: celocli $basename" >> "$file.tmp"
+                echo "sidebarTitle: \"$capitalized\"" >> "$file.tmp"
+                echo "---" >> "$file.tmp"
+                echo "" >> "$file.tmp"
                 # Append original content
                 cat "$file" >> "$file.tmp"
                 # Replace original file
