@@ -111,6 +111,14 @@ jobs:
             fi
           done
           
+          # Fix USAGE code blocks to have sh syntax highlighting
+          for file in ./tooling/libraries-sdks/cli/*.mdx; do
+            if [ -f "$file" ]; then
+              # Replace ``` followed by newline and USAGE with ```sh followed by newline and USAGE
+              sed -i '/^```$/{N;s/^```\nUSAGE/```sh\nUSAGE/;}' "$file"
+            fi
+          done
+          
           # Update docs.json to only include CLI pages that exist
           echo "Current directory: $(pwd)"
           echo "Looking for docs.json..."
@@ -140,7 +148,7 @@ jobs:
             # Use jq to update the CLI pages section in docs.json
             echo "Updating docs.json with jq..."
             jq --argjson pages "[$cli_files]" '
-              (.navigation[] | select(.group == "Libraries & SDKs") | .pages[] | select(.group == "CLI") | .pages) = $pages
+              (.navigation.tabs[] | select(.tab == "Tooling") | .groups[] | select(.group == "Libraries & SDKs") | .pages[2] | .pages) = $pages
             ' docs.json > docs.json.tmp && mv docs.json.tmp docs.json
             
             echo "docs.json updated successfully"
