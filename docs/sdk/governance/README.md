@@ -1,8 +1,8 @@
-**@celo/governance v5.1.9-alpha.0**
+**@celo/governance v5.1.9**
 
 ***
 
-# @celo/governance v5.1.9-alpha.0
+# @celo/governance v5.1.9
 
 ## Classes
 

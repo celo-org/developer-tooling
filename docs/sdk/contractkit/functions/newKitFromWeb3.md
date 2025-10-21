@@ -1,4 +1,4 @@
-[**@celo/contractkit v10.0.2-alpha.0**](../README.md)
+[**@celo/contractkit v10.0.2**](../README.md)
 
 ***
 
