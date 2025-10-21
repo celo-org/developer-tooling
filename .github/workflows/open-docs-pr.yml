@@ -131,15 +131,24 @@ jobs:
             echo "Scanning CLI files in ./tooling/libraries-sdks/cli/"
             ls -la ./tooling/libraries-sdks/cli/
             
+            # Start with index if it exists
             cli_files=""
+            if [ -f "./tooling/libraries-sdks/cli/index.mdx" ]; then
+              cli_files="\"tooling/libraries-sdks/cli/index\""
+              echo "Found CLI file: index (added first)"
+            fi
+            
+            # Add all other files (excluding index since we already added it)
             for file in ./tooling/libraries-sdks/cli/*.mdx; do
               if [ -f "$file" ]; then
                 basename=$(basename "$file" .mdx)
-                echo "Found CLI file: $basename"
-                if [ -n "$cli_files" ]; then
-                  cli_files="$cli_files,"
+                if [ "$basename" != "index" ]; then
+                  echo "Found CLI file: $basename"
+                  if [ -n "$cli_files" ]; then
+                    cli_files="$cli_files,"
+                  fi
+                  cli_files="$cli_files\"tooling/libraries-sdks/cli/$basename\""
                 fi
-                cli_files="$cli_files\"tooling/libraries-sdks/cli/$basename\""
               fi
             done
             
@@ -161,7 +170,7 @@ jobs:
             cat > ./tooling/libraries-sdks/cli/README.txt << 'EOF'
           ⚠️ Do Not Edit These Files Directly
 
-          The files in this directory are automatically generated from the celo-org/developer-tooling repository.
+          The files in this directory (except for index.mdx) are automatically generated from the celo-org/developer-tooling repository.
 
           To make changes to the CLI documentation:
           1. Edit the source files in the developer-tooling repository
