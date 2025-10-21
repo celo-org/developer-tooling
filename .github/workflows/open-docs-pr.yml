@@ -112,12 +112,22 @@ jobs:
           done
           
           # Update docs.json to only include CLI pages that exist
+          echo "Current directory: $(pwd)"
+          echo "Looking for docs.json..."
+          ls -la docs.json || echo "docs.json not found"
+          
           if [ -f "docs.json" ]; then
+            echo "Found docs.json, updating CLI pages..."
+            
             # Create list of existing CLI files (without .mdx extension)
+            echo "Scanning CLI files in ./tooling/libraries-sdks/cli/"
+            ls -la ./tooling/libraries-sdks/cli/
+            
             cli_files=""
             for file in ./tooling/libraries-sdks/cli/*.mdx; do
               if [ -f "$file" ]; then
                 basename=$(basename "$file" .mdx)
+                echo "Found CLI file: $basename"
                 if [ -n "$cli_files" ]; then
                   cli_files="$cli_files,"
                 fi
@@ -125,10 +135,17 @@ jobs:
               fi
             done
             
+            echo "CLI files list: [$cli_files]"
+            
             # Use jq to update the CLI pages section in docs.json
+            echo "Updating docs.json with jq..."
             jq --argjson pages "[$cli_files]" '
               (.navigation[] | select(.group == "Libraries & SDKs") | .pages[] | select(.group == "CLI") | .pages) = $pages
             ' docs.json > docs.json.tmp && mv docs.json.tmp docs.json
+            
+            echo "docs.json updated successfully"
+          else
+            echo "docs.json not found in current directory"
           fi
           
           # Add warning file about generated content (only if it doesn't exist)
