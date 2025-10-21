@@ -75,21 +75,21 @@ jobs:
           cd ../..
           
           # Create target directory if it doesn't exist
-          mkdir -p ./docs/tooling/libraries-sdks/cli
+          mkdir -p ./tooling/libraries-sdks/cli
           
           # Remove existing files except index.md and readme files
-          find ./docs/tooling/libraries-sdks/cli -type f \( -name "*.md" -o -name "*.mdx" \) ! -name "index.md" ! -name "*readme*" ! -name "*README*" -delete
+          find ./tooling/libraries-sdks/cli -type f \( -name "*.md" -o -name "*.mdx" \) ! -name "index.md" ! -name "*readme*" ! -name "*README*" -delete
           
           # Copy files and rename .md to .mdx
           for file in ./submodules/developer-tooling/docs/command-line-interface/*.md; do
             if [ -f "$file" ]; then
               basename=$(basename "$file" .md)
-              cp "$file" "./docs/tooling/libraries-sdks/cli/${basename}.mdx"
+              cp "$file" "./tooling/libraries-sdks/cli/${basename}.mdx"
             fi
           done
           
           # Add warning file about generated content
-          cat > ./docs/tooling/libraries-sdks/cli/README.txt << 'EOF'
+          cat > ./tooling/libraries-sdks/cli/README.txt << 'EOF'
           ⚠️ Do Not Edit These Files Directly
 
           The files in this directory are automatically generated from the celo-org/developer-tooling repository.
@@ -103,7 +103,7 @@ jobs:
 
           git status
           git add submodules/developer-tooling
-          git add docs/tooling/libraries-sdks/cli
+          git add tooling/libraries-sdks/cli
           git commit -m "chore: update developer-tooling submodule"
           git push origin $NEW_BRANCH
 
