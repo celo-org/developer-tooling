@@ -21,7 +21,7 @@ const syntheticDescribe = USE_PHYSICAL_LEDGER ? describe.skip : describe
 // Increase timeout to give developer time to respond on device
 const TEST_TIMEOUT_IN_MS = USE_PHYSICAL_LEDGER ? 30 * 1000 : 1 * 1000
 
-const CHAIN_ID = 44787
+const CHAIN_ID = 11142220
 
 // Sample data from the official EIP-712 example:
 // https://github.com/ethereum/EIPs/blob/master/assets/eip-712/Example.js
@@ -457,8 +457,9 @@ describe('LedgerWallet class', () => {
                   feeCurrency: '0x' as const,
                   // data: '0xabcdef',
                 }
-                const signedTx: EncodedTransaction =
-                  await wallet.signTransaction(celoTransactionZeroPrefix)
+                const signedTx: EncodedTransaction = await wallet.signTransaction(
+                  celoTransactionZeroPrefix
+                )
                 expect(signedTx.tx.s.startsWith('0x00')).toBeFalsy()
                 const [, recoveredSigner] = recoverTransaction(signedTx.raw)
                 expect(normalizeAddressWith0x(recoveredSigner)).toBe(
@@ -520,7 +521,7 @@ describe('LedgerWallet class', () => {
               gas: 99,
               maxFeePerGas: 99,
               maxPriorityFeePerGas: 99,
-              feeCurrency: '0x874069fa1eb16d44d622f2e0ca25eea172369bc1',
+              feeCurrency: '0x85Bee67D435A39f7467a8a9DE34a5B73D25Df426',
             }
           })
 
@@ -532,26 +533,26 @@ describe('LedgerWallet class', () => {
                 .mockImplementation(() => Promise.resolve(true))
 
               await expect(wallet.signTransaction(celoTransaction)).resolves.toMatchInlineSnapshot(`
-                  {
-                    "raw": "0x7bf87f82aef38063636394588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a764000080c094874069fa1eb16d44d622f2e0ca25eea172369bc101a0254f952c5223c30039f7f845778d7aac558464ce2971fd09883df34913eb6dfca037a78571ae1a44d86bac7269e3a845990a49ad5fb60a5ec1fcaba428693558c0",
-                    "tx": {
-                      "accessList": [],
-                      "feeCurrency": "0x874069fa1eb16d44d622f2e0ca25eea172369bc1",
-                      "gas": "0x63",
-                      "hash": "0xdc8347423b5310ed64e46a9abb49cd455e8049f838f93752afd122ae938e53c9",
-                      "input": "0x",
-                      "maxFeePerGas": "0x63",
-                      "maxPriorityFeePerGas": "0x63",
-                      "nonce": "0",
-                      "r": "0x254f952c5223c30039f7f845778d7aac558464ce2971fd09883df34913eb6dfc",
-                      "s": "0x37a78571ae1a44d86bac7269e3a845990a49ad5fb60a5ec1fcaba428693558c0",
-                      "to": "0x588e4b68193001e4d10928660ab4165b813717c0",
-                      "v": "0x01",
-                      "value": "0x0de0b6b3a7640000",
-                    },
-                    "type": "cip64",
-                  }
-                `)
+                {
+                  "raw": "0x7bf88083aa044c8063636394588e4b68193001e4d10928660ab4165b813717c0880de0b6b3a764000080c09485bee67d435a39f7467a8a9de34a5b73d25df42680a0ed84d545876bf1e8dd01e7427ff74185fcb8bc3b6da179d86b1072905d92660aa01b3450238a3e6836ad93470da50197bd214c2ef91390c8a042a3cd09676c1f09",
+                  "tx": {
+                    "accessList": [],
+                    "feeCurrency": "0x85bee67d435a39f7467a8a9de34a5b73d25df426",
+                    "gas": "0x63",
+                    "hash": "0x216e6e192d20274ec194b3461bec8a017677b9ef24db154bfc5c10b36c484ec3",
+                    "input": "0x",
+                    "maxFeePerGas": "0x63",
+                    "maxPriorityFeePerGas": "0x63",
+                    "nonce": "0",
+                    "r": "0xed84d545876bf1e8dd01e7427ff74185fcb8bc3b6da179d86b1072905d92660a",
+                    "s": "0x1b3450238a3e6836ad93470da50197bd214c2ef91390c8a042a3cd09676c1f09",
+                    "to": "0x588e4b68193001e4d10928660ab4165b813717c0",
+                    "v": "0x",
+                    "value": "0x0de0b6b3a7640000",
+                  },
+                  "type": "cip64",
+                }
+              `)
 
               expect(wallet.ledger!.provideERC20TokenInformation).toHaveBeenCalledWith(
                 tokenInfoByAddressAndChainId(
@@ -575,7 +576,7 @@ describe('LedgerWallet class', () => {
               gas: 99,
               maxFeePerGas: 99,
               maxPriorityFeePerGas: 99,
-              feeCurrency: '0x874069fa1eb16d44d622f2e0ca25eea172369bc1',
+              feeCurrency: '0x85Bee67D435A39f7467a8a9DE34a5B73D25Df426',
             }
           })
 
@@ -620,7 +621,7 @@ describe('LedgerWallet class', () => {
               gas: 99,
               maxFeePerGas: 99,
               maxPriorityFeePerGas: 99,
-              feeCurrency: '0x874069fa1eb16d44d622f2e0ca25eea172369bc1',
+              feeCurrency: '0x85Bee67D435A39f7467a8a9DE34a5B73D25Df426',
             }
           })
 
