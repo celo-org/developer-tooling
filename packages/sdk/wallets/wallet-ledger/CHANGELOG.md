@@ -1,5 +1,15 @@
 # @celo/wallet-ledger
 
+## 8.0.2
+
+### Patch Changes
+
+- [#735](https://github.com/celo-org/developer-tooling/pull/735) [`5cb272b`](https://github.com/celo-org/developer-tooling/commit/5cb272babf5618b22253dbdf34b92f33d73b1e2d) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Upgrades @celo/ledger-token-signer adding support for sending more erc20 in the clear and fixing paying with USDC gas tokens when signing with ledgers
+
+- Updated dependencies []:
+  - @celo/wallet-base@8.0.2
+  - @celo/wallet-remote@8.0.2
+
 ## 8.0.1
 
 ### Patch Changes
