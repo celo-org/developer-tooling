@@ -1,5 +1,5 @@
 import { describe, expect, it, test, vi } from 'vitest'
-import { ACCOUNT_ADDRESS1, mockLedger, TEST_CHAIN_ID } from './test-utils'
+import { ACCOUNT_ADDRESS1, mockLedger } from './test-utils'
 import {
   assertCompat,
   checkForKnownToken,
@@ -7,6 +7,8 @@ import {
   readAppName,
   transportErrorFriendlyMessage,
 } from './utils.js'
+
+const TEST_CHAIN_ID = 11142220
 
 describe('utils', () => {
   describe('transportErrorFriendlyMessage', () => {
@@ -107,14 +109,15 @@ describe('utils', () => {
 
     it('works', async () => {
       const spy = vi.spyOn(ledger, 'provideERC20TokenInformation')
-      const cUSDa = '0x874069fa1eb16d44d622f2e0ca25eea172369bc1'
-      const cEURa = '0x10c892a6ec43a53e45d0b916b4b7d383b1b78c0f'
+      const USDCToken = '0x01c5c0122039549ad1493b8220cabedd739bc44e'
+      const USDCAdapter = '0xbf1441Ea57f43f35f713431001f35742c88071c7'
+      const cEUR = '0x6B172e333e2978484261D7eCC3DE491E79764BbC'
 
       await expect(
         checkForKnownToken(ledger, {
           to: ACCOUNT_ADDRESS1,
           chainId: TEST_CHAIN_ID,
-          feeCurrency: cUSDa,
+          feeCurrency: USDCAdapter,
         })
       ).resolves.toBeUndefined()
       expect(spy.mock.calls.length).toBe(1)
@@ -122,7 +125,7 @@ describe('utils', () => {
 
       await expect(
         checkForKnownToken(ledger, {
-          to: cEURa,
+          to: cEUR,
           chainId: TEST_CHAIN_ID,
         })
       ).resolves.toBeUndefined()
@@ -131,9 +134,9 @@ describe('utils', () => {
 
       await expect(
         checkForKnownToken(ledger, {
-          to: cUSDa,
+          to: USDCToken,
           chainId: TEST_CHAIN_ID,
-          feeCurrency: cEURa,
+          feeCurrency: cEUR,
         })
       ).resolves.toBeUndefined()
       expect(spy.mock.calls.length).toBe(2)
