@@ -1,4 +1,4 @@
-[**@celo/wallet-remote v8.0.1**](../README.md)
+[**@celo/wallet-remote v8.0.2**](../README.md)
 
 ***
 
