@@ -1,4 +1,4 @@
-import { authorizeValidatorSigner, authorizeVoteSigner } from '@celo/actions'
+import { authorizeValidatorSigner, authorizeVoteSigner } from '@celo/actions/contracts/accounts'
 import { parseProofOfPossession } from '@celo/core'
 import { Flags } from '@oclif/core'
 import { Hex } from 'viem'

@@ -1,4 +1,7 @@
-import { generateProofOfKeyPossessionLocally, parseSignatureOfAddress } from '@celo/actions'
+import {
+  generateProofOfKeyPossessionLocally,
+  parseSignatureOfAddress,
+} from '@celo/actions/authorization'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { serializeSignature } from '@celo/core'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'

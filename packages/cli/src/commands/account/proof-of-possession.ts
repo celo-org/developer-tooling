@@ -1,4 +1,4 @@
-import { generateProofOfKeyPossession } from '@celo/actions'
+import { generateProofOfKeyPossession } from '@celo/actions/authorization'
 import { serializeSignature } from '@celo/core'
 import { BaseCommand } from '../../base'
 import { printValueMap } from '../../utils/cli'
