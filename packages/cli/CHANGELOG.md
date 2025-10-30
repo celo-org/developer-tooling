@@ -1,5 +1,17 @@
 # Changelog
 
+## 8.0.1
+
+### Patch Changes
+
+- [#735](https://github.com/celo-org/developer-tooling/pull/735) [`5cb272b`](https://github.com/celo-org/developer-tooling/commit/5cb272babf5618b22253dbdf34b92f33d73b1e2d) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Support Celo Sepolia Tokens and all celo-token-list tokens when signing with Ledger
+
+- Updated dependencies [[`5cb272b`](https://github.com/celo-org/developer-tooling/commit/5cb272babf5618b22253dbdf34b92f33d73b1e2d)]:
+  - @celo/wallet-ledger@8.0.2
+  - @celo/viem-account-ledger@1.2.2
+  - @celo/wallet-hsm-azure@8.0.2
+  - @celo/wallet-local@8.0.2
+
 ## 8.0.0
 
 ### Major Changes

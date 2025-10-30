@@ -1,8 +1,8 @@
-**@celo/wallet-hsm-gcp v8.0.1**
+**@celo/wallet-hsm-gcp v8.0.2**
 
 ***
 
-# @celo/wallet-hsm-gcp v8.0.1
+# @celo/wallet-hsm-gcp v8.0.2
 
 ## Classes
 
