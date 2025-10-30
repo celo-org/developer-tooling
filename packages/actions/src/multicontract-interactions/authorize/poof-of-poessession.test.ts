@@ -1,14 +1,17 @@
+import { serializeSignature } from '@celo/core'
 import { privateKeyToAccount } from 'viem/accounts'
 import { describe, expect, it } from 'vitest'
-import { serializeSignature } from '@celo/core'
-import { generateProofOfKeyPossessionLocally, parseSignatureOfAddress } from './accounts.js'
+import {
+  generateProofOfKeyPossessionLocally,
+  parseSignatureOfAddress,
+} from './proof-of-possession.js'
 
 // Test constants
 const TEST_PRIVATE_KEY = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
 const TEST_SIGNER = privateKeyToAccount(TEST_PRIVATE_KEY).address
 const TEST_ACCOUNT = TEST_SIGNER // Use the same address for proof-of-possession tests
 
-describe('accounts proof-of-possession functions', () => {
+describe('authorize proof-of-possession functions', () => {
   // Note: wallet client tests are not included because anvil doesn't support personal_sign
   // These tests focus on local signing which works independently
 
