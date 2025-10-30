@@ -24,8 +24,8 @@ export const generateProofOfPossessionHash = (address: Address): Hex => {
 export const parseSignature = async (
   messageHash: Hex,
   signature: Hex,
-  expectedSigner: string
-): Promise<{ v: number; r: string; s: string }> => {
+  expectedSigner: Address
+): Promise<{ v: number; r: Hex; s: Hex }> => {
   // Parse signature using viem
   const parsed = viemParseSignature(signature)
 

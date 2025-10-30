@@ -10,7 +10,8 @@ const TIMEOUT = 30_000
 
 // Test data - use different addresses for account and signer (real-world scenario)
 const TEST_SIGNER_PRIVATE_KEY = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
-const TEST_ACCOUNT_PRIVATE_KEY = '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
+const TEST_ACCOUNT_PRIVATE_KEY =
+  '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
 const TEST_SIGNER = privateKeyToAccount(TEST_SIGNER_PRIVATE_KEY).address
 const TEST_ACCOUNT = privateKeyToAccount(TEST_ACCOUNT_PRIVATE_KEY).address
 
@@ -64,13 +65,13 @@ describe('Proof of Possession Compatibility Tests', () => {
           // when signer proves possession for a different account
           const oldSerialized = serializeSignature(oldResult)
           const newSerialized = serializeSignature(newResult)
-          
+
           // New implementation should be able to parse its own signatures
           const newParsed = await parseSignatureOfAddress(TEST_ACCOUNT, TEST_SIGNER, newSerialized)
           expect(newParsed.v).toBe(newResult.v)
           expect(newParsed.r).toBe(newResult.r)
           expect(newParsed.s).toBe(newResult.s)
-          
+
           expect(oldSerialized).toBe(newSerialized)
         },
         TIMEOUT
@@ -96,7 +97,7 @@ describe('Proof of Possession Compatibility Tests', () => {
 
           // We need to add both account and signer private keys for this test
           kit.connection.addAccount(TEST_ACCOUNT_PRIVATE_KEY)
-          kit.connection.addAccount(TEST_SIGNER_PRIVATE_KEY) 
+          kit.connection.addAccount(TEST_SIGNER_PRIVATE_KEY)
           kit.defaultAccount = TEST_SIGNER // Set signer as default for signing
 
           const oldResult = await accounts.generateProofOfKeyPossession(TEST_ACCOUNT, TEST_SIGNER)
@@ -117,7 +118,10 @@ describe('Proof of Possession Compatibility Tests', () => {
       'new implementation has correct structure',
       async () => {
         // Test local signing without RPC calls - signer proves possession for account
-        const newResult = await generateProofOfKeyPossessionLocally(TEST_SIGNER_PRIVATE_KEY, TEST_ACCOUNT)
+        const newResult = await generateProofOfKeyPossessionLocally(
+          TEST_SIGNER_PRIVATE_KEY,
+          TEST_ACCOUNT
+        )
         const newSerialized = serializeSignature(newResult)
 
         expect(newSerialized).toMatch(/^0x[a-fA-F0-9]{130}$/)
@@ -168,9 +172,15 @@ describe('Proof of Possession Compatibility Tests', () => {
       // For now, we'll just test that our new implementation produces consistent results
       // TODO: Use knownAccount when we have the corresponding private key
       void knownAccount // Keep for future use
-      const result1 = await generateProofOfKeyPossessionLocally(TEST_SIGNER_PRIVATE_KEY, TEST_ACCOUNT)
+      const result1 = await generateProofOfKeyPossessionLocally(
+        TEST_SIGNER_PRIVATE_KEY,
+        TEST_ACCOUNT
+      )
 
-      const result2 = await generateProofOfKeyPossessionLocally(TEST_SIGNER_PRIVATE_KEY, TEST_ACCOUNT)
+      const result2 = await generateProofOfKeyPossessionLocally(
+        TEST_SIGNER_PRIVATE_KEY,
+        TEST_ACCOUNT
+      )
 
       expect(serializeSignature(result1)).toBe(serializeSignature(result2))
     })
