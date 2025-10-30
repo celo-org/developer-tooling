@@ -1,6 +1,6 @@
 import { validatorsABI } from '@celo/abis'
-import { getContract, GetContractReturnType } from 'viem'
-import { Clients } from '../client.js'
+import { Address, getContract, GetContractReturnType } from 'viem'
+import { Clients, PublicCeloClient } from '../client.js'
 import { resolveAddress } from './registry.js'
 
 export async function getValidatorsContract<T extends Clients = Clients>(
@@ -16,3 +16,14 @@ export type ValidatorsContract<T extends Clients = Clients> = GetContractReturnT
   typeof validatorsABI,
   T
 >
+
+// METHODS
+
+export const isValidator = async (client: PublicCeloClient, account: Address): Promise<boolean> => {
+  return client.readContract({
+    address: await resolveAddress(client, 'Validators'),
+    abi: validatorsABI,
+    functionName: 'isValidator',
+    args: [account],
+  })
+}

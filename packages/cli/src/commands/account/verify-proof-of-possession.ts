@@ -1,4 +1,5 @@
 import { serializeSignature } from '@celo/utils/lib/signatureUtils'
+import { Hex } from 'viem'
 import { BaseCommand } from '../../base'
 import { printValueMap } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
@@ -38,7 +39,7 @@ export default class VerifyProofOfPossession extends BaseCommand {
         res.flags.signer,
         res.flags.signature
       )
-      signature = serializeSignature({ v, r, s })
+      signature = serializeSignature({ v, r, s }) as Hex
       valid = true
     } catch (error) {
       console.error('Error: Failed to parse signature')
