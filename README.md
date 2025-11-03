@@ -5,7 +5,7 @@ for the Celo community.
 
 ## How we work
 
-We are a GitHub-first team, which means we have a strong preference for communicating via GitHub. 
+We are a GitHub first team, which means we have a strong preference for communicating via GitHub. 
 Please use GitHub to:
 
 🐞 [File a bug report](https://github.com/celo-org/developer-tooling/issues/new/choose)
