@@ -1,5 +1,5 @@
 import { parseSignature } from '@celo/core'
-import { Address, encodePacked, Hex, keccak256 } from 'viem'
+import { Account, Address, encodePacked, Hex, keccak256 } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { WalletCeloClient } from '../../client'
 
@@ -14,7 +14,7 @@ export type ProofOfPossession = {
 export const generateProofOfKeyPossession = async (
   client: WalletCeloClient,
   account: Address,
-  signer: Address
+  signer: Account
 ): Promise<ProofOfPossession> => {
   // Use the same hash generation as soliditySha3({ type: 'address', value: account })
   const hash = keccak256(encodePacked(['address'], [account]))
@@ -23,8 +23,7 @@ export const generateProofOfKeyPossession = async (
     account: signer,
     message: { raw: hash },
   })
-
-  return parseSignature(hash, signature, signer)
+  return parseSignature(hash, signature, signer.address)
 }
 
 export const generateProofOfKeyPossessionLocally = async (
