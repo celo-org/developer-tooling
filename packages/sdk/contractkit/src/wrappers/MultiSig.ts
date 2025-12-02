@@ -39,7 +39,9 @@ export class MultiSigWrapper extends BaseWrapper<MultiSig> {
   async submitOrConfirmTransaction(destination: string, txObject: CeloTxObject<any>, value = '0') {
     const data = stringToSolidityBytes(txObject.encodeABI())
     const transactionCount = await this.contract.methods.getTransactionCount(true, true).call()
-    const transactionIds = await this.contract.methods.getTransactionIds(0, transactionCount, true, false).call()
+    const transactionIds = await this.contract.methods
+      .getTransactionIds(0, transactionCount, true, false)
+      .call()
 
     for (let transactionId of transactionIds) {
       const transaction = await this.contract.methods.transactions(transactionId).call()
