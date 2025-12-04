@@ -43,7 +43,7 @@ export class MultiSigWrapper extends BaseWrapper<MultiSig> {
       .getTransactionIds(0, transactionCount, true, false)
       .call()
 
-    for (let transactionId of transactionIds) {
+    for (const transactionId of transactionIds) {
       const transaction = await this.contract.methods.transactions(transactionId).call()
       if (
         transaction.data === data &&
