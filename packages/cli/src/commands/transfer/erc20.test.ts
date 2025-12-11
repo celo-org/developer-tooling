@@ -33,13 +33,13 @@ testWithAnvilL2('transfer:erc20 cmd', (web3: Web3) => {
 
     await topUpWithToken(
       kit,
-      StableToken.cUSD,
+      StableToken.USDm,
       accounts[0],
       new BigNumber('9000000000000000000000')
     )
     await topUpWithToken(
       kit,
-      StableToken.cREAL,
+      StableToken.BRLm,
       accounts[1],
       new BigNumber('9000000000000000000000')
     )
@@ -65,7 +65,7 @@ testWithAnvilL2('transfer:erc20 cmd', (web3: Web3) => {
     const receiverBalanceBefore = await kit.getTotalBalance(accounts[1])
     const amountToTransfer = '500000000000000000000'
 
-    const cusdAddress = await kit.celoTokens.getAddress(StableToken.cUSD)
+    const cusdAddress = await kit.celoTokens.getAddress(StableToken.USDm)
     // Send cusd as erc20
     await testLocallyWithWeb3Node(
       TransferERC20,
@@ -83,8 +83,8 @@ testWithAnvilL2('transfer:erc20 cmd', (web3: Web3) => {
     )
     // Send cusd as erc20
     const receiverBalance = await kit.getTotalBalance(reciever)
-    expect(receiverBalance.cUSD!.toFixed()).toEqual(
-      receiverBalanceBefore.cUSD!.plus(amountToTransfer).toFixed()
+    expect(receiverBalance.USDm!.toFixed()).toEqual(
+      receiverBalanceBefore.USDm!.plus(amountToTransfer).toFixed()
     )
     // Attempt to send erc20, back
     await testLocallyWithWeb3Node(
@@ -102,14 +102,14 @@ testWithAnvilL2('transfer:erc20 cmd', (web3: Web3) => {
       web3
     )
     const balanceAfter = await kit.getTotalBalance(sender)
-    expect(balanceBefore.cUSD).toEqual(balanceAfter.cUSD)
+    expect(balanceBefore.USDm).toEqual(balanceAfter.USDm)
   })
 
   test('should fail if to address is sanctioned', async () => {
     const spy = jest.spyOn(console, 'log').mockImplementation(() => {
       // noop
     })
-    const cusdAddress = await kit.celoTokens.getAddress(StableToken.cUSD)
+    const cusdAddress = await kit.celoTokens.getAddress(StableToken.USDm)
 
     await expect(
       testLocallyWithWeb3Node(
@@ -166,7 +166,7 @@ testWithAnvilL2('transfer:erc20 cmd', (web3: Web3) => {
     const receiver = accounts[1]
     const amountToTransfer = '500000000000000000000' // 500 tokens
 
-    const cusdAddress = await kit.celoTokens.getAddress(StableToken.cUSD)
+    const cusdAddress = await kit.celoTokens.getAddress(StableToken.USDm)
 
     // Transfer ERC20 with gas paid in CELO (default)
     await testLocallyWithWeb3Node(
@@ -188,11 +188,11 @@ testWithAnvilL2('transfer:erc20 cmd', (web3: Web3) => {
     const receiverBalance = await kit.getTotalBalance(receiver)
     const senderBalance = await kit.getTotalBalance(sender)
 
-    // The receiver should have received the cUSD
-    expect(receiverBalance.cUSD!.toFixed()).toEqual(amountToTransfer)
+    // The receiver should have received the USDm
+    expect(receiverBalance.USDm!.toFixed()).toEqual(amountToTransfer)
 
-    // The sender should have less cUSD (the transferred amount)
-    expect(senderBalance.cUSD!.toFixed()).toEqual(
+    // The sender should have less USDm (the transferred amount)
+    expect(senderBalance.USDm!.toFixed()).toEqual(
       new BigNumber('9000000000000000000000').minus(amountToTransfer).toFixed()
     )
   })

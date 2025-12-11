@@ -18,20 +18,20 @@ testWithAnvilL2('StableToken Wrapper', async (web3) => {
       symbol: string
     }
   } = {
-    [StableToken.cUSD]: {
-      stableToken: StableToken.cUSD,
-      name: 'Celo Dollar',
-      symbol: 'cUSD',
+    [StableToken.USDm]: {
+      stableToken: StableToken.USDm,
+      name: 'Mento Dollar',
+      symbol: 'USDm',
     },
-    [StableToken.cEUR]: {
-      stableToken: StableToken.cEUR,
-      name: 'Celo Euro',
-      symbol: 'cEUR',
+    [StableToken.EURm]: {
+      stableToken: StableToken.EURm,
+      name: 'Mento Euro',
+      symbol: 'EURm',
     },
-    [StableToken.cREAL]: {
-      stableToken: StableToken.cREAL,
-      name: 'Celo Brazilian Real',
-      symbol: 'cREAL',
+    [StableToken.BRLm]: {
+      stableToken: StableToken.BRLm,
+      name: 'Mento Brazilian Real',
+      symbol: 'BRLm',
     },
   }
 

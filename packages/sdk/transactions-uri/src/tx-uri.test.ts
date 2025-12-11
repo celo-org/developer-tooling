@@ -48,7 +48,7 @@ testWithAnvilL2('URI utils', (web3) => {
       expect(resultTx).toEqual(simpleTransferTx)
     })
 
-    it('should match cUSD transfer tx', () => {
+    it('should match USDm transfer tx', () => {
       const resultTx = parseUri(stableTokenTransferUri)
       expect(resultTx).toEqual(stableTokenTransferTx)
     })
@@ -65,7 +65,7 @@ testWithAnvilL2('URI utils', (web3) => {
       expect(resultUri).toEqual(simpleTransferUri)
     })
 
-    it('should match cUSD transfer URI', () => {
+    it('should match USDm transfer URI', () => {
       const uri = buildUri(stableTokenTransferTx, 'transfer', ['address', 'uint256'])
       expect(uri).toEqual(stableTokenTransferUri)
     })

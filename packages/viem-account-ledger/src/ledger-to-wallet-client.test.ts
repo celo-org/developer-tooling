@@ -248,8 +248,8 @@ syntheticDescribe('ledgerToWalletClient (mocked ledger)', () => {
               transport: await transport,
               walletClientOptions: defaultWalletClientOptions,
             })
-            const cUSDa = '0x874069fa1eb16d44d622f2e0ca25eea172369bc1'
-            const txHash = await client.signTransaction({ ...txData, feeCurrency: cUSDa, nonce: 2 })
+            const USDma = '0x874069fa1eb16d44d622f2e0ca25eea172369bc1'
+            const txHash = await client.signTransaction({ ...txData, feeCurrency: USDma, nonce: 2 })
             expect(txHash).toEqual(
               '0x7bf87682a4ec026464809412345678901234567890123456789012345678907b80c094874069fa1eb16d44d622f2e0ca25eea172369bc1809f086e5c4b1ec410ddc826f65809935295623743a8859eb7ce87272a0d97d997a043a7e7949a75149b469df789c9edab960e651be85a990524e4e9cd8cea72a831'
             )
@@ -263,10 +263,10 @@ syntheticDescribe('ledgerToWalletClient (mocked ledger)', () => {
               transport: await transport,
               walletClientOptions: defaultWalletClientOptions,
             })
-            const cUSDa = '0x874069fa1eb16d44d622f2e0ca25eea172369bc1'
+            const USDma = '0x874069fa1eb16d44d622f2e0ca25eea172369bc1'
             const txHash = await client.signTransaction({
               ...txData,
-              feeCurrency: cUSDa,
+              feeCurrency: USDma,
               nonce: 1,
             })
             expect(txHash).toEqual(
@@ -449,10 +449,10 @@ hardwareDescribe('ledgerToWalletClient (device ledger)', () => {
             transport: await transport,
             walletClientOptions: defaultWalletClientOptions,
           })
-          const cUSDa = '0x874069fa1eb16d44d622f2e0ca25eea172369bc1'
+          const USDma = '0x874069fa1eb16d44d622f2e0ca25eea172369bc1'
           // NOTE: this is device-specific
           // play with the nonce to produce a different tx with a yParity==0
-          const txHash = await client.signTransaction({ ...txData, feeCurrency: cUSDa, nonce: 0 })
+          const txHash = await client.signTransaction({ ...txData, feeCurrency: USDma, nonce: 0 })
           const [decoded, signer] = recoverTransaction(txHash)
           expect(signer.toLowerCase()).toBe(client.account.address.toLowerCase())
           // @ts-expect-error
@@ -467,12 +467,12 @@ hardwareDescribe('ledgerToWalletClient (device ledger)', () => {
             transport: await transport,
             walletClientOptions: defaultWalletClientOptions,
           })
-          const cUSDa = '0x874069fa1eb16d44d622f2e0ca25eea172369bc1'
+          const USDma = '0x874069fa1eb16d44d622f2e0ca25eea172369bc1'
           // NOTE: this is device-specific
           // play with the nonce to produce a different tx with a yParity==1
           const txHash = await client.signTransaction({
             ...txData,
-            feeCurrency: cUSDa,
+            feeCurrency: USDma,
             nonce: 100,
           })
           const [decoded, signer] = recoverTransaction(txHash)

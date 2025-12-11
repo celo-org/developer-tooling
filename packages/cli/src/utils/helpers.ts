@@ -62,11 +62,11 @@ export async function requireNodeIsSynced(client: PublicCeloClient) {
 
 export function getStableTokenContractName(stable: StableToken) {
   switch (stable) {
-    case StableToken.cUSD:
+    case StableToken.USDm:
       return 'StableToken'
-    case StableToken.cEUR:
+    case StableToken.EURm:
       return 'StableTokenEUR'
-    case StableToken.cREAL:
+    case StableToken.BRLm:
       return 'StableTokenBRL'
   }
 }

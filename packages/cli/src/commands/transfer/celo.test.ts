@@ -41,13 +41,13 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
 
     await topUpWithToken(
       kit,
-      StableToken.cUSD,
+      StableToken.USDm,
       accounts[0],
       new BigNumber('9000000000000000000000')
     )
     await topUpWithToken(
       kit,
-      StableToken.cUSD,
+      StableToken.USDm,
       accounts[1],
       new BigNumber('9000000000000000000000')
     )
@@ -62,7 +62,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
     const balanceBefore = (await kit.getTotalBalance(accounts[0])).CELO!
     const receiverBalanceBefore = await kit.getTotalBalance(accounts[1])
     const amountToTransfer = '500000000000000000000'
-    // Send cUSD to RG contract
+    // Send USDm to RG contract
     await testLocallyWithWeb3Node(
       TransferCelo,
       [
@@ -73,11 +73,11 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
         '--value',
         amountToTransfer,
         '--gasCurrency',
-        (await kit.contracts.getStableToken(StableToken.cUSD)).address,
+        (await kit.contracts.getStableToken(StableToken.USDm)).address,
       ],
       web3
     )
-    // RG cUSD balance should match the amount sent
+    // RG USDm balance should match the amount sent
     const receiverBalance = await kit.getTotalBalance(accounts[1])
     expect(receiverBalance.CELO!.toFixed()).toEqual(
       receiverBalanceBefore.CELO!.plus(amountToTransfer).toFixed()
@@ -88,7 +88,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
     // Safety check if the latest transaction was originated by expected account
     expect(transactionReceipt.from.toLowerCase()).toEqual(accounts[0].toLowerCase())
 
-    // Attempt to send cUSD back
+    // Attempt to send USDm back
     await testLocallyWithWeb3Node(
       TransferCelo,
       [
@@ -99,7 +99,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
         '--value',
         amountToTransfer,
         '--gasCurrency',
-        (await kit.contracts.getStableToken(StableToken.cUSD)).address,
+        (await kit.contracts.getStableToken(StableToken.USDm)).address,
       ],
       web3
     )
@@ -171,7 +171,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
           '--value',
           balance.toFixed(),
           '--gasCurrency',
-          (await kit.contracts.getStableToken(StableToken.cUSD)).address,
+          (await kit.contracts.getStableToken(StableToken.USDm)).address,
           '--comment',
           'Goodbye balance',
         ],
@@ -238,7 +238,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
         '--value',
         amountToTransfer.toString(10),
         '--gasCurrency',
-        (await kit.contracts.getStableToken(StableToken.cUSD)).address,
+        (await kit.contracts.getStableToken(StableToken.USDm)).address,
       ],
       web3
     )
@@ -278,7 +278,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
       web3
     )
 
-    // Attempt to send cUSD back
+    // Attempt to send USDm back
     await testLocallyWithWeb3Node(
       TransferCelo,
       [
@@ -332,7 +332,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
     jest.spyOn(TransferCelo.prototype, 'getPublicClient').mockResolvedValue(publicClient)
 
     const amountToTransfer = '1'
-    const cUSDAddress = (await kit.contracts.getStableToken(StableToken.cUSD)).address
+    const USDmAddress = (await kit.contracts.getStableToken(StableToken.USDm)).address
 
     await testLocallyWithWeb3Node(
       TransferCelo,
@@ -344,7 +344,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
         '--value',
         amountToTransfer,
         '--gasCurrency',
-        cUSDAddress,
+        USDmAddress,
       ],
       web3
     )
@@ -353,7 +353,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
       account: accounts[0],
       to: accounts[1] as Address,
       value: BigInt(amountToTransfer),
-      feeCurrency: cUSDAddress as Address,
+      feeCurrency: USDmAddress as Address,
     })
   })
 
@@ -411,7 +411,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
           '--value',
           amountToTransfer,
           '--gasCurrency',
-          (await kit.contracts.getStableToken(StableToken.cUSD)).address.toUpperCase(),
+          (await kit.contracts.getStableToken(StableToken.USDm)).address.toUpperCase(),
         ],
         web3
       )

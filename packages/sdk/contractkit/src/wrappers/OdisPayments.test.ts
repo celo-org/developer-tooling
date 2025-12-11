@@ -16,16 +16,16 @@ testWithAnvilL2('OdisPayments Wrapper', (web3) => {
     accounts = (await web3.eth.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
     odisPayments = await kit.contracts.getOdisPayments()
-    stableToken = await kit.contracts.getStableToken(StableToken.cUSD)
+    stableToken = await kit.contracts.getStableToken(StableToken.USDm)
 
-    await topUpWithToken(kit, StableToken.cUSD, accounts[0], new BigNumber(10000))
+    await topUpWithToken(kit, StableToken.USDm, accounts[0], new BigNumber(10000))
   })
 
   describe('#payInCUSD', () => {
     const testValue = 10000
 
     const payAndCheckState = async (sender: string, receiver: string, transferValue: number) => {
-      // Approve cUSD that OdisPayments contract may transfer from sender
+      // Approve USDm that OdisPayments contract may transfer from sender
       await stableToken
         .approve(odisPayments.address, transferValue)
         .sendAndWaitForReceipt({ from: sender })

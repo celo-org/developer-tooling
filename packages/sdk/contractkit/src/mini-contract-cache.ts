@@ -77,7 +77,7 @@ export class MiniContractCache implements ContractCacheType {
     return this.getContract(CeloContract.CeloToken)
   }
 
-  getStableToken(stableToken: StableToken = StableToken.cUSD): Promise<StableTokenWrapper> {
+  getStableToken(stableToken: StableToken = StableToken.USDm): Promise<StableTokenWrapper> {
     return this.getContract(stableTokenInfos[stableToken].contract)
   }
 

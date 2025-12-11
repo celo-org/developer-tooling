@@ -32,7 +32,7 @@ describe('CeloTokens', () => {
 
   describe('isStableToken()', () => {
     it('returns true if the token is a stable token', () => {
-      expect(celoTokens.isStableToken(StableToken.cUSD)).toEqual(true)
+      expect(celoTokens.isStableToken(StableToken.USDm)).toEqual(true)
     })
 
     it('returns false if the token is not a stable token', () => {

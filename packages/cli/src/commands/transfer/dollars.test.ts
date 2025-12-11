@@ -11,7 +11,7 @@ import {
   testLocallyWithWeb3Node,
 } from '../../test-utils/cliUtils'
 import { mockRpcFetch } from '../../test-utils/mockRpc'
-import TransferCUSD from './dollars'
+import TransferUSDM from './dollars'
 
 process.env.NO_SYNCCHECK = 'true'
 
@@ -33,13 +33,13 @@ testWithAnvilL2('transfer:dollars cmd', (web3: Web3) => {
     })
     await topUpWithToken(
       kit,
-      StableToken.cUSD,
+      StableToken.USDm,
       accounts[0],
       new BigNumber('1000000000000000000000')
     )
     await topUpWithToken(
       kit,
-      StableToken.cUSD,
+      StableToken.USDm,
       accounts[1],
       new BigNumber('1000000000000000000000')
     )
@@ -53,32 +53,32 @@ testWithAnvilL2('transfer:dollars cmd', (web3: Web3) => {
     const balanceBefore = await kit.getTotalBalance(accounts[0])
     const receiverBalanceBefore = await kit.getTotalBalance(accounts[1])
     const amountToTransfer = '500000000000000000000'
-    // Send cUSD to RG contract
+    // Send USDm to RG contract
     await testLocallyWithWeb3Node(
-      TransferCUSD,
+      TransferUSDM,
       ['--from', accounts[0], '--to', accounts[1], '--value', amountToTransfer],
       web3
     )
-    // RG cUSD balance should match the amount sent
+    // RG USDm balance should match the amount sent
     const receiverBalance = await kit.getTotalBalance(accounts[1])
-    expect(receiverBalance.cUSD!.toFixed()).toEqual(
-      receiverBalanceBefore.cUSD!.plus(amountToTransfer).toFixed()
+    expect(receiverBalance.USDm!.toFixed()).toEqual(
+      receiverBalanceBefore.USDm!.plus(amountToTransfer).toFixed()
     )
-    // Attempt to send cUSD back
+    // Attempt to send USDm back
     await testLocallyWithWeb3Node(
-      TransferCUSD,
+      TransferUSDM,
       ['--from', accounts[1], '--to', accounts[0], '--value', amountToTransfer],
       web3
     )
     const balanceAfter = await kit.getTotalBalance(accounts[0])
-    expect(balanceBefore.cUSD).toEqual(balanceAfter.cUSD)
+    expect(balanceBefore.USDm).toEqual(balanceAfter.USDm)
   })
   it('will transfer ALL the cusd an address has', async () => {
-    const cusdWrapper = await kit.contracts.getStableToken(StableToken.cUSD)
+    const cusdWrapper = await kit.contracts.getStableToken(StableToken.USDm)
     const balance = await cusdWrapper.balanceOf(accounts[0])
     expect(balance.toFixed()).toEqBigNumber('1000000000000000000000')
     await testLocallyWithWeb3Node(
-      TransferCUSD,
+      TransferUSDM,
       ['--from', accounts[0], '--to', accounts[1], '--value', balance.toFixed()],
       web3
     )
@@ -97,13 +97,13 @@ testWithAnvilL2('transfer:dollars cmd', (web3: Web3) => {
     })
     describe('matches transfer currency', () => {
       it('checks that the sender has enough of the token to cover both transfer and pay for gas', async () => {
-        const cusdWrapper = await kit.contracts.getStableToken(StableToken.cUSD)
+        const cusdWrapper = await kit.contracts.getStableToken(StableToken.USDm)
         const cusdAddress = cusdWrapper.address
         const balance = await cusdWrapper.balanceOf(accounts[0])
         expect(balance.toFixed()).toEqBigNumber('1000000000000000000000')
         await expect(
           testLocallyWithWeb3Node(
-            TransferCUSD,
+            TransferUSDM,
             [
               '--from',
               accounts[0],
@@ -125,7 +125,7 @@ testWithAnvilL2('transfer:dollars cmd', (web3: Web3) => {
               "Running Checks:",
             ],
             [
-              "   ✔  Account has at least 1000 cUSD ",
+              "   ✔  Account has at least 1000 USDm ",
             ],
             [
               "   ✔  Compliant Address ",
@@ -140,7 +140,7 @@ testWithAnvilL2('transfer:dollars cmd', (web3: Web3) => {
               "   ✔  The provided feeCurrency is whitelisted ",
             ],
             [
-              "   ✘  Account can afford to transfer cUSD with gas paid in 0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1 Cannot afford to transfer cUSD ; try reducing value slightly or using a different feeCurrency",
+              "   ✘  Account can afford to transfer USDm with gas paid in 0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1 Cannot afford to transfer USDm ; try reducing value slightly or using a different feeCurrency",
             ],
           ]
         `)
@@ -150,18 +150,18 @@ testWithAnvilL2('transfer:dollars cmd', (web3: Web3) => {
       beforeEach(async () => {
         await topUpWithToken(
           kit,
-          StableToken.cEUR,
+          StableToken.EURm,
           accounts[0],
           new BigNumber('1000000000000000000000')
         )
       })
       it('will transfer all the cusd an address has', async () => {
-        const cusdWrapper = await kit.contracts.getStableToken(StableToken.cUSD)
-        const euroWrapper = await kit.contracts.getStableToken(StableToken.cEUR)
+        const cusdWrapper = await kit.contracts.getStableToken(StableToken.USDm)
+        const euroWrapper = await kit.contracts.getStableToken(StableToken.EURm)
         const balance = await cusdWrapper.balanceOf(accounts[0])
         expect(balance.toFixed()).toEqBigNumber('1000000000000000000000')
         await testLocallyWithWeb3Node(
-          TransferCUSD,
+          TransferUSDM,
           [
             '--from',
             accounts[0],
@@ -181,12 +181,12 @@ testWithAnvilL2('transfer:dollars cmd', (web3: Web3) => {
   })
 
   describe('when --comment is passed', () => {
-    it('should transfer cUSD with a comment', async () => {
+    it('should transfer USDm with a comment', async () => {
       const amountToTransfer = '10000000000000000000'
       const comment = 'Test transfer'
       await expect(
         testLocallyWithWeb3Node(
-          TransferCUSD,
+          TransferUSDM,
           [
             '--from',
             accounts[0],
@@ -206,7 +206,7 @@ testWithAnvilL2('transfer:dollars cmd', (web3: Web3) => {
             "Running Checks:",
           ],
           [
-            "   ✔  Account has at least 10 cUSD ",
+            "   ✔  Account has at least 10 USDm ",
           ],
           [
             "   ✔  Compliant Address ",
@@ -218,13 +218,13 @@ testWithAnvilL2('transfer:dollars cmd', (web3: Web3) => {
             "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 can sign txs ",
           ],
           [
-            "   ✔  Account can afford to transfer cUSD with gas paid in CELO ",
+            "   ✔  Account can afford to transfer USDm with gas paid in CELO ",
           ],
           [
             "All checks passed",
           ],
           [
-            "SendTransaction: cUSD->TransferWithComment",
+            "SendTransaction: USDm->TransferWithComment",
           ],
           [
             "txHash: 0xtxhash",
@@ -238,7 +238,7 @@ testWithAnvilL2('transfer:dollars cmd', (web3: Web3) => {
     const spy = jest.spyOn(console, 'log')
     await expect(
       testLocallyWithWeb3Node(
-        TransferCUSD,
+        TransferUSDM,
         ['--from', accounts[1], '--to', TEST_SANCTIONED_ADDRESS, '--value', '1'],
         web3
       )

@@ -2,7 +2,7 @@ import { getStableTokenUSDContract } from '../../packages-to-be/stable-tokens'
 import { TransferStableBase } from '../../transfer-stable-base'
 
 export default class TransferDollars extends TransferStableBase {
-  static description = 'Transfer Celo Dollars (cUSD) to a specified address.'
+  static description = 'Transfer Mento Dollars (USDm) to a specified address.'
 
   static flags = {
     ...TransferStableBase.flags,

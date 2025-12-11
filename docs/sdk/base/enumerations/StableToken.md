@@ -10,24 +10,24 @@ Defined in: [packages/sdk/base/src/currencies.ts:1](https://github.com/celo-org/
 
 ## Enumeration Members
 
-### cEUR
+### EURm
 
-> **cEUR**: `"cEUR"`
+> **EURm**: `"EURm"`
 
 Defined in: [packages/sdk/base/src/currencies.ts:3](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/currencies.ts#L3)
 
 ***
 
-### cREAL
+### BRLm
 
-> **cREAL**: `"cREAL"`
+> **BRLm**: `"BRLm"`
 
 Defined in: [packages/sdk/base/src/currencies.ts:4](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/currencies.ts#L4)
 
 ***
 
-### cUSD
+### USDm
 
-> **cUSD**: `"cUSD"`
+> **USDm**: `"USDm"`
 
 Defined in: [packages/sdk/base/src/currencies.ts:2](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/currencies.ts#L2)

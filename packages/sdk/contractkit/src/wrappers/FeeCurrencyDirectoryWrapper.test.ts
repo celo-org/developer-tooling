@@ -14,22 +14,22 @@ testWithAnvilL2('FeeCurrencyDirectory', (web3) => {
           "adaptedToken": undefined,
           "address": "0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1",
           "decimals": 18,
-          "name": "Celo Dollar",
-          "symbol": "cUSD",
+          "name": "Mento Dollar",
+          "symbol": "USDm",
         },
         {
           "adaptedToken": undefined,
           "address": "0x5930519559Ffa7528a00BE445734036471c443a2",
           "decimals": 18,
-          "name": "Celo Euro",
-          "symbol": "cEUR",
+          "name": "Mento Euro",
+          "symbol": "EURm",
         },
         {
           "adaptedToken": undefined,
           "address": "0xB2Fd9852Ca3D69678286A8635d661690906A3E9d",
           "decimals": 18,
-          "name": "Celo Brazilian Real",
-          "symbol": "cREAL",
+          "name": "Mento Brazilian Real",
+          "symbol": "BRLm",
         },
       ]
     `)

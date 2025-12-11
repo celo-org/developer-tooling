@@ -15,7 +15,7 @@ import { StableTokenWrapper } from './StableTokenWrapper'
 
 testWithAnvilL2('Escrow Wrapper', (web3: Web3) => {
   const kit = newKitFromWeb3(web3)
-  const TEN_CUSD = kit.web3.utils.toWei('10', 'ether')
+  const TEN_USDM = kit.web3.utils.toWei('10', 'ether')
   const TIMESTAMP = 1665080820
 
   const getParsedSignatureOfAddressForTest = (address: string, signer: string) => {
@@ -57,11 +57,11 @@ testWithAnvilL2('Escrow Wrapper', (web3: Web3) => {
       new BigNumber(web3.utils.toWei('1', 'ether'))
     )
 
-    await topUpWithToken(kit, StableToken.cUSD, escrow.address, new BigNumber(TEN_CUSD))
-    await topUpWithToken(kit, StableToken.cUSD, accounts[0], new BigNumber(TEN_CUSD))
-    await topUpWithToken(kit, StableToken.cUSD, accounts[1], new BigNumber(TEN_CUSD))
-    await topUpWithToken(kit, StableToken.cUSD, accounts[2], new BigNumber(TEN_CUSD))
-    await setBalance(web3, accounts[0], new BigNumber(TEN_CUSD))
+    await topUpWithToken(kit, StableToken.USDm, escrow.address, new BigNumber(TEN_USDM))
+    await topUpWithToken(kit, StableToken.USDm, accounts[0], new BigNumber(TEN_USDM))
+    await topUpWithToken(kit, StableToken.USDm, accounts[1], new BigNumber(TEN_USDM))
+    await topUpWithToken(kit, StableToken.USDm, accounts[2], new BigNumber(TEN_USDM))
+    await setBalance(web3, accounts[0], new BigNumber(TEN_USDM))
 
     stableTokenContract = await kit.contracts.getStableToken()
     federatedAttestations = await kit.contracts.getFederatedAttestations()
@@ -80,13 +80,13 @@ testWithAnvilL2('Escrow Wrapper', (web3: Web3) => {
       .registerAttestationAsIssuer(identifier, kit.defaultAccount as string, TIMESTAMP)
       .sendAndWaitForReceipt()
 
-    await stableTokenContract.approve(escrow.address, TEN_CUSD).sendAndWaitForReceipt()
+    await stableTokenContract.approve(escrow.address, TEN_USDM).sendAndWaitForReceipt()
 
     await escrow
       .transferWithTrustedIssuers(
         identifier,
         stableTokenContract.address,
-        TEN_CUSD,
+        TEN_USDM,
         1000,
         testPaymentId,
         1,
@@ -113,14 +113,14 @@ testWithAnvilL2('Escrow Wrapper', (web3: Web3) => {
     const receiverBalanceBefore = await stableTokenContract.balanceOf(receiver)
 
     await stableTokenContract
-      .approve(escrow.address, TEN_CUSD)
+      .approve(escrow.address, TEN_USDM)
       .sendAndWaitForReceipt({ from: sender })
 
     await escrow
       .transferWithTrustedIssuers(
         identifier,
         stableTokenContract.address,
-        TEN_CUSD,
+        TEN_USDM,
         oneDayInSecs,
         withdrawKeyAddress,
         1,
@@ -135,8 +135,8 @@ testWithAnvilL2('Escrow Wrapper', (web3: Web3) => {
     const senderBalanceAfter = await stableTokenContract.balanceOf(sender)
     const receiverBalanceAfter = await stableTokenContract.balanceOf(receiver)
 
-    expect(senderBalanceBefore.minus(+TEN_CUSD)).toEqual(senderBalanceAfter)
-    expect(receiverBalanceBefore.plus(+TEN_CUSD)).toEqual(receiverBalanceAfter)
+    expect(senderBalanceBefore.minus(+TEN_USDM)).toEqual(senderBalanceAfter)
+    expect(receiverBalanceBefore.plus(+TEN_USDM)).toEqual(receiverBalanceAfter)
   })
   it('withdraw should revert if attestation is not registered', async () => {
     const sender: string = accounts[1]
@@ -146,14 +146,14 @@ testWithAnvilL2('Escrow Wrapper', (web3: Web3) => {
     const parsedSig = await getParsedSignatureOfAddressForTest(receiver, withdrawKeyAddress)
 
     await stableTokenContract
-      .approve(escrow.address, TEN_CUSD)
+      .approve(escrow.address, TEN_USDM)
       .sendAndWaitForReceipt({ from: sender })
 
     await escrow
       .transferWithTrustedIssuers(
         identifier,
         stableTokenContract.address,
-        TEN_CUSD,
+        TEN_USDM,
         oneDayInSecs,
         withdrawKeyAddress,
         1,
@@ -179,14 +179,14 @@ testWithAnvilL2('Escrow Wrapper', (web3: Web3) => {
       .sendAndWaitForReceipt()
 
     await stableTokenContract
-      .approve(escrow.address, TEN_CUSD)
+      .approve(escrow.address, TEN_USDM)
       .sendAndWaitForReceipt({ from: sender })
 
     await escrow
       .transferWithTrustedIssuers(
         identifier,
         stableTokenContract.address,
-        TEN_CUSD,
+        TEN_USDM,
         oneDayInSecs,
         withdrawKeyAddress,
         1,
