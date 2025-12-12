@@ -20,12 +20,12 @@ jobs:
       attestations: write
       id-token: write
       repository-projects: write
-      environment: production
     uses: celo-org/reusable-workflows/.github/workflows/npm-publish.yaml@v3.0.0
     with:
       node-version: 20
       version-command: yarn version-then-update-files
       publish-command: yarn release
+      environment: production
 
   # release gives an array of published packages as json objects, we need an array of strings for installing
   prepare:
