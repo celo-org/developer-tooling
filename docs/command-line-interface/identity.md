@@ -45,7 +45,7 @@ FLAGS
       Ledger Live
 
   --tokenAddress=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
-      The address of the token that will be withdrawn. Defaults to cUSD
+      The address of the token that will be withdrawn. Defaults to USDm
 
   --useLedger
       Set it to use a ledger wallet

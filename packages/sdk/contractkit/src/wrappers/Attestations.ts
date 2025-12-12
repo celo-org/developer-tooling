@@ -198,7 +198,7 @@ export class AttestationsWrapper extends BaseWrapper<Attestations> {
    * @param attestationsRequested  The number of attestations to request
    */
   async getAttestationFeeRequired(attestationsRequested: number) {
-    const contract = await this.contracts.getStableToken(StableToken.cUSD)
+    const contract = await this.contracts.getStableToken(StableToken.USDm)
     const attestationFee = await this.contract.methods
       .getAttestationRequestFee(contract.address)
       .call()
@@ -210,7 +210,7 @@ export class AttestationsWrapper extends BaseWrapper<Attestations> {
    * @param attestationsRequested The number of attestations to request
    */
   async approveAttestationFee(attestationsRequested: number) {
-    const tokenContract = await this.contracts.getStableToken(StableToken.cUSD)
+    const tokenContract = await this.contracts.getStableToken(StableToken.USDm)
     const fee = await this.getAttestationFeeRequired(attestationsRequested)
     return tokenContract.approve(this.address, fee.toFixed())
   }

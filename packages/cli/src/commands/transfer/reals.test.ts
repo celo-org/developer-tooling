@@ -31,13 +31,13 @@ testWithAnvilL2('transfer:reals cmd', (web3: Web3) => {
 
     await topUpWithToken(
       kit,
-      StableToken.cREAL,
+      StableToken.BRLm,
       accounts[0],
       new BigNumber('9000000000000000000000')
     )
     await topUpWithToken(
       kit,
-      StableToken.cREAL,
+      StableToken.BRLm,
       accounts[1],
       new BigNumber('9000000000000000000000')
     )
@@ -51,25 +51,25 @@ testWithAnvilL2('transfer:reals cmd', (web3: Web3) => {
     const balanceBefore = await kit.getTotalBalance(accounts[0])
     const receiverBalanceBefore = await kit.getTotalBalance(accounts[1])
     const amountToTransfer = '500000000000000000000'
-    // Send cREAL, to RG contract
+    // Send BRLm, to RG contract
     await testLocallyWithWeb3Node(
       TransferReals,
       ['--from', accounts[0], '--to', accounts[1], '--value', amountToTransfer],
       web3
     )
-    // RG cREAL, balance should match the amount sent
+    // RG BRLm, balance should match the amount sent
     const receiverBalance = await kit.getTotalBalance(accounts[1])
-    expect(receiverBalance.cREAL!.toFixed()).toEqual(
-      receiverBalanceBefore.cREAL!.plus(amountToTransfer).toFixed()
+    expect(receiverBalance.BRLm!.toFixed()).toEqual(
+      receiverBalanceBefore.BRLm!.plus(amountToTransfer).toFixed()
     )
-    // Attempt to send cREAL, back
+    // Attempt to send BRLm, back
     await testLocallyWithWeb3Node(
       TransferReals,
       ['--from', accounts[1], '--to', accounts[0], '--value', amountToTransfer],
       web3
     )
     const balanceAfter = await kit.getTotalBalance(accounts[0])
-    expect(balanceBefore.cREAL).toEqual(balanceAfter.cREAL)
+    expect(balanceBefore.BRLm).toEqual(balanceAfter.BRLm)
   })
 
   test('should fail if to address is sanctioned', async () => {

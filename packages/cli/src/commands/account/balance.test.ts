@@ -36,21 +36,21 @@ testWithAnvilL2('account:balance cmd', (web3: Web3) => {
 
     const balanceOutput = calls[1][0]
     expect(balanceOutput).toMatch(/CELO: \d+ \(~9\.\d+e\+23\)/)
-    expect(balanceOutput).toContain('cEUR: 0')
-    expect(balanceOutput).toContain('cREAL: 0')
-    expect(balanceOutput).toContain('cUSD: 0')
+    expect(balanceOutput).toContain('EURm: 0')
+    expect(balanceOutput).toContain('BRLm: 0')
+    expect(balanceOutput).toContain('USDm: 0')
     expect(balanceOutput).toContain('lockedCELO: 1234567000')
     expect(balanceOutput).toContain('pending: 890')
   })
 
   it('shows the balance of the account for different tokens', async () => {
-    const cUSDAmount = new BigNumber('1234567890000000000000')
-    const cEURAmount = new BigNumber('2345678900000000000000')
-    const cREALAmount = new BigNumber('3456789000000000000000')
+    const USDmAmount = new BigNumber('1234567890000000000000')
+    const EURmAmount = new BigNumber('2345678900000000000000')
+    const BRLmAmount = new BigNumber('3456789000000000000000')
 
-    await topUpWithToken(kit, StableToken.cUSD, accounts[0], cUSDAmount)
-    await topUpWithToken(kit, StableToken.cEUR, accounts[0], cEURAmount)
-    await topUpWithToken(kit, StableToken.cREAL, accounts[0], cREALAmount)
+    await topUpWithToken(kit, StableToken.USDm, accounts[0], USDmAmount)
+    await topUpWithToken(kit, StableToken.EURm, accounts[0], EURmAmount)
+    await topUpWithToken(kit, StableToken.BRLm, accounts[0], BRLmAmount)
 
     await testLocallyWithWeb3Node(
       Balance,
@@ -64,12 +64,12 @@ testWithAnvilL2('account:balance cmd', (web3: Web3) => {
           "All balances expressed in units of wei.",
         ],
         [
-          "CELO: 1000000000000000000000000 (~1e+24)
-      cEUR: 2345678900000000000000 (~2.3456789e+21)
-      cREAL: 3456789000000000000000 (~3.456789e+21)
-      cUSD: 1234567890000000000000 (~1.23456789e+21)
+          "BRLm: 3456789000000000000000 (~3.456789e+21)
+      CELO: 1000000000000000000000000 (~1e+24)
+      EURm: 2345678900000000000000 (~2.3456789e+21)
       lockedCELO: 0 
-      pending: 0 ",
+      pending: 0 
+      USDm: 1234567890000000000000 (~1.23456789e+21)",
         ],
         [
           "erc20: 1000000000000000000000000 (~1e+24)",

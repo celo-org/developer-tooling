@@ -196,7 +196,7 @@ export class SortedOraclesWrapper extends BaseWrapper<SortedOracles> {
   async reportStableToken(
     value: BigNumber.Value,
     oracleAddress: Address,
-    token: StableToken = StableToken.cUSD
+    token: StableToken = StableToken.USDm
   ): Promise<CeloTransactionObject<void>> {
     return this.report(stableTokenInfos[token].contract, value, oracleAddress)
   }

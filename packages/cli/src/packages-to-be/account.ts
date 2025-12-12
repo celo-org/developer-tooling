@@ -11,18 +11,18 @@ export const getTotalBalance = async (
   lockedCELO: bigint
   pending: bigint
   CELO: bigint
-  cUSD: bigint
-  cEUR: bigint
-  cREAL: bigint
+  USDm: bigint
+  EURm: bigint
+  BRLm: bigint
 }> => {
-  const [lockedCeloAddress, celoTokenAddress, cUSDAddress, cEURAddress, cREALAddress] =
+  const [lockedCeloAddress, celoTokenAddress, USDmAddress, EURmAddress, BRLmAddress] =
     await Promise.all(
       (['LockedGold', 'GoldToken', 'StableToken', 'StableTokenEUR', 'StableTokenBRL'] as const).map(
         (contractName) => resolveAddress(client, contractName)
       )
     )
 
-  const [lockedCELO, pending, CELO, cUSD, cEUR, cREAL] = await Promise.all([
+  const [lockedCELO, pending, CELO, USDm, EURm, BRLm] = await Promise.all([
     client.readContract({
       address: lockedCeloAddress,
       abi: lockedGoldABI,
@@ -42,19 +42,19 @@ export const getTotalBalance = async (
       args: [address],
     }),
     client.readContract({
-      address: cUSDAddress,
+      address: USDmAddress,
       abi: erc20Abi,
       functionName: 'balanceOf',
       args: [address],
     }),
     client.readContract({
-      address: cEURAddress,
+      address: EURmAddress,
       abi: erc20Abi,
       functionName: 'balanceOf',
       args: [address],
     }),
     client.readContract({
-      address: cREALAddress,
+      address: BRLmAddress,
       abi: erc20Abi,
       functionName: 'balanceOf',
       args: [address],
@@ -65,9 +65,9 @@ export const getTotalBalance = async (
     lockedCELO,
     pending,
     CELO,
-    cUSD,
-    cEUR,
-    cREAL,
+    USDm,
+    EURm,
+    BRLm,
   }
 }
 

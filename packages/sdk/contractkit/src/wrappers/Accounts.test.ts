@@ -12,7 +12,7 @@ jest.setTimeout(10 * 1000)
 
 /*
 TEST NOTES:
-- In migrations: The only account that has cUSD is accounts[0]
+- In migrations: The only account that has USDm is accounts[0]
 */
 
 const minLockedGoldValue = Web3.utils.toWei('10000', 'ether') // 10k gold

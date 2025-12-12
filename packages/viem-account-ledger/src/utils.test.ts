@@ -111,7 +111,7 @@ describe('utils', () => {
       const spy = vi.spyOn(ledger, 'provideERC20TokenInformation')
       const USDCToken = '0x01c5c0122039549ad1493b8220cabedd739bc44e'
       const USDCAdapter = '0xbf1441Ea57f43f35f713431001f35742c88071c7'
-      const cEUR = '0x6B172e333e2978484261D7eCC3DE491E79764BbC'
+      const EURm = '0x6B172e333e2978484261D7eCC3DE491E79764BbC'
 
       await expect(
         checkForKnownToken(ledger, {
@@ -125,7 +125,7 @@ describe('utils', () => {
 
       await expect(
         checkForKnownToken(ledger, {
-          to: cEUR,
+          to: EURm,
           chainId: TEST_CHAIN_ID,
         })
       ).resolves.toBeUndefined()
@@ -136,7 +136,7 @@ describe('utils', () => {
         checkForKnownToken(ledger, {
           to: USDCToken,
           chainId: TEST_CHAIN_ID,
-          feeCurrency: cEUR,
+          feeCurrency: EURm,
         })
       ).resolves.toBeUndefined()
       expect(spy.mock.calls.length).toBe(2)

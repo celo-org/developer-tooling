@@ -56,8 +56,8 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (web3: Web3) => {
     expect(revokedContract).toBe(contractAddress)
   })
 
-  test('will rescue all cUSD balance', async () => {
-    await topUpWithToken(kit, StableToken.cUSD, accounts[0], new BigNumber('100'))
+  test('will rescue all USDm balance', async () => {
+    await topUpWithToken(kit, StableToken.USDm, accounts[0], new BigNumber('100'))
     const stableToken = await kit.contracts.getStableToken()
     await stableToken.transfer(contractAddress, 100).send({
       from: accounts[0],

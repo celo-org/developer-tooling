@@ -218,18 +218,18 @@ testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
     const validatorAddress = (await epochManagerWrapper.getElectedAccounts())[0]
     const validatorGroupAddress = await validatorsWrapper.getValidatorsGroup(validatorAddress)
 
-    const validatorBalanceBefore = (await kit.getTotalBalance(validatorAddress)).cUSD!
-    const validatorGroupBalanceBefore = (await kit.getTotalBalance(validatorGroupAddress)).cUSD!
+    const validatorBalanceBefore = (await kit.getTotalBalance(validatorAddress)).USDm!
+    const validatorGroupBalanceBefore = (await kit.getTotalBalance(validatorGroupAddress)).USDm!
 
     await epochManagerWrapper.sendValidatorPayment(validatorAddress).sendAndWaitForReceipt({
       from: accounts[0],
     })
 
     expect(
-      (await kit.getTotalBalance(validatorAddress)).cUSD!.isGreaterThan(validatorBalanceBefore)
+      (await kit.getTotalBalance(validatorAddress)).USDm!.isGreaterThan(validatorBalanceBefore)
     ).toBeTruthy()
     expect(
-      (await kit.getTotalBalance(validatorGroupAddress)).cUSD!.isGreaterThan(
+      (await kit.getTotalBalance(validatorGroupAddress)).USDm!.isGreaterThan(
         validatorGroupBalanceBefore
       )
     ).toBeTruthy()

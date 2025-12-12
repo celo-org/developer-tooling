@@ -28,13 +28,13 @@ testWithAnvilL2('transfer:euros cmd', (web3: Web3) => {
 
     await topUpWithToken(
       kit,
-      StableToken.cEUR,
+      StableToken.EURm,
       accounts[0],
       new BigNumber('1000000000000000000000')
     )
     await topUpWithToken(
       kit,
-      StableToken.cEUR,
+      StableToken.EURm,
       accounts[1],
       new BigNumber('1000000000000000000000')
     )
@@ -48,25 +48,25 @@ testWithAnvilL2('transfer:euros cmd', (web3: Web3) => {
     const balanceBefore = await kit.getTotalBalance(accounts[0])
     const receiverBalanceBefore = await kit.getTotalBalance(accounts[1])
     const amountToTransfer = '500000000000000000000'
-    // Send cEUR to RG contract
+    // Send EURm to RG contract
     await testLocallyWithWeb3Node(
       TransferEURO,
       ['--from', accounts[0], '--to', accounts[1], '--value', amountToTransfer],
       web3
     )
-    // RG cEUR balance should match the amount sent
+    // RG EURm balance should match the amount sent
     const receiverBalance = await kit.getTotalBalance(accounts[1])
-    expect(receiverBalance.cEUR!.toFixed()).toEqual(
-      receiverBalanceBefore.cEUR!.plus(amountToTransfer).toFixed()
+    expect(receiverBalance.EURm!.toFixed()).toEqual(
+      receiverBalanceBefore.EURm!.plus(amountToTransfer).toFixed()
     )
-    // Attempt to send cEUR back
+    // Attempt to send EURm back
     await testLocallyWithWeb3Node(
       TransferEURO,
       ['--from', accounts[1], '--to', accounts[0], '--value', amountToTransfer],
       web3
     )
     const balanceAfter = await kit.getTotalBalance(accounts[0])
-    expect(balanceBefore.cEUR).toEqual(balanceAfter.cEUR)
+    expect(balanceBefore.EURm).toEqual(balanceAfter.EURm)
   })
 
   test('should fail if to address is sanctioned', async () => {

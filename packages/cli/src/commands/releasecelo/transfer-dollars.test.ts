@@ -61,18 +61,18 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (web3: Web3) => {
   test('can transfer dollars out of the ReleaseGold contract', async () => {
     await topUpWithToken(
       kit,
-      StableToken.cUSD,
+      StableToken.USDm,
       accounts[0],
       new BigNumber(web3.utils.toWei('1000', 'ether'))
     )
     jest.clearAllMocks()
     const logSpy = jest.spyOn(console, 'log')
-    const cUSDToTransfer = '500000000000000000000'
-    // Send cUSD to RG contract
+    const USDmToTransfer = '500000000000000000000'
+    // Send USDm to RG contract
     await expect(
       testLocallyWithWeb3Node(
         TransferDollars,
-        ['--from', accounts[0], '--to', contractAddress, '--value', cUSDToTransfer],
+        ['--from', accounts[0], '--to', contractAddress, '--value', USDmToTransfer],
         web3
       )
     ).resolves.toBeUndefined()
@@ -82,7 +82,7 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (web3: Web3) => {
           "Running Checks:",
         ],
         [
-          "   ✔  Account has at least 500 cUSD ",
+          "   ✔  Account has at least 500 USDm ",
         ],
         [
           "   ✔  Compliant Address ",
@@ -94,13 +94,13 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (web3: Web3) => {
           "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 can sign txs ",
         ],
         [
-          "   ✔  Account can afford to transfer cUSD with gas paid in CELO ",
+          "   ✔  Account can afford to transfer USDm with gas paid in CELO ",
         ],
         [
           "All checks passed",
         ],
         [
-          "SendTransaction: cUSD->Transfer",
+          "SendTransaction: USDm->Transfer",
         ],
         [
           "txHash: 0xtxhash",
@@ -109,9 +109,9 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (web3: Web3) => {
     `)
     jest.clearAllMocks()
     await mineBlocks(2, web3)
-    // RG cUSD balance should match the amount sent
+    // RG USDm balance should match the amount sent
     const contractBalance = await kit.getTotalBalance(contractAddress)
-    expect(contractBalance.cUSD!.toFixed()).toEqual(cUSDToTransfer)
+    expect(contractBalance.USDm!.toFixed()).toEqual(USDmToTransfer)
     // Test that transfer succeeds when using the beneficiary (accounts[1])
     await expect(
       testLocallyWithWeb3Node(
@@ -122,7 +122,7 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (web3: Web3) => {
           '--to',
           accounts[0],
           '--value',
-          cUSDToTransfer,
+          USDmToTransfer,
           '--privateKey',
           ACCOUNT_PRIVATE_KEYS[1],
         ],
@@ -134,8 +134,8 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (web3: Web3) => {
     const contractBalanceAfter = await kit.getTotalBalance(contractAddress)
 
     // Verify the transfer succeeded by checking the contract is empty
-    expect(contractBalanceAfter.cUSD!.toFixed()).toEqual('0') // Contract should be empty after transfer
-    expect(balanceAfter.cUSD!.toFixed()).toEqual('1000000000000000000000') // Should be 1000 cUSD (500 initial + 500 transferred)
+    expect(contractBalanceAfter.USDm!.toFixed()).toEqual('0') // Contract should be empty after transfer
+    expect(balanceAfter.USDm!.toFixed()).toEqual('1000000000000000000000') // Should be 1000 USDm (500 initial + 500 transferred)
   })
 
   test('fails if contract has no celo dollars', async () => {
@@ -150,23 +150,23 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (web3: Web3) => {
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls).at(-1)).toMatchInlineSnapshot(`
       [
-        "   ✘  Account has at least ${formatEther(value)} cUSD ",
+        "   ✘  Account has at least ${formatEther(value)} USDm ",
       ]
     `)
   })
   test('fails if to address is sanctioned', async () => {
     await topUpWithToken(
       kit,
-      StableToken.cUSD,
+      StableToken.USDm,
       accounts[0],
       new BigNumber(web3.utils.toWei('1000', 'ether'))
     )
     const spy = jest.spyOn(console, 'log')
-    const cUSDToTransfer = '500000000000000000000'
-    // Send cUSD to RG contract
+    const USDmToTransfer = '500000000000000000000'
+    // Send USDm to RG contract
     await testLocallyWithWeb3Node(
       TransferDollars,
-      ['--from', accounts[0], '--to', contractAddress, '--value', cUSDToTransfer],
+      ['--from', accounts[0], '--to', contractAddress, '--value', USDmToTransfer],
       web3
     )
 
@@ -183,16 +183,16 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (web3: Web3) => {
   test('fails if signing account is not the beneficiary or release owner', async () => {
     await topUpWithToken(
       kit,
-      StableToken.cUSD,
+      StableToken.USDm,
       accounts[0],
       new BigNumber(web3.utils.toWei('1000', 'ether'))
     )
     const spy = jest.spyOn(console, 'log')
-    const cUSDToTransfer = '500000000000000000000'
-    // Send cUSD to RG contract
+    const USDmToTransfer = '500000000000000000000'
+    // Send USDm to RG contract
     await testLocallyWithWeb3Node(
       TransferDollars,
-      ['--from', accounts[0], '--to', contractAddress, '--value', cUSDToTransfer],
+      ['--from', accounts[0], '--to', contractAddress, '--value', USDmToTransfer],
       web3
     )
 
