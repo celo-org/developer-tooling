@@ -18,20 +18,21 @@ testWithAnvilL2('StableToken Wrapper', async (web3) => {
       symbol: string
     }
   } = {
+    // Symbols are old in tests because the test data hasnt been updated
     [StableToken.USDm]: {
       stableToken: StableToken.USDm,
-      name: 'Mento Dollar',
-      symbol: 'USDm',
+      name: 'Celo Dollar', 
+      symbol: 'cUSD',
     },
     [StableToken.EURm]: {
       stableToken: StableToken.EURm,
-      name: 'Mento Euro',
-      symbol: 'EURm',
+      name: 'Celo Euro',
+      symbol: 'cEUR',
     },
     [StableToken.BRLm]: {
       stableToken: StableToken.BRLm,
-      name: 'Mento Brazilian Real',
-      symbol: 'BRLm',
+      name: 'Celo Brazilian Real',
+      symbol: 'cREAL',
     },
   }
 
