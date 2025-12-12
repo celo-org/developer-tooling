@@ -39,11 +39,13 @@ export default class Approve extends BaseCommand {
     multisigTXId: Flags.string({
       dependsOn: ['proposalID', 'useMultiSig'],
       exclusive: ['hotfix', 'useSafe'],
-      description: 'Optionally provide the exact multisig transaction id to confirm. otherwise will search onchain for transaction which matches the proposal.',
+      description:
+        'Optionally provide the exact multisig transaction id to confirm. otherwise will search onchain for transaction which matches the proposal.',
     }),
     submit: Flags.boolean({
       dependsOn: ['proposalID', 'useMultiSig'],
-      description: 'Submit the approval transaction to multisig without checking for prior confirmations onchain. (Use with caution!)',
+      description:
+        'Submit the approval transaction to multisig without checking for prior confirmations onchain. (Use with caution!)',
     }),
     from: CustomFlags.address({ required: true, description: "Approver's address" }),
     useMultiSig: Flags.boolean({
@@ -120,19 +122,30 @@ export default class Approve extends BaseCommand {
         .proposalExists(id)
         .proposalInStages(id, ['Referendum', 'Execution'])
         .addCheck(`${id} not already approved`, async () => !(await governance.isApproved(id)))
-        .addConditionalCheck('Proposal has not been submitted to multisig', res.flags.submit, async () => {
-          // We would prefer it allow for submissions if there is ambiguity, only fail if we confirm that it has been submitted
-          const confrimations = await fetchConfirmationsForProposals(id)
-          return confrimations === null || confrimations.count === 0
-        })
-        .addConditionalCheck('multisgTXId provided is valid', !!res.flags.multisigTXId,  async () => {
-          const confirmations = await fetchConfirmationsForProposals(id)
-          if (!confirmations || confirmations.count === 0) {
-            return false
+        .addConditionalCheck(
+          'Proposal has not been submitted to multisig',
+          res.flags.submit,
+          async () => {
+            // We would prefer it allow for submissions if there is ambiguity, only fail if we confirm that it has been submitted
+            const confrimations = await fetchConfirmationsForProposals(id)
+            return confrimations === null || confrimations.count === 0
           }
-          return confirmations.approvals.some(approval => approval.multisigTxId.toString() === res.flags.multisigTXId)
-    
-        })
+        )
+        .addConditionalCheck(
+          'multisgTXId provided is valid',
+          !!res.flags.multisigTXId,
+          async () => {
+            const confirmations = await fetchConfirmationsForProposals(id)
+            // if none are found the api could be wrong, so we allow it.
+            if (!confirmations || confirmations.count === 0) {
+              return true
+            }
+            // if we have confirmations, ensure one matches the provided id
+            return confirmations.approvals.some(
+              (approval) => approval.multisigTxId.toString() === res.flags.multisigTXId
+            )
+          }
+        )
         .runChecks()
       governanceTx = await governance.approve(id)
       logEvent = 'ProposalApproved'
@@ -160,7 +173,7 @@ export default class Approve extends BaseCommand {
     ) {
       const tx = await governanceSecurityCouncilMultiSig.submitOrConfirmTransaction(
         governance.address,
-        governanceTx.txo,
+        governanceTx.txo
       )
 
       await displaySendTx<string | void | boolean>('approveTx', tx, {}, logEvent)
@@ -171,17 +184,15 @@ export default class Approve extends BaseCommand {
       await displaySendTx<string | void | boolean>('approveTx', tx, {}, logEvent)
     } else if (res.flags.submit && useMultiSig) {
       const tx = await governanceApproverMultiSig!.submitTransaction(
-            governance.address,
-            governanceTx.txo,
-          )
+        governance.address,
+        governanceTx.txo
+      )
       await displaySendTx<string | void | boolean>('approveTx', tx, {}, logEvent)
-    } 
-    
-    else {
+    } else {
       const tx = useMultiSig
         ? await governanceApproverMultiSig!.submitOrConfirmTransaction(
             governance.address,
-            governanceTx.txo,
+            governanceTx.txo
           )
         : governanceTx
       await displaySendTx<string | void | boolean>('approveTx', tx, {}, logEvent)
@@ -257,12 +268,12 @@ const addDefaultChecks = async (
 }
 const debugRpcPayload = debugFactory('mento-api')
 
-
-
 async function fetchConfirmationsForProposals(proposalId: string): Promise<MondoAPITx | null> {
-  const response = await fetch(`https://mondo.celo.org/api/governance/${proposalId}/approval-confirmations`)
+  const response = await fetch(
+    `https://mondo.celo.org/api/governance/${proposalId}/approval-confirmations`
+  )
   if (response.ok) {
-    const data = await response.json() as MondoAPITx
+    const data = (await response.json()) as MondoAPITx
     debugRpcPayload('Fetched confirmations for proposal %s: %O', proposalId, data)
     return data
   } else {
@@ -271,13 +282,13 @@ async function fetchConfirmationsForProposals(proposalId: string): Promise<Mondo
 }
 
 interface MondoAPITx {
-  "proposalId": number
-  "count": number
-  "approvals": Array<{
-    "approver": StrongAddress
-    "multisigTxId": number
-    "confirmedAt": number
-    "blockNumber": number
-    "transactionHash": Hex
+  proposalId: number
+  count: number
+  approvals: Array<{
+    approver: StrongAddress
+    multisigTxId: number
+    confirmedAt: number
+    blockNumber: number
+    transactionHash: Hex
   }>
 }

@@ -105,8 +105,9 @@ testWithAnvilL2(
                     "executionTimeLimit": "0",
                   }
               `)
-        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-          .toMatchInlineSnapshot(`
+        expect(
+          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+        ).toMatchInlineSnapshot(`
                   [
                     [
                       "Running Checks:",
@@ -151,8 +152,9 @@ testWithAnvilL2(
                     "executionTimeLimit": "0",
                   }
               `)
-        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-          .toMatchInlineSnapshot(`
+        expect(
+          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+        ).toMatchInlineSnapshot(`
                   [
                     [
                       "Running Checks:",
@@ -219,8 +221,9 @@ testWithAnvilL2(
                     "executionTimeLimit": "0",
                   }
               `)
-        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-          .toMatchInlineSnapshot(`
+        expect(
+          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+        ).toMatchInlineSnapshot(`
                   [
                     [
                       "Running Checks:",
@@ -280,8 +283,9 @@ testWithAnvilL2(
                     "executionTimeLimit": "0",
                   }
               `)
-        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-          .toMatchInlineSnapshot(`
+        expect(
+          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+        ).toMatchInlineSnapshot(`
                   [
                     [
                       "Running Checks:",
@@ -343,8 +347,9 @@ testWithAnvilL2(
                     "executionTimeLimit": "0",
                   }
               `)
-        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-          .toMatchInlineSnapshot(`
+        expect(
+          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+        ).toMatchInlineSnapshot(`
                   [
                     [
                       "Running Checks:",
@@ -418,8 +423,9 @@ testWithAnvilL2(
                     "executionTimeLimit": "0",
                   }
               `)
-        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-          .toMatchInlineSnapshot(`
+        expect(
+          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+        ).toMatchInlineSnapshot(`
                   [
                     [
                       "Running Checks:",
@@ -515,8 +521,9 @@ testWithAnvilL2(
                   }
               `)
 
-        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-          .toMatchInlineSnapshot(`
+        expect(
+          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+        ).toMatchInlineSnapshot(`
                   [
                     [
                       "Running Checks:",
@@ -699,8 +706,9 @@ testWithAnvilL2(
                   }
               `)
 
-        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-          .toMatchInlineSnapshot(`
+        expect(
+          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+        ).toMatchInlineSnapshot(`
                   [
                     [
                       "Running Checks:",
@@ -786,8 +794,9 @@ testWithAnvilL2(
                     "executionTimeLimit": "0",
                   }
               `)
-        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-          .toMatchInlineSnapshot(`
+        expect(
+          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+        ).toMatchInlineSnapshot(`
                   [
                     [
                       "Running Checks:",
@@ -874,8 +883,9 @@ testWithAnvilL2(
                     "executionTimeLimit": "0",
                   }
               `)
-        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-          .toMatchInlineSnapshot(`
+        expect(
+          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+        ).toMatchInlineSnapshot(`
                   [
                     [
                       "Running Checks:",
@@ -946,8 +956,9 @@ testWithAnvilL2(
         )
 
         expect(await governance.isApproved(proposalId)).toBe(true)
-        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-          .toMatchInlineSnapshot(`
+        expect(
+          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+        ).toMatchInlineSnapshot(`
                   [
                     [
                       "Running Checks:",
@@ -1017,8 +1028,9 @@ testWithAnvilL2(
           )
         ).rejects.toThrow("Some checks didn't pass!")
 
-        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-          .toMatchInlineSnapshot(`
+        expect(
+          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+        ).toMatchInlineSnapshot(`
           [
             [
               "Running Checks:",
@@ -1072,8 +1084,9 @@ testWithAnvilL2(
           )
         ).resolves.toBeUndefined()
 
-        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-          .toMatchInlineSnapshot(`
+        expect(
+          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+        ).toMatchInlineSnapshot(`
                   [
                     [
                       "Running Checks:",
@@ -1159,19 +1172,21 @@ testWithAnvilL2(
         })
 
         // Now confirm it with the multisigTXId from accounts[1]
-        await expect(testLocallyWithWeb3Node(
-          Approve,
-          [
-            '--from',
-            accounts[1],
-            '--proposalID',
-            proposalId.toString(),
-            '--useMultiSig',
-            '--multisigTXId',
-            '0',
-          ],
-          web3
-        )).resolves.toBeUndefined()
+        await expect(
+          testLocallyWithWeb3Node(
+            Approve,
+            [
+              '--from',
+              accounts[1],
+              '--proposalID',
+              proposalId.toString(),
+              '--useMultiSig',
+              '--multisigTXId',
+              '0',
+            ],
+            web3
+          )
+        ).resolves.toBeUndefined()
 
         // The proposal should now be approved
         expect(await governance.isApproved(proposalId)).toBe(true)
@@ -1250,8 +1265,9 @@ testWithAnvilL2(
           )
         ).rejects.toThrow("Some checks didn't pass!")
 
-        expect(logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes)))
-          .toMatchInlineSnapshot(`
+        expect(
+          logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
+        ).toMatchInlineSnapshot(`
                   [
                     [
                       "Running Checks:",
