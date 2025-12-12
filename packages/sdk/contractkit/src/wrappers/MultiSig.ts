@@ -69,6 +69,13 @@ export class MultiSigWrapper extends BaseWrapper<MultiSig> {
       this.contract.methods.confirmTransaction(transactionId)
     )
   }
+  async submitTransaction(destination: string, txObject: CeloTxObject<any>, value = '0') {
+    const data = stringToSolidityBytes(txObject.encodeABI())
+    return toTransactionObject(
+      this.connection,
+      this.contract.methods.submitTransaction(destination, value, data)
+    )
+  }
 
   isOwner: (owner: Address) => Promise<boolean> = proxyCall(this.contract.methods.isOwner)
   getOwners = proxyCall(this.contract.methods.getOwners)
