@@ -10,24 +10,24 @@ Defined in: base/lib/currencies.d.ts:1
 
 ## Enumeration Members
 
-### cEUR
+### EURm
 
-> **cEUR**: `"cEUR"`
+> **EURm**: `"EURm"`
 
 Defined in: base/lib/currencies.d.ts:3
 
 ***
 
-### cREAL
+### BRLm
 
-> **cREAL**: `"cREAL"`
+> **BRLm**: `"BRLm"`
 
 Defined in: base/lib/currencies.d.ts:4
 
 ***
 
-### cUSD
+### USDm
 
-> **cUSD**: `"cUSD"`
+> **USDm**: `"USDm"`
 
 Defined in: base/lib/currencies.d.ts:2

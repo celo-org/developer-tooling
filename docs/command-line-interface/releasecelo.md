@@ -950,7 +950,7 @@ _See code: [src/commands/releasecelo/show.ts](https://github.com/celo-org/develo
 
 ## `celocli releasecelo:transfer-dollars`
 
-Transfer Celo Dollars from the given contract address. Dollars may be accrued to the ReleaseGold contract via validator epoch rewards.
+Transfer Mento Dollars from the given contract address. Dollars may be accrued to the ReleaseGold contract via validator epoch rewards.
 
 ```
 USAGE
@@ -987,16 +987,16 @@ FLAGS
       Ledger Live
 
   --to=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
-      (required) Address of the recipient of Celo Dollars transfer
+      (required) Address of the recipient of Mento Dollars transfer
 
   --useLedger
       Set it to use a ledger wallet
 
   --value=10000000000000000000000
-      (required) Value (in Wei) of Celo Dollars to transfer
+      (required) Value (in Wei) of Mento Dollars to transfer
 
 DESCRIPTION
-  Transfer Celo Dollars from the given contract address. Dollars may be accrued to the
+  Transfer Mento Dollars from the given contract address. Dollars may be accrued to the
   ReleaseGold contract via validator epoch rewards.
 
 EXAMPLES

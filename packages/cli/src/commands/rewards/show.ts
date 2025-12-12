@@ -253,7 +253,7 @@ export default class Show extends BaseCommand {
     //   governable. Otherwise, Sv = Sv-1
     //
     // At the end of each epoch, provided that the validator and its group have the required minimum
-    // stake, Validators are paid Pv * Sv * M * (1 - C) Celo Dollars where
+    // stake, Validators are paid Pv * Sv * M * (1 - C) Mento Dollars where
     // C is group share for the group the validator was a member of when it was elected and
     // Pv is the max payout to validators and is governable.
     if (validatorRewards.length > 0) {
@@ -274,7 +274,7 @@ export default class Show extends BaseCommand {
     }
 
     // At the end of each epoch, for each validator that was elected, the group a validator was
-    // elected as a member of is paid Pv * Sv * C * M Celo Dollars where:
+    // elected as a member of is paid Pv * Sv * C * M Mento Dollars where:
     // C is the current group share for the group the validator was a member of when it was elected,
     // Pv is the max payout to validators during this epoch programmatically derived from
     // considering the tradeoff between paying rewards now vs. saving rewards for later, and

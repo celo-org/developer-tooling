@@ -26,17 +26,17 @@ export interface StableTokenInfo extends CeloTokenInfo {
 export const stableTokenInfos: {
   [key in StableToken]: StableTokenInfo
 } = {
-  [StableToken.cUSD]: {
+  [StableToken.USDm]: {
     contract: CeloContract.StableToken,
-    symbol: StableToken.cUSD,
+    symbol: StableToken.USDm,
   },
-  [StableToken.cEUR]: {
+  [StableToken.EURm]: {
     contract: CeloContract.StableTokenEUR,
-    symbol: StableToken.cEUR,
+    symbol: StableToken.EURm,
   },
-  [StableToken.cREAL]: {
+  [StableToken.BRLm]: {
     contract: CeloContract.StableTokenBRL,
-    symbol: StableToken.cREAL,
+    symbol: StableToken.BRLm,
   },
 }
 

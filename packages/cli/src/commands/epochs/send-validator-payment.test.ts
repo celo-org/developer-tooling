@@ -25,8 +25,8 @@ testWithAnvilL2('epochs:send-validator-payment cmd', (web3) => {
     const electedValidators = await epochManagerWrapper.getElectedAccounts()
     const validatorAddress = electedValidators[0]
     const groupAddress = await validatorsWrapper.getValidatorsGroup(validatorAddress)
-    const validatorBalanceBefore = (await kit.getTotalBalance(validatorAddress)).cUSD!
-    const groupBalanceBefore = (await kit.getTotalBalance(groupAddress)).cUSD!
+    const validatorBalanceBefore = (await kit.getTotalBalance(validatorAddress)).USDm!
+    const groupBalanceBefore = (await kit.getTotalBalance(groupAddress)).USDm!
 
     await testLocallyWithWeb3Node(
       SendValidatorPayment,
@@ -58,8 +58,8 @@ testWithAnvilL2('epochs:send-validator-payment cmd', (web3) => {
       ]
     `)
 
-    const validatorBalanceAfter = (await kit.getTotalBalance(validatorAddress)).cUSD!
-    const groupBalanceAfter = (await kit.getTotalBalance(groupAddress)).cUSD!
+    const validatorBalanceAfter = (await kit.getTotalBalance(validatorAddress)).USDm!
+    const groupBalanceAfter = (await kit.getTotalBalance(groupAddress)).USDm!
 
     expect(validatorBalanceAfter.gt(validatorBalanceBefore)).toBe(true)
     expect(groupBalanceAfter.gt(groupBalanceBefore)).toBe(true)

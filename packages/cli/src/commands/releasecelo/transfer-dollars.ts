@@ -7,17 +7,17 @@ import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
 
 export default class TransferDollars extends ReleaseGoldBaseCommand {
   static description =
-    'Transfer Celo Dollars from the given contract address. Dollars may be accrued to the ReleaseGold contract via validator epoch rewards.'
+    'Transfer Mento Dollars from the given contract address. Dollars may be accrued to the ReleaseGold contract via validator epoch rewards.'
 
   static flags = {
     ...ReleaseGoldBaseCommand.flags,
     to: CustomFlags.address({
       required: true,
-      description: 'Address of the recipient of Celo Dollars transfer',
+      description: 'Address of the recipient of Mento Dollars transfer',
     }),
     value: CustomFlags.bigint({
       required: true,
-      description: 'Value (in Wei) of Celo Dollars to transfer',
+      description: 'Value (in Wei) of Mento Dollars to transfer',
     }),
   }
 
@@ -48,7 +48,7 @@ export default class TransferDollars extends ReleaseGoldBaseCommand {
       .addCheck(`Signing Account is ${isRevoked ? 'Release Owner' : 'Beneficiary'}`, () =>
         isAddressEqual(accountAddress, wallet.account.address)
       )
-      .hasEnoughStable(flags.contract, flags.value, 'cUSD')
+      .hasEnoughStable(flags.contract, flags.value, 'USDm')
       .runChecks()
 
     await displayViemTx(

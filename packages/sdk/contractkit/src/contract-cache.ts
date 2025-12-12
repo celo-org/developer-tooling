@@ -178,7 +178,7 @@ export class WrapperCache implements ContractCacheType {
   getSortedOracles() {
     return this.getContract(CeloContract.SortedOracles)
   }
-  getStableToken(stableToken: StableToken = StableToken.cUSD) {
+  getStableToken(stableToken: StableToken = StableToken.USDm) {
     return this.getContract(stableTokenInfos[stableToken].contract)
   }
   getValidators() {

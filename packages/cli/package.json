@@ -135,7 +135,7 @@
         "description": "Participate in and view the state of Validator Elections"
       },
       "exchange": {
-        "description": "Exchange Celo Dollars and CELO via Mento"
+        "description": "Exchange Mento Dollars and CELO via Mento"
       },
       "governance": {
         "description": "Interact with on-chain governance proposals and hotfixes"
@@ -156,7 +156,7 @@
         "description": "View and manage ReleaseGold contracts"
       },
       "transfer": {
-        "description": "Transfer CELO and Celo Dollars"
+        "description": "Transfer CELO and Mento Dollars"
       },
       "validator": {
         "description": "View and manage Validators"
