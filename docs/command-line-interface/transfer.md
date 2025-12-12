@@ -78,7 +78,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/transfer/celo.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.1/packages/cli/src/commands/transfer/celo.ts)_
+_See code: [src/commands/transfer/celo.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.2/packages/cli/src/commands/transfer/celo.ts)_
 
 ## `celocli transfer:dollars`
 
@@ -147,7 +147,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/transfer/dollars.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.1/packages/cli/src/commands/transfer/dollars.ts)_
+_See code: [src/commands/transfer/dollars.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.2/packages/cli/src/commands/transfer/dollars.ts)_
 
 ## `celocli transfer:erc20`
 
@@ -170,7 +170,7 @@ FLAGS
       URL of the node to run commands against or an alias
 
   --erc20Address=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
-      (required) Custom erc20 to check it's balance too
+      (required) Custom erc20 to transfer
 
   --from=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
       (required) Address of the sender
@@ -217,7 +217,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/transfer/erc20.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.1/packages/cli/src/commands/transfer/erc20.ts)_
+_See code: [src/commands/transfer/erc20.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.2/packages/cli/src/commands/transfer/erc20.ts)_
 
 ## `celocli transfer:euros`
 
@@ -286,7 +286,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/transfer/euros.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.1/packages/cli/src/commands/transfer/euros.ts)_
+_See code: [src/commands/transfer/euros.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.2/packages/cli/src/commands/transfer/euros.ts)_
 
 ## `celocli transfer:reals`
 
@@ -355,7 +355,7 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/transfer/reals.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.1/packages/cli/src/commands/transfer/reals.ts)_
+_See code: [src/commands/transfer/reals.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.2/packages/cli/src/commands/transfer/reals.ts)_
 
 ## `celocli transfer:stable`
 
@@ -365,7 +365,7 @@ Transfer a stable token to a specified address.
 USAGE
   $ celocli transfer:stable --from 0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --to
     0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d --value 10000000000000000000000
-    --stableToken USDm|cusd|EURm|ceur|BRLm|creal [-k <value> | --useLedger | ] [-n
+    --stableToken USDm|usdm|EURm|eurm|BRLm|brlm [-k <value> | --useLedger | ] [-n
     <value>] [--gasCurrency 0x1234567890123456789012345678901234567890]
     [--ledgerAddresses <value> ] [--ledgerLiveMode ] [--globalHelp] [--comment <value>]
 
@@ -400,7 +400,7 @@ FLAGS
 
   --stableToken=<option>
       (required) Name of the stable to be transferred
-      <options: USDm|cusd|EURm|ceur|BRLm|creal>
+      <options: USDm|usdm|EURm|eurm|BRLm|brlm>
 
   --to=0xc1912fEE45d61C87Cc5EA59DaE31190FFFFf232d
       (required) Address of the receiver
@@ -428,4 +428,4 @@ FLAG DESCRIPTIONS
     mainnet, celo, forno => Celo Mainnet chain',
 ```
 
-_See code: [src/commands/transfer/stable.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.1/packages/cli/src/commands/transfer/stable.ts)_
+_See code: [src/commands/transfer/stable.ts](https://github.com/celo-org/developer-tooling/tree/%40celo/celocli%408.0.2/packages/cli/src/commands/transfer/stable.ts)_

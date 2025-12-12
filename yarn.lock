@@ -1683,13 +1683,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@celo/actions@npm:0.2.0, @celo/actions@workspace:packages/actions":
+"@celo/actions@npm:0.2.1, @celo/actions@workspace:packages/actions":
   version: 0.0.0-use.local
   resolution: "@celo/actions@workspace:packages/actions"
   dependencies:
     "@celo/abis": "npm:13.0.0-post-audit.0"
-    "@celo/base": "npm:^7.0.3"
-    "@celo/core": "npm:0.0.1"
+    "@celo/base": "npm:^7.0.4"
+    "@celo/core": "npm:0.0.2"
     "@celo/dev-utils": "workspace:^"
     "@celo/typescript": "workspace:^"
     "@size-limit/preset-small-lib": "npm:^11.2.0"
@@ -1701,7 +1701,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/base@npm:7.0.3, @celo/base@npm:^7.0.3, @celo/base@workspace:^, @celo/base@workspace:packages/sdk/base":
+"@celo/base@npm:7.0.4, @celo/base@npm:^7.0.3, @celo/base@npm:^7.0.4, @celo/base@workspace:^, @celo/base@workspace:packages/sdk/base":
   version: 0.0.0-use.local
   resolution: "@celo/base@workspace:packages/sdk/base"
   dependencies:
@@ -1758,11 +1758,11 @@ __metadata:
   resolution: "@celo/celocli@workspace:packages/cli"
   dependencies:
     "@celo/abis": "npm:13.0.0-post-audit.0"
-    "@celo/actions": "npm:0.2.0"
-    "@celo/base": "npm:^7.0.3"
+    "@celo/actions": "npm:0.2.1"
+    "@celo/base": "npm:^7.0.4"
     "@celo/compliance": "npm:1.0.28"
     "@celo/connect": "npm:^7.0.0"
-    "@celo/contractkit": "npm:^10.0.2"
+    "@celo/contractkit": "npm:^10.0.3"
     "@celo/cryptographic-utils": "npm:^6.0.0"
     "@celo/dev-utils": "workspace:^"
     "@celo/explorer": "npm:^5.0.18"
@@ -1843,12 +1843,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/contractkit@npm:^10.0.2, @celo/contractkit@npm:^10.0.2-alpha.0, @celo/contractkit@workspace:^, @celo/contractkit@workspace:packages/sdk/contractkit":
+"@celo/contractkit@npm:^10.0.2, @celo/contractkit@npm:^10.0.2-alpha.0, @celo/contractkit@npm:^10.0.3, @celo/contractkit@workspace:^, @celo/contractkit@workspace:packages/sdk/contractkit":
   version: 0.0.0-use.local
   resolution: "@celo/contractkit@workspace:packages/sdk/contractkit"
   dependencies:
     "@celo/abis": "npm:13.0.0-post-audit.0"
-    "@celo/base": "npm:^7.0.3"
+    "@celo/base": "npm:^7.0.4"
     "@celo/celo-devchain": "npm:^7.0.0"
     "@celo/connect": "npm:^7.0.0"
     "@celo/dev-utils": "workspace:^"
@@ -1873,11 +1873,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@celo/core@npm:0.0.1, @celo/core@workspace:packages/core":
+"@celo/core@npm:0.0.2, @celo/core@workspace:packages/core":
   version: 0.0.0-use.local
   resolution: "@celo/core@workspace:packages/core"
   dependencies:
-    "@celo/base": "npm:7.0.3"
+    "@celo/base": "npm:7.0.4"
     "@celo/typescript": "workspace:^"
     "@size-limit/preset-small-lib": "npm:^11.2.0"
     "@vitest/coverage-v8": "npm:^3.1.3"

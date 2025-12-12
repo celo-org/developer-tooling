@@ -1,4 +1,4 @@
-[**@celo/base v7.0.3**](../README.md)
+[**@celo/base v7.0.4**](../README.md)
 
 ***
 
