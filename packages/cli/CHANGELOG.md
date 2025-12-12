@@ -1,5 +1,16 @@
 # Changelog
 
+## 8.0.2
+
+### Patch Changes
+
+- [#746](https://github.com/celo-org/developer-tooling/pull/746) [`f78f741`](https://github.com/celo-org/developer-tooling/commit/f78f7414b041d64cf7312876aa874c7761eb5f4b) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Update StableToken to match new Mento naming format cXXX => XXXm https://forum.celo.org/t/mento-stablecoin-rebranding-and-strategic-evolution/12639/10
+
+- Updated dependencies [[`f78f741`](https://github.com/celo-org/developer-tooling/commit/f78f7414b041d64cf7312876aa874c7761eb5f4b)]:
+  - @celo/contractkit@10.0.3
+  - @celo/base@7.0.4
+  - @celo/actions@0.2.1
+
 ## 8.0.1
 
 ### Patch Changes
