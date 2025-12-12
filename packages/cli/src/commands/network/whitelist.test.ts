@@ -27,15 +27,15 @@ testWithAnvilL2('network:whitelist cmd', (web3: Web3) => {
       ",
         ],
         [
-          " Mento Dollar         USDm   0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1 0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1 18       false         
+          " Celo Dollar         cUSD   0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1 0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1 18       false         
       ",
         ],
         [
-          " Mento Euro           EURm   0x5930519559Ffa7528a00BE445734036471c443a2 0x5930519559Ffa7528a00BE445734036471c443a2 18       false         
+          " Celo Euro           cEUR   0x5930519559Ffa7528a00BE445734036471c443a2 0x5930519559Ffa7528a00BE445734036471c443a2 18       false         
       ",
         ],
         [
-          " Mento Brazilian Real BRLm  0xB2Fd9852Ca3D69678286A8635d661690906A3E9d 0xB2Fd9852Ca3D69678286A8635d661690906A3E9d 18       false         
+          " Celo Brazilian Real cREAL  0xB2Fd9852Ca3D69678286A8635d661690906A3E9d 0xB2Fd9852Ca3D69678286A8635d661690906A3E9d 18       false         
       ",
         ],
       ]
@@ -49,24 +49,24 @@ testWithAnvilL2('network:whitelist cmd', (web3: Web3) => {
         [
           "[
         {
-          "name": "Mento Dollar",
-          "symbol": "USDm",
+          "name": "Celo Dollar",
+          "symbol": "cUSD",
           "whitelisted": "0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1",
           "token": "0x20FE3FD86C231fb8E28255452CEA7851f9C5f9c1",
           "decimals": "18",
           "usesAdapter": "false"
         },
         {
-          "name": "Mento Euro",
-          "symbol": "EURm",
+          "name": "Celo Euro",
+          "symbol": "cEUR",
           "whitelisted": "0x5930519559Ffa7528a00BE445734036471c443a2",
           "token": "0x5930519559Ffa7528a00BE445734036471c443a2",
           "decimals": "18",
           "usesAdapter": "false"
         },
         {
-          "name": "Mento Brazilian Real",
-          "symbol": "BRLm",
+          "name": "Celo Brazilian Real",
+          "symbol": "cREAL",
           "whitelisted": "0xB2Fd9852Ca3D69678286A8635d661690906A3E9d",
           "token": "0xB2Fd9852Ca3D69678286A8635d661690906A3E9d",
           "decimals": "18",
