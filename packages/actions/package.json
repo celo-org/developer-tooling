@@ -20,6 +20,11 @@
       "types": "./dist/cjs/multicontract-interactions/stake/index.d.ts",
       "import": "./dist/mjs/multicontract-interactions/stake/index.js",
       "require": "./dist/cjs/multicontract-interactions/stake/index.js"
+    },
+    "./authorization": {
+      "types": "./dist/cjs/multicontract-interactions/authorize/index.d.ts",
+      "import": "./dist/mjs/multicontract-interactions/authorize/index.js",
+      "require": "./dist/cjs/multicontract-interactions/authorize/index.js"
     }
   },
   "author": "cLabs",
@@ -73,12 +78,12 @@
     {
       "name": "require('@celo/actions') (cjs)",
       "path": "dist/cjs/index.js",
-      "limit": "120 kB"
+      "limit": "200 kB"
     },
     {
       "name": "import * from '@celo/actions' (esm)",
       "path": "dist/mjs/index.js",
-      "limit": "25 kB",
+      "limit": "50 kB",
       "import": "*"
     },
     {
@@ -100,9 +105,21 @@
       "import": "{ getAccountsContract }"
     },
     {
+      "name": "import { authorizeVoteSigner } from '@celo/actions/contracts/accounts' (esm)",
+      "path": "dist/mjs/contracts/accounts.js",
+      "limit": "50 kB",
+      "import": "{ authorizeVoteSigner }"
+    },
+    {
       "name": "import * from '@celo/actions/staking' (esm)",
       "path": "dist/mjs/multicontract-interactions/stake/index.js",
       "limit": "60 kB",
+      "import": "*"
+    },
+    {
+      "name": "import * from '@celo/actions/authorization' (esm)",
+      "path": "dist/mjs/multicontract-interactions/authorize/index.js",
+      "limit": "40 kB",
       "import": "*"
     }
   ]

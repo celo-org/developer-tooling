@@ -277,7 +277,7 @@ export abstract class BaseCommand extends Command {
       // NOTE: adjust logic here later to take in account commands which
       // don't use --from but --account or other flags to pass in which account
       // should be used
-      const accountAddress = res.flags.from as StrongAddress
+      const accountAddress = (res.flags.from || res.flags.signer) as StrongAddress
 
       if (res.flags.useLedger) {
         try {

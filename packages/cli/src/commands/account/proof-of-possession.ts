@@ -1,4 +1,10 @@
-import { serializeSignature } from '@celo/utils/lib/signatureUtils'
+import {
+  generateProofOfKeyPossession,
+  generateProofOfKeyPossessionLocally,
+} from '@celo/actions/authorization'
+import { ensureLeading0x } from '@celo/base'
+import { serializeSignature } from '@celo/core'
+import { Hex } from 'viem'
 import { BaseCommand } from '../../base'
 import { printValueMap } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
@@ -23,10 +29,22 @@ export default class ProofOfPossession extends BaseCommand {
   ]
 
   async run() {
-    const kit = await this.getKit()
     const res = await this.parse(ProofOfPossession)
-    const accounts = await kit.contracts.getAccounts()
-    const pop = await accounts.generateProofOfKeyPossession(res.flags.account, res.flags.signer)
+    const walletClient = await this.getWalletClient()
+    let pop: { v: number; r: Hex; s: Hex }
+    if (res.flags.privateKey) {
+      pop = await generateProofOfKeyPossessionLocally(
+        ensureLeading0x(res.flags.privateKey),
+        ensureLeading0x(res.flags.account)
+      )
+    } else {
+      pop = await generateProofOfKeyPossession(
+        walletClient,
+        res.flags.account,
+        walletClient.account
+      )
+    }
+
     printValueMap({ signature: serializeSignature(pop) })
   }
 }

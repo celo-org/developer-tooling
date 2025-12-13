@@ -31,7 +31,7 @@ const parseEcdsaPublicKey: ParseFn<string> = async (input) => {
     : parseBytes(input, 64, `${input} is not an ECDSA public key`)
 }
 
-const parseProofOfPossession: ParseFn<string> = async (input) => {
+const parseProofOfPossession: ParseFn<Hex> = async (input) => {
   return parseBytes(input, POP_SIZE, `${input} is not a proof-of-possession`)
 }
 const parseAddress: ParseFn<StrongAddress> = async (input) => {
