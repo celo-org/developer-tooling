@@ -1004,7 +1004,7 @@ testWithAnvilL2(
             approvals: [
               {
                 approver: accounts[0],
-                multisigTxId: 0,
+                multisigTx: 0,
                 confirmedAt: Date.now(),
                 blockNumber: 100,
                 transactionHash: '0xabcd',
@@ -1122,7 +1122,7 @@ testWithAnvilL2(
               `)
       })
 
-      it('should confirm existing multisig transaction when --multisigTXId is provided', async () => {
+      it('should confirm existing multisig transaction when --multisigTx is provided', async () => {
         const logMock = jest.spyOn(console, 'log')
         const kit = newKitFromWeb3(web3)
 
@@ -1153,7 +1153,7 @@ testWithAnvilL2(
         // Verify proposal is not yet approved
         expect(await governance.isApproved(proposalId)).toBe(false)
 
-        // Mock the fetch to return the multisigTxId
+        // Mock the fetch to return the multisigTx
         ;(fetch as jest.Mock).mockResolvedValue({
           ok: true,
           json: async () => ({
@@ -1162,7 +1162,7 @@ testWithAnvilL2(
             approvals: [
               {
                 approver: accounts[0],
-                multisigTxId: 0,
+                multisigTx: 0,
                 confirmedAt: Date.now(),
                 blockNumber: 100,
                 transactionHash: '0xabcd',
@@ -1171,7 +1171,7 @@ testWithAnvilL2(
           }),
         })
 
-        // Now confirm it with the multisigTXId from accounts[1]
+        // Now confirm it with the multisigTx from accounts[1]
         await expect(
           testLocallyWithWeb3Node(
             Approve,
@@ -1181,7 +1181,7 @@ testWithAnvilL2(
               '--proposalID',
               proposalId.toString(),
               '--useMultiSig',
-              '--multisigTXId',
+              '--multisigTx',
               '0',
             ],
             web3
@@ -1228,10 +1228,10 @@ testWithAnvilL2(
               `)
       })
 
-      it('should fail when invalid --multisigTXId is provided', async () => {
+      it('should fail when invalid --multisigTx is provided', async () => {
         const logMock = jest.spyOn(console, 'log')
 
-        // Mock the fetch to return a different multisigTxId
+        // Mock the fetch to return a different multisigTx
         ;(fetch as jest.Mock).mockResolvedValue({
           ok: true,
           json: async () => ({
@@ -1240,7 +1240,7 @@ testWithAnvilL2(
             approvals: [
               {
                 approver: accounts[0],
-                multisigTxId: 5, // Different ID
+                multisigTx: 5, // Different ID
                 confirmedAt: Date.now(),
                 blockNumber: 100,
                 transactionHash: '0xabcd',
@@ -1258,7 +1258,7 @@ testWithAnvilL2(
               '--proposalID',
               proposalId.toString(),
               '--useMultiSig',
-              '--multisigTXId',
+              '--multisigTx',
               '0', // Invalid ID
             ],
             web3
@@ -1305,7 +1305,7 @@ testWithAnvilL2(
             approvals: [
               {
                 approver: accounts[0],
-                multisigTxId: 0,
+                multisigTx: 0,
                 confirmedAt: Date.now(),
                 blockNumber: 100,
                 transactionHash: '0xabcd',

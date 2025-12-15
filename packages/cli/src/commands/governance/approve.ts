@@ -36,11 +36,11 @@ export default class Approve extends BaseCommand {
       description: 'UUID of proposal to approve',
       exclusive: ['hotfix'],
     }),
-    multisigTXId: Flags.string({
+    multisigTx: Flags.string({
       dependsOn: ['proposalID', 'useMultiSig'],
       exclusive: ['hotfix', 'useSafe'],
       description:
-        'Optionally provide the exact multisig transaction id to confirm. otherwise will search onchain for transaction which matches the proposal.',
+        'Optionally provide the exact multisig transaction ID to confirm. Otherwise will search onchain for transaction which matches the proposal call data.',
     }),
     submit: Flags.boolean({
       dependsOn: ['proposalID', 'useMultiSig'],
@@ -131,21 +131,17 @@ export default class Approve extends BaseCommand {
             return confrimations === null || confrimations.count === 0
           }
         )
-        .addConditionalCheck(
-          'multisgTXId provided is valid',
-          !!res.flags.multisigTXId,
-          async () => {
-            const confirmations = await fetchConfirmationsForProposals(id)
-            // if none are found the api could be wrong, so we allow it.
-            if (!confirmations || confirmations.count === 0) {
-              return true
-            }
-            // if we have confirmations, ensure one matches the provided id
-            return confirmations.approvals.some(
-              (approval) => approval.multisigTxId.toString() === res.flags.multisigTXId
-            )
+        .addConditionalCheck('multisgTXId provided is valid', !!res.flags.multisigTx, async () => {
+          const confirmations = await fetchConfirmationsForProposals(id)
+          // if none are found the api could be wrong, so we allow it.
+          if (!confirmations || confirmations.count === 0) {
+            return true
           }
-        )
+          // if we have confirmations, ensure one matches the provided id
+          return confirmations.approvals.some(
+            (approval) => approval.multisigTx.toString() === res.flags.multisigTx
+          )
+        })
         .runChecks()
       governanceTx = await governance.approve(id)
       logEvent = 'ProposalApproved'
@@ -177,9 +173,9 @@ export default class Approve extends BaseCommand {
       )
 
       await displaySendTx<string | void | boolean>('approveTx', tx, {}, logEvent)
-    } else if (res.flags.multisigTXId && useMultiSig) {
+    } else if (res.flags.multisigTx && useMultiSig) {
       const tx = await governanceApproverMultiSig!.confirmTransaction(
-        parseInt(res.flags.multisigTXId)
+        parseInt(res.flags.multisigTx)
       )
       await displaySendTx<string | void | boolean>('approveTx', tx, {}, logEvent)
     } else if (res.flags.submit && useMultiSig) {
@@ -286,7 +282,7 @@ interface MondoAPITx {
   count: number
   approvals: Array<{
     approver: StrongAddress
-    multisigTxId: number
+    multisigTx: number
     confirmedAt: number
     blockNumber: number
     transactionHash: Hex
