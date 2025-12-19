@@ -96,14 +96,16 @@ export default class RpcUrls extends BaseCommand {
     ux.action.start(`Fetching RPC URLs`)
     const rpcUrls = await concurrentMap(CONCURRENCY_LEVEL, validatorAddresses, async (address) => {
       const metadataURL = rpcNodeMetaDataUrls.get(address)
-
       if (!metadataURL) {
         return undefined
       }
-
       try {
-        const metadata = await IdentityMetadataWrapper.fetchFromURL(accountsWrapper, metadataURL)
-
+        const metadata = await Promise.race([
+          IdentityMetadataWrapper.fetchFromURL(accountsWrapper, metadataURL),
+          new Promise<never>((_, reject) =>
+            setTimeout(() => reject(new Error('Timeout')), 6_000)
+          )
+        ])
         return metadata.findClaim(ClaimTypes.RPC_URL)?.rpcUrl
       } catch (_) {
         return undefined
