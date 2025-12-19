@@ -1,5 +1,13 @@
 # @celo/actions
 
+## 0.2.1
+
+### Patch Changes
+
+- Updated dependencies [[`f78f741`](https://github.com/celo-org/developer-tooling/commit/f78f7414b041d64cf7312876aa874c7761eb5f4b)]:
+  - @celo/base@7.0.4
+  - @celo/core@0.0.2
+
 ## 0.2.0
 
 ### Minor Changes
