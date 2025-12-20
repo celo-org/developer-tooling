@@ -39,8 +39,11 @@ export class MultiSigWrapper extends BaseWrapper<MultiSig> {
   async submitOrConfirmTransaction(destination: string, txObject: CeloTxObject<any>, value = '0') {
     const data = stringToSolidityBytes(txObject.encodeABI())
     const transactionCount = await this.contract.methods.getTransactionCount(true, true).call()
-    let transactionId
-    for (transactionId = Number(transactionCount) - 1; transactionId >= 0; transactionId--) {
+    const transactionIds = await this.contract.methods
+      .getTransactionIds(0, transactionCount, true, false)
+      .call()
+
+    for (const transactionId of transactionIds) {
       const transaction = await this.contract.methods.transactions(transactionId).call()
       if (
         transaction.data === data &&
@@ -64,6 +67,13 @@ export class MultiSigWrapper extends BaseWrapper<MultiSig> {
     return toTransactionObject(
       this.connection,
       this.contract.methods.confirmTransaction(transactionId)
+    )
+  }
+  async submitTransaction(destination: string, txObject: CeloTxObject<any>, value = '0') {
+    const data = stringToSolidityBytes(txObject.encodeABI())
+    return toTransactionObject(
+      this.connection,
+      this.contract.methods.submitTransaction(destination, value, data)
     )
   }
 

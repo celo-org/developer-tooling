@@ -4,6 +4,10 @@ import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { MultiSigWrapper } from '@celo/contractkit/lib/wrappers/MultiSig'
 import { toBuffer } from '@ethereumjs/util'
 import { Flags } from '@oclif/core'
+import fetch from 'cross-fetch'
+import debugFactory from 'debug'
+import { Hex } from 'viem'
+
 import Web3 from 'web3'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
@@ -31,6 +35,17 @@ export default class Approve extends BaseCommand {
     proposalID: Flags.string({
       description: 'UUID of proposal to approve',
       exclusive: ['hotfix'],
+    }),
+    multisigTx: Flags.string({
+      dependsOn: ['proposalID', 'useMultiSig'],
+      exclusive: ['hotfix', 'useSafe'],
+      description:
+        'Optionally provide the exact multisig transaction ID to confirm. Otherwise will search onchain for transaction which matches the proposal call data.',
+    }),
+    submit: Flags.boolean({
+      dependsOn: ['proposalID', 'useMultiSig'],
+      description:
+        'Submit the approval transaction to multisig without checking for prior confirmations onchain. (Use with caution!)',
     }),
     from: CustomFlags.address({ required: true, description: "Approver's address" }),
     useMultiSig: Flags.boolean({
@@ -107,6 +122,26 @@ export default class Approve extends BaseCommand {
         .proposalExists(id)
         .proposalInStages(id, ['Referendum', 'Execution'])
         .addCheck(`${id} not already approved`, async () => !(await governance.isApproved(id)))
+        .addConditionalCheck(
+          'Proposal has not been submitted to multisig',
+          res.flags.submit,
+          async () => {
+            // We would prefer it allow for submissions if there is ambiguity, only fail if we confirm that it has been submitted
+            const confrimations = await fetchConfirmationsForProposals(id)
+            return confrimations === null || confrimations.count === 0
+          }
+        )
+        .addConditionalCheck('multisgTXId provided is valid', !!res.flags.multisigTx, async () => {
+          const confirmations = await fetchConfirmationsForProposals(id)
+          // if none are found the api could be wrong, so we allow it.
+          if (!confirmations || confirmations.count === 0) {
+            return true
+          }
+          // if we have confirmations, ensure one matches the provided id
+          return confirmations.approvals.some(
+            (approval) => approval.multisigTx.toString() === res.flags.multisigTx
+          )
+        })
         .runChecks()
       governanceTx = await governance.approve(id)
       logEvent = 'ProposalApproved'
@@ -137,6 +172,17 @@ export default class Approve extends BaseCommand {
         governanceTx.txo
       )
 
+      await displaySendTx<string | void | boolean>('approveTx', tx, {}, logEvent)
+    } else if (res.flags.multisigTx && useMultiSig) {
+      const tx = await governanceApproverMultiSig!.confirmTransaction(
+        parseInt(res.flags.multisigTx)
+      )
+      await displaySendTx<string | void | boolean>('approveTx', tx, {}, logEvent)
+    } else if (res.flags.submit && useMultiSig) {
+      const tx = await governanceApproverMultiSig!.submitTransaction(
+        governance.address,
+        governanceTx.txo
+      )
       await displaySendTx<string | void | boolean>('approveTx', tx, {}, logEvent)
     } else {
       const tx = useMultiSig
@@ -215,4 +261,30 @@ const addDefaultChecks = async (
     .addConditionalCheck(`${account} is multisig signatory`, useMultiSig, () =>
       governanceApproverMultiSig!.isOwner(account)
     )
+}
+const debugRpcPayload = debugFactory('mento-api')
+
+async function fetchConfirmationsForProposals(proposalId: string): Promise<MondoAPITx | null> {
+  const response = await fetch(
+    `https://mondo.celo.org/api/governance/${proposalId}/approval-confirmations`
+  )
+  if (response.ok) {
+    const data = (await response.json()) as MondoAPITx
+    debugRpcPayload('Fetched confirmations for proposal %s: %O', proposalId, data)
+    return data
+  } else {
+    return null
+  }
+}
+
+interface MondoAPITx {
+  proposalId: number
+  count: number
+  approvals: Array<{
+    approver: StrongAddress
+    multisigTx: number
+    confirmedAt: number
+    blockNumber: number
+    transactionHash: Hex
+  }>
 }
