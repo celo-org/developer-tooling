@@ -20,7 +20,7 @@ jobs:
       attestations: write
       id-token: write
       repository-projects: write
-    uses: celo-org/reusable-workflows/.github/workflows/npm-publish.yaml@v3.0.0
+    uses: celo-org/reusable-workflows/.github/workflows/npm-publish.yaml@develop
     with:
       node-version: 20
       version-command: yarn version-then-update-files
