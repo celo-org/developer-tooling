@@ -1,0 +1,47 @@
+name: npm publish (dry run)
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write  # keep if your publish flow uses OIDC/provenance
+
+jobs:
+  dry-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org/
+
+      - name: Show environment
+        run: |
+          node --version
+          npm --version
+          echo "ref=$GITHUB_REF"
+          echo "ref_name=$GITHUB_REF_NAME"
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build --if-present
+
+      - name: Inspect packaging
+        run: |
+          npm pack --dry-run
+          # If you want the real tarball artifact too, remove --dry-run:
+          # npm pack
+          # ls -la *.tgz
+
+      - name: npm publish dry run
+        run: |
+          npm config get registry
+          npm publish --dry-run --provenance
+
