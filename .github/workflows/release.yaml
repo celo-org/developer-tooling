@@ -71,7 +71,6 @@ jobs:
 
       - name: Run Trivy Scan
         id: trivy-fs
-        if: inputs.trivy-enabled
         uses: celo-org/trivy-composite-action@v1.0.1
         with:
           scan-type: fs
@@ -81,7 +80,7 @@ jobs:
           severity: "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL"
 
       - name: Upload SARIF to Security Tab
-        if: inputs.trivy-enabled &&fromJSON(steps.ghas-check.outputs.result)
+        if: fromJSON(steps.ghas-check.outputs.result)
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: ${{ steps.trivy-fs.outputs.sarif-file }}
@@ -89,7 +88,6 @@ jobs:
 
       - name: Delete trivy files
         shell: bash
-        if: inputs.trivy-enabled
         run: |
           repo_name=$(basename "$GITHUB_REPOSITORY")
           rm -rf "${repo_name}"-*.json
@@ -125,7 +123,7 @@ jobs:
         with:
           # This expects you to have a script called release which does a build for your packages and calls changeset publish
           publish: ${{ env.PUBLISH_COMMAND }}
-          version: ${{ env.NODE_VERSION }}
+          version: ${{ env.VERSION_COMMAND }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_PROVENANCE: "1" 
