@@ -24,7 +24,7 @@ jobs:
       id-token: write
       repository-projects: write
     env:
-      NODE_VERSION: 20
+      NODE_VERSION: 24
       VERSION_COMMAND: yarn version-then-update-files 
       PUBLISH_COMMAND: yarn release --dry-run
       OIDC_DUMP: true
