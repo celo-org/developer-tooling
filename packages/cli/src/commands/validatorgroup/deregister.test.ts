@@ -81,6 +81,15 @@ testWithAnvilL2('validatorgroup:deregister cmd', (web3: Web3) => {
     })
     describe('when not enough time has passed', () => {
       it('shows error that wait period is not over', async () => {
+        // Mock Date.now() to ensure we're before the wait period ends
+        // This prevents flakiness on CI where real time may have passed
+        const validators = await kit.contracts.getValidators()
+        const group = await validators.getValidatorGroup(groupAddress)
+        const groupRequirements = await validators.getGroupLockedGoldRequirements()
+        const waitPeriodEnd = group.membersUpdated + (groupRequirements.duration.toNumber())
+        const mockNow = (waitPeriodEnd - 1000) * 1000
+        const timeSpy = jest.spyOn(global.Date, 'now').mockImplementation(() => mockNow)
+
         const logMock = jest.spyOn(console, 'log').mockImplementation()
         logMock.mockClear()
         await expect(
@@ -105,8 +114,8 @@ testWithAnvilL2('validatorgroup:deregister cmd', (web3: Web3) => {
             ],
           ]
         `)
-        const validators = await kit.contracts.getValidators()
         await expect(validators.isValidatorGroup(groupAddress)).resolves.toBe(true)
+        timeSpy.mockRestore()
       })
     })
     describe('when wait duration for unlocking is over', () => {
