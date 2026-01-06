@@ -26,7 +26,7 @@ jobs:
     env:
       NODE_VERSION: 20
       VERSION_COMMAND: yarn version-then-update-files
-      PUBLISH_COMMAND: yarn release --dry-run --provenance
+      PUBLISH_COMMAND: yarn release
       OIDC_DUMP: true
 
     steps:
