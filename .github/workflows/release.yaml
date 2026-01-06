@@ -26,7 +26,7 @@ jobs:
       version-command: yarn version-then-update-files
       publish-command: yarn release --dry-run --provenance
       environment: production
-      dump-oidc: true
+      oidc-dump: true
 
   # release gives an array of published packages as json objects, we need an array of strings for installing
   prepare:
