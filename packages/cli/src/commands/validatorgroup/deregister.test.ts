@@ -86,7 +86,7 @@ testWithAnvilL2('validatorgroup:deregister cmd', (web3: Web3) => {
         const validators = await kit.contracts.getValidators()
         const group = await validators.getValidatorGroup(groupAddress)
         const groupRequirements = await validators.getGroupLockedGoldRequirements()
-        const waitPeriodEnd = group.membersUpdated + (groupRequirements.duration.toNumber())
+        const waitPeriodEnd = group.membersUpdated + groupRequirements.duration.toNumber()
         const mockNow = (waitPeriodEnd - 1000) * 1000
         const timeSpy = jest.spyOn(global.Date, 'now').mockImplementation(() => mockNow)
 
