@@ -98,21 +98,22 @@ jobs:
 
       # Setup Node JS with input from node version and set the registry url for github packages
       # DON'T USE registry-url due to https://github.com/changesets/action/issues/132
-      - name: "Setup Node JS"
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
+      #- name: "Setup Node JS"
+      #  uses: actions/setup-node@v4
+      #  with:
+      #   node-version: ${{ env.NODE_VERSION }}
+      #  registry-url: "https://registry.npmjs.org"
 
       - name: "enable corepack for yarn"
         run: sudo corepack enable yarn
         shell: bash
 
-      # must call twice because of chicken and egg problem with yarn and node
-      # DON'T USE registry-url due to https://github.com/changesets/action/issues/132
+
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: "yarn"
+          registry-url: "https://registry.npmjs.org"
+       cache: "yarn"
 
       - name: Install Dependencies
         shell: bash
