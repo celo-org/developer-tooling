@@ -14,6 +14,7 @@ jobs:
   release:
     name: Open Release PR or Publish Packages
     runs-on: ubuntu-latest
+    environment: production
     permissions:
       contents: write
       actions: read
