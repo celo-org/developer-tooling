@@ -110,4 +110,3 @@ jobs:
     uses: celo-org/developer-tooling/.github/workflows/upload-celocli-executables.yml@master
     with:
       ref: ${{ github.sha }}
-
