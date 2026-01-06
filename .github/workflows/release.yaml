@@ -25,8 +25,8 @@ jobs:
       repository-projects: write
     env:
       NODE_VERSION: 20
-      VERSION_COMMAND: yarn version-then-update-files
-      PUBLISH_COMMAND: yarn release
+      VERSION_COMMAND: yarn version-then-update-files 
+      PUBLISH_COMMAND: yarn release --dry-run
       OIDC_DUMP: true
 
     steps:
