@@ -13,6 +13,7 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
   release:
     name: Open Release PR or Publish Packages
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       actions: read
