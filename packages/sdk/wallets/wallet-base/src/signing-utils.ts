@@ -29,7 +29,7 @@ import { secp256k1 } from '@noble/curves/secp256k1'
 import { keccak_256 } from '@noble/hashes/sha3'
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils'
 import debugFactory from 'debug'
-import Web3 from 'web3' // TODO try to do this without web3 direct
+import Web3 from 'web3'; // TODO try to do this without web3 direct
 
 type OldTransactionTypes = 'celo-legacy' | 'cip42' | TransactionTypes
 type LegacyCeloTx = Omit<CeloTx, 'type'> & {
@@ -442,9 +442,9 @@ export function extractSignature(rawTx: string) {
 
 function extractSignatureFromDecoded(rawValues: Uint8Array[]) {
   // signature is always (for the tx we support so far) the last three elements of the array in order v, r, s,
-  const v = rawValues.at(-3)
-  const r = rawValues.at(-2)
-  const s = rawValues.at(-1)
+  const v = rawValues[rawValues.length - 3]
+  const r = rawValues[rawValues.length - 2]
+  const s = rawValues[rawValues.length - 1]
   // https://github.com/wagmi-dev/viem/blob/993321689b3e2220976504e7e170fe47731297ce/src/utils/transaction/parseTransaction.ts#L281
   // Account.recover cannot handle canonicalized signatures
   // A canonicalized signature may have the first byte removed if its value is 0
