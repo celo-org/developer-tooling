@@ -25,7 +25,7 @@ jobs:
     with:
       node-version: 20
       version-command: yarn version-then-update-files
-      publish-command: yarn release --dry-run
+      publish-command: yarn release
 
   prepare:
     name: Format Output for Install
