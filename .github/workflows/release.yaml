@@ -138,7 +138,7 @@ jobs:
     needs: release
     runs-on: ['self-hosted', 'org', 'ubuntu-22-04']
     container:
-      image: node:20-bullseye
+      image: node:24-bookworm
     outputs:
       result: '${{ steps.map.outputs.output }}'
     steps:
@@ -163,7 +163,7 @@ jobs:
     if: needs.release.outputs.published == 'true' && needs.prepare.outputs.result
     runs-on: ['self-hosted', 'org', 'ubuntu-22-04']
     container:
-      image: node:20-bullseye
+      image: node:24-bookworm
     strategy:
       fail-fast: false
       max-parallel: 12
