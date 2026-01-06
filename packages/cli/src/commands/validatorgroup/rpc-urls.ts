@@ -102,9 +102,7 @@ export default class RpcUrls extends BaseCommand {
       try {
         const metadata = await Promise.race([
           IdentityMetadataWrapper.fetchFromURL(accountsWrapper, metadataURL),
-          new Promise<never>((_, reject) =>
-            setTimeout(() => reject(new Error('Timeout')), 6_000)
-          )
+          new Promise<never>((_, reject) => setTimeout(() => reject(new Error('Timeout')), 6_000)),
         ])
         return metadata.findClaim(ClaimTypes.RPC_URL)?.rpcUrl
       } catch (_) {
