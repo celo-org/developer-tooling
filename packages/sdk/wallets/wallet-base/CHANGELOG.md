@@ -1,5 +1,11 @@
 # @celo/wallet-base
 
+## 8.0.3
+
+### Patch Changes
+
+- [#756](https://github.com/celo-org/developer-tooling/pull/756) [`fad32ac`](https://github.com/celo-org/developer-tooling/commit/fad32ac6748f7556359e62ea33ae0cf8299f1712) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - fix access of rawvalues
+
 ## 8.0.2
 
 ## 8.0.1
