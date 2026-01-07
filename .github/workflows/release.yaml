@@ -13,8 +13,6 @@ concurrency: ${{ github.workflow }}-${{ github.ref }}
 jobs:
   release:
     name: Open Release PR or Publish Packages
-    runs-on: ubuntu-latest
-    environment: production
     permissions:
       contents: write
       actions: read
@@ -23,122 +21,19 @@ jobs:
       attestations: write
       id-token: write
       repository-projects: write
-    env:
-      NODE_VERSION: 24
-      VERSION_COMMAND: yarn version-then-update-files 
-      PUBLISH_COMMAND: yarn release --dry-run
-      OIDC_DUMP: true
+    uses: celo-org/reusable-workflows/.github/workflows/npm-publish.yaml@develop
+    with:
+      node-version: 20
+      version-command: yarn version-then-update-files
+      publish-command: yarn release
 
-    steps:
-      # Security policy docker is configured in step security app
-      # Policy can be seen here https://app.stepsecurity.io/github/celo-org/actions/policies/docker
-      # disable-sudo is set to false if debug is true, because tmate requires root to work.
-      - name: Harden Runner
-        uses: step-security/harden-runner@v2
-        if: runner.environment == 'github-hosted'
-        with:
-          egress-policy: audit
-
-      - name: Dump OIDC claims (no secrets)
-        if: ${{ env.OIDC_DUMP == 'true' }}
-        run: |
-          echo "Requesting OIDC token..."
-          TOKEN_JSON=$(curl -s \
-           -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
-           "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=npm")
-
-          echo "$TOKEN_JSON" | jq -r '.value' > oidc.jwt
-
-          echo "OIDC JWT claims:"
-          jq -R 'split(".") | .[1] | @base64d | fromjson' oidc.jwt
-
-      - name: "Checkout"
-        uses: actions/checkout@v4
-
-      - name: Check if GHAS is Enabled
-        uses: actions/github-script@v7
-        id: ghas-check
-        with:
-          script: |
-            const [owner, repo] = '${{ github.repository }}'.split("/");
-            const res = await github.rest.repos.get({ owner, repo });
-            const isPrivate = res.data.private;
-            const hasGhas = res.data.security_and_analysis?.advanced_security?.status === 'enabled';
-            if (isPrivate && !hasGhas) {
-              core.warning('GHAS is NOT enabled and repo is private. Cannot upload SARIF.');
-              return false;
-            }
-            return true;
-
-      - name: Run Trivy Scan
-        id: trivy-fs
-        uses: celo-org/trivy-composite-action@v1.0.1
-        with:
-          scan-type: fs
-          scan-ref: "."
-          timeout: 15m
-          vuln-type: "os,library"
-          severity: "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL"
-
-      - name: Upload SARIF to Security Tab
-        if: fromJSON(steps.ghas-check.outputs.result)
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          sarif_file: ${{ steps.trivy-fs.outputs.sarif-file }}
-          category: fs-${{ steps.split.outputs.app_name }}
-
-      - name: Delete trivy files
-        shell: bash
-        run: |
-          repo_name=$(basename "$GITHUB_REPOSITORY")
-          rm -rf "${repo_name}"-*.json
-          rm -rf "${repo_name}"-*.sarif
-          rm -rf "${repo_name}"-*.txt
-          rm -rf .cache/
-
-      # Setup Node JS with input from node version and set the registry url for github packages
-      # DON'T USE registry-url due to https://github.com/changesets/action/issues/132
-      #- name: "Setup Node JS"
-      #  uses: actions/setup-node@v4
-      #  with:
-      #   node-version: ${{ env.NODE_VERSION }}
-      #  registry-url: "https://registry.npmjs.org"
-
-      - name: "enable corepack for yarn"
-        run: sudo corepack enable yarn
-        shell: bash
-
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          registry-url: "https://registry.npmjs.org"
-          cache: "yarn"
-
-      - name: Install Dependencies
-        shell: bash
-        run: yarn
-
-      - name: Create Release Pull Request or Publish to npm
-        id: changesets
-        uses: changesets/action@v1
-        with:
-          # This expects you to have a script called release which does a build for your packages and calls changeset publish
-          publish: ${{ env.PUBLISH_COMMAND }}
-          version: ${{ env.VERSION_COMMAND }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_PROVENANCE: "1" 
-
-
-  # release gives an array of published packages as json objects, we need an array of strings for installing
   prepare:
     name: Format Output for Install
     if: needs.release.outputs.published == 'true'
     needs: release
     runs-on: ['self-hosted', 'org', 'ubuntu-22-04']
     container:
-      image: node:20-bullseye
+      image: node:24-bookworm
     outputs:
       result: '${{ steps.map.outputs.output }}'
     steps:
@@ -163,7 +58,7 @@ jobs:
     if: needs.release.outputs.published == 'true' && needs.prepare.outputs.result
     runs-on: ['self-hosted', 'org', 'ubuntu-22-04']
     container:
-      image: node:20-bullseye
+      image: node:24-bookworm
     strategy:
       fail-fast: false
       max-parallel: 12
@@ -215,3 +110,5 @@ jobs:
     uses: celo-org/developer-tooling/.github/workflows/upload-celocli-executables.yml@master
     with:
       ref: ${{ github.sha }}
+
+
