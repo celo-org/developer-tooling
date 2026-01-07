@@ -1,4 +1,4 @@
-[**@celo/wallet-ledger v8.0.2**](../README.md)
+[**@celo/wallet-ledger v8.0.3**](../README.md)
 
 ***
 

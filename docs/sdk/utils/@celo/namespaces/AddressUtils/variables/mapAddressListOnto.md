@@ -8,7 +8,7 @@
 
 > `const` **mapAddressListOnto**: (`oldAddress`, `newAddress`) => `any`[]
 
-Defined in: packages/sdk/base/lib/address.d.ts:16
+Defined in: packages/sdk/base/lib/address.d.ts:17
 
 ## Parameters
 

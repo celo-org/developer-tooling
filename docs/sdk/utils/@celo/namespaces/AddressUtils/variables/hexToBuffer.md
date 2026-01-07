@@ -8,7 +8,7 @@
 
 > `const` **hexToBuffer**: (`input`) => `Buffer`
 
-Defined in: packages/sdk/base/lib/address.d.ts:12
+Defined in: packages/sdk/base/lib/address.d.ts:13
 
 ## Parameters
 

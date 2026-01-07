@@ -8,7 +8,7 @@
 
 > **RandomNumberGenerator** = (`size`, `callback`) => `void`
 
-Defined in: base/lib/account.d.ts:24
+Defined in: base/lib/account.d.ts:25
 
 ## Parameters
 

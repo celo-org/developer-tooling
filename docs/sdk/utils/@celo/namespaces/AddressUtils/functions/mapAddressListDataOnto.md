@@ -8,7 +8,7 @@
 
 > **mapAddressListDataOnto**\<`T`\>(`data`, `oldAddress`, `newAddress`, `initialValue`): `T`[]
 
-Defined in: packages/sdk/base/lib/address.d.ts:17
+Defined in: packages/sdk/base/lib/address.d.ts:18
 
 ## Type Parameters
 

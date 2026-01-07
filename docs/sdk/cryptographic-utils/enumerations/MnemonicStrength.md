@@ -6,7 +6,7 @@
 
 # Enumeration: MnemonicStrength
 
-Defined in: base/lib/account.d.ts:9
+Defined in: base/lib/account.d.ts:10
 
 ## Enumeration Members
 
@@ -14,7 +14,7 @@ Defined in: base/lib/account.d.ts:9
 
 > **s128\_12words**: `128`
 
-Defined in: base/lib/account.d.ts:10
+Defined in: base/lib/account.d.ts:11
 
 ***
 
@@ -22,4 +22,4 @@ Defined in: base/lib/account.d.ts:10
 
 > **s256\_24words**: `256`
 
-Defined in: base/lib/account.d.ts:11
+Defined in: base/lib/account.d.ts:12

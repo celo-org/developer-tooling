@@ -1,4 +1,4 @@
-[**@celo/viem-account-ledger v1.2.2**](../README.md)
+[**@celo/viem-account-ledger v1.2.3**](../README.md)
 
 ***
 

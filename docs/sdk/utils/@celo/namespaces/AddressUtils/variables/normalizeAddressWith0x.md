@@ -8,7 +8,7 @@
 
 > `const` **normalizeAddressWith0x**: (`a`) => `` `0x${string}` ``
 
-Defined in: packages/sdk/base/lib/address.d.ts:7
+Defined in: packages/sdk/base/lib/address.d.ts:8
 
 ## Parameters
 

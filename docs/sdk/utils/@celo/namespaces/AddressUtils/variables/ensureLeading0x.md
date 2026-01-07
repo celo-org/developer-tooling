@@ -8,7 +8,7 @@
 
 > `const` **ensureLeading0x**: (`input`) => `StrongAddress`
 
-Defined in: packages/sdk/base/lib/address.d.ts:9
+Defined in: packages/sdk/base/lib/address.d.ts:10
 
 ## Parameters
 
