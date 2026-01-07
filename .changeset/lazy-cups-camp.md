@@ -1,5 +1,6 @@
 ---
 '@celo/wallet-ledger': patch
+'@celo/celocli': patch 
 '@celo/viem-account-ledger': patch
 ---
 
