@@ -1,5 +1,12 @@
 # @celo/wallet-remote
 
+## 8.0.3
+
+### Patch Changes
+
+- Updated dependencies [[`fad32ac`](https://github.com/celo-org/developer-tooling/commit/fad32ac6748f7556359e62ea33ae0cf8299f1712)]:
+  - @celo/wallet-base@8.0.3
+
 ## 8.0.2
 
 ### Patch Changes

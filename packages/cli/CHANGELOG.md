@@ -1,5 +1,21 @@
 # Changelog
 
+## 8.0.3
+
+### Patch Changes
+
+- [#751](https://github.com/celo-org/developer-tooling/pull/751) [`43f1e89`](https://github.com/celo-org/developer-tooling/commit/43f1e89e04e4fe64b8ac41e82a35a96132894e5e) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Set a max wait time when fetching community rpc provider metadata urls.
+
+- [#758](https://github.com/celo-org/developer-tooling/pull/758) [`f2eaa3a`](https://github.com/celo-org/developer-tooling/commit/f2eaa3a374a7e59d47806924281413ec2351f36b) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - update celo-ledger-token-signer to fix transfer:dollars and support new mento token names
+
+- [#756](https://github.com/celo-org/developer-tooling/pull/756) [`fad32ac`](https://github.com/celo-org/developer-tooling/commit/fad32ac6748f7556359e62ea33ae0cf8299f1712) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Update minimum Node.js version requirement to >=20 and test on Node 24
+
+- Updated dependencies [[`f2eaa3a`](https://github.com/celo-org/developer-tooling/commit/f2eaa3a374a7e59d47806924281413ec2351f36b), [`fad32ac`](https://github.com/celo-org/developer-tooling/commit/fad32ac6748f7556359e62ea33ae0cf8299f1712)]:
+  - @celo/wallet-ledger@8.0.3
+  - @celo/viem-account-ledger@1.2.3
+  - @celo/wallet-hsm-azure@8.0.3
+  - @celo/wallet-local@8.0.3
+
 ## 8.0.2
 
 ### Patch Changes

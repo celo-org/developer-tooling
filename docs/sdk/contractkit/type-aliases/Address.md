@@ -8,4 +8,4 @@
 
 > **Address** = `string`
 
-Defined in: base/lib/address.d.ts:2
+Defined in: base/lib/address.d.ts:3
