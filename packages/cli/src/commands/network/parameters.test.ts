@@ -20,8 +20,8 @@ testWithAnvilL2('network:parameters', (web3) => {
         maxNumGroupsVotedFor: 10 
         totalVotes: 60000000000000000000000 (~6.000e+22)
       EpochManager: 
-        currentEpochNumber: 4
-        epochDuration: 86400
+        currentEpochNumber: 4 
+        epochDuration: 86400 (~8.640e+4)
         isTimeForNextEpoch: false
       FeeCurrencyDirectory: 
         intrinsicGasForAlternativeFeeCurrency: 
@@ -42,7 +42,7 @@ testWithAnvilL2('network:parameters', (web3) => {
           Execution: 1 week
           Referendum: 1 day
       LockedCelo: 
-        totalLockedGold: 120000000000000000000000 (~1.200e+23)
+        totalLockedCelo: 120000000000000000000000 (~1.200e+23)
         unlockingPeriod: 6 hours
       Reserve: 
         frozenReserveGoldDays: 0 
@@ -54,15 +54,15 @@ testWithAnvilL2('network:parameters', (web3) => {
       SortedOracles: 
         reportExpiry: 5 minutes
       Validators: 
-        commissionUpdateDelay: 3 days
+        commissionUpdateDelay: 14 hours 24 minutes
         downtimeGracePeriod: 0 
-        groupLockedGoldRequirements: 
+        groupLockedCeloRequirements: 
           duration: 6 months
           value: 10000000000000000000000 (~1.000e+22)
         maxGroupSize: 2 
         membershipHistoryLength: 60 
         slashingMultiplierResetPeriod: 1 month
-        validatorLockedGoldRequirements: 
+        validatorLockedCeloRequirements: 
           duration: 2 months
           value: 10000000000000000000000 (~1.000e+22)",
         ],

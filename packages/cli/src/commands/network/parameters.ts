@@ -2,6 +2,7 @@ import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { printValueMapRecursive } from '../../utils/cli'
 import { ViewCommmandFlags } from '../../utils/flags'
+import { getNetworkConfig } from '../../utils/network'
 
 export default class Parameters extends BaseCommand {
   static description =
@@ -17,9 +18,9 @@ export default class Parameters extends BaseCommand {
   }
 
   async run() {
-    const kit = await this.getKit()
+    const client = await this.getPublicClient()
     const res = await this.parse(Parameters)
-    const config = await kit.getNetworkConfig(!res.flags.raw)
+    const config = await getNetworkConfig(client, !res.flags.raw)
     printValueMapRecursive(config)
   }
 }
