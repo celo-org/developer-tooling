@@ -1798,7 +1798,7 @@ __metadata:
     cross-fetch: "npm:3.1.5"
     debug: "npm:^4.1.1"
     fs-extra: "npm:^8.1.0"
-    humanize-duration: "npm:^3.32.1"
+    humanize-duration: "npm:^3.33.2"
     inquirer: "npm:^7.3.3"
     jest: "npm:^29.7.0"
     oclif: "npm:^4.17.32"
@@ -11129,10 +11129,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"humanize-duration@npm:^3.32.1":
-  version: 3.32.1
-  resolution: "humanize-duration@npm:3.32.1"
-  checksum: 5909107485c33d0c025e5d15a45b2700f91c9efc1e88510867926b3d1ef24d2d0c8bf31f52abef92da53b29e69410c5acb3a4d6d72429bd8b61d82ac25739ce4
+"humanize-duration@npm:^3.33.2":
+  version: 3.33.2
+  resolution: "humanize-duration@npm:3.33.2"
+  checksum: ac6bc74b095d53e6ff320126d64c0998de213d0e38d0996f23389603c034c8f825915d4318fc19cfdb0612c4963d72d200da43cd7c28ac865bbf9a61f53418f4
   languageName: node
   linkType: hard
 
