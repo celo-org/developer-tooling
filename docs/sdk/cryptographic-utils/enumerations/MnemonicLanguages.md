@@ -6,7 +6,7 @@
 
 # Enumeration: MnemonicLanguages
 
-Defined in: base/lib/account.d.ts:13
+Defined in: base/lib/account.d.ts:14
 
 ## Enumeration Members
 
@@ -14,7 +14,7 @@ Defined in: base/lib/account.d.ts:13
 
 > **chinese\_simplified**: `0`
 
-Defined in: base/lib/account.d.ts:14
+Defined in: base/lib/account.d.ts:15
 
 ***
 
@@ -22,7 +22,7 @@ Defined in: base/lib/account.d.ts:14
 
 > **chinese\_traditional**: `1`
 
-Defined in: base/lib/account.d.ts:15
+Defined in: base/lib/account.d.ts:16
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: base/lib/account.d.ts:15
 
 > **english**: `2`
 
-Defined in: base/lib/account.d.ts:16
+Defined in: base/lib/account.d.ts:17
 
 ***
 
@@ -38,7 +38,7 @@ Defined in: base/lib/account.d.ts:16
 
 > **french**: `3`
 
-Defined in: base/lib/account.d.ts:17
+Defined in: base/lib/account.d.ts:18
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: base/lib/account.d.ts:17
 
 > **italian**: `4`
 
-Defined in: base/lib/account.d.ts:18
+Defined in: base/lib/account.d.ts:19
 
 ***
 
@@ -54,7 +54,7 @@ Defined in: base/lib/account.d.ts:18
 
 > **japanese**: `5`
 
-Defined in: base/lib/account.d.ts:19
+Defined in: base/lib/account.d.ts:20
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: base/lib/account.d.ts:19
 
 > **korean**: `6`
 
-Defined in: base/lib/account.d.ts:20
+Defined in: base/lib/account.d.ts:21
 
 ***
 
@@ -70,7 +70,7 @@ Defined in: base/lib/account.d.ts:20
 
 > **portuguese**: `8`
 
-Defined in: base/lib/account.d.ts:22
+Defined in: base/lib/account.d.ts:23
 
 ***
 
@@ -78,4 +78,4 @@ Defined in: base/lib/account.d.ts:22
 
 > **spanish**: `7`
 
-Defined in: base/lib/account.d.ts:21
+Defined in: base/lib/account.d.ts:22

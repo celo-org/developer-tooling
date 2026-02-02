@@ -8,7 +8,7 @@
 
 > `const` **eqAddress**: (`a`, `b`) => `boolean`
 
-Defined in: packages/sdk/base/lib/address.d.ts:4
+Defined in: packages/sdk/base/lib/address.d.ts:5
 
 ## Parameters
 

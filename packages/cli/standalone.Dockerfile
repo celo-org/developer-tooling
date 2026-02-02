@@ -3,7 +3,7 @@
 # Example build command (manual):
 #
 #   VERSION=x.y.z; docker build . --build-arg VERSION=$VERSION -t celocli-standalone:$VERSION
-FROM node:20-alpine
+FROM node:24-alpine
 LABEL org.opencontainers.image.authors="devops@clabs.co"
 
 # Install cli install dependencies.

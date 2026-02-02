@@ -8,4 +8,4 @@
 
 > `const` **NULL\_ADDRESS**: `` `0x${string}` ``
 
-Defined in: packages/sdk/base/lib/address.d.ts:14
+Defined in: packages/sdk/base/lib/address.d.ts:15

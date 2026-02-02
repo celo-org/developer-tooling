@@ -1,4 +1,4 @@
-[**@celo/wallet-local v8.0.2**](../README.md)
+[**@celo/wallet-local v8.0.3**](../README.md)
 
 ***
 
@@ -62,7 +62,7 @@ account private key
 
 > **computeSharedSecret**(`address`, `publicKey`): `Promise`\<`Buffer`\>
 
-Defined in: wallet-base/lib/wallet-base.d.ts:64
+Defined in: wallet-base/lib/wallet-base.d.ts:65
 
 Computes the shared secret (an ECDH key exchange object) between two accounts
 
@@ -94,7 +94,7 @@ Computes the shared secret (an ECDH key exchange object) between two accounts
 
 > **decrypt**(`address`, `ciphertext`): `Promise`\<`Buffer`\>
 
-Defined in: wallet-base/lib/wallet-base.d.ts:60
+Defined in: wallet-base/lib/wallet-base.d.ts:61
 
 #### Parameters
 
@@ -124,7 +124,7 @@ Defined in: wallet-base/lib/wallet-base.d.ts:60
 
 > **getAccounts**(): `string`[]
 
-Defined in: wallet-base/lib/wallet-base.d.ts:18
+Defined in: wallet-base/lib/wallet-base.d.ts:19
 
 Gets a list of accounts that have been registered
 
@@ -146,7 +146,7 @@ Gets a list of accounts that have been registered
 
 > **hasAccount**(`address?`): `boolean`
 
-Defined in: wallet-base/lib/wallet-base.d.ts:28
+Defined in: wallet-base/lib/wallet-base.d.ts:29
 
 Returns true if account has been registered
 
@@ -206,7 +206,7 @@ Adddress of the account to remove
 
 > **signPersonalMessage**(`address`, `data`): `Promise`\<`string`\>
 
-Defined in: wallet-base/lib/wallet-base.d.ts:51
+Defined in: wallet-base/lib/wallet-base.d.ts:52
 
 Sign a personal Ethereum signed message.
 
@@ -244,7 +244,7 @@ Signature hex string (order: rsv)
 
 > **signTransaction**(`txParams`): `Promise`\<`EncodedTransaction`\>
 
-Defined in: wallet-base/lib/wallet-base.d.ts:44
+Defined in: wallet-base/lib/wallet-base.d.ts:45
 
 Gets the signer based on the 'from' field in the tx body
 
@@ -274,7 +274,7 @@ Transaction to sign
 
 > **signTypedData**(`address`, `typedData`): `Promise`\<`string`\>
 
-Defined in: wallet-base/lib/wallet-base.d.ts:58
+Defined in: wallet-base/lib/wallet-base.d.ts:59
 
 Sign an EIP712 Typed Data message.
 

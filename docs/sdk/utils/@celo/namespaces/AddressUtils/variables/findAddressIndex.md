@@ -8,7 +8,7 @@
 
 > `const` **findAddressIndex**: (`address`, `addresses`) => `number`
 
-Defined in: packages/sdk/base/lib/address.d.ts:15
+Defined in: packages/sdk/base/lib/address.d.ts:16
 
 ## Parameters
 

@@ -1,4 +1,4 @@
-[**@celo/wallet-hsm-gcp v8.0.2**](../README.md)
+[**@celo/wallet-hsm-gcp v8.0.3**](../README.md)
 
 ***
 
@@ -62,7 +62,7 @@ Defined in: wallet-remote/lib/remote-wallet.d.ts:51
 
 > **computeSharedSecret**(`address`, `publicKey`): `Promise`\<`Buffer`\>
 
-Defined in: wallet-base/lib/wallet-base.d.ts:64
+Defined in: wallet-base/lib/wallet-base.d.ts:65
 
 Computes the shared secret (an ECDH key exchange object) between two accounts
 
@@ -94,7 +94,7 @@ Computes the shared secret (an ECDH key exchange object) between two accounts
 
 > **decrypt**(`address`, `ciphertext`): `Promise`\<`Buffer`\>
 
-Defined in: wallet-base/lib/wallet-base.d.ts:60
+Defined in: wallet-base/lib/wallet-base.d.ts:61
 
 #### Parameters
 
@@ -218,7 +218,7 @@ Idempotent to ensure multiple calls are benign
 
 > **removeAccount**(`_address`): `void`
 
-Defined in: wallet-base/lib/wallet-base.d.ts:23
+Defined in: wallet-base/lib/wallet-base.d.ts:24
 
 Removes the account with the given address. Needs to be implemented by subclass, otherwise throws error
 

@@ -1,4 +1,4 @@
-[**@celo/contractkit v10.0.2**](../README.md)
+[**@celo/contractkit v10.0.3**](../README.md)
 
 ***
 
@@ -10,19 +10,19 @@ Defined in: base/lib/currencies.d.ts:1
 
 ## Enumeration Members
 
-### EURm
-
-> **EURm**: `"EURm"`
-
-Defined in: base/lib/currencies.d.ts:3
-
-***
-
 ### BRLm
 
 > **BRLm**: `"BRLm"`
 
 Defined in: base/lib/currencies.d.ts:4
+
+***
+
+### EURm
+
+> **EURm**: `"EURm"`
+
+Defined in: base/lib/currencies.d.ts:3
 
 ***
 

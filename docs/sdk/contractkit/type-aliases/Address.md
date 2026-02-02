@@ -1,4 +1,4 @@
-[**@celo/contractkit v10.0.2**](../README.md)
+[**@celo/contractkit v10.0.3**](../README.md)
 
 ***
 
@@ -8,4 +8,4 @@
 
 > **Address** = `string`
 
-Defined in: base/lib/address.d.ts:2
+Defined in: base/lib/address.d.ts:3

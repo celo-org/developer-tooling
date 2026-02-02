@@ -1,4 +1,4 @@
-[**@celo/base v7.0.3**](../README.md)
+[**@celo/base v7.0.4**](../README.md)
 
 ***
 
@@ -10,19 +10,19 @@ Defined in: [packages/sdk/base/src/currencies.ts:1](https://github.com/celo-org/
 
 ## Enumeration Members
 
-### EURm
-
-> **EURm**: `"EURm"`
-
-Defined in: [packages/sdk/base/src/currencies.ts:3](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/currencies.ts#L3)
-
-***
-
 ### BRLm
 
 > **BRLm**: `"BRLm"`
 
 Defined in: [packages/sdk/base/src/currencies.ts:4](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/currencies.ts#L4)
+
+***
+
+### EURm
+
+> **EURm**: `"EURm"`
+
+Defined in: [packages/sdk/base/src/currencies.ts:3](https://github.com/celo-org/developer-tooling/blob/master/packages/sdk/base/src/currencies.ts#L3)
 
 ***
 
