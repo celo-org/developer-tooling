@@ -44,6 +44,7 @@ function createInstance(stateFilePath: string, chainId?: number): Anvil {
     gasLimit: TEST_GAS_LIMIT,
     blockBaseFeePerGas: TEST_BASE_FEE,
     codeSizeLimit: 50000000,
+    startTimeout: 60_000,
     stopTimeout: 1000,
     chainId,
   }

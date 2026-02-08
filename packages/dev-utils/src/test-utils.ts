@@ -102,7 +102,7 @@ export function testWithWeb3(
     let snapId: string | null = null
 
     if (options.hooks?.beforeAll) {
-      beforeAll(options.hooks.beforeAll)
+      beforeAll(options.hooks.beforeAll, 60_000)
     }
 
     beforeEach(async () => {

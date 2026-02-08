@@ -52,6 +52,7 @@ function createInstance(opts?: { chainId?: number; forkUrl?: string; forkBlockNu
     gasPrice: TEST_GAS_PRICE,
     gasLimit: TEST_GAS_LIMIT,
     blockBaseFeePerGas: TEST_BASE_FEE,
+    startTimeout: 60_000,
     stopTimeout: 3000,
     chainId: opts?.chainId,
     ...(forkUrl
