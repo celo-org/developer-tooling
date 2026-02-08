@@ -29,7 +29,7 @@ import { secp256k1 } from '@noble/curves/secp256k1'
 import { keccak_256 } from '@noble/hashes/sha3'
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils'
 import debugFactory from 'debug'
-import Web3 from 'web3' // TODO try to do this without web3 direct
+// Web3 removed - using native replacements
 
 type OldTransactionTypes = 'celo-legacy' | 'cip42' | TransactionTypes
 type LegacyCeloTx = Omit<CeloTx, 'type'> & {
@@ -113,7 +113,7 @@ function signatureFormatter(
 }
 
 export function stringNumberOrBNToHex(
-  num?: number | string | ReturnType<Web3['utils']['toBN']> | bigint
+  num?: number | string | bigint
 ): Hex {
   if (typeof num === 'string' || typeof num === 'number' || num === undefined) {
     return stringNumberToHex(num)
@@ -129,7 +129,7 @@ function stringNumberToHex(num?: number | string | bigint): StrongAddress {
   if (typeof num === 'bigint') {
     return makeEven(`0x` + num.toString(16)) as StrongAddress
   }
-  return makeEven(Web3.utils.numberToHex(num)) as StrongAddress
+  return makeEven(ensureLeading0x(Number(num).toString(16))) as StrongAddress
 }
 export function rlpEncodedTx(tx: CeloTx): RLPEncodedTx {
   assertSerializableTX(tx)
@@ -327,7 +327,7 @@ function isLessThanZero(value: CeloTx['gasPrice']) {
     case 'number':
       return Number(value) < 0
     default:
-      return value?.lt(Web3.utils.toBN(0)) || false
+      return typeof value === 'bigint' ? value < BigInt(0) : false
   }
 }
 

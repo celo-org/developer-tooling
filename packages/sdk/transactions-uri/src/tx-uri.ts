@@ -1,7 +1,7 @@
 import { trimLeading0x } from '@celo/base/lib/address'
 import { zeroRange } from '@celo/base/lib/collections'
 import { AbiCoder, CeloTx } from '@celo/connect'
-import BN from 'bn.js'
+// BN import removed - using native type checks
 import qrcode from 'qrcode'
 import querystring from 'querystring'
 import abiWeb3 from 'web3-eth-abi'
@@ -103,7 +103,7 @@ export function buildUri(tx: CeloTx, functionName?: string, abiTypes: string[] =
     uri += `args=[${functionArgs.join(',')}]`
   }
   const params = txQueryParams as { [key: string]: string }
-  if (txQueryParams.value instanceof BN) {
+  if (txQueryParams.value != null && typeof txQueryParams.value !== 'string') {
     params.value = txQueryParams.value.toString()
   }
   uri += querystring.stringify({ ...params })

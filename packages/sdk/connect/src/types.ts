@@ -162,6 +162,9 @@ export interface Contract {
     jsonInterface: any[]
   }
   methods: { [key: string]: (...args: any[]) => CeloTxObject<any> }
+  deploy(params: { data: string; arguments?: any[] }): CeloTxObject<any>
+  getPastEvents(event: string, options: PastEventOptions): Promise<EventLog[]>
+  events: { [key: string]: any }
   _address: string
 }
 

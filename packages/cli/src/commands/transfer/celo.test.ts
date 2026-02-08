@@ -295,7 +295,6 @@ testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
     )
 
     const client = createPublicClient({
-      // @ts-expect-error
       transport: http(kit.web3.currentProvider.existingProvider.host),
     })
     const events = await client.getContractEvents({

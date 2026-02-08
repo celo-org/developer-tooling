@@ -51,7 +51,6 @@ export abstract class AbstractFeeCurrencyWrapper<
 
     return Promise.all(
       feeCurrencies.map(async (address) => {
-        // @ts-expect-error abi typing is not 100% correct but works
         let contract = new this.connection.web3.eth.Contract(MINIMAL_TOKEN_INFO_ABI, address)
 
         const adaptedToken = (await contract.methods
@@ -66,7 +65,6 @@ export abstract class AbstractFeeCurrencyWrapper<
         // if standard didnt work try alt
 
         if (adaptedToken) {
-          // @ts-expect-error abi typing is not 100% correct but works
           contract = new this.connection.web3.eth.Contract(MINIMAL_TOKEN_INFO_ABI, adaptedToken)
         }
 

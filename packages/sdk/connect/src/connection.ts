@@ -5,7 +5,9 @@ import { EIP712TypedData, generateTypedDataHash } from '@celo/utils/lib/sign-typ
 import { Signature, parseSignatureWithoutPrefix } from '@celo/utils/lib/signatureUtils'
 import { bufferToHex } from '@ethereumjs/util'
 import debugFactory from 'debug'
-import { keccak256, hexToString } from 'viem'
+import { soliditySha3 as soliditySha3Fn } from '@celo/utils/lib/solidity'
+import { isValidAddress } from '@celo/utils/lib/address'
+import { keccak256, hexToString, numberToHex as viemNumberToHex, parseEther, formatEther } from 'viem'
 import { AbiCoder } from './abi-types'
 import { CeloProvider, assertIsCeloProvider } from './celo-provider'
 import {
@@ -17,6 +19,10 @@ import {
   CeloTxObject,
   CeloTxPending,
   CeloTxReceipt,
+  Contract,
+  EventLog,
+  PastEventOptions,
+  PromiEvent,
   Provider,
   Syncing,
 } from './types'
@@ -58,9 +64,10 @@ export class Connection {
   readonly paramsPopulator: TxParamsNormalizer
   rpcCaller!: RpcCaller
   private _provider!: Provider
+  private _originalWeb3: any
 
   constructor(
-    provider: Provider,
+    providerOrWeb3: Provider | any,
     public wallet?: ReadOnlyWallet,
     handleRevert = true
   ) {
@@ -71,6 +78,14 @@ export class Connection {
       gasInflationFactor: 1.3,
     }
 
+    // Accept both a Provider and a Web3-like object (which has currentProvider)
+    let provider: Provider
+    if (providerOrWeb3 != null && providerOrWeb3.currentProvider != null) {
+      this._originalWeb3 = providerOrWeb3
+      provider = providerOrWeb3.currentProvider as Provider
+    } else {
+      provider = providerOrWeb3 as Provider
+    }
     this.setProvider(provider)
     this.paramsPopulator = new TxParamsNormalizer(this)
   }
@@ -89,8 +104,14 @@ export class Connection {
       if (!(provider instanceof CeloProvider)) {
         this.rpcCaller = new HttpRpcCaller(provider)
         provider = new CeloProvider(provider, this)
+      } else {
+        this.rpcCaller = new HttpRpcCaller(provider)
       }
       this._provider = provider
+      // Update original web3 object's provider so web3.currentProvider reflects CeloProvider
+      if (this._originalWeb3 && typeof this._originalWeb3.setProvider === 'function') {
+        this._originalWeb3.setProvider(provider)
+      }
       return true
     } catch (error) {
       console.error(`could not attach provider`, error)
@@ -256,7 +277,8 @@ export class Connection {
             }
           }
         )
-      })
+      }),
+      (txHash) => this.getTransactionReceipt(txHash)
     )
   }
 
@@ -589,6 +611,29 @@ export class Connection {
     }
   }
 
+  getStorageAt = async (address: Address, position: number | string): Promise<string> => {
+    const pos = typeof position === 'number' ? '0x' + position.toString(16) : position
+    const response = await this.rpcCaller.call('eth_getStorageAt', [
+      inputAddressFormatter(address),
+      pos,
+      'latest',
+    ])
+    return response.result as string
+  }
+
+  private _web3Shim: any
+
+  /**
+   * Returns a web3-compatible shim object.
+   * Provides web3.eth.Contract, web3.eth.getBalance, web3.utils, etc.
+   */
+  get web3(): any {
+    if (!this._web3Shim) {
+      this._web3Shim = createWeb3Shim(this)
+    }
+    return this._web3Shim
+  }
+
   stop() {
     assertIsCeloProvider(this._provider)
     this._provider.stop()
@@ -624,25 +669,43 @@ import {
   decodeEventLog,
 } from 'viem'
 
+// Web3's ABI coder returned bigint values as strings. Convert to match.
+function bigintToString(value: any): any {
+  if (typeof value === 'bigint') {
+    return value.toString()
+  }
+  if (Array.isArray(value)) {
+    return value.map(bigintToString)
+  }
+  return value
+}
+
 const viemAbiCoder: AbiCoder = {
   decodeLog(inputs: any[], hexString: string, topics: string[]): any {
-    const abi = [
-      {
-        type: 'event' as const,
-        name: 'Event',
-        inputs: inputs.map((input: any) => ({
-          ...input,
-          indexed: input.indexed ?? false,
-        })),
-      },
-    ]
+    const eventInputs = inputs.map((input: any) => ({
+      ...input,
+      indexed: input.indexed ?? false,
+    }))
+    const abi = [{ type: 'event' as const, name: 'Event', inputs: eventInputs }]
+    // Web3 convention: topics passed WITHOUT event signature hash (topics[0] stripped).
+    // Viem's decodeEventLog expects topics[0] to be the event signature. Prepend it.
+    const sig = `Event(${eventInputs.map((i: any) => i.type).join(',')})`
+    const eventSigHash = toEventHash(sig)
+    const fullTopics = [eventSigHash, ...topics] as [`0x${string}`, ...`0x${string}`[]]
     try {
       const decoded = decodeEventLog({
         abi,
         data: hexString as `0x${string}`,
-        topics: topics as [`0x${string}`, ...`0x${string}`[]],
+        topics: fullTopics,
       })
-      return decoded.args
+      // Convert bigint values to strings to match web3 behavior
+      const args = (decoded as any).args
+      if (args && typeof args === 'object') {
+        for (const key of Object.keys(args)) {
+          args[key] = bigintToString(args[key])
+        }
+      }
+      return args
     } catch {
       return {}
     }
@@ -677,22 +740,404 @@ const viemAbiCoder: AbiCoder = {
     return toFunctionHash(sig).slice(0, 10)
   },
   decodeParameter(type: string, hex: string): any {
-    const result = decodeAbiParameters([{ type } as AbiParameter], hex as `0x${string}`)
-    return result[0]
+    const hexPrefixed = hex.startsWith('0x') ? hex : `0x${hex}`
+    const result = decodeAbiParameters([{ type } as AbiParameter], hexPrefixed as `0x${string}`)
+    return bigintToString(result[0])
   },
   decodeParameters(types: any[], hex: string): any {
     const abiParams = types.map((type: any) =>
       typeof type === 'string' ? ({ type } as AbiParameter) : type
     )
-    const result = decodeAbiParameters(abiParams, hex as `0x${string}`)
+    // Ensure 0x prefix (web3 accepted both, viem requires it)
+    const hexPrefixed = hex.startsWith('0x') ? hex : `0x${hex}`
+    const result = decodeAbiParameters(abiParams, hexPrefixed as `0x${string}`)
     const output: any = {}
     output.__length__ = result.length
     for (let i = 0; i < result.length; i++) {
-      output[i] = result[i]
+      const val = bigintToString(result[i])
+      output[i] = val
       if (abiParams[i].name) {
-        output[abiParams[i].name!] = result[i]
+        output[abiParams[i].name!] = val
       }
     }
     return output
   },
+}
+
+// Web3 compatibility shim
+
+function createWeb3ContractConstructor(connection: Connection) {
+  return class Web3CompatContract implements Contract {
+    options: { address: string; jsonInterface: any[] }
+    _address: string
+    events: { [key: string]: any } = {}
+
+    constructor(abi: any[], address?: string) {
+      this._address = address || ''
+      // Compute signature for function/event ABI items (web3 did this automatically)
+      const enrichedAbi = abi.map((item: any) => {
+        if (item.type === 'function' && !item.signature) {
+          const sig = `${item.name}(${(item.inputs || []).map((i: any) => i.type).join(',')})`
+          return { ...item, signature: toFunctionHash(sig).slice(0, 10) }
+        }
+        if (item.type === 'event' && !item.signature) {
+          const sig = `${item.name}(${(item.inputs || []).map((i: any) => i.type).join(',')})`
+          return { ...item, signature: toEventHash(sig) }
+        }
+        return item
+      })
+      this.options = { address: this._address, jsonInterface: enrichedAbi }
+      // Build events map from ABI
+      for (const item of enrichedAbi) {
+        if (item.type === 'event') {
+          this.events[item.name] = item
+        }
+      }
+    }
+
+    get methods() {
+      const contract = this
+      const abi = this.options.jsonInterface
+      return new Proxy(
+        {},
+        {
+          get(_target, prop: string) {
+            const methodAbi = abi.find(
+              (item: any) => item.type === 'function' && item.name === prop
+            )
+            if (!methodAbi) {
+              return (..._args: any[]) => ({
+                call: async () => {
+                  throw new Error(`Method ${prop} not found in ABI`)
+                },
+                send: () => {
+                  throw new Error(`Method ${prop} not found in ABI`)
+                },
+                estimateGas: async () => 0,
+                encodeABI: () => '0x',
+                _parent: contract,
+              })
+            }
+            return (...args: any[]) => ({
+              call: async (txParams?: CeloTx) => {
+                const data = encodeFunctionData({
+                  abi: [methodAbi],
+                  args,
+                })
+                const callParams = {
+                  to: contract._address,
+                  data,
+                  from: txParams?.from,
+                }
+                const response = await connection.rpcCaller.call('eth_call', [
+                  callParams,
+                  'latest',
+                ])
+                const result = response.result as string
+                if (
+                  !result ||
+                  result === '0x' ||
+                  !methodAbi.outputs ||
+                  methodAbi.outputs.length === 0
+                ) {
+                  return result
+                }
+                const decoded = viemAbiCoder.decodeParameters(methodAbi.outputs, result)
+                return methodAbi.outputs.length === 1 ? decoded[0] : decoded
+              },
+              send: (txParams?: CeloTx) => {
+                const data = encodeFunctionData({
+                  abi: [methodAbi],
+                  args,
+                })
+                const sendTx = {
+                  ...txParams,
+                  to: contract._address,
+                  data,
+                }
+                return createPromiEvent(connection, sendTx, abi)
+              },
+              estimateGas: async (txParams?: CeloTx) => {
+                const data = encodeFunctionData({
+                  abi: [methodAbi],
+                  args,
+                })
+                return connection.estimateGas({
+                  ...txParams,
+                  to: contract._address,
+                  data,
+                })
+              },
+              encodeABI: () => {
+                return encodeFunctionData({
+                  abi: [methodAbi],
+                  args,
+                })
+              },
+              _parent: contract,
+            })
+          },
+        }
+      )
+    }
+
+    deploy(params: { data: string; arguments?: any[] }): CeloTxObject<any> {
+      const constructorAbi = this.options.jsonInterface.find(
+        (item: any) => item.type === 'constructor'
+      )
+      let data = params.data
+      if (constructorAbi && params.arguments && params.arguments.length > 0) {
+        const types = constructorAbi.inputs.map((i: any) => i.type)
+        const encodedArgs = viemAbiCoder.encodeParameters(types, params.arguments).slice(2)
+        data = data + encodedArgs
+      }
+      const contract = this
+      return {
+        call: async () => data,
+        send: (txParams?: CeloTx) => {
+          return createPromiEvent(connection, { ...txParams, data }, this.options.jsonInterface)
+        },
+        estimateGas: async (txParams?: CeloTx) => {
+          return connection.estimateGas({ ...txParams, data })
+        },
+        encodeABI: () => data,
+        _parent: contract,
+        arguments: params.arguments || [],
+      } as any
+    }
+
+    async getPastEvents(event: string, options: PastEventOptions): Promise<EventLog[]> {
+      const eventAbi = this.options.jsonInterface.find(
+        (item: any) => item.type === 'event' && item.name === event
+      )
+      if (!eventAbi) return []
+
+      const eventSig = viemAbiCoder.encodeEventSignature(eventAbi)
+      const topics: (string | null)[] = [eventSig]
+
+      const params: any = {
+        address: this._address,
+        topics,
+        fromBlock:
+          options.fromBlock != null
+            ? inputBlockNumberFormatter(options.fromBlock)
+            : undefined,
+        toBlock:
+          options.toBlock != null
+            ? inputBlockNumberFormatter(options.toBlock)
+            : undefined,
+      }
+
+      const response = await connection.rpcCaller.call('eth_getLogs', [params])
+      const logs = response.result as any[]
+      return logs.map((log: any) => {
+        let returnValues: any = {}
+        try {
+          returnValues = viemAbiCoder.decodeLog(
+            eventAbi.inputs,
+            log.data,
+            log.topics.slice(1)
+          )
+        } catch {}
+        return {
+          event: eventAbi.name,
+          address: log.address,
+          returnValues,
+          logIndex: parseInt(log.logIndex, 16),
+          transactionIndex: parseInt(log.transactionIndex, 16),
+          transactionHash: log.transactionHash,
+          blockHash: log.blockHash,
+          blockNumber: parseInt(log.blockNumber, 16),
+          raw: { data: log.data, topics: log.topics },
+        }
+      })
+    }
+  }
+}
+
+function createPromiEvent(connection: Connection, sendTx: any, abi?: any[]): PromiEvent<any> {
+  type Listener = (...args: any[]) => void
+  const listeners: Record<string, Listener[]> = {}
+
+  const promise = new Promise<any>(async (resolve, reject) => {
+    try {
+      const hash = await new Promise<string>((res, rej) => {
+        ;(connection.currentProvider as Provider).send(
+          {
+            id: getRandomId(),
+            jsonrpc: '2.0',
+            method: 'eth_sendTransaction',
+            params: [sendTx],
+          },
+          (error, resp) => {
+            if (error) rej(error)
+            else if (resp?.error) rej(new Error(resp.error.message))
+            else if (resp) res(resp.result as string)
+            else rej(new Error('empty-response'))
+          }
+        )
+      })
+      ;(listeners['transactionHash'] || []).forEach((fn) => fn(hash))
+
+      let receipt = await pollForReceiptHelper(hash, (h) =>
+        connection.getTransactionReceipt(h)
+      )
+      if (abi && abi.length > 0) {
+        receipt = decodeReceiptEvents(receipt, abi, viemAbiCoder)
+      }
+      ;(listeners['receipt'] || []).forEach((fn) => fn(receipt))
+
+      resolve(receipt)
+    } catch (err) {
+      ;(listeners['error'] || []).forEach((fn) => fn(err, false))
+      reject(err)
+    }
+  })
+
+  const pe = promise as PromiEvent<any>
+  pe.on = (event: string, fn: Listener) => {
+    ;(listeners[event] = listeners[event] || []).push(fn)
+    return pe
+  }
+  pe.once = pe.on
+
+  return pe
+}
+
+async function pollForReceiptHelper(
+  txHash: string,
+  fetchReceipt: (hash: string) => Promise<CeloTxReceipt | null>
+): Promise<CeloTxReceipt> {
+  const POLL_INTERVAL = 100
+  const MAX_ATTEMPTS = 600
+  for (let i = 0; i < MAX_ATTEMPTS; i++) {
+    const receipt = await fetchReceipt(txHash)
+    if (receipt) {
+      return receipt
+    }
+    await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL))
+  }
+  throw new Error(`Transaction receipt not found after ${MAX_ATTEMPTS} attempts: ${txHash}`)
+}
+
+function decodeReceiptEvents(
+  receipt: CeloTxReceipt,
+  abi: any[],
+  coder: AbiCoder
+): CeloTxReceipt {
+  if (!receipt.logs || !Array.isArray(receipt.logs)) return receipt
+  const eventAbis = abi.filter((entry: any) => entry.type === 'event')
+  if (eventAbis.length === 0) return receipt
+
+  const events: { [eventName: string]: EventLog } = {}
+  for (const log of receipt.logs) {
+    if (!log.topics || log.topics.length === 0) continue
+    const topicHash = log.topics[0]
+    for (const eventAbi of eventAbis) {
+      const signature = coder.encodeEventSignature(eventAbi)
+      if (signature === topicHash) {
+        let returnValues: any = {}
+        try {
+          returnValues = coder.decodeLog(eventAbi.inputs, log.data, log.topics.slice(1))
+        } catch {}
+        events[eventAbi.name] = {
+          event: eventAbi.name,
+          address: log.address,
+          returnValues,
+          logIndex: log.logIndex,
+          transactionIndex: log.transactionIndex,
+          transactionHash: log.transactionHash,
+          blockHash: log.blockHash,
+          blockNumber: log.blockNumber,
+          raw: { data: log.data, topics: log.topics },
+        }
+        break
+      }
+    }
+  }
+  if (Object.keys(events).length > 0) {
+    receipt.events = events
+  }
+  return receipt
+}
+
+function createWeb3Shim(connection: Connection) {
+  const ContractConstructor = createWeb3ContractConstructor(connection)
+  const shim = {
+    eth: {
+      Contract: ContractConstructor,
+      net: {
+        isListening: () => connection.isListening(),
+      },
+      getBalance: (address: string) => connection.getBalance(address),
+      getStorageAt: (address: string, position: number | string) =>
+        connection.getStorageAt(address, position),
+      sign: (data: string, address: string) => connection.sign(data, address),
+      getAccounts: () => connection.getAccounts(),
+      getTransactionReceipt: (hash: string) => connection.getTransactionReceipt(hash),
+      getBlockNumber: () => connection.getBlockNumber(),
+      getBlock: (blockNumber: BlockNumber) => connection.getBlock(blockNumber),
+      call: async (tx: any) => {
+        const response = await connection.rpcCaller.call('eth_call', [tx, 'latest'])
+        return response.result as string
+      },
+      sendTransaction: (tx: any) => {
+        return createPromiEvent(connection, tx)
+      },
+      abi: viemAbiCoder,
+      getChainId: () => connection.chainId(),
+      isSyncing: () => connection.isSyncing(),
+      handleRevert: false,
+      transactionPollingInterval: 100,
+      defaultAccount: null as string | null,
+    },
+    utils: {
+      soliditySha3: soliditySha3Fn,
+      sha3: soliditySha3Fn,
+      keccak256: (value: string) => keccak256(value as `0x${string}`),
+      toBN: (value: any) => BigInt(value),
+      toWei: (value: string, unit?: string) => {
+        if (!unit || unit === 'ether') return parseEther(value).toString()
+        return value
+      },
+      fromWei: (value: string, unit?: string) => {
+        if (!unit || unit === 'ether') return formatEther(BigInt(value))
+        return value
+      },
+      isAddress: (address: string) => isValidAddress(address),
+      toChecksumAddress: (address: string) => toChecksumAddress(address),
+      numberToHex: (value: number | string | bigint) =>
+        viemNumberToHex(BigInt(value)),
+      hexToNumber: (hex: string) => Number(BigInt(hex)),
+      toHex: (value: any) => {
+        if (typeof value === 'number' || typeof value === 'bigint') {
+          return viemNumberToHex(BigInt(value))
+        }
+        return ensureLeading0x(value.toString())
+      },
+      hexToAscii: (hex: string) => hexToString(hex as `0x${string}`),
+      randomHex: (size: number) => {
+        const bytes = new Uint8Array(size)
+        for (let i = 0; i < size; i++) {
+          bytes[i] = Math.floor(Math.random() * 256)
+        }
+        return ensureLeading0x(
+          Array.from(bytes)
+            .map((b) => b.toString(16).padStart(2, '0'))
+            .join('')
+        )
+      },
+      _jsonInterfaceMethodToString: (abiItem: any) => {
+        if (abiItem.name) {
+          return `${abiItem.name}(${(abiItem.inputs || []).map((i: any) => i.type).join(',')})`
+        }
+        return ''
+      },
+    },
+    get currentProvider() {
+      return connection.currentProvider
+    },
+    setProvider: (provider: any) => connection.setProvider(provider),
+  }
+  return shim
 }

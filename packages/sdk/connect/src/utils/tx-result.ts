@@ -4,11 +4,16 @@ import { CeloTxReceipt, PromiEvent } from '../types'
 
 const debug = debugFactory('connection:tx:result')
 
+export type ReceiptFetcher = (txHash: string) => Promise<CeloTxReceipt | null>
+
 /**
  * Transforms a `PromiEvent` or a `Promise<string>` (tx hash) to a `TransactionResult`.
  */
-export function toTxResult(pe: PromiEvent<any> | Promise<string>) {
-  return new TransactionResult(pe)
+export function toTxResult(
+  pe: PromiEvent<any> | Promise<string>,
+  fetchReceipt?: ReceiptFetcher
+) {
+  return new TransactionResult(pe, fetchReceipt)
 }
 
 /**
@@ -20,7 +25,7 @@ export class TransactionResult {
   private hashFuture = new Future<string>()
   private receiptFuture = new Future<CeloTxReceipt>()
 
-  constructor(pe: PromiEvent<any> | Promise<string>) {
+  constructor(pe: PromiEvent<any> | Promise<string>, fetchReceipt?: ReceiptFetcher) {
     if (isPromiEvent(pe)) {
       void pe
         .on('transactionHash', (hash: string) => {
@@ -42,14 +47,21 @@ export class TransactionResult {
           this.receiptFuture.reject(error)
         }) as any)
     } else {
-      // Promise<string> - just a hash, no receipt events
+      // Promise<string> - just a tx hash, poll for receipt
       pe.then(
-        (hash: string) => {
+        async (hash: string) => {
           debug('hash: %s', hash)
           this.hashFuture.resolve(hash)
-          // Receipt not available via simple hash promise - consumers should
-          // poll for receipt via connection.getTransactionReceipt()
-          // For now, leave receiptFuture pending (waitReceipt will hang)
+          if (fetchReceipt) {
+            try {
+              const receipt = await pollForReceipt(hash, fetchReceipt)
+              debug('receipt: %O', receipt)
+              this.receiptFuture.resolve(receipt)
+            } catch (error: any) {
+              debug('receipt-poll-error: %o', error)
+              this.receiptFuture.reject(error)
+            }
+          }
         },
         (error: any) => {
           debug('send-error: %o', error)
@@ -83,4 +95,20 @@ export class TransactionResult {
 
 function isPromiEvent(pe: any): pe is PromiEvent<any> {
   return typeof pe.on === 'function'
+}
+
+async function pollForReceipt(
+  txHash: string,
+  fetchReceipt: ReceiptFetcher
+): Promise<CeloTxReceipt> {
+  const POLL_INTERVAL = 100
+  const MAX_ATTEMPTS = 600
+  for (let i = 0; i < MAX_ATTEMPTS; i++) {
+    const receipt = await fetchReceipt(txHash)
+    if (receipt) {
+      return receipt
+    }
+    await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL))
+  }
+  throw new Error(`Transaction receipt not found after ${MAX_ATTEMPTS} attempts: ${txHash}`)
 }

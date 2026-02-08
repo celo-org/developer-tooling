@@ -130,6 +130,9 @@ export function outputCeloTxReceiptFormatter(receipt: any): CeloTxReceipt {
   }
   receipt.cumulativeGasUsed = hexToNumber(receipt.cumulativeGasUsed)
   receipt.gasUsed = hexToNumber(receipt.gasUsed)
+  if (receipt.effectiveGasPrice) {
+    receipt.effectiveGasPrice = hexToNumber(receipt.effectiveGasPrice)
+  }
 
   if (Array.isArray(receipt.logs)) {
     receipt.logs = receipt.logs.map(outputLogFormatter)

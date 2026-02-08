@@ -503,7 +503,8 @@ export class AccountsWrapper extends BaseWrapper<Accounts> {
   }
 
   private keccak256(value: string | BN): string {
-    return this.connection.keccak256(value)
+    const strValue = typeof value === 'string' ? value : '0x' + value.toString(16)
+    return this.connection.keccak256(strValue)
   }
 }
 
