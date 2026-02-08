@@ -112,9 +112,7 @@ function signatureFormatter(
   }
 }
 
-export function stringNumberOrBNToHex(
-  num?: number | string | bigint
-): Hex {
+export function stringNumberOrBNToHex(num?: number | string | bigint): Hex {
   if (typeof num === 'string' || typeof num === 'number' || num === undefined) {
     return stringNumberToHex(num)
   } else {

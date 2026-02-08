@@ -7,7 +7,13 @@ import { bufferToHex } from '@ethereumjs/util'
 import debugFactory from 'debug'
 import { soliditySha3 as soliditySha3Fn } from '@celo/utils/lib/solidity'
 import { isValidAddress } from '@celo/utils/lib/address'
-import { keccak256, hexToString, numberToHex as viemNumberToHex, parseEther, formatEther } from 'viem'
+import {
+  keccak256,
+  hexToString,
+  numberToHex as viemNumberToHex,
+  parseEther,
+  formatEther,
+} from 'viem'
 import { AbiCoder } from './abi-types'
 import { CeloProvider, assertIsCeloProvider } from './celo-provider'
 import {
@@ -829,10 +835,7 @@ function createWeb3ContractConstructor(connection: Connection) {
                   data,
                   from: txParams?.from,
                 }
-                const response = await connection.rpcCaller.call('eth_call', [
-                  callParams,
-                  'latest',
-                ])
+                const response = await connection.rpcCaller.call('eth_call', [callParams, 'latest'])
                 const result = response.result as string
                 if (
                   !result ||
@@ -919,13 +922,8 @@ function createWeb3ContractConstructor(connection: Connection) {
         address: this._address,
         topics,
         fromBlock:
-          options.fromBlock != null
-            ? inputBlockNumberFormatter(options.fromBlock)
-            : undefined,
-        toBlock:
-          options.toBlock != null
-            ? inputBlockNumberFormatter(options.toBlock)
-            : undefined,
+          options.fromBlock != null ? inputBlockNumberFormatter(options.fromBlock) : undefined,
+        toBlock: options.toBlock != null ? inputBlockNumberFormatter(options.toBlock) : undefined,
       }
 
       const response = await connection.rpcCaller.call('eth_getLogs', [params])
@@ -933,11 +931,7 @@ function createWeb3ContractConstructor(connection: Connection) {
       return logs.map((log: any) => {
         let returnValues: any = {}
         try {
-          returnValues = viemAbiCoder.decodeLog(
-            eventAbi.inputs,
-            log.data,
-            log.topics.slice(1)
-          )
+          returnValues = viemAbiCoder.decodeLog(eventAbi.inputs, log.data, log.topics.slice(1))
         } catch {}
         return {
           event: eventAbi.name,
@@ -979,9 +973,7 @@ function createPromiEvent(connection: Connection, sendTx: any, abi?: any[]): Pro
       })
       ;(listeners['transactionHash'] || []).forEach((fn) => fn(hash))
 
-      let receipt = await pollForReceiptHelper(hash, (h) =>
-        connection.getTransactionReceipt(h)
-      )
+      let receipt = await pollForReceiptHelper(hash, (h) => connection.getTransactionReceipt(h))
       if (abi && abi.length > 0) {
         receipt = decodeReceiptEvents(receipt, abi, viemAbiCoder)
       }
@@ -1020,11 +1012,7 @@ async function pollForReceiptHelper(
   throw new Error(`Transaction receipt not found after ${MAX_ATTEMPTS} attempts: ${txHash}`)
 }
 
-function decodeReceiptEvents(
-  receipt: CeloTxReceipt,
-  abi: any[],
-  coder: AbiCoder
-): CeloTxReceipt {
+function decodeReceiptEvents(receipt: CeloTxReceipt, abi: any[], coder: AbiCoder): CeloTxReceipt {
   if (!receipt.logs || !Array.isArray(receipt.logs)) return receipt
   const eventAbis = abi.filter((entry: any) => entry.type === 'event')
   if (eventAbis.length === 0) return receipt
@@ -1106,8 +1094,7 @@ function createWeb3Shim(connection: Connection) {
       },
       isAddress: (address: string) => isValidAddress(address),
       toChecksumAddress: (address: string) => toChecksumAddress(address),
-      numberToHex: (value: number | string | bigint) =>
-        viemNumberToHex(BigInt(value)),
+      numberToHex: (value: number | string | bigint) => viemNumberToHex(BigInt(value)),
       hexToNumber: (hex: string) => Number(BigInt(hex)),
       toHex: (value: any) => {
         if (typeof value === 'number' || typeof value === 'bigint') {

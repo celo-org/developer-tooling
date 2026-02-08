@@ -9,10 +9,7 @@ export type ReceiptFetcher = (txHash: string) => Promise<CeloTxReceipt | null>
 /**
  * Transforms a `PromiEvent` or a `Promise<string>` (tx hash) to a `TransactionResult`.
  */
-export function toTxResult(
-  pe: PromiEvent<any> | Promise<string>,
-  fetchReceipt?: ReceiptFetcher
-) {
+export function toTxResult(pe: PromiEvent<any> | Promise<string>, fetchReceipt?: ReceiptFetcher) {
   return new TransactionResult(pe, fetchReceipt)
 }
 
