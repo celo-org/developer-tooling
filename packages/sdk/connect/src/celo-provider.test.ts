@@ -1,4 +1,3 @@
-import Web3 from 'web3'
 import { CeloProvider } from './celo-provider'
 import { Connection } from './connection'
 import {
@@ -96,10 +95,8 @@ describe('CeloProvider', () => {
       send: mockCallback,
     }
 
-    const web3 = new Web3()
-    web3.setProvider(mockProvider as any)
-    const connection = new Connection(web3, new MockWallet())
-    celoProvider = connection.web3.currentProvider as any as CeloProvider
+    const connection = new Connection(mockProvider, new MockWallet())
+    celoProvider = connection.currentProvider as any as CeloProvider
   })
 
   describe("when celo provider don't have any local account", () => {

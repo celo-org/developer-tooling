@@ -8,7 +8,7 @@ import {
   pubToAddress,
   toBuffer,
 } from '@ethereumjs/util'
-import { isHexStrict, soliditySha3 } from 'web3-utils'
+import { isHex, keccak256, toBytes } from 'viem'
 import { ensureLeading0x, eqAddress, privateKeyToAddress, trimLeading0x } from './address'
 import { EIP712TypedData, generateTypedDataHash } from './sign-typed-data-utils'
 
@@ -24,7 +24,7 @@ export {
 
 // If messages is a hex, the length of it should be the number of bytes
 function messageLength(message: string) {
-  if (isHexStrict(message)) {
+  if (isHex(message, { strict: true })) {
     return (message.length - 2) / 2
   }
   return message.length
@@ -33,11 +33,18 @@ function messageLength(message: string) {
 // https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_sign
 export function hashMessageWithPrefix(message: string): string {
   const prefix = '\x19Ethereum Signed Message:\n' + messageLength(message)
-  return soliditySha3(prefix, message)!
+  // prefix is always a plain string (UTF-8), message can be hex or plain string
+  // toBytes handles both: hex strings → decoded bytes, plain strings → UTF-8 bytes
+  const prefixBytes = toBytes(prefix)
+  const messageBytes = toBytes(message)
+  const combined = new Uint8Array(prefixBytes.length + messageBytes.length)
+  combined.set(prefixBytes)
+  combined.set(messageBytes, prefixBytes.length)
+  return keccak256(combined)
 }
 
 export function hashMessage(message: string): string {
-  return soliditySha3({ type: 'string', value: message })!
+  return keccak256(toBytes(message))
 }
 
 export async function addressToPublicKey(

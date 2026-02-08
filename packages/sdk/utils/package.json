@@ -36,8 +36,7 @@
     "bignumber.js": "^9.0.0",
     "fp-ts": "2.16.9",
     "io-ts": "2.0.1",
-    "web3-eth-abi": "1.10.4",
-    "web3-utils": "1.10.4"
+    "viem": "^2.33.2"
   },
   "devDependencies": {
     "@celo/typescript": "workspace:^"

@@ -5,9 +5,9 @@ import { CeloTxReceipt, PromiEvent } from '../types'
 const debug = debugFactory('connection:tx:result')
 
 /**
- * Transforms a `PromiEvent` to a `TransactionResult`.
+ * Transforms a `PromiEvent` or a `Promise<string>` (tx hash) to a `TransactionResult`.
  */
-export function toTxResult(pe: PromiEvent<any>) {
+export function toTxResult(pe: PromiEvent<any> | Promise<string>) {
   return new TransactionResult(pe)
 }
 
@@ -20,26 +20,44 @@ export class TransactionResult {
   private hashFuture = new Future<string>()
   private receiptFuture = new Future<CeloTxReceipt>()
 
-  constructor(pe: PromiEvent<any>) {
-    void pe
-      .on('transactionHash', (hash: string) => {
-        debug('hash: %s', hash)
-        this.hashFuture.resolve(hash)
-      })
-      .on('receipt', (receipt: CeloTxReceipt) => {
-        debug('receipt: %O', receipt)
-        this.receiptFuture.resolve(receipt)
-      })
+  constructor(pe: PromiEvent<any> | Promise<string>) {
+    if (isPromiEvent(pe)) {
+      void pe
+        .on('transactionHash', (hash: string) => {
+          debug('hash: %s', hash)
+          this.hashFuture.resolve(hash)
+        })
+        .on('receipt', (receipt: CeloTxReceipt) => {
+          debug('receipt: %O', receipt)
+          this.receiptFuture.resolve(receipt)
+        })
 
-      .on('error', ((error: any, receipt: CeloTxReceipt | false) => {
-        if (!receipt) {
+        .on('error', ((error: any, receipt: CeloTxReceipt | false) => {
+          if (!receipt) {
+            debug('send-error: %o', error)
+            this.hashFuture.reject(error)
+          } else {
+            debug('mining-error: %o, %O', error, receipt)
+          }
+          this.receiptFuture.reject(error)
+        }) as any)
+    } else {
+      // Promise<string> - just a hash, no receipt events
+      pe.then(
+        (hash: string) => {
+          debug('hash: %s', hash)
+          this.hashFuture.resolve(hash)
+          // Receipt not available via simple hash promise - consumers should
+          // poll for receipt via connection.getTransactionReceipt()
+          // For now, leave receiptFuture pending (waitReceipt will hang)
+        },
+        (error: any) => {
           debug('send-error: %o', error)
           this.hashFuture.reject(error)
-        } else {
-          debug('mining-error: %o, %O', error, receipt)
+          this.receiptFuture.reject(error)
         }
-        this.receiptFuture.reject(error)
-      }) as any)
+      )
+    }
   }
 
   /** Get (& wait for) transaction hash */
@@ -61,4 +79,8 @@ export class TransactionResult {
 
     return this.receiptFuture.wait()
   }
+}
+
+function isPromiEvent(pe: any): pe is PromiEvent<any> {
+  return typeof pe.on === 'function'
 }

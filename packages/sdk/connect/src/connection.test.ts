@@ -1,12 +1,19 @@
 import { ensureLeading0x } from '@celo/base'
-import Web3 from 'web3'
 import { Connection } from './connection'
+import { Callback, JsonRpcPayload, JsonRpcResponse, Provider } from './types'
+
+function createMockProvider(): Provider {
+  return {
+    send(_payload: JsonRpcPayload, _callback: Callback<JsonRpcResponse>): void {
+      // noop mock
+    },
+  }
+}
 
 describe('Connection', () => {
   let connection: Connection
   beforeEach(() => {
-    const web3 = new Web3('http://localhost:8545')
-    connection = new Connection(web3)
+    connection = new Connection(createMockProvider())
   })
 
   describe('#setFeeMarketGas', () => {

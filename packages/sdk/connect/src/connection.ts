@@ -5,7 +5,7 @@ import { EIP712TypedData, generateTypedDataHash } from '@celo/utils/lib/sign-typ
 import { Signature, parseSignatureWithoutPrefix } from '@celo/utils/lib/signatureUtils'
 import { bufferToHex } from '@ethereumjs/util'
 import debugFactory from 'debug'
-import Web3 from 'web3'
+import { keccak256, hexToString } from 'viem'
 import { AbiCoder } from './abi-types'
 import { CeloProvider, assertIsCeloProvider } from './celo-provider'
 import {
@@ -41,7 +41,6 @@ import { ReadOnlyWallet } from './wallet'
 
 const debugGasEstimation = debugFactory('connection:gas-estimation')
 
-type BN = ReturnType<Web3['utils']['toBN']>
 export interface ConnectionOptions {
   gasInflationFactor: number
   feeCurrency?: StrongAddress
@@ -50,33 +49,35 @@ export interface ConnectionOptions {
 
 /**
  * Connection is a Class for connecting to Celo, sending Transactions, etc
- * @param web3 an instance of web3
+ * @param provider a JSON-RPC provider
  * @param wallet a child class of {@link WalletBase}
- * @param handleRevert sets handleRevert on the web3.eth instance passed in
  */
 export class Connection {
   private config: ConnectionOptions
   private _chainID: number | undefined
   readonly paramsPopulator: TxParamsNormalizer
   rpcCaller!: RpcCaller
+  private _provider!: Provider
 
   constructor(
-    readonly web3: Web3,
+    provider: Provider,
     public wallet?: ReadOnlyWallet,
     handleRevert = true
   ) {
-    web3.eth.handleRevert = handleRevert
+    // handleRevert param kept for API compat but no longer used (was web3-specific)
+    void handleRevert
 
     this.config = {
       gasInflationFactor: 1.3,
     }
 
-    const existingProvider: Provider = web3.currentProvider as Provider
-    this.setProvider(existingProvider)
-    // TODO: Add this line with the wallets separation completed
-    // this.wallet = _wallet ?? new LocalWallet()
-    this.config.from = (web3.eth.defaultAccount as StrongAddress) ?? undefined
+    this.setProvider(provider)
     this.paramsPopulator = new TxParamsNormalizer(this)
+  }
+
+  /** Get the current provider */
+  get currentProvider(): Provider {
+    return this._provider
   }
 
   setProvider(provider: Provider) {
@@ -89,7 +90,7 @@ export class Connection {
         this.rpcCaller = new HttpRpcCaller(provider)
         provider = new CeloProvider(provider, this)
       }
-      this.web3.setProvider(provider as any)
+      this._provider = provider
       return true
     } catch (error) {
       console.error(`could not attach provider`, error)
@@ -97,12 +98,12 @@ export class Connection {
     }
   }
 
-  keccak256 = (value: string | BN): string => {
-    return this.web3.utils.keccak256(value)
+  keccak256 = (value: string): string => {
+    return keccak256(value as `0x${string}`)
   }
 
   hexToAscii = (hex: string) => {
-    return this.web3.utils.hexToAscii(hex)
+    return hexToString(hex as `0x${string}`)
   }
 
   /**
@@ -110,7 +111,6 @@ export class Connection {
    */
   set defaultAccount(address: StrongAddress | undefined) {
     this.config.from = address
-    this.web3.eth.defaultAccount = address ? address : null
   }
 
   /**
@@ -191,18 +191,19 @@ export class Connection {
     return addresses.map((value) => toChecksumAddress(value))
   }
 
-  isListening(): Promise<boolean> {
-    return this.web3.eth.net.isListening()
+  async isListening(): Promise<boolean> {
+    const response = await this.rpcCaller.call('net_listening', [])
+    return response.result as boolean
   }
 
   isSyncing(): Promise<boolean> {
     return new Promise((resolve, reject) => {
-      this.web3.eth
-        .isSyncing()
-        .then((response: boolean | Syncing) => {
-          // isSyncing returns a syncProgress object when it's still syncing
-          if (typeof response === 'boolean') {
-            resolve(response)
+      this.rpcCaller
+        .call('eth_syncing', [])
+        .then((response) => {
+          const result = response.result as boolean | Syncing
+          if (typeof result === 'boolean') {
+            resolve(result)
           } else {
             resolve(true)
           }
@@ -227,10 +228,34 @@ export class Connection {
       gas = await this.estimateGasWithInflationFactor(tx)
     }
 
+    return this.sendTransactionViaProvider({
+      ...tx,
+      gas,
+    })
+  }
+
+  private sendTransactionViaProvider(tx: CeloTx): TransactionResult {
     return toTxResult(
-      this.web3.eth.sendTransaction({
-        ...tx,
-        gas,
+      new Promise<string>((resolve, reject) => {
+        ;(this._provider as Provider).send(
+          {
+            id: getRandomId(),
+            jsonrpc: '2.0',
+            method: 'eth_sendTransaction',
+            params: [tx],
+          },
+          (error, resp) => {
+            if (error) {
+              reject(error)
+            } else if (resp?.error) {
+              reject(new Error(resp.error.message))
+            } else if (resp) {
+              resolve(resp.result as string)
+            } else {
+              reject(new Error('empty-response'))
+            }
+          }
+        )
       })
     )
   }
@@ -245,10 +270,12 @@ export class Connection {
     if (gas == null) {
       const gasEstimator = (_tx: CeloTx) => txObj.estimateGas({ ..._tx })
       const getCallTx = (_tx: CeloTx) => {
-        // @ts-ignore missing _parent property from TransactionObject type.
         return { ..._tx, data: txObj.encodeABI(), to: txObj._parent._address }
       }
-      const caller = (_tx: CeloTx) => this.web3.eth.call(getCallTx(_tx))
+      const caller = async (_tx: CeloTx) => {
+        const response = await this.rpcCaller.call('eth_call', [getCallTx(_tx), 'latest'])
+        return response.result as string
+      }
       gas = await this.estimateGasWithInflationFactor(tx, gasEstimator, caller)
     }
 
@@ -280,7 +307,7 @@ export class Connection {
     // would just forward it to the node
     const signature = await new Promise<string>((resolve, reject) => {
       const method = version ? `eth_signTypedData_v${version}` : 'eth_signTypedData'
-      ;(this.web3.currentProvider as Provider).send(
+      ;(this._provider as Provider).send(
         {
           id: getRandomId(),
           jsonrpc: '2.0',
@@ -311,7 +338,7 @@ export class Connection {
     // by the CeloProvider if there is a local wallet that could sign it. The RpcCaller
     // would just forward it to the node
     const signature = await new Promise<string>((resolve, reject) => {
-      ;(this.web3.currentProvider as Provider).send(
+      ;(this._provider as Provider).send(
         {
           id: getRandomId(),
           jsonrpc: '2.0',
@@ -334,7 +361,29 @@ export class Connection {
   }
 
   sendSignedTransaction = async (signedTransactionData: string): Promise<TransactionResult> => {
-    return toTxResult(this.web3.eth.sendSignedTransaction(signedTransactionData))
+    return toTxResult(
+      new Promise<string>((resolve, reject) => {
+        ;(this._provider as Provider).send(
+          {
+            id: getRandomId(),
+            jsonrpc: '2.0',
+            method: 'eth_sendRawTransaction',
+            params: [signedTransactionData],
+          },
+          (error, resp) => {
+            if (error) {
+              reject(error)
+            } else if (resp?.error) {
+              reject(new Error(resp.error.message))
+            } else if (resp) {
+              resolve(resp.result as string)
+            } else {
+              reject(new Error('empty-response'))
+            }
+          }
+        )
+      })
+    )
   }
   // if neither gas price nor feeMarket fields are present set them.
   setFeeMarketGas = async (tx: CeloTx): Promise<CeloTx> => {
@@ -360,15 +409,29 @@ export class Connection {
 
   estimateGas = async (
     tx: CeloTx,
-    gasEstimator: (tx: CeloTx) => Promise<number> = this.web3.eth.estimateGas,
-    caller: (tx: CeloTx) => Promise<string> = this.web3.eth.call
+    gasEstimator?: (tx: CeloTx) => Promise<number>,
+    caller?: (tx: CeloTx) => Promise<string>
   ): Promise<number> => {
+    const defaultGasEstimator = async (txToEstimate: CeloTx) => {
+      const response = await this.rpcCaller.call('eth_estimateGas', [txToEstimate])
+      return parseInt(response.result, 16)
+    }
+    const defaultCaller = async (txToCall: CeloTx) => {
+      const response = await this.rpcCaller.call('eth_call', [
+        { data: txToCall.data, to: txToCall.to, from: txToCall.from },
+        'latest',
+      ])
+      return response.result as string
+    }
+    const estimate = gasEstimator ?? defaultGasEstimator
+    const call = caller ?? defaultCaller
+
     try {
-      const gas = await gasEstimator({ ...tx })
+      const gas = await estimate({ ...tx })
       debugGasEstimation('estimatedGas: %s', gas.toString())
       return gas
     } catch (e) {
-      const called = await caller({ data: tx.data, to: tx.to, from: tx.from })
+      const called = await call({ data: tx.data, to: tx.to, from: tx.from })
       let revertReason = 'Could not decode transaction failure reason'
       if (called.startsWith('0x08c379a')) {
         revertReason = decodeStringParameter(this.getAbiCoder(), called.substring(10))
@@ -386,7 +449,7 @@ export class Connection {
   }
 
   getAbiCoder(): AbiCoder {
-    return this.web3.eth.abi as unknown as AbiCoder
+    return viemAbiCoder
   }
 
   estimateGasWithInflationFactor = async (
@@ -457,7 +520,7 @@ export class Connection {
   }
 
   private isBlockNumberHash = (blockNumber: BlockNumber) =>
-    blockNumber instanceof String && blockNumber.indexOf('0x') === 0
+    typeof blockNumber === 'string' && blockNumber.indexOf('0x') === 0
 
   getBlock = async (blockHashOrBlockNumber: BlockNumber, fullTxObjects = true): Promise<Block> => {
     const endpoint = this.isBlockNumberHash(blockHashOrBlockNumber)
@@ -527,27 +590,109 @@ export class Connection {
   }
 
   stop() {
-    assertIsCeloProvider(this.web3.currentProvider)
-    this.web3.currentProvider.stop()
+    assertIsCeloProvider(this._provider)
+    this._provider.stop()
   }
 }
 
 const addBufferToBaseFee = (gasPrice: bigint) => (gasPrice * BigInt(120)) / BigInt(100)
 
-function isEmpty(value: string | undefined | number | BN | bigint): value is undefined {
+function isEmpty(value: string | undefined | number | bigint): value is undefined {
   return (
     value === 0 ||
     value === undefined ||
     value === null ||
     value === '0' ||
     value === BigInt(0) ||
-    (typeof value === 'string' &&
-      (value.toLowerCase() === '0x' || value.toLowerCase() === '0x0')) ||
-    Web3.utils.toBN(value.toString(10)).eq(Web3.utils.toBN(0))
+    (typeof value === 'string' && (value.toLowerCase() === '0x' || value.toLowerCase() === '0x0'))
   )
 }
 export function isPresent(
-  value: string | undefined | number | BN | bigint
-): value is string | number | BN | bigint {
+  value: string | undefined | number | bigint
+): value is string | number | bigint {
   return !isEmpty(value)
+}
+
+// Viem-based ABI coder implementation that matches the AbiCoder interface
+import {
+  decodeAbiParameters,
+  encodeAbiParameters,
+  encodeFunctionData,
+  type AbiParameter,
+  toEventHash,
+  toFunctionHash,
+  decodeEventLog,
+} from 'viem'
+
+const viemAbiCoder: AbiCoder = {
+  decodeLog(inputs: any[], hexString: string, topics: string[]): any {
+    const abi = [
+      {
+        type: 'event' as const,
+        name: 'Event',
+        inputs: inputs.map((input: any) => ({
+          ...input,
+          indexed: input.indexed ?? false,
+        })),
+      },
+    ]
+    try {
+      const decoded = decodeEventLog({
+        abi,
+        data: hexString as `0x${string}`,
+        topics: topics as [`0x${string}`, ...`0x${string}`[]],
+      })
+      return decoded.args
+    } catch {
+      return {}
+    }
+  },
+  encodeParameter(type: string, parameter: any): string {
+    return encodeAbiParameters([{ type } as AbiParameter], [parameter])
+  },
+  encodeParameters(types: string[], parameters: any[]): string {
+    const abiParams = types.map((type) => ({ type }) as AbiParameter)
+    return encodeAbiParameters(abiParams, parameters)
+  },
+  encodeEventSignature(name: string | object): string {
+    if (typeof name === 'string') {
+      return toEventHash(name)
+    }
+    const abiItem = name as any
+    const sig = `${abiItem.name}(${(abiItem.inputs || []).map((i: any) => i.type).join(',')})`
+    return toEventHash(sig)
+  },
+  encodeFunctionCall(jsonInterface: object, parameters: any[]): string {
+    return encodeFunctionData({
+      abi: [jsonInterface as any],
+      args: parameters,
+    })
+  },
+  encodeFunctionSignature(name: string | object): string {
+    if (typeof name === 'string') {
+      return toFunctionHash(name).slice(0, 10)
+    }
+    const abiItem = name as any
+    const sig = `${abiItem.name}(${(abiItem.inputs || []).map((i: any) => i.type).join(',')})`
+    return toFunctionHash(sig).slice(0, 10)
+  },
+  decodeParameter(type: string, hex: string): any {
+    const result = decodeAbiParameters([{ type } as AbiParameter], hex as `0x${string}`)
+    return result[0]
+  },
+  decodeParameters(types: any[], hex: string): any {
+    const abiParams = types.map((type: any) =>
+      typeof type === 'string' ? ({ type } as AbiParameter) : type
+    )
+    const result = decodeAbiParameters(abiParams, hex as `0x${string}`)
+    const output: any = {}
+    output.__length__ = result.length
+    for (let i = 0; i < result.length; i++) {
+      output[i] = result[i]
+      if (abiParams[i].name) {
+        output[abiParams[i].name!] = result[i]
+      }
+    }
+    return output
+  },
 }

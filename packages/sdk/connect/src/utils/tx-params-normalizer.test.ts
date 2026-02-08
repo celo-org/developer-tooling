@@ -1,6 +1,5 @@
-import Web3 from 'web3'
 import { Connection } from '../connection'
-import { Callback, CeloTx, JsonRpcPayload, JsonRpcResponse } from '../types'
+import { Callback, CeloTx, JsonRpcPayload, JsonRpcResponse, Provider } from '../types'
 import { RpcCaller } from './rpc-caller'
 import { TxParamsNormalizer } from './tx-params-normalizer'
 
@@ -38,7 +37,12 @@ describe('TxParamsNormalizer class', () => {
         // noop
       },
     }
-    const connection = new Connection(new Web3('http://localhost:8545'))
+    const mockProvider: Provider = {
+      send(_payload: JsonRpcPayload, _callback: Callback<JsonRpcResponse>): void {
+        // noop
+      },
+    }
+    const connection = new Connection(mockProvider)
     connection.rpcCaller = rpcMock
     mockGasEstimation = jest.fn(
       (

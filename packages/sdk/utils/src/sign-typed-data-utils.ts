@@ -3,7 +3,7 @@ import { keccak_256 } from '@noble/hashes/sha3'
 import { hexToBytes, utf8ToBytes } from '@noble/hashes/utils'
 import { BigNumber } from 'bignumber.js'
 import * as t from 'io-ts'
-import coder from 'web3-eth-abi'
+import { type AbiParameter, encodeAbiParameters } from 'viem'
 
 export interface EIP712Parameter {
   name: string
@@ -200,7 +200,10 @@ export function typeHash(primaryType: string, types: EIP712Types): Buffer {
 function encodeValue(valueType: string, value: EIP712ObjectValue, types: EIP712Types): Buffer {
   // Encode the atomic types as their corresponding soldity ABI type.
   if (EIP712_ATOMIC_TYPES.includes(valueType)) {
-    const hexEncoded = coder.encodeParameter(valueType, normalizeValue(valueType, value))
+    const hexEncoded = encodeAbiParameters(
+      [{ type: valueType } as AbiParameter],
+      [normalizeValue(valueType, value)]
+    )
     return Buffer.from(trimLeading0x(hexEncoded), 'hex')
   }
 

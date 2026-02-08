@@ -1833,13 +1833,7 @@ __metadata:
     bignumber.js: "npm:^9.0.0"
     debug: "npm:^4.1.1"
     utf8: "npm:3.0.0"
-    web3: "npm:1.10.4"
-    web3-core: "npm:1.10.4"
-    web3-eth: "npm:1.10.4"
-    web3-eth-abi: "npm:1.10.4"
-    web3-eth-contract: "npm:1.10.4"
-  peerDependencies:
-    web3: 1.10.4
+    viem: "npm:^2.33.2"
   languageName: unknown
   linkType: soft
 
@@ -2115,8 +2109,7 @@ __metadata:
     bignumber.js: "npm:^9.0.0"
     fp-ts: "npm:2.16.9"
     io-ts: "npm:2.0.1"
-    web3-eth-abi: "npm:1.10.4"
-    web3-utils: "npm:1.10.4"
+    viem: "npm:^2.33.2"
   languageName: unknown
   linkType: soft
 

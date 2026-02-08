@@ -3,8 +3,8 @@ import { isValidAddress, toChecksumAddress } from '@celo/utils/lib/address'
 import { sha3 } from '@celo/utils/lib/solidity'
 import BigNumber from 'bignumber.js'
 import { encode } from 'utf8'
-import { AccessList } from 'web3-core'
 import {
+  AccessList,
   AccessListRaw,
   Block,
   BlockHeader,
