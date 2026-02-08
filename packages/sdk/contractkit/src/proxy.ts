@@ -29,7 +29,6 @@ import { ABI as ValidatorsABI } from '@celo/abis/web3/Validators'
 import { ABI as ReserveABI } from '@celo/abis/web3/mento/Reserve'
 import { ABI as StableTokenABI } from '@celo/abis/web3/mento/StableToken'
 import { ABIDefinition, AbiItem } from '@celo/connect'
-import Web3 from 'web3'
 
 export const GET_IMPLEMENTATION_ABI: ABIDefinition = {
   constant: true,
@@ -156,7 +155,7 @@ export const getInitializeAbiOfImplementation = (
   return initializeAbi
 }
 
-export const setImplementationOnProxy = (address: string, web3: Web3) => {
+export const setImplementationOnProxy = (address: string, web3: any) => {
   const proxyWeb3Contract = new web3.eth.Contract(PROXY_ABI)
   return proxyWeb3Contract.methods._setImplementation(address)
 }

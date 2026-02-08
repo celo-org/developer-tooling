@@ -1,15 +1,14 @@
-import Web3 from 'web3'
 import migrationOverride from './migration-override.json'
 import { jsonRpcCall } from './test-utils'
 
 export const NetworkConfig = migrationOverride
 
-export async function timeTravel(seconds: number, web3: Web3) {
+export async function timeTravel(seconds: number, web3: any) {
   await jsonRpcCall(web3, 'evm_increaseTime', [seconds])
   await jsonRpcCall(web3, 'evm_mine', [])
 }
 
-export async function mineBlocks(blocks: number, web3: Web3) {
+export async function mineBlocks(blocks: number, web3: any) {
   for (let i = 0; i < blocks; i++) {
     await jsonRpcCall(web3, 'evm_mine', [])
   }
@@ -19,7 +18,7 @@ export async function mineBlocks(blocks: number, web3: Web3) {
  */
 export async function getContractFromEvent(
   eventSignature: string,
-  web3: Web3,
+  web3: any,
   filter?: {
     expectedData?: string
     index?: number
@@ -37,7 +36,7 @@ export async function getContractFromEvent(
   if (!filter?.expectedData) {
     return logs[logIndex].address
   }
-  const filteredLogs = logs.filter((log) => log.data === filter.expectedData)
+  const filteredLogs = logs.filter((log: any) => log.data === filter.expectedData)
   if (filteredLogs.length === 0) {
     throw new Error(
       `Error: contract could not be found matching signature ${eventSignature} with data ${filter.expectedData}`

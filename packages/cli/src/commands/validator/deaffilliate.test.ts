@@ -3,7 +3,6 @@ import { newKitFromWeb3 } from '@celo/contractkit'
 import { ValidatorsWrapper } from '@celo/contractkit/lib/wrappers/Validators'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
-import Web3 from 'web3'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Register from '../account/register'
 import Lock from '../lockedcelo/lock'
@@ -12,7 +11,7 @@ import ValidatorDeAffiliate from './deaffiliate'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validator:deaffiliate', (web3: Web3) => {
+testWithAnvilL2('validator:deaffiliate', (web3: any) => {
   let account: string
   let validatorContract: ValidatorsWrapper
   let groupAddress: StrongAddress

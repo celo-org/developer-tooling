@@ -6,7 +6,6 @@ import {
   testWithAnvilL2,
   withImpersonatedAccount,
 } from '@celo/dev-utils/anvil-test'
-import Web3 from 'web3'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import { getCurrentTimestamp } from '../../utils/cli'
 import Approve from './approve'
@@ -14,7 +13,7 @@ import PrepareHotfix from './preparehotfix'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:preparehotfix cmd', (web3: Web3) => {
+testWithAnvilL2('governance:preparehotfix cmd', (web3: any) => {
   const HOTFIX_HASH = '0x8ad3719bb2577b277bcafc1f00ac2f1c3fa5e565173303684d0a8d4f3661680c'
   const HOTFIX_BUFFER = hexToBuffer(HOTFIX_HASH)
   const EXECUTION_TIME_LIMIT = 86400

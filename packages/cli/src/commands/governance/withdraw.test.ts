@@ -7,7 +7,6 @@ import { timeTravel } from '@celo/dev-utils/ganache-test'
 import { ProposalBuilder } from '@celo/governance'
 import Safe, { getSafeAddressFromDeploymentTx } from '@safe-global/protocol-kit'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import { deployMultiCall } from '../../test-utils/multicall'
 import { createMultisig, setupSafeContracts } from '../../test-utils/multisigUtils'
@@ -17,7 +16,7 @@ process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvilL2(
   'governance:withdraw',
-  (web3: Web3) => {
+  (web3: any) => {
     const logMock = jest.spyOn(console, 'log')
     const errorMock = jest.spyOn(console, 'error')
 

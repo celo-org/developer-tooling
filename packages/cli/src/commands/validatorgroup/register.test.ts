@@ -1,6 +1,5 @@
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
-import Web3 from 'web3'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import AccountRegister from '../account/register'
 import Lock from '../lockedcelo/lock'
@@ -8,7 +7,7 @@ import ValidatorGroupRegister from './register'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validatorgroup:register cmd', (web3: Web3) => {
+testWithAnvilL2('validatorgroup:register cmd', (web3: any) => {
   beforeEach(async () => {
     const accounts = await web3.eth.getAccounts()
 

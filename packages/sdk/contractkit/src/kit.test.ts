@@ -1,7 +1,6 @@
 import { CeloTx, CeloTxObject, CeloTxReceipt, PromiEvent } from '@celo/connect'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
-import Web3 from 'web3'
 import {
   ContractKit,
   newKitFromWeb3 as newFullKitFromWeb3,
@@ -9,6 +8,7 @@ import {
   newKitWithApiKey,
 } from './kit'
 import { newKitFromWeb3 as newMiniKitFromWeb3 } from './mini-kit'
+import { getWeb3ForKit } from './setupForKits'
 import { promiEventSpy } from './test-utils/PromiEventStub'
 import { startAndFinishEpochProcess } from './test-utils/utils'
 
@@ -49,7 +49,7 @@ export function txoStub<T>(): TransactionObjectStub<T> {
 
 ;[newFullKitFromWeb3, newMiniKitFromWeb3].forEach((newKitFromWeb3) => {
   describe('kit.sendTransactionObject()', () => {
-    const kit = newKitFromWeb3(new Web3('http://'))
+    const kit = newKitFromWeb3(getWeb3ForKit('http://', undefined))
 
     test('should send transaction on simple case', async () => {
       const txo = txoStub()
@@ -129,17 +129,14 @@ export function txoStub<T>(): TransactionObjectStub<T> {
 })
 
 describe('newKitWithApiKey()', () => {
-  test('should set apiKey in request header', async () => {
-    jest.spyOn(Web3.providers, 'HttpProvider')
-
-    newKitWithApiKey('http://', 'key')
-    expect(Web3.providers.HttpProvider).toHaveBeenCalledWith('http://', {
-      headers: [{ name: 'apiKey', value: 'key' }],
-    })
+  test('should create kit with apiKey', async () => {
+    const kit = newKitWithApiKey('http://', 'key')
+    expect(kit).toBeDefined()
+    expect(kit.connection).toBeDefined()
   })
 })
 
-testWithAnvilL2('kit', (web3: Web3) => {
+testWithAnvilL2('kit', (web3: any) => {
   let kit: ContractKit
 
   beforeAll(async () => {

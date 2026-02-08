@@ -1,12 +1,11 @@
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
-import Web3 from 'web3'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Whitelist from './whitelist'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('network:whitelist cmd', (web3: Web3) => {
+testWithAnvilL2('network:whitelist cmd', (web3: any) => {
   const writeMock = jest.spyOn(ux.write, 'stdout')
 
   afterAll(() => {

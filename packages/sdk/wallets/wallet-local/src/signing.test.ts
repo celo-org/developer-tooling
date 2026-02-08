@@ -10,7 +10,7 @@ import {
 import { privateKeyToAddress } from '@celo/utils/lib/address'
 import { recoverTransaction } from '@celo/wallet-base'
 import debugFactory from 'debug'
-import Web3 from 'web3'
+import { parseEther } from 'viem'
 import { LocalWallet } from './local-wallet'
 
 const debug = debugFactory('kit:txtest:sign')
@@ -30,7 +30,7 @@ debug(`Account Address 2: ${ACCOUNT_ADDRESS2}`)
 describe('Transaction Utils', () => {
   // only needed for the eth_coinbase rcp call
   let connection: Connection
-  let web3: Web3
+  let web3: any
   const mockProvider: Provider = {
     send: (payload: JsonRpcPayload, callback: Callback<JsonRpcResponse>): void => {
       if (payload.method === 'eth_coinbase') {
@@ -54,9 +54,8 @@ describe('Transaction Utils', () => {
   }
 
   const setupConnection = async () => {
-    web3 = new Web3()
-    web3.setProvider(mockProvider as any)
-    connection = new Connection(web3)
+    connection = new Connection(mockProvider)
+    web3 = connection.web3
     connection.wallet = new LocalWallet()
   }
   const verifyLocalSigning = async (celoTransaction: CeloTx): Promise<void> => {
@@ -136,7 +135,7 @@ describe('Transaction Utils', () => {
   }
 
   const verifyLocalSigningInAllPermutations = async (from: string, to: string): Promise<void> => {
-    const amountInWei: string = Web3.utils.toWei('1', 'ether')
+    const amountInWei: string = parseEther('1').toString()
     const nonce = 0
     const badNonce = 100
     const gas = 10000

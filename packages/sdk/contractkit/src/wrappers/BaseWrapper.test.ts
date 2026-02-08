@@ -1,7 +1,6 @@
 import { NULL_ADDRESS } from '@celo/base'
 import { CeloTxObject, Connection } from '@celo/connect'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
 import {
   ICeloVersionedContract,
   newICeloVersionedContract,
@@ -9,7 +8,9 @@ import {
 import { ContractVersion, newContractVersion } from '../versions'
 import { BaseWrapper, unixSecondsTimestampToDateString } from './BaseWrapper'
 
-const web3 = new Web3('http://localhost:8545')
+import { newKit } from '../kit'
+const kit = newKit('http://localhost:8545')
+const web3 = kit.web3
 const mockContract = newICeloVersionedContract(web3, NULL_ADDRESS)
 const mockVersion = newContractVersion(1, 1, 1, 1)
 // @ts-ignore

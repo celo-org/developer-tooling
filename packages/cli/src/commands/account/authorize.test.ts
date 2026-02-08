@@ -1,6 +1,5 @@
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
-import Web3 from 'web3'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import { PROOF_OF_POSSESSION_SIGNATURE } from '../../test-utils/constants'
 import Lock from '../lockedcelo/lock'
@@ -10,7 +9,7 @@ import Register from './register'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('account:authorize cmd', (web3: Web3) => {
+testWithAnvilL2('account:authorize cmd', (web3: any) => {
   const logMock = jest.spyOn(console, 'log')
   const errorMock = jest.spyOn(console, 'error')
 

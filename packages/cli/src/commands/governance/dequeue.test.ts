@@ -1,13 +1,12 @@
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
-import Web3 from 'web3'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Dequeue from './dequeue'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:dequeue cmd', (web3: Web3) => {
+testWithAnvilL2('governance:dequeue cmd', (web3: any) => {
   it('does not dequeue anything if no proposals are ready', async () => {
     const kit = newKitFromWeb3(web3)
     const [account] = await web3.eth.getAccounts()

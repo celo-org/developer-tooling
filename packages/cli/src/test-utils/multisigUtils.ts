@@ -3,7 +3,6 @@ import { StrongAddress } from '@celo/base'
 import { ContractKit } from '@celo/contractkit'
 import { setCode } from '@celo/dev-utils/anvil-test'
 import { TEST_GAS_PRICE } from '@celo/dev-utils/test-utils'
-import Web3 from 'web3'
 import {
   multiSigBytecode,
   proxyBytecode,
@@ -87,7 +86,7 @@ export async function createMultisig(
  *
  * A working example can be found in packages/cli/src/commands/governance/approve-l2.test.ts`
  */
-export const setupSafeContracts = async (web3: Web3) => {
+export const setupSafeContracts = async (web3: any) => {
   // Set up safe 1.3.0 in devchain
   await setCode(web3, SAFE_MULTISEND_ADDRESS, SAFE_MULTISEND_CODE)
   await setCode(web3, SAFE_MULTISEND_CALL_ONLY_ADDRESS, SAFE_MULTISEND_CALL_ONLY_CODE)

@@ -1,6 +1,53 @@
-import Web3 from 'web3'
-import { JsonRpcResponse } from 'web3-core-helpers'
+import { Connection, Provider, JsonRpcPayload, JsonRpcResponse } from '@celo/connect'
+import * as http from 'http'
 import migrationOverride from './migration-override.json'
+
+class SimpleHttpProvider implements Provider {
+  /** Compat with web3's HttpProvider which exposed .host */
+  readonly host: string
+
+  constructor(readonly url: string) {
+    this.host = url
+  }
+
+  send(payload: JsonRpcPayload, callback: (error: Error | null, result?: JsonRpcResponse) => void) {
+    const body = JSON.stringify(payload)
+    const parsedUrl = new URL(this.url)
+
+    const req = http.request(
+      {
+        hostname: parsedUrl.hostname,
+        port: parsedUrl.port,
+        path: parsedUrl.pathname + parsedUrl.search,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(body).toString(),
+        },
+      },
+      (res) => {
+        let data = ''
+        res.on('data', (chunk: string) => {
+          data += chunk
+        })
+        res.on('end', () => {
+          try {
+            callback(null, JSON.parse(data))
+          } catch (e) {
+            callback(new Error(`Invalid JSON response: ${data}`))
+          }
+        })
+      }
+    )
+
+    req.on('error', (err) => {
+      callback(err)
+    })
+
+    req.write(body)
+    req.end()
+  }
+}
 
 export const MINUTE = 60
 export const HOUR = 60 * 60
@@ -17,18 +64,20 @@ export const TEST_GAS_LIMIT = 20000000
 
 export const NetworkConfig = migrationOverride
 
-export function jsonRpcCall<O>(web3: Web3, method: string, params: any[]): Promise<O> {
+export function jsonRpcCall<O>(web3: any, method: string, params: any[]): Promise<O> {
   return new Promise<O>((resolve, reject) => {
-    if (web3.currentProvider && typeof web3.currentProvider !== 'string') {
-      // @ts-expect-error
-      web3.currentProvider.send(
+    const provider =
+      web3.currentProvider && typeof web3.currentProvider !== 'string' ? web3.currentProvider : null
+
+    if (provider && typeof provider.send === 'function') {
+      provider.send(
         {
           id: new Date().getTime(),
           jsonrpc: '2.0',
           method,
           params,
         },
-        (err: Error | null, res?: JsonRpcResponse) => {
+        (err: Error | null, res?: any) => {
           if (err) {
             reject(err)
           } else if (!res) {
@@ -52,11 +101,11 @@ export function jsonRpcCall<O>(web3: Web3, method: string, params: any[]): Promi
   })
 }
 
-export function evmRevert(web3: Web3, snapId: string): Promise<void> {
+export function evmRevert(web3: any, snapId: string): Promise<void> {
   return jsonRpcCall(web3, 'evm_revert', [snapId])
 }
 
-export function evmSnapshot(web3: Web3) {
+export function evmSnapshot(web3: any) {
   return jsonRpcCall<string>(web3, 'evm_snapshot', [])
 }
 
@@ -77,18 +126,15 @@ type TestWithWeb3Hooks = {
 export function testWithWeb3(
   name: string,
   rpcUrl: string,
-  fn: (web3: Web3) => void,
+  fn: (web3: any) => void,
   options: {
     hooks?: TestWithWeb3Hooks
     runIf?: boolean
   } = {}
 ) {
-  const web3 = new Web3(rpcUrl)
-
-  // @ts-ignore with anvil setup the tx receipt is apparently not immedietaly
-  // available after the tx is send, so by default it was waiting for 1000 ms
-  // before polling again making the tests slow
-  web3.eth.transactionPollingInterval = 10
+  const provider = new SimpleHttpProvider(rpcUrl)
+  const connection = new Connection(provider)
+  const web3 = connection.web3
 
   // By default we run all the tests
   let describeFn = describe

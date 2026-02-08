@@ -1,7 +1,6 @@
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import { ux } from '@oclif/core'
-import Web3 from 'web3'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Register from '../account/register'
 import Lock from '../lockedcelo/lock'
@@ -10,7 +9,7 @@ import ValidatorRegister from './register'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validator:list', (web3: Web3) => {
+testWithAnvilL2('validator:list', (web3: any) => {
   let account: string
   let ecdsaPublicKey: string
   const writeMock = jest.spyOn(ux.write, 'stdout').mockImplementation(() => {

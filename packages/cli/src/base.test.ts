@@ -7,7 +7,6 @@ import http from 'http'
 import { tmpdir } from 'os'
 import { MethodNotFoundRpcError } from 'viem'
 import { privateKeyToAddress } from 'viem/accounts'
-import Web3 from 'web3'
 import { BaseCommand } from './base'
 import Set from './commands/config/set'
 import CustomHelp from './help'
@@ -105,7 +104,7 @@ jest.mock('../package.json', () => ({
   version: '5.2.3',
 }))
 
-testWithAnvilL2('BaseCommand', (web3: Web3) => {
+testWithAnvilL2('BaseCommand', (web3: any) => {
   const logSpy = jest.spyOn(console, 'log').mockImplementation()
 
   beforeEach(() => {

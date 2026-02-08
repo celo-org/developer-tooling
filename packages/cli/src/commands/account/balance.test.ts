@@ -1,7 +1,6 @@
 import { ContractKit, newKitFromWeb3, StableToken } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
 import { topUpWithToken } from '../../test-utils/chain-setup'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Lock from '../lockedcelo/lock'
@@ -10,7 +9,7 @@ import Balance from './balance'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('account:balance cmd', (web3: Web3) => {
+testWithAnvilL2('account:balance cmd', (web3: any) => {
   const consoleMock = jest.spyOn(console, 'log')
   let accounts: string[] = []
   let kit: ContractKit

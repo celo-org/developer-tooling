@@ -1,9 +1,10 @@
 import { Connection } from '@celo/connect'
-import Web3 from 'web3'
+import { getProviderForKit } from './setupForKits'
 import { CeloContract } from '.'
 import { AddressRegistry } from './address-registry'
 import { ValidWrappers, WrapperCache } from './contract-cache'
 import { Web3ContractCache } from './web3-contract-cache'
+import * as crypto from 'crypto'
 
 const TestedWrappers: ValidWrappers[] = [
   CeloContract.GoldToken,
@@ -14,8 +15,8 @@ const TestedWrappers: ValidWrappers[] = [
 ]
 
 function newWrapperCache() {
-  const web3 = new Web3('http://localhost:8545')
-  const connection = new Connection(web3)
+  const provider = getProviderForKit('http://localhost:8545', undefined)
+  const connection = new Connection(provider)
   const registry = new AddressRegistry(connection)
   const web3ContractCache = new Web3ContractCache(registry)
   const AnyContractAddress = '0xe832065fb5117dbddcb566ff7dc4340999583e38'
@@ -36,8 +37,8 @@ describe('getContract()', () => {
   }
 
   test('should create a new instance when an address is provided', async () => {
-    const address1 = Web3.utils.randomHex(20)
-    const address2 = Web3.utils.randomHex(20)
+    const address1 = '0x' + crypto.randomBytes(20).toString('hex')
+    const address2 = '0x' + crypto.randomBytes(20).toString('hex')
     const contract1 = await contractCache.getContract(CeloContract.MultiSig, address1)
     const contract2 = await contractCache.getContract(CeloContract.MultiSig, address2)
     expect(contract1?.address).not.toEqual(contract2?.address)

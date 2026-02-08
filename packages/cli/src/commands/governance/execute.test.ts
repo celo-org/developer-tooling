@@ -10,13 +10,12 @@ import {
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import fs from 'fs'
 import path from 'node:path'
-import Web3 from 'web3'
 import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Execute from './execute'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:execute cmd', (web3: Web3) => {
+testWithAnvilL2('governance:execute cmd', (web3: any) => {
   const PROPOSAL_TRANSACTION_TEST_KEY = '3'
   const PROPOSAL_TRANSACTION_TEST_VALUE = '4'
   const PROPOSAL_TRANSACTIONS = [

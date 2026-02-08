@@ -2,7 +2,6 @@ import CeloTokenABI from '@celo/abis/GoldToken.json'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { readJSON, removeSync } from 'fs-extra'
 import inquirer from 'inquirer'
-import Web3 from 'web3'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import BuildProposal from './build-proposal'
 
@@ -13,7 +12,7 @@ jest.mock('inquirer')
 
 const TX_PATH_FOR_TEST = './test-tx.json'
 
-testWithAnvilL2('governance:build-proposal cmd', (web3: Web3) => {
+testWithAnvilL2('governance:build-proposal cmd', (web3: any) => {
   describe('building proposal to transfer funds from governance', () => {
     beforeEach(async () => {
       const promptSpy = jest

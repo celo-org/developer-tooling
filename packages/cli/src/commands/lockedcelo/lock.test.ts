@@ -2,7 +2,6 @@ import { newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
 import {
   LONG_TIMEOUT_MS,
   stripAnsiCodesFromNestedArray,
@@ -14,7 +13,7 @@ import Unlock from './unlock'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('lockedgold:lock cmd', (web3: Web3) => {
+testWithAnvilL2('lockedgold:lock cmd', (web3: any) => {
   test(
     'can lock with pending withdrawals',
     async () => {

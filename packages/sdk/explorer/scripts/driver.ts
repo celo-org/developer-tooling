@@ -1,8 +1,7 @@
-import { newKitFromWeb3 } from '@celo/contractkit'
-import Web3 from 'web3'
+import { newKit } from '@celo/contractkit'
 import { newBlockExplorer } from '../src/block-explorer'
 
-const kit = newKitFromWeb3(new Web3('ws://localhost:8545'))
+const kit = newKit('ws://localhost:8545')
 
 export function listenFor(subscription: any, seconds: number) {
   console.log(subscription)

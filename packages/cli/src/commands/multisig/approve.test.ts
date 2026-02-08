@@ -1,7 +1,6 @@
 import { StrongAddress } from '@celo/base'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
-import Web3 from 'web3'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import { createMultisig } from '../../test-utils/multisigUtils'
 import ApproveMultiSig from './approve'
@@ -9,7 +8,7 @@ import ProposeMultiSig from './propose'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('multisig:approve integration tests', (web3: Web3) => {
+testWithAnvilL2('multisig:approve integration tests', (web3: any) => {
   let kit: ContractKit
   let accounts: StrongAddress[]
   let multisigAddress: StrongAddress

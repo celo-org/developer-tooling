@@ -2,7 +2,6 @@ import { newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { setCommissionUpdateDelay } from '@celo/dev-utils/chain-setup'
 import { mineBlocks } from '@celo/dev-utils/ganache-test'
-import Web3 from 'web3'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import AccountRegister from '../account/register'
 import Lock from '../lockedcelo/lock'
@@ -11,7 +10,7 @@ import ValidatorGroupRegister from './register'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validatorgroup:comission cmd', (web3: Web3) => {
+testWithAnvilL2('validatorgroup:comission cmd', (web3: any) => {
   const registerValidatorGroup = async () => {
     const accounts = await web3.eth.getAccounts()
 

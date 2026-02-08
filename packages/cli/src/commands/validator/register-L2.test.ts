@@ -1,6 +1,5 @@
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
-import Web3 from 'web3'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Register from '../account/register'
 import Lock from '../lockedcelo/lock'
@@ -8,7 +7,7 @@ import ValidatorRegister from './register'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validator:register', (web3: Web3) => {
+testWithAnvilL2('validator:register', (web3: any) => {
   let account: string
   let ecdsaPublicKey: string
 

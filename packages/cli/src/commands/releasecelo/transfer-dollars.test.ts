@@ -7,7 +7,6 @@ import { ACCOUNT_PRIVATE_KEYS } from '@celo/dev-utils/test-accounts'
 import { TEST_BASE_FEE, TEST_GAS_PRICE } from '@celo/dev-utils/test-utils'
 import BigNumber from 'bignumber.js'
 import { formatEther, toHex } from 'viem'
-import Web3 from 'web3'
 import { topUpWithToken } from '../../test-utils/chain-setup'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import { createMultisig } from '../../test-utils/multisigUtils'
@@ -22,7 +21,7 @@ process.env.NO_SYNCCHECK = 'true'
 // Lots of commands, sometimes times out
 jest.setTimeout(15000)
 
-testWithAnvilL2('releasegold:transfer-dollars cmd', (web3: Web3) => {
+testWithAnvilL2('releasegold:transfer-dollars cmd', (web3: any) => {
   let accounts: StrongAddress[] = []
   let contractAddress: any
   let kit: ContractKit

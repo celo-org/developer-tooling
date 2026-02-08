@@ -4,7 +4,6 @@ import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
 import { changeMultiSigOwner } from '../../test-utils/chain-setup'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Register from '../account/register'
@@ -15,7 +14,7 @@ import VotePartially from './votePartially'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:vote-partially cmd', (web3: Web3) => {
+testWithAnvilL2('governance:vote-partially cmd', (web3: any) => {
   let minDeposit: string
   const kit = newKitFromWeb3(web3)
   const proposalID = new BigNumber(1)

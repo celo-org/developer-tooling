@@ -1,7 +1,6 @@
 import { CeloTxReceipt } from '@celo/connect/lib/types'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
 import { startAndFinishEpochProcess } from '../test-utils/utils'
 
 import { NULL_ADDRESS } from '@celo/base'
@@ -13,7 +12,7 @@ import { ElectionWrapper } from './Election'
 import { LockedGoldWrapper } from './LockedGold'
 import { ValidatorsWrapper } from './Validators'
 
-const minLockedGoldValue = Web3.utils.toWei('10000', 'ether') // 10k gold
+const minLockedGoldValue = '10000000000000000000000' // 10k gold
 
 jest.setTimeout(20000)
 

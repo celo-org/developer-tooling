@@ -1,11 +1,10 @@
 import { Connection } from '@celo/connect'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
-import Web3 from 'web3'
 import { AddressRegistry } from './address-registry'
 import { AllContracts } from './index'
 import { Web3ContractCache } from './web3-contract-cache'
 
-testWithAnvilL2('web3-contract-cache', (web3: Web3) => {
+testWithAnvilL2('web3-contract-cache', (web3: any) => {
   function newWeb3ContractCache() {
     const connection = new Connection(web3)
     const registry = new AddressRegistry(connection)

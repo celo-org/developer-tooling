@@ -74,8 +74,7 @@
     "fs-extra": "^8.1.0",
     "humanize-duration": "^3.32.1",
     "prompts": "^2.0.1",
-    "viem": "^2.33.2",
-    "web3": "1.10.4"
+    "viem": "^2.33.2"
   },
   "devDependencies": {
     "@celo/dev-utils": "workspace:^",

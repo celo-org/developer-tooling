@@ -8,7 +8,6 @@ import {
 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
-import Web3 from 'web3'
 import {
   EXTRA_LONG_TIMEOUT_MS,
   stripAnsiCodesFromNestedArray,
@@ -23,7 +22,7 @@ import { default as ValidatorRegister } from './register'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validator:deregister', (web3: Web3) => {
+testWithAnvilL2('validator:deregister', (web3: any) => {
   let account: string
   let ecdsaPublicKey: string
   let groupAddress: StrongAddress

@@ -2,7 +2,6 @@ import { newKitFromWeb3 } from '@celo/contractkit'
 import { impersonateAccount, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
 import { Address } from 'viem'
-import Web3 from 'web3'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Current from './current'
 
@@ -13,7 +12,7 @@ afterEach(async () => {
   jest.restoreAllMocks()
 })
 
-testWithAnvilL2('election:current cmd', async (web3: Web3) => {
+testWithAnvilL2('election:current cmd', async (web3: any) => {
   let logMock: ReturnType<typeof jest.spyOn>
   let warnMock: ReturnType<typeof jest.spyOn>
   let writeMock: ReturnType<typeof jest.spyOn>

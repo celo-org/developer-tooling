@@ -3,7 +3,6 @@ import { newKitFromWeb3 } from '@celo/contractkit'
 import { setBalance, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { addressToPublicKey, serializeSignature } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import { createMultisig } from '../../test-utils/multisigUtils'
 import { deployReleaseGoldContract } from '../../test-utils/release-gold'
@@ -14,7 +13,7 @@ import LockedCelo from './locked-gold'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('releasegold:authorize cmd', (web3: Web3) => {
+testWithAnvilL2('releasegold:authorize cmd', (web3: any) => {
   let contractAddress: string
   let kit: any
   let logSpy: jest.SpyInstance

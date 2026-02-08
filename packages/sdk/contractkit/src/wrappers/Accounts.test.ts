@@ -1,7 +1,6 @@
 import { StrongAddress } from '@celo/base'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
-import Web3 from 'web3'
 import { ContractKit, newKitFromWeb3 } from '../kit'
 import { getParsedSignatureOfAddress } from '../utils/getParsedSignatureOfAddress'
 import { AccountsWrapper } from './Accounts'
@@ -15,7 +14,7 @@ TEST NOTES:
 - In migrations: The only account that has cUSD is accounts[0]
 */
 
-const minLockedGoldValue = Web3.utils.toWei('10000', 'ether') // 10k gold
+const minLockedGoldValue = '10000000000000000000000' // 10k gold
 
 testWithAnvilL2('Accounts Wrapper', (web3) => {
   let kit: ContractKit

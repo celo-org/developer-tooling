@@ -4,7 +4,6 @@ import { REGISTRY_CONTRACT_ADDRESS } from '@celo/contractkit'
 import { setBalance, setCode, withImpersonatedAccount } from '@celo/dev-utils/anvil-test'
 import { HOUR, MINUTE, MONTH } from '@celo/dev-utils/test-utils'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
 import { getCurrentTimestamp } from '../utils/cli'
 
 // ported from ganache tests
@@ -13,7 +12,7 @@ const RELEASE_GOLD_IMPLEMENTATION_CONTRACT_BYTECODE =
 const RELEASE_GOLD_IMPLEMENTATION_CONTRACT_ADDRESS = '0xDdbe68bEae54dd94465C6bbA2477EE9500ce1974'
 
 export async function deployReleaseGoldContract(
-  web3: Web3,
+  web3: any,
   ownerMultisigAddress: StrongAddress,
   beneficiary: StrongAddress,
   releaseOwner: StrongAddress,

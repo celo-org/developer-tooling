@@ -71,6 +71,7 @@ export class Connection {
   rpcCaller!: RpcCaller
   private _provider!: Provider
   private _originalWeb3: any
+  private _settingProvider = false
 
   constructor(
     providerOrWeb3: Provider | any,
@@ -111,12 +112,23 @@ export class Connection {
         this.rpcCaller = new HttpRpcCaller(provider)
         provider = new CeloProvider(provider, this)
       } else {
-        this.rpcCaller = new HttpRpcCaller(provider)
+        // Use the underlying raw provider for rpcCaller to avoid recursion
+        // (CeloProvider.send -> handleAccounts -> Connection.getAccounts -> rpcCaller.call -> CeloProvider.send)
+        this.rpcCaller = new HttpRpcCaller(provider.existingProvider)
       }
       this._provider = provider
       // Update original web3 object's provider so web3.currentProvider reflects CeloProvider
-      if (this._originalWeb3 && typeof this._originalWeb3.setProvider === 'function') {
-        this._originalWeb3.setProvider(provider)
+      if (
+        this._originalWeb3 &&
+        typeof this._originalWeb3.setProvider === 'function' &&
+        !this._settingProvider
+      ) {
+        this._settingProvider = true
+        try {
+          this._originalWeb3.setProvider(provider)
+        } finally {
+          this._settingProvider = false
+        }
       }
       return true
     } catch (error) {
@@ -686,7 +698,7 @@ function bigintToString(value: any): any {
   return value
 }
 
-const viemAbiCoder: AbiCoder = {
+export const viemAbiCoder: AbiCoder = {
   decodeLog(inputs: any[], hexString: string, topics: string[]): any {
     const eventInputs = inputs.map((input: any) => ({
       ...input,
@@ -1064,7 +1076,25 @@ function createWeb3Shim(connection: Connection) {
       getAccounts: () => connection.getAccounts(),
       getTransactionReceipt: (hash: string) => connection.getTransactionReceipt(hash),
       getBlockNumber: () => connection.getBlockNumber(),
-      getBlock: (blockNumber: BlockNumber) => connection.getBlock(blockNumber),
+      getBlock: (blockNumber: BlockNumber, fullTxObjects?: boolean) =>
+        connection.getBlock(blockNumber, fullTxObjects ?? false),
+      getPastLogs: async (options: {
+        topics?: (string | null)[]
+        fromBlock?: string | number
+        toBlock?: string | number
+        address?: string
+      }) => {
+        const params: any = { ...options }
+        if (params.fromBlock != null) params.fromBlock = inputBlockNumberFormatter(params.fromBlock)
+        if (params.toBlock != null) params.toBlock = inputBlockNumberFormatter(params.toBlock)
+        const response = await connection.rpcCaller.call('eth_getLogs', [params])
+        const logs = response.result as any[]
+        // web3 returned checksummed addresses; raw RPC returns lowercase
+        return logs.map((log: any) => ({
+          ...log,
+          address: log.address ? toChecksumAddress(log.address) : log.address,
+        }))
+      },
       call: async (tx: any) => {
         const response = await connection.rpcCaller.call('eth_call', [tx, 'latest'])
         return response.result as string

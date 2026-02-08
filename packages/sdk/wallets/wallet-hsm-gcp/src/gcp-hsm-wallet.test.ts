@@ -11,7 +11,6 @@ import { asn1FromPublicKey } from '@celo/wallet-hsm'
 import * as ethUtil from '@ethereumjs/util'
 import { secp256k1 } from '@noble/curves/secp256k1'
 import { BigNumber } from 'bignumber.js'
-import Web3 from 'web3'
 import { GcpHsmWallet } from './gcp-hsm-wallet'
 require('dotenv').config()
 
@@ -159,7 +158,7 @@ describe('GcpHsmWallet class', () => {
           from: unknownAddress,
           to: otherAddress,
           chainId: CHAIN_ID,
-          value: Web3.utils.toWei('1', 'ether'),
+          value: '1000000000000000000',
           nonce: 0,
           gas: '10',
           gasPrice: '99',
@@ -218,7 +217,7 @@ describe('GcpHsmWallet class', () => {
           from: knownAddress,
           to: otherAddress,
           chainId: CHAIN_ID,
-          value: Web3.utils.toWei('1', 'ether'),
+          value: '1000000000000000000',
           nonce: 0,
           gas: '10',
           gasPrice: '99',
@@ -244,7 +243,7 @@ describe('GcpHsmWallet class', () => {
             from: await wallet.getAddressFromVersionName(knownKey),
             to: ACCOUNT_ADDRESS2,
             chainId: CHAIN_ID,
-            value: Web3.utils.toWei('1', 'ether'),
+            value: '1000000000000000000',
             nonce: 65,
             gas: '10',
             gasPrice: '99',

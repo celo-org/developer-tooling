@@ -1,12 +1,11 @@
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
-import Web3 from 'web3'
 import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Run from './run'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('election:run', (web3: Web3) => {
+testWithAnvilL2('election:run', (web3: any) => {
   afterEach(async () => {
     jest.clearAllMocks()
   })

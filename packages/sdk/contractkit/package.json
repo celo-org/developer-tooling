@@ -38,9 +38,7 @@
     "bignumber.js": "^9.0.0",
     "debug": "^4.1.1",
     "fp-ts": "2.16.9",
-    "semver": "^7.7.2",
-    "web3": "1.10.4",
-    "web3-core-helpers": "1.10.4"
+    "semver": "^7.7.2"
   },
   "devDependencies": {
     "@celo/celo-devchain": "^7.0.0",

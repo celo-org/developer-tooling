@@ -9,7 +9,6 @@ import { setBalance, testWithAnvilL2, withImpersonatedAccount } from '@celo/dev-
 import { getContractFromEvent, timeTravel } from '@celo/dev-utils/ganache-test'
 import BigNumber from 'bignumber.js'
 import { privateKeyToAddress } from 'viem/accounts'
-import Web3 from 'web3'
 import { topUpWithToken } from '../../test-utils/chain-setup'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import { createMultisig } from '../../test-utils/multisigUtils'
@@ -24,7 +23,7 @@ import LockedCelo from './locked-gold'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('releasegold:admin-revoke cmd', (web3: Web3) => {
+testWithAnvilL2('releasegold:admin-revoke cmd', (web3: any) => {
   let kit: ContractKit
   let contractAddress: StrongAddress
   let releaseGoldWrapper: ReleaseGoldWrapper

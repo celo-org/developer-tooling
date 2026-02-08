@@ -1,7 +1,6 @@
 import { Connection, ReadOnlyWallet } from '@celo/connect'
 import { LocalWallet } from '@celo/wallet-local'
 import { BigNumber } from 'bignumber.js'
-import Web3 from 'web3'
 import { AddressRegistry } from './address-registry'
 import { CeloTokens, EachCeloToken } from './celo-tokens'
 import { MiniContractCache } from './mini-contract-cache'
@@ -19,7 +18,7 @@ import {
  * @param options to pass to the Web3 HttpProvider constructor
  */
 export function newKit(url: string, wallet?: ReadOnlyWallet, options?: HttpProviderOptions) {
-  const web3: Web3 = getWeb3ForKit(url, options)
+  const web3 = getWeb3ForKit(url, options)
   return newKitFromWeb3(web3, wallet)
 }
 
@@ -38,7 +37,7 @@ export function newKitWithApiKey(url: string, apiKey: string, wallet?: ReadOnlyW
  * Creates a new instance of the `MiniContractKit` with a web3 instance
  * @param web3 Web3 instance
  */
-export function newKitFromWeb3(web3: Web3, wallet: ReadOnlyWallet = new LocalWallet()) {
+export function newKitFromWeb3(web3: any, wallet: ReadOnlyWallet = new LocalWallet()) {
   ensureCurrentProvider(web3)
   return new MiniContractKit(new Connection(web3, wallet))
 }

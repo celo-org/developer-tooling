@@ -1,7 +1,6 @@
 import { PublicCeloClient } from '@celo/actions'
 import { TestClientExtended } from '@celo/dev-utils/viem/anvil-test'
 import { Interfaces } from '@oclif/core'
-import Web3 from 'web3'
 import { BaseCommand } from '../base'
 
 type AbstractConstructor<T> = new (...args: any[]) => T
@@ -13,28 +12,33 @@ interface Runner extends AbstractConstructor<BaseCommand> {
 export async function testLocallyWithWeb3Node(
   command: Runner,
   argv: string[],
-  web3: Web3,
+  web3: any,
   config?: Interfaces.LoadOptions
 ) {
   return testLocally(command, [...argv, '--node', extractHostFromWeb3(web3)], config)
 }
 
-export const extractHostFromWeb3 = (web3: Web3): string => {
-  // why would the constructor name be HttpProvider but it not be considered an instance of HttpProvider? idk but it happens
-  if (
-    web3.currentProvider instanceof Web3.providers.HttpProvider ||
-    web3.currentProvider?.constructor.name === 'HttpProvider'
-  ) {
-    // @ts-ignore
-    return web3.currentProvider.host
+export const extractHostFromWeb3 = (web3: any): string => {
+  const provider = web3.currentProvider
+  if (!provider) {
+    throw new Error('No currentProvider on web3 object')
   }
 
-  // CeloProvider is not exported from @celo/connect, but it's injected into web3
-  if (web3.currentProvider !== null && web3.currentProvider.constructor.name === 'CeloProvider') {
-    return (web3.currentProvider as any).existingProvider.host
+  // CeloProvider wraps the underlying provider
+  if (provider.constructor.name === 'CeloProvider') {
+    const inner = provider.existingProvider
+    return inner.host || inner.url || 'http://localhost:8545'
   }
 
-  throw new Error(`Unsupported provider, ${web3.currentProvider?.constructor.name}`)
+  // Direct provider (HttpProvider or SimpleHttpProvider)
+  if (provider.host) {
+    return provider.host
+  }
+  if (provider.url) {
+    return provider.url
+  }
+
+  throw new Error(`Unsupported provider, ${provider.constructor.name}`)
 }
 
 export async function testLocallyWithViemNode(

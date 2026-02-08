@@ -6,7 +6,6 @@ import {
   JsonRpcResponse,
   Provider,
 } from '@celo/connect'
-import Web3 from 'web3'
 import { Metadata, fetchMetadata, tryGetProxyImplementation } from './sourcify'
 
 // This is taken from protocol/contracts/build/Account.json
@@ -14,10 +13,9 @@ const CONTRACT_METADATA = require('../fixtures/contract.metadata.json')
 
 describe('sourcify helpers', () => {
   let connection: Connection
-  const web3: Web3 = new Web3()
-  const address: Address = web3.utils.randomHex(20)
-  const proxyAddress: Address = web3.utils.randomHex(20)
-  const implAddress: Address = web3.utils.randomHex(20)
+  const address: Address = '0x' + require('crypto').randomBytes(20).toString('hex')
+  const proxyAddress: Address = '0x' + require('crypto').randomBytes(20).toString('hex')
+  const implAddress: Address = '0x' + require('crypto').randomBytes(20).toString('hex')
   const chainId: number = 42220
 
   const mockProvider: Provider = {
@@ -36,8 +34,7 @@ describe('sourcify helpers', () => {
 
   beforeEach(() => {
     fetchMock.reset()
-    web3.setProvider(mockProvider as any)
-    connection = new Connection(web3)
+    connection = new Connection(mockProvider)
     connection.chainId = jest.fn().mockImplementation(async () => {
       return chainId
     })

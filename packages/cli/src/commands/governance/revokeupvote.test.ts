@@ -3,7 +3,6 @@ import { newKitFromWeb3 } from '@celo/contractkit'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Register from '../account/register'
 import Lock from '../lockedcelo/lock'
@@ -11,7 +10,7 @@ import RevokeUpvote from './revokeupvote'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:revokeupvote cmd', (web3: Web3) => {
+testWithAnvilL2('governance:revokeupvote cmd', (web3: any) => {
   let minDeposit: BigNumber
   const kit = newKitFromWeb3(web3)
   const proposalId = '2'

@@ -2,7 +2,6 @@ import { Address } from '@celo/base'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
-import Web3 from 'web3'
 import {
   mockTimeForwardBy,
   setupGroup,
@@ -15,7 +14,7 @@ import ValidatorGroupMembers from './member'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validatorgroup:deregister cmd', (web3: Web3) => {
+testWithAnvilL2('validatorgroup:deregister cmd', (web3: any) => {
   let groupAddress: Address
   let validatorAddress: Address
   let kit: ContractKit

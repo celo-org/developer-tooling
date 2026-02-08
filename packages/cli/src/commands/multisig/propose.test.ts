@@ -1,7 +1,6 @@
 import { StrongAddress } from '@celo/base'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
-import Web3 from 'web3'
 import {
   stripAnsiCodesAndTxHashes,
   testLocally,
@@ -50,7 +49,7 @@ describe('multisig:propose cmd', () => {
   })
 })
 
-testWithAnvilL2('multisig:propose integration tests', (web3: Web3) => {
+testWithAnvilL2('multisig:propose integration tests', (web3: any) => {
   let kit: ContractKit
   let accounts: StrongAddress[]
   let multisigAddress: StrongAddress

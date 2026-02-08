@@ -7,7 +7,6 @@ import { setBalance, testWithAnvilL2, withImpersonatedAccount } from '@celo/dev-
 import { ux } from '@oclif/core'
 import Safe, { getSafeAddressFromDeploymentTx } from '@safe-global/protocol-kit'
 import * as fs from 'fs'
-import Web3 from 'web3'
 import {
   EXTRA_LONG_TIMEOUT_MS,
   stripAnsiCodesFromNestedArray,
@@ -149,7 +148,7 @@ const structAbiDefinition = {
 
 testWithAnvilL2(
   'governance:propose cmd',
-  (web3: Web3) => {
+  (web3: any) => {
     const TRANSACTION_FILE_PATH = 'governance-propose-l2.test.json'
 
     let governance: GovernanceWrapper

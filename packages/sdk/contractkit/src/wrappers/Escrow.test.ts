@@ -4,7 +4,6 @@ import { StableToken, StrongAddress } from '@celo/base'
 import { asCoreContractsOwner, setBalance, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { deployAttestationsContract } from '@celo/dev-utils/contracts'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
 import { REGISTRY_CONTRACT_ADDRESS } from '../address-registry'
 import { newKitFromWeb3 } from '../kit'
 import { topUpWithToken } from '../test-utils/utils'
@@ -13,7 +12,7 @@ import { EscrowWrapper } from './Escrow'
 import { FederatedAttestationsWrapper } from './FederatedAttestations'
 import { StableTokenWrapper } from './StableTokenWrapper'
 
-testWithAnvilL2('Escrow Wrapper', (web3: Web3) => {
+testWithAnvilL2('Escrow Wrapper', (web3: any) => {
   const kit = newKitFromWeb3(web3)
   const TEN_CUSD = kit.web3.utils.toWei('10', 'ether')
   const TIMESTAMP = 1665080820

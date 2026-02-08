@@ -2,7 +2,6 @@ import { newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
 import {
   EXTRA_LONG_TIMEOUT_MS,
   stripAnsiCodesAndTxHashes,
@@ -21,7 +20,7 @@ process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvilL2(
   'election:show',
-  (web3: Web3) => {
+  (web3: any) => {
     beforeEach(async () => {
       // need to set multical deployment on the address it was found on alfajores
       // since this test impersonates the old alfajores chain id

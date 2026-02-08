@@ -6,7 +6,6 @@ import { TEST_GAS_PRICE } from '@celo/dev-utils/test-utils'
 import BigNumber from 'bignumber.js'
 import { Address, createPublicClient, formatEther, http, parseEther } from 'viem'
 import { celo } from 'viem/chains'
-import Web3 from 'web3'
 import { topUpWithToken } from '../../test-utils/chain-setup'
 import {
   extractHostFromWeb3,
@@ -22,7 +21,7 @@ process.env.NO_SYNCCHECK = 'true'
 // Lots of commands, sometimes times out
 jest.setTimeout(15000)
 
-testWithAnvilL2('transfer:celo cmd', (web3: Web3) => {
+testWithAnvilL2('transfer:celo cmd', (web3: any) => {
   let accounts: string[] = []
   let kit: ContractKit
   let restoreMock: () => void

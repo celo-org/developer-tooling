@@ -3,7 +3,6 @@ import { ContractKit, newKitFromWeb3, StableToken } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { TEST_GAS_PRICE } from '@celo/dev-utils/test-utils'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
 import { topUpWithToken } from '../../test-utils/chain-setup'
 import { TEST_SANCTIONED_ADDRESS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import { mockRpcFetch } from '../../test-utils/mockRpc'
@@ -14,7 +13,7 @@ process.env.NO_SYNCCHECK = 'true'
 // Lots of commands, sometimes times out
 jest.setTimeout(15000)
 
-testWithAnvilL2('transfer:erc20 cmd', (web3: Web3) => {
+testWithAnvilL2('transfer:erc20 cmd', (web3: any) => {
   let accounts: string[] = []
   let kit: ContractKit
 

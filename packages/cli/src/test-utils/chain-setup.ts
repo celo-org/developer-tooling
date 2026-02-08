@@ -10,13 +10,13 @@ import {
 import { mineBlocks, timeTravel } from '@celo/dev-utils/ganache-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
+import { parseEther } from 'viem'
 import Switch from '../commands/epochs/switch'
 import { testLocallyWithWeb3Node } from './cliUtils'
 
-export const MIN_LOCKED_CELO_VALUE = new BigNumber(Web3.utils.toWei('10000', 'ether')) // 10k CELO for the group
+export const MIN_LOCKED_CELO_VALUE = new BigNumber(parseEther('10000').toString()) // 10k CELO for the group
 export const MIN_PRACTICAL_LOCKED_CELO_VALUE = MIN_LOCKED_CELO_VALUE.plus(
-  Web3.utils.toWei('1', 'ether')
+  parseEther('1').toString()
 ) // 10k CELO for the group and 1 for gas
 
 const GROUP_COMMISION = new BigNumber(0.1)
@@ -164,7 +164,7 @@ export async function setupValidatorAndAddToGroup(
   })
 }
 // you MUST call clearMock after using this function!
-export async function mockTimeForwardBy(seconds: number, web3: Web3) {
+export async function mockTimeForwardBy(seconds: number, web3: any) {
   const now = Date.now()
   await timeTravel(seconds, web3)
   const spy = jest.spyOn(global.Date, 'now').mockImplementation(() => now + seconds * 1000)

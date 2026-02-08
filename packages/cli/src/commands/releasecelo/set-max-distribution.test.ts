@@ -3,7 +3,6 @@ import { StrongAddress } from '@celo/base'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { ReleaseGoldWrapper } from '@celo/contractkit/lib/wrappers/ReleaseGold'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
-import Web3 from 'web3'
 import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import { createMultisig } from '../../test-utils/multisigUtils'
 import { deployReleaseGoldContract } from '../../test-utils/release-gold'
@@ -11,7 +10,7 @@ import SetMaxDistribution from './set-max-distribution'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('releasegold:set-max-distribution cmd', (web3: Web3) => {
+testWithAnvilL2('releasegold:set-max-distribution cmd', (web3: any) => {
   let contractAddress: string
   let kit: ContractKit
 

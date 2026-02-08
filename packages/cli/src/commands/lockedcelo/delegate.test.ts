@@ -1,7 +1,6 @@
 import { serializeSignature, StrongAddress } from '@celo/base'
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
-import Web3 from 'web3'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import { deployReleaseGoldContract } from '../../test-utils/release-gold'
 import Register from '../account/register'
@@ -12,7 +11,7 @@ import Lock from './lock'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('lockedgold:delegate cmd', (web3: Web3) => {
+testWithAnvilL2('lockedgold:delegate cmd', (web3: any) => {
   it('can not delegate when not an account or a vote signer', async () => {
     const [delegator, delegatee] = await web3.eth.getAccounts()
     const kit = newKitFromWeb3(web3)

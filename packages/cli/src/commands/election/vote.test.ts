@@ -2,7 +2,6 @@ import { newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
 import {
   registerAccount,
   registerAccountWithLockedGold,
@@ -13,7 +12,7 @@ import Vote from './vote'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('election:vote', (web3: Web3) => {
+testWithAnvilL2('election:vote', (web3: any) => {
   afterEach(async () => {
     jest.clearAllMocks()
   })

@@ -7,6 +7,7 @@ import {
 } from '@celo/base'
 import { ReadOnlyWallet } from '@celo/connect'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
+import { getWeb3ForKit } from '@celo/contractkit/lib/setupForKits'
 import { ledgerToWalletClient } from '@celo/viem-account-ledger'
 import { AzureHSMWallet } from '@celo/wallet-hsm-azure'
 import { AddressValidation, newLedgerWalletWithSetup } from '@celo/wallet-ledger'
@@ -16,7 +17,6 @@ import { Command, Flags, ux } from '@oclif/core'
 import { CLIError } from '@oclif/core/lib/errors'
 import { ArgOutput, FlagOutput, Input, ParserOutput } from '@oclif/core/lib/interfaces/parser'
 import chalk from 'chalk'
-import net from 'net'
 import {
   createPublicClient,
   createWalletClient,
@@ -30,7 +30,6 @@ import {
 import { privateKeyToAccount } from 'viem/accounts'
 import { celo, celoSepolia } from 'viem/chains'
 import { ipc } from 'viem/node'
-import Web3 from 'web3'
 import createRpcWalletClient from './packages-to-be/rpc-client'
 import { failWith } from './utils/cli'
 import { CustomFlags } from './utils/command'
@@ -143,7 +142,7 @@ export abstract class BaseCommand extends Command {
   // useful for the LedgerWalletClient which sometimes needs user input on reads
   public isOnlyReadingWallet = false
 
-  private _web3: Web3 | null = null
+  private _web3: any = null
   private _kit: ContractKit | null = null
 
   private publicClient: PublicCeloClient | null = null
@@ -153,7 +152,8 @@ export abstract class BaseCommand extends Command {
 
   async getWeb3() {
     if (!this._web3) {
-      this._web3 = await this.newWeb3()
+      const kit = await this.getKit()
+      this._web3 = kit.web3
     }
     return this._web3
   }
@@ -174,15 +174,12 @@ export abstract class BaseCommand extends Command {
 
   async newWeb3() {
     const nodeUrl = await this.getNodeUrl()
-
-    return nodeUrl && nodeUrl.endsWith('.ipc')
-      ? new Web3(new Web3.providers.IpcProvider(nodeUrl, net))
-      : new Web3(nodeUrl)
+    return getWeb3ForKit(nodeUrl, undefined)
   }
 
   async getKit() {
     if (!this._kit) {
-      this._kit = newKitFromWeb3(await this.getWeb3())
+      this._kit = newKitFromWeb3(await this.newWeb3())
     }
 
     const res = await this.parse()

@@ -3,7 +3,6 @@ import { Address, StrongAddress } from '@celo/base/lib/address'
 import { asCoreContractsOwner, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
 import { CeloContract } from '..'
 import { newKitFromWeb3 } from '../kit'
 import { AccountsWrapper } from './Accounts'
@@ -11,7 +10,7 @@ import { GovernanceWrapper, Proposal, ProposalTransaction, VoteValue } from './G
 import { LockedGoldWrapper } from './LockedGold'
 import { MultiSigWrapper } from './MultiSig'
 
-testWithAnvilL2('Governance Wrapper', (web3: Web3) => {
+testWithAnvilL2('Governance Wrapper', (web3: any) => {
   const ONE_SEC = 1000
   const kit = newKitFromWeb3(web3)
   const ONE_CGLD = web3.utils.toWei('1', 'ether')

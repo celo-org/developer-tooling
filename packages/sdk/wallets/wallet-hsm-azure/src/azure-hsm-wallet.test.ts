@@ -11,7 +11,6 @@ import { recoverTransaction, verifyEIP712TypedDataSigner } from '@celo/wallet-ba
 import { Signature, publicKeyPrefix } from '@celo/wallet-hsm'
 import * as ethUtil from '@ethereumjs/util'
 import { BigNumber } from 'bignumber.js'
-import Web3 from 'web3'
 import { AzureHSMWallet } from './azure-hsm-wallet'
 
 // Env var should hold service principal credentials
@@ -166,7 +165,7 @@ describe('AzureHSMWallet class', () => {
             celoTransaction = {
               from: unknownAddress,
               chainId: CHAIN_ID,
-              value: Web3.utils.toWei('1', 'ether'),
+              value: '1000000000000000000',
               nonce: 0,
               gas: '10',
               maxFeePerGas: '99',
@@ -228,7 +227,7 @@ describe('AzureHSMWallet class', () => {
               from: knownAddress,
               to: otherAddress,
               chainId: CHAIN_ID,
-              value: Web3.utils.toWei('1', 'ether'),
+              value: '1000000000000000000',
               nonce: 0,
               gas: '10',
               gasPrice: '99',
@@ -258,7 +257,7 @@ describe('AzureHSMWallet class', () => {
                 from: await wallet.getAddressFromKeyName(knownKey),
                 to: ACCOUNT_ADDRESS2,
                 chainId: CHAIN_ID,
-                value: Web3.utils.toWei('1', 'ether'),
+                value: '1000000000000000000',
                 nonce: 65,
                 gas: '10',
                 gasPrice: '99',

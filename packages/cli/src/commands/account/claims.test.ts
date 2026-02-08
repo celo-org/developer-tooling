@@ -6,7 +6,6 @@ import { ux } from '@oclif/core'
 import { readFileSync, writeFileSync } from 'fs'
 import humanizeDuration from 'humanize-duration'
 import { tmpdir } from 'os'
-import Web3 from 'web3'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import ClaimAccount from './claim-account'
 import ClaimDomain from './claim-domain'
@@ -17,7 +16,7 @@ import RegisterMetadata from './register-metadata'
 import ShowMetadata from './show-metadata'
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('account metadata cmds', (web3: Web3) => {
+testWithAnvilL2('account metadata cmds', (web3: any) => {
   let account: string
   let accounts: string[]
   let kit: ContractKit

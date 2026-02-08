@@ -2,13 +2,12 @@ import { PROXY_ADMIN_ADDRESS } from '@celo/connect'
 import { setCode, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import fs from 'fs'
 import path from 'node:path'
-import Web3 from 'web3'
 import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import HashHotfix from './hashhotfix'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:hashhotfix cmd', (web3: Web3) => {
+testWithAnvilL2('governance:hashhotfix cmd', (web3: any) => {
   const SALT = '0x614dccb5ac13cba47c2430bdee7829bb8c8f3603a8ace22e7680d317b39e3658'
   const HOTFIX_TRANSACTION_TEST_KEY = '3'
   const HOTFIX_TRANSACTION_TEST_VALUE = '4'

@@ -1,7 +1,6 @@
 import { StrongAddress } from '@celo/base'
 import { Anvil, CreateAnvilOptions, createAnvil } from '@viem/anvil'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
 import {
   TEST_BALANCE,
   TEST_BASE_FEE,
@@ -60,7 +59,7 @@ type TestWithAnvilOptions = {
 
 export function testWithAnvilL2(
   name: string,
-  fn: (web3: Web3) => void,
+  fn: (web3: any) => void,
   options?: TestWithAnvilOptions
 ) {
   return testWithAnvil(require.resolve('@celo/devchain-anvil/l2-devchain.json'), name, fn, options)
@@ -69,7 +68,7 @@ export function testWithAnvilL2(
 function testWithAnvil(
   stateFilePath: string,
   name: string,
-  fn: (web3: Web3) => void,
+  fn: (web3: any) => void,
   options?: TestWithAnvilOptions
 ) {
   const anvil = createInstance(stateFilePath, options?.chainId)
@@ -90,7 +89,7 @@ function testWithAnvil(
 }
 
 export function impersonateAccount(
-  web3: Web3,
+  web3: any,
   address: string,
   withBalance?: number | bigint | BigNumber
 ) {
@@ -102,12 +101,12 @@ export function impersonateAccount(
   ])
 }
 
-export function stopImpersonatingAccount(web3: Web3, address: string) {
+export function stopImpersonatingAccount(web3: any, address: string) {
   return jsonRpcCall(web3, 'anvil_stopImpersonatingAccount', [address])
 }
 
 export const withImpersonatedAccount = async (
-  web3: Web3,
+  web3: any,
   account: string,
   fn: () => Promise<void>,
   withBalance?: number | bigint | BigNumber
@@ -118,7 +117,7 @@ export const withImpersonatedAccount = async (
 }
 
 export const asCoreContractsOwner = async (
-  web3: Web3,
+  web3: any,
   fn: (ownerAddress: StrongAddress) => Promise<void>,
   withBalance?: number | bigint | BigNumber
 ) => {
@@ -132,16 +131,16 @@ export const asCoreContractsOwner = async (
   )
 }
 
-export function setCode(web3: Web3, address: string, code: string) {
+export function setCode(web3: any, address: string, code: string) {
   return jsonRpcCall(web3, 'anvil_setCode', [address, code])
 }
 
-export function setNextBlockTimestamp(web3: Web3, timestamp: number) {
+export function setNextBlockTimestamp(web3: any, timestamp: number) {
   return jsonRpcCall(web3, 'evm_setNextBlockTimestamp', [timestamp.toString()])
 }
 
 export function setBalance(
-  web3: Web3,
+  web3: any,
   address: StrongAddress,
   balance: number | bigint | BigNumber
 ) {

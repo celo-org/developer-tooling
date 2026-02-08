@@ -3,7 +3,6 @@ import { setCommissionUpdateDelay } from '@celo/dev-utils/chain-setup'
 import { mineBlocks, timeTravel } from '@celo/dev-utils/ganache-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
 import { newKitFromWeb3 } from '../kit'
 import { startAndFinishEpochProcess } from '../test-utils/utils'
 import { AccountsWrapper } from './Accounts'
@@ -14,7 +13,7 @@ TEST NOTES:
 - In migrations: The only account that has cUSD is accounts[0]
 */
 
-const minLockedGoldValue = Web3.utils.toWei('10000', 'ether') // 10k gold
+const minLockedGoldValue = '10000000000000000000000' // 10k gold
 
 testWithAnvilL2('Validators Wrapper', (web3) => {
   const kit = newKitFromWeb3(web3)

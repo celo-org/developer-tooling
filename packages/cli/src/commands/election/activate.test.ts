@@ -4,7 +4,6 @@ import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { generatePrivateKey, privateKeyToAccount, toAccount } from 'viem/accounts'
 import { celo } from 'viem/chains'
-import Web3 from 'web3'
 import {
   MIN_LOCKED_CELO_VALUE,
   registerAccount,
@@ -37,7 +36,7 @@ process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvilL2(
   'election:activate',
-  (web3: Web3) => {
+  (web3: any) => {
     beforeEach(async () => {
       // need to set multical deployment on the address it was found on alfajores
       // since this test impersonates the old alfajores chain id. Even though it runs on anvil
@@ -441,7 +440,7 @@ testWithAnvilL2(
   },
   { chainId: 42220 }
 )
-async function timeTravelAndSwitchEpoch(kit: ContractKit, web3: Web3, userAddress: string) {
+async function timeTravelAndSwitchEpoch(kit: ContractKit, web3: any, userAddress: string) {
   const epochManagerWrapper = await kit.contracts.getEpochManager()
   const epochDuration = await epochManagerWrapper.epochDuration()
   await timeTravel(epochDuration + 60, web3)

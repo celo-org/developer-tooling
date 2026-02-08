@@ -1,7 +1,6 @@
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import fs from 'node:fs'
 import path from 'node:path'
-import Web3 from 'web3'
 import {
   stripAnsiCodesAndTxHashes,
   stripAnsiCodesFromNestedArray,
@@ -11,7 +10,7 @@ import NewAccount from './new'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('account:new cmd', (web3: Web3) => {
+testWithAnvilL2('account:new cmd', (web3: any) => {
   const writeMock = jest.spyOn(NewAccount.prototype, 'log').mockImplementation(() => {
     // noop
   })

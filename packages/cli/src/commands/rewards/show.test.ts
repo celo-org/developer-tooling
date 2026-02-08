@@ -6,7 +6,6 @@ import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
 import { registerAccount } from '../../test-utils/chain-setup'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Switch from '../epochs/switch'
@@ -15,7 +14,7 @@ import Show from './show'
 process.env.NO_SYNCCHECK = 'true'
 const KNOWN_DEVCHAIN_VALIDATOR = '0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f'
 
-testWithAnvilL2('rewards:show cmd', (web3: Web3) => {
+testWithAnvilL2('rewards:show cmd', (web3: any) => {
   let kit: ContractKit
   let accounts: string[]
   const writeMock = jest.spyOn(ux.write, 'stdout')

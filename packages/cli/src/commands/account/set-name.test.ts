@@ -1,12 +1,11 @@
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
-import Web3 from 'web3'
 import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Register from '../account/register'
 import SetName from './set-name'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('account:set-name cmd', (web3: Web3) => {
+testWithAnvilL2('account:set-name cmd', (web3: any) => {
   test('can set the name of an account', async () => {
     const accounts = await web3.eth.getAccounts()
     await testLocallyWithWeb3Node(Register, ['--from', accounts[0]], web3)

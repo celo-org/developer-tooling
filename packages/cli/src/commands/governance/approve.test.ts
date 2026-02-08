@@ -13,7 +13,6 @@ import Safe, {
   PredictedSafeProps,
   SafeAccountConfig,
 } from '@safe-global/protocol-kit'
-import Web3 from 'web3'
 import { changeMultiSigOwner } from '../../test-utils/chain-setup'
 import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import { deployMultiCall } from '../../test-utils/multicall'
@@ -24,7 +23,7 @@ process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvilL2(
   'governance:approve cmd',
-  (web3: Web3) => {
+  (web3: any) => {
     const HOTFIX_HASH = '0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d'
     const HOTFIX_BUFFER = hexToBuffer(HOTFIX_HASH)
     beforeEach(async () => {
@@ -580,7 +579,6 @@ testWithAnvilL2(
           ...deploymentTransaction,
         })
 
-        // @ts-expect-error the function is able to extract safe adddress without having
         const safeAddress = getSafeAddressFromDeploymentTx(receipt, '1.3.0')
 
         protocolKit.connect({ safeAddress })

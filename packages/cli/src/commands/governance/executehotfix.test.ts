@@ -10,7 +10,6 @@ import {
 } from '@celo/dev-utils/anvil-test'
 import fs from 'fs'
 import path from 'node:path'
-import Web3 from 'web3'
 import { AbiItem, PROXY_ADMIN_ADDRESS } from '../../../../sdk/connect/lib'
 import {
   EXTRA_LONG_TIMEOUT_MS,
@@ -23,7 +22,7 @@ import PrepareHotfix from './preparehotfix'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:executehotfix cmd', (web3: Web3) => {
+testWithAnvilL2('governance:executehotfix cmd', (web3: any) => {
   const HOTFIX_HASH = '0x8ad3719bb2577b277bcafc1f00ac2f1c3fa5e565173303684d0a8d4f3661680c'
   const HOTFIX_BUFFER = hexToBuffer(HOTFIX_HASH)
   const HOTFIX_TRANSACTION_TEST_KEY = '3'

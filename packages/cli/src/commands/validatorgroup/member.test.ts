@@ -1,7 +1,6 @@
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL2, withImpersonatedAccount } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
-import Web3 from 'web3'
 import {
   setupGroup,
   setupValidator,
@@ -13,7 +12,7 @@ import Member from './member'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validatorgroup:member cmd', (web3: Web3) => {
+testWithAnvilL2('validatorgroup:member cmd', (web3: any) => {
   afterEach(() => {
     jest.clearAllMocks()
   })

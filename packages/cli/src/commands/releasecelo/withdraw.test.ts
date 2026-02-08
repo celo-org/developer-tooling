@@ -6,7 +6,6 @@ import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { getContractFromEvent, timeTravel } from '@celo/dev-utils/ganache-test'
 import { DAY, MONTH } from '@celo/dev-utils/test-utils'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
 import { topUpWithToken } from '../../test-utils/chain-setup'
 import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import { createMultisig } from '../../test-utils/multisigUtils'
@@ -19,7 +18,7 @@ import Withdraw from './withdraw'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('releasegold:withdraw cmd', (web3: Web3) => {
+testWithAnvilL2('releasegold:withdraw cmd', (web3: any) => {
   let contractAddress: string
   let kit: ContractKit
 

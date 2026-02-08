@@ -1,7 +1,6 @@
 import { newKitFromWeb3 } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
-import Web3 from 'web3'
 import { LONG_TIMEOUT_MS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
 import Register from '../account/register'
 import Vote from '../election/vote'
@@ -14,7 +13,7 @@ import Unlock from './unlock'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('lockedcelo:unlock cmd', (web3: Web3) => {
+testWithAnvilL2('lockedcelo:unlock cmd', (web3: any) => {
   test(
     'can unlock correctly from registered validator group',
     async () => {

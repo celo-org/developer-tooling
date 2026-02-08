@@ -8,14 +8,13 @@ import {
 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
 import { REGISTRY_CONTRACT_ADDRESS } from '../address-registry'
 import { newKitFromWeb3 } from '../kit'
 import { startAndFinishEpochProcess } from '../test-utils/utils'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('EpochManagerWrapper', (web3: Web3) => {
+testWithAnvilL2('EpochManagerWrapper', (web3: any) => {
   const kit = newKitFromWeb3(web3)
 
   let epochDuration: number

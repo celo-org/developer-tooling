@@ -4,7 +4,6 @@ import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { MultiSigWrapper } from '@celo/contractkit/lib/wrappers/MultiSig'
 import { toBuffer } from '@ethereumjs/util'
 import { Flags } from '@oclif/core'
-import Web3 from 'web3'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displaySendTx, failWith } from '../../utils/cli'
@@ -151,7 +150,7 @@ export default class Approve extends BaseCommand {
 }
 
 const addDefaultChecks = async (
-  web3: Web3,
+  web3: any,
   checkBuilder: ReturnType<typeof newCheckBuilder>,
   governance: GovernanceWrapper,
   isHotfix: boolean,
