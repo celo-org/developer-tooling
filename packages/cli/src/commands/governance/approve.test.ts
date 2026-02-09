@@ -402,7 +402,11 @@ testWithAnvilL2(
           ).waitReceipt()
         })
 
-        await testLocallyWithWeb3Node(Approve, ['--from', approver, '--hotfix', HOTFIX_HASH], client)
+        await testLocallyWithWeb3Node(
+          Approve,
+          ['--from', approver, '--hotfix', HOTFIX_HASH],
+          client
+        )
 
         expect(await governance.getHotfixRecord(HOTFIX_BUFFER)).toMatchInlineSnapshot(`
         {

@@ -92,9 +92,9 @@ testWithAnvilL2(
       const logMock = jest.spyOn(console, 'log')
       const [groupAddress] = await client.eth.getAccounts()
 
-      await expect(testLocallyWithWeb3Node(Show, [groupAddress, '--group'], client)).rejects.toThrow(
-        "Some checks didn't pass!"
-      )
+      await expect(
+        testLocallyWithWeb3Node(Show, [groupAddress, '--group'], client)
+      ).rejects.toThrow("Some checks didn't pass!")
       expect(stripAnsiCodesAndTxHashes(logMock.mock.calls[1][0])).toContain(
         `✘  ${groupAddress} is ValidatorGroup`
       )

@@ -71,7 +71,11 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (client) => {
     const [nonElectedGroupAddress, validatorAddress, nonAffilatedValidatorAddress] =
       await client.eth.getAccounts()
 
-    await setBalance(client, nonAffilatedValidatorAddress as Address, MIN_PRACTICAL_LOCKED_CELO_VALUE)
+    await setBalance(
+      client,
+      nonAffilatedValidatorAddress as Address,
+      MIN_PRACTICAL_LOCKED_CELO_VALUE
+    )
     await setupValidator(kit, nonAffilatedValidatorAddress)
     await setBalance(client, nonElectedGroupAddress as Address, MIN_PRACTICAL_LOCKED_CELO_VALUE)
     await setBalance(client, validatorAddress as Address, MIN_PRACTICAL_LOCKED_CELO_VALUE)

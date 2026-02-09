@@ -47,7 +47,11 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (client) => {
   })
 
   test('will revoke', async () => {
-    await testLocallyWithWeb3Node(AdminRevoke, ['--contract', contractAddress, '--yesreally'], client)
+    await testLocallyWithWeb3Node(
+      AdminRevoke,
+      ['--contract', contractAddress, '--yesreally'],
+      client
+    )
     const revokedContract = await getContractFromEvent(
       'ReleaseScheduleRevoked(uint256,uint256)',
       client
@@ -61,13 +65,21 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (client) => {
     await stableToken.transfer(contractAddress, 100).send({
       from: accounts[0],
     })
-    await testLocallyWithWeb3Node(AdminRevoke, ['--contract', contractAddress, '--yesreally'], client)
+    await testLocallyWithWeb3Node(
+      AdminRevoke,
+      ['--contract', contractAddress, '--yesreally'],
+      client
+    )
     const balance = await stableToken.balanceOf(contractAddress)
     expect(balance.isZero()).toBeTruthy()
   })
 
   test('will refund and finalize', async () => {
-    await testLocallyWithWeb3Node(AdminRevoke, ['--contract', contractAddress, '--yesreally'], client)
+    await testLocallyWithWeb3Node(
+      AdminRevoke,
+      ['--contract', contractAddress, '--yesreally'],
+      client
+    )
     const destroyedContract = await getContractFromEvent(
       'ReleaseGoldInstanceDestroyed(address,address)',
       client

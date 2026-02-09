@@ -143,7 +143,11 @@ testWithAnvilL2('multisig:show integration tests', (client) => {
 
     it('fails with invalid multisig address', async () => {
       await expect(
-        testLocallyWithWeb3Node(ShowMultiSig, ['0x0000000000000000000000000000000000000000'], client)
+        testLocallyWithWeb3Node(
+          ShowMultiSig,
+          ['0x0000000000000000000000000000000000000000'],
+          client
+        )
       ).rejects.toThrowErrorMatchingInlineSnapshot(`
         "The contract function "getTransactionCount" returned no data ("0x").
 

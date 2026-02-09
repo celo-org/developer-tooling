@@ -243,7 +243,9 @@ testWithAnvilL2('transfer:celo cmd', (client) => {
     )
 
     const block = await client.eth.getBlock('latest')
-    const transactionReceipt = await client.eth.getTransactionReceipt(block.transactions[0] as string)
+    const transactionReceipt = await client.eth.getTransactionReceipt(
+      block.transactions[0] as string
+    )
 
     // Safety check if the latest transaction was originated by expected account
     expect(transactionReceipt!.from.toLowerCase()).toEqual(accounts[0].toLowerCase())

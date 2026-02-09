@@ -18,7 +18,9 @@ testWithAnvilL2('election:revoke', (client) => {
   })
 
   it('fails when no flags are provided', async () => {
-    await expect(testLocallyWithWeb3Node(Revoke, [], client)).rejects.toThrow('Missing required flag')
+    await expect(testLocallyWithWeb3Node(Revoke, [], client)).rejects.toThrow(
+      'Missing required flag'
+    )
   })
 
   it('fails when address is not an account', async () => {
