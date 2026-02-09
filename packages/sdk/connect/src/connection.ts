@@ -1105,17 +1105,17 @@ function createPromiEvent(connection: Connection, sendTx: any, abi?: any[]): Pro
           }
         )
       })
-      ;(listeners['transactionHash'] || []).forEach((fn) => fn(hash))
+      ;(listeners.transactionHash || []).forEach((fn) => fn(hash))
 
       let receipt = await pollForReceiptHelper(hash, (h) => connection.getTransactionReceipt(h))
       if (abi && abi.length > 0) {
         receipt = decodeReceiptEvents(receipt, abi, viemAbiCoder)
       }
-      ;(listeners['receipt'] || []).forEach((fn) => fn(receipt))
+      ;(listeners.receipt || []).forEach((fn) => fn(receipt))
 
       resolve(receipt)
     } catch (err) {
-      ;(listeners['error'] || []).forEach((fn) => fn(err, false))
+      ;(listeners.error || []).forEach((fn) => fn(err, false))
       reject(err)
     }
   })
