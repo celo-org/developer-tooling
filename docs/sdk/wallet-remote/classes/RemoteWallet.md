@@ -1,4 +1,4 @@
-[**@celo/wallet-remote v8.0.2**](../README.md)
+[**@celo/wallet-remote v8.0.3**](../README.md)
 
 ***
 
@@ -44,7 +44,7 @@ Abstract class representing a remote wallet that requires async initialization
 
 > **computeSharedSecret**(`address`, `publicKey`): `Promise`\<`Buffer`\>
 
-Defined in: wallet-base/lib/wallet-base.d.ts:64
+Defined in: wallet-base/lib/wallet-base.d.ts:65
 
 Computes the shared secret (an ECDH key exchange object) between two accounts
 
@@ -76,7 +76,7 @@ Computes the shared secret (an ECDH key exchange object) between two accounts
 
 > **decrypt**(`address`, `ciphertext`): `Promise`\<`Buffer`\>
 
-Defined in: wallet-base/lib/wallet-base.d.ts:60
+Defined in: wallet-base/lib/wallet-base.d.ts:61
 
 #### Parameters
 
@@ -185,7 +185,7 @@ Defined in: [wallet-remote/src/remote-wallet.ts:111](https://github.com/celo-org
 
 > **removeAccount**(`_address`): `void`
 
-Defined in: wallet-base/lib/wallet-base.d.ts:23
+Defined in: wallet-base/lib/wallet-base.d.ts:24
 
 Removes the account with the given address. Needs to be implemented by subclass, otherwise throws error
 

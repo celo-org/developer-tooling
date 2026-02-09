@@ -45,9 +45,9 @@ export type StableTokenBRL<T extends Client = PublicClient> = GetContractReturnT
 >
 
 export const StableTokens = {
-  cUSD: getStableTokenUSDContract,
-  cEUR: getStableTokenEurContract,
-  cREAL: getStableTokenBrlContract,
+  USDm: getStableTokenUSDContract,
+  EURm: getStableTokenEurContract,
+  BRLm: getStableTokenBrlContract,
 } as const
 export type StableToken = keyof typeof StableTokens
 export type StableTokenContractGetter = (typeof StableTokens)[StableToken]

@@ -41,7 +41,7 @@ export default class Withdraw extends ReleaseGoldBaseCommand {
         this.releaseGoldWrapper.getLiquidityProvisionMet()
       )
       .addConditionalCheck(
-        'No cUSD would be left stranded when withdrawing the entire CELO balance',
+        'No USDm would be left stranded when withdrawing the entire CELO balance',
         value.eq(remainingUnlockedBalance),
         async () => {
           const stableToken = await kit.contracts.getStableToken()

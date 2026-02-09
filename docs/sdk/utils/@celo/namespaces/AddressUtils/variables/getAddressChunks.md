@@ -8,7 +8,7 @@
 
 > `const` **getAddressChunks**: (`input`) => `string`[]
 
-Defined in: packages/sdk/base/lib/address.d.ts:10
+Defined in: packages/sdk/base/lib/address.d.ts:11
 
 ## Parameters
 

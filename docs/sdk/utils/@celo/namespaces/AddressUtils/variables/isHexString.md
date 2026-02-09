@@ -8,7 +8,7 @@
 
 > `const` **isHexString**: (`input`) => `` input is `0x${string}` ``
 
-Defined in: packages/sdk/base/lib/address.d.ts:11
+Defined in: packages/sdk/base/lib/address.d.ts:12
 
 ## Parameters
 

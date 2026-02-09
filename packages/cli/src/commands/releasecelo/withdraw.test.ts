@@ -84,7 +84,7 @@ testWithAnvilL2('releasegold:withdraw cmd', (client) => {
     expect((await releaseGoldWrapper.getTotalWithdrawn()).toFixed()).toEqual(withdrawalAmount)
   })
 
-  test.skip("can't withdraw the whole balance if there is a cUSD balance", async () => {
+  test.skip("can't withdraw the whole balance if there is a USDm balance", async () => {
     const spy = jest.spyOn(console, 'log')
     await testLocallyWithWeb3Node(
       SetLiquidityProvision,
@@ -105,15 +105,15 @@ testWithAnvilL2('releasegold:withdraw cmd', (client) => {
     const remainingBalance = await releaseGoldWrapper.getRemainingUnlockedBalance()
 
     const stableToken = await kit.contracts.getStableToken()
-    const cUSDAmount = 100
+    const USDmAmount = 100
 
-    await topUpWithToken(kit, StableToken.cUSD, beneficiary, new BigNumber(cUSDAmount))
+    await topUpWithToken(kit, StableToken.USDm, beneficiary, new BigNumber(USDmAmount))
     await stableToken
-      .transfer(contractAddress, cUSDAmount)
+      .transfer(contractAddress, USDmAmount)
       .sendAndWaitForReceipt({ from: beneficiary })
 
     spy.mockClear()
-    // Can't withdraw since there is cUSD balance still
+    // Can't withdraw since there is USDm balance still
     await expect(
       testLocallyWithWeb3Node(
         Withdraw,
@@ -137,7 +137,7 @@ testWithAnvilL2('releasegold:withdraw cmd', (client) => {
           "   ✔  Contract has met liquidity provision if applicable ",
         ],
         [
-          "   ✘  No cUSD would be left stranded when withdrawing the entire CELO balance ",
+          "   ✘  No USDm would be left stranded when withdrawing the entire CELO balance ",
         ],
         [
           "   ✔  Compliant Address ",
@@ -145,7 +145,7 @@ testWithAnvilL2('releasegold:withdraw cmd', (client) => {
       ]
     `)
     spy.mockClear()
-    // Move out the cUSD balance
+    // Move out the USDm balance
     await expect(
       testLocallyWithWeb3Node(
         RGTransferDollars,
@@ -180,7 +180,7 @@ testWithAnvilL2('releasegold:withdraw cmd', (client) => {
           "   ✔  Contract has met liquidity provision if applicable ",
         ],
         [
-          "   ✔  No cUSD would be left stranded when withdrawing the entire CELO balance ",
+          "   ✔  No USDm would be left stranded when withdrawing the entire CELO balance ",
         ],
         [
           "   ✔  Compliant Address ",

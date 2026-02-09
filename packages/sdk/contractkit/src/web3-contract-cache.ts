@@ -68,9 +68,9 @@ export const ContractFactories = {
 }
 
 const StableToContract = {
-  [StableToken.cEUR]: CeloContract.StableTokenEUR,
-  [StableToken.cUSD]: CeloContract.StableToken,
-  [StableToken.cREAL]: CeloContract.StableTokenBRL,
+  [StableToken.EURm]: CeloContract.StableTokenEUR,
+  [StableToken.USDm]: CeloContract.StableToken,
+  [StableToken.BRLm]: CeloContract.StableTokenBRL,
 }
 
 export type CFType = typeof ContractFactories
@@ -159,7 +159,7 @@ export class Web3ContractCache {
   getSortedOracles() {
     return this.getContract(CeloContract.SortedOracles)
   }
-  getStableToken(stableToken: StableToken = StableToken.cUSD) {
+  getStableToken(stableToken: StableToken = StableToken.USDm) {
     return this.getContract(StableToContract[stableToken])
   }
   getValidators() {

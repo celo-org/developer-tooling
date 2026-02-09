@@ -24,7 +24,7 @@ export async function checkNotDangerousExchange(
   sellAmount: BigNumber,
   quotedAmountToReceiveWithBuffer: BigNumber,
   maxDepegPricePercentage: number,
-  stableTokenInfo: StableTokenInfo = stableTokenInfos[StableToken.cUSD],
+  stableTokenInfo: StableTokenInfo = stableTokenInfos[StableToken.USDm],
   flipOracle = false
 ): Promise<boolean> {
   const oracles = await kit.contracts.getSortedOracles()

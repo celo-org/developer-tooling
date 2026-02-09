@@ -30,7 +30,7 @@ testWithAnvilL2('transfer:stable cmd', (client) => {
 
     await topUpWithToken(
       kit,
-      StableToken.cUSD,
+      StableToken.USDm,
       accounts[0],
       new BigNumber('9000000000000000000000')
     )
@@ -57,14 +57,14 @@ testWithAnvilL2('transfer:stable cmd', (client) => {
         '--value',
         amountToTransfer,
         '--stableToken',
-        StableToken.cUSD,
+        StableToken.USDm,
       ],
       client
     )
     // Send cusd as erc20
     const receiverBalance = await kit.getTotalBalance(reciever)
-    expect(receiverBalance.cUSD!.toFixed()).toEqual(
-      receiverBalanceBefore.cUSD!.plus(amountToTransfer).toFixed()
+    expect(receiverBalance.USDm!.toFixed()).toEqual(
+      receiverBalanceBefore.USDm!.plus(amountToTransfer).toFixed()
     )
     // Attempt to send erc20, back
     await testLocallyWithWeb3Node(
@@ -77,7 +77,7 @@ testWithAnvilL2('transfer:stable cmd', (client) => {
         '--value',
         '2000000000000000000',
         '--stableToken',
-        StableToken.cUSD,
+        StableToken.USDm,
       ],
       client
     )
@@ -99,7 +99,7 @@ testWithAnvilL2('transfer:stable cmd', (client) => {
           '--value',
           '1',
           '--stableToken',
-          StableToken.cUSD,
+          StableToken.USDm,
         ],
         client
       )
@@ -119,7 +119,7 @@ testWithAnvilL2('transfer:stable cmd', (client) => {
           '--value',
           '1',
           '--stableToken',
-          StableToken.cEUR,
+          StableToken.EURm,
           '--useAKV',
         ],
 

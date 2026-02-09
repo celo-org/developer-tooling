@@ -113,7 +113,7 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
       )
     }
 
-    // rescue any cUSD balance
+    // rescue any USDm balance
     const stabletoken = await kit.contracts.getStableToken()
     const cusdBalance = await stabletoken.balanceOf(contractAddress)
     if (cusdBalance.isGreaterThan(0)) {

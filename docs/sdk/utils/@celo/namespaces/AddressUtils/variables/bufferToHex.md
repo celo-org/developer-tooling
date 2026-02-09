@@ -8,7 +8,7 @@
 
 > `const` **bufferToHex**: (`buf`) => `` `0x${string}` ``
 
-Defined in: packages/sdk/base/lib/address.d.ts:13
+Defined in: packages/sdk/base/lib/address.d.ts:14
 
 ## Parameters
 

@@ -6,7 +6,7 @@
 
 # Interface: Bip39
 
-Defined in: base/lib/account.d.ts:25
+Defined in: base/lib/account.d.ts:26
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: base/lib/account.d.ts:25
 
 > **generateMnemonic**: (`strength?`, `rng?`, `wordlist?`) => `Promise`\<`string`\>
 
-Defined in: base/lib/account.d.ts:28
+Defined in: base/lib/account.d.ts:29
 
 #### Parameters
 
@@ -40,7 +40,7 @@ Defined in: base/lib/account.d.ts:28
 
 > **mnemonicToSeed**: (`mnemonic`, `password?`) => `Promise`\<`Uint8Array`\>
 
-Defined in: base/lib/account.d.ts:27
+Defined in: base/lib/account.d.ts:28
 
 #### Parameters
 
@@ -62,7 +62,7 @@ Defined in: base/lib/account.d.ts:27
 
 > **mnemonicToSeedSync**: (`mnemonic`, `password?`) => `Uint8Array`
 
-Defined in: base/lib/account.d.ts:26
+Defined in: base/lib/account.d.ts:27
 
 #### Parameters
 
@@ -84,7 +84,7 @@ Defined in: base/lib/account.d.ts:26
 
 > **validateMnemonic**: (`mnemonic`, `wordlist?`) => `boolean`
 
-Defined in: base/lib/account.d.ts:29
+Defined in: base/lib/account.d.ts:30
 
 #### Parameters
 

@@ -4,7 +4,7 @@ Tool for interacting with the Celo Protocol.
 
 ## Installation
 
-celocli is tested on node 20, although we find it works with warnings on 18 and 22 as well.
+celocli is tested on node 24.
 
 To install globally, run:
 

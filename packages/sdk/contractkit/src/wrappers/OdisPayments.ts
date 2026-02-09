@@ -15,10 +15,10 @@ export class OdisPaymentsWrapper extends BaseWrapper<OdisPayments> {
   )
 
   /**
-   * @notice Sends cUSD to this contract to pay for ODIS quota (for queries).
+   * @notice Sends USDm to this contract to pay for ODIS quota (for queries).
    * @param account The account whose balance to increment.
-   * @param value The amount in cUSD to pay.
-   * @dev Throws if cUSD transfer fails.
+   * @param value The amount in USDm to pay.
+   * @dev Throws if USDm transfer fails.
    */
   payInCUSD: (account: Address, value: number | string) => CeloTransactionObject<void> = proxySend(
     this.connection,

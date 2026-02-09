@@ -1,7 +1,7 @@
 {
   "name": "@celo/celocli",
   "description": "CLI Tool for interacting with the Celo protocol",
-  "version": "8.0.1",
+  "version": "8.0.3",
   "author": "Celo",
   "license": "Apache-2.0",
   "repository": {
@@ -23,7 +23,7 @@
     "celo-cli"
   ],
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "scripts": {
     "clean": "rm -f tsconfig.tsbuildinfo && rm -rf lib/ && yarn run --top-level tsc -b . --clean",
@@ -40,20 +40,20 @@
   },
   "dependencies": {
     "@celo/abis": "13.0.0-post-audit.0",
-    "@celo/actions": "0.2.0",
-    "@celo/base": "^7.0.3",
+    "@celo/actions": "0.2.1",
+    "@celo/base": "^7.0.4",
     "@celo/compliance": "1.0.28",
     "@celo/connect": "^7.0.0",
-    "@celo/contractkit": "^10.0.2",
+    "@celo/contractkit": "^10.0.3",
     "@celo/cryptographic-utils": "^6.0.0",
     "@celo/explorer": "^5.0.18",
     "@celo/governance": "^5.1.9",
     "@celo/metadata-claims": "^1.0.4",
     "@celo/utils": "^8.0.3",
-    "@celo/viem-account-ledger": "^1.2.2",
-    "@celo/wallet-hsm-azure": "^8.0.2",
-    "@celo/wallet-ledger": "^8.0.2",
-    "@celo/wallet-local": "^8.0.2",
+    "@celo/viem-account-ledger": "^1.2.3",
+    "@celo/wallet-hsm-azure": "^8.0.3",
+    "@celo/wallet-ledger": "^8.0.3",
+    "@celo/wallet-local": "^8.0.3",
     "@ethereumjs/util": "8.0.5",
     "@ledgerhq/hw-transport-node-hid": "^6.28.5",
     "@oclif/core": "^3.27.0",
@@ -134,7 +134,7 @@
         "description": "Participate in and view the state of Validator Elections"
       },
       "exchange": {
-        "description": "Exchange Celo Dollars and CELO via Mento"
+        "description": "Exchange Mento Dollars and CELO via Mento"
       },
       "governance": {
         "description": "Interact with on-chain governance proposals and hotfixes"
@@ -155,7 +155,7 @@
         "description": "View and manage ReleaseGold contracts"
       },
       "transfer": {
-        "description": "Transfer CELO and Celo Dollars"
+        "description": "Transfer CELO and Mento Dollars"
       },
       "validator": {
         "description": "View and manage Validators"

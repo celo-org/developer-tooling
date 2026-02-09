@@ -155,8 +155,8 @@ syntheticDescribe('ledgerToAccount (mocked ledger)', () => {
             const account = await ledgerToAccount({
               transport: await transport,
             })
-            const cUSDa = '0x874069fa1eb16d44d622f2e0ca25eea172369bc1'
-            const txHash = await account.signTransaction({ ...txData, feeCurrency: cUSDa })
+            const USDma = '0x874069fa1eb16d44d622f2e0ca25eea172369bc1'
+            const txHash = await account.signTransaction({ ...txData, feeCurrency: USDma })
             expect(txHash).toEqual(
               `0x7bf87782aef32a6464809412345678901234567890123456789012345678907b80c094874069fa1eb16d44d622f2e0ca25eea172369bc180a017d8df83b40dc645b60142280613467ca92438ff5aa0811a6ceff399fe66d661a02efe4eea14146f41d4f776bec1ededc486ddee37cea8304d297a69dbf27c4089`
             )
@@ -169,10 +169,10 @@ syntheticDescribe('ledgerToAccount (mocked ledger)', () => {
             const account = await ledgerToAccount({
               transport: await transport,
             })
-            const cUSDa = '0x874069fa1eb16d44d622f2e0ca25eea172369bc1'
+            const USDma = '0x874069fa1eb16d44d622f2e0ca25eea172369bc1'
             const txHash = await account.signTransaction({
               ...txData,
-              feeCurrency: cUSDa,
+              feeCurrency: USDma,
               nonce: 100,
             })
             expect(txHash).toEqual(
@@ -362,10 +362,10 @@ hardwareDescribe('ledgerToAccount (device ledger)', () => {
           const account = await ledgerToAccount({
             transport: await transport,
           })
-          const cUSDa = '0x874069fa1eb16d44d622f2e0ca25eea172369bc1'
+          const USDma = '0x874069fa1eb16d44d622f2e0ca25eea172369bc1'
           // NOTE: this is device-specific
           // play with the nonce to produce a different tx with a yParity==0
-          const txHash = await account.signTransaction({ ...txData, feeCurrency: cUSDa, nonce: 0 })
+          const txHash = await account.signTransaction({ ...txData, feeCurrency: USDma, nonce: 0 })
           const [decoded, signer] = recoverTransaction(txHash)
           expect(signer.toLowerCase()).toBe(account.address.toLowerCase())
           // @ts-expect-error
@@ -379,12 +379,12 @@ hardwareDescribe('ledgerToAccount (device ledger)', () => {
           const account = await ledgerToAccount({
             transport: await transport,
           })
-          const cUSDa = '0x874069fa1eb16d44d622f2e0ca25eea172369bc1'
+          const USDma = '0x874069fa1eb16d44d622f2e0ca25eea172369bc1'
           // NOTE: this is device-specific
           // play with the nonce to produce a different tx with a yParity==1
           const txHash = await account.signTransaction({
             ...txData,
-            feeCurrency: cUSDa,
+            feeCurrency: USDma,
             nonce: 100,
           })
           const [decoded, signer] = recoverTransaction(txHash)

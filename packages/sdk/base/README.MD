@@ -29,9 +29,9 @@ Please use GitHub to:
 // enums StableTokens and Token are enums, CeloTokenType is the type that must be one of the 2 enums
 import { StableTokens, Token, CeloTokenType } from "@celo/base"
 
-StableTokens.cUSD
+StableTokens.USDm
 
-StableTokens.cREAL
+StableTokens.BRLm
 
 Token.CELO
 ```

@@ -15,7 +15,7 @@ export default class AttestationRewardsWithdraw extends BaseCommand {
         'Address to withdraw from. Can be the attestation signer address or the underlying account address',
     }),
     tokenAddress: CustomFlags.address({
-      description: 'The address of the token that will be withdrawn. Defaults to cUSD',
+      description: 'The address of the token that will be withdrawn. Defaults to USDm',
     }),
   }
 

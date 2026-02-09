@@ -14,7 +14,7 @@ export default class TransferErc20 extends BaseCommand {
     ...BaseCommand.flags,
     erc20Address: CustomFlags.address({
       required: true,
-      description: "Custom erc20 to check it's balance too",
+      description: 'Custom erc20 to transfer',
     }),
     from: CustomFlags.address({
       required: true,
@@ -99,7 +99,7 @@ export default class TransferErc20 extends BaseCommand {
       .runChecks({ failFast: true })
 
     await displayViemTx(
-      `${name}(${symbol})`,
+      `${name} (${symbol})`,
       erc20Contract.write.transfer([to, value], transferParams),
       client
     )

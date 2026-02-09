@@ -1,4 +1,4 @@
-[**@celo/contractkit v10.0.2**](../README.md)
+[**@celo/contractkit v10.0.3**](../README.md)
 
 ***
 
@@ -10,24 +10,24 @@ Defined in: base/lib/currencies.d.ts:1
 
 ## Enumeration Members
 
-### cEUR
+### BRLm
 
-> **cEUR**: `"cEUR"`
-
-Defined in: base/lib/currencies.d.ts:3
-
-***
-
-### cREAL
-
-> **cREAL**: `"cREAL"`
+> **BRLm**: `"BRLm"`
 
 Defined in: base/lib/currencies.d.ts:4
 
 ***
 
-### cUSD
+### EURm
 
-> **cUSD**: `"cUSD"`
+> **EURm**: `"EURm"`
+
+Defined in: base/lib/currencies.d.ts:3
+
+***
+
+### USDm
+
+> **USDm**: `"USDm"`
 
 Defined in: base/lib/currencies.d.ts:2

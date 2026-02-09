@@ -1,4 +1,4 @@
-[**@celo/wallet-base v8.0.2**](../README.md)
+[**@celo/wallet-base v8.0.3**](../README.md)
 
 ***
 
@@ -30,7 +30,7 @@ Defined in: [wallets/wallet-base/src/wallet-base.ts:11](https://github.com/celo-
 
 > **computeSharedSecret**: (`address`, `publicKey`) => `Promise`\<`Buffer`\>
 
-Defined in: connect/lib/wallet.d.ts:12
+Defined in: connect/lib/wallet.d.ts:13
 
 #### Parameters
 
@@ -56,7 +56,7 @@ Defined in: connect/lib/wallet.d.ts:12
 
 > **decrypt**: (`address`, `ciphertext`) => `Promise`\<`Buffer`\>
 
-Defined in: connect/lib/wallet.d.ts:11
+Defined in: connect/lib/wallet.d.ts:12
 
 #### Parameters
 
@@ -82,7 +82,7 @@ Defined in: connect/lib/wallet.d.ts:11
 
 > **getAccounts**: () => `string`[]
 
-Defined in: connect/lib/wallet.d.ts:5
+Defined in: connect/lib/wallet.d.ts:6
 
 #### Returns
 
@@ -98,7 +98,7 @@ Defined in: connect/lib/wallet.d.ts:5
 
 > **hasAccount**: (`address?`) => `boolean`
 
-Defined in: connect/lib/wallet.d.ts:7
+Defined in: connect/lib/wallet.d.ts:8
 
 #### Parameters
 
@@ -120,7 +120,7 @@ Defined in: connect/lib/wallet.d.ts:7
 
 > **removeAccount**: (`address`) => `void`
 
-Defined in: connect/lib/wallet.d.ts:6
+Defined in: connect/lib/wallet.d.ts:7
 
 #### Parameters
 
@@ -142,7 +142,7 @@ Defined in: connect/lib/wallet.d.ts:6
 
 > **signPersonalMessage**: (`address`, `data`) => `Promise`\<`string`\>
 
-Defined in: connect/lib/wallet.d.ts:10
+Defined in: connect/lib/wallet.d.ts:11
 
 #### Parameters
 
@@ -168,7 +168,7 @@ Defined in: connect/lib/wallet.d.ts:10
 
 > **signTransaction**: (`txParams`) => `Promise`\<`EncodedTransaction`\>
 
-Defined in: connect/lib/wallet.d.ts:8
+Defined in: connect/lib/wallet.d.ts:9
 
 #### Parameters
 
@@ -190,7 +190,7 @@ Defined in: connect/lib/wallet.d.ts:8
 
 > **signTypedData**: (`address`, `typedData`) => `Promise`\<`string`\>
 
-Defined in: connect/lib/wallet.d.ts:9
+Defined in: connect/lib/wallet.d.ts:10
 
 #### Parameters
 

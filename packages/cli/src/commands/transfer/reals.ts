@@ -2,7 +2,7 @@ import { getStableTokenBrlContract } from '../../packages-to-be/stable-tokens'
 import { TransferStableBase } from '../../transfer-stable-base'
 
 export default class TransferEuros extends TransferStableBase {
-  static description = 'Transfer Celo Brazilian Real (cREAL) to a specified address.'
+  static description = 'Transfer Mento Brazilian Real (BRLm) to a specified address.'
 
   static flags = {
     ...TransferStableBase.flags,

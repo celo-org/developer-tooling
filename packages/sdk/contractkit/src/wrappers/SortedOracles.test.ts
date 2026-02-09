@@ -75,7 +75,7 @@ testWithAnvilL2('SortedOracles Wrapper', (client) => {
     })
 
     const txResult = await deployTx.send({ from: owner, gasPrice: TEST_GAS_PRICE.toFixed() })
-    const deployedContract = web3NewSortedOracles(client, txResult.options.address)
+    const deployedContract = web3NewSortedOracles(client, (txResult as any).options.address)
     await deployedContract.methods
       .initialize(NetworkConfig.oracles.reportExpiry)
       .send({ from: owner })
@@ -135,9 +135,9 @@ testWithAnvilL2('SortedOracles Wrapper', (client) => {
     )
 
     await asCoreContractsOwner(client, async (ownerAddress) => {
-      const stableTokenUSDAddress = (await kit.contracts.getStableToken(StableToken.cUSD)).address
-      const stableTokenEURAddress = (await kit.contracts.getStableToken(StableToken.cEUR)).address
-      const stableTokenBRLAddress = (await kit.contracts.getStableToken(StableToken.cREAL)).address
+      const stableTokenUSDAddress = (await kit.contracts.getStableToken(StableToken.USDm)).address
+      const stableTokenEURAddress = (await kit.contracts.getStableToken(StableToken.EURm)).address
+      const stableTokenBRLAddress = (await kit.contracts.getStableToken(StableToken.BRLm)).address
 
       for (const tokenAddress of [
         stableTokenUSDAddress,
@@ -443,7 +443,7 @@ testWithAnvilL2('SortedOracles Wrapper', (client) => {
    * those arguments are being set correctly.
    */
   describe('#reportStableToken', () => {
-    it('calls report with the address for StableToken (cUSD) by default', async () => {
+    it('calls report with the address for StableToken (USDm) by default', async () => {
       const tx = await stableTokenSortedOracles.reportStableToken(14, oracleAddress)
       await tx.sendAndWaitForReceipt()
       expect(tx.txo.arguments[0]).toEqual(stableTokenAddress)

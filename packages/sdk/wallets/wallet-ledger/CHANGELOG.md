@@ -1,5 +1,15 @@
 # @celo/wallet-ledger
 
+## 8.0.3
+
+### Patch Changes
+
+- [#758](https://github.com/celo-org/developer-tooling/pull/758) [`f2eaa3a`](https://github.com/celo-org/developer-tooling/commit/f2eaa3a374a7e59d47806924281413ec2351f36b) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - update celo-ledger-token-signer to fix transfer:dollars and support new mento token names
+
+- Updated dependencies [[`fad32ac`](https://github.com/celo-org/developer-tooling/commit/fad32ac6748f7556359e62ea33ae0cf8299f1712)]:
+  - @celo/wallet-base@8.0.3
+  - @celo/wallet-remote@8.0.3
+
 ## 8.0.2
 
 ### Patch Changes

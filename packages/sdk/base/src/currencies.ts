@@ -1,7 +1,7 @@
 export enum StableToken {
-  cUSD = 'cUSD',
-  cEUR = 'cEUR',
-  cREAL = 'cREAL',
+  USDm = 'USDm',
+  EURm = 'EURm',
+  BRLm = 'BRLm',
 }
 
 export enum Token {

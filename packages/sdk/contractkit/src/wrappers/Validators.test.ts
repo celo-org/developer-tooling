@@ -10,7 +10,7 @@ import { LockedGoldWrapper } from './LockedGold'
 import { ValidatorsWrapper } from './Validators'
 /*
 TEST NOTES:
-- In migrations: The only account that has cUSD is accounts[0]
+- In migrations: The only account that has USDm is accounts[0]
 */
 
 const minLockedGoldValue = '10000000000000000000000' // 10k gold
