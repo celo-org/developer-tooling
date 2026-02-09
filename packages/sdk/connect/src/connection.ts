@@ -85,6 +85,9 @@ export interface Web3 {
     handleRevert: boolean
     transactionPollingInterval: number
     defaultAccount: string | null
+    accounts: {
+      create: () => { address: string; privateKey: string }
+    }
   }
   utils: {
     soliditySha3: (...args: any[]) => string | null
@@ -732,7 +735,56 @@ import {
   toEventHash,
   toFunctionHash,
   decodeEventLog,
+  pad,
 } from 'viem'
+
+/**
+ * Coerce a value to match the expected ABI type.
+ * Web3 was lenient about types; viem is strict. This bridges the gap.
+ */
+function coerceValueForType(type: string, value: any): any {
+  // bool: web3 accepted numbers/strings; viem requires actual booleans
+  if (type === 'bool') {
+    if (typeof value === 'boolean') return value
+    return Boolean(value)
+  }
+  // bytesN (fixed-size): web3 auto-padded short hex strings; viem requires exact size
+  const bytesMatch = type.match(/^bytes(\d+)$/)
+  if (bytesMatch) {
+    const expectedBytes = parseInt(bytesMatch[1], 10)
+    if (typeof value === 'string') {
+      const hex = value.startsWith('0x') ? value : `0x${value}`
+      // If the hex value is shorter than expected, right-pad with zeros
+      const actualBytes = (hex.length - 2) / 2
+      if (actualBytes < expectedBytes) {
+        return pad(hex as `0x${string}`, { size: expectedBytes, dir: 'right' })
+      }
+      return hex
+    }
+    // Buffer or Uint8Array
+    if (Buffer.isBuffer(value) || value instanceof Uint8Array) {
+      const hex = `0x${Buffer.from(value).toString('hex')}` as `0x${string}`
+      const actualBytes = Buffer.from(value).length
+      if (actualBytes < expectedBytes) {
+        return pad(hex, { size: expectedBytes, dir: 'right' })
+      }
+      return hex
+    }
+  }
+  return value
+}
+
+/**
+ * Coerce an array of values to match their expected ABI types.
+ */
+function coerceArgsForAbi(abiInputs: readonly any[], args: any[]): any[] {
+  return args.map((arg, i) => {
+    if (i < abiInputs.length && abiInputs[i].type) {
+      return coerceValueForType(abiInputs[i].type, arg)
+    }
+    return arg
+  })
+}
 
 // Web3's ABI coder returned bigint values as strings. Convert to match.
 function bigintToString(value: any): any {
@@ -776,11 +828,12 @@ export const viemAbiCoder: AbiCoder = {
     }
   },
   encodeParameter(type: string, parameter: any): string {
-    return encodeAbiParameters([{ type } as AbiParameter], [parameter])
+    return encodeAbiParameters([{ type } as AbiParameter], [coerceValueForType(type, parameter)])
   },
   encodeParameters(types: string[], parameters: any[]): string {
     const abiParams = types.map((type) => ({ type }) as AbiParameter)
-    return encodeAbiParameters(abiParams, parameters)
+    const coerced = parameters.map((param, i) => coerceValueForType(types[i], param))
+    return encodeAbiParameters(abiParams, coerced)
   },
   encodeEventSignature(name: string | object): string {
     if (typeof name === 'string') {
@@ -883,61 +936,71 @@ function createWeb3ContractConstructor(connection: Connection) {
                 _parent: contract,
               })
             }
-            return (...args: any[]) => ({
-              call: async (txParams?: CeloTx) => {
-                const data = encodeFunctionData({
-                  abi: [methodAbi],
-                  args,
-                })
-                const callParams = {
-                  to: contract._address,
-                  data,
-                  from: txParams?.from,
-                }
-                const response = await connection.rpcCaller.call('eth_call', [callParams, 'latest'])
-                const result = response.result as string
-                if (
-                  !result ||
-                  result === '0x' ||
-                  !methodAbi.outputs ||
-                  methodAbi.outputs.length === 0
-                ) {
-                  return result
-                }
-                const decoded = viemAbiCoder.decodeParameters(methodAbi.outputs, result)
-                return methodAbi.outputs.length === 1 ? decoded[0] : decoded
-              },
-              send: (txParams?: CeloTx) => {
-                const data = encodeFunctionData({
-                  abi: [methodAbi],
-                  args,
-                })
-                const sendTx = {
-                  ...txParams,
-                  to: contract._address,
-                  data,
-                }
-                return createPromiEvent(connection, sendTx, abi)
-              },
-              estimateGas: async (txParams?: CeloTx) => {
-                const data = encodeFunctionData({
-                  abi: [methodAbi],
-                  args,
-                })
-                return connection.estimateGas({
-                  ...txParams,
-                  to: contract._address,
-                  data,
-                })
-              },
-              encodeABI: () => {
-                return encodeFunctionData({
-                  abi: [methodAbi],
-                  args,
-                })
-              },
-              _parent: contract,
-            })
+            return (...rawArgs: any[]) => {
+              const args = methodAbi.inputs ? coerceArgsForAbi(methodAbi.inputs, rawArgs) : rawArgs
+              return {
+                call: async (txParams?: CeloTx) => {
+                  const data = encodeFunctionData({
+                    abi: [methodAbi],
+                    args,
+                  })
+                  const callParams = {
+                    to: contract._address,
+                    data,
+                    from: txParams?.from,
+                  }
+                  const response = await connection.rpcCaller.call('eth_call', [
+                    callParams,
+                    'latest',
+                  ])
+                  const result = response.result as string
+                  if (
+                    !result ||
+                    result === '0x' ||
+                    !methodAbi.outputs ||
+                    methodAbi.outputs.length === 0
+                  ) {
+                    return result
+                  }
+                  const decoded = viemAbiCoder.decodeParameters(methodAbi.outputs, result)
+                  if (methodAbi.outputs.length === 1) return decoded[0]
+                  // Remove __length__ for contract call results (web3 didn't include it)
+                  const { __length__, ...rest } = decoded
+                  return rest
+                },
+                send: (txParams?: CeloTx) => {
+                  const data = encodeFunctionData({
+                    abi: [methodAbi],
+                    args,
+                  })
+                  const sendTx = {
+                    ...txParams,
+                    to: contract._address,
+                    data,
+                  }
+                  return createPromiEvent(connection, sendTx, abi)
+                },
+                estimateGas: async (txParams?: CeloTx) => {
+                  const data = encodeFunctionData({
+                    abi: [methodAbi],
+                    args,
+                  })
+                  return connection.estimateGas({
+                    ...txParams,
+                    to: contract._address,
+                    data,
+                  })
+                },
+                encodeABI: () => {
+                  return encodeFunctionData({
+                    abi: [methodAbi],
+                    args,
+                  })
+                },
+                _parent: contract,
+                arguments: args,
+              }
+            }
           },
         }
       )

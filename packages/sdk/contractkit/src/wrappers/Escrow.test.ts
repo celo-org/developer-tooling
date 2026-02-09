@@ -69,12 +69,12 @@ testWithAnvilL2('Escrow Wrapper', (client) => {
 
     identifier = kit.web3.utils.soliditySha3({
       t: 'bytes32',
-      v: (kit.web3.eth as any).accounts.create().address,
+      v: kit.web3.eth.accounts.create().address,
     }) as string
   })
 
   it('transfer with trusted issuers should set TrustedIssuersPerPayment', async () => {
-    const testPaymentId = (kit.web3.eth as any).accounts.create().address
+    const testPaymentId = kit.web3.eth.accounts.create().address
     await federatedAttestations
       .registerAttestationAsIssuer(identifier, kit.defaultAccount as string, TIMESTAMP)
       .sendAndWaitForReceipt()

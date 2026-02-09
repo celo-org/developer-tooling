@@ -1,6 +1,7 @@
 import { StrongAddress } from '@celo/base'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
+import Web3 from 'web3'
 import { ContractKit, newKitFromWeb3 } from '../kit'
 import { getParsedSignatureOfAddress } from '../utils/getParsedSignatureOfAddress'
 import { AccountsWrapper } from './Accounts'
@@ -11,12 +12,12 @@ jest.setTimeout(10 * 1000)
 
 /*
 TEST NOTES:
-- In migrations: The only account that has USDm is accounts[0]
+- In migrations: The only account that has cUSD is accounts[0]
 */
 
-const minLockedGoldValue = '10000000000000000000000' // 10k gold
+const minLockedGoldValue = Web3.utils.toWei('10000', 'ether') // 10k gold
 
-testWithAnvilL2('Accounts Wrapper', (client) => {
+testWithAnvilL2('Accounts Wrapper', (web3) => {
   let kit: ContractKit
   let accounts: StrongAddress[] = []
   let accountsInstance: AccountsWrapper
@@ -32,7 +33,7 @@ testWithAnvilL2('Accounts Wrapper', (client) => {
 
   const getParsedSignatureOfAddressForTest = (address: string, signer: string) => {
     return getParsedSignatureOfAddress(
-      client.utils.soliditySha3,
+      web3.utils.soliditySha3,
       kit.connection.sign,
       address,
       signer
@@ -40,7 +41,7 @@ testWithAnvilL2('Accounts Wrapper', (client) => {
   }
 
   beforeAll(async () => {
-    kit = newKitFromWeb3(client)
+    kit = newKitFromWeb3(web3)
     accounts = await kit.connection.getAccounts()
     validators = await kit.contracts.getValidators()
     lockedGold = await kit.contracts.getLockedGold()
