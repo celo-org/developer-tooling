@@ -24,7 +24,7 @@ describe('sourcify helpers', () => {
         callback(null, {
           jsonrpc: payload.jsonrpc,
           id: Number(payload.id),
-          result: `0x000000000000000000000000${implAddress}`,
+          result: `0x000000000000000000000000${implAddress.slice(2)}`,
         })
       } else {
         callback(new Error('revert'))
