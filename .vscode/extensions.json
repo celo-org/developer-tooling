@@ -1,5 +1,3 @@
 {
-  "recommendations": [
-    "bloop.vibe-kanban"
-  ]
+  "recommendations": ["bloop.vibe-kanban"]
 }
