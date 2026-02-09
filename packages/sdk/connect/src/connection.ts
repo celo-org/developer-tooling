@@ -79,6 +79,7 @@ export interface Web3 {
     }) => Promise<any[]>
     call: (tx: any) => Promise<string>
     sendTransaction: (tx: any) => PromiEvent<any>
+    signTransaction: (tx: any) => Promise<{ raw: string; tx: any }>
     abi: AbiCoder
     getChainId: () => Promise<number>
     isSyncing: () => Promise<boolean | Syncing>
@@ -1222,6 +1223,23 @@ function createWeb3Shim(connection: Connection): Web3 {
       },
       sendTransaction: (tx: any) => {
         return createPromiEvent(connection, tx)
+      },
+      signTransaction: async (tx: any) => {
+        const response = await new Promise<any>((resolve, reject) => {
+          ;(connection.currentProvider as Provider).send(
+            {
+              id: Date.now(),
+              jsonrpc: '2.0',
+              method: 'eth_signTransaction',
+              params: [tx],
+            },
+            (err, res) => {
+              if (err) reject(err)
+              else resolve(res?.result)
+            }
+          )
+        })
+        return response
       },
       abi: viemAbiCoder,
       getChainId: () => connection.chainId(),
