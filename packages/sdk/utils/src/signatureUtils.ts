@@ -8,7 +8,7 @@ import {
   pubToAddress,
   toBuffer,
 } from '@ethereumjs/util'
-import { isHex, keccak256, toBytes } from 'viem'
+import { isHex, keccak256, stringToBytes, toBytes } from 'viem'
 import { ensureLeading0x, eqAddress, privateKeyToAddress, trimLeading0x } from './address'
 import { EIP712TypedData, generateTypedDataHash } from './sign-typed-data-utils'
 
@@ -44,7 +44,8 @@ export function hashMessageWithPrefix(message: string): string {
 }
 
 export function hashMessage(message: string): string {
-  return keccak256(toBytes(message))
+  // Always treat message as UTF-8 string (matching web3's soliditySha3({type:'string', value}))
+  return keccak256(stringToBytes(message))
 }
 
 export async function addressToPublicKey(

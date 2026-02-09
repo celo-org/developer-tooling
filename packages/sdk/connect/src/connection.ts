@@ -314,8 +314,9 @@ export class Connection {
     tx = this.fillTxDefaults(tx)
 
     let gas = tx.gas
-    if (gas == null) {
-      gas = await this.estimateGasWithInflationFactor(tx)
+    if (!gas) {
+      const { gas: _omit, ...txWithoutGas } = tx
+      gas = await this.estimateGasWithInflationFactor(txWithoutGas)
     }
 
     return this.sendTransactionViaProvider({
@@ -358,7 +359,9 @@ export class Connection {
     tx = this.fillTxDefaults(tx)
 
     let gas = tx.gas
-    if (gas == null) {
+    if (!gas) {
+      const { gas: _omit, ...txWithoutGas } = tx
+      tx = txWithoutGas
       const gasEstimator = (_tx: CeloTx) => txObj.estimateGas({ ..._tx })
       const getCallTx = (_tx: CeloTx) => {
         return { ..._tx, data: txObj.encodeABI(), to: txObj._parent._address }
