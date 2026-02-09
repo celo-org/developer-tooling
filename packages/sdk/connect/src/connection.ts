@@ -961,10 +961,7 @@ function createWeb3ContractConstructor(connection: Connection) {
           // web3's deploy().send() resolves to the deployed Contract instance,
           // not the receipt. Wrap the result to match that behavior.
           const jsonInterface = this.options.jsonInterface
-          const ContractClass = this.constructor as new (
-            abi: any[],
-            address?: string
-          ) => Contract
+          const ContractClass = this.constructor as new (abi: any[], address?: string) => Contract
           const wrappedPromise = pe.then((receipt: any) => {
             const deployed = new ContractClass(jsonInterface, receipt.contractAddress)
             return deployed
