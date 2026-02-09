@@ -1,26 +1,32 @@
 import { NULL_ADDRESS } from '@celo/base'
-import { CeloTxObject, Connection } from '@celo/connect'
+import { Connection, Contract } from '@celo/connect'
 import BigNumber from 'bignumber.js'
-import {
-  ICeloVersionedContract,
-  newICeloVersionedContract,
-} from '@celo/abis/web3/ICeloVersionedContract'
 import { ContractVersion, newContractVersion } from '../versions'
 import { BaseWrapper, unixSecondsTimestampToDateString } from './BaseWrapper'
 
-import { newKit } from '../kit'
-const kit = newKit('http://localhost:8545')
-const web3 = kit.web3
-const mockContract = newICeloVersionedContract(web3, NULL_ADDRESS)
 const mockVersion = newContractVersion(1, 1, 1, 1)
-// @ts-ignore
-mockContract.methods.getVersionNumber = (): CeloTxObject<any> => ({
-  call: async () => mockVersion.toRaw(),
-})
 
-class TestWrapper extends BaseWrapper<ICeloVersionedContract> {
+const mockContract = {
+  options: { address: NULL_ADDRESS, jsonInterface: [] },
+  methods: {
+    getVersionNumber: () => ({
+      call: async () => mockVersion.toRaw(),
+      send: async () => ({}),
+      estimateGas: async () => 0,
+      encodeABI: () => '0x',
+    }),
+  },
+  deploy: () => ({ call: async () => ({}), send: async () => ({}), estimateGas: async () => 0, encodeABI: () => '0x' }),
+  getPastEvents: async () => [],
+  events: {},
+  _address: NULL_ADDRESS,
+} as unknown as Contract
+
+const connection = new Connection('http://localhost:8545')
+
+class TestWrapper extends BaseWrapper<Contract> {
   constructor() {
-    super(new Connection(web3), mockContract)
+    super(connection, mockContract)
   }
 
   async protectedFunction(v: ContractVersion) {

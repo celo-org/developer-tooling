@@ -1,6 +1,12 @@
-import { encodePacked, type Hex, isHex, keccak256, toBytes } from 'viem'
+import { encodePacked, type Hex, isHex, keccak256, pad, toBytes, toHex } from 'viem'
 
-type SolidityValue = string | number | bigint | boolean | { type: string; value: unknown }
+type SolidityValue =
+  | string
+  | number
+  | bigint
+  | boolean
+  | { type: string; value: unknown }
+  | { t: string; v: unknown }
 
 /**
  * Computes keccak256 of Solidity-packed encoding of arguments.
@@ -21,6 +27,10 @@ export function soliditySha3(...args: SolidityValue[]): string | null {
     if (typeof arg === 'object' && arg !== null && 'type' in arg && 'value' in arg) {
       types.push(arg.type as string)
       values.push(arg.value)
+    } else if (typeof arg === 'object' && arg !== null && 't' in arg && 'v' in arg) {
+      // web3 shorthand: { t: 'uint256', v: 123 }
+      types.push((arg as any).t as string)
+      values.push((arg as any).v)
     } else if (typeof arg === 'string') {
       if (isHex(arg, { strict: true })) {
         types.push('bytes')
@@ -35,6 +45,26 @@ export function soliditySha3(...args: SolidityValue[]): string | null {
     } else if (typeof arg === 'boolean') {
       types.push('bool')
       values.push(arg)
+    }
+  }
+
+  // Coerce values for bytesN types: web3 accepted plain strings and hex of wrong size
+  for (let i = 0; i < types.length; i++) {
+    const bytesMatch = types[i].match(/^bytes(\d+)$/)
+    if (bytesMatch && typeof values[i] === 'string') {
+      const size = parseInt(bytesMatch[1], 10)
+      let hex: Hex
+      if (isHex(values[i] as string, { strict: true })) {
+        hex = values[i] as Hex
+      } else {
+        hex = toHex(toBytes(values[i] as string))
+      }
+      const byteLen = (hex.length - 2) / 2
+      if (byteLen < size) {
+        values[i] = pad(hex, { size, dir: 'right' })
+      } else if (byteLen > size) {
+        values[i] = ('0x' + hex.slice(2, 2 + size * 2)) as Hex
+      }
     }
   }
 

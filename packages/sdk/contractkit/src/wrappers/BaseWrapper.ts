@@ -1,4 +1,3 @@
-import { ICeloVersionedContract } from '@celo/abis/web3/ICeloVersionedContract'
 import { StrongAddress, bufferToHex, ensureLeading0x } from '@celo/base/lib/address'
 import { zip } from '@celo/base/lib/collections'
 import {
@@ -14,6 +13,18 @@ import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
 import { ContractVersion } from '../versions'
 
+/** Contract with getVersionNumber method */
+interface VersionedContract {
+  methods: {
+    getVersionNumber(): CeloTxObject<{
+      0: string
+      1: string
+      2: string
+      3: string
+    }>
+  }
+}
+
 /** Represents web3 native contract Method */
 type Method<I extends any[], O> = (...args: I) => CeloTxObject<O>
 
@@ -27,7 +38,7 @@ type EventsEnum<T extends Contract> = {
  * @internal -- use its children
  */
 export abstract class BaseWrapper<T extends Contract> {
-  protected _version?: T['methods'] extends ICeloVersionedContract['methods']
+  protected _version?: T['methods'] extends VersionedContract['methods']
     ? ContractVersion
     : never
 
