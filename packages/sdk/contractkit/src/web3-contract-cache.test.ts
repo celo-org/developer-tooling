@@ -2,7 +2,7 @@ import { Connection } from '@celo/connect'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { AddressRegistry } from './address-registry'
 import { AllContracts } from './index'
-import { Web3ContractCache } from './client-contract-cache'
+import { Web3ContractCache } from './web3-contract-cache'
 
 testWithAnvilL2('client-contract-cache', (client) => {
   function newWeb3ContractCache() {

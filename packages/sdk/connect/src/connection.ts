@@ -957,7 +957,21 @@ function createWeb3ContractConstructor(connection: Connection) {
       return {
         call: async () => data,
         send: (txParams?: CeloTx) => {
-          return createPromiEvent(connection, { ...txParams, data }, this.options.jsonInterface)
+          const pe = createPromiEvent(connection, { ...txParams, data }, this.options.jsonInterface)
+          // web3's deploy().send() resolves to the deployed Contract instance,
+          // not the receipt. Wrap the result to match that behavior.
+          const jsonInterface = this.options.jsonInterface
+          const ContractClass = this.constructor as new (
+            abi: any[],
+            address?: string
+          ) => Contract
+          const wrappedPromise = pe.then((receipt: any) => {
+            const deployed = new ContractClass(jsonInterface, receipt.contractAddress)
+            return deployed
+          })
+          ;(wrappedPromise as any).on = pe.on
+          ;(wrappedPromise as any).once = pe.once
+          return wrappedPromise as any
         },
         estimateGas: async (txParams?: CeloTx) => {
           return connection.estimateGas({ ...txParams, data })
@@ -1155,6 +1169,15 @@ function createWeb3Shim(connection: Connection): Web3 {
       handleRevert: false,
       transactionPollingInterval: 100,
       defaultAccount: null as string | null,
+      accounts: {
+        create: () => {
+          const crypto = require('crypto')
+          const privateKey = '0x' + crypto.randomBytes(32).toString('hex')
+          const { privateKeyToAddress } = require('@celo/utils/lib/address')
+          const address = privateKeyToAddress(privateKey)
+          return { address, privateKey }
+        },
+      },
     },
     utils: {
       soliditySha3: soliditySha3Fn,

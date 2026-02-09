@@ -119,7 +119,7 @@ testWithAnvilL2('SortedOracles Wrapper', (client) => {
   let btcOracleOwner: Address
   let stableTokenOracleOwner: Address
   const CELOBTCIdentifier: Address = client.utils.toChecksumAddress(
-    client.utils.keccak256('CELOBTC').slice(26)
+    '0x' + client.utils.keccak256('CELOBTC').slice(26)
   )
 
   beforeAll(async () => {

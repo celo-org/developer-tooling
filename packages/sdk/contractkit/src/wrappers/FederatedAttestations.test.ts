@@ -16,7 +16,7 @@ testWithAnvilL2('FederatedAttestations Wrapper', (client) => {
     accounts = (await client.eth.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
     federatedAttestations = await kit.contracts.getFederatedAttestations()
-    testAccountAddress = kit.web3.eth.accounts.create().address as StrongAddress
+    testAccountAddress = (kit.web3.eth as any).accounts.create().address as StrongAddress
     plainTextIdentifier = '221B Baker St., London'
     testIdentifierBytes32 = kit.web3.utils.soliditySha3({
       t: 'bytes32',
