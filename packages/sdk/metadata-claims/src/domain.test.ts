@@ -8,8 +8,8 @@ import { IdentityMetadataWrapper } from './metadata'
 import type { AccountMetadataSignerGetters } from './types'
 import { verifyDomainRecord } from './verify'
 
-testWithAnvilL2('Domain claims', (web3) => {
-  const kit = newKitFromWeb3(web3)
+testWithAnvilL2('Domain claims', (client) => {
+  const kit = newKitFromWeb3(client)
 
   const address = ACCOUNT_ADDRESSES[0]
   const secondAddress = ACCOUNT_ADDRESSES[1]

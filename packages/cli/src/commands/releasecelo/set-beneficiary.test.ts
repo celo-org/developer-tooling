@@ -10,7 +10,7 @@ import SetBeneficiary from './set-beneficiary'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('releasegold:set-beneficiary cmd', (web3: any) => {
+testWithAnvilL2('releasegold:set-beneficiary cmd', (client) => {
   let contractAddress: any
   let kit: ContractKit
   let releaseGoldWrapper: ReleaseGoldWrapper
@@ -22,8 +22,8 @@ testWithAnvilL2('releasegold:set-beneficiary cmd', (web3: any) => {
   let refundAddress: StrongAddress
 
   beforeEach(async () => {
-    kit = newKitFromWeb3(web3)
-    const accounts = await web3.eth.getAccounts()
+    kit = newKitFromWeb3(client)
+    const accounts = await client.eth.getAccounts()
 
     releaseOwner = accounts[0] as StrongAddress
     beneficiary = accounts[1] as StrongAddress
@@ -32,7 +32,7 @@ testWithAnvilL2('releasegold:set-beneficiary cmd', (web3: any) => {
     refundAddress = accounts[4] as StrongAddress
 
     contractAddress = await deployReleaseGoldContract(
-      web3,
+      client,
       await createMultisig(kit, [accounts[0], accounts[1]] as StrongAddress[], 2, 2),
       beneficiary,
       releaseOwner,
@@ -41,7 +41,7 @@ testWithAnvilL2('releasegold:set-beneficiary cmd', (web3: any) => {
 
     releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
-      newReleaseGold(web3, contractAddress),
+      newReleaseGold(client, contractAddress),
       kit.contracts
     )
     beneficiary = await releaseGoldWrapper.getBeneficiary()
@@ -62,7 +62,7 @@ testWithAnvilL2('releasegold:set-beneficiary cmd', (web3: any) => {
         newBeneficiary,
         '--yesreally',
       ],
-      web3
+      client
     )
     // The multisig tx should not confirm until both parties submit
     expect(await releaseGoldWrapper.getBeneficiary()).toEqual(beneficiary)
@@ -77,7 +77,7 @@ testWithAnvilL2('releasegold:set-beneficiary cmd', (web3: any) => {
         newBeneficiary,
         '--yesreally',
       ],
-      web3
+      client
     )
     expect(await releaseGoldWrapper.getBeneficiary()).toEqual(newBeneficiary)
     // It should also update the multisig owners
@@ -97,7 +97,7 @@ testWithAnvilL2('releasegold:set-beneficiary cmd', (web3: any) => {
           newBeneficiary,
           '--yesreally',
         ],
-        web3
+        client
       )
     ).rejects.toThrow()
   })
@@ -116,7 +116,7 @@ testWithAnvilL2('releasegold:set-beneficiary cmd', (web3: any) => {
         newBeneficiary,
         '--yesreally',
       ],
-      web3
+      client
     )
     await testLocallyWithWeb3Node(
       SetBeneficiary,
@@ -129,7 +129,7 @@ testWithAnvilL2('releasegold:set-beneficiary cmd', (web3: any) => {
         otherAccount,
         '--yesreally',
       ],
-      web3
+      client
     )
     expect(await releaseGoldWrapper.getBeneficiary()).toEqual(beneficiary)
     expect(await releaseGoldMultiSig.getOwners()).toEqual([releaseOwner, beneficiary])

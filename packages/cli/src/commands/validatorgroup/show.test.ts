@@ -4,7 +4,7 @@ import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../te
 import Show from './show'
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validatorgroup:show cmd', (web3: any) => {
+testWithAnvilL2('validatorgroup:show cmd', (client) => {
   const writeMock = jest.spyOn(ux.write, 'stdout')
   const logMock = jest.spyOn(console, 'log')
 
@@ -14,7 +14,7 @@ testWithAnvilL2('validatorgroup:show cmd', (web3: any) => {
 
   it('outputs the current validator groups', async () => {
     const validatorGroupfromDevChainSetup = '0x70997970C51812dc3A010C7d01b50e0d17dc79C8'
-    await testLocallyWithWeb3Node(Show, [validatorGroupfromDevChainSetup], web3)
+    await testLocallyWithWeb3Node(Show, [validatorGroupfromDevChainSetup], client)
     expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`[]`)
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
       [

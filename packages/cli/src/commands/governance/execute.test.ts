@@ -15,7 +15,7 @@ import Execute from './execute'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:execute cmd', (web3: any) => {
+testWithAnvilL2('governance:execute cmd', (client) => {
   const PROPOSAL_TRANSACTION_TEST_KEY = '3'
   const PROPOSAL_TRANSACTION_TEST_VALUE = '4'
   const PROPOSAL_TRANSACTIONS = [
@@ -63,9 +63,9 @@ testWithAnvilL2('governance:execute cmd', (web3: any) => {
   })
 
   it('should execute a proposal successfuly', async () => {
-    const kit = newKitFromWeb3(web3)
+    const kit = newKitFromWeb3(client)
     const governanceWrapper = await kit.contracts.getGovernance()
-    const [approver, proposer, voter] = await web3.eth.getAccounts()
+    const [approver, proposer, voter] = await client.eth.getAccounts()
     const minDeposit = (await governanceWrapper.minDeposit()).toFixed()
     const lockedGold = await kit.contracts.getLockedGold()
     const majorityOfVotes = (await lockedGold.getTotalLockedGold()).multipliedBy(0.6)
@@ -73,7 +73,7 @@ testWithAnvilL2('governance:execute cmd', (web3: any) => {
     const dequeueFrequency = (await governanceWrapper.dequeueFrequency()).toNumber()
     const proposalId = 1
 
-    await setCode(web3, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
+    await setCode(client, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
 
     await governanceWrapper
       .propose(PROPOSAL_TRANSACTIONS, 'URL')
@@ -87,7 +87,7 @@ testWithAnvilL2('governance:execute cmd', (web3: any) => {
       .lock()
       .sendAndWaitForReceipt({ from: voter, value: majorityOfVotes.toFixed() })
 
-    await timeTravel(dequeueFrequency + 1, web3)
+    await timeTravel(dequeueFrequency + 1, client)
 
     await governanceWrapper.dequeueProposalsIfReady().sendAndWaitForReceipt({
       from: proposer,
@@ -105,11 +105,11 @@ testWithAnvilL2('governance:execute cmd', (web3: any) => {
       await kit.sendTransaction({
         to: DEFAULT_OWNER_ADDRESS,
         from: approver,
-        value: web3.utils.toWei('1', 'ether'),
+        value: client.utils.toWei('1', 'ether'),
       })
     ).waitReceipt()
 
-    await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
+    await withImpersonatedAccount(client, DEFAULT_OWNER_ADDRESS, async () => {
       // setApprover to approverAccount
       await (
         await kit.sendTransaction({
@@ -124,9 +124,9 @@ testWithAnvilL2('governance:execute cmd', (web3: any) => {
 
     await lockedGoldWrapper.lock().sendAndWaitForReceipt({ from: voter, value: minDeposit })
     await (await governanceWrapper.vote(proposalId, 'Yes')).sendAndWaitForReceipt({ from: voter })
-    await timeTravel((await governanceWrapper.stageDurations()).Referendum.toNumber() + 1, web3)
+    await timeTravel((await governanceWrapper.stageDurations()).Referendum.toNumber() + 1, client)
 
-    const testTransactionsContract = new web3.eth.Contract(
+    const testTransactionsContract = new client.eth.Contract(
       TEST_TRANSACTIONS_ABI,
       PROXY_ADMIN_ADDRESS
     )
@@ -141,7 +141,7 @@ testWithAnvilL2('governance:execute cmd', (web3: any) => {
     await testLocallyWithWeb3Node(
       Execute,
       ['--proposalID', proposalId.toString(), '--from', proposer],
-      web3
+      client
     )
 
     expect(

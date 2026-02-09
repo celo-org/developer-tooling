@@ -36,11 +36,11 @@ process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvilL2(
   'election:activate',
-  (web3: any) => {
+  (client) => {
     beforeEach(async () => {
       // need to set multical deployment on the address it was found on alfajores
       // since this test impersonates the old alfajores chain id. Even though it runs on anvil
-      await deployMultiCall(web3, '0xcA11bde05977b3631167028862bE2a173976CA11')
+      await deployMultiCall(client, '0xcA11bde05977b3631167028862bE2a173976CA11')
     })
 
     const timers: ReturnType<typeof setTimeout>[] = []
@@ -53,19 +53,19 @@ testWithAnvilL2(
     })
 
     it('fails when no flags are provided', async () => {
-      await expect(testLocallyWithWeb3Node(ElectionActivate, [], web3)).rejects.toThrow(
+      await expect(testLocallyWithWeb3Node(ElectionActivate, [], client)).rejects.toThrow(
         'Missing required flag from'
       )
     })
 
     it('shows no pending votes', async () => {
-      const kit = newKitFromWeb3(web3)
-      const [userAddress] = await web3.eth.getAccounts()
+      const kit = newKitFromWeb3(client)
+      const [userAddress] = await client.eth.getAccounts()
       const writeMock = jest.spyOn(ux.write, 'stdout')
 
       await registerAccount(kit, userAddress)
 
-      await testLocallyWithWeb3Node(ElectionActivate, ['--from', userAddress], web3)
+      await testLocallyWithWeb3Node(ElectionActivate, ['--from', userAddress], client)
 
       expect(writeMock.mock.calls).toMatchInlineSnapshot(`
               [
@@ -78,8 +78,8 @@ testWithAnvilL2(
     })
 
     it('shows no activatable votes yet', async () => {
-      const kit = newKitFromWeb3(web3)
-      const [groupAddress, validatorAddress, userAddress] = await web3.eth.getAccounts()
+      const kit = newKitFromWeb3(client)
+      const [groupAddress, validatorAddress, userAddress] = await client.eth.getAccounts()
 
       const writeMock = jest.spyOn(ux.write, 'stdout')
 
@@ -87,7 +87,7 @@ testWithAnvilL2(
       await registerAccountWithLockedGold(kit, userAddress)
 
       await voteForGroupFrom(kit, userAddress, groupAddress, new BigNumber(10))
-      await testLocallyWithWeb3Node(ElectionActivate, ['--from', userAddress], web3)
+      await testLocallyWithWeb3Node(ElectionActivate, ['--from', userAddress], client)
 
       expect(writeMock.mock.calls).toMatchInlineSnapshot(`
               [
@@ -100,8 +100,8 @@ testWithAnvilL2(
     })
 
     it('activate votes', async () => {
-      const kit = newKitFromWeb3(web3)
-      const [groupAddress, validatorAddress, userAddress] = await web3.eth.getAccounts()
+      const kit = newKitFromWeb3(client)
+      const [groupAddress, validatorAddress, userAddress] = await client.eth.getAccounts()
       const election = await kit.contracts.getElection()
       const writeMock = jest.spyOn(ux.write, 'stdout')
       const activateAmount = 12345
@@ -114,9 +114,9 @@ testWithAnvilL2(
       expect((await election.getVotesForGroupByAccount(userAddress, groupAddress)).active).toEqual(
         new BigNumber(0)
       )
-      await timeTravelAndSwitchEpoch(kit, web3, userAddress)
+      await timeTravelAndSwitchEpoch(kit, client, userAddress)
       await expect(election.hasActivatablePendingVotes(userAddress)).resolves.toBe(true)
-      await testLocallyWithWeb3Node(ElectionActivate, ['--from', userAddress], web3)
+      await testLocallyWithWeb3Node(ElectionActivate, ['--from', userAddress], client)
 
       expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
       expect((await election.getVotesForGroupByAccount(userAddress, groupAddress)).active).toEqual(
@@ -127,9 +127,9 @@ testWithAnvilL2(
     it(
       'activate votes with --wait flag',
       async () => {
-        const kit = newKitFromWeb3(web3)
+        const kit = newKitFromWeb3(client)
         const [groupAddress, validatorAddress, userAddress, otherUserAddress] =
-          await web3.eth.getAccounts()
+          await client.eth.getAccounts()
         const election = await kit.contracts.getElection()
         const writeMock = jest.spyOn(ux.write, 'stdout')
         const activateAmount = 12345
@@ -144,12 +144,12 @@ testWithAnvilL2(
         ).toEqual(new BigNumber(0))
 
         await Promise.all([
-          testLocallyWithWeb3Node(ElectionActivate, ['--from', userAddress, '--wait'], web3),
+          testLocallyWithWeb3Node(ElectionActivate, ['--from', userAddress, '--wait'], client),
           new Promise<void>((resolve) => {
             // at least the amount the --wait flag waits in the check
             const timer = setTimeout(async () => {
               // switch with a different account
-              await timeTravelAndSwitchEpoch(kit, web3, otherUserAddress)
+              await timeTravelAndSwitchEpoch(kit, client, otherUserAddress)
               resolve()
             }, 1000)
             timers.push(timer)
@@ -198,9 +198,9 @@ testWithAnvilL2(
     )
 
     it('activate votes for other address', async () => {
-      const kit = newKitFromWeb3(web3)
+      const kit = newKitFromWeb3(client)
       const [groupAddress, validatorAddress, userAddress, otherUserAddress] =
-        await web3.eth.getAccounts()
+        await client.eth.getAccounts()
       const election = await kit.contracts.getElection()
       const writeMock = jest.spyOn(ux.write, 'stdout')
       const activateAmount = 54321
@@ -217,12 +217,12 @@ testWithAnvilL2(
         (await election.getVotesForGroupByAccount(otherUserAddress, groupAddress)).active
       ).toEqual(new BigNumber(0))
 
-      await timeTravelAndSwitchEpoch(kit, web3, userAddress)
+      await timeTravelAndSwitchEpoch(kit, client, userAddress)
       await expect(election.hasActivatablePendingVotes(userAddress)).resolves.toBe(true)
       await testLocallyWithWeb3Node(
         ElectionActivate,
         ['--from', otherUserAddress, '--for', userAddress],
-        web3
+        client
       )
 
       expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
@@ -237,7 +237,7 @@ testWithAnvilL2(
     it('activate votes for other address with --wait flag', async () => {
       const privKey = generatePrivateKey()
       const newAccount = privateKeyToAccount(privKey)
-      const kit = newKitFromWeb3(web3)
+      const kit = newKitFromWeb3(client)
 
       const [
         groupAddress,
@@ -246,7 +246,7 @@ testWithAnvilL2(
         yetAnotherAddress,
         secondGroupAddress,
         secondValidatorAddress,
-      ] = await web3.eth.getAccounts()
+      ] = await client.eth.getAccounts()
 
       const election = await kit.contracts.getElection()
       const writeMock = jest.spyOn(ux.write, 'stdout')
@@ -254,7 +254,7 @@ testWithAnvilL2(
       const activateAmountGroupTwo = 12345
       const logMock = jest.spyOn(console, 'log')
 
-      await setBalance(web3, newAccount.address, MIN_LOCKED_CELO_VALUE)
+      await setBalance(client, newAccount.address, MIN_LOCKED_CELO_VALUE)
       await setupGroupAndAffiliateValidator(kit, groupAddress, validatorAddress)
       await setupGroupAndAffiliateValidator(kit, secondGroupAddress, secondValidatorAddress)
       await registerAccountWithLockedGold(kit, userAddress)
@@ -278,13 +278,13 @@ testWithAnvilL2(
         testLocallyWithWeb3Node(
           ElectionActivate,
           ['--from', newAccount.address, '--for', userAddress, '--wait', '-k', privKey],
-          web3
+          client
         ),
         new Promise<void>((resolve) => {
           // at least the amount the --wait flag waits in the check
           const timer = setTimeout(async () => {
             // switch with a different account
-            await timeTravelAndSwitchEpoch(kit, web3, yetAnotherAddress)
+            await timeTravelAndSwitchEpoch(kit, client, yetAnotherAddress)
             resolve()
           }, 1000)
           timers.push(timer)
@@ -348,7 +348,7 @@ testWithAnvilL2(
       let signTransactionSpy: jest.Mock
       beforeEach(async () => {
         signTransactionSpy = jest.fn().mockResolvedValue('0xtxhash')
-        const [userAddress] = await web3.eth.getAccounts()
+        const [userAddress] = await client.eth.getAccounts()
 
         jest.spyOn(ViemLedger, 'ledgerToWalletClient').mockImplementation(async () => {
           const accounts = [
@@ -359,7 +359,7 @@ testWithAnvilL2(
                 signMessage: jest.fn(),
                 signTypedData: jest.fn(),
               }),
-              publicKey: (await addressToPublicKey(userAddress, web3.eth.sign)) as Hex,
+              publicKey: (await addressToPublicKey(userAddress, client.eth.sign)) as Hex,
               source: 'ledger' as const,
             },
           ]
@@ -367,7 +367,7 @@ testWithAnvilL2(
           return {
             ...createWalletClient({
               chain: celo,
-              transport: http(extractHostFromWeb3(web3)),
+              transport: http(extractHostFromWeb3(client)),
               account: accounts[0],
             }),
             getAddresses: async () => accounts.map((account) => account.address),
@@ -377,15 +377,15 @@ testWithAnvilL2(
       })
 
       it('send the transactions to ledger for signing', async () => {
-        const kit = newKitFromWeb3(web3)
+        const kit = newKitFromWeb3(client)
         const activateAmount = 1234
-        const [userAddress, groupAddress, validatorAddress] = await web3.eth.getAccounts()
+        const [userAddress, groupAddress, validatorAddress] = await client.eth.getAccounts()
         await setupGroupAndAffiliateValidator(kit, groupAddress, validatorAddress)
         await registerAccountWithLockedGold(kit, userAddress)
 
         await voteForGroupFrom(kit, userAddress, groupAddress, new BigNumber(activateAmount))
 
-        await timeTravelAndSwitchEpoch(kit, web3, userAddress)
+        await timeTravelAndSwitchEpoch(kit, client, userAddress)
 
         jest.spyOn(console, 'log')
         const writeMock = jest.spyOn(ux.write, 'stdout')
@@ -406,7 +406,7 @@ testWithAnvilL2(
         await testLocallyWithWeb3Node(
           ElectionActivate,
           ['--from', userAddress, '--useLedger'],
-          web3
+          client
         )
         expect(ViemLedger.ledgerToWalletClient).toHaveBeenCalledWith(
           expect.objectContaining({
@@ -440,10 +440,10 @@ testWithAnvilL2(
   },
   { chainId: 42220 }
 )
-async function timeTravelAndSwitchEpoch(kit: ContractKit, web3: any, userAddress: string) {
+async function timeTravelAndSwitchEpoch(kit: ContractKit, client: any, userAddress: string) {
   const epochManagerWrapper = await kit.contracts.getEpochManager()
   const epochDuration = await epochManagerWrapper.epochDuration()
-  await timeTravel(epochDuration + 60, web3)
-  await testLocallyWithWeb3Node(Switch, ['--from', userAddress], web3)
-  await timeTravel(60, web3)
+  await timeTravel(epochDuration + 60, client)
+  await testLocallyWithWeb3Node(Switch, ['--from', userAddress], client)
+  await timeTravel(60, client)
 }

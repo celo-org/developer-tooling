@@ -14,8 +14,8 @@ import { newKitFromWeb3 } from '../kit'
 import { MultiSigWrapper } from './MultiSig'
 import { ReserveWrapper } from './Reserve'
 
-testWithAnvilL2('Reserve Wrapper', (web3) => {
-  const kit = newKitFromWeb3(web3)
+testWithAnvilL2('Reserve Wrapper', (client) => {
+  const kit = newKitFromWeb3(client)
   let accounts: StrongAddress[] = []
   let reserve: ReserveWrapper
   let reserveSpenderMultiSig: MultiSigWrapper
@@ -23,18 +23,18 @@ testWithAnvilL2('Reserve Wrapper', (web3) => {
   let otherSpender: StrongAddress
 
   beforeEach(async () => {
-    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
+    accounts = (await client.eth.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
     otherReserveAddress = accounts[9]
     otherSpender = accounts[7]
     reserve = await kit.contracts.getReserve()
     const multiSigAddress = await kit.registry.addressFor('ReserveSpenderMultiSig' as CeloContract)
     reserveSpenderMultiSig = await kit.contracts.getMultiSig(multiSigAddress)
-    const reserveContract = newReserve(web3, reserve.address)
-    const reserveSpenderMultiSigContract = newMultiSig(web3, reserveSpenderMultiSig.address)
+    const reserveContract = newReserve(client, reserve.address)
+    const reserveSpenderMultiSigContract = newMultiSig(client, reserveSpenderMultiSig.address)
 
     await withImpersonatedAccount(
-      web3,
+      client,
       multiSigAddress,
       async () => {
         await reserveSpenderMultiSig
@@ -47,17 +47,17 @@ testWithAnvilL2('Reserve Wrapper', (web3) => {
           .changeRequirement(2)
           .send({ from: multiSigAddress })
       },
-      new BigNumber(web3.utils.toWei('1', 'ether'))
+      new BigNumber(client.utils.toWei('1', 'ether'))
     )
 
-    await asCoreContractsOwner(web3, async (ownerAdress: StrongAddress) => {
+    await asCoreContractsOwner(client, async (ownerAdress: StrongAddress) => {
       await reserveContract.methods.addSpender(otherSpender).send({ from: ownerAdress })
       await reserveContract.methods
         .addOtherReserveAddress(otherReserveAddress)
         .send({ from: ownerAdress })
     })
 
-    await setBalance(web3, reserve.address, new BigNumber(web3.utils.toWei('1', 'ether')))
+    await setBalance(client, reserve.address, new BigNumber(client.utils.toWei('1', 'ether')))
   })
 
   test('can get asset target weights which sum to 100%', async () => {

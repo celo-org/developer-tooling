@@ -3,8 +3,8 @@ import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { newKitFromWeb3 } from '../kit'
 import { FederatedAttestationsWrapper } from './FederatedAttestations'
 
-testWithAnvilL2('FederatedAttestations Wrapper', (web3) => {
-  const kit = newKitFromWeb3(web3)
+testWithAnvilL2('FederatedAttestations Wrapper', (client) => {
+  const kit = newKitFromWeb3(client)
   const TIME_STAMP = 1665080820
   let accounts: StrongAddress[] = []
   let federatedAttestations: FederatedAttestationsWrapper
@@ -13,7 +13,7 @@ testWithAnvilL2('FederatedAttestations Wrapper', (web3) => {
   let testAccountAddress: StrongAddress
 
   beforeAll(async () => {
-    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
+    accounts = (await client.eth.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
     federatedAttestations = await kit.contracts.getFederatedAttestations()
     testAccountAddress = kit.web3.eth.accounts.create().address as StrongAddress

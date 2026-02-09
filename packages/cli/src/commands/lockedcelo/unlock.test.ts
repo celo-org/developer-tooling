@@ -13,57 +13,57 @@ import Unlock from './unlock'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('lockedcelo:unlock cmd', (web3: any) => {
+testWithAnvilL2('lockedcelo:unlock cmd', (client) => {
   test(
     'can unlock correctly from registered validator group',
     async () => {
-      const accounts = await web3.eth.getAccounts()
+      const accounts = await client.eth.getAccounts()
       const account = accounts[0]
       const validator = accounts[1]
-      const kit = newKitFromWeb3(web3)
+      const kit = newKitFromWeb3(client)
       const lockedGold = await kit.contracts.getLockedGold()
-      await testLocallyWithWeb3Node(Register, ['--from', account], web3)
+      await testLocallyWithWeb3Node(Register, ['--from', account], client)
       await testLocallyWithWeb3Node(
         Lock,
         ['--from', account, '--value', '20000000000000000000000'],
-        web3
+        client
       )
       await testLocallyWithWeb3Node(
         ValidatorGroupRegister,
         ['--from', account, '--commission', '0', '--yes'],
-        web3
+        client
       )
-      await testLocallyWithWeb3Node(Register, ['--from', validator], web3)
+      await testLocallyWithWeb3Node(Register, ['--from', validator], client)
       await testLocallyWithWeb3Node(
         Lock,
         ['--from', validator, '--value', '20000000000000000000000'],
-        web3
+        client
       )
-      const ecdsaPublicKey = await addressToPublicKey(validator, web3.eth.sign)
+      const ecdsaPublicKey = await addressToPublicKey(validator, client.eth.sign)
       await testLocallyWithWeb3Node(
         ValidatorRegister,
         ['--from', validator, '--ecdsaKey', ecdsaPublicKey, '--yes'],
-        web3
+        client
       )
       await testLocallyWithWeb3Node(
         ValidatorAffiliate,
         ['--yes', '--from', validator, account],
-        web3
+        client
       )
       await testLocallyWithWeb3Node(
         ValidatorGroupMember,
         ['--yes', '--from', account, '--accept', validator],
-        web3
+        client
       )
       await testLocallyWithWeb3Node(
         Vote,
         ['--from', account, '--for', account, '--value', '10000000000000000000000'],
-        web3
+        client
       )
       await testLocallyWithWeb3Node(
         Unlock,
         ['--from', account, '--value', '10000000000000000000000'],
-        web3
+        client
       )
       const pendingWithdrawalsTotalValue = await lockedGold.getPendingWithdrawalsTotalValue(account)
       expect(pendingWithdrawalsTotalValue.toFixed()).toBe('10000000000000000000000')

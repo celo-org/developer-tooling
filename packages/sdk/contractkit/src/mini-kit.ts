@@ -1,4 +1,4 @@
-import { Connection, ReadOnlyWallet } from '@celo/connect'
+import { Connection, ReadOnlyWallet, Web3 } from '@celo/connect'
 import { LocalWallet } from '@celo/wallet-local'
 import { BigNumber } from 'bignumber.js'
 import { AddressRegistry } from './address-registry'
@@ -35,9 +35,12 @@ export function newKitWithApiKey(url: string, apiKey: string, wallet?: ReadOnlyW
 
 /**
  * Creates a new instance of the `MiniContractKit` with a web3 instance
- * @param web3 Web3 instance
+ * @param web3 – a {@link Web3} shim, a raw Provider, or an object with `currentProvider`
  */
-export function newKitFromWeb3(web3: any, wallet: ReadOnlyWallet = new LocalWallet()) {
+export function newKitFromWeb3(
+  web3: Web3 | { currentProvider: any } | any,
+  wallet: ReadOnlyWallet = new LocalWallet()
+) {
   ensureCurrentProvider(web3)
   return new MiniContractKit(new Connection(web3, wallet))
 }

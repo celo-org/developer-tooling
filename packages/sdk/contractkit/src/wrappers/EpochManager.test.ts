@@ -14,8 +14,8 @@ import { startAndFinishEpochProcess } from '../test-utils/utils'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('EpochManagerWrapper', (web3: any) => {
-  const kit = newKitFromWeb3(web3)
+testWithAnvilL2('EpochManagerWrapper', (client) => {
+  const kit = newKitFromWeb3(client)
 
   let epochDuration: number
 
@@ -35,7 +35,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: any) => {
   it('indicates that it is time for next epoch', async () => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
 
-    await timeTravel(epochDuration + 1, web3)
+    await timeTravel(epochDuration + 1, client)
 
     expect(await epochManagerWrapper.isTimeForNextEpoch()).toBeTruthy()
 
@@ -61,12 +61,12 @@ testWithAnvilL2('EpochManagerWrapper', (web3: any) => {
 
   it('gets current epoch processing status', async () => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
-    const accounts = await web3.eth.getAccounts()
+    const accounts = await client.eth.getAccounts()
 
     expect((await epochManagerWrapper.getEpochProcessingStatus()).status).toEqual(0)
 
     // Let the epoch pass and start another one
-    await timeTravel(epochDuration, web3)
+    await timeTravel(epochDuration, client)
     await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
       from: accounts[0],
     })
@@ -83,7 +83,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: any) => {
   it('gets block numbers for an epoch', async () => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
     const currentEpochNumber = await epochManagerWrapper.getCurrentEpochNumber()
-    const accounts = await web3.eth.getAccounts()
+    const accounts = await client.eth.getAccounts()
 
     expect(await epochManagerWrapper.getFirstBlockAtEpoch(currentEpochNumber)).toEqual(300)
     await expect(
@@ -91,7 +91,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: any) => {
     ).rejects.toMatchInlineSnapshot(`[Error: execution reverted: Epoch not finished yet]`)
 
     // Let the epoch pass and start another one
-    await timeTravel(epochDuration + 1, web3)
+    await timeTravel(epochDuration + 1, client)
     await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
       from: accounts[0],
     })
@@ -107,7 +107,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: any) => {
     async () => {
       const epochManagerWrapper = await kit.contracts.getEpochManager()
       const currentEpochNumber = await epochManagerWrapper.getCurrentEpochNumber()
-      const accounts = await web3.eth.getAccounts()
+      const accounts = await client.eth.getAccounts()
 
       expect(await epochManagerWrapper.getFirstBlockAtEpoch(currentEpochNumber)).toEqual(300)
       await expect(
@@ -115,7 +115,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: any) => {
       ).rejects.toMatchInlineSnapshot(`[Error: execution reverted: Epoch not finished yet]`)
 
       // Let the epoch pass and start another one
-      await timeTravel(epochDuration + 1, web3)
+      await timeTravel(epochDuration + 1, client)
       await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
         from: accounts[0],
       })
@@ -125,9 +125,9 @@ testWithAnvilL2('EpochManagerWrapper', (web3: any) => {
       const validatorGroups = await validatorsContract.getRegisteredValidatorGroupsAddresses()
 
       await asCoreContractsOwner(
-        web3,
+        client,
         async (ownerAdress: StrongAddress) => {
-          const registryContract = newRegistry(web3, REGISTRY_CONTRACT_ADDRESS)
+          const registryContract = newRegistry(client, REGISTRY_CONTRACT_ADDRESS)
 
           await registryContract.methods.setAddressFor('Validators', accounts[0]).send({
             from: ownerAdress,
@@ -144,7 +144,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: any) => {
               from: ownerAdress,
             })
         },
-        new BigNumber(web3.utils.toWei('1', 'ether'))
+        new BigNumber(client.utils.toWei('1', 'ether'))
       )
 
       await (await epochManagerWrapper.finishNextEpochProcessTx()).sendAndWaitForReceipt({
@@ -157,7 +157,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: any) => {
   async function activateValidators() {
     const validatorsContract = await kit.contracts.getValidators()
     const electionWrapper = await kit.contracts.getElection()
-    const electionContract = newElection(web3, electionWrapper.address)
+    const electionContract = newElection(client, electionWrapper.address)
     const validatorGroups = await validatorsContract.getRegisteredValidatorGroupsAddresses()
 
     for (const validatorGroup of validatorGroups) {
@@ -166,12 +166,12 @@ testWithAnvilL2('EpochManagerWrapper', (web3: any) => {
       )
       if (pendingVotesForGroup.gt(0)) {
         await withImpersonatedAccount(
-          web3,
+          client,
           validatorGroup,
           async () => {
             await electionContract.methods.activate(validatorGroup).send({ from: validatorGroup })
           },
-          new BigNumber(web3.utils.toWei('1', 'ether'))
+          new BigNumber(client.utils.toWei('1', 'ether'))
         )
       }
     }
@@ -182,7 +182,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: any) => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
     const EPOCH_COUNT = 5
 
-    await timeTravel(epochDuration, web3)
+    await timeTravel(epochDuration, client)
 
     await startAndFinishEpochProcess(kit)
 
@@ -191,7 +191,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: any) => {
     expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(5)
 
     for (let i = 0; i < EPOCH_COUNT; i++) {
-      await timeTravel(epochDuration + 1, web3)
+      await timeTravel(epochDuration + 1, client)
 
       await startAndFinishEpochProcess(kit)
     }
@@ -200,7 +200,7 @@ testWithAnvilL2('EpochManagerWrapper', (web3: any) => {
     expect((await epochManagerWrapper.getEpochProcessingStatus()).status).toEqual(0)
 
     // Start a new epoch process, but not finish it, so we can check the amounts
-    await timeTravel(epochDuration + 1, web3)
+    await timeTravel(epochDuration + 1, client)
     await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
       from: accounts[0],
     })
@@ -238,14 +238,14 @@ testWithAnvilL2('EpochManagerWrapper', (web3: any) => {
     const accounts = await kit.web3.eth.getAccounts()
     const epochManagerWrapper = await kit.contracts.getEpochManager()
 
-    await timeTravel(epochDuration, web3)
+    await timeTravel(epochDuration, client)
 
     await startAndFinishEpochProcess(kit)
 
     await activateValidators()
 
     // Start a new epoch process, but don't process it, so we can compare the amounts
-    await timeTravel(epochDuration + 1, web3)
+    await timeTravel(epochDuration + 1, client)
 
     await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
       from: accounts[0],

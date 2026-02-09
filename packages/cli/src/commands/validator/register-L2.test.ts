@@ -7,19 +7,19 @@ import ValidatorRegister from './register'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validator:register', (web3: any) => {
+testWithAnvilL2('validator:register', (client) => {
   let account: string
   let ecdsaPublicKey: string
 
   beforeEach(async () => {
-    const accounts = await web3.eth.getAccounts()
+    const accounts = await client.eth.getAccounts()
     account = accounts[0]
-    ecdsaPublicKey = await addressToPublicKey(account, web3.eth.sign)
-    await testLocallyWithWeb3Node(Register, ['--from', account], web3)
+    ecdsaPublicKey = await addressToPublicKey(account, client.eth.sign)
+    await testLocallyWithWeb3Node(Register, ['--from', account], client)
     await testLocallyWithWeb3Node(
       Lock,
       ['--from', account, '--value', '10000000000000000000000'],
-      web3
+      client
     )
   })
 
@@ -28,7 +28,7 @@ testWithAnvilL2('validator:register', (web3: any) => {
       testLocallyWithWeb3Node(
         ValidatorRegister,
         ['--from', account, '--ecdsaKey', ecdsaPublicKey, '--yes'],
-        web3
+        client
       )
     ).resolves.toBe(undefined)
   })
@@ -38,7 +38,7 @@ testWithAnvilL2('validator:register', (web3: any) => {
       testLocallyWithWeb3Node(
         ValidatorRegister,
         ['--from', account, '--ecdsaKey', ecdsaPublicKey, '--yes'],
-        web3
+        client
       )
     ).resolves.toBe(undefined)
   })
@@ -48,7 +48,7 @@ testWithAnvilL2('validator:register', (web3: any) => {
       testLocallyWithWeb3Node(
         ValidatorRegister,
         ['--from', account, '--ecdsaKey', ecdsaPublicKey, '--yes'],
-        web3
+        client
       )
     ).resolves.toBe(undefined)
 
@@ -56,7 +56,7 @@ testWithAnvilL2('validator:register', (web3: any) => {
       testLocallyWithWeb3Node(
         ValidatorRegister,
         ['--from', account, '--ecdsaKey', ecdsaPublicKey, '--yes'],
-        web3
+        client
       )
     ).rejects.toThrow("Some checks didn't pass!")
   })

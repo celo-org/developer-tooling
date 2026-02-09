@@ -1,4 +1,5 @@
 import { PublicCeloClient } from '@celo/actions'
+import { Web3 } from '@celo/connect'
 import { TestClientExtended } from '@celo/dev-utils/viem/anvil-test'
 import { Interfaces } from '@oclif/core'
 import { BaseCommand } from '../base'
@@ -12,16 +13,16 @@ interface Runner extends AbstractConstructor<BaseCommand> {
 export async function testLocallyWithWeb3Node(
   command: Runner,
   argv: string[],
-  web3: any,
+  client: Web3,
   config?: Interfaces.LoadOptions
 ) {
-  return testLocally(command, [...argv, '--node', extractHostFromWeb3(web3)], config)
+  return testLocally(command, [...argv, '--node', extractHostFromWeb3(client)], config)
 }
 
-export const extractHostFromWeb3 = (web3: any): string => {
-  const provider = web3.currentProvider
+export const extractHostFromWeb3 = (client: Web3): string => {
+  const provider = client.currentProvider as any
   if (!provider) {
-    throw new Error('No currentProvider on web3 object')
+    throw new Error('No currentProvider on client')
   }
 
   // CeloProvider wraps the underlying provider

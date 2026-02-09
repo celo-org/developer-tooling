@@ -6,8 +6,8 @@ import { startAndFinishEpochProcess } from '../test-utils/utils'
 import { AccountsWrapper } from './Accounts'
 import { LockedGoldWrapper } from './LockedGold'
 
-testWithAnvilL2('LockedGold Wrapper', (web3) => {
-  const kit = newKitFromWeb3(web3)
+testWithAnvilL2('LockedGold Wrapper', (client) => {
+  const kit = newKitFromWeb3(client)
   let accounts: AccountsWrapper
   let lockedGold: LockedGoldWrapper
 
@@ -15,7 +15,7 @@ testWithAnvilL2('LockedGold Wrapper', (web3) => {
   const value = 120938732980
   let account: StrongAddress
   beforeAll(async () => {
-    account = (await web3.eth.getAccounts())[0] as StrongAddress
+    account = (await client.eth.getAccounts())[0] as StrongAddress
     kit.defaultAccount = account
     lockedGold = await kit.contracts.getLockedGold()
     accounts = await kit.contracts.getAccounts()

@@ -21,15 +21,15 @@ process.env.NO_SYNCCHECK = 'true'
 // Lots of commands, sometimes times out
 jest.setTimeout(15000)
 
-testWithAnvilL2('transfer:celo cmd', (web3: any) => {
+testWithAnvilL2('transfer:celo cmd', (client) => {
   let accounts: string[] = []
   let kit: ContractKit
   let restoreMock: () => void
 
   beforeEach(async () => {
     restoreMock = mockRpcFetch({ method: 'eth_gasPrice', result: TEST_GAS_PRICE })
-    kit = newKitFromWeb3(web3)
-    accounts = await web3.eth.getAccounts()
+    kit = newKitFromWeb3(client)
+    accounts = await client.eth.getAccounts()
 
     jest.spyOn(console, 'log').mockImplementation(() => {
       // noop
@@ -74,18 +74,18 @@ testWithAnvilL2('transfer:celo cmd', (web3: any) => {
         '--gasCurrency',
         (await kit.contracts.getStableToken(StableToken.cUSD)).address,
       ],
-      web3
+      client
     )
     // RG cUSD balance should match the amount sent
     const receiverBalance = await kit.getTotalBalance(accounts[1])
     expect(receiverBalance.CELO!.toFixed()).toEqual(
       receiverBalanceBefore.CELO!.plus(amountToTransfer).toFixed()
     )
-    let block = await web3.eth.getBlock('latest')
-    let transactionReceipt = await web3.eth.getTransactionReceipt(block.transactions[0])
+    let block = await client.eth.getBlock('latest')
+    let transactionReceipt = await client.eth.getTransactionReceipt(block.transactions[0] as string)
 
     // Safety check if the latest transaction was originated by expected account
-    expect(transactionReceipt.from.toLowerCase()).toEqual(accounts[0].toLowerCase())
+    expect(transactionReceipt!.from.toLowerCase()).toEqual(accounts[0].toLowerCase())
 
     // Attempt to send cUSD back
     await testLocallyWithWeb3Node(
@@ -100,19 +100,19 @@ testWithAnvilL2('transfer:celo cmd', (web3: any) => {
         '--gasCurrency',
         (await kit.contracts.getStableToken(StableToken.cUSD)).address,
       ],
-      web3
+      client
     )
-    block = await web3.eth.getBlock('latest')
-    transactionReceipt = await web3.eth.getTransactionReceipt(block.transactions[0])
+    block = await client.eth.getBlock('latest')
+    transactionReceipt = await client.eth.getTransactionReceipt(block.transactions[0] as string)
 
     // Safety check if the latest transaction was originated by expected account
-    expect(transactionReceipt.from.toLowerCase()).toEqual(accounts[1].toLowerCase())
+    expect(transactionReceipt!.from.toLowerCase()).toEqual(accounts[1].toLowerCase())
 
     const balanceAfter = (await kit.getTotalBalance(accounts[0])).CELO?.toFixed()!
     // the balance should be close to initial minus the fees for gas times 2 (one for each transfer)
     const estimatedBalance = BigInt(
       balanceBefore
-        .minus(transactionReceipt.effectiveGasPrice * transactionReceipt.gasUsed * 2)
+        .minus(transactionReceipt!.effectiveGasPrice! * transactionReceipt!.gasUsed * 2)
         .toFixed()
     )
     expect(Number(formatEther(BigInt(balanceAfter)))).toBeCloseTo(
@@ -128,7 +128,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: any) => {
       testLocallyWithWeb3Node(
         TransferCelo,
         ['--from', accounts[0], '--to', accounts[1], '--value', balance.toFixed()],
-        web3
+        client
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
@@ -174,7 +174,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: any) => {
           '--comment',
           'Goodbye balance',
         ],
-        web3
+        client
       )
     ).resolves.toBeUndefined()
 
@@ -218,11 +218,11 @@ testWithAnvilL2('transfer:celo cmd', (web3: any) => {
   })
 
   test('can transfer very large amounts of CELO', async () => {
-    const balanceBefore = new BigNumber(await web3.eth.getBalance(accounts[0]))
+    const balanceBefore = new BigNumber(await client.eth.getBalance(accounts[0]))
 
     const amountToTransfer = parseEther('20000000')
     await setBalance(
-      web3,
+      client,
       accounts[0] as Address,
       balanceBefore.plus(amountToTransfer.toString(10))
     )
@@ -239,27 +239,27 @@ testWithAnvilL2('transfer:celo cmd', (web3: any) => {
         '--gasCurrency',
         (await kit.contracts.getStableToken(StableToken.cUSD)).address,
       ],
-      web3
+      client
     )
 
-    const block = await web3.eth.getBlock('latest')
-    const transactionReceipt = await web3.eth.getTransactionReceipt(block.transactions[0])
+    const block = await client.eth.getBlock('latest')
+    const transactionReceipt = await client.eth.getTransactionReceipt(block.transactions[0] as string)
 
     // Safety check if the latest transaction was originated by expected account
-    expect(transactionReceipt.from.toLowerCase()).toEqual(accounts[0].toLowerCase())
-    expect(transactionReceipt.cumulativeGasUsed).toBeGreaterThan(0)
-    expect(transactionReceipt.effectiveGasPrice).toBeGreaterThan(0)
-    expect(transactionReceipt.gasUsed).toBeGreaterThan(0)
-    expect(transactionReceipt.to).toEqual(accounts[1].toLowerCase())
-    expect(transactionReceipt.status).toEqual(true)
+    expect(transactionReceipt!.from.toLowerCase()).toEqual(accounts[0].toLowerCase())
+    expect(transactionReceipt!.cumulativeGasUsed).toBeGreaterThan(0)
+    expect(transactionReceipt!.effectiveGasPrice).toBeGreaterThan(0)
+    expect(transactionReceipt!.gasUsed).toBeGreaterThan(0)
+    expect(transactionReceipt!.to).toEqual(accounts[1].toLowerCase())
+    expect(transactionReceipt!.status).toEqual(true)
 
-    const balanceAfter = new BigNumber(await web3.eth.getBalance(accounts[0]))
+    const balanceAfter = new BigNumber(await client.eth.getBalance(accounts[0]))
 
     expect(BigInt(balanceAfter.toFixed())).toBeLessThan(BigInt(balanceBefore.toFixed()))
   })
 
   test('can transfer celo with comment', async () => {
-    const start = await web3.eth.getBlock('latest')
+    const start = await client.eth.getBlock('latest')
     const amountToTransfer = '500000000000000000000'
 
     await testLocallyWithWeb3Node(
@@ -274,7 +274,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: any) => {
         '--comment',
         'Hello World',
       ],
-      web3
+      client
     )
 
     // Attempt to send cUSD back
@@ -290,13 +290,13 @@ testWithAnvilL2('transfer:celo cmd', (web3: any) => {
         '--comment',
         'Hello World Back',
       ],
-      web3
+      client
     )
 
-    const client = createPublicClient({
-      transport: http(kit.web3.currentProvider.existingProvider.host),
+    const eventClient = createPublicClient({
+      transport: http((kit.web3.currentProvider as any).existingProvider.host),
     })
-    const events = await client.getContractEvents({
+    const events = await eventClient.getContractEvents({
       abi: goldTokenABI,
       eventName: 'TransferComment',
       fromBlock: BigInt(start.number),
@@ -310,7 +310,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: any) => {
 
   test('passes feeCurrency to estimateGas', async () => {
     const chainId = await kit.web3.eth.getChainId()
-    const nodeUrl = extractHostFromWeb3(web3)
+    const nodeUrl = extractHostFromWeb3(client)
     const publicClient = createPublicClient({
       chain: {
         name: 'Custom Chain',
@@ -344,7 +344,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: any) => {
         '--gasCurrency',
         cUSDAddress,
       ],
-      web3
+      client
     )
 
     expect(estimateGasSpy).toHaveBeenCalledWith({
@@ -361,7 +361,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: any) => {
       testLocallyWithWeb3Node(
         TransferCelo,
         ['--from', accounts[1], '--to', TEST_SANCTIONED_ADDRESS, '--value', '1'],
-        web3
+        client
       )
     ).rejects.toThrow()
     expect(spy).toHaveBeenCalledWith(expect.stringContaining(COMPLIANT_ERROR_RESPONSE))
@@ -373,7 +373,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: any) => {
       testLocallyWithWeb3Node(
         TransferCelo,
         ['--from', TEST_SANCTIONED_ADDRESS, '--to', accounts[0], '--value', '1'],
-        web3
+        client
       )
     ).rejects.toThrow()
     expect(spy).toHaveBeenCalledWith(expect.stringContaining(COMPLIANT_ERROR_RESPONSE))
@@ -385,7 +385,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: any) => {
       testLocallyWithWeb3Node(
         TransferCelo,
         ['--from', accounts[0], '--to', accounts[1], '--value', '1', '--gasCurrency', wrongFee],
-        web3
+        client
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`
       "Parsing --gasCurrency 
@@ -411,25 +411,25 @@ testWithAnvilL2('transfer:celo cmd', (web3: any) => {
           '--gasCurrency',
           (await kit.contracts.getStableToken(StableToken.cUSD)).address.toUpperCase(),
         ],
-        web3
+        client
       )
     ).resolves.toBeUndefined()
 
     const balanceAfter = await kit.getTotalBalance(accounts[0])
     const receiverBalanceAfter = await kit.getTotalBalance(accounts[1])
-    const transactionReceipt = await web3.eth.getTransactionReceipt(
-      (await web3.eth.getBlock('latest')).transactions[0]
+    const transactionReceipt = await client.eth.getTransactionReceipt(
+      (await client.eth.getBlock('latest')).transactions[0] as string
     )
 
     // Safety check if the latest transaction was originated by expected account
-    expect(transactionReceipt.from.toLowerCase()).toEqual(accounts[0].toLowerCase())
+    expect(transactionReceipt!.from.toLowerCase()).toEqual(accounts[0].toLowerCase())
 
     expect(receiverBalanceAfter.CELO!.toFixed()).toEqual(
       receiverBalanceBefore.CELO!.plus(amountToTransfer).toFixed()
     )
     expect(
       balanceAfter
-        .CELO!.plus(transactionReceipt.effectiveGasPrice * transactionReceipt.gasUsed)
+        .CELO!.plus(transactionReceipt!.effectiveGasPrice! * transactionReceipt!.gasUsed)
         .toFixed()
     ).toEqual(balanceBefore.CELO!.minus(amountToTransfer).toFixed())
   })
@@ -441,7 +441,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: any) => {
       testLocallyWithWeb3Node(
         TransferCelo,
         ['--from', accounts[0], '--to', accounts[1], '--value', '1', '--gasCurrency', wrongFee],
-        web3
+        client
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     expect(spy).toHaveBeenCalledWith(
@@ -455,7 +455,7 @@ testWithAnvilL2('transfer:celo cmd', (web3: any) => {
         TransferCelo,
         ['--from', accounts[0], '--to', accounts[1], '--value', '1', '--useAKV'],
 
-        web3
+        client
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"--useAKV flag is no longer supported"`)
   })

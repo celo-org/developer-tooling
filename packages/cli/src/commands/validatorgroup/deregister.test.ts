@@ -14,13 +14,13 @@ import ValidatorGroupMembers from './member'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validatorgroup:deregister cmd', (web3: any) => {
+testWithAnvilL2('validatorgroup:deregister cmd', (client) => {
   let groupAddress: Address
   let validatorAddress: Address
   let kit: ContractKit
   beforeEach(async () => {
-    kit = newKitFromWeb3(web3)
-    const addresses = await web3.eth.getAccounts()
+    kit = newKitFromWeb3(client)
+    const addresses = await client.eth.getAccounts()
     groupAddress = addresses[0]
     validatorAddress = addresses[1]
     await setupGroup(kit, groupAddress)
@@ -33,7 +33,7 @@ testWithAnvilL2('validatorgroup:deregister cmd', (web3: any) => {
       const logSpy = jest.spyOn(console, 'log').mockImplementation()
       const writeMock = jest.spyOn(ux.write, 'stdout').mockImplementation()
 
-      await testLocallyWithWeb3Node(DeRegisterValidatorGroup, ['--from', groupAddress], web3)
+      await testLocallyWithWeb3Node(DeRegisterValidatorGroup, ['--from', groupAddress], client)
 
       expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls)).toMatchInlineSnapshot(`
         [
@@ -73,7 +73,7 @@ testWithAnvilL2('validatorgroup:deregister cmd', (web3: any) => {
       await testLocallyWithWeb3Node(
         ValidatorGroupMembers,
         ['--yes', '--from', groupAddress, '--remove', validatorAddress],
-        web3
+        client
       )
       const validators = await kit.contracts.getValidators()
       await validators.deaffiliate().sendAndWaitForReceipt({ from: validatorAddress })
@@ -83,7 +83,7 @@ testWithAnvilL2('validatorgroup:deregister cmd', (web3: any) => {
         const logMock = jest.spyOn(console, 'log').mockImplementation()
         logMock.mockClear()
         await expect(
-          testLocallyWithWeb3Node(DeRegisterValidatorGroup, ['--from', groupAddress], web3)
+          testLocallyWithWeb3Node(DeRegisterValidatorGroup, ['--from', groupAddress], client)
         ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
         expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
           [
@@ -115,10 +115,10 @@ testWithAnvilL2('validatorgroup:deregister cmd', (web3: any) => {
         expect(group.members).toHaveLength(0)
         expect(group.affiliates).toHaveLength(0)
         const groupRequirements = await validators.getGroupLockedGoldRequirements()
-        const timeSpy = await mockTimeForwardBy(groupRequirements.duration.toNumber() * 2, web3)
+        const timeSpy = await mockTimeForwardBy(groupRequirements.duration.toNumber() * 2, client)
         const logMock = jest.spyOn(console, 'log').mockImplementation()
         await expect(
-          testLocallyWithWeb3Node(DeRegisterValidatorGroup, ['--from', groupAddress], web3)
+          testLocallyWithWeb3Node(DeRegisterValidatorGroup, ['--from', groupAddress], client)
         ).resolves.toBeUndefined()
         expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
           [
@@ -180,15 +180,15 @@ testWithAnvilL2('validatorgroup:deregister cmd', (web3: any) => {
 
   describe('when is not a validator group', () => {
     beforeEach(async () => {
-      const accounts = await web3.eth.getAccounts()
-      await testLocallyWithWeb3Node(AccountRegister, ['--from', accounts[2]], web3)
+      const accounts = await client.eth.getAccounts()
+      await testLocallyWithWeb3Node(AccountRegister, ['--from', accounts[2]], client)
     })
     it('shows error message', async () => {
       const logSpy = jest.spyOn(console, 'log').mockImplementation()
-      const accounts = await web3.eth.getAccounts()
+      const accounts = await client.eth.getAccounts()
       logSpy.mockClear()
       await expect(
-        testLocallyWithWeb3Node(DeRegisterValidatorGroup, ['--from', accounts[2]], web3)
+        testLocallyWithWeb3Node(DeRegisterValidatorGroup, ['--from', accounts[2]], client)
       ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
       expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls)).toMatchInlineSnapshot(`
         [

@@ -11,13 +11,13 @@ import Lock from './lock'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('lockedgold:delegate cmd', (web3: any) => {
+testWithAnvilL2('lockedgold:delegate cmd', (client) => {
   it('can not delegate when not an account or a vote signer', async () => {
-    const [delegator, delegatee] = await web3.eth.getAccounts()
-    const kit = newKitFromWeb3(web3)
+    const [delegator, delegatee] = await client.eth.getAccounts()
+    const kit = newKitFromWeb3(client)
     const lockedGold = await kit.contracts.getLockedGold()
 
-    await testLocallyWithWeb3Node(Register, ['--from', delegatee], web3)
+    await testLocallyWithWeb3Node(Register, ['--from', delegatee], client)
 
     const delegateeVotingPower = await lockedGold.getAccountTotalGovernanceVotingPower(delegatee)
 
@@ -30,7 +30,7 @@ testWithAnvilL2('lockedgold:delegate cmd', (web3: any) => {
       testLocallyWithWeb3Node(
         Delegate,
         ['--from', delegator, '--to', delegatee, '--percent', '45'],
-        web3
+        client
       )
     ).rejects.toMatchInlineSnapshot(`[Error: Some checks didn't pass!]`)
 
@@ -57,14 +57,14 @@ testWithAnvilL2('lockedgold:delegate cmd', (web3: any) => {
   })
 
   test('can delegate', async () => {
-    const accounts = await web3.eth.getAccounts()
+    const accounts = await client.eth.getAccounts()
     const account = accounts[0]
     const account2 = accounts[1]
-    const kit = newKitFromWeb3(web3)
+    const kit = newKitFromWeb3(client)
     const lockedGold = await kit.contracts.getLockedGold()
-    await testLocallyWithWeb3Node(Register, ['--from', account], web3)
-    await testLocallyWithWeb3Node(Register, ['--from', account2], web3)
-    await testLocallyWithWeb3Node(Lock, ['--from', account, '--value', '200'], web3)
+    await testLocallyWithWeb3Node(Register, ['--from', account], client)
+    await testLocallyWithWeb3Node(Register, ['--from', account2], client)
+    await testLocallyWithWeb3Node(Lock, ['--from', account, '--value', '200'], client)
 
     const account2OriginalVotingPower =
       await lockedGold.getAccountTotalGovernanceVotingPower(account2)
@@ -73,7 +73,7 @@ testWithAnvilL2('lockedgold:delegate cmd', (web3: any) => {
     await testLocallyWithWeb3Node(
       Delegate,
       ['--from', account, '--to', account2, '--percent', '100'],
-      web3
+      client
     )
 
     const account2VotingPower = await lockedGold.getAccountTotalGovernanceVotingPower(account2)
@@ -82,18 +82,18 @@ testWithAnvilL2('lockedgold:delegate cmd', (web3: any) => {
 
   it('can delegate as a vote signer for releasecelo contract', async () => {
     const [beneficiary, owner, voteSigner, refundAddress, delegateeAddress] =
-      (await web3.eth.getAccounts()) as StrongAddress[]
-    const kit = newKitFromWeb3(web3)
+      (await client.eth.getAccounts()) as StrongAddress[]
+    const kit = newKitFromWeb3(client)
     const accountsWrapper = await kit.contracts.getAccounts()
     const releaseGoldContractAddress = await deployReleaseGoldContract(
-      web3,
+      client,
       owner,
       beneficiary,
       owner,
       refundAddress
     )
 
-    await testLocallyWithWeb3Node(CreateAccount, ['--contract', releaseGoldContractAddress], web3)
+    await testLocallyWithWeb3Node(CreateAccount, ['--contract', releaseGoldContractAddress], client)
     await testLocallyWithWeb3Node(
       Authorize,
       [
@@ -108,9 +108,9 @@ testWithAnvilL2('lockedgold:delegate cmd', (web3: any) => {
           await accountsWrapper.generateProofOfKeyPossession(releaseGoldContractAddress, voteSigner)
         ),
       ],
-      web3
+      client
     )
-    await testLocallyWithWeb3Node(Lock, ['--from', beneficiary, '--value', '100'], web3)
+    await testLocallyWithWeb3Node(Lock, ['--from', beneficiary, '--value', '100'], client)
 
     const createAccountTx = await accountsWrapper.createAccount().send({ from: delegateeAddress })
     await createAccountTx.waitReceipt()
@@ -118,7 +118,7 @@ testWithAnvilL2('lockedgold:delegate cmd', (web3: any) => {
     await testLocallyWithWeb3Node(
       Delegate,
       ['--from', voteSigner, '--to', delegateeAddress, '--percent', '100'],
-      web3
+      client
     )
 
     const lockedGold = await kit.contracts.getLockedGold()

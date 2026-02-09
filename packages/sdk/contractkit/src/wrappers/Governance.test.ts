@@ -10,10 +10,10 @@ import { GovernanceWrapper, Proposal, ProposalTransaction, VoteValue } from './G
 import { LockedGoldWrapper } from './LockedGold'
 import { MultiSigWrapper } from './MultiSig'
 
-testWithAnvilL2('Governance Wrapper', (web3: any) => {
+testWithAnvilL2('Governance Wrapper', (client) => {
   const ONE_SEC = 1000
-  const kit = newKitFromWeb3(web3)
-  const ONE_CGLD = web3.utils.toWei('1', 'ether')
+  const kit = newKitFromWeb3(client)
+  const ONE_CGLD = client.utils.toWei('1', 'ether')
 
   let accounts: StrongAddress[] = []
   let governance: GovernanceWrapper
@@ -26,7 +26,7 @@ testWithAnvilL2('Governance Wrapper', (web3: any) => {
   let referendumStageDuration: number
 
   beforeAll(async () => {
-    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
+    accounts = (await client.eth.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
     governance = await kit.contracts.getGovernance()
     governanceApproverMultiSig = await kit.contracts.getMultiSig(await governance.getApprover())
@@ -103,14 +103,14 @@ testWithAnvilL2('Governance Wrapper', (web3: any) => {
       const tx = await governance.upvote(proposalId ?? proposalID, upvoter)
       await tx.sendAndWaitForReceipt({ from: upvoter })
       if (shouldTimeTravel) {
-        await timeTravel(dequeueFrequency, web3)
+        await timeTravel(dequeueFrequency, client)
         await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
       }
     }
 
     // protocol/truffle-config defines approver address as accounts[0]
     const approveFn = async () => {
-      await asCoreContractsOwner(web3, async (ownerAddress) => {
+      await asCoreContractsOwner(client, async (ownerAddress) => {
         const tx = await governance.approve(proposalID)
         const multisigTx = await governanceApproverMultiSig.submitOrConfirmTransaction(
           governance.address,
@@ -123,7 +123,7 @@ testWithAnvilL2('Governance Wrapper', (web3: any) => {
     const voteFn = async (voter: Address) => {
       const tx = await governance.vote(proposalID, 'Yes')
       await tx.sendAndWaitForReceipt({ from: voter })
-      await timeTravel(referendumStageDuration, web3)
+      await timeTravel(referendumStageDuration, client)
     }
 
     it('#propose', async () => {
@@ -138,7 +138,7 @@ testWithAnvilL2('Governance Wrapper', (web3: any) => {
 
     describe('#getHotfixRecord', () => {
       it('gets hotfix record', async () => {
-        const kit = newKitFromWeb3(web3)
+        const kit = newKitFromWeb3(client)
         const governance = await kit.contracts.getGovernance()
         const hotfixHash = Buffer.from('0x', 'hex')
 
@@ -188,7 +188,7 @@ testWithAnvilL2('Governance Wrapper', (web3: any) => {
 
     it('#approve', async () => {
       await proposeFn(accounts[0])
-      await timeTravel(dequeueFrequency, web3)
+      await timeTravel(dequeueFrequency, client)
       await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
       await approveFn()
 
@@ -198,7 +198,7 @@ testWithAnvilL2('Governance Wrapper', (web3: any) => {
 
     it('#vote', async () => {
       await proposeFn(accounts[0])
-      await timeTravel(dequeueFrequency, web3)
+      await timeTravel(dequeueFrequency, client)
       await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
       await approveFn()
       await voteFn(accounts[2])
@@ -211,7 +211,7 @@ testWithAnvilL2('Governance Wrapper', (web3: any) => {
     it('#getVoteRecord', async () => {
       const voter = accounts[2]
       await proposeFn(accounts[0])
-      await timeTravel(dequeueFrequency, web3)
+      await timeTravel(dequeueFrequency, client)
       await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
       await approveFn()
       await voteFn(voter)
@@ -228,7 +228,7 @@ testWithAnvilL2('Governance Wrapper', (web3: any) => {
 
     it('#votePartially', async () => {
       await proposeFn(accounts[0])
-      await timeTravel(dequeueFrequency, web3)
+      await timeTravel(dequeueFrequency, client)
       await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
       await approveFn()
 
@@ -238,7 +238,7 @@ testWithAnvilL2('Governance Wrapper', (web3: any) => {
 
       const tx = await governance.votePartially(proposalID, yes, no, abstain)
       await tx.sendAndWaitForReceipt({ from: accounts[2] })
-      await timeTravel(referendumStageDuration, web3)
+      await timeTravel(referendumStageDuration, client)
 
       const votes = await governance.getVotes(proposalID)
       const yesVotes = votes[VoteValue.Yes]
@@ -253,7 +253,7 @@ testWithAnvilL2('Governance Wrapper', (web3: any) => {
       '#execute',
       async () => {
         await proposeFn(accounts[0])
-        await timeTravel(dequeueFrequency, web3)
+        await timeTravel(dequeueFrequency, client)
         await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
         await approveFn()
         await voteFn(accounts[2])
@@ -269,7 +269,7 @@ testWithAnvilL2('Governance Wrapper', (web3: any) => {
 
     it('#getVoter', async () => {
       await proposeFn(accounts[0])
-      await timeTravel(dequeueFrequency, web3)
+      await timeTravel(dequeueFrequency, client)
       await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
       await approveFn()
       await voteFn(accounts[2])

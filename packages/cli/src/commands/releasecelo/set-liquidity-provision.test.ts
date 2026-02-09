@@ -10,16 +10,16 @@ import SetLiquidityProvision from './set-liquidity-provision'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('releasegold:set-liquidity-provision cmd', (web3: any) => {
+testWithAnvilL2('releasegold:set-liquidity-provision cmd', (client) => {
   let contractAddress: string
   let kit: ContractKit
 
   beforeEach(async () => {
-    const accounts = (await web3.eth.getAccounts()) as StrongAddress[]
-    kit = newKitFromWeb3(web3)
+    const accounts = (await client.eth.getAccounts()) as StrongAddress[]
+    kit = newKitFromWeb3(client)
 
     contractAddress = await deployReleaseGoldContract(
-      web3,
+      client,
       await createMultisig(kit, [accounts[0], accounts[1]] as StrongAddress[], 2, 2),
       accounts[1],
       accounts[0],
@@ -39,7 +39,7 @@ testWithAnvilL2('releasegold:set-liquidity-provision cmd', (web3: any) => {
     await testLocallyWithWeb3Node(
       SetLiquidityProvision,
       ['--contract', contractAddress, '--yesreally'],
-      web3
+      client
     )
 
     expect(await releaseGoldWrapper.getLiquidityProvisionMet()).toBeTruthy()

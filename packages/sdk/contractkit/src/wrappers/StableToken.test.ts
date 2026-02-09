@@ -8,8 +8,8 @@ import { StableTokenWrapper } from './StableTokenWrapper'
 
 // TEST NOTES: balances defined in test-utils/migration-override
 
-testWithAnvilL2('StableToken Wrapper', async (web3) => {
-  const kit = newKitFromWeb3(web3)
+testWithAnvilL2('StableToken Wrapper', async (client) => {
+  const kit = newKitFromWeb3(client)
 
   const stableTokenInfos: {
     [key in StableToken]: {
@@ -53,14 +53,14 @@ export function testStableToken(
   expectedName: string,
   expectedSymbol: string
 ) {
-  const web3 = kit.web3
-  const ONE_STABLE = web3.utils.toWei('1', 'ether')
+  const client = kit.web3
+  const ONE_STABLE = client.utils.toWei('1', 'ether')
 
   let accounts: string[] = []
   let stableToken: StableTokenWrapper
 
   beforeEach(async () => {
-    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
+    accounts = (await client.eth.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0] as StrongAddress
     stableToken = await kit.contracts.getStableToken(stableTokenName)
 

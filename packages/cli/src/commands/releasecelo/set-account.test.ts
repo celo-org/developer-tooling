@@ -9,23 +9,23 @@ import SetAccount from './set-account'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('releasegold:set-account cmd', (web3: any) => {
+testWithAnvilL2('releasegold:set-account cmd', (client) => {
   let contractAddress: string
   let kit: ContractKit
 
   beforeEach(async () => {
-    const accounts = (await web3.eth.getAccounts()) as StrongAddress[]
-    kit = newKitFromWeb3(web3)
+    const accounts = (await client.eth.getAccounts()) as StrongAddress[]
+    kit = newKitFromWeb3(client)
 
     contractAddress = await deployReleaseGoldContract(
-      web3,
+      client,
       await createMultisig(kit, [accounts[0], accounts[1]] as StrongAddress[], 2, 2),
       accounts[1],
       accounts[0],
       accounts[2]
     )
 
-    await testLocallyWithWeb3Node(CreateAccount, ['--contract', contractAddress], web3)
+    await testLocallyWithWeb3Node(CreateAccount, ['--contract', contractAddress], client)
   })
 
   it('sets all the properties', async () => {
@@ -36,7 +36,7 @@ testWithAnvilL2('releasegold:set-account cmd', (web3: any) => {
     await testLocallyWithWeb3Node(
       SetAccount,
       ['--contract', contractAddress, '--property', 'name', '--value', 'test-name'],
-      web3
+      client
     )
 
     await testLocallyWithWeb3Node(
@@ -49,13 +49,13 @@ testWithAnvilL2('releasegold:set-account cmd', (web3: any) => {
         '--value',
         TEST_ENCRYPTION_KEY,
       ],
-      web3
+      client
     )
 
     await testLocallyWithWeb3Node(
       SetAccount,
       ['--contract', contractAddress, '--property', 'metaURL', '--value', 'test-url'],
-      web3
+      client
     )
 
     expect(await accountWrapper.getName(contractAddress)).toEqual('test-name')
@@ -68,7 +68,7 @@ testWithAnvilL2('releasegold:set-account cmd', (web3: any) => {
       testLocallyWithWeb3Node(
         SetAccount,
         ['--contract', contractAddress, '--property', 'unknown', '--value', 'test-value'],
-        web3
+        client
       )
     ).rejects.toMatchInlineSnapshot(`
       [Error: Expected --property=unknown to be one of: name, dataEncryptionKey, metaURL

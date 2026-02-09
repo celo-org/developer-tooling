@@ -6,20 +6,19 @@ import Contracts from './contracts'
 process.env.NO_SYNCCHECK = 'true'
 jest.mock('@celo/abis/web3/ICeloVersionedContract')
 
-testWithAnvilL2('network:contracts', (web3) => {
+testWithAnvilL2('network:contracts', (client) => {
   describe('when version can be obtained', () => {
     beforeEach(() => {
       jest.unmock('@celo/abis/web3/ICeloVersionedContract')
       jest.resetModules()
       const actual = jest.requireActual('@celo/abis/web3/ICeloVersionedContract')
-      // @ts-expect-error
-      newICeloVersionedContract.mockImplementation(actual.newICeloVersionedContract)
+      ;(newICeloVersionedContract as jest.Mock).mockImplementation(actual.newICeloVersionedContract)
     })
     test('runs', async () => {
       const spy = jest.spyOn(write, 'stdout')
       const warnSpy = jest.spyOn(console, 'warn')
       expect(warnSpy.mock.calls).toMatchInlineSnapshot(`[]`)
-      await testLocallyWithWeb3Node(Contracts, ['--output', 'json'], web3)
+      await testLocallyWithWeb3Node(Contracts, ['--output', 'json'], client)
       expect(spy.mock.calls).toMatchSnapshot()
     })
   })
@@ -50,7 +49,7 @@ testWithAnvilL2('network:contracts', (web3) => {
       const spy = jest.spyOn(write, 'stdout')
       const warnSpy = jest.spyOn(console, 'warn')
 
-      await testLocallyWithWeb3Node(Contracts, ['--output', 'json'], web3)
+      await testLocallyWithWeb3Node(Contracts, ['--output', 'json'], client)
       expect(warnSpy.mock.calls).toMatchInlineSnapshot(`[]`)
       expect(spy.mock.calls).toMatchSnapshot() // see the file for the snapshot
     })

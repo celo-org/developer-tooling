@@ -7,7 +7,7 @@ import ElectionList from './list'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('election:list cmd', (web3: any) => {
+testWithAnvilL2('election:list cmd', (client) => {
   test('shows list when no arguments provided', async () => {
     const getValidatorGroupsVotesMock = jest.spyOn(
       ElectionWrapper.prototype,
@@ -34,7 +34,7 @@ testWithAnvilL2('election:list cmd', (web3: any) => {
 
     const writeMock = jest.spyOn(ux.write, 'stdout')
 
-    await testLocallyWithWeb3Node(ElectionList, ['--csv'], web3)
+    await testLocallyWithWeb3Node(ElectionList, ['--csv'], client)
 
     expect(getValidatorGroupsVotesMock).toHaveBeenCalled()
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`

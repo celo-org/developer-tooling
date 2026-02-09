@@ -11,27 +11,27 @@ import ValidatorDeAffiliate from './deaffiliate'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validator:deaffiliate', (web3: any) => {
+testWithAnvilL2('validator:deaffiliate', (client) => {
   let account: string
   let validatorContract: ValidatorsWrapper
   let groupAddress: StrongAddress
   beforeEach(async () => {
-    const accounts = await web3.eth.getAccounts()
+    const accounts = await client.eth.getAccounts()
     account = accounts[0]
-    const kit = newKitFromWeb3(web3)
+    const kit = newKitFromWeb3(client)
     kit.defaultAccount = account as StrongAddress
-    const ecdsaPublicKey = await addressToPublicKey(account, web3.eth.sign)
+    const ecdsaPublicKey = await addressToPublicKey(account, client.eth.sign)
 
     validatorContract = await kit.contracts.getValidators()
 
     const groups = await validatorContract.getRegisteredValidatorGroupsAddresses()
     groupAddress = groups[0] as StrongAddress
 
-    await testLocallyWithWeb3Node(Register, ['--from', account], web3)
+    await testLocallyWithWeb3Node(Register, ['--from', account], client)
     await testLocallyWithWeb3Node(
       Lock,
       ['--from', account, '--value', '10000000000000000000000'],
-      web3
+      client
     )
 
     // Register a validator
@@ -40,7 +40,7 @@ testWithAnvilL2('validator:deaffiliate', (web3: any) => {
     await testLocallyWithWeb3Node(
       ValidatorAffiliate,
       ['--from', account, groupAddress, '--yes'],
-      web3
+      client
     )
   })
 
@@ -53,7 +53,7 @@ testWithAnvilL2('validator:deaffiliate', (web3: any) => {
     const logMock = jest.spyOn(console, 'log')
     expect(validator.affiliation).toEqual(groupAddress)
 
-    await testLocallyWithWeb3Node(ValidatorDeAffiliate, ['--from', account], web3)
+    await testLocallyWithWeb3Node(ValidatorDeAffiliate, ['--from', account], client)
 
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
       [

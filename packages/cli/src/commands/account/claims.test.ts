@@ -16,14 +16,14 @@ import RegisterMetadata from './register-metadata'
 import ShowMetadata from './show-metadata'
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('account metadata cmds', (web3: any) => {
+testWithAnvilL2('account metadata cmds', (client) => {
   let account: string
   let accounts: string[]
   let kit: ContractKit
 
   beforeEach(async () => {
-    accounts = await web3.eth.getAccounts()
-    kit = newKitFromWeb3(web3)
+    accounts = await client.eth.getAccounts()
+    kit = newKitFromWeb3(client)
     account = accounts[0]
   })
 
@@ -39,7 +39,7 @@ testWithAnvilL2('account metadata cmds', (web3: any) => {
 
     test('account:create-metadata cmd', async () => {
       const newFilePath = `${tmpdir()}/newfile.json`
-      await testLocallyWithWeb3Node(CreateMetadata, ['--from', account, newFilePath], web3)
+      await testLocallyWithWeb3Node(CreateMetadata, ['--from', account, newFilePath], client)
       const res = JSON.parse(readFileSync(newFilePath).toString())
       expect(res.meta.address).toEqual(account)
     })
@@ -50,7 +50,7 @@ testWithAnvilL2('account metadata cmds', (web3: any) => {
       await testLocallyWithWeb3Node(
         ClaimName,
         ['--from', account, '--name', name, emptyFilePath],
-        web3
+        client
       )
       const metadata = await readFile()
       const claim = metadata.findClaim(ClaimTypes.NAME)
@@ -64,7 +64,7 @@ testWithAnvilL2('account metadata cmds', (web3: any) => {
       await testLocallyWithWeb3Node(
         ClaimDomain,
         ['--from', account, '--domain', domain, emptyFilePath],
-        web3
+        client
       )
       const metadata = await readFile()
       const claim = metadata.findClaim(ClaimTypes.DOMAIN)
@@ -80,7 +80,7 @@ testWithAnvilL2('account metadata cmds', (web3: any) => {
         testLocallyWithWeb3Node(
           ClaimRpcUrl,
           [emptyFilePath, '--from', account, '--rpcUrl', 'http://127.0.0.1:8545'],
-          web3
+          client
         )
       ).rejects.toMatchInlineSnapshot(`
         [Error: Parsing --rpcUrl 
@@ -91,7 +91,7 @@ testWithAnvilL2('account metadata cmds', (web3: any) => {
       await testLocallyWithWeb3Node(
         ClaimRpcUrl,
         [emptyFilePath, '--from', account, '--rpcUrl', rpcUrl],
-        web3
+        client
       )
 
       const metadata = await readFile()
@@ -103,7 +103,7 @@ testWithAnvilL2('account metadata cmds', (web3: any) => {
       const infoMock = jest.spyOn(console, 'info')
       const writeMock = jest.spyOn(ux.write, 'stdout')
 
-      await testLocallyWithWeb3Node(ShowMetadata, [emptyFilePath, '--csv'], web3)
+      await testLocallyWithWeb3Node(ShowMetadata, [emptyFilePath, '--csv'], client)
 
       expect(stripAnsiCodesFromNestedArray(infoMock.mock.calls)).toMatchInlineSnapshot(`
         [
@@ -135,7 +135,7 @@ testWithAnvilL2('account metadata cmds', (web3: any) => {
       await testLocallyWithWeb3Node(
         ClaimAccount,
         ['--from', account, '--address', otherAccount, emptyFilePath],
-        web3
+        client
       )
       const metadata = await readFile()
       const claim = metadata.findClaim(ClaimTypes.ACCOUNT)
@@ -155,13 +155,13 @@ testWithAnvilL2('account metadata cmds', (web3: any) => {
         await testLocallyWithWeb3Node(
           RegisterMetadata,
           ['--force', '--from', account, '--url', 'https://example.com'],
-          web3
+          client
         )
       })
 
       test('fails if url is missing', async () => {
         await expect(
-          testLocallyWithWeb3Node(RegisterMetadata, ['--force', '--from', account], web3)
+          testLocallyWithWeb3Node(RegisterMetadata, ['--force', '--from', account], client)
         ).rejects.toThrow('Missing required flag')
       })
     })
@@ -171,7 +171,7 @@ testWithAnvilL2('account metadata cmds', (web3: any) => {
         testLocallyWithWeb3Node(
           RegisterMetadata,
           ['--force', '--from', account, '--url', 'https://example.com'],
-          web3
+          client
         )
       ).rejects.toThrow("Some checks didn't pass!")
     })

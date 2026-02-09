@@ -136,11 +136,11 @@ describe('newKitWithApiKey()', () => {
   })
 })
 
-testWithAnvilL2('kit', (web3: any) => {
+testWithAnvilL2('kit', (client) => {
   let kit: ContractKit
 
   beforeAll(async () => {
-    kit = newKitFromWeb3(web3)
+    kit = newKitFromWeb3(client)
   })
 
   describe('epochs', () => {
@@ -152,11 +152,11 @@ testWithAnvilL2('kit', (web3: any) => {
 
       // Go 3 epochs ahead
       for (let i = 0; i < 3; i++) {
-        await timeTravel(epochDuration * 2, web3)
+        await timeTravel(epochDuration * 2, client)
         await startAndFinishEpochProcess(kit)
       }
 
-      await timeTravel(epochDuration * 2, web3)
+      await timeTravel(epochDuration * 2, client)
 
       const accounts = await kit.web3.eth.getAccounts()
 

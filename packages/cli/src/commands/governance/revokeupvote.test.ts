@@ -10,16 +10,16 @@ import RevokeUpvote from './revokeupvote'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:revokeupvote cmd', (web3: any) => {
+testWithAnvilL2('governance:revokeupvote cmd', (client) => {
   let minDeposit: BigNumber
-  const kit = newKitFromWeb3(web3)
+  const kit = newKitFromWeb3(client)
   const proposalId = '2'
 
   let accounts: StrongAddress[] = []
   let governance: GovernanceWrapper
 
   beforeEach(async () => {
-    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
+    accounts = (await client.eth.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
     governance = await kit.contracts.getGovernance()
     minDeposit = await governance.minDeposit()
@@ -31,8 +31,8 @@ testWithAnvilL2('governance:revokeupvote cmd', (web3: any) => {
     }
 
     for (let i = 1; i <= 4; i++) {
-      await testLocallyWithWeb3Node(Register, ['--from', accounts[i]], web3)
-      await testLocallyWithWeb3Node(Lock, ['--from', accounts[i], '--value', i.toString()], web3)
+      await testLocallyWithWeb3Node(Register, ['--from', accounts[i]], client)
+      await testLocallyWithWeb3Node(Lock, ['--from', accounts[i], '--value', i.toString()], client)
 
       await (await governance.upvote(proposalId, accounts[i])).sendAndWaitForReceipt({
         from: accounts[i],
@@ -52,7 +52,7 @@ testWithAnvilL2('governance:revokeupvote cmd', (web3: any) => {
     `)
 
     // Revoke upvote from account 2 (2 upvotes)
-    await testLocallyWithWeb3Node(RevokeUpvote, ['--from', accounts[2]], web3)
+    await testLocallyWithWeb3Node(RevokeUpvote, ['--from', accounts[2]], client)
 
     // 1 + 3 + 4 = 8 upvotes
     expect(await governance.getQueue()).toMatchInlineSnapshot(`

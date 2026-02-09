@@ -5,7 +5,7 @@ import Whitelist from './whitelist'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('network:whitelist cmd', (web3: any) => {
+testWithAnvilL2('network:whitelist cmd', (client) => {
   const writeMock = jest.spyOn(ux.write, 'stdout')
 
   afterAll(() => {
@@ -13,7 +13,7 @@ testWithAnvilL2('network:whitelist cmd', (web3: any) => {
   })
 
   it('can print the whitelist', async () => {
-    await testLocallyWithWeb3Node(Whitelist, [], web3)
+    await testLocallyWithWeb3Node(Whitelist, [], client)
 
     expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`
       [
@@ -41,7 +41,7 @@ testWithAnvilL2('network:whitelist cmd', (web3: any) => {
     `)
   })
   it('modifies output when formating flag is passed', async () => {
-    await testLocallyWithWeb3Node(Whitelist, ['--output=json'], web3)
+    await testLocallyWithWeb3Node(Whitelist, ['--output=json'], client)
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`
       [

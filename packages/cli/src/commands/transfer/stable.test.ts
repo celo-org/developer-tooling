@@ -11,7 +11,7 @@ process.env.NO_SYNCCHECK = 'true'
 // Lots of commands, sometimes times out
 jest.setTimeout(15000)
 
-testWithAnvilL2('transfer:stable cmd', (web3: any) => {
+testWithAnvilL2('transfer:stable cmd', (client) => {
   let accounts: string[] = []
   let kit: ContractKit
 
@@ -25,8 +25,8 @@ testWithAnvilL2('transfer:stable cmd', (web3: any) => {
   })
 
   beforeEach(async () => {
-    kit = newKitFromWeb3(web3)
-    accounts = await web3.eth.getAccounts()
+    kit = newKitFromWeb3(client)
+    accounts = await client.eth.getAccounts()
 
     await topUpWithToken(
       kit,
@@ -59,7 +59,7 @@ testWithAnvilL2('transfer:stable cmd', (web3: any) => {
         '--stableToken',
         StableToken.cUSD,
       ],
-      web3
+      client
     )
     // Send cusd as erc20
     const receiverBalance = await kit.getTotalBalance(reciever)
@@ -79,7 +79,7 @@ testWithAnvilL2('transfer:stable cmd', (web3: any) => {
         '--stableToken',
         StableToken.cUSD,
       ],
-      web3
+      client
     )
   })
 
@@ -101,7 +101,7 @@ testWithAnvilL2('transfer:stable cmd', (web3: any) => {
           '--stableToken',
           StableToken.cUSD,
         ],
-        web3
+        client
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     expect(spy).toHaveBeenCalledWith(expect.stringContaining(COMPLIANT_ERROR_RESPONSE))
@@ -123,7 +123,7 @@ testWithAnvilL2('transfer:stable cmd', (web3: any) => {
           '--useAKV',
         ],
 
-        web3
+        client
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"--useAKV flag is no longer supported"`)
   })

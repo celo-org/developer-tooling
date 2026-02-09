@@ -6,29 +6,29 @@ import { getIdentifierHash, IdentifierPrefix } from '@celo/odis-identifiers'
 import { newKitFromWeb3 } from '../kit'
 import { AttestationsWrapper } from './Attestations'
 
-testWithAnvilL2('AttestationsWrapper', (web3) => {
+testWithAnvilL2('AttestationsWrapper', (client) => {
   const PHONE_NUMBER = '+15555555555'
   const IDENTIFIER = getIdentifierHash(
-    web3.utils.sha3,
+    client.utils.sha3,
     PHONE_NUMBER,
     IdentifierPrefix.PHONE_NUMBER,
     'pepper'
   )
 
-  const kit = newKitFromWeb3(web3)
+  const kit = newKitFromWeb3(client)
   let accounts: StrongAddress[] = []
   let attestations: AttestationsWrapper
 
   beforeAll(async () => {
-    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
+    accounts = (await client.eth.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
 
-    const attestationsContractAddress = await deployAttestationsContract(web3, accounts[0])
+    const attestationsContractAddress = await deployAttestationsContract(client, accounts[0])
 
     attestations = new AttestationsWrapper(
       kit.connection,
-      newAttestations(web3, attestationsContractAddress),
-      newKitFromWeb3(web3).contracts
+      newAttestations(client, attestationsContractAddress),
+      newKitFromWeb3(client).contracts
     )
   })
 

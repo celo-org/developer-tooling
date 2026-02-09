@@ -7,7 +7,7 @@ import List from './list'
 import ValidatorGroupRegister from './register'
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validatorgroup:list cmd', (web3: any) => {
+testWithAnvilL2('validatorgroup:list cmd', (client) => {
   const writeMock = jest.spyOn(ux.write, 'stdout')
 
   afterAll(() => {
@@ -15,24 +15,24 @@ testWithAnvilL2('validatorgroup:list cmd', (web3: any) => {
   })
 
   const registerValidatorGroup = async () => {
-    const accounts = await web3.eth.getAccounts()
+    const accounts = await client.eth.getAccounts()
 
-    await testLocallyWithWeb3Node(AccountRegister, ['--from', accounts[0]], web3)
+    await testLocallyWithWeb3Node(AccountRegister, ['--from', accounts[0]], client)
     await testLocallyWithWeb3Node(
       Lock,
       ['--from', accounts[0], '--value', '10000000000000000000000'],
-      web3
+      client
     )
     await testLocallyWithWeb3Node(
       ValidatorGroupRegister,
       ['--from', accounts[0], '--commission', '0.1', '--yes'],
-      web3
+      client
     )
   }
 
   it('outputs the current validator groups', async () => {
     await registerValidatorGroup()
-    await testLocallyWithWeb3Node(List, [], web3)
+    await testLocallyWithWeb3Node(List, [], client)
     expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`
       [
         [

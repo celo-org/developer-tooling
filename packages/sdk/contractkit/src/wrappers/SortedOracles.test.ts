@@ -17,8 +17,8 @@ import { OracleRate, ReportTarget, SortedOraclesWrapper } from './SortedOracles'
 // set timeout to 10 seconds
 jest.setTimeout(10 * 1000)
 
-testWithAnvilL2('SortedOracles Wrapper', (web3) => {
-  const kit = newKitFromWeb3(web3)
+testWithAnvilL2('SortedOracles Wrapper', (client) => {
+  const kit = newKitFromWeb3(client)
 
   const reportAsOracles = async (
     sortedOracles: SortedOraclesWrapper,
@@ -50,7 +50,7 @@ testWithAnvilL2('SortedOracles Wrapper', (web3) => {
     const expirySeconds = (await sortedOracles.reportExpirySeconds()).toNumber()
     await reportAsOracles(sortedOracles, target, expiredOracles)
 
-    await timeTravel(expirySeconds * 2, web3)
+    await timeTravel(expirySeconds * 2, client)
 
     const freshOracles = allOracles.filter((o) => !expiredOracles.includes(o))
     await reportAsOracles(sortedOracles, target, freshOracles)
@@ -64,7 +64,7 @@ testWithAnvilL2('SortedOracles Wrapper', (web3) => {
    * the tests
    */
   const newSortedOracles = async (owner: Address): Promise<SortedOraclesWrapper> => {
-    const contract = new web3.eth.Contract(SortedOraclesArtifacts.abi as AbiItem[])
+    const contract = new client.eth.Contract(SortedOraclesArtifacts.abi as AbiItem[])
 
     const deployTx = contract.deploy({
       data: SortedOraclesArtifacts.bytecode.replace(
@@ -75,7 +75,7 @@ testWithAnvilL2('SortedOracles Wrapper', (web3) => {
     })
 
     const txResult = await deployTx.send({ from: owner, gasPrice: TEST_GAS_PRICE.toFixed() })
-    const deployedContract = web3NewSortedOracles(web3, txResult.options.address)
+    const deployedContract = web3NewSortedOracles(client, txResult.options.address)
     await deployedContract.methods
       .initialize(NetworkConfig.oracles.reportExpiry)
       .send({ from: owner })
@@ -101,7 +101,7 @@ testWithAnvilL2('SortedOracles Wrapper', (web3) => {
   // NOTE: These values are set in packages/dev-utils/src/migration-override.json,
   // and are derived from the MNEMONIC.
   // If the MNEMONIC has changed, these will need to be reset.
-  // To do that, look at the output of web3.eth.getAccounts(), and pick a few
+  // To do that, look at the output of client.eth.getAccounts(), and pick a few
   // addresses from that set to be oracles
   const stableTokenOracles: Address[] = NetworkConfig.stableToken.oracles
   const stableTokenEUROracles: Address[] = NetworkConfig.stableTokenEUR.oracles
@@ -118,23 +118,23 @@ testWithAnvilL2('SortedOracles Wrapper', (web3) => {
   let nonOracleAddress: Address
   let btcOracleOwner: Address
   let stableTokenOracleOwner: Address
-  const CELOBTCIdentifier: Address = web3.utils.toChecksumAddress(
-    web3.utils.keccak256('CELOBTC').slice(26)
+  const CELOBTCIdentifier: Address = client.utils.toChecksumAddress(
+    client.utils.keccak256('CELOBTC').slice(26)
   )
 
   beforeAll(async () => {
-    allAccounts = await web3.eth.getAccounts()
+    allAccounts = await client.eth.getAccounts()
 
     btcOracleOwner = stableTokenOracleOwner = allAccounts[0]
 
     btcSortedOracles = await newSortedOracles(btcOracleOwner)
     stableTokenSortedOracles = await kit.contracts.getSortedOracles()
     const stableTokenSortedOraclesContract = web3NewSortedOracles(
-      web3,
+      client,
       stableTokenSortedOracles.address
     )
 
-    await asCoreContractsOwner(web3, async (ownerAddress) => {
+    await asCoreContractsOwner(client, async (ownerAddress) => {
       const stableTokenUSDAddress = (await kit.contracts.getStableToken(StableToken.cUSD)).address
       const stableTokenEURAddress = (await kit.contracts.getStableToken(StableToken.cEUR)).address
       const stableTokenBRLAddress = (await kit.contracts.getStableToken(StableToken.cREAL)).address
@@ -198,7 +198,7 @@ testWithAnvilL2('SortedOracles Wrapper', (web3) => {
     ).sendAndWaitForReceipt({ from: stableTokenOracleOwner })
 
     const expirySeconds = (await stableTokenSortedOracles.reportExpirySeconds()).toNumber()
-    await timeTravel(expirySeconds * 2, web3)
+    await timeTravel(expirySeconds * 2, client)
 
     const removeExpiredReportsTx = await stableTokenSortedOracles.removeExpiredReports(
       CeloContract.StableToken,

@@ -13,15 +13,15 @@ import PrepareHotfix from './preparehotfix'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:preparehotfix cmd', (web3: any) => {
+testWithAnvilL2('governance:preparehotfix cmd', (client) => {
   const HOTFIX_HASH = '0x8ad3719bb2577b277bcafc1f00ac2f1c3fa5e565173303684d0a8d4f3661680c'
   const HOTFIX_BUFFER = hexToBuffer(HOTFIX_HASH)
   const EXECUTION_TIME_LIMIT = 86400
 
   it('should prepare a hotfix successfuly', async () => {
-    const kit = newKitFromWeb3(web3)
+    const kit = newKitFromWeb3(client)
     const governanceWrapper = await kit.contracts.getGovernance()
-    const [approverAccount, securityCouncilAccount] = await web3.eth.getAccounts()
+    const [approverAccount, securityCouncilAccount] = await client.eth.getAccounts()
     // arbitrary 100 seconds to the future to avoid
     // Timestamp error: X is lower than or equal to previous block's timestamp
     const nextTimestamp = getCurrentTimestamp() + 100
@@ -31,11 +31,11 @@ testWithAnvilL2('governance:preparehotfix cmd', (web3: any) => {
       await kit.sendTransaction({
         to: DEFAULT_OWNER_ADDRESS,
         from: approverAccount,
-        value: web3.utils.toWei('1', 'ether'),
+        value: client.utils.toWei('1', 'ether'),
       })
     ).waitReceipt()
 
-    await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
+    await withImpersonatedAccount(client, DEFAULT_OWNER_ADDRESS, async () => {
       // setHotfixExecutionTimeWindow to EXECUTION_TIME_LIMIT (86400)
       await (
         await kit.sendTransaction({
@@ -71,21 +71,21 @@ testWithAnvilL2('governance:preparehotfix cmd', (web3: any) => {
     await testLocallyWithWeb3Node(
       Approve,
       ['--hotfix', HOTFIX_HASH, '--from', approverAccount],
-      web3
+      client
     )
 
     await testLocallyWithWeb3Node(
       Approve,
       ['--hotfix', HOTFIX_HASH, '--from', securityCouncilAccount, '--type', 'securityCouncil'],
-      web3
+      client
     )
 
-    await setNextBlockTimestamp(web3, nextTimestamp)
+    await setNextBlockTimestamp(client, nextTimestamp)
 
     await testLocallyWithWeb3Node(
       PrepareHotfix,
       ['--hash', HOTFIX_HASH, '--from', approverAccount],
-      web3
+      client
     )
 
     expect(await governanceWrapper.getHotfixRecord(HOTFIX_BUFFER)).toMatchInlineSnapshot(`

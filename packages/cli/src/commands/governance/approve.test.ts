@@ -23,13 +23,13 @@ process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvilL2(
   'governance:approve cmd',
-  (web3: any) => {
+  (client) => {
     const HOTFIX_HASH = '0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d'
     const HOTFIX_BUFFER = hexToBuffer(HOTFIX_HASH)
     beforeEach(async () => {
       // need to set multical deployment on the address it was found on alfajores
       // since this test impersonates the old alfajores chain id
-      await deployMultiCall(web3, '0xcA11bde05977b3631167028862bE2a173976CA11')
+      await deployMultiCall(client, '0xcA11bde05977b3631167028862bE2a173976CA11')
       jest.spyOn(console, 'log').mockImplementation(() => {
         // noop
       })
@@ -40,14 +40,14 @@ testWithAnvilL2(
 
     describe('hotfix', () => {
       it('fails when address is not security council multisig signatory', async () => {
-        const kit = newKitFromWeb3(web3)
-        const accounts = await web3.eth.getAccounts()
+        const kit = newKitFromWeb3(client)
+        const accounts = await client.eth.getAccounts()
         const governance = await kit.contracts.getGovernance()
         const writeMock = jest.spyOn(ux.write, 'stdout')
         const logMock = jest.spyOn(console, 'log')
         const multisig = await governance.getApproverMultisig()
 
-        await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
+        await withImpersonatedAccount(client, DEFAULT_OWNER_ADDRESS, async () => {
           // setApprover to 0x5409ED021D9299bf6814279A6A1411A7e866A631 to avoid "Council cannot be approver" error
           await (
             await kit.sendTransaction({
@@ -82,7 +82,7 @@ testWithAnvilL2(
               '--type',
               'securityCouncil',
             ],
-            web3
+            client
           )
         ).rejects.toThrow("Some checks didn't pass!")
 
@@ -119,8 +119,8 @@ testWithAnvilL2(
       })
 
       it('fails when address is not approver multisig signatory', async () => {
-        const kit = newKitFromWeb3(web3)
-        const accounts = await web3.eth.getAccounts()
+        const kit = newKitFromWeb3(client)
+        const accounts = await client.eth.getAccounts()
         const governance = await kit.contracts.getGovernance()
         const writeMock = jest.spyOn(ux.write, 'stdout')
         const logMock = jest.spyOn(console, 'log')
@@ -129,7 +129,7 @@ testWithAnvilL2(
           testLocallyWithWeb3Node(
             Approve,
             ['--from', accounts[0], '--hotfix', HOTFIX_HASH, '--useMultiSig'],
-            web3
+            client
           )
         ).rejects.toThrow("Some checks didn't pass!")
 
@@ -166,13 +166,13 @@ testWithAnvilL2(
       })
 
       it('fails when address is not security council', async () => {
-        const [approver, securityCouncil, account] = await web3.eth.getAccounts()
-        const kit = newKitFromWeb3(web3)
+        const [approver, securityCouncil, account] = await client.eth.getAccounts()
+        const kit = newKitFromWeb3(client)
         const governance = await kit.contracts.getGovernance()
         const writeMock = jest.spyOn(ux.write, 'stdout')
         const logMock = jest.spyOn(console, 'log')
 
-        await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
+        await withImpersonatedAccount(client, DEFAULT_OWNER_ADDRESS, async () => {
           // setApprover to approver value
           await (
             await kit.sendTransaction({
@@ -198,7 +198,7 @@ testWithAnvilL2(
           testLocallyWithWeb3Node(
             Approve,
             ['--from', account, '--hotfix', HOTFIX_HASH, '--type', 'securityCouncil'],
-            web3
+            client
           )
         ).rejects.toThrow("Some checks didn't pass!")
 
@@ -232,13 +232,13 @@ testWithAnvilL2(
       })
 
       it('fails when address is not approver', async () => {
-        const kit = newKitFromWeb3(web3)
-        const [approver, securityCouncil, account] = await web3.eth.getAccounts()
+        const kit = newKitFromWeb3(client)
+        const [approver, securityCouncil, account] = await client.eth.getAccounts()
         const governance = await kit.contracts.getGovernance()
         const writeMock = jest.spyOn(ux.write, 'stdout')
         const logMock = jest.spyOn(console, 'log')
 
-        await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
+        await withImpersonatedAccount(client, DEFAULT_OWNER_ADDRESS, async () => {
           // setApprover to approver value
           await (
             await kit.sendTransaction({
@@ -261,7 +261,7 @@ testWithAnvilL2(
         })
 
         await expect(
-          testLocallyWithWeb3Node(Approve, ['--from', account, '--hotfix', HOTFIX_HASH], web3)
+          testLocallyWithWeb3Node(Approve, ['--from', account, '--hotfix', HOTFIX_HASH], client)
         ).rejects.toThrow("Some checks didn't pass!")
 
         expect(await governance.getHotfixRecord(HOTFIX_BUFFER)).toMatchInlineSnapshot(`
@@ -294,13 +294,13 @@ testWithAnvilL2(
       })
 
       it('succeeds when address is a direct security council', async () => {
-        const [approver, securityCouncil] = await web3.eth.getAccounts()
-        const kit = newKitFromWeb3(web3)
+        const [approver, securityCouncil] = await client.eth.getAccounts()
+        const kit = newKitFromWeb3(client)
         const governance = await kit.contracts.getGovernance()
         const writeMock = jest.spyOn(ux.write, 'stdout')
         const logMock = jest.spyOn(console, 'log')
 
-        await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
+        await withImpersonatedAccount(client, DEFAULT_OWNER_ADDRESS, async () => {
           // setApprover to approver value
           await (
             await kit.sendTransaction({
@@ -325,7 +325,7 @@ testWithAnvilL2(
         await testLocallyWithWeb3Node(
           Approve,
           ['--from', securityCouncil, '--hotfix', HOTFIX_HASH, '--type', 'securityCouncil'],
-          web3
+          client
         )
 
         expect(await governance.getHotfixRecord(HOTFIX_BUFFER)).toMatchInlineSnapshot(`
@@ -374,13 +374,13 @@ testWithAnvilL2(
       })
 
       it('succeeds when address is a direct approver', async () => {
-        const kit = newKitFromWeb3(web3)
-        const [approver, securityCouncil] = await web3.eth.getAccounts()
+        const kit = newKitFromWeb3(client)
+        const [approver, securityCouncil] = await client.eth.getAccounts()
         const governance = await kit.contracts.getGovernance()
         const writeMock = jest.spyOn(ux.write, 'stdout')
         const logMock = jest.spyOn(console, 'log')
 
-        await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
+        await withImpersonatedAccount(client, DEFAULT_OWNER_ADDRESS, async () => {
           // setApprover to approver value
           await (
             await kit.sendTransaction({
@@ -402,7 +402,7 @@ testWithAnvilL2(
           ).waitReceipt()
         })
 
-        await testLocallyWithWeb3Node(Approve, ['--from', approver, '--hotfix', HOTFIX_HASH], web3)
+        await testLocallyWithWeb3Node(Approve, ['--from', approver, '--hotfix', HOTFIX_HASH], client)
 
         expect(await governance.getHotfixRecord(HOTFIX_BUFFER)).toMatchInlineSnapshot(`
         {
@@ -450,8 +450,8 @@ testWithAnvilL2(
       })
 
       it('succeeds when address is security council multisig signatory', async () => {
-        const kit = newKitFromWeb3(web3)
-        const accounts = (await web3.eth.getAccounts()) as StrongAddress[]
+        const kit = newKitFromWeb3(client)
+        const accounts = (await client.eth.getAccounts()) as StrongAddress[]
         const governance = await kit.contracts.getGovernance()
         const writeMock = jest.spyOn(ux.write, 'stdout')
         const logMock = jest.spyOn(console, 'log')
@@ -459,7 +459,7 @@ testWithAnvilL2(
 
         await changeMultiSigOwner(kit, accounts[0])
 
-        await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
+        await withImpersonatedAccount(client, DEFAULT_OWNER_ADDRESS, async () => {
           // setApprover to 0x5409ED021D9299bf6814279A6A1411A7e866A631 to avoid "Council cannot be approver" error
           await (
             await kit.sendTransaction({
@@ -498,7 +498,7 @@ testWithAnvilL2(
             '--type',
             'securityCouncil',
           ],
-          web3
+          client
         )
 
         expect(await governance.getHotfixRecord(HOTFIX_BUFFER)).toMatchInlineSnapshot(`
@@ -544,11 +544,11 @@ testWithAnvilL2(
       })
 
       it('succeeds when address is security council safe signatory', async () => {
-        await setupSafeContracts(web3)
+        await setupSafeContracts(client)
 
-        const kit = newKitFromWeb3(web3)
+        const kit = newKitFromWeb3(client)
         const [approver, securityCouncilSafeSignatory1] =
-          (await web3.eth.getAccounts()) as StrongAddress[]
+          (await client.eth.getAccounts()) as StrongAddress[]
         const securityCouncilSafeSignatory2: StrongAddress =
           '0x6C666E57A5E8715cFE93f92790f98c4dFf7b69e2'
         const securityCouncilSafeSignatory2PrivateKey =
@@ -568,13 +568,13 @@ testWithAnvilL2(
 
         const protocolKit = await Safe.init({
           predictedSafe: predictSafe,
-          provider: (web3.currentProvider as any as CeloProvider).toEip1193Provider(),
+          provider: (client.currentProvider as any as CeloProvider).toEip1193Provider(),
           signer: securityCouncilSafeSignatory1,
         })
 
         const deploymentTransaction = await protocolKit.createSafeDeploymentTransaction()
 
-        const receipt = await web3.eth.sendTransaction({
+        const receipt = await client.eth.sendTransaction({
           from: securityCouncilSafeSignatory1,
           ...deploymentTransaction,
         })
@@ -583,7 +583,7 @@ testWithAnvilL2(
 
         protocolKit.connect({ safeAddress })
 
-        await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
+        await withImpersonatedAccount(client, DEFAULT_OWNER_ADDRESS, async () => {
           // setApprover to 0x5409ED021D9299bf6814279A6A1411A7e866A631 to avoid "Council cannot be approver" error
           await (
             await kit.sendTransaction({
@@ -635,7 +635,7 @@ testWithAnvilL2(
             '--type',
             'securityCouncil',
           ],
-          web3
+          client
         )
 
         // Run the same command twice with same arguments to make sure it doesn't have any effect
@@ -650,7 +650,7 @@ testWithAnvilL2(
             '--type',
             'securityCouncil',
           ],
-          web3
+          client
         )
 
         expect(await governance.getHotfixRecord(HOTFIX_BUFFER)).toMatchInlineSnapshot(`
@@ -664,9 +664,9 @@ testWithAnvilL2(
 
         // Make sure the account has enough balance to pay for the transaction
         await setBalance(
-          web3,
+          client,
           securityCouncilSafeSignatory2,
-          BigInt(web3.utils.toWei('1', 'ether'))
+          BigInt(client.utils.toWei('1', 'ether'))
         )
         await testLocallyWithWeb3Node(
           Approve,
@@ -682,7 +682,7 @@ testWithAnvilL2(
             '--privateKey',
             securityCouncilSafeSignatory2PrivateKey,
           ],
-          web3
+          client
         )
 
         expect(await governance.getHotfixRecord(HOTFIX_BUFFER)).toMatchInlineSnapshot(`
@@ -759,8 +759,8 @@ testWithAnvilL2(
       })
 
       it('succeeds when address is approver multisig signatory', async () => {
-        const kit = newKitFromWeb3(web3)
-        const accounts = (await web3.eth.getAccounts()) as StrongAddress[]
+        const kit = newKitFromWeb3(client)
+        const accounts = (await client.eth.getAccounts()) as StrongAddress[]
 
         await changeMultiSigOwner(kit, accounts[0])
 
@@ -771,7 +771,7 @@ testWithAnvilL2(
         await testLocallyWithWeb3Node(
           Approve,
           ['--from', accounts[0], '--hotfix', HOTFIX_HASH, '--useMultiSig'],
-          web3
+          client
         )
 
         expect(await governance.getHotfixRecord(HOTFIX_BUFFER)).toMatchInlineSnapshot(`
@@ -816,8 +816,8 @@ testWithAnvilL2(
       })
 
       it('succeeds when address is security council multisig signatory', async () => {
-        const kit = newKitFromWeb3(web3)
-        const accounts = (await web3.eth.getAccounts()) as StrongAddress[]
+        const kit = newKitFromWeb3(client)
+        const accounts = (await client.eth.getAccounts()) as StrongAddress[]
 
         await changeMultiSigOwner(kit, accounts[0])
 
@@ -826,7 +826,7 @@ testWithAnvilL2(
         const logMock = jest.spyOn(console, 'log')
         const multisig = await governance.getApproverMultisig()
 
-        await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
+        await withImpersonatedAccount(client, DEFAULT_OWNER_ADDRESS, async () => {
           // setApprover to 0x5409ED021D9299bf6814279A6A1411A7e866A631 to avoid "Council cannot be approver" error
           await (
             await kit.sendTransaction({
@@ -860,7 +860,7 @@ testWithAnvilL2(
             '--type',
             'securityCouncil',
           ],
-          web3
+          client
         )
 
         expect(await governance.getHotfixRecord(HOTFIX_BUFFER)).toMatchInlineSnapshot(`

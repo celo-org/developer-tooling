@@ -1,4 +1,4 @@
-import { Connection, Provider, JsonRpcPayload, JsonRpcResponse } from '@celo/connect'
+import { Connection, Provider, JsonRpcPayload, JsonRpcResponse, Web3 } from '@celo/connect'
 import * as http from 'http'
 import migrationOverride from './migration-override.json'
 
@@ -64,10 +64,9 @@ export const TEST_GAS_LIMIT = 20000000
 
 export const NetworkConfig = migrationOverride
 
-export function jsonRpcCall<O>(web3: any, method: string, params: any[]): Promise<O> {
+export function jsonRpcCall<O>(client: Web3, method: string, params: any[]): Promise<O> {
   return new Promise<O>((resolve, reject) => {
-    const provider =
-      web3.currentProvider && typeof web3.currentProvider !== 'string' ? web3.currentProvider : null
+    const provider = client.currentProvider
 
     if (provider && typeof provider.send === 'function') {
       provider.send(
@@ -77,7 +76,7 @@ export function jsonRpcCall<O>(web3: any, method: string, params: any[]): Promis
           method,
           params,
         },
-        (err: Error | null, res?: any) => {
+        (err, res) => {
           if (err) {
             reject(err)
           } else if (!res) {
@@ -101,12 +100,12 @@ export function jsonRpcCall<O>(web3: any, method: string, params: any[]): Promis
   })
 }
 
-export function evmRevert(web3: any, snapId: string): Promise<void> {
-  return jsonRpcCall(web3, 'evm_revert', [snapId])
+export function evmRevert(client: Web3, snapId: string): Promise<void> {
+  return jsonRpcCall(client, 'evm_revert', [snapId])
 }
 
-export function evmSnapshot(web3: any) {
-  return jsonRpcCall<string>(web3, 'evm_snapshot', [])
+export function evmSnapshot(client: Web3) {
+  return jsonRpcCall<string>(client, 'evm_snapshot', [])
 }
 
 type TestWithWeb3Hooks = {
@@ -115,9 +114,9 @@ type TestWithWeb3Hooks = {
 }
 
 /**
- * Creates a test suite with a given name and provides function with a web3 instance connected to the given rpcUrl.
+ * Creates a test suite with a given name and provides function with a Web3 client connected to the given rpcUrl.
  *
- * It is an equivalent of jest `describe` with the web3 additioon. It also provides hooks for beforeAll and afterAll.
+ * It is an equivalent of jest `describe` with a Web3 client. It also provides hooks for beforeAll and afterAll.
  *
  * Optionally if a runIf flag is set to false the test suite will be skipped (useful for conditional test suites). By
  * default all test suites are run normally, but if the runIf flag is set to false the test suite will be skipped by using
@@ -126,7 +125,7 @@ type TestWithWeb3Hooks = {
 export function testWithWeb3(
   name: string,
   rpcUrl: string,
-  fn: (web3: any) => void,
+  fn: (client: Web3) => void,
   options: {
     hooks?: TestWithWeb3Hooks
     runIf?: boolean
@@ -134,7 +133,7 @@ export function testWithWeb3(
 ) {
   const provider = new SimpleHttpProvider(rpcUrl)
   const connection = new Connection(provider)
-  const web3 = connection.web3
+  const client = connection.web3
 
   // By default we run all the tests
   let describeFn = describe
@@ -153,14 +152,14 @@ export function testWithWeb3(
 
     beforeEach(async () => {
       if (snapId != null) {
-        await evmRevert(web3, snapId)
+        await evmRevert(client, snapId)
       }
-      snapId = await evmSnapshot(web3)
+      snapId = await evmSnapshot(client)
     })
 
     afterAll(async () => {
       if (snapId != null) {
-        await evmRevert(web3, snapId)
+        await evmRevert(client, snapId)
       }
       if (options.hooks?.afterAll) {
         // hook must be awaited here or jest doesnt actually wait for it and complains of open handles
@@ -168,6 +167,6 @@ export function testWithWeb3(
       }
     })
 
-    fn(web3)
+    fn(client)
   })
 }

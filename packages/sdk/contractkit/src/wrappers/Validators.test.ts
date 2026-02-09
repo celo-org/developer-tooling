@@ -15,8 +15,8 @@ TEST NOTES:
 
 const minLockedGoldValue = '10000000000000000000000' // 10k gold
 
-testWithAnvilL2('Validators Wrapper', (web3) => {
-  const kit = newKitFromWeb3(web3)
+testWithAnvilL2('Validators Wrapper', (client) => {
+  const kit = newKitFromWeb3(client)
   let accounts: string[] = []
   let accountsInstance: AccountsWrapper
   let validators: ValidatorsWrapper
@@ -33,7 +33,7 @@ testWithAnvilL2('Validators Wrapper', (web3) => {
   }
 
   beforeAll(async () => {
-    accounts = await web3.eth.getAccounts()
+    accounts = await client.eth.getAccounts()
     validators = await kit.contracts.getValidators()
     lockedGold = await kit.contracts.getLockedGold()
     accountsInstance = await kit.contracts.getAccounts()
@@ -102,11 +102,11 @@ testWithAnvilL2('Validators Wrapper', (web3) => {
     const txOpts = { from: groupAccount }
 
     // Set commission update delay to 3 blocks for backwards compatibility
-    await setCommissionUpdateDelay(web3, validators.address, 3)
-    await mineBlocks(1, web3)
+    await setCommissionUpdateDelay(client, validators.address, 3)
+    await mineBlocks(1, client)
 
     await validators.setNextCommissionUpdate('0.2').sendAndWaitForReceipt(txOpts)
-    await mineBlocks(3, web3)
+    await mineBlocks(3, client)
     await validators.updateCommission().sendAndWaitForReceipt(txOpts)
 
     const commission = (await validators.getValidatorGroup(groupAccount)).commission
@@ -196,7 +196,7 @@ testWithAnvilL2('Validators Wrapper', (web3) => {
     beforeEach(async () => {
       const epochManagerWrapper = await kit.contracts.getEpochManager()
       const epochDuration = await epochManagerWrapper.epochDuration()
-      await timeTravel(epochDuration, web3)
+      await timeTravel(epochDuration, client)
     })
 
     it("can fetch epoch's last block information", async () => {

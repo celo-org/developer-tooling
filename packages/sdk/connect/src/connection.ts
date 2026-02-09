@@ -59,6 +59,53 @@ export interface ConnectionOptions {
   from?: StrongAddress
 }
 
+/** The web3 compatibility shim returned by {@link Connection.web3} */
+export interface Web3 {
+  eth: {
+    Contract: new (abi: readonly any[] | any[], address?: string) => Contract
+    net: { isListening: () => Promise<boolean> }
+    getBalance: (address: string) => Promise<string>
+    getStorageAt: (address: string, position: number | string) => Promise<string>
+    sign: (data: string, address: string) => Promise<string>
+    getAccounts: () => Promise<string[]>
+    getTransactionReceipt: (hash: string) => Promise<CeloTxReceipt | null>
+    getBlockNumber: () => Promise<number>
+    getBlock: (blockNumber: BlockNumber, fullTxObjects?: boolean) => Promise<Block>
+    getPastLogs: (options: {
+      topics?: (string | null)[]
+      fromBlock?: string | number
+      toBlock?: string | number
+      address?: string
+    }) => Promise<any[]>
+    call: (tx: any) => Promise<string>
+    sendTransaction: (tx: any) => PromiEvent<any>
+    abi: AbiCoder
+    getChainId: () => Promise<number>
+    isSyncing: () => Promise<boolean | Syncing>
+    handleRevert: boolean
+    transactionPollingInterval: number
+    defaultAccount: string | null
+  }
+  utils: {
+    soliditySha3: (...args: any[]) => string | null
+    sha3: (...args: any[]) => string | null
+    keccak256: (value: string) => string
+    toBN: (value: any) => bigint
+    toWei: (value: string, unit?: string) => string
+    fromWei: (value: string, unit?: string) => string
+    isAddress: (address: string) => boolean
+    toChecksumAddress: (address: string) => string
+    numberToHex: (value: number | string | bigint) => string
+    hexToNumber: (hex: string) => number
+    toHex: (value: any) => string
+    hexToAscii: (hex: string) => string
+    randomHex: (size: number) => string
+    _jsonInterfaceMethodToString: (abiItem: any) => string
+  }
+  currentProvider: Provider
+  setProvider: (provider: any) => void
+}
+
 /**
  * Connection is a Class for connecting to Celo, sending Transactions, etc
  * @param provider a JSON-RPC provider
@@ -639,13 +686,13 @@ export class Connection {
     return response.result as string
   }
 
-  private _web3Shim: any
+  private _web3Shim: Web3 | undefined
 
   /**
    * Returns a web3-compatible shim object.
    * Provides web3.eth.Contract, web3.eth.getBalance, web3.utils, etc.
    */
-  get web3(): any {
+  get web3(): Web3 {
     if (!this._web3Shim) {
       this._web3Shim = createWeb3Shim(this)
     }
@@ -790,7 +837,7 @@ function createWeb3ContractConstructor(connection: Connection) {
     _address: string
     events: { [key: string]: any } = {}
 
-    constructor(abi: any[], address?: string) {
+    constructor(abi: readonly any[] | any[], address?: string) {
       this._address = address || ''
       // Compute signature for function/event ABI items (web3 did this automatically)
       const enrichedAbi = abi.map((item: any) => {
@@ -1061,7 +1108,7 @@ function decodeReceiptEvents(receipt: CeloTxReceipt, abi: any[], coder: AbiCoder
   return receipt
 }
 
-function createWeb3Shim(connection: Connection) {
+function createWeb3Shim(connection: Connection): Web3 {
   const ContractConstructor = createWeb3ContractConstructor(connection)
   const shim = {
     eth: {

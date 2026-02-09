@@ -13,7 +13,7 @@ process.env.NO_SYNCCHECK = 'true'
 // Lots of commands, sometimes times out
 jest.setTimeout(15000)
 
-testWithAnvilL2('transfer:erc20 cmd', (web3: any) => {
+testWithAnvilL2('transfer:erc20 cmd', (client) => {
   let accounts: string[] = []
   let kit: ContractKit
 
@@ -27,8 +27,8 @@ testWithAnvilL2('transfer:erc20 cmd', (web3: any) => {
   })
 
   beforeEach(async () => {
-    kit = newKitFromWeb3(web3)
-    accounts = await web3.eth.getAccounts()
+    kit = newKitFromWeb3(client)
+    accounts = await client.eth.getAccounts()
 
     await topUpWithToken(
       kit,
@@ -78,7 +78,7 @@ testWithAnvilL2('transfer:erc20 cmd', (web3: any) => {
         '--erc20Address',
         cusdAddress,
       ],
-      web3
+      client
     )
     // Send cusd as erc20
     const receiverBalance = await kit.getTotalBalance(reciever)
@@ -98,7 +98,7 @@ testWithAnvilL2('transfer:erc20 cmd', (web3: any) => {
         '--erc20Address',
         cusdAddress,
       ],
-      web3
+      client
     )
     const balanceAfter = await kit.getTotalBalance(sender)
     expect(balanceBefore.cUSD).toEqual(balanceAfter.cUSD)
@@ -123,7 +123,7 @@ testWithAnvilL2('transfer:erc20 cmd', (web3: any) => {
           '--erc20Address',
           cusdAddress,
         ],
-        web3
+        client
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     expect(spy).toHaveBeenCalledWith(expect.stringContaining(COMPLIANT_ERROR_RESPONSE))
@@ -134,7 +134,7 @@ testWithAnvilL2('transfer:erc20 cmd', (web3: any) => {
       testLocallyWithWeb3Node(
         TransferERC20,
         ['--from', accounts[0], '--to', accounts[1], '--value', '1', '--erc20Address', accounts[2]],
-        web3
+        client
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Invalid erc20 address"`)
   })
@@ -155,7 +155,7 @@ testWithAnvilL2('transfer:erc20 cmd', (web3: any) => {
           '--useAKV',
         ],
 
-        web3
+        client
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"--useAKV flag is no longer supported"`)
   })
@@ -180,7 +180,7 @@ testWithAnvilL2('transfer:erc20 cmd', (web3: any) => {
         '--erc20Address',
         cusdAddress,
       ],
-      web3
+      client
     )
 
     // Verify the transfer was successful

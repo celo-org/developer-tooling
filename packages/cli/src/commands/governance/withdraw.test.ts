@@ -16,12 +16,12 @@ process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvilL2(
   'governance:withdraw',
-  (web3: any) => {
+  (client) => {
     const logMock = jest.spyOn(console, 'log')
     const errorMock = jest.spyOn(console, 'error')
 
     let minDeposit: string
-    const kit = newKitFromWeb3(web3)
+    const kit = newKitFromWeb3(client)
 
     let accounts: StrongAddress[] = []
     let governance: GovernanceWrapper
@@ -30,9 +30,9 @@ testWithAnvilL2(
       logMock.mockClear().mockImplementation()
       errorMock.mockClear().mockImplementation()
 
-      await deployMultiCall(web3, '0xcA11bde05977b3631167028862bE2a173976CA11')
+      await deployMultiCall(client, '0xcA11bde05977b3631167028862bE2a173976CA11')
 
-      accounts = (await web3.eth.getAccounts()) as StrongAddress[]
+      accounts = (await client.eth.getAccounts()) as StrongAddress[]
       kit.defaultAccount = accounts[0]
       governance = await kit.contracts.getGovernance()
       minDeposit = (await governance.minDeposit()).toFixed()
@@ -41,26 +41,26 @@ testWithAnvilL2(
         .propose(proposal, 'URL')
         .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
       const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
-      await timeTravel(dequeueFrequency + 1, web3)
+      await timeTravel(dequeueFrequency + 1, client)
       await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
     })
 
     test('can withdraw', async () => {
       const balanceBefore = await kit.connection.getBalance(accounts[0])
 
-      await testLocallyWithWeb3Node(Withdraw, ['--from', accounts[0]], web3)
+      await testLocallyWithWeb3Node(Withdraw, ['--from', accounts[0]], client)
 
       const balanceAfter = await kit.connection.getBalance(accounts[0])
-      const latestTransactionReceipt = await web3.eth.getTransactionReceipt(
-        (await web3.eth.getBlock('latest')).transactions[0]
+      const latestTransactionReceipt = await client.eth.getTransactionReceipt(
+        (await client.eth.getBlock('latest')).transactions[0] as string
       )
 
       // Safety check if the latest transaction was originated by expected account
-      expect(latestTransactionReceipt.from.toLowerCase()).toEqual(accounts[0].toLowerCase())
+      expect(latestTransactionReceipt!.from.toLowerCase()).toEqual(accounts[0].toLowerCase())
 
       const difference = new BigNumber(balanceAfter)
         .minus(balanceBefore)
-        .plus(latestTransactionReceipt.effectiveGasPrice * latestTransactionReceipt.gasUsed)
+        .plus(latestTransactionReceipt!.effectiveGasPrice! * latestTransactionReceipt!.gasUsed)
 
       expect(difference.toFixed()).toEqual(minDeposit)
 
@@ -95,7 +95,7 @@ testWithAnvilL2(
         multisigAddress = await createMultisig(kit, [multisigOwner], 1, 1)
 
         await withImpersonatedAccount(
-          web3,
+          client,
           multisigAddress,
           async () => {
             await governance
@@ -107,11 +107,11 @@ testWithAnvilL2(
         )
 
         // Zero out the balance for easier testing
-        await setBalance(web3, multisigAddress, 0)
+        await setBalance(client, multisigAddress, 0)
 
         // Dequeue so the proposal can be refunded
         const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
-        await timeTravel(dequeueFrequency + 1, web3)
+        await timeTravel(dequeueFrequency + 1, client)
         await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
       })
 
@@ -122,7 +122,7 @@ testWithAnvilL2(
         await testLocallyWithWeb3Node(
           Withdraw,
           ['--useMultiSig', '--for', multisigAddress, '--from', multisigOwner],
-          web3
+          client
         )
 
         // After withdrawing the refunded deposit should be the minDeposit (as we zeroed out the balance before)
@@ -170,7 +170,7 @@ testWithAnvilL2(
           testLocallyWithWeb3Node(
             Withdraw,
             ['--useMultiSig', '--for', multisigAddress, '--from', otherAccount],
-            web3
+            client
           )
         ).rejects.toMatchInlineSnapshot(`[Error: Some checks didn't pass!]`)
 
@@ -199,10 +199,10 @@ testWithAnvilL2(
       let owners: StrongAddress[]
 
       beforeEach(async () => {
-        await setupSafeContracts(web3)
+        await setupSafeContracts(client)
 
         owners = [
-          (await web3.eth.getAccounts())[0] as StrongAddress,
+          (await client.eth.getAccounts())[0] as StrongAddress,
           '0x6C666E57A5E8715cFE93f92790f98c4dFf7b69e2',
         ]
         const safeAccountConfig = {
@@ -215,11 +215,11 @@ testWithAnvilL2(
         }
         const protocolKit = await Safe.init({
           predictedSafe: predictSafe,
-          provider: (web3.currentProvider as any as CeloProvider).toEip1193Provider(),
+          provider: (client.currentProvider as any as CeloProvider).toEip1193Provider(),
           signer: owners[0],
         })
         const deploymentTransaction = await protocolKit.createSafeDeploymentTransaction()
-        const receipt = await web3.eth.sendTransaction({
+        const receipt = await client.eth.sendTransaction({
           from: owners[0],
           ...deploymentTransaction,
         })
@@ -230,12 +230,12 @@ testWithAnvilL2(
         await protocolKit.connect({ safeAddress })
 
         const balance = new BigNumber(minDeposit).multipliedBy(2)
-        await setBalance(web3, safeAddress, balance)
+        await setBalance(client, safeAddress, balance)
         for (const owner of owners) {
-          await setBalance(web3, owner, balance)
+          await setBalance(client, owner, balance)
         }
 
-        await withImpersonatedAccount(web3, safeAddress, async () => {
+        await withImpersonatedAccount(client, safeAddress, async () => {
           await governance
             .propose(await new ProposalBuilder(kit).build(), 'http://example.com/proposal.json')
             .sendAndWaitForReceipt({ from: safeAddress, value: minDeposit })
@@ -243,7 +243,7 @@ testWithAnvilL2(
 
         // Dequeue so the proposal can be refunded
         const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
-        await timeTravel(dequeueFrequency + 1, web3)
+        await timeTravel(dequeueFrequency + 1, client)
         await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
       })
 
@@ -252,11 +252,11 @@ testWithAnvilL2(
         const amountBeforeRefund = await kit.connection.getBalance(safeAddress)
 
         for (const owner of owners) {
-          await withImpersonatedAccount(web3, owner, async () => {
+          await withImpersonatedAccount(client, owner, async () => {
             await testLocallyWithWeb3Node(
               Withdraw,
               ['--from', owner, '--useSafe', '--safeAddress', safeAddress],
-              web3
+              client
             )
           })
           if (owner !== owners.at(-1)) {

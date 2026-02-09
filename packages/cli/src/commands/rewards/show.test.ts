@@ -14,7 +14,7 @@ import Show from './show'
 process.env.NO_SYNCCHECK = 'true'
 const KNOWN_DEVCHAIN_VALIDATOR = '0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f'
 
-testWithAnvilL2('rewards:show cmd', (web3: any) => {
+testWithAnvilL2('rewards:show cmd', (client) => {
   let kit: ContractKit
   let accounts: string[]
   const writeMock = jest.spyOn(ux.write, 'stdout')
@@ -22,17 +22,17 @@ testWithAnvilL2('rewards:show cmd', (web3: any) => {
   const infoMock = jest.spyOn(console, 'info')
 
   beforeEach(async () => {
-    kit = newKitFromWeb3(web3)
-    accounts = await web3.eth.getAccounts()
+    kit = newKitFromWeb3(client)
+    accounts = await client.eth.getAccounts()
     const epochManager = await kit.contracts.getEpochManager()
-    await timeTravel((await epochManager.epochDuration()) + 1, web3)
-    await testLocallyWithWeb3Node(Switch, ['--from', accounts[0]], web3)
+    await timeTravel((await epochManager.epochDuration()) + 1, client)
+    await testLocallyWithWeb3Node(Switch, ['--from', accounts[0]], client)
     jest.clearAllMocks()
   })
 
   describe('no arguments', () => {
     test('default', async () => {
-      await expect(testLocallyWithWeb3Node(Show, [], web3)).resolves.toBeUndefined()
+      await expect(testLocallyWithWeb3Node(Show, [], client)).resolves.toBeUndefined()
       expect(stripAnsiCodesFromNestedArray(infoMock.mock.calls)).toMatchInlineSnapshot(`
         [
           [
@@ -48,7 +48,7 @@ testWithAnvilL2('rewards:show cmd', (web3: any) => {
         .mockImplementationOnce(async () => {
           throw new Error('test missing trie node')
         })
-      await expect(testLocallyWithWeb3Node(Show, [], web3)).rejects.toMatchInlineSnapshot(`
+      await expect(testLocallyWithWeb3Node(Show, [], client)).rejects.toMatchInlineSnapshot(`
         [Error: Exact voter information is available only for 1024 blocks after each epoch.
         Supply --estimate to estimate rewards based on current votes, or use an archive node.]
       `)
@@ -61,7 +61,7 @@ testWithAnvilL2('rewards:show cmd', (web3: any) => {
         testLocallyWithWeb3Node(
           Show,
           ['--validator', '0x1234567890123456789012345678901234567890'],
-          web3
+          client
         )
       ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
@@ -77,7 +77,7 @@ testWithAnvilL2('rewards:show cmd', (web3: any) => {
     })
 
     test('valid', async () => {
-      await testLocallyWithWeb3Node(Show, ['--validator', KNOWN_DEVCHAIN_VALIDATOR], web3)
+      await testLocallyWithWeb3Node(Show, ['--validator', KNOWN_DEVCHAIN_VALIDATOR], client)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [
           [
@@ -147,7 +147,7 @@ testWithAnvilL2('rewards:show cmd', (web3: any) => {
         },
       ])
 
-      await testLocallyWithWeb3Node(Show, ['--validator', KNOWN_DEVCHAIN_VALIDATOR], web3)
+      await testLocallyWithWeb3Node(Show, ['--validator', KNOWN_DEVCHAIN_VALIDATOR], client)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [
           [
@@ -196,7 +196,7 @@ testWithAnvilL2('rewards:show cmd', (web3: any) => {
         testLocallyWithWeb3Node(
           Show,
           ['--voter', '0x1234567890123456789012345678901234567890'],
-          web3
+          client
         )
       ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
@@ -213,7 +213,7 @@ testWithAnvilL2('rewards:show cmd', (web3: any) => {
     test('valid', async () => {
       await registerAccount(kit, accounts[0])
       await expect(
-        testLocallyWithWeb3Node(Show, ['--voter', accounts[0], '--estimate'], web3)
+        testLocallyWithWeb3Node(Show, ['--voter', accounts[0], '--estimate'], client)
       ).resolves.toMatchInlineSnapshot(`undefined`)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [

@@ -1,4 +1,5 @@
 import { StrongAddress } from '@celo/base'
+import { Web3 } from '@celo/connect'
 import { ContractKit, StableToken } from '@celo/contractkit'
 import {
   DEFAULT_OWNER_ADDRESS,
@@ -164,9 +165,9 @@ export async function setupValidatorAndAddToGroup(
   })
 }
 // you MUST call clearMock after using this function!
-export async function mockTimeForwardBy(seconds: number, web3: any) {
+export async function mockTimeForwardBy(seconds: number, client: Web3) {
   const now = Date.now()
-  await timeTravel(seconds, web3)
+  await timeTravel(seconds, client)
   const spy = jest.spyOn(global.Date, 'now').mockImplementation(() => now + seconds * 1000)
 
   console.warn('mockTimeForwardBy', seconds, 'seconds', 'call clearMock after using this function')

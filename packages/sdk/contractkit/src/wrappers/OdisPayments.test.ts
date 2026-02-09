@@ -6,14 +6,14 @@ import { topUpWithToken } from '../test-utils/utils'
 import { OdisPaymentsWrapper } from './OdisPayments'
 import { StableTokenWrapper } from './StableTokenWrapper'
 
-testWithAnvilL2('OdisPayments Wrapper', (web3) => {
-  const kit = newKitFromWeb3(web3)
+testWithAnvilL2('OdisPayments Wrapper', (client) => {
+  const kit = newKitFromWeb3(client)
   let accounts: StrongAddress[] = []
   let odisPayments: OdisPaymentsWrapper
   let stableToken: StableTokenWrapper
 
   beforeAll(async () => {
-    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
+    accounts = (await client.eth.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
     odisPayments = await kit.contracts.getOdisPayments()
     stableToken = await kit.contracts.getStableToken(StableToken.cUSD)

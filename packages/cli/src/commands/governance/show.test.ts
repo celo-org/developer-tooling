@@ -10,7 +10,7 @@ import Show from './show'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:show cmd', (web3: any) => {
+testWithAnvilL2('governance:show cmd', (client) => {
   const PROPOSAL_TRANSACTIONS = [
     {
       to: '0x4200000000000000000000000000000000000018',
@@ -33,9 +33,9 @@ testWithAnvilL2('governance:show cmd', (web3: any) => {
   })
 
   it('shows a proposal in "Referendum" stage', async () => {
-    const kit = newKitFromWeb3(web3)
+    const kit = newKitFromWeb3(client)
     const governanceWrapper = await kit.contracts.getGovernance()
-    const [proposer, voter] = await web3.eth.getAccounts()
+    const [proposer, voter] = await client.eth.getAccounts()
     const minDeposit = (await governanceWrapper.minDeposit()).toFixed()
     const logMock = jest.spyOn(console, 'log')
     const dequeueFrequency = (await governanceWrapper.dequeueFrequency()).toNumber()
@@ -51,7 +51,7 @@ testWithAnvilL2('governance:show cmd', (web3: any) => {
     await accountWrapper.createAccount().sendAndWaitForReceipt({ from: voter })
     await lockedGoldWrapper.lock().sendAndWaitForReceipt({ from: voter, value: minDeposit })
 
-    await timeTravel(dequeueFrequency + 1, web3)
+    await timeTravel(dequeueFrequency + 1, client)
 
     await governanceWrapper.dequeueProposalsIfReady().sendAndWaitForReceipt({
       from: proposer,
@@ -59,7 +59,7 @@ testWithAnvilL2('governance:show cmd', (web3: any) => {
 
     await (await governanceWrapper.vote(proposalId, 'Yes')).sendAndWaitForReceipt({ from: voter })
 
-    await testLocallyWithWeb3Node(Show, ['--proposalID', proposalId.toString()], web3)
+    await testLocallyWithWeb3Node(Show, ['--proposalID', proposalId.toString()], client)
 
     const schedule = await governanceWrapper.proposalSchedule(proposalId)
     const timestamp = await (await governanceWrapper.getProposalMetadata(proposalId)).timestamp

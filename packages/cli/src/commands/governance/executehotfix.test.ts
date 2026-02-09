@@ -22,7 +22,7 @@ import PrepareHotfix from './preparehotfix'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:executehotfix cmd', (web3: any) => {
+testWithAnvilL2('governance:executehotfix cmd', (client) => {
   const HOTFIX_HASH = '0x8ad3719bb2577b277bcafc1f00ac2f1c3fa5e565173303684d0a8d4f3661680c'
   const HOTFIX_BUFFER = hexToBuffer(HOTFIX_HASH)
   const HOTFIX_TRANSACTION_TEST_KEY = '3'
@@ -74,23 +74,23 @@ testWithAnvilL2('governance:executehotfix cmd', (web3: any) => {
   it(
     'should execute a hotfix successfuly',
     async () => {
-      const kit = newKitFromWeb3(web3)
+      const kit = newKitFromWeb3(client)
       const governanceWrapper = await kit.contracts.getGovernance()
-      const [approverAccount, securityCouncilAccount] = await web3.eth.getAccounts()
+      const [approverAccount, securityCouncilAccount] = await client.eth.getAccounts()
       const logMock = jest.spyOn(console, 'log')
 
-      await setCode(web3, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
+      await setCode(client, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
 
       // send some funds to DEFAULT_OWNER_ADDRESS to execute transactions
       await (
         await kit.sendTransaction({
           to: DEFAULT_OWNER_ADDRESS,
           from: approverAccount,
-          value: web3.utils.toWei('1', 'ether'),
+          value: client.utils.toWei('1', 'ether'),
         })
       ).waitReceipt()
 
-      await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
+      await withImpersonatedAccount(client, DEFAULT_OWNER_ADDRESS, async () => {
         // setHotfixExecutionTimeWindow to EXECUTION_TIME_LIMIT (86400)
         await (
           await kit.sendTransaction({
@@ -126,22 +126,22 @@ testWithAnvilL2('governance:executehotfix cmd', (web3: any) => {
       await testLocallyWithWeb3Node(
         Approve,
         ['--hotfix', HOTFIX_HASH, '--from', approverAccount],
-        web3
+        client
       )
 
       await testLocallyWithWeb3Node(
         Approve,
         ['--hotfix', HOTFIX_HASH, '--from', securityCouncilAccount, '--type', 'securityCouncil'],
-        web3
+        client
       )
 
       await testLocallyWithWeb3Node(
         PrepareHotfix,
         ['--hash', HOTFIX_HASH, '--from', approverAccount],
-        web3
+        client
       )
 
-      const testTransactionsContract = new web3.eth.Contract(
+      const testTransactionsContract = new client.eth.Contract(
         TEST_TRANSACTIONS_ABI,
         PROXY_ADMIN_ADDRESS
       )
@@ -163,7 +163,7 @@ testWithAnvilL2('governance:executehotfix cmd', (web3: any) => {
           '--salt',
           SALT,
         ],
-        web3
+        client
       )
 
       expect(
@@ -213,23 +213,23 @@ testWithAnvilL2('governance:executehotfix cmd', (web3: any) => {
   it(
     'fails if execution time limit has been reached',
     async () => {
-      const kit = newKitFromWeb3(web3)
+      const kit = newKitFromWeb3(client)
       const governanceWrapper = await kit.contracts.getGovernance()
-      const [approverAccount, securityCouncilAccount] = await web3.eth.getAccounts()
+      const [approverAccount, securityCouncilAccount] = await client.eth.getAccounts()
       const logMock = jest.spyOn(console, 'log')
 
-      await setCode(web3, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
+      await setCode(client, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
 
       // send some funds to DEFAULT_OWNER_ADDRESS to execute transactions
       await (
         await kit.sendTransaction({
           to: DEFAULT_OWNER_ADDRESS,
           from: approverAccount,
-          value: web3.utils.toWei('1', 'ether'),
+          value: client.utils.toWei('1', 'ether'),
         })
       ).waitReceipt()
 
-      await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
+      await withImpersonatedAccount(client, DEFAULT_OWNER_ADDRESS, async () => {
         // setHotfixExecutionTimeWindow to 1 second
         await (
           await kit.sendTransaction({
@@ -265,22 +265,22 @@ testWithAnvilL2('governance:executehotfix cmd', (web3: any) => {
       await testLocallyWithWeb3Node(
         Approve,
         ['--hotfix', HOTFIX_HASH, '--from', approverAccount],
-        web3
+        client
       )
 
       await testLocallyWithWeb3Node(
         Approve,
         ['--hotfix', HOTFIX_HASH, '--from', securityCouncilAccount, '--type', 'securityCouncil'],
-        web3
+        client
       )
 
       await testLocallyWithWeb3Node(
         PrepareHotfix,
         ['--hash', HOTFIX_HASH, '--from', approverAccount],
-        web3
+        client
       )
 
-      const testTransactionsContract = new web3.eth.Contract(
+      const testTransactionsContract = new client.eth.Contract(
         TEST_TRANSACTIONS_ABI,
         PROXY_ADMIN_ADDRESS
       )
@@ -298,7 +298,7 @@ testWithAnvilL2('governance:executehotfix cmd', (web3: any) => {
         .spyOn(global.Date, 'now')
         .mockImplementation(() => timestampAfterExecutionLimit.multipliedBy(1000).toNumber())
 
-      await setNextBlockTimestamp(web3, timestampAfterExecutionLimit.toNumber())
+      await setNextBlockTimestamp(client, timestampAfterExecutionLimit.toNumber())
 
       logMock.mockClear()
 
@@ -313,7 +313,7 @@ testWithAnvilL2('governance:executehotfix cmd', (web3: any) => {
             '--salt',
             SALT,
           ],
-          web3
+          client
         )
       ).rejects.toThrow("Some checks didn't pass!")
 

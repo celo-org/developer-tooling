@@ -1,6 +1,13 @@
 // tslint:disable: ordered-imports
 import { StrongAddress } from '@celo/base'
-import { CeloTx, CeloTxObject, Connection, ReadOnlyWallet, TransactionResult } from '@celo/connect'
+import {
+  CeloTx,
+  CeloTxObject,
+  Connection,
+  ReadOnlyWallet,
+  TransactionResult,
+  Web3,
+} from '@celo/connect'
 import { EIP712TypedData } from '@celo/utils/lib/sign-typed-data-utils'
 import { Signature } from '@celo/utils/lib/signatureUtils'
 import { LocalWallet } from '@celo/wallet-local'
@@ -51,9 +58,12 @@ export function newKitWithApiKey(url: string, apiKey: string, wallet?: ReadOnlyW
 
 /**
  * Creates a new instance of the `ContractKit` with a web3 instance
- * @param web3 Web3 instance
+ * @param web3 – a {@link Web3} shim, a raw Provider, or an object with `currentProvider`
  */
-export function newKitFromWeb3(web3: any, wallet: ReadOnlyWallet = new LocalWallet()) {
+export function newKitFromWeb3(
+  web3: Web3 | { currentProvider: any } | any,
+  wallet: ReadOnlyWallet = new LocalWallet()
+) {
   ensureCurrentProvider(web3)
   return new ContractKit(new Connection(web3, wallet))
 }

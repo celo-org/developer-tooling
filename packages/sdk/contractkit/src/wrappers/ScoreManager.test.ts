@@ -3,8 +3,8 @@ import BigNumber from 'bignumber.js'
 import { newKitFromWeb3 } from '../kit'
 import { valueToFixidityString } from './BaseWrapper'
 
-testWithAnvilL2('ScoreManager Wrapper', (web3) => {
-  const kit = newKitFromWeb3(web3)
+testWithAnvilL2('ScoreManager Wrapper', (client) => {
+  const kit = newKitFromWeb3(client)
 
   it('gets validator score', async () => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
@@ -17,7 +17,7 @@ testWithAnvilL2('ScoreManager Wrapper', (web3) => {
     ).toMatchInlineSnapshot(`"1"`)
 
     await asCoreContractsOwner(
-      web3,
+      client,
       async (from) => {
         const scoreManagerContract = await kit._web3Contracts.getScoreManager()
 
@@ -29,7 +29,7 @@ testWithAnvilL2('ScoreManager Wrapper', (web3) => {
           )
           .send({ from })
       },
-      new BigNumber(web3.utils.toWei('1', 'ether'))
+      new BigNumber(client.utils.toWei('1', 'ether'))
     )
 
     // should return the new score
@@ -45,7 +45,7 @@ testWithAnvilL2('ScoreManager Wrapper', (web3) => {
     expect(await scoreManagerWrapper.getGroupScore(GROUP_ADDRESSES[0])).toMatchInlineSnapshot(`"1"`)
 
     await asCoreContractsOwner(
-      web3,
+      client,
       async (from) => {
         const scoreManagerContract = await kit._web3Contracts.getScoreManager()
 
@@ -54,7 +54,7 @@ testWithAnvilL2('ScoreManager Wrapper', (web3) => {
           .setGroupScore(GROUP_ADDRESSES[0], valueToFixidityString(new BigNumber(0.99)))
           .send({ from })
       },
-      new BigNumber(web3.utils.toWei('1', 'ether'))
+      new BigNumber(client.utils.toWei('1', 'ether'))
     )
 
     // should return the new score

@@ -12,9 +12,9 @@ import Upvote from './upvote'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:upvote cmd', (web3: any) => {
+testWithAnvilL2('governance:upvote cmd', (client) => {
   let minDeposit: string
-  const kit = newKitFromWeb3(web3)
+  const kit = newKitFromWeb3(client)
   const proposalID = new BigNumber(1)
   const proposalID2 = new BigNumber(2)
   const proposalID3 = new BigNumber(3)
@@ -25,7 +25,7 @@ testWithAnvilL2('governance:upvote cmd', (web3: any) => {
   let governance: GovernanceWrapper
 
   beforeEach(async () => {
-    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
+    accounts = (await client.eth.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
     governance = await kit.contracts.getGovernance()
     minDeposit = (await governance.minDeposit()).toFixed()
@@ -34,14 +34,14 @@ testWithAnvilL2('governance:upvote cmd', (web3: any) => {
     // If the devchain is published less than dequeueFrequency ago, the tests
     // will fail, so we need to make sure that by calling timeTravel() we will
     // hit the next dequeue
-    await timeTravel(dequeueFrequency, web3)
+    await timeTravel(dequeueFrequency, client)
 
     await governance
       .propose([], 'URL')
       .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
     // this will reset lastDequeue to now
     // there is 3 concurrent proposals possible to be dequeued
-    await testLocallyWithWeb3Node(Dequeue, ['--from', accounts[0]], web3)
+    await testLocallyWithWeb3Node(Dequeue, ['--from', accounts[0]], client)
     await governance
       .propose([], 'URL2')
       .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
@@ -55,16 +55,16 @@ testWithAnvilL2('governance:upvote cmd', (web3: any) => {
       .propose([], 'URL5')
       .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
 
-    await timeTravel(dequeueFrequency, web3)
-    await testLocallyWithWeb3Node(Register, ['--from', accounts[0]], web3)
-    await testLocallyWithWeb3Node(Lock, ['--from', accounts[0], '--value', '100'], web3)
+    await timeTravel(dequeueFrequency, client)
+    await testLocallyWithWeb3Node(Register, ['--from', accounts[0]], client)
+    await testLocallyWithWeb3Node(Lock, ['--from', accounts[0], '--value', '100'], client)
   })
 
   test('will dequeue proposal if ready', async () => {
     await testLocallyWithWeb3Node(
       Upvote,
       ['--proposalID', proposalID2.toString(10), '--from', accounts[0]],
-      web3
+      client
     )
 
     const queue = await governance.getQueue()
@@ -78,7 +78,7 @@ testWithAnvilL2('governance:upvote cmd', (web3: any) => {
     await testLocallyWithWeb3Node(
       Upvote,
       ['--proposalID', proposalID5.toString(10), '--from', accounts[0]],
-      web3
+      client
     )
 
     const queue = await governance.getQueue()

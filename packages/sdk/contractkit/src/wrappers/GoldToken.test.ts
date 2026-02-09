@@ -7,19 +7,19 @@ import { GoldTokenWrapper } from './GoldTokenWrapper'
 // TODO checking for account balance directly won't work because of missing transfer precompile
 // instead we can check for the Transfer event instead and/or lowered allowance value (they both
 // happen after the call to transfer precompile)
-testWithAnvilL2('GoldToken Wrapper', (web3) => {
-  const ONE_GOLD = web3.utils.toWei('1', 'ether')
+testWithAnvilL2('GoldToken Wrapper', (client) => {
+  const ONE_GOLD = client.utils.toWei('1', 'ether')
 
-  const kit = newKitFromWeb3(web3)
+  const kit = newKitFromWeb3(client)
   let accounts: StrongAddress[] = []
   let goldToken: GoldTokenWrapper
   let goldTokenContract: GoldToken
 
   beforeAll(async () => {
-    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
+    accounts = (await client.eth.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
     goldToken = await kit.contracts.getGoldToken()
-    goldTokenContract = newGoldToken(web3, goldToken.address)
+    goldTokenContract = newGoldToken(client, goldToken.address)
   })
 
   it('checks balance', () => expect(goldToken.balanceOf(accounts[0])).resolves.toBeBigNumber())

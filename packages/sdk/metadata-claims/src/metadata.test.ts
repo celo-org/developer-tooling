@@ -7,8 +7,8 @@ import { Claim, createNameClaim, createRpcUrlClaim } from './claim'
 import { ClaimTypes, IdentityMetadataWrapper } from './metadata'
 import { now } from './types'
 
-testWithAnvilL2('Metadata', (web3) => {
-  const kit = newKitFromWeb3(web3)
+testWithAnvilL2('Metadata', (client) => {
+  const kit = newKitFromWeb3(client)
   const address = ACCOUNT_ADDRESSES[0]
   const otherAddress = ACCOUNT_ADDRESSES[1]
 

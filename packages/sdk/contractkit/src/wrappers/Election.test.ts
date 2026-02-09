@@ -16,15 +16,15 @@ const minLockedGoldValue = '10000000000000000000000' // 10k gold
 
 jest.setTimeout(20000)
 
-testWithAnvilL2('Election Wrapper', (web3) => {
-  const ZERO_GOLD = new BigNumber(web3.utils.toWei('0', 'ether'))
-  const ONE_HUNDRED_GOLD = new BigNumber(web3.utils.toWei('100', 'ether'))
-  const ONE_HUNDRED_ONE_GOLD = new BigNumber(web3.utils.toWei('101', 'ether'))
-  const TWO_HUNDRED_GOLD = new BigNumber(web3.utils.toWei('200', 'ether'))
-  const TWO_HUNDRED_ONE_GOLD = new BigNumber(web3.utils.toWei('201', 'ether'))
-  const THREE_HUNDRED_GOLD = new BigNumber(web3.utils.toWei('300', 'ether'))
+testWithAnvilL2('Election Wrapper', (client) => {
+  const ZERO_GOLD = new BigNumber(client.utils.toWei('0', 'ether'))
+  const ONE_HUNDRED_GOLD = new BigNumber(client.utils.toWei('100', 'ether'))
+  const ONE_HUNDRED_ONE_GOLD = new BigNumber(client.utils.toWei('101', 'ether'))
+  const TWO_HUNDRED_GOLD = new BigNumber(client.utils.toWei('200', 'ether'))
+  const TWO_HUNDRED_ONE_GOLD = new BigNumber(client.utils.toWei('201', 'ether'))
+  const THREE_HUNDRED_GOLD = new BigNumber(client.utils.toWei('300', 'ether'))
   const GROUP_COMMISSION = new BigNumber(0.1)
-  const kit = newKitFromWeb3(web3)
+  const kit = newKitFromWeb3(client)
   let accounts: string[] = []
   let election: ElectionWrapper
   let accountsInstance: AccountsWrapper
@@ -87,7 +87,7 @@ testWithAnvilL2('Election Wrapper', (web3) => {
   const activateAndVote = async (groupAccount: string, userAccount: string, amount: BigNumber) => {
     await (await election.vote(groupAccount, amount)).sendAndWaitForReceipt({ from: userAccount })
     const epochDuraction = await kit.getEpochSize()
-    await timeTravel(epochDuraction + 1, web3)
+    await timeTravel(epochDuraction + 1, client)
     await startAndFinishEpochProcess(kit)
 
     const txList = await election.activate(userAccount)
@@ -155,7 +155,7 @@ testWithAnvilL2('Election Wrapper', (web3) => {
         })
         const epochDuraction = await kit.getEpochSize()
 
-        await timeTravel(epochDuraction + 1, web3)
+        await timeTravel(epochDuraction + 1, client)
 
         await startAndFinishEpochProcess(kit)
 

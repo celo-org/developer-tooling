@@ -18,27 +18,27 @@ import Withdraw from './withdraw'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('releasegold:withdraw cmd', (web3: any) => {
+testWithAnvilL2('releasegold:withdraw cmd', (client) => {
   let contractAddress: string
   let kit: ContractKit
 
   beforeEach(async () => {
-    const accounts = (await web3.eth.getAccounts()) as StrongAddress[]
-    kit = newKitFromWeb3(web3)
+    const accounts = (await client.eth.getAccounts()) as StrongAddress[]
+    kit = newKitFromWeb3(client)
 
     contractAddress = await deployReleaseGoldContract(
-      web3,
+      client,
       await createMultisig(kit, [accounts[0], accounts[1]] as StrongAddress[], 2, 2),
       accounts[1],
       accounts[0],
       accounts[2]
     )
-    await testLocallyWithWeb3Node(CreateAccount, ['--contract', contractAddress], web3)
+    await testLocallyWithWeb3Node(CreateAccount, ['--contract', contractAddress], client)
     // make the whole balance available for withdrawal
     await testLocallyWithWeb3Node(
       SetMaxDistribution,
       ['--contract', contractAddress, '--yesreally', '--distributionRatio', '1000'],
-      web3
+      client
     )
   })
 
@@ -46,14 +46,14 @@ testWithAnvilL2('releasegold:withdraw cmd', (web3: any) => {
     await testLocallyWithWeb3Node(
       SetLiquidityProvision,
       ['--contract', contractAddress, '--yesreally'],
-      web3
+      client
     )
     // Based on the release schedule, 3 months needs to pass
-    await timeTravel(MONTH * 3 + DAY, web3)
+    await timeTravel(MONTH * 3 + DAY, client)
     const withdrawalAmount = '10000000000000000000'
     const releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
-      newReleaseGold(web3, contractAddress),
+      newReleaseGold(client, contractAddress),
       kit.contracts
     )
     const beneficiary = await releaseGoldWrapper.getBeneficiary()
@@ -64,21 +64,21 @@ testWithAnvilL2('releasegold:withdraw cmd', (web3: any) => {
     await testLocallyWithWeb3Node(
       Withdraw,
       ['--contract', contractAddress, '--value', withdrawalAmount],
-      web3
+      client
     )
 
     const balanceAfter = (await kit.getTotalBalance(beneficiary)).CELO!
 
-    const latestTransactionReceipt = await web3.eth.getTransactionReceipt(
-      (await web3.eth.getBlock('latest')).transactions[0]
+    const latestTransactionReceipt = await client.eth.getTransactionReceipt(
+      (await client.eth.getBlock('latest')).transactions[0] as string
     )
 
     // Safety check if the latest transaction was originated by the beneficiary
-    expect(latestTransactionReceipt.from.toLowerCase()).toEqual(beneficiary.toLowerCase())
+    expect(latestTransactionReceipt!.from.toLowerCase()).toEqual(beneficiary.toLowerCase())
 
     const difference = new BigNumber(balanceAfter)
       .minus(balanceBefore)
-      .plus(latestTransactionReceipt.effectiveGasPrice * latestTransactionReceipt.gasUsed)
+      .plus(latestTransactionReceipt!.effectiveGasPrice! * latestTransactionReceipt!.gasUsed)
 
     expect(difference.toFixed()).toEqual(withdrawalAmount)
     expect((await releaseGoldWrapper.getTotalWithdrawn()).toFixed()).toEqual(withdrawalAmount)
@@ -89,15 +89,15 @@ testWithAnvilL2('releasegold:withdraw cmd', (web3: any) => {
     await testLocallyWithWeb3Node(
       SetLiquidityProvision,
       ['--contract', contractAddress, '--yesreally'],
-      web3
+      client
     )
     expect(spy).toHaveBeenCalledWith(
       expect.stringContaining('The liquidity provision has not already been set')
     )
-    await timeTravel(MONTH * 12 + DAY, web3)
+    await timeTravel(MONTH * 12 + DAY, client)
     const releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
-      newReleaseGold(web3, contractAddress),
+      newReleaseGold(client, contractAddress),
       kit.contracts
     )
     const beneficiary = await releaseGoldWrapper.getBeneficiary()
@@ -118,7 +118,7 @@ testWithAnvilL2('releasegold:withdraw cmd', (web3: any) => {
       testLocallyWithWeb3Node(
         Withdraw,
         ['--contract', contractAddress, '--value', remainingBalance.toString()],
-        web3
+        client
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
 
@@ -150,19 +150,19 @@ testWithAnvilL2('releasegold:withdraw cmd', (web3: any) => {
       testLocallyWithWeb3Node(
         RGTransferDollars,
         ['--contract', contractAddress, '--to', beneficiary, '--value', '100'],
-        web3
+        client
       )
     ).resolves.toBeUndefined()
     spy.mockClear()
 
     const totalWithdrawn = await releaseGoldWrapper.getTotalWithdrawn()
     expect(totalWithdrawn.toFixed()).toMatchInlineSnapshot(`"0"`)
-    await timeTravel(DAY * 31, web3)
+    await timeTravel(DAY * 31, client)
     await expect(
       testLocallyWithWeb3Node(
         Withdraw,
         ['--contract', contractAddress, '--value', remainingBalance.toString()],
-        web3
+        client
       )
     ).resolves.toBeUndefined()
     expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
@@ -202,7 +202,7 @@ testWithAnvilL2('releasegold:withdraw cmd', (web3: any) => {
 
     const destroyedContractAddress = await getContractFromEvent(
       'ReleaseGoldInstanceDestroyed(address,address)',
-      web3
+      client
     )
 
     expect(destroyedContractAddress).toBe(contractAddress)

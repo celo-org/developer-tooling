@@ -49,7 +49,7 @@ describe('multisig:propose cmd', () => {
   })
 })
 
-testWithAnvilL2('multisig:propose integration tests', (web3: any) => {
+testWithAnvilL2('multisig:propose integration tests', (client) => {
   let kit: ContractKit
   let accounts: StrongAddress[]
   let multisigAddress: StrongAddress
@@ -59,8 +59,8 @@ testWithAnvilL2('multisig:propose integration tests', (web3: any) => {
   let nonOwner: StrongAddress
 
   beforeAll(async () => {
-    kit = newKitFromWeb3(web3)
-    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
+    kit = newKitFromWeb3(client)
+    accounts = (await client.eth.getAccounts()) as StrongAddress[]
 
     // Set up test accounts
     owner1 = accounts[0]
@@ -102,7 +102,7 @@ testWithAnvilL2('multisig:propose integration tests', (web3: any) => {
       const result = await testLocallyWithWeb3Node(
         ProposeMultiSig,
         [multisigAddress, '--from', owner1, '--to', recipient, '--value', value],
-        web3
+        client
       )
       expectLogs(logMock).toMatchInlineSnapshot(`
         [
@@ -120,7 +120,7 @@ testWithAnvilL2('multisig:propose integration tests', (web3: any) => {
       const result = await testLocallyWithWeb3Node(
         ProposeMultiSig,
         [multisigAddress, '--from', owner2, '--to', recipient, '--data', data],
-        web3
+        client
       )
       expectLogs(logMock).toMatchInlineSnapshot(`
         [
@@ -139,7 +139,7 @@ testWithAnvilL2('multisig:propose integration tests', (web3: any) => {
       const result = await testLocallyWithWeb3Node(
         ProposeMultiSig,
         [multisigAddress, '--from', owner3, '--to', recipient, '--value', value, '--data', data],
-        web3
+        client
       )
       expectLogs(logMock).toMatchInlineSnapshot(`
         [
@@ -158,7 +158,7 @@ testWithAnvilL2('multisig:propose integration tests', (web3: any) => {
         testLocallyWithWeb3Node(
           ProposeMultiSig,
           [multisigAddress, '--from', nonOwner, '--to', recipient, '--value', value],
-          web3
+          client
         )
       ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     })
@@ -180,7 +180,7 @@ testWithAnvilL2('multisig:propose integration tests', (web3: any) => {
             value,
           ],
 
-          web3
+          client
         )
       ).rejects.toThrowErrorMatchingInlineSnapshot(`
         "The contract function "getOwners" returned no data ("0x").
@@ -215,7 +215,7 @@ testWithAnvilL2('multisig:propose integration tests', (web3: any) => {
             value,
           ],
 
-          web3
+          client
         )
       ).rejects.toThrowErrorMatchingInlineSnapshot(`
         "Parsing --to 

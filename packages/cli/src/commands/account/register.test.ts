@@ -5,24 +5,24 @@ import Register from './register'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('account:register cmd', (web3: any) => {
+testWithAnvilL2('account:register cmd', (client) => {
   test('can register account', async () => {
-    const accounts = await web3.eth.getAccounts()
+    const accounts = await client.eth.getAccounts()
 
     await testLocallyWithWeb3Node(
       Register,
       ['--from', accounts[0], '--name', 'Chapulin Colorado'],
-      web3
+      client
     )
 
-    const kit = newKitFromWeb3(web3)
+    const kit = newKitFromWeb3(client)
     const account = await kit.contracts.getAccounts()
 
     expect(await account.getName(accounts[0])).toMatchInlineSnapshot(`"Chapulin Colorado"`)
   })
 
   test('fails if from is missing', async () => {
-    await expect(testLocallyWithWeb3Node(Register, [], web3)).rejects.toThrow(
+    await expect(testLocallyWithWeb3Node(Register, [], client)).rejects.toThrow(
       'Missing required flag'
     )
   })

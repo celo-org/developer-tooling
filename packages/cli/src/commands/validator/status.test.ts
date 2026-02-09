@@ -9,7 +9,7 @@ process.env.NO_SYNCCHECK = 'true'
 
 const KNOWN_DEVCHAIN_VALIDATOR = '0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f'
 
-testWithAnvilL2('validator:status', (web3: any) => {
+testWithAnvilL2('validator:status', (client) => {
   const writeMock = jest.spyOn(ux.write, 'stdout')
   const logMock = jest.spyOn(console, 'log')
 
@@ -21,7 +21,7 @@ testWithAnvilL2('validator:status', (web3: any) => {
     await testLocallyWithWeb3Node(
       Status,
       ['--validator', KNOWN_DEVCHAIN_VALIDATOR, '--csv', '--start', '349'],
-      web3
+      client
     )
 
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
@@ -55,7 +55,7 @@ testWithAnvilL2('validator:status', (web3: any) => {
   })
 
   it('displays status for all validators', async () => {
-    await testLocallyWithWeb3Node(Status, ['--all', '--csv', '--start', '349'], web3)
+    await testLocallyWithWeb3Node(Status, ['--all', '--csv', '--start', '349'], client)
 
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`[]`)
     expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`
@@ -93,13 +93,13 @@ testWithAnvilL2('validator:status', (web3: any) => {
   })
 
   it('fails if start and end are in different epochs', async () => {
-    const [account] = await web3.eth.getAccounts()
-    const kit = newKitFromWeb3(web3)
+    const [account] = await client.eth.getAccounts()
+    const kit = newKitFromWeb3(client)
     const blockNumber = await kit.web3.eth.getBlockNumber()
     const epoch = await kit.getEpochNumberOfBlock(blockNumber)
     const firstBlockOfCurrentEpoch = await kit.getFirstBlockNumberForEpoch(epoch)
 
-    await testLocallyWithWeb3Node(Switch, ['--from', account], web3)
+    await testLocallyWithWeb3Node(Switch, ['--from', account], client)
 
     await expect(
       testLocallyWithWeb3Node(
@@ -110,7 +110,7 @@ testWithAnvilL2('validator:status', (web3: any) => {
           '--start',
           (firstBlockOfCurrentEpoch - 2).toString(),
         ],
-        web3
+        client
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Start and end blocks must be in the current epoch"`

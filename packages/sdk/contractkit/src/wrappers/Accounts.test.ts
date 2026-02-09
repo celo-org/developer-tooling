@@ -16,7 +16,7 @@ TEST NOTES:
 
 const minLockedGoldValue = '10000000000000000000000' // 10k gold
 
-testWithAnvilL2('Accounts Wrapper', (web3) => {
+testWithAnvilL2('Accounts Wrapper', (client) => {
   let kit: ContractKit
   let accounts: StrongAddress[] = []
   let accountsInstance: AccountsWrapper
@@ -32,7 +32,7 @@ testWithAnvilL2('Accounts Wrapper', (web3) => {
 
   const getParsedSignatureOfAddressForTest = (address: string, signer: string) => {
     return getParsedSignatureOfAddress(
-      web3.utils.soliditySha3,
+      client.utils.soliditySha3,
       kit.connection.sign,
       address,
       signer
@@ -40,7 +40,7 @@ testWithAnvilL2('Accounts Wrapper', (web3) => {
   }
 
   beforeAll(async () => {
-    kit = newKitFromWeb3(web3)
+    kit = newKitFromWeb3(client)
     accounts = await kit.connection.getAccounts()
     validators = await kit.contracts.getValidators()
     lockedGold = await kit.contracts.getLockedGold()

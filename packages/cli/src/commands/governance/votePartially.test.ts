@@ -14,16 +14,16 @@ import VotePartially from './votePartially'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:vote-partially cmd', (web3: any) => {
+testWithAnvilL2('governance:vote-partially cmd', (client) => {
   let minDeposit: string
-  const kit = newKitFromWeb3(web3)
+  const kit = newKitFromWeb3(client)
   const proposalID = new BigNumber(1)
 
   let accounts: StrongAddress[] = []
   let governance: GovernanceWrapper
 
   beforeEach(async () => {
-    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
+    accounts = (await client.eth.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
     governance = await kit.contracts.getGovernance()
     minDeposit = (await governance.minDeposit()).toFixed()
@@ -31,16 +31,16 @@ testWithAnvilL2('governance:vote-partially cmd', (web3: any) => {
       .propose([], 'URL')
       .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
     const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
-    await timeTravel(dequeueFrequency + 1, web3)
-    await testLocallyWithWeb3Node(Dequeue, ['--from', accounts[0]], web3)
+    await timeTravel(dequeueFrequency + 1, client)
+    await testLocallyWithWeb3Node(Dequeue, ['--from', accounts[0]], client)
     await changeMultiSigOwner(kit, accounts[0])
     await testLocallyWithWeb3Node(
       Approve,
       ['--from', accounts[0], '--proposalID', proposalID.toString(10), '--useMultiSig'],
-      web3
+      client
     )
-    await testLocallyWithWeb3Node(Register, ['--from', accounts[0]], web3)
-    await testLocallyWithWeb3Node(Lock, ['--from', accounts[0], '--value', '100'], web3)
+    await testLocallyWithWeb3Node(Register, ['--from', accounts[0]], client)
+    await testLocallyWithWeb3Node(Lock, ['--from', accounts[0], '--value', '100'], client)
   })
 
   test('can vote partially yes and no', async () => {
@@ -58,7 +58,7 @@ testWithAnvilL2('governance:vote-partially cmd', (web3: any) => {
         '--abstain',
         '0',
       ],
-      web3
+      client
     )
     const votes = await governance.getVotes(proposalID)
     expect(votes.Yes.toNumber()).toEqual(10)

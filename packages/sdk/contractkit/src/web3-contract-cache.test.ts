@@ -2,11 +2,11 @@ import { Connection } from '@celo/connect'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { AddressRegistry } from './address-registry'
 import { AllContracts } from './index'
-import { Web3ContractCache } from './web3-contract-cache'
+import { Web3ContractCache } from './client-contract-cache'
 
-testWithAnvilL2('web3-contract-cache', (web3: any) => {
+testWithAnvilL2('client-contract-cache', (client) => {
   function newWeb3ContractCache() {
-    const connection = new Connection(web3)
+    const connection = new Connection(client)
     const registry = new AddressRegistry(connection)
     const AnyContractAddress = '0xe832065fb5117dbddcb566ff7dc4340999583e38'
     jest.spyOn(registry, 'addressFor').mockResolvedValue(AnyContractAddress)

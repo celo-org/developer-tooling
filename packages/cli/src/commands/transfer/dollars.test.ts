@@ -17,13 +17,13 @@ process.env.NO_SYNCCHECK = 'true'
 // Lots of commands, sometimes times out
 jest.setTimeout(15000)
 
-testWithAnvilL2('transfer:dollars cmd', (web3: any) => {
+testWithAnvilL2('transfer:dollars cmd', (client) => {
   let accounts: string[] = []
   let kit: ContractKit
   let logMock: jest.SpyInstance
   beforeEach(async () => {
-    kit = newKitFromWeb3(web3)
-    accounts = await web3.eth.getAccounts()
+    kit = newKitFromWeb3(client)
+    accounts = await client.eth.getAccounts()
     logMock = jest.spyOn(console, 'log').mockImplementation(() => {
       // noop
     })
@@ -56,7 +56,7 @@ testWithAnvilL2('transfer:dollars cmd', (web3: any) => {
     await testLocallyWithWeb3Node(
       TransferCUSD,
       ['--from', accounts[0], '--to', accounts[1], '--value', amountToTransfer],
-      web3
+      client
     )
     // RG cUSD balance should match the amount sent
     const receiverBalance = await kit.getTotalBalance(accounts[1])
@@ -67,7 +67,7 @@ testWithAnvilL2('transfer:dollars cmd', (web3: any) => {
     await testLocallyWithWeb3Node(
       TransferCUSD,
       ['--from', accounts[1], '--to', accounts[0], '--value', amountToTransfer],
-      web3
+      client
     )
     const balanceAfter = await kit.getTotalBalance(accounts[0])
     expect(balanceBefore.cUSD).toEqual(balanceAfter.cUSD)
@@ -79,7 +79,7 @@ testWithAnvilL2('transfer:dollars cmd', (web3: any) => {
     await testLocallyWithWeb3Node(
       TransferCUSD,
       ['--from', accounts[0], '--to', accounts[1], '--value', balance.toFixed()],
-      web3
+      client
     )
     const balanceAfter = await cusdWrapper.balanceOf(accounts[0])
     expect(balanceAfter.toFixed()).toEqBigNumber('0')
@@ -114,7 +114,7 @@ testWithAnvilL2('transfer:dollars cmd', (web3: any) => {
               cusdAddress,
             ],
 
-            web3
+            client
           )
         ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
 
@@ -171,7 +171,7 @@ testWithAnvilL2('transfer:dollars cmd', (web3: any) => {
             '--gasCurrency',
             euroWrapper.address,
           ],
-          web3
+          client
         )
         const balanceAfter = await cusdWrapper.balanceOf(accounts[0])
         expect(balanceAfter.toFixed()).toEqBigNumber('0')
@@ -196,7 +196,7 @@ testWithAnvilL2('transfer:dollars cmd', (web3: any) => {
             '--comment',
             comment,
           ],
-          web3
+          client
         )
       ).resolves.toBeUndefined()
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
@@ -239,7 +239,7 @@ testWithAnvilL2('transfer:dollars cmd', (web3: any) => {
       testLocallyWithWeb3Node(
         TransferCUSD,
         ['--from', accounts[1], '--to', TEST_SANCTIONED_ADDRESS, '--value', '1'],
-        web3
+        client
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     expect(spy).toHaveBeenCalledWith(expect.stringContaining(COMPLIANT_ERROR_RESPONSE))

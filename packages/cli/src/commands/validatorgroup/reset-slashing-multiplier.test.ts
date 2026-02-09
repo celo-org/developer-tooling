@@ -8,20 +8,20 @@ import ResetSlashingMultiplier from './reset-slashing-multiplier'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validatorgroup:reset-slashing-multiplier cmd', (web3: any) => {
+testWithAnvilL2('validatorgroup:reset-slashing-multiplier cmd', (client) => {
   beforeEach(async () => {
-    const accounts = await web3.eth.getAccounts()
+    const accounts = await client.eth.getAccounts()
 
-    await testLocallyWithWeb3Node(AccountRegister, ['--from', accounts[0]], web3)
+    await testLocallyWithWeb3Node(AccountRegister, ['--from', accounts[0]], client)
     await testLocallyWithWeb3Node(
       Lock,
       ['--from', accounts[0], '--value', '10000000000000000000000'],
-      web3
+      client
     )
     await testLocallyWithWeb3Node(
       ValidatorGroupRegister,
       ['--from', accounts[0], '--commission', '0.2', '--yes'],
-      web3
+      client
     )
   })
   afterAll(() => {
@@ -32,9 +32,9 @@ testWithAnvilL2('validatorgroup:reset-slashing-multiplier cmd', (web3: any) => {
     const logSpy = jest.spyOn(console, 'log')
     const writeMock = jest.spyOn(ux.write, 'stdout')
 
-    const accounts = await web3.eth.getAccounts()
+    const accounts = await client.eth.getAccounts()
 
-    await testLocallyWithWeb3Node(ResetSlashingMultiplier, [accounts[0]], web3)
+    await testLocallyWithWeb3Node(ResetSlashingMultiplier, [accounts[0]], client)
 
     expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls)).toMatchInlineSnapshot(`
       [

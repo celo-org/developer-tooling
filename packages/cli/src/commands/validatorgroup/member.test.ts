@@ -12,7 +12,7 @@ import Member from './member'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validatorgroup:member cmd', (web3: any) => {
+testWithAnvilL2('validatorgroup:member cmd', (client) => {
   afterEach(() => {
     jest.clearAllMocks()
   })
@@ -22,8 +22,8 @@ testWithAnvilL2('validatorgroup:member cmd', (web3: any) => {
     let kit: ContractKit
     const logSpy = jest.spyOn(console, 'log').mockImplementation()
     beforeEach(async () => {
-      kit = newKitFromWeb3(web3)
-      const addresses = await web3.eth.getAccounts()
+      kit = newKitFromWeb3(client)
+      const addresses = await client.eth.getAccounts()
       groupAddress = addresses[0]
       validatorAddress = addresses[1]
       await setupGroup(kit, groupAddress)
@@ -34,7 +34,7 @@ testWithAnvilL2('validatorgroup:member cmd', (web3: any) => {
         await testLocallyWithWeb3Node(
           ValidatorAffiliate,
           [groupAddress, '--from', validatorAddress, '--yes'],
-          web3
+          client
         )
       })
       it('accepts a new member to the group', async () => {
@@ -43,7 +43,7 @@ testWithAnvilL2('validatorgroup:member cmd', (web3: any) => {
         await testLocallyWithWeb3Node(
           Member,
           ['--yes', '--from', groupAddress, '--accept', validatorAddress],
-          web3
+          client
         )
         expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`[]`)
         expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls)).toMatchInlineSnapshot(`
@@ -86,7 +86,7 @@ testWithAnvilL2('validatorgroup:member cmd', (web3: any) => {
         await testLocallyWithWeb3Node(
           Member,
           ['--yes', '--from', groupAddress, '--remove', validatorAddress],
-          web3
+          client
         )
         expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`[]`)
         expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls)).toMatchInlineSnapshot(`
@@ -123,7 +123,7 @@ testWithAnvilL2('validatorgroup:member cmd', (web3: any) => {
   describe('when --reorder called from the group signer', () => {
     it('orders member to new position in group rank', async () => {
       const logSpy = jest.spyOn(console, 'log').mockImplementation()
-      const kit = newKitFromWeb3(web3)
+      const kit = newKitFromWeb3(client)
 
       const ValidatorsWrapper = await kit.contracts.getValidators()
       const vgroups = await ValidatorsWrapper.getRegisteredValidatorGroups()
@@ -149,11 +149,11 @@ testWithAnvilL2('validatorgroup:member cmd', (web3: any) => {
       expect(validatorAddress).toBeDefined()
       const newPosition = '0'
 
-      await withImpersonatedAccount(web3, groupToMessWith.address, async () => {
+      await withImpersonatedAccount(client, groupToMessWith.address, async () => {
         await testLocallyWithWeb3Node(
           Member,
           [validatorAddress, '--from', groupToMessWith.address, '--reorder', newPosition],
-          web3
+          client
         )
       })
 

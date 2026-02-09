@@ -12,16 +12,16 @@ import Revoke from './revoke'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('releasegold:refund-and-finalize cmd', (web3: any) => {
+testWithAnvilL2('releasegold:refund-and-finalize cmd', (client) => {
   let contractAddress: any
   let kit: ContractKit
 
   beforeEach(async () => {
-    const accounts = (await web3.eth.getAccounts()) as StrongAddress[]
-    kit = newKitFromWeb3(web3)
+    const accounts = (await client.eth.getAccounts()) as StrongAddress[]
+    kit = newKitFromWeb3(client)
 
     contractAddress = await deployReleaseGoldContract(
-      web3,
+      client,
       await createMultisig(kit, [accounts[0], accounts[1]] as StrongAddress[], 2, 2),
       accounts[1],
       accounts[0],
@@ -30,15 +30,15 @@ testWithAnvilL2('releasegold:refund-and-finalize cmd', (web3: any) => {
   })
 
   test('can refund celo', async () => {
-    await testLocallyWithWeb3Node(Revoke, ['--contract', contractAddress, '--yesreally'], web3)
+    await testLocallyWithWeb3Node(Revoke, ['--contract', contractAddress, '--yesreally'], client)
     const releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
-      newReleaseGold(web3, contractAddress),
+      newReleaseGold(client, contractAddress),
       kit.contracts
     )
     const refundAddress = await releaseGoldWrapper.getRefundAddress()
     const balanceBefore = await kit.getTotalBalance(refundAddress)
-    await testLocallyWithWeb3Node(RefundAndFinalize, ['--contract', contractAddress], web3)
+    await testLocallyWithWeb3Node(RefundAndFinalize, ['--contract', contractAddress], client)
     const balanceAfter = await kit.getTotalBalance(refundAddress)
     expect(balanceBefore.CELO!.toNumber()).toBeLessThan(balanceAfter.CELO!.toNumber())
   })
@@ -46,22 +46,22 @@ testWithAnvilL2('releasegold:refund-and-finalize cmd', (web3: any) => {
   test('can finalize the contract', async () => {
     const releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
-      newReleaseGold(web3, contractAddress),
+      newReleaseGold(client, contractAddress),
       kit.contracts
     )
 
     expect(await releaseGoldWrapper.isRevoked()).toBe(false)
-    await testLocallyWithWeb3Node(Revoke, ['--contract', contractAddress, '--yesreally'], web3)
+    await testLocallyWithWeb3Node(Revoke, ['--contract', contractAddress, '--yesreally'], client)
     expect(await releaseGoldWrapper.isRevoked()).toBe(true)
 
     // Contract still should have some balance
     expect((await kit.getTotalBalance(contractAddress)).CELO).not.toEqBigNumber(0)
 
-    await testLocallyWithWeb3Node(RefundAndFinalize, ['--contract', contractAddress], web3)
+    await testLocallyWithWeb3Node(RefundAndFinalize, ['--contract', contractAddress], client)
 
     const destroyedContractAddress = await getContractFromEvent(
       'ReleaseGoldInstanceDestroyed(address,address)',
-      web3
+      client
     )
 
     expect(destroyedContractAddress).toBe(contractAddress)

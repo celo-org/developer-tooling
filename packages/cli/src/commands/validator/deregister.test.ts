@@ -22,7 +22,7 @@ import { default as ValidatorRegister } from './register'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validator:deregister', (web3: any) => {
+testWithAnvilL2('validator:deregister', (client) => {
   let account: string
   let ecdsaPublicKey: string
   let groupAddress: StrongAddress
@@ -35,30 +35,30 @@ testWithAnvilL2('validator:deregister', (web3: any) => {
     jest.spyOn(console, 'error').mockImplementation(() => {
       // noop
     })
-    const accounts = await web3.eth.getAccounts()
+    const accounts = await client.eth.getAccounts()
     account = accounts[0]
-    const kit = newKitFromWeb3(web3)
+    const kit = newKitFromWeb3(client)
     validatorContract = await kit.contracts.getValidators()
     const groups = await validatorContract.getRegisteredValidatorGroupsAddresses()
     groupAddress = groups[0] as StrongAddress
-    ecdsaPublicKey = await addressToPublicKey(account, web3.eth.sign)
-    await testLocallyWithWeb3Node(Register, ['--from', account], web3)
+    ecdsaPublicKey = await addressToPublicKey(account, client.eth.sign)
+    await testLocallyWithWeb3Node(Register, ['--from', account], client)
     await testLocallyWithWeb3Node(
       Lock,
       ['--from', account, '--value', '10000000000000000000000'],
-      web3
+      client
     )
     await testLocallyWithWeb3Node(
       ValidatorRegister,
       ['--from', account, '--ecdsaKey', ecdsaPublicKey, '--yes'],
-      web3
+      client
     )
     await testLocallyWithWeb3Node(
       ValidatorAffiliate,
       ['--from', account, groupAddress, '--yes'],
-      web3
+      client
     )
-    await asCoreContractsOwner(web3, async (ownerAddress) => {
+    await asCoreContractsOwner(client, async (ownerAddress) => {
       // @ts-expect-error (.contract)
       await validatorContract.contract.methods.setMaxGroupSize(5).send({ from: ownerAddress })
       // @ts-expect-error (.contract)
@@ -70,11 +70,11 @@ testWithAnvilL2('validator:deregister', (web3: any) => {
         .setGroupLockedGoldRequirements(2, 10000)
         .send({ from: ownerAddress })
     })
-    await withImpersonatedAccount(web3, groupAddress, async () => {
+    await withImpersonatedAccount(client, groupAddress, async () => {
       await testLocallyWithWeb3Node(
         ValidatorGroupMembers,
         [account, '--from', groupAddress, '--accept', '--yes'],
-        web3
+        client
       )
     })
   })
@@ -90,11 +90,11 @@ testWithAnvilL2('validator:deregister', (web3: any) => {
       // precondition
       const groupAtSettup = await validatorContract.getValidatorGroup(groupAddress, false)
       expect(groupAtSettup.members).toContain(account)
-      await withImpersonatedAccount(web3, groupAddress, async () => {
+      await withImpersonatedAccount(client, groupAddress, async () => {
         await testLocallyWithWeb3Node(
           ValidatorGroupMembers,
           [account, '--from', groupAddress, '--remove', '--yes'],
-          web3
+          client
         )
       })
 
@@ -102,7 +102,7 @@ testWithAnvilL2('validator:deregister', (web3: any) => {
       const { lastRemovedFromGroupTimestamp } =
         await validatorContract.getValidatorMembershipHistoryExtraData(account)
       // travel in the evm
-      await timeTravel(duration.multipliedBy(2).toNumber(), web3)
+      await timeTravel(duration.multipliedBy(2).toNumber(), client)
       // time travel in node land
       const jestTime = lastRemovedFromGroupTimestamp * 1000
       const futureTime = jestTime + duration.multipliedBy(2000).toNumber()
@@ -122,7 +122,7 @@ testWithAnvilL2('validator:deregister', (web3: any) => {
         duration.toNumber()
       )
       await expect(
-        testLocallyWithWeb3Node(ValidatorDeRegister, ['--from', account], web3)
+        testLocallyWithWeb3Node(ValidatorDeRegister, ['--from', account], client)
       ).resolves.toMatchInlineSnapshot(`undefined`)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
               [
@@ -174,7 +174,7 @@ testWithAnvilL2('validator:deregister', (web3: any) => {
       logMock.mockClear()
 
       await expect(
-        testLocallyWithWeb3Node(ValidatorDeRegister, ['--from', account], web3)
+        testLocallyWithWeb3Node(ValidatorDeRegister, ['--from', account], client)
       ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
 
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
@@ -206,7 +206,7 @@ testWithAnvilL2('validator:deregister', (web3: any) => {
   it(
     'succeeds if not a member of any group',
     async () => {
-      const [_, notAffiliatedValidator] = await web3.eth.getAccounts()
+      const [_, notAffiliatedValidator] = await client.eth.getAccounts()
       const groupAtSetup = await validatorContract.getValidatorGroup(groupAddress, false)
 
       // Sanity check
@@ -216,7 +216,7 @@ testWithAnvilL2('validator:deregister', (web3: any) => {
       await testLocallyWithWeb3Node(
         Lock,
         ['--from', notAffiliatedValidator, '--value', '10000000000000000000000'],
-        web3
+        client
       )
       await testLocallyWithWeb3Node(
         ValidatorRegister,
@@ -224,17 +224,17 @@ testWithAnvilL2('validator:deregister', (web3: any) => {
           '--from',
           notAffiliatedValidator,
           '--ecdsaKey',
-          await addressToPublicKey(notAffiliatedValidator, web3.eth.sign),
+          await addressToPublicKey(notAffiliatedValidator, client.eth.sign),
           '--yes',
         ],
-        web3
+        client
       )
 
       const { duration } = await validatorContract.getValidatorLockedGoldRequirements()
       const { lastRemovedFromGroupTimestamp } =
         await validatorContract.getValidatorMembershipHistoryExtraData(account)
       // travel in the evm
-      await timeTravel(duration.multipliedBy(2).toNumber(), web3)
+      await timeTravel(duration.multipliedBy(2).toNumber(), client)
       // time travel in node land
       const jestTime = lastRemovedFromGroupTimestamp * 1000
       const futureTime = jestTime + duration.multipliedBy(2000).toNumber()
@@ -243,7 +243,7 @@ testWithAnvilL2('validator:deregister', (web3: any) => {
       const logMock = jest.spyOn(console, 'log')
       logMock.mockClear()
 
-      await testLocallyWithWeb3Node(ValidatorDeRegister, ['--from', notAffiliatedValidator], web3)
+      await testLocallyWithWeb3Node(ValidatorDeRegister, ['--from', notAffiliatedValidator], client)
 
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [

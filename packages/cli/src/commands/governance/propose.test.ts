@@ -148,7 +148,7 @@ const structAbiDefinition = {
 
 testWithAnvilL2(
   'governance:propose cmd',
-  (web3: any) => {
+  (client) => {
     const TRANSACTION_FILE_PATH = 'governance-propose-l2.test.json'
 
     let governance: GovernanceWrapper
@@ -156,16 +156,16 @@ testWithAnvilL2(
     let goldTokenContract: GoldTokenWrapper['contract']
     let minDeposit: string
 
-    const kit = newKitFromWeb3(web3)
+    const kit = newKitFromWeb3(client)
 
     let accounts: StrongAddress[] = []
 
     beforeEach(async () => {
       // need to set multical deployment on the address it was found on alfajores
       // since this test impersonates the old alfajores chain id
-      await deployMultiCall(web3, '0xcA11bde05977b3631167028862bE2a173976CA11')
+      await deployMultiCall(client, '0xcA11bde05977b3631167028862bE2a173976CA11')
 
-      accounts = (await web3.eth.getAccounts()) as StrongAddress[]
+      accounts = (await client.eth.getAccounts()) as StrongAddress[]
       kit.defaultAccount = accounts[0]
       governance = await kit.contracts.getGovernance()
       goldToken = await kit.contracts.getGoldToken()
@@ -188,7 +188,7 @@ testWithAnvilL2(
           await kit.sendTransaction({
             to: governance.address,
             from: accounts[0],
-            value: web3.utils.toWei('1', 'ether'),
+            value: client.utils.toWei('1', 'ether'),
           })
         ).waitReceipt()
 
@@ -207,7 +207,7 @@ testWithAnvilL2(
             '--descriptionURL',
             'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
           ],
-          web3
+          client
         )
 
         const proposal = await governance.getProposal(1)
@@ -232,7 +232,7 @@ testWithAnvilL2(
           await kit.sendTransaction({
             from: accounts[0],
             to: governance.address,
-            value: web3.utils.toWei('1', 'ether'),
+            value: client.utils.toWei('1', 'ether'),
           })
         ).waitReceipt()
 
@@ -248,7 +248,7 @@ testWithAnvilL2(
           await kit.sendTransaction({
             from: accounts[2],
             to: multisigWithOneSigner,
-            value: web3.utils.toWei('20000', 'ether'), // 2x min deposit on Mainnet
+            value: client.utils.toWei('20000', 'ether'), // 2x min deposit on Mainnet
           })
         ).waitReceipt()
 
@@ -270,7 +270,7 @@ testWithAnvilL2(
             '--descriptionURL',
             'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
           ],
-          web3
+          client
         )
 
         const proposal = await governance.getProposal(1)
@@ -295,7 +295,7 @@ testWithAnvilL2(
           await kit.sendTransaction({
             to: governance.address,
             from: accounts[0],
-            value: web3.utils.toWei('1', 'ether'),
+            value: client.utils.toWei('1', 'ether'),
           })
         ).waitReceipt()
 
@@ -311,7 +311,7 @@ testWithAnvilL2(
           await kit.sendTransaction({
             from: accounts[2],
             to: multisigWithTwoSigners,
-            value: web3.utils.toWei('20000', 'ether'), // 2x min deposit on Mainnet
+            value: client.utils.toWei('20000', 'ether'), // 2x min deposit on Mainnet
           })
         ).waitReceipt()
 
@@ -334,7 +334,7 @@ testWithAnvilL2(
             '--descriptionURL',
             'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
           ],
-          web3
+          client
         )
 
         const proposalBetween = await governance.getProposal(1)
@@ -344,7 +344,7 @@ testWithAnvilL2(
         await testLocallyWithWeb3Node(
           Approve,
           ['--from', accounts[1], '--for', multisigWithTwoSigners, '--tx', '0'],
-          web3
+          client
         )
 
         const proposal = await governance.getProposal(1)
@@ -361,13 +361,13 @@ testWithAnvilL2(
 
     describe('with safe', () => {
       beforeEach(async () => {
-        await setupSafeContracts(web3)
+        await setupSafeContracts(client)
       })
 
       test(
         'will successfully create proposal based on Core contract (1 owner)',
         async () => {
-          const [owner1] = (await web3.eth.getAccounts()) as StrongAddress[]
+          const [owner1] = (await client.eth.getAccounts()) as StrongAddress[]
           const safeAccountConfig = {
             owners: [owner1],
             threshold: 1,
@@ -378,11 +378,11 @@ testWithAnvilL2(
           }
           const protocolKit = await Safe.init({
             predictedSafe: predictSafe,
-            provider: (web3.currentProvider as any as CeloProvider).toEip1193Provider(),
+            provider: (client.currentProvider as any as CeloProvider).toEip1193Provider(),
             signer: owner1,
           })
           const deploymentTransaction = await protocolKit.createSafeDeploymentTransaction()
-          const receipt = await web3.eth.sendTransaction({
+          const receipt = await client.eth.sendTransaction({
             from: owner1,
             ...deploymentTransaction,
           })
@@ -392,11 +392,11 @@ testWithAnvilL2(
           ) as StrongAddress
           await protocolKit.connect({ safeAddress })
 
-          const balance = BigInt(web3.utils.toWei('100', 'ether'))
-          await setBalance(web3, goldToken.address, balance)
-          await setBalance(web3, governance.address, balance)
-          await setBalance(web3, owner1, balance)
-          await setBalance(web3, safeAddress, balance)
+          const balance = BigInt(client.utils.toWei('100', 'ether'))
+          await setBalance(client, goldToken.address, balance)
+          await setBalance(client, governance.address, balance)
+          await setBalance(client, owner1, balance)
+          await setBalance(client, safeAddress, balance)
 
           const transactionsToBeSaved = JSON.stringify(transactions)
           fs.writeFileSync(TRANSACTION_FILE_PATH, transactionsToBeSaved, { flag: 'w' })
@@ -420,7 +420,7 @@ testWithAnvilL2(
               '--descriptionURL',
               'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
             ],
-            web3
+            client
           )
           const proposal = await governance.getProposal(1)
           expect(proposal.length).toEqual(transactions.length)
@@ -437,7 +437,7 @@ testWithAnvilL2(
       test(
         'will successfully create proposal based on Core contract (2 owners)',
         async () => {
-          const [owner1] = (await web3.eth.getAccounts()) as StrongAddress[]
+          const [owner1] = (await client.eth.getAccounts()) as StrongAddress[]
           const owner2 = '0x6C666E57A5E8715cFE93f92790f98c4dFf7b69e2'
           const safeAccountConfig = {
             owners: [owner1, owner2],
@@ -449,11 +449,11 @@ testWithAnvilL2(
           }
           const protocolKit = await Safe.init({
             predictedSafe: predictSafe,
-            provider: (web3.currentProvider as any as CeloProvider).toEip1193Provider(),
+            provider: (client.currentProvider as any as CeloProvider).toEip1193Provider(),
             signer: owner1,
           })
           const deploymentTransaction = await protocolKit.createSafeDeploymentTransaction()
-          const receipt = await web3.eth.sendTransaction({
+          const receipt = await client.eth.sendTransaction({
             from: owner1,
             ...deploymentTransaction,
           })
@@ -463,12 +463,12 @@ testWithAnvilL2(
           ) as StrongAddress
           await protocolKit.connect({ safeAddress })
 
-          const balance = BigInt(web3.utils.toWei('100', 'ether'))
-          await setBalance(web3, goldToken.address, balance)
-          await setBalance(web3, governance.address, balance)
-          await setBalance(web3, owner1, balance)
-          await setBalance(web3, owner2, balance)
-          await setBalance(web3, safeAddress, balance)
+          const balance = BigInt(client.utils.toWei('100', 'ether'))
+          await setBalance(client, goldToken.address, balance)
+          await setBalance(client, governance.address, balance)
+          await setBalance(client, owner1, balance)
+          await setBalance(client, owner2, balance)
+          await setBalance(client, safeAddress, balance)
 
           const transactionsToBeSaved = JSON.stringify(transactions)
           fs.writeFileSync(TRANSACTION_FILE_PATH, transactionsToBeSaved, { flag: 'w' })
@@ -492,12 +492,12 @@ testWithAnvilL2(
               '--descriptionURL',
               'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
             ],
-            web3
+            client
           )
           const proposalBefore2ndOwner = await governance.getProposal(1)
           expect(proposalBefore2ndOwner).toEqual([])
 
-          await withImpersonatedAccount(web3, owner2, async () => {
+          await withImpersonatedAccount(client, owner2, async () => {
             await testLocallyWithWeb3Node(
               Propose,
               [
@@ -513,7 +513,7 @@ testWithAnvilL2(
                 '--descriptionURL',
                 'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
               ],
-              web3
+              client
             )
           })
 
@@ -540,7 +540,7 @@ testWithAnvilL2(
           await kit.sendTransaction({
             to: governance.address,
             from: accounts[0],
-            value: web3.utils.toWei('1', 'ether'),
+            value: client.utils.toWei('1', 'ether'),
           })
         ).waitReceipt()
 
@@ -561,7 +561,7 @@ testWithAnvilL2(
             '--force',
             '--noInfo',
           ],
-          web3
+          client
         )
 
         const proposal = await governance.getProposal(1)
@@ -586,7 +586,7 @@ testWithAnvilL2(
           await kit.sendTransaction({
             to: governance.address,
             from: accounts[0],
-            value: web3.utils.toWei('1', 'ether'),
+            value: client.utils.toWei('1', 'ether'),
           })
         ).waitReceipt()
 
@@ -607,7 +607,7 @@ testWithAnvilL2(
             '--force',
             '--noInfo',
           ],
-          web3
+          client
         )
 
         const proposal = await governance.getProposal(1)
@@ -638,7 +638,7 @@ testWithAnvilL2(
               '--jsonTransactions',
               './exampleProposal.json',
             ],
-            web3
+            client
           )
         ).rejects.toThrow('Missing required flag descriptionURL')
       },
@@ -662,7 +662,7 @@ testWithAnvilL2(
               'https://github.com/suspicious-org/governance/blob/main/CGPs/cgp-123.md',
             ],
 
-            web3
+            client
           )
         ).rejects.toThrowErrorMatchingInlineSnapshot(`
           "Parsing --descriptionURL 
@@ -689,7 +689,7 @@ testWithAnvilL2(
               '--descriptionURL',
               'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
             ],
-            web3
+            client
           )
         ).resolves.toBe(undefined)
       },
@@ -713,7 +713,7 @@ testWithAnvilL2(
             '--descriptionURL',
             'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
           ],
-          web3
+          client
         )
         expect(spyStart).toHaveBeenCalledWith('Sending Transaction: proposeTx')
         expect(spyStop).toHaveBeenCalled()
@@ -739,7 +739,7 @@ testWithAnvilL2(
             '--descriptionURL',
             'https://github.com/celo-org/governance/blob/main/CGPs/cgp-123.md',
           ],
-          web3
+          client
         )
         expect(spyStart).toHaveBeenCalledWith('Sending Transaction: proposeTx')
         expect(spyStop).toHaveBeenCalled()
@@ -771,7 +771,7 @@ testWithAnvilL2(
               'https://github.com/celo-org/governance/blob/main/CGPs/cgp-404.md',
             ],
 
-            web3
+            client
           )
         ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
         expect(stripAnsiCodesFromNestedArray(mockLog.mock.calls)).toMatchInlineSnapshot(`
@@ -816,7 +816,7 @@ testWithAnvilL2(
               'https://github.com/celo-org/governance/blob/main/CGPs/cgp-error.md',
             ],
 
-            web3
+            client
           )
         ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
         const mockLog = jest.spyOn(console, 'log').mockImplementation(() => {})

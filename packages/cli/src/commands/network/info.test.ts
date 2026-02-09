@@ -6,23 +6,23 @@ import EpochsSwitch from '../epochs/switch'
 import Info from './info'
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('network:info', (web3) => {
+testWithAnvilL2('network:info', (client) => {
   beforeAll(async () => {
-    const kit = newKitFromWeb3(web3)
+    const kit = newKitFromWeb3(client)
     const epochManager = await kit.contracts.getEpochManager()
     const epochDuration = await epochManager.epochDuration()
-    const accounts = await web3.eth.getAccounts()
+    const accounts = await client.eth.getAccounts()
 
     // Switch epochs 3 times
     for (let i = 0; i < 3; i++) {
-      await timeTravel(epochDuration * 2, web3)
-      await testLocallyWithWeb3Node(EpochsSwitch, ['--from', accounts[0], '--delay', '1'], web3)
+      await timeTravel(epochDuration * 2, client)
+      await testLocallyWithWeb3Node(EpochsSwitch, ['--from', accounts[0], '--delay', '1'], client)
     }
   })
 
   it('runs for latest epoch', async () => {
     const spy = jest.spyOn(console, 'log')
-    await testLocallyWithWeb3Node(Info, [], web3)
+    await testLocallyWithWeb3Node(Info, [], client)
 
     expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
       [
@@ -39,7 +39,7 @@ testWithAnvilL2('network:info', (web3) => {
 
   it('runs for last 3 epochs', async () => {
     const spy = jest.spyOn(console, 'log')
-    await testLocallyWithWeb3Node(Info, ['--lastN', '3'], web3)
+    await testLocallyWithWeb3Node(Info, ['--lastN', '3'], client)
 
     expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
       [
@@ -65,7 +65,7 @@ testWithAnvilL2('network:info', (web3) => {
 
   it('runs for last 100 epochs, but displays only epoch that exist', async () => {
     const spy = jest.spyOn(console, 'log')
-    await testLocallyWithWeb3Node(Info, ['--lastN', '100'], web3)
+    await testLocallyWithWeb3Node(Info, ['--lastN', '100'], client)
 
     expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
       [

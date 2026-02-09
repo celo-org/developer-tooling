@@ -1,16 +1,17 @@
+import { Web3 } from '@celo/connect'
 import migrationOverride from './migration-override.json'
 import { jsonRpcCall } from './test-utils'
 
 export const NetworkConfig = migrationOverride
 
-export async function timeTravel(seconds: number, web3: any) {
-  await jsonRpcCall(web3, 'evm_increaseTime', [seconds])
-  await jsonRpcCall(web3, 'evm_mine', [])
+export async function timeTravel(seconds: number, client: Web3) {
+  await jsonRpcCall(client, 'evm_increaseTime', [seconds])
+  await jsonRpcCall(client, 'evm_mine', [])
 }
 
-export async function mineBlocks(blocks: number, web3: any) {
+export async function mineBlocks(blocks: number, client: Web3) {
   for (let i = 0; i < blocks; i++) {
-    await jsonRpcCall(web3, 'evm_mine', [])
+    await jsonRpcCall(client, 'evm_mine', [])
   }
 }
 /**
@@ -18,14 +19,14 @@ export async function mineBlocks(blocks: number, web3: any) {
  */
 export async function getContractFromEvent(
   eventSignature: string,
-  web3: any,
+  client: Web3,
   filter?: {
     expectedData?: string
     index?: number
   }
 ): Promise<string> {
-  const logs = await web3.eth.getPastLogs({
-    topics: [web3.utils.sha3(eventSignature)],
+  const logs = await client.eth.getPastLogs({
+    topics: [client.utils.sha3(eventSignature)],
     fromBlock: 'earliest',
     toBlock: 'latest',
   })

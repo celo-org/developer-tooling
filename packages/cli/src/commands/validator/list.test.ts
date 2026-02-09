@@ -9,7 +9,7 @@ import ValidatorRegister from './register'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validator:list', (web3: any) => {
+testWithAnvilL2('validator:list', (client) => {
   let account: string
   let ecdsaPublicKey: string
   const writeMock = jest.spyOn(ux.write, 'stdout').mockImplementation(() => {
@@ -20,19 +20,19 @@ testWithAnvilL2('validator:list', (web3: any) => {
     jest.spyOn(console, 'log').mockImplementation(() => {
       // noop
     })
-    const accounts = await web3.eth.getAccounts()
+    const accounts = await client.eth.getAccounts()
     account = accounts[0]
-    ecdsaPublicKey = await addressToPublicKey(account, web3.eth.sign)
-    await testLocallyWithWeb3Node(Register, ['--from', account], web3)
+    ecdsaPublicKey = await addressToPublicKey(account, client.eth.sign)
+    await testLocallyWithWeb3Node(Register, ['--from', account], client)
     await testLocallyWithWeb3Node(
       Lock,
       ['--from', account, '--value', '10000000000000000000000'],
-      web3
+      client
     )
     await testLocallyWithWeb3Node(
       ValidatorRegister,
       ['--from', account, '--ecdsaKey', ecdsaPublicKey, '--yes'],
-      web3
+      client
     )
   })
 
@@ -42,7 +42,7 @@ testWithAnvilL2('validator:list', (web3: any) => {
   })
 
   it('shows all registered validators', async () => {
-    await testLocallyWithWeb3Node(ListValidators, ['--csv'], web3)
+    await testLocallyWithWeb3Node(ListValidators, ['--csv'], client)
     expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`
       [
         [

@@ -23,17 +23,17 @@ import LockedCelo from './locked-gold'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('releasegold:admin-revoke cmd', (web3: any) => {
+testWithAnvilL2('releasegold:admin-revoke cmd', (client) => {
   let kit: ContractKit
   let contractAddress: StrongAddress
   let releaseGoldWrapper: ReleaseGoldWrapper
   let accounts: StrongAddress[]
 
   beforeEach(async () => {
-    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
-    kit = newKitFromWeb3(web3)
+    accounts = (await client.eth.getAccounts()) as StrongAddress[]
+    kit = newKitFromWeb3(client)
     contractAddress = await deployReleaseGoldContract(
-      web3,
+      client,
       await createMultisig(kit, [accounts[0], accounts[1]] as StrongAddress[], 2, 2),
       accounts[1],
       accounts[0],
@@ -41,16 +41,16 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (web3: any) => {
     )
     releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
-      newReleaseGold(web3, contractAddress),
+      newReleaseGold(client, contractAddress),
       kit.contracts
     )
   })
 
   test('will revoke', async () => {
-    await testLocallyWithWeb3Node(AdminRevoke, ['--contract', contractAddress, '--yesreally'], web3)
+    await testLocallyWithWeb3Node(AdminRevoke, ['--contract', contractAddress, '--yesreally'], client)
     const revokedContract = await getContractFromEvent(
       'ReleaseScheduleRevoked(uint256,uint256)',
-      web3
+      client
     )
     expect(revokedContract).toBe(contractAddress)
   })
@@ -61,16 +61,16 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (web3: any) => {
     await stableToken.transfer(contractAddress, 100).send({
       from: accounts[0],
     })
-    await testLocallyWithWeb3Node(AdminRevoke, ['--contract', contractAddress, '--yesreally'], web3)
+    await testLocallyWithWeb3Node(AdminRevoke, ['--contract', contractAddress, '--yesreally'], client)
     const balance = await stableToken.balanceOf(contractAddress)
     expect(balance.isZero()).toBeTruthy()
   })
 
   test('will refund and finalize', async () => {
-    await testLocallyWithWeb3Node(AdminRevoke, ['--contract', contractAddress, '--yesreally'], web3)
+    await testLocallyWithWeb3Node(AdminRevoke, ['--contract', contractAddress, '--yesreally'], client)
     const destroyedContract = await getContractFromEvent(
       'ReleaseGoldInstanceDestroyed(address,address)',
-      web3
+      client
     )
     expect(destroyedContract).toBe(contractAddress)
   })
@@ -80,12 +80,12 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (web3: any) => {
 
     beforeEach(async () => {
       // Make sure the release gold contract has enough funds
-      await setBalance(web3, contractAddress, new BigNumber(web3.utils.toWei('10', 'ether')))
-      await testLocallyWithWeb3Node(CreateAccount, ['--contract', contractAddress], web3)
+      await setBalance(client, contractAddress, new BigNumber(client.utils.toWei('10', 'ether')))
+      await testLocallyWithWeb3Node(CreateAccount, ['--contract', contractAddress], client)
       await testLocallyWithWeb3Node(
         LockedCelo,
         ['--contract', contractAddress, '--action', 'lock', '--value', value, '--yes'],
-        web3
+        client
       )
     })
 
@@ -93,7 +93,7 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (web3: any) => {
       await testLocallyWithWeb3Node(
         AdminRevoke,
         ['--contract', contractAddress, '--yesreally'],
-        web3
+        client
       )
       const lockedGold = await kit.contracts.getLockedGold()
       const lockedAmount = await lockedGold.getAccountTotalLockedGold(releaseGoldWrapper.address)
@@ -126,7 +126,7 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (web3: any) => {
             '--signature',
             serializeSignature(pop),
           ],
-          web3
+          client
         )
       })
 
@@ -134,7 +134,7 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (web3: any) => {
         await testLocallyWithWeb3Node(
           AdminRevoke,
           ['--contract', contractAddress, '--yesreally'],
-          web3
+          client
         )
         const newVoteSigner = await accountsWrapper.getVoteSigner(contractAddress)
         expect(newVoteSigner).not.toEqual(voteSigner)
@@ -152,18 +152,18 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (web3: any) => {
             .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
 
           const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
-          await timeTravel(dequeueFrequency + 1, web3)
+          await timeTravel(dequeueFrequency + 1, client)
           const multiApprover = await governance.getApproverMultisig()
           await setBalance(
-            web3,
+            client,
             multiApprover.address,
-            new BigNumber(web3.utils.toWei('10', 'ether'))
+            new BigNumber(client.utils.toWei('10', 'ether'))
           )
-          await withImpersonatedAccount(web3, multiApprover.address, async () => {
+          await withImpersonatedAccount(client, multiApprover.address, async () => {
             await testLocallyWithWeb3Node(
               Approve,
               ['--from', multiApprover.address, '--proposalID', '1'],
-              web3
+              client
             )
           })
           await testLocallyWithWeb3Node(
@@ -178,7 +178,7 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (web3: any) => {
               '--privateKey',
               PRIVATE_KEY1,
             ],
-            web3
+            client
           )
           await governance
             .propose([], 'URL')
@@ -189,7 +189,7 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (web3: any) => {
           await testLocallyWithWeb3Node(
             GovernanceUpvote,
             ['--from', voteSigner, '--proposalID', '3', '--privateKey', PRIVATE_KEY1],
-            web3
+            client
           )
         })
 
@@ -199,7 +199,7 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (web3: any) => {
           await testLocallyWithWeb3Node(
             AdminRevoke,
             ['--contract', contractAddress, '--yesreally'],
-            web3
+            client
           )
           const isVotingAfter = await governance.isVoting(contractAddress)
           expect(isVotingAfter).toBeFalsy()
