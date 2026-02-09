@@ -16,7 +16,12 @@ const mockContract = {
       encodeABI: () => '0x',
     }),
   },
-  deploy: () => ({ call: async () => ({}), send: async () => ({}), estimateGas: async () => 0, encodeABI: () => '0x' }),
+  deploy: () => ({
+    call: async () => ({}),
+    send: async () => ({}),
+    estimateGas: async () => 0,
+    encodeABI: () => '0x',
+  }),
   getPastEvents: async () => [],
   events: {},
   _address: NULL_ADDRESS,

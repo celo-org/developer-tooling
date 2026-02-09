@@ -38,9 +38,7 @@ type EventsEnum<T extends Contract> = {
  * @internal -- use its children
  */
 export abstract class BaseWrapper<T extends Contract> {
-  protected _version?: T['methods'] extends VersionedContract['methods']
-    ? ContractVersion
-    : never
+  protected _version?: T['methods'] extends VersionedContract['methods'] ? ContractVersion : never
 
   constructor(
     protected readonly connection: Connection,
