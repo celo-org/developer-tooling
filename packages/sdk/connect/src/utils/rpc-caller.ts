@@ -11,11 +11,52 @@ const SENSITIVE_METHODS = new Set([
   'personal_importRawKey',
 ])
 
-function sanitizePayload(payload: JsonRpcPayload): JsonRpcPayload {
-  if (SENSITIVE_METHODS.has(payload.method)) {
-    return { ...payload, params: ['[REDACTED]'] }
+const SENSITIVE_KEYS = new Set(['password', 'privateKey', 'rawKey', 'secret', 'passphrase'])
+
+function deepSanitize(value: unknown): unknown {
+  if (value === null || value === undefined) {
+    return value
   }
-  return payload
+  if (Array.isArray(value)) {
+    return value.map(deepSanitize)
+  }
+  if (typeof value === 'object') {
+    const sanitized: Record<string, unknown> = {}
+    for (const [key, val] of Object.entries(value)) {
+      sanitized[key] = SENSITIVE_KEYS.has(key) ? '[REDACTED]' : deepSanitize(val)
+    }
+    return sanitized
+  }
+  return value
+}
+
+function sanitizeRpcPayload(payload: JsonRpcPayload): Record<string, unknown> {
+  if (SENSITIVE_METHODS.has(payload.method)) {
+    return {
+      id: payload.id,
+      jsonrpc: payload.jsonrpc,
+      method: payload.method,
+      params: '[REDACTED]',
+    }
+  }
+  return {
+    id: payload.id,
+    jsonrpc: payload.jsonrpc,
+    method: payload.method,
+    params: deepSanitize(payload.params),
+  }
+}
+
+function sanitizeRpcResponse(response?: JsonRpcResponse): Record<string, unknown> | undefined {
+  if (!response) {
+    return response
+  }
+  return {
+    id: response.id,
+    jsonrpc: response.jsonrpc,
+    result: deepSanitize(response.result),
+    error: response.error,
+  }
 }
 
 export function rpcCallHandler(
@@ -109,7 +150,7 @@ export class HttpRpcCaller implements RpcCaller {
     payload: JsonRpcPayload,
     callback: (error: Error | null, result?: JsonRpcResponse) => void
   ): void {
-    debugRpcPayload('%O', sanitizePayload(payload))
+    debugRpcPayload('%O', sanitizeRpcPayload(payload))
 
     const decoratedCallback: Callback<JsonRpcResponse> = (
       error: Error | null,
@@ -120,7 +161,7 @@ export class HttpRpcCaller implements RpcCaller {
       if (error) {
         err = error
       }
-      debugRpcResponse('%O', result)
+      debugRpcResponse('%O', sanitizeRpcResponse(result))
       // The provider send call will not provide an error to the callback if
       // the result itself specifies an error. Here, we extract the error in the
       // result.
