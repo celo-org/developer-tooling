@@ -1,5 +1,5 @@
 import { NULL_ADDRESS } from '@celo/base'
-import { Connection, Contract } from '@celo/connect'
+import { Connection, Contract, Provider } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import { ContractVersion, newContractVersion } from '../versions'
 import { BaseWrapper, unixSecondsTimestampToDateString } from './BaseWrapper'
@@ -27,7 +27,8 @@ const mockContract = {
   _address: NULL_ADDRESS,
 } as unknown as Contract
 
-const connection = new Connection('http://localhost:8545')
+const mockProvider = { send: (_payload: unknown, _cb: unknown) => undefined } as unknown as Provider
+const connection = new Connection(mockProvider)
 
 class TestWrapper extends BaseWrapper<Contract> {
   constructor() {
