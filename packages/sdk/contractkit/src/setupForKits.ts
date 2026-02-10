@@ -20,11 +20,11 @@ export function setupAPIKey(apiKey: string) {
   return options
 }
 /** @internal */
-export function ensureCurrentProvider(
-  providerOrWeb3: Provider | { currentProvider?: Provider }
-) {
+export function ensureCurrentProvider(providerOrWeb3: Provider | { currentProvider?: Provider }) {
   const provider =
-    providerOrWeb3 != null && 'currentProvider' in providerOrWeb3 && providerOrWeb3.currentProvider != null
+    providerOrWeb3 != null &&
+    'currentProvider' in providerOrWeb3 &&
+    providerOrWeb3.currentProvider != null
       ? providerOrWeb3.currentProvider
       : providerOrWeb3
   if (!provider) {

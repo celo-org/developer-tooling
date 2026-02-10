@@ -296,7 +296,10 @@ testWithAnvilL2('transfer:celo cmd', (client) => {
     )
 
     const eventClient = createPublicClient({
-      transport: http((kit.web3.currentProvider as unknown as { existingProvider: { host: string } }).existingProvider.host),
+      transport: http(
+        (kit.web3.currentProvider as unknown as { existingProvider: { host: string } })
+          .existingProvider.host
+      ),
     })
     const events = await eventClient.getContractEvents({
       abi: goldTokenABI,

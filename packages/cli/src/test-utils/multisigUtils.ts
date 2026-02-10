@@ -46,7 +46,9 @@ export async function createMultisig(
     (abi) => abi.type === 'function' && abi.name === 'initialize'
   )
   const proxy = new kit.web3.eth.Contract(proxyABI as unknown as AbiItem[], proxyAddress)
-  const baseFee = await kit.web3.eth.getBlock('latest').then((block) => (block as unknown as { baseFeePerGas: string }).baseFeePerGas)
+  const baseFee = await kit.web3.eth
+    .getBlock('latest')
+    .then((block) => (block as unknown as { baseFeePerGas: string }).baseFeePerGas)
   const priorityFee = kit.web3.utils.toWei('25', 'gwei')
   const initMethod = proxy.methods._setAndInitializeImplementation
   const callData = kit.web3.eth.abi.encodeFunctionCall(initializerAbi as AbiItem, [

@@ -847,7 +847,9 @@ export const viemAbiCoder: AbiCoder = {
   },
   encodeParameter(type: string, parameter: unknown): string {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- viem's encodeAbiParameters has deeply recursive types incompatible with unknown
-    return encodeAbiParameters([{ type } as AbiParameter], [coerceValueForType(type, parameter)] as any)
+    return encodeAbiParameters([{ type } as AbiParameter], [
+      coerceValueForType(type, parameter),
+    ] as any)
   },
   encodeParameters(types: string[], parameters: unknown[]): string {
     const abiParams = types.map((type) => ({ type }) as AbiParameter)
@@ -1044,7 +1046,10 @@ function createWeb3ContractConstructor(connection: Connection) {
           // web3's deploy().send() resolves to the deployed Contract instance,
           // not the receipt. Wrap the result to match that behavior.
           const jsonInterface = this.options.jsonInterface
-          const ContractClass = this.constructor as new (abi: AbiItem[], address?: string) => Contract
+          const ContractClass = this.constructor as new (
+            abi: AbiItem[],
+            address?: string
+          ) => Contract
           const wrappedPromise = pe.then((receipt: CeloTxReceipt) => {
             const deployed = new ContractClass(jsonInterface, receipt.contractAddress)
             return deployed
@@ -1180,7 +1185,11 @@ async function pollForReceiptHelper(
   throw new Error(`Transaction receipt not found after ${MAX_ATTEMPTS} attempts: ${txHash}`)
 }
 
-function decodeReceiptEvents(receipt: CeloTxReceipt, abi: AbiItem[], coder: AbiCoder): CeloTxReceipt {
+function decodeReceiptEvents(
+  receipt: CeloTxReceipt,
+  abi: AbiItem[],
+  coder: AbiCoder
+): CeloTxReceipt {
   if (!receipt.logs || !Array.isArray(receipt.logs)) return receipt
   const eventAbis = abi.filter((entry: AbiItem) => entry.type === 'event')
   if (eventAbis.length === 0) return receipt
@@ -1266,20 +1275,22 @@ function createWeb3Shim(connection: Connection): Web3 {
         return createPromiEvent(connection, tx)
       },
       signTransaction: async (tx: CeloTx) => {
-        const response = await new Promise<{ raw: string; tx: CeloTxReceipt }>((resolve, reject) => {
-          ;(connection.currentProvider as Provider).send(
-            {
-              id: Date.now(),
-              jsonrpc: '2.0',
-              method: 'eth_signTransaction',
-              params: [tx],
-            },
-            (err, res) => {
-              if (err) reject(err)
-              else resolve(res?.result)
-            }
-          )
-        })
+        const response = await new Promise<{ raw: string; tx: CeloTxReceipt }>(
+          (resolve, reject) => {
+            ;(connection.currentProvider as Provider).send(
+              {
+                id: Date.now(),
+                jsonrpc: '2.0',
+                method: 'eth_signTransaction',
+                params: [tx],
+              },
+              (err, res) => {
+                if (err) reject(err)
+                else resolve(res?.result)
+              }
+            )
+          }
+        )
         return response
       },
       abi: viemAbiCoder,

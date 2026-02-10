@@ -25,10 +25,7 @@ export class TransactionResult {
   private hashFuture = new Future<string>()
   private receiptFuture = new Future<CeloTxReceipt>()
 
-  constructor(
-    pe: PromiEvent<CeloTxReceipt> | Promise<string>,
-    fetchReceipt?: ReceiptFetcher
-  ) {
+  constructor(pe: PromiEvent<CeloTxReceipt> | Promise<string>, fetchReceipt?: ReceiptFetcher) {
     if (isPromiEvent(pe)) {
       void pe
         .on('transactionHash', (hash: string) => {

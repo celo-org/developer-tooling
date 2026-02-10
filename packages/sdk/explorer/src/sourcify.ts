@@ -233,7 +233,10 @@ export async function tryGetProxyImplementation(
   for (const fn of PROXY_IMPLEMENTATION_GETTERS) {
     try {
       return await new Promise<Address>((resolve, reject) => {
-        proxyContract.methods[fn]().call().then((v) => resolve(v as Address)).catch(reject)
+        proxyContract.methods[fn]()
+          .call()
+          .then((v) => resolve(v as Address))
+          .catch(reject)
       })
     } catch {
       continue

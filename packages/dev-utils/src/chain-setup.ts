@@ -9,7 +9,10 @@ export async function setCommissionUpdateDelay(
   delayInBlocks: number
 ) {
   await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
-    const validators = new web3.eth.Contract(validatorsABI as unknown as AbiItem[], validatorsContractAddress)
+    const validators = new web3.eth.Contract(
+      validatorsABI as unknown as AbiItem[],
+      validatorsContractAddress
+    )
 
     const { transactionHash } = await validators.methods
       .setCommissionUpdateDelay(delayInBlocks)
@@ -26,7 +29,10 @@ export async function setDequeueFrequency(
   frequency: number
 ) {
   await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
-    const governance = new web3.eth.Contract(governanceABI as unknown as AbiItem[], governanceContractAddress)
+    const governance = new web3.eth.Contract(
+      governanceABI as unknown as AbiItem[],
+      governanceContractAddress
+    )
 
     const { transactionHash } = await governance.methods.setDequeueFrequency(frequency).send({
       from: DEFAULT_OWNER_ADDRESS,
@@ -41,7 +47,10 @@ export async function setReferendumStageDuration(
   duration: number
 ) {
   await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
-    const governance = new web3.eth.Contract(governanceABI as unknown as AbiItem[], governanceContractAddress)
+    const governance = new web3.eth.Contract(
+      governanceABI as unknown as AbiItem[],
+      governanceContractAddress
+    )
 
     const { transactionHash } = await governance.methods.setReferendumStageDuration(duration).send({
       from: DEFAULT_OWNER_ADDRESS,
