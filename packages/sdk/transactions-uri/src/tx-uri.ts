@@ -90,7 +90,9 @@ export function buildUri(tx: CeloTx, functionName?: string, abiTypes: string[] =
     if (txData.length > 8) {
       const argsEncoded = txData.slice(8)
       const decoded = abi.decodeParameters(abiTypes, argsEncoded)
-      functionArgs = zeroRange(decoded.__length__).map((idx) => decoded[idx].toLowerCase())
+      functionArgs = zeroRange(decoded.__length__).map((idx) =>
+        (decoded[idx] as string).toLowerCase()
+      )
     }
   }
 

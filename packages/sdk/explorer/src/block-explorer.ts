@@ -286,7 +286,7 @@ export class BlockExplorer {
       .filter((key) => key.includes('fraction')) // TODO: come up with better enumeration
       .forEach((fractionKey) => {
         debug('transforming fixed number param')
-        params[fractionKey] = fromFixed(params[fractionKey])
+        params[fractionKey] = fromFixed(params[fractionKey] as BigNumber)
       })
 
     return {
