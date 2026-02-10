@@ -75,7 +75,7 @@ testWithAnvilL2('SortedOracles Wrapper', (client) => {
     })
 
     const txResult = await deployTx.send({ from: owner, gasPrice: TEST_GAS_PRICE.toFixed() })
-    const deployedContract = web3NewSortedOracles(client, (txResult as any).options.address)
+    const deployedContract = web3NewSortedOracles(client, (txResult as unknown as { options: { address: string } }).options.address)
     await deployedContract.methods
       .initialize(NetworkConfig.oracles.reportExpiry)
       .send({ from: owner })

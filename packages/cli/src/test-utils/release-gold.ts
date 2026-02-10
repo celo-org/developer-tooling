@@ -1,5 +1,6 @@
 import { newReleaseGold } from '@celo/abis/web3/ReleaseGold'
 import { StrongAddress } from '@celo/base'
+import { Web3 } from '@celo/connect'
 import { REGISTRY_CONTRACT_ADDRESS } from '@celo/contractkit'
 import { setBalance, setCode, withImpersonatedAccount } from '@celo/dev-utils/anvil-test'
 import { HOUR, MINUTE, MONTH } from '@celo/dev-utils/test-utils'
@@ -12,7 +13,7 @@ const RELEASE_GOLD_IMPLEMENTATION_CONTRACT_BYTECODE =
 const RELEASE_GOLD_IMPLEMENTATION_CONTRACT_ADDRESS = '0xDdbe68bEae54dd94465C6bbA2477EE9500ce1974'
 
 export async function deployReleaseGoldContract(
-  web3: any,
+  web3: Web3,
   ownerMultisigAddress: StrongAddress,
   beneficiary: StrongAddress,
   releaseOwner: StrongAddress,

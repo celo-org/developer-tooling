@@ -1,5 +1,5 @@
 import { PublicCeloClient } from '@celo/actions'
-import { Web3 } from '@celo/connect'
+import { Provider, Web3 } from '@celo/connect'
 import { TestClientExtended } from '@celo/dev-utils/viem/anvil-test'
 import { Interfaces } from '@oclif/core'
 import { BaseCommand } from '../base'
@@ -20,7 +20,11 @@ export async function testLocallyWithWeb3Node(
 }
 
 export const extractHostFromWeb3 = (client: Web3): string => {
-  const provider = client.currentProvider as any
+  const provider = client.currentProvider as Provider & {
+    host?: string
+    url?: string
+    existingProvider?: { host?: string; url?: string }
+  }
   if (!provider) {
     throw new Error('No currentProvider on client')
   }
@@ -28,7 +32,7 @@ export const extractHostFromWeb3 = (client: Web3): string => {
   // CeloProvider wraps the underlying provider
   if (provider.constructor.name === 'CeloProvider') {
     const inner = provider.existingProvider
-    return inner.host || inner.url || 'http://localhost:8545'
+    return inner?.host || inner?.url || 'http://localhost:8545'
   }
 
   // Direct provider (HttpProvider or SimpleHttpProvider)

@@ -1,7 +1,8 @@
 import { StrongAddress } from '@celo/base'
+import { Web3 } from '@celo/connect'
 import { setCode } from '@celo/dev-utils/anvil-test'
 
-export async function deployMultiCall(web3: any, address: StrongAddress) {
+export async function deployMultiCall(web3: Web3, address: StrongAddress) {
   return setCode(web3, address, bytecode)
 }
 

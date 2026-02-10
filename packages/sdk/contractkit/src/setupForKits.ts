@@ -20,9 +20,11 @@ export function setupAPIKey(apiKey: string) {
   return options
 }
 /** @internal */
-export function ensureCurrentProvider(providerOrWeb3: any) {
+export function ensureCurrentProvider(
+  providerOrWeb3: Provider | { currentProvider?: Provider }
+) {
   const provider =
-    providerOrWeb3 != null && providerOrWeb3.currentProvider != null
+    providerOrWeb3 != null && 'currentProvider' in providerOrWeb3 && providerOrWeb3.currentProvider != null
       ? providerOrWeb3.currentProvider
       : providerOrWeb3
   if (!provider) {
@@ -136,7 +138,10 @@ export function getProviderForKit(url: string, options: HttpProviderOptions | un
  * @deprecated Use getProviderForKit instead
  * @internal
  */
-export function getWeb3ForKit(url: string, options: HttpProviderOptions | undefined): any {
+export function getWeb3ForKit(
+  url: string,
+  options: HttpProviderOptions | undefined
+): { currentProvider: Provider } {
   // Return an object that looks like Web3 for backward compat with Connection constructor
   const provider = getProviderForKit(url, options)
   return { currentProvider: provider }

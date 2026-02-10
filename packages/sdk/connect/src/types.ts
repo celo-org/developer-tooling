@@ -1,4 +1,5 @@
 import { StrongAddress } from '@celo/base'
+import type { AbiItem } from './abi-types'
 export type Address = string
 
 export type Hex = `0x${string}`
@@ -50,7 +51,7 @@ export interface CeloTx extends Partial<CeloParams> {
   chainId?: number
   chain?: string
   hardfork?: string
-  common?: any
+  common?: Record<string, unknown>
   accessList?: AccessList
   type?: TransactionTypes
 }
@@ -58,6 +59,7 @@ export interface CeloTx extends Partial<CeloParams> {
 export type WithSig<T> = T & { v: number; s: string; r: string; yParity: 0 | 1 }
 export type CeloTxWithSig = WithSig<CeloTx>
 export interface CeloTxObject<T> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- must remain any for backward compat with generated contract types
   arguments: any[]
   call(tx?: CeloTx): Promise<T>
   send(tx?: CeloTx): PromiEvent<CeloTxReceipt>
@@ -73,13 +75,14 @@ export type BlockNumber = string | number
 export interface EventLog {
   event: string
   address: string
-  returnValues: any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- decoded event values have dynamic types based on ABI
+  returnValues: Record<string, any>
   logIndex: number
   transactionIndex: number
   transactionHash: string
   blockHash: string
   blockNumber: number
-  raw?: { data: string; topics: any[] }
+  raw?: { data: string; topics: string[] }
 }
 
 /** Transaction log entry */
@@ -159,11 +162,14 @@ export type Syncing =
 export interface Contract {
   options: {
     address: string
-    jsonInterface: any[]
+    jsonInterface: AbiItem[]
   }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- contravariant: specific method params must be assignable
   methods: { [key: string]: (...args: any[]) => CeloTxObject<any> }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   deploy(params: { data: string; arguments?: any[] }): CeloTxObject<any>
   getPastEvents(event: string, options: PastEventOptions): Promise<EventLog[]>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- must accommodate ContractEvent types from generated contracts
   events: { [key: string]: any }
   _address: string
 }
@@ -172,15 +178,15 @@ export interface Contract {
 export interface ContractSendMethod {
   send(
     options: CeloTx,
-    callback?: (err: any, transactionHash: string) => void
+    callback?: (err: Error | null, transactionHash: string) => void
   ): PromiEvent<CeloTxReceipt>
-  estimateGas(options: CeloTx, callback?: (err: any, gas: number) => void): Promise<number>
+  estimateGas(options: CeloTx, callback?: (err: Error | null, gas: number) => void): Promise<number>
   encodeABI(): string
 }
 
 /** PastEventOptions - retained for backward compatibility */
 export interface PastEventOptions {
-  filter?: Record<string, any>
+  filter?: Record<string, unknown>
   fromBlock?: BlockNumber
   toBlock?: BlockNumber
   topics?: string[]

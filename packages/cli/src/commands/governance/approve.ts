@@ -1,5 +1,5 @@
 import { StrongAddress } from '@celo/base'
-import { CeloTransactionObject } from '@celo/connect'
+import { CeloTransactionObject, Web3 } from '@celo/connect'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { MultiSigWrapper } from '@celo/contractkit/lib/wrappers/MultiSig'
 import { toBuffer } from '@ethereumjs/util'
@@ -109,7 +109,7 @@ export default class Approve extends BaseCommand {
       governanceApproverMultiSig
     )
 
-    let governanceTx: CeloTransactionObject<any>
+    let governanceTx: CeloTransactionObject<unknown>
     let logEvent: string
     if (id) {
       if (await governance.isQueued(id)) {
@@ -170,18 +170,18 @@ export default class Approve extends BaseCommand {
         governanceTx.txo
       )
 
-      await displaySendTx<string | void | boolean>('approveTx', tx, {}, logEvent)
+      await displaySendTx('approveTx', tx as CeloTransactionObject<unknown>, {}, logEvent)
     } else if (res.flags.multisigTx && useMultiSig) {
       const tx = await governanceApproverMultiSig!.confirmTransaction(
         parseInt(res.flags.multisigTx)
       )
-      await displaySendTx<string | void | boolean>('approveTx', tx, {}, logEvent)
+      await displaySendTx('approveTx', tx, {}, logEvent)
     } else if (res.flags.submit && useMultiSig) {
       const tx = await governanceApproverMultiSig!.submitTransaction(
         governance.address,
         governanceTx.txo
       )
-      await displaySendTx<string | void | boolean>('approveTx', tx, {}, logEvent)
+      await displaySendTx('approveTx', tx, {}, logEvent)
     } else {
       const tx = useMultiSig
         ? await governanceApproverMultiSig!.submitOrConfirmTransaction(
@@ -189,13 +189,13 @@ export default class Approve extends BaseCommand {
             governanceTx.txo
           )
         : governanceTx
-      await displaySendTx<string | void | boolean>('approveTx', tx, {}, logEvent)
+      await displaySendTx('approveTx', tx, {}, logEvent)
     }
   }
 }
 
 const addDefaultChecks = async (
-  web3: any,
+  web3: Web3,
   checkBuilder: ReturnType<typeof newCheckBuilder>,
   governance: GovernanceWrapper,
   isHotfix: boolean,

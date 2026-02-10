@@ -64,7 +64,7 @@ export const TEST_GAS_LIMIT = 20000000
 
 export const NetworkConfig = migrationOverride
 
-export function jsonRpcCall<O>(client: Web3, method: string, params: any[]): Promise<O> {
+export function jsonRpcCall<O>(client: Web3, method: string, params: unknown[]): Promise<O> {
   return new Promise<O>((resolve, reject) => {
     const provider = client.currentProvider
 

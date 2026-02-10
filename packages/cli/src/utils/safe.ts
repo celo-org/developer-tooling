@@ -1,12 +1,12 @@
 import { StrongAddress } from '@celo/base'
-import { CeloTransactionObject } from '@celo/connect'
+import { CeloTransactionObject, Web3 } from '@celo/connect'
 import { CeloProvider } from '@celo/connect/lib/celo-provider'
 import Safe from '@safe-global/protocol-kit'
 import { MetaTransactionData, TransactionResult } from '@safe-global/types-kit'
 import { displaySafeTx } from './cli'
 
 export const createSafeFromWeb3 = async (
-  web3: any,
+  web3: Web3,
   signer: StrongAddress,
   safeAddress: StrongAddress
 ) => {
@@ -22,7 +22,7 @@ export const createSafeFromWeb3 = async (
 }
 
 export const safeTransactionMetadataFromCeloTransactionObject = async (
-  tx: CeloTransactionObject<any>,
+  tx: CeloTransactionObject<unknown>,
   toAddress: StrongAddress,
   value = '0'
 ): Promise<MetaTransactionData> => {
@@ -34,7 +34,7 @@ export const safeTransactionMetadataFromCeloTransactionObject = async (
 }
 
 export const performSafeTransaction = async (
-  web3: any,
+  web3: Web3,
   safeAddress: StrongAddress,
   safeSigner: StrongAddress,
   txData: MetaTransactionData

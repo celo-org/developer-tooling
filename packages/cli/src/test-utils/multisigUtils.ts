@@ -1,5 +1,6 @@
 import { multiSigABI, proxyABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
+import { AbiItem, Web3 } from '@celo/connect'
 import { ContractKit } from '@celo/contractkit'
 import { setCode } from '@celo/dev-utils/anvil-test'
 import { TEST_GAS_PRICE } from '@celo/dev-utils/test-utils'
@@ -44,14 +45,14 @@ export async function createMultisig(
   const initializerAbi = multiSigABI.find(
     (abi) => abi.type === 'function' && abi.name === 'initialize'
   )
-  const proxy = new kit.web3.eth.Contract(proxyABI as any, proxyAddress)
-  const baseFee = await kit.web3.eth.getBlock('latest').then((block: any) => block.baseFeePerGas)
+  const proxy = new kit.web3.eth.Contract(proxyABI as unknown as AbiItem[], proxyAddress)
+  const baseFee = await kit.web3.eth.getBlock('latest').then((block) => (block as unknown as { baseFeePerGas: string }).baseFeePerGas)
   const priorityFee = kit.web3.utils.toWei('25', 'gwei')
   const initMethod = proxy.methods._setAndInitializeImplementation
-  const callData = kit.web3.eth.abi.encodeFunctionCall(initializerAbi as any, [
-    owners as any,
-    requiredSignatures as any,
-    requiredInternalSignatures as any,
+  const callData = kit.web3.eth.abi.encodeFunctionCall(initializerAbi as AbiItem, [
+    owners as unknown,
+    requiredSignatures as unknown,
+    requiredInternalSignatures as unknown,
   ])
   const initTx = initMethod(multiSigAddress, callData)
   await initTx.send({
@@ -86,7 +87,7 @@ export async function createMultisig(
  *
  * A working example can be found in packages/cli/src/commands/governance/approve-l2.test.ts`
  */
-export const setupSafeContracts = async (web3: any) => {
+export const setupSafeContracts = async (web3: Web3) => {
   // Set up safe 1.3.0 in devchain
   await setCode(web3, SAFE_MULTISEND_ADDRESS, SAFE_MULTISEND_CODE)
   await setCode(web3, SAFE_MULTISEND_CALL_ONLY_ADDRESS, SAFE_MULTISEND_CALL_ONLY_CODE)

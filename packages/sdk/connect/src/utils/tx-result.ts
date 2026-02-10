@@ -1,6 +1,6 @@
 import { Future } from '@celo/base/lib/future'
 import debugFactory from 'debug'
-import { CeloTxReceipt, PromiEvent } from '../types'
+import { CeloTxReceipt, Error as ConnectError, PromiEvent } from '../types'
 
 const debug = debugFactory('connection:tx:result')
 
@@ -9,7 +9,10 @@ export type ReceiptFetcher = (txHash: string) => Promise<CeloTxReceipt | null>
 /**
  * Transforms a `PromiEvent` or a `Promise<string>` (tx hash) to a `TransactionResult`.
  */
-export function toTxResult(pe: PromiEvent<any> | Promise<string>, fetchReceipt?: ReceiptFetcher) {
+export function toTxResult(
+  pe: PromiEvent<CeloTxReceipt> | Promise<string>,
+  fetchReceipt?: ReceiptFetcher
+) {
   return new TransactionResult(pe, fetchReceipt)
 }
 
@@ -22,7 +25,10 @@ export class TransactionResult {
   private hashFuture = new Future<string>()
   private receiptFuture = new Future<CeloTxReceipt>()
 
-  constructor(pe: PromiEvent<any> | Promise<string>, fetchReceipt?: ReceiptFetcher) {
+  constructor(
+    pe: PromiEvent<CeloTxReceipt> | Promise<string>,
+    fetchReceipt?: ReceiptFetcher
+  ) {
     if (isPromiEvent(pe)) {
       void pe
         .on('transactionHash', (hash: string) => {
@@ -34,7 +40,7 @@ export class TransactionResult {
           this.receiptFuture.resolve(receipt)
         })
 
-        .on('error', ((error: any, receipt: CeloTxReceipt | false) => {
+        .on('error', ((error: ConnectError, receipt: CeloTxReceipt | false) => {
           if (!receipt) {
             debug('send-error: %o', error)
             this.hashFuture.reject(error)
@@ -42,7 +48,7 @@ export class TransactionResult {
             debug('mining-error: %o, %O', error, receipt)
           }
           this.receiptFuture.reject(error)
-        }) as any)
+        }) as (error: ConnectError) => void)
     } else {
       // Promise<string> - just a tx hash, poll for receipt
       pe.then(
@@ -54,13 +60,13 @@ export class TransactionResult {
               const receipt = await pollForReceipt(hash, fetchReceipt)
               debug('receipt: %O', receipt)
               this.receiptFuture.resolve(receipt)
-            } catch (error: any) {
+            } catch (error) {
               debug('receipt-poll-error: %o', error)
               this.receiptFuture.reject(error)
             }
           }
         },
-        (error: any) => {
+        (error: Error) => {
           debug('send-error: %o', error)
           this.hashFuture.reject(error)
           this.receiptFuture.reject(error)
@@ -90,8 +96,10 @@ export class TransactionResult {
   }
 }
 
-function isPromiEvent(pe: any): pe is PromiEvent<any> {
-  return typeof pe.on === 'function'
+function isPromiEvent(
+  pe: PromiEvent<CeloTxReceipt> | Promise<string>
+): pe is PromiEvent<CeloTxReceipt> {
+  return 'on' in pe && typeof pe.on === 'function'
 }
 
 async function pollForReceipt(

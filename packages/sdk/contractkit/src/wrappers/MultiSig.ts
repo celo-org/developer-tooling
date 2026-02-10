@@ -36,7 +36,7 @@ export class MultiSigWrapper extends BaseWrapper<MultiSig> {
    * Otherwise, submits the `txObject` to the multisig and add confirmation.
    * @param index The index of the pending withdrawal to withdraw.
    */
-  async submitOrConfirmTransaction(destination: string, txObject: CeloTxObject<any>, value = '0') {
+  async submitOrConfirmTransaction(destination: string, txObject: CeloTxObject<unknown>, value = '0') {
     const data = stringToSolidityBytes(txObject.encodeABI())
     const transactionCount = await this.contract.methods.getTransactionCount(true, true).call()
     const transactionIds = await this.contract.methods
@@ -69,7 +69,7 @@ export class MultiSigWrapper extends BaseWrapper<MultiSig> {
       this.contract.methods.confirmTransaction(transactionId)
     )
   }
-  async submitTransaction(destination: string, txObject: CeloTxObject<any>, value = '0') {
+  async submitTransaction(destination: string, txObject: CeloTxObject<unknown>, value = '0') {
     const data = stringToSolidityBytes(txObject.encodeABI())
     return toTransactionObject(
       this.connection,
@@ -95,7 +95,7 @@ export class MultiSigWrapper extends BaseWrapper<MultiSig> {
 
   async getTransactionDataByContent(
     destination: string,
-    txo: CeloTxObject<any>,
+    txo: CeloTxObject<unknown>,
     value: BigNumber.Value = 0
   ) {
     const data = stringToSolidityBytes(txo.encodeABI())

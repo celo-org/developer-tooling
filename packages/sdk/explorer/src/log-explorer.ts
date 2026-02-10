@@ -77,13 +77,16 @@ export class LogExplorer {
       return null
     }
 
-    const returnValues = this.kit.connection
+    const decoded = this.kit.connection
       .getAbiCoder()
-      .decodeLog(matchedAbi.inputs || [], log.data || '', log.topics.slice(1))
-    delete (returnValues as any).__length__
-    Object.keys(returnValues).forEach((key) => {
+      .decodeLog(matchedAbi.inputs || [], log.data || '', log.topics.slice(1)) as unknown as Record<
+      string,
+      unknown
+    >
+    delete decoded.__length__
+    Object.keys(decoded).forEach((key) => {
       if (Number.parseInt(key, 10) >= 0) {
-        delete (returnValues as any)[key]
+        delete decoded[key]
       }
     })
 
@@ -94,7 +97,7 @@ export class LogExplorer {
       logIndex: log.logIndex,
       transactionIndex: log.transactionIndex,
       transactionHash: log.transactionHash,
-      returnValues,
+      returnValues: decoded,
       event: matchedAbi.name!,
       signature: logSignature,
       raw: {

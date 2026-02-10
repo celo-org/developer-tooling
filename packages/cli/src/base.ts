@@ -5,7 +5,7 @@ import {
   ETHEREUM_DERIVATION_PATH,
   StrongAddress,
 } from '@celo/base'
-import { ReadOnlyWallet } from '@celo/connect'
+import { ReadOnlyWallet, Web3 } from '@celo/connect'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { getWeb3ForKit } from '@celo/contractkit/lib/setupForKits'
 import { ledgerToWalletClient } from '@celo/viem-account-ledger'
@@ -142,7 +142,7 @@ export abstract class BaseCommand extends Command {
   // useful for the LedgerWalletClient which sometimes needs user input on reads
   public isOnlyReadingWallet = false
 
-  private _web3: any = null
+  private _web3: Web3 | null = null
   private _kit: ContractKit | null = null
 
   private publicClient: PublicCeloClient | null = null
@@ -321,7 +321,10 @@ export abstract class BaseCommand extends Command {
         } catch (e) {
           let code: number | undefined
           try {
-            const error = JSON.parse((e as any).details) as { code: number; message: string }
+            const error = JSON.parse((e as Error & { details: string }).details) as {
+              code: number
+              message: string
+            }
             code = error.code
           } catch (_) {
             // noop
@@ -345,7 +348,7 @@ export abstract class BaseCommand extends Command {
     const res = await this.parse(BaseCommand)
     const isLedgerLiveMode = res.flags.ledgerLiveMode
     const indicesToIterateOver: number[] = res.raw.some(
-      (value: any) => value.flag === 'ledgerCustomAddresses'
+      (value) => (value as { flag?: string }).flag === 'ledgerCustomAddresses'
     )
       ? JSON.parse(res.flags.ledgerCustomAddresses)
       : Array.from(new Array(res.flags.ledgerAddresses).keys())
@@ -398,7 +401,7 @@ export abstract class BaseCommand extends Command {
       try {
         const isLedgerLiveMode = res.flags.ledgerLiveMode
         const indicesToIterateOver: number[] = res.raw.some(
-          (value) => (value as any).flag === 'ledgerCustomAddresses'
+          (value) => (value as { flag?: string }).flag === 'ledgerCustomAddresses'
         )
           ? JSON.parse(res.flags.ledgerCustomAddresses)
           : Array.from(new Array(res.flags.ledgerAddresses).keys())
@@ -508,7 +511,7 @@ export abstract class BaseCommand extends Command {
     return false
   }
 
-  async finally(arg: Error | undefined): Promise<any> {
+  async finally(arg: Error | undefined): Promise<void> {
     const hideExtraOutput = await this.shouldHideExtraOutput(arg)
 
     try {

@@ -5,13 +5,13 @@ export type ABIType = 'uint256' | 'boolean' | 'string' | 'bytes' | string // TOD
 
 /** @internal */
 export interface DecodedParamsArray {
-  [index: number]: any
+  [index: number]: unknown
   __length__: number
 }
 
 /** @internal */
 export interface DecodedParamsObject extends DecodedParamsArray {
-  [key: string]: any
+  [key: string]: unknown
 }
 
 // Note the following types come from web3-utils: AbiInput, AbiOutput, AbiItem, AbiType StateMutabilityType, ABIDefinition
@@ -54,14 +54,14 @@ export interface ABIDefinition extends AbiItem {
 export interface AbiCoder {
   decodeLog(inputs: AbiInput[], hexString: string, topics: string[]): EventLog
 
-  encodeParameter(type: ABIType, parameter: any): string
-  encodeParameters(types: ABIType[], paramaters: any[]): string
+  encodeParameter(type: ABIType, parameter: unknown): string
+  encodeParameters(types: ABIType[], paramaters: unknown[]): string
 
   encodeEventSignature(name: string | object): string
-  encodeFunctionCall(jsonInterface: object, parameters: any[]): string
+  encodeFunctionCall(jsonInterface: object, parameters: unknown[]): string
   encodeFunctionSignature(name: string | object): string
 
-  decodeParameter(type: ABIType, hex: string): any
+  decodeParameter(type: ABIType, hex: string): unknown
 
   decodeParameters(types: ABIType[], hex: string): DecodedParamsArray
   decodeParameters(types: AbiInput[], hex: string): DecodedParamsObject

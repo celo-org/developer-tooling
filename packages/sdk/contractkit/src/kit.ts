@@ -4,6 +4,7 @@ import {
   CeloTx,
   CeloTxObject,
   Connection,
+  Provider,
   ReadOnlyWallet,
   TransactionResult,
   Web3,
@@ -61,7 +62,7 @@ export function newKitWithApiKey(url: string, apiKey: string, wallet?: ReadOnlyW
  * @param web3 – a {@link Web3} shim, a raw Provider, or an object with `currentProvider`
  */
 export function newKitFromWeb3(
-  web3: Web3 | { currentProvider: any } | any,
+  web3: Web3 | { currentProvider: Provider },
   wallet: ReadOnlyWallet = new LocalWallet()
 ) {
   ensureCurrentProvider(web3)

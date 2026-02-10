@@ -1,8 +1,8 @@
 import { StrongAddress } from '@celo/base'
-import { Contract } from '@celo/connect'
+import { AbiItem, Contract } from '@celo/connect'
 import { BaseWrapper } from './BaseWrapper'
 
-const MINIMAL_TOKEN_INFO_ABI = [
+const MINIMAL_TOKEN_INFO_ABI: AbiItem[] = [
   {
     type: 'function' as const,
     stateMutability: 'view',

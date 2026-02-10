@@ -215,7 +215,7 @@ testWithAnvilL2(
         }
         const protocolKit = await Safe.init({
           predictedSafe: predictSafe,
-          provider: (client.currentProvider as any as CeloProvider).toEip1193Provider(),
+          provider: (client.currentProvider as unknown as CeloProvider).toEip1193Provider(),
           signer: owners[0],
         })
         const deploymentTransaction = await protocolKit.createSafeDeploymentTransaction()

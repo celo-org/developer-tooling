@@ -1,6 +1,6 @@
 import { encodePacked, type Hex, isHex, keccak256, pad, toBytes, toHex } from 'viem'
 
-type SolidityValue =
+export type SolidityValue =
   | string
   | number
   | bigint
@@ -29,8 +29,9 @@ export function soliditySha3(...args: SolidityValue[]): string | null {
       values.push(arg.value)
     } else if (typeof arg === 'object' && arg !== null && 't' in arg && 'v' in arg) {
       // web3 shorthand: { t: 'uint256', v: 123 }
-      types.push((arg as any).t as string)
-      values.push((arg as any).v)
+      const shorthand = arg as { t: string; v: unknown }
+      types.push(shorthand.t)
+      values.push(shorthand.v)
     } else if (typeof arg === 'string') {
       if (isHex(arg, { strict: true })) {
         types.push('bytes')

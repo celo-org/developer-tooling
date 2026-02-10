@@ -232,8 +232,8 @@ export async function tryGetProxyImplementation(
   const proxyContract = new connection.web3.eth.Contract(PROXY_ABI, contract)
   for (const fn of PROXY_IMPLEMENTATION_GETTERS) {
     try {
-      return await new Promise((resolve, reject) => {
-        proxyContract.methods[fn]().call().then(resolve).catch(reject)
+      return await new Promise<Address>((resolve, reject) => {
+        proxyContract.methods[fn]().call().then((v) => resolve(v as Address)).catch(reject)
       })
     } catch {
       continue

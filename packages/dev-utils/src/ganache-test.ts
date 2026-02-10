@@ -37,7 +37,7 @@ export async function getContractFromEvent(
   if (!filter?.expectedData) {
     return logs[logIndex].address
   }
-  const filteredLogs = logs.filter((log: any) => log.data === filter.expectedData)
+  const filteredLogs = logs.filter((log) => log.data === filter.expectedData)
   if (filteredLogs.length === 0) {
     throw new Error(
       `Error: contract could not be found matching signature ${eventSignature} with data ${filter.expectedData}`

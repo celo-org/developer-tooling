@@ -1,6 +1,7 @@
 import {
   CeloTransactionObject,
   CeloTx,
+  DecodedParamsObject,
   EventLog,
   parseDecodedParams,
   TransactionResult,
@@ -175,7 +176,7 @@ async function innerDisplaySendTx(
           displayEventName.includes(eventName)
       )
       .forEach(([eventName, log]) => {
-        const { params } = parseDecodedParams((log as EventLog).returnValues)
+        const { params } = parseDecodedParams((log as EventLog).returnValues as DecodedParamsObject)
         console.log(chalk.magenta.bold(`${eventName}:`))
         printValueMap(params, chalk.magenta)
       })

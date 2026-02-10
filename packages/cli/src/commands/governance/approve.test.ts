@@ -582,7 +582,7 @@ testWithAnvilL2(
 
         const protocolKit = await Safe.init({
           predictedSafe: predictSafe,
-          provider: (client.currentProvider as any as CeloProvider).toEip1193Provider(),
+          provider: (client.currentProvider as unknown as CeloProvider).toEip1193Provider(),
           signer: securityCouncilSafeSignatory1,
         })
 
@@ -593,7 +593,10 @@ testWithAnvilL2(
           ...deploymentTransaction,
         })
 
-        const safeAddress = getSafeAddressFromDeploymentTx(receipt, '1.3.0')
+        const safeAddress = getSafeAddressFromDeploymentTx(
+          receipt as unknown as Parameters<typeof getSafeAddressFromDeploymentTx>[0],
+          '1.3.0'
+        )
 
         protocolKit.connect({ safeAddress })
 

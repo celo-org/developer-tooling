@@ -95,5 +95,5 @@ export const signatureToAbiDefinition = (fnSignature: string): ABIDefinition => 
 }
 
 /** @internal */
-export const decodeStringParameter = (ethAbi: AbiCoder, str: string) =>
-  ethAbi.decodeParameter('string', ensureLeading0x(str))
+export const decodeStringParameter = (ethAbi: AbiCoder, str: string): string =>
+  ethAbi.decodeParameter('string', ensureLeading0x(str)) as string

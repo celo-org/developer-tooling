@@ -1,3 +1,4 @@
+import { Web3 } from '@celo/connect'
 import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
 import { setBalance, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
@@ -440,7 +441,7 @@ testWithAnvilL2(
   },
   { chainId: 42220 }
 )
-async function timeTravelAndSwitchEpoch(kit: ContractKit, client: any, userAddress: string) {
+async function timeTravelAndSwitchEpoch(kit: ContractKit, client: Web3, userAddress: string) {
   const epochManagerWrapper = await kit.contracts.getEpochManager()
   const epochDuration = await epochManagerWrapper.epochDuration()
   await timeTravel(epochDuration + 60, client)

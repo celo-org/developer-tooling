@@ -81,7 +81,7 @@ describe('Transaction Utils', () => {
     })
 
     // Helper: parse a value that may be a hex string (from web3 mutation) or a number
-    const toNumber = (val: any): number => {
+    const toNumber = (val: unknown): number => {
       if (typeof val === 'string' && val.startsWith('0x')) return parseInt(val, 16)
       return Number(val)
     }
