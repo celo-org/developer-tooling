@@ -95,7 +95,7 @@ const registryRepointRawArgs = (abiCoder: AbiCoder, tx: ProposalTransaction) => 
   const params = abiCoder.decodeParameters(setAddressAbi.inputs!, trimLeading0x(tx.input).slice(8))
   return {
     name: params.identifier as CeloContract,
-    address: params.addr,
+    address: params.addr as string,
   }
 }
 
