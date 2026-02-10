@@ -5,6 +5,19 @@ const debugRpcPayload = debugFactory('rpc:payload')
 const debugRpcResponse = debugFactory('rpc:response')
 const debugRpcCallback = debugFactory('rpc:callback:exception')
 
+const SENSITIVE_METHODS = new Set([
+  'personal_unlockAccount',
+  'personal_sign',
+  'personal_importRawKey',
+])
+
+function sanitizePayload(payload: JsonRpcPayload): JsonRpcPayload {
+  if (SENSITIVE_METHODS.has(payload.method)) {
+    return { ...payload, params: ['[REDACTED]'] }
+  }
+  return payload
+}
+
 export function rpcCallHandler(
   payload: JsonRpcPayload,
   handler: (p: JsonRpcPayload) => Promise<any>,
@@ -96,7 +109,7 @@ export class HttpRpcCaller implements RpcCaller {
     payload: JsonRpcPayload,
     callback: (error: Error | null, result?: JsonRpcResponse) => void
   ): void {
-    debugRpcPayload('%O', payload)
+    debugRpcPayload('%O', sanitizePayload(payload))
 
     const decoratedCallback: Callback<JsonRpcResponse> = (
       error: Error | null,
