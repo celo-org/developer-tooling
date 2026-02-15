@@ -1,5 +1,5 @@
-import { Registry } from '@celo/abis/web3/Registry'
 import { Address, StrongAddress } from '@celo/base/lib/address'
+import { Contract } from '@celo/connect'
 import { asCoreContractsOwner, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import BigNumber from 'bignumber.js'
@@ -20,7 +20,7 @@ testWithAnvilL2('Governance Wrapper', (client) => {
   let governanceApproverMultiSig: MultiSigWrapper
   let lockedGold: LockedGoldWrapper
   let accountWrapper: AccountsWrapper
-  let registry: Registry
+  let registry: Contract
   let minDeposit: string
   let dequeueFrequency: number
   let referendumStageDuration: number

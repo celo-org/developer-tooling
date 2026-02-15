@@ -1,5 +1,4 @@
-import { FeeHandler } from '@celo/abis/web3/FeeHandler'
-import { Address } from '@celo/connect'
+import { Address, Contract } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import { BaseWrapper, proxyCall, proxySend } from './BaseWrapper'
 
@@ -40,7 +39,7 @@ export interface ExchangeProposalReadable {
   implictPricePerCelo: BigNumber
 }
 
-export class FeeHandlerWrapper extends BaseWrapper<FeeHandler> {
+export class FeeHandlerWrapper extends BaseWrapper<Contract> {
   owner = proxyCall(this.contract.methods.owner)
 
   handleAll = proxySend(this.connection, this.contract.methods.handleAll)

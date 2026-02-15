@@ -1,4 +1,4 @@
-import { EpochManager } from '@celo/abis/web3/EpochManager'
+import { Contract } from '@celo/connect'
 import { NULL_ADDRESS } from '@celo/base'
 import BigNumber from 'bignumber.js'
 import { proxyCall, proxySend, valueToInt, valueToString } from './BaseWrapper'
@@ -27,7 +27,7 @@ export interface EpochManagerConfig {
 /**
  * Contract handling epoch management.
  */
-export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
+export class EpochManagerWrapper extends BaseWrapperForGoverning<Contract> {
   public get _contract() {
     return this.contract
   }
@@ -168,7 +168,7 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
     const electedGroups = Array.from(
       new Set(
         await Promise.all(
-          elected.map(async (validator) => validators.getMembershipInLastEpoch(validator))
+          elected.map(async (validator: string) => validators.getMembershipInLastEpoch(validator))
         )
       )
     )

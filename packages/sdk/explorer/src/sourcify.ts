@@ -10,9 +10,32 @@
  *  // do something with it.
  * }
  */
-import { AbiCoder, ABIDefinition, AbiItem, Address, Connection } from '@celo/connect'
+import { AbiCoder, ABIDefinition, AbiItem, AbiInput, Address, Connection } from '@celo/connect'
 import fetch from 'cross-fetch'
 import { ContractMapping, mapFromPairs } from './base'
+
+/**
+ * Convert an ABI item to a function signature string like `transfer(address,uint256)`.
+ * Replaces the former web3 internal `_jsonInterfaceMethodToString`.
+ */
+function abiItemToSignatureString(item: AbiItem): string {
+  if (item.type === 'function' || item.type === 'constructor' || item.type === 'event') {
+    const inputTypes = (item.inputs || []).map((input: AbiInput) => formatAbiInputType(input))
+    return `${item.name || ''}(${inputTypes.join(',')})`
+  }
+  return item.name || ''
+}
+
+function formatAbiInputType(input: AbiInput): string {
+  if (input.type === 'tuple' && input.components) {
+    return `(${input.components.map((c: AbiInput) => formatAbiInputType(c)).join(',')})`
+  }
+  if (input.type.startsWith('tuple[') && input.components) {
+    const suffix = input.type.slice(5) // e.g. '[]' or '[3]'
+    return `(${input.components.map((c: AbiInput) => formatAbiInputType(c)).join(',')})${suffix}`
+  }
+  return input.type
+}
 
 const PROXY_IMPLEMENTATION_GETTERS = [
   '_getImplementation',
@@ -67,16 +90,12 @@ export class Metadata {
   public fnMapping: Map<string, ABIDefinition> = new Map()
 
   private abiCoder: AbiCoder
-  private jsonInterfaceMethodToString: (item: AbiItem) => string
   private address: Address
 
   constructor(connection: Connection, address: Address, response: any) {
     this.abiCoder = connection.getAbiCoder()
 
     this.response = response as MetadataResponse
-    // XXX: For some reason this isn't exported as it should be
-    // @ts-ignore
-    this.jsonInterfaceMethodToString = connection.web3.utils._jsonInterfaceMethodToString
     this.address = address
   }
 
@@ -154,7 +173,7 @@ export class Metadata {
       // Method is a full call signature with arguments
       return (
         this.abi?.filter((item) => {
-          return item.type === 'function' && this.jsonInterfaceMethodToString(item) === query
+          return item.type === 'function' && abiItemToSignatureString(item) === query
         }) || []
       )
     } else {
@@ -229,13 +248,13 @@ export async function tryGetProxyImplementation(
   connection: Connection,
   contract: Address
 ): Promise<Address | undefined> {
-  const proxyContract = new connection.web3.eth.Contract(PROXY_ABI, contract)
+  const proxyContract = connection.createContract(PROXY_ABI, contract)
   for (const fn of PROXY_IMPLEMENTATION_GETTERS) {
     try {
       return await new Promise<Address>((resolve, reject) => {
         proxyContract.methods[fn]()
           .call()
-          .then((v) => resolve(v as Address))
+          .then((v: any) => resolve(v as Address))
           .catch(reject)
       })
     } catch {
@@ -244,11 +263,8 @@ export async function tryGetProxyImplementation(
   }
 
   try {
-    const hexValue = await connection.web3.eth.getStorageAt(
-      contract,
-      PROXY_IMPLEMENTATION_POSITION_UUPS
-    )
-    const address = connection.web3.utils.toChecksumAddress('0x' + hexValue.slice(-40))
+    const hexValue = await connection.getStorageAt(contract, PROXY_IMPLEMENTATION_POSITION_UUPS)
+    const address = ('0x' + hexValue.slice(-40)) as Address
     return address
   } catch {
     return undefined

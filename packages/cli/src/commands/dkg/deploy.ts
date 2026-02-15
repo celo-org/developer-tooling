@@ -25,8 +25,7 @@ export default class DKGDeploy extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(DKGDeploy)
-    const web3 = kit.connection.web3
-    const dkg = new web3.eth.Contract(DKG.abi)
+    const dkg = kit.connection.createContract(DKG.abi, '0x0000000000000000000000000000000000000000')
 
     await displayWeb3Tx(
       'deployDKG',

@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js'
 import { ContractKit } from '../kit'
 
 export const startAndFinishEpochProcess = async (kit: ContractKit) => {
-  const [from] = await kit.web3.eth.getAccounts()
+  const [from] = await kit.connection.getAccounts()
   const epochManagerWrapper = await kit.contracts.getEpochManager()
 
   await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({ from })
@@ -20,7 +20,7 @@ export const topUpWithToken = async (
 ) => {
   const token = await kit.contracts.getStableToken(stableToken)
 
-  await withImpersonatedAccount(kit.web3, STABLES_ADDRESS, async () => {
+  await withImpersonatedAccount(kit.connection as any, STABLES_ADDRESS, async () => {
     await token.transfer(recipientAddress, amount.toFixed()).sendAndWaitForReceipt({
       from: STABLES_ADDRESS,
     })

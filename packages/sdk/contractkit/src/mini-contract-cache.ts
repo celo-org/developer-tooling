@@ -1,10 +1,12 @@
-import { newAccounts } from '@celo/abis/web3/Accounts'
-import { newGoldToken } from '@celo/abis/web3/GoldToken'
-import { newStableToken } from '@celo/abis/web3/mento/StableToken'
-import { newStableTokenBRL } from '@celo/abis/web3/mento/StableTokenBRL'
-import { newStableTokenEUR } from '@celo/abis/web3/mento/StableTokenEUR'
+import {
+  accountsABI,
+  goldTokenABI,
+  stableTokenABI,
+  stableTokenBrlABI,
+  stableTokenEurABI,
+} from '@celo/abis'
 import { StableToken } from '@celo/base'
-import { Connection } from '@celo/connect'
+import { AbiItem, Connection, Contract } from '@celo/connect'
 import { AddressRegistry } from './address-registry'
 import { CeloContract } from './base'
 import { ContractCacheType } from './basic-contract-cache-type'
@@ -13,25 +15,30 @@ import { AccountsWrapper } from './wrappers/Accounts'
 import { GoldTokenWrapper } from './wrappers/GoldTokenWrapper'
 import { StableTokenWrapper } from './wrappers/StableTokenWrapper'
 
-const MINIMUM_CONTRACTS = {
+interface MinContractEntry {
+  abi: readonly any[]
+  wrapper: new (connection: Connection, contract: any) => any
+}
+
+const MINIMUM_CONTRACTS: Record<string, MinContractEntry> = {
   [CeloContract.Accounts]: {
-    newInstance: newAccounts,
+    abi: accountsABI,
     wrapper: AccountsWrapper,
   },
   [CeloContract.CeloToken]: {
-    newInstance: newGoldToken,
+    abi: goldTokenABI,
     wrapper: GoldTokenWrapper,
   },
   [CeloContract.StableToken]: {
-    newInstance: newStableToken,
+    abi: stableTokenABI,
     wrapper: StableTokenWrapper,
   },
   [CeloContract.StableTokenBRL]: {
-    newInstance: newStableTokenBRL,
+    abi: stableTokenBrlABI,
     wrapper: StableTokenWrapper,
   },
   [CeloContract.StableTokenEUR]: {
-    newInstance: newStableTokenEUR,
+    abi: stableTokenEurABI,
     wrapper: StableTokenWrapper,
   },
 }
@@ -39,8 +46,6 @@ const MINIMUM_CONTRACTS = {
 export type ContractsBroughtBase = typeof MINIMUM_CONTRACTS
 
 type Keys = keyof ContractsBroughtBase
-
-type Wrappers<T extends Keys> = InstanceType<ContractsBroughtBase[T]['wrapper']>
 
 const contractsWhichRequireCache = new Set([
   CeloContract.Attestations,
@@ -61,7 +66,7 @@ const contractsWhichRequireCache = new Set([
  */
 
 export class MiniContractCache implements ContractCacheType {
-  private cache: Map<keyof ContractsBroughtBase, any> = new Map()
+  private cache: Map<string, any> = new Map()
 
   constructor(
     readonly connection: Connection,
@@ -84,51 +89,45 @@ export class MiniContractCache implements ContractCacheType {
   /**
    * Get Contract wrapper
    */
-  public async getContract<ContractKey extends keyof ContractsBroughtBase>(
-    contract: ContractKey,
-    address?: string
-  ): Promise<Wrappers<ContractKey>> {
+  public async getContract(contract: Keys, address?: string): Promise<any> {
     if (!this.isContractAvailable(contract)) {
       throw new Error(
-        `This instance of MiniContracts was not given a mapping for ${contract}. Either add it or use WrapperCache for full set of contracts`
+        `This instance of MiniContracts was not given a mapping for ${String(contract)}. Either add it or use WrapperCache for full set of contracts`
       )
     }
 
-    if (contractsWhichRequireCache.has(contract)) {
+    if (contractsWhichRequireCache.has(contract as CeloContract)) {
       throw new Error(
-        `${contract} cannot be used with MiniContracts as it requires an instance of WrapperCache to be passed in as an argument`
+        `${String(contract)} cannot be used with MiniContracts as it requires an instance of WrapperCache to be passed in as an argument`
       )
     }
 
-    if (this.cache.get(contract) == null || address !== undefined) {
-      await this.setContract<ContractKey>(contract, address)
+    if (this.cache.get(contract as string) == null || address !== undefined) {
+      await this.setContract(contract, address)
     }
-    return this.cache.get(contract)! as Wrappers<ContractKey>
+    return this.cache.get(contract as string)!
   }
 
-  private async setContract<ContractKey extends keyof ContractsBroughtBase>(
-    contract: ContractKey,
-    address: string | undefined
-  ) {
+  private async setContract(contract: Keys, address: string | undefined) {
     if (!address) {
-      address = await this.registry.addressFor(contract)
+      address = await this.registry.addressFor(contract as CeloContract)
     }
 
-    const classes = this.contractClasses[contract]
+    const classes = this.contractClasses[contract as string]
 
-    const instance = classes.newInstance(this.connection.web3, address)
+    const instance: Contract = this.connection.createContract(classes.abi as AbiItem[], address)
 
-    const Klass = classes.wrapper as ContractsBroughtBase[ContractKey]['wrapper']
-    const wrapper = new Klass(this.connection, instance as any)
+    const Klass = classes.wrapper
+    const wrapper = new Klass(this.connection, instance)
 
-    this.cache.set(contract, wrapper)
+    this.cache.set(contract as string, wrapper)
   }
 
-  public invalidateContract<C extends keyof ContractsBroughtBase>(contract: C) {
-    this.cache.delete(contract)
+  public invalidateContract(contract: Keys) {
+    this.cache.delete(contract as string)
   }
 
-  private isContractAvailable(contract: keyof ContractsBroughtBase) {
-    return !!this.contractClasses[contract]
+  private isContractAvailable(contract: Keys) {
+    return !!this.contractClasses[contract as string]
   }
 }

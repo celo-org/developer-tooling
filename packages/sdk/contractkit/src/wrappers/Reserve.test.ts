@@ -62,9 +62,12 @@ testWithAnvilL2('Reserve Wrapper', (client) => {
 
   test('can get asset target weights which sum to 100%', async () => {
     const targets = await reserve.getAssetAllocationWeights()
-    expect(targets.reduce((total, current) => total.plus(current), new BigNumber(0))).toEqual(
-      new BigNumber(100 * 10_000_000_000_000_000_000_000)
-    )
+    expect(
+      targets.reduce(
+        (total: BigNumber, current: BigNumber) => total.plus(current),
+        new BigNumber(0)
+      )
+    ).toEqual(new BigNumber(100 * 10_000_000_000_000_000_000_000))
   })
 
   test('can get asset target symbols ', async () => {

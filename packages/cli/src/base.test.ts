@@ -61,17 +61,17 @@ describe('flags', () => {
   describe('--node celo-sepolia', () => {
     it('it connects to 11_142_220', async () => {
       const command = new BasicCommand(['--node', 'celo-sepolia'], config)
-      const runnerWeb3 = await command.getWeb3()
-      const connectdChain = await runnerWeb3.eth.getChainId()
-      expect(connectdChain).toBe(11_142_220)
+      const runnerClient = await command.getPublicClient()
+      const connectdChain = runnerClient.chain
+      expect(connectdChain.id).toBe(11_142_220)
     })
   })
   describe.each(['celo', 'mainnet'])('--node  %s', (node) => {
     it('it connects to 42220', async () => {
       const command = new BasicCommand(['--node', node], config)
-      const runnerWeb3 = await command.getWeb3()
-      const connectdChain = await runnerWeb3.eth.getChainId()
-      expect(connectdChain).toBe(42220)
+      const runnerClient = await command.getPublicClient()
+      const connectdChain = runnerClient.chain
+      expect(connectdChain.id).toBe(42220)
     })
   })
   describe('--node websockets', () => {

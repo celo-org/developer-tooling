@@ -25,9 +25,7 @@ export default class DKGRegister extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(DKGRegister)
-    const web3 = kit.connection.web3
-
-    const dkg = new web3.eth.Contract(DKG.abi as any, res.flags.address)
+    const dkg = kit.connection.createContract(DKG.abi as any, res.flags.address)
 
     const participantAddress = res.flags.participantAddress
     await displayWeb3Tx('allowlist', dkg.methods.allowlist(ensureLeading0x(participantAddress)), {

@@ -34,9 +34,7 @@ export default class DKGGet extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(DKGGet)
-    const web3 = kit.connection.web3
-
-    const dkg = new web3.eth.Contract(DKG.abi, res.flags.address)
+    const dkg = kit.connection.createContract(DKG.abi, res.flags.address)
 
     const methodType = res.flags.method as keyof typeof Method
     switch (methodType) {

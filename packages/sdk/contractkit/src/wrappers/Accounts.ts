@@ -1,7 +1,12 @@
-import { Accounts } from '@celo/abis/web3/Accounts'
 import { StrongAddress } from '@celo/base'
 import { NativeSigner, Signature, Signer } from '@celo/base/lib/signatureUtils'
-import { Address, CeloTransactionObject, CeloTxObject, toTransactionObject } from '@celo/connect'
+import {
+  Address,
+  CeloTransactionObject,
+  CeloTxObject,
+  toTransactionObject,
+  Contract,
+} from '@celo/connect'
 import {
   LocalSigner,
   hashMessageWithPrefix,
@@ -36,7 +41,7 @@ interface AccountSummary {
 /**
  * Contract for handling deposits needed for voting.
  */
-export class AccountsWrapper extends BaseWrapper<Accounts> {
+export class AccountsWrapper extends BaseWrapper<Contract> {
   private RELEASE_4_VERSION = newContractVersion(1, 1, 2, 0)
 
   /**
@@ -211,7 +216,7 @@ export class AccountsWrapper extends BaseWrapper<Accounts> {
   ): Promise<CeloTransactionObject<void>> {
     const account = this.connection.defaultAccount || (await this.connection.getAccounts())[0]
     if (await validatorsWrapper.isValidator(account)) {
-      const message = this.connection.web3.utils.soliditySha3({
+      const message = soliditySha3({
         type: 'address',
         value: account,
       })!
@@ -263,7 +268,7 @@ export class AccountsWrapper extends BaseWrapper<Accounts> {
     proofOfSigningKeyPossession: Signature
   ): Promise<CeloTransactionObject<void>> {
     const account = this.connection.defaultAccount || (await this.connection.getAccounts())[0]
-    const message = this.connection.web3.utils.soliditySha3({
+    const message = soliditySha3({
       type: 'address',
       value: account,
     })!
@@ -339,7 +344,7 @@ export class AccountsWrapper extends BaseWrapper<Accounts> {
     return this.getParsedSignatureOfAddress(
       account,
       signer,
-      NativeSigner(this.connection.web3.eth.sign, signer)
+      NativeSigner(this.connection.sign, signer)
     )
   }
 

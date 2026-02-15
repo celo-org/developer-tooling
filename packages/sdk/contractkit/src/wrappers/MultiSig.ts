@@ -1,5 +1,10 @@
-import { MultiSig } from '@celo/abis/web3/MultiSig'
-import { Address, CeloTransactionObject, CeloTxObject, toTransactionObject } from '@celo/connect'
+import {
+  Address,
+  CeloTransactionObject,
+  CeloTxObject,
+  toTransactionObject,
+  Contract,
+} from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import {
   BaseWrapper,
@@ -29,7 +34,7 @@ export interface TransactionDataWithOutConfirmations {
 /**
  * Contract for handling multisig actions
  */
-export class MultiSigWrapper extends BaseWrapper<MultiSig> {
+export class MultiSigWrapper extends BaseWrapper<Contract> {
   /**
    * Allows an owner to submit and confirm a transaction.
    * If an unexecuted transaction matching `txObject` exists on the multisig, adds a confirmation to that tx ID.
@@ -158,7 +163,7 @@ export class MultiSigWrapper extends BaseWrapper<MultiSig> {
   async getConfirmations(txId: number) {
     const owners = await this.getOwners()
     const confirmationsOrEmpties = await Promise.all(
-      owners.map(async (owner) => {
+      owners.map(async (owner: string) => {
         const confirmation = await this.contract.methods.confirmations(txId, owner).call()
         if (confirmation) {
           return owner

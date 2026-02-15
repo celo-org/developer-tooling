@@ -1,5 +1,4 @@
-import { IERC20 } from '@celo/abis/web3/IERC20'
-import { Connection } from '@celo/connect'
+import { Connection, Contract } from '@celo/connect'
 import { AddressRegistry } from './address-registry'
 import { CeloContract } from './base'
 import { ContractCacheType } from './basic-contract-cache-type'
@@ -75,7 +74,7 @@ interface WrapperCacheMap {
   [CeloContract.Election]?: ElectionWrapper
   [CeloContract.EpochManager]?: EpochManagerWrapper
   [CeloContract.EpochRewards]?: EpochRewardsWrapper
-  [CeloContract.ERC20]?: Erc20Wrapper<IERC20>
+  [CeloContract.ERC20]?: Erc20Wrapper<Contract>
   [CeloContract.Escrow]?: EscrowWrapper
   [CeloContract.FederatedAttestations]?: FederatedAttestationsWrapper
   [CeloContract.FeeCurrencyDirectory]?: FeeCurrencyDirectoryWrapper
@@ -190,7 +189,7 @@ export class WrapperCache implements ContractCacheType {
    */
   public async getContract<C extends ValidWrappers>(contract: C, address?: string) {
     if (this.wrapperCache[contract] == null || address !== undefined) {
-      const instance = await this._web3Contracts.getContract<C>(contract, address)
+      const instance = await this._web3Contracts.getContract(contract, address)
       if (contract === CeloContract.SortedOracles) {
         const Klass = WithRegistry[CeloContract.SortedOracles]
         this.wrapperCache[CeloContract.SortedOracles] = new Klass(

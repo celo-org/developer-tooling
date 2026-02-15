@@ -6,6 +6,7 @@ import {
   parseDecodedParams,
   signatureToAbiDefinition,
 } from '@celo/connect'
+import { toChecksumAddress } from '@celo/utils/lib/address'
 import { CeloContract, ContractKit } from '@celo/contractkit'
 import { PROXY_ABI } from '@celo/contractkit/lib/proxy'
 import { fromFixed } from '@celo/utils/lib/fixidity'
@@ -322,10 +323,7 @@ export class BlockExplorer {
     if (cached) {
       return cached
     }
-    const metadata = await fetchMetadata(
-      this.kit.connection,
-      this.kit.web3.utils.toChecksumAddress(address)
-    )
+    const metadata = await fetchMetadata(this.kit.connection, toChecksumAddress(address))
     const mapping = metadata?.toContractMapping()
     if (mapping) {
       this.addressMapping.set(address, mapping)

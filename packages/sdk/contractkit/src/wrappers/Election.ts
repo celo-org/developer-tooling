@@ -1,4 +1,3 @@
-import { Election } from '@celo/abis/web3/Election'
 import {
   eqAddress,
   findAddressIndex,
@@ -14,6 +13,7 @@ import {
   CeloTxObject,
   EventLog,
   toTransactionObject,
+  Contract,
 } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import {
@@ -76,7 +76,7 @@ export interface ElectionConfig {
 /**
  * Contract for voting for validators and managing validator groups.
  */
-export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
+export class ElectionWrapper extends BaseWrapperForGoverning<Contract> {
   /**
    * Returns the minimum and maximum number of validators that can be elected.
    * @returns The minimum and maximum number of validators that can be elected.
@@ -355,10 +355,10 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
   ): Promise<CeloTransactionObject<boolean>[]> {
     const groups = await this.contract.methods.getGroupsVotedForByAccount(account).call()
     const isActivatable = await Promise.all(
-      groups.map((g) => this.contract.methods.hasActivatablePendingVotes(account, g).call())
+      groups.map((g: string) => this.contract.methods.hasActivatablePendingVotes(account, g).call())
     )
-    const groupsActivatable = groups.filter((_, i) => isActivatable[i])
-    return groupsActivatable.map((g) =>
+    const groupsActivatable = groups.filter((_: string, i: number) => isActivatable[i])
+    return groupsActivatable.map((g: string) =>
       onBehalfOfAccount ? this._activateForAccount(g, account) : this._activate(g)
     )
   }
@@ -454,15 +454,15 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
   async getEligibleValidatorGroupsVotes(): Promise<ValidatorGroupVote[]> {
     const res = await this.contract.methods.getTotalVotesForEligibleValidatorGroups().call()
     return zip(
-      (a, b) => ({
+      (a: string, b: string) => ({
         address: a,
         name: '',
         votes: new BigNumber(b),
         capacity: new BigNumber(0),
-        eligible: true,
+        eligible: true as const,
       }),
-      res[0],
-      res[1]
+      res[0] as string[],
+      res[1] as string[]
     )
   }
 

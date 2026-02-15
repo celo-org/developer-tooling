@@ -54,7 +54,10 @@ export default class ValidatorRegister extends BaseCommand {
 
     // register encryption key on accounts contract
     // TODO: Use a different key data encryption
-    const pubKey = await addressToPublicKey(res.flags.from, kit.web3.eth.sign)
+    const pubKey = await addressToPublicKey(
+      res.flags.from,
+      kit.connection.sign.bind(kit.connection)
+    )
     const setKeyTx = accounts.setAccountDataEncryptionKey(pubKey)
     await displaySendTx('Set encryption key', setKeyTx)
   }

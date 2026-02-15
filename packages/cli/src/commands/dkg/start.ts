@@ -20,9 +20,7 @@ export default class DKGStart extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(DKGStart)
-    const web3 = kit.connection.web3
-
-    const dkg = new web3.eth.Contract(DKG.abi, res.flags.address)
+    const dkg = kit.connection.createContract(DKG.abi, res.flags.address)
 
     await displayWeb3Tx('start', dkg.methods.start(), { from: res.flags.from })
     this.log('DKG Started!')

@@ -1,5 +1,4 @@
-import { newICeloVersionedContract } from '@celo/abis/web3/ICeloVersionedContract'
-import { newProxy } from '@celo/abis/web3/Proxy'
+import { iCeloVersionedContractABI, proxyABI } from '@celo/abis'
 import { concurrentMap } from '@celo/base'
 import { CeloContract } from '@celo/contractkit'
 import { ux } from '@oclif/core'
@@ -39,7 +38,10 @@ export default class Contracts extends BaseCommand {
           implementation = 'NONE'
         } else {
           try {
-            implementation = await newProxy(kit.web3, proxy).methods._getImplementation().call()
+            implementation = await kit.connection
+              .createContract(proxyABI as any, proxy)
+              .methods._getImplementation()
+              .call()
           } catch (e) {
             // if we fail to get implementation that means it doesnt have one so set it to NONE
             implementation = 'NONE'
@@ -51,7 +53,8 @@ export default class Contracts extends BaseCommand {
           version = 'NONE'
         } else {
           try {
-            const raw = await newICeloVersionedContract(kit.web3, implementation)
+            const raw = await kit.connection
+              .createContract(iCeloVersionedContractABI as any, implementation)
               .methods.getVersionNumber()
               .call()
             version = `${raw[0]}.${raw[1]}.${raw[2]}.${raw[3]}`

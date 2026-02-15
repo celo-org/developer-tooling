@@ -1,4 +1,3 @@
-import { toTxResult } from '@celo/connect'
 import { ContractKit } from '@celo/contractkit'
 import { ProposalTransaction } from '@celo/contractkit/lib/wrappers/Governance'
 import { ProposalBuilder, proposalToJSON, ProposalTransactionJSON } from '@celo/governance'
@@ -33,17 +32,18 @@ async function tryProposal(
 
     try {
       if (call) {
-        await kit.web3.eth.call({
+        await kit.connection.rpcCaller.call('eth_call', [
+          { to: tx.to, from, value: tx.value, data: tx.input },
+          'latest',
+        ])
+      } else {
+        const txResult = await kit.connection.sendTransaction({
           to: tx.to,
           from,
           value: tx.value,
           data: tx.input,
         })
-      } else {
-        const txRes = toTxResult(
-          kit.web3.eth.sendTransaction({ to: tx.to, from, value: tx.value, data: tx.input })
-        )
-        await txRes.waitReceipt()
+        await txResult.waitReceipt()
       }
       console.log(chalk.green(`   ${chalk.bold('✔')}  Transaction ${i} success!`))
     } catch (err: any) {

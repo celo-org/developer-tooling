@@ -56,8 +56,24 @@ describe('Transaction Utils', () => {
 
   const setupConnection = async () => {
     connection = new Connection(mockProvider)
-    client = connection.web3
     connection.wallet = new LocalWallet()
+    const provider = connection.currentProvider
+    client = {
+      currentProvider: provider,
+      eth: {
+        signTransaction: (tx: CeloTx) =>
+          new Promise((resolve, reject) => {
+            provider.send({ id: 1, jsonrpc: '2.0', method: 'eth_signTransaction', params: [tx] }, ((
+              err: any,
+              resp: any
+            ) => {
+              if (err) reject(err)
+              else if (resp?.error) reject(new Error(resp.error.message))
+              else resolve(resp?.result)
+            }) as any)
+          }),
+      },
+    } as any
   }
   const verifyLocalSigning = async (celoTransaction: CeloTx): Promise<void> => {
     let recoveredSigner: string | undefined

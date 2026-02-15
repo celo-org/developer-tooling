@@ -1,6 +1,11 @@
-import { SortedOracles } from '@celo/abis/web3/SortedOracles'
 import { eqAddress, NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
-import { Address, CeloTransactionObject, Connection, toTransactionObject } from '@celo/connect'
+import {
+  Address,
+  CeloTransactionObject,
+  Connection,
+  toTransactionObject,
+  Contract,
+} from '@celo/connect'
 import { isValidAddress } from '@celo/utils/lib/address'
 import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
@@ -54,10 +59,10 @@ export type ReportTarget = StableTokenContract | Address
 /**
  * Currency price oracle contract.
  */
-export class SortedOraclesWrapper extends BaseWrapper<SortedOracles> {
+export class SortedOraclesWrapper extends BaseWrapper<Contract> {
   constructor(
     protected readonly connection: Connection,
-    protected readonly contract: SortedOracles,
+    protected readonly contract: Contract,
     protected readonly registry: AddressRegistry
   ) {
     super(connection, contract)

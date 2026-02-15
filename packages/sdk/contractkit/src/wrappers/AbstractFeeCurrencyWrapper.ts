@@ -51,7 +51,7 @@ export abstract class AbstractFeeCurrencyWrapper<
 
     return Promise.all(
       feeCurrencies.map(async (address) => {
-        let contract = new this.connection.web3.eth.Contract(MINIMAL_TOKEN_INFO_ABI, address)
+        let contract = this.connection.createContract(MINIMAL_TOKEN_INFO_ABI, address)
 
         const adaptedToken = (await contract.methods
           .adaptedToken()
@@ -65,7 +65,7 @@ export abstract class AbstractFeeCurrencyWrapper<
         // if standard didnt work try alt
 
         if (adaptedToken) {
-          contract = new this.connection.web3.eth.Contract(MINIMAL_TOKEN_INFO_ABI, adaptedToken)
+          contract = this.connection.createContract(MINIMAL_TOKEN_INFO_ABI, adaptedToken)
         }
 
         return Promise.all([

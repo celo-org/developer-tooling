@@ -1,8 +1,8 @@
 // NOTE: removing this import results in `yarn build` failures in Dockerfiles
 // after the move to node 10. This allows types to be inferred without
 // referencing '@celo/utils/node_modules/bignumber.js'
-import { GoldToken } from '@celo/abis/web3/GoldToken'
 import { Address } from '@celo/base'
+import { Contract } from '@celo/connect'
 import 'bignumber.js'
 import {
   proxySend,
@@ -16,7 +16,7 @@ import { CeloTokenWrapper } from './CeloTokenWrapper'
 /**
  * ERC-20 contract for Celo native currency.
  */
-export class GoldTokenWrapper extends CeloTokenWrapper<GoldToken> {
+export class GoldTokenWrapper extends CeloTokenWrapper<Contract> {
   /**
    * Increases the allowance of another user.
    * @param spender The address which is being approved to spend CELO.
@@ -44,8 +44,7 @@ export class GoldTokenWrapper extends CeloTokenWrapper<GoldToken> {
    * @param owner The address to query the balance of.
    * @return The balance of the specified address.
    */
-  balanceOf = (account: Address) =>
-    this.connection.web3.eth.getBalance(account).then(valueToBigNumber)
+  balanceOf = (account: Address) => this.connection.getBalance(account).then(valueToBigNumber)
 }
 
 export type GoldTokenWrapperType = GoldTokenWrapper

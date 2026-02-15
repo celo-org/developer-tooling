@@ -5,9 +5,9 @@ import {
   ETHEREUM_DERIVATION_PATH,
   StrongAddress,
 } from '@celo/base'
-import { ReadOnlyWallet, Web3 } from '@celo/connect'
-import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
-import { getWeb3ForKit } from '@celo/contractkit/lib/setupForKits'
+import { type Provider, ReadOnlyWallet } from '@celo/connect'
+import { ContractKit, newKitFromProvider } from '@celo/contractkit'
+import { getProviderForKit } from '@celo/contractkit/lib/setupForKits'
 import { ledgerToWalletClient } from '@celo/viem-account-ledger'
 import { AzureHSMWallet } from '@celo/wallet-hsm-azure'
 import { AddressValidation, newLedgerWalletWithSetup } from '@celo/wallet-ledger'
@@ -142,7 +142,7 @@ export abstract class BaseCommand extends Command {
   // useful for the LedgerWalletClient which sometimes needs user input on reads
   public isOnlyReadingWallet = false
 
-  private _web3: Web3 | null = null
+  private _provider: Provider | null = null
   private _kit: ContractKit | null = null
 
   private publicClient: PublicCeloClient | null = null
@@ -150,12 +150,13 @@ export abstract class BaseCommand extends Command {
   private _parseResult: null | ParserOutput<FlagOutput, FlagOutput> = null
   private ledgerTransport: Awaited<ReturnType<(typeof _TransportNodeHid)['open']>> | null = null
 
-  async getWeb3() {
-    if (!this._web3) {
-      const kit = await this.getKit()
-      this._web3 = kit.web3
-    }
-    return this._web3
+  /**
+   * @deprecated Use getKit().connection or getPublicClient()/getWalletClient() instead
+   * Returns an object with currentProvider for backward compatibility
+   */
+  async getWeb3(): Promise<{ currentProvider: Provider }> {
+    const kit = await this.getKit()
+    return { currentProvider: kit.connection.currentProvider }
   }
 
   get _wallet(): ReadOnlyWallet | undefined {
@@ -172,14 +173,25 @@ export abstract class BaseCommand extends Command {
     return (res.flags && res.flags.node) || getNodeUrl(this.config.configDir)
   }
 
-  async newWeb3() {
-    const nodeUrl = await this.getNodeUrl()
-    return getWeb3ForKit(nodeUrl, undefined)
+  /**
+   * @deprecated Use newProvider() instead
+   */
+  async newWeb3(): Promise<{ currentProvider: Provider }> {
+    const provider = await this.newProvider()
+    return { currentProvider: provider }
+  }
+
+  async newProvider(): Promise<Provider> {
+    if (!this._provider) {
+      const nodeUrl = await this.getNodeUrl()
+      this._provider = getProviderForKit(nodeUrl, undefined)
+    }
+    return this._provider
   }
 
   async getKit() {
     if (!this._kit) {
-      this._kit = newKitFromWeb3(await this.newWeb3())
+      this._kit = newKitFromProvider(await this.newProvider())
     }
 
     const res = await this.parse()

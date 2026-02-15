@@ -1,4 +1,4 @@
-import { newReleaseGold } from '@celo/abis/web3/ReleaseGold'
+import { releaseGoldABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
 import { ReleaseGoldWrapper } from '@celo/contractkit/lib/wrappers/ReleaseGold'
 import { BaseCommand } from '../base'
@@ -37,7 +37,7 @@ export abstract class ReleaseGoldBaseCommand extends BaseCommand {
     if (!this._releaseGoldWrapper) {
       this._releaseGoldWrapper = new ReleaseGoldWrapper(
         kit.connection,
-        newReleaseGold(kit.connection.web3, await this.contractAddress()),
+        kit.connection.createContract(releaseGoldABI as any, await this.contractAddress()),
         kit.contracts
       )
       // Call arbitrary release gold fn to verify `contractAddress` is a releasegold contract.

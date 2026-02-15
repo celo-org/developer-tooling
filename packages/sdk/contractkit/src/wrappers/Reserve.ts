@@ -1,5 +1,4 @@
-import { Reserve } from '@celo/abis/web3/mento/Reserve'
-import { Address, EventLog } from '@celo/connect'
+import { Address, EventLog, Contract } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import {
   BaseWrapper,
@@ -20,7 +19,7 @@ export interface ReserveConfig {
 /**
  * Contract for handling reserve for stable currencies
  */
-export class ReserveWrapper extends BaseWrapper<Reserve> {
+export class ReserveWrapper extends BaseWrapper<Contract> {
   /**
    * Query Tobin tax staleness threshold parameter.
    * @returns Current Tobin tax staleness threshold.
@@ -71,7 +70,7 @@ export class ReserveWrapper extends BaseWrapper<Reserve> {
   getAssetAllocationSymbols = proxyCall(
     this.contract.methods.getAssetAllocationSymbols,
     undefined,
-    (symbols) => symbols.map((symbol) => this.connection.hexToAscii(symbol))
+    (symbols: string[]) => symbols.map((symbol: string) => this.connection.hexToAscii(symbol))
   )
 
   /**

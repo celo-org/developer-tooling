@@ -1,8 +1,14 @@
-import { ReleaseGold } from '@celo/abis/web3/ReleaseGold'
 import { concurrentMap } from '@celo/base'
 import { StrongAddress, findAddressIndex } from '@celo/base/lib/address'
 import { Signature } from '@celo/base/lib/signatureUtils'
-import { Address, CeloTransactionObject, CeloTxObject, toTransactionObject } from '@celo/connect'
+import {
+  Address,
+  CeloTransactionObject,
+  CeloTxObject,
+  toTransactionObject,
+  Contract,
+} from '@celo/connect'
+import { soliditySha3 } from '@celo/utils/lib/solidity'
 import { hashMessageWithPrefix, signedMessageToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
 import { flatten } from 'fp-ts/lib/Array'
@@ -64,7 +70,7 @@ interface RevocationInfo {
 /**
  * Contract for handling an instance of a ReleaseGold contract.
  */
-export class ReleaseGoldWrapper extends BaseWrapperForGoverning<ReleaseGold> {
+export class ReleaseGoldWrapper extends BaseWrapperForGoverning<Contract> {
   /**
    * Returns the underlying Release schedule of the ReleaseGold contract
    * @return A ReleaseSchedule.
@@ -507,7 +513,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<ReleaseGold> {
     const validators = await this.contracts.getValidators()
     const account = this.address
     if (await validators.isValidator(account)) {
-      const message = this.connection.web3.utils.soliditySha3({
+      const message = soliditySha3({
         type: 'address',
         value: account,
       })!
@@ -559,7 +565,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<ReleaseGold> {
     proofOfSigningKeyPossession: Signature
   ): Promise<CeloTransactionObject<void>> {
     const account = this.address
-    const message = this.connection.web3.utils.soliditySha3({
+    const message = soliditySha3({
       type: 'address',
       value: account,
     })!

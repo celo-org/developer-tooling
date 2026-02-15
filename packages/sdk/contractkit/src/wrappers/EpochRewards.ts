@@ -1,10 +1,10 @@
-import { EpochRewards } from '@celo/abis/web3/EpochRewards'
+import { Contract } from '@celo/connect'
 import { fromFixed } from '@celo/utils/lib/fixidity'
 import { BaseWrapper, proxyCall, valueToBigNumber } from './BaseWrapper'
 
 const parseFixidity = (v: string) => fromFixed(valueToBigNumber(v))
 
-export class EpochRewardsWrapper extends BaseWrapper<EpochRewards> {
+export class EpochRewardsWrapper extends BaseWrapper<Contract> {
   getRewardsMultiplierParameters = proxyCall(
     this.contract.methods.getRewardsMultiplierParameters,
     undefined,

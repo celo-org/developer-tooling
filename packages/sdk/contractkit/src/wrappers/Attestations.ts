@@ -1,7 +1,6 @@
-import { Attestations } from '@celo/abis/web3/Attestations'
 import { StableToken } from '@celo/base'
 import { eqAddress } from '@celo/base/lib/address'
-import { Address, Connection, toTransactionObject } from '@celo/connect'
+import { Address, Connection, toTransactionObject, Contract } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import { AccountsWrapper } from './Accounts'
 import {
@@ -60,10 +59,10 @@ interface ContractsForAttestation {
   getStableToken(stableToken: StableToken): Promise<StableTokenWrapper>
 }
 
-export class AttestationsWrapper extends BaseWrapper<Attestations> {
+export class AttestationsWrapper extends BaseWrapper<Contract> {
   constructor(
     protected readonly connection: Connection,
-    protected readonly contract: Attestations,
+    protected readonly contract: Contract,
     protected readonly contracts: ContractsForAttestation
   ) {
     super(connection, contract)
@@ -313,7 +312,7 @@ export class AttestationsWrapper extends BaseWrapper<Attestations> {
 
   async revoke(identifer: string, account: Address) {
     const accounts = await this.lookupAccountsForIdentifier(identifer)
-    const idx = accounts.findIndex((acc) => eqAddress(acc, account))
+    const idx = accounts.findIndex((acc: string) => eqAddress(acc, account))
     if (idx < 0) {
       throw new Error("Account not found in identifier's accounts")
     }

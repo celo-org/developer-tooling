@@ -1,11 +1,10 @@
-import { LockedGold } from '@celo/abis/web3/LockedGold'
 import {
   AddressListItem as ALI,
   Comparator,
   linkedListChanges as baseLinkedListChanges,
   zip,
 } from '@celo/base/lib/collections'
-import { Address, CeloTransactionObject, EventLog } from '@celo/connect'
+import { Address, CeloTransactionObject, EventLog, Contract } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import {
   proxyCall,
@@ -71,7 +70,7 @@ export interface LockedGoldConfig {
  * Contract for handling deposits needed for voting.
  */
 
-export class LockedGoldWrapper extends BaseWrapperForGoverning<LockedGold> {
+export class LockedGoldWrapper extends BaseWrapperForGoverning<Contract> {
   /**
    * Withdraws a gold that has been unlocked after the unlocking period has passed.
    * @param index The index of the pending withdrawal to withdraw.
@@ -104,7 +103,7 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<LockedGold> {
   revokeDelegated = proxySend(this.connection, this.contract.methods.revokeDelegatedGovernanceVotes)
 
   getMaxDelegateesCount = async () => {
-    const maxDelegateesCountHex = await this.connection.web3.eth.getStorageAt(
+    const maxDelegateesCountHex = await this.connection.getStorageAt(
       // @ts-ignore
       this.contract._address,
       10
@@ -287,12 +286,12 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<LockedGold> {
   async getPendingWithdrawals(account: string) {
     const withdrawals = await this.contract.methods.getPendingWithdrawals(account).call()
     return zip(
-      (time, value): PendingWithdrawal => ({
+      (time: string, value: string): PendingWithdrawal => ({
         time: valueToBigNumber(time),
         value: valueToBigNumber(value),
       }),
-      withdrawals[1],
-      withdrawals[0]
+      withdrawals[1] as string[],
+      withdrawals[0] as string[]
     )
   }
 

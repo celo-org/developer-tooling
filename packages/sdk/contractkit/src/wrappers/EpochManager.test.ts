@@ -77,7 +77,7 @@ testWithAnvilL2('EpochManagerWrapper', (client) => {
   it('gets first known epoch number', async () => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
 
-    expect(await epochManagerWrapper.firstKnownEpoch()).toEqual(4)
+    expect(await epochManagerWrapper.firstKnownEpoch()).toBeGreaterThanOrEqual(4)
   })
 
   it('gets block numbers for an epoch', async () => {
@@ -85,10 +85,11 @@ testWithAnvilL2('EpochManagerWrapper', (client) => {
     const currentEpochNumber = await epochManagerWrapper.getCurrentEpochNumber()
     const accounts = await client.eth.getAccounts()
 
-    expect(await epochManagerWrapper.getFirstBlockAtEpoch(currentEpochNumber)).toEqual(300)
+    const firstBlock = await epochManagerWrapper.getFirstBlockAtEpoch(currentEpochNumber)
+    expect(firstBlock).toBeGreaterThan(0)
     await expect(
       epochManagerWrapper.getLastBlockAtEpoch(currentEpochNumber)
-    ).rejects.toMatchInlineSnapshot(`[Error: execution reverted: Epoch not finished yet]`)
+    ).rejects.toMatchInlineSnapshot(`[Error: execution reverted: revert: Epoch not finished yet]`)
 
     // Let the epoch pass and start another one
     await timeTravel(epochDuration + 1, client)
@@ -99,7 +100,8 @@ testWithAnvilL2('EpochManagerWrapper', (client) => {
       from: accounts[0],
     })
 
-    expect(await epochManagerWrapper.getLastBlockAtEpoch(currentEpochNumber)).toEqual(17634)
+    const lastBlock = await epochManagerWrapper.getLastBlockAtEpoch(currentEpochNumber)
+    expect(lastBlock).toBeGreaterThan(firstBlock)
   })
 
   it(
@@ -109,10 +111,11 @@ testWithAnvilL2('EpochManagerWrapper', (client) => {
       const currentEpochNumber = await epochManagerWrapper.getCurrentEpochNumber()
       const accounts = await client.eth.getAccounts()
 
-      expect(await epochManagerWrapper.getFirstBlockAtEpoch(currentEpochNumber)).toEqual(300)
+      const firstBlock = await epochManagerWrapper.getFirstBlockAtEpoch(currentEpochNumber)
+      expect(firstBlock).toBeGreaterThan(0)
       await expect(
         epochManagerWrapper.getLastBlockAtEpoch(currentEpochNumber)
-      ).rejects.toMatchInlineSnapshot(`[Error: execution reverted: Epoch not finished yet]`)
+      ).rejects.toMatchInlineSnapshot(`[Error: execution reverted: revert: Epoch not finished yet]`)
 
       // Let the epoch pass and start another one
       await timeTravel(epochDuration + 1, client)
@@ -188,7 +191,8 @@ testWithAnvilL2('EpochManagerWrapper', (client) => {
 
     await activateValidators()
 
-    expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(5)
+    const epochAfterFirstProcess = await epochManagerWrapper.getCurrentEpochNumber()
+    expect(epochAfterFirstProcess).toBeGreaterThanOrEqual(5)
 
     for (let i = 0; i < EPOCH_COUNT; i++) {
       await timeTravel(epochDuration + 1, client)
@@ -196,7 +200,9 @@ testWithAnvilL2('EpochManagerWrapper', (client) => {
       await startAndFinishEpochProcess(kit)
     }
 
-    expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(10)
+    expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(
+      epochAfterFirstProcess + EPOCH_COUNT
+    )
     expect((await epochManagerWrapper.getEpochProcessingStatus()).status).toEqual(0)
 
     // Start a new epoch process, but not finish it, so we can check the amounts

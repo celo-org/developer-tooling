@@ -1,4 +1,3 @@
-import { Governance } from '@celo/abis/web3/Governance'
 import {
   bufferToHex,
   ensureLeading0x,
@@ -9,7 +8,7 @@ import {
 } from '@celo/base/lib/address'
 import { concurrentMap } from '@celo/base/lib/async'
 import { zeroRange, zip } from '@celo/base/lib/collections'
-import { Address, CeloTxObject, CeloTxPending, toTransactionObject } from '@celo/connect'
+import { Address, CeloTxObject, CeloTxPending, toTransactionObject, Contract } from '@celo/connect'
 import { fromFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
 import {
@@ -70,7 +69,13 @@ export interface ProposalMetadata {
   descriptionURL: string
 }
 
-export type ProposalParams = Parameters<Governance['methods']['propose']>
+export type ProposalParams = [
+  (number | string)[],
+  string[],
+  string | number[],
+  (number | string)[],
+  string,
+]
 export type ProposalTransaction = Pick<CeloTxPending, 'to' | 'input' | 'value'>
 export type Proposal = ProposalTransaction[]
 
@@ -120,7 +125,13 @@ export interface Votes {
   [VoteValue.Yes]: BigNumber
 }
 
-export type HotfixParams = Parameters<Governance['methods']['executeHotfix']>
+export type HotfixParams = [
+  (number | string)[],
+  string[],
+  string | number[],
+  (number | string)[],
+  string | number[],
+]
 export const hotfixToParams = (proposal: Proposal, salt: Buffer): HotfixParams => {
   const p = proposalToParams(proposal, '') // no description URL for hotfixes
   return [p[0], p[1], p[2], p[3], bufferToHex(salt)]
@@ -155,7 +166,7 @@ const ZERO_BN = new BigNumber(0)
 /**
  * Contract managing voting for governance proposals.
  */
-export class GovernanceWrapper extends BaseWrapperForGoverning<Governance> {
+export class GovernanceWrapper extends BaseWrapperForGoverning<Contract> {
   /**
    * Querying number of possible concurrent proposals.
    * @returns Current number of possible concurrent proposals.
@@ -663,8 +674,8 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<Governance> {
   async getDequeue(filterZeroes = false) {
     const dequeue = await this.contract.methods.getDequeue().call()
     // filter non-zero as dequeued indices are reused and `deleteDequeuedProposal` zeroes
-    const dequeueIds = dequeue.map(valueToBigNumber)
-    return filterZeroes ? dequeueIds.filter((id) => !id.isZero()) : dequeueIds
+    const dequeueIds = (dequeue as string[]).map(valueToBigNumber)
+    return filterZeroes ? dequeueIds.filter((id: BigNumber) => !id.isZero()) : dequeueIds
   }
 
   /*
@@ -672,7 +683,9 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<Governance> {
    */
   async getVoteRecords(voter: Address): Promise<VoteRecord[]> {
     const dequeue = await this.getDequeue()
-    const voteRecords = await Promise.all(dequeue.map((id) => this.getVoteRecord(voter, id)))
+    const voteRecords = await Promise.all(
+      dequeue.map((id: BigNumber) => this.getVoteRecord(voter, id))
+    )
     return voteRecords.filter((record) => record != null) as VoteRecord[]
   }
 
@@ -723,10 +736,8 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<Governance> {
   }
 
   private async getDequeueIndex(proposalID: BigNumber.Value, dequeue?: BigNumber[]) {
-    if (!dequeue) {
-      dequeue = await this.getDequeue()
-    }
-    return this.getIndex(proposalID, dequeue)
+    const resolvedDequeue = dequeue ?? (await this.getDequeue())
+    return this.getIndex(proposalID, resolvedDequeue)
   }
 
   private async getQueueIndex(proposalID: BigNumber.Value, queue?: UpvoteRecord[]) {

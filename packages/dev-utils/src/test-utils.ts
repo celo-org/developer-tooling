@@ -1,5 +1,19 @@
 import { Connection, Provider, JsonRpcPayload, JsonRpcResponse, Web3 } from '@celo/connect'
+import BigNumber from 'bignumber.js'
+import { randomBytes } from 'crypto'
 import * as http from 'http'
+import {
+  encodePacked,
+  getAddress,
+  isAddress,
+  isHex,
+  keccak256,
+  pad,
+  toBytes,
+  toHex,
+  type Hex,
+} from 'viem'
+import { privateKeyToAddress } from 'viem/accounts'
 import migrationOverride from './migration-override.json'
 
 class SimpleHttpProvider implements Provider {
@@ -76,7 +90,7 @@ export function jsonRpcCall<O>(client: Web3, method: string, params: unknown[]):
           method,
           params,
         },
-        (err, res) => {
+        (err: Error | null, res?: JsonRpcResponse) => {
           if (err) {
             reject(err)
           } else if (!res) {
@@ -108,6 +122,165 @@ export function evmSnapshot(client: Web3) {
   return jsonRpcCall<string>(client, 'evm_snapshot', [])
 }
 
+// -- soliditySha3 / sha3 helpers (mirrors @celo/utils/lib/solidity) --
+
+type SolidityValue =
+  | string
+  | number
+  | bigint
+  | boolean
+  | { type: string; value: unknown }
+  | { t: string; v: unknown }
+
+function soliditySha3(...args: SolidityValue[]): string | null {
+  if (args.length === 0) return null
+
+  const types: string[] = []
+  const values: unknown[] = []
+
+  for (const arg of args) {
+    if (typeof arg === 'object' && arg !== null && 'type' in arg && 'value' in arg) {
+      types.push(arg.type as string)
+      values.push(arg.value)
+    } else if (typeof arg === 'object' && arg !== null && 't' in arg && 'v' in arg) {
+      const shorthand = arg as { t: string; v: unknown }
+      types.push(shorthand.t)
+      values.push(shorthand.v)
+    } else if (typeof arg === 'string') {
+      if (isHex(arg, { strict: true })) {
+        types.push('bytes')
+        values.push(arg)
+      } else {
+        types.push('string')
+        values.push(arg)
+      }
+    } else if (typeof arg === 'number' || typeof arg === 'bigint') {
+      types.push('uint256')
+      values.push(BigInt(arg))
+    } else if (typeof arg === 'boolean') {
+      types.push('bool')
+      values.push(arg)
+    }
+  }
+
+  // Coerce values for bytesN types
+  for (let i = 0; i < types.length; i++) {
+    const bytesMatch = types[i].match(/^bytes(\d+)$/)
+    if (bytesMatch && typeof values[i] === 'string') {
+      const size = parseInt(bytesMatch[1], 10)
+      let hex: Hex
+      if (isHex(values[i] as string, { strict: true })) {
+        hex = values[i] as Hex
+      } else {
+        hex = toHex(toBytes(values[i] as string))
+      }
+      const byteLen = (hex.length - 2) / 2
+      if (byteLen < size) {
+        values[i] = pad(hex, { size, dir: 'right' })
+      } else if (byteLen > size) {
+        values[i] = ('0x' + hex.slice(2, 2 + size * 2)) as Hex
+      }
+    }
+  }
+
+  const packed = encodePacked(types, values)
+  return keccak256(packed)
+}
+
+function sha3(...args: SolidityValue[]): string | null {
+  if (args.length === 1 && typeof args[0] === 'string') {
+    const input = args[0]
+    if (isHex(input, { strict: true })) {
+      return keccak256(input as Hex)
+    }
+    return keccak256(toBytes(input))
+  }
+  return soliditySha3(...args)
+}
+
+function toWei(value: string, unit: string): string {
+  const multipliers: Record<string, string> = {
+    wei: '1',
+    kwei: '1000',
+    mwei: '1000000',
+    gwei: '1000000000',
+    szabo: '1000000000000',
+    finney: '1000000000000000',
+    ether: '1000000000000000000',
+  }
+  const multiplier = multipliers[unit] || multipliers.ether
+  return new BigNumber(value).times(multiplier).toFixed(0)
+}
+
+/**
+ * Creates a web3-like shim object backed by a Connection.
+ * Provides `currentProvider`, `eth.*`, and `utils.*` for backward compatibility with tests.
+ */
+function createWeb3Shim(provider: Provider): Web3 {
+  const conn = new Connection(provider)
+
+  const shim = {
+    currentProvider: conn.currentProvider,
+    eth: {
+      getAccounts: () => conn.getAccounts(),
+      getBalance: (address: string) =>
+        conn.rpcCaller
+          .call('eth_getBalance', [address, 'latest'])
+          .then((r: any) => String(parseInt(r.result, 16))),
+      getBlockNumber: () => conn.getBlockNumber(),
+      sign: conn.sign.bind(conn),
+      call: (tx: any) => conn.rpcCaller.call('eth_call', [tx, 'latest']).then((r: any) => r.result),
+      sendTransaction: async (tx: any) => {
+        const result = await conn.sendTransaction(tx)
+        const receipt = await result.waitReceipt()
+        return receipt
+      },
+      getBlock: (blockHashOrNumber: any) =>
+        conn.rpcCaller
+          .call('eth_getBlockByNumber', [
+            typeof blockHashOrNumber === 'number'
+              ? '0x' + blockHashOrNumber.toString(16)
+              : blockHashOrNumber,
+            false,
+          ])
+          .then((r: any) => r.result),
+      getTransactionReceipt: (txHash: string) => conn.getTransactionReceipt(txHash),
+      getChainId: () => conn.chainId(),
+      getPastLogs: (params: any) =>
+        conn.rpcCaller.call('eth_getLogs', [params]).then((r: any) => r.result),
+      Contract: function ContractCompat(this: any, abi: any, address?: string) {
+        return conn.createContract(abi, address || '0x0000000000000000000000000000000000000000')
+      },
+      abi: {
+        encodeFunctionCall: (abi: any, params: any[]) =>
+          conn.getAbiCoder().encodeFunctionCall(abi, params),
+      },
+      personal: {
+        lockAccount: (address: string) => conn.rpcCaller.call('personal_lockAccount', [address]),
+        unlockAccount: (address: string, password: string, duration: number) =>
+          conn.rpcCaller.call('personal_unlockAccount', [address, password, duration]),
+      },
+      accounts: {
+        create: () => {
+          const privateKey = ('0x' + randomBytes(32).toString('hex')) as `0x${string}`
+          const address = privateKeyToAddress(privateKey)
+          return { address, privateKey }
+        },
+      },
+    },
+    utils: {
+      toWei,
+      toChecksumAddress: (address: string) => getAddress(address),
+      isAddress: (address: string) => isAddress(address),
+      soliditySha3: (...args: any[]) => soliditySha3(...args),
+      sha3: (...args: any[]) => sha3(...args),
+      keccak256: (value: string) => conn.keccak256(value),
+    },
+  }
+
+  return shim as Web3
+}
+
 type TestWithWeb3Hooks = {
   beforeAll?: () => Promise<void>
   afterAll?: () => Promise<void>
@@ -132,8 +305,7 @@ export function testWithWeb3(
   } = {}
 ) {
   const provider = new SimpleHttpProvider(rpcUrl)
-  const connection = new Connection(provider)
-  const client = connection.web3
+  const client = createWeb3Shim(provider)
 
   // By default we run all the tests
   let describeFn = describe

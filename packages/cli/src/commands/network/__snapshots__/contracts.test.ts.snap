@@ -186,67 +186,67 @@ exports[`network:contracts when version cant be obtained still prints rest of co
     "contract": "Accounts",
     "proxy": "0x6e31AE4b9cC7A90ae038b8FBBEd2Eb95104BA8aE",
     "implementation": "0x438D7FbE627FAde24e27295f67Bd4bc9bfbEfd7E",
-    "version": "1.2.3.4"
+    "version": "1.2.0.0"
   },
   {
     "contract": "CeloToken",
     "proxy": "0x84afC656f046C38D6022C2f02b9F667f028e1ef0",
     "implementation": "0x9Ab966c8ac3544bE8BAFE22286F05c1c440F6883",
-    "version": "1.2.3.4"
+    "version": "1.2.0.0"
   },
   {
     "contract": "CeloUnreleasedTreasury",
     "proxy": "0x621b99D7698395aD1A677d981a7F7Ae66cB4861f",
     "implementation": "0xD9B44a177d3a84C7eFAF3025329370932f554a05",
-    "version": "1.2.3.4"
+    "version": "1.1.0.0"
   },
   {
     "contract": "Election",
     "proxy": "0xcB4E4A207DC1C220bd54B2A983E32e923c32E544",
     "implementation": "0x2566c5b4d43188265fbEf7cBB07AE38c5eeb10D2",
-    "version": "1.2.3.4"
+    "version": "1.2.0.0"
   },
   {
     "contract": "EpochManager",
     "proxy": "0x2E290D8c2D6b26985f2826A63Aa103963DbAca23",
     "implementation": "0x05FD583D8e6408C3d3DB26ABEE14f779323587D7",
-    "version": "1.2.3.4"
+    "version": "1.1.0.1"
   },
   {
     "contract": "EpochManagerEnabler",
     "proxy": "0xeD2E802c08227c1b3DA3F502Ed9dcAA01616309B",
     "implementation": "0xf68c5BA8633FD599845b46d5C333D1d9393424Bc",
-    "version": "1.2.3.4"
+    "version": "1.1.0.0"
   },
   {
     "contract": "EpochRewards",
     "proxy": "0x535D5EbB846832A2d876380dBccCb84eE5521d3f",
     "implementation": "0x912D0C4f3461Afe4d8Bf71377C7DE0c73B621814",
-    "version": "1.2.3.4"
+    "version": "1.2.0.0"
   },
   {
     "contract": "Escrow",
     "proxy": "0x69EeE27C1ace51A7a5306D41262D16B6838aDd88",
     "implementation": "0xfDf980A8859515Eb4Ecb2a31eF0c416b1ce92Bd8",
-    "version": "1.2.3.4"
+    "version": "1.2.0.0"
   },
   {
     "contract": "FederatedAttestations",
     "proxy": "0x2972DF87DA881bf2E71ea8aF6dE6E8b2731e13e9",
     "implementation": "0xF580A3c9ac2cD1AD35c74d9bc67b7d4cbA57D45e",
-    "version": "1.2.3.4"
+    "version": "1.1.0.0"
   },
   {
     "contract": "FeeCurrencyDirectory",
     "proxy": "0x5a7D21C9255DAA32109c8136661D7e853Fc5BF63",
     "implementation": "0x4f9BaCe3eaC4917Ee4427a376E84d9A47428ce19",
-    "version": "1.2.3.4"
+    "version": "1.1.0.0"
   },
   {
     "contract": "FeeHandler",
     "proxy": "0xeaEEC408eCbCdF9CDF21d0B1880419dF7290E2c9",
     "implementation": "0x240b564Eb0C4E4Db6507438E9DCF37872c622Fec",
-    "version": "1.2.3.4"
+    "version": "1.2.0.0"
   },
   {
     "contract": "Freezer",
@@ -258,43 +258,43 @@ exports[`network:contracts when version cant be obtained still prints rest of co
     "contract": "GoldToken",
     "proxy": "0x84afC656f046C38D6022C2f02b9F667f028e1ef0",
     "implementation": "0x9Ab966c8ac3544bE8BAFE22286F05c1c440F6883",
-    "version": "1.2.3.4"
+    "version": "1.2.0.0"
   },
   {
     "contract": "Governance",
     "proxy": "0x2EB25B5eb9d5A4f61deb1e4F846343F862eB67D9",
     "implementation": "0xf3C31cB1C052DF61A3f046A845B0ca1a1eBbFFa7",
-    "version": "1.2.3.4"
+    "version": "1.5.0.0"
   },
   {
     "contract": "GovernanceSlasher",
     "proxy": "0xDDA88a8ebeaaB19d2a58374D8c72200AFAF94bB4",
     "implementation": "0x2192Ba796202D02249F705977B15CD0162703857",
-    "version": "1.2.3.4"
+    "version": "1.2.0.0"
   },
   {
     "contract": "LockedCelo",
     "proxy": "0x619b4767f6A955E63ED7d334DF3384bc4eacFdB8",
     "implementation": "0x317aC5e1cde8BCF5049f1E6eBC0565b9EfA303dF",
-    "version": "1.2.3.4"
+    "version": "1.1.5.0"
   },
   {
     "contract": "LockedGold",
     "proxy": "0x619b4767f6A955E63ED7d334DF3384bc4eacFdB8",
     "implementation": "0x317aC5e1cde8BCF5049f1E6eBC0565b9EfA303dF",
-    "version": "1.2.3.4"
+    "version": "1.1.5.0"
   },
   {
     "contract": "MentoFeeHandlerSeller",
     "proxy": "0x4b08c6219147552F68A3D4CA0ab4737B531660e4",
     "implementation": "0xdCEf23b9d59907Bc6Bbf8058F5C177cFB82c5e88",
-    "version": "1.2.3.4"
+    "version": "1.1.1.0"
   },
   {
     "contract": "OdisPayments",
     "proxy": "0x8Cc7e63482Ca6Ee77E0D1820395289D07249de77",
     "implementation": "0x817aF0BeF4C0bB8e05dB0bfB221a64520621C032",
-    "version": "1.2.3.4"
+    "version": "1.1.0.0"
   },
   {
     "contract": "Registry",
@@ -306,19 +306,19 @@ exports[`network:contracts when version cant be obtained still prints rest of co
     "contract": "Reserve",
     "proxy": "0x153193d9b852Dd791565a2929110282976040e54",
     "implementation": "0x6DDBd2A88C55e28ac8283c43D1F7100C295283fb",
-    "version": "1.2.3.4"
+    "version": "1.1.2.2"
   },
   {
     "contract": "ScoreManager",
     "proxy": "0x26B262FbaB2E243a4CEFD2Dbde9e1C203BaCd732",
     "implementation": "0x345E7101aa60eDe5864822FC3fb2E5d5f679C187",
-    "version": "1.2.3.4"
+    "version": "1.1.0.0"
   },
   {
     "contract": "SortedOracles",
     "proxy": "0xeA6aCD469A2C2F32E167a9Ce50db735B61e00A2a",
     "implementation": "0x19f9025D0eF2Ea2025b51DCB7CEEC4845aaf2A5e",
-    "version": "1.2.3.4"
+    "version": "1.1.4.0"
   },
   {
     "contract": "StableToken",
@@ -342,13 +342,13 @@ exports[`network:contracts when version cant be obtained still prints rest of co
     "contract": "UniswapFeeHandlerSeller",
     "proxy": "0x33f9eFcF4d4834932D3958d6d1d5AE18F358406E",
     "implementation": "0xA03CC602d94610aEb7F8852826f4C9abC3167122",
-    "version": "1.2.3.4"
+    "version": "2.0.0.0"
   },
   {
     "contract": "Validators",
     "proxy": "0x0fEDbA6Ae0D2cD916FaB191aA822cf9fe41990Be",
     "implementation": "0xDBF27E3318D388bDa0fb74EC37DA129DCcc51270",
-    "version": "1.2.3.4"
+    "version": "1.4.0.0"
   }
 ]
 ",

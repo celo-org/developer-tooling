@@ -1,8 +1,13 @@
-import { Validators } from '@celo/abis/web3/Validators'
 import { eqAddress, findAddressIndex, NULL_ADDRESS } from '@celo/base/lib/address'
 import { concurrentMap } from '@celo/base/lib/async'
 import { zeroRange, zip } from '@celo/base/lib/collections'
-import { Address, CeloTransactionObject, EventLog, toTransactionObject } from '@celo/connect'
+import {
+  Address,
+  CeloTransactionObject,
+  EventLog,
+  toTransactionObject,
+  Contract,
+} from '@celo/connect'
 import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
 import {
@@ -77,7 +82,7 @@ export interface MembershipHistoryExtraData {
  * Contract for voting for validators and managing validator groups.
  */
 // TODO(asa): Support validator signers
-export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
+export class ValidatorsWrapper extends BaseWrapperForGoverning<Contract> {
   /**
    * Queues an update to a validator group's commission.
    * @param commission Fixidity representation of the commission this group receives on epoch
@@ -349,8 +354,12 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Validators> {
   getValidatorMembershipHistory: (validator: Address) => Promise<GroupMembership[]> = proxyCall(
     this.contract.methods.getMembershipHistory,
     undefined,
-    (res) =>
-      zip((epoch, group): GroupMembership => ({ epoch: valueToInt(epoch), group }), res[0], res[1])
+    (res: { 0: string[]; 1: string[] }) =>
+      zip(
+        (epoch: string, group: string): GroupMembership => ({ epoch: valueToInt(epoch), group }),
+        res[0],
+        res[1]
+      )
   )
 
   /**

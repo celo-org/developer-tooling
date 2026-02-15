@@ -1,5 +1,5 @@
 import { StrongAddress } from '@celo/base'
-import { CeloTransactionObject, Web3 } from '@celo/connect'
+import { CeloTransactionObject, type Provider } from '@celo/connect'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { MultiSigWrapper } from '@celo/contractkit/lib/wrappers/MultiSig'
 import { toBuffer } from '@ethereumjs/util'
@@ -195,7 +195,7 @@ export default class Approve extends BaseCommand {
 }
 
 const addDefaultChecks = async (
-  web3: Web3,
+  web3: { currentProvider: Provider },
   checkBuilder: ReturnType<typeof newCheckBuilder>,
   governance: GovernanceWrapper,
   isHotfix: boolean,

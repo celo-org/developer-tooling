@@ -32,7 +32,7 @@ testWithAnvilL2('releasegold:show cmd', (client) => {
     const logMock = jest.spyOn(console, 'log')
     const releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
-      newReleaseGold(kit.connection.web3, contractAddress),
+      newReleaseGold(kit.web3, contractAddress),
       kit.contracts
     )
 

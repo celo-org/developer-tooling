@@ -1,8 +1,7 @@
 // NOTE: removing this import results in `yarn build` failures in Dockerfiles
 // after the move to node 10. This allows types to be inferred without
 // referencing '@celo/utils/node_modules/bignumber.js'
-import { ICeloToken } from '@celo/abis/web3/ICeloToken'
-import { IERC20 } from '@celo/abis/web3/IERC20'
+import { Contract } from '@celo/connect'
 import 'bignumber.js'
 import { proxyCall, proxySend, valueToInt } from './BaseWrapper'
 import { Erc20Wrapper } from './Erc20Wrapper'
@@ -10,7 +9,7 @@ import { Erc20Wrapper } from './Erc20Wrapper'
 /**
  * Contract for Celo native currency that adheres to the ICeloToken and IERC20 interfaces.
  */
-export class CeloTokenWrapper<T extends IERC20 & ICeloToken> extends Erc20Wrapper<T> {
+export class CeloTokenWrapper<T extends Contract = Contract> extends Erc20Wrapper<T> {
   /**
    * Returns the name of the token.
    * @returns Name of the token.

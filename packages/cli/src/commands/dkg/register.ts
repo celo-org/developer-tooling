@@ -24,9 +24,7 @@ export default class DKGRegister extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(DKGRegister)
-    const web3 = kit.connection.web3
-
-    const dkg = new web3.eth.Contract(DKG.abi, res.flags.address)
+    const dkg = kit.connection.createContract(DKG.abi, res.flags.address)
 
     // read the pubkey and publish it
     const blsKey = fs.readFileSync(res.flags.blsKey).toString('hex')

@@ -1,34 +1,35 @@
-// tslint:disable: ordered-imports
-import { ABI as AccountsABI } from '@celo/abis/web3/Accounts'
-import { ABI as AttestationsABI } from '@celo/abis/web3/Attestations'
-import { ABI as CeloUnreleasedTreasuryABI } from '@celo/abis/web3/CeloUnreleasedTreasury'
-import { ABI as DoubleSigningSlasherABI } from '@celo/abis/web3/DoubleSigningSlasher'
-import { ABI as DowntimeSlasherABI } from '@celo/abis/web3/DowntimeSlasher'
-import { ABI as ElectionABI } from '@celo/abis/web3/Election'
-import { ABI as EpochManagerABI } from '@celo/abis/web3/EpochManager'
-import { ABI as EpochManagerEnablerABI } from '@celo/abis/web3/EpochManagerEnabler'
-import { ABI as EpochRewardsABI } from '@celo/abis/web3/EpochRewards'
-import { ABI as EscrowABI } from '@celo/abis/web3/Escrow'
-import { ABI as FederatedAttestationsABI } from '@celo/abis/web3/FederatedAttestations'
-import { ABI as FeeCurrencyDirectoryABI } from '@celo/abis/web3/FeeCurrencyDirectory'
-import { ABI as FeeCurrencyWhitelistABI } from '@celo/abis/web3/FeeCurrencyWhitelist'
-import { ABI as FeeHandlerABI } from '@celo/abis/web3/FeeHandler'
-import { ABI as FreezerABI } from '@celo/abis/web3/Freezer'
-import { ABI as GoldTokenABI } from '@celo/abis/web3/GoldToken'
-import { ABI as GovernanceABI } from '@celo/abis/web3/Governance'
-import { ABI as LockedGoldABI } from '@celo/abis/web3/LockedGold'
-import { ABI as MentoFeeHandlerSellerABI } from '@celo/abis/web3/MentoFeeHandlerSeller'
-import { ABI as MultiSigABI } from '@celo/abis/web3/MultiSig'
-import { ABI as OdisPaymentsABI } from '@celo/abis/web3/OdisPayments'
-import { ABI as ProxyABI } from '@celo/abis/web3/Proxy'
-import { ABI as RegistryABI } from '@celo/abis/web3/Registry'
-import { ABI as ScoreManagerABI } from '@celo/abis/web3/ScoreManager'
-import { ABI as SortedOraclesABI } from '@celo/abis/web3/SortedOracles'
-import { ABI as UniswapFeeHandlerSellerABI } from '@celo/abis/web3/UniswapFeeHandlerSeller'
-import { ABI as ValidatorsABI } from '@celo/abis/web3/Validators'
-import { ABI as ReserveABI } from '@celo/abis/web3/mento/Reserve'
-import { ABI as StableTokenABI } from '@celo/abis/web3/mento/StableToken'
-import { ABIDefinition, AbiItem, Web3 } from '@celo/connect'
+import {
+  accountsABI,
+  attestationsABI,
+  celoUnreleasedTreasuryABI,
+  doubleSigningSlasherABI,
+  downtimeSlasherABI,
+  electionABI,
+  epochManagerABI,
+  epochManagerEnablerABI,
+  epochRewardsABI,
+  escrowABI,
+  federatedAttestationsABI,
+  feeCurrencyDirectoryABI,
+  feeCurrencyWhitelistABI,
+  feeHandlerABI,
+  freezerABI,
+  goldTokenABI,
+  governanceABI,
+  lockedGoldABI,
+  mentoFeeHandlerSellerABI,
+  multiSigABI,
+  odisPaymentsABI,
+  proxyABI as proxyContractABI,
+  registryABI,
+  reserveABI,
+  scoreManagerABI,
+  sortedOraclesABI,
+  stableTokenABI,
+  uniswapFeeHandlerSellerABI,
+  validatorsABI,
+} from '@celo/abis'
+import { ABIDefinition, AbiItem, Connection } from '@celo/connect'
 
 export const GET_IMPLEMENTATION_ABI: ABIDefinition = {
   constant: true,
@@ -109,40 +110,41 @@ export const PROXY_SET_IMPLEMENTATION_SIGNATURE = SET_IMPLEMENTATION_ABI.signatu
 export const PROXY_SET_AND_INITIALIZE_IMPLEMENTATION_SIGNATURE =
   SET_AND_INITIALIZE_IMPLEMENTATION_ABI.signature
 
-const findInitializeAbi = (items: AbiItem[]) => items.find((item) => item.name === 'initialize')
+const findInitializeAbi = (items: readonly any[]) =>
+  (items as AbiItem[]).find((item) => item.name === 'initialize')
 
 const initializeAbiMap = {
-  AccountsProxy: findInitializeAbi(AccountsABI),
-  AttestationsProxy: findInitializeAbi(AttestationsABI),
-  CeloUnreleasedTreasuryProxy: findInitializeAbi(CeloUnreleasedTreasuryABI),
-  DoubleSigningSlasherProxy: findInitializeAbi(DoubleSigningSlasherABI),
-  DowntimeSlasherProxy: findInitializeAbi(DowntimeSlasherABI),
-  ElectionProxy: findInitializeAbi(ElectionABI),
-  EpochManagerProxy: findInitializeAbi(EpochManagerABI),
-  EpochManagerEnablerProxy: findInitializeAbi(EpochManagerEnablerABI),
-  EpochRewardsProxy: findInitializeAbi(EpochRewardsABI),
-  EscrowProxy: findInitializeAbi(EscrowABI),
-  FederatedAttestationsProxy: findInitializeAbi(FederatedAttestationsABI),
-  FeeCurrencyDirectoryProxy: findInitializeAbi(FeeCurrencyDirectoryABI),
-  FeeCurrencyWhitelistProxy: findInitializeAbi(FeeCurrencyWhitelistABI),
-  FeeHandlerProxy: findInitializeAbi(FeeHandlerABI),
-  MentoFeeHandlerSellerProxy: findInitializeAbi(MentoFeeHandlerSellerABI),
-  UniswapFeeHandlerSellerProxy: findInitializeAbi(UniswapFeeHandlerSellerABI),
-  FreezerProxy: findInitializeAbi(FreezerABI),
-  GoldTokenProxy: findInitializeAbi(GoldTokenABI),
-  GovernanceProxy: findInitializeAbi(GovernanceABI),
-  LockedGoldProxy: findInitializeAbi(LockedGoldABI),
-  MultiSigProxy: findInitializeAbi(MultiSigABI),
-  OdisPaymentsProxy: findInitializeAbi(OdisPaymentsABI),
-  ProxyProxy: findInitializeAbi(ProxyABI),
-  RegistryProxy: findInitializeAbi(RegistryABI),
-  ReserveProxy: findInitializeAbi(ReserveABI),
-  ScoreManagerProxy: findInitializeAbi(ScoreManagerABI),
-  SortedOraclesProxy: findInitializeAbi(SortedOraclesABI),
-  StableTokenProxy: findInitializeAbi(StableTokenABI),
-  StableTokenEURProxy: findInitializeAbi(StableTokenABI),
-  StableTokenBRLProxy: findInitializeAbi(StableTokenABI),
-  ValidatorsProxy: findInitializeAbi(ValidatorsABI),
+  AccountsProxy: findInitializeAbi(accountsABI),
+  AttestationsProxy: findInitializeAbi(attestationsABI),
+  CeloUnreleasedTreasuryProxy: findInitializeAbi(celoUnreleasedTreasuryABI),
+  DoubleSigningSlasherProxy: findInitializeAbi(doubleSigningSlasherABI),
+  DowntimeSlasherProxy: findInitializeAbi(downtimeSlasherABI),
+  ElectionProxy: findInitializeAbi(electionABI),
+  EpochManagerProxy: findInitializeAbi(epochManagerABI),
+  EpochManagerEnablerProxy: findInitializeAbi(epochManagerEnablerABI),
+  EpochRewardsProxy: findInitializeAbi(epochRewardsABI),
+  EscrowProxy: findInitializeAbi(escrowABI),
+  FederatedAttestationsProxy: findInitializeAbi(federatedAttestationsABI),
+  FeeCurrencyDirectoryProxy: findInitializeAbi(feeCurrencyDirectoryABI),
+  FeeCurrencyWhitelistProxy: findInitializeAbi(feeCurrencyWhitelistABI),
+  FeeHandlerProxy: findInitializeAbi(feeHandlerABI),
+  MentoFeeHandlerSellerProxy: findInitializeAbi(mentoFeeHandlerSellerABI),
+  UniswapFeeHandlerSellerProxy: findInitializeAbi(uniswapFeeHandlerSellerABI),
+  FreezerProxy: findInitializeAbi(freezerABI),
+  GoldTokenProxy: findInitializeAbi(goldTokenABI),
+  GovernanceProxy: findInitializeAbi(governanceABI),
+  LockedGoldProxy: findInitializeAbi(lockedGoldABI),
+  MultiSigProxy: findInitializeAbi(multiSigABI),
+  OdisPaymentsProxy: findInitializeAbi(odisPaymentsABI),
+  ProxyProxy: findInitializeAbi(proxyContractABI),
+  RegistryProxy: findInitializeAbi(registryABI),
+  ReserveProxy: findInitializeAbi(reserveABI),
+  ScoreManagerProxy: findInitializeAbi(scoreManagerABI),
+  SortedOraclesProxy: findInitializeAbi(sortedOraclesABI),
+  StableTokenProxy: findInitializeAbi(stableTokenABI),
+  StableTokenEURProxy: findInitializeAbi(stableTokenABI),
+  StableTokenBRLProxy: findInitializeAbi(stableTokenABI),
+  ValidatorsProxy: findInitializeAbi(validatorsABI),
 }
 
 export const getInitializeAbiOfImplementation = (
@@ -155,7 +157,7 @@ export const getInitializeAbiOfImplementation = (
   return initializeAbi
 }
 
-export const setImplementationOnProxy = (address: string, web3: Web3) => {
-  const proxyWeb3Contract = new web3.eth.Contract(PROXY_ABI)
-  return proxyWeb3Contract.methods._setImplementation(address)
+export const setImplementationOnProxy = (address: string, connection: Connection) => {
+  const proxyContract = connection.createContract(PROXY_ABI)
+  return proxyContract.methods._setImplementation(address)
 }

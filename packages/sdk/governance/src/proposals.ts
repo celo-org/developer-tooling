@@ -2,6 +2,7 @@ import { ABI as GovernanceABI } from '@celo/abis/web3/Governance'
 import { ABI as RegistryABI } from '@celo/abis/web3/Registry'
 import { Address, trimLeading0x } from '@celo/base/lib/address'
 import { AbiCoder, CeloTxPending, getAbiByName, parseDecodedParams } from '@celo/connect'
+import { toChecksumAddress } from '@celo/utils/lib/address'
 import { CeloContract, ContractKit, REGISTRY_CONTRACT_ADDRESS } from '@celo/contractkit'
 import { stripProxy, suffixProxy } from '@celo/contractkit/lib/base'
 import {
@@ -170,10 +171,7 @@ export const proposalToJSON = async (
         initAbi = getInitializeAbiOfImplementation(jsonTx.contract as any)
       } else {
         const implAddress = jsonTx.args[0]
-        const metadata = await fetchMetadata(
-          kit.connection,
-          kit.web3.utils.toChecksumAddress(implAddress)
-        )
+        const metadata = await fetchMetadata(kit.connection, toChecksumAddress(implAddress))
         if (metadata && metadata.abi) {
           initAbi = metadata?.abiForMethod('initialize')[0]
         }

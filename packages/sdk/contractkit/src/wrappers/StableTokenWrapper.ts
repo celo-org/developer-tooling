@@ -1,5 +1,4 @@
-import { ICeloToken } from '@celo/abis/web3/ICeloToken'
-import { StableToken } from '@celo/abis/web3/mento/StableToken'
+import { Contract } from '@celo/connect'
 import { proxyCall, proxySend, stringIdentity, tupleParser, valueToString } from './BaseWrapper'
 import { CeloTokenWrapper } from './CeloTokenWrapper'
 
@@ -12,7 +11,7 @@ export interface StableTokenConfig {
 /**
  * Stable token with variable supply
  */
-export class StableTokenWrapper extends CeloTokenWrapper<StableToken & ICeloToken> {
+export class StableTokenWrapper extends CeloTokenWrapper<Contract> {
   /**
    * Returns the address of the owner of the contract.
    * @return the address of the owner of the contract.

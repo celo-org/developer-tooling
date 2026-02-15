@@ -1,6 +1,6 @@
-import { newRegistry, Registry } from '@celo/abis/web3/Registry'
+import { registryABI } from '@celo/abis'
 import { NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
-import { Connection } from '@celo/connect'
+import { Connection, Contract } from '@celo/connect'
 import debugFactory from 'debug'
 import { CeloContract, RegisteredContracts, stripProxy } from './base'
 
@@ -21,12 +21,12 @@ export class UnregisteredError extends Error {
  * @param connection – an instance of @celo/connect {@link Connection}
  */
 export class AddressRegistry {
-  private readonly registry: Registry
+  private readonly registry: Contract
   private readonly cache: Map<CeloContract, StrongAddress> = new Map()
 
   constructor(readonly connection: Connection) {
     this.cache.set(CeloContract.Registry, REGISTRY_CONTRACT_ADDRESS)
-    this.registry = newRegistry(connection.web3, REGISTRY_CONTRACT_ADDRESS)
+    this.registry = connection.createContract(registryABI as any, REGISTRY_CONTRACT_ADDRESS)
   }
 
   /**

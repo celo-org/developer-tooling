@@ -30,7 +30,7 @@ testWithAnvilL2('releasegold:set-max-distribution cmd', (client) => {
   it('sets max distribution', async () => {
     const releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
-      newReleaseGold(kit.connection.web3, contractAddress),
+      newReleaseGold(kit.web3, contractAddress),
       kit.contracts
     )
 

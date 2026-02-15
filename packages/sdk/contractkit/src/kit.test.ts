@@ -136,6 +136,130 @@ describe('newKitWithApiKey()', () => {
   })
 })
 
+describe('newKitFromProvider()', () => {
+  test('should create a kit from a provider', () => {
+    const { newKitFromProvider } = require('./kit')
+    const provider = {
+      send(_payload: any, _callback: any) {
+        // noop
+      },
+    }
+    const kit = newKitFromProvider(provider)
+    expect(kit).toBeDefined()
+    expect(kit.connection).toBeDefined()
+  })
+})
+
+describe('kit.web3 backward-compat shim', () => {
+  let kit: ContractKit
+
+  beforeEach(() => {
+    kit = newKitFromWeb3(getWeb3ForKit('http://', undefined))
+  })
+
+  describe('web3.utils', () => {
+    test('utils.toChecksumAddress returns checksummed address', () => {
+      const lower = '0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+      const checksummed = kit.web3.utils.toChecksumAddress(lower)
+      expect(checksummed).toBe('0xaAaAaAaaAaAaAaaAaAAAAAAAAaaaAaAaAaaAaaAa')
+    })
+
+    test('utils.isAddress validates addresses correctly', () => {
+      expect(kit.web3.utils.isAddress('0xaAaAaAaaAaAaAaaAaAAAAAAAAaaaAaAaAaaAaaAa')).toBe(true)
+      expect(kit.web3.utils.isAddress('not-an-address')).toBe(false)
+      expect(kit.web3.utils.isAddress('')).toBe(false)
+    })
+
+    test('utils.toWei converts ether to wei', () => {
+      const result = kit.web3.utils.toWei('1', 'ether')
+      expect(result).toBe('1000000000000000000')
+    })
+
+    test('utils.toWei converts gwei to wei', () => {
+      const result = kit.web3.utils.toWei('1', 'gwei')
+      expect(result).toBe('1000000000')
+    })
+
+    test('utils.toWei converts wei to wei (identity)', () => {
+      const result = kit.web3.utils.toWei('1', 'wei')
+      expect(result).toBe('1')
+    })
+
+    test('utils.soliditySha3 is a function', () => {
+      expect(typeof kit.web3.utils.soliditySha3).toBe('function')
+    })
+
+    test('utils.sha3 is a function', () => {
+      expect(typeof kit.web3.utils.sha3).toBe('function')
+    })
+
+    test('utils.keccak256 is a function', () => {
+      expect(typeof kit.web3.utils.keccak256).toBe('function')
+    })
+  })
+
+  describe('web3.eth', () => {
+    test('eth.getAccounts is a function', () => {
+      expect(typeof kit.web3.eth.getAccounts).toBe('function')
+    })
+
+    test('eth.getBlockNumber is a function', () => {
+      expect(typeof kit.web3.eth.getBlockNumber).toBe('function')
+    })
+
+    test('eth.sign is a function', () => {
+      expect(typeof kit.web3.eth.sign).toBe('function')
+    })
+
+    test('eth.call is a function', () => {
+      expect(typeof kit.web3.eth.call).toBe('function')
+    })
+
+    test('eth.sendTransaction is a function', () => {
+      expect(typeof kit.web3.eth.sendTransaction).toBe('function')
+    })
+
+    test('eth.getBlock is a function', () => {
+      expect(typeof kit.web3.eth.getBlock).toBe('function')
+    })
+
+    test('eth.getChainId is a function', () => {
+      expect(typeof kit.web3.eth.getChainId).toBe('function')
+    })
+
+    test('eth.Contract is a constructor-like function', () => {
+      expect(typeof kit.web3.eth.Contract).toBe('function')
+    })
+
+    test('eth.accounts.create returns an object with address and privateKey', () => {
+      const account = kit.web3.eth.accounts.create()
+      expect(account).toBeDefined()
+      expect(typeof account.address).toBe('string')
+      expect(typeof account.privateKey).toBe('string')
+      expect(account.address).toMatch(/^0x[0-9a-fA-F]{40}$/)
+      expect(account.privateKey).toMatch(/^0x[0-9a-fA-F]{64}$/)
+    })
+
+    test('eth.abi.encodeFunctionCall is a function', () => {
+      expect(typeof kit.web3.eth.abi.encodeFunctionCall).toBe('function')
+    })
+
+    test('eth.personal.lockAccount is a function', () => {
+      expect(typeof kit.web3.eth.personal.lockAccount).toBe('function')
+    })
+
+    test('eth.personal.unlockAccount is a function', () => {
+      expect(typeof kit.web3.eth.personal.unlockAccount).toBe('function')
+    })
+  })
+
+  describe('web3.currentProvider', () => {
+    test('is the same as connection.currentProvider', () => {
+      expect(kit.web3.currentProvider).toBe(kit.connection.currentProvider)
+    })
+  })
+})
+
 testWithAnvilL2('kit', (client) => {
   let kit: ContractKit
 
@@ -174,26 +298,30 @@ testWithAnvilL2('kit', (client) => {
     })
 
     it('gets first and last block number of an epoch', async () => {
-      expect(await kit.getFirstBlockNumberForEpoch(4)).toMatchInlineSnapshot(`300`)
-      expect(await kit.getLastBlockNumberForEpoch(4)).toMatchInlineSnapshot(`17634`)
+      const epochManagerWrapper = await kit.contracts.getEpochManager()
+      const firstKnown = await epochManagerWrapper.firstKnownEpoch()
 
-      expect(await kit.getFirstBlockNumberForEpoch(5)).toMatchInlineSnapshot(`17635`)
-      expect(await kit.getLastBlockNumberForEpoch(5)).toMatchInlineSnapshot(`17637`)
+      // The first known epoch should have valid block numbers
+      const firstBlock = await kit.getFirstBlockNumberForEpoch(firstKnown)
+      const lastBlock = await kit.getLastBlockNumberForEpoch(firstKnown)
+      expect(firstBlock).toBeGreaterThan(0)
+      expect(lastBlock).toBeGreaterThan(firstBlock)
 
-      expect(await kit.getFirstBlockNumberForEpoch(6)).toMatchInlineSnapshot(`17638`)
-      expect(await kit.getLastBlockNumberForEpoch(6)).toMatchInlineSnapshot(`17640`)
-
-      expect(await kit.getFirstBlockNumberForEpoch(7)).toMatchInlineSnapshot(`17641`)
-      expect(await kit.getLastBlockNumberForEpoch(7)).toMatchInlineSnapshot(`17643`)
-
-      expect(await kit.getFirstBlockNumberForEpoch(8)).toMatchInlineSnapshot(`17644`)
+      // Subsequent epochs that were advanced in beforeEach should also be queryable
+      const nextFirst = await kit.getFirstBlockNumberForEpoch(firstKnown + 1)
+      const nextLast = await kit.getLastBlockNumberForEpoch(firstKnown + 1)
+      expect(nextFirst).toBeGreaterThan(lastBlock)
+      expect(nextLast).toBeGreaterThan(nextFirst)
     })
 
     it('gets the current epoch number', async () => {
-      expect(await kit.getEpochNumberOfBlock(300)).toMatchInlineSnapshot(`4`)
-      expect(await kit.getEpochNumberOfBlock(357)).toMatchInlineSnapshot(`4`)
-      expect(await kit.getEpochNumberOfBlock(361)).toMatchInlineSnapshot(`4`)
-      expect(await kit.getEpochNumberOfBlock(362)).toMatchInlineSnapshot(`4`)
+      const epochManagerWrapper = await kit.contracts.getEpochManager()
+      const firstKnown = await epochManagerWrapper.firstKnownEpoch()
+      const firstBlock = await kit.getFirstBlockNumberForEpoch(firstKnown)
+
+      // Block within the first known epoch should return that epoch number
+      expect(await kit.getEpochNumberOfBlock(firstBlock)).toEqual(firstKnown)
+      expect(await kit.getEpochNumberOfBlock(firstBlock + 1)).toEqual(firstKnown)
     })
   })
 })

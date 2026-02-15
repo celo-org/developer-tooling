@@ -1,10 +1,10 @@
-import { ScoreManager } from '@celo/abis/web3/ScoreManager'
+import { Contract } from '@celo/connect'
 import { BaseWrapper, fixidityValueToBigNumber, proxyCall } from './BaseWrapper'
 
 /**
  * Contract handling validator scores.
  */
-export class ScoreManagerWrapper extends BaseWrapper<ScoreManager> {
+export class ScoreManagerWrapper extends BaseWrapper<Contract> {
   getGroupScore = proxyCall(
     this.contract.methods.getGroupScore,
     undefined,

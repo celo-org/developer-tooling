@@ -1,4 +1,5 @@
 import { Web3 } from '@celo/connect'
+import { getAddress } from 'viem'
 import migrationOverride from './migration-override.json'
 import { jsonRpcCall } from './test-utils'
 
@@ -35,13 +36,13 @@ export async function getContractFromEvent(
   }
   const logIndex = filter?.index ?? 0
   if (!filter?.expectedData) {
-    return logs[logIndex].address
+    return getAddress(logs[logIndex].address)
   }
-  const filteredLogs = logs.filter((log) => log.data === filter.expectedData)
+  const filteredLogs = logs.filter((log: { data: string }) => log.data === filter.expectedData)
   if (filteredLogs.length === 0) {
     throw new Error(
       `Error: contract could not be found matching signature ${eventSignature} with data ${filter.expectedData}`
     )
   }
-  return filteredLogs[logIndex ?? 0].address
+  return getAddress(filteredLogs[logIndex ?? 0].address)
 }

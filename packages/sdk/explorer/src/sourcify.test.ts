@@ -231,6 +231,167 @@ describe('sourcify helpers', () => {
       })
     })
 
+    describe('abiForMethod with tuple params (tests abiItemToSignatureString)', () => {
+      it('matches a function with simple params via full signature', () => {
+        const metadata = new Metadata(connection, address, {
+          output: {
+            abi: [
+              {
+                type: 'function',
+                name: 'transfer',
+                inputs: [
+                  { name: 'to', type: 'address' },
+                  { name: 'value', type: 'uint256' },
+                ],
+                outputs: [{ name: 'success', type: 'bool' }],
+                stateMutability: 'nonpayable',
+              },
+            ],
+          },
+        })
+        const results = metadata.abiForMethod('transfer(address,uint256)')
+        expect(results.length).toEqual(1)
+        expect(results[0].name).toBe('transfer')
+      })
+
+      it('matches a function with tuple params via full signature', () => {
+        const metadata = new Metadata(connection, address, {
+          output: {
+            abi: [
+              {
+                type: 'function',
+                name: 'complexMethod',
+                inputs: [
+                  {
+                    name: 'data',
+                    type: 'tuple',
+                    components: [
+                      { name: 'addr', type: 'address' },
+                      { name: 'amount', type: 'uint256' },
+                    ],
+                  },
+                ],
+                outputs: [],
+                stateMutability: 'nonpayable',
+              },
+            ],
+          },
+        })
+        const results = metadata.abiForMethod('complexMethod((address,uint256))')
+        expect(results.length).toEqual(1)
+        expect(results[0].name).toBe('complexMethod')
+      })
+
+      it('matches a function with tuple array params', () => {
+        const metadata = new Metadata(connection, address, {
+          output: {
+            abi: [
+              {
+                type: 'function',
+                name: 'batchTransfer',
+                inputs: [
+                  {
+                    name: 'transfers',
+                    type: 'tuple[]',
+                    components: [
+                      { name: 'to', type: 'address' },
+                      { name: 'value', type: 'uint256' },
+                    ],
+                  },
+                ],
+                outputs: [],
+                stateMutability: 'nonpayable',
+              },
+            ],
+          },
+        })
+        const results = metadata.abiForMethod('batchTransfer((address,uint256)[])')
+        expect(results.length).toEqual(1)
+        expect(results[0].name).toBe('batchTransfer')
+      })
+
+      it('matches a function with nested tuple params', () => {
+        const metadata = new Metadata(connection, address, {
+          output: {
+            abi: [
+              {
+                type: 'function',
+                name: 'nested',
+                inputs: [
+                  {
+                    name: 'data',
+                    type: 'tuple',
+                    components: [
+                      {
+                        name: 'inner',
+                        type: 'tuple',
+                        components: [
+                          { name: 'x', type: 'uint256' },
+                          { name: 'y', type: 'uint256' },
+                        ],
+                      },
+                      { name: 'flag', type: 'bool' },
+                    ],
+                  },
+                ],
+                outputs: [],
+                stateMutability: 'nonpayable',
+              },
+            ],
+          },
+        })
+        const results = metadata.abiForMethod('nested(((uint256,uint256),bool))')
+        expect(results.length).toEqual(1)
+        expect(results[0].name).toBe('nested')
+      })
+
+      it('returns empty for mismatched signature', () => {
+        const metadata = new Metadata(connection, address, {
+          output: {
+            abi: [
+              {
+                type: 'function',
+                name: 'transfer',
+                inputs: [
+                  { name: 'to', type: 'address' },
+                  { name: 'value', type: 'uint256' },
+                ],
+                outputs: [{ name: 'success', type: 'bool' }],
+                stateMutability: 'nonpayable',
+              },
+            ],
+          },
+        })
+        const results = metadata.abiForMethod('transfer(address,bool)')
+        expect(results.length).toEqual(0)
+      })
+
+      it('handles event and constructor types (does not match as function)', () => {
+        const metadata = new Metadata(connection, address, {
+          output: {
+            abi: [
+              {
+                type: 'event',
+                name: 'Transfer',
+                inputs: [
+                  { name: 'from', type: 'address', indexed: true },
+                  { name: 'to', type: 'address', indexed: true },
+                  { name: 'value', type: 'uint256', indexed: false },
+                ],
+              },
+              {
+                type: 'constructor',
+                inputs: [{ name: 'supply', type: 'uint256' }],
+              },
+            ],
+          },
+        })
+        // Events and constructors should not be found by abiForMethod
+        const results = metadata.abiForMethod('Transfer(address,address,uint256)')
+        expect(results.length).toEqual(0)
+      })
+    })
+
     describe('tryGetProxyImplementation', () => {
       describe('with a cLabs proxy', () => {
         it('fetches the implementation', async () => {
@@ -244,6 +405,32 @@ describe('sourcify helpers', () => {
           const result = await tryGetProxyImplementation(connection, address)
           expect(result).toBeUndefined()
         })
+      })
+    })
+
+    describe('toContractMapping', () => {
+      it('returns a mapping with fnMapping populated', () => {
+        const metadata = new Metadata(connection, address, {
+          output: {
+            abi: [
+              {
+                type: 'function',
+                name: 'foo',
+                inputs: [],
+                outputs: [{ name: '', type: 'uint256' }],
+                stateMutability: 'view',
+              },
+            ],
+          },
+          settings: {
+            compilationTarget: { 'foo.sol': 'Foo' },
+          },
+        })
+        const mapping = metadata.toContractMapping()
+        expect(mapping.details.name).toBe('Foo')
+        expect(mapping.details.address).toBe(address)
+        expect(mapping.details.isCore).toBe(false)
+        expect(mapping.fnMapping.size).toBeGreaterThan(0)
       })
     })
   })

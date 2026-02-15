@@ -23,9 +23,7 @@ export default class DKGPublish extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(DKGPublish)
-    const web3 = kit.connection.web3
-
-    const dkg = new web3.eth.Contract(DKG.abi, res.flags.address)
+    const dkg = kit.connection.createContract(DKG.abi, res.flags.address)
 
     const data = fs.readFileSync(res.flags.data).toString('hex')
     await displayWeb3Tx('publishData', dkg.methods.publish(ensureLeading0x(data)), {

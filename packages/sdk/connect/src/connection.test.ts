@@ -1,5 +1,6 @@
 import { ensureLeading0x } from '@celo/base'
-import { Connection } from './connection'
+import { Connection, viemAbiCoder } from './connection'
+import { AbiItem } from './abi-types'
 import { Callback, JsonRpcPayload, JsonRpcResponse, Provider } from './types'
 
 function createMockProvider(): Provider {
@@ -10,10 +11,221 @@ function createMockProvider(): Provider {
   }
 }
 
+function createMockProviderWithRpc(handler: (payload: JsonRpcPayload) => unknown): Provider {
+  return {
+    send(payload: JsonRpcPayload, callback: Callback<JsonRpcResponse>): void {
+      try {
+        const result = handler(payload)
+        callback(null, {
+          jsonrpc: '2.0',
+          id: payload.id as number,
+          result,
+        })
+      } catch (err) {
+        callback(err as Error)
+      }
+    },
+  }
+}
+
 describe('Connection', () => {
   let connection: Connection
   beforeEach(() => {
     connection = new Connection(createMockProvider())
+  })
+
+  describe('#createContract', () => {
+    const simpleAbi: AbiItem[] = [
+      {
+        type: 'function',
+        name: 'balanceOf',
+        inputs: [{ name: 'owner', type: 'address' }],
+        outputs: [{ name: 'balance', type: 'uint256' }],
+        stateMutability: 'view',
+      },
+      {
+        type: 'function',
+        name: 'transfer',
+        inputs: [
+          { name: 'to', type: 'address' },
+          { name: 'value', type: 'uint256' },
+        ],
+        outputs: [{ name: 'success', type: 'bool' }],
+        stateMutability: 'nonpayable',
+      },
+      {
+        type: 'event',
+        name: 'Transfer',
+        inputs: [
+          { name: 'from', type: 'address', indexed: true },
+          { name: 'to', type: 'address', indexed: true },
+          { name: 'value', type: 'uint256', indexed: false },
+        ],
+      },
+    ]
+
+    it('returns an object with methods and options properties', () => {
+      const contract = connection.createContract(
+        simpleAbi,
+        '0x1234567890123456789012345678901234567890'
+      )
+      expect(contract).toBeDefined()
+      expect(contract.methods).toBeDefined()
+      expect(contract.options).toBeDefined()
+      expect(contract.options.address).toBe('0x1234567890123456789012345678901234567890')
+      expect(contract.options.jsonInterface).toBeDefined()
+      expect(contract.options.jsonInterface.length).toBe(simpleAbi.length)
+    })
+
+    it('has the correct _address property', () => {
+      const address = '0xABCDEF0123456789ABCDEF0123456789ABCDEF01'
+      const contract = connection.createContract(simpleAbi, address)
+      expect(contract._address).toBe(address)
+    })
+
+    it('creates a contract without an address', () => {
+      const contract = connection.createContract(simpleAbi)
+      expect(contract._address).toBe('')
+      expect(contract.options.address).toBe('')
+    })
+
+    it('has method proxy that returns callable txObjects', () => {
+      const contract = connection.createContract(
+        simpleAbi,
+        '0x1234567890123456789012345678901234567890'
+      )
+      const txObj = contract.methods.balanceOf('0x0000000000000000000000000000000000000001')
+      expect(txObj).toBeDefined()
+      expect(typeof txObj.call).toBe('function')
+      expect(typeof txObj.send).toBe('function')
+      expect(typeof txObj.estimateGas).toBe('function')
+      expect(typeof txObj.encodeABI).toBe('function')
+      expect(txObj._parent).toBe(contract)
+    })
+
+    it('encodeABI returns correct hex for a function call', () => {
+      const contract = connection.createContract(
+        simpleAbi,
+        '0x1234567890123456789012345678901234567890'
+      )
+      const encoded = contract.methods
+        .balanceOf('0x0000000000000000000000000000000000000001')
+        .encodeABI()
+      expect(encoded).toMatch(/^0x/)
+      // balanceOf(address) selector is 0x70a08231
+      expect(encoded.slice(0, 10)).toBe('0x70a08231')
+    })
+
+    it('methods proxy returns fallback for unknown methods', () => {
+      const contract = connection.createContract(
+        simpleAbi,
+        '0x1234567890123456789012345678901234567890'
+      )
+      const txObj = contract.methods.nonExistentMethod()
+      expect(txObj).toBeDefined()
+      expect(typeof txObj.call).toBe('function')
+      expect(txObj.encodeABI()).toBe('0x')
+    })
+
+    it('call method decodes the return value from RPC', async () => {
+      const mockProvider = createMockProviderWithRpc((payload) => {
+        if (payload.method === 'eth_call') {
+          // Return a uint256 value of 42
+          return '0x000000000000000000000000000000000000000000000000000000000000002a'
+        }
+        return '0x'
+      })
+      const conn = new Connection(mockProvider)
+      const contract = conn.createContract(simpleAbi, '0x1234567890123456789012345678901234567890')
+      const result = await contract.methods
+        .balanceOf('0x0000000000000000000000000000000000000001')
+        .call()
+      expect(result).toBe('42')
+    })
+
+    it('populates events map from ABI', () => {
+      const contract = connection.createContract(
+        simpleAbi,
+        '0x1234567890123456789012345678901234567890'
+      )
+      expect(contract.events).toBeDefined()
+      expect(contract.events.Transfer).toBeDefined()
+      expect(contract.events.Transfer.name).toBe('Transfer')
+    })
+
+    it('enriches ABI items with function signatures', () => {
+      const contract = connection.createContract(
+        simpleAbi,
+        '0x1234567890123456789012345678901234567890'
+      )
+      // The enriched ABI should have signature field for function items
+      const balanceOfAbi = contract.options.jsonInterface.find((item) => item.name === 'balanceOf')
+      expect(balanceOfAbi).toBeDefined()
+      expect((balanceOfAbi as any).signature).toBe('0x70a08231')
+    })
+
+    it('deploy method works with constructor arguments', () => {
+      const abiWithConstructor: AbiItem[] = [
+        {
+          type: 'constructor',
+          inputs: [{ name: 'initialSupply', type: 'uint256' }],
+        },
+        ...simpleAbi,
+      ]
+      const contract = connection.createContract(abiWithConstructor)
+      const deployObj = contract.deploy({
+        data: '0x6080604052',
+        arguments: [1000],
+      })
+      expect(deployObj).toBeDefined()
+      expect(typeof deployObj.encodeABI).toBe('function')
+      const encoded = deployObj.encodeABI()
+      expect(encoded).toMatch(/^0x6080604052/)
+      // Should have constructor args appended
+      expect(encoded.length).toBeGreaterThan('0x6080604052'.length)
+    })
+  })
+
+  describe('#viemAbiCoder', () => {
+    it('encodes and decodes a parameter', () => {
+      const encoded = viemAbiCoder.encodeParameter('uint256', 42)
+      const decoded = viemAbiCoder.decodeParameter('uint256', encoded)
+      expect(decoded).toBe('42')
+    })
+
+    it('encodes a function signature from string', () => {
+      const sig = viemAbiCoder.encodeFunctionSignature('transfer(address,uint256)')
+      expect(sig).toBe('0xa9059cbb')
+    })
+
+    it('encodes a function signature from ABI item', () => {
+      const sig = viemAbiCoder.encodeFunctionSignature({
+        type: 'function',
+        name: 'transfer',
+        inputs: [
+          { name: 'to', type: 'address' },
+          { name: 'value', type: 'uint256' },
+        ],
+      })
+      expect(sig).toBe('0xa9059cbb')
+    })
+
+    it('encodes an event signature', () => {
+      const sig = viemAbiCoder.encodeEventSignature('Transfer(address,address,uint256)')
+      expect(sig).toMatch(/^0x/)
+      expect(sig.length).toBe(66) // 0x + 64 hex chars
+    })
+
+    it('encodes and decodes multiple parameters', () => {
+      const encoded = viemAbiCoder.encodeParameters(
+        ['address', 'uint256'],
+        ['0x0000000000000000000000000000000000000001', 100]
+      )
+      const decoded = viemAbiCoder.decodeParameters(['address', 'uint256'], encoded)
+      expect(decoded[0]).toBe('0x0000000000000000000000000000000000000001')
+      expect(decoded[1]).toBe('100')
+      expect(decoded.__length__).toBe(2)
+    })
   })
 
   describe('#setFeeMarketGas', () => {

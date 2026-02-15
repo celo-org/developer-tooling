@@ -1,10 +1,10 @@
-import { newReleaseGold } from '@celo/abis/web3/ReleaseGold'
+import { releaseGoldABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
-import { Web3 } from '@celo/connect'
 import { REGISTRY_CONTRACT_ADDRESS } from '@celo/contractkit'
 import { setBalance, setCode, withImpersonatedAccount } from '@celo/dev-utils/anvil-test'
 import { HOUR, MINUTE, MONTH } from '@celo/dev-utils/test-utils'
 import BigNumber from 'bignumber.js'
+import { parseEther } from 'viem'
 import { getCurrentTimestamp } from '../utils/cli'
 
 // ported from ganache tests
@@ -13,7 +13,7 @@ const RELEASE_GOLD_IMPLEMENTATION_CONTRACT_BYTECODE =
 const RELEASE_GOLD_IMPLEMENTATION_CONTRACT_ADDRESS = '0xDdbe68bEae54dd94465C6bbA2477EE9500ce1974'
 
 export async function deployReleaseGoldContract(
-  web3: Web3,
+  web3: any,
   ownerMultisigAddress: StrongAddress,
   beneficiary: StrongAddress,
   releaseOwner: StrongAddress,
@@ -26,9 +26,13 @@ export async function deployReleaseGoldContract(
     RELEASE_GOLD_IMPLEMENTATION_CONTRACT_BYTECODE
   )
 
-  const contract = newReleaseGold(web3, RELEASE_GOLD_IMPLEMENTATION_CONTRACT_ADDRESS)
+  // Create contract using the ABI directly (web3 is passed through as-is for test compat)
+  const contract = new (web3 as any).eth.Contract(
+    releaseGoldABI as any,
+    RELEASE_GOLD_IMPLEMENTATION_CONTRACT_ADDRESS
+  )
   const releasePeriods = 4
-  const amountReleasedPerPeriod = new BigNumber(web3.utils.toWei('10', 'ether'))
+  const amountReleasedPerPeriod = new BigNumber(parseEther('10').toString())
 
   await withImpersonatedAccount(
     web3,
@@ -54,7 +58,7 @@ export async function deployReleaseGoldContract(
         )
         .send({ from: ownerMultisigAddress })
     },
-    new BigNumber(web3.utils.toWei('1', 'ether'))
+    new BigNumber(parseEther('1').toString())
   )
 
   await setBalance(

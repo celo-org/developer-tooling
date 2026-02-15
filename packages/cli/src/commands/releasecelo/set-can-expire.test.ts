@@ -55,7 +55,7 @@ testWithAnvilL2('releasegold:set-can-expire cmd', (client) => {
   it('sets can expire to false and then true', async () => {
     const releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
-      newReleaseGold(kit.connection.web3, contractAddress),
+      newReleaseGold(kit.web3, contractAddress),
       kit.contracts
     )
 

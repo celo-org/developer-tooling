@@ -5,6 +5,7 @@ import {
   Contract,
   signatureToAbiDefinition,
 } from '@celo/connect'
+import { toChecksumAddress } from '@celo/utils/lib/address'
 import {
   CeloContract,
   ContractKit,
@@ -75,7 +76,7 @@ export class ProposalBuilder {
     this.builders.push(async () => {
       const proxy = await this.kit._web3Contracts.getContract(contract)
       return this.fromWeb3tx(
-        setImplementationOnProxy(newImplementationAddress, this.kit.connection.web3),
+        setImplementationOnProxy(newImplementationAddress, this.kit.connection),
         {
           to: proxy.options.address,
           value: '0',
@@ -126,10 +127,7 @@ export class ProposalBuilder {
     tx: ExternalProposalTransactionJSON
   ): Promise<AbiItem | null> => {
     const abiCoder = this.kit.connection.getAbiCoder()
-    const metadata = await fetchMetadata(
-      this.kit.connection,
-      this.kit.web3.utils.toChecksumAddress(address)
-    )
+    const metadata = await fetchMetadata(this.kit.connection, toChecksumAddress(address))
     const potentialABIs = metadata?.abiForMethod(tx.function) ?? []
     return (
       potentialABIs.find((abi) => {
