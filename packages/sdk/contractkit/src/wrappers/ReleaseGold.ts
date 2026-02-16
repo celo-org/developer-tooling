@@ -456,8 +456,16 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<Contract> {
   /**
    * Sets the wallet address for the account
    * @param walletAddress The address to set
+   * @param v The recovery id of the incoming ECDSA signature
+   * @param r The output of the ECDSA signature
+   * @param s The output of the ECDSA signature
    */
-  setAccountWalletAddress: (walletAddress: string) => CeloTransactionObject<void> = proxySend(
+  setAccountWalletAddress: (
+    walletAddress: string,
+    v: number | string,
+    r: string | number[],
+    s: string | number[]
+  ) => CeloTransactionObject<void> = proxySend(
     this.connection,
     this.contract.methods.setAccountWalletAddress
   )
@@ -489,10 +497,8 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<Contract> {
   /**
    * Sets the contract's max distribution
    */
-  setMaxDistribution: (distributionRatio: string) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract.methods.setMaxDistribution
-  )
+  setMaxDistribution: (distributionRatio: number | string) => CeloTransactionObject<void> =
+    proxySend(this.connection, this.contract.methods.setMaxDistribution)
 
   /**
    * Sets the contract's beneficiary
