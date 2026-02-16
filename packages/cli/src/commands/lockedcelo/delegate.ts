@@ -50,9 +50,6 @@ export default class Delegate extends BaseCommand {
 
     const lockedGold = await kit.contracts.getLockedGold()
 
-    console.log('value', percent.toString())
-    console.log('valueFixed', percentFixed.toFixed())
-
     const tx = lockedGold.delegate(to, percentFixed.toFixed())
     await displaySendTx('delegate', tx)
   }
