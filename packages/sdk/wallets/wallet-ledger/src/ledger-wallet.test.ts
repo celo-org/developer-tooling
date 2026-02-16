@@ -278,7 +278,6 @@ describe('LedgerWallet class', () => {
 
       // @ts-expect-error
       currentAppName = await wallet.retrieveAppName()
-      console.log(currentAppName)
     }, TEST_TIMEOUT_IN_MS)
 
     test('starts 5 accounts', () => {

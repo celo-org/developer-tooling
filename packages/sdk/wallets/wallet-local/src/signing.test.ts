@@ -6,7 +6,6 @@ import {
   JsonRpcPayload,
   JsonRpcResponse,
   Provider,
-  Web3,
 } from '@celo/connect'
 import { privateKeyToAddress } from '@celo/utils/lib/address'
 import { recoverTransaction } from '@celo/wallet-base'
@@ -31,7 +30,7 @@ debug(`Account Address 2: ${ACCOUNT_ADDRESS2}`)
 describe('Transaction Utils', () => {
   // only needed for the eth_coinbase rcp call
   let connection: Connection
-  let client: Web3
+  let client: { currentProvider: Provider; eth: { signTransaction: (tx: CeloTx) => Promise<any> } }
   const mockProvider: Provider = {
     send: (payload: JsonRpcPayload, callback: Callback<JsonRpcResponse>): void => {
       if (payload.method === 'eth_coinbase') {
