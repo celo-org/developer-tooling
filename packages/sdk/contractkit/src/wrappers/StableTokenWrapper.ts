@@ -1,4 +1,4 @@
-import { Contract } from '@celo/connect'
+import { CeloTransactionObject, Contract } from '@celo/connect'
 import { proxyCall, proxySend, stringIdentity, tupleParser, valueToString } from './BaseWrapper'
 import { CeloTokenWrapper } from './CeloTokenWrapper'
 
@@ -16,7 +16,7 @@ export class StableTokenWrapper extends CeloTokenWrapper<Contract> {
    * Returns the address of the owner of the contract.
    * @return the address of the owner of the contract.
    */
-  owner = proxyCall(this.contract.methods.owner)
+  owner: () => Promise<string> = proxyCall(this.contract.methods.owner)
 
   /**
    * Increases the allowance of another user.
@@ -24,7 +24,10 @@ export class StableTokenWrapper extends CeloTokenWrapper<Contract> {
    * @param value The increment of the amount of StableToken approved to the spender.
    * @returns true if success.
    */
-  increaseAllowance = proxySend(
+  increaseAllowance: (
+    spender: string,
+    value: import('bignumber.js').default.Value
+  ) => CeloTransactionObject<void> = proxySend(
     this.connection,
     this.contract.methods.increaseAllowance,
     tupleParser(stringIdentity, valueToString)
@@ -35,9 +38,18 @@ export class StableTokenWrapper extends CeloTokenWrapper<Contract> {
    * @param value The decrement of the amount of StableToken approved to the spender.
    * @returns true if success.
    */
-  decreaseAllowance = proxySend(this.connection, this.contract.methods.decreaseAllowance)
-  mint = proxySend(this.connection, this.contract.methods.mint)
-  burn = proxySend(this.connection, this.contract.methods.burn)
+  decreaseAllowance: (spender: string, value: string) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract.methods.decreaseAllowance
+  )
+  mint: (to: string, value: string) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract.methods.mint
+  )
+  burn: (value: string) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract.methods.burn
+  )
 
   /**
    * Returns current configuration parameters.

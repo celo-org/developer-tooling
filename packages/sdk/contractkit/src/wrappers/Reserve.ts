@@ -1,4 +1,4 @@
-import { Address, EventLog, Contract } from '@celo/connect'
+import { Address, CeloTransactionObject, EventLog, Contract } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import {
   BaseWrapper,
@@ -35,8 +35,14 @@ export class ReserveWrapper extends BaseWrapper<Contract> {
     fixidityValueToBigNumber
   )
   isSpender: (account: string) => Promise<boolean> = proxyCall(this.contract.methods.isSpender)
-  transferGold = proxySend(this.connection, this.contract.methods.transferGold)
-  getOrComputeTobinTax = proxySend(this.connection, this.contract.methods.getOrComputeTobinTax)
+  transferGold: (to: string, value: string | number) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract.methods.transferGold
+  )
+  getOrComputeTobinTax: () => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract.methods.getOrComputeTobinTax
+  )
   frozenReserveGoldStartBalance = proxyCall(
     this.contract.methods.frozenReserveGoldStartBalance,
     undefined,
@@ -57,10 +63,10 @@ export class ReserveWrapper extends BaseWrapper<Contract> {
    * @notice Returns a list of weights used for the allocation of reserve assets.
    * @return An array of a list of weights used for the allocation of reserve assets.
    */
-  getAssetAllocationWeights = proxyCall(
+  getAssetAllocationWeights: () => Promise<BigNumber[]> = proxyCall(
     this.contract.methods.getAssetAllocationWeights,
     undefined,
-    (weights) => weights.map(valueToBigNumber)
+    (weights: string[]) => weights.map(valueToBigNumber)
   )
 
   /**
@@ -111,7 +117,9 @@ export class ReserveWrapper extends BaseWrapper<Contract> {
     valueToBigNumber
   )
 
-  getOtherReserveAddresses = proxyCall(this.contract.methods.getOtherReserveAddresses)
+  getOtherReserveAddresses: () => Promise<string[]> = proxyCall(
+    this.contract.methods.getOtherReserveAddresses
+  )
 
   /**
    * Returns current configuration parameters.
@@ -126,7 +134,9 @@ export class ReserveWrapper extends BaseWrapper<Contract> {
     }
   }
 
-  isOtherReserveAddress = proxyCall(this.contract.methods.isOtherReserveAddress)
+  isOtherReserveAddress: (address: string) => Promise<boolean> = proxyCall(
+    this.contract.methods.isOtherReserveAddress
+  )
 
   async getSpenders(): Promise<Address[]> {
     const spendersAdded = (

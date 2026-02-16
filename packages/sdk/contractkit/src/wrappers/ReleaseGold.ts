@@ -418,7 +418,10 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<Contract> {
   /**
    * Beneficiary creates an account on behalf of the ReleaseGold contract.
    */
-  createAccount = proxySend(this.connection, this.contract.methods.createAccount)
+  createAccount: () => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract.methods.createAccount
+  )
 
   /**
    * Beneficiary creates an account on behalf of the ReleaseGold contract.
@@ -426,25 +429,35 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<Contract> {
    * @param dataEncryptionKey The key to set
    * @param walletAddress The address to set
    */
-  setAccount = proxySend(this.connection, this.contract.methods.setAccount)
+  setAccount: (
+    name: string,
+    dataEncryptionKey: string,
+    walletAddress: string
+  ) => CeloTransactionObject<void> = proxySend(this.connection, this.contract.methods.setAccount)
 
   /**
    * Sets the name for the account
    * @param name The name to set
    */
-  setAccountName = proxySend(this.connection, this.contract.methods.setAccountName)
+  setAccountName: (name: string) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract.methods.setAccountName
+  )
 
   /**
    * Sets the metadataURL for the account
    * @param metadataURL The url to set
    */
-  setAccountMetadataURL = proxySend(this.connection, this.contract.methods.setAccountMetadataURL)
+  setAccountMetadataURL: (url: string) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract.methods.setAccountMetadataURL
+  )
 
   /**
    * Sets the wallet address for the account
    * @param walletAddress The address to set
    */
-  setAccountWalletAddress = proxySend(
+  setAccountWalletAddress: (walletAddress: string) => CeloTransactionObject<void> = proxySend(
     this.connection,
     this.contract.methods.setAccountWalletAddress
   )
@@ -453,31 +466,41 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<Contract> {
    * Sets the data encryption of the account
    * @param dataEncryptionKey The key to set
    */
-  setAccountDataEncryptionKey = proxySend(
-    this.connection,
-    this.contract.methods.setAccountDataEncryptionKey
-  )
+  setAccountDataEncryptionKey: (dataEncryptionKey: string) => CeloTransactionObject<void> =
+    proxySend(this.connection, this.contract.methods.setAccountDataEncryptionKey)
 
   /**
    * Sets the contract's liquidity provision to true
    */
-  setLiquidityProvision = proxySend(this.connection, this.contract.methods.setLiquidityProvision)
+  setLiquidityProvision: () => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract.methods.setLiquidityProvision
+  )
 
   /**
    * Sets the contract's `canExpire` field to `_canExpire`
    * @param _canExpire If the contract can expire `EXPIRATION_TIME` after the release schedule finishes.
    */
-  setCanExpire = proxySend(this.connection, this.contract.methods.setCanExpire)
+  setCanExpire: (canExpire: boolean) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract.methods.setCanExpire
+  )
 
   /**
    * Sets the contract's max distribution
    */
-  setMaxDistribution = proxySend(this.connection, this.contract.methods.setMaxDistribution)
+  setMaxDistribution: (distributionRatio: string) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract.methods.setMaxDistribution
+  )
 
   /**
    * Sets the contract's beneficiary
    */
-  setBeneficiary = proxySend(this.connection, this.contract.methods.setBeneficiary)
+  setBeneficiary: (beneficiary: string) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract.methods.setBeneficiary
+  )
 
   /**
    * Authorizes an address to sign votes on behalf of the account.

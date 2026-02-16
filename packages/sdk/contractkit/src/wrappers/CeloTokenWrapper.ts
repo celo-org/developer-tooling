@@ -1,7 +1,7 @@
 // NOTE: removing this import results in `yarn build` failures in Dockerfiles
 // after the move to node 10. This allows types to be inferred without
 // referencing '@celo/utils/node_modules/bignumber.js'
-import { Contract } from '@celo/connect'
+import { CeloTransactionObject, Contract } from '@celo/connect'
 import 'bignumber.js'
 import { proxyCall, proxySend, valueToInt } from './BaseWrapper'
 import { Erc20Wrapper } from './Erc20Wrapper'
@@ -14,13 +14,13 @@ export class CeloTokenWrapper<T extends Contract = Contract> extends Erc20Wrappe
    * Returns the name of the token.
    * @returns Name of the token.
    */
-  name = proxyCall(this.contract.methods.name)
+  name: () => Promise<string> = proxyCall(this.contract.methods.name)
 
   /**
    * Returns the three letter symbol of the token.
    * @returns Symbol of the token.
    */
-  symbol = proxyCall(this.contract.methods.symbol)
+  symbol: () => Promise<string> = proxyCall(this.contract.methods.symbol)
   /**
    * Returns the number of decimals used in the token.
    * @returns Number of decimals.
@@ -34,5 +34,6 @@ export class CeloTokenWrapper<T extends Contract = Contract> extends Erc20Wrappe
    * @param comment The transfer comment
    * @return True if the transaction succeeds.
    */
-  transferWithComment = proxySend(this.connection, this.contract.methods.transferWithComment)
+  transferWithComment: (to: string, value: string, comment: string) => CeloTransactionObject<void> =
+    proxySend(this.connection, this.contract.methods.transferWithComment)
 }

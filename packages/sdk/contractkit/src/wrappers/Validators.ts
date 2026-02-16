@@ -237,14 +237,16 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Contract> {
    * @param account The account.
    * @return Whether a particular address is a registered validator.
    */
-  isValidator = proxyCall(this.contract.methods.isValidator)
+  isValidator: (account: string) => Promise<boolean> = proxyCall(this.contract.methods.isValidator)
 
   /**
    * Returns whether a particular account has a registered validator group.
    * @param account The account.
    * @return Whether a particular address is a registered validator group.
    */
-  isValidatorGroup = proxyCall(this.contract.methods.isValidatorGroup)
+  isValidatorGroup: (account: string) => Promise<boolean> = proxyCall(
+    this.contract.methods.isValidatorGroup
+  )
 
   /**
    * Returns whether an account meets the requirements to register a validator.
@@ -434,7 +436,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Contract> {
    * De-registers a validator, removing it from the group for which it is a member.
    * @param validatorAddress Address of the validator to deregister
    */
-  async deregisterValidator(validatorAddress: Address) {
+  async deregisterValidator(validatorAddress: Address): Promise<CeloTransactionObject<void>> {
     const allValidators = await this.getRegisteredValidatorsAddresses()
     const idx = findAddressIndex(validatorAddress, allValidators)
 
@@ -462,7 +464,9 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Contract> {
    * De-registers a validator Group
    * @param validatorGroupAddress Address of the validator group to deregister
    */
-  async deregisterValidatorGroup(validatorGroupAddress: Address) {
+  async deregisterValidatorGroup(
+    validatorGroupAddress: Address
+  ): Promise<CeloTransactionObject<void>> {
     const allGroups = await this.getRegisteredValidatorGroupsAddresses()
     const idx = findAddressIndex(validatorGroupAddress, allGroups)
 
@@ -487,22 +491,23 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Contract> {
    * Fails if the account is not a validator with non-zero affiliation.
    */
 
-  deaffiliate = proxySend(this.connection, this.contract.methods.deaffiliate)
+  deaffiliate: () => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract.methods.deaffiliate
+  )
 
   /**
    * Removes a validator from the group for which it is a member.
    * @param validatorAccount The validator to deaffiliate from their affiliated validator group.
    */
-  forceDeaffiliateIfValidator = proxySend(
-    this.connection,
-    this.contract.methods.forceDeaffiliateIfValidator
-  )
+  forceDeaffiliateIfValidator: (validatorAccount: string) => CeloTransactionObject<void> =
+    proxySend(this.connection, this.contract.methods.forceDeaffiliateIfValidator)
 
   /**
    * Resets a group's slashing multiplier if it has been >= the reset period since
    * the last time the group was slashed.
    */
-  resetSlashingMultiplier = proxySend(
+  resetSlashingMultiplier: () => CeloTransactionObject<void> = proxySend(
     this.connection,
     this.contract.methods.resetSlashingMultiplier
   )
@@ -534,7 +539,10 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Contract> {
    *
    * @param validator The Validator to remove from the group
    */
-  removeMember = proxySend(this.connection, this.contract.methods.removeMember)
+  removeMember: (validator: string) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract.methods.removeMember
+  )
 
   /**
    * Reorders a member within a validator group.
@@ -543,7 +551,11 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<Contract> {
    * @param validator The validator to reorder.
    * @param newIndex New position for the validator
    */
-  async reorderMember(groupAddr: Address, validator: Address, newIndex: number) {
+  async reorderMember(
+    groupAddr: Address,
+    validator: Address,
+    newIndex: number
+  ): Promise<CeloTransactionObject<void>> {
     const group = await this.getValidatorGroup(groupAddr)
 
     if (newIndex < 0 || newIndex >= group.members.length) {

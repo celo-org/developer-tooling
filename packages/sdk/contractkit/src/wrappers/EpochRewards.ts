@@ -31,9 +31,12 @@ export class EpochRewardsWrapper extends BaseWrapper<Contract> {
     parseFixidity
   )
 
-  getCarbonOffsetting = async () => {
+  getCarbonOffsetting = async (): Promise<{
+    factor: import('bignumber.js').default
+    partner: string
+  }> => {
     const factor = parseFixidity(await this.contract.methods.getCarbonOffsettingFraction().call())
-    const partner = await this.contract.methods.carbonOffsettingPartner().call()
+    const partner: string = await this.contract.methods.carbonOffsettingPartner().call()
     return {
       factor,
       partner,

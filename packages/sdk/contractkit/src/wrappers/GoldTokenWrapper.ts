@@ -2,7 +2,7 @@
 // after the move to node 10. This allows types to be inferred without
 // referencing '@celo/utils/node_modules/bignumber.js'
 import { Address } from '@celo/base'
-import { Contract } from '@celo/connect'
+import { CeloTransactionObject, Contract } from '@celo/connect'
 import 'bignumber.js'
 import {
   proxySend,
@@ -23,7 +23,10 @@ export class GoldTokenWrapper extends CeloTokenWrapper<Contract> {
    * @param value The increment of the amount of CELO approved to the spender.
    * @returns true if success.
    */
-  increaseAllowance = proxySend(
+  increaseAllowance: (
+    spender: string,
+    value: import('bignumber.js').default.Value
+  ) => CeloTransactionObject<void> = proxySend(
     this.connection,
     this.contract.methods.increaseAllowance,
     tupleParser(stringIdentity, valueToString)
@@ -34,7 +37,8 @@ export class GoldTokenWrapper extends CeloTokenWrapper<Contract> {
    * @param value The decrement of the amount of CELO approved to the spender.
    * @returns true if success.
    */
-  decreaseAllowance = proxySend(this.connection, this.contract.methods.decreaseAllowance)
+  decreaseAllowance: (spender: string, value: string | number) => CeloTransactionObject<void> =
+    proxySend(this.connection, this.contract.methods.decreaseAllowance)
 
   /**
    * Gets the balance of the specified address.

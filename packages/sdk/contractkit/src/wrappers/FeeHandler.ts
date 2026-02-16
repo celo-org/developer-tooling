@@ -1,4 +1,4 @@
-import { Address, Contract } from '@celo/connect'
+import { Address, CeloTransactionObject, Contract } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import { BaseWrapper, proxyCall, proxySend } from './BaseWrapper'
 
@@ -40,23 +40,38 @@ export interface ExchangeProposalReadable {
 }
 
 export class FeeHandlerWrapper extends BaseWrapper<Contract> {
-  owner = proxyCall(this.contract.methods.owner)
+  owner: () => Promise<string> = proxyCall(this.contract.methods.owner)
 
-  handleAll = proxySend(this.connection, this.contract.methods.handleAll)
-  burnCelo = proxySend(this.connection, this.contract.methods.burnCelo)
+  handleAll: () => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract.methods.handleAll
+  )
+  burnCelo: () => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract.methods.burnCelo
+  )
 
-  async handle(tokenAddress: Address) {
-    const createExchangeProposalInner = proxySend(this.connection, this.contract.methods.handle)
+  async handle(tokenAddress: Address): Promise<CeloTransactionObject<void>> {
+    const createExchangeProposalInner: (addr: string) => CeloTransactionObject<void> = proxySend(
+      this.connection,
+      this.contract.methods.handle
+    )
     return createExchangeProposalInner(tokenAddress)
   }
 
-  async sell(tokenAddress: Address) {
-    const innerCall = proxySend(this.connection, this.contract.methods.sell)
+  async sell(tokenAddress: Address): Promise<CeloTransactionObject<void>> {
+    const innerCall: (addr: string) => CeloTransactionObject<void> = proxySend(
+      this.connection,
+      this.contract.methods.sell
+    )
     return innerCall(tokenAddress)
   }
 
-  async distribute(tokenAddress: Address) {
-    const innerCall = proxySend(this.connection, this.contract.methods.distribute)
+  async distribute(tokenAddress: Address): Promise<CeloTransactionObject<void>> {
+    const innerCall: (addr: string) => CeloTransactionObject<void> = proxySend(
+      this.connection,
+      this.contract.methods.distribute
+    )
     return innerCall(tokenAddress)
   }
 }

@@ -1,6 +1,12 @@
 import { StableToken } from '@celo/base'
 import { eqAddress } from '@celo/base/lib/address'
-import { Address, Connection, toTransactionObject, Contract } from '@celo/connect'
+import {
+  Address,
+  CeloTransactionObject,
+  Connection,
+  toTransactionObject,
+  Contract,
+} from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import { AccountsWrapper } from './Accounts'
 import {
@@ -99,15 +105,16 @@ export class AttestationsWrapper extends BaseWrapper<Contract> {
    * @param identifier Attestation identifier (e.g. phone hash)
    * @param account Address of the account
    */
-  getUnselectedRequest = proxyCall(
-    this.contract.methods.getUnselectedRequest,
-    undefined,
-    (res) => ({
-      blockNumber: valueToInt(res[0]),
-      attestationsRequested: valueToInt(res[1]),
-      attestationRequestFeeToken: res[2],
-    })
-  )
+  getUnselectedRequest: (identifier: string, account: Address) => Promise<UnselectedRequest> =
+    proxyCall(
+      this.contract.methods.getUnselectedRequest,
+      undefined,
+      (res): UnselectedRequest => ({
+        blockNumber: valueToInt(res[0]),
+        attestationsRequested: valueToInt(res[1]),
+        attestationRequestFeeToken: res[2] as string,
+      })
+    )
 
   /**
    * @notice Checks if attestation request is expired.
@@ -125,7 +132,9 @@ export class AttestationsWrapper extends BaseWrapper<Contract> {
    * @param identifier Attestation identifier (e.g. phone hash)
    * @param account Address of the account
    */
-  getAttestationIssuers = proxyCall(this.contract.methods.getAttestationIssuers)
+  getAttestationIssuers: (identifier: string, account: Address) => Promise<string[]> = proxyCall(
+    this.contract.methods.getAttestationIssuers
+  )
 
   /**
    * Returns the attestation state of a phone number/account/issuer tuple
@@ -208,7 +217,7 @@ export class AttestationsWrapper extends BaseWrapper<Contract> {
    * Approves the necessary amount of StableToken to request Attestations
    * @param attestationsRequested The number of attestations to request
    */
-  async approveAttestationFee(attestationsRequested: number) {
+  async approveAttestationFee(attestationsRequested: number): Promise<CeloTransactionObject<void>> {
     const tokenContract = await this.contracts.getStableToken(StableToken.USDm)
     const fee = await this.getAttestationFeeRequired(attestationsRequested)
     return tokenContract.approve(this.address, fee.toFixed())
@@ -230,7 +239,10 @@ export class AttestationsWrapper extends BaseWrapper<Contract> {
    * Allows issuers to withdraw accumulated attestation rewards
    * @param address The address of the token that will be withdrawn
    */
-  withdraw = proxySend(this.connection, this.contract.methods.withdraw)
+  withdraw: (token: string) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract.methods.withdraw
+  )
 
   /**
    * Returns the current configuration parameters for the contract.
@@ -268,7 +280,9 @@ export class AttestationsWrapper extends BaseWrapper<Contract> {
    * Returns the list of accounts associated with an identifier.
    * @param identifier Attestation identifier (e.g. phone hash)
    */
-  lookupAccountsForIdentifier = proxyCall(this.contract.methods.lookupAccountsForIdentifier)
+  lookupAccountsForIdentifier: (identifier: string) => Promise<string[]> = proxyCall(
+    this.contract.methods.lookupAccountsForIdentifier
+  )
 
   /**
    * Lookup mapped wallet addresses for a given list of identifiers
@@ -310,7 +324,7 @@ export class AttestationsWrapper extends BaseWrapper<Contract> {
     return result
   }
 
-  async revoke(identifer: string, account: Address) {
+  async revoke(identifer: string, account: Address): Promise<CeloTransactionObject<void>> {
     const accounts = await this.lookupAccountsForIdentifier(identifer)
     const idx = accounts.findIndex((acc: string) => eqAddress(acc, account))
     if (idx < 0) {

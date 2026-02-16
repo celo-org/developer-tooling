@@ -47,7 +47,10 @@ export class AccountsWrapper extends BaseWrapper<Contract> {
   /**
    * Creates an account.
    */
-  createAccount = proxySend(this.connection, this.contract.methods.createAccount)
+  createAccount: () => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract.methods.createAccount
+  )
 
   /**
    * Returns the attestation signer for the specified account.
@@ -291,7 +294,7 @@ export class AccountsWrapper extends BaseWrapper<Contract> {
     )
   }
 
-  async authorizeSigner(signer: Address, role: string) {
+  async authorizeSigner(signer: Address, role: string): Promise<CeloTransactionObject<void>> {
     await this.onlyVersionOrGreater(this.RELEASE_4_VERSION)
     const [accounts, chainId] = await Promise.all([
       this.connection.getAccounts(),
@@ -316,7 +319,10 @@ export class AccountsWrapper extends BaseWrapper<Contract> {
     )
   }
 
-  async startSignerAuthorization(signer: Address, role: string) {
+  async startSignerAuthorization(
+    signer: Address,
+    role: string
+  ): Promise<CeloTransactionObject<void>> {
     await this.onlyVersionOrGreater(this.RELEASE_4_VERSION)
     return toTransactionObject(
       this.connection,
@@ -324,7 +330,10 @@ export class AccountsWrapper extends BaseWrapper<Contract> {
     )
   }
 
-  async completeSignerAuthorization(account: Address, role: string) {
+  async completeSignerAuthorization(
+    account: Address,
+    role: string
+  ): Promise<CeloTransactionObject<void>> {
     await this.onlyVersionOrGreater(this.RELEASE_4_VERSION)
     return toTransactionObject(
       this.connection,
@@ -374,19 +383,23 @@ export class AccountsWrapper extends BaseWrapper<Contract> {
    * Returns the set wallet address for the account
    * @param account Account
    */
-  getWalletAddress = proxyCall(this.contract.methods.getWalletAddress)
+  getWalletAddress: (account: string) => Promise<string> = proxyCall(
+    this.contract.methods.getWalletAddress
+  )
 
   /**
    * Returns the metadataURL for the account
    * @param account Account
    */
-  getMetadataURL = proxyCall(this.contract.methods.getMetadataURL)
+  getMetadataURL: (account: string) => Promise<string> = proxyCall(
+    this.contract.methods.getMetadataURL
+  )
 
   /**
    * Sets the data encryption of the account
    * @param encryptionKey The key to set
    */
-  setAccountDataEncryptionKey = proxySend(
+  setAccountDataEncryptionKey: (encryptionKey: string) => CeloTransactionObject<void> = proxySend(
     this.connection,
     this.contract.methods.setAccountDataEncryptionKey
   )
@@ -437,13 +450,19 @@ export class AccountsWrapper extends BaseWrapper<Contract> {
    * Sets the name for the account
    * @param name The name to set
    */
-  setName = proxySend(this.connection, this.contract.methods.setName)
+  setName: (name: string) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract.methods.setName
+  )
 
   /**
    * Sets the metadataURL for the account
    * @param url The url to set
    */
-  setMetadataURL = proxySend(this.connection, this.contract.methods.setMetadataURL)
+  setMetadataURL: (url: string) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract.methods.setMetadataURL
+  )
 
   /**
    * Set a validator's payment delegation settings.
@@ -454,13 +473,14 @@ export class AccountsWrapper extends BaseWrapper<Contract> {
    * be greater than 1.
    * @dev Use `deletePaymentDelegation` to unset the payment delegation.
    */
-  setPaymentDelegation = proxySend(this.connection, this.contract.methods.setPaymentDelegation)
+  setPaymentDelegation: (beneficiary: string, fraction: string) => CeloTransactionObject<void> =
+    proxySend(this.connection, this.contract.methods.setPaymentDelegation)
 
   /**
    * Remove a validator's payment delegation by setting beneficiary and
    * fraction to 0.
    */
-  deletePaymentDelegation = proxySend(
+  deletePaymentDelegation: () => CeloTransactionObject<void> = proxySend(
     this.connection,
     this.contract.methods.deletePaymentDelegation
   )
@@ -470,7 +490,9 @@ export class AccountsWrapper extends BaseWrapper<Contract> {
    * @param account Account of the validator.
    * @return Beneficiary address and fraction of payment delegated.
    */
-  getPaymentDelegation = proxyCall(this.contract.methods.getPaymentDelegation)
+  getPaymentDelegation: (account: string) => Promise<{ 0: string; 1: string }> = proxyCall(
+    this.contract.methods.getPaymentDelegation
+  )
 
   /**
    * Sets the wallet address for the account

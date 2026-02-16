@@ -1,4 +1,4 @@
-import { Contract } from '@celo/connect'
+import { CeloTransactionObject, Contract } from '@celo/connect'
 // NOTE: removing this import results in `yarn build` failures in Dockerfiles
 // after the move to node 10. This allows types to be inferred without
 // referencing '@celo/utils/node_modules/bignumber.js'
@@ -29,7 +29,10 @@ export class Erc20Wrapper<T extends Contract> extends BaseWrapper<T> {
    * @param value The amount of the token approved to the spender.
    * @return True if the transaction succeeds.
    */
-  approve = proxySend(this.connection, this.contract.methods.approve)
+  approve: (spender: string, value: string | number) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract.methods.approve
+  )
 
   /**
    * Transfers the token from one address to another.
@@ -37,7 +40,10 @@ export class Erc20Wrapper<T extends Contract> extends BaseWrapper<T> {
    * @param value The amount of the token to transfer.
    * @return True if the transaction succeeds.
    */
-  transfer = proxySend(this.connection, this.contract.methods.transfer)
+  transfer: (to: string, value: string | number) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract.methods.transfer
+  )
 
   /**
    * Transfers the token from one address to another on behalf of a user.
@@ -46,7 +52,8 @@ export class Erc20Wrapper<T extends Contract> extends BaseWrapper<T> {
    * @param value The amount of the token to transfer.
    * @return True if the transaction succeeds.
    */
-  transferFrom = proxySend(this.connection, this.contract.methods.transferFrom)
+  transferFrom: (from: string, to: string, value: string | number) => CeloTransactionObject<void> =
+    proxySend(this.connection, this.contract.methods.transferFrom)
 
   /**
    * Gets the balance of the specified address.

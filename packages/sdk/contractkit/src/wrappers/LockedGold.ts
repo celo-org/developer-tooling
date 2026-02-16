@@ -84,23 +84,28 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<Contract> {
    * Locks gold to be used for voting.
    * The gold to be locked, must be specified as the `tx.value`
    */
-  lock = proxySend(this.connection, this.contract.methods.lock)
+  lock: () => CeloTransactionObject<void> = proxySend(this.connection, this.contract.methods.lock)
 
   /**
    * Delegates locked gold.
    */
-  delegate = proxySend(this.connection, this.contract.methods.delegateGovernanceVotes)
+  delegate: (delegatee: string, percentAmount: string) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract.methods.delegateGovernanceVotes
+  )
 
   /**
    * Updates the amount of delegated locked gold. There might be discrepancy between the amount of locked gold
    * and the amount of delegated locked gold because of received rewards.
    */
-  updateDelegatedAmount = proxySend(this.connection, this.contract.methods.updateDelegatedAmount)
+  updateDelegatedAmount: (delegator: string, delegatee: string) => CeloTransactionObject<void> =
+    proxySend(this.connection, this.contract.methods.updateDelegatedAmount)
 
   /**
    * Revokes delegated locked gold.
    */
-  revokeDelegated = proxySend(this.connection, this.contract.methods.revokeDelegatedGovernanceVotes)
+  revokeDelegated: (delegatee: string, percentAmount: string) => CeloTransactionObject<void> =
+    proxySend(this.connection, this.contract.methods.revokeDelegatedGovernanceVotes)
 
   getMaxDelegateesCount = async () => {
     const maxDelegateesCountHex = await this.connection.getStorageAt(

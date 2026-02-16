@@ -112,7 +112,7 @@ export class FederatedAttestationsWrapper extends BaseWrapper<Contract> {
     account: Address,
     signer: Address,
     issuedOn: number
-  ) {
+  ): Promise<CeloTransactionObject<void>> {
     const chainId = await this.connection.chainId()
     const typedData = buildRegisterAttestationTypedData(chainId, this.address, {
       identifier,

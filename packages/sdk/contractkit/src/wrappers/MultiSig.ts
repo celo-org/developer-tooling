@@ -45,7 +45,7 @@ export class MultiSigWrapper extends BaseWrapper<Contract> {
     destination: string,
     txObject: CeloTxObject<unknown>,
     value = '0'
-  ) {
+  ): Promise<CeloTransactionObject<void>> {
     const data = stringToSolidityBytes(txObject.encodeABI())
     const transactionCount = await this.contract.methods.getTransactionCount(true, true).call()
     const transactionIds = await this.contract.methods
@@ -72,13 +72,17 @@ export class MultiSigWrapper extends BaseWrapper<Contract> {
     )
   }
 
-  async confirmTransaction(transactionId: number) {
+  async confirmTransaction(transactionId: number): Promise<CeloTransactionObject<void>> {
     return toTransactionObject(
       this.connection,
       this.contract.methods.confirmTransaction(transactionId)
     )
   }
-  async submitTransaction(destination: string, txObject: CeloTxObject<unknown>, value = '0') {
+  async submitTransaction(
+    destination: string,
+    txObject: CeloTxObject<unknown>,
+    value = '0'
+  ): Promise<CeloTransactionObject<void>> {
     const data = stringToSolidityBytes(txObject.encodeABI())
     return toTransactionObject(
       this.connection,
@@ -87,7 +91,7 @@ export class MultiSigWrapper extends BaseWrapper<Contract> {
   }
 
   isOwner: (owner: Address) => Promise<boolean> = proxyCall(this.contract.methods.isOwner)
-  getOwners = proxyCall(this.contract.methods.getOwners)
+  getOwners: () => Promise<string[]> = proxyCall(this.contract.methods.getOwners)
   getRequired = proxyCall(this.contract.methods.required, undefined, valueToBigNumber)
   getInternalRequired = proxyCall(
     this.contract.methods.internalRequired,

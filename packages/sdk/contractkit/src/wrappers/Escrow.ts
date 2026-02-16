@@ -11,7 +11,16 @@ export class EscrowWrapper extends BaseWrapper<Contract> {
    * @return An EscrowedPayment struct which holds information such
    * as; recipient identifier, sender address, token address, value, etc.
    */
-  escrowedPayments = proxyCall(this.contract.methods.escrowedPayments)
+  escrowedPayments: (paymentId: string) => Promise<{
+    recipientIdentifier: string
+    sender: string
+    token: string
+    value: string
+    sentIndex: string
+    timestamp: string
+    expirySeconds: string
+    minAttestations: string
+  }> = proxyCall(this.contract.methods.escrowedPayments)
 
   /**
    * @notice Gets array of all Escrowed Payments received by identifier.
@@ -19,7 +28,9 @@ export class EscrowWrapper extends BaseWrapper<Contract> {
    * @return An array containing all the IDs of the Escrowed Payments that were received
    * by the specified receiver.
    */
-  getReceivedPaymentIds = proxyCall(this.contract.methods.getReceivedPaymentIds)
+  getReceivedPaymentIds: (identifier: string) => Promise<string[]> = proxyCall(
+    this.contract.methods.getReceivedPaymentIds
+  )
 
   /**
    * @notice Gets array of all Escrowed Payment IDs sent by sender.
@@ -27,20 +38,26 @@ export class EscrowWrapper extends BaseWrapper<Contract> {
    * @return An array containing all the IDs of the Escrowed Payments that were sent by the
    * specified sender.
    */
-  getSentPaymentIds = proxyCall(this.contract.methods.getSentPaymentIds)
+  getSentPaymentIds: (sender: Address) => Promise<string[]> = proxyCall(
+    this.contract.methods.getSentPaymentIds
+  )
 
   /**
    * @notice Gets trusted issuers set as default for payments by `transfer` function.
    * @return An array of addresses of trusted issuers.
    */
-  getDefaultTrustedIssuers = proxyCall(this.contract.methods.getDefaultTrustedIssuers)
+  getDefaultTrustedIssuers: () => Promise<string[]> = proxyCall(
+    this.contract.methods.getDefaultTrustedIssuers
+  )
 
   /**
    * @notice Gets array of all trusted issuers set per paymentId.
    * @param paymentId The ID of the payment to get.
    * @return An array of addresses of trusted issuers set for an escrowed payment.
    */
-  getTrustedIssuersPerPayment = proxyCall(this.contract.methods.getTrustedIssuersPerPayment)
+  getTrustedIssuersPerPayment: (paymentId: string) => Promise<string[]> = proxyCall(
+    this.contract.methods.getTrustedIssuersPerPayment
+  )
 
   /**
    * @notice Transfer tokens to a specific user. Supports both identity with privacy (an empty

@@ -1,4 +1,4 @@
-import { Contract } from '@celo/connect'
+import { CeloTransactionObject, Contract } from '@celo/connect'
 import { NULL_ADDRESS } from '@celo/base'
 import BigNumber from 'bignumber.js'
 import { proxyCall, proxySend, valueToInt, valueToString } from './BaseWrapper'
@@ -50,12 +50,16 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<Contract> {
     valueToInt
   )
   processedGroups = proxyCall(this.contract.methods.processedGroups, undefined, valueToString)
-  isOnEpochProcess = proxyCall(this.contract.methods.isOnEpochProcess)
-  isEpochProcessingStarted = proxyCall(this.contract.methods.isEpochProcessingStarted)
-  isIndividualProcessing = proxyCall(this.contract.methods.isIndividualProcessing)
-  isTimeForNextEpoch = proxyCall(this.contract.methods.isTimeForNextEpoch)
-  getElectedAccounts = proxyCall(this.contract.methods.getElectedAccounts)
-  getElectedSigners = proxyCall(this.contract.methods.getElectedSigners)
+  isOnEpochProcess: () => Promise<boolean> = proxyCall(this.contract.methods.isOnEpochProcess)
+  isEpochProcessingStarted: () => Promise<boolean> = proxyCall(
+    this.contract.methods.isEpochProcessingStarted
+  )
+  isIndividualProcessing: () => Promise<boolean> = proxyCall(
+    this.contract.methods.isIndividualProcessing
+  )
+  isTimeForNextEpoch: () => Promise<boolean> = proxyCall(this.contract.methods.isTimeForNextEpoch)
+  getElectedAccounts: () => Promise<string[]> = proxyCall(this.contract.methods.getElectedAccounts)
+  getElectedSigners: () => Promise<string[]> = proxyCall(this.contract.methods.getElectedSigners)
   getEpochProcessingStatus = proxyCall(
     this.contract.methods.epochProcessing,
     undefined,
@@ -70,13 +74,33 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<Contract> {
     }
   )
 
-  startNextEpochProcess = proxySend(this.connection, this.contract.methods.startNextEpochProcess)
-  finishNextEpochProcess = proxySend(this.connection, this.contract.methods.finishNextEpochProcess)
-  sendValidatorPayment = proxySend(this.connection, this.contract.methods.sendValidatorPayment)
-  setToProcessGroups = proxySend(this.connection, this.contract.methods.setToProcessGroups)
-  processGroups = proxySend(this.connection, this.contract.methods.processGroups)
+  startNextEpochProcess: () => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract.methods.startNextEpochProcess
+  )
+  finishNextEpochProcess: (
+    groups: string[],
+    lessers: string[],
+    greaters: string[]
+  ) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract.methods.finishNextEpochProcess
+  )
+  sendValidatorPayment: (validator: string) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract.methods.sendValidatorPayment
+  )
+  setToProcessGroups: () => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract.methods.setToProcessGroups
+  )
+  processGroups: (
+    groups: string[],
+    lessers: string[],
+    greaters: string[]
+  ) => CeloTransactionObject<void> = proxySend(this.connection, this.contract.methods.processGroups)
 
-  startNextEpochProcessTx = async () => {
+  startNextEpochProcessTx = async (): Promise<CeloTransactionObject<void> | undefined> => {
     // check that the epoch process is not already started
     const isEpochProcessStarted = await this.isOnEpochProcess()
     if (isEpochProcessStarted) {
@@ -86,13 +110,13 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<Contract> {
     return this.startNextEpochProcess()
   }
 
-  finishNextEpochProcessTx = async () => {
+  finishNextEpochProcessTx = async (): Promise<CeloTransactionObject<void>> => {
     const { groups, lessers, greaters } = await this.getEpochGroupsAndSorting()
 
     return this.finishNextEpochProcess(groups, lessers, greaters)
   }
 
-  processGroupsTx = async () => {
+  processGroupsTx = async (): Promise<CeloTransactionObject<void>> => {
     const { groups, lessers, greaters } = await this.getEpochGroupsAndSorting()
 
     return this.processGroups(groups, lessers, greaters)
