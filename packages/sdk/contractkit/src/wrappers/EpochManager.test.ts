@@ -86,9 +86,9 @@ testWithAnvilL2('EpochManagerWrapper', (client) => {
 
     const firstBlock = await epochManagerWrapper.getFirstBlockAtEpoch(currentEpochNumber)
     expect(firstBlock).toBeGreaterThan(0)
-    await expect(
-      epochManagerWrapper.getLastBlockAtEpoch(currentEpochNumber)
-    ).rejects.toMatchInlineSnapshot(`[Error: execution reverted: revert: Epoch not finished yet]`)
+    await expect(epochManagerWrapper.getLastBlockAtEpoch(currentEpochNumber)).rejects.toThrow(
+      'Epoch not finished yet'
+    )
 
     // Let the epoch pass and start another one
     await timeTravel(epochDuration + 1, client)
@@ -112,9 +112,9 @@ testWithAnvilL2('EpochManagerWrapper', (client) => {
 
       const firstBlock = await epochManagerWrapper.getFirstBlockAtEpoch(currentEpochNumber)
       expect(firstBlock).toBeGreaterThan(0)
-      await expect(
-        epochManagerWrapper.getLastBlockAtEpoch(currentEpochNumber)
-      ).rejects.toMatchInlineSnapshot(`[Error: execution reverted: revert: Epoch not finished yet]`)
+      await expect(epochManagerWrapper.getLastBlockAtEpoch(currentEpochNumber)).rejects.toThrow(
+        'Epoch not finished yet'
+      )
 
       // Let the epoch pass and start another one
       await timeTravel(epochDuration + 1, client)
