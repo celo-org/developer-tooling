@@ -1,11 +1,11 @@
 import { StrongAddress } from '@celo/base'
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import BigNumber from 'bignumber.js'
 import { changeMultiSigOwner } from '../../test-utils/chain-setup'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { testLocallyWithNode } from '../../test-utils/cliUtils'
 import Register from '../account/register'
 import Lock from '../lockedcelo/lock'
 import Approve from './approve'
@@ -16,14 +16,14 @@ process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvilL2('governance:vote cmd', (client) => {
   let minDeposit: string
-  const kit = newKitFromWeb3(client)
+  const kit = newKitFromProvider(client.currentProvider)
   const proposalID = new BigNumber(1)
 
   let accounts: StrongAddress[] = []
   let governance: GovernanceWrapper
 
   beforeEach(async () => {
-    accounts = (await client.eth.getAccounts()) as StrongAddress[]
+    accounts = (await kit.connection.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
     governance = await kit.contracts.getGovernance()
     minDeposit = (await governance.minDeposit()).toFixed()
@@ -32,19 +32,19 @@ testWithAnvilL2('governance:vote cmd', (client) => {
       .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
     const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
     await timeTravel(dequeueFrequency, client)
-    await testLocallyWithWeb3Node(Dequeue, ['--from', accounts[0]], client)
+    await testLocallyWithNode(Dequeue, ['--from', accounts[0]], client)
     await changeMultiSigOwner(kit, accounts[0])
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Approve,
       ['--from', accounts[0], '--proposalID', proposalID.toString(10), '--useMultiSig'],
       client
     )
-    await testLocallyWithWeb3Node(Register, ['--from', accounts[0]], client)
-    await testLocallyWithWeb3Node(Lock, ['--from', accounts[0], '--value', '100'], client)
+    await testLocallyWithNode(Register, ['--from', accounts[0]], client)
+    await testLocallyWithNode(Lock, ['--from', accounts[0], '--value', '100'], client)
   })
 
   test('can vote yes', async () => {
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Vote,
       ['--from', accounts[0], '--proposalID', proposalID.toString(10), '--value', 'Yes'],
       client

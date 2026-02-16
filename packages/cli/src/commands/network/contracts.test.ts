@@ -1,55 +1,54 @@
-import { newICeloVersionedContract } from '@celo/abis/web3/ICeloVersionedContract'
+import { Connection } from '@celo/connect'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import write from '@oclif/core/lib/cli-ux/write'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { testLocallyWithNode } from '../../test-utils/cliUtils'
 import Contracts from './contracts'
 process.env.NO_SYNCCHECK = 'true'
-jest.mock('@celo/abis/web3/ICeloVersionedContract')
 
 testWithAnvilL2('network:contracts', (client) => {
   describe('when version can be obtained', () => {
-    beforeEach(() => {
-      jest.unmock('@celo/abis/web3/ICeloVersionedContract')
-      jest.resetModules()
-      const actual = jest.requireActual('@celo/abis/web3/ICeloVersionedContract')
-      ;(newICeloVersionedContract as jest.Mock).mockImplementation(actual.newICeloVersionedContract)
-    })
     test('runs', async () => {
       const spy = jest.spyOn(write, 'stdout')
       const warnSpy = jest.spyOn(console, 'warn')
       expect(warnSpy.mock.calls).toMatchInlineSnapshot(`[]`)
-      await testLocallyWithWeb3Node(Contracts, ['--output', 'json'], client)
+      await testLocallyWithNode(Contracts, ['--output', 'json'], client)
       expect(spy.mock.calls).toMatchSnapshot()
     })
   })
   describe('when version cant be obtained', () => {
+    let createContractSpy: jest.SpyInstance
     beforeEach(() => {
-      // @ts-expect-error
-      newICeloVersionedContract.mockImplementation((_, address) => {
-        return {
-          methods: {
-            getVersionNumber: jest.fn().mockImplementation(() => {
+      const originalCreateContract = Connection.prototype.createContract
+      createContractSpy = jest
+        .spyOn(Connection.prototype, 'createContract')
+        .mockImplementation(function (this: Connection, abi: any, address?: string) {
+          const contract = originalCreateContract.call(this, abi, address)
+          // Check if this is a versioned contract call (has getVersionNumber method)
+          if (contract.methods.getVersionNumber) {
+            contract.methods.getVersionNumber = jest.fn().mockImplementation(() => {
               // fake governance slasher
               if (address === '0x76C05a43234EB2804aa83Cd40BA10080a43d07AE') {
-                return { call: jest.fn().mockRejectedValue(new Error('Error: execution reverted')) }
+                return {
+                  call: jest.fn().mockRejectedValue(new Error('Error: execution reverted')),
+                }
               } else {
                 // return a fake normal version
                 return { call: jest.fn().mockResolvedValue([1, 2, 3, 4]) }
               }
-            }),
-          },
-        }
-      })
+            })
+          }
+          return contract
+        })
     })
     afterEach(() => {
+      createContractSpy.mockRestore()
       jest.clearAllMocks()
-      jest.resetModules()
     })
     it('still prints rest of contracts', async () => {
       const spy = jest.spyOn(write, 'stdout')
       const warnSpy = jest.spyOn(console, 'warn')
 
-      await testLocallyWithWeb3Node(Contracts, ['--output', 'json'], client)
+      await testLocallyWithNode(Contracts, ['--output', 'json'], client)
       expect(warnSpy.mock.calls).toMatchInlineSnapshot(`[]`)
       expect(spy.mock.calls).toMatchSnapshot() // see the file for the snapshot
     })

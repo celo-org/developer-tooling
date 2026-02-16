@@ -56,13 +56,6 @@ export interface ConnectionOptions {
 }
 
 /**
- * @deprecated The Web3 shim interface has been removed. Use `Connection.createContract()` directly.
- * Typed as `any` for backward compatibility with existing test code.
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Web3 = any
-
-/**
  * Connection is a Class for connecting to Celo, sending Transactions, etc
  * @param provider a JSON-RPC provider
  * @param wallet a child class of {@link WalletBase}
@@ -663,5 +656,3 @@ export class Connection {
 }
 
 const addBufferToBaseFee = (gasPrice: bigint) => (gasPrice * BigInt(120)) / BigInt(100)
-
-// createWeb3Shim has been removed. Use Connection.createContract() directly.

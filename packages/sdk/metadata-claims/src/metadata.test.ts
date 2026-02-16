@@ -1,4 +1,4 @@
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ACCOUNT_ADDRESSES } from '@celo/dev-utils/test-accounts'
 import { Address } from '@celo/utils/lib/address'
@@ -8,7 +8,7 @@ import { ClaimTypes, IdentityMetadataWrapper } from './metadata'
 import { now } from './types'
 
 testWithAnvilL2('Metadata', (client) => {
-  const kit = newKitFromWeb3(client)
+  const kit = newKitFromProvider(client.currentProvider)
   const address = ACCOUNT_ADDRESSES[0]
   const otherAddress = ACCOUNT_ADDRESSES[1]
 

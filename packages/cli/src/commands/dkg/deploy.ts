@@ -1,6 +1,6 @@
 import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
-import { displayWeb3Tx } from '../../utils/cli'
+import { displayTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { deprecationOptions } from '../../utils/notice'
 const DKG = require('./DKG.json')
@@ -27,7 +27,7 @@ export default class DKGDeploy extends BaseCommand {
     const res = await this.parse(DKGDeploy)
     const dkg = kit.connection.createContract(DKG.abi, '0x0000000000000000000000000000000000000000')
 
-    await displayWeb3Tx(
+    await displayTx(
       'deployDKG',
       dkg.deploy({ data: DKG.bytecode, arguments: [res.flags.threshold, res.flags.phaseDuration] }),
       { from: res.flags.from }

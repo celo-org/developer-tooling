@@ -1,4 +1,4 @@
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
 import {
@@ -7,7 +7,7 @@ import {
   setupGroupAndAffiliateValidator,
   voteForGroupFromAndActivateVotes,
 } from '../../test-utils/chain-setup'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { testLocallyWithNode } from '../../test-utils/cliUtils'
 import Revoke from './revoke'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -18,17 +18,16 @@ testWithAnvilL2('election:revoke', (client) => {
   })
 
   it('fails when no flags are provided', async () => {
-    await expect(testLocallyWithWeb3Node(Revoke, [], client)).rejects.toThrow(
-      'Missing required flag'
-    )
+    await expect(testLocallyWithNode(Revoke, [], client)).rejects.toThrow('Missing required flag')
   })
 
   it('fails when address is not an account', async () => {
     const logMock = jest.spyOn(console, 'log')
-    const [fromAddress, groupAddress] = await client.eth.getAccounts()
+    const kit = newKitFromProvider(client.currentProvider)
+    const [fromAddress, groupAddress] = await kit.connection.getAccounts()
 
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         Revoke,
         ['--from', fromAddress, '--for', groupAddress, '--value', '1'],
         client
@@ -40,13 +39,13 @@ testWithAnvilL2('election:revoke', (client) => {
   })
 
   it('fails when trying to revoke more votes than voted', async () => {
-    const kit = newKitFromWeb3(client)
-    const [fromAddress, groupAddress] = await client.eth.getAccounts()
+    const kit = newKitFromProvider(client.currentProvider)
+    const [fromAddress, groupAddress] = await kit.connection.getAccounts()
 
     await registerAccount(kit, fromAddress)
 
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         Revoke,
         ['--from', fromAddress, '--for', groupAddress, '--value', '1'],
         client
@@ -57,10 +56,10 @@ testWithAnvilL2('election:revoke', (client) => {
   })
 
   it('successfuly revokes all votes', async () => {
-    const kit = newKitFromWeb3(client)
+    const kit = newKitFromProvider(client.currentProvider)
     const election = await kit.contracts.getElection()
     const amount = new BigNumber(12345)
-    const [fromAddress, validatorAddress, groupAddress] = await client.eth.getAccounts()
+    const [fromAddress, validatorAddress, groupAddress] = await kit.connection.getAccounts()
 
     await registerAccountWithLockedGold(kit, fromAddress)
     await setupGroupAndAffiliateValidator(kit, groupAddress, validatorAddress)
@@ -70,7 +69,7 @@ testWithAnvilL2('election:revoke', (client) => {
       amount
     )
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Revoke,
       ['--from', fromAddress, '--for', groupAddress, '--value', amount.toFixed()],
       client
@@ -82,11 +81,11 @@ testWithAnvilL2('election:revoke', (client) => {
   })
 
   it('successfuly revokes votes partially', async () => {
-    const kit = newKitFromWeb3(client)
+    const kit = newKitFromProvider(client.currentProvider)
     const election = await kit.contracts.getElection()
     const amount = new BigNumber(54321)
     const revokeAmount = new BigNumber(4321)
-    const [fromAddress, validatorAddress, groupAddress] = await client.eth.getAccounts()
+    const [fromAddress, validatorAddress, groupAddress] = await kit.connection.getAccounts()
 
     await registerAccountWithLockedGold(kit, fromAddress)
     await setupGroupAndAffiliateValidator(kit, groupAddress, validatorAddress)
@@ -96,7 +95,7 @@ testWithAnvilL2('election:revoke', (client) => {
       amount
     )
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Revoke,
       ['--from', fromAddress, '--for', groupAddress, '--value', revokeAmount.toFixed()],
       client

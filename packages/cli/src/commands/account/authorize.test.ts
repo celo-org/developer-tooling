@@ -1,6 +1,7 @@
+import { newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import { PROOF_OF_POSSESSION_SIGNATURE } from '../../test-utils/constants'
 import Lock from '../lockedcelo/lock'
 import ValidatorRegister from '../validator/register'
@@ -21,15 +22,16 @@ testWithAnvilL2('account:authorize cmd', (client) => {
   afterEach(() => jest.clearAllMocks())
 
   test('can authorize vote signer', async () => {
-    const accounts = await client.eth.getAccounts()
+    const kit = newKitFromProvider(client.currentProvider)
+    const accounts = await kit.connection.getAccounts()
     const notRegisteredAccount = accounts[0]
     const signerNotRegisteredAccount = accounts[1]
 
-    await testLocallyWithWeb3Node(Register, ['--from', notRegisteredAccount], client)
+    await testLocallyWithNode(Register, ['--from', notRegisteredAccount], client)
 
     logMock.mockClear()
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Authorize,
       [
         '--from',
@@ -66,15 +68,16 @@ testWithAnvilL2('account:authorize cmd', (client) => {
   })
 
   test('can authorize attestation signer', async () => {
-    const accounts = await client.eth.getAccounts()
+    const kit = newKitFromProvider(client.currentProvider)
+    const accounts = await kit.connection.getAccounts()
     const notRegisteredAccount = accounts[0]
     const signerNotRegisteredAccount = accounts[1]
 
-    await testLocallyWithWeb3Node(Register, ['--from', notRegisteredAccount], client)
+    await testLocallyWithNode(Register, ['--from', notRegisteredAccount], client)
 
     logMock.mockClear()
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Authorize,
       [
         '--from',
@@ -111,15 +114,16 @@ testWithAnvilL2('account:authorize cmd', (client) => {
   })
 
   test('can authorize validator signer before validator is registered', async () => {
-    const accounts = await client.eth.getAccounts()
+    const kit = newKitFromProvider(client.currentProvider)
+    const accounts = await kit.connection.getAccounts()
     const notRegisteredAccount = accounts[0]
     const signerNotRegisteredAccount = accounts[1]
 
-    await testLocallyWithWeb3Node(Register, ['--from', notRegisteredAccount], client)
+    await testLocallyWithNode(Register, ['--from', notRegisteredAccount], client)
 
     logMock.mockClear()
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Authorize,
       [
         '--from',
@@ -157,17 +161,18 @@ testWithAnvilL2('account:authorize cmd', (client) => {
   })
 
   it('can authorize validator signer after validator is registered', async () => {
-    const accounts = await client.eth.getAccounts()
+    const kit = newKitFromProvider(client.currentProvider)
+    const accounts = await kit.connection.getAccounts()
     const notRegisteredAccount = accounts[0]
     const signerNotRegisteredAccount = accounts[1]
-    const ecdsaPublicKey = await addressToPublicKey(notRegisteredAccount, client.eth.sign)
-    await testLocallyWithWeb3Node(Register, ['--from', notRegisteredAccount], client)
-    await testLocallyWithWeb3Node(
+    const ecdsaPublicKey = await addressToPublicKey(notRegisteredAccount, kit.connection.sign)
+    await testLocallyWithNode(Register, ['--from', notRegisteredAccount], client)
+    await testLocallyWithNode(
       Lock,
       ['--from', notRegisteredAccount, '--value', '10000000000000000000000'],
       client
     )
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       ValidatorRegister,
       ['--from', notRegisteredAccount, '--ecdsaKey', ecdsaPublicKey, '--yes'],
       client
@@ -175,7 +180,7 @@ testWithAnvilL2('account:authorize cmd', (client) => {
 
     logMock.mockClear()
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Authorize,
       [
         '--from',
@@ -212,17 +217,18 @@ testWithAnvilL2('account:authorize cmd', (client) => {
   })
 
   it('fails when using BLS keys on L2', async () => {
-    const accounts = await client.eth.getAccounts()
+    const kit = newKitFromProvider(client.currentProvider)
+    const accounts = await kit.connection.getAccounts()
     const notRegisteredAccount = accounts[0]
     const signerNotRegisteredAccount = accounts[1]
-    const ecdsaPublicKey = await addressToPublicKey(notRegisteredAccount, client.eth.sign)
-    await testLocallyWithWeb3Node(Register, ['--from', notRegisteredAccount], client)
-    await testLocallyWithWeb3Node(
+    const ecdsaPublicKey = await addressToPublicKey(notRegisteredAccount, kit.connection.sign)
+    await testLocallyWithNode(Register, ['--from', notRegisteredAccount], client)
+    await testLocallyWithNode(
       Lock,
       ['--from', notRegisteredAccount, '--value', '10000000000000000000000'],
       client
     )
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       ValidatorRegister,
       ['--from', notRegisteredAccount, '--ecdsaKey', ecdsaPublicKey, '--yes'],
       client
@@ -231,7 +237,7 @@ testWithAnvilL2('account:authorize cmd', (client) => {
     logMock.mockClear()
 
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         Authorize,
         [
           '--from',
@@ -259,17 +265,18 @@ testWithAnvilL2('account:authorize cmd', (client) => {
   })
 
   test('can force authorize validator signer without BLS after validator is registered', async () => {
-    const accounts = await client.eth.getAccounts()
+    const kit = newKitFromProvider(client.currentProvider)
+    const accounts = await kit.connection.getAccounts()
     const notRegisteredAccount = accounts[0]
     const signerNotRegisteredAccount = accounts[1]
-    const ecdsaPublicKey = await addressToPublicKey(notRegisteredAccount, client.eth.sign)
-    await testLocallyWithWeb3Node(Register, ['--from', notRegisteredAccount], client)
-    await testLocallyWithWeb3Node(
+    const ecdsaPublicKey = await addressToPublicKey(notRegisteredAccount, kit.connection.sign)
+    await testLocallyWithNode(Register, ['--from', notRegisteredAccount], client)
+    await testLocallyWithNode(
       Lock,
       ['--from', notRegisteredAccount, '--value', '10000000000000000000000'],
       client
     )
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       ValidatorRegister,
       ['--from', notRegisteredAccount, '--ecdsaKey', ecdsaPublicKey, '--yes'],
       client
@@ -277,7 +284,7 @@ testWithAnvilL2('account:authorize cmd', (client) => {
 
     logMock.mockClear()
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Authorize,
       [
         '--from',
@@ -315,14 +322,15 @@ testWithAnvilL2('account:authorize cmd', (client) => {
   })
 
   test('fails if from is not an account', async () => {
-    const accounts = await client.eth.getAccounts()
+    const kit = newKitFromProvider(client.currentProvider)
+    const accounts = await kit.connection.getAccounts()
     const notRegisteredAccount = accounts[0]
     const signerNotRegisteredAccount = accounts[1]
 
     logMock.mockClear()
 
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         Authorize,
         [
           '--from',

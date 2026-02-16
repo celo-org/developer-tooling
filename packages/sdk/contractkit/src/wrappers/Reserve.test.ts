@@ -1,5 +1,4 @@
-import { newReserve } from '@celo/abis/web3/mento/Reserve'
-import { newMultiSig } from '@celo/abis/web3/MultiSig'
+import { multiSigABI, reserveABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
 import {
   asCoreContractsOwner,
@@ -10,12 +9,12 @@ import {
 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
 import { CeloContract } from '../base'
-import { newKitFromWeb3 } from '../kit'
+import { newKitFromProvider } from '../kit'
 import { MultiSigWrapper } from './MultiSig'
 import { ReserveWrapper } from './Reserve'
 
 testWithAnvilL2('Reserve Wrapper', (client) => {
-  const kit = newKitFromWeb3(client)
+  const kit = newKitFromProvider(client.currentProvider)
   let accounts: StrongAddress[] = []
   let reserve: ReserveWrapper
   let reserveSpenderMultiSig: MultiSigWrapper
@@ -23,15 +22,18 @@ testWithAnvilL2('Reserve Wrapper', (client) => {
   let otherSpender: StrongAddress
 
   beforeEach(async () => {
-    accounts = (await client.eth.getAccounts()) as StrongAddress[]
+    accounts = await kit.connection.getAccounts()
     kit.defaultAccount = accounts[0]
     otherReserveAddress = accounts[9]
     otherSpender = accounts[7]
     reserve = await kit.contracts.getReserve()
     const multiSigAddress = await kit.registry.addressFor('ReserveSpenderMultiSig' as CeloContract)
     reserveSpenderMultiSig = await kit.contracts.getMultiSig(multiSigAddress)
-    const reserveContract = newReserve(client, reserve.address)
-    const reserveSpenderMultiSigContract = newMultiSig(client, reserveSpenderMultiSig.address)
+    const reserveContract = kit.connection.createContract(reserveABI as any, reserve.address)
+    const reserveSpenderMultiSigContract = kit.connection.createContract(
+      multiSigABI as any,
+      reserveSpenderMultiSig.address
+    )
 
     await withImpersonatedAccount(
       client,
@@ -47,7 +49,7 @@ testWithAnvilL2('Reserve Wrapper', (client) => {
           .changeRequirement(2)
           .send({ from: multiSigAddress })
       },
-      new BigNumber(client.utils.toWei('1', 'ether'))
+      new BigNumber('1e18')
     )
 
     await asCoreContractsOwner(client, async (ownerAdress: StrongAddress) => {
@@ -57,7 +59,7 @@ testWithAnvilL2('Reserve Wrapper', (client) => {
         .send({ from: ownerAdress })
     })
 
-    await setBalance(client, reserve.address, new BigNumber(client.utils.toWei('1', 'ether')))
+    await setBalance(client, reserve.address, new BigNumber('1e18'))
   })
 
   test('can get asset target weights which sum to 100%', async () => {

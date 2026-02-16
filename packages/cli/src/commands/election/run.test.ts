@@ -1,6 +1,6 @@
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
-import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesAndTxHashes, testLocallyWithNode } from '../../test-utils/cliUtils'
 import Run from './run'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -16,7 +16,7 @@ testWithAnvilL2('election:run', (client) => {
     const warnMock = jest.spyOn(console, 'warn')
     const writeMock = jest.spyOn(ux.write, 'stdout')
 
-    await testLocallyWithWeb3Node(Run, ['--csv'], client)
+    await testLocallyWithNode(Run, ['--csv'], client)
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`
       [
@@ -45,7 +45,7 @@ testWithAnvilL2('election:run', (client) => {
     const warnMock = jest.spyOn(console, 'warn')
     const writeMock = jest.spyOn(ux.write, 'stdout')
 
-    await testLocallyWithWeb3Node(Run, ['--csv'], client)
+    await testLocallyWithNode(Run, ['--csv'], client)
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`
       [

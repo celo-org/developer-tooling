@@ -1,9 +1,9 @@
 import { COMPLIANT_ERROR_RESPONSE } from '@celo/compliance'
-import { ContractKit, newKitFromWeb3, StableToken } from '@celo/contractkit'
+import { ContractKit, newKitFromProvider, StableToken } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
 import { topUpWithToken } from '../../test-utils/chain-setup'
-import { TEST_SANCTIONED_ADDRESS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { TEST_SANCTIONED_ADDRESS, testLocallyWithNode } from '../../test-utils/cliUtils'
 import TransferEURO from './euros'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -16,8 +16,8 @@ testWithAnvilL2('transfer:euros cmd', (client) => {
   let kit: ContractKit
 
   beforeEach(async () => {
-    kit = newKitFromWeb3(client)
-    accounts = await client.eth.getAccounts()
+    kit = newKitFromProvider(client.currentProvider)
+    accounts = await kit.connection.getAccounts()
     jest.spyOn(console, 'log').mockImplementation(() => {
       // noop
     })
@@ -48,7 +48,7 @@ testWithAnvilL2('transfer:euros cmd', (client) => {
     const receiverBalanceBefore = await kit.getTotalBalance(accounts[1])
     const amountToTransfer = '500000000000000000000'
     // Send EURm to RG contract
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       TransferEURO,
       ['--from', accounts[0], '--to', accounts[1], '--value', amountToTransfer],
       client
@@ -59,7 +59,7 @@ testWithAnvilL2('transfer:euros cmd', (client) => {
       receiverBalanceBefore.EURm!.plus(amountToTransfer).toFixed()
     )
     // Attempt to send EURm back
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       TransferEURO,
       ['--from', accounts[1], '--to', accounts[0], '--value', amountToTransfer],
       client
@@ -71,7 +71,7 @@ testWithAnvilL2('transfer:euros cmd', (client) => {
   test('should fail if to address is sanctioned', async () => {
     const spy = jest.spyOn(console, 'log')
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         TransferEURO,
         ['--from', accounts[1], '--to', TEST_SANCTIONED_ADDRESS, '--value', '1'],
         client

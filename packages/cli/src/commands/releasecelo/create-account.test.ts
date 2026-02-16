@@ -1,7 +1,7 @@
 import { StrongAddress } from '@celo/base'
-import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
+import { ContractKit, newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { testLocallyWithNode } from '../../test-utils/cliUtils'
 import { createMultisig } from '../../test-utils/multisigUtils'
 import { deployReleaseGoldContract } from '../../test-utils/release-gold'
 import CreateAccount from './create-account'
@@ -13,8 +13,8 @@ testWithAnvilL2('releasegold:create-account cmd', (client) => {
   let kit: ContractKit
 
   beforeEach(async () => {
-    const accounts = (await client.eth.getAccounts()) as StrongAddress[]
-    kit = newKitFromWeb3(client)
+    kit = newKitFromProvider(client.currentProvider)
+    const accounts = (await kit.connection.getAccounts()) as StrongAddress[]
 
     contractAddress = await deployReleaseGoldContract(
       client,
@@ -30,7 +30,7 @@ testWithAnvilL2('releasegold:create-account cmd', (client) => {
 
     expect(await accountWrapper.isAccount(contractAddress)).toBeFalsy()
 
-    await testLocallyWithWeb3Node(CreateAccount, ['--contract', contractAddress], client)
+    await testLocallyWithNode(CreateAccount, ['--contract', contractAddress], client)
 
     expect(await accountWrapper.isAccount(contractAddress)).toBeTruthy()
   })

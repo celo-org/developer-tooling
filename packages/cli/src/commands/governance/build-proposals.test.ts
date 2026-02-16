@@ -2,7 +2,7 @@ import CeloTokenABI from '@celo/abis/GoldToken.json'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { readJSON, removeSync } from 'fs-extra'
 import inquirer from 'inquirer'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { testLocallyWithNode } from '../../test-utils/cliUtils'
 import BuildProposal from './build-proposal'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -36,7 +36,7 @@ testWithAnvilL2('governance:build-proposal cmd', (client) => {
       promptSpy.mockResolvedValueOnce({ 'Celo Contract': '✔ done' })
     })
     it('generates the json', async () => {
-      await testLocallyWithWeb3Node(BuildProposal, ['--output', TX_PATH_FOR_TEST], client)
+      await testLocallyWithNode(BuildProposal, ['--output', TX_PATH_FOR_TEST], client)
       const result = await readJSON(TX_PATH_FOR_TEST)
       expect(result).toMatchInlineSnapshot(`
         [

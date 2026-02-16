@@ -1,10 +1,13 @@
 import { StrongAddress } from '@celo/base'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
-import { newKitFromWeb3 } from '../kit'
+import { privateKeyToAddress } from '@celo/utils/lib/address'
+import { soliditySha3 } from '@celo/utils/lib/solidity'
+import { randomBytes } from 'crypto'
+import { newKitFromProvider } from '../kit'
 import { FederatedAttestationsWrapper } from './FederatedAttestations'
 
 testWithAnvilL2('FederatedAttestations Wrapper', (web3) => {
-  const kit = newKitFromWeb3(web3)
+  const kit = newKitFromProvider(web3.currentProvider)
   const TIME_STAMP = 1665080820
   let accounts: StrongAddress[] = []
   let federatedAttestations: FederatedAttestationsWrapper
@@ -13,12 +16,13 @@ testWithAnvilL2('FederatedAttestations Wrapper', (web3) => {
   let testAccountAddress: StrongAddress
 
   beforeAll(async () => {
-    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
+    accounts = await kit.connection.getAccounts()
     kit.defaultAccount = accounts[0]
     federatedAttestations = await kit.contracts.getFederatedAttestations()
-    testAccountAddress = kit.web3.eth.accounts.create().address as StrongAddress
+    const randomPrivateKey = '0x' + randomBytes(32).toString('hex')
+    testAccountAddress = privateKeyToAddress(randomPrivateKey)
     plainTextIdentifier = '221B Baker St., London'
-    testIdentifierBytes32 = kit.web3.utils.soliditySha3({
+    testIdentifierBytes32 = soliditySha3({
       t: 'bytes32',
       v: plainTextIdentifier,
     }) as string
@@ -127,7 +131,7 @@ testWithAnvilL2('FederatedAttestations Wrapper', (web3) => {
     expect(identifiersAfterRevocation.identifiers).toEqual([])
   })
   it('batch revoke attestations should remove all attestations specified ', async () => {
-    const secondIdentifierBytes32 = kit.web3.utils.soliditySha3({
+    const secondIdentifierBytes32 = soliditySha3({
       t: 'bytes32',
       v: '1600 Pennsylvania Avenue, Washington, D.C., USA',
     }) as string

@@ -1,6 +1,6 @@
 import { hexToBuffer, StrongAddress } from '@celo/base'
 import { CeloProvider } from '@celo/connect/lib/celo-provider'
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import {
   DEFAULT_OWNER_ADDRESS,
@@ -20,11 +20,12 @@ import { changeMultiSigOwner } from '../../test-utils/chain-setup'
 import {
   stripAnsiCodesAndTxHashes,
   stripAnsiCodesFromNestedArray,
-  testLocallyWithWeb3Node,
+  testLocallyWithNode,
 } from '../../test-utils/cliUtils'
 import { deployMultiCall } from '../../test-utils/multicall'
 import { createMultisig, setupSafeContracts } from '../../test-utils/multisigUtils'
 import Approve from './approve'
+import { parseEther } from 'viem'
 
 // Mock fetch for HTTP status tests
 jest.mock('cross-fetch')
@@ -50,8 +51,8 @@ testWithAnvilL2(
 
     describe('hotfix', () => {
       it('fails when address is not security council multisig signatory', async () => {
-        const kit = newKitFromWeb3(client)
-        const accounts = await client.eth.getAccounts()
+        const kit = newKitFromProvider(client.currentProvider)
+        const accounts = await kit.connection.getAccounts()
         const governance = await kit.contracts.getGovernance()
         const writeMock = jest.spyOn(ux.write, 'stdout')
         const logMock = jest.spyOn(console, 'log')
@@ -81,7 +82,7 @@ testWithAnvilL2(
         })
 
         await expect(
-          testLocallyWithWeb3Node(
+          testLocallyWithNode(
             Approve,
             [
               '--from',
@@ -129,14 +130,14 @@ testWithAnvilL2(
       })
 
       it('fails when address is not approver multisig signatory', async () => {
-        const kit = newKitFromWeb3(client)
-        const accounts = await client.eth.getAccounts()
+        const kit = newKitFromProvider(client.currentProvider)
+        const accounts = await kit.connection.getAccounts()
         const governance = await kit.contracts.getGovernance()
         const writeMock = jest.spyOn(ux.write, 'stdout')
         const logMock = jest.spyOn(console, 'log')
 
         await expect(
-          testLocallyWithWeb3Node(
+          testLocallyWithNode(
             Approve,
             ['--from', accounts[0], '--hotfix', HOTFIX_HASH, '--useMultiSig'],
             client
@@ -176,8 +177,8 @@ testWithAnvilL2(
       })
 
       it('fails when address is not security council', async () => {
-        const [approver, securityCouncil, account] = await client.eth.getAccounts()
-        const kit = newKitFromWeb3(client)
+        const kit = newKitFromProvider(client.currentProvider)
+        const [approver, securityCouncil, account] = await kit.connection.getAccounts()
         const governance = await kit.contracts.getGovernance()
         const writeMock = jest.spyOn(ux.write, 'stdout')
         const logMock = jest.spyOn(console, 'log')
@@ -205,7 +206,7 @@ testWithAnvilL2(
         })
 
         await expect(
-          testLocallyWithWeb3Node(
+          testLocallyWithNode(
             Approve,
             ['--from', account, '--hotfix', HOTFIX_HASH, '--type', 'securityCouncil'],
             client
@@ -242,8 +243,8 @@ testWithAnvilL2(
       })
 
       it('fails when address is not approver', async () => {
-        const kit = newKitFromWeb3(client)
-        const [approver, securityCouncil, account] = await client.eth.getAccounts()
+        const kit = newKitFromProvider(client.currentProvider)
+        const [approver, securityCouncil, account] = await kit.connection.getAccounts()
         const governance = await kit.contracts.getGovernance()
         const writeMock = jest.spyOn(ux.write, 'stdout')
         const logMock = jest.spyOn(console, 'log')
@@ -271,7 +272,7 @@ testWithAnvilL2(
         })
 
         await expect(
-          testLocallyWithWeb3Node(Approve, ['--from', account, '--hotfix', HOTFIX_HASH], client)
+          testLocallyWithNode(Approve, ['--from', account, '--hotfix', HOTFIX_HASH], client)
         ).rejects.toThrow("Some checks didn't pass!")
 
         expect(await governance.getHotfixRecord(HOTFIX_BUFFER)).toMatchInlineSnapshot(`
@@ -304,8 +305,8 @@ testWithAnvilL2(
       })
 
       it('succeeds when address is a direct security council', async () => {
-        const [approver, securityCouncil] = await client.eth.getAccounts()
-        const kit = newKitFromWeb3(client)
+        const kit = newKitFromProvider(client.currentProvider)
+        const [approver, securityCouncil] = await kit.connection.getAccounts()
         const governance = await kit.contracts.getGovernance()
         const writeMock = jest.spyOn(ux.write, 'stdout')
         const logMock = jest.spyOn(console, 'log')
@@ -332,7 +333,7 @@ testWithAnvilL2(
           ).waitReceipt()
         })
 
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           Approve,
           ['--from', securityCouncil, '--hotfix', HOTFIX_HASH, '--type', 'securityCouncil'],
           client
@@ -384,8 +385,8 @@ testWithAnvilL2(
       })
 
       it('succeeds when address is a direct approver', async () => {
-        const kit = newKitFromWeb3(client)
-        const [approver, securityCouncil] = await client.eth.getAccounts()
+        const kit = newKitFromProvider(client.currentProvider)
+        const [approver, securityCouncil] = await kit.connection.getAccounts()
         const governance = await kit.contracts.getGovernance()
         const writeMock = jest.spyOn(ux.write, 'stdout')
         const logMock = jest.spyOn(console, 'log')
@@ -412,11 +413,7 @@ testWithAnvilL2(
           ).waitReceipt()
         })
 
-        await testLocallyWithWeb3Node(
-          Approve,
-          ['--from', approver, '--hotfix', HOTFIX_HASH],
-          client
-        )
+        await testLocallyWithNode(Approve, ['--from', approver, '--hotfix', HOTFIX_HASH], client)
 
         expect(await governance.getHotfixRecord(HOTFIX_BUFFER)).toMatchInlineSnapshot(`
                   {
@@ -464,8 +461,8 @@ testWithAnvilL2(
       })
 
       it('succeeds when address is security council multisig signatory', async () => {
-        const kit = newKitFromWeb3(client)
-        const accounts = (await client.eth.getAccounts()) as StrongAddress[]
+        const kit = newKitFromProvider(client.currentProvider)
+        const accounts = (await kit.connection.getAccounts()) as StrongAddress[]
         const governance = await kit.contracts.getGovernance()
         const writeMock = jest.spyOn(ux.write, 'stdout')
         const logMock = jest.spyOn(console, 'log')
@@ -501,7 +498,7 @@ testWithAnvilL2(
         expect(await governance.getApprover()).toBe(accounts[0])
         expect(await governance.getSecurityCouncil()).toEqual(multisig.address)
 
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           Approve,
           [
             '--from',
@@ -560,9 +557,9 @@ testWithAnvilL2(
       it('succeeds when address is security council safe signatory', async () => {
         await setupSafeContracts(client)
 
-        const kit = newKitFromWeb3(client)
+        const kit = newKitFromProvider(client.currentProvider)
         const [approver, securityCouncilSafeSignatory1] =
-          (await client.eth.getAccounts()) as StrongAddress[]
+          (await kit.connection.getAccounts()) as StrongAddress[]
         const securityCouncilSafeSignatory2: StrongAddress =
           '0x6C666E57A5E8715cFE93f92790f98c4dFf7b69e2'
         const securityCouncilSafeSignatory2PrivateKey =
@@ -582,16 +579,17 @@ testWithAnvilL2(
 
         const protocolKit = await Safe.init({
           predictedSafe: predictSafe,
-          provider: (client.currentProvider as unknown as CeloProvider).toEip1193Provider(),
+          provider: (kit.connection.currentProvider as unknown as CeloProvider).toEip1193Provider(),
           signer: securityCouncilSafeSignatory1,
         })
 
         const deploymentTransaction = await protocolKit.createSafeDeploymentTransaction()
 
-        const receipt = await client.eth.sendTransaction({
+        const txResult = await kit.connection.sendTransaction({
           from: securityCouncilSafeSignatory1,
           ...deploymentTransaction,
         })
+        const receipt = await txResult.waitReceipt()
 
         const safeAddress = getSafeAddressFromDeploymentTx(
           receipt as unknown as Parameters<typeof getSafeAddressFromDeploymentTx>[0],
@@ -641,7 +639,7 @@ testWithAnvilL2(
                   }
               `)
 
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           Approve,
           [
             '--from',
@@ -656,7 +654,7 @@ testWithAnvilL2(
         )
 
         // Run the same command twice with same arguments to make sure it doesn't have any effect
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           Approve,
           [
             '--from',
@@ -680,12 +678,8 @@ testWithAnvilL2(
               `)
 
         // Make sure the account has enough balance to pay for the transaction
-        await setBalance(
-          client,
-          securityCouncilSafeSignatory2,
-          BigInt(client.utils.toWei('1', 'ether'))
-        )
-        await testLocallyWithWeb3Node(
+        await setBalance(client, securityCouncilSafeSignatory2, BigInt(parseEther('1').toString()))
+        await testLocallyWithNode(
           Approve,
           [
             '--from',
@@ -776,8 +770,8 @@ testWithAnvilL2(
       })
 
       it('succeeds when address is approver multisig signatory', async () => {
-        const kit = newKitFromWeb3(client)
-        const accounts = (await client.eth.getAccounts()) as StrongAddress[]
+        const kit = newKitFromProvider(client.currentProvider)
+        const accounts = (await kit.connection.getAccounts()) as StrongAddress[]
 
         await changeMultiSigOwner(kit, accounts[0])
 
@@ -785,7 +779,7 @@ testWithAnvilL2(
         const writeMock = jest.spyOn(ux.write, 'stdout')
         const logMock = jest.spyOn(console, 'log')
 
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           Approve,
           ['--from', accounts[0], '--hotfix', HOTFIX_HASH, '--useMultiSig'],
           client
@@ -833,8 +827,8 @@ testWithAnvilL2(
       })
 
       it('succeeds when address is security council multisig signatory', async () => {
-        const kit = newKitFromWeb3(client)
-        const accounts = (await client.eth.getAccounts()) as StrongAddress[]
+        const kit = newKitFromProvider(client.currentProvider)
+        const accounts = (await kit.connection.getAccounts()) as StrongAddress[]
 
         await changeMultiSigOwner(kit, accounts[0])
 
@@ -866,7 +860,7 @@ testWithAnvilL2(
           ).waitReceipt()
         })
 
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           Approve,
           [
             '--from',
@@ -928,8 +922,8 @@ testWithAnvilL2(
       let accounts: StrongAddress[]
 
       beforeEach(async () => {
-        accounts = (await client.eth.getAccounts()) as StrongAddress[]
-        const kit = newKitFromWeb3(client)
+        const kit = newKitFromProvider(client.currentProvider)
+        accounts = (await kit.connection.getAccounts()) as StrongAddress[]
         governance = await kit.contracts.getGovernance()
 
         // Create and dequeue a proposal
@@ -954,7 +948,7 @@ testWithAnvilL2(
         const writeMock = jest.spyOn(ux.write, 'stdout')
         const logMock = jest.spyOn(console, 'log')
 
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           Approve,
           ['--from', accounts[0], '--proposalID', proposalId.toString(), '--useMultiSig'],
           client
@@ -1019,7 +1013,7 @@ testWithAnvilL2(
         })
 
         await expect(
-          testLocallyWithWeb3Node(
+          testLocallyWithNode(
             Approve,
             [
               '--from',
@@ -1075,7 +1069,7 @@ testWithAnvilL2(
         })
 
         await expect(
-          testLocallyWithWeb3Node(
+          testLocallyWithNode(
             Approve,
             [
               '--from',
@@ -1129,7 +1123,7 @@ testWithAnvilL2(
 
       it('should confirm existing multisig transaction when --multisigTx is provided', async () => {
         const logMock = jest.spyOn(console, 'log')
-        const kit = newKitFromWeb3(client)
+        const kit = newKitFromProvider(client.currentProvider)
 
         // Create a 2-signer multisig so the transaction won't execute immediately
         const twoSignerMultisig = await createMultisig(kit, [accounts[0], accounts[1]], 2, 2)
@@ -1178,7 +1172,7 @@ testWithAnvilL2(
 
         // Now confirm it with the multisigTx from accounts[1]
         await expect(
-          testLocallyWithWeb3Node(
+          testLocallyWithNode(
             Approve,
             [
               '--from',
@@ -1255,7 +1249,7 @@ testWithAnvilL2(
         })
 
         await expect(
-          testLocallyWithWeb3Node(
+          testLocallyWithNode(
             Approve,
             [
               '--from',
@@ -1321,7 +1315,7 @@ testWithAnvilL2(
 
         // Without --submit flag, this should work because the default behavior
         // is submitOrConfirmTransaction which will confirm if it exists
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           Approve,
           ['--from', accounts[0], '--proposalID', proposalId.toString(), '--useMultiSig'],
           client

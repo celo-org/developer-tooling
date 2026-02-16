@@ -1,9 +1,9 @@
 import { StrongAddress } from '@celo/base'
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { testLocallyWithNode } from '../../test-utils/cliUtils'
 import Register from '../account/register'
 import Lock from '../lockedcelo/lock'
 import RevokeUpvote from './revokeupvote'
@@ -12,14 +12,14 @@ process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvilL2('governance:revokeupvote cmd', (client) => {
   let minDeposit: BigNumber
-  const kit = newKitFromWeb3(client)
+  const kit = newKitFromProvider(client.currentProvider)
   const proposalId = '2'
 
   let accounts: StrongAddress[] = []
   let governance: GovernanceWrapper
 
   beforeEach(async () => {
-    accounts = (await client.eth.getAccounts()) as StrongAddress[]
+    accounts = (await kit.connection.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
     governance = await kit.contracts.getGovernance()
     minDeposit = await governance.minDeposit()
@@ -31,8 +31,8 @@ testWithAnvilL2('governance:revokeupvote cmd', (client) => {
     }
 
     for (let i = 1; i <= 4; i++) {
-      await testLocallyWithWeb3Node(Register, ['--from', accounts[i]], client)
-      await testLocallyWithWeb3Node(Lock, ['--from', accounts[i], '--value', i.toString()], client)
+      await testLocallyWithNode(Register, ['--from', accounts[i]], client)
+      await testLocallyWithNode(Lock, ['--from', accounts[i], '--value', i.toString()], client)
 
       await (await governance.upvote(proposalId, accounts[i])).sendAndWaitForReceipt({
         from: accounts[i],
@@ -52,7 +52,7 @@ testWithAnvilL2('governance:revokeupvote cmd', (client) => {
     `)
 
     // Revoke upvote from account 2 (2 upvotes)
-    await testLocallyWithWeb3Node(RevokeUpvote, ['--from', accounts[2]], client)
+    await testLocallyWithNode(RevokeUpvote, ['--from', accounts[2]], client)
 
     // 1 + 3 + 4 = 8 upvotes
     expect(await governance.getQueue()).toMatchInlineSnapshot(`

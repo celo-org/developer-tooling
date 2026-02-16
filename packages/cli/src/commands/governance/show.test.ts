@@ -1,11 +1,11 @@
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { unixSecondsTimestampToDateString } from '@celo/contractkit/lib/wrappers/BaseWrapper'
 import { Proposal } from '@celo/contractkit/lib/wrappers/Governance'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import fs from 'fs'
 import path from 'node:path'
-import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesAndTxHashes, testLocallyWithNode } from '../../test-utils/cliUtils'
 import Show from './show'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -33,9 +33,9 @@ testWithAnvilL2('governance:show cmd', (client) => {
   })
 
   it('shows a proposal in "Referendum" stage', async () => {
-    const kit = newKitFromWeb3(client)
+    const kit = newKitFromProvider(client.currentProvider)
     const governanceWrapper = await kit.contracts.getGovernance()
-    const [proposer, voter] = await client.eth.getAccounts()
+    const [proposer, voter] = await kit.connection.getAccounts()
     const minDeposit = (await governanceWrapper.minDeposit()).toFixed()
     const logMock = jest.spyOn(console, 'log')
     const dequeueFrequency = (await governanceWrapper.dequeueFrequency()).toNumber()
@@ -59,7 +59,7 @@ testWithAnvilL2('governance:show cmd', (client) => {
 
     await (await governanceWrapper.vote(proposalId, 'Yes')).sendAndWaitForReceipt({ from: voter })
 
-    await testLocallyWithWeb3Node(Show, ['--proposalID', proposalId.toString()], client)
+    await testLocallyWithNode(Show, ['--proposalID', proposalId.toString()], client)
 
     const schedule = await governanceWrapper.proposalSchedule(proposalId)
     const timestamp = await (await governanceWrapper.getProposalMetadata(proposalId)).timestamp

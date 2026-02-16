@@ -1,10 +1,10 @@
 import { COMPLIANT_ERROR_RESPONSE } from '@celo/compliance'
-import { ContractKit, newKitFromWeb3, StableToken } from '@celo/contractkit'
+import { ContractKit, newKitFromProvider, StableToken } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { TEST_GAS_PRICE } from '@celo/dev-utils/test-utils'
 import BigNumber from 'bignumber.js'
 import { topUpWithToken } from '../../test-utils/chain-setup'
-import { TEST_SANCTIONED_ADDRESS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { TEST_SANCTIONED_ADDRESS, testLocallyWithNode } from '../../test-utils/cliUtils'
 import { mockRpcFetch } from '../../test-utils/mockRpc'
 import TransferERC20 from './erc20'
 
@@ -27,8 +27,8 @@ testWithAnvilL2('transfer:erc20 cmd', (client) => {
   })
 
   beforeEach(async () => {
-    kit = newKitFromWeb3(client)
-    accounts = await client.eth.getAccounts()
+    kit = newKitFromProvider(client.currentProvider)
+    accounts = await kit.connection.getAccounts()
 
     await topUpWithToken(
       kit,
@@ -66,7 +66,7 @@ testWithAnvilL2('transfer:erc20 cmd', (client) => {
 
     const cusdAddress = await kit.celoTokens.getAddress(StableToken.USDm)
     // Send cusd as erc20
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       TransferERC20,
       [
         '--from',
@@ -86,7 +86,7 @@ testWithAnvilL2('transfer:erc20 cmd', (client) => {
       receiverBalanceBefore.USDm!.plus(amountToTransfer).toFixed()
     )
     // Attempt to send erc20, back
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       TransferERC20,
       [
         '--from',
@@ -111,7 +111,7 @@ testWithAnvilL2('transfer:erc20 cmd', (client) => {
     const cusdAddress = await kit.celoTokens.getAddress(StableToken.USDm)
 
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         TransferERC20,
         [
           '--from',
@@ -131,7 +131,7 @@ testWithAnvilL2('transfer:erc20 cmd', (client) => {
 
   test("should fail if erc20 address isn't correct", async () => {
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         TransferERC20,
         ['--from', accounts[0], '--to', accounts[1], '--value', '1', '--erc20Address', accounts[2]],
         client
@@ -141,7 +141,7 @@ testWithAnvilL2('transfer:erc20 cmd', (client) => {
 
   test('should fail if using with --useAKV', async () => {
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         TransferERC20,
         [
           '--from',
@@ -168,7 +168,7 @@ testWithAnvilL2('transfer:erc20 cmd', (client) => {
     const cusdAddress = await kit.celoTokens.getAddress(StableToken.USDm)
 
     // Transfer ERC20 with gas paid in CELO (default)
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       TransferERC20,
       [
         '--from',

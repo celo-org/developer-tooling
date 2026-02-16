@@ -1,11 +1,11 @@
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import {
   LONG_TIMEOUT_MS,
   stripAnsiCodesFromNestedArray,
-  testLocallyWithWeb3Node,
+  testLocallyWithNode,
 } from '../../test-utils/cliUtils'
 import Register from '../account/register'
 import Lock from './lock'
@@ -17,16 +17,16 @@ testWithAnvilL2('lockedgold:lock cmd', (client) => {
   test(
     'can lock with pending withdrawals',
     async () => {
-      const accounts = await client.eth.getAccounts()
+      const kit = newKitFromProvider(client.currentProvider)
+      const accounts = await kit.connection.getAccounts()
       const account = accounts[0]
-      const kit = newKitFromWeb3(client)
       const lockedGold = await kit.contracts.getLockedGold()
-      await testLocallyWithWeb3Node(Register, ['--from', account], client)
-      await testLocallyWithWeb3Node(Lock, ['--from', account, '--value', '100'], client)
-      await testLocallyWithWeb3Node(Unlock, ['--from', account, '--value', '50'], client)
-      await testLocallyWithWeb3Node(Lock, ['--from', account, '--value', '75'], client)
-      await testLocallyWithWeb3Node(Unlock, ['--from', account, '--value', '50'], client)
-      await testLocallyWithWeb3Node(Lock, ['--from', account, '--value', '50'], client)
+      await testLocallyWithNode(Register, ['--from', account], client)
+      await testLocallyWithNode(Lock, ['--from', account, '--value', '100'], client)
+      await testLocallyWithNode(Unlock, ['--from', account, '--value', '50'], client)
+      await testLocallyWithNode(Lock, ['--from', account, '--value', '75'], client)
+      await testLocallyWithNode(Unlock, ['--from', account, '--value', '50'], client)
+      await testLocallyWithNode(Lock, ['--from', account, '--value', '50'], client)
       const pendingWithdrawalsTotalValue = await lockedGold.getPendingWithdrawalsTotalValue(account)
       expect(pendingWithdrawalsTotalValue.toFixed()).toBe('0')
     },
@@ -34,9 +34,9 @@ testWithAnvilL2('lockedgold:lock cmd', (client) => {
   )
   describe('when EOA is not yet an account', () => {
     it('performs the registration and locks the value', async () => {
-      const eoaAddresses = await client.eth.getAccounts()
+      const kit = newKitFromProvider(client.currentProvider)
+      const eoaAddresses = await kit.connection.getAccounts()
       const eoa = eoaAddresses[1]
-      const kit = newKitFromWeb3(client)
       const accountsContract = await kit.contracts.getAccounts()
       const lockedGoldContract = await kit.contracts.getLockedGold()
 
@@ -46,7 +46,7 @@ testWithAnvilL2('lockedgold:lock cmd', (client) => {
       // pre check
       expect(await accountsContract.isAccount(eoa)).toBe(false)
 
-      await testLocallyWithWeb3Node(Lock, ['--from', eoa, '--value', '100'], client)
+      await testLocallyWithNode(Lock, ['--from', eoa, '--value', '100'], client)
 
       expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls)).toMatchInlineSnapshot(`
         [

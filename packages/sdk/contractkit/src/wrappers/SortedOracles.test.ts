@@ -1,4 +1,4 @@
-import { newSortedOracles as web3NewSortedOracles } from '@celo/abis/web3/SortedOracles'
+import { sortedOraclesABI } from '@celo/abis'
 import SortedOraclesArtifacts from '@celo/celo-devchain/contracts/contracts-0.5/SortedOracles.json'
 import { AbiItem, Address } from '@celo/connect'
 import {
@@ -9,16 +9,18 @@ import {
 import { describeEach } from '@celo/dev-utils/describeEach'
 import { NetworkConfig, timeTravel } from '@celo/dev-utils/ganache-test'
 import { TEST_GAS_PRICE } from '@celo/dev-utils/test-utils'
+import { toChecksumAddress } from '@celo/utils/lib/address'
+import { sha3 } from '@celo/utils/lib/solidity'
 import { CeloContract } from '../base'
 import { StableToken } from '../celo-tokens'
-import { newKitFromWeb3 } from '../kit'
+import { newKitFromProvider } from '../kit'
 import { OracleRate, ReportTarget, SortedOraclesWrapper } from './SortedOracles'
 
 // set timeout to 10 seconds
 jest.setTimeout(10 * 1000)
 
 testWithAnvilL2('SortedOracles Wrapper', (client) => {
-  const kit = newKitFromWeb3(client)
+  const kit = newKitFromProvider(client.currentProvider)
 
   const reportAsOracles = async (
     sortedOracles: SortedOraclesWrapper,
@@ -64,7 +66,7 @@ testWithAnvilL2('SortedOracles Wrapper', (client) => {
    * the tests
    */
   const newSortedOracles = async (owner: Address): Promise<SortedOraclesWrapper> => {
-    const contract = new client.eth.Contract(SortedOraclesArtifacts.abi as AbiItem[])
+    const contract = kit.connection.createContract(SortedOraclesArtifacts.abi as AbiItem[])
 
     const deployTx = contract.deploy({
       data: SortedOraclesArtifacts.bytecode.replace(
@@ -75,8 +77,8 @@ testWithAnvilL2('SortedOracles Wrapper', (client) => {
     })
 
     const txResult = await deployTx.send({ from: owner, gasPrice: TEST_GAS_PRICE.toFixed() })
-    const deployedContract = web3NewSortedOracles(
-      client,
+    const deployedContract = kit.connection.createContract(
+      sortedOraclesABI as any,
       (txResult as unknown as { options: { address: string } }).options.address
     )
     await deployedContract.methods
@@ -104,7 +106,7 @@ testWithAnvilL2('SortedOracles Wrapper', (client) => {
   // NOTE: These values are set in packages/dev-utils/src/migration-override.json,
   // and are derived from the MNEMONIC.
   // If the MNEMONIC has changed, these will need to be reset.
-  // To do that, look at the output of client.eth.getAccounts(), and pick a few
+  // To do that, look at the output of kit.connection.getAccounts(), and pick a few
   // addresses from that set to be oracles
   const stableTokenOracles: Address[] = NetworkConfig.stableToken.oracles
   const stableTokenEUROracles: Address[] = NetworkConfig.stableTokenEUR.oracles
@@ -121,19 +123,17 @@ testWithAnvilL2('SortedOracles Wrapper', (client) => {
   let nonOracleAddress: Address
   let btcOracleOwner: Address
   let stableTokenOracleOwner: Address
-  const CELOBTCIdentifier: Address = client.utils.toChecksumAddress(
-    '0x' + client.utils.keccak256('CELOBTC').slice(26)
-  )
+  const CELOBTCIdentifier: Address = toChecksumAddress('0x' + sha3('CELOBTC')!.slice(26))
 
   beforeAll(async () => {
-    allAccounts = await client.eth.getAccounts()
+    allAccounts = await kit.connection.getAccounts()
 
     btcOracleOwner = stableTokenOracleOwner = allAccounts[0]
 
     btcSortedOracles = await newSortedOracles(btcOracleOwner)
     stableTokenSortedOracles = await kit.contracts.getSortedOracles()
-    const stableTokenSortedOraclesContract = web3NewSortedOracles(
-      client,
+    const stableTokenSortedOraclesContract = kit.connection.createContract(
+      sortedOraclesABI as any,
       stableTokenSortedOracles.address
     )
 

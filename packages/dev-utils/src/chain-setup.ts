@@ -1,15 +1,17 @@
 import { governanceABI, validatorsABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
-import { AbiItem, Web3 } from '@celo/connect'
+import { AbiItem, Connection } from '@celo/connect'
 import { DEFAULT_OWNER_ADDRESS, withImpersonatedAccount } from './anvil-test'
+import { type ProviderOwner } from './test-utils'
 
 export async function setCommissionUpdateDelay(
-  web3: Web3,
+  client: ProviderOwner,
   validatorsContractAddress: StrongAddress,
   delayInBlocks: number
 ) {
-  await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
-    const validators = new web3.eth.Contract(
+  const conn = new Connection(client.currentProvider)
+  await withImpersonatedAccount(client, DEFAULT_OWNER_ADDRESS, async () => {
+    const validators = conn.createContract(
       validatorsABI as unknown as AbiItem[],
       validatorsContractAddress
     )
@@ -19,17 +21,18 @@ export async function setCommissionUpdateDelay(
       .send({
         from: DEFAULT_OWNER_ADDRESS,
       })
-    await web3.eth.getTransactionReceipt(transactionHash)
+    await conn.getTransactionReceipt(transactionHash)
   })
 }
 
 export async function setDequeueFrequency(
-  web3: Web3,
+  client: ProviderOwner,
   governanceContractAddress: StrongAddress,
   frequency: number
 ) {
-  await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
-    const governance = new web3.eth.Contract(
+  const conn = new Connection(client.currentProvider)
+  await withImpersonatedAccount(client, DEFAULT_OWNER_ADDRESS, async () => {
+    const governance = conn.createContract(
       governanceABI as unknown as AbiItem[],
       governanceContractAddress
     )
@@ -37,17 +40,18 @@ export async function setDequeueFrequency(
     const { transactionHash } = await governance.methods.setDequeueFrequency(frequency).send({
       from: DEFAULT_OWNER_ADDRESS,
     })
-    await web3.eth.getTransactionReceipt(transactionHash)
+    await conn.getTransactionReceipt(transactionHash)
   })
 }
 
 export async function setReferendumStageDuration(
-  web3: Web3,
+  client: ProviderOwner,
   governanceContractAddress: StrongAddress,
   duration: number
 ) {
-  await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
-    const governance = new web3.eth.Contract(
+  const conn = new Connection(client.currentProvider)
+  await withImpersonatedAccount(client, DEFAULT_OWNER_ADDRESS, async () => {
+    const governance = conn.createContract(
       governanceABI as unknown as AbiItem[],
       governanceContractAddress
     )
@@ -55,6 +59,6 @@ export async function setReferendumStageDuration(
     const { transactionHash } = await governance.methods.setReferendumStageDuration(duration).send({
       from: DEFAULT_OWNER_ADDRESS,
     })
-    await web3.eth.getTransactionReceipt(transactionHash)
+    await conn.getTransactionReceipt(transactionHash)
   })
 }

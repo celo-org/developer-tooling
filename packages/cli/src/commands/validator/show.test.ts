@@ -1,6 +1,6 @@
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import Show from './show'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -16,7 +16,7 @@ testWithAnvilL2('validator:show', (client) => {
   })
 
   it('shows the validator', async () => {
-    await testLocallyWithWeb3Node(Show, [KNOWN_DEVCHAIN_VALIDATOR], client)
+    await testLocallyWithNode(Show, [KNOWN_DEVCHAIN_VALIDATOR], client)
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
       [
         [

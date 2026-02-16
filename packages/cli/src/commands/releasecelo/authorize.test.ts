@@ -1,15 +1,16 @@
 import { NULL_ADDRESS, StrongAddress } from '@celo/base'
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { setBalance, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { addressToPublicKey, serializeSignature } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import { createMultisig } from '../../test-utils/multisigUtils'
 import { deployReleaseGoldContract } from '../../test-utils/release-gold'
 import ValidatorRegister from '../validator/register'
 import Authorize from './authorize'
 import CreateAccount from './create-account'
 import LockedCelo from './locked-gold'
+import { parseEther } from 'viem'
 
 process.env.NO_SYNCCHECK = 'true'
 
@@ -19,8 +20,8 @@ testWithAnvilL2('releasegold:authorize cmd', (client) => {
   let logSpy: jest.SpyInstance
 
   beforeEach(async () => {
-    const accounts = (await client.eth.getAccounts()) as StrongAddress[]
-    kit = newKitFromWeb3(client)
+    kit = newKitFromProvider(client.currentProvider)
+    const accounts = (await kit.connection.getAccounts()) as StrongAddress[]
     contractAddress = await deployReleaseGoldContract(
       client,
       await createMultisig(kit, [accounts[0], accounts[1]] as StrongAddress[], 2, 2),
@@ -33,9 +34,9 @@ testWithAnvilL2('releasegold:authorize cmd', (client) => {
     await setBalance(
       client,
       contractAddress as StrongAddress,
-      new BigNumber(client.utils.toWei('100000', 'ether'))
+      new BigNumber(parseEther('100000').toString())
     )
-    await testLocallyWithWeb3Node(CreateAccount, ['--contract', contractAddress], client)
+    await testLocallyWithNode(CreateAccount, ['--contract', contractAddress], client)
   })
 
   describe('can authorize account signers', () => {
@@ -43,7 +44,7 @@ testWithAnvilL2('releasegold:authorize cmd', (client) => {
     let accounts: any
 
     beforeEach(async () => {
-      accounts = await client.eth.getAccounts()
+      accounts = await kit.connection.getAccounts()
       const accountsWrapper = await kit.contracts.getAccounts()
       pop = await accountsWrapper.generateProofOfKeyPossession(contractAddress, accounts[1])
       logSpy = jest.spyOn(console, 'log')
@@ -51,7 +52,7 @@ testWithAnvilL2('releasegold:authorize cmd', (client) => {
 
     test('can authorize account vote signer ', async () => {
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           Authorize,
           [
             '--contract',
@@ -89,7 +90,7 @@ testWithAnvilL2('releasegold:authorize cmd', (client) => {
 
     test('can authorize account validator signer', async () => {
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           Authorize,
           [
             '--contract',
@@ -148,7 +149,7 @@ testWithAnvilL2('releasegold:authorize cmd', (client) => {
 
     test('can authorize account attestation signer', async () => {
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           Authorize,
           [
             '--contract',
@@ -204,13 +205,13 @@ testWithAnvilL2('releasegold:authorize cmd', (client) => {
   })
 
   test('can register as a validator from an authorized signer', async () => {
-    const accounts = await client.eth.getAccounts()
+    const accounts = await kit.connection.getAccounts()
     const accountsWrapper = await kit.contracts.getAccounts()
     const signer = accounts[1]
     const pop = await accountsWrapper.generateProofOfKeyPossession(contractAddress, signer)
-    const ecdsaPublicKey = await addressToPublicKey(signer, client.eth.sign)
+    const ecdsaPublicKey = await addressToPublicKey(signer, kit.connection.sign)
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         LockedCelo,
         [
           '--contract',
@@ -225,7 +226,7 @@ testWithAnvilL2('releasegold:authorize cmd', (client) => {
       )
     ).resolves.toBeUndefined()
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         Authorize,
         [
           '--contract',
@@ -241,7 +242,7 @@ testWithAnvilL2('releasegold:authorize cmd', (client) => {
       )
     ).resolves.toBeUndefined()
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         ValidatorRegister,
         ['--from', signer, '--ecdsaKey', ecdsaPublicKey, '--yes'],
         client
@@ -250,9 +251,9 @@ testWithAnvilL2('releasegold:authorize cmd', (client) => {
   })
 
   test('fails if contract is not registered as an account', async () => {
-    const accounts = await client.eth.getAccounts()
+    const accounts = await kit.connection.getAccounts()
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         Authorize,
         [
           '--contract',

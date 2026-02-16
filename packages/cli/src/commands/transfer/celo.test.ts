@@ -1,6 +1,6 @@
 import { goldTokenABI } from '@celo/abis'
 import { COMPLIANT_ERROR_RESPONSE } from '@celo/compliance'
-import { ContractKit, newKitFromWeb3, StableToken } from '@celo/contractkit'
+import { ContractKit, newKitFromProvider, StableToken } from '@celo/contractkit'
 import { setBalance, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { TEST_GAS_PRICE } from '@celo/dev-utils/test-utils'
 import BigNumber from 'bignumber.js'
@@ -8,10 +8,10 @@ import { Address, createPublicClient, formatEther, http, parseEther } from 'viem
 import { celo } from 'viem/chains'
 import { topUpWithToken } from '../../test-utils/chain-setup'
 import {
-  extractHostFromWeb3,
+  extractHostFromProvider,
   stripAnsiCodesFromNestedArray,
   TEST_SANCTIONED_ADDRESS,
-  testLocallyWithWeb3Node,
+  testLocallyWithNode,
 } from '../../test-utils/cliUtils'
 import { mockRpcFetch } from '../../test-utils/mockRpc'
 import TransferCelo from './celo'
@@ -28,8 +28,8 @@ testWithAnvilL2('transfer:celo cmd', (client) => {
 
   beforeEach(async () => {
     restoreMock = mockRpcFetch({ method: 'eth_gasPrice', result: TEST_GAS_PRICE })
-    kit = newKitFromWeb3(client)
-    accounts = await client.eth.getAccounts()
+    kit = newKitFromProvider(client.currentProvider)
+    accounts = await kit.connection.getAccounts()
 
     jest.spyOn(console, 'log').mockImplementation(() => {
       // noop
@@ -62,7 +62,7 @@ testWithAnvilL2('transfer:celo cmd', (client) => {
     const receiverBalanceBefore = await kit.getTotalBalance(accounts[1])
     const amountToTransfer = '500000000000000000000'
     // Send USDm to RG contract
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       TransferCelo,
       [
         '--from',
@@ -81,14 +81,16 @@ testWithAnvilL2('transfer:celo cmd', (client) => {
     expect(receiverBalance.CELO!.toFixed()).toEqual(
       receiverBalanceBefore.CELO!.plus(amountToTransfer).toFixed()
     )
-    let block = await client.eth.getBlock('latest')
-    let transactionReceipt = await client.eth.getTransactionReceipt(block.transactions[0] as string)
+    let block = await kit.connection.getBlock('latest', false)
+    let transactionReceipt = await kit.connection.getTransactionReceipt(
+      block.transactions[0] as string
+    )
 
     // Safety check if the latest transaction was originated by expected account
     expect(transactionReceipt!.from.toLowerCase()).toEqual(accounts[0].toLowerCase())
 
     // Attempt to send USDm back
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       TransferCelo,
       [
         '--from',
@@ -102,8 +104,8 @@ testWithAnvilL2('transfer:celo cmd', (client) => {
       ],
       client
     )
-    block = await client.eth.getBlock('latest')
-    transactionReceipt = await client.eth.getTransactionReceipt(block.transactions[0] as string)
+    block = await kit.connection.getBlock('latest', false)
+    transactionReceipt = await kit.connection.getTransactionReceipt(block.transactions[0] as string)
 
     // Safety check if the latest transaction was originated by expected account
     expect(transactionReceipt!.from.toLowerCase()).toEqual(accounts[1].toLowerCase())
@@ -125,7 +127,7 @@ testWithAnvilL2('transfer:celo cmd', (client) => {
     const spy = jest.spyOn(console, 'log')
     const balance = (await kit.getTotalBalance(accounts[0])).CELO!
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         TransferCelo,
         ['--from', accounts[0], '--to', accounts[1], '--value', balance.toFixed()],
         client
@@ -160,7 +162,7 @@ testWithAnvilL2('transfer:celo cmd', (client) => {
     const spy = jest.spyOn(console, 'log')
 
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         TransferCelo,
         [
           '--from',
@@ -218,7 +220,7 @@ testWithAnvilL2('transfer:celo cmd', (client) => {
   })
 
   test('can transfer very large amounts of CELO', async () => {
-    const balanceBefore = new BigNumber(await client.eth.getBalance(accounts[0]))
+    const balanceBefore = new BigNumber(await kit.connection.getBalance(accounts[0]))
 
     const amountToTransfer = parseEther('20000000')
     await setBalance(
@@ -227,7 +229,7 @@ testWithAnvilL2('transfer:celo cmd', (client) => {
       balanceBefore.plus(amountToTransfer.toString(10))
     )
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       TransferCelo,
       [
         '--from',
@@ -242,8 +244,8 @@ testWithAnvilL2('transfer:celo cmd', (client) => {
       client
     )
 
-    const block = await client.eth.getBlock('latest')
-    const transactionReceipt = await client.eth.getTransactionReceipt(
+    const block = await kit.connection.getBlock('latest', false)
+    const transactionReceipt = await kit.connection.getTransactionReceipt(
       block.transactions[0] as string
     )
 
@@ -255,16 +257,16 @@ testWithAnvilL2('transfer:celo cmd', (client) => {
     expect(transactionReceipt!.to).toEqual(accounts[1].toLowerCase())
     expect(transactionReceipt!.status).toEqual(true)
 
-    const balanceAfter = new BigNumber(await client.eth.getBalance(accounts[0]))
+    const balanceAfter = new BigNumber(await kit.connection.getBalance(accounts[0]))
 
     expect(BigInt(balanceAfter.toFixed())).toBeLessThan(BigInt(balanceBefore.toFixed()))
   })
 
   test('can transfer celo with comment', async () => {
-    const start = await client.eth.getBlock('latest')
+    const start = await kit.connection.getBlock('latest')
     const amountToTransfer = '500000000000000000000'
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       TransferCelo,
       [
         '--from',
@@ -280,7 +282,7 @@ testWithAnvilL2('transfer:celo cmd', (client) => {
     )
 
     // Attempt to send USDm back
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       TransferCelo,
       [
         '--from',
@@ -297,7 +299,7 @@ testWithAnvilL2('transfer:celo cmd', (client) => {
 
     const eventClient = createPublicClient({
       transport: http(
-        (kit.web3.currentProvider as unknown as { existingProvider: { host: string } })
+        (kit.connection.currentProvider as unknown as { existingProvider: { host: string } })
           .existingProvider.host
       ),
     })
@@ -314,8 +316,8 @@ testWithAnvilL2('transfer:celo cmd', (client) => {
   })
 
   test('passes feeCurrency to estimateGas', async () => {
-    const chainId = await kit.web3.eth.getChainId()
-    const nodeUrl = extractHostFromWeb3(client)
+    const chainId = await kit.connection.chainId()
+    const nodeUrl = extractHostFromProvider(client)
     const publicClient = createPublicClient({
       chain: {
         name: 'Custom Chain',
@@ -337,7 +339,7 @@ testWithAnvilL2('transfer:celo cmd', (client) => {
     const amountToTransfer = '1'
     const USDmAddress = (await kit.contracts.getStableToken(StableToken.USDm)).address
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       TransferCelo,
       [
         '--from',
@@ -363,7 +365,7 @@ testWithAnvilL2('transfer:celo cmd', (client) => {
   test('should fail if to address is sanctioned', async () => {
     const spy = jest.spyOn(console, 'log')
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         TransferCelo,
         ['--from', accounts[1], '--to', TEST_SANCTIONED_ADDRESS, '--value', '1'],
         client
@@ -375,7 +377,7 @@ testWithAnvilL2('transfer:celo cmd', (client) => {
   test('should fail if from address is sanctioned', async () => {
     const spy = jest.spyOn(console, 'log')
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         TransferCelo,
         ['--from', TEST_SANCTIONED_ADDRESS, '--to', accounts[0], '--value', '1'],
         client
@@ -387,7 +389,7 @@ testWithAnvilL2('transfer:celo cmd', (client) => {
   test("should fail if the feeCurrency isn't correctly formatted", async () => {
     const wrongFee = '0x123'
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         TransferCelo,
         ['--from', accounts[0], '--to', accounts[1], '--value', '1', '--gasCurrency', wrongFee],
         client
@@ -404,7 +406,7 @@ testWithAnvilL2('transfer:celo cmd', (client) => {
     const receiverBalanceBefore = await kit.getTotalBalance(accounts[1])
     const amountToTransfer = '1'
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         TransferCelo,
         [
           '--from',
@@ -422,8 +424,8 @@ testWithAnvilL2('transfer:celo cmd', (client) => {
 
     const balanceAfter = await kit.getTotalBalance(accounts[0])
     const receiverBalanceAfter = await kit.getTotalBalance(accounts[1])
-    const transactionReceipt = await client.eth.getTransactionReceipt(
-      (await client.eth.getBlock('latest')).transactions[0] as string
+    const transactionReceipt = await kit.connection.getTransactionReceipt(
+      (await kit.connection.getBlock('latest', false)).transactions[0] as string
     )
 
     // Safety check if the latest transaction was originated by expected account
@@ -443,7 +445,7 @@ testWithAnvilL2('transfer:celo cmd', (client) => {
     const spy = jest.spyOn(console, 'log')
     const wrongFee = '0x1234567890123456789012345678901234567890'
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         TransferCelo,
         ['--from', accounts[0], '--to', accounts[1], '--value', '1', '--gasCurrency', wrongFee],
         client
@@ -456,7 +458,7 @@ testWithAnvilL2('transfer:celo cmd', (client) => {
 
   test('should fail if using with --useAKV', async () => {
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         TransferCelo,
         ['--from', accounts[0], '--to', accounts[1], '--value', '1', '--useAKV'],
 

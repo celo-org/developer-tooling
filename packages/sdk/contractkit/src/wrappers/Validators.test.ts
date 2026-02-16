@@ -3,7 +3,7 @@ import { setCommissionUpdateDelay } from '@celo/dev-utils/chain-setup'
 import { mineBlocks, timeTravel } from '@celo/dev-utils/ganache-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
-import { newKitFromWeb3 } from '../kit'
+import { newKitFromProvider } from '../kit'
 import { startAndFinishEpochProcess } from '../test-utils/utils'
 import { AccountsWrapper } from './Accounts'
 import { LockedGoldWrapper } from './LockedGold'
@@ -16,7 +16,7 @@ TEST NOTES:
 const minLockedGoldValue = '10000000000000000000000' // 10k gold
 
 testWithAnvilL2('Validators Wrapper', (client) => {
-  const kit = newKitFromWeb3(client)
+  const kit = newKitFromProvider(client.currentProvider)
   let accounts: string[] = []
   let accountsInstance: AccountsWrapper
   let validators: ValidatorsWrapper
@@ -33,7 +33,7 @@ testWithAnvilL2('Validators Wrapper', (client) => {
   }
 
   beforeAll(async () => {
-    accounts = await client.eth.getAccounts()
+    accounts = await kit.connection.getAccounts()
     validators = await kit.contracts.getValidators()
     lockedGold = await kit.contracts.getLockedGold()
     accountsInstance = await kit.contracts.getAccounts()

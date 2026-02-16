@@ -1,5 +1,5 @@
 import { COMPLIANT_ERROR_RESPONSE } from '@celo/compliance'
-import { ContractKit, newKitFromWeb3, StableToken } from '@celo/contractkit'
+import { ContractKit, newKitFromProvider, StableToken } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { TEST_GAS_PRICE } from '@celo/dev-utils/test-utils'
 import BigNumber from 'bignumber.js'
@@ -7,7 +7,7 @@ import { topUpWithToken } from '../../test-utils/chain-setup'
 import {
   stripAnsiCodesFromNestedArray,
   TEST_SANCTIONED_ADDRESS,
-  testLocallyWithWeb3Node,
+  testLocallyWithNode,
 } from '../../test-utils/cliUtils'
 import { mockRpcFetch } from '../../test-utils/mockRpc'
 import TransferUSDM from './dollars'
@@ -22,8 +22,8 @@ testWithAnvilL2('transfer:dollars cmd', (client) => {
   let kit: ContractKit
   let logMock: jest.SpyInstance
   beforeEach(async () => {
-    kit = newKitFromWeb3(client)
-    accounts = await client.eth.getAccounts()
+    kit = newKitFromProvider(client.currentProvider)
+    accounts = await kit.connection.getAccounts()
     logMock = jest.spyOn(console, 'log').mockImplementation(() => {
       // noop
     })
@@ -53,7 +53,7 @@ testWithAnvilL2('transfer:dollars cmd', (client) => {
     const receiverBalanceBefore = await kit.getTotalBalance(accounts[1])
     const amountToTransfer = '500000000000000000000'
     // Send USDm to RG contract
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       TransferUSDM,
       ['--from', accounts[0], '--to', accounts[1], '--value', amountToTransfer],
       client
@@ -64,7 +64,7 @@ testWithAnvilL2('transfer:dollars cmd', (client) => {
       receiverBalanceBefore.USDm!.plus(amountToTransfer).toFixed()
     )
     // Attempt to send USDm back
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       TransferUSDM,
       ['--from', accounts[1], '--to', accounts[0], '--value', amountToTransfer],
       client
@@ -76,7 +76,7 @@ testWithAnvilL2('transfer:dollars cmd', (client) => {
     const cusdWrapper = await kit.contracts.getStableToken(StableToken.USDm)
     const balance = await cusdWrapper.balanceOf(accounts[0])
     expect(balance.toFixed()).toEqBigNumber('1000000000000000000000')
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       TransferUSDM,
       ['--from', accounts[0], '--to', accounts[1], '--value', balance.toFixed()],
       client
@@ -101,7 +101,7 @@ testWithAnvilL2('transfer:dollars cmd', (client) => {
         const balance = await cusdWrapper.balanceOf(accounts[0])
         expect(balance.toFixed()).toEqBigNumber('1000000000000000000000')
         await expect(
-          testLocallyWithWeb3Node(
+          testLocallyWithNode(
             TransferUSDM,
             [
               '--from',
@@ -159,7 +159,7 @@ testWithAnvilL2('transfer:dollars cmd', (client) => {
         const euroWrapper = await kit.contracts.getStableToken(StableToken.EURm)
         const balance = await cusdWrapper.balanceOf(accounts[0])
         expect(balance.toFixed()).toEqBigNumber('1000000000000000000000')
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           TransferUSDM,
           [
             '--from',
@@ -184,7 +184,7 @@ testWithAnvilL2('transfer:dollars cmd', (client) => {
       const amountToTransfer = '10000000000000000000'
       const comment = 'Test transfer'
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           TransferUSDM,
           [
             '--from',
@@ -236,7 +236,7 @@ testWithAnvilL2('transfer:dollars cmd', (client) => {
   test('should fail if to address is sanctioned', async () => {
     const spy = jest.spyOn(console, 'log')
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         TransferUSDM,
         ['--from', accounts[1], '--to', TEST_SANCTIONED_ADDRESS, '--value', '1'],
         client

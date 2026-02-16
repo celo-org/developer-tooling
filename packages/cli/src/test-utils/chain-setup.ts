@@ -1,5 +1,4 @@
 import { StrongAddress } from '@celo/base'
-import { Web3 } from '@celo/connect'
 import { ContractKit, StableToken } from '@celo/contractkit'
 import {
   DEFAULT_OWNER_ADDRESS,
@@ -9,11 +8,12 @@ import {
   withImpersonatedAccount,
 } from '@celo/dev-utils/anvil-test'
 import { mineBlocks, timeTravel } from '@celo/dev-utils/ganache-test'
+import { type ProviderOwner } from '@celo/dev-utils/test-utils'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
 import { parseEther } from 'viem'
 import Switch from '../commands/epochs/switch'
-import { testLocallyWithWeb3Node } from './cliUtils'
+import { testLocallyWithNode } from './cliUtils'
 
 export const MIN_LOCKED_CELO_VALUE = new BigNumber(parseEther('10000').toString()) // 10k CELO for the group
 export const MIN_PRACTICAL_LOCKED_CELO_VALUE = MIN_LOCKED_CELO_VALUE.plus(
@@ -97,10 +97,10 @@ export const voteForGroupFromAndActivateVotes = async (
   groupAddress: string,
   amount: BigNumber
 ) => {
-  const accounts = await kit.web3.eth.getAccounts()
+  const accounts = await kit.connection.getAccounts()
   await voteForGroupFrom(kit, fromAddress, groupAddress, amount)
-  await timeTravel(24 * 60 * 60, kit.web3) // wait for 24 hours to
-  await testLocallyWithWeb3Node(Switch, ['--from', accounts[0]], kit.web3)
+  await timeTravel(24 * 60 * 60, kit.connection) // wait for 24 hours to
+  await testLocallyWithNode(Switch, ['--from', accounts[0]], kit.connection)
 
   const election = await kit.contracts.getElection()
 
@@ -110,7 +110,7 @@ export const voteForGroupFromAndActivateVotes = async (
 }
 
 export const mineEpoch = async (kit: ContractKit) => {
-  await mineBlocks(100, kit.web3)
+  await mineBlocks(100, kit.connection)
 }
 
 export const topUpWithToken = async (
@@ -121,11 +121,11 @@ export const topUpWithToken = async (
 ) => {
   const token = await kit.contracts.getStableToken(stableToken)
 
-  await impersonateAccount(kit.web3, STABLES_ADDRESS)
+  await impersonateAccount(kit.connection, STABLES_ADDRESS)
   await token.transfer(account, amount.toFixed()).sendAndWaitForReceipt({
     from: STABLES_ADDRESS,
   })
-  await stopImpersonatingAccount(kit.web3, STABLES_ADDRESS)
+  await stopImpersonatingAccount(kit.connection, STABLES_ADDRESS)
 }
 
 // replace the original owner in the devchain, so we can act as the multisig owner
@@ -137,16 +137,16 @@ export const changeMultiSigOwner = async (kit: ContractKit, toAccount: StrongAdd
     await kit.sendTransaction({
       from: toAccount,
       to: multisig.address,
-      value: kit.web3.utils.toWei('1', 'ether'),
+      value: parseEther('1').toString(),
     })
   ).waitReceipt()
 
-  await impersonateAccount(kit.web3, multisig.address)
+  await impersonateAccount(kit.connection, multisig.address)
 
   await multisig
     .replaceOwner(DEFAULT_OWNER_ADDRESS, toAccount)
     .sendAndWaitForReceipt({ from: multisig.address })
-  await stopImpersonatingAccount(kit.web3, multisig.address)
+  await stopImpersonatingAccount(kit.connection, multisig.address)
 }
 
 export async function setupValidatorAndAddToGroup(
@@ -165,7 +165,7 @@ export async function setupValidatorAndAddToGroup(
   })
 }
 // you MUST call clearMock after using this function!
-export async function mockTimeForwardBy(seconds: number, client: Web3) {
+export async function mockTimeForwardBy(seconds: number, client: ProviderOwner) {
   const now = Date.now()
   await timeTravel(seconds, client)
   const spy = jest.spyOn(global.Date, 'now').mockImplementation(() => now + seconds * 1000)
@@ -175,13 +175,13 @@ export async function mockTimeForwardBy(seconds: number, client: Web3) {
 }
 
 export const activateAllValidatorGroupsVotes = async (kit: ContractKit) => {
-  const [sender] = await kit.web3.eth.getAccounts()
+  const [sender] = await kit.connection.getAccounts()
   const validatorsContract = await kit.contracts.getValidators()
   const electionWrapper = await kit.contracts.getElection()
   const epochManagerWrapper = await kit.contracts.getEpochManager()
   const validatorGroups = await validatorsContract.getRegisteredValidatorGroupsAddresses()
 
-  await timeTravel((await epochManagerWrapper.epochDuration()) + 1, kit.web3)
+  await timeTravel((await epochManagerWrapper.epochDuration()) + 1, kit.connection)
 
   // Make sure we are in the next epoch to activate the votes
   await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({ from: sender })
@@ -197,7 +197,7 @@ export const activateAllValidatorGroupsVotes = async (kit: ContractKit) => {
 
     if (pendingVotesForGroup.gt(0)) {
       await withImpersonatedAccount(
-        kit.web3,
+        kit.connection,
         validatorGroup,
         async () => {
           // @ts-expect-error here as well
@@ -205,7 +205,7 @@ export const activateAllValidatorGroupsVotes = async (kit: ContractKit) => {
             .activate(validatorGroup)
             .send({ from: validatorGroup })
         },
-        new BigNumber(kit.web3.utils.toWei('1', 'ether'))
+        new BigNumber(parseEther('1').toString())
       )
     }
   }

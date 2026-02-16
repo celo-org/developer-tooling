@@ -26,7 +26,7 @@ import {
 const CLIError = Errors.CLIError
 
 // TODO: How can we deploy contracts with the Celo provider w/o a CeloTransactionObject?
-export async function displayWeb3Tx(name: string, txObj: any, tx?: Omit<CeloTx, 'data'>) {
+export async function displayTx(name: string, txObj: any, tx?: Omit<CeloTx, 'data'>) {
   ux.action.start(`Sending Transaction: ${name}`)
   const result = await txObj.send(tx)
   console.log(result)

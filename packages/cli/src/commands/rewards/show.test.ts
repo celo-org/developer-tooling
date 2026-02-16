@@ -1,4 +1,4 @@
-import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
+import { ContractKit, newKitFromProvider } from '@celo/contractkit'
 import { ElectionWrapper } from '@celo/contractkit/lib/wrappers/Election'
 import { LockedGoldWrapper } from '@celo/contractkit/lib/wrappers/LockedGold'
 import { ValidatorsWrapper } from '@celo/contractkit/lib/wrappers/Validators'
@@ -7,7 +7,7 @@ import { timeTravel } from '@celo/dev-utils/ganache-test'
 import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { registerAccount } from '../../test-utils/chain-setup'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import Switch from '../epochs/switch'
 import Show from './show'
 
@@ -22,17 +22,17 @@ testWithAnvilL2('rewards:show cmd', (client) => {
   const infoMock = jest.spyOn(console, 'info')
 
   beforeEach(async () => {
-    kit = newKitFromWeb3(client)
-    accounts = await client.eth.getAccounts()
+    kit = newKitFromProvider(client.currentProvider)
+    accounts = await kit.connection.getAccounts()
     const epochManager = await kit.contracts.getEpochManager()
     await timeTravel((await epochManager.epochDuration()) + 1, client)
-    await testLocallyWithWeb3Node(Switch, ['--from', accounts[0]], client)
+    await testLocallyWithNode(Switch, ['--from', accounts[0]], client)
     jest.clearAllMocks()
   })
 
   describe('no arguments', () => {
     test('default', async () => {
-      await expect(testLocallyWithWeb3Node(Show, [], client)).resolves.toBeUndefined()
+      await expect(testLocallyWithNode(Show, [], client)).resolves.toBeUndefined()
       expect(stripAnsiCodesFromNestedArray(infoMock.mock.calls)).toMatchInlineSnapshot(`
         [
           [
@@ -48,7 +48,7 @@ testWithAnvilL2('rewards:show cmd', (client) => {
         .mockImplementationOnce(async () => {
           throw new Error('test missing trie node')
         })
-      await expect(testLocallyWithWeb3Node(Show, [], client)).rejects.toMatchInlineSnapshot(`
+      await expect(testLocallyWithNode(Show, [], client)).rejects.toMatchInlineSnapshot(`
         [Error: Exact voter information is available only for 1024 blocks after each epoch.
         Supply --estimate to estimate rewards based on current votes, or use an archive node.]
       `)
@@ -58,7 +58,7 @@ testWithAnvilL2('rewards:show cmd', (client) => {
   describe('--validator', () => {
     test('invalid', async () => {
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           Show,
           ['--validator', '0x1234567890123456789012345678901234567890'],
           client
@@ -77,7 +77,7 @@ testWithAnvilL2('rewards:show cmd', (client) => {
     })
 
     test('valid', async () => {
-      await testLocallyWithWeb3Node(Show, ['--validator', KNOWN_DEVCHAIN_VALIDATOR], client)
+      await testLocallyWithNode(Show, ['--validator', KNOWN_DEVCHAIN_VALIDATOR], client)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [
           [
@@ -147,7 +147,7 @@ testWithAnvilL2('rewards:show cmd', (client) => {
         },
       ])
 
-      await testLocallyWithWeb3Node(Show, ['--validator', KNOWN_DEVCHAIN_VALIDATOR], client)
+      await testLocallyWithNode(Show, ['--validator', KNOWN_DEVCHAIN_VALIDATOR], client)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [
           [
@@ -193,11 +193,7 @@ testWithAnvilL2('rewards:show cmd', (client) => {
   describe('--voter', () => {
     test('invalid', async () => {
       await expect(
-        testLocallyWithWeb3Node(
-          Show,
-          ['--voter', '0x1234567890123456789012345678901234567890'],
-          client
-        )
+        testLocallyWithNode(Show, ['--voter', '0x1234567890123456789012345678901234567890'], client)
       ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
               [
@@ -213,7 +209,7 @@ testWithAnvilL2('rewards:show cmd', (client) => {
     test('valid', async () => {
       await registerAccount(kit, accounts[0])
       await expect(
-        testLocallyWithWeb3Node(Show, ['--voter', accounts[0], '--estimate'], client)
+        testLocallyWithNode(Show, ['--voter', accounts[0], '--estimate'], client)
       ).resolves.toMatchInlineSnapshot(`undefined`)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [

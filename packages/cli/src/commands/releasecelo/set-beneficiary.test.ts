@@ -1,9 +1,9 @@
-import { newReleaseGold } from '@celo/abis/web3/ReleaseGold'
+import { releaseGoldABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
-import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
+import { ContractKit, newKitFromProvider } from '@celo/contractkit'
 import { ReleaseGoldWrapper } from '@celo/contractkit/lib/wrappers/ReleaseGold'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { testLocallyWithNode } from '../../test-utils/cliUtils'
 import { createMultisig } from '../../test-utils/multisigUtils'
 import { deployReleaseGoldContract } from '../../test-utils/release-gold'
 import SetBeneficiary from './set-beneficiary'
@@ -22,8 +22,8 @@ testWithAnvilL2('releasegold:set-beneficiary cmd', (client) => {
   let refundAddress: StrongAddress
 
   beforeEach(async () => {
-    kit = newKitFromWeb3(client)
-    const accounts = await client.eth.getAccounts()
+    kit = newKitFromProvider(client.currentProvider)
+    const accounts = await kit.connection.getAccounts()
 
     releaseOwner = accounts[0] as StrongAddress
     beneficiary = accounts[1] as StrongAddress
@@ -41,7 +41,7 @@ testWithAnvilL2('releasegold:set-beneficiary cmd', (client) => {
 
     releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
-      newReleaseGold(client, contractAddress),
+      kit.connection.createContract(releaseGoldABI as any, contractAddress),
       kit.contracts
     )
     beneficiary = await releaseGoldWrapper.getBeneficiary()
@@ -51,7 +51,7 @@ testWithAnvilL2('releasegold:set-beneficiary cmd', (client) => {
 
   test('can change beneficiary', async () => {
     // First submit the tx from the release owner (accounts[0])
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       SetBeneficiary,
       [
         '--contract',
@@ -66,7 +66,7 @@ testWithAnvilL2('releasegold:set-beneficiary cmd', (client) => {
     )
     // The multisig tx should not confirm until both parties submit
     expect(await releaseGoldWrapper.getBeneficiary()).toEqual(beneficiary)
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       SetBeneficiary,
       [
         '--contract',
@@ -86,7 +86,7 @@ testWithAnvilL2('releasegold:set-beneficiary cmd', (client) => {
 
   test('if called by a different account, it should fail', async () => {
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         SetBeneficiary,
         [
           '--contract',
@@ -105,7 +105,7 @@ testWithAnvilL2('releasegold:set-beneficiary cmd', (client) => {
   test('if the owners submit different txs, nothing on the ReleaseGold contract should change', async () => {
     // ReleaseOwner tries to change the beneficiary to `newBeneficiary` while the beneficiary
     // tries to change to `otherAccount`. Nothing should change on the RG contract.
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       SetBeneficiary,
       [
         '--contract',
@@ -118,7 +118,7 @@ testWithAnvilL2('releasegold:set-beneficiary cmd', (client) => {
       ],
       client
     )
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       SetBeneficiary,
       [
         '--contract',

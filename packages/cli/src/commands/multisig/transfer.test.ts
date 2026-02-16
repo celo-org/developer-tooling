@@ -1,7 +1,7 @@
 import { StrongAddress } from '@celo/base'
-import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
+import { ContractKit, newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import { createMultisig } from '../../test-utils/multisigUtils'
 import MultiSigTransfer from './transfer'
 
@@ -17,8 +17,8 @@ testWithAnvilL2('multisig:transfer integration tests', (client) => {
   let nonOwner: StrongAddress
 
   beforeAll(async () => {
-    kit = newKitFromWeb3(client)
-    accounts = (await client.eth.getAccounts()) as StrongAddress[]
+    kit = newKitFromProvider(client.currentProvider)
+    accounts = (await kit.connection.getAccounts()) as StrongAddress[]
     console.warn('Accounts:', accounts)
     // Set up test accounts
     owner1 = accounts[0]
@@ -47,7 +47,7 @@ testWithAnvilL2('multisig:transfer integration tests', (client) => {
       const recipient = accounts[4]
       const amount = (10 ** 18).toString() // 1 CELO in wei
 
-      const result = await testLocallyWithWeb3Node(
+      const result = await testLocallyWithNode(
         MultiSigTransfer,
         [multisigAddress, '--to', recipient, '--amount', amount, '--from', owner1],
         client
@@ -61,14 +61,14 @@ testWithAnvilL2('multisig:transfer integration tests', (client) => {
       const amount = '2000000000000000000' // 2 CELO in wei
 
       // First owner proposes the transfer
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         MultiSigTransfer,
         [multisigAddress, '--to', recipient, '--amount', amount, '--from', owner1],
         client
       )
 
       // Second owner approves the same transfer (should find existing transaction)
-      const result = await testLocallyWithWeb3Node(
+      const result = await testLocallyWithNode(
         MultiSigTransfer,
         [multisigAddress, '--to', recipient, '--amount', amount, '--from', owner2],
         client
@@ -82,7 +82,7 @@ testWithAnvilL2('multisig:transfer integration tests', (client) => {
       const recipient = accounts[6]
       const amount = '100000000000000000'
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           MultiSigTransfer,
           [
             multisigAddress,
@@ -117,7 +117,7 @@ testWithAnvilL2('multisig:transfer integration tests', (client) => {
       const amount = '100000000000000000'
 
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           MultiSigTransfer,
           [
             '0x0000000000000000000000000000000000000000',
@@ -152,7 +152,7 @@ testWithAnvilL2('multisig:transfer integration tests', (client) => {
       const amount = '100000000000000000'
 
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           MultiSigTransfer,
           [
             multisigAddress,
@@ -177,7 +177,7 @@ testWithAnvilL2('multisig:transfer integration tests', (client) => {
       const recipient = accounts[8]
 
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           MultiSigTransfer,
           [multisigAddress, '--to', recipient, '--amount', 'not-a-number', '--from', owner1],
           client
@@ -193,7 +193,7 @@ testWithAnvilL2('multisig:transfer integration tests', (client) => {
       const recipient = accounts[9]
 
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           MultiSigTransfer,
           [
             multisigAddress,
@@ -216,7 +216,7 @@ testWithAnvilL2('multisig:transfer integration tests', (client) => {
       const recipient = accounts[6]
       const amount = '3000000000000000000' // 3 CELO in wei
 
-      const result = await testLocallyWithWeb3Node(
+      const result = await testLocallyWithNode(
         MultiSigTransfer,
         [
           multisigAddress,
@@ -244,7 +244,7 @@ testWithAnvilL2('multisig:transfer integration tests', (client) => {
       const logMock = jest.spyOn(console, 'log')
 
       // First owner proposes the transferFrom
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         MultiSigTransfer,
         [
           multisigAddress,
@@ -281,7 +281,7 @@ testWithAnvilL2('multisig:transfer integration tests', (client) => {
       `)
 
       // Second owner approves the same transferFrom (should find existing transaction)
-      const result = await testLocallyWithWeb3Node(
+      const result = await testLocallyWithNode(
         MultiSigTransfer,
         [
           multisigAddress,

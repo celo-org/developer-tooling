@@ -1,10 +1,10 @@
 import { StrongAddress } from '@celo/base'
-import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
+import { ContractKit, newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import {
   stripAnsiCodesAndTxHashes,
   testLocally,
-  testLocallyWithWeb3Node,
+  testLocallyWithNode,
 } from '../../test-utils/cliUtils'
 import { createMultisig } from '../../test-utils/multisigUtils'
 import ProposeMultiSig from './propose'
@@ -59,8 +59,8 @@ testWithAnvilL2('multisig:propose integration tests', (client) => {
   let nonOwner: StrongAddress
 
   beforeAll(async () => {
-    kit = newKitFromWeb3(client)
-    accounts = (await client.eth.getAccounts()) as StrongAddress[]
+    kit = newKitFromProvider(client.currentProvider)
+    accounts = (await kit.connection.getAccounts()) as StrongAddress[]
 
     // Set up test accounts
     owner1 = accounts[0]
@@ -99,7 +99,7 @@ testWithAnvilL2('multisig:propose integration tests', (client) => {
       const recipient = accounts[4]
       const value = (10 ** 18).toString() // 1 CELO in wei
 
-      const result = await testLocallyWithWeb3Node(
+      const result = await testLocallyWithNode(
         ProposeMultiSig,
         [multisigAddress, '--from', owner1, '--to', recipient, '--value', value],
         client
@@ -117,7 +117,7 @@ testWithAnvilL2('multisig:propose integration tests', (client) => {
       const data =
         '0xa9059cbb000000000000000000000000d8da6bf26964af9d7eed9e03e53415d37aa960450000000000000000000000000000000000000000000000000000000000000064'
 
-      const result = await testLocallyWithWeb3Node(
+      const result = await testLocallyWithNode(
         ProposeMultiSig,
         [multisigAddress, '--from', owner2, '--to', recipient, '--data', data],
         client
@@ -136,7 +136,7 @@ testWithAnvilL2('multisig:propose integration tests', (client) => {
       const value = '500000000000000000' // 0.5 CELO in wei
       const data = '0x'
 
-      const result = await testLocallyWithWeb3Node(
+      const result = await testLocallyWithNode(
         ProposeMultiSig,
         [multisigAddress, '--from', owner3, '--to', recipient, '--value', value, '--data', data],
         client
@@ -155,7 +155,7 @@ testWithAnvilL2('multisig:propose integration tests', (client) => {
       const value = '100000000000000000'
 
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           ProposeMultiSig,
           [multisigAddress, '--from', nonOwner, '--to', recipient, '--value', value],
           client
@@ -168,7 +168,7 @@ testWithAnvilL2('multisig:propose integration tests', (client) => {
       const value = '100000000000000000'
 
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           ProposeMultiSig,
           [
             '0x0000000000000000000000000000000000000000',
@@ -203,7 +203,7 @@ testWithAnvilL2('multisig:propose integration tests', (client) => {
       const value = '100000000000000000'
 
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           ProposeMultiSig,
           [
             multisigAddress,

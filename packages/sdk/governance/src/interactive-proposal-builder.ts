@@ -118,25 +118,14 @@ export class InteractiveProposalBuilder {
   }
 }
 export function requireABI(contractName: CeloContract): ABIDefinition[] {
-  // search thru multiple paths to find the ABI
-  if (contractName === CeloContract.CeloToken) {
-    contractName = CeloContract.GoldToken
-  } else if (contractName === CeloContract.LockedCelo) {
-    contractName = CeloContract.LockedGold
-  }
-  for (const path of ['', '0.8/', 'mento/']) {
-    const abi = safeRequire(contractName, path)
-    if (abi !== null) {
-      return abi
+  try {
+    const mod = require(`@celo/abis/${contractName}`)
+    const abiKey = Object.keys(mod).find((key) => key.endsWith('ABI'))
+    if (abiKey) {
+      return mod[abiKey] as ABIDefinition[]
     }
+  } catch {
+    // fall through
   }
   throw new Error(`Cannot require ABI for ${contractName}`)
-}
-
-function safeRequire(contractName: CeloContract, subPath?: string) {
-  try {
-    return require(`@celo/abis/web3/${subPath ?? ''}${contractName}`).ABI as ABIDefinition[]
-  } catch {
-    return null
-  }
 }

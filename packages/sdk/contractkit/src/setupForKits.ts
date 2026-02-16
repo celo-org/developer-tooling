@@ -19,19 +19,6 @@ export function setupAPIKey(apiKey: string) {
   })
   return options
 }
-/** @internal */
-export function ensureCurrentProvider(providerOrWeb3: Provider | { currentProvider?: Provider }) {
-  const provider =
-    providerOrWeb3 != null &&
-    'currentProvider' in providerOrWeb3 &&
-    providerOrWeb3.currentProvider != null
-      ? providerOrWeb3.currentProvider
-      : providerOrWeb3
-  if (!provider) {
-    throw new Error('Must have a valid Provider')
-  }
-}
-
 class SimpleHttpProvider implements Provider {
   /** Compat with web3's HttpProvider which exposed .host */
   readonly host: string
@@ -132,17 +119,4 @@ export function getProviderForKit(url: string, options: HttpProviderOptions | un
   } else {
     return new SimpleHttpProvider(url, options)
   }
-}
-
-/**
- * @deprecated Use getProviderForKit instead
- * @internal
- */
-export function getWeb3ForKit(
-  url: string,
-  options: HttpProviderOptions | undefined
-): { currentProvider: Provider } {
-  // Return an object that looks like Web3 for backward compat with Connection constructor
-  const provider = getProviderForKit(url, options)
-  return { currentProvider: provider }
 }

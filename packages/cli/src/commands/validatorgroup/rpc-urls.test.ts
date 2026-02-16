@@ -1,4 +1,4 @@
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { AccountsWrapper } from '@celo/contractkit/lib/wrappers/Accounts'
 import { setBalance, testWithAnvilL2, withImpersonatedAccount } from '@celo/dev-utils/anvil-test'
 import { ClaimTypes, IdentityMetadataWrapper } from '@celo/metadata-claims'
@@ -9,7 +9,7 @@ import {
   setupGroupAndAffiliateValidator,
   setupValidator,
 } from '../../test-utils/chain-setup'
-import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesAndTxHashes, testLocallyWithNode } from '../../test-utils/cliUtils'
 import RpcUrls from './rpc-urls'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -65,11 +65,11 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (client) => {
   ]
 
   beforeEach(async () => {
-    const kit = newKitFromWeb3(client)
+    const kit = newKitFromProvider(client.currentProvider)
     const accountsWrapper = await kit.contracts.getAccounts()
 
     const [nonElectedGroupAddress, validatorAddress, nonAffilatedValidatorAddress] =
-      await client.eth.getAccounts()
+      await kit.connection.getAccounts()
 
     await setBalance(
       client,
@@ -102,7 +102,7 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (client) => {
     const logMock = jest.spyOn(console, 'log')
     const writeMock = jest.spyOn(ux.write, 'stdout')
 
-    await testLocallyWithWeb3Node(RpcUrls, ['--csv'], client)
+    await testLocallyWithNode(RpcUrls, ['--csv'], client)
 
     expect(
       writeMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
@@ -131,7 +131,7 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (client) => {
     const logMock = jest.spyOn(console, 'log')
     const writeMock = jest.spyOn(ux.write, 'stdout')
 
-    await testLocallyWithWeb3Node(RpcUrls, ['--all', '--csv'], client)
+    await testLocallyWithNode(RpcUrls, ['--all', '--csv'], client)
 
     expect(
       writeMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))

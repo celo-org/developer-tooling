@@ -1,10 +1,10 @@
 import { StrongAddress } from '@celo/base'
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import BigNumber from 'bignumber.js'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { testLocallyWithNode } from '../../test-utils/cliUtils'
 import Register from '../account/register'
 import Lock from '../lockedcelo/lock'
 import Dequeue from './dequeue'
@@ -14,7 +14,7 @@ process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvilL2('governance:upvote cmd', (client) => {
   let minDeposit: string
-  const kit = newKitFromWeb3(client)
+  const kit = newKitFromProvider(client.currentProvider)
   const proposalID = new BigNumber(1)
   const proposalID2 = new BigNumber(2)
   const proposalID3 = new BigNumber(3)
@@ -25,7 +25,7 @@ testWithAnvilL2('governance:upvote cmd', (client) => {
   let governance: GovernanceWrapper
 
   beforeEach(async () => {
-    accounts = (await client.eth.getAccounts()) as StrongAddress[]
+    accounts = (await kit.connection.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
     governance = await kit.contracts.getGovernance()
     minDeposit = (await governance.minDeposit()).toFixed()
@@ -41,7 +41,7 @@ testWithAnvilL2('governance:upvote cmd', (client) => {
       .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
     // this will reset lastDequeue to now
     // there is 3 concurrent proposals possible to be dequeued
-    await testLocallyWithWeb3Node(Dequeue, ['--from', accounts[0]], client)
+    await testLocallyWithNode(Dequeue, ['--from', accounts[0]], client)
     await governance
       .propose([], 'URL2')
       .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
@@ -56,12 +56,12 @@ testWithAnvilL2('governance:upvote cmd', (client) => {
       .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
 
     await timeTravel(dequeueFrequency, client)
-    await testLocallyWithWeb3Node(Register, ['--from', accounts[0]], client)
-    await testLocallyWithWeb3Node(Lock, ['--from', accounts[0], '--value', '100'], client)
+    await testLocallyWithNode(Register, ['--from', accounts[0]], client)
+    await testLocallyWithNode(Lock, ['--from', accounts[0], '--value', '100'], client)
   })
 
   test('will dequeue proposal if ready', async () => {
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Upvote,
       ['--proposalID', proposalID2.toString(10), '--from', accounts[0]],
       client
@@ -75,7 +75,7 @@ testWithAnvilL2('governance:upvote cmd', (client) => {
   })
 
   test('can upvote proposal which cannot be dequeued', async () => {
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Upvote,
       ['--proposalID', proposalID5.toString(10), '--from', accounts[0]],
       client

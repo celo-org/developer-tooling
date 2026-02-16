@@ -1,6 +1,6 @@
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import Whitelist from './whitelist'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -13,7 +13,7 @@ testWithAnvilL2('network:whitelist cmd', (client) => {
   })
 
   it('can print the whitelist', async () => {
-    await testLocallyWithWeb3Node(Whitelist, [], client)
+    await testLocallyWithNode(Whitelist, [], client)
 
     expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`
       [
@@ -41,7 +41,7 @@ testWithAnvilL2('network:whitelist cmd', (client) => {
     `)
   })
   it('modifies output when formating flag is passed', async () => {
-    await testLocallyWithWeb3Node(Whitelist, ['--output=json'], client)
+    await testLocallyWithNode(Whitelist, ['--output=json'], client)
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`
       [

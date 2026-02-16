@@ -1,10 +1,10 @@
 import { epochManagerABI } from '@celo/abis'
 import * as epochManager from '@celo/actions/contracts/epoch-manager'
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
 import { UnknownRpcError } from 'viem'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { testLocallyWithNode } from '../../test-utils/cliUtils'
 import Start from './start'
 import Status from './status'
 process.env.NO_SYNCCHECK = 'true'
@@ -12,11 +12,11 @@ process.env.NO_SYNCCHECK = 'true'
 testWithAnvilL2('epochs:status cmd', (client) => {
   it('shows the current status of the epoch', async () => {
     const consoleMock = jest.spyOn(ux.write, 'stdout')
-    const kit = newKitFromWeb3(client)
+    const kit = newKitFromProvider(client.currentProvider)
     const epochManagerWrapper = await kit.contracts.getEpochManager()
 
     expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(4)
-    await expect(testLocallyWithWeb3Node(Status, ['--output', 'csv'], client)).resolves.toBe(true)
+    await expect(testLocallyWithNode(Status, ['--output', 'csv'], client)).resolves.toBe(true)
 
     expect(consoleMock.mock.calls).toMatchInlineSnapshot(`
       [
@@ -57,16 +57,17 @@ testWithAnvilL2('epochs:status cmd', (client) => {
   })
   describe('when the epoch has is processing', () => {
     beforeEach(async () => {
-      const accounts = await client.eth.getAccounts()
-      await testLocallyWithWeb3Node(Start, ['--from', accounts[0]], client)
+      const kit = newKitFromProvider(client.currentProvider)
+      const accounts = await kit.connection.getAccounts()
+      await testLocallyWithNode(Start, ['--from', accounts[0]], client)
     })
     it('shows the current status of the epoch', async () => {
       const consoleMock = jest.spyOn(ux.write, 'stdout')
-      const kit = newKitFromWeb3(client)
+      const kit = newKitFromProvider(client.currentProvider)
       const epochManagerWrapper = await kit.contracts.getEpochManager()
 
       expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(4)
-      await expect(testLocallyWithWeb3Node(Status, ['--output', 'csv'], client)).resolves.toBe(true)
+      await expect(testLocallyWithNode(Status, ['--output', 'csv'], client)).resolves.toBe(true)
 
       // Check that the output contains the expected structure and values, but be flexible about timing-dependent fields
       const calls = consoleMock.mock.calls
@@ -113,7 +114,7 @@ testWithAnvilL2('epochs:status cmd', (client) => {
       const consoleMock = jest.spyOn(ux.write, 'stdout')
       jest.spyOn(epochManager, 'getEpochManagerContract').mockResolvedValue(mockEpochManager as any)
 
-      await expect(testLocallyWithWeb3Node(Status, ['--output', 'csv'], client)).resolves.toBe(true)
+      await expect(testLocallyWithNode(Status, ['--output', 'csv'], client)).resolves.toBe(true)
 
       expect(consoleMock.mock.calls).toMatchInlineSnapshot(`
         [

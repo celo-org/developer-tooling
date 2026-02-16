@@ -1,19 +1,19 @@
 import { StableToken, StrongAddress } from '@celo/base'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
-import { newKitFromWeb3 } from '../kit'
+import { newKitFromProvider } from '../kit'
 import { topUpWithToken } from '../test-utils/utils'
 import { OdisPaymentsWrapper } from './OdisPayments'
 import { StableTokenWrapper } from './StableTokenWrapper'
 
 testWithAnvilL2('OdisPayments Wrapper', (client) => {
-  const kit = newKitFromWeb3(client)
+  const kit = newKitFromProvider(client.currentProvider)
   let accounts: StrongAddress[] = []
   let odisPayments: OdisPaymentsWrapper
   let stableToken: StableTokenWrapper
 
   beforeAll(async () => {
-    accounts = (await client.eth.getAccounts()) as StrongAddress[]
+    accounts = await kit.connection.getAccounts()
     kit.defaultAccount = accounts[0]
     odisPayments = await kit.contracts.getOdisPayments()
     stableToken = await kit.contracts.getStableToken(StableToken.USDm)

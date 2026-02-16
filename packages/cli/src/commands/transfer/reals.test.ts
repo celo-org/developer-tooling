@@ -1,9 +1,9 @@
 import { COMPLIANT_ERROR_RESPONSE } from '@celo/compliance'
-import { ContractKit, StableToken, newKitFromWeb3 } from '@celo/contractkit'
+import { ContractKit, StableToken, newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
 import { topUpWithToken } from '../../test-utils/chain-setup'
-import { TEST_SANCTIONED_ADDRESS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { TEST_SANCTIONED_ADDRESS, testLocallyWithNode } from '../../test-utils/cliUtils'
 import TransferReals from './reals'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -25,8 +25,8 @@ testWithAnvilL2('transfer:reals cmd', (client) => {
   })
 
   beforeEach(async () => {
-    kit = newKitFromWeb3(client)
-    accounts = await client.eth.getAccounts()
+    kit = newKitFromProvider(client.currentProvider)
+    accounts = await kit.connection.getAccounts()
 
     await topUpWithToken(
       kit,
@@ -51,7 +51,7 @@ testWithAnvilL2('transfer:reals cmd', (client) => {
     const receiverBalanceBefore = await kit.getTotalBalance(accounts[1])
     const amountToTransfer = '500000000000000000000'
     // Send BRLm, to RG contract
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       TransferReals,
       ['--from', accounts[0], '--to', accounts[1], '--value', amountToTransfer],
       client
@@ -62,7 +62,7 @@ testWithAnvilL2('transfer:reals cmd', (client) => {
       receiverBalanceBefore.BRLm!.plus(amountToTransfer).toFixed()
     )
     // Attempt to send BRLm, back
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       TransferReals,
       ['--from', accounts[1], '--to', accounts[0], '--value', amountToTransfer],
       client
@@ -77,7 +77,7 @@ testWithAnvilL2('transfer:reals cmd', (client) => {
     })
 
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         TransferReals,
         ['--from', accounts[1], '--to', TEST_SANCTIONED_ADDRESS, '--value', '1'],
         client

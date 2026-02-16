@@ -1,5 +1,5 @@
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import Requirements from './requirements'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -12,7 +12,7 @@ testWithAnvilL2('validator:requirements', (client) => {
   })
 
   it('shows all registered validators', async () => {
-    await testLocallyWithWeb3Node(Requirements, [], client)
+    await testLocallyWithNode(Requirements, [], client)
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
       [
         [

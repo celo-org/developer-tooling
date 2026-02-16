@@ -1,7 +1,7 @@
 import { StrongAddress } from '@celo/base'
-import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
+import { ContractKit, newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import { createMultisig } from '../../test-utils/multisigUtils'
 import ProposeMultiSig from './propose'
 import ShowMultiSig from './show'
@@ -17,8 +17,8 @@ testWithAnvilL2('multisig:show integration tests', (client) => {
   let owner3: StrongAddress
 
   beforeAll(async () => {
-    kit = newKitFromWeb3(client)
-    accounts = (await client.eth.getAccounts()) as StrongAddress[]
+    kit = newKitFromProvider(client.currentProvider)
+    accounts = (await kit.connection.getAccounts()) as StrongAddress[]
 
     // Set up test accounts
     owner1 = accounts[0]
@@ -44,7 +44,7 @@ testWithAnvilL2('multisig:show integration tests', (client) => {
   describe('show multisig information', () => {
     it('shows basic multisig information', async () => {
       const logMock = jest.spyOn(console, 'log')
-      await testLocallyWithWeb3Node(ShowMultiSig, [multisigAddress], client)
+      await testLocallyWithNode(ShowMultiSig, [multisigAddress], client)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [
           [
@@ -65,7 +65,7 @@ testWithAnvilL2('multisig:show integration tests', (client) => {
       const recipient = accounts[4]
       const value = (10 ** 18).toString() // 1 CELO in wei
 
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         ProposeMultiSig,
         [multisigAddress, '--from', owner1, '--to', recipient, '--value', value],
         client
@@ -73,11 +73,7 @@ testWithAnvilL2('multisig:show integration tests', (client) => {
       const logMock = jest.spyOn(console, 'log')
 
       // Now show the specific transaction
-      const result = await testLocallyWithWeb3Node(
-        ShowMultiSig,
-        [multisigAddress, '--tx', '0'],
-        client
-      )
+      const result = await testLocallyWithNode(ShowMultiSig, [multisigAddress, '--tx', '0'], client)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [
           [
@@ -123,7 +119,7 @@ testWithAnvilL2('multisig:show integration tests', (client) => {
     it('shows raw transaction data', async () => {
       const logMock = jest.spyOn(console, 'log')
 
-      await testLocallyWithWeb3Node(ShowMultiSig, [multisigAddress, '--all', '--raw'], client)
+      await testLocallyWithNode(ShowMultiSig, [multisigAddress, '--all', '--raw'], client)
 
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [
@@ -143,11 +139,7 @@ testWithAnvilL2('multisig:show integration tests', (client) => {
 
     it('fails with invalid multisig address', async () => {
       await expect(
-        testLocallyWithWeb3Node(
-          ShowMultiSig,
-          ['0x0000000000000000000000000000000000000000'],
-          client
-        )
+        testLocallyWithNode(ShowMultiSig, ['0x0000000000000000000000000000000000000000'], client)
       ).rejects.toThrowErrorMatchingInlineSnapshot(`
         "The contract function "getTransactionCount" returned no data ("0x").
 
@@ -170,7 +162,7 @@ testWithAnvilL2('multisig:show integration tests', (client) => {
       const logMock = jest.spyOn(console, 'log')
 
       await expect(
-        testLocallyWithWeb3Node(ShowMultiSig, [multisigAddress, '--tx', '999271717'], client)
+        testLocallyWithNode(ShowMultiSig, [multisigAddress, '--tx', '999271717'], client)
       ).resolves.toBeUndefined()
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [
@@ -198,7 +190,7 @@ testWithAnvilL2('multisig:show integration tests', (client) => {
       const data =
         '0xa9059cbb000000000000000000000000d8da6bf26964af9d7eed9e03e53415d37aa960450000000000000000000000000000000000000000000000000000000000000064'
 
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         ProposeMultiSig,
         [multisigAddress, '--from', owner3, '--to', recipient, '--data', data],
         client
@@ -207,7 +199,7 @@ testWithAnvilL2('multisig:show integration tests', (client) => {
 
       // Show the transaction with data
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           ShowMultiSig,
           [multisigAddress, '--tx', '2'], // Third transaction
           client

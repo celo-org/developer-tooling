@@ -1,5 +1,6 @@
+import { newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import { PROOF_OF_POSSESSION_SIGNATURE } from '../../test-utils/constants'
 import Authorize from './authorize'
 import Deauthorize from './deauthorize'
@@ -9,11 +10,12 @@ process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvilL2('account:deauthorize cmd', (client) => {
   test('can deauthorize attestation signer', async () => {
-    const accounts = await client.eth.getAccounts()
+    const kit = newKitFromProvider(client.currentProvider)
+    const accounts = await kit.connection.getAccounts()
     const notRegisteredAccount = accounts[0]
     const signerNotRegisteredAccount = accounts[1]
-    await testLocallyWithWeb3Node(Register, ['--from', accounts[0]], client)
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(Register, ['--from', accounts[0]], client)
+    await testLocallyWithNode(
       Authorize,
       [
         '--from',
@@ -30,7 +32,7 @@ testWithAnvilL2('account:deauthorize cmd', (client) => {
 
     const logMock = jest.spyOn(console, 'log')
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Deauthorize,
       [
         '--from',
@@ -56,13 +58,14 @@ testWithAnvilL2('account:deauthorize cmd', (client) => {
   })
 
   test('cannot deauthorize a non-authorized signer', async () => {
-    const accounts = await client.eth.getAccounts()
+    const kit = newKitFromProvider(client.currentProvider)
+    const accounts = await kit.connection.getAccounts()
     const notRegisteredAccount = accounts[0]
     const signerNotRegisteredAccount = accounts[1]
-    await testLocallyWithWeb3Node(Register, ['--from', notRegisteredAccount], client)
+    await testLocallyWithNode(Register, ['--from', notRegisteredAccount], client)
 
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         Deauthorize,
         [
           '--from',

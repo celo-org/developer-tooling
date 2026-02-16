@@ -10,16 +10,16 @@ interface Runner extends AbstractConstructor<BaseCommand> {
   flags: typeof BaseCommand.flags
 }
 
-export async function testLocallyWithWeb3Node(
+export async function testLocallyWithNode(
   command: Runner,
   argv: string[],
   client: { currentProvider: Provider },
   config?: Interfaces.LoadOptions
 ) {
-  return testLocally(command, [...argv, '--node', extractHostFromWeb3(client)], config)
+  return testLocally(command, [...argv, '--node', extractHostFromProvider(client)], config)
 }
 
-export const extractHostFromWeb3 = (client: { currentProvider: Provider }): string => {
+export const extractHostFromProvider = (client: { currentProvider: Provider }): string => {
   const provider = client.currentProvider as Provider & {
     host?: string
     url?: string

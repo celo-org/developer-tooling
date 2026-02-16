@@ -1,8 +1,8 @@
-import { ContractKit, newKitFromWeb3, StableToken } from '@celo/contractkit'
+import { ContractKit, newKitFromProvider, StableToken } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
 import { topUpWithToken } from '../../test-utils/chain-setup'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import Lock from '../lockedcelo/lock'
 import Unlock from '../lockedcelo/unlock'
 import Balance from './balance'
@@ -15,18 +15,18 @@ testWithAnvilL2('account:balance cmd', (client) => {
   let kit: ContractKit
 
   beforeEach(async () => {
-    kit = newKitFromWeb3(client)
-    accounts = await client.eth.getAccounts()
+    kit = newKitFromProvider(client.currentProvider)
+    accounts = await kit.connection.getAccounts()
     consoleMock.mockClear()
   })
 
   it('shows the balance of the account for CELO only', async () => {
-    await testLocallyWithWeb3Node(Lock, ['--from', accounts[0], '--value', '1234567890'], client)
-    await testLocallyWithWeb3Node(Unlock, ['--from', accounts[0], '--value', '890'], client)
+    await testLocallyWithNode(Lock, ['--from', accounts[0], '--value', '1234567890'], client)
+    await testLocallyWithNode(Unlock, ['--from', accounts[0], '--value', '890'], client)
 
     consoleMock.mockClear()
 
-    await testLocallyWithWeb3Node(Balance, [accounts[0]], client)
+    await testLocallyWithNode(Balance, [accounts[0]], client)
 
     // Instead of exact snapshot matching, let's verify the balance structure and ranges
     const calls = stripAnsiCodesFromNestedArray(consoleMock.mock.calls)
@@ -51,7 +51,7 @@ testWithAnvilL2('account:balance cmd', (client) => {
     await topUpWithToken(kit, StableToken.EURm, accounts[0], EURmAmount)
     await topUpWithToken(kit, StableToken.BRLm, accounts[0], BRLmAmount)
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Balance,
       [accounts[0], '--erc20Address', (await kit.contracts.getGoldToken()).address],
       client

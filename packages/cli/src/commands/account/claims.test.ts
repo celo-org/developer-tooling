@@ -1,4 +1,4 @@
-import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
+import { ContractKit, newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ClaimTypes, IdentityMetadataWrapper } from '@celo/metadata-claims'
 import { now } from '@celo/metadata-claims/lib/types'
@@ -6,7 +6,7 @@ import { ux } from '@oclif/core'
 import { readFileSync, writeFileSync } from 'fs'
 import humanizeDuration from 'humanize-duration'
 import { tmpdir } from 'os'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import ClaimAccount from './claim-account'
 import ClaimDomain from './claim-domain'
 import ClaimName from './claim-name'
@@ -22,8 +22,8 @@ testWithAnvilL2('account metadata cmds', (client) => {
   let kit: ContractKit
 
   beforeEach(async () => {
-    accounts = await client.eth.getAccounts()
-    kit = newKitFromWeb3(client)
+    kit = newKitFromProvider(client.currentProvider)
+    accounts = await kit.connection.getAccounts()
     account = accounts[0]
   })
 
@@ -39,7 +39,7 @@ testWithAnvilL2('account metadata cmds', (client) => {
 
     test('account:create-metadata cmd', async () => {
       const newFilePath = `${tmpdir()}/newfile.json`
-      await testLocallyWithWeb3Node(CreateMetadata, ['--from', account, newFilePath], client)
+      await testLocallyWithNode(CreateMetadata, ['--from', account, newFilePath], client)
       const res = JSON.parse(readFileSync(newFilePath).toString())
       expect(res.meta.address).toEqual(account)
     })
@@ -47,7 +47,7 @@ testWithAnvilL2('account metadata cmds', (client) => {
     test('account:claim-name cmd', async () => {
       generateEmptyMetadataFile()
       const name = 'myname'
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         ClaimName,
         ['--from', account, '--name', name, emptyFilePath],
         client
@@ -61,7 +61,7 @@ testWithAnvilL2('account metadata cmds', (client) => {
     test('account:claim-domain cmd', async () => {
       generateEmptyMetadataFile()
       const domain = 'example.com'
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         ClaimDomain,
         ['--from', account, '--domain', domain, emptyFilePath],
         client
@@ -77,7 +77,7 @@ testWithAnvilL2('account metadata cmds', (client) => {
       const rpcUrl = 'http://example.com:8545'
 
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           ClaimRpcUrl,
           [emptyFilePath, '--from', account, '--rpcUrl', 'http://127.0.0.1:8545'],
           client
@@ -88,7 +88,7 @@ testWithAnvilL2('account metadata cmds', (client) => {
         See more help with --help]
       `)
 
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         ClaimRpcUrl,
         [emptyFilePath, '--from', account, '--rpcUrl', rpcUrl],
         client
@@ -103,7 +103,7 @@ testWithAnvilL2('account metadata cmds', (client) => {
       const infoMock = jest.spyOn(console, 'info')
       const writeMock = jest.spyOn(ux.write, 'stdout')
 
-      await testLocallyWithWeb3Node(ShowMetadata, [emptyFilePath, '--csv'], client)
+      await testLocallyWithNode(ShowMetadata, [emptyFilePath, '--csv'], client)
 
       expect(stripAnsiCodesFromNestedArray(infoMock.mock.calls)).toMatchInlineSnapshot(`
         [
@@ -132,7 +132,7 @@ testWithAnvilL2('account metadata cmds', (client) => {
     test('account:claim-account cmd', async () => {
       generateEmptyMetadataFile()
       const otherAccount = accounts[1]
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         ClaimAccount,
         ['--from', account, '--address', otherAccount, emptyFilePath],
         client
@@ -152,7 +152,7 @@ testWithAnvilL2('account metadata cmds', (client) => {
       })
 
       test('can register metadata', async () => {
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           RegisterMetadata,
           ['--force', '--from', account, '--url', 'https://example.com'],
           client
@@ -161,14 +161,14 @@ testWithAnvilL2('account metadata cmds', (client) => {
 
       test('fails if url is missing', async () => {
         await expect(
-          testLocallyWithWeb3Node(RegisterMetadata, ['--force', '--from', account], client)
+          testLocallyWithNode(RegisterMetadata, ['--force', '--from', account], client)
         ).rejects.toThrow('Missing required flag')
       })
     })
 
     it('cannot register metadata', async () => {
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           RegisterMetadata,
           ['--force', '--from', account, '--url', 'https://example.com'],
           client

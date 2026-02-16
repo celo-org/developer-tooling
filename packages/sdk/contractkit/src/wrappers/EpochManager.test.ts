@@ -1,5 +1,4 @@
-import { newElection } from '@celo/abis/web3/Election'
-import { newRegistry } from '@celo/abis/web3/Registry'
+import { electionABI, registryABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
 import {
   asCoreContractsOwner,
@@ -9,13 +8,13 @@ import {
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import BigNumber from 'bignumber.js'
 import { REGISTRY_CONTRACT_ADDRESS } from '../address-registry'
-import { newKitFromWeb3 } from '../kit'
+import { newKitFromProvider } from '../kit'
 import { startAndFinishEpochProcess } from '../test-utils/utils'
 
 process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvilL2('EpochManagerWrapper', (client) => {
-  const kit = newKitFromWeb3(client)
+  const kit = newKitFromProvider(client.currentProvider)
 
   let epochDuration: number
 
@@ -61,7 +60,7 @@ testWithAnvilL2('EpochManagerWrapper', (client) => {
 
   it('gets current epoch processing status', async () => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
-    const accounts = await client.eth.getAccounts()
+    const accounts = await kit.connection.getAccounts()
 
     expect((await epochManagerWrapper.getEpochProcessingStatus()).status).toEqual(0)
 
@@ -83,7 +82,7 @@ testWithAnvilL2('EpochManagerWrapper', (client) => {
   it('gets block numbers for an epoch', async () => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
     const currentEpochNumber = await epochManagerWrapper.getCurrentEpochNumber()
-    const accounts = await client.eth.getAccounts()
+    const accounts = await kit.connection.getAccounts()
 
     const firstBlock = await epochManagerWrapper.getFirstBlockAtEpoch(currentEpochNumber)
     expect(firstBlock).toBeGreaterThan(0)
@@ -109,7 +108,7 @@ testWithAnvilL2('EpochManagerWrapper', (client) => {
     async () => {
       const epochManagerWrapper = await kit.contracts.getEpochManager()
       const currentEpochNumber = await epochManagerWrapper.getCurrentEpochNumber()
-      const accounts = await client.eth.getAccounts()
+      const accounts = await kit.connection.getAccounts()
 
       const firstBlock = await epochManagerWrapper.getFirstBlockAtEpoch(currentEpochNumber)
       expect(firstBlock).toBeGreaterThan(0)
@@ -130,7 +129,10 @@ testWithAnvilL2('EpochManagerWrapper', (client) => {
       await asCoreContractsOwner(
         client,
         async (ownerAdress: StrongAddress) => {
-          const registryContract = newRegistry(client, REGISTRY_CONTRACT_ADDRESS)
+          const registryContract = kit.connection.createContract(
+            registryABI as any,
+            REGISTRY_CONTRACT_ADDRESS
+          )
 
           await registryContract.methods.setAddressFor('Validators', accounts[0]).send({
             from: ownerAdress,
@@ -147,7 +149,7 @@ testWithAnvilL2('EpochManagerWrapper', (client) => {
               from: ownerAdress,
             })
         },
-        new BigNumber(client.utils.toWei('1', 'ether'))
+        new BigNumber('1e18')
       )
 
       await (await epochManagerWrapper.finishNextEpochProcessTx()).sendAndWaitForReceipt({
@@ -160,7 +162,10 @@ testWithAnvilL2('EpochManagerWrapper', (client) => {
   async function activateValidators() {
     const validatorsContract = await kit.contracts.getValidators()
     const electionWrapper = await kit.contracts.getElection()
-    const electionContract = newElection(client, electionWrapper.address)
+    const electionContract = kit.connection.createContract(
+      electionABI as any,
+      electionWrapper.address
+    )
     const validatorGroups = await validatorsContract.getRegisteredValidatorGroupsAddresses()
 
     for (const validatorGroup of validatorGroups) {
@@ -174,14 +179,14 @@ testWithAnvilL2('EpochManagerWrapper', (client) => {
           async () => {
             await electionContract.methods.activate(validatorGroup).send({ from: validatorGroup })
           },
-          new BigNumber(client.utils.toWei('1', 'ether'))
+          new BigNumber('1e18')
         )
       }
     }
   }
 
   it('starts and finishes a number of epochs and sends validator rewards', async () => {
-    const accounts = await kit.web3.eth.getAccounts()
+    const accounts = await kit.connection.getAccounts()
     const epochManagerWrapper = await kit.contracts.getEpochManager()
     const EPOCH_COUNT = 5
 
@@ -241,7 +246,7 @@ testWithAnvilL2('EpochManagerWrapper', (client) => {
   })
 
   it('processes elected validator groups', async () => {
-    const accounts = await kit.web3.eth.getAccounts()
+    const accounts = await kit.connection.getAccounts()
     const epochManagerWrapper = await kit.contracts.getEpochManager()
 
     await timeTravel(epochDuration, client)

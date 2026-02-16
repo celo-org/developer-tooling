@@ -1,15 +1,16 @@
 import { hexToBuffer } from '@celo/base'
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import {
   DEFAULT_OWNER_ADDRESS,
   setNextBlockTimestamp,
   testWithAnvilL2,
   withImpersonatedAccount,
 } from '@celo/dev-utils/anvil-test'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { testLocallyWithNode } from '../../test-utils/cliUtils'
 import { getCurrentTimestamp } from '../../utils/cli'
 import Approve from './approve'
 import PrepareHotfix from './preparehotfix'
+import { parseEther } from 'viem'
 
 process.env.NO_SYNCCHECK = 'true'
 
@@ -19,9 +20,9 @@ testWithAnvilL2('governance:preparehotfix cmd', (client) => {
   const EXECUTION_TIME_LIMIT = 86400
 
   it('should prepare a hotfix successfuly', async () => {
-    const kit = newKitFromWeb3(client)
+    const kit = newKitFromProvider(client.currentProvider)
     const governanceWrapper = await kit.contracts.getGovernance()
-    const [approverAccount, securityCouncilAccount] = await client.eth.getAccounts()
+    const [approverAccount, securityCouncilAccount] = await kit.connection.getAccounts()
     // arbitrary 100 seconds to the future to avoid
     // Timestamp error: X is lower than or equal to previous block's timestamp
     const nextTimestamp = getCurrentTimestamp() + 100
@@ -31,7 +32,7 @@ testWithAnvilL2('governance:preparehotfix cmd', (client) => {
       await kit.sendTransaction({
         to: DEFAULT_OWNER_ADDRESS,
         from: approverAccount,
-        value: client.utils.toWei('1', 'ether'),
+        value: parseEther('1').toString(),
       })
     ).waitReceipt()
 
@@ -68,13 +69,9 @@ testWithAnvilL2('governance:preparehotfix cmd', (client) => {
       ).waitReceipt()
     })
 
-    await testLocallyWithWeb3Node(
-      Approve,
-      ['--hotfix', HOTFIX_HASH, '--from', approverAccount],
-      client
-    )
+    await testLocallyWithNode(Approve, ['--hotfix', HOTFIX_HASH, '--from', approverAccount], client)
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Approve,
       ['--hotfix', HOTFIX_HASH, '--from', securityCouncilAccount, '--type', 'securityCouncil'],
       client
@@ -82,7 +79,7 @@ testWithAnvilL2('governance:preparehotfix cmd', (client) => {
 
     await setNextBlockTimestamp(client, nextTimestamp)
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       PrepareHotfix,
       ['--hash', HOTFIX_HASH, '--from', approverAccount],
       client

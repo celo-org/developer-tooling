@@ -1,5 +1,5 @@
 import { AbiItem } from '@celo/connect'
-import { CeloContract, ContractKit, newKitFromWeb3 } from '@celo/contractkit'
+import { CeloContract, ContractKit, newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
 import { ProposalBuilder } from './proposal-builder'
@@ -8,7 +8,7 @@ testWithAnvilL2('ProposalBuilder', (client) => {
   let proposalBuilder: ProposalBuilder
 
   beforeEach(() => {
-    kit = newKitFromWeb3(client)
+    kit = newKitFromProvider(client.currentProvider)
     proposalBuilder = new ProposalBuilder(kit)
   })
 

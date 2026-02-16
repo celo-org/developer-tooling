@@ -2,7 +2,7 @@ import { ensureLeading0x } from '@celo/utils/lib/address'
 import { Flags } from '@oclif/core'
 import fs from 'fs'
 import { BaseCommand } from '../../base'
-import { displayWeb3Tx } from '../../utils/cli'
+import { displayTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { deprecationOptions } from '../../utils/notice'
 
@@ -28,7 +28,7 @@ export default class DKGRegister extends BaseCommand {
 
     // read the pubkey and publish it
     const blsKey = fs.readFileSync(res.flags.blsKey).toString('hex')
-    await displayWeb3Tx('registerBlsKey', dkg.methods.register(ensureLeading0x(blsKey)), {
+    await displayTx('registerBlsKey', dkg.methods.register(ensureLeading0x(blsKey)), {
       from: res.flags.from,
     })
   }

@@ -1,8 +1,8 @@
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { impersonateAccount, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
 import { Address } from 'viem'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { testLocallyWithNode } from '../../test-utils/cliUtils'
 import Current from './current'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -22,7 +22,7 @@ testWithAnvilL2('election:current cmd', async (client) => {
     writeMock = jest.spyOn(ux.write, 'stdout')
   })
   it('shows list with no --valset provided', async () => {
-    await testLocallyWithWeb3Node(Current, ['--csv'], client)
+    await testLocallyWithNode(Current, ['--csv'], client)
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`
       [
@@ -61,7 +61,7 @@ testWithAnvilL2('election:current cmd', async (client) => {
   })
 
   it('shows list with --valset provided', async () => {
-    const kit = newKitFromWeb3(client)
+    const kit = newKitFromProvider(client.currentProvider)
     const epochManager = await kit.contracts.getEpochManager()
     const accountsContract = await kit.contracts.getAccounts()
 
@@ -94,7 +94,7 @@ testWithAnvilL2('election:current cmd', async (client) => {
 
     // The actual test
 
-    await testLocallyWithWeb3Node(Current, ['--csv', '--valset'], client)
+    await testLocallyWithNode(Current, ['--csv', '--valset'], client)
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`
       [

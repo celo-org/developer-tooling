@@ -1,13 +1,13 @@
 import { StrongAddress } from '@celo/base'
 import { CeloProvider } from '@celo/connect/lib/celo-provider'
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { GovernanceWrapper, Proposal } from '@celo/contractkit/lib/wrappers/Governance'
 import { setBalance, testWithAnvilL2, withImpersonatedAccount } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import { ProposalBuilder } from '@celo/governance'
 import Safe, { getSafeAddressFromDeploymentTx } from '@safe-global/protocol-kit'
 import BigNumber from 'bignumber.js'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import { deployMultiCall } from '../../test-utils/multicall'
 import { createMultisig, setupSafeContracts } from '../../test-utils/multisigUtils'
 import Withdraw from './withdraw'
@@ -21,7 +21,7 @@ testWithAnvilL2(
     const errorMock = jest.spyOn(console, 'error')
 
     let minDeposit: string
-    const kit = newKitFromWeb3(client)
+    const kit = newKitFromProvider(client.currentProvider)
 
     let accounts: StrongAddress[] = []
     let governance: GovernanceWrapper
@@ -32,7 +32,7 @@ testWithAnvilL2(
 
       await deployMultiCall(client, '0xcA11bde05977b3631167028862bE2a173976CA11')
 
-      accounts = (await client.eth.getAccounts()) as StrongAddress[]
+      accounts = (await kit.connection.getAccounts()) as StrongAddress[]
       kit.defaultAccount = accounts[0]
       governance = await kit.contracts.getGovernance()
       minDeposit = (await governance.minDeposit()).toFixed()
@@ -48,11 +48,11 @@ testWithAnvilL2(
     test('can withdraw', async () => {
       const balanceBefore = await kit.connection.getBalance(accounts[0])
 
-      await testLocallyWithWeb3Node(Withdraw, ['--from', accounts[0]], client)
+      await testLocallyWithNode(Withdraw, ['--from', accounts[0]], client)
 
       const balanceAfter = await kit.connection.getBalance(accounts[0])
-      const latestTransactionReceipt = await client.eth.getTransactionReceipt(
-        (await client.eth.getBlock('latest')).transactions[0] as string
+      const latestTransactionReceipt = await kit.connection.getTransactionReceipt(
+        (await kit.connection.getBlock('latest', false)).transactions[0] as string
       )
 
       // Safety check if the latest transaction was originated by expected account
@@ -119,7 +119,7 @@ testWithAnvilL2(
         // Safety check
         expect(await kit.connection.getBalance(multisigAddress)).toEqual('0')
 
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           Withdraw,
           ['--useMultiSig', '--for', multisigAddress, '--from', multisigOwner],
           client
@@ -167,7 +167,7 @@ testWithAnvilL2(
         expect(await kit.connection.getBalance(multisigAddress)).toEqual('0')
 
         await expect(
-          testLocallyWithWeb3Node(
+          testLocallyWithNode(
             Withdraw,
             ['--useMultiSig', '--for', multisigAddress, '--from', otherAccount],
             client
@@ -202,7 +202,7 @@ testWithAnvilL2(
         await setupSafeContracts(client)
 
         owners = [
-          (await client.eth.getAccounts())[0] as StrongAddress,
+          (await kit.connection.getAccounts())[0] as StrongAddress,
           '0x6C666E57A5E8715cFE93f92790f98c4dFf7b69e2',
         ]
         const safeAccountConfig = {
@@ -215,14 +215,15 @@ testWithAnvilL2(
         }
         const protocolKit = await Safe.init({
           predictedSafe: predictSafe,
-          provider: (client.currentProvider as unknown as CeloProvider).toEip1193Provider(),
+          provider: (kit.connection.currentProvider as unknown as CeloProvider).toEip1193Provider(),
           signer: owners[0],
         })
         const deploymentTransaction = await protocolKit.createSafeDeploymentTransaction()
-        const receipt = await client.eth.sendTransaction({
+        const txResult = await kit.connection.sendTransaction({
           from: owners[0],
           ...deploymentTransaction,
         })
+        const receipt = await txResult.waitReceipt()
         safeAddress = getSafeAddressFromDeploymentTx(
           receipt as unknown as Parameters<typeof getSafeAddressFromDeploymentTx>[0],
           '1.3.0'
@@ -253,7 +254,7 @@ testWithAnvilL2(
 
         for (const owner of owners) {
           await withImpersonatedAccount(client, owner, async () => {
-            await testLocallyWithWeb3Node(
+            await testLocallyWithNode(
               Withdraw,
               ['--from', owner, '--useSafe', '--safeAddress', safeAddress],
               client

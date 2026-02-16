@@ -1,9 +1,9 @@
 import { COMPLIANT_ERROR_RESPONSE } from '@celo/compliance'
-import { ContractKit, StableToken, newKitFromWeb3 } from '@celo/contractkit'
+import { ContractKit, StableToken, newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
 import { topUpWithToken } from '../../test-utils/chain-setup'
-import { TEST_SANCTIONED_ADDRESS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { TEST_SANCTIONED_ADDRESS, testLocallyWithNode } from '../../test-utils/cliUtils'
 import TransferStable from './stable'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -25,8 +25,8 @@ testWithAnvilL2('transfer:stable cmd', (client) => {
   })
 
   beforeEach(async () => {
-    kit = newKitFromWeb3(client)
-    accounts = await client.eth.getAccounts()
+    kit = newKitFromProvider(client.currentProvider)
+    accounts = await kit.connection.getAccounts()
 
     await topUpWithToken(
       kit,
@@ -47,7 +47,7 @@ testWithAnvilL2('transfer:stable cmd', (client) => {
     const amountToTransfer = '5000000000000000000'
 
     // Send cusd as erc20
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       TransferStable,
       [
         '--from',
@@ -67,7 +67,7 @@ testWithAnvilL2('transfer:stable cmd', (client) => {
       receiverBalanceBefore.USDm!.plus(amountToTransfer).toFixed()
     )
     // Attempt to send erc20, back
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       TransferStable,
       [
         '--from',
@@ -89,7 +89,7 @@ testWithAnvilL2('transfer:stable cmd', (client) => {
     })
 
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         TransferStable,
         [
           '--from',
@@ -109,7 +109,7 @@ testWithAnvilL2('transfer:stable cmd', (client) => {
 
   test('should fail if using with --useAKV', async () => {
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         TransferStable,
         [
           '--from',

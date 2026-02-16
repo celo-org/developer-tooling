@@ -1,6 +1,7 @@
+import { newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { testLocallyWithNode } from '../../test-utils/cliUtils'
 import Register from '../account/register'
 import Lock from '../lockedcelo/lock'
 import ValidatorRegister from './register'
@@ -12,11 +13,12 @@ testWithAnvilL2('validator:register', (client) => {
   let ecdsaPublicKey: string
 
   beforeEach(async () => {
-    const accounts = await client.eth.getAccounts()
+    const kit = newKitFromProvider(client.currentProvider)
+    const accounts = await kit.connection.getAccounts()
     account = accounts[0]
-    ecdsaPublicKey = await addressToPublicKey(account, client.eth.sign)
-    await testLocallyWithWeb3Node(Register, ['--from', account], client)
-    await testLocallyWithWeb3Node(
+    ecdsaPublicKey = await addressToPublicKey(account, kit.connection.sign)
+    await testLocallyWithNode(Register, ['--from', account], client)
+    await testLocallyWithNode(
       Lock,
       ['--from', account, '--value', '10000000000000000000000'],
       client
@@ -25,7 +27,7 @@ testWithAnvilL2('validator:register', (client) => {
 
   test('can register validator with 0x prefix', async () => {
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         ValidatorRegister,
         ['--from', account, '--ecdsaKey', ecdsaPublicKey, '--yes'],
         client
@@ -35,7 +37,7 @@ testWithAnvilL2('validator:register', (client) => {
 
   test('can register validator without 0x prefix', async () => {
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         ValidatorRegister,
         ['--from', account, '--ecdsaKey', ecdsaPublicKey, '--yes'],
         client
@@ -45,7 +47,7 @@ testWithAnvilL2('validator:register', (client) => {
 
   test('fails if validator already registered', async () => {
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         ValidatorRegister,
         ['--from', account, '--ecdsaKey', ecdsaPublicKey, '--yes'],
         client
@@ -53,7 +55,7 @@ testWithAnvilL2('validator:register', (client) => {
     ).resolves.toBe(undefined)
 
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         ValidatorRegister,
         ['--from', account, '--ecdsaKey', ecdsaPublicKey, '--yes'],
         client

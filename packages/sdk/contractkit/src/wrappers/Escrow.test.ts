@@ -1,11 +1,13 @@
-import { newAttestations } from '@celo/abis/web3/Attestations'
-import { newRegistry } from '@celo/abis/web3/Registry'
+import { attestationsABI, registryABI } from '@celo/abis'
 import { StableToken, StrongAddress } from '@celo/base'
 import { asCoreContractsOwner, setBalance, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { deployAttestationsContract } from '@celo/dev-utils/contracts'
+import { privateKeyToAddress } from '@celo/utils/lib/address'
+import { soliditySha3 } from '@celo/utils/lib/solidity'
 import BigNumber from 'bignumber.js'
+import { randomBytes } from 'crypto'
 import { REGISTRY_CONTRACT_ADDRESS } from '../address-registry'
-import { newKitFromWeb3 } from '../kit'
+import { newKitFromProvider } from '../kit'
 import { topUpWithToken } from '../test-utils/utils'
 import { getParsedSignatureOfAddress } from '../utils/getParsedSignatureOfAddress'
 import { EscrowWrapper } from './Escrow'
@@ -13,17 +15,12 @@ import { FederatedAttestationsWrapper } from './FederatedAttestations'
 import { StableTokenWrapper } from './StableTokenWrapper'
 
 testWithAnvilL2('Escrow Wrapper', (client) => {
-  const kit = newKitFromWeb3(client)
-  const TEN_USDM = kit.web3.utils.toWei('10', 'ether')
+  const kit = newKitFromProvider(client.currentProvider)
+  const TEN_USDM = new BigNumber('10e18').toFixed()
   const TIMESTAMP = 1665080820
 
   const getParsedSignatureOfAddressForTest = (address: string, signer: string) => {
-    return getParsedSignatureOfAddress(
-      client.utils.soliditySha3,
-      kit.connection.sign,
-      address,
-      signer
-    )
+    return getParsedSignatureOfAddress(soliditySha3, kit.connection.sign, address, signer)
   }
 
   let accounts: StrongAddress[] = []
@@ -33,16 +30,22 @@ testWithAnvilL2('Escrow Wrapper', (client) => {
   let identifier: string
 
   beforeEach(async () => {
-    accounts = (await client.eth.getAccounts()) as StrongAddress[]
+    accounts = await kit.connection.getAccounts()
     escrow = await kit.contracts.getEscrow()
 
     await asCoreContractsOwner(
       client,
       async (ownerAdress: StrongAddress) => {
-        const registryContract = newRegistry(client, REGISTRY_CONTRACT_ADDRESS)
+        const registryContract = kit.connection.createContract(
+          registryABI as any,
+          REGISTRY_CONTRACT_ADDRESS
+        )
         const attestationsContractAddress = await deployAttestationsContract(client, ownerAdress)
 
-        const attestationsContract = newAttestations(client, attestationsContractAddress)
+        const attestationsContract = kit.connection.createContract(
+          attestationsABI as any,
+          attestationsContractAddress
+        )
 
         // otherwise reverts with "minAttestations larger than limit"
         await attestationsContract.methods.setMaxAttestations(1).send({ from: ownerAdress })
@@ -53,7 +56,7 @@ testWithAnvilL2('Escrow Wrapper', (client) => {
             from: ownerAdress,
           })
       },
-      new BigNumber(client.utils.toWei('1', 'ether'))
+      new BigNumber('1e18')
     )
 
     await topUpWithToken(kit, StableToken.USDm, escrow.address, new BigNumber(TEN_USDM))
@@ -67,14 +70,16 @@ testWithAnvilL2('Escrow Wrapper', (client) => {
 
     kit.defaultAccount = accounts[0]
 
-    identifier = kit.web3.utils.soliditySha3({
+    const randomKey1 = '0x' + randomBytes(32).toString('hex')
+    identifier = soliditySha3({
       t: 'bytes32',
-      v: kit.web3.eth.accounts.create().address,
+      v: privateKeyToAddress(randomKey1),
     }) as string
   })
 
   it('transfer with trusted issuers should set TrustedIssuersPerPayment', async () => {
-    const testPaymentId = kit.web3.eth.accounts.create().address
+    const randomKey2 = '0x' + randomBytes(32).toString('hex')
+    const testPaymentId = privateKeyToAddress(randomKey2)
     await federatedAttestations
       .registerAttestationAsIssuer(identifier, kit.defaultAccount as string, TIMESTAMP)
       .sendAndWaitForReceipt()

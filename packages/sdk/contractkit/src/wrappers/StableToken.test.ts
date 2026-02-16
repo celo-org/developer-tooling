@@ -2,14 +2,14 @@ import { StrongAddress } from '@celo/base'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
 import { StableToken } from '../celo-tokens'
-import { ContractKit, newKitFromWeb3 } from '../kit'
+import { ContractKit, newKitFromProvider } from '../kit'
 import { topUpWithToken } from '../test-utils/utils'
 import { StableTokenWrapper } from './StableTokenWrapper'
 
 // TEST NOTES: balances defined in test-utils/migration-override
 
 testWithAnvilL2('StableToken Wrapper', async (client) => {
-  const kit = newKitFromWeb3(client)
+  const kit = newKitFromProvider(client.currentProvider)
 
   const stableTokenInfos: {
     [key in StableToken]: {
@@ -54,14 +54,13 @@ export function testStableToken(
   expectedName: string,
   expectedSymbol: string
 ) {
-  const client = kit.web3
-  const ONE_STABLE = client.utils.toWei('1', 'ether')
+  const ONE_STABLE = new BigNumber('1e18').toFixed()
 
   let accounts: string[] = []
   let stableToken: StableTokenWrapper
 
   beforeEach(async () => {
-    accounts = (await client.eth.getAccounts()) as StrongAddress[]
+    accounts = await kit.connection.getAccounts()
     kit.defaultAccount = accounts[0] as StrongAddress
     stableToken = await kit.contracts.getStableToken(stableTokenName)
 

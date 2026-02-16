@@ -10,7 +10,7 @@ import { privateKeyToAddress } from 'viem/accounts'
 import { BaseCommand } from './base'
 import Set from './commands/config/set'
 import CustomHelp from './help'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from './test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from './test-utils/cliUtils'
 import { mockRpcFetch } from './test-utils/mockRpc'
 import { CustomFlags } from './utils/command'
 import * as config from './utils/config'
@@ -117,7 +117,7 @@ testWithAnvilL2('BaseCommand', (client) => {
         const storedDerivationPath = readConfig(tmpdir()).derivationPath
         console.info('storedDerivationPath', storedDerivationPath)
         expect(storedDerivationPath).not.toBe(undefined)
-        await testLocallyWithWeb3Node(BasicCommand, ['--useLedger'], client)
+        await testLocallyWithNode(BasicCommand, ['--useLedger'], client)
         expect(WalletLedgerExports.newLedgerWalletWithSetup).toHaveBeenCalledWith(
           expect.anything(),
           expect.objectContaining({
@@ -133,8 +133,8 @@ testWithAnvilL2('BaseCommand', (client) => {
       it('uses custom derivationPath', async () => {
         const storedDerivationPath = readConfig(tmpdir()).derivationPath
         const customPath = "m/44'/9000'/0'"
-        await testLocallyWithWeb3Node(Set, ['--derivationPath', customPath], client)
-        await testLocallyWithWeb3Node(BasicCommand, ['--useLedger'], client)
+        await testLocallyWithNode(Set, ['--derivationPath', customPath], client)
+        await testLocallyWithNode(BasicCommand, ['--useLedger'], client)
         expect(WalletLedgerExports.newLedgerWalletWithSetup).toHaveBeenCalledWith(
           expect.anything(),
           expect.objectContaining({
@@ -146,12 +146,12 @@ testWithAnvilL2('BaseCommand', (client) => {
             baseDerivationPath: customPath,
           })
         )
-        await testLocallyWithWeb3Node(Set, ['--derivationPath', storedDerivationPath], client)
+        await testLocallyWithNode(Set, ['--derivationPath', storedDerivationPath], client)
       })
     })
 
     it('--ledgerAddresses passes derivationPathIndexes to LedgerWallet', async () => {
-      await testLocallyWithWeb3Node(BasicCommand, ['--useLedger', '--ledgerAddresses', '5'], client)
+      await testLocallyWithNode(BasicCommand, ['--useLedger', '--ledgerAddresses', '5'], client)
 
       expect(WalletLedgerExports.newLedgerWalletWithSetup).toHaveBeenCalledWith(
         expect.anything(),
@@ -196,7 +196,7 @@ testWithAnvilL2('BaseCommand', (client) => {
 
     describe('with --ledgerLiveMode', () => {
       it('--ledgerAddresses passes changeIndexes to LedgerWallet', async () => {
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           BasicCommand,
           ['--useLedger', '--ledgerLiveMode', '--ledgerAddresses', '5'],
           client
@@ -245,7 +245,7 @@ testWithAnvilL2('BaseCommand', (client) => {
       })
       describe('with --ledgerCustomAddresses', () => {
         it('passes custom changeIndexes to LedgerWallet', async () => {
-          await testLocallyWithWeb3Node(
+          await testLocallyWithNode(
             BasicCommand,
             ['--useLedger', '--ledgerLiveMode', '--ledgerCustomAddresses', '[1,8,9]'],
             client
@@ -292,7 +292,7 @@ testWithAnvilL2('BaseCommand', (client) => {
     })
     describe('with --ledgerCustomAddresses', () => {
       it('passes custom derivationPathIndexes to LedgerWallet', async () => {
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           BasicCommand,
           ['--useLedger', '--ledgerCustomAddresses', '[1,8,9]'],
           client
@@ -340,7 +340,7 @@ testWithAnvilL2('BaseCommand', (client) => {
 
     describe('with --from', () => {
       it('uses it as the default account', async () => {
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           BasicCommand,
           [
             '--useLedger',
@@ -380,7 +380,7 @@ testWithAnvilL2('BaseCommand', (client) => {
     const errorSpy = jest.spyOn(console, 'error').mockImplementation()
 
     await expect(
-      testLocallyWithWeb3Node(TestErrorCommand, [], client)
+      testLocallyWithNode(TestErrorCommand, [], client)
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Unable to create an RPC Wallet Client, the node is not unlocked. Did you forget to use \`--privateKey\` or \`--useLedger\`?"`
     )
@@ -398,7 +398,7 @@ testWithAnvilL2('BaseCommand', (client) => {
     const errorSpy = jest.spyOn(console, 'error').mockImplementation()
 
     await expect(
-      testLocallyWithWeb3Node(TestErrorCommand, [], client)
+      testLocallyWithNode(TestErrorCommand, [], client)
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"test error"`)
 
     expect(errorSpy.mock.calls).toMatchInlineSnapshot(`
@@ -431,7 +431,7 @@ testWithAnvilL2('BaseCommand', (client) => {
     const errorSpy = jest.spyOn(console, 'error').mockImplementation()
 
     await expect(
-      testLocallyWithWeb3Node(TestErrorCommand, ['--output', 'csv'], client)
+      testLocallyWithNode(TestErrorCommand, ['--output', 'csv'], client)
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"test error"`)
 
     expect(errorSpy.mock.calls).toMatchInlineSnapshot(`[]`)
@@ -452,7 +452,7 @@ testWithAnvilL2('BaseCommand', (client) => {
       throw new Error('Mock connection stop error')
     })
 
-    await testLocallyWithWeb3Node(TestConnectionStopErrorCommand, [], client)
+    await testLocallyWithNode(TestConnectionStopErrorCommand, [], client)
 
     expect(logSpy.mock.calls).toMatchInlineSnapshot(`
       [
@@ -488,7 +488,7 @@ testWithAnvilL2('BaseCommand', (client) => {
       }
 
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           TestPrivateKeyCommand,
           ['--privateKey', privateKey, '--from', wrongFromAddress],
           client
@@ -514,7 +514,7 @@ testWithAnvilL2('BaseCommand', (client) => {
       }
 
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           TestPrivateKeyCommand,
           ['--privateKey', privateKey, '--from', correctFromAddress],
           client
@@ -537,7 +537,7 @@ testWithAnvilL2('BaseCommand', (client) => {
       }
 
       await expect(
-        testLocallyWithWeb3Node(TestPrivateKeyCommand, ['--privateKey', privateKey], client)
+        testLocallyWithNode(TestPrivateKeyCommand, ['--privateKey', privateKey], client)
       ).resolves.not.toThrow()
     })
   })

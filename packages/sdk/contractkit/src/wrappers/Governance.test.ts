@@ -4,7 +4,7 @@ import { asCoreContractsOwner, testWithAnvilL2 } from '@celo/dev-utils/anvil-tes
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import BigNumber from 'bignumber.js'
 import { CeloContract } from '..'
-import { newKitFromWeb3 } from '../kit'
+import { newKitFromProvider } from '../kit'
 import { AccountsWrapper } from './Accounts'
 import { GovernanceWrapper, Proposal, ProposalTransaction, VoteValue } from './Governance'
 import { LockedGoldWrapper } from './LockedGold'
@@ -12,8 +12,8 @@ import { MultiSigWrapper } from './MultiSig'
 
 testWithAnvilL2('Governance Wrapper', (client) => {
   const ONE_SEC = 1000
-  const kit = newKitFromWeb3(client)
-  const ONE_CGLD = client.utils.toWei('1', 'ether')
+  const kit = newKitFromProvider(client.currentProvider)
+  const ONE_CGLD = new BigNumber('1e18').toFixed()
 
   let accounts: StrongAddress[] = []
   let governance: GovernanceWrapper
@@ -26,7 +26,7 @@ testWithAnvilL2('Governance Wrapper', (client) => {
   let referendumStageDuration: number
 
   beforeAll(async () => {
-    accounts = (await client.eth.getAccounts()) as StrongAddress[]
+    accounts = await kit.connection.getAccounts()
     kit.defaultAccount = accounts[0]
     governance = await kit.contracts.getGovernance()
     governanceApproverMultiSig = await kit.contracts.getMultiSig(await governance.getApprover())
@@ -138,7 +138,7 @@ testWithAnvilL2('Governance Wrapper', (client) => {
 
     describe('#getHotfixRecord', () => {
       it('gets hotfix record', async () => {
-        const kit = newKitFromWeb3(client)
+        const kit = newKitFromProvider(client.currentProvider)
         const governance = await kit.contracts.getGovernance()
         const hotfixHash = Buffer.from('0x', 'hex')
 

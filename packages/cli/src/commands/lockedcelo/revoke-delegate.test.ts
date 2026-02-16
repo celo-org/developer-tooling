@@ -1,6 +1,6 @@
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { testLocallyWithNode } from '../../test-utils/cliUtils'
 import Register from '../account/register'
 import Delegate from './delegate'
 import Lock from './lock'
@@ -10,16 +10,16 @@ process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvilL2('lockedgold:revoke-delegate cmd', (client) => {
   test('can revoke delegate', async () => {
-    const accounts = await client.eth.getAccounts()
+    const kit = newKitFromProvider(client.currentProvider)
+    const accounts = await kit.connection.getAccounts()
     const account = accounts[0]
     const account2 = accounts[1]
-    const kit = newKitFromWeb3(client)
     const lockedGold = await kit.contracts.getLockedGold()
-    await testLocallyWithWeb3Node(Register, ['--from', account], client)
-    await testLocallyWithWeb3Node(Register, ['--from', account2], client)
-    await testLocallyWithWeb3Node(Lock, ['--from', account, '--value', '200'], client)
+    await testLocallyWithNode(Register, ['--from', account], client)
+    await testLocallyWithNode(Register, ['--from', account2], client)
+    await testLocallyWithNode(Lock, ['--from', account, '--value', '200'], client)
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Delegate,
       ['--from', account, '--to', account2, '--percent', '100'],
       client
@@ -28,7 +28,7 @@ testWithAnvilL2('lockedgold:revoke-delegate cmd', (client) => {
     const account2VotingPower = await lockedGold.getAccountTotalGovernanceVotingPower(account2)
     expect(account2VotingPower.toFixed()).toBe('200')
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       RevokeDelegate,
       ['--from', account, '--to', account2, '--percent', '100'],
       client

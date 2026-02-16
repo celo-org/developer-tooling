@@ -1,4 +1,4 @@
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
@@ -7,7 +7,7 @@ import {
   registerAccountWithLockedGold,
   setupGroupAndAffiliateValidator,
 } from '../../test-utils/chain-setup'
-import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesAndTxHashes, testLocallyWithNode } from '../../test-utils/cliUtils'
 import Vote from './vote'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -18,15 +18,16 @@ testWithAnvilL2('election:vote', (client) => {
   })
 
   it('fails when no flags are provided', async () => {
-    await expect(testLocallyWithWeb3Node(Vote, [], client)).rejects.toThrow('Missing required flag')
+    await expect(testLocallyWithNode(Vote, [], client)).rejects.toThrow('Missing required flag')
   })
 
   it('fails when voter is not an account', async () => {
     const logMock = jest.spyOn(console, 'log')
-    const [fromAddress, groupAddress] = await client.eth.getAccounts()
+    const kit = newKitFromProvider(client.currentProvider)
+    const [fromAddress, groupAddress] = await kit.connection.getAccounts()
 
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         Vote,
         ['--from', fromAddress, '--for', groupAddress, '--value', '1'],
         client
@@ -39,14 +40,14 @@ testWithAnvilL2('election:vote', (client) => {
   })
 
   it('fails when "for" is not a validator group', async () => {
-    const kit = newKitFromWeb3(client)
+    const kit = newKitFromProvider(client.currentProvider)
     const logMock = jest.spyOn(console, 'log')
-    const [fromAddress, groupAddress] = await client.eth.getAccounts()
+    const [fromAddress, groupAddress] = await kit.connection.getAccounts()
 
     await registerAccount(kit, fromAddress)
 
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         Vote,
         ['--from', fromAddress, '--for', groupAddress, '--value', '1'],
         client
@@ -59,15 +60,15 @@ testWithAnvilL2('election:vote', (client) => {
   })
 
   it('fails when value is too high', async () => {
-    const kit = newKitFromWeb3(client)
+    const kit = newKitFromProvider(client.currentProvider)
     const logMock = jest.spyOn(console, 'log')
-    const [fromAddress, groupAddress, validatorAddress] = await client.eth.getAccounts()
+    const [fromAddress, groupAddress, validatorAddress] = await kit.connection.getAccounts()
 
     await registerAccount(kit, fromAddress)
     await setupGroupAndAffiliateValidator(kit, groupAddress, validatorAddress)
 
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         Vote,
         ['--from', fromAddress, '--for', groupAddress, '--value', '1'],
         client
@@ -80,10 +81,10 @@ testWithAnvilL2('election:vote', (client) => {
   })
 
   it('successfuly votes for a group', async () => {
-    const kit = newKitFromWeb3(client)
+    const kit = newKitFromProvider(client.currentProvider)
     const logMock = jest.spyOn(console, 'log')
     const writeMock = jest.spyOn(ux.write, 'stdout')
-    const [fromAddress, groupAddress, validatorAddress] = await client.eth.getAccounts()
+    const [fromAddress, groupAddress, validatorAddress] = await kit.connection.getAccounts()
     const amount = new BigNumber(12345)
     const election = await kit.contracts.getElection()
 
@@ -95,7 +96,7 @@ testWithAnvilL2('election:vote', (client) => {
     )
 
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         Vote,
         ['--from', fromAddress, '--for', groupAddress, '--value', amount.toFixed()],
         client

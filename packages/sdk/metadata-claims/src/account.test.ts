@@ -1,4 +1,4 @@
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ACCOUNT_ADDRESSES, ACCOUNT_PRIVATE_KEYS } from '@celo/dev-utils/test-accounts'
 import { privateKeyToAddress, privateKeyToPublicKey } from '@celo/utils/lib/address'
@@ -10,7 +10,7 @@ import { AccountMetadataSignerGetters } from './types'
 import { verifyClaim } from './verify'
 
 testWithAnvilL2('Account claims', (client) => {
-  const kit = newKitFromWeb3(client)
+  const kit = newKitFromProvider(client.currentProvider)
   const address = ACCOUNT_ADDRESSES[0]
   const otherAddress = ACCOUNT_ADDRESSES[1]
 

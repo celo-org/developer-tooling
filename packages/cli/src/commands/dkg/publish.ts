@@ -2,7 +2,7 @@ import { ensureLeading0x } from '@celo/utils/lib/address'
 import { Flags } from '@oclif/core'
 import fs from 'fs'
 import { BaseCommand } from '../../base'
-import { displayWeb3Tx } from '../../utils/cli'
+import { displayTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { deprecationOptions } from '../../utils/notice'
 const DKG = require('./DKG.json')
@@ -26,7 +26,7 @@ export default class DKGPublish extends BaseCommand {
     const dkg = kit.connection.createContract(DKG.abi, res.flags.address)
 
     const data = fs.readFileSync(res.flags.data).toString('hex')
-    await displayWeb3Tx('publishData', dkg.methods.publish(ensureLeading0x(data)), {
+    await displayTx('publishData', dkg.methods.publish(ensureLeading0x(data)), {
       from: res.flags.from,
     })
   }

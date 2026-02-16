@@ -1,10 +1,10 @@
 import { asCoreContractsOwner, GROUP_ADDRESSES, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
-import { newKitFromWeb3 } from '../kit'
+import { newKitFromProvider } from '../kit'
 import { valueToFixidityString } from './BaseWrapper'
 
 testWithAnvilL2('ScoreManager Wrapper', (client) => {
-  const kit = newKitFromWeb3(client)
+  const kit = newKitFromProvider(client.currentProvider)
 
   it('gets validator score', async () => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
@@ -29,7 +29,7 @@ testWithAnvilL2('ScoreManager Wrapper', (client) => {
           )
           .send({ from })
       },
-      new BigNumber(client.utils.toWei('1', 'ether'))
+      new BigNumber('1e18')
     )
 
     // should return the new score
@@ -54,7 +54,7 @@ testWithAnvilL2('ScoreManager Wrapper', (client) => {
           .setGroupScore(GROUP_ADDRESSES[0], valueToFixidityString(new BigNumber(0.99)))
           .send({ from })
       },
-      new BigNumber(client.utils.toWei('1', 'ether'))
+      new BigNumber('1e18')
     )
 
     // should return the new score

@@ -4,12 +4,7 @@ import { BigNumber } from 'bignumber.js'
 import { AddressRegistry } from './address-registry'
 import { CeloTokens, EachCeloToken } from './celo-tokens'
 import { MiniContractCache } from './mini-contract-cache'
-import {
-  ensureCurrentProvider,
-  getProviderForKit,
-  HttpProviderOptions,
-  setupAPIKey,
-} from './setupForKits'
+import { getProviderForKit, HttpProviderOptions, setupAPIKey } from './setupForKits'
 
 /**
  * Creates a new instance of `MiniContractKit` given a nodeUrl
@@ -39,21 +34,6 @@ export function newKitWithApiKey(url: string, apiKey: string, wallet?: ReadOnlyW
  * @param wallet – optional wallet for signing
  */
 export function newKitFromProvider(provider: Provider, wallet: ReadOnlyWallet = new LocalWallet()) {
-  return new MiniContractKit(new Connection(provider, wallet))
-}
-
-/**
- * @deprecated Use {@link newKitFromProvider} instead
- * Creates a new instance of the `MiniContractKit` with a web3-like instance
- * @param web3 – a raw Provider, or an object with `currentProvider`
- */
-export function newKitFromWeb3(
-  web3: Provider | { currentProvider: Provider },
-  wallet: ReadOnlyWallet = new LocalWallet()
-) {
-  ensureCurrentProvider(web3)
-  const provider =
-    web3 != null && 'currentProvider' in web3 ? web3.currentProvider! : (web3 as Provider)
   return new MiniContractKit(new Connection(provider, wallet))
 }
 

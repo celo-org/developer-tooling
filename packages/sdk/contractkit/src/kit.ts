@@ -8,9 +8,7 @@ import {
   ReadOnlyWallet,
   TransactionResult,
 } from '@celo/connect'
-import { isValidAddress, privateKeyToAddress, toChecksumAddress } from '@celo/utils/lib/address'
-import { soliditySha3, sha3 } from '@celo/utils/lib/solidity'
-import { randomBytes } from 'crypto'
+import { isValidAddress } from '@celo/utils/lib/address'
 import { EIP712TypedData } from '@celo/utils/lib/sign-typed-data-utils'
 import { Signature } from '@celo/utils/lib/signatureUtils'
 import { LocalWallet } from '@celo/wallet-local'
@@ -19,13 +17,8 @@ import { AddressRegistry } from './address-registry'
 import { CeloContract } from './base'
 import { CeloTokens, EachCeloToken } from './celo-tokens'
 import { ValidWrappers, WrapperCache } from './contract-cache'
-import {
-  ensureCurrentProvider,
-  getProviderForKit,
-  HttpProviderOptions,
-  setupAPIKey,
-} from './setupForKits'
-import { Web3ContractCache } from './web3-contract-cache'
+import { getProviderForKit, HttpProviderOptions, setupAPIKey } from './setupForKits'
+import { ContractCache } from './contract-factory-cache'
 import { AttestationsConfig } from './wrappers/Attestations'
 import { ElectionConfig } from './wrappers/Election'
 import { GovernanceConfig } from './wrappers/Governance'
@@ -68,20 +61,6 @@ export function newKitFromProvider(provider: Provider, wallet: ReadOnlyWallet = 
   return new ContractKit(new Connection(provider, wallet))
 }
 
-/**
- * @deprecated Use {@link newKitFromProvider} instead
- * Creates a new instance of the `ContractKit` with a web3-like instance
- * @param web3 – a raw Provider, or an object with `currentProvider`
- */
-export function newKitFromWeb3(
-  web3: Provider | { currentProvider: Provider },
-  wallet: ReadOnlyWallet = new LocalWallet()
-) {
-  ensureCurrentProvider(web3)
-  const provider =
-    web3 != null && 'currentProvider' in web3 ? web3.currentProvider! : (web3 as Provider)
-  return new ContractKit(new Connection(provider, wallet))
-}
 export interface NetworkConfig {
   stableTokens: EachCeloToken<StableTokenConfig>
   election: ElectionConfig
@@ -113,8 +92,8 @@ interface AccountBalance extends EachCeloToken<BigNumber> {
 export class ContractKit {
   /** core contract's address registry */
   readonly registry: AddressRegistry
-  /** factory for core contract's native web3 wrappers  */
-  readonly _web3Contracts: Web3ContractCache
+  /** factory for core contract's native contract wrappers  */
+  readonly _web3Contracts: ContractCache
   /** factory for core contract's kit wrappers  */
   readonly contracts: WrapperCache
   /** helper for interacting with CELO & stable tokens */
@@ -125,80 +104,9 @@ export class ContractKit {
 
   constructor(readonly connection: Connection) {
     this.registry = new AddressRegistry(connection)
-    this._web3Contracts = new Web3ContractCache(this.registry)
+    this._web3Contracts = new ContractCache(this.registry)
     this.contracts = new WrapperCache(connection, this._web3Contracts, this.registry)
     this.celoTokens = new CeloTokens(this.contracts, this.registry)
-  }
-
-  /**
-   * @deprecated Use `kit.connection` methods directly. Returns a minimal web3-like
-   * object with `currentProvider` and commonly used utilities for backward compatibility.
-   */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  get web3(): any {
-    const conn = this.connection
-    return {
-      currentProvider: conn.currentProvider,
-      eth: {
-        getAccounts: () => conn.getAccounts(),
-        getBlockNumber: () => conn.getBlockNumber(),
-        sign: conn.sign.bind(conn),
-        call: (tx: any) =>
-          conn.rpcCaller.call('eth_call', [tx, 'latest']).then((r: any) => r.result),
-        sendTransaction: (tx: any) => conn.sendTransaction(tx),
-        getBlock: (blockHashOrNumber: any) =>
-          conn.rpcCaller
-            .call('eth_getBlockByNumber', [
-              typeof blockHashOrNumber === 'number'
-                ? '0x' + blockHashOrNumber.toString(16)
-                : blockHashOrNumber,
-              false,
-            ])
-            .then((r: any) => r.result),
-        abi: {
-          encodeFunctionCall: (abi: any, params: any[]) =>
-            conn.getAbiCoder().encodeFunctionCall(abi, params),
-        },
-        personal: {
-          lockAccount: (address: string) => conn.rpcCaller.call('personal_lockAccount', [address]),
-          unlockAccount: (address: string, password: string, duration: number) =>
-            conn.rpcCaller.call('personal_unlockAccount', [address, password, duration]),
-        },
-        Contract: function ContractCompat(this: any, abi: any, address?: string) {
-          return conn.createContract(abi, address || '0x0000000000000000000000000000000000000000')
-        },
-        getChainId: () => conn.chainId(),
-        accounts: {
-          create: () => {
-            // Generate a random private key and derive the address
-            const privateKey = '0x' + randomBytes(32).toString('hex')
-            const address = privateKeyToAddress(privateKey)
-            return { address, privateKey }
-          },
-        },
-      },
-      utils: {
-        toWei: (value: string, unit: string) => {
-          // Manual Wei conversion without BigInt (ES6 target)
-          const multipliers: Record<string, string> = {
-            wei: '1',
-            kwei: '1000',
-            mwei: '1000000',
-            gwei: '1000000000',
-            szabo: '1000000000000',
-            finney: '1000000000000000',
-            ether: '1000000000000000000',
-          }
-          const multiplier = multipliers[unit] || multipliers.ether
-          return new BigNumber(value).times(multiplier).toFixed(0)
-        },
-        toChecksumAddress: (address: string) => toChecksumAddress(address),
-        isAddress: (address: string) => isValidAddress(address),
-        soliditySha3: (...args: any[]) => soliditySha3(...args),
-        sha3: (...args: any[]) => sha3(...args),
-        keccak256: (value: string) => conn.keccak256(value),
-      },
-    }
   }
 
   getWallet() {

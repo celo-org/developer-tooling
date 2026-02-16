@@ -3,12 +3,12 @@ import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import {
   ContractKit,
-  newKitFromWeb3 as newFullKitFromWeb3,
-  newKitFromWeb3,
+  newKitFromProvider as newFullKitFromProvider,
+  newKitFromProvider,
   newKitWithApiKey,
 } from './kit'
-import { newKitFromWeb3 as newMiniKitFromWeb3 } from './mini-kit'
-import { getWeb3ForKit } from './setupForKits'
+import { newKitFromProvider as newMiniKitFromProvider } from './mini-kit'
+import { getProviderForKit } from './setupForKits'
 import { promiEventSpy } from './test-utils/PromiEventStub'
 import { startAndFinishEpochProcess } from './test-utils/utils'
 
@@ -47,9 +47,9 @@ export function txoStub<T>(): TransactionObjectStub<T> {
   return pe
 }
 
-;[newFullKitFromWeb3, newMiniKitFromWeb3].forEach((newKitFromWeb3) => {
+;[newFullKitFromProvider, newMiniKitFromProvider].forEach((newKitFromProviderFn) => {
   describe('kit.sendTransactionObject()', () => {
-    const kit = newKitFromWeb3(getWeb3ForKit('http://', undefined))
+    const kit = newKitFromProviderFn(getProviderForKit('http://', undefined))
 
     test('should send transaction on simple case', async () => {
       const txo = txoStub()
@@ -138,7 +138,6 @@ describe('newKitWithApiKey()', () => {
 
 describe('newKitFromProvider()', () => {
   test('should create a kit from a provider', () => {
-    const { newKitFromProvider } = require('./kit')
     const provider = {
       send(_payload: any, _callback: any) {
         // noop
@@ -150,121 +149,11 @@ describe('newKitFromProvider()', () => {
   })
 })
 
-describe('kit.web3 backward-compat shim', () => {
-  let kit: ContractKit
-
-  beforeEach(() => {
-    kit = newKitFromWeb3(getWeb3ForKit('http://', undefined))
-  })
-
-  describe('web3.utils', () => {
-    test('utils.toChecksumAddress returns checksummed address', () => {
-      const lower = '0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-      const checksummed = kit.web3.utils.toChecksumAddress(lower)
-      expect(checksummed).toBe('0xaAaAaAaaAaAaAaaAaAAAAAAAAaaaAaAaAaaAaaAa')
-    })
-
-    test('utils.isAddress validates addresses correctly', () => {
-      expect(kit.web3.utils.isAddress('0xaAaAaAaaAaAaAaaAaAAAAAAAAaaaAaAaAaaAaaAa')).toBe(true)
-      expect(kit.web3.utils.isAddress('not-an-address')).toBe(false)
-      expect(kit.web3.utils.isAddress('')).toBe(false)
-    })
-
-    test('utils.toWei converts ether to wei', () => {
-      const result = kit.web3.utils.toWei('1', 'ether')
-      expect(result).toBe('1000000000000000000')
-    })
-
-    test('utils.toWei converts gwei to wei', () => {
-      const result = kit.web3.utils.toWei('1', 'gwei')
-      expect(result).toBe('1000000000')
-    })
-
-    test('utils.toWei converts wei to wei (identity)', () => {
-      const result = kit.web3.utils.toWei('1', 'wei')
-      expect(result).toBe('1')
-    })
-
-    test('utils.soliditySha3 is a function', () => {
-      expect(typeof kit.web3.utils.soliditySha3).toBe('function')
-    })
-
-    test('utils.sha3 is a function', () => {
-      expect(typeof kit.web3.utils.sha3).toBe('function')
-    })
-
-    test('utils.keccak256 is a function', () => {
-      expect(typeof kit.web3.utils.keccak256).toBe('function')
-    })
-  })
-
-  describe('web3.eth', () => {
-    test('eth.getAccounts is a function', () => {
-      expect(typeof kit.web3.eth.getAccounts).toBe('function')
-    })
-
-    test('eth.getBlockNumber is a function', () => {
-      expect(typeof kit.web3.eth.getBlockNumber).toBe('function')
-    })
-
-    test('eth.sign is a function', () => {
-      expect(typeof kit.web3.eth.sign).toBe('function')
-    })
-
-    test('eth.call is a function', () => {
-      expect(typeof kit.web3.eth.call).toBe('function')
-    })
-
-    test('eth.sendTransaction is a function', () => {
-      expect(typeof kit.web3.eth.sendTransaction).toBe('function')
-    })
-
-    test('eth.getBlock is a function', () => {
-      expect(typeof kit.web3.eth.getBlock).toBe('function')
-    })
-
-    test('eth.getChainId is a function', () => {
-      expect(typeof kit.web3.eth.getChainId).toBe('function')
-    })
-
-    test('eth.Contract is a constructor-like function', () => {
-      expect(typeof kit.web3.eth.Contract).toBe('function')
-    })
-
-    test('eth.accounts.create returns an object with address and privateKey', () => {
-      const account = kit.web3.eth.accounts.create()
-      expect(account).toBeDefined()
-      expect(typeof account.address).toBe('string')
-      expect(typeof account.privateKey).toBe('string')
-      expect(account.address).toMatch(/^0x[0-9a-fA-F]{40}$/)
-      expect(account.privateKey).toMatch(/^0x[0-9a-fA-F]{64}$/)
-    })
-
-    test('eth.abi.encodeFunctionCall is a function', () => {
-      expect(typeof kit.web3.eth.abi.encodeFunctionCall).toBe('function')
-    })
-
-    test('eth.personal.lockAccount is a function', () => {
-      expect(typeof kit.web3.eth.personal.lockAccount).toBe('function')
-    })
-
-    test('eth.personal.unlockAccount is a function', () => {
-      expect(typeof kit.web3.eth.personal.unlockAccount).toBe('function')
-    })
-  })
-
-  describe('web3.currentProvider', () => {
-    test('is the same as connection.currentProvider', () => {
-      expect(kit.web3.currentProvider).toBe(kit.connection.currentProvider)
-    })
-  })
-})
-
 testWithAnvilL2('kit', (client) => {
   let kit: ContractKit
 
   beforeAll(async () => {
-    kit = newKitFromWeb3(client)
+    kit = newKitFromProvider(client.currentProvider)
   })
 
   describe('epochs', () => {
@@ -282,7 +171,7 @@ testWithAnvilL2('kit', (client) => {
 
       await timeTravel(epochDuration * 2, client)
 
-      const accounts = await kit.web3.eth.getAccounts()
+      const accounts = await kit.connection.getAccounts()
 
       await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
         from: accounts[0],

@@ -1,9 +1,10 @@
 import { PROXY_ADMIN_ADDRESS } from '@celo/connect'
+import { newKitFromProvider } from '@celo/contractkit'
 import { setCode, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import * as celoGovernance from '@celo/governance'
 import fs from 'fs'
 import path from 'node:path'
-import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesAndTxHashes, testLocallyWithNode } from '../../test-utils/cliUtils'
 import TestProposal from './test-proposal'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -51,10 +52,11 @@ testWithAnvilL2('governance:test-proposal cmd', (client) => {
 
     await setCode(client, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
 
-    const [account] = await client.eth.getAccounts()
+    const kit = newKitFromProvider(client.currentProvider)
+    const [account] = await kit.connection.getAccounts()
     const logMock = jest.spyOn(console, 'log')
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       TestProposal,
       ['--jsonTransactions', PROPOSAL_TRANSACTIONS_FILE_PATH, '--from', account],
       client

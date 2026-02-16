@@ -1,7 +1,8 @@
 import { StrongAddress } from '@celo/base'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
-import { ContractKit, newKitFromWeb3 } from '../kit'
+import { soliditySha3 } from '@celo/utils/lib/solidity'
+import { ContractKit, newKitFromProvider } from '../kit'
 import { getParsedSignatureOfAddress } from '../utils/getParsedSignatureOfAddress'
 import { AccountsWrapper } from './Accounts'
 import { valueToBigNumber, valueToFixidityString } from './BaseWrapper'
@@ -31,16 +32,11 @@ testWithAnvilL2('Accounts Wrapper', (client) => {
   }
 
   const getParsedSignatureOfAddressForTest = (address: string, signer: string) => {
-    return getParsedSignatureOfAddress(
-      client.utils.soliditySha3,
-      kit.connection.sign,
-      address,
-      signer
-    )
+    return getParsedSignatureOfAddress(soliditySha3, kit.connection.sign, address, signer)
   }
 
   beforeAll(async () => {
-    kit = newKitFromWeb3(client)
+    kit = newKitFromProvider(client.currentProvider)
     accounts = await kit.connection.getAccounts()
     validators = await kit.contracts.getValidators()
     lockedGold = await kit.contracts.getLockedGold()

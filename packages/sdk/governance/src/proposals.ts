@@ -1,7 +1,12 @@
-import { ABI as GovernanceABI } from '@celo/abis/web3/Governance'
-import { ABI as RegistryABI } from '@celo/abis/web3/Registry'
+import { governanceABI, registryABI } from '@celo/abis'
 import { Address, trimLeading0x } from '@celo/base/lib/address'
-import { AbiCoder, CeloTxPending, getAbiByName, parseDecodedParams } from '@celo/connect'
+import {
+  type AbiItem,
+  AbiCoder,
+  CeloTxPending,
+  getAbiByName,
+  parseDecodedParams,
+} from '@celo/connect'
 import { toChecksumAddress } from '@celo/utils/lib/address'
 import { CeloContract, ContractKit, REGISTRY_CONTRACT_ADDRESS } from '@celo/contractkit'
 import { stripProxy, suffixProxy } from '@celo/contractkit/lib/base'
@@ -26,7 +31,7 @@ import debugFactory from 'debug'
 
 export const debug = debugFactory('governance:proposals')
 
-export const hotfixExecuteAbi = getAbiByName(GovernanceABI, 'executeHotfix')
+export const hotfixExecuteAbi = getAbiByName(governanceABI as unknown as AbiItem[], 'executeHotfix')
 
 export const hotfixToEncodedParams = (kit: ContractKit, proposal: Proposal, salt: Buffer) =>
   kit.connection.getAbiCoder().encodeParameters(
@@ -83,7 +88,7 @@ export const registryRepointArgs = (
   }
 }
 
-const setAddressAbi = getAbiByName(RegistryABI, 'setAddressFor')
+const setAddressAbi = getAbiByName(registryABI as unknown as AbiItem[], 'setAddressFor')
 
 const isRegistryRepointRaw = (abiCoder: AbiCoder, tx: ProposalTransaction) =>
   tx.to === REGISTRY_CONTRACT_ADDRESS &&

@@ -1,8 +1,8 @@
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { setCommissionUpdateDelay } from '@celo/dev-utils/chain-setup'
 import { mineBlocks } from '@celo/dev-utils/ganache-test'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { testLocallyWithNode } from '../../test-utils/cliUtils'
 import AccountRegister from '../account/register'
 import Lock from '../lockedcelo/lock'
 import Commission from './commission'
@@ -12,15 +12,16 @@ process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvilL2('validatorgroup:comission cmd', (client) => {
   const registerValidatorGroup = async () => {
-    const accounts = await client.eth.getAccounts()
+    const kit = newKitFromProvider(client.currentProvider)
+    const accounts = await kit.connection.getAccounts()
 
-    await testLocallyWithWeb3Node(AccountRegister, ['--from', accounts[0]], client)
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(AccountRegister, ['--from', accounts[0]], client)
+    await testLocallyWithNode(
       Lock,
       ['--from', accounts[0], '--value', '10000000000000000000000'],
       client
     )
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       ValidatorGroupRegister,
       ['--from', accounts[0], '--commission', '0.1', '--yes'],
       client
@@ -28,31 +29,24 @@ testWithAnvilL2('validatorgroup:comission cmd', (client) => {
   }
 
   test('can queue update', async () => {
-    const accounts = await client.eth.getAccounts()
+    const kit = newKitFromProvider(client.currentProvider)
+    const accounts = await kit.connection.getAccounts()
     await registerValidatorGroup()
-    await testLocallyWithWeb3Node(
-      Commission,
-      ['--from', accounts[0], '--queue-update', '0.2'],
-      client
-    )
+    await testLocallyWithNode(Commission, ['--from', accounts[0], '--queue-update', '0.2'], client)
   })
   test('can apply update', async () => {
-    const accounts = await client.eth.getAccounts()
-    const kit = newKitFromWeb3(client)
+    const kit = newKitFromProvider(client.currentProvider)
+    const accounts = await kit.connection.getAccounts()
     const validatorsWrapper = await kit.contracts.getValidators()
 
     // Set commission update delay to 3 blocks for backwards compatibility
     await setCommissionUpdateDelay(client, validatorsWrapper.address, 3)
 
     await registerValidatorGroup()
-    await testLocallyWithWeb3Node(
-      Commission,
-      ['--from', accounts[0], '--queue-update', '0.2'],
-      client
-    )
+    await testLocallyWithNode(Commission, ['--from', accounts[0], '--queue-update', '0.2'], client)
 
     await mineBlocks(3, client)
 
-    await testLocallyWithWeb3Node(Commission, ['--from', accounts[0], '--apply'], client)
+    await testLocallyWithNode(Commission, ['--from', accounts[0], '--apply'], client)
   })
 })

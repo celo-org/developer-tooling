@@ -1,7 +1,7 @@
 import { ensureLeading0x } from '@celo/utils/lib/address'
 import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
-import { displayWeb3Tx } from '../../utils/cli'
+import { displayTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { deprecationOptions } from '../../utils/notice'
 import DKG from './DKG.json'
@@ -28,7 +28,7 @@ export default class DKGRegister extends BaseCommand {
     const dkg = kit.connection.createContract(DKG.abi as any, res.flags.address)
 
     const participantAddress = res.flags.participantAddress
-    await displayWeb3Tx('allowlist', dkg.methods.allowlist(ensureLeading0x(participantAddress)), {
+    await displayTx('allowlist', dkg.methods.allowlist(ensureLeading0x(participantAddress)), {
       from: res.flags.from,
     })
   }

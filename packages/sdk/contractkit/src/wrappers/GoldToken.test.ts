@@ -1,25 +1,27 @@
-import { GoldToken, newGoldToken } from '@celo/abis/web3/GoldToken'
+import { goldTokenABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
+import { Contract } from '@celo/connect'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
-import { newKitFromWeb3 } from '../kit'
+import BigNumber from 'bignumber.js'
+import { newKitFromProvider } from '../kit'
 import { GoldTokenWrapper } from './GoldTokenWrapper'
 
 // TODO checking for account balance directly won't work because of missing transfer precompile
 // instead we can check for the Transfer event instead and/or lowered allowance value (they both
 // happen after the call to transfer precompile)
 testWithAnvilL2('GoldToken Wrapper', (client) => {
-  const ONE_GOLD = client.utils.toWei('1', 'ether')
+  const ONE_GOLD = new BigNumber('1e18').toFixed()
 
-  const kit = newKitFromWeb3(client)
+  const kit = newKitFromProvider(client.currentProvider)
   let accounts: StrongAddress[] = []
   let goldToken: GoldTokenWrapper
-  let goldTokenContract: GoldToken
+  let goldTokenContract: Contract
 
   beforeAll(async () => {
-    accounts = (await client.eth.getAccounts()) as StrongAddress[]
+    accounts = await kit.connection.getAccounts()
     kit.defaultAccount = accounts[0]
     goldToken = await kit.contracts.getGoldToken()
-    goldTokenContract = newGoldToken(client, goldToken.address)
+    goldTokenContract = kit.connection.createContract(goldTokenABI as any, goldToken.address)
   })
 
   it('checks balance', () => expect(goldToken.balanceOf(accounts[0])).resolves.toBeBigNumber())

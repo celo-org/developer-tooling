@@ -1,6 +1,7 @@
+import { newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import AccountRegister from '../account/register'
 import Lock from '../lockedcelo/lock'
 import ValidatorGroupRegister from './register'
@@ -10,15 +11,16 @@ process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvilL2('validatorgroup:reset-slashing-multiplier cmd', (client) => {
   beforeEach(async () => {
-    const accounts = await client.eth.getAccounts()
+    const kit = newKitFromProvider(client.currentProvider)
+    const accounts = await kit.connection.getAccounts()
 
-    await testLocallyWithWeb3Node(AccountRegister, ['--from', accounts[0]], client)
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(AccountRegister, ['--from', accounts[0]], client)
+    await testLocallyWithNode(
       Lock,
       ['--from', accounts[0], '--value', '10000000000000000000000'],
       client
     )
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       ValidatorGroupRegister,
       ['--from', accounts[0], '--commission', '0.2', '--yes'],
       client
@@ -32,9 +34,10 @@ testWithAnvilL2('validatorgroup:reset-slashing-multiplier cmd', (client) => {
     const logSpy = jest.spyOn(console, 'log')
     const writeMock = jest.spyOn(ux.write, 'stdout')
 
-    const accounts = await client.eth.getAccounts()
+    const kit = newKitFromProvider(client.currentProvider)
+    const accounts = await kit.connection.getAccounts()
 
-    await testLocallyWithWeb3Node(ResetSlashingMultiplier, [accounts[0]], client)
+    await testLocallyWithNode(ResetSlashingMultiplier, [accounts[0]], client)
 
     expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls)).toMatchInlineSnapshot(`
       [

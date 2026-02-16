@@ -1,6 +1,6 @@
 import { StrongAddress } from '@celo/base'
 import { CeloProvider } from '@celo/connect/lib/celo-provider'
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { GoldTokenWrapper } from '@celo/contractkit/lib/wrappers/GoldTokenWrapper'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { setBalance, testWithAnvilL2, withImpersonatedAccount } from '@celo/dev-utils/anvil-test'
@@ -10,12 +10,13 @@ import * as fs from 'fs'
 import {
   EXTRA_LONG_TIMEOUT_MS,
   stripAnsiCodesFromNestedArray,
-  testLocallyWithWeb3Node,
+  testLocallyWithNode,
 } from '../../test-utils/cliUtils'
 import { deployMultiCall } from '../../test-utils/multicall'
 import { createMultisig, setupSafeContracts } from '../../test-utils/multisigUtils'
 import Approve from '../multisig/approve'
 import Propose from './propose'
+import { parseEther } from 'viem'
 
 // Mock fetch for HTTP status tests
 jest.mock('cross-fetch')
@@ -156,7 +157,7 @@ testWithAnvilL2(
     let goldTokenContract: GoldTokenWrapper['contract']
     let minDeposit: string
 
-    const kit = newKitFromWeb3(client)
+    const kit = newKitFromProvider(client.currentProvider)
 
     let accounts: StrongAddress[] = []
 
@@ -165,7 +166,7 @@ testWithAnvilL2(
       // since this test impersonates the old alfajores chain id
       await deployMultiCall(client, '0xcA11bde05977b3631167028862bE2a173976CA11')
 
-      accounts = (await client.eth.getAccounts()) as StrongAddress[]
+      accounts = (await kit.connection.getAccounts()) as StrongAddress[]
       kit.defaultAccount = accounts[0]
       governance = await kit.contracts.getGovernance()
       goldToken = await kit.contracts.getGoldToken()
@@ -188,14 +189,14 @@ testWithAnvilL2(
           await kit.sendTransaction({
             to: governance.address,
             from: accounts[0],
-            value: client.utils.toWei('1', 'ether'),
+            value: parseEther('1').toString(),
           })
         ).waitReceipt()
 
         const proposalBefore = await governance.getProposal(1)
         expect(proposalBefore).toEqual([])
 
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           Propose,
           [
             '--jsonTransactions',
@@ -232,7 +233,7 @@ testWithAnvilL2(
           await kit.sendTransaction({
             from: accounts[0],
             to: governance.address,
-            value: client.utils.toWei('1', 'ether'),
+            value: parseEther('1').toString(),
           })
         ).waitReceipt()
 
@@ -248,14 +249,14 @@ testWithAnvilL2(
           await kit.sendTransaction({
             from: accounts[2],
             to: multisigWithOneSigner,
-            value: client.utils.toWei('20000', 'ether'), // 2x min deposit on Mainnet
+            value: parseEther('20000').toString(), // 2x min deposit on Mainnet
           })
         ).waitReceipt()
 
         const proposalBefore = await governance.getProposal(1)
         expect(proposalBefore).toEqual([])
 
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           Propose,
           [
             '--jsonTransactions',
@@ -295,7 +296,7 @@ testWithAnvilL2(
           await kit.sendTransaction({
             to: governance.address,
             from: accounts[0],
-            value: client.utils.toWei('1', 'ether'),
+            value: parseEther('1').toString(),
           })
         ).waitReceipt()
 
@@ -311,7 +312,7 @@ testWithAnvilL2(
           await kit.sendTransaction({
             from: accounts[2],
             to: multisigWithTwoSigners,
-            value: client.utils.toWei('20000', 'ether'), // 2x min deposit on Mainnet
+            value: parseEther('20000').toString(), // 2x min deposit on Mainnet
           })
         ).waitReceipt()
 
@@ -319,7 +320,7 @@ testWithAnvilL2(
         expect(proposalBefore).toEqual([])
 
         // Submit proposal from signer A
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           Propose,
           [
             '--jsonTransactions',
@@ -341,7 +342,7 @@ testWithAnvilL2(
         expect(proposalBetween).toEqual([])
 
         // Approve proposal from signer B
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           Approve,
           ['--from', accounts[1], '--for', multisigWithTwoSigners, '--tx', '0'],
           client
@@ -367,7 +368,7 @@ testWithAnvilL2(
       test(
         'will successfully create proposal based on Core contract (1 owner)',
         async () => {
-          const [owner1] = (await client.eth.getAccounts()) as StrongAddress[]
+          const [owner1] = (await kit.connection.getAccounts()) as StrongAddress[]
           const safeAccountConfig = {
             owners: [owner1],
             threshold: 1,
@@ -378,21 +379,24 @@ testWithAnvilL2(
           }
           const protocolKit = await Safe.init({
             predictedSafe: predictSafe,
-            provider: (client.currentProvider as unknown as CeloProvider).toEip1193Provider(),
+            provider: (
+              kit.connection.currentProvider as unknown as CeloProvider
+            ).toEip1193Provider(),
             signer: owner1,
           })
           const deploymentTransaction = await protocolKit.createSafeDeploymentTransaction()
-          const receipt = await client.eth.sendTransaction({
+          const txResult = await kit.connection.sendTransaction({
             from: owner1,
             ...deploymentTransaction,
           })
+          const receipt = await txResult.waitReceipt()
           const safeAddress = getSafeAddressFromDeploymentTx(
             receipt as unknown as Parameters<typeof getSafeAddressFromDeploymentTx>[0],
             '1.3.0'
           ) as StrongAddress
           await protocolKit.connect({ safeAddress })
 
-          const balance = BigInt(client.utils.toWei('100', 'ether'))
+          const balance = BigInt(parseEther('100').toString())
           await setBalance(client, goldToken.address, balance)
           await setBalance(client, governance.address, balance)
           await setBalance(client, owner1, balance)
@@ -405,7 +409,7 @@ testWithAnvilL2(
           expect(proposalBefore).toEqual([])
 
           // Submit proposal from signer A
-          await testLocallyWithWeb3Node(
+          await testLocallyWithNode(
             Propose,
             [
               '--jsonTransactions',
@@ -437,7 +441,7 @@ testWithAnvilL2(
       test(
         'will successfully create proposal based on Core contract (2 owners)',
         async () => {
-          const [owner1] = (await client.eth.getAccounts()) as StrongAddress[]
+          const [owner1] = (await kit.connection.getAccounts()) as StrongAddress[]
           const owner2 = '0x6C666E57A5E8715cFE93f92790f98c4dFf7b69e2'
           const safeAccountConfig = {
             owners: [owner1, owner2],
@@ -449,21 +453,24 @@ testWithAnvilL2(
           }
           const protocolKit = await Safe.init({
             predictedSafe: predictSafe,
-            provider: (client.currentProvider as unknown as CeloProvider).toEip1193Provider(),
+            provider: (
+              kit.connection.currentProvider as unknown as CeloProvider
+            ).toEip1193Provider(),
             signer: owner1,
           })
           const deploymentTransaction = await protocolKit.createSafeDeploymentTransaction()
-          const receipt = await client.eth.sendTransaction({
+          const txResult = await kit.connection.sendTransaction({
             from: owner1,
             ...deploymentTransaction,
           })
+          const receipt = await txResult.waitReceipt()
           const safeAddress = getSafeAddressFromDeploymentTx(
             receipt as unknown as Parameters<typeof getSafeAddressFromDeploymentTx>[0],
             '1.3.0'
           ) as StrongAddress
           await protocolKit.connect({ safeAddress })
 
-          const balance = BigInt(client.utils.toWei('100', 'ether'))
+          const balance = BigInt(parseEther('100').toString())
           await setBalance(client, goldToken.address, balance)
           await setBalance(client, governance.address, balance)
           await setBalance(client, owner1, balance)
@@ -477,7 +484,7 @@ testWithAnvilL2(
           expect(proposalBefore).toEqual([])
 
           // Submit proposal from signer 1
-          await testLocallyWithWeb3Node(
+          await testLocallyWithNode(
             Propose,
             [
               '--jsonTransactions',
@@ -498,7 +505,7 @@ testWithAnvilL2(
           expect(proposalBefore2ndOwner).toEqual([])
 
           await withImpersonatedAccount(client, owner2, async () => {
-            await testLocallyWithWeb3Node(
+            await testLocallyWithNode(
               Propose,
               [
                 '--jsonTransactions',
@@ -540,14 +547,14 @@ testWithAnvilL2(
           await kit.sendTransaction({
             to: governance.address,
             from: accounts[0],
-            value: client.utils.toWei('1', 'ether'),
+            value: parseEther('1').toString(),
           })
         ).waitReceipt()
 
         const proposalBefore = await governance.getProposal(1)
         expect(proposalBefore).toEqual([])
 
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           Propose,
           [
             '--jsonTransactions',
@@ -586,14 +593,14 @@ testWithAnvilL2(
           await kit.sendTransaction({
             to: governance.address,
             from: accounts[0],
-            value: client.utils.toWei('1', 'ether'),
+            value: parseEther('1').toString(),
           })
         ).waitReceipt()
 
         const proposalBefore = await governance.getProposal(1)
         expect(proposalBefore).toEqual([])
 
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           Propose,
           [
             '--jsonTransactions',
@@ -628,7 +635,7 @@ testWithAnvilL2(
       'fails when descriptionURl is missing',
       async () => {
         await expect(
-          testLocallyWithWeb3Node(
+          testLocallyWithNode(
             Propose,
             [
               '--from',
@@ -649,7 +656,7 @@ testWithAnvilL2(
       'fails when descriptionURl is invalid',
       async () => {
         await expect(
-          testLocallyWithWeb3Node(
+          testLocallyWithNode(
             Propose,
             [
               '--from',
@@ -677,7 +684,7 @@ testWithAnvilL2(
       'can submit empty proposal',
       async () => {
         await expect(
-          testLocallyWithWeb3Node(
+          testLocallyWithNode(
             Propose,
             [
               '--from',
@@ -701,7 +708,7 @@ testWithAnvilL2(
       async () => {
         const spyStart = jest.spyOn(ux.action, 'start')
         const spyStop = jest.spyOn(ux.action, 'stop')
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           Propose,
           [
             '--from',
@@ -727,7 +734,7 @@ testWithAnvilL2(
         const spyStart = jest.spyOn(ux.action, 'start')
         const spyStop = jest.spyOn(ux.action, 'stop')
 
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           Propose,
           [
             '--from',
@@ -758,7 +765,7 @@ testWithAnvilL2(
         const mockLog = jest.spyOn(console, 'log').mockImplementation(() => {})
 
         await expect(
-          testLocallyWithWeb3Node(
+          testLocallyWithNode(
             Propose,
             [
               '--from',
@@ -803,7 +810,7 @@ testWithAnvilL2(
         mockFetch.mockRejectedValue(new Error('Network error'))
 
         await expect(
-          testLocallyWithWeb3Node(
+          testLocallyWithNode(
             Propose,
             [
               '--from',

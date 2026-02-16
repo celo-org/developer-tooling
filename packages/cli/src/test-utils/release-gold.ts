@@ -1,8 +1,9 @@
 import { releaseGoldABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
+import { Connection } from '@celo/connect'
 import { REGISTRY_CONTRACT_ADDRESS } from '@celo/contractkit'
 import { setBalance, setCode, withImpersonatedAccount } from '@celo/dev-utils/anvil-test'
-import { HOUR, MINUTE, MONTH } from '@celo/dev-utils/test-utils'
+import { HOUR, MINUTE, MONTH, ProviderOwner } from '@celo/dev-utils/test-utils'
 import BigNumber from 'bignumber.js'
 import { parseEther } from 'viem'
 import { getCurrentTimestamp } from '../utils/cli'
@@ -13,7 +14,7 @@ const RELEASE_GOLD_IMPLEMENTATION_CONTRACT_BYTECODE =
 const RELEASE_GOLD_IMPLEMENTATION_CONTRACT_ADDRESS = '0xDdbe68bEae54dd94465C6bbA2477EE9500ce1974'
 
 export async function deployReleaseGoldContract(
-  web3: any,
+  web3: ProviderOwner,
   ownerMultisigAddress: StrongAddress,
   beneficiary: StrongAddress,
   releaseOwner: StrongAddress,
@@ -26,8 +27,9 @@ export async function deployReleaseGoldContract(
     RELEASE_GOLD_IMPLEMENTATION_CONTRACT_BYTECODE
   )
 
-  // Create contract using the ABI directly (web3 is passed through as-is for test compat)
-  const contract = new (web3 as any).eth.Contract(
+  // Create contract using Connection's createContract
+  const connection = new Connection(web3.currentProvider)
+  const contract = connection.createContract(
     releaseGoldABI as any,
     RELEASE_GOLD_IMPLEMENTATION_CONTRACT_ADDRESS
   )

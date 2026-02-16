@@ -1,7 +1,7 @@
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import Switch from '../epochs/switch'
 import Status from './status'
 
@@ -18,7 +18,7 @@ testWithAnvilL2('validator:status', (client) => {
   })
 
   it('displays status of the validator', async () => {
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Status,
       ['--validator', KNOWN_DEVCHAIN_VALIDATOR, '--csv', '--start', '349'],
       client
@@ -55,7 +55,7 @@ testWithAnvilL2('validator:status', (client) => {
   })
 
   it('displays status for all validators', async () => {
-    await testLocallyWithWeb3Node(Status, ['--all', '--csv', '--start', '349'], client)
+    await testLocallyWithNode(Status, ['--all', '--csv', '--start', '349'], client)
 
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`[]`)
     expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`
@@ -93,16 +93,16 @@ testWithAnvilL2('validator:status', (client) => {
   })
 
   it('fails if start and end are in different epochs', async () => {
-    const [account] = await client.eth.getAccounts()
-    const kit = newKitFromWeb3(client)
-    const blockNumber = await kit.web3.eth.getBlockNumber()
+    const kit = newKitFromProvider(client.currentProvider)
+    const [account] = await kit.connection.getAccounts()
+    const blockNumber = await kit.connection.getBlockNumber()
     const epoch = await kit.getEpochNumberOfBlock(blockNumber)
     const firstBlockOfCurrentEpoch = await kit.getFirstBlockNumberForEpoch(epoch)
 
-    await testLocallyWithWeb3Node(Switch, ['--from', account], client)
+    await testLocallyWithNode(Switch, ['--from', account], client)
 
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         Status,
         [
           '--validator',

@@ -1,7 +1,7 @@
 import { StrongAddress } from '@celo/base'
-import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
+import { ContractKit, newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { testLocallyWithNode } from '../../test-utils/cliUtils'
 import { createMultisig } from '../../test-utils/multisigUtils'
 import { deployReleaseGoldContract } from '../../test-utils/release-gold'
 import CreateAccount from './create-account'
@@ -14,8 +14,8 @@ testWithAnvilL2('releasegold:set-account cmd', (client) => {
   let kit: ContractKit
 
   beforeEach(async () => {
-    const accounts = (await client.eth.getAccounts()) as StrongAddress[]
-    kit = newKitFromWeb3(client)
+    kit = newKitFromProvider(client.currentProvider)
+    const accounts = (await kit.connection.getAccounts()) as StrongAddress[]
 
     contractAddress = await deployReleaseGoldContract(
       client,
@@ -25,7 +25,7 @@ testWithAnvilL2('releasegold:set-account cmd', (client) => {
       accounts[2]
     )
 
-    await testLocallyWithWeb3Node(CreateAccount, ['--contract', contractAddress], client)
+    await testLocallyWithNode(CreateAccount, ['--contract', contractAddress], client)
   })
 
   it('sets all the properties', async () => {
@@ -33,13 +33,13 @@ testWithAnvilL2('releasegold:set-account cmd', (client) => {
       '0x041bb96e35f9f4b71ca8de561fff55a249ddf9d13ab582bdd09a09e75da68ae4cd0ab7038030f41b237498b4d76387ae878dc8d98fd6f6db2c15362d1a3bf11216'
     const accountWrapper = await kit.contracts.getAccounts()
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       SetAccount,
       ['--contract', contractAddress, '--property', 'name', '--value', 'test-name'],
       client
     )
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       SetAccount,
       [
         '--contract',
@@ -52,7 +52,7 @@ testWithAnvilL2('releasegold:set-account cmd', (client) => {
       client
     )
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       SetAccount,
       ['--contract', contractAddress, '--property', 'metaURL', '--value', 'test-url'],
       client
@@ -65,7 +65,7 @@ testWithAnvilL2('releasegold:set-account cmd', (client) => {
 
   it('fails if unknown property', async () => {
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         SetAccount,
         ['--contract', contractAddress, '--property', 'unknown', '--value', 'test-value'],
         client

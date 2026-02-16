@@ -1,7 +1,8 @@
+import { newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import { ux } from '@oclif/core'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import Register from '../account/register'
 import Lock from '../lockedcelo/lock'
 import ListValidators from './list'
@@ -20,16 +21,17 @@ testWithAnvilL2('validator:list', (client) => {
     jest.spyOn(console, 'log').mockImplementation(() => {
       // noop
     })
-    const accounts = await client.eth.getAccounts()
+    const kit = newKitFromProvider(client.currentProvider)
+    const accounts = await kit.connection.getAccounts()
     account = accounts[0]
-    ecdsaPublicKey = await addressToPublicKey(account, client.eth.sign)
-    await testLocallyWithWeb3Node(Register, ['--from', account], client)
-    await testLocallyWithWeb3Node(
+    ecdsaPublicKey = await addressToPublicKey(account, kit.connection.sign)
+    await testLocallyWithNode(Register, ['--from', account], client)
+    await testLocallyWithNode(
       Lock,
       ['--from', account, '--value', '10000000000000000000000'],
       client
     )
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       ValidatorRegister,
       ['--from', account, '--ecdsaKey', ecdsaPublicKey, '--yes'],
       client
@@ -42,7 +44,7 @@ testWithAnvilL2('validator:list', (client) => {
   })
 
   it('shows all registered validators', async () => {
-    await testLocallyWithWeb3Node(ListValidators, ['--csv'], client)
+    await testLocallyWithNode(ListValidators, ['--csv'], client)
     expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`
       [
         [

@@ -1,5 +1,5 @@
 import { BaseCommand } from '../../base'
-import { displayWeb3Tx } from '../../utils/cli'
+import { displayTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { deprecationOptions } from '../../utils/notice'
 
@@ -22,7 +22,7 @@ export default class DKGStart extends BaseCommand {
     const res = await this.parse(DKGStart)
     const dkg = kit.connection.createContract(DKG.abi, res.flags.address)
 
-    await displayWeb3Tx('start', dkg.methods.start(), { from: res.flags.from })
+    await displayTx('start', dkg.methods.start(), { from: res.flags.from })
     this.log('DKG Started!')
   }
 }

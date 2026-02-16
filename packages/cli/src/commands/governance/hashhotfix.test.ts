@@ -2,7 +2,7 @@ import { PROXY_ADMIN_ADDRESS } from '@celo/connect'
 import { setCode, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import fs from 'fs'
 import path from 'node:path'
-import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesAndTxHashes, testLocallyWithNode } from '../../test-utils/cliUtils'
 import HashHotfix from './hashhotfix'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -36,7 +36,7 @@ testWithAnvilL2('governance:hashhotfix cmd', (client) => {
   it('should hash a hotfix successfuly with --force flag', async () => {
     const logMock = jest.spyOn(console, 'log')
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       HashHotfix,
       ['--jsonTransactions', HOTFIX_TRANSACTIONS_FILE_PATH, '--salt', SALT, '--force'],
       client
@@ -61,7 +61,7 @@ testWithAnvilL2('governance:hashhotfix cmd', (client) => {
 
     const logMock = jest.spyOn(console, 'log')
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       HashHotfix,
       ['--jsonTransactions', HOTFIX_TRANSACTIONS_FILE_PATH, '--salt', SALT],
       client
@@ -90,7 +90,7 @@ testWithAnvilL2('governance:hashhotfix cmd', (client) => {
   it('should fail when hotfix does not pass verification', async () => {
     const logMock = jest.spyOn(console, 'log')
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       HashHotfix,
       ['--jsonTransactions', HOTFIX_TRANSACTIONS_FILE_PATH, '--salt', SALT],
       client

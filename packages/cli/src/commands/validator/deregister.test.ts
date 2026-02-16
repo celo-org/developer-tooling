@@ -1,5 +1,5 @@
 import { StrongAddress } from '@celo/base'
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { ValidatorsWrapper } from '@celo/contractkit/lib/wrappers/Validators'
 import {
   asCoreContractsOwner,
@@ -11,7 +11,7 @@ import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import {
   EXTRA_LONG_TIMEOUT_MS,
   stripAnsiCodesFromNestedArray,
-  testLocallyWithWeb3Node,
+  testLocallyWithNode,
 } from '../../test-utils/cliUtils'
 import Register from '../account/register'
 import Lock from '../lockedcelo/lock'
@@ -35,25 +35,25 @@ testWithAnvilL2('validator:deregister', (client) => {
     jest.spyOn(console, 'error').mockImplementation(() => {
       // noop
     })
-    const accounts = await client.eth.getAccounts()
+    const kit = newKitFromProvider(client.currentProvider)
+    const accounts = await kit.connection.getAccounts()
     account = accounts[0]
-    const kit = newKitFromWeb3(client)
     validatorContract = await kit.contracts.getValidators()
     const groups = await validatorContract.getRegisteredValidatorGroupsAddresses()
     groupAddress = groups[0] as StrongAddress
-    ecdsaPublicKey = await addressToPublicKey(account, client.eth.sign)
-    await testLocallyWithWeb3Node(Register, ['--from', account], client)
-    await testLocallyWithWeb3Node(
+    ecdsaPublicKey = await addressToPublicKey(account, kit.connection.sign)
+    await testLocallyWithNode(Register, ['--from', account], client)
+    await testLocallyWithNode(
       Lock,
       ['--from', account, '--value', '10000000000000000000000'],
       client
     )
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       ValidatorRegister,
       ['--from', account, '--ecdsaKey', ecdsaPublicKey, '--yes'],
       client
     )
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       ValidatorAffiliate,
       ['--from', account, groupAddress, '--yes'],
       client
@@ -71,7 +71,7 @@ testWithAnvilL2('validator:deregister', (client) => {
         .send({ from: ownerAddress })
     })
     await withImpersonatedAccount(client, groupAddress, async () => {
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         ValidatorGroupMembers,
         [account, '--from', groupAddress, '--accept', '--yes'],
         client
@@ -91,7 +91,7 @@ testWithAnvilL2('validator:deregister', (client) => {
       const groupAtSettup = await validatorContract.getValidatorGroup(groupAddress, false)
       expect(groupAtSettup.members).toContain(account)
       await withImpersonatedAccount(client, groupAddress, async () => {
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           ValidatorGroupMembers,
           [account, '--from', groupAddress, '--remove', '--yes'],
           client
@@ -122,7 +122,7 @@ testWithAnvilL2('validator:deregister', (client) => {
         duration.toNumber()
       )
       await expect(
-        testLocallyWithWeb3Node(ValidatorDeRegister, ['--from', account], client)
+        testLocallyWithNode(ValidatorDeRegister, ['--from', account], client)
       ).resolves.toMatchInlineSnapshot(`undefined`)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
               [
@@ -174,7 +174,7 @@ testWithAnvilL2('validator:deregister', (client) => {
       logMock.mockClear()
 
       await expect(
-        testLocallyWithWeb3Node(ValidatorDeRegister, ['--from', account], client)
+        testLocallyWithNode(ValidatorDeRegister, ['--from', account], client)
       ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
 
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
@@ -206,25 +206,26 @@ testWithAnvilL2('validator:deregister', (client) => {
   it(
     'succeeds if not a member of any group',
     async () => {
-      const [_, notAffiliatedValidator] = await client.eth.getAccounts()
+      const kit = newKitFromProvider(client.currentProvider)
+      const [_, notAffiliatedValidator] = await kit.connection.getAccounts()
       const groupAtSetup = await validatorContract.getValidatorGroup(groupAddress, false)
 
       // Sanity check
       expect(groupAtSetup.members).not.toContain(notAffiliatedValidator)
 
       // Register, but not affiliate
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         Lock,
         ['--from', notAffiliatedValidator, '--value', '10000000000000000000000'],
         client
       )
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         ValidatorRegister,
         [
           '--from',
           notAffiliatedValidator,
           '--ecdsaKey',
-          await addressToPublicKey(notAffiliatedValidator, client.eth.sign),
+          await addressToPublicKey(notAffiliatedValidator, kit.connection.sign),
           '--yes',
         ],
         client
@@ -243,7 +244,7 @@ testWithAnvilL2('validator:deregister', (client) => {
       const logMock = jest.spyOn(console, 'log')
       logMock.mockClear()
 
-      await testLocallyWithWeb3Node(ValidatorDeRegister, ['--from', notAffiliatedValidator], client)
+      await testLocallyWithNode(ValidatorDeRegister, ['--from', notAffiliatedValidator], client)
 
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [

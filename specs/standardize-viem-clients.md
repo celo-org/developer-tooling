@@ -4,7 +4,7 @@
 
 ### Current State — Two Coexisting Paradigms
 
-1. **Legacy (web3-based)**: `@celo/connect` defines a `Connection` class wrapping a JSON-RPC `Provider` and exposing a `web3` getter via `createWeb3Shim()`. `@celo/contractkit` builds on this (`ContractKit → Connection → Web3 shim`). All legacy SDK packages (`contractkit`, `connect`, `governance`, `explorer`, `metadata-claims`, `transactions-uri`) and CLI test infrastructure depend on this.
+1. **Legacy (web3-based)**: `@celo/connect` defines a `Connection` class wrapping a JSON-RPC `Provider`. The actual web3.js npm package has already been removed — all RPC calls go through raw JSON-RPC via `rpcCaller.call(...)` and ABI encoding uses viem internally (`abi-coder.ts`, `rpc-contract.ts`). However, `@celo/contractkit` exposes a `get web3(): any` backward-compat shim (lines 138-202 of `kit.ts`) that emulates `web3.eth.*` and `web3.utils.*` using `Connection` methods. `@celo/dev-utils` has `createWeb3Shim()` for test harnesses. All legacy SDK packages and CLI test infrastructure depend on this shim surface.
 
 2. **Modern (viem-based)**: `@celo/actions` defines canonical types (`PublicCeloClient`, `WalletCeloClient`, `CeloClient`, `Clients`) in `src/client.ts`. The CLI's `BaseCommand` already constructs `publicClient` and `walletClient` via viem. `@celo/dev-utils` provides `viem_testWithAnvil()`. `@celo/viem-account-ledger` is pure viem.
 
@@ -21,6 +21,41 @@
 - CLI — dual `getKit()` + `getPublicClient()` pattern throughout commands
 - `@celo/governance` — heavy use of `kit.web3.utils.*`
 - DKG commands — heavily web3-dependent (may be candidates for removal)
+
+### Key Finding: web3.js npm Package Already Removed
+
+The web3.js library is **not** in any `package.json` dependencies. What remains is:
+- A **web3-like API surface** (`kit.web3` property, `Web3` type alias, `createWeb3Shim()`)
+- These are pure TypeScript shims over `Connection` methods and viem utilities
+- The shim exists solely for backward compatibility; removing it is a surface-level change, not a deep architectural one
+
+## Current Migration Status
+
+### Already Completed (Commit 7fe8c4478)
+
+- `Connection` class no longer wraps a `Web3` instance — uses raw JSON-RPC + viem internally
+- `Connection.createContract()` replaces `new web3.eth.Contract(abi, address)`
+- `viemAbiCoder` (in `abi-coder.ts`) replaces web3 ABI coder
+- `RpcContract` (in `rpc-contract.ts`) replaces web3 Contract class
+- `web3-contract-cache.ts` uses `@celo/abis` (viem ABIs) for ABI source
+- All wrapper classes use `Connection.createContract()` instead of `new web3.eth.Contract()`
+- `newKitFromProvider()` factory added as the recommended entry point
+
+### Remaining Web3 Surface (Quantified)
+
+| Pattern | Count | Location |
+|---|---|---|
+| `kit.web3` references | **67** | Test files across contractkit, CLI |
+| `createWeb3Shim` | **3** | Definition + call in dev-utils, comment in connection.ts |
+| `web3.eth.*` method calls | **43** | Test files and dev-utils helpers |
+| `web3.utils.*` method calls | **16** | Test files and CLI chain-setup |
+| `newKitFromWeb3` call sites | **~217** | Test files (2 definitions + ~215 calls) |
+| `@celo/abis/web3/` imports | **24** | Governance source + test files |
+| `testLocallyWithWeb3Node` | **~554** | CLI test helper used in nearly all CLI tests |
+| `Web3ContractCache` | **16** | Internal contractkit class (cosmetic) |
+| `displayWeb3Tx` | **11** | CLI DKG commands utility |
+| `getWeb3ForKit` | **4** | Deprecated helper in setupForKits.ts |
+| `Web3` type imports | **76** | From `@celo/connect` across packages |
 
 ## Specification
 
@@ -88,6 +123,136 @@ For tests, `@celo/dev-utils` exports `TestClientExtended` (via `createTestClient
 
 `@celo/actions`, `@celo/core`, `@celo/viem-account-ledger`, `@celo/base`, `@celo/phone-utils`, `@celo/cryptographic-utils`, `@celo/keystores`
 
+## Detailed Implementation Plan
+
+### Phase 1: Governance Production Code (2 files)
+
+| File | Line(s) | Current | Replacement |
+|---|---|---|---|
+| `packages/sdk/governance/src/proposals.ts` | 1-2 | `ABI as GovernanceABI` from `@celo/abis/web3/Governance`, `ABI as RegistryABI` from `@celo/abis/web3/Registry` | Import viem ABIs from `@celo/abis` (e.g., `governanceABI`, `registryABI`) |
+| `packages/sdk/governance/src/interactive-proposal-builder.ts` | 138 | `require('@celo/abis/web3/${subPath}${contractName}').ABI` | `require('@celo/abis/${contractName}')` or static import from `@celo/abis` |
+
+### Phase 2: Test Infrastructure (5 files)
+
+These changes unblock the mass test file migration.
+
+| File | Change |
+|---|---|
+| `packages/dev-utils/src/anvil-test.ts` | Modify `testWithAnvilL2()` to provide `Provider` (or `TestClientExtended`) instead of `Web3` shim to callbacks. Alternatively, have it provide both a `kit` (via `newKitFromProvider`) and a `provider`, eliminating the need for callers to call `newKitFromWeb3()`. |
+| `packages/dev-utils/src/test-utils.ts` | Remove `createWeb3Shim()` function and `Web3` type import. Update `testWithWeb3()` to use viem client. |
+| `packages/dev-utils/src/ganache-test.ts` | Rewrite `timeTravel()`, `mineBlocks()`, `getContractFromEvent()` etc. to accept a `Provider` or viem `TestClient` instead of `Web3` shim. Most of these only need `jsonRpcCall()` which takes a provider. |
+| `packages/dev-utils/src/chain-setup.ts` | Replace `new web3.eth.Contract(abi, address)` with `Connection.createContract(abi, address)` or viem `getContract()`. Replace `web3.eth.getTransactionReceipt()` with viem or Connection equivalent. |
+| `packages/dev-utils/src/contracts.ts` | Replace `new client.eth.Contract(abi).deploy(...).send(...)` with viem `deployContract()` or raw RPC. |
+
+### Phase 3: Remove Core Shims (4 files)
+
+| File | Line(s) | Change |
+|---|---|---|
+| `packages/sdk/connect/src/connection.ts` | 63 | Remove `export type Web3 = any` |
+| `packages/sdk/contractkit/src/kit.ts` | 76-84 | Remove `newKitFromWeb3()` definition |
+| `packages/sdk/contractkit/src/kit.ts` | 138-202 | Remove `get web3(): any` shim |
+| `packages/sdk/contractkit/src/mini-kit.ts` | 50-58 | Remove `newKitFromWeb3()` definition |
+| `packages/sdk/contractkit/src/setupForKits.ts` | 141-148 | Remove `getWeb3ForKit()` |
+
+### Phase 4: Mass Test File Migration (~111 files)
+
+#### 4A: Replace `newKitFromWeb3(client)` (~217 call sites)
+
+**Pattern**: `newKitFromWeb3(client)` → `newKitFromProvider(provider)` (where `provider` comes from the updated test harness)
+
+If Phase 2 changes `testWithAnvilL2()` to directly provide a `provider`, then:
+```typescript
+// Before
+testWithAnvilL2('test name', async (client: Web3) => {
+  const kit = newKitFromWeb3(client)
+  ...
+})
+
+// After
+testWithAnvilL2('test name', async (provider: Provider) => {
+  const kit = newKitFromProvider(provider)
+  ...
+})
+```
+
+#### 4B: Replace `kit.web3.eth.*` calls (67 references)
+
+| Current Pattern | Viem/Connection Replacement |
+|---|---|
+| `kit.web3.eth.getAccounts()` | `kit.connection.getAccounts()` |
+| `kit.web3.eth.getBlockNumber()` | `kit.connection.getBlockNumber()` |
+| `kit.web3.eth.getChainId()` | `kit.connection.chainId()` |
+| `kit.web3.eth.getBlock(n)` | `kit.connection.getBlock(n)` |
+| `kit.web3.eth.getBalance(addr)` | `kit.connection.getBalance(addr)` |
+| `kit.web3.eth.getTransactionReceipt(hash)` | `kit.connection.getTransactionReceipt(hash)` |
+| `kit.web3.eth.sign(data, addr)` | `kit.connection.sign(data, addr)` |
+| `kit.web3.eth.sendTransaction(tx)` | `kit.connection.sendTransaction(tx)` |
+| `kit.web3.eth.accounts.create()` | `import { generatePrivateKey, privateKeyToAddress } from 'viem/accounts'` |
+| `kit.web3.currentProvider` | `kit.connection.currentProvider` |
+
+#### 4C: Replace `kit.web3.utils.*` calls (16 references)
+
+| Current Pattern | Viem Replacement |
+|---|---|
+| `kit.web3.utils.toWei('1', 'ether')` | `parseEther('1').toString()` from `viem` |
+| `kit.web3.utils.toWei('1', 'gwei')` | `parseGwei('1').toString()` from `viem` |
+| `kit.web3.utils.soliditySha3(...)` | `keccak256(encodePacked(...))` from `viem` |
+| `kit.web3.utils.sha3(...)` | `keccak256(toBytes(...))` from `viem` |
+| `kit.web3.utils.toChecksumAddress(addr)` | `getAddress(addr)` from `viem` |
+| `kit.web3.utils.isAddress(addr)` | `isAddress(addr)` from `viem` |
+| `kit.web3.utils.keccak256(val)` | `keccak256(val)` from `viem` |
+
+#### 4D: Replace `@celo/abis/web3/*` factory functions (24 imports)
+
+| Current | Replacement |
+|---|---|
+| `import { newReleaseGold } from '@celo/abis/web3/ReleaseGold'` + `newReleaseGold(kit.web3, addr)` | `import { releaseGoldABI } from '@celo/abis'` + `kit.connection.createContract(releaseGoldABI, addr)` |
+| `import { newRegistry } from '@celo/abis/web3/Registry'` + `newRegistry(kit.web3, addr)` | `import { registryABI } from '@celo/abis'` + `kit.connection.createContract(registryABI, addr)` |
+| Same pattern for `newElection`, `newMultiSig`, `newSortedOracles`, `newGoldToken`, `newAttestations`, `newICeloVersionedContract` | Same pattern: import viem ABI from `@celo/abis` + `connection.createContract()` |
+
+#### 4E: Replace `testLocallyWithWeb3Node` (~554 call sites)
+
+The function only extracts the RPC URL from `web3.currentProvider`. Options:
+1. **Rename to `testLocallyWithNode()`** and accept `{ currentProvider: Provider }` or `string` (URL directly)
+2. **Keep function signature** accepting any object with `currentProvider` — since `Connection` has `currentProvider`, callers can pass `kit.connection` instead of `kit.web3`
+
+Recommended: rename + accept `kit.connection` (which has `.currentProvider`).
+
+#### 4F: Replace dev-utils helpers in CLI tests
+
+| Function | Current signature | New signature |
+|---|---|---|
+| `timeTravel(seconds, web3)` | Accepts `Web3` shim | Accept `Provider` or `Connection` |
+| `mineBlocks(count, web3)` | Accepts `Web3` shim | Accept `Provider` or `Connection` |
+| `impersonateAccount(web3, address)` | Accepts `Web3` shim | Accept `Provider` or `Connection` |
+| `stopImpersonatingAccount(web3, address)` | Accepts `Web3` shim | Accept `Provider` or `Connection` |
+| `withImpersonatedAccount(web3, address, fn)` | Accepts `Web3` shim | Accept `Provider` or `Connection` |
+| `setBalance(web3, address, balance)` | Accepts `Web3` shim | Accept `Provider` or `Connection` |
+| `setCode(web3, address, code)` | Accepts `Web3` shim | Accept `Provider` or `Connection` |
+
+These all only need `jsonRpcCall()`, which takes a `Provider`.
+
+### Phase 5: Cosmetic Cleanup
+
+| Item | Change |
+|---|---|
+| `Web3ContractCache` class | Rename to `ContractCache` |
+| `web3-contract-cache.ts` file | Rename to `contract-cache.ts` |
+| `displayWeb3Tx()` in CLI | Rename to `displayTx()` |
+| `testLocallyWithWeb3Node()` | Rename to `testLocallyWithNode()` |
+| `setupForKits.ts` | Remove if empty after `getWeb3ForKit()` removal |
+
+### Identified Blockers and Mitigations
+
+| # | Blocker | Severity | Mitigation |
+|---|---|---|---|
+| B1 | `ganache-test.ts` `getContractFromEvent()` uses `client.eth.getPastLogs()` and `client.utils.sha3()` | Medium | Rewrite to use raw RPC `eth_getLogs` + viem `keccak256()` |
+| B2 | `dev-utils/contracts.ts` `deployAttestationsContract()` uses `new client.eth.Contract(abi).deploy(...).send(...)` | Medium | Rewrite using viem `deployContract()` or raw `eth_sendTransaction` |
+| B3 | `@celo/abis/web3/*` factories used in governance production code | High | Switch to viem ABI imports from `@celo/abis` — must verify ABI format compatibility |
+| B4 | `testLocallyWithWeb3Node` has 554 call sites | Low | Mechanical find-replace; function only uses `.currentProvider` |
+| B5 | `newKitFromWeb3` has ~217 call sites | Low | Mechanical find-replace; already delegates to `newKitFromProvider` |
+| B6 | `dev-utils/chain-setup.ts` uses `new web3.eth.Contract(abi, address)` for direct contract calls | Medium | Use `Connection.createContract()` or viem `getContract()` |
+
 ## Acceptance Criteria
 
 1. **AC-1: `createWeb3Shim` Elimination**
@@ -127,7 +292,7 @@ For tests, `@celo/dev-utils` exports `TestClientExtended` (via `createTestClient
 
 7. **AC-7: Test Infrastructure**
    - AC-7.1: `viem_testWithAnvil()` is the sole Anvil test harness; legacy `testWithAnvilL2()` removed
-   - AC-7.2: All migrated tests pass with `RUN_ANVIL_TESTS=1`
+   - AC-7.2: All migrated tests pass with `RUN_ANVIL_TESTS=true`
    - AC-7.3: `yarn test` passes across the monorepo
 
 8. **AC-8: Account/Signer Handling**
@@ -145,7 +310,7 @@ For tests, `@celo/dev-utils` exports `TestClientExtended` (via `createTestClient
     - AC-10.1: `yarn build` succeeds with zero TypeScript errors
     - AC-10.2: `yarn lint` passes
     - AC-10.3: `yarn test` passes
-    - AC-10.4: Anvil tests pass with `RUN_ANVIL_TESTS=1`
+    - AC-10.4: Anvil tests pass with `RUN_ANVIL_TESTS=true`
     - AC-10.5: Changesets created for all packages with public API changes (major bumps for `connect`, `contractkit`)
 
 ## Non-goals
@@ -170,6 +335,10 @@ For tests, `@celo/dev-utils` exports `TestClientExtended` (via `createTestClient
 | Q5 | Should `@celo/abis/web3/*` constructors be rewritten for viem? | **Yes** — rewrite to accept viem `PublicClient` |
 | Q6 | Semver bumps? | **Major** for `@celo/connect` and `@celo/contractkit`; minor/patch for others |
 | Q7 | One large PR or phased? | **One large PR** — all changes land atomically |
+
+## Open Questions
+
+None — all questions resolved.
 
 ---
 

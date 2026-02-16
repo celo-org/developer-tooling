@@ -1,7 +1,7 @@
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { activateAllValidatorGroupsVotes } from '../../test-utils/chain-setup'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import SendValidatorPayment from './send-validator-payment'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -14,12 +14,12 @@ testWithAnvilL2('epochs:send-validator-payment cmd', (client) => {
     logMock.mockClear()
     errorMock.mockClear()
 
-    await activateAllValidatorGroupsVotes(newKitFromWeb3(client))
+    await activateAllValidatorGroupsVotes(newKitFromProvider(client.currentProvider))
   })
 
   it('successfuly sends the payments', async () => {
-    const kit = newKitFromWeb3(client)
-    const [sender] = await client.eth.getAccounts()
+    const kit = newKitFromProvider(client.currentProvider)
+    const [sender] = await kit.connection.getAccounts()
     const epochManagerWrapper = await kit.contracts.getEpochManager()
     const validatorsWrapper = await kit.contracts.getValidators()
     const electedValidators = await epochManagerWrapper.getElectedAccounts()
@@ -28,7 +28,7 @@ testWithAnvilL2('epochs:send-validator-payment cmd', (client) => {
     const validatorBalanceBefore = (await kit.getTotalBalance(validatorAddress)).USDm!
     const groupBalanceBefore = (await kit.getTotalBalance(groupAddress)).USDm!
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       SendValidatorPayment,
       ['--for', validatorAddress, '--from', sender],
       client
@@ -66,10 +66,11 @@ testWithAnvilL2('epochs:send-validator-payment cmd', (client) => {
   })
 
   it('fails if not a validator', async () => {
-    const [nonValidatorAccount, sender] = await client.eth.getAccounts()
+    const kit = newKitFromProvider(client.currentProvider)
+    const [nonValidatorAccount, sender] = await kit.connection.getAccounts()
 
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         SendValidatorPayment,
         ['--for', nonValidatorAccount, '--from', sender],
         client

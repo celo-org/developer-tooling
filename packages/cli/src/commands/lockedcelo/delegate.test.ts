@@ -1,7 +1,7 @@
 import { serializeSignature, StrongAddress } from '@celo/base'
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import { deployReleaseGoldContract } from '../../test-utils/release-gold'
 import Register from '../account/register'
 import Authorize from '../releasecelo/authorize'
@@ -13,11 +13,11 @@ process.env.NO_SYNCCHECK = 'true'
 
 testWithAnvilL2('lockedgold:delegate cmd', (client) => {
   it('can not delegate when not an account or a vote signer', async () => {
-    const [delegator, delegatee] = await client.eth.getAccounts()
-    const kit = newKitFromWeb3(client)
+    const kit = newKitFromProvider(client.currentProvider)
+    const [delegator, delegatee] = await kit.connection.getAccounts()
     const lockedGold = await kit.contracts.getLockedGold()
 
-    await testLocallyWithWeb3Node(Register, ['--from', delegatee], client)
+    await testLocallyWithNode(Register, ['--from', delegatee], client)
 
     const delegateeVotingPower = await lockedGold.getAccountTotalGovernanceVotingPower(delegatee)
 
@@ -27,7 +27,7 @@ testWithAnvilL2('lockedgold:delegate cmd', (client) => {
     const logMock = jest.spyOn(console, 'log')
 
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         Delegate,
         ['--from', delegator, '--to', delegatee, '--percent', '45'],
         client
@@ -57,20 +57,20 @@ testWithAnvilL2('lockedgold:delegate cmd', (client) => {
   })
 
   test('can delegate', async () => {
-    const accounts = await client.eth.getAccounts()
+    const kit = newKitFromProvider(client.currentProvider)
+    const accounts = await kit.connection.getAccounts()
     const account = accounts[0]
     const account2 = accounts[1]
-    const kit = newKitFromWeb3(client)
     const lockedGold = await kit.contracts.getLockedGold()
-    await testLocallyWithWeb3Node(Register, ['--from', account], client)
-    await testLocallyWithWeb3Node(Register, ['--from', account2], client)
-    await testLocallyWithWeb3Node(Lock, ['--from', account, '--value', '200'], client)
+    await testLocallyWithNode(Register, ['--from', account], client)
+    await testLocallyWithNode(Register, ['--from', account2], client)
+    await testLocallyWithNode(Lock, ['--from', account, '--value', '200'], client)
 
     const account2OriginalVotingPower =
       await lockedGold.getAccountTotalGovernanceVotingPower(account2)
     expect(account2OriginalVotingPower.toFixed()).toBe('0')
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Delegate,
       ['--from', account, '--to', account2, '--percent', '100'],
       client
@@ -81,9 +81,9 @@ testWithAnvilL2('lockedgold:delegate cmd', (client) => {
   })
 
   it('can delegate as a vote signer for releasecelo contract', async () => {
+    const kit = newKitFromProvider(client.currentProvider)
     const [beneficiary, owner, voteSigner, refundAddress, delegateeAddress] =
-      (await client.eth.getAccounts()) as StrongAddress[]
-    const kit = newKitFromWeb3(client)
+      (await kit.connection.getAccounts()) as StrongAddress[]
     const accountsWrapper = await kit.contracts.getAccounts()
     const releaseGoldContractAddress = await deployReleaseGoldContract(
       client,
@@ -93,8 +93,8 @@ testWithAnvilL2('lockedgold:delegate cmd', (client) => {
       refundAddress
     )
 
-    await testLocallyWithWeb3Node(CreateAccount, ['--contract', releaseGoldContractAddress], client)
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(CreateAccount, ['--contract', releaseGoldContractAddress], client)
+    await testLocallyWithNode(
       Authorize,
       [
         '--contract',
@@ -110,12 +110,12 @@ testWithAnvilL2('lockedgold:delegate cmd', (client) => {
       ],
       client
     )
-    await testLocallyWithWeb3Node(Lock, ['--from', beneficiary, '--value', '100'], client)
+    await testLocallyWithNode(Lock, ['--from', beneficiary, '--value', '100'], client)
 
     const createAccountTx = await accountsWrapper.createAccount().send({ from: delegateeAddress })
     await createAccountTx.waitReceipt()
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Delegate,
       ['--from', voteSigner, '--to', delegateeAddress, '--percent', '100'],
       client

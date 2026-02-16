@@ -1,7 +1,7 @@
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
-import { LONG_TIMEOUT_MS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { LONG_TIMEOUT_MS, testLocallyWithNode } from '../../test-utils/cliUtils'
 import Register from '../account/register'
 import Vote from '../election/vote'
 import ValidatorAffiliate from '../validator/affiliate'
@@ -17,50 +17,46 @@ testWithAnvilL2('lockedcelo:unlock cmd', (client) => {
   test(
     'can unlock correctly from registered validator group',
     async () => {
-      const accounts = await client.eth.getAccounts()
+      const kit = newKitFromProvider(client.currentProvider)
+      const accounts = await kit.connection.getAccounts()
       const account = accounts[0]
       const validator = accounts[1]
-      const kit = newKitFromWeb3(client)
       const lockedGold = await kit.contracts.getLockedGold()
-      await testLocallyWithWeb3Node(Register, ['--from', account], client)
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(Register, ['--from', account], client)
+      await testLocallyWithNode(
         Lock,
         ['--from', account, '--value', '20000000000000000000000'],
         client
       )
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         ValidatorGroupRegister,
         ['--from', account, '--commission', '0', '--yes'],
         client
       )
-      await testLocallyWithWeb3Node(Register, ['--from', validator], client)
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(Register, ['--from', validator], client)
+      await testLocallyWithNode(
         Lock,
         ['--from', validator, '--value', '20000000000000000000000'],
         client
       )
-      const ecdsaPublicKey = await addressToPublicKey(validator, client.eth.sign)
-      await testLocallyWithWeb3Node(
+      const ecdsaPublicKey = await addressToPublicKey(validator, kit.connection.sign)
+      await testLocallyWithNode(
         ValidatorRegister,
         ['--from', validator, '--ecdsaKey', ecdsaPublicKey, '--yes'],
         client
       )
-      await testLocallyWithWeb3Node(
-        ValidatorAffiliate,
-        ['--yes', '--from', validator, account],
-        client
-      )
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(ValidatorAffiliate, ['--yes', '--from', validator, account], client)
+      await testLocallyWithNode(
         ValidatorGroupMember,
         ['--yes', '--from', account, '--accept', validator],
         client
       )
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         Vote,
         ['--from', account, '--for', account, '--value', '10000000000000000000000'],
         client
       )
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         Unlock,
         ['--from', account, '--value', '10000000000000000000000'],
         client

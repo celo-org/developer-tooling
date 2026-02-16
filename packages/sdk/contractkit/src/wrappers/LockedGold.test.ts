@@ -1,13 +1,13 @@
 import { StrongAddress } from '@celo/base'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
-import { newKitFromWeb3 } from '../kit'
+import { newKitFromProvider } from '../kit'
 import { startAndFinishEpochProcess } from '../test-utils/utils'
 import { AccountsWrapper } from './Accounts'
 import { LockedGoldWrapper } from './LockedGold'
 
 testWithAnvilL2('LockedGold Wrapper', (client) => {
-  const kit = newKitFromWeb3(client)
+  const kit = newKitFromProvider(client.currentProvider)
   let accounts: AccountsWrapper
   let lockedGold: LockedGoldWrapper
 
@@ -15,7 +15,7 @@ testWithAnvilL2('LockedGold Wrapper', (client) => {
   const value = 120938732980
   let account: StrongAddress
   beforeAll(async () => {
-    account = (await client.eth.getAccounts())[0] as StrongAddress
+    account = (await kit.connection.getAccounts())[0]
     kit.defaultAccount = account
     lockedGold = await kit.contracts.getLockedGold()
     accounts = await kit.contracts.getAccounts()

@@ -3,7 +3,7 @@ import { getProviderForKit } from './setupForKits'
 import { CeloContract } from '.'
 import { AddressRegistry } from './address-registry'
 import { ValidWrappers, WrapperCache } from './contract-cache'
-import { Web3ContractCache } from './web3-contract-cache'
+import { ContractCache } from './contract-factory-cache'
 import * as crypto from 'crypto'
 
 const TestedWrappers: ValidWrappers[] = [
@@ -18,7 +18,7 @@ function newWrapperCache() {
   const provider = getProviderForKit('http://localhost:8545', undefined)
   const connection = new Connection(provider)
   const registry = new AddressRegistry(connection)
-  const web3ContractCache = new Web3ContractCache(registry)
+  const web3ContractCache = new ContractCache(registry)
   const AnyContractAddress = '0xe832065fb5117dbddcb566ff7dc4340999583e38'
   jest.spyOn(registry, 'addressFor').mockResolvedValue(AnyContractAddress)
   const contractCache = new WrapperCache(connection, web3ContractCache, registry)

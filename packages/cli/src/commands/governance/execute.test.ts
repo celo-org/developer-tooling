@@ -1,5 +1,5 @@
 import { AbiItem, PROXY_ADMIN_ADDRESS } from '@celo/connect'
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { Proposal } from '@celo/contractkit/lib/wrappers/Governance'
 import {
   DEFAULT_OWNER_ADDRESS,
@@ -10,8 +10,9 @@ import {
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import fs from 'fs'
 import path from 'node:path'
-import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesAndTxHashes, testLocallyWithNode } from '../../test-utils/cliUtils'
 import Execute from './execute'
+import { parseEther } from 'viem'
 
 process.env.NO_SYNCCHECK = 'true'
 
@@ -63,9 +64,9 @@ testWithAnvilL2('governance:execute cmd', (client) => {
   })
 
   it('should execute a proposal successfuly', async () => {
-    const kit = newKitFromWeb3(client)
+    const kit = newKitFromProvider(client.currentProvider)
     const governanceWrapper = await kit.contracts.getGovernance()
-    const [approver, proposer, voter] = await client.eth.getAccounts()
+    const [approver, proposer, voter] = await kit.connection.getAccounts()
     const minDeposit = (await governanceWrapper.minDeposit()).toFixed()
     const lockedGold = await kit.contracts.getLockedGold()
     const majorityOfVotes = (await lockedGold.getTotalLockedGold()).multipliedBy(0.6)
@@ -105,7 +106,7 @@ testWithAnvilL2('governance:execute cmd', (client) => {
       await kit.sendTransaction({
         to: DEFAULT_OWNER_ADDRESS,
         from: approver,
-        value: client.utils.toWei('1', 'ether'),
+        value: parseEther('1').toString(),
       })
     ).waitReceipt()
 
@@ -126,7 +127,7 @@ testWithAnvilL2('governance:execute cmd', (client) => {
     await (await governanceWrapper.vote(proposalId, 'Yes')).sendAndWaitForReceipt({ from: voter })
     await timeTravel((await governanceWrapper.stageDurations()).Referendum.toNumber() + 1, client)
 
-    const testTransactionsContract = new client.eth.Contract(
+    const testTransactionsContract = kit.connection.createContract(
       TEST_TRANSACTIONS_ABI,
       PROXY_ADMIN_ADDRESS
     )
@@ -138,7 +139,7 @@ testWithAnvilL2('governance:execute cmd', (client) => {
 
     logMock.mockClear()
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Execute,
       ['--proposalID', proposalId.toString(), '--from', proposer],
       client

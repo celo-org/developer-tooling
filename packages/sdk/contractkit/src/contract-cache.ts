@@ -3,7 +3,7 @@ import { AddressRegistry } from './address-registry'
 import { CeloContract } from './base'
 import { ContractCacheType } from './basic-contract-cache-type'
 import { StableToken, stableTokenInfos } from './celo-tokens'
-import { Web3ContractCache } from './web3-contract-cache'
+import { ContractCache } from './contract-factory-cache'
 import { AccountsWrapper } from './wrappers/Accounts'
 import { AttestationsWrapper } from './wrappers/Attestations'
 import { ElectionWrapper } from './wrappers/Election'
@@ -110,7 +110,7 @@ export class WrapperCache implements ContractCacheType {
   private wrapperCache: WrapperCacheMap = {}
   constructor(
     readonly connection: Connection,
-    readonly _web3Contracts: Web3ContractCache,
+    readonly _web3Contracts: ContractCache,
     readonly registry: AddressRegistry
   ) {}
 

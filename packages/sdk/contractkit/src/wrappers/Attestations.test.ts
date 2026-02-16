@@ -1,34 +1,30 @@
-import { newAttestations } from '@celo/abis/web3/Attestations'
+import { attestationsABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { deployAttestationsContract } from '@celo/dev-utils/contracts'
 import { getIdentifierHash, IdentifierPrefix } from '@celo/odis-identifiers'
-import { newKitFromWeb3 } from '../kit'
+import { sha3 } from '@celo/utils/lib/solidity'
+import { newKitFromProvider } from '../kit'
 import { AttestationsWrapper } from './Attestations'
 
 testWithAnvilL2('AttestationsWrapper', (client) => {
   const PHONE_NUMBER = '+15555555555'
-  const IDENTIFIER = getIdentifierHash(
-    client.utils.sha3,
-    PHONE_NUMBER,
-    IdentifierPrefix.PHONE_NUMBER,
-    'pepper'
-  )
+  const IDENTIFIER = getIdentifierHash(sha3, PHONE_NUMBER, IdentifierPrefix.PHONE_NUMBER, 'pepper')
 
-  const kit = newKitFromWeb3(client)
+  const kit = newKitFromProvider(client.currentProvider)
   let accounts: StrongAddress[] = []
   let attestations: AttestationsWrapper
 
   beforeAll(async () => {
-    accounts = (await client.eth.getAccounts()) as StrongAddress[]
+    accounts = await kit.connection.getAccounts()
     kit.defaultAccount = accounts[0]
 
     const attestationsContractAddress = await deployAttestationsContract(client, accounts[0])
 
     attestations = new AttestationsWrapper(
       kit.connection,
-      newAttestations(client, attestationsContractAddress),
-      newKitFromWeb3(client).contracts
+      kit.connection.createContract(attestationsABI as any, attestationsContractAddress),
+      newKitFromProvider(client.currentProvider).contracts
     )
   })
 

@@ -6,7 +6,7 @@ import { startAndFinishEpochProcess } from '../test-utils/utils'
 import { NULL_ADDRESS } from '@celo/base'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
-import { newKitFromWeb3 } from '../kit'
+import { newKitFromProvider } from '../kit'
 import { AccountsWrapper } from './Accounts'
 import { ElectionWrapper } from './Election'
 import { LockedGoldWrapper } from './LockedGold'
@@ -17,14 +17,14 @@ const minLockedGoldValue = '10000000000000000000000' // 10k gold
 jest.setTimeout(20000)
 
 testWithAnvilL2('Election Wrapper', (client) => {
-  const ZERO_GOLD = new BigNumber(client.utils.toWei('0', 'ether'))
-  const ONE_HUNDRED_GOLD = new BigNumber(client.utils.toWei('100', 'ether'))
-  const ONE_HUNDRED_ONE_GOLD = new BigNumber(client.utils.toWei('101', 'ether'))
-  const TWO_HUNDRED_GOLD = new BigNumber(client.utils.toWei('200', 'ether'))
-  const TWO_HUNDRED_ONE_GOLD = new BigNumber(client.utils.toWei('201', 'ether'))
-  const THREE_HUNDRED_GOLD = new BigNumber(client.utils.toWei('300', 'ether'))
+  const ZERO_GOLD = new BigNumber('0')
+  const ONE_HUNDRED_GOLD = new BigNumber('100e18')
+  const ONE_HUNDRED_ONE_GOLD = new BigNumber('101e18')
+  const TWO_HUNDRED_GOLD = new BigNumber('200e18')
+  const TWO_HUNDRED_ONE_GOLD = new BigNumber('201e18')
+  const THREE_HUNDRED_GOLD = new BigNumber('300e18')
   const GROUP_COMMISSION = new BigNumber(0.1)
-  const kit = newKitFromWeb3(client)
+  const kit = newKitFromProvider(client.currentProvider)
   let accounts: string[] = []
   let election: ElectionWrapper
   let accountsInstance: AccountsWrapper

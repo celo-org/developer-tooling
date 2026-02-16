@@ -34,11 +34,11 @@ import { AddressRegistry } from './address-registry'
 import { CeloContract, ProxyContracts } from './base'
 import { StableToken } from './celo-tokens'
 
-const debug = debugFactory('kit:web3-contract-cache')
+const debug = debugFactory('kit:contract-factory-cache')
 
 /**
  * ABI arrays mapped to CeloContract enum values.
- * Used by Web3ContractCache to create Contract instances.
+ * Used by ContractCache to create Contract instances.
  */
 export const ContractABIs: Record<string, readonly any[]> = {
   [CeloContract.Accounts]: accountsABI,
@@ -90,7 +90,7 @@ type ContractCacheMap = { [K in string]?: Contract }
  * Mostly a private cache, kit users would normally use
  * a contract wrapper
  */
-export class Web3ContractCache {
+export class ContractCache {
   private cacheMap: ContractCacheMap = {}
   /** core contract's address registry */
   constructor(readonly registry: AddressRegistry) {}
