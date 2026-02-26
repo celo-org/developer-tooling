@@ -1,3 +1,4 @@
+import { accountsABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
 import { NativeSigner, Signature, Signer } from '@celo/base/lib/signatureUtils'
 import {
@@ -40,7 +41,7 @@ interface AccountSummary {
 /**
  * Contract for handling deposits needed for voting.
  */
-export class AccountsWrapper extends BaseWrapper {
+export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
   private RELEASE_4_VERSION = newContractVersion(1, 1, 2, 0)
 
   /**
@@ -368,7 +369,7 @@ export class AccountsWrapper extends BaseWrapper {
   async removeAttestationSigner(): Promise<CeloTransactionObject<void>> {
     return toTransactionObject(
       this.connection,
-      createViemTxObject(this.connection, this.contract, 'removeAttestationSigner', [])
+      createViemTxObject<void>(this.connection, this.contract, 'removeAttestationSigner', [])
     )
   }
 

@@ -1,3 +1,4 @@
+import { governanceABI } from '@celo/abis'
 import {
   bufferToHex,
   ensureLeading0x,
@@ -171,7 +172,7 @@ const ZERO_BN = new BigNumber(0)
 /**
  * Contract managing voting for governance proposals.
  */
-export class GovernanceWrapper extends BaseWrapperForGoverning {
+export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governanceABI> {
   /**
    * Querying number of possible concurrent proposals.
    * @returns Current number of possible concurrent proposals.

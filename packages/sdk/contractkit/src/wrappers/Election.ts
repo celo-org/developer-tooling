@@ -1,3 +1,4 @@
+import { electionABI } from '@celo/abis'
 import {
   eqAddress,
   findAddressIndex,
@@ -75,7 +76,7 @@ export interface ElectionConfig {
 /**
  * Contract for voting for validators and managing validator groups.
  */
-export class ElectionWrapper extends BaseWrapperForGoverning {
+export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI> {
   /**
    * Returns the minimum and maximum number of validators that can be elected.
    * @returns The minimum and maximum number of validators that can be elected.
