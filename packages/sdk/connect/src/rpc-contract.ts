@@ -28,6 +28,30 @@ interface GetLogsParams {
  * @internal
  */
 export function createContractConstructor(connection: Connection) {
+  const enrichAbiWithSignatures = (abi: readonly AbiItem[] | AbiItem[]): AbiItem[] => {
+    return abi.map((item: AbiItem) => {
+      if (item.type === 'function' && !('signature' in item)) {
+        const sig = `${item.name}(${(item.inputs || []).map((i: AbiInput) => i.type).join(',')})`
+        return { ...item, signature: toFunctionHash(sig).slice(0, 10) }
+      }
+      if (item.type === 'event' && !('signature' in item)) {
+        const sig = `${item.name}(${(item.inputs || []).map((i: AbiInput) => i.type).join(',')})`
+        return { ...item, signature: toEventHash(sig) }
+      }
+      return item
+    })
+  }
+
+  const buildEventsMap = (abi: AbiItem[]): Record<string, AbiItem> => {
+    const eventsMap: Record<string, AbiItem> = {}
+    for (const item of abi) {
+      if (item.type === 'event' && item.name) {
+        eventsMap[item.name] = item
+      }
+    }
+    return eventsMap
+  }
+
   return class RpcContract implements Contract {
     options: { address: string; jsonInterface: AbiItem[] }
     _address: string
@@ -35,25 +59,9 @@ export function createContractConstructor(connection: Connection) {
 
     constructor(abi: readonly AbiItem[] | AbiItem[], address?: string) {
       this._address = address || ''
-      // Compute signature for function/event ABI items (web3 did this automatically)
-      const enrichedAbi = abi.map((item: AbiItem) => {
-        if (item.type === 'function' && !('signature' in item)) {
-          const sig = `${item.name}(${(item.inputs || []).map((i: AbiInput) => i.type).join(',')})`
-          return { ...item, signature: toFunctionHash(sig).slice(0, 10) }
-        }
-        if (item.type === 'event' && !('signature' in item)) {
-          const sig = `${item.name}(${(item.inputs || []).map((i: AbiInput) => i.type).join(',')})`
-          return { ...item, signature: toEventHash(sig) }
-        }
-        return item
-      })
+      const enrichedAbi = enrichAbiWithSignatures(abi)
       this.options = { address: this._address, jsonInterface: enrichedAbi }
-      // Build events map from ABI
-      for (const item of enrichedAbi) {
-        if (item.type === 'event' && item.name) {
-          this.events[item.name] = item
-        }
-      }
+      this.events = buildEventsMap(enrichedAbi)
     }
 
     get methods() {
