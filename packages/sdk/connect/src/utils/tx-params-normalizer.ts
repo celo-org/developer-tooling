@@ -1,19 +1,8 @@
 import BigNumber from 'bignumber.js'
 import { Connection } from '../connection'
 import { CeloTx } from '../types'
+import { isEmpty, isPresent } from '../abi-coder'
 
-function isEmpty(value: string | undefined) {
-  return (
-    value === undefined ||
-    value === null ||
-    value === '0' ||
-    value.toLowerCase() === '0x' ||
-    value.toLowerCase() === '0x0'
-  )
-}
-function isPresent(value: string | undefined) {
-  return !isEmpty(value)
-}
 
 export class TxParamsNormalizer {
   private chainId: number | null = null
