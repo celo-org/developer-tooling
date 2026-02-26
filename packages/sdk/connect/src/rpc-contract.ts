@@ -189,7 +189,7 @@ export function createContractConstructor(connection: Connection) {
       if (!eventAbi) return []
 
       const eventSig = viemAbiCoder.encodeEventSignature(eventAbi)
-      const topics: (string | null)[] = [eventSig]
+      const topics: string[] = [eventSig]
 
       const params: {
         address: string
