@@ -1,3 +1,4 @@
+import { goldTokenABI } from '@celo/abis'
 // NOTE: removing this import results in `yarn build` failures in Dockerfiles
 // after the move to node 10. This allows types to be inferred without
 // referencing '@celo/utils/node_modules/bignumber.js'
@@ -9,7 +10,9 @@ import { Erc20Wrapper } from './Erc20Wrapper'
 /**
  * Contract for Celo native currency that adheres to the ICeloToken and IERC20 interfaces.
  */
-export class CeloTokenWrapper extends Erc20Wrapper {
+export class CeloTokenWrapper<
+  TAbi extends readonly unknown[] = typeof goldTokenABI,
+> extends Erc20Wrapper<TAbi> {
   /**
    * Returns the name of the token.
    * @returns Name of the token.

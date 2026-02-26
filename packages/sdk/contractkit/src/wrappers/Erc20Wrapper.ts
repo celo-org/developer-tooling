@@ -1,3 +1,4 @@
+import { ierc20ABI } from '@celo/abis'
 import { CeloTransactionObject } from '@celo/connect'
 // NOTE: removing this import results in `yarn build` failures in Dockerfiles
 // after the move to node 10. This allows types to be inferred without
@@ -8,7 +9,9 @@ import { BaseWrapper, proxyCall, proxySend, valueToBigNumber } from './BaseWrapp
 /**
  * ERC-20 contract only containing the non-optional functions
  */
-export class Erc20Wrapper extends BaseWrapper {
+export class Erc20Wrapper<
+  TAbi extends readonly unknown[] = typeof ierc20ABI,
+> extends BaseWrapper<TAbi> {
   /**
    * Querying allowance.
    * @param from Account who has given the allowance.
