@@ -15,17 +15,13 @@ export class Erc20Wrapper extends BaseWrapper {
    * @param to Address of account to whom the allowance was given.
    * @returns Amount of allowance.
    */
-  allowance = proxyCall(
-    this.contract,
-    'allowance', undefined, valueToBigNumber)
+  allowance = proxyCall(this.contract, 'allowance', undefined, valueToBigNumber)
 
   /**
    * Returns the total supply of the token, that is, the amount of tokens currently minted.
    * @returns Total supply.
    */
-  totalSupply = proxyCall(
-    this.contract,
-    'totalSupply', undefined, valueToBigNumber)
+  totalSupply = proxyCall(this.contract, 'totalSupply', undefined, valueToBigNumber)
 
   /**
    * Approve a user to transfer the token on behalf of another user.
@@ -59,11 +55,7 @@ export class Erc20Wrapper extends BaseWrapper {
    * @return True if the transaction succeeds.
    */
   transferFrom: (from: string, to: string, value: string | number) => CeloTransactionObject<void> =
-    proxySend(
-    this.connection,
-    this.contract,
-    'transferFrom'
-  )
+    proxySend(this.connection, this.contract, 'transferFrom')
 
   /**
    * Gets the balance of the specified address.

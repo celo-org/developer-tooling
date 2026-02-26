@@ -25,9 +25,7 @@ export class CeloTokenWrapper extends Erc20Wrapper {
    * Returns the number of decimals used in the token.
    * @returns Number of decimals.
    */
-  decimals = proxyCall(
-    this.contract,
-    'decimals', undefined, valueToInt)
+  decimals = proxyCall(this.contract, 'decimals', undefined, valueToInt)
 
   /**
    * Transfers the token from one address to another with a comment.
@@ -37,9 +35,5 @@ export class CeloTokenWrapper extends Erc20Wrapper {
    * @return True if the transaction succeeds.
    */
   transferWithComment: (to: string, value: string, comment: string) => CeloTransactionObject<void> =
-    proxySend(
-    this.connection,
-    this.contract,
-    'transferWithComment'
-  )
+    proxySend(this.connection, this.contract, 'transferWithComment')
 }

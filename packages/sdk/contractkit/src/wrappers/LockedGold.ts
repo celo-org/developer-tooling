@@ -85,11 +85,7 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning {
    * Locks gold to be used for voting.
    * The gold to be locked, must be specified as the `tx.value`
    */
-  lock: () => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'lock'
-  )
+  lock: () => CeloTransactionObject<void> = proxySend(this.connection, this.contract, 'lock')
 
   /**
    * Delegates locked gold.
@@ -105,21 +101,13 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning {
    * and the amount of delegated locked gold because of received rewards.
    */
   updateDelegatedAmount: (delegator: string, delegatee: string) => CeloTransactionObject<void> =
-    proxySend(
-    this.connection,
-    this.contract,
-    'updateDelegatedAmount'
-  )
+    proxySend(this.connection, this.contract, 'updateDelegatedAmount')
 
   /**
    * Revokes delegated locked gold.
    */
   revokeDelegated: (delegatee: string, percentAmount: string) => CeloTransactionObject<void> =
-    proxySend(
-    this.connection,
-    this.contract,
-    'revokeDelegatedGovernanceVotes'
-  )
+    proxySend(this.connection, this.contract, 'revokeDelegatedGovernanceVotes')
 
   getMaxDelegateesCount = async () => {
     const maxDelegateesCountHex = await this.connection.getStorageAt(
@@ -131,9 +119,24 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning {
   }
 
   getDelegateInfo = async (account: string): Promise<DelegateInfo> => {
-    const totalDelegatedFractionPromise = createViemTxObject<string>(this.connection, this.contract, 'getAccountTotalDelegatedFraction', [account]).call()
-    const totalDelegatedCeloPromise = createViemTxObject<string>(this.connection, this.contract, 'totalDelegatedCelo', [account]).call()
-    const delegateesPromise = createViemTxObject<string[]>(this.connection, this.contract, 'getDelegateesOfDelegator', [account]).call()
+    const totalDelegatedFractionPromise = createViemTxObject<string>(
+      this.connection,
+      this.contract,
+      'getAccountTotalDelegatedFraction',
+      [account]
+    ).call()
+    const totalDelegatedCeloPromise = createViemTxObject<string>(
+      this.connection,
+      this.contract,
+      'totalDelegatedCelo',
+      [account]
+    ).call()
+    const delegateesPromise = createViemTxObject<string[]>(
+      this.connection,
+      this.contract,
+      'getDelegateesOfDelegator',
+      [account]
+    ).call()
 
     const fixidity = new BigNumber('1000000000000000000000000')
 
@@ -228,12 +231,7 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning {
    *   gold that has been unlocked but not yet withdrawn.
    * @returns The total amount of locked gold in the system.
    */
-  getTotalLockedGold = proxyCall(
-    this.contract,
-    'getTotalLockedGold',
-    undefined,
-    valueToBigNumber
-  )
+  getTotalLockedGold = proxyCall(this.contract, 'getTotalLockedGold', undefined, valueToBigNumber)
 
   /**
    * Returns the total amount of non-voting locked gold for an account.
@@ -252,7 +250,14 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning {
    */
   async getConfig(): Promise<LockedGoldConfig> {
     return {
-      unlockingPeriod: valueToBigNumber(await createViemTxObject<string>(this.connection, this.contract, 'unlockingPeriod', []).call()),
+      unlockingPeriod: valueToBigNumber(
+        await createViemTxObject<string>(
+          this.connection,
+          this.contract,
+          'unlockingPeriod',
+          []
+        ).call()
+      ),
       totalLockedGold: await this.getTotalLockedGold(),
     }
   }
@@ -295,7 +300,10 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning {
    */
   async getAccountTotalGovernanceVotingPower(account: string) {
     const totalGovernanceVotingPower = await createViemTxObject<string>(
-      this.connection, this.contract, 'getAccountTotalGovernanceVotingPower', [account]
+      this.connection,
+      this.contract,
+      'getAccountTotalGovernanceVotingPower',
+      [account]
     ).call()
     return new BigNumber(totalGovernanceVotingPower)
   }
@@ -306,7 +314,12 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning {
    * @return The value and timestamp for each pending withdrawal.
    */
   async getPendingWithdrawals(account: string) {
-    const withdrawals = await createViemTxObject<{ 0: string[]; 1: string[] }>(this.connection, this.contract, 'getPendingWithdrawals', [account]).call()
+    const withdrawals = await createViemTxObject<{ 0: string[]; 1: string[] }>(
+      this.connection,
+      this.contract,
+      'getPendingWithdrawals',
+      [account]
+    ).call()
     return zip(
       (time: string, value: string): PendingWithdrawal => ({
         time: valueToBigNumber(time),
@@ -325,7 +338,12 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning {
    * @return The timestamp of the pending withdrawal.
    */
   async getPendingWithdrawal(account: string, index: number) {
-    const response = await createViemTxObject<{ 0: string; 1: string }>(this.connection, this.contract, 'getPendingWithdrawal', [account, index]).call()
+    const response = await createViemTxObject<{ 0: string; 1: string }>(
+      this.connection,
+      this.contract,
+      'getPendingWithdrawal',
+      [account, index]
+    ).call()
     return {
       value: valueToBigNumber(response[0]),
       time: valueToBigNumber(response[1]),

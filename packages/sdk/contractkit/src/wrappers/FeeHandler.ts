@@ -55,28 +55,28 @@ export class FeeHandlerWrapper extends BaseWrapper {
 
   async handle(tokenAddress: Address): Promise<CeloTransactionObject<void>> {
     const createExchangeProposalInner: (addr: string) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'handle'
-  )
+      this.connection,
+      this.contract,
+      'handle'
+    )
     return createExchangeProposalInner(tokenAddress)
   }
 
   async sell(tokenAddress: Address): Promise<CeloTransactionObject<void>> {
     const innerCall: (addr: string) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'sell'
-  )
+      this.connection,
+      this.contract,
+      'sell'
+    )
     return innerCall(tokenAddress)
   }
 
   async distribute(tokenAddress: Address): Promise<CeloTransactionObject<void>> {
     const innerCall: (addr: string) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'distribute'
-  )
+      this.connection,
+      this.contract,
+      'distribute'
+    )
     return innerCall(tokenAddress)
   }
 }

@@ -1,7 +1,12 @@
 import { concurrentMap } from '@celo/base'
 import { StrongAddress, findAddressIndex } from '@celo/base/lib/address'
 import { Signature } from '@celo/base/lib/signatureUtils'
-import { Address, CeloTransactionObject, createViemTxObject, toTransactionObject } from '@celo/connect'
+import {
+  Address,
+  CeloTransactionObject,
+  createViemTxObject,
+  toTransactionObject,
+} from '@celo/connect'
 import { soliditySha3 } from '@celo/utils/lib/solidity'
 import { hashMessageWithPrefix, signedMessageToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
@@ -70,7 +75,13 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning {
    * @return A ReleaseSchedule.
    */
   async getReleaseSchedule(): Promise<ReleaseSchedule> {
-    const releaseSchedule = await createViemTxObject<{ releaseStartTime: string; releaseCliff: string; numReleasePeriods: string; releasePeriod: string; amountReleasedPerPeriod: string }>(this.connection, this.contract, 'releaseSchedule', []).call()
+    const releaseSchedule = await createViemTxObject<{
+      releaseStartTime: string
+      releaseCliff: string
+      numReleasePeriods: string
+      releasePeriod: string
+      amountReleasedPerPeriod: string
+    }>(this.connection, this.contract, 'releaseSchedule', []).call()
 
     return {
       releaseStartTime: valueToInt(releaseSchedule.releaseStartTime),
@@ -100,39 +111,34 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning {
    * Returns the beneficiary of the ReleaseGold contract
    * @return The address of the beneficiary.
    */
-  getBeneficiary: () => Promise<StrongAddress> = proxyCall(
-    this.contract, 'beneficiary'
-  )
+  getBeneficiary: () => Promise<StrongAddress> = proxyCall(this.contract, 'beneficiary')
 
   /**
    * Returns the releaseOwner address of the ReleaseGold contract
    * @return The address of the releaseOwner.
    */
-  getReleaseOwner: () => Promise<StrongAddress> = proxyCall(
-    this.contract, 'releaseOwner'
-  )
+  getReleaseOwner: () => Promise<StrongAddress> = proxyCall(this.contract, 'releaseOwner')
 
   /**
    * Returns the refund address of the ReleaseGold contract
    * @return The refundAddress.
    */
-  getRefundAddress: () => Promise<StrongAddress> = proxyCall(
-    this.contract, 'refundAddress'
-  )
+  getRefundAddress: () => Promise<StrongAddress> = proxyCall(this.contract, 'refundAddress')
 
   /**
    * Returns the owner's address of the ReleaseGold contract
    * @return The owner's address.
    */
-  getOwner: () => Promise<StrongAddress> = proxyCall(
-    this.contract, 'owner'
-  )
+  getOwner: () => Promise<StrongAddress> = proxyCall(this.contract, 'owner')
 
   /**
    * Returns true if the liquidity provision has been met for this contract
    * @return If the liquidity provision is met.
    */
-  getLiquidityProvisionMet: () => Promise<boolean> = proxyCall(this.contract, 'liquidityProvisionMet')
+  getLiquidityProvisionMet: () => Promise<boolean> = proxyCall(
+    this.contract,
+    'liquidityProvisionMet'
+  )
 
   /**
    * Returns true if the contract can validate
@@ -175,7 +181,12 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning {
    */
   async getRevocationInfo(): Promise<RevocationInfo> {
     try {
-      const revocationInfo = await createViemTxObject<{ revocable: boolean; canExpire: boolean; releasedBalanceAtRevoke: string; revokeTime: string }>(this.connection, this.contract, 'revocationInfo', []).call()
+      const revocationInfo = await createViemTxObject<{
+        revocable: boolean
+        canExpire: boolean
+        releasedBalanceAtRevoke: string
+        revokeTime: string
+      }>(this.connection, this.contract, 'revocationInfo', []).call()
       return {
         revocable: revocationInfo.revocable,
         canExpire: revocationInfo.canExpire,
@@ -442,11 +453,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning {
     name: string,
     dataEncryptionKey: string,
     walletAddress: string
-  ) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'setAccount'
-  )
+  ) => CeloTransactionObject<void> = proxySend(this.connection, this.contract, 'setAccount')
 
   /**
    * Sets the name for the account
@@ -491,11 +498,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning {
    * @param dataEncryptionKey The key to set
    */
   setAccountDataEncryptionKey: (dataEncryptionKey: string) => CeloTransactionObject<void> =
-    proxySend(
-    this.connection,
-    this.contract,
-    'setAccountDataEncryptionKey'
-  )
+    proxySend(this.connection, this.contract, 'setAccountDataEncryptionKey')
 
   /**
    * Sets the contract's liquidity provision to true
@@ -520,11 +523,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning {
    * Sets the contract's max distribution
    */
   setMaxDistribution: (distributionRatio: number | string) => CeloTransactionObject<void> =
-    proxySend(
-    this.connection,
-    this.contract,
-    'setMaxDistribution'
-  )
+    proxySend(this.connection, this.contract, 'setMaxDistribution')
 
   /**
    * Sets the contract's beneficiary
@@ -582,13 +581,18 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning {
       )
       return toTransactionObject(
         this.connection,
-        createViemTxObject(this.connection, this.contract, 'authorizeValidatorSignerWithPublicKey', [
-          signer,
-          proofOfSigningKeyPossession.v,
-          proofOfSigningKeyPossession.r,
-          proofOfSigningKeyPossession.s,
-          stringToSolidityBytes(pubKey),
-        ])
+        createViemTxObject(
+          this.connection,
+          this.contract,
+          'authorizeValidatorSignerWithPublicKey',
+          [
+            signer,
+            proofOfSigningKeyPossession.v,
+            proofOfSigningKeyPossession.r,
+            proofOfSigningKeyPossession.s,
+            stringToSolidityBytes(pubKey),
+          ]
+        )
       )
     } else {
       return toTransactionObject(
@@ -687,7 +691,13 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning {
 
     return toTransactionObject(
       this.connection,
-      createViemTxObject(this.connection, this.contract, 'revokePending', [group, value.toFixed(), lesser, greater, index])
+      createViemTxObject(this.connection, this.contract, 'revokePending', [
+        group,
+        value.toFixed(),
+        lesser,
+        greater,
+        index,
+      ])
     )
   }
 
@@ -721,7 +731,13 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning {
 
     return toTransactionObject(
       this.connection,
-      createViemTxObject(this.connection, this.contract, 'revokeActive', [group, value.toFixed(), lesser, greater, index])
+      createViemTxObject(this.connection, this.contract, 'revokeActive', [
+        group,
+        value.toFixed(),
+        lesser,
+        greater,
+        index,
+      ])
     )
   }
 

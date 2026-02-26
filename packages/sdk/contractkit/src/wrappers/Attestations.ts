@@ -111,8 +111,8 @@ export class AttestationsWrapper extends BaseWrapper {
    */
   getUnselectedRequest: (identifier: string, account: Address) => Promise<UnselectedRequest> =
     proxyCall(
-    this.contract,
-    'getUnselectedRequest',
+      this.contract,
+      'getUnselectedRequest',
       undefined,
       (res: any): UnselectedRequest => ({
         blockNumber: valueToInt(res[0]),
@@ -137,7 +137,10 @@ export class AttestationsWrapper extends BaseWrapper {
    * @param identifier Attestation identifier (e.g. phone hash)
    * @param account Address of the account
    */
-  getAttestationIssuers: (identifier: string, account: Address) => Promise<string[]> = proxyCall(this.contract, 'getAttestationIssuers')
+  getAttestationIssuers: (identifier: string, account: Address) => Promise<string[]> = proxyCall(
+    this.contract,
+    'getAttestationIssuers'
+  )
 
   /**
    * Returns the attestation state of a phone number/account/issuer tuple
@@ -161,9 +164,7 @@ export class AttestationsWrapper extends BaseWrapper {
    * @param account Address of the account
    */
   getAttestationStat: (identifier: string, account: Address) => Promise<AttestationStat> =
-    proxyCall(
-    this.contract,
-    'getAttestationStats', undefined, (stat: any) => ({
+    proxyCall(this.contract, 'getAttestationStats', undefined, (stat: any) => ({
       completed: valueToInt(stat[0]),
       total: valueToInt(stat[1]),
     }))
@@ -214,7 +215,10 @@ export class AttestationsWrapper extends BaseWrapper {
   async getAttestationFeeRequired(attestationsRequested: number) {
     const contract = await this.contracts.getStableToken(StableToken.USDm)
     const attestationFee = await createViemTxObject<string>(
-      this.connection, this.contract, 'getAttestationRequestFee', [contract.address]
+      this.connection,
+      this.contract,
+      'getAttestationRequestFee',
+      [contract.address]
     ).call()
     return new BigNumber(attestationFee).times(attestationsRequested)
   }
@@ -288,7 +292,10 @@ export class AttestationsWrapper extends BaseWrapper {
    * Returns the list of accounts associated with an identifier.
    * @param identifier Attestation identifier (e.g. phone hash)
    */
-  lookupAccountsForIdentifier: (identifier: string) => Promise<string[]> = proxyCall(this.contract, 'lookupAccountsForIdentifier')
+  lookupAccountsForIdentifier: (identifier: string) => Promise<string[]> = proxyCall(
+    this.contract,
+    'lookupAccountsForIdentifier'
+  )
 
   /**
    * Lookup mapped wallet addresses for a given list of identifiers
@@ -296,7 +303,12 @@ export class AttestationsWrapper extends BaseWrapper {
    */
   async lookupIdentifiers(identifiers: string[]): Promise<IdentifierLookupResult> {
     // Unfortunately can't be destructured
-    const stats = await createViemTxObject<{ 0: string[]; 1: string[]; 2: string[]; 3: string[] }>(this.connection, this.contract, 'batchGetAttestationStats', [identifiers]).call()
+    const stats = await createViemTxObject<{ 0: string[]; 1: string[]; 2: string[]; 3: string[] }>(
+      this.connection,
+      this.contract,
+      'batchGetAttestationStats',
+      [identifiers]
+    ).call()
 
     const matches = stats[0].map(valueToInt)
     const addresses = stats[1]
@@ -336,7 +348,10 @@ export class AttestationsWrapper extends BaseWrapper {
     if (idx < 0) {
       throw new Error("Account not found in identifier's accounts")
     }
-    return toTransactionObject(this.connection, createViemTxObject(this.connection, this.contract, 'revoke', [identifer, idx]))
+    return toTransactionObject(
+      this.connection,
+      createViemTxObject(this.connection, this.contract, 'revoke', [identifer, idx])
+    )
   }
 }
 

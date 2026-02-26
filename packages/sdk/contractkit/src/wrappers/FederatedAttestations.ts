@@ -1,4 +1,9 @@
-import { Address, CeloTransactionObject, createViemTxObject, toTransactionObject } from '@celo/connect'
+import {
+  Address,
+  CeloTransactionObject,
+  createViemTxObject,
+  toTransactionObject,
+} from '@celo/connect'
 import { registerAttestation as buildRegisterAttestationTypedData } from '@celo/utils/lib/typed-data-constructors'
 import { BaseWrapper, proxyCall, proxySend } from './BaseWrapper'
 
@@ -149,11 +154,7 @@ export class FederatedAttestationsWrapper extends BaseWrapper {
     identifier: string,
     issuer: Address,
     account: Address
-  ) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'revokeAttestation'
-  )
+  ) => CeloTransactionObject<void> = proxySend(this.connection, this.contract, 'revokeAttestation')
 
   /**
    * @notice Revokes attestations [identifiers <-> accounts] from issuer

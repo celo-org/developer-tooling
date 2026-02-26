@@ -35,7 +35,12 @@ export class AddressRegistry {
   async addressFor(contract: CeloContract): Promise<StrongAddress> {
     if (!this.cache.has(contract)) {
       debug('Fetching address from Registry for %s', contract)
-      const address = await createViemTxObject<string>(this.connection, this.registry, 'getAddressForString', [stripProxy(contract)]).call()
+      const address = await createViemTxObject<string>(
+        this.connection,
+        this.registry,
+        'getAddressForString',
+        [stripProxy(contract)]
+      ).call()
 
       debug('Fetched address %s', address)
       if (!address || address === NULL_ADDRESS) {

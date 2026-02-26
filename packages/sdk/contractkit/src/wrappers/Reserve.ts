@@ -109,12 +109,7 @@ export class ReserveWrapper extends BaseWrapper {
    * @see {getUnfrozenReserveCeloBalance}
    * @return {BigNumber} amount in wei
    */
-  getUnfrozenBalance = proxyCall(
-    this.contract,
-    'getUnfrozenBalance',
-    undefined,
-    valueToBigNumber
-  )
+  getUnfrozenBalance = proxyCall(this.contract, 'getUnfrozenBalance', undefined, valueToBigNumber)
 
   /**
    * @notice Returns the amount of unfrozen CELO included in the reserve
@@ -129,7 +124,10 @@ export class ReserveWrapper extends BaseWrapper {
     valueToBigNumber
   )
 
-  getOtherReserveAddresses: () => Promise<string[]> = proxyCall(this.contract, 'getOtherReserveAddresses')
+  getOtherReserveAddresses: () => Promise<string[]> = proxyCall(
+    this.contract,
+    'getOtherReserveAddresses'
+  )
 
   /**
    * Returns current configuration parameters.
@@ -144,7 +142,10 @@ export class ReserveWrapper extends BaseWrapper {
     }
   }
 
-  isOtherReserveAddress: (address: string) => Promise<boolean> = proxyCall(this.contract, 'isOtherReserveAddress')
+  isOtherReserveAddress: (address: string) => Promise<boolean> = proxyCall(
+    this.contract,
+    'isOtherReserveAddress'
+  )
 
   async getSpenders(): Promise<Address[]> {
     const spendersAdded = (

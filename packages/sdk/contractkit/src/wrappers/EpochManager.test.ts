@@ -136,17 +136,27 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
             REGISTRY_CONTRACT_ADDRESS
           )
 
-          await createViemTxObject(kit.connection, registryContract, 'setAddressFor', ['Validators', accounts[0]]).send({
+          await createViemTxObject(kit.connection, registryContract, 'setAddressFor', [
+            'Validators',
+            accounts[0],
+          ]).send({
             from: ownerAdress,
           })
 
-          // @ts-expect-error -- accessing internal contract for test setup
-          await createViemTxObject(kit.connection, electionContract.contract, 'markGroupIneligible', [validatorGroups[0]])
-            .send({ from: accounts[0] })
+          await createViemTxObject(
+            kit.connection,
+            // @ts-expect-error -- accessing internal contract for test setup
+            electionContract.contract,
+            'markGroupIneligible',
+            [validatorGroups[0]]
+          ).send({ from: accounts[0] })
 
-          await createViemTxObject(kit.connection, registryContract, 'setAddressFor', ['Validators', validatorsContract.address]).send({
-              from: ownerAdress,
-            })
+          await createViemTxObject(kit.connection, registryContract, 'setAddressFor', [
+            'Validators',
+            validatorsContract.address,
+          ]).send({
+            from: ownerAdress,
+          })
         },
         parseEther('1')
       )
@@ -169,14 +179,21 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
 
     for (const validatorGroup of validatorGroups) {
       const pendingVotesForGroup = new BigNumber(
-        await createViemTxObject<string>(kit.connection, electionViemContract, 'getPendingVotesForGroup', [validatorGroup]).call()
+        await createViemTxObject<string>(
+          kit.connection,
+          electionViemContract,
+          'getPendingVotesForGroup',
+          [validatorGroup]
+        ).call()
       )
       if (pendingVotesForGroup.gt(0)) {
         await withImpersonatedAccount(
           provider,
           validatorGroup,
           async () => {
-            await createViemTxObject(kit.connection, electionViemContract, 'activate', [validatorGroup]).send({ from: validatorGroup })
+            await createViemTxObject(kit.connection, electionViemContract, 'activate', [
+              validatorGroup,
+            ]).send({ from: validatorGroup })
           },
           parseEther('1')
         )

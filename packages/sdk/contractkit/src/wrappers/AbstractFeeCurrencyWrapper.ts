@@ -49,9 +49,17 @@ export abstract class AbstractFeeCurrencyWrapper extends BaseWrapper {
 
     return Promise.all(
       feeCurrencies.map(async (address) => {
-        let contract: ViemContract = this.connection.getViemContract(MINIMAL_TOKEN_INFO_ABI, address)
+        let contract: ViemContract = this.connection.getViemContract(
+          MINIMAL_TOKEN_INFO_ABI,
+          address
+        )
 
-        const adaptedToken = (await createViemTxObject<string>(this.connection, contract, 'adaptedToken', [])
+        const adaptedToken = (await createViemTxObject<string>(
+          this.connection,
+          contract,
+          'adaptedToken',
+          []
+        )
           .call()
           .catch(() =>
             createViemTxObject<string>(this.connection, contract, 'getAdaptedToken', [])

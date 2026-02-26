@@ -75,7 +75,9 @@ export class SortedOraclesWrapper extends BaseWrapper {
    */
   async numRates(target: ReportTarget): Promise<number> {
     const identifier = await this.toCurrencyPairIdentifier(target)
-    const response = await createViemTxObject<string>(this.connection, this.contract, 'numRates', [identifier]).call()
+    const response = await createViemTxObject<string>(this.connection, this.contract, 'numRates', [
+      identifier,
+    ]).call()
     return valueToInt(response)
   }
 
@@ -87,7 +89,12 @@ export class SortedOraclesWrapper extends BaseWrapper {
    */
   async medianRate(target: ReportTarget): Promise<MedianRate> {
     const identifier = await this.toCurrencyPairIdentifier(target)
-    const response = await createViemTxObject<{ 0: string; 1: string }>(this.connection, this.contract, 'medianRate', [identifier]).call()
+    const response = await createViemTxObject<{ 0: string; 1: string }>(
+      this.connection,
+      this.contract,
+      'medianRate',
+      [identifier]
+    ).call()
     return {
       rate: valueToFrac(response[0], response[1]),
     }
@@ -101,7 +108,10 @@ export class SortedOraclesWrapper extends BaseWrapper {
    */
   async isOracle(target: ReportTarget, oracle: Address): Promise<boolean> {
     const identifier = await this.toCurrencyPairIdentifier(target)
-    return createViemTxObject<boolean>(this.connection, this.contract, 'isOracle', [identifier, oracle]).call()
+    return createViemTxObject<boolean>(this.connection, this.contract, 'isOracle', [
+      identifier,
+      oracle,
+    ]).call()
   }
 
   /**
@@ -111,19 +121,16 @@ export class SortedOraclesWrapper extends BaseWrapper {
    */
   async getOracles(target: ReportTarget): Promise<Address[]> {
     const identifier = await this.toCurrencyPairIdentifier(target)
-    return createViemTxObject<Address[]>(this.connection, this.contract, 'getOracles', [identifier]).call()
+    return createViemTxObject<Address[]>(this.connection, this.contract, 'getOracles', [
+      identifier,
+    ]).call()
   }
 
   /**
    * Returns the report expiry parameter.
    * @returns Current report expiry.
    */
-  reportExpirySeconds = proxyCall(
-    this.contract,
-    'reportExpirySeconds',
-    undefined,
-    valueToBigNumber
-  )
+  reportExpirySeconds = proxyCall(this.contract, 'reportExpirySeconds', undefined, valueToBigNumber)
 
   /**
    * Returns the expiry for the target if exists, if not the default.
@@ -132,7 +139,12 @@ export class SortedOraclesWrapper extends BaseWrapper {
    */
   async getTokenReportExpirySeconds(target: ReportTarget): Promise<BigNumber> {
     const identifier = await this.toCurrencyPairIdentifier(target)
-    const response = await createViemTxObject<string>(this.connection, this.contract, 'getTokenReportExpirySeconds', [identifier]).call()
+    const response = await createViemTxObject<string>(
+      this.connection,
+      this.contract,
+      'getTokenReportExpirySeconds',
+      [identifier]
+    ).call()
     return valueToBigNumber(response)
   }
 
@@ -142,7 +154,12 @@ export class SortedOraclesWrapper extends BaseWrapper {
    */
   async isOldestReportExpired(target: ReportTarget): Promise<[boolean, Address]> {
     const identifier = await this.toCurrencyPairIdentifier(target)
-    const response = await createViemTxObject<{ 0: boolean; 1: Address }>(this.connection, this.contract, 'isOldestReportExpired', [identifier]).call()
+    const response = await createViemTxObject<{ 0: boolean; 1: Address }>(
+      this.connection,
+      this.contract,
+      'isOldestReportExpired',
+      [identifier]
+    ).call()
     // response is NOT an array, but a js object with two keys 0 and 1
     return [response[0], response[1]]
   }
@@ -164,7 +181,10 @@ export class SortedOraclesWrapper extends BaseWrapper {
     }
     return toTransactionObject(
       this.connection,
-      createViemTxObject(this.connection, this.contract, 'removeExpiredReports', [identifier, numReports])
+      createViemTxObject(this.connection, this.contract, 'removeExpiredReports', [
+        identifier,
+        numReports,
+      ])
     )
   }
 
@@ -189,7 +209,12 @@ export class SortedOraclesWrapper extends BaseWrapper {
 
     return toTransactionObject(
       this.connection,
-      createViemTxObject(this.connection, this.contract, 'report', [identifier, fixedValue.toFixed(), lesserKey, greaterKey]),
+      createViemTxObject(this.connection, this.contract, 'report', [
+        identifier,
+        fixedValue.toFixed(),
+        lesserKey,
+        greaterKey,
+      ]),
       { from: oracleAddress }
     )
   }
@@ -241,7 +266,12 @@ export class SortedOraclesWrapper extends BaseWrapper {
    */
   async getRates(target: ReportTarget): Promise<OracleRate[]> {
     const identifier = await this.toCurrencyPairIdentifier(target)
-    const response = await createViemTxObject<{ 0: Address[]; 1: string[]; 2: string[] }>(this.connection, this.contract, 'getRates', [identifier]).call()
+    const response = await createViemTxObject<{ 0: Address[]; 1: string[]; 2: string[] }>(
+      this.connection,
+      this.contract,
+      'getRates',
+      [identifier]
+    ).call()
     const rates: OracleRate[] = []
     for (let i = 0; i < response[0].length; i++) {
       const medRelIndex = parseInt(response[2][i], 10)
@@ -261,7 +291,12 @@ export class SortedOraclesWrapper extends BaseWrapper {
    */
   async getTimestamps(target: ReportTarget): Promise<OracleTimestamp[]> {
     const identifier = await this.toCurrencyPairIdentifier(target)
-    const response = await createViemTxObject<{ 0: Address[]; 1: string[]; 2: string[] }>(this.connection, this.contract, 'getTimestamps', [identifier]).call()
+    const response = await createViemTxObject<{ 0: Address[]; 1: string[]; 2: string[] }>(
+      this.connection,
+      this.contract,
+      'getTimestamps',
+      [identifier]
+    ).call()
     const timestamps: OracleTimestamp[] = []
     for (let i = 0; i < response[0].length; i++) {
       const medRelIndex = parseInt(response[2][i], 10)

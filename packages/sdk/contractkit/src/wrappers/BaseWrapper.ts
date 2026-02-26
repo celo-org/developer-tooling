@@ -360,7 +360,12 @@ export function proxySend<InputArgs extends any[], ParsedInputArgs extends any[]
 ): (...args: InputArgs) => CeloTransactionObject<Output> {
   return (...args: InputArgs) => {
     const resolvedArgs = parseInputArgs ? parseInputArgs(...args) : args
-    const txo = createViemTxObject<Output>(connection, contract, functionName, resolvedArgs as unknown[])
+    const txo = createViemTxObject<Output>(
+      connection,
+      contract,
+      functionName,
+      resolvedArgs as unknown[]
+    )
     return toTransactionObject(connection, txo)
   }
 }

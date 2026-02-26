@@ -31,39 +31,22 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning {
   public get _contract() {
     return this.contract
   }
-  epochDuration = proxyCall(
-    this.contract,
-    'epochDuration', undefined, valueToInt)
-  firstKnownEpoch = proxyCall(
-    this.contract,
-    'firstKnownEpoch', undefined, valueToInt)
-  getCurrentEpochNumber = proxyCall(
-    this.contract,
-    'getCurrentEpochNumber',
-    undefined,
-    valueToInt
-  )
-  getFirstBlockAtEpoch = proxyCall(
-    this.contract,
-    'getFirstBlockAtEpoch',
-    undefined,
-    valueToInt
-  )
-  getLastBlockAtEpoch = proxyCall(
-    this.contract,
-    'getLastBlockAtEpoch', undefined, valueToInt)
-  getEpochNumberOfBlock = proxyCall(
-    this.contract,
-    'getEpochNumberOfBlock',
-    undefined,
-    valueToInt
-  )
-  processedGroups = proxyCall(
-    this.contract,
-    'processedGroups', undefined, valueToString)
+  epochDuration = proxyCall(this.contract, 'epochDuration', undefined, valueToInt)
+  firstKnownEpoch = proxyCall(this.contract, 'firstKnownEpoch', undefined, valueToInt)
+  getCurrentEpochNumber = proxyCall(this.contract, 'getCurrentEpochNumber', undefined, valueToInt)
+  getFirstBlockAtEpoch = proxyCall(this.contract, 'getFirstBlockAtEpoch', undefined, valueToInt)
+  getLastBlockAtEpoch = proxyCall(this.contract, 'getLastBlockAtEpoch', undefined, valueToInt)
+  getEpochNumberOfBlock = proxyCall(this.contract, 'getEpochNumberOfBlock', undefined, valueToInt)
+  processedGroups = proxyCall(this.contract, 'processedGroups', undefined, valueToString)
   isOnEpochProcess: () => Promise<boolean> = proxyCall(this.contract, 'isOnEpochProcess')
-  isEpochProcessingStarted: () => Promise<boolean> = proxyCall(this.contract, 'isEpochProcessingStarted')
-  isIndividualProcessing: () => Promise<boolean> = proxyCall(this.contract, 'isIndividualProcessing')
+  isEpochProcessingStarted: () => Promise<boolean> = proxyCall(
+    this.contract,
+    'isEpochProcessingStarted'
+  )
+  isIndividualProcessing: () => Promise<boolean> = proxyCall(
+    this.contract,
+    'isIndividualProcessing'
+  )
   isTimeForNextEpoch: () => Promise<boolean> = proxyCall(this.contract, 'isTimeForNextEpoch')
   getElectedAccounts: () => Promise<string[]> = proxyCall(this.contract, 'getElectedAccounts')
   getElectedSigners: () => Promise<string[]> = proxyCall(this.contract, 'getElectedSigners')
@@ -110,11 +93,7 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning {
     groups: string[],
     lessers: string[],
     greaters: string[]
-  ) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'processGroups'
-  )
+  ) => CeloTransactionObject<void> = proxySend(this.connection, this.contract, 'processGroups')
 
   startNextEpochProcessTx = async (): Promise<CeloTransactionObject<void> | undefined> => {
     // check that the epoch process is not already started

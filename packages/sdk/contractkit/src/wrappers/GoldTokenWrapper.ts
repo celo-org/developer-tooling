@@ -39,11 +39,7 @@ export class GoldTokenWrapper extends CeloTokenWrapper {
    * @returns true if success.
    */
   decreaseAllowance: (spender: string, value: string | number) => CeloTransactionObject<void> =
-    proxySend(
-    this.connection,
-    this.contract,
-    'decreaseAllowance'
-  )
+    proxySend(this.connection, this.contract, 'decreaseAllowance')
 
   /**
    * Gets the balance of the specified address.

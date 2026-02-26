@@ -24,9 +24,9 @@ testWithAnvilL2('ScoreManager Wrapper', (provider) => {
 
         // change the score
         await createViemTxObject(kit.connection, scoreManagerContract, 'setValidatorScore', [
-            electedValidatorAddresses[0],
-            valueToFixidityString(new BigNumber(0.5)),
-          ]).send({ from })
+          electedValidatorAddresses[0],
+          valueToFixidityString(new BigNumber(0.5)),
+        ]).send({ from })
       },
       new BigNumber('1e18')
     )
@@ -50,8 +50,9 @@ testWithAnvilL2('ScoreManager Wrapper', (provider) => {
 
         // change the score
         await createViemTxObject(kit.connection, scoreManagerContract, 'setGroupScore', [
-            GROUP_ADDRESSES[0], valueToFixidityString(new BigNumber(0.99)),
-          ]).send({ from })
+          GROUP_ADDRESSES[0],
+          valueToFixidityString(new BigNumber(0.99)),
+        ]).send({ from })
       },
       new BigNumber('1e18')
     )

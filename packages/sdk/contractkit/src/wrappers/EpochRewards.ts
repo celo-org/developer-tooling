@@ -38,8 +38,20 @@ export class EpochRewardsWrapper extends BaseWrapper {
     factor: import('bignumber.js').default
     partner: string
   }> => {
-    const factor = parseFixidity(await createViemTxObject<string>(this.connection, this.contract, 'getCarbonOffsettingFraction', []).call())
-    const partner: string = await createViemTxObject<string>(this.connection, this.contract, 'carbonOffsettingPartner', []).call()
+    const factor = parseFixidity(
+      await createViemTxObject<string>(
+        this.connection,
+        this.contract,
+        'getCarbonOffsettingFraction',
+        []
+      ).call()
+    )
+    const partner: string = await createViemTxObject<string>(
+      this.connection,
+      this.contract,
+      'carbonOffsettingPartner',
+      []
+    ).call()
     return {
       factor,
       partner,
