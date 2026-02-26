@@ -6,6 +6,7 @@ import { ContractKit, newKitFromProvider } from '../kit'
 import { getParsedSignatureOfAddress } from '../utils/getParsedSignatureOfAddress'
 import { AccountsWrapper } from './Accounts'
 import { valueToBigNumber, valueToFixidityString } from './BaseWrapper'
+import { parseEther } from 'viem'
 import { LockedGoldWrapper } from './LockedGold'
 import { ValidatorsWrapper } from './Validators'
 jest.setTimeout(10 * 1000)
@@ -15,7 +16,7 @@ TEST NOTES:
 - In migrations: The only account that has USDm is accounts[0]
 */
 
-const minLockedGoldValue = '10000000000000000000000' // 10k gold (10000 * 1e18)
+const minLockedGoldValue = parseEther('10000').toString()
 
 testWithAnvilL2('Accounts Wrapper', (client) => {
   let kit: ContractKit

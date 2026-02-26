@@ -11,8 +11,9 @@ import { AccountsWrapper } from './Accounts'
 import { ElectionWrapper } from './Election'
 import { LockedGoldWrapper } from './LockedGold'
 import { ValidatorsWrapper } from './Validators'
+import { parseEther } from 'viem'
 
-const minLockedGoldValue = '10000000000000000000000' // 10k gold
+const minLockedGoldValue = parseEther('10000').toString()
 
 jest.setTimeout(20000)
 
