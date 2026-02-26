@@ -69,7 +69,11 @@ testWithAnvilL2('governance:preparehotfix cmd', (providerOwner) => {
       ).waitReceipt()
     })
 
-    await testLocallyWithNode(Approve, ['--hotfix', HOTFIX_HASH, '--from', approverAccount], providerOwner)
+    await testLocallyWithNode(
+      Approve,
+      ['--hotfix', HOTFIX_HASH, '--from', approverAccount],
+      providerOwner
+    )
 
     await testLocallyWithNode(
       Approve,

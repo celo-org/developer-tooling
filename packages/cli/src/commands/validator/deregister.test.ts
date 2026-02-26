@@ -244,7 +244,11 @@ testWithAnvilL2('validator:deregister', (providerOwner) => {
       const logMock = jest.spyOn(console, 'log')
       logMock.mockClear()
 
-      await testLocallyWithNode(ValidatorDeRegister, ['--from', notAffiliatedValidator], providerOwner)
+      await testLocallyWithNode(
+        ValidatorDeRegister,
+        ['--from', notAffiliatedValidator],
+        providerOwner
+      )
 
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [

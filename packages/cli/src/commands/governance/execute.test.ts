@@ -125,7 +125,10 @@ testWithAnvilL2('governance:execute cmd', (providerOwner) => {
 
     await lockedGoldWrapper.lock().sendAndWaitForReceipt({ from: voter, value: minDeposit })
     await (await governanceWrapper.vote(proposalId, 'Yes')).sendAndWaitForReceipt({ from: voter })
-    await timeTravel((await governanceWrapper.stageDurations()).Referendum.toNumber() + 1, providerOwner)
+    await timeTravel(
+      (await governanceWrapper.stageDurations()).Referendum.toNumber() + 1,
+      providerOwner
+    )
 
     const testTransactionsContract = kit.connection.createContract(
       TEST_TRANSACTIONS_ABI,

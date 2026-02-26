@@ -21,6 +21,8 @@ testWithAnvilL2('account:register cmd', (providerOwner) => {
   })
 
   test('fails if from is missing', async () => {
-    await expect(testLocallyWithNode(Register, [], providerOwner)).rejects.toThrow('Missing required flag')
+    await expect(testLocallyWithNode(Register, [], providerOwner)).rejects.toThrow(
+      'Missing required flag'
+    )
   })
 })

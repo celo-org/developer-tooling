@@ -18,7 +18,9 @@ testWithAnvilL2('election:vote', (providerOwner) => {
   })
 
   it('fails when no flags are provided', async () => {
-    await expect(testLocallyWithNode(Vote, [], providerOwner)).rejects.toThrow('Missing required flag')
+    await expect(testLocallyWithNode(Vote, [], providerOwner)).rejects.toThrow(
+      'Missing required flag'
+    )
   })
 
   it('fails when voter is not an account', async () => {

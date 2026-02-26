@@ -32,7 +32,11 @@ testWithAnvilL2('governance:revokeupvote cmd', (providerOwner) => {
 
     for (let i = 1; i <= 4; i++) {
       await testLocallyWithNode(Register, ['--from', accounts[i]], providerOwner)
-      await testLocallyWithNode(Lock, ['--from', accounts[i], '--value', i.toString()], providerOwner)
+      await testLocallyWithNode(
+        Lock,
+        ['--from', accounts[i], '--value', i.toString()],
+        providerOwner
+      )
 
       await (await governance.upvote(proposalId, accounts[i])).sendAndWaitForReceipt({
         from: accounts[i],

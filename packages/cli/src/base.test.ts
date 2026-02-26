@@ -151,7 +151,11 @@ testWithAnvilL2('BaseCommand', (providerOwner) => {
     })
 
     it('--ledgerAddresses passes derivationPathIndexes to LedgerWallet', async () => {
-      await testLocallyWithNode(BasicCommand, ['--useLedger', '--ledgerAddresses', '5'], providerOwner)
+      await testLocallyWithNode(
+        BasicCommand,
+        ['--useLedger', '--ledgerAddresses', '5'],
+        providerOwner
+      )
 
       expect(WalletLedgerExports.newLedgerWalletWithSetup).toHaveBeenCalledWith(
         expect.anything(),

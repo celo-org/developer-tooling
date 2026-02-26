@@ -77,7 +77,11 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (providerOwner) => {
       MIN_PRACTICAL_LOCKED_CELO_VALUE
     )
     await setupValidator(kit, nonAffilatedValidatorAddress)
-    await setBalance(providerOwner, nonElectedGroupAddress as Address, MIN_PRACTICAL_LOCKED_CELO_VALUE)
+    await setBalance(
+      providerOwner,
+      nonElectedGroupAddress as Address,
+      MIN_PRACTICAL_LOCKED_CELO_VALUE
+    )
     await setBalance(providerOwner, validatorAddress as Address, MIN_PRACTICAL_LOCKED_CELO_VALUE)
     await setupGroupAndAffiliateValidator(kit, nonElectedGroupAddress, validatorAddress)
 

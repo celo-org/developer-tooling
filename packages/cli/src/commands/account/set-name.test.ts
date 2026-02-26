@@ -11,7 +11,11 @@ testWithAnvilL2('account:set-name cmd', (providerOwner) => {
     const kit = newKitFromProvider(providerOwner.currentProvider)
     const accounts = await kit.connection.getAccounts()
     await testLocallyWithNode(Register, ['--from', accounts[0]], providerOwner)
-    await testLocallyWithNode(SetName, ['--account', accounts[0], '--name', 'TestName'], providerOwner)
+    await testLocallyWithNode(
+      SetName,
+      ['--account', accounts[0], '--name', 'TestName'],
+      providerOwner
+    )
   })
 
   test('fails if account is not registered', async () => {
@@ -24,17 +28,17 @@ testWithAnvilL2('account:set-name cmd', (providerOwner) => {
   })
 
   test('fails if account is not provided', async () => {
-    await expect(testLocallyWithNode(SetName, ['--name', 'TestName'], providerOwner)).rejects.toThrow(
-      'Missing required flag'
-    )
+    await expect(
+      testLocallyWithNode(SetName, ['--name', 'TestName'], providerOwner)
+    ).rejects.toThrow('Missing required flag')
   })
 
   test('fails if name is not provided', async () => {
     const kit = newKitFromProvider(providerOwner.currentProvider)
     const accounts = await kit.connection.getAccounts()
 
-    await expect(testLocallyWithNode(SetName, ['--account', accounts[0]], providerOwner)).rejects.toThrow(
-      'Missing required flag'
-    )
+    await expect(
+      testLocallyWithNode(SetName, ['--account', accounts[0]], providerOwner)
+    ).rejects.toThrow('Missing required flag')
   })
 })

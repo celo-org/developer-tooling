@@ -32,7 +32,11 @@ testWithAnvilL2('validatorgroup:comission cmd', (providerOwner) => {
     const kit = newKitFromProvider(providerOwner.currentProvider)
     const accounts = await kit.connection.getAccounts()
     await registerValidatorGroup()
-    await testLocallyWithNode(Commission, ['--from', accounts[0], '--queue-update', '0.2'], providerOwner)
+    await testLocallyWithNode(
+      Commission,
+      ['--from', accounts[0], '--queue-update', '0.2'],
+      providerOwner
+    )
   })
   test('can apply update', async () => {
     const kit = newKitFromProvider(providerOwner.currentProvider)
@@ -43,7 +47,11 @@ testWithAnvilL2('validatorgroup:comission cmd', (providerOwner) => {
     await setCommissionUpdateDelay(providerOwner, validatorsWrapper.address, 3)
 
     await registerValidatorGroup()
-    await testLocallyWithNode(Commission, ['--from', accounts[0], '--queue-update', '0.2'], providerOwner)
+    await testLocallyWithNode(
+      Commission,
+      ['--from', accounts[0], '--queue-update', '0.2'],
+      providerOwner
+    )
 
     await mineBlocks(3, providerOwner)
 

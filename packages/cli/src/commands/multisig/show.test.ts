@@ -73,7 +73,11 @@ testWithAnvilL2('multisig:show integration tests', (providerOwner) => {
       const logMock = jest.spyOn(console, 'log')
 
       // Now show the specific transaction
-      const result = await testLocallyWithNode(ShowMultiSig, [multisigAddress, '--tx', '0'], providerOwner)
+      const result = await testLocallyWithNode(
+        ShowMultiSig,
+        [multisigAddress, '--tx', '0'],
+        providerOwner
+      )
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [
           [
@@ -139,7 +143,11 @@ testWithAnvilL2('multisig:show integration tests', (providerOwner) => {
 
     it('fails with invalid multisig address', async () => {
       await expect(
-        testLocallyWithNode(ShowMultiSig, ['0x0000000000000000000000000000000000000000'], providerOwner)
+        testLocallyWithNode(
+          ShowMultiSig,
+          ['0x0000000000000000000000000000000000000000'],
+          providerOwner
+        )
       ).rejects.toThrowErrorMatchingInlineSnapshot(`
         "The contract function "getTransactionCount" returned no data ("0x").
 

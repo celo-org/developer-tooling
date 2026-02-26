@@ -124,7 +124,10 @@ testWithAnvilL2('validatorgroup:deregister cmd', (providerOwner) => {
         expect(group.members).toHaveLength(0)
         expect(group.affiliates).toHaveLength(0)
         const groupRequirements = await validators.getGroupLockedGoldRequirements()
-        const timeSpy = await mockTimeForwardBy(groupRequirements.duration.toNumber() * 2, providerOwner)
+        const timeSpy = await mockTimeForwardBy(
+          groupRequirements.duration.toNumber() * 2,
+          providerOwner
+        )
         const logMock = jest.spyOn(console, 'log').mockImplementation()
         await expect(
           testLocallyWithNode(DeRegisterValidatorGroup, ['--from', groupAddress], providerOwner)

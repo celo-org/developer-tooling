@@ -93,7 +93,11 @@ testWithAnvilL2('lockedgold:delegate cmd', (providerOwner) => {
       refundAddress
     )
 
-    await testLocallyWithNode(CreateAccount, ['--contract', releaseGoldContractAddress], providerOwner)
+    await testLocallyWithNode(
+      CreateAccount,
+      ['--contract', releaseGoldContractAddress],
+      providerOwner
+    )
     await testLocallyWithNode(
       Authorize,
       [

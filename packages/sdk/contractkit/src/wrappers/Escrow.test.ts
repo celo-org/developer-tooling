@@ -40,7 +40,10 @@ testWithAnvilL2('Escrow Wrapper', (providerOwner) => {
           registryABI as any,
           REGISTRY_CONTRACT_ADDRESS
         )
-        const attestationsContractAddress = await deployAttestationsContract(providerOwner, ownerAdress)
+        const attestationsContractAddress = await deployAttestationsContract(
+          providerOwner,
+          ownerAdress
+        )
 
         const attestationsContract = kit.connection.createContract(
           attestationsABI as any,

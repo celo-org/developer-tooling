@@ -48,7 +48,11 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (providerOwner) => {
   })
 
   test('will revoke', async () => {
-    await testLocallyWithNode(AdminRevoke, ['--contract', contractAddress, '--yesreally'], providerOwner)
+    await testLocallyWithNode(
+      AdminRevoke,
+      ['--contract', contractAddress, '--yesreally'],
+      providerOwner
+    )
     const revokedContract = await getContractFromEvent(
       'ReleaseScheduleRevoked(uint256,uint256)',
       providerOwner
@@ -62,13 +66,21 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (providerOwner) => {
     await stableToken.transfer(contractAddress, 100).send({
       from: accounts[0],
     })
-    await testLocallyWithNode(AdminRevoke, ['--contract', contractAddress, '--yesreally'], providerOwner)
+    await testLocallyWithNode(
+      AdminRevoke,
+      ['--contract', contractAddress, '--yesreally'],
+      providerOwner
+    )
     const balance = await stableToken.balanceOf(contractAddress)
     expect(balance.isZero()).toBeTruthy()
   })
 
   test('will refund and finalize', async () => {
-    await testLocallyWithNode(AdminRevoke, ['--contract', contractAddress, '--yesreally'], providerOwner)
+    await testLocallyWithNode(
+      AdminRevoke,
+      ['--contract', contractAddress, '--yesreally'],
+      providerOwner
+    )
     const destroyedContract = await getContractFromEvent(
       'ReleaseGoldInstanceDestroyed(address,address)',
       providerOwner
@@ -91,7 +103,11 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (providerOwner) => {
     })
 
     test('will unlock all gold', async () => {
-      await testLocallyWithNode(AdminRevoke, ['--contract', contractAddress, '--yesreally'], providerOwner)
+      await testLocallyWithNode(
+        AdminRevoke,
+        ['--contract', contractAddress, '--yesreally'],
+        providerOwner
+      )
       const lockedGold = await kit.contracts.getLockedGold()
       const lockedAmount = await lockedGold.getAccountTotalLockedGold(releaseGoldWrapper.address)
       expect(lockedAmount.isZero()).toBeTruthy()

@@ -45,7 +45,11 @@ testWithAnvilL2('lockedcelo:unlock cmd', (providerOwner) => {
         ['--from', validator, '--ecdsaKey', ecdsaPublicKey, '--yes'],
         providerOwner
       )
-      await testLocallyWithNode(ValidatorAffiliate, ['--yes', '--from', validator, account], providerOwner)
+      await testLocallyWithNode(
+        ValidatorAffiliate,
+        ['--yes', '--from', validator, account],
+        providerOwner
+      )
       await testLocallyWithNode(
         ValidatorGroupMember,
         ['--yes', '--from', account, '--accept', validator],

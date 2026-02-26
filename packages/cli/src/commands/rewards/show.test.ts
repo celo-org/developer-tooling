@@ -193,7 +193,11 @@ testWithAnvilL2('rewards:show cmd', (providerOwner) => {
   describe('--voter', () => {
     test('invalid', async () => {
       await expect(
-        testLocallyWithNode(Show, ['--voter', '0x1234567890123456789012345678901234567890'], providerOwner)
+        testLocallyWithNode(
+          Show,
+          ['--voter', '0x1234567890123456789012345678901234567890'],
+          providerOwner
+        )
       ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
               [
