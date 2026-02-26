@@ -662,7 +662,10 @@ export class Connection {
    * @param abi - The ABI of the contract
    * @param address - The deployed contract address
    */
-  getViemContract(abi: readonly AbiItem[] | AbiItem[], address: string): ViemContract {
+  getViemContract<TAbi extends readonly unknown[] = AbiItem[]>(
+    abi: TAbi | AbiItem[],
+    address: string
+  ): ViemContract<TAbi> {
     // Enrich ABI items with function/event signatures for backward compatibility
     // (block explorer, governance proposal builder, etc. rely on ad.signature)
     const enrichedAbi = (abi as AbiItem[]).map((item: AbiItem) => {
@@ -677,8 +680,8 @@ export class Connection {
       return item
     })
     return {
-      abi: enrichedAbi,
-      address,
+      abi: enrichedAbi as unknown as TAbi,
+      address: address as `0x${string}`,
       client: this._viemClient,
     }
   }

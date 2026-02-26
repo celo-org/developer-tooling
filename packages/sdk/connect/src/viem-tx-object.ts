@@ -1,3 +1,4 @@
+import type { Abi, ContractFunctionArgs, ContractFunctionName } from 'viem'
 import { encodeFunctionData } from 'viem'
 import type { AbiItem } from './abi-types'
 import type { Connection } from './connection'
@@ -9,14 +10,36 @@ import { coerceArgsForAbi } from './viem-abi-coder'
 /**
  * Create a CeloTxObject from a viem-native contract + function name + args.
  * This replaces the contract.methods.foo(args) pattern with direct encodeFunctionData.
+ *
+ * Typed overload: when a `ViemContract<TAbi>` with a const-typed ABI is provided,
+ * the function name and args are constrained at compile time.
+ */
+export function createViemTxObject<
+  TAbi extends Abi,
+  TFunctionName extends ContractFunctionName<TAbi>,
+>(
+  connection: Connection,
+  contract: ViemContract<TAbi>,
+  functionName: TFunctionName,
+  args: ContractFunctionArgs<TAbi, 'nonpayable' | 'payable' | 'view' | 'pure', TFunctionName>
+): CeloTxObject<unknown>
+/**
+ * Untyped fallback: accepts any string function name for backward compatibility.
+ * Used by CLI, ProposalBuilder, and other dynamic callers.
  */
 export function createViemTxObject<O>(
   connection: Connection,
-  contract: ViemContract,
+  contract: ViemContract<readonly unknown[]>,
   functionName: string,
   args: unknown[]
-): CeloTxObject<O> {
-  const methodAbi = contract.abi.find(
+): CeloTxObject<O>
+export function createViemTxObject(
+  connection: Connection,
+  contract: ViemContract<readonly unknown[]>,
+  functionName: string,
+  args: unknown[]
+): CeloTxObject<unknown> {
+  const methodAbi = (contract.abi as AbiItem[]).find(
     (item: AbiItem) => item.type === 'function' && item.name === functionName
   )
   if (!methodAbi) {
@@ -32,7 +55,7 @@ export function createViemTxObject<O>(
       args: coercedArgs,
     })
 
-  const txObject: CeloTxObject<O> = {
+  const txObject: CeloTxObject<unknown> = {
     call: async (txParams?: CeloTx) => {
       const result = await contract.client.call({
         to: contract.address as `0x${string}`,
@@ -45,20 +68,20 @@ export function createViemTxObject<O>(
         !methodAbi.outputs ||
         methodAbi.outputs.length === 0
       ) {
-        return result.data as unknown as O
+        return result.data as unknown
       }
       // Use viem abi coder to decode (reuse existing decoder for backward compat)
       const { viemAbiCoder } = await import('./viem-abi-coder')
       const decoded = viemAbiCoder.decodeParameters(methodAbi.outputs, result.data)
-      if (methodAbi.outputs.length === 1) return decoded[0] as O
+      if (methodAbi.outputs.length === 1) return decoded[0] as unknown
       const { __length__, ...rest } = decoded
-      return rest as O
+      return rest as unknown
     },
     send: (txParams?: CeloTx) => {
       return createPromiEvent(
         connection,
         { ...txParams, to: contract.address, data: encodeData() },
-        contract.abi
+        contract.abi as unknown as AbiItem[]
       )
     },
     estimateGas: async (txParams?: CeloTx) => {
@@ -70,7 +93,7 @@ export function createViemTxObject<O>(
     },
     encodeABI: () => encodeData(),
     _parent: {
-      options: { address: contract.address, jsonInterface: contract.abi },
+      options: { address: contract.address, jsonInterface: contract.abi as unknown as AbiItem[] },
       _address: contract.address,
       events: {},
       methods: {} as any,
