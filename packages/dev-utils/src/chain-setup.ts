@@ -1,6 +1,6 @@
 import { governanceABI, validatorsABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
-import { AbiItem, Connection, Provider } from '@celo/connect'
+import { AbiItem, Connection, createViemTxObject, Provider } from '@celo/connect'
 import { DEFAULT_OWNER_ADDRESS, withImpersonatedAccount } from './anvil-test'
 
 export async function setCommissionUpdateDelay(
@@ -10,16 +10,19 @@ export async function setCommissionUpdateDelay(
 ) {
   const conn = new Connection(provider)
   await withImpersonatedAccount(provider, DEFAULT_OWNER_ADDRESS, async () => {
-    const validators = conn.createContract(
+    const validators = conn.getViemContract(
       validatorsABI as unknown as AbiItem[],
       validatorsContractAddress
     )
 
-    const { transactionHash } = await validators.methods
-      .setCommissionUpdateDelay(delayInBlocks)
-      .send({
-        from: DEFAULT_OWNER_ADDRESS,
-      })
+    const { transactionHash } = await createViemTxObject(
+      conn,
+      validators,
+      'setCommissionUpdateDelay',
+      [delayInBlocks]
+    ).send({
+      from: DEFAULT_OWNER_ADDRESS,
+    })
     await conn.getTransactionReceipt(transactionHash)
   })
 }
@@ -31,12 +34,14 @@ export async function setDequeueFrequency(
 ) {
   const conn = new Connection(provider)
   await withImpersonatedAccount(provider, DEFAULT_OWNER_ADDRESS, async () => {
-    const governance = conn.createContract(
+    const governance = conn.getViemContract(
       governanceABI as unknown as AbiItem[],
       governanceContractAddress
     )
 
-    const { transactionHash } = await governance.methods.setDequeueFrequency(frequency).send({
+    const { transactionHash } = await createViemTxObject(conn, governance, 'setDequeueFrequency', [
+      frequency,
+    ]).send({
       from: DEFAULT_OWNER_ADDRESS,
     })
     await conn.getTransactionReceipt(transactionHash)
@@ -50,12 +55,17 @@ export async function setReferendumStageDuration(
 ) {
   const conn = new Connection(provider)
   await withImpersonatedAccount(provider, DEFAULT_OWNER_ADDRESS, async () => {
-    const governance = conn.createContract(
+    const governance = conn.getViemContract(
       governanceABI as unknown as AbiItem[],
       governanceContractAddress
     )
 
-    const { transactionHash } = await governance.methods.setReferendumStageDuration(duration).send({
+    const { transactionHash } = await createViemTxObject(
+      conn,
+      governance,
+      'setReferendumStageDuration',
+      [duration]
+    ).send({
       from: DEFAULT_OWNER_ADDRESS,
     })
     await conn.getTransactionReceipt(transactionHash)

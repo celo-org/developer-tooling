@@ -22,8 +22,8 @@ export const getContractDetailsFromContract: any = async (
   const contract = await kit._contracts.getContract(celoContract, address)
   return {
     name: celoContract,
-    address: address ?? contract.options.address,
-    jsonInterface: contract.options.jsonInterface,
+    address: address ?? contract.address,
+    jsonInterface: contract.abi,
     isCore: true,
   }
 }

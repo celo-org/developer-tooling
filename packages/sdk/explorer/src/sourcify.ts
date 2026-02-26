@@ -10,7 +10,15 @@
  *  // do something with it.
  * }
  */
-import { AbiCoder, ABIDefinition, AbiItem, AbiInput, Address, Connection } from '@celo/connect'
+import {
+  AbiCoder,
+  ABIDefinition,
+  AbiItem,
+  AbiInput,
+  Address,
+  Connection,
+  createViemTxObject,
+} from '@celo/connect'
 import fetch from 'cross-fetch'
 import { ContractMapping, mapFromPairs } from './base'
 
@@ -248,11 +256,11 @@ export async function tryGetProxyImplementation(
   connection: Connection,
   contract: Address
 ): Promise<Address | undefined> {
-  const proxyContract = connection.createContract(PROXY_ABI, contract)
+  const proxyContract = connection.getViemContract(PROXY_ABI, contract)
   for (const fn of PROXY_IMPLEMENTATION_GETTERS) {
     try {
       return await new Promise<Address>((resolve, reject) => {
-        proxyContract.methods[fn]()
+        createViemTxObject<Address>(connection, proxyContract, fn, [])
           .call()
           .then((v: any) => resolve(v as Address))
           .catch(reject)
