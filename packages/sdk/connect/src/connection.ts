@@ -64,14 +64,9 @@ export class Connection {
   readonly paramsPopulator: TxParamsNormalizer
   rpcCaller!: RpcCaller
   private _provider!: CeloProvider
-  private _originalProviderOwner?: {
-    currentProvider: Provider
-    setProvider?: (p: Provider) => void
-  }
-  private _settingProvider = false
 
   constructor(
-    providerOrWeb3: Provider | { currentProvider: Provider; setProvider?: (p: Provider) => void },
+    provider: Provider,
     public wallet?: ReadOnlyWallet,
     handleRevert = true
   ) {
@@ -82,14 +77,6 @@ export class Connection {
       gasInflationFactor: 1.3,
     }
 
-    // Accept both a Provider and a Web3-like object (which has currentProvider)
-    let provider: Provider
-    if (providerOrWeb3 != null && 'currentProvider' in providerOrWeb3) {
-      this._originalProviderOwner = providerOrWeb3
-      provider = providerOrWeb3.currentProvider
-    } else {
-      provider = providerOrWeb3 as Provider
-    }
     this.setProvider(provider)
     this.paramsPopulator = new TxParamsNormalizer(this)
   }
@@ -116,19 +103,7 @@ export class Connection {
         celoProvider = provider
       }
       this._provider = celoProvider
-      // Update original web3 object's provider so web3.currentProvider reflects CeloProvider
-      if (
-        this._originalProviderOwner &&
-        typeof this._originalProviderOwner.setProvider === 'function' &&
-        !this._settingProvider
-      ) {
-        this._settingProvider = true
-        try {
-          this._originalProviderOwner.setProvider(celoProvider)
-        } finally {
-          this._settingProvider = false
-        }
-      }
+      return true
       return true
     } catch (error) {
       console.error(`could not attach provider`, error)
