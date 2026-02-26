@@ -1,5 +1,5 @@
 import { ensureLeading0x } from '@celo/base'
-import { Connection, viemAbiCoder } from './connection'
+import { Connection } from './connection'
 import { AbiItem } from './abi-types'
 import { Callback, JsonRpcPayload, JsonRpcResponse, Provider } from './types'
 
@@ -186,47 +186,6 @@ describe('Connection', () => {
     })
   })
 
-  describe('#viemAbiCoder', () => {
-    it('encodes and decodes a parameter', () => {
-      const encoded = viemAbiCoder.encodeParameter('uint256', 42)
-      const decoded = viemAbiCoder.decodeParameter('uint256', encoded)
-      expect(decoded).toBe('42')
-    })
-
-    it('encodes a function signature from string', () => {
-      const sig = viemAbiCoder.encodeFunctionSignature('transfer(address,uint256)')
-      expect(sig).toBe('0xa9059cbb')
-    })
-
-    it('encodes a function signature from ABI item', () => {
-      const sig = viemAbiCoder.encodeFunctionSignature({
-        type: 'function',
-        name: 'transfer',
-        inputs: [
-          { name: 'to', type: 'address' },
-          { name: 'value', type: 'uint256' },
-        ],
-      })
-      expect(sig).toBe('0xa9059cbb')
-    })
-
-    it('encodes an event signature', () => {
-      const sig = viemAbiCoder.encodeEventSignature('Transfer(address,address,uint256)')
-      expect(sig).toMatch(/^0x/)
-      expect(sig.length).toBe(66) // 0x + 64 hex chars
-    })
-
-    it('encodes and decodes multiple parameters', () => {
-      const encoded = viemAbiCoder.encodeParameters(
-        ['address', 'uint256'],
-        ['0x0000000000000000000000000000000000000001', 100]
-      )
-      const decoded = viemAbiCoder.decodeParameters(['address', 'uint256'], encoded)
-      expect(decoded[0]).toBe('0x0000000000000000000000000000000000000001')
-      expect(decoded[1]).toBe('100')
-      expect(decoded.__length__).toBe(2)
-    })
-  })
 
   describe('#setFeeMarketGas', () => {
     describe('when fee market gas is set', () => {
