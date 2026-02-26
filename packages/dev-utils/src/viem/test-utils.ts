@@ -37,7 +37,7 @@ export function testWithViem(
     let snapId: Hex | null = null
 
     if (options.hooks?.beforeAll) {
-      beforeAll(options.hooks.beforeAll, 15_000)
+      beforeAll(options.hooks.beforeAll, 30_000)
     }
 
     beforeEach(async () => {

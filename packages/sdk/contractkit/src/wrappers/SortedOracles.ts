@@ -1,6 +1,12 @@
 import { sortedOraclesABI } from '@celo/abis'
 import { eqAddress, NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
-import { Address, CeloTransactionObject, Connection, type ViemContract } from '@celo/connect'
+import {
+  Address,
+  CeloTransactionObject,
+  Connection,
+  toTransactionObject,
+  type ViemContract,
+} from '@celo/connect'
 import { isValidAddress } from '@celo/utils/lib/address'
 import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
@@ -209,20 +215,8 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
       oracleAddress
     )
 
-    // proxySend doesn't support txOptions, so we need to manually set the from
-    // We pass it via the returned CeloTransactionObject
     const txo = this._report(identifier, fixedValue.toFixed(), lesserKey, greaterKey)
-    // Override from address
-    const originalTxo = txo.txo
-    const wrappedTxo = {
-      ...txo,
-      txo: {
-        ...originalTxo,
-        send: (params?: any) => originalTxo.send({ ...params, from: oracleAddress }),
-        estimateGas: (params?: any) => originalTxo.estimateGas({ ...params, from: oracleAddress }),
-      },
-    }
-    return wrappedTxo as CeloTransactionObject<void>
+    return toTransactionObject(this.connection, txo.txo, { from: oracleAddress })
   }
 
   /**
