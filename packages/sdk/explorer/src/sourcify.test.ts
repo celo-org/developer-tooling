@@ -1,3 +1,4 @@
+import * as crypto from 'crypto'
 import {
   Address,
   Callback,
@@ -13,9 +14,9 @@ const CONTRACT_METADATA = require('../fixtures/contract.metadata.json')
 
 describe('sourcify helpers', () => {
   let connection: Connection
-  const address: Address = '0x' + require('crypto').randomBytes(20).toString('hex')
-  const proxyAddress: Address = '0x' + require('crypto').randomBytes(20).toString('hex')
-  const implAddress: Address = '0x' + require('crypto').randomBytes(20).toString('hex')
+  const address: Address = '0x' + crypto.randomBytes(20).toString('hex')
+  const proxyAddress: Address = '0x' + crypto.randomBytes(20).toString('hex')
+  const implAddress: Address = '0x' + crypto.randomBytes(20).toString('hex')
   const chainId: number = 42220
 
   const mockProvider: Provider = {
