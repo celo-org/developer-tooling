@@ -39,10 +39,10 @@ export interface FormattedCeloTx {
 
 /** Transaction configuration - replaces web3's TransactionConfig */
 export interface CeloTx extends Partial<CeloParams> {
-  from?: string | number
+  from?: string
   to?: string
   value?: number | string | bigint
-  gas?: number | string
+  gas?: number | string | bigint
   gasPrice?: number | string | bigint
   maxFeePerGas?: number | string | bigint
   maxPriorityFeePerGas?: number | string | bigint
@@ -108,15 +108,6 @@ export interface PromiEvent<T> extends Promise<T> {
   on(type: 'receipt', handler: (receipt: T) => void): PromiEvent<T>
   on(type: 'confirmation', handler: (confNumber: number, receipt: T) => void): PromiEvent<T>
   on(type: 'error', handler: (error: Error, receipt?: T) => void): PromiEvent<T>
-}
-
-export interface Sign {
-  message: string
-  messageHash?: string
-  r: string
-  s: string
-  v: string
-  signature: string
 }
 
 /** Block header */
