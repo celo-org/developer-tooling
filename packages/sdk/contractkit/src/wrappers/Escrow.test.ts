@@ -76,7 +76,10 @@ testWithAnvilL2('Escrow Wrapper', (providerOwner) => {
 
     const randomKey1 = '0x' + randomBytes(32).toString('hex')
     identifier = keccak256(
-      encodePacked(['bytes32'], [pad(privateKeyToAddress(randomKey1) as `0x${string}`, { size: 32 })])
+      encodePacked(
+        ['bytes32'],
+        [pad(privateKeyToAddress(randomKey1) as `0x${string}`, { size: 32 })]
+      )
     ) as string
   })
 
