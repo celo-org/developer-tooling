@@ -30,7 +30,7 @@ debug(`Account Address 2: ${ACCOUNT_ADDRESS2}`)
 describe('Transaction Utils', () => {
   // only needed for the eth_coinbase rcp call
   let connection: Connection
-  let client: { currentProvider: Provider; eth: { signTransaction: (tx: CeloTx) => Promise<any> } }
+  let signTransaction: (tx: CeloTx) => Promise<{ raw: string; tx: any }>
   const mockProvider: Provider = {
     send: (payload: JsonRpcPayload, callback: Callback<JsonRpcResponse>): void => {
       if (payload.method === 'eth_coinbase') {
@@ -57,29 +57,23 @@ describe('Transaction Utils', () => {
     connection = new Connection(mockProvider)
     connection.wallet = new LocalWallet()
     const provider = connection.currentProvider
-    client = {
-      currentProvider: provider,
-      eth: {
-        signTransaction: (tx: CeloTx) =>
-          new Promise((resolve, reject) => {
-            provider.send({ id: 1, jsonrpc: '2.0', method: 'eth_signTransaction', params: [tx] }, ((
-              err: any,
-              resp: any
-            ) => {
-              if (err) reject(err)
-              else if (resp?.error) reject(new Error(resp.error.message))
-              else resolve(resp?.result)
+    signTransaction = (tx: CeloTx) =>
+      new Promise((resolve, reject) => {
+        provider.send(
+          { id: 1, jsonrpc: '2.0', method: 'eth_signTransaction', params: [tx] },
+          ((err: any, resp: any) => {
+            if (err) reject(err)
+            else if (resp?.error) reject(new Error(resp.error.message))
+            else resolve(resp?.result)
             }) as any)
-          }),
-      },
-    } as any
+      })
   }
   const verifyLocalSigning = async (celoTransaction: CeloTx): Promise<void> => {
     let recoveredSigner: string | undefined
     let recoveredTransaction: CeloTx | undefined
     let signedTransaction: { raw: string; tx: any } | undefined
     beforeAll(async () => {
-      signedTransaction = await client.eth.signTransaction(celoTransaction)
+      signedTransaction = await signTransaction(celoTransaction)
       const recovery = recoverTransaction(signedTransaction!.raw)
       recoveredTransaction = recovery[0]
       recoveredSigner = recovery[1]
