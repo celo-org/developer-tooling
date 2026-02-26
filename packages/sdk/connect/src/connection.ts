@@ -66,7 +66,7 @@ export class Connection {
   readonly paramsPopulator: TxParamsNormalizer
   rpcCaller!: RpcCaller
   private _provider!: Provider
-  private _originalWeb3?: { currentProvider: Provider; setProvider?: (p: Provider) => void }
+  private _originalProviderOwner?: { currentProvider: Provider; setProvider?: (p: Provider) => void }
   private _settingProvider = false
 
   constructor(
@@ -84,7 +84,7 @@ export class Connection {
     // Accept both a Provider and a Web3-like object (which has currentProvider)
     let provider: Provider
     if (providerOrWeb3 != null && 'currentProvider' in providerOrWeb3) {
-      this._originalWeb3 = providerOrWeb3
+      this._originalProviderOwner = providerOrWeb3
       provider = providerOrWeb3.currentProvider
     } else {
       provider = providerOrWeb3 as Provider
@@ -115,13 +115,13 @@ export class Connection {
       this._provider = provider
       // Update original web3 object's provider so web3.currentProvider reflects CeloProvider
       if (
-        this._originalWeb3 &&
-        typeof this._originalWeb3.setProvider === 'function' &&
+        this._originalProviderOwner &&
+        typeof this._originalProviderOwner.setProvider === 'function' &&
         !this._settingProvider
       ) {
         this._settingProvider = true
         try {
-          this._originalWeb3.setProvider(provider)
+          this._originalProviderOwner.setProvider(provider)
         } finally {
           this._settingProvider = false
         }
