@@ -5,7 +5,7 @@ import { EIP712TypedData, generateTypedDataHash } from '@celo/utils/lib/sign-typ
 import { Signature, parseSignatureWithoutPrefix } from '@celo/utils/lib/signatureUtils'
 import { bufferToHex } from '@ethereumjs/util'
 import debugFactory from 'debug'
-import { keccak256, hexToString } from 'viem'
+import { keccak256, hexToString, toHex } from 'viem'
 import { AbiCoder, AbiItem } from './abi-types'
 import { isEmpty, viemAbiCoder } from './abi-coder'
 import { createContractConstructor } from './rpc-contract'
@@ -632,7 +632,7 @@ export class Connection {
   }
 
   getStorageAt = async (address: Address, position: number | string): Promise<string> => {
-    const pos = typeof position === 'number' ? '0x' + position.toString(16) : position
+    const pos = typeof position === 'number' ? toHex(position) : position
     const response = await this.rpcCaller.call('eth_getStorageAt', [
       inputAddressFormatter(address),
       pos,
