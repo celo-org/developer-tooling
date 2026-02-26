@@ -37,10 +37,10 @@ import { StableToken } from './celo-tokens'
 const debug = debugFactory('kit:contract-factory-cache')
 
 /**
- * ABI arrays mapped to CeloContract enum values.
- * Used by ContractCache to create Contract instances.
+ * Typed ABI map — preserves per-contract const ABI types for compile-time type safety.
+ * Use this when you need the specific ABI type for a contract (e.g. in wrapper generics).
  */
-export const ContractABIs: Record<string, readonly any[]> = {
+export const TypedContractABIs = {
   [CeloContract.Accounts]: accountsABI,
   [CeloContract.Attestations]: attestationsABI,
   [CeloContract.CeloUnreleasedTreasury]: celoUnreleasedTreasuryABI,
@@ -72,7 +72,21 @@ export const ContractABIs: Record<string, readonly any[]> = {
   [CeloContract.StableTokenEUR]: stableTokenABI,
   [CeloContract.StableTokenBRL]: stableTokenABI,
   [CeloContract.Validators]: validatorsABI,
-}
+} as const
+
+/**
+ * Utility type to extract the ABI type for a given CeloContract.
+ * @example
+ * type AccountsABI = ContractABI<CeloContract.Accounts> // typeof accountsABI
+ */
+export type ContractABI<T extends keyof typeof TypedContractABIs> = (typeof TypedContractABIs)[T]
+
+/**
+ * ABI arrays mapped to CeloContract enum values.
+ * @deprecated Use TypedContractABIs for type-safe access.
+ * Kept for backward compatibility with dynamic lookups.
+ */
+export const ContractABIs: Record<string, readonly any[]> = TypedContractABIs
 
 const StableToContract = {
   [StableToken.EURm]: CeloContract.StableTokenEUR,
