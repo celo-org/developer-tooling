@@ -1,5 +1,6 @@
 import { multiSigABI, reserveABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
+import { createViemTxObject } from '@celo/connect'
 import {
   asCoreContractsOwner,
   DEFAULT_OWNER_ADDRESS,
@@ -29,8 +30,8 @@ testWithAnvilL2('Reserve Wrapper', (provider) => {
     reserve = await kit.contracts.getReserve()
     const multiSigAddress = await kit.registry.addressFor('ReserveSpenderMultiSig' as CeloContract)
     reserveSpenderMultiSig = await kit.contracts.getMultiSig(multiSigAddress)
-    const reserveContract = kit.connection.createContract(reserveABI as any, reserve.address)
-    const reserveSpenderMultiSigContract = kit.connection.createContract(
+    const reserveContract = kit.connection.getViemContract(reserveABI as any, reserve.address)
+    const reserveSpenderMultiSigContract = kit.connection.getViemContract(
       multiSigABI as any,
       reserveSpenderMultiSig.address
     )
@@ -42,21 +43,26 @@ testWithAnvilL2('Reserve Wrapper', (provider) => {
         await reserveSpenderMultiSig
           .replaceOwner(DEFAULT_OWNER_ADDRESS, accounts[0])
           .sendAndWaitForReceipt({ from: multiSigAddress })
-        await reserveSpenderMultiSigContract.methods
-          .addOwner(otherSpender)
-          .send({ from: multiSigAddress })
-        await reserveSpenderMultiSigContract.methods
-          .changeRequirement(2)
-          .send({ from: multiSigAddress })
+        await createViemTxObject(kit.connection, reserveSpenderMultiSigContract, 'addOwner', [
+          otherSpender,
+        ]).send({ from: multiSigAddress })
+        await createViemTxObject(
+          kit.connection,
+          reserveSpenderMultiSigContract,
+          'changeRequirement',
+          [2]
+        ).send({ from: multiSigAddress })
       },
       new BigNumber('1e18')
     )
 
     await asCoreContractsOwner(provider, async (ownerAdress: StrongAddress) => {
-      await reserveContract.methods.addSpender(otherSpender).send({ from: ownerAdress })
-      await reserveContract.methods
-        .addOtherReserveAddress(otherReserveAddress)
-        .send({ from: ownerAdress })
+      await createViemTxObject(kit.connection, reserveContract, 'addSpender', [otherSpender]).send({
+        from: ownerAdress,
+      })
+      await createViemTxObject(kit.connection, reserveContract, 'addOtherReserveAddress', [
+        otherReserveAddress,
+      ]).send({ from: ownerAdress })
     })
 
     await setBalance(provider, reserve.address, new BigNumber('1e18'))

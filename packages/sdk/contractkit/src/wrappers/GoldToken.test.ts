@@ -1,6 +1,6 @@
 import { goldTokenABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
-import { Contract } from '@celo/connect'
+import type { ViemContract } from '@celo/connect'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
 import { newKitFromProvider } from '../kit'
@@ -15,13 +15,13 @@ testWithAnvilL2('GoldToken Wrapper', (provider) => {
   const kit = newKitFromProvider(provider)
   let accounts: StrongAddress[] = []
   let goldToken: GoldTokenWrapper
-  let goldTokenContract: Contract
+  let goldTokenContract: ViemContract
 
   beforeAll(async () => {
     accounts = await kit.connection.getAccounts()
     kit.defaultAccount = accounts[0]
     goldToken = await kit.contracts.getGoldToken()
-    goldTokenContract = kit.connection.createContract(goldTokenABI as any, goldToken.address)
+    goldTokenContract = kit.connection.getViemContract(goldTokenABI as any, goldToken.address)
   })
 
   it('checks balance', () => expect(goldToken.balanceOf(accounts[0])).resolves.toBeBigNumber())
@@ -42,12 +42,18 @@ testWithAnvilL2('GoldToken Wrapper', (provider) => {
   it('transfers', async () => {
     await goldToken.transfer(accounts[1], ONE_GOLD).sendAndWaitForReceipt()
 
-    const events = await goldTokenContract.getPastEvents('Transfer', { fromBlock: 'latest' })
+    const events = await goldTokenContract.client.getContractEvents({
+      abi: goldTokenContract.abi as any,
+      address: goldTokenContract.address as `0x${string}`,
+      eventName: 'Transfer',
+      fromBlock: 'latest',
+    })
 
     expect(events.length).toBe(1)
-    expect(events[0].returnValues.from).toEqual(accounts[0])
-    expect(events[0].returnValues.to).toEqual(accounts[1])
-    expect(events[0].returnValues.value).toEqual(ONE_GOLD)
+    const args = (events[0] as any).args
+    expect(args.from).toEqual(accounts[0])
+    expect(args.to).toEqual(accounts[1])
+    expect(args.value.toString()).toEqual(ONE_GOLD)
   })
 
   it('transfers from', async () => {
@@ -58,12 +64,18 @@ testWithAnvilL2('GoldToken Wrapper', (provider) => {
 
     await goldToken.transferFrom(accounts[1], accounts[3], ONE_GOLD).sendAndWaitForReceipt()
 
-    const events = await goldTokenContract.getPastEvents('Transfer', { fromBlock: 'latest' })
+    const events = await goldTokenContract.client.getContractEvents({
+      abi: goldTokenContract.abi as any,
+      address: goldTokenContract.address as `0x${string}`,
+      eventName: 'Transfer',
+      fromBlock: 'latest',
+    })
 
     expect(events.length).toBe(1)
-    expect(events[0].returnValues.from).toEqual(accounts[1])
-    expect(events[0].returnValues.to).toEqual(accounts[3])
-    expect(events[0].returnValues.value).toEqual(ONE_GOLD)
+    const args = (events[0] as any).args
+    expect(args.from).toEqual(accounts[1])
+    expect(args.to).toEqual(accounts[3])
+    expect(args.value.toString()).toEqual(ONE_GOLD)
     expect(await goldToken.allowance(accounts[1], accounts[0])).toEqBigNumber(0)
   })
 })

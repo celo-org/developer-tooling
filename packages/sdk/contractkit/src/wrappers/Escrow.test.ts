@@ -1,5 +1,6 @@
 import { attestationsABI, registryABI } from '@celo/abis'
 import { StableToken, StrongAddress } from '@celo/base'
+import { createViemTxObject } from '@celo/connect'
 import { asCoreContractsOwner, setBalance, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { deployAttestationsContract } from '@celo/dev-utils/contracts'
 import { privateKeyToAddress } from '@celo/utils/lib/address'
@@ -37,25 +38,31 @@ testWithAnvilL2('Escrow Wrapper', (provider) => {
     await asCoreContractsOwner(
       provider,
       async (ownerAdress: StrongAddress) => {
-        const registryContract = kit.connection.createContract(
+        const registryContract = kit.connection.getViemContract(
           registryABI as any,
           REGISTRY_CONTRACT_ADDRESS
         )
         const attestationsContractAddress = await deployAttestationsContract(provider, ownerAdress)
 
-        const attestationsContract = kit.connection.createContract(
+        const attestationsContract = kit.connection.getViemContract(
           attestationsABI as any,
           attestationsContractAddress
         )
 
         // otherwise reverts with "minAttestations larger than limit"
-        await attestationsContract.methods.setMaxAttestations(1).send({ from: ownerAdress })
+        await createViemTxObject(
+          kit.connection,
+          attestationsContract,
+          'setMaxAttestations',
+          [1]
+        ).send({ from: ownerAdress })
 
-        await registryContract.methods
-          .setAddressFor('Attestations', attestationsContractAddress)
-          .send({
-            from: ownerAdress,
-          })
+        await createViemTxObject(kit.connection, registryContract, 'setAddressFor', [
+          'Attestations',
+          attestationsContractAddress,
+        ]).send({
+          from: ownerAdress,
+        })
       },
       parseEther('1')
     )

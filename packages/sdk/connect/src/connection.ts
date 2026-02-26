@@ -636,6 +636,8 @@ export class Connection {
   }
 
   /**
+   * @deprecated Use `getViemContract()` instead. This method will be removed in a future version.
+   * Only kept for backward compatibility and contract deployment (`.deploy()`).
    * Create a contract instance bound to this connection.
    * Replaces the old `new web3.eth.Contract(abi, address)` pattern.
    * @param abi - The ABI of the contract
