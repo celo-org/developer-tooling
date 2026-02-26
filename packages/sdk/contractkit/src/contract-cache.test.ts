@@ -15,7 +15,7 @@ const TestedWrappers: ValidWrappers[] = [
 ]
 
 function newWrapperCache() {
-  const provider = getProviderForKit('http://localhost:8545', undefined)
+  const provider = getProviderForKit('http://localhost:8545')
   const connection = new Connection(provider)
   const registry = new AddressRegistry(connection)
   const nativeContractCache = new ContractCache(registry)

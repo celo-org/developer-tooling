@@ -113,7 +113,7 @@ class SimpleIpcProvider implements Provider {
 }
 
 /** @internal */
-export function getProviderForKit(url: string, options: HttpProviderOptions | undefined): Provider {
+export function getProviderForKit(url: string, options?: HttpProviderOptions): Provider {
   if (url.endsWith('.ipc')) {
     return new SimpleIpcProvider(url, net)
   } else {
