@@ -6,7 +6,7 @@ import { privateKeyToAddress } from '@celo/utils/lib/address'
 import { soliditySha3 } from '@celo/utils/lib/solidity' // uses viem internally; needed for getParsedSignatureOfAddress callback
 import BigNumber from 'bignumber.js'
 import { randomBytes } from 'crypto'
-import { encodePacked, keccak256, parseEther } from 'viem'
+import { encodePacked, keccak256, pad, parseEther } from 'viem'
 import { REGISTRY_CONTRACT_ADDRESS } from '../address-registry'
 import { newKitFromProvider } from '../kit'
 import { topUpWithToken } from '../test-utils/utils'
@@ -76,7 +76,7 @@ testWithAnvilL2('Escrow Wrapper', (providerOwner) => {
 
     const randomKey1 = '0x' + randomBytes(32).toString('hex')
     identifier = keccak256(
-      encodePacked(['bytes32'], [privateKeyToAddress(randomKey1) as `0x${string}`])
+      encodePacked(['bytes32'], [pad(privateKeyToAddress(randomKey1) as `0x${string}`, { size: 32 })])
     ) as string
   })
 
