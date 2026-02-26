@@ -19,8 +19,15 @@ export function setupAPIKey(apiKey: string) {
   })
   return options
 }
+/**
+ * HTTP/HTTPS provider with custom headers support (e.g. API keys).
+ * Not deduplicated with dev-utils/test-utils.ts SimpleHttpProvider because:
+ *   1. That version is http-only (no https, no headers) — simpler for tests
+ *   2. dev-utils is a devDependency and cannot import from contractkit
+ *   3. contractkit cannot import from dev-utils (circular)
+ */
 class SimpleHttpProvider implements Provider {
-  /** Compat with web3's HttpProvider which exposed .host */
+  /** Used by cli/src/test-utils/cliUtils.ts:extractHostFromProvider to get the RPC URL */
   readonly host: string
 
   constructor(
