@@ -1,3 +1,4 @@
+import { attestationsABI } from '@celo/abis'
 import { StableToken } from '@celo/base'
 import { eqAddress } from '@celo/base/lib/address'
 import {
@@ -66,10 +67,10 @@ interface ContractsForAttestation {
   getStableToken(stableToken: StableToken): Promise<StableTokenWrapper>
 }
 
-export class AttestationsWrapper extends BaseWrapper {
+export class AttestationsWrapper extends BaseWrapper<typeof attestationsABI> {
   constructor(
     protected readonly connection: Connection,
-    protected readonly contract: ViemContract,
+    protected readonly contract: ViemContract<typeof attestationsABI>,
     protected readonly contracts: ContractsForAttestation
   ) {
     super(connection, contract)

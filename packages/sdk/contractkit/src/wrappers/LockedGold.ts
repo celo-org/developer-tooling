@@ -1,3 +1,4 @@
+import { lockedGoldABI } from '@celo/abis'
 import {
   AddressListItem as ALI,
   Comparator,
@@ -70,7 +71,7 @@ export interface LockedGoldConfig {
  * Contract for handling deposits needed for voting.
  */
 
-export class LockedGoldWrapper extends BaseWrapperForGoverning {
+export class LockedGoldWrapper extends BaseWrapperForGoverning<typeof lockedGoldABI> {
   /**
    * Withdraws a gold that has been unlocked after the unlocking period has passed.
    * @param index The index of the pending withdrawal to withdraw.

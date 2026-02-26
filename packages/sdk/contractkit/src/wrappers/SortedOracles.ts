@@ -1,3 +1,4 @@
+import { sortedOraclesABI } from '@celo/abis'
 import { eqAddress, NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
 import {
   Address,
@@ -60,10 +61,10 @@ export type ReportTarget = StableTokenContract | Address
 /**
  * Currency price oracle contract.
  */
-export class SortedOraclesWrapper extends BaseWrapper {
+export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
   constructor(
     protected readonly connection: Connection,
-    protected readonly contract: ViemContract,
+    protected readonly contract: ViemContract<typeof sortedOraclesABI>,
     protected readonly registry: AddressRegistry
   ) {
     super(connection, contract)

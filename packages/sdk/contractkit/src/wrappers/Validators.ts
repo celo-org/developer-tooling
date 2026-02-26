@@ -1,3 +1,4 @@
+import { validatorsABI } from '@celo/abis'
 import { eqAddress, findAddressIndex, NULL_ADDRESS } from '@celo/base/lib/address'
 import { concurrentMap } from '@celo/base/lib/async'
 import { zeroRange, zip } from '@celo/base/lib/collections'
@@ -82,7 +83,7 @@ export interface MembershipHistoryExtraData {
  * Contract for voting for validators and managing validator groups.
  */
 // TODO(asa): Support validator signers
-export class ValidatorsWrapper extends BaseWrapperForGoverning {
+export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validatorsABI> {
   /**
    * Queues an update to a validator group's commission.
    * @param commission Fixidity representation of the commission this group receives on epoch

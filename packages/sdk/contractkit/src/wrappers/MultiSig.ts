@@ -1,3 +1,4 @@
+import { multiSigABI } from '@celo/abis'
 import {
   Address,
   CeloTransactionObject,
@@ -34,7 +35,7 @@ export interface TransactionDataWithOutConfirmations {
 /**
  * Contract for handling multisig actions
  */
-export class MultiSigWrapper extends BaseWrapper {
+export class MultiSigWrapper extends BaseWrapper<typeof multiSigABI> {
   /**
    * Allows an owner to submit and confirm a transaction.
    * If an unexecuted transaction matching `txObject` exists on the multisig, adds a confirmation to that tx ID.

@@ -1,3 +1,4 @@
+import { releaseGoldABI } from '@celo/abis'
 import { concurrentMap } from '@celo/base'
 import { StrongAddress, findAddressIndex } from '@celo/base/lib/address'
 import { Signature } from '@celo/base/lib/signatureUtils'
@@ -69,7 +70,7 @@ interface RevocationInfo {
 /**
  * Contract for handling an instance of a ReleaseGold contract.
  */
-export class ReleaseGoldWrapper extends BaseWrapperForGoverning {
+export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGoldABI> {
   /**
    * Returns the underlying Release schedule of the ReleaseGold contract
    * @return A ReleaseSchedule.
