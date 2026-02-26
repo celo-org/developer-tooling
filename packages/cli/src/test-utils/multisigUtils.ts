@@ -21,6 +21,10 @@ import {
   SAFE_PROXY_FACTORY_CODE,
 } from './constants'
 
+interface RpcBlockResponse {
+  baseFeePerGas: string
+}
+
 export async function createMultisig(
   kit: ContractKit,
   owners: StrongAddress[],
@@ -49,7 +53,7 @@ export async function createMultisig(
   )
   const proxy = kit.connection.createContract(proxyABI as unknown as AbiItem[], proxyAddress!)
   const blockResp = await kit.connection.rpcCaller.call('eth_getBlockByNumber', ['latest', false])
-  const baseFee = (blockResp.result as { baseFeePerGas: string }).baseFeePerGas
+  const baseFee = (blockResp.result as RpcBlockResponse).baseFeePerGas
   const priorityFee = parseUnits('25', 9).toString()
   const initMethod = proxy.methods._setAndInitializeImplementation
   const callData = kit.connection
