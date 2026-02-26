@@ -94,6 +94,8 @@ export function createContractConstructor(connection: Connection) {
               })
             }
             return (...rawArgs: unknown[]) => {
+              // coerceArgs bridges web3→viem type strictness: viem's encodeFunctionData
+              // rejects types web3 accepted (e.g. number for bool, short hex for bytesN)
               const args = methodAbi.inputs ? coerceArgsForAbi(methodAbi.inputs, rawArgs) : rawArgs
               return {
                 call: async (txParams?: CeloTx) => {
