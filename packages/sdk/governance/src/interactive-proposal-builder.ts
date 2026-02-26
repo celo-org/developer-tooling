@@ -118,14 +118,11 @@ export class InteractiveProposalBuilder {
   }
 }
 export function requireABI(contractName: CeloContract): ABIDefinition[] {
-  try {
-    const mod = require(`@celo/abis/${contractName}`)
-    const abiKey = Object.keys(mod).find((key) => key.endsWith('ABI'))
-    if (abiKey) {
-      return mod[abiKey] as ABIDefinition[]
-    }
-  } catch {
-    // fall through
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const mod = require(`@celo/abis/${contractName}`)
+  const abiKey = Object.keys(mod).find((key) => key.endsWith('ABI'))
+  if (abiKey) {
+    return mod[abiKey] as ABIDefinition[]
   }
-  throw new Error(`Cannot require ABI for ${contractName}`)
+  throw new Error(`Cannot find ABI export for ${contractName}`)
 }
