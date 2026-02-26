@@ -1,6 +1,6 @@
 import { releaseGoldABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
-import { Connection, Provider } from '@celo/connect'
+import { Connection, createViemTxObject, Provider } from '@celo/connect'
 import { REGISTRY_CONTRACT_ADDRESS } from '@celo/contractkit'
 import { setBalance, setCode, withImpersonatedAccount } from '@celo/dev-utils/anvil-test'
 import { HOUR, MINUTE, MONTH } from '@celo/dev-utils/test-utils'
@@ -27,9 +27,9 @@ export async function deployReleaseGoldContract(
     RELEASE_GOLD_IMPLEMENTATION_CONTRACT_BYTECODE
   )
 
-  // Create contract using Connection's createContract
+  // Create contract using Connection's getViemContract
   const connection = new Connection(provider)
-  const contract = connection.createContract(
+  const contract = connection.getViemContract(
     releaseGoldABI as any,
     RELEASE_GOLD_IMPLEMENTATION_CONTRACT_ADDRESS
   )
@@ -41,24 +41,22 @@ export async function deployReleaseGoldContract(
     ownerMultisigAddress,
     async () => {
       // default values taken from https://github.com/celo-org/celo-monorepo/blob/master/packages/protocol/test-sol/unit/governance/voting/ReleaseGold.t.sol#L146
-      await contract.methods
-        .initialize(
-          getCurrentTimestamp() + 5 * MINUTE,
-          HOUR,
-          releasePeriods,
-          3 * MONTH,
-          amountReleasedPerPeriod.toFixed(),
-          canValidate === false, // Otherwise reverts with "Revocable contracts cannot validate"
-          beneficiary,
-          releaseOwner,
-          refundAddress,
-          true, // subjectToLiquidityProvision needs to be true, because in the withdraw test we set the liquidity provision and it will fail otherwise
-          500, // distribution ratio
-          canValidate,
-          true,
-          REGISTRY_CONTRACT_ADDRESS
-        )
-        .send({ from: ownerMultisigAddress })
+      await createViemTxObject(connection, contract, 'initialize', [
+        getCurrentTimestamp() + 5 * MINUTE,
+        HOUR,
+        releasePeriods,
+        3 * MONTH,
+        amountReleasedPerPeriod.toFixed(),
+        canValidate === false, // Otherwise reverts with "Revocable contracts cannot validate"
+        beneficiary,
+        releaseOwner,
+        refundAddress,
+        true, // subjectToLiquidityProvision needs to be true, because in the withdraw test we set the liquidity provision and it will fail otherwise
+        500, // distribution ratio
+        canValidate,
+        true,
+        REGISTRY_CONTRACT_ADDRESS,
+      ]).send({ from: ownerMultisigAddress })
     },
     new BigNumber(parseEther('1').toString())
   )

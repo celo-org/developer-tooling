@@ -16,32 +16,40 @@ testWithAnvilL2('network:contracts', (provider) => {
     })
   })
   describe('when version cant be obtained', () => {
-    let createContractSpy: jest.SpyInstance
+    let getViemContractSpy: jest.SpyInstance
     beforeEach(() => {
-      const originalCreateContract = Connection.prototype.createContract
-      createContractSpy = jest
-        .spyOn(Connection.prototype, 'createContract')
+      const originalGetViemContract = Connection.prototype.getViemContract
+      getViemContractSpy = jest
+        .spyOn(Connection.prototype, 'getViemContract')
         .mockImplementation(function (this: Connection, abi: any, address?: string) {
-          const contract = originalCreateContract.call(this, abi, address)
-          // Check if this is a versioned contract call (has getVersionNumber method)
-          if (contract.methods.getVersionNumber) {
-            contract.methods.getVersionNumber = jest.fn().mockImplementation(() => {
-              // fake governance slasher
-              if (address === '0x76C05a43234EB2804aa83Cd40BA10080a43d07AE') {
-                return {
-                  call: jest.fn().mockRejectedValue(new Error('Error: execution reverted')),
-                }
-              } else {
-                // return a fake normal version
-                return { call: jest.fn().mockResolvedValue([1, 2, 3, 4]) }
-              }
-            })
+          const contract = originalGetViemContract.call(this, abi, address!)
+          // Check if this is a versioned contract call (has getVersionNumber in ABI)
+          const hasGetVersionNumber =
+            Array.isArray(abi) &&
+            abi.some((item: any) => item.type === 'function' && item.name === 'getVersionNumber')
+          if (hasGetVersionNumber) {
+            return {
+              ...contract,
+              client: {
+                ...contract.client,
+                call: jest.fn().mockImplementation(async () => {
+                  // fake governance slasher
+                  if (address === '0x76C05a43234EB2804aa83Cd40BA10080a43d07AE') {
+                    throw new Error('Error: execution reverted')
+                  }
+                  // return ABI-encoded [1, 2, 3, 4] (4 uint256 values)
+                  return {
+                    data: '0x0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000030000000000000000000000000000000000000000000000000000000000000004',
+                  }
+                }),
+              },
+            }
           }
           return contract
         })
     })
     afterEach(() => {
-      createContractSpy.mockRestore()
+      getViemContractSpy.mockRestore()
       jest.clearAllMocks()
     })
     it('still prints rest of contracts', async () => {

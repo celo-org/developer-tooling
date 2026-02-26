@@ -25,6 +25,7 @@ export default class DKGDeploy extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(DKGDeploy)
+    // Using createContract (not getViemContract) because .deploy() is not supported by ViemContract
     const dkg = kit.connection.createContract(DKG.abi, '0x0000000000000000000000000000000000000000')
 
     await displayTx(

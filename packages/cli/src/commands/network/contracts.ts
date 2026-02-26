@@ -1,3 +1,4 @@
+import { createViemTxObject } from '@celo/connect'
 import { iCeloVersionedContractABI, proxyABI } from '@celo/abis'
 import { concurrentMap } from '@celo/base'
 import { CeloContract } from '@celo/contractkit'
@@ -38,10 +39,13 @@ export default class Contracts extends BaseCommand {
           implementation = 'NONE'
         } else {
           try {
-            implementation = await kit.connection
-              .createContract(proxyABI as any, proxy)
-              .methods._getImplementation()
-              .call()
+            const proxyContract = kit.connection.getViemContract(proxyABI as any, proxy)
+            implementation = await createViemTxObject<string>(
+              kit.connection,
+              proxyContract,
+              '_getImplementation',
+              []
+            ).call()
           } catch (e) {
             // if we fail to get implementation that means it doesnt have one so set it to NONE
             implementation = 'NONE'
@@ -53,10 +57,16 @@ export default class Contracts extends BaseCommand {
           version = 'NONE'
         } else {
           try {
-            const raw = await kit.connection
-              .createContract(iCeloVersionedContractABI as any, implementation)
-              .methods.getVersionNumber()
-              .call()
+            const versionContract = kit.connection.getViemContract(
+              iCeloVersionedContractABI as any,
+              implementation
+            )
+            const raw = await createViemTxObject<any>(
+              kit.connection,
+              versionContract,
+              'getVersionNumber',
+              []
+            ).call()
             version = `${raw[0]}.${raw[1]}.${raw[2]}.${raw[3]}`
           } catch (e) {
             console.warn(`Failed to get version for ${contract} at ${proxy}`)

@@ -8,7 +8,7 @@ import {
   withImpersonatedAccount,
 } from '@celo/dev-utils/anvil-test'
 import { mineBlocks, timeTravel } from '@celo/dev-utils/ganache-test'
-import { Provider } from '@celo/connect'
+import { createViemTxObject, Provider } from '@celo/connect'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
 import { parseEther } from 'viem'
@@ -191,8 +191,13 @@ export const activateAllValidatorGroupsVotes = async (kit: ContractKit) => {
 
   for (const validatorGroup of validatorGroups) {
     const pendingVotesForGroup = new BigNumber(
-      // @ts-expect-error we need to call the method directly as it's not exposed (and no need to) via the wrapper
-      await electionWrapper.contract.methods.getPendingVotesForGroup(validatorGroup).call()
+      await createViemTxObject<string>(
+        kit.connection,
+        // @ts-expect-error we need to call the method directly as it's not exposed via the wrapper
+        electionWrapper.contract,
+        'getPendingVotesForGroup',
+        [validatorGroup]
+      ).call()
     )
 
     if (pendingVotesForGroup.gt(0)) {
@@ -200,10 +205,13 @@ export const activateAllValidatorGroupsVotes = async (kit: ContractKit) => {
         kit.connection.currentProvider,
         validatorGroup,
         async () => {
-          // @ts-expect-error here as well
-          await electionWrapper.contract.methods
-            .activate(validatorGroup)
-            .send({ from: validatorGroup })
+          await createViemTxObject(
+            kit.connection,
+            // @ts-expect-error here as well
+            electionWrapper.contract,
+            'activate',
+            [validatorGroup]
+          ).send({ from: validatorGroup })
         },
         new BigNumber(parseEther('1').toString())
       )

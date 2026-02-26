@@ -1,4 +1,4 @@
-import { AbiItem, PROXY_ADMIN_ADDRESS } from '@celo/connect'
+import { AbiItem, createViemTxObject, PROXY_ADMIN_ADDRESS } from '@celo/connect'
 import { newKitFromProvider } from '@celo/contractkit'
 import { Proposal } from '@celo/contractkit/lib/wrappers/Governance'
 import {
@@ -127,14 +127,16 @@ testWithAnvilL2('governance:execute cmd', (provider) => {
     await (await governanceWrapper.vote(proposalId, 'Yes')).sendAndWaitForReceipt({ from: voter })
     await timeTravel((await governanceWrapper.stageDurations()).Referendum.toNumber() + 1, provider)
 
-    const testTransactionsContract = kit.connection.createContract(
+    const testTransactionsContract = kit.connection.getViemContract(
       TEST_TRANSACTIONS_ABI,
       PROXY_ADMIN_ADDRESS
     )
 
     // TestTransaction contract returns 0 if a value is not set for a given key
     expect(
-      await testTransactionsContract.methods.getValue(PROPOSAL_TRANSACTION_TEST_KEY).call()
+      await createViemTxObject<string>(kit.connection, testTransactionsContract, 'getValue', [
+        PROPOSAL_TRANSACTION_TEST_KEY,
+      ]).call()
     ).toEqual('0')
 
     logMock.mockClear()
@@ -146,7 +148,9 @@ testWithAnvilL2('governance:execute cmd', (provider) => {
     )
 
     expect(
-      await testTransactionsContract.methods.getValue(PROPOSAL_TRANSACTION_TEST_KEY).call()
+      await createViemTxObject<string>(kit.connection, testTransactionsContract, 'getValue', [
+        PROPOSAL_TRANSACTION_TEST_KEY,
+      ]).call()
     ).toEqual(PROPOSAL_TRANSACTION_TEST_VALUE)
 
     expect(

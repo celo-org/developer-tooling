@@ -10,7 +10,7 @@ import {
 } from '@celo/dev-utils/anvil-test'
 import fs from 'fs'
 import path from 'node:path'
-import { AbiItem, PROXY_ADMIN_ADDRESS } from '../../../../sdk/connect/lib'
+import { AbiItem, createViemTxObject, PROXY_ADMIN_ADDRESS } from '@celo/connect'
 import {
   EXTRA_LONG_TIMEOUT_MS,
   stripAnsiCodesAndTxHashes,
@@ -142,14 +142,16 @@ testWithAnvilL2('governance:executehotfix cmd', (provider) => {
         provider
       )
 
-      const testTransactionsContract = kit.connection.createContract(
+      const testTransactionsContract = kit.connection.getViemContract(
         TEST_TRANSACTIONS_ABI,
         PROXY_ADMIN_ADDRESS
       )
 
       // TestTransaction contract returns 0 if a value is not set for a given key
       expect(
-        await testTransactionsContract.methods.getValue(HOTFIX_TRANSACTION_TEST_KEY).call()
+        await createViemTxObject<string>(kit.connection, testTransactionsContract, 'getValue', [
+          HOTFIX_TRANSACTION_TEST_KEY,
+        ]).call()
       ).toEqual('0')
 
       logMock.mockClear()
@@ -168,7 +170,9 @@ testWithAnvilL2('governance:executehotfix cmd', (provider) => {
       )
 
       expect(
-        await testTransactionsContract.methods.getValue(HOTFIX_TRANSACTION_TEST_KEY).call()
+        await createViemTxObject<string>(kit.connection, testTransactionsContract, 'getValue', [
+          HOTFIX_TRANSACTION_TEST_KEY,
+        ]).call()
       ).toEqual(HOTFIX_TRANSACTION_TEST_VALUE)
 
       expect(
@@ -281,14 +285,16 @@ testWithAnvilL2('governance:executehotfix cmd', (provider) => {
         provider
       )
 
-      const testTransactionsContract = kit.connection.createContract(
+      const testTransactionsContract = kit.connection.getViemContract(
         TEST_TRANSACTIONS_ABI,
         PROXY_ADMIN_ADDRESS
       )
 
       // TestTransaction contract returns 0 if a value is not set for a given key
       expect(
-        await testTransactionsContract.methods.getValue(HOTFIX_TRANSACTION_TEST_KEY).call()
+        await createViemTxObject<string>(kit.connection, testTransactionsContract, 'getValue', [
+          HOTFIX_TRANSACTION_TEST_KEY,
+        ]).call()
       ).toEqual('0')
 
       const timestampAfterExecutionLimit = (
@@ -320,7 +326,9 @@ testWithAnvilL2('governance:executehotfix cmd', (provider) => {
 
       // Should still return 0 because the hotfix should not have been executed
       expect(
-        await testTransactionsContract.methods.getValue(HOTFIX_TRANSACTION_TEST_KEY).call()
+        await createViemTxObject<string>(kit.connection, testTransactionsContract, 'getValue', [
+          HOTFIX_TRANSACTION_TEST_KEY,
+        ]).call()
       ).toEqual('0')
 
       expect(

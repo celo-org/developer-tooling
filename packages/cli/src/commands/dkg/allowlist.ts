@@ -1,3 +1,4 @@
+import { createViemTxObject } from '@celo/connect'
 import { ensureLeading0x } from '@celo/utils/lib/address'
 import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
@@ -25,11 +26,13 @@ export default class DKGRegister extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(DKGRegister)
-    const dkg = kit.connection.createContract(DKG.abi as any, res.flags.address)
+    const dkg = kit.connection.getViemContract(DKG.abi as any, res.flags.address)
 
     const participantAddress = res.flags.participantAddress
-    await displayTx('allowlist', dkg.methods.allowlist(ensureLeading0x(participantAddress)), {
-      from: res.flags.from,
-    })
+    await displayTx(
+      'allowlist',
+      createViemTxObject(kit.connection, dkg, 'allowlist', [ensureLeading0x(participantAddress)]),
+      { from: res.flags.from }
+    )
   }
 }

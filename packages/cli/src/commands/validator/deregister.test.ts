@@ -1,3 +1,4 @@
+import { createViemTxObject } from '@celo/connect'
 import { StrongAddress } from '@celo/base'
 import { newKitFromProvider } from '@celo/contractkit'
 import { ValidatorsWrapper } from '@celo/contractkit/lib/wrappers/Validators'
@@ -59,16 +60,27 @@ testWithAnvilL2('validator:deregister', (provider) => {
       provider
     )
     await asCoreContractsOwner(provider, async (ownerAddress) => {
-      // @ts-expect-error (.contract)
-      await validatorContract.contract.methods.setMaxGroupSize(5).send({ from: ownerAddress })
-      // @ts-expect-error (.contract)
-      await validatorContract.contract.methods
-        .setValidatorLockedGoldRequirements(2, 10000)
-        .send({ from: ownerAddress })
-      // @ts-expect-error (.contract)
-      await validatorContract.contract.methods
-        .setGroupLockedGoldRequirements(2, 10000)
-        .send({ from: ownerAddress })
+      await createViemTxObject(
+        kit.connection,
+        // @ts-expect-error (.contract)
+        validatorContract.contract,
+        'setMaxGroupSize',
+        [5]
+      ).send({ from: ownerAddress })
+      await createViemTxObject(
+        kit.connection,
+        // @ts-expect-error (.contract)
+        validatorContract.contract,
+        'setValidatorLockedGoldRequirements',
+        [2, 10000]
+      ).send({ from: ownerAddress })
+      await createViemTxObject(
+        kit.connection,
+        // @ts-expect-error (.contract)
+        validatorContract.contract,
+        'setGroupLockedGoldRequirements',
+        [2, 10000]
+      ).send({ from: ownerAddress })
     })
     await withImpersonatedAccount(provider, groupAddress, async () => {
       await testLocallyWithNode(

@@ -1,3 +1,4 @@
+import { createViemTxObject } from '@celo/connect'
 import { ensureLeading0x } from '@celo/utils/lib/address'
 import { Flags } from '@oclif/core'
 import fs from 'fs'
@@ -23,11 +24,13 @@ export default class DKGPublish extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(DKGPublish)
-    const dkg = kit.connection.createContract(DKG.abi, res.flags.address)
+    const dkg = kit.connection.getViemContract(DKG.abi, res.flags.address)
 
     const data = fs.readFileSync(res.flags.data).toString('hex')
-    await displayTx('publishData', dkg.methods.publish(ensureLeading0x(data)), {
-      from: res.flags.from,
-    })
+    await displayTx(
+      'publishData',
+      createViemTxObject(kit.connection, dkg, 'publish', [ensureLeading0x(data)]),
+      { from: res.flags.from }
+    )
   }
 }

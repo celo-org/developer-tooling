@@ -1,6 +1,6 @@
 import { multiSigABI, proxyABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
-import { AbiItem, Provider } from '@celo/connect'
+import { AbiItem, createViemTxObject, Provider } from '@celo/connect'
 import { ContractKit } from '@celo/contractkit'
 import { setCode } from '@celo/dev-utils/anvil-test'
 import { TEST_GAS_PRICE } from '@celo/dev-utils/test-utils'
@@ -50,11 +50,10 @@ export async function createMultisig(
   const initializerAbi = multiSigABI.find(
     (abi) => abi.type === 'function' && abi.name === 'initialize'
   )
-  const proxy = kit.connection.createContract(proxyABI as unknown as AbiItem[], proxyAddress!)
+  const proxy = kit.connection.getViemContract(proxyABI as unknown as AbiItem[], proxyAddress!)
   const blockResp = await kit.connection.rpcCaller.call('eth_getBlockByNumber', ['latest', false])
   const baseFee = (blockResp.result as RpcBlockResponse).baseFeePerGas
   const priorityFee = parseUnits('25', 9).toString()
-  const initMethod = proxy.methods._setAndInitializeImplementation
   const callData = kit.connection
     .getAbiCoder()
     .encodeFunctionCall(initializerAbi as AbiItem, [
@@ -62,15 +61,19 @@ export async function createMultisig(
       requiredSignatures as unknown,
       requiredInternalSignatures as unknown,
     ])
-  const initTx = initMethod(multiSigAddress, callData)
+  const initTx = createViemTxObject(kit.connection, proxy, '_setAndInitializeImplementation', [
+    multiSigAddress,
+    callData,
+  ])
   await initTx.send({
     from: kit.defaultAccount,
     gas: await initTx.estimateGas({ from: kit.defaultAccount }),
     maxPriorityFeePerGas: priorityFee,
     maxFeePerGas: (BigInt(baseFee) + BigInt(priorityFee)).toString(),
   })
-  const transferOwnershipMethod = proxy.methods._transferOwnership
-  const changeOwnerTx = transferOwnershipMethod(proxyAddress)
+  const changeOwnerTx = createViemTxObject(kit.connection, proxy, '_transferOwnership', [
+    proxyAddress,
+  ])
   await changeOwnerTx.send({
     from: kit.defaultAccount,
     gas: await changeOwnerTx.estimateGas({ from: kit.defaultAccount }),

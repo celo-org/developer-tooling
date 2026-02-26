@@ -1,3 +1,4 @@
+import { createViemTxObject } from '@celo/connect'
 import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { CustomFlags } from '../../utils/command'
@@ -34,37 +35,37 @@ export default class DKGGet extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(DKGGet)
-    const dkg = kit.connection.createContract(DKG.abi, res.flags.address)
+    const dkg = kit.connection.getViemContract(DKG.abi, res.flags.address)
 
     const methodType = res.flags.method as keyof typeof Method
     switch (methodType) {
       case Method.shares: {
-        const data = await dkg.methods.getShares().call()
+        const data = await createViemTxObject(kit.connection, dkg, 'getShares', []).call()
         this.log(JSON.stringify(data))
         break
       }
       case Method.responses: {
-        const data = await dkg.methods.getResponses().call()
+        const data = await createViemTxObject(kit.connection, dkg, 'getResponses', []).call()
         this.log(JSON.stringify(data))
         break
       }
       case Method.justifications: {
-        const data = await dkg.methods.getJustifications().call()
+        const data = await createViemTxObject(kit.connection, dkg, 'getJustifications', []).call()
         this.log(JSON.stringify(data))
         break
       }
       case Method.participants: {
-        const data = await dkg.methods.getParticipants().call()
+        const data = await createViemTxObject(kit.connection, dkg, 'getParticipants', []).call()
         this.log(JSON.stringify(data))
         break
       }
       case Method.phase: {
-        const phase = await dkg.methods.inPhase().call()
+        const phase = await createViemTxObject(kit.connection, dkg, 'inPhase', []).call()
         this.log(`In phase: ${phase}`)
         break
       }
       case Method.group: {
-        const data = await dkg.methods.getBlsKeys().call()
+        const data = await createViemTxObject<any>(kit.connection, dkg, 'getBlsKeys', []).call()
         const group = { threshold: data[0], blsKeys: data[1] }
         this.log(JSON.stringify(group))
         break
