@@ -11,6 +11,7 @@ import {
 } from '@celo/connect'
 import type { AbiItem } from '@celo/connect/lib/abi-types'
 import { viemAbiCoder } from '@celo/connect/lib/viem-abi-coder'
+import type { Abi, ContractFunctionName } from 'viem'
 import { toFunctionHash } from 'viem'
 import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
@@ -23,12 +24,12 @@ type EventsEnum = Record<string, string>
 /**
  * @internal -- use its children
  */
-export abstract class BaseWrapper {
+export abstract class BaseWrapper<TAbi extends readonly unknown[] = AbiItem[]> {
   protected _version?: ContractVersion
 
   constructor(
     protected readonly connection: Connection,
-    protected readonly contract: ViemContract
+    protected readonly contract: ViemContract<TAbi>
   ) {}
 
   /** Contract address */
@@ -77,7 +78,7 @@ export abstract class BaseWrapper {
 
   /** Contract getPastEvents */
   public async getPastEvents(event: Events, options: PastEventOptions): Promise<EventLog[]> {
-    const eventAbi = this.contract.abi.find(
+    const eventAbi = (this.contract.abi as unknown as AbiItem[]).find(
       (item: AbiItem) => item.type === 'event' && item.name === event
     )
     if (!eventAbi) return []
@@ -127,7 +128,7 @@ export abstract class BaseWrapper {
     })
   }
 
-  events: Record<string, AbiItem> = this.contract.abi
+  events: Record<string, AbiItem> = (this.contract.abi as unknown as AbiItem[])
     .filter((item: AbiItem) => item.type === 'event' && item.name)
     .reduce<Record<string, AbiItem>>((acc, item: AbiItem) => {
       acc[item.name!] = item
@@ -139,7 +140,7 @@ export abstract class BaseWrapper {
     {} as any
   )
 
-  methodIds = this.contract.abi
+  methodIds = (this.contract.abi as unknown as AbiItem[])
     .filter((item: AbiItem) => item.type === 'function' && item.name)
     .reduce<Record<Methods, string>>((acc, item: AbiItem) => {
       const sig = `${item.name}(${(item.inputs || []).map((i) => i.type).join(',')})`
@@ -277,24 +278,78 @@ export function tupleParser(...parsers: Parser<any, any>[]) {
 /**
  * Creates a proxy to read from a viem-native contract.
  *
- * There are 4 cases:
- *  - contract + functionName
- *  - contract + functionName + parseOutput
- *  - contract + functionName + parseInputArgs + parseOutput
- *  - contract + functionName + parseInputArgs
+ * Typed overloads: when a `ViemContract<TAbi>` with a const-typed ABI is provided,
+ * the function name is constrained to actual ABI function names at compile time.
+ *
+ * Untyped overloads (below): accept any string for backward compatibility.
  */
+
+// Typed overload: contract with const ABI, function name only
+export function proxyCall<
+  TAbi extends Abi,
+  TFunctionName extends ContractFunctionName<TAbi, 'view' | 'pure'>,
+  InputArgs extends any[],
+  Output,
+>(
+  contract: ViemContract<TAbi>,
+  functionName: TFunctionName
+): (...args: InputArgs) => Promise<Output>
+
+// Typed overload: contract with const ABI, function name + undefined + output parser
+export function proxyCall<
+  TAbi extends Abi,
+  TFunctionName extends ContractFunctionName<TAbi, 'view' | 'pure'>,
+  InputArgs extends any[],
+  PreParsedOutput,
+  Output,
+>(
+  contract: ViemContract<TAbi>,
+  functionName: TFunctionName,
+  parseInputArgs: undefined,
+  parseOutput: (o: PreParsedOutput) => Output
+): (...args: InputArgs) => Promise<Output>
+
+// Typed overload: contract with const ABI, function name + input parser
+export function proxyCall<
+  TAbi extends Abi,
+  TFunctionName extends ContractFunctionName<TAbi, 'view' | 'pure'>,
+  InputArgs extends any[],
+  ParsedInputArgs extends any[],
+  Output,
+>(
+  contract: ViemContract<TAbi>,
+  functionName: TFunctionName,
+  parseInputArgs: (...args: InputArgs) => ParsedInputArgs
+): (...args: InputArgs) => Promise<Output>
+
+// Typed overload: contract with const ABI, function name + input parser + output parser
+export function proxyCall<
+  TAbi extends Abi,
+  TFunctionName extends ContractFunctionName<TAbi, 'view' | 'pure'>,
+  InputArgs extends any[],
+  ParsedInputArgs extends any[],
+  PreParsedOutput,
+  Output,
+>(
+  contract: ViemContract<TAbi>,
+  functionName: TFunctionName,
+  parseInputArgs: ((...args: InputArgs) => ParsedInputArgs) | undefined,
+  parseOutput: (o: PreParsedOutput) => Output
+): (...args: InputArgs) => Promise<Output>
+
+// Untyped overloads (backward compat): accept any string function name
 export function proxyCall<InputArgs extends any[], Output>(
-  contract: ViemContract,
+  contract: ViemContract<readonly unknown[]>,
   functionName: string
 ): (...args: InputArgs) => Promise<Output>
 export function proxyCall<InputArgs extends any[], PreParsedOutput, Output>(
-  contract: ViemContract,
+  contract: ViemContract<readonly unknown[]>,
   functionName: string,
   parseInputArgs: undefined,
   parseOutput: (o: PreParsedOutput) => Output
 ): (...args: InputArgs) => Promise<Output>
 export function proxyCall<InputArgs extends any[], ParsedInputArgs extends any[], Output>(
-  contract: ViemContract,
+  contract: ViemContract<readonly unknown[]>,
   functionName: string,
   parseInputArgs: (...args: InputArgs) => ParsedInputArgs
 ): (...args: InputArgs) => Promise<Output>
@@ -304,7 +359,7 @@ export function proxyCall<
   PreParsedOutput,
   Output,
 >(
-  contract: ViemContract,
+  contract: ViemContract<readonly unknown[]>,
   functionName: string,
   parseInputArgs: ((...args: InputArgs) => ParsedInputArgs) | undefined,
   parseOutput: (o: PreParsedOutput) => Output
@@ -315,7 +370,7 @@ export function proxyCall<
   PreParsedOutput,
   Output,
 >(
-  contract: ViemContract,
+  contract: ViemContract<readonly unknown[]>,
   functionName: string,
   parseInputArgs?: ((...args: InputArgs) => ParsedInputArgs) | undefined,
   parseOutput?: ((o: PreParsedOutput) => Output) | undefined
@@ -337,24 +392,51 @@ export function proxyCall<
 /**
  * Creates a proxy to send a tx on a viem-native contract.
  *
- * There are 2 cases:
- *  - connection + contract + functionName
- *  - connection + contract + functionName + parseInputArgs
+ * Typed overloads: when a `ViemContract<TAbi>` with a const-typed ABI is provided,
+ * the function name is constrained to actual ABI function names at compile time.
  */
+
+// Typed overload: contract with const ABI, function name only
+export function proxySend<
+  TAbi extends Abi,
+  TFunctionName extends ContractFunctionName<TAbi, 'nonpayable' | 'payable'>,
+  InputArgs extends any[],
+  Output,
+>(
+  connection: Connection,
+  contract: ViemContract<TAbi>,
+  functionName: TFunctionName
+): (...args: InputArgs) => CeloTransactionObject<Output>
+
+// Typed overload: contract with const ABI, function name + input parser
+export function proxySend<
+  TAbi extends Abi,
+  TFunctionName extends ContractFunctionName<TAbi, 'nonpayable' | 'payable'>,
+  InputArgs extends any[],
+  ParsedInputArgs extends any[],
+  Output,
+>(
+  connection: Connection,
+  contract: ViemContract<TAbi>,
+  functionName: TFunctionName,
+  parseInputArgs: (...args: InputArgs) => ParsedInputArgs
+): (...args: InputArgs) => CeloTransactionObject<Output>
+
+// Untyped overloads (backward compat)
 export function proxySend<InputArgs extends any[], Output>(
   connection: Connection,
-  contract: ViemContract,
+  contract: ViemContract<readonly unknown[]>,
   functionName: string
 ): (...args: InputArgs) => CeloTransactionObject<Output>
 export function proxySend<InputArgs extends any[], ParsedInputArgs extends any[], Output>(
   connection: Connection,
-  contract: ViemContract,
+  contract: ViemContract<readonly unknown[]>,
   functionName: string,
   parseInputArgs: (...args: InputArgs) => ParsedInputArgs
 ): (...args: InputArgs) => CeloTransactionObject<Output>
 export function proxySend<InputArgs extends any[], ParsedInputArgs extends any[], Output>(
   connection: Connection,
-  contract: ViemContract,
+  contract: ViemContract<readonly unknown[]>,
   functionName: string,
   parseInputArgs?: (...args: InputArgs) => ParsedInputArgs
 ): (...args: InputArgs) => CeloTransactionObject<Output> {
