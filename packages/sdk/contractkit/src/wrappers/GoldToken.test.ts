@@ -9,10 +9,10 @@ import { GoldTokenWrapper } from './GoldTokenWrapper'
 // TODO checking for account balance directly won't work because of missing transfer precompile
 // instead we can check for the Transfer event instead and/or lowered allowance value (they both
 // happen after the call to transfer precompile)
-testWithAnvilL2('GoldToken Wrapper', (providerOwner) => {
+testWithAnvilL2('GoldToken Wrapper', (provider) => {
   const ONE_GOLD = new BigNumber('1e18').toFixed()
 
-  const kit = newKitFromProvider(providerOwner.currentProvider)
+  const kit = newKitFromProvider(provider)
   let accounts: StrongAddress[] = []
   let goldToken: GoldTokenWrapper
   let goldTokenContract: Contract

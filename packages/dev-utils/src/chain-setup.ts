@@ -1,16 +1,15 @@
 import { governanceABI, validatorsABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
-import { AbiItem, Connection } from '@celo/connect'
+import { AbiItem, Connection, Provider } from '@celo/connect'
 import { DEFAULT_OWNER_ADDRESS, withImpersonatedAccount } from './anvil-test'
-import { type ProviderOwner } from './test-utils'
 
 export async function setCommissionUpdateDelay(
-  client: ProviderOwner,
+  provider: Provider,
   validatorsContractAddress: StrongAddress,
   delayInBlocks: number
 ) {
-  const conn = new Connection(client.currentProvider)
-  await withImpersonatedAccount(client, DEFAULT_OWNER_ADDRESS, async () => {
+  const conn = new Connection(provider)
+  await withImpersonatedAccount(provider, DEFAULT_OWNER_ADDRESS, async () => {
     const validators = conn.createContract(
       validatorsABI as unknown as AbiItem[],
       validatorsContractAddress
@@ -26,12 +25,12 @@ export async function setCommissionUpdateDelay(
 }
 
 export async function setDequeueFrequency(
-  client: ProviderOwner,
+  provider: Provider,
   governanceContractAddress: StrongAddress,
   frequency: number
 ) {
-  const conn = new Connection(client.currentProvider)
-  await withImpersonatedAccount(client, DEFAULT_OWNER_ADDRESS, async () => {
+  const conn = new Connection(provider)
+  await withImpersonatedAccount(provider, DEFAULT_OWNER_ADDRESS, async () => {
     const governance = conn.createContract(
       governanceABI as unknown as AbiItem[],
       governanceContractAddress
@@ -45,12 +44,12 @@ export async function setDequeueFrequency(
 }
 
 export async function setReferendumStageDuration(
-  client: ProviderOwner,
+  provider: Provider,
   governanceContractAddress: StrongAddress,
   duration: number
 ) {
-  const conn = new Connection(client.currentProvider)
-  await withImpersonatedAccount(client, DEFAULT_OWNER_ADDRESS, async () => {
+  const conn = new Connection(provider)
+  await withImpersonatedAccount(provider, DEFAULT_OWNER_ADDRESS, async () => {
     const governance = conn.createContract(
       governanceABI as unknown as AbiItem[],
       governanceContractAddress

@@ -1,10 +1,9 @@
 import { multiSigABI, proxyABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
-import { AbiItem } from '@celo/connect'
+import { AbiItem, Provider } from '@celo/connect'
 import { ContractKit } from '@celo/contractkit'
 import { setCode } from '@celo/dev-utils/anvil-test'
 import { TEST_GAS_PRICE } from '@celo/dev-utils/test-utils'
-import { ProviderOwner } from '@celo/dev-utils/test-utils'
 import { parseUnits } from 'viem'
 import {
   multiSigBytecode,
@@ -96,11 +95,11 @@ export async function createMultisig(
  *
  * A working example can be found in packages/cli/src/commands/governance/approve-l2.test.ts`
  */
-export const setupSafeContracts = async (providerOwner: ProviderOwner) => {
+export const setupSafeContracts = async (provider: Provider) => {
   // Set up safe 1.3.0 in devchain
-  await setCode(providerOwner, SAFE_MULTISEND_ADDRESS, SAFE_MULTISEND_CODE)
-  await setCode(providerOwner, SAFE_MULTISEND_CALL_ONLY_ADDRESS, SAFE_MULTISEND_CALL_ONLY_CODE)
-  await setCode(providerOwner, SAFE_PROXY_FACTORY_ADDRESS, SAFE_PROXY_FACTORY_CODE)
-  await setCode(providerOwner, SAFE_PROXY_ADDRESS, SAFE_PROXY_CODE)
-  await setCode(providerOwner, SAFE_FALLBACK_HANDLER_ADDRESS, SAFE_FALLBACK_HANDLER_CODE)
+  await setCode(provider, SAFE_MULTISEND_ADDRESS, SAFE_MULTISEND_CODE)
+  await setCode(provider, SAFE_MULTISEND_CALL_ONLY_ADDRESS, SAFE_MULTISEND_CALL_ONLY_CODE)
+  await setCode(provider, SAFE_PROXY_FACTORY_ADDRESS, SAFE_PROXY_FACTORY_CODE)
+  await setCode(provider, SAFE_PROXY_ADDRESS, SAFE_PROXY_CODE)
+  await setCode(provider, SAFE_FALLBACK_HANDLER_ADDRESS, SAFE_FALLBACK_HANDLER_CODE)
 }

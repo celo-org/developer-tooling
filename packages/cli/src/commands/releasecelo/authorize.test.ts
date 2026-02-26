@@ -14,16 +14,16 @@ import { parseEther } from 'viem'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('releasegold:authorize cmd', (providerOwner) => {
+testWithAnvilL2('releasegold:authorize cmd', (provider) => {
   let contractAddress: string
   let kit: any
   let logSpy: jest.SpyInstance
 
   beforeEach(async () => {
-    kit = newKitFromProvider(providerOwner.currentProvider)
+    kit = newKitFromProvider(provider)
     const accounts = (await kit.connection.getAccounts()) as StrongAddress[]
     contractAddress = await deployReleaseGoldContract(
-      providerOwner,
+      provider,
       await createMultisig(kit, [accounts[0], accounts[1]] as StrongAddress[], 2, 2),
       accounts[1],
       accounts[0],
@@ -32,11 +32,11 @@ testWithAnvilL2('releasegold:authorize cmd', (providerOwner) => {
     )
     // contract needs to have sufficient funds to lock CELO
     await setBalance(
-      providerOwner,
+      provider,
       contractAddress as StrongAddress,
       new BigNumber(parseEther('100000').toString())
     )
-    await testLocallyWithNode(CreateAccount, ['--contract', contractAddress], providerOwner)
+    await testLocallyWithNode(CreateAccount, ['--contract', contractAddress], provider)
   })
 
   describe('can authorize account signers', () => {
@@ -64,7 +64,7 @@ testWithAnvilL2('releasegold:authorize cmd', (providerOwner) => {
             '--signature',
             serializeSignature(pop),
           ],
-          providerOwner
+          provider
         )
       ).resolves.toBeUndefined()
       expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls)).toMatchInlineSnapshot(`
@@ -102,7 +102,7 @@ testWithAnvilL2('releasegold:authorize cmd', (providerOwner) => {
             '--signature',
             serializeSignature(pop),
           ],
-          providerOwner
+          provider
         )
       ).resolves.toBeUndefined()
       expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls)).toMatchInlineSnapshot(`
@@ -161,7 +161,7 @@ testWithAnvilL2('releasegold:authorize cmd', (providerOwner) => {
             '--signature',
             serializeSignature(pop),
           ],
-          providerOwner
+          provider
         )
       ).resolves.toBeUndefined()
       expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls)).toMatchInlineSnapshot(`
@@ -222,7 +222,7 @@ testWithAnvilL2('releasegold:authorize cmd', (providerOwner) => {
           '10000000000000000000000',
           '--yes',
         ],
-        providerOwner
+        provider
       )
     ).resolves.toBeUndefined()
     await expect(
@@ -238,14 +238,14 @@ testWithAnvilL2('releasegold:authorize cmd', (providerOwner) => {
           '--signature',
           serializeSignature(pop),
         ],
-        providerOwner
+        provider
       )
     ).resolves.toBeUndefined()
     await expect(
       testLocallyWithNode(
         ValidatorRegister,
         ['--from', signer, '--ecdsaKey', ecdsaPublicKey, '--yes'],
-        providerOwner
+        provider
       )
     ).resolves.toBeUndefined()
   })
@@ -266,7 +266,7 @@ testWithAnvilL2('releasegold:authorize cmd', (providerOwner) => {
           '0x1b9fca4bbb5bfb1dbe69ef1cddbd9b4202dcb6b134c5170611e1e36ecfa468d7b46c85328d504934fce6c2a1571603a50ae224d2b32685e84d4d1a1eebad8452eb',
         ],
 
-        providerOwner
+        provider
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Unable to parse signature (expected signer 0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb)"`

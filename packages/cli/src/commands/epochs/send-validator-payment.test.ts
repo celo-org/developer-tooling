@@ -6,7 +6,7 @@ import SendValidatorPayment from './send-validator-payment'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('epochs:send-validator-payment cmd', (providerOwner) => {
+testWithAnvilL2('epochs:send-validator-payment cmd', (provider) => {
   const logMock = jest.spyOn(console, 'log')
   const errorMock = jest.spyOn(console, 'error')
 
@@ -14,11 +14,11 @@ testWithAnvilL2('epochs:send-validator-payment cmd', (providerOwner) => {
     logMock.mockClear()
     errorMock.mockClear()
 
-    await activateAllValidatorGroupsVotes(newKitFromProvider(providerOwner.currentProvider))
+    await activateAllValidatorGroupsVotes(newKitFromProvider(provider))
   })
 
   it('successfuly sends the payments', async () => {
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const [sender] = await kit.connection.getAccounts()
     const epochManagerWrapper = await kit.contracts.getEpochManager()
     const validatorsWrapper = await kit.contracts.getValidators()
@@ -31,7 +31,7 @@ testWithAnvilL2('epochs:send-validator-payment cmd', (providerOwner) => {
     await testLocallyWithNode(
       SendValidatorPayment,
       ['--for', validatorAddress, '--from', sender],
-      providerOwner
+      provider
     )
 
     // TODO as the numbers are not deterministic, we can't assert the exact values, so it's tested separately
@@ -66,14 +66,14 @@ testWithAnvilL2('epochs:send-validator-payment cmd', (providerOwner) => {
   })
 
   it('fails if not a validator', async () => {
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const [nonValidatorAccount, sender] = await kit.connection.getAccounts()
 
     await expect(
       testLocallyWithNode(
         SendValidatorPayment,
         ['--for', nonValidatorAccount, '--from', sender],
-        providerOwner
+        provider
       )
     ).rejects.toMatchInlineSnapshot(`[Error: Some checks didn't pass!]`)
 

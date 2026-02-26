@@ -7,7 +7,7 @@ process.env.NO_SYNCCHECK = 'true'
 
 const KNOWN_DEVCHAIN_VALIDATOR = '0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f'
 
-testWithAnvilL2('validator:show', (providerOwner) => {
+testWithAnvilL2('validator:show', (provider) => {
   const writeMock = jest.spyOn(ux.write, 'stdout')
   const logMock = jest.spyOn(console, 'log')
 
@@ -16,7 +16,7 @@ testWithAnvilL2('validator:show', (providerOwner) => {
   })
 
   it('shows the validator', async () => {
-    await testLocallyWithNode(Show, [KNOWN_DEVCHAIN_VALIDATOR], providerOwner)
+    await testLocallyWithNode(Show, [KNOWN_DEVCHAIN_VALIDATOR], provider)
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
       [
         [

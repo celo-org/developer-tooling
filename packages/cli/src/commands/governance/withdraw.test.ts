@@ -20,7 +20,7 @@ testWithAnvilL2(
     const errorMock = jest.spyOn(console, 'error')
 
     let minDeposit: string
-    const kit = newKitFromProvider(client.currentProvider)
+    const kit = newKitFromProvider(client)
 
     let accounts: StrongAddress[] = []
     let governance: GovernanceWrapper

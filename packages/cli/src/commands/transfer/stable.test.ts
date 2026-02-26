@@ -11,7 +11,7 @@ process.env.NO_SYNCCHECK = 'true'
 // Lots of commands, sometimes times out
 jest.setTimeout(15000)
 
-testWithAnvilL2('transfer:stable cmd', (providerOwner) => {
+testWithAnvilL2('transfer:stable cmd', (provider) => {
   let accounts: string[] = []
   let kit: ContractKit
 
@@ -25,7 +25,7 @@ testWithAnvilL2('transfer:stable cmd', (providerOwner) => {
   })
 
   beforeEach(async () => {
-    kit = newKitFromProvider(providerOwner.currentProvider)
+    kit = newKitFromProvider(provider)
     accounts = await kit.connection.getAccounts()
 
     await topUpWithToken(
@@ -59,7 +59,7 @@ testWithAnvilL2('transfer:stable cmd', (providerOwner) => {
         '--stableToken',
         StableToken.USDm,
       ],
-      providerOwner
+      provider
     )
     // Send cusd as erc20
     const receiverBalance = await kit.getTotalBalance(reciever)
@@ -79,7 +79,7 @@ testWithAnvilL2('transfer:stable cmd', (providerOwner) => {
         '--stableToken',
         StableToken.USDm,
       ],
-      providerOwner
+      provider
     )
   })
 
@@ -101,7 +101,7 @@ testWithAnvilL2('transfer:stable cmd', (providerOwner) => {
           '--stableToken',
           StableToken.USDm,
         ],
-        providerOwner
+        provider
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     expect(spy).toHaveBeenCalledWith(expect.stringContaining(COMPLIANT_ERROR_RESPONSE))
@@ -123,7 +123,7 @@ testWithAnvilL2('transfer:stable cmd', (providerOwner) => {
           '--useAKV',
         ],
 
-        providerOwner
+        provider
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"--useAKV flag is no longer supported"`)
   })

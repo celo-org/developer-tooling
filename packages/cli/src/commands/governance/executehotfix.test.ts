@@ -23,7 +23,7 @@ import { parseEther } from 'viem'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:executehotfix cmd', (providerOwner) => {
+testWithAnvilL2('governance:executehotfix cmd', (provider) => {
   const HOTFIX_HASH = '0x8ad3719bb2577b277bcafc1f00ac2f1c3fa5e565173303684d0a8d4f3661680c'
   const HOTFIX_BUFFER = hexToBuffer(HOTFIX_HASH)
   const HOTFIX_TRANSACTION_TEST_KEY = '3'
@@ -75,12 +75,12 @@ testWithAnvilL2('governance:executehotfix cmd', (providerOwner) => {
   it(
     'should execute a hotfix successfuly',
     async () => {
-      const kit = newKitFromProvider(providerOwner.currentProvider)
+      const kit = newKitFromProvider(provider)
       const governanceWrapper = await kit.contracts.getGovernance()
       const [approverAccount, securityCouncilAccount] = await kit.connection.getAccounts()
       const logMock = jest.spyOn(console, 'log')
 
-      await setCode(providerOwner, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
+      await setCode(provider, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
 
       // send some funds to DEFAULT_OWNER_ADDRESS to execute transactions
       await (
@@ -91,7 +91,7 @@ testWithAnvilL2('governance:executehotfix cmd', (providerOwner) => {
         })
       ).waitReceipt()
 
-      await withImpersonatedAccount(providerOwner, DEFAULT_OWNER_ADDRESS, async () => {
+      await withImpersonatedAccount(provider, DEFAULT_OWNER_ADDRESS, async () => {
         // setHotfixExecutionTimeWindow to EXECUTION_TIME_LIMIT (86400)
         await (
           await kit.sendTransaction({
@@ -127,19 +127,19 @@ testWithAnvilL2('governance:executehotfix cmd', (providerOwner) => {
       await testLocallyWithNode(
         Approve,
         ['--hotfix', HOTFIX_HASH, '--from', approverAccount],
-        providerOwner
+        provider
       )
 
       await testLocallyWithNode(
         Approve,
         ['--hotfix', HOTFIX_HASH, '--from', securityCouncilAccount, '--type', 'securityCouncil'],
-        providerOwner
+        provider
       )
 
       await testLocallyWithNode(
         PrepareHotfix,
         ['--hash', HOTFIX_HASH, '--from', approverAccount],
-        providerOwner
+        provider
       )
 
       const testTransactionsContract = kit.connection.createContract(
@@ -164,7 +164,7 @@ testWithAnvilL2('governance:executehotfix cmd', (providerOwner) => {
           '--salt',
           SALT,
         ],
-        providerOwner
+        provider
       )
 
       expect(
@@ -214,12 +214,12 @@ testWithAnvilL2('governance:executehotfix cmd', (providerOwner) => {
   it(
     'fails if execution time limit has been reached',
     async () => {
-      const kit = newKitFromProvider(providerOwner.currentProvider)
+      const kit = newKitFromProvider(provider)
       const governanceWrapper = await kit.contracts.getGovernance()
       const [approverAccount, securityCouncilAccount] = await kit.connection.getAccounts()
       const logMock = jest.spyOn(console, 'log')
 
-      await setCode(providerOwner, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
+      await setCode(provider, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
 
       // send some funds to DEFAULT_OWNER_ADDRESS to execute transactions
       await (
@@ -230,7 +230,7 @@ testWithAnvilL2('governance:executehotfix cmd', (providerOwner) => {
         })
       ).waitReceipt()
 
-      await withImpersonatedAccount(providerOwner, DEFAULT_OWNER_ADDRESS, async () => {
+      await withImpersonatedAccount(provider, DEFAULT_OWNER_ADDRESS, async () => {
         // setHotfixExecutionTimeWindow to 1 second
         await (
           await kit.sendTransaction({
@@ -266,19 +266,19 @@ testWithAnvilL2('governance:executehotfix cmd', (providerOwner) => {
       await testLocallyWithNode(
         Approve,
         ['--hotfix', HOTFIX_HASH, '--from', approverAccount],
-        providerOwner
+        provider
       )
 
       await testLocallyWithNode(
         Approve,
         ['--hotfix', HOTFIX_HASH, '--from', securityCouncilAccount, '--type', 'securityCouncil'],
-        providerOwner
+        provider
       )
 
       await testLocallyWithNode(
         PrepareHotfix,
         ['--hash', HOTFIX_HASH, '--from', approverAccount],
-        providerOwner
+        provider
       )
 
       const testTransactionsContract = kit.connection.createContract(
@@ -299,7 +299,7 @@ testWithAnvilL2('governance:executehotfix cmd', (providerOwner) => {
         .spyOn(global.Date, 'now')
         .mockImplementation(() => timestampAfterExecutionLimit.multipliedBy(1000).toNumber())
 
-      await setNextBlockTimestamp(providerOwner, timestampAfterExecutionLimit.toNumber())
+      await setNextBlockTimestamp(provider, timestampAfterExecutionLimit.toNumber())
 
       logMock.mockClear()
 
@@ -314,7 +314,7 @@ testWithAnvilL2('governance:executehotfix cmd', (providerOwner) => {
             '--salt',
             SALT,
           ],
-          providerOwner
+          provider
         )
       ).rejects.toThrow("Some checks didn't pass!")
 

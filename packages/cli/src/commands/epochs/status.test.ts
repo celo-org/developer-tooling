@@ -9,16 +9,14 @@ import Start from './start'
 import Status from './status'
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('epochs:status cmd', (providerOwner) => {
+testWithAnvilL2('epochs:status cmd', (provider) => {
   it('shows the current status of the epoch', async () => {
     const consoleMock = jest.spyOn(ux.write, 'stdout')
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const epochManagerWrapper = await kit.contracts.getEpochManager()
 
     expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(4)
-    await expect(testLocallyWithNode(Status, ['--output', 'csv'], providerOwner)).resolves.toBe(
-      true
-    )
+    await expect(testLocallyWithNode(Status, ['--output', 'csv'], provider)).resolves.toBe(true)
 
     expect(consoleMock.mock.calls).toMatchInlineSnapshot(`
       [
@@ -59,19 +57,17 @@ testWithAnvilL2('epochs:status cmd', (providerOwner) => {
   })
   describe('when the epoch has is processing', () => {
     beforeEach(async () => {
-      const kit = newKitFromProvider(providerOwner.currentProvider)
+      const kit = newKitFromProvider(provider)
       const accounts = await kit.connection.getAccounts()
-      await testLocallyWithNode(Start, ['--from', accounts[0]], providerOwner)
+      await testLocallyWithNode(Start, ['--from', accounts[0]], provider)
     })
     it('shows the current status of the epoch', async () => {
       const consoleMock = jest.spyOn(ux.write, 'stdout')
-      const kit = newKitFromProvider(providerOwner.currentProvider)
+      const kit = newKitFromProvider(provider)
       const epochManagerWrapper = await kit.contracts.getEpochManager()
 
       expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(4)
-      await expect(testLocallyWithNode(Status, ['--output', 'csv'], providerOwner)).resolves.toBe(
-        true
-      )
+      await expect(testLocallyWithNode(Status, ['--output', 'csv'], provider)).resolves.toBe(true)
 
       // Check that the output contains the expected structure and values, but be flexible about timing-dependent fields
       const calls = consoleMock.mock.calls
@@ -118,9 +114,7 @@ testWithAnvilL2('epochs:status cmd', (providerOwner) => {
       const consoleMock = jest.spyOn(ux.write, 'stdout')
       jest.spyOn(epochManager, 'getEpochManagerContract').mockResolvedValue(mockEpochManager as any)
 
-      await expect(testLocallyWithNode(Status, ['--output', 'csv'], providerOwner)).resolves.toBe(
-        true
-      )
+      await expect(testLocallyWithNode(Status, ['--output', 'csv'], provider)).resolves.toBe(true)
 
       expect(consoleMock.mock.calls).toMatchInlineSnapshot(`
         [

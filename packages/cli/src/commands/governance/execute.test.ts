@@ -16,7 +16,7 @@ import { parseEther } from 'viem'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:execute cmd', (providerOwner) => {
+testWithAnvilL2('governance:execute cmd', (provider) => {
   const PROPOSAL_TRANSACTION_TEST_KEY = '3'
   const PROPOSAL_TRANSACTION_TEST_VALUE = '4'
   const PROPOSAL_TRANSACTIONS = [
@@ -64,7 +64,7 @@ testWithAnvilL2('governance:execute cmd', (providerOwner) => {
   })
 
   it('should execute a proposal successfuly', async () => {
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const governanceWrapper = await kit.contracts.getGovernance()
     const [approver, proposer, voter] = await kit.connection.getAccounts()
     const minDeposit = (await governanceWrapper.minDeposit()).toFixed()
@@ -74,7 +74,7 @@ testWithAnvilL2('governance:execute cmd', (providerOwner) => {
     const dequeueFrequency = (await governanceWrapper.dequeueFrequency()).toNumber()
     const proposalId = 1
 
-    await setCode(providerOwner, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
+    await setCode(provider, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
 
     await governanceWrapper
       .propose(PROPOSAL_TRANSACTIONS, 'URL')
@@ -88,7 +88,7 @@ testWithAnvilL2('governance:execute cmd', (providerOwner) => {
       .lock()
       .sendAndWaitForReceipt({ from: voter, value: majorityOfVotes.toFixed() })
 
-    await timeTravel(dequeueFrequency + 1, providerOwner)
+    await timeTravel(dequeueFrequency + 1, provider)
 
     await governanceWrapper.dequeueProposalsIfReady().sendAndWaitForReceipt({
       from: proposer,
@@ -110,7 +110,7 @@ testWithAnvilL2('governance:execute cmd', (providerOwner) => {
       })
     ).waitReceipt()
 
-    await withImpersonatedAccount(providerOwner, DEFAULT_OWNER_ADDRESS, async () => {
+    await withImpersonatedAccount(provider, DEFAULT_OWNER_ADDRESS, async () => {
       // setApprover to approverAccount
       await (
         await kit.sendTransaction({
@@ -125,10 +125,7 @@ testWithAnvilL2('governance:execute cmd', (providerOwner) => {
 
     await lockedGoldWrapper.lock().sendAndWaitForReceipt({ from: voter, value: minDeposit })
     await (await governanceWrapper.vote(proposalId, 'Yes')).sendAndWaitForReceipt({ from: voter })
-    await timeTravel(
-      (await governanceWrapper.stageDurations()).Referendum.toNumber() + 1,
-      providerOwner
-    )
+    await timeTravel((await governanceWrapper.stageDurations()).Referendum.toNumber() + 1, provider)
 
     const testTransactionsContract = kit.connection.createContract(
       TEST_TRANSACTIONS_ABI,
@@ -145,7 +142,7 @@ testWithAnvilL2('governance:execute cmd', (providerOwner) => {
     await testLocallyWithNode(
       Execute,
       ['--proposalID', proposalId.toString(), '--from', proposer],
-      providerOwner
+      provider
     )
 
     expect(

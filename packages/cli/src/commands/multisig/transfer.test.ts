@@ -7,7 +7,7 @@ import MultiSigTransfer from './transfer'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('multisig:transfer integration tests', (providerOwner) => {
+testWithAnvilL2('multisig:transfer integration tests', (provider) => {
   let kit: ContractKit
   let accounts: StrongAddress[]
   let multisigAddress: StrongAddress
@@ -17,7 +17,7 @@ testWithAnvilL2('multisig:transfer integration tests', (providerOwner) => {
   let nonOwner: StrongAddress
 
   beforeAll(async () => {
-    kit = newKitFromProvider(providerOwner.currentProvider)
+    kit = newKitFromProvider(provider)
     accounts = (await kit.connection.getAccounts()) as StrongAddress[]
     console.warn('Accounts:', accounts)
     // Set up test accounts
@@ -50,7 +50,7 @@ testWithAnvilL2('multisig:transfer integration tests', (providerOwner) => {
       const result = await testLocallyWithNode(
         MultiSigTransfer,
         [multisigAddress, '--to', recipient, '--amount', amount, '--from', owner1],
-        providerOwner
+        provider
       )
 
       expect(result).toBeUndefined()
@@ -64,14 +64,14 @@ testWithAnvilL2('multisig:transfer integration tests', (providerOwner) => {
       await testLocallyWithNode(
         MultiSigTransfer,
         [multisigAddress, '--to', recipient, '--amount', amount, '--from', owner1],
-        providerOwner
+        provider
       )
 
       // Second owner approves the same transfer (should find existing transaction)
       const result = await testLocallyWithNode(
         MultiSigTransfer,
         [multisigAddress, '--to', recipient, '--amount', amount, '--from', owner2],
-        providerOwner
+        provider
       )
 
       expect(result).toBeUndefined()
@@ -97,7 +97,7 @@ testWithAnvilL2('multisig:transfer integration tests', (providerOwner) => {
             '--transferFrom',
           ],
 
-          providerOwner
+          provider
         )
       ).rejects.toThrow("Some checks didn't pass!")
       expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
@@ -129,7 +129,7 @@ testWithAnvilL2('multisig:transfer integration tests', (providerOwner) => {
             owner1,
           ],
 
-          providerOwner
+          provider
         )
       ).rejects.toThrowErrorMatchingInlineSnapshot(`
         "The contract function "getOwners" returned no data ("0x").
@@ -164,7 +164,7 @@ testWithAnvilL2('multisig:transfer integration tests', (providerOwner) => {
             owner1,
           ],
 
-          providerOwner
+          provider
         )
       ).rejects.toThrowErrorMatchingInlineSnapshot(`
         "Parsing --to 
@@ -180,7 +180,7 @@ testWithAnvilL2('multisig:transfer integration tests', (providerOwner) => {
         testLocallyWithNode(
           MultiSigTransfer,
           [multisigAddress, '--to', recipient, '--amount', 'not-a-number', '--from', owner1],
-          providerOwner
+          provider
         )
       ).rejects.toThrowErrorMatchingInlineSnapshot(`
         "Parsing --amount 
@@ -206,7 +206,7 @@ testWithAnvilL2('multisig:transfer integration tests', (providerOwner) => {
             owner1,
           ],
 
-          providerOwner
+          provider
         )
       ).rejects.toThrow()
     })
@@ -230,7 +230,7 @@ testWithAnvilL2('multisig:transfer integration tests', (providerOwner) => {
           '--from',
           owner1,
         ],
-        providerOwner
+        provider
       )
 
       expect(result).toBeUndefined()
@@ -258,7 +258,7 @@ testWithAnvilL2('multisig:transfer integration tests', (providerOwner) => {
           '--from',
           owner1,
         ],
-        providerOwner
+        provider
       )
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [
@@ -295,7 +295,7 @@ testWithAnvilL2('multisig:transfer integration tests', (providerOwner) => {
           '--from',
           owner2,
         ],
-        providerOwner
+        provider
       )
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [

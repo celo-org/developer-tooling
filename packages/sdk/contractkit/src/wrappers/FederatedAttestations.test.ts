@@ -6,8 +6,8 @@ import { randomBytes } from 'crypto'
 import { newKitFromProvider } from '../kit'
 import { FederatedAttestationsWrapper } from './FederatedAttestations'
 
-testWithAnvilL2('FederatedAttestations Wrapper', (web3) => {
-  const kit = newKitFromProvider(web3.currentProvider)
+testWithAnvilL2('FederatedAttestations Wrapper', (provider) => {
+  const kit = newKitFromProvider(provider)
   const TIME_STAMP = 1665080820
   let accounts: StrongAddress[] = []
   let federatedAttestations: FederatedAttestationsWrapper

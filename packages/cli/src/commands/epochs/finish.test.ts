@@ -8,10 +8,10 @@ import Start from './start'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('epochs:finish cmd', (providerOwner) => {
+testWithAnvilL2('epochs:finish cmd', (provider) => {
   it('Warns when epoch process is not yet started', async () => {
     const logMock = jest.spyOn(console, 'log')
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const accounts = await kit.connection.getAccounts()
     const epochManagerWrapper = await kit.contracts.getEpochManager()
     expect(
@@ -20,7 +20,7 @@ testWithAnvilL2('epochs:finish cmd', (providerOwner) => {
 
     expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(4)
     await expect(
-      testLocallyWithNode(Finish, ['--from', accounts[0]], providerOwner)
+      testLocallyWithNode(Finish, ['--from', accounts[0]], provider)
     ).resolves.toMatchInlineSnapshot(`"Epoch process is not started yet"`)
     expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(4)
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`[]`)
@@ -28,19 +28,19 @@ testWithAnvilL2('epochs:finish cmd', (providerOwner) => {
 
   it('finishes epoch process successfully', async () => {
     const logMock = jest.spyOn(console, 'log')
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const accounts = await kit.connection.getAccounts()
     const epochManagerWrapper = await kit.contracts.getEpochManager()
     const epochDuration = new BigNumber(await epochManagerWrapper.epochDuration())
 
-    await timeTravel(epochDuration.plus(1).toNumber(), providerOwner)
+    await timeTravel(epochDuration.plus(1).toNumber(), provider)
 
     expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(4)
     expect(await epochManagerWrapper.isTimeForNextEpoch()).toEqual(true)
 
-    await testLocallyWithNode(Start, ['--from', accounts[0]], providerOwner)
+    await testLocallyWithNode(Start, ['--from', accounts[0]], provider)
 
-    await testLocallyWithNode(Finish, ['--from', accounts[0]], providerOwner)
+    await testLocallyWithNode(Finish, ['--from', accounts[0]], provider)
 
     expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(5)
     expect(await epochManagerWrapper.isTimeForNextEpoch()).toEqual(false)

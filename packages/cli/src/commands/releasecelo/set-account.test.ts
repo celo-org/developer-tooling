@@ -9,23 +9,23 @@ import SetAccount from './set-account'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('releasegold:set-account cmd', (providerOwner) => {
+testWithAnvilL2('releasegold:set-account cmd', (provider) => {
   let contractAddress: string
   let kit: ContractKit
 
   beforeEach(async () => {
-    kit = newKitFromProvider(providerOwner.currentProvider)
+    kit = newKitFromProvider(provider)
     const accounts = (await kit.connection.getAccounts()) as StrongAddress[]
 
     contractAddress = await deployReleaseGoldContract(
-      providerOwner,
+      provider,
       await createMultisig(kit, [accounts[0], accounts[1]] as StrongAddress[], 2, 2),
       accounts[1],
       accounts[0],
       accounts[2]
     )
 
-    await testLocallyWithNode(CreateAccount, ['--contract', contractAddress], providerOwner)
+    await testLocallyWithNode(CreateAccount, ['--contract', contractAddress], provider)
   })
 
   it('sets all the properties', async () => {
@@ -36,7 +36,7 @@ testWithAnvilL2('releasegold:set-account cmd', (providerOwner) => {
     await testLocallyWithNode(
       SetAccount,
       ['--contract', contractAddress, '--property', 'name', '--value', 'test-name'],
-      providerOwner
+      provider
     )
 
     await testLocallyWithNode(
@@ -49,13 +49,13 @@ testWithAnvilL2('releasegold:set-account cmd', (providerOwner) => {
         '--value',
         TEST_ENCRYPTION_KEY,
       ],
-      providerOwner
+      provider
     )
 
     await testLocallyWithNode(
       SetAccount,
       ['--contract', contractAddress, '--property', 'metaURL', '--value', 'test-url'],
-      providerOwner
+      provider
     )
 
     expect(await accountWrapper.getName(contractAddress)).toEqual('test-name')
@@ -68,7 +68,7 @@ testWithAnvilL2('releasegold:set-account cmd', (providerOwner) => {
       testLocallyWithNode(
         SetAccount,
         ['--contract', contractAddress, '--property', 'unknown', '--value', 'test-value'],
-        providerOwner
+        provider
       )
     ).rejects.toMatchInlineSnapshot(`
       [Error: Expected --property=unknown to be one of: name, dataEncryptionKey, metaURL

@@ -8,7 +8,7 @@ import ShowMultiSig from './show'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('multisig:show integration tests', (providerOwner) => {
+testWithAnvilL2('multisig:show integration tests', (provider) => {
   let kit: ContractKit
   let accounts: StrongAddress[]
   let multisigAddress: StrongAddress
@@ -17,7 +17,7 @@ testWithAnvilL2('multisig:show integration tests', (providerOwner) => {
   let owner3: StrongAddress
 
   beforeAll(async () => {
-    kit = newKitFromProvider(providerOwner.currentProvider)
+    kit = newKitFromProvider(provider)
     accounts = (await kit.connection.getAccounts()) as StrongAddress[]
 
     // Set up test accounts
@@ -44,7 +44,7 @@ testWithAnvilL2('multisig:show integration tests', (providerOwner) => {
   describe('show multisig information', () => {
     it('shows basic multisig information', async () => {
       const logMock = jest.spyOn(console, 'log')
-      await testLocallyWithNode(ShowMultiSig, [multisigAddress], providerOwner)
+      await testLocallyWithNode(ShowMultiSig, [multisigAddress], provider)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [
           [
@@ -68,7 +68,7 @@ testWithAnvilL2('multisig:show integration tests', (providerOwner) => {
       await testLocallyWithNode(
         ProposeMultiSig,
         [multisigAddress, '--from', owner1, '--to', recipient, '--value', value],
-        providerOwner
+        provider
       )
       const logMock = jest.spyOn(console, 'log')
 
@@ -76,7 +76,7 @@ testWithAnvilL2('multisig:show integration tests', (providerOwner) => {
       const result = await testLocallyWithNode(
         ShowMultiSig,
         [multisigAddress, '--tx', '0'],
-        providerOwner
+        provider
       )
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [
@@ -123,7 +123,7 @@ testWithAnvilL2('multisig:show integration tests', (providerOwner) => {
     it('shows raw transaction data', async () => {
       const logMock = jest.spyOn(console, 'log')
 
-      await testLocallyWithNode(ShowMultiSig, [multisigAddress, '--all', '--raw'], providerOwner)
+      await testLocallyWithNode(ShowMultiSig, [multisigAddress, '--all', '--raw'], provider)
 
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [
@@ -143,11 +143,7 @@ testWithAnvilL2('multisig:show integration tests', (providerOwner) => {
 
     it('fails with invalid multisig address', async () => {
       await expect(
-        testLocallyWithNode(
-          ShowMultiSig,
-          ['0x0000000000000000000000000000000000000000'],
-          providerOwner
-        )
+        testLocallyWithNode(ShowMultiSig, ['0x0000000000000000000000000000000000000000'], provider)
       ).rejects.toThrowErrorMatchingInlineSnapshot(`
         "The contract function "getTransactionCount" returned no data ("0x").
 
@@ -170,7 +166,7 @@ testWithAnvilL2('multisig:show integration tests', (providerOwner) => {
       const logMock = jest.spyOn(console, 'log')
 
       await expect(
-        testLocallyWithNode(ShowMultiSig, [multisigAddress, '--tx', '999271717'], providerOwner)
+        testLocallyWithNode(ShowMultiSig, [multisigAddress, '--tx', '999271717'], provider)
       ).resolves.toBeUndefined()
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [
@@ -201,7 +197,7 @@ testWithAnvilL2('multisig:show integration tests', (providerOwner) => {
       await testLocallyWithNode(
         ProposeMultiSig,
         [multisigAddress, '--from', owner3, '--to', recipient, '--data', data],
-        providerOwner
+        provider
       )
       const logMock = jest.spyOn(console, 'log')
 
@@ -210,7 +206,7 @@ testWithAnvilL2('multisig:show integration tests', (providerOwner) => {
         testLocallyWithNode(
           ShowMultiSig,
           [multisigAddress, '--tx', '2'], // Third transaction
-          providerOwner
+          provider
         )
       ).resolves.toBeUndefined()
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`

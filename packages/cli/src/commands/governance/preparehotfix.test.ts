@@ -14,13 +14,13 @@ import { parseEther } from 'viem'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:preparehotfix cmd', (providerOwner) => {
+testWithAnvilL2('governance:preparehotfix cmd', (provider) => {
   const HOTFIX_HASH = '0x8ad3719bb2577b277bcafc1f00ac2f1c3fa5e565173303684d0a8d4f3661680c'
   const HOTFIX_BUFFER = hexToBuffer(HOTFIX_HASH)
   const EXECUTION_TIME_LIMIT = 86400
 
   it('should prepare a hotfix successfuly', async () => {
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const governanceWrapper = await kit.contracts.getGovernance()
     const [approverAccount, securityCouncilAccount] = await kit.connection.getAccounts()
     // arbitrary 100 seconds to the future to avoid
@@ -36,7 +36,7 @@ testWithAnvilL2('governance:preparehotfix cmd', (providerOwner) => {
       })
     ).waitReceipt()
 
-    await withImpersonatedAccount(providerOwner, DEFAULT_OWNER_ADDRESS, async () => {
+    await withImpersonatedAccount(provider, DEFAULT_OWNER_ADDRESS, async () => {
       // setHotfixExecutionTimeWindow to EXECUTION_TIME_LIMIT (86400)
       await (
         await kit.sendTransaction({
@@ -72,21 +72,21 @@ testWithAnvilL2('governance:preparehotfix cmd', (providerOwner) => {
     await testLocallyWithNode(
       Approve,
       ['--hotfix', HOTFIX_HASH, '--from', approverAccount],
-      providerOwner
+      provider
     )
 
     await testLocallyWithNode(
       Approve,
       ['--hotfix', HOTFIX_HASH, '--from', securityCouncilAccount, '--type', 'securityCouncil'],
-      providerOwner
+      provider
     )
 
-    await setNextBlockTimestamp(providerOwner, nextTimestamp)
+    await setNextBlockTimestamp(provider, nextTimestamp)
 
     await testLocallyWithNode(
       PrepareHotfix,
       ['--hash', HOTFIX_HASH, '--from', approverAccount],
-      providerOwner
+      provider
     )
 
     expect(await governanceWrapper.getHotfixRecord(HOTFIX_BUFFER)).toMatchInlineSnapshot(`

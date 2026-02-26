@@ -11,13 +11,13 @@ import Lock from './lock'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('lockedgold:delegate cmd', (providerOwner) => {
+testWithAnvilL2('lockedgold:delegate cmd', (provider) => {
   it('can not delegate when not an account or a vote signer', async () => {
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const [delegator, delegatee] = await kit.connection.getAccounts()
     const lockedGold = await kit.contracts.getLockedGold()
 
-    await testLocallyWithNode(Register, ['--from', delegatee], providerOwner)
+    await testLocallyWithNode(Register, ['--from', delegatee], provider)
 
     const delegateeVotingPower = await lockedGold.getAccountTotalGovernanceVotingPower(delegatee)
 
@@ -30,7 +30,7 @@ testWithAnvilL2('lockedgold:delegate cmd', (providerOwner) => {
       testLocallyWithNode(
         Delegate,
         ['--from', delegator, '--to', delegatee, '--percent', '45'],
-        providerOwner
+        provider
       )
     ).rejects.toMatchInlineSnapshot(`[Error: Some checks didn't pass!]`)
 
@@ -57,14 +57,14 @@ testWithAnvilL2('lockedgold:delegate cmd', (providerOwner) => {
   })
 
   test('can delegate', async () => {
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const accounts = await kit.connection.getAccounts()
     const account = accounts[0]
     const account2 = accounts[1]
     const lockedGold = await kit.contracts.getLockedGold()
-    await testLocallyWithNode(Register, ['--from', account], providerOwner)
-    await testLocallyWithNode(Register, ['--from', account2], providerOwner)
-    await testLocallyWithNode(Lock, ['--from', account, '--value', '200'], providerOwner)
+    await testLocallyWithNode(Register, ['--from', account], provider)
+    await testLocallyWithNode(Register, ['--from', account2], provider)
+    await testLocallyWithNode(Lock, ['--from', account, '--value', '200'], provider)
 
     const account2OriginalVotingPower =
       await lockedGold.getAccountTotalGovernanceVotingPower(account2)
@@ -73,7 +73,7 @@ testWithAnvilL2('lockedgold:delegate cmd', (providerOwner) => {
     await testLocallyWithNode(
       Delegate,
       ['--from', account, '--to', account2, '--percent', '100'],
-      providerOwner
+      provider
     )
 
     const account2VotingPower = await lockedGold.getAccountTotalGovernanceVotingPower(account2)
@@ -81,23 +81,19 @@ testWithAnvilL2('lockedgold:delegate cmd', (providerOwner) => {
   })
 
   it('can delegate as a vote signer for releasecelo contract', async () => {
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const [beneficiary, owner, voteSigner, refundAddress, delegateeAddress] =
       (await kit.connection.getAccounts()) as StrongAddress[]
     const accountsWrapper = await kit.contracts.getAccounts()
     const releaseGoldContractAddress = await deployReleaseGoldContract(
-      providerOwner,
+      provider,
       owner,
       beneficiary,
       owner,
       refundAddress
     )
 
-    await testLocallyWithNode(
-      CreateAccount,
-      ['--contract', releaseGoldContractAddress],
-      providerOwner
-    )
+    await testLocallyWithNode(CreateAccount, ['--contract', releaseGoldContractAddress], provider)
     await testLocallyWithNode(
       Authorize,
       [
@@ -112,9 +108,9 @@ testWithAnvilL2('lockedgold:delegate cmd', (providerOwner) => {
           await accountsWrapper.generateProofOfKeyPossession(releaseGoldContractAddress, voteSigner)
         ),
       ],
-      providerOwner
+      provider
     )
-    await testLocallyWithNode(Lock, ['--from', beneficiary, '--value', '100'], providerOwner)
+    await testLocallyWithNode(Lock, ['--from', beneficiary, '--value', '100'], provider)
 
     const createAccountTx = await accountsWrapper.createAccount().send({ from: delegateeAddress })
     await createAccountTx.waitReceipt()
@@ -122,7 +118,7 @@ testWithAnvilL2('lockedgold:delegate cmd', (providerOwner) => {
     await testLocallyWithNode(
       Delegate,
       ['--from', voteSigner, '--to', delegateeAddress, '--percent', '100'],
-      providerOwner
+      provider
     )
 
     const lockedGold = await kit.contracts.getLockedGold()

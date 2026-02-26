@@ -7,8 +7,8 @@ import { Claim, createNameClaim, createRpcUrlClaim } from './claim'
 import { ClaimTypes, IdentityMetadataWrapper } from './metadata'
 import { now } from './types'
 
-testWithAnvilL2('Metadata', (providerOwner) => {
-  const kit = newKitFromProvider(providerOwner.currentProvider)
+testWithAnvilL2('Metadata', (provider) => {
+  const kit = newKitFromProvider(provider)
   const address = ACCOUNT_ADDRESSES[0]
   const otherAddress = ACCOUNT_ADDRESSES[1]
 

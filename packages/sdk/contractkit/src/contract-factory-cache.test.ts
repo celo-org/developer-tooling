@@ -4,9 +4,9 @@ import { AddressRegistry } from './address-registry'
 import { AllContracts } from './index'
 import { ContractCache } from './contract-factory-cache'
 
-testWithAnvilL2('providerOwner-contract-cache', (providerOwner) => {
+testWithAnvilL2('provider-contract-cache', (provider) => {
   function newContractCache() {
-    const connection = new Connection(providerOwner.currentProvider)
+    const connection = new Connection(provider)
     const registry = new AddressRegistry(connection)
     const AnyContractAddress = '0xe832065fb5117dbddcb566ff7dc4340999583e38'
     jest.spyOn(registry, 'addressFor').mockResolvedValue(AnyContractAddress)

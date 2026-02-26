@@ -15,8 +15,8 @@ TEST NOTES:
 
 const minLockedGoldValue = '10000000000000000000000' // 10k gold
 
-testWithAnvilL2('Validators Wrapper', (providerOwner) => {
-  const kit = newKitFromProvider(providerOwner.currentProvider)
+testWithAnvilL2('Validators Wrapper', (provider) => {
+  const kit = newKitFromProvider(provider)
   let accounts: string[] = []
   let accountsInstance: AccountsWrapper
   let validators: ValidatorsWrapper
@@ -102,11 +102,11 @@ testWithAnvilL2('Validators Wrapper', (providerOwner) => {
     const txOpts = { from: groupAccount }
 
     // Set commission update delay to 3 blocks for backwards compatibility
-    await setCommissionUpdateDelay(providerOwner, validators.address, 3)
-    await mineBlocks(1, providerOwner)
+    await setCommissionUpdateDelay(provider, validators.address, 3)
+    await mineBlocks(1, provider)
 
     await validators.setNextCommissionUpdate('0.2').sendAndWaitForReceipt(txOpts)
-    await mineBlocks(3, providerOwner)
+    await mineBlocks(3, provider)
     await validators.updateCommission().sendAndWaitForReceipt(txOpts)
 
     const commission = (await validators.getValidatorGroup(groupAccount)).commission
@@ -196,7 +196,7 @@ testWithAnvilL2('Validators Wrapper', (providerOwner) => {
     beforeEach(async () => {
       const epochManagerWrapper = await kit.contracts.getEpochManager()
       const epochDuration = await epochManagerWrapper.epochDuration()
-      await timeTravel(epochDuration, providerOwner)
+      await timeTravel(epochDuration, provider)
     })
 
     it("can fetch epoch's last block information", async () => {

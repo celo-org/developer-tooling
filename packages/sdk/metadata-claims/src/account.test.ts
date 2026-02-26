@@ -9,8 +9,8 @@ import { IdentityMetadataWrapper } from './metadata'
 import { AccountMetadataSignerGetters } from './types'
 import { verifyClaim } from './verify'
 
-testWithAnvilL2('Account claims', (providerOwner) => {
-  const kit = newKitFromProvider(providerOwner.currentProvider)
+testWithAnvilL2('Account claims', (provider) => {
+  const kit = newKitFromProvider(provider)
   const address = ACCOUNT_ADDRESSES[0]
   const otherAddress = ACCOUNT_ADDRESSES[1]
 

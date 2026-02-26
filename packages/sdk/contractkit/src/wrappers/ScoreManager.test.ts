@@ -3,8 +3,8 @@ import BigNumber from 'bignumber.js'
 import { newKitFromProvider } from '../kit'
 import { valueToFixidityString } from './BaseWrapper'
 
-testWithAnvilL2('ScoreManager Wrapper', (providerOwner) => {
-  const kit = newKitFromProvider(providerOwner.currentProvider)
+testWithAnvilL2('ScoreManager Wrapper', (provider) => {
+  const kit = newKitFromProvider(provider)
 
   it('gets validator score', async () => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
@@ -17,7 +17,7 @@ testWithAnvilL2('ScoreManager Wrapper', (providerOwner) => {
     ).toMatchInlineSnapshot(`"1"`)
 
     await asCoreContractsOwner(
-      providerOwner,
+      provider,
       async (from) => {
         const scoreManagerContract = await kit._contracts.getScoreManager()
 
@@ -45,7 +45,7 @@ testWithAnvilL2('ScoreManager Wrapper', (providerOwner) => {
     expect(await scoreManagerWrapper.getGroupScore(GROUP_ADDRESSES[0])).toMatchInlineSnapshot(`"1"`)
 
     await asCoreContractsOwner(
-      providerOwner,
+      provider,
       async (from) => {
         const scoreManagerContract = await kit._contracts.getScoreManager()
 

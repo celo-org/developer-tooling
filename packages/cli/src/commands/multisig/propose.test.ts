@@ -49,7 +49,7 @@ describe('multisig:propose cmd', () => {
   })
 })
 
-testWithAnvilL2('multisig:propose integration tests', (providerOwner) => {
+testWithAnvilL2('multisig:propose integration tests', (provider) => {
   let kit: ContractKit
   let accounts: StrongAddress[]
   let multisigAddress: StrongAddress
@@ -59,7 +59,7 @@ testWithAnvilL2('multisig:propose integration tests', (providerOwner) => {
   let nonOwner: StrongAddress
 
   beforeAll(async () => {
-    kit = newKitFromProvider(providerOwner.currentProvider)
+    kit = newKitFromProvider(provider)
     accounts = (await kit.connection.getAccounts()) as StrongAddress[]
 
     // Set up test accounts
@@ -102,7 +102,7 @@ testWithAnvilL2('multisig:propose integration tests', (providerOwner) => {
       const result = await testLocallyWithNode(
         ProposeMultiSig,
         [multisigAddress, '--from', owner1, '--to', recipient, '--value', value],
-        providerOwner
+        provider
       )
       expectLogs(logMock).toMatchInlineSnapshot(`
         [
@@ -120,7 +120,7 @@ testWithAnvilL2('multisig:propose integration tests', (providerOwner) => {
       const result = await testLocallyWithNode(
         ProposeMultiSig,
         [multisigAddress, '--from', owner2, '--to', recipient, '--data', data],
-        providerOwner
+        provider
       )
       expectLogs(logMock).toMatchInlineSnapshot(`
         [
@@ -139,7 +139,7 @@ testWithAnvilL2('multisig:propose integration tests', (providerOwner) => {
       const result = await testLocallyWithNode(
         ProposeMultiSig,
         [multisigAddress, '--from', owner3, '--to', recipient, '--value', value, '--data', data],
-        providerOwner
+        provider
       )
       expectLogs(logMock).toMatchInlineSnapshot(`
         [
@@ -158,7 +158,7 @@ testWithAnvilL2('multisig:propose integration tests', (providerOwner) => {
         testLocallyWithNode(
           ProposeMultiSig,
           [multisigAddress, '--from', nonOwner, '--to', recipient, '--value', value],
-          providerOwner
+          provider
         )
       ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     })
@@ -180,7 +180,7 @@ testWithAnvilL2('multisig:propose integration tests', (providerOwner) => {
             value,
           ],
 
-          providerOwner
+          provider
         )
       ).rejects.toThrowErrorMatchingInlineSnapshot(`
         "The contract function "getOwners" returned no data ("0x").
@@ -215,7 +215,7 @@ testWithAnvilL2('multisig:propose integration tests', (providerOwner) => {
             value,
           ],
 
-          providerOwner
+          provider
         )
       ).rejects.toThrowErrorMatchingInlineSnapshot(`
         "Parsing --to 

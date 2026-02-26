@@ -10,7 +10,7 @@ import NewAccount from './new'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('account:new cmd', (providerOwner) => {
+testWithAnvilL2('account:new cmd', (provider) => {
   const writeMock = jest.spyOn(NewAccount.prototype, 'log').mockImplementation(() => {
     // noop
   })
@@ -23,7 +23,7 @@ testWithAnvilL2('account:new cmd', (providerOwner) => {
     consoleMock.mockClear()
   })
   it('generates mnemonic and lets people know which derivation path is being used when called with no flags', async () => {
-    await testLocallyWithNode(NewAccount, [], providerOwner)
+    await testLocallyWithNode(NewAccount, [], provider)
 
     expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`
       [
@@ -45,7 +45,7 @@ testWithAnvilL2('account:new cmd', (providerOwner) => {
   })
 
   it("when called with --derivationPath eth it generates mnemonic using m/44'/60'/0'", async () => {
-    await testLocallyWithNode(NewAccount, ['--derivationPath', 'eth'], providerOwner)
+    await testLocallyWithNode(NewAccount, ['--derivationPath', 'eth'], provider)
 
     expect(deRandomize(consoleMock.mock.lastCall?.[0])).toMatchInlineSnapshot(`
       "mnemonic: *** *** 
@@ -57,7 +57,7 @@ testWithAnvilL2('account:new cmd', (providerOwner) => {
   })
 
   it(`when called with --derivationPath celoLegacy it generates with "m/44'/52752'/0'"`, async () => {
-    await testLocallyWithNode(NewAccount, ['--derivationPath', 'celoLegacy'], providerOwner)
+    await testLocallyWithNode(NewAccount, ['--derivationPath', 'celoLegacy'], provider)
 
     expect(deRandomize(consoleMock.mock.lastCall?.[0])).toMatchInlineSnapshot(`
       "mnemonic: *** *** 
@@ -71,7 +71,7 @@ testWithAnvilL2('account:new cmd', (providerOwner) => {
   describe('bad data --derivationPath', () => {
     it(`with invalid alias "notARealPath"  throws"`, async () => {
       await expect(
-        testLocallyWithNode(NewAccount, ['--derivationPath', 'notARealPath'], providerOwner)
+        testLocallyWithNode(NewAccount, ['--derivationPath', 'notARealPath'], provider)
       ).rejects.toThrowErrorMatchingInlineSnapshot(`
         "Parsing --derivationPath 
         	Invalid derivationPath: notARealPath. should be in format  "m / 44' / coin_type' / account'"
@@ -80,7 +80,7 @@ testWithAnvilL2('account:new cmd', (providerOwner) => {
     })
     it(`with invalid bip44 throws"`, async () => {
       await expect(
-        testLocallyWithNode(NewAccount, ['--derivationPath', 'm/44/1/1/2/10'], providerOwner)
+        testLocallyWithNode(NewAccount, ['--derivationPath', 'm/44/1/1/2/10'], provider)
       ).rejects.toThrowErrorMatchingInlineSnapshot(`
         "Parsing --derivationPath 
         	Invalid derivationPath: m/44/1/1/2/10. should be in format  "m / 44' / coin_type' / account'"
@@ -89,7 +89,7 @@ testWithAnvilL2('account:new cmd', (providerOwner) => {
     })
     it('with bip44 with changeIndex 4 throws', async () => {
       await expect(
-        testLocallyWithNode(NewAccount, ['--derivationPath', "m/44'/52752'/0/0'"], providerOwner)
+        testLocallyWithNode(NewAccount, ['--derivationPath', "m/44'/52752'/0/0'"], provider)
       ).rejects.toThrowErrorMatchingInlineSnapshot(`
         "Parsing --derivationPath 
         	Invalid derivationPath: m/44'/52752'/0/0'. should be in format  "m / 44' / coin_type' / account'"
@@ -98,7 +98,7 @@ testWithAnvilL2('account:new cmd', (providerOwner) => {
     })
     it('with bip44 including changeIndex 4 and addressIndex 5 throws', async () => {
       await expect(
-        testLocallyWithNode(NewAccount, ['--derivationPath', "m/44'/52752'/0/0/0'"], providerOwner)
+        testLocallyWithNode(NewAccount, ['--derivationPath', "m/44'/52752'/0/0/0'"], provider)
       ).rejects.toThrowErrorMatchingInlineSnapshot(`
         "Parsing --derivationPath 
         	Invalid derivationPath: m/44'/52752'/0/0/0'. should be in format  "m / 44' / coin_type' / account'"
@@ -106,7 +106,7 @@ testWithAnvilL2('account:new cmd', (providerOwner) => {
       `)
     })
     it(`with path ending in "/" removes the slash`, async () => {
-      await testLocallyWithNode(NewAccount, ['--derivationPath', "m/44'/60'/0'/"], providerOwner)
+      await testLocallyWithNode(NewAccount, ['--derivationPath', "m/44'/60'/0'/"], provider)
 
       expect(deRandomize(consoleMock.mock.lastCall?.[0])).toMatchInlineSnapshot(`
         "mnemonic: *** *** 
@@ -132,7 +132,7 @@ testWithAnvilL2('account:new cmd', (providerOwner) => {
     })
 
     it('generates using eth derivation path', async () => {
-      await testLocallyWithNode(NewAccount, [`--mnemonicPath`, MNEMONIC_PATH], providerOwner)
+      await testLocallyWithNode(NewAccount, [`--mnemonicPath`, MNEMONIC_PATH], provider)
 
       expect(stripAnsiCodesAndTxHashes(consoleMock.mock.lastCall?.[0])).toMatchInlineSnapshot(`
         "mnemonic: hamster label near volume denial spawn stable orbit trade only crawl learn forest fire test feel bubble found angle also olympic obscure fork venue
@@ -147,7 +147,7 @@ testWithAnvilL2('account:new cmd', (providerOwner) => {
       await testLocallyWithNode(
         NewAccount,
         ['--derivationPath', 'celoLegacy', `--mnemonicPath`, MNEMONIC_PATH],
-        providerOwner
+        provider
       )
 
       expect(stripAnsiCodesAndTxHashes(consoleMock.mock.lastCall?.[0])).toMatchInlineSnapshot(`
@@ -163,7 +163,7 @@ testWithAnvilL2('account:new cmd', (providerOwner) => {
       await testLocallyWithNode(
         NewAccount,
         [`--mnemonicPath`, MNEMONIC_PATH, '--derivationPath', "m/44'/60'/0'"],
-        providerOwner
+        provider
       )
 
       expect(stripAnsiCodesAndTxHashes(consoleMock.mock.lastCall?.[0])).toMatchInlineSnapshot(`
@@ -178,7 +178,7 @@ testWithAnvilL2('account:new cmd', (providerOwner) => {
       await testLocallyWithNode(
         NewAccount,
         [`--mnemonicPath`, MNEMONIC_PATH, '--derivationPath', 'eth', '--changeIndex', '2'],
-        providerOwner
+        provider
       )
 
       expect(stripAnsiCodesAndTxHashes(consoleMock.mock.lastCall?.[0])).toMatchInlineSnapshot(`
@@ -193,7 +193,7 @@ testWithAnvilL2('account:new cmd', (providerOwner) => {
       await testLocallyWithNode(
         NewAccount,
         [`--mnemonicPath`, MNEMONIC_PATH, '--derivationPath', 'eth', '--addressIndex', '3'],
-        providerOwner
+        provider
       )
 
       expect(stripAnsiCodesAndTxHashes(consoleMock.mock.lastCall?.[0])).toMatchInlineSnapshot(`

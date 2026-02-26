@@ -5,15 +5,15 @@ import Register from './register'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('account:register cmd', (providerOwner) => {
+testWithAnvilL2('account:register cmd', (provider) => {
   test('can register account', async () => {
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const accounts = await kit.connection.getAccounts()
 
     await testLocallyWithNode(
       Register,
       ['--from', accounts[0], '--name', 'Chapulin Colorado'],
-      providerOwner
+      provider
     )
     const account = await kit.contracts.getAccounts()
 
@@ -21,7 +21,7 @@ testWithAnvilL2('account:register cmd', (providerOwner) => {
   })
 
   test('fails if from is missing', async () => {
-    await expect(testLocallyWithNode(Register, [], providerOwner)).rejects.toThrow(
+    await expect(testLocallyWithNode(Register, [], provider)).rejects.toThrow(
       'Missing required flag'
     )
   })

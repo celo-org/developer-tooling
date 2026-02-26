@@ -8,7 +8,7 @@ import {
   withImpersonatedAccount,
 } from '@celo/dev-utils/anvil-test'
 import { mineBlocks, timeTravel } from '@celo/dev-utils/ganache-test'
-import { type ProviderOwner } from '@celo/dev-utils/test-utils'
+import { Provider } from '@celo/connect'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
 import { parseEther } from 'viem'
@@ -99,8 +99,8 @@ export const voteForGroupFromAndActivateVotes = async (
 ) => {
   const accounts = await kit.connection.getAccounts()
   await voteForGroupFrom(kit, fromAddress, groupAddress, amount)
-  await timeTravel(24 * 60 * 60, kit.connection) // wait for 24 hours to
-  await testLocallyWithNode(Switch, ['--from', accounts[0]], kit.connection)
+  await timeTravel(24 * 60 * 60, kit.connection.currentProvider) // wait for 24 hours to
+  await testLocallyWithNode(Switch, ['--from', accounts[0]], kit.connection.currentProvider)
 
   const election = await kit.contracts.getElection()
 
@@ -110,7 +110,7 @@ export const voteForGroupFromAndActivateVotes = async (
 }
 
 export const mineEpoch = async (kit: ContractKit) => {
-  await mineBlocks(100, kit.connection)
+  await mineBlocks(100, kit.connection.currentProvider)
 }
 
 export const topUpWithToken = async (
@@ -121,11 +121,11 @@ export const topUpWithToken = async (
 ) => {
   const token = await kit.contracts.getStableToken(stableToken)
 
-  await impersonateAccount(kit.connection, STABLES_ADDRESS)
+  await impersonateAccount(kit.connection.currentProvider, STABLES_ADDRESS)
   await token.transfer(account, amount.toFixed()).sendAndWaitForReceipt({
     from: STABLES_ADDRESS,
   })
-  await stopImpersonatingAccount(kit.connection, STABLES_ADDRESS)
+  await stopImpersonatingAccount(kit.connection.currentProvider, STABLES_ADDRESS)
 }
 
 // replace the original owner in the devchain, so we can act as the multisig owner
@@ -141,12 +141,12 @@ export const changeMultiSigOwner = async (kit: ContractKit, toAccount: StrongAdd
     })
   ).waitReceipt()
 
-  await impersonateAccount(kit.connection, multisig.address)
+  await impersonateAccount(kit.connection.currentProvider, multisig.address)
 
   await multisig
     .replaceOwner(DEFAULT_OWNER_ADDRESS, toAccount)
     .sendAndWaitForReceipt({ from: multisig.address })
-  await stopImpersonatingAccount(kit.connection, multisig.address)
+  await stopImpersonatingAccount(kit.connection.currentProvider, multisig.address)
 }
 
 export async function setupValidatorAndAddToGroup(
@@ -165,9 +165,9 @@ export async function setupValidatorAndAddToGroup(
   })
 }
 // you MUST call clearMock after using this function!
-export async function mockTimeForwardBy(seconds: number, client: ProviderOwner) {
+export async function mockTimeForwardBy(seconds: number, provider: Provider) {
   const now = Date.now()
-  await timeTravel(seconds, client)
+  await timeTravel(seconds, provider)
   const spy = jest.spyOn(global.Date, 'now').mockImplementation(() => now + seconds * 1000)
 
   console.warn('mockTimeForwardBy', seconds, 'seconds', 'call clearMock after using this function')
@@ -181,7 +181,7 @@ export const activateAllValidatorGroupsVotes = async (kit: ContractKit) => {
   const epochManagerWrapper = await kit.contracts.getEpochManager()
   const validatorGroups = await validatorsContract.getRegisteredValidatorGroupsAddresses()
 
-  await timeTravel((await epochManagerWrapper.epochDuration()) + 1, kit.connection)
+  await timeTravel((await epochManagerWrapper.epochDuration()) + 1, kit.connection.currentProvider)
 
   // Make sure we are in the next epoch to activate the votes
   await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({ from: sender })
@@ -197,7 +197,7 @@ export const activateAllValidatorGroupsVotes = async (kit: ContractKit) => {
 
     if (pendingVotesForGroup.gt(0)) {
       await withImpersonatedAccount(
-        kit.connection,
+        kit.connection.currentProvider,
         validatorGroup,
         async () => {
           // @ts-expect-error here as well

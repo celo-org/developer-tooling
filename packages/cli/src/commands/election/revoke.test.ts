@@ -12,27 +12,25 @@ import Revoke from './revoke'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('election:revoke', (providerOwner) => {
+testWithAnvilL2('election:revoke', (provider) => {
   afterEach(async () => {
     jest.clearAllMocks()
   })
 
   it('fails when no flags are provided', async () => {
-    await expect(testLocallyWithNode(Revoke, [], providerOwner)).rejects.toThrow(
-      'Missing required flag'
-    )
+    await expect(testLocallyWithNode(Revoke, [], provider)).rejects.toThrow('Missing required flag')
   })
 
   it('fails when address is not an account', async () => {
     const logMock = jest.spyOn(console, 'log')
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const [fromAddress, groupAddress] = await kit.connection.getAccounts()
 
     await expect(
       testLocallyWithNode(
         Revoke,
         ['--from', fromAddress, '--for', groupAddress, '--value', '1'],
-        providerOwner
+        provider
       )
     ).rejects.toMatchInlineSnapshot(`[Error: Some checks didn't pass!]`)
     expect(logMock.mock.calls[1][0]).toContain(
@@ -41,7 +39,7 @@ testWithAnvilL2('election:revoke', (providerOwner) => {
   })
 
   it('fails when trying to revoke more votes than voted', async () => {
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const [fromAddress, groupAddress] = await kit.connection.getAccounts()
 
     await registerAccount(kit, fromAddress)
@@ -50,7 +48,7 @@ testWithAnvilL2('election:revoke', (providerOwner) => {
       testLocallyWithNode(
         Revoke,
         ['--from', fromAddress, '--for', groupAddress, '--value', '1'],
-        providerOwner
+        provider
       )
     ).rejects.toThrow(
       `can't revoke more votes for ${groupAddress} than have been made by ${fromAddress}`
@@ -58,7 +56,7 @@ testWithAnvilL2('election:revoke', (providerOwner) => {
   })
 
   it('successfuly revokes all votes', async () => {
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const election = await kit.contracts.getElection()
     const amount = new BigNumber(12345)
     const [fromAddress, validatorAddress, groupAddress] = await kit.connection.getAccounts()
@@ -74,7 +72,7 @@ testWithAnvilL2('election:revoke', (providerOwner) => {
     await testLocallyWithNode(
       Revoke,
       ['--from', fromAddress, '--for', groupAddress, '--value', amount.toFixed()],
-      providerOwner
+      provider
     )
 
     expect((await election.getVotesForGroupByAccount(fromAddress, groupAddress)).active).toEqual(
@@ -83,7 +81,7 @@ testWithAnvilL2('election:revoke', (providerOwner) => {
   })
 
   it('successfuly revokes votes partially', async () => {
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const election = await kit.contracts.getElection()
     const amount = new BigNumber(54321)
     const revokeAmount = new BigNumber(4321)
@@ -100,7 +98,7 @@ testWithAnvilL2('election:revoke', (providerOwner) => {
     await testLocallyWithNode(
       Revoke,
       ['--from', fromAddress, '--for', groupAddress, '--value', revokeAmount.toFixed()],
-      providerOwner
+      provider
     )
 
     expect((await election.getVotesForGroupByAccount(fromAddress, groupAddress)).active).toEqual(

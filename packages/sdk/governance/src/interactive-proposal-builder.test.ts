@@ -17,13 +17,13 @@ describe('all registered contracts can be required', () => {
   })
 })
 
-testWithAnvilL2('InteractiveProposalBuilder', (providerOwner) => {
+testWithAnvilL2('InteractiveProposalBuilder', (provider) => {
   let builder: ProposalBuilder
   let interactiveBuilder: InteractiveProposalBuilder
   let fromJsonTxSpy: jest.SpyInstance
 
   beforeEach(() => {
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     builder = new ProposalBuilder(kit)
     fromJsonTxSpy = jest.spyOn(builder, 'fromJsonTx')
     interactiveBuilder = new InteractiveProposalBuilder(builder)

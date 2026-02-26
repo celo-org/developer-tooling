@@ -1,14 +1,13 @@
 import { StrongAddress } from '@celo/base'
-import { AbiItem, Connection } from '@celo/connect'
+import { AbiItem, Connection, Provider } from '@celo/connect'
 import AttestationsArtifacts from '@celo/celo-devchain/contracts/contracts-0.5/Attestations.json'
 import { LinkedLibraryAddress } from './anvil-test'
-import { type ProviderOwner } from './test-utils'
 
 export const deployAttestationsContract = async (
-  client: ProviderOwner,
+  provider: Provider,
   owner: StrongAddress
 ): Promise<StrongAddress> => {
-  const conn = new Connection(client.currentProvider)
+  const conn = new Connection(provider)
   const contract = conn.createContract(AttestationsArtifacts.abi as AbiItem[])
 
   const deployTx = contract.deploy({

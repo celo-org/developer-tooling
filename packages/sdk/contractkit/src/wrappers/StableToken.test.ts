@@ -8,8 +8,8 @@ import { StableTokenWrapper } from './StableTokenWrapper'
 
 // TEST NOTES: balances defined in test-utils/migration-override
 
-testWithAnvilL2('StableToken Wrapper', async (providerOwner) => {
-  const kit = newKitFromProvider(providerOwner.currentProvider)
+testWithAnvilL2('StableToken Wrapper', async (provider) => {
+  const kit = newKitFromProvider(provider)
 
   const stableTokenInfos: {
     [key in StableToken]: {

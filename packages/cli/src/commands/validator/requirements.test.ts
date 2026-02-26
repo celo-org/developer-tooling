@@ -4,7 +4,7 @@ import Requirements from './requirements'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validator:requirements', (providerOwner) => {
+testWithAnvilL2('validator:requirements', (provider) => {
   const logMock = jest.spyOn(console, 'log')
 
   afterEach(() => {
@@ -12,7 +12,7 @@ testWithAnvilL2('validator:requirements', (providerOwner) => {
   })
 
   it('shows all registered validators', async () => {
-    await testLocallyWithNode(Requirements, [], providerOwner)
+    await testLocallyWithNode(Requirements, [], provider)
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
       [
         [

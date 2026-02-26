@@ -10,7 +10,7 @@ import Show from './show'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:show cmd', (providerOwner) => {
+testWithAnvilL2('governance:show cmd', (provider) => {
   const PROPOSAL_TRANSACTIONS = [
     {
       to: '0x4200000000000000000000000000000000000018',
@@ -33,7 +33,7 @@ testWithAnvilL2('governance:show cmd', (providerOwner) => {
   })
 
   it('shows a proposal in "Referendum" stage', async () => {
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const governanceWrapper = await kit.contracts.getGovernance()
     const [proposer, voter] = await kit.connection.getAccounts()
     const minDeposit = (await governanceWrapper.minDeposit()).toFixed()
@@ -51,7 +51,7 @@ testWithAnvilL2('governance:show cmd', (providerOwner) => {
     await accountWrapper.createAccount().sendAndWaitForReceipt({ from: voter })
     await lockedGoldWrapper.lock().sendAndWaitForReceipt({ from: voter, value: minDeposit })
 
-    await timeTravel(dequeueFrequency + 1, providerOwner)
+    await timeTravel(dequeueFrequency + 1, provider)
 
     await governanceWrapper.dequeueProposalsIfReady().sendAndWaitForReceipt({
       from: proposer,
@@ -59,7 +59,7 @@ testWithAnvilL2('governance:show cmd', (providerOwner) => {
 
     await (await governanceWrapper.vote(proposalId, 'Yes')).sendAndWaitForReceipt({ from: voter })
 
-    await testLocallyWithNode(Show, ['--proposalID', proposalId.toString()], providerOwner)
+    await testLocallyWithNode(Show, ['--proposalID', proposalId.toString()], provider)
 
     const schedule = await governanceWrapper.proposalSchedule(proposalId)
     const timestamp = await (await governanceWrapper.getProposalMetadata(proposalId)).timestamp

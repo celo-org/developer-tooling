@@ -9,23 +9,23 @@ import LockedCelo from './locked-gold'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('releasegold:locked-gold cmd', (providerOwner) => {
+testWithAnvilL2('releasegold:locked-gold cmd', (provider) => {
   let contractAddress: string
   let kit: ContractKit
 
   beforeEach(async () => {
-    kit = newKitFromProvider(providerOwner.currentProvider)
+    kit = newKitFromProvider(provider)
     const accounts = (await kit.connection.getAccounts()) as StrongAddress[]
 
     contractAddress = await deployReleaseGoldContract(
-      providerOwner,
+      provider,
       await createMultisig(kit, [accounts[0], accounts[1]] as StrongAddress[], 2, 2),
       accounts[1],
       accounts[0],
       accounts[2]
     )
 
-    await testLocallyWithNode(CreateAccount, ['--contract', contractAddress], providerOwner)
+    await testLocallyWithNode(CreateAccount, ['--contract', contractAddress], provider)
   })
 
   test(
@@ -35,22 +35,22 @@ testWithAnvilL2('releasegold:locked-gold cmd', (providerOwner) => {
       await testLocallyWithNode(
         LockedCelo,
         ['--contract', contractAddress, '--action', 'lock', '--value', '100'],
-        providerOwner
+        provider
       )
       await testLocallyWithNode(
         LockedCelo,
         ['--contract', contractAddress, '--action', 'unlock', '--value', '50'],
-        providerOwner
+        provider
       )
       await testLocallyWithNode(
         LockedCelo,
         ['--contract', contractAddress, '--action', 'lock', '--value', '75'],
-        providerOwner
+        provider
       )
       await testLocallyWithNode(
         LockedCelo,
         ['--contract', contractAddress, '--action', 'unlock', '--value', '50'],
-        providerOwner
+        provider
       )
       const pendingWithdrawalsTotalValue =
         await lockedGold.getPendingWithdrawalsTotalValue(contractAddress)

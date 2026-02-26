@@ -151,12 +151,12 @@ export abstract class BaseCommand extends Command {
   private ledgerTransport: Awaited<ReturnType<(typeof _TransportNodeHid)['open']>> | null = null
 
   /**
-   * @deprecated Use getKit().connection or getPublicClient()/getWalletClient() instead
-   * Returns an object with currentProvider for backward compatibility
+   * @deprecated Use getKit().connection.currentProvider or getPublicClient()/getWalletClient() instead
+   * Returns the Provider for backward compatibility
    */
-  async getWeb3(): Promise<{ currentProvider: Provider }> {
+  async getWeb3(): Promise<Provider> {
     const kit = await this.getKit()
-    return { currentProvider: kit.connection.currentProvider }
+    return kit.connection.currentProvider
   }
 
   get _wallet(): ReadOnlyWallet | undefined {

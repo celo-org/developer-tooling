@@ -7,16 +7,16 @@ import Start from './start'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('epochs:start cmd', (providerOwner) => {
+testWithAnvilL2('epochs:start cmd', (provider) => {
   it('Warns only when next epoch is not due', async () => {
     const logMock = jest.spyOn(console, 'log')
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const accounts = await kit.connection.getAccounts()
     const epochManagerWrapper = await kit.contracts.getEpochManager()
 
     expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(4)
     await expect(
-      testLocallyWithNode(Start, ['--from', accounts[0]], providerOwner)
+      testLocallyWithNode(Start, ['--from', accounts[0]], provider)
     ).resolves.toMatchInlineSnapshot(`"It is not time for the next epoch yet"`)
     expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(4)
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`[]`)
@@ -24,17 +24,17 @@ testWithAnvilL2('epochs:start cmd', (providerOwner) => {
 
   it('starts process successfully', async () => {
     const logMock = jest.spyOn(console, 'log')
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const accounts = await kit.connection.getAccounts()
     const epochManagerWrapper = await kit.contracts.getEpochManager()
     const epochDuration = new BigNumber(await epochManagerWrapper.epochDuration())
 
-    await timeTravel(epochDuration.plus(1).toNumber(), providerOwner)
+    await timeTravel(epochDuration.plus(1).toNumber(), provider)
 
     expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(4)
     expect(await epochManagerWrapper.isTimeForNextEpoch()).toEqual(true)
 
-    await testLocallyWithNode(Start, ['--from', accounts[0]], providerOwner)
+    await testLocallyWithNode(Start, ['--from', accounts[0]], provider)
 
     expect(await epochManagerWrapper.isOnEpochProcess()).toEqual(true)
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`

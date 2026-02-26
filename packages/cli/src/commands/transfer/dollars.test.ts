@@ -17,12 +17,12 @@ process.env.NO_SYNCCHECK = 'true'
 // Lots of commands, sometimes times out
 jest.setTimeout(15000)
 
-testWithAnvilL2('transfer:dollars cmd', (providerOwner) => {
+testWithAnvilL2('transfer:dollars cmd', (provider) => {
   let accounts: string[] = []
   let kit: ContractKit
   let logMock: jest.SpyInstance
   beforeEach(async () => {
-    kit = newKitFromProvider(providerOwner.currentProvider)
+    kit = newKitFromProvider(provider)
     accounts = await kit.connection.getAccounts()
     logMock = jest.spyOn(console, 'log').mockImplementation(() => {
       // noop
@@ -56,7 +56,7 @@ testWithAnvilL2('transfer:dollars cmd', (providerOwner) => {
     await testLocallyWithNode(
       TransferUSDM,
       ['--from', accounts[0], '--to', accounts[1], '--value', amountToTransfer],
-      providerOwner
+      provider
     )
     // RG USDm balance should match the amount sent
     const receiverBalance = await kit.getTotalBalance(accounts[1])
@@ -67,7 +67,7 @@ testWithAnvilL2('transfer:dollars cmd', (providerOwner) => {
     await testLocallyWithNode(
       TransferUSDM,
       ['--from', accounts[1], '--to', accounts[0], '--value', amountToTransfer],
-      providerOwner
+      provider
     )
     const balanceAfter = await kit.getTotalBalance(accounts[0])
     expect(balanceBefore.USDm).toEqual(balanceAfter.USDm)
@@ -79,7 +79,7 @@ testWithAnvilL2('transfer:dollars cmd', (providerOwner) => {
     await testLocallyWithNode(
       TransferUSDM,
       ['--from', accounts[0], '--to', accounts[1], '--value', balance.toFixed()],
-      providerOwner
+      provider
     )
     const balanceAfter = await cusdWrapper.balanceOf(accounts[0])
     expect(balanceAfter.toFixed()).toEqBigNumber('0')
@@ -114,7 +114,7 @@ testWithAnvilL2('transfer:dollars cmd', (providerOwner) => {
               cusdAddress,
             ],
 
-            providerOwner
+            provider
           )
         ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
 
@@ -171,7 +171,7 @@ testWithAnvilL2('transfer:dollars cmd', (providerOwner) => {
             '--gasCurrency',
             euroWrapper.address,
           ],
-          providerOwner
+          provider
         )
         const balanceAfter = await cusdWrapper.balanceOf(accounts[0])
         expect(balanceAfter.toFixed()).toEqBigNumber('0')
@@ -196,7 +196,7 @@ testWithAnvilL2('transfer:dollars cmd', (providerOwner) => {
             '--comment',
             comment,
           ],
-          providerOwner
+          provider
         )
       ).resolves.toBeUndefined()
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
@@ -239,7 +239,7 @@ testWithAnvilL2('transfer:dollars cmd', (providerOwner) => {
       testLocallyWithNode(
         TransferUSDM,
         ['--from', accounts[1], '--to', TEST_SANCTIONED_ADDRESS, '--value', '1'],
-        providerOwner
+        provider
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     expect(spy).toHaveBeenCalledWith(expect.stringContaining(COMPLIANT_ERROR_RESPONSE))

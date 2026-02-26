@@ -10,16 +10,16 @@ import SetCanExpire from './set-can-expire'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('releasegold:set-can-expire cmd', (providerOwner) => {
+testWithAnvilL2('releasegold:set-can-expire cmd', (provider) => {
   let contractAddress: string
   let kit: ContractKit
 
   beforeEach(async () => {
-    kit = newKitFromProvider(providerOwner.currentProvider)
+    kit = newKitFromProvider(provider)
     const accounts = (await kit.connection.getAccounts()) as StrongAddress[]
 
     contractAddress = await deployReleaseGoldContract(
-      providerOwner,
+      provider,
       await createMultisig(kit, [accounts[0], accounts[1]] as StrongAddress[], 2, 2),
       accounts[1],
       accounts[0],
@@ -34,7 +34,7 @@ testWithAnvilL2('releasegold:set-can-expire cmd', (providerOwner) => {
       testLocallyWithNode(
         SetCanExpire,
         ['--contract', contractAddress, '--value', 'true', '--yesreally'],
-        providerOwner
+        provider
       )
     ).rejects.toMatchInlineSnapshot(`[Error: Some checks didn't pass!]`)
 
@@ -62,7 +62,7 @@ testWithAnvilL2('releasegold:set-can-expire cmd', (providerOwner) => {
     await testLocallyWithNode(
       SetCanExpire,
       ['--contract', contractAddress, '--value', 'false', '--yesreally'],
-      providerOwner
+      provider
     )
 
     expect((await releaseGoldWrapper.getRevocationInfo()).canExpire).toBeFalsy()
@@ -70,7 +70,7 @@ testWithAnvilL2('releasegold:set-can-expire cmd', (providerOwner) => {
     await testLocallyWithNode(
       SetCanExpire,
       ['--contract', contractAddress, '--value', 'true', '--yesreally'],
-      providerOwner
+      provider
     )
 
     expect((await releaseGoldWrapper.getRevocationInfo()).canExpire).toBeTruthy()

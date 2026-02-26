@@ -6,9 +6,9 @@ import Dequeue from './dequeue'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:dequeue cmd', (providerOwner) => {
+testWithAnvilL2('governance:dequeue cmd', (provider) => {
   it('does not dequeue anything if no proposals are ready', async () => {
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const [account] = await kit.connection.getAccounts()
     const governanceWrapper = await kit.contracts.getGovernance()
     const minDeposit = (await governanceWrapper.minDeposit()).toFixed()
@@ -25,7 +25,7 @@ testWithAnvilL2('governance:dequeue cmd', (providerOwner) => {
       .sendAndWaitForReceipt({ from: account, value: minDeposit })
 
     // Run dequeue operation
-    await testLocallyWithNode(Dequeue, ['--from', account], providerOwner)
+    await testLocallyWithNode(Dequeue, ['--from', account], provider)
 
     // After first dequeue, we should have either proposal dequeued or still in queue
     const afterFirstDequeue = await governanceWrapper.getDequeue()
@@ -39,7 +39,7 @@ testWithAnvilL2('governance:dequeue cmd', (providerOwner) => {
       .sendAndWaitForReceipt({ from: account, value: minDeposit })
 
     // Run dequeue again
-    await testLocallyWithNode(Dequeue, ['--from', account], providerOwner)
+    await testLocallyWithNode(Dequeue, ['--from', account], provider)
 
     // After second dequeue, we should have 2 total proposals in the system
     const finalDequeue = await governanceWrapper.getDequeue()
@@ -49,7 +49,7 @@ testWithAnvilL2('governance:dequeue cmd', (providerOwner) => {
   })
 
   it('dequeues proposals after time has passed', async () => {
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const [account] = await kit.connection.getAccounts()
     const governanceWrapper = await kit.contracts.getGovernance()
     const minDeposit = (await governanceWrapper.minDeposit()).toFixed()
@@ -65,7 +65,7 @@ testWithAnvilL2('governance:dequeue cmd', (providerOwner) => {
       .sendAndWaitForReceipt({ from: account, value: minDeposit })
 
     // Run dequeue immediately (should not dequeue due to timing)
-    await testLocallyWithNode(Dequeue, ['--from', account], providerOwner)
+    await testLocallyWithNode(Dequeue, ['--from', account], provider)
 
     // Should have 1 proposal total in the system
     const afterFirstDequeue = await governanceWrapper.getDequeue()
@@ -78,10 +78,10 @@ testWithAnvilL2('governance:dequeue cmd', (providerOwner) => {
       .sendAndWaitForReceipt({ from: account, value: minDeposit })
 
     // Advance time to allow dequeuing
-    await timeTravel(dequeueFrequency + 1, providerOwner)
+    await timeTravel(dequeueFrequency + 1, provider)
 
     // Now dequeue should work
-    await testLocallyWithNode(Dequeue, ['--from', account], providerOwner)
+    await testLocallyWithNode(Dequeue, ['--from', account], provider)
 
     // Should have 2 proposals total, and some should be dequeued
     const finalDequeue = await governanceWrapper.getDequeue()

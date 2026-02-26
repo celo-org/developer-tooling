@@ -18,27 +18,27 @@ import Withdraw from './withdraw'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('releasegold:withdraw cmd', (providerOwner) => {
+testWithAnvilL2('releasegold:withdraw cmd', (provider) => {
   let contractAddress: string
   let kit: ContractKit
 
   beforeEach(async () => {
-    kit = newKitFromProvider(providerOwner.currentProvider)
+    kit = newKitFromProvider(provider)
     const accounts = (await kit.connection.getAccounts()) as StrongAddress[]
 
     contractAddress = await deployReleaseGoldContract(
-      providerOwner,
+      provider,
       await createMultisig(kit, [accounts[0], accounts[1]] as StrongAddress[], 2, 2),
       accounts[1],
       accounts[0],
       accounts[2]
     )
-    await testLocallyWithNode(CreateAccount, ['--contract', contractAddress], providerOwner)
+    await testLocallyWithNode(CreateAccount, ['--contract', contractAddress], provider)
     // make the whole balance available for withdrawal
     await testLocallyWithNode(
       SetMaxDistribution,
       ['--contract', contractAddress, '--yesreally', '--distributionRatio', '1000'],
-      providerOwner
+      provider
     )
   })
 
@@ -46,10 +46,10 @@ testWithAnvilL2('releasegold:withdraw cmd', (providerOwner) => {
     await testLocallyWithNode(
       SetLiquidityProvision,
       ['--contract', contractAddress, '--yesreally'],
-      providerOwner
+      provider
     )
     // Based on the release schedule, 3 months needs to pass
-    await timeTravel(MONTH * 3 + DAY, providerOwner)
+    await timeTravel(MONTH * 3 + DAY, provider)
     const withdrawalAmount = '10000000000000000000'
     const releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
@@ -64,7 +64,7 @@ testWithAnvilL2('releasegold:withdraw cmd', (providerOwner) => {
     await testLocallyWithNode(
       Withdraw,
       ['--contract', contractAddress, '--value', withdrawalAmount],
-      providerOwner
+      provider
     )
 
     const balanceAfter = (await kit.getTotalBalance(beneficiary)).CELO!
@@ -89,12 +89,12 @@ testWithAnvilL2('releasegold:withdraw cmd', (providerOwner) => {
     await testLocallyWithNode(
       SetLiquidityProvision,
       ['--contract', contractAddress, '--yesreally'],
-      providerOwner
+      provider
     )
     expect(spy).toHaveBeenCalledWith(
       expect.stringContaining('The liquidity provision has not already been set')
     )
-    await timeTravel(MONTH * 12 + DAY, providerOwner)
+    await timeTravel(MONTH * 12 + DAY, provider)
     const releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
       kit.connection.createContract(releaseGoldABI as any, contractAddress),
@@ -118,7 +118,7 @@ testWithAnvilL2('releasegold:withdraw cmd', (providerOwner) => {
       testLocallyWithNode(
         Withdraw,
         ['--contract', contractAddress, '--value', remainingBalance.toString()],
-        providerOwner
+        provider
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
 
@@ -150,19 +150,19 @@ testWithAnvilL2('releasegold:withdraw cmd', (providerOwner) => {
       testLocallyWithNode(
         RGTransferDollars,
         ['--contract', contractAddress, '--to', beneficiary, '--value', '100'],
-        providerOwner
+        provider
       )
     ).resolves.toBeUndefined()
     spy.mockClear()
 
     const totalWithdrawn = await releaseGoldWrapper.getTotalWithdrawn()
     expect(totalWithdrawn.toFixed()).toMatchInlineSnapshot(`"0"`)
-    await timeTravel(DAY * 31, providerOwner)
+    await timeTravel(DAY * 31, provider)
     await expect(
       testLocallyWithNode(
         Withdraw,
         ['--contract', contractAddress, '--value', remainingBalance.toString()],
-        providerOwner
+        provider
       )
     ).resolves.toBeUndefined()
     expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
@@ -202,7 +202,7 @@ testWithAnvilL2('releasegold:withdraw cmd', (providerOwner) => {
 
     const destroyedContractAddress = await getContractFromEvent(
       'ReleaseGoldInstanceDestroyed(address,address)',
-      providerOwner
+      provider
     )
 
     expect(destroyedContractAddress).toBe(contractAddress)

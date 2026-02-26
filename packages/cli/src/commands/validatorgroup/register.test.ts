@@ -8,16 +8,16 @@ import ValidatorGroupRegister from './register'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validatorgroup:register cmd', (providerOwner) => {
+testWithAnvilL2('validatorgroup:register cmd', (provider) => {
   beforeEach(async () => {
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const accounts = await kit.connection.getAccounts()
 
-    await testLocallyWithNode(AccountRegister, ['--from', accounts[0]], providerOwner)
+    await testLocallyWithNode(AccountRegister, ['--from', accounts[0]], provider)
     await testLocallyWithNode(
       Lock,
       ['--from', accounts[0], '--value', '10000000000000000000000'],
-      providerOwner
+      provider
     )
   })
   afterAll(() => {
@@ -28,13 +28,13 @@ testWithAnvilL2('validatorgroup:register cmd', (providerOwner) => {
     const logSpy = jest.spyOn(console, 'log')
     const writeMock = jest.spyOn(ux.write, 'stdout')
 
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const accounts = await kit.connection.getAccounts()
 
     await testLocallyWithNode(
       ValidatorGroupRegister,
       ['--from', accounts[0], '--commission', '0.2', '--yes'],
-      providerOwner
+      provider
     )
     expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls)).toMatchInlineSnapshot(`
       [

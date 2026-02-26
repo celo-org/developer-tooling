@@ -7,7 +7,7 @@ import { keccak256, toBytes } from 'viem'
 import { newKitFromProvider } from '../kit'
 import { AttestationsWrapper } from './Attestations'
 
-testWithAnvilL2('AttestationsWrapper', (providerOwner) => {
+testWithAnvilL2('AttestationsWrapper', (provider) => {
   const PHONE_NUMBER = '+15555555555'
   const IDENTIFIER = getIdentifierHash(
     (input) => keccak256(toBytes(input)),
@@ -16,7 +16,7 @@ testWithAnvilL2('AttestationsWrapper', (providerOwner) => {
     'pepper'
   )
 
-  const kit = newKitFromProvider(providerOwner.currentProvider)
+  const kit = newKitFromProvider(provider)
   let accounts: StrongAddress[] = []
   let attestations: AttestationsWrapper
 
@@ -24,12 +24,12 @@ testWithAnvilL2('AttestationsWrapper', (providerOwner) => {
     accounts = await kit.connection.getAccounts()
     kit.defaultAccount = accounts[0]
 
-    const attestationsContractAddress = await deployAttestationsContract(providerOwner, accounts[0])
+    const attestationsContractAddress = await deployAttestationsContract(provider, accounts[0])
 
     attestations = new AttestationsWrapper(
       kit.connection,
       kit.connection.createContract(attestationsABI as any, attestationsContractAddress),
-      newKitFromProvider(providerOwner.currentProvider).contracts
+      newKitFromProvider(provider).contracts
     )
   })
 

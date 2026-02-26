@@ -1,17 +1,18 @@
+import { Provider } from '@celo/connect'
 import { getAddress, keccak256, toBytes } from 'viem'
 import migrationOverride from './migration-override.json'
-import { type ProviderOwner, jsonRpcCall } from './test-utils'
+import { jsonRpcCall } from './test-utils'
 
 export const NetworkConfig = migrationOverride
 
-export async function timeTravel(seconds: number, client: ProviderOwner) {
-  await jsonRpcCall(client, 'evm_increaseTime', [seconds])
-  await jsonRpcCall(client, 'evm_mine', [])
+export async function timeTravel(seconds: number, provider: Provider) {
+  await jsonRpcCall(provider, 'evm_increaseTime', [seconds])
+  await jsonRpcCall(provider, 'evm_mine', [])
 }
 
-export async function mineBlocks(blocks: number, client: ProviderOwner) {
+export async function mineBlocks(blocks: number, provider: Provider) {
   for (let i = 0; i < blocks; i++) {
-    await jsonRpcCall(client, 'evm_mine', [])
+    await jsonRpcCall(provider, 'evm_mine', [])
   }
 }
 /**
@@ -19,14 +20,14 @@ export async function mineBlocks(blocks: number, client: ProviderOwner) {
  */
 export async function getContractFromEvent(
   eventSignature: string,
-  client: ProviderOwner,
+  provider: Provider,
   filter?: {
     expectedData?: string
     index?: number
   }
 ): Promise<string> {
   const topic = keccak256(toBytes(eventSignature))
-  const logs = await jsonRpcCall<any[]>(client, 'eth_getLogs', [
+  const logs = await jsonRpcCall<any[]>(provider, 'eth_getLogs', [
     {
       topics: [topic],
       fromBlock: 'earliest',

@@ -8,13 +8,13 @@ import Register from './register'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('account:deauthorize cmd', (providerOwner) => {
+testWithAnvilL2('account:deauthorize cmd', (provider) => {
   test('can deauthorize attestation signer', async () => {
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const accounts = await kit.connection.getAccounts()
     const notRegisteredAccount = accounts[0]
     const signerNotRegisteredAccount = accounts[1]
-    await testLocallyWithNode(Register, ['--from', accounts[0]], providerOwner)
+    await testLocallyWithNode(Register, ['--from', accounts[0]], provider)
     await testLocallyWithNode(
       Authorize,
       [
@@ -27,7 +27,7 @@ testWithAnvilL2('account:deauthorize cmd', (providerOwner) => {
         '--signature',
         PROOF_OF_POSSESSION_SIGNATURE,
       ],
-      providerOwner
+      provider
     )
 
     const logMock = jest.spyOn(console, 'log')
@@ -42,7 +42,7 @@ testWithAnvilL2('account:deauthorize cmd', (providerOwner) => {
         '--signer',
         signerNotRegisteredAccount,
       ],
-      providerOwner
+      provider
     )
 
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
@@ -58,11 +58,11 @@ testWithAnvilL2('account:deauthorize cmd', (providerOwner) => {
   })
 
   test('cannot deauthorize a non-authorized signer', async () => {
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const accounts = await kit.connection.getAccounts()
     const notRegisteredAccount = accounts[0]
     const signerNotRegisteredAccount = accounts[1]
-    await testLocallyWithNode(Register, ['--from', notRegisteredAccount], providerOwner)
+    await testLocallyWithNode(Register, ['--from', notRegisteredAccount], provider)
 
     await expect(
       testLocallyWithNode(
@@ -76,7 +76,7 @@ testWithAnvilL2('account:deauthorize cmd', (providerOwner) => {
           signerNotRegisteredAccount,
         ],
 
-        providerOwner
+        provider
       )
     ).rejects.toMatchInlineSnapshot(
       `[Error: Invalid signer argument: 0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb. The current signer for this role is: 0x5409ED021D9299bf6814279A6A1411A7e866A631]`

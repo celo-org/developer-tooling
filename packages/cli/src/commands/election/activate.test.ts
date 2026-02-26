@@ -24,7 +24,7 @@ import ElectionActivate from './activate'
 
 import { StrongAddress } from '@celo/base'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
-import { type ProviderOwner } from '@celo/dev-utils/test-utils'
+import { Provider } from '@celo/connect'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import * as ViemLedger from '@celo/viem-account-ledger'
 import { createWalletClient, Hex, http } from 'viem'
@@ -60,7 +60,7 @@ testWithAnvilL2(
     })
 
     it('shows no pending votes', async () => {
-      const kit = newKitFromProvider(client.currentProvider)
+      const kit = newKitFromProvider(client)
       const [userAddress] = await kit.connection.getAccounts()
       const writeMock = jest.spyOn(ux.write, 'stdout')
 
@@ -79,7 +79,7 @@ testWithAnvilL2(
     })
 
     it('shows no activatable votes yet', async () => {
-      const kit = newKitFromProvider(client.currentProvider)
+      const kit = newKitFromProvider(client)
       const [groupAddress, validatorAddress, userAddress] = await kit.connection.getAccounts()
 
       const writeMock = jest.spyOn(ux.write, 'stdout')
@@ -101,7 +101,7 @@ testWithAnvilL2(
     })
 
     it('activate votes', async () => {
-      const kit = newKitFromProvider(client.currentProvider)
+      const kit = newKitFromProvider(client)
       const [groupAddress, validatorAddress, userAddress] = await kit.connection.getAccounts()
       const election = await kit.contracts.getElection()
       const writeMock = jest.spyOn(ux.write, 'stdout')
@@ -128,7 +128,7 @@ testWithAnvilL2(
     it(
       'activate votes with --wait flag',
       async () => {
-        const kit = newKitFromProvider(client.currentProvider)
+        const kit = newKitFromProvider(client)
         const [groupAddress, validatorAddress, userAddress, otherUserAddress] =
           await kit.connection.getAccounts()
         const election = await kit.contracts.getElection()
@@ -199,7 +199,7 @@ testWithAnvilL2(
     )
 
     it('activate votes for other address', async () => {
-      const kit = newKitFromProvider(client.currentProvider)
+      const kit = newKitFromProvider(client)
       const [groupAddress, validatorAddress, userAddress, otherUserAddress] =
         await kit.connection.getAccounts()
       const election = await kit.contracts.getElection()
@@ -238,7 +238,7 @@ testWithAnvilL2(
     it('activate votes for other address with --wait flag', async () => {
       const privKey = generatePrivateKey()
       const newAccount = privateKeyToAccount(privKey)
-      const kit = newKitFromProvider(client.currentProvider)
+      const kit = newKitFromProvider(client)
 
       const [
         groupAddress,
@@ -349,7 +349,7 @@ testWithAnvilL2(
       let signTransactionSpy: jest.Mock
       beforeEach(async () => {
         signTransactionSpy = jest.fn().mockResolvedValue('0xtxhash')
-        const kit = newKitFromProvider(client.currentProvider)
+        const kit = newKitFromProvider(client)
         const [userAddress] = await kit.connection.getAccounts()
 
         jest.spyOn(ViemLedger, 'ledgerToWalletClient').mockImplementation(async () => {
@@ -379,7 +379,7 @@ testWithAnvilL2(
       })
 
       it('send the transactions to ledger for signing', async () => {
-        const kit = newKitFromProvider(client.currentProvider)
+        const kit = newKitFromProvider(client)
         const activateAmount = 1234
         const [userAddress, groupAddress, validatorAddress] = await kit.connection.getAccounts()
         await setupGroupAndAffiliateValidator(kit, groupAddress, validatorAddress)
@@ -438,14 +438,10 @@ testWithAnvilL2(
   },
   { chainId: 42220 }
 )
-async function timeTravelAndSwitchEpoch(
-  kit: ContractKit,
-  client: ProviderOwner,
-  userAddress: string
-) {
+async function timeTravelAndSwitchEpoch(kit: ContractKit, provider: Provider, userAddress: string) {
   const epochManagerWrapper = await kit.contracts.getEpochManager()
   const epochDuration = await epochManagerWrapper.epochDuration()
-  await timeTravel(epochDuration + 60, client)
-  await testLocallyWithNode(Switch, ['--from', userAddress], client)
-  await timeTravel(60, client)
+  await timeTravel(epochDuration + 60, provider)
+  await testLocallyWithNode(Switch, ['--from', userAddress], provider)
+  await timeTravel(60, provider)
 }

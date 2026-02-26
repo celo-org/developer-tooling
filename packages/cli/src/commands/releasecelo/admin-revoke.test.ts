@@ -24,17 +24,17 @@ import LockedCelo from './locked-gold'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('releasegold:admin-revoke cmd', (providerOwner) => {
+testWithAnvilL2('releasegold:admin-revoke cmd', (provider) => {
   let kit: ContractKit
   let contractAddress: StrongAddress
   let releaseGoldWrapper: ReleaseGoldWrapper
   let accounts: StrongAddress[]
 
   beforeEach(async () => {
-    kit = newKitFromProvider(providerOwner.currentProvider)
+    kit = newKitFromProvider(provider)
     accounts = (await kit.connection.getAccounts()) as StrongAddress[]
     contractAddress = await deployReleaseGoldContract(
-      providerOwner,
+      provider,
       await createMultisig(kit, [accounts[0], accounts[1]] as StrongAddress[], 2, 2),
       accounts[1],
       accounts[0],
@@ -48,14 +48,10 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (providerOwner) => {
   })
 
   test('will revoke', async () => {
-    await testLocallyWithNode(
-      AdminRevoke,
-      ['--contract', contractAddress, '--yesreally'],
-      providerOwner
-    )
+    await testLocallyWithNode(AdminRevoke, ['--contract', contractAddress, '--yesreally'], provider)
     const revokedContract = await getContractFromEvent(
       'ReleaseScheduleRevoked(uint256,uint256)',
-      providerOwner
+      provider
     )
     expect(revokedContract).toBe(contractAddress)
   })
@@ -66,24 +62,16 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (providerOwner) => {
     await stableToken.transfer(contractAddress, 100).send({
       from: accounts[0],
     })
-    await testLocallyWithNode(
-      AdminRevoke,
-      ['--contract', contractAddress, '--yesreally'],
-      providerOwner
-    )
+    await testLocallyWithNode(AdminRevoke, ['--contract', contractAddress, '--yesreally'], provider)
     const balance = await stableToken.balanceOf(contractAddress)
     expect(balance.isZero()).toBeTruthy()
   })
 
   test('will refund and finalize', async () => {
-    await testLocallyWithNode(
-      AdminRevoke,
-      ['--contract', contractAddress, '--yesreally'],
-      providerOwner
-    )
+    await testLocallyWithNode(AdminRevoke, ['--contract', contractAddress, '--yesreally'], provider)
     const destroyedContract = await getContractFromEvent(
       'ReleaseGoldInstanceDestroyed(address,address)',
-      providerOwner
+      provider
     )
     expect(destroyedContract).toBe(contractAddress)
   })
@@ -93,12 +81,12 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (providerOwner) => {
 
     beforeEach(async () => {
       // Make sure the release gold contract has enough funds
-      await setBalance(providerOwner, contractAddress, new BigNumber(parseEther('10').toString()))
-      await testLocallyWithNode(CreateAccount, ['--contract', contractAddress], providerOwner)
+      await setBalance(provider, contractAddress, new BigNumber(parseEther('10').toString()))
+      await testLocallyWithNode(CreateAccount, ['--contract', contractAddress], provider)
       await testLocallyWithNode(
         LockedCelo,
         ['--contract', contractAddress, '--action', 'lock', '--value', value, '--yes'],
-        providerOwner
+        provider
       )
     })
 
@@ -106,7 +94,7 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (providerOwner) => {
       await testLocallyWithNode(
         AdminRevoke,
         ['--contract', contractAddress, '--yesreally'],
-        providerOwner
+        provider
       )
       const lockedGold = await kit.contracts.getLockedGold()
       const lockedAmount = await lockedGold.getAccountTotalLockedGold(releaseGoldWrapper.address)
@@ -139,7 +127,7 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (providerOwner) => {
             '--signature',
             serializeSignature(pop),
           ],
-          providerOwner
+          provider
         )
       })
 
@@ -147,7 +135,7 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (providerOwner) => {
         await testLocallyWithNode(
           AdminRevoke,
           ['--contract', contractAddress, '--yesreally'],
-          providerOwner
+          provider
         )
         const newVoteSigner = await accountsWrapper.getVoteSigner(contractAddress)
         expect(newVoteSigner).not.toEqual(voteSigner)
@@ -165,18 +153,18 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (providerOwner) => {
             .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
 
           const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
-          await timeTravel(dequeueFrequency + 1, providerOwner)
+          await timeTravel(dequeueFrequency + 1, provider)
           const multiApprover = await governance.getApproverMultisig()
           await setBalance(
-            providerOwner,
+            provider,
             multiApprover.address,
             new BigNumber(parseEther('10').toString())
           )
-          await withImpersonatedAccount(providerOwner, multiApprover.address, async () => {
+          await withImpersonatedAccount(provider, multiApprover.address, async () => {
             await testLocallyWithNode(
               Approve,
               ['--from', multiApprover.address, '--proposalID', '1'],
-              providerOwner
+              provider
             )
           })
           await testLocallyWithNode(
@@ -191,7 +179,7 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (providerOwner) => {
               '--privateKey',
               PRIVATE_KEY1,
             ],
-            providerOwner
+            provider
           )
           await governance
             .propose([], 'URL')
@@ -202,7 +190,7 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (providerOwner) => {
           await testLocallyWithNode(
             GovernanceUpvote,
             ['--from', voteSigner, '--proposalID', '3', '--privateKey', PRIVATE_KEY1],
-            providerOwner
+            provider
           )
         })
 
@@ -212,7 +200,7 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (providerOwner) => {
           await testLocallyWithNode(
             AdminRevoke,
             ['--contract', contractAddress, '--yesreally'],
-            providerOwner
+            provider
           )
           const isVotingAfter = await governance.isVoting(contractAddress)
           expect(isVotingAfter).toBeFalsy()

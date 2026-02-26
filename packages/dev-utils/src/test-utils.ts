@@ -64,17 +64,11 @@ export const TEST_GAS_LIMIT = 20000000
 
 export const NetworkConfig = migrationOverride
 
-/** An object that has a currentProvider (Connection, ContractKit.connection, etc.) */
+/** @deprecated Use `Provider` from `@celo/connect` directly instead. */
 export type ProviderOwner = { currentProvider: Provider }
 
-export function jsonRpcCall<O>(
-  providerOwner: ProviderOwner,
-  method: string,
-  params: unknown[]
-): Promise<O> {
+export function jsonRpcCall<O>(provider: Provider, method: string, params: unknown[]): Promise<O> {
   return new Promise<O>((resolve, reject) => {
-    const provider = providerOwner.currentProvider
-
     if (provider && typeof provider.send === 'function') {
       provider.send(
         {
@@ -107,12 +101,12 @@ export function jsonRpcCall<O>(
   })
 }
 
-export function evmRevert(providerOwner: ProviderOwner, snapId: string): Promise<void> {
-  return jsonRpcCall(providerOwner, 'evm_revert', [snapId])
+export function evmRevert(provider: Provider, snapId: string): Promise<void> {
+  return jsonRpcCall(provider, 'evm_revert', [snapId])
 }
 
-export function evmSnapshot(providerOwner: ProviderOwner) {
-  return jsonRpcCall<string>(providerOwner, 'evm_snapshot', [])
+export function evmSnapshot(provider: Provider) {
+  return jsonRpcCall<string>(provider, 'evm_snapshot', [])
 }
 
 type TestWithWeb3Hooks = {
@@ -121,10 +115,10 @@ type TestWithWeb3Hooks = {
 }
 
 /**
- * Creates a test suite with a given name and provides function with a ProviderOwner
+ * Creates a test suite with a given name and provides the test function with a Provider
  * connected to the given rpcUrl.
  *
- * It is an equivalent of jest `describe` with a provider-owning client. It also provides
+ * It is an equivalent of jest `describe` with a Provider. It also provides
  * hooks for beforeAll and afterAll.
  *
  * Optionally if a runIf flag is set to false the test suite will be skipped (useful for
@@ -135,15 +129,13 @@ type TestWithWeb3Hooks = {
 export function testWithWeb3(
   name: string,
   rpcUrl: string,
-  fn: (providerOwner: ProviderOwner) => void,
+  fn: (provider: Provider) => void,
   options: {
     hooks?: TestWithWeb3Hooks
     runIf?: boolean
   } = {}
 ) {
   const provider = new SimpleHttpProvider(rpcUrl)
-  const providerOwner: ProviderOwner = { currentProvider: provider }
-
   // By default we run all the tests
   let describeFn = describe
 
@@ -161,14 +153,14 @@ export function testWithWeb3(
 
     beforeEach(async () => {
       if (snapId != null) {
-        await evmRevert(providerOwner, snapId)
+        await evmRevert(provider, snapId)
       }
-      snapId = await evmSnapshot(providerOwner)
+      snapId = await evmSnapshot(provider)
     })
 
     afterAll(async () => {
       if (snapId != null) {
-        await evmRevert(providerOwner, snapId)
+        await evmRevert(provider, snapId)
       }
       if (options.hooks?.afterAll) {
         // hook must be awaited here or jest doesnt actually wait for it and complains of open handles
@@ -176,6 +168,6 @@ export function testWithWeb3(
       }
     })
 
-    fn(providerOwner)
+    fn(provider)
   })
 }

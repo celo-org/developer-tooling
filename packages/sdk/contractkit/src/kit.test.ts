@@ -136,7 +136,7 @@ describe('newKitWithApiKey()', () => {
     try {
       const kit = newKitWithApiKey('http://localhost:8545', 'key')
       expect(kit).toBeDefined()
-      expect(kit.connection).toBeDefined()
+      expect(kit.connection.currentProvider).toBeDefined()
       // Verify that setupAPIKey was called with the correct API key
       expect(setupAPIKeySpy).toHaveBeenCalledWith('key')
     } finally {
@@ -154,15 +154,15 @@ describe('newKitFromProvider()', () => {
     }
     const kit = newKitFromProvider(provider)
     expect(kit).toBeDefined()
-    expect(kit.connection).toBeDefined()
+    expect(kit.connection.currentProvider).toBeDefined()
   })
 })
 
-testWithAnvilL2('kit', (providerOwner) => {
+testWithAnvilL2('kit', (provider) => {
   let kit: ContractKit
 
   beforeAll(async () => {
-    kit = newKitFromProvider(providerOwner.currentProvider)
+    kit = newKitFromProvider(provider)
   })
 
   describe('epochs', () => {
@@ -174,11 +174,11 @@ testWithAnvilL2('kit', (providerOwner) => {
 
       // Go 3 epochs ahead
       for (let i = 0; i < 3; i++) {
-        await timeTravel(epochDuration * 2, providerOwner)
+        await timeTravel(epochDuration * 2, provider)
         await startAndFinishEpochProcess(kit)
       }
 
-      await timeTravel(epochDuration * 2, providerOwner)
+      await timeTravel(epochDuration * 2, provider)
 
       const accounts = await kit.connection.getAccounts()
 

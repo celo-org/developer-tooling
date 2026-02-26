@@ -28,7 +28,7 @@ testWithAnvilL2(
       await deployMultiCall(client, '0xcA11bde05977b3631167028862bE2a173976CA11')
 
       const logMock = jest.spyOn(console, 'log')
-      const kit = newKitFromProvider(client.currentProvider)
+      const kit = newKitFromProvider(client)
       const [voterAddress] = await kit.connection.getAccounts()
       const validatorsWrapper = await kit.contracts.getValidators()
       const epochManagerWrapper = await kit.contracts.getEpochManager()
@@ -69,7 +69,7 @@ testWithAnvilL2(
     })
 
     it('fails when no flags are provided', async () => {
-      const kit = newKitFromProvider(client.currentProvider)
+      const kit = newKitFromProvider(client)
       const [groupAddress] = await kit.connection.getAccounts()
       await expect(testLocallyWithNode(Show, [groupAddress], client)).rejects.toThrow(
         'Must select --voter or --group'
@@ -78,7 +78,7 @@ testWithAnvilL2(
 
     it('fails when provided address is not a group', async () => {
       const logMock = jest.spyOn(console, 'log')
-      const kit = newKitFromProvider(client.currentProvider)
+      const kit = newKitFromProvider(client)
       const [groupAddress] = await kit.connection.getAccounts()
 
       await expect(testLocallyWithNode(Show, [groupAddress, '--group'], client)).rejects.toThrow(
@@ -91,7 +91,7 @@ testWithAnvilL2(
 
     it('fails when provided address is not a voter', async () => {
       const logMock = jest.spyOn(console, 'log')
-      const kit = newKitFromProvider(client.currentProvider)
+      const kit = newKitFromProvider(client)
       const [_, nonVoterAddress] = await kit.connection.getAccounts()
 
       await expect(testLocallyWithNode(Show, [nonVoterAddress, '--voter'], client)).rejects.toThrow(
@@ -103,7 +103,7 @@ testWithAnvilL2(
     })
 
     it('shows data for a group', async () => {
-      const kit = newKitFromProvider(client.currentProvider)
+      const kit = newKitFromProvider(client)
       const logMock = jest.spyOn(console, 'log').mockClear()
       const validatorsWrapper = await kit.contracts.getValidators()
       const [_, group] = await validatorsWrapper.getRegisteredValidatorGroups()
@@ -124,7 +124,7 @@ testWithAnvilL2(
 
     it('shows data for an account', async () => {
       const logMock = jest.spyOn(console, 'log')
-      const kit = newKitFromProvider(client.currentProvider)
+      const kit = newKitFromProvider(client)
       const [voterAddress] = await kit.connection.getAccounts()
 
       await testLocallyWithNode(Show, [voterAddress, '--voter'], client)

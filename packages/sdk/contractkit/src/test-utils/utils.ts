@@ -20,7 +20,7 @@ export const topUpWithToken = async (
 ) => {
   const token = await kit.contracts.getStableToken(stableToken)
 
-  await withImpersonatedAccount(kit.connection as any, STABLES_ADDRESS, async () => {
+  await withImpersonatedAccount(kit.connection.currentProvider, STABLES_ADDRESS, async () => {
     await token.transfer(recipientAddress, amount.toFixed()).sendAndWaitForReceipt({
       from: STABLES_ADDRESS,
     })

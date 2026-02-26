@@ -4,10 +4,10 @@ import Parameters from './parameters'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('network:parameters', (providerOwner) => {
+testWithAnvilL2('network:parameters', (provider) => {
   test('runs', async () => {
     const spy = jest.spyOn(console, 'log')
-    await testLocallyWithNode(Parameters, [], providerOwner)
+    await testLocallyWithNode(Parameters, [], provider)
     expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
       [
         [

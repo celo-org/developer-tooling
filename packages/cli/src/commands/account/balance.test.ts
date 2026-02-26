@@ -9,24 +9,24 @@ import Balance from './balance'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('account:balance cmd', (providerOwner) => {
+testWithAnvilL2('account:balance cmd', (provider) => {
   const consoleMock = jest.spyOn(console, 'log')
   let accounts: string[] = []
   let kit: ContractKit
 
   beforeEach(async () => {
-    kit = newKitFromProvider(providerOwner.currentProvider)
+    kit = newKitFromProvider(provider)
     accounts = await kit.connection.getAccounts()
     consoleMock.mockClear()
   })
 
   it('shows the balance of the account for CELO only', async () => {
-    await testLocallyWithNode(Lock, ['--from', accounts[0], '--value', '1234567890'], providerOwner)
-    await testLocallyWithNode(Unlock, ['--from', accounts[0], '--value', '890'], providerOwner)
+    await testLocallyWithNode(Lock, ['--from', accounts[0], '--value', '1234567890'], provider)
+    await testLocallyWithNode(Unlock, ['--from', accounts[0], '--value', '890'], provider)
 
     consoleMock.mockClear()
 
-    await testLocallyWithNode(Balance, [accounts[0]], providerOwner)
+    await testLocallyWithNode(Balance, [accounts[0]], provider)
 
     // Instead of exact snapshot matching, let's verify the balance structure and ranges
     const calls = stripAnsiCodesFromNestedArray(consoleMock.mock.calls)
@@ -54,7 +54,7 @@ testWithAnvilL2('account:balance cmd', (providerOwner) => {
     await testLocallyWithNode(
       Balance,
       [accounts[0], '--erc20Address', (await kit.contracts.getGoldToken()).address],
-      providerOwner
+      provider
     )
 
     expect(stripAnsiCodesFromNestedArray(consoleMock.mock.calls)).toMatchInlineSnapshot(`

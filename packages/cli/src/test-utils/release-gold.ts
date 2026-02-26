@@ -1,9 +1,9 @@
 import { releaseGoldABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
-import { Connection } from '@celo/connect'
+import { Connection, Provider } from '@celo/connect'
 import { REGISTRY_CONTRACT_ADDRESS } from '@celo/contractkit'
 import { setBalance, setCode, withImpersonatedAccount } from '@celo/dev-utils/anvil-test'
-import { HOUR, MINUTE, MONTH, ProviderOwner } from '@celo/dev-utils/test-utils'
+import { HOUR, MINUTE, MONTH } from '@celo/dev-utils/test-utils'
 import BigNumber from 'bignumber.js'
 import { parseEther } from 'viem'
 import { getCurrentTimestamp } from '../utils/cli'
@@ -14,7 +14,7 @@ const RELEASE_GOLD_IMPLEMENTATION_CONTRACT_BYTECODE =
 const RELEASE_GOLD_IMPLEMENTATION_CONTRACT_ADDRESS = '0xDdbe68bEae54dd94465C6bbA2477EE9500ce1974'
 
 export async function deployReleaseGoldContract(
-  providerOwner: ProviderOwner,
+  provider: Provider,
   ownerMultisigAddress: StrongAddress,
   beneficiary: StrongAddress,
   releaseOwner: StrongAddress,
@@ -22,13 +22,13 @@ export async function deployReleaseGoldContract(
   canValidate: boolean = false
 ): Promise<StrongAddress> {
   await setCode(
-    providerOwner,
+    provider,
     RELEASE_GOLD_IMPLEMENTATION_CONTRACT_ADDRESS,
     RELEASE_GOLD_IMPLEMENTATION_CONTRACT_BYTECODE
   )
 
   // Create contract using Connection's createContract
-  const connection = new Connection(providerOwner.currentProvider)
+  const connection = new Connection(provider)
   const contract = connection.createContract(
     releaseGoldABI as any,
     RELEASE_GOLD_IMPLEMENTATION_CONTRACT_ADDRESS
@@ -37,7 +37,7 @@ export async function deployReleaseGoldContract(
   const amountReleasedPerPeriod = new BigNumber(parseEther('10').toString())
 
   await withImpersonatedAccount(
-    providerOwner,
+    provider,
     ownerMultisigAddress,
     async () => {
       // default values taken from https://github.com/celo-org/celo-monorepo/blob/master/packages/protocol/test-sol/unit/governance/voting/ReleaseGold.t.sol#L146
@@ -64,7 +64,7 @@ export async function deployReleaseGoldContract(
   )
 
   await setBalance(
-    providerOwner,
+    provider,
     RELEASE_GOLD_IMPLEMENTATION_CONTRACT_ADDRESS,
     amountReleasedPerPeriod.multipliedBy(releasePeriods)
   )

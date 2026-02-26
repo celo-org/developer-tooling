@@ -50,7 +50,7 @@ testWithAnvilL2(
 
     describe('hotfix', () => {
       it('fails when address is not security council multisig signatory', async () => {
-        const kit = newKitFromProvider(client.currentProvider)
+        const kit = newKitFromProvider(client)
         const accounts = await kit.connection.getAccounts()
         const governance = await kit.contracts.getGovernance()
         const writeMock = jest.spyOn(ux.write, 'stdout')
@@ -129,7 +129,7 @@ testWithAnvilL2(
       })
 
       it('fails when address is not approver multisig signatory', async () => {
-        const kit = newKitFromProvider(client.currentProvider)
+        const kit = newKitFromProvider(client)
         const accounts = await kit.connection.getAccounts()
         const governance = await kit.contracts.getGovernance()
         const writeMock = jest.spyOn(ux.write, 'stdout')
@@ -176,7 +176,7 @@ testWithAnvilL2(
       })
 
       it('fails when address is not security council', async () => {
-        const kit = newKitFromProvider(client.currentProvider)
+        const kit = newKitFromProvider(client)
         const [approver, securityCouncil, account] = await kit.connection.getAccounts()
         const governance = await kit.contracts.getGovernance()
         const writeMock = jest.spyOn(ux.write, 'stdout')
@@ -242,7 +242,7 @@ testWithAnvilL2(
       })
 
       it('fails when address is not approver', async () => {
-        const kit = newKitFromProvider(client.currentProvider)
+        const kit = newKitFromProvider(client)
         const [approver, securityCouncil, account] = await kit.connection.getAccounts()
         const governance = await kit.contracts.getGovernance()
         const writeMock = jest.spyOn(ux.write, 'stdout')
@@ -304,7 +304,7 @@ testWithAnvilL2(
       })
 
       it('succeeds when address is a direct security council', async () => {
-        const kit = newKitFromProvider(client.currentProvider)
+        const kit = newKitFromProvider(client)
         const [approver, securityCouncil] = await kit.connection.getAccounts()
         const governance = await kit.contracts.getGovernance()
         const writeMock = jest.spyOn(ux.write, 'stdout')
@@ -384,7 +384,7 @@ testWithAnvilL2(
       })
 
       it('succeeds when address is a direct approver', async () => {
-        const kit = newKitFromProvider(client.currentProvider)
+        const kit = newKitFromProvider(client)
         const [approver, securityCouncil] = await kit.connection.getAccounts()
         const governance = await kit.contracts.getGovernance()
         const writeMock = jest.spyOn(ux.write, 'stdout')
@@ -460,7 +460,7 @@ testWithAnvilL2(
       })
 
       it('succeeds when address is security council multisig signatory', async () => {
-        const kit = newKitFromProvider(client.currentProvider)
+        const kit = newKitFromProvider(client)
         const accounts = (await kit.connection.getAccounts()) as StrongAddress[]
         const governance = await kit.contracts.getGovernance()
         const writeMock = jest.spyOn(ux.write, 'stdout')
@@ -556,7 +556,7 @@ testWithAnvilL2(
       it('succeeds when address is security council safe signatory', async () => {
         await setupSafeContracts(client)
 
-        const kit = newKitFromProvider(client.currentProvider)
+        const kit = newKitFromProvider(client)
         const [approver, securityCouncilSafeSignatory1] =
           (await kit.connection.getAccounts()) as StrongAddress[]
         const securityCouncilSafeSignatory2: StrongAddress =
@@ -769,7 +769,7 @@ testWithAnvilL2(
       })
 
       it('succeeds when address is approver multisig signatory', async () => {
-        const kit = newKitFromProvider(client.currentProvider)
+        const kit = newKitFromProvider(client)
         const accounts = (await kit.connection.getAccounts()) as StrongAddress[]
 
         await changeMultiSigOwner(kit, accounts[0])
@@ -826,7 +826,7 @@ testWithAnvilL2(
       })
 
       it('succeeds when address is security council multisig signatory', async () => {
-        const kit = newKitFromProvider(client.currentProvider)
+        const kit = newKitFromProvider(client)
         const accounts = (await kit.connection.getAccounts()) as StrongAddress[]
 
         await changeMultiSigOwner(kit, accounts[0])
@@ -921,7 +921,7 @@ testWithAnvilL2(
       let accounts: StrongAddress[]
 
       beforeEach(async () => {
-        const kit = newKitFromProvider(client.currentProvider)
+        const kit = newKitFromProvider(client)
         accounts = (await kit.connection.getAccounts()) as StrongAddress[]
         governance = await kit.contracts.getGovernance()
 
@@ -1122,7 +1122,7 @@ testWithAnvilL2(
 
       it('should confirm existing multisig transaction when --multisigTx is provided', async () => {
         const logMock = jest.spyOn(console, 'log')
-        const kit = newKitFromProvider(client.currentProvider)
+        const kit = newKitFromProvider(client)
 
         // Create a 2-signer multisig so the transaction won't execute immediately
         const twoSignerMultisig = await createMultisig(kit, [accounts[0], accounts[1]], 2, 2)

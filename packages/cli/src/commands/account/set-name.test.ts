@@ -6,39 +6,35 @@ import SetName from './set-name'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('account:set-name cmd', (providerOwner) => {
+testWithAnvilL2('account:set-name cmd', (provider) => {
   test('can set the name of an account', async () => {
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const accounts = await kit.connection.getAccounts()
-    await testLocallyWithNode(Register, ['--from', accounts[0]], providerOwner)
-    await testLocallyWithNode(
-      SetName,
-      ['--account', accounts[0], '--name', 'TestName'],
-      providerOwner
-    )
+    await testLocallyWithNode(Register, ['--from', accounts[0]], provider)
+    await testLocallyWithNode(SetName, ['--account', accounts[0], '--name', 'TestName'], provider)
   })
 
   test('fails if account is not registered', async () => {
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const accounts = await kit.connection.getAccounts()
 
     await expect(
-      testLocallyWithNode(SetName, ['--account', accounts[0], '--name', 'TestName'], providerOwner)
+      testLocallyWithNode(SetName, ['--account', accounts[0], '--name', 'TestName'], provider)
     ).rejects.toThrow("Some checks didn't pass!")
   })
 
   test('fails if account is not provided', async () => {
-    await expect(
-      testLocallyWithNode(SetName, ['--name', 'TestName'], providerOwner)
-    ).rejects.toThrow('Missing required flag')
+    await expect(testLocallyWithNode(SetName, ['--name', 'TestName'], provider)).rejects.toThrow(
+      'Missing required flag'
+    )
   })
 
   test('fails if name is not provided', async () => {
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const accounts = await kit.connection.getAccounts()
 
     await expect(
-      testLocallyWithNode(SetName, ['--account', accounts[0]], providerOwner)
+      testLocallyWithNode(SetName, ['--account', accounts[0]], provider)
     ).rejects.toThrow('Missing required flag')
   })
 })

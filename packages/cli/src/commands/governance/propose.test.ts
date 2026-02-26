@@ -156,7 +156,7 @@ testWithAnvilL2(
     let goldTokenContract: GoldTokenWrapper['contract']
     let minDeposit: string
 
-    const kit = newKitFromProvider(client.currentProvider)
+    const kit = newKitFromProvider(client)
 
     let accounts: StrongAddress[] = []
 

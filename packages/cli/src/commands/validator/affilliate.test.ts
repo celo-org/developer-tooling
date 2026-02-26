@@ -10,12 +10,12 @@ import ValidatorAffiliate from './affiliate'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validator:affiliate', (providerOwner) => {
+testWithAnvilL2('validator:affiliate', (provider) => {
   let account: string
   let validatorContract: ValidatorsWrapper
   let groupAddress: StrongAddress
   beforeEach(async () => {
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const accounts = await kit.connection.getAccounts()
     account = accounts[0]
     kit.defaultAccount = account as StrongAddress
@@ -26,11 +26,11 @@ testWithAnvilL2('validator:affiliate', (providerOwner) => {
     const groups = await validatorContract.getRegisteredValidatorGroupsAddresses()
     groupAddress = groups[0] as StrongAddress
 
-    await testLocallyWithNode(Register, ['--from', account], providerOwner)
+    await testLocallyWithNode(Register, ['--from', account], provider)
     await testLocallyWithNode(
       Lock,
       ['--from', account, '--value', '10000000000000000000000'],
-      providerOwner
+      provider
     )
 
     // Register a validator
@@ -47,7 +47,7 @@ testWithAnvilL2('validator:affiliate', (providerOwner) => {
     await testLocallyWithNode(
       ValidatorAffiliate,
       ['--from', account, groupAddress, '--yes'],
-      providerOwner
+      provider
     )
 
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
@@ -84,7 +84,7 @@ testWithAnvilL2('validator:affiliate', (providerOwner) => {
 
   it('fails when not a validator signer', async () => {
     const logMock = jest.spyOn(console, 'log')
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const [_, nonSignerAccount] = await kit.connection.getAccounts()
 
     logMock.mockClear()
@@ -93,7 +93,7 @@ testWithAnvilL2('validator:affiliate', (providerOwner) => {
       testLocallyWithNode(
         ValidatorAffiliate,
         ['--from', nonSignerAccount, groupAddress, '--yes'],
-        providerOwner
+        provider
       )
     ).rejects.toMatchInlineSnapshot(`[Error: Some checks didn't pass!]`)
 

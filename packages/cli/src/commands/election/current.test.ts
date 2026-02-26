@@ -12,7 +12,7 @@ afterEach(async () => {
   jest.restoreAllMocks()
 })
 
-testWithAnvilL2('election:current cmd', async (providerOwner) => {
+testWithAnvilL2('election:current cmd', async (provider) => {
   let logMock: ReturnType<typeof jest.spyOn>
   let warnMock: ReturnType<typeof jest.spyOn>
   let writeMock: ReturnType<typeof jest.spyOn>
@@ -22,7 +22,7 @@ testWithAnvilL2('election:current cmd', async (providerOwner) => {
     writeMock = jest.spyOn(ux.write, 'stdout')
   })
   it('shows list with no --valset provided', async () => {
-    await testLocallyWithNode(Current, ['--csv'], providerOwner)
+    await testLocallyWithNode(Current, ['--csv'], provider)
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`
       [
@@ -61,7 +61,7 @@ testWithAnvilL2('election:current cmd', async (providerOwner) => {
   })
 
   it('shows list with --valset provided', async () => {
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const epochManager = await kit.contracts.getEpochManager()
     const accountsContract = await kit.contracts.getAccounts()
 
@@ -74,9 +74,9 @@ testWithAnvilL2('election:current cmd', async (providerOwner) => {
     )
 
     // Set the names
-    await impersonateAccount(providerOwner, validator1)
+    await impersonateAccount(provider, validator1)
     await accountsContract.setName('Validator #1').sendAndWaitForReceipt({ from: validator1 })
-    await impersonateAccount(providerOwner, validator2)
+    await impersonateAccount(provider, validator2)
     await accountsContract.setName('Validator #2').sendAndWaitForReceipt({ from: validator2 })
 
     // // change the signer
@@ -94,7 +94,7 @@ testWithAnvilL2('election:current cmd', async (providerOwner) => {
 
     // The actual test
 
-    await testLocallyWithNode(Current, ['--csv', '--valset'], providerOwner)
+    await testLocallyWithNode(Current, ['--csv', '--valset'], provider)
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`
       [

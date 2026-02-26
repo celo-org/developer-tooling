@@ -11,16 +11,16 @@ import { parseEther } from 'viem'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('releasegold:set-max-distribution cmd', (providerOwner) => {
+testWithAnvilL2('releasegold:set-max-distribution cmd', (provider) => {
   let contractAddress: string
   let kit: ContractKit
 
   beforeEach(async () => {
-    kit = newKitFromProvider(providerOwner.currentProvider)
+    kit = newKitFromProvider(provider)
     const accounts = (await kit.connection.getAccounts()) as StrongAddress[]
 
     contractAddress = await deployReleaseGoldContract(
-      providerOwner,
+      provider,
       await createMultisig(kit, [accounts[0], accounts[1]] as StrongAddress[], 2, 2),
       accounts[1],
       accounts[0],
@@ -39,7 +39,7 @@ testWithAnvilL2('releasegold:set-max-distribution cmd', (providerOwner) => {
     await testLocallyWithNode(
       SetMaxDistribution,
       ['--contract', contractAddress, '--distributionRatio', '500', '--yesreally'],
-      providerOwner
+      provider
     )
 
     expect((await releaseGoldWrapper.getMaxDistribution()).toFixed()).toEqual(
@@ -54,7 +54,7 @@ testWithAnvilL2('releasegold:set-max-distribution cmd', (providerOwner) => {
       testLocallyWithNode(
         SetMaxDistribution,
         ['--contract', contractAddress, '--distributionRatio', '1500', '--yesreally'],
-        providerOwner
+        provider
       )
     ).rejects.toMatchInlineSnapshot(`[Error: Some checks didn't pass!]`)
 

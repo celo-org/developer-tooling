@@ -104,7 +104,7 @@ jest.mock('../package.json', () => ({
   version: '5.2.3',
 }))
 
-testWithAnvilL2('BaseCommand', (providerOwner) => {
+testWithAnvilL2('BaseCommand', (provider) => {
   const logSpy = jest.spyOn(console, 'log').mockImplementation()
 
   beforeEach(() => {
@@ -117,7 +117,7 @@ testWithAnvilL2('BaseCommand', (providerOwner) => {
         const storedDerivationPath = readConfig(tmpdir()).derivationPath
         console.info('storedDerivationPath', storedDerivationPath)
         expect(storedDerivationPath).not.toBe(undefined)
-        await testLocallyWithNode(BasicCommand, ['--useLedger'], providerOwner)
+        await testLocallyWithNode(BasicCommand, ['--useLedger'], provider)
         expect(WalletLedgerExports.newLedgerWalletWithSetup).toHaveBeenCalledWith(
           expect.anything(),
           expect.objectContaining({
@@ -133,8 +133,8 @@ testWithAnvilL2('BaseCommand', (providerOwner) => {
       it('uses custom derivationPath', async () => {
         const storedDerivationPath = readConfig(tmpdir()).derivationPath
         const customPath = "m/44'/9000'/0'"
-        await testLocallyWithNode(Set, ['--derivationPath', customPath], providerOwner)
-        await testLocallyWithNode(BasicCommand, ['--useLedger'], providerOwner)
+        await testLocallyWithNode(Set, ['--derivationPath', customPath], provider)
+        await testLocallyWithNode(BasicCommand, ['--useLedger'], provider)
         expect(WalletLedgerExports.newLedgerWalletWithSetup).toHaveBeenCalledWith(
           expect.anything(),
           expect.objectContaining({
@@ -146,16 +146,12 @@ testWithAnvilL2('BaseCommand', (providerOwner) => {
             baseDerivationPath: customPath,
           })
         )
-        await testLocallyWithNode(Set, ['--derivationPath', storedDerivationPath], providerOwner)
+        await testLocallyWithNode(Set, ['--derivationPath', storedDerivationPath], provider)
       })
     })
 
     it('--ledgerAddresses passes derivationPathIndexes to LedgerWallet', async () => {
-      await testLocallyWithNode(
-        BasicCommand,
-        ['--useLedger', '--ledgerAddresses', '5'],
-        providerOwner
-      )
+      await testLocallyWithNode(BasicCommand, ['--useLedger', '--ledgerAddresses', '5'], provider)
 
       expect(WalletLedgerExports.newLedgerWalletWithSetup).toHaveBeenCalledWith(
         expect.anything(),
@@ -203,7 +199,7 @@ testWithAnvilL2('BaseCommand', (providerOwner) => {
         await testLocallyWithNode(
           BasicCommand,
           ['--useLedger', '--ledgerLiveMode', '--ledgerAddresses', '5'],
-          providerOwner
+          provider
         )
 
         expect(WalletLedgerExports.newLedgerWalletWithSetup).toHaveBeenCalledWith(
@@ -252,7 +248,7 @@ testWithAnvilL2('BaseCommand', (providerOwner) => {
           await testLocallyWithNode(
             BasicCommand,
             ['--useLedger', '--ledgerLiveMode', '--ledgerCustomAddresses', '[1,8,9]'],
-            providerOwner
+            provider
           )
 
           expect(WalletLedgerExports.newLedgerWalletWithSetup).toHaveBeenCalledWith(
@@ -299,7 +295,7 @@ testWithAnvilL2('BaseCommand', (providerOwner) => {
         await testLocallyWithNode(
           BasicCommand,
           ['--useLedger', '--ledgerCustomAddresses', '[1,8,9]'],
-          providerOwner
+          provider
         )
 
         expect(WalletLedgerExports.newLedgerWalletWithSetup).toHaveBeenCalledWith(
@@ -353,7 +349,7 @@ testWithAnvilL2('BaseCommand', (providerOwner) => {
             '--from',
             '0x1234567890123456789012345678901234567890',
           ],
-          providerOwner
+          provider
         )
 
         expect(ViemAccountLedgerExports.ledgerToWalletClient).toHaveBeenCalledWith(
@@ -384,7 +380,7 @@ testWithAnvilL2('BaseCommand', (providerOwner) => {
     const errorSpy = jest.spyOn(console, 'error').mockImplementation()
 
     await expect(
-      testLocallyWithNode(TestErrorCommand, [], providerOwner)
+      testLocallyWithNode(TestErrorCommand, [], provider)
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Unable to create an RPC Wallet Client, the node is not unlocked. Did you forget to use \`--privateKey\` or \`--useLedger\`?"`
     )
@@ -402,7 +398,7 @@ testWithAnvilL2('BaseCommand', (providerOwner) => {
     const errorSpy = jest.spyOn(console, 'error').mockImplementation()
 
     await expect(
-      testLocallyWithNode(TestErrorCommand, [], providerOwner)
+      testLocallyWithNode(TestErrorCommand, [], provider)
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"test error"`)
 
     expect(errorSpy.mock.calls).toMatchInlineSnapshot(`
@@ -435,7 +431,7 @@ testWithAnvilL2('BaseCommand', (providerOwner) => {
     const errorSpy = jest.spyOn(console, 'error').mockImplementation()
 
     await expect(
-      testLocallyWithNode(TestErrorCommand, ['--output', 'csv'], providerOwner)
+      testLocallyWithNode(TestErrorCommand, ['--output', 'csv'], provider)
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"test error"`)
 
     expect(errorSpy.mock.calls).toMatchInlineSnapshot(`[]`)
@@ -456,7 +452,7 @@ testWithAnvilL2('BaseCommand', (providerOwner) => {
       throw new Error('Mock connection stop error')
     })
 
-    await testLocallyWithNode(TestConnectionStopErrorCommand, [], providerOwner)
+    await testLocallyWithNode(TestConnectionStopErrorCommand, [], provider)
 
     expect(logSpy.mock.calls).toMatchInlineSnapshot(`
       [
@@ -495,7 +491,7 @@ testWithAnvilL2('BaseCommand', (providerOwner) => {
         testLocallyWithNode(
           TestPrivateKeyCommand,
           ['--privateKey', privateKey, '--from', wrongFromAddress],
-          providerOwner
+          provider
         )
       ).rejects.toThrowErrorMatchingInlineSnapshot(
         `"The --from address ${wrongFromAddress} does not match the address derived from the provided private key 0x1Be31A94361a391bBaFB2a4CCd704F57dc04d4bb."`
@@ -521,7 +517,7 @@ testWithAnvilL2('BaseCommand', (providerOwner) => {
         testLocallyWithNode(
           TestPrivateKeyCommand,
           ['--privateKey', privateKey, '--from', correctFromAddress],
-          providerOwner
+          provider
         )
       ).resolves.not.toThrow()
     })
@@ -541,7 +537,7 @@ testWithAnvilL2('BaseCommand', (providerOwner) => {
       }
 
       await expect(
-        testLocallyWithNode(TestPrivateKeyCommand, ['--privateKey', privateKey], providerOwner)
+        testLocallyWithNode(TestPrivateKeyCommand, ['--privateKey', privateKey], provider)
       ).resolves.not.toThrow()
     })
   })

@@ -10,7 +10,7 @@ import ValidatorRegister from './register'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validator:list', (providerOwner) => {
+testWithAnvilL2('validator:list', (provider) => {
   let account: string
   let ecdsaPublicKey: string
   const writeMock = jest.spyOn(ux.write, 'stdout').mockImplementation(() => {
@@ -21,20 +21,20 @@ testWithAnvilL2('validator:list', (providerOwner) => {
     jest.spyOn(console, 'log').mockImplementation(() => {
       // noop
     })
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const accounts = await kit.connection.getAccounts()
     account = accounts[0]
     ecdsaPublicKey = await addressToPublicKey(account, kit.connection.sign)
-    await testLocallyWithNode(Register, ['--from', account], providerOwner)
+    await testLocallyWithNode(Register, ['--from', account], provider)
     await testLocallyWithNode(
       Lock,
       ['--from', account, '--value', '10000000000000000000000'],
-      providerOwner
+      provider
     )
     await testLocallyWithNode(
       ValidatorRegister,
       ['--from', account, '--ecdsaKey', ecdsaPublicKey, '--yes'],
-      providerOwner
+      provider
     )
   })
 
@@ -44,7 +44,7 @@ testWithAnvilL2('validator:list', (providerOwner) => {
   })
 
   it('shows all registered validators', async () => {
-    await testLocallyWithNode(ListValidators, ['--csv'], providerOwner)
+    await testLocallyWithNode(ListValidators, ['--csv'], provider)
     expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`
       [
         [

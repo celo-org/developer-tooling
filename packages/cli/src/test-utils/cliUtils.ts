@@ -1,7 +1,6 @@
 import { PublicCeloClient } from '@celo/actions'
 import { Provider } from '@celo/connect'
 import { CeloProvider } from '@celo/connect/lib/celo-provider'
-import type { ProviderOwner } from '@celo/dev-utils/test-utils'
 import { TestClientExtended } from '@celo/dev-utils/viem/anvil-test'
 import { Interfaces } from '@oclif/core'
 import { BaseCommand } from '../base'
@@ -15,18 +14,13 @@ interface Runner extends AbstractConstructor<BaseCommand> {
 export async function testLocallyWithNode(
   command: Runner,
   argv: string[],
-  client: ProviderOwner,
+  client: Provider,
   config?: Interfaces.LoadOptions
 ) {
   return testLocally(command, [...argv, '--node', extractHostFromProvider(client)], config)
 }
 
-export const extractHostFromProvider = (client: ProviderOwner): string => {
-  const provider = client.currentProvider
-  if (!provider) {
-    throw new Error('No currentProvider on client')
-  }
-
+export const extractHostFromProvider = (provider: Provider): string => {
   // CeloProvider wraps the underlying provider
   if (provider instanceof CeloProvider) {
     const inner = provider.existingProvider as { host?: string; url?: string }

@@ -17,7 +17,7 @@ const minLockedGoldValue = parseEther('10000').toString()
 
 jest.setTimeout(20000)
 
-testWithAnvilL2('Election Wrapper', (providerOwner) => {
+testWithAnvilL2('Election Wrapper', (provider) => {
   const ZERO_GOLD = new BigNumber('0')
   const ONE_HUNDRED_GOLD = new BigNumber(parseEther('100').toString())
   const ONE_HUNDRED_ONE_GOLD = new BigNumber(parseEther('101').toString())
@@ -25,7 +25,7 @@ testWithAnvilL2('Election Wrapper', (providerOwner) => {
   const TWO_HUNDRED_ONE_GOLD = new BigNumber(parseEther('201').toString())
   const THREE_HUNDRED_GOLD = new BigNumber(parseEther('300').toString())
   const GROUP_COMMISSION = new BigNumber(0.1)
-  const kit = newKitFromProvider(providerOwner.currentProvider)
+  const kit = newKitFromProvider(provider)
   let accounts: string[] = []
   let election: ElectionWrapper
   let accountsInstance: AccountsWrapper
@@ -88,7 +88,7 @@ testWithAnvilL2('Election Wrapper', (providerOwner) => {
   const activateAndVote = async (groupAccount: string, userAccount: string, amount: BigNumber) => {
     await (await election.vote(groupAccount, amount)).sendAndWaitForReceipt({ from: userAccount })
     const epochDuraction = await kit.getEpochSize()
-    await timeTravel(epochDuraction + 1, providerOwner)
+    await timeTravel(epochDuraction + 1, provider)
     await startAndFinishEpochProcess(kit)
 
     const txList = await election.activate(userAccount)
@@ -156,7 +156,7 @@ testWithAnvilL2('Election Wrapper', (providerOwner) => {
         })
         const epochDuraction = await kit.getEpochSize()
 
-        await timeTravel(epochDuraction + 1, providerOwner)
+        await timeTravel(epochDuraction + 1, provider)
 
         await startAndFinishEpochProcess(kit)
 

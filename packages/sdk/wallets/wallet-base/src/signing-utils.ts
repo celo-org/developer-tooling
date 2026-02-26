@@ -30,7 +30,6 @@ import { keccak_256 } from '@noble/hashes/sha3'
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils'
 import debugFactory from 'debug'
 
-
 type OldTransactionTypes = 'celo-legacy' | 'cip42' | TransactionTypes
 type LegacyCeloTx = Omit<CeloTx, 'type'> & {
   type: 'celo-legacy'

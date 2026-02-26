@@ -6,27 +6,23 @@ import EpochsSwitch from '../epochs/switch'
 import Info from './info'
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('network:info', (providerOwner) => {
+testWithAnvilL2('network:info', (provider) => {
   beforeAll(async () => {
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const epochManager = await kit.contracts.getEpochManager()
     const epochDuration = await epochManager.epochDuration()
     const accounts = await kit.connection.getAccounts()
 
     // Switch epochs 3 times
     for (let i = 0; i < 3; i++) {
-      await timeTravel(epochDuration * 2, providerOwner)
-      await testLocallyWithNode(
-        EpochsSwitch,
-        ['--from', accounts[0], '--delay', '1'],
-        providerOwner
-      )
+      await timeTravel(epochDuration * 2, provider)
+      await testLocallyWithNode(EpochsSwitch, ['--from', accounts[0], '--delay', '1'], provider)
     }
   })
 
   it('runs for latest epoch', async () => {
     const spy = jest.spyOn(console, 'log')
-    await testLocallyWithNode(Info, [], providerOwner)
+    await testLocallyWithNode(Info, [], provider)
 
     expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
       [
@@ -43,7 +39,7 @@ testWithAnvilL2('network:info', (providerOwner) => {
 
   it('runs for last 3 epochs', async () => {
     const spy = jest.spyOn(console, 'log')
-    await testLocallyWithNode(Info, ['--lastN', '3'], providerOwner)
+    await testLocallyWithNode(Info, ['--lastN', '3'], provider)
 
     expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
       [
@@ -69,7 +65,7 @@ testWithAnvilL2('network:info', (providerOwner) => {
 
   it('runs for last 100 epochs, but displays only epoch that exist', async () => {
     const spy = jest.spyOn(console, 'log')
-    await testLocallyWithNode(Info, ['--lastN', '100'], providerOwner)
+    await testLocallyWithNode(Info, ['--lastN', '100'], provider)
 
     expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
       [

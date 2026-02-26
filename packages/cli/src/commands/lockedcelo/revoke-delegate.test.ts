@@ -8,21 +8,21 @@ import RevokeDelegate from './revoke-delegate'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('lockedgold:revoke-delegate cmd', (providerOwner) => {
+testWithAnvilL2('lockedgold:revoke-delegate cmd', (provider) => {
   test('can revoke delegate', async () => {
-    const kit = newKitFromProvider(providerOwner.currentProvider)
+    const kit = newKitFromProvider(provider)
     const accounts = await kit.connection.getAccounts()
     const account = accounts[0]
     const account2 = accounts[1]
     const lockedGold = await kit.contracts.getLockedGold()
-    await testLocallyWithNode(Register, ['--from', account], providerOwner)
-    await testLocallyWithNode(Register, ['--from', account2], providerOwner)
-    await testLocallyWithNode(Lock, ['--from', account, '--value', '200'], providerOwner)
+    await testLocallyWithNode(Register, ['--from', account], provider)
+    await testLocallyWithNode(Register, ['--from', account2], provider)
+    await testLocallyWithNode(Lock, ['--from', account, '--value', '200'], provider)
 
     await testLocallyWithNode(
       Delegate,
       ['--from', account, '--to', account2, '--percent', '100'],
-      providerOwner
+      provider
     )
 
     const account2VotingPower = await lockedGold.getAccountTotalGovernanceVotingPower(account2)
@@ -31,7 +31,7 @@ testWithAnvilL2('lockedgold:revoke-delegate cmd', (providerOwner) => {
     await testLocallyWithNode(
       RevokeDelegate,
       ['--from', account, '--to', account2, '--percent', '100'],
-      providerOwner
+      provider
     )
 
     const account2VotingPowerAfterRevoke =

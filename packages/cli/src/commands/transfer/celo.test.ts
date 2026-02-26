@@ -21,14 +21,14 @@ process.env.NO_SYNCCHECK = 'true'
 // Lots of commands, sometimes times out
 jest.setTimeout(15000)
 
-testWithAnvilL2('transfer:celo cmd', (providerOwner) => {
+testWithAnvilL2('transfer:celo cmd', (provider) => {
   let accounts: string[] = []
   let kit: ContractKit
   let restoreMock: () => void
 
   beforeEach(async () => {
     restoreMock = mockRpcFetch({ method: 'eth_gasPrice', result: TEST_GAS_PRICE })
-    kit = newKitFromProvider(providerOwner.currentProvider)
+    kit = newKitFromProvider(provider)
     accounts = await kit.connection.getAccounts()
 
     jest.spyOn(console, 'log').mockImplementation(() => {
@@ -74,7 +74,7 @@ testWithAnvilL2('transfer:celo cmd', (providerOwner) => {
         '--gasCurrency',
         (await kit.contracts.getStableToken(StableToken.USDm)).address,
       ],
-      providerOwner
+      provider
     )
     // RG USDm balance should match the amount sent
     const receiverBalance = await kit.getTotalBalance(accounts[1])
@@ -102,7 +102,7 @@ testWithAnvilL2('transfer:celo cmd', (providerOwner) => {
         '--gasCurrency',
         (await kit.contracts.getStableToken(StableToken.USDm)).address,
       ],
-      providerOwner
+      provider
     )
     block = await kit.connection.getBlock('latest', false)
     transactionReceipt = await kit.connection.getTransactionReceipt(block.transactions[0] as string)
@@ -130,7 +130,7 @@ testWithAnvilL2('transfer:celo cmd', (providerOwner) => {
       testLocallyWithNode(
         TransferCelo,
         ['--from', accounts[0], '--to', accounts[1], '--value', balance.toFixed()],
-        providerOwner
+        provider
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
@@ -176,7 +176,7 @@ testWithAnvilL2('transfer:celo cmd', (providerOwner) => {
           '--comment',
           'Goodbye balance',
         ],
-        providerOwner
+        provider
       )
     ).resolves.toBeUndefined()
 
@@ -224,7 +224,7 @@ testWithAnvilL2('transfer:celo cmd', (providerOwner) => {
 
     const amountToTransfer = parseEther('20000000')
     await setBalance(
-      providerOwner,
+      provider,
       accounts[0] as Address,
       balanceBefore.plus(amountToTransfer.toString(10))
     )
@@ -241,7 +241,7 @@ testWithAnvilL2('transfer:celo cmd', (providerOwner) => {
         '--gasCurrency',
         (await kit.contracts.getStableToken(StableToken.USDm)).address,
       ],
-      providerOwner
+      provider
     )
 
     const block = await kit.connection.getBlock('latest', false)
@@ -278,7 +278,7 @@ testWithAnvilL2('transfer:celo cmd', (providerOwner) => {
         '--comment',
         'Hello World',
       ],
-      providerOwner
+      provider
     )
 
     // Attempt to send USDm back
@@ -294,7 +294,7 @@ testWithAnvilL2('transfer:celo cmd', (providerOwner) => {
         '--comment',
         'Hello World Back',
       ],
-      providerOwner
+      provider
     )
 
     const eventClient = createPublicClient({
@@ -316,7 +316,7 @@ testWithAnvilL2('transfer:celo cmd', (providerOwner) => {
 
   test('passes feeCurrency to estimateGas', async () => {
     const chainId = await kit.connection.chainId()
-    const nodeUrl = extractHostFromProvider(providerOwner)
+    const nodeUrl = extractHostFromProvider(provider)
     const publicClient = createPublicClient({
       chain: {
         name: 'Custom Chain',
@@ -350,7 +350,7 @@ testWithAnvilL2('transfer:celo cmd', (providerOwner) => {
         '--gasCurrency',
         USDmAddress,
       ],
-      providerOwner
+      provider
     )
 
     expect(estimateGasSpy).toHaveBeenCalledWith({
@@ -367,7 +367,7 @@ testWithAnvilL2('transfer:celo cmd', (providerOwner) => {
       testLocallyWithNode(
         TransferCelo,
         ['--from', accounts[1], '--to', TEST_SANCTIONED_ADDRESS, '--value', '1'],
-        providerOwner
+        provider
       )
     ).rejects.toThrow()
     expect(spy).toHaveBeenCalledWith(expect.stringContaining(COMPLIANT_ERROR_RESPONSE))
@@ -379,7 +379,7 @@ testWithAnvilL2('transfer:celo cmd', (providerOwner) => {
       testLocallyWithNode(
         TransferCelo,
         ['--from', TEST_SANCTIONED_ADDRESS, '--to', accounts[0], '--value', '1'],
-        providerOwner
+        provider
       )
     ).rejects.toThrow()
     expect(spy).toHaveBeenCalledWith(expect.stringContaining(COMPLIANT_ERROR_RESPONSE))
@@ -391,7 +391,7 @@ testWithAnvilL2('transfer:celo cmd', (providerOwner) => {
       testLocallyWithNode(
         TransferCelo,
         ['--from', accounts[0], '--to', accounts[1], '--value', '1', '--gasCurrency', wrongFee],
-        providerOwner
+        provider
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`
       "Parsing --gasCurrency 
@@ -417,7 +417,7 @@ testWithAnvilL2('transfer:celo cmd', (providerOwner) => {
           '--gasCurrency',
           (await kit.contracts.getStableToken(StableToken.USDm)).address.toUpperCase(),
         ],
-        providerOwner
+        provider
       )
     ).resolves.toBeUndefined()
 
@@ -447,7 +447,7 @@ testWithAnvilL2('transfer:celo cmd', (providerOwner) => {
       testLocallyWithNode(
         TransferCelo,
         ['--from', accounts[0], '--to', accounts[1], '--value', '1', '--gasCurrency', wrongFee],
-        providerOwner
+        provider
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     expect(spy).toHaveBeenCalledWith(
@@ -461,7 +461,7 @@ testWithAnvilL2('transfer:celo cmd', (providerOwner) => {
         TransferCelo,
         ['--from', accounts[0], '--to', accounts[1], '--value', '1', '--useAKV'],
 
-        providerOwner
+        provider
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"--useAKV flag is no longer supported"`)
   })
