@@ -7,6 +7,7 @@ import {
 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import BigNumber from 'bignumber.js'
+import { parseEther } from 'viem'
 import { REGISTRY_CONTRACT_ADDRESS } from '../address-registry'
 import { newKitFromProvider } from '../kit'
 import { startAndFinishEpochProcess } from '../test-utils/utils'
@@ -149,7 +150,7 @@ testWithAnvilL2('EpochManagerWrapper', (providerOwner) => {
               from: ownerAdress,
             })
         },
-        new BigNumber('1e18')
+        parseEther('1')
       )
 
       await (await epochManagerWrapper.finishNextEpochProcessTx()).sendAndWaitForReceipt({
@@ -179,7 +180,7 @@ testWithAnvilL2('EpochManagerWrapper', (providerOwner) => {
           async () => {
             await electionContract.methods.activate(validatorGroup).send({ from: validatorGroup })
           },
-          new BigNumber('1e18')
+          parseEther('1')
         )
       }
     }

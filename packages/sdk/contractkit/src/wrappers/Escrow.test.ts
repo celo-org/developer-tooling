@@ -6,6 +6,7 @@ import { privateKeyToAddress } from '@celo/utils/lib/address'
 import { soliditySha3 } from '@celo/utils/lib/solidity'
 import BigNumber from 'bignumber.js'
 import { randomBytes } from 'crypto'
+import { parseEther } from 'viem'
 import { REGISTRY_CONTRACT_ADDRESS } from '../address-registry'
 import { newKitFromProvider } from '../kit'
 import { topUpWithToken } from '../test-utils/utils'
@@ -16,7 +17,7 @@ import { StableTokenWrapper } from './StableTokenWrapper'
 
 testWithAnvilL2('Escrow Wrapper', (providerOwner) => {
   const kit = newKitFromProvider(providerOwner.currentProvider)
-  const TEN_USDM = new BigNumber('10e18').toFixed()
+  const TEN_USDM = parseEther('10').toString()
   const TIMESTAMP = 1665080820
 
   const getParsedSignatureOfAddressForTest = (address: string, signer: string) => {
@@ -59,7 +60,7 @@ testWithAnvilL2('Escrow Wrapper', (providerOwner) => {
             from: ownerAdress,
           })
       },
-      new BigNumber('1e18')
+      parseEther('1')
     )
 
     await topUpWithToken(kit, StableToken.USDm, escrow.address, new BigNumber(TEN_USDM))

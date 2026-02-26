@@ -19,11 +19,11 @@ jest.setTimeout(20000)
 
 testWithAnvilL2('Election Wrapper', (providerOwner) => {
   const ZERO_GOLD = new BigNumber('0')
-  const ONE_HUNDRED_GOLD = new BigNumber('100e18')
-  const ONE_HUNDRED_ONE_GOLD = new BigNumber('101e18')
-  const TWO_HUNDRED_GOLD = new BigNumber('200e18')
-  const TWO_HUNDRED_ONE_GOLD = new BigNumber('201e18')
-  const THREE_HUNDRED_GOLD = new BigNumber('300e18')
+  const ONE_HUNDRED_GOLD = new BigNumber(parseEther('100').toString())
+  const ONE_HUNDRED_ONE_GOLD = new BigNumber(parseEther('101').toString())
+  const TWO_HUNDRED_GOLD = new BigNumber(parseEther('200').toString())
+  const TWO_HUNDRED_ONE_GOLD = new BigNumber(parseEther('201').toString())
+  const THREE_HUNDRED_GOLD = new BigNumber(parseEther('300').toString())
   const GROUP_COMMISSION = new BigNumber(0.1)
   const kit = newKitFromProvider(providerOwner.currentProvider)
   let accounts: string[] = []
