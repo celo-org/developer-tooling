@@ -5,12 +5,14 @@ import { BaseWrapper, fixidityValueToBigNumber, proxyCall } from './BaseWrapper'
  */
 export class ScoreManagerWrapper extends BaseWrapper {
   getGroupScore = proxyCall(
-    this.contract.methods.getGroupScore,
+    this.contract,
+    'getGroupScore',
     undefined,
     fixidityValueToBigNumber
   )
   getValidatorScore = proxyCall(
-    this.contract.methods.getValidatorScore,
+    this.contract,
+    'getValidatorScore',
     undefined,
     fixidityValueToBigNumber
   )

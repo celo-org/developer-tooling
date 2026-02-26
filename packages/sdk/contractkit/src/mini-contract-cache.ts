@@ -6,7 +6,7 @@ import {
   stableTokenEurABI,
 } from '@celo/abis'
 import { StableToken } from '@celo/base'
-import { AbiItem, Connection, Contract } from '@celo/connect'
+import { AbiItem, Connection } from '@celo/connect'
 import { AddressRegistry } from './address-registry'
 import { CeloContract } from './base'
 import { ContractCacheType } from './basic-contract-cache-type'
@@ -115,7 +115,7 @@ export class MiniContractCache implements ContractCacheType {
 
     const classes = this.contractClasses[contract as string]
 
-    const instance: Contract = this.connection.createContract(classes.abi as AbiItem[], address)
+    const instance = this.connection.getViemContract(classes.abi as AbiItem[], address)
 
     const Klass = classes.wrapper
     const wrapper = new Klass(this.connection, instance)

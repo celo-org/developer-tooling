@@ -1,4 +1,4 @@
-import { Address, CeloTransactionObject, toTransactionObject } from '@celo/connect'
+import { Address, CeloTransactionObject, createViemTxObject, toTransactionObject } from '@celo/connect'
 import { registerAttestation as buildRegisterAttestationTypedData } from '@celo/utils/lib/typed-data-constructors'
 import { BaseWrapper, proxyCall, proxySend } from './BaseWrapper'
 
@@ -18,7 +18,7 @@ export class FederatedAttestationsWrapper extends BaseWrapper {
   ) => Promise<{
     countsPerIssuer: string[]
     identifiers: string[]
-  }> = proxyCall(this.contract.methods.lookupIdentifiers)
+  }> = proxyCall(this.contract, 'lookupIdentifiers')
 
   /**
    * @notice Returns info about attestations for `identifier` produced by
@@ -43,7 +43,7 @@ export class FederatedAttestationsWrapper extends BaseWrapper {
     signers: Address[]
     issuedOns: string[]
     publishedOns: string[]
-  }> = proxyCall(this.contract.methods.lookupAttestations)
+  }> = proxyCall(this.contract, 'lookupAttestations')
 
   /**
    * @notice Validates the given attestation and signature
@@ -67,7 +67,7 @@ export class FederatedAttestationsWrapper extends BaseWrapper {
     v: number | string,
     r: string | number[],
     s: string | number[]
-  ) => Promise<void> = proxyCall(this.contract.methods.validateAttestationSig)
+  ) => Promise<void> = proxyCall(this.contract, 'validateAttestationSig')
 
   /**
    * @return keccak 256 of abi encoded parameters
@@ -78,7 +78,7 @@ export class FederatedAttestationsWrapper extends BaseWrapper {
     account: Address,
     signer: Address,
     issuedOn: number
-  ) => Promise<string> = proxyCall(this.contract.methods.getUniqueAttestationHash)
+  ) => Promise<string> = proxyCall(this.contract, 'getUniqueAttestationHash')
 
   /**
    * @notice Registers an attestation directly from the issuer
@@ -94,7 +94,8 @@ export class FederatedAttestationsWrapper extends BaseWrapper {
     issuedOn: number
   ) => CeloTransactionObject<void> = proxySend(
     this.connection,
-    this.contract.methods.registerAttestationAsIssuer
+    this.contract,
+    'registerAttestationAsIssuer'
   )
 
   /**
@@ -124,7 +125,7 @@ export class FederatedAttestationsWrapper extends BaseWrapper {
     const sig = await this.connection.signTypedData(signer, typedData)
     return toTransactionObject(
       this.connection,
-      this.contract.methods.registerAttestation(
+      createViemTxObject(this.connection, this.contract, 'registerAttestation', [
         identifier,
         issuer,
         account,
@@ -132,8 +133,8 @@ export class FederatedAttestationsWrapper extends BaseWrapper {
         issuedOn,
         sig.v,
         sig.r,
-        sig.s
-      )
+        sig.s,
+      ])
     )
   }
 
@@ -150,7 +151,8 @@ export class FederatedAttestationsWrapper extends BaseWrapper {
     account: Address
   ) => CeloTransactionObject<void> = proxySend(
     this.connection,
-    this.contract.methods.revokeAttestation
+    this.contract,
+    'revokeAttestation'
   )
 
   /**
@@ -169,6 +171,7 @@ export class FederatedAttestationsWrapper extends BaseWrapper {
     accounts: Address[]
   ) => CeloTransactionObject<void> = proxySend(
     this.connection,
-    this.contract.methods.batchRevokeAttestations
+    this.contract,
+    'batchRevokeAttestations'
   )
 }

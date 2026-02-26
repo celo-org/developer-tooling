@@ -28,7 +28,7 @@ testWithAnvilL2('AttestationsWrapper', (provider) => {
 
     attestations = new AttestationsWrapper(
       kit.connection,
-      kit.connection.createContract(attestationsABI as any, attestationsContractAddress),
+      kit.connection.getViemContract(attestationsABI as any, attestationsContractAddress),
       newKitFromProvider(provider).contracts
     )
   })

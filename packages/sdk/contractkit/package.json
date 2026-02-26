@@ -38,7 +38,8 @@
     "bignumber.js": "^9.0.0",
     "debug": "^4.1.1",
     "fp-ts": "2.16.9",
-    "semver": "^7.7.2"
+    "semver": "^7.7.2",
+    "viem": "^2.33.2"
   },
   "devDependencies": {
     "@celo/celo-devchain": "^7.0.0",

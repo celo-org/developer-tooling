@@ -16,7 +16,7 @@ export class StableTokenWrapper extends CeloTokenWrapper {
    * Returns the address of the owner of the contract.
    * @return the address of the owner of the contract.
    */
-  owner: () => Promise<string> = proxyCall(this.contract.methods.owner)
+  owner: () => Promise<string> = proxyCall(this.contract, 'owner')
 
   /**
    * Increases the allowance of another user.
@@ -29,7 +29,8 @@ export class StableTokenWrapper extends CeloTokenWrapper {
     value: import('bignumber.js').default.Value
   ) => CeloTransactionObject<void> = proxySend(
     this.connection,
-    this.contract.methods.increaseAllowance,
+    this.contract,
+    'increaseAllowance',
     tupleParser(stringIdentity, valueToString)
   )
   /**
@@ -40,15 +41,18 @@ export class StableTokenWrapper extends CeloTokenWrapper {
    */
   decreaseAllowance: (spender: string, value: string) => CeloTransactionObject<void> = proxySend(
     this.connection,
-    this.contract.methods.decreaseAllowance
+    this.contract,
+    'decreaseAllowance'
   )
   mint: (to: string, value: string) => CeloTransactionObject<void> = proxySend(
     this.connection,
-    this.contract.methods.mint
+    this.contract,
+    'mint'
   )
   burn: (value: string) => CeloTransactionObject<void> = proxySend(
     this.connection,
-    this.contract.methods.burn
+    this.contract,
+    'burn'
   )
 
   /**

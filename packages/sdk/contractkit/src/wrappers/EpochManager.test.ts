@@ -1,4 +1,5 @@
 import { electionABI, registryABI } from '@celo/abis'
+import { createViemTxObject } from '@celo/connect'
 import { StrongAddress } from '@celo/base'
 import {
   asCoreContractsOwner,
@@ -130,23 +131,20 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
       await asCoreContractsOwner(
         provider,
         async (ownerAdress: StrongAddress) => {
-          const registryContract = kit.connection.createContract(
+          const registryContract = kit.connection.getViemContract(
             registryABI as any,
             REGISTRY_CONTRACT_ADDRESS
           )
 
-          await registryContract.methods.setAddressFor('Validators', accounts[0]).send({
+          await createViemTxObject(kit.connection, registryContract, 'setAddressFor', ['Validators', accounts[0]]).send({
             from: ownerAdress,
           })
 
-          // @ts-expect-error
-          await electionContract.contract.methods
-            .markGroupIneligible(validatorGroups[0])
+          // @ts-expect-error -- accessing internal contract for test setup
+          await createViemTxObject(kit.connection, electionContract.contract, 'markGroupIneligible', [validatorGroups[0]])
             .send({ from: accounts[0] })
 
-          await registryContract.methods
-            .setAddressFor('Validators', validatorsContract.address)
-            .send({
+          await createViemTxObject(kit.connection, registryContract, 'setAddressFor', ['Validators', validatorsContract.address]).send({
               from: ownerAdress,
             })
         },
@@ -163,7 +161,7 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
   async function activateValidators() {
     const validatorsContract = await kit.contracts.getValidators()
     const electionWrapper = await kit.contracts.getElection()
-    const electionContract = kit.connection.createContract(
+    const electionViemContract = kit.connection.getViemContract(
       electionABI as any,
       electionWrapper.address
     )
@@ -171,14 +169,14 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
 
     for (const validatorGroup of validatorGroups) {
       const pendingVotesForGroup = new BigNumber(
-        await electionContract.methods.getPendingVotesForGroup(validatorGroup).call()
+        await createViemTxObject<string>(kit.connection, electionViemContract, 'getPendingVotesForGroup', [validatorGroup]).call()
       )
       if (pendingVotesForGroup.gt(0)) {
         await withImpersonatedAccount(
           provider,
           validatorGroup,
           async () => {
-            await electionContract.methods.activate(validatorGroup).send({ from: validatorGroup })
+            await createViemTxObject(kit.connection, electionViemContract, 'activate', [validatorGroup]).send({ from: validatorGroup })
           },
           parseEther('1')
         )

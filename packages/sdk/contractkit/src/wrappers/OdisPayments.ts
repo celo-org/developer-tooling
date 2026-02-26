@@ -8,7 +8,8 @@ export class OdisPaymentsWrapper extends BaseWrapper {
    * @param account The account to fetch total amount of funds sent
    */
   totalPaidCUSD: (account: Address) => Promise<BigNumber> = proxyCall(
-    this.contract.methods.totalPaidCUSD,
+    this.contract,
+    'totalPaidCUSD',
     undefined,
     valueToBigNumber
   )
@@ -21,7 +22,8 @@ export class OdisPaymentsWrapper extends BaseWrapper {
    */
   payInCUSD: (account: Address, value: number | string) => CeloTransactionObject<void> = proxySend(
     this.connection,
-    this.contract.methods.payInCUSD
+    this.contract,
+    'payInCUSD'
   )
 }
 

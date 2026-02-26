@@ -1,6 +1,6 @@
 import { sortedOraclesABI } from '@celo/abis'
 import SortedOraclesArtifacts from '@celo/celo-devchain/contracts/contracts-0.5/SortedOracles.json'
-import { AbiItem, Address } from '@celo/connect'
+import { AbiItem, Address, createViemTxObject } from '@celo/connect'
 import {
   asCoreContractsOwner,
   LinkedLibraryAddress,
@@ -66,12 +66,12 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
    * the tests
    */
   const newSortedOracles = async (owner: Address): Promise<SortedOraclesWrapper> => {
-    const contract = kit.connection.createContract(SortedOraclesArtifacts.abi as AbiItem[])
+    const oldContract = kit.connection.createContract(SortedOraclesArtifacts.abi as AbiItem[])
     interface DeployResult {
       options: { address: string }
     }
 
-    const deployTx = contract.deploy({
+    const deployTx = oldContract.deploy({
       data: SortedOraclesArtifacts.bytecode.replace(
         /__AddressSortedLinkedListWithMedian_____/g,
         LinkedLibraryAddress.AddressSortedLinkedListWithMedian.replace('0x', '')
@@ -80,13 +80,12 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
     })
 
     const txResult = await deployTx.send({ from: owner, gasPrice: TEST_GAS_PRICE.toFixed() })
-    const deployedContract = kit.connection.createContract(
+    const deployedAddress = (txResult as unknown as DeployResult).options.address
+    const deployedContract = kit.connection.getViemContract(
       sortedOraclesABI as any,
-      (txResult as unknown as DeployResult).options.address
+      deployedAddress
     )
-    await deployedContract.methods
-      .initialize(NetworkConfig.oracles.reportExpiry)
-      .send({ from: owner })
+    await createViemTxObject(kit.connection, deployedContract, 'initialize', [NetworkConfig.oracles.reportExpiry]).send({ from: owner })
 
     return new SortedOraclesWrapper(kit.connection, deployedContract, kit.registry)
   }
@@ -101,7 +100,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
     const identifier = await sortedOraclesInstance.toCurrencyPairIdentifier(target)
     // @ts-ignore
     const sortedOraclesContract = sortedOraclesInstance.contract
-    await sortedOraclesContract.methods.addOracle(identifier, oracle).send({
+    await createViemTxObject(kit.connection, sortedOraclesContract, 'addOracle', [identifier, oracle]).send({
       from: owner,
     })
   }
@@ -135,7 +134,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
 
     btcSortedOracles = await newSortedOracles(btcOracleOwner)
     stableTokenSortedOracles = await kit.contracts.getSortedOracles()
-    const stableTokenSortedOraclesContract = kit.connection.createContract(
+    const stableTokenSortedOraclesContract = kit.connection.getViemContract(
       sortedOraclesABI as any,
       stableTokenSortedOracles.address
     )
@@ -150,26 +149,22 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
         stableTokenEURAddress,
         stableTokenBRLAddress,
       ]) {
-        await stableTokenSortedOraclesContract.methods
-          .removeOracle(tokenAddress, ownerAddress, 0)
+        await createViemTxObject(kit.connection, stableTokenSortedOraclesContract, 'removeOracle', [tokenAddress, ownerAddress, 0])
           .send({ from: ownerAddress })
       }
 
       for (const oracle of stableTokenOracles) {
-        await stableTokenSortedOraclesContract.methods
-          .addOracle(stableTokenUSDAddress, oracle)
+        await createViemTxObject(kit.connection, stableTokenSortedOraclesContract, 'addOracle', [stableTokenUSDAddress, oracle])
           .send({ from: ownerAddress })
       }
 
       for (const oracle of stableTokenEUROracles) {
-        await stableTokenSortedOraclesContract.methods
-          .addOracle(stableTokenEURAddress, oracle)
+        await createViemTxObject(kit.connection, stableTokenSortedOraclesContract, 'addOracle', [stableTokenEURAddress, oracle])
           .send({ from: ownerAddress })
       }
 
       for (const oracle of stableTokenBRLOracles) {
-        await stableTokenSortedOraclesContract.methods
-          .addOracle(stableTokenBRLAddress, oracle)
+        await createViemTxObject(kit.connection, stableTokenSortedOraclesContract, 'addOracle', [stableTokenBRLAddress, oracle])
           .send({ from: ownerAddress })
       }
     })

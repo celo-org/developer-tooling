@@ -5,9 +5,10 @@ import { EIP712TypedData, generateTypedDataHash } from '@celo/utils/lib/sign-typ
 import { Signature, parseSignatureWithoutPrefix } from '@celo/utils/lib/signatureUtils'
 import { bufferToHex } from '@ethereumjs/util'
 import debugFactory from 'debug'
-import { keccak256, hexToString, toHex } from 'viem'
+import { keccak256, hexToString, toHex, createPublicClient, custom, type PublicClient } from 'viem'
 import { AbiCoder, AbiItem } from './abi-types'
 import { isEmpty, viemAbiCoder } from './viem-abi-coder'
+import type { ViemContract } from './viem-contract'
 import { createContractConstructor } from './rpc-contract'
 import { CeloProvider, assertIsCeloProvider } from './celo-provider'
 import {
@@ -64,6 +65,7 @@ export class Connection {
   readonly paramsPopulator: TxParamsNormalizer
   rpcCaller!: RpcCaller
   private _provider!: CeloProvider
+  private _viemClient!: PublicClient
 
   constructor(
     provider: Provider,
@@ -86,6 +88,11 @@ export class Connection {
     return this._provider
   }
 
+  /** Viem PublicClient bound to this connection's RPC */
+  get viemClient(): PublicClient {
+    return this._viemClient
+  }
+
   setProvider(provider: Provider) {
     if (!provider) {
       throw new Error('Must have a valid Provider')
@@ -103,7 +110,17 @@ export class Connection {
         celoProvider = provider
       }
       this._provider = celoProvider
-      return true
+      this._viemClient = createPublicClient({
+        transport: custom({
+          request: async ({ method, params }) => {
+            const response = await this.rpcCaller.call(method, params as any[])
+            if (response.error) {
+              throw new Error(response.error.message)
+            }
+            return response.result
+          },
+        }),
+      })
       return true
     } catch (error) {
       console.error(`could not attach provider`, error)
@@ -627,6 +644,19 @@ export class Connection {
   createContract(abi: readonly AbiItem[] | AbiItem[], address?: string): Contract {
     const ContractClass = createContractConstructor(this)
     return new ContractClass(abi, address)
+  }
+
+  /**
+   * Create a viem-native contract instance bound to this connection.
+   * @param abi - The ABI of the contract
+   * @param address - The deployed contract address
+   */
+  getViemContract(abi: readonly AbiItem[] | AbiItem[], address: string): ViemContract {
+    return {
+      abi: abi as AbiItem[],
+      address,
+      client: this._viemClient,
+    }
   }
 
   stop() {

@@ -1,13 +1,15 @@
 import { fromFixed } from '@celo/utils/lib/fixidity'
+import { createViemTxObject } from '@celo/connect'
 import { BaseWrapper, proxyCall, valueToBigNumber } from './BaseWrapper'
 
 const parseFixidity = (v: string) => fromFixed(valueToBigNumber(v))
 
 export class EpochRewardsWrapper extends BaseWrapper {
   getRewardsMultiplierParameters = proxyCall(
-    this.contract.methods.getRewardsMultiplierParameters,
+    this.contract,
+    'getRewardsMultiplierParameters',
     undefined,
-    (res) => ({
+    (res: any) => ({
       max: parseFixidity(res[0]),
       underspendAdjustment: parseFixidity(res[1]),
       overspendAdjustment: parseFixidity(res[2]),
@@ -15,9 +17,10 @@ export class EpochRewardsWrapper extends BaseWrapper {
   )
 
   getTargetVotingYieldParameters = proxyCall(
-    this.contract.methods.getTargetVotingYieldParameters,
+    this.contract,
+    'getTargetVotingYieldParameters',
     undefined,
-    (res) => ({
+    (res: any) => ({
       target: parseFixidity(res[0]),
       max: parseFixidity(res[1]),
       adjustment: parseFixidity(res[2]),
@@ -25,7 +28,8 @@ export class EpochRewardsWrapper extends BaseWrapper {
   )
 
   getCommunityReward = proxyCall(
-    this.contract.methods.getCommunityRewardFraction,
+    this.contract,
+    'getCommunityRewardFraction',
     undefined,
     parseFixidity
   )
@@ -34,8 +38,8 @@ export class EpochRewardsWrapper extends BaseWrapper {
     factor: import('bignumber.js').default
     partner: string
   }> => {
-    const factor = parseFixidity(await this.contract.methods.getCarbonOffsettingFraction().call())
-    const partner: string = await this.contract.methods.carbonOffsettingPartner().call()
+    const factor = parseFixidity(await createViemTxObject<string>(this.connection, this.contract, 'getCarbonOffsettingFraction', []).call())
+    const partner: string = await createViemTxObject<string>(this.connection, this.contract, 'carbonOffsettingPartner', []).call()
     return {
       factor,
       partner,
@@ -43,7 +47,8 @@ export class EpochRewardsWrapper extends BaseWrapper {
   }
 
   getTargetValidatorEpochPayment = proxyCall(
-    this.contract.methods.targetValidatorEpochPayment,
+    this.contract,
+    'targetValidatorEpochPayment',
     undefined,
     valueToBigNumber
   )

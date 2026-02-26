@@ -20,7 +20,7 @@ export class EscrowWrapper extends BaseWrapper {
     timestamp: string
     expirySeconds: string
     minAttestations: string
-  }> = proxyCall(this.contract.methods.escrowedPayments)
+  }> = proxyCall(this.contract, 'escrowedPayments')
 
   /**
    * @notice Gets array of all Escrowed Payments received by identifier.
@@ -28,9 +28,7 @@ export class EscrowWrapper extends BaseWrapper {
    * @return An array containing all the IDs of the Escrowed Payments that were received
    * by the specified receiver.
    */
-  getReceivedPaymentIds: (identifier: string) => Promise<string[]> = proxyCall(
-    this.contract.methods.getReceivedPaymentIds
-  )
+  getReceivedPaymentIds: (identifier: string) => Promise<string[]> = proxyCall(this.contract, 'getReceivedPaymentIds')
 
   /**
    * @notice Gets array of all Escrowed Payment IDs sent by sender.
@@ -38,26 +36,20 @@ export class EscrowWrapper extends BaseWrapper {
    * @return An array containing all the IDs of the Escrowed Payments that were sent by the
    * specified sender.
    */
-  getSentPaymentIds: (sender: Address) => Promise<string[]> = proxyCall(
-    this.contract.methods.getSentPaymentIds
-  )
+  getSentPaymentIds: (sender: Address) => Promise<string[]> = proxyCall(this.contract, 'getSentPaymentIds')
 
   /**
    * @notice Gets trusted issuers set as default for payments by `transfer` function.
    * @return An array of addresses of trusted issuers.
    */
-  getDefaultTrustedIssuers: () => Promise<string[]> = proxyCall(
-    this.contract.methods.getDefaultTrustedIssuers
-  )
+  getDefaultTrustedIssuers: () => Promise<string[]> = proxyCall(this.contract, 'getDefaultTrustedIssuers')
 
   /**
    * @notice Gets array of all trusted issuers set per paymentId.
    * @param paymentId The ID of the payment to get.
    * @return An array of addresses of trusted issuers set for an escrowed payment.
    */
-  getTrustedIssuersPerPayment: (paymentId: string) => Promise<string[]> = proxyCall(
-    this.contract.methods.getTrustedIssuersPerPayment
-  )
+  getTrustedIssuersPerPayment: (paymentId: string) => Promise<string[]> = proxyCall(this.contract, 'getTrustedIssuersPerPayment')
 
   /**
    * @notice Transfer tokens to a specific user. Supports both identity with privacy (an empty
@@ -84,7 +76,11 @@ export class EscrowWrapper extends BaseWrapper {
     expirySeconds: number,
     paymentId: Address,
     minAttestations: number
-  ) => CeloTransactionObject<boolean> = proxySend(this.connection, this.contract.methods.transfer)
+  ) => CeloTransactionObject<boolean> = proxySend(
+    this.connection,
+    this.contract,
+    'transfer'
+  )
 
   /**
    * @notice Withdraws tokens for a verified user.
@@ -101,7 +97,11 @@ export class EscrowWrapper extends BaseWrapper {
     v: number | string,
     r: string | number[],
     s: string | number[]
-  ) => CeloTransactionObject<boolean> = proxySend(this.connection, this.contract.methods.withdraw)
+  ) => CeloTransactionObject<boolean> = proxySend(
+    this.connection,
+    this.contract,
+    'withdraw'
+  )
 
   /**
    * @notice Revokes tokens for a sender who is redeeming a payment after it has expired.
@@ -112,7 +112,8 @@ export class EscrowWrapper extends BaseWrapper {
    */
   revoke: (paymentId: string) => CeloTransactionObject<boolean> = proxySend(
     this.connection,
-    this.contract.methods.revoke
+    this.contract,
+    'revoke'
   )
 
   /**
@@ -144,7 +145,8 @@ export class EscrowWrapper extends BaseWrapper {
     trustedIssuers: Address[]
   ) => CeloTransactionObject<boolean> = proxySend(
     this.connection,
-    this.contract.methods.transferWithTrustedIssuers
+    this.contract,
+    'transferWithTrustedIssuers'
   )
 }
 

@@ -15,7 +15,8 @@ export interface FeeCurrencyDirectoryConfig {
  */
 export class FeeCurrencyDirectoryWrapper extends AbstractFeeCurrencyWrapper {
   getCurrencies = proxyCall(
-    this.contract.methods.getCurrencies,
+    this.contract,
+    'getCurrencies',
     undefined,
     (addresses: string[]) => [...new Set(addresses)].sort() as StrongAddress[]
   )
@@ -27,7 +28,8 @@ export class FeeCurrencyDirectoryWrapper extends AbstractFeeCurrencyWrapper {
   getExchangeRate: (
     token: StrongAddress
   ) => Promise<{ numerator: BigNumber; denominator: BigNumber }> = proxyCall(
-    this.contract.methods.getExchangeRate,
+    this.contract,
+    'getExchangeRate',
     undefined,
     (res: { numerator: string; denominator: string }) => ({
       numerator: valueToBigNumber(res.numerator),
@@ -38,7 +40,8 @@ export class FeeCurrencyDirectoryWrapper extends AbstractFeeCurrencyWrapper {
   getCurrencyConfig: (
     token: StrongAddress
   ) => Promise<{ oracle: StrongAddress; intrinsicGas: BigNumber }> = proxyCall(
-    this.contract.methods.getCurrencyConfig,
+    this.contract,
+    'getCurrencyConfig',
     undefined,
     (res: { oracle: string; intrinsicGas: string }) => ({
       oracle: res.oracle as StrongAddress,

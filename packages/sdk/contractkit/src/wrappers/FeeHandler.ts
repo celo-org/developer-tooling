@@ -40,38 +40,43 @@ export interface ExchangeProposalReadable {
 }
 
 export class FeeHandlerWrapper extends BaseWrapper {
-  owner: () => Promise<string> = proxyCall(this.contract.methods.owner)
+  owner: () => Promise<string> = proxyCall(this.contract, 'owner')
 
   handleAll: () => CeloTransactionObject<void> = proxySend(
     this.connection,
-    this.contract.methods.handleAll
+    this.contract,
+    'handleAll'
   )
   burnCelo: () => CeloTransactionObject<void> = proxySend(
     this.connection,
-    this.contract.methods.burnCelo
+    this.contract,
+    'burnCelo'
   )
 
   async handle(tokenAddress: Address): Promise<CeloTransactionObject<void>> {
     const createExchangeProposalInner: (addr: string) => CeloTransactionObject<void> = proxySend(
-      this.connection,
-      this.contract.methods.handle
-    )
+    this.connection,
+    this.contract,
+    'handle'
+  )
     return createExchangeProposalInner(tokenAddress)
   }
 
   async sell(tokenAddress: Address): Promise<CeloTransactionObject<void>> {
     const innerCall: (addr: string) => CeloTransactionObject<void> = proxySend(
-      this.connection,
-      this.contract.methods.sell
-    )
+    this.connection,
+    this.contract,
+    'sell'
+  )
     return innerCall(tokenAddress)
   }
 
   async distribute(tokenAddress: Address): Promise<CeloTransactionObject<void>> {
     const innerCall: (addr: string) => CeloTransactionObject<void> = proxySend(
-      this.connection,
-      this.contract.methods.distribute
-    )
+    this.connection,
+    this.contract,
+    'distribute'
+  )
     return innerCall(tokenAddress)
   }
 }

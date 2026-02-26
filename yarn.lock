@@ -1861,6 +1861,7 @@ __metadata:
     fp-ts: "npm:2.16.9"
     jest: "npm:^29.7.0"
     semver: "npm:^7.7.2"
+    viem: "npm:^2.33.2"
   languageName: unknown
   linkType: soft
 

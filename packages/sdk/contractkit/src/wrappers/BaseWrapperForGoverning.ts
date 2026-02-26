@@ -1,4 +1,4 @@
-import { Connection, Contract } from '@celo/connect'
+import { Connection, type ViemContract } from '@celo/connect'
 import { AccountsWrapper } from './Accounts'
 import { BaseWrapper } from './BaseWrapper'
 import { ElectionWrapper } from './Election'
@@ -22,7 +22,7 @@ interface ContractWrappersForVotingAndRules {
 export class BaseWrapperForGoverning extends BaseWrapper {
   constructor(
     protected readonly connection: Connection,
-    protected readonly contract: Contract,
+    protected readonly contract: ViemContract,
     protected readonly contracts: ContractWrappersForVotingAndRules
   ) {
     super(connection, contract)

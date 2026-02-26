@@ -2,19 +2,19 @@ import { StrongAddress, bufferToHex, ensureLeading0x } from '@celo/base/lib/addr
 import { zip } from '@celo/base/lib/collections'
 import {
   CeloTransactionObject,
-  CeloTxObject,
   Connection,
-  Contract,
   EventLog,
   PastEventOptions,
+  createViemTxObject,
   toTransactionObject,
+  type ViemContract,
 } from '@celo/connect'
+import type { AbiItem } from '@celo/connect/lib/abi-types'
+import { viemAbiCoder } from '@celo/connect/lib/viem-abi-coder'
+import { toFunctionHash } from 'viem'
 import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
 import { ContractVersion } from '../versions'
-
-/** Represents web3 native contract Method */
-type Method<I extends any[], O> = (...args: I) => CeloTxObject<O>
 
 type Events = string
 type Methods = string
@@ -28,19 +28,43 @@ export abstract class BaseWrapper {
 
   constructor(
     protected readonly connection: Connection,
-    protected readonly contract: Contract
+    protected readonly contract: ViemContract
   ) {}
 
   /** Contract address */
   get address(): StrongAddress {
-    return this.contract.options.address as StrongAddress
+    return this.contract.address as StrongAddress
   }
 
   async version() {
     if (!this._version) {
-      const raw = await this.contract.methods.getVersionNumber().call()
-      // @ts-ignore conditional type
-      this._version = ContractVersion.fromRaw(raw)
+      const result = await this.contract.client.call({
+        to: this.contract.address as `0x${string}`,
+        data: viemAbiCoder.encodeFunctionSignature({
+          type: 'function',
+          name: 'getVersionNumber',
+          inputs: [],
+          outputs: [
+            { name: '', type: 'uint256' },
+            { name: '', type: 'uint256' },
+            { name: '', type: 'uint256' },
+            { name: '', type: 'uint256' },
+          ],
+        }) as `0x${string}`,
+      })
+      if (result.data && result.data !== '0x') {
+        const decoded = viemAbiCoder.decodeParameters(
+          [
+            { name: '', type: 'uint256' },
+            { name: '', type: 'uint256' },
+            { name: '', type: 'uint256' },
+            { name: '', type: 'uint256' },
+          ],
+          result.data
+        )
+        // @ts-ignore conditional type
+        this._version = ContractVersion.fromRaw(decoded)
+      }
     }
     return this._version!
   }
@@ -52,30 +76,76 @@ export abstract class BaseWrapper {
   }
 
   /** Contract getPastEvents */
-  public getPastEvents(event: Events, options: PastEventOptions): Promise<EventLog[]> {
-    return this.contract.getPastEvents(event as string, options)
+  public async getPastEvents(event: Events, options: PastEventOptions): Promise<EventLog[]> {
+    const eventAbi = this.contract.abi.find(
+      (item: AbiItem) => item.type === 'event' && item.name === event
+    )
+    if (!eventAbi) return []
+
+    const eventSig = viemAbiCoder.encodeEventSignature(eventAbi)
+    const topics: string[] = [eventSig]
+
+    const params: Record<string, unknown> = {
+      address: this.contract.address,
+      topics,
+    }
+    if (options.fromBlock != null) {
+      params.fromBlock =
+        typeof options.fromBlock === 'number'
+          ? `0x${options.fromBlock.toString(16)}`
+          : options.fromBlock
+    }
+    if (options.toBlock != null) {
+      params.toBlock =
+        typeof options.toBlock === 'number' ? `0x${options.toBlock.toString(16)}` : options.toBlock
+    }
+
+    const response = await this.connection.rpcCaller.call('eth_getLogs', [params])
+    const logs = response.result as any[]
+    return logs.map((log: any) => {
+      let returnValues: Record<string, unknown> = {}
+      try {
+        returnValues = viemAbiCoder.decodeLog(
+          eventAbi.inputs || [],
+          log.data,
+          log.topics.slice(1)
+        ) as unknown as Record<string, unknown>
+      } catch {
+        // Event decoding may fail for proxy contracts; skip gracefully
+      }
+      return {
+        event: eventAbi.name!,
+        address: log.address,
+        returnValues,
+        logIndex: log.logIndex,
+        transactionIndex: log.transactionIndex,
+        transactionHash: log.transactionHash,
+        blockHash: log.blockHash,
+        blockNumber: log.blockNumber,
+        raw: { data: log.data, topics: log.topics },
+      }
+    })
   }
 
-  events: Contract['events'] = this.contract.events
+  events: Record<string, AbiItem> = this.contract.abi
+    .filter((item: AbiItem) => item.type === 'event' && item.name)
+    .reduce<Record<string, AbiItem>>((acc, item: AbiItem) => {
+      acc[item.name!] = item
+      return acc
+    }, {})
 
   eventTypes = Object.keys(this.events).reduce<EventsEnum>(
     (acc, key) => ({ ...acc, [key]: key }),
     {} as any
   )
 
-  methodIds = Object.keys(this.contract.methods).reduce<Record<Methods, string>>(
-    (acc, method: Methods) => {
-      const methodABI = this.contract.options.jsonInterface.find((item) => item.name === method)
-
-      acc[method] =
-        methodABI === undefined
-          ? '0x'
-          : this.connection.getAbiCoder().encodeFunctionSignature(methodABI)
-
+  methodIds = this.contract.abi
+    .filter((item: AbiItem) => item.type === 'function' && item.name)
+    .reduce<Record<Methods, string>>((acc, item: AbiItem) => {
+      const sig = `${item.name}(${(item.inputs || []).map((i) => i.type).join(',')})`
+      acc[item.name!] = toFunctionHash(sig).slice(0, 10)
       return acc
-    },
-    {} as any
-  )
+    }, {} as any)
 }
 
 export const valueToBigNumber = (input: BigNumber.Value) => new BigNumber(input)
@@ -205,139 +275,92 @@ export function tupleParser(...parsers: Parser<any, any>[]) {
 }
 
 /**
- * Specifies all different possible proxyCall arguments so that
- * it always return a function of type: (...args:InputArgs) => Promise<Output>
- *
- * cases:
- *  - methodFn
- *  - parseInputArgs => methodFn
- *  - parseInputArgs => methodFn => parseOutput
- *  - methodFn => parseOutput
- */
-type ProxyCallArgs<
-  InputArgs extends any[],
-  ParsedInputArgs extends any[],
-  PreParsedOutput,
-  Output,
-> = // parseInputArgs => methodFn => parseOutput
-| [
-    Method<ParsedInputArgs, PreParsedOutput>,
-    (...arg: InputArgs) => ParsedInputArgs,
-    (arg: PreParsedOutput) => Output,
-  ]
-// methodFn => parseOutput
-| [Method<InputArgs, PreParsedOutput>, undefined, (arg: PreParsedOutput) => Output]
-// parseInputArgs => methodFn
-| [Method<ParsedInputArgs, Output>, (...arg: InputArgs) => ParsedInputArgs]
-// methodFn
-| [Method<InputArgs, Output>]
-
-/**
- * Creates a proxy to call a web3 native contract method.
+ * Creates a proxy to read from a viem-native contract.
  *
  * There are 4 cases:
- *  - methodFn
- *  - parseInputArgs => methodFn
- *  - parseInputArgs => methodFn => parseOutput
- *  - methodFn => parseOutput
- *
- * @param methodFn Web3 methods function
- * @param parseInputArgs [optional] parseInputArgs function, tranforms arguments into `methodFn` expected inputs
- * @param parseOutput [optional] parseOutput function, transforms `methodFn` output into proxy return
+ *  - contract + functionName
+ *  - contract + functionName + parseOutput
+ *  - contract + functionName + parseInputArgs + parseOutput
+ *  - contract + functionName + parseInputArgs
  */
-export function proxyCall<
-  InputArgs extends any[],
-  ParsedInputArgs extends any[],
-  PreParsedOutput,
-  Output,
->(
-  methodFn: Method<ParsedInputArgs, PreParsedOutput>,
-  parseInputArgs: (...args: InputArgs) => ParsedInputArgs,
-  parseOutput: (o: PreParsedOutput) => Output
+export function proxyCall<InputArgs extends any[], Output>(
+  contract: ViemContract,
+  functionName: string
 ): (...args: InputArgs) => Promise<Output>
 export function proxyCall<InputArgs extends any[], PreParsedOutput, Output>(
-  methodFn: Method<InputArgs, PreParsedOutput>,
-  x: undefined,
+  contract: ViemContract,
+  functionName: string,
+  parseInputArgs: undefined,
   parseOutput: (o: PreParsedOutput) => Output
 ): (...args: InputArgs) => Promise<Output>
 export function proxyCall<InputArgs extends any[], ParsedInputArgs extends any[], Output>(
-  methodFn: Method<ParsedInputArgs, Output>,
+  contract: ViemContract,
+  functionName: string,
   parseInputArgs: (...args: InputArgs) => ParsedInputArgs
 ): (...args: InputArgs) => Promise<Output>
-export function proxyCall<InputArgs extends any[], Output>(
-  methodFn: Method<InputArgs, Output>
-): (...args: InputArgs) => Promise<Output>
-
 export function proxyCall<
   InputArgs extends any[],
   ParsedInputArgs extends any[],
   PreParsedOutput,
   Output,
 >(
-  ...callArgs: ProxyCallArgs<InputArgs, ParsedInputArgs, PreParsedOutput, Output>
-): (...args: InputArgs) => Promise<Output> {
-  if (callArgs.length === 3 && callArgs[1] != null) {
-    const methodFn = callArgs[0]
-    const parseInputArgs = callArgs[1]
-    const parseOutput = callArgs[2]
-    return (...args: InputArgs) =>
-      methodFn(...parseInputArgs(...args))
-        .call()
-        .then(parseOutput)
-  } else if (callArgs.length === 3) {
-    const methodFn = callArgs[0]
-    const parseOutput = callArgs[2]
-    return (...args: InputArgs) =>
-      methodFn(...args)
-        .call()
-        .then(parseOutput)
-  } else if (callArgs.length === 2) {
-    const methodFn = callArgs[0]
-    const parseInputArgs = callArgs[1]
-    return (...args: InputArgs) => methodFn(...parseInputArgs(...args)).call()
-  } else {
-    const methodFn = callArgs[0]
-    return (...args: InputArgs) => methodFn(...args).call()
+  contract: ViemContract,
+  functionName: string,
+  parseInputArgs: ((...args: InputArgs) => ParsedInputArgs) | undefined,
+  parseOutput: (o: PreParsedOutput) => Output
+): (...args: InputArgs) => Promise<Output>
+export function proxyCall<
+  InputArgs extends any[],
+  ParsedInputArgs extends any[],
+  PreParsedOutput,
+  Output,
+>(
+  contract: ViemContract,
+  functionName: string,
+  parseInputArgs?: ((...args: InputArgs) => ParsedInputArgs) | undefined,
+  parseOutput?: ((o: PreParsedOutput) => Output) | undefined
+): (...args: InputArgs) => Promise<Output | PreParsedOutput> {
+  return async (...args: InputArgs) => {
+    const resolvedArgs = parseInputArgs ? parseInputArgs(...args) : args
+    const txo = createViemTxObject<PreParsedOutput>(
+      // connection not needed for call, but type requires it — pass null and use client.call directly
+      undefined as any,
+      contract,
+      functionName,
+      resolvedArgs as unknown[]
+    )
+    const result = await txo.call()
+    return parseOutput ? parseOutput(result) : result
   }
 }
 
 /**
- * Specifies all different possible proxySend arguments so that
- * it always return a function of type: (...args:InputArgs) => CeloTransactionObject<Output>
- *
- * cases:
- *  - methodFn
- *  - parseInputArgs => methodFn
- */
-type ProxySendArgs<
-  InputArgs extends any[],
-  ParsedInputArgs extends any[],
-  Output,
-> = // parseInputArgs => methodFn
-| [Method<ParsedInputArgs, Output>, (...arg: InputArgs) => ParsedInputArgs]
-// methodFn
-| [Method<InputArgs, Output>]
-
-/**
- * Creates a proxy to send a tx on a web3 native contract method.
+ * Creates a proxy to send a tx on a viem-native contract.
  *
  * There are 2 cases:
- *  - call methodFn (no pre or post parsing)
- *  - preParse arguments & call methodFn
- *
- * @param methodFn Web3 methods function
- * @param preParse [optional] preParse function, tranforms arguments into `methodFn` expected inputs
+ *  - connection + contract + functionName
+ *  - connection + contract + functionName + parseInputArgs
  */
+export function proxySend<InputArgs extends any[], Output>(
+  connection: Connection,
+  contract: ViemContract,
+  functionName: string
+): (...args: InputArgs) => CeloTransactionObject<Output>
 export function proxySend<InputArgs extends any[], ParsedInputArgs extends any[], Output>(
   connection: Connection,
-  ...sendArgs: ProxySendArgs<InputArgs, ParsedInputArgs, Output>
+  contract: ViemContract,
+  functionName: string,
+  parseInputArgs: (...args: InputArgs) => ParsedInputArgs
+): (...args: InputArgs) => CeloTransactionObject<Output>
+export function proxySend<InputArgs extends any[], ParsedInputArgs extends any[], Output>(
+  connection: Connection,
+  contract: ViemContract,
+  functionName: string,
+  parseInputArgs?: (...args: InputArgs) => ParsedInputArgs
 ): (...args: InputArgs) => CeloTransactionObject<Output> {
-  if (sendArgs.length === 2) {
-    const methodFn = sendArgs[0]
-    const preParse = sendArgs[1]
-    return (...args: InputArgs) => toTransactionObject(connection, methodFn(...preParse(...args)))
-  } else {
-    const methodFn = sendArgs[0]
-    return (...args: InputArgs) => toTransactionObject(connection, methodFn(...args))
+  return (...args: InputArgs) => {
+    const resolvedArgs = parseInputArgs ? parseInputArgs(...args) : args
+    const txo = createViemTxObject<Output>(connection, contract, functionName, resolvedArgs as unknown[])
+    return toTransactionObject(connection, txo)
   }
 }

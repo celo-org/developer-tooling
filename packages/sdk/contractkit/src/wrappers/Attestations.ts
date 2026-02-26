@@ -4,8 +4,9 @@ import {
   Address,
   CeloTransactionObject,
   Connection,
+  createViemTxObject,
   toTransactionObject,
-  Contract,
+  type ViemContract,
 } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import { AccountsWrapper } from './Accounts'
@@ -68,7 +69,7 @@ interface ContractsForAttestation {
 export class AttestationsWrapper extends BaseWrapper {
   constructor(
     protected readonly connection: Connection,
-    protected readonly contract: Contract,
+    protected readonly contract: ViemContract,
     protected readonly contracts: ContractsForAttestation
   ) {
     super(connection, contract)
@@ -78,7 +79,8 @@ export class AttestationsWrapper extends BaseWrapper {
    *  Returns the time an attestation can be completable before it is considered expired
    */
   attestationExpiryBlocks = proxyCall(
-    this.contract.methods.attestationExpiryBlocks,
+    this.contract,
+    'attestationExpiryBlocks',
     undefined,
     valueToInt
   )
@@ -89,13 +91,15 @@ export class AttestationsWrapper extends BaseWrapper {
    * @returns The fee as big number.
    */
   attestationRequestFees = proxyCall(
-    this.contract.methods.attestationRequestFees,
+    this.contract,
+    'attestationRequestFees',
     undefined,
     valueToBigNumber
   )
 
   selectIssuersWaitBlocks = proxyCall(
-    this.contract.methods.selectIssuersWaitBlocks,
+    this.contract,
+    'selectIssuersWaitBlocks',
     undefined,
     valueToInt
   )
@@ -107,9 +111,10 @@ export class AttestationsWrapper extends BaseWrapper {
    */
   getUnselectedRequest: (identifier: string, account: Address) => Promise<UnselectedRequest> =
     proxyCall(
-      this.contract.methods.getUnselectedRequest,
+    this.contract,
+    'getUnselectedRequest',
       undefined,
-      (res): UnselectedRequest => ({
+      (res: any): UnselectedRequest => ({
         blockNumber: valueToInt(res[0]),
         attestationsRequested: valueToInt(res[1]),
         attestationRequestFeeToken: res[2] as string,
@@ -132,9 +137,7 @@ export class AttestationsWrapper extends BaseWrapper {
    * @param identifier Attestation identifier (e.g. phone hash)
    * @param account Address of the account
    */
-  getAttestationIssuers: (identifier: string, account: Address) => Promise<string[]> = proxyCall(
-    this.contract.methods.getAttestationIssuers
-  )
+  getAttestationIssuers: (identifier: string, account: Address) => Promise<string[]> = proxyCall(this.contract, 'getAttestationIssuers')
 
   /**
    * Returns the attestation state of a phone number/account/issuer tuple
@@ -146,9 +149,10 @@ export class AttestationsWrapper extends BaseWrapper {
     account: Address,
     issuer: Address
   ) => Promise<AttestationStateForIssuer> = proxyCall(
-    this.contract.methods.getAttestationState,
+    this.contract,
+    'getAttestationState',
     undefined,
-    (state) => ({ attestationState: valueToInt(state[0]) })
+    (state: any) => ({ attestationState: valueToInt(state[0]) })
   )
 
   /**
@@ -157,7 +161,9 @@ export class AttestationsWrapper extends BaseWrapper {
    * @param account Address of the account
    */
   getAttestationStat: (identifier: string, account: Address) => Promise<AttestationStat> =
-    proxyCall(this.contract.methods.getAttestationStats, undefined, (stat) => ({
+    proxyCall(
+    this.contract,
+    'getAttestationStats', undefined, (stat: any) => ({
       completed: valueToInt(stat[0]),
       total: valueToInt(stat[1]),
     }))
@@ -207,9 +213,9 @@ export class AttestationsWrapper extends BaseWrapper {
    */
   async getAttestationFeeRequired(attestationsRequested: number) {
     const contract = await this.contracts.getStableToken(StableToken.USDm)
-    const attestationFee = await this.contract.methods
-      .getAttestationRequestFee(contract.address)
-      .call()
+    const attestationFee = await createViemTxObject<string>(
+      this.connection, this.contract, 'getAttestationRequestFee', [contract.address]
+    ).call()
     return new BigNumber(attestationFee).times(attestationsRequested)
   }
 
@@ -230,7 +236,8 @@ export class AttestationsWrapper extends BaseWrapper {
    * @return The reward amount.
    */
   getPendingWithdrawals: (token: string, account: string) => Promise<BigNumber> = proxyCall(
-    this.contract.methods.pendingWithdrawals,
+    this.contract,
+    'pendingWithdrawals',
     undefined,
     valueToBigNumber
   )
@@ -241,7 +248,8 @@ export class AttestationsWrapper extends BaseWrapper {
    */
   withdraw: (token: string) => CeloTransactionObject<void> = proxySend(
     this.connection,
-    this.contract.methods.withdraw
+    this.contract,
+    'withdraw'
   )
 
   /**
@@ -280,9 +288,7 @@ export class AttestationsWrapper extends BaseWrapper {
    * Returns the list of accounts associated with an identifier.
    * @param identifier Attestation identifier (e.g. phone hash)
    */
-  lookupAccountsForIdentifier: (identifier: string) => Promise<string[]> = proxyCall(
-    this.contract.methods.lookupAccountsForIdentifier
-  )
+  lookupAccountsForIdentifier: (identifier: string) => Promise<string[]> = proxyCall(this.contract, 'lookupAccountsForIdentifier')
 
   /**
    * Lookup mapped wallet addresses for a given list of identifiers
@@ -290,7 +296,7 @@ export class AttestationsWrapper extends BaseWrapper {
    */
   async lookupIdentifiers(identifiers: string[]): Promise<IdentifierLookupResult> {
     // Unfortunately can't be destructured
-    const stats = await this.contract.methods.batchGetAttestationStats(identifiers).call()
+    const stats = await createViemTxObject<{ 0: string[]; 1: string[]; 2: string[]; 3: string[] }>(this.connection, this.contract, 'batchGetAttestationStats', [identifiers]).call()
 
     const matches = stats[0].map(valueToInt)
     const addresses = stats[1]
@@ -330,7 +336,7 @@ export class AttestationsWrapper extends BaseWrapper {
     if (idx < 0) {
       throw new Error("Account not found in identifier's accounts")
     }
-    return toTransactionObject(this.connection, this.contract.methods.revoke(identifer, idx))
+    return toTransactionObject(this.connection, createViemTxObject(this.connection, this.contract, 'revoke', [identifer, idx]))
   }
 }
 

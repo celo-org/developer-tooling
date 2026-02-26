@@ -1,4 +1,4 @@
-import { Address, CeloTransactionObject, CeloTxObject, toTransactionObject } from '@celo/connect'
+import { Address, CeloTransactionObject, CeloTxObject, createViemTxObject, toTransactionObject } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import {
   BaseWrapper,
@@ -41,13 +41,13 @@ export class MultiSigWrapper extends BaseWrapper {
     value = '0'
   ): Promise<CeloTransactionObject<void>> {
     const data = stringToSolidityBytes(txObject.encodeABI())
-    const transactionCount = await this.contract.methods.getTransactionCount(true, true).call()
-    const transactionIds = await this.contract.methods
-      .getTransactionIds(0, transactionCount, true, false)
-      .call()
+    const transactionCount = await createViemTxObject<string>(this.connection, this.contract, 'getTransactionCount', [true, true]).call()
+    const transactionIds = await createViemTxObject<string[]>(
+      this.connection, this.contract, 'getTransactionIds', [0, transactionCount, true, false]
+    ).call()
 
     for (const transactionId of transactionIds) {
-      const transaction = await this.contract.methods.transactions(transactionId).call()
+      const transaction = await createViemTxObject<{ data: string; destination: string; value: string; executed: boolean }>(this.connection, this.contract, 'transactions', [transactionId]).call()
       if (
         transaction.data === data &&
         transaction.destination === destination &&
@@ -56,20 +56,20 @@ export class MultiSigWrapper extends BaseWrapper {
       ) {
         return toTransactionObject(
           this.connection,
-          this.contract.methods.confirmTransaction(transactionId)
+          createViemTxObject(this.connection, this.contract, 'confirmTransaction', [transactionId])
         )
       }
     }
     return toTransactionObject(
       this.connection,
-      this.contract.methods.submitTransaction(destination, value, data)
+      createViemTxObject(this.connection, this.contract, 'submitTransaction', [destination, value, data])
     )
   }
 
   async confirmTransaction(transactionId: number): Promise<CeloTransactionObject<void>> {
     return toTransactionObject(
       this.connection,
-      this.contract.methods.confirmTransaction(transactionId)
+      createViemTxObject(this.connection, this.contract, 'confirmTransaction', [transactionId])
     )
   }
   async submitTransaction(
@@ -80,23 +80,31 @@ export class MultiSigWrapper extends BaseWrapper {
     const data = stringToSolidityBytes(txObject.encodeABI())
     return toTransactionObject(
       this.connection,
-      this.contract.methods.submitTransaction(destination, value, data)
+      createViemTxObject(this.connection, this.contract, 'submitTransaction', [destination, value, data])
     )
   }
 
-  isOwner: (owner: Address) => Promise<boolean> = proxyCall(this.contract.methods.isOwner)
-  getOwners: () => Promise<string[]> = proxyCall(this.contract.methods.getOwners)
-  getRequired = proxyCall(this.contract.methods.required, undefined, valueToBigNumber)
+  isOwner: (owner: Address) => Promise<boolean> = proxyCall(this.contract, 'isOwner')
+  getOwners: () => Promise<string[]> = proxyCall(this.contract, 'getOwners')
+  getRequired = proxyCall(
+    this.contract,
+    'required', undefined, valueToBigNumber)
   getInternalRequired = proxyCall(
-    this.contract.methods.internalRequired,
+    this.contract,
+    'internalRequired',
     undefined,
     valueToBigNumber
   )
-  totalTransactionCount = proxyCall(this.contract.methods.transactionCount, undefined, valueToInt)
-  getTransactionCount = proxyCall(this.contract.methods.getTransactionCount, undefined, valueToInt)
+  totalTransactionCount = proxyCall(
+    this.contract,
+    'transactionCount', undefined, valueToInt)
+  getTransactionCount = proxyCall(
+    this.contract,
+    'getTransactionCount', undefined, valueToInt)
   replaceOwner: (owner: Address, newOwner: Address) => CeloTransactionObject<void> = proxySend(
     this.connection,
-    this.contract.methods.replaceOwner,
+    this.contract,
+    'replaceOwner',
     tupleParser(stringIdentity, stringIdentity)
   )
 
@@ -132,9 +140,9 @@ export class MultiSigWrapper extends BaseWrapper {
     includeConfirmations: false
   ): Promise<TransactionDataWithOutConfirmations>
   async getTransaction(i: number, includeConfirmations = true) {
-    const { destination, value, data, executed } = await this.contract.methods
-      .transactions(i)
-      .call()
+    const { destination, value, data, executed } = await createViemTxObject<{ destination: string; value: string; data: string; executed: boolean }>(
+      this.connection, this.contract, 'transactions', [i]
+    ).call()
     if (!includeConfirmations) {
       return {
         destination,
@@ -162,7 +170,7 @@ export class MultiSigWrapper extends BaseWrapper {
     const owners = await this.getOwners()
     const confirmationsOrEmpties = await Promise.all(
       owners.map(async (owner: string) => {
-        const confirmation = await this.contract.methods.confirmations(txId, owner).call()
+        const confirmation = await createViemTxObject<boolean>(this.connection, this.contract, 'confirmations', [txId, owner]).call()
         if (confirmation) {
           return owner
         } else {

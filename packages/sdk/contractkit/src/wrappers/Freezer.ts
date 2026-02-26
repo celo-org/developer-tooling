@@ -4,13 +4,15 @@ import { BaseWrapper, proxyCall, proxySend } from './BaseWrapper'
 export class FreezerWrapper extends BaseWrapper {
   freeze: (target: string) => CeloTransactionObject<void> = proxySend(
     this.connection,
-    this.contract.methods.freeze
+    this.contract,
+    'freeze'
   )
   unfreeze: (target: string) => CeloTransactionObject<void> = proxySend(
     this.connection,
-    this.contract.methods.unfreeze
+    this.contract,
+    'unfreeze'
   )
-  isFrozen: (target: string) => Promise<boolean> = proxyCall(this.contract.methods.isFrozen)
+  isFrozen: (target: string) => Promise<boolean> = proxyCall(this.contract, 'isFrozen')
 }
 
 export type FreezerWrapperType = FreezerWrapper

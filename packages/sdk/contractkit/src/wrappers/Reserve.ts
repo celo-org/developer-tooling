@@ -25,36 +25,43 @@ export class ReserveWrapper extends BaseWrapper {
    * @returns Current Tobin tax staleness threshold.
    */
   tobinTaxStalenessThreshold = proxyCall(
-    this.contract.methods.tobinTaxStalenessThreshold,
+    this.contract,
+    'tobinTaxStalenessThreshold',
     undefined,
     valueToBigNumber
   )
   dailySpendingRatio = proxyCall(
-    this.contract.methods.getDailySpendingRatio,
+    this.contract,
+    'getDailySpendingRatio',
     undefined,
     fixidityValueToBigNumber
   )
-  isSpender: (account: string) => Promise<boolean> = proxyCall(this.contract.methods.isSpender)
+  isSpender: (account: string) => Promise<boolean> = proxyCall(this.contract, 'isSpender')
   transferGold: (to: string, value: string | number) => CeloTransactionObject<void> = proxySend(
     this.connection,
-    this.contract.methods.transferGold
+    this.contract,
+    'transferGold'
   )
   getOrComputeTobinTax: () => CeloTransactionObject<void> = proxySend(
     this.connection,
-    this.contract.methods.getOrComputeTobinTax
+    this.contract,
+    'getOrComputeTobinTax'
   )
   frozenReserveGoldStartBalance = proxyCall(
-    this.contract.methods.frozenReserveGoldStartBalance,
+    this.contract,
+    'frozenReserveGoldStartBalance',
     undefined,
     valueToBigNumber
   )
   frozenReserveGoldStartDay = proxyCall(
-    this.contract.methods.frozenReserveGoldStartDay,
+    this.contract,
+    'frozenReserveGoldStartDay',
     undefined,
     valueToBigNumber
   )
   frozenReserveGoldDays = proxyCall(
-    this.contract.methods.frozenReserveGoldDays,
+    this.contract,
+    'frozenReserveGoldDays',
     undefined,
     valueToBigNumber
   )
@@ -64,7 +71,8 @@ export class ReserveWrapper extends BaseWrapper {
    * @return An array of a list of weights used for the allocation of reserve assets.
    */
   getAssetAllocationWeights: () => Promise<BigNumber[]> = proxyCall(
-    this.contract.methods.getAssetAllocationWeights,
+    this.contract,
+    'getAssetAllocationWeights',
     undefined,
     (weights: string[]) => weights.map(valueToBigNumber)
   )
@@ -74,7 +82,8 @@ export class ReserveWrapper extends BaseWrapper {
    * @return An array of token symbols that have been allocated.
    */
   getAssetAllocationSymbols = proxyCall(
-    this.contract.methods.getAssetAllocationSymbols,
+    this.contract,
+    'getAssetAllocationSymbols',
     undefined,
     (symbols: string[]) => symbols.map((symbol: string) => this.connection.hexToAscii(symbol))
   )
@@ -83,7 +92,8 @@ export class ReserveWrapper extends BaseWrapper {
    * @alias {getReserveCeloBalance}
    */
   getReserveGoldBalance = proxyCall(
-    this.contract.methods.getReserveGoldBalance,
+    this.contract,
+    'getReserveGoldBalance',
     undefined,
     valueToBigNumber
   )
@@ -100,7 +110,8 @@ export class ReserveWrapper extends BaseWrapper {
    * @return {BigNumber} amount in wei
    */
   getUnfrozenBalance = proxyCall(
-    this.contract.methods.getUnfrozenBalance,
+    this.contract,
+    'getUnfrozenBalance',
     undefined,
     valueToBigNumber
   )
@@ -112,14 +123,13 @@ export class ReserveWrapper extends BaseWrapper {
    * @return {BigNumber} amount in wei
    */
   getUnfrozenReserveCeloBalance = proxyCall(
-    this.contract.methods.getUnfrozenReserveGoldBalance,
+    this.contract,
+    'getUnfrozenReserveGoldBalance',
     undefined,
     valueToBigNumber
   )
 
-  getOtherReserveAddresses: () => Promise<string[]> = proxyCall(
-    this.contract.methods.getOtherReserveAddresses
-  )
+  getOtherReserveAddresses: () => Promise<string[]> = proxyCall(this.contract, 'getOtherReserveAddresses')
 
   /**
    * Returns current configuration parameters.
@@ -134,9 +144,7 @@ export class ReserveWrapper extends BaseWrapper {
     }
   }
 
-  isOtherReserveAddress: (address: string) => Promise<boolean> = proxyCall(
-    this.contract.methods.isOtherReserveAddress
-  )
+  isOtherReserveAddress: (address: string) => Promise<boolean> = proxyCall(this.contract, 'isOtherReserveAddress')
 
   async getSpenders(): Promise<Address[]> {
     const spendersAdded = (

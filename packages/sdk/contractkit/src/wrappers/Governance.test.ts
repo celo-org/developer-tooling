@@ -1,5 +1,5 @@
 import { Address, StrongAddress } from '@celo/base/lib/address'
-import { Contract } from '@celo/connect'
+import { createViemTxObject, type ViemContract } from '@celo/connect'
 import { asCoreContractsOwner, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import BigNumber from 'bignumber.js'
@@ -20,7 +20,7 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
   let governanceApproverMultiSig: MultiSigWrapper
   let lockedGold: LockedGoldWrapper
   let accountWrapper: AccountsWrapper
-  let registry: Contract
+  let registry: ViemContract
   let minDeposit: string
   let dequeueFrequency: number
   let referendumStageDuration: number
@@ -49,8 +49,8 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
     const proposals: ProposalTransaction[] = repoints.map<ProposalTransaction>((repoint) => {
       return {
         value: '0',
-        to: (registry as any)._address,
-        input: registry.methods.setAddressFor(...repoint).encodeABI(),
+        to: registry.address,
+        input: createViemTxObject(kit.connection, registry, 'setAddressFor', repoint).encodeABI(),
       }
     })
     return proposals as Proposal

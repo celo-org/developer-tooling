@@ -28,7 +28,8 @@ export class GoldTokenWrapper extends CeloTokenWrapper {
     value: import('bignumber.js').default.Value
   ) => CeloTransactionObject<void> = proxySend(
     this.connection,
-    this.contract.methods.increaseAllowance,
+    this.contract,
+    'increaseAllowance',
     tupleParser(stringIdentity, valueToString)
   )
   /**
@@ -38,12 +39,18 @@ export class GoldTokenWrapper extends CeloTokenWrapper {
    * @returns true if success.
    */
   decreaseAllowance: (spender: string, value: string | number) => CeloTransactionObject<void> =
-    proxySend(this.connection, this.contract.methods.decreaseAllowance)
+    proxySend(
+    this.connection,
+    this.contract,
+    'decreaseAllowance'
+  )
 
   /**
    * Gets the balance of the specified address.
    * WARNING: The actual call to the Gold contract of the balanceOf:
-   * `balanceOf = proxyCall(this.contract.methods.balanceOf, undefined, valueToBigNumber)`
+   * `balanceOf = proxyCall(
+    this.contract,
+    'balanceOf', undefined, valueToBigNumber)`
    * has issues with web3. Keep the one calling getBalance
    * @param owner The address to query the balance of.
    * @return The balance of the specified address.

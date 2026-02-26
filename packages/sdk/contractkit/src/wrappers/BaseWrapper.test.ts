@@ -1,31 +1,37 @@
 import { NULL_ADDRESS } from '@celo/base'
-import { Connection, Contract, Provider } from '@celo/connect'
+import { Connection, Provider, type ViemContract } from '@celo/connect'
+import { viemAbiCoder } from '@celo/connect/lib/viem-abi-coder'
 import BigNumber from 'bignumber.js'
 import { ContractVersion, newContractVersion } from '../versions'
 import { BaseWrapper, unixSecondsTimestampToDateString } from './BaseWrapper'
 
 const mockVersion = newContractVersion(1, 1, 1, 1)
 
-const mockContract = {
-  options: { address: NULL_ADDRESS, jsonInterface: [] },
-  methods: {
-    getVersionNumber: () => ({
-      call: async () => mockVersion.toRaw(),
-      send: async () => ({}),
-      estimateGas: async () => 0,
-      encodeABI: () => '0x',
-    }),
-  },
-  deploy: () => ({
-    call: async () => ({}),
-    send: async () => ({}),
-    estimateGas: async () => 0,
-    encodeABI: () => '0x',
-  }),
-  getPastEvents: async () => [],
-  events: {},
-  _address: NULL_ADDRESS,
-} as unknown as Contract
+// Encode the version as ABI-encoded (uint256, uint256, uint256, uint256)
+const encodedVersion = viemAbiCoder.encodeParameters(
+  ['uint256', 'uint256', 'uint256', 'uint256'],
+  ['1', '1', '1', '1']
+)
+
+const mockContract: ViemContract = {
+  abi: [
+    {
+      type: 'function' as const,
+      name: 'getVersionNumber',
+      inputs: [],
+      outputs: [
+        { name: '', type: 'uint256' },
+        { name: '', type: 'uint256' },
+        { name: '', type: 'uint256' },
+        { name: '', type: 'uint256' },
+      ],
+    },
+  ],
+  address: NULL_ADDRESS,
+  client: {
+    call: async () => ({ data: encodedVersion }),
+  } as any,
+}
 
 const mockProvider = { send: (_payload: unknown, _cb: unknown) => undefined } as unknown as Provider
 const connection = new Connection(mockProvider)

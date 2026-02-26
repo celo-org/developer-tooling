@@ -1,6 +1,6 @@
 import { registryABI } from '@celo/abis'
 import { NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
-import { Connection, Contract } from '@celo/connect'
+import { Connection, createViemTxObject, type ViemContract } from '@celo/connect'
 import debugFactory from 'debug'
 import { CeloContract, RegisteredContracts, stripProxy } from './base'
 
@@ -21,12 +21,12 @@ export class UnregisteredError extends Error {
  * @param connection – an instance of @celo/connect {@link Connection}
  */
 export class AddressRegistry {
-  private readonly registry: Contract
+  private readonly registry: ViemContract
   private readonly cache: Map<CeloContract, StrongAddress> = new Map()
 
   constructor(readonly connection: Connection) {
     this.cache.set(CeloContract.Registry, REGISTRY_CONTRACT_ADDRESS)
-    this.registry = connection.createContract(registryABI as any, REGISTRY_CONTRACT_ADDRESS)
+    this.registry = connection.getViemContract(registryABI as any, REGISTRY_CONTRACT_ADDRESS)
   }
 
   /**
@@ -35,7 +35,7 @@ export class AddressRegistry {
   async addressFor(contract: CeloContract): Promise<StrongAddress> {
     if (!this.cache.has(contract)) {
       debug('Fetching address from Registry for %s', contract)
-      const address = await this.registry.methods.getAddressForString(stripProxy(contract)).call()
+      const address = await createViemTxObject<string>(this.connection, this.registry, 'getAddressForString', [stripProxy(contract)]).call()
 
       debug('Fetched address %s', address)
       if (!address || address === NULL_ADDRESS) {
