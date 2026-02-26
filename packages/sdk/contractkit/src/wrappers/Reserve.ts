@@ -1,3 +1,4 @@
+import { reserveABI } from '@celo/abis'
 import { Address, CeloTransactionObject, EventLog } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import {
@@ -19,7 +20,7 @@ export interface ReserveConfig {
 /**
  * Contract for handling reserve for stable currencies
  */
-export class ReserveWrapper extends BaseWrapper {
+export class ReserveWrapper extends BaseWrapper<typeof reserveABI> {
   /**
    * Query Tobin tax staleness threshold parameter.
    * @returns Current Tobin tax staleness threshold.
