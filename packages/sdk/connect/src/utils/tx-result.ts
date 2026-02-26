@@ -1,6 +1,7 @@
 import { Future } from '@celo/base/lib/future'
 import debugFactory from 'debug'
 import { CeloTxReceipt, Error as ConnectError, PromiEvent } from '../types'
+import { pollForReceiptHelper } from '../promi-event'
 
 const debug = debugFactory('connection:tx:result')
 
@@ -54,7 +55,7 @@ export class TransactionResult {
           this.hashFuture.resolve(hash)
           if (fetchReceipt) {
             try {
-              const receipt = await pollForReceipt(hash, fetchReceipt)
+              const receipt = await pollForReceiptHelper(hash, fetchReceipt)
               debug('receipt: %O', receipt)
               this.receiptFuture.resolve(receipt)
             } catch (error) {
@@ -99,18 +100,3 @@ function isPromiEvent(
   return 'on' in pe && typeof pe.on === 'function'
 }
 
-async function pollForReceipt(
-  txHash: string,
-  fetchReceipt: ReceiptFetcher
-): Promise<CeloTxReceipt> {
-  const POLL_INTERVAL = 100
-  const MAX_ATTEMPTS = 600
-  for (let i = 0; i < MAX_ATTEMPTS; i++) {
-    const receipt = await fetchReceipt(txHash)
-    if (receipt) {
-      return receipt
-    }
-    await new Promise((resolve) => setTimeout(resolve, POLL_INTERVAL))
-  }
-  throw new Error(`Transaction receipt not found after ${MAX_ATTEMPTS} attempts: ${txHash}`)
-}
