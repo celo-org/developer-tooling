@@ -11,6 +11,7 @@ import { asn1FromPublicKey } from '@celo/wallet-hsm'
 import * as ethUtil from '@ethereumjs/util'
 import { secp256k1 } from '@noble/curves/secp256k1'
 import { BigNumber } from 'bignumber.js'
+import { parseEther } from 'viem'
 import { AwsHsmWallet } from './aws-hsm-wallet'
 require('dotenv').config()
 
@@ -24,7 +25,6 @@ export const PRIVATE_KEY_NEVER =
 export const ACCOUNT_ADDRESS_NEVER = normalizeAddressWith0x(privateKeyToAddress(PRIVATE_KEY_NEVER))
 
 export const CHAIN_ID = 44378
-const ONE_CELO_IN_WEI = '1000000000000000000' // 1e18
 
 export const TYPED_DATA = {
   types: {
@@ -174,7 +174,7 @@ describe('AwsHsmWallet class', () => {
           from: unknownAddress,
           to: otherAddress,
           chainId: CHAIN_ID,
-          value: ONE_CELO_IN_WEI,
+          value: parseEther('1').toString(),
           nonce: 0,
           gas: '10',
           gasPrice: '99',
@@ -231,7 +231,7 @@ describe('AwsHsmWallet class', () => {
           from: knownAddress,
           to: otherAddress,
           chainId: CHAIN_ID,
-          value: ONE_CELO_IN_WEI,
+          value: parseEther('1').toString(),
           nonce: 0,
           gas: '10',
           gasPrice: '99',
@@ -257,7 +257,7 @@ describe('AwsHsmWallet class', () => {
             from: await wallet.getAddressFromKeyId(knownKey),
             to: ACCOUNT_ADDRESS2,
             chainId: CHAIN_ID,
-            value: ONE_CELO_IN_WEI,
+            value: parseEther('1').toString(),
             nonce: 65,
             gas: '10',
             gasPrice: '99',
