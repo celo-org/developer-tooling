@@ -1,6 +1,7 @@
 import { CeloTx, CeloTxObject, CeloTxReceipt, PromiEvent } from '@celo/connect'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
+
 import {
   ContractKit,
   newKitFromProvider as newFullKitFromProvider,
@@ -130,9 +131,17 @@ export function txoStub<T>(): TransactionObjectStub<T> {
 
 describe('newKitWithApiKey()', () => {
   test('should create kit with apiKey', async () => {
-    const kit = newKitWithApiKey('http://', 'key')
-    expect(kit).toBeDefined()
-    expect(kit.connection).toBeDefined()
+    // Spy on setupAPIKey to verify it's called with the correct API key
+    const setupAPIKeySpy = jest.spyOn(require('./setupForKits'), 'setupAPIKey')
+    try {
+      const kit = newKitWithApiKey('http://localhost:8545', 'key')
+      expect(kit).toBeDefined()
+      expect(kit.connection).toBeDefined()
+      // Verify that setupAPIKey was called with the correct API key
+      expect(setupAPIKeySpy).toHaveBeenCalledWith('key')
+    } finally {
+      setupAPIKeySpy.mockRestore()
+    }
   })
 })
 
