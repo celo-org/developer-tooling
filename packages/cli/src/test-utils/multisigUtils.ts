@@ -4,6 +4,7 @@ import { AbiItem } from '@celo/connect'
 import { ContractKit } from '@celo/contractkit'
 import { setCode } from '@celo/dev-utils/anvil-test'
 import { TEST_GAS_PRICE } from '@celo/dev-utils/test-utils'
+import { ProviderOwner } from '@celo/dev-utils/test-utils'
 import { parseUnits } from 'viem'
 import {
   multiSigBytecode,
@@ -91,7 +92,7 @@ export async function createMultisig(
  *
  * A working example can be found in packages/cli/src/commands/governance/approve-l2.test.ts`
  */
-export const setupSafeContracts = async (providerOwner: any) => {
+export const setupSafeContracts = async (providerOwner: ProviderOwner) => {
   // Set up safe 1.3.0 in devchain
   await setCode(providerOwner, SAFE_MULTISEND_ADDRESS, SAFE_MULTISEND_CODE)
   await setCode(providerOwner, SAFE_MULTISEND_CALL_ONLY_ADDRESS, SAFE_MULTISEND_CALL_ONLY_CODE)
