@@ -99,4 +99,3 @@ function isPromiEvent(
 ): pe is PromiEvent<CeloTxReceipt> {
   return 'on' in pe && typeof pe.on === 'function'
 }
-

@@ -110,8 +110,8 @@ export const PROXY_SET_IMPLEMENTATION_SIGNATURE = SET_IMPLEMENTATION_ABI.signatu
 export const PROXY_SET_AND_INITIALIZE_IMPLEMENTATION_SIGNATURE =
   SET_AND_INITIALIZE_IMPLEMENTATION_ABI.signature
 
-const findInitializeAbi = (items: readonly AbiItem[]) =>
-  items.find((item) => item.name === 'initialize')
+const findInitializeAbi = (items: readonly any[]) =>
+  items.find((item: AbiItem) => item.name === 'initialize') as AbiItem | undefined
 
 const initializeAbiMap = {
   AccountsProxy: findInitializeAbi(accountsABI),

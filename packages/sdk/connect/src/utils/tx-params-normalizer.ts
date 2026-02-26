@@ -3,7 +3,6 @@ import { Connection } from '../connection'
 import { CeloTx } from '../types'
 import { isEmpty, isPresent } from '../abi-coder'
 
-
 export class TxParamsNormalizer {
   private chainId: number | null = null
 
