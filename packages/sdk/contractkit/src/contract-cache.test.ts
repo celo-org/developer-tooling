@@ -18,10 +18,10 @@ function newWrapperCache() {
   const provider = getProviderForKit('http://localhost:8545', undefined)
   const connection = new Connection(provider)
   const registry = new AddressRegistry(connection)
-  const web3ContractCache = new ContractCache(registry)
+  const nativeContractCache = new ContractCache(registry)
   const AnyContractAddress = '0xe832065fb5117dbddcb566ff7dc4340999583e38'
   jest.spyOn(registry, 'addressFor').mockResolvedValue(AnyContractAddress)
-  const contractCache = new WrapperCache(connection, web3ContractCache, registry)
+  const contractCache = new WrapperCache(connection, nativeContractCache, registry)
   return contractCache
 }
 
