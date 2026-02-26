@@ -82,8 +82,9 @@ export function soliditySha3Raw(...args: SolidityValue[]): string {
 }
 
 /**
- * Computes keccak256 hash. Alias for soliditySha3.
- * Replacement for web3-utils sha3.
+ * Computes keccak256 hash. Replacement for web3-utils sha3.
+ * For a single string argument, hashes it directly (hex as bytes, otherwise UTF-8).
+ * For multiple or typed arguments, delegates to soliditySha3.
  */
 export function sha3(...args: SolidityValue[]): string | null {
   // When called with a single string (the common case for sha3), handle it directly
