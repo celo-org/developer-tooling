@@ -156,7 +156,7 @@ export default class Approve extends BaseCommand {
     if (approvalType === 'securityCouncil' && useSafe) {
       await performSafeTransaction(
         await this.getWeb3(),
-        await governance.getSecurityCouncil(),
+        (await governance.getSecurityCouncil()) as StrongAddress,
         account,
         await safeTransactionMetadataFromCeloTransactionObject(governanceTx, governance.address)
       )
@@ -239,7 +239,7 @@ const addDefaultChecks = async (
           const protocolKit = await createSafeFromWeb3(
             provider,
             account,
-            await governance.getSecurityCouncil()
+            (await governance.getSecurityCouncil()) as StrongAddress
           )
 
           return await protocolKit.isOwner(account)

@@ -5,8 +5,17 @@ import { EIP712TypedData, generateTypedDataHash } from '@celo/utils/lib/sign-typ
 import { Signature, parseSignatureWithoutPrefix } from '@celo/utils/lib/signatureUtils'
 import { bufferToHex } from '@ethereumjs/util'
 import debugFactory from 'debug'
-import { keccak256, hexToString, toHex, createPublicClient, custom, type PublicClient } from 'viem'
-import { AbiCoder, AbiItem } from './abi-types'
+import {
+  keccak256,
+  hexToString,
+  toHex,
+  createPublicClient,
+  custom,
+  toFunctionHash,
+  toEventHash,
+  type PublicClient,
+} from 'viem'
+import { AbiCoder, AbiInput, AbiItem } from './abi-types'
 import { isEmpty, viemAbiCoder } from './viem-abi-coder'
 import type { ViemContract } from './viem-contract'
 import { createContractConstructor } from './rpc-contract'
@@ -654,8 +663,21 @@ export class Connection {
    * @param address - The deployed contract address
    */
   getViemContract(abi: readonly AbiItem[] | AbiItem[], address: string): ViemContract {
+    // Enrich ABI items with function/event signatures for backward compatibility
+    // (block explorer, governance proposal builder, etc. rely on ad.signature)
+    const enrichedAbi = (abi as AbiItem[]).map((item: AbiItem) => {
+      if (item.type === 'function' && !('signature' in item)) {
+        const sig = `${item.name}(${(item.inputs || []).map((i: AbiInput) => i.type).join(',')})`
+        return { ...item, signature: toFunctionHash(sig).slice(0, 10) }
+      }
+      if (item.type === 'event' && !('signature' in item)) {
+        const sig = `${item.name}(${(item.inputs || []).map((i: AbiInput) => i.type).join(',')})`
+        return { ...item, signature: toEventHash(sig) }
+      }
+      return item
+    })
     return {
-      abi: abi as AbiItem[],
+      abi: enrichedAbi,
       address,
       client: this._viemClient,
     }

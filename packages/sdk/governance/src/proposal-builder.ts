@@ -2,7 +2,7 @@ import {
   AbiItem,
   CeloTransactionObject,
   CeloTxObject,
-  Contract,
+  createViemTxObject,
   signatureToAbiDefinition,
 } from '@celo/connect'
 import { toChecksumAddress } from '@celo/utils/lib/address'
@@ -78,7 +78,7 @@ export class ProposalBuilder {
       return this.fromWeb3tx(
         setImplementationOnProxy(newImplementationAddress, this.kit.connection),
         {
-          to: proxy.options.address,
+          to: proxy.address,
           value: '0',
         }
       )
@@ -216,14 +216,7 @@ export class ProposalBuilder {
 
     const contract = await this.kit._contracts.getContract(tx.contract, address)
     const methodName = tx.function
-    const method = (contract.methods as Contract['methods'])[methodName]
-    if (!method) {
-      throw new Error(`Method ${methodName} not found on ${tx.contract}`)
-    }
-    const txo = method(...tx.args)
-    if (!txo) {
-      throw new Error(`Arguments ${tx.args} did not match ${methodName} signature`)
-    }
+    const txo = createViemTxObject(this.kit.connection, contract, methodName, tx.args)
 
     return this.fromWeb3tx(txo, { to: address, value: tx.value })
   }
