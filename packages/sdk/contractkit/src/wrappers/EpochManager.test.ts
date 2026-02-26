@@ -77,7 +77,7 @@ testWithAnvilL2('EpochManagerWrapper', (providerOwner) => {
   it('gets first known epoch number', async () => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
 
-    expect(await epochManagerWrapper.firstKnownEpoch()).toBeGreaterThanOrEqual(4)
+    expect(await epochManagerWrapper.firstKnownEpoch()).toEqual(4)
   })
 
   it('gets block numbers for an epoch', async () => {
@@ -86,7 +86,7 @@ testWithAnvilL2('EpochManagerWrapper', (providerOwner) => {
     const accounts = await kit.connection.getAccounts()
 
     const firstBlock = await epochManagerWrapper.getFirstBlockAtEpoch(currentEpochNumber)
-    expect(firstBlock).toBeGreaterThan(0)
+    expect(firstBlock).toEqual(300)
     await expect(epochManagerWrapper.getLastBlockAtEpoch(currentEpochNumber)).rejects.toThrow(
       'Epoch not finished yet'
     )
@@ -101,7 +101,7 @@ testWithAnvilL2('EpochManagerWrapper', (providerOwner) => {
     })
 
     const lastBlock = await epochManagerWrapper.getLastBlockAtEpoch(currentEpochNumber)
-    expect(lastBlock).toBeGreaterThan(firstBlock)
+    expect(lastBlock).toEqual(17634)
   })
 
   it(
@@ -112,7 +112,7 @@ testWithAnvilL2('EpochManagerWrapper', (providerOwner) => {
       const accounts = await kit.connection.getAccounts()
 
       const firstBlock = await epochManagerWrapper.getFirstBlockAtEpoch(currentEpochNumber)
-      expect(firstBlock).toBeGreaterThan(0)
+      expect(firstBlock).toEqual(300)
       await expect(epochManagerWrapper.getLastBlockAtEpoch(currentEpochNumber)).rejects.toThrow(
         'Epoch not finished yet'
       )
@@ -198,7 +198,7 @@ testWithAnvilL2('EpochManagerWrapper', (providerOwner) => {
     await activateValidators()
 
     const epochAfterFirstProcess = await epochManagerWrapper.getCurrentEpochNumber()
-    expect(epochAfterFirstProcess).toBeGreaterThanOrEqual(5)
+    expect(epochAfterFirstProcess).toEqual(5)
 
     for (let i = 0; i < EPOCH_COUNT; i++) {
       await timeTravel(epochDuration + 1, providerOwner)
