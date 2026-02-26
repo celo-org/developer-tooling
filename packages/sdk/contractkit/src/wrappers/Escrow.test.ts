@@ -3,10 +3,10 @@ import { StableToken, StrongAddress } from '@celo/base'
 import { asCoreContractsOwner, setBalance, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { deployAttestationsContract } from '@celo/dev-utils/contracts'
 import { privateKeyToAddress } from '@celo/utils/lib/address'
-import { soliditySha3 } from '@celo/utils/lib/solidity'
+import { soliditySha3 } from '@celo/utils/lib/solidity' // uses viem internally; needed for getParsedSignatureOfAddress callback
 import BigNumber from 'bignumber.js'
 import { randomBytes } from 'crypto'
-import { parseEther } from 'viem'
+import { encodePacked, keccak256, parseEther } from 'viem'
 import { REGISTRY_CONTRACT_ADDRESS } from '../address-registry'
 import { newKitFromProvider } from '../kit'
 import { topUpWithToken } from '../test-utils/utils'
@@ -75,10 +75,9 @@ testWithAnvilL2('Escrow Wrapper', (providerOwner) => {
     kit.defaultAccount = accounts[0]
 
     const randomKey1 = '0x' + randomBytes(32).toString('hex')
-    identifier = soliditySha3({
-      t: 'bytes32',
-      v: privateKeyToAddress(randomKey1),
-    }) as string
+    identifier = keccak256(
+      encodePacked(['bytes32'], [privateKeyToAddress(randomKey1) as `0x${string}`])
+    ) as string
   })
 
   it('transfer with trusted issuers should set TrustedIssuersPerPayment', async () => {
