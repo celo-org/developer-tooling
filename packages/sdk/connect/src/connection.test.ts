@@ -174,8 +174,8 @@ describe('Connection', () => {
       ]
       const contract = connection.createContract(abiWithConstructor)
       const deployObj = contract.deploy({
-        data: '0x6080604052',
-        arguments: [1000],
+        data: '0x6080604052', // minimal EVM bytecode prefix (PUSH1 0x80 PUSH1 0x40 MSTORE)
+        arguments: [1000], // initialSupply constructor arg (see abiWithConstructor above)
       })
       expect(deployObj).toBeDefined()
       expect(typeof deployObj.encodeABI).toBe('function')
