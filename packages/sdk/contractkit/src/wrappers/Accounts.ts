@@ -1,11 +1,6 @@
 import { StrongAddress } from '@celo/base'
 import { NativeSigner, Signature, Signer } from '@celo/base/lib/signatureUtils'
-import {
-  Address,
-  CeloTransactionObject,
-  CeloTxObject,
-  toTransactionObject,
-} from '@celo/connect'
+import { Address, CeloTransactionObject, CeloTxObject, toTransactionObject } from '@celo/connect'
 import {
   LocalSigner,
   hashMessageWithPrefix,

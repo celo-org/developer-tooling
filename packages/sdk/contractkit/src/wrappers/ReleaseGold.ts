@@ -1,12 +1,7 @@
 import { concurrentMap } from '@celo/base'
 import { StrongAddress, findAddressIndex } from '@celo/base/lib/address'
 import { Signature } from '@celo/base/lib/signatureUtils'
-import {
-  Address,
-  CeloTransactionObject,
-  CeloTxObject,
-  toTransactionObject,
-} from '@celo/connect'
+import { Address, CeloTransactionObject, CeloTxObject, toTransactionObject } from '@celo/connect'
 import { soliditySha3 } from '@celo/utils/lib/solidity'
 import { hashMessageWithPrefix, signedMessageToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'

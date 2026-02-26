@@ -13,8 +13,6 @@ import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
 import { ContractVersion } from '../versions'
 
-
-
 /** Represents web3 native contract Method */
 type Method<I extends any[], O> = (...args: I) => CeloTxObject<O>
 

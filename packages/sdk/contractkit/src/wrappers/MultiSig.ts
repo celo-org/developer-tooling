@@ -1,9 +1,4 @@
-import {
-  Address,
-  CeloTransactionObject,
-  CeloTxObject,
-  toTransactionObject,
-} from '@celo/connect'
+import { Address, CeloTransactionObject, CeloTxObject, toTransactionObject } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import {
   BaseWrapper,
