@@ -36,13 +36,14 @@ export function coerceValueForType(type: string, value: unknown): unknown {
     }
     // Buffer or Uint8Array
     if (Buffer.isBuffer(value) || value instanceof Uint8Array) {
-      const hex = `0x${Buffer.from(value).toString('hex')}` as `0x${string}`
-      const actualBytes = Buffer.from(value).length
-      if (actualBytes < expectedBytes) {
+      const buffer = Buffer.from(value)
+      const hex = `0x${buffer.toString('hex')}` as `0x${string}`
+      if (buffer.length < expectedBytes) {
         return pad(hex, { size: expectedBytes, dir: 'right' })
       }
       return hex
     }
+    throw new Error(`Unsupported value type for ${type}: ${typeof value}`)
   }
   return value
 }
