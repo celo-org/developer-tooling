@@ -9,7 +9,12 @@ import { AttestationsWrapper } from './Attestations'
 
 testWithAnvilL2('AttestationsWrapper', (providerOwner) => {
   const PHONE_NUMBER = '+15555555555'
-  const IDENTIFIER = getIdentifierHash((input) => keccak256(toBytes(input)), PHONE_NUMBER, IdentifierPrefix.PHONE_NUMBER, 'pepper')
+  const IDENTIFIER = getIdentifierHash(
+    (input) => keccak256(toBytes(input)),
+    PHONE_NUMBER,
+    IdentifierPrefix.PHONE_NUMBER,
+    'pepper'
+  )
 
   const kit = newKitFromProvider(providerOwner.currentProvider)
   let accounts: StrongAddress[] = []

@@ -1,4 +1,10 @@
-import { encodeAbiParameters, type AbiParameter, encodeFunctionData, toEventHash, toFunctionHash } from 'viem'
+import {
+  encodeAbiParameters,
+  type AbiParameter,
+  encodeFunctionData,
+  toEventHash,
+  toFunctionHash,
+} from 'viem'
 import { AbiInput, AbiItem } from './abi-types'
 import { coerceArgsForAbi, coerceValueForType, viemAbiCoder } from './viem-abi-coder'
 import { createPromiEvent } from './promi-event'
@@ -163,8 +169,12 @@ export function createContractConstructor(connection: Connection) {
       )
       let data = params.data
       if (constructorAbi && params.arguments && params.arguments.length > 0) {
-        const abiParams = constructorAbi.inputs!.map((i: AbiInput) => ({ type: i.type }) as AbiParameter)
-        const coerced = params.arguments.map((param, i) => coerceValueForType(constructorAbi.inputs![i].type, param))
+        const abiParams = constructorAbi.inputs!.map(
+          (i: AbiInput) => ({ type: i.type }) as AbiParameter
+        )
+        const coerced = params.arguments.map((param, i) =>
+          coerceValueForType(constructorAbi.inputs![i].type, param)
+        )
         // eslint-disable-next-line @typescript-eslint/no-explicit-any -- viem's encodeAbiParameters has deeply recursive types incompatible with unknown
         const encodedArgs = encodeAbiParameters(abiParams, coerced as any).slice(2)
         data = data + encodedArgs
