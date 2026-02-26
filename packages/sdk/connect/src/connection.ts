@@ -42,10 +42,8 @@ import { TxParamsNormalizer } from './utils/tx-params-normalizer'
 import { TransactionResult, toTxResult } from './utils/tx-result'
 import { ReadOnlyWallet } from './wallet'
 
-// Re-export extracted modules for backward compatibility
-export { viemAbiCoder, isPresent } from './abi-coder'
-export { createContractConstructor } from './rpc-contract'
-export { createPromiEvent, pollForReceiptHelper, decodeReceiptEvents } from './promi-event'
+// Convenience re-export for consumers that import from @celo/connect
+export { viemAbiCoder } from './abi-coder'
 
 const debugGasEstimation = debugFactory('connection:gas-estimation')
 
