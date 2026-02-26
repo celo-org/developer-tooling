@@ -92,8 +92,7 @@ testWithAnvilL2('validator:deregister', (provider) => {
   })
 
   afterEach(() => {
-    jest.resetAllMocks()
-    jest.clearAllMocks()
+    jest.restoreAllMocks()
   })
 
   it(
@@ -118,7 +117,7 @@ testWithAnvilL2('validator:deregister', (provider) => {
       // time travel in node land
       const jestTime = lastRemovedFromGroupTimestamp * 1000
       const futureTime = jestTime + duration.multipliedBy(2000).toNumber()
-      global.Date.now = jest.fn(() => futureTime)
+      jest.spyOn(Date, 'now').mockReturnValue(futureTime)
 
       const logMock = jest.spyOn(console, 'log')
       // this ensures that any spy that were allready attached to console.log from previous calls to spyOn are cleared
@@ -168,8 +167,6 @@ testWithAnvilL2('validator:deregister', (provider) => {
               ]
           `)
       expect(validatorContract.isValidator(account)).resolves.toEqual(false)
-      // @ts-expect-error
-      global.Date.now.mockReset()
     },
     EXTRA_LONG_TIMEOUT_MS
   )
@@ -207,7 +204,7 @@ testWithAnvilL2('validator:deregister', (provider) => {
             "   ✘  Account isn't a member of a validator group ",
           ],
           [
-            "   ✘  Enough time has passed since the account was removed from a validator group? ",
+            "   ✔  Enough time has passed since the account was removed from a validator group? ",
           ],
         ]
       `)
@@ -251,7 +248,7 @@ testWithAnvilL2('validator:deregister', (provider) => {
       // time travel in node land
       const jestTime = lastRemovedFromGroupTimestamp * 1000
       const futureTime = jestTime + duration.multipliedBy(2000).toNumber()
-      global.Date.now = jest.fn(() => futureTime)
+      jest.spyOn(Date, 'now').mockReturnValue(futureTime)
 
       const logMock = jest.spyOn(console, 'log')
       logMock.mockClear()
