@@ -449,24 +449,26 @@ export class Connection {
     }
   }
 
+  private defaultGasEstimator = async (tx: CeloTx): Promise<number> => {
+    const response = await this.rpcCaller.call('eth_estimateGas', [tx])
+    return parseInt(response.result, 16)
+  }
+
+  private defaultCaller = async (tx: CeloTx): Promise<string> => {
+    const response = await this.rpcCaller.call('eth_call', [
+      { data: tx.data, to: tx.to, from: tx.from },
+      'latest',
+    ])
+    return response.result as string
+  }
+
   estimateGas = async (
     tx: CeloTx,
     gasEstimator?: (tx: CeloTx) => Promise<number>,
     caller?: (tx: CeloTx) => Promise<string>
   ): Promise<number> => {
-    const defaultGasEstimator = async (txToEstimate: CeloTx) => {
-      const response = await this.rpcCaller.call('eth_estimateGas', [txToEstimate])
-      return parseInt(response.result, 16)
-    }
-    const defaultCaller = async (txToCall: CeloTx) => {
-      const response = await this.rpcCaller.call('eth_call', [
-        { data: txToCall.data, to: txToCall.to, from: txToCall.from },
-        'latest',
-      ])
-      return response.result as string
-    }
-    const estimator = gasEstimator ?? defaultGasEstimator
-    const callFn = caller ?? defaultCaller
+    const estimator = gasEstimator ?? this.defaultGasEstimator
+    const callFn = caller ?? this.defaultCaller
 
     try {
       const gas = await estimator({ ...tx })
