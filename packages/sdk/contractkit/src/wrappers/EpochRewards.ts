@@ -1,6 +1,5 @@
 import { epochRewardsABI } from '@celo/abis'
 import { fromFixed } from '@celo/utils/lib/fixidity'
-import { createViemTxObject } from '@celo/connect'
 import { BaseWrapper, proxyCall, valueToBigNumber } from './BaseWrapper'
 
 const parseFixidity = (v: string) => fromFixed(valueToBigNumber(v))
@@ -35,24 +34,24 @@ export class EpochRewardsWrapper extends BaseWrapper<typeof epochRewardsABI> {
     parseFixidity
   )
 
+  private _getCarbonOffsettingFraction = proxyCall(
+    this.contract,
+    'getCarbonOffsettingFraction',
+    undefined,
+    parseFixidity
+  )
+
+  private _getCarbonOffsettingPartner: (...args: any[]) => Promise<string> = proxyCall(
+    this.contract,
+    'carbonOffsettingPartner'
+  )
+
   getCarbonOffsetting = async (): Promise<{
     factor: import('bignumber.js').default
     partner: string
   }> => {
-    const factor = parseFixidity(
-      await createViemTxObject<string>(
-        this.connection,
-        this.contract,
-        'getCarbonOffsettingFraction',
-        []
-      ).call()
-    )
-    const partner: string = await createViemTxObject<string>(
-      this.connection,
-      this.contract,
-      'carbonOffsettingPartner',
-      []
-    ).call()
+    const factor = await this._getCarbonOffsettingFraction()
+    const partner: string = await this._getCarbonOffsettingPartner()
     return {
       factor,
       partner,

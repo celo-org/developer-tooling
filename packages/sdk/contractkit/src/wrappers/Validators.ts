@@ -2,13 +2,7 @@ import { validatorsABI } from '@celo/abis'
 import { eqAddress, findAddressIndex, NULL_ADDRESS } from '@celo/base/lib/address'
 import { concurrentMap } from '@celo/base/lib/async'
 import { zeroRange, zip } from '@celo/base/lib/collections'
-import {
-  Address,
-  CeloTransactionObject,
-  createViemTxObject,
-  EventLog,
-  toTransactionObject,
-} from '@celo/connect'
+import { Address, CeloTransactionObject, EventLog } from '@celo/connect'
 import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
 import {
@@ -84,6 +78,114 @@ export interface MembershipHistoryExtraData {
  */
 // TODO(asa): Support validator signers
 export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validatorsABI> {
+  // --- private proxy fields for typed contract calls ---
+  private _getValidatorLockedGoldRequirements = proxyCall(
+    this.contract,
+    'getValidatorLockedGoldRequirements',
+    undefined,
+    (res: { 0: string; 1: string }): LockedGoldRequirements => ({
+      value: valueToBigNumber(res[0]),
+      duration: valueToBigNumber(res[1]),
+    })
+  )
+
+  private _getGroupLockedGoldRequirements = proxyCall(
+    this.contract,
+    'getGroupLockedGoldRequirements',
+    undefined,
+    (res: { 0: string; 1: string }): LockedGoldRequirements => ({
+      value: valueToBigNumber(res[0]),
+      duration: valueToBigNumber(res[1]),
+    })
+  )
+
+  private _maxGroupSize = proxyCall(this.contract, 'maxGroupSize', undefined, valueToBigNumber)
+
+  private _membershipHistoryLength = proxyCall(
+    this.contract,
+    'membershipHistoryLength',
+    undefined,
+    valueToBigNumber
+  )
+
+  private _getValidator: (
+    ...args: any[]
+  ) => Promise<{ ecdsaPublicKey: string; affiliation: string; score: string; signer: Address }> =
+    proxyCall(this.contract, 'getValidator')
+
+  private _getValidatorsGroup: (...args: any[]) => Promise<Address> = proxyCall(
+    this.contract,
+    'getValidatorsGroup'
+  )
+
+  private _getMembershipInLastEpoch: (...args: any[]) => Promise<Address> = proxyCall(
+    this.contract,
+    'getMembershipInLastEpoch'
+  )
+
+  private _getValidatorGroup: (...args: any[]) => Promise<{
+    0: Address[]
+    1: string
+    2: string
+    3: string
+    4: string[]
+    5: string
+    6: string
+  }> = proxyCall(this.contract, 'getValidatorGroup')
+
+  private _getRegisteredValidators: (...args: any[]) => Promise<Address[]> = proxyCall(
+    this.contract,
+    'getRegisteredValidators'
+  )
+
+  private _numberValidatorsInCurrentSet = proxyCall(
+    this.contract,
+    'numberValidatorsInCurrentSet',
+    undefined,
+    valueToInt
+  )
+
+  private _validatorSignerAddressFromCurrentSet: (...args: any[]) => Promise<Address> = proxyCall(
+    this.contract,
+    'validatorSignerAddressFromCurrentSet'
+  )
+
+  private _deregisterValidator: (...args: any[]) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract,
+    'deregisterValidator'
+  )
+
+  private _registerValidatorGroup: (...args: any[]) => CeloTransactionObject<boolean> = proxySend(
+    this.connection,
+    this.contract,
+    'registerValidatorGroup'
+  )
+
+  private _deregisterValidatorGroup: (...args: any[]) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract,
+    'deregisterValidatorGroup'
+  )
+
+  private _addFirstMember: (...args: any[]) => CeloTransactionObject<boolean> = proxySend(
+    this.connection,
+    this.contract,
+    'addFirstMember'
+  )
+
+  private _addMember: (...args: any[]) => CeloTransactionObject<boolean> = proxySend(
+    this.connection,
+    this.contract,
+    'addMember'
+  )
+
+  private _reorderMember: (...args: any[]) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract,
+    'reorderMember'
+  )
+
   /**
    * Queues an update to a validator group's commission.
    * @param commission Fixidity representation of the commission this group receives on epoch
@@ -110,16 +212,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
    * @returns The Locked Gold requirements for validators.
    */
   async getValidatorLockedGoldRequirements(): Promise<LockedGoldRequirements> {
-    const res = await createViemTxObject<{ 0: string; 1: string }>(
-      this.connection,
-      this.contract,
-      'getValidatorLockedGoldRequirements',
-      []
-    ).call()
-    return {
-      value: valueToBigNumber(res[0]),
-      duration: valueToBigNumber(res[1]),
-    }
+    return this._getValidatorLockedGoldRequirements()
   }
 
   /**
@@ -127,16 +220,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
    * @returns The Locked Gold requirements for validator groups.
    */
   async getGroupLockedGoldRequirements(): Promise<LockedGoldRequirements> {
-    const res = await createViemTxObject<{ 0: string; 1: string }>(
-      this.connection,
-      this.contract,
-      'getGroupLockedGoldRequirements',
-      []
-    ).call()
-    return {
-      value: valueToBigNumber(res[0]),
-      duration: valueToBigNumber(res[1]),
-    }
+    return this._getGroupLockedGoldRequirements()
   }
 
   /**
@@ -187,13 +271,8 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
     const res = await Promise.all([
       this.getValidatorLockedGoldRequirements(),
       this.getGroupLockedGoldRequirements(),
-      createViemTxObject<string>(this.connection, this.contract, 'maxGroupSize', []).call(),
-      createViemTxObject<string>(
-        this.connection,
-        this.contract,
-        'membershipHistoryLength',
-        []
-      ).call(),
+      this._maxGroupSize(),
+      this._membershipHistoryLength(),
       this.getSlashingMultiplierResetPeriod(),
       this.getCommissionUpdateDelay(),
       this.getDowntimeGracePeriod(),
@@ -201,8 +280,8 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
     return {
       validatorLockedGoldRequirements: res[0],
       groupLockedGoldRequirements: res[1],
-      maxGroupSize: valueToBigNumber(res[2]),
-      membershipHistoryLength: valueToBigNumber(res[3]),
+      maxGroupSize: res[2],
+      membershipHistoryLength: res[3],
       slashingMultiplierResetPeriod: res[4],
       commissionUpdateDelay: res[5],
       downtimeGracePeriod: res[6],
@@ -299,19 +378,14 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
   /** Get Validator information */
   async getValidator(address: Address, blockNumber?: number): Promise<Validator> {
     // @ts-ignore: Expected 0-1 arguments, but got 2
-    const res = await createViemTxObject<{
-      ecdsaPublicKey: string
-      affiliation: string
-      score: string
-      signer: Address
-    }>(this.connection, this.contract, 'getValidator', [address]).call()
+    const res = await this._getValidator(address)
     const accounts = await this.contracts.getAccounts()
     const name = (await accounts.getName(address, blockNumber)) || ''
 
     return {
       name,
       address,
-      ecdsaPublicKey: res.ecdsaPublicKey as unknown as string,
+      ecdsaPublicKey: res.ecdsaPublicKey,
       affiliation: res.affiliation,
       score: fromFixed(new BigNumber(res.score)),
       signer: res.signer,
@@ -319,15 +393,11 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
   }
 
   async getValidatorsGroup(address: Address): Promise<Address> {
-    return createViemTxObject<Address>(this.connection, this.contract, 'getValidatorsGroup', [
-      address,
-    ]).call()
+    return this._getValidatorsGroup(address)
   }
 
   async getMembershipInLastEpoch(address: Address): Promise<Address> {
-    return createViemTxObject<Address>(this.connection, this.contract, 'getMembershipInLastEpoch', [
-      address,
-    ]).call()
+    return this._getMembershipInLastEpoch(address)
   }
 
   async getValidatorFromSigner(address: Address, blockNumber?: number): Promise<Validator> {
@@ -353,15 +423,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
     blockNumber?: number
   ): Promise<ValidatorGroup> {
     // @ts-ignore: Expected 0-1 arguments, but got 2
-    const res = await createViemTxObject<{
-      0: Address[]
-      1: string
-      2: string
-      3: string
-      4: string[]
-      5: string
-      6: string
-    }>(this.connection, this.contract, 'getValidatorGroup', [address]).call()
+    const res = await this._getValidatorGroup(address)
     const accounts = await this.contracts.getAccounts()
     const name = (await accounts.getName(address, blockNumber)) || ''
     let affiliates: Validator[] = []
@@ -430,12 +492,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
   /** Get list of registered validator addresses */
   async getRegisteredValidatorsAddresses(_blockNumber?: number): Promise<Address[]> {
     // @ts-ignore: Expected 0-1 arguments, but got 2
-    return createViemTxObject<Address[]>(
-      this.connection,
-      this.contract,
-      'getRegisteredValidators',
-      []
-    ).call()
+    return this._getRegisteredValidators()
   }
 
   /** Get list of registered validator group addresses */
@@ -494,10 +551,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
     if (idx < 0) {
       throw new Error(`${validatorAddress} is not a registered validator`)
     }
-    return toTransactionObject(
-      this.connection,
-      createViemTxObject(this.connection, this.contract, 'deregisterValidator', [idx])
-    )
+    return this._deregisterValidator(idx)
   }
 
   /**
@@ -508,12 +562,9 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
    * @param commission the commission this group receives on epoch payments made to its members.
    */
   async registerValidatorGroup(commission: BigNumber): Promise<CeloTransactionObject<boolean>> {
-    return toTransactionObject(
-      this.connection,
-      createViemTxObject(this.connection, this.contract, 'registerValidatorGroup', [
-        toFixed(commission).toFixed(),
-      ])
-    )
+    return this._registerValidatorGroup(
+      toFixed(commission).toFixed()
+    ) as CeloTransactionObject<boolean>
   }
 
   /**
@@ -529,10 +580,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
     if (idx < 0) {
       throw new Error(`${validatorGroupAddress} is not a registered validator`)
     }
-    return toTransactionObject(
-      this.connection,
-      createViemTxObject(this.connection, this.contract, 'deregisterValidatorGroup', [idx])
-    )
+    return this._deregisterValidatorGroup(idx)
   }
 
   /**
@@ -586,19 +634,9 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
       const voteWeight = await election.getTotalVotesForGroup(group)
       const { lesser, greater } = await election.findLesserAndGreaterAfterVote(group, voteWeight)
 
-      return toTransactionObject(
-        this.connection,
-        createViemTxObject(this.connection, this.contract, 'addFirstMember', [
-          validator,
-          lesser,
-          greater,
-        ])
-      )
+      return this._addFirstMember(validator, lesser, greater) as CeloTransactionObject<boolean>
     } else {
-      return toTransactionObject(
-        this.connection,
-        createViemTxObject(this.connection, this.contract, 'addMember', [validator])
-      )
+      return this._addMember(validator) as CeloTransactionObject<boolean>
     }
   }
 
@@ -648,14 +686,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
       newIndex === group.members.length - 1 ? NULL_ADDRESS : group.members[newIndex + 1]
     const prevMember = newIndex === 0 ? NULL_ADDRESS : group.members[newIndex - 1]
 
-    return toTransactionObject(
-      this.connection,
-      createViemTxObject(this.connection, this.contract, 'reorderMember', [
-        validator,
-        nextMember,
-        prevMember,
-      ])
-    )
+    return this._reorderMember(validator, nextMember, prevMember)
   }
 
   async getEpochSizeNumber(): Promise<number> {
@@ -713,22 +744,8 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
    * Returns the current set of validator signer addresses
    */
   async currentSignerSet(): Promise<Address[]> {
-    const n = valueToInt(
-      await createViemTxObject<string>(
-        this.connection,
-        this.contract,
-        'numberValidatorsInCurrentSet',
-        []
-      ).call()
-    )
-    return concurrentMap(5, zeroRange(n), (idx) =>
-      createViemTxObject<Address>(
-        this.connection,
-        this.contract,
-        'validatorSignerAddressFromCurrentSet',
-        [idx]
-      ).call()
-    )
+    const n = await this._numberValidatorsInCurrentSet()
+    return concurrentMap(5, zeroRange(n), (idx) => this._validatorSignerAddressFromCurrentSet(idx))
   }
 
   /**

@@ -5,7 +5,7 @@ import {
   Connection,
   EventLog,
   PastEventOptions,
-  createViemTxObject,
+  createViemTxObjectInternal,
   toTransactionObject,
   type ViemContract,
 } from '@celo/connect'
@@ -338,18 +338,19 @@ export function proxyCall<
 ): (...args: InputArgs) => Promise<Output>
 
 // Untyped overloads (backward compat): accept any string function name
+// Matches only ViemContract with default mutable AbiItem[] type parameter
 export function proxyCall<InputArgs extends any[], Output>(
-  contract: ViemContract<readonly unknown[]>,
+  contract: ViemContract,
   functionName: string
 ): (...args: InputArgs) => Promise<Output>
 export function proxyCall<InputArgs extends any[], PreParsedOutput, Output>(
-  contract: ViemContract<readonly unknown[]>,
+  contract: ViemContract,
   functionName: string,
   parseInputArgs: undefined,
   parseOutput: (o: PreParsedOutput) => Output
 ): (...args: InputArgs) => Promise<Output>
 export function proxyCall<InputArgs extends any[], ParsedInputArgs extends any[], Output>(
-  contract: ViemContract<readonly unknown[]>,
+  contract: ViemContract,
   functionName: string,
   parseInputArgs: (...args: InputArgs) => ParsedInputArgs
 ): (...args: InputArgs) => Promise<Output>
@@ -359,7 +360,7 @@ export function proxyCall<
   PreParsedOutput,
   Output,
 >(
-  contract: ViemContract<readonly unknown[]>,
+  contract: ViemContract,
   functionName: string,
   parseInputArgs: ((...args: InputArgs) => ParsedInputArgs) | undefined,
   parseOutput: (o: PreParsedOutput) => Output
@@ -375,18 +376,7 @@ export function proxyCall<
   parseInputArgs?: ((...args: InputArgs) => ParsedInputArgs) | undefined,
   parseOutput?: ((o: PreParsedOutput) => Output) | undefined
 ): (...args: InputArgs) => Promise<Output | PreParsedOutput> {
-  return async (...args: InputArgs) => {
-    const resolvedArgs = parseInputArgs ? parseInputArgs(...args) : args
-    const txo = createViemTxObject<PreParsedOutput>(
-      // connection not needed for call, but type requires it — pass null and use client.call directly
-      undefined as any,
-      contract,
-      functionName,
-      resolvedArgs as unknown[]
-    )
-    const result = await txo.call()
-    return parseOutput ? parseOutput(result) : result
-  }
+  return proxyCallGenericImpl(contract, functionName, parseInputArgs, parseOutput)
 }
 
 /**
@@ -425,24 +415,141 @@ export function proxySend<
 // Untyped overloads (backward compat)
 export function proxySend<InputArgs extends any[], Output>(
   connection: Connection,
-  contract: ViemContract<readonly unknown[]>,
+  contract: ViemContract,
   functionName: string
 ): (...args: InputArgs) => CeloTransactionObject<Output>
 export function proxySend<InputArgs extends any[], ParsedInputArgs extends any[], Output>(
+  connection: Connection,
+  contract: ViemContract,
+  functionName: string,
+  parseInputArgs: (...args: InputArgs) => ParsedInputArgs
+): (...args: InputArgs) => CeloTransactionObject<Output>
+export function proxySend<InputArgs extends any[], ParsedInputArgs extends any[]>(
+  connection: Connection,
+  contract: ViemContract<readonly unknown[]>,
+  functionName: string,
+  parseInputArgs?: (...args: InputArgs) => ParsedInputArgs
+): (...args: InputArgs) => CeloTransactionObject<unknown> {
+  return proxySendGenericImpl(connection, contract, functionName, parseInputArgs)
+}
+
+// ---------------------------------------------------------------------------
+// Generic variants: non-overloaded, for generic intermediate classes.
+// Accept ViemContract<readonly unknown[]> — typed contracts pass via covariance.
+// These are SEPARATE functions (not overloads), so typed proxyCall/proxySend
+// can't fall through to them. Explicit usage in generic classes only.
+// ---------------------------------------------------------------------------
+
+/**
+ * Like proxyCall, but without compile-time function name checking.
+ * Use ONLY in generic intermediate classes (Erc20Wrapper, CeloTokenWrapper)
+ * where TAbi is an unresolved generic parameter.
+ * Concrete wrapper classes MUST use proxyCall() for type-safe function names.
+ * @internal
+ */
+export function proxyCallGeneric<InputArgs extends any[], Output>(
+  contract: ViemContract<readonly unknown[]>,
+  functionName: string
+): (...args: InputArgs) => Promise<Output>
+export function proxyCallGeneric<InputArgs extends any[], PreParsedOutput, Output>(
+  contract: ViemContract<readonly unknown[]>,
+  functionName: string,
+  parseInputArgs: undefined,
+  parseOutput: (o: PreParsedOutput) => Output
+): (...args: InputArgs) => Promise<Output>
+export function proxyCallGeneric<InputArgs extends any[], ParsedInputArgs extends any[], Output>(
+  contract: ViemContract<readonly unknown[]>,
+  functionName: string,
+  parseInputArgs: (...args: InputArgs) => ParsedInputArgs
+): (...args: InputArgs) => Promise<Output>
+export function proxyCallGeneric<
+  InputArgs extends any[],
+  ParsedInputArgs extends any[],
+  PreParsedOutput,
+  Output,
+>(
+  contract: ViemContract<readonly unknown[]>,
+  functionName: string,
+  parseInputArgs: ((...args: InputArgs) => ParsedInputArgs) | undefined,
+  parseOutput: (o: PreParsedOutput) => Output
+): (...args: InputArgs) => Promise<Output>
+export function proxyCallGeneric<
+  InputArgs extends any[],
+  ParsedInputArgs extends any[],
+  PreParsedOutput,
+  Output,
+>(
+  contract: ViemContract<readonly unknown[]>,
+  functionName: string,
+  parseInputArgs?: ((...args: InputArgs) => ParsedInputArgs) | undefined,
+  parseOutput?: ((o: PreParsedOutput) => Output) | undefined
+): (...args: InputArgs) => Promise<Output | PreParsedOutput> {
+  return proxyCallGenericImpl(contract, functionName, parseInputArgs, parseOutput)
+}
+
+/**
+ * Like proxySend, but without compile-time function name checking.
+ * Use ONLY in generic intermediate classes.
+ * @internal
+ */
+export function proxySendGeneric<InputArgs extends any[], Output>(
+  connection: Connection,
+  contract: ViemContract<readonly unknown[]>,
+  functionName: string
+): (...args: InputArgs) => CeloTransactionObject<Output>
+export function proxySendGeneric<InputArgs extends any[], ParsedInputArgs extends any[], Output>(
   connection: Connection,
   contract: ViemContract<readonly unknown[]>,
   functionName: string,
   parseInputArgs: (...args: InputArgs) => ParsedInputArgs
 ): (...args: InputArgs) => CeloTransactionObject<Output>
-export function proxySend<InputArgs extends any[], ParsedInputArgs extends any[], Output>(
+export function proxySendGeneric<InputArgs extends any[], ParsedInputArgs extends any[]>(
   connection: Connection,
   contract: ViemContract<readonly unknown[]>,
   functionName: string,
   parseInputArgs?: (...args: InputArgs) => ParsedInputArgs
-): (...args: InputArgs) => CeloTransactionObject<Output> {
+): (...args: InputArgs) => CeloTransactionObject<unknown> {
+  return proxySendGenericImpl(connection, contract, functionName, parseInputArgs)
+}
+
+// ---------------------------------------------------------------------------
+// Shared implementation (private to this module)
+// ---------------------------------------------------------------------------
+
+function proxyCallGenericImpl<
+  InputArgs extends any[],
+  ParsedInputArgs extends any[],
+  PreParsedOutput,
+  Output,
+>(
+  contract: ViemContract<readonly unknown[]>,
+  functionName: string,
+  parseInputArgs?: ((...args: InputArgs) => ParsedInputArgs) | undefined,
+  parseOutput?: ((o: PreParsedOutput) => Output) | undefined
+): (...args: InputArgs) => Promise<Output | PreParsedOutput> {
+  return async (...args: InputArgs) => {
+    const resolvedArgs = parseInputArgs ? parseInputArgs(...args) : args
+    const txo = createViemTxObjectInternal(
+      // connection not needed for call — pass undefined, client.call is used directly
+      undefined!,
+      contract,
+      functionName,
+      resolvedArgs as unknown[]
+    )
+    const result = await txo.call()
+    return parseOutput ? parseOutput(result as PreParsedOutput) : (result as PreParsedOutput)
+  }
+}
+
+function proxySendGenericImpl<InputArgs extends any[], ParsedInputArgs extends any[]>(
+  connection: Connection,
+  contract: ViemContract<readonly unknown[]>,
+  functionName: string,
+  parseInputArgs?: (...args: InputArgs) => ParsedInputArgs
+): (...args: InputArgs) => CeloTransactionObject<unknown> {
   return (...args: InputArgs) => {
     const resolvedArgs = parseInputArgs ? parseInputArgs(...args) : args
-    const txo = createViemTxObject<Output>(
+    const txo = createViemTxObjectInternal(
       connection,
       contract,
       functionName,

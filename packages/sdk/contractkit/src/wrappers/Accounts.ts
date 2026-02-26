@@ -1,12 +1,7 @@
 import { accountsABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
 import { NativeSigner, Signature, Signer } from '@celo/base/lib/signatureUtils'
-import {
-  Address,
-  CeloTransactionObject,
-  createViemTxObject,
-  toTransactionObject,
-} from '@celo/connect'
+import { Address, CeloTransactionObject } from '@celo/connect'
 import {
   LocalSigner,
   hashMessageWithPrefix,
@@ -169,6 +164,12 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     }
   }
 
+  private _authorizeAttestationSigner: (...args: any[]) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract,
+    'authorizeAttestationSigner'
+  )
+
   /**
    * Authorize an attestation signing key on behalf of this account to another address.
    * @param signer The address of the signing key to authorize.
@@ -179,16 +180,20 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     signer: Address,
     proofOfSigningKeyPossession: Signature
   ): Promise<CeloTransactionObject<void>> {
-    return toTransactionObject(
-      this.connection,
-      createViemTxObject(this.connection, this.contract, 'authorizeAttestationSigner', [
-        signer,
-        proofOfSigningKeyPossession.v,
-        proofOfSigningKeyPossession.r,
-        proofOfSigningKeyPossession.s,
-      ])
+    return this._authorizeAttestationSigner(
+      signer,
+      proofOfSigningKeyPossession.v,
+      proofOfSigningKeyPossession.r,
+      proofOfSigningKeyPossession.s
     )
   }
+
+  private _authorizeVoteSigner: (...args: any[]) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract,
+    'authorizeVoteSigner'
+  )
+
   /**
    * Authorizes an address to sign votes on behalf of the account.
    * @param signer The address of the vote signing key to authorize.
@@ -199,16 +204,22 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     signer: Address,
     proofOfSigningKeyPossession: Signature
   ): Promise<CeloTransactionObject<void>> {
-    return toTransactionObject(
-      this.connection,
-      createViemTxObject(this.connection, this.contract, 'authorizeVoteSigner', [
-        signer,
-        proofOfSigningKeyPossession.v,
-        proofOfSigningKeyPossession.r,
-        proofOfSigningKeyPossession.s,
-      ])
+    return this._authorizeVoteSigner(
+      signer,
+      proofOfSigningKeyPossession.v,
+      proofOfSigningKeyPossession.r,
+      proofOfSigningKeyPossession.s
     )
   }
+
+  private _authorizeValidatorSignerWithPublicKey: (...args: any[]) => CeloTransactionObject<void> =
+    proxySend(this.connection, this.contract, 'authorizeValidatorSignerWithPublicKey')
+
+  private _authorizeValidatorSigner: (...args: any[]) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract,
+    'authorizeValidatorSigner'
+  )
 
   /**
    * Authorizes an address to sign consensus messages on behalf of the account.
@@ -234,30 +245,19 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
         proofOfSigningKeyPossession.r,
         proofOfSigningKeyPossession.s
       )
-      return toTransactionObject(
-        this.connection,
-        createViemTxObject(
-          this.connection,
-          this.contract,
-          'authorizeValidatorSignerWithPublicKey',
-          [
-            signer,
-            proofOfSigningKeyPossession.v,
-            proofOfSigningKeyPossession.r,
-            proofOfSigningKeyPossession.s,
-            stringToSolidityBytes(pubKey),
-          ]
-        )
+      return this._authorizeValidatorSignerWithPublicKey(
+        signer,
+        proofOfSigningKeyPossession.v,
+        proofOfSigningKeyPossession.r,
+        proofOfSigningKeyPossession.s,
+        stringToSolidityBytes(pubKey)
       )
     } else {
-      return toTransactionObject(
-        this.connection,
-        createViemTxObject(this.connection, this.contract, 'authorizeValidatorSigner', [
-          signer,
-          proofOfSigningKeyPossession.v,
-          proofOfSigningKeyPossession.r,
-          proofOfSigningKeyPossession.s,
-        ])
+      return this._authorizeValidatorSigner(
+        signer,
+        proofOfSigningKeyPossession.v,
+        proofOfSigningKeyPossession.r,
+        proofOfSigningKeyPossession.s
       )
     }
   }
@@ -291,17 +291,17 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
       proofOfSigningKeyPossession.r,
       proofOfSigningKeyPossession.s
     )
-    return toTransactionObject(
-      this.connection,
-      createViemTxObject(this.connection, this.contract, 'authorizeValidatorSignerWithPublicKey', [
-        signer,
-        proofOfSigningKeyPossession.v,
-        proofOfSigningKeyPossession.r,
-        proofOfSigningKeyPossession.s,
-        stringToSolidityBytes(pubKey),
-      ])
+    return this._authorizeValidatorSignerWithPublicKey(
+      signer,
+      proofOfSigningKeyPossession.v,
+      proofOfSigningKeyPossession.r,
+      proofOfSigningKeyPossession.s,
+      stringToSolidityBytes(pubKey)
     )
   }
+
+  private _authorizeSignerWithSignature: (...args: any[]) => CeloTransactionObject<void> =
+    proxySend(this.connection, this.contract, 'authorizeSignerWithSignature')
 
   async authorizeSigner(signer: Address, role: string): Promise<CeloTransactionObject<void>> {
     await this.onlyVersionOrGreater(this.RELEASE_4_VERSION)
@@ -322,55 +322,49 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     })
 
     const sig = await this.connection.signTypedData(signer, typedData)
-    return toTransactionObject(
-      this.connection,
-      createViemTxObject(this.connection, this.contract, 'authorizeSignerWithSignature', [
-        signer,
-        hashedRole,
-        sig.v,
-        sig.r,
-        sig.s,
-      ])
-    )
+    return this._authorizeSignerWithSignature(signer, hashedRole, sig.v, sig.r, sig.s)
   }
+
+  private _authorizeSigner: (...args: any[]) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract,
+    'authorizeSigner'
+  )
 
   async startSignerAuthorization(
     signer: Address,
     role: string
   ): Promise<CeloTransactionObject<void>> {
     await this.onlyVersionOrGreater(this.RELEASE_4_VERSION)
-    return toTransactionObject(
-      this.connection,
-      createViemTxObject(this.connection, this.contract, 'authorizeSigner', [
-        signer,
-        this.keccak256(role),
-      ])
-    )
+    return this._authorizeSigner(signer, this.keccak256(role))
   }
+
+  private _completeSignerAuthorization: (...args: any[]) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract,
+    'completeSignerAuthorization'
+  )
 
   async completeSignerAuthorization(
     account: Address,
     role: string
   ): Promise<CeloTransactionObject<void>> {
     await this.onlyVersionOrGreater(this.RELEASE_4_VERSION)
-    return toTransactionObject(
-      this.connection,
-      createViemTxObject(this.connection, this.contract, 'completeSignerAuthorization', [
-        account,
-        this.keccak256(role),
-      ])
-    )
+    return this._completeSignerAuthorization(account, this.keccak256(role))
   }
+
+  private _removeAttestationSigner: (...args: any[]) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract,
+    'removeAttestationSigner'
+  )
 
   /**
    * Removes the currently authorized attestation signer for the account
    * @returns A CeloTransactionObject
    */
   async removeAttestationSigner(): Promise<CeloTransactionObject<void>> {
-    return toTransactionObject(
-      this.connection,
-      createViemTxObject<void>(this.connection, this.contract, 'removeAttestationSigner', [])
-    )
+    return this._removeAttestationSigner()
   }
 
   async generateProofOfKeyPossession(account: Address, signer: Address) {
@@ -390,9 +384,11 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
    * @param account Account
    * @param blockNumber Height of result, defaults to tip.
    */
+  private _getName = proxyCall(this.contract, 'getName')
+
   async getName(account: Address, _blockNumber?: number): Promise<string> {
     // @ts-ignore: Expected 0-1 arguments, but got 2
-    return createViemTxObject<string>(this.connection, this.contract, 'getName', [account]).call()
+    return this._getName(account)
   }
 
   /**
@@ -428,6 +424,12 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     'setAccountDataEncryptionKey'
   )
 
+  private _setAccount: (...args: any[]) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract,
+    'setAccount'
+  )
+
   /**
    * Convenience Setter for the dataEncryptionKey and wallet address for an account
    * @param name A string to set as the name of the account
@@ -442,29 +444,16 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     proofOfPossession: Signature | null = null
   ): CeloTransactionObject<void> {
     if (proofOfPossession) {
-      return toTransactionObject(
-        this.connection,
-        createViemTxObject(this.connection, this.contract, 'setAccount', [
-          name,
-          dataEncryptionKey,
-          walletAddress,
-          proofOfPossession.v,
-          proofOfPossession.r,
-          proofOfPossession.s,
-        ])
+      return this._setAccount(
+        name,
+        dataEncryptionKey,
+        walletAddress,
+        proofOfPossession.v,
+        proofOfPossession.r,
+        proofOfPossession.s
       )
     } else {
-      return toTransactionObject(
-        this.connection,
-        createViemTxObject(this.connection, this.contract, 'setAccount', [
-          name,
-          dataEncryptionKey,
-          walletAddress,
-          '0x0',
-          '0x0',
-          '0x0',
-        ])
-      )
+      return this._setAccount(name, dataEncryptionKey, walletAddress, '0x0', '0x0', '0x0')
     }
   }
 
@@ -520,6 +509,12 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     'getPaymentDelegation'
   )
 
+  private _setWalletAddress: (...args: any[]) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract,
+    'setWalletAddress'
+  )
+
   /**
    * Sets the wallet address for the account
    * @param address The address to set
@@ -529,25 +524,14 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     proofOfPossession: Signature | null = null
   ): CeloTransactionObject<void> {
     if (proofOfPossession) {
-      return toTransactionObject(
-        this.connection,
-        createViemTxObject(this.connection, this.contract, 'setWalletAddress', [
-          walletAddress,
-          proofOfPossession.v,
-          proofOfPossession.r,
-          proofOfPossession.s,
-        ])
+      return this._setWalletAddress(
+        walletAddress,
+        proofOfPossession.v,
+        proofOfPossession.r,
+        proofOfPossession.s
       )
     } else {
-      return toTransactionObject(
-        this.connection,
-        createViemTxObject(this.connection, this.contract, 'setWalletAddress', [
-          walletAddress,
-          '0x0',
-          '0x0',
-          '0x0',
-        ])
-      )
+      return this._setWalletAddress(walletAddress, '0x0', '0x0', '0x0')
     }
   }
 

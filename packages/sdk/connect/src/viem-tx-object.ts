@@ -8,38 +8,20 @@ import type { ViemContract } from './viem-contract'
 import { coerceArgsForAbi } from './viem-abi-coder'
 
 /**
- * Create a CeloTxObject from a viem-native contract + function name + args.
- * This replaces the contract.methods.foo(args) pattern with direct encodeFunctionData.
- *
- * Typed overload: when a `ViemContract<TAbi>` with a const-typed ABI is provided,
- * the function name and args are constrained at compile time.
+ * Internal implementation of createViemTxObject.
+ * Accepts the widest contract type (`ViemContract<readonly unknown[]>`) and string functionName.
+ * NOT part of the public API — used by proxyCallGeneric/proxySendGeneric and the
+ * overloaded createViemTxObject implementations.
+ * @internal
  */
-export function createViemTxObject<
-  TAbi extends Abi,
-  TFunctionName extends ContractFunctionName<TAbi>,
->(
-  connection: Connection,
-  contract: ViemContract<TAbi>,
-  functionName: TFunctionName,
-  args: ContractFunctionArgs<TAbi, 'nonpayable' | 'payable' | 'view' | 'pure', TFunctionName>
-): CeloTxObject<unknown>
-/**
- * Untyped fallback: accepts any string function name for backward compatibility.
- * Used by CLI, ProposalBuilder, and other dynamic callers.
- */
-export function createViemTxObject<O>(
-  connection: Connection,
-  contract: ViemContract<readonly unknown[]>,
-  functionName: string,
-  args: unknown[]
-): CeloTxObject<O>
-export function createViemTxObject(
+export function createViemTxObjectInternal(
   connection: Connection,
   contract: ViemContract<readonly unknown[]>,
   functionName: string,
   args: unknown[]
 ): CeloTxObject<unknown> {
-  const methodAbi = (contract.abi as AbiItem[]).find(
+  const contractAbi = contract.abi as AbiItem[]
+  const methodAbi = contractAbi.find(
     (item: AbiItem) => item.type === 'function' && item.name === functionName
   )
   if (!methodAbi) {
@@ -81,7 +63,7 @@ export function createViemTxObject(
       return createPromiEvent(
         connection,
         { ...txParams, to: contract.address, data: encodeData() },
-        contract.abi as unknown as AbiItem[]
+        contractAbi
       )
     },
     estimateGas: async (txParams?: CeloTx) => {
@@ -93,7 +75,7 @@ export function createViemTxObject(
     },
     encodeABI: () => encodeData(),
     _parent: {
-      options: { address: contract.address, jsonInterface: contract.abi as unknown as AbiItem[] },
+      options: { address: contract.address, jsonInterface: contractAbi },
       _address: contract.address,
       events: {},
       methods: {} as any,
@@ -104,4 +86,40 @@ export function createViemTxObject(
   }
 
   return txObject
+}
+
+/**
+ * Create a CeloTxObject from a viem-native contract + function name + args.
+ * This replaces the contract.methods.foo(args) pattern with direct encodeFunctionData.
+ *
+ * Overload 1 (fully typed): when a `ViemContract<TAbi>` with a const-typed ABI is provided,
+ * the function name and args are constrained at compile time.
+ */
+export function createViemTxObject<
+  TAbi extends Abi,
+  TFunctionName extends ContractFunctionName<TAbi>,
+>(
+  connection: Connection,
+  contract: ViemContract<TAbi>,
+  functionName: TFunctionName,
+  args: ContractFunctionArgs<TAbi, 'nonpayable' | 'payable' | 'view' | 'pure', TFunctionName>
+): CeloTxObject<unknown>
+/**
+ * Overload 2 (untyped fallback): accepts any string function name for backward compatibility.
+ * Accepts any ViemContract regardless of ABI type (mutable or readonly).
+ * Used by CLI, ProposalBuilder, and other dynamic callers.
+ */
+export function createViemTxObject<O>(
+  connection: Connection,
+  contract: ViemContract<readonly unknown[]>,
+  functionName: string,
+  args: unknown[]
+): CeloTxObject<O>
+export function createViemTxObject(
+  connection: Connection,
+  contract: ViemContract<readonly unknown[]>,
+  functionName: string,
+  args: unknown[]
+): CeloTxObject<unknown> {
+  return createViemTxObjectInternal(connection, contract, functionName, args)
 }

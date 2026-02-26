@@ -1,10 +1,5 @@
 import { federatedAttestationsABI } from '@celo/abis'
-import {
-  Address,
-  CeloTransactionObject,
-  createViemTxObject,
-  toTransactionObject,
-} from '@celo/connect'
+import { Address, CeloTransactionObject } from '@celo/connect'
 import { registerAttestation as buildRegisterAttestationTypedData } from '@celo/utils/lib/typed-data-constructors'
 import { BaseWrapper, proxyCall, proxySend } from './BaseWrapper'
 
@@ -104,6 +99,12 @@ export class FederatedAttestationsWrapper extends BaseWrapper<typeof federatedAt
     'registerAttestationAsIssuer'
   )
 
+  private _registerAttestation: (...args: any[]) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract,
+    'registerAttestation'
+  )
+
   /**
    * @notice Generates a valid signature and registers the attestation
    * @param identifier Hash of the identifier to be attested
@@ -129,18 +130,15 @@ export class FederatedAttestationsWrapper extends BaseWrapper<typeof federatedAt
       issuedOn,
     })
     const sig = await this.connection.signTypedData(signer, typedData)
-    return toTransactionObject(
-      this.connection,
-      createViemTxObject(this.connection, this.contract, 'registerAttestation', [
-        identifier,
-        issuer,
-        account,
-        signer,
-        issuedOn,
-        sig.v,
-        sig.r,
-        sig.s,
-      ])
+    return this._registerAttestation(
+      identifier,
+      issuer,
+      account,
+      signer,
+      issuedOn,
+      sig.v,
+      sig.r,
+      sig.s
     )
   }
 

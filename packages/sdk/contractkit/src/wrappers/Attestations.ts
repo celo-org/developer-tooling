@@ -1,14 +1,7 @@
 import { attestationsABI } from '@celo/abis'
 import { StableToken } from '@celo/base'
 import { eqAddress } from '@celo/base/lib/address'
-import {
-  Address,
-  CeloTransactionObject,
-  Connection,
-  createViemTxObject,
-  toTransactionObject,
-  type ViemContract,
-} from '@celo/connect'
+import { Address, CeloTransactionObject, Connection, type ViemContract } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import { AccountsWrapper } from './Accounts'
 import {
@@ -209,19 +202,21 @@ export class AttestationsWrapper extends BaseWrapper<typeof attestationsABI> {
     }
   }
 
+  private _getAttestationRequestFee = proxyCall(
+    this.contract,
+    'getAttestationRequestFee',
+    undefined,
+    valueToBigNumber
+  )
+
   /**
    * Calculates the amount of StableToken required to request Attestations
    * @param attestationsRequested  The number of attestations to request
    */
   async getAttestationFeeRequired(attestationsRequested: number) {
     const contract = await this.contracts.getStableToken(StableToken.USDm)
-    const attestationFee = await createViemTxObject<string>(
-      this.connection,
-      this.contract,
-      'getAttestationRequestFee',
-      [contract.address]
-    ).call()
-    return new BigNumber(attestationFee).times(attestationsRequested)
+    const attestationFee = await this._getAttestationRequestFee(contract.address)
+    return attestationFee.times(attestationsRequested)
   }
 
   /**
@@ -302,19 +297,21 @@ export class AttestationsWrapper extends BaseWrapper<typeof attestationsABI> {
    * Lookup mapped wallet addresses for a given list of identifiers
    * @param identifiers Attestation identifiers (e.g. phone hashes)
    */
+  private _batchGetAttestationStats: (
+    ...args: any[]
+  ) => Promise<{ 0: string[]; 1: string[]; 2: string[]; 3: string[] }> = proxyCall(
+    this.contract,
+    'batchGetAttestationStats'
+  )
+
   async lookupIdentifiers(identifiers: string[]): Promise<IdentifierLookupResult> {
     // Unfortunately can't be destructured
-    const stats = await createViemTxObject<{ 0: string[]; 1: string[]; 2: string[]; 3: string[] }>(
-      this.connection,
-      this.contract,
-      'batchGetAttestationStats',
-      [identifiers]
-    ).call()
+    const stats = await this._batchGetAttestationStats(identifiers)
 
-    const matches = stats[0].map(valueToInt)
-    const addresses = stats[1]
-    const completed = stats[2].map(valueToInt)
-    const total = stats[3].map(valueToInt)
+    const matches = (stats[0] as string[]).map(valueToInt)
+    const addresses = stats[1] as string[]
+    const completed = (stats[2] as string[]).map(valueToInt)
+    const total = (stats[3] as string[]).map(valueToInt)
     // Map of identifier -> (Map of address -> AttestationStat)
     const result: IdentifierLookupResult = {}
 
@@ -343,16 +340,19 @@ export class AttestationsWrapper extends BaseWrapper<typeof attestationsABI> {
     return result
   }
 
+  private _revoke: (...args: any[]) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract,
+    'revoke'
+  )
+
   async revoke(identifer: string, account: Address): Promise<CeloTransactionObject<void>> {
     const accounts = await this.lookupAccountsForIdentifier(identifer)
     const idx = accounts.findIndex((acc: string) => eqAddress(acc, account))
     if (idx < 0) {
       throw new Error("Account not found in identifier's accounts")
     }
-    return toTransactionObject(
-      this.connection,
-      createViemTxObject(this.connection, this.contract, 'revoke', [identifer, idx])
-    )
+    return this._revoke(identifer, idx)
   }
 }
 

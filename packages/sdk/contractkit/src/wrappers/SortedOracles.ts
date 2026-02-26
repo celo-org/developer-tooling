@@ -1,13 +1,6 @@
 import { sortedOraclesABI } from '@celo/abis'
 import { eqAddress, NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
-import {
-  Address,
-  CeloTransactionObject,
-  Connection,
-  createViemTxObject,
-  toTransactionObject,
-  type ViemContract,
-} from '@celo/connect'
+import { Address, CeloTransactionObject, Connection, type ViemContract } from '@celo/connect'
 import { isValidAddress } from '@celo/utils/lib/address'
 import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
@@ -17,6 +10,7 @@ import { isStableTokenContract, StableToken, stableTokenInfos } from '../celo-to
 import {
   BaseWrapper,
   proxyCall,
+  proxySend,
   secondsToDurationString,
   valueToBigNumber,
   valueToFrac,
@@ -69,6 +63,9 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
   ) {
     super(connection, contract)
   }
+
+  private _numRates = proxyCall(this.contract, 'numRates', undefined, valueToInt)
+
   /**
    * Gets the number of rates that have been reported for the given target
    * @param target The ReportTarget, either CeloToken or currency pair
@@ -76,11 +73,13 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
    */
   async numRates(target: ReportTarget): Promise<number> {
     const identifier = await this.toCurrencyPairIdentifier(target)
-    const response = await createViemTxObject<string>(this.connection, this.contract, 'numRates', [
-      identifier,
-    ]).call()
-    return valueToInt(response)
+    return this._numRates(identifier)
   }
+
+  private _medianRate: (...args: any[]) => Promise<{ 0: string; 1: string }> = proxyCall(
+    this.contract,
+    'medianRate'
+  )
 
   /**
    * Returns the median rate for the given target
@@ -90,16 +89,13 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
    */
   async medianRate(target: ReportTarget): Promise<MedianRate> {
     const identifier = await this.toCurrencyPairIdentifier(target)
-    const response = await createViemTxObject<{ 0: string; 1: string }>(
-      this.connection,
-      this.contract,
-      'medianRate',
-      [identifier]
-    ).call()
+    const response = await this._medianRate(identifier)
     return {
       rate: valueToFrac(response[0], response[1]),
     }
   }
+
+  private _isOracle: (...args: any[]) => Promise<boolean> = proxyCall(this.contract, 'isOracle')
 
   /**
    * Checks if the given address is whitelisted as an oracle for the target
@@ -109,11 +105,13 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
    */
   async isOracle(target: ReportTarget, oracle: Address): Promise<boolean> {
     const identifier = await this.toCurrencyPairIdentifier(target)
-    return createViemTxObject<boolean>(this.connection, this.contract, 'isOracle', [
-      identifier,
-      oracle,
-    ]).call()
+    return this._isOracle(identifier, oracle)
   }
+
+  private _getOracles: (...args: any[]) => Promise<Address[]> = proxyCall(
+    this.contract,
+    'getOracles'
+  )
 
   /**
    * Returns the list of whitelisted oracles for a given target
@@ -122,9 +120,7 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
    */
   async getOracles(target: ReportTarget): Promise<Address[]> {
     const identifier = await this.toCurrencyPairIdentifier(target)
-    return createViemTxObject<Address[]>(this.connection, this.contract, 'getOracles', [
-      identifier,
-    ]).call()
+    return this._getOracles(identifier)
   }
 
   /**
@@ -133,6 +129,13 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
    */
   reportExpirySeconds = proxyCall(this.contract, 'reportExpirySeconds', undefined, valueToBigNumber)
 
+  private _getTokenReportExpirySeconds = proxyCall(
+    this.contract,
+    'getTokenReportExpirySeconds',
+    undefined,
+    valueToBigNumber
+  )
+
   /**
    * Returns the expiry for the target if exists, if not the default.
    * @param target The ReportTarget, either CeloToken or currency pair
@@ -140,14 +143,11 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
    */
   async getTokenReportExpirySeconds(target: ReportTarget): Promise<BigNumber> {
     const identifier = await this.toCurrencyPairIdentifier(target)
-    const response = await createViemTxObject<string>(
-      this.connection,
-      this.contract,
-      'getTokenReportExpirySeconds',
-      [identifier]
-    ).call()
-    return valueToBigNumber(response)
+    return this._getTokenReportExpirySeconds(identifier)
   }
+
+  private _isOldestReportExpired: (...args: any[]) => Promise<{ 0: boolean; 1: Address }> =
+    proxyCall(this.contract, 'isOldestReportExpired')
 
   /**
    * Checks if the oldest report for a given target is expired
@@ -155,15 +155,16 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
    */
   async isOldestReportExpired(target: ReportTarget): Promise<[boolean, Address]> {
     const identifier = await this.toCurrencyPairIdentifier(target)
-    const response = await createViemTxObject<{ 0: boolean; 1: Address }>(
-      this.connection,
-      this.contract,
-      'isOldestReportExpired',
-      [identifier]
-    ).call()
+    const response = await this._isOldestReportExpired(identifier)
     // response is NOT an array, but a js object with two keys 0 and 1
     return [response[0], response[1]]
   }
+
+  private _removeExpiredReports: (...args: any[]) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract,
+    'removeExpiredReports'
+  )
 
   /**
    * Removes expired reports, if any exist
@@ -180,14 +181,14 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
     if (!numReports) {
       numReports = (await this.getReports(target)).length - 1
     }
-    return toTransactionObject(
-      this.connection,
-      createViemTxObject(this.connection, this.contract, 'removeExpiredReports', [
-        identifier,
-        numReports,
-      ])
-    )
+    return this._removeExpiredReports(identifier, numReports)
   }
+
+  private _report: (...args: any[]) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract,
+    'report'
+  )
 
   /**
    * Updates an oracle value and the median.
@@ -208,16 +209,20 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
       oracleAddress
     )
 
-    return toTransactionObject(
-      this.connection,
-      createViemTxObject(this.connection, this.contract, 'report', [
-        identifier,
-        fixedValue.toFixed(),
-        lesserKey,
-        greaterKey,
-      ]),
-      { from: oracleAddress }
-    )
+    // proxySend doesn't support txOptions, so we need to manually set the from
+    // We pass it via the returned CeloTransactionObject
+    const txo = this._report(identifier, fixedValue.toFixed(), lesserKey, greaterKey)
+    // Override from address
+    const originalTxo = txo.txo
+    const wrappedTxo = {
+      ...txo,
+      txo: {
+        ...originalTxo,
+        send: (params?: any) => originalTxo.send({ ...params, from: oracleAddress }),
+        estimateGas: (params?: any) => originalTxo.estimateGas({ ...params, from: oracleAddress }),
+      },
+    }
+    return wrappedTxo as CeloTransactionObject<void>
   }
 
   /**
@@ -260,6 +265,9 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
    */
   getStableTokenRates = async (): Promise<OracleRate[]> => this.getRates(CeloContract.StableToken)
 
+  private _getRates: (...args: any[]) => Promise<{ 0: Address[]; 1: string[]; 2: string[] }> =
+    proxyCall(this.contract, 'getRates')
+
   /**
    * Gets all elements from the doubly linked list.
    * @param target The ReportTarget, either CeloToken or currency pair in question
@@ -267,23 +275,21 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
    */
   async getRates(target: ReportTarget): Promise<OracleRate[]> {
     const identifier = await this.toCurrencyPairIdentifier(target)
-    const response = await createViemTxObject<{ 0: Address[]; 1: string[]; 2: string[] }>(
-      this.connection,
-      this.contract,
-      'getRates',
-      [identifier]
-    ).call()
+    const response = await this._getRates(identifier)
     const rates: OracleRate[] = []
-    for (let i = 0; i < response[0].length; i++) {
-      const medRelIndex = parseInt(response[2][i], 10)
+    for (let i = 0; i < (response[0] as Address[]).length; i++) {
+      const medRelIndex = parseInt((response[2] as string[])[i], 10)
       rates.push({
-        address: response[0][i],
-        rate: fromFixed(valueToBigNumber(response[1][i])),
+        address: (response[0] as Address[])[i],
+        rate: fromFixed(valueToBigNumber((response[1] as string[])[i])),
         medianRelation: medRelIndex,
       })
     }
     return rates
   }
+
+  private _getTimestamps: (...args: any[]) => Promise<{ 0: Address[]; 1: string[]; 2: string[] }> =
+    proxyCall(this.contract, 'getTimestamps')
 
   /**
    * Gets all elements from the doubly linked list.
@@ -292,18 +298,13 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
    */
   async getTimestamps(target: ReportTarget): Promise<OracleTimestamp[]> {
     const identifier = await this.toCurrencyPairIdentifier(target)
-    const response = await createViemTxObject<{ 0: Address[]; 1: string[]; 2: string[] }>(
-      this.connection,
-      this.contract,
-      'getTimestamps',
-      [identifier]
-    ).call()
+    const response = await this._getTimestamps(identifier)
     const timestamps: OracleTimestamp[] = []
-    for (let i = 0; i < response[0].length; i++) {
-      const medRelIndex = parseInt(response[2][i], 10)
+    for (let i = 0; i < (response[0] as Address[]).length; i++) {
+      const medRelIndex = parseInt((response[2] as string[])[i], 10)
       timestamps.push({
-        address: response[0][i],
-        timestamp: valueToBigNumber(response[1][i]),
+        address: (response[0] as Address[])[i],
+        timestamp: valueToBigNumber((response[1] as string[])[i]),
         medianRelation: medRelIndex,
       })
     }

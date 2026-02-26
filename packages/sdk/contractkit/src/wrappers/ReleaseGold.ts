@@ -2,12 +2,7 @@ import { releaseGoldABI } from '@celo/abis'
 import { concurrentMap } from '@celo/base'
 import { StrongAddress, findAddressIndex } from '@celo/base/lib/address'
 import { Signature } from '@celo/base/lib/signatureUtils'
-import {
-  Address,
-  CeloTransactionObject,
-  createViemTxObject,
-  toTransactionObject,
-} from '@celo/connect'
+import { Address, CeloTransactionObject } from '@celo/connect'
 import { soliditySha3 } from '@celo/utils/lib/solidity'
 import { hashMessageWithPrefix, signedMessageToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
@@ -71,18 +66,20 @@ interface RevocationInfo {
  * Contract for handling an instance of a ReleaseGold contract.
  */
 export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGoldABI> {
+  private _getReleaseSchedule: () => Promise<{
+    releaseStartTime: string
+    releaseCliff: string
+    numReleasePeriods: string
+    releasePeriod: string
+    amountReleasedPerPeriod: string
+  }> = proxyCall(this.contract, 'releaseSchedule')
+
   /**
    * Returns the underlying Release schedule of the ReleaseGold contract
    * @return A ReleaseSchedule.
    */
   async getReleaseSchedule(): Promise<ReleaseSchedule> {
-    const releaseSchedule = await createViemTxObject<{
-      releaseStartTime: string
-      releaseCliff: string
-      numReleasePeriods: string
-      releasePeriod: string
-      amountReleasedPerPeriod: string
-    }>(this.connection, this.contract, 'releaseSchedule', []).call()
+    const releaseSchedule = await this._getReleaseSchedule()
 
     return {
       releaseStartTime: valueToInt(releaseSchedule.releaseStartTime),
@@ -176,18 +173,20 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
     valueToBigNumber
   )
 
+  private _getRevocationInfo: () => Promise<{
+    revocable: boolean
+    canExpire: boolean
+    releasedBalanceAtRevoke: string
+    revokeTime: string
+  }> = proxyCall(this.contract, 'revocationInfo')
+
   /**
    * Returns the underlying Revocation Info of the ReleaseGold contract
    * @return A RevocationInfo struct.
    */
   async getRevocationInfo(): Promise<RevocationInfo> {
     try {
-      const revocationInfo = await createViemTxObject<{
-        revocable: boolean
-        canExpire: boolean
-        releasedBalanceAtRevoke: string
-        revokeTime: string
-      }>(this.connection, this.contract, 'revocationInfo', []).call()
+      const revocationInfo = await this._getRevocationInfo()
       return {
         revocable: revocationInfo.revocable,
         canExpire: revocationInfo.canExpire,
@@ -535,6 +534,12 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
     'setBeneficiary'
   )
 
+  private _authorizeVoteSigner: (...args: any[]) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract,
+    'authorizeVoteSigner'
+  )
+
   /**
    * Authorizes an address to sign votes on behalf of the account.
    * @param signer The address of the vote signing key to authorize.
@@ -545,16 +550,22 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
     signer: Address,
     proofOfSigningKeyPossession: Signature
   ): Promise<CeloTransactionObject<void>> {
-    return toTransactionObject(
-      this.connection,
-      createViemTxObject(this.connection, this.contract, 'authorizeVoteSigner', [
-        signer,
-        proofOfSigningKeyPossession.v,
-        proofOfSigningKeyPossession.r,
-        proofOfSigningKeyPossession.s,
-      ])
+    return this._authorizeVoteSigner(
+      signer,
+      proofOfSigningKeyPossession.v,
+      proofOfSigningKeyPossession.r,
+      proofOfSigningKeyPossession.s
     )
   }
+
+  private _authorizeValidatorSignerWithPublicKey: (...args: any[]) => CeloTransactionObject<void> =
+    proxySend(this.connection, this.contract, 'authorizeValidatorSignerWithPublicKey')
+
+  private _authorizeValidatorSigner: (...args: any[]) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract,
+    'authorizeValidatorSigner'
+  )
 
   /**
    * Authorizes an address to sign validation messages on behalf of the account.
@@ -580,30 +591,19 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
         proofOfSigningKeyPossession.r,
         proofOfSigningKeyPossession.s
       )
-      return toTransactionObject(
-        this.connection,
-        createViemTxObject(
-          this.connection,
-          this.contract,
-          'authorizeValidatorSignerWithPublicKey',
-          [
-            signer,
-            proofOfSigningKeyPossession.v,
-            proofOfSigningKeyPossession.r,
-            proofOfSigningKeyPossession.s,
-            stringToSolidityBytes(pubKey),
-          ]
-        )
+      return this._authorizeValidatorSignerWithPublicKey(
+        signer,
+        proofOfSigningKeyPossession.v,
+        proofOfSigningKeyPossession.r,
+        proofOfSigningKeyPossession.s,
+        stringToSolidityBytes(pubKey)
       )
     } else {
-      return toTransactionObject(
-        this.connection,
-        createViemTxObject(this.connection, this.contract, 'authorizeValidatorSigner', [
-          signer,
-          proofOfSigningKeyPossession.v,
-          proofOfSigningKeyPossession.r,
-          proofOfSigningKeyPossession.s,
-        ])
+      return this._authorizeValidatorSigner(
+        signer,
+        proofOfSigningKeyPossession.v,
+        proofOfSigningKeyPossession.r,
+        proofOfSigningKeyPossession.s
       )
     }
   }
@@ -637,17 +637,20 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
       proofOfSigningKeyPossession.r,
       proofOfSigningKeyPossession.s
     )
-    return toTransactionObject(
-      this.connection,
-      createViemTxObject(this.connection, this.contract, 'authorizeValidatorSignerWithPublicKey', [
-        signer,
-        proofOfSigningKeyPossession.v,
-        proofOfSigningKeyPossession.r,
-        proofOfSigningKeyPossession.s,
-        stringToSolidityBytes(pubKey),
-      ])
+    return this._authorizeValidatorSignerWithPublicKey(
+      signer,
+      proofOfSigningKeyPossession.v,
+      proofOfSigningKeyPossession.r,
+      proofOfSigningKeyPossession.s,
+      stringToSolidityBytes(pubKey)
     )
   }
+
+  private _authorizeAttestationSigner: (...args: any[]) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract,
+    'authorizeAttestationSigner'
+  )
 
   /**
    * Authorizes an address to sign attestation messages on behalf of the account.
@@ -659,16 +662,19 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
     signer: Address,
     proofOfSigningKeyPossession: Signature
   ): Promise<CeloTransactionObject<void>> {
-    return toTransactionObject(
-      this.connection,
-      createViemTxObject(this.connection, this.contract, 'authorizeAttestationSigner', [
-        signer,
-        proofOfSigningKeyPossession.v,
-        proofOfSigningKeyPossession.r,
-        proofOfSigningKeyPossession.s,
-      ])
+    return this._authorizeAttestationSigner(
+      signer,
+      proofOfSigningKeyPossession.v,
+      proofOfSigningKeyPossession.r,
+      proofOfSigningKeyPossession.s
     )
   }
+
+  private _revokePending: (...args: any[]) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract,
+    'revokePending'
+  )
 
   /**
    * Revokes pending votes
@@ -690,16 +696,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
       value.times(-1)
     )
 
-    return toTransactionObject(
-      this.connection,
-      createViemTxObject(this.connection, this.contract, 'revokePending', [
-        group,
-        value.toFixed(),
-        lesser,
-        greater,
-        index,
-      ])
-    )
+    return this._revokePending(group, value.toFixed(), lesser, greater, index)
   }
 
   /**
@@ -709,6 +706,12 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
    */
   revokePendingVotes = (group: Address, value: BigNumber) =>
     this.revokePending(this.address, group, value)
+
+  private _revokeActive: (...args: any[]) => CeloTransactionObject<void> = proxySend(
+    this.connection,
+    this.contract,
+    'revokeActive'
+  )
 
   /**
    * Revokes active votes
@@ -730,16 +733,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
       value.times(-1)
     )
 
-    return toTransactionObject(
-      this.connection,
-      createViemTxObject(this.connection, this.contract, 'revokeActive', [
-        group,
-        value.toFixed(),
-        lesser,
-        greater,
-        index,
-      ])
-    )
+    return this._revokeActive(group, value.toFixed(), lesser, greater, index)
   }
 
   /**
