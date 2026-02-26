@@ -29,9 +29,8 @@ export function soliditySha3(...args: SolidityValue[]): string | null {
       values.push(arg.value)
     } else if (typeof arg === 'object' && arg !== null && 't' in arg && 'v' in arg) {
       // web3 shorthand: { t: 'uint256', v: 123 }
-      const shorthand = arg as { t: string; v: unknown }
-      types.push(shorthand.t)
-      values.push(shorthand.v)
+      types.push((arg as { t: string; v: unknown }).t)
+      values.push((arg as { t: string; v: unknown }).v)
     } else if (typeof arg === 'string') {
       if (isHex(arg, { strict: true })) {
         types.push('bytes')
