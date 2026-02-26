@@ -65,7 +65,7 @@ export class Connection {
   private _chainID: number | undefined
   readonly paramsPopulator: TxParamsNormalizer
   rpcCaller!: RpcCaller
-  private _provider!: Provider
+  private _provider!: CeloProvider
   private _originalProviderOwner?: {
     currentProvider: Provider
     setProvider?: (p: Provider) => void
@@ -97,7 +97,7 @@ export class Connection {
   }
 
   /** Get the current provider */
-  get currentProvider(): Provider {
+  get currentProvider(): CeloProvider {
     return this._provider
   }
 
@@ -107,15 +107,17 @@ export class Connection {
     }
     this._chainID = undefined
     try {
+      let celoProvider: CeloProvider
       if (!(provider instanceof CeloProvider)) {
         this.rpcCaller = new HttpRpcCaller(provider)
-        provider = new CeloProvider(provider, this)
+        celoProvider = new CeloProvider(provider, this)
       } else {
         // Use the underlying raw provider for rpcCaller to avoid recursion
         // (CeloProvider.send -> handleAccounts -> Connection.getAccounts -> rpcCaller.call -> CeloProvider.send)
         this.rpcCaller = new HttpRpcCaller(provider.existingProvider)
+        celoProvider = provider
       }
-      this._provider = provider
+      this._provider = celoProvider
       // Update original web3 object's provider so web3.currentProvider reflects CeloProvider
       if (
         this._originalProviderOwner &&
@@ -124,7 +126,7 @@ export class Connection {
       ) {
         this._settingProvider = true
         try {
-          this._originalProviderOwner.setProvider(provider)
+          this._originalProviderOwner.setProvider(celoProvider)
         } finally {
           this._settingProvider = false
         }

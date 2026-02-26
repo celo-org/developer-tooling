@@ -1,6 +1,6 @@
 import { AbiCoder, AbiItem } from './abi-types'
 import { viemAbiCoder } from './abi-coder'
-import { CeloTx, CeloTxReceipt, EventLog, PromiEvent, Provider } from './types'
+import { CeloTx, CeloTxReceipt, EventLog, PromiEvent } from './types'
 import { getRandomId } from './utils/rpc-caller'
 import type { Connection } from './connection'
 
@@ -15,7 +15,7 @@ export function createPromiEvent(
   const promise = new Promise<CeloTxReceipt>(async (resolve, reject) => {
     try {
       const hash = await new Promise<string>((res, rej) => {
-        ;(connection.currentProvider as Provider).send(
+        connection.currentProvider.send(
           {
             id: getRandomId(),
             jsonrpc: '2.0',

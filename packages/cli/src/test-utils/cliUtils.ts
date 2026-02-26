@@ -1,5 +1,7 @@
 import { PublicCeloClient } from '@celo/actions'
 import { Provider } from '@celo/connect'
+import { CeloProvider } from '@celo/connect/lib/celo-provider'
+import type { ProviderOwner } from '@celo/dev-utils/test-utils'
 import { TestClientExtended } from '@celo/dev-utils/viem/anvil-test'
 import { Interfaces } from '@oclif/core'
 import { BaseCommand } from '../base'
@@ -13,34 +15,31 @@ interface Runner extends AbstractConstructor<BaseCommand> {
 export async function testLocallyWithNode(
   command: Runner,
   argv: string[],
-  client: { currentProvider: Provider },
+  client: ProviderOwner,
   config?: Interfaces.LoadOptions
 ) {
   return testLocally(command, [...argv, '--node', extractHostFromProvider(client)], config)
 }
 
-export const extractHostFromProvider = (client: { currentProvider: Provider }): string => {
-  const provider = client.currentProvider as Provider & {
-    host?: string
-    url?: string
-    existingProvider?: { host?: string; url?: string }
-  }
+export const extractHostFromProvider = (client: ProviderOwner): string => {
+  const provider = client.currentProvider
   if (!provider) {
     throw new Error('No currentProvider on client')
   }
 
   // CeloProvider wraps the underlying provider
-  if (provider.constructor.name === 'CeloProvider') {
-    const inner = provider.existingProvider
+  if (provider instanceof CeloProvider) {
+    const inner = provider.existingProvider as { host?: string; url?: string }
     return inner?.host || inner?.url || 'http://localhost:8545'
   }
 
   // Direct provider (HttpProvider or SimpleHttpProvider)
-  if (provider.host) {
-    return provider.host
+  const rawProvider = provider as Provider & { host?: string; url?: string }
+  if (rawProvider.host) {
+    return rawProvider.host
   }
-  if (provider.url) {
-    return provider.url
+  if (rawProvider.url) {
+    return rawProvider.url
   }
 
   throw new Error(`Unsupported provider, ${provider.constructor.name}`)
