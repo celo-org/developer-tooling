@@ -186,7 +186,6 @@ describe('Connection', () => {
     })
   })
 
-
   describe('#setFeeMarketGas', () => {
     describe('when fee market gas is set', () => {
       it('returns with gasPrice undefined and feeMarketGas set', async () => {

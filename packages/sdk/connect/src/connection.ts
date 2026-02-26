@@ -7,7 +7,7 @@ import { bufferToHex } from '@ethereumjs/util'
 import debugFactory from 'debug'
 import { keccak256, hexToString, toHex } from 'viem'
 import { AbiCoder, AbiItem } from './abi-types'
-import { isEmpty, viemAbiCoder } from './abi-coder'
+import { isEmpty, viemAbiCoder } from './viem-abi-coder'
 import { createContractConstructor } from './rpc-contract'
 import { CeloProvider, assertIsCeloProvider } from './celo-provider'
 import {
@@ -43,7 +43,7 @@ import { TransactionResult, toTxResult } from './utils/tx-result'
 import { ReadOnlyWallet } from './wallet'
 
 // Convenience re-export for consumers that import from @celo/connect
-export { viemAbiCoder } from './abi-coder'
+export { viemAbiCoder } from './viem-abi-coder'
 
 const debugGasEstimation = debugFactory('connection:gas-estimation')
 

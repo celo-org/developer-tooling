@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js'
 import { Connection } from '../connection'
 import { CeloTx } from '../types'
-import { isEmpty, isPresent } from '../abi-coder'
+import { isEmpty, isPresent } from '../viem-abi-coder'
 
 export class TxParamsNormalizer {
   private chainId: number | null = null

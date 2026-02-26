@@ -1,5 +1,5 @@
 import { AbiCoder, AbiItem } from './abi-types'
-import { viemAbiCoder } from './abi-coder'
+import { viemAbiCoder } from './viem-abi-coder'
 import { CeloTx, CeloTxReceipt, EventLog, PromiEvent } from './types'
 import { getRandomId } from './utils/rpc-caller'
 import type { Connection } from './connection'

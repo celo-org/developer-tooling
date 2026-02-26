@@ -1,4 +1,4 @@
-import { viemAbiCoder, coerceValueForType } from './abi-coder'
+import { viemAbiCoder, coerceValueForType } from './viem-abi-coder'
 
 describe('#viemAbiCoder', () => {
   it('encodes and decodes a parameter', () => {

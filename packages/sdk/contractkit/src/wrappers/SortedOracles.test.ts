@@ -67,9 +67,9 @@ testWithAnvilL2('SortedOracles Wrapper', (providerOwner) => {
    */
   const newSortedOracles = async (owner: Address): Promise<SortedOraclesWrapper> => {
     const contract = kit.connection.createContract(SortedOraclesArtifacts.abi as AbiItem[])
-interface DeployResult {
-  options: { address: string }
-}
+    interface DeployResult {
+      options: { address: string }
+    }
 
     const deployTx = contract.deploy({
       data: SortedOraclesArtifacts.bytecode.replace(

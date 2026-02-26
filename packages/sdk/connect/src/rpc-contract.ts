@@ -1,6 +1,6 @@
 import { encodeFunctionData, toEventHash, toFunctionHash } from 'viem'
 import { AbiInput, AbiItem } from './abi-types'
-import { coerceArgsForAbi, viemAbiCoder } from './abi-coder'
+import { coerceArgsForAbi, viemAbiCoder } from './viem-abi-coder'
 import { createPromiEvent } from './promi-event'
 import {
   BlockNumber,
