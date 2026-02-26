@@ -43,7 +43,7 @@ import { TransactionResult, toTxResult } from './utils/tx-result'
 import { ReadOnlyWallet } from './wallet'
 
 // Convenience re-export for consumers that import from @celo/connect
-export { viemAbiCoder } from './viem-abi-coder'
+export { viemAbiCoder, isPresent, isEmpty } from './viem-abi-coder'
 
 const debugGasEstimation = debugFactory('connection:gas-estimation')
 
