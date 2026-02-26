@@ -214,7 +214,9 @@ export function createContractConstructor(connection: Connection) {
             log.data,
             log.topics.slice(1)
           ) as unknown as Record<string, unknown>
-        } catch {}
+        } catch {
+          // Event decoding may fail for topics from proxy contracts or unknown events; skip gracefully
+        }
         return {
           event: eventAbi.name!,
           address: log.address,
