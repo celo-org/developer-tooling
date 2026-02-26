@@ -16,6 +16,13 @@ import {
 import { inputBlockNumberFormatter } from './utils/formatter'
 import type { Connection } from './connection'
 
+interface GetLogsParams {
+  address: string
+  topics: (string | null)[]
+  fromBlock?: BlockNumber
+  toBlock?: BlockNumber
+}
+
 /**
  * Creates a Contract constructor class bound to the given connection.
  * @internal
@@ -191,12 +198,7 @@ export function createContractConstructor(connection: Connection) {
       const eventSig = viemAbiCoder.encodeEventSignature(eventAbi)
       const topics: string[] = [eventSig]
 
-      const params: {
-        address: string
-        topics: (string | null)[]
-        fromBlock?: BlockNumber
-        toBlock?: BlockNumber
-      } = {
+      const params: GetLogsParams = {
         address: this._address,
         topics,
         fromBlock:
