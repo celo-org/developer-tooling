@@ -29,7 +29,7 @@ import { secp256k1 } from '@noble/curves/secp256k1'
 import { keccak_256 } from '@noble/hashes/sha3'
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils'
 import debugFactory from 'debug'
-// Web3 removed - using native replacements
+
 
 type OldTransactionTypes = 'celo-legacy' | 'cip42' | TransactionTypes
 type LegacyCeloTx = Omit<CeloTx, 'type'> & {
