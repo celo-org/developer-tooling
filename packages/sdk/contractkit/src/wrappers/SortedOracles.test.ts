@@ -67,6 +67,9 @@ testWithAnvilL2('SortedOracles Wrapper', (providerOwner) => {
    */
   const newSortedOracles = async (owner: Address): Promise<SortedOraclesWrapper> => {
     const contract = kit.connection.createContract(SortedOraclesArtifacts.abi as AbiItem[])
+interface DeployResult {
+  options: { address: string }
+}
 
     const deployTx = contract.deploy({
       data: SortedOraclesArtifacts.bytecode.replace(
@@ -79,7 +82,7 @@ testWithAnvilL2('SortedOracles Wrapper', (providerOwner) => {
     const txResult = await deployTx.send({ from: owner, gasPrice: TEST_GAS_PRICE.toFixed() })
     const deployedContract = kit.connection.createContract(
       sortedOraclesABI as any,
-      (txResult as unknown as { options: { address: string } }).options.address
+      (txResult as unknown as DeployResult).options.address
     )
     await deployedContract.methods
       .initialize(NetworkConfig.oracles.reportExpiry)
