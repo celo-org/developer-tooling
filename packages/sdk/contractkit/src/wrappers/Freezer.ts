@@ -1,7 +1,8 @@
+import { freezerABI } from '@celo/abis'
 import { CeloTransactionObject } from '@celo/connect'
 import { BaseWrapper, proxyCall, proxySend } from './BaseWrapper'
 
-export class FreezerWrapper extends BaseWrapper {
+export class FreezerWrapper extends BaseWrapper<typeof freezerABI> {
   freeze: (target: string) => CeloTransactionObject<void> = proxySend(
     this.connection,
     this.contract,

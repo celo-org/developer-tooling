@@ -1,8 +1,9 @@
+import { odisPaymentsABI } from '@celo/abis'
 import { Address, CeloTransactionObject } from '@celo/connect'
 import { BigNumber } from 'bignumber.js'
 import { BaseWrapper, proxyCall, proxySend, valueToBigNumber } from './BaseWrapper'
 
-export class OdisPaymentsWrapper extends BaseWrapper {
+export class OdisPaymentsWrapper extends BaseWrapper<typeof odisPaymentsABI> {
   /**
    * @notice Fetches total amount sent (all-time) for given account to odisPayments
    * @param account The account to fetch total amount of funds sent

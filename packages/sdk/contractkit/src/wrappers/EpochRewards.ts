@@ -1,10 +1,11 @@
+import { epochRewardsABI } from '@celo/abis'
 import { fromFixed } from '@celo/utils/lib/fixidity'
 import { createViemTxObject } from '@celo/connect'
 import { BaseWrapper, proxyCall, valueToBigNumber } from './BaseWrapper'
 
 const parseFixidity = (v: string) => fromFixed(valueToBigNumber(v))
 
-export class EpochRewardsWrapper extends BaseWrapper {
+export class EpochRewardsWrapper extends BaseWrapper<typeof epochRewardsABI> {
   getRewardsMultiplierParameters = proxyCall(
     this.contract,
     'getRewardsMultiplierParameters',

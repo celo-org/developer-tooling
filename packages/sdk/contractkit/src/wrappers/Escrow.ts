@@ -1,10 +1,11 @@
+import { escrowABI } from '@celo/abis'
 import { Address, CeloTransactionObject } from '@celo/connect'
 import { BaseWrapper, proxyCall, proxySend } from './BaseWrapper'
 
 /**
  * Contract for handling reserve for stable currencies
  */
-export class EscrowWrapper extends BaseWrapper {
+export class EscrowWrapper extends BaseWrapper<typeof escrowABI> {
   /**
    * @notice Gets the unique escrowed payment for a given payment ID
    * @param paymentId The ID of the payment to get.
