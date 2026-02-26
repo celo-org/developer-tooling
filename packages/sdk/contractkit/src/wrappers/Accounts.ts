@@ -529,6 +529,8 @@ export class AccountsWrapper extends BaseWrapper<Contract> {
     return getParsedSignatureOfAddress(soliditySha3, signerFn.sign, address, signer)
   }
 
+  // connection.keccak256 now uses viem which requires a hex string input,
+  // unlike web3's version which accepted BN natively — convert BN to hex first
   private keccak256(value: string | BN): string {
     const strValue = typeof value === 'string' ? value : '0x' + value.toString(16)
     return this.connection.keccak256(strValue)
