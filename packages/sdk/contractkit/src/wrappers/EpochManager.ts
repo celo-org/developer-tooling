@@ -1,4 +1,4 @@
-import { CeloTransactionObject, Contract } from '@celo/connect'
+import { CeloTransactionObject } from '@celo/connect'
 import { NULL_ADDRESS } from '@celo/base'
 import BigNumber from 'bignumber.js'
 import { proxyCall, proxySend, valueToInt, valueToString } from './BaseWrapper'
@@ -27,7 +27,7 @@ export interface EpochManagerConfig {
 /**
  * Contract handling epoch management.
  */
-export class EpochManagerWrapper extends BaseWrapperForGoverning<Contract> {
+export class EpochManagerWrapper extends BaseWrapperForGoverning {
   public get _contract() {
     return this.contract
   }

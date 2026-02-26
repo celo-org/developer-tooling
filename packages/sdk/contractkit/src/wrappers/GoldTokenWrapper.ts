@@ -2,7 +2,7 @@
 // after the move to node 10. This allows types to be inferred without
 // referencing '@celo/utils/node_modules/bignumber.js'
 import { Address } from '@celo/base'
-import { CeloTransactionObject, Contract } from '@celo/connect'
+import { CeloTransactionObject } from '@celo/connect'
 import 'bignumber.js'
 import {
   proxySend,
@@ -16,7 +16,7 @@ import { CeloTokenWrapper } from './CeloTokenWrapper'
 /**
  * ERC-20 contract for Celo native currency.
  */
-export class GoldTokenWrapper extends CeloTokenWrapper<Contract> {
+export class GoldTokenWrapper extends CeloTokenWrapper {
   /**
    * Increases the allowance of another user.
    * @param spender The address which is being approved to spend CELO.

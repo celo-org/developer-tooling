@@ -1,4 +1,4 @@
-import { CeloTransactionObject, Contract } from '@celo/connect'
+import { CeloTransactionObject } from '@celo/connect'
 import { proxyCall, proxySend, stringIdentity, tupleParser, valueToString } from './BaseWrapper'
 import { CeloTokenWrapper } from './CeloTokenWrapper'
 
@@ -11,7 +11,7 @@ export interface StableTokenConfig {
 /**
  * Stable token with variable supply
  */
-export class StableTokenWrapper extends CeloTokenWrapper<Contract> {
+export class StableTokenWrapper extends CeloTokenWrapper {
   /**
    * Returns the address of the owner of the contract.
    * @return the address of the owner of the contract.

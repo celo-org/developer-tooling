@@ -14,7 +14,6 @@ import {
   CeloTxObject,
   CeloTxPending,
   toTransactionObject,
-  Contract,
 } from '@celo/connect'
 import { fromFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
@@ -173,7 +172,7 @@ const ZERO_BN = new BigNumber(0)
 /**
  * Contract managing voting for governance proposals.
  */
-export class GovernanceWrapper extends BaseWrapperForGoverning<Contract> {
+export class GovernanceWrapper extends BaseWrapperForGoverning {
   /**
    * Querying number of possible concurrent proposals.
    * @returns Current number of possible concurrent proposals.

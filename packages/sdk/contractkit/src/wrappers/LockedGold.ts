@@ -4,7 +4,7 @@ import {
   linkedListChanges as baseLinkedListChanges,
   zip,
 } from '@celo/base/lib/collections'
-import { Address, CeloTransactionObject, EventLog, Contract } from '@celo/connect'
+import { Address, CeloTransactionObject, EventLog } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import {
   proxyCall,
@@ -70,7 +70,7 @@ export interface LockedGoldConfig {
  * Contract for handling deposits needed for voting.
  */
 
-export class LockedGoldWrapper extends BaseWrapperForGoverning<Contract> {
+export class LockedGoldWrapper extends BaseWrapperForGoverning {
   /**
    * Withdraws a gold that has been unlocked after the unlocking period has passed.
    * @param index The index of the pending withdrawal to withdraw.

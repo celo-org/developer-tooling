@@ -1,5 +1,5 @@
 import { StrongAddress } from '@celo/base'
-import type { Contract } from '@celo/connect'
+import type {} from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import { AbstractFeeCurrencyWrapper } from './AbstractFeeCurrencyWrapper'
 import { proxyCall, valueToBigNumber } from './BaseWrapper'
@@ -13,7 +13,7 @@ export interface FeeCurrencyDirectoryConfig {
 /**
  * FeeCurrencyDirectory contract listing available currencies usable to pay fees
  */
-export class FeeCurrencyDirectoryWrapper extends AbstractFeeCurrencyWrapper<Contract> {
+export class FeeCurrencyDirectoryWrapper extends AbstractFeeCurrencyWrapper {
   getCurrencies = proxyCall(
     this.contract.methods.getCurrencies,
     undefined,

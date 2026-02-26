@@ -1,5 +1,5 @@
 import { StrongAddress } from '@celo/base'
-import { AbiItem, Contract } from '@celo/connect'
+import { AbiItem } from '@celo/connect'
 import { BaseWrapper } from './BaseWrapper'
 
 const MINIMAL_TOKEN_INFO_ABI: AbiItem[] = [
@@ -41,9 +41,7 @@ const MINIMAL_TOKEN_INFO_ABI: AbiItem[] = [
   },
 ] as const
 
-export abstract class AbstractFeeCurrencyWrapper<
-  TContract extends Contract,
-> extends BaseWrapper<TContract> {
+export abstract class AbstractFeeCurrencyWrapper extends BaseWrapper {
   abstract getAddresses(): Promise<StrongAddress[]>
 
   async getFeeCurrencyInformation(whitelist?: StrongAddress[]) {

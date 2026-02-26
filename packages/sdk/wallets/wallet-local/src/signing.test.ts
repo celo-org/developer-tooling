@@ -59,13 +59,14 @@ describe('Transaction Utils', () => {
     const provider = connection.currentProvider
     signTransaction = (tx: CeloTx) =>
       new Promise((resolve, reject) => {
-        provider.send(
-          { id: 1, jsonrpc: '2.0', method: 'eth_signTransaction', params: [tx] },
-          ((err: any, resp: any) => {
-            if (err) reject(err)
-            else if (resp?.error) reject(new Error(resp.error.message))
-            else resolve(resp?.result)
-            }) as any)
+        provider.send({ id: 1, jsonrpc: '2.0', method: 'eth_signTransaction', params: [tx] }, ((
+          err: any,
+          resp: any
+        ) => {
+          if (err) reject(err)
+          else if (resp?.error) reject(new Error(resp.error.message))
+          else resolve(resp?.result)
+        }) as any)
       })
   }
   const verifyLocalSigning = async (celoTransaction: CeloTx): Promise<void> => {

@@ -13,7 +13,6 @@ import {
   CeloTxObject,
   EventLog,
   toTransactionObject,
-  Contract,
 } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import {
@@ -76,7 +75,7 @@ export interface ElectionConfig {
 /**
  * Contract for voting for validators and managing validator groups.
  */
-export class ElectionWrapper extends BaseWrapperForGoverning<Contract> {
+export class ElectionWrapper extends BaseWrapperForGoverning {
   /**
    * Returns the minimum and maximum number of validators that can be elected.
    * @returns The minimum and maximum number of validators that can be elected.

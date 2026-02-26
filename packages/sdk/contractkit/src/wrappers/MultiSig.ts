@@ -3,7 +3,6 @@ import {
   CeloTransactionObject,
   CeloTxObject,
   toTransactionObject,
-  Contract,
 } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import {
@@ -34,7 +33,7 @@ export interface TransactionDataWithOutConfirmations {
 /**
  * Contract for handling multisig actions
  */
-export class MultiSigWrapper extends BaseWrapper<Contract> {
+export class MultiSigWrapper extends BaseWrapper {
   /**
    * Allows an owner to submit and confirm a transaction.
    * If an unexecuted transaction matching `txObject` exists on the multisig, adds a confirmation to that tx ID.

@@ -13,36 +13,24 @@ import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
 import { ContractVersion } from '../versions'
 
-/** Contract with getVersionNumber method */
-interface VersionedContract {
-  methods: {
-    getVersionNumber(): CeloTxObject<{
-      0: string
-      1: string
-      2: string
-      3: string
-    }>
-  }
-}
+
 
 /** Represents web3 native contract Method */
 type Method<I extends any[], O> = (...args: I) => CeloTxObject<O>
 
-type Events<T extends Contract> = keyof T['events']
-type Methods<T extends Contract> = keyof T['methods']
-type EventsEnum<T extends Contract> = {
-  [event in Events<T>]: event
-}
+type Events = string
+type Methods = string
+type EventsEnum = Record<string, string>
 
 /**
  * @internal -- use its children
  */
-export abstract class BaseWrapper<T extends Contract> {
-  protected _version?: T['methods'] extends VersionedContract['methods'] ? ContractVersion : never
+export abstract class BaseWrapper {
+  protected _version?: ContractVersion
 
   constructor(
     protected readonly connection: Connection,
-    protected readonly contract: T
+    protected readonly contract: Contract
   ) {}
 
   /** Contract address */
@@ -66,19 +54,19 @@ export abstract class BaseWrapper<T extends Contract> {
   }
 
   /** Contract getPastEvents */
-  public getPastEvents(event: Events<T>, options: PastEventOptions): Promise<EventLog[]> {
+  public getPastEvents(event: Events, options: PastEventOptions): Promise<EventLog[]> {
     return this.contract.getPastEvents(event as string, options)
   }
 
-  events: T['events'] = this.contract.events
+  events: Contract['events'] = this.contract.events
 
-  eventTypes = Object.keys(this.events).reduce<EventsEnum<T>>(
+  eventTypes = Object.keys(this.events).reduce<EventsEnum>(
     (acc, key) => ({ ...acc, [key]: key }),
     {} as any
   )
 
-  methodIds = Object.keys(this.contract.methods).reduce<Record<Methods<T>, string>>(
-    (acc, method: Methods<T>) => {
+  methodIds = Object.keys(this.contract.methods).reduce<Record<Methods, string>>(
+    (acc, method: Methods) => {
       const methodABI = this.contract.options.jsonInterface.find((item) => item.name === method)
 
       acc[method] =

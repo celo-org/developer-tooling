@@ -65,7 +65,7 @@ interface ContractsForAttestation {
   getStableToken(stableToken: StableToken): Promise<StableTokenWrapper>
 }
 
-export class AttestationsWrapper extends BaseWrapper<Contract> {
+export class AttestationsWrapper extends BaseWrapper {
   constructor(
     protected readonly connection: Connection,
     protected readonly contract: Contract,

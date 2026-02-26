@@ -30,7 +30,7 @@ const mockContract = {
 const mockProvider = { send: (_payload: unknown, _cb: unknown) => undefined } as unknown as Provider
 const connection = new Connection(mockProvider)
 
-class TestWrapper extends BaseWrapper<Contract> {
+class TestWrapper extends BaseWrapper {
   constructor() {
     super(connection, mockContract)
   }

@@ -1,4 +1,4 @@
-import { Connection, Contract } from '@celo/connect'
+import { Connection } from '@celo/connect'
 import { AddressRegistry } from './address-registry'
 import { CeloContract } from './base'
 import { ContractCacheType } from './basic-contract-cache-type'
@@ -74,7 +74,7 @@ interface WrapperCacheMap {
   [CeloContract.Election]?: ElectionWrapper
   [CeloContract.EpochManager]?: EpochManagerWrapper
   [CeloContract.EpochRewards]?: EpochRewardsWrapper
-  [CeloContract.ERC20]?: Erc20Wrapper<Contract>
+  [CeloContract.ERC20]?: Erc20Wrapper
   [CeloContract.Escrow]?: EscrowWrapper
   [CeloContract.FederatedAttestations]?: FederatedAttestationsWrapper
   [CeloContract.FeeCurrencyDirectory]?: FeeCurrencyDirectoryWrapper

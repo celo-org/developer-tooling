@@ -1,4 +1,4 @@
-import { CeloTransactionObject, Contract } from '@celo/connect'
+import { CeloTransactionObject } from '@celo/connect'
 // NOTE: removing this import results in `yarn build` failures in Dockerfiles
 // after the move to node 10. This allows types to be inferred without
 // referencing '@celo/utils/node_modules/bignumber.js'
@@ -8,7 +8,7 @@ import { BaseWrapper, proxyCall, proxySend, valueToBigNumber } from './BaseWrapp
 /**
  * ERC-20 contract only containing the non-optional functions
  */
-export class Erc20Wrapper<T extends Contract> extends BaseWrapper<T> {
+export class Erc20Wrapper extends BaseWrapper {
   /**
    * Querying allowance.
    * @param from Account who has given the allowance.
@@ -67,4 +67,4 @@ export class Erc20Wrapper<T extends Contract> extends BaseWrapper<T> {
   )
 }
 
-export type Erc20WrapperType<T extends Contract> = Erc20Wrapper<T>
+export type Erc20WrapperType = Erc20Wrapper

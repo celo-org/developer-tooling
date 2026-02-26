@@ -5,7 +5,6 @@ import {
   CeloTransactionObject,
   CeloTxObject,
   toTransactionObject,
-  Contract,
 } from '@celo/connect'
 import {
   LocalSigner,
@@ -41,7 +40,7 @@ interface AccountSummary {
 /**
  * Contract for handling deposits needed for voting.
  */
-export class AccountsWrapper extends BaseWrapper<Contract> {
+export class AccountsWrapper extends BaseWrapper {
   private RELEASE_4_VERSION = newContractVersion(1, 1, 2, 0)
 
   /**

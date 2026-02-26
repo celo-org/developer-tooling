@@ -19,10 +19,10 @@ interface ContractWrappersForVotingAndRules {
 }
 
 /** @internal */
-export class BaseWrapperForGoverning<T extends Contract> extends BaseWrapper<T> {
+export class BaseWrapperForGoverning extends BaseWrapper {
   constructor(
     protected readonly connection: Connection,
-    protected readonly contract: T,
+    protected readonly contract: Contract,
     protected readonly contracts: ContractWrappersForVotingAndRules
   ) {
     super(connection, contract)

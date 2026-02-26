@@ -6,7 +6,6 @@ import {
   CeloTransactionObject,
   EventLog,
   toTransactionObject,
-  Contract,
 } from '@celo/connect'
 import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
@@ -82,7 +81,7 @@ export interface MembershipHistoryExtraData {
  * Contract for voting for validators and managing validator groups.
  */
 // TODO(asa): Support validator signers
-export class ValidatorsWrapper extends BaseWrapperForGoverning<Contract> {
+export class ValidatorsWrapper extends BaseWrapperForGoverning {
   /**
    * Queues an update to a validator group's commission.
    * @param commission Fixidity representation of the commission this group receives on epoch

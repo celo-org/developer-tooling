@@ -1,4 +1,4 @@
-import { Address, CeloTransactionObject, EventLog, Contract } from '@celo/connect'
+import { Address, CeloTransactionObject, EventLog } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import {
   BaseWrapper,
@@ -19,7 +19,7 @@ export interface ReserveConfig {
 /**
  * Contract for handling reserve for stable currencies
  */
-export class ReserveWrapper extends BaseWrapper<Contract> {
+export class ReserveWrapper extends BaseWrapper {
   /**
    * Query Tobin tax staleness threshold parameter.
    * @returns Current Tobin tax staleness threshold.

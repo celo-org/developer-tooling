@@ -1,8 +1,8 @@
-import { Address, CeloTransactionObject, toTransactionObject, Contract } from '@celo/connect'
+import { Address, CeloTransactionObject, toTransactionObject } from '@celo/connect'
 import { registerAttestation as buildRegisterAttestationTypedData } from '@celo/utils/lib/typed-data-constructors'
 import { BaseWrapper, proxyCall, proxySend } from './BaseWrapper'
 
-export class FederatedAttestationsWrapper extends BaseWrapper<Contract> {
+export class FederatedAttestationsWrapper extends BaseWrapper {
   /**
    * @notice Returns identifiers mapped to `account` by signers of `trustedIssuers`
    * @param account Address of the account

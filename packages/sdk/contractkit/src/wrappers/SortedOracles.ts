@@ -59,7 +59,7 @@ export type ReportTarget = StableTokenContract | Address
 /**
  * Currency price oracle contract.
  */
-export class SortedOraclesWrapper extends BaseWrapper<Contract> {
+export class SortedOraclesWrapper extends BaseWrapper {
   constructor(
     protected readonly connection: Connection,
     protected readonly contract: Contract,

@@ -1,10 +1,9 @@
-import { Contract } from '@celo/connect'
 import { BaseWrapper, fixidityValueToBigNumber, proxyCall } from './BaseWrapper'
 
 /**
  * Contract handling validator scores.
  */
-export class ScoreManagerWrapper extends BaseWrapper<Contract> {
+export class ScoreManagerWrapper extends BaseWrapper {
   getGroupScore = proxyCall(
     this.contract.methods.getGroupScore,
     undefined,

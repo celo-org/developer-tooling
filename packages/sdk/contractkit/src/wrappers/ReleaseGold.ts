@@ -6,7 +6,6 @@ import {
   CeloTransactionObject,
   CeloTxObject,
   toTransactionObject,
-  Contract,
 } from '@celo/connect'
 import { soliditySha3 } from '@celo/utils/lib/solidity'
 import { hashMessageWithPrefix, signedMessageToPublicKey } from '@celo/utils/lib/signatureUtils'
@@ -70,7 +69,7 @@ interface RevocationInfo {
 /**
  * Contract for handling an instance of a ReleaseGold contract.
  */
-export class ReleaseGoldWrapper extends BaseWrapperForGoverning<Contract> {
+export class ReleaseGoldWrapper extends BaseWrapperForGoverning {
   /**
    * Returns the underlying Release schedule of the ReleaseGold contract
    * @return A ReleaseSchedule.
