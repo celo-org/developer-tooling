@@ -66,7 +66,10 @@ export class Connection {
   readonly paramsPopulator: TxParamsNormalizer
   rpcCaller!: RpcCaller
   private _provider!: Provider
-  private _originalProviderOwner?: { currentProvider: Provider; setProvider?: (p: Provider) => void }
+  private _originalProviderOwner?: {
+    currentProvider: Provider
+    setProvider?: (p: Provider) => void
+  }
   private _settingProvider = false
 
   constructor(
@@ -273,7 +276,7 @@ export class Connection {
   private sendTransactionViaProvider(tx: CeloTx): TransactionResult {
     return toTxResult(
       new Promise<string>((resolve, reject) => {
-        ;(this._provider as Provider).send(
+        this._provider.send(
           {
             id: getRandomId(),
             jsonrpc: '2.0',
@@ -346,7 +349,7 @@ export class Connection {
     // would just forward it to the node
     const signature = await new Promise<string>((resolve, reject) => {
       const method = version ? `eth_signTypedData_v${version}` : 'eth_signTypedData'
-      ;(this._provider as Provider).send(
+      this._provider.send(
         {
           id: getRandomId(),
           jsonrpc: '2.0',
@@ -377,7 +380,7 @@ export class Connection {
     // by the CeloProvider if there is a local wallet that could sign it. The RpcCaller
     // would just forward it to the node
     const signature = await new Promise<string>((resolve, reject) => {
-      ;(this._provider as Provider).send(
+      this._provider.send(
         {
           id: getRandomId(),
           jsonrpc: '2.0',
@@ -402,7 +405,7 @@ export class Connection {
   sendSignedTransaction = async (signedTransactionData: string): Promise<TransactionResult> => {
     return toTxResult(
       new Promise<string>((resolve, reject) => {
-        ;(this._provider as Provider).send(
+        this._provider.send(
           {
             id: getRandomId(),
             jsonrpc: '2.0',
