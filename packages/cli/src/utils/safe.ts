@@ -6,16 +6,16 @@ import { MetaTransactionData, TransactionResult } from '@safe-global/types-kit'
 import { displaySafeTx } from './cli'
 
 export const createSafeFromWeb3 = async (
-  web3: { currentProvider: Provider },
+  providerOwner: { currentProvider: Provider },
   signer: StrongAddress,
   safeAddress: StrongAddress
 ) => {
-  if (!(web3.currentProvider instanceof CeloProvider)) {
+  if (!(providerOwner.currentProvider instanceof CeloProvider)) {
     throw new Error('Unexpected web3 provider')
   }
 
   return await Safe.init({
-    provider: web3.currentProvider.toEip1193Provider(),
+    provider: providerOwner.currentProvider.toEip1193Provider(),
     signer,
     safeAddress,
   })
@@ -34,12 +34,12 @@ export const safeTransactionMetadataFromCeloTransactionObject = async (
 }
 
 export const performSafeTransaction = async (
-  web3: { currentProvider: Provider },
+  providerOwner: { currentProvider: Provider },
   safeAddress: StrongAddress,
   safeSigner: StrongAddress,
   txData: MetaTransactionData
 ) => {
-  const safe = await createSafeFromWeb3(web3, safeSigner, safeAddress)
+  const safe = await createSafeFromWeb3(providerOwner, safeSigner, safeAddress)
   const approveTxPromise = await createApproveSafeTransactionIfNotApproved(safe, txData, safeSigner)
 
   if (approveTxPromise) {

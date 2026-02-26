@@ -14,7 +14,7 @@ const RELEASE_GOLD_IMPLEMENTATION_CONTRACT_BYTECODE =
 const RELEASE_GOLD_IMPLEMENTATION_CONTRACT_ADDRESS = '0xDdbe68bEae54dd94465C6bbA2477EE9500ce1974'
 
 export async function deployReleaseGoldContract(
-  web3: ProviderOwner,
+  providerOwner: ProviderOwner,
   ownerMultisigAddress: StrongAddress,
   beneficiary: StrongAddress,
   releaseOwner: StrongAddress,
@@ -22,13 +22,13 @@ export async function deployReleaseGoldContract(
   canValidate: boolean = false
 ): Promise<StrongAddress> {
   await setCode(
-    web3,
+    providerOwner,
     RELEASE_GOLD_IMPLEMENTATION_CONTRACT_ADDRESS,
     RELEASE_GOLD_IMPLEMENTATION_CONTRACT_BYTECODE
   )
 
   // Create contract using Connection's createContract
-  const connection = new Connection(web3.currentProvider)
+  const connection = new Connection(providerOwner.currentProvider)
   const contract = connection.createContract(
     releaseGoldABI as any,
     RELEASE_GOLD_IMPLEMENTATION_CONTRACT_ADDRESS
@@ -37,7 +37,7 @@ export async function deployReleaseGoldContract(
   const amountReleasedPerPeriod = new BigNumber(parseEther('10').toString())
 
   await withImpersonatedAccount(
-    web3,
+    providerOwner,
     ownerMultisigAddress,
     async () => {
       // default values taken from https://github.com/celo-org/celo-monorepo/blob/master/packages/protocol/test-sol/unit/governance/voting/ReleaseGold.t.sol#L146
@@ -64,7 +64,7 @@ export async function deployReleaseGoldContract(
   )
 
   await setBalance(
-    web3,
+    providerOwner,
     RELEASE_GOLD_IMPLEMENTATION_CONTRACT_ADDRESS,
     amountReleasedPerPeriod.multipliedBy(releasePeriods)
   )

@@ -91,11 +91,11 @@ export async function createMultisig(
  *
  * A working example can be found in packages/cli/src/commands/governance/approve-l2.test.ts`
  */
-export const setupSafeContracts = async (web3: any) => {
+export const setupSafeContracts = async (providerOwner: any) => {
   // Set up safe 1.3.0 in devchain
-  await setCode(web3, SAFE_MULTISEND_ADDRESS, SAFE_MULTISEND_CODE)
-  await setCode(web3, SAFE_MULTISEND_CALL_ONLY_ADDRESS, SAFE_MULTISEND_CALL_ONLY_CODE)
-  await setCode(web3, SAFE_PROXY_FACTORY_ADDRESS, SAFE_PROXY_FACTORY_CODE)
-  await setCode(web3, SAFE_PROXY_ADDRESS, SAFE_PROXY_CODE)
-  await setCode(web3, SAFE_FALLBACK_HANDLER_ADDRESS, SAFE_FALLBACK_HANDLER_CODE)
+  await setCode(providerOwner, SAFE_MULTISEND_ADDRESS, SAFE_MULTISEND_CODE)
+  await setCode(providerOwner, SAFE_MULTISEND_CALL_ONLY_ADDRESS, SAFE_MULTISEND_CALL_ONLY_CODE)
+  await setCode(providerOwner, SAFE_PROXY_FACTORY_ADDRESS, SAFE_PROXY_FACTORY_CODE)
+  await setCode(providerOwner, SAFE_PROXY_ADDRESS, SAFE_PROXY_CODE)
+  await setCode(providerOwner, SAFE_FALLBACK_HANDLER_ADDRESS, SAFE_FALLBACK_HANDLER_CODE)
 }

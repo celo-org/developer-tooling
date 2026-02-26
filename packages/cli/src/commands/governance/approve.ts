@@ -195,7 +195,7 @@ export default class Approve extends BaseCommand {
 }
 
 const addDefaultChecks = async (
-  web3: { currentProvider: Provider },
+  providerOwner: { currentProvider: Provider },
   checkBuilder: ReturnType<typeof newCheckBuilder>,
   governance: GovernanceWrapper,
   isHotfix: boolean,
@@ -237,7 +237,7 @@ const addDefaultChecks = async (
       } else if (useSafe) {
         checkBuilder.addCheck(`${account} is security council safe signatory`, async () => {
           const protocolKit = await createSafeFromWeb3(
-            web3,
+            providerOwner,
             account,
             await governance.getSecurityCouncil()
           )
