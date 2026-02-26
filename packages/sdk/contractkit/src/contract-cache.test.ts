@@ -14,8 +14,12 @@ const TestedWrappers: ValidWrappers[] = [
   CeloContract.LockedCelo,
 ]
 
+function createMockProvider() {
+  return getProviderForKit('http://localhost:8545')
+}
+
 function newWrapperCache() {
-  const provider = getProviderForKit('http://localhost:8545')
+  const provider = createMockProvider()
   const connection = new Connection(provider)
   const registry = new AddressRegistry(connection)
   const nativeContractCache = new ContractCache(registry)
