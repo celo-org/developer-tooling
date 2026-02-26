@@ -19,7 +19,7 @@ testWithAnvilL2('ScoreManager Wrapper', (client) => {
     await asCoreContractsOwner(
       client,
       async (from) => {
-        const scoreManagerContract = await kit._web3Contracts.getScoreManager()
+        const scoreManagerContract = await kit._contracts.getScoreManager()
 
         // change the score
         await scoreManagerContract.methods
@@ -47,7 +47,7 @@ testWithAnvilL2('ScoreManager Wrapper', (client) => {
     await asCoreContractsOwner(
       client,
       async (from) => {
-        const scoreManagerContract = await kit._web3Contracts.getScoreManager()
+        const scoreManagerContract = await kit._contracts.getScoreManager()
 
         // change the score
         await scoreManagerContract.methods

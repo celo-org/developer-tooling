@@ -19,7 +19,7 @@ export const getContractDetailsFromContract: any = async (
   celoContract: CeloContract,
   address?: string
 ) => {
-  const contract = await kit._web3Contracts.getContract(celoContract, address)
+  const contract = await kit._contracts.getContract(celoContract, address)
   return {
     name: celoContract,
     address: address ?? contract.options.address,

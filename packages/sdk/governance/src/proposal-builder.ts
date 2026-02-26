@@ -74,7 +74,7 @@ export class ProposalBuilder {
    */
   addProxyRepointingTx = (contract: CeloContract, newImplementationAddress: string) => {
     this.builders.push(async () => {
-      const proxy = await this.kit._web3Contracts.getContract(contract)
+      const proxy = await this.kit._contracts.getContract(contract)
       return this.fromWeb3tx(
         setImplementationOnProxy(newImplementationAddress, this.kit.connection),
         {
@@ -214,7 +214,7 @@ export class ProposalBuilder {
         .encodeFunctionCall(getInitializeAbiOfImplementation(tx.contract as any), tx.args[1])
     }
 
-    const contract = await this.kit._web3Contracts.getContract(tx.contract, address)
+    const contract = await this.kit._contracts.getContract(tx.contract, address)
     const methodName = tx.function
     const method = (contract.methods as Contract['methods'])[methodName]
     if (!method) {

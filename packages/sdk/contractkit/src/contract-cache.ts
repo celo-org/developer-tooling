@@ -110,7 +110,7 @@ export class WrapperCache implements ContractCacheType {
   private wrapperCache: WrapperCacheMap = {}
   constructor(
     readonly connection: Connection,
-    readonly _web3Contracts: ContractCache,
+    readonly _contracts: ContractCache,
     readonly registry: AddressRegistry
   ) {}
 
@@ -189,7 +189,7 @@ export class WrapperCache implements ContractCacheType {
    */
   public async getContract<C extends ValidWrappers>(contract: C, address?: string) {
     if (this.wrapperCache[contract] == null || address !== undefined) {
-      const instance = await this._web3Contracts.getContract(contract, address)
+      const instance = await this._contracts.getContract(contract, address)
       if (contract === CeloContract.SortedOracles) {
         const Klass = WithRegistry[CeloContract.SortedOracles]
         this.wrapperCache[CeloContract.SortedOracles] = new Klass(
@@ -212,7 +212,7 @@ export class WrapperCache implements ContractCacheType {
   }
 
   public invalidateContract<C extends ValidWrappers>(contract: C) {
-    this._web3Contracts.invalidateContract(contract)
+    this._contracts.invalidateContract(contract)
     this.wrapperCache[contract] = undefined
   }
 }

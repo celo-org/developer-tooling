@@ -93,7 +93,7 @@ export class ContractKit {
   /** core contract's address registry */
   readonly registry: AddressRegistry
   /** factory for core contract's native contract wrappers  */
-  readonly _web3Contracts: ContractCache
+  readonly _contracts: ContractCache
   /** factory for core contract's kit wrappers  */
   readonly contracts: WrapperCache
   /** helper for interacting with CELO & stable tokens */
@@ -104,8 +104,8 @@ export class ContractKit {
 
   constructor(readonly connection: Connection) {
     this.registry = new AddressRegistry(connection)
-    this._web3Contracts = new ContractCache(this.registry)
-    this.contracts = new WrapperCache(connection, this._web3Contracts, this.registry)
+    this._contracts = new ContractCache(this.registry)
+    this.contracts = new WrapperCache(connection, this._contracts, this.registry)
     this.celoTokens = new CeloTokens(this.contracts, this.registry)
   }
 
