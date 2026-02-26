@@ -10,7 +10,7 @@ import SetBeneficiary from './set-beneficiary'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('releasegold:set-beneficiary cmd', (client) => {
+testWithAnvilL2('releasegold:set-beneficiary cmd', (providerOwner) => {
   let contractAddress: any
   let kit: ContractKit
   let releaseGoldWrapper: ReleaseGoldWrapper
@@ -22,7 +22,7 @@ testWithAnvilL2('releasegold:set-beneficiary cmd', (client) => {
   let refundAddress: StrongAddress
 
   beforeEach(async () => {
-    kit = newKitFromProvider(client.currentProvider)
+    kit = newKitFromProvider(providerOwner.currentProvider)
     const accounts = await kit.connection.getAccounts()
 
     releaseOwner = accounts[0] as StrongAddress
@@ -32,7 +32,7 @@ testWithAnvilL2('releasegold:set-beneficiary cmd', (client) => {
     refundAddress = accounts[4] as StrongAddress
 
     contractAddress = await deployReleaseGoldContract(
-      client,
+      providerOwner,
       await createMultisig(kit, [accounts[0], accounts[1]] as StrongAddress[], 2, 2),
       beneficiary,
       releaseOwner,
@@ -62,7 +62,7 @@ testWithAnvilL2('releasegold:set-beneficiary cmd', (client) => {
         newBeneficiary,
         '--yesreally',
       ],
-      client
+      providerOwner
     )
     // The multisig tx should not confirm until both parties submit
     expect(await releaseGoldWrapper.getBeneficiary()).toEqual(beneficiary)
@@ -77,7 +77,7 @@ testWithAnvilL2('releasegold:set-beneficiary cmd', (client) => {
         newBeneficiary,
         '--yesreally',
       ],
-      client
+      providerOwner
     )
     expect(await releaseGoldWrapper.getBeneficiary()).toEqual(newBeneficiary)
     // It should also update the multisig owners
@@ -97,7 +97,7 @@ testWithAnvilL2('releasegold:set-beneficiary cmd', (client) => {
           newBeneficiary,
           '--yesreally',
         ],
-        client
+        providerOwner
       )
     ).rejects.toThrow()
   })
@@ -116,7 +116,7 @@ testWithAnvilL2('releasegold:set-beneficiary cmd', (client) => {
         newBeneficiary,
         '--yesreally',
       ],
-      client
+      providerOwner
     )
     await testLocallyWithNode(
       SetBeneficiary,
@@ -129,7 +129,7 @@ testWithAnvilL2('releasegold:set-beneficiary cmd', (client) => {
         otherAccount,
         '--yesreally',
       ],
-      client
+      providerOwner
     )
     expect(await releaseGoldWrapper.getBeneficiary()).toEqual(beneficiary)
     expect(await releaseGoldMultiSig.getOwners()).toEqual([releaseOwner, beneficiary])

@@ -12,25 +12,25 @@ import Vote from './vote'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('election:vote', (client) => {
+testWithAnvilL2('election:vote', (providerOwner) => {
   afterEach(async () => {
     jest.clearAllMocks()
   })
 
   it('fails when no flags are provided', async () => {
-    await expect(testLocallyWithNode(Vote, [], client)).rejects.toThrow('Missing required flag')
+    await expect(testLocallyWithNode(Vote, [], providerOwner)).rejects.toThrow('Missing required flag')
   })
 
   it('fails when voter is not an account', async () => {
     const logMock = jest.spyOn(console, 'log')
-    const kit = newKitFromProvider(client.currentProvider)
+    const kit = newKitFromProvider(providerOwner.currentProvider)
     const [fromAddress, groupAddress] = await kit.connection.getAccounts()
 
     await expect(
       testLocallyWithNode(
         Vote,
         ['--from', fromAddress, '--for', groupAddress, '--value', '1'],
-        client
+        providerOwner
       )
     ).rejects.toThrow()
 
@@ -40,7 +40,7 @@ testWithAnvilL2('election:vote', (client) => {
   })
 
   it('fails when "for" is not a validator group', async () => {
-    const kit = newKitFromProvider(client.currentProvider)
+    const kit = newKitFromProvider(providerOwner.currentProvider)
     const logMock = jest.spyOn(console, 'log')
     const [fromAddress, groupAddress] = await kit.connection.getAccounts()
 
@@ -50,7 +50,7 @@ testWithAnvilL2('election:vote', (client) => {
       testLocallyWithNode(
         Vote,
         ['--from', fromAddress, '--for', groupAddress, '--value', '1'],
-        client
+        providerOwner
       )
     ).rejects.toThrow()
 
@@ -60,7 +60,7 @@ testWithAnvilL2('election:vote', (client) => {
   })
 
   it('fails when value is too high', async () => {
-    const kit = newKitFromProvider(client.currentProvider)
+    const kit = newKitFromProvider(providerOwner.currentProvider)
     const logMock = jest.spyOn(console, 'log')
     const [fromAddress, groupAddress, validatorAddress] = await kit.connection.getAccounts()
 
@@ -71,7 +71,7 @@ testWithAnvilL2('election:vote', (client) => {
       testLocallyWithNode(
         Vote,
         ['--from', fromAddress, '--for', groupAddress, '--value', '1'],
-        client
+        providerOwner
       )
     ).rejects.toThrow()
 
@@ -81,7 +81,7 @@ testWithAnvilL2('election:vote', (client) => {
   })
 
   it('successfuly votes for a group', async () => {
-    const kit = newKitFromProvider(client.currentProvider)
+    const kit = newKitFromProvider(providerOwner.currentProvider)
     const logMock = jest.spyOn(console, 'log')
     const writeMock = jest.spyOn(ux.write, 'stdout')
     const [fromAddress, groupAddress, validatorAddress] = await kit.connection.getAccounts()
@@ -99,7 +99,7 @@ testWithAnvilL2('election:vote', (client) => {
       testLocallyWithNode(
         Vote,
         ['--from', fromAddress, '--for', groupAddress, '--value', amount.toFixed()],
-        client
+        providerOwner
       )
     ).resolves.not.toThrow()
 

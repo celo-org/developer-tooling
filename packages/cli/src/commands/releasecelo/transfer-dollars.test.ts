@@ -21,13 +21,13 @@ process.env.NO_SYNCCHECK = 'true'
 // Lots of commands, sometimes times out
 jest.setTimeout(15000)
 
-testWithAnvilL2('releasegold:transfer-dollars cmd', (client) => {
+testWithAnvilL2('releasegold:transfer-dollars cmd', (providerOwner) => {
   let accounts: StrongAddress[] = []
   let contractAddress: any
   let kit: ContractKit
 
   beforeEach(async () => {
-    kit = newKitFromProvider(client.currentProvider)
+    kit = newKitFromProvider(providerOwner.currentProvider)
     accounts = (await kit.connection.getAccounts()) as StrongAddress[]
     jest.spyOn(console, 'log').mockImplementation(() => {
       // noop
@@ -37,7 +37,7 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (client) => {
     })
 
     contractAddress = await deployReleaseGoldContract(
-      client,
+      providerOwner,
       await createMultisig(kit, [accounts[0], accounts[1]] as StrongAddress[], 2, 2),
       accounts[1],
       accounts[0],
@@ -49,8 +49,8 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (client) => {
     jest.spyOn(kit.connection, 'getMaxPriorityFeePerGas').mockImplementation(async () => {
       return toHex(TEST_GAS_PRICE - TEST_BASE_FEE)
     })
-    await testLocallyWithNode(Register, ['--from', accounts[0]], client)
-    await testLocallyWithNode(CreateAccount, ['--contract', contractAddress], client)
+    await testLocallyWithNode(Register, ['--from', accounts[0]], providerOwner)
+    await testLocallyWithNode(CreateAccount, ['--contract', contractAddress], providerOwner)
   })
 
   afterEach(() => {
@@ -72,7 +72,7 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (client) => {
       testLocallyWithNode(
         TransferDollars,
         ['--from', accounts[0], '--to', contractAddress, '--value', USDmToTransfer],
-        client
+        providerOwner
       )
     ).resolves.toBeUndefined()
     expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls)).toMatchInlineSnapshot(`
@@ -107,7 +107,7 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (client) => {
       ]
     `)
     jest.clearAllMocks()
-    await mineBlocks(2, client)
+    await mineBlocks(2, providerOwner)
     // RG USDm balance should match the amount sent
     const contractBalance = await kit.getTotalBalance(contractAddress)
     expect(contractBalance.USDm!.toFixed()).toEqual(USDmToTransfer)
@@ -125,7 +125,7 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (client) => {
           '--privateKey',
           ACCOUNT_PRIVATE_KEYS[1],
         ],
-        client
+        providerOwner
       )
     ).resolves.toBeUndefined()
 
@@ -144,7 +144,7 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (client) => {
       testLocallyWithNode(
         RGTransferDollars,
         ['--contract', contractAddress, '--to', accounts[0], '--value', value.toString()],
-        client
+        providerOwner
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls).at(-1)).toMatchInlineSnapshot(`
@@ -166,14 +166,14 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (client) => {
     await testLocallyWithNode(
       TransferDollars,
       ['--from', accounts[0], '--to', contractAddress, '--value', USDmToTransfer],
-      client
+      providerOwner
     )
 
     await expect(
       testLocallyWithNode(
         RGTransferDollars,
         ['--contract', contractAddress, '--to', SANCTIONED_ADDRESSES[0], '--value', '10'],
-        client
+        providerOwner
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     expect(spy).toHaveBeenCalledWith(expect.stringContaining(COMPLIANT_ERROR_RESPONSE))
@@ -192,7 +192,7 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (client) => {
     await testLocallyWithNode(
       TransferDollars,
       ['--from', accounts[0], '--to', contractAddress, '--value', USDmToTransfer],
-      client
+      providerOwner
     )
 
     // Try to transfer using account[2] which is neither beneficiary nor release owner
@@ -209,7 +209,7 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (client) => {
           '--privateKey',
           ACCOUNT_PRIVATE_KEYS[2],
         ],
-        client
+        providerOwner
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
 

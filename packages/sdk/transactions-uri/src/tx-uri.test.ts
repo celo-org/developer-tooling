@@ -3,7 +3,7 @@ import { CeloContract, newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { buildUri, parseUri } from './tx-uri'
 
-testWithAnvilL2('URI utils', (client) => {
+testWithAnvilL2('URI utils', (providerOwner) => {
   const recipient = '0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef'
   const value = '100'
 
@@ -19,7 +19,7 @@ testWithAnvilL2('URI utils', (client) => {
   let lockGoldUri: string
   let lockGoldTx: CeloTx
 
-  const kit = newKitFromProvider(client.currentProvider)
+  const kit = newKitFromProvider(providerOwner.currentProvider)
 
   beforeAll(async () => {
     const stableTokenAddr = await kit.registry.addressFor(CeloContract.StableToken)

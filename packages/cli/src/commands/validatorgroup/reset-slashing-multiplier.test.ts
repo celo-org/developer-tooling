@@ -9,21 +9,21 @@ import ResetSlashingMultiplier from './reset-slashing-multiplier'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validatorgroup:reset-slashing-multiplier cmd', (client) => {
+testWithAnvilL2('validatorgroup:reset-slashing-multiplier cmd', (providerOwner) => {
   beforeEach(async () => {
-    const kit = newKitFromProvider(client.currentProvider)
+    const kit = newKitFromProvider(providerOwner.currentProvider)
     const accounts = await kit.connection.getAccounts()
 
-    await testLocallyWithNode(AccountRegister, ['--from', accounts[0]], client)
+    await testLocallyWithNode(AccountRegister, ['--from', accounts[0]], providerOwner)
     await testLocallyWithNode(
       Lock,
       ['--from', accounts[0], '--value', '10000000000000000000000'],
-      client
+      providerOwner
     )
     await testLocallyWithNode(
       ValidatorGroupRegister,
       ['--from', accounts[0], '--commission', '0.2', '--yes'],
-      client
+      providerOwner
     )
   })
   afterAll(() => {
@@ -34,10 +34,10 @@ testWithAnvilL2('validatorgroup:reset-slashing-multiplier cmd', (client) => {
     const logSpy = jest.spyOn(console, 'log')
     const writeMock = jest.spyOn(ux.write, 'stdout')
 
-    const kit = newKitFromProvider(client.currentProvider)
+    const kit = newKitFromProvider(providerOwner.currentProvider)
     const accounts = await kit.connection.getAccounts()
 
-    await testLocallyWithNode(ResetSlashingMultiplier, [accounts[0]], client)
+    await testLocallyWithNode(ResetSlashingMultiplier, [accounts[0]], providerOwner)
 
     expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls)).toMatchInlineSnapshot(`
       [

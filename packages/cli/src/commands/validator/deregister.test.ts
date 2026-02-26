@@ -22,7 +22,7 @@ import { default as ValidatorRegister } from './register'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validator:deregister', (client) => {
+testWithAnvilL2('validator:deregister', (providerOwner) => {
   let account: string
   let ecdsaPublicKey: string
   let groupAddress: StrongAddress
@@ -35,30 +35,30 @@ testWithAnvilL2('validator:deregister', (client) => {
     jest.spyOn(console, 'error').mockImplementation(() => {
       // noop
     })
-    const kit = newKitFromProvider(client.currentProvider)
+    const kit = newKitFromProvider(providerOwner.currentProvider)
     const accounts = await kit.connection.getAccounts()
     account = accounts[0]
     validatorContract = await kit.contracts.getValidators()
     const groups = await validatorContract.getRegisteredValidatorGroupsAddresses()
     groupAddress = groups[0] as StrongAddress
     ecdsaPublicKey = await addressToPublicKey(account, kit.connection.sign)
-    await testLocallyWithNode(Register, ['--from', account], client)
+    await testLocallyWithNode(Register, ['--from', account], providerOwner)
     await testLocallyWithNode(
       Lock,
       ['--from', account, '--value', '10000000000000000000000'],
-      client
+      providerOwner
     )
     await testLocallyWithNode(
       ValidatorRegister,
       ['--from', account, '--ecdsaKey', ecdsaPublicKey, '--yes'],
-      client
+      providerOwner
     )
     await testLocallyWithNode(
       ValidatorAffiliate,
       ['--from', account, groupAddress, '--yes'],
-      client
+      providerOwner
     )
-    await asCoreContractsOwner(client, async (ownerAddress) => {
+    await asCoreContractsOwner(providerOwner, async (ownerAddress) => {
       // @ts-expect-error (.contract)
       await validatorContract.contract.methods.setMaxGroupSize(5).send({ from: ownerAddress })
       // @ts-expect-error (.contract)
@@ -70,11 +70,11 @@ testWithAnvilL2('validator:deregister', (client) => {
         .setGroupLockedGoldRequirements(2, 10000)
         .send({ from: ownerAddress })
     })
-    await withImpersonatedAccount(client, groupAddress, async () => {
+    await withImpersonatedAccount(providerOwner, groupAddress, async () => {
       await testLocallyWithNode(
         ValidatorGroupMembers,
         [account, '--from', groupAddress, '--accept', '--yes'],
-        client
+        providerOwner
       )
     })
   })
@@ -90,11 +90,11 @@ testWithAnvilL2('validator:deregister', (client) => {
       // precondition
       const groupAtSettup = await validatorContract.getValidatorGroup(groupAddress, false)
       expect(groupAtSettup.members).toContain(account)
-      await withImpersonatedAccount(client, groupAddress, async () => {
+      await withImpersonatedAccount(providerOwner, groupAddress, async () => {
         await testLocallyWithNode(
           ValidatorGroupMembers,
           [account, '--from', groupAddress, '--remove', '--yes'],
-          client
+          providerOwner
         )
       })
 
@@ -102,7 +102,7 @@ testWithAnvilL2('validator:deregister', (client) => {
       const { lastRemovedFromGroupTimestamp } =
         await validatorContract.getValidatorMembershipHistoryExtraData(account)
       // travel in the evm
-      await timeTravel(duration.multipliedBy(2).toNumber(), client)
+      await timeTravel(duration.multipliedBy(2).toNumber(), providerOwner)
       // time travel in node land
       const jestTime = lastRemovedFromGroupTimestamp * 1000
       const futureTime = jestTime + duration.multipliedBy(2000).toNumber()
@@ -122,7 +122,7 @@ testWithAnvilL2('validator:deregister', (client) => {
         duration.toNumber()
       )
       await expect(
-        testLocallyWithNode(ValidatorDeRegister, ['--from', account], client)
+        testLocallyWithNode(ValidatorDeRegister, ['--from', account], providerOwner)
       ).resolves.toMatchInlineSnapshot(`undefined`)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
               [
@@ -174,7 +174,7 @@ testWithAnvilL2('validator:deregister', (client) => {
       logMock.mockClear()
 
       await expect(
-        testLocallyWithNode(ValidatorDeRegister, ['--from', account], client)
+        testLocallyWithNode(ValidatorDeRegister, ['--from', account], providerOwner)
       ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
 
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
@@ -206,7 +206,7 @@ testWithAnvilL2('validator:deregister', (client) => {
   it(
     'succeeds if not a member of any group',
     async () => {
-      const kit = newKitFromProvider(client.currentProvider)
+      const kit = newKitFromProvider(providerOwner.currentProvider)
       const [_, notAffiliatedValidator] = await kit.connection.getAccounts()
       const groupAtSetup = await validatorContract.getValidatorGroup(groupAddress, false)
 
@@ -217,7 +217,7 @@ testWithAnvilL2('validator:deregister', (client) => {
       await testLocallyWithNode(
         Lock,
         ['--from', notAffiliatedValidator, '--value', '10000000000000000000000'],
-        client
+        providerOwner
       )
       await testLocallyWithNode(
         ValidatorRegister,
@@ -228,14 +228,14 @@ testWithAnvilL2('validator:deregister', (client) => {
           await addressToPublicKey(notAffiliatedValidator, kit.connection.sign),
           '--yes',
         ],
-        client
+        providerOwner
       )
 
       const { duration } = await validatorContract.getValidatorLockedGoldRequirements()
       const { lastRemovedFromGroupTimestamp } =
         await validatorContract.getValidatorMembershipHistoryExtraData(account)
       // travel in the evm
-      await timeTravel(duration.multipliedBy(2).toNumber(), client)
+      await timeTravel(duration.multipliedBy(2).toNumber(), providerOwner)
       // time travel in node land
       const jestTime = lastRemovedFromGroupTimestamp * 1000
       const futureTime = jestTime + duration.multipliedBy(2000).toNumber()
@@ -244,7 +244,7 @@ testWithAnvilL2('validator:deregister', (client) => {
       const logMock = jest.spyOn(console, 'log')
       logMock.mockClear()
 
-      await testLocallyWithNode(ValidatorDeRegister, ['--from', notAffiliatedValidator], client)
+      await testLocallyWithNode(ValidatorDeRegister, ['--from', notAffiliatedValidator], providerOwner)
 
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [

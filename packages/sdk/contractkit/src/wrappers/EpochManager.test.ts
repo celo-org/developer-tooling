@@ -13,8 +13,8 @@ import { startAndFinishEpochProcess } from '../test-utils/utils'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('EpochManagerWrapper', (client) => {
-  const kit = newKitFromProvider(client.currentProvider)
+testWithAnvilL2('EpochManagerWrapper', (providerOwner) => {
+  const kit = newKitFromProvider(providerOwner.currentProvider)
 
   let epochDuration: number
 
@@ -34,7 +34,7 @@ testWithAnvilL2('EpochManagerWrapper', (client) => {
   it('indicates that it is time for next epoch', async () => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
 
-    await timeTravel(epochDuration + 1, client)
+    await timeTravel(epochDuration + 1, providerOwner)
 
     expect(await epochManagerWrapper.isTimeForNextEpoch()).toBeTruthy()
 
@@ -65,7 +65,7 @@ testWithAnvilL2('EpochManagerWrapper', (client) => {
     expect((await epochManagerWrapper.getEpochProcessingStatus()).status).toEqual(0)
 
     // Let the epoch pass and start another one
-    await timeTravel(epochDuration, client)
+    await timeTravel(epochDuration, providerOwner)
     await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
       from: accounts[0],
     })
@@ -91,7 +91,7 @@ testWithAnvilL2('EpochManagerWrapper', (client) => {
     )
 
     // Let the epoch pass and start another one
-    await timeTravel(epochDuration + 1, client)
+    await timeTravel(epochDuration + 1, providerOwner)
     await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
       from: accounts[0],
     })
@@ -117,7 +117,7 @@ testWithAnvilL2('EpochManagerWrapper', (client) => {
       )
 
       // Let the epoch pass and start another one
-      await timeTravel(epochDuration + 1, client)
+      await timeTravel(epochDuration + 1, providerOwner)
       await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
         from: accounts[0],
       })
@@ -127,7 +127,7 @@ testWithAnvilL2('EpochManagerWrapper', (client) => {
       const validatorGroups = await validatorsContract.getRegisteredValidatorGroupsAddresses()
 
       await asCoreContractsOwner(
-        client,
+        providerOwner,
         async (ownerAdress: StrongAddress) => {
           const registryContract = kit.connection.createContract(
             registryABI as any,
@@ -174,7 +174,7 @@ testWithAnvilL2('EpochManagerWrapper', (client) => {
       )
       if (pendingVotesForGroup.gt(0)) {
         await withImpersonatedAccount(
-          client,
+          providerOwner,
           validatorGroup,
           async () => {
             await electionContract.methods.activate(validatorGroup).send({ from: validatorGroup })
@@ -190,7 +190,7 @@ testWithAnvilL2('EpochManagerWrapper', (client) => {
     const epochManagerWrapper = await kit.contracts.getEpochManager()
     const EPOCH_COUNT = 5
 
-    await timeTravel(epochDuration, client)
+    await timeTravel(epochDuration, providerOwner)
 
     await startAndFinishEpochProcess(kit)
 
@@ -200,7 +200,7 @@ testWithAnvilL2('EpochManagerWrapper', (client) => {
     expect(epochAfterFirstProcess).toBeGreaterThanOrEqual(5)
 
     for (let i = 0; i < EPOCH_COUNT; i++) {
-      await timeTravel(epochDuration + 1, client)
+      await timeTravel(epochDuration + 1, providerOwner)
 
       await startAndFinishEpochProcess(kit)
     }
@@ -211,7 +211,7 @@ testWithAnvilL2('EpochManagerWrapper', (client) => {
     expect((await epochManagerWrapper.getEpochProcessingStatus()).status).toEqual(0)
 
     // Start a new epoch process, but not finish it, so we can check the amounts
-    await timeTravel(epochDuration + 1, client)
+    await timeTravel(epochDuration + 1, providerOwner)
     await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
       from: accounts[0],
     })
@@ -249,14 +249,14 @@ testWithAnvilL2('EpochManagerWrapper', (client) => {
     const accounts = await kit.connection.getAccounts()
     const epochManagerWrapper = await kit.contracts.getEpochManager()
 
-    await timeTravel(epochDuration, client)
+    await timeTravel(epochDuration, providerOwner)
 
     await startAndFinishEpochProcess(kit)
 
     await activateValidators()
 
     // Start a new epoch process, but don't process it, so we can compare the amounts
-    await timeTravel(epochDuration + 1, client)
+    await timeTravel(epochDuration + 1, providerOwner)
 
     await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
       from: accounts[0],

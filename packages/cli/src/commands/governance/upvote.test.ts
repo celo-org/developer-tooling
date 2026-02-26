@@ -12,9 +12,9 @@ import Upvote from './upvote'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:upvote cmd', (client) => {
+testWithAnvilL2('governance:upvote cmd', (providerOwner) => {
   let minDeposit: string
-  const kit = newKitFromProvider(client.currentProvider)
+  const kit = newKitFromProvider(providerOwner.currentProvider)
   const proposalID = new BigNumber(1)
   const proposalID2 = new BigNumber(2)
   const proposalID3 = new BigNumber(3)
@@ -34,14 +34,14 @@ testWithAnvilL2('governance:upvote cmd', (client) => {
     // If the devchain is published less than dequeueFrequency ago, the tests
     // will fail, so we need to make sure that by calling timeTravel() we will
     // hit the next dequeue
-    await timeTravel(dequeueFrequency, client)
+    await timeTravel(dequeueFrequency, providerOwner)
 
     await governance
       .propose([], 'URL')
       .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
     // this will reset lastDequeue to now
     // there is 3 concurrent proposals possible to be dequeued
-    await testLocallyWithNode(Dequeue, ['--from', accounts[0]], client)
+    await testLocallyWithNode(Dequeue, ['--from', accounts[0]], providerOwner)
     await governance
       .propose([], 'URL2')
       .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
@@ -55,16 +55,16 @@ testWithAnvilL2('governance:upvote cmd', (client) => {
       .propose([], 'URL5')
       .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
 
-    await timeTravel(dequeueFrequency, client)
-    await testLocallyWithNode(Register, ['--from', accounts[0]], client)
-    await testLocallyWithNode(Lock, ['--from', accounts[0], '--value', '100'], client)
+    await timeTravel(dequeueFrequency, providerOwner)
+    await testLocallyWithNode(Register, ['--from', accounts[0]], providerOwner)
+    await testLocallyWithNode(Lock, ['--from', accounts[0], '--value', '100'], providerOwner)
   })
 
   test('will dequeue proposal if ready', async () => {
     await testLocallyWithNode(
       Upvote,
       ['--proposalID', proposalID2.toString(10), '--from', accounts[0]],
-      client
+      providerOwner
     )
 
     const queue = await governance.getQueue()
@@ -78,7 +78,7 @@ testWithAnvilL2('governance:upvote cmd', (client) => {
     await testLocallyWithNode(
       Upvote,
       ['--proposalID', proposalID5.toString(10), '--from', accounts[0]],
-      client
+      providerOwner
     )
 
     const queue = await governance.getQueue()

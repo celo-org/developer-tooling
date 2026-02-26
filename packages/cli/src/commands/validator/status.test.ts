@@ -9,7 +9,7 @@ process.env.NO_SYNCCHECK = 'true'
 
 const KNOWN_DEVCHAIN_VALIDATOR = '0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f'
 
-testWithAnvilL2('validator:status', (client) => {
+testWithAnvilL2('validator:status', (providerOwner) => {
   const writeMock = jest.spyOn(ux.write, 'stdout')
   const logMock = jest.spyOn(console, 'log')
 
@@ -21,7 +21,7 @@ testWithAnvilL2('validator:status', (client) => {
     await testLocallyWithNode(
       Status,
       ['--validator', KNOWN_DEVCHAIN_VALIDATOR, '--csv', '--start', '349'],
-      client
+      providerOwner
     )
 
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
@@ -55,7 +55,7 @@ testWithAnvilL2('validator:status', (client) => {
   })
 
   it('displays status for all validators', async () => {
-    await testLocallyWithNode(Status, ['--all', '--csv', '--start', '349'], client)
+    await testLocallyWithNode(Status, ['--all', '--csv', '--start', '349'], providerOwner)
 
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`[]`)
     expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`
@@ -93,13 +93,13 @@ testWithAnvilL2('validator:status', (client) => {
   })
 
   it('fails if start and end are in different epochs', async () => {
-    const kit = newKitFromProvider(client.currentProvider)
+    const kit = newKitFromProvider(providerOwner.currentProvider)
     const [account] = await kit.connection.getAccounts()
     const blockNumber = await kit.connection.getBlockNumber()
     const epoch = await kit.getEpochNumberOfBlock(blockNumber)
     const firstBlockOfCurrentEpoch = await kit.getFirstBlockNumberForEpoch(epoch)
 
-    await testLocallyWithNode(Switch, ['--from', account], client)
+    await testLocallyWithNode(Switch, ['--from', account], providerOwner)
 
     await expect(
       testLocallyWithNode(
@@ -110,7 +110,7 @@ testWithAnvilL2('validator:status', (client) => {
           '--start',
           (firstBlockOfCurrentEpoch - 2).toString(),
         ],
-        client
+        providerOwner
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Start and end blocks must be in the current epoch"`

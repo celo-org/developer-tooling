@@ -7,7 +7,7 @@ import HashHotfix from './hashhotfix'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:hashhotfix cmd', (client) => {
+testWithAnvilL2('governance:hashhotfix cmd', (providerOwner) => {
   const SALT = '0x614dccb5ac13cba47c2430bdee7829bb8c8f3603a8ace22e7680d317b39e3658'
   const HOTFIX_TRANSACTION_TEST_KEY = '3'
   const HOTFIX_TRANSACTION_TEST_VALUE = '4'
@@ -39,7 +39,7 @@ testWithAnvilL2('governance:hashhotfix cmd', (client) => {
     await testLocallyWithNode(
       HashHotfix,
       ['--jsonTransactions', HOTFIX_TRANSACTIONS_FILE_PATH, '--salt', SALT, '--force'],
-      client
+      providerOwner
     )
 
     expect(
@@ -57,14 +57,14 @@ testWithAnvilL2('governance:hashhotfix cmd', (client) => {
   })
 
   it('should verify and hash a hotfix successfuly', async () => {
-    await setCode(client, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
+    await setCode(providerOwner, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
 
     const logMock = jest.spyOn(console, 'log')
 
     await testLocallyWithNode(
       HashHotfix,
       ['--jsonTransactions', HOTFIX_TRANSACTIONS_FILE_PATH, '--salt', SALT],
-      client
+      providerOwner
     )
 
     expect(
@@ -93,7 +93,7 @@ testWithAnvilL2('governance:hashhotfix cmd', (client) => {
     await testLocallyWithNode(
       HashHotfix,
       ['--jsonTransactions', HOTFIX_TRANSACTIONS_FILE_PATH, '--salt', SALT],
-      client
+      providerOwner
     )
 
     expect(

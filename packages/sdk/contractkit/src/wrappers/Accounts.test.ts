@@ -18,7 +18,7 @@ TEST NOTES:
 
 const minLockedGoldValue = parseEther('10000').toString()
 
-testWithAnvilL2('Accounts Wrapper', (client) => {
+testWithAnvilL2('Accounts Wrapper', (providerOwner) => {
   let kit: ContractKit
   let accounts: StrongAddress[] = []
   let accountsInstance: AccountsWrapper
@@ -37,7 +37,7 @@ testWithAnvilL2('Accounts Wrapper', (client) => {
   }
 
   beforeAll(async () => {
-    kit = newKitFromProvider(client.currentProvider)
+    kit = newKitFromProvider(providerOwner.currentProvider)
     accounts = await kit.connection.getAccounts()
     validators = await kit.contracts.getValidators()
     lockedGold = await kit.contracts.getLockedGold()

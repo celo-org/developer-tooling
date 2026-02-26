@@ -68,12 +68,12 @@ export const NetworkConfig = migrationOverride
 export type ProviderOwner = { currentProvider: Provider }
 
 export function jsonRpcCall<O>(
-  client: ProviderOwner,
+  providerOwner: ProviderOwner,
   method: string,
   params: unknown[]
 ): Promise<O> {
   return new Promise<O>((resolve, reject) => {
-    const provider = client.currentProvider
+    const provider = providerOwner.currentProvider
 
     if (provider && typeof provider.send === 'function') {
       provider.send(
@@ -107,12 +107,12 @@ export function jsonRpcCall<O>(
   })
 }
 
-export function evmRevert(client: ProviderOwner, snapId: string): Promise<void> {
-  return jsonRpcCall(client, 'evm_revert', [snapId])
+export function evmRevert(providerOwner: ProviderOwner, snapId: string): Promise<void> {
+  return jsonRpcCall(providerOwner, 'evm_revert', [snapId])
 }
 
-export function evmSnapshot(client: ProviderOwner) {
-  return jsonRpcCall<string>(client, 'evm_snapshot', [])
+export function evmSnapshot(providerOwner: ProviderOwner) {
+  return jsonRpcCall<string>(providerOwner, 'evm_snapshot', [])
 }
 
 type TestWithWeb3Hooks = {
@@ -135,14 +135,14 @@ type TestWithWeb3Hooks = {
 export function testWithWeb3(
   name: string,
   rpcUrl: string,
-  fn: (client: ProviderOwner) => void,
+  fn: (providerOwner: ProviderOwner) => void,
   options: {
     hooks?: TestWithWeb3Hooks
     runIf?: boolean
   } = {}
 ) {
   const provider = new SimpleHttpProvider(rpcUrl)
-  const client: ProviderOwner = { currentProvider: provider }
+  const providerOwner: ProviderOwner = { currentProvider: provider }
 
   // By default we run all the tests
   let describeFn = describe
@@ -161,14 +161,14 @@ export function testWithWeb3(
 
     beforeEach(async () => {
       if (snapId != null) {
-        await evmRevert(client, snapId)
+        await evmRevert(providerOwner, snapId)
       }
-      snapId = await evmSnapshot(client)
+      snapId = await evmSnapshot(providerOwner)
     })
 
     afterAll(async () => {
       if (snapId != null) {
-        await evmRevert(client, snapId)
+        await evmRevert(providerOwner, snapId)
       }
       if (options.hooks?.afterAll) {
         // hook must be awaited here or jest doesnt actually wait for it and complains of open handles
@@ -176,6 +176,6 @@ export function testWithWeb3(
       }
     })
 
-    fn(client)
+    fn(providerOwner)
   })
 }

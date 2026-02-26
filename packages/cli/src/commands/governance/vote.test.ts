@@ -14,9 +14,9 @@ import Vote from './vote'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:vote cmd', (client) => {
+testWithAnvilL2('governance:vote cmd', (providerOwner) => {
   let minDeposit: string
-  const kit = newKitFromProvider(client.currentProvider)
+  const kit = newKitFromProvider(providerOwner.currentProvider)
   const proposalID = new BigNumber(1)
 
   let accounts: StrongAddress[] = []
@@ -31,23 +31,23 @@ testWithAnvilL2('governance:vote cmd', (client) => {
       .propose([], 'URL')
       .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
     const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
-    await timeTravel(dequeueFrequency, client)
-    await testLocallyWithNode(Dequeue, ['--from', accounts[0]], client)
+    await timeTravel(dequeueFrequency, providerOwner)
+    await testLocallyWithNode(Dequeue, ['--from', accounts[0]], providerOwner)
     await changeMultiSigOwner(kit, accounts[0])
     await testLocallyWithNode(
       Approve,
       ['--from', accounts[0], '--proposalID', proposalID.toString(10), '--useMultiSig'],
-      client
+      providerOwner
     )
-    await testLocallyWithNode(Register, ['--from', accounts[0]], client)
-    await testLocallyWithNode(Lock, ['--from', accounts[0], '--value', '100'], client)
+    await testLocallyWithNode(Register, ['--from', accounts[0]], providerOwner)
+    await testLocallyWithNode(Lock, ['--from', accounts[0], '--value', '100'], providerOwner)
   })
 
   test('can vote yes', async () => {
     await testLocallyWithNode(
       Vote,
       ['--from', accounts[0], '--proposalID', proposalID.toString(10), '--value', 'Yes'],
-      client
+      providerOwner
     )
     const votes = await governance.getVotes(proposalID)
     expect(votes.Yes.toNumber()).toEqual(100)

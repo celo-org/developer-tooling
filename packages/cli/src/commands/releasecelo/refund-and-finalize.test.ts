@@ -12,16 +12,16 @@ import Revoke from './revoke'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('releasegold:refund-and-finalize cmd', (client) => {
+testWithAnvilL2('releasegold:refund-and-finalize cmd', (providerOwner) => {
   let contractAddress: any
   let kit: ContractKit
 
   beforeEach(async () => {
-    kit = newKitFromProvider(client.currentProvider)
+    kit = newKitFromProvider(providerOwner.currentProvider)
     const accounts = (await kit.connection.getAccounts()) as StrongAddress[]
 
     contractAddress = await deployReleaseGoldContract(
-      client,
+      providerOwner,
       await createMultisig(kit, [accounts[0], accounts[1]] as StrongAddress[], 2, 2),
       accounts[1],
       accounts[0],
@@ -30,7 +30,7 @@ testWithAnvilL2('releasegold:refund-and-finalize cmd', (client) => {
   })
 
   test('can refund celo', async () => {
-    await testLocallyWithNode(Revoke, ['--contract', contractAddress, '--yesreally'], client)
+    await testLocallyWithNode(Revoke, ['--contract', contractAddress, '--yesreally'], providerOwner)
     const releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
       kit.connection.createContract(releaseGoldABI as any, contractAddress),
@@ -38,7 +38,7 @@ testWithAnvilL2('releasegold:refund-and-finalize cmd', (client) => {
     )
     const refundAddress = await releaseGoldWrapper.getRefundAddress()
     const balanceBefore = await kit.getTotalBalance(refundAddress)
-    await testLocallyWithNode(RefundAndFinalize, ['--contract', contractAddress], client)
+    await testLocallyWithNode(RefundAndFinalize, ['--contract', contractAddress], providerOwner)
     const balanceAfter = await kit.getTotalBalance(refundAddress)
     expect(balanceBefore.CELO!.toNumber()).toBeLessThan(balanceAfter.CELO!.toNumber())
   })
@@ -51,17 +51,17 @@ testWithAnvilL2('releasegold:refund-and-finalize cmd', (client) => {
     )
 
     expect(await releaseGoldWrapper.isRevoked()).toBe(false)
-    await testLocallyWithNode(Revoke, ['--contract', contractAddress, '--yesreally'], client)
+    await testLocallyWithNode(Revoke, ['--contract', contractAddress, '--yesreally'], providerOwner)
     expect(await releaseGoldWrapper.isRevoked()).toBe(true)
 
     // Contract still should have some balance
     expect((await kit.getTotalBalance(contractAddress)).CELO).not.toEqBigNumber(0)
 
-    await testLocallyWithNode(RefundAndFinalize, ['--contract', contractAddress], client)
+    await testLocallyWithNode(RefundAndFinalize, ['--contract', contractAddress], providerOwner)
 
     const destroyedContractAddress = await getContractFromEvent(
       'ReleaseGoldInstanceDestroyed(address,address)',
-      client
+      providerOwner
     )
 
     expect(destroyedContractAddress).toBe(contractAddress)

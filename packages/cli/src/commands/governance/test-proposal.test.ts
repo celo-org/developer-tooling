@@ -17,7 +17,7 @@ jest.mock('@celo/governance', () => {
   }
 })
 
-testWithAnvilL2('governance:test-proposal cmd', (client) => {
+testWithAnvilL2('governance:test-proposal cmd', (providerOwner) => {
   const PROPOSAL_TRANSACTION_TEST_KEY = '3'
   const PROPOSAL_TRANSACTION_TEST_VALUE = '4'
   const PROPOSAL_TRANSACTIONS = [
@@ -50,16 +50,16 @@ testWithAnvilL2('governance:test-proposal cmd', (client) => {
         return {} as any
       })
 
-    await setCode(client, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
+    await setCode(providerOwner, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
 
-    const kit = newKitFromProvider(client.currentProvider)
+    const kit = newKitFromProvider(providerOwner.currentProvider)
     const [account] = await kit.connection.getAccounts()
     const logMock = jest.spyOn(console, 'log')
 
     await testLocallyWithNode(
       TestProposal,
       ['--jsonTransactions', PROPOSAL_TRANSACTIONS_FILE_PATH, '--from', account],
-      client
+      providerOwner
     )
 
     // Verify we're passing correct arguments to 'proposalToJSON'

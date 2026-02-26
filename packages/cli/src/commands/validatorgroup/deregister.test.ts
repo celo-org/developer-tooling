@@ -14,12 +14,12 @@ import ValidatorGroupMembers from './member'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validatorgroup:deregister cmd', (client) => {
+testWithAnvilL2('validatorgroup:deregister cmd', (providerOwner) => {
   let groupAddress: Address
   let validatorAddress: Address
   let kit: ContractKit
   beforeEach(async () => {
-    kit = newKitFromProvider(client.currentProvider)
+    kit = newKitFromProvider(providerOwner.currentProvider)
     const addresses = await kit.connection.getAccounts()
     groupAddress = addresses[0]
     validatorAddress = addresses[1]
@@ -33,7 +33,7 @@ testWithAnvilL2('validatorgroup:deregister cmd', (client) => {
       const logSpy = jest.spyOn(console, 'log').mockImplementation()
       const writeMock = jest.spyOn(ux.write, 'stdout').mockImplementation()
 
-      await testLocallyWithNode(DeRegisterValidatorGroup, ['--from', groupAddress], client)
+      await testLocallyWithNode(DeRegisterValidatorGroup, ['--from', groupAddress], providerOwner)
 
       expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls)).toMatchInlineSnapshot(`
         [
@@ -73,7 +73,7 @@ testWithAnvilL2('validatorgroup:deregister cmd', (client) => {
       await testLocallyWithNode(
         ValidatorGroupMembers,
         ['--yes', '--from', groupAddress, '--remove', validatorAddress],
-        client
+        providerOwner
       )
       const validators = await kit.contracts.getValidators()
       await validators.deaffiliate().sendAndWaitForReceipt({ from: validatorAddress })
@@ -92,7 +92,7 @@ testWithAnvilL2('validatorgroup:deregister cmd', (client) => {
         const logMock = jest.spyOn(console, 'log').mockImplementation()
         logMock.mockClear()
         await expect(
-          testLocallyWithNode(DeRegisterValidatorGroup, ['--from', groupAddress], client)
+          testLocallyWithNode(DeRegisterValidatorGroup, ['--from', groupAddress], providerOwner)
         ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
         expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
           [
@@ -124,10 +124,10 @@ testWithAnvilL2('validatorgroup:deregister cmd', (client) => {
         expect(group.members).toHaveLength(0)
         expect(group.affiliates).toHaveLength(0)
         const groupRequirements = await validators.getGroupLockedGoldRequirements()
-        const timeSpy = await mockTimeForwardBy(groupRequirements.duration.toNumber() * 2, client)
+        const timeSpy = await mockTimeForwardBy(groupRequirements.duration.toNumber() * 2, providerOwner)
         const logMock = jest.spyOn(console, 'log').mockImplementation()
         await expect(
-          testLocallyWithNode(DeRegisterValidatorGroup, ['--from', groupAddress], client)
+          testLocallyWithNode(DeRegisterValidatorGroup, ['--from', groupAddress], providerOwner)
         ).resolves.toBeUndefined()
         expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
           [
@@ -190,14 +190,14 @@ testWithAnvilL2('validatorgroup:deregister cmd', (client) => {
   describe('when is not a validator group', () => {
     beforeEach(async () => {
       const accounts = await kit.connection.getAccounts()
-      await testLocallyWithNode(AccountRegister, ['--from', accounts[2]], client)
+      await testLocallyWithNode(AccountRegister, ['--from', accounts[2]], providerOwner)
     })
     it('shows error message', async () => {
       const logSpy = jest.spyOn(console, 'log').mockImplementation()
       const accounts = await kit.connection.getAccounts()
       logSpy.mockClear()
       await expect(
-        testLocallyWithNode(DeRegisterValidatorGroup, ['--from', accounts[2]], client)
+        testLocallyWithNode(DeRegisterValidatorGroup, ['--from', accounts[2]], providerOwner)
       ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
       expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls)).toMatchInlineSnapshot(`
         [

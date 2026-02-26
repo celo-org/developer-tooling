@@ -19,8 +19,8 @@ import { OracleRate, ReportTarget, SortedOraclesWrapper } from './SortedOracles'
 // set timeout to 10 seconds
 jest.setTimeout(10 * 1000)
 
-testWithAnvilL2('SortedOracles Wrapper', (client) => {
-  const kit = newKitFromProvider(client.currentProvider)
+testWithAnvilL2('SortedOracles Wrapper', (providerOwner) => {
+  const kit = newKitFromProvider(providerOwner.currentProvider)
 
   const reportAsOracles = async (
     sortedOracles: SortedOraclesWrapper,
@@ -52,7 +52,7 @@ testWithAnvilL2('SortedOracles Wrapper', (client) => {
     const expirySeconds = (await sortedOracles.reportExpirySeconds()).toNumber()
     await reportAsOracles(sortedOracles, target, expiredOracles)
 
-    await timeTravel(expirySeconds * 2, client)
+    await timeTravel(expirySeconds * 2, providerOwner)
 
     const freshOracles = allOracles.filter((o) => !expiredOracles.includes(o))
     await reportAsOracles(sortedOracles, target, freshOracles)
@@ -137,7 +137,7 @@ testWithAnvilL2('SortedOracles Wrapper', (client) => {
       stableTokenSortedOracles.address
     )
 
-    await asCoreContractsOwner(client, async (ownerAddress) => {
+    await asCoreContractsOwner(providerOwner, async (ownerAddress) => {
       const stableTokenUSDAddress = (await kit.contracts.getStableToken(StableToken.USDm)).address
       const stableTokenEURAddress = (await kit.contracts.getStableToken(StableToken.EURm)).address
       const stableTokenBRLAddress = (await kit.contracts.getStableToken(StableToken.BRLm)).address
@@ -201,7 +201,7 @@ testWithAnvilL2('SortedOracles Wrapper', (client) => {
     ).sendAndWaitForReceipt({ from: stableTokenOracleOwner })
 
     const expirySeconds = (await stableTokenSortedOracles.reportExpirySeconds()).toNumber()
-    await timeTravel(expirySeconds * 2, client)
+    await timeTravel(expirySeconds * 2, providerOwner)
 
     const removeExpiredReportsTx = await stableTokenSortedOracles.removeExpiredReports(
       CeloContract.StableToken,

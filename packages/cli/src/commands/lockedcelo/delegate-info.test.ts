@@ -8,22 +8,22 @@ import Lock from './lock'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('lockedgold:delegate-info cmd', (client) => {
+testWithAnvilL2('lockedgold:delegate-info cmd', (providerOwner) => {
   test('gets the info', async () => {
-    const kit = newKitFromProvider(client.currentProvider)
+    const kit = newKitFromProvider(providerOwner.currentProvider)
     const accounts = await kit.connection.getAccounts()
     const account = accounts[0]
     const account2 = accounts[1]
-    await testLocallyWithNode(Register, ['--from', account], client)
-    await testLocallyWithNode(Register, ['--from', account2], client)
-    await testLocallyWithNode(Lock, ['--from', account, '--value', '200'], client)
+    await testLocallyWithNode(Register, ['--from', account], providerOwner)
+    await testLocallyWithNode(Register, ['--from', account2], providerOwner)
+    await testLocallyWithNode(Lock, ['--from', account, '--value', '200'], providerOwner)
 
     await testLocallyWithNode(
       Delegate,
       ['--from', account, '--to', account2, '--percent', '100'],
-      client
+      providerOwner
     )
 
-    await testLocallyWithNode(DelegateInfo, ['--account', account], client)
+    await testLocallyWithNode(DelegateInfo, ['--account', account], providerOwner)
   })
 })

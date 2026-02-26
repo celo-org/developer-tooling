@@ -10,7 +10,7 @@ import Register from './register'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('account:authorize cmd', (client) => {
+testWithAnvilL2('account:authorize cmd', (providerOwner) => {
   const logMock = jest.spyOn(console, 'log')
   const errorMock = jest.spyOn(console, 'error')
 
@@ -22,12 +22,12 @@ testWithAnvilL2('account:authorize cmd', (client) => {
   afterEach(() => jest.clearAllMocks())
 
   test('can authorize vote signer', async () => {
-    const kit = newKitFromProvider(client.currentProvider)
+    const kit = newKitFromProvider(providerOwner.currentProvider)
     const accounts = await kit.connection.getAccounts()
     const notRegisteredAccount = accounts[0]
     const signerNotRegisteredAccount = accounts[1]
 
-    await testLocallyWithNode(Register, ['--from', notRegisteredAccount], client)
+    await testLocallyWithNode(Register, ['--from', notRegisteredAccount], providerOwner)
 
     logMock.mockClear()
 
@@ -43,7 +43,7 @@ testWithAnvilL2('account:authorize cmd', (client) => {
         '--signature',
         PROOF_OF_POSSESSION_SIGNATURE,
       ],
-      client
+      providerOwner
     )
 
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
@@ -68,12 +68,12 @@ testWithAnvilL2('account:authorize cmd', (client) => {
   })
 
   test('can authorize attestation signer', async () => {
-    const kit = newKitFromProvider(client.currentProvider)
+    const kit = newKitFromProvider(providerOwner.currentProvider)
     const accounts = await kit.connection.getAccounts()
     const notRegisteredAccount = accounts[0]
     const signerNotRegisteredAccount = accounts[1]
 
-    await testLocallyWithNode(Register, ['--from', notRegisteredAccount], client)
+    await testLocallyWithNode(Register, ['--from', notRegisteredAccount], providerOwner)
 
     logMock.mockClear()
 
@@ -89,7 +89,7 @@ testWithAnvilL2('account:authorize cmd', (client) => {
         '--signature',
         PROOF_OF_POSSESSION_SIGNATURE,
       ],
-      client
+      providerOwner
     )
 
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
@@ -114,12 +114,12 @@ testWithAnvilL2('account:authorize cmd', (client) => {
   })
 
   test('can authorize validator signer before validator is registered', async () => {
-    const kit = newKitFromProvider(client.currentProvider)
+    const kit = newKitFromProvider(providerOwner.currentProvider)
     const accounts = await kit.connection.getAccounts()
     const notRegisteredAccount = accounts[0]
     const signerNotRegisteredAccount = accounts[1]
 
-    await testLocallyWithNode(Register, ['--from', notRegisteredAccount], client)
+    await testLocallyWithNode(Register, ['--from', notRegisteredAccount], providerOwner)
 
     logMock.mockClear()
 
@@ -135,7 +135,7 @@ testWithAnvilL2('account:authorize cmd', (client) => {
         '--signature',
         PROOF_OF_POSSESSION_SIGNATURE,
       ],
-      client
+      providerOwner
     )
 
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
@@ -161,21 +161,21 @@ testWithAnvilL2('account:authorize cmd', (client) => {
   })
 
   it('can authorize validator signer after validator is registered', async () => {
-    const kit = newKitFromProvider(client.currentProvider)
+    const kit = newKitFromProvider(providerOwner.currentProvider)
     const accounts = await kit.connection.getAccounts()
     const notRegisteredAccount = accounts[0]
     const signerNotRegisteredAccount = accounts[1]
     const ecdsaPublicKey = await addressToPublicKey(notRegisteredAccount, kit.connection.sign)
-    await testLocallyWithNode(Register, ['--from', notRegisteredAccount], client)
+    await testLocallyWithNode(Register, ['--from', notRegisteredAccount], providerOwner)
     await testLocallyWithNode(
       Lock,
       ['--from', notRegisteredAccount, '--value', '10000000000000000000000'],
-      client
+      providerOwner
     )
     await testLocallyWithNode(
       ValidatorRegister,
       ['--from', notRegisteredAccount, '--ecdsaKey', ecdsaPublicKey, '--yes'],
-      client
+      providerOwner
     )
 
     logMock.mockClear()
@@ -192,7 +192,7 @@ testWithAnvilL2('account:authorize cmd', (client) => {
         '--signature',
         PROOF_OF_POSSESSION_SIGNATURE,
       ],
-      client
+      providerOwner
     )
 
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
@@ -217,21 +217,21 @@ testWithAnvilL2('account:authorize cmd', (client) => {
   })
 
   it('fails when using BLS keys on L2', async () => {
-    const kit = newKitFromProvider(client.currentProvider)
+    const kit = newKitFromProvider(providerOwner.currentProvider)
     const accounts = await kit.connection.getAccounts()
     const notRegisteredAccount = accounts[0]
     const signerNotRegisteredAccount = accounts[1]
     const ecdsaPublicKey = await addressToPublicKey(notRegisteredAccount, kit.connection.sign)
-    await testLocallyWithNode(Register, ['--from', notRegisteredAccount], client)
+    await testLocallyWithNode(Register, ['--from', notRegisteredAccount], providerOwner)
     await testLocallyWithNode(
       Lock,
       ['--from', notRegisteredAccount, '--value', '10000000000000000000000'],
-      client
+      providerOwner
     )
     await testLocallyWithNode(
       ValidatorRegister,
       ['--from', notRegisteredAccount, '--ecdsaKey', ecdsaPublicKey, '--yes'],
-      client
+      providerOwner
     )
 
     logMock.mockClear()
@@ -254,7 +254,7 @@ testWithAnvilL2('account:authorize cmd', (client) => {
           '0xcdb77255037eb68897cd487fdd85388cbda448f617f874449d4b11588b0b7ad8ddc20d9bb450b513bb35664ea3923900',
         ],
 
-        client
+        providerOwner
       )
     ).rejects.toMatchInlineSnapshot(`
       [Error: Nonexistent flags: --blsKey, --blsPop
@@ -265,21 +265,21 @@ testWithAnvilL2('account:authorize cmd', (client) => {
   })
 
   test('can force authorize validator signer without BLS after validator is registered', async () => {
-    const kit = newKitFromProvider(client.currentProvider)
+    const kit = newKitFromProvider(providerOwner.currentProvider)
     const accounts = await kit.connection.getAccounts()
     const notRegisteredAccount = accounts[0]
     const signerNotRegisteredAccount = accounts[1]
     const ecdsaPublicKey = await addressToPublicKey(notRegisteredAccount, kit.connection.sign)
-    await testLocallyWithNode(Register, ['--from', notRegisteredAccount], client)
+    await testLocallyWithNode(Register, ['--from', notRegisteredAccount], providerOwner)
     await testLocallyWithNode(
       Lock,
       ['--from', notRegisteredAccount, '--value', '10000000000000000000000'],
-      client
+      providerOwner
     )
     await testLocallyWithNode(
       ValidatorRegister,
       ['--from', notRegisteredAccount, '--ecdsaKey', ecdsaPublicKey, '--yes'],
-      client
+      providerOwner
     )
 
     logMock.mockClear()
@@ -297,7 +297,7 @@ testWithAnvilL2('account:authorize cmd', (client) => {
         PROOF_OF_POSSESSION_SIGNATURE,
         '--force',
       ],
-      client
+      providerOwner
     )
     expect(stripAnsiCodesFromNestedArray(errorMock.mock.calls)).toMatchInlineSnapshot(`[]`)
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
@@ -322,7 +322,7 @@ testWithAnvilL2('account:authorize cmd', (client) => {
   })
 
   test('fails if from is not an account', async () => {
-    const kit = newKitFromProvider(client.currentProvider)
+    const kit = newKitFromProvider(providerOwner.currentProvider)
     const accounts = await kit.connection.getAccounts()
     const notRegisteredAccount = accounts[0]
     const signerNotRegisteredAccount = accounts[1]
@@ -343,7 +343,7 @@ testWithAnvilL2('account:authorize cmd', (client) => {
           PROOF_OF_POSSESSION_SIGNATURE,
         ],
 
-        client
+        providerOwner
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     expect(stripAnsiCodesFromNestedArray(errorMock.mock.calls)).toMatchInlineSnapshot(`[]`)

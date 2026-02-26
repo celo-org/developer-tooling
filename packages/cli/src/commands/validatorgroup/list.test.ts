@@ -8,7 +8,7 @@ import List from './list'
 import ValidatorGroupRegister from './register'
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validatorgroup:list cmd', (client) => {
+testWithAnvilL2('validatorgroup:list cmd', (providerOwner) => {
   const writeMock = jest.spyOn(ux.write, 'stdout')
 
   afterAll(() => {
@@ -16,25 +16,25 @@ testWithAnvilL2('validatorgroup:list cmd', (client) => {
   })
 
   const registerValidatorGroup = async () => {
-    const kit = newKitFromProvider(client.currentProvider)
+    const kit = newKitFromProvider(providerOwner.currentProvider)
     const accounts = await kit.connection.getAccounts()
 
-    await testLocallyWithNode(AccountRegister, ['--from', accounts[0]], client)
+    await testLocallyWithNode(AccountRegister, ['--from', accounts[0]], providerOwner)
     await testLocallyWithNode(
       Lock,
       ['--from', accounts[0], '--value', '10000000000000000000000'],
-      client
+      providerOwner
     )
     await testLocallyWithNode(
       ValidatorGroupRegister,
       ['--from', accounts[0], '--commission', '0.1', '--yes'],
-      client
+      providerOwner
     )
   }
 
   it('outputs the current validator groups', async () => {
     await registerValidatorGroup()
-    await testLocallyWithNode(List, [], client)
+    await testLocallyWithNode(List, [], providerOwner)
     expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`
       [
         [

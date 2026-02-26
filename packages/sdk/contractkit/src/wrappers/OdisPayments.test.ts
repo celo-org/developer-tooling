@@ -6,8 +6,8 @@ import { topUpWithToken } from '../test-utils/utils'
 import { OdisPaymentsWrapper } from './OdisPayments'
 import { StableTokenWrapper } from './StableTokenWrapper'
 
-testWithAnvilL2('OdisPayments Wrapper', (client) => {
-  const kit = newKitFromProvider(client.currentProvider)
+testWithAnvilL2('OdisPayments Wrapper', (providerOwner) => {
+  const kit = newKitFromProvider(providerOwner.currentProvider)
   let accounts: StrongAddress[] = []
   let odisPayments: OdisPaymentsWrapper
   let stableToken: StableTokenWrapper

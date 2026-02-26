@@ -9,23 +9,23 @@ import SetAccount from './set-account'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('releasegold:set-account cmd', (client) => {
+testWithAnvilL2('releasegold:set-account cmd', (providerOwner) => {
   let contractAddress: string
   let kit: ContractKit
 
   beforeEach(async () => {
-    kit = newKitFromProvider(client.currentProvider)
+    kit = newKitFromProvider(providerOwner.currentProvider)
     const accounts = (await kit.connection.getAccounts()) as StrongAddress[]
 
     contractAddress = await deployReleaseGoldContract(
-      client,
+      providerOwner,
       await createMultisig(kit, [accounts[0], accounts[1]] as StrongAddress[], 2, 2),
       accounts[1],
       accounts[0],
       accounts[2]
     )
 
-    await testLocallyWithNode(CreateAccount, ['--contract', contractAddress], client)
+    await testLocallyWithNode(CreateAccount, ['--contract', contractAddress], providerOwner)
   })
 
   it('sets all the properties', async () => {
@@ -36,7 +36,7 @@ testWithAnvilL2('releasegold:set-account cmd', (client) => {
     await testLocallyWithNode(
       SetAccount,
       ['--contract', contractAddress, '--property', 'name', '--value', 'test-name'],
-      client
+      providerOwner
     )
 
     await testLocallyWithNode(
@@ -49,13 +49,13 @@ testWithAnvilL2('releasegold:set-account cmd', (client) => {
         '--value',
         TEST_ENCRYPTION_KEY,
       ],
-      client
+      providerOwner
     )
 
     await testLocallyWithNode(
       SetAccount,
       ['--contract', contractAddress, '--property', 'metaURL', '--value', 'test-url'],
-      client
+      providerOwner
     )
 
     expect(await accountWrapper.getName(contractAddress)).toEqual('test-name')
@@ -68,7 +68,7 @@ testWithAnvilL2('releasegold:set-account cmd', (client) => {
       testLocallyWithNode(
         SetAccount,
         ['--contract', contractAddress, '--property', 'unknown', '--value', 'test-value'],
-        client
+        providerOwner
       )
     ).rejects.toMatchInlineSnapshot(`
       [Error: Expected --property=unknown to be one of: name, dataEncryptionKey, metaURL

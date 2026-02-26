@@ -13,8 +13,8 @@ import { newKitFromProvider } from '../kit'
 import { MultiSigWrapper } from './MultiSig'
 import { ReserveWrapper } from './Reserve'
 
-testWithAnvilL2('Reserve Wrapper', (client) => {
-  const kit = newKitFromProvider(client.currentProvider)
+testWithAnvilL2('Reserve Wrapper', (providerOwner) => {
+  const kit = newKitFromProvider(providerOwner.currentProvider)
   let accounts: StrongAddress[] = []
   let reserve: ReserveWrapper
   let reserveSpenderMultiSig: MultiSigWrapper
@@ -36,7 +36,7 @@ testWithAnvilL2('Reserve Wrapper', (client) => {
     )
 
     await withImpersonatedAccount(
-      client,
+      providerOwner,
       multiSigAddress,
       async () => {
         await reserveSpenderMultiSig
@@ -52,14 +52,14 @@ testWithAnvilL2('Reserve Wrapper', (client) => {
       new BigNumber('1e18')
     )
 
-    await asCoreContractsOwner(client, async (ownerAdress: StrongAddress) => {
+    await asCoreContractsOwner(providerOwner, async (ownerAdress: StrongAddress) => {
       await reserveContract.methods.addSpender(otherSpender).send({ from: ownerAdress })
       await reserveContract.methods
         .addOtherReserveAddress(otherReserveAddress)
         .send({ from: ownerAdress })
     })
 
-    await setBalance(client, reserve.address, new BigNumber('1e18'))
+    await setBalance(providerOwner, reserve.address, new BigNumber('1e18'))
   })
 
   test('can get asset target weights which sum to 100%', async () => {

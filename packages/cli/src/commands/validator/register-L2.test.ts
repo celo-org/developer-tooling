@@ -8,20 +8,20 @@ import ValidatorRegister from './register'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validator:register', (client) => {
+testWithAnvilL2('validator:register', (providerOwner) => {
   let account: string
   let ecdsaPublicKey: string
 
   beforeEach(async () => {
-    const kit = newKitFromProvider(client.currentProvider)
+    const kit = newKitFromProvider(providerOwner.currentProvider)
     const accounts = await kit.connection.getAccounts()
     account = accounts[0]
     ecdsaPublicKey = await addressToPublicKey(account, kit.connection.sign)
-    await testLocallyWithNode(Register, ['--from', account], client)
+    await testLocallyWithNode(Register, ['--from', account], providerOwner)
     await testLocallyWithNode(
       Lock,
       ['--from', account, '--value', '10000000000000000000000'],
-      client
+      providerOwner
     )
   })
 
@@ -30,7 +30,7 @@ testWithAnvilL2('validator:register', (client) => {
       testLocallyWithNode(
         ValidatorRegister,
         ['--from', account, '--ecdsaKey', ecdsaPublicKey, '--yes'],
-        client
+        providerOwner
       )
     ).resolves.toBe(undefined)
   })
@@ -40,7 +40,7 @@ testWithAnvilL2('validator:register', (client) => {
       testLocallyWithNode(
         ValidatorRegister,
         ['--from', account, '--ecdsaKey', ecdsaPublicKey, '--yes'],
-        client
+        providerOwner
       )
     ).resolves.toBe(undefined)
   })
@@ -50,7 +50,7 @@ testWithAnvilL2('validator:register', (client) => {
       testLocallyWithNode(
         ValidatorRegister,
         ['--from', account, '--ecdsaKey', ecdsaPublicKey, '--yes'],
-        client
+        providerOwner
       )
     ).resolves.toBe(undefined)
 
@@ -58,7 +58,7 @@ testWithAnvilL2('validator:register', (client) => {
       testLocallyWithNode(
         ValidatorRegister,
         ['--from', account, '--ecdsaKey', ecdsaPublicKey, '--yes'],
-        client
+        providerOwner
       )
     ).rejects.toThrow("Some checks didn't pass!")
   })

@@ -8,16 +8,16 @@ import CreateAccount from './create-account'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('releasegold:create-account cmd', (client) => {
+testWithAnvilL2('releasegold:create-account cmd', (providerOwner) => {
   let contractAddress: string
   let kit: ContractKit
 
   beforeEach(async () => {
-    kit = newKitFromProvider(client.currentProvider)
+    kit = newKitFromProvider(providerOwner.currentProvider)
     const accounts = (await kit.connection.getAccounts()) as StrongAddress[]
 
     contractAddress = await deployReleaseGoldContract(
-      client,
+      providerOwner,
       await createMultisig(kit, [accounts[0], accounts[1]] as StrongAddress[], 2, 2),
       accounts[1],
       accounts[0],
@@ -30,7 +30,7 @@ testWithAnvilL2('releasegold:create-account cmd', (client) => {
 
     expect(await accountWrapper.isAccount(contractAddress)).toBeFalsy()
 
-    await testLocallyWithNode(CreateAccount, ['--contract', contractAddress], client)
+    await testLocallyWithNode(CreateAccount, ['--contract', contractAddress], providerOwner)
 
     expect(await accountWrapper.isAccount(contractAddress)).toBeTruthy()
   })

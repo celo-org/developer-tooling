@@ -13,20 +13,20 @@ import Unlock from './unlock'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('lockedgold:lock cmd', (client) => {
+testWithAnvilL2('lockedgold:lock cmd', (providerOwner) => {
   test(
     'can lock with pending withdrawals',
     async () => {
-      const kit = newKitFromProvider(client.currentProvider)
+      const kit = newKitFromProvider(providerOwner.currentProvider)
       const accounts = await kit.connection.getAccounts()
       const account = accounts[0]
       const lockedGold = await kit.contracts.getLockedGold()
-      await testLocallyWithNode(Register, ['--from', account], client)
-      await testLocallyWithNode(Lock, ['--from', account, '--value', '100'], client)
-      await testLocallyWithNode(Unlock, ['--from', account, '--value', '50'], client)
-      await testLocallyWithNode(Lock, ['--from', account, '--value', '75'], client)
-      await testLocallyWithNode(Unlock, ['--from', account, '--value', '50'], client)
-      await testLocallyWithNode(Lock, ['--from', account, '--value', '50'], client)
+      await testLocallyWithNode(Register, ['--from', account], providerOwner)
+      await testLocallyWithNode(Lock, ['--from', account, '--value', '100'], providerOwner)
+      await testLocallyWithNode(Unlock, ['--from', account, '--value', '50'], providerOwner)
+      await testLocallyWithNode(Lock, ['--from', account, '--value', '75'], providerOwner)
+      await testLocallyWithNode(Unlock, ['--from', account, '--value', '50'], providerOwner)
+      await testLocallyWithNode(Lock, ['--from', account, '--value', '50'], providerOwner)
       const pendingWithdrawalsTotalValue = await lockedGold.getPendingWithdrawalsTotalValue(account)
       expect(pendingWithdrawalsTotalValue.toFixed()).toBe('0')
     },
@@ -34,7 +34,7 @@ testWithAnvilL2('lockedgold:lock cmd', (client) => {
   )
   describe('when EOA is not yet an account', () => {
     it('performs the registration and locks the value', async () => {
-      const kit = newKitFromProvider(client.currentProvider)
+      const kit = newKitFromProvider(providerOwner.currentProvider)
       const eoaAddresses = await kit.connection.getAccounts()
       const eoa = eoaAddresses[1]
       const accountsContract = await kit.contracts.getAccounts()
@@ -46,7 +46,7 @@ testWithAnvilL2('lockedgold:lock cmd', (client) => {
       // pre check
       expect(await accountsContract.isAccount(eoa)).toBe(false)
 
-      await testLocallyWithNode(Lock, ['--from', eoa, '--value', '100'], client)
+      await testLocallyWithNode(Lock, ['--from', eoa, '--value', '100'], providerOwner)
 
       expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls)).toMatchInlineSnapshot(`
         [

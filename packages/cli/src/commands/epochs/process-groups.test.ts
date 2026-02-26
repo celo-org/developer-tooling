@@ -8,17 +8,17 @@ import Start from './start'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('epochs:process-groups cmd', (client) => {
+testWithAnvilL2('epochs:process-groups cmd', (providerOwner) => {
   it('Warns when epoch process is not yet started', async () => {
     const logMock = jest.spyOn(console, 'log')
-    const kit = newKitFromProvider(client.currentProvider)
+    const kit = newKitFromProvider(providerOwner.currentProvider)
     const accounts = await kit.connection.getAccounts()
     const epochManagerWrapper = await kit.contracts.getEpochManager()
 
     expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(4)
 
     await expect(
-      testLocallyWithNode(ProcessGroups, ['--from', accounts[0]], client)
+      testLocallyWithNode(ProcessGroups, ['--from', accounts[0]], providerOwner)
     ).resolves.toMatchInlineSnapshot(`"Epoch process is not started yet"`)
 
     expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(4)
@@ -27,18 +27,18 @@ testWithAnvilL2('epochs:process-groups cmd', (client) => {
 
   it('processes groups and finishes epoch process successfully when epoch process not started', async () => {
     const logMock = jest.spyOn(console, 'log')
-    const kit = newKitFromProvider(client.currentProvider)
+    const kit = newKitFromProvider(providerOwner.currentProvider)
     const accounts = await kit.connection.getAccounts()
     const epochManagerWrapper = await kit.contracts.getEpochManager()
     const epochDuration = new BigNumber(await epochManagerWrapper.epochDuration())
 
-    await timeTravel(epochDuration.plus(1).toNumber(), client)
+    await timeTravel(epochDuration.plus(1).toNumber(), providerOwner)
 
     expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(4)
     expect(await epochManagerWrapper.isTimeForNextEpoch()).toEqual(true)
 
-    await testLocallyWithNode(Start, ['--from', accounts[0]], client)
-    await testLocallyWithNode(ProcessGroups, ['--from', accounts[0]], client)
+    await testLocallyWithNode(Start, ['--from', accounts[0]], providerOwner)
+    await testLocallyWithNode(ProcessGroups, ['--from', accounts[0]], providerOwner)
 
     expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(5)
     expect(await epochManagerWrapper.isTimeForNextEpoch()).toEqual(false)
@@ -68,13 +68,13 @@ testWithAnvilL2('epochs:process-groups cmd', (client) => {
 
   it('processes groups and finishes epoch process successfully when a single group is processed individually', async () => {
     const logMock = jest.spyOn(console, 'log')
-    const kit = newKitFromProvider(client.currentProvider)
+    const kit = newKitFromProvider(providerOwner.currentProvider)
     const [from] = await kit.connection.getAccounts()
     const epochManagerWrapper = await kit.contracts.getEpochManager()
     const validatorsWrapper = await kit.contracts.getValidators()
     const epochDuration = new BigNumber(await epochManagerWrapper.epochDuration())
 
-    await timeTravel(epochDuration.plus(1).toNumber(), client)
+    await timeTravel(epochDuration.plus(1).toNumber(), providerOwner)
 
     expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(4)
     expect(await epochManagerWrapper.isTimeForNextEpoch()).toEqual(true)
@@ -106,7 +106,7 @@ testWithAnvilL2('epochs:process-groups cmd', (client) => {
       '0'
     )
 
-    await testLocallyWithNode(ProcessGroups, ['--from', from], client)
+    await testLocallyWithNode(ProcessGroups, ['--from', from], providerOwner)
 
     expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(5)
     expect(await epochManagerWrapper.isTimeForNextEpoch()).toEqual(false)

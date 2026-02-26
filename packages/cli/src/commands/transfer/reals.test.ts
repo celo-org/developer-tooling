@@ -11,7 +11,7 @@ process.env.NO_SYNCCHECK = 'true'
 // Lots of commands, sometimes times out
 jest.setTimeout(15000)
 
-testWithAnvilL2('transfer:reals cmd', (client) => {
+testWithAnvilL2('transfer:reals cmd', (providerOwner) => {
   let accounts: string[] = []
   let kit: ContractKit
 
@@ -25,7 +25,7 @@ testWithAnvilL2('transfer:reals cmd', (client) => {
   })
 
   beforeEach(async () => {
-    kit = newKitFromProvider(client.currentProvider)
+    kit = newKitFromProvider(providerOwner.currentProvider)
     accounts = await kit.connection.getAccounts()
 
     await topUpWithToken(
@@ -54,7 +54,7 @@ testWithAnvilL2('transfer:reals cmd', (client) => {
     await testLocallyWithNode(
       TransferReals,
       ['--from', accounts[0], '--to', accounts[1], '--value', amountToTransfer],
-      client
+      providerOwner
     )
     // RG BRLm, balance should match the amount sent
     const receiverBalance = await kit.getTotalBalance(accounts[1])
@@ -65,7 +65,7 @@ testWithAnvilL2('transfer:reals cmd', (client) => {
     await testLocallyWithNode(
       TransferReals,
       ['--from', accounts[1], '--to', accounts[0], '--value', amountToTransfer],
-      client
+      providerOwner
     )
     const balanceAfter = await kit.getTotalBalance(accounts[0])
     expect(balanceBefore.BRLm).toEqual(balanceAfter.BRLm)
@@ -80,7 +80,7 @@ testWithAnvilL2('transfer:reals cmd', (client) => {
       testLocallyWithNode(
         TransferReals,
         ['--from', accounts[1], '--to', TEST_SANCTIONED_ADDRESS, '--value', '1'],
-        client
+        providerOwner
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     expect(spy).toHaveBeenCalledWith(expect.stringContaining(COMPLIANT_ERROR_RESPONSE))

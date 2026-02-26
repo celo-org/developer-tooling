@@ -3,9 +3,9 @@ import { FeeCurrencyDirectoryWrapper } from '@celo/contractkit/lib/wrappers/FeeC
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { getFeeCurrencyContractWrapper } from './fee-currency'
 
-testWithAnvilL2('getFeeCurrencyContractWrapper', async (client) => {
+testWithAnvilL2('getFeeCurrencyContractWrapper', async (providerOwner) => {
   it('returns FeeCurrencyDirectory for L2 context', async () => {
-    const kit = newKitFromProvider(client.currentProvider)
+    const kit = newKitFromProvider(providerOwner.currentProvider)
 
     const wrapper = await getFeeCurrencyContractWrapper(kit)
     expect(wrapper).toBeInstanceOf(FeeCurrencyDirectoryWrapper)

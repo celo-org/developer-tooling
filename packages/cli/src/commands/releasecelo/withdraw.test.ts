@@ -18,27 +18,27 @@ import Withdraw from './withdraw'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('releasegold:withdraw cmd', (client) => {
+testWithAnvilL2('releasegold:withdraw cmd', (providerOwner) => {
   let contractAddress: string
   let kit: ContractKit
 
   beforeEach(async () => {
-    kit = newKitFromProvider(client.currentProvider)
+    kit = newKitFromProvider(providerOwner.currentProvider)
     const accounts = (await kit.connection.getAccounts()) as StrongAddress[]
 
     contractAddress = await deployReleaseGoldContract(
-      client,
+      providerOwner,
       await createMultisig(kit, [accounts[0], accounts[1]] as StrongAddress[], 2, 2),
       accounts[1],
       accounts[0],
       accounts[2]
     )
-    await testLocallyWithNode(CreateAccount, ['--contract', contractAddress], client)
+    await testLocallyWithNode(CreateAccount, ['--contract', contractAddress], providerOwner)
     // make the whole balance available for withdrawal
     await testLocallyWithNode(
       SetMaxDistribution,
       ['--contract', contractAddress, '--yesreally', '--distributionRatio', '1000'],
-      client
+      providerOwner
     )
   })
 
@@ -46,10 +46,10 @@ testWithAnvilL2('releasegold:withdraw cmd', (client) => {
     await testLocallyWithNode(
       SetLiquidityProvision,
       ['--contract', contractAddress, '--yesreally'],
-      client
+      providerOwner
     )
     // Based on the release schedule, 3 months needs to pass
-    await timeTravel(MONTH * 3 + DAY, client)
+    await timeTravel(MONTH * 3 + DAY, providerOwner)
     const withdrawalAmount = '10000000000000000000'
     const releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
@@ -64,7 +64,7 @@ testWithAnvilL2('releasegold:withdraw cmd', (client) => {
     await testLocallyWithNode(
       Withdraw,
       ['--contract', contractAddress, '--value', withdrawalAmount],
-      client
+      providerOwner
     )
 
     const balanceAfter = (await kit.getTotalBalance(beneficiary)).CELO!
@@ -89,12 +89,12 @@ testWithAnvilL2('releasegold:withdraw cmd', (client) => {
     await testLocallyWithNode(
       SetLiquidityProvision,
       ['--contract', contractAddress, '--yesreally'],
-      client
+      providerOwner
     )
     expect(spy).toHaveBeenCalledWith(
       expect.stringContaining('The liquidity provision has not already been set')
     )
-    await timeTravel(MONTH * 12 + DAY, client)
+    await timeTravel(MONTH * 12 + DAY, providerOwner)
     const releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
       kit.connection.createContract(releaseGoldABI as any, contractAddress),
@@ -118,7 +118,7 @@ testWithAnvilL2('releasegold:withdraw cmd', (client) => {
       testLocallyWithNode(
         Withdraw,
         ['--contract', contractAddress, '--value', remainingBalance.toString()],
-        client
+        providerOwner
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
 
@@ -150,19 +150,19 @@ testWithAnvilL2('releasegold:withdraw cmd', (client) => {
       testLocallyWithNode(
         RGTransferDollars,
         ['--contract', contractAddress, '--to', beneficiary, '--value', '100'],
-        client
+        providerOwner
       )
     ).resolves.toBeUndefined()
     spy.mockClear()
 
     const totalWithdrawn = await releaseGoldWrapper.getTotalWithdrawn()
     expect(totalWithdrawn.toFixed()).toMatchInlineSnapshot(`"0"`)
-    await timeTravel(DAY * 31, client)
+    await timeTravel(DAY * 31, providerOwner)
     await expect(
       testLocallyWithNode(
         Withdraw,
         ['--contract', contractAddress, '--value', remainingBalance.toString()],
-        client
+        providerOwner
       )
     ).resolves.toBeUndefined()
     expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
@@ -202,7 +202,7 @@ testWithAnvilL2('releasegold:withdraw cmd', (client) => {
 
     const destroyedContractAddress = await getContractFromEvent(
       'ReleaseGoldInstanceDestroyed(address,address)',
-      client
+      providerOwner
     )
 
     expect(destroyedContractAddress).toBe(contractAddress)

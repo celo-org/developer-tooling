@@ -14,7 +14,7 @@ import Show from './show'
 process.env.NO_SYNCCHECK = 'true'
 const KNOWN_DEVCHAIN_VALIDATOR = '0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f'
 
-testWithAnvilL2('rewards:show cmd', (client) => {
+testWithAnvilL2('rewards:show cmd', (providerOwner) => {
   let kit: ContractKit
   let accounts: string[]
   const writeMock = jest.spyOn(ux.write, 'stdout')
@@ -22,17 +22,17 @@ testWithAnvilL2('rewards:show cmd', (client) => {
   const infoMock = jest.spyOn(console, 'info')
 
   beforeEach(async () => {
-    kit = newKitFromProvider(client.currentProvider)
+    kit = newKitFromProvider(providerOwner.currentProvider)
     accounts = await kit.connection.getAccounts()
     const epochManager = await kit.contracts.getEpochManager()
-    await timeTravel((await epochManager.epochDuration()) + 1, client)
-    await testLocallyWithNode(Switch, ['--from', accounts[0]], client)
+    await timeTravel((await epochManager.epochDuration()) + 1, providerOwner)
+    await testLocallyWithNode(Switch, ['--from', accounts[0]], providerOwner)
     jest.clearAllMocks()
   })
 
   describe('no arguments', () => {
     test('default', async () => {
-      await expect(testLocallyWithNode(Show, [], client)).resolves.toBeUndefined()
+      await expect(testLocallyWithNode(Show, [], providerOwner)).resolves.toBeUndefined()
       expect(stripAnsiCodesFromNestedArray(infoMock.mock.calls)).toMatchInlineSnapshot(`
         [
           [
@@ -48,7 +48,7 @@ testWithAnvilL2('rewards:show cmd', (client) => {
         .mockImplementationOnce(async () => {
           throw new Error('test missing trie node')
         })
-      await expect(testLocallyWithNode(Show, [], client)).rejects.toMatchInlineSnapshot(`
+      await expect(testLocallyWithNode(Show, [], providerOwner)).rejects.toMatchInlineSnapshot(`
         [Error: Exact voter information is available only for 1024 blocks after each epoch.
         Supply --estimate to estimate rewards based on current votes, or use an archive node.]
       `)
@@ -61,7 +61,7 @@ testWithAnvilL2('rewards:show cmd', (client) => {
         testLocallyWithNode(
           Show,
           ['--validator', '0x1234567890123456789012345678901234567890'],
-          client
+          providerOwner
         )
       ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
@@ -77,7 +77,7 @@ testWithAnvilL2('rewards:show cmd', (client) => {
     })
 
     test('valid', async () => {
-      await testLocallyWithNode(Show, ['--validator', KNOWN_DEVCHAIN_VALIDATOR], client)
+      await testLocallyWithNode(Show, ['--validator', KNOWN_DEVCHAIN_VALIDATOR], providerOwner)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [
           [
@@ -147,7 +147,7 @@ testWithAnvilL2('rewards:show cmd', (client) => {
         },
       ])
 
-      await testLocallyWithNode(Show, ['--validator', KNOWN_DEVCHAIN_VALIDATOR], client)
+      await testLocallyWithNode(Show, ['--validator', KNOWN_DEVCHAIN_VALIDATOR], providerOwner)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [
           [
@@ -193,7 +193,7 @@ testWithAnvilL2('rewards:show cmd', (client) => {
   describe('--voter', () => {
     test('invalid', async () => {
       await expect(
-        testLocallyWithNode(Show, ['--voter', '0x1234567890123456789012345678901234567890'], client)
+        testLocallyWithNode(Show, ['--voter', '0x1234567890123456789012345678901234567890'], providerOwner)
       ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
               [
@@ -209,7 +209,7 @@ testWithAnvilL2('rewards:show cmd', (client) => {
     test('valid', async () => {
       await registerAccount(kit, accounts[0])
       await expect(
-        testLocallyWithNode(Show, ['--voter', accounts[0], '--estimate'], client)
+        testLocallyWithNode(Show, ['--voter', accounts[0], '--estimate'], providerOwner)
       ).resolves.toMatchInlineSnapshot(`undefined`)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [

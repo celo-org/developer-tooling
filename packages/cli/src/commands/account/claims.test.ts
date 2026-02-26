@@ -16,13 +16,13 @@ import RegisterMetadata from './register-metadata'
 import ShowMetadata from './show-metadata'
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('account metadata cmds', (client) => {
+testWithAnvilL2('account metadata cmds', (providerOwner) => {
   let account: string
   let accounts: string[]
   let kit: ContractKit
 
   beforeEach(async () => {
-    kit = newKitFromProvider(client.currentProvider)
+    kit = newKitFromProvider(providerOwner.currentProvider)
     accounts = await kit.connection.getAccounts()
     account = accounts[0]
   })
@@ -39,7 +39,7 @@ testWithAnvilL2('account metadata cmds', (client) => {
 
     test('account:create-metadata cmd', async () => {
       const newFilePath = `${tmpdir()}/newfile.json`
-      await testLocallyWithNode(CreateMetadata, ['--from', account, newFilePath], client)
+      await testLocallyWithNode(CreateMetadata, ['--from', account, newFilePath], providerOwner)
       const res = JSON.parse(readFileSync(newFilePath).toString())
       expect(res.meta.address).toEqual(account)
     })
@@ -50,7 +50,7 @@ testWithAnvilL2('account metadata cmds', (client) => {
       await testLocallyWithNode(
         ClaimName,
         ['--from', account, '--name', name, emptyFilePath],
-        client
+        providerOwner
       )
       const metadata = await readFile()
       const claim = metadata.findClaim(ClaimTypes.NAME)
@@ -64,7 +64,7 @@ testWithAnvilL2('account metadata cmds', (client) => {
       await testLocallyWithNode(
         ClaimDomain,
         ['--from', account, '--domain', domain, emptyFilePath],
-        client
+        providerOwner
       )
       const metadata = await readFile()
       const claim = metadata.findClaim(ClaimTypes.DOMAIN)
@@ -80,7 +80,7 @@ testWithAnvilL2('account metadata cmds', (client) => {
         testLocallyWithNode(
           ClaimRpcUrl,
           [emptyFilePath, '--from', account, '--rpcUrl', 'http://127.0.0.1:8545'],
-          client
+          providerOwner
         )
       ).rejects.toMatchInlineSnapshot(`
         [Error: Parsing --rpcUrl 
@@ -91,7 +91,7 @@ testWithAnvilL2('account metadata cmds', (client) => {
       await testLocallyWithNode(
         ClaimRpcUrl,
         [emptyFilePath, '--from', account, '--rpcUrl', rpcUrl],
-        client
+        providerOwner
       )
 
       const metadata = await readFile()
@@ -103,7 +103,7 @@ testWithAnvilL2('account metadata cmds', (client) => {
       const infoMock = jest.spyOn(console, 'info')
       const writeMock = jest.spyOn(ux.write, 'stdout')
 
-      await testLocallyWithNode(ShowMetadata, [emptyFilePath, '--csv'], client)
+      await testLocallyWithNode(ShowMetadata, [emptyFilePath, '--csv'], providerOwner)
 
       expect(stripAnsiCodesFromNestedArray(infoMock.mock.calls)).toMatchInlineSnapshot(`
         [
@@ -135,7 +135,7 @@ testWithAnvilL2('account metadata cmds', (client) => {
       await testLocallyWithNode(
         ClaimAccount,
         ['--from', account, '--address', otherAccount, emptyFilePath],
-        client
+        providerOwner
       )
       const metadata = await readFile()
       const claim = metadata.findClaim(ClaimTypes.ACCOUNT)
@@ -155,13 +155,13 @@ testWithAnvilL2('account metadata cmds', (client) => {
         await testLocallyWithNode(
           RegisterMetadata,
           ['--force', '--from', account, '--url', 'https://example.com'],
-          client
+          providerOwner
         )
       })
 
       test('fails if url is missing', async () => {
         await expect(
-          testLocallyWithNode(RegisterMetadata, ['--force', '--from', account], client)
+          testLocallyWithNode(RegisterMetadata, ['--force', '--from', account], providerOwner)
         ).rejects.toThrow('Missing required flag')
       })
     })
@@ -171,7 +171,7 @@ testWithAnvilL2('account metadata cmds', (client) => {
         testLocallyWithNode(
           RegisterMetadata,
           ['--force', '--from', account, '--url', 'https://example.com'],
-          client
+          providerOwner
         )
       ).rejects.toThrow("Some checks didn't pass!")
     })

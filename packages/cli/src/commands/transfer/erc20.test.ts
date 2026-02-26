@@ -13,7 +13,7 @@ process.env.NO_SYNCCHECK = 'true'
 // Lots of commands, sometimes times out
 jest.setTimeout(15000)
 
-testWithAnvilL2('transfer:erc20 cmd', (client) => {
+testWithAnvilL2('transfer:erc20 cmd', (providerOwner) => {
   let accounts: string[] = []
   let kit: ContractKit
 
@@ -27,7 +27,7 @@ testWithAnvilL2('transfer:erc20 cmd', (client) => {
   })
 
   beforeEach(async () => {
-    kit = newKitFromProvider(client.currentProvider)
+    kit = newKitFromProvider(providerOwner.currentProvider)
     accounts = await kit.connection.getAccounts()
 
     await topUpWithToken(
@@ -78,7 +78,7 @@ testWithAnvilL2('transfer:erc20 cmd', (client) => {
         '--erc20Address',
         cusdAddress,
       ],
-      client
+      providerOwner
     )
     // Send cusd as erc20
     const receiverBalance = await kit.getTotalBalance(reciever)
@@ -98,7 +98,7 @@ testWithAnvilL2('transfer:erc20 cmd', (client) => {
         '--erc20Address',
         cusdAddress,
       ],
-      client
+      providerOwner
     )
     const balanceAfter = await kit.getTotalBalance(sender)
     expect(balanceBefore.USDm).toEqual(balanceAfter.USDm)
@@ -123,7 +123,7 @@ testWithAnvilL2('transfer:erc20 cmd', (client) => {
           '--erc20Address',
           cusdAddress,
         ],
-        client
+        providerOwner
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     expect(spy).toHaveBeenCalledWith(expect.stringContaining(COMPLIANT_ERROR_RESPONSE))
@@ -134,7 +134,7 @@ testWithAnvilL2('transfer:erc20 cmd', (client) => {
       testLocallyWithNode(
         TransferERC20,
         ['--from', accounts[0], '--to', accounts[1], '--value', '1', '--erc20Address', accounts[2]],
-        client
+        providerOwner
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Invalid erc20 address"`)
   })
@@ -155,7 +155,7 @@ testWithAnvilL2('transfer:erc20 cmd', (client) => {
           '--useAKV',
         ],
 
-        client
+        providerOwner
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"--useAKV flag is no longer supported"`)
   })
@@ -180,7 +180,7 @@ testWithAnvilL2('transfer:erc20 cmd', (client) => {
         '--erc20Address',
         cusdAddress,
       ],
-      client
+      providerOwner
     )
 
     // Verify the transfer was successful

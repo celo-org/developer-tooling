@@ -60,7 +60,7 @@ type TestWithAnvilOptions = {
 
 export function testWithAnvilL2(
   name: string,
-  fn: (client: ProviderOwner) => void,
+  fn: (providerOwner: ProviderOwner) => void,
   options?: TestWithAnvilOptions
 ) {
   return testWithAnvil(require.resolve('@celo/devchain-anvil/l2-devchain.json'), name, fn, options)
@@ -69,7 +69,7 @@ export function testWithAnvilL2(
 function testWithAnvil(
   stateFilePath: string,
   name: string,
-  fn: (client: ProviderOwner) => void,
+  fn: (providerOwner: ProviderOwner) => void,
   options?: TestWithAnvilOptions
 ) {
   const anvil = createInstance(stateFilePath, options?.chainId)
@@ -90,40 +90,40 @@ function testWithAnvil(
 }
 
 export function impersonateAccount(
-  client: ProviderOwner,
+  providerOwner: ProviderOwner,
   address: string,
   withBalance?: number | bigint | BigNumber
 ) {
   return Promise.all([
-    jsonRpcCall(client, 'anvil_impersonateAccount', [address]),
+    jsonRpcCall(providerOwner, 'anvil_impersonateAccount', [address]),
     withBalance
-      ? jsonRpcCall(client, 'anvil_setBalance', [address, `0x${withBalance.toString(16)}`])
+      ? jsonRpcCall(providerOwner, 'anvil_setBalance', [address, `0x${withBalance.toString(16)}`])
       : undefined,
   ])
 }
 
-export function stopImpersonatingAccount(client: ProviderOwner, address: string) {
-  return jsonRpcCall(client, 'anvil_stopImpersonatingAccount', [address])
+export function stopImpersonatingAccount(providerOwner: ProviderOwner, address: string) {
+  return jsonRpcCall(providerOwner, 'anvil_stopImpersonatingAccount', [address])
 }
 
 export const withImpersonatedAccount = async (
-  client: ProviderOwner,
+  providerOwner: ProviderOwner,
   account: string,
   fn: () => Promise<void>,
   withBalance?: number | bigint | BigNumber
 ) => {
-  await impersonateAccount(client, account, withBalance)
+  await impersonateAccount(providerOwner, account, withBalance)
   await fn()
-  await stopImpersonatingAccount(client, account)
+  await stopImpersonatingAccount(providerOwner, account)
 }
 
 export const asCoreContractsOwner = async (
-  client: ProviderOwner,
+  providerOwner: ProviderOwner,
   fn: (ownerAddress: StrongAddress) => Promise<void>,
   withBalance?: number | bigint | BigNumber
 ) => {
   await withImpersonatedAccount(
-    client,
+    providerOwner,
     DEFAULT_OWNER_ADDRESS,
     async () => {
       await fn(DEFAULT_OWNER_ADDRESS)
@@ -132,18 +132,18 @@ export const asCoreContractsOwner = async (
   )
 }
 
-export function setCode(client: ProviderOwner, address: string, code: string) {
-  return jsonRpcCall(client, 'anvil_setCode', [address, code])
+export function setCode(providerOwner: ProviderOwner, address: string, code: string) {
+  return jsonRpcCall(providerOwner, 'anvil_setCode', [address, code])
 }
 
-export function setNextBlockTimestamp(client: ProviderOwner, timestamp: number) {
-  return jsonRpcCall(client, 'evm_setNextBlockTimestamp', [timestamp.toString()])
+export function setNextBlockTimestamp(providerOwner: ProviderOwner, timestamp: number) {
+  return jsonRpcCall(providerOwner, 'evm_setNextBlockTimestamp', [timestamp.toString()])
 }
 
 export function setBalance(
-  client: ProviderOwner,
+  providerOwner: ProviderOwner,
   address: StrongAddress,
   balance: number | bigint | BigNumber
 ) {
-  return jsonRpcCall(client, 'anvil_setBalance', [address, `0x${balance.toString(16)}`])
+  return jsonRpcCall(providerOwner, 'anvil_setBalance', [address, `0x${balance.toString(16)}`])
 }

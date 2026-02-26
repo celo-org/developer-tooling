@@ -14,7 +14,7 @@ import RpcUrls from './rpc-urls'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validatorgroup:rpc-urls cmd', async (client) => {
+testWithAnvilL2('validatorgroup:rpc-urls cmd', async (providerOwner) => {
   jest.spyOn(IdentityMetadataWrapper, 'fetchFromURL').mockImplementation(async (_, url) => {
     const validatorAddress = url.split('/').pop()
 
@@ -43,7 +43,7 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (client) => {
     validator: string
   ) => {
     await withImpersonatedAccount(
-      client,
+      providerOwner,
       validator,
       async () => {
         await accountsWrapper
@@ -65,20 +65,20 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (client) => {
   ]
 
   beforeEach(async () => {
-    const kit = newKitFromProvider(client.currentProvider)
+    const kit = newKitFromProvider(providerOwner.currentProvider)
     const accountsWrapper = await kit.contracts.getAccounts()
 
     const [nonElectedGroupAddress, validatorAddress, nonAffilatedValidatorAddress] =
       await kit.connection.getAccounts()
 
     await setBalance(
-      client,
+      providerOwner,
       nonAffilatedValidatorAddress as Address,
       MIN_PRACTICAL_LOCKED_CELO_VALUE
     )
     await setupValidator(kit, nonAffilatedValidatorAddress)
-    await setBalance(client, nonElectedGroupAddress as Address, MIN_PRACTICAL_LOCKED_CELO_VALUE)
-    await setBalance(client, validatorAddress as Address, MIN_PRACTICAL_LOCKED_CELO_VALUE)
+    await setBalance(providerOwner, nonElectedGroupAddress as Address, MIN_PRACTICAL_LOCKED_CELO_VALUE)
+    await setBalance(providerOwner, validatorAddress as Address, MIN_PRACTICAL_LOCKED_CELO_VALUE)
     await setupGroupAndAffiliateValidator(kit, nonElectedGroupAddress, validatorAddress)
 
     await accountsWrapper
@@ -89,7 +89,7 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (client) => {
       validatorAddress,
       nonAffilatedValidatorAddress,
     ]) {
-      await setBalance(client, validator as Address, MIN_PRACTICAL_LOCKED_CELO_VALUE)
+      await setBalance(providerOwner, validator as Address, MIN_PRACTICAL_LOCKED_CELO_VALUE)
       try {
         await setMetadataUrlForValidator(accountsWrapper, validator)
       } catch (error) {
@@ -102,7 +102,7 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (client) => {
     const logMock = jest.spyOn(console, 'log')
     const writeMock = jest.spyOn(ux.write, 'stdout')
 
-    await testLocallyWithNode(RpcUrls, ['--csv'], client)
+    await testLocallyWithNode(RpcUrls, ['--csv'], providerOwner)
 
     expect(
       writeMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
@@ -131,7 +131,7 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (client) => {
     const logMock = jest.spyOn(console, 'log')
     const writeMock = jest.spyOn(ux.write, 'stdout')
 
-    await testLocallyWithNode(RpcUrls, ['--all', '--csv'], client)
+    await testLocallyWithNode(RpcUrls, ['--all', '--csv'], providerOwner)
 
     expect(
       writeMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))

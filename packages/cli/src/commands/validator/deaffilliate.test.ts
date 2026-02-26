@@ -11,12 +11,12 @@ import ValidatorDeAffiliate from './deaffiliate'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validator:deaffiliate', (client) => {
+testWithAnvilL2('validator:deaffiliate', (providerOwner) => {
   let account: string
   let validatorContract: ValidatorsWrapper
   let groupAddress: StrongAddress
   beforeEach(async () => {
-    const kit = newKitFromProvider(client.currentProvider)
+    const kit = newKitFromProvider(providerOwner.currentProvider)
     const accounts = await kit.connection.getAccounts()
     account = accounts[0]
     kit.defaultAccount = account as StrongAddress
@@ -27,11 +27,11 @@ testWithAnvilL2('validator:deaffiliate', (client) => {
     const groups = await validatorContract.getRegisteredValidatorGroupsAddresses()
     groupAddress = groups[0] as StrongAddress
 
-    await testLocallyWithNode(Register, ['--from', account], client)
+    await testLocallyWithNode(Register, ['--from', account], providerOwner)
     await testLocallyWithNode(
       Lock,
       ['--from', account, '--value', '10000000000000000000000'],
-      client
+      providerOwner
     )
 
     // Register a validator
@@ -40,7 +40,7 @@ testWithAnvilL2('validator:deaffiliate', (client) => {
     await testLocallyWithNode(
       ValidatorAffiliate,
       ['--from', account, groupAddress, '--yes'],
-      client
+      providerOwner
     )
   })
 
@@ -53,7 +53,7 @@ testWithAnvilL2('validator:deaffiliate', (client) => {
     const logMock = jest.spyOn(console, 'log')
     expect(validator.affiliation).toEqual(groupAddress)
 
-    await testLocallyWithNode(ValidatorDeAffiliate, ['--from', account], client)
+    await testLocallyWithNode(ValidatorDeAffiliate, ['--from', account], providerOwner)
 
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
       [

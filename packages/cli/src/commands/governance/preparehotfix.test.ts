@@ -14,13 +14,13 @@ import { parseEther } from 'viem'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:preparehotfix cmd', (client) => {
+testWithAnvilL2('governance:preparehotfix cmd', (providerOwner) => {
   const HOTFIX_HASH = '0x8ad3719bb2577b277bcafc1f00ac2f1c3fa5e565173303684d0a8d4f3661680c'
   const HOTFIX_BUFFER = hexToBuffer(HOTFIX_HASH)
   const EXECUTION_TIME_LIMIT = 86400
 
   it('should prepare a hotfix successfuly', async () => {
-    const kit = newKitFromProvider(client.currentProvider)
+    const kit = newKitFromProvider(providerOwner.currentProvider)
     const governanceWrapper = await kit.contracts.getGovernance()
     const [approverAccount, securityCouncilAccount] = await kit.connection.getAccounts()
     // arbitrary 100 seconds to the future to avoid
@@ -36,7 +36,7 @@ testWithAnvilL2('governance:preparehotfix cmd', (client) => {
       })
     ).waitReceipt()
 
-    await withImpersonatedAccount(client, DEFAULT_OWNER_ADDRESS, async () => {
+    await withImpersonatedAccount(providerOwner, DEFAULT_OWNER_ADDRESS, async () => {
       // setHotfixExecutionTimeWindow to EXECUTION_TIME_LIMIT (86400)
       await (
         await kit.sendTransaction({
@@ -69,20 +69,20 @@ testWithAnvilL2('governance:preparehotfix cmd', (client) => {
       ).waitReceipt()
     })
 
-    await testLocallyWithNode(Approve, ['--hotfix', HOTFIX_HASH, '--from', approverAccount], client)
+    await testLocallyWithNode(Approve, ['--hotfix', HOTFIX_HASH, '--from', approverAccount], providerOwner)
 
     await testLocallyWithNode(
       Approve,
       ['--hotfix', HOTFIX_HASH, '--from', securityCouncilAccount, '--type', 'securityCouncil'],
-      client
+      providerOwner
     )
 
-    await setNextBlockTimestamp(client, nextTimestamp)
+    await setNextBlockTimestamp(providerOwner, nextTimestamp)
 
     await testLocallyWithNode(
       PrepareHotfix,
       ['--hash', HOTFIX_HASH, '--from', approverAccount],
-      client
+      providerOwner
     )
 
     expect(await governanceWrapper.getHotfixRecord(HOTFIX_BUFFER)).toMatchInlineSnapshot(`

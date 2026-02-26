@@ -1,5 +1,4 @@
 import { StrongAddress } from '@celo/base'
-import { CeloProvider } from '@celo/connect/lib/celo-provider'
 import { newKitFromProvider } from '@celo/contractkit'
 import { GoldTokenWrapper } from '@celo/contractkit/lib/wrappers/GoldTokenWrapper'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
@@ -379,9 +378,7 @@ testWithAnvilL2(
           }
           const protocolKit = await Safe.init({
             predictedSafe: predictSafe,
-            provider: (
-              kit.connection.currentProvider as unknown as CeloProvider
-            ).toEip1193Provider(),
+            provider: kit.connection.currentProvider.toEip1193Provider(),
             signer: owner1,
           })
           const deploymentTransaction = await protocolKit.createSafeDeploymentTransaction()
@@ -453,9 +450,7 @@ testWithAnvilL2(
           }
           const protocolKit = await Safe.init({
             predictedSafe: predictSafe,
-            provider: (
-              kit.connection.currentProvider as unknown as CeloProvider
-            ).toEip1193Provider(),
+            provider: kit.connection.currentProvider.toEip1193Provider(),
             signer: owner1,
           })
           const deploymentTransaction = await protocolKit.createSafeDeploymentTransaction()

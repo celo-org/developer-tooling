@@ -10,9 +10,9 @@ import RevokeUpvote from './revokeupvote'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:revokeupvote cmd', (client) => {
+testWithAnvilL2('governance:revokeupvote cmd', (providerOwner) => {
   let minDeposit: BigNumber
-  const kit = newKitFromProvider(client.currentProvider)
+  const kit = newKitFromProvider(providerOwner.currentProvider)
   const proposalId = '2'
 
   let accounts: StrongAddress[] = []
@@ -31,8 +31,8 @@ testWithAnvilL2('governance:revokeupvote cmd', (client) => {
     }
 
     for (let i = 1; i <= 4; i++) {
-      await testLocallyWithNode(Register, ['--from', accounts[i]], client)
-      await testLocallyWithNode(Lock, ['--from', accounts[i], '--value', i.toString()], client)
+      await testLocallyWithNode(Register, ['--from', accounts[i]], providerOwner)
+      await testLocallyWithNode(Lock, ['--from', accounts[i], '--value', i.toString()], providerOwner)
 
       await (await governance.upvote(proposalId, accounts[i])).sendAndWaitForReceipt({
         from: accounts[i],
@@ -52,7 +52,7 @@ testWithAnvilL2('governance:revokeupvote cmd', (client) => {
     `)
 
     // Revoke upvote from account 2 (2 upvotes)
-    await testLocallyWithNode(RevokeUpvote, ['--from', accounts[2]], client)
+    await testLocallyWithNode(RevokeUpvote, ['--from', accounts[2]], providerOwner)
 
     // 1 + 3 + 4 = 8 upvotes
     expect(await governance.getQueue()).toMatchInlineSnapshot(`

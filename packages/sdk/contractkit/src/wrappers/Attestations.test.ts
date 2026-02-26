@@ -7,11 +7,11 @@ import { sha3 } from '@celo/utils/lib/solidity'
 import { newKitFromProvider } from '../kit'
 import { AttestationsWrapper } from './Attestations'
 
-testWithAnvilL2('AttestationsWrapper', (client) => {
+testWithAnvilL2('AttestationsWrapper', (providerOwner) => {
   const PHONE_NUMBER = '+15555555555'
   const IDENTIFIER = getIdentifierHash(sha3, PHONE_NUMBER, IdentifierPrefix.PHONE_NUMBER, 'pepper')
 
-  const kit = newKitFromProvider(client.currentProvider)
+  const kit = newKitFromProvider(providerOwner.currentProvider)
   let accounts: StrongAddress[] = []
   let attestations: AttestationsWrapper
 
@@ -19,12 +19,12 @@ testWithAnvilL2('AttestationsWrapper', (client) => {
     accounts = await kit.connection.getAccounts()
     kit.defaultAccount = accounts[0]
 
-    const attestationsContractAddress = await deployAttestationsContract(client, accounts[0])
+    const attestationsContractAddress = await deployAttestationsContract(providerOwner, accounts[0])
 
     attestations = new AttestationsWrapper(
       kit.connection,
       kit.connection.createContract(attestationsABI as any, attestationsContractAddress),
-      newKitFromProvider(client.currentProvider).contracts
+      newKitFromProvider(providerOwner.currentProvider).contracts
     )
   })
 

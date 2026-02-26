@@ -5,13 +5,13 @@ import { testLocallyWithNode } from '../../test-utils/cliUtils'
 import Contracts from './contracts'
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('network:contracts', (client) => {
+testWithAnvilL2('network:contracts', (providerOwner) => {
   describe('when version can be obtained', () => {
     test('runs', async () => {
       const spy = jest.spyOn(write, 'stdout')
       const warnSpy = jest.spyOn(console, 'warn')
       expect(warnSpy.mock.calls).toMatchInlineSnapshot(`[]`)
-      await testLocallyWithNode(Contracts, ['--output', 'json'], client)
+      await testLocallyWithNode(Contracts, ['--output', 'json'], providerOwner)
       expect(spy.mock.calls).toMatchSnapshot()
     })
   })
@@ -48,7 +48,7 @@ testWithAnvilL2('network:contracts', (client) => {
       const spy = jest.spyOn(write, 'stdout')
       const warnSpy = jest.spyOn(console, 'warn')
 
-      await testLocallyWithNode(Contracts, ['--output', 'json'], client)
+      await testLocallyWithNode(Contracts, ['--output', 'json'], providerOwner)
       expect(warnSpy.mock.calls).toMatchInlineSnapshot(`[]`)
       expect(spy.mock.calls).toMatchSnapshot() // see the file for the snapshot
     })

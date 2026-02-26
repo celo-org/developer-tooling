@@ -149,11 +149,11 @@ describe('newKitFromProvider()', () => {
   })
 })
 
-testWithAnvilL2('kit', (client) => {
+testWithAnvilL2('kit', (providerOwner) => {
   let kit: ContractKit
 
   beforeAll(async () => {
-    kit = newKitFromProvider(client.currentProvider)
+    kit = newKitFromProvider(providerOwner.currentProvider)
   })
 
   describe('epochs', () => {
@@ -165,11 +165,11 @@ testWithAnvilL2('kit', (client) => {
 
       // Go 3 epochs ahead
       for (let i = 0; i < 3; i++) {
-        await timeTravel(epochDuration * 2, client)
+        await timeTravel(epochDuration * 2, providerOwner)
         await startAndFinishEpochProcess(kit)
       }
 
-      await timeTravel(epochDuration * 2, client)
+      await timeTravel(epochDuration * 2, providerOwner)
 
       const accounts = await kit.connection.getAccounts()
 

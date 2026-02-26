@@ -5,9 +5,9 @@ import { soliditySha3 } from '@celo/utils/lib/solidity'
 import { newKitFromProvider } from '../kit'
 
 // This only really tests signatureUtils in @celo/utils, but is tested here
-// to avoid the client/ganache setup in @celo/utils
-testWithAnvilL2('Signing', (client) => {
-  const kit = newKitFromProvider(client.currentProvider)
+// to avoid the providerOwner/ganache setup in @celo/utils
+testWithAnvilL2('Signing', (providerOwner) => {
+  const kit = newKitFromProvider(providerOwner.currentProvider)
   const account = ACCOUNT_ADDRESSES[0]
   const pKey = ACCOUNT_PRIVATE_KEYS[0]
 

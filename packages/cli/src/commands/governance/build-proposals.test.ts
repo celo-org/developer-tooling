@@ -12,7 +12,7 @@ jest.mock('inquirer')
 
 const TX_PATH_FOR_TEST = './test-tx.json'
 
-testWithAnvilL2('governance:build-proposal cmd', (client) => {
+testWithAnvilL2('governance:build-proposal cmd', (providerOwner) => {
   describe('building proposal to transfer funds from governance', () => {
     beforeEach(async () => {
       const promptSpy = jest
@@ -36,7 +36,7 @@ testWithAnvilL2('governance:build-proposal cmd', (client) => {
       promptSpy.mockResolvedValueOnce({ 'Celo Contract': '✔ done' })
     })
     it('generates the json', async () => {
-      await testLocallyWithNode(BuildProposal, ['--output', TX_PATH_FOR_TEST], client)
+      await testLocallyWithNode(BuildProposal, ['--output', TX_PATH_FOR_TEST], providerOwner)
       const result = await readJSON(TX_PATH_FOR_TEST)
       expect(result).toMatchInlineSnapshot(`
         [

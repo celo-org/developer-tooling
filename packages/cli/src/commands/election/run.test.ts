@@ -5,7 +5,7 @@ import Run from './run'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('election:run', (client) => {
+testWithAnvilL2('election:run', (providerOwner) => {
   afterEach(async () => {
     jest.clearAllMocks()
   })
@@ -16,7 +16,7 @@ testWithAnvilL2('election:run', (client) => {
     const warnMock = jest.spyOn(console, 'warn')
     const writeMock = jest.spyOn(ux.write, 'stdout')
 
-    await testLocallyWithNode(Run, ['--csv'], client)
+    await testLocallyWithNode(Run, ['--csv'], providerOwner)
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`
       [
@@ -45,7 +45,7 @@ testWithAnvilL2('election:run', (client) => {
     const warnMock = jest.spyOn(console, 'warn')
     const writeMock = jest.spyOn(ux.write, 'stdout')
 
-    await testLocallyWithNode(Run, ['--csv'], client)
+    await testLocallyWithNode(Run, ['--csv'], providerOwner)
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`
       [

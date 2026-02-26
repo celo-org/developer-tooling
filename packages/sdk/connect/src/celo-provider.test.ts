@@ -96,7 +96,7 @@ describe('CeloProvider', () => {
     }
 
     const connection = new Connection(mockProvider, new MockWallet())
-    celoProvider = connection.currentProvider as unknown as CeloProvider
+    celoProvider = connection.currentProvider
   })
 
   describe("when celo provider don't have any local account", () => {

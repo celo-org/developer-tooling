@@ -1,5 +1,4 @@
 import { hexToBuffer, StrongAddress } from '@celo/base'
-import { CeloProvider } from '@celo/connect/lib/celo-provider'
 import { newKitFromProvider } from '@celo/contractkit'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import {
@@ -579,7 +578,7 @@ testWithAnvilL2(
 
         const protocolKit = await Safe.init({
           predictedSafe: predictSafe,
-          provider: (kit.connection.currentProvider as unknown as CeloProvider).toEip1193Provider(),
+          provider: kit.connection.currentProvider.toEip1193Provider(),
           signer: securityCouncilSafeSignatory1,
         })
 

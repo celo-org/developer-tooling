@@ -3,12 +3,12 @@ import { CeloContract, ContractKit, newKitFromProvider } from '@celo/contractkit
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
 import { ProposalBuilder } from './proposal-builder'
-testWithAnvilL2('ProposalBuilder', (client) => {
+testWithAnvilL2('ProposalBuilder', (providerOwner) => {
   let kit: ContractKit
   let proposalBuilder: ProposalBuilder
 
   beforeEach(() => {
-    kit = newKitFromProvider(client.currentProvider)
+    kit = newKitFromProvider(providerOwner.currentProvider)
     proposalBuilder = new ProposalBuilder(kit)
   })
 

@@ -14,8 +14,8 @@ import { EscrowWrapper } from './Escrow'
 import { FederatedAttestationsWrapper } from './FederatedAttestations'
 import { StableTokenWrapper } from './StableTokenWrapper'
 
-testWithAnvilL2('Escrow Wrapper', (client) => {
-  const kit = newKitFromProvider(client.currentProvider)
+testWithAnvilL2('Escrow Wrapper', (providerOwner) => {
+  const kit = newKitFromProvider(providerOwner.currentProvider)
   const TEN_USDM = new BigNumber('10e18').toFixed()
   const TIMESTAMP = 1665080820
 
@@ -34,13 +34,13 @@ testWithAnvilL2('Escrow Wrapper', (client) => {
     escrow = await kit.contracts.getEscrow()
 
     await asCoreContractsOwner(
-      client,
+      providerOwner,
       async (ownerAdress: StrongAddress) => {
         const registryContract = kit.connection.createContract(
           registryABI as any,
           REGISTRY_CONTRACT_ADDRESS
         )
-        const attestationsContractAddress = await deployAttestationsContract(client, ownerAdress)
+        const attestationsContractAddress = await deployAttestationsContract(providerOwner, ownerAdress)
 
         const attestationsContract = kit.connection.createContract(
           attestationsABI as any,
@@ -63,7 +63,7 @@ testWithAnvilL2('Escrow Wrapper', (client) => {
     await topUpWithToken(kit, StableToken.USDm, accounts[0], new BigNumber(TEN_USDM))
     await topUpWithToken(kit, StableToken.USDm, accounts[1], new BigNumber(TEN_USDM))
     await topUpWithToken(kit, StableToken.USDm, accounts[2], new BigNumber(TEN_USDM))
-    await setBalance(client, accounts[0], new BigNumber(TEN_USDM))
+    await setBalance(providerOwner, accounts[0], new BigNumber(TEN_USDM))
 
     stableTokenContract = await kit.contracts.getStableToken()
     federatedAttestations = await kit.contracts.getFederatedAttestations()

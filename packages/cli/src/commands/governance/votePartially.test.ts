@@ -14,9 +14,9 @@ import VotePartially from './votePartially'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:vote-partially cmd', (client) => {
+testWithAnvilL2('governance:vote-partially cmd', (providerOwner) => {
   let minDeposit: string
-  const kit = newKitFromProvider(client.currentProvider)
+  const kit = newKitFromProvider(providerOwner.currentProvider)
   const proposalID = new BigNumber(1)
 
   let accounts: StrongAddress[] = []
@@ -31,16 +31,16 @@ testWithAnvilL2('governance:vote-partially cmd', (client) => {
       .propose([], 'URL')
       .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
     const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
-    await timeTravel(dequeueFrequency + 1, client)
-    await testLocallyWithNode(Dequeue, ['--from', accounts[0]], client)
+    await timeTravel(dequeueFrequency + 1, providerOwner)
+    await testLocallyWithNode(Dequeue, ['--from', accounts[0]], providerOwner)
     await changeMultiSigOwner(kit, accounts[0])
     await testLocallyWithNode(
       Approve,
       ['--from', accounts[0], '--proposalID', proposalID.toString(10), '--useMultiSig'],
-      client
+      providerOwner
     )
-    await testLocallyWithNode(Register, ['--from', accounts[0]], client)
-    await testLocallyWithNode(Lock, ['--from', accounts[0], '--value', '100'], client)
+    await testLocallyWithNode(Register, ['--from', accounts[0]], providerOwner)
+    await testLocallyWithNode(Lock, ['--from', accounts[0], '--value', '100'], providerOwner)
   })
 
   test('can vote partially yes and no', async () => {
@@ -58,7 +58,7 @@ testWithAnvilL2('governance:vote-partially cmd', (client) => {
         '--abstain',
         '0',
       ],
-      client
+      providerOwner
     )
     const votes = await governance.getVotes(proposalID)
     expect(votes.Yes.toNumber()).toEqual(10)

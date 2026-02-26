@@ -7,7 +7,7 @@ import ElectionList from './list'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('election:list cmd', (client) => {
+testWithAnvilL2('election:list cmd', (providerOwner) => {
   test('shows list when no arguments provided', async () => {
     const getValidatorGroupsVotesMock = jest.spyOn(
       ElectionWrapper.prototype,
@@ -34,7 +34,7 @@ testWithAnvilL2('election:list cmd', (client) => {
 
     const writeMock = jest.spyOn(ux.write, 'stdout')
 
-    await testLocallyWithNode(ElectionList, ['--csv'], client)
+    await testLocallyWithNode(ElectionList, ['--csv'], providerOwner)
 
     expect(getValidatorGroupsVotesMock).toHaveBeenCalled()
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`

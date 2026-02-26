@@ -8,7 +8,7 @@ import ShowMultiSig from './show'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('multisig:show integration tests', (client) => {
+testWithAnvilL2('multisig:show integration tests', (providerOwner) => {
   let kit: ContractKit
   let accounts: StrongAddress[]
   let multisigAddress: StrongAddress
@@ -17,7 +17,7 @@ testWithAnvilL2('multisig:show integration tests', (client) => {
   let owner3: StrongAddress
 
   beforeAll(async () => {
-    kit = newKitFromProvider(client.currentProvider)
+    kit = newKitFromProvider(providerOwner.currentProvider)
     accounts = (await kit.connection.getAccounts()) as StrongAddress[]
 
     // Set up test accounts
@@ -44,7 +44,7 @@ testWithAnvilL2('multisig:show integration tests', (client) => {
   describe('show multisig information', () => {
     it('shows basic multisig information', async () => {
       const logMock = jest.spyOn(console, 'log')
-      await testLocallyWithNode(ShowMultiSig, [multisigAddress], client)
+      await testLocallyWithNode(ShowMultiSig, [multisigAddress], providerOwner)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [
           [
@@ -68,12 +68,12 @@ testWithAnvilL2('multisig:show integration tests', (client) => {
       await testLocallyWithNode(
         ProposeMultiSig,
         [multisigAddress, '--from', owner1, '--to', recipient, '--value', value],
-        client
+        providerOwner
       )
       const logMock = jest.spyOn(console, 'log')
 
       // Now show the specific transaction
-      const result = await testLocallyWithNode(ShowMultiSig, [multisigAddress, '--tx', '0'], client)
+      const result = await testLocallyWithNode(ShowMultiSig, [multisigAddress, '--tx', '0'], providerOwner)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [
           [
@@ -119,7 +119,7 @@ testWithAnvilL2('multisig:show integration tests', (client) => {
     it('shows raw transaction data', async () => {
       const logMock = jest.spyOn(console, 'log')
 
-      await testLocallyWithNode(ShowMultiSig, [multisigAddress, '--all', '--raw'], client)
+      await testLocallyWithNode(ShowMultiSig, [multisigAddress, '--all', '--raw'], providerOwner)
 
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [
@@ -139,7 +139,7 @@ testWithAnvilL2('multisig:show integration tests', (client) => {
 
     it('fails with invalid multisig address', async () => {
       await expect(
-        testLocallyWithNode(ShowMultiSig, ['0x0000000000000000000000000000000000000000'], client)
+        testLocallyWithNode(ShowMultiSig, ['0x0000000000000000000000000000000000000000'], providerOwner)
       ).rejects.toThrowErrorMatchingInlineSnapshot(`
         "The contract function "getTransactionCount" returned no data ("0x").
 
@@ -162,7 +162,7 @@ testWithAnvilL2('multisig:show integration tests', (client) => {
       const logMock = jest.spyOn(console, 'log')
 
       await expect(
-        testLocallyWithNode(ShowMultiSig, [multisigAddress, '--tx', '999271717'], client)
+        testLocallyWithNode(ShowMultiSig, [multisigAddress, '--tx', '999271717'], providerOwner)
       ).resolves.toBeUndefined()
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [
@@ -193,7 +193,7 @@ testWithAnvilL2('multisig:show integration tests', (client) => {
       await testLocallyWithNode(
         ProposeMultiSig,
         [multisigAddress, '--from', owner3, '--to', recipient, '--data', data],
-        client
+        providerOwner
       )
       const logMock = jest.spyOn(console, 'log')
 
@@ -202,7 +202,7 @@ testWithAnvilL2('multisig:show integration tests', (client) => {
         testLocallyWithNode(
           ShowMultiSig,
           [multisigAddress, '--tx', '2'], // Third transaction
-          client
+          providerOwner
         )
       ).resolves.toBeUndefined()
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`

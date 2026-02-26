@@ -6,8 +6,8 @@ import { startAndFinishEpochProcess } from '../test-utils/utils'
 import { AccountsWrapper } from './Accounts'
 import { LockedGoldWrapper } from './LockedGold'
 
-testWithAnvilL2('LockedGold Wrapper', (client) => {
-  const kit = newKitFromProvider(client.currentProvider)
+testWithAnvilL2('LockedGold Wrapper', (providerOwner) => {
+  const kit = newKitFromProvider(providerOwner.currentProvider)
   let accounts: AccountsWrapper
   let lockedGold: LockedGoldWrapper
 
