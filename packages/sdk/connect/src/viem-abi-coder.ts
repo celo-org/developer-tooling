@@ -60,7 +60,9 @@ export function coerceArgsForAbi(abiInputs: readonly AbiInput[], args: unknown[]
   })
 }
 
-// Web3's ABI coder returned bigint values as strings. Convert to match.
+// Viem's ABI decoder returns uint/int values as bigint, while web3 returned strings.
+// Downstream consumers (wrapper proxyCall transformers, CLI formatters, etc.) expect
+// string values for large numbers, so we convert to preserve backward compatibility.
 export function bigintToString(value: unknown): unknown {
   if (typeof value === 'bigint') {
     return value.toString()
