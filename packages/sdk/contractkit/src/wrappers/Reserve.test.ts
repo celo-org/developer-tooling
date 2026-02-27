@@ -104,21 +104,33 @@ testWithAnvilL2('Reserve Wrapper', (provider) => {
   })
 
   test('two spenders required to confirm transfers gold', async () => {
+    const { parseEventLogs } = await import('viem')
+
     const tx = await reserve.transferGold(otherReserveAddress, 10)
     const multisigTx = await reserveSpenderMultiSig.submitOrConfirmTransaction(
       reserve.address,
       tx.txo
     )
-    const events = await (await multisigTx.sendAndWaitForReceipt()).events
-    expect(events && events.Submission && events.Confirmation && !events.Execution).toBeTruthy()
+    const receipt = await multisigTx.sendAndWaitForReceipt()
+    const logs = parseEventLogs({ abi: multiSigABI as any, logs: receipt.logs as any })
+    const eventNames = logs.map((l: any) => l.eventName)
+    // First signer: Submission + Confirmation but NOT Execution (2-of-2 required)
+    expect(eventNames).toContain('Submission')
+    expect(eventNames).toContain('Confirmation')
+    expect(eventNames).not.toContain('Execution')
 
     const tx2 = await reserve.transferGold(otherReserveAddress, 10)
     const multisigTx2 = await reserveSpenderMultiSig.submitOrConfirmTransaction(
       reserve.address,
       tx2.txo
     )
-    const events2 = await (await multisigTx2.sendAndWaitForReceipt({ from: otherSpender })).events
-    expect(events2 && !events2.Submission && events2.Confirmation && events2.Execution).toBeTruthy()
+    const receipt2 = await multisigTx2.sendAndWaitForReceipt({ from: otherSpender })
+    const logs2 = parseEventLogs({ abi: multiSigABI as any, logs: receipt2.logs as any })
+    const eventNames2 = logs2.map((l: any) => l.eventName)
+    // Second signer: Confirmation + Execution but NOT Submission
+    expect(eventNames2).not.toContain('Submission')
+    expect(eventNames2).toContain('Confirmation')
+    expect(eventNames2).toContain('Execution')
   })
 
   test('test does not transfer gold if not spender', async () => {

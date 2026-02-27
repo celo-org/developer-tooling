@@ -1,6 +1,5 @@
 import { goldTokenABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
-import type { CeloContract } from '@celo/connect'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
 import { newKitFromProvider } from '../kit'
@@ -15,7 +14,7 @@ testWithAnvilL2('GoldToken Wrapper', (provider) => {
   const kit = newKitFromProvider(provider)
   let accounts: StrongAddress[] = []
   let goldToken: GoldTokenWrapper
-  let goldTokenContract: CeloContract
+  let goldTokenContract: any
 
   beforeAll(async () => {
     accounts = await kit.connection.getAccounts()
@@ -42,7 +41,7 @@ testWithAnvilL2('GoldToken Wrapper', (provider) => {
   it('transfers', async () => {
     await goldToken.transfer(accounts[1], ONE_GOLD).sendAndWaitForReceipt()
 
-    const events = await goldTokenContract.client.getContractEvents({
+    const events = await kit.connection.viemClient.getContractEvents({
       abi: goldTokenContract.abi as any,
       address: goldTokenContract.address as `0x${string}`,
       eventName: 'Transfer',
@@ -64,7 +63,7 @@ testWithAnvilL2('GoldToken Wrapper', (provider) => {
 
     await goldToken.transferFrom(accounts[1], accounts[3], ONE_GOLD).sendAndWaitForReceipt()
 
-    const events = await goldTokenContract.client.getContractEvents({
+    const events = await kit.connection.viemClient.getContractEvents({
       abi: goldTokenContract.abi as any,
       address: goldTokenContract.address as `0x${string}`,
       eventName: 'Transfer',

@@ -27,14 +27,12 @@ export function txoStub<T>(): TransactionObjectStub<T> {
     call: () => {
       throw new Error('not implemented')
     },
-    encodeABI: () => {
-      throw new Error('not implemented')
-    },
+    encodeABI: () => '0x1234',
     estimateGas: estimateGasMock,
     send: sendMock,
     sendMock,
     estimateGasMock,
-    _parent: jest.fn() as any,
+    _parent: { _address: '0x' + '0'.repeat(40) } as any,
   }
   return pe
 }
@@ -43,13 +41,28 @@ export function txoStub<T>(): TransactionObjectStub<T> {
   describe('kit.sendTransactionObject()', () => {
     const kit = newKitFromProviderFn(getProviderForKit('http://', undefined))
 
+    // sendTransactionObject now uses encodeABI() + sendTransactionViaProvider()
+    // rather than txo.send(), so we mock sendTransactionViaProvider to prevent
+    // actual network calls and to assert on the tx params passed through.
+    let sendViaProviderSpy: jest.SpyInstance
+    beforeEach(() => {
+      sendViaProviderSpy = jest
+        .spyOn(kit.connection as any, 'sendTransactionViaProvider')
+        .mockReturnValue({
+          getHash: jest.fn().mockResolvedValue('0x' + 'a'.repeat(64)),
+          waitReceipt: jest.fn().mockResolvedValue({ status: true }),
+        })
+    })
+    afterEach(() => {
+      sendViaProviderSpy.mockRestore()
+    })
+
     test('should send transaction on simple case', async () => {
       const txo = txoStub()
       txo.estimateGasMock.mockResolvedValue(1000)
-      // sendTransactionObject now uses encodeABI() + sendTransactionViaProvider()
-      // rather than txo.send(), so hash/receipt resolution is handled internally
-      expect(txo.sendMock).toBeDefined()
-      expect(txo.estimateGasMock).toBeDefined()
+      await kit.connection.sendTransactionObject(txo)
+      // Gas is inflated by defaultGasInflationFactor (1.3)
+      expect(sendViaProviderSpy).toHaveBeenCalledTimes(1)
     })
 
     test('should not estimateGas if gas is provided', async () => {
@@ -63,21 +76,23 @@ export function txoStub<T>(): TransactionObjectStub<T> {
       txo.estimateGasMock.mockResolvedValue(1000)
       kit.connection.defaultGasInflationFactor = 2
       await kit.connection.sendTransactionObject(txo)
-      expect(txo.send).toBeCalledWith(
+      expect(sendViaProviderSpy).toBeCalledWith(
         expect.objectContaining({
           gas: 1000 * 2,
         })
       )
     })
 
-    test('should forward txoptions to txo.send()', async () => {
+    test('should forward txoptions to sendTransactionViaProvider()', async () => {
       const txo = txoStub()
       await kit.connection.sendTransactionObject(txo, { gas: 555, from: '0xAAFFF' })
-      expect(txo.send).toBeCalledWith({
-        feeCurrency: undefined,
-        gas: 555,
-        from: '0xAAFFF',
-      })
+      expect(sendViaProviderSpy).toBeCalledWith(
+        expect.objectContaining({
+          feeCurrency: undefined,
+          gas: 555,
+          from: '0xAAFFF',
+        })
+      )
     })
 
     test('works with maxFeePerGas and maxPriorityFeePerGas', async () => {
@@ -88,13 +103,15 @@ export function txoStub<T>(): TransactionObjectStub<T> {
         maxPriorityFeePerGas: 555,
         from: '0xAAFFF',
       })
-      expect(txo.send).toBeCalledWith({
-        feeCurrency: undefined,
-        maxFeePerGas: 555,
-        maxPriorityFeePerGas: 555,
-        gas: 1000,
-        from: '0xAAFFF',
-      })
+      expect(sendViaProviderSpy).toBeCalledWith(
+        expect.objectContaining({
+          feeCurrency: undefined,
+          maxFeePerGas: 555,
+          maxPriorityFeePerGas: 555,
+          gas: 1000,
+          from: '0xAAFFF',
+        })
+      )
     })
 
     test('when maxFeePerGas and maxPriorityFeePerGas and feeCurrency', async () => {
@@ -106,13 +123,15 @@ export function txoStub<T>(): TransactionObjectStub<T> {
         feeCurrency: '0xe8537a3d056da446677b9e9d6c5db704eaab4787',
         from: '0xAAFFF',
       })
-      expect(txo.send).toBeCalledWith({
-        gas: 1000,
-        maxFeePerGas: 555,
-        maxPriorityFeePerGas: 555,
-        feeCurrency: '0xe8537a3d056da446677b9e9d6c5db704eaab4787',
-        from: '0xAAFFF',
-      })
+      expect(sendViaProviderSpy).toBeCalledWith(
+        expect.objectContaining({
+          gas: 1000,
+          maxFeePerGas: 555,
+          maxPriorityFeePerGas: 555,
+          feeCurrency: '0xe8537a3d056da446677b9e9d6c5db704eaab4787',
+          from: '0xAAFFF',
+        })
+      )
     })
   })
 })

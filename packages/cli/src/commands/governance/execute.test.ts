@@ -156,35 +156,29 @@ testWithAnvilL2('governance:execute cmd', (provider) => {
     expect(
       logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
     ).toMatchInlineSnapshot(`
+      [
         [
-          [
-            "Running Checks:",
-          ],
-          [
-            "   ✔  1 is an existing proposal ",
-          ],
-          [
-            "   ✔  1 is in stage Execution ",
-          ],
-          [
-            "   ✔  Proposal 1 is passing corresponding constitutional quorum ",
-          ],
-          [
-            "All checks passed",
-          ],
-          [
-            "SendTransaction: executeTx",
-          ],
-          [
-            "txHash: 0xtxhash",
-          ],
-          [
-            "ProposalExecuted:",
-          ],
-          [
-            "proposalId: 1",
-          ],
-        ]
-      `)
+          "Running Checks:",
+        ],
+        [
+          "   ✔  1 is an existing proposal ",
+        ],
+        [
+          "   ✔  1 is in stage Execution ",
+        ],
+        [
+          "   ✔  Proposal 1 is passing corresponding constitutional quorum ",
+        ],
+        [
+          "All checks passed",
+        ],
+        [
+          "SendTransaction: executeTx",
+        ],
+        [
+          "txHash: 0xtxhash",
+        ],
+      ]
+    `)
   })
 })

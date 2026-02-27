@@ -1,9 +1,11 @@
 import { NULL_ADDRESS } from '@celo/base'
-import { Connection, Provider, type CeloContract } from '@celo/connect'
+import { Connection, Provider } from '@celo/connect'
+import type { AbiItem } from '@celo/connect/lib/abi-types'
 import { viemAbiCoder } from '@celo/connect/lib/viem-abi-coder'
 import BigNumber from 'bignumber.js'
+import type { PublicClient } from 'viem'
 import { ContractVersion, newContractVersion } from '../versions'
-import { BaseWrapper, unixSecondsTimestampToDateString } from './BaseWrapper'
+import { BaseWrapper, type ContractLike, unixSecondsTimestampToDateString } from './BaseWrapper'
 
 const mockVersion = newContractVersion(1, 1, 1, 1)
 
@@ -13,7 +15,7 @@ const encodedVersion = viemAbiCoder.encodeParameters(
   ['1', '1', '1', '1']
 )
 
-const mockContract: CeloContract = {
+const mockContract: ContractLike<AbiItem[]> = {
   abi: [
     {
       type: 'function' as const,
@@ -28,13 +30,14 @@ const mockContract: CeloContract = {
     },
   ],
   address: NULL_ADDRESS,
-  client: {
-    call: async () => ({ data: encodedVersion }),
-  } as any,
 }
 
 const mockProvider = { send: (_payload: unknown, _cb: unknown) => undefined } as unknown as Provider
 const connection = new Connection(mockProvider)
+// Override viemClient with mock that returns encoded version data
+;(connection as any)._viemClient = {
+  call: jest.fn().mockResolvedValue({ data: encodedVersion }),
+} as unknown as PublicClient
 
 class TestWrapper extends BaseWrapper {
   constructor() {

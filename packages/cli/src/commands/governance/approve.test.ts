@@ -349,37 +349,30 @@ testWithAnvilL2(
         expect(
           logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
         ).toMatchInlineSnapshot(`
-                  [
-                    [
-                      "Running Checks:",
-                    ],
-                    [
-                      "   ✔  0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb is security council address ",
-                    ],
-                    [
-                      "   ✔  Hotfix 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d is not already approved by security council ",
-                    ],
-                    [
-                      "   ✔  Hotfix 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d is not already executed ",
-                    ],
-                    [
-                      "All checks passed",
-                    ],
-                    [
-                      "SendTransaction: approveTx",
-                    ],
-                    [
-                      "txHash: 0xtxhash",
-                    ],
-                    [
-                      "HotfixApproved:",
-                    ],
-                    [
-                      "hash: 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d
-                  approver: 0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb",
-                    ],
-                  ]
-              `)
+          [
+            [
+              "Running Checks:",
+            ],
+            [
+              "   ✔  0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb is security council address ",
+            ],
+            [
+              "   ✔  Hotfix 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d is not already approved by security council ",
+            ],
+            [
+              "   ✔  Hotfix 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d is not already executed ",
+            ],
+            [
+              "All checks passed",
+            ],
+            [
+              "SendTransaction: approveTx",
+            ],
+            [
+              "txHash: 0xtxhash",
+            ],
+          ]
+        `)
         expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
       })
 
@@ -425,37 +418,30 @@ testWithAnvilL2(
         expect(
           logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
         ).toMatchInlineSnapshot(`
-                  [
-                    [
-                      "Running Checks:",
-                    ],
-                    [
-                      "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is approver address ",
-                    ],
-                    [
-                      "   ✔  Hotfix 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d is not already approved ",
-                    ],
-                    [
-                      "   ✔  Hotfix 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d is not already executed ",
-                    ],
-                    [
-                      "All checks passed",
-                    ],
-                    [
-                      "SendTransaction: approveTx",
-                    ],
-                    [
-                      "txHash: 0xtxhash",
-                    ],
-                    [
-                      "HotfixApproved:",
-                    ],
-                    [
-                      "hash: 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d
-                  approver: 0x5409ED021D9299bf6814279A6A1411A7e866A631",
-                    ],
-                  ]
-              `)
+          [
+            [
+              "Running Checks:",
+            ],
+            [
+              "   ✔  0x5409ED021D9299bf6814279A6A1411A7e866A631 is approver address ",
+            ],
+            [
+              "   ✔  Hotfix 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d is not already approved ",
+            ],
+            [
+              "   ✔  Hotfix 0xbf670baa773b342120e1af45433a465bbd6fa289a5cf72763d63d95e4e22482d is not already executed ",
+            ],
+            [
+              "All checks passed",
+            ],
+            [
+              "SendTransaction: approveTx",
+            ],
+            [
+              "txHash: 0xtxhash",
+            ],
+          ]
+        `)
         expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
       })
 
@@ -1133,7 +1119,9 @@ testWithAnvilL2(
             await kit.sendTransaction({
               to: governance.address,
               from: DEFAULT_OWNER_ADDRESS,
-              data: `0x3156560e000000000000000000000000${twoSignerMultisig.replace('0x', '').toLowerCase()}`,
+              data: `0x3156560e000000000000000000000000${twoSignerMultisig
+                .replace('0x', '')
+                .toLowerCase()}`,
             })
           ).waitReceipt()
         })
@@ -1191,39 +1179,39 @@ testWithAnvilL2(
         expect(
           logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
         ).toMatchInlineSnapshot(`
-                  [
-                    [
-                      "Running Checks:",
-                    ],
-                    [
-                      "   ✔  ${twoSignerMultisig} is approver address ",
-                    ],
-                    [
-                      "   ✔  ${accounts[1]} is multisig signatory ",
-                    ],
-                    [
-                      "   ✔  1 is an existing proposal ",
-                    ],
-                    [
-                      "   ✔  1 is in stage Referendum or Execution ",
-                    ],
-                    [
-                      "   ✔  1 not already approved ",
-                    ],
-                    [
-                      "   ✔  multisgTXId provided is valid ",
-                    ],
-                    [
-                      "All checks passed",
-                    ],
-                    [
-                      "SendTransaction: approveTx",
-                    ],
-                    [
-                      "txHash: 0xtxhash",
-                    ],
-                  ]
-              `)
+          [
+            [
+              "Running Checks:",
+            ],
+            [
+              "   ✔  0x0B1ba0af832d7C05fD64161E0Db78E85978E8082 is approver address ",
+            ],
+            [
+              "   ✔  0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb is multisig signatory ",
+            ],
+            [
+              "   ✔  1 is an existing proposal ",
+            ],
+            [
+              "   ✔  1 is in stage Referendum or Execution ",
+            ],
+            [
+              "   ✔  1 not already approved ",
+            ],
+            [
+              "   ✔  multisgTXId provided is valid ",
+            ],
+            [
+              "All checks passed",
+            ],
+            [
+              "SendTransaction: approveTx",
+            ],
+            [
+              "txHash: 0xtxhash",
+            ],
+          ]
+        `)
       })
 
       it('should fail when invalid --multisigTx is provided', async () => {

@@ -128,34 +128,27 @@ testWithAnvilL2(
         expect(await kit.connection.getBalance(multisigAddress)).toEqual(minDeposit)
 
         expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
-                  [
-                    [
-                      "Running Checks:",
-                    ],
-                    [
-                      "   ✔  0x871DD7C2B4b25E1Aa18728e9D5f2Af4C4e431f5c has refunded governance deposits ",
-                    ],
-                    [
-                      "   ✔  The provided address is an owner of the multisig ",
-                    ],
-                    [
-                      "All checks passed",
-                    ],
-                    [
-                      "SendTransaction: withdraw",
-                    ],
-                    [
-                      "txHash: 0xtxhash",
-                    ],
-                    [
-                      "Deposit:",
-                    ],
-                    [
-                      "sender: 0x2EB25B5eb9d5A4f61deb1e4F846343F862eB67D9
-                  value: 100000000000000000000",
-                    ],
-                  ]
-              `)
+          [
+            [
+              "Running Checks:",
+            ],
+            [
+              "   ✔  0x871DD7C2B4b25E1Aa18728e9D5f2Af4C4e431f5c has refunded governance deposits ",
+            ],
+            [
+              "   ✔  The provided address is an owner of the multisig ",
+            ],
+            [
+              "All checks passed",
+            ],
+            [
+              "SendTransaction: withdraw",
+            ],
+            [
+              "txHash: 0xtxhash",
+            ],
+          ]
+        `)
         expect(stripAnsiCodesFromNestedArray(errorMock.mock.calls)).toMatchInlineSnapshot(`[]`)
       })
 

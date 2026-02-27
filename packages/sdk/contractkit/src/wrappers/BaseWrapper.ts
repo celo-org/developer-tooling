@@ -22,6 +22,14 @@ export interface ContractLike<TAbi extends readonly unknown[] = readonly unknown
   readonly address: `0x${string}`
 }
 
+/**
+ * @internal Registry mapping contract instances to their Connection.
+ * Populated by BaseWrapper constructor, consumed by proxyCallGenericImpl
+ * so standalone proxyCall/proxyCallGeneric can access Connection without
+ * changing their public signatures.
+ */
+const contractConnections = new WeakMap<object, Connection>()
+
 type Events = string
 type Methods = string
 type EventsEnum = Record<string, string>
@@ -38,6 +46,7 @@ export abstract class BaseWrapper<TAbi extends readonly unknown[] = AbiItem[]> {
     protected readonly contract: ContractLike<TAbi>
   ) {
     this.client = connection.viemClient
+    contractConnections.set(contract, connection)
   }
 
   /** Contract address */
@@ -537,9 +546,15 @@ function proxyCallGenericImpl<
 ): (...args: InputArgs) => Promise<Output | PreParsedOutput> {
   return async (...args: InputArgs) => {
     const resolvedArgs = parseInputArgs ? parseInputArgs(...args) : args
+    const connection = contractConnections.get(contract)
+    if (!connection) {
+      throw new Error(
+        `Connection not found for contract at ${contract.address}. ` +
+          'Ensure the contract was registered via a BaseWrapper constructor.'
+      )
+    }
     const txo = createViemTxObjectInternal(
-      // connection not needed for call — pass undefined, client.call is used directly
-      undefined!,
+      connection,
       contract,
       functionName,
       resolvedArgs as unknown[]

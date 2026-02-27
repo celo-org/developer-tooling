@@ -1,5 +1,5 @@
 import { Address, StrongAddress } from '@celo/base/lib/address'
-import { createViemTxObject, type CeloContract as CeloContractInstance } from '@celo/connect'
+import { createViemTxObject, type ContractRef } from '@celo/connect'
 import { asCoreContractsOwner, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import BigNumber from 'bignumber.js'
@@ -20,7 +20,7 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
   let governanceApproverMultiSig: MultiSigWrapper
   let lockedGold: LockedGoldWrapper
   let accountWrapper: AccountsWrapper
-  let registry: CeloContractInstance
+  let registry: ContractRef
   let minDeposit: string
   let dequeueFrequency: number
   let referendumStageDuration: number

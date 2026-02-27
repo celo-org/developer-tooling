@@ -74,7 +74,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
     const data = encodeDeployData({
       abi: SortedOraclesArtifacts.abi,
       bytecode: linkedBytecode as `0x${string}`,
-      args: [NetworkConfig.oracles.reportExpiry],
+      args: [true],
     })
 
     const txResult = await kit.connection.sendTransaction({
