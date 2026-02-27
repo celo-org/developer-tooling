@@ -119,19 +119,25 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<typeof lockedGold
     return new BigNumber(maxDelegateesCountHex, 16)
   }
 
-  private _getAccountTotalDelegatedFraction: (...args: any[]) => Promise<string> = proxyCall(
+  private _getAccountTotalDelegatedFraction = proxyCall(
     this.contract,
-    'getAccountTotalDelegatedFraction'
+    'getAccountTotalDelegatedFraction',
+    undefined,
+    (res) => res.toString()
   )
 
-  private _getTotalDelegatedCelo: (...args: any[]) => Promise<string> = proxyCall(
+  private _getTotalDelegatedCelo = proxyCall(
     this.contract,
-    'totalDelegatedCelo'
+    'totalDelegatedCelo',
+    undefined,
+    (res) => res.toString()
   )
 
-  private _getDelegateesOfDelegator: (...args: any[]) => Promise<string[]> = proxyCall(
+  private _getDelegateesOfDelegator = proxyCall(
     this.contract,
-    'getDelegateesOfDelegator'
+    'getDelegateesOfDelegator',
+    undefined,
+    (res) => [...res] as string[]
   )
 
   getDelegateInfo = async (account: string): Promise<DelegateInfo> => {
@@ -224,7 +230,7 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<typeof lockedGold
     this.contract,
     'getAccountTotalLockedGold',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
   /**
@@ -232,7 +238,9 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<typeof lockedGold
    *   gold that has been unlocked but not yet withdrawn.
    * @returns The total amount of locked gold in the system.
    */
-  getTotalLockedGold = proxyCall(this.contract, 'getTotalLockedGold', undefined, valueToBigNumber)
+  getTotalLockedGold = proxyCall(this.contract, 'getTotalLockedGold', undefined, (res) =>
+    valueToBigNumber(res.toString())
+  )
 
   /**
    * Returns the total amount of non-voting locked gold for an account.
@@ -243,14 +251,11 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<typeof lockedGold
     this.contract,
     'getAccountNonvotingLockedGold',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
-  private _getUnlockingPeriod = proxyCall(
-    this.contract,
-    'unlockingPeriod',
-    undefined,
-    valueToBigNumber
+  private _getUnlockingPeriod = proxyCall(this.contract, 'unlockingPeriod', undefined, (res) =>
+    valueToBigNumber(res.toString())
   )
 
   /**
@@ -303,7 +308,7 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<typeof lockedGold
     this.contract,
     'getAccountTotalGovernanceVotingPower',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
   async getAccountTotalGovernanceVotingPower(account: string) {
@@ -315,8 +320,15 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<typeof lockedGold
    * @param account The address of the account.
    * @return The value and timestamp for each pending withdrawal.
    */
-  private _getPendingWithdrawals: (...args: any[]) => Promise<{ 0: string[]; 1: string[] }> =
-    proxyCall(this.contract, 'getPendingWithdrawals')
+  private _getPendingWithdrawals = proxyCall(
+    this.contract,
+    'getPendingWithdrawals',
+    undefined,
+    (res) => ({
+      0: [...res[0]].map((v) => v.toString()),
+      1: [...res[1]].map((v) => v.toString()),
+    })
+  )
 
   async getPendingWithdrawals(account: string) {
     const withdrawals = await this._getPendingWithdrawals(account)
@@ -337,9 +349,14 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<typeof lockedGold
    * @return The value of the pending withdrawal.
    * @return The timestamp of the pending withdrawal.
    */
-  private _getPendingWithdrawal: (...args: any[]) => Promise<{ 0: string; 1: string }> = proxyCall(
+  private _getPendingWithdrawal = proxyCall(
     this.contract,
-    'getPendingWithdrawal'
+    'getPendingWithdrawal',
+    undefined,
+    (res) => ({
+      0: res[0].toString(),
+      1: res[1].toString(),
+    })
   )
 
   async getPendingWithdrawal(account: string, index: number) {
@@ -444,7 +461,7 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<typeof lockedGold
     this.contract,
     'getTotalPendingWithdrawalsCount',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 }
 

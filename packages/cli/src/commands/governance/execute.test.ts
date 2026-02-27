@@ -137,7 +137,7 @@ testWithAnvilL2('governance:execute cmd', (provider) => {
       await createViemTxObject<string>(kit.connection, testTransactionsContract, 'getValue', [
         PROPOSAL_TRANSACTION_TEST_KEY,
       ]).call()
-    ).toEqual('0')
+    ).toEqual(0n)
 
     logMock.mockClear()
 
@@ -151,7 +151,7 @@ testWithAnvilL2('governance:execute cmd', (provider) => {
       await createViemTxObject<string>(kit.connection, testTransactionsContract, 'getValue', [
         PROPOSAL_TRANSACTION_TEST_KEY,
       ]).call()
-    ).toEqual(PROPOSAL_TRANSACTION_TEST_VALUE)
+    ).toEqual(BigInt(PROPOSAL_TRANSACTION_TEST_VALUE))
 
     expect(
       logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))

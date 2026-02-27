@@ -66,13 +66,13 @@ interface RevocationInfo {
  * Contract for handling an instance of a ReleaseGold contract.
  */
 export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGoldABI> {
-  private _getReleaseSchedule: () => Promise<{
-    releaseStartTime: string
-    releaseCliff: string
-    numReleasePeriods: string
-    releasePeriod: string
-    amountReleasedPerPeriod: string
-  }> = proxyCall(this.contract, 'releaseSchedule')
+  private _getReleaseSchedule = proxyCall(this.contract, 'releaseSchedule', undefined, (res) => ({
+    releaseStartTime: res[0].toString(),
+    releaseCliff: res[1].toString(),
+    numReleasePeriods: res[2].toString(),
+    releasePeriod: res[3].toString(),
+    amountReleasedPerPeriod: res[4].toString(),
+  }))
 
   /**
    * Returns the underlying Release schedule of the ReleaseGold contract
@@ -158,7 +158,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
     this.contract,
     'totalWithdrawn',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
   /**
@@ -170,15 +170,15 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
     this.contract,
     'maxDistribution',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
-  private _getRevocationInfo: () => Promise<{
-    revocable: boolean
-    canExpire: boolean
-    releasedBalanceAtRevoke: string
-    revokeTime: string
-  }> = proxyCall(this.contract, 'revocationInfo')
+  private _getRevocationInfo = proxyCall(this.contract, 'revocationInfo', undefined, (res) => ({
+    revocable: res[0] as boolean,
+    canExpire: res[1] as boolean,
+    releasedBalanceAtRevoke: res[2].toString(),
+    revokeTime: res[3].toString(),
+  }))
 
   /**
    * Returns the underlying Revocation Info of the ReleaseGold contract
@@ -247,7 +247,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
     this.contract,
     'getTotalBalance',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
   /**
@@ -258,7 +258,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
     this.contract,
     'getRemainingTotalBalance',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
   /**
@@ -269,7 +269,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
     this.contract,
     'getRemainingUnlockedBalance',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
   /**
@@ -280,7 +280,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
     this.contract,
     'getRemainingLockedBalance',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
   /**
@@ -291,7 +291,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
     this.contract,
     'getCurrentReleasedTotalAmount',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
   /**
@@ -302,7 +302,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
     this.contract,
     'getWithdrawableAmount',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
   /**

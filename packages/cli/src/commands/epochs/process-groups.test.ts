@@ -123,7 +123,7 @@ testWithAnvilL2('epochs:process-groups cmd', (provider) => {
         'processedGroups',
         [electedGroup]
       ).call()
-    ).toEqual('0')
+    ).toEqual(0n)
 
     await testLocallyWithNode(ProcessGroups, ['--from', from], provider)
 

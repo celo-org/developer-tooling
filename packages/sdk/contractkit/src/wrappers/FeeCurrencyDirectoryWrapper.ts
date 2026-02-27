@@ -31,9 +31,9 @@ export class FeeCurrencyDirectoryWrapper extends AbstractFeeCurrencyWrapper {
     this.contract,
     'getExchangeRate',
     undefined,
-    (res: { numerator: string; denominator: string }) => ({
-      numerator: valueToBigNumber(res.numerator),
-      denominator: valueToBigNumber(res.denominator),
+    (res: readonly [bigint, bigint]) => ({
+      numerator: valueToBigNumber(res[0].toString()),
+      denominator: valueToBigNumber(res[1].toString()),
     })
   )
 
@@ -43,9 +43,9 @@ export class FeeCurrencyDirectoryWrapper extends AbstractFeeCurrencyWrapper {
     this.contract,
     'getCurrencyConfig',
     undefined,
-    (res: { oracle: string; intrinsicGas: string }) => ({
+    (res: { oracle: string; intrinsicGas: bigint }) => ({
       oracle: res.oracle as StrongAddress,
-      intrinsicGas: valueToBigNumber(res.intrinsicGas),
+      intrinsicGas: valueToBigNumber(res.intrinsicGas.toString()),
     })
   )
 

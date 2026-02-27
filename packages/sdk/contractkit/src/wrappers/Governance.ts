@@ -168,59 +168,40 @@ const ZERO_BN = new BigNumber(0)
  */
 export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governanceABI> {
   // --- private proxy fields for typed contract calls ---
-  private _stageDurations = proxyCall(
-    this.contract,
-    'stageDurations',
-    undefined,
-    (res: { 0: string; 1: string; 2: string }) => ({
-      [ProposalStage.Referendum]: valueToBigNumber(res[1]),
-      [ProposalStage.Execution]: valueToBigNumber(res[2]),
-    })
-  )
+  private _stageDurations = proxyCall(this.contract, 'stageDurations', undefined, (res) => ({
+    [ProposalStage.Referendum]: valueToBigNumber(res[1].toString()),
+    [ProposalStage.Execution]: valueToBigNumber(res[2].toString()),
+  }))
 
-  private _getConstitution: (...args: any[]) => Promise<string> = proxyCall(
-    this.contract,
-    'getConstitution'
-  )
+  private _getConstitution = proxyCall(this.contract, 'getConstitution')
 
   private _getParticipationParameters = proxyCall(
     this.contract,
     'getParticipationParameters',
     undefined,
-    (res: { 0: string; 1: string; 2: string; 3: string }) => ({
-      baseline: fromFixed(new BigNumber(res[0])),
-      baselineFloor: fromFixed(new BigNumber(res[1])),
-      baselineUpdateFactor: fromFixed(new BigNumber(res[2])),
-      baselineQuorumFactor: fromFixed(new BigNumber(res[3])),
+    (res) => ({
+      baseline: fromFixed(new BigNumber(res[0].toString())),
+      baselineFloor: fromFixed(new BigNumber(res[1].toString())),
+      baselineUpdateFactor: fromFixed(new BigNumber(res[2].toString())),
+      baselineQuorumFactor: fromFixed(new BigNumber(res[3].toString())),
     })
   )
 
-  private _getProposalStage: (...args: any[]) => Promise<string> = proxyCall(
-    this.contract,
-    'getProposalStage'
-  )
+  private _getProposalStage = proxyCall(this.contract, 'getProposalStage')
 
-  private _getVoteRecord: (
-    ...args: any[]
-  ) => Promise<{ 0: string; 1: string; 2: string; 3: string; 4: string; 5: string }> = proxyCall(
-    this.contract,
-    'getVoteRecord'
-  )
+  private _getVoteRecord = proxyCall(this.contract, 'getVoteRecord')
 
-  private _getDequeue: (...args: any[]) => Promise<string[]> = proxyCall(
-    this.contract,
-    'getDequeue'
-  )
+  private _getDequeue = proxyCall(this.contract, 'getDequeue')
 
   private _getHotfixRecord = proxyCall(
     this.contract,
     'getHotfixRecord',
     undefined,
-    (res: { 0: boolean; 1: boolean; 2: boolean; 3: string }): HotfixRecord => ({
+    (res): HotfixRecord => ({
       approved: res[0],
       councilApproved: res[1],
       executed: res[2],
-      executionTimeLimit: valueToBigNumber(res[3]),
+      executionTimeLimit: valueToBigNumber(res[3].toString()),
     })
   )
 
@@ -259,27 +240,37 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
    * Querying number of possible concurrent proposals.
    * @returns Current number of possible concurrent proposals.
    */
-  concurrentProposals = proxyCall(this.contract, 'concurrentProposals', undefined, valueToBigNumber)
+  concurrentProposals = proxyCall(this.contract, 'concurrentProposals', undefined, (res) =>
+    valueToBigNumber(res.toString())
+  )
   /**
    * Query time of last proposal dequeue
    * @returns Time of last dequeue
    */
-  lastDequeue = proxyCall(this.contract, 'lastDequeue', undefined, valueToBigNumber)
+  lastDequeue = proxyCall(this.contract, 'lastDequeue', undefined, (res) =>
+    valueToBigNumber(res.toString())
+  )
   /**
    * Query proposal dequeue frequency.
    * @returns Current proposal dequeue frequency in seconds.
    */
-  dequeueFrequency = proxyCall(this.contract, 'dequeueFrequency', undefined, valueToBigNumber)
+  dequeueFrequency = proxyCall(this.contract, 'dequeueFrequency', undefined, (res) =>
+    valueToBigNumber(res.toString())
+  )
   /**
    * Query minimum deposit required to make a proposal.
    * @returns Current minimum deposit.
    */
-  minDeposit = proxyCall(this.contract, 'minDeposit', undefined, valueToBigNumber)
+  minDeposit = proxyCall(this.contract, 'minDeposit', undefined, (res) =>
+    valueToBigNumber(res.toString())
+  )
   /**
    * Query queue expiry parameter.
    * @return The number of seconds a proposal can stay in the queue before expiring.
    */
-  queueExpiry = proxyCall(this.contract, 'queueExpiry', undefined, valueToBigNumber)
+  queueExpiry = proxyCall(this.contract, 'queueExpiry', undefined, (res) =>
+    valueToBigNumber(res.toString())
+  )
   /**
    * Query durations of different stages in proposal lifecycle.
    * @returns Durations for approval, referendum and execution stages in seconds.
@@ -296,7 +287,7 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
     // Extract the leading four bytes of the call data, which specifies the function.
     const callSignature = ensureLeading0x(trimLeading0x(tx.input).slice(0, 8))
     const value = await this._getConstitution(tx.to ?? NULL_ADDRESS, callSignature)
-    return fromFixed(new BigNumber(value))
+    return fromFixed(new BigNumber(value.toString()))
   }
 
   /**
@@ -411,11 +402,11 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
     this.contract,
     'getProposal',
     tupleParser(valueToString),
-    (res: any) => ({
+    (res) => ({
       proposer: res[0],
-      deposit: valueToBigNumber(res[1]),
-      timestamp: valueToBigNumber(res[2]),
-      transactionCount: valueToInt(res[3]),
+      deposit: valueToBigNumber(res[1].toString()),
+      timestamp: valueToBigNumber(res[2].toString()),
+      transactionCount: valueToInt(res[3].toString()),
       descriptionURL: res[4],
     })
   )
@@ -444,8 +435,8 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
     this.contract,
     'getProposalTransaction',
     tupleParser(valueToString, valueToString),
-    (res: any) => ({
-      value: res[0],
+    (res) => ({
+      value: res[0].toString(),
       to: res[1],
       input: solidityBytesToString(res[2]),
     })
@@ -665,9 +656,9 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
     this.contract,
     'getUpvoteRecord',
     tupleParser(identity),
-    (o: any) => ({
-      proposalID: valueToBigNumber(o[0]),
-      upvotes: valueToBigNumber(o[1]),
+    (o) => ({
+      proposalID: valueToBigNumber(o[0].toString()),
+      upvotes: valueToBigNumber(o[1].toString()),
     })
   )
 
@@ -690,12 +681,12 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
       const proposalIndex = await this.getDequeueIndex(proposalID)
       const res = await this._getVoteRecord(voter, proposalIndex)
       return {
-        proposalID: valueToBigNumber(res[0]),
-        value: Object.keys(VoteValue)[valueToInt(res[1])] as VoteValue,
-        votes: valueToBigNumber(res[2]),
-        yesVotes: valueToBigNumber(res[3]),
-        noVotes: valueToBigNumber(res[4]),
-        abstainVotes: valueToBigNumber(res[5]),
+        proposalID: valueToBigNumber(res[0].toString()),
+        value: Object.keys(VoteValue)[valueToInt(res[1].toString())] as VoteValue,
+        votes: valueToBigNumber(res[2].toString()),
+        yesVotes: valueToBigNumber(res[3].toString()),
+        noVotes: valueToBigNumber(res[4].toString()),
+        abstainVotes: valueToBigNumber(res[5].toString()),
       }
     } catch (_) {
       // The proposal ID may not be present in the dequeued list, or the voter may not have a vote
@@ -722,14 +713,16 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
     this.contract,
     'refundedDeposits',
     tupleParser(stringIdentity),
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
   /*
    * Returns the upvotes applied to a given proposal.
    * @param proposalID Governance proposal UUID
    */
-  getUpvotes = proxyCall(this.contract, 'getUpvotes', tupleParser(valueToString), valueToBigNumber)
+  getUpvotes = proxyCall(this.contract, 'getUpvotes', tupleParser(valueToString), (res) =>
+    valueToBigNumber(res.toString())
+  )
 
   /**
    * Returns the yes, no, and abstain votes applied to a given proposal.
@@ -739,24 +732,24 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
     this.contract,
     'getVoteTotals',
     tupleParser(valueToString),
-    (res: any): Votes => ({
-      [VoteValue.Yes]: valueToBigNumber(res[0]),
-      [VoteValue.No]: valueToBigNumber(res[1]),
-      [VoteValue.Abstain]: valueToBigNumber(res[2]),
+    (res): Votes => ({
+      [VoteValue.Yes]: valueToBigNumber(res[0].toString()),
+      [VoteValue.No]: valueToBigNumber(res[1].toString()),
+      [VoteValue.Abstain]: valueToBigNumber(res[2].toString()),
     })
   )
 
   /**
    * Returns the proposal queue as list of upvote records.
    */
-  getQueue = proxyCall(this.contract, 'getQueue', undefined, (arraysObject: any) =>
-    zip<string, string, UpvoteRecord>(
+  getQueue = proxyCall(this.contract, 'getQueue', undefined, (arraysObject) =>
+    zip(
       (_id, _upvotes) => ({
-        proposalID: valueToBigNumber(_id),
-        upvotes: valueToBigNumber(_upvotes),
+        proposalID: valueToBigNumber(_id.toString()),
+        upvotes: valueToBigNumber(_upvotes.toString()),
       }),
-      arraysObject[0],
-      arraysObject[1]
+      [...arraysObject[0]],
+      [...arraysObject[1]]
     )
   )
 
@@ -766,7 +759,7 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
   async getDequeue(filterZeroes = false) {
     const dequeue = await this._getDequeue()
     // filter non-zero as dequeued indices are reused and `deleteDequeuedProposal` zeroes
-    const dequeueIds = (dequeue as string[]).map(valueToBigNumber)
+    const dequeueIds = [...dequeue].map((id) => new BigNumber(id.toString()))
     return filterZeroes ? dequeueIds.filter((id: BigNumber) => !id.isZero()) : dequeueIds
   }
 
@@ -998,7 +991,9 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
   /**
    * Returns the number of validators required to reach a Byzantine quorum
    */
-  minQuorumSize = proxyCall(this.contract, 'minQuorumSizeInCurrentSet', undefined, valueToBigNumber)
+  minQuorumSize = proxyCall(this.contract, 'minQuorumSizeInCurrentSet', undefined, (res) =>
+    valueToBigNumber(res.toString())
+  )
 
   /**
    * Marks the given hotfix approved by `sender`.

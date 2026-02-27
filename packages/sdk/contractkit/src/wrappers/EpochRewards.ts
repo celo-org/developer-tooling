@@ -9,10 +9,10 @@ export class EpochRewardsWrapper extends BaseWrapper<typeof epochRewardsABI> {
     this.contract,
     'getRewardsMultiplierParameters',
     undefined,
-    (res: any) => ({
-      max: parseFixidity(res[0]),
-      underspendAdjustment: parseFixidity(res[1]),
-      overspendAdjustment: parseFixidity(res[2]),
+    (res) => ({
+      max: parseFixidity(res[0].toString()),
+      underspendAdjustment: parseFixidity(res[1].toString()),
+      overspendAdjustment: parseFixidity(res[2].toString()),
     })
   )
 
@@ -20,25 +20,22 @@ export class EpochRewardsWrapper extends BaseWrapper<typeof epochRewardsABI> {
     this.contract,
     'getTargetVotingYieldParameters',
     undefined,
-    (res: any) => ({
-      target: parseFixidity(res[0]),
-      max: parseFixidity(res[1]),
-      adjustment: parseFixidity(res[2]),
+    (res) => ({
+      target: parseFixidity(res[0].toString()),
+      max: parseFixidity(res[1].toString()),
+      adjustment: parseFixidity(res[2].toString()),
     })
   )
 
-  getCommunityReward = proxyCall(
-    this.contract,
-    'getCommunityRewardFraction',
-    undefined,
-    parseFixidity
+  getCommunityReward = proxyCall(this.contract, 'getCommunityRewardFraction', undefined, (res) =>
+    parseFixidity(res.toString())
   )
 
   private _getCarbonOffsettingFraction = proxyCall(
     this.contract,
     'getCarbonOffsettingFraction',
     undefined,
-    parseFixidity
+    (res) => parseFixidity(res.toString())
   )
 
   private _getCarbonOffsettingPartner: (...args: any[]) => Promise<string> = proxyCall(
@@ -62,7 +59,7 @@ export class EpochRewardsWrapper extends BaseWrapper<typeof epochRewardsABI> {
     this.contract,
     'targetValidatorEpochPayment',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
   async getConfig() {

@@ -12,7 +12,7 @@ export class OdisPaymentsWrapper extends BaseWrapper<typeof odisPaymentsABI> {
     this.contract,
     'totalPaidCUSD',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
   /**

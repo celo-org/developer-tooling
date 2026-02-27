@@ -65,7 +65,9 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
     super(connection, contract)
   }
 
-  private _numRates = proxyCall(this.contract, 'numRates', undefined, valueToInt)
+  private _numRates = proxyCall(this.contract, 'numRates', undefined, (res) =>
+    valueToInt(res.toString())
+  )
 
   /**
    * Gets the number of rates that have been reported for the given target
@@ -77,10 +79,10 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
     return this._numRates(identifier)
   }
 
-  private _medianRate: (...args: any[]) => Promise<{ 0: string; 1: string }> = proxyCall(
-    this.contract,
-    'medianRate'
-  )
+  private _medianRate = proxyCall(this.contract, 'medianRate', undefined, (res) => ({
+    0: res[0].toString(),
+    1: res[1].toString(),
+  }))
 
   /**
    * Returns the median rate for the given target
@@ -109,9 +111,11 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
     return this._isOracle(identifier, oracle)
   }
 
-  private _getOracles: (...args: any[]) => Promise<Address[]> = proxyCall(
+  private _getOracles = proxyCall(
     this.contract,
-    'getOracles'
+    'getOracles',
+    undefined,
+    (res) => [...res] as string[]
   )
 
   /**
@@ -128,13 +132,15 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
    * Returns the report expiry parameter.
    * @returns Current report expiry.
    */
-  reportExpirySeconds = proxyCall(this.contract, 'reportExpirySeconds', undefined, valueToBigNumber)
+  reportExpirySeconds = proxyCall(this.contract, 'reportExpirySeconds', undefined, (res) =>
+    valueToBigNumber(res.toString())
+  )
 
   private _getTokenReportExpirySeconds = proxyCall(
     this.contract,
     'getTokenReportExpirySeconds',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
   /**
@@ -254,8 +260,11 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
    */
   getStableTokenRates = async (): Promise<OracleRate[]> => this.getRates(CeloContract.StableToken)
 
-  private _getRates: (...args: any[]) => Promise<{ 0: Address[]; 1: string[]; 2: string[] }> =
-    proxyCall(this.contract, 'getRates')
+  private _getRates = proxyCall(this.contract, 'getRates', undefined, (res) => ({
+    0: [...res[0]] as string[],
+    1: [...res[1]].map((v) => v.toString()),
+    2: [...res[2]].map((v) => v.toString()),
+  }))
 
   /**
    * Gets all elements from the doubly linked list.
@@ -277,8 +286,11 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
     return rates
   }
 
-  private _getTimestamps: (...args: any[]) => Promise<{ 0: Address[]; 1: string[]; 2: string[] }> =
-    proxyCall(this.contract, 'getTimestamps')
+  private _getTimestamps = proxyCall(this.contract, 'getTimestamps', undefined, (res) => ({
+    0: [...res[0]] as string[],
+    1: [...res[1]].map((v) => v.toString()),
+    2: [...res[2]].map((v) => v.toString()),
+  }))
 
   /**
    * Gets all elements from the doubly linked list.

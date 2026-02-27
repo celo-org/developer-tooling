@@ -59,22 +59,23 @@ export class MultiSigWrapper extends BaseWrapper<typeof multiSigABI> {
     return this._submitTransaction(destination, value, data)
   }
 
-  private _getTransactionCountRaw: (...args: any[]) => Promise<number> = proxyCall(
+  private _getTransactionCountRaw = proxyCall(
     this.contract,
-    'getTransactionCount'
+    'getTransactionCount',
+    undefined,
+    (res) => Number(res)
   )
 
-  private _getTransactionIds: (...args: any[]) => Promise<string[]> = proxyCall(
-    this.contract,
-    'getTransactionIds'
+  private _getTransactionIds = proxyCall(this.contract, 'getTransactionIds', undefined, (res) =>
+    [...res].map((v) => v.toString())
   )
 
-  private _getTransactionRaw: (
-    ...args: any[]
-  ) => Promise<{ destination: string; value: string; data: string; executed: boolean }> = proxyCall(
-    this.contract,
-    'transactions'
-  )
+  private _getTransactionRaw = proxyCall(this.contract, 'transactions', undefined, (res) => ({
+    destination: res[0] as string,
+    value: res[1].toString(),
+    data: res[2] as string,
+    executed: res[3] as boolean,
+  }))
 
   private _confirmTransaction: (...args: any[]) => CeloTransactionObject<void> = proxySend(
     this.connection,
@@ -101,11 +102,19 @@ export class MultiSigWrapper extends BaseWrapper<typeof multiSigABI> {
   }
 
   isOwner: (owner: Address) => Promise<boolean> = proxyCall(this.contract, 'isOwner')
-  getOwners: () => Promise<string[]> = proxyCall(this.contract, 'getOwners')
-  getRequired = proxyCall(this.contract, 'required', undefined, valueToBigNumber)
-  getInternalRequired = proxyCall(this.contract, 'internalRequired', undefined, valueToBigNumber)
-  totalTransactionCount = proxyCall(this.contract, 'transactionCount', undefined, valueToInt)
-  getTransactionCount = proxyCall(this.contract, 'getTransactionCount', undefined, valueToInt)
+  getOwners = proxyCall(this.contract, 'getOwners', undefined, (res) => [...res] as string[])
+  getRequired = proxyCall(this.contract, 'required', undefined, (res) =>
+    valueToBigNumber(res.toString())
+  )
+  getInternalRequired = proxyCall(this.contract, 'internalRequired', undefined, (res) =>
+    valueToBigNumber(res.toString())
+  )
+  totalTransactionCount = proxyCall(this.contract, 'transactionCount', undefined, (res) =>
+    valueToInt(res.toString())
+  )
+  getTransactionCount = proxyCall(this.contract, 'getTransactionCount', undefined, (res) =>
+    valueToInt(res.toString())
+  )
   replaceOwner: (owner: Address, newOwner: Address) => CeloTransactionObject<void> = proxySend(
     this.connection,
     this.contract,

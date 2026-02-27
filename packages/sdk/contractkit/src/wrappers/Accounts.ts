@@ -395,7 +395,7 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
    * Returns the set data encryption key for the account
    * @param account Account
    */
-  getDataEncryptionKey = proxyCall(this.contract, 'getDataEncryptionKey', undefined, (res: any) =>
+  getDataEncryptionKey = proxyCall(this.contract, 'getDataEncryptionKey', undefined, (res) =>
     solidityBytesToString(res)
   )
 
@@ -504,10 +504,10 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
    * @param account Account of the validator.
    * @return Beneficiary address and fraction of payment delegated.
    */
-  getPaymentDelegation: (account: string) => Promise<{ 0: string; 1: string }> = proxyCall(
-    this.contract,
-    'getPaymentDelegation'
-  )
+  getPaymentDelegation = proxyCall(this.contract, 'getPaymentDelegation', undefined, (res) => ({
+    0: res[0] as string,
+    1: res[1].toString(),
+  }))
 
   private _setWalletAddress: (...args: any[]) => CeloTransactionObject<void> = proxySend(
     this.connection,

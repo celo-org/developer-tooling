@@ -1,5 +1,5 @@
 import type { Abi, ContractFunctionArgs, ContractFunctionName } from 'viem'
-import { encodeFunctionData } from 'viem'
+import { decodeFunctionResult, encodeFunctionData } from 'viem'
 import type { AbiItem } from './abi-types'
 import type { Connection } from './connection'
 import { getRandomId } from './utils/rpc-caller'
@@ -62,12 +62,11 @@ export function createViemTxObjectInternal(
       ) {
         return result.data as unknown
       }
-      // Use viem abi coder to decode (reuse existing decoder for backward compat)
-      const { viemAbiCoder } = await import('./viem-abi-coder')
-      const decoded = viemAbiCoder.decodeParameters(methodAbi.outputs, result.data)
-      if (methodAbi.outputs.length === 1) return decoded[0] as unknown
-      const { __length__, ...rest } = decoded
-      return rest as unknown
+      return decodeFunctionResult({
+        abi: contract.abi as Abi,
+        functionName: functionName as ContractFunctionName<Abi>,
+        data: result.data,
+      })
     },
     send: (txParams?: CeloTx): Promise<string> => {
       return new Promise<string>((resolve, reject) => {

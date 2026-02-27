@@ -29,13 +29,10 @@ export class ReserveWrapper extends BaseWrapper<typeof reserveABI> {
     this.contract,
     'tobinTaxStalenessThreshold',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
-  dailySpendingRatio = proxyCall(
-    this.contract,
-    'getDailySpendingRatio',
-    undefined,
-    fixidityValueToBigNumber
+  dailySpendingRatio = proxyCall(this.contract, 'getDailySpendingRatio', undefined, (res) =>
+    fixidityValueToBigNumber(res.toString())
   )
   isSpender: (account: string) => Promise<boolean> = proxyCall(this.contract, 'isSpender')
   transferGold: (to: string, value: string | number) => CeloTransactionObject<void> = proxySend(
@@ -52,19 +49,16 @@ export class ReserveWrapper extends BaseWrapper<typeof reserveABI> {
     this.contract,
     'frozenReserveGoldStartBalance',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
   frozenReserveGoldStartDay = proxyCall(
     this.contract,
     'frozenReserveGoldStartDay',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
-  frozenReserveGoldDays = proxyCall(
-    this.contract,
-    'frozenReserveGoldDays',
-    undefined,
-    valueToBigNumber
+  frozenReserveGoldDays = proxyCall(this.contract, 'frozenReserveGoldDays', undefined, (res) =>
+    valueToBigNumber(res.toString())
   )
 
   /**
@@ -75,7 +69,7 @@ export class ReserveWrapper extends BaseWrapper<typeof reserveABI> {
     this.contract,
     'getAssetAllocationWeights',
     undefined,
-    (weights: string[]) => weights.map(valueToBigNumber)
+    (weights) => [...weights].map((w) => valueToBigNumber(w.toString()))
   )
 
   /**
@@ -86,17 +80,14 @@ export class ReserveWrapper extends BaseWrapper<typeof reserveABI> {
     this.contract,
     'getAssetAllocationSymbols',
     undefined,
-    (symbols: string[]) => symbols.map((symbol: string) => this.connection.hexToAscii(symbol))
+    (symbols) => [...symbols].map((symbol) => this.connection.hexToAscii(symbol))
   )
 
   /**
    * @alias {getReserveCeloBalance}
    */
-  getReserveGoldBalance = proxyCall(
-    this.contract,
-    'getReserveGoldBalance',
-    undefined,
-    valueToBigNumber
+  getReserveGoldBalance = proxyCall(this.contract, 'getReserveGoldBalance', undefined, (res) =>
+    valueToBigNumber(res.toString())
   )
 
   /**
@@ -110,7 +101,9 @@ export class ReserveWrapper extends BaseWrapper<typeof reserveABI> {
    * @see {getUnfrozenReserveCeloBalance}
    * @return {BigNumber} amount in wei
    */
-  getUnfrozenBalance = proxyCall(this.contract, 'getUnfrozenBalance', undefined, valueToBigNumber)
+  getUnfrozenBalance = proxyCall(this.contract, 'getUnfrozenBalance', undefined, (res) =>
+    valueToBigNumber(res.toString())
+  )
 
   /**
    * @notice Returns the amount of unfrozen CELO included in the reserve
@@ -122,12 +115,14 @@ export class ReserveWrapper extends BaseWrapper<typeof reserveABI> {
     this.contract,
     'getUnfrozenReserveGoldBalance',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
-  getOtherReserveAddresses: () => Promise<string[]> = proxyCall(
+  getOtherReserveAddresses = proxyCall(
     this.contract,
-    'getOtherReserveAddresses'
+    'getOtherReserveAddresses',
+    undefined,
+    (res) => [...res] as string[]
   )
 
   /**

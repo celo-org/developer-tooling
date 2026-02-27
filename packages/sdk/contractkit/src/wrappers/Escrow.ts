@@ -12,16 +12,16 @@ export class EscrowWrapper extends BaseWrapper<typeof escrowABI> {
    * @return An EscrowedPayment struct which holds information such
    * as; recipient identifier, sender address, token address, value, etc.
    */
-  escrowedPayments: (paymentId: string) => Promise<{
-    recipientIdentifier: string
-    sender: string
-    token: string
-    value: string
-    sentIndex: string
-    timestamp: string
-    expirySeconds: string
-    minAttestations: string
-  }> = proxyCall(this.contract, 'escrowedPayments')
+  escrowedPayments = proxyCall(this.contract, 'escrowedPayments', undefined, (res) => ({
+    recipientIdentifier: res[0] as string,
+    sender: res[1] as string,
+    token: res[2] as string,
+    value: res[3].toString(),
+    sentIndex: res[4].toString(),
+    timestamp: res[6].toString(),
+    expirySeconds: res[7].toString(),
+    minAttestations: res[8].toString(),
+  }))
 
   /**
    * @notice Gets array of all Escrowed Payments received by identifier.
@@ -29,9 +29,11 @@ export class EscrowWrapper extends BaseWrapper<typeof escrowABI> {
    * @return An array containing all the IDs of the Escrowed Payments that were received
    * by the specified receiver.
    */
-  getReceivedPaymentIds: (identifier: string) => Promise<string[]> = proxyCall(
+  getReceivedPaymentIds = proxyCall(
     this.contract,
-    'getReceivedPaymentIds'
+    'getReceivedPaymentIds',
+    undefined,
+    (res) => [...res] as string[]
   )
 
   /**
@@ -40,18 +42,22 @@ export class EscrowWrapper extends BaseWrapper<typeof escrowABI> {
    * @return An array containing all the IDs of the Escrowed Payments that were sent by the
    * specified sender.
    */
-  getSentPaymentIds: (sender: Address) => Promise<string[]> = proxyCall(
+  getSentPaymentIds = proxyCall(
     this.contract,
-    'getSentPaymentIds'
+    'getSentPaymentIds',
+    undefined,
+    (res) => [...res] as string[]
   )
 
   /**
    * @notice Gets trusted issuers set as default for payments by `transfer` function.
    * @return An array of addresses of trusted issuers.
    */
-  getDefaultTrustedIssuers: () => Promise<string[]> = proxyCall(
+  getDefaultTrustedIssuers = proxyCall(
     this.contract,
-    'getDefaultTrustedIssuers'
+    'getDefaultTrustedIssuers',
+    undefined,
+    (res) => [...res] as string[]
   )
 
   /**
@@ -59,9 +65,11 @@ export class EscrowWrapper extends BaseWrapper<typeof escrowABI> {
    * @param paymentId The ID of the payment to get.
    * @return An array of addresses of trusted issuers set for an escrowed payment.
    */
-  getTrustedIssuersPerPayment: (paymentId: string) => Promise<string[]> = proxyCall(
+  getTrustedIssuersPerPayment = proxyCall(
     this.contract,
-    'getTrustedIssuersPerPayment'
+    'getTrustedIssuersPerPayment',
+    undefined,
+    (res) => [...res] as string[]
   )
 
   /**

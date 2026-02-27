@@ -1,8 +1,8 @@
-import { CeloTransactionObject } from '@celo/connect'
-import { NULL_ADDRESS } from '@celo/base'
 import { epochManagerABI } from '@celo/abis'
+import { NULL_ADDRESS } from '@celo/base'
+import { CeloTransactionObject } from '@celo/connect'
 import BigNumber from 'bignumber.js'
-import { proxyCall, proxySend, valueToInt, valueToString } from './BaseWrapper'
+import { proxyCall, proxySend, valueToInt } from './BaseWrapper'
 import { BaseWrapperForGoverning } from './BaseWrapperForGoverning'
 import { ValidatorGroupVote } from './Election'
 
@@ -32,13 +32,25 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<typeof epochMan
   public get _contract() {
     return this.contract
   }
-  epochDuration = proxyCall(this.contract, 'epochDuration', undefined, valueToInt)
-  firstKnownEpoch = proxyCall(this.contract, 'firstKnownEpoch', undefined, valueToInt)
-  getCurrentEpochNumber = proxyCall(this.contract, 'getCurrentEpochNumber', undefined, valueToInt)
-  getFirstBlockAtEpoch = proxyCall(this.contract, 'getFirstBlockAtEpoch', undefined, valueToInt)
-  getLastBlockAtEpoch = proxyCall(this.contract, 'getLastBlockAtEpoch', undefined, valueToInt)
-  getEpochNumberOfBlock = proxyCall(this.contract, 'getEpochNumberOfBlock', undefined, valueToInt)
-  processedGroups = proxyCall(this.contract, 'processedGroups', undefined, valueToString)
+  epochDuration = proxyCall(this.contract, 'epochDuration', undefined, (res) =>
+    valueToInt(res.toString())
+  )
+  firstKnownEpoch = proxyCall(this.contract, 'firstKnownEpoch', undefined, (res) =>
+    valueToInt(res.toString())
+  )
+  getCurrentEpochNumber = proxyCall(this.contract, 'getCurrentEpochNumber', undefined, (res) =>
+    valueToInt(res.toString())
+  )
+  getFirstBlockAtEpoch = proxyCall(this.contract, 'getFirstBlockAtEpoch', undefined, (res) =>
+    valueToInt(res.toString())
+  )
+  getLastBlockAtEpoch = proxyCall(this.contract, 'getLastBlockAtEpoch', undefined, (res) =>
+    valueToInt(res.toString())
+  )
+  getEpochNumberOfBlock = proxyCall(this.contract, 'getEpochNumberOfBlock', undefined, (res) =>
+    valueToInt(res.toString())
+  )
+  processedGroups = proxyCall(this.contract, 'processedGroups', undefined, (res) => res.toString())
   isOnEpochProcess: () => Promise<boolean> = proxyCall(this.contract, 'isOnEpochProcess')
   isEpochProcessingStarted: () => Promise<boolean> = proxyCall(
     this.contract,
@@ -49,19 +61,29 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<typeof epochMan
     'isIndividualProcessing'
   )
   isTimeForNextEpoch: () => Promise<boolean> = proxyCall(this.contract, 'isTimeForNextEpoch')
-  getElectedAccounts: () => Promise<string[]> = proxyCall(this.contract, 'getElectedAccounts')
-  getElectedSigners: () => Promise<string[]> = proxyCall(this.contract, 'getElectedSigners')
+  getElectedAccounts: () => Promise<string[]> = proxyCall(
+    this.contract,
+    'getElectedAccounts',
+    undefined,
+    (res) => [...res] as string[]
+  )
+  getElectedSigners: () => Promise<string[]> = proxyCall(
+    this.contract,
+    'getElectedSigners',
+    undefined,
+    (res) => [...res] as string[]
+  )
   getEpochProcessingStatus = proxyCall(
     this.contract,
     'epochProcessing',
     undefined,
-    (result: any): EpochProcessState => {
+    (result): EpochProcessState => {
       return {
-        status: parseInt(result.status),
-        perValidatorReward: new BigNumber(result.perValidatorReward),
-        totalRewardsVoter: new BigNumber(result.totalRewardsVoter),
-        totalRewardsCommunity: new BigNumber(result.totalRewardsCommunity),
-        totalRewardsCarbonFund: new BigNumber(result.totalRewardsCarbonFund),
+        status: Number(result[0]),
+        perValidatorReward: new BigNumber(result[1].toString()),
+        totalRewardsVoter: new BigNumber(result[2].toString()),
+        totalRewardsCommunity: new BigNumber(result[3].toString()),
+        totalRewardsCarbonFund: new BigNumber(result[4].toString()),
       }
     }
   )

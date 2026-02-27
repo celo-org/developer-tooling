@@ -152,7 +152,7 @@ testWithAnvilL2('governance:executehotfix cmd', (provider) => {
         await createViemTxObject<string>(kit.connection, testTransactionsContract, 'getValue', [
           HOTFIX_TRANSACTION_TEST_KEY,
         ]).call()
-      ).toEqual('0')
+      ).toEqual(0n)
 
       logMock.mockClear()
 
@@ -173,7 +173,7 @@ testWithAnvilL2('governance:executehotfix cmd', (provider) => {
         await createViemTxObject<string>(kit.connection, testTransactionsContract, 'getValue', [
           HOTFIX_TRANSACTION_TEST_KEY,
         ]).call()
-      ).toEqual(HOTFIX_TRANSACTION_TEST_VALUE)
+      ).toEqual(BigInt(HOTFIX_TRANSACTION_TEST_VALUE))
 
       expect(
         logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
@@ -289,7 +289,7 @@ testWithAnvilL2('governance:executehotfix cmd', (provider) => {
         await createViemTxObject<string>(kit.connection, testTransactionsContract, 'getValue', [
           HOTFIX_TRANSACTION_TEST_KEY,
         ]).call()
-      ).toEqual('0')
+      ).toEqual(0n)
 
       const timestampAfterExecutionLimit = (
         (await governanceWrapper.getHotfixRecord(HOTFIX_BUFFER)) as HotfixRecord
@@ -323,7 +323,7 @@ testWithAnvilL2('governance:executehotfix cmd', (provider) => {
         await createViemTxObject<string>(kit.connection, testTransactionsContract, 'getValue', [
           HOTFIX_TRANSACTION_TEST_KEY,
         ]).call()
-      ).toEqual('0')
+      ).toEqual(0n)
 
       expect(
         logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))

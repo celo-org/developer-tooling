@@ -73,11 +73,8 @@ export class AttestationsWrapper extends BaseWrapper<typeof attestationsABI> {
   /**
    *  Returns the time an attestation can be completable before it is considered expired
    */
-  attestationExpiryBlocks = proxyCall(
-    this.contract,
-    'attestationExpiryBlocks',
-    undefined,
-    valueToInt
+  attestationExpiryBlocks = proxyCall(this.contract, 'attestationExpiryBlocks', undefined, (res) =>
+    valueToInt(res.toString())
   )
 
   /**
@@ -85,18 +82,12 @@ export class AttestationsWrapper extends BaseWrapper<typeof attestationsABI> {
    * @param address Token address.
    * @returns The fee as big number.
    */
-  attestationRequestFees = proxyCall(
-    this.contract,
-    'attestationRequestFees',
-    undefined,
-    valueToBigNumber
+  attestationRequestFees = proxyCall(this.contract, 'attestationRequestFees', undefined, (res) =>
+    valueToBigNumber(res.toString())
   )
 
-  selectIssuersWaitBlocks = proxyCall(
-    this.contract,
-    'selectIssuersWaitBlocks',
-    undefined,
-    valueToInt
+  selectIssuersWaitBlocks = proxyCall(this.contract, 'selectIssuersWaitBlocks', undefined, (res) =>
+    valueToInt(res.toString())
   )
 
   /**
@@ -109,9 +100,9 @@ export class AttestationsWrapper extends BaseWrapper<typeof attestationsABI> {
       this.contract,
       'getUnselectedRequest',
       undefined,
-      (res: any): UnselectedRequest => ({
-        blockNumber: valueToInt(res[0]),
-        attestationsRequested: valueToInt(res[1]),
+      (res): UnselectedRequest => ({
+        blockNumber: valueToInt(res[0].toString()),
+        attestationsRequested: valueToInt(res[1].toString()),
         attestationRequestFeeToken: res[2] as string,
       })
     )
@@ -132,9 +123,11 @@ export class AttestationsWrapper extends BaseWrapper<typeof attestationsABI> {
    * @param identifier Attestation identifier (e.g. phone hash)
    * @param account Address of the account
    */
-  getAttestationIssuers: (identifier: string, account: Address) => Promise<string[]> = proxyCall(
+  getAttestationIssuers = proxyCall(
     this.contract,
-    'getAttestationIssuers'
+    'getAttestationIssuers',
+    undefined,
+    (res) => [...res] as string[]
   )
 
   /**
@@ -150,7 +143,7 @@ export class AttestationsWrapper extends BaseWrapper<typeof attestationsABI> {
     this.contract,
     'getAttestationState',
     undefined,
-    (state: any) => ({ attestationState: valueToInt(state[0]) })
+    (state) => ({ attestationState: valueToInt(state[0].toString()) })
   )
 
   /**
@@ -159,9 +152,9 @@ export class AttestationsWrapper extends BaseWrapper<typeof attestationsABI> {
    * @param account Address of the account
    */
   getAttestationStat: (identifier: string, account: Address) => Promise<AttestationStat> =
-    proxyCall(this.contract, 'getAttestationStats', undefined, (stat: any) => ({
-      completed: valueToInt(stat[0]),
-      total: valueToInt(stat[1]),
+    proxyCall(this.contract, 'getAttestationStats', undefined, (stat) => ({
+      completed: valueToInt(stat[0].toString()),
+      total: valueToInt(stat[1].toString()),
     }))
 
   /**
@@ -207,7 +200,7 @@ export class AttestationsWrapper extends BaseWrapper<typeof attestationsABI> {
     this.contract,
     'getAttestationRequestFee',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
   /**
@@ -236,11 +229,8 @@ export class AttestationsWrapper extends BaseWrapper<typeof attestationsABI> {
    * @param account The address of the account.
    * @return The reward amount.
    */
-  getPendingWithdrawals: (token: string, account: string) => Promise<BigNumber> = proxyCall(
-    this.contract,
-    'pendingWithdrawals',
-    undefined,
-    valueToBigNumber
+  getPendingWithdrawals = proxyCall(this.contract, 'pendingWithdrawals', undefined, (res) =>
+    valueToBigNumber(res.toString())
   )
 
   /**
@@ -289,20 +279,27 @@ export class AttestationsWrapper extends BaseWrapper<typeof attestationsABI> {
    * Returns the list of accounts associated with an identifier.
    * @param identifier Attestation identifier (e.g. phone hash)
    */
-  lookupAccountsForIdentifier: (identifier: string) => Promise<string[]> = proxyCall(
+  lookupAccountsForIdentifier = proxyCall(
     this.contract,
-    'lookupAccountsForIdentifier'
+    'lookupAccountsForIdentifier',
+    undefined,
+    (res) => [...res] as string[]
   )
 
   /**
    * Lookup mapped wallet addresses for a given list of identifiers
    * @param identifiers Attestation identifiers (e.g. phone hashes)
    */
-  private _batchGetAttestationStats: (
-    ...args: any[]
-  ) => Promise<{ 0: string[]; 1: string[]; 2: string[]; 3: string[] }> = proxyCall(
+  private _batchGetAttestationStats = proxyCall(
     this.contract,
-    'batchGetAttestationStats'
+    'batchGetAttestationStats',
+    undefined,
+    (res) => ({
+      0: [...res[0]].map((v) => v.toString()),
+      1: [...res[1]] as string[],
+      2: [...res[2]].map((v) => v.toString()),
+      3: [...res[3]].map((v) => v.toString()),
+    })
   )
 
   async lookupIdentifiers(identifiers: string[]): Promise<IdentifierLookupResult> {

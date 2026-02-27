@@ -83,9 +83,9 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
     this.contract,
     'getValidatorLockedGoldRequirements',
     undefined,
-    (res: { 0: string; 1: string }): LockedGoldRequirements => ({
-      value: valueToBigNumber(res[0]),
-      duration: valueToBigNumber(res[1]),
+    (res): LockedGoldRequirements => ({
+      value: valueToBigNumber(res[0].toString()),
+      duration: valueToBigNumber(res[1].toString()),
     })
   )
 
@@ -93,59 +93,59 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
     this.contract,
     'getGroupLockedGoldRequirements',
     undefined,
-    (res: { 0: string; 1: string }): LockedGoldRequirements => ({
-      value: valueToBigNumber(res[0]),
-      duration: valueToBigNumber(res[1]),
+    (res): LockedGoldRequirements => ({
+      value: valueToBigNumber(res[0].toString()),
+      duration: valueToBigNumber(res[1].toString()),
     })
   )
 
-  private _maxGroupSize = proxyCall(this.contract, 'maxGroupSize', undefined, valueToBigNumber)
+  private _maxGroupSize = proxyCall(this.contract, 'maxGroupSize', undefined, (res) =>
+    valueToBigNumber(res.toString())
+  )
 
   private _membershipHistoryLength = proxyCall(
     this.contract,
     'membershipHistoryLength',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
-  private _getValidator: (
-    ...args: any[]
-  ) => Promise<{ ecdsaPublicKey: string; affiliation: string; score: string; signer: Address }> =
-    proxyCall(this.contract, 'getValidator')
+  private _getValidator = proxyCall(this.contract, 'getValidator', undefined, (res) => ({
+    ecdsaPublicKey: res[0] as string,
+    affiliation: res[2] as string,
+    score: res[3].toString(),
+    signer: res[4] as string,
+  }))
 
-  private _getValidatorsGroup: (...args: any[]) => Promise<Address> = proxyCall(
+  private _getValidatorsGroup = proxyCall(this.contract, 'getValidatorsGroup')
+
+  private _getMembershipInLastEpoch = proxyCall(this.contract, 'getMembershipInLastEpoch')
+
+  private _getValidatorGroup = proxyCall(this.contract, 'getValidatorGroup', undefined, (res) => ({
+    0: [...res[0]] as string[],
+    1: res[1].toString(),
+    2: res[2].toString(),
+    3: res[3].toString(),
+    4: [...res[4]].map((v) => v.toString()),
+    5: res[5].toString(),
+    6: res[6].toString(),
+  }))
+
+  private _getRegisteredValidators = proxyCall(
     this.contract,
-    'getValidatorsGroup'
-  )
-
-  private _getMembershipInLastEpoch: (...args: any[]) => Promise<Address> = proxyCall(
-    this.contract,
-    'getMembershipInLastEpoch'
-  )
-
-  private _getValidatorGroup: (...args: any[]) => Promise<{
-    0: Address[]
-    1: string
-    2: string
-    3: string
-    4: string[]
-    5: string
-    6: string
-  }> = proxyCall(this.contract, 'getValidatorGroup')
-
-  private _getRegisteredValidators: (...args: any[]) => Promise<Address[]> = proxyCall(
-    this.contract,
-    'getRegisteredValidators'
+    'getRegisteredValidators',
+    undefined,
+    (res) => [...res] as string[]
   )
 
   private _numberValidatorsInCurrentSet = proxyCall(
     this.contract,
     'numberValidatorsInCurrentSet',
     undefined,
-    valueToInt
+    (res) => valueToInt(res.toString())
   )
 
-  private _validatorSignerAddressFromCurrentSet: (...args: any[]) => Promise<Address> = proxyCall(
+  private _validatorSignerAddressFromCurrentSet = proxyCall(
     this.contract,
     'validatorSignerAddressFromCurrentSet'
   )
@@ -231,7 +231,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
     this.contract,
     'getAccountLockedGoldRequirement',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
   /**
@@ -241,17 +241,14 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
     this.contract,
     'slashingMultiplierResetPeriod',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
   /**
    * Returns the update delay, in blocks, for the group commission.
    */
-  getCommissionUpdateDelay = proxyCall(
-    this.contract,
-    'commissionUpdateDelay',
-    undefined,
-    valueToBigNumber
+  getCommissionUpdateDelay = proxyCall(this.contract, 'commissionUpdateDelay', undefined, (res) =>
+    valueToBigNumber(res.toString())
   )
 
   /**
@@ -261,7 +258,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
     this.contract,
     'deprecated_downtimeGracePeriod',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
   /**
@@ -459,11 +456,11 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
     this.contract,
     'getMembershipHistory',
     undefined,
-    (res: { 0: string[]; 1: string[] }) =>
+    (res) =>
       zip(
-        (epoch: string, group: string): GroupMembership => ({ epoch: valueToInt(epoch), group }),
-        res[0],
-        res[1]
+        (epoch, group): GroupMembership => ({ epoch: valueToInt(epoch.toString()), group }),
+        [...res[0]],
+        [...res[1]]
       )
   )
 
@@ -478,7 +475,10 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
     this.contract,
     'getMembershipHistory',
     undefined,
-    (res: any) => ({ lastRemovedFromGroupTimestamp: valueToInt(res[2]), tail: valueToInt(res[3]) })
+    (res) => ({
+      lastRemovedFromGroupTimestamp: valueToInt(res[2].toString()),
+      tail: valueToInt(res[3].toString()),
+    })
   )
 
   /** Get the size (amount of members) of a ValidatorGroup */
@@ -486,7 +486,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
     this.contract,
     'getGroupNumMembers',
     undefined,
-    valueToInt
+    (res) => valueToInt(res.toString())
   )
 
   /** Get list of registered validator addresses */
@@ -496,9 +496,11 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
   }
 
   /** Get list of registered validator group addresses */
-  getRegisteredValidatorGroupsAddresses: () => Promise<Address[]> = proxyCall(
+  getRegisteredValidatorGroupsAddresses = proxyCall(
     this.contract,
-    'getRegisteredValidatorGroups'
+    'getRegisteredValidatorGroups',
+    undefined,
+    (res) => [...res] as string[]
   )
 
   /** Get list of registered validators */
@@ -536,9 +538,13 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
     tupleParser(stringToSolidityBytes)
   )
 
-  getEpochNumber = proxyCall(this.contract, 'getEpochNumber', undefined, valueToBigNumber)
+  getEpochNumber = proxyCall(this.contract, 'getEpochNumber', undefined, (res) =>
+    valueToBigNumber(res.toString())
+  )
 
-  getEpochSize = proxyCall(this.contract, 'getEpochSize', undefined, valueToBigNumber)
+  getEpochSize = proxyCall(this.contract, 'getEpochSize', undefined, (res) =>
+    valueToBigNumber(res.toString())
+  )
 
   /**
    * De-registers a validator, removing it from the group for which it is a member.

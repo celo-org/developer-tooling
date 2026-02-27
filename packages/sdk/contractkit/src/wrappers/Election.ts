@@ -76,53 +76,59 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
     this.contract,
     'electableValidators',
     undefined,
-    (res: { min: string; max: string }) => ({
-      min: valueToBigNumber(res.min),
-      max: valueToBigNumber(res.max),
+    (res) => ({
+      min: valueToBigNumber(res[0].toString()),
+      max: valueToBigNumber(res[1].toString()),
     })
   )
 
-  private _electNValidatorSigners: (...args: any[]) => Promise<Address[]> = proxyCall(
+  private _electNValidatorSigners = proxyCall(
     this.contract,
-    'electNValidatorSigners'
+    'electNValidatorSigners',
+    undefined,
+    (res) => [...res] as Address[]
   )
 
-  private _electValidatorSigners: (...args: any[]) => Promise<Address[]> = proxyCall(
+  private _electValidatorSigners = proxyCall(
     this.contract,
-    'electValidatorSigners'
+    'electValidatorSigners',
+    undefined,
+    (res) => [...res] as Address[]
   )
 
   private _getTotalVotesForGroup = proxyCall(
     this.contract,
     'getTotalVotesForGroup',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
   private _getActiveVotesForGroup = proxyCall(
     this.contract,
     'getActiveVotesForGroup',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
   private _getPendingVotesForGroupByAccount = proxyCall(
     this.contract,
     'getPendingVotesForGroupByAccount',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
   private _getActiveVotesForGroupByAccount = proxyCall(
     this.contract,
     'getActiveVotesForGroupByAccount',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
-  private _getGroupsVotedForByAccountInternal: (...args: any[]) => Promise<string[]> = proxyCall(
+  private _getGroupsVotedForByAccountInternal = proxyCall(
     this.contract,
-    'getGroupsVotedForByAccount'
+    'getGroupsVotedForByAccount',
+    undefined,
+    (res) => [...res] as string[]
   )
 
   private _hasActivatablePendingVotes: (...args: any[]) => Promise<boolean> = proxyCall(
@@ -134,7 +140,7 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
     this.contract,
     'maxNumGroupsVotedFor',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
   private _getGroupEligibility: (...args: any[]) => Promise<boolean> = proxyCall(
@@ -146,21 +152,21 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
     this.contract,
     'getNumVotesReceivable',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
-  private _getTotalVotesForEligibleValidatorGroups: (
-    ...args: any[]
-  ) => Promise<[string[], string[]]> = proxyCall(
+  private _getTotalVotesForEligibleValidatorGroups = proxyCall(
     this.contract,
-    'getTotalVotesForEligibleValidatorGroups'
+    'getTotalVotesForEligibleValidatorGroups',
+    undefined,
+    (res) => [[...res[0]] as string[], [...res[1]].map((v) => v.toString())] as [string[], string[]]
   )
 
   private _getGroupEpochRewardsBasedOnScore = proxyCall(
     this.contract,
     'getGroupEpochRewardsBasedOnScore',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
   private _revokePending: (...args: any[]) => CeloTransactionObject<boolean> = proxySend(
@@ -191,11 +197,8 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
    * Returns the current election threshold.
    * @returns Election threshold.
    */
-  electabilityThreshold = proxyCall(
-    this.contract,
-    'getElectabilityThreshold',
-    undefined,
-    fixidityValueToBigNumber
+  electabilityThreshold = proxyCall(this.contract, 'getElectabilityThreshold', undefined, (res) =>
+    fixidityValueToBigNumber(res.toString())
   )
 
   /**
@@ -229,7 +232,7 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
     this.contract,
     'numberValidatorsInSet',
     undefined,
-    valueToInt
+    (res) => valueToInt(res.toString())
   )
 
   /**
@@ -240,23 +243,27 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
     this.contract,
     'numberValidatorsInCurrentSet',
     undefined,
-    valueToInt
+    (res) => valueToInt(res.toString())
   )
 
   /**
    * Returns the total votes received across all groups.
    * @return The total votes received across all groups.
    */
-  getTotalVotes = proxyCall(this.contract, 'getTotalVotes', undefined, valueToBigNumber)
+  getTotalVotes = proxyCall(this.contract, 'getTotalVotes', undefined, (res) =>
+    valueToBigNumber(res.toString())
+  )
 
   /**
    * Returns the current validator signers using the precompiles.
    * @return List of current validator signers.
    * @deprecated use EpochManagerWrapper.getElectedSigners instead. see see https://specs.celo.org/smart_contract_updates_from_l1.html
    */
-  getCurrentValidatorSigners: () => Promise<Address[]> = proxyCall(
+  getCurrentValidatorSigners = proxyCall(
     this.contract,
-    'getCurrentValidatorSigners'
+    'getCurrentValidatorSigners',
+    undefined,
+    (res) => [...res] as string[]
   )
 
   /**
@@ -307,7 +314,7 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
     this.contract,
     'getTotalVotesForGroupByAccount',
     undefined,
-    valueToBigNumber
+    (res) => valueToBigNumber(res.toString())
   )
 
   /**
@@ -324,9 +331,11 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
    * @param account The address of the account casting votes.
    * @return The groups that `account` has voted for.
    */
-  getGroupsVotedForByAccount: (account: Address) => Promise<Address[]> = proxyCall(
+  getGroupsVotedForByAccount = proxyCall(
     this.contract,
-    'getGroupsVotedForByAccount'
+    'getGroupsVotedForByAccount',
+    undefined,
+    (res) => [...res] as string[]
   )
 
   async getVotesForGroupByAccount(
@@ -353,11 +362,8 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
     return { address: account, votes }
   }
 
-  getTotalVotesByAccount = proxyCall(
-    this.contract,
-    'getTotalVotesByAccount',
-    undefined,
-    valueToBigNumber
+  getTotalVotesByAccount = proxyCall(this.contract, 'getTotalVotesByAccount', undefined, (res) =>
+    valueToBigNumber(res.toString())
   )
 
   /**

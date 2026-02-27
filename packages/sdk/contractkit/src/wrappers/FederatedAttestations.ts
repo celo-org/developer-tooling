@@ -13,13 +13,10 @@ export class FederatedAttestationsWrapper extends BaseWrapper<typeof federatedAt
    * @dev Adds identifier info to the arrays in order of provided trustedIssuers
    * @dev Expectation that only one attestation exists per (identifier, issuer, account)
    */
-  lookupIdentifiers: (
-    account: Address,
-    trustedIssuers: Address[]
-  ) => Promise<{
-    countsPerIssuer: string[]
-    identifiers: string[]
-  }> = proxyCall(this.contract, 'lookupIdentifiers')
+  lookupIdentifiers = proxyCall(this.contract, 'lookupIdentifiers', undefined, (res) => ({
+    countsPerIssuer: [...res[0]].map((v) => v.toString()),
+    identifiers: [...res[1]] as string[],
+  }))
 
   /**
    * @notice Returns info about attestations for `identifier` produced by
@@ -35,16 +32,13 @@ export class FederatedAttestationsWrapper extends BaseWrapper<typeof federatedAt
    * @dev Adds attestation info to the arrays in order of provided trustedIssuers
    * @dev Expectation that only one attestation exists per (identifier, issuer, account)
    */
-  lookupAttestations: (
-    identifier: string,
-    trustedIssuers: Address[]
-  ) => Promise<{
-    countsPerIssuer: string[]
-    accounts: Address[]
-    signers: Address[]
-    issuedOns: string[]
-    publishedOns: string[]
-  }> = proxyCall(this.contract, 'lookupAttestations')
+  lookupAttestations = proxyCall(this.contract, 'lookupAttestations', undefined, (res) => ({
+    countsPerIssuer: [...res[0]].map((v) => v.toString()),
+    accounts: [...res[1]] as string[],
+    signers: [...res[2]] as string[],
+    issuedOns: [...res[3]].map((v) => v.toString()),
+    publishedOns: [...res[4]].map((v) => v.toString()),
+  }))
 
   /**
    * @notice Validates the given attestation and signature
