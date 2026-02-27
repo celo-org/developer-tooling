@@ -39,7 +39,7 @@ export default class Contracts extends BaseCommand {
           implementation = 'NONE'
         } else {
           try {
-            const proxyContract = kit.connection.getViemContract(proxyABI as any, proxy)
+            const proxyContract = kit.connection.getCeloContract(proxyABI as any, proxy)
             implementation = await createViemTxObject<string>(
               kit.connection,
               proxyContract,
@@ -57,7 +57,7 @@ export default class Contracts extends BaseCommand {
           version = 'NONE'
         } else {
           try {
-            const versionContract = kit.connection.getViemContract(
+            const versionContract = kit.connection.getCeloContract(
               iCeloVersionedContractABI as any,
               implementation
             )

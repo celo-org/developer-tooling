@@ -35,7 +35,7 @@ export default class DKGGet extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(DKGGet)
-    const dkg = kit.connection.getViemContract(DKG.abi, res.flags.address)
+    const dkg = kit.connection.getCeloContract(DKG.abi, res.flags.address)
 
     const methodType = res.flags.method as keyof typeof Method
     switch (methodType) {

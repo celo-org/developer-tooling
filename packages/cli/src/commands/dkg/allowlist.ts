@@ -26,7 +26,7 @@ export default class DKGRegister extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(DKGRegister)
-    const dkg = kit.connection.getViemContract(DKG.abi as any, res.flags.address)
+    const dkg = kit.connection.getCeloContract(DKG.abi as any, res.flags.address)
 
     const participantAddress = res.flags.participantAddress
     await displayTx(

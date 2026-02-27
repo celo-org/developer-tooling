@@ -21,7 +21,7 @@ export default class DKGStart extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(DKGStart)
-    const dkg = kit.connection.getViemContract(DKG.abi, res.flags.address)
+    const dkg = kit.connection.getCeloContract(DKG.abi, res.flags.address)
 
     await displayTx('start', createViemTxObject(kit.connection, dkg, 'start', []), {
       from: res.flags.from,

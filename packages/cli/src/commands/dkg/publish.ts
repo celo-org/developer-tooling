@@ -24,7 +24,7 @@ export default class DKGPublish extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(DKGPublish)
-    const dkg = kit.connection.getViemContract(DKG.abi, res.flags.address)
+    const dkg = kit.connection.getCeloContract(DKG.abi, res.flags.address)
 
     const data = fs.readFileSync(res.flags.data).toString('hex')
     await displayTx(
