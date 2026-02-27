@@ -18,6 +18,7 @@ import {
 import { AbiCoder, AbiInput, AbiItem } from './abi-types'
 import { isEmpty, viemAbiCoder } from './viem-abi-coder'
 import type { ViemContract } from './viem-contract'
+import { type CeloContract, createCeloContract } from './contract-types'
 import { createContractConstructor } from './rpc-contract'
 import { CeloProvider, assertIsCeloProvider } from './celo-provider'
 import {
@@ -658,7 +659,7 @@ export class Connection {
   }
 
   /**
-   * Create a viem-native contract instance bound to this connection.
+   * @deprecated Use `getCeloContract()` instead. Returns a ViemContract for backward compatibility.
    * @param abi - The ABI of the contract
    * @param address - The deployed contract address
    */
@@ -684,6 +685,31 @@ export class Connection {
       address: address as `0x${string}`,
       client: this._viemClient,
     }
+  }
+
+  /**
+   * Create a viem-native contract instance bound to this connection.
+   * Returns a viem GetContractReturnType with type-safe .read, .simulate, .estimateGas namespaces.
+   * @param abi - The ABI of the contract
+   * @param address - The deployed contract address
+   */
+  getCeloContract<TAbi extends readonly unknown[] = readonly unknown[]>(
+    abi: TAbi | AbiItem[],
+    address: string
+  ): CeloContract<TAbi> {
+    // Enrich ABI items with function/event signatures for backward compatibility
+    const enrichedAbi = (abi as AbiItem[]).map((item: AbiItem) => {
+      if (item.type === 'function' && !('signature' in item)) {
+        const sig = `${item.name}(${(item.inputs || []).map((i: AbiInput) => i.type).join(',')})`
+        return { ...item, signature: toFunctionHash(sig).slice(0, 10) }
+      }
+      if (item.type === 'event' && !('signature' in item)) {
+        const sig = `${item.name}(${(item.inputs || []).map((i: AbiInput) => i.type).join(',')})`
+        return { ...item, signature: toEventHash(sig) }
+      }
+      return item
+    })
+    return createCeloContract(enrichedAbi as unknown as TAbi, address as `0x${string}`, this._viemClient)
   }
 
   stop() {

@@ -11,7 +11,7 @@ import {
 } from '@celo/connect'
 import type { AbiItem } from '@celo/connect/lib/abi-types'
 import { viemAbiCoder } from '@celo/connect/lib/viem-abi-coder'
-import type { Abi, ContractFunctionName } from 'viem'
+import type { Abi, ContractFunctionName, PublicClient } from 'viem'
 import { toFunctionHash } from 'viem'
 import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
@@ -26,11 +26,14 @@ type EventsEnum = Record<string, string>
  */
 export abstract class BaseWrapper<TAbi extends readonly unknown[] = AbiItem[]> {
   protected _version?: ContractVersion
+  protected readonly client: PublicClient
 
   constructor(
     protected readonly connection: Connection,
     protected readonly contract: ViemContract<TAbi>
-  ) {}
+  ) {
+    this.client = connection.viemClient
+  }
 
   /** Contract address */
   get address(): StrongAddress {
@@ -39,7 +42,7 @@ export abstract class BaseWrapper<TAbi extends readonly unknown[] = AbiItem[]> {
 
   async version() {
     if (!this._version) {
-      const result = await this.contract.client.call({
+      const result = await this.client.call({
         to: this.contract.address as `0x${string}`,
         data: viemAbiCoder.encodeFunctionSignature({
           type: 'function',

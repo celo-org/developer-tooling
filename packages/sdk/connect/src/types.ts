@@ -181,7 +181,6 @@ export interface Contract {
   _address: string
 }
 
-
 /** PastEventOptions - retained for backward compatibility */
 export interface PastEventOptions {
   filter?: Record<string, unknown>

@@ -10,10 +10,7 @@ export type ReceiptFetcher = (txHash: string) => Promise<CeloTxReceipt | null>
 /**
  * Transforms a `Promise<string>` (tx hash) to a `TransactionResult`.
  */
-export function toTxResult(
-  txHashPromise: Promise<string>,
-  fetchReceipt?: ReceiptFetcher
-) {
+export function toTxResult(txHashPromise: Promise<string>, fetchReceipt?: ReceiptFetcher) {
   return new TransactionResult(txHashPromise, fetchReceipt)
 }
 
@@ -68,4 +65,3 @@ export class TransactionResult {
     return this.receiptFuture.wait()
   }
 }
-
