@@ -1,6 +1,6 @@
-import { Flags } from '@oclif/core'
+import { Flags, ux } from '@oclif/core'
+import { encodeDeployData } from 'viem'
 import { BaseCommand } from '../../base'
-import { displayTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { deprecationOptions } from '../../utils/notice'
 const DKG = require('./DKG.json')
@@ -25,13 +25,19 @@ export default class DKGDeploy extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(DKGDeploy)
-    // Using createContract (not getCeloContract) because .deploy() is not supported by CeloContract
-    const dkg = kit.connection.createContract(DKG.abi, '0x0000000000000000000000000000000000000000')
+    const data = encodeDeployData({
+      abi: DKG.abi,
+      bytecode: DKG.bytecode,
+      args: [res.flags.threshold, res.flags.phaseDuration],
+    })
 
-    await displayTx(
-      'deployDKG',
-      dkg.deploy({ data: DKG.bytecode, arguments: [res.flags.threshold, res.flags.phaseDuration] }),
-      { from: res.flags.from }
-    )
+    ux.action.start('Sending Transaction: deployDKG')
+    const txResult = await kit.connection.sendTransaction({
+      from: res.flags.from,
+      data,
+    })
+    const receipt = await txResult.waitReceipt()
+    console.log(receipt)
+    ux.action.stop()
   }
 }

@@ -1,6 +1,6 @@
 import { sortedOraclesABI } from '@celo/abis'
 import SortedOraclesArtifacts from '@celo/celo-devchain/contracts/contracts-0.5/SortedOracles.json'
-import { AbiItem, Address, createViemTxObject } from '@celo/connect'
+import { Address, createViemTxObject } from '@celo/connect'
 import {
   asCoreContractsOwner,
   LinkedLibraryAddress,
@@ -66,21 +66,24 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
    * the tests
    */
   const newSortedOracles = async (owner: Address): Promise<SortedOraclesWrapper> => {
-    const oldContract = kit.connection.createContract(SortedOraclesArtifacts.abi as AbiItem[])
-    interface DeployResult {
-      options: { address: string }
-    }
-
-    const deployTx = oldContract.deploy({
-      data: SortedOraclesArtifacts.bytecode.replace(
-        /__AddressSortedLinkedListWithMedian_____/g,
-        LinkedLibraryAddress.AddressSortedLinkedListWithMedian.replace('0x', '')
-      ),
-      arguments: [NetworkConfig.oracles.reportExpiry],
+    const { encodeDeployData } = await import('viem')
+    const linkedBytecode = SortedOraclesArtifacts.bytecode.replace(
+      /__AddressSortedLinkedListWithMedian_____/g,
+      LinkedLibraryAddress.AddressSortedLinkedListWithMedian.replace('0x', '')
+    )
+    const data = encodeDeployData({
+      abi: SortedOraclesArtifacts.abi,
+      bytecode: linkedBytecode as `0x${string}`,
+      args: [NetworkConfig.oracles.reportExpiry],
     })
 
-    const txResult = await deployTx.send({ from: owner, gasPrice: TEST_GAS_PRICE.toFixed() })
-    const deployedAddress = (txResult as unknown as DeployResult).options.address
+    const txResult = await kit.connection.sendTransaction({
+      from: owner,
+      data,
+      gasPrice: TEST_GAS_PRICE.toFixed(),
+    })
+    const receipt = await txResult.waitReceipt()
+    const deployedAddress = receipt.contractAddress!
     const deployedContract = kit.connection.getViemContract(
       sortedOraclesABI as any,
       deployedAddress
