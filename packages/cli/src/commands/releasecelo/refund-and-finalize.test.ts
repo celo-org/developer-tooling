@@ -33,7 +33,7 @@ testWithAnvilL2('releasegold:refund-and-finalize cmd', (provider) => {
     await testLocallyWithNode(Revoke, ['--contract', contractAddress, '--yesreally'], provider)
     const releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
-      kit.connection.getViemContract(releaseGoldABI as any, contractAddress),
+      kit.connection.getCeloContract(releaseGoldABI as any, contractAddress),
       kit.contracts
     )
     const refundAddress = await releaseGoldWrapper.getRefundAddress()
@@ -46,7 +46,7 @@ testWithAnvilL2('releasegold:refund-and-finalize cmd', (provider) => {
   test('can finalize the contract', async () => {
     const releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
-      kit.connection.getViemContract(releaseGoldABI as any, contractAddress),
+      kit.connection.getCeloContract(releaseGoldABI as any, contractAddress),
       kit.contracts
     )
 

@@ -50,7 +50,7 @@ export async function createMultisig(
   const initializerAbi = multiSigABI.find(
     (abi) => abi.type === 'function' && abi.name === 'initialize'
   )
-  const proxy = kit.connection.getViemContract(proxyABI as unknown as AbiItem[], proxyAddress!)
+  const proxy = kit.connection.getCeloContract(proxyABI as unknown as AbiItem[], proxyAddress!)
   const blockResp = await kit.connection.rpcCaller.call('eth_getBlockByNumber', ['latest', false])
   const baseFee = (blockResp.result as RpcBlockResponse).baseFeePerGas
   const priorityFee = parseUnits('25', 9).toString()

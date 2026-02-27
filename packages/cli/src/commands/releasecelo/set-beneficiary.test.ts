@@ -41,7 +41,7 @@ testWithAnvilL2('releasegold:set-beneficiary cmd', (provider) => {
 
     releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
-      kit.connection.getViemContract(releaseGoldABI as any, contractAddress),
+      kit.connection.getCeloContract(releaseGoldABI as any, contractAddress),
       kit.contracts
     )
     beneficiary = await releaseGoldWrapper.getBeneficiary()

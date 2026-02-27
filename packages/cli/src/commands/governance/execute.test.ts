@@ -127,7 +127,7 @@ testWithAnvilL2('governance:execute cmd', (provider) => {
     await (await governanceWrapper.vote(proposalId, 'Yes')).sendAndWaitForReceipt({ from: voter })
     await timeTravel((await governanceWrapper.stageDurations()).Referendum.toNumber() + 1, provider)
 
-    const testTransactionsContract = kit.connection.getViemContract(
+    const testTransactionsContract = kit.connection.getCeloContract(
       TEST_TRANSACTIONS_ABI,
       PROXY_ADMIN_ADDRESS
     )

@@ -16,13 +16,13 @@ testWithAnvilL2('network:contracts', (provider) => {
     })
   })
   describe('when version cant be obtained', () => {
-    let getViemContractSpy: jest.SpyInstance
+    let getCeloContractSpy: jest.SpyInstance
     beforeEach(() => {
-      const originalGetViemContract = Connection.prototype.getViemContract
-      getViemContractSpy = jest
-        .spyOn(Connection.prototype, 'getViemContract')
+      const originalGetCeloContract = Connection.prototype.getCeloContract
+      getCeloContractSpy = jest
+        .spyOn(Connection.prototype, 'getCeloContract')
         .mockImplementation(function (this: Connection, abi: any, address?: string) {
-          const contract = originalGetViemContract.call(this, abi, address!)
+          const contract = originalGetCeloContract.call(this, abi, address!)
           // Check if this is a versioned contract call (has getVersionNumber in ABI)
           const hasGetVersionNumber =
             Array.isArray(abi) &&
@@ -49,7 +49,7 @@ testWithAnvilL2('network:contracts', (provider) => {
         })
     })
     afterEach(() => {
-      getViemContractSpy.mockRestore()
+      getCeloContractSpy.mockRestore()
       jest.clearAllMocks()
     })
     it('still prints rest of contracts', async () => {

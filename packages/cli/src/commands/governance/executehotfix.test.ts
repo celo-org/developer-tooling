@@ -142,7 +142,7 @@ testWithAnvilL2('governance:executehotfix cmd', (provider) => {
         provider
       )
 
-      const testTransactionsContract = kit.connection.getViemContract(
+      const testTransactionsContract = kit.connection.getCeloContract(
         TEST_TRANSACTIONS_ABI,
         PROXY_ADMIN_ADDRESS
       )
@@ -285,7 +285,7 @@ testWithAnvilL2('governance:executehotfix cmd', (provider) => {
         provider
       )
 
-      const testTransactionsContract = kit.connection.getViemContract(
+      const testTransactionsContract = kit.connection.getCeloContract(
         TEST_TRANSACTIONS_ABI,
         PROXY_ADMIN_ADDRESS
       )

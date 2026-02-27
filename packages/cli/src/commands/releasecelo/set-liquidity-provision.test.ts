@@ -30,7 +30,7 @@ testWithAnvilL2('releasegold:set-liquidity-provision cmd', (provider) => {
   it('sets liqudity provision', async () => {
     const releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
-      kit.connection.getViemContract(releaseGoldABI as any, contractAddress),
+      kit.connection.getCeloContract(releaseGoldABI as any, contractAddress),
       kit.contracts
     )
 

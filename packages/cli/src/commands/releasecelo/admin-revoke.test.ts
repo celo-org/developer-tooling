@@ -42,7 +42,7 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (provider) => {
     )
     releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
-      kit.connection.getViemContract(releaseGoldABI as any, contractAddress),
+      kit.connection.getCeloContract(releaseGoldABI as any, contractAddress),
       kit.contracts
     )
   })

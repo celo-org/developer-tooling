@@ -27,9 +27,9 @@ export async function deployReleaseGoldContract(
     RELEASE_GOLD_IMPLEMENTATION_CONTRACT_BYTECODE
   )
 
-  // Create contract using Connection's getViemContract
+  // Create contract using Connection's getCeloContract
   const connection = new Connection(provider)
-  const contract = connection.getViemContract(
+  const contract = connection.getCeloContract(
     releaseGoldABI as any,
     RELEASE_GOLD_IMPLEMENTATION_CONTRACT_ADDRESS
   )
