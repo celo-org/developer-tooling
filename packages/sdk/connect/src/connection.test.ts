@@ -10,7 +10,6 @@ function createMockProvider(): Provider {
   }
 }
 
-
 describe('Connection', () => {
   let connection: Connection
   beforeEach(() => {

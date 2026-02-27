@@ -108,7 +108,6 @@ export interface Log {
   id?: string
 }
 
-
 /** Block header */
 export interface BlockHeader {
   number: number
@@ -147,7 +146,6 @@ export type Syncing =
       knownStates?: number
       pulledStates?: number
     }
-
 
 /** PastEventOptions - retained for backward compatibility */
 export interface PastEventOptions {
