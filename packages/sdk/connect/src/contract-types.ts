@@ -10,6 +10,12 @@ export type CeloContract<TAbi extends readonly unknown[] = readonly unknown[]> =
   GetContractReturnType<TAbi, PublicClient>
 
 /**
+ * @deprecated Use `CeloContract` instead. This type alias will be removed in a future version.
+ */
+export type ViemContract<TAbi extends readonly unknown[] = readonly unknown[]> =
+  CeloContract<TAbi>
+
+/**
  * Create a viem contract instance for a Celo contract.
  * Direct replacement for Connection.getViemContract().
  */

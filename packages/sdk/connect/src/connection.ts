@@ -17,9 +17,7 @@ import {
 } from 'viem'
 import { AbiCoder, AbiInput, AbiItem } from './abi-types'
 import { isEmpty, viemAbiCoder } from './viem-abi-coder'
-import type { ViemContract } from './viem-contract'
 import { type CeloContract, createCeloContract } from './contract-types'
-import { createContractConstructor } from './rpc-contract'
 import { CeloProvider, assertIsCeloProvider } from './celo-provider'
 import {
   Address,
@@ -30,7 +28,6 @@ import {
   CeloTxObject,
   CeloTxPending,
   CeloTxReceipt,
-  Contract,
   Provider,
   Syncing,
 } from './types'
@@ -646,45 +643,15 @@ export class Connection {
   }
 
   /**
-   * @deprecated Use `getViemContract()` instead. This method will be removed in a future version.
-   * Only kept for backward compatibility and contract deployment (`.deploy()`).
-   * Create a contract instance bound to this connection.
-   * Replaces the old `new web3.eth.Contract(abi, address)` pattern.
-   * @param abi - The ABI of the contract
-   * @param address - The deployed contract address
-   */
-  createContract(abi: readonly AbiItem[] | AbiItem[], address?: string): Contract {
-    const ContractClass = createContractConstructor(this)
-    return new ContractClass(abi, address)
-  }
-
-  /**
    * @deprecated Use `getCeloContract()` instead. Returns a ViemContract for backward compatibility.
    * @param abi - The ABI of the contract
    * @param address - The deployed contract address
    */
-  getViemContract<TAbi extends readonly unknown[] = AbiItem[]>(
+  getViemContract<TAbi extends readonly unknown[] = readonly unknown[]>(
     abi: TAbi | AbiItem[],
     address: string
-  ): ViemContract<TAbi> {
-    // Enrich ABI items with function/event signatures for backward compatibility
-    // (block explorer, governance proposal builder, etc. rely on ad.signature)
-    const enrichedAbi = (abi as AbiItem[]).map((item: AbiItem) => {
-      if (item.type === 'function' && !('signature' in item)) {
-        const sig = `${item.name}(${(item.inputs || []).map((i: AbiInput) => i.type).join(',')})`
-        return { ...item, signature: toFunctionHash(sig).slice(0, 10) }
-      }
-      if (item.type === 'event' && !('signature' in item)) {
-        const sig = `${item.name}(${(item.inputs || []).map((i: AbiInput) => i.type).join(',')})`
-        return { ...item, signature: toEventHash(sig) }
-      }
-      return item
-    })
-    return {
-      abi: enrichedAbi as unknown as TAbi,
-      address: address as `0x${string}`,
-      client: this._viemClient,
-    }
+  ): CeloContract<TAbi> {
+    return this.getCeloContract(abi, address)
   }
 
   /**

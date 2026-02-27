@@ -1,7 +1,6 @@
 export * from './abi-types'
 export * from './connection'
 export * from './types'
-export * from './viem-contract'
 export * from './contract-types'
 export * from './viem-tx-object'
 export * from './utils/abi-utils'

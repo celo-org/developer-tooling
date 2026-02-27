@@ -108,20 +108,6 @@ export interface Log {
   id?: string
 }
 
-/**
- * @deprecated PromiEvent is being removed. Use `Promise<string>` (tx hash) instead.
- * This interface will be deleted in a future version.
- */
-export interface PromiEvent<T> extends Promise<T> {
-  once(type: 'transactionHash', handler: (receipt: string) => void): PromiEvent<T>
-  once(type: 'receipt', handler: (receipt: T) => void): PromiEvent<T>
-  once(type: 'confirmation', handler: (confNumber: number, receipt: T) => void): PromiEvent<T>
-  once(type: 'error', handler: (error: Error) => void): PromiEvent<T>
-  on(type: 'transactionHash', handler: (receipt: string) => void): PromiEvent<T>
-  on(type: 'receipt', handler: (receipt: T) => void): PromiEvent<T>
-  on(type: 'confirmation', handler: (confNumber: number, receipt: T) => void): PromiEvent<T>
-  on(type: 'error', handler: (error: Error, receipt?: T) => void): PromiEvent<T>
-}
 
 /** Block header */
 export interface BlockHeader {
@@ -162,24 +148,6 @@ export type Syncing =
       pulledStates?: number
     }
 
-/**
- * @deprecated Contract interface is being removed. Use viem contract instances instead.
- * This interface will be deleted in a future version.
- */
-export interface Contract {
-  options: {
-    address: string
-    jsonInterface: AbiItem[]
-  }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- contravariant: specific method params must be assignable
-  methods: { [key: string]: (...args: any[]) => CeloTxObject<any> }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  deploy(params: { data: string; arguments?: any[] }): CeloTxObject<any>
-  getPastEvents(event: string, options: PastEventOptions): Promise<EventLog[]>
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- must accommodate ContractEvent types from generated contracts
-  events: { [key: string]: any }
-  _address: string
-}
 
 /** PastEventOptions - retained for backward compatibility */
 export interface PastEventOptions {
