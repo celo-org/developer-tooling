@@ -1,11 +1,12 @@
 import { attestationsABI } from '@celo/abis'
 import { StableToken } from '@celo/base'
 import { eqAddress } from '@celo/base/lib/address'
-import { Address, CeloTransactionObject, Connection, type ViemContract } from '@celo/connect'
+import { Address, CeloTransactionObject, Connection } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import { AccountsWrapper } from './Accounts'
 import {
   BaseWrapper,
+  type ContractLike,
   blocksToDurationString,
   proxyCall,
   proxySend,
@@ -63,7 +64,7 @@ interface ContractsForAttestation {
 export class AttestationsWrapper extends BaseWrapper<typeof attestationsABI> {
   constructor(
     protected readonly connection: Connection,
-    protected readonly contract: ViemContract<typeof attestationsABI>,
+    protected readonly contract: ContractLike<typeof attestationsABI>,
     protected readonly contracts: ContractsForAttestation
   ) {
     super(connection, contract)

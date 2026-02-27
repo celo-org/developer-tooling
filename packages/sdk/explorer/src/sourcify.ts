@@ -256,7 +256,7 @@ export async function tryGetProxyImplementation(
   connection: Connection,
   contract: Address
 ): Promise<Address | undefined> {
-  const proxyContract = connection.getViemContract(PROXY_ABI, contract)
+  const proxyContract = connection.getCeloContract(PROXY_ABI, contract)
   for (const fn of PROXY_IMPLEMENTATION_GETTERS) {
     try {
       return await new Promise<Address>((resolve, reject) => {

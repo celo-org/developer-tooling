@@ -158,6 +158,6 @@ export const getInitializeAbiOfImplementation = (
 }
 
 export const setImplementationOnProxy = (address: string, connection: Connection) => {
-  const proxyContract = connection.getViemContract(PROXY_ABI, '')
+  const proxyContract = connection.getCeloContract(PROXY_ABI, '')
   return createViemTxObject(connection, proxyContract, '_setImplementation', [address])
 }

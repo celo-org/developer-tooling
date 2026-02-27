@@ -1,6 +1,6 @@
 import { StrongAddress } from '@celo/base'
-import { AbiItem, createViemTxObject, type ViemContract } from '@celo/connect'
-import { BaseWrapper } from './BaseWrapper'
+import { AbiItem, createViemTxObject } from '@celo/connect'
+import { BaseWrapper, type ContractLike } from './BaseWrapper'
 
 const MINIMAL_TOKEN_INFO_ABI: AbiItem[] = [
   {
@@ -49,7 +49,7 @@ export abstract class AbstractFeeCurrencyWrapper extends BaseWrapper {
 
     return Promise.all(
       feeCurrencies.map(async (address) => {
-        let contract: ViemContract = this.connection.getViemContract(
+        let contract: ContractLike = this.connection.getCeloContract(
           MINIMAL_TOKEN_INFO_ABI,
           address
         )
@@ -69,7 +69,7 @@ export abstract class AbstractFeeCurrencyWrapper extends BaseWrapper {
         // if standard didnt work try alt
 
         if (adaptedToken) {
-          contract = this.connection.getViemContract(MINIMAL_TOKEN_INFO_ABI, adaptedToken)
+          contract = this.connection.getCeloContract(MINIMAL_TOKEN_INFO_ABI, adaptedToken)
         }
 
         return Promise.all([

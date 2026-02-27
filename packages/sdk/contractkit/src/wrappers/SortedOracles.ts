@@ -5,7 +5,6 @@ import {
   CeloTransactionObject,
   Connection,
   toTransactionObject,
-  type ViemContract,
 } from '@celo/connect'
 import { isValidAddress } from '@celo/utils/lib/address'
 import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
@@ -15,6 +14,7 @@ import { CeloContract, StableTokenContract } from '../base'
 import { isStableTokenContract, StableToken, stableTokenInfos } from '../celo-tokens'
 import {
   BaseWrapper,
+  type ContractLike,
   proxyCall,
   proxySend,
   secondsToDurationString,
@@ -64,7 +64,7 @@ export type ReportTarget = StableTokenContract | Address
 export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
   constructor(
     protected readonly connection: Connection,
-    protected readonly contract: ViemContract<typeof sortedOraclesABI>,
+    protected readonly contract: ContractLike<typeof sortedOraclesABI>,
     protected readonly registry: AddressRegistry
   ) {
     super(connection, contract)

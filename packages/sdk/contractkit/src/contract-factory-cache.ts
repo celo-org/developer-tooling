@@ -28,7 +28,7 @@ import {
   uniswapFeeHandlerSellerABI,
   validatorsABI,
 } from '@celo/abis'
-import { AbiItem, type ViemContract } from '@celo/connect'
+import { AbiItem, type ContractRef } from '@celo/connect'
 import debugFactory from 'debug'
 import { AddressRegistry } from './address-registry'
 import { CeloContract, ProxyContracts } from './base'
@@ -94,7 +94,7 @@ const StableToContract = {
   [StableToken.BRLm]: CeloContract.StableTokenBRL,
 }
 
-type ContractCacheMap = { [K in string]?: ViemContract }
+type ContractCacheMap = { [K in string]?: ContractRef }
 
 /**
  * Contract factory and cache.
@@ -204,7 +204,7 @@ export class ContractCache {
       if (!abi) {
         throw new Error(`No ABI found for contract ${contract}`)
       }
-      this.cacheMap[contract] = this.registry.connection.getViemContract(abi as AbiItem[], address)
+      this.cacheMap[contract] = this.registry.connection.getCeloContract(abi as AbiItem[], address)
     }
     // we know it's defined (thus the !)
     return this.cacheMap[contract]!

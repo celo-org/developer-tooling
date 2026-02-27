@@ -115,7 +115,7 @@ export class MiniContractCache implements ContractCacheType {
 
     const classes = this.contractClasses[contract as string]
 
-    const instance = this.connection.getViemContract(classes.abi as AbiItem[], address)
+    const instance = this.connection.getCeloContract(classes.abi as AbiItem[], address)
 
     const Klass = classes.wrapper
     const wrapper = new Klass(this.connection, instance)

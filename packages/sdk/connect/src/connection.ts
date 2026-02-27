@@ -709,7 +709,11 @@ export class Connection {
       }
       return item
     })
-    return createCeloContract(enrichedAbi as unknown as TAbi, address as `0x${string}`, this._viemClient)
+    return createCeloContract(
+      enrichedAbi as unknown as TAbi,
+      address as `0x${string}`,
+      this._viemClient
+    )
   }
 
   stop() {

@@ -11,7 +11,7 @@
 
 import { accountsABI } from '@celo/abis'
 import type { Connection } from '@celo/connect'
-import type { ViemContract } from '@celo/connect'
+import type { CeloContract, ViemContract } from '@celo/connect'
 import { proxyCall, proxySend } from '../wrappers/BaseWrapper'
 
 // Declare a typed Accounts contract with const-typed ABI
@@ -71,3 +71,25 @@ void proxyCall(accountsContract, 'createAccount')
 // 'isAccount' is a view method, not a send method. proxySend should reject it.
 // @ts-expect-error - 'isAccount' is not a nonpayable/payable method
 void proxySend(connection, accountsContract, 'isAccount')
+
+// ============================================================================
+// Tests 9-12: CeloContract (GetContractReturnType) compatibility
+// ============================================================================
+
+// CeloContract uses viem's GetContractReturnType which has a different shape
+// than ViemContract. The ContractLike<TAbi> parameter type ensures both work.
+declare const celoContract: CeloContract<typeof accountsABI>
+
+// Test 9: proxyCall with CeloContract and correct method name compiles
+void proxyCall(celoContract, 'isAccount')
+
+// Test 10: proxySend with CeloContract and correct method name compiles
+void proxySend(connection, celoContract, 'createAccount')
+
+// Test 11: proxyCall with CeloContract rejects incorrect method name
+// @ts-expect-error - 'isAcount' is not a valid method name on Accounts contract
+void proxyCall(celoContract, 'isAcount')
+
+// Test 12: proxySend with CeloContract rejects incorrect method name
+// @ts-expect-error - 'createAcount' is not a valid method name on Accounts contract
+void proxySend(connection, celoContract, 'createAcount')

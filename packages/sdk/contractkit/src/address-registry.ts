@@ -1,6 +1,6 @@
 import { registryABI } from '@celo/abis'
 import { NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
-import { Connection, createViemTxObject, type ViemContract } from '@celo/connect'
+import { Connection, createViemTxObject, type ContractRef } from '@celo/connect'
 import debugFactory from 'debug'
 import { CeloContract, RegisteredContracts, stripProxy } from './base'
 
@@ -21,12 +21,12 @@ export class UnregisteredError extends Error {
  * @param connection – an instance of @celo/connect {@link Connection}
  */
 export class AddressRegistry {
-  private readonly registry: ViemContract
+  private readonly registry: ContractRef
   private readonly cache: Map<CeloContract, StrongAddress> = new Map()
 
   constructor(readonly connection: Connection) {
     this.cache.set(CeloContract.Registry, REGISTRY_CONTRACT_ADDRESS)
-    this.registry = connection.getViemContract(registryABI as any, REGISTRY_CONTRACT_ADDRESS)
+    this.registry = connection.getCeloContract(registryABI as any, REGISTRY_CONTRACT_ADDRESS)
   }
 
   /**
