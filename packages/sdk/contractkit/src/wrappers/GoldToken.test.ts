@@ -1,6 +1,6 @@
 import { goldTokenABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
-import type { ViemContract } from '@celo/connect'
+import type { CeloContract } from '@celo/connect'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
 import { newKitFromProvider } from '../kit'
@@ -15,13 +15,13 @@ testWithAnvilL2('GoldToken Wrapper', (provider) => {
   const kit = newKitFromProvider(provider)
   let accounts: StrongAddress[] = []
   let goldToken: GoldTokenWrapper
-  let goldTokenContract: ViemContract
+  let goldTokenContract: CeloContract
 
   beforeAll(async () => {
     accounts = await kit.connection.getAccounts()
     kit.defaultAccount = accounts[0]
     goldToken = await kit.contracts.getGoldToken()
-    goldTokenContract = kit.connection.getViemContract(goldTokenABI as any, goldToken.address)
+    goldTokenContract = kit.connection.getCeloContract(goldTokenABI as any, goldToken.address)
   })
 
   it('checks balance', () => expect(goldToken.balanceOf(accounts[0])).resolves.toBeBigNumber())

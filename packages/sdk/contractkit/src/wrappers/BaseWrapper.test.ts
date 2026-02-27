@@ -1,5 +1,5 @@
 import { NULL_ADDRESS } from '@celo/base'
-import { Connection, Provider, type ViemContract } from '@celo/connect'
+import { Connection, Provider, type CeloContract } from '@celo/connect'
 import { viemAbiCoder } from '@celo/connect/lib/viem-abi-coder'
 import BigNumber from 'bignumber.js'
 import { ContractVersion, newContractVersion } from '../versions'
@@ -13,7 +13,7 @@ const encodedVersion = viemAbiCoder.encodeParameters(
   ['1', '1', '1', '1']
 )
 
-const mockContract: ViemContract = {
+const mockContract: CeloContract = {
   abi: [
     {
       type: 'function' as const,

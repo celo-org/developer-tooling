@@ -30,8 +30,8 @@ testWithAnvilL2('Reserve Wrapper', (provider) => {
     reserve = await kit.contracts.getReserve()
     const multiSigAddress = await kit.registry.addressFor('ReserveSpenderMultiSig' as CeloContract)
     reserveSpenderMultiSig = await kit.contracts.getMultiSig(multiSigAddress)
-    const reserveContract = kit.connection.getViemContract(reserveABI as any, reserve.address)
-    const reserveSpenderMultiSigContract = kit.connection.getViemContract(
+    const reserveContract = kit.connection.getCeloContract(reserveABI as any, reserve.address)
+    const reserveSpenderMultiSigContract = kit.connection.getCeloContract(
       multiSigABI as any,
       reserveSpenderMultiSig.address
     )

@@ -38,13 +38,13 @@ testWithAnvilL2('Escrow Wrapper', (provider) => {
     await asCoreContractsOwner(
       provider,
       async (ownerAdress: StrongAddress) => {
-        const registryContract = kit.connection.getViemContract(
+        const registryContract = kit.connection.getCeloContract(
           registryABI as any,
           REGISTRY_CONTRACT_ADDRESS
         )
         const attestationsContractAddress = await deployAttestationsContract(provider, ownerAdress)
 
-        const attestationsContract = kit.connection.getViemContract(
+        const attestationsContract = kit.connection.getCeloContract(
           attestationsABI as any,
           attestationsContractAddress
         )

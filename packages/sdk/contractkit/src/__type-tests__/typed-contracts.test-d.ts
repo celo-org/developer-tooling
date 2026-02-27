@@ -11,11 +11,11 @@
 
 import { accountsABI } from '@celo/abis'
 import type { Connection } from '@celo/connect'
-import type { CeloContract, ViemContract } from '@celo/connect'
+import type { CeloContract } from '@celo/connect'
 import { proxyCall, proxySend } from '../wrappers/BaseWrapper'
 
 // Declare a typed Accounts contract with const-typed ABI
-declare const accountsContract: ViemContract<typeof accountsABI>
+declare const accountsContract: CeloContract<typeof accountsABI>
 
 // Declare a dummy connection for proxySend tests
 declare const connection: Connection
@@ -76,8 +76,8 @@ void proxySend(connection, accountsContract, 'isAccount')
 // Tests 9-12: CeloContract (GetContractReturnType) compatibility
 // ============================================================================
 
-// CeloContract uses viem's GetContractReturnType which has a different shape
-// than ViemContract. The ContractLike<TAbi> parameter type ensures both work.
+// CeloContract uses viem's GetContractReturnType.
+// The ContractLike<TAbi> parameter type ensures it works with proxyCall/proxySend.
 declare const celoContract: CeloContract<typeof accountsABI>
 
 // Test 9: proxyCall with CeloContract and correct method name compiles

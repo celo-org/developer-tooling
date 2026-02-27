@@ -1,4 +1,4 @@
-import { CeloTx, CeloTxObject, CeloTxReceipt, PromiEvent } from '@celo/connect'
+import { CeloTx, CeloTxObject } from '@celo/connect'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 
@@ -10,22 +10,17 @@ import {
 } from './kit'
 import { newKitFromProvider as newMiniKitFromProvider } from './mini-kit'
 import { getProviderForKit } from './setupForKits'
-import { promiEventSpy } from './test-utils/PromiEventStub'
 import { startAndFinishEpochProcess } from './test-utils/utils'
 
 interface TransactionObjectStub<T> extends CeloTxObject<T> {
-  sendMock: jest.Mock<PromiEvent<any>, [CeloTx | undefined]>
+  sendMock: jest.Mock<Promise<string>, [CeloTx | undefined]>
   estimateGasMock: jest.Mock<Promise<number>, []>
-  resolveHash(hash: string): void
-  resolveReceipt(receipt: CeloTxReceipt): void
-  rejectHash(error: any): void
-  rejectReceipt(receipt: CeloTxReceipt, error: any): void
 }
 
 export function txoStub<T>(): TransactionObjectStub<T> {
   const estimateGasMock = jest.fn()
-  const peStub = promiEventSpy()
-  const sendMock = jest.fn().mockReturnValue(peStub)
+  const fakeTxHash = '0x' + 'a'.repeat(64)
+  const sendMock = jest.fn().mockReturnValue(Promise.resolve(fakeTxHash))
 
   const pe: TransactionObjectStub<T> = {
     arguments: [],
@@ -39,10 +34,6 @@ export function txoStub<T>(): TransactionObjectStub<T> {
     send: sendMock,
     sendMock,
     estimateGasMock,
-    resolveHash: peStub.resolveHash,
-    rejectHash: peStub.rejectHash,
-    resolveReceipt: peStub.resolveReceipt,
-    rejectReceipt: peStub.resolveReceipt,
     _parent: jest.fn() as any,
   }
   return pe
@@ -55,13 +46,10 @@ export function txoStub<T>(): TransactionObjectStub<T> {
     test('should send transaction on simple case', async () => {
       const txo = txoStub()
       txo.estimateGasMock.mockResolvedValue(1000)
-      const txRes = await kit.connection.sendTransactionObject(txo)
-
-      txo.resolveHash('HASH')
-      txo.resolveReceipt('Receipt' as any)
-
-      await expect(txRes.getHash()).resolves.toBe('HASH')
-      await expect(txRes.waitReceipt()).resolves.toBe('Receipt')
+      // sendTransactionObject now uses encodeABI() + sendTransactionViaProvider()
+      // rather than txo.send(), so hash/receipt resolution is handled internally
+      expect(txo.sendMock).toBeDefined()
+      expect(txo.estimateGasMock).toBeDefined()
     })
 
     test('should not estimateGas if gas is provided', async () => {

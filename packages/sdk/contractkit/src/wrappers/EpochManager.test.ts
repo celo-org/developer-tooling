@@ -131,7 +131,7 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
       await asCoreContractsOwner(
         provider,
         async (ownerAdress: StrongAddress) => {
-          const registryContract = kit.connection.getViemContract(
+          const registryContract = kit.connection.getCeloContract(
             registryABI as any,
             REGISTRY_CONTRACT_ADDRESS
           )
@@ -171,7 +171,7 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
   async function activateValidators() {
     const validatorsContract = await kit.contracts.getValidators()
     const electionWrapper = await kit.contracts.getElection()
-    const electionViemContract = kit.connection.getViemContract(
+    const electionViemContract = kit.connection.getCeloContract(
       electionABI as any,
       electionWrapper.address
     )

@@ -84,7 +84,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
     })
     const receipt = await txResult.waitReceipt()
     const deployedAddress = receipt.contractAddress!
-    const deployedContract = kit.connection.getViemContract(
+    const deployedContract = kit.connection.getCeloContract(
       sortedOraclesABI as any,
       deployedAddress
     )
@@ -142,7 +142,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
 
     btcSortedOracles = await newSortedOracles(btcOracleOwner)
     stableTokenSortedOracles = await kit.contracts.getSortedOracles()
-    const stableTokenSortedOraclesContract = kit.connection.getViemContract(
+    const stableTokenSortedOraclesContract = kit.connection.getCeloContract(
       sortedOraclesABI as any,
       stableTokenSortedOracles.address
     )
