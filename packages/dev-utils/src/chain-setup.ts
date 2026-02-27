@@ -10,12 +10,12 @@ export async function setCommissionUpdateDelay(
 ) {
   const conn = new Connection(provider)
   await withImpersonatedAccount(provider, DEFAULT_OWNER_ADDRESS, async () => {
-    const validators = conn.getViemContract(
+    const validators = conn.getCeloContract(
       validatorsABI as unknown as AbiItem[],
       validatorsContractAddress
     )
 
-    const { transactionHash } = await createViemTxObject(
+    const transactionHash = await createViemTxObject(
       conn,
       validators,
       'setCommissionUpdateDelay',
@@ -34,12 +34,12 @@ export async function setDequeueFrequency(
 ) {
   const conn = new Connection(provider)
   await withImpersonatedAccount(provider, DEFAULT_OWNER_ADDRESS, async () => {
-    const governance = conn.getViemContract(
+    const governance = conn.getCeloContract(
       governanceABI as unknown as AbiItem[],
       governanceContractAddress
     )
 
-    const { transactionHash } = await createViemTxObject(conn, governance, 'setDequeueFrequency', [
+    const transactionHash = await createViemTxObject(conn, governance, 'setDequeueFrequency', [
       frequency,
     ]).send({
       from: DEFAULT_OWNER_ADDRESS,
@@ -55,12 +55,12 @@ export async function setReferendumStageDuration(
 ) {
   const conn = new Connection(provider)
   await withImpersonatedAccount(provider, DEFAULT_OWNER_ADDRESS, async () => {
-    const governance = conn.getViemContract(
+    const governance = conn.getCeloContract(
       governanceABI as unknown as AbiItem[],
       governanceContractAddress
     )
 
-    const { transactionHash } = await createViemTxObject(
+    const transactionHash = await createViemTxObject(
       conn,
       governance,
       'setReferendumStageDuration',

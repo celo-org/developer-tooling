@@ -8,8 +8,8 @@ export const deployAttestationsContract = async (
   owner: StrongAddress
 ): Promise<StrongAddress> => {
   const conn = new Connection(provider)
-  // Using createContract (not getViemContract) because .deploy() is not
-  // supported by ViemContract
+  // Using createContract (not getCeloContract) because .deploy() is not
+  // supported by CeloContract
   const contract = conn.createContract(AttestationsArtifacts.abi as AbiItem[])
 
   const deployTx = contract.deploy({
