@@ -322,12 +322,12 @@ export class Connection {
       gas = await this.estimateGasWithInflationFactor(tx, gasEstimator, caller)
     }
 
-    return toTxResult(
-      txObj.send({
-        ...tx,
-        gas,
-      })
-    )
+    return this.sendTransactionViaProvider({
+      ...tx,
+      gas,
+      data: txObj.encodeABI(),
+      to: txObj._parent._address,
+    })
   }
 
   /*

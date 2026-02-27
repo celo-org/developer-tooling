@@ -208,7 +208,7 @@ export function createContractConstructor(connection: Connection) {
         encodeABI: () => data,
         _parent: contract,
         arguments: params.arguments || [],
-      } as CeloTxObject<unknown>
+      } as unknown as CeloTxObject<unknown>
     }
 
     async getPastEvents(event: string, options: PastEventOptions): Promise<EventLog[]> {

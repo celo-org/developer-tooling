@@ -2,7 +2,7 @@ import type { Abi, ContractFunctionArgs, ContractFunctionName } from 'viem'
 import { encodeFunctionData } from 'viem'
 import type { AbiItem } from './abi-types'
 import type { Connection } from './connection'
-import { createPromiEvent } from './promi-event'
+import { getRandomId } from './utils/rpc-caller'
 import type { CeloTx, CeloTxObject } from './types'
 import type { ViemContract } from './viem-contract'
 import { coerceArgsForAbi } from './viem-abi-coder'
@@ -39,7 +39,7 @@ export function createViemTxObjectInternal(
 
   const txObject: CeloTxObject<unknown> = {
     call: async (txParams?: CeloTx) => {
-      const result = await contract.client.call({
+      const result = await connection.viemClient.call({
         to: contract.address as `0x${string}`,
         data: encodeData() as `0x${string}`,
         account: txParams?.from as `0x${string}` | undefined,
@@ -59,12 +59,23 @@ export function createViemTxObjectInternal(
       const { __length__, ...rest } = decoded
       return rest as unknown
     },
-    send: (txParams?: CeloTx) => {
-      return createPromiEvent(
-        connection,
-        { ...txParams, to: contract.address, data: encodeData() },
-        contractAbi
-      )
+    send: (txParams?: CeloTx): Promise<string> => {
+      return new Promise<string>((resolve, reject) => {
+        connection.currentProvider.send(
+          {
+            id: getRandomId(),
+            jsonrpc: '2.0',
+            method: 'eth_sendTransaction',
+            params: [{ ...txParams, to: contract.address, data: encodeData() }],
+          },
+          (error, resp) => {
+            if (error) reject(error)
+            else if (resp?.error) reject(new Error(resp.error.message))
+            else if (resp) resolve(resp.result as string)
+            else reject(new Error('empty-response'))
+          }
+        )
+      })
     },
     estimateGas: async (txParams?: CeloTx) => {
       return connection.estimateGas({

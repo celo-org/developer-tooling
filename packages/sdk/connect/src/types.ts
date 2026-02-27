@@ -62,10 +62,20 @@ export interface CeloTxObject<T> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any -- must remain any for backward compat with generated contract types
   arguments: any[]
   call(tx?: CeloTx): Promise<T>
-  send(tx?: CeloTx): PromiEvent<CeloTxReceipt>
+  send(tx?: CeloTx): Promise<string>
   estimateGas(tx?: CeloTx): Promise<number>
   encodeABI(): string
-  _parent: Contract
+  _parent: {
+    options: { address: string; jsonInterface: AbiItem[] }
+    _address: string
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- must accommodate ContractEvent types from generated contracts
+    events: { [key: string]: any }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- contravariant: specific method params must be assignable
+    methods: { [key: string]: (...args: any[]) => CeloTxObject<any> }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    deploy(params: { data: string; arguments?: any[] }): CeloTxObject<any>
+    getPastEvents(event: string, options: PastEventOptions): Promise<EventLog[]>
+  }
 }
 
 /** Block number can be a number, hex string, or named tag */
@@ -98,7 +108,10 @@ export interface Log {
   id?: string
 }
 
-/** PromiEvent - a Promise that also emits events */
+/**
+ * @deprecated PromiEvent is being removed. Use `Promise<string>` (tx hash) instead.
+ * This interface will be deleted in a future version.
+ */
 export interface PromiEvent<T> extends Promise<T> {
   once(type: 'transactionHash', handler: (receipt: string) => void): PromiEvent<T>
   once(type: 'receipt', handler: (receipt: T) => void): PromiEvent<T>
@@ -149,7 +162,10 @@ export type Syncing =
       pulledStates?: number
     }
 
-/** Contract interface - replaces web3-eth-contract Contract */
+/**
+ * @deprecated Contract interface is being removed. Use viem contract instances instead.
+ * This interface will be deleted in a future version.
+ */
 export interface Contract {
   options: {
     address: string
@@ -165,15 +181,6 @@ export interface Contract {
   _address: string
 }
 
-/** ContractSendMethod - retained for backward compatibility */
-export interface ContractSendMethod {
-  send(
-    options: CeloTx,
-    callback?: (err: Error | null, transactionHash: string) => void
-  ): PromiEvent<CeloTxReceipt>
-  estimateGas(options: CeloTx, callback?: (err: Error | null, gas: number) => void): Promise<number>
-  encodeABI(): string
-}
 
 /** PastEventOptions - retained for backward compatibility */
 export interface PastEventOptions {

@@ -1,6 +1,6 @@
 import { Future } from '@celo/base/lib/future'
 import debugFactory from 'debug'
-import { CeloTxReceipt, Error as ConnectError, PromiEvent } from '../types'
+import { CeloTxReceipt } from '../types'
 import { pollForReceiptHelper } from './receipt-polling'
 
 const debug = debugFactory('connection:tx:result')
@@ -8,69 +8,44 @@ const debug = debugFactory('connection:tx:result')
 export type ReceiptFetcher = (txHash: string) => Promise<CeloTxReceipt | null>
 
 /**
- * Transforms a `PromiEvent` or a `Promise<string>` (tx hash) to a `TransactionResult`.
+ * Transforms a `Promise<string>` (tx hash) to a `TransactionResult`.
  */
 export function toTxResult(
-  pe: PromiEvent<CeloTxReceipt> | Promise<string>,
+  txHashPromise: Promise<string>,
   fetchReceipt?: ReceiptFetcher
 ) {
-  return new TransactionResult(pe, fetchReceipt)
+  return new TransactionResult(txHashPromise, fetchReceipt)
 }
 
 /**
- * Replacement interface for web3's `PromiEvent`. Instead of emiting events
- * to signal different stages, eveything is exposed as a promise. Which ends
- * up being nicer when doing promise/async based programming.
+ * Wraps a transaction hash promise into a result with getHash() and waitReceipt() methods.
  */
 export class TransactionResult {
   private hashFuture = new Future<string>()
   private receiptFuture = new Future<CeloTxReceipt>()
 
-  constructor(pe: PromiEvent<CeloTxReceipt> | Promise<string>, fetchReceipt?: ReceiptFetcher) {
-    if (isPromiEvent(pe)) {
-      void pe
-        .on('transactionHash', (hash: string) => {
-          debug('hash: %s', hash)
-          this.hashFuture.resolve(hash)
-        })
-        .on('receipt', (receipt: CeloTxReceipt) => {
-          debug('receipt: %O', receipt)
-          this.receiptFuture.resolve(receipt)
-        })
-
-        .on('error', ((error: ConnectError, receipt: CeloTxReceipt | false) => {
-          if (!receipt) {
-            debug('send-error: %o', error)
-            this.hashFuture.reject(error)
-          } else {
-            debug('mining-error: %o, %O', error, receipt)
+  constructor(txHashPromise: Promise<string>, fetchReceipt?: ReceiptFetcher) {
+    txHashPromise.then(
+      async (hash: string) => {
+        debug('hash: %s', hash)
+        this.hashFuture.resolve(hash)
+        if (fetchReceipt) {
+          try {
+            const receipt = await pollForReceiptHelper(hash, fetchReceipt)
+            debug('receipt: %O', receipt)
+            this.receiptFuture.resolve(receipt)
+          } catch (error) {
+            debug('receipt-poll-error: %o', error)
+            this.receiptFuture.reject(error)
           }
-          this.receiptFuture.reject(error)
-        }) as (error: ConnectError) => void)
-    } else {
-      // Promise<string> - just a tx hash, poll for receipt
-      pe.then(
-        async (hash: string) => {
-          debug('hash: %s', hash)
-          this.hashFuture.resolve(hash)
-          if (fetchReceipt) {
-            try {
-              const receipt = await pollForReceiptHelper(hash, fetchReceipt)
-              debug('receipt: %O', receipt)
-              this.receiptFuture.resolve(receipt)
-            } catch (error) {
-              debug('receipt-poll-error: %o', error)
-              this.receiptFuture.reject(error)
-            }
-          }
-        },
-        (error: Error) => {
-          debug('send-error: %o', error)
-          this.hashFuture.reject(error)
-          this.receiptFuture.reject(error)
         }
-      )
-    }
+      },
+      (error: Error) => {
+        debug('send-error: %o', error)
+        this.hashFuture.reject(error)
+        this.receiptFuture.reject(error)
+      }
+    )
   }
 
   /** Get (& wait for) transaction hash */
@@ -94,8 +69,3 @@ export class TransactionResult {
   }
 }
 
-function isPromiEvent(
-  pe: PromiEvent<CeloTxReceipt> | Promise<string>
-): pe is PromiEvent<CeloTxReceipt> {
-  return 'on' in pe && typeof pe.on === 'function'
-}
