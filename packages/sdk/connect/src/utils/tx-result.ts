@@ -1,7 +1,7 @@
 import { Future } from '@celo/base/lib/future'
 import debugFactory from 'debug'
 import { CeloTxReceipt, Error as ConnectError, PromiEvent } from '../types'
-import { pollForReceiptHelper } from '../promi-event'
+import { pollForReceiptHelper } from './receipt-polling'
 
 const debug = debugFactory('connection:tx:result')
 
