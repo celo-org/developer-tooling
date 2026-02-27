@@ -1,11 +1,6 @@
 import { sortedOraclesABI } from '@celo/abis'
 import { eqAddress, NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
-import {
-  Address,
-  CeloTransactionObject,
-  Connection,
-  toTransactionObject,
-} from '@celo/connect'
+import { Address, CeloTransactionObject, Connection, toTransactionObject } from '@celo/connect'
 import { isValidAddress } from '@celo/utils/lib/address'
 import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'

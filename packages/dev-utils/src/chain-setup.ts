@@ -15,12 +15,9 @@ export async function setCommissionUpdateDelay(
       validatorsContractAddress
     )
 
-    const transactionHash = await createViemTxObject(
-      conn,
-      validators,
-      'setCommissionUpdateDelay',
-      [delayInBlocks]
-    ).send({
+    const transactionHash = await createViemTxObject(conn, validators, 'setCommissionUpdateDelay', [
+      delayInBlocks,
+    ]).send({
       from: DEFAULT_OWNER_ADDRESS,
     })
     await conn.getTransactionReceipt(transactionHash)
