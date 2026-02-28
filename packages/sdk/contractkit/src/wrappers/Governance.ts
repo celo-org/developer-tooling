@@ -1,4 +1,5 @@
 import { governanceABI } from '@celo/abis'
+import { pad } from 'viem'
 import {
   bufferToHex,
   ensureLeading0x,
@@ -197,7 +198,7 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
   private _getDequeue = async () => this.contract.read.getDequeue()
 
   private _getHotfixRecord = async (hash: string): Promise<HotfixRecord> => {
-    const res = await this.contract.read.getHotfixRecord([hash as `0x${string}`])
+    const res = await this.contract.read.getHotfixRecord([pad(hash as `0x${string}`, { size: 32 })])
     return {
       approved: res[0],
       councilApproved: res[1],
