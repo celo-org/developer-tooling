@@ -168,8 +168,7 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     )
   }
 
-  private _authorizeVoteSigner = (...args: any[]) =>
-    this.buildTx('authorizeVoteSigner', args)
+  private _authorizeVoteSigner = (...args: any[]) => this.buildTx('authorizeVoteSigner', args)
 
   /**
    * Authorizes an address to sign votes on behalf of the account.

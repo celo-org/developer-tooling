@@ -37,5 +37,9 @@ export class CeloTokenWrapper<TAbi extends Abi = typeof goldTokenABI> extends Er
    * @return True if the transaction succeeds.
    */
   transferWithComment = (to: string, value: string, comment: string) =>
-    this.buildTxUnchecked('transferWithComment', [to, value, comment]) as CeloTransactionObject<void>
+    this.buildTxUnchecked('transferWithComment', [
+      to,
+      value,
+      comment,
+    ]) as CeloTransactionObject<void>
 }

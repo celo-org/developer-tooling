@@ -1,5 +1,5 @@
 import { StrongAddress, bufferToHex, ensureLeading0x } from '@celo/base/lib/address'
-import { zip } from '@celo/base/lib/collections'
+
 import {
   CeloTransactionObject,
   CeloContract,
@@ -11,7 +11,7 @@ import {
 } from '@celo/connect'
 import type { AbiItem } from '@celo/connect/lib/abi-types'
 import { viemAbiCoder } from '@celo/connect/lib/viem-abi-coder'
-import type { Abi, ContractFunctionName, PublicClient } from 'viem'
+import type { ContractFunctionName, PublicClient } from 'viem'
 import { toFunctionHash } from 'viem'
 import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
@@ -305,90 +305,6 @@ export const solidityBytesToString = (input: SolidityBytes): string => {
   }
 }
 
-type Parser<A, B> = (input: A) => B
-
-/** Identity Parser */
-export const identity = <A>(a: A) => a
-export const stringIdentity = (x: string) => x
-
-/**
- * Tuple parser
- * Useful to map different input arguments
- */
-export function tupleParser<A0, B0>(parser0: Parser<A0, B0>): (...args: [A0]) => [B0]
-export function tupleParser<A0, B0, A1, B1>(
-  parser0: Parser<A0, B0>,
-  parser1: Parser<A1, B1>
-): (...args: [A0, A1]) => [B0, B1]
-export function tupleParser<A0, B0, A1, B1, A2, B2>(
-  parser0: Parser<A0, B0>,
-  parser1: Parser<A1, B1>,
-  parser2: Parser<A2, B2>
-): (...args: [A0, A1, A2]) => [B0, B1, B2]
-export function tupleParser<A0, B0, A1, B1, A2, B2, A3, B3>(
-  parser0: Parser<A0, B0>,
-  parser1: Parser<A1, B1>,
-  parser2: Parser<A2, B2>,
-  parser3: Parser<A3, B3>
-): (...args: [A0, A1, A2, A3]) => [B0, B1, B2, B3]
-export function tupleParser(...parsers: Parser<any, any>[]) {
-  return (...args: any[]) => zip((parser, input) => parser(input), parsers, args)
-}
-
-/**
- * Creates a proxy to send a tx on a viem-native contract.
- *
- * Typed overloads: when a contract with a const-typed ABI is provided,
- * the function name is constrained to actual ABI function names at compile time.
- */
-
-// Typed overload: contract with const ABI, function name only
-export function proxySend<
-  TAbi extends Abi,
-  TFunctionName extends ContractFunctionName<TAbi, 'nonpayable' | 'payable'>,
-  InputArgs extends any[],
-  Output,
->(
-  connection: Connection,
-  contract: ContractLike<TAbi>,
-  functionName: TFunctionName
-): (...args: InputArgs) => CeloTransactionObject<Output>
-
-// Typed overload: contract with const ABI, function name + input parser
-export function proxySend<
-  TAbi extends Abi,
-  TFunctionName extends ContractFunctionName<TAbi, 'nonpayable' | 'payable'>,
-  InputArgs extends any[],
-  ParsedInputArgs extends any[],
-  Output,
->(
-  connection: Connection,
-  contract: ContractLike<TAbi>,
-  functionName: TFunctionName,
-  parseInputArgs: (...args: InputArgs) => ParsedInputArgs
-): (...args: InputArgs) => CeloTransactionObject<Output>
-
-// Untyped overloads (backward compat)
-export function proxySend<InputArgs extends any[], Output>(
-  connection: Connection,
-  contract: ContractLike<AbiItem[]>,
-  functionName: string
-): (...args: InputArgs) => CeloTransactionObject<Output>
-export function proxySend<InputArgs extends any[], ParsedInputArgs extends any[], Output>(
-  connection: Connection,
-  contract: ContractLike<AbiItem[]>,
-  functionName: string,
-  parseInputArgs: (...args: InputArgs) => ParsedInputArgs
-): (...args: InputArgs) => CeloTransactionObject<Output>
-export function proxySend<InputArgs extends any[], ParsedInputArgs extends any[]>(
-  connection: Connection,
-  contract: ContractLike,
-  functionName: string,
-  parseInputArgs?: (...args: InputArgs) => ParsedInputArgs
-): (...args: InputArgs) => CeloTransactionObject<unknown> {
-  return proxySendGenericImpl(connection, contract, functionName, parseInputArgs)
-}
-
 // ---------------------------------------------------------------------------
 // Generic variants: non-overloaded, for generic intermediate classes.
 // Accept ContractLike — typed contracts pass via structural subtyping.
@@ -443,31 +359,6 @@ export function proxyCallGeneric<
   return proxyCallGenericImpl(contract, functionName, parseInputArgs, parseOutput)
 }
 
-/**
- * Like proxySend, but without compile-time function name checking.
- * Use ONLY in generic intermediate classes.
- * @internal
- */
-export function proxySendGeneric<InputArgs extends any[], Output>(
-  connection: Connection,
-  contract: ContractLike,
-  functionName: string
-): (...args: InputArgs) => CeloTransactionObject<Output>
-export function proxySendGeneric<InputArgs extends any[], ParsedInputArgs extends any[], Output>(
-  connection: Connection,
-  contract: ContractLike,
-  functionName: string,
-  parseInputArgs: (...args: InputArgs) => ParsedInputArgs
-): (...args: InputArgs) => CeloTransactionObject<Output>
-export function proxySendGeneric<InputArgs extends any[], ParsedInputArgs extends any[]>(
-  connection: Connection,
-  contract: ContractLike,
-  functionName: string,
-  parseInputArgs?: (...args: InputArgs) => ParsedInputArgs
-): (...args: InputArgs) => CeloTransactionObject<unknown> {
-  return proxySendGenericImpl(connection, contract, functionName, parseInputArgs)
-}
-
 // ---------------------------------------------------------------------------
 // Shared implementation (private to this module)
 // ---------------------------------------------------------------------------
@@ -500,23 +391,5 @@ function proxyCallGenericImpl<
     )
     const result = await txo.call()
     return parseOutput ? parseOutput(result as PreParsedOutput) : (result as PreParsedOutput)
-  }
-}
-
-function proxySendGenericImpl<InputArgs extends any[], ParsedInputArgs extends any[]>(
-  connection: Connection,
-  contract: ContractLike,
-  functionName: string,
-  parseInputArgs?: (...args: InputArgs) => ParsedInputArgs
-): (...args: InputArgs) => CeloTransactionObject<unknown> {
-  return (...args: InputArgs) => {
-    const resolvedArgs = parseInputArgs ? parseInputArgs(...args) : args
-    const txo = createViemTxObjectInternal(
-      connection,
-      contract,
-      functionName,
-      resolvedArgs as unknown[]
-    )
-    return toTransactionObject(connection, txo)
   }
 }

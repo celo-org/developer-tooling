@@ -126,7 +126,8 @@ export class MultiSigWrapper extends BaseWrapper<typeof multiSigABI> {
     const res = await this.contract.read.getTransactionCount([pending, executed])
     return valueToInt(res.toString())
   }
-  replaceOwner = (owner: Address, newOwner: Address) => this.buildTx('replaceOwner', [owner, newOwner])
+  replaceOwner = (owner: Address, newOwner: Address) =>
+    this.buildTx('replaceOwner', [owner, newOwner])
 
   async getTransactionDataByContent(
     destination: string,

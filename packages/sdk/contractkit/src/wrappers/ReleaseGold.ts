@@ -452,8 +452,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
    */
   setBeneficiary = (beneficiary: string) => this.buildTx('setBeneficiary', [beneficiary])
 
-  private _authorizeVoteSigner = (...args: any[]) =>
-    this.buildTx('authorizeVoteSigner', args)
+  private _authorizeVoteSigner = (...args: any[]) => this.buildTx('authorizeVoteSigner', args)
 
   /**
    * Authorizes an address to sign votes on behalf of the account.

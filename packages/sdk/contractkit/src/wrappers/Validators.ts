@@ -148,8 +148,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
 
   private _deregisterValidator = (...args: any[]) => this.buildTx('deregisterValidator', args)
 
-  private _registerValidatorGroup = (...args: any[]) =>
-    this.buildTx('registerValidatorGroup', args)
+  private _registerValidatorGroup = (...args: any[]) => this.buildTx('registerValidatorGroup', args)
 
   private _deregisterValidatorGroup = (...args: any[]) =>
     this.buildTx('deregisterValidatorGroup', args)
@@ -578,7 +577,11 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
       const voteWeight = await election.getTotalVotesForGroup(group)
       const { lesser, greater } = await election.findLesserAndGreaterAfterVote(group, voteWeight)
 
-      return this._addFirstMember(validator, lesser, greater) as unknown as CeloTransactionObject<boolean>
+      return this._addFirstMember(
+        validator,
+        lesser,
+        greater
+      ) as unknown as CeloTransactionObject<boolean>
     } else {
       return this._addMember(validator) as unknown as CeloTransactionObject<boolean>
     }
