@@ -49,7 +49,6 @@ import {
 import { hasProperty } from './utils/provider-utils'
 import { HttpRpcCaller, RpcCaller, getRandomId } from './utils/rpc-caller'
 import { TxParamsNormalizer } from './utils/tx-params-normalizer'
-import { TransactionResult, toTxResult } from './utils/tx-result'
 import { ReadOnlyWallet } from './wallet'
 
 // Convenience re-export for consumers that import from @celo/connect
@@ -76,8 +75,10 @@ export class Connection {
   private _provider!: CeloProvider
   private _viemClient!: PublicClient
 
-  constructor(provider: Provider, public wallet?: ReadOnlyWallet) {
-
+  constructor(
+    provider: Provider,
+    public wallet?: ReadOnlyWallet
+  ) {
     this.config = {
       gasInflationFactor: 1.3,
     }
@@ -251,9 +252,9 @@ export class Connection {
    * Similar to `web3.eth.sendTransaction()` but with following differences:
    *  - applies connections tx's defaults
    *  - estimatesGas before sending
-   *  - returns a `TransactionResult` instead of `PromiEvent`
+   *  - returns the transaction hash
    */
-  sendTransaction = async (tx: CeloTx): Promise<TransactionResult> => {
+  sendTransaction = async (tx: CeloTx): Promise<`0x${string}`> => {
     tx = this.fillTxDefaults(tx)
 
     let gas = tx.gas
@@ -268,31 +269,28 @@ export class Connection {
     })
   }
 
-  private sendTransactionViaProvider(tx: CeloTx): TransactionResult {
-    return toTxResult(
-      new Promise<string>((resolve, reject) => {
-        this._provider.send(
-          {
-            id: getRandomId(),
-            jsonrpc: '2.0',
-            method: 'eth_sendTransaction',
-            params: [tx],
-          },
-          (error, resp) => {
-            if (error) {
-              reject(error)
-            } else if (resp?.error) {
-              reject(new Error(resp.error.message))
-            } else if (resp) {
-              resolve(resp.result as string)
-            } else {
-              reject(new Error('empty-response'))
-            }
+  private async sendTransactionViaProvider(tx: CeloTx): Promise<`0x${string}`> {
+    return new Promise<`0x${string}`>((resolve, reject) => {
+      this._provider.send(
+        {
+          id: getRandomId(),
+          jsonrpc: '2.0',
+          method: 'eth_sendTransaction',
+          params: [tx],
+        },
+        (error, resp) => {
+          if (error) {
+            reject(error)
+          } else if (resp?.error) {
+            reject(new Error(resp.error.message))
+          } else if (resp) {
+            resolve(resp.result as `0x${string}`)
+          } else {
+            reject(new Error('empty-response'))
           }
-        )
-      }),
-      (txHash) => this.getTransactionReceipt(txHash)
-    )
+        }
+      )
+    })
   }
 
   /**
@@ -516,7 +514,6 @@ export class Connection {
     return this.getTransactionCount(address)
   }
 
-
   gasPrice = async (feeCurrency?: Address): Promise<string> => {
     // Required otherwise is not backward compatible
     const parameter = feeCurrency ? [feeCurrency] : []
@@ -554,7 +551,6 @@ export class Connection {
 
     return outputBlockFormatter(response.result)
   }
-
 
   getBalance = async (address: Address, defaultBlock?: BlockNumber): Promise<string> => {
     // Reference: https://eth.wiki/json-rpc/API#eth_getBalance
@@ -607,7 +603,6 @@ export class Connection {
     ])
     return response.result as string
   }
-
 
   /**
    * Create a viem-native contract instance bound to this connection.

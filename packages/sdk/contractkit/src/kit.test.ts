@@ -24,10 +24,7 @@ import { startAndFinishEpochProcess } from './test-utils/utils'
     beforeEach(() => {
       sendViaProviderSpy = jest
         .spyOn(kit.connection as any, 'sendTransactionViaProvider')
-        .mockReturnValue({
-          getHash: jest.fn().mockResolvedValue('0x' + 'a'.repeat(64)),
-          waitReceipt: jest.fn().mockResolvedValue({ status: true }),
-        })
+        .mockResolvedValue('0x' + 'a'.repeat(64))
       estimateGasSpy = jest
         .spyOn(kit.connection, 'estimateGasWithInflationFactor')
         .mockResolvedValue(1000)

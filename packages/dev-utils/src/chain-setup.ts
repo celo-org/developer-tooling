@@ -16,12 +16,11 @@ export async function setCommissionUpdateDelay(
       functionName: 'setCommissionUpdateDelay',
       args: [BigInt(delayInBlocks)],
     })
-    const result = await conn.sendTransaction({
+    const transactionHash = await conn.sendTransaction({
       to: validatorsContractAddress,
       data,
       from: DEFAULT_OWNER_ADDRESS,
     })
-    const transactionHash = await result.getHash()
     await conn.getTransactionReceipt(transactionHash)
   })
 }
@@ -38,12 +37,11 @@ export async function setDequeueFrequency(
       functionName: 'setDequeueFrequency',
       args: [BigInt(frequency)],
     })
-    const result = await conn.sendTransaction({
+    const transactionHash = await conn.sendTransaction({
       to: governanceContractAddress,
       data,
       from: DEFAULT_OWNER_ADDRESS,
     })
-    const transactionHash = await result.getHash()
     await conn.getTransactionReceipt(transactionHash)
   })
 }
@@ -60,12 +58,11 @@ export async function setReferendumStageDuration(
       functionName: 'setReferendumStageDuration',
       args: [BigInt(duration)],
     })
-    const result = await conn.sendTransaction({
+    const transactionHash = await conn.sendTransaction({
       to: governanceContractAddress,
       data,
       from: DEFAULT_OWNER_ADDRESS,
     })
-    const transactionHash = await result.getHash()
     await conn.getTransactionReceipt(transactionHash)
   })
 }

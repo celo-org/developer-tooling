@@ -1,6 +1,6 @@
 // tslint:disable: ordered-imports
 import { StrongAddress } from '@celo/base'
-import { CeloTx, Connection, Provider, ReadOnlyWallet, TransactionResult } from '@celo/connect'
+import { CeloTx, Connection, Provider, ReadOnlyWallet } from '@celo/connect'
 import { isValidAddress } from '@celo/utils/lib/address'
 import { EIP712TypedData } from '@celo/utils/lib/sign-typed-data-utils'
 import { Signature } from '@celo/utils/lib/signatureUtils'
@@ -251,7 +251,7 @@ export class ContractKit {
     return this.connection.isSyncing()
   }
 
-  async sendTransaction(tx: CeloTx): Promise<TransactionResult> {
+  async sendTransaction(tx: CeloTx): Promise<`0x${string}`> {
     return this.connection.sendTransaction(tx)
   }
 

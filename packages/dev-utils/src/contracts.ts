@@ -19,11 +19,11 @@ export const deployAttestationsContract = async (
     args: [true],
   })
 
-  const txResult = await conn.sendTransaction({
+  const txHash = await conn.sendTransaction({
     from: owner,
     data,
   })
-  const receipt = await txResult.waitReceipt()
+  const receipt = await conn.viemClient.waitForTransactionReceipt({ hash: txHash })
 
   return receipt.contractAddress as StrongAddress
 }

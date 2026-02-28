@@ -109,13 +109,12 @@ export abstract class BaseWrapper<TAbi extends readonly unknown[] = AbiItem[]> {
     txParams?: Omit<CeloTx, 'data'>
   ): Promise<`0x${string}`> {
     const data = this.encodeFunctionData(functionName as string, args)
-    const result = await this.connection.sendTransaction({
+    const hash = await this.connection.sendTransaction({
       ...txParams,
       to: this.contract.address,
       data,
     })
-    const hash = (await result.getHash()) as `0x${string}`
-    await result.waitReceipt()
+    await this.connection.viemClient.waitForTransactionReceipt({ hash })
     return hash
   }
 
@@ -130,13 +129,12 @@ export abstract class BaseWrapper<TAbi extends readonly unknown[] = AbiItem[]> {
     txParams?: Omit<CeloTx, 'data'>
   ): Promise<`0x${string}`> {
     const data = this.encodeFunctionData(functionName, args)
-    const result = await this.connection.sendTransaction({
+    const hash = await this.connection.sendTransaction({
       ...txParams,
       to: this.contract.address,
       data,
     })
-    const hash = (await result.getHash()) as `0x${string}`
-    await result.waitReceipt()
+    await this.connection.viemClient.waitForTransactionReceipt({ hash })
     return hash
   }
 
