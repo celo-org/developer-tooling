@@ -1,15 +1,6 @@
 import { StrongAddress, bufferToHex, ensureLeading0x } from '@celo/base/lib/address'
 
-import {
-  CeloTransactionObject,
-  CeloContract,
-  CeloTx,
-  Connection,
-  EventLog,
-  PastEventOptions,
-  createViemTxObjectInternal,
-  toTransactionObject,
-} from '@celo/connect'
+import { CeloContract, CeloTx, Connection, EventLog, PastEventOptions } from '@celo/connect'
 import type { AbiItem } from '@celo/connect/lib/abi-types'
 import { viemAbiCoder, coerceArgsForAbi } from '@celo/connect/lib/viem-abi-coder'
 import type { ContractFunctionName, PublicClient } from 'viem'
@@ -23,14 +14,6 @@ export interface ContractLike<TAbi extends readonly unknown[] = readonly unknown
   readonly abi: TAbi
   readonly address: `0x${string}`
 }
-
-/**
- * @internal Registry mapping contract instances to their Connection.
- * Populated by BaseWrapper constructor, consumed by proxyCallGenericImpl
- * so standalone proxyCall/proxyCallGeneric can access Connection without
- * changing their public signatures.
- */
-const contractConnections = new WeakMap<object, Connection>()
 
 type Events = string
 type Methods = string
@@ -48,7 +31,6 @@ export abstract class BaseWrapper<TAbi extends readonly unknown[] = AbiItem[]> {
     protected readonly contract: CeloContract<TAbi>
   ) {
     this.client = connection.viemClient
-    contractConnections.set(contract, connection)
   }
 
   /** Contract address */
@@ -93,38 +75,6 @@ export abstract class BaseWrapper<TAbi extends readonly unknown[] = AbiItem[]> {
     if (!(await this.version()).isAtLeast(version)) {
       throw new Error(`Bytecode version ${this._version} is not compatible with ${version} yet`)
     }
-  }
-
-  /**
-   * Create a CeloTransactionObject for a state-changing contract call.
-   * Typed variant: constrains functionName to actual ABI write methods.
-   * @internal Used by concrete wrapper subclasses to replace proxySend.
-   */
-  protected buildTx<TFunctionName extends ContractFunctionName<TAbi, 'nonpayable' | 'payable'>>(
-    functionName: TFunctionName,
-    args: unknown[]
-  ): CeloTransactionObject<void> {
-    const txo = createViemTxObjectInternal(
-      this.connection,
-      this.contract,
-      functionName as string,
-      args
-    )
-    return toTransactionObject(this.connection, txo) as CeloTransactionObject<void>
-  }
-
-  /**
-   * Create a CeloTransactionObject without compile-time function name checking.
-   * Use ONLY in generic intermediate classes (Erc20Wrapper, CeloTokenWrapper)
-   * where TAbi is an unresolved generic parameter.
-   * @internal
-   */
-  protected buildTxUnchecked(
-    functionName: string,
-    args: unknown[]
-  ): CeloTransactionObject<unknown> {
-    const txo = createViemTxObjectInternal(this.connection, this.contract, functionName, args)
-    return toTransactionObject(this.connection, txo)
   }
 
   /**
@@ -362,88 +312,5 @@ export const solidityBytesToString = (input: SolidityBytes): string => {
     return ensureLeading0x(hexString)
   } else {
     throw new Error('Unexpected input type for solidity bytes')
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Generic variants: non-overloaded, for generic intermediate classes.
-// Accept ContractLike — typed contracts pass via structural subtyping.
-// These are SEPARATE functions (not overloads), so typed proxyCall/proxySend
-// can't fall through to them. Explicit usage in generic classes only.
-// ---------------------------------------------------------------------------
-
-/**
- * Like proxyCall, but without compile-time function name checking.
- * Use ONLY in generic intermediate classes (Erc20Wrapper, CeloTokenWrapper)
- * where TAbi is an unresolved generic parameter.
- * Concrete wrapper classes MUST use proxyCall() for type-safe function names.
- * @internal
- */
-export function proxyCallGeneric<InputArgs extends any[], Output>(
-  contract: ContractLike,
-  functionName: string
-): (...args: InputArgs) => Promise<Output>
-export function proxyCallGeneric<InputArgs extends any[], PreParsedOutput, Output>(
-  contract: ContractLike,
-  functionName: string,
-  parseInputArgs: undefined,
-  parseOutput: (o: PreParsedOutput) => Output
-): (...args: InputArgs) => Promise<Output>
-export function proxyCallGeneric<InputArgs extends any[], ParsedInputArgs extends any[], Output>(
-  contract: ContractLike,
-  functionName: string,
-  parseInputArgs: (...args: InputArgs) => ParsedInputArgs
-): (...args: InputArgs) => Promise<Output>
-export function proxyCallGeneric<
-  InputArgs extends any[],
-  ParsedInputArgs extends any[],
-  PreParsedOutput,
-  Output,
->(
-  contract: ContractLike,
-  functionName: string,
-  parseInputArgs: ((...args: InputArgs) => ParsedInputArgs) | undefined,
-  parseOutput: (o: PreParsedOutput) => Output
-): (...args: InputArgs) => Promise<Output>
-export function proxyCallGeneric<
-  InputArgs extends any[],
-  ParsedInputArgs extends any[],
-  PreParsedOutput,
-  Output,
->(
-  contract: ContractLike,
-  functionName: string,
-  parseInputArgs?: ((...args: InputArgs) => ParsedInputArgs) | undefined,
-  parseOutput?: ((o: PreParsedOutput) => Output) | undefined
-): (...args: InputArgs) => Promise<Output | PreParsedOutput> {
-  return proxyCallGenericImpl(contract, functionName, parseInputArgs, parseOutput)
-}
-
-// ---------------------------------------------------------------------------
-// Shared implementation (private to this module)
-// ---------------------------------------------------------------------------
-
-function proxyCallGenericImpl<
-  InputArgs extends any[],
-  ParsedInputArgs extends any[],
-  PreParsedOutput,
-  Output,
->(
-  contract: ContractLike,
-  functionName: string,
-  parseInputArgs?: ((...args: InputArgs) => ParsedInputArgs) | undefined,
-  parseOutput?: ((o: PreParsedOutput) => Output) | undefined
-): (...args: InputArgs) => Promise<Output | PreParsedOutput> {
-  return async (...args: InputArgs) => {
-    const resolvedArgs = parseInputArgs ? parseInputArgs(...args) : args
-    const connection = contractConnections.get(contract)
-    if (!connection) {
-      throw new Error(
-        `Connection not found for contract at ${contract.address}. ` +
-          'Ensure the contract was registered via a BaseWrapper constructor.'
-      )
-    }
-    const result = await connection.callContract(contract, functionName, resolvedArgs as unknown[])
-    return parseOutput ? parseOutput(result as PreParsedOutput) : (result as PreParsedOutput)
   }
 }

@@ -22,7 +22,7 @@ import {
 import { AbiCoder, AbiInput, AbiItem } from './abi-types'
 import { isEmpty, viemAbiCoder, coerceArgsForAbi } from './viem-abi-coder'
 import { type CeloContract, createCeloContract } from './contract-types'
-import type { ContractRef } from './viem-tx-object'
+import type { ContractRef } from './types'
 import { CeloProvider, assertIsCeloProvider } from './celo-provider'
 import {
   Address,
@@ -30,7 +30,6 @@ import {
   BlockHeader,
   BlockNumber,
   CeloTx,
-  CeloTxObject,
   CeloTxPending,
   CeloTxReceipt,
   Provider,
@@ -304,38 +303,8 @@ export class Connection {
     )
   }
 
-  sendTransactionObject = async (
-    txObj: CeloTxObject<any>,
-    tx?: Omit<CeloTx, 'data'>
-  ): Promise<TransactionResult> => {
-    tx = this.fillTxDefaults(tx)
-
-    let gas = tx.gas
-    if (!gas) {
-      const { gas: _omit, ...txWithoutGas } = tx
-      tx = txWithoutGas
-      const gasEstimator = (_tx: CeloTx) => txObj.estimateGas({ ..._tx })
-      const getCallTx = (_tx: CeloTx) => {
-        return { ..._tx, data: txObj.encodeABI(), to: txObj._parent._address }
-      }
-      const caller = async (_tx: CeloTx) => {
-        const response = await this.rpcCaller.call('eth_call', [getCallTx(_tx), 'latest'])
-        return response.result as string
-      }
-      gas = await this.estimateGasWithInflationFactor(tx, gasEstimator, caller)
-    }
-
-    return this.sendTransactionViaProvider({
-      ...tx,
-      gas,
-      data: txObj.encodeABI(),
-      to: txObj._parent._address,
-    })
-  }
-
   /**
    * Call a read-only contract function and decode the result.
-   * Replaces the pattern: createViemTxObject(connection, contract, fn, args).call()
    * @internal
    */
   callContract = async (

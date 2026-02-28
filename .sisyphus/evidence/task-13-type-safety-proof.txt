@@ -1,0 +1,45 @@
+TASK 13: Type-Level Test File for Compile-Time Type Safety Verification
+=========================================================================
+
+OBJECTIVE:
+Create a type-level test file that proves compile-time type safety for the 
+strongly-typed contract methods refactor using @ts-expect-error directives.
+
+DELIVERABLES COMPLETED:
+✓ File created: packages/sdk/contractkit/src/__type-tests__/typed-contracts.test-d.ts
+✓ Contains 8 type assertions:
+  1. proxyCall with correct method name 'isAccount' compiles ✓
+  2. proxyCall with incorrect method name 'isAcount' fails with @ts-expect-error ✓
+  3. proxySend with correct method name 'createAccount' compiles ✓
+  4. proxySend with incorrect method name 'createAcount' fails with @ts-expect-error ✓
+  5. proxyCall with another valid view method 'getVoteSigner' compiles ✓
+  6. proxySend with another valid send method 'authorizeVoteSigner' compiles ✓
+  7. proxyCall rejects send-only method 'createAccount' with @ts-expect-error ✓
+  8. proxySend rejects view-only method 'isAccount' with @ts-expect-error ✓
+
+✓ Build verification: yarn workspace @celo/contractkit run build passes
+✓ Verification test: Removed @ts-expect-error → build failed with TS2769 error
+✓ Verification test: Restored @ts-expect-error → build passed
+✓ tsconfig.json updated to include .test-d.ts files in type checking
+
+KEY IMPLEMENTATION DETAILS:
+- Used `void` operator to suppress unused variable warnings
+- Imported accountsABI from @celo/abis for const-typed ABI
+- Imported ViemContract from @celo/connect for generic typing
+- Imported proxyCall and proxySend from ../wrappers/BaseWrapper
+- Declared typed contract: ViemContract<typeof accountsABI>
+- Declared dummy connection: Connection
+- All @ts-expect-error directives are satisfied by TypeScript compiler
+
+VERIFICATION EVIDENCE:
+1. Build passes with all @ts-expect-error directives in place
+2. Build fails with TS2769 error when @ts-expect-error is removed
+3. Error message: "No overload matches this call" - proves type checking is active
+4. File is properly excluded from runtime test execution (not a .test.ts file)
+
+CHANGES MADE:
+1. Created: packages/sdk/contractkit/src/__type-tests__/typed-contracts.test-d.ts (74 lines)
+2. Modified: packages/sdk/contractkit/tsconfig.json (added .test-d.ts to include)
+
+STATUS: ✓ COMPLETE
+All requirements met. Type safety is verified at compile time.

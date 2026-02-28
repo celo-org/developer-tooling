@@ -1,5 +1,4 @@
 import { StrongAddress } from '@celo/base'
-import type { AbiItem } from './abi-types'
 export type Address = string
 
 export type Hex = `0x${string}`
@@ -58,24 +57,15 @@ export interface CeloTx extends Partial<CeloParams> {
 
 export type WithSig<T> = T & { v: number; s: string; r: string; yParity: 0 | 1 }
 export type CeloTxWithSig = WithSig<CeloTx>
-export interface CeloTxObject<T> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- must remain any for backward compat with generated contract types
-  arguments: any[]
-  call(tx?: CeloTx): Promise<T>
-  send(tx?: CeloTx): Promise<string>
-  estimateGas(tx?: CeloTx): Promise<number>
-  encodeABI(): string
-  _parent: {
-    options: { address: string; jsonInterface: AbiItem[] }
-    _address: string
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- must accommodate ContractEvent types from generated contracts
-    events: { [key: string]: any }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- contravariant: specific method params must be assignable
-    methods: { [key: string]: (...args: any[]) => CeloTxObject<any> }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    deploy(params: { data: string; arguments?: any[] }): CeloTxObject<any>
-    getPastEvents(event: string, options: PastEventOptions): Promise<EventLog[]>
-  }
+
+/**
+ * Minimal contract shape needed for tx object creation.
+ * Both ViemContract and CeloContract (GetContractReturnType) satisfy this interface.
+ * @internal
+ */
+export interface ContractRef {
+  readonly abi: readonly unknown[]
+  readonly address: `0x${string}`
 }
 
 /** Block number can be a number, hex string, or named tag */

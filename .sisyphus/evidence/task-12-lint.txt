@@ -1,0 +1,179 @@
+packages/cli/src/commands/governance/propose.test.ts:767:77 lint/suspicious/noEmptyBlockStatements ━━━━━━━━━━
+
+  ! Unexpected empty block.
+  
+    765 │         })
+    766 │ 
+  > 767 │         const mockLog = jest.spyOn(console, 'log').mockImplementation(() => {})
+        │                                                                             ^^
+    768 │ 
+    769 │         await expect(
+  
+  i Empty blocks are usually the result of an incomplete refactoring. Remove the empty block or add a comment inside it if it is intentional.
+  
+
+packages/cli/src/commands/governance/propose.test.ts:831:77 lint/suspicious/noEmptyBlockStatements ━━━━━━━━━━
+
+  ! Unexpected empty block.
+  
+    829 │           )
+    830 │         ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
+  > 831 │         const mockLog = jest.spyOn(console, 'log').mockImplementation(() => {})
+        │                                                                             ^^
+    832 │ 
+    833 │         expect(stripAnsiCodesFromNestedArray(mockLog.mock.calls)).toMatchInlineSnapshot(`[]`)
+  
+  i Empty blocks are usually the result of an incomplete refactoring. Remove the empty block or add a comment inside it if it is intentional.
+  
+
+packages/cli/src/commands/multisig/transfer.test.ts:81:71 lint/suspicious/noEmptyBlockStatements ━━━━━━━━━━
+
+  ! Unexpected empty block.
+  
+    80 │     it('fails when non-owner tries to transfer', async () => {
+  > 81 │       const spy = jest.spyOn(console, 'log').mockImplementation(() => {})
+       │                                                                       ^^
+    82 │       const recipient = accounts[6]
+    83 │       const amount = '100000000000000000'
+  
+  i Empty blocks are usually the result of an incomplete refactoring. Remove the empty block or add a comment inside it if it is intentional.
+  
+
+packages/cli/src/test-utils/setup.ts:6:49 lint/suspicious/noEmptyBlockStatements ━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected empty block.
+  
+    4 │       open: jest.fn(() => {
+    5 │         return {
+  > 6 │           send: jest.fn(() => new Promise(() => {})),
+      │                                                 ^^
+    7 │           decorateAppAPIMethods: jest.fn(),
+    8 │           close: jest.fn(),
+  
+  i Empty blocks are usually the result of an incomplete refactoring. Remove the empty block or add a comment inside it if it is intentional.
+  
+
+packages/cli/src/test-utils/teardown.global.ts:1:48 lint/suspicious/noEmptyBlockStatements ━━━━━━━━━━
+
+  ! Unexpected empty block.
+  
+  > 1 │ export default async function globalTeardown() {}
+      │                                                ^^
+    2 │ 
+  
+  i Empty blocks are usually the result of an incomplete refactoring. Remove the empty block or add a comment inside it if it is intentional.
+  
+
+packages/cli/src/utils/checks.ts:94:21 lint/suspicious/noEmptyBlockStatements ━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected empty block.
+  
+    92 │           const account = await signerToAccount(await this.getClient(), this.signer)
+    93 │           return f(account, this) as Resolve<A>
+  > 94 │         } catch (_) {}
+       │                     ^^
+    95 │       }
+    96 │ 
+  
+  i Empty blocks are usually the result of an incomplete refactoring. Remove the empty block or add a comment inside it if it is intentional.
+  
+
+packages/cli/src/utils/checks.ts:122:21 lint/suspicious/noEmptyBlockStatements ━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected empty block.
+  
+    121 │           return f(validatorsContract, this.signer, account, this) as Resolve<A>
+  > 122 │         } catch (_) {}
+        │                     ^^
+    123 │       }
+    124 │ 
+  
+  i Empty blocks are usually the result of an incomplete refactoring. Remove the empty block or add a comment inside it if it is intentional.
+  
+
+packages/cli/src/utils/checks.ts:146:21 lint/suspicious/noEmptyBlockStatements ━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected empty block.
+  
+    145 │           return f(lockedCeloContract, this.signer, account, validatorsContract) as Resolve<A>
+  > 146 │         } catch (_) {}
+        │                     ^^
+    147 │       }
+    148 │ 
+  
+  i Empty blocks are usually the result of an incomplete refactoring. Remove the empty block or add a comment inside it if it is intentional.
+  
+
+packages/cli/src/utils/checks.ts:436:21 lint/suspicious/noEmptyBlockStatements ━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected empty block.
+  
+    435 │           return !isAddressEqual(address, NULL_ADDRESS)
+  > 436 │         } catch (_) {}
+        │                     ^^
+    437 │ 
+    438 │         return false
+  
+  i Empty blocks are usually the result of an incomplete refactoring. Remove the empty block or add a comment inside it if it is intentional.
+  
+
+packages/cli/src/utils/cli.ts:111:21 lint/suspicious/noEmptyBlockStatements ━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ! Unexpected empty block.
+  
+    109 │             .filter(Boolean)
+    110 │             .at(0)
+  > 111 │         } catch (e) {}
+        │                     ^^
+    112 │ 
+    113 │         return decodedLog
+  
+  i Empty blocks are usually the result of an incomplete refactoring. Remove the empty block or add a comment inside it if it is intentional.
+  
+
+packages/sdk/contractkit/src/test-utils/setup.global.ts:1:45 lint/suspicious/noEmptyBlockStatements ━━━━━━━━━━
+
+  ! Unexpected empty block.
+  
+  > 1 │ export default async function globalSetup() {}
+      │                                             ^^
+    2 │ 
+  
+  i Empty blocks are usually the result of an incomplete refactoring. Remove the empty block or add a comment inside it if it is intentional.
+  
+
+packages/sdk/contractkit/src/test-utils/teardown.global.ts:1:48 lint/suspicious/noEmptyBlockStatements ━━━━━━━━━━
+
+  ! Unexpected empty block.
+  
+  > 1 │ export default async function globalTeardown() {}
+      │                                                ^^
+    2 │ 
+  
+  i Empty blocks are usually the result of an incomplete refactoring. Remove the empty block or add a comment inside it if it is intentional.
+  
+
+packages/sdk/transactions-uri/src/test-utils/setup.global.ts:1:45 lint/suspicious/noEmptyBlockStatements ━━━━━━━━━━
+
+  ! Unexpected empty block.
+  
+  > 1 │ export default async function globalSetup() {}
+      │                                             ^^
+    2 │ 
+  
+  i Empty blocks are usually the result of an incomplete refactoring. Remove the empty block or add a comment inside it if it is intentional.
+  
+
+packages/sdk/transactions-uri/src/test-utils/teardown.global.ts:1:48 lint/suspicious/noEmptyBlockStatements ━━━━━━━━━━
+
+  ! Unexpected empty block.
+  
+  > 1 │ export default async function globalTeardown() {}
+      │                                                ^^
+    2 │ 
+  
+  i Empty blocks are usually the result of an incomplete refactoring. Remove the empty block or add a comment inside it if it is intentional.
+  
+
+Checked 706 files in 2s. No fixes applied.
+Found 14 warnings.

@@ -1,6 +1,5 @@
 import { multiSigABI, reserveABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
-import { createViemTxObject } from '@celo/connect'
 import {
   asCoreContractsOwner,
   DEFAULT_OWNER_ADDRESS,
@@ -8,6 +7,7 @@ import {
   testWithAnvilL2,
   withImpersonatedAccount,
 } from '@celo/dev-utils/anvil-test'
+import { encodeFunctionData } from 'viem'
 import BigNumber from 'bignumber.js'
 import { CeloContract } from '../base'
 import { newKitFromProvider } from '../kit'
@@ -43,26 +43,47 @@ testWithAnvilL2('Reserve Wrapper', (provider) => {
         await reserveSpenderMultiSig
           .replaceOwner(DEFAULT_OWNER_ADDRESS, accounts[0])
           .sendAndWaitForReceipt({ from: multiSigAddress })
-        await createViemTxObject(kit.connection, reserveSpenderMultiSigContract, 'addOwner', [
-          otherSpender,
-        ]).send({ from: multiSigAddress })
-        await createViemTxObject(
-          kit.connection,
-          reserveSpenderMultiSigContract,
-          'changeRequirement',
-          [2]
-        ).send({ from: multiSigAddress })
+        await kit.connection.sendTransaction({
+          to: reserveSpenderMultiSigContract.address,
+          data: encodeFunctionData({
+            abi: reserveSpenderMultiSigContract.abi as any,
+            functionName: 'addOwner',
+            args: [otherSpender],
+          }),
+          from: multiSigAddress,
+        })
+        await kit.connection.sendTransaction({
+          to: reserveSpenderMultiSigContract.address,
+          data: encodeFunctionData({
+            abi: reserveSpenderMultiSigContract.abi as any,
+            functionName: 'changeRequirement',
+            args: [2],
+          }),
+          from: multiSigAddress,
+        })
       },
       new BigNumber('1e18')
     )
 
     await asCoreContractsOwner(provider, async (ownerAdress: StrongAddress) => {
-      await createViemTxObject(kit.connection, reserveContract, 'addSpender', [otherSpender]).send({
+      await kit.connection.sendTransaction({
+        to: reserveContract.address,
+        data: encodeFunctionData({
+          abi: reserveContract.abi as any,
+          functionName: 'addSpender',
+          args: [otherSpender],
+        }),
         from: ownerAdress,
       })
-      await createViemTxObject(kit.connection, reserveContract, 'addOtherReserveAddress', [
-        otherReserveAddress,
-      ]).send({ from: ownerAdress })
+      await kit.connection.sendTransaction({
+        to: reserveContract.address,
+        data: encodeFunctionData({
+          abi: reserveContract.abi as any,
+          functionName: 'addOtherReserveAddress',
+          args: [otherReserveAddress],
+        }),
+        from: ownerAdress,
+      })
     })
 
     await setBalance(provider, reserve.address, new BigNumber('1e18'))
@@ -106,26 +127,36 @@ testWithAnvilL2('Reserve Wrapper', (provider) => {
   test('two spenders required to confirm transfers gold', async () => {
     const { parseEventLogs } = await import('viem')
 
-    const tx = await reserve.transferGold(otherReserveAddress, 10)
-    const multisigTx = await reserveSpenderMultiSig.submitOrConfirmTransaction(
+    const transferData = encodeFunctionData({
+      abi: reserveABI,
+      functionName: 'transferGold',
+      args: [otherReserveAddress, BigInt(10)],
+    })
+    const txHash = await reserveSpenderMultiSig.submitOrConfirmTransaction(
       reserve.address,
-      tx.txo
+      transferData
     )
-    const receipt = await multisigTx.sendAndWaitForReceipt()
-    const logs = parseEventLogs({ abi: multiSigABI as any, logs: receipt.logs as any })
+    const receipt = await kit.connection.getTransactionReceipt(txHash)
+    const logs = parseEventLogs({ abi: multiSigABI as any, logs: receipt!.logs as any })
     const eventNames = logs.map((l: any) => l.eventName)
     // First signer: Submission + Confirmation but NOT Execution (2-of-2 required)
     expect(eventNames).toContain('Submission')
     expect(eventNames).toContain('Confirmation')
     expect(eventNames).not.toContain('Execution')
 
-    const tx2 = await reserve.transferGold(otherReserveAddress, 10)
-    const multisigTx2 = await reserveSpenderMultiSig.submitOrConfirmTransaction(
+    const transferData2 = encodeFunctionData({
+      abi: reserveABI,
+      functionName: 'transferGold',
+      args: [otherReserveAddress, BigInt(10)],
+    })
+    const txHash2 = await reserveSpenderMultiSig.submitOrConfirmTransaction(
       reserve.address,
-      tx2.txo
+      transferData2,
+      '0',
+      { from: otherSpender }
     )
-    const receipt2 = await multisigTx2.sendAndWaitForReceipt({ from: otherSpender })
-    const logs2 = parseEventLogs({ abi: multiSigABI as any, logs: receipt2.logs as any })
+    const receipt2 = await kit.connection.getTransactionReceipt(txHash2)
+    const logs2 = parseEventLogs({ abi: multiSigABI as any, logs: receipt2!.logs as any })
     const eventNames2 = logs2.map((l: any) => l.eventName)
     // Second signer: Confirmation + Execution but NOT Submission
     expect(eventNames2).not.toContain('Submission')
@@ -134,11 +165,15 @@ testWithAnvilL2('Reserve Wrapper', (provider) => {
   })
 
   test('test does not transfer gold if not spender', async () => {
-    const tx = await reserve.transferGold(otherReserveAddress, 10)
-    const multisigTx = await reserveSpenderMultiSig.submitOrConfirmTransaction(
-      reserve.address,
-      tx.txo
-    )
-    await expect(multisigTx.sendAndWaitForReceipt({ from: accounts[2] })).rejects.toThrowError()
+    const transferData = encodeFunctionData({
+      abi: reserveABI,
+      functionName: 'transferGold',
+      args: [otherReserveAddress, BigInt(10)],
+    })
+    await expect(
+      reserveSpenderMultiSig.submitOrConfirmTransaction(reserve.address, transferData, '0', {
+        from: accounts[2],
+      })
+    ).rejects.toThrowError()
   })
 })

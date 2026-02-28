@@ -1973,6 +1973,7 @@ __metadata:
     debug: "npm:^4.1.1"
     fetch-mock: "npm:^10.0.7"
     inquirer: "npm:^7.3.3"
+    viem: "npm:^2.33.2"
   languageName: unknown
   linkType: soft
 

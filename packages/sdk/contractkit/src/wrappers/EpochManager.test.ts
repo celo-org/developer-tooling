@@ -1,5 +1,4 @@
 import { electionABI, registryABI } from '@celo/abis'
-import { createViemTxObject } from '@celo/connect'
 import { StrongAddress } from '@celo/base'
 import {
   asCoreContractsOwner,
@@ -8,7 +7,7 @@ import {
 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import BigNumber from 'bignumber.js'
-import { parseEther } from 'viem'
+import { encodeFunctionData, parseEther } from 'viem'
 import { REGISTRY_CONTRACT_ADDRESS } from '../address-registry'
 import { newKitFromProvider } from '../kit'
 import { startAndFinishEpochProcess } from '../test-utils/utils'
@@ -136,25 +135,34 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
             REGISTRY_CONTRACT_ADDRESS
           )
 
-          await createViemTxObject(kit.connection, registryContract, 'setAddressFor', [
-            'Validators',
-            accounts[0],
-          ]).send({
+          await kit.connection.sendTransaction({
+            to: registryContract.address,
+            data: encodeFunctionData({
+              abi: registryContract.abi as any,
+              functionName: 'setAddressFor',
+              args: ['Validators', accounts[0]],
+            }),
             from: ownerAdress,
           })
 
-          await createViemTxObject(
-            kit.connection,
-            // @ts-expect-error -- accessing internal contract for test setup
-            electionContract.contract,
-            'markGroupIneligible',
-            [validatorGroups[0]]
-          ).send({ from: accounts[0] })
+          await kit.connection.sendTransaction({
+            to: (electionContract as any).contract.address,
+            data: encodeFunctionData({
+              // @ts-expect-error -- accessing internal contract for test setup
+              abi: (electionContract as any).contract.abi as any,
+              functionName: 'markGroupIneligible',
+              args: [validatorGroups[0]],
+            }),
+            from: accounts[0],
+          })
 
-          await createViemTxObject(kit.connection, registryContract, 'setAddressFor', [
-            'Validators',
-            validatorsContract.address,
-          ]).send({
+          await kit.connection.sendTransaction({
+            to: registryContract.address,
+            data: encodeFunctionData({
+              abi: registryContract.abi as any,
+              functionName: 'setAddressFor',
+              args: ['Validators', validatorsContract.address],
+            }),
             from: ownerAdress,
           })
         },
@@ -179,21 +187,24 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
 
     for (const validatorGroup of validatorGroups) {
       const pendingVotesForGroup = new BigNumber(
-        await createViemTxObject<string>(
-          kit.connection,
-          electionViemContract,
-          'getPendingVotesForGroup',
-          [validatorGroup]
-        ).call()
+        (await kit.connection.callContract(electionViemContract, 'getPendingVotesForGroup', [
+          validatorGroup,
+        ])) as string
       )
       if (pendingVotesForGroup.gt(0)) {
         await withImpersonatedAccount(
           provider,
           validatorGroup,
           async () => {
-            await createViemTxObject(kit.connection, electionViemContract, 'activate', [
-              validatorGroup,
-            ]).send({ from: validatorGroup })
+            await kit.connection.sendTransaction({
+              to: electionViemContract.address,
+              data: encodeFunctionData({
+                abi: electionViemContract.abi as any,
+                functionName: 'activate',
+                args: [validatorGroup],
+              }),
+              from: validatorGroup,
+            })
           },
           parseEther('1')
         )

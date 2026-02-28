@@ -1,0 +1,16 @@
+=== LEGACY PACKAGE: @celo/base ===
+
+Files with .d.ts.map:
+-rw-r--r--@ 1 pavelhornak  staff  1067 Feb 28 08:25 packages/sdk/base/lib/account.d.ts.map
+-rw-r--r--@ 1 pavelhornak  staff   946 Feb 28 08:25 packages/sdk/base/lib/address.d.ts.map
+-rw-r--r--@ 1 pavelhornak  staff  1222 Feb 28 08:25 packages/sdk/base/lib/async.d.ts.map
+-rw-r--r--@ 1 pavelhornak  staff  1341 Feb 28 08:25 packages/sdk/base/lib/collections.d.ts.map
+-rw-r--r--@ 1 pavelhornak  staff   261 Feb 28 08:25 packages/sdk/base/lib/currencies.d.ts.map
+-rw-r--r--@ 1 pavelhornak  staff   672 Feb 28 08:25 packages/sdk/base/lib/future.d.ts.map
+-rw-r--r--@ 1 pavelhornak  staff   423 Feb 28 08:25 packages/sdk/base/lib/index.d.ts.map
+-rw-r--r--@ 1 pavelhornak  staff   516 Feb 28 08:25 packages/sdk/base/lib/inputValidation.d.ts.map
+-rw-r--r--@ 1 pavelhornak  staff   182 Feb 28 08:25 packages/sdk/base/lib/io.d.ts.map
+-rw-r--r--@ 1 pavelhornak  staff   275 Feb 28 08:25 packages/sdk/base/lib/lock.d.ts.map
+
+Sample map file content (index.d.ts.map):
+{"version":3,"file":"index.d.ts","sourceRoot":"","sources":["../src/index.ts"],"names":[],"mappings":"AAAA,cAAc,WAAW,CAAA;AACzB,cAAc,WAAW,CAAA;AACzB,cAAc,SAAS,CAAA;AACvB,cAAc,eAAe,CAAA;AAC7B,cAAc,cAAc,CAAA;AAC5B,cAAc,UAAU,CAAA;AACxB,cAAc,mBAAmB,CAAA;AACjC,cAAc,MAAM,CAAA;AACpB,cAAc,UAAU,CAAA;AACxB,cAAc,WAAW,CAAA;AACzB,cAAc,gBAAgB,CAAA;AAC9B,cAAc,UAAU,CAAA;AACxB,cAAc,kBAAkB,CAAA;AAChC,cAAc,UAAU,CAAA;AACxB,cAAc,QAAQ,CAAA"}

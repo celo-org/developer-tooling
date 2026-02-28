@@ -1,4 +1,4 @@
-import { CeloTx, CeloTxObject } from '@celo/connect'
+import { CeloTx } from '@celo/connect'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 
@@ -12,17 +12,23 @@ import { newKitFromProvider as newMiniKitFromProvider } from './mini-kit'
 import { getProviderForKit } from './setupForKits'
 import { startAndFinishEpochProcess } from './test-utils/utils'
 
-interface TransactionObjectStub<T> extends CeloTxObject<T> {
+interface TransactionObjectStub {
+  arguments: any[]
+  call: () => never
+  encodeABI: () => string
+  estimateGas: jest.Mock<Promise<number>, []>
+  send: jest.Mock<Promise<string>, [CeloTx | undefined]>
   sendMock: jest.Mock<Promise<string>, [CeloTx | undefined]>
   estimateGasMock: jest.Mock<Promise<number>, []>
+  _parent: { _address: string }
 }
 
-export function txoStub<T>(): TransactionObjectStub<T> {
+export function txoStub(): TransactionObjectStub {
   const estimateGasMock = jest.fn()
   const fakeTxHash = '0x' + 'a'.repeat(64)
   const sendMock = jest.fn().mockReturnValue(Promise.resolve(fakeTxHash))
 
-  const pe: TransactionObjectStub<T> = {
+  const pe: TransactionObjectStub = {
     arguments: [],
     call: () => {
       throw new Error('not implemented')
@@ -32,7 +38,7 @@ export function txoStub<T>(): TransactionObjectStub<T> {
     send: sendMock,
     sendMock,
     estimateGasMock,
-    _parent: { _address: '0x' + '0'.repeat(40) } as any,
+    _parent: { _address: '0x' + '0'.repeat(40) },
   }
   return pe
 }

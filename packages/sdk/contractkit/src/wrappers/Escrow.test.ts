@@ -1,13 +1,12 @@
 import { attestationsABI, registryABI } from '@celo/abis'
 import { StableToken, StrongAddress } from '@celo/base'
-import { createViemTxObject } from '@celo/connect'
 import { asCoreContractsOwner, setBalance, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { deployAttestationsContract } from '@celo/dev-utils/contracts'
 import { privateKeyToAddress } from '@celo/utils/lib/address'
 import { soliditySha3 } from '@celo/utils/lib/solidity' // uses viem internally; needed for getParsedSignatureOfAddress callback
 import BigNumber from 'bignumber.js'
 import { randomBytes } from 'crypto'
-import { encodePacked, keccak256, pad, parseEther } from 'viem'
+import { encodeFunctionData, encodePacked, keccak256, pad, parseEther } from 'viem'
 import { REGISTRY_CONTRACT_ADDRESS } from '../address-registry'
 import { newKitFromProvider } from '../kit'
 import { topUpWithToken } from '../test-utils/utils'
@@ -50,17 +49,23 @@ testWithAnvilL2('Escrow Wrapper', (provider) => {
         )
 
         // otherwise reverts with "minAttestations larger than limit"
-        await createViemTxObject(
-          kit.connection,
-          attestationsContract,
-          'setMaxAttestations',
-          [1]
-        ).send({ from: ownerAdress })
+        await kit.connection.sendTransaction({
+          to: attestationsContract.address,
+          data: encodeFunctionData({
+            abi: attestationsContract.abi as any,
+            functionName: 'setMaxAttestations',
+            args: [1],
+          }),
+          from: ownerAdress,
+        })
 
-        await createViemTxObject(kit.connection, registryContract, 'setAddressFor', [
-          'Attestations',
-          attestationsContractAddress,
-        ]).send({
+        await kit.connection.sendTransaction({
+          to: registryContract.address,
+          data: encodeFunctionData({
+            abi: registryContract.abi as any,
+            functionName: 'setAddressFor',
+            args: ['Attestations', attestationsContractAddress],
+          }),
           from: ownerAdress,
         })
       },

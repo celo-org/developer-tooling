@@ -1,8 +1,9 @@
 import { Address, StrongAddress } from '@celo/base/lib/address'
-import { createViemTxObject, type ContractRef } from '@celo/connect'
+import { type ContractRef } from '@celo/connect'
 import { asCoreContractsOwner, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import BigNumber from 'bignumber.js'
+import { encodeFunctionData } from 'viem'
 import { CeloContract } from '..'
 import { newKitFromProvider } from '../kit'
 import { AccountsWrapper } from './Accounts'
@@ -50,7 +51,11 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
       return {
         value: '0',
         to: registry.address,
-        input: createViemTxObject(kit.connection, registry, 'setAddressFor', repoint).encodeABI(),
+        input: encodeFunctionData({
+          abi: registry.abi as any,
+          functionName: 'setAddressFor',
+          args: repoint,
+        }),
       }
     })
     return proposals as Proposal

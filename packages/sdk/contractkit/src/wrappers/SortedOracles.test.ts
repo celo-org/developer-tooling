@@ -1,11 +1,12 @@
 import { sortedOraclesABI } from '@celo/abis'
 import SortedOraclesArtifacts from '@celo/celo-devchain/contracts/contracts-0.5/SortedOracles.json'
-import { Address, createViemTxObject } from '@celo/connect'
+import { Address } from '@celo/connect'
 import {
   asCoreContractsOwner,
   LinkedLibraryAddress,
   testWithAnvilL2,
 } from '@celo/dev-utils/anvil-test'
+import { encodeFunctionData } from 'viem'
 import { describeEach } from '@celo/dev-utils/describeEach'
 import { NetworkConfig, timeTravel } from '@celo/dev-utils/ganache-test'
 import { TEST_GAS_PRICE } from '@celo/dev-utils/test-utils'
@@ -88,9 +89,16 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
       sortedOraclesABI as any,
       deployedAddress
     )
-    await createViemTxObject(kit.connection, deployedContract, 'initialize', [
-      NetworkConfig.oracles.reportExpiry,
-    ]).send({ from: owner })
+    const initData = encodeFunctionData({
+      abi: deployedContract.abi as any,
+      functionName: 'initialize',
+      args: [NetworkConfig.oracles.reportExpiry],
+    })
+    await kit.connection.sendTransaction({
+      to: deployedContract.address,
+      data: initData,
+      from: owner,
+    })
 
     return new SortedOraclesWrapper(kit.connection, deployedContract as any, kit.registry)
   }
@@ -105,10 +113,14 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
     const identifier = await sortedOraclesInstance.toCurrencyPairIdentifier(target)
     // @ts-ignore
     const sortedOraclesContract = sortedOraclesInstance.contract
-    await createViemTxObject(kit.connection, sortedOraclesContract, 'addOracle', [
-      identifier,
-      oracle,
-    ]).send({
+    const addData = encodeFunctionData({
+      abi: sortedOraclesContract.abi as any,
+      functionName: 'addOracle',
+      args: [identifier, oracle],
+    })
+    await kit.connection.sendTransaction({
+      to: sortedOraclesContract.address,
+      data: addData,
       from: owner,
     })
   }
@@ -157,32 +169,51 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
         stableTokenEURAddress,
         stableTokenBRLAddress,
       ]) {
-        await createViemTxObject(kit.connection, stableTokenSortedOraclesContract, 'removeOracle', [
-          tokenAddress,
-          ownerAddress,
-          0,
-        ]).send({ from: ownerAddress })
+        await kit.connection.sendTransaction({
+          to: stableTokenSortedOraclesContract.address,
+          data: encodeFunctionData({
+            abi: stableTokenSortedOraclesContract.abi as any,
+            functionName: 'removeOracle',
+            args: [tokenAddress, ownerAddress, 0],
+          }),
+          from: ownerAddress,
+        })
       }
 
       for (const oracle of stableTokenOracles) {
-        await createViemTxObject(kit.connection, stableTokenSortedOraclesContract, 'addOracle', [
-          stableTokenUSDAddress,
-          oracle,
-        ]).send({ from: ownerAddress })
+        await kit.connection.sendTransaction({
+          to: stableTokenSortedOraclesContract.address,
+          data: encodeFunctionData({
+            abi: stableTokenSortedOraclesContract.abi as any,
+            functionName: 'addOracle',
+            args: [stableTokenUSDAddress, oracle],
+          }),
+          from: ownerAddress,
+        })
       }
 
       for (const oracle of stableTokenEUROracles) {
-        await createViemTxObject(kit.connection, stableTokenSortedOraclesContract, 'addOracle', [
-          stableTokenEURAddress,
-          oracle,
-        ]).send({ from: ownerAddress })
+        await kit.connection.sendTransaction({
+          to: stableTokenSortedOraclesContract.address,
+          data: encodeFunctionData({
+            abi: stableTokenSortedOraclesContract.abi as any,
+            functionName: 'addOracle',
+            args: [stableTokenEURAddress, oracle],
+          }),
+          from: ownerAddress,
+        })
       }
 
       for (const oracle of stableTokenBRLOracles) {
-        await createViemTxObject(kit.connection, stableTokenSortedOraclesContract, 'addOracle', [
-          stableTokenBRLAddress,
-          oracle,
-        ]).send({ from: ownerAddress })
+        await kit.connection.sendTransaction({
+          to: stableTokenSortedOraclesContract.address,
+          data: encodeFunctionData({
+            abi: stableTokenSortedOraclesContract.abi as any,
+            functionName: 'addOracle',
+            args: [stableTokenBRLAddress, oracle],
+          }),
+          from: ownerAddress,
+        })
       }
     })
 

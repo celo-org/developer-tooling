@@ -5,7 +5,7 @@ import { goldTokenABI } from '@celo/abis'
 import { CeloTx } from '@celo/connect'
 import type { Abi } from 'viem'
 import 'bignumber.js'
-import { proxyCallGeneric, valueToInt } from './BaseWrapper'
+import { valueToInt } from './BaseWrapper'
 import { Erc20Wrapper } from './Erc20Wrapper'
 
 /**
@@ -16,18 +16,21 @@ export class CeloTokenWrapper<TAbi extends Abi = typeof goldTokenABI> extends Er
    * Returns the name of the token.
    * @returns Name of the token.
    */
-  name: () => Promise<string> = proxyCallGeneric(this.contract, 'name')
+  name = async (): Promise<string> =>
+    (await this.connection.callContract(this.contract, 'name', [])) as string
 
   /**
    * Returns the three letter symbol of the token.
    * @returns Symbol of the token.
    */
-  symbol: () => Promise<string> = proxyCallGeneric(this.contract, 'symbol')
+  symbol = async (): Promise<string> =>
+    (await this.connection.callContract(this.contract, 'symbol', [])) as string
   /**
    * Returns the number of decimals used in the token.
    * @returns Number of decimals.
    */
-  decimals = proxyCallGeneric(this.contract, 'decimals', undefined, valueToInt)
+  decimals = async () =>
+    valueToInt((await this.connection.callContract(this.contract, 'decimals', [])) as any)
 
   /**
    * Transfers the token from one address to another with a comment.

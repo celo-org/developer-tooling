@@ -1,0 +1,55 @@
+TASK 1: Widen BaseWrapper.contract type from ContractLike to CeloContract
+STATUS: COMPLETED ✓
+
+BUILD VERIFICATION:
+- Full monorepo build: PASSED (exit code 0)
+- @celo/celocli build: PASSED
+- @celo/governance build: PASSED
+
+FILES MODIFIED:
+1. packages/sdk/contractkit/src/wrappers/BaseWrapper.ts
+   - Added import: CeloContract from @celo/connect
+   - Changed: protected readonly contract: ContractLike<TAbi> → CeloContract<TAbi>
+   - Kept: ContractLike interface (still used by proxyCallGeneric, etc.)
+   - Kept: contractConnections WeakMap
+
+2. packages/sdk/contractkit/src/wrappers/BaseWrapperForGoverning.ts
+   - Added import: CeloContract from @celo/connect
+   - Removed import: ContractLike (no longer needed)
+   - Changed: protected readonly contract: ContractLike<TAbi> → CeloContract<TAbi>
+
+3. packages/sdk/contractkit/src/wrappers/Attestations.ts
+   - Added import: CeloContract from @celo/connect
+   - Removed import: ContractLike (no longer needed)
+   - Changed: protected readonly contract: ContractLike<typeof attestationsABI> → CeloContract<typeof attestationsABI>
+
+4. packages/sdk/contractkit/src/wrappers/SortedOracles.ts
+   - Added import: CeloContract from @celo/connect
+   - Aliased enum import: CeloContract as CeloContractEnum from ../base
+   - Changed: protected readonly contract: ContractLike<typeof sortedOraclesABI> → CeloContract<typeof sortedOraclesABI>
+   - Updated usages: CeloContract.StableToken → CeloContractEnum.StableToken
+
+5. packages/sdk/contractkit/src/wrappers/EpochManager.ts
+   - Added import: CeloContract from @celo/connect
+   - Added explicit type annotation to _contract getter: CeloContract<typeof epochManagerABI>
+
+VERIFICATION:
+✓ ContractLike interface still exists (not removed)
+✓ contractConnections WeakMap still exists (not removed)
+✓ All subclasses updated to use CeloContract
+✓ No breaking changes to constructor signatures
+✓ No 'as any' casts added
+✓ Full monorepo build passes
+✓ Specific package builds pass (@celo/celocli, @celo/governance)
+
+OUTCOME:
+BaseWrapper.contract now has type CeloContract<TAbi> which provides access to:
+- .read namespace (typed read methods)
+- .write namespace (typed write methods)
+- .simulate namespace
+- .estimateGas namespace
+- .createEventFilter namespace
+- .getEvents namespace
+- .watchEvent namespace
+
+The contract IS already a CeloContract at runtime - this change just widens the TypeScript type.

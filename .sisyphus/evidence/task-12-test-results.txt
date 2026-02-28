@@ -1,0 +1,412 @@
+(node:87347) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:87349) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:87350) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:87351) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:87348) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS src/contract-cache.test.ts
+  ✓ should cache contracts (3 ms)
+  getContract()
+    ✓ SBAT get GoldToken (5 ms)
+    ✓ SBAT get StableToken (2 ms)
+    ✓ SBAT get StableTokenEUR (1 ms)
+    ✓ SBAT get Validators (2 ms)
+    ✓ SBAT get LockedCelo (1 ms)
+    ✓ should create a new instance when an address is provided (2 ms)
+    get contract methods
+      ✓ has a method getAccounts (1 ms)
+      ✓ has a method getAttestations (1 ms)
+      ✓ has a method getElection (1 ms)
+      ✓ has a method getEpochRewards (1 ms)
+      ✓ has a method getEscrow
+      ✓ has a method getEpochManager (1 ms)
+      ✓ has a method getFederatedAttestations (1 ms)
+      ✓ has a method getFeeCurrencyDirectory
+      ✓ has a method getFreezer
+      ✓ has a method getGoldToken
+      ✓ has a method getCeloToken (1 ms)
+      ✓ has a method getGovernance (1 ms)
+      ✓ has a method getLockedGold (1 ms)
+      ✓ has a method getLockedCelo
+      ✓ has a method getMultiSig
+      ✓ has a method getOdisPayments (1 ms)
+      ✓ has a method getReserve (1 ms)
+      ✓ has a method getScoreManager
+      ✓ has a method getSortedOracles
+      ✓ has a method getStableToken (1 ms)
+      ✓ has a method getValidators
+
+PASS src/wrappers/BaseWrapper.test.ts
+  TestWrapper
+    #onlyVersionOrGreater (actual = 1.1.1.1)
+      ✓ should throw with incompatible version 2.0.0.0 (26 ms)
+      ✓ should throw with incompatible version 1.2.0.0
+      ✓ should throw with incompatible version 1.1.2.0
+      ✓ should resolve with compatible version 1.1.1.2 (1 ms)
+      ✓ should resolve with compatible version 1.0.0.0
+  unixSecondsTimestampToDateString()
+    when Brazil/East
+      ✓ returns local time (93 ms)
+    when UTC
+      ✓ returns utc time
+    when Australia/Adelaide
+      ✓ returns local time (1 ms)
+    when Europe/London
+      ✓ returns local time
+
+(node:87346) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS src/celo-tokens.test.ts
+  CeloTokens
+    forEachCeloToken()
+      ✓ returns an object with a key for each celo token and the value from a provided async fn (1101 ms)
+      ✓ returns an object with a key for each celo token and the value from a provided non-async fn (1069 ms)
+    isStableToken()
+      ✓ returns true if the token is a stable token (6 ms)
+      ✓ returns false if the token is not a stable token (1 ms)
+    isStableTokenContract()
+      ✓ returns true if the contract is a stable token contract (1 ms)
+      ✓ returns false if the contract is not a stable token contract (1 ms)
+
+(node:87345) ExperimentalWarning: VM Modules is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS src/wrappers/Attestations.test.ts (5.007 s)
+  AttestationsWrapper
+    Verification with default values
+      ✓ No completions returns false (5 ms)
+      ✓ Not enough completions returns false (1 ms)
+      ✓ Fraction too low returns false (1 ms)
+      ✓ Fraction pass threshold returns true (1 ms)
+
+PASS src/contract-factory-cache.test.ts (5.105 s)
+  provider-contract-cache
+    ✓ should cache contracts (14 ms)
+    getContract()
+      ✓ SBAT get Accounts (11 ms)
+      ✓ SBAT get Attestations (2 ms)
+      ✓ SBAT get CeloUnreleasedTreasury (1 ms)
+      ✓ SBAT get Election (2 ms)
+      ✓ SBAT get EpochRewards (1 ms)
+      ✓ SBAT get ERC20 (1 ms)
+      ✓ SBAT get Escrow (1 ms)
+      ✓ SBAT get EpochManager (1 ms)
+      ✓ SBAT get EpochManagerEnabler (1 ms)
+      ✓ SBAT get FederatedAttestations (1 ms)
+      ✓ SBAT get FeeCurrencyDirectory (1 ms)
+      ✓ SBAT get FeeHandler (1 ms)
+      ✓ SBAT get Freezer (1 ms)
+      ✓ SBAT get GoldToken (1 ms)
+      ✓ SBAT get CeloToken
+      ✓ SBAT get Governance (2 ms)
+      ✓ SBAT get GovernanceSlasher
+      ✓ SBAT get LockedGold (1 ms)
+      ✓ SBAT get LockedCelo (1 ms)
+      ✓ SBAT get MentoFeeHandlerSeller (1 ms)
+      ✓ SBAT get UniswapFeeHandlerSeller (1 ms)
+      ✓ SBAT get MultiSig (1 ms)
+      ✓ SBAT get OdisPayments
+      ✓ SBAT get Registry (1 ms)
+      ✓ SBAT get Reserve (1 ms)
+      ✓ SBAT get ScoreManager (20 ms)
+      ✓ SBAT get SortedOracles (2 ms)
+      ✓ SBAT get StableToken (1 ms)
+      ✓ SBAT get StableTokenEUR (2 ms)
+      ✓ SBAT get StableTokenBRL (1 ms)
+      ✓ SBAT get Validators (3 ms)
+    getLockedCelo()
+      ✓ returns the LockedCelo contract (2 ms)
+    getCeloToken()
+      ✓ returns the CELO token contract (2 ms)
+
+PASS src/utils/signing.test.ts (5.15 s)
+  Signing
+    ✓ signs a message the same way via RPC and with an explicit private key (32 ms)
+    ✓ signs a message that was hashed the same way via RPC and with an explicit private key (6 ms)
+
+PASS src/wrappers/FederatedAttestations.test.ts
+  FederatedAttestations Wrapper
+    ✓ no identifiers should exist if none were registered (3 ms)
+    ✓ no attestations should exist if none were registered (1 ms)
+    ✓ attestation and identifiers should exist after registerAttestation is called (219 ms)
+    ✓ attestation should exist when registered and not when revoked (208 ms)
+    ✓ batch revoke attestations should remove all attestations specified  (311 ms)
+
+PASS src/wrappers/Accounts.test.ts (7.389 s)
+  Accounts Wrapper
+    ✓ SBAT authorize attestation key (246 ms)
+    ✓ SBAT remove attestation key authorization (317 ms)
+    ✓ SBAT authorize validator key when not a validator (211 ms)
+    ✓ SBAT authorize validator key when a validator (437 ms)
+    ✓ SBAT set the wallet address to the caller (209 ms)
+    ✓ SBAT set the wallet address to a different wallet address (211 ms)
+    ✓ SNBAT to set to a different wallet address without a signature (102 ms)
+    ✓ SNBAT fraction greater than 1 (110 ms)
+    ✓ SNBAT beneficiary and fraction (207 ms)
+    ✓ SNBAT delete expected to clear beneficiary and fraction (312 ms)
+
+PASS src/wrappers/GoldToken.test.ts
+  GoldToken Wrapper
+    ✓ checks balance (1 ms)
+    ✓ checks decimals (1 ms)
+    ✓ checks name (1 ms)
+    ✓ checks symbol (1 ms)
+    ✓ checks totalSupply (1 ms)
+    ✓ approves spender (105 ms)
+    ✓ transfers (105 ms)
+    ✓ transfers from (208 ms)
+
+PASS src/wrappers/FeeCurrencyDirectoryWrapper.test.ts
+  FeeCurrencyDirectory
+    ✓ fetches fee currency information (2119 ms)
+    ✓ fetches exchange rate (2 ms)
+    ✓ fetches currency config (2 ms)
+    ✓ fetches config (1 ms)
+
+PASS src/kit.test.ts (9.176 s)
+  kit.sendTransactionObject()
+    ✓ should send transaction on simple case (2 ms)
+    ✓ should not estimateGas if gas is provided
+    ✓ should use inflation factor on gas
+    ✓ should forward txoptions to sendTransactionViaProvider()
+    ✓ works with maxFeePerGas and maxPriorityFeePerGas (1 ms)
+    ✓ when maxFeePerGas and maxPriorityFeePerGas and feeCurrency
+    ✓ should send transaction on simple case
+    ✓ should not estimateGas if gas is provided
+    ✓ should use inflation factor on gas
+    ✓ should forward txoptions to sendTransactionViaProvider()
+    ✓ works with maxFeePerGas and maxPriorityFeePerGas
+    ✓ when maxFeePerGas and maxPriorityFeePerGas and feeCurrency (1 ms)
+  newKitWithApiKey()
+    ✓ should create kit with apiKey
+  newKitFromProvider()
+    ✓ should create a kit from a provider
+  kit
+    epochs
+      ✓ gets the current epoch size (1486 ms)
+      ✓ gets first and last block number of an epoch (1338 ms)
+      ✓ gets the current epoch number (1334 ms)
+
+PASS src/wrappers/Escrow.test.ts
+  Escrow Wrapper
+    ✓ transfer with trusted issuers should set TrustedIssuersPerPayment (858 ms)
+    ✓ withdraw should be successful after transferWithTrustedIssuers (949 ms)
+    ✓ withdraw should revert if attestation is not registered (739 ms)
+    ✓ withdraw should revert if attestation is registered by issuer not on the trusted issuers list (836 ms)
+
+PASS src/wrappers/OdisPayments.test.ts
+  OdisPayments Wrapper
+    #payInCUSD
+      ✓ should allow sender to make a payment on their behalf (210 ms)
+      ✓ should allow sender to make a payment for another account (209 ms)
+      ✓ should revert if transfer fails (115 ms)
+
+PASS src/wrappers/ScoreManager.test.ts
+  ScoreManager Wrapper
+    ✓ gets validator score (11 ms)
+    ✓ gets group score (3 ms)
+
+PASS src/wrappers/Reserve.test.ts
+  Reserve Wrapper
+    ✓ can get asset target weights which sum to 100% (123 ms)
+    ✓ can get asset target symbols  (111 ms)
+    ✓ can get reserve unfrozen balance  (110 ms)
+    ✓ can get sum of reserve unfrozen balance + other reserve address balances (111 ms)
+    ✓ test is spender (110 ms)
+    ✓ two spenders required to confirm transfers gold (461 ms)
+    ✓ test does not transfer gold if not spender (116 ms)
+
+PASS src/wrappers/EpochManager.test.ts (7.965 s)
+  EpochManagerWrapper
+    ✓ has the correct address for the EpochManager contract (1 ms)
+    ✓ indicates that it is time for next epoch (367 ms)
+    ✓ gets elected validators (1 ms)
+    ✓ gets current epoch processing status (181 ms)
+    ✓ gets first known epoch number (3 ms)
+    ✓ gets block numbers for an epoch (1424 ms)
+    ✓ finishes epoch correctly when validator group is not eligable any more (1411 ms)
+    ✓ starts and finishes a number of epochs and sends validator rewards (2296 ms)
+    ✓ processes elected validator groups (784 ms)
+
+PASS src/wrappers/Governance.test.ts (5.295 s)
+  Governance Wrapper
+    ✓ #getConfig (9 ms)
+    Proposals
+      ✓ #propose (109 ms)
+      ✓ #upvote (324 ms)
+      ✓ #revokeUpvote (429 ms)
+      ✓ #approve (318 ms)
+      ✓ #vote (434 ms)
+      ✓ #getVoteRecord (432 ms)
+      ✓ #votePartially (434 ms)
+      ✓ #execute (547 ms)
+      ✓ #getVoter (435 ms)
+      #getHotfixRecord
+        ✓ gets hotfix record (4 ms)
+
+PASS src/wrappers/LockedGold.test.ts
+  LockedGold Wrapper
+    ✓ locks gold (106 ms)
+    ✓ unlocks gold (213 ms)
+    ✓ relocks gold (969 ms)
+    ✓ should return the count of pending withdrawals (325 ms)
+    ✓ should return zero when there are no pending withdrawals (1 ms)
+    ✓ should return the pending withdrawal at a given index (216 ms)
+    ✓ should throw an error for an invalid index (1060 ms)
+    ✓ get accounts slashed (357 ms)
+
+PASS src/wrappers/SortedOracles.test.ts (10.535 s)
+  SortedOracles Wrapper
+    StableToken (CELO/USD)
+      #report
+        when reporting from a whitelisted Oracle
+          ✓ should be able to report a rate (109 ms)
+          when inserting into the middle of the existing rates
+            ✓ passes the correct lesserKey and greaterKey as args (422 ms)
+            ✓ inserts the new record in the right place (420 ms)
+        when reporting from a non-oracle address
+          ✓ should raise an error (6 ms)
+          ✓ should not change the list of rates (3 ms)
+      #removeExpiredReports
+        ✓ should not remove any reports when reports exist but are not expired (545 ms)
+        when expired reports exist
+          ✓ should successfully remove a report (530 ms)
+          ✓ removes only the expired reports, even if the number to remove is higher (545 ms)
+      #isOldestReportExpired
+        when at least one expired report exists
+          ✓ returns with true and the address of the last reporting oracle (428 ms)
+        when the oldest is not expired
+          ✓ returns with false and the address of the last reporting oracle (443 ms)
+      #getRates
+        ✓ SBAT getRates (435 ms)
+        ✓ returns the correct rate (437 ms)
+      #isOracle
+        ✓ returns true when this address is a whitelisted oracle for this token
+        ✓ returns false when this address is not an oracle (1 ms)
+      #numRates
+        ✓ returns a count of rates reported for the specified token (1 ms)
+      #medianRate
+        ✓ returns the key for the median (1 ms)
+      #reportExpirySeconds
+        ✓ returns the number of seconds after which a report expires
+    CELO/BTC
+      #report
+        when reporting from a whitelisted Oracle
+          ✓ should be able to report a rate (105 ms)
+          when inserting into the middle of the existing rates
+            ✓ passes the correct lesserKey and greaterKey as args (419 ms)
+            ✓ inserts the new record in the right place (429 ms)
+        when reporting from a non-oracle address
+          ✓ should raise an error (5 ms)
+          ✓ should not change the list of rates (4 ms)
+      #removeExpiredReports
+        ✓ should not remove any reports when reports exist but are not expired (532 ms)
+        when expired reports exist
+          ✓ should successfully remove a report (537 ms)
+          ✓ removes only the expired reports, even if the number to remove is higher (548 ms)
+      #isOldestReportExpired
+        when at least one expired report exists
+          ✓ returns with true and the address of the last reporting oracle (424 ms)
+        when the oldest is not expired
+          ✓ returns with false and the address of the last reporting oracle (425 ms)
+      #getRates
+        ✓ SBAT getRates (421 ms)
+        ✓ returns the correct rate (422 ms)
+      #isOracle
+        ✓ returns true when this address is a whitelisted oracle for this token (1 ms)
+        ✓ returns false when this address is not an oracle (1 ms)
+      #numRates
+        ✓ returns a count of rates reported for the specified token
+      #medianRate
+        ✓ returns the key for the median (1 ms)
+      #reportExpirySeconds
+        ✓ returns the number of seconds after which a report expires
+    #reportStableToken
+      ✓ calls report with the address for StableToken (USDm) by default (105 ms)
+      calls report with the address for the provided StableToken
+        ✓ calls report with token USDm (105 ms)
+        ✓ calls report with token EURm (105 ms)
+        ✓ calls report with token BRLm (104 ms)
+    #getStableTokenRates
+      ✓ gets rates for Stable Token (2 ms)
+
+PASS src/wrappers/Validators.test.ts (9.643 s)
+  Validators Wrapper
+    ✓ registers a validator group (321 ms)
+    ✓ registers a validator (332 ms)
+    ✓ adds a member (906 ms)
+    ✓ sets next commission update (439 ms)
+    ✓ updates commission (545 ms)
+    ✓ gets group affiliates (789 ms)
+    reorders member
+      ✓ moves last to first (1572 ms)
+      ✓ moves first to last (1567 ms)
+      ✓ checks address normalization (1541 ms)
+    epoch block information
+      ✓ can fetch epoch's last block information (351 ms)
+      ✓ can fetch block's epoch information (347 ms)
+
+PASS src/wrappers/StableToken.test.ts (12.466 s)
+  StableToken Wrapper
+    cUSD
+      ✓ checks balance (422 ms)
+      ✓ checks decimals (418 ms)
+      ✓ checks name (418 ms)
+      ✓ checks symbol (428 ms)
+      ✓ checks totalSupply (433 ms)
+      ✓ transfers (521 ms)
+      ✓ approves spender (533 ms)
+      ✓ transfers from (636 ms)
+    cEUR
+      ✓ checks balance (423 ms)
+      ✓ checks decimals (416 ms)
+      ✓ checks name (420 ms)
+      ✓ checks symbol (425 ms)
+      ✓ checks totalSupply (439 ms)
+      ✓ transfers (539 ms)
+      ✓ approves spender (527 ms)
+      ✓ transfers from (630 ms)
+    cREAL
+      ✓ checks balance (423 ms)
+      ✓ checks decimals (416 ms)
+      ✓ checks name (417 ms)
+      ✓ checks symbol (419 ms)
+      ✓ checks totalSupply (441 ms)
+      ✓ transfers (549 ms)
+      ✓ approves spender (551 ms)
+      ✓ transfers from (634 ms)
+
+PASS src/wrappers/Election.test.ts (27.025 s)
+  Election Wrapper
+    ElectionWrapper
+      #getValidatorGroupVotes
+        ✓ shows non-empty group as eligible (1110 ms)
+        ✓ shows empty group as ineligible (1010 ms)
+      #vote
+        ✓ votes (1190 ms)
+        ✓ total votes remain unchanged when group becomes ineligible (1297 ms)
+      #activate
+        ✓ activates vote (1694 ms)
+        ✓ active votes remain unchanged when group becomes ineligible (1749 ms)
+      #revokeActive
+        ✓ revokes active (1807 ms)
+        ✓ revokes active when group is ineligible (1945 ms)
+      #revokePending
+        ✓ revokes pending (1364 ms)
+        ✓ revokes pending when group is ineligible (1436 ms)
+      #revoke
+        ✓ revokes active and pending votes (1992 ms)
+        ✓ revokes active and pending votes when group is ineligible (2233 ms)
+    #findLesserAndGreaterAfterVote
+      ✓ Validator groups should be in the correct order (5281 ms)
+
+A worker process has failed to exit gracefully and has been force exited. This is likely caused by tests leaking due to improper teardown. Try running with --detectOpenHandles to find leaks. Active timers can also cause this, ensure that .unref() was called on them.
+Test Suites: 22 passed, 22 total
+Tests:       258 passed, 258 total
+Snapshots:   12 passed, 12 total
+Time:        29.704 s
+Ran all test suites.
+Force exiting Jest: Have you considered using `--detectOpenHandles` to detect async operations that kept running after all tests finished?

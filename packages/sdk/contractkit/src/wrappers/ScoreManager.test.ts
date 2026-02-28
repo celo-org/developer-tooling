@@ -1,6 +1,6 @@
 import { asCoreContractsOwner, GROUP_ADDRESSES, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
-import { createViemTxObject } from '@celo/connect'
 import BigNumber from 'bignumber.js'
+import { encodeFunctionData } from 'viem'
 import { newKitFromProvider } from '../kit'
 import { valueToFixidityString } from './BaseWrapper'
 
@@ -23,10 +23,16 @@ testWithAnvilL2('ScoreManager Wrapper', (provider) => {
         const scoreManagerContract = await kit._contracts.getScoreManager()
 
         // change the score
-        await createViemTxObject(kit.connection, scoreManagerContract, 'setValidatorScore', [
-          electedValidatorAddresses[0],
-          valueToFixidityString(new BigNumber(0.5)),
-        ]).send({ from })
+        const data = encodeFunctionData({
+          abi: scoreManagerContract.abi as any,
+          functionName: 'setValidatorScore',
+          args: [electedValidatorAddresses[0], valueToFixidityString(new BigNumber(0.5))],
+        })
+        await kit.connection.sendTransaction({
+          to: scoreManagerContract.address,
+          data,
+          from,
+        })
       },
       new BigNumber('1e18')
     )
@@ -49,10 +55,16 @@ testWithAnvilL2('ScoreManager Wrapper', (provider) => {
         const scoreManagerContract = await kit._contracts.getScoreManager()
 
         // change the score
-        await createViemTxObject(kit.connection, scoreManagerContract, 'setGroupScore', [
-          GROUP_ADDRESSES[0],
-          valueToFixidityString(new BigNumber(0.99)),
-        ]).send({ from })
+        const data = encodeFunctionData({
+          abi: scoreManagerContract.abi as any,
+          functionName: 'setGroupScore',
+          args: [GROUP_ADDRESSES[0], valueToFixidityString(new BigNumber(0.99))],
+        })
+        await kit.connection.sendTransaction({
+          to: scoreManagerContract.address,
+          data,
+          from,
+        })
       },
       new BigNumber('1e18')
     )

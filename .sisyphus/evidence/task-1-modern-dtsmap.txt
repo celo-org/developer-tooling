@@ -1,0 +1,41 @@
+=== MODERN PACKAGE: @celo/actions ===
+
+Files with .d.ts.map in dist/mjs:
+      21
+Sample files:
+packages/actions/dist/mjs/multicontract-interactions/stake/vote.d.ts.map
+packages/actions/dist/mjs/multicontract-interactions/stake/staking-groups.d.ts.map
+packages/actions/dist/mjs/multicontract-interactions/stake/elected-rpc-nodes.d.ts.map
+packages/actions/dist/mjs/multicontract-interactions/stake/index.d.ts.map
+packages/actions/dist/mjs/contract-name.d.ts.map
+
+Files with .d.ts.map in dist/cjs:
+      21
+Sample files:
+packages/actions/dist/cjs/multicontract-interactions/stake/vote.d.ts.map
+packages/actions/dist/cjs/multicontract-interactions/stake/staking-groups.d.ts.map
+packages/actions/dist/cjs/multicontract-interactions/stake/elected-rpc-nodes.d.ts.map
+packages/actions/dist/cjs/multicontract-interactions/stake/index.d.ts.map
+packages/actions/dist/cjs/contract-name.d.ts.map
+
+Sample map file content (contract-name.d.ts.map from mjs):
+{"version":3,"file":"contract-name.d.ts","sourceRoot":"","sources":["../../src/contract-name.ts"],"names":[],"mappings":"AAGA,MAAM,MAAM,YAAY,GACpB,UAAU,GACV,cAAc,GACd,UAAU,GACV,sBAAsB,GACtB,YAAY,GACZ,WAAW,GACX,YAAY,GACZ,cAAc,GACd,aAAa,GACb,gBAAgB,GAChB,gBAAgB,GAChB,YAAY,CAAA"}
+=== MODERN PACKAGE: @celo/dev-utils ===
+
+Files with .d.ts.map in dist/mjs:
+      11
+Sample files:
+packages/dev-utils/dist/mjs/test-accounts.d.ts.map
+packages/dev-utils/dist/mjs/anvil-test.d.ts.map
+packages/dev-utils/dist/mjs/network.d.ts.map
+packages/dev-utils/dist/mjs/matchers.d.ts.map
+packages/dev-utils/dist/mjs/test-utils.d.ts.map
+
+Files with .d.ts.map in dist/cjs:
+      11
+Sample files:
+packages/dev-utils/dist/cjs/test-accounts.d.ts.map
+packages/dev-utils/dist/cjs/anvil-test.d.ts.map
+packages/dev-utils/dist/cjs/network.d.ts.map
+packages/dev-utils/dist/cjs/matchers.d.ts.map
+packages/dev-utils/dist/cjs/test-utils.d.ts.map
