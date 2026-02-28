@@ -2,6 +2,7 @@
   "compilerOptions": {
     "rootDir": "src",
     "declaration": true,
+    "declarationMap": true,
     "esModuleInterop": true,
     "types": ["node"],
     "lib": ["esnext"],
