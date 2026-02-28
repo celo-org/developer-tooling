@@ -2,6 +2,7 @@ import { StrongAddress, bufferToHex, ensureLeading0x } from '@celo/base/lib/addr
 import { zip } from '@celo/base/lib/collections'
 import {
   CeloTransactionObject,
+  CeloContract,
   Connection,
   EventLog,
   PastEventOptions,
@@ -43,7 +44,7 @@ export abstract class BaseWrapper<TAbi extends readonly unknown[] = AbiItem[]> {
 
   constructor(
     protected readonly connection: Connection,
-    protected readonly contract: ContractLike<TAbi>
+    protected readonly contract: CeloContract<TAbi>
   ) {
     this.client = connection.viemClient
     contractConnections.set(contract, connection)
@@ -180,6 +181,16 @@ export const valueToInt = (input: BigNumber.Value) =>
 
 export const valueToFrac = (numerator: BigNumber.Value, denominator: BigNumber.Value) =>
   valueToBigNumber(numerator).div(valueToBigNumber(denominator))
+
+/** Convert a string address to viem's strict hex address type */
+export function toViemAddress(v: string): `0x${string}` {
+  return ensureLeading0x(v) as `0x${string}`
+}
+
+/** Convert BigNumber.Value (string | number | BigNumber) to bigint for viem .read calls */
+export function toViemBigInt(v: BigNumber.Value): bigint {
+  return BigInt(new BigNumber(v).toFixed(0))
+}
 
 enum TimeDurations {
   millennium = 31536000000000,

@@ -1,15 +1,14 @@
 import { sortedOraclesABI } from '@celo/abis'
 import { eqAddress, NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
-import { Address, CeloTransactionObject, Connection, toTransactionObject } from '@celo/connect'
+import { Address, CeloTransactionObject, CeloContract, Connection, toTransactionObject } from '@celo/connect'
 import { isValidAddress } from '@celo/utils/lib/address'
 import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
 import { AddressRegistry } from '../address-registry'
-import { CeloContract, StableTokenContract } from '../base'
+import { CeloContract as CeloContractEnum, StableTokenContract } from '../base'
 import { isStableTokenContract, StableToken, stableTokenInfos } from '../celo-tokens'
 import {
   BaseWrapper,
-  type ContractLike,
   proxyCall,
   proxySend,
   secondsToDurationString,
@@ -59,7 +58,7 @@ export type ReportTarget = StableTokenContract | Address
 export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
   constructor(
     protected readonly connection: Connection,
-    protected readonly contract: ContractLike<typeof sortedOraclesABI>,
+    protected readonly contract: CeloContract<typeof sortedOraclesABI>,
     protected readonly registry: AddressRegistry
   ) {
     super(connection, contract)
@@ -258,7 +257,7 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
    * Helper function to get the rates for StableToken, by passing the address
    * of StableToken to `getRates`.
    */
-  getStableTokenRates = async (): Promise<OracleRate[]> => this.getRates(CeloContract.StableToken)
+  getStableTokenRates = async (): Promise<OracleRate[]> => this.getRates(CeloContractEnum.StableToken)
 
   private _getRates = proxyCall(this.contract, 'getRates', undefined, (res) => ({
     0: [...res[0]] as string[],
@@ -350,7 +349,7 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
   }
 
   private async toCurrencyPairIdentifier(target: ReportTarget): Promise<StrongAddress> {
-    if (isStableTokenContract(target as CeloContract)) {
+    if (isStableTokenContract(target as CeloContractEnum)) {
       return this.registry.addressFor(target as StableTokenContract)
     } else if (isValidAddress(target)) {
       return target

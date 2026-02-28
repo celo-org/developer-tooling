@@ -93,3 +93,29 @@ void proxyCall(celoContract, 'isAcount')
 // Test 12: proxySend with CeloContract rejects incorrect method name
 // @ts-expect-error - 'createAcount' is not a valid method name on Accounts contract
 void proxySend(connection, celoContract, 'createAcount')
+
+// ============================================================================
+// Tests 13-16: CeloContract .read property type safety
+// ============================================================================
+// CeloContract provides a .read namespace with type-safe view methods.
+// This section verifies that .read property access works correctly.
+
+// Test 13: .read.isAccount resolves to correct function type
+// 'isAccount' is a valid view method on Accounts. Should compile without error.
+void celoContract.read.isAccount
+
+// Test 14: .read with correct method name is callable
+// Verify that the function can be called with correct arguments.
+// 'isAccount' takes an address parameter and returns boolean.
+const isAccountFn = celoContract.read.isAccount
+void isAccountFn
+
+// Test 15: .read rejects invalid method names
+// 'nonExistentFunction' is not a valid method on Accounts contract.
+// @ts-expect-error - 'nonExistentFunction' is not a valid method name
+void celoContract.read.nonExistentFunction
+
+// Test 16: .read.createAccount should fail (send-only method)
+// 'createAccount' is a send method, not a view method. .read should reject it.
+// @ts-expect-error - 'createAccount' is not a view/pure method
+void celoContract.read.createAccount

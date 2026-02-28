@@ -1,7 +1,7 @@
-import { Connection } from '@celo/connect'
+import { Connection, CeloContract } from '@celo/connect'
 import type { AbiItem } from '@celo/connect/lib/abi-types'
 import { AccountsWrapper } from './Accounts'
-import { BaseWrapper, type ContractLike } from './BaseWrapper'
+import { BaseWrapper } from './BaseWrapper'
 import { ElectionWrapper } from './Election'
 import { EpochManagerWrapper } from './EpochManager'
 import { LockedGoldWrapper } from './LockedGold'
@@ -25,7 +25,7 @@ export class BaseWrapperForGoverning<
 > extends BaseWrapper<TAbi> {
   constructor(
     protected readonly connection: Connection,
-    protected readonly contract: ContractLike<TAbi>,
+    protected readonly contract: CeloContract<TAbi>,
     protected readonly contracts: ContractWrappersForVotingAndRules
   ) {
     super(connection, contract)
