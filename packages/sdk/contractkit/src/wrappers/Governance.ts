@@ -14,12 +14,10 @@ import { fromFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
 import {
   bufferToSolidityBytes,
-  proxySend,
   secondsToDurationString,
   solidityBytesToString,
   toViemAddress,
   toViemBigInt,
-  tupleParser,
   unixSecondsTimestampToDateString,
   valueToBigNumber,
   valueToInt,
@@ -207,36 +205,12 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
     }
   }
 
-  private _upvote: (...args: any[]) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'upvote'
-  )
-  private _revokeUpvote: (...args: any[]) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'revokeUpvote'
-  )
-  private _approve: (...args: any[]) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'approve'
-  )
-  private _voteSend: (...args: any[]) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'vote'
-  )
-  private _votePartially: (...args: any[]) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'votePartially'
-  )
-  private _execute: (...args: any[]) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'execute'
-  )
+  private _upvote = (...args: any[]) => this.buildTx('upvote', args)
+  private _revokeUpvote = (...args: any[]) => this.buildTx('revokeUpvote', args)
+  private _approve = (...args: any[]) => this.buildTx('approve', args)
+  private _voteSend = (...args: any[]) => this.buildTx('vote', args)
+  private _votePartially = (...args: any[]) => this.buildTx('votePartially', args)
+  private _execute = (...args: any[]) => this.buildTx('execute', args)
 
   /**
    * Querying number of possible concurrent proposals.
@@ -614,23 +588,15 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
   /**
    * Withdraws refunded proposal deposits.
    */
-  withdraw: () => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'withdraw'
-  )
+  withdraw = () => this.buildTx('withdraw', [])
 
   /**
    * Submits a new governance proposal.
    * @param proposal Governance proposal
    * @param descriptionURL A URL where further information about the proposal can be viewed
    */
-  propose: (proposal: Proposal, descriptionURL: string) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'propose',
-    proposalToParams
-  )
+  propose = (proposal: Proposal, descriptionURL: string) =>
+    this.buildTx('propose', proposalToParams(proposal, descriptionURL))
 
   /**
    * Returns whether a governance proposal exists with the given ID.
@@ -782,11 +748,7 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
   /**
    * Dequeues any queued proposals if `dequeueFrequency` seconds have elapsed since the last dequeue
    */
-  dequeueProposalsIfReady: () => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'dequeueProposalsIfReady'
-  )
+  dequeueProposalsIfReady = () => this.buildTx('dequeueProposalsIfReady', [])
 
   /**
    * Returns the number of votes that will be applied to a proposal for a given voter.
@@ -943,11 +905,7 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
       valueToString(abstainVotes)
     )
   }
-  revokeVotes: () => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'revokeVotes'
-  )
+  revokeVotes = () => this.buildTx('revokeVotes', [])
 
   /**
    * Executes a given proposal's associated transactions.
@@ -991,23 +949,13 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
    * @param hash keccak256 hash of hotfix's associated abi encoded transactions
    * @notice Only the `approver` address will succeed in sending this transaction
    */
-  approveHotfix: (hash: Buffer) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'approveHotfix',
-    tupleParser(bufferToHex)
-  )
+  approveHotfix = (hash: Buffer) => this.buildTx('approveHotfix', [bufferToHex(hash)])
 
   /**
    * Marks the given hotfix prepared for current epoch if quorum of validators have whitelisted it.
    * @param hash keccak256 hash of hotfix's associated abi encoded transactions
    */
-  prepareHotfix: (hash: Buffer) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'prepareHotfix',
-    tupleParser(bufferToHex)
-  )
+  prepareHotfix = (hash: Buffer) => this.buildTx('prepareHotfix', [bufferToHex(hash)])
 
   /**
    * Executes a given sequence of transactions if the corresponding hash is prepared and approved.
@@ -1015,12 +963,8 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
    * @param salt Secret which guarantees uniqueness of hash
    * @notice keccak256 hash of abi encoded transactions computed on-chain
    */
-  executeHotfix: (proposal: Proposal, salt: Buffer) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'executeHotfix',
-    hotfixToParams
-  )
+  executeHotfix = (proposal: Proposal, salt: Buffer) =>
+    this.buildTx('executeHotfix', hotfixToParams(proposal, salt))
 }
 
 export type GovernanceWrapperType = GovernanceWrapper

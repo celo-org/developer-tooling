@@ -7,12 +7,10 @@ import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
 import {
   blocksToDurationString,
-  proxySend,
   secondsToDurationString,
   stringToSolidityBytes,
   toViemAddress,
   toViemBigInt,
-  tupleParser,
   valueToBigNumber,
   valueToFixidityString,
   valueToInt,
@@ -148,62 +146,32 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
   private _validatorSignerAddressFromCurrentSet = async (index: number) =>
     this.contract.read.validatorSignerAddressFromCurrentSet([toViemBigInt(index)])
 
-  private _deregisterValidator: (...args: any[]) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'deregisterValidator'
-  )
+  private _deregisterValidator = (...args: any[]) => this.buildTx('deregisterValidator', args)
 
-  private _registerValidatorGroup: (...args: any[]) => CeloTransactionObject<boolean> = proxySend(
-    this.connection,
-    this.contract,
-    'registerValidatorGroup'
-  )
+  private _registerValidatorGroup = (...args: any[]) =>
+    this.buildTx('registerValidatorGroup', args)
 
-  private _deregisterValidatorGroup: (...args: any[]) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'deregisterValidatorGroup'
-  )
+  private _deregisterValidatorGroup = (...args: any[]) =>
+    this.buildTx('deregisterValidatorGroup', args)
 
-  private _addFirstMember: (...args: any[]) => CeloTransactionObject<boolean> = proxySend(
-    this.connection,
-    this.contract,
-    'addFirstMember'
-  )
+  private _addFirstMember = (...args: any[]) => this.buildTx('addFirstMember', args)
 
-  private _addMember: (...args: any[]) => CeloTransactionObject<boolean> = proxySend(
-    this.connection,
-    this.contract,
-    'addMember'
-  )
+  private _addMember = (...args: any[]) => this.buildTx('addMember', args)
 
-  private _reorderMember: (...args: any[]) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'reorderMember'
-  )
+  private _reorderMember = (...args: any[]) => this.buildTx('reorderMember', args)
 
   /**
    * Queues an update to a validator group's commission.
    * @param commission Fixidity representation of the commission this group receives on epoch
    *   payments made to its members. Must be in the range [0, 1.0].
    */
-  setNextCommissionUpdate: (commission: BigNumber.Value) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'setNextCommissionUpdate',
-    tupleParser(valueToFixidityString)
-  )
+  setNextCommissionUpdate = (commission: BigNumber.Value) =>
+    this.buildTx('setNextCommissionUpdate', [valueToFixidityString(commission)])
 
   /**
    * Updates a validator group's commission based on the previously queued update
    */
-  updateCommission: () => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'updateCommission'
-  )
+  updateCommission = () => this.buildTx('updateCommission', [])
 
   /**
    * Returns the Locked Gold requirements for validators.
@@ -507,19 +475,15 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
    *   the validator signer.
    * @param ecdsaPublicKey The ECDSA public key that the validator is using for consensus. 64 bytes.
    */
-  registerValidator: (ecdsaPublicKey: string) => CeloTransactionObject<boolean> = proxySend(
-    this.connection,
-    this.contract,
-    'registerValidator',
-    tupleParser(stringToSolidityBytes)
-  )
+  registerValidator = (ecdsaPublicKey: string) =>
+    this.buildTx('registerValidator', [
+      stringToSolidityBytes(ecdsaPublicKey),
+    ]) as unknown as CeloTransactionObject<boolean>
 
-  registerValidatorNoBls: (ecdsaPublicKey: string) => CeloTransactionObject<boolean> = proxySend(
-    this.connection,
-    this.contract,
-    'registerValidatorNoBls',
-    tupleParser(stringToSolidityBytes)
-  )
+  registerValidatorNoBls = (ecdsaPublicKey: string) =>
+    this.buildTx('registerValidatorNoBls', [
+      stringToSolidityBytes(ecdsaPublicKey),
+    ]) as unknown as CeloTransactionObject<boolean>
 
   getEpochNumber = async () => {
     const res = await this.contract.read.getEpochNumber()
@@ -555,7 +519,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
   async registerValidatorGroup(commission: BigNumber): Promise<CeloTransactionObject<boolean>> {
     return this._registerValidatorGroup(
       toFixed(commission).toFixed()
-    ) as CeloTransactionObject<boolean>
+    ) as unknown as CeloTransactionObject<boolean>
   }
 
   /**
@@ -579,39 +543,28 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
    * De-affiliates with the previously affiliated group if present.
    * @param group The validator group with which to affiliate.
    */
-  affiliate: (group: Address) => CeloTransactionObject<boolean> = proxySend(
-    this.connection,
-    this.contract,
-    'affiliate'
-  )
+  affiliate = (group: Address) =>
+    this.buildTx('affiliate', [group]) as unknown as CeloTransactionObject<boolean>
 
   /**
    * De-affiliates a validator, removing it from the group for which it is a member.
    * Fails if the account is not a validator with non-zero affiliation.
    */
 
-  deaffiliate: () => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'deaffiliate'
-  )
+  deaffiliate = () => this.buildTx('deaffiliate', [])
 
   /**
    * Removes a validator from the group for which it is a member.
    * @param validatorAccount The validator to deaffiliate from their affiliated validator group.
    */
-  forceDeaffiliateIfValidator: (validatorAccount: string) => CeloTransactionObject<void> =
-    proxySend(this.connection, this.contract, 'forceDeaffiliateIfValidator')
+  forceDeaffiliateIfValidator = (validatorAccount: string) =>
+    this.buildTx('forceDeaffiliateIfValidator', [validatorAccount])
 
   /**
    * Resets a group's slashing multiplier if it has been >= the reset period since
    * the last time the group was slashed.
    */
-  resetSlashingMultiplier: () => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'resetSlashingMultiplier'
-  )
+  resetSlashingMultiplier = () => this.buildTx('resetSlashingMultiplier', [])
 
   /**
    * Adds a member to the end of a validator group's list of members.
@@ -625,9 +578,9 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
       const voteWeight = await election.getTotalVotesForGroup(group)
       const { lesser, greater } = await election.findLesserAndGreaterAfterVote(group, voteWeight)
 
-      return this._addFirstMember(validator, lesser, greater) as CeloTransactionObject<boolean>
+      return this._addFirstMember(validator, lesser, greater) as unknown as CeloTransactionObject<boolean>
     } else {
-      return this._addMember(validator) as CeloTransactionObject<boolean>
+      return this._addMember(validator) as unknown as CeloTransactionObject<boolean>
     }
   }
 
@@ -637,11 +590,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
    *
    * @param validator The Validator to remove from the group
    */
-  removeMember: (validator: string) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'removeMember'
-  )
+  removeMember = (validator: string) => this.buildTx('removeMember', [validator])
 
   /**
    * Reorders a member within a validator group.

@@ -8,11 +8,8 @@ import { hashMessageWithPrefix, signedMessageToPublicKey } from '@celo/utils/lib
 import BigNumber from 'bignumber.js'
 import { flatten } from 'fp-ts/lib/Array'
 import {
-  proxySend,
   secondsToDurationString,
-  stringIdentity,
   stringToSolidityBytes,
-  tupleParser,
   unixSecondsTimestampToDateString,
   valueToBigNumber,
   valueToInt,
@@ -296,11 +293,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
    * Revoke a Release schedule
    * @return A CeloTransactionObject
    */
-  revokeReleasing: () => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'revoke'
-  )
+  revokeReleasing = () => this.buildTx('revoke', [])
 
   /**
    * Revoke a vesting CELO schedule from the contract's beneficiary.
@@ -312,40 +305,22 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
    * Refund `refundAddress` and `beneficiary` after the ReleaseGold schedule has been revoked.
    * @return A CeloTransactionObject
    */
-  refundAndFinalize: () => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'refundAndFinalize'
-  )
+  refundAndFinalize = () => this.buildTx('refundAndFinalize', [])
 
   /**
    * Locks gold to be used for voting.
    * @param value The amount of gold to lock
    */
-  lockGold: (value: BigNumber.Value) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'lockGold',
-    tupleParser(valueToString)
-  )
+  lockGold = (value: BigNumber.Value) => this.buildTx('lockGold', [valueToString(value)])
 
-  transfer: (to: Address, value: BigNumber.Value) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'transfer',
-    tupleParser(stringIdentity, valueToString)
-  )
+  transfer = (to: Address, value: BigNumber.Value) =>
+    this.buildTx('transfer', [to, valueToString(value)])
 
   /**
    * Unlocks gold that becomes withdrawable after the unlocking period.
    * @param value The amount of gold to unlock
    */
-  unlockGold: (value: BigNumber.Value) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'unlockGold',
-    tupleParser(valueToString)
-  )
+  unlockGold = (value: BigNumber.Value) => this.buildTx('unlockGold', [valueToString(value)])
 
   async unlockAllGold() {
     const lockedGold = await this.contracts.getLockedGold()
@@ -392,43 +367,26 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
    * @param index The index of the pending withdrawal to relock from.
    * @param value The value to relock from the specified pending withdrawal.
    */
-  _relockGold: (index: number, value: BigNumber.Value) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'relockGold',
-    tupleParser(valueToString, valueToString)
-  )
+  _relockGold = (index: number, value: BigNumber.Value) =>
+    this.buildTx('relockGold', [valueToString(index), valueToString(value)])
 
   /**
    * Withdraw gold in the ReleaseGold instance that has been unlocked but not withdrawn.
    * @param index The index of the pending locked gold withdrawal
    */
-  withdrawLockedGold: (index: BigNumber.Value) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'withdrawLockedGold',
-    tupleParser(valueToString)
-  )
+  withdrawLockedGold = (index: BigNumber.Value) =>
+    this.buildTx('withdrawLockedGold', [valueToString(index)])
 
   /**
    * Transfer released gold from the ReleaseGold instance back to beneficiary.
    * @param value The requested gold amount
    */
-  withdraw: (value: BigNumber.Value) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'withdraw',
-    tupleParser(valueToString)
-  )
+  withdraw = (value: BigNumber.Value) => this.buildTx('withdraw', [valueToString(value)])
 
   /**
    * Beneficiary creates an account on behalf of the ReleaseGold contract.
    */
-  createAccount: () => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'createAccount'
-  )
+  createAccount = () => this.buildTx('createAccount', [])
 
   /**
    * Beneficiary creates an account on behalf of the ReleaseGold contract.
@@ -436,31 +394,20 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
    * @param dataEncryptionKey The key to set
    * @param walletAddress The address to set
    */
-  setAccount: (
-    name: string,
-    dataEncryptionKey: string,
-    walletAddress: string
-  ) => CeloTransactionObject<void> = proxySend(this.connection, this.contract, 'setAccount')
+  setAccount = (name: string, dataEncryptionKey: string, walletAddress: string) =>
+    this.buildTx('setAccount', [name, dataEncryptionKey, walletAddress])
 
   /**
    * Sets the name for the account
    * @param name The name to set
    */
-  setAccountName: (name: string) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'setAccountName'
-  )
+  setAccountName = (name: string) => this.buildTx('setAccountName', [name])
 
   /**
    * Sets the metadataURL for the account
    * @param metadataURL The url to set
    */
-  setAccountMetadataURL: (url: string) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'setAccountMetadataURL'
-  )
+  setAccountMetadataURL = (url: string) => this.buildTx('setAccountMetadataURL', [url])
 
   /**
    * Sets the wallet address for the account
@@ -469,63 +416,44 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
    * @param r The output of the ECDSA signature
    * @param s The output of the ECDSA signature
    */
-  setAccountWalletAddress: (
+  setAccountWalletAddress = (
     walletAddress: string,
     v: number | string,
     r: string | number[],
     s: string | number[]
-  ) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'setAccountWalletAddress'
-  )
+  ) => this.buildTx('setAccountWalletAddress', [walletAddress, v, r, s])
 
   /**
    * Sets the data encryption of the account
    * @param dataEncryptionKey The key to set
    */
-  setAccountDataEncryptionKey: (dataEncryptionKey: string) => CeloTransactionObject<void> =
-    proxySend(this.connection, this.contract, 'setAccountDataEncryptionKey')
+  setAccountDataEncryptionKey = (dataEncryptionKey: string) =>
+    this.buildTx('setAccountDataEncryptionKey', [dataEncryptionKey])
 
   /**
    * Sets the contract's liquidity provision to true
    */
-  setLiquidityProvision: () => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'setLiquidityProvision'
-  )
+  setLiquidityProvision = () => this.buildTx('setLiquidityProvision', [])
 
   /**
    * Sets the contract's `canExpire` field to `_canExpire`
    * @param _canExpire If the contract can expire `EXPIRATION_TIME` after the release schedule finishes.
    */
-  setCanExpire: (canExpire: boolean) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'setCanExpire'
-  )
+  setCanExpire = (canExpire: boolean) => this.buildTx('setCanExpire', [canExpire])
 
   /**
    * Sets the contract's max distribution
    */
-  setMaxDistribution: (distributionRatio: number | string) => CeloTransactionObject<void> =
-    proxySend(this.connection, this.contract, 'setMaxDistribution')
+  setMaxDistribution = (distributionRatio: number | string) =>
+    this.buildTx('setMaxDistribution', [distributionRatio])
 
   /**
    * Sets the contract's beneficiary
    */
-  setBeneficiary: (beneficiary: string) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'setBeneficiary'
-  )
+  setBeneficiary = (beneficiary: string) => this.buildTx('setBeneficiary', [beneficiary])
 
-  private _authorizeVoteSigner: (...args: any[]) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'authorizeVoteSigner'
-  )
+  private _authorizeVoteSigner = (...args: any[]) =>
+    this.buildTx('authorizeVoteSigner', args)
 
   /**
    * Authorizes an address to sign votes on behalf of the account.
@@ -545,14 +473,11 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
     )
   }
 
-  private _authorizeValidatorSignerWithPublicKey: (...args: any[]) => CeloTransactionObject<void> =
-    proxySend(this.connection, this.contract, 'authorizeValidatorSignerWithPublicKey')
+  private _authorizeValidatorSignerWithPublicKey = (...args: any[]) =>
+    this.buildTx('authorizeValidatorSignerWithPublicKey', args)
 
-  private _authorizeValidatorSigner: (...args: any[]) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'authorizeValidatorSigner'
-  )
+  private _authorizeValidatorSigner = (...args: any[]) =>
+    this.buildTx('authorizeValidatorSigner', args)
 
   /**
    * Authorizes an address to sign validation messages on behalf of the account.
@@ -633,11 +558,8 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
     )
   }
 
-  private _authorizeAttestationSigner: (...args: any[]) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'authorizeAttestationSigner'
-  )
+  private _authorizeAttestationSigner = (...args: any[]) =>
+    this.buildTx('authorizeAttestationSigner', args)
 
   /**
    * Authorizes an address to sign attestation messages on behalf of the account.
@@ -657,11 +579,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
     )
   }
 
-  private _revokePending: (...args: any[]) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'revokePending'
-  )
+  private _revokePending = (...args: any[]) => this.buildTx('revokePending', args)
 
   /**
    * Revokes pending votes
@@ -694,11 +612,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
   revokePendingVotes = (group: Address, value: BigNumber) =>
     this.revokePending(this.address, group, value)
 
-  private _revokeActive: (...args: any[]) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'revokeActive'
-  )
+  private _revokeActive = (...args: any[]) => this.buildTx('revokeActive', args)
 
   /**
    * Revokes active votes

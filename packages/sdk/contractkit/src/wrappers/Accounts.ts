@@ -14,7 +14,6 @@ import type BN from 'bn.js' // just the types
 import { getParsedSignatureOfAddress } from '../utils/getParsedSignatureOfAddress'
 import { newContractVersion } from '../versions'
 import {
-  proxySend,
   solidityBytesToString,
   stringToSolidityBytes,
   toViemAddress,
@@ -42,11 +41,7 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
   /**
    * Creates an account.
    */
-  createAccount: () => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'createAccount'
-  )
+  createAccount = () => this.buildTx('createAccount', [])
 
   /**
    * Returns the attestation signer for the specified account.
@@ -152,11 +147,8 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     }
   }
 
-  private _authorizeAttestationSigner: (...args: any[]) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'authorizeAttestationSigner'
-  )
+  private _authorizeAttestationSigner = (...args: any[]) =>
+    this.buildTx('authorizeAttestationSigner', args)
 
   /**
    * Authorize an attestation signing key on behalf of this account to another address.
@@ -176,11 +168,8 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     )
   }
 
-  private _authorizeVoteSigner: (...args: any[]) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'authorizeVoteSigner'
-  )
+  private _authorizeVoteSigner = (...args: any[]) =>
+    this.buildTx('authorizeVoteSigner', args)
 
   /**
    * Authorizes an address to sign votes on behalf of the account.
@@ -200,14 +189,11 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     )
   }
 
-  private _authorizeValidatorSignerWithPublicKey: (...args: any[]) => CeloTransactionObject<void> =
-    proxySend(this.connection, this.contract, 'authorizeValidatorSignerWithPublicKey')
+  private _authorizeValidatorSignerWithPublicKey = (...args: any[]) =>
+    this.buildTx('authorizeValidatorSignerWithPublicKey', args)
 
-  private _authorizeValidatorSigner: (...args: any[]) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'authorizeValidatorSigner'
-  )
+  private _authorizeValidatorSigner = (...args: any[]) =>
+    this.buildTx('authorizeValidatorSigner', args)
 
   /**
    * Authorizes an address to sign consensus messages on behalf of the account.
@@ -288,8 +274,8 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     )
   }
 
-  private _authorizeSignerWithSignature: (...args: any[]) => CeloTransactionObject<void> =
-    proxySend(this.connection, this.contract, 'authorizeSignerWithSignature')
+  private _authorizeSignerWithSignature = (...args: any[]) =>
+    this.buildTx('authorizeSignerWithSignature', args)
 
   async authorizeSigner(signer: Address, role: string): Promise<CeloTransactionObject<void>> {
     await this.onlyVersionOrGreater(this.RELEASE_4_VERSION)
@@ -313,11 +299,7 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     return this._authorizeSignerWithSignature(signer, hashedRole, sig.v, sig.r, sig.s)
   }
 
-  private _authorizeSigner: (...args: any[]) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'authorizeSigner'
-  )
+  private _authorizeSigner = (...args: any[]) => this.buildTx('authorizeSigner', args)
 
   async startSignerAuthorization(
     signer: Address,
@@ -327,11 +309,8 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     return this._authorizeSigner(signer, this.keccak256(role))
   }
 
-  private _completeSignerAuthorization: (...args: any[]) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'completeSignerAuthorization'
-  )
+  private _completeSignerAuthorization = (...args: any[]) =>
+    this.buildTx('completeSignerAuthorization', args)
 
   async completeSignerAuthorization(
     account: Address,
@@ -341,11 +320,8 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     return this._completeSignerAuthorization(account, this.keccak256(role))
   }
 
-  private _removeAttestationSigner: (...args: any[]) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'removeAttestationSigner'
-  )
+  private _removeAttestationSigner = (...args: any[]) =>
+    this.buildTx('removeAttestationSigner', args)
 
   /**
    * Removes the currently authorized attestation signer for the account
@@ -406,17 +382,10 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
    * Sets the data encryption of the account
    * @param encryptionKey The key to set
    */
-  setAccountDataEncryptionKey: (encryptionKey: string) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'setAccountDataEncryptionKey'
-  )
+  setAccountDataEncryptionKey = (encryptionKey: string) =>
+    this.buildTx('setAccountDataEncryptionKey', [encryptionKey])
 
-  private _setAccount: (...args: any[]) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'setAccount'
-  )
+  private _setAccount = (...args: any[]) => this.buildTx('setAccount', args)
 
   /**
    * Convenience Setter for the dataEncryptionKey and wallet address for an account
@@ -449,21 +418,13 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
    * Sets the name for the account
    * @param name The name to set
    */
-  setName: (name: string) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'setName'
-  )
+  setName = (name: string) => this.buildTx('setName', [name])
 
   /**
    * Sets the metadataURL for the account
    * @param url The url to set
    */
-  setMetadataURL: (url: string) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'setMetadataURL'
-  )
+  setMetadataURL = (url: string) => this.buildTx('setMetadataURL', [url])
 
   /**
    * Set a validator's payment delegation settings.
@@ -474,18 +435,14 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
    * be greater than 1.
    * @dev Use `deletePaymentDelegation` to unset the payment delegation.
    */
-  setPaymentDelegation: (beneficiary: string, fraction: string) => CeloTransactionObject<void> =
-    proxySend(this.connection, this.contract, 'setPaymentDelegation')
+  setPaymentDelegation = (beneficiary: string, fraction: string) =>
+    this.buildTx('setPaymentDelegation', [beneficiary, fraction])
 
   /**
    * Remove a validator's payment delegation by setting beneficiary and
    * fraction to 0.
    */
-  deletePaymentDelegation: () => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'deletePaymentDelegation'
-  )
+  deletePaymentDelegation = () => this.buildTx('deletePaymentDelegation', [])
 
   /**
    * Get a validator's payment delegation settings.
@@ -500,11 +457,7 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     }
   }
 
-  private _setWalletAddress: (...args: any[]) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'setWalletAddress'
-  )
+  private _setWalletAddress = (...args: any[]) => this.buildTx('setWalletAddress', args)
 
   /**
    * Sets the wallet address for the account
