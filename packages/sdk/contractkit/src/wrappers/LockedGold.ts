@@ -8,9 +8,10 @@ import {
 import { Address, CeloTransactionObject, EventLog } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import {
-  proxyCall,
   proxySend,
   secondsToDurationString,
+  toViemAddress,
+  toViemBigInt,
   tupleParser,
   valueToBigNumber,
   valueToString,
@@ -119,26 +120,20 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<typeof lockedGold
     return new BigNumber(maxDelegateesCountHex, 16)
   }
 
-  private _getAccountTotalDelegatedFraction = proxyCall(
-    this.contract,
-    'getAccountTotalDelegatedFraction',
-    undefined,
-    (res) => res.toString()
-  )
+  private _getAccountTotalDelegatedFraction = async (account: string) => {
+    const res = await this.contract.read.getAccountTotalDelegatedFraction([toViemAddress(account)])
+    return res.toString()
+  }
 
-  private _getTotalDelegatedCelo = proxyCall(
-    this.contract,
-    'totalDelegatedCelo',
-    undefined,
-    (res) => res.toString()
-  )
+  private _getTotalDelegatedCelo = async (account: string) => {
+    const res = await this.contract.read.totalDelegatedCelo([toViemAddress(account)])
+    return res.toString()
+  }
 
-  private _getDelegateesOfDelegator = proxyCall(
-    this.contract,
-    'getDelegateesOfDelegator',
-    undefined,
-    (res) => [...res] as string[]
-  )
+  private _getDelegateesOfDelegator = async (account: string) => {
+    const res = await this.contract.read.getDelegateesOfDelegator([toViemAddress(account)])
+    return [...res] as string[]
+  }
 
   getDelegateInfo = async (account: string): Promise<DelegateInfo> => {
     const totalDelegatedFractionPromise = this._getAccountTotalDelegatedFraction(account)
@@ -226,37 +221,35 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<typeof lockedGold
    * @param account The account.
    * @return The total amount of locked gold for an account.
    */
-  getAccountTotalLockedGold = proxyCall(
-    this.contract,
-    'getAccountTotalLockedGold',
-    undefined,
-    (res) => valueToBigNumber(res.toString())
-  )
+  getAccountTotalLockedGold = async (account: string) => {
+    const res = await this.contract.read.getAccountTotalLockedGold([toViemAddress(account)])
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Returns the total amount of locked gold in the system. Note that this does not include
    *   gold that has been unlocked but not yet withdrawn.
    * @returns The total amount of locked gold in the system.
    */
-  getTotalLockedGold = proxyCall(this.contract, 'getTotalLockedGold', undefined, (res) =>
-    valueToBigNumber(res.toString())
-  )
+  getTotalLockedGold = async () => {
+    const res = await this.contract.read.getTotalLockedGold()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Returns the total amount of non-voting locked gold for an account.
    * @param account The account.
    * @return The total amount of non-voting locked gold for an account.
    */
-  getAccountNonvotingLockedGold = proxyCall(
-    this.contract,
-    'getAccountNonvotingLockedGold',
-    undefined,
-    (res) => valueToBigNumber(res.toString())
-  )
+  getAccountNonvotingLockedGold = async (account: string) => {
+    const res = await this.contract.read.getAccountNonvotingLockedGold([toViemAddress(account)])
+    return valueToBigNumber(res.toString())
+  }
 
-  private _getUnlockingPeriod = proxyCall(this.contract, 'unlockingPeriod', undefined, (res) =>
-    valueToBigNumber(res.toString())
-  )
+  private _getUnlockingPeriod = async () => {
+    const res = await this.contract.read.unlockingPeriod()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Returns current configuration parameters.
@@ -304,12 +297,12 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<typeof lockedGold
    * @param account The address of the account.
    * @return The total amount of governance voting power for an account.
    */
-  private _getAccountTotalGovernanceVotingPower = proxyCall(
-    this.contract,
-    'getAccountTotalGovernanceVotingPower',
-    undefined,
-    (res) => valueToBigNumber(res.toString())
-  )
+  private _getAccountTotalGovernanceVotingPower = async (account: string) => {
+    const res = await this.contract.read.getAccountTotalGovernanceVotingPower([
+      toViemAddress(account),
+    ])
+    return valueToBigNumber(res.toString())
+  }
 
   async getAccountTotalGovernanceVotingPower(account: string) {
     return this._getAccountTotalGovernanceVotingPower(account)
@@ -320,15 +313,13 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<typeof lockedGold
    * @param account The address of the account.
    * @return The value and timestamp for each pending withdrawal.
    */
-  private _getPendingWithdrawals = proxyCall(
-    this.contract,
-    'getPendingWithdrawals',
-    undefined,
-    (res) => ({
+  private _getPendingWithdrawals = async (account: string) => {
+    const res = await this.contract.read.getPendingWithdrawals([toViemAddress(account)])
+    return {
       0: [...res[0]].map((v) => v.toString()),
       1: [...res[1]].map((v) => v.toString()),
-    })
-  )
+    }
+  }
 
   async getPendingWithdrawals(account: string) {
     const withdrawals = await this._getPendingWithdrawals(account)
@@ -349,15 +340,16 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<typeof lockedGold
    * @return The value of the pending withdrawal.
    * @return The timestamp of the pending withdrawal.
    */
-  private _getPendingWithdrawal = proxyCall(
-    this.contract,
-    'getPendingWithdrawal',
-    undefined,
-    (res) => ({
+  private _getPendingWithdrawal = async (account: string, index: number) => {
+    const res = await this.contract.read.getPendingWithdrawal([
+      toViemAddress(account),
+      toViemBigInt(index),
+    ])
+    return {
       0: res[0].toString(),
       1: res[1].toString(),
-    })
-  )
+    }
+  }
 
   async getPendingWithdrawal(account: string, index: number) {
     const response = await this._getPendingWithdrawal(account, index)
@@ -457,12 +449,10 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<typeof lockedGold
     return this._getTotalPendingWithdrawalsCount(account)
   }
 
-  _getTotalPendingWithdrawalsCount = proxyCall(
-    this.contract,
-    'getTotalPendingWithdrawalsCount',
-    undefined,
-    (res) => valueToBigNumber(res.toString())
-  )
+  _getTotalPendingWithdrawalsCount = async (account: string) => {
+    const res = await this.contract.read.getTotalPendingWithdrawalsCount([toViemAddress(account)])
+    return valueToBigNumber(res.toString())
+  }
 }
 
 export type LockedGoldWrapperType = LockedGoldWrapper

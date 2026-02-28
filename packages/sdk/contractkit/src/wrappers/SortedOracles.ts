@@ -1,6 +1,12 @@
 import { sortedOraclesABI } from '@celo/abis'
 import { eqAddress, NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
-import { Address, CeloTransactionObject, CeloContract, Connection, toTransactionObject } from '@celo/connect'
+import {
+  Address,
+  CeloTransactionObject,
+  CeloContract,
+  Connection,
+  toTransactionObject,
+} from '@celo/connect'
 import { isValidAddress } from '@celo/utils/lib/address'
 import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
@@ -9,9 +15,9 @@ import { CeloContract as CeloContractEnum, StableTokenContract } from '../base'
 import { isStableTokenContract, StableToken, stableTokenInfos } from '../celo-tokens'
 import {
   BaseWrapper,
-  proxyCall,
   proxySend,
   secondsToDurationString,
+  toViemAddress,
   valueToBigNumber,
   valueToFrac,
   valueToInt,
@@ -64,9 +70,10 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
     super(connection, contract)
   }
 
-  private _numRates = proxyCall(this.contract, 'numRates', undefined, (res) =>
-    valueToInt(res.toString())
-  )
+  private _numRates = async (target: string): Promise<number> => {
+    const res = await this.contract.read.numRates([toViemAddress(target)])
+    return valueToInt(res.toString())
+  }
 
   /**
    * Gets the number of rates that have been reported for the given target
@@ -78,10 +85,13 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
     return this._numRates(identifier)
   }
 
-  private _medianRate = proxyCall(this.contract, 'medianRate', undefined, (res) => ({
-    0: res[0].toString(),
-    1: res[1].toString(),
-  }))
+  private _medianRate = async (target: string) => {
+    const res = await this.contract.read.medianRate([toViemAddress(target)])
+    return {
+      0: res[0].toString(),
+      1: res[1].toString(),
+    }
+  }
 
   /**
    * Returns the median rate for the given target
@@ -97,7 +107,9 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
     }
   }
 
-  private _isOracle: (...args: any[]) => Promise<boolean> = proxyCall(this.contract, 'isOracle')
+  private _isOracle = async (target: string, oracle: string): Promise<boolean> => {
+    return this.contract.read.isOracle([toViemAddress(target), toViemAddress(oracle)])
+  }
 
   /**
    * Checks if the given address is whitelisted as an oracle for the target
@@ -110,12 +122,10 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
     return this._isOracle(identifier, oracle)
   }
 
-  private _getOracles = proxyCall(
-    this.contract,
-    'getOracles',
-    undefined,
-    (res) => [...res] as string[]
-  )
+  private _getOracles = async (target: string) => {
+    const res = await this.contract.read.getOracles([toViemAddress(target)])
+    return [...res] as string[]
+  }
 
   /**
    * Returns the list of whitelisted oracles for a given target
@@ -131,16 +141,15 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
    * Returns the report expiry parameter.
    * @returns Current report expiry.
    */
-  reportExpirySeconds = proxyCall(this.contract, 'reportExpirySeconds', undefined, (res) =>
-    valueToBigNumber(res.toString())
-  )
+  reportExpirySeconds = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.reportExpirySeconds()
+    return valueToBigNumber(res.toString())
+  }
 
-  private _getTokenReportExpirySeconds = proxyCall(
-    this.contract,
-    'getTokenReportExpirySeconds',
-    undefined,
-    (res) => valueToBigNumber(res.toString())
-  )
+  private _getTokenReportExpirySeconds = async (target: string): Promise<BigNumber> => {
+    const res = await this.contract.read.getTokenReportExpirySeconds([toViemAddress(target)])
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Returns the expiry for the target if exists, if not the default.
@@ -152,8 +161,10 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
     return this._getTokenReportExpirySeconds(identifier)
   }
 
-  private _isOldestReportExpired: (...args: any[]) => Promise<{ 0: boolean; 1: Address }> =
-    proxyCall(this.contract, 'isOldestReportExpired')
+  private _isOldestReportExpired = async (target: string): Promise<{ 0: boolean; 1: Address }> => {
+    const res = await this.contract.read.isOldestReportExpired([toViemAddress(target)])
+    return { 0: res[0], 1: res[1] as Address }
+  }
 
   /**
    * Checks if the oldest report for a given target is expired
@@ -257,13 +268,17 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
    * Helper function to get the rates for StableToken, by passing the address
    * of StableToken to `getRates`.
    */
-  getStableTokenRates = async (): Promise<OracleRate[]> => this.getRates(CeloContractEnum.StableToken)
+  getStableTokenRates = async (): Promise<OracleRate[]> =>
+    this.getRates(CeloContractEnum.StableToken)
 
-  private _getRates = proxyCall(this.contract, 'getRates', undefined, (res) => ({
-    0: [...res[0]] as string[],
-    1: [...res[1]].map((v) => v.toString()),
-    2: [...res[2]].map((v) => v.toString()),
-  }))
+  private _getRates = async (target: string) => {
+    const res = await this.contract.read.getRates([toViemAddress(target)])
+    return {
+      0: [...res[0]] as string[],
+      1: [...res[1]].map((v) => v.toString()),
+      2: [...res[2]].map((v) => v.toString()),
+    }
+  }
 
   /**
    * Gets all elements from the doubly linked list.
@@ -285,11 +300,14 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
     return rates
   }
 
-  private _getTimestamps = proxyCall(this.contract, 'getTimestamps', undefined, (res) => ({
-    0: [...res[0]] as string[],
-    1: [...res[1]].map((v) => v.toString()),
-    2: [...res[2]].map((v) => v.toString()),
-  }))
+  private _getTimestamps = async (target: string) => {
+    const res = await this.contract.read.getTimestamps([toViemAddress(target)])
+    return {
+      0: [...res[0]] as string[],
+      1: [...res[1]].map((v) => v.toString()),
+      2: [...res[2]].map((v) => v.toString()),
+    }
+  }
 
   /**
    * Gets all elements from the doubly linked list.

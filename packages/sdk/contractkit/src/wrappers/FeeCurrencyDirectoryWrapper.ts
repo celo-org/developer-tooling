@@ -24,7 +24,10 @@ export class FeeCurrencyDirectoryWrapper extends AbstractFeeCurrencyWrapper {
   }
 
   getExchangeRate = async (token: StrongAddress) => {
-    const res = (await this.contract.read.getExchangeRate([toViemAddress(token)])) as readonly [bigint, bigint]
+    const res = (await this.contract.read.getExchangeRate([toViemAddress(token)])) as readonly [
+      bigint,
+      bigint,
+    ]
     return {
       numerator: valueToBigNumber(res[0].toString()),
       denominator: valueToBigNumber(res[1].toString()),
@@ -32,7 +35,10 @@ export class FeeCurrencyDirectoryWrapper extends AbstractFeeCurrencyWrapper {
   }
 
   getCurrencyConfig = async (token: StrongAddress) => {
-    const res = (await this.contract.read.getCurrencyConfig([toViemAddress(token)])) as { oracle: string; intrinsicGas: bigint }
+    const res = (await this.contract.read.getCurrencyConfig([toViemAddress(token)])) as {
+      oracle: string
+      intrinsicGas: bigint
+    }
     return {
       oracle: res.oracle as StrongAddress,
       intrinsicGas: valueToBigNumber(res.intrinsicGas.toString()),

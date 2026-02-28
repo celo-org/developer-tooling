@@ -3,7 +3,8 @@ import { Address, CeloTransactionObject, CeloTxObject } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import {
   BaseWrapper,
-  proxyCall,
+  toViemAddress,
+  toViemBigInt,
   proxySend,
   stringIdentity,
   stringToSolidityBytes,
@@ -59,23 +60,35 @@ export class MultiSigWrapper extends BaseWrapper<typeof multiSigABI> {
     return this._submitTransaction(destination, value, data)
   }
 
-  private _getTransactionCountRaw = proxyCall(
-    this.contract,
-    'getTransactionCount',
-    undefined,
-    (res) => Number(res)
-  )
+  private _getTransactionCountRaw = async (pending: boolean, executed: boolean) => {
+    const res = await this.contract.read.getTransactionCount([pending, executed])
+    return Number(res)
+  }
 
-  private _getTransactionIds = proxyCall(this.contract, 'getTransactionIds', undefined, (res) =>
-    [...res].map((v) => v.toString())
-  )
+  private _getTransactionIds = async (
+    from: number,
+    to: number,
+    pending: boolean,
+    executed: boolean
+  ) => {
+    const res = await this.contract.read.getTransactionIds([
+      toViemBigInt(from),
+      toViemBigInt(to),
+      pending,
+      executed,
+    ])
+    return [...res].map((v) => v.toString())
+  }
 
-  private _getTransactionRaw = proxyCall(this.contract, 'transactions', undefined, (res) => ({
-    destination: res[0] as string,
-    value: res[1].toString(),
-    data: res[2] as string,
-    executed: res[3] as boolean,
-  }))
+  private _getTransactionRaw = async (i: number | string) => {
+    const res = await this.contract.read.transactions([toViemBigInt(i)])
+    return {
+      destination: res[0] as string,
+      value: res[1].toString(),
+      data: res[2] as string,
+      executed: res[3] as boolean,
+    }
+  }
 
   private _confirmTransaction: (...args: any[]) => CeloTransactionObject<void> = proxySend(
     this.connection,
@@ -101,20 +114,29 @@ export class MultiSigWrapper extends BaseWrapper<typeof multiSigABI> {
     return this._submitTransaction(destination, value, data)
   }
 
-  isOwner: (owner: Address) => Promise<boolean> = proxyCall(this.contract, 'isOwner')
-  getOwners = proxyCall(this.contract, 'getOwners', undefined, (res) => [...res] as string[])
-  getRequired = proxyCall(this.contract, 'required', undefined, (res) =>
-    valueToBigNumber(res.toString())
-  )
-  getInternalRequired = proxyCall(this.contract, 'internalRequired', undefined, (res) =>
-    valueToBigNumber(res.toString())
-  )
-  totalTransactionCount = proxyCall(this.contract, 'transactionCount', undefined, (res) =>
-    valueToInt(res.toString())
-  )
-  getTransactionCount = proxyCall(this.contract, 'getTransactionCount', undefined, (res) =>
-    valueToInt(res.toString())
-  )
+  isOwner: (owner: Address) => Promise<boolean> = async (owner) => {
+    return this.contract.read.isOwner([toViemAddress(owner)])
+  }
+  getOwners = async () => {
+    const res = await this.contract.read.getOwners()
+    return [...res] as string[]
+  }
+  getRequired = async () => {
+    const res = await this.contract.read.required()
+    return valueToBigNumber(res.toString())
+  }
+  getInternalRequired = async () => {
+    const res = await this.contract.read.internalRequired()
+    return valueToBigNumber(res.toString())
+  }
+  totalTransactionCount = async () => {
+    const res = await this.contract.read.transactionCount()
+    return valueToInt(res.toString())
+  }
+  getTransactionCount = async (pending: boolean, executed: boolean) => {
+    const res = await this.contract.read.getTransactionCount([pending, executed])
+    return valueToInt(res.toString())
+  }
   replaceOwner: (owner: Address, newOwner: Address) => CeloTransactionObject<void> = proxySend(
     this.connection,
     this.contract,
@@ -178,7 +200,9 @@ export class MultiSigWrapper extends BaseWrapper<typeof multiSigABI> {
     }
   }
 
-  private _getConfirmation = proxyCall(this.contract, 'confirmations')
+  private _getConfirmation = async (txId: number, owner: string) => {
+    return this.contract.read.confirmations([toViemBigInt(txId), toViemAddress(owner)])
+  }
 
   /*
    * Returns array of signer addresses which have confirmed a transaction

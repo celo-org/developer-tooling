@@ -2,7 +2,7 @@ import { epochManagerABI } from '@celo/abis'
 import { NULL_ADDRESS } from '@celo/base'
 import { CeloTransactionObject, CeloContract } from '@celo/connect'
 import BigNumber from 'bignumber.js'
-import { proxyCall, proxySend, valueToInt } from './BaseWrapper'
+import { proxySend, toViemAddress, toViemBigInt, valueToInt } from './BaseWrapper'
 import { BaseWrapperForGoverning } from './BaseWrapperForGoverning'
 import { ValidatorGroupVote } from './Election'
 
@@ -32,61 +32,64 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<typeof epochMan
   public get _contract(): CeloContract<typeof epochManagerABI> {
     return this.contract
   }
-  epochDuration = proxyCall(this.contract, 'epochDuration', undefined, (res) =>
-    valueToInt(res.toString())
-  )
-  firstKnownEpoch = proxyCall(this.contract, 'firstKnownEpoch', undefined, (res) =>
-    valueToInt(res.toString())
-  )
-  getCurrentEpochNumber = proxyCall(this.contract, 'getCurrentEpochNumber', undefined, (res) =>
-    valueToInt(res.toString())
-  )
-  getFirstBlockAtEpoch = proxyCall(this.contract, 'getFirstBlockAtEpoch', undefined, (res) =>
-    valueToInt(res.toString())
-  )
-  getLastBlockAtEpoch = proxyCall(this.contract, 'getLastBlockAtEpoch', undefined, (res) =>
-    valueToInt(res.toString())
-  )
-  getEpochNumberOfBlock = proxyCall(this.contract, 'getEpochNumberOfBlock', undefined, (res) =>
-    valueToInt(res.toString())
-  )
-  processedGroups = proxyCall(this.contract, 'processedGroups', undefined, (res) => res.toString())
-  isOnEpochProcess: () => Promise<boolean> = proxyCall(this.contract, 'isOnEpochProcess')
-  isEpochProcessingStarted: () => Promise<boolean> = proxyCall(
-    this.contract,
-    'isEpochProcessingStarted'
-  )
-  isIndividualProcessing: () => Promise<boolean> = proxyCall(
-    this.contract,
-    'isIndividualProcessing'
-  )
-  isTimeForNextEpoch: () => Promise<boolean> = proxyCall(this.contract, 'isTimeForNextEpoch')
-  getElectedAccounts: () => Promise<string[]> = proxyCall(
-    this.contract,
-    'getElectedAccounts',
-    undefined,
-    (res) => [...res] as string[]
-  )
-  getElectedSigners: () => Promise<string[]> = proxyCall(
-    this.contract,
-    'getElectedSigners',
-    undefined,
-    (res) => [...res] as string[]
-  )
-  getEpochProcessingStatus = proxyCall(
-    this.contract,
-    'epochProcessing',
-    undefined,
-    (result): EpochProcessState => {
-      return {
-        status: Number(result[0]),
-        perValidatorReward: new BigNumber(result[1].toString()),
-        totalRewardsVoter: new BigNumber(result[2].toString()),
-        totalRewardsCommunity: new BigNumber(result[3].toString()),
-        totalRewardsCarbonFund: new BigNumber(result[4].toString()),
-      }
+  epochDuration = async () => {
+    const res = await this.contract.read.epochDuration()
+    return valueToInt(res.toString())
+  }
+  firstKnownEpoch = async () => {
+    const res = await this.contract.read.firstKnownEpoch()
+    return valueToInt(res.toString())
+  }
+  getCurrentEpochNumber = async () => {
+    const res = await this.contract.read.getCurrentEpochNumber()
+    return valueToInt(res.toString())
+  }
+  getFirstBlockAtEpoch = async (epoch: BigNumber.Value) => {
+    const res = await this.contract.read.getFirstBlockAtEpoch([toViemBigInt(epoch)])
+    return valueToInt(res.toString())
+  }
+  getLastBlockAtEpoch = async (epoch: BigNumber.Value) => {
+    const res = await this.contract.read.getLastBlockAtEpoch([toViemBigInt(epoch)])
+    return valueToInt(res.toString())
+  }
+  getEpochNumberOfBlock = async (blockNumber: BigNumber.Value) => {
+    const res = await this.contract.read.getEpochNumberOfBlock([toViemBigInt(blockNumber)])
+    return valueToInt(res.toString())
+  }
+  processedGroups = async (group: string) => {
+    const res = await this.contract.read.processedGroups([toViemAddress(group)])
+    return res.toString()
+  }
+  isOnEpochProcess = async (): Promise<boolean> => {
+    return this.contract.read.isOnEpochProcess()
+  }
+  isEpochProcessingStarted = async (): Promise<boolean> => {
+    return this.contract.read.isEpochProcessingStarted()
+  }
+  isIndividualProcessing = async (): Promise<boolean> => {
+    return this.contract.read.isIndividualProcessing()
+  }
+  isTimeForNextEpoch = async (): Promise<boolean> => {
+    return this.contract.read.isTimeForNextEpoch()
+  }
+  getElectedAccounts = async (): Promise<string[]> => {
+    const res = await this.contract.read.getElectedAccounts()
+    return [...res] as string[]
+  }
+  getElectedSigners = async (): Promise<string[]> => {
+    const res = await this.contract.read.getElectedSigners()
+    return [...res] as string[]
+  }
+  getEpochProcessingStatus = async (): Promise<EpochProcessState> => {
+    const result = await this.contract.read.epochProcessing()
+    return {
+      status: Number(result[0]),
+      perValidatorReward: new BigNumber(result[1].toString()),
+      totalRewardsVoter: new BigNumber(result[2].toString()),
+      totalRewardsCommunity: new BigNumber(result[3].toString()),
+      totalRewardsCarbonFund: new BigNumber(result[4].toString()),
     }
-  )
+  }
 
   startNextEpochProcess: () => CeloTransactionObject<void> = proxySend(
     this.connection,

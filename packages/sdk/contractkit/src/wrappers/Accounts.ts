@@ -14,10 +14,10 @@ import type BN from 'bn.js' // just the types
 import { getParsedSignatureOfAddress } from '../utils/getParsedSignatureOfAddress'
 import { newContractVersion } from '../versions'
 import {
-  proxyCall,
   proxySend,
   solidityBytesToString,
   stringToSolidityBytes,
+  toViemAddress,
 } from '../wrappers/BaseWrapper'
 import { BaseWrapper } from './BaseWrapper'
 interface AccountSummary {
@@ -53,59 +53,47 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
    * @param account The address of the account.
    * @return The address with which the account can vote.
    */
-  getAttestationSigner: (account: string) => Promise<StrongAddress> = proxyCall(
-    this.contract,
-    'getAttestationSigner'
-  )
+  getAttestationSigner = async (account: string): Promise<StrongAddress> =>
+    this.contract.read.getAttestationSigner([toViemAddress(account)])
 
   /**
    * Returns if the account has authorized an attestation signer
    * @param account The address of the account.
    * @return If the account has authorized an attestation signer
    */
-  hasAuthorizedAttestationSigner: (account: string) => Promise<boolean> = proxyCall(
-    this.contract,
-    'hasAuthorizedAttestationSigner'
-  )
+  hasAuthorizedAttestationSigner = async (account: string): Promise<boolean> =>
+    this.contract.read.hasAuthorizedAttestationSigner([toViemAddress(account)])
 
   /**
    * Returns the vote signer for the specified account.
    * @param account The address of the account.
    * @return The address with which the account can vote.
    */
-  getVoteSigner: (account: string) => Promise<StrongAddress> = proxyCall(
-    this.contract,
-    'getVoteSigner'
-  )
+  getVoteSigner = async (account: string): Promise<StrongAddress> =>
+    this.contract.read.getVoteSigner([toViemAddress(account)])
   /**
    * Returns the validator signer for the specified account.
    * @param account The address of the account.
    * @return The address with which the account can register a validator or group.
    */
-  getValidatorSigner: (account: string) => Promise<StrongAddress> = proxyCall(
-    this.contract,
-    'getValidatorSigner'
-  )
+  getValidatorSigner = async (account: string): Promise<StrongAddress> =>
+    this.contract.read.getValidatorSigner([toViemAddress(account)])
 
   /**
    * Returns the account address given the signer for voting
    * @param signer Address that is authorized to sign the tx as voter
    * @return The Account address
    */
-  voteSignerToAccount: (signer: Address) => Promise<StrongAddress> = proxyCall(
-    this.contract,
-    'voteSignerToAccount'
-  )
+  voteSignerToAccount = async (signer: Address): Promise<StrongAddress> =>
+    this.contract.read.voteSignerToAccount([toViemAddress(signer)])
 
   /**
    * Returns the account address given the signer for validating
    * @param signer Address that is authorized to sign the tx as validator
    * @return The Account address
    */
-  validatorSignerToAccount: (signer: Address) => Promise<StrongAddress> = proxyCall(
-    this.contract,
-    'validatorSignerToAccount'
-  )
+  validatorSignerToAccount = async (signer: Address): Promise<StrongAddress> =>
+    this.contract.read.validatorSignerToAccount([toViemAddress(signer)])
 
   /**
    * Returns the account associated with `signer`.
@@ -113,24 +101,24 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
    * @dev Fails if the `signer` is not an account or previously authorized signer.
    * @return The associated account.
    */
-  signerToAccount: (signer: Address) => Promise<StrongAddress> = proxyCall(
-    this.contract,
-    'signerToAccount'
-  )
+  signerToAccount = async (signer: Address): Promise<StrongAddress> =>
+    this.contract.read.signerToAccount([toViemAddress(signer)])
 
   /**
    * Check if an account already exists.
    * @param account The address of the account
    * @return Returns `true` if account exists. Returns `false` otherwise.
    */
-  isAccount: (account: string) => Promise<boolean> = proxyCall(this.contract, 'isAccount')
+  isAccount = async (account: string): Promise<boolean> =>
+    this.contract.read.isAccount([toViemAddress(account)])
 
   /**
    * Check if an address is a signer address
    * @param address The address of the account
    * @return Returns `true` if account exists. Returns `false` otherwise.
    */
-  isSigner: (address: string) => Promise<boolean> = proxyCall(this.contract, 'isAuthorizedSigner')
+  isSigner = async (address: string): Promise<boolean> =>
+    this.contract.read.isAuthorizedSigner([toViemAddress(address)])
 
   getCurrentSigners(address: string): Promise<string[]> {
     return Promise.all([
@@ -384,7 +372,7 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
    * @param account Account
    * @param blockNumber Height of result, defaults to tip.
    */
-  private _getName = proxyCall(this.contract, 'getName')
+  private _getName = async (account: string) => this.contract.read.getName([toViemAddress(account)])
 
   async getName(account: Address, _blockNumber?: number): Promise<string> {
     // @ts-ignore: Expected 0-1 arguments, but got 2
@@ -395,24 +383,24 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
    * Returns the set data encryption key for the account
    * @param account Account
    */
-  getDataEncryptionKey = proxyCall(this.contract, 'getDataEncryptionKey', undefined, (res) =>
-    solidityBytesToString(res)
-  )
+  getDataEncryptionKey = async (account: string) => {
+    const res = await this.contract.read.getDataEncryptionKey([toViemAddress(account)])
+    return solidityBytesToString(res)
+  }
 
   /**
    * Returns the set wallet address for the account
    * @param account Account
    */
-  getWalletAddress: (account: string) => Promise<string> = proxyCall(
-    this.contract,
-    'getWalletAddress'
-  )
+  getWalletAddress = async (account: string): Promise<string> =>
+    this.contract.read.getWalletAddress([toViemAddress(account)])
 
   /**
    * Returns the metadataURL for the account
    * @param account Account
    */
-  getMetadataURL: (account: string) => Promise<string> = proxyCall(this.contract, 'getMetadataURL')
+  getMetadataURL = async (account: string): Promise<string> =>
+    this.contract.read.getMetadataURL([toViemAddress(account)])
 
   /**
    * Sets the data encryption of the account
@@ -504,10 +492,13 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
    * @param account Account of the validator.
    * @return Beneficiary address and fraction of payment delegated.
    */
-  getPaymentDelegation = proxyCall(this.contract, 'getPaymentDelegation', undefined, (res) => ({
-    0: res[0] as string,
-    1: res[1].toString(),
-  }))
+  getPaymentDelegation = async (account: string) => {
+    const res = await this.contract.read.getPaymentDelegation([toViemAddress(account)])
+    return {
+      0: res[0] as string,
+      1: res[1].toString(),
+    }
+  }
 
   private _setWalletAddress: (...args: any[]) => CeloTransactionObject<void> = proxySend(
     this.connection,
