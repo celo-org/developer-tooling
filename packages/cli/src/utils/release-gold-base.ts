@@ -37,7 +37,7 @@ export abstract class ReleaseGoldBaseCommand extends BaseCommand {
     if (!this._releaseGoldWrapper) {
       this._releaseGoldWrapper = new ReleaseGoldWrapper(
         kit.connection,
-        kit.connection.getCeloContract(releaseGoldABI as any, await this.contractAddress()),
+        kit.connection.getCeloContract(releaseGoldABI as any, await this.contractAddress()) as any,
         kit.contracts
       )
       // Call arbitrary release gold fn to verify `contractAddress` is a releasegold contract.
