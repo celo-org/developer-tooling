@@ -11,7 +11,7 @@ import {
 } from '@celo/connect'
 import type { AbiItem } from '@celo/connect/lib/abi-types'
 import { viemAbiCoder } from '@celo/connect/lib/viem-abi-coder'
-import type { Abi, ContractFunctionName, ContractFunctionReturnType, PublicClient } from 'viem'
+import type { Abi, ContractFunctionName, PublicClient } from 'viem'
 import { toFunctionHash } from 'viem'
 import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
@@ -301,106 +301,6 @@ export function tupleParser<A0, B0, A1, B1, A2, B2, A3, B3>(
 ): (...args: [A0, A1, A2, A3]) => [B0, B1, B2, B3]
 export function tupleParser(...parsers: Parser<any, any>[]) {
   return (...args: any[]) => zip((parser, input) => parser(input), parsers, args)
-}
-
-/**
- * Creates a proxy to read from a viem-native contract.
- *
- * Typed overloads: when a contract with a const-typed ABI is provided,
- * the function name is constrained to actual ABI function names at compile time.
- *
- * Untyped overloads (below): accept any string for backward compatibility.
- */
-
-// Typed overload: contract with const ABI, function name only
-export function proxyCall<
-  TAbi extends Abi,
-  TFunctionName extends ContractFunctionName<TAbi, 'view' | 'pure'>,
-  InputArgs extends any[],
->(
-  contract: ContractLike<TAbi>,
-  functionName: TFunctionName
-): (...args: InputArgs) => Promise<ContractFunctionReturnType<TAbi, 'view' | 'pure', TFunctionName>>
-
-// Typed overload: contract with const ABI, function name + undefined + output parser
-export function proxyCall<
-  TAbi extends Abi,
-  TFunctionName extends ContractFunctionName<TAbi, 'view' | 'pure'>,
-  InputArgs extends any[],
-  Output,
->(
-  contract: ContractLike<TAbi>,
-  functionName: TFunctionName,
-  parseInputArgs: undefined,
-  parseOutput: (o: ContractFunctionReturnType<TAbi, 'view' | 'pure', TFunctionName>) => Output
-): (...args: InputArgs) => Promise<Output>
-
-// Typed overload: contract with const ABI, function name + input parser
-export function proxyCall<
-  TAbi extends Abi,
-  TFunctionName extends ContractFunctionName<TAbi, 'view' | 'pure'>,
-  InputArgs extends any[],
-  ParsedInputArgs extends any[],
->(
-  contract: ContractLike<TAbi>,
-  functionName: TFunctionName,
-  parseInputArgs: (...args: InputArgs) => ParsedInputArgs
-): (...args: InputArgs) => Promise<ContractFunctionReturnType<TAbi, 'view' | 'pure', TFunctionName>>
-
-// Typed overload: contract with const ABI, function name + input parser + output parser
-export function proxyCall<
-  TAbi extends Abi,
-  TFunctionName extends ContractFunctionName<TAbi, 'view' | 'pure'>,
-  InputArgs extends any[],
-  ParsedInputArgs extends any[],
-  Output,
->(
-  contract: ContractLike<TAbi>,
-  functionName: TFunctionName,
-  parseInputArgs: ((...args: InputArgs) => ParsedInputArgs) | undefined,
-  parseOutput: (o: ContractFunctionReturnType<TAbi, 'view' | 'pure', TFunctionName>) => Output
-): (...args: InputArgs) => Promise<Output>
-
-// Untyped overloads (backward compat): accept any string function name
-// Matches only contracts with default mutable AbiItem[] type parameter
-export function proxyCall<InputArgs extends any[], Output>(
-  contract: ContractLike<AbiItem[]>,
-  functionName: string
-): (...args: InputArgs) => Promise<Output>
-export function proxyCall<InputArgs extends any[], PreParsedOutput, Output>(
-  contract: ContractLike<AbiItem[]>,
-  functionName: string,
-  parseInputArgs: undefined,
-  parseOutput: (o: PreParsedOutput) => Output
-): (...args: InputArgs) => Promise<Output>
-export function proxyCall<InputArgs extends any[], ParsedInputArgs extends any[], Output>(
-  contract: ContractLike<AbiItem[]>,
-  functionName: string,
-  parseInputArgs: (...args: InputArgs) => ParsedInputArgs
-): (...args: InputArgs) => Promise<Output>
-export function proxyCall<
-  InputArgs extends any[],
-  ParsedInputArgs extends any[],
-  PreParsedOutput,
-  Output,
->(
-  contract: ContractLike<AbiItem[]>,
-  functionName: string,
-  parseInputArgs: ((...args: InputArgs) => ParsedInputArgs) | undefined,
-  parseOutput: (o: PreParsedOutput) => Output
-): (...args: InputArgs) => Promise<Output>
-export function proxyCall<
-  InputArgs extends any[],
-  ParsedInputArgs extends any[],
-  PreParsedOutput,
-  Output,
->(
-  contract: ContractLike,
-  functionName: string,
-  parseInputArgs?: ((...args: InputArgs) => ParsedInputArgs) | undefined,
-  parseOutput?: ((o: PreParsedOutput) => Output) | undefined
-): (...args: InputArgs) => Promise<Output | PreParsedOutput> {
-  return proxyCallGenericImpl(contract, functionName, parseInputArgs, parseOutput)
 }
 
 /**
