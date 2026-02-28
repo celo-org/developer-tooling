@@ -2,7 +2,7 @@ import { Flags } from '@oclif/core'
 import chalk from 'chalk'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class VotePartially extends BaseCommand {
@@ -25,6 +25,7 @@ export default class VotePartially extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(VotePartially)
     const signer = res.flags.from
     const id = res.flags.proposalID
@@ -43,16 +44,10 @@ export default class VotePartially extends BaseCommand {
       return
     }
 
-    await displaySendTx(
+    await displayViemTx(
       'voteTx',
-      await governance.votePartially(
-        id,
-        res.flags.yes ?? 0,
-        res.flags.no ?? 0,
-        res.flags.abstain ?? 0
-      ),
-      {},
-      'ProposalPartiallyVoted'
+      governance.votePartially(id, res.flags.yes ?? 0, res.flags.no ?? 0, res.flags.abstain ?? 0),
+      publicClient
     )
   }
 }

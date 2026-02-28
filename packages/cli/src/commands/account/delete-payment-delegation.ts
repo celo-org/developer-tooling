@@ -1,5 +1,5 @@
 import { BaseCommand } from '../../base'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class DeletePaymentDelegation extends BaseCommand {
@@ -19,11 +19,12 @@ export default class DeletePaymentDelegation extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(DeletePaymentDelegation)
     kit.defaultAccount = res.flags.account
     const accounts = await kit.contracts.getAccounts()
 
-    await displaySendTx('deletePaymentDelegation', accounts.deletePaymentDelegation())
+    await displayViemTx('deletePaymentDelegation', accounts.deletePaymentDelegation(), publicClient)
 
     console.log('Deleted payment delegation.')
   }

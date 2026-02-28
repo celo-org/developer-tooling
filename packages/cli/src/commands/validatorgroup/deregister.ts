@@ -1,6 +1,6 @@
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class ValidatorGroupDeRegister extends BaseCommand {
@@ -19,6 +19,7 @@ export default class ValidatorGroupDeRegister extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(ValidatorGroupDeRegister)
 
     const validators = await kit.contracts.getValidators()
@@ -32,6 +33,6 @@ export default class ValidatorGroupDeRegister extends BaseCommand {
       .validatorGroupDeregisterDurationPassed()
       .then((checks) => checks.runChecks())
 
-    await displaySendTx('deregister', await validators.deregisterValidatorGroup(account))
+    await displayViemTx('deregister', validators.deregisterValidatorGroup(account), publicClient)
   }
 }

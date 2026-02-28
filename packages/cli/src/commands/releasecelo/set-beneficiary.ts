@@ -1,7 +1,7 @@
 import { Flags } from '@oclif/core'
 import prompts from 'prompts'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
 
@@ -32,6 +32,7 @@ export default class SetBeneficiary extends ReleaseGoldBaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const { flags } = await this.parse(SetBeneficiary)
     const newBeneficiary = flags.beneficiary as string
 
@@ -55,22 +56,25 @@ export default class SetBeneficiary extends ReleaseGoldBaseCommand {
     }
 
     const currentBeneficiary = await this.releaseGoldWrapper.getBeneficiary()
-    const setBeneficiaryTx = this.releaseGoldWrapper.setBeneficiary(newBeneficiary)
-    const setBeneficiaryMultiSigTx = await releaseGoldMultiSig.submitOrConfirmTransaction(
-      await this.contractAddress(),
-      setBeneficiaryTx.txo
-    )
-    await displaySendTx<any>(
+    const setBeneficiaryData = this.releaseGoldWrapper.encodeFunctionData('setBeneficiary', [
+      newBeneficiary,
+    ])
+    await displayViemTx(
       'setBeneficiary',
-      setBeneficiaryMultiSigTx,
-      { from: flags.from as string },
-      'BeneficiarySet'
+      releaseGoldMultiSig.submitOrConfirmTransaction(
+        await this.contractAddress(),
+        setBeneficiaryData
+      ),
+      publicClient
     )
-    const replaceOwnerTx = releaseGoldMultiSig.replaceOwner(currentBeneficiary, newBeneficiary)
-    const replaceOwnerMultiSigTx = await releaseGoldMultiSig.submitOrConfirmTransaction(
-      releaseGoldMultiSig.address,
-      replaceOwnerTx.txo
+    const replaceOwnerData = releaseGoldMultiSig.encodeFunctionData('replaceOwner', [
+      currentBeneficiary,
+      newBeneficiary,
+    ])
+    await displayViemTx(
+      'replaceMultiSigOwner',
+      releaseGoldMultiSig.submitOrConfirmTransaction(releaseGoldMultiSig.address, replaceOwnerData),
+      publicClient
     )
-    await displaySendTx<any>('replaceMultiSigOwner', replaceOwnerMultiSigTx, { from: flags.from })
   }
 }

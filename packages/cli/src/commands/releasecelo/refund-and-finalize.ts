@@ -1,5 +1,5 @@
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
 
 export default class RefundAndFinalize extends ReleaseGoldBaseCommand {
@@ -16,6 +16,7 @@ export default class RefundAndFinalize extends ReleaseGoldBaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const isRevoked = await this.releaseGoldWrapper.isRevoked()
     const remainingLockedBalance = await this.releaseGoldWrapper.getRemainingLockedBalance()
 
@@ -25,6 +26,10 @@ export default class RefundAndFinalize extends ReleaseGoldBaseCommand {
       .runChecks()
 
     kit.defaultAccount = await this.releaseGoldWrapper.getReleaseOwner()
-    await displaySendTx('refundAndFinalize', await this.releaseGoldWrapper.refundAndFinalize())
+    await displayViemTx(
+      'refundAndFinalize',
+      this.releaseGoldWrapper.refundAndFinalize(),
+      publicClient
+    )
   }
 }

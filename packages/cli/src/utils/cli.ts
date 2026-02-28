@@ -1,11 +1,4 @@
-import {
-  CeloTransactionObject,
-  CeloTx,
-  DecodedParamsObject,
-  EventLog,
-  parseDecodedParams,
-  TransactionResult,
-} from '@celo/connect'
+import { CeloTx } from '@celo/connect'
 import { LockedGoldRequirements } from '@celo/contractkit/lib/wrappers/Validators'
 import { Errors, ux } from '@oclif/core'
 import { TransactionResult as SafeTransactionResult } from '@safe-global/types-kit'
@@ -25,7 +18,6 @@ import {
 
 const CLIError = Errors.CLIError
 
-// TODO: How can we deploy contracts with the Celo provider w/o a CeloTransactionObject?
 export async function displayTx(name: string, txObj: any, tx?: Omit<CeloTx, 'data'>) {
   ux.action.start(`Sending Transaction: ${name}`)
   const result = await txObj.send(tx)
@@ -135,51 +127,6 @@ export async function displayViemTx<const abi extends Abi | undefined = undefine
   } catch (e) {
     ux.action.stop(`failed: ${(e as Error).message}`)
     throw e
-  }
-}
-
-export async function displaySendTx<A>(
-  name: string,
-  txObj: CeloTransactionObject<A>,
-  tx?: Omit<CeloTx, 'data'>,
-  displayEventName?: string | string[]
-) {
-  ux.action.start(`Sending Transaction: ${name}`)
-  try {
-    const txResult = await txObj.send(tx)
-    await innerDisplaySendTx(name, txResult, displayEventName)
-  } catch (e) {
-    ux.action.stop(`failed: ${(e as Error).message}`)
-    throw e
-  }
-}
-
-// to share between displaySendTx and displaySendEthersTxViaCK
-async function innerDisplaySendTx(
-  name: string,
-  txResult: TransactionResult,
-  displayEventName?: string | string[] | undefined
-) {
-  const txHash = await txResult.getHash()
-
-  console.log(chalk`SendTransaction: {red.bold ${name}}`)
-  printValueMap({ txHash })
-
-  const txReceipt = await txResult.waitReceipt()
-  ux.action.stop()
-
-  if (displayEventName && txReceipt.events) {
-    Object.entries(txReceipt.events)
-      .filter(
-        ([eventName]) =>
-          (typeof displayEventName === 'string' && eventName === displayEventName) ||
-          displayEventName.includes(eventName)
-      )
-      .forEach(([eventName, log]) => {
-        const { params } = parseDecodedParams((log as EventLog).returnValues as DecodedParamsObject)
-        console.log(chalk.magenta.bold(`${eventName}:`))
-        printValueMap(params, chalk.magenta)
-      })
   }
 }
 

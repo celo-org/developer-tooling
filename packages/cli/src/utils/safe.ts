@@ -1,5 +1,5 @@
 import { StrongAddress } from '@celo/base'
-import { CeloTransactionObject, type Provider } from '@celo/connect'
+import { type Provider } from '@celo/connect'
 import { CeloProvider } from '@celo/connect/lib/celo-provider'
 import Safe from '@safe-global/protocol-kit'
 import { MetaTransactionData, TransactionResult } from '@safe-global/types-kit'
@@ -21,14 +21,14 @@ export const createSafeFromWeb3 = async (
   })
 }
 
-export const safeTransactionMetadataFromCeloTransactionObject = async (
-  tx: CeloTransactionObject<unknown>,
+export const safeTransactionMetadata = (
+  encodedData: `0x${string}`,
   toAddress: StrongAddress,
   value = '0'
-): Promise<MetaTransactionData> => {
+): MetaTransactionData => {
   return {
     to: toAddress,
-    data: tx.txo.encodeABI(),
+    data: encodedData,
     value,
   }
 }

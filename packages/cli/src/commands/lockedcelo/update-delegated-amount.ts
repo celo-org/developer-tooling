@@ -1,6 +1,6 @@
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class UpdateDelegatedAmount extends BaseCommand {
@@ -23,6 +23,7 @@ export default class UpdateDelegatedAmount extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(UpdateDelegatedAmount)
     const address = res.flags.from
     const to = res.flags.to
@@ -34,6 +35,6 @@ export default class UpdateDelegatedAmount extends BaseCommand {
     const lockedGold = await kit.contracts.getLockedGold()
 
     const tx = lockedGold.updateDelegatedAmount(address, to)
-    await displaySendTx('updateDelegatedAmount', tx)
+    await displayViemTx('updateDelegatedAmount', tx, publicClient)
   }
 }

@@ -26,7 +26,7 @@ export const registerAccount = async (kit: ContractKit, address: string) => {
   const accounts = await kit.contracts.getAccounts()
 
   if (!(await accounts.isAccount(address))) {
-    await accounts.createAccount().sendAndWaitForReceipt({ from: address })
+    await accounts.createAccount({ from: address })
   }
 }
 
@@ -39,7 +39,7 @@ export const registerAccountWithLockedGold = async (
 
   const lockedGold = await kit.contracts.getLockedGold()
 
-  await lockedGold.lock().sendAndWaitForReceipt({ from: address, value })
+  await lockedGold.lock({ from: address, value })
 }
 
 export const setupGroup = async (
@@ -55,7 +55,7 @@ export const setupGroup = async (
 
   const validators = await kit.contracts.getValidators()
 
-  await (await validators.registerValidatorGroup(groupCommission)).sendAndWaitForReceipt({
+  await validators.registerValidatorGroup(groupCommission, {
     from: groupAccount,
   })
 }
@@ -66,7 +66,7 @@ export const setupValidator = async (kit: ContractKit, validatorAccount: string)
   const ecdsaPublicKey = await addressToPublicKey(validatorAccount, kit.connection.sign)
   const validators = await kit.contracts.getValidators()
 
-  await validators.registerValidatorNoBls(ecdsaPublicKey).sendAndWaitForReceipt({
+  await validators.registerValidatorNoBls(ecdsaPublicKey, {
     from: validatorAccount,
   })
 }
@@ -88,7 +88,7 @@ export const voteForGroupFrom = async (
 ) => {
   const election = await kit.contracts.getElection()
 
-  await (await election.vote(groupAddress, amount)).sendAndWaitForReceipt({ from: fromAddress })
+  await election.vote(groupAddress, amount, { from: fromAddress })
 }
 
 export const voteForGroupFromAndActivateVotes = async (
@@ -104,9 +104,8 @@ export const voteForGroupFromAndActivateVotes = async (
 
   const election = await kit.contracts.getElection()
 
-  const txos = await election.activate(fromAddress, false)
-
-  await Promise.all(txos.map((txo) => txo.sendAndWaitForReceipt({ from: fromAddress })))
+  // activate returns hashes directly (transactions already sent)
+  await election.activate(fromAddress, false)
 }
 
 export const mineEpoch = async (kit: ContractKit) => {
@@ -122,7 +121,7 @@ export const topUpWithToken = async (
   const token = await kit.contracts.getStableToken(stableToken)
 
   await impersonateAccount(kit.connection.currentProvider, STABLES_ADDRESS)
-  await token.transfer(account, amount.toFixed()).sendAndWaitForReceipt({
+  await token.transfer(account, amount.toFixed(), {
     from: STABLES_ADDRESS,
   })
   await stopImpersonatingAccount(kit.connection.currentProvider, STABLES_ADDRESS)
@@ -143,9 +142,7 @@ export const changeMultiSigOwner = async (kit: ContractKit, toAccount: StrongAdd
 
   await impersonateAccount(kit.connection.currentProvider, multisig.address)
 
-  await multisig
-    .replaceOwner(DEFAULT_OWNER_ADDRESS, toAccount)
-    .sendAndWaitForReceipt({ from: multisig.address })
+  await multisig.replaceOwner(DEFAULT_OWNER_ADDRESS, toAccount, { from: multisig.address })
   await stopImpersonatingAccount(kit.connection.currentProvider, multisig.address)
 }
 
@@ -158,9 +155,9 @@ export async function setupValidatorAndAddToGroup(
 
   const validators = await kit.contracts.getValidators()
 
-  await validators.affiliate(groupAccount).sendAndWaitForReceipt({ from: validatorAccount })
+  await validators.affiliate(groupAccount, { from: validatorAccount })
 
-  await (await validators.addMember(groupAccount, validatorAccount)).sendAndWaitForReceipt({
+  await validators.addMember(groupAccount, validatorAccount, {
     from: groupAccount,
   })
 }
@@ -184,10 +181,8 @@ export const activateAllValidatorGroupsVotes = async (kit: ContractKit) => {
   await timeTravel((await epochManagerWrapper.epochDuration()) + 1, kit.connection.currentProvider)
 
   // Make sure we are in the next epoch to activate the votes
-  await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({ from: sender })
-  await (await epochManagerWrapper.finishNextEpochProcessTx()).sendAndWaitForReceipt({
-    from: sender,
-  })
+  await epochManagerWrapper.startNextEpochProcess({ from: sender })
+  await epochManagerWrapper.finishNextEpochProcessTx({ from: sender })
 
   for (const validatorGroup of validatorGroups) {
     const pendingVotesForGroup = new BigNumber(

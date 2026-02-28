@@ -1,6 +1,6 @@
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class RevokeUpvote extends BaseCommand {
@@ -15,6 +15,7 @@ export default class RevokeUpvote extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(RevokeUpvote)
     const signer = res.flags.from
     kit.defaultAccount = signer
@@ -24,11 +25,6 @@ export default class RevokeUpvote extends BaseCommand {
     // TODO(nategraf): Check whether there are upvotes to revoke before sending transaction.
     const governance = await kit.contracts.getGovernance()
     const account = await (await kit.contracts.getAccounts()).voteSignerToAccount(signer)
-    await displaySendTx(
-      'revokeUpvoteTx',
-      await governance.revokeUpvote(account),
-      {},
-      'ProposalUpvoteRevoked'
-    )
+    await displayViemTx('revokeUpvoteTx', governance.revokeUpvote(account), publicClient)
   }
 }

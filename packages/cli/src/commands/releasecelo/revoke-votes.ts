@@ -1,8 +1,7 @@
-import { CeloTransactionObject } from '@celo/connect'
 import { Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
 
@@ -41,6 +40,7 @@ export default class RevokeVotes extends ReleaseGoldBaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const { flags } = await this.parse(RevokeVotes)
 
     await newCheckBuilder(this).isAccount(this.releaseGoldWrapper.address).runChecks()
@@ -51,13 +51,13 @@ export default class RevokeVotes extends ReleaseGoldBaseCommand {
 
     kit.defaultAccount = isRevoked ? releaseOwner : beneficiary
 
-    let txos: CeloTransactionObject<void>[]
+    let hashes: `0x${string}`[]
     if (flags.allVotes && flags.allGroups) {
-      txos = await this.releaseGoldWrapper.revokeAllVotesForAllGroups()
+      hashes = await this.releaseGoldWrapper.revokeAllVotesForAllGroups()
     } else if (flags.allVotes && flags.group) {
-      txos = await this.releaseGoldWrapper.revokeAllVotesForGroup(flags.group)
+      hashes = await this.releaseGoldWrapper.revokeAllVotesForGroup(flags.group)
     } else if (flags.votes && flags.group) {
-      txos = await this.releaseGoldWrapper.revokeValueFromVotes(
+      hashes = await this.releaseGoldWrapper.revokeValueFromVotes(
         flags.group,
         new BigNumber(flags.votes)
       )
@@ -67,8 +67,8 @@ export default class RevokeVotes extends ReleaseGoldBaseCommand {
       )
     }
 
-    for (const txo of txos) {
-      await displaySendTx('revokeVotes', txo)
+    for (const hash of hashes) {
+      await displayViemTx('revokeVotes', Promise.resolve(hash), publicClient)
     }
   }
 }

@@ -1,7 +1,7 @@
 import { ux } from '@oclif/core'
 
 import { BaseCommand } from '../../base'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class AttestationRewardsWithdraw extends BaseCommand {
@@ -21,6 +21,7 @@ export default class AttestationRewardsWithdraw extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const { flags } = await this.parse(AttestationRewardsWithdraw)
     const [accounts, attestations] = await Promise.all([
       kit.contracts.getAccounts(),
@@ -43,7 +44,11 @@ export default class AttestationRewardsWithdraw extends BaseCommand {
     }
 
     ux.action.start(`Withdrawing ${pendingWithdrawals.toString()} rewards to ${accountAddress}`)
-    await displaySendTx('withdraw', attestations.withdraw(tokenAddress), { from: flags.from })
+    await displayViemTx(
+      'withdraw',
+      attestations.withdraw(tokenAddress, { from: flags.from }),
+      publicClient
+    )
     ux.action.stop()
   }
 }

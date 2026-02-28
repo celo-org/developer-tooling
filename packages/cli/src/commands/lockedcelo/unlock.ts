@@ -2,7 +2,7 @@ import { Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { LockedGoldArgs } from '../../utils/lockedgold'
 
@@ -25,6 +25,7 @@ export default class Unlock extends BaseCommand {
   async run() {
     const res = await this.parse(Unlock)
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const lockedgold = await kit.contracts.getLockedGold()
     const value = new BigNumber(res.flags.value)
 
@@ -34,6 +35,6 @@ export default class Unlock extends BaseCommand {
       .hasEnoughLockedGoldToUnlock(value)
       .runChecks()
 
-    await displaySendTx('unlock', lockedgold.unlock(value))
+    await displayViemTx('unlock', lockedgold.unlock(value), publicClient)
   }
 }

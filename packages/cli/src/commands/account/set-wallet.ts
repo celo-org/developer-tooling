@@ -1,6 +1,6 @@
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class SetWallet extends BaseCommand {
@@ -31,6 +31,7 @@ export default class SetWallet extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(SetWallet)
     kit.defaultAccount = res.flags.account
     const accounts = await kit.contracts.getAccounts()
@@ -43,15 +44,20 @@ export default class SetWallet extends BaseCommand {
       } catch (error) {
         console.error('Error: Failed to parse signature')
       }
-      await displaySendTx(
+      await displayViemTx(
         'setWalletAddress',
         accounts.setWalletAddress(
           res.flags.wallet,
           accounts.parseSignatureOfAddress(res.flags.account, res.flags.signer, res.flags.signature)
-        )
+        ),
+        publicClient
       )
     } else {
-      await displaySendTx('setWalletAddress', accounts.setWalletAddress(res.flags.wallet))
+      await displayViemTx(
+        'setWalletAddress',
+        accounts.setWalletAddress(res.flags.wallet),
+        publicClient
+      )
     }
   }
 }

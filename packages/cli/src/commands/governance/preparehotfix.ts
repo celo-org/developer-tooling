@@ -2,7 +2,7 @@ import { toBuffer } from '@ethereumjs/util'
 import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class PrepareHotfix extends BaseCommand {
@@ -20,6 +20,7 @@ export default class PrepareHotfix extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(PrepareHotfix)
     const account = res.flags.from
     kit.defaultAccount = account
@@ -33,6 +34,6 @@ export default class PrepareHotfix extends BaseCommand {
       .hotfixNotExecuted(hash)
       .runChecks()
 
-    await displaySendTx('prepareHotfixTx', governance.prepareHotfix(hash), {}, 'HotfixPrepared')
+    await displayViemTx('prepareHotfixTx', governance.prepareHotfix(hash), publicClient)
   }
 }

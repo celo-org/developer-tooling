@@ -1,9 +1,10 @@
+import { PublicCeloClient } from '@celo/actions'
 import { GovernanceWrapper } from '@celo/contractkit/src/wrappers/Governance'
 import { Flags } from '@oclif/core'
 import chalk from 'chalk'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class Upvote extends BaseCommand {
@@ -19,6 +20,7 @@ export default class Upvote extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(Upvote)
     const signer = res.flags.from
     const id = res.flags.proposalID
@@ -33,10 +35,13 @@ export default class Upvote extends BaseCommand {
 
     const account = await (await kit.contracts.getAccounts()).voteSignerToAccount(signer)
 
-    const consideredProposals = await this.dequeueAllPossibleProposals(governance as any)
+    const consideredProposals = await this.dequeueAllPossibleProposals(
+      governance as any,
+      publicClient
+    )
 
     if (!consideredProposals.some((k) => k.id === id)) {
-      await displaySendTx('upvoteTx', await governance.upvote(id, account), {}, 'ProposalUpvoted')
+      await displayViemTx('upvoteTx', governance.upvote(id, account), publicClient)
     } else {
       console.info(chalk.green('Proposal was dequeued, no need to upvote it.'))
     }
@@ -52,7 +57,7 @@ export default class Upvote extends BaseCommand {
    * 4. Since none of the proposals were actually dequeued, next call will allow to dequeue again
    * 5. Upvote function will try to dequeue again and possibly it will hit the proposal and bug that we have
    */
-  async dequeueAllPossibleProposals(governance: GovernanceWrapper) {
+  async dequeueAllPossibleProposals(governance: GovernanceWrapper, publicClient: PublicCeloClient) {
     const concurrentProposalCount = (await governance.concurrentProposals()).toNumber()
     const queue = await governance.getQueue()
     const originalLastDequeue = await governance.lastDequeue()
@@ -72,7 +77,7 @@ export default class Upvote extends BaseCommand {
         )
       ).filter((k) => k.expired === false)
 
-      await displaySendTx('dequeue', governance.dequeueProposalsIfReady(), {})
+      await displayViemTx('dequeue', governance.dequeueProposalsIfReady(), publicClient)
       if (originalLastDequeue !== (await governance.lastDequeue())) {
         break
       }

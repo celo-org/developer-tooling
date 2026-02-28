@@ -1,5 +1,5 @@
 import { StrongAddress } from '@celo/base'
-import { CeloTransactionObject, type Provider } from '@celo/connect'
+import { type Provider } from '@celo/connect'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { MultiSigWrapper } from '@celo/contractkit/lib/wrappers/MultiSig'
 import { toBuffer } from '@ethereumjs/util'
@@ -9,12 +9,12 @@ import debugFactory from 'debug'
 import { Hex } from 'viem'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx, failWith } from '../../utils/cli'
+import { displayViemTx, failWith } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import {
   createSafeFromWeb3,
   performSafeTransaction,
-  safeTransactionMetadataFromCeloTransactionObject,
+  safeTransactionMetadata,
 } from '../../utils/safe'
 
 enum HotfixApprovalType {
@@ -78,6 +78,7 @@ export default class Approve extends BaseCommand {
   async run() {
     const checkBuilder = newCheckBuilder(this)
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(Approve)
     const account = res.flags.from
     const useMultiSig = res.flags.useMultiSig
@@ -109,11 +110,11 @@ export default class Approve extends BaseCommand {
       governanceApproverMultiSig
     )
 
-    let governanceTx: CeloTransactionObject<unknown>
-    let logEvent: string
+    let encodedGovernanceData: `0x${string}` | undefined
     if (id) {
       if (await governance.isQueued(id)) {
-        await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
+        const dequeueHash = await governance.dequeueProposalsIfReady()
+        await publicClient.waitForTransactionReceipt({ hash: dequeueHash })
       }
 
       await checkBuilder
@@ -124,31 +125,35 @@ export default class Approve extends BaseCommand {
           'Proposal has not been submitted to multisig',
           res.flags.submit,
           async () => {
-            // We would prefer it allow for submissions if there is ambiguity, only fail if we confirm that it has been submitted
             const confrimations = await fetchConfirmationsForProposals(id)
             return confrimations === null || confrimations.count === 0
           }
         )
         .addConditionalCheck('multisgTXId provided is valid', !!res.flags.multisigTx, async () => {
           const confirmations = await fetchConfirmationsForProposals(id)
-          // if none are found the api could be wrong, so we allow it.
           if (!confirmations || confirmations.count === 0) {
             return true
           }
-          // if we have confirmations, ensure one matches the provided id
           return confirmations.approvals.some(
             (approval) => approval.multisigTx.toString() === res.flags.multisigTx
           )
         })
         .runChecks()
-      governanceTx = await governance.approve(id)
-      logEvent = 'ProposalApproved'
+
+      if (useMultiSig || useSafe) {
+        const dequeue = await governance.getDequeue()
+        const proposalIndex = dequeue.findIndex((d) => d.eq(id))
+        encodedGovernanceData = governance.encodeFunctionData('approve', [
+          id,
+          proposalIndex.toString(),
+        ])
+      }
     } else if (hotfix) {
       await checkBuilder.runChecks()
 
-      // TODO dedup toBuffer
-      governanceTx = governance.approveHotfix(toBuffer(hotfix) as Buffer)
-      logEvent = 'HotfixApproved'
+      if (useMultiSig || useSafe) {
+        encodedGovernanceData = governance.encodeFunctionData('approveHotfix', [hotfix])
+      }
     } else {
       failWith('Proposal ID or hotfix must be provided')
     }
@@ -158,38 +163,52 @@ export default class Approve extends BaseCommand {
         await this.getWeb3(),
         (await governance.getSecurityCouncil()) as StrongAddress,
         account,
-        await safeTransactionMetadataFromCeloTransactionObject(governanceTx, governance.address)
+        safeTransactionMetadata(encodedGovernanceData!, governance.address)
       )
     } else if (
       approvalType === 'securityCouncil' &&
       useMultiSig &&
       governanceSecurityCouncilMultiSig
     ) {
-      const tx = await governanceSecurityCouncilMultiSig.submitOrConfirmTransaction(
-        governance.address,
-        governanceTx.txo
+      await displayViemTx(
+        'approveTx',
+        governanceSecurityCouncilMultiSig.submitOrConfirmTransaction(
+          governance.address,
+          encodedGovernanceData!
+        ),
+        publicClient
       )
-
-      await displaySendTx('approveTx', tx as CeloTransactionObject<unknown>, {}, logEvent)
     } else if (res.flags.multisigTx && useMultiSig) {
-      const tx = await governanceApproverMultiSig!.confirmTransaction(
-        parseInt(res.flags.multisigTx)
+      await displayViemTx(
+        'approveTx',
+        governanceApproverMultiSig!.confirmTransaction(parseInt(res.flags.multisigTx)),
+        publicClient
       )
-      await displaySendTx('approveTx', tx, {}, logEvent)
     } else if (res.flags.submit && useMultiSig) {
-      const tx = await governanceApproverMultiSig!.submitTransaction(
-        governance.address,
-        governanceTx.txo
+      await displayViemTx(
+        'approveTx',
+        governanceApproverMultiSig!.submitTransaction(governance.address, encodedGovernanceData!),
+        publicClient
       )
-      await displaySendTx('approveTx', tx, {}, logEvent)
+    } else if (useMultiSig) {
+      await displayViemTx(
+        'approveTx',
+        governanceApproverMultiSig!.submitOrConfirmTransaction(
+          governance.address,
+          encodedGovernanceData!
+        ),
+        publicClient
+      )
     } else {
-      const tx = useMultiSig
-        ? await governanceApproverMultiSig!.submitOrConfirmTransaction(
-            governance.address,
-            governanceTx.txo
-          )
-        : governanceTx
-      await displaySendTx('approveTx', tx, {}, logEvent)
+      if (id) {
+        await displayViemTx('approveTx', governance.approve(id), publicClient)
+      } else {
+        await displayViemTx(
+          'approveTx',
+          governance.approveHotfix(toBuffer(hotfix!) as Buffer),
+          publicClient
+        )
+      }
     }
   }
 }

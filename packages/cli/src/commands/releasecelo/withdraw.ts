@@ -1,5 +1,5 @@
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
 
@@ -23,6 +23,7 @@ export default class Withdraw extends ReleaseGoldBaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const { flags } = await this.parse(Withdraw)
     const value = flags.value
 
@@ -55,6 +56,6 @@ export default class Withdraw extends ReleaseGoldBaseCommand {
       .isNotSanctioned(kit.defaultAccount as string)
       .runChecks()
 
-    await displaySendTx('withdrawTx', this.releaseGoldWrapper.withdraw(value))
+    await displayViemTx('withdrawTx', this.releaseGoldWrapper.withdraw(value), publicClient)
   }
 }
