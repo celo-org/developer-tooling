@@ -2,7 +2,7 @@ import { validatorsABI } from '@celo/abis'
 import { eqAddress, findAddressIndex, NULL_ADDRESS } from '@celo/base/lib/address'
 import { concurrentMap } from '@celo/base/lib/async'
 import { zeroRange, zip } from '@celo/base/lib/collections'
-import { Address, CeloTransactionObject, EventLog } from '@celo/connect'
+import { Address, CeloTx, EventLog } from '@celo/connect'
 import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
 import {
@@ -146,31 +146,37 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
   private _validatorSignerAddressFromCurrentSet = async (index: number) =>
     this.contract.read.validatorSignerAddressFromCurrentSet([toViemBigInt(index)])
 
-  private _deregisterValidator = (...args: any[]) => this.buildTx('deregisterValidator', args)
+  private _deregisterValidator = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('deregisterValidator', args, txParams)
 
-  private _registerValidatorGroup = (...args: any[]) => this.buildTx('registerValidatorGroup', args)
+  private _registerValidatorGroup = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('registerValidatorGroup', args, txParams)
 
-  private _deregisterValidatorGroup = (...args: any[]) =>
-    this.buildTx('deregisterValidatorGroup', args)
+  private _deregisterValidatorGroup = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('deregisterValidatorGroup', args, txParams)
 
-  private _addFirstMember = (...args: any[]) => this.buildTx('addFirstMember', args)
+  private _addFirstMember = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('addFirstMember', args, txParams)
 
-  private _addMember = (...args: any[]) => this.buildTx('addMember', args)
+  private _addMember = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('addMember', args, txParams)
 
-  private _reorderMember = (...args: any[]) => this.buildTx('reorderMember', args)
+  private _reorderMember = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('reorderMember', args, txParams)
 
   /**
    * Queues an update to a validator group's commission.
    * @param commission Fixidity representation of the commission this group receives on epoch
    *   payments made to its members. Must be in the range [0, 1.0].
    */
-  setNextCommissionUpdate = (commission: BigNumber.Value) =>
-    this.buildTx('setNextCommissionUpdate', [valueToFixidityString(commission)])
+  setNextCommissionUpdate = (commission: BigNumber.Value, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('setNextCommissionUpdate', [valueToFixidityString(commission)], txParams)
 
   /**
    * Updates a validator group's commission based on the previously queued update
    */
-  updateCommission = () => this.buildTx('updateCommission', [])
+  updateCommission = (txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('updateCommission', [], txParams)
 
   /**
    * Returns the Locked Gold requirements for validators.
@@ -474,15 +480,11 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
    *   the validator signer.
    * @param ecdsaPublicKey The ECDSA public key that the validator is using for consensus. 64 bytes.
    */
-  registerValidator = (ecdsaPublicKey: string) =>
-    this.buildTx('registerValidator', [
-      stringToSolidityBytes(ecdsaPublicKey),
-    ]) as unknown as CeloTransactionObject<boolean>
+  registerValidator = (ecdsaPublicKey: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('registerValidator', [stringToSolidityBytes(ecdsaPublicKey)], txParams)
 
-  registerValidatorNoBls = (ecdsaPublicKey: string) =>
-    this.buildTx('registerValidatorNoBls', [
-      stringToSolidityBytes(ecdsaPublicKey),
-    ]) as unknown as CeloTransactionObject<boolean>
+  registerValidatorNoBls = (ecdsaPublicKey: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('registerValidatorNoBls', [stringToSolidityBytes(ecdsaPublicKey)], txParams)
 
   getEpochNumber = async () => {
     const res = await this.contract.read.getEpochNumber()
@@ -498,14 +500,17 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
    * De-registers a validator, removing it from the group for which it is a member.
    * @param validatorAddress Address of the validator to deregister
    */
-  async deregisterValidator(validatorAddress: Address): Promise<CeloTransactionObject<void>> {
+  async deregisterValidator(
+    validatorAddress: Address,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     const allValidators = await this.getRegisteredValidatorsAddresses()
     const idx = findAddressIndex(validatorAddress, allValidators)
 
     if (idx < 0) {
       throw new Error(`${validatorAddress} is not a registered validator`)
     }
-    return this._deregisterValidator(idx)
+    return this._deregisterValidator([idx], txParams)
   }
 
   /**
@@ -515,10 +520,11 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
    *
    * @param commission the commission this group receives on epoch payments made to its members.
    */
-  async registerValidatorGroup(commission: BigNumber): Promise<CeloTransactionObject<boolean>> {
-    return this._registerValidatorGroup(
-      toFixed(commission).toFixed()
-    ) as unknown as CeloTransactionObject<boolean>
+  async registerValidatorGroup(
+    commission: BigNumber,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
+    return this._registerValidatorGroup([toFixed(commission).toFixed()], txParams)
   }
 
   /**
@@ -526,15 +532,16 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
    * @param validatorGroupAddress Address of the validator group to deregister
    */
   async deregisterValidatorGroup(
-    validatorGroupAddress: Address
-  ): Promise<CeloTransactionObject<void>> {
+    validatorGroupAddress: Address,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     const allGroups = await this.getRegisteredValidatorGroupsAddresses()
     const idx = findAddressIndex(validatorGroupAddress, allGroups)
 
     if (idx < 0) {
       throw new Error(`${validatorGroupAddress} is not a registered validator`)
     }
-    return this._deregisterValidatorGroup(idx)
+    return this._deregisterValidatorGroup([idx], txParams)
   }
 
   /**
@@ -542,48 +549,49 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
    * De-affiliates with the previously affiliated group if present.
    * @param group The validator group with which to affiliate.
    */
-  affiliate = (group: Address) =>
-    this.buildTx('affiliate', [group]) as unknown as CeloTransactionObject<boolean>
+  affiliate = (group: Address, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('affiliate', [group], txParams)
 
   /**
    * De-affiliates a validator, removing it from the group for which it is a member.
    * Fails if the account is not a validator with non-zero affiliation.
    */
 
-  deaffiliate = () => this.buildTx('deaffiliate', [])
+  deaffiliate = (txParams?: Omit<CeloTx, 'data'>) => this.sendTx('deaffiliate', [], txParams)
 
   /**
    * Removes a validator from the group for which it is a member.
    * @param validatorAccount The validator to deaffiliate from their affiliated validator group.
    */
-  forceDeaffiliateIfValidator = (validatorAccount: string) =>
-    this.buildTx('forceDeaffiliateIfValidator', [validatorAccount])
+  forceDeaffiliateIfValidator = (validatorAccount: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('forceDeaffiliateIfValidator', [validatorAccount], txParams)
 
   /**
    * Resets a group's slashing multiplier if it has been >= the reset period since
    * the last time the group was slashed.
    */
-  resetSlashingMultiplier = () => this.buildTx('resetSlashingMultiplier', [])
+  resetSlashingMultiplier = (txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('resetSlashingMultiplier', [], txParams)
 
   /**
    * Adds a member to the end of a validator group's list of members.
    * Fails if `validator` has not set their affiliation to this account.
    * @param validator The validator to add to the group
    */
-  async addMember(group: Address, validator: Address): Promise<CeloTransactionObject<boolean>> {
+  async addMember(
+    group: Address,
+    validator: Address,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     const numMembers = await this.getValidatorGroupSize(group)
     if (numMembers === 0) {
       const election = await this.contracts.getElection()
       const voteWeight = await election.getTotalVotesForGroup(group)
       const { lesser, greater } = await election.findLesserAndGreaterAfterVote(group, voteWeight)
 
-      return this._addFirstMember(
-        validator,
-        lesser,
-        greater
-      ) as unknown as CeloTransactionObject<boolean>
+      return this._addFirstMember([validator, lesser, greater], txParams)
     } else {
-      return this._addMember(validator) as unknown as CeloTransactionObject<boolean>
+      return this._addMember([validator], txParams)
     }
   }
 
@@ -593,7 +601,8 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
    *
    * @param validator The Validator to remove from the group
    */
-  removeMember = (validator: string) => this.buildTx('removeMember', [validator])
+  removeMember = (validator: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('removeMember', [validator], txParams)
 
   /**
    * Reorders a member within a validator group.
@@ -605,8 +614,9 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
   async reorderMember(
     groupAddr: Address,
     validator: Address,
-    newIndex: number
-  ): Promise<CeloTransactionObject<void>> {
+    newIndex: number,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     const group = await this.getValidatorGroup(groupAddr)
 
     if (newIndex < 0 || newIndex >= group.members.length) {
@@ -629,7 +639,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
       newIndex === group.members.length - 1 ? NULL_ADDRESS : group.members[newIndex + 1]
     const prevMember = newIndex === 0 ? NULL_ADDRESS : group.members[newIndex - 1]
 
-    return this._reorderMember(validator, nextMember, prevMember)
+    return this._reorderMember([validator, nextMember, prevMember], txParams)
   }
 
   async getEpochSizeNumber(): Promise<number> {

@@ -1,5 +1,5 @@
 import { multiSigABI } from '@celo/abis'
-import { Address, CeloTransactionObject, CeloTxObject } from '@celo/connect'
+import { Address, CeloTx } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import {
   BaseWrapper,
@@ -36,10 +36,11 @@ export class MultiSigWrapper extends BaseWrapper<typeof multiSigABI> {
    */
   async submitOrConfirmTransaction(
     destination: string,
-    txObject: CeloTxObject<unknown>,
-    value = '0'
-  ): Promise<CeloTransactionObject<void>> {
-    const data = stringToSolidityBytes(txObject.encodeABI())
+    encodedData: string,
+    value = '0',
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
+    const data = stringToSolidityBytes(encodedData)
     const transactionCount = await this._getTransactionCountRaw(true, true)
     const transactionIds = await this._getTransactionIds(0, transactionCount, true, false)
 
@@ -51,10 +52,10 @@ export class MultiSigWrapper extends BaseWrapper<typeof multiSigABI> {
         transaction.value === value &&
         !transaction.executed
       ) {
-        return this._confirmTransaction(transactionId)
+        return this.sendTx('confirmTransaction', [transactionId], txParams)
       }
     }
-    return this._submitTransaction(destination, value, data)
+    return this.sendTx('submitTransaction', [destination, value, data], txParams)
   }
 
   private _getTransactionCountRaw = async (pending: boolean, executed: boolean) => {
@@ -87,20 +88,20 @@ export class MultiSigWrapper extends BaseWrapper<typeof multiSigABI> {
     }
   }
 
-  private _confirmTransaction = (...args: any[]) => this.buildTx('confirmTransaction', args)
-
-  private _submitTransaction = (...args: any[]) => this.buildTx('submitTransaction', args)
-
-  async confirmTransaction(transactionId: number): Promise<CeloTransactionObject<void>> {
-    return this._confirmTransaction(transactionId)
+  async confirmTransaction(
+    transactionId: number,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
+    return this.sendTx('confirmTransaction', [transactionId], txParams)
   }
   async submitTransaction(
     destination: string,
-    txObject: CeloTxObject<unknown>,
-    value = '0'
-  ): Promise<CeloTransactionObject<void>> {
-    const data = stringToSolidityBytes(txObject.encodeABI())
-    return this._submitTransaction(destination, value, data)
+    encodedData: string,
+    value = '0',
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
+    const data = stringToSolidityBytes(encodedData)
+    return this.sendTx('submitTransaction', [destination, value, data], txParams)
   }
 
   isOwner: (owner: Address) => Promise<boolean> = async (owner) => {
@@ -126,15 +127,15 @@ export class MultiSigWrapper extends BaseWrapper<typeof multiSigABI> {
     const res = await this.contract.read.getTransactionCount([pending, executed])
     return valueToInt(res.toString())
   }
-  replaceOwner = (owner: Address, newOwner: Address) =>
-    this.buildTx('replaceOwner', [owner, newOwner])
+  replaceOwner = (owner: Address, newOwner: Address, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('replaceOwner', [owner, newOwner], txParams)
 
   async getTransactionDataByContent(
     destination: string,
-    txo: CeloTxObject<unknown>,
+    encodedData: string,
     value: BigNumber.Value = 0
   ) {
-    const data = stringToSolidityBytes(txo.encodeABI())
+    const data = stringToSolidityBytes(encodedData)
     const transactionCount = await this.getTransactionCount(true, true)
     const transactionsOrEmpties = await Promise.all(
       new Array(transactionCount).fill(0).map(async (_, index) => {

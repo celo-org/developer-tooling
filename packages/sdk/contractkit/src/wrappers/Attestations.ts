@@ -1,7 +1,7 @@
 import { attestationsABI } from '@celo/abis'
 import { StableToken } from '@celo/base'
 import { eqAddress } from '@celo/base/lib/address'
-import { Address, CeloTransactionObject, CeloContract, Connection } from '@celo/connect'
+import { Address, CeloTx, CeloContract, Connection } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import { AccountsWrapper } from './Accounts'
 import {
@@ -227,7 +227,7 @@ export class AttestationsWrapper extends BaseWrapper<typeof attestationsABI> {
    * Approves the necessary amount of StableToken to request Attestations
    * @param attestationsRequested The number of attestations to request
    */
-  async approveAttestationFee(attestationsRequested: number): Promise<CeloTransactionObject<void>> {
+  async approveAttestationFee(attestationsRequested: number): Promise<`0x${string}`> {
     const tokenContract = await this.contracts.getStableToken(StableToken.USDm)
     const fee = await this.getAttestationFeeRequired(attestationsRequested)
     return tokenContract.approve(this.address, fee.toFixed())
@@ -251,7 +251,8 @@ export class AttestationsWrapper extends BaseWrapper<typeof attestationsABI> {
    * Allows issuers to withdraw accumulated attestation rewards
    * @param address The address of the token that will be withdrawn
    */
-  withdraw = (token: string) => this.buildTx('withdraw', [token])
+  withdraw = (token: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('withdraw', [token], txParams)
 
   /**
    * Returns the current configuration parameters for the contract.
@@ -346,15 +347,17 @@ export class AttestationsWrapper extends BaseWrapper<typeof attestationsABI> {
     return result
   }
 
-  private _revoke = (...args: any[]) => this.buildTx('revoke', args)
-
-  async revoke(identifer: string, account: Address): Promise<CeloTransactionObject<void>> {
+  async revoke(
+    identifer: string,
+    account: Address,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     const accounts = await this.lookupAccountsForIdentifier(identifer)
     const idx = accounts.findIndex((acc: string) => eqAddress(acc, account))
     if (idx < 0) {
       throw new Error("Account not found in identifier's accounts")
     }
-    return this._revoke(identifer, idx)
+    return this.sendTx('revoke', [identifer, idx], txParams)
   }
 }
 

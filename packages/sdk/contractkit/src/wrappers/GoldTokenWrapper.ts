@@ -3,6 +3,7 @@ import { goldTokenABI } from '@celo/abis'
 // after the move to node 10. This allows types to be inferred without
 // referencing '@celo/utils/node_modules/bignumber.js'
 import { Address } from '@celo/base'
+import { CeloTx } from '@celo/connect'
 import 'bignumber.js'
 import { valueToBigNumber, valueToString } from './BaseWrapper'
 import { CeloTokenWrapper } from './CeloTokenWrapper'
@@ -17,16 +18,19 @@ export class GoldTokenWrapper extends CeloTokenWrapper<typeof goldTokenABI> {
    * @param value The increment of the amount of CELO approved to the spender.
    * @returns true if success.
    */
-  increaseAllowance = (spender: string, value: import('bignumber.js').default.Value) =>
-    this.buildTx('increaseAllowance', [spender, valueToString(value)])
+  increaseAllowance = (
+    spender: string,
+    value: import('bignumber.js').default.Value,
+    txParams?: Omit<CeloTx, 'data'>
+  ) => this.sendTx('increaseAllowance', [spender, valueToString(value)], txParams)
   /**
    * Decreases the allowance of another user.
    * @param spender The address which is being approved to spend CELO.
    * @param value The decrement of the amount of CELO approved to the spender.
    * @returns true if success.
    */
-  decreaseAllowance = (spender: string, value: string | number) =>
-    this.buildTx('decreaseAllowance', [spender, value])
+  decreaseAllowance = (spender: string, value: string | number, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('decreaseAllowance', [spender, value], txParams)
 
   /**
    * Gets the balance of the specified address.

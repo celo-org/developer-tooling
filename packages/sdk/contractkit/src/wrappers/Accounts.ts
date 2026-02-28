@@ -1,7 +1,7 @@
 import { accountsABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
 import { NativeSigner, Signature, Signer } from '@celo/base/lib/signatureUtils'
-import { Address, CeloTransactionObject } from '@celo/connect'
+import { Address, CeloTx } from '@celo/connect'
 import {
   LocalSigner,
   hashMessageWithPrefix,
@@ -41,7 +41,7 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
   /**
    * Creates an account.
    */
-  createAccount = () => this.buildTx('createAccount', [])
+  createAccount = (txParams?: Omit<CeloTx, 'data'>) => this.sendTx('createAccount', [], txParams)
 
   /**
    * Returns the attestation signer for the specified account.
@@ -147,8 +147,8 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     }
   }
 
-  private _authorizeAttestationSigner = (...args: any[]) =>
-    this.buildTx('authorizeAttestationSigner', args)
+  private _authorizeAttestationSigner = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('authorizeAttestationSigner', args, txParams)
 
   /**
    * Authorize an attestation signing key on behalf of this account to another address.
@@ -158,17 +158,22 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
    */
   async authorizeAttestationSigner(
     signer: Address,
-    proofOfSigningKeyPossession: Signature
-  ): Promise<CeloTransactionObject<void>> {
+    proofOfSigningKeyPossession: Signature,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     return this._authorizeAttestationSigner(
-      signer,
-      proofOfSigningKeyPossession.v,
-      proofOfSigningKeyPossession.r,
-      proofOfSigningKeyPossession.s
+      [
+        signer,
+        proofOfSigningKeyPossession.v,
+        proofOfSigningKeyPossession.r,
+        proofOfSigningKeyPossession.s,
+      ],
+      txParams
     )
   }
 
-  private _authorizeVoteSigner = (...args: any[]) => this.buildTx('authorizeVoteSigner', args)
+  private _authorizeVoteSigner = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('authorizeVoteSigner', args, txParams)
 
   /**
    * Authorizes an address to sign votes on behalf of the account.
@@ -178,21 +183,25 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
    */
   async authorizeVoteSigner(
     signer: Address,
-    proofOfSigningKeyPossession: Signature
-  ): Promise<CeloTransactionObject<void>> {
+    proofOfSigningKeyPossession: Signature,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     return this._authorizeVoteSigner(
-      signer,
-      proofOfSigningKeyPossession.v,
-      proofOfSigningKeyPossession.r,
-      proofOfSigningKeyPossession.s
+      [
+        signer,
+        proofOfSigningKeyPossession.v,
+        proofOfSigningKeyPossession.r,
+        proofOfSigningKeyPossession.s,
+      ],
+      txParams
     )
   }
 
-  private _authorizeValidatorSignerWithPublicKey = (...args: any[]) =>
-    this.buildTx('authorizeValidatorSignerWithPublicKey', args)
+  private _authorizeValidatorSignerWithPublicKey = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('authorizeValidatorSignerWithPublicKey', args, txParams)
 
-  private _authorizeValidatorSigner = (...args: any[]) =>
-    this.buildTx('authorizeValidatorSigner', args)
+  private _authorizeValidatorSigner = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('authorizeValidatorSigner', args, txParams)
 
   /**
    * Authorizes an address to sign consensus messages on behalf of the account.
@@ -203,8 +212,9 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
   async authorizeValidatorSigner(
     signer: Address,
     proofOfSigningKeyPossession: Signature,
-    validatorsWrapper: { isValidator: (account: string) => Promise<boolean> }
-  ): Promise<CeloTransactionObject<void>> {
+    validatorsWrapper: { isValidator: (account: string) => Promise<boolean> },
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     const account = this.connection.defaultAccount || (await this.connection.getAccounts())[0]
     if (await validatorsWrapper.isValidator(account)) {
       const message = soliditySha3({
@@ -219,18 +229,24 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
         proofOfSigningKeyPossession.s
       )
       return this._authorizeValidatorSignerWithPublicKey(
-        signer,
-        proofOfSigningKeyPossession.v,
-        proofOfSigningKeyPossession.r,
-        proofOfSigningKeyPossession.s,
-        stringToSolidityBytes(pubKey)
+        [
+          signer,
+          proofOfSigningKeyPossession.v,
+          proofOfSigningKeyPossession.r,
+          proofOfSigningKeyPossession.s,
+          stringToSolidityBytes(pubKey),
+        ],
+        txParams
       )
     } else {
       return this._authorizeValidatorSigner(
-        signer,
-        proofOfSigningKeyPossession.v,
-        proofOfSigningKeyPossession.r,
-        proofOfSigningKeyPossession.s
+        [
+          signer,
+          proofOfSigningKeyPossession.v,
+          proofOfSigningKeyPossession.r,
+          proofOfSigningKeyPossession.s,
+        ],
+        txParams
       )
     }
   }
@@ -250,8 +266,9 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
    */
   async authorizeValidatorSignerWithPublicKey(
     signer: Address,
-    proofOfSigningKeyPossession: Signature
-  ): Promise<CeloTransactionObject<void>> {
+    proofOfSigningKeyPossession: Signature,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     const account = this.connection.defaultAccount || (await this.connection.getAccounts())[0]
     const message = soliditySha3({
       type: 'address',
@@ -265,18 +282,25 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
       proofOfSigningKeyPossession.s
     )
     return this._authorizeValidatorSignerWithPublicKey(
-      signer,
-      proofOfSigningKeyPossession.v,
-      proofOfSigningKeyPossession.r,
-      proofOfSigningKeyPossession.s,
-      stringToSolidityBytes(pubKey)
+      [
+        signer,
+        proofOfSigningKeyPossession.v,
+        proofOfSigningKeyPossession.r,
+        proofOfSigningKeyPossession.s,
+        stringToSolidityBytes(pubKey),
+      ],
+      txParams
     )
   }
 
-  private _authorizeSignerWithSignature = (...args: any[]) =>
-    this.buildTx('authorizeSignerWithSignature', args)
+  private _authorizeSignerWithSignature = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('authorizeSignerWithSignature', args, txParams)
 
-  async authorizeSigner(signer: Address, role: string): Promise<CeloTransactionObject<void>> {
+  async authorizeSigner(
+    signer: Address,
+    role: string,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     await this.onlyVersionOrGreater(this.RELEASE_4_VERSION)
     const [accounts, chainId] = await Promise.all([
       this.connection.getAccounts(),
@@ -295,39 +319,42 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     })
 
     const sig = await this.connection.signTypedData(signer, typedData)
-    return this._authorizeSignerWithSignature(signer, hashedRole, sig.v, sig.r, sig.s)
+    return this._authorizeSignerWithSignature([signer, hashedRole, sig.v, sig.r, sig.s], txParams)
   }
 
-  private _authorizeSigner = (...args: any[]) => this.buildTx('authorizeSigner', args)
+  private _authorizeSigner = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('authorizeSigner', args, txParams)
 
   async startSignerAuthorization(
     signer: Address,
-    role: string
-  ): Promise<CeloTransactionObject<void>> {
+    role: string,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     await this.onlyVersionOrGreater(this.RELEASE_4_VERSION)
-    return this._authorizeSigner(signer, this.keccak256(role))
+    return this._authorizeSigner([signer, this.keccak256(role)], txParams)
   }
 
-  private _completeSignerAuthorization = (...args: any[]) =>
-    this.buildTx('completeSignerAuthorization', args)
+  private _completeSignerAuthorization = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('completeSignerAuthorization', args, txParams)
 
   async completeSignerAuthorization(
     account: Address,
-    role: string
-  ): Promise<CeloTransactionObject<void>> {
+    role: string,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     await this.onlyVersionOrGreater(this.RELEASE_4_VERSION)
-    return this._completeSignerAuthorization(account, this.keccak256(role))
+    return this._completeSignerAuthorization([account, this.keccak256(role)], txParams)
   }
 
-  private _removeAttestationSigner = (...args: any[]) =>
-    this.buildTx('removeAttestationSigner', args)
+  private _removeAttestationSigner = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('removeAttestationSigner', args, txParams)
 
   /**
    * Removes the currently authorized attestation signer for the account
    * @returns A CeloTransactionObject
    */
-  async removeAttestationSigner(): Promise<CeloTransactionObject<void>> {
-    return this._removeAttestationSigner()
+  async removeAttestationSigner(txParams?: Omit<CeloTx, 'data'>): Promise<`0x${string}`> {
+    return this._removeAttestationSigner([], txParams)
   }
 
   async generateProofOfKeyPossession(account: Address, signer: Address) {
@@ -381,10 +408,11 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
    * Sets the data encryption of the account
    * @param encryptionKey The key to set
    */
-  setAccountDataEncryptionKey = (encryptionKey: string) =>
-    this.buildTx('setAccountDataEncryptionKey', [encryptionKey])
+  setAccountDataEncryptionKey = (encryptionKey: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('setAccountDataEncryptionKey', [encryptionKey], txParams)
 
-  private _setAccount = (...args: any[]) => this.buildTx('setAccount', args)
+  private _setAccount = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('setAccount', args, txParams)
 
   /**
    * Convenience Setter for the dataEncryptionKey and wallet address for an account
@@ -393,23 +421,30 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
    * @param walletAddress The wallet address to set for the account
    * @param proofOfPossession Signature from the wallet address key over the sender's address
    */
-  setAccount(
+  async setAccount(
     name: string,
     dataEncryptionKey: string,
     walletAddress: Address,
-    proofOfPossession: Signature | null = null
-  ): CeloTransactionObject<void> {
+    proofOfPossession: Signature | null = null,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     if (proofOfPossession) {
       return this._setAccount(
-        name,
-        dataEncryptionKey,
-        walletAddress,
-        proofOfPossession.v,
-        proofOfPossession.r,
-        proofOfPossession.s
+        [
+          name,
+          dataEncryptionKey,
+          walletAddress,
+          proofOfPossession.v,
+          proofOfPossession.r,
+          proofOfPossession.s,
+        ],
+        txParams
       )
     } else {
-      return this._setAccount(name, dataEncryptionKey, walletAddress, '0x0', '0x0', '0x0')
+      return this._setAccount(
+        [name, dataEncryptionKey, walletAddress, '0x0', '0x0', '0x0'],
+        txParams
+      )
     }
   }
 
@@ -417,13 +452,15 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
    * Sets the name for the account
    * @param name The name to set
    */
-  setName = (name: string) => this.buildTx('setName', [name])
+  setName = (name: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('setName', [name], txParams)
 
   /**
    * Sets the metadataURL for the account
    * @param url The url to set
    */
-  setMetadataURL = (url: string) => this.buildTx('setMetadataURL', [url])
+  setMetadataURL = (url: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('setMetadataURL', [url], txParams)
 
   /**
    * Set a validator's payment delegation settings.
@@ -434,14 +471,15 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
    * be greater than 1.
    * @dev Use `deletePaymentDelegation` to unset the payment delegation.
    */
-  setPaymentDelegation = (beneficiary: string, fraction: string) =>
-    this.buildTx('setPaymentDelegation', [beneficiary, fraction])
+  setPaymentDelegation = (beneficiary: string, fraction: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('setPaymentDelegation', [beneficiary, fraction], txParams)
 
   /**
    * Remove a validator's payment delegation by setting beneficiary and
    * fraction to 0.
    */
-  deletePaymentDelegation = () => this.buildTx('deletePaymentDelegation', [])
+  deletePaymentDelegation = (txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('deletePaymentDelegation', [], txParams)
 
   /**
    * Get a validator's payment delegation settings.
@@ -456,25 +494,25 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     }
   }
 
-  private _setWalletAddress = (...args: any[]) => this.buildTx('setWalletAddress', args)
+  private _setWalletAddress = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('setWalletAddress', args, txParams)
 
   /**
    * Sets the wallet address for the account
    * @param address The address to set
    */
-  setWalletAddress(
+  async setWalletAddress(
     walletAddress: Address,
-    proofOfPossession: Signature | null = null
-  ): CeloTransactionObject<void> {
+    proofOfPossession: Signature | null = null,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     if (proofOfPossession) {
       return this._setWalletAddress(
-        walletAddress,
-        proofOfPossession.v,
-        proofOfPossession.r,
-        proofOfPossession.s
+        [walletAddress, proofOfPossession.v, proofOfPossession.r, proofOfPossession.s],
+        txParams
       )
     } else {
-      return this._setWalletAddress(walletAddress, '0x0', '0x0', '0x0')
+      return this._setWalletAddress([walletAddress, '0x0', '0x0', '0x0'], txParams)
     }
   }
 

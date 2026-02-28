@@ -1,6 +1,6 @@
 import { epochManagerABI } from '@celo/abis'
 import { NULL_ADDRESS } from '@celo/base'
-import { CeloTransactionObject, CeloContract } from '@celo/connect'
+import { CeloTx, CeloContract } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import { toViemAddress, toViemBigInt, valueToInt } from './BaseWrapper'
 import { BaseWrapperForGoverning } from './BaseWrapperForGoverning'
@@ -91,34 +91,47 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<typeof epochMan
     }
   }
 
-  startNextEpochProcess = () => this.buildTx('startNextEpochProcess', [])
-  finishNextEpochProcess = (groups: string[], lessers: string[], greaters: string[]) =>
-    this.buildTx('finishNextEpochProcess', [groups, lessers, greaters])
-  sendValidatorPayment = (validator: string) => this.buildTx('sendValidatorPayment', [validator])
-  setToProcessGroups = () => this.buildTx('setToProcessGroups', [])
-  processGroups = (groups: string[], lessers: string[], greaters: string[]) =>
-    this.buildTx('processGroups', [groups, lessers, greaters])
+  startNextEpochProcess = (txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('startNextEpochProcess', [], txParams)
+  finishNextEpochProcess = (
+    groups: string[],
+    lessers: string[],
+    greaters: string[],
+    txParams?: Omit<CeloTx, 'data'>
+  ) => this.sendTx('finishNextEpochProcess', [groups, lessers, greaters], txParams)
+  sendValidatorPayment = (validator: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('sendValidatorPayment', [validator], txParams)
+  setToProcessGroups = (txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('setToProcessGroups', [], txParams)
+  processGroups = (
+    groups: string[],
+    lessers: string[],
+    greaters: string[],
+    txParams?: Omit<CeloTx, 'data'>
+  ) => this.sendTx('processGroups', [groups, lessers, greaters], txParams)
 
-  startNextEpochProcessTx = async (): Promise<CeloTransactionObject<void> | undefined> => {
+  startNextEpochProcessTx = async (
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}` | undefined> => {
     // check that the epoch process is not already started
     const isEpochProcessStarted = await this.isOnEpochProcess()
     if (isEpochProcessStarted) {
       console.warn('Epoch process has already started.')
       return
     }
-    return this.startNextEpochProcess()
+    return this.startNextEpochProcess(txParams)
   }
 
-  finishNextEpochProcessTx = async (): Promise<CeloTransactionObject<void>> => {
+  finishNextEpochProcessTx = async (txParams?: Omit<CeloTx, 'data'>): Promise<`0x${string}`> => {
     const { groups, lessers, greaters } = await this.getEpochGroupsAndSorting()
 
-    return this.finishNextEpochProcess(groups, lessers, greaters)
+    return this.finishNextEpochProcess(groups, lessers, greaters, txParams)
   }
 
-  processGroupsTx = async (): Promise<CeloTransactionObject<void>> => {
+  processGroupsTx = async (txParams?: Omit<CeloTx, 'data'>): Promise<`0x${string}`> => {
     const { groups, lessers, greaters } = await this.getEpochGroupsAndSorting()
 
-    return this.processGroups(groups, lessers, greaters)
+    return this.processGroups(groups, lessers, greaters, txParams)
   }
 
   getLessersAndGreaters = async (groups: string[]) => {

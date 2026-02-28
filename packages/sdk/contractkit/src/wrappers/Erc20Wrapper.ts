@@ -1,5 +1,5 @@
 import { ierc20ABI } from '@celo/abis'
-import { CeloTransactionObject } from '@celo/connect'
+import { CeloTx } from '@celo/connect'
 import type { Abi } from 'viem'
 // NOTE: removing this import results in `yarn build` failures in Dockerfiles
 // after the move to node 10. This allows types to be inferred without
@@ -31,8 +31,8 @@ export class Erc20Wrapper<TAbi extends Abi = typeof ierc20ABI> extends BaseWrapp
    * @param value The amount of the token approved to the spender.
    * @return True if the transaction succeeds.
    */
-  approve = (spender: string, value: string | number) =>
-    this.buildTxUnchecked('approve', [spender, value]) as CeloTransactionObject<void>
+  approve = (spender: string, value: string | number, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTxUnchecked('approve', [spender, value], txParams)
 
   /**
    * Transfers the token from one address to another.
@@ -40,8 +40,8 @@ export class Erc20Wrapper<TAbi extends Abi = typeof ierc20ABI> extends BaseWrapp
    * @param value The amount of the token to transfer.
    * @return True if the transaction succeeds.
    */
-  transfer = (to: string, value: string | number) =>
-    this.buildTxUnchecked('transfer', [to, value]) as CeloTransactionObject<void>
+  transfer = (to: string, value: string | number, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTxUnchecked('transfer', [to, value], txParams)
 
   /**
    * Transfers the token from one address to another on behalf of a user.
@@ -50,8 +50,12 @@ export class Erc20Wrapper<TAbi extends Abi = typeof ierc20ABI> extends BaseWrapp
    * @param value The amount of the token to transfer.
    * @return True if the transaction succeeds.
    */
-  transferFrom = (from: string, to: string, value: string | number) =>
-    this.buildTxUnchecked('transferFrom', [from, to, value]) as CeloTransactionObject<void>
+  transferFrom = (
+    from: string,
+    to: string,
+    value: string | number,
+    txParams?: Omit<CeloTx, 'data'>
+  ) => this.sendTxUnchecked('transferFrom', [from, to, value], txParams)
 
   /**
    * Gets the balance of the specified address.

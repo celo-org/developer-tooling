@@ -1,5 +1,5 @@
 import { escrowABI } from '@celo/abis'
-import { Address } from '@celo/connect'
+import { Address, CeloTx } from '@celo/connect'
 import { BaseWrapper, toViemAddress } from './BaseWrapper'
 
 /**
@@ -91,9 +91,14 @@ export class EscrowWrapper extends BaseWrapper<typeof escrowABI> {
     value: number | string,
     expirySeconds: number,
     paymentId: Address,
-    minAttestations: number
+    minAttestations: number,
+    txParams?: Omit<CeloTx, 'data'>
   ) =>
-    this.buildTx('transfer', [identifier, token, value, expirySeconds, paymentId, minAttestations])
+    this.sendTx(
+      'transfer',
+      [identifier, token, value, expirySeconds, paymentId, minAttestations],
+      txParams
+    )
 
   /**
    * @notice Withdraws tokens for a verified user.
@@ -105,8 +110,13 @@ export class EscrowWrapper extends BaseWrapper<typeof escrowABI> {
    * @dev Throws if 'token' or 'value' is 0.
    * @dev Throws if msg.sender does not prove ownership of the withdraw key.
    */
-  withdraw = (paymentId: Address, v: number | string, r: string | number[], s: string | number[]) =>
-    this.buildTx('withdraw', [paymentId, v, r, s])
+  withdraw = (
+    paymentId: Address,
+    v: number | string,
+    r: string | number[],
+    s: string | number[],
+    txParams?: Omit<CeloTx, 'data'>
+  ) => this.sendTx('withdraw', [paymentId, v, r, s], txParams)
 
   /**
    * @notice Revokes tokens for a sender who is redeeming a payment after it has expired.
@@ -115,7 +125,8 @@ export class EscrowWrapper extends BaseWrapper<typeof escrowABI> {
    * @dev Throws if msg.sender is not the sender of payment.
    * @dev Throws if redeem time hasn't been reached yet.
    */
-  revoke = (paymentId: string) => this.buildTx('revoke', [paymentId])
+  revoke = (paymentId: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('revoke', [paymentId], txParams)
 
   /**
    * @notice Transfer tokens to a specific user. Supports both identity with privacy (an empty
@@ -143,17 +154,14 @@ export class EscrowWrapper extends BaseWrapper<typeof escrowABI> {
     expirySeconds: number,
     paymentId: Address,
     minAttestations: number,
-    trustedIssuers: Address[]
+    trustedIssuers: Address[],
+    txParams?: Omit<CeloTx, 'data'>
   ) =>
-    this.buildTx('transferWithTrustedIssuers', [
-      identifier,
-      token,
-      value,
-      expirySeconds,
-      paymentId,
-      minAttestations,
-      trustedIssuers,
-    ])
+    this.sendTx(
+      'transferWithTrustedIssuers',
+      [identifier, token, value, expirySeconds, paymentId, minAttestations, trustedIssuers],
+      txParams
+    )
 }
 
 export type EscrowWrapperType = EscrowWrapper

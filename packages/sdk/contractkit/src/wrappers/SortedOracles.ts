@@ -1,12 +1,6 @@
 import { sortedOraclesABI } from '@celo/abis'
 import { eqAddress, NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
-import {
-  Address,
-  CeloTransactionObject,
-  CeloContract,
-  Connection,
-  toTransactionObject,
-} from '@celo/connect'
+import { Address, CeloTx, CeloContract, Connection } from '@celo/connect'
 import { isValidAddress } from '@celo/utils/lib/address'
 import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
@@ -176,8 +170,6 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
     return [response[0], response[1]]
   }
 
-  private _removeExpiredReports = (...args: any[]) => this.buildTx('removeExpiredReports', args)
-
   /**
    * Removes expired reports, if any exist
    * @param target The ReportTarget, either CeloToken or currency pair
@@ -187,16 +179,15 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
    */
   async removeExpiredReports(
     target: ReportTarget,
-    numReports?: number
-  ): Promise<CeloTransactionObject<void>> {
+    numReports?: number,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     const identifier = await this.toCurrencyPairIdentifier(target)
     if (!numReports) {
       numReports = (await this.getReports(target)).length - 1
     }
-    return this._removeExpiredReports(identifier, numReports)
+    return this.sendTx('removeExpiredReports', [identifier, numReports], txParams)
   }
-
-  private _report = (...args: any[]) => this.buildTx('report', args)
 
   /**
    * Updates an oracle value and the median.
@@ -207,7 +198,7 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
     target: ReportTarget,
     value: BigNumber.Value,
     oracleAddress: Address
-  ): Promise<CeloTransactionObject<void>> {
+  ): Promise<`0x${string}`> {
     const identifier = await this.toCurrencyPairIdentifier(target)
     const fixedValue = toFixed(valueToBigNumber(value))
 
@@ -217,8 +208,9 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
       oracleAddress
     )
 
-    const txo = this._report(identifier, fixedValue.toFixed(), lesserKey, greaterKey)
-    return toTransactionObject(this.connection, txo.txo, { from: oracleAddress })
+    return this.sendTx('report', [identifier, fixedValue.toFixed(), lesserKey, greaterKey], {
+      from: oracleAddress,
+    })
   }
 
   /**
@@ -231,7 +223,7 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
     value: BigNumber.Value,
     oracleAddress: Address,
     token: StableToken = StableToken.USDm
-  ): Promise<CeloTransactionObject<void>> {
+  ): Promise<`0x${string}`> {
     return this.report(stableTokenInfos[token].contract, value, oracleAddress)
   }
 

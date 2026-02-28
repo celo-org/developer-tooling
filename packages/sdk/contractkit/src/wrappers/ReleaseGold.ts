@@ -1,12 +1,11 @@
 import { releaseGoldABI } from '@celo/abis'
-import { concurrentMap } from '@celo/base'
 import { StrongAddress, findAddressIndex } from '@celo/base/lib/address'
 import { Signature } from '@celo/base/lib/signatureUtils'
-import { Address, CeloTransactionObject } from '@celo/connect'
+import { Address, CeloTx } from '@celo/connect'
 import { soliditySha3 } from '@celo/utils/lib/solidity'
 import { hashMessageWithPrefix, signedMessageToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
-import { flatten } from 'fp-ts/lib/Array'
+
 import {
   secondsToDurationString,
   stringToSolidityBytes,
@@ -293,7 +292,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
    * Revoke a Release schedule
    * @return A CeloTransactionObject
    */
-  revokeReleasing = () => this.buildTx('revoke', [])
+  revokeReleasing = (txParams?: Omit<CeloTx, 'data'>) => this.sendTx('revoke', [], txParams)
 
   /**
    * Revoke a vesting CELO schedule from the contract's beneficiary.
@@ -305,22 +304,25 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
    * Refund `refundAddress` and `beneficiary` after the ReleaseGold schedule has been revoked.
    * @return A CeloTransactionObject
    */
-  refundAndFinalize = () => this.buildTx('refundAndFinalize', [])
+  refundAndFinalize = (txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('refundAndFinalize', [], txParams)
 
   /**
    * Locks gold to be used for voting.
    * @param value The amount of gold to lock
    */
-  lockGold = (value: BigNumber.Value) => this.buildTx('lockGold', [valueToString(value)])
+  lockGold = (value: BigNumber.Value, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('lockGold', [valueToString(value)], txParams)
 
-  transfer = (to: Address, value: BigNumber.Value) =>
-    this.buildTx('transfer', [to, valueToString(value)])
+  transfer = (to: Address, value: BigNumber.Value, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('transfer', [to, valueToString(value)], txParams)
 
   /**
    * Unlocks gold that becomes withdrawable after the unlocking period.
    * @param value The amount of gold to unlock
    */
-  unlockGold = (value: BigNumber.Value) => this.buildTx('unlockGold', [valueToString(value)])
+  unlockGold = (value: BigNumber.Value, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('unlockGold', [valueToString(value)], txParams)
 
   async unlockAllGold() {
     const lockedGold = await this.contracts.getLockedGold()
@@ -333,7 +335,10 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
    * @param index The index of the pending withdrawal to relock from.
    * @param value The value to relock from the specified pending withdrawal.
    */
-  async relockGold(value: BigNumber.Value): Promise<CeloTransactionObject<void>[]> {
+  async relockGold(
+    value: BigNumber.Value,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`[]> {
     const lockedGold = await this.contracts.getLockedGold()
     const pendingWithdrawals = await lockedGold.getPendingWithdrawals(this.address)
     // Ensure there are enough pending withdrawals to relock.
@@ -351,15 +356,20 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
     pendingWithdrawals.forEach(throwIfNotSorted)
 
     let remainingToRelock = new BigNumber(value)
-    const relockPw = (acc: CeloTransactionObject<void>[], pw: PendingWithdrawal, i: number) => {
+    const relockOps: { index: number; value: BigNumber }[] = []
+    pendingWithdrawals.reduceRight((_acc: null, pw: PendingWithdrawal, i: number) => {
       const valueToRelock = BigNumber.minimum(pw.value, remainingToRelock)
       if (!valueToRelock.isZero()) {
         remainingToRelock = remainingToRelock.minus(valueToRelock)
-        acc.push(this._relockGold(i, valueToRelock))
+        relockOps.push({ index: i, value: valueToRelock })
       }
-      return acc
+      return null
+    }, null)
+    const hashes: `0x${string}`[] = []
+    for (const op of relockOps) {
+      hashes.push(await this._relockGold(op.index, op.value, txParams))
     }
-    return pendingWithdrawals.reduceRight(relockPw, []) as CeloTransactionObject<void>[]
+    return hashes
   }
 
   /**
@@ -367,26 +377,27 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
    * @param index The index of the pending withdrawal to relock from.
    * @param value The value to relock from the specified pending withdrawal.
    */
-  _relockGold = (index: number, value: BigNumber.Value) =>
-    this.buildTx('relockGold', [valueToString(index), valueToString(value)])
+  _relockGold = (index: number, value: BigNumber.Value, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('relockGold', [valueToString(index), valueToString(value)], txParams)
 
   /**
    * Withdraw gold in the ReleaseGold instance that has been unlocked but not withdrawn.
    * @param index The index of the pending locked gold withdrawal
    */
-  withdrawLockedGold = (index: BigNumber.Value) =>
-    this.buildTx('withdrawLockedGold', [valueToString(index)])
+  withdrawLockedGold = (index: BigNumber.Value, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('withdrawLockedGold', [valueToString(index)], txParams)
 
   /**
    * Transfer released gold from the ReleaseGold instance back to beneficiary.
    * @param value The requested gold amount
    */
-  withdraw = (value: BigNumber.Value) => this.buildTx('withdraw', [valueToString(value)])
+  withdraw = (value: BigNumber.Value, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('withdraw', [valueToString(value)], txParams)
 
   /**
    * Beneficiary creates an account on behalf of the ReleaseGold contract.
    */
-  createAccount = () => this.buildTx('createAccount', [])
+  createAccount = (txParams?: Omit<CeloTx, 'data'>) => this.sendTx('createAccount', [], txParams)
 
   /**
    * Beneficiary creates an account on behalf of the ReleaseGold contract.
@@ -394,20 +405,26 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
    * @param dataEncryptionKey The key to set
    * @param walletAddress The address to set
    */
-  setAccount = (name: string, dataEncryptionKey: string, walletAddress: string) =>
-    this.buildTx('setAccount', [name, dataEncryptionKey, walletAddress])
+  setAccount = (
+    name: string,
+    dataEncryptionKey: string,
+    walletAddress: string,
+    txParams?: Omit<CeloTx, 'data'>
+  ) => this.sendTx('setAccount', [name, dataEncryptionKey, walletAddress], txParams)
 
   /**
    * Sets the name for the account
    * @param name The name to set
    */
-  setAccountName = (name: string) => this.buildTx('setAccountName', [name])
+  setAccountName = (name: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('setAccountName', [name], txParams)
 
   /**
    * Sets the metadataURL for the account
    * @param metadataURL The url to set
    */
-  setAccountMetadataURL = (url: string) => this.buildTx('setAccountMetadataURL', [url])
+  setAccountMetadataURL = (url: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('setAccountMetadataURL', [url], txParams)
 
   /**
    * Sets the wallet address for the account
@@ -420,39 +437,44 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
     walletAddress: string,
     v: number | string,
     r: string | number[],
-    s: string | number[]
-  ) => this.buildTx('setAccountWalletAddress', [walletAddress, v, r, s])
+    s: string | number[],
+    txParams?: Omit<CeloTx, 'data'>
+  ) => this.sendTx('setAccountWalletAddress', [walletAddress, v, r, s], txParams)
 
   /**
    * Sets the data encryption of the account
    * @param dataEncryptionKey The key to set
    */
-  setAccountDataEncryptionKey = (dataEncryptionKey: string) =>
-    this.buildTx('setAccountDataEncryptionKey', [dataEncryptionKey])
+  setAccountDataEncryptionKey = (dataEncryptionKey: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('setAccountDataEncryptionKey', [dataEncryptionKey], txParams)
 
   /**
    * Sets the contract's liquidity provision to true
    */
-  setLiquidityProvision = () => this.buildTx('setLiquidityProvision', [])
+  setLiquidityProvision = (txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('setLiquidityProvision', [], txParams)
 
   /**
    * Sets the contract's `canExpire` field to `_canExpire`
    * @param _canExpire If the contract can expire `EXPIRATION_TIME` after the release schedule finishes.
    */
-  setCanExpire = (canExpire: boolean) => this.buildTx('setCanExpire', [canExpire])
+  setCanExpire = (canExpire: boolean, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('setCanExpire', [canExpire], txParams)
 
   /**
    * Sets the contract's max distribution
    */
-  setMaxDistribution = (distributionRatio: number | string) =>
-    this.buildTx('setMaxDistribution', [distributionRatio])
+  setMaxDistribution = (distributionRatio: number | string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('setMaxDistribution', [distributionRatio], txParams)
 
   /**
    * Sets the contract's beneficiary
    */
-  setBeneficiary = (beneficiary: string) => this.buildTx('setBeneficiary', [beneficiary])
+  setBeneficiary = (beneficiary: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('setBeneficiary', [beneficiary], txParams)
 
-  private _authorizeVoteSigner = (...args: any[]) => this.buildTx('authorizeVoteSigner', args)
+  private _authorizeVoteSigner = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('authorizeVoteSigner', args, txParams)
 
   /**
    * Authorizes an address to sign votes on behalf of the account.
@@ -462,21 +484,25 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
    */
   async authorizeVoteSigner(
     signer: Address,
-    proofOfSigningKeyPossession: Signature
-  ): Promise<CeloTransactionObject<void>> {
+    proofOfSigningKeyPossession: Signature,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     return this._authorizeVoteSigner(
-      signer,
-      proofOfSigningKeyPossession.v,
-      proofOfSigningKeyPossession.r,
-      proofOfSigningKeyPossession.s
+      [
+        signer,
+        proofOfSigningKeyPossession.v,
+        proofOfSigningKeyPossession.r,
+        proofOfSigningKeyPossession.s,
+      ],
+      txParams
     )
   }
 
-  private _authorizeValidatorSignerWithPublicKey = (...args: any[]) =>
-    this.buildTx('authorizeValidatorSignerWithPublicKey', args)
+  private _authorizeValidatorSignerWithPublicKey = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('authorizeValidatorSignerWithPublicKey', args, txParams)
 
-  private _authorizeValidatorSigner = (...args: any[]) =>
-    this.buildTx('authorizeValidatorSigner', args)
+  private _authorizeValidatorSigner = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('authorizeValidatorSigner', args, txParams)
 
   /**
    * Authorizes an address to sign validation messages on behalf of the account.
@@ -486,8 +512,9 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
    */
   async authorizeValidatorSigner(
     signer: Address,
-    proofOfSigningKeyPossession: Signature
-  ): Promise<CeloTransactionObject<void>> {
+    proofOfSigningKeyPossession: Signature,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     const validators = await this.contracts.getValidators()
     const account = this.address
     if (await validators.isValidator(account)) {
@@ -503,18 +530,24 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
         proofOfSigningKeyPossession.s
       )
       return this._authorizeValidatorSignerWithPublicKey(
-        signer,
-        proofOfSigningKeyPossession.v,
-        proofOfSigningKeyPossession.r,
-        proofOfSigningKeyPossession.s,
-        stringToSolidityBytes(pubKey)
+        [
+          signer,
+          proofOfSigningKeyPossession.v,
+          proofOfSigningKeyPossession.r,
+          proofOfSigningKeyPossession.s,
+          stringToSolidityBytes(pubKey),
+        ],
+        txParams
       )
     } else {
       return this._authorizeValidatorSigner(
-        signer,
-        proofOfSigningKeyPossession.v,
-        proofOfSigningKeyPossession.r,
-        proofOfSigningKeyPossession.s
+        [
+          signer,
+          proofOfSigningKeyPossession.v,
+          proofOfSigningKeyPossession.r,
+          proofOfSigningKeyPossession.s,
+        ],
+        txParams
       )
     }
   }
@@ -534,8 +567,9 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
    */
   async authorizeValidatorSignerWithPublicKey(
     signer: Address,
-    proofOfSigningKeyPossession: Signature
-  ): Promise<CeloTransactionObject<void>> {
+    proofOfSigningKeyPossession: Signature,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     const account = this.address
     const message = soliditySha3({
       type: 'address',
@@ -549,16 +583,19 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
       proofOfSigningKeyPossession.s
     )
     return this._authorizeValidatorSignerWithPublicKey(
-      signer,
-      proofOfSigningKeyPossession.v,
-      proofOfSigningKeyPossession.r,
-      proofOfSigningKeyPossession.s,
-      stringToSolidityBytes(pubKey)
+      [
+        signer,
+        proofOfSigningKeyPossession.v,
+        proofOfSigningKeyPossession.r,
+        proofOfSigningKeyPossession.s,
+        stringToSolidityBytes(pubKey),
+      ],
+      txParams
     )
   }
 
-  private _authorizeAttestationSigner = (...args: any[]) =>
-    this.buildTx('authorizeAttestationSigner', args)
+  private _authorizeAttestationSigner = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('authorizeAttestationSigner', args, txParams)
 
   /**
    * Authorizes an address to sign attestation messages on behalf of the account.
@@ -568,17 +605,22 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
    */
   async authorizeAttestationSigner(
     signer: Address,
-    proofOfSigningKeyPossession: Signature
-  ): Promise<CeloTransactionObject<void>> {
+    proofOfSigningKeyPossession: Signature,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     return this._authorizeAttestationSigner(
-      signer,
-      proofOfSigningKeyPossession.v,
-      proofOfSigningKeyPossession.r,
-      proofOfSigningKeyPossession.s
+      [
+        signer,
+        proofOfSigningKeyPossession.v,
+        proofOfSigningKeyPossession.r,
+        proofOfSigningKeyPossession.s,
+      ],
+      txParams
     )
   }
 
-  private _revokePending = (...args: any[]) => this.buildTx('revokePending', args)
+  private _revokePending = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('revokePending', args, txParams)
 
   /**
    * Revokes pending votes
@@ -590,8 +632,9 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
   async revokePending(
     account: Address,
     group: Address,
-    value: BigNumber
-  ): Promise<CeloTransactionObject<void>> {
+    value: BigNumber,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     const electionContract = await this.contracts.getElection()
     const groups = await electionContract.getGroupsVotedForByAccount(account)
     const index = findAddressIndex(group, groups)
@@ -600,7 +643,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
       value.times(-1)
     )
 
-    return this._revokePending(group, value.toFixed(), lesser, greater, index)
+    return this._revokePending([group, value.toFixed(), lesser, greater, index], txParams)
   }
 
   /**
@@ -611,7 +654,8 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
   revokePendingVotes = (group: Address, value: BigNumber) =>
     this.revokePending(this.address, group, value)
 
-  private _revokeActive = (...args: any[]) => this.buildTx('revokeActive', args)
+  private _revokeActive = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('revokeActive', args, txParams)
 
   /**
    * Revokes active votes
@@ -623,8 +667,9 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
   async revokeActive(
     account: Address,
     group: Address,
-    value: BigNumber
-  ): Promise<CeloTransactionObject<void>> {
+    value: BigNumber,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     const electionContract = await this.contracts.getElection()
     const groups = await electionContract.getGroupsVotedForByAccount(account)
     const index = findAddressIndex(group, groups)
@@ -633,7 +678,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
       value.times(-1)
     )
 
-    return this._revokeActive(group, value.toFixed(), lesser, greater, index)
+    return this._revokeActive([group, value.toFixed(), lesser, greater, index], txParams)
   }
 
   /**
@@ -654,23 +699,24 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
   async revoke(
     account: Address,
     group: Address,
-    value: BigNumber
-  ): Promise<CeloTransactionObject<void>[]> {
+    value: BigNumber,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`[]> {
     const electionContract = await this.contracts.getElection()
     const vote = await electionContract.getVotesForGroupByAccount(account, group)
     if (value.gt(vote.pending.plus(vote.active))) {
       throw new Error(`can't revoke more votes for ${group} than have been made by ${account}`)
     }
-    const txos = []
+    const hashes: `0x${string}`[] = []
     const pendingValue = BigNumber.minimum(vote.pending, value)
     if (!pendingValue.isZero()) {
-      txos.push(await this.revokePending(account, group, pendingValue))
+      hashes.push(await this.revokePending(account, group, pendingValue, txParams))
     }
     if (pendingValue.lt(value)) {
       const activeValue = value.minus(pendingValue)
-      txos.push(await this.revokeActive(account, group, activeValue))
+      hashes.push(await this.revokeActive(account, group, activeValue, txParams))
     }
-    return txos
+    return hashes
   }
 
   /**
@@ -681,28 +727,30 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
   revokeValueFromVotes = (group: Address, value: BigNumber) =>
     this.revoke(this.address, group, value)
 
-  revokeAllVotesForGroup = async (group: Address) => {
-    const txos = []
+  revokeAllVotesForGroup = async (group: Address): Promise<`0x${string}`[]> => {
+    const hashes: `0x${string}`[] = []
     const electionContract = await this.contracts.getElection()
     const { pending, active } = await electionContract.getVotesForGroupByAccount(
       this.address,
       group
     )
     if (pending.isGreaterThan(0)) {
-      const revokePendingTx = await this.revokePendingVotes(group, pending)
-      txos.push(revokePendingTx)
+      hashes.push(await this.revokePendingVotes(group, pending))
     }
     if (active.isGreaterThan(0)) {
-      const revokeActiveTx = await this.revokeActiveVotes(group, active)
-      txos.push(revokeActiveTx)
+      hashes.push(await this.revokeActiveVotes(group, active))
     }
-    return txos
+    return hashes
   }
 
-  revokeAllVotesForAllGroups = async () => {
+  revokeAllVotesForAllGroups = async (): Promise<`0x${string}`[]> => {
     const electionContract = await this.contracts.getElection()
     const groups = await electionContract.getGroupsVotedForByAccount(this.address)
-    const txoMatrix = await concurrentMap(4, groups, (group) => this.revokeAllVotesForGroup(group))
-    return flatten(txoMatrix)
+    const hashes: `0x${string}`[] = []
+    for (const group of groups) {
+      const groupHashes = await this.revokeAllVotesForGroup(group)
+      hashes.push(...groupHashes)
+    }
+    return hashes
   }
 }

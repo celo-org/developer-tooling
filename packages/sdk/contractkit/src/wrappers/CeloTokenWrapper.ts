@@ -2,7 +2,7 @@ import { goldTokenABI } from '@celo/abis'
 // NOTE: removing this import results in `yarn build` failures in Dockerfiles
 // after the move to node 10. This allows types to be inferred without
 // referencing '@celo/utils/node_modules/bignumber.js'
-import { CeloTransactionObject } from '@celo/connect'
+import { CeloTx } from '@celo/connect'
 import type { Abi } from 'viem'
 import 'bignumber.js'
 import { proxyCallGeneric, valueToInt } from './BaseWrapper'
@@ -36,10 +36,10 @@ export class CeloTokenWrapper<TAbi extends Abi = typeof goldTokenABI> extends Er
    * @param comment The transfer comment
    * @return True if the transaction succeeds.
    */
-  transferWithComment = (to: string, value: string, comment: string) =>
-    this.buildTxUnchecked('transferWithComment', [
-      to,
-      value,
-      comment,
-    ]) as CeloTransactionObject<void>
+  transferWithComment = (
+    to: string,
+    value: string,
+    comment: string,
+    txParams?: Omit<CeloTx, 'data'>
+  ) => this.sendTxUnchecked('transferWithComment', [to, value, comment], txParams)
 }

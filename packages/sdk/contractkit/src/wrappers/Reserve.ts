@@ -1,5 +1,5 @@
 import { reserveABI } from '@celo/abis'
-import { Address, EventLog } from '@celo/connect'
+import { Address, CeloTx, EventLog } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import {
   BaseWrapper,
@@ -35,8 +35,10 @@ export class ReserveWrapper extends BaseWrapper<typeof reserveABI> {
   isSpender = async (account: string): Promise<boolean> => {
     return this.contract.read.isSpender([toViemAddress(account)])
   }
-  transferGold = (to: string, value: string | number) => this.buildTx('transferGold', [to, value])
-  getOrComputeTobinTax = () => this.buildTx('getOrComputeTobinTax', [])
+  transferGold = (to: string, value: string | number, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('transferGold', [to, value], txParams)
+  getOrComputeTobinTax = (txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('getOrComputeTobinTax', [], txParams)
   frozenReserveGoldStartBalance = async (): Promise<BigNumber> => {
     const res = await this.contract.read.frozenReserveGoldStartBalance()
     return valueToBigNumber(res.toString())

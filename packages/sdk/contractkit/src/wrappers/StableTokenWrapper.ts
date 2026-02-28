@@ -1,5 +1,5 @@
 import { stableTokenABI } from '@celo/abis'
-import { CeloTransactionObject } from '@celo/connect'
+import { CeloTx } from '@celo/connect'
 import { valueToString } from './BaseWrapper'
 import { CeloTokenWrapper } from './CeloTokenWrapper'
 
@@ -27,20 +27,20 @@ export class StableTokenWrapper extends CeloTokenWrapper<typeof stableTokenABI> 
    */
   increaseAllowance = (
     spender: string,
-    value: import('bignumber.js').default.Value
-  ): CeloTransactionObject<void> =>
-    this.buildTx('increaseAllowance', [spender, valueToString(value)])
+    value: import('bignumber.js').default.Value,
+    txParams?: Omit<CeloTx, 'data'>
+  ) => this.sendTx('increaseAllowance', [spender, valueToString(value)], txParams)
   /**
    * Decreases the allowance of another user.
    * @param spender The address which is being approved to spend StableToken.
    * @param value The decrement of the amount of StableToken approved to the spender.
    * @returns true if success.
    */
-  decreaseAllowance = (spender: string, value: string): CeloTransactionObject<void> =>
-    this.buildTx('decreaseAllowance', [spender, value])
-  mint = (to: string, value: string): CeloTransactionObject<void> =>
-    this.buildTx('mint', [to, value])
-  burn = (value: string): CeloTransactionObject<void> => this.buildTx('burn', [value])
+  decreaseAllowance = (spender: string, value: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('decreaseAllowance', [spender, value], txParams)
+  mint = (to: string, value: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('mint', [to, value], txParams)
+  burn = (value: string, txParams?: Omit<CeloTx, 'data'>) => this.sendTx('burn', [value], txParams)
 
   /**
    * Returns current configuration parameters.

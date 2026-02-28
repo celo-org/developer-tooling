@@ -5,7 +5,7 @@ import {
   linkedListChanges as baseLinkedListChanges,
   zip,
 } from '@celo/base/lib/collections'
-import { Address, CeloTransactionObject, EventLog } from '@celo/connect'
+import { Address, CeloTx, EventLog } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import {
   secondsToDurationString,
@@ -75,32 +75,33 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<typeof lockedGold
    * Withdraws a gold that has been unlocked after the unlocking period has passed.
    * @param index The index of the pending withdrawal to withdraw.
    */
-  withdraw = (index: number) => this.buildTx('withdraw', [index])
+  withdraw = (index: number, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('withdraw', [index], txParams)
 
   /**
    * Locks gold to be used for voting.
    * The gold to be locked, must be specified as the `tx.value`
    */
-  lock = () => this.buildTx('lock', [])
+  lock = (txParams?: Omit<CeloTx, 'data'>) => this.sendTx('lock', [], txParams)
 
   /**
    * Delegates locked gold.
    */
-  delegate = (delegatee: string, percentAmount: string) =>
-    this.buildTx('delegateGovernanceVotes', [delegatee, percentAmount])
+  delegate = (delegatee: string, percentAmount: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('delegateGovernanceVotes', [delegatee, percentAmount], txParams)
 
   /**
    * Updates the amount of delegated locked gold. There might be discrepancy between the amount of locked gold
    * and the amount of delegated locked gold because of received rewards.
    */
-  updateDelegatedAmount = (delegator: string, delegatee: string) =>
-    this.buildTx('updateDelegatedAmount', [delegator, delegatee])
+  updateDelegatedAmount = (delegator: string, delegatee: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('updateDelegatedAmount', [delegator, delegatee], txParams)
 
   /**
    * Revokes delegated locked gold.
    */
-  revokeDelegated = (delegatee: string, percentAmount: string) =>
-    this.buildTx('revokeDelegatedGovernanceVotes', [delegatee, percentAmount])
+  revokeDelegated = (delegatee: string, percentAmount: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('revokeDelegatedGovernanceVotes', [delegatee, percentAmount], txParams)
 
   getMaxDelegateesCount = async () => {
     const maxDelegateesCountHex = await this.connection.getStorageAt(
@@ -148,7 +149,8 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<typeof lockedGold
    * Unlocks gold that becomes withdrawable after the unlocking period.
    * @param value The amount of gold to unlock.
    */
-  unlock = (value: BigNumber.Value) => this.buildTx('unlock', [valueToString(value)])
+  unlock = (value: BigNumber.Value, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('unlock', [valueToString(value)], txParams)
 
   async getPendingWithdrawalsTotalValue(account: Address) {
     const pendingWithdrawals = await this.getPendingWithdrawals(account)
@@ -162,7 +164,11 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<typeof lockedGold
    * Relocks gold that has been unlocked but not withdrawn.
    * @param value The value to relock from pending withdrawals.
    */
-  async relock(account: Address, value: BigNumber.Value): Promise<CeloTransactionObject<void>[]> {
+  async relock(
+    account: Address,
+    value: BigNumber.Value,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`[]> {
     const pendingWithdrawals = await this.getPendingWithdrawals(account)
     // Ensure there are enough pending withdrawals to relock.
     const totalValue = await this.getPendingWithdrawalsTotalValue(account)
@@ -179,15 +185,22 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<typeof lockedGold
     pendingWithdrawals.forEach(throwIfNotSorted)
 
     let remainingToRelock = new BigNumber(value)
-    const relockPw = (acc: CeloTransactionObject<void>[], pw: PendingWithdrawal, i: number) => {
+    const relockOps: { index: number; value: BigNumber }[] = []
+    // Use reduceRight to determine which withdrawals to relock (highest index first)
+    pendingWithdrawals.reduceRight((_acc: null, pw: PendingWithdrawal, i: number) => {
       const valueToRelock = BigNumber.minimum(pw.value, remainingToRelock)
       if (!valueToRelock.isZero()) {
         remainingToRelock = remainingToRelock.minus(valueToRelock)
-        acc.push(this._relock(i, valueToRelock))
+        relockOps.push({ index: i, value: valueToRelock })
       }
-      return acc
+      return null
+    }, null)
+    // Send sequentially, preserving reduceRight ordering
+    const hashes: `0x${string}`[] = []
+    for (const op of relockOps) {
+      hashes.push(await this._relock(op.index, op.value, txParams))
     }
-    return pendingWithdrawals.reduceRight(relockPw, []) as CeloTransactionObject<void>[]
+    return hashes
   }
 
   /**
@@ -195,8 +208,8 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<typeof lockedGold
    * @param index The index of the pending withdrawal to relock from.
    * @param value The value to relock from the specified pending withdrawal.
    */
-  _relock = (index: number, value: BigNumber.Value) =>
-    this.buildTx('relock', [valueToString(index), valueToString(value)])
+  _relock = (index: number, value: BigNumber.Value, txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('relock', [valueToString(index), valueToString(value)], txParams)
 
   /**
    * Returns the total amount of locked gold for an account.

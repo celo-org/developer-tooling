@@ -8,7 +8,7 @@ import {
 } from '@celo/base/lib/address'
 import { concurrentMap, concurrentValuesMap } from '@celo/base/lib/async'
 import { zeroRange, zip } from '@celo/base/lib/collections'
-import { Address, CeloTransactionObject, EventLog } from '@celo/connect'
+import { Address, CeloTx, EventLog } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import {
   fixidityValueToBigNumber,
@@ -164,9 +164,12 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
     return valueToBigNumber(res.toString())
   }
 
-  private _revokePending = (...args: any[]) => this.buildTx('revokePending', args) as any
-  private _revokeActive = (...args: any[]) => this.buildTx('revokeActive', args) as any
-  private _vote = (...args: any[]) => this.buildTx('vote', args) as any
+  private _revokePending = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('revokePending', args, txParams)
+  private _revokeActive = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('revokeActive', args, txParams)
+  private _vote = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('vote', args, txParams)
 
   /**
    * Returns the minimum and maximum number of validators that can be elected.
@@ -413,9 +416,11 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
     return concurrentMap(5, groups, (g) => this.getValidatorGroupVotes(g as string))
   }
 
-  private _activate = (...args: any[]) => this.buildTx('activate', args) as any
+  private _activate = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('activate', args, txParams)
 
-  private _activateForAccount = (...args: any[]) => this.buildTx('activateForAccount', args) as any
+  private _activateForAccount = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.sendTx('activateForAccount', args, txParams)
 
   /**
    * Activates any activatable pending votes.
@@ -423,34 +428,35 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
    */
   async activate(
     account: Address,
-    onBehalfOfAccount?: boolean
-  ): Promise<CeloTransactionObject<boolean>[]> {
+    onBehalfOfAccount?: boolean,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`[]> {
     const groups = await this._getGroupsVotedForByAccountInternal(account)
     const isActivatable = await Promise.all(
       groups.map((g: string) => this._hasActivatablePendingVotes(account, g))
     )
     const groupsActivatable = groups.filter((_: string, i: number) => isActivatable[i])
-    return groupsActivatable.map((g: string) =>
-      onBehalfOfAccount ? this._activateForAccount(g, account) : this._activate(g)
-    ) as CeloTransactionObject<boolean>[]
+    const hashes: `0x${string}`[] = []
+    for (const g of groupsActivatable) {
+      const hash = onBehalfOfAccount
+        ? await this._activateForAccount([g, account], txParams)
+        : await this._activate([g], txParams)
+      hashes.push(hash)
+    }
+    return hashes
   }
 
   async revokePending(
     account: Address,
     group: Address,
-    value: BigNumber
-  ): Promise<CeloTransactionObject<boolean>> {
+    value: BigNumber,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     const groups = await this._getGroupsVotedForByAccountInternal(account)
     const index = findAddressIndex(group, groups)
     const { lesser, greater } = await this.findLesserAndGreaterAfterVote(group, value.times(-1))
 
-    return this._revokePending(
-      group,
-      value.toFixed(),
-      lesser,
-      greater,
-      index
-    ) as CeloTransactionObject<boolean>
+    return this._revokePending([group, value.toFixed(), lesser, greater, index], txParams)
   }
 
   /**
@@ -467,8 +473,9 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
     group: Address,
     value: BigNumber,
     lesserAfterVote?: Address,
-    greaterAfterVote?: Address
-  ): Promise<CeloTransactionObject<boolean>> {
+    greaterAfterVote?: Address,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     let lesser: Address, greater: Address
 
     const groups = await this._getGroupsVotedForByAccountInternal(account)
@@ -481,35 +488,30 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
       lesser = res.lesser
       greater = res.greater
     }
-    return this._revokeActive(
-      group,
-      value.toFixed(),
-      lesser,
-      greater,
-      index
-    ) as CeloTransactionObject<boolean>
+    return this._revokeActive([group, value.toFixed(), lesser, greater, index], txParams)
   }
 
   async revoke(
     account: Address,
     group: Address,
-    value: BigNumber
-  ): Promise<CeloTransactionObject<boolean>[]> {
+    value: BigNumber,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`[]> {
     const vote = await this.getVotesForGroupByAccount(account, group)
     if (value.gt(vote.pending.plus(vote.active))) {
       throw new Error(`can't revoke more votes for ${group} than have been made by ${account}`)
     }
-    const txos = []
+    const hashes: `0x${string}`[] = []
     const pendingValue = BigNumber.minimum(vote.pending, value)
     if (!pendingValue.isZero()) {
-      txos.push(await this.revokePending(account, group, pendingValue))
+      hashes.push(await this.revokePending(account, group, pendingValue, txParams))
     }
     if (pendingValue.lt(value)) {
       const activeValue = value.minus(pendingValue)
       const { lesser, greater } = await this.findLesserAndGreaterAfterVote(group, value.times(-1))
-      txos.push(await this.revokeActive(account, group, activeValue, lesser, greater))
+      hashes.push(await this.revokeActive(account, group, activeValue, lesser, greater, txParams))
     }
-    return txos
+    return hashes
   }
 
   /**
@@ -517,15 +519,14 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
    * @param validatorGroup The validator group to vote for.
    * @param value The amount of gold to use to vote.
    */
-  async vote(validatorGroup: Address, value: BigNumber): Promise<CeloTransactionObject<boolean>> {
+  async vote(
+    validatorGroup: Address,
+    value: BigNumber,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     const { lesser, greater } = await this.findLesserAndGreaterAfterVote(validatorGroup, value)
 
-    return this._vote(
-      validatorGroup,
-      value.toFixed(),
-      lesser,
-      greater
-    ) as CeloTransactionObject<boolean>
+    return this._vote([validatorGroup, value.toFixed(), lesser, greater], txParams)
   }
 
   /**

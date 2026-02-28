@@ -1,5 +1,5 @@
 import { federatedAttestationsABI } from '@celo/abis'
-import { Address, CeloTransactionObject } from '@celo/connect'
+import { Address, CeloTx } from '@celo/connect'
 import { registerAttestation as buildRegisterAttestationTypedData } from '@celo/utils/lib/typed-data-constructors'
 import { BaseWrapper, toViemAddress, toViemBigInt } from './BaseWrapper'
 
@@ -115,10 +115,12 @@ export class FederatedAttestationsWrapper extends BaseWrapper<typeof federatedAt
    * @dev Attestation signer and issuer in storage is set to msg.sender
    * @dev Throws if an attestation with the same (identifier, issuer, account) already exists
    */
-  registerAttestationAsIssuer = (identifier: string, account: Address, issuedOn: number) =>
-    this.buildTx('registerAttestationAsIssuer', [identifier, account, issuedOn])
-
-  private _registerAttestation = (...args: any[]) => this.buildTx('registerAttestation', args)
+  registerAttestationAsIssuer = (
+    identifier: string,
+    account: Address,
+    issuedOn: number,
+    txParams?: Omit<CeloTx, 'data'>
+  ) => this.sendTx('registerAttestationAsIssuer', [identifier, account, issuedOn], txParams)
 
   /**
    * @notice Generates a valid signature and registers the attestation
@@ -134,8 +136,9 @@ export class FederatedAttestationsWrapper extends BaseWrapper<typeof federatedAt
     issuer: Address,
     account: Address,
     signer: Address,
-    issuedOn: number
-  ): Promise<CeloTransactionObject<void>> {
+    issuedOn: number,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     const chainId = await this.connection.chainId()
     const typedData = buildRegisterAttestationTypedData(chainId, this.address, {
       identifier,
@@ -145,15 +148,10 @@ export class FederatedAttestationsWrapper extends BaseWrapper<typeof federatedAt
       issuedOn,
     })
     const sig = await this.connection.signTypedData(signer, typedData)
-    return this._registerAttestation(
-      identifier,
-      issuer,
-      account,
-      signer,
-      issuedOn,
-      sig.v,
-      sig.r,
-      sig.s
+    return this.sendTx(
+      'registerAttestation',
+      [identifier, issuer, account, signer, issuedOn, sig.v, sig.r, sig.s],
+      txParams
     )
   }
 
@@ -164,8 +162,12 @@ export class FederatedAttestationsWrapper extends BaseWrapper<typeof federatedAt
    * @param account Address of the account mapped to the identifier
    * @dev Throws if sender is not the issuer, signer, or account
    */
-  revokeAttestation = (identifier: string, issuer: Address, account: Address) =>
-    this.buildTx('revokeAttestation', [identifier, issuer, account])
+  revokeAttestation = (
+    identifier: string,
+    issuer: Address,
+    account: Address,
+    txParams?: Omit<CeloTx, 'data'>
+  ) => this.sendTx('revokeAttestation', [identifier, issuer, account], txParams)
 
   /**
    * @notice Revokes attestations [identifiers <-> accounts] from issuer
@@ -177,6 +179,10 @@ export class FederatedAttestationsWrapper extends BaseWrapper<typeof federatedAt
    * @dev Throws if sender is not the issuer or currently registered signer of issuer
    * @dev Throws if an attestation is not found for identifiers[i] <-> accounts[i]
    */
-  batchRevokeAttestations = (issuer: Address, identifiers: string[], accounts: Address[]) =>
-    this.buildTx('batchRevokeAttestations', [issuer, identifiers, accounts])
+  batchRevokeAttestations = (
+    issuer: Address,
+    identifiers: string[],
+    accounts: Address[],
+    txParams?: Omit<CeloTx, 'data'>
+  ) => this.sendTx('batchRevokeAttestations', [issuer, identifiers, accounts], txParams)
 }
