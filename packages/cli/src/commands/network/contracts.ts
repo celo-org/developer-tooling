@@ -1,4 +1,4 @@
-import { createViemTxObject } from '@celo/connect'
+import { decodeFunctionResult, encodeFunctionData } from 'viem'
 import { iCeloVersionedContractABI, proxyABI } from '@celo/abis'
 import { concurrentMap } from '@celo/base'
 import { CeloContract } from '@celo/contractkit'
@@ -40,12 +40,20 @@ export default class Contracts extends BaseCommand {
         } else {
           try {
             const proxyContract = kit.connection.getCeloContract(proxyABI as any, proxy)
-            implementation = await createViemTxObject<string>(
-              kit.connection,
-              proxyContract,
-              '_getImplementation',
-              []
-            ).call()
+            const implCallData = encodeFunctionData({
+              abi: proxyContract.abi,
+              functionName: '_getImplementation',
+              args: [],
+            })
+            const { data: implResultData } = await kit.connection.viemClient.call({
+              to: proxyContract.address,
+              data: implCallData,
+            })
+            implementation = decodeFunctionResult({
+              abi: proxyContract.abi,
+              functionName: '_getImplementation',
+              data: implResultData!,
+            }) as string
           } catch (e) {
             // if we fail to get implementation that means it doesnt have one so set it to NONE
             implementation = 'NONE'
@@ -61,12 +69,20 @@ export default class Contracts extends BaseCommand {
               iCeloVersionedContractABI as any,
               implementation
             )
-            const raw = await createViemTxObject<any>(
-              kit.connection,
-              versionContract,
-              'getVersionNumber',
-              []
-            ).call()
+            const versionCallData = encodeFunctionData({
+              abi: versionContract.abi,
+              functionName: 'getVersionNumber',
+              args: [],
+            })
+            const { data: versionResultData } = await kit.connection.viemClient.call({
+              to: versionContract.address,
+              data: versionCallData,
+            })
+            const raw = decodeFunctionResult({
+              abi: versionContract.abi,
+              functionName: 'getVersionNumber',
+              data: versionResultData!,
+            }) as readonly [unknown, unknown, unknown, unknown]
             version = `${raw[0]}.${raw[1]}.${raw[2]}.${raw[3]}`
           } catch (e) {
             console.warn(`Failed to get version for ${contract} at ${proxy}`)

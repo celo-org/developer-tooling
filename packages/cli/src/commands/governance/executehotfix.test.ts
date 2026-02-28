@@ -10,7 +10,7 @@ import {
 } from '@celo/dev-utils/anvil-test'
 import fs from 'fs'
 import path from 'node:path'
-import { AbiItem, createViemTxObject, PROXY_ADMIN_ADDRESS } from '@celo/connect'
+import { AbiItem, PROXY_ADMIN_ADDRESS } from '@celo/connect'
 import {
   EXTRA_LONG_TIMEOUT_MS,
   stripAnsiCodesAndTxHashes,
@@ -19,7 +19,7 @@ import {
 import Approve from './approve'
 import ExecuteHotfix from './executehotfix'
 import PrepareHotfix from './preparehotfix'
-import { parseEther } from 'viem'
+import { decodeFunctionResult, encodeFunctionData, parseEther } from 'viem'
 
 process.env.NO_SYNCCHECK = 'true'
 
@@ -148,10 +148,21 @@ testWithAnvilL2('governance:executehotfix cmd', (provider) => {
       )
 
       // TestTransaction contract returns 0 if a value is not set for a given key
+      const getValueCallData = encodeFunctionData({
+        abi: testTransactionsContract.abi,
+        functionName: 'getValue',
+        args: [HOTFIX_TRANSACTION_TEST_KEY],
+      })
+      const { data: getValueResultData } = await kit.connection.viemClient.call({
+        to: testTransactionsContract.address,
+        data: getValueCallData,
+      })
       expect(
-        await createViemTxObject<string>(kit.connection, testTransactionsContract, 'getValue', [
-          HOTFIX_TRANSACTION_TEST_KEY,
-        ]).call()
+        decodeFunctionResult({
+          abi: testTransactionsContract.abi,
+          functionName: 'getValue',
+          data: getValueResultData!,
+        })
       ).toEqual(0n)
 
       logMock.mockClear()
@@ -169,10 +180,21 @@ testWithAnvilL2('governance:executehotfix cmd', (provider) => {
         provider
       )
 
+      const getValueCallData2 = encodeFunctionData({
+        abi: testTransactionsContract.abi,
+        functionName: 'getValue',
+        args: [HOTFIX_TRANSACTION_TEST_KEY],
+      })
+      const { data: getValueResultData2 } = await kit.connection.viemClient.call({
+        to: testTransactionsContract.address,
+        data: getValueCallData2,
+      })
       expect(
-        await createViemTxObject<string>(kit.connection, testTransactionsContract, 'getValue', [
-          HOTFIX_TRANSACTION_TEST_KEY,
-        ]).call()
+        decodeFunctionResult({
+          abi: testTransactionsContract.abi,
+          functionName: 'getValue',
+          data: getValueResultData2!,
+        })
       ).toEqual(BigInt(HOTFIX_TRANSACTION_TEST_VALUE))
 
       expect(
@@ -285,10 +307,21 @@ testWithAnvilL2('governance:executehotfix cmd', (provider) => {
       )
 
       // TestTransaction contract returns 0 if a value is not set for a given key
+      const getValueCallData = encodeFunctionData({
+        abi: testTransactionsContract.abi,
+        functionName: 'getValue',
+        args: [HOTFIX_TRANSACTION_TEST_KEY],
+      })
+      const { data: getValueResultData } = await kit.connection.viemClient.call({
+        to: testTransactionsContract.address,
+        data: getValueCallData,
+      })
       expect(
-        await createViemTxObject<string>(kit.connection, testTransactionsContract, 'getValue', [
-          HOTFIX_TRANSACTION_TEST_KEY,
-        ]).call()
+        decodeFunctionResult({
+          abi: testTransactionsContract.abi,
+          functionName: 'getValue',
+          data: getValueResultData!,
+        })
       ).toEqual(0n)
 
       const timestampAfterExecutionLimit = (
@@ -319,10 +352,21 @@ testWithAnvilL2('governance:executehotfix cmd', (provider) => {
       ).rejects.toThrow("Some checks didn't pass!")
 
       // Should still return 0 because the hotfix should not have been executed
+      const getValueCallData2 = encodeFunctionData({
+        abi: testTransactionsContract.abi,
+        functionName: 'getValue',
+        args: [HOTFIX_TRANSACTION_TEST_KEY],
+      })
+      const { data: getValueResultData2 } = await kit.connection.viemClient.call({
+        to: testTransactionsContract.address,
+        data: getValueCallData2,
+      })
       expect(
-        await createViemTxObject<string>(kit.connection, testTransactionsContract, 'getValue', [
-          HOTFIX_TRANSACTION_TEST_KEY,
-        ]).call()
+        decodeFunctionResult({
+          abi: testTransactionsContract.abi,
+          functionName: 'getValue',
+          data: getValueResultData2!,
+        })
       ).toEqual(0n)
 
       expect(

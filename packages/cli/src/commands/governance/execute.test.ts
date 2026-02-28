@@ -1,4 +1,4 @@
-import { AbiItem, createViemTxObject, PROXY_ADMIN_ADDRESS } from '@celo/connect'
+import { AbiItem, PROXY_ADMIN_ADDRESS } from '@celo/connect'
 import { newKitFromProvider } from '@celo/contractkit'
 import { Proposal } from '@celo/contractkit/lib/wrappers/Governance'
 import {
@@ -12,7 +12,7 @@ import fs from 'fs'
 import path from 'node:path'
 import { stripAnsiCodesAndTxHashes, testLocallyWithNode } from '../../test-utils/cliUtils'
 import Execute from './execute'
-import { parseEther } from 'viem'
+import { decodeFunctionResult, encodeFunctionData, parseEther } from 'viem'
 
 process.env.NO_SYNCCHECK = 'true'
 
@@ -133,10 +133,21 @@ testWithAnvilL2('governance:execute cmd', (provider) => {
     )
 
     // TestTransaction contract returns 0 if a value is not set for a given key
+    const getValueCallData = encodeFunctionData({
+      abi: testTransactionsContract.abi,
+      functionName: 'getValue',
+      args: [PROPOSAL_TRANSACTION_TEST_KEY],
+    })
+    const { data: getValueResultData } = await kit.connection.viemClient.call({
+      to: testTransactionsContract.address,
+      data: getValueCallData,
+    })
     expect(
-      await createViemTxObject<string>(kit.connection, testTransactionsContract, 'getValue', [
-        PROPOSAL_TRANSACTION_TEST_KEY,
-      ]).call()
+      decodeFunctionResult({
+        abi: testTransactionsContract.abi,
+        functionName: 'getValue',
+        data: getValueResultData!,
+      })
     ).toEqual(0n)
 
     logMock.mockClear()
@@ -147,10 +158,21 @@ testWithAnvilL2('governance:execute cmd', (provider) => {
       provider
     )
 
+    const getValueCallData2 = encodeFunctionData({
+      abi: testTransactionsContract.abi,
+      functionName: 'getValue',
+      args: [PROPOSAL_TRANSACTION_TEST_KEY],
+    })
+    const { data: getValueResultData2 } = await kit.connection.viemClient.call({
+      to: testTransactionsContract.address,
+      data: getValueCallData2,
+    })
     expect(
-      await createViemTxObject<string>(kit.connection, testTransactionsContract, 'getValue', [
-        PROPOSAL_TRANSACTION_TEST_KEY,
-      ]).call()
+      decodeFunctionResult({
+        abi: testTransactionsContract.abi,
+        functionName: 'getValue',
+        data: getValueResultData2!,
+      })
     ).toEqual(BigInt(PROPOSAL_TRANSACTION_TEST_VALUE))
 
     expect(

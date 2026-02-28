@@ -1,4 +1,3 @@
-import { createViemTxObject } from '@celo/connect'
 import { StrongAddress } from '@celo/base'
 import { newKitFromProvider } from '@celo/contractkit'
 import { GoldTokenWrapper } from '@celo/contractkit/lib/wrappers/GoldTokenWrapper'
@@ -16,7 +15,7 @@ import { deployMultiCall } from '../../test-utils/multicall'
 import { createMultisig, setupSafeContracts } from '../../test-utils/multisigUtils'
 import Approve from '../multisig/approve'
 import Propose from './propose'
-import { parseEther } from 'viem'
+import { encodeFunctionData, parseEther } from 'viem'
 
 // Mock fetch for HTTP status tests
 jest.mock('cross-fetch')
@@ -215,10 +214,11 @@ testWithAnvilL2(
         expect(proposal.length).toEqual(transactions.length)
         expect(proposal[0].to).toEqual(goldToken.address)
         expect(proposal[0].value).toEqual(transactions[0].value)
-        const expectedInput = createViemTxObject(kit.connection, goldTokenContract, 'transfer', [
-          transactions[0].args[0],
-          transactions[0].args[1],
-        ]).encodeABI()
+        const expectedInput = encodeFunctionData({
+          abi: goldTokenContract.abi,
+          functionName: 'transfer',
+          args: [transactions[0].args[0], transactions[0].args[1]],
+        })
         expect(proposal[0].input).toEqual(expectedInput)
       },
       EXTRA_LONG_TIMEOUT_MS * 2
@@ -279,10 +279,11 @@ testWithAnvilL2(
         expect(proposal.length).toEqual(transactions.length)
         expect(proposal[0].to).toEqual(goldToken.address)
         expect(proposal[0].value).toEqual(transactions[0].value)
-        const expectedInput = createViemTxObject(kit.connection, goldTokenContract, 'transfer', [
-          transactions[0].args[0],
-          transactions[0].args[1],
-        ]).encodeABI()
+        const expectedInput = encodeFunctionData({
+          abi: goldTokenContract.abi,
+          functionName: 'transfer',
+          args: [transactions[0].args[0], transactions[0].args[1]],
+        })
         expect(proposal[0].input).toEqual(expectedInput)
       },
       EXTRA_LONG_TIMEOUT_MS
@@ -354,10 +355,11 @@ testWithAnvilL2(
         expect(proposal.length).toEqual(transactions.length)
         expect(proposal[0].to).toEqual(goldToken.address)
         expect(proposal[0].value).toEqual(transactions[0].value)
-        const expectedInput = createViemTxObject(kit.connection, goldTokenContract, 'transfer', [
-          transactions[0].args[0],
-          transactions[0].args[1],
-        ]).encodeABI()
+        const expectedInput = encodeFunctionData({
+          abi: goldTokenContract.abi,
+          functionName: 'transfer',
+          args: [transactions[0].args[0], transactions[0].args[1]],
+        })
         expect(proposal[0].input).toEqual(expectedInput)
       },
       EXTRA_LONG_TIMEOUT_MS
@@ -431,10 +433,11 @@ testWithAnvilL2(
           expect(proposal.length).toEqual(transactions.length)
           expect(proposal[0].to).toEqual(goldToken.address)
           expect(proposal[0].value).toEqual(transactions[0].value)
-          const expectedInput = createViemTxObject(kit.connection, goldTokenContract, 'transfer', [
-            transactions[0].args[0],
-            transactions[0].args[1],
-          ]).encodeABI()
+          const expectedInput = encodeFunctionData({
+            abi: goldTokenContract.abi,
+            functionName: 'transfer',
+            args: [transactions[0].args[0], transactions[0].args[1]],
+          })
           expect(proposal[0].input).toEqual(expectedInput)
         },
         EXTRA_LONG_TIMEOUT_MS
@@ -528,10 +531,11 @@ testWithAnvilL2(
           expect(proposal.length).toEqual(transactions.length)
           expect(proposal[0].to).toEqual(goldToken.address)
           expect(proposal[0].value).toEqual(transactions[0].value)
-          const expectedInput = createViemTxObject(kit.connection, goldTokenContract, 'transfer', [
-            transactions[0].args[0],
-            transactions[0].args[1],
-          ]).encodeABI()
+          const expectedInput = encodeFunctionData({
+            abi: goldTokenContract.abi,
+            functionName: 'transfer',
+            args: [transactions[0].args[0], transactions[0].args[1]],
+          })
           expect(proposal[0].input).toEqual(expectedInput)
         },
         EXTRA_LONG_TIMEOUT_MS
@@ -576,10 +580,11 @@ testWithAnvilL2(
         expect(proposal.length).toEqual(transactions.length)
         expect(proposal[0].to).toEqual(randomAddress)
         expect(proposal[0].value).toEqual(transactions[0].value)
-        const expectedInput = createViemTxObject(kit.connection, goldTokenContract, 'transfer', [
-          transactions[0].args[0],
-          transactions[0].args[1],
-        ]).encodeABI()
+        const expectedInput = encodeFunctionData({
+          abi: goldTokenContract.abi,
+          functionName: 'transfer',
+          args: [transactions[0].args[0], transactions[0].args[1]],
+        })
         expect(proposal[0].input).toEqual(expectedInput)
       },
       EXTRA_LONG_TIMEOUT_MS

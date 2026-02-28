@@ -1,4 +1,4 @@
-import { createViemTxObject } from '@celo/connect'
+import { encodeFunctionData } from 'viem'
 import { StrongAddress } from '@celo/base'
 import { newKitFromProvider } from '@celo/contractkit'
 import { ValidatorsWrapper } from '@celo/contractkit/lib/wrappers/Validators'
@@ -60,27 +60,45 @@ testWithAnvilL2('validator:deregister', (provider) => {
       provider
     )
     await asCoreContractsOwner(provider, async (ownerAddress) => {
-      await createViemTxObject(
-        kit.connection,
+      const setMaxGroupSizeData = encodeFunctionData({
         // @ts-expect-error (.contract)
-        validatorContract.contract,
-        'setMaxGroupSize',
-        [5]
-      ).send({ from: ownerAddress })
-      await createViemTxObject(
-        kit.connection,
+        abi: validatorContract.contract.abi,
+        functionName: 'setMaxGroupSize',
+        args: [5],
+      })
+      const setMaxGroupSizeResult = await kit.connection.sendTransaction({
         // @ts-expect-error (.contract)
-        validatorContract.contract,
-        'setValidatorLockedGoldRequirements',
-        [2, 10000]
-      ).send({ from: ownerAddress })
-      await createViemTxObject(
-        kit.connection,
+        to: validatorContract.contract.address,
+        data: setMaxGroupSizeData,
+        from: ownerAddress,
+      })
+      await setMaxGroupSizeResult.getHash()
+      const setValidatorLockedGoldData = encodeFunctionData({
         // @ts-expect-error (.contract)
-        validatorContract.contract,
-        'setGroupLockedGoldRequirements',
-        [2, 10000]
-      ).send({ from: ownerAddress })
+        abi: validatorContract.contract.abi,
+        functionName: 'setValidatorLockedGoldRequirements',
+        args: [2, 10000],
+      })
+      const setValidatorLockedGoldResult = await kit.connection.sendTransaction({
+        // @ts-expect-error (.contract)
+        to: validatorContract.contract.address,
+        data: setValidatorLockedGoldData,
+        from: ownerAddress,
+      })
+      await setValidatorLockedGoldResult.getHash()
+      const setGroupLockedGoldData = encodeFunctionData({
+        // @ts-expect-error (.contract)
+        abi: validatorContract.contract.abi,
+        functionName: 'setGroupLockedGoldRequirements',
+        args: [2, 10000],
+      })
+      const setGroupLockedGoldResult = await kit.connection.sendTransaction({
+        // @ts-expect-error (.contract)
+        to: validatorContract.contract.address,
+        data: setGroupLockedGoldData,
+        from: ownerAddress,
+      })
+      await setGroupLockedGoldResult.getHash()
     })
     await withImpersonatedAccount(provider, groupAddress, async () => {
       await testLocallyWithNode(

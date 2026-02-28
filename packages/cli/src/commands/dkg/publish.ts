@@ -1,4 +1,4 @@
-import { createViemTxObject } from '@celo/connect'
+import { encodeFunctionData } from 'viem'
 import { ensureLeading0x } from '@celo/utils/lib/address'
 import { Flags } from '@oclif/core'
 import fs from 'fs'
@@ -27,9 +27,19 @@ export default class DKGPublish extends BaseCommand {
     const dkg = kit.connection.getCeloContract(DKG.abi, res.flags.address)
 
     const data = fs.readFileSync(res.flags.data).toString('hex')
+    const publishData = encodeFunctionData({
+      abi: dkg.abi,
+      functionName: 'publish',
+      args: [ensureLeading0x(data)],
+    })
     await displayTx(
       'publishData',
-      createViemTxObject(kit.connection, dkg, 'publish', [ensureLeading0x(data)]),
+      {
+        send: (tx: any) =>
+          kit.connection
+            .sendTransaction({ ...tx, to: dkg.address, data: publishData })
+            .then((r) => r.getHash()),
+      },
       { from: res.flags.from }
     )
   }

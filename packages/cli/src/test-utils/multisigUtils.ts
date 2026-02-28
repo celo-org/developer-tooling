@@ -1,10 +1,10 @@
 import { multiSigABI, proxyABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
-import { AbiItem, createViemTxObject, Provider } from '@celo/connect'
+import { AbiItem, Provider } from '@celo/connect'
 import { ContractKit } from '@celo/contractkit'
 import { setCode } from '@celo/dev-utils/anvil-test'
 import { TEST_GAS_PRICE } from '@celo/dev-utils/test-utils'
-import { parseUnits } from 'viem'
+import { encodeFunctionData, parseUnits } from 'viem'
 import {
   multiSigBytecode,
   proxyBytecode,
@@ -61,25 +61,44 @@ export async function createMultisig(
       requiredSignatures as unknown,
       requiredInternalSignatures as unknown,
     ])
-  const initTx = createViemTxObject(kit.connection, proxy, '_setAndInitializeImplementation', [
-    multiSigAddress,
-    callData,
-  ])
-  await initTx.send({
+  const initData = encodeFunctionData({
+    abi: proxy.abi,
+    functionName: '_setAndInitializeImplementation',
+    args: [multiSigAddress, callData],
+  })
+  const initGas = await kit.connection.estimateGas({
     from: kit.defaultAccount,
-    gas: await initTx.estimateGas({ from: kit.defaultAccount }),
+    to: proxy.address,
+    data: initData,
+  })
+  const initResult = await kit.connection.sendTransaction({
+    from: kit.defaultAccount,
+    to: proxy.address,
+    data: initData,
+    gas: initGas,
     maxPriorityFeePerGas: priorityFee,
     maxFeePerGas: (BigInt(baseFee) + BigInt(priorityFee)).toString(),
   })
-  const changeOwnerTx = createViemTxObject(kit.connection, proxy, '_transferOwnership', [
-    proxyAddress,
-  ])
-  await changeOwnerTx.send({
+  await initResult.getHash()
+  const changeOwnerData = encodeFunctionData({
+    abi: proxy.abi,
+    functionName: '_transferOwnership',
+    args: [proxyAddress],
+  })
+  const changeOwnerGas = await kit.connection.estimateGas({
     from: kit.defaultAccount,
-    gas: await changeOwnerTx.estimateGas({ from: kit.defaultAccount }),
+    to: proxy.address,
+    data: changeOwnerData,
+  })
+  const changeOwnerResult = await kit.connection.sendTransaction({
+    from: kit.defaultAccount,
+    to: proxy.address,
+    data: changeOwnerData,
+    gas: changeOwnerGas,
     maxPriorityFeePerGas: priorityFee,
     maxFeePerGas: (BigInt(baseFee) + BigInt(priorityFee)).toString(),
   })
+  await changeOwnerResult.getHash()
 
   return proxyAddress as StrongAddress
 }

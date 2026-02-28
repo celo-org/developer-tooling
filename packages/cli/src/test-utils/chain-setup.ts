@@ -8,10 +8,10 @@ import {
   withImpersonatedAccount,
 } from '@celo/dev-utils/anvil-test'
 import { mineBlocks, timeTravel } from '@celo/dev-utils/ganache-test'
-import { createViemTxObject, Provider } from '@celo/connect'
+import { Provider } from '@celo/connect'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
-import { parseEther } from 'viem'
+import { decodeFunctionResult, encodeFunctionData, parseEther } from 'viem'
 import Switch from '../commands/epochs/switch'
 import { testLocallyWithNode } from './cliUtils'
 
@@ -185,28 +185,43 @@ export const activateAllValidatorGroupsVotes = async (kit: ContractKit) => {
   await epochManagerWrapper.finishNextEpochProcessTx({ from: sender })
 
   for (const validatorGroup of validatorGroups) {
-    const pendingVotesForGroup = new BigNumber(
-      await createViemTxObject<string>(
-        kit.connection,
-        // @ts-expect-error we need to call the method directly as it's not exposed via the wrapper
-        electionWrapper.contract,
-        'getPendingVotesForGroup',
-        [validatorGroup]
-      ).call()
-    )
+    const getPendingCallData = encodeFunctionData({
+      // @ts-expect-error we need to call the method directly as it's not exposed via the wrapper
+      abi: electionWrapper.contract.abi,
+      functionName: 'getPendingVotesForGroup',
+      args: [validatorGroup as `0x${string}`],
+    })
+    const { data: getPendingResultData } = await kit.connection.viemClient.call({
+      // @ts-expect-error we need to call the method directly as it's not exposed via the wrapper
+      to: electionWrapper.contract.address,
+      data: getPendingCallData,
+    })
+    const pendingVotesRaw = decodeFunctionResult({
+      // @ts-expect-error we need to call the method directly as it's not exposed via the wrapper
+      abi: electionWrapper.contract.abi,
+      functionName: 'getPendingVotesForGroup',
+      data: getPendingResultData!,
+    })
+    const pendingVotesForGroup = new BigNumber(String(pendingVotesRaw))
 
     if (pendingVotesForGroup.gt(0)) {
       await withImpersonatedAccount(
         kit.connection.currentProvider,
         validatorGroup,
         async () => {
-          await createViemTxObject(
-            kit.connection,
+          const activateData = encodeFunctionData({
             // @ts-expect-error here as well
-            electionWrapper.contract,
-            'activate',
-            [validatorGroup]
-          ).send({ from: validatorGroup })
+            abi: electionWrapper.contract.abi,
+            functionName: 'activate',
+            args: [validatorGroup as `0x${string}`],
+          })
+          const activateResult = await kit.connection.sendTransaction({
+            // @ts-expect-error here as well
+            to: electionWrapper.contract.address,
+            data: activateData,
+            from: validatorGroup,
+          })
+          await activateResult.getHash()
         },
         new BigNumber(parseEther('1').toString())
       )

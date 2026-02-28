@@ -1,11 +1,11 @@
 import { releaseGoldABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
-import { Connection, createViemTxObject, Provider } from '@celo/connect'
+import { Connection, Provider } from '@celo/connect'
 import { REGISTRY_CONTRACT_ADDRESS } from '@celo/contractkit'
 import { setBalance, setCode, withImpersonatedAccount } from '@celo/dev-utils/anvil-test'
 import { HOUR, MINUTE, MONTH } from '@celo/dev-utils/test-utils'
 import BigNumber from 'bignumber.js'
-import { parseEther } from 'viem'
+import { encodeFunctionData, parseEther } from 'viem'
 import { getCurrentTimestamp } from '../utils/cli'
 
 // ported from ganache tests
@@ -41,22 +41,32 @@ export async function deployReleaseGoldContract(
     ownerMultisigAddress,
     async () => {
       // default values taken from https://github.com/celo-org/celo-monorepo/blob/master/packages/protocol/test-sol/unit/governance/voting/ReleaseGold.t.sol#L146
-      await createViemTxObject(connection, contract, 'initialize', [
-        getCurrentTimestamp() + 5 * MINUTE,
-        HOUR,
-        releasePeriods,
-        3 * MONTH,
-        amountReleasedPerPeriod.toFixed(),
-        canValidate === false, // Otherwise reverts with "Revocable contracts cannot validate"
-        beneficiary,
-        releaseOwner,
-        refundAddress,
-        true, // subjectToLiquidityProvision needs to be true, because in the withdraw test we set the liquidity provision and it will fail otherwise
-        500, // distribution ratio
-        canValidate,
-        true,
-        REGISTRY_CONTRACT_ADDRESS,
-      ]).send({ from: ownerMultisigAddress })
+      const initData = encodeFunctionData({
+        abi: contract.abi,
+        functionName: 'initialize',
+        args: [
+          getCurrentTimestamp() + 5 * MINUTE,
+          HOUR,
+          releasePeriods,
+          3 * MONTH,
+          amountReleasedPerPeriod.toFixed(),
+          canValidate === false, // Otherwise reverts with "Revocable contracts cannot validate"
+          beneficiary,
+          releaseOwner,
+          refundAddress,
+          true, // subjectToLiquidityProvision needs to be true, because in the withdraw test we set the liquidity provision and it will fail otherwise
+          500, // distribution ratio
+          canValidate,
+          true,
+          REGISTRY_CONTRACT_ADDRESS,
+        ],
+      })
+      const initResult = await connection.sendTransaction({
+        to: contract.address,
+        data: initData,
+        from: ownerMultisigAddress,
+      })
+      await initResult.getHash()
     },
     new BigNumber(parseEther('1').toString())
   )

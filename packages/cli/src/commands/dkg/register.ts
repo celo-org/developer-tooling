@@ -1,4 +1,4 @@
-import { createViemTxObject } from '@celo/connect'
+import { encodeFunctionData } from 'viem'
 import { ensureLeading0x } from '@celo/utils/lib/address'
 import { Flags } from '@oclif/core'
 import fs from 'fs'
@@ -29,9 +29,19 @@ export default class DKGRegister extends BaseCommand {
 
     // read the pubkey and publish it
     const blsKey = fs.readFileSync(res.flags.blsKey).toString('hex')
+    const registerData = encodeFunctionData({
+      abi: dkg.abi,
+      functionName: 'register',
+      args: [ensureLeading0x(blsKey)],
+    })
     await displayTx(
       'registerBlsKey',
-      createViemTxObject(kit.connection, dkg, 'register', [ensureLeading0x(blsKey)]),
+      {
+        send: (tx: any) =>
+          kit.connection
+            .sendTransaction({ ...tx, to: dkg.address, data: registerData })
+            .then((r) => r.getHash()),
+      },
       { from: res.flags.from }
     )
   }

@@ -1,4 +1,4 @@
-import { createViemTxObject } from '@celo/connect'
+import { decodeFunctionResult, encodeFunctionData } from 'viem'
 import { newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
@@ -15,14 +15,22 @@ testWithAnvilL2('epochs:finish cmd', (provider) => {
     const kit = newKitFromProvider(provider)
     const accounts = await kit.connection.getAccounts()
     const epochManagerWrapper = await kit.contracts.getEpochManager()
+    const callData = encodeFunctionData({
+      abi: epochManagerWrapper._contract.abi,
+      functionName: 'systemAlreadyInitialized',
+      args: [],
+    })
+    const { data: resultData } = await kit.connection.viemClient.call({
+      to: epochManagerWrapper._contract.address,
+      data: callData,
+    })
     expect(
-      createViemTxObject(
-        kit.connection,
-        epochManagerWrapper._contract,
-        'systemAlreadyInitialized',
-        []
-      ).call()
-    ).resolves.toEqual(true)
+      decodeFunctionResult({
+        abi: epochManagerWrapper._contract.abi,
+        functionName: 'systemAlreadyInitialized',
+        data: resultData!,
+      })
+    ).toEqual(true)
 
     expect(await epochManagerWrapper.getCurrentEpochNumber()).toEqual(4)
     await expect(

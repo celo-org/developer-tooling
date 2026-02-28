@@ -1,4 +1,4 @@
-import { createViemTxObject } from '@celo/connect'
+import { encodeFunctionData } from 'viem'
 import { BaseCommand } from '../../base'
 import { displayTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
@@ -23,9 +23,17 @@ export default class DKGStart extends BaseCommand {
     const res = await this.parse(DKGStart)
     const dkg = kit.connection.getCeloContract(DKG.abi, res.flags.address)
 
-    await displayTx('start', createViemTxObject(kit.connection, dkg, 'start', []), {
-      from: res.flags.from,
-    })
+    const startData = encodeFunctionData({ abi: dkg.abi, functionName: 'start', args: [] })
+    await displayTx(
+      'start',
+      {
+        send: (tx: any) =>
+          kit.connection
+            .sendTransaction({ ...tx, to: dkg.address, data: startData })
+            .then((r) => r.getHash()),
+      },
+      { from: res.flags.from }
+    )
     this.log('DKG Started!')
   }
 }

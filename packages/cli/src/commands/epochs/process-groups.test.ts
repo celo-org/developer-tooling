@@ -1,4 +1,4 @@
-import { createViemTxObject } from '@celo/connect'
+import { decodeFunctionResult, encodeFunctionData } from 'viem'
 import { newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
@@ -86,43 +86,75 @@ testWithAnvilL2('epochs:process-groups cmd', (provider) => {
     // Following lines simulate a scenario where someone calls processGroup() for their own group(s)
     // previously starting epoch process and calling setToProcessGroups() for individual processing
     await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({ from })
-    await createViemTxObject(
-      kit.connection,
+    const setToProcessData = encodeFunctionData({
       // @ts-expect-error we're accessing a private property
-      epochManagerWrapper.contract,
-      'setToProcessGroups',
-      []
-    ).send({ from })
+      abi: epochManagerWrapper.contract.abi,
+      functionName: 'setToProcessGroups',
+      args: [],
+    })
+    const setToProcessResult = await kit.connection.sendTransaction({
+      // @ts-expect-error we're accessing a private property
+      to: epochManagerWrapper.contract.address,
+      data: setToProcessData,
+      from,
+    })
+    await setToProcessResult.getHash()
     const [lessers, greaters] = await epochManagerWrapper.getLessersAndGreaters([electedGroup])
 
     // Making sure the group has not been processed yet
+    const processedCallData = encodeFunctionData({
+      // @ts-ignore accessing a private property
+      abi: epochManagerWrapper.contract.abi,
+      functionName: 'processedGroups',
+      args: [electedGroup],
+    })
+    const { data: processedResultData } = await kit.connection.viemClient.call({
+      // @ts-ignore accessing a private property
+      to: epochManagerWrapper.contract.address,
+      data: processedCallData,
+    })
     expect(
-      await createViemTxObject<string>(
-        kit.connection,
+      decodeFunctionResult({
         // @ts-ignore accessing a private property
-        epochManagerWrapper.contract,
-        'processedGroups',
-        [electedGroup]
-      ).call()
+        abi: epochManagerWrapper.contract.abi,
+        functionName: 'processedGroups',
+        data: processedResultData!,
+      })
     ).not.toEqual('0')
 
-    await createViemTxObject(
-      kit.connection,
+    const processGroupData = encodeFunctionData({
       // @ts-expect-error we're accessing a private property
-      epochManagerWrapper.contract,
-      'processGroup',
-      [electedGroup, lessers[0], greaters[0]]
-    ).send({ from })
+      abi: epochManagerWrapper.contract.abi,
+      functionName: 'processGroup',
+      args: [electedGroup, lessers[0], greaters[0]],
+    })
+    const processGroupResult = await kit.connection.sendTransaction({
+      // @ts-expect-error we're accessing a private property
+      to: epochManagerWrapper.contract.address,
+      data: processGroupData,
+      from,
+    })
+    await processGroupResult.getHash()
 
     // Making sure the group has not been processed yet
+    const processedCallData2 = encodeFunctionData({
+      // @ts-ignore accessing a private property
+      abi: epochManagerWrapper.contract.abi,
+      functionName: 'processedGroups',
+      args: [electedGroup],
+    })
+    const { data: processedResultData2 } = await kit.connection.viemClient.call({
+      // @ts-ignore accessing a private property
+      to: epochManagerWrapper.contract.address,
+      data: processedCallData2,
+    })
     expect(
-      await createViemTxObject<string>(
-        kit.connection,
+      decodeFunctionResult({
         // @ts-ignore accessing a private property
-        epochManagerWrapper.contract,
-        'processedGroups',
-        [electedGroup]
-      ).call()
+        abi: epochManagerWrapper.contract.abi,
+        functionName: 'processedGroups',
+        data: processedResultData2!,
+      })
     ).toEqual(0n)
 
     await testLocallyWithNode(ProcessGroups, ['--from', from], provider)
