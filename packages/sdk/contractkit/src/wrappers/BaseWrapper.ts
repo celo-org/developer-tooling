@@ -94,6 +94,38 @@ export abstract class BaseWrapper<TAbi extends readonly unknown[] = AbiItem[]> {
     }
   }
 
+  /**
+   * Create a CeloTransactionObject for a state-changing contract call.
+   * Typed variant: constrains functionName to actual ABI write methods.
+   * @internal Used by concrete wrapper subclasses to replace proxySend.
+   */
+  protected buildTx<TFunctionName extends ContractFunctionName<TAbi, 'nonpayable' | 'payable'>>(
+    functionName: TFunctionName,
+    args: unknown[]
+  ): CeloTransactionObject<void> {
+    const txo = createViemTxObjectInternal(
+      this.connection,
+      this.contract,
+      functionName as string,
+      args
+    )
+    return toTransactionObject(this.connection, txo) as CeloTransactionObject<void>
+  }
+
+  /**
+   * Create a CeloTransactionObject without compile-time function name checking.
+   * Use ONLY in generic intermediate classes (Erc20Wrapper, CeloTokenWrapper)
+   * where TAbi is an unresolved generic parameter.
+   * @internal
+   */
+  protected buildTxUnchecked(
+    functionName: string,
+    args: unknown[]
+  ): CeloTransactionObject<unknown> {
+    const txo = createViemTxObjectInternal(this.connection, this.contract, functionName, args)
+    return toTransactionObject(this.connection, txo)
+  }
+
   /** Contract getPastEvents */
   public async getPastEvents(event: Events, options: PastEventOptions): Promise<EventLog[]> {
     const eventAbi = (this.contract.abi as unknown as AbiItem[]).find(

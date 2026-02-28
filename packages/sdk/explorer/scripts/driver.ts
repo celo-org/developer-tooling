@@ -35,8 +35,6 @@ async function main() {
     printJSON(blockExplorer.parseBlock(block))
   })
 
-
-
   kit.connection.stop()
 }
 
