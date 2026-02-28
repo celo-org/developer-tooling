@@ -1,6 +1,6 @@
 import { stableTokenABI } from '@celo/abis'
 import { CeloTransactionObject } from '@celo/connect'
-import { proxyCall, proxySend, stringIdentity, tupleParser, valueToString } from './BaseWrapper'
+import { proxySend, stringIdentity, tupleParser, valueToString } from './BaseWrapper'
 import { CeloTokenWrapper } from './CeloTokenWrapper'
 
 export interface StableTokenConfig {
@@ -17,7 +17,7 @@ export class StableTokenWrapper extends CeloTokenWrapper<typeof stableTokenABI> 
    * Returns the address of the owner of the contract.
    * @return the address of the owner of the contract.
    */
-  owner: () => Promise<string> = proxyCall(this.contract, 'owner')
+  owner = async () => this.contract.read.owner() as Promise<string>
 
   /**
    * Increases the allowance of another user.

@@ -8,7 +8,6 @@ import { hashMessageWithPrefix, signedMessageToPublicKey } from '@celo/utils/lib
 import BigNumber from 'bignumber.js'
 import { flatten } from 'fp-ts/lib/Array'
 import {
-  proxyCall,
   proxySend,
   secondsToDurationString,
   stringIdentity,
@@ -66,13 +65,16 @@ interface RevocationInfo {
  * Contract for handling an instance of a ReleaseGold contract.
  */
 export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGoldABI> {
-  private _getReleaseSchedule = proxyCall(this.contract, 'releaseSchedule', undefined, (res) => ({
-    releaseStartTime: res[0].toString(),
-    releaseCliff: res[1].toString(),
-    numReleasePeriods: res[2].toString(),
-    releasePeriod: res[3].toString(),
-    amountReleasedPerPeriod: res[4].toString(),
-  }))
+  private _getReleaseSchedule = async () => {
+    const res = await this.contract.read.releaseSchedule()
+    return {
+      releaseStartTime: res[0].toString(),
+      releaseCliff: res[1].toString(),
+      numReleasePeriods: res[2].toString(),
+      releasePeriod: res[3].toString(),
+      amountReleasedPerPeriod: res[4].toString(),
+    }
+  }
 
   /**
    * Returns the underlying Release schedule of the ReleaseGold contract
@@ -109,76 +111,73 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
    * Returns the beneficiary of the ReleaseGold contract
    * @return The address of the beneficiary.
    */
-  getBeneficiary: () => Promise<StrongAddress> = proxyCall(this.contract, 'beneficiary')
+  getBeneficiary = async (): Promise<StrongAddress> => this.contract.read.beneficiary()
 
   /**
    * Returns the releaseOwner address of the ReleaseGold contract
    * @return The address of the releaseOwner.
    */
-  getReleaseOwner: () => Promise<StrongAddress> = proxyCall(this.contract, 'releaseOwner')
+  getReleaseOwner = async (): Promise<StrongAddress> => this.contract.read.releaseOwner()
 
   /**
    * Returns the refund address of the ReleaseGold contract
    * @return The refundAddress.
    */
-  getRefundAddress: () => Promise<StrongAddress> = proxyCall(this.contract, 'refundAddress')
+  getRefundAddress = async (): Promise<StrongAddress> => this.contract.read.refundAddress()
 
   /**
    * Returns the owner's address of the ReleaseGold contract
    * @return The owner's address.
    */
-  getOwner: () => Promise<StrongAddress> = proxyCall(this.contract, 'owner')
+  getOwner = async (): Promise<StrongAddress> => this.contract.read.owner()
 
   /**
    * Returns true if the liquidity provision has been met for this contract
    * @return If the liquidity provision is met.
    */
-  getLiquidityProvisionMet: () => Promise<boolean> = proxyCall(
-    this.contract,
-    'liquidityProvisionMet'
-  )
+  getLiquidityProvisionMet = async (): Promise<boolean> =>
+    this.contract.read.liquidityProvisionMet()
 
   /**
    * Returns true if the contract can validate
    * @return If the contract can validate
    */
-  getCanValidate: () => Promise<boolean> = proxyCall(this.contract, 'canValidate')
+  getCanValidate = async (): Promise<boolean> => this.contract.read.canValidate()
 
   /**
    * Returns true if the contract can vote
    * @return If the contract can vote
    */
-  getCanVote: () => Promise<boolean> = proxyCall(this.contract, 'canVote')
+  getCanVote = async (): Promise<boolean> => this.contract.read.canVote()
 
   /**
    * Returns the total withdrawn amount from the ReleaseGold contract
    * @return The total withdrawn amount from the ReleaseGold contract
    */
-  getTotalWithdrawn: () => Promise<BigNumber> = proxyCall(
-    this.contract,
-    'totalWithdrawn',
-    undefined,
-    (res) => valueToBigNumber(res.toString())
-  )
+  getTotalWithdrawn = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.totalWithdrawn()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Returns the maximum amount of gold (regardless of release schedule)
    * currently allowed for release.
    * @return The max amount of gold currently withdrawable.
    */
-  getMaxDistribution: () => Promise<BigNumber> = proxyCall(
-    this.contract,
-    'maxDistribution',
-    undefined,
-    (res) => valueToBigNumber(res.toString())
-  )
+  getMaxDistribution = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.maxDistribution()
+    return valueToBigNumber(res.toString())
+  }
 
-  private _getRevocationInfo = proxyCall(this.contract, 'revocationInfo', undefined, (res) => ({
-    revocable: res[0] as boolean,
-    canExpire: res[1] as boolean,
-    releasedBalanceAtRevoke: res[2].toString(),
-    revokeTime: res[3].toString(),
-  }))
+  private _getRevocationInfo = async () => {
+    const res = await this.contract.read.revocationInfo()
+    return {
+      revocable: res[0] as boolean,
+      canExpire: res[1] as boolean,
+      releasedBalanceAtRevoke: res[2].toString(),
+      revokeTime: res[3].toString(),
+    }
+  }
 
   /**
    * Returns the underlying Revocation Info of the ReleaseGold contract
@@ -219,7 +218,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
    * Indicates if the release grant is revoked or not
    * @return A boolean indicating revoked releasing (true) or non-revoked(false).
    */
-  isRevoked: () => Promise<boolean> = proxyCall(this.contract, 'isRevoked')
+  isRevoked = async (): Promise<boolean> => this.contract.read.isRevoked()
 
   /**
    * Returns the time at which the release schedule was revoked
@@ -243,67 +242,55 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
    * Returns the total balance of the ReleaseGold instance
    * @return The total ReleaseGold instance balance
    */
-  getTotalBalance: () => Promise<BigNumber> = proxyCall(
-    this.contract,
-    'getTotalBalance',
-    undefined,
-    (res) => valueToBigNumber(res.toString())
-  )
+  getTotalBalance = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.getTotalBalance()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Returns the the sum of locked and unlocked gold in the ReleaseGold instance
    * @return The remaining total ReleaseGold instance balance
    */
-  getRemainingTotalBalance: () => Promise<BigNumber> = proxyCall(
-    this.contract,
-    'getRemainingTotalBalance',
-    undefined,
-    (res) => valueToBigNumber(res.toString())
-  )
+  getRemainingTotalBalance = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.getRemainingTotalBalance()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Returns the remaining unlocked gold balance in the ReleaseGold instance
    * @return The available unlocked ReleaseGold instance gold balance
    */
-  getRemainingUnlockedBalance: () => Promise<BigNumber> = proxyCall(
-    this.contract,
-    'getRemainingUnlockedBalance',
-    undefined,
-    (res) => valueToBigNumber(res.toString())
-  )
+  getRemainingUnlockedBalance = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.getRemainingUnlockedBalance()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Returns the remaining locked gold balance in the ReleaseGold instance
    * @return The remaining locked ReleaseGold instance gold balance
    */
-  getRemainingLockedBalance: () => Promise<BigNumber> = proxyCall(
-    this.contract,
-    'getRemainingLockedBalance',
-    undefined,
-    (res) => valueToBigNumber(res.toString())
-  )
+  getRemainingLockedBalance = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.getRemainingLockedBalance()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Returns the total amount that has already released up to now
    * @return The already released gold amount up to the point of call
    */
-  getCurrentReleasedTotalAmount: () => Promise<BigNumber> = proxyCall(
-    this.contract,
-    'getCurrentReleasedTotalAmount',
-    undefined,
-    (res) => valueToBigNumber(res.toString())
-  )
+  getCurrentReleasedTotalAmount = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.getCurrentReleasedTotalAmount()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Returns currently withdrawable amount
    * @return The amount that can be yet withdrawn
    */
-  getWithdrawableAmount: () => Promise<BigNumber> = proxyCall(
-    this.contract,
-    'getWithdrawableAmount',
-    undefined,
-    (res) => valueToBigNumber(res.toString())
-  )
+  getWithdrawableAmount = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.getWithdrawableAmount()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Revoke a Release schedule

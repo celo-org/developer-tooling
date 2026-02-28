@@ -13,12 +13,11 @@ import { fromFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
 import {
   bufferToSolidityBytes,
-  identity,
-  proxyCall,
   proxySend,
   secondsToDurationString,
   solidityBytesToString,
-  stringIdentity,
+  toViemAddress,
+  toViemBigInt,
   tupleParser,
   unixSecondsTimestampToDateString,
   valueToBigNumber,
@@ -168,42 +167,44 @@ const ZERO_BN = new BigNumber(0)
  */
 export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governanceABI> {
   // --- private proxy fields for typed contract calls ---
-  private _stageDurations = proxyCall(this.contract, 'stageDurations', undefined, (res) => ({
-    [ProposalStage.Referendum]: valueToBigNumber(res[1].toString()),
-    [ProposalStage.Execution]: valueToBigNumber(res[2].toString()),
-  }))
+  private _stageDurations = async () => {
+    const res = await this.contract.read.stageDurations()
+    return {
+      [ProposalStage.Referendum]: valueToBigNumber(res[1].toString()),
+      [ProposalStage.Execution]: valueToBigNumber(res[2].toString()),
+    }
+  }
 
-  private _getConstitution = proxyCall(this.contract, 'getConstitution')
+  private _getConstitution = async (destination: string, functionId: string) =>
+    this.contract.read.getConstitution([toViemAddress(destination), functionId as `0x${string}`])
 
-  private _getParticipationParameters = proxyCall(
-    this.contract,
-    'getParticipationParameters',
-    undefined,
-    (res) => ({
+  private _getParticipationParameters = async () => {
+    const res = await this.contract.read.getParticipationParameters()
+    return {
       baseline: fromFixed(new BigNumber(res[0].toString())),
       baselineFloor: fromFixed(new BigNumber(res[1].toString())),
       baselineUpdateFactor: fromFixed(new BigNumber(res[2].toString())),
       baselineQuorumFactor: fromFixed(new BigNumber(res[3].toString())),
-    })
-  )
+    }
+  }
 
-  private _getProposalStage = proxyCall(this.contract, 'getProposalStage')
+  private _getProposalStage = async (proposalID: BigNumber.Value) =>
+    this.contract.read.getProposalStage([toViemBigInt(proposalID)])
 
-  private _getVoteRecord = proxyCall(this.contract, 'getVoteRecord')
+  private _getVoteRecord = async (voter: string, index: number) =>
+    this.contract.read.getVoteRecord([toViemAddress(voter), BigInt(index)])
 
-  private _getDequeue = proxyCall(this.contract, 'getDequeue')
+  private _getDequeue = async () => this.contract.read.getDequeue()
 
-  private _getHotfixRecord = proxyCall(
-    this.contract,
-    'getHotfixRecord',
-    undefined,
-    (res): HotfixRecord => ({
+  private _getHotfixRecord = async (hash: string): Promise<HotfixRecord> => {
+    const res = await this.contract.read.getHotfixRecord([hash as `0x${string}`])
+    return {
       approved: res[0],
       councilApproved: res[1],
       executed: res[2],
       executionTimeLimit: valueToBigNumber(res[3].toString()),
-    })
-  )
+    }
+  }
 
   private _upvote: (...args: any[]) => CeloTransactionObject<void> = proxySend(
     this.connection,
@@ -240,37 +241,42 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
    * Querying number of possible concurrent proposals.
    * @returns Current number of possible concurrent proposals.
    */
-  concurrentProposals = proxyCall(this.contract, 'concurrentProposals', undefined, (res) =>
-    valueToBigNumber(res.toString())
-  )
+  concurrentProposals = async () => {
+    const res = await this.contract.read.concurrentProposals()
+    return valueToBigNumber(res.toString())
+  }
   /**
    * Query time of last proposal dequeue
    * @returns Time of last dequeue
    */
-  lastDequeue = proxyCall(this.contract, 'lastDequeue', undefined, (res) =>
-    valueToBigNumber(res.toString())
-  )
+  lastDequeue = async () => {
+    const res = await this.contract.read.lastDequeue()
+    return valueToBigNumber(res.toString())
+  }
   /**
    * Query proposal dequeue frequency.
    * @returns Current proposal dequeue frequency in seconds.
    */
-  dequeueFrequency = proxyCall(this.contract, 'dequeueFrequency', undefined, (res) =>
-    valueToBigNumber(res.toString())
-  )
+  dequeueFrequency = async () => {
+    const res = await this.contract.read.dequeueFrequency()
+    return valueToBigNumber(res.toString())
+  }
   /**
    * Query minimum deposit required to make a proposal.
    * @returns Current minimum deposit.
    */
-  minDeposit = proxyCall(this.contract, 'minDeposit', undefined, (res) =>
-    valueToBigNumber(res.toString())
-  )
+  minDeposit = async () => {
+    const res = await this.contract.read.minDeposit()
+    return valueToBigNumber(res.toString())
+  }
   /**
    * Query queue expiry parameter.
    * @return The number of seconds a proposal can stay in the queue before expiring.
    */
-  queueExpiry = proxyCall(this.contract, 'queueExpiry', undefined, (res) =>
-    valueToBigNumber(res.toString())
-  )
+  queueExpiry = async () => {
+    const res = await this.contract.read.queueExpiry()
+    return valueToBigNumber(res.toString())
+  }
   /**
    * Query durations of different stages in proposal lifecycle.
    * @returns Durations for approval, referendum and execution stages in seconds.
@@ -348,7 +354,7 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
    * @param account The address of the account.
    * @returns Whether or not the account is voting on proposals.
    */
-  isVoting: (account: string) => Promise<boolean> = proxyCall(this.contract, 'isVoting')
+  isVoting = async (account: string) => this.contract.read.isVoting([toViemAddress(account)])
 
   /**
    * Returns current configuration parameters.
@@ -398,18 +404,16 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
    * Returns the metadata associated with a given proposal.
    * @param proposalID Governance proposal UUID
    */
-  getProposalMetadata: (proposalID: BigNumber.Value) => Promise<ProposalMetadata> = proxyCall(
-    this.contract,
-    'getProposal',
-    tupleParser(valueToString),
-    (res) => ({
+  getProposalMetadata = async (proposalID: BigNumber.Value): Promise<ProposalMetadata> => {
+    const res = await this.contract.read.getProposal([toViemBigInt(proposalID)])
+    return {
       proposer: res[0],
       deposit: valueToBigNumber(res[1].toString()),
       timestamp: valueToBigNumber(res[2].toString()),
       transactionCount: valueToInt(res[3].toString()),
       descriptionURL: res[4],
-    })
-  )
+    }
+  }
 
   /**
    * Returns the human readable metadata associated with a given proposal.
@@ -428,54 +432,46 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
    * @param proposalID Governance proposal UUID
    * @param txIndex Transaction index
    */
-  getProposalTransaction: (
+  getProposalTransaction = async (
     proposalID: BigNumber.Value,
     txIndex: number
-  ) => Promise<ProposalTransaction> = proxyCall(
-    this.contract,
-    'getProposalTransaction',
-    tupleParser(valueToString, valueToString),
-    (res) => ({
+  ): Promise<ProposalTransaction> => {
+    const res = await this.contract.read.getProposalTransaction([
+      toViemBigInt(proposalID),
+      toViemBigInt(txIndex),
+    ])
+    return {
       value: res[0].toString(),
       to: res[1],
       input: solidityBytesToString(res[2]),
-    })
-  )
+    }
+  }
 
   /**
    * Returns whether a given proposal is approved.
    * @param proposalID Governance proposal UUID
    */
-  isApproved: (proposalID: BigNumber.Value) => Promise<boolean> = proxyCall(
-    this.contract,
-    'isApproved',
-    tupleParser(valueToString)
-  )
+  isApproved = async (proposalID: BigNumber.Value) =>
+    this.contract.read.isApproved([toViemBigInt(proposalID)])
 
   /**
    * Returns whether a dequeued proposal is expired.
    * @param proposalID Governance proposal UUID
    */
-  isDequeuedProposalExpired: (proposalID: BigNumber.Value) => Promise<boolean> = proxyCall(
-    this.contract,
-    'isDequeuedProposalExpired',
-    tupleParser(valueToString)
-  )
+  isDequeuedProposalExpired = async (proposalID: BigNumber.Value) =>
+    this.contract.read.isDequeuedProposalExpired([toViemBigInt(proposalID)])
 
   /**
    * Returns whether a dequeued proposal is expired.
    * @param proposalID Governance proposal UUID
    */
-  isQueuedProposalExpired: (proposalID: BigNumber.Value) => Promise<boolean> = proxyCall(
-    this.contract,
-    'isQueuedProposalExpired',
-    tupleParser(valueToString)
-  )
+  isQueuedProposalExpired = async (proposalID: BigNumber.Value) =>
+    this.contract.read.isQueuedProposalExpired([toViemBigInt(proposalID)])
 
   /**
    * Returns the approver address for proposals and hotfixes.
    */
-  getApprover = proxyCall(this.contract, 'approver', undefined, stringIdentity)
+  getApprover = async () => this.contract.read.approver() as Promise<string>
 
   /**
    * Returns the approver multisig contract for proposals and hotfixes.
@@ -486,7 +482,7 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
   /**
    * Returns the security council address for hotfixes.
    */
-  getSecurityCouncil = proxyCall(this.contract, 'securityCouncil', undefined, stringIdentity)
+  getSecurityCouncil = async () => this.contract.read.securityCouncil() as Promise<string>
 
   /**
    * Returns the security council multisig contract for hotfixes.
@@ -502,8 +498,8 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
       return expired ? ProposalStage.Expiration : ProposalStage.Queued
     }
 
-    const res = await this._getProposalStage(valueToString(proposalID))
-    return Object.keys(ProposalStage)[valueToInt(res)] as ProposalStage
+    const res = await this._getProposalStage(proposalID)
+    return Object.keys(ProposalStage)[Number(res)] as ProposalStage
   }
 
   async proposalSchedule(proposalID: BigNumber.Value): Promise<Partial<StageDurations<BigNumber>>> {
@@ -611,11 +607,8 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
    * Returns whether a given proposal is passing relative to the constitution's threshold.
    * @param proposalID Governance proposal UUID
    */
-  isProposalPassing: (proposalID: BigNumber.Value) => Promise<boolean> = proxyCall(
-    this.contract,
-    'isProposalPassing',
-    tupleParser(valueToString)
-  )
+  isProposalPassing = async (proposalID: BigNumber.Value) =>
+    this.contract.read.isProposalPassing([toViemBigInt(proposalID)])
 
   /**
    * Withdraws refunded proposal deposits.
@@ -642,25 +635,20 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
    * Returns whether a governance proposal exists with the given ID.
    * @param proposalID Governance proposal UUID
    */
-  proposalExists: (proposalID: BigNumber.Value) => Promise<boolean> = proxyCall(
-    this.contract,
-    'proposalExists',
-    tupleParser(valueToString)
-  )
+  proposalExists = async (proposalID: BigNumber.Value) =>
+    this.contract.read.proposalExists([toViemBigInt(proposalID)])
 
   /**
    * Returns the current upvoted governance proposal ID and applied vote weight (zeroes if none).
    * @param upvoter Address of upvoter
    */
-  getUpvoteRecord: (upvoter: Address) => Promise<UpvoteRecord> = proxyCall(
-    this.contract,
-    'getUpvoteRecord',
-    tupleParser(identity),
-    (o) => ({
+  getUpvoteRecord = async (upvoter: Address): Promise<UpvoteRecord> => {
+    const o = await this.contract.read.getUpvoteRecord([toViemAddress(upvoter)])
+    return {
       proposalID: valueToBigNumber(o[0].toString()),
       upvotes: valueToBigNumber(o[1].toString()),
-    })
-  )
+    }
+  }
 
   async isUpvoting(upvoter: Address): Promise<boolean> {
     const upvote = await this.getUpvoteRecord(upvoter)
@@ -699,51 +687,46 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
    * Returns whether a given proposal is queued.
    * @param proposalID Governance proposal UUID
    */
-  isQueued: (proposalID: BigNumber.Value) => Promise<boolean> = proxyCall(
-    this.contract,
-    'isQueued',
-    tupleParser(valueToString)
-  )
+  isQueued = async (proposalID: BigNumber.Value) =>
+    this.contract.read.isQueued([toViemBigInt(proposalID)])
 
   /**
    * Returns the value of proposal deposits that have been refunded.
    * @param proposer Governance proposer address.
    */
-  getRefundedDeposits = proxyCall(
-    this.contract,
-    'refundedDeposits',
-    tupleParser(stringIdentity),
-    (res) => valueToBigNumber(res.toString())
-  )
+  getRefundedDeposits = async (proposer: string) => {
+    const res = await this.contract.read.refundedDeposits([toViemAddress(proposer)])
+    return valueToBigNumber(res.toString())
+  }
 
   /*
    * Returns the upvotes applied to a given proposal.
    * @param proposalID Governance proposal UUID
    */
-  getUpvotes = proxyCall(this.contract, 'getUpvotes', tupleParser(valueToString), (res) =>
-    valueToBigNumber(res.toString())
-  )
+  getUpvotes = async (proposalID: BigNumber.Value) => {
+    const res = await this.contract.read.getUpvotes([toViemBigInt(proposalID)])
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Returns the yes, no, and abstain votes applied to a given proposal.
    * @param proposalID Governance proposal UUID
    */
-  getVotes = proxyCall(
-    this.contract,
-    'getVoteTotals',
-    tupleParser(valueToString),
-    (res): Votes => ({
+  getVotes = async (proposalID: BigNumber.Value): Promise<Votes> => {
+    const res = await this.contract.read.getVoteTotals([toViemBigInt(proposalID)])
+    return {
       [VoteValue.Yes]: valueToBigNumber(res[0].toString()),
       [VoteValue.No]: valueToBigNumber(res[1].toString()),
       [VoteValue.Abstain]: valueToBigNumber(res[2].toString()),
-    })
-  )
+    }
+  }
 
   /**
    * Returns the proposal queue as list of upvote records.
    */
-  getQueue = proxyCall(this.contract, 'getQueue', undefined, (arraysObject) =>
-    zip(
+  getQueue = async () => {
+    const arraysObject = await this.contract.read.getQueue()
+    return zip(
       (_id, _upvotes) => ({
         proposalID: valueToBigNumber(_id.toString()),
         upvotes: valueToBigNumber(_upvotes.toString()),
@@ -751,7 +734,7 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
       [...arraysObject[0]],
       [...arraysObject[1]]
     )
-  )
+  }
 
   /**
    * Returns the (existing) proposal dequeue as list of proposal IDs.
@@ -974,11 +957,17 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
     return this._execute(valueToString(proposalID), proposalIndex)
   }
 
-  getHotfixHash: (proposal: Proposal, salt: Buffer) => Promise<string> = proxyCall(
-    this.contract,
-    'getHotfixHash',
-    hotfixToParams
-  )
+  getHotfixHash = async (proposal: Proposal, salt: Buffer): Promise<string> => {
+    const params = hotfixToParams(proposal, salt)
+    const result = await this.contract.read.getHotfixHash([
+      params[0].map((v) => BigInt(v)),
+      params[1] as `0x${string}`[],
+      params[2] as `0x${string}`,
+      params[3].map((v) => BigInt(v)),
+      params[4] as `0x${string}`,
+    ])
+    return result
+  }
 
   /**
    * Returns approved, executed, and prepared status associated with a given hotfix.
@@ -991,9 +980,10 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
   /**
    * Returns the number of validators required to reach a Byzantine quorum
    */
-  minQuorumSize = proxyCall(this.contract, 'minQuorumSizeInCurrentSet', undefined, (res) =>
-    valueToBigNumber(res.toString())
-  )
+  minQuorumSize = async () => {
+    const res = await this.contract.read.minQuorumSizeInCurrentSet()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Marks the given hotfix approved by `sender`.
