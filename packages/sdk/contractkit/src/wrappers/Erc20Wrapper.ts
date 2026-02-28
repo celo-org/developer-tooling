@@ -5,7 +5,7 @@ import type { Abi } from 'viem'
 // after the move to node 10. This allows types to be inferred without
 // referencing '@celo/utils/node_modules/bignumber.js'
 import BigNumber from 'bignumber.js'
-import { BaseWrapper, valueToBigNumber } from './BaseWrapper'
+import { BaseWrapper, valueToBigNumber, toViemAddress } from './BaseWrapper'
 
 /**
  * ERC-20 contract only containing the non-optional functions
@@ -17,15 +17,22 @@ export class Erc20Wrapper<TAbi extends Abi = typeof ierc20ABI> extends BaseWrapp
    * @param to Address of account to whom the allowance was given.
    * @returns Amount of allowance.
    */
-  allowance = async (...args: any[]): Promise<BigNumber> =>
-    valueToBigNumber((await this.connection.callContract(this.contract, 'allowance', args)) as any)
+  allowance = async (from: string, to: string): Promise<BigNumber> => {
+    const res = await (this.contract as any).read.allowance([
+      toViemAddress(from),
+      toViemAddress(to),
+    ])
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Returns the total supply of the token, that is, the amount of tokens currently minted.
    * @returns Total supply.
    */
-  totalSupply = async (): Promise<BigNumber> =>
-    valueToBigNumber((await this.connection.callContract(this.contract, 'totalSupply', [])) as any)
+  totalSupply = async (): Promise<BigNumber> => {
+    const res = await (this.contract as any).read.totalSupply()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Approve a user to transfer the token on behalf of another user.
@@ -64,10 +71,10 @@ export class Erc20Wrapper<TAbi extends Abi = typeof ierc20ABI> extends BaseWrapp
    * @param owner The address to query the balance of.
    * @return The balance of the specified address.
    */
-  balanceOf = async (owner: string): Promise<BigNumber> =>
-    valueToBigNumber(
-      (await this.connection.callContract(this.contract, 'balanceOf', [owner])) as any
-    )
+  balanceOf = async (owner: string): Promise<BigNumber> => {
+    const res = await (this.contract as any).read.balanceOf([toViemAddress(owner)])
+    return valueToBigNumber(res.toString())
+  }
 }
 
 export type Erc20WrapperType = Erc20Wrapper

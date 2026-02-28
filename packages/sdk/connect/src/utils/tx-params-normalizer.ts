@@ -20,7 +20,7 @@ export class TxParamsNormalizer {
         },
         async () => {
           if (txParams.nonce == null) {
-            return this.connection.nonce(txParams.from!.toString())
+            return this.connection.getTransactionCount(txParams.from!.toString())
           }
           return txParams.nonce
         },

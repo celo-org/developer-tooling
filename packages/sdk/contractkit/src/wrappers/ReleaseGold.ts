@@ -553,13 +553,6 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
   }
 
   /**
-   * @deprecated use `authorizeValidatorSignerWithPublicKey`
-   */
-  async authorizeValidatorSignerAndBls(signer: Address, proofOfSigningKeyPossession: Signature) {
-    return this.authorizeValidatorSignerWithPublicKey(signer, proofOfSigningKeyPossession)
-  }
-
-  /**
    * Authorizes an address to sign consensus messages on behalf of the contract's account. Also switch BLS key at the same time.
    * @param signer The address of the signing key to authorize.
    * @param proofOfSigningKeyPossession The contract's account address signed by the signer address.

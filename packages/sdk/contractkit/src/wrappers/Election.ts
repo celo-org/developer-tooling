@@ -7,7 +7,7 @@ import {
   StrongAddress,
 } from '@celo/base/lib/address'
 import { concurrentMap, concurrentValuesMap } from '@celo/base/lib/async'
-import { zeroRange, zip } from '@celo/base/lib/collections'
+import { zip } from '@celo/base/lib/collections'
 import { Address, CeloTx, EventLog } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import {
@@ -239,29 +239,6 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
   getTotalVotes = async () => {
     const res = await this.contract.read.getTotalVotes()
     return valueToBigNumber(res.toString())
-  }
-
-  /**
-   * Returns the current validator signers using the precompiles.
-   * @return List of current validator signers.
-   * @deprecated use EpochManagerWrapper.getElectedSigners instead. see see https://specs.celo.org/smart_contract_updates_from_l1.html
-   */
-  getCurrentValidatorSigners = async () => {
-    const res = await this.contract.read.getCurrentValidatorSigners()
-    return [...res] as string[]
-  }
-
-  /**
-   * Returns the validator signers for block `blockNumber`.
-   * @param blockNumber Block number to retrieve signers for.
-   * @return Address of each signer in the validator set.
-   * @deprecated see https://specs.celo.org/smart_contract_updates_from_l1.html
-   */
-  async getValidatorSigners(blockNumber: number): Promise<Address[]> {
-    const numValidators = await this.numberValidatorsInSet(blockNumber)
-    return concurrentMap(10, zeroRange(numValidators), (i: number) =>
-      this.validatorSignerAddressFromSet(i, blockNumber)
-    )
   }
 
   /**

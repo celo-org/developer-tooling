@@ -2,6 +2,7 @@ import { accountsABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
 import { NativeSigner, Signature, Signer } from '@celo/base/lib/signatureUtils'
 import { Address, CeloTx } from '@celo/connect'
+import { keccak256 } from 'viem'
 import {
   LocalSigner,
   hashMessageWithPrefix,
@@ -248,13 +249,6 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
         txParams
       )
     }
-  }
-
-  /**
-   * @deprecated use `authorizeValidatorSignerWithPublicKey`
-   */
-  async authorizeValidatorSignerAndBls(signer: Address, proofOfSigningKeyPossession: Signature) {
-    return this.authorizeValidatorSignerWithPublicKey(signer, proofOfSigningKeyPossession)
   }
 
   /**
@@ -525,7 +519,7 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
   }
 
   private keccak256(value: string): string {
-    return this.connection.keccak256(value)
+    return keccak256(value as `0x${string}`)
   }
 }
 

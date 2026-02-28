@@ -92,9 +92,6 @@ export class ContractKit {
   /** helper for interacting with CELO & stable tokens */
   readonly celoTokens: CeloTokens
 
-  /** @deprecated no longer needed since gasPrice is available on node rpc */
-  gasPriceSuggestionMultiplier = 5
-
   constructor(readonly connection: Connection) {
     this.registry = new AddressRegistry(connection)
     this._contracts = new ContractCache(this.registry)
@@ -241,14 +238,6 @@ export class ContractKit {
 
   get defaultFeeCurrency() {
     return this.connection.defaultFeeCurrency
-  }
-
-  isListening(): Promise<boolean> {
-    return this.connection.isListening()
-  }
-
-  isSyncing(): Promise<boolean> {
-    return this.connection.isSyncing()
   }
 
   async sendTransaction(tx: CeloTx): Promise<`0x${string}`> {

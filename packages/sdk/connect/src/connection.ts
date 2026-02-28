@@ -4,8 +4,6 @@ import { EIP712TypedData, generateTypedDataHash } from '@celo/utils/lib/sign-typ
 import { Signature, parseSignatureWithoutPrefix } from '@celo/utils/lib/signatureUtils'
 import debugFactory from 'debug'
 import {
-  keccak256,
-  hexToString,
   toHex,
   createPublicClient,
   custom,
@@ -30,7 +28,6 @@ import {
   CeloTxPending,
   CeloTxReceipt,
   Provider,
-  Syncing,
 } from './types'
 import { decodeStringParameter } from './utils/abi-utils'
 import {
@@ -130,14 +127,6 @@ export class Connection {
     }
   }
 
-  keccak256 = (value: string): string => {
-    return keccak256(value as `0x${string}`)
-  }
-
-  hexToAscii = (hex: string) => {
-    return hexToString(hex as `0x${string}`)
-  }
-
   /**
    * Set default account for generated transactions (eg. tx.from )
    */
@@ -221,27 +210,6 @@ export class Connection {
 
   private toChecksumAddresses(addresses: string[]) {
     return addresses.map((value) => toChecksumAddress(value))
-  }
-
-  async isListening(): Promise<boolean> {
-    const response = await this.rpcCaller.call('net_listening', [])
-    return response.result as boolean
-  }
-
-  isSyncing(): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      this.rpcCaller
-        .call('eth_syncing', [])
-        .then((response) => {
-          const result = response.result as boolean | Syncing
-          if (typeof result === 'boolean') {
-            resolve(result)
-          } else {
-            resolve(true)
-          }
-        })
-        .catch(reject)
-    })
   }
 
   /**
@@ -506,10 +474,6 @@ export class Connection {
     const response = await this.rpcCaller.call('eth_getTransactionCount', [address, 'pending'])
 
     return hexToNumber(response.result)!
-  }
-
-  nonce = async (address: Address): Promise<number> => {
-    return this.getTransactionCount(address)
   }
 
   gasPrice = async (feeCurrency?: Address): Promise<string> => {

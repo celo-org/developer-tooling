@@ -1,5 +1,6 @@
 import { reserveABI } from '@celo/abis'
 import { Address, CeloTx, EventLog } from '@celo/connect'
+import { hexToString } from 'viem'
 import BigNumber from 'bignumber.js'
 import {
   BaseWrapper,
@@ -67,7 +68,7 @@ export class ReserveWrapper extends BaseWrapper<typeof reserveABI> {
    */
   getAssetAllocationSymbols = async (): Promise<string[]> => {
     const res = await this.contract.read.getAssetAllocationSymbols()
-    return [...res].map((symbol) => this.connection.hexToAscii(symbol))
+    return [...res].map((symbol) => hexToString(symbol as `0x${string}`))
   }
 
   /**

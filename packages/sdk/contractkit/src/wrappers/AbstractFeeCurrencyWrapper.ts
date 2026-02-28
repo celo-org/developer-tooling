@@ -54,11 +54,11 @@ export abstract class AbstractFeeCurrencyWrapper extends BaseWrapper {
           address
         )
 
-        const adaptedToken = (await this.connection
-          .callContract(contract, 'adaptedToken', [])
-          .catch(() =>
-            this.connection.callContract(contract, 'getAdaptedToken', []).catch(() => undefined)
-          )) as StrongAddress | undefined
+        const adaptedToken = (await (contract as any).read
+          .adaptedToken()
+          .catch(() => (contract as any).read.getAdaptedToken().catch(() => undefined))) as
+          | StrongAddress
+          | undefined
         // if standard didnt work try alt
 
         if (adaptedToken) {
@@ -66,15 +66,11 @@ export abstract class AbstractFeeCurrencyWrapper extends BaseWrapper {
         }
 
         return Promise.all([
-          this.connection.callContract(contract, 'name', []).catch(() => undefined) as Promise<
-            string | undefined
-          >,
-          this.connection.callContract(contract, 'symbol', []).catch(() => undefined) as Promise<
-            string | undefined
-          >,
-          this.connection
-            .callContract(contract, 'decimals', [])
-            .then((x) => x && parseInt(x as string, 10))
+          (contract as any).read.name().catch(() => undefined) as Promise<string | undefined>,
+          (contract as any).read.symbol().catch(() => undefined) as Promise<string | undefined>,
+          (contract as any).read
+            .decimals()
+            .then((x: unknown) => (x != null ? Number(x) : undefined))
             .catch(() => undefined) as Promise<number | undefined>,
         ]).then(([name, symbol, decimals]) => ({
           name,
