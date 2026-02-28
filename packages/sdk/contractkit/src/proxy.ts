@@ -29,7 +29,8 @@ import {
   uniswapFeeHandlerSellerABI,
   validatorsABI,
 } from '@celo/abis'
-import { ABIDefinition, AbiItem, Connection, createViemTxObject } from '@celo/connect'
+import { ABIDefinition, AbiItem } from '@celo/connect'
+import { encodeFunctionData } from 'viem'
 
 export const GET_IMPLEMENTATION_ABI: ABIDefinition = {
   constant: true,
@@ -157,7 +158,10 @@ export const getInitializeAbiOfImplementation = (
   return initializeAbi
 }
 
-export const setImplementationOnProxy = (address: string, connection: Connection) => {
-  const proxyContract = connection.getCeloContract(PROXY_ABI, '')
-  return createViemTxObject(connection, proxyContract, '_setImplementation', [address])
+export const setImplementationOnProxy = (address: string): string => {
+  return encodeFunctionData({
+    abi: PROXY_ABI,
+    functionName: '_setImplementation',
+    args: [address],
+  })
 }

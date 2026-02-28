@@ -1,7 +1,8 @@
 import { governanceABI, validatorsABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
-import { AbiItem, Connection, createViemTxObject, Provider } from '@celo/connect'
+import { Connection, Provider } from '@celo/connect'
 import { DEFAULT_OWNER_ADDRESS, withImpersonatedAccount } from './anvil-test'
+import { encodeFunctionData } from 'viem'
 
 export async function setCommissionUpdateDelay(
   provider: Provider,
@@ -10,16 +11,17 @@ export async function setCommissionUpdateDelay(
 ) {
   const conn = new Connection(provider)
   await withImpersonatedAccount(provider, DEFAULT_OWNER_ADDRESS, async () => {
-    const validators = conn.getCeloContract(
-      validatorsABI as unknown as AbiItem[],
-      validatorsContractAddress
-    )
-
-    const transactionHash = await createViemTxObject(conn, validators, 'setCommissionUpdateDelay', [
-      delayInBlocks,
-    ]).send({
+    const data = encodeFunctionData({
+      abi: validatorsABI,
+      functionName: 'setCommissionUpdateDelay',
+      args: [BigInt(delayInBlocks)],
+    })
+    const result = await conn.sendTransaction({
+      to: validatorsContractAddress,
+      data,
       from: DEFAULT_OWNER_ADDRESS,
     })
+    const transactionHash = await result.getHash()
     await conn.getTransactionReceipt(transactionHash)
   })
 }
@@ -31,16 +33,17 @@ export async function setDequeueFrequency(
 ) {
   const conn = new Connection(provider)
   await withImpersonatedAccount(provider, DEFAULT_OWNER_ADDRESS, async () => {
-    const governance = conn.getCeloContract(
-      governanceABI as unknown as AbiItem[],
-      governanceContractAddress
-    )
-
-    const transactionHash = await createViemTxObject(conn, governance, 'setDequeueFrequency', [
-      frequency,
-    ]).send({
+    const data = encodeFunctionData({
+      abi: governanceABI,
+      functionName: 'setDequeueFrequency',
+      args: [BigInt(frequency)],
+    })
+    const result = await conn.sendTransaction({
+      to: governanceContractAddress,
+      data,
       from: DEFAULT_OWNER_ADDRESS,
     })
+    const transactionHash = await result.getHash()
     await conn.getTransactionReceipt(transactionHash)
   })
 }
@@ -52,19 +55,17 @@ export async function setReferendumStageDuration(
 ) {
   const conn = new Connection(provider)
   await withImpersonatedAccount(provider, DEFAULT_OWNER_ADDRESS, async () => {
-    const governance = conn.getCeloContract(
-      governanceABI as unknown as AbiItem[],
-      governanceContractAddress
-    )
-
-    const transactionHash = await createViemTxObject(
-      conn,
-      governance,
-      'setReferendumStageDuration',
-      [duration]
-    ).send({
+    const data = encodeFunctionData({
+      abi: governanceABI,
+      functionName: 'setReferendumStageDuration',
+      args: [BigInt(duration)],
+    })
+    const result = await conn.sendTransaction({
+      to: governanceContractAddress,
+      data,
       from: DEFAULT_OWNER_ADDRESS,
     })
+    const transactionHash = await result.getHash()
     await conn.getTransactionReceipt(transactionHash)
   })
 }

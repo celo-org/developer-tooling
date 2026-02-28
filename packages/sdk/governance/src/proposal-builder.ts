@@ -1,10 +1,5 @@
-import {
-  AbiItem,
-  CeloTransactionObject,
-  CeloTxObject,
-  createViemTxObject,
-  signatureToAbiDefinition,
-} from '@celo/connect'
+import { AbiItem, signatureToAbiDefinition } from '@celo/connect'
+import { coerceArgsForAbi } from '@celo/connect/lib/viem-abi-coder'
 import { toChecksumAddress } from '@celo/utils/lib/address'
 import {
   CeloContract,
@@ -15,11 +10,11 @@ import {
   setImplementationOnProxy,
 } from '@celo/contractkit'
 import { stripProxy } from '@celo/contractkit/lib/base'
-import { valueToString } from '@celo/contractkit/lib/wrappers/BaseWrapper'
 import { ProposalTransaction } from '@celo/contractkit/lib/wrappers/Governance'
 import { fetchMetadata, tryGetProxyImplementation } from '@celo/explorer/lib/sourcify'
 import { isValidAddress } from '@celo/utils/lib/address'
 import { isNativeError } from 'util/types'
+import { encodeFunctionData } from 'viem'
 import {
   ExternalProposalTransactionJSON,
   ProposalTransactionJSON,
@@ -57,14 +52,14 @@ export class ProposalBuilder {
   }
 
   /**
-   * Converts a Web3 transaction into a proposal transaction object.
-   * @param tx A Web3 transaction object to convert.
+   * Converts encoded function data into a proposal transaction object.
+   * @param data Hex-encoded function call data.
    * @param params Parameters for how the transaction should be executed.
    */
-  fromWeb3tx = (tx: CeloTxObject<any>, params: ProposalTxParams): ProposalTransaction => ({
+  fromEncodedTx = (data: string, params: ProposalTxParams): ProposalTransaction => ({
     value: params.value,
     to: params.to,
-    input: tx.encodeABI(),
+    input: data,
   })
 
   /**
@@ -75,37 +70,20 @@ export class ProposalBuilder {
   addProxyRepointingTx = (contract: CeloContract, newImplementationAddress: string) => {
     this.builders.push(async () => {
       const proxy = await this.kit._contracts.getContract(contract)
-      return this.fromWeb3tx(
-        setImplementationOnProxy(newImplementationAddress, this.kit.connection),
-        {
-          to: proxy.address,
-          value: '0',
-        }
-      )
+      return this.fromEncodedTx(setImplementationOnProxy(newImplementationAddress), {
+        to: proxy.address,
+        value: '0',
+      })
     })
   }
 
   /**
-   * Adds a Web3 transaction to the list for proposal construction.
-   * @param tx A Web3 transaction object to add to the proposal.
+   * Adds an encoded transaction to the list for proposal construction.
+   * @param data Hex-encoded function call data.
    * @param params Parameters for how the transaction should be executed.
    */
-  addWeb3Tx = (tx: CeloTxObject<any>, params: ProposalTxParams) =>
-    this.builders.push(async () => this.fromWeb3tx(tx, params))
-
-  /**
-   * Adds a Celo transaction to the list for proposal construction.
-   * @param tx A Celo transaction object to add to the proposal.
-   * @param params Optional parameters for how the transaction should be executed.
-   */
-  addTx(tx: CeloTransactionObject<any>, params: Partial<ProposalTxParams> = {}) {
-    const to = params.to ?? tx.defaultParams?.to
-    const value = params.value ?? tx.defaultParams?.value
-    if (!to || !value) {
-      throw new Error("Transaction parameters 'to' and/or 'value' not provided")
-    }
-    this.addWeb3Tx(tx.txo, { to, value: valueToString(value.toString()) })
-  }
+  addEncodedTx = (data: string, params: ProposalTxParams) =>
+    this.builders.push(async () => this.fromEncodedTx(data, params))
 
   setRegistryAddition = (contract: CeloContract, address: string) =>
     (this.registryAdditions[stripProxy(contract)] = address)
@@ -216,9 +194,19 @@ export class ProposalBuilder {
 
     const contract = await this.kit._contracts.getContract(tx.contract, address)
     const methodName = tx.function
-    const txo = createViemTxObject(this.kit.connection, contract, methodName, tx.args)
-
-    return this.fromWeb3tx(txo, { to: address, value: tx.value })
+    const abiItem = (contract.abi as AbiItem[]).find(
+      (item) => item.type === 'function' && item.name === methodName
+    )
+    if (!abiItem) {
+      throw new Error(`Method ${methodName} not found in ABI for ${tx.contract}`)
+    }
+    const coercedArgs = abiItem.inputs ? coerceArgsForAbi(abiItem.inputs, tx.args) : tx.args
+    const data = encodeFunctionData({
+      abi: [abiItem],
+      functionName: methodName,
+      args: coercedArgs,
+    })
+    return this.fromEncodedTx(data, { to: address, value: tx.value })
   }
 
   fromJsonTx = async (
