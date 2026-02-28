@@ -104,13 +104,12 @@ export class ProposalBuilder {
     address: string,
     tx: ExternalProposalTransactionJSON
   ): Promise<AbiItem | null> => {
-    const abiCoder = this.kit.connection.getAbiCoder()
     const metadata = await fetchMetadata(this.kit.connection, toChecksumAddress(address))
     const potentialABIs = metadata?.abiForMethod(tx.function) ?? []
     return (
       potentialABIs.find((abi) => {
         try {
-          abiCoder.encodeFunctionCall(abi, this.transformArgs(abi, tx.args))
+          encodeFunctionData({ abi: [abi] as any, args: this.transformArgs(abi, tx.args) as any })
           return true
         } catch {
           return false
@@ -145,9 +144,10 @@ export class ProposalBuilder {
       methodABI = signatureToAbiDefinition(tx.function)
     }
 
-    const input = this.kit.connection
-      .getAbiCoder()
-      .encodeFunctionCall(methodABI, this.transformArgs(methodABI, tx.args))
+    const input = encodeFunctionData({
+      abi: [methodABI] as any,
+      args: this.transformArgs(methodABI, tx.args) as any,
+    })
     return { input, to: tx.address, value: tx.value }
   }
 
@@ -187,9 +187,10 @@ export class ProposalBuilder {
 
     if (tx.function === SET_AND_INITIALIZE_IMPLEMENTATION_ABI.name && Array.isArray(tx.args[1])) {
       // Transform array of initialize arguments (if provided) into delegate call data
-      tx.args[1] = this.kit.connection
-        .getAbiCoder()
-        .encodeFunctionCall(getInitializeAbiOfImplementation(tx.contract as any), tx.args[1])
+      tx.args[1] = encodeFunctionData({
+        abi: [getInitializeAbiOfImplementation(tx.contract as any)] as any,
+        args: tx.args[1] as any,
+      })
     }
 
     const contract = await this.kit._contracts.getContract(tx.contract, address)

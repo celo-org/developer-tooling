@@ -2,8 +2,9 @@ import { governanceABI, registryABI } from '@celo/abis'
 import { Address, trimLeading0x } from '@celo/base/lib/address'
 import {
   type AbiItem,
-  AbiCoder,
+  AbiInput,
   CeloTxPending,
+  decodeParametersToObject,
   getAbiByName,
   parseDecodedParams,
 } from '@celo/connect'
@@ -28,15 +29,16 @@ import { keccak_256 } from '@noble/hashes/sha3'
 import { utf8ToBytes } from '@noble/hashes/utils'
 import { BigNumber } from 'bignumber.js'
 import debugFactory from 'debug'
+import { encodeAbiParameters, toFunctionSelector, type AbiParameter } from 'viem'
 
 export const debug = debugFactory('governance:proposals')
 
 export const hotfixExecuteAbi = getAbiByName(governanceABI as unknown as AbiItem[], 'executeHotfix')
 
-export const hotfixToEncodedParams = (kit: ContractKit, proposal: Proposal, salt: Buffer) =>
-  kit.connection.getAbiCoder().encodeParameters(
-    hotfixExecuteAbi.inputs!.map((input) => input.type),
-    hotfixToParams(proposal, salt)
+export const hotfixToEncodedParams = (_kit: ContractKit, proposal: Proposal, salt: Buffer) =>
+  encodeAbiParameters(
+    hotfixExecuteAbi.inputs!.map((input) => ({ ...input }) as AbiParameter),
+    hotfixToParams(proposal, salt) as any
   )
 
 export const hotfixToHash = (kit: ContractKit, proposal: Proposal, salt: Buffer): Buffer =>
@@ -90,15 +92,18 @@ export const registryRepointArgs = (
 
 const setAddressAbi = getAbiByName(registryABI as unknown as AbiItem[], 'setAddressFor')
 
-const isRegistryRepointRaw = (abiCoder: AbiCoder, tx: ProposalTransaction) =>
-  tx.to === REGISTRY_CONTRACT_ADDRESS &&
-  tx.input.startsWith(abiCoder.encodeFunctionSignature(setAddressAbi))
+const setAddressFnSelector = toFunctionSelector(
+  `${setAddressAbi.name}(${(setAddressAbi.inputs || []).map((i: AbiInput) => i.type).join(',')})`
+)
 
-const registryRepointRawArgs = (abiCoder: AbiCoder, tx: ProposalTransaction) => {
-  if (!isRegistryRepointRaw(abiCoder, tx)) {
+const isRegistryRepointRaw = (tx: ProposalTransaction) =>
+  tx.to === REGISTRY_CONTRACT_ADDRESS && tx.input.startsWith(setAddressFnSelector)
+
+const registryRepointRawArgs = (tx: ProposalTransaction) => {
+  if (!isRegistryRepointRaw(tx)) {
     throw new Error(`Proposal transaction not a registry repoint:\n${JSON.stringify(tx, null, 2)}`)
   }
-  const params = abiCoder.decodeParameters(setAddressAbi.inputs!, trimLeading0x(tx.input).slice(8))
+  const params = decodeParametersToObject(setAddressAbi.inputs!, trimLeading0x(tx.input).slice(8))
   return {
     name: params.identifier as CeloContract,
     address: params.addr as string,
@@ -142,7 +147,6 @@ export const proposalToJSON = async (
       })
     )
   }
-  const abiCoder = kit.connection.getAbiCoder()
 
   const proposalJson: ProposalTransactionJSON[] = []
 
@@ -151,8 +155,8 @@ export const proposalToJSON = async (
     if (parsedTx == null) {
       throw new Error(`Unable to parse ${JSON.stringify(tx)} with block explorer`)
     }
-    if (isRegistryRepointRaw(abiCoder, tx) && parsedTx.callDetails.isCoreContract) {
-      const args = registryRepointRawArgs(abiCoder, tx)
+    if (isRegistryRepointRaw(tx) && parsedTx.callDetails.isCoreContract) {
+      const args = registryRepointRawArgs(tx)
       await updateRegistryMapping(args.name, args.address)
     }
 
@@ -189,7 +193,7 @@ export const proposalToJSON = async (
         const initArgs = trimLeading0x(jsonTx.args[1]).slice(8)
 
         const { params: initParams } = parseDecodedParams(
-          kit.connection.getAbiCoder().decodeParameters(initAbi.inputs!, initArgs)
+          decodeParametersToObject(initAbi.inputs!, initArgs)
         )
         jsonTx.params![`initialize@${initSig}`] = initParams
       }

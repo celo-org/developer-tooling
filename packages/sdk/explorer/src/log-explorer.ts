@@ -1,4 +1,5 @@
-import { ABIDefinition, Address, CeloTxReceipt, EventLog, Log } from '@celo/connect'
+import { ABIDefinition, Address, AbiInput, CeloTxReceipt, EventLog, Log } from '@celo/connect'
+import { decodeEventLog, toEventHash } from 'viem'
 import { ContractKit } from '@celo/contractkit'
 import { ContractDetails, mapFromPairs, obtainKitContractDetails } from './base'
 
@@ -77,35 +78,47 @@ export class LogExplorer {
       return null
     }
 
-    const decoded = this.kit.connection
-      .getAbiCoder()
-      .decodeLog(matchedAbi.inputs || [], log.data || '', log.topics.slice(1)) as unknown as Record<
-      string,
-      unknown
-    >
-    delete decoded.__length__
-    Object.keys(decoded).forEach((key) => {
-      if (Number.parseInt(key, 10) >= 0) {
-        delete decoded[key]
+    const eventInputs = (matchedAbi.inputs || []).map((input: AbiInput) => ({
+      ...input,
+      indexed: input.indexed ?? false,
+    }))
+    const eventAbi = [
+      { type: 'event' as const, name: matchedAbi.name || 'Event', inputs: eventInputs },
+    ]
+    const sig = `${matchedAbi.name || 'Event'}(${eventInputs.map((i: AbiInput) => i.type).join(',')})`
+    const eventSigHash = toEventHash(sig)
+    const fullTopics = [eventSigHash, ...log.topics.slice(1)] as [`0x${string}`, ...`0x${string}`[]]
+    try {
+      const result = decodeEventLog({
+        abi: eventAbi,
+        data: (log.data || '0x') as `0x${string}`,
+        topics: fullTopics,
+      })
+      const decoded = { ...(result.args as Record<string, unknown>) }
+      // bigint to string for backward compat
+      for (const key of Object.keys(decoded)) {
+        if (typeof decoded[key] === 'bigint') decoded[key] = (decoded[key] as bigint).toString()
       }
-    })
 
-    const logEvent: EventLog & { signature: string } = {
-      address: log.address,
-      blockHash: log.blockHash,
-      blockNumber: log.blockNumber,
-      logIndex: log.logIndex,
-      transactionIndex: log.transactionIndex,
-      transactionHash: log.transactionHash,
-      returnValues: decoded,
-      event: matchedAbi.name!,
-      signature: logSignature,
-      raw: {
-        data: log.data || '',
-        topics: log.topics || [],
-      },
+      const logEvent: EventLog & { signature: string } = {
+        address: log.address,
+        blockHash: log.blockHash,
+        blockNumber: log.blockNumber,
+        logIndex: log.logIndex,
+        transactionIndex: log.transactionIndex,
+        transactionHash: log.transactionHash,
+        returnValues: decoded,
+        event: matchedAbi.name!,
+        signature: logSignature,
+        raw: {
+          data: log.data || '',
+          topics: log.topics || [],
+        },
+      }
+
+      return logEvent
+    } catch {
+      return null
     }
-
-    return logEvent
   }
 }

@@ -7,6 +7,7 @@ import {
   JsonRpcResponse,
   Provider,
 } from '@celo/connect'
+import { toFunctionSelector } from 'viem'
 import { Metadata, fetchMetadata, tryGetProxyImplementation } from './sourcify'
 
 // This is taken from protocol/contracts/build/Account.json
@@ -196,9 +197,7 @@ describe('sourcify helpers', () => {
 
       describe('when the function exists', () => {
         it('returns the ABI', async () => {
-          const callSignature = connection
-            .getAbiCoder()
-            .encodeFunctionSignature('authorizedBy(address)')
+          const callSignature = toFunctionSelector('authorizedBy(address)')
           const abi = contractMetadata.abiForSelector(callSignature)
           expect(abi).toMatchObject({
             constant: true,

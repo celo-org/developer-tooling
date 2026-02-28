@@ -30,7 +30,7 @@ export default class DKGStart extends BaseCommand {
         send: (tx: any) =>
           kit.connection
             .sendTransaction({ ...tx, to: dkg.address, data: startData })
-            .then((r) => r.getHash()),
+            .then((r) => r),
       },
       { from: res.flags.from }
     )

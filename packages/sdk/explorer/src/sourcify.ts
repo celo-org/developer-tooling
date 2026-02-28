@@ -10,7 +10,8 @@
  *  // do something with it.
  * }
  */
-import { AbiCoder, ABIDefinition, AbiItem, AbiInput, Address, Connection } from '@celo/connect'
+import { ABIDefinition, AbiItem, AbiInput, Address, Connection } from '@celo/connect'
+import { toFunctionSelector } from 'viem'
 import fetch from 'cross-fetch'
 import { ContractMapping, mapFromPairs } from './base'
 
@@ -89,12 +90,9 @@ export class Metadata {
   public contractName: string | null = null
   public fnMapping: Map<string, ABIDefinition> = new Map()
 
-  private abiCoder: AbiCoder
   private address: Address
 
-  constructor(connection: Connection, address: Address, response: any) {
-    this.abiCoder = connection.getAbiCoder()
-
+  constructor(_connection: Connection, address: Address, response: any) {
     this.response = response as MetadataResponse
     this.address = address
   }
@@ -112,7 +110,8 @@ export class Metadata {
         (this.abi || [])
           .filter((item) => item.type === 'function')
           .map((item) => {
-            const signature = this.abiCoder.encodeFunctionSignature(item)
+            const sig = `${item.name}(${(item.inputs || []).map((i: AbiInput) => formatAbiInputType(i)).join(',')})`
+            const signature = toFunctionSelector(sig)
             return { ...item, signature }
           })
           .map((item) => [item.signature, item])
@@ -155,7 +154,12 @@ export class Metadata {
   abiForSelector(selector: string): AbiItem | null {
     return (
       this.abi?.find((item) => {
-        return item.type === 'function' && this.abiCoder.encodeFunctionSignature(item) === selector
+        return (
+          item.type === 'function' &&
+          toFunctionSelector(
+            `${item.name}(${(item.inputs || []).map((i: AbiInput) => formatAbiInputType(i)).join(',')})`
+          ) === selector
+        )
       }) || null
     )
   }
@@ -251,7 +255,7 @@ export async function tryGetProxyImplementation(
   const proxyContract = connection.getCeloContract(PROXY_ABI, contract)
   for (const fn of PROXY_IMPLEMENTATION_GETTERS) {
     try {
-      const result = await connection.callContract(proxyContract, fn, [])
+      const result = await (proxyContract as any).read[fn]()
       return result as Address
     } catch {
       continue

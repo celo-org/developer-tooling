@@ -2,7 +2,8 @@ import { StrongAddress, bufferToHex, ensureLeading0x } from '@celo/base/lib/addr
 
 import { CeloContract, CeloTx, Connection, EventLog, PastEventOptions } from '@celo/connect'
 import type { AbiItem } from '@celo/connect/lib/abi-types'
-import { viemAbiCoder, coerceArgsForAbi } from '@celo/connect/lib/viem-abi-coder'
+import { coerceArgsForAbi } from '@celo/connect/lib/viem-abi-coder'
+import { decodeParametersToObject } from '@celo/connect/lib/utils/abi-utils'
 import type { ContractFunctionName, PublicClient } from 'viem'
 import { toFunctionHash, encodeFunctionData as viemEncodeFunctionData } from 'viem'
 import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
@@ -42,20 +43,10 @@ export abstract class BaseWrapper<TAbi extends readonly unknown[] = AbiItem[]> {
     if (!this._version) {
       const result = await this.client.call({
         to: this.contract.address as `0x${string}`,
-        data: viemAbiCoder.encodeFunctionSignature({
-          type: 'function',
-          name: 'getVersionNumber',
-          inputs: [],
-          outputs: [
-            { name: '', type: 'uint256' },
-            { name: '', type: 'uint256' },
-            { name: '', type: 'uint256' },
-            { name: '', type: 'uint256' },
-          ],
-        }) as `0x${string}`,
+        data: toFunctionHash('getVersionNumber()').slice(0, 10) as `0x${string}`,
       })
       if (result.data && result.data !== '0x') {
-        const decoded = viemAbiCoder.decodeParameters(
+        const decoded = decodeParametersToObject(
           [
             { name: '', type: 'uint256' },
             { name: '', type: 'uint256' },

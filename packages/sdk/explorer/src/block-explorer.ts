@@ -3,6 +3,7 @@ import {
   Address,
   Block,
   CeloTxPending,
+  decodeParametersToObject,
   parseDecodedParams,
   signatureToAbiDefinition,
 } from '@celo/connect'
@@ -271,7 +272,7 @@ export class BlockExplorer {
   buildCallDetails(contract: ContractDetails, abi: ABIDefinition, input: string): CallDetails {
     const encodedParameters = input.slice(10)
     const { args, params } = parseDecodedParams(
-      this.kit.connection.getAbiCoder().decodeParameters(abi.inputs!, encodedParameters)
+      decodeParametersToObject(abi.inputs!, encodedParameters)
     )
 
     // transform numbers to big numbers in params

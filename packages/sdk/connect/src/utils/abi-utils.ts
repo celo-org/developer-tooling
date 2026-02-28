@@ -1,5 +1,7 @@
 import { ensureLeading0x } from '@celo/base/lib/address'
-import { AbiCoder, ABIDefinition, AbiItem, DecodedParamsObject } from '../abi-types'
+import { decodeAbiParameters, type AbiParameter } from 'viem'
+import { ABIDefinition, AbiInput, AbiItem, DecodedParamsObject } from '../abi-types'
+import { bigintToString } from '../viem-abi-coder'
 
 /** @internal */
 export const getAbiByName = (abi: AbiItem[], methodName: string) =>
@@ -95,5 +97,29 @@ export const signatureToAbiDefinition = (fnSignature: string): ABIDefinition => 
 }
 
 /** @internal */
-export const decodeStringParameter = (ethAbi: AbiCoder, str: string): string =>
-  ethAbi.decodeParameter('string', ensureLeading0x(str)) as string
+export const decodeStringParameter = (str: string): string => {
+  const hex = ensureLeading0x(str) as `0x${string}`
+  const result = decodeAbiParameters([{ type: 'string' } as AbiParameter], hex)
+  return result[0] as string
+}
+
+/** @internal */
+export const decodeParametersToObject = (
+  types: (string | AbiInput)[],
+  hex: string
+): DecodedParamsObject => {
+  const abiParams = types.map((type) =>
+    typeof type === 'string' ? ({ type } as AbiParameter) : (type as AbiParameter)
+  )
+  const hexPrefixed = (hex.startsWith('0x') ? hex : `0x${hex}`) as `0x${string}`
+  const result = decodeAbiParameters(abiParams, hexPrefixed)
+  const output: DecodedParamsObject = { __length__: result.length }
+  for (let i = 0; i < result.length; i++) {
+    const val = bigintToString(result[i])
+    output[i] = val
+    if (abiParams[i].name) {
+      output[abiParams[i].name!] = val
+    }
+  }
+  return output
+}

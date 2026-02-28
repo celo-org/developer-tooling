@@ -1,7 +1,7 @@
 import { NULL_ADDRESS } from '@celo/base'
 import { Connection, Provider } from '@celo/connect'
 import type { AbiItem } from '@celo/connect/lib/abi-types'
-import { viemAbiCoder } from '@celo/connect/lib/viem-abi-coder'
+import { encodeAbiParameters, type AbiParameter } from 'viem'
 import BigNumber from 'bignumber.js'
 import type { PublicClient } from 'viem'
 import { ContractVersion, newContractVersion } from '../versions'
@@ -10,9 +10,14 @@ import { BaseWrapper, type ContractLike, unixSecondsTimestampToDateString } from
 const mockVersion = newContractVersion(1, 1, 1, 1)
 
 // Encode the version as ABI-encoded (uint256, uint256, uint256, uint256)
-const encodedVersion = viemAbiCoder.encodeParameters(
-  ['uint256', 'uint256', 'uint256', 'uint256'],
-  ['1', '1', '1', '1']
+const encodedVersion = encodeAbiParameters(
+  [
+    { type: 'uint256' },
+    { type: 'uint256' },
+    { type: 'uint256' },
+    { type: 'uint256' },
+  ] as AbiParameter[],
+  [1n, 1n, 1n, 1n]
 )
 
 const mockContract: ContractLike<AbiItem[]> = {

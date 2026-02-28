@@ -1,10 +1,9 @@
 import { trimLeading0x } from '@celo/base/lib/address'
 import { zeroRange } from '@celo/base/lib/collections'
-import { CeloTx, viemAbiCoder } from '@celo/connect'
+import { CeloTx } from '@celo/connect'
+import { decodeAbiParameters, encodeAbiParameters, toFunctionHash, type AbiParameter } from 'viem'
 import qrcode from 'qrcode'
 import querystring from 'querystring'
-
-const abi = viemAbiCoder
 
 // see https://solidity.readthedocs.io/en/v0.5.3/abi-spec.html#function-selector-and-argument-encoding
 const ABI_TYPE_REGEX = '(u?int(8|16|32|64|128|256)|address|bool|bytes(4|32)?|string)(\\[\\])?'
@@ -40,14 +39,17 @@ export function parseUri(uri: string): CeloTx {
     const parsedQuery = querystring.parse(namedGroups.query)
 
     if (namedGroups.function !== undefined) {
-      const functionSig = abi.encodeFunctionSignature(namedGroups.function)
+      const functionSig = toFunctionHash(namedGroups.function).slice(0, 10)
       tx.data = functionSig
 
       if (namedGroups.inputTypes != null && namedGroups.inputTypes !== '') {
         const abiTypes = namedGroups.inputTypes.split(',')
         const rawArgs = (parsedQuery.args || '[]') as string
         const builtArgs = rawArgs.slice(1, rawArgs.length - 1).split(',')
-        const callSig = abi.encodeParameters(abiTypes, builtArgs)
+        const callSig = encodeAbiParameters(
+          abiTypes.map((t: string) => ({ type: t }) as AbiParameter),
+          builtArgs as any
+        )
 
         tx.data += trimLeading0x(callSig)
       }
@@ -77,7 +79,7 @@ export function buildUri(tx: CeloTx, functionName?: string, abiTypes: string[] =
     }
 
     const functionSelector = `${functionName}(${abiTypes.join(',')})`
-    const functionSig = trimLeading0x(abi.encodeFunctionSignature(functionSelector))
+    const functionSig = trimLeading0x(toFunctionHash(functionSelector).slice(0, 10))
     const txData = trimLeading0x(tx.data)
     const funcEncoded = txData.slice(0, 8)
 
@@ -89,10 +91,11 @@ export function buildUri(tx: CeloTx, functionName?: string, abiTypes: string[] =
 
     if (txData.length > 8) {
       const argsEncoded = txData.slice(8)
-      const decoded = abi.decodeParameters(abiTypes, argsEncoded)
-      functionArgs = zeroRange(decoded.__length__).map((idx) =>
-        (decoded[idx] as string).toLowerCase()
+      const decoded = decodeAbiParameters(
+        abiTypes.map((t: string) => ({ type: t }) as AbiParameter),
+        `0x${argsEncoded}` as `0x${string}`
       )
+      functionArgs = zeroRange(decoded.length).map((idx) => (decoded[idx] as string).toLowerCase())
     }
   }
 

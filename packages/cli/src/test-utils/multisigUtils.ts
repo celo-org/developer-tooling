@@ -5,6 +5,7 @@ import { ContractKit } from '@celo/contractkit'
 import { setCode } from '@celo/dev-utils/anvil-test'
 import { TEST_GAS_PRICE } from '@celo/dev-utils/test-utils'
 import { encodeFunctionData, parseUnits } from 'viem'
+import { waitForTransactionReceipt } from 'viem/actions'
 import {
   multiSigBytecode,
   proxyBytecode,
@@ -34,17 +35,23 @@ export async function createMultisig(
   kit.defaultAccount = accounts[0]
 
   // Deploy Proxy contract
-  const proxyDeploymentTx = await kit.sendTransaction({
+  const proxyHash = await kit.sendTransaction({
     data: proxyBytecode,
     maxFeePerGas: TEST_GAS_PRICE,
   })
-  const { contractAddress: proxyAddress } = await proxyDeploymentTx.waitReceipt()
+  const proxyReceipt = await waitForTransactionReceipt(kit.connection.viemClient, {
+    hash: proxyHash,
+  })
+  const { contractAddress: proxyAddress } = proxyReceipt
   // Deploy MultiSig contract
-  const multisigDeploymentTx = await kit.sendTransaction({
+  const multisigHash = await kit.sendTransaction({
     data: multiSigBytecode,
     maxFeePerGas: TEST_GAS_PRICE,
   })
-  const { contractAddress: multiSigAddress } = await multisigDeploymentTx.waitReceipt()
+  const multisigReceipt = await waitForTransactionReceipt(kit.connection.viemClient, {
+    hash: multisigHash,
+  })
+  const { contractAddress: multiSigAddress } = multisigReceipt
 
   // Configure and initialize MultiSig
   const initializerAbi = multiSigABI.find(
@@ -54,13 +61,10 @@ export async function createMultisig(
   const blockResp = await kit.connection.rpcCaller.call('eth_getBlockByNumber', ['latest', false])
   const baseFee = (blockResp.result as RpcBlockResponse).baseFeePerGas
   const priorityFee = parseUnits('25', 9).toString()
-  const callData = kit.connection
-    .getAbiCoder()
-    .encodeFunctionCall(initializerAbi as AbiItem, [
-      owners as unknown,
-      requiredSignatures as unknown,
-      requiredInternalSignatures as unknown,
-    ])
+  const callData = encodeFunctionData({
+    abi: [initializerAbi] as any,
+    args: [owners, requiredSignatures, requiredInternalSignatures] as any,
+  })
   const initData = encodeFunctionData({
     abi: proxy.abi,
     functionName: '_setAndInitializeImplementation',
@@ -71,7 +75,7 @@ export async function createMultisig(
     to: proxy.address,
     data: initData,
   })
-  const initResult = await kit.connection.sendTransaction({
+  await kit.connection.sendTransaction({
     from: kit.defaultAccount,
     to: proxy.address,
     data: initData,
@@ -79,7 +83,7 @@ export async function createMultisig(
     maxPriorityFeePerGas: priorityFee,
     maxFeePerGas: (BigInt(baseFee) + BigInt(priorityFee)).toString(),
   })
-  await initResult.getHash()
+  // Hash is returned directly from sendTransaction
   const changeOwnerData = encodeFunctionData({
     abi: proxy.abi,
     functionName: '_transferOwnership',
@@ -90,7 +94,7 @@ export async function createMultisig(
     to: proxy.address,
     data: changeOwnerData,
   })
-  const changeOwnerResult = await kit.connection.sendTransaction({
+  await kit.connection.sendTransaction({
     from: kit.defaultAccount,
     to: proxy.address,
     data: changeOwnerData,
@@ -98,7 +102,7 @@ export async function createMultisig(
     maxPriorityFeePerGas: priorityFee,
     maxFeePerGas: (BigInt(baseFee) + BigInt(priorityFee)).toString(),
   })
-  await changeOwnerResult.getHash()
+  // Hash is returned directly from sendTransaction
 
   return proxyAddress as StrongAddress
 }

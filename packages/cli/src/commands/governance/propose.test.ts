@@ -629,9 +629,10 @@ testWithAnvilL2(
         expect(proposal[0].to).toEqual('0x3d79EdAaBC0EaB6F08ED885C05Fc0B014290D95A')
         expect(proposal[0].value).toEqual(transactions[0].value)
 
-        const expectedInput = kit.connection
-          .getAbiCoder()
-          .encodeFunctionCall(structAbiDefinition, [JSON.parse(transactionsWithStruct[0].args[0])])
+        const expectedInput = encodeFunctionData({
+          abi: [structAbiDefinition] as any,
+          args: [JSON.parse(transactionsWithStruct[0].args[0])] as any,
+        })
 
         expect(proposal[0].input).toEqual(expectedInput)
       },

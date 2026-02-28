@@ -1,5 +1,6 @@
 import { Flags, ux } from '@oclif/core'
 import { encodeDeployData } from 'viem'
+import { waitForTransactionReceipt } from 'viem/actions'
 import { BaseCommand } from '../../base'
 import { CustomFlags } from '../../utils/command'
 import { deprecationOptions } from '../../utils/notice'
@@ -32,11 +33,13 @@ export default class DKGDeploy extends BaseCommand {
     })
 
     ux.action.start('Sending Transaction: deployDKG')
-    const txResult = await kit.connection.sendTransaction({
+    const hash = await kit.connection.sendTransaction({
       from: res.flags.from,
       data,
     })
-    const receipt = await txResult.waitReceipt()
+    const receipt = await waitForTransactionReceipt(kit.connection.viemClient, {
+      hash,
+    })
     console.log(receipt)
     ux.action.stop()
   }

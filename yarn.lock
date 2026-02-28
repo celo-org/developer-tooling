@@ -1946,6 +1946,7 @@ __metadata:
     cross-fetch: "npm:3.1.5"
     debug: "npm:^4.1.1"
     fetch-mock: "npm:^10.0.7"
+    viem: "npm:^2.33.2"
   languageName: unknown
   linkType: soft
 
@@ -2071,6 +2072,7 @@ __metadata:
     dotenv: "npm:^8.2.0"
     fetch-mock: "npm:^10.0.7"
     qrcode: "npm:1.4.4"
+    viem: "npm:^2.33.2"
   languageName: unknown
   linkType: soft
 

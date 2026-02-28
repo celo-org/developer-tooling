@@ -2,6 +2,7 @@ import { ContractKit } from '@celo/contractkit'
 import { ProposalTransaction } from '@celo/contractkit/lib/wrappers/Governance'
 import { ProposalBuilder, proposalToJSON, ProposalTransactionJSON } from '@celo/governance'
 import chalk from 'chalk'
+import { waitForTransactionReceipt } from 'viem/actions'
 import { readJsonSync } from 'fs-extra'
 
 export async function checkProposal(proposal: ProposalTransaction[], kit: ContractKit) {
@@ -37,13 +38,15 @@ async function tryProposal(
           'latest',
         ])
       } else {
-        const txResult = await kit.connection.sendTransaction({
+        const hash = await kit.connection.sendTransaction({
           to: tx.to,
           from,
           value: tx.value,
           data: tx.input,
         })
-        await txResult.waitReceipt()
+        await waitForTransactionReceipt(kit.connection.viemClient, {
+          hash,
+        })
       }
       console.log(chalk.green(`   ${chalk.bold('✔')}  Transaction ${i} success!`))
     } catch (err: any) {

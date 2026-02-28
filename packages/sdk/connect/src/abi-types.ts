@@ -1,5 +1,3 @@
-import { EventLog } from './types'
-
 /** @internal */
 export type ABIType = 'uint256' | 'boolean' | 'string' | 'bytes' | string // TODO complete list
 
@@ -49,20 +47,4 @@ export interface AbiItem {
 /** @internal */
 export interface ABIDefinition extends AbiItem {
   signature: string
-}
-/** @internal */
-export interface AbiCoder {
-  decodeLog(inputs: AbiInput[], hexString: string, topics: string[]): EventLog
-
-  encodeParameter(type: ABIType, parameter: unknown): string
-  encodeParameters(types: ABIType[], paramaters: unknown[]): string
-
-  encodeEventSignature(name: string | object): string
-  encodeFunctionCall(jsonInterface: object, parameters: unknown[]): string
-  encodeFunctionSignature(name: string | object): string
-
-  decodeParameter(type: ABIType, hex: string): unknown
-
-  decodeParameters(types: ABIType[], hex: string): DecodedParamsArray
-  decodeParameters(types: AbiInput[], hex: string): DecodedParamsObject
 }

@@ -182,9 +182,7 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
 
     for (const validatorGroup of validatorGroups) {
       const pendingVotesForGroup = new BigNumber(
-        (await kit.connection.callContract(electionViemContract, 'getPendingVotesForGroup', [
-          validatorGroup,
-        ])) as string
+        String(await (electionViemContract as any).read.getPendingVotesForGroup([validatorGroup]))
       )
       if (pendingVotesForGroup.gt(0)) {
         await withImpersonatedAccount(

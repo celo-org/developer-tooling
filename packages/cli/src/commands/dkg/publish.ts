@@ -38,7 +38,7 @@ export default class DKGPublish extends BaseCommand {
         send: (tx: any) =>
           kit.connection
             .sendTransaction({ ...tx, to: dkg.address, data: publishData })
-            .then((r) => r.getHash()),
+            .then((r) => r),
       },
       { from: res.flags.from }
     )

@@ -40,7 +40,7 @@ export default class DKGRegister extends BaseCommand {
         send: (tx: any) =>
           kit.connection
             .sendTransaction({ ...tx, to: dkg.address, data: allowlistData })
-            .then((r) => r.getHash()),
+            .then((r) => r),
       },
       { from: res.flags.from }
     )

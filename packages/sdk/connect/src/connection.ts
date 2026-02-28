@@ -9,16 +9,11 @@ import {
   custom,
   toFunctionHash,
   toEventHash,
-  decodeFunctionResult,
-  encodeFunctionData,
-  type Abi,
-  type ContractFunctionName,
   type PublicClient,
 } from 'viem'
-import { AbiCoder, AbiInput, AbiItem } from './abi-types'
-import { isEmpty, viemAbiCoder, coerceArgsForAbi } from './viem-abi-coder'
+import { AbiInput, AbiItem } from './abi-types'
+import { isEmpty } from './viem-abi-coder'
 import { type CeloContract, createCeloContract } from './contract-types'
-import type { ContractRef } from './types'
 import { CeloProvider, assertIsCeloProvider } from './celo-provider'
 import {
   Address,
@@ -47,7 +42,7 @@ import { TxParamsNormalizer } from './utils/tx-params-normalizer'
 import { ReadOnlyWallet } from './wallet'
 
 // Convenience re-export for consumers that import from @celo/connect
-export { viemAbiCoder, isPresent, isEmpty } from './viem-abi-coder'
+export { isPresent, isEmpty } from './viem-abi-coder'
 
 const debugGasEstimation = debugFactory('connection:gas-estimation')
 
@@ -259,46 +254,6 @@ export class Connection {
     })
   }
 
-  /**
-   * Call a read-only contract function and decode the result.
-   * @internal
-   */
-  callContract = async (
-    contract: ContractRef,
-    functionName: string,
-    args: unknown[]
-  ): Promise<unknown> => {
-    const contractAbi = contract.abi as AbiItem[]
-    const methodAbi = contractAbi.find(
-      (item: AbiItem) => item.type === 'function' && item.name === functionName
-    )
-    if (!methodAbi) {
-      throw new Error(`Method ${functionName} not found in ABI`)
-    }
-    const coercedArgs = methodAbi.inputs ? coerceArgsForAbi(methodAbi.inputs, args) : args
-    const data = encodeFunctionData({
-      abi: [methodAbi],
-      args: coercedArgs,
-    })
-    const result = await this.viemClient.call({
-      to: contract.address,
-      data: data as `0x${string}`,
-    })
-    if (
-      !result.data ||
-      result.data === '0x' ||
-      !methodAbi.outputs ||
-      methodAbi.outputs.length === 0
-    ) {
-      return result.data
-    }
-    return decodeFunctionResult({
-      abi: contract.abi as Abi,
-      functionName: functionName as ContractFunctionName<Abi>,
-      data: result.data,
-    })
-  }
-
   /*
    * @param signer - The address of account signing this data
    * @param typedData - Structured data to be signed
@@ -423,7 +378,7 @@ export class Connection {
       const called = await callFn({ data: tx.data, to: tx.to, from: tx.from })
       let revertReason = 'Could not decode transaction failure reason'
       if (called.startsWith('0x08c379a')) {
-        revertReason = decodeStringParameter(this.getAbiCoder(), called.substring(10))
+        revertReason = decodeStringParameter(called.substring(10))
       }
       debugGasEstimation('Recover transaction failure reason', {
         called,
@@ -435,10 +390,6 @@ export class Connection {
       })
       return Promise.reject(`Gas estimation failed: ${revertReason} or ${e}`)
     }
-  }
-
-  getAbiCoder(): AbiCoder {
-    return viemAbiCoder
   }
 
   estimateGasWithInflationFactor = async (

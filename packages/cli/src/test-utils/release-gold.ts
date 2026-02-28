@@ -61,12 +61,12 @@ export async function deployReleaseGoldContract(
           REGISTRY_CONTRACT_ADDRESS,
         ],
       })
-      const initResult = await connection.sendTransaction({
+      await connection.sendTransaction({
         to: contract.address,
         data: initData,
         from: ownerMultisigAddress,
       })
-      await initResult.getHash()
+      // Hash is returned directly from sendTransaction
     },
     new BigNumber(parseEther('1').toString())
   )

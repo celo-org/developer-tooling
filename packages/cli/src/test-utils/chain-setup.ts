@@ -12,6 +12,7 @@ import { Provider } from '@celo/connect'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
 import { decodeFunctionResult, encodeFunctionData, parseEther } from 'viem'
+import { waitForTransactionReceipt } from 'viem/actions'
 import Switch from '../commands/epochs/switch'
 import { testLocallyWithNode } from './cliUtils'
 
@@ -132,13 +133,14 @@ export const topUpWithToken = async (
 export const changeMultiSigOwner = async (kit: ContractKit, toAccount: StrongAddress) => {
   const governance = await kit.contracts.getGovernance()
   const multisig = await governance.getApproverMultisig()
-  await (
-    await kit.sendTransaction({
-      from: toAccount,
-      to: multisig.address,
-      value: parseEther('1').toString(),
-    })
-  ).waitReceipt()
+  const hash = await kit.sendTransaction({
+    from: toAccount,
+    to: multisig.address,
+    value: parseEther('1').toString(),
+  })
+  await waitForTransactionReceipt(kit.connection.viemClient, {
+    hash,
+  })
 
   await impersonateAccount(kit.connection.currentProvider, multisig.address)
 
@@ -215,13 +217,13 @@ export const activateAllValidatorGroupsVotes = async (kit: ContractKit) => {
             functionName: 'activate',
             args: [validatorGroup as `0x${string}`],
           })
-          const activateResult = await kit.connection.sendTransaction({
+          const hash = await kit.connection.sendTransaction({
             // @ts-expect-error here as well
             to: electionWrapper.contract.address,
             data: activateData,
             from: validatorGroup,
           })
-          await activateResult.getHash()
+          hash
         },
         new BigNumber(parseEther('1').toString())
       )

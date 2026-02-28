@@ -35,7 +35,7 @@ export class AddressRegistry {
   async addressFor(contract: CeloContract): Promise<StrongAddress> {
     if (!this.cache.has(contract)) {
       debug('Fetching address from Registry for %s', contract)
-      const address = (await this.connection.callContract(this.registry, 'getAddressForString', [
+      const address = (await (this.registry as any).read.getAddressForString([
         stripProxy(contract),
       ])) as string
 
