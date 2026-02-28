@@ -28,7 +28,7 @@ testWithAnvilL2('AttestationsWrapper', (provider) => {
 
     attestations = new AttestationsWrapper(
       kit.connection,
-      kit.connection.getCeloContract(attestationsABI as any, attestationsContractAddress),
+      kit.connection.getCeloContract(attestationsABI as any, attestationsContractAddress) as any,
       newKitFromProvider(provider).contracts
     )
   })

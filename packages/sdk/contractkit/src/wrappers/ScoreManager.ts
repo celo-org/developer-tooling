@@ -1,16 +1,18 @@
 import { scoreManagerABI } from '@celo/abis'
-import { BaseWrapper, fixidityValueToBigNumber, proxyCall } from './BaseWrapper'
+import { BaseWrapper, fixidityValueToBigNumber, toViemAddress } from './BaseWrapper'
 
 /**
  * Contract handling validator scores.
  */
 export class ScoreManagerWrapper extends BaseWrapper<typeof scoreManagerABI> {
-  getGroupScore = proxyCall(this.contract, 'getGroupScore', undefined, (res) =>
-    fixidityValueToBigNumber(res.toString())
-  )
-  getValidatorScore = proxyCall(this.contract, 'getValidatorScore', undefined, (res) =>
-    fixidityValueToBigNumber(res.toString())
-  )
+  getGroupScore = async (group: string) => {
+    const res = await this.contract.read.getGroupScore([toViemAddress(group)])
+    return fixidityValueToBigNumber(res.toString())
+  }
+  getValidatorScore = async (signer: string) => {
+    const res = await this.contract.read.getValidatorScore([toViemAddress(signer)])
+    return fixidityValueToBigNumber(res.toString())
+  }
 }
 
 export type ScoreManagerWrapperType = ScoreManagerWrapper

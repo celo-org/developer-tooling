@@ -1,19 +1,17 @@
 import { odisPaymentsABI } from '@celo/abis'
 import { Address, CeloTransactionObject } from '@celo/connect'
 import { BigNumber } from 'bignumber.js'
-import { BaseWrapper, proxyCall, proxySend, valueToBigNumber } from './BaseWrapper'
+import { BaseWrapper, proxySend, toViemAddress, valueToBigNumber } from './BaseWrapper'
 
 export class OdisPaymentsWrapper extends BaseWrapper<typeof odisPaymentsABI> {
   /**
    * @notice Fetches total amount sent (all-time) for given account to odisPayments
    * @param account The account to fetch total amount of funds sent
    */
-  totalPaidCUSD: (account: Address) => Promise<BigNumber> = proxyCall(
-    this.contract,
-    'totalPaidCUSD',
-    undefined,
-    (res) => valueToBigNumber(res.toString())
-  )
+  totalPaidCUSD = async (account: Address): Promise<BigNumber> => {
+    const res = await this.contract.read.totalPaidCUSD([toViemAddress(account)])
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * @notice Sends USDm to this contract to pay for ODIS quota (for queries).

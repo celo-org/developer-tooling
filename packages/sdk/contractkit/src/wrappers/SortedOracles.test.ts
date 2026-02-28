@@ -92,7 +92,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
       NetworkConfig.oracles.reportExpiry,
     ]).send({ from: owner })
 
-    return new SortedOraclesWrapper(kit.connection, deployedContract, kit.registry)
+    return new SortedOraclesWrapper(kit.connection, deployedContract as any, kit.registry)
   }
 
   const addOracleForTarget = async (

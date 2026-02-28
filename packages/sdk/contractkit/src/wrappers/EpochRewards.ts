@@ -1,47 +1,41 @@
 import { epochRewardsABI } from '@celo/abis'
 import { fromFixed } from '@celo/utils/lib/fixidity'
-import { BaseWrapper, proxyCall, valueToBigNumber } from './BaseWrapper'
+import { BaseWrapper, valueToBigNumber } from './BaseWrapper'
 
 const parseFixidity = (v: string) => fromFixed(valueToBigNumber(v))
 
 export class EpochRewardsWrapper extends BaseWrapper<typeof epochRewardsABI> {
-  getRewardsMultiplierParameters = proxyCall(
-    this.contract,
-    'getRewardsMultiplierParameters',
-    undefined,
-    (res) => ({
+  getRewardsMultiplierParameters = async () => {
+    const res = await this.contract.read.getRewardsMultiplierParameters()
+    return {
       max: parseFixidity(res[0].toString()),
       underspendAdjustment: parseFixidity(res[1].toString()),
       overspendAdjustment: parseFixidity(res[2].toString()),
-    })
-  )
+    }
+  }
 
-  getTargetVotingYieldParameters = proxyCall(
-    this.contract,
-    'getTargetVotingYieldParameters',
-    undefined,
-    (res) => ({
+  getTargetVotingYieldParameters = async () => {
+    const res = await this.contract.read.getTargetVotingYieldParameters()
+    return {
       target: parseFixidity(res[0].toString()),
       max: parseFixidity(res[1].toString()),
       adjustment: parseFixidity(res[2].toString()),
-    })
-  )
+    }
+  }
 
-  getCommunityReward = proxyCall(this.contract, 'getCommunityRewardFraction', undefined, (res) =>
-    parseFixidity(res.toString())
-  )
+  getCommunityReward = async () => {
+    const res = await this.contract.read.getCommunityRewardFraction()
+    return parseFixidity(res.toString())
+  }
 
-  private _getCarbonOffsettingFraction = proxyCall(
-    this.contract,
-    'getCarbonOffsettingFraction',
-    undefined,
-    (res) => parseFixidity(res.toString())
-  )
+  private _getCarbonOffsettingFraction = async () => {
+    const res = await this.contract.read.getCarbonOffsettingFraction()
+    return parseFixidity(res.toString())
+  }
 
-  private _getCarbonOffsettingPartner: (...args: any[]) => Promise<string> = proxyCall(
-    this.contract,
-    'carbonOffsettingPartner'
-  )
+  private _getCarbonOffsettingPartner = async (): Promise<string> => {
+    return this.contract.read.carbonOffsettingPartner()
+  }
 
   getCarbonOffsetting = async (): Promise<{
     factor: import('bignumber.js').default
@@ -55,12 +49,10 @@ export class EpochRewardsWrapper extends BaseWrapper<typeof epochRewardsABI> {
     }
   }
 
-  getTargetValidatorEpochPayment = proxyCall(
-    this.contract,
-    'targetValidatorEpochPayment',
-    undefined,
-    (res) => valueToBigNumber(res.toString())
-  )
+  getTargetValidatorEpochPayment = async () => {
+    const res = await this.contract.read.targetValidatorEpochPayment()
+    return valueToBigNumber(res.toString())
+  }
 
   async getConfig() {
     const rewardsMultiplier = await this.getRewardsMultiplierParameters()

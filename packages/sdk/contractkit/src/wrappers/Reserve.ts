@@ -4,8 +4,8 @@ import BigNumber from 'bignumber.js'
 import {
   BaseWrapper,
   fixidityValueToBigNumber,
-  proxyCall,
   proxySend,
+  toViemAddress,
   valueToBigNumber,
 } from './BaseWrapper'
 
@@ -25,16 +25,17 @@ export class ReserveWrapper extends BaseWrapper<typeof reserveABI> {
    * Query Tobin tax staleness threshold parameter.
    * @returns Current Tobin tax staleness threshold.
    */
-  tobinTaxStalenessThreshold = proxyCall(
-    this.contract,
-    'tobinTaxStalenessThreshold',
-    undefined,
-    (res) => valueToBigNumber(res.toString())
-  )
-  dailySpendingRatio = proxyCall(this.contract, 'getDailySpendingRatio', undefined, (res) =>
-    fixidityValueToBigNumber(res.toString())
-  )
-  isSpender: (account: string) => Promise<boolean> = proxyCall(this.contract, 'isSpender')
+  tobinTaxStalenessThreshold = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.tobinTaxStalenessThreshold()
+    return valueToBigNumber(res.toString())
+  }
+  dailySpendingRatio = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.getDailySpendingRatio()
+    return fixidityValueToBigNumber(res.toString())
+  }
+  isSpender = async (account: string): Promise<boolean> => {
+    return this.contract.read.isSpender([toViemAddress(account)])
+  }
   transferGold: (to: string, value: string | number) => CeloTransactionObject<void> = proxySend(
     this.connection,
     this.contract,
@@ -45,50 +46,44 @@ export class ReserveWrapper extends BaseWrapper<typeof reserveABI> {
     this.contract,
     'getOrComputeTobinTax'
   )
-  frozenReserveGoldStartBalance = proxyCall(
-    this.contract,
-    'frozenReserveGoldStartBalance',
-    undefined,
-    (res) => valueToBigNumber(res.toString())
-  )
-  frozenReserveGoldStartDay = proxyCall(
-    this.contract,
-    'frozenReserveGoldStartDay',
-    undefined,
-    (res) => valueToBigNumber(res.toString())
-  )
-  frozenReserveGoldDays = proxyCall(this.contract, 'frozenReserveGoldDays', undefined, (res) =>
-    valueToBigNumber(res.toString())
-  )
+  frozenReserveGoldStartBalance = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.frozenReserveGoldStartBalance()
+    return valueToBigNumber(res.toString())
+  }
+  frozenReserveGoldStartDay = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.frozenReserveGoldStartDay()
+    return valueToBigNumber(res.toString())
+  }
+  frozenReserveGoldDays = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.frozenReserveGoldDays()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * @notice Returns a list of weights used for the allocation of reserve assets.
    * @return An array of a list of weights used for the allocation of reserve assets.
    */
-  getAssetAllocationWeights: () => Promise<BigNumber[]> = proxyCall(
-    this.contract,
-    'getAssetAllocationWeights',
-    undefined,
-    (weights) => [...weights].map((w) => valueToBigNumber(w.toString()))
-  )
+  getAssetAllocationWeights = async (): Promise<BigNumber[]> => {
+    const res = await this.contract.read.getAssetAllocationWeights()
+    return [...res].map((w) => valueToBigNumber(w.toString()))
+  }
 
   /**
    * @notice Returns a list of token symbols that have been allocated.
    * @return An array of token symbols that have been allocated.
    */
-  getAssetAllocationSymbols = proxyCall(
-    this.contract,
-    'getAssetAllocationSymbols',
-    undefined,
-    (symbols) => [...symbols].map((symbol) => this.connection.hexToAscii(symbol))
-  )
+  getAssetAllocationSymbols = async (): Promise<string[]> => {
+    const res = await this.contract.read.getAssetAllocationSymbols()
+    return [...res].map((symbol) => this.connection.hexToAscii(symbol))
+  }
 
   /**
    * @alias {getReserveCeloBalance}
    */
-  getReserveGoldBalance = proxyCall(this.contract, 'getReserveGoldBalance', undefined, (res) =>
-    valueToBigNumber(res.toString())
-  )
+  getReserveGoldBalance = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.getReserveGoldBalance()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * @notice Returns the amount of CELO included in the reserve
@@ -101,9 +96,10 @@ export class ReserveWrapper extends BaseWrapper<typeof reserveABI> {
    * @see {getUnfrozenReserveCeloBalance}
    * @return {BigNumber} amount in wei
    */
-  getUnfrozenBalance = proxyCall(this.contract, 'getUnfrozenBalance', undefined, (res) =>
-    valueToBigNumber(res.toString())
-  )
+  getUnfrozenBalance = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.getUnfrozenBalance()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * @notice Returns the amount of unfrozen CELO included in the reserve
@@ -111,19 +107,15 @@ export class ReserveWrapper extends BaseWrapper<typeof reserveABI> {
    * @see {getUnfrozenBalance}
    * @return {BigNumber} amount in wei
    */
-  getUnfrozenReserveCeloBalance = proxyCall(
-    this.contract,
-    'getUnfrozenReserveGoldBalance',
-    undefined,
-    (res) => valueToBigNumber(res.toString())
-  )
+  getUnfrozenReserveCeloBalance = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.getUnfrozenReserveGoldBalance()
+    return valueToBigNumber(res.toString())
+  }
 
-  getOtherReserveAddresses = proxyCall(
-    this.contract,
-    'getOtherReserveAddresses',
-    undefined,
-    (res) => [...res] as string[]
-  )
+  getOtherReserveAddresses = async (): Promise<string[]> => {
+    const res = await this.contract.read.getOtherReserveAddresses()
+    return [...res] as string[]
+  }
 
   /**
    * Returns current configuration parameters.
@@ -138,10 +130,9 @@ export class ReserveWrapper extends BaseWrapper<typeof reserveABI> {
     }
   }
 
-  isOtherReserveAddress: (address: string) => Promise<boolean> = proxyCall(
-    this.contract,
-    'isOtherReserveAddress'
-  )
+  isOtherReserveAddress = async (address: string): Promise<boolean> => {
+    return this.contract.read.isOtherReserveAddress([toViemAddress(address)])
+  }
 
   async getSpenders(): Promise<Address[]> {
     const spendersAdded = (

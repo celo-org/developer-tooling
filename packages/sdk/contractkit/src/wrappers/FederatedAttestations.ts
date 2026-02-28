@@ -1,7 +1,7 @@
 import { federatedAttestationsABI } from '@celo/abis'
 import { Address, CeloTransactionObject } from '@celo/connect'
 import { registerAttestation as buildRegisterAttestationTypedData } from '@celo/utils/lib/typed-data-constructors'
-import { BaseWrapper, proxyCall, proxySend } from './BaseWrapper'
+import { BaseWrapper, proxySend, toViemAddress, toViemBigInt } from './BaseWrapper'
 
 export class FederatedAttestationsWrapper extends BaseWrapper<typeof federatedAttestationsABI> {
   /**
@@ -13,10 +13,16 @@ export class FederatedAttestationsWrapper extends BaseWrapper<typeof federatedAt
    * @dev Adds identifier info to the arrays in order of provided trustedIssuers
    * @dev Expectation that only one attestation exists per (identifier, issuer, account)
    */
-  lookupIdentifiers = proxyCall(this.contract, 'lookupIdentifiers', undefined, (res) => ({
-    countsPerIssuer: [...res[0]].map((v) => v.toString()),
-    identifiers: [...res[1]] as string[],
-  }))
+  lookupIdentifiers = async (account: string, trustedIssuers: string[]) => {
+    const res = await this.contract.read.lookupIdentifiers([
+      toViemAddress(account),
+      trustedIssuers.map(toViemAddress),
+    ])
+    return {
+      countsPerIssuer: [...res[0]].map((v) => v.toString()),
+      identifiers: [...res[1]] as string[],
+    }
+  }
 
   /**
    * @notice Returns info about attestations for `identifier` produced by
@@ -32,13 +38,19 @@ export class FederatedAttestationsWrapper extends BaseWrapper<typeof federatedAt
    * @dev Adds attestation info to the arrays in order of provided trustedIssuers
    * @dev Expectation that only one attestation exists per (identifier, issuer, account)
    */
-  lookupAttestations = proxyCall(this.contract, 'lookupAttestations', undefined, (res) => ({
-    countsPerIssuer: [...res[0]].map((v) => v.toString()),
-    accounts: [...res[1]] as string[],
-    signers: [...res[2]] as string[],
-    issuedOns: [...res[3]].map((v) => v.toString()),
-    publishedOns: [...res[4]].map((v) => v.toString()),
-  }))
+  lookupAttestations = async (identifier: string, trustedIssuers: string[]) => {
+    const res = await this.contract.read.lookupAttestations([
+      identifier as `0x${string}`,
+      trustedIssuers.map(toViemAddress),
+    ])
+    return {
+      countsPerIssuer: [...res[0]].map((v) => v.toString()),
+      accounts: [...res[1]] as string[],
+      signers: [...res[2]] as string[],
+      issuedOns: [...res[3]].map((v) => v.toString()),
+      publishedOns: [...res[4]].map((v) => v.toString()),
+    }
+  }
 
   /**
    * @notice Validates the given attestation and signature
@@ -53,27 +65,47 @@ export class FederatedAttestationsWrapper extends BaseWrapper<typeof federatedAt
    * @dev Throws if attestation has been revoked
    * @dev Throws if signer is not an authorized AttestationSigner of the issuer
    */
-  validateAttestationSig: (
+  validateAttestationSig = async (
     identifier: string,
-    issuer: Address,
-    account: Address,
-    signer: Address,
+    issuer: string,
+    account: string,
+    signer: string,
     issuedOn: number,
     v: number | string,
     r: string | number[],
     s: string | number[]
-  ) => Promise<void> = proxyCall(this.contract, 'validateAttestationSig')
+  ): Promise<void> => {
+    await this.contract.read.validateAttestationSig([
+      identifier as `0x${string}`,
+      toViemAddress(issuer),
+      toViemAddress(account),
+      toViemAddress(signer),
+      toViemBigInt(issuedOn),
+      v as unknown as number,
+      r as `0x${string}`,
+      s as `0x${string}`,
+    ])
+  }
 
   /**
    * @return keccak 256 of abi encoded parameters
    */
-  getUniqueAttestationHash: (
+  getUniqueAttestationHash = async (
     identifier: string,
-    issuer: Address,
-    account: Address,
-    signer: Address,
+    issuer: string,
+    account: string,
+    signer: string,
     issuedOn: number
-  ) => Promise<string> = proxyCall(this.contract, 'getUniqueAttestationHash')
+  ): Promise<string> => {
+    const res = await this.contract.read.getUniqueAttestationHash([
+      identifier as `0x${string}`,
+      toViemAddress(issuer),
+      toViemAddress(account),
+      toViemAddress(signer),
+      toViemBigInt(issuedOn),
+    ])
+    return res
+  }
 
   /**
    * @notice Registers an attestation directly from the issuer

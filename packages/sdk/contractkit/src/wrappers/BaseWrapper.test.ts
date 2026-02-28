@@ -41,7 +41,7 @@ const connection = new Connection(mockProvider)
 
 class TestWrapper extends BaseWrapper {
   constructor() {
-    super(connection, mockContract)
+    super(connection, mockContract as any)
   }
 
   async protectedFunction(v: ContractVersion) {

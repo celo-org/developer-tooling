@@ -2,7 +2,7 @@ import { StrongAddress } from '@celo/base'
 import type {} from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import { AbstractFeeCurrencyWrapper } from './AbstractFeeCurrencyWrapper'
-import { proxyCall, valueToBigNumber } from './BaseWrapper'
+import { toViemAddress, valueToBigNumber } from './BaseWrapper'
 
 export interface FeeCurrencyDirectoryConfig {
   intrinsicGasForAlternativeFeeCurrency: {
@@ -14,40 +14,30 @@ export interface FeeCurrencyDirectoryConfig {
  * FeeCurrencyDirectory contract listing available currencies usable to pay fees
  */
 export class FeeCurrencyDirectoryWrapper extends AbstractFeeCurrencyWrapper {
-  getCurrencies = proxyCall(
-    this.contract,
-    'getCurrencies',
-    undefined,
-    (addresses: string[]) => [...new Set(addresses)].sort() as StrongAddress[]
-  )
+  getCurrencies = async () => {
+    const addresses = (await this.contract.read.getCurrencies()) as string[]
+    return [...new Set(addresses)].sort() as StrongAddress[]
+  }
 
   getAddresses(): Promise<StrongAddress[]> {
     return this.getCurrencies()
   }
 
-  getExchangeRate: (
-    token: StrongAddress
-  ) => Promise<{ numerator: BigNumber; denominator: BigNumber }> = proxyCall(
-    this.contract,
-    'getExchangeRate',
-    undefined,
-    (res: readonly [bigint, bigint]) => ({
+  getExchangeRate = async (token: StrongAddress) => {
+    const res = (await this.contract.read.getExchangeRate([toViemAddress(token)])) as readonly [bigint, bigint]
+    return {
       numerator: valueToBigNumber(res[0].toString()),
       denominator: valueToBigNumber(res[1].toString()),
-    })
-  )
+    }
+  }
 
-  getCurrencyConfig: (
-    token: StrongAddress
-  ) => Promise<{ oracle: StrongAddress; intrinsicGas: BigNumber }> = proxyCall(
-    this.contract,
-    'getCurrencyConfig',
-    undefined,
-    (res: { oracle: string; intrinsicGas: bigint }) => ({
+  getCurrencyConfig = async (token: StrongAddress) => {
+    const res = (await this.contract.read.getCurrencyConfig([toViemAddress(token)])) as { oracle: string; intrinsicGas: bigint }
+    return {
       oracle: res.oracle as StrongAddress,
       intrinsicGas: valueToBigNumber(res.intrinsicGas.toString()),
-    })
-  )
+    }
+  }
 
   /**
    * Returns current configuration parameters.

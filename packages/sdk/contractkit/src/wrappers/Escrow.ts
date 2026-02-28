@@ -1,6 +1,6 @@
 import { escrowABI } from '@celo/abis'
 import { Address, CeloTransactionObject } from '@celo/connect'
-import { BaseWrapper, proxyCall, proxySend } from './BaseWrapper'
+import { BaseWrapper, proxySend, toViemAddress } from './BaseWrapper'
 
 /**
  * Contract for handling reserve for stable currencies
@@ -12,16 +12,19 @@ export class EscrowWrapper extends BaseWrapper<typeof escrowABI> {
    * @return An EscrowedPayment struct which holds information such
    * as; recipient identifier, sender address, token address, value, etc.
    */
-  escrowedPayments = proxyCall(this.contract, 'escrowedPayments', undefined, (res) => ({
-    recipientIdentifier: res[0] as string,
-    sender: res[1] as string,
-    token: res[2] as string,
-    value: res[3].toString(),
-    sentIndex: res[4].toString(),
-    timestamp: res[6].toString(),
-    expirySeconds: res[7].toString(),
-    minAttestations: res[8].toString(),
-  }))
+  escrowedPayments = async (paymentId: string) => {
+    const res = await this.contract.read.escrowedPayments([paymentId as `0x${string}`])
+    return {
+      recipientIdentifier: res[0] as string,
+      sender: res[1] as string,
+      token: res[2] as string,
+      value: res[3].toString(),
+      sentIndex: res[4].toString(),
+      timestamp: res[6].toString(),
+      expirySeconds: res[7].toString(),
+      minAttestations: res[8].toString(),
+    }
+  }
 
   /**
    * @notice Gets array of all Escrowed Payments received by identifier.
@@ -29,12 +32,10 @@ export class EscrowWrapper extends BaseWrapper<typeof escrowABI> {
    * @return An array containing all the IDs of the Escrowed Payments that were received
    * by the specified receiver.
    */
-  getReceivedPaymentIds = proxyCall(
-    this.contract,
-    'getReceivedPaymentIds',
-    undefined,
-    (res) => [...res] as string[]
-  )
+  getReceivedPaymentIds = async (identifier: string) => {
+    const res = await this.contract.read.getReceivedPaymentIds([identifier as `0x${string}`])
+    return [...res] as string[]
+  }
 
   /**
    * @notice Gets array of all Escrowed Payment IDs sent by sender.
@@ -42,35 +43,29 @@ export class EscrowWrapper extends BaseWrapper<typeof escrowABI> {
    * @return An array containing all the IDs of the Escrowed Payments that were sent by the
    * specified sender.
    */
-  getSentPaymentIds = proxyCall(
-    this.contract,
-    'getSentPaymentIds',
-    undefined,
-    (res) => [...res] as string[]
-  )
+  getSentPaymentIds = async (sender: string) => {
+    const res = await this.contract.read.getSentPaymentIds([toViemAddress(sender)])
+    return [...res] as string[]
+  }
 
   /**
    * @notice Gets trusted issuers set as default for payments by `transfer` function.
    * @return An array of addresses of trusted issuers.
    */
-  getDefaultTrustedIssuers = proxyCall(
-    this.contract,
-    'getDefaultTrustedIssuers',
-    undefined,
-    (res) => [...res] as string[]
-  )
+  getDefaultTrustedIssuers = async () => {
+    const res = await this.contract.read.getDefaultTrustedIssuers()
+    return [...res] as string[]
+  }
 
   /**
    * @notice Gets array of all trusted issuers set per paymentId.
    * @param paymentId The ID of the payment to get.
    * @return An array of addresses of trusted issuers set for an escrowed payment.
    */
-  getTrustedIssuersPerPayment = proxyCall(
-    this.contract,
-    'getTrustedIssuersPerPayment',
-    undefined,
-    (res) => [...res] as string[]
-  )
+  getTrustedIssuersPerPayment = async (paymentId: string) => {
+    const res = await this.contract.read.getTrustedIssuersPerPayment([toViemAddress(paymentId)])
+    return [...res] as string[]
+  }
 
   /**
    * @notice Transfer tokens to a specific user. Supports both identity with privacy (an empty
