@@ -27,7 +27,6 @@ import { CeloProvider, assertIsCeloProvider } from './celo-provider'
 import {
   Address,
   Block,
-  BlockHeader,
   BlockNumber,
   CeloTx,
   CeloTxPending,
@@ -44,7 +43,6 @@ import {
   inputSignFormatter,
   outputBigNumberFormatter,
   outputBlockFormatter,
-  outputBlockHeaderFormatter,
   outputCeloTxFormatter,
   outputCeloTxReceiptFormatter,
 } from './utils/formatter'
@@ -78,13 +76,7 @@ export class Connection {
   private _provider!: CeloProvider
   private _viemClient!: PublicClient
 
-  constructor(
-    provider: Provider,
-    public wallet?: ReadOnlyWallet,
-    handleRevert = true
-  ) {
-    // handleRevert param kept for API compat but no longer used (was web3-specific)
-    void handleRevert
+  constructor(provider: Provider, public wallet?: ReadOnlyWallet) {
 
     this.config = {
       gasInflationFactor: 1.3,
@@ -416,31 +408,6 @@ export class Connection {
     return signature
   }
 
-  sendSignedTransaction = async (signedTransactionData: string): Promise<TransactionResult> => {
-    return toTxResult(
-      new Promise<string>((resolve, reject) => {
-        this._provider.send(
-          {
-            id: getRandomId(),
-            jsonrpc: '2.0',
-            method: 'eth_sendRawTransaction',
-            params: [signedTransactionData],
-          },
-          (error, resp) => {
-            if (error) {
-              reject(error)
-            } else if (resp?.error) {
-              reject(new Error(resp.error.message))
-            } else if (resp) {
-              resolve(resp.result as string)
-            } else {
-              reject(new Error('empty-response'))
-            }
-          }
-        )
-      })
-    )
-  }
   // if neither gas price nor feeMarket fields are present set them.
   setFeeMarketGas = async (tx: CeloTx): Promise<CeloTx> => {
     if (isEmpty(tx.maxPriorityFeePerGas)) {
@@ -549,11 +516,6 @@ export class Connection {
     return this.getTransactionCount(address)
   }
 
-  coinbase = async (): Promise<string> => {
-    // Reference: https://eth.wiki/json-rpc/API#eth_coinbase
-    const response = await this.rpcCaller.call('eth_coinbase', [])
-    return response.result.toString()
-  }
 
   gasPrice = async (feeCurrency?: Address): Promise<string> => {
     // Required otherwise is not backward compatible
@@ -593,17 +555,6 @@ export class Connection {
     return outputBlockFormatter(response.result)
   }
 
-  getBlockHeader = async (blockHashOrBlockNumber: BlockNumber): Promise<BlockHeader> => {
-    const endpoint = this.isBlockNumberHash(blockHashOrBlockNumber)
-      ? 'eth_getHeaderByHash'
-      : 'eth_getHeaderByNumber'
-
-    const response = await this.rpcCaller.call(endpoint, [
-      inputBlockNumberFormatter(blockHashOrBlockNumber),
-    ])
-
-    return outputBlockHeaderFormatter(response.result)
-  }
 
   getBalance = async (address: Address, defaultBlock?: BlockNumber): Promise<string> => {
     // Reference: https://eth.wiki/json-rpc/API#eth_getBalance
@@ -657,17 +608,6 @@ export class Connection {
     return response.result as string
   }
 
-  /**
-   * @deprecated Use `getCeloContract()` instead. Returns a ViemContract for backward compatibility.
-   * @param abi - The ABI of the contract
-   * @param address - The deployed contract address
-   */
-  getViemContract<TAbi extends readonly unknown[] = readonly unknown[]>(
-    abi: TAbi | AbiItem[],
-    address: string
-  ): CeloContract<TAbi> {
-    return this.getCeloContract(abi, address)
-  }
 
   /**
    * Create a viem-native contract instance bound to this connection.
