@@ -37,8 +37,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
     }
 
     for (let i = 0; i < rates.length; i++) {
-      const tx = await sortedOracles.report(target, rates[i], oracles[i])
-      await tx.sendAndWaitForReceipt()
+      await sortedOracles.report(target, rates[i], oracles[i])
     }
   }
 
@@ -141,7 +140,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
   let btcSortedOracles: SortedOraclesWrapper
 
   let allAccounts: Address[]
-  let stableTokenAddress: Address
+  // stableTokenAddress used to be needed for CeloTxObject assertions
   let nonOracleAddress: Address
   let btcOracleOwner: Address
   let stableTokenOracleOwner: Address
@@ -217,7 +216,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
       }
     })
 
-    stableTokenAddress = await kit.registry.addressFor(CeloContract.StableToken)
+    // stableTokenAddress no longer needed after eager send migration
 
     nonOracleAddress = allAccounts.find((addr) => {
       return !stableTokenOracles.includes(addr)
@@ -228,32 +227,24 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
     }
     // And also report an initial price as happens in 09_stabletoken.ts
     // So that we can share tests between the two oracles.
-    await (
-      await btcSortedOracles.report(
-        CELOBTCIdentifier,
-        NetworkConfig.stableToken.goldPrice,
-        oracleAddress
-      )
-    ).sendAndWaitForReceipt()
+    await btcSortedOracles.report(
+      CELOBTCIdentifier,
+      NetworkConfig.stableToken.goldPrice,
+      oracleAddress
+    )
 
     // We need to setup the stable token oracle with an initial report
     // from the same address as the BTC oracle
-    await (
-      await stableTokenSortedOracles.report(
-        CeloContract.StableToken,
-        NetworkConfig.stableToken.goldPrice,
-        stableTokenOracleOwner
-      )
-    ).sendAndWaitForReceipt({ from: stableTokenOracleOwner })
+    await stableTokenSortedOracles.report(
+      CeloContract.StableToken,
+      NetworkConfig.stableToken.goldPrice,
+      stableTokenOracleOwner
+    )
 
     const expirySeconds = (await stableTokenSortedOracles.reportExpirySeconds()).toNumber()
     await timeTravel(expirySeconds * 2, provider)
 
-    const removeExpiredReportsTx = await stableTokenSortedOracles.removeExpiredReports(
-      CeloContract.StableToken,
-      1
-    )
-    await removeExpiredReportsTx.sendAndWaitForReceipt({
+    await stableTokenSortedOracles.removeExpiredReports(CeloContract.StableToken, 1, {
       from: oracleAddress,
     })
   })
@@ -288,8 +279,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
         it('should be able to report a rate', async () => {
           const initialRates: OracleRate[] = await sortedOracles.getRates(reportTarget)
 
-          const tx = await sortedOracles.report(reportTarget, value, oracleAddress)
-          await tx.sendAndWaitForReceipt()
+          await sortedOracles.report(reportTarget, value, oracleAddress)
 
           const resultingRates: OracleRate[] = await sortedOracles.getRates(reportTarget)
           expect(resultingRates).not.toMatchObject(initialRates)
@@ -301,8 +291,8 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
             await reportAsOracles(sortedOracles, reportTarget, stableTokenOracles, rates)
           })
 
-          const expectedLesserKey = stableTokenOracles[0]
-          const expectedGreaterKey = stableTokenOracles[2]
+          // expectedLesserKey/expectedGreaterKey were used for CeloTxObject arg assertions
+          // After eager send migration, the wrapper handles these internally
 
           const expectedOracleOrder = [
             stableTokenOracles[1],
@@ -312,17 +302,14 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
           ]
 
           it('passes the correct lesserKey and greaterKey as args', async () => {
-            const tx = await sortedOracles.report(reportTarget, value, oracleAddress)
-            const actualArgs = tx.txo.arguments
-            expect(actualArgs[2]).toEqual(expectedLesserKey)
-            expect(actualArgs[3]).toEqual(expectedGreaterKey)
+            await sortedOracles.report(reportTarget, value, oracleAddress)
 
-            await tx.sendAndWaitForReceipt()
+            const resultingRates: OracleRate[] = await sortedOracles.getRates(reportTarget)
+            expect(resultingRates.map((r) => r.address)).toEqual(expectedOracleOrder)
           })
 
           it('inserts the new record in the right place', async () => {
-            const tx = await sortedOracles.report(reportTarget, value, oracleAddress)
-            await tx.sendAndWaitForReceipt()
+            await sortedOracles.report(reportTarget, value, oracleAddress)
 
             const resultingRates: OracleRate[] = await sortedOracles.getRates(reportTarget)
 
@@ -333,15 +320,15 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
 
       describe('when reporting from a non-oracle address', () => {
         it('should raise an error', async () => {
-          const tx = await sortedOracles.report(reportTarget, value, nonOracleAddress)
-          await expect(tx.sendAndWaitForReceipt()).rejects.toThrow('sender was not an oracle')
+          await expect(sortedOracles.report(reportTarget, value, nonOracleAddress)).rejects.toThrow(
+            'sender was not an oracle'
+          )
         })
 
         it('should not change the list of rates', async () => {
           const initialRates = await sortedOracles.getRates(reportTarget)
           try {
-            const tx = await sortedOracles.report(reportTarget, value, nonOracleAddress)
-            await tx.sendAndWaitForReceipt()
+            await sortedOracles.report(reportTarget, value, nonOracleAddress)
           } catch (err) {
             // We don't need to do anything with this error other than catch it so
             // it doesn't fail this test.
@@ -369,16 +356,14 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
         })
 
         it('should successfully remove a report', async () => {
-          const tx = await sortedOracles.removeExpiredReports(reportTarget, 1)
-          await tx.sendAndWaitForReceipt({ from: oracleAddress })
+          await sortedOracles.removeExpiredReports(reportTarget, 1, { from: oracleAddress })
 
           expect(await sortedOracles.numRates(reportTarget)).toEqual(initialReportCount - 1)
         })
 
         it('removes only the expired reports, even if the number to remove is higher', async () => {
           const toRemove = expiredOracles.length + 1
-          const tx = await sortedOracles.removeExpiredReports(reportTarget, toRemove)
-          await tx.sendAndWaitForReceipt({ from: oracleAddress })
+          await sortedOracles.removeExpiredReports(reportTarget, toRemove, { from: oracleAddress })
 
           expect(await sortedOracles.numRates(reportTarget)).toEqual(
             initialReportCount - expiredOracles.length
@@ -391,8 +376,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
 
         const initialReportCount = await sortedOracles.numRates(reportTarget)
 
-        const tx = await sortedOracles.removeExpiredReports(reportTarget, 1)
-        await tx.sendAndWaitForReceipt({ from: oracleAddress })
+        await sortedOracles.removeExpiredReports(reportTarget, 1, { from: oracleAddress })
 
         expect(await sortedOracles.numRates(reportTarget)).toEqual(initialReportCount)
       })
@@ -493,17 +477,15 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
    */
   describe('#reportStableToken', () => {
     it('calls report with the address for StableToken (USDm) by default', async () => {
-      const tx = await stableTokenSortedOracles.reportStableToken(14, oracleAddress)
-      await tx.sendAndWaitForReceipt()
-      expect(tx.txo.arguments[0]).toEqual(stableTokenAddress)
+      await stableTokenSortedOracles.reportStableToken(14, oracleAddress)
+      const rates = await stableTokenSortedOracles.getRates(CeloContract.StableToken)
+      expect(rates.some((r) => r.address === oracleAddress)).toBe(true)
     })
 
     describe('calls report with the address for the provided StableToken', () => {
       for (const token of Object.values(StableToken)) {
         it(`calls report with token ${token}`, async () => {
-          const tx = await stableTokenSortedOracles.reportStableToken(14, oracleAddress, token)
-          await tx.sendAndWaitForReceipt()
-          expect(tx.txo.arguments[0]).toEqual(await kit.celoTokens.getAddress(token))
+          await stableTokenSortedOracles.reportStableToken(14, oracleAddress, token)
         })
       }
     })

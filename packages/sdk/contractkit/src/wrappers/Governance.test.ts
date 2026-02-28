@@ -39,8 +39,8 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
     dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
 
     for (const account of accounts.slice(0, 4)) {
-      await accountWrapper.createAccount().sendAndWaitForReceipt({ from: account })
-      await lockedGold.lock().sendAndWaitForReceipt({ from: account, value: ONE_CGLD })
+      await accountWrapper.createAccount({ from: account })
+      await lockedGold.lock({ from: account, value: ONE_CGLD })
     }
   })
 
@@ -94,40 +94,37 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
 
     const proposeFn = async (proposer: Address, proposeTwice = false) => {
       if (proposeTwice) {
-        await governance
-          .propose(proposal, 'URL')
-          .sendAndWaitForReceipt({ from: proposer, value: minDeposit })
+        await governance.propose(proposal, 'URL', { from: proposer, value: minDeposit })
       }
 
-      await governance
-        .propose(proposal, 'URL')
-        .sendAndWaitForReceipt({ from: proposer, value: minDeposit })
+      await governance.propose(proposal, 'URL', { from: proposer, value: minDeposit })
     }
 
     const upvoteFn = async (upvoter: Address, shouldTimeTravel = true, proposalId?: BigNumber) => {
-      const tx = await governance.upvote(proposalId ?? proposalID, upvoter)
-      await tx.sendAndWaitForReceipt({ from: upvoter })
+      await governance.upvote(proposalId ?? proposalID, upvoter, { from: upvoter })
       if (shouldTimeTravel) {
         await timeTravel(dequeueFrequency, provider)
-        await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
+        await governance.dequeueProposalsIfReady()
       }
     }
 
     // protocol/truffle-config defines approver address as accounts[0]
     const approveFn = async () => {
       await asCoreContractsOwner(provider, async (ownerAddress) => {
-        const tx = await governance.approve(proposalID)
-        const multisigTx = await governanceApproverMultiSig.submitOrConfirmTransaction(
+        const dequeue = await governance.getDequeue()
+        const index = dequeue.findIndex((id) => id.eq(proposalID))
+        const approveData = governance.encodeFunctionData('approve', [proposalID, index])
+        await governanceApproverMultiSig.submitOrConfirmTransaction(
           governance.address,
-          tx.txo
+          approveData,
+          '0',
+          { from: ownerAddress }
         )
-        await multisigTx.sendAndWaitForReceipt({ from: ownerAddress })
       })
     }
 
     const voteFn = async (voter: Address) => {
-      const tx = await governance.vote(proposalID, 'Yes')
-      await tx.sendAndWaitForReceipt({ from: voter })
+      await governance.vote(proposalID, 'Yes', { from: voter })
       await timeTravel(referendumStageDuration, provider)
     }
 
@@ -184,8 +181,7 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
       const before = await governance.getUpvotes(proposalId)
       const upvoteRecord = await governance.getUpvoteRecord(accounts[1])
 
-      const tx = await governance.revokeUpvote(accounts[1])
-      await tx.sendAndWaitForReceipt({ from: accounts[1] })
+      await governance.revokeUpvote(accounts[1], { from: accounts[1] })
 
       const after = await governance.getUpvotes(proposalId)
       expect(after).toEqBigNumber(before.minus(upvoteRecord.upvotes))
@@ -194,7 +190,7 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
     it('#approve', async () => {
       await proposeFn(accounts[0])
       await timeTravel(dequeueFrequency, provider)
-      await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
+      await governance.dequeueProposalsIfReady()
       await approveFn()
 
       const approved = await governance.isApproved(proposalID)
@@ -204,7 +200,7 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
     it('#vote', async () => {
       await proposeFn(accounts[0])
       await timeTravel(dequeueFrequency, provider)
-      await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
+      await governance.dequeueProposalsIfReady()
       await approveFn()
       await voteFn(accounts[2])
 
@@ -217,7 +213,7 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
       const voter = accounts[2]
       await proposeFn(accounts[0])
       await timeTravel(dequeueFrequency, provider)
-      await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
+      await governance.dequeueProposalsIfReady()
       await approveFn()
       await voteFn(voter)
 
@@ -234,15 +230,14 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
     it('#votePartially', async () => {
       await proposeFn(accounts[0])
       await timeTravel(dequeueFrequency, provider)
-      await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
+      await governance.dequeueProposalsIfReady()
       await approveFn()
 
       const yes = 10
       const no = 20
       const abstain = 0
 
-      const tx = await governance.votePartially(proposalID, yes, no, abstain)
-      await tx.sendAndWaitForReceipt({ from: accounts[2] })
+      await governance.votePartially(proposalID, yes, no, abstain, { from: accounts[2] })
       await timeTravel(referendumStageDuration, provider)
 
       const votes = await governance.getVotes(proposalID)
@@ -259,12 +254,11 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
       async () => {
         await proposeFn(accounts[0])
         await timeTravel(dequeueFrequency, provider)
-        await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
+        await governance.dequeueProposalsIfReady()
         await approveFn()
         await voteFn(accounts[2])
 
-        const tx = await governance.execute(proposalID)
-        await tx.sendAndWaitForReceipt()
+        await governance.execute(proposalID)
 
         const exists = await governance.proposalExists(proposalID)
         expect(exists).toBeFalsy()
@@ -275,7 +269,7 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
     it('#getVoter', async () => {
       await proposeFn(accounts[0])
       await timeTravel(dequeueFrequency, provider)
-      await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
+      await governance.dequeueProposalsIfReady()
       await approveFn()
       await voteFn(accounts[2])
 

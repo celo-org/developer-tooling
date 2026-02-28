@@ -114,7 +114,9 @@ export abstract class BaseWrapper<TAbi extends readonly unknown[] = AbiItem[]> {
       to: this.contract.address,
       data,
     })
-    return (await result.getHash()) as `0x${string}`
+    const hash = (await result.getHash()) as `0x${string}`
+    await result.waitReceipt()
+    return hash
   }
 
   /**
@@ -133,7 +135,9 @@ export abstract class BaseWrapper<TAbi extends readonly unknown[] = AbiItem[]> {
       to: this.contract.address,
       data,
     })
-    return (await result.getHash()) as `0x${string}`
+    const hash = (await result.getHash()) as `0x${string}`
+    await result.waitReceipt()
+    return hash
   }
 
   /** Contract getPastEvents */

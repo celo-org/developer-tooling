@@ -1,4 +1,3 @@
-import { CeloTxReceipt } from '@celo/connect/lib/types'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
 import { startAndFinishEpochProcess } from '../test-utils/utils'
@@ -53,24 +52,20 @@ testWithAnvilL2('Election Wrapper', (provider) => {
     value: string = minLockedGoldValue
   ) => {
     if (!(await accountsInstance.isAccount(account))) {
-      await accountsInstance.createAccount().sendAndWaitForReceipt({ from: account })
+      await accountsInstance.createAccount({ from: account })
     }
-    await lockedGold.lock().sendAndWaitForReceipt({ from: account, value })
+    await lockedGold.lock({ from: account, value })
   }
 
   const setupGroup = async (groupAccount: string) => {
     await registerAccountWithLockedGold(groupAccount, new BigNumber(minLockedGoldValue).toFixed())
-    await (await validators.registerValidatorGroup(GROUP_COMMISSION)).sendAndWaitForReceipt({
-      from: groupAccount,
-    })
+    await validators.registerValidatorGroup(GROUP_COMMISSION, { from: groupAccount })
   }
 
   const setupValidator = async (validatorAccount: string) => {
     await registerAccountWithLockedGold(validatorAccount)
     const ecdsaPublicKey = await addressToPublicKey(validatorAccount, kit.connection.sign)
-    await validators.registerValidatorNoBls(ecdsaPublicKey).sendAndWaitForReceipt({
-      from: validatorAccount,
-    })
+    await validators.registerValidatorNoBls(ecdsaPublicKey, { from: validatorAccount })
   }
 
   const setupGroupAndAffiliateValidator = async (
@@ -79,28 +74,17 @@ testWithAnvilL2('Election Wrapper', (provider) => {
   ) => {
     await setupGroup(groupAccount)
     await setupValidator(validatorAccount)
-    await validators.affiliate(groupAccount).sendAndWaitForReceipt({ from: validatorAccount })
-    await (await validators.addMember(groupAccount, validatorAccount)).sendAndWaitForReceipt({
-      from: groupAccount,
-    })
+    await validators.affiliate(groupAccount, { from: validatorAccount })
+    await validators.addMember(groupAccount, validatorAccount, { from: groupAccount })
   }
 
   const activateAndVote = async (groupAccount: string, userAccount: string, amount: BigNumber) => {
-    await (await election.vote(groupAccount, amount)).sendAndWaitForReceipt({ from: userAccount })
+    await election.vote(groupAccount, amount, { from: userAccount })
     const epochDuraction = await kit.getEpochSize()
     await timeTravel(epochDuraction + 1, provider)
     await startAndFinishEpochProcess(kit)
 
-    const txList = await election.activate(userAccount)
-
-    const promises: Promise<CeloTxReceipt>[] = []
-
-    for (const tx of txList) {
-      const promise = tx.sendAndWaitForReceipt({ from: userAccount })
-      promises.push(promise)
-    }
-
-    await Promise.all(promises)
+    await election.activate(userAccount, undefined, { from: userAccount })
   }
 
   describe('ElectionWrapper', () => {
@@ -125,7 +109,7 @@ testWithAnvilL2('Election Wrapper', (provider) => {
       })
 
       test('shows empty group as ineligible', async () => {
-        await validators.deaffiliate().sendAndWaitForReceipt({ from: validatorAccount })
+        await validators.deaffiliate({ from: validatorAccount })
         const groupVotesAfter = await election.getValidatorGroupVotes(groupAccount)
         expect(groupVotesAfter.eligible).toBe(false)
       })
@@ -133,9 +117,7 @@ testWithAnvilL2('Election Wrapper', (provider) => {
 
     describe('#vote', () => {
       beforeEach(async () => {
-        await (await election.vote(groupAccount, ONE_HUNDRED_GOLD)).sendAndWaitForReceipt({
-          from: userAccount,
-        })
+        await election.vote(groupAccount, ONE_HUNDRED_GOLD, { from: userAccount })
       })
       it('votes', async () => {
         const totalGroupVotes = await election.getTotalVotesForGroup(groupAccount)
@@ -143,7 +125,7 @@ testWithAnvilL2('Election Wrapper', (provider) => {
       })
 
       test('total votes remain unchanged when group becomes ineligible', async () => {
-        await validators.deaffiliate().sendAndWaitForReceipt({ from: validatorAccount })
+        await validators.deaffiliate({ from: validatorAccount })
         const totalGroupVotes = await election.getTotalVotesForGroup(groupAccount)
         expect(totalGroupVotes).toEqual(ONE_HUNDRED_GOLD)
       })
@@ -151,22 +133,14 @@ testWithAnvilL2('Election Wrapper', (provider) => {
 
     describe('#activate', () => {
       beforeEach(async () => {
-        await (await election.vote(groupAccount, ONE_HUNDRED_GOLD)).sendAndWaitForReceipt({
-          from: userAccount,
-        })
+        await election.vote(groupAccount, ONE_HUNDRED_GOLD, { from: userAccount })
         const epochDuraction = await kit.getEpochSize()
 
         await timeTravel(epochDuraction + 1, provider)
 
         await startAndFinishEpochProcess(kit)
 
-        const txList = await election.activate(userAccount)
-        const promises: Promise<CeloTxReceipt>[] = []
-        for (const tx of txList) {
-          const promise = tx.sendAndWaitForReceipt({ from: userAccount })
-          promises.push(promise)
-        }
-        await Promise.all(promises)
+        await election.activate(userAccount, undefined, { from: userAccount })
       })
 
       it('activates vote', async () => {
@@ -175,7 +149,7 @@ testWithAnvilL2('Election Wrapper', (provider) => {
       })
 
       test('active votes remain unchanged when group becomes ineligible', async () => {
-        await validators.deaffiliate().sendAndWaitForReceipt({ from: validatorAccount })
+        await validators.deaffiliate({ from: validatorAccount })
         const activeVotes = await election.getActiveVotesForGroup(groupAccount)
         expect(activeVotes).toEqual(ONE_HUNDRED_GOLD)
       })
@@ -187,21 +161,29 @@ testWithAnvilL2('Election Wrapper', (provider) => {
       })
 
       it('revokes active', async () => {
-        await (
-          await election.revokeActive(userAccount, groupAccount, ONE_HUNDRED_GOLD)
-        ).sendAndWaitForReceipt({
-          from: userAccount,
-        })
+        await election.revokeActive(
+          userAccount,
+          groupAccount,
+          ONE_HUNDRED_GOLD,
+          undefined,
+          undefined,
+          { from: userAccount }
+        )
 
         const remainingVotes = await election.getTotalVotesForGroup(groupAccount)
         expect(remainingVotes).toEqual(ZERO_GOLD)
       })
 
       it('revokes active when group is ineligible', async () => {
-        await validators.deaffiliate().sendAndWaitForReceipt({ from: validatorAccount })
-        await (
-          await election.revokeActive(userAccount, groupAccount, ONE_HUNDRED_GOLD)
-        ).sendAndWaitForReceipt({ from: userAccount })
+        await validators.deaffiliate({ from: validatorAccount })
+        await election.revokeActive(
+          userAccount,
+          groupAccount,
+          ONE_HUNDRED_GOLD,
+          undefined,
+          undefined,
+          { from: userAccount }
+        )
 
         const remainingVotes = await election.getTotalVotesForGroup(groupAccount)
         expect(remainingVotes).toEqual(ZERO_GOLD)
@@ -210,15 +192,11 @@ testWithAnvilL2('Election Wrapper', (provider) => {
 
     describe('#revokePending', () => {
       beforeEach(async () => {
-        await (await election.vote(groupAccount, ONE_HUNDRED_GOLD)).sendAndWaitForReceipt({
-          from: userAccount,
-        })
+        await election.vote(groupAccount, ONE_HUNDRED_GOLD, { from: userAccount })
       })
 
       it('revokes pending', async () => {
-        await (
-          await election.revokePending(userAccount, groupAccount, ONE_HUNDRED_GOLD)
-        ).sendAndWaitForReceipt({
+        await election.revokePending(userAccount, groupAccount, ONE_HUNDRED_GOLD, {
           from: userAccount,
         })
         const remainingVotes = await election.getTotalVotesForGroup(groupAccount)
@@ -226,10 +204,8 @@ testWithAnvilL2('Election Wrapper', (provider) => {
       })
 
       it('revokes pending when group is ineligible', async () => {
-        await validators.deaffiliate().sendAndWaitForReceipt({ from: validatorAccount })
-        await (
-          await election.revokePending(userAccount, groupAccount, ONE_HUNDRED_GOLD)
-        ).sendAndWaitForReceipt({
+        await validators.deaffiliate({ from: validatorAccount })
+        await election.revokePending(userAccount, groupAccount, ONE_HUNDRED_GOLD, {
           from: userAccount,
         })
         const remainingVotes = await election.getTotalVotesForGroup(groupAccount)
@@ -240,34 +216,22 @@ testWithAnvilL2('Election Wrapper', (provider) => {
     describe('#revoke', () => {
       beforeEach(async () => {
         await activateAndVote(groupAccount, userAccount, TWO_HUNDRED_GOLD)
-        await (await election.vote(groupAccount, ONE_HUNDRED_GOLD)).sendAndWaitForReceipt({
-          from: userAccount,
-        })
+        await election.vote(groupAccount, ONE_HUNDRED_GOLD, { from: userAccount })
       })
 
       it('revokes active and pending votes', async () => {
-        const revokeTransactionsList = await election.revoke(
-          userAccount,
-          groupAccount,
-          THREE_HUNDRED_GOLD
-        )
-        for (const tx of revokeTransactionsList) {
-          await tx.sendAndWaitForReceipt({ from: userAccount })
-        }
+        await election.revoke(userAccount, groupAccount, THREE_HUNDRED_GOLD, {
+          from: userAccount,
+        })
         const remainingVotes = await election.getTotalVotesForGroup(groupAccount)
         expect(remainingVotes).toEqual(ZERO_GOLD)
       })
 
       it('revokes active and pending votes when group is ineligible', async () => {
-        await validators.deaffiliate().sendAndWaitForReceipt({ from: validatorAccount })
-        const revokeTransactionsList = await election.revoke(
-          userAccount,
-          groupAccount,
-          THREE_HUNDRED_GOLD
-        )
-        for (const tx of revokeTransactionsList) {
-          await tx.sendAndWaitForReceipt({ from: userAccount })
-        }
+        await validators.deaffiliate({ from: validatorAccount })
+        await election.revoke(userAccount, groupAccount, THREE_HUNDRED_GOLD, {
+          from: userAccount,
+        })
         const remainingVotes = await election.getTotalVotesForGroup(groupAccount)
         expect(remainingVotes).toEqual(ZERO_GOLD)
       })
@@ -308,17 +272,10 @@ testWithAnvilL2('Election Wrapper', (provider) => {
     })
 
     test('Validator groups should be in the correct order', async () => {
-      await (await election.vote(groupAccountA, ONE_HUNDRED_GOLD)).sendAndWaitForReceipt({
+      await election.vote(groupAccountA, ONE_HUNDRED_GOLD, { from: userAccount })
+      await election.revoke(userAccount, groupAccountA, TWO_HUNDRED_GOLD, {
         from: userAccount,
       })
-      const revokeTransactionsList = await election.revoke(
-        userAccount,
-        groupAccountA,
-        TWO_HUNDRED_GOLD
-      )
-      for (const tx of revokeTransactionsList) {
-        await tx.sendAndWaitForReceipt({ from: userAccount })
-      }
       const groupOrder = await election.findLesserAndGreaterAfterVote(groupAccountA, ZERO_GOLD)
       expect(groupOrder).toEqual({ lesser: NULL_ADDRESS, greater: groupAccountC })
     })

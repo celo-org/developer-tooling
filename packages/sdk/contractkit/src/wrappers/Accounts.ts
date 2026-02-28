@@ -154,7 +154,7 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
    * Authorize an attestation signing key on behalf of this account to another address.
    * @param signer The address of the signing key to authorize.
    * @param proofOfSigningKeyPossession The account address signed by the signer address.
-   * @return A CeloTransactionObject
+   * @returns A promise that resolves to the transaction hash
    */
   async authorizeAttestationSigner(
     signer: Address,
@@ -179,7 +179,7 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
    * Authorizes an address to sign votes on behalf of the account.
    * @param signer The address of the vote signing key to authorize.
    * @param proofOfSigningKeyPossession The account address signed by the signer address.
-   * @return A CeloTransactionObject
+   * @returns A promise that resolves to the transaction hash
    */
   async authorizeVoteSigner(
     signer: Address,
@@ -207,7 +207,7 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
    * Authorizes an address to sign consensus messages on behalf of the account.
    * @param signer The address of the signing key to authorize.
    * @param proofOfSigningKeyPossession The account address signed by the signer address.
-   * @return A CeloTransactionObject
+   * @returns A promise that resolves to the transaction hash
    */
   async authorizeValidatorSigner(
     signer: Address,
@@ -262,7 +262,7 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
    * Authorizes an address to sign consensus messages on behalf of the account. Also switch BLS key at the same time.
    * @param signer The address of the signing key to authorize.
    * @param proofOfSigningKeyPossession The account address signed by the signer address.
-   * @return A CeloTransactionObject
+   * @returns A promise that resolves to the transaction hash
    */
   async authorizeValidatorSignerWithPublicKey(
     signer: Address,
@@ -351,7 +351,7 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
 
   /**
    * Removes the currently authorized attestation signer for the account
-   * @returns A CeloTransactionObject
+   * @returns A promise that resolves to the transaction hash
    */
   async removeAttestationSigner(txParams?: Omit<CeloTx, 'data'>): Promise<`0x${string}`> {
     return this._removeAttestationSigner([], txParams)

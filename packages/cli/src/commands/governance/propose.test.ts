@@ -217,7 +217,7 @@ testWithAnvilL2(
         const expectedInput = encodeFunctionData({
           abi: goldTokenContract.abi,
           functionName: 'transfer',
-          args: [transactions[0].args[0], transactions[0].args[1]],
+          args: [transactions[0].args[0] as `0x${string}`, BigInt(transactions[0].args[1])],
         })
         expect(proposal[0].input).toEqual(expectedInput)
       },
@@ -282,7 +282,7 @@ testWithAnvilL2(
         const expectedInput = encodeFunctionData({
           abi: goldTokenContract.abi,
           functionName: 'transfer',
-          args: [transactions[0].args[0], transactions[0].args[1]],
+          args: [transactions[0].args[0] as `0x${string}`, BigInt(transactions[0].args[1])],
         })
         expect(proposal[0].input).toEqual(expectedInput)
       },
@@ -358,7 +358,7 @@ testWithAnvilL2(
         const expectedInput = encodeFunctionData({
           abi: goldTokenContract.abi,
           functionName: 'transfer',
-          args: [transactions[0].args[0], transactions[0].args[1]],
+          args: [transactions[0].args[0] as `0x${string}`, BigInt(transactions[0].args[1])],
         })
         expect(proposal[0].input).toEqual(expectedInput)
       },
@@ -436,7 +436,7 @@ testWithAnvilL2(
           const expectedInput = encodeFunctionData({
             abi: goldTokenContract.abi,
             functionName: 'transfer',
-            args: [transactions[0].args[0], transactions[0].args[1]],
+            args: [transactions[0].args[0] as `0x${string}`, BigInt(transactions[0].args[1])],
           })
           expect(proposal[0].input).toEqual(expectedInput)
         },
@@ -534,7 +534,7 @@ testWithAnvilL2(
           const expectedInput = encodeFunctionData({
             abi: goldTokenContract.abi,
             functionName: 'transfer',
-            args: [transactions[0].args[0], transactions[0].args[1]],
+            args: [transactions[0].args[0] as `0x${string}`, BigInt(transactions[0].args[1])],
           })
           expect(proposal[0].input).toEqual(expectedInput)
         },
@@ -583,7 +583,7 @@ testWithAnvilL2(
         const expectedInput = encodeFunctionData({
           abi: goldTokenContract.abi,
           functionName: 'transfer',
-          args: [transactions[0].args[0], transactions[0].args[1]],
+          args: [transactions[0].args[0] as `0x${string}`, BigInt(transactions[0].args[1])],
         })
         expect(proposal[0].input).toEqual(expectedInput)
       },

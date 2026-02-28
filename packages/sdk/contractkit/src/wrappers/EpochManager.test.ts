@@ -67,9 +67,7 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
 
     // Let the epoch pass and start another one
     await timeTravel(epochDuration, provider)
-    await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
-      from: accounts[0],
-    })
+    await epochManagerWrapper.startNextEpochProcess({ from: accounts[0] })
 
     expect((await epochManagerWrapper.getEpochProcessingStatus()).status).toEqual(1)
   })
@@ -93,12 +91,8 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
 
     // Let the epoch pass and start another one
     await timeTravel(epochDuration + 1, provider)
-    await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
-      from: accounts[0],
-    })
-    await (await epochManagerWrapper.finishNextEpochProcessTx()).sendAndWaitForReceipt({
-      from: accounts[0],
-    })
+    await epochManagerWrapper.startNextEpochProcess({ from: accounts[0] })
+    await epochManagerWrapper.finishNextEpochProcessTx({ from: accounts[0] })
 
     const lastBlock = await epochManagerWrapper.getLastBlockAtEpoch(currentEpochNumber)
     expect(lastBlock).toEqual(17634)
@@ -119,9 +113,7 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
 
       // Let the epoch pass and start another one
       await timeTravel(epochDuration + 1, provider)
-      await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
-        from: accounts[0],
-      })
+      await epochManagerWrapper.startNextEpochProcess({ from: accounts[0] })
 
       const validatorsContract = await kit.contracts.getValidators()
       const electionContract = await kit.contracts.getElection()
@@ -135,43 +127,46 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
             REGISTRY_CONTRACT_ADDRESS
           )
 
-          await kit.connection.sendTransaction({
-            to: registryContract.address,
-            data: encodeFunctionData({
-              abi: registryContract.abi as any,
-              functionName: 'setAddressFor',
-              args: ['Validators', accounts[0]],
-            }),
-            from: ownerAdress,
-          })
+          await (
+            await kit.connection.sendTransaction({
+              to: registryContract.address,
+              data: encodeFunctionData({
+                abi: registryContract.abi as any,
+                functionName: 'setAddressFor',
+                args: ['Validators', accounts[0]],
+              }),
+              from: ownerAdress,
+            })
+          ).waitReceipt()
 
-          await kit.connection.sendTransaction({
-            to: (electionContract as any).contract.address,
-            data: encodeFunctionData({
-              // @ts-expect-error -- accessing internal contract for test setup
-              abi: (electionContract as any).contract.abi as any,
-              functionName: 'markGroupIneligible',
-              args: [validatorGroups[0]],
-            }),
-            from: accounts[0],
-          })
+          await (
+            await kit.connection.sendTransaction({
+              to: (electionContract as any).contract.address,
+              data: encodeFunctionData({
+                abi: (electionContract as any).contract.abi as any,
+                functionName: 'markGroupIneligible',
+                args: [validatorGroups[0]],
+              }),
+              from: accounts[0],
+            })
+          ).waitReceipt()
 
-          await kit.connection.sendTransaction({
-            to: registryContract.address,
-            data: encodeFunctionData({
-              abi: registryContract.abi as any,
-              functionName: 'setAddressFor',
-              args: ['Validators', validatorsContract.address],
-            }),
-            from: ownerAdress,
-          })
+          await (
+            await kit.connection.sendTransaction({
+              to: registryContract.address,
+              data: encodeFunctionData({
+                abi: registryContract.abi as any,
+                functionName: 'setAddressFor',
+                args: ['Validators', validatorsContract.address],
+              }),
+              from: ownerAdress,
+            })
+          ).waitReceipt()
         },
         parseEther('1')
       )
 
-      await (await epochManagerWrapper.finishNextEpochProcessTx()).sendAndWaitForReceipt({
-        from: accounts[0],
-      })
+      await epochManagerWrapper.finishNextEpochProcessTx({ from: accounts[0] })
     },
     1000 * 60 * 5
   )
@@ -196,15 +191,17 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
           provider,
           validatorGroup,
           async () => {
-            await kit.connection.sendTransaction({
-              to: electionViemContract.address,
-              data: encodeFunctionData({
-                abi: electionViemContract.abi as any,
-                functionName: 'activate',
-                args: [validatorGroup],
-              }),
-              from: validatorGroup,
-            })
+            await (
+              await kit.connection.sendTransaction({
+                to: electionViemContract.address,
+                data: encodeFunctionData({
+                  abi: electionViemContract.abi as any,
+                  functionName: 'activate',
+                  args: [validatorGroup],
+                }),
+                from: validatorGroup,
+              })
+            ).waitReceipt()
           },
           parseEther('1')
         )
@@ -239,9 +236,7 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
 
     // Start a new epoch process, but not finish it, so we can check the amounts
     await timeTravel(epochDuration + 1, provider)
-    await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
-      from: accounts[0],
-    })
+    await epochManagerWrapper.startNextEpochProcess({ from: accounts[0] })
 
     const status = await epochManagerWrapper.getEpochProcessingStatus()
 
@@ -258,9 +253,7 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
     const validatorBalanceBefore = (await kit.getTotalBalance(validatorAddress)).USDm!
     const validatorGroupBalanceBefore = (await kit.getTotalBalance(validatorGroupAddress)).USDm!
 
-    await epochManagerWrapper.sendValidatorPayment(validatorAddress).sendAndWaitForReceipt({
-      from: accounts[0],
-    })
+    await epochManagerWrapper.sendValidatorPayment(validatorAddress, { from: accounts[0] })
 
     expect(
       (await kit.getTotalBalance(validatorAddress)).USDm!.isGreaterThan(validatorBalanceBefore)
@@ -285,9 +278,7 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
     // Start a new epoch process, but don't process it, so we can compare the amounts
     await timeTravel(epochDuration + 1, provider)
 
-    await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({
-      from: accounts[0],
-    })
+    await epochManagerWrapper.startNextEpochProcess({ from: accounts[0] })
 
     const statusBeforeProcessing = await epochManagerWrapper.getEpochProcessingStatus()
 
@@ -296,13 +287,9 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
     expect(statusBeforeProcessing.totalRewardsCommunity.toNumber()).toBeGreaterThan(0)
     expect(statusBeforeProcessing.totalRewardsCarbonFund.toNumber()).toBeGreaterThan(0)
 
-    await epochManagerWrapper.setToProcessGroups().sendAndWaitForReceipt({
-      from: accounts[0],
-    })
+    await epochManagerWrapper.setToProcessGroups({ from: accounts[0] })
 
-    await (await epochManagerWrapper.processGroupsTx()).sendAndWaitForReceipt({
-      from: accounts[0],
-    })
+    await epochManagerWrapper.processGroupsTx({ from: accounts[0] })
 
     const statusAfterProcessing = await epochManagerWrapper.getEpochProcessingStatus()
 

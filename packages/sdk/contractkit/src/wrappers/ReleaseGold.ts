@@ -290,19 +290,19 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
 
   /**
    * Revoke a Release schedule
-   * @return A CeloTransactionObject
+   * @returns A promise that resolves to the transaction hash
    */
   revokeReleasing = (txParams?: Omit<CeloTx, 'data'>) => this.sendTx('revoke', [], txParams)
 
   /**
    * Revoke a vesting CELO schedule from the contract's beneficiary.
-   * @return A CeloTransactionObject
+   * @returns A promise that resolves to the transaction hash
    */
   revokeBeneficiary = this.revokeReleasing
 
   /**
    * Refund `refundAddress` and `beneficiary` after the ReleaseGold schedule has been revoked.
-   * @return A CeloTransactionObject
+   * @returns A promise that resolves to the transaction hash
    */
   refundAndFinalize = (txParams?: Omit<CeloTx, 'data'>) =>
     this.sendTx('refundAndFinalize', [], txParams)
@@ -480,7 +480,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
    * Authorizes an address to sign votes on behalf of the account.
    * @param signer The address of the vote signing key to authorize.
    * @param proofOfSigningKeyPossession The account address signed by the signer address.
-   * @return A CeloTransactionObject
+   * @returns A promise that resolves to the transaction hash
    */
   async authorizeVoteSigner(
     signer: Address,
@@ -508,7 +508,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
    * Authorizes an address to sign validation messages on behalf of the account.
    * @param signer The address of the validator signing key to authorize.
    * @param proofOfSigningKeyPossession The account address signed by the signer address.
-   * @return A CeloTransactionObject
+   * @returns A promise that resolves to the transaction hash
    */
   async authorizeValidatorSigner(
     signer: Address,
@@ -563,7 +563,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
    * Authorizes an address to sign consensus messages on behalf of the contract's account. Also switch BLS key at the same time.
    * @param signer The address of the signing key to authorize.
    * @param proofOfSigningKeyPossession The contract's account address signed by the signer address.
-   * @return A CeloTransactionObject
+   * @returns A promise that resolves to the transaction hash
    */
   async authorizeValidatorSignerWithPublicKey(
     signer: Address,
@@ -601,7 +601,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
    * Authorizes an address to sign attestation messages on behalf of the account.
    * @param signer The address of the attestation signing key to authorize.
    * @param proofOfSigningKeyPossession The account address signed by the signer address.
-   * @return A CeloTransactionObject
+   * @returns A promise that resolves to the transaction hash
    */
   async authorizeAttestationSigner(
     signer: Address,

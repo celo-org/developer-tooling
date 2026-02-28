@@ -20,39 +20,36 @@ testWithAnvilL2('LockedGold Wrapper', (provider) => {
     lockedGold = await kit.contracts.getLockedGold()
     accounts = await kit.contracts.getAccounts()
     if (!(await accounts.isAccount(account))) {
-      await accounts.createAccount().sendAndWaitForReceipt({ from: account })
+      await accounts.createAccount({ from: account })
     }
   })
 
   it('locks gold', async () => {
-    await lockedGold.lock().sendAndWaitForReceipt({ value })
+    await lockedGold.lock({ value })
   })
 
   it('unlocks gold', async () => {
-    await lockedGold.lock().sendAndWaitForReceipt({ value })
-    await lockedGold.unlock(value).sendAndWaitForReceipt()
+    await lockedGold.lock({ value })
+    await lockedGold.unlock(value)
   })
 
   it('relocks gold', async () => {
     // Make 5 pending withdrawals.
-    await lockedGold.lock().sendAndWaitForReceipt({ value: value * 5 })
-    await lockedGold.unlock(value).sendAndWaitForReceipt()
-    await lockedGold.unlock(value).sendAndWaitForReceipt()
-    await lockedGold.unlock(value).sendAndWaitForReceipt()
-    await lockedGold.unlock(value).sendAndWaitForReceipt()
-    await lockedGold.unlock(value).sendAndWaitForReceipt()
+    await lockedGold.lock({ value: value * 5 })
+    await lockedGold.unlock(value)
+    await lockedGold.unlock(value)
+    await lockedGold.unlock(value)
+    await lockedGold.unlock(value)
+    await lockedGold.unlock(value)
 
     // Re-lock 2.5 of them
-    const txos = await lockedGold.relock(account, value * 2.5)
-    for (const txo of txos) {
-      await txo.sendAndWaitForReceipt()
-    }
+    await lockedGold.relock(account, value * 2.5)
   })
 
   test('should return the count of pending withdrawals', async () => {
-    await lockedGold.lock().sendAndWaitForReceipt({ value: value * 2 })
-    await lockedGold.unlock(value).sendAndWaitForReceipt()
-    await lockedGold.unlock(value).sendAndWaitForReceipt()
+    await lockedGold.lock({ value: value * 2 })
+    await lockedGold.unlock(value)
+    await lockedGold.unlock(value)
 
     const count = await lockedGold.getTotalPendingWithdrawalsCount(account)
     expect(count).toEqBigNumber(2)
@@ -64,8 +61,8 @@ testWithAnvilL2('LockedGold Wrapper', (provider) => {
   })
 
   test('should return the pending withdrawal at a given index', async () => {
-    await lockedGold.lock().sendAndWaitForReceipt({ value: value * 2 })
-    await lockedGold.unlock(value).sendAndWaitForReceipt()
+    await lockedGold.lock({ value: value * 2 })
+    await lockedGold.unlock(value)
     const pendingWithdrawal = await lockedGold.getPendingWithdrawal(account, 0)
 
     expect(pendingWithdrawal.value).toEqBigNumber(value)

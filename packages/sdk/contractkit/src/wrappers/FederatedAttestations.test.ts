@@ -53,16 +53,14 @@ testWithAnvilL2('FederatedAttestations Wrapper', (provider) => {
     const account = accounts[3]
 
     const accountInstance = await kit.contracts.getAccounts()
-    await accountInstance.createAccount().sendAndWaitForReceipt({ from: issuer })
-    const celoTransactionObject = await federatedAttestations.registerAttestation(
+    await accountInstance.createAccount({ from: issuer })
+    await federatedAttestations.registerAttestation(
       testIdentifierBytes32,
       issuer,
       account,
       issuer,
       TIME_STAMP
     )
-
-    await celoTransactionObject.sendAndWaitForReceipt()
 
     const attestationsAfterRegistration = await federatedAttestations.lookupAttestations(
       testIdentifierBytes32,
@@ -84,9 +82,11 @@ testWithAnvilL2('FederatedAttestations Wrapper', (provider) => {
   })
 
   it('attestation should exist when registered and not when revoked', async () => {
-    await federatedAttestations
-      .registerAttestationAsIssuer(testIdentifierBytes32, testAccountAddress, TIME_STAMP)
-      .sendAndWaitForReceipt()
+    await federatedAttestations.registerAttestationAsIssuer(
+      testIdentifierBytes32,
+      testAccountAddress,
+      TIME_STAMP
+    )
 
     const attestationsAfterRegistration = await federatedAttestations.lookupAttestations(
       testIdentifierBytes32,
@@ -107,9 +107,11 @@ testWithAnvilL2('FederatedAttestations Wrapper', (provider) => {
     expect(identifiersAfterRegistration.countsPerIssuer).toEqual(['1'])
     expect(identifiersAfterRegistration.identifiers).toEqual([testIdentifierBytes32])
 
-    await federatedAttestations
-      .revokeAttestation(testIdentifierBytes32, accounts[0], testAccountAddress)
-      .sendAndWaitForReceipt()
+    await federatedAttestations.revokeAttestation(
+      testIdentifierBytes32,
+      accounts[0],
+      testAccountAddress
+    )
 
     const attestationsAfterRevocation = await federatedAttestations.lookupAttestations(
       testIdentifierBytes32,
@@ -136,13 +138,17 @@ testWithAnvilL2('FederatedAttestations Wrapper', (provider) => {
       v: '1600 Pennsylvania Avenue, Washington, D.C., USA',
     }) as string
 
-    await federatedAttestations
-      .registerAttestationAsIssuer(testIdentifierBytes32, testAccountAddress, TIME_STAMP)
-      .sendAndWaitForReceipt()
+    await federatedAttestations.registerAttestationAsIssuer(
+      testIdentifierBytes32,
+      testAccountAddress,
+      TIME_STAMP
+    )
 
-    await federatedAttestations
-      .registerAttestationAsIssuer(secondIdentifierBytes32, testAccountAddress, TIME_STAMP)
-      .sendAndWaitForReceipt()
+    await federatedAttestations.registerAttestationAsIssuer(
+      secondIdentifierBytes32,
+      testAccountAddress,
+      TIME_STAMP
+    )
 
     const identifiersAfterRegistration = await federatedAttestations.lookupIdentifiers(
       testAccountAddress,
@@ -155,13 +161,11 @@ testWithAnvilL2('FederatedAttestations Wrapper', (provider) => {
       secondIdentifierBytes32,
     ])
 
-    await federatedAttestations
-      .batchRevokeAttestations(
-        accounts[0],
-        [testIdentifierBytes32, secondIdentifierBytes32],
-        [testAccountAddress, testAccountAddress]
-      )
-      .sendAndWaitForReceipt()
+    await federatedAttestations.batchRevokeAttestations(
+      accounts[0],
+      [testIdentifierBytes32, secondIdentifierBytes32],
+      [testAccountAddress, testAccountAddress]
+    )
 
     const identifiersAfterBatchRevocation = await federatedAttestations.lookupIdentifiers(
       testAccountAddress,

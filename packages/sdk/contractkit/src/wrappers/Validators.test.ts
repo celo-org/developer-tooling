@@ -27,9 +27,9 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
     value: string = minLockedGoldValue
   ) => {
     if (!(await accountsInstance.isAccount(account))) {
-      await accountsInstance.createAccount().sendAndWaitForReceipt({ from: account })
+      await accountsInstance.createAccount({ from: account })
     }
-    await lockedGold.lock().sendAndWaitForReceipt({ from: account, value })
+    await lockedGold.lock({ from: account, value })
   }
 
   beforeAll(async () => {
@@ -44,20 +44,13 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
       groupAccount,
       new BigNumber(minLockedGoldValue).times(members).toFixed()
     )
-    await (await validators.registerValidatorGroup(new BigNumber(0.1))).sendAndWaitForReceipt({
-      from: groupAccount,
-    })
+    await validators.registerValidatorGroup(new BigNumber(0.1), { from: groupAccount })
   }
 
   const setupValidator = async (validatorAccount: string) => {
     await registerAccountWithLockedGold(validatorAccount)
     const ecdsaPublicKey = await addressToPublicKey(validatorAccount, kit.connection.sign)
-    await validators
-      // @ts-ignore
-      .registerValidatorNoBls(ecdsaPublicKey)
-      .sendAndWaitForReceipt({
-        from: validatorAccount,
-      })
+    await validators.registerValidatorNoBls(ecdsaPublicKey, { from: validatorAccount })
   }
 
   it('registers a validator group', async () => {
@@ -77,10 +70,8 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
     const validatorAccount = accounts[1]
     await setupGroup(groupAccount)
     await setupValidator(validatorAccount)
-    await validators.affiliate(groupAccount).sendAndWaitForReceipt({ from: validatorAccount })
-    await (await validators.addMember(groupAccount, validatorAccount)).sendAndWaitForReceipt({
-      from: groupAccount,
-    })
+    await validators.affiliate(groupAccount, { from: validatorAccount })
+    await validators.addMember(groupAccount, validatorAccount, { from: groupAccount })
 
     const members = await validators.getValidatorGroup(groupAccount).then((group) => group.members)
     expect(members).toContain(validatorAccount)
@@ -89,9 +80,7 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
   it('sets next commission update', async () => {
     const groupAccount = accounts[0]
     await setupGroup(groupAccount)
-    await validators.setNextCommissionUpdate('0.2').sendAndWaitForReceipt({
-      from: groupAccount,
-    })
+    await validators.setNextCommissionUpdate('0.2', { from: groupAccount })
     const commission = (await validators.getValidatorGroup(groupAccount)).nextCommission
     expect(commission).toEqBigNumber('0.2')
   })
@@ -105,9 +94,9 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
     await setCommissionUpdateDelay(provider, validators.address, 3)
     await mineBlocks(1, provider)
 
-    await validators.setNextCommissionUpdate('0.2').sendAndWaitForReceipt(txOpts)
+    await validators.setNextCommissionUpdate('0.2', txOpts)
     await mineBlocks(3, provider)
-    await validators.updateCommission().sendAndWaitForReceipt(txOpts)
+    await validators.updateCommission(txOpts)
 
     const commission = (await validators.getValidatorGroup(groupAccount)).commission
     expect(commission).toEqBigNumber('0.2')
@@ -118,7 +107,7 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
     const validatorAccount = accounts[1]
     await setupGroup(groupAccount)
     await setupValidator(validatorAccount)
-    await validators.affiliate(groupAccount).sendAndWaitForReceipt({ from: validatorAccount })
+    await validators.affiliate(groupAccount, { from: validatorAccount })
     const group = await validators.getValidatorGroup(groupAccount)
     expect(group.affiliates).toContain(validatorAccount)
   })
@@ -138,10 +127,8 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
 
       for (const validator of [validator1, validator2]) {
         await setupValidator(validator)
-        await validators.affiliate(groupAccount).sendAndWaitForReceipt({ from: validator })
-        await (await validators.addMember(groupAccount, validator)).sendAndWaitForReceipt({
-          from: groupAccount,
-        })
+        await validators.affiliate(groupAccount, { from: validator })
+        await validators.addMember(groupAccount, validator, { from: groupAccount })
       }
 
       const members = await validators
@@ -153,9 +140,7 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
     it('moves last to first', async () => {
       jest.setTimeout(30 * 1000)
 
-      await validators
-        .reorderMember(groupAccount, validator2, 0)
-        .then((x) => x.sendAndWaitForReceipt({ from: groupAccount }))
+      await validators.reorderMember(groupAccount, validator2, 0, { from: groupAccount })
 
       const membersAfter = await validators
         .getValidatorGroup(groupAccount)
@@ -167,9 +152,7 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
     it('moves first to last', async () => {
       jest.setTimeout(30 * 1000)
 
-      await validators
-        .reorderMember(groupAccount, validator1, 1)
-        .then((x) => x.sendAndWaitForReceipt({ from: groupAccount }))
+      await validators.reorderMember(groupAccount, validator1, 1, { from: groupAccount })
 
       const membersAfter = await validators
         .getValidatorGroup(groupAccount)
@@ -181,9 +164,9 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
     it('checks address normalization', async () => {
       jest.setTimeout(30 * 1000)
 
-      await validators
-        .reorderMember(groupAccount, validator2.toLowerCase(), 0)
-        .then((x) => x.sendAndWaitForReceipt({ from: groupAccount }))
+      await validators.reorderMember(groupAccount, validator2.toLowerCase(), 0, {
+        from: groupAccount,
+      })
 
       const membersAfter = await validators
         .getValidatorGroup(groupAccount)

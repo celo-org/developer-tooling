@@ -913,9 +913,10 @@ testWithAnvilL2(
 
         // Create and dequeue a proposal
         const minDeposit = (await governance.minDeposit()).toString()
-        await governance
-          .propose([], 'https://example.com/proposal')
-          .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
+        await governance.propose([], 'https://example.com/proposal', {
+          from: accounts[0],
+          value: minDeposit,
+        })
 
         proposalId = new BigNumber(1)
 
@@ -923,7 +924,7 @@ testWithAnvilL2(
         const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
         const { timeTravel } = await import('@celo/dev-utils/ganache-test')
         await timeTravel(dequeueFrequency + 1, client)
-        await governance.dequeueProposalsIfReady().sendAndWaitForReceipt({ from: accounts[0] })
+        await governance.dequeueProposalsIfReady({ from: accounts[0] })
 
         // Make accounts[0] the multisig owner
         await changeMultiSigOwner(kit, accounts[0])
@@ -1131,10 +1132,15 @@ testWithAnvilL2(
 
         // First, submit the transaction to multisig from accounts[0]
         // This won't execute because it requires 2 confirmations
-        const approveTx = await governance.approve(proposalId)
-        await (
-          await multisig.submitTransaction(governance.address, approveTx.txo)
-        ).sendAndWaitForReceipt({ from: accounts[0] })
+        const dequeue = await governance.getDequeue()
+        const proposalIndex = dequeue.findIndex((id: BigNumber) => id.isEqualTo(proposalId))
+        const approveData = governance.encodeFunctionData('approve', [
+          proposalId.toString(),
+          proposalIndex,
+        ])
+        await multisig.submitTransaction(governance.address, approveData, '0', {
+          from: accounts[0],
+        })
 
         // Verify proposal is not yet approved
         expect(await governance.isApproved(proposalId)).toBe(false)

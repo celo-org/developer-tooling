@@ -78,8 +78,7 @@ export function testStableToken(
 
   it('transfers', async () => {
     const before = await stableToken.balanceOf(accounts[1])
-    const tx = await stableToken.transfer(accounts[1], ONE_STABLE).send()
-    await tx.waitReceipt()
+    await stableToken.transfer(accounts[1], ONE_STABLE)
 
     const after = await stableToken.balanceOf(accounts[1])
     expect(after.minus(before)).toEqBigNumber(ONE_STABLE)
@@ -89,7 +88,7 @@ export function testStableToken(
     const before = await stableToken.allowance(accounts[0], accounts[1])
     expect(before).toEqBigNumber(0)
 
-    await stableToken.approve(accounts[1], ONE_STABLE).sendAndWaitForReceipt()
+    await stableToken.approve(accounts[1], ONE_STABLE)
     const after = await stableToken.allowance(accounts[0], accounts[1])
     expect(after).toEqBigNumber(ONE_STABLE)
   })
@@ -97,12 +96,11 @@ export function testStableToken(
   it('transfers from', async () => {
     const before = await stableToken.balanceOf(accounts[3])
     // account1 approves account0
-    await stableToken.approve(accounts[1], ONE_STABLE).sendAndWaitForReceipt({ from: accounts[0] })
+    await stableToken.approve(accounts[1], ONE_STABLE, { from: accounts[0] })
 
-    const tx = await stableToken
-      .transferFrom(accounts[0], accounts[3], ONE_STABLE)
-      .send({ from: accounts[1] })
-    await tx.waitReceipt()
+    await stableToken.transferFrom(accounts[0], accounts[3], ONE_STABLE, {
+      from: accounts[1],
+    })
     const after = await stableToken.balanceOf(accounts[3])
     expect(after.minus(before)).toEqBigNumber(ONE_STABLE)
   })

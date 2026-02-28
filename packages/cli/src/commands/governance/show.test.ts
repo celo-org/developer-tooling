@@ -41,23 +41,22 @@ testWithAnvilL2('governance:show cmd', (provider) => {
     const dequeueFrequency = (await governanceWrapper.dequeueFrequency()).toNumber()
     const proposalId = 1
 
-    await governanceWrapper
-      .propose(PROPOSAL_TRANSACTIONS, 'URL')
-      .sendAndWaitForReceipt({ from: proposer, value: minDeposit })
+    await governanceWrapper.propose(PROPOSAL_TRANSACTIONS, 'URL', {
+      from: proposer,
+      value: minDeposit,
+    })
 
     const accountWrapper = await kit.contracts.getAccounts()
     const lockedGoldWrapper = await kit.contracts.getLockedGold()
 
-    await accountWrapper.createAccount().sendAndWaitForReceipt({ from: voter })
-    await lockedGoldWrapper.lock().sendAndWaitForReceipt({ from: voter, value: minDeposit })
+    await accountWrapper.createAccount({ from: voter })
+    await lockedGoldWrapper.lock({ from: voter, value: minDeposit })
 
     await timeTravel(dequeueFrequency + 1, provider)
 
-    await governanceWrapper.dequeueProposalsIfReady().sendAndWaitForReceipt({
-      from: proposer,
-    })
+    await governanceWrapper.dequeueProposalsIfReady({ from: proposer })
 
-    await (await governanceWrapper.vote(proposalId, 'Yes')).sendAndWaitForReceipt({ from: voter })
+    await governanceWrapper.vote(proposalId, 'Yes', { from: voter })
 
     await testLocallyWithNode(Show, ['--proposalID', proposalId.toString()], provider)
 
