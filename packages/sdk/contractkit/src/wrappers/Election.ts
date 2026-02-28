@@ -12,7 +12,6 @@ import { Address, CeloTransactionObject, EventLog } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import {
   fixidityValueToBigNumber,
-  proxySend,
   toViemAddress,
   toViemBigInt,
   valueToBigNumber,
@@ -165,21 +164,9 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
     return valueToBigNumber(res.toString())
   }
 
-  private _revokePending: (...args: any[]) => CeloTransactionObject<boolean> = proxySend(
-    this.connection,
-    this.contract,
-    'revokePending'
-  )
-  private _revokeActive: (...args: any[]) => CeloTransactionObject<boolean> = proxySend(
-    this.connection,
-    this.contract,
-    'revokeActive'
-  )
-  private _vote: (...args: any[]) => CeloTransactionObject<boolean> = proxySend(
-    this.connection,
-    this.contract,
-    'vote'
-  )
+  private _revokePending = (...args: any[]) => this.buildTx('revokePending', args) as any
+  private _revokeActive = (...args: any[]) => this.buildTx('revokeActive', args) as any
+  private _vote = (...args: any[]) => this.buildTx('vote', args) as any
 
   /**
    * Returns the minimum and maximum number of validators that can be elected.
@@ -426,9 +413,9 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
     return concurrentMap(5, groups, (g) => this.getValidatorGroupVotes(g as string))
   }
 
-  private _activate = proxySend(this.connection, this.contract, 'activate')
+  private _activate = (...args: any[]) => this.buildTx('activate', args) as any
 
-  private _activateForAccount = proxySend(this.connection, this.contract, 'activateForAccount')
+  private _activateForAccount = (...args: any[]) => this.buildTx('activateForAccount', args) as any
 
   /**
    * Activates any activatable pending votes.

@@ -1,7 +1,7 @@
 import { feeHandlerABI } from '@celo/abis'
-import { Address, CeloTransactionObject } from '@celo/connect'
+import { Address } from '@celo/connect'
 import BigNumber from 'bignumber.js'
-import { BaseWrapper, proxySend } from './BaseWrapper'
+import { BaseWrapper } from './BaseWrapper'
 
 export enum ExchangeProposalState {
   None,
@@ -43,42 +43,19 @@ export interface ExchangeProposalReadable {
 export class FeeHandlerWrapper extends BaseWrapper<typeof feeHandlerABI> {
   owner = async () => this.contract.read.owner() as Promise<string>
 
-  handleAll: () => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'handleAll'
-  )
-  burnCelo: () => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'burnCelo'
-  )
+  handleAll = () => this.buildTx('handleAll', [])
+  burnCelo = () => this.buildTx('burnCelo', [])
 
-  async handle(tokenAddress: Address): Promise<CeloTransactionObject<void>> {
-    const createExchangeProposalInner: (addr: string) => CeloTransactionObject<void> = proxySend(
-      this.connection,
-      this.contract,
-      'handle'
-    )
-    return createExchangeProposalInner(tokenAddress)
+  handle(tokenAddress: Address) {
+    return this.buildTx('handle', [tokenAddress])
   }
 
-  async sell(tokenAddress: Address): Promise<CeloTransactionObject<void>> {
-    const innerCall: (addr: string) => CeloTransactionObject<void> = proxySend(
-      this.connection,
-      this.contract,
-      'sell'
-    )
-    return innerCall(tokenAddress)
+  sell(tokenAddress: Address) {
+    return this.buildTx('sell', [tokenAddress])
   }
 
-  async distribute(tokenAddress: Address): Promise<CeloTransactionObject<void>> {
-    const innerCall: (addr: string) => CeloTransactionObject<void> = proxySend(
-      this.connection,
-      this.contract,
-      'distribute'
-    )
-    return innerCall(tokenAddress)
+  distribute(tokenAddress: Address) {
+    return this.buildTx('distribute', [tokenAddress])
   }
 }
 

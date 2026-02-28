@@ -5,10 +5,7 @@ import {
   BaseWrapper,
   toViemAddress,
   toViemBigInt,
-  proxySend,
-  stringIdentity,
   stringToSolidityBytes,
-  tupleParser,
   valueToBigNumber,
   valueToInt,
 } from './BaseWrapper'
@@ -90,17 +87,9 @@ export class MultiSigWrapper extends BaseWrapper<typeof multiSigABI> {
     }
   }
 
-  private _confirmTransaction: (...args: any[]) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'confirmTransaction'
-  )
+  private _confirmTransaction = (...args: any[]) => this.buildTx('confirmTransaction', args)
 
-  private _submitTransaction: (...args: any[]) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'submitTransaction'
-  )
+  private _submitTransaction = (...args: any[]) => this.buildTx('submitTransaction', args)
 
   async confirmTransaction(transactionId: number): Promise<CeloTransactionObject<void>> {
     return this._confirmTransaction(transactionId)
@@ -137,12 +126,7 @@ export class MultiSigWrapper extends BaseWrapper<typeof multiSigABI> {
     const res = await this.contract.read.getTransactionCount([pending, executed])
     return valueToInt(res.toString())
   }
-  replaceOwner: (owner: Address, newOwner: Address) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'replaceOwner',
-    tupleParser(stringIdentity, stringIdentity)
-  )
+  replaceOwner = (owner: Address, newOwner: Address) => this.buildTx('replaceOwner', [owner, newOwner])
 
   async getTransactionDataByContent(
     destination: string,

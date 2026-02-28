@@ -1,6 +1,6 @@
 import { stableTokenABI } from '@celo/abis'
 import { CeloTransactionObject } from '@celo/connect'
-import { proxySend, stringIdentity, tupleParser, valueToString } from './BaseWrapper'
+import { valueToString } from './BaseWrapper'
 import { CeloTokenWrapper } from './CeloTokenWrapper'
 
 export interface StableTokenConfig {
@@ -25,36 +25,19 @@ export class StableTokenWrapper extends CeloTokenWrapper<typeof stableTokenABI> 
    * @param value The increment of the amount of StableToken approved to the spender.
    * @returns true if success.
    */
-  increaseAllowance: (
+  increaseAllowance = (
     spender: string,
     value: import('bignumber.js').default.Value
-  ) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'increaseAllowance',
-    tupleParser(stringIdentity, valueToString)
-  )
+  ): CeloTransactionObject<void> => this.buildTx('increaseAllowance', [spender, valueToString(value)])
   /**
    * Decreases the allowance of another user.
    * @param spender The address which is being approved to spend StableToken.
    * @param value The decrement of the amount of StableToken approved to the spender.
    * @returns true if success.
    */
-  decreaseAllowance: (spender: string, value: string) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'decreaseAllowance'
-  )
-  mint: (to: string, value: string) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'mint'
-  )
-  burn: (value: string) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'burn'
-  )
+  decreaseAllowance = (spender: string, value: string): CeloTransactionObject<void> => this.buildTx('decreaseAllowance', [spender, value])
+  mint = (to: string, value: string): CeloTransactionObject<void> => this.buildTx('mint', [to, value])
+  burn = (value: string): CeloTransactionObject<void> => this.buildTx('burn', [value])
 
   /**
    * Returns current configuration parameters.

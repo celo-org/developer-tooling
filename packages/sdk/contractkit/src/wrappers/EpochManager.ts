@@ -2,7 +2,7 @@ import { epochManagerABI } from '@celo/abis'
 import { NULL_ADDRESS } from '@celo/base'
 import { CeloTransactionObject, CeloContract } from '@celo/connect'
 import BigNumber from 'bignumber.js'
-import { proxySend, toViemAddress, toViemBigInt, valueToInt } from './BaseWrapper'
+import { toViemAddress, toViemBigInt, valueToInt } from './BaseWrapper'
 import { BaseWrapperForGoverning } from './BaseWrapperForGoverning'
 import { ValidatorGroupVote } from './Election'
 
@@ -91,35 +91,13 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<typeof epochMan
     }
   }
 
-  startNextEpochProcess: () => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'startNextEpochProcess'
-  )
-  finishNextEpochProcess: (
-    groups: string[],
-    lessers: string[],
-    greaters: string[]
-  ) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'finishNextEpochProcess'
-  )
-  sendValidatorPayment: (validator: string) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'sendValidatorPayment'
-  )
-  setToProcessGroups: () => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'setToProcessGroups'
-  )
-  processGroups: (
-    groups: string[],
-    lessers: string[],
-    greaters: string[]
-  ) => CeloTransactionObject<void> = proxySend(this.connection, this.contract, 'processGroups')
+  startNextEpochProcess = () => this.buildTx('startNextEpochProcess', [])
+  finishNextEpochProcess = (groups: string[], lessers: string[], greaters: string[]) =>
+    this.buildTx('finishNextEpochProcess', [groups, lessers, greaters])
+  sendValidatorPayment = (validator: string) => this.buildTx('sendValidatorPayment', [validator])
+  setToProcessGroups = () => this.buildTx('setToProcessGroups', [])
+  processGroups = (groups: string[], lessers: string[], greaters: string[]) =>
+    this.buildTx('processGroups', [groups, lessers, greaters])
 
   startNextEpochProcessTx = async (): Promise<CeloTransactionObject<void> | undefined> => {
     // check that the epoch process is not already started

@@ -5,7 +5,7 @@ import { goldTokenABI } from '@celo/abis'
 import { CeloTransactionObject } from '@celo/connect'
 import type { Abi } from 'viem'
 import 'bignumber.js'
-import { proxyCallGeneric, proxySendGeneric, valueToInt } from './BaseWrapper'
+import { proxyCallGeneric, valueToInt } from './BaseWrapper'
 import { Erc20Wrapper } from './Erc20Wrapper'
 
 /**
@@ -36,6 +36,6 @@ export class CeloTokenWrapper<TAbi extends Abi = typeof goldTokenABI> extends Er
    * @param comment The transfer comment
    * @return True if the transaction succeeds.
    */
-  transferWithComment: (to: string, value: string, comment: string) => CeloTransactionObject<void> =
-    proxySendGeneric(this.connection, this.contract, 'transferWithComment')
+  transferWithComment = (to: string, value: string, comment: string) =>
+    this.buildTxUnchecked('transferWithComment', [to, value, comment]) as CeloTransactionObject<void>
 }

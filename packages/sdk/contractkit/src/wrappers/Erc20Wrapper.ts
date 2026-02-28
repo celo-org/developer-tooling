@@ -5,7 +5,7 @@ import type { Abi } from 'viem'
 // after the move to node 10. This allows types to be inferred without
 // referencing '@celo/utils/node_modules/bignumber.js'
 import BigNumber from 'bignumber.js'
-import { BaseWrapper, proxyCallGeneric, proxySendGeneric, valueToBigNumber } from './BaseWrapper'
+import { BaseWrapper, proxyCallGeneric, valueToBigNumber } from './BaseWrapper'
 
 /**
  * ERC-20 contract only containing the non-optional functions
@@ -31,8 +31,8 @@ export class Erc20Wrapper<TAbi extends Abi = typeof ierc20ABI> extends BaseWrapp
    * @param value The amount of the token approved to the spender.
    * @return True if the transaction succeeds.
    */
-  approve: (spender: string, value: string | number) => CeloTransactionObject<void> =
-    proxySendGeneric(this.connection, this.contract, 'approve')
+  approve = (spender: string, value: string | number) =>
+    this.buildTxUnchecked('approve', [spender, value]) as CeloTransactionObject<void>
 
   /**
    * Transfers the token from one address to another.
@@ -40,11 +40,8 @@ export class Erc20Wrapper<TAbi extends Abi = typeof ierc20ABI> extends BaseWrapp
    * @param value The amount of the token to transfer.
    * @return True if the transaction succeeds.
    */
-  transfer: (to: string, value: string | number) => CeloTransactionObject<void> = proxySendGeneric(
-    this.connection,
-    this.contract,
-    'transfer'
-  )
+  transfer = (to: string, value: string | number) =>
+    this.buildTxUnchecked('transfer', [to, value]) as CeloTransactionObject<void>
 
   /**
    * Transfers the token from one address to another on behalf of a user.
@@ -53,8 +50,8 @@ export class Erc20Wrapper<TAbi extends Abi = typeof ierc20ABI> extends BaseWrapp
    * @param value The amount of the token to transfer.
    * @return True if the transaction succeeds.
    */
-  transferFrom: (from: string, to: string, value: string | number) => CeloTransactionObject<void> =
-    proxySendGeneric(this.connection, this.contract, 'transferFrom')
+  transferFrom = (from: string, to: string, value: string | number) =>
+    this.buildTxUnchecked('transferFrom', [from, to, value]) as CeloTransactionObject<void>
 
   /**
    * Gets the balance of the specified address.
