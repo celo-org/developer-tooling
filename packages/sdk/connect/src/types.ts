@@ -60,7 +60,7 @@ export type CeloTxWithSig = WithSig<CeloTx>
 
 /**
  * Minimal contract shape needed for tx object creation.
- * Both ViemContract and CeloContract (GetContractReturnType) satisfy this interface.
+ * CeloContract (GetContractReturnType) satisfies this interface.
  * @internal
  */
 export interface ContractRef {

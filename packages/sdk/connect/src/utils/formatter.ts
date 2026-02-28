@@ -1,7 +1,6 @@
 import { ensureLeading0x, StrongAddress, trimLeading0x } from '@celo/base/lib/address'
 import { isValidAddress, toChecksumAddress } from '@celo/utils/lib/address'
 import { sha3 } from '@celo/utils/lib/solidity'
-import BigNumber from 'bignumber.js'
 import { encode } from 'utf8'
 import {
   AccessList,
@@ -214,7 +213,7 @@ export function outputBlockFormatter(block: any): Block {
 
 export function hexToNumber(hex?: string): number | undefined {
   if (hex) {
-    return new BigNumber(hex).toNumber()
+    return Number(BigInt(hex))
   }
   return undefined
 }
@@ -254,7 +253,7 @@ export function outputLogFormatter(log: any): Log {
 }
 
 export function outputBigNumberFormatter(hex: string): string {
-  return new BigNumber(hex).toString(10)
+  return BigInt(hex).toString(10)
 }
 
 function isHash(value: string) {
@@ -352,12 +351,14 @@ function isHexStrict(hex: string): boolean {
   return /^(-)?0x[0-9a-f]*$/i.test(hex)
 }
 
-function numberToHex(value?: BigNumber.Value): Hex | undefined {
+function numberToHex(value?: string | number | bigint): Hex | undefined {
   if (value) {
-    const numberValue = new BigNumber(value)
-    const result = ensureLeading0x(new BigNumber(value).toString(16))
-    // Seen in web3, copied just in case
-    return (numberValue.lt(new BigNumber(0)) ? `-${result}` : result) as Hex
+    const bigValue = BigInt(value)
+    const zero = BigInt(0)
+    const result = ensureLeading0x(
+      bigValue < zero ? (-bigValue).toString(16) : bigValue.toString(16)
+    )
+    return (bigValue < zero ? `-${result}` : result) as Hex
   }
   return undefined
 }

@@ -1,9 +1,7 @@
-// tslint:disable: ordered-imports
 import { StrongAddress } from '@celo/base'
 import { ensureLeading0x, toChecksumAddress } from '@celo/utils/lib/address'
 import { EIP712TypedData, generateTypedDataHash } from '@celo/utils/lib/sign-typed-data-utils'
 import { Signature, parseSignatureWithoutPrefix } from '@celo/utils/lib/signatureUtils'
-import { bufferToHex } from '@ethereumjs/util'
 import debugFactory from 'debug'
 import {
   keccak256,
@@ -375,7 +373,7 @@ export class Connection {
       )
     })
 
-    const messageHash = bufferToHex(generateTypedDataHash(typedData))
+    const messageHash = toHex(generateTypedDataHash(typedData))
     return parseSignatureWithoutPrefix(messageHash, signature, signer)
   }
 

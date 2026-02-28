@@ -67,6 +67,7 @@ class MockWallet implements ReadOnlyWallet {
 describe('CeloProvider', () => {
   let mockCallback: any
   let mockProvider: Provider
+  let connection: Connection
   let celoProvider: CeloProvider
   const interceptedByCeloProvider = [
     'eth_sendTransaction',
@@ -95,7 +96,7 @@ describe('CeloProvider', () => {
       send: mockCallback,
     }
 
-    const connection = new Connection(mockProvider, new MockWallet())
+    connection = new Connection(mockProvider, new MockWallet())
     celoProvider = connection.currentProvider
   })
 
@@ -184,7 +185,7 @@ describe('CeloProvider', () => {
     }
 
     beforeEach(() => {
-      celoProvider.addAccount(ACCOUNT_ADDRESS1)
+      connection.addAccount(ACCOUNT_ADDRESS1)
     })
 
     describe('but tries to use it with a different account', () => {

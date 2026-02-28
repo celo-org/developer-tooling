@@ -145,49 +145,53 @@ export abstract class BaseWrapper<TAbi extends readonly unknown[] = AbiItem[]> {
     )
     if (!eventAbi) return []
 
-    const eventSig = viemAbiCoder.encodeEventSignature(eventAbi)
-    const topics: string[] = [eventSig]
+    const fromBlock =
+      options.fromBlock != null
+        ? typeof options.fromBlock === 'number'
+          ? BigInt(options.fromBlock)
+          : options.fromBlock === 'latest' ||
+              options.fromBlock === 'earliest' ||
+              options.fromBlock === 'pending'
+            ? options.fromBlock
+            : BigInt(options.fromBlock)
+        : undefined
+    const toBlock =
+      options.toBlock != null
+        ? typeof options.toBlock === 'number'
+          ? BigInt(options.toBlock)
+          : options.toBlock === 'latest' ||
+              options.toBlock === 'earliest' ||
+              options.toBlock === 'pending'
+            ? options.toBlock
+            : BigInt(options.toBlock)
+        : undefined
 
-    const params: Record<string, unknown> = {
-      address: this.contract.address,
-      topics,
-    }
-    if (options.fromBlock != null) {
-      params.fromBlock =
-        typeof options.fromBlock === 'number'
-          ? `0x${options.fromBlock.toString(16)}`
-          : options.fromBlock
-    }
-    if (options.toBlock != null) {
-      params.toBlock =
-        typeof options.toBlock === 'number' ? `0x${options.toBlock.toString(16)}` : options.toBlock
-    }
+    try {
+      const logs = await this.client.getLogs({
+        address: this.contract.address,
+        event: eventAbi as any,
+        fromBlock,
+        toBlock,
+      })
 
-    const response = await this.connection.rpcCaller.call('eth_getLogs', [params])
-    const logs = response.result as any[]
-    return logs.map((log: any) => {
-      let returnValues: Record<string, unknown> = {}
-      try {
-        returnValues = viemAbiCoder.decodeLog(
-          eventAbi.inputs || [],
-          log.data,
-          log.topics.slice(1)
-        ) as unknown as Record<string, unknown>
-      } catch {
-        // Event decoding may fail for proxy contracts; skip gracefully
-      }
-      return {
-        event: eventAbi.name!,
-        address: log.address,
-        returnValues,
-        logIndex: log.logIndex,
-        transactionIndex: log.transactionIndex,
-        transactionHash: log.transactionHash,
-        blockHash: log.blockHash,
-        blockNumber: log.blockNumber,
-        raw: { data: log.data, topics: log.topics },
-      }
-    })
+      return logs.map((log) => {
+        const decoded = log as typeof log & { args?: Record<string, unknown> }
+        return {
+          event: eventAbi.name!,
+          address: log.address,
+          returnValues: decoded.args ?? {},
+          logIndex: log.logIndex!,
+          transactionIndex: log.transactionIndex!,
+          transactionHash: log.transactionHash!,
+          blockHash: log.blockHash!,
+          blockNumber: Number(log.blockNumber!),
+          raw: { data: log.data, topics: log.topics as string[] },
+        }
+      })
+    } catch {
+      // Event decoding may fail for proxy contracts; return empty gracefully
+      return []
+    }
   }
 
   events: Record<string, AbiItem> = (this.contract.abi as unknown as AbiItem[])
@@ -301,7 +305,7 @@ export const unixSecondsTimestampToDateString = (input: BigNumber.Value) => {
   return Intl.DateTimeFormat('default', DATE_TIME_OPTIONS).format(date)
 }
 
-// Type of bytes in solidity gets represented as a string of number array by typechain and web3
+// Type of bytes in solidity gets represented as a string of number array
 // Hopefully this will improve in the future, at which point we can make improvements here
 type SolidityBytes = string | number[]
 export const stringToSolidityBytes = (input: string) => ensureLeading0x(input) as SolidityBytes

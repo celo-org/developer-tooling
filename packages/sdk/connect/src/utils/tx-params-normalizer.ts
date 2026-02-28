@@ -1,4 +1,3 @@
-import BigNumber from 'bignumber.js'
 import { Connection } from '../connection'
 import { CeloTx } from '../types'
 import { isEmpty, isPresent } from '../viem-abi-coder'
@@ -39,11 +38,10 @@ export class TxParamsNormalizer {
           ) {
             const suggestedPrice = await this.connection.gasPrice(txParams.feeCurrency)
             // add small buffer to suggested price like other libraries do
-            const priceWithRoom = new BigNumber(suggestedPrice)
-              .times(120)
-              .dividedBy(100)
-              .integerValue()
-              .toString(16)
+            // use ceiling division to match previous BigNumber.integerValue(ROUND_HALF_UP) behavior
+            const numerator = BigInt(suggestedPrice) * BigInt(120)
+            const denominator = BigInt(100)
+            const priceWithRoom = ((numerator + denominator - BigInt(1)) / denominator).toString(16)
             return `0x${priceWithRoom}`
           }
           return txParams.maxFeePerGas

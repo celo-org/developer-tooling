@@ -10,7 +10,6 @@ import {
 } from '@celo/utils/lib/signatureUtils'
 import { soliditySha3 } from '@celo/utils/lib/solidity'
 import { authorizeSigner as buildAuthorizeSignerTypedData } from '@celo/utils/lib/typed-data-constructors'
-import type BN from 'bn.js' // just the types
 import { getParsedSignatureOfAddress } from '../utils/getParsedSignatureOfAddress'
 import { newContractVersion } from '../versions'
 import {
@@ -525,11 +524,8 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     return getParsedSignatureOfAddress(soliditySha3, signerFn.sign, address, signer)
   }
 
-  // connection.keccak256 now uses viem which requires a hex string input,
-  // unlike web3's version which accepted BN natively — convert BN to hex first
-  private keccak256(value: string | BN): string {
-    const strValue = typeof value === 'string' ? value : '0x' + value.toString(16)
-    return this.connection.keccak256(strValue)
+  private keccak256(value: string): string {
+    return this.connection.keccak256(value)
   }
 }
 

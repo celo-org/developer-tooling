@@ -43,7 +43,7 @@ export function assertIsCeloProvider(provider: any): asserts provider is CeloPro
 }
 
 /*
- * CeloProvider wraps a web3.js provider for use with Celo
+ * CeloProvider wraps an EIP-1193 provider for use with Celo
  */
 export class CeloProvider implements Provider {
   private alreadyStopped: boolean = false
@@ -58,21 +58,6 @@ export class CeloProvider implements Provider {
     readonly connection: Connection
   ) {
     this.addProviderDelegatedFunctions()
-  }
-
-  // @deprecated  Use the `addAccount` from the Connection
-  addAccount(privateKey: string) {
-    this.connection.addAccount(privateKey)
-  }
-
-  // @deprecated  Use the `removeAccount` from the Connection
-  removeAccount(address: string) {
-    this.connection.removeAccount(address)
-  }
-
-  // @deprecated  Use the `getAccounts` from the Connection
-  async getAccounts(): Promise<string[]> {
-    return this.connection.getAccounts()
   }
 
   isLocalAccount(address?: string): boolean {

@@ -34,9 +34,6 @@ export class GoldTokenWrapper extends CeloTokenWrapper<typeof goldTokenABI> {
 
   /**
    * Gets the balance of the specified address.
-   * WARNING: The actual call to the Gold contract of the balanceOf:
-   * `balanceOf = this.contract.read.balanceOf(account)`
-   * has issues with web3. Keep the one calling getBalance
    * @param owner The address to query the balance of.
    * @return The balance of the specified address.
    */
