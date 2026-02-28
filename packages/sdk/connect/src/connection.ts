@@ -13,11 +13,16 @@ import {
   custom,
   toFunctionHash,
   toEventHash,
+  decodeFunctionResult,
+  encodeFunctionData,
+  type Abi,
+  type ContractFunctionName,
   type PublicClient,
 } from 'viem'
 import { AbiCoder, AbiInput, AbiItem } from './abi-types'
-import { isEmpty, viemAbiCoder } from './viem-abi-coder'
+import { isEmpty, viemAbiCoder, coerceArgsForAbi } from './viem-abi-coder'
 import { type CeloContract, createCeloContract } from './contract-types'
+import type { ContractRef } from './viem-tx-object'
 import { CeloProvider, assertIsCeloProvider } from './celo-provider'
 import {
   Address,
@@ -325,6 +330,47 @@ export class Connection {
       gas,
       data: txObj.encodeABI(),
       to: txObj._parent._address,
+    })
+  }
+
+  /**
+   * Call a read-only contract function and decode the result.
+   * Replaces the pattern: createViemTxObject(connection, contract, fn, args).call()
+   * @internal
+   */
+  callContract = async (
+    contract: ContractRef,
+    functionName: string,
+    args: unknown[]
+  ): Promise<unknown> => {
+    const contractAbi = contract.abi as AbiItem[]
+    const methodAbi = contractAbi.find(
+      (item: AbiItem) => item.type === 'function' && item.name === functionName
+    )
+    if (!methodAbi) {
+      throw new Error(`Method ${functionName} not found in ABI`)
+    }
+    const coercedArgs = methodAbi.inputs ? coerceArgsForAbi(methodAbi.inputs, args) : args
+    const data = encodeFunctionData({
+      abi: [methodAbi],
+      args: coercedArgs,
+    })
+    const result = await this.viemClient.call({
+      to: contract.address,
+      data: data as `0x${string}`,
+    })
+    if (
+      !result.data ||
+      result.data === '0x' ||
+      !methodAbi.outputs ||
+      methodAbi.outputs.length === 0
+    ) {
+      return result.data
+    }
+    return decodeFunctionResult({
+      abi: contract.abi as Abi,
+      functionName: functionName as ContractFunctionName<Abi>,
+      data: result.data,
     })
   }
 

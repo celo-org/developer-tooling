@@ -3,6 +3,7 @@ import { StrongAddress, bufferToHex, ensureLeading0x } from '@celo/base/lib/addr
 import {
   CeloTransactionObject,
   CeloContract,
+  CeloTx,
   Connection,
   EventLog,
   PastEventOptions,
@@ -10,9 +11,9 @@ import {
   toTransactionObject,
 } from '@celo/connect'
 import type { AbiItem } from '@celo/connect/lib/abi-types'
-import { viemAbiCoder } from '@celo/connect/lib/viem-abi-coder'
+import { viemAbiCoder, coerceArgsForAbi } from '@celo/connect/lib/viem-abi-coder'
 import type { ContractFunctionName, PublicClient } from 'viem'
-import { toFunctionHash } from 'viem'
+import { toFunctionHash, encodeFunctionData as viemEncodeFunctionData } from 'viem'
 import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
 import { ContractVersion } from '../versions'
@@ -124,6 +125,65 @@ export abstract class BaseWrapper<TAbi extends readonly unknown[] = AbiItem[]> {
   ): CeloTransactionObject<unknown> {
     const txo = createViemTxObjectInternal(this.connection, this.contract, functionName, args)
     return toTransactionObject(this.connection, txo)
+  }
+
+  /**
+   * Encode function call data without sending.
+   * @internal
+   */
+  public encodeFunctionData(functionName: string, args: unknown[]): `0x${string}` {
+    const contractAbi = this.contract.abi as AbiItem[]
+    const methodAbi = contractAbi.find(
+      (item: AbiItem) => item.type === 'function' && item.name === functionName
+    )
+    if (!methodAbi) {
+      throw new Error(`Method ${functionName} not found in ABI`)
+    }
+    const coercedArgs = methodAbi.inputs ? coerceArgsForAbi(methodAbi.inputs, args) : args
+    return viemEncodeFunctionData({
+      abi: [methodAbi],
+      args: coercedArgs,
+    }) as `0x${string}`
+  }
+
+  /**
+   * Send a state-changing transaction eagerly (typed).
+   * Constrains functionName to actual ABI write methods.
+   * @internal
+   */
+  protected async sendTx<
+    TFunctionName extends ContractFunctionName<TAbi, 'nonpayable' | 'payable'>,
+  >(
+    functionName: TFunctionName,
+    args: unknown[],
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
+    const data = this.encodeFunctionData(functionName as string, args)
+    const result = await this.connection.sendTransaction({
+      ...txParams,
+      to: this.contract.address,
+      data,
+    })
+    return (await result.getHash()) as `0x${string}`
+  }
+
+  /**
+   * Send a state-changing transaction eagerly (untyped).
+   * Use ONLY in generic intermediate classes where TAbi is unresolved.
+   * @internal
+   */
+  protected async sendTxUnchecked(
+    functionName: string,
+    args: unknown[],
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
+    const data = this.encodeFunctionData(functionName, args)
+    const result = await this.connection.sendTransaction({
+      ...txParams,
+      to: this.contract.address,
+      data,
+    })
+    return (await result.getHash()) as `0x${string}`
   }
 
   /** Contract getPastEvents */
@@ -383,13 +443,7 @@ function proxyCallGenericImpl<
           'Ensure the contract was registered via a BaseWrapper constructor.'
       )
     }
-    const txo = createViemTxObjectInternal(
-      connection,
-      contract,
-      functionName,
-      resolvedArgs as unknown[]
-    )
-    const result = await txo.call()
+    const result = await connection.callContract(contract, functionName, resolvedArgs as unknown[])
     return parseOutput ? parseOutput(result as PreParsedOutput) : (result as PreParsedOutput)
   }
 }

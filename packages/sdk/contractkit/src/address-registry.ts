@@ -1,6 +1,6 @@
 import { registryABI } from '@celo/abis'
 import { NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
-import { Connection, createViemTxObject, type ContractRef } from '@celo/connect'
+import { Connection, type ContractRef } from '@celo/connect'
 import debugFactory from 'debug'
 import { CeloContract, RegisteredContracts, stripProxy } from './base'
 
@@ -35,12 +35,9 @@ export class AddressRegistry {
   async addressFor(contract: CeloContract): Promise<StrongAddress> {
     if (!this.cache.has(contract)) {
       debug('Fetching address from Registry for %s', contract)
-      const address = await createViemTxObject<string>(
-        this.connection,
-        this.registry,
-        'getAddressForString',
-        [stripProxy(contract)]
-      ).call()
+      const address = (await this.connection.callContract(this.registry, 'getAddressForString', [
+        stripProxy(contract),
+      ])) as string
 
       debug('Fetched address %s', address)
       if (!address || address === NULL_ADDRESS) {

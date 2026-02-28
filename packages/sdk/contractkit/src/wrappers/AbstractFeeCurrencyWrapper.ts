@@ -1,5 +1,5 @@
 import { StrongAddress } from '@celo/base'
-import { AbiItem, createViemTxObject } from '@celo/connect'
+import type { AbiItem } from '@celo/connect'
 import { BaseWrapper, type ContractLike } from './BaseWrapper'
 
 const MINIMAL_TOKEN_INFO_ABI: AbiItem[] = [
@@ -54,17 +54,10 @@ export abstract class AbstractFeeCurrencyWrapper extends BaseWrapper {
           address
         )
 
-        const adaptedToken = (await createViemTxObject<string>(
-          this.connection,
-          contract,
-          'adaptedToken',
-          []
-        )
-          .call()
+        const adaptedToken = (await this.connection
+          .callContract(contract, 'adaptedToken', [])
           .catch(() =>
-            createViemTxObject<string>(this.connection, contract, 'getAdaptedToken', [])
-              .call()
-              .catch(() => undefined)
+            this.connection.callContract(contract, 'getAdaptedToken', []).catch(() => undefined)
           )) as StrongAddress | undefined
         // if standard didnt work try alt
 
@@ -73,15 +66,15 @@ export abstract class AbstractFeeCurrencyWrapper extends BaseWrapper {
         }
 
         return Promise.all([
-          createViemTxObject<string>(this.connection, contract, 'name', [])
-            .call()
-            .catch(() => undefined) as Promise<string | undefined>,
-          createViemTxObject<string>(this.connection, contract, 'symbol', [])
-            .call()
-            .catch(() => undefined) as Promise<string | undefined>,
-          createViemTxObject<string>(this.connection, contract, 'decimals', [])
-            .call()
-            .then((x: string) => x && parseInt(x, 10))
+          this.connection.callContract(contract, 'name', []).catch(() => undefined) as Promise<
+            string | undefined
+          >,
+          this.connection.callContract(contract, 'symbol', []).catch(() => undefined) as Promise<
+            string | undefined
+          >,
+          this.connection
+            .callContract(contract, 'decimals', [])
+            .then((x) => x && parseInt(x as string, 10))
             .catch(() => undefined) as Promise<number | undefined>,
         ]).then(([name, symbol, decimals]) => ({
           name,
