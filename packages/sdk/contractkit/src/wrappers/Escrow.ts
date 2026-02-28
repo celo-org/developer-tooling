@@ -1,6 +1,6 @@
 import { escrowABI } from '@celo/abis'
-import { Address, CeloTransactionObject } from '@celo/connect'
-import { BaseWrapper, proxySend, toViemAddress } from './BaseWrapper'
+import { Address } from '@celo/connect'
+import { BaseWrapper, toViemAddress } from './BaseWrapper'
 
 /**
  * Contract for handling reserve for stable currencies
@@ -85,14 +85,15 @@ export class EscrowWrapper extends BaseWrapper<typeof escrowABI> {
    * @dev If minAttestations is 0, trustedIssuers will be set to empty list.
    * @dev msg.sender needs to have already approved this contract to transfer
    */
-  transfer: (
+  transfer = (
     identifier: string,
     token: Address,
     value: number | string,
     expirySeconds: number,
     paymentId: Address,
     minAttestations: number
-  ) => CeloTransactionObject<boolean> = proxySend(this.connection, this.contract, 'transfer')
+  ) =>
+    this.buildTx('transfer', [identifier, token, value, expirySeconds, paymentId, minAttestations])
 
   /**
    * @notice Withdraws tokens for a verified user.
@@ -104,12 +105,8 @@ export class EscrowWrapper extends BaseWrapper<typeof escrowABI> {
    * @dev Throws if 'token' or 'value' is 0.
    * @dev Throws if msg.sender does not prove ownership of the withdraw key.
    */
-  withdraw: (
-    paymentId: Address,
-    v: number | string,
-    r: string | number[],
-    s: string | number[]
-  ) => CeloTransactionObject<boolean> = proxySend(this.connection, this.contract, 'withdraw')
+  withdraw = (paymentId: Address, v: number | string, r: string | number[], s: string | number[]) =>
+    this.buildTx('withdraw', [paymentId, v, r, s])
 
   /**
    * @notice Revokes tokens for a sender who is redeeming a payment after it has expired.
@@ -118,11 +115,7 @@ export class EscrowWrapper extends BaseWrapper<typeof escrowABI> {
    * @dev Throws if msg.sender is not the sender of payment.
    * @dev Throws if redeem time hasn't been reached yet.
    */
-  revoke: (paymentId: string) => CeloTransactionObject<boolean> = proxySend(
-    this.connection,
-    this.contract,
-    'revoke'
-  )
+  revoke = (paymentId: string) => this.buildTx('revoke', [paymentId])
 
   /**
    * @notice Transfer tokens to a specific user. Supports both identity with privacy (an empty
@@ -143,7 +136,7 @@ export class EscrowWrapper extends BaseWrapper<typeof escrowABI> {
    * @dev Throws if minAttestations == 0 but trustedIssuers are provided.
    * @dev msg.sender needs to have already approved this contract to transfer.
    */
-  transferWithTrustedIssuers: (
+  transferWithTrustedIssuers = (
     identifier: string,
     token: Address,
     value: number | string,
@@ -151,11 +144,16 @@ export class EscrowWrapper extends BaseWrapper<typeof escrowABI> {
     paymentId: Address,
     minAttestations: number,
     trustedIssuers: Address[]
-  ) => CeloTransactionObject<boolean> = proxySend(
-    this.connection,
-    this.contract,
-    'transferWithTrustedIssuers'
-  )
+  ) =>
+    this.buildTx('transferWithTrustedIssuers', [
+      identifier,
+      token,
+      value,
+      expirySeconds,
+      paymentId,
+      minAttestations,
+      trustedIssuers,
+    ])
 }
 
 export type EscrowWrapperType = EscrowWrapper

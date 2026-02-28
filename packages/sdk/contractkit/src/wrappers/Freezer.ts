@@ -1,18 +1,10 @@
 import { freezerABI } from '@celo/abis'
-import { CeloTransactionObject } from '@celo/connect'
-import { BaseWrapper, proxySend, toViemAddress } from './BaseWrapper'
+
+import { BaseWrapper, toViemAddress } from './BaseWrapper'
 
 export class FreezerWrapper extends BaseWrapper<typeof freezerABI> {
-  freeze: (target: string) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'freeze'
-  )
-  unfreeze: (target: string) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'unfreeze'
-  )
+  freeze = (target: string) => this.buildTx('freeze', [target])
+  unfreeze = (target: string) => this.buildTx('unfreeze', [target])
   isFrozen = async (target: string) => this.contract.read.isFrozen([toViemAddress(target)])
 }
 

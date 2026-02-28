@@ -15,7 +15,6 @@ import { CeloContract as CeloContractEnum, StableTokenContract } from '../base'
 import { isStableTokenContract, StableToken, stableTokenInfos } from '../celo-tokens'
 import {
   BaseWrapper,
-  proxySend,
   secondsToDurationString,
   toViemAddress,
   valueToBigNumber,
@@ -177,11 +176,7 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
     return [response[0], response[1]]
   }
 
-  private _removeExpiredReports: (...args: any[]) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'removeExpiredReports'
-  )
+  private _removeExpiredReports = (...args: any[]) => this.buildTx('removeExpiredReports', args)
 
   /**
    * Removes expired reports, if any exist
@@ -201,11 +196,7 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
     return this._removeExpiredReports(identifier, numReports)
   }
 
-  private _report: (...args: any[]) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'report'
-  )
+  private _report = (...args: any[]) => this.buildTx('report', args)
 
   /**
    * Updates an oracle value and the median.

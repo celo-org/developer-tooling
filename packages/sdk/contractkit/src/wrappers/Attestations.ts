@@ -7,7 +7,6 @@ import { AccountsWrapper } from './Accounts'
 import {
   BaseWrapper,
   blocksToDurationString,
-  proxySend,
   toViemAddress,
   valueToBigNumber,
   valueToInt,
@@ -252,11 +251,7 @@ export class AttestationsWrapper extends BaseWrapper<typeof attestationsABI> {
    * Allows issuers to withdraw accumulated attestation rewards
    * @param address The address of the token that will be withdrawn
    */
-  withdraw: (token: string) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'withdraw'
-  )
+  withdraw = (token: string) => this.buildTx('withdraw', [token])
 
   /**
    * Returns the current configuration parameters for the contract.
@@ -351,11 +346,7 @@ export class AttestationsWrapper extends BaseWrapper<typeof attestationsABI> {
     return result
   }
 
-  private _revoke: (...args: any[]) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'revoke'
-  )
+  private _revoke = (...args: any[]) => this.buildTx('revoke', args)
 
   async revoke(identifer: string, account: Address): Promise<CeloTransactionObject<void>> {
     const accounts = await this.lookupAccountsForIdentifier(identifer)

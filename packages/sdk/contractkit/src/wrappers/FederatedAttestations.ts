@@ -1,7 +1,7 @@
 import { federatedAttestationsABI } from '@celo/abis'
 import { Address, CeloTransactionObject } from '@celo/connect'
 import { registerAttestation as buildRegisterAttestationTypedData } from '@celo/utils/lib/typed-data-constructors'
-import { BaseWrapper, proxySend, toViemAddress, toViemBigInt } from './BaseWrapper'
+import { BaseWrapper, toViemAddress, toViemBigInt } from './BaseWrapper'
 
 export class FederatedAttestationsWrapper extends BaseWrapper<typeof federatedAttestationsABI> {
   /**
@@ -115,21 +115,10 @@ export class FederatedAttestationsWrapper extends BaseWrapper<typeof federatedAt
    * @dev Attestation signer and issuer in storage is set to msg.sender
    * @dev Throws if an attestation with the same (identifier, issuer, account) already exists
    */
-  registerAttestationAsIssuer: (
-    identifier: string,
-    account: Address,
-    issuedOn: number
-  ) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'registerAttestationAsIssuer'
-  )
+  registerAttestationAsIssuer = (identifier: string, account: Address, issuedOn: number) =>
+    this.buildTx('registerAttestationAsIssuer', [identifier, account, issuedOn])
 
-  private _registerAttestation: (...args: any[]) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'registerAttestation'
-  )
+  private _registerAttestation = (...args: any[]) => this.buildTx('registerAttestation', args)
 
   /**
    * @notice Generates a valid signature and registers the attestation
@@ -175,11 +164,8 @@ export class FederatedAttestationsWrapper extends BaseWrapper<typeof federatedAt
    * @param account Address of the account mapped to the identifier
    * @dev Throws if sender is not the issuer, signer, or account
    */
-  revokeAttestation: (
-    identifier: string,
-    issuer: Address,
-    account: Address
-  ) => CeloTransactionObject<void> = proxySend(this.connection, this.contract, 'revokeAttestation')
+  revokeAttestation = (identifier: string, issuer: Address, account: Address) =>
+    this.buildTx('revokeAttestation', [identifier, issuer, account])
 
   /**
    * @notice Revokes attestations [identifiers <-> accounts] from issuer
@@ -191,13 +177,6 @@ export class FederatedAttestationsWrapper extends BaseWrapper<typeof federatedAt
    * @dev Throws if sender is not the issuer or currently registered signer of issuer
    * @dev Throws if an attestation is not found for identifiers[i] <-> accounts[i]
    */
-  batchRevokeAttestations: (
-    issuer: Address,
-    identifiers: string[],
-    accounts: Address[]
-  ) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract,
-    'batchRevokeAttestations'
-  )
+  batchRevokeAttestations = (issuer: Address, identifiers: string[], accounts: Address[]) =>
+    this.buildTx('batchRevokeAttestations', [issuer, identifiers, accounts])
 }
