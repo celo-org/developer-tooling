@@ -105,7 +105,7 @@ export abstract class BaseWrapper<TAbi extends readonly unknown[] = AbiItem[]> {
       to: this.contract.address,
       data,
     })
-    await this.connection.viemClient.waitForTransactionReceipt({ hash })
+    await this.connection.viemClient.waitForTransactionReceipt({ hash, timeout: 120_000 })
     return hash
   }
 
@@ -125,7 +125,7 @@ export abstract class BaseWrapper<TAbi extends readonly unknown[] = AbiItem[]> {
       to: this.contract.address,
       data,
     })
-    await this.connection.viemClient.waitForTransactionReceipt({ hash })
+    await this.connection.viemClient.waitForTransactionReceipt({ hash, timeout: 120_000 })
     return hash
   }
 

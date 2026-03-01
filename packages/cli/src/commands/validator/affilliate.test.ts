@@ -34,7 +34,7 @@ testWithAnvilL2('validator:affiliate', (provider) => {
     )
 
     // Register a validator
-    await validatorContract.registerValidatorNoBls(ecdsaPublicKey).sendAndWaitForReceipt()
+    await validatorContract.registerValidatorNoBls(ecdsaPublicKey)
   })
 
   afterEach(() => {

@@ -106,7 +106,7 @@ export const voteForGroupFromAndActivateVotes = async (
   const election = await kit.contracts.getElection()
 
   // activate returns hashes directly (transactions already sent)
-  await election.activate(fromAddress, false)
+  await election.activate(fromAddress, false, { from: fromAddress })
 }
 
 export const mineEpoch = async (kit: ContractKit) => {

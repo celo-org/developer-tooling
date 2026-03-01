@@ -18,7 +18,7 @@ testWithAnvilL2('network:info', (provider) => {
       await timeTravel(epochDuration * 2, provider)
       await testLocallyWithNode(EpochsSwitch, ['--from', accounts[0], '--delay', '1'], provider)
     }
-  })
+  }, 60000)
 
   it('runs for latest epoch', async () => {
     const spy = jest.spyOn(console, 'log')

@@ -20,8 +20,8 @@ testWithAnvilL2('releasegold:set-account cmd', (provider) => {
     contractAddress = await deployReleaseGoldContract(
       provider,
       await createMultisig(kit, [accounts[0], accounts[1]] as StrongAddress[], 2, 2),
-      accounts[1],
       accounts[0],
+      accounts[1],
       accounts[2]
     )
 

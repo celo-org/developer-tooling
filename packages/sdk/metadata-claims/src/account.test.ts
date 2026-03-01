@@ -66,10 +66,10 @@ testWithAnvilL2('Account claims', (provider) => {
 
       const myUrl = 'https://www.example.com/'
       const accounts = await kit.contracts.getAccounts()
-      await accounts.createAccount().sendAndWaitForReceipt({ from: address })
-      await accounts.setMetadataURL(myUrl).sendAndWaitForReceipt({ from: address, gas: 0 })
-      await accounts.createAccount().sendAndWaitForReceipt({ from: otherAddress })
-      await accounts.setMetadataURL(myUrl).sendAndWaitForReceipt({ from: otherAddress, gas: 0 })
+      await accounts.createAccount({ from: address })
+      await accounts.setMetadataURL(myUrl, { from: address, gas: 0 })
+      await accounts.createAccount({ from: otherAddress })
+      await accounts.setMetadataURL(myUrl, { from: otherAddress, gas: 0 })
 
       IdentityMetadataWrapper.fetchFromURL = () => Promise.resolve(otherMetadata)
 
@@ -93,9 +93,7 @@ testWithAnvilL2('Account claims', (provider) => {
 
     describe('when the metadata URL of the other account has not been set', () => {
       beforeEach(async () => {
-        await (await kit.contracts.getAccounts())
-          .setMetadataURL('')
-          .sendAndWaitForReceipt({ from: otherAddress, gas: 0 })
+        await (await kit.contracts.getAccounts()).setMetadataURL('', { from: otherAddress, gas: 0 })
       })
 
       it('indicates that the metadata url could not be retrieved', async () => {

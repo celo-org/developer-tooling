@@ -77,12 +77,12 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
       args: [true],
     })
 
-    const txResult = await kit.connection.sendTransaction({
+    const txHash = await kit.connection.sendTransaction({
       from: owner,
       data,
       gasPrice: TEST_GAS_PRICE.toFixed(),
     })
-    const receipt = await txResult.waitReceipt()
+    const receipt = await kit.connection.waitForTransactionReceipt(txHash)
     const deployedAddress = receipt.contractAddress!
     const deployedContract = kit.connection.getCeloContract(
       sortedOraclesABI as any,

@@ -36,24 +36,14 @@ testWithAnvilL2('governance:upvote cmd', (provider) => {
     // hit the next dequeue
     await timeTravel(dequeueFrequency, provider)
 
-    await governance
-      .propose([], 'URL')
-      .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
+    await governance.propose([], 'URL', { from: accounts[0], value: minDeposit })
     // this will reset lastDequeue to now
     // there is 3 concurrent proposals possible to be dequeued
     await testLocallyWithNode(Dequeue, ['--from', accounts[0]], provider)
-    await governance
-      .propose([], 'URL2')
-      .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
-    await governance
-      .propose([], 'URL3')
-      .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
-    await governance
-      .propose([], 'URL4')
-      .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
-    await governance
-      .propose([], 'URL5')
-      .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
+    await governance.propose([], 'URL2', { from: accounts[0], value: minDeposit })
+    await governance.propose([], 'URL3', { from: accounts[0], value: minDeposit })
+    await governance.propose([], 'URL4', { from: accounts[0], value: minDeposit })
+    await governance.propose([], 'URL5', { from: accounts[0], value: minDeposit })
 
     await timeTravel(dequeueFrequency, provider)
     await testLocallyWithNode(Register, ['--from', accounts[0]], provider)

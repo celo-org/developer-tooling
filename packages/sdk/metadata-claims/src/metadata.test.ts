@@ -38,7 +38,7 @@ testWithAnvilL2('Metadata', (provider) => {
     const validatorSigner = ACCOUNT_ADDRESSES[3]
     const attestationSigner = ACCOUNT_ADDRESSES[4]
     console.warn('Creating account', address)
-    await accounts.createAccount().send({ from: address })
+    await accounts.createAccount({ from: address })
     const testSigner = async (
       signer: Address,
       action: string,
@@ -50,7 +50,7 @@ testWithAnvilL2('Metadata', (provider) => {
       if (action === 'vote') {
         const fees = await kit.connection.setFeeMarketGas({})
         console.warn('testSigner vote', address, fees)
-        await (await accounts.authorizeVoteSigner(signer, pop)).sendAndWaitForReceipt({
+        await accounts.authorizeVoteSigner(signer, pop, {
           from: address,
           gas: 13000000,
           maxFeePerGas: fees.maxFeePerGas,
@@ -58,15 +58,13 @@ testWithAnvilL2('Metadata', (provider) => {
       } else if (action === 'validator') {
         console.warn('testSigner validator', address)
 
-        await (
-          await accounts.authorizeValidatorSigner(signer, pop, validator)
-        ).sendAndWaitForReceipt({
+        await accounts.authorizeValidatorSigner(signer, pop, validator, {
           from: address,
           gas: 13000000,
         })
       } else if (action === 'attestation') {
         console.warn('testSigner attestation', address)
-        await (await accounts.authorizeAttestationSigner(signer, pop)).sendAndWaitForReceipt({
+        await accounts.authorizeAttestationSigner(signer, pop, {
           from: address,
           gas: 13000000,
         })

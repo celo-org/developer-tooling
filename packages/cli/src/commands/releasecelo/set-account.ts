@@ -40,6 +40,7 @@ export default class SetAccount extends ReleaseGoldBaseCommand {
       .addCheck('Contract is not revoked', () => !isRevoked)
       .runChecks()
 
+    kit.defaultAccount = await this.releaseGoldWrapper.getBeneficiary()
     let tx: any
     if (flags.property === 'name') {
       tx = this.releaseGoldWrapper.setAccountName(flags.value)
@@ -51,7 +52,6 @@ export default class SetAccount extends ReleaseGoldBaseCommand {
       return this.error(`Invalid property provided`)
     }
 
-    kit.defaultAccount = await this.releaseGoldWrapper.getBeneficiary()
     await displayViemTx('setAccount' + flags.property + 'Tx', tx, publicClient)
   }
 }

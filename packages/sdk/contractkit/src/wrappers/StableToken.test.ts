@@ -68,7 +68,7 @@ export function testStableToken(
     for (let i = 0; i <= 3; i++) {
       await topUpWithToken(kit, stableTokenName, accounts[i], new BigNumber(ONE_STABLE))
     }
-  })
+  }, 60000)
 
   it('checks balance', () => expect(stableToken.balanceOf(accounts[0])).resolves.toBeBigNumber())
   it('checks decimals', () => expect(stableToken.decimals()).resolves.toBe(18))

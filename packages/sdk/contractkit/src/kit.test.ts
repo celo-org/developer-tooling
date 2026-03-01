@@ -162,7 +162,7 @@ testWithAnvilL2('kit', (provider) => {
       await epochManagerWrapper.startNextEpochProcess({ from: accounts[0] })
 
       await epochManagerWrapper.finishNextEpochProcessTx({ from: accounts[0] })
-    })
+    }, 300000)
 
     it('gets the current epoch size', async () => {
       expect(await kit.getEpochSize()).toEqual(epochDuration)

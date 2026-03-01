@@ -25,7 +25,7 @@ testWithAnvilL2('URI utils', (provider) => {
     const stableTokenAddr = await kit.registry.addressFor(CeloContract.StableToken)
     stableTokenTransferUri = `celo:${stableTokenAddr}/transfer(address,uint256)?args=[${recipient},${value}]`
     const stableToken = await kit.contracts.getStableToken()
-    const transferData = stableToken.transfer(recipient, value).txo.encodeABI()
+    const transferData = stableToken.encodeFunctionData('transfer', [recipient, value])
     stableTokenTransferTx = {
       to: stableTokenAddr,
       data: transferData,
@@ -34,7 +34,7 @@ testWithAnvilL2('URI utils', (provider) => {
     const lockedGoldAddr = await kit.registry.addressFor(CeloContract.LockedCelo)
     lockGoldUri = `celo:${lockedGoldAddr}/lock()?value=${value}`
     const lockedGold = await kit.contracts.getLockedGold()
-    const lockData = lockedGold.lock().txo.encodeABI()
+    const lockData = lockedGold.encodeFunctionData('lock', [])
     lockGoldTx = {
       to: lockedGoldAddr,
       data: lockData,

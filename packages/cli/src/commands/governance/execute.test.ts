@@ -76,21 +76,20 @@ testWithAnvilL2('governance:execute cmd', (provider) => {
 
     await setCode(provider, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
 
-    await governanceWrapper
-      .propose(PROPOSAL_TRANSACTIONS, 'URL')
-      .sendAndWaitForReceipt({ from: proposer, value: minDeposit })
+    await governanceWrapper.propose(PROPOSAL_TRANSACTIONS, 'URL', {
+      from: proposer,
+      value: minDeposit,
+    })
 
     const accountWrapper = await kit.contracts.getAccounts()
     const lockedGoldWrapper = await kit.contracts.getLockedGold()
 
-    await accountWrapper.createAccount().sendAndWaitForReceipt({ from: voter })
-    await lockedGoldWrapper
-      .lock()
-      .sendAndWaitForReceipt({ from: voter, value: majorityOfVotes.toFixed() })
+    await accountWrapper.createAccount({ from: voter })
+    await lockedGoldWrapper.lock({ from: voter, value: majorityOfVotes.toFixed() })
 
     await timeTravel(dequeueFrequency + 1, provider)
 
-    await governanceWrapper.dequeueProposalsIfReady().sendAndWaitForReceipt({
+    await governanceWrapper.dequeueProposalsIfReady({
       from: proposer,
     })
 
@@ -102,29 +101,25 @@ testWithAnvilL2('governance:execute cmd', (provider) => {
     expect(await governanceWrapper.getQueue()).toMatchInlineSnapshot(`[]`)
 
     // send some funds to DEFAULT_OWNER_ADDRESS to execute transactions
-    await (
-      await kit.sendTransaction({
-        to: DEFAULT_OWNER_ADDRESS,
-        from: approver,
-        value: parseEther('1').toString(),
-      })
-    ).waitReceipt()
+    await kit.sendTransaction({
+      to: DEFAULT_OWNER_ADDRESS,
+      from: approver,
+      value: parseEther('1').toString(),
+    })
 
     await withImpersonatedAccount(provider, DEFAULT_OWNER_ADDRESS, async () => {
       // setApprover to approverAccount
-      await (
-        await kit.sendTransaction({
-          to: governanceWrapper.address,
-          from: DEFAULT_OWNER_ADDRESS,
-          data: `0x3156560e000000000000000000000000${approver.replace('0x', '').toLowerCase()}`,
-        })
-      ).waitReceipt()
+      await kit.sendTransaction({
+        to: governanceWrapper.address,
+        from: DEFAULT_OWNER_ADDRESS,
+        data: `0x3156560e000000000000000000000000${approver.replace('0x', '').toLowerCase()}`,
+      })
     })
 
-    await (await governanceWrapper.approve(proposalId)).sendAndWaitForReceipt({ from: approver })
+    await governanceWrapper.approve(proposalId, { from: approver })
 
-    await lockedGoldWrapper.lock().sendAndWaitForReceipt({ from: voter, value: minDeposit })
-    await (await governanceWrapper.vote(proposalId, 'Yes')).sendAndWaitForReceipt({ from: voter })
+    await lockedGoldWrapper.lock({ from: voter, value: minDeposit })
+    await governanceWrapper.vote(proposalId, 'Yes', { from: voter })
     await timeTravel((await governanceWrapper.stageDurations()).Referendum.toNumber() + 1, provider)
 
     const testTransactionsContract = kit.connection.getCeloContract(

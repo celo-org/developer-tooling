@@ -42,7 +42,7 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (provider) => {
     )
     releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
-      kit.connection.getCeloContract(releaseGoldABI as any, contractAddress),
+      kit.connection.getCeloContract(releaseGoldABI as any, contractAddress) as any,
       kit.contracts
     )
   })
@@ -59,7 +59,7 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (provider) => {
   test('will rescue all USDm balance', async () => {
     await topUpWithToken(kit, StableToken.USDm, accounts[0], new BigNumber('100'))
     const stableToken = await kit.contracts.getStableToken()
-    await stableToken.transfer(contractAddress, 100).send({
+    await stableToken.transfer(contractAddress, 100, {
       from: accounts[0],
     })
     await testLocallyWithNode(AdminRevoke, ['--contract', contractAddress, '--yesreally'], provider)
@@ -148,9 +148,7 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (provider) => {
           // from vote.test.ts
           governance = await kit.contracts.getGovernance()
           const minDeposit = (await governance.minDeposit()).toFixed()
-          await governance
-            .propose([], 'URL')
-            .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
+          await governance.propose([], 'URL', { from: accounts[0], value: minDeposit })
 
           const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
           await timeTravel(dequeueFrequency + 1, provider)
@@ -181,12 +179,8 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (provider) => {
             ],
             provider
           )
-          await governance
-            .propose([], 'URL')
-            .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
-          await governance
-            .propose([], 'URL')
-            .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
+          await governance.propose([], 'URL', { from: accounts[0], value: minDeposit })
+          await governance.propose([], 'URL', { from: accounts[0], value: minDeposit })
           await testLocallyWithNode(
             GovernanceUpvote,
             ['--from', voteSigner, '--proposalID', '3', '--privateKey', PRIVATE_KEY1],

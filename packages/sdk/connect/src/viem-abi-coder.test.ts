@@ -9,9 +9,9 @@ import {
 
 describe('viem ABI encoding/decoding', () => {
   it('encodes and decodes a parameter', () => {
-    const encoded = encodeAbiParameters([{ type: 'uint256' }] as AbiParameter[], [42n])
+    const encoded = encodeAbiParameters([{ type: 'uint256' }] as AbiParameter[], [BigInt(42)])
     const decoded = decodeAbiParameters([{ type: 'uint256' }] as AbiParameter[], encoded)
-    expect(decoded[0].toString()).toBe('42')
+    expect((decoded[0] as bigint).toString()).toBe('42')
   })
 
   it('encodes a function signature from string', () => {
@@ -33,14 +33,14 @@ describe('viem ABI encoding/decoding', () => {
   it('encodes and decodes multiple parameters', () => {
     const encoded = encodeAbiParameters(
       [{ type: 'address' }, { type: 'uint256' }] as AbiParameter[],
-      ['0x0000000000000000000000000000000000000001', 100n]
+      ['0x0000000000000000000000000000000000000001', BigInt(100)]
     )
     const decoded = decodeAbiParameters(
       [{ type: 'address' }, { type: 'uint256' }] as AbiParameter[],
       encoded
     )
     expect(decoded[0]).toBe('0x0000000000000000000000000000000000000001')
-    expect(decoded[1].toString()).toBe('100')
+    expect((decoded[1] as bigint).toString()).toBe('100')
     expect(decoded.length).toBe(2)
   })
 })
@@ -147,7 +147,7 @@ describe('#coerceValueForType - bytesN', () => {
 
 describe('viem decodeEventLog', () => {
   it('decodes a basic event log', () => {
-    const data = encodeAbiParameters([{ type: 'uint256' }] as AbiParameter[], [100n])
+    const data = encodeAbiParameters([{ type: 'uint256' }] as AbiParameter[], [BigInt(100)])
     const topics = [
       '0x0000000000000000000000000000000000000000000000000000000000000001',
       '0x0000000000000000000000000000000000000000000000000000000000000002',
@@ -158,7 +158,7 @@ describe('viem decodeEventLog', () => {
   })
 
   it('handles encoding with no indexed parameters', () => {
-    const data = encodeAbiParameters([{ type: 'uint256' }] as AbiParameter[], [42n])
+    const data = encodeAbiParameters([{ type: 'uint256' }] as AbiParameter[], [BigInt(42)])
     expect(data).toBeDefined()
   })
 })

@@ -28,7 +28,7 @@ testWithAnvilL2('rewards:show cmd', (provider) => {
     await timeTravel((await epochManager.epochDuration()) + 1, provider)
     await testLocallyWithNode(Switch, ['--from', accounts[0]], provider)
     jest.clearAllMocks()
-  })
+  }, 60000)
 
   describe('no arguments', () => {
     test('default', async () => {

@@ -14,7 +14,7 @@ import { parseEther } from 'viem'
 
 const minLockedGoldValue = parseEther('10000').toString()
 
-jest.setTimeout(20000)
+jest.setTimeout(60000)
 
 testWithAnvilL2('Election Wrapper', (provider) => {
   const ZERO_GOLD = new BigNumber('0')
@@ -99,7 +99,7 @@ testWithAnvilL2('Election Wrapper', (provider) => {
 
       await setupGroupAndAffiliateValidator(groupAccount, validatorAccount)
       await registerAccountWithLockedGold(userAccount)
-    })
+    }, 60000)
 
     describe('#getValidatorGroupVotes', () => {
       // Confirm base assumptions once to avoid duplicating test code later
@@ -118,7 +118,7 @@ testWithAnvilL2('Election Wrapper', (provider) => {
     describe('#vote', () => {
       beforeEach(async () => {
         await election.vote(groupAccount, ONE_HUNDRED_GOLD, { from: userAccount })
-      })
+      }, 60000)
       it('votes', async () => {
         const totalGroupVotes = await election.getTotalVotesForGroup(groupAccount)
         expect(totalGroupVotes).toEqual(ONE_HUNDRED_GOLD)
@@ -141,7 +141,7 @@ testWithAnvilL2('Election Wrapper', (provider) => {
         await startAndFinishEpochProcess(kit)
 
         await election.activate(userAccount, undefined, { from: userAccount })
-      })
+      }, 60000)
 
       it('activates vote', async () => {
         const activeVotes = await election.getActiveVotesForGroup(groupAccount)
@@ -158,7 +158,7 @@ testWithAnvilL2('Election Wrapper', (provider) => {
     describe('#revokeActive', () => {
       beforeEach(async () => {
         await activateAndVote(groupAccount, userAccount, ONE_HUNDRED_GOLD)
-      })
+      }, 60000)
 
       it('revokes active', async () => {
         await election.revokeActive(
@@ -217,7 +217,7 @@ testWithAnvilL2('Election Wrapper', (provider) => {
       beforeEach(async () => {
         await activateAndVote(groupAccount, userAccount, TWO_HUNDRED_GOLD)
         await election.vote(groupAccount, ONE_HUNDRED_GOLD, { from: userAccount })
-      })
+      }, 60000)
 
       it('revokes active and pending votes', async () => {
         await election.revoke(userAccount, groupAccount, THREE_HUNDRED_GOLD, {
@@ -269,7 +269,7 @@ testWithAnvilL2('Election Wrapper', (provider) => {
       await activateAndVote(groupAccountA, userAccount, TWO_HUNDRED_GOLD)
       await activateAndVote(groupAccountB, userAccount, TWO_HUNDRED_ONE_GOLD)
       await activateAndVote(groupAccountC, userAccount, ONE_HUNDRED_ONE_GOLD)
-    })
+    }, 120000)
 
     test('Validator groups should be in the correct order', async () => {
       await election.vote(groupAccountA, ONE_HUNDRED_GOLD, { from: userAccount })

@@ -95,7 +95,7 @@ export function buildUri(tx: CeloTx, functionName?: string, abiTypes: string[] =
         abiTypes.map((t: string) => ({ type: t }) as AbiParameter),
         `0x${argsEncoded}` as `0x${string}`
       )
-      functionArgs = zeroRange(decoded.length).map((idx) => (decoded[idx] as string).toLowerCase())
+      functionArgs = zeroRange(decoded.length).map((idx) => String(decoded[idx]).toLowerCase())
     }
   }
 

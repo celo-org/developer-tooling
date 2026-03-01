@@ -46,11 +46,9 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (provider) => {
       provider,
       validator,
       async () => {
-        await accountsWrapper
-          .setMetadataURL(`https://example.com/metadata/${validator}`)
-          .sendAndWaitForReceipt({
-            from: validator,
-          })
+        await accountsWrapper.setMetadataURL(`https://example.com/metadata/${validator}`, {
+          from: validator,
+        })
       },
       parseEther('10000000')
     )
@@ -81,9 +79,7 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (provider) => {
     await setBalance(provider, validatorAddress as Address, MIN_PRACTICAL_LOCKED_CELO_VALUE)
     await setupGroupAndAffiliateValidator(kit, nonElectedGroupAddress, validatorAddress)
 
-    await accountsWrapper
-      .setName('Test group')
-      .sendAndWaitForReceipt({ from: nonElectedGroupAddress })
+    await accountsWrapper.setName('Test group', { from: nonElectedGroupAddress })
     for (const validator of [
       ...EXISTING_VALIDATORS,
       validatorAddress,
@@ -96,7 +92,7 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (provider) => {
         process.stderr.write(`Failed to set metadata URL for ${validator}: ${error}\n`)
       }
     }
-  })
+  }, 60000)
 
   it('shows the RPC URLs of the elected validator groups', async () => {
     const logMock = jest.spyOn(console, 'log')

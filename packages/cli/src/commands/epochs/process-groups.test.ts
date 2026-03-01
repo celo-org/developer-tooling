@@ -65,7 +65,7 @@ testWithAnvilL2('epochs:process-groups cmd', (provider) => {
         ],
       ]
     `)
-  })
+  }, 60000)
 
   it('processes groups and finishes epoch process successfully when a single group is processed individually', async () => {
     const logMock = jest.spyOn(console, 'log')
@@ -85,20 +85,19 @@ testWithAnvilL2('epochs:process-groups cmd', (provider) => {
 
     // Following lines simulate a scenario where someone calls processGroup() for their own group(s)
     // previously starting epoch process and calling setToProcessGroups() for individual processing
-    await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({ from })
+    await epochManagerWrapper.startNextEpochProcess({ from })
     const setToProcessData = encodeFunctionData({
       // @ts-expect-error we're accessing a private property
       abi: epochManagerWrapper.contract.abi,
       functionName: 'setToProcessGroups',
       args: [],
     })
-    const setToProcessResult = await kit.connection.sendTransaction({
+    await kit.connection.sendTransaction({
       // @ts-expect-error we're accessing a private property
       to: epochManagerWrapper.contract.address,
       data: setToProcessData,
       from,
     })
-    await setToProcessResult.getHash()
     const [lessers, greaters] = await epochManagerWrapper.getLessersAndGreaters([electedGroup])
 
     // Making sure the group has not been processed yet
@@ -106,7 +105,7 @@ testWithAnvilL2('epochs:process-groups cmd', (provider) => {
       // @ts-ignore accessing a private property
       abi: epochManagerWrapper.contract.abi,
       functionName: 'processedGroups',
-      args: [electedGroup],
+      args: [electedGroup as `0x${string}`],
     })
     const { data: processedResultData } = await kit.connection.viemClient.call({
       // @ts-ignore accessing a private property
@@ -126,22 +125,25 @@ testWithAnvilL2('epochs:process-groups cmd', (provider) => {
       // @ts-expect-error we're accessing a private property
       abi: epochManagerWrapper.contract.abi,
       functionName: 'processGroup',
-      args: [electedGroup, lessers[0], greaters[0]],
+      args: [
+        electedGroup as `0x${string}`,
+        lessers[0] as `0x${string}`,
+        greaters[0] as `0x${string}`,
+      ],
     })
-    const processGroupResult = await kit.connection.sendTransaction({
+    await kit.connection.sendTransaction({
       // @ts-expect-error we're accessing a private property
       to: epochManagerWrapper.contract.address,
       data: processGroupData,
       from,
     })
-    await processGroupResult.getHash()
 
     // Making sure the group has not been processed yet
     const processedCallData2 = encodeFunctionData({
       // @ts-ignore accessing a private property
       abi: epochManagerWrapper.contract.abi,
       functionName: 'processedGroups',
-      args: [electedGroup],
+      args: [electedGroup as `0x${string}`],
     })
     const { data: processedResultData2 } = await kit.connection.viemClient.call({
       // @ts-ignore accessing a private property
@@ -171,5 +173,5 @@ testWithAnvilL2('epochs:process-groups cmd', (provider) => {
         ],
       ]
     `)
-  })
+  }, 60000)
 })

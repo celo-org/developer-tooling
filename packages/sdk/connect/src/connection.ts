@@ -495,6 +495,22 @@ export class Connection {
     return outputCeloTxReceiptFormatter(response.result)
   }
 
+  waitForTransactionReceipt = async (
+    txhash: string,
+    timeoutMs = 120000,
+    intervalMs = 500
+  ): Promise<CeloTxReceipt> => {
+    const start = Date.now()
+    while (Date.now() - start < timeoutMs) {
+      const receipt = await this.getTransactionReceipt(txhash)
+      if (receipt !== null) {
+        return receipt
+      }
+      await new Promise((resolve) => setTimeout(resolve, intervalMs))
+    }
+    throw new Error(`Timed out waiting for transaction receipt: ${txhash}`)
+  }
+
   private fillTxDefaults(tx?: CeloTx): CeloTx {
     const defaultTx: CeloTx = {
       from: this.config.from,

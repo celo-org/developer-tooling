@@ -59,25 +59,21 @@ testWithAnvilL2(
 
         await withImpersonatedAccount(client, DEFAULT_OWNER_ADDRESS, async () => {
           // setApprover to 0x5409ED021D9299bf6814279A6A1411A7e866A631 to avoid "Council cannot be approver" error
-          await (
-            await kit.sendTransaction({
-              to: governance.address,
-              from: DEFAULT_OWNER_ADDRESS,
-              data: '0x3156560e0000000000000000000000005409ed021d9299bf6814279a6a1411a7e866a631',
-            })
-          ).waitReceipt()
+          await kit.sendTransaction({
+            to: governance.address,
+            from: DEFAULT_OWNER_ADDRESS,
+            data: '0x3156560e0000000000000000000000005409ed021d9299bf6814279a6a1411a7e866a631',
+          })
 
           // setSecurityCouncil to multisig address
-          await (
-            await kit.sendTransaction({
-              to: governance.address,
-              from: DEFAULT_OWNER_ADDRESS,
-              // cast calldata "setSecurityCouncil(address)" <multisig-address>
-              data: `0x1c1083e2000000000000000000000000${multisig.address
-                .replace('0x', '')
-                .toLowerCase()}`,
-            })
-          ).waitReceipt()
+          await kit.sendTransaction({
+            to: governance.address,
+            from: DEFAULT_OWNER_ADDRESS,
+            // cast calldata "setSecurityCouncil(address)" <multisig-address>
+            data: `0x1c1083e2000000000000000000000000${multisig.address
+              .replace('0x', '')
+              .toLowerCase()}`,
+          })
         })
 
         await expect(
@@ -184,24 +180,20 @@ testWithAnvilL2(
 
         await withImpersonatedAccount(client, DEFAULT_OWNER_ADDRESS, async () => {
           // setApprover to approver value
-          await (
-            await kit.sendTransaction({
-              to: governance.address,
-              from: DEFAULT_OWNER_ADDRESS,
-              data: `0x3156560e000000000000000000000000${approver.replace('0x', '').toLowerCase()}`,
-            })
-          ).waitReceipt()
+          await kit.sendTransaction({
+            to: governance.address,
+            from: DEFAULT_OWNER_ADDRESS,
+            data: `0x3156560e000000000000000000000000${approver.replace('0x', '').toLowerCase()}`,
+          })
 
           // setSecurityCouncil to securityCouncil value
-          await (
-            await kit.sendTransaction({
-              to: governance.address,
-              from: DEFAULT_OWNER_ADDRESS,
-              data: `0x1c1083e2000000000000000000000000${securityCouncil
-                .replace('0x', '')
-                .toLowerCase()}`,
-            })
-          ).waitReceipt()
+          await kit.sendTransaction({
+            to: governance.address,
+            from: DEFAULT_OWNER_ADDRESS,
+            data: `0x1c1083e2000000000000000000000000${securityCouncil
+              .replace('0x', '')
+              .toLowerCase()}`,
+          })
         })
 
         await expect(
@@ -250,24 +242,20 @@ testWithAnvilL2(
 
         await withImpersonatedAccount(client, DEFAULT_OWNER_ADDRESS, async () => {
           // setApprover to approver value
-          await (
-            await kit.sendTransaction({
-              to: governance.address,
-              from: DEFAULT_OWNER_ADDRESS,
-              data: `0x3156560e000000000000000000000000${approver.replace('0x', '').toLowerCase()}`,
-            })
-          ).waitReceipt()
+          await kit.sendTransaction({
+            to: governance.address,
+            from: DEFAULT_OWNER_ADDRESS,
+            data: `0x3156560e000000000000000000000000${approver.replace('0x', '').toLowerCase()}`,
+          })
 
           // setSecurityCouncil to securityCouncil value
-          await (
-            await kit.sendTransaction({
-              to: governance.address,
-              from: DEFAULT_OWNER_ADDRESS,
-              data: `0x1c1083e2000000000000000000000000${securityCouncil
-                .replace('0x', '')
-                .toLowerCase()}`,
-            })
-          ).waitReceipt()
+          await kit.sendTransaction({
+            to: governance.address,
+            from: DEFAULT_OWNER_ADDRESS,
+            data: `0x1c1083e2000000000000000000000000${securityCouncil
+              .replace('0x', '')
+              .toLowerCase()}`,
+          })
         })
 
         await expect(
@@ -312,24 +300,20 @@ testWithAnvilL2(
 
         await withImpersonatedAccount(client, DEFAULT_OWNER_ADDRESS, async () => {
           // setApprover to approver value
-          await (
-            await kit.sendTransaction({
-              to: governance.address,
-              from: DEFAULT_OWNER_ADDRESS,
-              data: `0x3156560e000000000000000000000000${approver.replace('0x', '').toLowerCase()}`,
-            })
-          ).waitReceipt()
+          await kit.sendTransaction({
+            to: governance.address,
+            from: DEFAULT_OWNER_ADDRESS,
+            data: `0x3156560e000000000000000000000000${approver.replace('0x', '').toLowerCase()}`,
+          })
 
           // setSecurityCouncil to securityCouncil value
-          await (
-            await kit.sendTransaction({
-              to: governance.address,
-              from: DEFAULT_OWNER_ADDRESS,
-              data: `0x1c1083e2000000000000000000000000${securityCouncil
-                .replace('0x', '')
-                .toLowerCase()}`,
-            })
-          ).waitReceipt()
+          await kit.sendTransaction({
+            to: governance.address,
+            from: DEFAULT_OWNER_ADDRESS,
+            data: `0x1c1083e2000000000000000000000000${securityCouncil
+              .replace('0x', '')
+              .toLowerCase()}`,
+          })
         })
 
         await testLocallyWithNode(
@@ -385,24 +369,20 @@ testWithAnvilL2(
 
         await withImpersonatedAccount(client, DEFAULT_OWNER_ADDRESS, async () => {
           // setApprover to approver value
-          await (
-            await kit.sendTransaction({
-              to: governance.address,
-              from: DEFAULT_OWNER_ADDRESS,
-              data: `0x3156560e000000000000000000000000${approver.replace('0x', '').toLowerCase()}`,
-            })
-          ).waitReceipt()
+          await kit.sendTransaction({
+            to: governance.address,
+            from: DEFAULT_OWNER_ADDRESS,
+            data: `0x3156560e000000000000000000000000${approver.replace('0x', '').toLowerCase()}`,
+          })
 
           // setSecurityCouncil to securityCouncil value
-          await (
-            await kit.sendTransaction({
-              to: governance.address,
-              from: DEFAULT_OWNER_ADDRESS,
-              data: `0x1c1083e2000000000000000000000000${securityCouncil
-                .replace('0x', '')
-                .toLowerCase()}`,
-            })
-          ).waitReceipt()
+          await kit.sendTransaction({
+            to: governance.address,
+            from: DEFAULT_OWNER_ADDRESS,
+            data: `0x1c1083e2000000000000000000000000${securityCouncil
+              .replace('0x', '')
+              .toLowerCase()}`,
+          })
         })
 
         await testLocallyWithNode(Approve, ['--from', approver, '--hotfix', HOTFIX_HASH], client)
@@ -457,26 +437,22 @@ testWithAnvilL2(
 
         await withImpersonatedAccount(client, DEFAULT_OWNER_ADDRESS, async () => {
           // setApprover to 0x5409ED021D9299bf6814279A6A1411A7e866A631 to avoid "Council cannot be approver" error
-          await (
-            await kit.sendTransaction({
-              to: governance.address,
-              from: DEFAULT_OWNER_ADDRESS,
-              // cast calldata "setApprover(address)" "0x5409ED021D9299bf6814279A6A1411A7e866A631"
-              data: '0x3156560e0000000000000000000000005409ed021d9299bf6814279a6a1411a7e866a631',
-            })
-          ).waitReceipt()
+          await kit.sendTransaction({
+            to: governance.address,
+            from: DEFAULT_OWNER_ADDRESS,
+            // cast calldata "setApprover(address)" "0x5409ED021D9299bf6814279A6A1411A7e866A631"
+            data: '0x3156560e0000000000000000000000005409ed021d9299bf6814279a6a1411a7e866a631',
+          })
 
           // setSecurityCouncil to multisig address
-          await (
-            await kit.sendTransaction({
-              to: governance.address,
-              from: DEFAULT_OWNER_ADDRESS,
-              // cast calldata "setSecurityCouncil(address)" <multisig-address>
-              data: `0x1c1083e2000000000000000000000000${multisig.address
-                .replace('0x', '')
-                .toLowerCase()}`,
-            })
-          ).waitReceipt()
+          await kit.sendTransaction({
+            to: governance.address,
+            from: DEFAULT_OWNER_ADDRESS,
+            // cast calldata "setSecurityCouncil(address)" <multisig-address>
+            data: `0x1c1083e2000000000000000000000000${multisig.address
+              .replace('0x', '')
+              .toLowerCase()}`,
+          })
         })
 
         // Sanity checks
@@ -570,11 +546,11 @@ testWithAnvilL2(
 
         const deploymentTransaction = await protocolKit.createSafeDeploymentTransaction()
 
-        const txResult = await kit.connection.sendTransaction({
+        const txHash = await kit.connection.sendTransaction({
           from: securityCouncilSafeSignatory1,
           ...deploymentTransaction,
         })
-        const receipt = await txResult.waitReceipt()
+        const receipt = await kit.connection.waitForTransactionReceipt(txHash)
 
         const safeAddress = getSafeAddressFromDeploymentTx(
           receipt as unknown as Parameters<typeof getSafeAddressFromDeploymentTx>[0],
@@ -585,26 +561,22 @@ testWithAnvilL2(
 
         await withImpersonatedAccount(client, DEFAULT_OWNER_ADDRESS, async () => {
           // setApprover to 0x5409ED021D9299bf6814279A6A1411A7e866A631 to avoid "Council cannot be approver" error
-          await (
-            await kit.sendTransaction({
-              to: governance.address,
-              from: DEFAULT_OWNER_ADDRESS,
-              // cast calldata "setApprover(address)" "0x5409ED021D9299bf6814279A6A1411A7e866A631"
-              data: '0x3156560e0000000000000000000000005409ed021d9299bf6814279a6a1411a7e866a631',
-            })
-          ).waitReceipt()
+          await kit.sendTransaction({
+            to: governance.address,
+            from: DEFAULT_OWNER_ADDRESS,
+            // cast calldata "setApprover(address)" "0x5409ED021D9299bf6814279A6A1411A7e866A631"
+            data: '0x3156560e0000000000000000000000005409ed021d9299bf6814279a6a1411a7e866a631',
+          })
 
           // setSecurityCouncil to safe address
-          await (
-            await kit.sendTransaction({
-              to: governance.address,
-              from: DEFAULT_OWNER_ADDRESS,
-              // cast calldata "setSecurityCouncil(address)" <safe-address>
-              data: `0x1c1083e2000000000000000000000000${safeAddress
-                .replace('0x', '')
-                .toLowerCase()}`,
-            })
-          ).waitReceipt()
+          await kit.sendTransaction({
+            to: governance.address,
+            from: DEFAULT_OWNER_ADDRESS,
+            // cast calldata "setSecurityCouncil(address)" <safe-address>
+            data: `0x1c1083e2000000000000000000000000${safeAddress
+              .replace('0x', '')
+              .toLowerCase()}`,
+          })
         })
 
         // Sanity checks
@@ -824,25 +796,21 @@ testWithAnvilL2(
 
         await withImpersonatedAccount(client, DEFAULT_OWNER_ADDRESS, async () => {
           // setApprover to 0x5409ED021D9299bf6814279A6A1411A7e866A631 to avoid "Council cannot be approver" error
-          await (
-            await kit.sendTransaction({
-              to: governance.address,
-              from: DEFAULT_OWNER_ADDRESS,
-              data: '0x3156560e0000000000000000000000005409ed021d9299bf6814279a6a1411a7e866a631',
-            })
-          ).waitReceipt()
+          await kit.sendTransaction({
+            to: governance.address,
+            from: DEFAULT_OWNER_ADDRESS,
+            data: '0x3156560e0000000000000000000000005409ed021d9299bf6814279a6a1411a7e866a631',
+          })
 
           // setSecurityCouncil to multisig address
-          await (
-            await kit.sendTransaction({
-              to: governance.address,
-              from: DEFAULT_OWNER_ADDRESS,
-              // cast calldata "setSecurityCouncil(address)" <multisig-address>
-              data: `0x1c1083e2000000000000000000000000${multisig.address
-                .replace('0x', '')
-                .toLowerCase()}`,
-            })
-          ).waitReceipt()
+          await kit.sendTransaction({
+            to: governance.address,
+            from: DEFAULT_OWNER_ADDRESS,
+            // cast calldata "setSecurityCouncil(address)" <multisig-address>
+            data: `0x1c1083e2000000000000000000000000${multisig.address
+              .replace('0x', '')
+              .toLowerCase()}`,
+          })
         })
 
         await testLocallyWithNode(
@@ -1116,15 +1084,13 @@ testWithAnvilL2(
 
         // Set the new multisig as the governance approver
         await withImpersonatedAccount(client, DEFAULT_OWNER_ADDRESS, async () => {
-          await (
-            await kit.sendTransaction({
-              to: governance.address,
-              from: DEFAULT_OWNER_ADDRESS,
-              data: `0x3156560e000000000000000000000000${twoSignerMultisig
-                .replace('0x', '')
-                .toLowerCase()}`,
-            })
-          ).waitReceipt()
+          await kit.sendTransaction({
+            to: governance.address,
+            from: DEFAULT_OWNER_ADDRESS,
+            data: `0x3156560e000000000000000000000000${twoSignerMultisig
+              .replace('0x', '')
+              .toLowerCase()}`,
+          })
         })
 
         // Get the new multisig wrapper

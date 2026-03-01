@@ -25,16 +25,14 @@ testWithAnvilL2('governance:revokeupvote cmd', (provider) => {
     minDeposit = await governance.minDeposit()
 
     for (let i = 1; i <= 2; i++) {
-      await governance
-        .propose([], `URL${i}`)
-        .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit.toFixed() })
+      await governance.propose([], `URL${i}`, { from: accounts[0], value: minDeposit.toFixed() })
     }
 
     for (let i = 1; i <= 4; i++) {
       await testLocallyWithNode(Register, ['--from', accounts[i]], provider)
       await testLocallyWithNode(Lock, ['--from', accounts[i], '--value', i.toString()], provider)
 
-      await (await governance.upvote(proposalId, accounts[i])).sendAndWaitForReceipt({
+      await governance.upvote(proposalId, accounts[i], {
         from: accounts[i],
       })
     }

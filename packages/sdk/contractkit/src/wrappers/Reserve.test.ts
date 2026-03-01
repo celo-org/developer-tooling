@@ -43,55 +43,47 @@ testWithAnvilL2('Reserve Wrapper', (provider) => {
         await reserveSpenderMultiSig.replaceOwner(DEFAULT_OWNER_ADDRESS, accounts[0], {
           from: multiSigAddress,
         })
-        await (
-          await kit.connection.sendTransaction({
-            to: reserveSpenderMultiSigContract.address,
-            data: encodeFunctionData({
-              abi: reserveSpenderMultiSigContract.abi as any,
-              functionName: 'addOwner',
-              args: [otherSpender],
-            }),
-            from: multiSigAddress,
-          })
-        ).waitReceipt()
-        await (
-          await kit.connection.sendTransaction({
-            to: reserveSpenderMultiSigContract.address,
-            data: encodeFunctionData({
-              abi: reserveSpenderMultiSigContract.abi as any,
-              functionName: 'changeRequirement',
-              args: [2],
-            }),
-            from: multiSigAddress,
-          })
-        ).waitReceipt()
+        await kit.connection.sendTransaction({
+          to: reserveSpenderMultiSigContract.address,
+          data: encodeFunctionData({
+            abi: reserveSpenderMultiSigContract.abi as any,
+            functionName: 'addOwner',
+            args: [otherSpender],
+          }),
+          from: multiSigAddress,
+        })
+        await kit.connection.sendTransaction({
+          to: reserveSpenderMultiSigContract.address,
+          data: encodeFunctionData({
+            abi: reserveSpenderMultiSigContract.abi as any,
+            functionName: 'changeRequirement',
+            args: [2],
+          }),
+          from: multiSigAddress,
+        })
       },
       new BigNumber('1e18')
     )
 
     await asCoreContractsOwner(provider, async (ownerAdress: StrongAddress) => {
-      await (
-        await kit.connection.sendTransaction({
-          to: reserveContract.address,
-          data: encodeFunctionData({
-            abi: reserveContract.abi as any,
-            functionName: 'addSpender',
-            args: [otherSpender],
-          }),
-          from: ownerAdress,
-        })
-      ).waitReceipt()
-      await (
-        await kit.connection.sendTransaction({
-          to: reserveContract.address,
-          data: encodeFunctionData({
-            abi: reserveContract.abi as any,
-            functionName: 'addOtherReserveAddress',
-            args: [otherReserveAddress],
-          }),
-          from: ownerAdress,
-        })
-      ).waitReceipt()
+      await kit.connection.sendTransaction({
+        to: reserveContract.address,
+        data: encodeFunctionData({
+          abi: reserveContract.abi as any,
+          functionName: 'addSpender',
+          args: [otherSpender],
+        }),
+        from: ownerAdress,
+      })
+      await kit.connection.sendTransaction({
+        to: reserveContract.address,
+        data: encodeFunctionData({
+          abi: reserveContract.abi as any,
+          functionName: 'addOtherReserveAddress',
+          args: [otherReserveAddress],
+        }),
+        from: ownerAdress,
+      })
     })
 
     await setBalance(provider, reserve.address, new BigNumber('1e18'))

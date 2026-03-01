@@ -112,8 +112,7 @@ testWithAnvilL2('lockedgold:delegate cmd', (provider) => {
     )
     await testLocallyWithNode(Lock, ['--from', beneficiary, '--value', '100'], provider)
 
-    const createAccountTx = await accountsWrapper.createAccount().send({ from: delegateeAddress })
-    await createAccountTx.waitReceipt()
+    await accountsWrapper.createAccount({ from: delegateeAddress })
 
     await testLocallyWithNode(
       Delegate,

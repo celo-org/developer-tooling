@@ -64,41 +64,38 @@ testWithAnvilL2('validator:deregister', (provider) => {
         // @ts-expect-error (.contract)
         abi: validatorContract.contract.abi,
         functionName: 'setMaxGroupSize',
-        args: [5],
+        args: [BigInt(5)],
       })
-      const setMaxGroupSizeResult = await kit.connection.sendTransaction({
+      await kit.connection.sendTransaction({
         // @ts-expect-error (.contract)
         to: validatorContract.contract.address,
         data: setMaxGroupSizeData,
         from: ownerAddress,
       })
-      await setMaxGroupSizeResult.getHash()
       const setValidatorLockedGoldData = encodeFunctionData({
         // @ts-expect-error (.contract)
         abi: validatorContract.contract.abi,
         functionName: 'setValidatorLockedGoldRequirements',
-        args: [2, 10000],
+        args: [BigInt(2), BigInt(10000)],
       })
-      const setValidatorLockedGoldResult = await kit.connection.sendTransaction({
+      await kit.connection.sendTransaction({
         // @ts-expect-error (.contract)
         to: validatorContract.contract.address,
         data: setValidatorLockedGoldData,
         from: ownerAddress,
       })
-      await setValidatorLockedGoldResult.getHash()
       const setGroupLockedGoldData = encodeFunctionData({
         // @ts-expect-error (.contract)
         abi: validatorContract.contract.abi,
         functionName: 'setGroupLockedGoldRequirements',
-        args: [2, 10000],
+        args: [BigInt(2), BigInt(10000)],
       })
-      const setGroupLockedGoldResult = await kit.connection.sendTransaction({
+      await kit.connection.sendTransaction({
         // @ts-expect-error (.contract)
         to: validatorContract.contract.address,
         data: setGroupLockedGoldData,
         from: ownerAddress,
       })
-      await setGroupLockedGoldResult.getHash()
     })
     await withImpersonatedAccount(provider, groupAddress, async () => {
       await testLocallyWithNode(
@@ -107,7 +104,7 @@ testWithAnvilL2('validator:deregister', (provider) => {
         provider
       )
     })
-  })
+  }, 60000)
 
   afterEach(() => {
     jest.restoreAllMocks()

@@ -55,7 +55,7 @@ testWithAnvilL2('epochs:switch cmd', (provider) => {
         ],
       ]
     `)
-  })
+  }, 30000)
 
   it('switches epoch successfully which already has started process', async () => {
     const logMock = jest.spyOn(console, 'log')

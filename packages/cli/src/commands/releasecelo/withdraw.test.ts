@@ -53,7 +53,7 @@ testWithAnvilL2('releasegold:withdraw cmd', (provider) => {
     const withdrawalAmount = '10000000000000000000'
     const releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
-      kit.connection.getCeloContract(releaseGoldABI as any, contractAddress),
+      kit.connection.getCeloContract(releaseGoldABI as any, contractAddress) as any,
       kit.contracts
     )
     const beneficiary = await releaseGoldWrapper.getBeneficiary()
@@ -97,7 +97,7 @@ testWithAnvilL2('releasegold:withdraw cmd', (provider) => {
     await timeTravel(MONTH * 12 + DAY, provider)
     const releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
-      kit.connection.getCeloContract(releaseGoldABI as any, contractAddress),
+      kit.connection.getCeloContract(releaseGoldABI as any, contractAddress) as any,
       kit.contracts
     )
     const beneficiary = await releaseGoldWrapper.getBeneficiary()
@@ -108,9 +108,7 @@ testWithAnvilL2('releasegold:withdraw cmd', (provider) => {
     const USDmAmount = 100
 
     await topUpWithToken(kit, StableToken.USDm, beneficiary, new BigNumber(USDmAmount))
-    await stableToken
-      .transfer(contractAddress, USDmAmount)
-      .sendAndWaitForReceipt({ from: beneficiary })
+    await stableToken.transfer(contractAddress, USDmAmount, { from: beneficiary })
 
     spy.mockClear()
     // Can't withdraw since there is USDm balance still

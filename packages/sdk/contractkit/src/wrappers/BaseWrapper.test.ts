@@ -17,7 +17,7 @@ const encodedVersion = encodeAbiParameters(
     { type: 'uint256' },
     { type: 'uint256' },
   ] as AbiParameter[],
-  [1n, 1n, 1n, 1n]
+  [BigInt(1), BigInt(1), BigInt(1), BigInt(1)]
 )
 
 const mockContract: ContractLike<AbiItem[]> = {

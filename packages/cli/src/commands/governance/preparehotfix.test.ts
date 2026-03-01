@@ -28,45 +28,37 @@ testWithAnvilL2('governance:preparehotfix cmd', (provider) => {
     const nextTimestamp = getCurrentTimestamp() + 100
 
     // send some funds to DEFAULT_OWNER_ADDRESS to execute transactions
-    await (
-      await kit.sendTransaction({
-        to: DEFAULT_OWNER_ADDRESS,
-        from: approverAccount,
-        value: parseEther('1').toString(),
-      })
-    ).waitReceipt()
+    await kit.sendTransaction({
+      to: DEFAULT_OWNER_ADDRESS,
+      from: approverAccount,
+      value: parseEther('1').toString(),
+    })
 
     await withImpersonatedAccount(provider, DEFAULT_OWNER_ADDRESS, async () => {
       // setHotfixExecutionTimeWindow to EXECUTION_TIME_LIMIT (86400)
-      await (
-        await kit.sendTransaction({
-          to: governanceWrapper.address,
-          from: DEFAULT_OWNER_ADDRESS,
-          data: '0x745407c80000000000000000000000000000000000000000000000000000000000015180',
-        })
-      ).waitReceipt()
+      await kit.sendTransaction({
+        to: governanceWrapper.address,
+        from: DEFAULT_OWNER_ADDRESS,
+        data: '0x745407c80000000000000000000000000000000000000000000000000000000000015180',
+      })
 
       // setApprover to 0x5409ED021D9299bf6814279A6A1411A7e866A631
-      await (
-        await kit.sendTransaction({
-          to: governanceWrapper.address,
-          from: DEFAULT_OWNER_ADDRESS,
-          data: `0x3156560e000000000000000000000000${approverAccount
-            .replace('0x', '')
-            .toLowerCase()}`,
-        })
-      ).waitReceipt()
+      await kit.sendTransaction({
+        to: governanceWrapper.address,
+        from: DEFAULT_OWNER_ADDRESS,
+        data: `0x3156560e000000000000000000000000${approverAccount
+          .replace('0x', '')
+          .toLowerCase()}`,
+      })
 
       // setSecurityCouncil to 0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb
-      await (
-        await kit.sendTransaction({
-          to: governanceWrapper.address,
-          from: DEFAULT_OWNER_ADDRESS,
-          data: `0x1c1083e2000000000000000000000000${securityCouncilAccount
-            .replace('0x', '')
-            .toLowerCase()}`,
-        })
-      ).waitReceipt()
+      await kit.sendTransaction({
+        to: governanceWrapper.address,
+        from: DEFAULT_OWNER_ADDRESS,
+        data: `0x1c1083e2000000000000000000000000${securityCouncilAccount
+          .replace('0x', '')
+          .toLowerCase()}`,
+      })
     })
 
     await testLocallyWithNode(

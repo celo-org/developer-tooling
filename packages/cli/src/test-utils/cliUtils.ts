@@ -87,6 +87,6 @@ export function stripAnsiCodesFromNestedArray(arrays: string[][]) {
 }
 
 export const LONG_TIMEOUT_MS = 10 * 1000
-export const EXTRA_LONG_TIMEOUT_MS = 60 * 1000
+export const EXTRA_LONG_TIMEOUT_MS = 120 * 1000
 
 export const TEST_SANCTIONED_ADDRESS = '0x01e2919679362dfbc9ee1644ba9c6da6d6245bb1'

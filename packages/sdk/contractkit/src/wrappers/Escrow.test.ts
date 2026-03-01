@@ -49,29 +49,25 @@ testWithAnvilL2('Escrow Wrapper', (provider) => {
         )
 
         // otherwise reverts with "minAttestations larger than limit"
-        await (
-          await kit.connection.sendTransaction({
-            to: attestationsContract.address,
-            data: encodeFunctionData({
-              abi: attestationsContract.abi as any,
-              functionName: 'setMaxAttestations',
-              args: [1],
-            }),
-            from: ownerAdress,
-          })
-        ).waitReceipt()
+        await kit.connection.sendTransaction({
+          to: attestationsContract.address,
+          data: encodeFunctionData({
+            abi: attestationsContract.abi as any,
+            functionName: 'setMaxAttestations',
+            args: [1],
+          }),
+          from: ownerAdress,
+        })
 
-        await (
-          await kit.connection.sendTransaction({
-            to: registryContract.address,
-            data: encodeFunctionData({
-              abi: registryContract.abi as any,
-              functionName: 'setAddressFor',
-              args: ['Attestations', attestationsContractAddress],
-            }),
-            from: ownerAdress,
-          })
-        ).waitReceipt()
+        await kit.connection.sendTransaction({
+          to: registryContract.address,
+          data: encodeFunctionData({
+            abi: registryContract.abi as any,
+            functionName: 'setAddressFor',
+            args: ['Attestations', attestationsContractAddress],
+          }),
+          from: ownerAdress,
+        })
       },
       parseEther('1')
     )

@@ -31,7 +31,7 @@ testWithAnvilL2('releasegold:set-max-distribution cmd', (provider) => {
   it('sets max distribution', async () => {
     const releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
-      kit.connection.getCeloContract(releaseGoldABI as any, contractAddress),
+      kit.connection.getCeloContract(releaseGoldABI as any, contractAddress) as any,
       kit.contracts
     )
 

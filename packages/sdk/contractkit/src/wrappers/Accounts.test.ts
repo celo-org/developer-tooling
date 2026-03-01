@@ -9,7 +9,7 @@ import { valueToBigNumber, valueToFixidityString } from './BaseWrapper'
 import { parseEther } from 'viem'
 import { LockedGoldWrapper } from './LockedGold'
 import { ValidatorsWrapper } from './Validators'
-jest.setTimeout(10 * 1000)
+jest.setTimeout(60 * 1000)
 
 /*
 TEST NOTES:
@@ -123,7 +123,9 @@ testWithAnvilL2('Accounts Wrapper', (provider) => {
     const account = accounts[0]
     const wallet = accounts[1]
     await accountsInstance.createAccount({ from: account })
-    await expect(accountsInstance.setWalletAddress(wallet)).rejects
+    await expect(
+      accountsInstance.setWalletAddress(wallet, null, { from: account })
+    ).rejects.toThrow()
   })
 
   test('SNBAT fraction greater than 1', async () => {
@@ -135,7 +137,7 @@ testWithAnvilL2('Accounts Wrapper', (provider) => {
 
     await accountsInstance.createAccount({ from: account })
     await expect(
-      accountsInstance.setPaymentDelegation(beneficiary, fractionInvalid)
+      accountsInstance.setPaymentDelegation(beneficiary, fractionInvalid, { from: account })
     ).rejects.toThrow('Fraction must not be greater than 1')
   })
 

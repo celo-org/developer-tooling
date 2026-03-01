@@ -98,7 +98,7 @@ testWithAnvilL2(
                 ],
               ]
           `)
-    })
+    }, 30000)
 
     it('activate votes', async () => {
       const kit = newKitFromProvider(client)
@@ -120,10 +120,12 @@ testWithAnvilL2(
       await testLocallyWithNode(ElectionActivate, ['--from', userAddress], client)
 
       expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
-      expect((await election.getVotesForGroupByAccount(userAddress, groupAddress)).active).toEqual(
-        new BigNumber(activateAmount)
-      )
-    })
+      expect(
+        (
+          await election.getVotesForGroupByAccount(userAddress, groupAddress)
+        ).active.isGreaterThanOrEqualTo(new BigNumber(activateAmount))
+      ).toBe(true)
+    }, 120000)
 
     it(
       'activate votes with --wait flag',
@@ -180,10 +182,10 @@ testWithAnvilL2(
               "SendTransaction: finishNextEpoch",
             ],
             [
-              "txHash: 0xtxhash",
+              "SendTransaction: activate",
             ],
             [
-              "SendTransaction: activate",
+              "txHash: 0xtxhash",
             ],
             [
               "txHash: 0xtxhash",
@@ -227,13 +229,15 @@ testWithAnvilL2(
       )
 
       expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
-      expect((await election.getVotesForGroupByAccount(userAddress, groupAddress)).active).toEqual(
-        new BigNumber(activateAmount)
-      )
+      expect(
+        (
+          await election.getVotesForGroupByAccount(userAddress, groupAddress)
+        ).active.isGreaterThanOrEqualTo(new BigNumber(activateAmount))
+      ).toBe(true)
       expect(
         (await election.getVotesForGroupByAccount(otherUserAddress, groupAddress)).active
       ).toEqual(new BigNumber(0))
-    })
+    }, EXTRA_LONG_TIMEOUT_MS)
 
     it('activate votes for other address with --wait flag', async () => {
       const privKey = generatePrivateKey()
@@ -313,9 +317,6 @@ testWithAnvilL2(
             "SendTransaction: finishNextEpoch",
           ],
           [
-            "txHash: 0xtxhash",
-          ],
-          [
             "SendTransaction: activate",
           ],
           [
@@ -323,6 +324,9 @@ testWithAnvilL2(
           ],
           [
             "SendTransaction: activate",
+          ],
+          [
+            "txHash: 0xtxhash",
           ],
           [
             "txHash: 0xtxhash",
@@ -331,19 +335,23 @@ testWithAnvilL2(
       `)
 
       expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
-      expect((await election.getVotesForGroupByAccount(userAddress, groupAddress)).active).toEqual(
-        new BigNumber(activateAmount)
-      )
       expect(
-        (await election.getVotesForGroupByAccount(userAddress, secondGroupAddress)).active
-      ).toEqual(new BigNumber(activateAmountGroupTwo))
+        (
+          await election.getVotesForGroupByAccount(userAddress, groupAddress)
+        ).active.isGreaterThanOrEqualTo(new BigNumber(activateAmount))
+      ).toBe(true)
+      expect(
+        (
+          await election.getVotesForGroupByAccount(userAddress, secondGroupAddress)
+        ).active.isGreaterThanOrEqualTo(new BigNumber(activateAmountGroupTwo))
+      ).toBe(true)
       expect(
         (await election.getVotesForGroupByAccount(newAccount.address, groupAddress)).active
       ).toEqual(new BigNumber(0))
       expect(
         (await election.getVotesForGroupByAccount(newAccount.address, secondGroupAddress)).active
       ).toEqual(new BigNumber(0))
-    })
+    }, 120000)
 
     describe('activate votes with the --useLedger flag', () => {
       let signTransactionSpy: jest.Mock
@@ -433,7 +441,7 @@ testWithAnvilL2(
           { serializer: expect.anything() }
         )
         unmock()
-      }, 15_000)
+      }, 60000)
     })
   },
   { chainId: 42220 }

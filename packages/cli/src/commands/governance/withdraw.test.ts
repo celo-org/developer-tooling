@@ -36,12 +36,10 @@ testWithAnvilL2(
       governance = await kit.contracts.getGovernance()
       minDeposit = (await governance.minDeposit()).toFixed()
       const proposal: Proposal = await new ProposalBuilder(kit).build()
-      await governance
-        .propose(proposal, 'URL')
-        .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
+      await governance.propose(proposal, 'URL', { from: accounts[0], value: minDeposit })
       const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
       await timeTravel(dequeueFrequency + 1, client)
-      await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
+      await governance.dequeueProposalsIfReady()
     })
 
     test('can withdraw', async () => {
@@ -97,9 +95,11 @@ testWithAnvilL2(
           client,
           multisigAddress,
           async () => {
-            await governance
-              .propose(await new ProposalBuilder(kit).build(), 'http://example.com/proposal.json')
-              .sendAndWaitForReceipt({ from: multisigAddress, value: minDeposit })
+            await governance.propose(
+              await new ProposalBuilder(kit).build(),
+              'http://example.com/proposal.json',
+              { from: multisigAddress, value: minDeposit }
+            )
           },
           // make sure the multisig contract has enough balance to perform the transaction
           new BigNumber(minDeposit).multipliedBy(2)
@@ -111,7 +111,7 @@ testWithAnvilL2(
         // Dequeue so the proposal can be refunded
         const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
         await timeTravel(dequeueFrequency + 1, client)
-        await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
+        await governance.dequeueProposalsIfReady()
       })
 
       it('can withdraw using --useMultiSig', async () => {
@@ -211,11 +211,11 @@ testWithAnvilL2(
           signer: owners[0],
         })
         const deploymentTransaction = await protocolKit.createSafeDeploymentTransaction()
-        const txResult = await kit.connection.sendTransaction({
+        const txHash = await kit.connection.sendTransaction({
           from: owners[0],
           ...deploymentTransaction,
         })
-        const receipt = await txResult.waitReceipt()
+        const receipt = await kit.connection.waitForTransactionReceipt(txHash)
         safeAddress = getSafeAddressFromDeploymentTx(
           receipt as unknown as Parameters<typeof getSafeAddressFromDeploymentTx>[0],
           '1.3.0'
@@ -229,15 +229,17 @@ testWithAnvilL2(
         }
 
         await withImpersonatedAccount(client, safeAddress, async () => {
-          await governance
-            .propose(await new ProposalBuilder(kit).build(), 'http://example.com/proposal.json')
-            .sendAndWaitForReceipt({ from: safeAddress, value: minDeposit })
+          await governance.propose(
+            await new ProposalBuilder(kit).build(),
+            'http://example.com/proposal.json',
+            { from: safeAddress, value: minDeposit }
+          )
         })
 
         // Dequeue so the proposal can be refunded
         const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
         await timeTravel(dequeueFrequency + 1, client)
-        await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
+        await governance.dequeueProposalsIfReady()
       })
 
       it('can withdraw using --useSafe', async () => {

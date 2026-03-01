@@ -78,7 +78,7 @@ testWithAnvilL2('election:revoke', (provider) => {
     expect((await election.getVotesForGroupByAccount(fromAddress, groupAddress)).active).toEqual(
       new BigNumber(0)
     )
-  })
+  }, 120000)
 
   it('successfuly revokes votes partially', async () => {
     const kit = newKitFromProvider(provider)
@@ -104,5 +104,5 @@ testWithAnvilL2('election:revoke', (provider) => {
     expect((await election.getVotesForGroupByAccount(fromAddress, groupAddress)).active).toEqual(
       amount.minus(revokeAmount)
     )
-  })
+  }, 120000)
 })

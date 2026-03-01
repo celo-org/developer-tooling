@@ -75,9 +75,9 @@ testWithAnvilL2('election:current cmd', async (provider) => {
 
     // Set the names
     await impersonateAccount(provider, validator1)
-    await accountsContract.setName('Validator #1').sendAndWaitForReceipt({ from: validator1 })
+    await accountsContract.setName('Validator #1', { from: validator1 })
     await impersonateAccount(provider, validator2)
-    await accountsContract.setName('Validator #2').sendAndWaitForReceipt({ from: validator2 })
+    await accountsContract.setName('Validator #2', { from: validator2 })
 
     // // change the signer
     kit.connection.defaultAccount = validator2 as Address
@@ -85,12 +85,12 @@ testWithAnvilL2('election:current cmd', async (provider) => {
       validator2,
       changingSignerAddress
     )
-    const txo = await accountsContract.authorizeValidatorSigner(
+    await accountsContract.authorizeValidatorSigner(
       changingSignerAddress,
       proof,
-      await kit.contracts.getValidators()
+      await kit.contracts.getValidators(),
+      { from: validator2 }
     )
-    await txo.sendAndWaitForReceipt({ from: validator2 })
 
     // The actual test
 

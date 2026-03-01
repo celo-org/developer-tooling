@@ -148,7 +148,7 @@ testWithAnvilL2('account metadata cmds', (provider) => {
     describe('when the account is registered', () => {
       beforeEach(async () => {
         const accountsInstance = await kit.contracts.getAccounts()
-        await accountsInstance.createAccount().sendAndWaitForReceipt({ from: account })
+        await accountsInstance.createAccount({ from: account })
       })
 
       test('can register metadata', async () => {

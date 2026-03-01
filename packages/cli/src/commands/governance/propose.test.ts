@@ -184,13 +184,11 @@ testWithAnvilL2(
         const transactionsToBeSaved = JSON.stringify(transactions)
         fs.writeFileSync(TRANSACTION_FILE_PATH, transactionsToBeSaved, { flag: 'w' })
 
-        await (
-          await kit.sendTransaction({
-            to: governance.address,
-            from: accounts[0],
-            value: parseEther('1').toString(),
-          })
-        ).waitReceipt()
+        await kit.sendTransaction({
+          to: governance.address,
+          from: accounts[0],
+          value: parseEther('1').toString(),
+        })
 
         const proposalBefore = await governance.getProposal(1)
         expect(proposalBefore).toEqual([])
@@ -230,13 +228,11 @@ testWithAnvilL2(
         const transactionsToBeSaved = JSON.stringify(transactions)
         fs.writeFileSync(TRANSACTION_FILE_PATH, transactionsToBeSaved, { flag: 'w' })
 
-        await (
-          await kit.sendTransaction({
-            from: accounts[0],
-            to: governance.address,
-            value: parseEther('1').toString(),
-          })
-        ).waitReceipt()
+        await kit.sendTransaction({
+          from: accounts[0],
+          to: governance.address,
+          value: parseEther('1').toString(),
+        })
 
         const multisigWithOneSigner = await createMultisig(kit, [accounts[0]], 1, 1)
         /**
@@ -246,13 +242,11 @@ testWithAnvilL2(
          * is too much. But I'm leaving this in case we update the devchain to match
          * Alfajores or Mainnet parameters in the future.
          */
-        await (
-          await kit.sendTransaction({
-            from: accounts[2],
-            to: multisigWithOneSigner,
-            value: parseEther('20000').toString(), // 2x min deposit on Mainnet
-          })
-        ).waitReceipt()
+        await kit.sendTransaction({
+          from: accounts[2],
+          to: multisigWithOneSigner,
+          value: parseEther('20000').toString(), // 2x min deposit on Mainnet
+        })
 
         const proposalBefore = await governance.getProposal(1)
         expect(proposalBefore).toEqual([])
@@ -295,13 +289,11 @@ testWithAnvilL2(
         const transactionsToBeSaved = JSON.stringify(transactions)
         fs.writeFileSync(TRANSACTION_FILE_PATH, transactionsToBeSaved, { flag: 'w' })
 
-        await (
-          await kit.sendTransaction({
-            to: governance.address,
-            from: accounts[0],
-            value: parseEther('1').toString(),
-          })
-        ).waitReceipt()
+        await kit.sendTransaction({
+          to: governance.address,
+          from: accounts[0],
+          value: parseEther('1').toString(),
+        })
 
         const multisigWithTwoSigners = await createMultisig(kit, [accounts[0], accounts[1]], 2, 2)
         /**
@@ -311,13 +303,11 @@ testWithAnvilL2(
          * is too much. But I'm leaving this in case we update the devchain to match
          * Alfajores or Mainnet parameters in the future.
          */
-        await (
-          await kit.sendTransaction({
-            from: accounts[2],
-            to: multisigWithTwoSigners,
-            value: parseEther('20000').toString(), // 2x min deposit on Mainnet
-          })
-        ).waitReceipt()
+        await kit.sendTransaction({
+          from: accounts[2],
+          to: multisigWithTwoSigners,
+          value: parseEther('20000').toString(), // 2x min deposit on Mainnet
+        })
 
         const proposalBefore = await governance.getProposal(1)
         expect(proposalBefore).toEqual([])
@@ -388,11 +378,11 @@ testWithAnvilL2(
             signer: owner1,
           })
           const deploymentTransaction = await protocolKit.createSafeDeploymentTransaction()
-          const txResult = await kit.connection.sendTransaction({
+          const txHash = await kit.connection.sendTransaction({
             from: owner1,
             ...deploymentTransaction,
           })
-          const receipt = await txResult.waitReceipt()
+          const receipt = await kit.connection.waitForTransactionReceipt(txHash)
           const safeAddress = getSafeAddressFromDeploymentTx(
             receipt as unknown as Parameters<typeof getSafeAddressFromDeploymentTx>[0],
             '1.3.0'
@@ -462,11 +452,11 @@ testWithAnvilL2(
             signer: owner1,
           })
           const deploymentTransaction = await protocolKit.createSafeDeploymentTransaction()
-          const txResult = await kit.connection.sendTransaction({
+          const txHash = await kit.connection.sendTransaction({
             from: owner1,
             ...deploymentTransaction,
           })
-          const receipt = await txResult.waitReceipt()
+          const receipt = await kit.connection.waitForTransactionReceipt(txHash)
           const safeAddress = getSafeAddressFromDeploymentTx(
             receipt as unknown as Parameters<typeof getSafeAddressFromDeploymentTx>[0],
             '1.3.0'
@@ -548,13 +538,11 @@ testWithAnvilL2(
         const transactionsToBeSaved = JSON.stringify(transactionsUnknownAddress)
         fs.writeFileSync(TRANSACTION_FILE_PATH, transactionsToBeSaved, { flag: 'w' })
 
-        await (
-          await kit.sendTransaction({
-            to: governance.address,
-            from: accounts[0],
-            value: parseEther('1').toString(),
-          })
-        ).waitReceipt()
+        await kit.sendTransaction({
+          to: governance.address,
+          from: accounts[0],
+          value: parseEther('1').toString(),
+        })
 
         const proposalBefore = await governance.getProposal(1)
         expect(proposalBefore).toEqual([])
@@ -596,13 +584,11 @@ testWithAnvilL2(
         const transactionsToBeSaved = JSON.stringify(transactionsWithStruct)
         fs.writeFileSync(TRANSACTION_FILE_PATH, transactionsToBeSaved, { flag: 'w' })
 
-        await (
-          await kit.sendTransaction({
-            to: governance.address,
-            from: accounts[0],
-            value: parseEther('1').toString(),
-          })
-        ).waitReceipt()
+        await kit.sendTransaction({
+          to: governance.address,
+          from: accounts[0],
+          value: parseEther('1').toString(),
+        })
 
         const proposalBefore = await governance.getProposal(1)
         expect(proposalBefore).toEqual([])

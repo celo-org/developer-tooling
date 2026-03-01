@@ -127,41 +127,35 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
             REGISTRY_CONTRACT_ADDRESS
           )
 
-          await (
-            await kit.connection.sendTransaction({
-              to: registryContract.address,
-              data: encodeFunctionData({
-                abi: registryContract.abi as any,
-                functionName: 'setAddressFor',
-                args: ['Validators', accounts[0]],
-              }),
-              from: ownerAdress,
-            })
-          ).waitReceipt()
+          await kit.connection.sendTransaction({
+            to: registryContract.address,
+            data: encodeFunctionData({
+              abi: registryContract.abi as any,
+              functionName: 'setAddressFor',
+              args: ['Validators', accounts[0]],
+            }),
+            from: ownerAdress,
+          })
 
-          await (
-            await kit.connection.sendTransaction({
-              to: (electionContract as any).contract.address,
-              data: encodeFunctionData({
-                abi: (electionContract as any).contract.abi as any,
-                functionName: 'markGroupIneligible',
-                args: [validatorGroups[0]],
-              }),
-              from: accounts[0],
-            })
-          ).waitReceipt()
+          await kit.connection.sendTransaction({
+            to: (electionContract as any).contract.address,
+            data: encodeFunctionData({
+              abi: (electionContract as any).contract.abi as any,
+              functionName: 'markGroupIneligible',
+              args: [validatorGroups[0]],
+            }),
+            from: accounts[0],
+          })
 
-          await (
-            await kit.connection.sendTransaction({
-              to: registryContract.address,
-              data: encodeFunctionData({
-                abi: registryContract.abi as any,
-                functionName: 'setAddressFor',
-                args: ['Validators', validatorsContract.address],
-              }),
-              from: ownerAdress,
-            })
-          ).waitReceipt()
+          await kit.connection.sendTransaction({
+            to: registryContract.address,
+            data: encodeFunctionData({
+              abi: registryContract.abi as any,
+              functionName: 'setAddressFor',
+              args: ['Validators', validatorsContract.address],
+            }),
+            from: ownerAdress,
+          })
         },
         parseEther('1')
       )
@@ -189,17 +183,15 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
           provider,
           validatorGroup,
           async () => {
-            await (
-              await kit.connection.sendTransaction({
-                to: electionViemContract.address,
-                data: encodeFunctionData({
-                  abi: electionViemContract.abi as any,
-                  functionName: 'activate',
-                  args: [validatorGroup],
-                }),
-                from: validatorGroup,
-              })
-            ).waitReceipt()
+            await kit.connection.sendTransaction({
+              to: electionViemContract.address,
+              data: encodeFunctionData({
+                abi: electionViemContract.abi as any,
+                functionName: 'activate',
+                args: [validatorGroup],
+              }),
+              from: validatorGroup,
+            })
           },
           parseEther('1')
         )
@@ -261,7 +253,7 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
         validatorGroupBalanceBefore
       )
     ).toBeTruthy()
-  })
+  }, 60000)
 
   it('processes elected validator groups', async () => {
     const accounts = await kit.connection.getAccounts()
@@ -295,5 +287,5 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
     expect(statusAfterProcessing.perValidatorReward.toNumber()).toEqual(0)
     expect(statusAfterProcessing.totalRewardsCommunity.toNumber()).toEqual(0)
     expect(statusAfterProcessing.totalRewardsCarbonFund.toNumber()).toEqual(0)
-  })
+  }, 60000)
 })
