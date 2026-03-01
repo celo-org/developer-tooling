@@ -3,15 +3,15 @@ import { AbiInput } from './abi-types'
 
 /**
  * Coerce a value to match the expected ABI type.
- * Web3 was lenient about types; viem is strict. This bridges the gap.
+ * The legacy SDK was lenient about types; viem is strict. This bridges the gap.
  */
 export function coerceValueForType(type: string, value: unknown): unknown {
-  // bool: web3 accepted numbers/strings; viem requires actual booleans
+  // bool: legacy SDK accepted numbers/strings; viem requires actual booleans
   if (type === 'bool') {
     if (typeof value === 'boolean') return value
     return Boolean(value)
   }
-  // bytesN (fixed-size): web3 auto-padded short hex strings; viem requires exact size
+  // bytesN (fixed-size): legacy SDK auto-padded short hex strings; viem requires exact size
   const bytesMatch = type.match(/^bytes(\d+)$/)
   if (bytesMatch) {
     const expectedBytes = parseInt(bytesMatch[1], 10)
@@ -50,7 +50,7 @@ export function coerceArgsForAbi(abiInputs: readonly AbiInput[], args: unknown[]
   })
 }
 
-// Viem's ABI decoder returns uint/int values as bigint, while web3 returned strings.
+// Viem's ABI decoder returns uint/int values as bigint, while the legacy SDK returned strings.
 // Downstream consumers (wrapper proxyCall transformers, CLI formatters, etc.) expect
 // string values for large numbers, so we convert to preserve backward compatibility.
 export function bigintToString(value: unknown): unknown {

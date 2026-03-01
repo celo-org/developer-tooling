@@ -210,7 +210,7 @@ export class Connection {
   /**
    * Send a transaction to celo-blockchain.
    *
-   * Similar to `web3.eth.sendTransaction()` but with following differences:
+   * Similar to `eth_sendTransaction` but with following differences:
    *  - applies connections tx's defaults
    *  - estimatesGas before sending
    *  - returns the transaction hash

@@ -200,44 +200,48 @@ testWithAnvilL2(
       EXTRA_LONG_TIMEOUT_MS
     )
 
-    it('activate votes for other address', async () => {
-      const kit = newKitFromProvider(client)
-      const [groupAddress, validatorAddress, userAddress, otherUserAddress] =
-        await kit.connection.getAccounts()
-      const election = await kit.contracts.getElection()
-      const writeMock = jest.spyOn(ux.write, 'stdout')
-      const activateAmount = 54321
+    it(
+      'activate votes for other address',
+      async () => {
+        const kit = newKitFromProvider(client)
+        const [groupAddress, validatorAddress, userAddress, otherUserAddress] =
+          await kit.connection.getAccounts()
+        const election = await kit.contracts.getElection()
+        const writeMock = jest.spyOn(ux.write, 'stdout')
+        const activateAmount = 54321
 
-      await setupGroupAndAffiliateValidator(kit, groupAddress, validatorAddress)
-      await registerAccountWithLockedGold(kit, userAddress)
+        await setupGroupAndAffiliateValidator(kit, groupAddress, validatorAddress)
+        await registerAccountWithLockedGold(kit, userAddress)
 
-      await voteForGroupFrom(kit, userAddress, groupAddress, new BigNumber(activateAmount))
+        await voteForGroupFrom(kit, userAddress, groupAddress, new BigNumber(activateAmount))
 
-      expect((await election.getVotesForGroupByAccount(userAddress, groupAddress)).active).toEqual(
-        new BigNumber(0)
-      )
-      expect(
-        (await election.getVotesForGroupByAccount(otherUserAddress, groupAddress)).active
-      ).toEqual(new BigNumber(0))
+        expect(
+          (await election.getVotesForGroupByAccount(userAddress, groupAddress)).active
+        ).toEqual(new BigNumber(0))
+        expect(
+          (await election.getVotesForGroupByAccount(otherUserAddress, groupAddress)).active
+        ).toEqual(new BigNumber(0))
 
-      await timeTravelAndSwitchEpoch(kit, client, userAddress)
-      await expect(election.hasActivatablePendingVotes(userAddress)).resolves.toBe(true)
-      await testLocallyWithNode(
-        ElectionActivate,
-        ['--from', otherUserAddress, '--for', userAddress],
-        client
-      )
+        await timeTravelAndSwitchEpoch(kit, client, userAddress)
+        await expect(election.hasActivatablePendingVotes(userAddress)).resolves.toBe(true)
+        await testLocallyWithNode(
+          ElectionActivate,
+          ['--from', otherUserAddress, '--for', userAddress],
+          client
+        )
 
-      expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
-      expect(
-        (
-          await election.getVotesForGroupByAccount(userAddress, groupAddress)
-        ).active.isGreaterThanOrEqualTo(new BigNumber(activateAmount))
-      ).toBe(true)
-      expect(
-        (await election.getVotesForGroupByAccount(otherUserAddress, groupAddress)).active
-      ).toEqual(new BigNumber(0))
-    }, EXTRA_LONG_TIMEOUT_MS)
+        expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
+        expect(
+          (
+            await election.getVotesForGroupByAccount(userAddress, groupAddress)
+          ).active.isGreaterThanOrEqualTo(new BigNumber(activateAmount))
+        ).toBe(true)
+        expect(
+          (await election.getVotesForGroupByAccount(otherUserAddress, groupAddress)).active
+        ).toEqual(new BigNumber(0))
+      },
+      EXTRA_LONG_TIMEOUT_MS
+    )
 
     it('activate votes for other address with --wait flag', async () => {
       const privKey = generatePrivateKey()
@@ -399,7 +403,6 @@ testWithAnvilL2(
 
         jest.spyOn(console, 'log')
         const writeMock = jest.spyOn(ux.write, 'stdout')
-        const web3Spy = jest.spyOn(ElectionActivate.prototype, 'getWeb3')
         const walletSpy = jest.spyOn(ElectionActivate.prototype, 'getWalletClient')
 
         const unmock = mockRpcFetch({
@@ -428,7 +431,6 @@ testWithAnvilL2(
         )
         expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
 
-        expect(web3Spy).not.toHaveBeenCalled()
         expect(walletSpy).toHaveBeenCalled()
         expect(signTransactionSpy).toHaveBeenCalledWith(
           expect.objectContaining({

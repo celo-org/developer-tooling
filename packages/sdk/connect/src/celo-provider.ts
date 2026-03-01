@@ -65,7 +65,7 @@ export class CeloProvider implements Provider {
   }
 
   /**
-   * Send method as expected by web3.js
+   * Send method implementing the JSON-RPC provider interface.
    */
   send(payload: JsonRpcPayload, callback: Callback<JsonRpcResponse>): void {
     let txParams: any

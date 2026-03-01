@@ -90,7 +90,7 @@ describe('Transaction Utils', () => {
       expect(recoveredSigner?.toLowerCase()).toEqual(celoTransaction.from!.toString().toLowerCase())
     })
 
-    // Helper: parse a value that may be a hex string (from web3 mutation) or a number
+    // Helper: parse a value that may be a hex string or a number
     const toNumber = (val: unknown): number => {
       if (typeof val === 'string' && val.startsWith('0x')) return parseInt(val, 16)
       return Number(val)

@@ -276,7 +276,7 @@ export function parseAccessList(accessListRaw: AccessListRaw | undefined): Acces
         if (isHash(key)) {
           return key
         } else {
-          // same behavior as web3
+          // validate storage key format
           throw new Error(`Invalid storage key: ${key}`)
         }
       }),

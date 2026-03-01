@@ -36,7 +36,7 @@ export interface FormattedCeloTx {
   type: TransactionTypes
 }
 
-/** Transaction configuration - replaces web3's TransactionConfig */
+/** Transaction configuration */
 export interface CeloTx extends Partial<CeloParams> {
   from?: string
   to?: string

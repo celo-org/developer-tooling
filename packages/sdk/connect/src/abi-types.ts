@@ -12,7 +12,7 @@ export interface DecodedParamsObject extends DecodedParamsArray {
   [key: string]: unknown
 }
 
-// Note the following types come from web3-utils: AbiInput, AbiOutput, AbiItem, AbiType StateMutabilityType, ABIDefinition
+// Note the following types were originally derived from web3-utils and are now maintained locally: AbiInput, AbiOutput, AbiItem, AbiType, StateMutabilityType, ABIDefinition
 type AbiType = 'function' | 'constructor' | 'event' | 'fallback'
 type StateMutabilityType = 'pure' | 'view' | 'nonpayable' | 'payable'
 

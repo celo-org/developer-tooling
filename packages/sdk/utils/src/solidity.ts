@@ -10,7 +10,7 @@ export type SolidityValue =
 
 /**
  * Computes keccak256 of Solidity-packed encoding of arguments.
- * Replacement for web3-utils soliditySha3.
+ * Replacement for the former web3-utils soliditySha3.
  *
  * Supports two calling conventions:
  * 1. Typed objects: soliditySha3({ type: 'address', value: '0x...' })
@@ -28,7 +28,7 @@ export function soliditySha3(...args: SolidityValue[]): string | null {
       types.push(arg.type as string)
       values.push(arg.value)
     } else if (typeof arg === 'object' && arg !== null && 't' in arg && 'v' in arg) {
-      // web3 shorthand: { t: 'uint256', v: 123 }
+      // shorthand: { t: 'uint256', v: 123 }
       types.push((arg as { t: string; v: unknown }).t)
       values.push((arg as { t: string; v: unknown }).v)
     } else if (typeof arg === 'string') {
@@ -48,7 +48,7 @@ export function soliditySha3(...args: SolidityValue[]): string | null {
     }
   }
 
-  // Coerce values for bytesN types: web3 accepted plain strings and hex of wrong size
+  // Coerce values for bytesN types: the legacy API accepted plain strings and hex of wrong size
   for (let i = 0; i < types.length; i++) {
     const bytesMatch = types[i].match(/^bytes(\d+)$/)
     if (bytesMatch && typeof values[i] === 'string') {
@@ -74,14 +74,14 @@ export function soliditySha3(...args: SolidityValue[]): string | null {
 
 /**
  * Same as soliditySha3 but returns the zero hash instead of null for empty input.
- * Replacement for web3-utils soliditySha3Raw.
+ * Replacement for the former web3-utils soliditySha3Raw.
  */
 export function soliditySha3Raw(...args: SolidityValue[]): string {
   return soliditySha3(...args) ?? keccak256(new Uint8Array())
 }
 
 /**
- * Computes keccak256 hash. Replacement for web3-utils sha3.
+ * Computes keccak256 hash. Replacement for the former web3-utils sha3.
  * For a single string argument, hashes it directly (hex as bytes, otherwise UTF-8).
  * For multiple or typed arguments, delegates to soliditySha3.
  */
@@ -89,7 +89,7 @@ export function sha3(...args: SolidityValue[]): string | null {
   // When called with a single string (the common case for sha3), handle it directly
   if (args.length === 1 && typeof args[0] === 'string') {
     const input = args[0]
-    // web3's sha3 with a single string auto-detects: hex → decode as bytes, otherwise UTF-8
+    // sha3 with a single string auto-detects: hex → decode as bytes, otherwise UTF-8
     if (isHex(input, { strict: true })) {
       return keccak256(input as Hex)
     }

@@ -9,7 +9,7 @@ import {
   TEST_GAS_PRICE,
   TEST_MNEMONIC,
   jsonRpcCall,
-  testWithWeb3,
+  testWithProvider,
 } from './test-utils'
 
 let instance: null | Anvil = null
@@ -75,7 +75,7 @@ function testWithAnvil(
   const anvil = createInstance(stateFilePath, options?.chainId)
 
   // for each test suite, we start and stop a new anvil instance
-  return testWithWeb3(name, `http://127.0.0.1:${anvil.port}`, fn, {
+  return testWithProvider(name, `http://127.0.0.1:${anvil.port}`, fn, {
     runIf:
       process.env.RUN_ANVIL_TESTS === 'true' || typeof process.env.RUN_ANVIL_TESTS === 'undefined',
     hooks: {

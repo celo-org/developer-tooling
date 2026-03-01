@@ -11,11 +11,7 @@ import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
 import { displayViemTx, failWith } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
-import {
-  createSafeFromWeb3,
-  performSafeTransaction,
-  safeTransactionMetadata,
-} from '../../utils/safe'
+import { createSafe, performSafeTransaction, safeTransactionMetadata } from '../../utils/safe'
 
 enum HotfixApprovalType {
   APPROVER = 'approver',
@@ -97,7 +93,7 @@ export default class Approve extends BaseCommand {
     const approver = useMultiSig ? governanceApproverMultiSig!.address : account
 
     await addDefaultChecks(
-      await this.getWeb3(),
+      (await this.getKit()).connection.currentProvider,
       checkBuilder,
       governance,
       !!hotfix,
@@ -160,7 +156,7 @@ export default class Approve extends BaseCommand {
 
     if (approvalType === 'securityCouncil' && useSafe) {
       await performSafeTransaction(
-        await this.getWeb3(),
+        (await this.getKit()).connection.currentProvider,
         (await governance.getSecurityCouncil()) as StrongAddress,
         account,
         safeTransactionMetadata(encodedGovernanceData!, governance.address)
@@ -255,7 +251,7 @@ const addDefaultChecks = async (
           })
       } else if (useSafe) {
         checkBuilder.addCheck(`${account} is security council safe signatory`, async () => {
-          const protocolKit = await createSafeFromWeb3(
+          const protocolKit = await createSafe(
             provider,
             account,
             (await governance.getSecurityCouncil()) as StrongAddress

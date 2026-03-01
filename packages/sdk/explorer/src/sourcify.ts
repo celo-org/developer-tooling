@@ -17,7 +17,7 @@ import { ContractMapping, mapFromPairs } from './base'
 
 /**
  * Convert an ABI item to a function signature string like `transfer(address,uint256)`.
- * Replaces the former web3 internal `_jsonInterfaceMethodToString`.
+ * Replaces the former `_jsonInterfaceMethodToString` helper.
  */
 function abiItemToSignatureString(item: AbiItem): string {
   if (item.type === 'function' || item.type === 'constructor' || item.type === 'event') {

@@ -6,11 +6,7 @@ import { newCheckBuilder } from '../../utils/checks'
 import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { MultiSigFlags, SafeFlags } from '../../utils/flags'
-import {
-  createSafeFromWeb3,
-  performSafeTransaction,
-  safeTransactionMetadata,
-} from '../../utils/safe'
+import { createSafe, performSafeTransaction, safeTransactionMetadata } from '../../utils/safe'
 
 export default class Withdraw extends BaseCommand {
   static description = 'Withdraw refunded governance proposal deposits.'
@@ -38,8 +34,8 @@ export default class Withdraw extends BaseCommand {
       checkBuilder.isMultiSigOwner(res.flags.from, res.flags.for as StrongAddress)
     } else if (res.flags.useSafe) {
       checkBuilder.addCheck(`${res.flags.from} is a safe owner`, async () => {
-        const safe = await createSafeFromWeb3(
-          await this.getWeb3(),
+        const safe = await createSafe(
+          (await this.getKit()).connection.currentProvider,
           res.flags.from,
           res.flags.safeAddress!
         )
@@ -62,7 +58,7 @@ export default class Withdraw extends BaseCommand {
       await displayViemTx('withdraw', Promise.resolve(multiSigTx), publicClient)
     } else if (res.flags.useSafe) {
       await performSafeTransaction(
-        await this.getWeb3(),
+        (await this.getKit()).connection.currentProvider,
         res.flags.safeAddress!,
         res.flags.from,
         safeTransactionMetadata(withdrawData, governance.address)

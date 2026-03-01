@@ -150,15 +150,6 @@ export abstract class BaseCommand extends Command {
   private _parseResult: null | ParserOutput<FlagOutput, FlagOutput> = null
   private ledgerTransport: Awaited<ReturnType<(typeof _TransportNodeHid)['open']>> | null = null
 
-  /**
-   * @deprecated Use getKit().connection.currentProvider or getPublicClient()/getWalletClient() instead
-   * Returns the Provider for backward compatibility
-   */
-  async getWeb3(): Promise<Provider> {
-    const kit = await this.getKit()
-    return kit.connection.currentProvider
-  }
-
   get _wallet(): ReadOnlyWallet | undefined {
     return this._wallet
   }
@@ -171,14 +162,6 @@ export abstract class BaseCommand extends Command {
     const res = await this.parse()
 
     return (res.flags && res.flags.node) || getNodeUrl(this.config.configDir)
-  }
-
-  /**
-   * @deprecated Use newProvider() instead
-   */
-  async newWeb3(): Promise<{ currentProvider: Provider }> {
-    const provider = await this.newProvider()
-    return { currentProvider: provider }
   }
 
   async newProvider(): Promise<Provider> {

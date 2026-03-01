@@ -43,7 +43,6 @@ export default class AccountList extends BaseCommand {
       addresses = await wallet.getAddresses()
     } else {
       // TODO: remove me when useAKV implemented or deprecated
-      // NOTE: Fallback to web3 for `useAKV` flag
       const kit = await this.getKit()
       addresses = await kit.connection.getAccounts()
     }

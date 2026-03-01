@@ -44,7 +44,7 @@ export function hashMessageWithPrefix(message: string): string {
 }
 
 export function hashMessage(message: string): string {
-  // Always treat message as UTF-8 string (matching web3's soliditySha3({type:'string', value}))
+  // Always treat message as UTF-8 string (matching soliditySha3({type:'string', value}))
   return keccak256(stringToBytes(message))
 }
 

@@ -13,11 +13,7 @@ import {
   addExistingProposalJSONFileToBuilder,
   checkProposal,
 } from '../../utils/governance'
-import {
-  createSafeFromWeb3,
-  performSafeTransaction,
-  safeTransactionMetadata,
-} from '../../utils/safe'
+import { createSafe, performSafeTransaction, safeTransactionMetadata } from '../../utils/safe'
 export default class Propose extends BaseCommand {
   static description = 'Submit a governance proposal'
 
@@ -92,7 +88,11 @@ export default class Propose extends BaseCommand {
         proposerMultiSig!.isOwner(account)
       )
       .addConditionalCheck(`${account} is a safe owner`, useSafe, async () => {
-        const safe = await createSafeFromWeb3(await this.getWeb3(), account, proposer)
+        const safe = await createSafe(
+          (await this.getKit()).connection.currentProvider,
+          account,
+          proposer
+        )
         return safe.isOwner(account)
       })
       .runChecks()
@@ -140,7 +140,7 @@ export default class Propose extends BaseCommand {
         )
       } else {
         await performSafeTransaction(
-          await this.getWeb3(),
+          (await this.getKit()).connection.currentProvider,
           proposer,
           account,
           safeTransactionMetadata(proposeData, governance.address, deposit.toFixed())

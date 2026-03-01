@@ -7,9 +7,9 @@ type Hooks = {
 }
 
 /**
- * Creates a test suite with a given name and provides function with a web3 instance connected to the given rpcUrl.
+ * Creates a test suite with a given name and provides function with a viem client connected to the given rpcUrl.
  *
- * It is an equivalent of jest `describe` with the web3 additioon. It also provides hooks for beforeAll and afterAll.
+ * It is an equivalent of jest `describe` with a viem test client. It also provides hooks for beforeAll and afterAll.
  *
  * Optionally if a runIf flag is set to false the test suite will be skipped (useful for conditional test suites). By
  * default all test suites are run normally, but if the runIf flag is set to false the test suite will be skipped by using

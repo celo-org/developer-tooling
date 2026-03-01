@@ -3,7 +3,7 @@ import * as http from 'http'
 import migrationOverride from './migration-override.json'
 
 class SimpleHttpProvider implements Provider {
-  /** Compat with web3's HttpProvider which exposed .host */
+  /** Compat with legacy HttpProvider which exposed .host */
   readonly host: string
 
   constructor(readonly url: string) {
@@ -109,7 +109,7 @@ export function evmSnapshot(provider: Provider) {
   return jsonRpcCall<string>(provider, 'evm_snapshot', [])
 }
 
-type TestWithWeb3Hooks = {
+type TestWithProviderHooks = {
   beforeAll?: () => Promise<void>
   afterAll?: () => Promise<void>
 }
@@ -126,12 +126,12 @@ type TestWithWeb3Hooks = {
  * flag is set to false the test suite will be skipped by using jest `describe.skip`. It will
  * be reported in the summary as "skipped".
  */
-export function testWithWeb3(
+export function testWithProvider(
   name: string,
   rpcUrl: string,
   fn: (provider: Provider) => void,
   options: {
-    hooks?: TestWithWeb3Hooks
+    hooks?: TestWithProviderHooks
     runIf?: boolean
   } = {}
 ) {
