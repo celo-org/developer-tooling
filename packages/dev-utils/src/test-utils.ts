@@ -64,9 +64,6 @@ export const TEST_GAS_LIMIT = 20000000
 
 export const NetworkConfig = migrationOverride
 
-/** @deprecated Use `Provider` from `@celo/connect` directly instead. */
-export type ProviderOwner = { currentProvider: Provider }
-
 export function jsonRpcCall<O>(provider: Provider, method: string, params: unknown[]): Promise<O> {
   return new Promise<O>((resolve, reject) => {
     if (provider && typeof provider.send === 'function') {

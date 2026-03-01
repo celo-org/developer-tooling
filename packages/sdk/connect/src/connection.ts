@@ -104,14 +104,33 @@ export class Connection {
         celoProvider = provider
       }
       this._provider = celoProvider
+      const rawProvider = provider instanceof CeloProvider ? provider.existingProvider : provider
       this._viemClient = createPublicClient({
         transport: custom({
           request: async ({ method, params }) => {
-            const response = await this.rpcCaller.call(method, params as any[])
-            if (response.error) {
-              throw new Error(response.error.message)
-            }
-            return response.result
+            return new Promise((resolve, reject) => {
+              rawProvider.send!(
+                {
+                  id: getRandomId(),
+                  jsonrpc: '2.0',
+                  method,
+                  params: params as any[],
+                },
+                (error, response) => {
+                  if (error) {
+                    reject(error)
+                  } else if (response?.error) {
+                    reject(
+                      new Error(
+                        typeof response.error === 'string' ? response.error : response.error.message
+                      )
+                    )
+                  } else {
+                    resolve(response?.result)
+                  }
+                }
+              )
+            })
           },
         }),
       })
@@ -189,8 +208,11 @@ export class Connection {
   }
 
   async getNodeAccounts(): Promise<StrongAddress[]> {
-    const nodeAccountsResp = await this.rpcCaller.call('eth_accounts', [])
-    return this.toChecksumAddresses(nodeAccountsResp.result ?? []) as StrongAddress[]
+    const accounts = await this._viemClient.request({
+      method: 'eth_accounts' as any,
+      params: [] as any,
+    })
+    return this.toChecksumAddresses((accounts as string[]) ?? []) as StrongAddress[]
   }
 
   getLocalAccounts(): StrongAddress[] {
@@ -350,16 +372,19 @@ export class Connection {
   }
 
   private defaultGasEstimator = async (tx: CeloTx): Promise<number> => {
-    const response = await this.rpcCaller.call('eth_estimateGas', [tx])
-    return parseInt(response.result, 16)
+    const result = await this._viemClient.request({
+      method: 'eth_estimateGas',
+      params: [tx] as any,
+    })
+    return parseInt(result as string, 16)
   }
 
   private defaultCaller = async (tx: CeloTx): Promise<string> => {
-    const response = await this.rpcCaller.call('eth_call', [
-      { data: tx.data, to: tx.to, from: tx.from },
-      'latest',
-    ])
-    return response.result as string
+    const result = await this._viemClient.request({
+      method: 'eth_call',
+      params: [{ data: tx.data, to: tx.to, from: tx.from }, 'latest'] as any,
+    })
+    return result as string
   }
 
   estimateGas = async (
@@ -413,40 +438,40 @@ export class Connection {
     if (this._chainID) {
       return this._chainID
     }
-    // Reference: https://eth.wiki/json-rpc/API#net_version
-    const response = await this.rpcCaller.call('net_version', [])
-    const chainID = parseInt(response.result.toString(), 10)
+    const chainID = await this._viemClient.getChainId()
     this._chainID = chainID
     return chainID
   }
 
   getTransactionCount = async (address: Address): Promise<number> => {
-    // Reference: https://eth.wiki/json-rpc/API#eth_gettransactioncount
-    const response = await this.rpcCaller.call('eth_getTransactionCount', [address, 'pending'])
-
-    return hexToNumber(response.result)!
+    const result = await this._viemClient.request({
+      method: 'eth_getTransactionCount',
+      params: [address as `0x${string}`, 'pending'],
+    })
+    return hexToNumber(result)!
   }
 
   gasPrice = async (feeCurrency?: Address): Promise<string> => {
-    // Required otherwise is not backward compatible
     const parameter = feeCurrency ? [feeCurrency] : []
-    // Reference: https://eth.wiki/json-rpc/API#eth_gasprice
-    const response = await this.rpcCaller.call('eth_gasPrice', parameter)
-    const gasPriceInHex = response.result.toString()
-    return gasPriceInHex
+    const result = await this._viemClient.request({
+      method: 'eth_gasPrice',
+      params: parameter as any,
+    })
+    return (result as string).toString()
   }
 
   getMaxPriorityFeePerGas = async (feeCurrency?: Address): Promise<string> => {
     const parameter = feeCurrency ? [feeCurrency] : []
-    return this.rpcCaller.call('eth_maxPriorityFeePerGas', parameter).then((rpcResponse) => {
-      return rpcResponse.result
+    const result = await this._viemClient.request({
+      method: 'eth_maxPriorityFeePerGas',
+      params: parameter as any,
     })
+    return result as string
   }
 
   getBlockNumber = async (): Promise<number> => {
-    const response = await this.rpcCaller.call('eth_blockNumber', [])
-
-    return hexToNumber(response.result)!
+    const result = await this._viemClient.request({ method: 'eth_blockNumber', params: [] as any })
+    return hexToNumber(result as string)!
   }
 
   private isBlockNumberHash = (blockNumber: BlockNumber) =>
@@ -454,45 +479,47 @@ export class Connection {
 
   getBlock = async (blockHashOrBlockNumber: BlockNumber, fullTxObjects = true): Promise<Block> => {
     const endpoint = this.isBlockNumberHash(blockHashOrBlockNumber)
-      ? 'eth_getBlockByHash' // Reference: https://eth.wiki/json-rpc/API#eth_getBlockByHash
-      : 'eth_getBlockByNumber' // Reference: https://eth.wiki/json-rpc/API#eth_getBlockByNumber
+      ? 'eth_getBlockByHash'
+      : 'eth_getBlockByNumber'
 
-    const response = await this.rpcCaller.call(endpoint, [
-      inputBlockNumberFormatter(blockHashOrBlockNumber),
-      fullTxObjects,
-    ])
+    const result = await this._viemClient.request({
+      method: endpoint as any,
+      params: [inputBlockNumberFormatter(blockHashOrBlockNumber), fullTxObjects] as any,
+    })
 
-    return outputBlockFormatter(response.result)
+    return outputBlockFormatter(result)
   }
 
   getBalance = async (address: Address, defaultBlock?: BlockNumber): Promise<string> => {
-    // Reference: https://eth.wiki/json-rpc/API#eth_getBalance
-    const response = await this.rpcCaller.call('eth_getBalance', [
-      inputAddressFormatter(address),
-      inputDefaultBlockNumberFormatter(defaultBlock),
-    ])
-    return outputBigNumberFormatter(response.result)
+    const result = await this._viemClient.request({
+      method: 'eth_getBalance',
+      params: [
+        inputAddressFormatter(address) as `0x${string}`,
+        inputDefaultBlockNumberFormatter(defaultBlock) as any,
+      ],
+    })
+    return outputBigNumberFormatter(result)
   }
 
   getTransaction = async (transactionHash: string): Promise<CeloTxPending> => {
-    // Reference: https://eth.wiki/json-rpc/API#eth_getTransactionByHash
-    const response = await this.rpcCaller.call('eth_getTransactionByHash', [
-      ensureLeading0x(transactionHash),
-    ])
-    return outputCeloTxFormatter(response.result)
+    const result = await this._viemClient.request({
+      method: 'eth_getTransactionByHash',
+      params: [ensureLeading0x(transactionHash) as `0x${string}`],
+    })
+    return outputCeloTxFormatter(result)
   }
 
   getTransactionReceipt = async (txhash: string): Promise<CeloTxReceipt | null> => {
-    // Reference: https://eth.wiki/json-rpc/API#eth_getTransactionReceipt
-    const response = await this.rpcCaller.call('eth_getTransactionReceipt', [
-      ensureLeading0x(txhash),
-    ])
+    const result = await this._viemClient.request({
+      method: 'eth_getTransactionReceipt',
+      params: [ensureLeading0x(txhash) as `0x${string}`],
+    })
 
-    if (response.result === null) {
+    if (result === null) {
       return null
     }
 
-    return outputCeloTxReceiptFormatter(response.result)
+    return outputCeloTxReceiptFormatter(result)
   }
 
   waitForTransactionReceipt = async (
@@ -525,12 +552,11 @@ export class Connection {
 
   getStorageAt = async (address: Address, position: number | string): Promise<string> => {
     const pos = typeof position === 'number' ? toHex(position) : position
-    const response = await this.rpcCaller.call('eth_getStorageAt', [
-      inputAddressFormatter(address),
-      pos,
-      'latest',
-    ])
-    return response.result as string
+    const result = await this._viemClient.request({
+      method: 'eth_getStorageAt',
+      params: [inputAddressFormatter(address) as `0x${string}`, pos as `0x${string}`, 'latest'],
+    })
+    return result as string
   }
 
   /**

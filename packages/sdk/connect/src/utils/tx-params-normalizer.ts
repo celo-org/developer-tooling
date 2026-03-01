@@ -59,11 +59,7 @@ export class TxParamsNormalizer {
       isPresent(txParams.maxFeePerGas?.toString()) &&
       isEmpty(txParams.maxPriorityFeePerGas?.toString())
     ) {
-      const clientMaxPriorityFeePerGas = await this.connection.rpcCaller.call(
-        'eth_maxPriorityFeePerGas',
-        []
-      )
-      txParams.maxPriorityFeePerGas = clientMaxPriorityFeePerGas.result
+      txParams.maxPriorityFeePerGas = await this.connection.getMaxPriorityFeePerGas()
     }
 
     // remove gasPrice if maxFeePerGas is set

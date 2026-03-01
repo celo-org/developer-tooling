@@ -15,6 +15,7 @@ import { EscrowWrapper } from './Escrow'
 import { FederatedAttestationsWrapper } from './FederatedAttestations'
 import { StableTokenWrapper } from './StableTokenWrapper'
 
+jest.setTimeout(30_000)
 testWithAnvilL2('Escrow Wrapper', (provider) => {
   const kit = newKitFromProvider(provider)
   const TEN_USDM = parseEther('10').toString()

@@ -5,7 +5,6 @@ import {
   CeloTxPending,
   decodeParametersToObject,
   parseDecodedParams,
-  signatureToAbiDefinition,
 } from '@celo/connect'
 import { toChecksumAddress } from '@celo/utils/lib/address'
 import { CeloContract, ContractKit } from '@celo/contractkit'
@@ -169,32 +168,6 @@ export class BlockExplorer {
   }
 
   /**
-   * @deprecated use getContractMappingWithSelector instead
-   * Returns the contract name and ABI of the method by looking up
-   * the contract address either in all possible contract mappings.
-   * @param address
-   * @param selector
-   * @param onlyCoreContracts
-   * @returns The contract name and ABI of the method or null if not found
-   */
-  getContractMethodAbi = async (
-    address: string,
-    selector: string,
-    onlyCoreContracts = false
-  ): Promise<ContractNameAndMethodAbi | null> => {
-    if (onlyCoreContracts) {
-      return this.getContractMethodAbiFromCore(address, selector)
-    }
-
-    const contractMapping = await this.getContractMappingWithSelector(address, selector)
-    if (contractMapping === undefined) {
-      return null
-    }
-
-    return this.getContractMethodAbiFromMapping(contractMapping, selector)
-  }
-
-  /**
    * Returns the contract name and ABI of the method by looking up
    * the contract address but only in core contracts
    * @param address
@@ -214,59 +187,6 @@ export class BlockExplorer {
     }
 
     return this.getContractMethodAbiFromMapping(contractMapping, selector)
-  }
-
-  /**
-   * @deprecated use getContractMappingWithSelector instead
-   * Returns the contract name and ABI of the method by looking up
-   * the contract address in Sourcify.
-   * @param address
-   * @param selector
-   * @returns The contract name and ABI of the method or null if not found
-   */
-  getContractMethodAbiFromSourcify = async (
-    address: string,
-    selector: string
-  ): Promise<ContractNameAndMethodAbi | null> => {
-    const contractMapping = await this.getContractMappingWithSelector(address, selector, [
-      this.getContractMappingFromSourcify,
-      this.getContractMappingFromSourcifyAsProxy,
-    ])
-
-    if (contractMapping === undefined) {
-      return null
-    }
-
-    return this.getContractMethodAbiFromMapping(contractMapping, selector)
-  }
-
-  /**
-   * @deprecated use getContractMappingWithSelector instead
-   * Returns the contract name and ABI of the method by looking up
-   * the selector in a list of known functions.
-   * @param address
-   * @param selector
-   * @param onlyCoreContracts
-   * @returns The contract name and ABI of the method or null if not found
-   */
-  getContractMethodAbiFallback = (
-    address: string,
-    selector: string
-  ): ContractNameAndMethodAbi | null => {
-    // TODO(bogdan): This could be replaced with a call to 4byte.directory
-    // or a local database of common functions.
-    const knownFunctions: { [k: string]: string } = {
-      '0x095ea7b3': 'approve(address to, uint256 value)',
-      '0x4d49e87d': 'addLiquidity(uint256[] amounts, uint256 minLPToMint, uint256 deadline)',
-    }
-    const signature = knownFunctions[selector]
-    if (signature) {
-      return {
-        abi: signatureToAbiDefinition(signature),
-        contract: `Unknown(${address})`,
-      }
-    }
-    return null
   }
 
   buildCallDetails(contract: ContractDetails, abi: ABIDefinition, input: string): CallDetails {

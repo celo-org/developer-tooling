@@ -212,17 +212,18 @@ export class CeloProvider implements Provider {
     await this.nonceLock.acquire()
     try {
       const signedTx = await this.handleSignTransaction(payload)
-      const response = await this.connection.rpcCaller.call('eth_sendRawTransaction', [
-        signedTx.raw,
-      ])
-      return response.result
+      const result = await this.connection.viemClient.request({
+        method: 'eth_sendRawTransaction',
+        params: [signedTx.raw as `0x${string}`],
+      })
+      return result
     } finally {
       this.nonceLock.release()
     }
   }
 
   private forwardSend(payload: JsonRpcPayload, callback: Callback<JsonRpcResponse>): void {
-    this.connection.rpcCaller.send(payload, callback)
+    this.existingProvider.send!(payload, callback)
   }
 
   private checkPayloadWithAtLeastNParams(payload: JsonRpcPayload, n: number) {

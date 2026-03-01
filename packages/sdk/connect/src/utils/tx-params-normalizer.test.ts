@@ -1,11 +1,23 @@
 import { Connection } from '../connection'
 import { Callback, CeloTx, JsonRpcPayload, JsonRpcResponse, Provider } from '../types'
-import { RpcCaller } from './rpc-caller'
 import { TxParamsNormalizer } from './tx-params-normalizer'
+
+function createMockProvider(handler: (method: string, params: any[]) => any): Provider {
+  return {
+    send(payload: JsonRpcPayload, callback: Callback<JsonRpcResponse>): void {
+      try {
+        const result = handler(payload.method, payload.params || [])
+        callback(null, { id: Number(payload.id), jsonrpc: '2.0', result })
+      } catch (error: any) {
+        callback(error)
+      }
+    },
+  }
+}
 
 describe('TxParamsNormalizer class', () => {
   let populator: TxParamsNormalizer
-  let mockRpcCall: any
+  let mockRpcHandler: jest.Mock
   let mockGasEstimation: any
   const completeCeloTx: CeloTx = {
     nonce: 1,
@@ -22,28 +34,16 @@ describe('TxParamsNormalizer class', () => {
   }
 
   beforeEach(() => {
-    mockRpcCall = jest.fn((method: string, _params: any[]): Promise<JsonRpcResponse> => {
-      return new Promise((resolve, _reject) =>
-        resolve({
-          jsonrpc: '2.0',
-          id: 1,
-          result: method === 'net_version' ? '27' : '0x27',
-        })
-      )
+    mockRpcHandler = jest.fn((method: string, _params: any[]) => {
+      if (method === 'eth_chainId') {
+        // 27 in hex
+        return '0x1b'
+      }
+      // Default hex return for other methods
+      return '0x27'
     })
-    const rpcMock: RpcCaller = {
-      call: mockRpcCall,
-      send: (_payload: JsonRpcPayload, _callback: Callback<JsonRpcResponse>): void => {
-        // noop
-      },
-    }
-    const mockProvider: Provider = {
-      send(_payload: JsonRpcPayload, _callback: Callback<JsonRpcResponse>): void {
-        // noop
-      },
-    }
+    const mockProvider = createMockProvider(mockRpcHandler)
     const connection = new Connection(mockProvider)
-    connection.rpcCaller = rpcMock
     mockGasEstimation = jest.fn(
       (
         _tx: CeloTx,
@@ -63,8 +63,8 @@ describe('TxParamsNormalizer class', () => {
       celoTx.chainId = undefined
       const newCeloTx = await populator.populate(celoTx)
       expect(newCeloTx.chainId).toBe(27)
-      expect(mockRpcCall.mock.calls.length).toBe(1)
-      expect(mockRpcCall.mock.calls[0][0]).toBe('net_version')
+      // viemClient.getChainId() calls eth_chainId
+      expect(mockRpcHandler).toHaveBeenCalledWith('eth_chainId', expect.anything())
     })
 
     test('will retrieve only once the chaindId', async () => {
@@ -76,8 +76,11 @@ describe('TxParamsNormalizer class', () => {
       const newCeloTx2 = await populator.populate(celoTx)
       expect(newCeloTx2.chainId).toBe(27)
 
-      expect(mockRpcCall.mock.calls.length).toBe(1)
-      expect(mockRpcCall.mock.calls[0][0]).toBe('net_version')
+      // eth_chainId should only be called once due to caching in Connection
+      const chainIdCalls = mockRpcHandler.mock.calls.filter(
+        (call: any[]) => call[0] === 'eth_chainId'
+      )
+      expect(chainIdCalls.length).toBe(1)
     })
 
     test('will populate the nonce', async () => {
@@ -85,8 +88,7 @@ describe('TxParamsNormalizer class', () => {
       celoTx.nonce = undefined
       const newCeloTx = await populator.populate(celoTx)
       expect(newCeloTx.nonce).toBe(39) // 0x27 => 39
-      expect(mockRpcCall.mock.calls.length).toBe(1)
-      expect(mockRpcCall.mock.calls[0][0]).toBe('eth_getTransactionCount')
+      expect(mockRpcHandler).toHaveBeenCalledWith('eth_getTransactionCount', expect.anything())
     })
 
     test('will populate the gas', async () => {
@@ -126,8 +128,8 @@ describe('TxParamsNormalizer class', () => {
       const newCeloTx = await populator.populate(celoTx)
       expect(newCeloTx.maxFeePerGas).toBe('0x2f')
       expect(newCeloTx.maxPriorityFeePerGas).toBe('0x27')
-      expect(mockRpcCall.mock.calls[0]).toEqual(['eth_gasPrice', []])
-      expect(mockRpcCall.mock.calls[1]).toEqual(['eth_maxPriorityFeePerGas', []])
+      expect(mockRpcHandler).toHaveBeenCalledWith('eth_gasPrice', [])
+      expect(mockRpcHandler).toHaveBeenCalledWith('eth_maxPriorityFeePerGas', [])
     })
 
     test('will populate the maxFeePerGas and maxPriorityFeePerGas with fee currency', async () => {
@@ -139,8 +141,8 @@ describe('TxParamsNormalizer class', () => {
       const newCeloTx = await populator.populate(celoTx)
       expect(newCeloTx.maxFeePerGas).toBe('0x2f')
       expect(newCeloTx.maxPriorityFeePerGas).toBe('0x27')
-      expect(mockRpcCall.mock.calls[0]).toEqual(['eth_gasPrice', ['0x1234']])
-      expect(mockRpcCall.mock.calls[1]).toEqual(['eth_maxPriorityFeePerGas', []])
+      expect(mockRpcHandler).toHaveBeenCalledWith('eth_gasPrice', ['0x1234'])
+      expect(mockRpcHandler).toHaveBeenCalledWith('eth_maxPriorityFeePerGas', [])
     })
   })
 })

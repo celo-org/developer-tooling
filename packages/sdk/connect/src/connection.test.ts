@@ -2,22 +2,28 @@ import { ensureLeading0x } from '@celo/base'
 import { Connection } from './connection'
 import { Callback, JsonRpcPayload, JsonRpcResponse, Provider } from './types'
 
-function createMockProvider(): Provider {
+function createMockProvider(handler?: (method: string, params: any[]) => any): Provider {
   return {
-    send(_payload: JsonRpcPayload, _callback: Callback<JsonRpcResponse>): void {
-      // noop mock
+    send(payload: JsonRpcPayload, callback: Callback<JsonRpcResponse>): void {
+      if (handler) {
+        try {
+          const result = handler(payload.method, payload.params || [])
+          callback(null, { id: Number(payload.id), jsonrpc: '2.0', result })
+        } catch (error: any) {
+          callback(error)
+        }
+      }
     },
   }
 }
 
 describe('Connection', () => {
-  let connection: Connection
-  beforeEach(() => {
-    connection = new Connection(createMockProvider())
-  })
-
   describe('#setFeeMarketGas', () => {
     describe('when fee market gas is set', () => {
+      let connection: Connection
+      beforeEach(() => {
+        connection = new Connection(createMockProvider())
+      })
       it('returns with gasPrice undefined and feeMarketGas set', async () => {
         const result = await connection.setFeeMarketGas({
           maxFeePerGas: '1',
@@ -30,7 +36,11 @@ describe('Connection', () => {
         })
       })
     })
-    describe('when fee market gas is set', () => {
+    describe('when fee market gas is set (duplicate)', () => {
+      let connection: Connection
+      beforeEach(() => {
+        connection = new Connection(createMockProvider())
+      })
       it('returns with gasPrice undefined and feeMarketGas set', async () => {
         const result = await connection.setFeeMarketGas({
           maxFeePerGas: '1',
@@ -49,42 +59,27 @@ describe('Connection', () => {
       const BASE_FEE_PER = 25000000000
       const PRIORITYFEE = 200000
       const multiple = BigInt(120)
+      let connection: Connection
+      let rpcHandler: jest.Mock
       beforeEach(() => {
-        connection.rpcCaller.call = jest.fn(async (method) => {
+        rpcHandler = jest.fn((method: string) => {
           if (method === 'eth_gasPrice') {
-            return {
-              result: ensureLeading0x(ETH_GAS_PRICE.toString(16)),
-              id: 22,
-              jsonrpc: '2.0',
-            }
+            return ensureLeading0x(ETH_GAS_PRICE.toString(16))
           }
           if (method === 'eth_maxPriorityFeePerGas') {
-            return {
-              result: ensureLeading0x(PRIORITYFEE.toString(16)),
-              id: 23,
-              jsonrpc: '2.0',
-            }
+            return ensureLeading0x(PRIORITYFEE.toString(16))
           }
-          if (method === 'eth_getBlockByNumber') {
-            return {
-              result: { gasLimit: 30000000, baseFeePerGas: BASE_FEE_PER },
-              id: 24,
-              jsonrpc: '2.0',
-            }
+          if (method === 'eth_getBlockByNumber' || method === 'eth_getBlockByHash') {
+            return { gasLimit: 30000000, baseFeePerGas: BASE_FEE_PER }
           }
-          return {
-            result: 0,
-            id: 25,
-            jsonrpc: '2.0',
-          }
+          return 0
         })
+        connection = new Connection(createMockProvider(rpcHandler))
       })
       it('asked the rpc what they should be with feeCurrency', async () => {
         const result = await connection.setFeeMarketGas({ feeCurrency: '0x000001' })
-        expect(connection.rpcCaller.call).toHaveBeenCalledWith('eth_maxPriorityFeePerGas', [
-          '0x000001',
-        ])
-        expect(connection.rpcCaller.call).toHaveBeenCalledWith('eth_gasPrice', ['0x000001'])
+        expect(rpcHandler).toHaveBeenCalledWith('eth_maxPriorityFeePerGas', ['0x000001'])
+        expect(rpcHandler).toHaveBeenCalledWith('eth_gasPrice', ['0x000001'])
 
         expect(BigInt(result.maxPriorityFeePerGas as string)).toEqual(BigInt(PRIORITYFEE))
         expect(BigInt(result.maxFeePerGas as string)).toEqual(
@@ -93,11 +88,11 @@ describe('Connection', () => {
       })
       it('asked the rpc what they should be without feeCurrency', async () => {
         const result = await connection.setFeeMarketGas({})
-        expect(connection.rpcCaller.call).toHaveBeenCalledWith('eth_maxPriorityFeePerGas', [])
-        expect(connection.rpcCaller.call).toHaveBeenCalledWith('eth_getBlockByNumber', [
-          'latest',
-          true,
-        ])
+        expect(rpcHandler).toHaveBeenCalledWith('eth_maxPriorityFeePerGas', [])
+        expect(rpcHandler).toHaveBeenCalledWith(
+          expect.stringMatching(/eth_getBlockBy/),
+          expect.any(Array)
+        )
         expect(BigInt(result.maxPriorityFeePerGas as string)).toEqual(BigInt(PRIORITYFEE))
         expect(BigInt(result.maxFeePerGas as string)).toEqual(
           (BigInt(BASE_FEE_PER) * multiple) / BigInt(100) + BigInt(PRIORITYFEE)

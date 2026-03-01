@@ -160,13 +160,6 @@ function isLatinBasedLanguage(language: MnemonicLanguages): boolean {
   }
 }
 
-/**
- * @deprecated now an alias for normalizeMnemonic.
- */
-export function formatNonAccentedCharacters(mnemonic: string) {
-  return normalizeMnemonic(mnemonic)
-}
-
 // Unify the bip39.wordlists (otherwise depends on the instance of the bip39)
 export function getWordList(language: MnemonicLanguages = MnemonicLanguages.english): string[] {
   return wordlists[language]

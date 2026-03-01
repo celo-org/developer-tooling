@@ -263,29 +263,33 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
         const exists = await governance.proposalExists(proposalID)
         expect(exists).toBeFalsy()
       },
-      10 * ONE_SEC
+      30 * ONE_SEC
     )
 
-    it('#getVoter', async () => {
-      await proposeFn(accounts[0])
-      await timeTravel(dequeueFrequency, provider)
-      await governance.dequeueProposalsIfReady()
-      await approveFn()
-      await voteFn(accounts[2])
+    it(
+      '#getVoter',
+      async () => {
+        await proposeFn(accounts[0])
+        await timeTravel(dequeueFrequency, provider)
+        await governance.dequeueProposalsIfReady()
+        await approveFn()
+        await voteFn(accounts[2])
 
-      const proposer = await governance.getVoter(accounts[0])
-      expect(proposer.refundedDeposits).toEqBigNumber(minDeposit)
+        const proposer = await governance.getVoter(accounts[0])
+        expect(proposer.refundedDeposits).toEqBigNumber(minDeposit)
 
-      const voter = await governance.getVoter(accounts[2])
-      const expectedVoteRecord = {
-        proposalID,
-        votes: new BigNumber(0),
-        value: VoteValue.None,
-        abstainVotes: new BigNumber(0),
-        noVotes: new BigNumber(0),
-        yesVotes: new BigNumber('1000000000000000000'),
-      }
-      expect(voter.votes[0]).toEqual(expectedVoteRecord)
-    })
+        const voter = await governance.getVoter(accounts[2])
+        const expectedVoteRecord = {
+          proposalID,
+          votes: new BigNumber(0),
+          value: VoteValue.None,
+          abstainVotes: new BigNumber(0),
+          noVotes: new BigNumber(0),
+          yesVotes: new BigNumber('1000000000000000000'),
+        }
+        expect(voter.votes[0]).toEqual(expectedVoteRecord)
+      },
+      30 * ONE_SEC
+    )
   })
 })

@@ -118,35 +118,6 @@ function parseArray<T>(parseElement: ParseFn<T>): ParseFn<T[]> {
 }
 
 export const parseAddressArray = parseArray(parseAddress)
-export const parseIntRange = (input: string) => {
-  const range = input
-    .slice(1, input.length - 1)
-    .split(':')
-    .map((s) => parseInt(s, 10))
-  if (range.length !== 2) {
-    throw new Error('range input must be two integers separated by a ":"')
-  }
-
-  let start: number
-  if (input.startsWith('[')) {
-    start = range[0]
-  } else if (input.startsWith('(')) {
-    start = range[0] + 1
-  } else {
-    throw new Error('range input must begin with "[" (inclusive) or "(" (exclusive)')
-  }
-
-  let end: number
-  if (input.endsWith(']')) {
-    end = range[1]
-  } else if (input.endsWith(')')) {
-    end = range[1] - 1
-  } else {
-    throw new Error('range input must end with "]" (inclusive) or ")" (exclusive)')
-  }
-
-  return { start, end }
-}
 
 export function argBuilder<T>(parser: ParseFn<T>) {
   return (name: string, args?: Parameters<typeof Args.custom>[0]) =>

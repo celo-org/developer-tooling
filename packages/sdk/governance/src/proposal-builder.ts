@@ -95,11 +95,6 @@ export class ProposalBuilder {
     RegisteredContracts.includes(stripProxy(contract)) ||
     this.getRegistryAddition(contract) !== undefined
 
-  /*
-   * @deprecated - use isRegistryContract
-   */
-  isRegistered = this.isRegistryContract
-
   lookupExternalMethodABI = async (
     address: string,
     tx: ExternalProposalTransactionJSON
@@ -150,12 +145,6 @@ export class ProposalBuilder {
     })
     return { input, to: tx.address, value: tx.value }
   }
-
-  /*
-   *  @deprecated use buildCallToExternalContract
-   *
-   */
-  buildFunctionCallToExternalContract = this.buildCallToExternalContract
 
   transformArgs = (abi: AbiItem, args: any[]) => {
     if (abi.inputs?.length !== args.length) {
