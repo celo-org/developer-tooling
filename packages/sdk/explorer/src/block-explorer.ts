@@ -147,48 +147,6 @@ export class BlockExplorer {
     return null
   }
 
-  private getContractMethodAbiFromMapping = (
-    contractMapping: ContractMapping,
-    selector: string
-  ): ContractNameAndMethodAbi | null => {
-    if (contractMapping === undefined) {
-      return null
-    }
-
-    const methodAbi = contractMapping.fnMapping.get(selector)
-    if (methodAbi === undefined) {
-      return null
-    }
-
-    return {
-      contract: contractMapping.details.address,
-      contractName: contractMapping.details.name,
-      abi: methodAbi,
-    }
-  }
-
-  /**
-   * Returns the contract name and ABI of the method by looking up
-   * the contract address but only in core contracts
-   * @param address
-   * @param selector
-   * @returns The contract name and ABI of the method or null if not found
-   */
-  getContractMethodAbiFromCore = async (
-    address: string,
-    selector: string
-  ): Promise<ContractNameAndMethodAbi | null> => {
-    const contractMapping = await this.getContractMappingWithSelector(address, selector, [
-      this.getContractMappingFromCore,
-    ])
-
-    if (contractMapping === undefined) {
-      return null
-    }
-
-    return this.getContractMethodAbiFromMapping(contractMapping, selector)
-  }
-
   buildCallDetails(contract: ContractDetails, abi: ABIDefinition, input: string): CallDetails {
     const encodedParameters = input.slice(10)
     const { args, params } = parseDecodedParams(
