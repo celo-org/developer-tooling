@@ -1,4 +1,5 @@
-import { Provider, JsonRpcPayload, JsonRpcResponse } from '@celo/connect'
+import { Provider } from '@celo/connect'
+import type { EIP1193RequestFn } from 'viem'
 import * as http from 'http'
 import * as https from 'https'
 import * as net from 'net'
@@ -19,12 +20,12 @@ export function setupAPIKey(apiKey: string) {
   })
   return options
 }
+
+let nextId = 1
+
 /**
  * HTTP/HTTPS provider with custom headers support (e.g. API keys).
- * Not deduplicated with dev-utils/test-utils.ts SimpleHttpProvider because:
- *   1. That version is http-only (no https, no headers) — simpler for tests
- *   2. dev-utils is a devDependency and cannot import from contractkit
- *   3. contractkit cannot import from dev-utils (circular)
+ * Implements EIP-1193 request() interface.
  */
 class SimpleHttpProvider implements Provider {
   /** Used by cli/src/test-utils/cliUtils.ts:extractHostFromProvider to get the RPC URL */
@@ -37,8 +38,13 @@ class SimpleHttpProvider implements Provider {
     this.host = url
   }
 
-  send(payload: JsonRpcPayload, callback: (error: Error | null, result?: JsonRpcResponse) => void) {
-    const body = JSON.stringify(payload)
+  request: EIP1193RequestFn = async ({ method, params }) => {
+    const body = JSON.stringify({
+      jsonrpc: '2.0',
+      id: nextId++,
+      method,
+      params: Array.isArray(params) ? params : params != null ? [params] : [],
+    })
     const parsedUrl = new URL(this.url)
     const isHttps = parsedUrl.protocol === 'https:'
     const httpModule = isHttps ? https : http
@@ -54,35 +60,42 @@ class SimpleHttpProvider implements Provider {
       }
     }
 
-    const req = httpModule.request(
-      {
-        hostname: parsedUrl.hostname,
-        port: parsedUrl.port,
-        path: parsedUrl.pathname + parsedUrl.search,
-        method: 'POST',
-        headers,
-      },
-      (res) => {
-        let data = ''
-        res.on('data', (chunk: string) => {
-          data += chunk
-        })
-        res.on('end', () => {
-          try {
-            callback(null, JSON.parse(data))
-          } catch (e) {
-            callback(new Error(`Invalid JSON response: ${data}`))
-          }
-        })
-      }
-    )
+    return new Promise((resolve, reject) => {
+      const req = httpModule.request(
+        {
+          hostname: parsedUrl.hostname,
+          port: parsedUrl.port,
+          path: parsedUrl.pathname + parsedUrl.search,
+          method: 'POST',
+          headers,
+        },
+        (res) => {
+          let data = ''
+          res.on('data', (chunk: string) => {
+            data += chunk
+          })
+          res.on('end', () => {
+            try {
+              const json = JSON.parse(data)
+              if (json.error) {
+                reject(new Error(json.error.message || JSON.stringify(json.error)))
+              } else {
+                resolve(json.result)
+              }
+            } catch (e) {
+              reject(new Error(`Invalid JSON response: ${data}`))
+            }
+          })
+        }
+      )
 
-    req.on('error', (err) => {
-      callback(err)
+      req.on('error', (err) => {
+        reject(err)
+      })
+
+      req.write(body)
+      req.end()
     })
-
-    req.write(body)
-    req.end()
   }
 }
 
@@ -92,29 +105,42 @@ class SimpleIpcProvider implements Provider {
     private netModule: typeof net
   ) {}
 
-  send(payload: JsonRpcPayload, callback: (error: Error | null, result?: JsonRpcResponse) => void) {
-    const body = JSON.stringify(payload)
-    const socket = this.netModule.connect({ path: this.path })
-    let data = ''
-
-    socket.on('connect', () => {
-      socket.write(body)
+  request: EIP1193RequestFn = async ({ method, params }) => {
+    const body = JSON.stringify({
+      jsonrpc: '2.0',
+      id: nextId++,
+      method,
+      params: Array.isArray(params) ? params : params != null ? [params] : [],
     })
 
-    socket.on('data', (chunk: Buffer) => {
-      data += chunk.toString()
-    })
+    return new Promise((resolve, reject) => {
+      const socket = this.netModule.connect({ path: this.path })
+      let data = ''
 
-    socket.on('end', () => {
-      try {
-        callback(null, JSON.parse(data))
-      } catch (e) {
-        callback(new Error(`Invalid JSON response: ${data}`))
-      }
-    })
+      socket.on('connect', () => {
+        socket.write(body)
+      })
 
-    socket.on('error', (err) => {
-      callback(err)
+      socket.on('data', (chunk: Buffer) => {
+        data += chunk.toString()
+      })
+
+      socket.on('end', () => {
+        try {
+          const json = JSON.parse(data)
+          if (json.error) {
+            reject(new Error(json.error.message || JSON.stringify(json.error)))
+          } else {
+            resolve(json.result)
+          }
+        } catch (e) {
+          reject(new Error(`Invalid JSON response: ${data}`))
+        }
+      })
+
+      socket.on('error', (err) => {
+        reject(err)
+      })
     })
   }
 }

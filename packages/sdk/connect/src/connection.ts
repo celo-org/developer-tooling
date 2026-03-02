@@ -37,7 +37,6 @@ import {
   outputCeloTxReceiptFormatter,
 } from './utils/formatter'
 import { hasProperty } from './utils/provider-utils'
-import { HttpRpcCaller, RpcCaller, getRandomId } from './utils/rpc-caller'
 import { TxParamsNormalizer } from './utils/tx-params-normalizer'
 import { ReadOnlyWallet } from './wallet'
 
@@ -54,14 +53,13 @@ export interface ConnectionOptions {
 
 /**
  * Connection is a Class for connecting to Celo, sending Transactions, etc
- * @param provider a JSON-RPC provider
+ * @param provider an EIP-1193 provider
  * @param wallet a child class of {@link WalletBase}
  */
 export class Connection {
   private config: ConnectionOptions
   private _chainID: number | undefined
   readonly paramsPopulator: TxParamsNormalizer
-  rpcCaller!: RpcCaller
   private _provider!: CeloProvider
   private _viemClient!: PublicClient
 
@@ -95,43 +93,15 @@ export class Connection {
     try {
       let celoProvider: CeloProvider
       if (!(provider instanceof CeloProvider)) {
-        this.rpcCaller = new HttpRpcCaller(provider)
         celoProvider = new CeloProvider(provider, this)
       } else {
-        // Use the underlying raw provider for rpcCaller to avoid recursion
-        // (CeloProvider.send -> handleAccounts -> Connection.getAccounts -> rpcCaller.call -> CeloProvider.send)
-        this.rpcCaller = new HttpRpcCaller(provider.existingProvider)
         celoProvider = provider
       }
       this._provider = celoProvider
       const rawProvider = provider instanceof CeloProvider ? provider.existingProvider : provider
       this._viemClient = createPublicClient({
         transport: custom({
-          request: async ({ method, params }) => {
-            return new Promise((resolve, reject) => {
-              rawProvider.send!(
-                {
-                  id: getRandomId(),
-                  jsonrpc: '2.0',
-                  method,
-                  params: params as any[],
-                },
-                (error, response) => {
-                  if (error) {
-                    reject(error)
-                  } else if (response?.error) {
-                    reject(
-                      new Error(
-                        typeof response.error === 'string' ? response.error : response.error.message
-                      )
-                    )
-                  } else {
-                    resolve(response?.result)
-                  }
-                }
-              )
-            })
-          },
+          request: rawProvider.request.bind(rawProvider),
         }),
       })
       return true
@@ -253,27 +223,11 @@ export class Connection {
   }
 
   private async sendTransactionViaProvider(tx: CeloTx): Promise<`0x${string}`> {
-    return new Promise<`0x${string}`>((resolve, reject) => {
-      this._provider.send(
-        {
-          id: getRandomId(),
-          jsonrpc: '2.0',
-          method: 'eth_sendTransaction',
-          params: [tx],
-        },
-        (error, resp) => {
-          if (error) {
-            reject(error)
-          } else if (resp?.error) {
-            reject(new Error(resp.error.message))
-          } else if (resp) {
-            resolve(resp.result as `0x${string}`)
-          } else {
-            reject(new Error('empty-response'))
-          }
-        }
-      )
+    const result = await this._provider.request({
+      method: 'eth_sendTransaction',
+      params: [tx],
     })
+    return result as `0x${string}`
   }
 
   /*
@@ -291,60 +245,28 @@ export class Connection {
     // stringify data for v3 & v4 based on https://github.com/MetaMask/metamask-extension/blob/c72199a1a6e4151c40c22f79d0f3b6ed7a2d59a7/app/scripts/lib/typed-message-manager.js#L185
     const shouldStringify = version === 3 || version === 4
 
-    // Uses the Provider and not the RpcCaller, because this method should be intercepted
-    // by the CeloProvider if there is a local wallet that could sign it. The RpcCaller
-    // would just forward it to the node
-    const signature = await new Promise<string>((resolve, reject) => {
-      const method = version ? `eth_signTypedData_v${version}` : 'eth_signTypedData'
-      this._provider.send(
-        {
-          id: getRandomId(),
-          jsonrpc: '2.0',
-          method,
-          params: [
-            inputAddressFormatter(signer),
-            shouldStringify ? JSON.stringify(typedData) : typedData,
-          ],
-        },
-        (error, resp) => {
-          if (error) {
-            reject(error)
-          } else if (resp) {
-            resolve(resp.result as string)
-          } else {
-            reject(new Error('empty-response'))
-          }
-        }
-      )
-    })
+    // Uses the CeloProvider so this method can be intercepted
+    // by a local wallet that could sign it.
+    const method = version ? `eth_signTypedData_v${version}` : 'eth_signTypedData'
+    const signature = (await this._provider.request({
+      method,
+      params: [
+        inputAddressFormatter(signer),
+        shouldStringify ? JSON.stringify(typedData) : typedData,
+      ],
+    })) as string
 
     const messageHash = toHex(generateTypedDataHash(typedData))
     return parseSignatureWithoutPrefix(messageHash, signature, signer)
   }
 
   sign = async (dataToSign: string, address: Address | number): Promise<string> => {
-    // Uses the Provider and not the RpcCaller, because this method should be intercepted
-    // by the CeloProvider if there is a local wallet that could sign it. The RpcCaller
-    // would just forward it to the node
-    const signature = await new Promise<string>((resolve, reject) => {
-      this._provider.send(
-        {
-          id: getRandomId(),
-          jsonrpc: '2.0',
-          method: 'eth_sign',
-          params: [inputAddressFormatter(address.toString()), inputSignFormatter(dataToSign)],
-        },
-        (error, resp) => {
-          if (error) {
-            reject(error)
-          } else if (resp) {
-            resolve(resp.result as string)
-          } else {
-            reject(new Error('empty-response'))
-          }
-        }
-      )
-    })
+    // Uses the CeloProvider so this method can be intercepted
+    // by a local wallet that could sign it.
+    const signature = (await this._provider.request({
+      method: 'eth_sign',
+      params: [inputAddressFormatter(address.toString()), inputSignFormatter(dataToSign)],
+    })) as string
 
     return signature
   }

@@ -12,7 +12,8 @@ import {
   getHashFromEncoded,
   signTransaction,
 } from '@celo/wallet-base'
-import * as ethUtil from '@ethereumjs/util'
+import { secp256k1 } from '@noble/curves/secp256k1'
+import { keccak_256 } from '@noble/hashes/sha3'
 import { createVerify, VerifyPublicKeyInput } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
@@ -179,16 +180,20 @@ export class TestLedger {
 
   async signPersonalMessage(derivationPath: string, data: string) {
     if (ledgerAddresses[derivationPath]) {
-      const dataBuff = ethUtil.toBuffer(ensureLeading0x(data))
-      const msgHashBuff = ethUtil.hashPersonalMessage(dataBuff)
+      const dataBytes = Buffer.from(trimLeading0x(ensureLeading0x(data)), 'hex')
+      const prefix = Buffer.from(`\x19Ethereum Signed Message:\n${dataBytes.length}`)
+      const combined = new Uint8Array(prefix.length + dataBytes.length)
+      combined.set(prefix)
+      combined.set(dataBytes, prefix.length)
+      const msgHashBuff = keccak_256(combined)
 
       const trimmedKey = trimLeading0x(ledgerAddresses[derivationPath].privateKey)
       const pkBuffer = Buffer.from(trimmedKey, 'hex')
-      const signature = ethUtil.ecsign(msgHashBuff, pkBuffer)
+      const signature = secp256k1.sign(msgHashBuff, pkBuffer)
       return {
-        v: Number(signature.v),
-        r: signature.r.toString('hex'),
-        s: signature.s.toString('hex'),
+        v: signature.recovery + 27,
+        r: signature.r.toString(16).padStart(64, '0'),
+        s: signature.s.toString(16).padStart(64, '0'),
       }
     }
     throw new Error('Invalid Path')
@@ -203,11 +208,11 @@ export class TestLedger {
 
     const trimmedKey = trimLeading0x(ledgerAddresses[derivationPath].privateKey)
     const pkBuffer = Buffer.from(trimmedKey, 'hex')
-    const signature = ethUtil.ecsign(messageHash, pkBuffer)
+    const signature = secp256k1.sign(messageHash, pkBuffer)
     return {
-      v: Number(signature.v),
-      r: signature.r.toString('hex'),
-      s: signature.s.toString('hex'),
+      v: signature.recovery + 27,
+      r: signature.r.toString(16).padStart(64, '0'),
+      s: signature.s.toString(16).padStart(64, '0'),
     }
   }
 

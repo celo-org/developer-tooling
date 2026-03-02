@@ -618,7 +618,7 @@ describe('extractSignature', () => {
   })
   it('fails when length is empty', () => {
     expect(() => extractSignature('0x')).toThrowErrorMatchingInlineSnapshot(
-      `"Invalid byte sequence"`
+      `"@extractSignature: provided transaction has 0 elements but ethereum-legacy txs with a signature have 9 {}"`
     )
   })
 })

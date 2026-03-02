@@ -8,7 +8,7 @@ import {
 import { verifySignature } from '@celo/utils/lib/signatureUtils'
 import { recoverTransaction, verifyEIP712TypedDataSigner } from '@celo/wallet-base'
 import { asn1FromPublicKey } from '@celo/wallet-hsm'
-import * as ethUtil from '@ethereumjs/util'
+// ethUtil removed — using @noble/curves/secp256k1 instead
 import { secp256k1 } from '@noble/curves/secp256k1'
 import { BigNumber } from 'bignumber.js'
 import { parseEther } from 'viem'
@@ -120,7 +120,9 @@ describe('AwsHsmWallet class', () => {
                 throw new Error(`Key 'arn:aws:kms:123:key/${KeyId}' does not exist`)
               }
               const privateKey = keys.get(KeyId)
-              const pubKey = ethUtil.privateToPublic(ethUtil.toBuffer(privateKey))
+              const pubKey = Buffer.from(
+                secp256k1.getPublicKey(trimLeading0x(privateKey!), false).subarray(1)
+              )
               const temp = new BigNumber(ensureLeading0x(pubKey.toString('hex')))
               const asn1Key = asn1FromPublicKey(temp)
               return { PublicKey: new Uint8Array(asn1Key) }

@@ -1,9 +1,10 @@
 import { ReadOnlyWallet } from '@celo/connect'
-import { Address, publicKeyToAddress } from '@celo/utils/lib/address'
+import { Address } from '@celo/utils/lib/address'
 import { RemoteWallet } from '@celo/wallet-remote'
 import debugFactory from 'debug'
 import { AzureHSMSigner } from './azure-hsm-signer'
 import { AzureKeyVaultClient } from './azure-key-vault-client'
+import { getAddressFromPublicKey } from '@celo/wallet-hsm'
 
 const debug = debugFactory('kit:wallet:aws-hsm-wallet')
 
@@ -52,6 +53,6 @@ export class AzureHSMWallet extends RemoteWallet<AzureHSMSigner> implements Read
       throw new Error('AzureHSMWallet needs to be initialized first')
     }
     const publicKey = await this.keyVaultClient!.getPublicKey(keyName)
-    return publicKeyToAddress(publicKey.toString(16))
+    return getAddressFromPublicKey(publicKey)
   }
 }

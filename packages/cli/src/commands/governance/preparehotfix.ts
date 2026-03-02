@@ -1,4 +1,4 @@
-import { toBuffer } from '@ethereumjs/util'
+import { hexToBytes } from 'viem'
 import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
@@ -26,7 +26,7 @@ export default class PrepareHotfix extends BaseCommand {
     kit.defaultAccount = account
 
     const governance = await kit.contracts.getGovernance()
-    const hash = toBuffer(res.flags.hash) as Buffer
+    const hash = Buffer.from(hexToBytes(res.flags.hash as `0x${string}`))
 
     await newCheckBuilder(this, account)
       .hotfixApproved(hash)

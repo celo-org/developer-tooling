@@ -125,9 +125,9 @@ describe('newKitWithApiKey()', () => {
 describe('newKitFromProvider()', () => {
   test('should create a kit from a provider', () => {
     const provider = {
-      send(_payload: any, _callback: any) {
+      request: (async () => {
         // noop
-      },
+      }) as any,
     }
     const kit = newKitFromProvider(provider)
     expect(kit).toBeDefined()

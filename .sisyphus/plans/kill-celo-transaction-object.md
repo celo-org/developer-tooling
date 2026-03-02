@@ -68,15 +68,15 @@ Eliminate the last major web3-era transaction abstractions (`CeloTxObject`, `Cel
 - Dead types and functions removed from `@celo/connect`
 
 ### Definition of Done
-- [ ] `yarn build` exits 0 (full monorepo)
-- [ ] `RUN_ANVIL_TESTS=true yarn workspace @celo/contractkit run test` passes
-- [ ] `yarn workspace @celo/governance run build && yarn workspace @celo/governance run test` passes
-- [ ] `RUN_ANVIL_TESTS=true yarn workspace @celo/celocli run test` passes
-- [ ] `yarn lint && yarn fmt:diff` passes
-- [ ] Zero `CeloTransactionObject` references in codebase
-- [ ] Zero `CeloTxObject` references in codebase (except deprecated re-export if any)
-- [ ] Zero `createViemTxObject` references in codebase
-- [ ] Zero `displaySendTx` references in codebase
+- [x] `yarn build` exits 0 (full monorepo)
+- [x] `RUN_ANVIL_TESTS=true yarn workspace @celo/contractkit run test` passes
+- [x] `yarn workspace @celo/governance run build && yarn workspace @celo/governance run test` passes
+- [x] `RUN_ANVIL_TESTS=true yarn workspace @celo/celocli run test` passes
+- [x] `yarn lint && yarn fmt:diff` passes
+- [x] Zero `CeloTransactionObject` references in codebase
+- [x] Zero `CeloTxObject` references in codebase (except deprecated re-export if any)
+- [x] Zero `createViemTxObject` references in codebase
+- [x] Zero `displaySendTx` references in codebase
 
 ### Must Have
 - Wrapper write methods return `Promise<`0x${string}`>` (tx hash)
@@ -209,7 +209,7 @@ Max Concurrent: 5 (Wave 2)
 > Implementation + verification = ONE task. Never separate.
 > EVERY task MUST have: Recommended Agent Profile + Parallelization info + QA Scenarios.
 
-- [ ] 1. Add `sendTx()`, `sendTxUnchecked()`, and `encodeFunctionData()` to BaseWrapper
+- [x] 1. Add `sendTx()`, `sendTxUnchecked()`, and `encodeFunctionData()` to BaseWrapper
 
   **What to do**:
   - Add `protected async sendTx(functionName, args, txParams?)` method that:
@@ -246,11 +246,11 @@ Max Concurrent: 5 (Wave 2)
   - `packages/sdk/connect/src/utils/tx-result.ts:49` — `TransactionResult.getHash()` returns `Promise<string>`
 
   **Acceptance Criteria**:
-  - [ ] `sendTx()` method exists on BaseWrapper, is protected, returns `Promise<\`0x${string}\`>`
-  - [ ] `sendTxUnchecked()` method exists on BaseWrapper, is protected, returns `Promise<\`0x${string}\`>`
-  - [ ] `encodeFunctionData()` method exists on BaseWrapper, is public, returns `\`0x${string}\``
-  - [ ] `yarn workspace @celo/contractkit run build` exits 0
-  - [ ] Existing `buildTx`/`buildTxUnchecked` still work (not removed)
+  - [x] `sendTx()` method exists on BaseWrapper, is protected, returns `Promise<\`0x${string}\`>`
+  - [x] `sendTxUnchecked()` method exists on BaseWrapper, is protected, returns `Promise<\`0x${string}\`>`
+  - [x] `encodeFunctionData()` method exists on BaseWrapper, is public, returns `\`0x${string}\``
+  - [x] `yarn workspace @celo/contractkit run build` exits 0
+  - [x] Existing `buildTx`/`buildTxUnchecked` still work (not removed)
 
   **QA Scenarios:**
   ```
@@ -267,7 +267,7 @@ Max Concurrent: 5 (Wave 2)
 
   **Commit**: NO (groups with Wave 1 commit)
 
-- [ ] 2. Add `connection.callContract()` helper and migrate `proxyCallGenericImpl`
+- [x] 2. Add `connection.callContract()` helper and migrate `proxyCallGenericImpl`
 
   **What to do**:
   - Add `callContract(contract: ContractRef, functionName: string, args: unknown[]): Promise<unknown>` to Connection class that:
@@ -301,11 +301,11 @@ Max Concurrent: 5 (Wave 2)
   - `packages/sdk/connect/src/viem-abi-coder.ts` — `coerceArgsForAbi`
 
   **Acceptance Criteria**:
-  - [ ] `callContract()` method exists on Connection class
-  - [ ] `proxyCallGenericImpl` no longer uses `createViemTxObjectInternal`
-  - [ ] `yarn workspace @celo/connect run build` exits 0
-  - [ ] `yarn workspace @celo/contractkit run build` exits 0
-  - [ ] `RUN_ANVIL_TESTS=true yarn workspace @celo/contractkit run test` passes (proxyCallGeneric-based reads still work)
+  - [x] `callContract()` method exists on Connection class
+  - [x] `proxyCallGenericImpl` no longer uses `createViemTxObjectInternal`
+  - [x] `yarn workspace @celo/connect run build` exits 0
+  - [x] `yarn workspace @celo/contractkit run build` exits 0
+  - [x] `RUN_ANVIL_TESTS=true yarn workspace @celo/contractkit run test` passes (proxyCallGeneric-based reads still work)
 
   **QA Scenarios:**
   ```
@@ -322,7 +322,7 @@ Max Concurrent: 5 (Wave 2)
 
   **Commit**: NO (groups with Wave 1 commit)
 
-- [ ] 3. Migrate AbstractFeeCurrencyWrapper reads to `callContract` / `contract.read`
+- [x] 3. Migrate AbstractFeeCurrencyWrapper reads to `callContract` / `contract.read`
 
   **What to do**:
   - Replace 5 `createViemTxObject(...).call()` usages in `AbstractFeeCurrencyWrapper.ts` with `connection.callContract()` or `contract.read.*`
@@ -347,8 +347,8 @@ Max Concurrent: 5 (Wave 2)
   - `packages/sdk/contractkit/src/wrappers/AbstractFeeCurrencyWrapper.ts:57-82` — the 5 createViemTxObject calls to replace
 
   **Acceptance Criteria**:
-  - [ ] Zero `createViemTxObject` in AbstractFeeCurrencyWrapper.ts
-  - [ ] `yarn workspace @celo/contractkit run build` exits 0
+  - [x] Zero `createViemTxObject` in AbstractFeeCurrencyWrapper.ts
+  - [x] `yarn workspace @celo/contractkit run build` exits 0
 
   **QA Scenarios:**
   ```
@@ -363,7 +363,7 @@ Max Concurrent: 5 (Wave 2)
 
   **Commit**: NO (groups with Wave 1 commit)
 
-- [ ] 4. Migrate `address-registry.ts` and `sourcify.ts` reads to `callContract`
+- [x] 4. Migrate `address-registry.ts` and `sourcify.ts` reads to `callContract`
 
   **What to do**:
   - Replace `createViemTxObject<string>(connection, registryContract, 'getAddressForString', [...]).call()` in `address-registry.ts:38` with `connection.callContract()`
@@ -387,10 +387,10 @@ Max Concurrent: 5 (Wave 2)
   - `packages/sdk/explorer/src/sourcify.ts:263` — createViemTxObject for proxy implementation lookup
 
   **Acceptance Criteria**:
-  - [ ] Zero `createViemTxObject` in address-registry.ts
-  - [ ] Zero `createViemTxObject` in sourcify.ts
-  - [ ] `yarn workspace @celo/contractkit run build` exits 0
-  - [ ] `yarn workspace @celo/explorer run build` exits 0
+  - [x] Zero `createViemTxObject` in address-registry.ts
+  - [x] Zero `createViemTxObject` in sourcify.ts
+  - [x] `yarn workspace @celo/contractkit run build` exits 0
+  - [x] `yarn workspace @celo/explorer run build` exits 0
 
   **QA Scenarios:**
   ```
@@ -408,7 +408,7 @@ Max Concurrent: 5 (Wave 2)
   - Message: `feat(connect,contractkit): add callContract helper and sendTx/encodeFunctionData to BaseWrapper`
   - Pre-commit: `yarn workspace @celo/connect run build && yarn workspace @celo/contractkit run build && yarn workspace @celo/explorer run build`
 
-- [ ] 5. Migrate simple wrappers to eager send (8 files)
+- [x] 5. Migrate simple wrappers to eager send (8 files)
 
   **What to do**:
   - Replace `buildTx('functionName', [...])` with `this.sendTx('functionName', [...], txParams)` in 8 simple wrapper files
@@ -443,10 +443,10 @@ Max Concurrent: 5 (Wave 2)
   - `packages/sdk/contractkit/src/wrappers/FederatedAttestations.ts` — 1 method
 
   **Acceptance Criteria**:
-  - [ ] Zero `CeloTransactionObject` in the 8 files
-  - [ ] Zero `buildTx` calls in the 8 files
-  - [ ] All write methods return `Promise<\`0x${string}\`>`
-  - [ ] `yarn workspace @celo/contractkit run build` exits 0
+  - [x] Zero `CeloTransactionObject` in the 8 files
+  - [x] Zero `buildTx` calls in the 8 files
+  - [x] All write methods return `Promise<\`0x${string}\`>`
+  - [x] `yarn workspace @celo/contractkit run build` exits 0
 
   **QA Scenarios:**
   ```
@@ -461,7 +461,7 @@ Max Concurrent: 5 (Wave 2)
 
   **Commit**: NO (groups with Wave 2 commit)
 
-- [ ] 6. Migrate StableToken + MultiSig + FeeHandler + EpochManager to eager send
+- [x] 6. Migrate StableToken + MultiSig + FeeHandler + EpochManager to eager send
 
   **What to do**:
   - Same pattern as Task 5 but for medium-complexity wrappers
@@ -490,9 +490,9 @@ Max Concurrent: 5 (Wave 2)
   - `packages/sdk/contractkit/src/wrappers/EpochManager.ts:94-122` — 5 methods
 
   **Acceptance Criteria**:
-  - [ ] Zero `CeloTransactionObject` in StableToken, MultiSig, FeeHandler, EpochManager
-  - [ ] Zero `CeloTxObject` in MultiSig.ts
-  - [ ] `yarn workspace @celo/contractkit run build` exits 0
+  - [x] Zero `CeloTransactionObject` in StableToken, MultiSig, FeeHandler, EpochManager
+  - [x] Zero `CeloTxObject` in MultiSig.ts
+  - [x] `yarn workspace @celo/contractkit run build` exits 0
 
   **QA Scenarios:**
   ```
@@ -507,7 +507,7 @@ Max Concurrent: 5 (Wave 2)
 
   **Commit**: NO (groups with Wave 2 commit)
 
-- [ ] 7. Migrate Erc20Wrapper + CeloTokenWrapper to eager send (generic wrappers)
+- [x] 7. Migrate Erc20Wrapper + CeloTokenWrapper to eager send (generic wrappers)
 
   **What to do**:
   - Replace `buildTxUnchecked` with `sendTxUnchecked` in Erc20Wrapper (approve, transfer, transferFrom) and CeloTokenWrapper (increaseAllowance)
@@ -530,13 +530,13 @@ Max Concurrent: 5 (Wave 2)
   - `packages/sdk/contractkit/src/wrappers/CeloTokenWrapper.ts:40-44` — 1 buildTxUnchecked call
 
   **Acceptance Criteria**:
-  - [ ] Zero `CeloTransactionObject` in Erc20Wrapper.ts and CeloTokenWrapper.ts
-  - [ ] Zero `buildTxUnchecked` in both files (replaced with `sendTxUnchecked`)
-  - [ ] `yarn workspace @celo/contractkit run build` exits 0
+  - [x] Zero `CeloTransactionObject` in Erc20Wrapper.ts and CeloTokenWrapper.ts
+  - [x] Zero `buildTxUnchecked` in both files (replaced with `sendTxUnchecked`)
+  - [x] `yarn workspace @celo/contractkit run build` exits 0
 
   **Commit**: NO (groups with Wave 2 commit)
 
-- [ ] 8. Migrate Election + LockedGold to eager send (array-returning methods)
+- [x] 8. Migrate Election + LockedGold to eager send (array-returning methods)
 
   **What to do**:
   - Replace `buildTx` with `sendTx` in all write methods
@@ -566,15 +566,15 @@ Max Concurrent: 5 (Wave 2)
   - `packages/sdk/contractkit/src/wrappers/LockedGold.ts:165-192` — relock uses reduceRight for index ordering
 
   **Acceptance Criteria**:
-  - [ ] Zero `CeloTransactionObject` in Election.ts and LockedGold.ts
-  - [ ] Array-returning methods return `Promise<\`0x${string}\`[]>`
-  - [ ] LockedGold.relock() preserves reduceRight ordering
-  - [ ] `yarn workspace @celo/contractkit run build` exits 0
-  - [ ] `RUN_ANVIL_TESTS=true yarn workspace @celo/contractkit run test` passes
+  - [x] Zero `CeloTransactionObject` in Election.ts and LockedGold.ts
+  - [x] Array-returning methods return `Promise<\`0x${string}\`[]>`
+  - [x] LockedGold.relock() preserves reduceRight ordering
+  - [x] `yarn workspace @celo/contractkit run build` exits 0
+  - [x] `RUN_ANVIL_TESTS=true yarn workspace @celo/contractkit run test` passes
 
   **Commit**: NO (groups with Wave 2 commit)
 
-- [ ] 9. Migrate Governance + Validators + Accounts + ReleaseGold to eager send
+- [x] 9. Migrate Governance + Validators + Accounts + ReleaseGold to eager send
 
   **What to do**:
   - Replace `buildTx` with `sendTx` in all write methods across these 4 complex wrappers
@@ -606,17 +606,17 @@ Max Concurrent: 5 (Wave 2)
   - `packages/sdk/contractkit/src/wrappers/ReleaseGold.ts:336-660` — array-returning methods + 20+ write methods
 
   **Acceptance Criteria**:
-  - [ ] Zero `CeloTransactionObject` in Governance, Validators, Accounts, ReleaseGold
-  - [ ] Zero `as unknown as` casts in Validators.ts
-  - [ ] `yarn workspace @celo/contractkit run build` exits 0
-  - [ ] `yarn workspace @celo/governance run build` exits 0
-  - [ ] `RUN_ANVIL_TESTS=true yarn workspace @celo/contractkit run test` passes
+  - [x] Zero `CeloTransactionObject` in Governance, Validators, Accounts, ReleaseGold
+  - [x] Zero `as unknown as` casts in Validators.ts
+  - [x] `yarn workspace @celo/contractkit run build` exits 0
+  - [x] `yarn workspace @celo/governance run build` exits 0
+  - [x] `RUN_ANVIL_TESTS=true yarn workspace @celo/contractkit run test` passes
 
   **Commit**: YES
   - Message: `refactor(contractkit): migrate wrapper write methods to eager send (return tx hash)`
   - Pre-commit: `yarn workspace @celo/contractkit run build && yarn workspace @celo/governance run build`
 
-- [ ] 10. ProposalBuilder — replace createViemTxObject with encodeFunctionData
+- [x] 10. ProposalBuilder — replace createViemTxObject with encodeFunctionData
 
   **What to do**:
   - In `buildCallToCoreContract()` (line 219): replace `createViemTxObject(connection, contract, methodName, args)` with viem's `encodeFunctionData({ abi: contract.abi, functionName: methodName, args })` (with coercion via `coerceArgsForAbi`)
@@ -644,15 +644,15 @@ Max Concurrent: 5 (Wave 2)
   - `packages/sdk/connect/src/viem-abi-coder.ts` — coerceArgsForAbi for arg coercion before encodeFunctionData
 
   **Acceptance Criteria**:
-  - [ ] Zero `createViemTxObject` in proposal-builder.ts
-  - [ ] Zero `CeloTxObject` in proposal-builder.ts
-  - [ ] Zero `CeloTransactionObject` in proposal-builder.ts
-  - [ ] `yarn workspace @celo/governance run build` exits 0
-  - [ ] `yarn workspace @celo/governance run test` passes
+  - [x] Zero `createViemTxObject` in proposal-builder.ts
+  - [x] Zero `CeloTxObject` in proposal-builder.ts
+  - [x] Zero `CeloTransactionObject` in proposal-builder.ts
+  - [x] `yarn workspace @celo/governance run build` exits 0
+  - [x] `yarn workspace @celo/governance run test` passes
 
   **Commit**: NO (groups with Wave 3 commit)
 
-- [ ] 11. proxy.ts setImplementationOnProxy — return encoded data
+- [x] 11. proxy.ts setImplementationOnProxy — return encoded data
 
   **What to do**:
   - `setImplementationOnProxy(address, connection)` currently returns `CeloTxObject` via `createViemTxObject`. Change to return `{ to: string, data: string }` — the encoded proxy repoint calldata + proxy address
@@ -674,12 +674,12 @@ Max Concurrent: 5 (Wave 2)
   - `packages/sdk/governance/src/proposal-builder.ts:75-86` — addProxyRepointingTx caller
 
   **Acceptance Criteria**:
-  - [ ] Zero `createViemTxObject` in proxy.ts
-  - [ ] `yarn workspace @celo/contractkit run build` exits 0
+  - [x] Zero `createViemTxObject` in proxy.ts
+  - [x] `yarn workspace @celo/contractkit run build` exits 0
 
   **Commit**: NO (groups with Wave 3 commit)
 
-- [ ] 12. dev-utils/chain-setup.ts — replace createViemTxObject
+- [x] 12. dev-utils/chain-setup.ts — replace createViemTxObject
 
   **What to do**:
   - Replace 3 `createViemTxObject(...).send({from})` patterns with `connection.sendTransaction({ to, data: encodeFunctionData(...), from })`
@@ -700,13 +700,13 @@ Max Concurrent: 5 (Wave 2)
   - `packages/dev-utils/src/chain-setup.ts:18-65` — 3 createViemTxObject calls
 
   **Acceptance Criteria**:
-  - [ ] Zero `createViemTxObject` in chain-setup.ts
-  - [ ] `yarn workspace @celo/dev-utils run build` exits 0
+  - [x] Zero `createViemTxObject` in chain-setup.ts
+  - [x] `yarn workspace @celo/dev-utils run build` exits 0
 
   **Commit**: YES
   - Message: `refactor(governance): replace createViemTxObject with encodeFunctionData in ProposalBuilder and chain-setup`
 
-- [ ] 13. CLI — converge displaySendTx into displayViemTx + update safe.ts + governance/approve.ts
+- [x] 13. CLI — converge displaySendTx into displayViemTx + update safe.ts + governance/approve.ts
 
   **What to do**:
   - `displayViemTx` already exists at `cli/src/utils/cli.ts:68` with signature `(name, hash: Promise<Address>, client: PublicCeloClient)`. Use this as the target pattern.
@@ -739,14 +739,14 @@ Max Concurrent: 5 (Wave 2)
   - `packages/cli/src/commands/governance/approve.ts:170-189` — uses `.txo` for multisig
 
   **Acceptance Criteria**:
-  - [ ] Zero `displaySendTx` in CLI codebase
-  - [ ] Zero `CeloTransactionObject` in CLI source (non-test) files
-  - [ ] Zero `.txo` access in CLI source files
-  - [ ] `yarn workspace @celo/celocli run build` exits 0
+  - [x] Zero `displaySendTx` in CLI codebase
+  - [x] Zero `CeloTransactionObject` in CLI source (non-test) files
+  - [x] Zero `.txo` access in CLI source files
+  - [x] `yarn workspace @celo/celocli run build` exits 0
 
   **Commit**: NO (groups with Wave 4 commit)
 
-- [ ] 14. CLI test utilities — replace createViemTxObject in chain-setup, multisigUtils, release-gold
+- [x] 14. CLI test utilities — replace createViemTxObject in chain-setup, multisigUtils, release-gold
 
   **What to do**:
   - Replace all `createViemTxObject(...).send()` and `.sendAndWaitForReceipt()` in:
@@ -773,12 +773,12 @@ Max Concurrent: 5 (Wave 2)
   - `packages/cli/src/test-utils/release-gold.ts:44-59` — 1 createViemTxObject call
 
   **Acceptance Criteria**:
-  - [ ] Zero `createViemTxObject` in CLI test-utils
-  - [ ] `yarn workspace @celo/celocli run build` exits 0
+  - [x] Zero `createViemTxObject` in CLI test-utils
+  - [x] `yarn workspace @celo/celocli run build` exits 0
 
   **Commit**: NO (groups with Wave 4 commit)
 
-- [ ] 15. CLI DKG commands — replace createViemTxObject .send()/.call()
+- [x] 15. CLI DKG commands — replace createViemTxObject .send()/.call()
 
   **What to do**:
   - DKG commands use `createViemTxObject` for both `.send()` and `.call()` patterns:
@@ -805,12 +805,12 @@ Max Concurrent: 5 (Wave 2)
   - `packages/cli/src/commands/dkg/get.ts:43-68` — 6 createViemTxObject .call() patterns
 
   **Acceptance Criteria**:
-  - [ ] Zero `createViemTxObject` in dkg/*.ts
-  - [ ] `yarn workspace @celo/celocli run build` exits 0
+  - [x] Zero `createViemTxObject` in dkg/*.ts
+  - [x] `yarn workspace @celo/celocli run build` exits 0
 
   **Commit**: NO (groups with Wave 4 commit)
 
-- [ ] 16. CLI remaining test files — propose.test, execute.test, other test files
+- [x] 16. CLI remaining test files — propose.test, execute.test, other test files
 
   **What to do**:
   - Replace all `createViemTxObject` in CLI test files:
@@ -841,12 +841,12 @@ Max Concurrent: 5 (Wave 2)
   - All other CLI test files with createViemTxObject
 
   **Acceptance Criteria**:
-  - [ ] Zero `createViemTxObject` in CLI test files
-  - [ ] `yarn workspace @celo/celocli run build` exits 0
+  - [x] Zero `createViemTxObject` in CLI test files
+  - [x] `yarn workspace @celo/celocli run build` exits 0
 
   **Commit**: NO (groups with Wave 4 commit)
 
-- [ ] 17. CLI network/contracts.ts + contractkit tests — remaining .call() and .send() usages
+- [x] 17. CLI network/contracts.ts + contractkit tests — remaining .call() and .send() usages
 
   **What to do**:
   - Replace `createViemTxObject<string>(connection, contract, 'functionName', [...]).call()` in `network/contracts.ts:43,64` with `connection.callContract()`
@@ -875,14 +875,14 @@ Max Concurrent: 5 (Wave 2)
   - `packages/sdk/contractkit/src/wrappers/SortedOracles.test.ts` — 6 createViemTxObject
 
   **Acceptance Criteria**:
-  - [ ] Zero `createViemTxObject` in contractkit test files and CLI network/contracts.ts
-  - [ ] `yarn workspace @celo/contractkit run build` exits 0
-  - [ ] `RUN_ANVIL_TESTS=true yarn workspace @celo/contractkit run test` passes
+  - [x] Zero `createViemTxObject` in contractkit test files and CLI network/contracts.ts
+  - [x] `yarn workspace @celo/contractkit run build` exits 0
+  - [x] `RUN_ANVIL_TESTS=true yarn workspace @celo/contractkit run test` passes
 
   **Commit**: YES
   - Message: `refactor(cli): converge displaySendTx into displayViemTx, replace createViemTxObject`
 
-- [ ] 18. Kill CeloTransactionObject class + toTransactionObject + CeloTransactionParams
+- [x] 18. Kill CeloTransactionObject class + toTransactionObject + CeloTransactionParams
 
   **What to do**:
   - Delete `CeloTransactionObject` class and `toTransactionObject` helper from `celo-transaction-object.ts`
@@ -905,13 +905,13 @@ Max Concurrent: 5 (Wave 2)
   - `packages/sdk/connect/src/index.ts:7` — export to remove
 
   **Acceptance Criteria**:
-  - [ ] `celo-transaction-object.ts` deleted or emptied
-  - [ ] Zero `CeloTransactionObject` in `@celo/connect` source
-  - [ ] `yarn workspace @celo/connect run build` exits 0
+  - [x] `celo-transaction-object.ts` deleted or emptied
+  - [x] Zero `CeloTransactionObject` in `@celo/connect` source
+  - [x] `yarn workspace @celo/connect run build` exits 0
 
   **Commit**: NO (groups with Wave 5 commit)
 
-- [ ] 19. Kill CeloTxObject interface + _parent type structure
+- [x] 19. Kill CeloTxObject interface + _parent type structure
 
   **What to do**:
   - Remove `CeloTxObject<T>` interface from `types.ts`
@@ -934,12 +934,12 @@ Max Concurrent: 5 (Wave 2)
   - `packages/sdk/connect/src/connection.ts:302-329` — sendTransactionObject uses CeloTxObject
 
   **Acceptance Criteria**:
-  - [ ] Zero `CeloTxObject` in types.ts
-  - [ ] `yarn workspace @celo/connect run build` exits 0
+  - [x] Zero `CeloTxObject` in types.ts
+  - [x] `yarn workspace @celo/connect run build` exits 0
 
   **Commit**: NO (groups with Wave 5 commit)
 
-- [ ] 20. Kill createViemTxObject/Internal + clean up viem-tx-object.ts
+- [x] 20. Kill createViemTxObject/Internal + clean up viem-tx-object.ts
 
   **What to do**:
   - Remove `createViemTxObjectInternal` and all `createViemTxObject` overloads from `viem-tx-object.ts`
@@ -962,12 +962,12 @@ Max Concurrent: 5 (Wave 2)
   - `packages/sdk/connect/src/index.ts:5` — export to update
 
   **Acceptance Criteria**:
-  - [ ] Zero `createViemTxObject` in @celo/connect source
-  - [ ] `yarn workspace @celo/connect run build` exits 0
+  - [x] Zero `createViemTxObject` in @celo/connect source
+  - [x] `yarn workspace @celo/connect run build` exits 0
 
   **Commit**: NO (groups with Wave 5 commit)
 
-- [ ] 21. Kill proxyCallGeneric/Impl + buildTx/buildTxUnchecked + requireCall + dead ProposalBuilder methods
+- [x] 21. Kill proxyCallGeneric/Impl + buildTx/buildTxUnchecked + requireCall + dead ProposalBuilder methods
 
   **What to do**:
   - Remove `proxyCallGeneric` (5 overloads) and `proxyCallGenericImpl` from BaseWrapper.ts
@@ -993,15 +993,15 @@ Max Concurrent: 5 (Wave 2)
   - `packages/cli/src/utils/require.ts:26-34` — requireCall (dead code)
 
   **Acceptance Criteria**:
-  - [ ] Zero `proxyCallGeneric` function definitions in BaseWrapper.ts
-  - [ ] Zero `buildTx` function definitions in BaseWrapper.ts
-  - [ ] Zero `requireCall` in require.ts (function removed)
-  - [ ] `yarn workspace @celo/contractkit run build` exits 0
-  - [ ] `yarn workspace @celo/celocli run build` exits 0
+  - [x] Zero `proxyCallGeneric` function definitions in BaseWrapper.ts
+  - [x] Zero `buildTx` function definitions in BaseWrapper.ts
+  - [x] Zero `requireCall` in require.ts (function removed)
+  - [x] `yarn workspace @celo/contractkit run build` exits 0
+  - [x] `yarn workspace @celo/celocli run build` exits 0
 
   **Commit**: NO (groups with Wave 5 commit)
 
-- [ ] 22. Remove dead imports/exports from @celo/connect index.ts + final connect cleanup
+- [x] 22. Remove dead imports/exports from @celo/connect index.ts + final connect cleanup
 
   **What to do**:
   - Update `packages/sdk/connect/src/index.ts` to remove exports for deleted files/types
@@ -1019,16 +1019,16 @@ Max Concurrent: 5 (Wave 2)
   - **Blocked By**: Tasks 18-21
 
   **Acceptance Criteria**:
-  - [ ] `yarn build` exits 0 (full monorepo)
-  - [ ] Zero `CeloTransactionObject` in monorepo (`grep -rl`)
-  - [ ] Zero `CeloTxObject` in monorepo
-  - [ ] Zero `createViemTxObject` in monorepo
+  - [x] `yarn build` exits 0 (full monorepo)
+  - [x] Zero `CeloTransactionObject` in monorepo (`grep -rl`)
+  - [x] Zero `CeloTxObject` in monorepo
+  - [x] Zero `createViemTxObject` in monorepo
 
   **Commit**: YES
   - Message: `refactor(connect): remove CeloTxObject, CeloTransactionObject, createViemTxObject`
   - Pre-commit: `yarn build && yarn lint && yarn fmt:diff`
 
-- [ ] 23. Full verification — build, test, lint across all packages
+- [x] 23. Full verification — build, test, lint across all packages
 
   **What to do**:
   - Run full monorepo build: `yarn build`
@@ -1048,15 +1048,15 @@ Max Concurrent: 5 (Wave 2)
   - **Blocked By**: Task 22
 
   **Acceptance Criteria**:
-  - [ ] `yarn build` exits 0
-  - [ ] All contractkit tests pass
-  - [ ] All governance tests pass
-  - [ ] All CLI tests pass
-  - [ ] `yarn lint && yarn fmt:diff` passes
-  - [ ] `grep -rl 'CeloTransactionObject' packages/` → 0
-  - [ ] `grep -rl 'CeloTxObject' packages/` → 0
-  - [ ] `grep -rl 'createViemTxObject' packages/` → 0
-  - [ ] `grep -rl 'displaySendTx' packages/` → 0
+  - [x] `yarn build` exits 0
+  - [x] All contractkit tests pass
+  - [x] All governance tests pass
+  - [x] All CLI tests pass
+  - [x] `yarn lint && yarn fmt:diff` passes
+  - [x] `grep -rl 'CeloTransactionObject' packages/` → 0
+  - [x] `grep -rl 'CeloTxObject' packages/` → 0
+  - [x] `grep -rl 'createViemTxObject' packages/` → 0
+  - [x] `grep -rl 'displaySendTx' packages/` → 0
 
   **Commit**: NO (verification only)
 
@@ -1065,19 +1065,19 @@ Max Concurrent: 5 (Wave 2)
 
 > 4 review agents run in PARALLEL. ALL must APPROVE. Rejection → fix → re-run.
 
-- [ ] F1. **Plan Compliance Audit** — `oracle`
+- [x] F1. **Plan Compliance Audit** — `oracle`
   Read the plan end-to-end. For each "Must Have": verify implementation exists (read file, run command). For each "Must NOT Have": search codebase for forbidden patterns — reject with file:line if found. Check evidence files exist. Compare deliverables against plan.
   Output: `Must Have [N/N] | Must NOT Have [N/N] | Tasks [N/N] | VERDICT: APPROVE/REJECT`
 
-- [ ] F2. **Code Quality Review** — `unspecified-high`
+- [x] F2. **Code Quality Review** — `unspecified-high`
   Run `tsc --noEmit` + `yarn lint` + `yarn fmt:diff` + `yarn test`. Review all changed files for: `as any`/`@ts-ignore`, empty catches, console.log in prod, commented-out code, unused imports. Check AI slop: excessive comments, over-abstraction, generic names.
   Output: `Build [PASS/FAIL] | Lint [PASS/FAIL] | Tests [N pass/N fail] | Files [N clean/N issues] | VERDICT`
 
-- [ ] F3. **Real Manual QA** — `unspecified-high` (+ `playwright` skill if needed)
+- [x] F3. **Real Manual QA** — `unspecified-high` (+ `playwright` skill if needed)
   Start from clean state. Run full build. Run contractkit tests with Anvil. Run governance tests. Run CLI tests. Verify zero references to killed types. Verify wrapper methods return hex strings.
   Output: `Scenarios [N/N pass] | Integration [N/N] | Edge Cases [N tested] | VERDICT`
 
-- [ ] F4. **Scope Fidelity Check** — `deep`
+- [x] F4. **Scope Fidelity Check** — `deep`
   For each task: read "What to do", read actual diff (git log/diff). Verify 1:1 — everything in spec was built (no missing), nothing beyond spec was built (no creep). Check "Must NOT do" compliance. Flag unaccounted changes.
   Output: `Tasks [N/N compliant] | Contamination [CLEAN/N issues] | Unaccounted [CLEAN/N files] | VERDICT`
 
@@ -1109,13 +1109,13 @@ grep -rl "displaySendTx" packages/                             # Expected: 0 mat
 ```
 
 ### Final Checklist
-- [ ] All "Must Have" present
-- [ ] All "Must NOT Have" absent
-- [ ] All tests pass
-- [ ] Zero CeloTransactionObject references
-- [ ] Zero CeloTxObject references
-- [ ] Zero createViemTxObject references
-- [ ] Zero displaySendTx references
-- [ ] Wrapper methods return `Promise<`0x${string}`>`
-- [ ] encodeFunctionData available on BaseWrapper
-- [ ] callContract available on Connection
+- [x] All "Must Have" present
+- [x] All "Must NOT Have" absent
+- [x] All tests pass
+- [x] Zero CeloTransactionObject references
+- [x] Zero CeloTxObject references
+- [x] Zero createViemTxObject references
+- [x] Zero displaySendTx references
+- [x] Wrapper methods return `Promise<`0x${string}`>`
+- [x] encodeFunctionData available on BaseWrapper
+- [x] callContract available on Connection

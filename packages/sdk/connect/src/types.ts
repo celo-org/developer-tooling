@@ -1,3 +1,4 @@
+import type { EIP1193RequestFn } from 'viem'
 import { StrongAddress } from '@celo/base'
 export type Address = string
 
@@ -229,58 +230,19 @@ export interface CeloTxReceipt extends Partial<CeloParams> {
   events?: { [eventName: string]: EventLog }
 }
 
-export type Callback<T> = (error: Error | null, result?: T) => void
-
-export interface JsonRpcResponse {
-  jsonrpc: string
-  id: string | number
-  result?: any
-  error?: {
-    readonly code?: number
-    readonly data?: unknown
-    readonly message: string
-  }
-}
-
-export interface JsonRpcPayload {
-  jsonrpc: string
-  method: string
-  params: any[]
-  id?: string | number
-}
-
+/**
+ * EIP-1193 compliant provider interface.
+ * Uses viem's strongly-typed EIP1193RequestFn for full type safety.
+ */
 export interface Provider {
-  send(
-    payload: JsonRpcPayload,
-    callback: (error: Error | null, result?: JsonRpcResponse) => void
-  ): void
+  request: EIP1193RequestFn
 }
 
-export interface Error {
-  readonly code?: number
-  readonly data?: unknown
-  readonly message: string
-}
-
-export interface HttpProvider {
-  send(
-    payload: JsonRpcPayload,
-    callback: (error: Error | null, result?: JsonRpcResponse) => void
-  ): void
-}
+/** @deprecated Use Provider instead — kept for backward compat during migration */
+export type HttpProvider = Provider
 
 export interface RLPEncodedTx {
   transaction: FormattedCeloTx
   rlpEncode: Hex
   type: TransactionTypes
-}
-
-// Based on https://eips.ethereum.org/EIPS/eip-1193
-export interface Eip1193RequestArguments {
-  readonly method: string
-  readonly params?: readonly unknown[] | object
-}
-
-export interface Eip1193Provider {
-  request(args: Eip1193RequestArguments): Promise<unknown>
 }

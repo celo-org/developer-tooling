@@ -1,12 +1,5 @@
 import * as crypto from 'crypto'
-import {
-  Address,
-  Callback,
-  Connection,
-  JsonRpcPayload,
-  JsonRpcResponse,
-  Provider,
-} from '@celo/connect'
+import { Address, Connection, Provider } from '@celo/connect'
 import { toFunctionSelector } from 'viem'
 import { Metadata, fetchMetadata, tryGetProxyImplementation } from './sourcify'
 
@@ -21,17 +14,14 @@ describe('sourcify helpers', () => {
   const chainId: number = 42220
 
   const mockProvider: Provider = {
-    send: (payload: JsonRpcPayload, callback: Callback<JsonRpcResponse>): void => {
-      if (payload.params[0].to === proxyAddress) {
-        callback(null, {
-          jsonrpc: payload.jsonrpc,
-          id: Number(payload.id),
-          result: `0x000000000000000000000000${implAddress.slice(2)}`,
-        })
+    request: (async ({ params }: { method: string; params?: any }) => {
+      const safeParams = Array.isArray(params) ? params : params != null ? [params] : []
+      if (safeParams[0]?.to === proxyAddress) {
+        return `0x000000000000000000000000${implAddress.slice(2)}`
       } else {
-        callback(new Error('revert'))
+        throw new Error('revert')
       }
-    },
+    }) as any,
   }
 
   beforeEach(() => {

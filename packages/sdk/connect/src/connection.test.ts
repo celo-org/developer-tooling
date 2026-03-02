@@ -1,19 +1,14 @@
 import { ensureLeading0x } from '@celo/base'
 import { Connection } from './connection'
-import { Callback, JsonRpcPayload, JsonRpcResponse, Provider } from './types'
+import { Provider } from './types'
 
 function createMockProvider(handler?: (method: string, params: any[]) => any): Provider {
   return {
-    send(payload: JsonRpcPayload, callback: Callback<JsonRpcResponse>): void {
+    request: (async ({ method, params }: any) => {
       if (handler) {
-        try {
-          const result = handler(payload.method, payload.params || [])
-          callback(null, { id: Number(payload.id), jsonrpc: '2.0', result })
-        } catch (error: any) {
-          callback(error)
-        }
+        return handler(method, params || [])
       }
-    },
+    }) as any,
   }
 }
 

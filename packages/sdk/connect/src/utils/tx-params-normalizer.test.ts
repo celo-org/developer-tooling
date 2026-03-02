@@ -1,17 +1,12 @@
 import { Connection } from '../connection'
-import { Callback, CeloTx, JsonRpcPayload, JsonRpcResponse, Provider } from '../types'
+import { CeloTx, Provider } from '../types'
 import { TxParamsNormalizer } from './tx-params-normalizer'
 
 function createMockProvider(handler: (method: string, params: any[]) => any): Provider {
   return {
-    send(payload: JsonRpcPayload, callback: Callback<JsonRpcResponse>): void {
-      try {
-        const result = handler(payload.method, payload.params || [])
-        callback(null, { id: Number(payload.id), jsonrpc: '2.0', result })
-      } catch (error: any) {
-        callback(error)
-      }
-    },
+    request: (async ({ method, params }: any) => {
+      return handler(method, params || [])
+    }) as any,
   }
 }
 

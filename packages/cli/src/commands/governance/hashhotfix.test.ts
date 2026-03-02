@@ -104,7 +104,10 @@ testWithAnvilL2('governance:hashhotfix cmd', (provider) => {
           "Simulating proposal execution",
         ],
         [
-          "   ✘  Transaction 0 failure: Error: EVM error OpcodeNotFound",
+          "   ✘  Transaction 0 failure: UnknownRpcError: An unknown RPC error occurred.
+
+      Details: EVM error OpcodeNotFound
+      Version: viem@2.33.2",
         ],
       ]
     `)

@@ -4,7 +4,8 @@ import { computeSharedSecret as computeECDHSecret } from '@celo/utils/lib/ecdh'
 import { Decrypt } from '@celo/utils/lib/ecies'
 import { EIP712TypedData, generateTypedDataHash } from '@celo/utils/lib/sign-typed-data-utils'
 import { getHashFromEncoded, signTransaction } from '@celo/wallet-base'
-import * as ethUtil from '@ethereumjs/util'
+import { keccak_256 } from '@noble/hashes/sha3'
+import { secp256k1 } from '@noble/curves/secp256k1'
 
 /**
  * Signs the EVM transaction using the provided private key
@@ -28,18 +29,21 @@ export class LocalSigner implements Signer {
   }
 
   async signPersonalMessage(data: string): Promise<{ v: number; r: Buffer; s: Buffer }> {
-    // ecsign needs a privateKey without 0x
     const trimmedKey = trimLeading0x(this.privateKey)
     const pkBuffer = Buffer.from(trimmedKey, 'hex')
 
-    const dataBuff = ethUtil.toBuffer(ensureLeading0x(data))
-    const msgHashBuff = ethUtil.hashPersonalMessage(dataBuff)
+    const dataBytes = Buffer.from(trimLeading0x(ensureLeading0x(data)), 'hex')
+    const prefix = Buffer.from(`\x19Ethereum Signed Message:\n${dataBytes.length}`)
+    const combined = new Uint8Array(prefix.length + dataBytes.length)
+    combined.set(prefix)
+    combined.set(dataBytes, prefix.length)
+    const msgHash = keccak_256(combined)
 
-    const sig = ethUtil.ecsign(msgHashBuff, pkBuffer)
+    const sig = secp256k1.sign(msgHash, pkBuffer)
     return {
-      v: Number(sig.v),
-      r: Buffer.from(sig.r),
-      s: Buffer.from(sig.s),
+      v: sig.recovery + 27,
+      r: Buffer.from(sig.r.toString(16).padStart(64, '0'), 'hex'),
+      s: Buffer.from(sig.s.toString(16).padStart(64, '0'), 'hex'),
     }
   }
 
@@ -48,11 +52,11 @@ export class LocalSigner implements Signer {
     const trimmedKey = trimLeading0x(this.privateKey)
     const pkBuffer = Buffer.from(trimmedKey, 'hex')
 
-    const sig = ethUtil.ecsign(dataBuff, pkBuffer)
+    const sig = secp256k1.sign(dataBuff, pkBuffer)
     return {
-      v: Number(sig.v),
-      r: Buffer.from(sig.r),
-      s: Buffer.from(sig.s),
+      v: sig.recovery + 27,
+      r: Buffer.from(sig.r.toString(16).padStart(64, '0'), 'hex'),
+      s: Buffer.from(sig.s.toString(16).padStart(64, '0'), 'hex'),
     }
   }
 

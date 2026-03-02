@@ -2,7 +2,7 @@ import { ensureLeading0x, trimLeading0x } from '@celo/base/lib/address'
 import { RLPEncodedTx, Signer } from '@celo/connect'
 import { EIP712TypedData, generateTypedDataHash } from '@celo/utils/lib/sign-typed-data-utils'
 import { getHashFromEncoded } from '@celo/wallet-base'
-import * as ethUtil from '@ethereumjs/util'
+import { keccak_256 } from '@noble/hashes/sha3'
 import { AzureKeyVaultClient } from './azure-key-vault-client'
 
 /**
@@ -37,12 +37,13 @@ export class AzureHSMSigner implements Signer {
   }
 
   async signPersonalMessage(data: string): Promise<{ v: number; r: Buffer; s: Buffer }> {
-    const dataBuff = ethUtil.toBuffer(ensureLeading0x(data))
-    const msgHashBuff = ethUtil.hashPersonalMessage(dataBuff)
-    const signature = await AzureHSMSigner.keyVaultClient.signMessage(
-      Buffer.from(msgHashBuff),
-      this.keyName
-    )
+    const dataBytes = Buffer.from(trimLeading0x(ensureLeading0x(data)), 'hex')
+    const prefix = Buffer.from(`\x19Ethereum Signed Message:\n${dataBytes.length}`)
+    const combined = new Uint8Array(prefix.length + dataBytes.length)
+    combined.set(prefix)
+    combined.set(dataBytes, prefix.length)
+    const msgHashBuff = Buffer.from(keccak_256(combined))
+    const signature = await AzureHSMSigner.keyVaultClient.signMessage(msgHashBuff, this.keyName)
     // Recovery ID should be a byte prefix
     // https://bitcoin.stackexchange.com/questions/38351/ecdsa-v-r-s-what-is-v
     const sigV = signature.v + 27

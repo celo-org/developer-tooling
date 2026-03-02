@@ -1,12 +1,5 @@
 /** biome-ignore-all lint/suspicious/noDoubleEquals: legacy-test-file */
-import {
-  Callback,
-  CeloTx,
-  Connection,
-  JsonRpcPayload,
-  JsonRpcResponse,
-  Provider,
-} from '@celo/connect'
+import { CeloTx, Connection, Provider } from '@celo/connect'
 import { privateKeyToAddress } from '@celo/utils/lib/address'
 import { recoverTransaction } from '@celo/wallet-base'
 import debugFactory from 'debug'
@@ -32,42 +25,24 @@ describe('Transaction Utils', () => {
   let connection: Connection
   let signTransaction: (tx: CeloTx) => Promise<{ raw: string; tx: any }>
   const mockProvider: Provider = {
-    send: (payload: JsonRpcPayload, callback: Callback<JsonRpcResponse>): void => {
-      if (payload.method === 'eth_coinbase') {
-        const response: JsonRpcResponse = {
-          jsonrpc: payload.jsonrpc,
-          id: Number(payload.id),
-          result: '0xc94770007dda54cF92009BFF0dE90c06F603a09f',
-        }
-        callback(null, response)
-      } else if (payload.method === 'eth_gasPrice') {
-        const response: JsonRpcResponse = {
-          jsonrpc: payload.jsonrpc,
-          id: Number(payload.id),
-          result: '0x09184e72a000',
-        }
-        callback(null, response)
+    request: (async ({ method }: any) => {
+      if (method === 'eth_coinbase') {
+        return '0xc94770007dda54cF92009BFF0dE90c06F603a09f'
+      } else if (method === 'eth_gasPrice') {
+        return '0x09184e72a000'
       } else {
-        callback(new Error(payload.method))
+        throw new Error(method)
       }
-    },
+    }) as any,
   }
 
   const setupConnection = async () => {
     connection = new Connection(mockProvider)
     connection.wallet = new LocalWallet()
     const provider = connection.currentProvider
-    signTransaction = (tx: CeloTx) =>
-      new Promise((resolve, reject) => {
-        provider.send({ id: 1, jsonrpc: '2.0', method: 'eth_signTransaction', params: [tx] }, ((
-          err: any,
-          resp: any
-        ) => {
-          if (err) reject(err)
-          else if (resp?.error) reject(new Error(resp.error.message))
-          else resolve(resp?.result)
-        }) as any)
-      })
+    signTransaction = async (tx: CeloTx) => {
+      return provider.request({ method: 'eth_signTransaction', params: [tx] })
+    }
   }
   const verifyLocalSigning = async (celoTransaction: CeloTx): Promise<void> => {
     let recoveredSigner: string | undefined

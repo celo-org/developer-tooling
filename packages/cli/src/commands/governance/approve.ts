@@ -2,7 +2,7 @@ import { StrongAddress } from '@celo/base'
 import { type Provider } from '@celo/connect'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { MultiSigWrapper } from '@celo/contractkit/lib/wrappers/MultiSig'
-import { toBuffer } from '@ethereumjs/util'
+import { hexToBytes } from 'viem'
 import { Flags } from '@oclif/core'
 import fetch from 'cross-fetch'
 import debugFactory from 'debug'
@@ -201,7 +201,7 @@ export default class Approve extends BaseCommand {
       } else {
         await displayViemTx(
           'approveTx',
-          governance.approveHotfix(toBuffer(hotfix!) as Buffer),
+          governance.approveHotfix(Buffer.from(hexToBytes(hotfix! as `0x${string}`))),
           publicClient
         )
       }
@@ -223,7 +223,7 @@ const addDefaultChecks = async (
   governanceApproverMultiSig: MultiSigWrapper | undefined
 ) => {
   if (isHotfix) {
-    const hotfixBuf = toBuffer(hotfix) as Buffer
+    const hotfixBuf = Buffer.from(hexToBytes(hotfix as `0x${string}`))
 
     if (approvalType === HotfixApprovalType.APPROVER || approvalType === undefined) {
       if (useMultiSig) {

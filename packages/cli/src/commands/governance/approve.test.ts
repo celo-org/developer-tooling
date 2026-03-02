@@ -540,7 +540,7 @@ testWithAnvilL2(
 
         const protocolKit = await Safe.init({
           predictedSafe: predictSafe,
-          provider: kit.connection.currentProvider.toEip1193Provider(),
+          provider: kit.connection.currentProvider as any,
           signer: securityCouncilSafeSignatory1,
         })
 

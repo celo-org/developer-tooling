@@ -15,7 +15,7 @@ export const createSafe = async (
   }
 
   return await Safe.init({
-    provider: provider.toEip1193Provider(),
+    provider: provider as any,
     signer,
     safeAddress,
   })

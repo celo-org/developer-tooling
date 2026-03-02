@@ -1,14 +1,7 @@
 import { NativeSigner, serializeSignature, Signature, Signer } from '@celo/base/lib/signatureUtils'
-import {
-  bufferToHex,
-  ecrecover,
-  ecsign,
-  fromRpcSig,
-  privateToPublic,
-  pubToAddress,
-  toBuffer,
-} from '@ethereumjs/util'
-import { isHex, keccak256, stringToBytes, toBytes } from 'viem'
+import { secp256k1 } from '@noble/curves/secp256k1'
+import { bytesToHex, hexToBytes, isHex, keccak256, stringToBytes, toBytes, toHex } from 'viem'
+import { publicKeyToAddress as viemPublicKeyToAddress } from 'viem/accounts'
 import { ensureLeading0x, eqAddress, privateKeyToAddress, trimLeading0x } from './address'
 import { EIP712TypedData, generateTypedDataHash } from './sign-typed-data-utils'
 
@@ -57,16 +50,28 @@ export async function addressToPublicKey(
   // Note: Eth.sign typing displays incorrect parameter order
   const sig = await signFn(data, signer)
 
-  const rawsig = fromRpcSig(sig)
-  const prefixedMsg = hashMessageWithPrefix(data)
-  const pubKey = ecrecover(Buffer.from(prefixedMsg.slice(2), 'hex'), rawsig.v, rawsig.r, rawsig.s)
+  const trimmedSig = trimLeading0x(sig)
+  const r = hexToBytes(`0x${trimmedSig.slice(0, 64)}`)
+  const s = hexToBytes(`0x${trimmedSig.slice(64, 128)}`)
+  let v = parseInt(trimmedSig.slice(128, 130), 16)
+  if (v < 27) v += 27
 
-  const computedAddr = pubToAddress(pubKey).toString('hex')
+  const prefixedMsg = hashMessageWithPrefix(data)
+  const msgHash = hexToBytes(prefixedMsg as `0x${string}`)
+
+  const signature = new secp256k1.Signature(
+    BigInt(toHex(r, { size: 32 })),
+    BigInt(toHex(s, { size: 32 }))
+  ).addRecoveryBit(v - 27)
+  const pubKeyFull = signature.recoverPublicKey(msgHash).toRawBytes(false)
+
+  const computedAddr = viemPublicKeyToAddress(bytesToHex(pubKeyFull) as `0x${string}`)
   if (!eqAddress(computedAddr, signer)) {
     throw new Error('computed address !== signer')
   }
 
-  return '0x' + pubKey.toString('hex')
+  // Return raw 64-byte key (without 04 prefix) for on-chain compatibility
+  return bytesToHex(pubKeyFull.subarray(1))
 }
 
 export function LocalSigner(privateKey: string): Signer {
@@ -79,13 +84,11 @@ export function LocalSigner(privateKey: string): Signer {
 }
 
 export function signedMessageToPublicKey(message: string, v: number, r: string, s: string) {
-  const pubKeyBuf = ecrecover(
-    Buffer.from(message.slice(2), 'hex'),
-    BigInt(v),
-    Buffer.from(r.slice(2), 'hex'),
-    Buffer.from(s.slice(2), 'hex')
-  )
-  return '0x' + pubKeyBuf.toString('hex')
+  const msgHash = hexToBytes(message as `0x${string}`)
+  const signature = new secp256k1.Signature(BigInt(r), BigInt(s)).addRecoveryBit(v - 27)
+  const pubKey = signature.recoverPublicKey(msgHash).toRawBytes(false)
+  // Return raw 64-byte key (without 04 prefix) for on-chain compatibility
+  return bytesToHex(pubKey.subarray(1))
 }
 
 export function signMessage(message: string, privateKey: string, address: string) {
@@ -97,16 +100,21 @@ export function signMessage(message: string, privateKey: string, address: string
 }
 
 export function signMessageWithoutPrefix(messageHash: string, privateKey: string, address: string) {
-  const publicKey = privateToPublic(toBuffer(privateKey))
-  const derivedAddress: string = bufferToHex(pubToAddress(publicKey))
+  const privKeyBytes = hexToBytes(ensureLeading0x(privateKey) as `0x${string}`)
+  const pubKey = secp256k1.getPublicKey(privKeyBytes, false)
+  const derivedAddress = viemPublicKeyToAddress(bytesToHex(pubKey) as `0x${string}`)
   if (derivedAddress.toLowerCase() !== address.toLowerCase()) {
     throw new Error('Provided private key does not match address of intended signer')
   }
-  const { r, s, v } = ecsign(toBuffer(messageHash), toBuffer(privateKey))
-  if (!isValidSignature(address, messageHash, Number(v), bufferToHex(r), bufferToHex(s))) {
+  const msgHashBytes = hexToBytes(messageHash as `0x${string}`)
+  const sig = secp256k1.sign(msgHashBytes, privKeyBytes.slice(0, 32))
+  const v = sig.recovery + 27
+  const r = ensureLeading0x(sig.r.toString(16).padStart(64, '0'))
+  const s = ensureLeading0x(sig.s.toString(16).padStart(64, '0'))
+  if (!isValidSignature(address, messageHash, v, r, s)) {
     throw new Error('Unable to validate signature')
   }
-  return { v: Number(v), r: bufferToHex(r), s: bufferToHex(s) }
+  return { v, r, s }
 }
 
 export function verifySignature(message: string, signature: string, signer: string) {
@@ -147,9 +155,10 @@ function recoverEIP712TypedDataSigner(
 ): string {
   const dataBuff = generateTypedDataHash(typedData)
   const { r, s, v } = parseFunction(trimLeading0x(signature))
-  const publicKey = ecrecover(toBuffer(dataBuff), BigInt(v), toBuffer(r), toBuffer(s))
-  // TODO test error handling on this
-  return bufferToHex(pubToAddress(publicKey))
+  const msgHash = dataBuff instanceof Uint8Array ? dataBuff : hexToBytes(dataBuff as `0x${string}`)
+  const sig = new secp256k1.Signature(BigInt(r), BigInt(s)).addRecoveryBit(v - 27)
+  const publicKey = sig.recoverPublicKey(msgHash).toRawBytes(false)
+  return viemPublicKeyToAddress(bytesToHex(publicKey) as `0x${string}`)
 }
 
 /**
@@ -204,8 +213,10 @@ export function verifyEIP712TypedDataSigner(
 export function guessSigner(message: string, signature: string): string {
   const messageHash = hashMessageWithPrefix(message)
   const { r, s, v } = parseSignatureAsRsv(signature.slice(2))
-  const publicKey = ecrecover(toBuffer(messageHash), BigInt(v), toBuffer(r), toBuffer(s))
-  return bufferToHex(pubToAddress(publicKey))
+  const msgHash = hexToBytes(messageHash as `0x${string}`)
+  const sig = new secp256k1.Signature(BigInt(r), BigInt(s)).addRecoveryBit(v - 27)
+  const publicKey = sig.recoverPublicKey(msgHash).toRawBytes(false)
+  return viemPublicKeyToAddress(bytesToHex(publicKey) as `0x${string}`)
 }
 
 function parseSignatureAsVrs(signature: string) {
@@ -230,10 +241,10 @@ function parseSignatureAsRsv(signature: string) {
 
 function isValidSignature(signer: string, message: string, v: number, r: string, s: string) {
   try {
-    const publicKey = ecrecover(toBuffer(message), BigInt(v), toBuffer(r), toBuffer(s))
-
-    const retrievedAddress: string = bufferToHex(pubToAddress(publicKey))
-
+    const msgHash = hexToBytes(message as `0x${string}`)
+    const sig = new secp256k1.Signature(BigInt(r), BigInt(s)).addRecoveryBit(v - 27)
+    const publicKey = sig.recoverPublicKey(msgHash).toRawBytes(false)
+    const retrievedAddress = viemPublicKeyToAddress(bytesToHex(publicKey) as `0x${string}`)
     return eqAddress(retrievedAddress, signer)
   } catch (err) {
     return false

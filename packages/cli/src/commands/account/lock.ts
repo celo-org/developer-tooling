@@ -23,6 +23,9 @@ export default class Lock extends BaseCommand {
       console.warn('Warning: account:lock not implemented for Ledger')
     }
 
-    await kit.connection.rpcCaller.call('personal_lockAccount', [res.args.arg1 as string])
+    await kit.connection.viemClient.request({
+      method: 'personal_lockAccount' as any,
+      params: [res.args.arg1 as string] as any,
+    })
   }
 }

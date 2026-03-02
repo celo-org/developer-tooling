@@ -1,6 +1,9 @@
-import { Provider, JsonRpcPayload, JsonRpcResponse } from '@celo/connect'
+import { Provider } from '@celo/connect'
+import type { EIP1193RequestFn } from 'viem'
 import * as http from 'http'
 import migrationOverride from './migration-override.json'
+
+let nextId = 0
 
 class SimpleHttpProvider implements Provider {
   /** Compat with legacy HttpProvider which exposed .host */
@@ -10,42 +13,58 @@ class SimpleHttpProvider implements Provider {
     this.host = url
   }
 
-  send(payload: JsonRpcPayload, callback: (error: Error | null, result?: JsonRpcResponse) => void) {
-    const body = JSON.stringify(payload)
+  request: EIP1193RequestFn = async ({ method, params }) => {
+    const body = JSON.stringify({
+      id: ++nextId,
+      jsonrpc: '2.0',
+      method,
+      params: Array.isArray(params) ? params : params != null ? [params] : [],
+    })
     const parsedUrl = new URL(this.url)
 
-    const req = http.request(
-      {
-        hostname: parsedUrl.hostname,
-        port: parsedUrl.port,
-        path: parsedUrl.pathname + parsedUrl.search,
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Content-Length': Buffer.byteLength(body).toString(),
+    return new Promise<any>((resolve, reject) => {
+      const req = http.request(
+        {
+          hostname: parsedUrl.hostname,
+          port: parsedUrl.port,
+          path: parsedUrl.pathname + parsedUrl.search,
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(body).toString(),
+          },
         },
-      },
-      (res) => {
-        let data = ''
-        res.on('data', (chunk: string) => {
-          data += chunk
-        })
-        res.on('end', () => {
-          try {
-            callback(null, JSON.parse(data))
-          } catch (e) {
-            callback(new Error(`Invalid JSON response: ${data}`))
-          }
-        })
-      }
-    )
+        (res) => {
+          let data = ''
+          res.on('data', (chunk: string) => {
+            data += chunk
+          })
+          res.on('end', () => {
+            try {
+              const json = JSON.parse(data)
+              if (json.error) {
+                reject(
+                  new Error(
+                    `JSON-RPC error: method: ${method} params: ${JSON.stringify(params)} error: ${JSON.stringify(json.error)}`
+                  )
+                )
+              } else {
+                resolve(json.result)
+              }
+            } catch (e) {
+              reject(new Error(`Invalid JSON response: ${data}`))
+            }
+          })
+        }
+      )
 
-    req.on('error', (err) => {
-      callback(err)
+      req.on('error', (err) => {
+        reject(err)
+      })
+
+      req.write(body)
+      req.end()
     })
-
-    req.write(body)
-    req.end()
   }
 }
 
@@ -65,37 +84,7 @@ export const TEST_GAS_LIMIT = 20000000
 export const NetworkConfig = migrationOverride
 
 export function jsonRpcCall<O>(provider: Provider, method: string, params: unknown[]): Promise<O> {
-  return new Promise<O>((resolve, reject) => {
-    if (provider && typeof provider.send === 'function') {
-      provider.send(
-        {
-          id: new Date().getTime(),
-          jsonrpc: '2.0',
-          method,
-          params,
-        },
-        (err: any, res?: JsonRpcResponse) => {
-          if (err) {
-            reject(err)
-          } else if (!res) {
-            reject(new Error('no response'))
-          } else if (res.error) {
-            reject(
-              new Error(
-                `Failed JsonRpcResponse: method: ${method} params: ${JSON.stringify(
-                  params
-                )} error: ${JSON.stringify(res.error)}`
-              )
-            )
-          } else {
-            resolve(res.result)
-          }
-        }
-      )
-    } else {
-      reject(new Error('Invalid provider'))
-    }
-  })
+  return provider.request({ method, params }) as Promise<O>
 }
 
 export function evmRevert(provider: Provider, snapId: string): Promise<void> {

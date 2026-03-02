@@ -33,10 +33,10 @@ async function tryProposal(
 
     try {
       if (call) {
-        await kit.connection.rpcCaller.call('eth_call', [
-          { to: tx.to, from, value: tx.value, data: tx.input },
-          'latest',
-        ])
+        await kit.connection.viemClient.request({
+          method: 'eth_call',
+          params: [{ to: tx.to, from, value: tx.value, data: tx.input }, 'latest'] as any,
+        })
       } else {
         const hash = await kit.connection.sendTransaction({
           to: tx.to,

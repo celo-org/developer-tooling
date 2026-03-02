@@ -1,7 +1,8 @@
 import { URL_REGEX } from '@celo/base/lib/io'
-import { isValidPublic, toChecksumAddress } from '@ethereumjs/util'
-import { either } from 'fp-ts/lib/Either'
+import { secp256k1 } from '@noble/curves/secp256k1'
+import { getAddress } from 'viem'
 import * as t from 'io-ts'
+import { either } from 'fp-ts/lib/Either'
 import { isValidAddress } from './address'
 
 // Exports moved to @celo/base, forwarding them
@@ -41,7 +42,7 @@ export const AddressType = new t.Type<string, string, unknown>(
   (input, context) =>
     either.chain(t.string.validate(input, context), (stringValue) =>
       isValidAddress(stringValue)
-        ? t.success(toChecksumAddress(stringValue))
+        ? t.success(getAddress(stringValue))
         : t.failure(stringValue, context, 'is not a valid address')
     ),
   String
@@ -51,11 +52,22 @@ export const PublicKeyType = new t.Type<string, string, unknown>(
   'Public Key',
   t.string.is,
   (input, context) =>
-    either.chain(t.string.validate(input, context), (stringValue) =>
-      stringValue.startsWith('0x') && isValidPublic(Buffer.from(stringValue.slice(2), 'hex'), true)
-        ? t.success(toChecksumAddress(stringValue))
-        : t.failure(stringValue, context, 'is not a valid public key')
-    ),
+    either.chain(t.string.validate(input, context), (stringValue) => {
+      if (!stringValue.startsWith('0x')) {
+        return t.failure(stringValue, context, 'is not a valid public key')
+      }
+      // Accept both 64-byte raw (128 hex chars) and 65-byte uncompressed (130 hex chars with 04 prefix)
+      let hexKey = stringValue.slice(2)
+      if (hexKey.length === 128) {
+        hexKey = '04' + hexKey
+      }
+      try {
+        secp256k1.ProjectivePoint.fromHex(hexKey)
+        return t.success(stringValue)
+      } catch {
+        return t.failure(stringValue, context, 'is not a valid public key')
+      }
+    }),
   String
 )
 

@@ -34,7 +34,6 @@
     "@celo/wallet-base": "^8.0.3",
     "@celo/wallet-hsm": "^8.0.3",
     "@celo/wallet-remote": "^8.0.3",
-    "@ethereumjs/util": "8.0.5",
     "@types/secp256k1": "^4.0.0",
     "bignumber.js": "^9.0.0",
     "debug": "^4.1.1"
