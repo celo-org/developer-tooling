@@ -12,7 +12,7 @@ const ADDRESS_REGEX_STR = '(?<address>0x[a-fA-F0-9]{40})'
 const CHAIN_ID_REGEX = '(?<chainId>\\d+)'
 const TX_PARAMS = ['feeCurrency', 'gas', 'gasPrice', 'value']
 const PARAM_REGEX = `(${TX_PARAMS.join('|')})=\\w+`
-const ARGS_REGEX = 'args=\\[(,?\\w+)*\\]'
+const ARGS_REGEX = 'args=\\[(\\w+(,\\w+)*)?\\]'
 const QUERY_REGEX = `(?<query>(&?(${PARAM_REGEX}|${ARGS_REGEX}))+)`
 
 // URI scheme mostly borrowed from https://github.com/ethereum/EIPs/blob/master/EIPS/eip-681.md
