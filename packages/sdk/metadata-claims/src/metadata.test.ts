@@ -38,7 +38,8 @@ testWithAnvilL2('Metadata', (provider) => {
     const validatorSigner = ACCOUNT_ADDRESSES[3]
     const attestationSigner = ACCOUNT_ADDRESSES[4]
     console.warn('Creating account', address)
-    await accounts.createAccount({ from: address })
+    const hash = await accounts.createAccount({ from: address })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash })
     const testSigner = async (
       signer: Address,
       action: string,
@@ -50,24 +51,27 @@ testWithAnvilL2('Metadata', (provider) => {
       if (action === 'vote') {
         const fees = await kit.connection.setFeeMarketGas({})
         console.warn('testSigner vote', address, fees)
-        await accounts.authorizeVoteSigner(signer, pop, {
+        const h = await accounts.authorizeVoteSigner(signer, pop, {
           from: address,
           gas: 13000000,
           maxFeePerGas: fees.maxFeePerGas,
         })
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: h })
       } else if (action === 'validator') {
         console.warn('testSigner validator', address)
 
-        await accounts.authorizeValidatorSigner(signer, pop, validator, {
+        const h = await accounts.authorizeValidatorSigner(signer, pop, validator, {
           from: address,
           gas: 13000000,
         })
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: h })
       } else if (action === 'attestation') {
         console.warn('testSigner attestation', address)
-        await accounts.authorizeAttestationSigner(signer, pop, {
+        const h = await accounts.authorizeAttestationSigner(signer, pop, {
           from: address,
           gas: 13000000,
         })
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: h })
       }
       console.warn('testSigner addClaim', address)
 

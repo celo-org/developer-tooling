@@ -66,10 +66,16 @@ testWithAnvilL2('Account claims', (provider) => {
 
       const myUrl = 'https://www.example.com/'
       const accounts = await kit.contracts.getAccounts()
-      await accounts.createAccount({ from: address })
-      await accounts.setMetadataURL(myUrl, { from: address, gas: 0 })
-      await accounts.createAccount({ from: otherAddress })
-      await accounts.setMetadataURL(myUrl, { from: otherAddress, gas: 0 })
+      const publicClient = kit.connection.viemClient
+      
+      let hash = await accounts.createAccount({ from: address })
+      await publicClient.waitForTransactionReceipt({ hash })
+      hash = await accounts.setMetadataURL(myUrl, { from: address })
+      await publicClient.waitForTransactionReceipt({ hash })
+      hash = await accounts.createAccount({ from: otherAddress })
+      await publicClient.waitForTransactionReceipt({ hash })
+      hash = await accounts.setMetadataURL(myUrl, { from: otherAddress })
+      await publicClient.waitForTransactionReceipt({ hash })
 
       IdentityMetadataWrapper.fetchFromURL = () => Promise.resolve(otherMetadata)
 
@@ -93,7 +99,8 @@ testWithAnvilL2('Account claims', (provider) => {
 
     describe('when the metadata URL of the other account has not been set', () => {
       beforeEach(async () => {
-        await (await kit.contracts.getAccounts()).setMetadataURL('', { from: otherAddress, gas: 0 })
+        const h = await (await kit.contracts.getAccounts()).setMetadataURL('', { from: otherAddress })
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: h })
       })
 
       it('indicates that the metadata url could not be retrieved', async () => {

@@ -84,10 +84,26 @@ function wrapWriteWithAccountMapping(
         }
 
         // Pre-flight gas estimation to catch reverts before sending the tx.
-        // This replicates the old connection.sendTransaction() behavior where
-        // estimateGas was called first and reverts were surfaced as thrown errors.
+        // Strip `gas` from estimation args — estimation determines gas, it shouldn't receive a gas limit.
         if (estimateGasNs && typeof estimateGasNs[prop as string] === 'function') {
-          await estimateGasNs[prop as string](...args)
+          const estArgs = [...args]
+          const estLastIdx = estArgs.length - 1
+          const estLast = estLastIdx >= 0 ? estArgs[estLastIdx] : undefined
+          if (estLast && typeof estLast === 'object' && !Array.isArray(estLast) && 'gas' in estLast) {
+            const { gas, ...rest } = estLast
+            estArgs[estLastIdx] = rest
+          }
+          await estimateGasNs[prop as string](...estArgs)
+        }
+
+        // Strip gas: 0 from write args — let viem estimate gas normally
+        {
+          const wLastIdx = args.length - 1
+          const wLast = wLastIdx >= 0 ? args[wLastIdx] : undefined
+          if (wLast && typeof wLast === 'object' && !Array.isArray(wLast) && 'gas' in wLast && !wLast.gas) {
+            const { gas, ...rest } = wLast
+            args[wLastIdx] = rest
+          }
         }
 
         return method(...args)
