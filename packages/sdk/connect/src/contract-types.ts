@@ -89,7 +89,12 @@ function wrapWriteWithAccountMapping(
           const estArgs = [...args]
           const estLastIdx = estArgs.length - 1
           const estLast = estLastIdx >= 0 ? estArgs[estLastIdx] : undefined
-          if (estLast && typeof estLast === 'object' && !Array.isArray(estLast) && 'gas' in estLast) {
+          if (
+            estLast &&
+            typeof estLast === 'object' &&
+            !Array.isArray(estLast) &&
+            'gas' in estLast
+          ) {
             const { gas, ...rest } = estLast
             estArgs[estLastIdx] = rest
           }
@@ -100,7 +105,13 @@ function wrapWriteWithAccountMapping(
         {
           const wLastIdx = args.length - 1
           const wLast = wLastIdx >= 0 ? args[wLastIdx] : undefined
-          if (wLast && typeof wLast === 'object' && !Array.isArray(wLast) && 'gas' in wLast && !wLast.gas) {
+          if (
+            wLast &&
+            typeof wLast === 'object' &&
+            !Array.isArray(wLast) &&
+            'gas' in wLast &&
+            !wLast.gas
+          ) {
             const { gas, ...rest } = wLast
             args[wLastIdx] = rest
           }

@@ -36,9 +36,10 @@ testWithAnvilL2('governance:revokeupvote cmd', (provider) => {
       await testLocallyWithNode(Register, ['--from', accounts[i]], provider)
       await testLocallyWithNode(Lock, ['--from', accounts[i], '--value', i.toString()], provider)
 
-      await governance.upvote(proposalId, accounts[i], {
+      const upvoteHash = await governance.upvote(proposalId, accounts[i], {
         from: accounts[i],
       })
+      await kit.connection.waitForTransactionReceipt(upvoteHash)
     }
   })
 

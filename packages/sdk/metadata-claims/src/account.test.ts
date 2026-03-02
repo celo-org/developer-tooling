@@ -67,7 +67,7 @@ testWithAnvilL2('Account claims', (provider) => {
       const myUrl = 'https://www.example.com/'
       const accounts = await kit.contracts.getAccounts()
       const publicClient = kit.connection.viemClient
-      
+
       let hash = await accounts.createAccount({ from: address })
       await publicClient.waitForTransactionReceipt({ hash })
       hash = await accounts.setMetadataURL(myUrl, { from: address })
@@ -99,7 +99,9 @@ testWithAnvilL2('Account claims', (provider) => {
 
     describe('when the metadata URL of the other account has not been set', () => {
       beforeEach(async () => {
-        const h = await (await kit.contracts.getAccounts()).setMetadataURL('', { from: otherAddress })
+        const h = await (await kit.contracts.getAccounts()).setMetadataURL('', {
+          from: otherAddress,
+        })
         await kit.connection.viemClient.waitForTransactionReceipt({ hash: h })
       })
 
