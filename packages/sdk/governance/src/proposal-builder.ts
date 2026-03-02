@@ -25,6 +25,7 @@ import {
   isRegistryRepoint,
   registryRepointArgs,
 } from './proposals'
+import { bigintReplacer } from './json-utils'
 
 /**
  * Builder class to construct proposals from JSON or transaction objects.
@@ -233,7 +234,7 @@ export class ProposalBuilder {
     throw new Error(
       `Couldn't build call for transaction:\n\n${JSON.stringify(
         tx,
-        undefined,
+        bigintReplacer,
         2
       )}\n\nAt least one of the following issues must be corrected:\n${issues
         .map((error, index) => `  ${index + 1}. ${error}`)

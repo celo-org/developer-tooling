@@ -6,6 +6,7 @@ import BigNumber from 'bignumber.js'
 import inquirer from 'inquirer'
 import type { ProposalTransactionJSON } from './'
 import { ProposalBuilder } from './proposal-builder'
+import { bigintReplacer } from './json-utils'
 
 const DONE_CHOICE = '✔ done'
 
@@ -14,7 +15,7 @@ export class InteractiveProposalBuilder {
 
   async outputTransactions() {
     const transactionList = this.builder.build()
-    console.log(JSON.stringify(transactionList, null, 2))
+    console.log(JSON.stringify(transactionList, bigintReplacer, 2))
   }
 
   async promptTransactions() {

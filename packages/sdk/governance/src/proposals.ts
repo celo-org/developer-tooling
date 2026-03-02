@@ -30,6 +30,7 @@ import { utf8ToBytes } from '@noble/hashes/utils'
 import { BigNumber } from 'bignumber.js'
 import debugFactory from 'debug'
 import { encodeAbiParameters, toFunctionSelector, type AbiParameter } from 'viem'
+import { bigintReplacer } from './json-utils'
 
 export const debug = debugFactory('governance:proposals')
 
@@ -82,7 +83,7 @@ export const registryRepointArgs = (
   tx: Pick<ExternalProposalTransactionJSON, 'args' | 'contract' | 'function'>
 ) => {
   if (!isRegistryRepoint(tx)) {
-    throw new Error(`Proposal transaction not a registry repoint:\n${JSON.stringify(tx, null, 2)}`)
+    throw new Error(`Proposal transaction not a registry repoint:\n${JSON.stringify(tx, bigintReplacer, 2)}`)
   }
   return {
     name: tx.args[0] as CeloContract,
@@ -101,7 +102,7 @@ const isRegistryRepointRaw = (tx: ProposalTransaction) =>
 
 const registryRepointRawArgs = (tx: ProposalTransaction) => {
   if (!isRegistryRepointRaw(tx)) {
-    throw new Error(`Proposal transaction not a registry repoint:\n${JSON.stringify(tx, null, 2)}`)
+    throw new Error(`Proposal transaction not a registry repoint:\n${JSON.stringify(tx, bigintReplacer, 2)}`)
   }
   const params = decodeParametersToObject(setAddressAbi.inputs!, trimLeading0x(tx.input).slice(8))
   return {
@@ -153,7 +154,7 @@ export const proposalToJSON = async (
   for (const tx of proposal) {
     const parsedTx = await blockExplorer.tryParseTx(tx as CeloTxPending)
     if (parsedTx == null) {
-      throw new Error(`Unable to parse ${JSON.stringify(tx)} with block explorer`)
+      throw new Error(`Unable to parse ${JSON.stringify(tx, bigintReplacer)} with block explorer`)
     }
     if (isRegistryRepointRaw(tx) && parsedTx.callDetails.isCoreContract) {
       const args = registryRepointRawArgs(tx)
