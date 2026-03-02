@@ -28,11 +28,12 @@ testWithAnvilL2('ScoreManager Wrapper', (provider) => {
           functionName: 'setValidatorScore',
           args: [electedValidatorAddresses[0], valueToFixidityString(new BigNumber(0.5))],
         })
-        await kit.connection.sendTransaction({
+        const hash = await kit.connection.sendTransaction({
           to: scoreManagerContract.address,
           data,
           from,
         })
+        await kit.connection.waitForTransactionReceipt(hash)
       },
       new BigNumber('1e18')
     )
@@ -60,11 +61,12 @@ testWithAnvilL2('ScoreManager Wrapper', (provider) => {
           functionName: 'setGroupScore',
           args: [GROUP_ADDRESSES[0], valueToFixidityString(new BigNumber(0.99))],
         })
-        await kit.connection.sendTransaction({
+        const hash = await kit.connection.sendTransaction({
           to: scoreManagerContract.address,
           data,
           from,
         })
+        await kit.connection.waitForTransactionReceipt(hash)
       },
       new BigNumber('1e18')
     )
