@@ -127,17 +127,6 @@ export interface Block extends BlockHeader {
   uncles?: string[]
 }
 
-/** Sync status */
-export type Syncing =
-  | false
-  | {
-      startingBlock: number
-      currentBlock: number
-      highestBlock: number
-      knownStates?: number
-      pulledStates?: number
-    }
-
 /** PastEventOptions - retained for backward compatibility */
 export interface PastEventOptions {
   filter?: Record<string, unknown>
@@ -237,9 +226,6 @@ export interface CeloTxReceipt extends Partial<CeloParams> {
 export interface Provider {
   request: EIP1193RequestFn
 }
-
-/** @deprecated Use Provider instead — kept for backward compat during migration */
-export type HttpProvider = Provider
 
 export interface RLPEncodedTx {
   transaction: FormattedCeloTx
