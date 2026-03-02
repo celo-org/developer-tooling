@@ -94,10 +94,16 @@ export class EscrowWrapper extends BaseWrapper<typeof escrowABI> {
     minAttestations: number,
     txParams?: Omit<CeloTx, 'data'>
   ) =>
-    this.sendTx(
-      'transfer',
-      [identifier, token, value, expirySeconds, paymentId, minAttestations],
-      txParams
+    this.contract.write.transfer(
+      [
+        identifier as `0x${string}`,
+        toViemAddress(token),
+        BigInt(value),
+        BigInt(expirySeconds),
+        toViemAddress(paymentId),
+        BigInt(minAttestations),
+      ] as const,
+      txParams as any
     )
 
   /**
@@ -116,7 +122,11 @@ export class EscrowWrapper extends BaseWrapper<typeof escrowABI> {
     r: string | number[],
     s: string | number[],
     txParams?: Omit<CeloTx, 'data'>
-  ) => this.sendTx('withdraw', [paymentId, v, r, s], txParams)
+  ) =>
+    this.contract.write.withdraw(
+      [toViemAddress(paymentId), Number(v), r as `0x${string}`, s as `0x${string}`] as const,
+      txParams as any
+    )
 
   /**
    * @notice Revokes tokens for a sender who is redeeming a payment after it has expired.
@@ -126,7 +136,7 @@ export class EscrowWrapper extends BaseWrapper<typeof escrowABI> {
    * @dev Throws if redeem time hasn't been reached yet.
    */
   revoke = (paymentId: string, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('revoke', [paymentId], txParams)
+    this.contract.write.revoke([toViemAddress(paymentId)] as const, txParams as any)
 
   /**
    * @notice Transfer tokens to a specific user. Supports both identity with privacy (an empty
@@ -157,10 +167,17 @@ export class EscrowWrapper extends BaseWrapper<typeof escrowABI> {
     trustedIssuers: Address[],
     txParams?: Omit<CeloTx, 'data'>
   ) =>
-    this.sendTx(
-      'transferWithTrustedIssuers',
-      [identifier, token, value, expirySeconds, paymentId, minAttestations, trustedIssuers],
-      txParams
+    this.contract.write.transferWithTrustedIssuers(
+      [
+        identifier as `0x${string}`,
+        toViemAddress(token),
+        BigInt(value),
+        BigInt(expirySeconds),
+        toViemAddress(paymentId),
+        BigInt(minAttestations),
+        trustedIssuers.map(toViemAddress),
+      ] as const,
+      txParams as any
     )
 }
 

@@ -6,10 +6,12 @@ import debugFactory from 'debug'
 import {
   toHex,
   createPublicClient,
+  createWalletClient,
   custom,
   toFunctionHash,
   toEventHash,
   type PublicClient,
+  type WalletClient,
 } from 'viem'
 import { AbiInput, AbiItem } from './abi-types'
 import { isEmpty } from './viem-abi-coder'
@@ -39,6 +41,7 @@ import {
 import { hasProperty } from './utils/provider-utils'
 import { TxParamsNormalizer } from './utils/tx-params-normalizer'
 import { ReadOnlyWallet } from './wallet'
+import { readOnlyWalletToAccount } from './wallet-adapter'
 
 // Convenience re-export for consumers that import from @celo/connect
 export { isPresent, isEmpty } from './viem-abi-coder'
@@ -62,6 +65,7 @@ export class Connection {
   readonly paramsPopulator: TxParamsNormalizer
   private _provider!: CeloProvider
   private _viemClient!: PublicClient
+  private _walletClient: WalletClient | undefined
 
   constructor(
     provider: Provider,
@@ -85,6 +89,31 @@ export class Connection {
     return this._viemClient
   }
 
+  /**
+   * Viem WalletClient bound to this connection's provider.
+   * Lazily sets the default account when the wallet gains accounts after construction.
+   */
+  get walletClient(): WalletClient | undefined {
+    // If walletClient exists without a default account but the wallet now has accounts, recreate
+    if (
+      this._walletClient &&
+      !this._walletClient.account &&
+      this.wallet &&
+      this.wallet.getAccounts().length > 0
+    ) {
+      this._walletClient = createWalletClient({
+        account: readOnlyWalletToAccount(
+          this.wallet,
+          this.wallet.getAccounts()[0] as StrongAddress
+        ),
+        transport: custom({
+          request: this._provider.request.bind(this._provider),
+        }),
+      })
+    }
+    return this._walletClient
+  }
+
   setProvider(provider: Provider) {
     if (!provider) {
       throw new Error('Must have a valid Provider')
@@ -104,6 +133,25 @@ export class Connection {
           request: rawProvider.request.bind(rawProvider),
         }),
       })
+      if (this.wallet && this.wallet.getAccounts().length > 0) {
+        this._walletClient = createWalletClient({
+          account: readOnlyWalletToAccount(
+            this.wallet,
+            this.wallet.getAccounts()[0] as StrongAddress
+          ),
+          transport: custom({
+            request: celoProvider.request.bind(celoProvider),
+          }),
+        })
+      } else {
+        // Always create a WalletClient so contract.write works for node accounts.
+        // Individual write calls provide the account via from -> account mapping.
+        this._walletClient = createWalletClient({
+          transport: custom({
+            request: celoProvider.request.bind(celoProvider),
+          }),
+        })
+      }
       return true
     } catch (error) {
       console.error(`could not attach provider`, error)
@@ -506,7 +554,10 @@ export class Connection {
     return createCeloContract(
       enrichedAbi as unknown as TAbi,
       address as `0x${string}`,
-      this._viemClient
+      this._viemClient,
+      this.walletClient,
+      () => this.config.from,
+      () => this.chainId()
     )
   }
 

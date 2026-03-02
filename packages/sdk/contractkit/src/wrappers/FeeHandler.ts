@@ -1,7 +1,7 @@
 import { feeHandlerABI } from '@celo/abis'
 import { Address, CeloTx } from '@celo/connect'
 import BigNumber from 'bignumber.js'
-import { BaseWrapper } from './BaseWrapper'
+import { BaseWrapper, toViemAddress } from './BaseWrapper'
 
 export enum ExchangeProposalState {
   None,
@@ -43,19 +43,19 @@ export interface ExchangeProposalReadable {
 export class FeeHandlerWrapper extends BaseWrapper<typeof feeHandlerABI> {
   owner = async () => this.contract.read.owner() as Promise<string>
 
-  handleAll = (txParams?: Omit<CeloTx, 'data'>) => this.sendTx('handleAll', [], txParams)
-  burnCelo = (txParams?: Omit<CeloTx, 'data'>) => this.sendTx('burnCelo', [], txParams)
+  handleAll = (txParams?: Omit<CeloTx, 'data'>) => this.contract.write.handleAll(txParams as any)
+  burnCelo = (txParams?: Omit<CeloTx, 'data'>) => this.contract.write.burnCelo(txParams as any)
 
   handle(tokenAddress: Address, txParams?: Omit<CeloTx, 'data'>) {
-    return this.sendTx('handle', [tokenAddress], txParams)
+    return this.contract.write.handle([toViemAddress(tokenAddress)] as const, txParams as any)
   }
 
   sell(tokenAddress: Address, txParams?: Omit<CeloTx, 'data'>) {
-    return this.sendTx('sell', [tokenAddress], txParams)
+    return this.contract.write.sell([toViemAddress(tokenAddress)] as const, txParams as any)
   }
 
   distribute(tokenAddress: Address, txParams?: Omit<CeloTx, 'data'>) {
-    return this.sendTx('distribute', [tokenAddress], txParams)
+    return this.contract.write.distribute([toViemAddress(tokenAddress)] as const, txParams as any)
   }
 }
 

@@ -164,13 +164,6 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
     return valueToBigNumber(res.toString())
   }
 
-  private _revokePending = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('revokePending', args, txParams)
-  private _revokeActive = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('revokeActive', args, txParams)
-  private _vote = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('vote', args, txParams)
-
   /**
    * Returns the minimum and maximum number of validators that can be elected.
    * @returns The minimum and maximum number of validators that can be elected.
@@ -393,12 +386,6 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
     return concurrentMap(5, groups, (g) => this.getValidatorGroupVotes(g as string))
   }
 
-  private _activate = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('activate', args, txParams)
-
-  private _activateForAccount = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('activateForAccount', args, txParams)
-
   /**
    * Activates any activatable pending votes.
    * @param account The account with pending votes to activate.
@@ -416,8 +403,11 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
     const hashes: `0x${string}`[] = []
     for (const g of groupsActivatable) {
       const hash = onBehalfOfAccount
-        ? await this._activateForAccount([g, account], txParams)
-        : await this._activate([g], txParams)
+        ? await this.contract.write.activateForAccount(
+            [toViemAddress(g), toViemAddress(account)],
+            txParams as any
+          )
+        : await this.contract.write.activate([toViemAddress(g)], txParams as any)
       hashes.push(hash)
     }
     return hashes
@@ -433,7 +423,16 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
     const index = findAddressIndex(group, groups)
     const { lesser, greater } = await this.findLesserAndGreaterAfterVote(group, value.times(-1))
 
-    return this._revokePending([group, value.toFixed(), lesser, greater, index], txParams)
+    return this.contract.write.revokePending(
+      [
+        toViemAddress(group),
+        toViemBigInt(value.toFixed()),
+        toViemAddress(lesser),
+        toViemAddress(greater),
+        BigInt(index),
+      ],
+      txParams as any
+    )
   }
 
   /**
@@ -465,7 +464,16 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
       lesser = res.lesser
       greater = res.greater
     }
-    return this._revokeActive([group, value.toFixed(), lesser, greater, index], txParams)
+    return this.contract.write.revokeActive(
+      [
+        toViemAddress(group),
+        toViemBigInt(value.toFixed()),
+        toViemAddress(lesser),
+        toViemAddress(greater),
+        BigInt(index),
+      ],
+      txParams as any
+    )
   }
 
   async revoke(
@@ -503,7 +511,15 @@ export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI>
   ): Promise<`0x${string}`> {
     const { lesser, greater } = await this.findLesserAndGreaterAfterVote(validatorGroup, value)
 
-    return this._vote([validatorGroup, value.toFixed(), lesser, greater], txParams)
+    return this.contract.write.vote(
+      [
+        toViemAddress(validatorGroup),
+        toViemBigInt(value.toFixed()),
+        toViemAddress(lesser),
+        toViemAddress(greater),
+      ],
+      txParams as any
+    )
   }
 
   /**

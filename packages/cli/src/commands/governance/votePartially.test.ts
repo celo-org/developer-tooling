@@ -27,7 +27,11 @@ testWithAnvilL2('governance:vote-partially cmd', (provider) => {
     kit.defaultAccount = accounts[0]
     governance = await kit.contracts.getGovernance()
     minDeposit = (await governance.minDeposit()).toFixed()
-    await governance.propose([], 'URL', { from: accounts[0], value: minDeposit })
+    const proposeHash = await governance.propose([], 'URL', {
+      from: accounts[0],
+      value: minDeposit,
+    })
+    await kit.connection.waitForTransactionReceipt(proposeHash)
     const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
     await timeTravel(dequeueFrequency + 1, provider)
     await testLocallyWithNode(Dequeue, ['--from', accounts[0]], provider)

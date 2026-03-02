@@ -12,7 +12,6 @@ import { Provider } from '@celo/connect'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
 import { decodeFunctionResult, encodeFunctionData, parseEther } from 'viem'
-import { waitForTransactionReceipt } from 'viem/actions'
 import Switch from '../commands/epochs/switch'
 import { testLocallyWithNode } from './cliUtils'
 
@@ -27,7 +26,8 @@ export const registerAccount = async (kit: ContractKit, address: string) => {
   const accounts = await kit.contracts.getAccounts()
 
   if (!(await accounts.isAccount(address))) {
-    await accounts.createAccount({ from: address })
+    const hash = await accounts.createAccount({ from: address })
+    await kit.connection.waitForTransactionReceipt(hash)
   }
 }
 
@@ -40,7 +40,8 @@ export const registerAccountWithLockedGold = async (
 
   const lockedGold = await kit.contracts.getLockedGold()
 
-  await lockedGold.lock({ from: address, value })
+  const hash = await lockedGold.lock({ from: address, value })
+  await kit.connection.waitForTransactionReceipt(hash)
 }
 
 export const setupGroup = async (
@@ -56,9 +57,10 @@ export const setupGroup = async (
 
   const validators = await kit.contracts.getValidators()
 
-  await validators.registerValidatorGroup(groupCommission, {
+  const hash = await validators.registerValidatorGroup(groupCommission, {
     from: groupAccount,
   })
+  await kit.connection.waitForTransactionReceipt(hash)
 }
 
 export const setupValidator = async (kit: ContractKit, validatorAccount: string) => {
@@ -67,9 +69,10 @@ export const setupValidator = async (kit: ContractKit, validatorAccount: string)
   const ecdsaPublicKey = await addressToPublicKey(validatorAccount, kit.connection.sign)
   const validators = await kit.contracts.getValidators()
 
-  await validators.registerValidatorNoBls(ecdsaPublicKey, {
+  const hash = await validators.registerValidatorNoBls(ecdsaPublicKey, {
     from: validatorAccount,
   })
+  await kit.connection.waitForTransactionReceipt(hash)
 }
 
 export const setupGroupAndAffiliateValidator = async (
@@ -89,7 +92,8 @@ export const voteForGroupFrom = async (
 ) => {
   const election = await kit.contracts.getElection()
 
-  await election.vote(groupAddress, amount, { from: fromAddress })
+  const hash = await election.vote(groupAddress, amount, { from: fromAddress })
+  await kit.connection.waitForTransactionReceipt(hash)
 }
 
 export const voteForGroupFromAndActivateVotes = async (
@@ -106,7 +110,10 @@ export const voteForGroupFromAndActivateVotes = async (
   const election = await kit.contracts.getElection()
 
   // activate returns hashes directly (transactions already sent)
-  await election.activate(fromAddress, false, { from: fromAddress })
+  const hashes = await election.activate(fromAddress, false, { from: fromAddress })
+  for (const hash of hashes) {
+    await kit.connection.waitForTransactionReceipt(hash)
+  }
 }
 
 export const mineEpoch = async (kit: ContractKit) => {
@@ -122,9 +129,10 @@ export const topUpWithToken = async (
   const token = await kit.contracts.getStableToken(stableToken)
 
   await impersonateAccount(kit.connection.currentProvider, STABLES_ADDRESS)
-  await token.transfer(account, amount.toFixed(), {
+  const hash = await token.transfer(account, amount.toFixed(), {
     from: STABLES_ADDRESS,
   })
+  await kit.connection.waitForTransactionReceipt(hash)
   await stopImpersonatingAccount(kit.connection.currentProvider, STABLES_ADDRESS)
 }
 
@@ -138,13 +146,14 @@ export const changeMultiSigOwner = async (kit: ContractKit, toAccount: StrongAdd
     to: multisig.address,
     value: parseEther('1').toString(),
   })
-  await waitForTransactionReceipt(kit.connection.viemClient, {
-    hash,
-  })
+  await kit.connection.waitForTransactionReceipt(hash)
 
   await impersonateAccount(kit.connection.currentProvider, multisig.address)
 
-  await multisig.replaceOwner(DEFAULT_OWNER_ADDRESS, toAccount, { from: multisig.address })
+  const replaceHash = await multisig.replaceOwner(DEFAULT_OWNER_ADDRESS, toAccount, {
+    from: multisig.address,
+  })
+  await kit.connection.waitForTransactionReceipt(replaceHash)
   await stopImpersonatingAccount(kit.connection.currentProvider, multisig.address)
 }
 
@@ -157,11 +166,13 @@ export async function setupValidatorAndAddToGroup(
 
   const validators = await kit.contracts.getValidators()
 
-  await validators.affiliate(groupAccount, { from: validatorAccount })
+  const affiliateHash = await validators.affiliate(groupAccount, { from: validatorAccount })
+  await kit.connection.waitForTransactionReceipt(affiliateHash)
 
-  await validators.addMember(groupAccount, validatorAccount, {
+  const addMemberHash = await validators.addMember(groupAccount, validatorAccount, {
     from: groupAccount,
   })
+  await kit.connection.waitForTransactionReceipt(addMemberHash)
 }
 // you MUST call clearMock after using this function!
 export async function mockTimeForwardBy(seconds: number, provider: Provider) {
@@ -183,8 +194,10 @@ export const activateAllValidatorGroupsVotes = async (kit: ContractKit) => {
   await timeTravel((await epochManagerWrapper.epochDuration()) + 1, kit.connection.currentProvider)
 
   // Make sure we are in the next epoch to activate the votes
-  await epochManagerWrapper.startNextEpochProcess({ from: sender })
-  await epochManagerWrapper.finishNextEpochProcessTx({ from: sender })
+  const startHash = await epochManagerWrapper.startNextEpochProcess({ from: sender })
+  await kit.connection.waitForTransactionReceipt(startHash)
+  const finishHash = await epochManagerWrapper.finishNextEpochProcessTx({ from: sender })
+  await kit.connection.waitForTransactionReceipt(finishHash)
 
   for (const validatorGroup of validatorGroups) {
     const getPendingCallData = encodeFunctionData({
@@ -223,7 +236,7 @@ export const activateAllValidatorGroupsVotes = async (kit: ContractKit) => {
             data: activateData,
             from: validatorGroup,
           })
-          hash
+          await kit.connection.waitForTransactionReceipt(hash)
         },
         new BigNumber(parseEther('1').toString())
       )

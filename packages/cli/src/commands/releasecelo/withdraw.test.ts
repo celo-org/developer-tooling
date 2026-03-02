@@ -108,7 +108,10 @@ testWithAnvilL2('releasegold:withdraw cmd', (provider) => {
     const USDmAmount = 100
 
     await topUpWithToken(kit, StableToken.USDm, beneficiary, new BigNumber(USDmAmount))
-    await stableToken.transfer(contractAddress, USDmAmount, { from: beneficiary })
+    const transferHash = await stableToken.transfer(contractAddress, USDmAmount, {
+      from: beneficiary,
+    })
+    await kit.connection.waitForTransactionReceipt(transferHash)
 
     spy.mockClear()
     // Can't withdraw since there is USDm balance still

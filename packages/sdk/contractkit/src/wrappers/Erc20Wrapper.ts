@@ -41,7 +41,7 @@ export class Erc20Wrapper<TAbi extends Abi = typeof ierc20ABI> extends BaseWrapp
    * @return True if the transaction succeeds.
    */
   approve = (spender: string, value: string | number, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTxUnchecked('approve', [spender, value], txParams)
+    (this.contract as any).write.approve([spender, value] as const, txParams as any)
 
   /**
    * Transfers the token from one address to another.
@@ -50,7 +50,7 @@ export class Erc20Wrapper<TAbi extends Abi = typeof ierc20ABI> extends BaseWrapp
    * @return True if the transaction succeeds.
    */
   transfer = (to: string, value: string | number, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTxUnchecked('transfer', [to, value], txParams)
+    (this.contract as any).write.transfer([to, value] as const, txParams as any)
 
   /**
    * Transfers the token from one address to another on behalf of a user.
@@ -64,7 +64,7 @@ export class Erc20Wrapper<TAbi extends Abi = typeof ierc20ABI> extends BaseWrapp
     to: string,
     value: string | number,
     txParams?: Omit<CeloTx, 'data'>
-  ) => this.sendTxUnchecked('transferFrom', [from, to, value], txParams)
+  ) => (this.contract as any).write.transferFrom([from, to, value] as const, txParams as any)
 
   /**
    * Gets the balance of the specified address.

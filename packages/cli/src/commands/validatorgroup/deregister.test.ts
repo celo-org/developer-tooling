@@ -76,7 +76,8 @@ testWithAnvilL2('validatorgroup:deregister cmd', (provider) => {
         provider
       )
       const validators = await kit.contracts.getValidators()
-      await validators.deaffiliate({ from: validatorAddress })
+      const deaffiliateHash = await validators.deaffiliate({ from: validatorAddress })
+      await kit.connection.waitForTransactionReceipt(deaffiliateHash)
     }, 60000)
     describe('when not enough time has passed', () => {
       it('shows error that wait period is not over', async () => {

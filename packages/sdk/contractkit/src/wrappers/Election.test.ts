@@ -52,20 +52,24 @@ testWithAnvilL2('Election Wrapper', (provider) => {
     value: string = minLockedGoldValue
   ) => {
     if (!(await accountsInstance.isAccount(account))) {
-      await accountsInstance.createAccount({ from: account })
+      const hash = await accountsInstance.createAccount({ from: account })
+      await kit.connection.waitForTransactionReceipt(hash)
     }
-    await lockedGold.lock({ from: account, value })
+    const lockHash = await lockedGold.lock({ from: account, value })
+    await kit.connection.waitForTransactionReceipt(lockHash)
   }
 
   const setupGroup = async (groupAccount: string) => {
     await registerAccountWithLockedGold(groupAccount, new BigNumber(minLockedGoldValue).toFixed())
-    await validators.registerValidatorGroup(GROUP_COMMISSION, { from: groupAccount })
+    const hash = await validators.registerValidatorGroup(GROUP_COMMISSION, { from: groupAccount })
+    await kit.connection.waitForTransactionReceipt(hash)
   }
 
   const setupValidator = async (validatorAccount: string) => {
     await registerAccountWithLockedGold(validatorAccount)
     const ecdsaPublicKey = await addressToPublicKey(validatorAccount, kit.connection.sign)
-    await validators.registerValidatorNoBls(ecdsaPublicKey, { from: validatorAccount })
+    const hash = await validators.registerValidatorNoBls(ecdsaPublicKey, { from: validatorAccount })
+    await kit.connection.waitForTransactionReceipt(hash)
   }
 
   const setupGroupAndAffiliateValidator = async (
@@ -74,17 +78,25 @@ testWithAnvilL2('Election Wrapper', (provider) => {
   ) => {
     await setupGroup(groupAccount)
     await setupValidator(validatorAccount)
-    await validators.affiliate(groupAccount, { from: validatorAccount })
-    await validators.addMember(groupAccount, validatorAccount, { from: groupAccount })
+    const affiliateHash = await validators.affiliate(groupAccount, { from: validatorAccount })
+    await kit.connection.waitForTransactionReceipt(affiliateHash)
+    const addMemberHash = await validators.addMember(groupAccount, validatorAccount, {
+      from: groupAccount,
+    })
+    await kit.connection.waitForTransactionReceipt(addMemberHash)
   }
 
   const activateAndVote = async (groupAccount: string, userAccount: string, amount: BigNumber) => {
-    await election.vote(groupAccount, amount, { from: userAccount })
+    const voteHash = await election.vote(groupAccount, amount, { from: userAccount })
+    await kit.connection.waitForTransactionReceipt(voteHash)
     const epochDuraction = await kit.getEpochSize()
     await timeTravel(epochDuraction + 1, provider)
     await startAndFinishEpochProcess(kit)
 
-    await election.activate(userAccount, undefined, { from: userAccount })
+    const hashes = await election.activate(userAccount, undefined, { from: userAccount })
+    for (const hash of hashes) {
+      await kit.connection.waitForTransactionReceipt(hash)
+    }
   }
 
   describe('ElectionWrapper', () => {
@@ -109,7 +121,8 @@ testWithAnvilL2('Election Wrapper', (provider) => {
       })
 
       test('shows empty group as ineligible', async () => {
-        await validators.deaffiliate({ from: validatorAccount })
+        const deaffiliateHash = await validators.deaffiliate({ from: validatorAccount })
+        await kit.connection.waitForTransactionReceipt(deaffiliateHash)
         const groupVotesAfter = await election.getValidatorGroupVotes(groupAccount)
         expect(groupVotesAfter.eligible).toBe(false)
       })
@@ -117,7 +130,8 @@ testWithAnvilL2('Election Wrapper', (provider) => {
 
     describe('#vote', () => {
       beforeEach(async () => {
-        await election.vote(groupAccount, ONE_HUNDRED_GOLD, { from: userAccount })
+        const hash = await election.vote(groupAccount, ONE_HUNDRED_GOLD, { from: userAccount })
+        await kit.connection.waitForTransactionReceipt(hash)
       }, 60000)
       it('votes', async () => {
         const totalGroupVotes = await election.getTotalVotesForGroup(groupAccount)
@@ -125,7 +139,8 @@ testWithAnvilL2('Election Wrapper', (provider) => {
       })
 
       test('total votes remain unchanged when group becomes ineligible', async () => {
-        await validators.deaffiliate({ from: validatorAccount })
+        const deaffiliateHash = await validators.deaffiliate({ from: validatorAccount })
+        await kit.connection.waitForTransactionReceipt(deaffiliateHash)
         const totalGroupVotes = await election.getTotalVotesForGroup(groupAccount)
         expect(totalGroupVotes).toEqual(ONE_HUNDRED_GOLD)
       })
@@ -133,14 +148,18 @@ testWithAnvilL2('Election Wrapper', (provider) => {
 
     describe('#activate', () => {
       beforeEach(async () => {
-        await election.vote(groupAccount, ONE_HUNDRED_GOLD, { from: userAccount })
+        const voteHash = await election.vote(groupAccount, ONE_HUNDRED_GOLD, { from: userAccount })
+        await kit.connection.waitForTransactionReceipt(voteHash)
         const epochDuraction = await kit.getEpochSize()
 
         await timeTravel(epochDuraction + 1, provider)
 
         await startAndFinishEpochProcess(kit)
 
-        await election.activate(userAccount, undefined, { from: userAccount })
+        const hashes = await election.activate(userAccount, undefined, { from: userAccount })
+        for (const hash of hashes) {
+          await kit.connection.waitForTransactionReceipt(hash)
+        }
       }, 60000)
 
       it('activates vote', async () => {
@@ -149,7 +168,8 @@ testWithAnvilL2('Election Wrapper', (provider) => {
       })
 
       test('active votes remain unchanged when group becomes ineligible', async () => {
-        await validators.deaffiliate({ from: validatorAccount })
+        const deaffiliateHash = await validators.deaffiliate({ from: validatorAccount })
+        await kit.connection.waitForTransactionReceipt(deaffiliateHash)
         const activeVotes = await election.getActiveVotesForGroup(groupAccount)
         expect(activeVotes).toEqual(ONE_HUNDRED_GOLD)
       })
@@ -161,7 +181,7 @@ testWithAnvilL2('Election Wrapper', (provider) => {
       }, 60000)
 
       it('revokes active', async () => {
-        await election.revokeActive(
+        const hash = await election.revokeActive(
           userAccount,
           groupAccount,
           ONE_HUNDRED_GOLD,
@@ -169,14 +189,16 @@ testWithAnvilL2('Election Wrapper', (provider) => {
           undefined,
           { from: userAccount }
         )
+        await kit.connection.waitForTransactionReceipt(hash)
 
         const remainingVotes = await election.getTotalVotesForGroup(groupAccount)
         expect(remainingVotes).toEqual(ZERO_GOLD)
       })
 
       it('revokes active when group is ineligible', async () => {
-        await validators.deaffiliate({ from: validatorAccount })
-        await election.revokeActive(
+        const deaffiliateHash = await validators.deaffiliate({ from: validatorAccount })
+        await kit.connection.waitForTransactionReceipt(deaffiliateHash)
+        const hash = await election.revokeActive(
           userAccount,
           groupAccount,
           ONE_HUNDRED_GOLD,
@@ -184,6 +206,7 @@ testWithAnvilL2('Election Wrapper', (provider) => {
           undefined,
           { from: userAccount }
         )
+        await kit.connection.waitForTransactionReceipt(hash)
 
         const remainingVotes = await election.getTotalVotesForGroup(groupAccount)
         expect(remainingVotes).toEqual(ZERO_GOLD)
@@ -192,22 +215,26 @@ testWithAnvilL2('Election Wrapper', (provider) => {
 
     describe('#revokePending', () => {
       beforeEach(async () => {
-        await election.vote(groupAccount, ONE_HUNDRED_GOLD, { from: userAccount })
+        const hash = await election.vote(groupAccount, ONE_HUNDRED_GOLD, { from: userAccount })
+        await kit.connection.waitForTransactionReceipt(hash)
       })
 
       it('revokes pending', async () => {
-        await election.revokePending(userAccount, groupAccount, ONE_HUNDRED_GOLD, {
+        const hash = await election.revokePending(userAccount, groupAccount, ONE_HUNDRED_GOLD, {
           from: userAccount,
         })
+        await kit.connection.waitForTransactionReceipt(hash)
         const remainingVotes = await election.getTotalVotesForGroup(groupAccount)
         expect(remainingVotes).toEqual(ZERO_GOLD)
       })
 
       it('revokes pending when group is ineligible', async () => {
-        await validators.deaffiliate({ from: validatorAccount })
-        await election.revokePending(userAccount, groupAccount, ONE_HUNDRED_GOLD, {
+        const deaffiliateHash = await validators.deaffiliate({ from: validatorAccount })
+        await kit.connection.waitForTransactionReceipt(deaffiliateHash)
+        const hash = await election.revokePending(userAccount, groupAccount, ONE_HUNDRED_GOLD, {
           from: userAccount,
         })
+        await kit.connection.waitForTransactionReceipt(hash)
         const remainingVotes = await election.getTotalVotesForGroup(groupAccount)
         expect(remainingVotes).toEqual(ZERO_GOLD)
       })
@@ -216,22 +243,30 @@ testWithAnvilL2('Election Wrapper', (provider) => {
     describe('#revoke', () => {
       beforeEach(async () => {
         await activateAndVote(groupAccount, userAccount, TWO_HUNDRED_GOLD)
-        await election.vote(groupAccount, ONE_HUNDRED_GOLD, { from: userAccount })
+        const voteHash = await election.vote(groupAccount, ONE_HUNDRED_GOLD, { from: userAccount })
+        await kit.connection.waitForTransactionReceipt(voteHash)
       }, 60000)
 
       it('revokes active and pending votes', async () => {
-        await election.revoke(userAccount, groupAccount, THREE_HUNDRED_GOLD, {
+        const hashes = await election.revoke(userAccount, groupAccount, THREE_HUNDRED_GOLD, {
           from: userAccount,
         })
+        for (const hash of hashes) {
+          await kit.connection.waitForTransactionReceipt(hash)
+        }
         const remainingVotes = await election.getTotalVotesForGroup(groupAccount)
         expect(remainingVotes).toEqual(ZERO_GOLD)
       })
 
       it('revokes active and pending votes when group is ineligible', async () => {
-        await validators.deaffiliate({ from: validatorAccount })
-        await election.revoke(userAccount, groupAccount, THREE_HUNDRED_GOLD, {
+        const deaffiliateHash = await validators.deaffiliate({ from: validatorAccount })
+        await kit.connection.waitForTransactionReceipt(deaffiliateHash)
+        const hashes = await election.revoke(userAccount, groupAccount, THREE_HUNDRED_GOLD, {
           from: userAccount,
         })
+        for (const hash of hashes) {
+          await kit.connection.waitForTransactionReceipt(hash)
+        }
         const remainingVotes = await election.getTotalVotesForGroup(groupAccount)
         expect(remainingVotes).toEqual(ZERO_GOLD)
       })
@@ -272,10 +307,14 @@ testWithAnvilL2('Election Wrapper', (provider) => {
     }, 120000)
 
     test('Validator groups should be in the correct order', async () => {
-      await election.vote(groupAccountA, ONE_HUNDRED_GOLD, { from: userAccount })
-      await election.revoke(userAccount, groupAccountA, TWO_HUNDRED_GOLD, {
+      const voteHash = await election.vote(groupAccountA, ONE_HUNDRED_GOLD, { from: userAccount })
+      await kit.connection.waitForTransactionReceipt(voteHash)
+      const revokeHashes = await election.revoke(userAccount, groupAccountA, TWO_HUNDRED_GOLD, {
         from: userAccount,
       })
+      for (const hash of revokeHashes) {
+        await kit.connection.waitForTransactionReceipt(hash)
+      }
       const groupOrder = await election.findLesserAndGreaterAfterVote(groupAccountA, ZERO_GOLD)
       expect(groupOrder).toEqual({ lesser: NULL_ADDRESS, greater: groupAccountC })
     })

@@ -37,9 +37,9 @@ export class ReserveWrapper extends BaseWrapper<typeof reserveABI> {
     return this.contract.read.isSpender([toViemAddress(account)])
   }
   transferGold = (to: string, value: string | number, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('transferGold', [to, value], txParams)
+    this.contract.write.transferGold([toViemAddress(to), BigInt(value)] as const, txParams as any)
   getOrComputeTobinTax = (txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('getOrComputeTobinTax', [], txParams)
+    this.contract.write.getOrComputeTobinTax(txParams as any)
   frozenReserveGoldStartBalance = async (): Promise<BigNumber> => {
     const res = await this.contract.read.frozenReserveGoldStartBalance()
     return valueToBigNumber(res.toString())

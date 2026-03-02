@@ -120,7 +120,11 @@ export class FederatedAttestationsWrapper extends BaseWrapper<typeof federatedAt
     account: Address,
     issuedOn: number,
     txParams?: Omit<CeloTx, 'data'>
-  ) => this.sendTx('registerAttestationAsIssuer', [identifier, account, issuedOn], txParams)
+  ) =>
+    this.contract.write.registerAttestationAsIssuer(
+      [identifier as `0x${string}`, toViemAddress(account), BigInt(issuedOn)] as const,
+      txParams as any
+    )
 
   /**
    * @notice Generates a valid signature and registers the attestation
@@ -148,10 +152,18 @@ export class FederatedAttestationsWrapper extends BaseWrapper<typeof federatedAt
       issuedOn,
     })
     const sig = await this.connection.signTypedData(signer, typedData)
-    return this.sendTx(
-      'registerAttestation',
-      [identifier, issuer, account, signer, issuedOn, sig.v, sig.r, sig.s],
-      txParams
+    return this.contract.write.registerAttestation(
+      [
+        identifier as `0x${string}`,
+        toViemAddress(issuer),
+        toViemAddress(account),
+        toViemAddress(signer),
+        BigInt(issuedOn),
+        sig.v,
+        sig.r as `0x${string}`,
+        sig.s as `0x${string}`,
+      ] as const,
+      txParams as any
     )
   }
 
@@ -167,7 +179,11 @@ export class FederatedAttestationsWrapper extends BaseWrapper<typeof federatedAt
     issuer: Address,
     account: Address,
     txParams?: Omit<CeloTx, 'data'>
-  ) => this.sendTx('revokeAttestation', [identifier, issuer, account], txParams)
+  ) =>
+    this.contract.write.revokeAttestation(
+      [identifier as `0x${string}`, toViemAddress(issuer), toViemAddress(account)] as const,
+      txParams as any
+    )
 
   /**
    * @notice Revokes attestations [identifiers <-> accounts] from issuer
@@ -184,5 +200,13 @@ export class FederatedAttestationsWrapper extends BaseWrapper<typeof federatedAt
     identifiers: string[],
     accounts: Address[],
     txParams?: Omit<CeloTx, 'data'>
-  ) => this.sendTx('batchRevokeAttestations', [issuer, identifiers, accounts], txParams)
+  ) =>
+    this.contract.write.batchRevokeAttestations(
+      [
+        toViemAddress(issuer),
+        identifiers.map((id) => id as `0x${string}`),
+        accounts.map(toViemAddress),
+      ] as const,
+      txParams as any
+    )
 }

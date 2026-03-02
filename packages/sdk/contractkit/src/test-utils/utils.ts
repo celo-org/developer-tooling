@@ -7,9 +7,11 @@ export const startAndFinishEpochProcess = async (kit: ContractKit) => {
   const [from] = await kit.connection.getAccounts()
   const epochManagerWrapper = await kit.contracts.getEpochManager()
 
-  await epochManagerWrapper.startNextEpochProcess({ from })
+  const startHash = await epochManagerWrapper.startNextEpochProcess({ from })
+  await kit.connection.waitForTransactionReceipt(startHash)
 
-  await epochManagerWrapper.finishNextEpochProcessTx({ from })
+  const finishHash = await epochManagerWrapper.finishNextEpochProcessTx({ from })
+  await kit.connection.waitForTransactionReceipt(finishHash)
 }
 
 export const topUpWithToken = async (
@@ -21,6 +23,7 @@ export const topUpWithToken = async (
   const token = await kit.contracts.getStableToken(stableToken)
 
   await withImpersonatedAccount(kit.connection.currentProvider, STABLES_ADDRESS, async () => {
-    await token.transfer(recipientAddress, amount.toFixed(), { from: STABLES_ADDRESS })
+    const hash = await token.transfer(recipientAddress, amount.toFixed(), { from: STABLES_ADDRESS })
+    await kit.connection.waitForTransactionReceipt(hash)
   })
 }

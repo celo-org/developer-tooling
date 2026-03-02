@@ -33,13 +33,15 @@ testWithAnvilL2('GoldToken Wrapper', (provider) => {
     const before = await goldToken.allowance(accounts[0], accounts[1])
     expect(before).toEqBigNumber(0)
 
-    await goldToken.approve(accounts[1], ONE_GOLD)
+    const hash = await goldToken.approve(accounts[1], ONE_GOLD)
+    await kit.connection.waitForTransactionReceipt(hash)
     const after = await goldToken.allowance(accounts[0], accounts[1])
     expect(after).toEqBigNumber(ONE_GOLD)
   })
 
   it('transfers', async () => {
-    await goldToken.transfer(accounts[1], ONE_GOLD)
+    const hash = await goldToken.transfer(accounts[1], ONE_GOLD)
+    await kit.connection.waitForTransactionReceipt(hash)
 
     const events = await kit.connection.viemClient.getContractEvents({
       abi: goldTokenContract.abi as any,
@@ -57,11 +59,13 @@ testWithAnvilL2('GoldToken Wrapper', (provider) => {
 
   it('transfers from', async () => {
     // account1 approves account0
-    await goldToken.approve(accounts[0], ONE_GOLD, { from: accounts[1] })
+    const approveHash = await goldToken.approve(accounts[0], ONE_GOLD, { from: accounts[1] })
+    await kit.connection.waitForTransactionReceipt(approveHash)
 
     expect(await goldToken.allowance(accounts[1], accounts[0])).toEqBigNumber(ONE_GOLD)
 
-    await goldToken.transferFrom(accounts[1], accounts[3], ONE_GOLD)
+    const transferHash = await goldToken.transferFrom(accounts[1], accounts[3], ONE_GOLD)
+    await kit.connection.waitForTransactionReceipt(transferHash)
 
     const events = await kit.connection.viemClient.getContractEvents({
       abi: goldTokenContract.abi as any,

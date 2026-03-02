@@ -76,32 +76,41 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<typeof lockedGold
    * @param index The index of the pending withdrawal to withdraw.
    */
   withdraw = (index: number, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('withdraw', [index], txParams)
+    this.contract.write.withdraw([BigInt(index)] as const, txParams as any)
 
   /**
    * Locks gold to be used for voting.
    * The gold to be locked, must be specified as the `tx.value`
    */
-  lock = (txParams?: Omit<CeloTx, 'data'>) => this.sendTx('lock', [], txParams)
+  lock = (txParams?: Omit<CeloTx, 'data'>) => this.contract.write.lock(txParams as any)
 
   /**
    * Delegates locked gold.
    */
   delegate = (delegatee: string, percentAmount: string, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('delegateGovernanceVotes', [delegatee, percentAmount], txParams)
+    this.contract.write.delegateGovernanceVotes(
+      [toViemAddress(delegatee), BigInt(percentAmount)] as const,
+      txParams as any
+    )
 
   /**
    * Updates the amount of delegated locked gold. There might be discrepancy between the amount of locked gold
    * and the amount of delegated locked gold because of received rewards.
    */
   updateDelegatedAmount = (delegator: string, delegatee: string, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('updateDelegatedAmount', [delegator, delegatee], txParams)
+    this.contract.write.updateDelegatedAmount(
+      [toViemAddress(delegator), toViemAddress(delegatee)] as const,
+      txParams as any
+    )
 
   /**
    * Revokes delegated locked gold.
    */
   revokeDelegated = (delegatee: string, percentAmount: string, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('revokeDelegatedGovernanceVotes', [delegatee, percentAmount], txParams)
+    this.contract.write.revokeDelegatedGovernanceVotes(
+      [toViemAddress(delegatee), BigInt(percentAmount)] as const,
+      txParams as any
+    )
 
   getMaxDelegateesCount = async () => {
     const maxDelegateesCountHex = await this.connection.getStorageAt(
@@ -150,7 +159,7 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<typeof lockedGold
    * @param value The amount of gold to unlock.
    */
   unlock = (value: BigNumber.Value, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('unlock', [valueToString(value)], txParams)
+    this.contract.write.unlock([BigInt(valueToString(value))] as const, txParams as any)
 
   async getPendingWithdrawalsTotalValue(account: Address) {
     const pendingWithdrawals = await this.getPendingWithdrawals(account)
@@ -209,7 +218,10 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<typeof lockedGold
    * @param value The value to relock from the specified pending withdrawal.
    */
   _relock = (index: number, value: BigNumber.Value, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('relock', [valueToString(index), valueToString(value)], txParams)
+    this.contract.write.relock(
+      [BigInt(valueToString(index)), BigInt(valueToString(value))] as const,
+      txParams as any
+    )
 
   /**
    * Returns the total amount of locked gold for an account.

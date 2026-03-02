@@ -59,9 +59,10 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (provider) => {
   test('will rescue all USDm balance', async () => {
     await topUpWithToken(kit, StableToken.USDm, accounts[0], new BigNumber('100'))
     const stableToken = await kit.contracts.getStableToken()
-    await stableToken.transfer(contractAddress, 100, {
+    const transferHash = await stableToken.transfer(contractAddress, 100, {
       from: accounts[0],
     })
+    await kit.connection.waitForTransactionReceipt(transferHash)
     await testLocallyWithNode(AdminRevoke, ['--contract', contractAddress, '--yesreally'], provider)
     const balance = await stableToken.balanceOf(contractAddress)
     expect(balance.isZero()).toBeTruthy()
@@ -148,7 +149,11 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (provider) => {
           // from vote.test.ts
           governance = await kit.contracts.getGovernance()
           const minDeposit = (await governance.minDeposit()).toFixed()
-          await governance.propose([], 'URL', { from: accounts[0], value: minDeposit })
+          const proposeHash1 = await governance.propose([], 'URL', {
+            from: accounts[0],
+            value: minDeposit,
+          })
+          await kit.connection.waitForTransactionReceipt(proposeHash1)
 
           const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
           await timeTravel(dequeueFrequency + 1, provider)
@@ -179,8 +184,16 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (provider) => {
             ],
             provider
           )
-          await governance.propose([], 'URL', { from: accounts[0], value: minDeposit })
-          await governance.propose([], 'URL', { from: accounts[0], value: minDeposit })
+          const proposeHash2 = await governance.propose([], 'URL', {
+            from: accounts[0],
+            value: minDeposit,
+          })
+          await kit.connection.waitForTransactionReceipt(proposeHash2)
+          const proposeHash3 = await governance.propose([], 'URL', {
+            from: accounts[0],
+            value: minDeposit,
+          })
+          await kit.connection.waitForTransactionReceipt(proposeHash3)
           await testLocallyWithNode(
             GovernanceUpvote,
             ['--from', voteSigner, '--proposalID', '3', '--privateKey', PRIVATE_KEY1],

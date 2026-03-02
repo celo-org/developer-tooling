@@ -136,7 +136,7 @@ testWithAnvilL2('Reserve Wrapper', (provider) => {
       reserve.address,
       transferData
     )
-    const receipt = await kit.connection.getTransactionReceipt(txHash)
+    const receipt = await kit.connection.waitForTransactionReceipt(txHash)
     const logs = parseEventLogs({ abi: multiSigABI as any, logs: receipt!.logs as any })
     const eventNames = logs.map((l: any) => l.eventName)
     // First signer: Submission + Confirmation but NOT Execution (2-of-2 required)
@@ -155,7 +155,7 @@ testWithAnvilL2('Reserve Wrapper', (provider) => {
       '0',
       { from: otherSpender }
     )
-    const receipt2 = await kit.connection.getTransactionReceipt(txHash2)
+    const receipt2 = await kit.connection.waitForTransactionReceipt(txHash2)
     const logs2 = parseEventLogs({ abi: multiSigABI as any, logs: receipt2!.logs as any })
     const eventNames2 = logs2.map((l: any) => l.eventName)
     // Second signer: Confirmation + Execution but NOT Submission

@@ -205,19 +205,6 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
     }
   }
 
-  private _upvote = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('upvote', args, txParams)
-  private _revokeUpvote = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('revokeUpvote', args, txParams)
-  private _approve = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('approve', args, txParams)
-  private _voteSend = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('vote', args, txParams)
-  private _votePartially = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('votePartially', args, txParams)
-  private _execute = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('execute', args, txParams)
-
   /**
    * Querying number of possible concurrent proposals.
    * @returns Current number of possible concurrent proposals.
@@ -597,15 +584,26 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
   /**
    * Withdraws refunded proposal deposits.
    */
-  withdraw = (txParams?: Omit<CeloTx, 'data'>) => this.sendTx('withdraw', [], txParams)
+  withdraw = (txParams?: Omit<CeloTx, 'data'>) => this.contract.write.withdraw(txParams as any)
 
   /**
    * Submits a new governance proposal.
    * @param proposal Governance proposal
    * @param descriptionURL A URL where further information about the proposal can be viewed
    */
-  propose = (proposal: Proposal, descriptionURL: string, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('propose', proposalToParams(proposal, descriptionURL), txParams)
+  propose = (proposal: Proposal, descriptionURL: string, txParams?: Omit<CeloTx, 'data'>) => {
+    const params = proposalToParams(proposal, descriptionURL)
+    return this.contract.write.propose(
+      [
+        params[0].map((v) => BigInt(v)),
+        params[1] as `0x${string}`[],
+        params[2] as `0x${string}`,
+        params[3].map((v) => BigInt(v)),
+        params[4],
+      ],
+      txParams as any
+    )
+  }
 
   /**
    * Returns whether a governance proposal exists with the given ID.
@@ -758,7 +756,7 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
    * Dequeues any queued proposals if `dequeueFrequency` seconds have elapsed since the last dequeue
    */
   dequeueProposalsIfReady = (txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('dequeueProposalsIfReady', [], txParams)
+    this.contract.write.dequeueProposalsIfReady(txParams as any)
 
   /**
    * Returns the number of votes that will be applied to a proposal for a given voter.
@@ -855,9 +853,9 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
     txParams?: Omit<CeloTx, 'data'>
   ): Promise<`0x${string}`> {
     const { lesserID, greaterID } = await this.lesserAndGreaterAfterUpvote(upvoter, proposalID)
-    return this._upvote(
-      [valueToString(proposalID), valueToString(lesserID), valueToString(greaterID)],
-      txParams
+    return this.contract.write.upvote(
+      [toViemBigInt(proposalID), toViemBigInt(lesserID), toViemBigInt(greaterID)],
+      txParams as any
     )
   }
   /**
@@ -866,7 +864,10 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
    */
   async revokeUpvote(upvoter: Address, txParams?: Omit<CeloTx, 'data'>): Promise<`0x${string}`> {
     const { lesserID, greaterID } = await this.lesserAndGreaterAfterRevoke(upvoter)
-    return this._revokeUpvote([valueToString(lesserID), valueToString(greaterID)], txParams)
+    return this.contract.write.revokeUpvote(
+      [toViemBigInt(lesserID), toViemBigInt(greaterID)],
+      txParams as any
+    )
   }
 
   /**
@@ -879,7 +880,10 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
     txParams?: Omit<CeloTx, 'data'>
   ): Promise<`0x${string}`> {
     const proposalIndex = await this.getDequeueIndex(proposalID)
-    return this._approve([valueToString(proposalID), proposalIndex], txParams)
+    return this.contract.write.approve(
+      [toViemBigInt(proposalID), BigInt(proposalIndex)],
+      txParams as any
+    )
   }
 
   /**
@@ -894,7 +898,10 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
   ): Promise<`0x${string}`> {
     const proposalIndex = await this.getDequeueIndex(proposalID)
     const voteNum = Object.keys(VoteValue).indexOf(vote)
-    return this._voteSend([valueToString(proposalID), proposalIndex, voteNum], txParams)
+    return this.contract.write.vote(
+      [toViemBigInt(proposalID), BigInt(proposalIndex), voteNum],
+      txParams as any
+    )
   }
 
   /**
@@ -912,18 +919,19 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
     txParams?: Omit<CeloTx, 'data'>
   ): Promise<`0x${string}`> {
     const proposalIndex = await this.getDequeueIndex(proposalID)
-    return this._votePartially(
+    return this.contract.write.votePartially(
       [
-        valueToString(proposalID),
-        proposalIndex,
-        valueToString(yesVotes),
-        valueToString(noVotes),
-        valueToString(abstainVotes),
+        toViemBigInt(proposalID),
+        BigInt(proposalIndex),
+        toViemBigInt(yesVotes),
+        toViemBigInt(noVotes),
+        toViemBigInt(abstainVotes),
       ],
-      txParams
+      txParams as any
     )
   }
-  revokeVotes = (txParams?: Omit<CeloTx, 'data'>) => this.sendTx('revokeVotes', [], txParams)
+  revokeVotes = (txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.revokeVotes(txParams as any)
 
   /**
    * Executes a given proposal's associated transactions.
@@ -934,7 +942,10 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
     txParams?: Omit<CeloTx, 'data'>
   ): Promise<`0x${string}`> {
     const proposalIndex = await this.getDequeueIndex(proposalID)
-    return this._execute([valueToString(proposalID), proposalIndex], txParams)
+    return this.contract.write.execute(
+      [toViemBigInt(proposalID), BigInt(proposalIndex)],
+      txParams as any
+    )
   }
 
   getHotfixHash = async (proposal: Proposal, salt: Buffer): Promise<string> => {
@@ -971,14 +982,20 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
    * @notice Only the `approver` address will succeed in sending this transaction
    */
   approveHotfix = (hash: Buffer, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('approveHotfix', [bufferToHex(hash)], txParams)
+    this.contract.write.approveHotfix(
+      [pad(bufferToHex(hash) as `0x${string}`, { size: 32 })],
+      txParams as any
+    )
 
   /**
    * Marks the given hotfix prepared for current epoch if quorum of validators have whitelisted it.
    * @param hash keccak256 hash of hotfix's associated abi encoded transactions
    */
   prepareHotfix = (hash: Buffer, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('prepareHotfix', [bufferToHex(hash)], txParams)
+    this.contract.write.prepareHotfix(
+      [pad(bufferToHex(hash) as `0x${string}`, { size: 32 })],
+      txParams as any
+    )
 
   /**
    * Executes a given sequence of transactions if the corresponding hash is prepared and approved.
@@ -986,8 +1003,19 @@ export class GovernanceWrapper extends BaseWrapperForGoverning<typeof governance
    * @param salt Secret which guarantees uniqueness of hash
    * @notice keccak256 hash of abi encoded transactions computed on-chain
    */
-  executeHotfix = (proposal: Proposal, salt: Buffer, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('executeHotfix', hotfixToParams(proposal, salt), txParams)
+  executeHotfix = (proposal: Proposal, salt: Buffer, txParams?: Omit<CeloTx, 'data'>) => {
+    const params = hotfixToParams(proposal, salt)
+    return this.contract.write.executeHotfix(
+      [
+        params[0].map((v) => BigInt(v)),
+        params[1] as `0x${string}`[],
+        params[2] as `0x${string}`,
+        params[3].map((v) => BigInt(v)),
+        pad(params[4] as `0x${string}`, { size: 32 }),
+      ],
+      txParams as any
+    )
+  }
 }
 
 export type GovernanceWrapperType = GovernanceWrapper

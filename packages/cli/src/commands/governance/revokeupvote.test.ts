@@ -25,7 +25,11 @@ testWithAnvilL2('governance:revokeupvote cmd', (provider) => {
     minDeposit = await governance.minDeposit()
 
     for (let i = 1; i <= 2; i++) {
-      await governance.propose([], `URL${i}`, { from: accounts[0], value: minDeposit.toFixed() })
+      const proposeHash = await governance.propose([], `URL${i}`, {
+        from: accounts[0],
+        value: minDeposit.toFixed(),
+      })
+      await kit.connection.waitForTransactionReceipt(proposeHash)
     }
 
     for (let i = 1; i <= 4; i++) {

@@ -186,7 +186,10 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
     if (!numReports) {
       numReports = (await this.getReports(target)).length - 1
     }
-    return this.sendTx('removeExpiredReports', [identifier, numReports], txParams)
+    return this.contract.write.removeExpiredReports(
+      [toViemAddress(identifier), BigInt(numReports!)] as const,
+      txParams as any
+    )
   }
 
   /**
@@ -208,9 +211,15 @@ export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
       oracleAddress
     )
 
-    return this.sendTx('report', [identifier, fixedValue.toFixed(), lesserKey, greaterKey], {
-      from: oracleAddress,
-    })
+    return this.contract.write.report(
+      [
+        toViemAddress(identifier),
+        BigInt(fixedValue.toFixed()),
+        toViemAddress(lesserKey),
+        toViemAddress(greaterKey),
+      ] as const,
+      { from: oracleAddress } as any
+    )
   }
 
   /**

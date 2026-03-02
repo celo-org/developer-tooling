@@ -53,14 +53,16 @@ testWithAnvilL2('FederatedAttestations Wrapper', (provider) => {
     const account = accounts[3]
 
     const accountInstance = await kit.contracts.getAccounts()
-    await accountInstance.createAccount({ from: issuer })
-    await federatedAttestations.registerAttestation(
+    const createHash = await accountInstance.createAccount({ from: issuer })
+    await kit.connection.waitForTransactionReceipt(createHash)
+    const registerHash = await federatedAttestations.registerAttestation(
       testIdentifierBytes32,
       issuer,
       account,
       issuer,
       TIME_STAMP
     )
+    await kit.connection.waitForTransactionReceipt(registerHash)
 
     const attestationsAfterRegistration = await federatedAttestations.lookupAttestations(
       testIdentifierBytes32,
@@ -82,11 +84,12 @@ testWithAnvilL2('FederatedAttestations Wrapper', (provider) => {
   })
 
   it('attestation should exist when registered and not when revoked', async () => {
-    await federatedAttestations.registerAttestationAsIssuer(
+    const registerHash = await federatedAttestations.registerAttestationAsIssuer(
       testIdentifierBytes32,
       testAccountAddress,
       TIME_STAMP
     )
+    await kit.connection.waitForTransactionReceipt(registerHash)
 
     const attestationsAfterRegistration = await federatedAttestations.lookupAttestations(
       testIdentifierBytes32,
@@ -107,11 +110,12 @@ testWithAnvilL2('FederatedAttestations Wrapper', (provider) => {
     expect(identifiersAfterRegistration.countsPerIssuer).toEqual(['1'])
     expect(identifiersAfterRegistration.identifiers).toEqual([testIdentifierBytes32])
 
-    await federatedAttestations.revokeAttestation(
+    const revokeHash = await federatedAttestations.revokeAttestation(
       testIdentifierBytes32,
       accounts[0],
       testAccountAddress
     )
+    await kit.connection.waitForTransactionReceipt(revokeHash)
 
     const attestationsAfterRevocation = await federatedAttestations.lookupAttestations(
       testIdentifierBytes32,
@@ -138,17 +142,19 @@ testWithAnvilL2('FederatedAttestations Wrapper', (provider) => {
       v: '1600 Pennsylvania Avenue, Washington, D.C., USA',
     }) as string
 
-    await federatedAttestations.registerAttestationAsIssuer(
+    const register1Hash = await federatedAttestations.registerAttestationAsIssuer(
       testIdentifierBytes32,
       testAccountAddress,
       TIME_STAMP
     )
+    await kit.connection.waitForTransactionReceipt(register1Hash)
 
-    await federatedAttestations.registerAttestationAsIssuer(
+    const register2Hash = await federatedAttestations.registerAttestationAsIssuer(
       secondIdentifierBytes32,
       testAccountAddress,
       TIME_STAMP
     )
+    await kit.connection.waitForTransactionReceipt(register2Hash)
 
     const identifiersAfterRegistration = await federatedAttestations.lookupIdentifiers(
       testAccountAddress,
@@ -161,11 +167,12 @@ testWithAnvilL2('FederatedAttestations Wrapper', (provider) => {
       secondIdentifierBytes32,
     ])
 
-    await federatedAttestations.batchRevokeAttestations(
+    const batchRevokeHash = await federatedAttestations.batchRevokeAttestations(
       accounts[0],
       [testIdentifierBytes32, secondIdentifierBytes32],
       [testAccountAddress, testAccountAddress]
     )
+    await kit.connection.waitForTransactionReceipt(batchRevokeHash)
 
     const identifiersAfterBatchRevocation = await federatedAttestations.lookupIdentifiers(
       testAccountAddress,

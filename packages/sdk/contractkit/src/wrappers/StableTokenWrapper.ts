@@ -1,6 +1,6 @@
 import { stableTokenABI } from '@celo/abis'
 import { CeloTx } from '@celo/connect'
-import { valueToString } from './BaseWrapper'
+import { toViemAddress, valueToString } from './BaseWrapper'
 import { CeloTokenWrapper } from './CeloTokenWrapper'
 
 export interface StableTokenConfig {
@@ -29,7 +29,11 @@ export class StableTokenWrapper extends CeloTokenWrapper<typeof stableTokenABI> 
     spender: string,
     value: import('bignumber.js').default.Value,
     txParams?: Omit<CeloTx, 'data'>
-  ) => this.sendTx('increaseAllowance', [spender, valueToString(value)], txParams)
+  ) =>
+    this.contract.write.increaseAllowance(
+      [toViemAddress(spender), BigInt(valueToString(value))] as const,
+      txParams as any
+    )
   /**
    * Decreases the allowance of another user.
    * @param spender The address which is being approved to spend StableToken.
@@ -37,10 +41,14 @@ export class StableTokenWrapper extends CeloTokenWrapper<typeof stableTokenABI> 
    * @returns true if success.
    */
   decreaseAllowance = (spender: string, value: string, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('decreaseAllowance', [spender, value], txParams)
+    this.contract.write.decreaseAllowance(
+      [toViemAddress(spender), BigInt(value)] as const,
+      txParams as any
+    )
   mint = (to: string, value: string, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('mint', [to, value], txParams)
-  burn = (value: string, txParams?: Omit<CeloTx, 'data'>) => this.sendTx('burn', [value], txParams)
+    this.contract.write.mint([toViemAddress(to), BigInt(value)] as const, txParams as any)
+  burn = (value: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.burn([BigInt(value)] as const, txParams as any)
 
   /**
    * Returns current configuration parameters.

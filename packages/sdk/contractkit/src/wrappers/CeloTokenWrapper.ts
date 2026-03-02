@@ -48,5 +48,6 @@ export class CeloTokenWrapper<TAbi extends Abi = typeof goldTokenABI> extends Er
     value: string,
     comment: string,
     txParams?: Omit<CeloTx, 'data'>
-  ) => this.sendTxUnchecked('transferWithComment', [to, value, comment], txParams)
+  ) =>
+    (this.contract as any).write.transferWithComment([to, value, comment] as const, txParams as any)
 }

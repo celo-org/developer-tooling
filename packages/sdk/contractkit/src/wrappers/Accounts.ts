@@ -39,9 +39,19 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
   private RELEASE_4_VERSION = newContractVersion(1, 1, 2, 0)
 
   /**
+   * @internal Convert CeloTx overrides for contract.write calls.
+   * CeloProvider transport handles Celo-specific field mapping at runtime.
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private writeOverrides(txParams?: Omit<CeloTx, 'data'>): any {
+    return txParams ? { ...txParams } : undefined
+  }
+
+  /**
    * Creates an account.
    */
-  createAccount = (txParams?: Omit<CeloTx, 'data'>) => this.sendTx('createAccount', [], txParams)
+  createAccount = (txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.createAccount(this.writeOverrides(txParams))
 
   /**
    * Returns the attestation signer for the specified account.
@@ -147,9 +157,6 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     }
   }
 
-  private _authorizeAttestationSigner = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('authorizeAttestationSigner', args, txParams)
-
   /**
    * Authorize an attestation signing key on behalf of this account to another address.
    * @param signer The address of the signing key to authorize.
@@ -161,19 +168,16 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     proofOfSigningKeyPossession: Signature,
     txParams?: Omit<CeloTx, 'data'>
   ): Promise<`0x${string}`> {
-    return this._authorizeAttestationSigner(
+    return this.contract.write.authorizeAttestationSigner(
       [
-        signer,
+        toViemAddress(signer),
         proofOfSigningKeyPossession.v,
-        proofOfSigningKeyPossession.r,
-        proofOfSigningKeyPossession.s,
-      ],
-      txParams
+        proofOfSigningKeyPossession.r as `0x${string}`,
+        proofOfSigningKeyPossession.s as `0x${string}`,
+      ] as const,
+      this.writeOverrides(txParams)
     )
   }
-
-  private _authorizeVoteSigner = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('authorizeVoteSigner', args, txParams)
 
   /**
    * Authorizes an address to sign votes on behalf of the account.
@@ -186,22 +190,16 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     proofOfSigningKeyPossession: Signature,
     txParams?: Omit<CeloTx, 'data'>
   ): Promise<`0x${string}`> {
-    return this._authorizeVoteSigner(
+    return this.contract.write.authorizeVoteSigner(
       [
-        signer,
+        toViemAddress(signer),
         proofOfSigningKeyPossession.v,
-        proofOfSigningKeyPossession.r,
-        proofOfSigningKeyPossession.s,
-      ],
-      txParams
+        proofOfSigningKeyPossession.r as `0x${string}`,
+        proofOfSigningKeyPossession.s as `0x${string}`,
+      ] as const,
+      this.writeOverrides(txParams)
     )
   }
-
-  private _authorizeValidatorSignerWithPublicKey = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('authorizeValidatorSignerWithPublicKey', args, txParams)
-
-  private _authorizeValidatorSigner = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('authorizeValidatorSigner', args, txParams)
 
   /**
    * Authorizes an address to sign consensus messages on behalf of the account.
@@ -228,25 +226,25 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
         proofOfSigningKeyPossession.r,
         proofOfSigningKeyPossession.s
       )
-      return this._authorizeValidatorSignerWithPublicKey(
+      return this.contract.write.authorizeValidatorSignerWithPublicKey(
         [
-          signer,
+          toViemAddress(signer),
           proofOfSigningKeyPossession.v,
-          proofOfSigningKeyPossession.r,
-          proofOfSigningKeyPossession.s,
-          stringToSolidityBytes(pubKey),
-        ],
-        txParams
+          proofOfSigningKeyPossession.r as `0x${string}`,
+          proofOfSigningKeyPossession.s as `0x${string}`,
+          stringToSolidityBytes(pubKey) as `0x${string}`,
+        ] as const,
+        this.writeOverrides(txParams)
       )
     } else {
-      return this._authorizeValidatorSigner(
+      return this.contract.write.authorizeValidatorSigner(
         [
-          signer,
+          toViemAddress(signer),
           proofOfSigningKeyPossession.v,
-          proofOfSigningKeyPossession.r,
-          proofOfSigningKeyPossession.s,
-        ],
-        txParams
+          proofOfSigningKeyPossession.r as `0x${string}`,
+          proofOfSigningKeyPossession.s as `0x${string}`,
+        ] as const,
+        this.writeOverrides(txParams)
       )
     }
   }
@@ -274,20 +272,17 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
       proofOfSigningKeyPossession.r,
       proofOfSigningKeyPossession.s
     )
-    return this._authorizeValidatorSignerWithPublicKey(
+    return this.contract.write.authorizeValidatorSignerWithPublicKey(
       [
-        signer,
+        toViemAddress(signer),
         proofOfSigningKeyPossession.v,
-        proofOfSigningKeyPossession.r,
-        proofOfSigningKeyPossession.s,
-        stringToSolidityBytes(pubKey),
-      ],
-      txParams
+        proofOfSigningKeyPossession.r as `0x${string}`,
+        proofOfSigningKeyPossession.s as `0x${string}`,
+        stringToSolidityBytes(pubKey) as `0x${string}`,
+      ] as const,
+      this.writeOverrides(txParams)
     )
   }
-
-  private _authorizeSignerWithSignature = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('authorizeSignerWithSignature', args, txParams)
 
   async authorizeSigner(
     signer: Address,
@@ -312,11 +307,17 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     })
 
     const sig = await this.connection.signTypedData(signer, typedData)
-    return this._authorizeSignerWithSignature([signer, hashedRole, sig.v, sig.r, sig.s], txParams)
+    return this.contract.write.authorizeSignerWithSignature(
+      [
+        toViemAddress(signer),
+        hashedRole as `0x${string}`,
+        sig.v,
+        sig.r as `0x${string}`,
+        sig.s as `0x${string}`,
+      ] as const,
+      this.writeOverrides(txParams)
+    )
   }
-
-  private _authorizeSigner = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('authorizeSigner', args, txParams)
 
   async startSignerAuthorization(
     signer: Address,
@@ -324,11 +325,11 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     txParams?: Omit<CeloTx, 'data'>
   ): Promise<`0x${string}`> {
     await this.onlyVersionOrGreater(this.RELEASE_4_VERSION)
-    return this._authorizeSigner([signer, this.keccak256(role)], txParams)
+    return this.contract.write.authorizeSigner(
+      [toViemAddress(signer), this.keccak256(role) as `0x${string}`] as const,
+      this.writeOverrides(txParams)
+    )
   }
-
-  private _completeSignerAuthorization = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('completeSignerAuthorization', args, txParams)
 
   async completeSignerAuthorization(
     account: Address,
@@ -336,18 +337,18 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     txParams?: Omit<CeloTx, 'data'>
   ): Promise<`0x${string}`> {
     await this.onlyVersionOrGreater(this.RELEASE_4_VERSION)
-    return this._completeSignerAuthorization([account, this.keccak256(role)], txParams)
+    return this.contract.write.completeSignerAuthorization(
+      [toViemAddress(account), this.keccak256(role) as `0x${string}`] as const,
+      this.writeOverrides(txParams)
+    )
   }
-
-  private _removeAttestationSigner = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('removeAttestationSigner', args, txParams)
 
   /**
    * Removes the currently authorized attestation signer for the account
    * @returns A promise that resolves to the transaction hash
    */
   async removeAttestationSigner(txParams?: Omit<CeloTx, 'data'>): Promise<`0x${string}`> {
-    return this._removeAttestationSigner([], txParams)
+    return this.contract.write.removeAttestationSigner(this.writeOverrides(txParams))
   }
 
   async generateProofOfKeyPossession(account: Address, signer: Address) {
@@ -402,10 +403,10 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
    * @param encryptionKey The key to set
    */
   setAccountDataEncryptionKey = (encryptionKey: string, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('setAccountDataEncryptionKey', [encryptionKey], txParams)
-
-  private _setAccount = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('setAccount', args, txParams)
+    this.contract.write.setAccountDataEncryptionKey(
+      [encryptionKey as `0x${string}`] as const,
+      this.writeOverrides(txParams)
+    )
 
   /**
    * Convenience Setter for the dataEncryptionKey and wallet address for an account
@@ -422,21 +423,28 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     txParams?: Omit<CeloTx, 'data'>
   ): Promise<`0x${string}`> {
     if (proofOfPossession) {
-      return this._setAccount(
+      return this.contract.write.setAccount(
         [
           name,
-          dataEncryptionKey,
-          walletAddress,
+          dataEncryptionKey as `0x${string}`,
+          toViemAddress(walletAddress),
           proofOfPossession.v,
-          proofOfPossession.r,
-          proofOfPossession.s,
-        ],
-        txParams
+          proofOfPossession.r as `0x${string}`,
+          proofOfPossession.s as `0x${string}`,
+        ] as const,
+        this.writeOverrides(txParams)
       )
     } else {
-      return this._setAccount(
-        [name, dataEncryptionKey, walletAddress, '0x0', '0x0', '0x0'],
-        txParams
+      return this.contract.write.setAccount(
+        [
+          name,
+          dataEncryptionKey as `0x${string}`,
+          toViemAddress(walletAddress),
+          0,
+          '0x0' as `0x${string}`,
+          '0x0' as `0x${string}`,
+        ] as const,
+        this.writeOverrides(txParams)
       )
     }
   }
@@ -446,14 +454,14 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
    * @param name The name to set
    */
   setName = (name: string, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('setName', [name], txParams)
+    this.contract.write.setName([name] as const, this.writeOverrides(txParams))
 
   /**
    * Sets the metadataURL for the account
    * @param url The url to set
    */
   setMetadataURL = (url: string, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('setMetadataURL', [url], txParams)
+    this.contract.write.setMetadataURL([url] as const, this.writeOverrides(txParams))
 
   /**
    * Set a validator's payment delegation settings.
@@ -465,14 +473,17 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
    * @dev Use `deletePaymentDelegation` to unset the payment delegation.
    */
   setPaymentDelegation = (beneficiary: string, fraction: string, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('setPaymentDelegation', [beneficiary, fraction], txParams)
+    this.contract.write.setPaymentDelegation(
+      [toViemAddress(beneficiary), BigInt(fraction)] as const,
+      this.writeOverrides(txParams)
+    )
 
   /**
    * Remove a validator's payment delegation by setting beneficiary and
    * fraction to 0.
    */
   deletePaymentDelegation = (txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('deletePaymentDelegation', [], txParams)
+    this.contract.write.deletePaymentDelegation(this.writeOverrides(txParams))
 
   /**
    * Get a validator's payment delegation settings.
@@ -487,9 +498,6 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     }
   }
 
-  private _setWalletAddress = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('setWalletAddress', args, txParams)
-
   /**
    * Sets the wallet address for the account
    * @param address The address to set
@@ -500,12 +508,25 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     txParams?: Omit<CeloTx, 'data'>
   ): Promise<`0x${string}`> {
     if (proofOfPossession) {
-      return this._setWalletAddress(
-        [walletAddress, proofOfPossession.v, proofOfPossession.r, proofOfPossession.s],
-        txParams
+      return this.contract.write.setWalletAddress(
+        [
+          toViemAddress(walletAddress),
+          proofOfPossession.v,
+          proofOfPossession.r as `0x${string}`,
+          proofOfPossession.s as `0x${string}`,
+        ] as const,
+        this.writeOverrides(txParams)
       )
     } else {
-      return this._setWalletAddress([walletAddress, '0x0', '0x0', '0x0'], txParams)
+      return this.contract.write.setWalletAddress(
+        [
+          toViemAddress(walletAddress),
+          0,
+          '0x0000000000000000000000000000000000000000000000000000000000000000',
+          '0x0000000000000000000000000000000000000000000000000000000000000000',
+        ] as const,
+        this.writeOverrides(txParams)
+      )
     }
   }
 

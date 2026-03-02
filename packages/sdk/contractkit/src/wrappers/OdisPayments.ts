@@ -20,7 +20,7 @@ export class OdisPaymentsWrapper extends BaseWrapper<typeof odisPaymentsABI> {
    * @dev Throws if USDm transfer fails.
    */
   payInCUSD = (account: Address, value: number | string, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('payInCUSD', [account, value], txParams)
+    this.contract.write.payInCUSD([toViemAddress(account), BigInt(value)] as const, txParams as any)
 }
 
 export type OdisPaymentsWrapperType = OdisPaymentsWrapper

@@ -27,9 +27,11 @@ testWithAnvilL2('Accounts Wrapper', (provider) => {
 
   const registerAccountWithLockedGold = async (account: string) => {
     if (!(await accountsInstance.isAccount(account))) {
-      await accountsInstance.createAccount({ from: account })
+      const hash = await accountsInstance.createAccount({ from: account })
+      await kit.connection.waitForTransactionReceipt(hash)
     }
-    await lockedGold.lock({ from: account, value: minLockedGoldValue })
+    const hash = await lockedGold.lock({ from: account, value: minLockedGoldValue })
+    await kit.connection.waitForTransactionReceipt(hash)
   }
 
   const getParsedSignatureOfAddressForTest = (address: string, signer: string) => {
@@ -47,15 +49,20 @@ testWithAnvilL2('Accounts Wrapper', (provider) => {
   const setupValidator = async (validatorAccount: string) => {
     await registerAccountWithLockedGold(validatorAccount)
     const ecdsaPublicKey = await addressToPublicKey(validatorAccount, kit.connection.sign)
-    await validators.registerValidatorNoBls(ecdsaPublicKey, { from: validatorAccount })
+    const hash = await validators.registerValidatorNoBls(ecdsaPublicKey, { from: validatorAccount })
+    await kit.connection.waitForTransactionReceipt(hash)
   }
 
   test('SBAT authorize attestation key', async () => {
     const account = accounts[0]
     const signer = accounts[1]
-    await accountsInstance.createAccount({ from: account })
+    const hash = await accountsInstance.createAccount({ from: account })
+    await kit.connection.waitForTransactionReceipt(hash)
     const sig = await getParsedSignatureOfAddressForTest(account, signer)
-    await accountsInstance.authorizeAttestationSigner(signer, sig, { from: account })
+    const authHash = await accountsInstance.authorizeAttestationSigner(signer, sig, {
+      from: account,
+    })
+    await kit.connection.waitForTransactionReceipt(authHash)
     const attestationSigner = await accountsInstance.getAttestationSigner(account)
     expect(attestationSigner).toEqual(signer)
   })
@@ -63,14 +70,19 @@ testWithAnvilL2('Accounts Wrapper', (provider) => {
   test('SBAT remove attestation key authorization', async () => {
     const account = accounts[0]
     const signer = accounts[1]
-    await accountsInstance.createAccount({ from: account })
+    const hash = await accountsInstance.createAccount({ from: account })
+    await kit.connection.waitForTransactionReceipt(hash)
     const sig = await getParsedSignatureOfAddressForTest(account, signer)
-    await accountsInstance.authorizeAttestationSigner(signer, sig, { from: account })
+    const authHash = await accountsInstance.authorizeAttestationSigner(signer, sig, {
+      from: account,
+    })
+    await kit.connection.waitForTransactionReceipt(authHash)
 
     let attestationSigner = await accountsInstance.getAttestationSigner(account)
     expect(attestationSigner).toEqual(signer)
 
-    await accountsInstance.removeAttestationSigner({ from: account })
+    const removeHash = await accountsInstance.removeAttestationSigner({ from: account })
+    await kit.connection.waitForTransactionReceipt(removeHash)
 
     attestationSigner = await accountsInstance.getAttestationSigner(account)
     expect(attestationSigner).toEqual(account)
@@ -79,9 +91,13 @@ testWithAnvilL2('Accounts Wrapper', (provider) => {
   test('SBAT authorize validator key when not a validator', async () => {
     const account = accounts[0]
     const signer = accounts[1]
-    await accountsInstance.createAccount({ from: account })
+    const hash = await accountsInstance.createAccount({ from: account })
+    await kit.connection.waitForTransactionReceipt(hash)
     const sig = await getParsedSignatureOfAddressForTest(account, signer)
-    await accountsInstance.authorizeValidatorSigner(signer, sig, validators, { from: account })
+    const authHash = await accountsInstance.authorizeValidatorSigner(signer, sig, validators, {
+      from: account,
+    })
+    await kit.connection.waitForTransactionReceipt(authHash)
 
     const validatorSigner = await accountsInstance.getValidatorSigner(account)
     expect(validatorSigner).toEqual(signer)
@@ -90,10 +106,14 @@ testWithAnvilL2('Accounts Wrapper', (provider) => {
   test('SBAT authorize validator key when a validator', async () => {
     const account = accounts[0]
     const signer = accounts[1]
-    await accountsInstance.createAccount({ from: account })
+    const hash = await accountsInstance.createAccount({ from: account })
+    await kit.connection.waitForTransactionReceipt(hash)
     await setupValidator(account)
     const sig = await getParsedSignatureOfAddressForTest(account, signer)
-    await accountsInstance.authorizeValidatorSigner(signer, sig, validators, { from: account })
+    const authHash = await accountsInstance.authorizeValidatorSigner(signer, sig, validators, {
+      from: account,
+    })
+    await kit.connection.waitForTransactionReceipt(authHash)
 
     const validatorSigner = await accountsInstance.getValidatorSigner(account)
     expect(validatorSigner).toEqual(signer)
@@ -101,8 +121,10 @@ testWithAnvilL2('Accounts Wrapper', (provider) => {
 
   test('SBAT set the wallet address to the caller', async () => {
     const account = accounts[0]
-    await accountsInstance.createAccount({ from: account })
-    await accountsInstance.setWalletAddress(account, null, { from: account })
+    const hash = await accountsInstance.createAccount({ from: account })
+    await kit.connection.waitForTransactionReceipt(hash)
+    const setHash = await accountsInstance.setWalletAddress(account, null, { from: account })
+    await kit.connection.waitForTransactionReceipt(setHash)
 
     const walletAddress = await accountsInstance.getWalletAddress(account)
     expect(walletAddress).toEqual(account)
@@ -111,9 +133,11 @@ testWithAnvilL2('Accounts Wrapper', (provider) => {
   test('SBAT set the wallet address to a different wallet address', async () => {
     const account = accounts[0]
     const wallet = accounts[1]
-    await accountsInstance.createAccount({ from: account })
+    const hash = await accountsInstance.createAccount({ from: account })
+    await kit.connection.waitForTransactionReceipt(hash)
     const signature = await accountsInstance.generateProofOfKeyPossession(account, wallet)
-    await accountsInstance.setWalletAddress(wallet, signature, { from: account })
+    const setHash = await accountsInstance.setWalletAddress(wallet, signature, { from: account })
+    await kit.connection.waitForTransactionReceipt(setHash)
 
     const walletAddress = await accountsInstance.getWalletAddress(account)
     expect(walletAddress).toEqual(wallet)
@@ -122,7 +146,8 @@ testWithAnvilL2('Accounts Wrapper', (provider) => {
   test('SNBAT to set to a different wallet address without a signature', async () => {
     const account = accounts[0]
     const wallet = accounts[1]
-    await accountsInstance.createAccount({ from: account })
+    const hash = await accountsInstance.createAccount({ from: account })
+    await kit.connection.waitForTransactionReceipt(hash)
     await expect(
       accountsInstance.setWalletAddress(wallet, null, { from: account })
     ).rejects.toThrow()
@@ -135,7 +160,8 @@ testWithAnvilL2('Accounts Wrapper', (provider) => {
 
     kit.defaultAccount = account
 
-    await accountsInstance.createAccount({ from: account })
+    const hash = await accountsInstance.createAccount({ from: account })
+    await kit.connection.waitForTransactionReceipt(hash)
     await expect(
       accountsInstance.setPaymentDelegation(beneficiary, fractionInvalid, { from: account })
     ).rejects.toThrow('Fraction must not be greater than 1')
@@ -149,8 +175,10 @@ testWithAnvilL2('Accounts Wrapper', (provider) => {
 
     kit.defaultAccount = account
 
-    await accountsInstance.createAccount({ from: account })
-    await accountsInstance.setPaymentDelegation(beneficiary, fractionValid)
+    const hash = await accountsInstance.createAccount({ from: account })
+    await kit.connection.waitForTransactionReceipt(hash)
+    const setHash = await accountsInstance.setPaymentDelegation(beneficiary, fractionValid)
+    await kit.connection.waitForTransactionReceipt(setHash)
 
     const retval = await accountsInstance.getPaymentDelegation(account)
     expect(retval).toEqual(expectedRetval)
@@ -164,10 +192,13 @@ testWithAnvilL2('Accounts Wrapper', (provider) => {
 
     kit.defaultAccount = account
 
-    await accountsInstance.createAccount({ from: account })
-    await accountsInstance.setPaymentDelegation(beneficiary, fractionValid)
+    const hash = await accountsInstance.createAccount({ from: account })
+    await kit.connection.waitForTransactionReceipt(hash)
+    const setHash = await accountsInstance.setPaymentDelegation(beneficiary, fractionValid)
+    await kit.connection.waitForTransactionReceipt(setHash)
 
-    await accountsInstance.deletePaymentDelegation()
+    const delHash = await accountsInstance.deletePaymentDelegation()
+    await kit.connection.waitForTransactionReceipt(delHash)
 
     const retval = await accountsInstance.getPaymentDelegation(account)
     expect(retval).toEqual(expectedRetval)

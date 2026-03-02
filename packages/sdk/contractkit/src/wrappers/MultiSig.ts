@@ -52,10 +52,16 @@ export class MultiSigWrapper extends BaseWrapper<typeof multiSigABI> {
         transaction.value === value &&
         !transaction.executed
       ) {
-        return this.sendTx('confirmTransaction', [transactionId], txParams)
+        return this.contract.write.confirmTransaction(
+          [BigInt(transactionId)] as const,
+          txParams as any
+        )
       }
     }
-    return this.sendTx('submitTransaction', [destination, value, data], txParams)
+    return this.contract.write.submitTransaction(
+      [toViemAddress(destination), BigInt(value), data as `0x${string}`] as const,
+      txParams as any
+    )
   }
 
   private _getTransactionCountRaw = async (pending: boolean, executed: boolean) => {
@@ -92,7 +98,7 @@ export class MultiSigWrapper extends BaseWrapper<typeof multiSigABI> {
     transactionId: number,
     txParams?: Omit<CeloTx, 'data'>
   ): Promise<`0x${string}`> {
-    return this.sendTx('confirmTransaction', [transactionId], txParams)
+    return this.contract.write.confirmTransaction([BigInt(transactionId)] as const, txParams as any)
   }
   async submitTransaction(
     destination: string,
@@ -101,7 +107,10 @@ export class MultiSigWrapper extends BaseWrapper<typeof multiSigABI> {
     txParams?: Omit<CeloTx, 'data'>
   ): Promise<`0x${string}`> {
     const data = stringToSolidityBytes(encodedData)
-    return this.sendTx('submitTransaction', [destination, value, data], txParams)
+    return this.contract.write.submitTransaction(
+      [toViemAddress(destination), BigInt(value), data as `0x${string}`] as const,
+      txParams as any
+    )
   }
 
   isOwner: (owner: Address) => Promise<boolean> = async (owner) => {
@@ -128,7 +137,10 @@ export class MultiSigWrapper extends BaseWrapper<typeof multiSigABI> {
     return valueToInt(res.toString())
   }
   replaceOwner = (owner: Address, newOwner: Address, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('replaceOwner', [owner, newOwner], txParams)
+    this.contract.write.replaceOwner(
+      [toViemAddress(owner), toViemAddress(newOwner)] as const,
+      txParams as any
+    )
 
   async getTransactionDataByContent(
     destination: string,

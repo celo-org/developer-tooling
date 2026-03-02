@@ -67,7 +67,8 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
 
     // Let the epoch pass and start another one
     await timeTravel(epochDuration, provider)
-    await epochManagerWrapper.startNextEpochProcess({ from: accounts[0] })
+    const hash1 = await epochManagerWrapper.startNextEpochProcess({ from: accounts[0] })
+    await kit.connection.waitForTransactionReceipt(hash1)
 
     expect((await epochManagerWrapper.getEpochProcessingStatus()).status).toEqual(1)
   })
@@ -91,8 +92,10 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
 
     // Let the epoch pass and start another one
     await timeTravel(epochDuration + 1, provider)
-    await epochManagerWrapper.startNextEpochProcess({ from: accounts[0] })
-    await epochManagerWrapper.finishNextEpochProcessTx({ from: accounts[0] })
+    const hash2 = await epochManagerWrapper.startNextEpochProcess({ from: accounts[0] })
+    await kit.connection.waitForTransactionReceipt(hash2)
+    const hash3 = await epochManagerWrapper.finishNextEpochProcessTx({ from: accounts[0] })
+    await kit.connection.waitForTransactionReceipt(hash3)
 
     const lastBlock = await epochManagerWrapper.getLastBlockAtEpoch(currentEpochNumber)
     expect(lastBlock).toEqual(17634)
@@ -113,7 +116,8 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
 
       // Let the epoch pass and start another one
       await timeTravel(epochDuration + 1, provider)
-      await epochManagerWrapper.startNextEpochProcess({ from: accounts[0] })
+      const hash4 = await epochManagerWrapper.startNextEpochProcess({ from: accounts[0] })
+      await kit.connection.waitForTransactionReceipt(hash4)
 
       const validatorsContract = await kit.contracts.getValidators()
       const electionContract = await kit.contracts.getElection()
@@ -127,7 +131,7 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
             REGISTRY_CONTRACT_ADDRESS
           )
 
-          await kit.connection.sendTransaction({
+          const hash5 = await kit.connection.sendTransaction({
             to: registryContract.address,
             data: encodeFunctionData({
               abi: registryContract.abi as any,
@@ -136,8 +140,9 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
             }),
             from: ownerAdress,
           })
+          await kit.connection.waitForTransactionReceipt(hash5)
 
-          await kit.connection.sendTransaction({
+          const hash6 = await kit.connection.sendTransaction({
             to: (electionContract as any).contract.address,
             data: encodeFunctionData({
               abi: (electionContract as any).contract.abi as any,
@@ -146,8 +151,9 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
             }),
             from: accounts[0],
           })
+          await kit.connection.waitForTransactionReceipt(hash6)
 
-          await kit.connection.sendTransaction({
+          const hash7 = await kit.connection.sendTransaction({
             to: registryContract.address,
             data: encodeFunctionData({
               abi: registryContract.abi as any,
@@ -156,11 +162,13 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
             }),
             from: ownerAdress,
           })
+          await kit.connection.waitForTransactionReceipt(hash7)
         },
         parseEther('1')
       )
 
-      await epochManagerWrapper.finishNextEpochProcessTx({ from: accounts[0] })
+      const hash8 = await epochManagerWrapper.finishNextEpochProcessTx({ from: accounts[0] })
+      await kit.connection.waitForTransactionReceipt(hash8)
     },
     1000 * 60 * 5
   )
@@ -183,7 +191,7 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
           provider,
           validatorGroup,
           async () => {
-            await kit.connection.sendTransaction({
+            const hash9 = await kit.connection.sendTransaction({
               to: electionViemContract.address,
               data: encodeFunctionData({
                 abi: electionViemContract.abi as any,
@@ -192,6 +200,7 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
               }),
               from: validatorGroup,
             })
+            await kit.connection.waitForTransactionReceipt(hash9)
           },
           parseEther('1')
         )
@@ -226,7 +235,8 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
 
     // Start a new epoch process, but not finish it, so we can check the amounts
     await timeTravel(epochDuration + 1, provider)
-    await epochManagerWrapper.startNextEpochProcess({ from: accounts[0] })
+    const hash10 = await epochManagerWrapper.startNextEpochProcess({ from: accounts[0] })
+    await kit.connection.waitForTransactionReceipt(hash10)
 
     const status = await epochManagerWrapper.getEpochProcessingStatus()
 
@@ -243,7 +253,10 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
     const validatorBalanceBefore = (await kit.getTotalBalance(validatorAddress)).USDm!
     const validatorGroupBalanceBefore = (await kit.getTotalBalance(validatorGroupAddress)).USDm!
 
-    await epochManagerWrapper.sendValidatorPayment(validatorAddress, { from: accounts[0] })
+    const hash11 = await epochManagerWrapper.sendValidatorPayment(validatorAddress, {
+      from: accounts[0],
+    })
+    await kit.connection.waitForTransactionReceipt(hash11)
 
     expect(
       (await kit.getTotalBalance(validatorAddress)).USDm!.isGreaterThan(validatorBalanceBefore)
@@ -268,7 +281,8 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
     // Start a new epoch process, but don't process it, so we can compare the amounts
     await timeTravel(epochDuration + 1, provider)
 
-    await epochManagerWrapper.startNextEpochProcess({ from: accounts[0] })
+    const hash12 = await epochManagerWrapper.startNextEpochProcess({ from: accounts[0] })
+    await kit.connection.waitForTransactionReceipt(hash12)
 
     const statusBeforeProcessing = await epochManagerWrapper.getEpochProcessingStatus()
 
@@ -277,9 +291,11 @@ testWithAnvilL2('EpochManagerWrapper', (provider) => {
     expect(statusBeforeProcessing.totalRewardsCommunity.toNumber()).toBeGreaterThan(0)
     expect(statusBeforeProcessing.totalRewardsCarbonFund.toNumber()).toBeGreaterThan(0)
 
-    await epochManagerWrapper.setToProcessGroups({ from: accounts[0] })
+    const hash13 = await epochManagerWrapper.setToProcessGroups({ from: accounts[0] })
+    await kit.connection.waitForTransactionReceipt(hash13)
 
-    await epochManagerWrapper.processGroupsTx({ from: accounts[0] })
+    const hash14 = await epochManagerWrapper.processGroupsTx({ from: accounts[0] })
+    await kit.connection.waitForTransactionReceipt(hash14)
 
     const statusAfterProcessing = await epochManagerWrapper.getEpochProcessingStatus()
 

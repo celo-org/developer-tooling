@@ -252,7 +252,7 @@ export class AttestationsWrapper extends BaseWrapper<typeof attestationsABI> {
    * @param address The address of the token that will be withdrawn
    */
   withdraw = (token: string, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('withdraw', [token], txParams)
+    this.contract.write.withdraw([toViemAddress(token)] as const, txParams as any)
 
   /**
    * Returns the current configuration parameters for the contract.
@@ -357,7 +357,10 @@ export class AttestationsWrapper extends BaseWrapper<typeof attestationsABI> {
     if (idx < 0) {
       throw new Error("Account not found in identifier's accounts")
     }
-    return this.sendTx('revoke', [identifer, idx], txParams)
+    return this.contract.write.revoke(
+      [identifer as `0x${string}`, BigInt(idx)] as const,
+      txParams as any
+    )
   }
 }
 

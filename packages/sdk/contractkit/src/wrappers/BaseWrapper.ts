@@ -1,10 +1,10 @@
 import { StrongAddress, bufferToHex, ensureLeading0x } from '@celo/base/lib/address'
 
-import { CeloContract, CeloTx, Connection, EventLog, PastEventOptions } from '@celo/connect'
+import { type CeloContract, Connection, type EventLog, type PastEventOptions } from '@celo/connect'
 import type { AbiItem } from '@celo/connect/lib/abi-types'
 import { coerceArgsForAbi } from '@celo/connect/lib/viem-abi-coder'
 import { decodeParametersToObject } from '@celo/connect/lib/utils/abi-utils'
-import type { ContractFunctionName, PublicClient } from 'viem'
+import type { PublicClient } from 'viem'
 import { toFunctionHash, encodeFunctionData as viemEncodeFunctionData } from 'viem'
 import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
@@ -85,48 +85,6 @@ export abstract class BaseWrapper<TAbi extends readonly unknown[] = AbiItem[]> {
       abi: [methodAbi],
       args: coercedArgs,
     }) as `0x${string}`
-  }
-
-  /**
-   * Send a state-changing transaction eagerly (typed).
-   * Constrains functionName to actual ABI write methods.
-   * @internal
-   */
-  protected async sendTx<
-    TFunctionName extends ContractFunctionName<TAbi, 'nonpayable' | 'payable'>,
-  >(
-    functionName: TFunctionName,
-    args: unknown[],
-    txParams?: Omit<CeloTx, 'data'>
-  ): Promise<`0x${string}`> {
-    const data = this.encodeFunctionData(functionName as string, args)
-    const hash = await this.connection.sendTransaction({
-      ...txParams,
-      to: this.contract.address,
-      data,
-    })
-    await this.connection.viemClient.waitForTransactionReceipt({ hash, timeout: 120_000 })
-    return hash
-  }
-
-  /**
-   * Send a state-changing transaction eagerly (untyped).
-   * Use ONLY in generic intermediate classes where TAbi is unresolved.
-   * @internal
-   */
-  protected async sendTxUnchecked(
-    functionName: string,
-    args: unknown[],
-    txParams?: Omit<CeloTx, 'data'>
-  ): Promise<`0x${string}`> {
-    const data = this.encodeFunctionData(functionName, args)
-    const hash = await this.connection.sendTransaction({
-      ...txParams,
-      to: this.contract.address,
-      data,
-    })
-    await this.connection.viemClient.waitForTransactionReceipt({ hash, timeout: 120_000 })
-    return hash
   }
 
   /** Contract getPastEvents */

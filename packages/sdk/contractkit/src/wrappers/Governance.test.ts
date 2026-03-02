@@ -39,8 +39,10 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
     dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
 
     for (const account of accounts.slice(0, 4)) {
-      await accountWrapper.createAccount({ from: account })
-      await lockedGold.lock({ from: account, value: ONE_CGLD })
+      const createHash = await accountWrapper.createAccount({ from: account })
+      await kit.connection.waitForTransactionReceipt(createHash)
+      const lockHash = await lockedGold.lock({ from: account, value: ONE_CGLD })
+      await kit.connection.waitForTransactionReceipt(lockHash)
     }
   })
 
@@ -94,17 +96,24 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
 
     const proposeFn = async (proposer: Address, proposeTwice = false) => {
       if (proposeTwice) {
-        await governance.propose(proposal, 'URL', { from: proposer, value: minDeposit })
+        const hash = await governance.propose(proposal, 'URL', {
+          from: proposer,
+          value: minDeposit,
+        })
+        await kit.connection.waitForTransactionReceipt(hash)
       }
 
-      await governance.propose(proposal, 'URL', { from: proposer, value: minDeposit })
+      const hash = await governance.propose(proposal, 'URL', { from: proposer, value: minDeposit })
+      await kit.connection.waitForTransactionReceipt(hash)
     }
 
     const upvoteFn = async (upvoter: Address, shouldTimeTravel = true, proposalId?: BigNumber) => {
-      await governance.upvote(proposalId ?? proposalID, upvoter, { from: upvoter })
+      const hash = await governance.upvote(proposalId ?? proposalID, upvoter, { from: upvoter })
+      await kit.connection.waitForTransactionReceipt(hash)
       if (shouldTimeTravel) {
         await timeTravel(dequeueFrequency, provider)
-        await governance.dequeueProposalsIfReady()
+        const dequeueHash = await governance.dequeueProposalsIfReady()
+        await kit.connection.waitForTransactionReceipt(dequeueHash)
       }
     }
 
@@ -114,17 +123,19 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
         const dequeue = await governance.getDequeue()
         const index = dequeue.findIndex((id) => id.eq(proposalID))
         const approveData = governance.encodeFunctionData('approve', [proposalID, index])
-        await governanceApproverMultiSig.submitOrConfirmTransaction(
+        const hash = await governanceApproverMultiSig.submitOrConfirmTransaction(
           governance.address,
           approveData,
           '0',
           { from: ownerAddress }
         )
+        await kit.connection.waitForTransactionReceipt(hash)
       })
     }
 
     const voteFn = async (voter: Address) => {
-      await governance.vote(proposalID, 'Yes', { from: voter })
+      const hash = await governance.vote(proposalID, 'Yes', { from: voter })
+      await kit.connection.waitForTransactionReceipt(hash)
       await timeTravel(referendumStageDuration, provider)
     }
 
@@ -181,7 +192,8 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
       const before = await governance.getUpvotes(proposalId)
       const upvoteRecord = await governance.getUpvoteRecord(accounts[1])
 
-      await governance.revokeUpvote(accounts[1], { from: accounts[1] })
+      const hash = await governance.revokeUpvote(accounts[1], { from: accounts[1] })
+      await kit.connection.waitForTransactionReceipt(hash)
 
       const after = await governance.getUpvotes(proposalId)
       expect(after).toEqBigNumber(before.minus(upvoteRecord.upvotes))
@@ -190,7 +202,8 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
     it('#approve', async () => {
       await proposeFn(accounts[0])
       await timeTravel(dequeueFrequency, provider)
-      await governance.dequeueProposalsIfReady()
+      const dequeueHash = await governance.dequeueProposalsIfReady()
+      await kit.connection.waitForTransactionReceipt(dequeueHash)
       await approveFn()
 
       const approved = await governance.isApproved(proposalID)
@@ -200,7 +213,8 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
     it('#vote', async () => {
       await proposeFn(accounts[0])
       await timeTravel(dequeueFrequency, provider)
-      await governance.dequeueProposalsIfReady()
+      const dequeueHash = await governance.dequeueProposalsIfReady()
+      await kit.connection.waitForTransactionReceipt(dequeueHash)
       await approveFn()
       await voteFn(accounts[2])
 
@@ -213,7 +227,8 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
       const voter = accounts[2]
       await proposeFn(accounts[0])
       await timeTravel(dequeueFrequency, provider)
-      await governance.dequeueProposalsIfReady()
+      const dequeueHash = await governance.dequeueProposalsIfReady()
+      await kit.connection.waitForTransactionReceipt(dequeueHash)
       await approveFn()
       await voteFn(voter)
 
@@ -230,14 +245,18 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
     it('#votePartially', async () => {
       await proposeFn(accounts[0])
       await timeTravel(dequeueFrequency, provider)
-      await governance.dequeueProposalsIfReady()
+      const dequeueHash = await governance.dequeueProposalsIfReady()
+      await kit.connection.waitForTransactionReceipt(dequeueHash)
       await approveFn()
 
       const yes = 10
       const no = 20
       const abstain = 0
 
-      await governance.votePartially(proposalID, yes, no, abstain, { from: accounts[2] })
+      const hash = await governance.votePartially(proposalID, yes, no, abstain, {
+        from: accounts[2],
+      })
+      await kit.connection.waitForTransactionReceipt(hash)
       await timeTravel(referendumStageDuration, provider)
 
       const votes = await governance.getVotes(proposalID)
@@ -254,11 +273,13 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
       async () => {
         await proposeFn(accounts[0])
         await timeTravel(dequeueFrequency, provider)
-        await governance.dequeueProposalsIfReady()
+        const dequeueHash = await governance.dequeueProposalsIfReady()
+        await kit.connection.waitForTransactionReceipt(dequeueHash)
         await approveFn()
         await voteFn(accounts[2])
 
-        await governance.execute(proposalID)
+        const hash = await governance.execute(proposalID)
+        await kit.connection.waitForTransactionReceipt(hash)
 
         const exists = await governance.proposalExists(proposalID)
         expect(exists).toBeFalsy()
@@ -271,7 +292,8 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
       async () => {
         await proposeFn(accounts[0])
         await timeTravel(dequeueFrequency, provider)
-        await governance.dequeueProposalsIfReady()
+        const dequeueHash = await governance.dequeueProposalsIfReady()
+        await kit.connection.waitForTransactionReceipt(dequeueHash)
         await approveFn()
         await voteFn(accounts[2])
 

@@ -36,14 +36,34 @@ testWithAnvilL2('governance:upvote cmd', (provider) => {
     // hit the next dequeue
     await timeTravel(dequeueFrequency, provider)
 
-    await governance.propose([], 'URL', { from: accounts[0], value: minDeposit })
+    const proposeHash1 = await governance.propose([], 'URL', {
+      from: accounts[0],
+      value: minDeposit,
+    })
+    await kit.connection.waitForTransactionReceipt(proposeHash1)
     // this will reset lastDequeue to now
     // there is 3 concurrent proposals possible to be dequeued
     await testLocallyWithNode(Dequeue, ['--from', accounts[0]], provider)
-    await governance.propose([], 'URL2', { from: accounts[0], value: minDeposit })
-    await governance.propose([], 'URL3', { from: accounts[0], value: minDeposit })
-    await governance.propose([], 'URL4', { from: accounts[0], value: minDeposit })
-    await governance.propose([], 'URL5', { from: accounts[0], value: minDeposit })
+    const proposeHash2 = await governance.propose([], 'URL2', {
+      from: accounts[0],
+      value: minDeposit,
+    })
+    await kit.connection.waitForTransactionReceipt(proposeHash2)
+    const proposeHash3 = await governance.propose([], 'URL3', {
+      from: accounts[0],
+      value: minDeposit,
+    })
+    await kit.connection.waitForTransactionReceipt(proposeHash3)
+    const proposeHash4 = await governance.propose([], 'URL4', {
+      from: accounts[0],
+      value: minDeposit,
+    })
+    await kit.connection.waitForTransactionReceipt(proposeHash4)
+    const proposeHash5 = await governance.propose([], 'URL5', {
+      from: accounts[0],
+      value: minDeposit,
+    })
+    await kit.connection.waitForTransactionReceipt(proposeHash5)
 
     await timeTravel(dequeueFrequency, provider)
     await testLocallyWithNode(Register, ['--from', accounts[0]], provider)

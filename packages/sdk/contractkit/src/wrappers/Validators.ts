@@ -146,23 +146,39 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
   private _validatorSignerAddressFromCurrentSet = async (index: number) =>
     this.contract.read.validatorSignerAddressFromCurrentSet([toViemBigInt(index)])
 
-  private _deregisterValidator = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('deregisterValidator', args, txParams)
+  private _deregisterValidator = (index: number, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.deregisterValidator([toViemBigInt(index)], txParams as any)
 
-  private _registerValidatorGroup = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('registerValidatorGroup', args, txParams)
+  private _registerValidatorGroup = (commission: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.registerValidatorGroup([BigInt(commission)], txParams as any)
 
-  private _deregisterValidatorGroup = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('deregisterValidatorGroup', args, txParams)
+  private _deregisterValidatorGroup = (index: number, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.deregisterValidatorGroup([toViemBigInt(index)], txParams as any)
 
-  private _addFirstMember = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('addFirstMember', args, txParams)
+  private _addFirstMember = (
+    validator: string,
+    lesser: string,
+    greater: string,
+    txParams?: Omit<CeloTx, 'data'>
+  ) =>
+    this.contract.write.addFirstMember(
+      [toViemAddress(validator), toViemAddress(lesser), toViemAddress(greater)],
+      txParams as any
+    )
 
-  private _addMember = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('addMember', args, txParams)
+  private _addMember = (validator: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.addMember([toViemAddress(validator)], txParams as any)
 
-  private _reorderMember = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('reorderMember', args, txParams)
+  private _reorderMember = (
+    validator: string,
+    nextMember: string,
+    prevMember: string,
+    txParams?: Omit<CeloTx, 'data'>
+  ) =>
+    this.contract.write.reorderMember(
+      [toViemAddress(validator), toViemAddress(nextMember), toViemAddress(prevMember)],
+      txParams as any
+    )
 
   /**
    * Queues an update to a validator group's commission.
@@ -170,13 +186,16 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
    *   payments made to its members. Must be in the range [0, 1.0].
    */
   setNextCommissionUpdate = (commission: BigNumber.Value, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('setNextCommissionUpdate', [valueToFixidityString(commission)], txParams)
+    this.contract.write.setNextCommissionUpdate(
+      [BigInt(valueToFixidityString(commission))],
+      txParams as any
+    )
 
   /**
    * Updates a validator group's commission based on the previously queued update
    */
   updateCommission = (txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('updateCommission', [], txParams)
+    this.contract.write.updateCommission(txParams as any)
 
   /**
    * Returns the Locked Gold requirements for validators.
@@ -481,10 +500,16 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
    * @param ecdsaPublicKey The ECDSA public key that the validator is using for consensus. 64 bytes.
    */
   registerValidator = (ecdsaPublicKey: string, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('registerValidator', [stringToSolidityBytes(ecdsaPublicKey)], txParams)
+    this.contract.write.registerValidator(
+      [stringToSolidityBytes(ecdsaPublicKey) as `0x${string}`],
+      txParams as any
+    )
 
   registerValidatorNoBls = (ecdsaPublicKey: string, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('registerValidatorNoBls', [stringToSolidityBytes(ecdsaPublicKey)], txParams)
+    this.contract.write.registerValidatorNoBls(
+      [stringToSolidityBytes(ecdsaPublicKey) as `0x${string}`],
+      txParams as any
+    )
 
   getEpochNumber = async () => {
     const res = await this.contract.read.getEpochNumber()
@@ -510,7 +535,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
     if (idx < 0) {
       throw new Error(`${validatorAddress} is not a registered validator`)
     }
-    return this._deregisterValidator([idx], txParams)
+    return this._deregisterValidator(idx, txParams)
   }
 
   /**
@@ -524,7 +549,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
     commission: BigNumber,
     txParams?: Omit<CeloTx, 'data'>
   ): Promise<`0x${string}`> {
-    return this._registerValidatorGroup([toFixed(commission).toFixed()], txParams)
+    return this._registerValidatorGroup(toFixed(commission).toFixed(), txParams)
   }
 
   /**
@@ -541,7 +566,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
     if (idx < 0) {
       throw new Error(`${validatorGroupAddress} is not a registered validator`)
     }
-    return this._deregisterValidatorGroup([idx], txParams)
+    return this._deregisterValidatorGroup(idx, txParams)
   }
 
   /**
@@ -550,28 +575,32 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
    * @param group The validator group with which to affiliate.
    */
   affiliate = (group: Address, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('affiliate', [group], txParams)
+    this.contract.write.affiliate([toViemAddress(group)], txParams as any)
 
   /**
    * De-affiliates a validator, removing it from the group for which it is a member.
    * Fails if the account is not a validator with non-zero affiliation.
    */
 
-  deaffiliate = (txParams?: Omit<CeloTx, 'data'>) => this.sendTx('deaffiliate', [], txParams)
+  deaffiliate = (txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.deaffiliate(txParams as any)
 
   /**
    * Removes a validator from the group for which it is a member.
    * @param validatorAccount The validator to deaffiliate from their affiliated validator group.
    */
   forceDeaffiliateIfValidator = (validatorAccount: string, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('forceDeaffiliateIfValidator', [validatorAccount], txParams)
+    this.contract.write.forceDeaffiliateIfValidator(
+      [toViemAddress(validatorAccount)],
+      txParams as any
+    )
 
   /**
    * Resets a group's slashing multiplier if it has been >= the reset period since
    * the last time the group was slashed.
    */
   resetSlashingMultiplier = (txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('resetSlashingMultiplier', [], txParams)
+    this.contract.write.resetSlashingMultiplier(txParams as any)
 
   /**
    * Adds a member to the end of a validator group's list of members.
@@ -589,9 +618,9 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
       const voteWeight = await election.getTotalVotesForGroup(group)
       const { lesser, greater } = await election.findLesserAndGreaterAfterVote(group, voteWeight)
 
-      return this._addFirstMember([validator, lesser, greater], txParams)
+      return this._addFirstMember(validator, lesser, greater, txParams)
     } else {
-      return this._addMember([validator], txParams)
+      return this._addMember(validator, txParams)
     }
   }
 
@@ -602,7 +631,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
    * @param validator The Validator to remove from the group
    */
   removeMember = (validator: string, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('removeMember', [validator], txParams)
+    this.contract.write.removeMember([toViemAddress(validator)], txParams as any)
 
   /**
    * Reorders a member within a validator group.
@@ -639,7 +668,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
       newIndex === group.members.length - 1 ? NULL_ADDRESS : group.members[newIndex + 1]
     const prevMember = newIndex === 0 ? NULL_ADDRESS : group.members[newIndex - 1]
 
-    return this._reorderMember([validator, nextMember, prevMember], txParams)
+    return this._reorderMember(validator, nextMember, prevMember, txParams)
   }
 
   async getEpochSizeNumber(): Promise<number> {

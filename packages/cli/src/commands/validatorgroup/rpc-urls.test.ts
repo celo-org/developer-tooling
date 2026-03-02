@@ -38,6 +38,8 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (provider) => {
     } as any) // that data is enough
   })
 
+  let kit: ReturnType<typeof newKitFromProvider>
+
   const setMetadataUrlForValidator = async (
     accountsWrapper: AccountsWrapper,
     validator: string
@@ -46,9 +48,13 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (provider) => {
       provider,
       validator,
       async () => {
-        await accountsWrapper.setMetadataURL(`https://example.com/metadata/${validator}`, {
-          from: validator,
-        })
+        const hash = await accountsWrapper.setMetadataURL(
+          `https://example.com/metadata/${validator}`,
+          {
+            from: validator,
+          }
+        )
+        await kit.connection.waitForTransactionReceipt(hash)
       },
       parseEther('10000000')
     )
@@ -63,7 +69,7 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (provider) => {
   ]
 
   beforeEach(async () => {
-    const kit = newKitFromProvider(provider)
+    kit = newKitFromProvider(provider)
     const accountsWrapper = await kit.contracts.getAccounts()
 
     const [nonElectedGroupAddress, validatorAddress, nonAffilatedValidatorAddress] =
@@ -79,7 +85,10 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (provider) => {
     await setBalance(provider, validatorAddress as Address, MIN_PRACTICAL_LOCKED_CELO_VALUE)
     await setupGroupAndAffiliateValidator(kit, nonElectedGroupAddress, validatorAddress)
 
-    await accountsWrapper.setName('Test group', { from: nonElectedGroupAddress })
+    const setNameHash = await accountsWrapper.setName('Test group', {
+      from: nonElectedGroupAddress,
+    })
+    await kit.connection.waitForTransactionReceipt(setNameHash)
     for (const validator of [
       ...EXISTING_VALIDATORS,
       validatorAddress,

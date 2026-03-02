@@ -92,23 +92,31 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<typeof epochMan
   }
 
   startNextEpochProcess = (txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('startNextEpochProcess', [], txParams)
+    this.contract.write.startNextEpochProcess(txParams as any)
   finishNextEpochProcess = (
     groups: string[],
     lessers: string[],
     greaters: string[],
     txParams?: Omit<CeloTx, 'data'>
-  ) => this.sendTx('finishNextEpochProcess', [groups, lessers, greaters], txParams)
+  ) =>
+    this.contract.write.finishNextEpochProcess(
+      [groups.map(toViemAddress), lessers.map(toViemAddress), greaters.map(toViemAddress)] as const,
+      txParams as any
+    )
   sendValidatorPayment = (validator: string, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('sendValidatorPayment', [validator], txParams)
+    this.contract.write.sendValidatorPayment([toViemAddress(validator)] as const, txParams as any)
   setToProcessGroups = (txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('setToProcessGroups', [], txParams)
+    this.contract.write.setToProcessGroups(txParams as any)
   processGroups = (
     groups: string[],
     lessers: string[],
     greaters: string[],
     txParams?: Omit<CeloTx, 'data'>
-  ) => this.sendTx('processGroups', [groups, lessers, greaters], txParams)
+  ) =>
+    this.contract.write.processGroups(
+      [groups.map(toViemAddress), lessers.map(toViemAddress), greaters.map(toViemAddress)] as const,
+      txParams as any
+    )
 
   startNextEpochProcessTx = async (
     txParams?: Omit<CeloTx, 'data'>

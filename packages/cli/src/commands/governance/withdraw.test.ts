@@ -36,10 +36,15 @@ testWithAnvilL2(
       governance = await kit.contracts.getGovernance()
       minDeposit = (await governance.minDeposit()).toFixed()
       const proposal: Proposal = await new ProposalBuilder(kit).build()
-      await governance.propose(proposal, 'URL', { from: accounts[0], value: minDeposit })
+      const proposeHash = await governance.propose(proposal, 'URL', {
+        from: accounts[0],
+        value: minDeposit,
+      })
+      await kit.connection.waitForTransactionReceipt(proposeHash)
       const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
       await timeTravel(dequeueFrequency + 1, client)
-      await governance.dequeueProposalsIfReady()
+      const dequeueHash = await governance.dequeueProposalsIfReady()
+      await kit.connection.waitForTransactionReceipt(dequeueHash)
     })
 
     test('can withdraw', async () => {
@@ -95,11 +100,12 @@ testWithAnvilL2(
           client,
           multisigAddress,
           async () => {
-            await governance.propose(
+            const proposeHash2 = await governance.propose(
               await new ProposalBuilder(kit).build(),
               'http://example.com/proposal.json',
               { from: multisigAddress, value: minDeposit }
             )
+            await kit.connection.waitForTransactionReceipt(proposeHash2)
           },
           // make sure the multisig contract has enough balance to perform the transaction
           new BigNumber(minDeposit).multipliedBy(2)
@@ -111,7 +117,8 @@ testWithAnvilL2(
         // Dequeue so the proposal can be refunded
         const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
         await timeTravel(dequeueFrequency + 1, client)
-        await governance.dequeueProposalsIfReady()
+        const dequeueHash2 = await governance.dequeueProposalsIfReady()
+        await kit.connection.waitForTransactionReceipt(dequeueHash2)
       })
 
       it('can withdraw using --useMultiSig', async () => {
@@ -229,17 +236,19 @@ testWithAnvilL2(
         }
 
         await withImpersonatedAccount(client, safeAddress, async () => {
-          await governance.propose(
+          const proposeHash3 = await governance.propose(
             await new ProposalBuilder(kit).build(),
             'http://example.com/proposal.json',
             { from: safeAddress, value: minDeposit }
           )
+          await kit.connection.waitForTransactionReceipt(proposeHash3)
         })
 
         // Dequeue so the proposal can be refunded
         const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
         await timeTravel(dequeueFrequency + 1, client)
-        await governance.dequeueProposalsIfReady()
+        const dequeueHash3 = await governance.dequeueProposalsIfReady()
+        await kit.connection.waitForTransactionReceipt(dequeueHash3)
       })
 
       it('can withdraw using --useSafe', async () => {

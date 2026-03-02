@@ -20,7 +20,11 @@ testWithAnvilL2('governance:dequeue cmd', (provider) => {
     expect(initialDequeue).toEqual([])
 
     // Create first proposal
-    await governanceWrapper.propose([], 'URL', { from: account, value: minDeposit })
+    const proposeHash = await governanceWrapper.propose([], 'URL', {
+      from: account,
+      value: minDeposit,
+    })
+    await kit.connection.waitForTransactionReceipt(proposeHash)
 
     // Run dequeue operation
     await testLocallyWithNode(Dequeue, ['--from', account], provider)
@@ -32,7 +36,11 @@ testWithAnvilL2('governance:dequeue cmd', (provider) => {
     expect(totalProposals).toBe(1) // Should have exactly 1 proposal in system
 
     // Create second proposal
-    await governanceWrapper.propose([], 'URL2', { from: account, value: minDeposit })
+    const proposeHash2 = await governanceWrapper.propose([], 'URL2', {
+      from: account,
+      value: minDeposit,
+    })
+    await kit.connection.waitForTransactionReceipt(proposeHash2)
 
     // Run dequeue again
     await testLocallyWithNode(Dequeue, ['--from', account], provider)
@@ -56,7 +64,11 @@ testWithAnvilL2('governance:dequeue cmd', (provider) => {
     expect(await governanceWrapper.getDequeue()).toEqual([])
 
     // Create first proposal
-    await governanceWrapper.propose([], 'URL', { from: account, value: minDeposit })
+    const proposeHash = await governanceWrapper.propose([], 'URL', {
+      from: account,
+      value: minDeposit,
+    })
+    await kit.connection.waitForTransactionReceipt(proposeHash)
 
     // Run dequeue immediately (should not dequeue due to timing)
     await testLocallyWithNode(Dequeue, ['--from', account], provider)
@@ -67,7 +79,11 @@ testWithAnvilL2('governance:dequeue cmd', (provider) => {
     expect(afterFirstDequeue.length + afterFirstQueue.length).toBe(1)
 
     // Create second proposal
-    await governanceWrapper.propose([], 'URL2', { from: account, value: minDeposit })
+    const proposeHash2 = await governanceWrapper.propose([], 'URL2', {
+      from: account,
+      value: minDeposit,
+    })
+    await kit.connection.waitForTransactionReceipt(proposeHash2)
 
     // Advance time to allow dequeuing
     await timeTravel(dequeueFrequency + 1, provider)

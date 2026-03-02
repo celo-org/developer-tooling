@@ -18,7 +18,7 @@ import { newKitFromProvider } from '../kit'
 import { OracleRate, ReportTarget, SortedOraclesWrapper } from './SortedOracles'
 
 // set timeout to 10 seconds
-jest.setTimeout(10 * 1000)
+jest.setTimeout(60 * 1000)
 
 testWithAnvilL2('SortedOracles Wrapper', (provider) => {
   const kit = newKitFromProvider(provider)
@@ -37,7 +37,8 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
     }
 
     for (let i = 0; i < rates.length; i++) {
-      await sortedOracles.report(target, rates[i], oracles[i])
+      const hash = await sortedOracles.report(target, rates[i], oracles[i])
+      await kit.connection.waitForTransactionReceipt(hash)
     }
   }
 
@@ -93,11 +94,12 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
       functionName: 'initialize',
       args: [NetworkConfig.oracles.reportExpiry],
     })
-    await kit.connection.sendTransaction({
+    const initHash = await kit.connection.sendTransaction({
       to: deployedContract.address,
       data: initData,
       from: owner,
     })
+    await kit.connection.waitForTransactionReceipt(initHash)
 
     return new SortedOraclesWrapper(kit.connection, deployedContract as any, kit.registry)
   }
@@ -117,11 +119,12 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
       functionName: 'addOracle',
       args: [identifier, oracle],
     })
-    await kit.connection.sendTransaction({
+    const hash = await kit.connection.sendTransaction({
       to: sortedOraclesContract.address,
       data: addData,
       from: owner,
     })
+    await kit.connection.waitForTransactionReceipt(hash)
   }
 
   // NOTE: These values are set in packages/dev-utils/src/migration-override.json,
@@ -168,7 +171,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
         stableTokenEURAddress,
         stableTokenBRLAddress,
       ]) {
-        await kit.connection.sendTransaction({
+        const hash = await kit.connection.sendTransaction({
           to: stableTokenSortedOraclesContract.address,
           data: encodeFunctionData({
             abi: stableTokenSortedOraclesContract.abi as any,
@@ -177,10 +180,11 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
           }),
           from: ownerAddress,
         })
+        await kit.connection.waitForTransactionReceipt(hash)
       }
 
       for (const oracle of stableTokenOracles) {
-        await kit.connection.sendTransaction({
+        const hash = await kit.connection.sendTransaction({
           to: stableTokenSortedOraclesContract.address,
           data: encodeFunctionData({
             abi: stableTokenSortedOraclesContract.abi as any,
@@ -189,10 +193,11 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
           }),
           from: ownerAddress,
         })
+        await kit.connection.waitForTransactionReceipt(hash)
       }
 
       for (const oracle of stableTokenEUROracles) {
-        await kit.connection.sendTransaction({
+        const hash = await kit.connection.sendTransaction({
           to: stableTokenSortedOraclesContract.address,
           data: encodeFunctionData({
             abi: stableTokenSortedOraclesContract.abi as any,
@@ -201,10 +206,11 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
           }),
           from: ownerAddress,
         })
+        await kit.connection.waitForTransactionReceipt(hash)
       }
 
       for (const oracle of stableTokenBRLOracles) {
-        await kit.connection.sendTransaction({
+        const hash = await kit.connection.sendTransaction({
           to: stableTokenSortedOraclesContract.address,
           data: encodeFunctionData({
             abi: stableTokenSortedOraclesContract.abi as any,
@@ -213,6 +219,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
           }),
           from: ownerAddress,
         })
+        await kit.connection.waitForTransactionReceipt(hash)
       }
     })
 
@@ -227,26 +234,33 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
     }
     // And also report an initial price as happens in 09_stabletoken.ts
     // So that we can share tests between the two oracles.
-    await btcSortedOracles.report(
+    const btcReportHash = await btcSortedOracles.report(
       CELOBTCIdentifier,
       NetworkConfig.stableToken.goldPrice,
       oracleAddress
     )
+    await kit.connection.waitForTransactionReceipt(btcReportHash)
 
     // We need to setup the stable token oracle with an initial report
     // from the same address as the BTC oracle
-    await stableTokenSortedOracles.report(
+    const stableReportHash = await stableTokenSortedOracles.report(
       CeloContract.StableToken,
       NetworkConfig.stableToken.goldPrice,
       stableTokenOracleOwner
     )
+    await kit.connection.waitForTransactionReceipt(stableReportHash)
 
     const expirySeconds = (await stableTokenSortedOracles.reportExpirySeconds()).toNumber()
     await timeTravel(expirySeconds * 2, provider)
 
-    await stableTokenSortedOracles.removeExpiredReports(CeloContract.StableToken, 1, {
-      from: oracleAddress,
-    })
+    const removeHash = await stableTokenSortedOracles.removeExpiredReports(
+      CeloContract.StableToken,
+      1,
+      {
+        from: oracleAddress,
+      }
+    )
+    await kit.connection.waitForTransactionReceipt(removeHash)
   })
 
   const testCases: { label: string; reportTarget: ReportTarget }[] = [
@@ -279,7 +293,8 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
         it('should be able to report a rate', async () => {
           const initialRates: OracleRate[] = await sortedOracles.getRates(reportTarget)
 
-          await sortedOracles.report(reportTarget, value, oracleAddress)
+          const hash = await sortedOracles.report(reportTarget, value, oracleAddress)
+          await kit.connection.waitForTransactionReceipt(hash)
 
           const resultingRates: OracleRate[] = await sortedOracles.getRates(reportTarget)
           expect(resultingRates).not.toMatchObject(initialRates)
@@ -291,7 +306,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
             await reportAsOracles(sortedOracles, reportTarget, stableTokenOracles, rates)
           })
 
-          // expectedLesserKey/expectedGreaterKey were used for CeloTxObject arg assertions
+          // expectedLesserKey/expectedGreaterKey were used for CeloTxObject assertions
           // After eager send migration, the wrapper handles these internally
 
           const expectedOracleOrder = [
@@ -302,14 +317,16 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
           ]
 
           it('passes the correct lesserKey and greaterKey as args', async () => {
-            await sortedOracles.report(reportTarget, value, oracleAddress)
+            const hash = await sortedOracles.report(reportTarget, value, oracleAddress)
+            await kit.connection.waitForTransactionReceipt(hash)
 
             const resultingRates: OracleRate[] = await sortedOracles.getRates(reportTarget)
             expect(resultingRates.map((r) => r.address)).toEqual(expectedOracleOrder)
           })
 
           it('inserts the new record in the right place', async () => {
-            await sortedOracles.report(reportTarget, value, oracleAddress)
+            const hash = await sortedOracles.report(reportTarget, value, oracleAddress)
+            await kit.connection.waitForTransactionReceipt(hash)
 
             const resultingRates: OracleRate[] = await sortedOracles.getRates(reportTarget)
 
@@ -356,14 +373,20 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
         })
 
         it('should successfully remove a report', async () => {
-          await sortedOracles.removeExpiredReports(reportTarget, 1, { from: oracleAddress })
+          const hash = await sortedOracles.removeExpiredReports(reportTarget, 1, {
+            from: oracleAddress,
+          })
+          await kit.connection.waitForTransactionReceipt(hash)
 
           expect(await sortedOracles.numRates(reportTarget)).toEqual(initialReportCount - 1)
         })
 
         it('removes only the expired reports, even if the number to remove is higher', async () => {
           const toRemove = expiredOracles.length + 1
-          await sortedOracles.removeExpiredReports(reportTarget, toRemove, { from: oracleAddress })
+          const hash = await sortedOracles.removeExpiredReports(reportTarget, toRemove, {
+            from: oracleAddress,
+          })
+          await kit.connection.waitForTransactionReceipt(hash)
 
           expect(await sortedOracles.numRates(reportTarget)).toEqual(
             initialReportCount - expiredOracles.length
@@ -376,7 +399,10 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
 
         const initialReportCount = await sortedOracles.numRates(reportTarget)
 
-        await sortedOracles.removeExpiredReports(reportTarget, 1, { from: oracleAddress })
+        const hash = await sortedOracles.removeExpiredReports(reportTarget, 1, {
+          from: oracleAddress,
+        })
+        await kit.connection.waitForTransactionReceipt(hash)
 
         expect(await sortedOracles.numRates(reportTarget)).toEqual(initialReportCount)
       })
@@ -477,7 +503,8 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
    */
   describe('#reportStableToken', () => {
     it('calls report with the address for StableToken (USDm) by default', async () => {
-      await stableTokenSortedOracles.reportStableToken(14, oracleAddress)
+      const hash = await stableTokenSortedOracles.reportStableToken(14, oracleAddress)
+      await kit.connection.waitForTransactionReceipt(hash)
       const rates = await stableTokenSortedOracles.getRates(CeloContract.StableToken)
       expect(rates.some((r) => r.address === oracleAddress)).toBe(true)
     })
@@ -485,7 +512,8 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
     describe('calls report with the address for the provided StableToken', () => {
       for (const token of Object.values(StableToken)) {
         it(`calls report with token ${token}`, async () => {
-          await stableTokenSortedOracles.reportStableToken(14, oracleAddress, token)
+          const hash = await stableTokenSortedOracles.reportStableToken(14, oracleAddress, token)
+          await kit.connection.waitForTransactionReceipt(hash)
         })
       }
     })

@@ -27,9 +27,11 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
     value: string = minLockedGoldValue
   ) => {
     if (!(await accountsInstance.isAccount(account))) {
-      await accountsInstance.createAccount({ from: account })
+      const hash = await accountsInstance.createAccount({ from: account })
+      await kit.connection.waitForTransactionReceipt(hash)
     }
-    await lockedGold.lock({ from: account, value })
+    const lockHash = await lockedGold.lock({ from: account, value })
+    await kit.connection.waitForTransactionReceipt(lockHash)
   }
 
   beforeAll(async () => {
@@ -44,13 +46,15 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
       groupAccount,
       new BigNumber(minLockedGoldValue).times(members).toFixed()
     )
-    await validators.registerValidatorGroup(new BigNumber(0.1), { from: groupAccount })
+    const hash = await validators.registerValidatorGroup(new BigNumber(0.1), { from: groupAccount })
+    await kit.connection.waitForTransactionReceipt(hash)
   }
 
   const setupValidator = async (validatorAccount: string) => {
     await registerAccountWithLockedGold(validatorAccount)
     const ecdsaPublicKey = await addressToPublicKey(validatorAccount, kit.connection.sign)
-    await validators.registerValidatorNoBls(ecdsaPublicKey, { from: validatorAccount })
+    const hash = await validators.registerValidatorNoBls(ecdsaPublicKey, { from: validatorAccount })
+    await kit.connection.waitForTransactionReceipt(hash)
   }
 
   it('registers a validator group', async () => {
@@ -70,8 +74,12 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
     const validatorAccount = accounts[1]
     await setupGroup(groupAccount)
     await setupValidator(validatorAccount)
-    await validators.affiliate(groupAccount, { from: validatorAccount })
-    await validators.addMember(groupAccount, validatorAccount, { from: groupAccount })
+    const affiliateHash = await validators.affiliate(groupAccount, { from: validatorAccount })
+    await kit.connection.waitForTransactionReceipt(affiliateHash)
+    const addMemberHash = await validators.addMember(groupAccount, validatorAccount, {
+      from: groupAccount,
+    })
+    await kit.connection.waitForTransactionReceipt(addMemberHash)
 
     const members = await validators.getValidatorGroup(groupAccount).then((group) => group.members)
     expect(members).toContain(validatorAccount)
@@ -80,7 +88,8 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
   it('sets next commission update', async () => {
     const groupAccount = accounts[0]
     await setupGroup(groupAccount)
-    await validators.setNextCommissionUpdate('0.2', { from: groupAccount })
+    const hash = await validators.setNextCommissionUpdate('0.2', { from: groupAccount })
+    await kit.connection.waitForTransactionReceipt(hash)
     const commission = (await validators.getValidatorGroup(groupAccount)).nextCommission
     expect(commission).toEqBigNumber('0.2')
   })
@@ -94,9 +103,11 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
     await setCommissionUpdateDelay(provider, validators.address, 3)
     await mineBlocks(1, provider)
 
-    await validators.setNextCommissionUpdate('0.2', txOpts)
+    const setHash = await validators.setNextCommissionUpdate('0.2', txOpts)
+    await kit.connection.waitForTransactionReceipt(setHash)
     await mineBlocks(3, provider)
-    await validators.updateCommission(txOpts)
+    const updateHash = await validators.updateCommission(txOpts)
+    await kit.connection.waitForTransactionReceipt(updateHash)
 
     const commission = (await validators.getValidatorGroup(groupAccount)).commission
     expect(commission).toEqBigNumber('0.2')
@@ -107,7 +118,8 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
     const validatorAccount = accounts[1]
     await setupGroup(groupAccount)
     await setupValidator(validatorAccount)
-    await validators.affiliate(groupAccount, { from: validatorAccount })
+    const affiliateHash = await validators.affiliate(groupAccount, { from: validatorAccount })
+    await kit.connection.waitForTransactionReceipt(affiliateHash)
     const group = await validators.getValidatorGroup(groupAccount)
     expect(group.affiliates).toContain(validatorAccount)
   })
@@ -127,8 +139,12 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
 
       for (const validator of [validator1, validator2]) {
         await setupValidator(validator)
-        await validators.affiliate(groupAccount, { from: validator })
-        await validators.addMember(groupAccount, validator, { from: groupAccount })
+        const affiliateHash = await validators.affiliate(groupAccount, { from: validator })
+        await kit.connection.waitForTransactionReceipt(affiliateHash)
+        const addMemberHash = await validators.addMember(groupAccount, validator, {
+          from: groupAccount,
+        })
+        await kit.connection.waitForTransactionReceipt(addMemberHash)
       }
 
       const members = await validators
@@ -140,7 +156,10 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
     it('moves last to first', async () => {
       jest.setTimeout(30 * 1000)
 
-      await validators.reorderMember(groupAccount, validator2, 0, { from: groupAccount })
+      const hash = await validators.reorderMember(groupAccount, validator2, 0, {
+        from: groupAccount,
+      })
+      await kit.connection.waitForTransactionReceipt(hash)
 
       const membersAfter = await validators
         .getValidatorGroup(groupAccount)
@@ -152,7 +171,10 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
     it('moves first to last', async () => {
       jest.setTimeout(30 * 1000)
 
-      await validators.reorderMember(groupAccount, validator1, 1, { from: groupAccount })
+      const hash = await validators.reorderMember(groupAccount, validator1, 1, {
+        from: groupAccount,
+      })
+      await kit.connection.waitForTransactionReceipt(hash)
 
       const membersAfter = await validators
         .getValidatorGroup(groupAccount)
@@ -164,9 +186,10 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
     it('checks address normalization', async () => {
       jest.setTimeout(30 * 1000)
 
-      await validators.reorderMember(groupAccount, validator2.toLowerCase(), 0, {
+      const hash = await validators.reorderMember(groupAccount, validator2.toLowerCase(), 0, {
         from: groupAccount,
       })
+      await kit.connection.waitForTransactionReceipt(hash)
 
       const membersAfter = await validators
         .getValidatorGroup(groupAccount)

@@ -96,15 +96,17 @@ testWithAnvilL2('Escrow Wrapper', (provider) => {
   it('transfer with trusted issuers should set TrustedIssuersPerPayment', async () => {
     const randomKey2 = '0x' + randomBytes(32).toString('hex')
     const testPaymentId = privateKeyToAddress(randomKey2)
-    await federatedAttestations.registerAttestationAsIssuer(
+    const registerHash = await federatedAttestations.registerAttestationAsIssuer(
       identifier,
       kit.defaultAccount as string,
       TIMESTAMP
     )
+    await kit.connection.waitForTransactionReceipt(registerHash)
 
-    await stableTokenContract.approve(escrow.address, TEN_USDM)
+    const approveHash = await stableTokenContract.approve(escrow.address, TEN_USDM)
+    await kit.connection.waitForTransactionReceipt(approveHash)
 
-    await escrow.transferWithTrustedIssuers(
+    const transferHash = await escrow.transferWithTrustedIssuers(
       identifier,
       stableTokenContract.address,
       TEN_USDM,
@@ -113,6 +115,7 @@ testWithAnvilL2('Escrow Wrapper', (provider) => {
       1,
       accounts
     )
+    await kit.connection.waitForTransactionReceipt(transferHash)
 
     const trustedIssuersPerPayment = await escrow.getTrustedIssuersPerPayment(testPaymentId)
 
@@ -125,14 +128,22 @@ testWithAnvilL2('Escrow Wrapper', (provider) => {
     const oneDayInSecs: number = 86400
     const parsedSig = await getParsedSignatureOfAddressForTest(receiver, withdrawKeyAddress)
 
-    await federatedAttestations.registerAttestationAsIssuer(identifier, receiver, TIMESTAMP)
+    const registerHash = await federatedAttestations.registerAttestationAsIssuer(
+      identifier,
+      receiver,
+      TIMESTAMP
+    )
+    await kit.connection.waitForTransactionReceipt(registerHash)
 
     const senderBalanceBefore = await stableTokenContract.balanceOf(sender)
     const receiverBalanceBefore = await stableTokenContract.balanceOf(receiver)
 
-    await stableTokenContract.approve(escrow.address, TEN_USDM, { from: sender })
+    const approveHash = await stableTokenContract.approve(escrow.address, TEN_USDM, {
+      from: sender,
+    })
+    await kit.connection.waitForTransactionReceipt(approveHash)
 
-    await escrow.transferWithTrustedIssuers(
+    const transferHash = await escrow.transferWithTrustedIssuers(
       identifier,
       stableTokenContract.address,
       TEN_USDM,
@@ -142,10 +153,18 @@ testWithAnvilL2('Escrow Wrapper', (provider) => {
       accounts,
       { from: sender }
     )
+    await kit.connection.waitForTransactionReceipt(transferHash)
 
-    await escrow.withdraw(withdrawKeyAddress, parsedSig.v, parsedSig.r, parsedSig.s, {
-      from: receiver,
-    })
+    const withdrawHash = await escrow.withdraw(
+      withdrawKeyAddress,
+      parsedSig.v,
+      parsedSig.r,
+      parsedSig.s,
+      {
+        from: receiver,
+      }
+    )
+    await kit.connection.waitForTransactionReceipt(withdrawHash)
 
     const senderBalanceAfter = await stableTokenContract.balanceOf(sender)
     const receiverBalanceAfter = await stableTokenContract.balanceOf(receiver)
@@ -160,9 +179,12 @@ testWithAnvilL2('Escrow Wrapper', (provider) => {
     const oneDayInSecs: number = 86400
     const parsedSig = await getParsedSignatureOfAddressForTest(receiver, withdrawKeyAddress)
 
-    await stableTokenContract.approve(escrow.address, TEN_USDM, { from: sender })
+    const approveHash = await stableTokenContract.approve(escrow.address, TEN_USDM, {
+      from: sender,
+    })
+    await kit.connection.waitForTransactionReceipt(approveHash)
 
-    await escrow.transferWithTrustedIssuers(
+    const transferHash = await escrow.transferWithTrustedIssuers(
       identifier,
       stableTokenContract.address,
       TEN_USDM,
@@ -172,6 +194,7 @@ testWithAnvilL2('Escrow Wrapper', (provider) => {
       accounts,
       { from: sender }
     )
+    await kit.connection.waitForTransactionReceipt(transferHash)
 
     await expect(
       escrow.withdraw(withdrawKeyAddress, parsedSig.v, parsedSig.r, parsedSig.s)
@@ -184,11 +207,19 @@ testWithAnvilL2('Escrow Wrapper', (provider) => {
     const oneDayInSecs: number = 86400
     const parsedSig = await getParsedSignatureOfAddressForTest(receiver, withdrawKeyAddress)
 
-    await federatedAttestations.registerAttestationAsIssuer(identifier, receiver, TIMESTAMP)
+    const registerHash = await federatedAttestations.registerAttestationAsIssuer(
+      identifier,
+      receiver,
+      TIMESTAMP
+    )
+    await kit.connection.waitForTransactionReceipt(registerHash)
 
-    await stableTokenContract.approve(escrow.address, TEN_USDM, { from: sender })
+    const approveHash = await stableTokenContract.approve(escrow.address, TEN_USDM, {
+      from: sender,
+    })
+    await kit.connection.waitForTransactionReceipt(approveHash)
 
-    await escrow.transferWithTrustedIssuers(
+    const transferHash = await escrow.transferWithTrustedIssuers(
       identifier,
       stableTokenContract.address,
       TEN_USDM,
@@ -198,6 +229,7 @@ testWithAnvilL2('Escrow Wrapper', (provider) => {
       [accounts[5]],
       { from: sender }
     )
+    await kit.connection.waitForTransactionReceipt(transferHash)
 
     await expect(
       escrow.withdraw(withdrawKeyAddress, parsedSig.v, parsedSig.r, parsedSig.s)

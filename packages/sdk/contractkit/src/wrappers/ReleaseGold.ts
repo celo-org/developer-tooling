@@ -9,6 +9,7 @@ import BigNumber from 'bignumber.js'
 import {
   secondsToDurationString,
   stringToSolidityBytes,
+  toViemAddress,
   unixSecondsTimestampToDateString,
   valueToBigNumber,
   valueToInt,
@@ -292,7 +293,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
    * Revoke a Release schedule
    * @returns A promise that resolves to the transaction hash
    */
-  revokeReleasing = (txParams?: Omit<CeloTx, 'data'>) => this.sendTx('revoke', [], txParams)
+  revokeReleasing = (txParams?: Omit<CeloTx, 'data'>) => this.contract.write.revoke(txParams as any)
 
   /**
    * Revoke a vesting CELO schedule from the contract's beneficiary.
@@ -305,24 +306,27 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
    * @returns A promise that resolves to the transaction hash
    */
   refundAndFinalize = (txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('refundAndFinalize', [], txParams)
+    this.contract.write.refundAndFinalize(txParams as any)
 
   /**
    * Locks gold to be used for voting.
    * @param value The amount of gold to lock
    */
   lockGold = (value: BigNumber.Value, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('lockGold', [valueToString(value)], txParams)
+    this.contract.write.lockGold([BigInt(valueToString(value))] as const, txParams as any)
 
   transfer = (to: Address, value: BigNumber.Value, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('transfer', [to, valueToString(value)], txParams)
+    this.contract.write.transfer(
+      [toViemAddress(to), BigInt(valueToString(value))] as const,
+      txParams as any
+    )
 
   /**
    * Unlocks gold that becomes withdrawable after the unlocking period.
    * @param value The amount of gold to unlock
    */
   unlockGold = (value: BigNumber.Value, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('unlockGold', [valueToString(value)], txParams)
+    this.contract.write.unlockGold([BigInt(valueToString(value))] as const, txParams as any)
 
   async unlockAllGold() {
     const lockedGold = await this.contracts.getLockedGold()
@@ -378,26 +382,30 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
    * @param value The value to relock from the specified pending withdrawal.
    */
   _relockGold = (index: number, value: BigNumber.Value, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('relockGold', [valueToString(index), valueToString(value)], txParams)
+    this.contract.write.relockGold(
+      [BigInt(valueToString(index)), BigInt(valueToString(value))] as const,
+      txParams as any
+    )
 
   /**
    * Withdraw gold in the ReleaseGold instance that has been unlocked but not withdrawn.
    * @param index The index of the pending locked gold withdrawal
    */
   withdrawLockedGold = (index: BigNumber.Value, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('withdrawLockedGold', [valueToString(index)], txParams)
+    this.contract.write.withdrawLockedGold([BigInt(valueToString(index))] as const, txParams as any)
 
   /**
    * Transfer released gold from the ReleaseGold instance back to beneficiary.
    * @param value The requested gold amount
    */
   withdraw = (value: BigNumber.Value, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('withdraw', [valueToString(value)], txParams)
+    this.contract.write.withdraw([BigInt(valueToString(value))] as const, txParams as any)
 
   /**
    * Beneficiary creates an account on behalf of the ReleaseGold contract.
    */
-  createAccount = (txParams?: Omit<CeloTx, 'data'>) => this.sendTx('createAccount', [], txParams)
+  createAccount = (txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.createAccount(txParams as any)
 
   /**
    * Beneficiary creates an account on behalf of the ReleaseGold contract.
@@ -410,21 +418,25 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
     dataEncryptionKey: string,
     walletAddress: string,
     txParams?: Omit<CeloTx, 'data'>
-  ) => this.sendTx('setAccount', [name, dataEncryptionKey, walletAddress], txParams)
+  ) =>
+    this.contract.write.setAccount(
+      [name, dataEncryptionKey as `0x${string}`, toViemAddress(walletAddress)] as any,
+      txParams as any
+    )
 
   /**
    * Sets the name for the account
    * @param name The name to set
    */
   setAccountName = (name: string, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('setAccountName', [name], txParams)
+    this.contract.write.setAccountName([name] as const, txParams as any)
 
   /**
    * Sets the metadataURL for the account
    * @param metadataURL The url to set
    */
   setAccountMetadataURL = (url: string, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('setAccountMetadataURL', [url], txParams)
+    this.contract.write.setAccountMetadataURL([url] as const, txParams as any)
 
   /**
    * Sets the wallet address for the account
@@ -439,42 +451,49 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
     r: string | number[],
     s: string | number[],
     txParams?: Omit<CeloTx, 'data'>
-  ) => this.sendTx('setAccountWalletAddress', [walletAddress, v, r, s], txParams)
+  ) =>
+    this.contract.write.setAccountWalletAddress(
+      [toViemAddress(walletAddress), Number(v), r as `0x${string}`, s as `0x${string}`] as const,
+      txParams as any
+    )
 
   /**
    * Sets the data encryption of the account
    * @param dataEncryptionKey The key to set
    */
   setAccountDataEncryptionKey = (dataEncryptionKey: string, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('setAccountDataEncryptionKey', [dataEncryptionKey], txParams)
+    this.contract.write.setAccountDataEncryptionKey(
+      [dataEncryptionKey as `0x${string}`] as const,
+      txParams as any
+    )
 
   /**
    * Sets the contract's liquidity provision to true
    */
   setLiquidityProvision = (txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('setLiquidityProvision', [], txParams)
+    this.contract.write.setLiquidityProvision(txParams as any)
 
   /**
    * Sets the contract's `canExpire` field to `_canExpire`
    * @param _canExpire If the contract can expire `EXPIRATION_TIME` after the release schedule finishes.
    */
   setCanExpire = (canExpire: boolean, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('setCanExpire', [canExpire], txParams)
+    this.contract.write.setCanExpire([canExpire] as const, txParams as any)
 
   /**
    * Sets the contract's max distribution
    */
   setMaxDistribution = (distributionRatio: number | string, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('setMaxDistribution', [distributionRatio], txParams)
+    this.contract.write.setMaxDistribution([BigInt(distributionRatio)] as const, txParams as any)
 
   /**
    * Sets the contract's beneficiary
    */
   setBeneficiary = (beneficiary: string, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('setBeneficiary', [beneficiary], txParams)
+    this.contract.write.setBeneficiary([toViemAddress(beneficiary)] as const, txParams as any)
 
   private _authorizeVoteSigner = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('authorizeVoteSigner', args, txParams)
+    this.contract.write.authorizeVoteSigner(args as any, txParams as any)
 
   /**
    * Authorizes an address to sign votes on behalf of the account.
@@ -499,10 +518,10 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
   }
 
   private _authorizeValidatorSignerWithPublicKey = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('authorizeValidatorSignerWithPublicKey', args, txParams)
+    this.contract.write.authorizeValidatorSignerWithPublicKey(args as any, txParams as any)
 
   private _authorizeValidatorSigner = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('authorizeValidatorSigner', args, txParams)
+    this.contract.write.authorizeValidatorSigner(args as any, txParams as any)
 
   /**
    * Authorizes an address to sign validation messages on behalf of the account.
@@ -588,7 +607,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
   }
 
   private _authorizeAttestationSigner = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('authorizeAttestationSigner', args, txParams)
+    this.contract.write.authorizeAttestationSigner(args as any, txParams as any)
 
   /**
    * Authorizes an address to sign attestation messages on behalf of the account.
@@ -613,7 +632,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
   }
 
   private _revokePending = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('revokePending', args, txParams)
+    this.contract.write.revokePending(args as any, txParams as any)
 
   /**
    * Revokes pending votes
@@ -648,7 +667,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGo
     this.revokePending(this.address, group, value)
 
   private _revokeActive = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('revokeActive', args, txParams)
+    this.contract.write.revokeActive(args as any, txParams as any)
 
   /**
    * Revokes active votes

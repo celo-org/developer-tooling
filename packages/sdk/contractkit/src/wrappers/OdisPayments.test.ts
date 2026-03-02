@@ -26,10 +26,14 @@ testWithAnvilL2('OdisPayments Wrapper', (provider) => {
 
     const payAndCheckState = async (sender: string, receiver: string, transferValue: number) => {
       // Approve USDm that OdisPayments contract may transfer from sender
-      await stableToken.approve(odisPayments.address, transferValue, { from: sender })
+      const approveHash = await stableToken.approve(odisPayments.address, transferValue, {
+        from: sender,
+      })
+      await kit.connection.waitForTransactionReceipt(approveHash)
 
       const senderBalanceBefore = await stableToken.balanceOf(sender)
-      await odisPayments.payInCUSD(receiver, transferValue, { from: sender })
+      const payHash = await odisPayments.payInCUSD(receiver, transferValue, { from: sender })
+      await kit.connection.waitForTransactionReceipt(payHash)
       const balanceAfter = await stableToken.balanceOf(sender)
       expect(senderBalanceBefore.minus(balanceAfter)).toEqBigNumber(transferValue)
       expect(await stableToken.balanceOf(odisPayments.address)).toEqBigNumber(transferValue)
@@ -45,7 +49,8 @@ testWithAnvilL2('OdisPayments Wrapper', (provider) => {
     })
 
     it('should revert if transfer fails', async () => {
-      await stableToken.approve(odisPayments.address, testValue)
+      const approveHash = await stableToken.approve(odisPayments.address, testValue)
+      await kit.connection.waitForTransactionReceipt(approveHash)
       expect.assertions(2)
       await expect(odisPayments.payInCUSD(accounts[0], testValue + 1)).rejects.toThrow()
       expect(await odisPayments.totalPaidCUSD(accounts[0])).toEqBigNumber(0)

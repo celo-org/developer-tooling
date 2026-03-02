@@ -76,22 +76,26 @@ testWithAnvilL2('governance:execute cmd', (provider) => {
 
     await setCode(provider, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
 
-    await governanceWrapper.propose(PROPOSAL_TRANSACTIONS, 'URL', {
+    const proposeHash = await governanceWrapper.propose(PROPOSAL_TRANSACTIONS, 'URL', {
       from: proposer,
       value: minDeposit,
     })
+    await kit.connection.waitForTransactionReceipt(proposeHash)
 
     const accountWrapper = await kit.contracts.getAccounts()
     const lockedGoldWrapper = await kit.contracts.getLockedGold()
 
-    await accountWrapper.createAccount({ from: voter })
-    await lockedGoldWrapper.lock({ from: voter, value: majorityOfVotes.toFixed() })
+    const createHash = await accountWrapper.createAccount({ from: voter })
+    await kit.connection.waitForTransactionReceipt(createHash)
+    const lockHash = await lockedGoldWrapper.lock({ from: voter, value: majorityOfVotes.toFixed() })
+    await kit.connection.waitForTransactionReceipt(lockHash)
 
     await timeTravel(dequeueFrequency + 1, provider)
 
-    await governanceWrapper.dequeueProposalsIfReady({
+    const dequeueHash = await governanceWrapper.dequeueProposalsIfReady({
       from: proposer,
     })
+    await kit.connection.waitForTransactionReceipt(dequeueHash)
 
     expect(await governanceWrapper.getDequeue()).toMatchInlineSnapshot(`
         [
@@ -116,10 +120,13 @@ testWithAnvilL2('governance:execute cmd', (provider) => {
       })
     })
 
-    await governanceWrapper.approve(proposalId, { from: approver })
+    const approveHash = await governanceWrapper.approve(proposalId, { from: approver })
+    await kit.connection.waitForTransactionReceipt(approveHash)
 
-    await lockedGoldWrapper.lock({ from: voter, value: minDeposit })
-    await governanceWrapper.vote(proposalId, 'Yes', { from: voter })
+    const lockHash2 = await lockedGoldWrapper.lock({ from: voter, value: minDeposit })
+    await kit.connection.waitForTransactionReceipt(lockHash2)
+    const voteHash = await governanceWrapper.vote(proposalId, 'Yes', { from: voter })
+    await kit.connection.waitForTransactionReceipt(voteHash)
     await timeTravel((await governanceWrapper.stageDurations()).Referendum.toNumber() + 1, provider)
 
     const testTransactionsContract = kit.connection.getCeloContract(

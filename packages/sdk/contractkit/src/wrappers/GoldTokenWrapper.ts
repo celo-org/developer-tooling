@@ -5,7 +5,7 @@ import { goldTokenABI } from '@celo/abis'
 import { Address } from '@celo/base'
 import { CeloTx } from '@celo/connect'
 import 'bignumber.js'
-import { valueToBigNumber, valueToString } from './BaseWrapper'
+import { toViemAddress, valueToBigNumber, valueToString } from './BaseWrapper'
 import { CeloTokenWrapper } from './CeloTokenWrapper'
 
 /**
@@ -22,7 +22,11 @@ export class GoldTokenWrapper extends CeloTokenWrapper<typeof goldTokenABI> {
     spender: string,
     value: import('bignumber.js').default.Value,
     txParams?: Omit<CeloTx, 'data'>
-  ) => this.sendTx('increaseAllowance', [spender, valueToString(value)], txParams)
+  ) =>
+    this.contract.write.increaseAllowance(
+      [toViemAddress(spender), BigInt(valueToString(value))] as const,
+      txParams as any
+    )
   /**
    * Decreases the allowance of another user.
    * @param spender The address which is being approved to spend CELO.
@@ -30,7 +34,10 @@ export class GoldTokenWrapper extends CeloTokenWrapper<typeof goldTokenABI> {
    * @returns true if success.
    */
   decreaseAllowance = (spender: string, value: string | number, txParams?: Omit<CeloTx, 'data'>) =>
-    this.sendTx('decreaseAllowance', [spender, value], txParams)
+    this.contract.write.decreaseAllowance(
+      [toViemAddress(spender), BigInt(value)] as const,
+      txParams as any
+    )
 
   /**
    * Gets the balance of the specified address.
