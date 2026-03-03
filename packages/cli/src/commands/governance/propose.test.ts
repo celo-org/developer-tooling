@@ -382,7 +382,9 @@ testWithAnvilL2(
             from: owner1,
             ...deploymentTransaction,
           })
-          const receipt = await kit.connection.viemClient.waitForTransactionReceipt({ hash: txHash as `0x${string}` })
+          const receipt = await kit.connection.viemClient.waitForTransactionReceipt({
+            hash: txHash as `0x${string}`,
+          })
           const safeAddress = getSafeAddressFromDeploymentTx(
             receipt as unknown as Parameters<typeof getSafeAddressFromDeploymentTx>[0],
             '1.3.0'
@@ -456,7 +458,9 @@ testWithAnvilL2(
             from: owner1,
             ...deploymentTransaction,
           })
-          const receipt = await kit.connection.viemClient.waitForTransactionReceipt({ hash: txHash as `0x${string}` })
+          const receipt = await kit.connection.viemClient.waitForTransactionReceipt({
+            hash: txHash as `0x${string}`,
+          })
           const safeAddress = getSafeAddressFromDeploymentTx(
             receipt as unknown as Parameters<typeof getSafeAddressFromDeploymentTx>[0],
             '1.3.0'

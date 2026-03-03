@@ -208,7 +208,10 @@ export default class ValidatorStatus extends BaseCommand {
       name,
       address: validator,
       signer,
-      elected: await electionCache.elected(signer, Number(await kit.connection.viemClient.getBlockNumber())),
+      elected: await electionCache.elected(
+        signer,
+        Number(await kit.connection.viemClient.getBlockNumber())
+      ),
       frontRunner: frontRunnerSigners.some(eqAddress.bind(null, signer)),
     }
 

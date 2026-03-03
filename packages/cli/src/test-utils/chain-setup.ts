@@ -167,12 +167,16 @@ export async function setupValidatorAndAddToGroup(
   const validators = await kit.contracts.getValidators()
 
   const affiliateHash = await validators.affiliate(groupAccount, { from: validatorAccount })
-  await kit.connection.viemClient.waitForTransactionReceipt({ hash: affiliateHash as `0x${string}` })
+  await kit.connection.viemClient.waitForTransactionReceipt({
+    hash: affiliateHash as `0x${string}`,
+  })
 
   const addMemberHash = await validators.addMember(groupAccount, validatorAccount, {
     from: groupAccount,
   })
-  await kit.connection.viemClient.waitForTransactionReceipt({ hash: addMemberHash as `0x${string}` })
+  await kit.connection.viemClient.waitForTransactionReceipt({
+    hash: addMemberHash as `0x${string}`,
+  })
 }
 // you MUST call clearMock after using this function!
 export async function mockTimeForwardBy(seconds: number, provider: Provider) {

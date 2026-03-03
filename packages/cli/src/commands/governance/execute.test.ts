@@ -80,7 +80,9 @@ testWithAnvilL2('governance:execute cmd', (provider) => {
       from: proposer,
       value: minDeposit,
     })
-    await kit.connection.viemClient.waitForTransactionReceipt({ hash: proposeHash as `0x${string}` })
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: proposeHash as `0x${string}`,
+    })
 
     const accountWrapper = await kit.contracts.getAccounts()
     const lockedGoldWrapper = await kit.contracts.getLockedGold()
@@ -95,7 +97,9 @@ testWithAnvilL2('governance:execute cmd', (provider) => {
     const dequeueHash = await governanceWrapper.dequeueProposalsIfReady({
       from: proposer,
     })
-    await kit.connection.viemClient.waitForTransactionReceipt({ hash: dequeueHash as `0x${string}` })
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: dequeueHash as `0x${string}`,
+    })
 
     expect(await governanceWrapper.getDequeue()).toMatchInlineSnapshot(`
         [
@@ -121,7 +125,9 @@ testWithAnvilL2('governance:execute cmd', (provider) => {
     })
 
     const approveHash = await governanceWrapper.approve(proposalId, { from: approver })
-    await kit.connection.viemClient.waitForTransactionReceipt({ hash: approveHash as `0x${string}` })
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: approveHash as `0x${string}`,
+    })
 
     const lockHash2 = await lockedGoldWrapper.lock({ from: voter, value: minDeposit })
     await kit.connection.viemClient.waitForTransactionReceipt({ hash: lockHash2 as `0x${string}` })

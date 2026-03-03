@@ -1,9 +1,4 @@
-import {
-  ABIDefinition,
-  Address,
-  decodeParametersToObject,
-  parseDecodedParams,
-} from '@celo/connect'
+import { ABIDefinition, Address, decodeParametersToObject, parseDecodedParams } from '@celo/connect'
 import type { Block, Transaction } from 'viem'
 import { toChecksumAddress } from '@celo/utils/lib/address'
 import { CeloContract, ContractKit } from '@celo/contractkit'

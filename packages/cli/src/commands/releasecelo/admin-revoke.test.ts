@@ -62,7 +62,9 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (provider) => {
     const transferHash = await stableToken.transfer(contractAddress, 100, {
       from: accounts[0],
     })
-    await kit.connection.viemClient.waitForTransactionReceipt({ hash: transferHash as `0x${string}` })
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: transferHash as `0x${string}`,
+    })
     await testLocallyWithNode(AdminRevoke, ['--contract', contractAddress, '--yesreally'], provider)
     const balance = await stableToken.balanceOf(contractAddress)
     expect(balance.isZero()).toBeTruthy()
@@ -153,7 +155,9 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (provider) => {
             from: accounts[0],
             value: minDeposit,
           })
-          await kit.connection.viemClient.waitForTransactionReceipt({ hash: proposeHash1 as `0x${string}` })
+          await kit.connection.viemClient.waitForTransactionReceipt({
+            hash: proposeHash1 as `0x${string}`,
+          })
 
           const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
           await timeTravel(dequeueFrequency + 1, provider)
@@ -188,12 +192,16 @@ testWithAnvilL2('releasegold:admin-revoke cmd', (provider) => {
             from: accounts[0],
             value: minDeposit,
           })
-          await kit.connection.viemClient.waitForTransactionReceipt({ hash: proposeHash2 as `0x${string}` })
+          await kit.connection.viemClient.waitForTransactionReceipt({
+            hash: proposeHash2 as `0x${string}`,
+          })
           const proposeHash3 = await governance.propose([], 'URL', {
             from: accounts[0],
             value: minDeposit,
           })
-          await kit.connection.viemClient.waitForTransactionReceipt({ hash: proposeHash3 as `0x${string}` })
+          await kit.connection.viemClient.waitForTransactionReceipt({
+            hash: proposeHash3 as `0x${string}`,
+          })
           await testLocallyWithNode(
             GovernanceUpvote,
             ['--from', voteSigner, '--proposalID', '3', '--privateKey', PRIVATE_KEY1],

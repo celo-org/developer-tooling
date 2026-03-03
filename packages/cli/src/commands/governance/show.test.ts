@@ -45,7 +45,9 @@ testWithAnvilL2('governance:show cmd', (provider) => {
       from: proposer,
       value: minDeposit,
     })
-    await kit.connection.viemClient.waitForTransactionReceipt({ hash: proposeHash as `0x${string}` })
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: proposeHash as `0x${string}`,
+    })
 
     const accountWrapper = await kit.contracts.getAccounts()
     const lockedGoldWrapper = await kit.contracts.getLockedGold()
@@ -58,7 +60,9 @@ testWithAnvilL2('governance:show cmd', (provider) => {
     await timeTravel(dequeueFrequency + 1, provider)
 
     const dequeueHash = await governanceWrapper.dequeueProposalsIfReady({ from: proposer })
-    await kit.connection.viemClient.waitForTransactionReceipt({ hash: dequeueHash as `0x${string}` })
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: dequeueHash as `0x${string}`,
+    })
 
     const voteHash = await governanceWrapper.vote(proposalId, 'Yes', { from: voter })
     await kit.connection.viemClient.waitForTransactionReceipt({ hash: voteHash as `0x${string}` })

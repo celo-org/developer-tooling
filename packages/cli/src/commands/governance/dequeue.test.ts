@@ -24,7 +24,9 @@ testWithAnvilL2('governance:dequeue cmd', (provider) => {
       from: account,
       value: minDeposit,
     })
-    await kit.connection.viemClient.waitForTransactionReceipt({ hash: proposeHash as `0x${string}` })
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: proposeHash as `0x${string}`,
+    })
 
     // Run dequeue operation
     await testLocallyWithNode(Dequeue, ['--from', account], provider)
@@ -40,7 +42,9 @@ testWithAnvilL2('governance:dequeue cmd', (provider) => {
       from: account,
       value: minDeposit,
     })
-    await kit.connection.viemClient.waitForTransactionReceipt({ hash: proposeHash2 as `0x${string}` })
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: proposeHash2 as `0x${string}`,
+    })
 
     // Run dequeue again
     await testLocallyWithNode(Dequeue, ['--from', account], provider)
@@ -68,7 +72,9 @@ testWithAnvilL2('governance:dequeue cmd', (provider) => {
       from: account,
       value: minDeposit,
     })
-    await kit.connection.viemClient.waitForTransactionReceipt({ hash: proposeHash as `0x${string}` })
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: proposeHash as `0x${string}`,
+    })
 
     // Run dequeue immediately (should not dequeue due to timing)
     await testLocallyWithNode(Dequeue, ['--from', account], provider)
@@ -83,7 +89,9 @@ testWithAnvilL2('governance:dequeue cmd', (provider) => {
       from: account,
       value: minDeposit,
     })
-    await kit.connection.viemClient.waitForTransactionReceipt({ hash: proposeHash2 as `0x${string}` })
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: proposeHash2 as `0x${string}`,
+    })
 
     // Advance time to allow dequeuing
     await timeTravel(dequeueFrequency + 1, provider)

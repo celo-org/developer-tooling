@@ -222,7 +222,11 @@ testWithAnvilL2('transfer:celo cmd', (provider) => {
   })
 
   test('can transfer very large amounts of CELO', async () => {
-    const balanceBefore = new BigNumber((await kit.connection.viemClient.getBalance({ address: accounts[0] as `0x${string}` })).toString())
+    const balanceBefore = new BigNumber(
+      (
+        await kit.connection.viemClient.getBalance({ address: accounts[0] as `0x${string}` })
+      ).toString()
+    )
 
     const amountToTransfer = parseEther('20000000')
     await setBalance(
@@ -259,7 +263,11 @@ testWithAnvilL2('transfer:celo cmd', (provider) => {
     expect(transactionReceipt.to).toEqual(accounts[1].toLowerCase())
     expect(transactionReceipt.status).toEqual('success')
 
-    const balanceAfter = new BigNumber((await kit.connection.viemClient.getBalance({ address: accounts[0] as `0x${string}` })).toString())
+    const balanceAfter = new BigNumber(
+      (
+        await kit.connection.viemClient.getBalance({ address: accounts[0] as `0x${string}` })
+      ).toString()
+    )
 
     expect(BigInt(balanceAfter.toFixed())).toBeLessThan(BigInt(balanceBefore.toFixed()))
   })

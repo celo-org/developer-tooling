@@ -76,10 +76,14 @@ testWithAnvilL2('election:current cmd', async (provider) => {
     // Set the names
     await impersonateAccount(provider, validator1)
     const setName1Hash = await accountsContract.setName('Validator #1', { from: validator1 })
-    await kit.connection.viemClient.waitForTransactionReceipt({ hash: setName1Hash as `0x${string}` })
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: setName1Hash as `0x${string}`,
+    })
     await impersonateAccount(provider, validator2)
     const setName2Hash = await accountsContract.setName('Validator #2', { from: validator2 })
-    await kit.connection.viemClient.waitForTransactionReceipt({ hash: setName2Hash as `0x${string}` })
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: setName2Hash as `0x${string}`,
+    })
 
     // // change the signer
     kit.connection.defaultAccount = validator2 as Address
