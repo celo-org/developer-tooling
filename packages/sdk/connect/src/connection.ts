@@ -17,27 +17,9 @@ import { AbiInput, AbiItem } from './abi-types'
 import { isEmpty } from './viem-abi-coder'
 import { type CeloContract, createCeloContract } from './contract-types'
 import { CeloProvider, assertIsCeloProvider } from './celo-provider'
-import {
-  Address,
-  Block,
-  BlockNumber,
-  CeloTx,
-  CeloTxPending,
-  CeloTxReceipt,
-  Provider,
-} from './types'
+import { Address, CeloTx, Provider } from './types'
 import { decodeStringParameter } from './utils/abi-utils'
-import {
-  hexToNumber,
-  inputAddressFormatter,
-  inputBlockNumberFormatter,
-  inputDefaultBlockNumberFormatter,
-  inputSignFormatter,
-  outputBigNumberFormatter,
-  outputBlockFormatter,
-  outputCeloTxFormatter,
-  outputCeloTxReceiptFormatter,
-} from './utils/formatter'
+import { inputAddressFormatter, inputSignFormatter } from './utils/formatter'
 import { hasProperty } from './utils/provider-utils'
 import { TxParamsNormalizer } from './utils/tx-params-normalizer'
 import { ReadOnlyWallet } from './wallet'
@@ -61,7 +43,6 @@ export interface ConnectionOptions {
  */
 export class Connection {
   private config: ConnectionOptions
-  private _chainID: number | undefined
   readonly paramsPopulator: TxParamsNormalizer
   private _provider!: CeloProvider
   private _viemClient!: PublicClient
@@ -118,7 +99,6 @@ export class Connection {
     if (!provider) {
       throw new Error('Must have a valid Provider')
     }
-    this._chainID = undefined
     try {
       let celoProvider: CeloProvider
       if (!(provider instanceof CeloProvider)) {
@@ -405,24 +385,6 @@ export class Connection {
     }
   }
 
-  // An instance of Connection will only change chain id if provider is changed.
-  chainId = async (): Promise<number> => {
-    if (this._chainID) {
-      return this._chainID
-    }
-    const chainID = await this._viemClient.getChainId()
-    this._chainID = chainID
-    return chainID
-  }
-
-  getTransactionCount = async (address: Address): Promise<number> => {
-    const result = await this._viemClient.request({
-      method: 'eth_getTransactionCount',
-      params: [address as `0x${string}`, 'pending'],
-    })
-    return hexToNumber(result)!
-  }
-
   gasPrice = async (feeCurrency?: Address): Promise<string> => {
     const parameter = feeCurrency ? [feeCurrency] : []
     const result = await this._viemClient.request({
@@ -440,76 +402,6 @@ export class Connection {
     })
     return result as string
   }
-
-  getBlockNumber = async (): Promise<number> => {
-    const result = await this._viemClient.request({ method: 'eth_blockNumber', params: [] as any })
-    return hexToNumber(result as string)!
-  }
-
-  private isBlockNumberHash = (blockNumber: BlockNumber) =>
-    typeof blockNumber === 'string' && blockNumber.indexOf('0x') === 0
-
-  getBlock = async (blockHashOrBlockNumber: BlockNumber, fullTxObjects = true): Promise<Block> => {
-    const endpoint = this.isBlockNumberHash(blockHashOrBlockNumber)
-      ? 'eth_getBlockByHash'
-      : 'eth_getBlockByNumber'
-
-    const result = await this._viemClient.request({
-      method: endpoint as any,
-      params: [inputBlockNumberFormatter(blockHashOrBlockNumber), fullTxObjects] as any,
-    })
-
-    return outputBlockFormatter(result)
-  }
-
-  getBalance = async (address: Address, defaultBlock?: BlockNumber): Promise<string> => {
-    const result = await this._viemClient.request({
-      method: 'eth_getBalance',
-      params: [
-        inputAddressFormatter(address) as `0x${string}`,
-        inputDefaultBlockNumberFormatter(defaultBlock) as any,
-      ],
-    })
-    return outputBigNumberFormatter(result)
-  }
-
-  getTransaction = async (transactionHash: string): Promise<CeloTxPending> => {
-    const result = await this._viemClient.request({
-      method: 'eth_getTransactionByHash',
-      params: [ensureLeading0x(transactionHash) as `0x${string}`],
-    })
-    return outputCeloTxFormatter(result)
-  }
-
-  getTransactionReceipt = async (txhash: string): Promise<CeloTxReceipt | null> => {
-    const result = await this._viemClient.request({
-      method: 'eth_getTransactionReceipt',
-      params: [ensureLeading0x(txhash) as `0x${string}`],
-    })
-
-    if (result === null) {
-      return null
-    }
-
-    return outputCeloTxReceiptFormatter(result)
-  }
-
-  waitForTransactionReceipt = async (
-    txhash: string,
-    timeoutMs = 120000,
-    intervalMs = 500
-  ): Promise<CeloTxReceipt> => {
-    const start = Date.now()
-    while (Date.now() - start < timeoutMs) {
-      const receipt = await this.getTransactionReceipt(txhash)
-      if (receipt !== null) {
-        return receipt
-      }
-      await new Promise((resolve) => setTimeout(resolve, intervalMs))
-    }
-    throw new Error(`Timed out waiting for transaction receipt: ${txhash}`)
-  }
-
   private fillTxDefaults(tx?: CeloTx): CeloTx {
     const defaultTx: CeloTx = {
       from: this.config.from,
@@ -520,15 +412,6 @@ export class Connection {
       ...defaultTx,
       ...tx,
     }
-  }
-
-  getStorageAt = async (address: Address, position: number | string): Promise<string> => {
-    const pos = typeof position === 'number' ? toHex(position) : position
-    const result = await this._viemClient.request({
-      method: 'eth_getStorageAt',
-      params: [inputAddressFormatter(address) as `0x${string}`, pos as `0x${string}`, 'latest'],
-    })
-    return result as string
   }
 
   /**

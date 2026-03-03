@@ -86,19 +86,6 @@ export interface EventLog {
   raw?: { data: string; topics: string[] }
 }
 
-/** Transaction log entry */
-export interface Log {
-  address: string
-  data: string
-  topics: string[]
-  logIndex: number
-  transactionIndex: number
-  transactionHash: string
-  blockHash: string
-  blockNumber: number
-  id?: string
-}
-
 /** Block header */
 export interface BlockHeader {
   number: number
@@ -117,14 +104,6 @@ export interface BlockHeader {
   timestamp: number | string
   baseFeePerGas?: number | string
   size?: number
-}
-
-/** Block with transactions */
-export interface Block extends BlockHeader {
-  transactions: (string | CeloTxPending)[]
-  difficulty?: string
-  totalDifficulty?: string
-  uncles?: string[]
 }
 
 /** PastEventOptions - retained for backward compatibility */
@@ -199,24 +178,6 @@ export interface CeloTxPending extends Partial<CeloParams> {
   v?: string
   r?: string
   s?: string
-}
-
-/** Transaction receipt */
-export interface CeloTxReceipt extends Partial<CeloParams> {
-  status: boolean
-  transactionHash: string
-  transactionIndex: number
-  blockHash: string
-  blockNumber: number
-  from: string
-  to: string
-  contractAddress?: string
-  cumulativeGasUsed: number
-  gasUsed: number
-  effectiveGasPrice?: number
-  logs: Log[]
-  logsBloom: string
-  events?: { [eventName: string]: EventLog }
 }
 
 /**

@@ -21,7 +21,7 @@ export async function setCommissionUpdateDelay(
       data,
       from: DEFAULT_OWNER_ADDRESS,
     })
-    await conn.getTransactionReceipt(transactionHash)
+    await conn.viemClient.waitForTransactionReceipt({ hash: transactionHash })
   })
 }
 
@@ -42,7 +42,7 @@ export async function setDequeueFrequency(
       data,
       from: DEFAULT_OWNER_ADDRESS,
     })
-    await conn.getTransactionReceipt(transactionHash)
+    await conn.viemClient.waitForTransactionReceipt({ hash: transactionHash })
   })
 }
 
@@ -63,6 +63,6 @@ export async function setReferendumStageDuration(
       data,
       from: DEFAULT_OWNER_ADDRESS,
     })
-    await conn.getTransactionReceipt(transactionHash)
+    await conn.viemClient.waitForTransactionReceipt({ hash: transactionHash })
   })
 }
