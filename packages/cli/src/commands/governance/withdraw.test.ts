@@ -40,29 +40,30 @@ testWithAnvilL2(
         from: accounts[0],
         value: minDeposit,
       })
-      await kit.connection.waitForTransactionReceipt(proposeHash)
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: proposeHash as `0x${string}` })
       const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
       await timeTravel(dequeueFrequency + 1, client)
       const dequeueHash = await governance.dequeueProposalsIfReady()
-      await kit.connection.waitForTransactionReceipt(dequeueHash)
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: dequeueHash as `0x${string}` })
     })
 
     test('can withdraw', async () => {
-      const balanceBefore = await kit.connection.getBalance(accounts[0])
+      const balanceBefore = await kit.connection.viemClient.getBalance({ address: accounts[0] as `0x${string}` })
 
       await testLocallyWithNode(Withdraw, ['--from', accounts[0]], client)
 
-      const balanceAfter = await kit.connection.getBalance(accounts[0])
-      const latestTransactionReceipt = await kit.connection.getTransactionReceipt(
-        (await kit.connection.getBlock('latest', false)).transactions[0] as string
-      )
+      const balanceAfter = await kit.connection.viemClient.getBalance({ address: accounts[0] as `0x${string}` })
+      const latestBlock = await kit.connection.viemClient.getBlock({ blockTag: 'latest' })
+      const latestTransactionReceipt = await kit.connection.viemClient.getTransactionReceipt({
+        hash: latestBlock.transactions[0],
+      })
 
       // Safety check if the latest transaction was originated by expected account
-      expect(latestTransactionReceipt!.from.toLowerCase()).toEqual(accounts[0].toLowerCase())
+      expect(latestTransactionReceipt.from.toLowerCase()).toEqual(accounts[0].toLowerCase())
 
-      const difference = new BigNumber(balanceAfter)
-        .minus(balanceBefore)
-        .plus(latestTransactionReceipt!.effectiveGasPrice! * latestTransactionReceipt!.gasUsed)
+      const difference = new BigNumber(balanceAfter.toString())
+        .minus(balanceBefore.toString())
+        .plus((latestTransactionReceipt.effectiveGasPrice * latestTransactionReceipt.gasUsed).toString())
 
       expect(difference.toFixed()).toEqual(minDeposit)
 
@@ -105,7 +106,7 @@ testWithAnvilL2(
               'http://example.com/proposal.json',
               { from: multisigAddress, value: minDeposit }
             )
-            await kit.connection.waitForTransactionReceipt(proposeHash2)
+            await kit.connection.viemClient.waitForTransactionReceipt({ hash: proposeHash2 as `0x${string}` })
           },
           // make sure the multisig contract has enough balance to perform the transaction
           new BigNumber(minDeposit).multipliedBy(2)
@@ -118,12 +119,12 @@ testWithAnvilL2(
         const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
         await timeTravel(dequeueFrequency + 1, client)
         const dequeueHash2 = await governance.dequeueProposalsIfReady()
-        await kit.connection.waitForTransactionReceipt(dequeueHash2)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: dequeueHash2 as `0x${string}` })
       })
 
       it('can withdraw using --useMultiSig', async () => {
         // Safety check
-        expect(await kit.connection.getBalance(multisigAddress)).toEqual('0')
+        expect(await kit.connection.viemClient.getBalance({ address: multisigAddress as `0x${string}` })).toEqual(0n)
 
         await testLocallyWithNode(
           Withdraw,
@@ -132,7 +133,7 @@ testWithAnvilL2(
         )
 
         // After withdrawing the refunded deposit should be the minDeposit (as we zeroed out the balance before)
-        expect(await kit.connection.getBalance(multisigAddress)).toEqual(minDeposit)
+        expect(await kit.connection.viemClient.getBalance({ address: multisigAddress as `0x${string}` })).toEqual(BigInt(minDeposit))
 
         expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
           [
@@ -163,7 +164,7 @@ testWithAnvilL2(
         const otherAccount = accounts[1]
 
         // Safety check
-        expect(await kit.connection.getBalance(multisigAddress)).toEqual('0')
+        expect(await kit.connection.viemClient.getBalance({ address: multisigAddress as `0x${string}` })).toEqual(0n)
 
         await expect(
           testLocallyWithNode(
@@ -174,7 +175,7 @@ testWithAnvilL2(
         ).rejects.toMatchInlineSnapshot(`[Error: Some checks didn't pass!]`)
 
         // After failing to withdraw the deposit, the balance should still be zero
-        expect(await kit.connection.getBalance(multisigAddress)).toEqual('0')
+        expect(await kit.connection.viemClient.getBalance({ address: multisigAddress as `0x${string}` })).toEqual(0n)
 
         expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
                   [
@@ -222,7 +223,7 @@ testWithAnvilL2(
           from: owners[0],
           ...deploymentTransaction,
         })
-        const receipt = await kit.connection.waitForTransactionReceipt(txHash)
+        const receipt = await kit.connection.viemClient.waitForTransactionReceipt({ hash: txHash as `0x${string}` })
         safeAddress = getSafeAddressFromDeploymentTx(
           receipt as unknown as Parameters<typeof getSafeAddressFromDeploymentTx>[0],
           '1.3.0'
@@ -241,19 +242,19 @@ testWithAnvilL2(
             'http://example.com/proposal.json',
             { from: safeAddress, value: minDeposit }
           )
-          await kit.connection.waitForTransactionReceipt(proposeHash3)
+          await kit.connection.viemClient.waitForTransactionReceipt({ hash: proposeHash3 as `0x${string}` })
         })
 
         // Dequeue so the proposal can be refunded
         const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
         await timeTravel(dequeueFrequency + 1, client)
         const dequeueHash3 = await governance.dequeueProposalsIfReady()
-        await kit.connection.waitForTransactionReceipt(dequeueHash3)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: dequeueHash3 as `0x${string}` })
       })
 
       it('can withdraw using --useSafe', async () => {
         // Safety check
-        const amountBeforeRefund = await kit.connection.getBalance(safeAddress)
+        const amountBeforeRefund = await kit.connection.viemClient.getBalance({ address: safeAddress as `0x${string}` })
 
         for (const owner of owners) {
           await withImpersonatedAccount(client, owner, async () => {
@@ -264,13 +265,13 @@ testWithAnvilL2(
             )
           })
           if (owner !== owners.at(-1)) {
-            expect(await kit.connection.getBalance(safeAddress)).toEqual(amountBeforeRefund)
+            expect(await kit.connection.viemClient.getBalance({ address: safeAddress as `0x${string}` })).toEqual(amountBeforeRefund)
           }
         }
 
         // After withdrawing the refunded deposit should be the minDeposit (as we zeroed out the balance before)
-        expect(await kit.connection.getBalance(safeAddress)).toEqual(
-          (BigInt(minDeposit) + BigInt(amountBeforeRefund)).toString()
+        expect(await kit.connection.viemClient.getBalance({ address: safeAddress as `0x${string}` })).toEqual(
+          BigInt(minDeposit) + amountBeforeRefund
         )
 
         expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`

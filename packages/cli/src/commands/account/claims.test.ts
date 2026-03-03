@@ -149,7 +149,7 @@ testWithAnvilL2('account metadata cmds', (provider) => {
       beforeEach(async () => {
         const accountsInstance = await kit.contracts.getAccounts()
         const hash = await accountsInstance.createAccount({ from: account })
-        await kit.connection.waitForTransactionReceipt(hash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash as `0x${string}` })
       })
 
       test('can register metadata', async () => {

@@ -113,7 +113,7 @@ testWithAnvilL2('lockedgold:delegate cmd', (provider) => {
     await testLocallyWithNode(Lock, ['--from', beneficiary, '--value', '100'], provider)
 
     const createHash = await accountsWrapper.createAccount({ from: delegateeAddress })
-    await kit.connection.waitForTransactionReceipt(createHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: createHash as `0x${string}` })
 
     await testLocallyWithNode(
       Delegate,

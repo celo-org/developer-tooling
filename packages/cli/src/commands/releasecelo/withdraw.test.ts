@@ -69,16 +69,17 @@ testWithAnvilL2('releasegold:withdraw cmd', (provider) => {
 
     const balanceAfter = (await kit.getTotalBalance(beneficiary)).CELO!
 
-    const latestTransactionReceipt = await kit.connection.getTransactionReceipt(
-      (await kit.connection.getBlock('latest', false)).transactions[0] as string
-    )
+    const latestBlock = await kit.connection.viemClient.getBlock({ blockTag: 'latest' })
+    const latestTransactionReceipt = await kit.connection.viemClient.getTransactionReceipt({
+      hash: latestBlock.transactions[0],
+    })
 
     // Safety check if the latest transaction was originated by the beneficiary
-    expect(latestTransactionReceipt!.from.toLowerCase()).toEqual(beneficiary.toLowerCase())
+    expect(latestTransactionReceipt.from.toLowerCase()).toEqual(beneficiary.toLowerCase())
 
     const difference = new BigNumber(balanceAfter)
       .minus(balanceBefore)
-      .plus(latestTransactionReceipt!.effectiveGasPrice! * latestTransactionReceipt!.gasUsed)
+      .plus((latestTransactionReceipt.effectiveGasPrice * latestTransactionReceipt.gasUsed).toString())
 
     expect(difference.toFixed()).toEqual(withdrawalAmount)
     expect((await releaseGoldWrapper.getTotalWithdrawn()).toFixed()).toEqual(withdrawalAmount)
@@ -111,7 +112,7 @@ testWithAnvilL2('releasegold:withdraw cmd', (provider) => {
     const transferHash = await stableToken.transfer(contractAddress, USDmAmount, {
       from: beneficiary,
     })
-    await kit.connection.waitForTransactionReceipt(transferHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: transferHash as `0x${string}` })
 
     spy.mockClear()
     // Can't withdraw since there is USDm balance still

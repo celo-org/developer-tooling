@@ -54,7 +54,7 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (provider) => {
             from: validator,
           }
         )
-        await kit.connection.waitForTransactionReceipt(hash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash as `0x${string}` })
       },
       parseEther('10000000')
     )
@@ -88,7 +88,7 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (provider) => {
     const setNameHash = await accountsWrapper.setName('Test group', {
       from: nonElectedGroupAddress,
     })
-    await kit.connection.waitForTransactionReceipt(setNameHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: setNameHash as `0x${string}` })
     for (const validator of [
       ...EXISTING_VALIDATORS,
       validatorAddress,

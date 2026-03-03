@@ -27,7 +27,7 @@ export const registerAccount = async (kit: ContractKit, address: string) => {
 
   if (!(await accounts.isAccount(address))) {
     const hash = await accounts.createAccount({ from: address })
-    await kit.connection.waitForTransactionReceipt(hash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash as `0x${string}` })
   }
 }
 
@@ -41,7 +41,7 @@ export const registerAccountWithLockedGold = async (
   const lockedGold = await kit.contracts.getLockedGold()
 
   const hash = await lockedGold.lock({ from: address, value })
-  await kit.connection.waitForTransactionReceipt(hash)
+  await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash as `0x${string}` })
 }
 
 export const setupGroup = async (
@@ -60,7 +60,7 @@ export const setupGroup = async (
   const hash = await validators.registerValidatorGroup(groupCommission, {
     from: groupAccount,
   })
-  await kit.connection.waitForTransactionReceipt(hash)
+  await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash as `0x${string}` })
 }
 
 export const setupValidator = async (kit: ContractKit, validatorAccount: string) => {
@@ -72,7 +72,7 @@ export const setupValidator = async (kit: ContractKit, validatorAccount: string)
   const hash = await validators.registerValidatorNoBls(ecdsaPublicKey, {
     from: validatorAccount,
   })
-  await kit.connection.waitForTransactionReceipt(hash)
+  await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash as `0x${string}` })
 }
 
 export const setupGroupAndAffiliateValidator = async (
@@ -93,7 +93,7 @@ export const voteForGroupFrom = async (
   const election = await kit.contracts.getElection()
 
   const hash = await election.vote(groupAddress, amount, { from: fromAddress })
-  await kit.connection.waitForTransactionReceipt(hash)
+  await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash as `0x${string}` })
 }
 
 export const voteForGroupFromAndActivateVotes = async (
@@ -112,7 +112,7 @@ export const voteForGroupFromAndActivateVotes = async (
   // activate returns hashes directly (transactions already sent)
   const hashes = await election.activate(fromAddress, false, { from: fromAddress })
   for (const hash of hashes) {
-    await kit.connection.waitForTransactionReceipt(hash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash as `0x${string}` })
   }
 }
 
@@ -132,7 +132,7 @@ export const topUpWithToken = async (
   const hash = await token.transfer(account, amount.toFixed(), {
     from: STABLES_ADDRESS,
   })
-  await kit.connection.waitForTransactionReceipt(hash)
+  await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash as `0x${string}` })
   await stopImpersonatingAccount(kit.connection.currentProvider, STABLES_ADDRESS)
 }
 
@@ -146,14 +146,14 @@ export const changeMultiSigOwner = async (kit: ContractKit, toAccount: StrongAdd
     to: multisig.address,
     value: parseEther('1').toString(),
   })
-  await kit.connection.waitForTransactionReceipt(hash)
+  await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash as `0x${string}` })
 
   await impersonateAccount(kit.connection.currentProvider, multisig.address)
 
   const replaceHash = await multisig.replaceOwner(DEFAULT_OWNER_ADDRESS, toAccount, {
     from: multisig.address,
   })
-  await kit.connection.waitForTransactionReceipt(replaceHash)
+  await kit.connection.viemClient.waitForTransactionReceipt({ hash: replaceHash as `0x${string}` })
   await stopImpersonatingAccount(kit.connection.currentProvider, multisig.address)
 }
 
@@ -167,12 +167,12 @@ export async function setupValidatorAndAddToGroup(
   const validators = await kit.contracts.getValidators()
 
   const affiliateHash = await validators.affiliate(groupAccount, { from: validatorAccount })
-  await kit.connection.waitForTransactionReceipt(affiliateHash)
+  await kit.connection.viemClient.waitForTransactionReceipt({ hash: affiliateHash as `0x${string}` })
 
   const addMemberHash = await validators.addMember(groupAccount, validatorAccount, {
     from: groupAccount,
   })
-  await kit.connection.waitForTransactionReceipt(addMemberHash)
+  await kit.connection.viemClient.waitForTransactionReceipt({ hash: addMemberHash as `0x${string}` })
 }
 // you MUST call clearMock after using this function!
 export async function mockTimeForwardBy(seconds: number, provider: Provider) {
@@ -195,9 +195,9 @@ export const activateAllValidatorGroupsVotes = async (kit: ContractKit) => {
 
   // Make sure we are in the next epoch to activate the votes
   const startHash = await epochManagerWrapper.startNextEpochProcess({ from: sender })
-  await kit.connection.waitForTransactionReceipt(startHash)
+  await kit.connection.viemClient.waitForTransactionReceipt({ hash: startHash as `0x${string}` })
   const finishHash = await epochManagerWrapper.finishNextEpochProcessTx({ from: sender })
-  await kit.connection.waitForTransactionReceipt(finishHash)
+  await kit.connection.viemClient.waitForTransactionReceipt({ hash: finishHash as `0x${string}` })
 
   for (const validatorGroup of validatorGroups) {
     const getPendingCallData = encodeFunctionData({
@@ -236,7 +236,7 @@ export const activateAllValidatorGroupsVotes = async (kit: ContractKit) => {
             data: activateData,
             from: validatorGroup,
           })
-          await kit.connection.waitForTransactionReceipt(hash)
+          await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash as `0x${string}` })
         },
         new BigNumber(parseEther('1').toString())
       )

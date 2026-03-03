@@ -29,7 +29,7 @@ testWithAnvilL2('governance:revokeupvote cmd', (provider) => {
         from: accounts[0],
         value: minDeposit.toFixed(),
       })
-      await kit.connection.waitForTransactionReceipt(proposeHash)
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: proposeHash as `0x${string}` })
     }
 
     for (let i = 1; i <= 4; i++) {
@@ -39,7 +39,7 @@ testWithAnvilL2('governance:revokeupvote cmd', (provider) => {
       const upvoteHash = await governance.upvote(proposalId, accounts[i], {
         from: accounts[i],
       })
-      await kit.connection.waitForTransactionReceipt(upvoteHash)
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: upvoteHash as `0x${string}` })
     }
   })
 

@@ -80,22 +80,22 @@ testWithAnvilL2('governance:execute cmd', (provider) => {
       from: proposer,
       value: minDeposit,
     })
-    await kit.connection.waitForTransactionReceipt(proposeHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: proposeHash as `0x${string}` })
 
     const accountWrapper = await kit.contracts.getAccounts()
     const lockedGoldWrapper = await kit.contracts.getLockedGold()
 
     const createHash = await accountWrapper.createAccount({ from: voter })
-    await kit.connection.waitForTransactionReceipt(createHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: createHash as `0x${string}` })
     const lockHash = await lockedGoldWrapper.lock({ from: voter, value: majorityOfVotes.toFixed() })
-    await kit.connection.waitForTransactionReceipt(lockHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: lockHash as `0x${string}` })
 
     await timeTravel(dequeueFrequency + 1, provider)
 
     const dequeueHash = await governanceWrapper.dequeueProposalsIfReady({
       from: proposer,
     })
-    await kit.connection.waitForTransactionReceipt(dequeueHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: dequeueHash as `0x${string}` })
 
     expect(await governanceWrapper.getDequeue()).toMatchInlineSnapshot(`
         [
@@ -121,12 +121,12 @@ testWithAnvilL2('governance:execute cmd', (provider) => {
     })
 
     const approveHash = await governanceWrapper.approve(proposalId, { from: approver })
-    await kit.connection.waitForTransactionReceipt(approveHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: approveHash as `0x${string}` })
 
     const lockHash2 = await lockedGoldWrapper.lock({ from: voter, value: minDeposit })
-    await kit.connection.waitForTransactionReceipt(lockHash2)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: lockHash2 as `0x${string}` })
     const voteHash = await governanceWrapper.vote(proposalId, 'Yes', { from: voter })
-    await kit.connection.waitForTransactionReceipt(voteHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: voteHash as `0x${string}` })
     await timeTravel((await governanceWrapper.stageDurations()).Referendum.toNumber() + 1, provider)
 
     const testTransactionsContract = kit.connection.getCeloContract(

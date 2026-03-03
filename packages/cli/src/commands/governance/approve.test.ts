@@ -550,7 +550,7 @@ testWithAnvilL2(
           from: securityCouncilSafeSignatory1,
           ...deploymentTransaction,
         })
-        const receipt = await kit.connection.waitForTransactionReceipt(txHash)
+        const receipt = await kit.connection.viemClient.waitForTransactionReceipt({ hash: txHash as `0x${string}` })
 
         const safeAddress = getSafeAddressFromDeploymentTx(
           receipt as unknown as Parameters<typeof getSafeAddressFromDeploymentTx>[0],
@@ -885,7 +885,7 @@ testWithAnvilL2(
           from: accounts[0],
           value: minDeposit,
         })
-        await kit.connection.waitForTransactionReceipt(proposeHash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: proposeHash as `0x${string}` })
 
         proposalId = new BigNumber(1)
 
@@ -894,7 +894,7 @@ testWithAnvilL2(
         const { timeTravel } = await import('@celo/dev-utils/ganache-test')
         await timeTravel(dequeueFrequency + 1, client)
         const dequeueHash = await governance.dequeueProposalsIfReady({ from: accounts[0] })
-        await kit.connection.waitForTransactionReceipt(dequeueHash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: dequeueHash as `0x${string}` })
 
         // Make accounts[0] the multisig owner
         await changeMultiSigOwner(kit, accounts[0])
@@ -1109,7 +1109,7 @@ testWithAnvilL2(
         const submitHash = await multisig.submitTransaction(governance.address, approveData, '0', {
           from: accounts[0],
         })
-        await kit.connection.waitForTransactionReceipt(submitHash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: submitHash as `0x${string}` })
 
         // Verify proposal is not yet approved
         expect(await governance.isApproved(proposalId)).toBe(false)

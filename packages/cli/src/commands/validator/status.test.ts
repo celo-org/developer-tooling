@@ -95,7 +95,7 @@ testWithAnvilL2('validator:status', (provider) => {
   it('fails if start and end are in different epochs', async () => {
     const kit = newKitFromProvider(provider)
     const [account] = await kit.connection.getAccounts()
-    const blockNumber = await kit.connection.getBlockNumber()
+    const blockNumber = Number(await kit.connection.viemClient.getBlockNumber())
     const epoch = await kit.getEpochNumberOfBlock(blockNumber)
     const firstBlockOfCurrentEpoch = await kit.getFirstBlockNumberForEpoch(epoch)
 

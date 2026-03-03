@@ -81,13 +81,13 @@ testWithAnvilL2('transfer:celo cmd', (provider) => {
     expect(receiverBalance.CELO!.toFixed()).toEqual(
       receiverBalanceBefore.CELO!.plus(amountToTransfer).toFixed()
     )
-    let block = await kit.connection.getBlock('latest', false)
-    let transactionReceipt = await kit.connection.getTransactionReceipt(
-      block.transactions[0] as string
-    )
+    let block = await kit.connection.viemClient.getBlock({ blockTag: 'latest' })
+    let transactionReceipt = await kit.connection.viemClient.getTransactionReceipt({
+      hash: block.transactions[0],
+    })
 
     // Safety check if the latest transaction was originated by expected account
-    expect(transactionReceipt!.from.toLowerCase()).toEqual(accounts[0].toLowerCase())
+    expect(transactionReceipt.from.toLowerCase()).toEqual(accounts[0].toLowerCase())
 
     // Attempt to send USDm back
     await testLocallyWithNode(
@@ -104,17 +104,19 @@ testWithAnvilL2('transfer:celo cmd', (provider) => {
       ],
       provider
     )
-    block = await kit.connection.getBlock('latest', false)
-    transactionReceipt = await kit.connection.getTransactionReceipt(block.transactions[0] as string)
+    block = await kit.connection.viemClient.getBlock({ blockTag: 'latest' })
+    transactionReceipt = await kit.connection.viemClient.getTransactionReceipt({
+      hash: block.transactions[0],
+    })
 
     // Safety check if the latest transaction was originated by expected account
-    expect(transactionReceipt!.from.toLowerCase()).toEqual(accounts[1].toLowerCase())
+    expect(transactionReceipt.from.toLowerCase()).toEqual(accounts[1].toLowerCase())
 
     const balanceAfter = (await kit.getTotalBalance(accounts[0])).CELO?.toFixed()!
     // the balance should be close to initial minus the fees for gas times 2 (one for each transfer)
     const estimatedBalance = BigInt(
       balanceBefore
-        .minus(transactionReceipt!.effectiveGasPrice! * transactionReceipt!.gasUsed * 2)
+        .minus((transactionReceipt.effectiveGasPrice * transactionReceipt.gasUsed * 2n).toString())
         .toFixed()
     )
     expect(Number(formatEther(BigInt(balanceAfter)))).toBeCloseTo(
@@ -220,7 +222,7 @@ testWithAnvilL2('transfer:celo cmd', (provider) => {
   })
 
   test('can transfer very large amounts of CELO', async () => {
-    const balanceBefore = new BigNumber(await kit.connection.getBalance(accounts[0]))
+    const balanceBefore = new BigNumber((await kit.connection.viemClient.getBalance({ address: accounts[0] as `0x${string}` })).toString())
 
     const amountToTransfer = parseEther('20000000')
     await setBalance(
@@ -244,26 +246,26 @@ testWithAnvilL2('transfer:celo cmd', (provider) => {
       provider
     )
 
-    const block = await kit.connection.getBlock('latest', false)
-    const transactionReceipt = await kit.connection.getTransactionReceipt(
-      block.transactions[0] as string
-    )
+    const block = await kit.connection.viemClient.getBlock({ blockTag: 'latest' })
+    const transactionReceipt = await kit.connection.viemClient.getTransactionReceipt({
+      hash: block.transactions[0],
+    })
 
     // Safety check if the latest transaction was originated by expected account
-    expect(transactionReceipt!.from.toLowerCase()).toEqual(accounts[0].toLowerCase())
-    expect(transactionReceipt!.cumulativeGasUsed).toBeGreaterThan(0)
-    expect(transactionReceipt!.effectiveGasPrice).toBeGreaterThan(0)
-    expect(transactionReceipt!.gasUsed).toBeGreaterThan(0)
-    expect(transactionReceipt!.to).toEqual(accounts[1].toLowerCase())
-    expect(transactionReceipt!.status).toEqual(true)
+    expect(transactionReceipt.from.toLowerCase()).toEqual(accounts[0].toLowerCase())
+    expect(transactionReceipt.cumulativeGasUsed).toBeGreaterThan(0n)
+    expect(transactionReceipt.effectiveGasPrice).toBeGreaterThan(0n)
+    expect(transactionReceipt.gasUsed).toBeGreaterThan(0n)
+    expect(transactionReceipt.to).toEqual(accounts[1].toLowerCase())
+    expect(transactionReceipt.status).toEqual('success')
 
-    const balanceAfter = new BigNumber(await kit.connection.getBalance(accounts[0]))
+    const balanceAfter = new BigNumber((await kit.connection.viemClient.getBalance({ address: accounts[0] as `0x${string}` })).toString())
 
     expect(BigInt(balanceAfter.toFixed())).toBeLessThan(BigInt(balanceBefore.toFixed()))
   })
 
   test('can transfer celo with comment', async () => {
-    const start = await kit.connection.getBlock('latest')
+    const start = await kit.connection.viemClient.getBlock({ blockTag: 'latest' })
     const amountToTransfer = '500000000000000000000'
 
     await testLocallyWithNode(
@@ -305,7 +307,7 @@ testWithAnvilL2('transfer:celo cmd', (provider) => {
     const events = await eventClient.getContractEvents({
       abi: goldTokenABI,
       eventName: 'TransferComment',
-      fromBlock: BigInt(start.number),
+      fromBlock: start.number,
       address: (await kit.contracts.getCeloToken()).address,
     })
 
@@ -315,7 +317,7 @@ testWithAnvilL2('transfer:celo cmd', (provider) => {
   })
 
   test('passes feeCurrency to estimateGas', async () => {
-    const chainId = await kit.connection.chainId()
+    const chainId = await kit.connection.viemClient.getChainId()
     const nodeUrl = extractHostFromProvider(provider)
     const publicClient = createPublicClient({
       chain: {
@@ -423,19 +425,20 @@ testWithAnvilL2('transfer:celo cmd', (provider) => {
 
     const balanceAfter = await kit.getTotalBalance(accounts[0])
     const receiverBalanceAfter = await kit.getTotalBalance(accounts[1])
-    const transactionReceipt = await kit.connection.getTransactionReceipt(
-      (await kit.connection.getBlock('latest', false)).transactions[0] as string
-    )
+    const latestBlock = await kit.connection.viemClient.getBlock({ blockTag: 'latest' })
+    const transactionReceipt = await kit.connection.viemClient.getTransactionReceipt({
+      hash: latestBlock.transactions[0],
+    })
 
     // Safety check if the latest transaction was originated by expected account
-    expect(transactionReceipt!.from.toLowerCase()).toEqual(accounts[0].toLowerCase())
+    expect(transactionReceipt.from.toLowerCase()).toEqual(accounts[0].toLowerCase())
 
     expect(receiverBalanceAfter.CELO!.toFixed()).toEqual(
       receiverBalanceBefore.CELO!.plus(amountToTransfer).toFixed()
     )
     expect(
       balanceAfter
-        .CELO!.plus(transactionReceipt!.effectiveGasPrice! * transactionReceipt!.gasUsed)
+        .CELO!.plus((transactionReceipt.effectiveGasPrice * transactionReceipt.gasUsed).toString())
         .toFixed()
     ).toEqual(balanceBefore.CELO!.minus(amountToTransfer).toFixed())
   })

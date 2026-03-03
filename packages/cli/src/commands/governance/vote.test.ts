@@ -31,7 +31,7 @@ testWithAnvilL2('governance:vote cmd', (provider) => {
       from: accounts[0],
       value: minDeposit,
     })
-    await kit.connection.waitForTransactionReceipt(proposeHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: proposeHash as `0x${string}` })
     const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
     await timeTravel(dequeueFrequency, provider)
     await testLocallyWithNode(Dequeue, ['--from', accounts[0]], provider)

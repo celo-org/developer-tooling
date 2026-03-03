@@ -89,7 +89,7 @@ export default class ValidatorStatus extends BaseCommand {
       )
     }
 
-    const latest = await kit.connection.getBlockNumber()
+    const latest = Number(await kit.connection.viemClient.getBlockNumber())
     const endBlock = res.flags.end === -1 ? latest : res.flags.end
     const startBlock = res.flags.start === -1 ? endBlock - 100 : res.flags.start
 
@@ -208,7 +208,7 @@ export default class ValidatorStatus extends BaseCommand {
       name,
       address: validator,
       signer,
-      elected: await electionCache.elected(signer, await kit.connection.getBlockNumber()),
+      elected: await electionCache.elected(signer, Number(await kit.connection.viemClient.getBlockNumber())),
       frontRunner: frontRunnerSigners.some(eqAddress.bind(null, signer)),
     }
 
