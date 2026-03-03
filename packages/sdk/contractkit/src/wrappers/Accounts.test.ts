@@ -28,10 +28,10 @@ testWithAnvilL2('Accounts Wrapper', (provider) => {
   const registerAccountWithLockedGold = async (account: string) => {
     if (!(await accountsInstance.isAccount(account))) {
       const hash = await accountsInstance.createAccount({ from: account })
-      await kit.connection.waitForTransactionReceipt(hash)
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
     }
     const hash = await lockedGold.lock({ from: account, value: minLockedGoldValue })
-    await kit.connection.waitForTransactionReceipt(hash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
   }
 
   const getParsedSignatureOfAddressForTest = (address: string, signer: string) => {
@@ -50,19 +50,19 @@ testWithAnvilL2('Accounts Wrapper', (provider) => {
     await registerAccountWithLockedGold(validatorAccount)
     const ecdsaPublicKey = await addressToPublicKey(validatorAccount, kit.connection.sign)
     const hash = await validators.registerValidatorNoBls(ecdsaPublicKey, { from: validatorAccount })
-    await kit.connection.waitForTransactionReceipt(hash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
   }
 
   test('SBAT authorize attestation key', async () => {
     const account = accounts[0]
     const signer = accounts[1]
     const hash = await accountsInstance.createAccount({ from: account })
-    await kit.connection.waitForTransactionReceipt(hash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
     const sig = await getParsedSignatureOfAddressForTest(account, signer)
     const authHash = await accountsInstance.authorizeAttestationSigner(signer, sig, {
       from: account,
     })
-    await kit.connection.waitForTransactionReceipt(authHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: authHash })
     const attestationSigner = await accountsInstance.getAttestationSigner(account)
     expect(attestationSigner).toEqual(signer)
   })
@@ -71,18 +71,18 @@ testWithAnvilL2('Accounts Wrapper', (provider) => {
     const account = accounts[0]
     const signer = accounts[1]
     const hash = await accountsInstance.createAccount({ from: account })
-    await kit.connection.waitForTransactionReceipt(hash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
     const sig = await getParsedSignatureOfAddressForTest(account, signer)
     const authHash = await accountsInstance.authorizeAttestationSigner(signer, sig, {
       from: account,
     })
-    await kit.connection.waitForTransactionReceipt(authHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: authHash })
 
     let attestationSigner = await accountsInstance.getAttestationSigner(account)
     expect(attestationSigner).toEqual(signer)
 
     const removeHash = await accountsInstance.removeAttestationSigner({ from: account })
-    await kit.connection.waitForTransactionReceipt(removeHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: removeHash })
 
     attestationSigner = await accountsInstance.getAttestationSigner(account)
     expect(attestationSigner).toEqual(account)
@@ -92,12 +92,12 @@ testWithAnvilL2('Accounts Wrapper', (provider) => {
     const account = accounts[0]
     const signer = accounts[1]
     const hash = await accountsInstance.createAccount({ from: account })
-    await kit.connection.waitForTransactionReceipt(hash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
     const sig = await getParsedSignatureOfAddressForTest(account, signer)
     const authHash = await accountsInstance.authorizeValidatorSigner(signer, sig, validators, {
       from: account,
     })
-    await kit.connection.waitForTransactionReceipt(authHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: authHash })
 
     const validatorSigner = await accountsInstance.getValidatorSigner(account)
     expect(validatorSigner).toEqual(signer)
@@ -107,13 +107,13 @@ testWithAnvilL2('Accounts Wrapper', (provider) => {
     const account = accounts[0]
     const signer = accounts[1]
     const hash = await accountsInstance.createAccount({ from: account })
-    await kit.connection.waitForTransactionReceipt(hash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
     await setupValidator(account)
     const sig = await getParsedSignatureOfAddressForTest(account, signer)
     const authHash = await accountsInstance.authorizeValidatorSigner(signer, sig, validators, {
       from: account,
     })
-    await kit.connection.waitForTransactionReceipt(authHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: authHash })
 
     const validatorSigner = await accountsInstance.getValidatorSigner(account)
     expect(validatorSigner).toEqual(signer)
@@ -122,9 +122,9 @@ testWithAnvilL2('Accounts Wrapper', (provider) => {
   test('SBAT set the wallet address to the caller', async () => {
     const account = accounts[0]
     const hash = await accountsInstance.createAccount({ from: account })
-    await kit.connection.waitForTransactionReceipt(hash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
     const setHash = await accountsInstance.setWalletAddress(account, null, { from: account })
-    await kit.connection.waitForTransactionReceipt(setHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: setHash })
 
     const walletAddress = await accountsInstance.getWalletAddress(account)
     expect(walletAddress).toEqual(account)
@@ -134,10 +134,10 @@ testWithAnvilL2('Accounts Wrapper', (provider) => {
     const account = accounts[0]
     const wallet = accounts[1]
     const hash = await accountsInstance.createAccount({ from: account })
-    await kit.connection.waitForTransactionReceipt(hash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
     const signature = await accountsInstance.generateProofOfKeyPossession(account, wallet)
     const setHash = await accountsInstance.setWalletAddress(wallet, signature, { from: account })
-    await kit.connection.waitForTransactionReceipt(setHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: setHash })
 
     const walletAddress = await accountsInstance.getWalletAddress(account)
     expect(walletAddress).toEqual(wallet)
@@ -147,7 +147,7 @@ testWithAnvilL2('Accounts Wrapper', (provider) => {
     const account = accounts[0]
     const wallet = accounts[1]
     const hash = await accountsInstance.createAccount({ from: account })
-    await kit.connection.waitForTransactionReceipt(hash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
     await expect(
       accountsInstance.setWalletAddress(wallet, null, { from: account })
     ).rejects.toThrow()
@@ -161,7 +161,7 @@ testWithAnvilL2('Accounts Wrapper', (provider) => {
     kit.defaultAccount = account
 
     const hash = await accountsInstance.createAccount({ from: account })
-    await kit.connection.waitForTransactionReceipt(hash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
     await expect(
       accountsInstance.setPaymentDelegation(beneficiary, fractionInvalid, { from: account })
     ).rejects.toThrow('Fraction must not be greater than 1')
@@ -176,9 +176,9 @@ testWithAnvilL2('Accounts Wrapper', (provider) => {
     kit.defaultAccount = account
 
     const hash = await accountsInstance.createAccount({ from: account })
-    await kit.connection.waitForTransactionReceipt(hash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
     const setHash = await accountsInstance.setPaymentDelegation(beneficiary, fractionValid)
-    await kit.connection.waitForTransactionReceipt(setHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: setHash })
 
     const retval = await accountsInstance.getPaymentDelegation(account)
     expect(retval).toEqual(expectedRetval)
@@ -193,12 +193,12 @@ testWithAnvilL2('Accounts Wrapper', (provider) => {
     kit.defaultAccount = account
 
     const hash = await accountsInstance.createAccount({ from: account })
-    await kit.connection.waitForTransactionReceipt(hash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
     const setHash = await accountsInstance.setPaymentDelegation(beneficiary, fractionValid)
-    await kit.connection.waitForTransactionReceipt(setHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: setHash })
 
     const delHash = await accountsInstance.deletePaymentDelegation()
-    await kit.connection.waitForTransactionReceipt(delHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: delHash })
 
     const retval = await accountsInstance.getPaymentDelegation(account)
     expect(retval).toEqual(expectedRetval)

@@ -79,7 +79,7 @@ export function testStableToken(
   it('transfers', async () => {
     const before = await stableToken.balanceOf(accounts[1])
     const hash = await stableToken.transfer(accounts[1], ONE_STABLE)
-    await kit.connection.waitForTransactionReceipt(hash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
 
     const after = await stableToken.balanceOf(accounts[1])
     expect(after.minus(before)).toEqBigNumber(ONE_STABLE)
@@ -90,7 +90,7 @@ export function testStableToken(
     expect(before).toEqBigNumber(0)
 
     const hash = await stableToken.approve(accounts[1], ONE_STABLE)
-    await kit.connection.waitForTransactionReceipt(hash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
     const after = await stableToken.allowance(accounts[0], accounts[1])
     expect(after).toEqBigNumber(ONE_STABLE)
   })
@@ -99,12 +99,12 @@ export function testStableToken(
     const before = await stableToken.balanceOf(accounts[3])
     // account1 approves account0
     const approveHash = await stableToken.approve(accounts[1], ONE_STABLE, { from: accounts[0] })
-    await kit.connection.waitForTransactionReceipt(approveHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: approveHash })
 
     const transferHash = await stableToken.transferFrom(accounts[0], accounts[3], ONE_STABLE, {
       from: accounts[1],
     })
-    await kit.connection.waitForTransactionReceipt(transferHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: transferHash })
     const after = await stableToken.balanceOf(accounts[3])
     expect(after.minus(before)).toEqBigNumber(ONE_STABLE)
   })

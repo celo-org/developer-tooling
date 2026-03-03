@@ -752,7 +752,7 @@ export class ValidatorsWrapper extends BaseWrapperForGoverning<typeof validators
     blockNumber?: number
   ): Promise<{ group: Address; historyIndex: number }> {
     const blockEpoch = await this.getEpochNumberOfBlock(
-      blockNumber || (await this.connection.getBlockNumber())
+      blockNumber || Number(await this.connection.viemClient.getBlockNumber())
     )
     const membershipHistory = await this.getValidatorMembershipHistory(account)
     const historyIndex = this.findValidatorMembershipHistoryIndex(blockEpoch, membershipHistory)

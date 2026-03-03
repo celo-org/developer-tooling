@@ -101,10 +101,10 @@ testWithAnvilL2('Escrow Wrapper', (provider) => {
       kit.defaultAccount as string,
       TIMESTAMP
     )
-    await kit.connection.waitForTransactionReceipt(registerHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: registerHash })
 
     const approveHash = await stableTokenContract.approve(escrow.address, TEN_USDM)
-    await kit.connection.waitForTransactionReceipt(approveHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: approveHash })
 
     const transferHash = await escrow.transferWithTrustedIssuers(
       identifier,
@@ -115,7 +115,7 @@ testWithAnvilL2('Escrow Wrapper', (provider) => {
       1,
       accounts
     )
-    await kit.connection.waitForTransactionReceipt(transferHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: transferHash })
 
     const trustedIssuersPerPayment = await escrow.getTrustedIssuersPerPayment(testPaymentId)
 
@@ -133,7 +133,7 @@ testWithAnvilL2('Escrow Wrapper', (provider) => {
       receiver,
       TIMESTAMP
     )
-    await kit.connection.waitForTransactionReceipt(registerHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: registerHash })
 
     const senderBalanceBefore = await stableTokenContract.balanceOf(sender)
     const receiverBalanceBefore = await stableTokenContract.balanceOf(receiver)
@@ -141,7 +141,7 @@ testWithAnvilL2('Escrow Wrapper', (provider) => {
     const approveHash = await stableTokenContract.approve(escrow.address, TEN_USDM, {
       from: sender,
     })
-    await kit.connection.waitForTransactionReceipt(approveHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: approveHash })
 
     const transferHash = await escrow.transferWithTrustedIssuers(
       identifier,
@@ -153,7 +153,7 @@ testWithAnvilL2('Escrow Wrapper', (provider) => {
       accounts,
       { from: sender }
     )
-    await kit.connection.waitForTransactionReceipt(transferHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: transferHash })
 
     const withdrawHash = await escrow.withdraw(
       withdrawKeyAddress,
@@ -164,7 +164,7 @@ testWithAnvilL2('Escrow Wrapper', (provider) => {
         from: receiver,
       }
     )
-    await kit.connection.waitForTransactionReceipt(withdrawHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: withdrawHash })
 
     const senderBalanceAfter = await stableTokenContract.balanceOf(sender)
     const receiverBalanceAfter = await stableTokenContract.balanceOf(receiver)
@@ -182,7 +182,7 @@ testWithAnvilL2('Escrow Wrapper', (provider) => {
     const approveHash = await stableTokenContract.approve(escrow.address, TEN_USDM, {
       from: sender,
     })
-    await kit.connection.waitForTransactionReceipt(approveHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: approveHash })
 
     const transferHash = await escrow.transferWithTrustedIssuers(
       identifier,
@@ -194,7 +194,7 @@ testWithAnvilL2('Escrow Wrapper', (provider) => {
       accounts,
       { from: sender }
     )
-    await kit.connection.waitForTransactionReceipt(transferHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: transferHash })
 
     await expect(
       escrow.withdraw(withdrawKeyAddress, parsedSig.v, parsedSig.r, parsedSig.s)
@@ -212,12 +212,12 @@ testWithAnvilL2('Escrow Wrapper', (provider) => {
       receiver,
       TIMESTAMP
     )
-    await kit.connection.waitForTransactionReceipt(registerHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: registerHash })
 
     const approveHash = await stableTokenContract.approve(escrow.address, TEN_USDM, {
       from: sender,
     })
-    await kit.connection.waitForTransactionReceipt(approveHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: approveHash })
 
     const transferHash = await escrow.transferWithTrustedIssuers(
       identifier,
@@ -229,7 +229,7 @@ testWithAnvilL2('Escrow Wrapper', (provider) => {
       [accounts[5]],
       { from: sender }
     )
-    await kit.connection.waitForTransactionReceipt(transferHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: transferHash })
 
     await expect(
       escrow.withdraw(withdrawKeyAddress, parsedSig.v, parsedSig.r, parsedSig.s)

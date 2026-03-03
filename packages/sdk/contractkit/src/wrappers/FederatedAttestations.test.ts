@@ -54,7 +54,7 @@ testWithAnvilL2('FederatedAttestations Wrapper', (provider) => {
 
     const accountInstance = await kit.contracts.getAccounts()
     const createHash = await accountInstance.createAccount({ from: issuer })
-    await kit.connection.waitForTransactionReceipt(createHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: createHash })
     const registerHash = await federatedAttestations.registerAttestation(
       testIdentifierBytes32,
       issuer,
@@ -62,7 +62,7 @@ testWithAnvilL2('FederatedAttestations Wrapper', (provider) => {
       issuer,
       TIME_STAMP
     )
-    await kit.connection.waitForTransactionReceipt(registerHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: registerHash })
 
     const attestationsAfterRegistration = await federatedAttestations.lookupAttestations(
       testIdentifierBytes32,
@@ -89,7 +89,7 @@ testWithAnvilL2('FederatedAttestations Wrapper', (provider) => {
       testAccountAddress,
       TIME_STAMP
     )
-    await kit.connection.waitForTransactionReceipt(registerHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: registerHash })
 
     const attestationsAfterRegistration = await federatedAttestations.lookupAttestations(
       testIdentifierBytes32,
@@ -115,7 +115,7 @@ testWithAnvilL2('FederatedAttestations Wrapper', (provider) => {
       accounts[0],
       testAccountAddress
     )
-    await kit.connection.waitForTransactionReceipt(revokeHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: revokeHash })
 
     const attestationsAfterRevocation = await federatedAttestations.lookupAttestations(
       testIdentifierBytes32,
@@ -147,14 +147,14 @@ testWithAnvilL2('FederatedAttestations Wrapper', (provider) => {
       testAccountAddress,
       TIME_STAMP
     )
-    await kit.connection.waitForTransactionReceipt(register1Hash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: register1Hash })
 
     const register2Hash = await federatedAttestations.registerAttestationAsIssuer(
       secondIdentifierBytes32,
       testAccountAddress,
       TIME_STAMP
     )
-    await kit.connection.waitForTransactionReceipt(register2Hash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: register2Hash })
 
     const identifiersAfterRegistration = await federatedAttestations.lookupIdentifiers(
       testAccountAddress,
@@ -172,7 +172,7 @@ testWithAnvilL2('FederatedAttestations Wrapper', (provider) => {
       [testIdentifierBytes32, secondIdentifierBytes32],
       [testAccountAddress, testAccountAddress]
     )
-    await kit.connection.waitForTransactionReceipt(batchRevokeHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: batchRevokeHash })
 
     const identifiersAfterBatchRevocation = await federatedAttestations.lookupIdentifiers(
       testAccountAddress,

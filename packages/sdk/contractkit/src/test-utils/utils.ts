@@ -8,10 +8,10 @@ export const startAndFinishEpochProcess = async (kit: ContractKit) => {
   const epochManagerWrapper = await kit.contracts.getEpochManager()
 
   const startHash = await epochManagerWrapper.startNextEpochProcess({ from })
-  await kit.connection.waitForTransactionReceipt(startHash)
+  await kit.connection.viemClient.waitForTransactionReceipt({ hash: startHash })
 
   const finishHash = await epochManagerWrapper.finishNextEpochProcessTx({ from })
-  await kit.connection.waitForTransactionReceipt(finishHash)
+  await kit.connection.viemClient.waitForTransactionReceipt({ hash: finishHash })
 }
 
 export const topUpWithToken = async (
@@ -24,6 +24,6 @@ export const topUpWithToken = async (
 
   await withImpersonatedAccount(kit.connection.currentProvider, STABLES_ADDRESS, async () => {
     const hash = await token.transfer(recipientAddress, amount.toFixed(), { from: STABLES_ADDRESS })
-    await kit.connection.waitForTransactionReceipt(hash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
   })
 }

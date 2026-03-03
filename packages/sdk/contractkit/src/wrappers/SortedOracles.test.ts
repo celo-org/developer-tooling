@@ -38,7 +38,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
 
     for (let i = 0; i < rates.length; i++) {
       const hash = await sortedOracles.report(target, rates[i], oracles[i])
-      await kit.connection.waitForTransactionReceipt(hash)
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
     }
   }
 
@@ -83,7 +83,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
       data,
       gasPrice: TEST_GAS_PRICE.toFixed(),
     })
-    const receipt = await kit.connection.waitForTransactionReceipt(txHash)
+    const receipt = await kit.connection.viemClient.waitForTransactionReceipt({ hash: txHash })
     const deployedAddress = receipt.contractAddress!
     const deployedContract = kit.connection.getCeloContract(
       sortedOraclesABI as any,
@@ -99,7 +99,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
       data: initData,
       from: owner,
     })
-    await kit.connection.waitForTransactionReceipt(initHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: initHash })
 
     return new SortedOraclesWrapper(kit.connection, deployedContract as any, kit.registry)
   }
@@ -124,7 +124,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
       data: addData,
       from: owner,
     })
-    await kit.connection.waitForTransactionReceipt(hash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
   }
 
   // NOTE: These values are set in packages/dev-utils/src/migration-override.json,
@@ -180,7 +180,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
           }),
           from: ownerAddress,
         })
-        await kit.connection.waitForTransactionReceipt(hash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
       }
 
       for (const oracle of stableTokenOracles) {
@@ -193,7 +193,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
           }),
           from: ownerAddress,
         })
-        await kit.connection.waitForTransactionReceipt(hash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
       }
 
       for (const oracle of stableTokenEUROracles) {
@@ -206,7 +206,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
           }),
           from: ownerAddress,
         })
-        await kit.connection.waitForTransactionReceipt(hash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
       }
 
       for (const oracle of stableTokenBRLOracles) {
@@ -219,7 +219,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
           }),
           from: ownerAddress,
         })
-        await kit.connection.waitForTransactionReceipt(hash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
       }
     })
 
@@ -239,7 +239,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
       NetworkConfig.stableToken.goldPrice,
       oracleAddress
     )
-    await kit.connection.waitForTransactionReceipt(btcReportHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: btcReportHash })
 
     // We need to setup the stable token oracle with an initial report
     // from the same address as the BTC oracle
@@ -248,7 +248,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
       NetworkConfig.stableToken.goldPrice,
       stableTokenOracleOwner
     )
-    await kit.connection.waitForTransactionReceipt(stableReportHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: stableReportHash })
 
     const expirySeconds = (await stableTokenSortedOracles.reportExpirySeconds()).toNumber()
     await timeTravel(expirySeconds * 2, provider)
@@ -260,7 +260,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
         from: oracleAddress,
       }
     )
-    await kit.connection.waitForTransactionReceipt(removeHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: removeHash })
   })
 
   const testCases: { label: string; reportTarget: ReportTarget }[] = [
@@ -294,7 +294,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
           const initialRates: OracleRate[] = await sortedOracles.getRates(reportTarget)
 
           const hash = await sortedOracles.report(reportTarget, value, oracleAddress)
-          await kit.connection.waitForTransactionReceipt(hash)
+          await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
 
           const resultingRates: OracleRate[] = await sortedOracles.getRates(reportTarget)
           expect(resultingRates).not.toMatchObject(initialRates)
@@ -318,7 +318,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
 
           it('passes the correct lesserKey and greaterKey as args', async () => {
             const hash = await sortedOracles.report(reportTarget, value, oracleAddress)
-            await kit.connection.waitForTransactionReceipt(hash)
+            await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
 
             const resultingRates: OracleRate[] = await sortedOracles.getRates(reportTarget)
             expect(resultingRates.map((r) => r.address)).toEqual(expectedOracleOrder)
@@ -326,7 +326,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
 
           it('inserts the new record in the right place', async () => {
             const hash = await sortedOracles.report(reportTarget, value, oracleAddress)
-            await kit.connection.waitForTransactionReceipt(hash)
+            await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
 
             const resultingRates: OracleRate[] = await sortedOracles.getRates(reportTarget)
 
@@ -376,7 +376,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
           const hash = await sortedOracles.removeExpiredReports(reportTarget, 1, {
             from: oracleAddress,
           })
-          await kit.connection.waitForTransactionReceipt(hash)
+          await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
 
           expect(await sortedOracles.numRates(reportTarget)).toEqual(initialReportCount - 1)
         })
@@ -386,7 +386,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
           const hash = await sortedOracles.removeExpiredReports(reportTarget, toRemove, {
             from: oracleAddress,
           })
-          await kit.connection.waitForTransactionReceipt(hash)
+          await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
 
           expect(await sortedOracles.numRates(reportTarget)).toEqual(
             initialReportCount - expiredOracles.length
@@ -402,7 +402,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
         const hash = await sortedOracles.removeExpiredReports(reportTarget, 1, {
           from: oracleAddress,
         })
-        await kit.connection.waitForTransactionReceipt(hash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
 
         expect(await sortedOracles.numRates(reportTarget)).toEqual(initialReportCount)
       })
@@ -504,7 +504,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
   describe('#reportStableToken', () => {
     it('calls report with the address for StableToken (USDm) by default', async () => {
       const hash = await stableTokenSortedOracles.reportStableToken(14, oracleAddress)
-      await kit.connection.waitForTransactionReceipt(hash)
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
       const rates = await stableTokenSortedOracles.getRates(CeloContract.StableToken)
       expect(rates.some((r) => r.address === oracleAddress)).toBe(true)
     })
@@ -513,7 +513,7 @@ testWithAnvilL2('SortedOracles Wrapper', (provider) => {
       for (const token of Object.values(StableToken)) {
         it(`calls report with token ${token}`, async () => {
           const hash = await stableTokenSortedOracles.reportStableToken(14, oracleAddress, token)
-          await kit.connection.waitForTransactionReceipt(hash)
+          await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
         })
       }
     })

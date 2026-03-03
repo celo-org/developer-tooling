@@ -292,7 +292,7 @@ export class AccountsWrapper extends BaseWrapper<typeof accountsABI> {
     await this.onlyVersionOrGreater(this.RELEASE_4_VERSION)
     const [accounts, chainId] = await Promise.all([
       this.connection.getAccounts(),
-      this.connection.chainId(),
+      this.connection.viemClient.getChainId(),
       // This IS the accounts contract wrapper no need to get it
     ])
     const account = this.connection.defaultAccount || accounts[0]

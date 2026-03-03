@@ -40,9 +40,9 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
 
     for (const account of accounts.slice(0, 4)) {
       const createHash = await accountWrapper.createAccount({ from: account })
-      await kit.connection.waitForTransactionReceipt(createHash)
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: createHash })
       const lockHash = await lockedGold.lock({ from: account, value: ONE_CGLD })
-      await kit.connection.waitForTransactionReceipt(lockHash)
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: lockHash })
     }
   })
 
@@ -100,20 +100,20 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
           from: proposer,
           value: minDeposit,
         })
-        await kit.connection.waitForTransactionReceipt(hash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
       }
 
       const hash = await governance.propose(proposal, 'URL', { from: proposer, value: minDeposit })
-      await kit.connection.waitForTransactionReceipt(hash)
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
     }
 
     const upvoteFn = async (upvoter: Address, shouldTimeTravel = true, proposalId?: BigNumber) => {
       const hash = await governance.upvote(proposalId ?? proposalID, upvoter, { from: upvoter })
-      await kit.connection.waitForTransactionReceipt(hash)
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
       if (shouldTimeTravel) {
         await timeTravel(dequeueFrequency, provider)
         const dequeueHash = await governance.dequeueProposalsIfReady()
-        await kit.connection.waitForTransactionReceipt(dequeueHash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: dequeueHash })
       }
     }
 
@@ -129,13 +129,13 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
           '0',
           { from: ownerAddress }
         )
-        await kit.connection.waitForTransactionReceipt(hash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
       })
     }
 
     const voteFn = async (voter: Address) => {
       const hash = await governance.vote(proposalID, 'Yes', { from: voter })
-      await kit.connection.waitForTransactionReceipt(hash)
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
       await timeTravel(referendumStageDuration, provider)
     }
 
@@ -193,7 +193,7 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
       const upvoteRecord = await governance.getUpvoteRecord(accounts[1])
 
       const hash = await governance.revokeUpvote(accounts[1], { from: accounts[1] })
-      await kit.connection.waitForTransactionReceipt(hash)
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
 
       const after = await governance.getUpvotes(proposalId)
       expect(after).toEqBigNumber(before.minus(upvoteRecord.upvotes))
@@ -203,7 +203,7 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
       await proposeFn(accounts[0])
       await timeTravel(dequeueFrequency, provider)
       const dequeueHash = await governance.dequeueProposalsIfReady()
-      await kit.connection.waitForTransactionReceipt(dequeueHash)
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: dequeueHash })
       await approveFn()
 
       const approved = await governance.isApproved(proposalID)
@@ -214,7 +214,7 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
       await proposeFn(accounts[0])
       await timeTravel(dequeueFrequency, provider)
       const dequeueHash = await governance.dequeueProposalsIfReady()
-      await kit.connection.waitForTransactionReceipt(dequeueHash)
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: dequeueHash })
       await approveFn()
       await voteFn(accounts[2])
 
@@ -228,7 +228,7 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
       await proposeFn(accounts[0])
       await timeTravel(dequeueFrequency, provider)
       const dequeueHash = await governance.dequeueProposalsIfReady()
-      await kit.connection.waitForTransactionReceipt(dequeueHash)
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: dequeueHash })
       await approveFn()
       await voteFn(voter)
 
@@ -246,7 +246,7 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
       await proposeFn(accounts[0])
       await timeTravel(dequeueFrequency, provider)
       const dequeueHash = await governance.dequeueProposalsIfReady()
-      await kit.connection.waitForTransactionReceipt(dequeueHash)
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: dequeueHash })
       await approveFn()
 
       const yes = 10
@@ -256,7 +256,7 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
       const hash = await governance.votePartially(proposalID, yes, no, abstain, {
         from: accounts[2],
       })
-      await kit.connection.waitForTransactionReceipt(hash)
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
       await timeTravel(referendumStageDuration, provider)
 
       const votes = await governance.getVotes(proposalID)
@@ -274,12 +274,12 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
         await proposeFn(accounts[0])
         await timeTravel(dequeueFrequency, provider)
         const dequeueHash = await governance.dequeueProposalsIfReady()
-        await kit.connection.waitForTransactionReceipt(dequeueHash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: dequeueHash })
         await approveFn()
         await voteFn(accounts[2])
 
         const hash = await governance.execute(proposalID)
-        await kit.connection.waitForTransactionReceipt(hash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
 
         const exists = await governance.proposalExists(proposalID)
         expect(exists).toBeFalsy()
@@ -293,7 +293,7 @@ testWithAnvilL2('Governance Wrapper', (provider) => {
         await proposeFn(accounts[0])
         await timeTravel(dequeueFrequency, provider)
         const dequeueHash = await governance.dequeueProposalsIfReady()
-        await kit.connection.waitForTransactionReceipt(dequeueHash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: dequeueHash })
         await approveFn()
         await voteFn(accounts[2])
 

@@ -53,23 +53,23 @@ testWithAnvilL2('Election Wrapper', (provider) => {
   ) => {
     if (!(await accountsInstance.isAccount(account))) {
       const hash = await accountsInstance.createAccount({ from: account })
-      await kit.connection.waitForTransactionReceipt(hash)
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
     }
     const lockHash = await lockedGold.lock({ from: account, value })
-    await kit.connection.waitForTransactionReceipt(lockHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: lockHash })
   }
 
   const setupGroup = async (groupAccount: string) => {
     await registerAccountWithLockedGold(groupAccount, new BigNumber(minLockedGoldValue).toFixed())
     const hash = await validators.registerValidatorGroup(GROUP_COMMISSION, { from: groupAccount })
-    await kit.connection.waitForTransactionReceipt(hash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
   }
 
   const setupValidator = async (validatorAccount: string) => {
     await registerAccountWithLockedGold(validatorAccount)
     const ecdsaPublicKey = await addressToPublicKey(validatorAccount, kit.connection.sign)
     const hash = await validators.registerValidatorNoBls(ecdsaPublicKey, { from: validatorAccount })
-    await kit.connection.waitForTransactionReceipt(hash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
   }
 
   const setupGroupAndAffiliateValidator = async (
@@ -79,23 +79,23 @@ testWithAnvilL2('Election Wrapper', (provider) => {
     await setupGroup(groupAccount)
     await setupValidator(validatorAccount)
     const affiliateHash = await validators.affiliate(groupAccount, { from: validatorAccount })
-    await kit.connection.waitForTransactionReceipt(affiliateHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: affiliateHash })
     const addMemberHash = await validators.addMember(groupAccount, validatorAccount, {
       from: groupAccount,
     })
-    await kit.connection.waitForTransactionReceipt(addMemberHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: addMemberHash })
   }
 
   const activateAndVote = async (groupAccount: string, userAccount: string, amount: BigNumber) => {
     const voteHash = await election.vote(groupAccount, amount, { from: userAccount })
-    await kit.connection.waitForTransactionReceipt(voteHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: voteHash })
     const epochDuraction = await kit.getEpochSize()
     await timeTravel(epochDuraction + 1, provider)
     await startAndFinishEpochProcess(kit)
 
     const hashes = await election.activate(userAccount, undefined, { from: userAccount })
     for (const hash of hashes) {
-      await kit.connection.waitForTransactionReceipt(hash)
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
     }
   }
 
@@ -122,7 +122,7 @@ testWithAnvilL2('Election Wrapper', (provider) => {
 
       test('shows empty group as ineligible', async () => {
         const deaffiliateHash = await validators.deaffiliate({ from: validatorAccount })
-        await kit.connection.waitForTransactionReceipt(deaffiliateHash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: deaffiliateHash })
         const groupVotesAfter = await election.getValidatorGroupVotes(groupAccount)
         expect(groupVotesAfter.eligible).toBe(false)
       })
@@ -131,7 +131,7 @@ testWithAnvilL2('Election Wrapper', (provider) => {
     describe('#vote', () => {
       beforeEach(async () => {
         const hash = await election.vote(groupAccount, ONE_HUNDRED_GOLD, { from: userAccount })
-        await kit.connection.waitForTransactionReceipt(hash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
       }, 60000)
       it('votes', async () => {
         const totalGroupVotes = await election.getTotalVotesForGroup(groupAccount)
@@ -140,7 +140,7 @@ testWithAnvilL2('Election Wrapper', (provider) => {
 
       test('total votes remain unchanged when group becomes ineligible', async () => {
         const deaffiliateHash = await validators.deaffiliate({ from: validatorAccount })
-        await kit.connection.waitForTransactionReceipt(deaffiliateHash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: deaffiliateHash })
         const totalGroupVotes = await election.getTotalVotesForGroup(groupAccount)
         expect(totalGroupVotes).toEqual(ONE_HUNDRED_GOLD)
       })
@@ -149,7 +149,7 @@ testWithAnvilL2('Election Wrapper', (provider) => {
     describe('#activate', () => {
       beforeEach(async () => {
         const voteHash = await election.vote(groupAccount, ONE_HUNDRED_GOLD, { from: userAccount })
-        await kit.connection.waitForTransactionReceipt(voteHash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: voteHash })
         const epochDuraction = await kit.getEpochSize()
 
         await timeTravel(epochDuraction + 1, provider)
@@ -158,7 +158,7 @@ testWithAnvilL2('Election Wrapper', (provider) => {
 
         const hashes = await election.activate(userAccount, undefined, { from: userAccount })
         for (const hash of hashes) {
-          await kit.connection.waitForTransactionReceipt(hash)
+          await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
         }
       }, 60000)
 
@@ -169,7 +169,7 @@ testWithAnvilL2('Election Wrapper', (provider) => {
 
       test('active votes remain unchanged when group becomes ineligible', async () => {
         const deaffiliateHash = await validators.deaffiliate({ from: validatorAccount })
-        await kit.connection.waitForTransactionReceipt(deaffiliateHash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: deaffiliateHash })
         const activeVotes = await election.getActiveVotesForGroup(groupAccount)
         expect(activeVotes).toEqual(ONE_HUNDRED_GOLD)
       })
@@ -189,7 +189,7 @@ testWithAnvilL2('Election Wrapper', (provider) => {
           undefined,
           { from: userAccount }
         )
-        await kit.connection.waitForTransactionReceipt(hash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
 
         const remainingVotes = await election.getTotalVotesForGroup(groupAccount)
         expect(remainingVotes).toEqual(ZERO_GOLD)
@@ -197,7 +197,7 @@ testWithAnvilL2('Election Wrapper', (provider) => {
 
       it('revokes active when group is ineligible', async () => {
         const deaffiliateHash = await validators.deaffiliate({ from: validatorAccount })
-        await kit.connection.waitForTransactionReceipt(deaffiliateHash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: deaffiliateHash })
         const hash = await election.revokeActive(
           userAccount,
           groupAccount,
@@ -206,7 +206,7 @@ testWithAnvilL2('Election Wrapper', (provider) => {
           undefined,
           { from: userAccount }
         )
-        await kit.connection.waitForTransactionReceipt(hash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
 
         const remainingVotes = await election.getTotalVotesForGroup(groupAccount)
         expect(remainingVotes).toEqual(ZERO_GOLD)
@@ -216,25 +216,25 @@ testWithAnvilL2('Election Wrapper', (provider) => {
     describe('#revokePending', () => {
       beforeEach(async () => {
         const hash = await election.vote(groupAccount, ONE_HUNDRED_GOLD, { from: userAccount })
-        await kit.connection.waitForTransactionReceipt(hash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
       })
 
       it('revokes pending', async () => {
         const hash = await election.revokePending(userAccount, groupAccount, ONE_HUNDRED_GOLD, {
           from: userAccount,
         })
-        await kit.connection.waitForTransactionReceipt(hash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
         const remainingVotes = await election.getTotalVotesForGroup(groupAccount)
         expect(remainingVotes).toEqual(ZERO_GOLD)
       })
 
       it('revokes pending when group is ineligible', async () => {
         const deaffiliateHash = await validators.deaffiliate({ from: validatorAccount })
-        await kit.connection.waitForTransactionReceipt(deaffiliateHash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: deaffiliateHash })
         const hash = await election.revokePending(userAccount, groupAccount, ONE_HUNDRED_GOLD, {
           from: userAccount,
         })
-        await kit.connection.waitForTransactionReceipt(hash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
         const remainingVotes = await election.getTotalVotesForGroup(groupAccount)
         expect(remainingVotes).toEqual(ZERO_GOLD)
       })
@@ -244,7 +244,7 @@ testWithAnvilL2('Election Wrapper', (provider) => {
       beforeEach(async () => {
         await activateAndVote(groupAccount, userAccount, TWO_HUNDRED_GOLD)
         const voteHash = await election.vote(groupAccount, ONE_HUNDRED_GOLD, { from: userAccount })
-        await kit.connection.waitForTransactionReceipt(voteHash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: voteHash })
       }, 60000)
 
       it('revokes active and pending votes', async () => {
@@ -252,7 +252,7 @@ testWithAnvilL2('Election Wrapper', (provider) => {
           from: userAccount,
         })
         for (const hash of hashes) {
-          await kit.connection.waitForTransactionReceipt(hash)
+          await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
         }
         const remainingVotes = await election.getTotalVotesForGroup(groupAccount)
         expect(remainingVotes).toEqual(ZERO_GOLD)
@@ -260,12 +260,12 @@ testWithAnvilL2('Election Wrapper', (provider) => {
 
       it('revokes active and pending votes when group is ineligible', async () => {
         const deaffiliateHash = await validators.deaffiliate({ from: validatorAccount })
-        await kit.connection.waitForTransactionReceipt(deaffiliateHash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: deaffiliateHash })
         const hashes = await election.revoke(userAccount, groupAccount, THREE_HUNDRED_GOLD, {
           from: userAccount,
         })
         for (const hash of hashes) {
-          await kit.connection.waitForTransactionReceipt(hash)
+          await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
         }
         const remainingVotes = await election.getTotalVotesForGroup(groupAccount)
         expect(remainingVotes).toEqual(ZERO_GOLD)
@@ -308,12 +308,12 @@ testWithAnvilL2('Election Wrapper', (provider) => {
 
     test('Validator groups should be in the correct order', async () => {
       const voteHash = await election.vote(groupAccountA, ONE_HUNDRED_GOLD, { from: userAccount })
-      await kit.connection.waitForTransactionReceipt(voteHash)
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: voteHash })
       const revokeHashes = await election.revoke(userAccount, groupAccountA, TWO_HUNDRED_GOLD, {
         from: userAccount,
       })
       for (const hash of revokeHashes) {
-        await kit.connection.waitForTransactionReceipt(hash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
       }
       const groupOrder = await election.findLesserAndGreaterAfterVote(groupAccountA, ZERO_GOLD)
       expect(groupOrder).toEqual({ lesser: NULL_ADDRESS, greater: groupAccountC })

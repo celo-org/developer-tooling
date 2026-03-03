@@ -44,7 +44,12 @@ export class GoldTokenWrapper extends CeloTokenWrapper<typeof goldTokenABI> {
    * @param owner The address to query the balance of.
    * @return The balance of the specified address.
    */
-  balanceOf = (account: Address) => this.connection.getBalance(account).then(valueToBigNumber)
+  balanceOf = async (account: Address) => {
+    const balance = await this.connection.viemClient.getBalance({
+      address: account as `0x${string}`,
+    })
+    return valueToBigNumber(balance.toString())
+  }
 }
 
 export type GoldTokenWrapperType = GoldTokenWrapper

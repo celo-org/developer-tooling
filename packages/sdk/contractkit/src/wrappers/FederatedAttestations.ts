@@ -143,7 +143,7 @@ export class FederatedAttestationsWrapper extends BaseWrapper<typeof federatedAt
     issuedOn: number,
     txParams?: Omit<CeloTx, 'data'>
   ): Promise<`0x${string}`> {
-    const chainId = await this.connection.chainId()
+    const chainId = await this.connection.viemClient.getChainId()
     const typedData = buildRegisterAttestationTypedData(chainId, this.address, {
       identifier,
       issuer,

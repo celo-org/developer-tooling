@@ -118,7 +118,7 @@ export class AttestationsWrapper extends BaseWrapper<typeof attestationsABI> {
   isAttestationExpired = async (attestationRequestBlockNumber: number) => {
     // We duplicate the implementation here, until Attestation.sol->isAttestationExpired is not external
     const attestationExpiryBlocks = await this.attestationExpiryBlocks()
-    const blockNumber = await this.connection.getBlockNumber()
+    const blockNumber = Number(await this.connection.viemClient.getBlockNumber())
     return blockNumber >= attestationRequestBlockNumber + attestationExpiryBlocks
   }
 

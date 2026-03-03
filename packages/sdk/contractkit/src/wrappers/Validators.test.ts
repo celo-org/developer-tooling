@@ -28,10 +28,10 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
   ) => {
     if (!(await accountsInstance.isAccount(account))) {
       const hash = await accountsInstance.createAccount({ from: account })
-      await kit.connection.waitForTransactionReceipt(hash)
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
     }
     const lockHash = await lockedGold.lock({ from: account, value })
-    await kit.connection.waitForTransactionReceipt(lockHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: lockHash })
   }
 
   beforeAll(async () => {
@@ -47,14 +47,14 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
       new BigNumber(minLockedGoldValue).times(members).toFixed()
     )
     const hash = await validators.registerValidatorGroup(new BigNumber(0.1), { from: groupAccount })
-    await kit.connection.waitForTransactionReceipt(hash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
   }
 
   const setupValidator = async (validatorAccount: string) => {
     await registerAccountWithLockedGold(validatorAccount)
     const ecdsaPublicKey = await addressToPublicKey(validatorAccount, kit.connection.sign)
     const hash = await validators.registerValidatorNoBls(ecdsaPublicKey, { from: validatorAccount })
-    await kit.connection.waitForTransactionReceipt(hash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
   }
 
   it('registers a validator group', async () => {
@@ -75,11 +75,11 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
     await setupGroup(groupAccount)
     await setupValidator(validatorAccount)
     const affiliateHash = await validators.affiliate(groupAccount, { from: validatorAccount })
-    await kit.connection.waitForTransactionReceipt(affiliateHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: affiliateHash })
     const addMemberHash = await validators.addMember(groupAccount, validatorAccount, {
       from: groupAccount,
     })
-    await kit.connection.waitForTransactionReceipt(addMemberHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: addMemberHash })
 
     const members = await validators.getValidatorGroup(groupAccount).then((group) => group.members)
     expect(members).toContain(validatorAccount)
@@ -89,7 +89,7 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
     const groupAccount = accounts[0]
     await setupGroup(groupAccount)
     const hash = await validators.setNextCommissionUpdate('0.2', { from: groupAccount })
-    await kit.connection.waitForTransactionReceipt(hash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
     const commission = (await validators.getValidatorGroup(groupAccount)).nextCommission
     expect(commission).toEqBigNumber('0.2')
   })
@@ -104,10 +104,10 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
     await mineBlocks(1, provider)
 
     const setHash = await validators.setNextCommissionUpdate('0.2', txOpts)
-    await kit.connection.waitForTransactionReceipt(setHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: setHash })
     await mineBlocks(3, provider)
     const updateHash = await validators.updateCommission(txOpts)
-    await kit.connection.waitForTransactionReceipt(updateHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: updateHash })
 
     const commission = (await validators.getValidatorGroup(groupAccount)).commission
     expect(commission).toEqBigNumber('0.2')
@@ -119,7 +119,7 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
     await setupGroup(groupAccount)
     await setupValidator(validatorAccount)
     const affiliateHash = await validators.affiliate(groupAccount, { from: validatorAccount })
-    await kit.connection.waitForTransactionReceipt(affiliateHash)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: affiliateHash })
     const group = await validators.getValidatorGroup(groupAccount)
     expect(group.affiliates).toContain(validatorAccount)
   })
@@ -140,11 +140,11 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
       for (const validator of [validator1, validator2]) {
         await setupValidator(validator)
         const affiliateHash = await validators.affiliate(groupAccount, { from: validator })
-        await kit.connection.waitForTransactionReceipt(affiliateHash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: affiliateHash })
         const addMemberHash = await validators.addMember(groupAccount, validator, {
           from: groupAccount,
         })
-        await kit.connection.waitForTransactionReceipt(addMemberHash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: addMemberHash })
       }
 
       const members = await validators
@@ -159,7 +159,7 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
       const hash = await validators.reorderMember(groupAccount, validator2, 0, {
         from: groupAccount,
       })
-      await kit.connection.waitForTransactionReceipt(hash)
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
 
       const membersAfter = await validators
         .getValidatorGroup(groupAccount)
@@ -174,7 +174,7 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
       const hash = await validators.reorderMember(groupAccount, validator1, 1, {
         from: groupAccount,
       })
-      await kit.connection.waitForTransactionReceipt(hash)
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
 
       const membersAfter = await validators
         .getValidatorGroup(groupAccount)
@@ -189,7 +189,7 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
       const hash = await validators.reorderMember(groupAccount, validator2.toLowerCase(), 0, {
         from: groupAccount,
       })
-      await kit.connection.waitForTransactionReceipt(hash)
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
 
       const membersAfter = await validators
         .getValidatorGroup(groupAccount)
@@ -214,7 +214,7 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
     it("can fetch block's epoch information", async () => {
       await startAndFinishEpochProcess(kit)
       const epochNumberOfBlockPromise = validators.getEpochNumberOfBlock(
-        await kit.connection.getBlockNumber()
+        Number(await kit.connection.viemClient.getBlockNumber())
       )
       expect(typeof (await epochNumberOfBlockPromise)).toBe('number')
     })

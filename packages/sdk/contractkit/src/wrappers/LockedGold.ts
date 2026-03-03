@@ -113,12 +113,11 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<typeof lockedGold
     )
 
   getMaxDelegateesCount = async () => {
-    const maxDelegateesCountHex = await this.connection.getStorageAt(
-      // @ts-ignore
-      this.contract.address,
-      10
-    )
-    return new BigNumber(maxDelegateesCountHex, 16)
+    const maxDelegateesCountHex = await this.connection.viemClient.getStorageAt({
+      address: this.contract.address,
+      slot: '0xa',
+    })
+    return new BigNumber(maxDelegateesCountHex ?? '0x0', 16)
   }
 
   private _getAccountTotalDelegatedFraction = async (account: string) => {

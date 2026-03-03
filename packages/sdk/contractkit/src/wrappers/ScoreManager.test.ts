@@ -33,7 +33,7 @@ testWithAnvilL2('ScoreManager Wrapper', (provider) => {
           data,
           from,
         })
-        await kit.connection.waitForTransactionReceipt(hash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
       },
       new BigNumber('1e18')
     )
@@ -66,7 +66,7 @@ testWithAnvilL2('ScoreManager Wrapper', (provider) => {
           data,
           from,
         })
-        await kit.connection.waitForTransactionReceipt(hash)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
       },
       new BigNumber('1e18')
     )
