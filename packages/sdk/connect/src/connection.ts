@@ -327,7 +327,9 @@ export class Connection {
 
     if (isEmpty(tx.maxFeePerGas)) {
       const baseFee = isEmpty(tx.feeCurrency)
-        ? await this.getBlock('latest').then((block) => block.baseFeePerGas)
+        ? await this._viemClient
+            .getBlock({ blockTag: 'latest' })
+            .then((block) => block.baseFeePerGas)
         : await this.gasPrice(tx.feeCurrency)
       const withBuffer = addBufferToBaseFee(BigInt(baseFee!))
       const maxFeePerGas =
@@ -557,7 +559,7 @@ export class Connection {
       this._viemClient,
       this.walletClient,
       () => this.config.from,
-      () => this.chainId()
+      () => this._viemClient.getChainId()
     )
   }
 

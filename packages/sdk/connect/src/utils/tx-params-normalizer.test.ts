@@ -71,7 +71,7 @@ describe('TxParamsNormalizer class', () => {
       const newCeloTx2 = await populator.populate(celoTx)
       expect(newCeloTx2.chainId).toBe(27)
 
-      // eth_chainId should only be called once due to caching in Connection
+      // eth_chainId should only be called once due to caching in TxParamsNormalizer
       const chainIdCalls = mockRpcHandler.mock.calls.filter(
         (call: any[]) => call[0] === 'eth_chainId'
       )

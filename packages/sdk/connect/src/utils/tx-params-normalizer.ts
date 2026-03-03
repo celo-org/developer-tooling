@@ -20,7 +20,10 @@ export class TxParamsNormalizer {
         },
         async () => {
           if (txParams.nonce == null) {
-            return this.connection.getTransactionCount(txParams.from!.toString())
+            return this.connection.viemClient.getTransactionCount({
+              address: txParams.from!.toString() as `0x${string}`,
+              blockTag: 'pending',
+            })
           }
           return txParams.nonce
         },
@@ -73,7 +76,7 @@ export class TxParamsNormalizer {
 
   private async getChainId(): Promise<number> {
     if (this.chainId === null) {
-      this.chainId = await this.connection.chainId()
+      this.chainId = await this.connection.viemClient.getChainId()
     }
     return this.chainId
   }
