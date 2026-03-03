@@ -105,7 +105,7 @@ export const decodeStringParameter = (str: string): string => {
 
 /** @internal */
 export const decodeParametersToObject = (
-  types: (string | AbiInput)[],
+  types: readonly (string | AbiInput)[],
   hex: string
 ): DecodedParamsObject => {
   const abiParams = types.map((type) =>

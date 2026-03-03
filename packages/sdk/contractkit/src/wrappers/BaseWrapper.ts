@@ -1,7 +1,7 @@
 import { StrongAddress, bufferToHex, ensureLeading0x } from '@celo/base/lib/address'
 
 import { type CeloContract, Connection, type EventLog, type PastEventOptions } from '@celo/connect'
-import type { AbiItem } from '@celo/connect/lib/abi-types'
+import type { AbiItem } from '@celo/connect'
 import { coerceArgsForAbi } from '@celo/connect/lib/viem-abi-coder'
 import { decodeParametersToObject } from '@celo/connect/lib/utils/abi-utils'
 import type { PublicClient } from 'viem'

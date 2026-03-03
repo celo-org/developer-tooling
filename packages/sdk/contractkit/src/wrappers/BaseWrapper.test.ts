@@ -1,6 +1,6 @@
 import { NULL_ADDRESS } from '@celo/base'
 import { Connection, Provider } from '@celo/connect'
-import type { AbiItem } from '@celo/connect/lib/abi-types'
+import type { AbiItem } from '@celo/connect'
 import { encodeAbiParameters, type AbiParameter } from 'viem'
 import BigNumber from 'bignumber.js'
 import type { PublicClient } from 'viem'

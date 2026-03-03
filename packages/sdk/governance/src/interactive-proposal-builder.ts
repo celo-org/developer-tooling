@@ -80,7 +80,7 @@ export class InteractiveProposalBuilder {
           },
         })
 
-        const answer: string = inputAnswer[functionInput.name]
+        const answer: string = inputAnswer[functionInput.name!]
         // transformedValue may not be in scientific notation
         const transformedValue =
           functionInput.type === 'uint256' ? new BigNumber(answer).toString(10) : answer

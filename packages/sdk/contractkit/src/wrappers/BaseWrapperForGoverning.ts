@@ -1,5 +1,5 @@
 import { Connection, CeloContract } from '@celo/connect'
-import type { AbiItem } from '@celo/connect/lib/abi-types'
+import type { AbiItem } from '@celo/connect'
 import { AccountsWrapper } from './Accounts'
 import { BaseWrapper } from './BaseWrapper'
 import { ElectionWrapper } from './Election'

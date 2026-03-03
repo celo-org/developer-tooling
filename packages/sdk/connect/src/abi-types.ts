@@ -1,5 +1,33 @@
+import type { AbiParameter } from 'viem'
+
+/** @internal - Matches viem's AbiParameter, extended with indexed for event inputs */
+export type AbiInput = AbiParameter & { indexed?: boolean }
+/** @internal - Matches viem's AbiParameter */
+export type AbiOutput = AbiParameter
+
+type AbiType = 'function' | 'constructor' | 'event' | 'fallback'
+type StateMutabilityType = 'pure' | 'view' | 'nonpayable' | 'payable'
+
 /** @internal */
-export type ABIType = 'uint256' | 'boolean' | 'string' | 'bytes' | string // TODO complete list
+export interface AbiItem {
+  anonymous?: boolean
+  constant?: boolean
+  inputs?: readonly AbiInput[]
+  name?: string
+  outputs?: readonly AbiOutput[]
+  payable?: boolean
+  stateMutability?: StateMutabilityType
+  type: AbiType
+  gas?: number
+}
+
+/** @internal */
+export interface ABIDefinition extends AbiItem {
+  signature: string
+}
+
+/** @internal */
+export type ABIType = string
 
 /** @internal */
 export interface DecodedParamsArray {
@@ -10,41 +38,4 @@ export interface DecodedParamsArray {
 /** @internal */
 export interface DecodedParamsObject extends DecodedParamsArray {
   [key: string]: unknown
-}
-
-// Note the following types were originally derived from web3-utils and are now maintained locally: AbiInput, AbiOutput, AbiItem, AbiType, StateMutabilityType, ABIDefinition
-type AbiType = 'function' | 'constructor' | 'event' | 'fallback'
-type StateMutabilityType = 'pure' | 'view' | 'nonpayable' | 'payable'
-
-/** @internal */
-export interface AbiInput {
-  name: string
-  type: string
-  indexed?: boolean
-  components?: AbiInput[]
-  internalType?: string
-}
-
-/** @internal */
-export interface AbiOutput {
-  name: string
-  type: string
-  components?: AbiOutput[]
-  internalType?: string
-}
-/** @internal */
-export interface AbiItem {
-  anonymous?: boolean
-  constant?: boolean
-  inputs?: AbiInput[]
-  name?: string
-  outputs?: AbiOutput[]
-  payable?: boolean
-  stateMutability?: StateMutabilityType
-  type: AbiType
-  gas?: number
-}
-/** @internal */
-export interface ABIDefinition extends AbiItem {
-  signature: string
 }
