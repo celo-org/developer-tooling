@@ -1,5 +1,5 @@
-import { ABIDefinition, Address, AbiInput, CeloTxReceipt, EventLog, Log } from '@celo/connect'
-import { decodeEventLog, toEventHash } from 'viem'
+import { ABIDefinition, Address, AbiInput, EventLog } from '@celo/connect'
+import { decodeEventLog, toEventHash, type TransactionReceipt } from 'viem'
 import { ContractKit } from '@celo/contractkit'
 import { ContractDetails, mapFromPairs, obtainKitContractDetails } from './base'
 
@@ -48,11 +48,17 @@ export class LogExplorer {
     }
   }
 
-  async fetchTxReceipt(txhash: string): Promise<CeloTxReceipt | null> {
-    return this.kit.connection.getTransactionReceipt(txhash)
+  async fetchTxReceipt(txhash: string): Promise<TransactionReceipt | null> {
+    try {
+      return await this.kit.connection.viemClient.getTransactionReceipt({
+        hash: txhash as `0x${string}`,
+      })
+    } catch {
+      return null
+    }
   }
 
-  getKnownLogs(tx: CeloTxReceipt): EventLog[] {
+  getKnownLogs(tx: TransactionReceipt): EventLog[] {
     const res: EventLog[] = []
     for (const log of tx.logs || []) {
       const event = this.tryParseLog(log)
@@ -63,7 +69,7 @@ export class LogExplorer {
     return res
   }
 
-  tryParseLog(log: Log): null | EventLog {
+  tryParseLog(log: TransactionReceipt['logs'][number]): null | EventLog {
     if (log.topics.length === 0) {
       return null
     }
@@ -73,6 +79,9 @@ export class LogExplorer {
       return null
     }
     const logSignature = log.topics[0]
+    if (logSignature == null) {
+      return null
+    }
     const matchedAbi = contractMapping.logMapping.get(logSignature)
     if (matchedAbi == null) {
       return null
@@ -103,7 +112,7 @@ export class LogExplorer {
       const logEvent: EventLog & { signature: string } = {
         address: log.address,
         blockHash: log.blockHash,
-        blockNumber: log.blockNumber,
+        blockNumber: Number(log.blockNumber),
         logIndex: log.logIndex,
         transactionIndex: log.transactionIndex,
         transactionHash: log.transactionHash,

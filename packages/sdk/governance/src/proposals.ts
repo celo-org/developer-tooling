@@ -3,7 +3,6 @@ import { Address, trimLeading0x } from '@celo/base/lib/address'
 import {
   type AbiItem,
   AbiInput,
-  CeloTxPending,
   decodeParametersToObject,
   getAbiByName,
   parseDecodedParams,
@@ -83,7 +82,9 @@ export const registryRepointArgs = (
   tx: Pick<ExternalProposalTransactionJSON, 'args' | 'contract' | 'function'>
 ) => {
   if (!isRegistryRepoint(tx)) {
-    throw new Error(`Proposal transaction not a registry repoint:\n${JSON.stringify(tx, bigintReplacer, 2)}`)
+    throw new Error(
+      `Proposal transaction not a registry repoint:\n${JSON.stringify(tx, bigintReplacer, 2)}`
+    )
   }
   return {
     name: tx.args[0] as CeloContract,
@@ -102,7 +103,9 @@ const isRegistryRepointRaw = (tx: ProposalTransaction) =>
 
 const registryRepointRawArgs = (tx: ProposalTransaction) => {
   if (!isRegistryRepointRaw(tx)) {
-    throw new Error(`Proposal transaction not a registry repoint:\n${JSON.stringify(tx, bigintReplacer, 2)}`)
+    throw new Error(
+      `Proposal transaction not a registry repoint:\n${JSON.stringify(tx, bigintReplacer, 2)}`
+    )
   }
   const params = decodeParametersToObject(setAddressAbi.inputs!, trimLeading0x(tx.input).slice(8))
   return {
@@ -152,22 +155,22 @@ export const proposalToJSON = async (
   const proposalJson: ProposalTransactionJSON[] = []
 
   for (const tx of proposal) {
-    const parsedTx = await blockExplorer.tryParseTx(tx as CeloTxPending)
-    if (parsedTx == null) {
+    const callDetails = await blockExplorer.tryParseTxInput(tx.to!, tx.input)
+    if (callDetails == null) {
       throw new Error(`Unable to parse ${JSON.stringify(tx, bigintReplacer)} with block explorer`)
     }
-    if (isRegistryRepointRaw(tx) && parsedTx.callDetails.isCoreContract) {
+    if (isRegistryRepointRaw(tx) && callDetails.isCoreContract) {
       const args = registryRepointRawArgs(tx)
       await updateRegistryMapping(args.name, args.address)
     }
 
     const jsonTx: ProposalTransactionJSON = {
-      contract: parsedTx.callDetails.contract as CeloContract,
-      address: parsedTx.callDetails.contractAddress,
-      function: parsedTx.callDetails.function,
-      args: parsedTx.callDetails.argList,
-      params: parsedTx.callDetails.paramMap,
-      value: parsedTx.tx.value,
+      contract: callDetails.contract as CeloContract,
+      address: callDetails.contractAddress,
+      function: callDetails.function,
+      args: callDetails.argList,
+      params: callDetails.paramMap,
+      value: tx.value,
     }
 
     if (isProxySetFunction(jsonTx)) {
@@ -176,7 +179,7 @@ export const proposalToJSON = async (
     } else if (isProxySetAndInitFunction(jsonTx)) {
       await blockExplorer.setProxyOverride(tx.to!, jsonTx.args[0])
       let initAbi
-      if (parsedTx.callDetails.isCoreContract) {
+      if (callDetails.isCoreContract) {
         jsonTx.contract = suffixProxy(jsonTx.contract)
         initAbi = getInitializeAbiOfImplementation(jsonTx.contract as any)
       } else {

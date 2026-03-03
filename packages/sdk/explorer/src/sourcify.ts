@@ -27,7 +27,10 @@ function abiItemToSignatureString(item: AbiItem): string {
   return item.name || ''
 }
 
-function formatAbiInputType(input: AbiInput): string {
+/** ABI input that may have tuple components (runtime ABI data from Solidity) */
+type AbiInputWithComponents = AbiInput & { components?: readonly AbiInputWithComponents[] }
+
+function formatAbiInputType(input: AbiInputWithComponents): string {
   if (input.type === 'tuple' && input.components) {
     return `(${input.components.map((c: AbiInput) => formatAbiInputType(c)).join(',')})`
   }
@@ -226,7 +229,7 @@ async function querySourcify(
   matchType: 'full_match' | 'partial_match',
   contract: Address
 ): Promise<Metadata | null> {
-  const chainID = await connection.chainId()
+  const chainID = await connection.viemClient.getChainId()
   const resp = await fetch(
     `https://repo.sourcify.dev/contracts/${matchType}/${chainID}/${contract}/metadata.json`
   )
@@ -263,7 +266,13 @@ export async function tryGetProxyImplementation(
   }
 
   try {
-    const hexValue = await connection.getStorageAt(contract, PROXY_IMPLEMENTATION_POSITION_UUPS)
+    const hexValue = await connection.viemClient.getStorageAt({
+      address: contract as `0x${string}`,
+      slot: PROXY_IMPLEMENTATION_POSITION_UUPS as `0x${string}`,
+    })
+    if (!hexValue) {
+      return undefined
+    }
     const address = ('0x' + hexValue.slice(-40)) as Address
     return address
   } catch {

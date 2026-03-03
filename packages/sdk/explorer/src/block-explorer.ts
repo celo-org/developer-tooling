@@ -1,11 +1,10 @@
 import {
   ABIDefinition,
   Address,
-  Block,
-  CeloTxPending,
   decodeParametersToObject,
   parseDecodedParams,
 } from '@celo/connect'
+import type { Block, Transaction } from 'viem'
 import { toChecksumAddress } from '@celo/utils/lib/address'
 import { CeloContract, ContractKit } from '@celo/contractkit'
 import { PROXY_ABI } from '@celo/contractkit/lib/proxy'
@@ -39,7 +38,7 @@ export interface CallDetails {
 
 export interface ParsedTx {
   callDetails: CallDetails
-  tx: CeloTxPending
+  tx: Transaction
 }
 
 export interface ParsedBlock {
@@ -93,10 +92,10 @@ export class BlockExplorer {
   }
 
   async fetchBlockByHash(blockHash: string): Promise<Block> {
-    return this.kit.connection.getBlock(blockHash)
+    return this.kit.connection.viemClient.getBlock({ blockHash: blockHash as `0x${string}` })
   }
   async fetchBlock(blockNumber: number): Promise<Block> {
-    return this.kit.connection.getBlock(blockNumber)
+    return this.kit.connection.viemClient.getBlock({ blockNumber: BigInt(blockNumber) })
   }
 
   async fetchBlockRange(from: number, to: number): Promise<Block[]> {
@@ -124,7 +123,7 @@ export class BlockExplorer {
     }
   }
 
-  async tryParseTx(tx: CeloTxPending): Promise<ParsedTx | null> {
+  async tryParseTx(tx: Transaction): Promise<ParsedTx | null> {
     const callDetails = await this.tryParseTxInput(tx.to!, tx.input)
     if (!callDetails) {
       return null
@@ -155,7 +154,7 @@ export class BlockExplorer {
 
     // transform numbers to big numbers in params
     abi.inputs!.forEach((abiInput, idx) => {
-      if (abiInput.type === 'uint256') {
+      if (abiInput.type === 'uint256' && abiInput.name) {
         debug('transforming number param')
         params[abiInput.name] = new BigNumber(args[idx])
       }

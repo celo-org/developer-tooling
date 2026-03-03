@@ -14,7 +14,10 @@ describe('sourcify helpers', () => {
   const chainId: number = 42220
 
   const mockProvider: Provider = {
-    request: (async ({ params }: { method: string; params?: any }) => {
+    request: (async ({ method, params }: { method: string; params?: any }) => {
+      if (method === 'eth_chainId') {
+        return `0x${chainId.toString(16)}`
+      }
       const safeParams = Array.isArray(params) ? params : params != null ? [params] : []
       if (safeParams[0]?.to === proxyAddress) {
         return `0x000000000000000000000000${implAddress.slice(2)}`
@@ -27,9 +30,6 @@ describe('sourcify helpers', () => {
   beforeEach(() => {
     fetchMock.reset()
     connection = new Connection(mockProvider)
-    connection.chainId = jest.fn().mockImplementation(async () => {
-      return chainId
-    })
   })
 
   describe('fetchMetadata()', () => {
