@@ -1,5 +1,5 @@
 {
-  "name": "@celo/contractkit",
+  "name": "@fernandezfalvaro/contractkit",
   "version": "10.0.3",
   "description": "Celo's ContractKit to interact with Celo network",
   "main": "./lib/index.js",
