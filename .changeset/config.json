@@ -5,7 +5,7 @@
   "fixed": [["@celo/wallet-*"]],
   "linked": [],
   "access": "public",
-  "baseBranch": "master",
+  "baseBranch": "test-oidc-publishing",
   "updateInternalDependencies": "patch",
   "ignore": [],
   "snapshot": {
