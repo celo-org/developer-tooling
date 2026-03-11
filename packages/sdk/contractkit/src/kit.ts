@@ -179,7 +179,7 @@ export class ContractKit {
    */
   setFeeCurrency(address: StrongAddress) {
     if (!this.web3.utils.isAddress(address)) {
-      throw new Error('Supplied address is not a valid hexadecimal address.')
+      throw new Error('Supplied address is not a valid hexadecimal address (Plonk).')
     }
     this.connection.defaultFeeCurrency = address
   }
