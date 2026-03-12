@@ -1,7 +1,7 @@
 import { isHexString, normalizeAddressWith0x } from '@celo/base/lib/address'
 import { Address, CeloTx, EncodedTransaction, ReadOnlyWallet, Signer } from '@celo/connect'
 import { EIP712TypedData } from '@celo/utils/lib/sign-typed-data-utils'
-import * as ethUtil from '@ethereumjs/util'
+import { ensureLeading0x } from '@celo/base/lib/address'
 import { chainIdTransformationForSigning, encodeTransaction, rlpEncodedTx } from './signing-utils'
 
 type addInMemoryAccount = (privateKey: string) => void
@@ -109,7 +109,10 @@ export abstract class WalletBase<TSigner extends Signer> implements ReadOnlyWall
     const signer = this.getSigner(address)
     const sig = await signer.signPersonalMessage(data)
 
-    return ethUtil.toRpcSig(BigInt(sig.v), sig.r, sig.s)
+    const rHex = Buffer.from(sig.r).toString('hex').padStart(64, '0')
+    const sHex = Buffer.from(sig.s).toString('hex').padStart(64, '0')
+    const vHex = (sig.v >= 27 ? sig.v - 27 : sig.v).toString(16).padStart(2, '0')
+    return ensureLeading0x(rHex + sHex + vHex)
   }
 
   /**
@@ -126,7 +129,10 @@ export abstract class WalletBase<TSigner extends Signer> implements ReadOnlyWall
     const signer = this.getSigner(address)
     const sig = await signer.signTypedData(typedData)
 
-    return ethUtil.toRpcSig(BigInt(sig.v), sig.r, sig.s)
+    const rHex = Buffer.from(sig.r).toString('hex').padStart(64, '0')
+    const sHex = Buffer.from(sig.s).toString('hex').padStart(64, '0')
+    const vHex = (sig.v >= 27 ? sig.v - 27 : sig.v).toString(16).padStart(2, '0')
+    return ensureLeading0x(rHex + sHex + vHex)
   }
 
   protected getSigner(address: string): TSigner {

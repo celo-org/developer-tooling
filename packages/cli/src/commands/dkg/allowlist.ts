@@ -1,7 +1,8 @@
+import { encodeFunctionData } from 'viem'
 import { ensureLeading0x } from '@celo/utils/lib/address'
 import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
-import { displayWeb3Tx } from '../../utils/cli'
+import { displayTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { deprecationOptions } from '../../utils/notice'
 import DKG from './DKG.json'
@@ -25,13 +26,23 @@ export default class DKGRegister extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(DKGRegister)
-    const web3 = kit.connection.web3
-
-    const dkg = new web3.eth.Contract(DKG.abi as any, res.flags.address)
+    const dkg = kit.connection.getCeloContract(DKG.abi as any, res.flags.address)
 
     const participantAddress = res.flags.participantAddress
-    await displayWeb3Tx('allowlist', dkg.methods.allowlist(ensureLeading0x(participantAddress)), {
-      from: res.flags.from,
+    const allowlistData = encodeFunctionData({
+      abi: dkg.abi,
+      functionName: 'allowlist',
+      args: [ensureLeading0x(participantAddress)],
     })
+    await displayTx(
+      'allowlist',
+      {
+        send: (tx: any) =>
+          kit.connection
+            .sendTransaction({ ...tx, to: dkg.address, data: allowlistData })
+            .then((r) => r),
+      },
+      { from: res.flags.from }
+    )
   }
 }

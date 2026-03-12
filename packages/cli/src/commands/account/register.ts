@@ -1,7 +1,7 @@
 import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class Register extends BaseCommand {
@@ -23,14 +23,15 @@ export default class Register extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(Register)
 
     const accounts = await kit.contracts.getAccounts()
 
     await newCheckBuilder(this).isNotAccount(res.flags.from).runChecks()
-    await displaySendTx('register', accounts.createAccount())
+    await displayViemTx('register', accounts.createAccount(), publicClient)
     if (res.flags.name) {
-      await displaySendTx('setName', accounts.setName(res.flags.name))
+      await displayViemTx('setName', accounts.setName(res.flags.name), publicClient)
     }
   }
 }

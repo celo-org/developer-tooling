@@ -1,13 +1,11 @@
-import { MultiSig } from '@celo/abis/web3/MultiSig'
-import { Address, CeloTransactionObject, CeloTxObject, toTransactionObject } from '@celo/connect'
+import { multiSigABI } from '@celo/abis'
+import { Address, CeloTx } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import {
   BaseWrapper,
-  proxyCall,
-  proxySend,
-  stringIdentity,
+  toViemAddress,
+  toViemBigInt,
   stringToSolidityBytes,
-  tupleParser,
   valueToBigNumber,
   valueToInt,
 } from './BaseWrapper'
@@ -29,76 +27,127 @@ export interface TransactionDataWithOutConfirmations {
 /**
  * Contract for handling multisig actions
  */
-export class MultiSigWrapper extends BaseWrapper<MultiSig> {
+export class MultiSigWrapper extends BaseWrapper<typeof multiSigABI> {
   /**
    * Allows an owner to submit and confirm a transaction.
    * If an unexecuted transaction matching `txObject` exists on the multisig, adds a confirmation to that tx ID.
    * Otherwise, submits the `txObject` to the multisig and add confirmation.
    * @param index The index of the pending withdrawal to withdraw.
    */
-  async submitOrConfirmTransaction(destination: string, txObject: CeloTxObject<any>, value = '0') {
-    const data = stringToSolidityBytes(txObject.encodeABI())
-    const transactionCount = await this.contract.methods.getTransactionCount(true, true).call()
-    const transactionIds = await this.contract.methods
-      .getTransactionIds(0, transactionCount, true, false)
-      .call()
+  async submitOrConfirmTransaction(
+    destination: string,
+    encodedData: string,
+    value = '0',
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
+    const data = stringToSolidityBytes(encodedData)
+    const transactionCount = await this._getTransactionCountRaw(true, true)
+    const transactionIds = await this._getTransactionIds(0, transactionCount, true, false)
 
     for (const transactionId of transactionIds) {
-      const transaction = await this.contract.methods.transactions(transactionId).call()
+      const transaction = await this._getTransactionRaw(transactionId)
       if (
         transaction.data === data &&
         transaction.destination === destination &&
         transaction.value === value &&
         !transaction.executed
       ) {
-        return toTransactionObject(
-          this.connection,
-          this.contract.methods.confirmTransaction(transactionId)
+        return this.contract.write.confirmTransaction(
+          [BigInt(transactionId)] as const,
+          txParams as any
         )
       }
     }
-    return toTransactionObject(
-      this.connection,
-      this.contract.methods.submitTransaction(destination, value, data)
+    return this.contract.write.submitTransaction(
+      [toViemAddress(destination), BigInt(value), data as `0x${string}`] as const,
+      txParams as any
     )
   }
 
-  async confirmTransaction(transactionId: number) {
-    return toTransactionObject(
-      this.connection,
-      this.contract.methods.confirmTransaction(transactionId)
-    )
+  private _getTransactionCountRaw = async (pending: boolean, executed: boolean) => {
+    const res = await this.contract.read.getTransactionCount([pending, executed])
+    return Number(res)
   }
-  async submitTransaction(destination: string, txObject: CeloTxObject<any>, value = '0') {
-    const data = stringToSolidityBytes(txObject.encodeABI())
-    return toTransactionObject(
-      this.connection,
-      this.contract.methods.submitTransaction(destination, value, data)
+
+  private _getTransactionIds = async (
+    from: number,
+    to: number,
+    pending: boolean,
+    executed: boolean
+  ) => {
+    const res = await this.contract.read.getTransactionIds([
+      toViemBigInt(from),
+      toViemBigInt(to),
+      pending,
+      executed,
+    ])
+    return [...res].map((v) => v.toString())
+  }
+
+  private _getTransactionRaw = async (i: number | string) => {
+    const res = await this.contract.read.transactions([toViemBigInt(i)])
+    return {
+      destination: res[0] as string,
+      value: res[1].toString(),
+      data: res[2] as string,
+      executed: res[3] as boolean,
+    }
+  }
+
+  async confirmTransaction(
+    transactionId: number,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
+    return this.contract.write.confirmTransaction([BigInt(transactionId)] as const, txParams as any)
+  }
+  async submitTransaction(
+    destination: string,
+    encodedData: string,
+    value = '0',
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
+    const data = stringToSolidityBytes(encodedData)
+    return this.contract.write.submitTransaction(
+      [toViemAddress(destination), BigInt(value), data as `0x${string}`] as const,
+      txParams as any
     )
   }
 
-  isOwner: (owner: Address) => Promise<boolean> = proxyCall(this.contract.methods.isOwner)
-  getOwners = proxyCall(this.contract.methods.getOwners)
-  getRequired = proxyCall(this.contract.methods.required, undefined, valueToBigNumber)
-  getInternalRequired = proxyCall(
-    this.contract.methods.internalRequired,
-    undefined,
-    valueToBigNumber
-  )
-  totalTransactionCount = proxyCall(this.contract.methods.transactionCount, undefined, valueToInt)
-  getTransactionCount = proxyCall(this.contract.methods.getTransactionCount, undefined, valueToInt)
-  replaceOwner: (owner: Address, newOwner: Address) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract.methods.replaceOwner,
-    tupleParser(stringIdentity, stringIdentity)
-  )
+  isOwner: (owner: Address) => Promise<boolean> = async (owner) => {
+    return this.contract.read.isOwner([toViemAddress(owner)])
+  }
+  getOwners = async () => {
+    const res = await this.contract.read.getOwners()
+    return [...res] as string[]
+  }
+  getRequired = async () => {
+    const res = await this.contract.read.required()
+    return valueToBigNumber(res.toString())
+  }
+  getInternalRequired = async () => {
+    const res = await this.contract.read.internalRequired()
+    return valueToBigNumber(res.toString())
+  }
+  totalTransactionCount = async () => {
+    const res = await this.contract.read.transactionCount()
+    return valueToInt(res.toString())
+  }
+  getTransactionCount = async (pending: boolean, executed: boolean) => {
+    const res = await this.contract.read.getTransactionCount([pending, executed])
+    return valueToInt(res.toString())
+  }
+  replaceOwner = (owner: Address, newOwner: Address, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.replaceOwner(
+      [toViemAddress(owner), toViemAddress(newOwner)] as const,
+      txParams as any
+    )
 
   async getTransactionDataByContent(
     destination: string,
-    txo: CeloTxObject<any>,
+    encodedData: string,
     value: BigNumber.Value = 0
   ) {
-    const data = stringToSolidityBytes(txo.encodeABI())
+    const data = stringToSolidityBytes(encodedData)
     const transactionCount = await this.getTransactionCount(true, true)
     const transactionsOrEmpties = await Promise.all(
       new Array(transactionCount).fill(0).map(async (_, index) => {
@@ -125,15 +174,17 @@ export class MultiSigWrapper extends BaseWrapper<MultiSig> {
     includeConfirmations: false
   ): Promise<TransactionDataWithOutConfirmations>
   async getTransaction(i: number, includeConfirmations = true) {
-    const { destination, value, data, executed } = await this.contract.methods
-      .transactions(i)
-      .call()
+    const res = await this._getTransactionRaw(i)
+    const destination = res.destination as string
+    const value = new BigNumber(res.value as string)
+    const data = res.data as string
+    const executed = res.executed as boolean
     if (!includeConfirmations) {
       return {
         destination,
         data,
         executed,
-        value: new BigNumber(value),
+        value,
       }
     }
 
@@ -143,8 +194,12 @@ export class MultiSigWrapper extends BaseWrapper<MultiSig> {
       destination,
       data,
       executed,
-      value: new BigNumber(value),
+      value,
     }
+  }
+
+  private _getConfirmation = async (txId: number, owner: string) => {
+    return this.contract.read.confirmations([toViemBigInt(txId), toViemAddress(owner)])
   }
 
   /*
@@ -154,8 +209,8 @@ export class MultiSigWrapper extends BaseWrapper<MultiSig> {
   async getConfirmations(txId: number) {
     const owners = await this.getOwners()
     const confirmationsOrEmpties = await Promise.all(
-      owners.map(async (owner) => {
-        const confirmation = await this.contract.methods.confirmations(txId, owner).call()
+      owners.map(async (owner: string) => {
+        const confirmation = await this._getConfirmation(txId, owner)
         if (confirmation) {
           return owner
         } else {

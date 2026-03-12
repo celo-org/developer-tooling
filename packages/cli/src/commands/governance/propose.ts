@@ -1,10 +1,11 @@
 import { ProposalBuilder, proposalToJSON, ProposalTransactionJSON } from '@celo/governance'
+import { proposalToParams } from '@celo/contractkit/lib/wrappers/Governance'
 import { Flags } from '@oclif/core'
 import { BigNumber } from 'bignumber.js'
 import { readFileSync } from 'fs'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx, printValueMapRecursive } from '../../utils/cli'
+import { displayViemTx, printValueMapRecursive } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { MultiSigFlags, SafeFlags } from '../../utils/flags'
 import {
@@ -12,11 +13,7 @@ import {
   addExistingProposalJSONFileToBuilder,
   checkProposal,
 } from '../../utils/governance'
-import {
-  createSafeFromWeb3,
-  performSafeTransaction,
-  safeTransactionMetadataFromCeloTransactionObject,
-} from '../../utils/safe'
+import { createSafe, performSafeTransaction, safeTransactionMetadata } from '../../utils/safe'
 export default class Propose extends BaseCommand {
   static description = 'Submit a governance proposal'
 
@@ -57,6 +54,7 @@ export default class Propose extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(Propose)
     const account = res.flags.from
 
@@ -90,7 +88,11 @@ export default class Propose extends BaseCommand {
         proposerMultiSig!.isOwner(account)
       )
       .addConditionalCheck(`${account} is a safe owner`, useSafe, async () => {
-        const safe = await createSafeFromWeb3(await this.getWeb3(), account, proposer)
+        const safe = await createSafe(
+          (await this.getKit()).connection.currentProvider,
+          account,
+          proposer
+        )
         return safe.isOwner(account)
       })
       .runChecks()
@@ -120,32 +122,35 @@ export default class Propose extends BaseCommand {
       }
     }
 
-    const governanceTx = governance.propose(proposal, res.flags.descriptionURL)
+    if (useMultiSig || useSafe) {
+      const proposeData = governance.encodeFunctionData(
+        'propose',
+        proposalToParams(proposal, res.flags.descriptionURL) as unknown[]
+      )
 
-    if (useMultiSig) {
-      const multiSigTx = await proposerMultiSig!.submitOrConfirmTransaction(
-        governance.address,
-        governanceTx.txo,
-        deposit.toFixed()
-      )
-      await displaySendTx<string | void | boolean>('proposeTx', multiSigTx, {}, 'ProposalQueued')
-    } else if (useSafe) {
-      await performSafeTransaction(
-        await this.getWeb3(),
-        proposer,
-        account,
-        await safeTransactionMetadataFromCeloTransactionObject(
-          governanceTx,
-          governance.address,
-          deposit.toFixed()
+      if (useMultiSig) {
+        await displayViemTx(
+          'proposeTx',
+          proposerMultiSig!.submitOrConfirmTransaction(
+            governance.address,
+            proposeData,
+            deposit.toFixed()
+          ),
+          publicClient
         )
-      )
+      } else {
+        await performSafeTransaction(
+          (await this.getKit()).connection.currentProvider,
+          proposer,
+          account,
+          safeTransactionMetadata(proposeData, governance.address, deposit.toFixed())
+        )
+      }
     } else {
-      await displaySendTx<string | void | boolean>(
+      await displayViemTx(
         'proposeTx',
-        governanceTx,
-        { value: deposit.toFixed() },
-        'ProposalQueued'
+        governance.propose(proposal, res.flags.descriptionURL, { value: deposit.toFixed() }),
+        publicClient
       )
     }
   }

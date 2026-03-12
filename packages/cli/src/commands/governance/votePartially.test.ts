@@ -1,12 +1,11 @@
 import { StrongAddress } from '@celo/base'
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
 import { changeMultiSigOwner } from '../../test-utils/chain-setup'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { testLocallyWithNode } from '../../test-utils/cliUtils'
 import Register from '../account/register'
 import Lock from '../lockedcelo/lock'
 import Approve from './approve'
@@ -15,37 +14,41 @@ import VotePartially from './votePartially'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:vote-partially cmd', (web3: Web3) => {
+testWithAnvilL2('governance:vote-partially cmd', (provider) => {
   let minDeposit: string
-  const kit = newKitFromWeb3(web3)
+  const kit = newKitFromProvider(provider)
   const proposalID = new BigNumber(1)
 
   let accounts: StrongAddress[] = []
   let governance: GovernanceWrapper
 
   beforeEach(async () => {
-    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
+    accounts = (await kit.connection.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
     governance = await kit.contracts.getGovernance()
     minDeposit = (await governance.minDeposit()).toFixed()
-    await governance
-      .propose([], 'URL')
-      .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit })
+    const proposeHash = await governance.propose([], 'URL', {
+      from: accounts[0],
+      value: minDeposit,
+    })
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: proposeHash as `0x${string}`,
+    })
     const dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
-    await timeTravel(dequeueFrequency + 1, web3)
-    await testLocallyWithWeb3Node(Dequeue, ['--from', accounts[0]], web3)
+    await timeTravel(dequeueFrequency + 1, provider)
+    await testLocallyWithNode(Dequeue, ['--from', accounts[0]], provider)
     await changeMultiSigOwner(kit, accounts[0])
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Approve,
       ['--from', accounts[0], '--proposalID', proposalID.toString(10), '--useMultiSig'],
-      web3
+      provider
     )
-    await testLocallyWithWeb3Node(Register, ['--from', accounts[0]], web3)
-    await testLocallyWithWeb3Node(Lock, ['--from', accounts[0], '--value', '100'], web3)
+    await testLocallyWithNode(Register, ['--from', accounts[0]], provider)
+    await testLocallyWithNode(Lock, ['--from', accounts[0], '--value', '100'], provider)
   })
 
   test('can vote partially yes and no', async () => {
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       VotePartially,
       [
         '--from',
@@ -59,7 +62,7 @@ testWithAnvilL2('governance:vote-partially cmd', (web3: Web3) => {
         '--abstain',
         '0',
       ],
-      web3
+      provider
     )
     const votes = await governance.getVotes(proposalID)
     expect(votes.Yes.toNumber()).toEqual(10)

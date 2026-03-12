@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js'
 import humanizeDuration from 'humanize-duration'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { binaryPrompt, displaySendTx } from '../../utils/cli'
+import { binaryPrompt, displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class ValidatorGroupRegister extends BaseCommand {
@@ -25,6 +25,7 @@ export default class ValidatorGroupRegister extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(ValidatorGroupRegister)
 
     const validators = await kit.contracts.getValidators()
@@ -54,7 +55,7 @@ export default class ValidatorGroupRegister extends BaseCommand {
       .signerMeetsValidatorGroupBalanceRequirements()
       .runChecks()
 
-    const tx = await validators.registerValidatorGroup(commission)
-    await displaySendTx('registerValidatorGroup', tx)
+    const tx = validators.registerValidatorGroup(commission)
+    await displayViemTx('registerValidatorGroup', tx, publicClient)
   }
 }

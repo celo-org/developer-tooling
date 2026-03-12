@@ -1,5 +1,5 @@
 import { BaseCommand } from '../../base'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class Finish extends BaseCommand {
@@ -16,6 +16,7 @@ export default class Finish extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(Finish)
     const address = res.flags.from
 
@@ -27,6 +28,6 @@ export default class Finish extends BaseCommand {
       return this.warn('Epoch process is not started yet')
     }
 
-    await displaySendTx('finishNextEpoch', await epochManager.finishNextEpochProcessTx())
+    await displayViemTx('finishNextEpoch', epochManager.finishNextEpochProcessTx(), publicClient)
   }
 }

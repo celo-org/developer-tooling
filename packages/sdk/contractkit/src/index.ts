@@ -3,7 +3,6 @@ export { REGISTRY_CONTRACT_ADDRESS } from './address-registry'
 export {
   AllContracts,
   CeloContract,
-  CeloToken,
   CeloTokenContract,
   RegisteredContracts,
 } from './base'

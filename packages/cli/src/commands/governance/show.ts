@@ -1,5 +1,5 @@
 import { ProposalBuilder, proposalToJSON } from '@celo/governance'
-import { toBuffer } from '@ethereumjs/util'
+import { hexToBytes } from 'viem'
 import { Flags } from '@oclif/core'
 import chalk from 'chalk'
 import { writeFileSync } from 'fs'
@@ -148,7 +148,7 @@ export default class Show extends BaseCommand {
         })
       }
     } else if (hotfix) {
-      const hotfixBuf = toBuffer(hotfix) as Buffer
+      const hotfixBuf = Buffer.from(hexToBytes(hotfix as `0x${string}`))
       const record = await governance.getHotfixRecord(hotfixBuf)
       printValueMap(record)
     } else if (account) {

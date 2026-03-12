@@ -1,10 +1,9 @@
 import { CeloTx } from '@celo/connect'
 import { normalizeAddressWith0x, privateKeyToAddress } from '@celo/utils/lib/address'
 import { hexToBytes } from '@noble/hashes/utils'
-import { parseTransaction, serializeTransaction } from 'viem'
+import { parseEther, parseTransaction, serializeTransaction } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { celo } from 'viem/chains'
-import Web3 from 'web3'
 import {
   extractSignature,
   getSignerFromTxEIP2718TX,
@@ -32,7 +31,7 @@ describe('rlpEncodedTx', () => {
       from: '0x1daf825EB5C0D9d9FeC33C444e413452A08e04A6',
       to: '0x43d72ff17701b2da814620735c39c620ce0ea4a1',
       chainId: 42220,
-      value: Web3.utils.toWei('0', 'ether'),
+      value: parseEther('0').toString(),
       nonce: 619,
       gas: '504830',
       gasPrice: '5000000000',
@@ -69,7 +68,7 @@ describe('rlpEncodedTx', () => {
       from: ACCOUNT_ADDRESS1,
       to: ACCOUNT_ADDRESS1,
       chainId: 2,
-      value: Web3.utils.toWei('1000', 'ether'),
+      value: parseEther('1000').toString(),
       nonce: 0,
       maxFeePerGas: '10',
       maxPriorityFeePerGas: '99',
@@ -81,7 +80,7 @@ describe('rlpEncodedTx', () => {
       it('throws an error', () => {
         const transaction = {
           ...eip1559Transaction,
-          maxFeePerGas: Web3.utils.toBN('-5'),
+          maxFeePerGas: BigInt('-5'),
         }
         expect(() => rlpEncodedTx(transaction)).toThrowErrorMatchingInlineSnapshot(
           `"GasPrice or maxFeePerGas or maxPriorityFeePerGas is less than than 0"`
@@ -92,7 +91,7 @@ describe('rlpEncodedTx', () => {
       it('throws an error', () => {
         const transaction = {
           ...eip1559Transaction,
-          maxPriorityFeePerGas: Web3.utils.toBN('-5'),
+          maxPriorityFeePerGas: BigInt('-5'),
         }
         expect(() => rlpEncodedTx(transaction)).toThrowErrorMatchingInlineSnapshot(
           `"GasPrice or maxFeePerGas or maxPriorityFeePerGas is less than than 0"`
@@ -160,7 +159,7 @@ describe('rlpEncodedTx', () => {
         const CIP66Transaction = {
           ...eip1559Transaction,
           feeCurrency: '0x5409ED021D9299bf6814279A6A1411A7e866A631',
-          maxFeeInFeeCurrency: Web3.utils.toBN('100000000010181646104615494635153636353810897'),
+          maxFeeInFeeCurrency: BigInt('100000000010181646104615494635153636353810897'),
         } as const
         const result = rlpEncodedTx(CIP66Transaction)
         expect(result).toMatchInlineSnapshot(`
@@ -242,7 +241,7 @@ describe('rlpEncodedTx', () => {
         from: ACCOUNT_ADDRESS1,
         to: ACCOUNT_ADDRESS1,
         chainId: 2,
-        value: Web3.utils.toWei('1000', 'ether'),
+        value: parseEther('1000').toString(),
         nonce: 0,
         maxFeePerGas: '1000',
         maxPriorityFeePerGas: '99',
@@ -279,7 +278,7 @@ describe('rlpEncodedTx', () => {
         from: ACCOUNT_ADDRESS1,
         to: ACCOUNT_ADDRESS1,
         chainId: 2,
-        value: Web3.utils.toWei('1000', 'ether'),
+        value: parseEther('1000').toString(),
         nonce: 0,
         maxFeePerGas: '1000',
         maxPriorityFeePerGas: '99',
@@ -521,7 +520,7 @@ describe('isPriceToLow', () => {
     expect(
       isPriceToLow({
         maxFeePerGas: 1_000_000_000,
-        maxPriorityFeePerGas: Web3.utils.toBN('50000000000000'),
+        maxPriorityFeePerGas: BigInt('50000000000000'),
         gasPrice: undefined,
       })
     ).toBe(false)
@@ -529,7 +528,7 @@ describe('isPriceToLow', () => {
   test('gasPrice is positive', () => {
     expect(
       isPriceToLow({
-        gasPrice: Web3.utils.toBN('50000000000000'),
+        gasPrice: BigInt('50000000000000'),
       })
     ).toBe(false)
   })
@@ -619,7 +618,7 @@ describe('extractSignature', () => {
   })
   it('fails when length is empty', () => {
     expect(() => extractSignature('0x')).toThrowErrorMatchingInlineSnapshot(
-      `"Invalid byte sequence"`
+      `"@extractSignature: provided transaction has 0 elements but ethereum-legacy txs with a signature have 9 {}"`
     )
   })
 })
@@ -663,7 +662,7 @@ describe('stringNumberOrBNToHex', () => {
     expect(stringNumberOrBNToHex(123)).toEqual('0x7b')
   })
   test('BN', () => {
-    const biggie = Web3.utils.toBN('123')
+    const biggie = BigInt('123')
     expect(stringNumberOrBNToHex(biggie)).toEqual('0x7b')
   })
   test('bigint', () => {

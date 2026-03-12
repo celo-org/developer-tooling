@@ -1,15 +1,14 @@
 import { StableToken, StrongAddress } from '@celo/base'
 import { COMPLIANT_ERROR_RESPONSE, SANCTIONED_ADDRESSES } from '@celo/compliance'
-import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
+import { ContractKit, newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { mineBlocks } from '@celo/dev-utils/ganache-test'
 import { ACCOUNT_PRIVATE_KEYS } from '@celo/dev-utils/test-accounts'
 import { TEST_BASE_FEE, TEST_GAS_PRICE } from '@celo/dev-utils/test-utils'
 import BigNumber from 'bignumber.js'
-import { formatEther, toHex } from 'viem'
-import Web3 from 'web3'
+import { formatEther, parseEther, toHex } from 'viem'
 import { topUpWithToken } from '../../test-utils/chain-setup'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import { createMultisig } from '../../test-utils/multisigUtils'
 import { deployReleaseGoldContract } from '../../test-utils/release-gold'
 import Register from '../account/register'
@@ -22,14 +21,14 @@ process.env.NO_SYNCCHECK = 'true'
 // Lots of commands, sometimes times out
 jest.setTimeout(15000)
 
-testWithAnvilL2('releasegold:transfer-dollars cmd', (web3: Web3) => {
+testWithAnvilL2('releasegold:transfer-dollars cmd', (provider) => {
   let accounts: StrongAddress[] = []
   let contractAddress: any
   let kit: ContractKit
 
   beforeEach(async () => {
-    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
-    kit = newKitFromWeb3(web3)
+    kit = newKitFromProvider(provider)
+    accounts = (await kit.connection.getAccounts()) as StrongAddress[]
     jest.spyOn(console, 'log').mockImplementation(() => {
       // noop
     })
@@ -38,7 +37,7 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (web3: Web3) => {
     })
 
     contractAddress = await deployReleaseGoldContract(
-      web3,
+      provider,
       await createMultisig(kit, [accounts[0], accounts[1]] as StrongAddress[], 2, 2),
       accounts[1],
       accounts[0],
@@ -50,8 +49,8 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (web3: Web3) => {
     jest.spyOn(kit.connection, 'getMaxPriorityFeePerGas').mockImplementation(async () => {
       return toHex(TEST_GAS_PRICE - TEST_BASE_FEE)
     })
-    await testLocallyWithWeb3Node(Register, ['--from', accounts[0]], web3)
-    await testLocallyWithWeb3Node(CreateAccount, ['--contract', contractAddress], web3)
+    await testLocallyWithNode(Register, ['--from', accounts[0]], provider)
+    await testLocallyWithNode(CreateAccount, ['--contract', contractAddress], provider)
   })
 
   afterEach(() => {
@@ -63,17 +62,17 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (web3: Web3) => {
       kit,
       StableToken.USDm,
       accounts[0],
-      new BigNumber(web3.utils.toWei('1000', 'ether'))
+      new BigNumber(parseEther('1000').toString())
     )
     jest.clearAllMocks()
     const logSpy = jest.spyOn(console, 'log')
     const USDmToTransfer = '500000000000000000000'
     // Send USDm to RG contract
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         TransferDollars,
         ['--from', accounts[0], '--to', contractAddress, '--value', USDmToTransfer],
-        web3
+        provider
       )
     ).resolves.toBeUndefined()
     expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls)).toMatchInlineSnapshot(`
@@ -108,13 +107,13 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (web3: Web3) => {
       ]
     `)
     jest.clearAllMocks()
-    await mineBlocks(2, web3)
+    await mineBlocks(2, provider)
     // RG USDm balance should match the amount sent
     const contractBalance = await kit.getTotalBalance(contractAddress)
     expect(contractBalance.USDm!.toFixed()).toEqual(USDmToTransfer)
     // Test that transfer succeeds when using the beneficiary (accounts[1])
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         RGTransferDollars,
         [
           '--contract',
@@ -126,7 +125,7 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (web3: Web3) => {
           '--privateKey',
           ACCOUNT_PRIVATE_KEYS[1],
         ],
-        web3
+        provider
       )
     ).resolves.toBeUndefined()
 
@@ -142,10 +141,10 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (web3: Web3) => {
     const logSpy = jest.spyOn(console, 'log')
     const value = BigInt(1)
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         RGTransferDollars,
         ['--contract', contractAddress, '--to', accounts[0], '--value', value.toString()],
-        web3
+        provider
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls).at(-1)).toMatchInlineSnapshot(`
@@ -159,22 +158,22 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (web3: Web3) => {
       kit,
       StableToken.USDm,
       accounts[0],
-      new BigNumber(web3.utils.toWei('1000', 'ether'))
+      new BigNumber(parseEther('1000').toString())
     )
     const spy = jest.spyOn(console, 'log')
     const USDmToTransfer = '500000000000000000000'
     // Send USDm to RG contract
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       TransferDollars,
       ['--from', accounts[0], '--to', contractAddress, '--value', USDmToTransfer],
-      web3
+      provider
     )
 
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         RGTransferDollars,
         ['--contract', contractAddress, '--to', SANCTIONED_ADDRESSES[0], '--value', '10'],
-        web3
+        provider
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     expect(spy).toHaveBeenCalledWith(expect.stringContaining(COMPLIANT_ERROR_RESPONSE))
@@ -185,20 +184,20 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (web3: Web3) => {
       kit,
       StableToken.USDm,
       accounts[0],
-      new BigNumber(web3.utils.toWei('1000', 'ether'))
+      new BigNumber(parseEther('1000').toString())
     )
     const spy = jest.spyOn(console, 'log')
     const USDmToTransfer = '500000000000000000000'
     // Send USDm to RG contract
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       TransferDollars,
       ['--from', accounts[0], '--to', contractAddress, '--value', USDmToTransfer],
-      web3
+      provider
     )
 
     // Try to transfer using account[2] which is neither beneficiary nor release owner
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         RGTransferDollars,
         [
           '--contract',
@@ -210,7 +209,7 @@ testWithAnvilL2('releasegold:transfer-dollars cmd', (web3: Web3) => {
           '--privateKey',
           ACCOUNT_PRIVATE_KEYS[2],
         ],
-        web3
+        provider
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
 

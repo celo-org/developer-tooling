@@ -1,13 +1,13 @@
 import { StrongAddress } from '@celo/base'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
-import { newKitFromWeb3 } from '../kit'
+import { newKitFromProvider } from '../kit'
 import { startAndFinishEpochProcess } from '../test-utils/utils'
 import { AccountsWrapper } from './Accounts'
 import { LockedGoldWrapper } from './LockedGold'
 
-testWithAnvilL2('LockedGold Wrapper', (web3) => {
-  const kit = newKitFromWeb3(web3)
+testWithAnvilL2('LockedGold Wrapper', (provider) => {
+  const kit = newKitFromProvider(provider)
   let accounts: AccountsWrapper
   let lockedGold: LockedGoldWrapper
 
@@ -15,44 +15,51 @@ testWithAnvilL2('LockedGold Wrapper', (web3) => {
   const value = 120938732980
   let account: StrongAddress
   beforeAll(async () => {
-    account = (await web3.eth.getAccounts())[0] as StrongAddress
+    account = (await kit.connection.getAccounts())[0]
     kit.defaultAccount = account
     lockedGold = await kit.contracts.getLockedGold()
     accounts = await kit.contracts.getAccounts()
     if (!(await accounts.isAccount(account))) {
-      await accounts.createAccount().sendAndWaitForReceipt({ from: account })
+      const hash = await accounts.createAccount({ from: account })
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
     }
   })
 
   it('locks gold', async () => {
-    await lockedGold.lock().sendAndWaitForReceipt({ value })
+    const hash = await lockedGold.lock({ value })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
   })
 
   it('unlocks gold', async () => {
-    await lockedGold.lock().sendAndWaitForReceipt({ value })
-    await lockedGold.unlock(value).sendAndWaitForReceipt()
+    const lockHash = await lockedGold.lock({ value })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: lockHash })
+    const unlockHash = await lockedGold.unlock(value)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: unlockHash })
   })
 
   it('relocks gold', async () => {
     // Make 5 pending withdrawals.
-    await lockedGold.lock().sendAndWaitForReceipt({ value: value * 5 })
-    await lockedGold.unlock(value).sendAndWaitForReceipt()
-    await lockedGold.unlock(value).sendAndWaitForReceipt()
-    await lockedGold.unlock(value).sendAndWaitForReceipt()
-    await lockedGold.unlock(value).sendAndWaitForReceipt()
-    await lockedGold.unlock(value).sendAndWaitForReceipt()
+    const lockHash = await lockedGold.lock({ value: value * 5 })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: lockHash })
+    for (let i = 0; i < 5; i++) {
+      const unlockHash = await lockedGold.unlock(value)
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: unlockHash })
+    }
 
     // Re-lock 2.5 of them
-    const txos = await lockedGold.relock(account, value * 2.5)
-    for (const txo of txos) {
-      await txo.sendAndWaitForReceipt()
+    const relockHashes = await lockedGold.relock(account, value * 2.5)
+    for (const hash of relockHashes) {
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
     }
   })
 
   test('should return the count of pending withdrawals', async () => {
-    await lockedGold.lock().sendAndWaitForReceipt({ value: value * 2 })
-    await lockedGold.unlock(value).sendAndWaitForReceipt()
-    await lockedGold.unlock(value).sendAndWaitForReceipt()
+    const lockHash = await lockedGold.lock({ value: value * 2 })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: lockHash })
+    const unlock1 = await lockedGold.unlock(value)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: unlock1 })
+    const unlock2 = await lockedGold.unlock(value)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: unlock2 })
 
     const count = await lockedGold.getTotalPendingWithdrawalsCount(account)
     expect(count).toEqBigNumber(2)
@@ -64,8 +71,10 @@ testWithAnvilL2('LockedGold Wrapper', (web3) => {
   })
 
   test('should return the pending withdrawal at a given index', async () => {
-    await lockedGold.lock().sendAndWaitForReceipt({ value: value * 2 })
-    await lockedGold.unlock(value).sendAndWaitForReceipt()
+    const lockHash = await lockedGold.lock({ value: value * 2 })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: lockHash })
+    const unlockHash = await lockedGold.unlock(value)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: unlockHash })
     const pendingWithdrawal = await lockedGold.getPendingWithdrawal(account, 0)
 
     expect(pendingWithdrawal.value).toEqBigNumber(value)

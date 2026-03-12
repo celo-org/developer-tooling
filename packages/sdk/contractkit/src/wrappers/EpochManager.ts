@@ -1,7 +1,8 @@
-import { EpochManager } from '@celo/abis/web3/EpochManager'
+import { epochManagerABI } from '@celo/abis'
 import { NULL_ADDRESS } from '@celo/base'
+import { CeloTx, CeloContract } from '@celo/connect'
 import BigNumber from 'bignumber.js'
-import { proxyCall, proxySend, valueToInt, valueToString } from './BaseWrapper'
+import { toViemAddress, toViemBigInt, valueToInt } from './BaseWrapper'
 import { BaseWrapperForGoverning } from './BaseWrapperForGoverning'
 import { ValidatorGroupVote } from './Election'
 
@@ -27,75 +28,118 @@ export interface EpochManagerConfig {
 /**
  * Contract handling epoch management.
  */
-export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
-  public get _contract() {
+export class EpochManagerWrapper extends BaseWrapperForGoverning<typeof epochManagerABI> {
+  public get _contract(): CeloContract<typeof epochManagerABI> {
     return this.contract
   }
-  epochDuration = proxyCall(this.contract.methods.epochDuration, undefined, valueToInt)
-  firstKnownEpoch = proxyCall(this.contract.methods.firstKnownEpoch, undefined, valueToInt)
-  getCurrentEpochNumber = proxyCall(
-    this.contract.methods.getCurrentEpochNumber,
-    undefined,
-    valueToInt
-  )
-  getFirstBlockAtEpoch = proxyCall(
-    this.contract.methods.getFirstBlockAtEpoch,
-    undefined,
-    valueToInt
-  )
-  getLastBlockAtEpoch = proxyCall(this.contract.methods.getLastBlockAtEpoch, undefined, valueToInt)
-  getEpochNumberOfBlock = proxyCall(
-    this.contract.methods.getEpochNumberOfBlock,
-    undefined,
-    valueToInt
-  )
-  processedGroups = proxyCall(this.contract.methods.processedGroups, undefined, valueToString)
-  isOnEpochProcess = proxyCall(this.contract.methods.isOnEpochProcess)
-  isEpochProcessingStarted = proxyCall(this.contract.methods.isEpochProcessingStarted)
-  isIndividualProcessing = proxyCall(this.contract.methods.isIndividualProcessing)
-  isTimeForNextEpoch = proxyCall(this.contract.methods.isTimeForNextEpoch)
-  getElectedAccounts = proxyCall(this.contract.methods.getElectedAccounts)
-  getElectedSigners = proxyCall(this.contract.methods.getElectedSigners)
-  getEpochProcessingStatus = proxyCall(
-    this.contract.methods.epochProcessing,
-    undefined,
-    (result): EpochProcessState => {
-      return {
-        status: parseInt(result.status),
-        perValidatorReward: new BigNumber(result.perValidatorReward),
-        totalRewardsVoter: new BigNumber(result.totalRewardsVoter),
-        totalRewardsCommunity: new BigNumber(result.totalRewardsCommunity),
-        totalRewardsCarbonFund: new BigNumber(result.totalRewardsCarbonFund),
-      }
+  epochDuration = async () => {
+    const res = await this.contract.read.epochDuration()
+    return valueToInt(res.toString())
+  }
+  firstKnownEpoch = async () => {
+    const res = await this.contract.read.firstKnownEpoch()
+    return valueToInt(res.toString())
+  }
+  getCurrentEpochNumber = async () => {
+    const res = await this.contract.read.getCurrentEpochNumber()
+    return valueToInt(res.toString())
+  }
+  getFirstBlockAtEpoch = async (epoch: BigNumber.Value) => {
+    const res = await this.contract.read.getFirstBlockAtEpoch([toViemBigInt(epoch)])
+    return valueToInt(res.toString())
+  }
+  getLastBlockAtEpoch = async (epoch: BigNumber.Value) => {
+    const res = await this.contract.read.getLastBlockAtEpoch([toViemBigInt(epoch)])
+    return valueToInt(res.toString())
+  }
+  getEpochNumberOfBlock = async (blockNumber: BigNumber.Value) => {
+    const res = await this.contract.read.getEpochNumberOfBlock([toViemBigInt(blockNumber)])
+    return valueToInt(res.toString())
+  }
+  processedGroups = async (group: string) => {
+    const res = await this.contract.read.processedGroups([toViemAddress(group)])
+    return res.toString()
+  }
+  isOnEpochProcess = async (): Promise<boolean> => {
+    return this.contract.read.isOnEpochProcess()
+  }
+  isEpochProcessingStarted = async (): Promise<boolean> => {
+    return this.contract.read.isEpochProcessingStarted()
+  }
+  isIndividualProcessing = async (): Promise<boolean> => {
+    return this.contract.read.isIndividualProcessing()
+  }
+  isTimeForNextEpoch = async (): Promise<boolean> => {
+    return this.contract.read.isTimeForNextEpoch()
+  }
+  getElectedAccounts = async (): Promise<string[]> => {
+    const res = await this.contract.read.getElectedAccounts()
+    return [...res] as string[]
+  }
+  getElectedSigners = async (): Promise<string[]> => {
+    const res = await this.contract.read.getElectedSigners()
+    return [...res] as string[]
+  }
+  getEpochProcessingStatus = async (): Promise<EpochProcessState> => {
+    const result = await this.contract.read.epochProcessing()
+    return {
+      status: Number(result[0]),
+      perValidatorReward: new BigNumber(result[1].toString()),
+      totalRewardsVoter: new BigNumber(result[2].toString()),
+      totalRewardsCommunity: new BigNumber(result[3].toString()),
+      totalRewardsCarbonFund: new BigNumber(result[4].toString()),
     }
-  )
+  }
 
-  startNextEpochProcess = proxySend(this.connection, this.contract.methods.startNextEpochProcess)
-  finishNextEpochProcess = proxySend(this.connection, this.contract.methods.finishNextEpochProcess)
-  sendValidatorPayment = proxySend(this.connection, this.contract.methods.sendValidatorPayment)
-  setToProcessGroups = proxySend(this.connection, this.contract.methods.setToProcessGroups)
-  processGroups = proxySend(this.connection, this.contract.methods.processGroups)
+  startNextEpochProcess = (txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.startNextEpochProcess(txParams as any)
+  finishNextEpochProcess = (
+    groups: string[],
+    lessers: string[],
+    greaters: string[],
+    txParams?: Omit<CeloTx, 'data'>
+  ) =>
+    this.contract.write.finishNextEpochProcess(
+      [groups.map(toViemAddress), lessers.map(toViemAddress), greaters.map(toViemAddress)] as const,
+      txParams as any
+    )
+  sendValidatorPayment = (validator: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.sendValidatorPayment([toViemAddress(validator)] as const, txParams as any)
+  setToProcessGroups = (txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.setToProcessGroups(txParams as any)
+  processGroups = (
+    groups: string[],
+    lessers: string[],
+    greaters: string[],
+    txParams?: Omit<CeloTx, 'data'>
+  ) =>
+    this.contract.write.processGroups(
+      [groups.map(toViemAddress), lessers.map(toViemAddress), greaters.map(toViemAddress)] as const,
+      txParams as any
+    )
 
-  startNextEpochProcessTx = async () => {
+  startNextEpochProcessTx = async (
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}` | undefined> => {
     // check that the epoch process is not already started
     const isEpochProcessStarted = await this.isOnEpochProcess()
     if (isEpochProcessStarted) {
       console.warn('Epoch process has already started.')
       return
     }
-    return this.startNextEpochProcess()
+    return this.startNextEpochProcess(txParams)
   }
 
-  finishNextEpochProcessTx = async () => {
+  finishNextEpochProcessTx = async (txParams?: Omit<CeloTx, 'data'>): Promise<`0x${string}`> => {
     const { groups, lessers, greaters } = await this.getEpochGroupsAndSorting()
 
-    return this.finishNextEpochProcess(groups, lessers, greaters)
+    return this.finishNextEpochProcess(groups, lessers, greaters, txParams)
   }
 
-  processGroupsTx = async () => {
+  processGroupsTx = async (txParams?: Omit<CeloTx, 'data'>): Promise<`0x${string}`> => {
     const { groups, lessers, greaters } = await this.getEpochGroupsAndSorting()
 
-    return this.processGroups(groups, lessers, greaters)
+    return this.processGroups(groups, lessers, greaters, txParams)
   }
 
   getLessersAndGreaters = async (groups: string[]) => {
@@ -168,19 +212,19 @@ export class EpochManagerWrapper extends BaseWrapperForGoverning<EpochManager> {
     const electedGroups = Array.from(
       new Set(
         await Promise.all(
-          elected.map(async (validator) => validators.getMembershipInLastEpoch(validator))
+          elected.map(async (validator: string) => validators.getMembershipInLastEpoch(validator))
         )
       )
     )
 
-    const groupProcessedEvents = await this.contract.getPastEvents('GroupProcessed', {
+    const groupProcessedEvents = await this.getPastEvents('GroupProcessed', {
       // We need +1 because events are emitted on the first block of the new epoch
       fromBlock: (await this.getFirstBlockAtEpoch(await this.getCurrentEpochNumber())) + 1,
     })
 
     // Filter out groups that have been processed
     const groups = electedGroups.filter((group) => {
-      return !groupProcessedEvents.some((event) => event.returnValues.group === group)
+      return !groupProcessedEvents.some((event: any) => event.returnValues.group === group)
     })
 
     const [lessers, greaters] = await this.getLessersAndGreaters(groups)

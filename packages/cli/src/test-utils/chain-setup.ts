@@ -8,15 +8,16 @@ import {
   withImpersonatedAccount,
 } from '@celo/dev-utils/anvil-test'
 import { mineBlocks, timeTravel } from '@celo/dev-utils/ganache-test'
+import { Provider } from '@celo/connect'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
+import { decodeFunctionResult, encodeFunctionData, parseEther } from 'viem'
 import Switch from '../commands/epochs/switch'
-import { testLocallyWithWeb3Node } from './cliUtils'
+import { testLocallyWithNode } from './cliUtils'
 
-export const MIN_LOCKED_CELO_VALUE = new BigNumber(Web3.utils.toWei('10000', 'ether')) // 10k CELO for the group
+export const MIN_LOCKED_CELO_VALUE = new BigNumber(parseEther('10000').toString()) // 10k CELO for the group
 export const MIN_PRACTICAL_LOCKED_CELO_VALUE = MIN_LOCKED_CELO_VALUE.plus(
-  Web3.utils.toWei('1', 'ether')
+  parseEther('1').toString()
 ) // 10k CELO for the group and 1 for gas
 
 const GROUP_COMMISION = new BigNumber(0.1)
@@ -25,7 +26,8 @@ export const registerAccount = async (kit: ContractKit, address: string) => {
   const accounts = await kit.contracts.getAccounts()
 
   if (!(await accounts.isAccount(address))) {
-    await accounts.createAccount().sendAndWaitForReceipt({ from: address })
+    const hash = await accounts.createAccount({ from: address })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash as `0x${string}` })
   }
 }
 
@@ -38,7 +40,8 @@ export const registerAccountWithLockedGold = async (
 
   const lockedGold = await kit.contracts.getLockedGold()
 
-  await lockedGold.lock().sendAndWaitForReceipt({ from: address, value })
+  const hash = await lockedGold.lock({ from: address, value })
+  await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash as `0x${string}` })
 }
 
 export const setupGroup = async (
@@ -54,9 +57,10 @@ export const setupGroup = async (
 
   const validators = await kit.contracts.getValidators()
 
-  await (await validators.registerValidatorGroup(groupCommission)).sendAndWaitForReceipt({
+  const hash = await validators.registerValidatorGroup(groupCommission, {
     from: groupAccount,
   })
+  await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash as `0x${string}` })
 }
 
 export const setupValidator = async (kit: ContractKit, validatorAccount: string) => {
@@ -65,9 +69,10 @@ export const setupValidator = async (kit: ContractKit, validatorAccount: string)
   const ecdsaPublicKey = await addressToPublicKey(validatorAccount, kit.connection.sign)
   const validators = await kit.contracts.getValidators()
 
-  await validators.registerValidatorNoBls(ecdsaPublicKey).sendAndWaitForReceipt({
+  const hash = await validators.registerValidatorNoBls(ecdsaPublicKey, {
     from: validatorAccount,
   })
+  await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash as `0x${string}` })
 }
 
 export const setupGroupAndAffiliateValidator = async (
@@ -87,7 +92,8 @@ export const voteForGroupFrom = async (
 ) => {
   const election = await kit.contracts.getElection()
 
-  await (await election.vote(groupAddress, amount)).sendAndWaitForReceipt({ from: fromAddress })
+  const hash = await election.vote(groupAddress, amount, { from: fromAddress })
+  await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash as `0x${string}` })
 }
 
 export const voteForGroupFromAndActivateVotes = async (
@@ -96,20 +102,22 @@ export const voteForGroupFromAndActivateVotes = async (
   groupAddress: string,
   amount: BigNumber
 ) => {
-  const accounts = await kit.web3.eth.getAccounts()
+  const accounts = await kit.connection.getAccounts()
   await voteForGroupFrom(kit, fromAddress, groupAddress, amount)
-  await timeTravel(24 * 60 * 60, kit.web3) // wait for 24 hours to
-  await testLocallyWithWeb3Node(Switch, ['--from', accounts[0]], kit.web3)
+  await timeTravel(24 * 60 * 60, kit.connection.currentProvider) // wait for 24 hours to
+  await testLocallyWithNode(Switch, ['--from', accounts[0]], kit.connection.currentProvider)
 
   const election = await kit.contracts.getElection()
 
-  const txos = await election.activate(fromAddress, false)
-
-  await Promise.all(txos.map((txo) => txo.sendAndWaitForReceipt({ from: fromAddress })))
+  // activate returns hashes directly (transactions already sent)
+  const hashes = await election.activate(fromAddress, false, { from: fromAddress })
+  for (const hash of hashes) {
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash as `0x${string}` })
+  }
 }
 
 export const mineEpoch = async (kit: ContractKit) => {
-  await mineBlocks(100, kit.web3)
+  await mineBlocks(100, kit.connection.currentProvider)
 }
 
 export const topUpWithToken = async (
@@ -120,11 +128,12 @@ export const topUpWithToken = async (
 ) => {
   const token = await kit.contracts.getStableToken(stableToken)
 
-  await impersonateAccount(kit.web3, STABLES_ADDRESS)
-  await token.transfer(account, amount.toFixed()).sendAndWaitForReceipt({
+  await impersonateAccount(kit.connection.currentProvider, STABLES_ADDRESS)
+  const hash = await token.transfer(account, amount.toFixed(), {
     from: STABLES_ADDRESS,
   })
-  await stopImpersonatingAccount(kit.web3, STABLES_ADDRESS)
+  await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash as `0x${string}` })
+  await stopImpersonatingAccount(kit.connection.currentProvider, STABLES_ADDRESS)
 }
 
 // replace the original owner in the devchain, so we can act as the multisig owner
@@ -132,20 +141,20 @@ export const topUpWithToken = async (
 export const changeMultiSigOwner = async (kit: ContractKit, toAccount: StrongAddress) => {
   const governance = await kit.contracts.getGovernance()
   const multisig = await governance.getApproverMultisig()
-  await (
-    await kit.sendTransaction({
-      from: toAccount,
-      to: multisig.address,
-      value: kit.web3.utils.toWei('1', 'ether'),
-    })
-  ).waitReceipt()
+  const hash = await kit.sendTransaction({
+    from: toAccount,
+    to: multisig.address,
+    value: parseEther('1').toString(),
+  })
+  await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash as `0x${string}` })
 
-  await impersonateAccount(kit.web3, multisig.address)
+  await impersonateAccount(kit.connection.currentProvider, multisig.address)
 
-  await multisig
-    .replaceOwner(DEFAULT_OWNER_ADDRESS, toAccount)
-    .sendAndWaitForReceipt({ from: multisig.address })
-  await stopImpersonatingAccount(kit.web3, multisig.address)
+  const replaceHash = await multisig.replaceOwner(DEFAULT_OWNER_ADDRESS, toAccount, {
+    from: multisig.address,
+  })
+  await kit.connection.viemClient.waitForTransactionReceipt({ hash: replaceHash as `0x${string}` })
+  await stopImpersonatingAccount(kit.connection.currentProvider, multisig.address)
 }
 
 export async function setupValidatorAndAddToGroup(
@@ -157,16 +166,22 @@ export async function setupValidatorAndAddToGroup(
 
   const validators = await kit.contracts.getValidators()
 
-  await validators.affiliate(groupAccount).sendAndWaitForReceipt({ from: validatorAccount })
+  const affiliateHash = await validators.affiliate(groupAccount, { from: validatorAccount })
+  await kit.connection.viemClient.waitForTransactionReceipt({
+    hash: affiliateHash as `0x${string}`,
+  })
 
-  await (await validators.addMember(groupAccount, validatorAccount)).sendAndWaitForReceipt({
+  const addMemberHash = await validators.addMember(groupAccount, validatorAccount, {
     from: groupAccount,
+  })
+  await kit.connection.viemClient.waitForTransactionReceipt({
+    hash: addMemberHash as `0x${string}`,
   })
 }
 // you MUST call clearMock after using this function!
-export async function mockTimeForwardBy(seconds: number, web3: Web3) {
+export async function mockTimeForwardBy(seconds: number, provider: Provider) {
   const now = Date.now()
-  await timeTravel(seconds, web3)
+  await timeTravel(seconds, provider)
   const spy = jest.spyOn(global.Date, 'now').mockImplementation(() => now + seconds * 1000)
 
   console.warn('mockTimeForwardBy', seconds, 'seconds', 'call clearMock after using this function')
@@ -174,37 +189,60 @@ export async function mockTimeForwardBy(seconds: number, web3: Web3) {
 }
 
 export const activateAllValidatorGroupsVotes = async (kit: ContractKit) => {
-  const [sender] = await kit.web3.eth.getAccounts()
+  const [sender] = await kit.connection.getAccounts()
   const validatorsContract = await kit.contracts.getValidators()
   const electionWrapper = await kit.contracts.getElection()
   const epochManagerWrapper = await kit.contracts.getEpochManager()
   const validatorGroups = await validatorsContract.getRegisteredValidatorGroupsAddresses()
 
-  await timeTravel((await epochManagerWrapper.epochDuration()) + 1, kit.web3)
+  await timeTravel((await epochManagerWrapper.epochDuration()) + 1, kit.connection.currentProvider)
 
   // Make sure we are in the next epoch to activate the votes
-  await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({ from: sender })
-  await (await epochManagerWrapper.finishNextEpochProcessTx()).sendAndWaitForReceipt({
-    from: sender,
-  })
+  const startHash = await epochManagerWrapper.startNextEpochProcess({ from: sender })
+  await kit.connection.viemClient.waitForTransactionReceipt({ hash: startHash as `0x${string}` })
+  const finishHash = await epochManagerWrapper.finishNextEpochProcessTx({ from: sender })
+  await kit.connection.viemClient.waitForTransactionReceipt({ hash: finishHash as `0x${string}` })
 
   for (const validatorGroup of validatorGroups) {
-    const pendingVotesForGroup = new BigNumber(
-      // @ts-expect-error we need to call the method directly as it's not exposed (and no need to) via the wrapper
-      await electionWrapper.contract.methods.getPendingVotesForGroup(validatorGroup).call()
-    )
+    const getPendingCallData = encodeFunctionData({
+      // @ts-expect-error we need to call the method directly as it's not exposed via the wrapper
+      abi: electionWrapper.contract.abi,
+      functionName: 'getPendingVotesForGroup',
+      args: [validatorGroup as `0x${string}`],
+    })
+    const { data: getPendingResultData } = await kit.connection.viemClient.call({
+      // @ts-expect-error we need to call the method directly as it's not exposed via the wrapper
+      to: electionWrapper.contract.address,
+      data: getPendingCallData,
+    })
+    const pendingVotesRaw = decodeFunctionResult({
+      // @ts-expect-error we need to call the method directly as it's not exposed via the wrapper
+      abi: electionWrapper.contract.abi,
+      functionName: 'getPendingVotesForGroup',
+      data: getPendingResultData!,
+    })
+    const pendingVotesForGroup = new BigNumber(String(pendingVotesRaw))
 
     if (pendingVotesForGroup.gt(0)) {
       await withImpersonatedAccount(
-        kit.web3,
+        kit.connection.currentProvider,
         validatorGroup,
         async () => {
-          // @ts-expect-error here as well
-          await electionWrapper.contract.methods
-            .activate(validatorGroup)
-            .send({ from: validatorGroup })
+          const activateData = encodeFunctionData({
+            // @ts-expect-error here as well
+            abi: electionWrapper.contract.abi,
+            functionName: 'activate',
+            args: [validatorGroup as `0x${string}`],
+          })
+          const hash = await kit.connection.sendTransaction({
+            // @ts-expect-error here as well
+            to: electionWrapper.contract.address,
+            data: activateData,
+            from: validatorGroup,
+          })
+          await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash as `0x${string}` })
         },
-        new BigNumber(kit.web3.utils.toWei('1', 'ether'))
+        new BigNumber(parseEther('1').toString())
       )
     }
   }

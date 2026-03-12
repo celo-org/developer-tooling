@@ -1,5 +1,5 @@
 import { hexToBuffer } from '@celo/base'
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { HotfixRecord } from '@celo/contractkit/lib/wrappers/Governance'
 import {
   DEFAULT_OWNER_ADDRESS,
@@ -10,20 +10,20 @@ import {
 } from '@celo/dev-utils/anvil-test'
 import fs from 'fs'
 import path from 'node:path'
-import Web3 from 'web3'
-import { AbiItem, PROXY_ADMIN_ADDRESS } from '../../../../sdk/connect/lib'
+import { AbiItem, PROXY_ADMIN_ADDRESS } from '@celo/connect'
 import {
   EXTRA_LONG_TIMEOUT_MS,
   stripAnsiCodesAndTxHashes,
-  testLocallyWithWeb3Node,
+  testLocallyWithNode,
 } from '../../test-utils/cliUtils'
 import Approve from './approve'
 import ExecuteHotfix from './executehotfix'
 import PrepareHotfix from './preparehotfix'
+import { decodeFunctionResult, encodeFunctionData, parseEther } from 'viem'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:executehotfix cmd', (web3: Web3) => {
+testWithAnvilL2('governance:executehotfix cmd', (provider) => {
   const HOTFIX_HASH = '0x8ad3719bb2577b277bcafc1f00ac2f1c3fa5e565173303684d0a8d4f3661680c'
   const HOTFIX_BUFFER = hexToBuffer(HOTFIX_HASH)
   const HOTFIX_TRANSACTION_TEST_KEY = '3'
@@ -75,86 +75,91 @@ testWithAnvilL2('governance:executehotfix cmd', (web3: Web3) => {
   it(
     'should execute a hotfix successfuly',
     async () => {
-      const kit = newKitFromWeb3(web3)
+      const kit = newKitFromProvider(provider)
       const governanceWrapper = await kit.contracts.getGovernance()
-      const [approverAccount, securityCouncilAccount] = await web3.eth.getAccounts()
+      const [approverAccount, securityCouncilAccount] = await kit.connection.getAccounts()
       const logMock = jest.spyOn(console, 'log')
 
-      await setCode(web3, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
+      await setCode(provider, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
 
       // send some funds to DEFAULT_OWNER_ADDRESS to execute transactions
-      await (
-        await kit.sendTransaction({
-          to: DEFAULT_OWNER_ADDRESS,
-          from: approverAccount,
-          value: web3.utils.toWei('1', 'ether'),
-        })
-      ).waitReceipt()
-
-      await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
-        // setHotfixExecutionTimeWindow to EXECUTION_TIME_LIMIT (86400)
-        await (
-          await kit.sendTransaction({
-            to: governanceWrapper.address,
-            from: DEFAULT_OWNER_ADDRESS,
-            data: '0x745407c80000000000000000000000000000000000000000000000000000000000015180',
-          })
-        ).waitReceipt()
-
-        // setApprover to 0x5409ED021D9299bf6814279A6A1411A7e866A631
-        await (
-          await kit.sendTransaction({
-            to: governanceWrapper.address,
-            from: DEFAULT_OWNER_ADDRESS,
-            data: `0x3156560e000000000000000000000000${approverAccount
-              .replace('0x', '')
-              .toLowerCase()}`,
-          })
-        ).waitReceipt()
-
-        // setSecurityCouncil to 0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb
-        await (
-          await kit.sendTransaction({
-            to: governanceWrapper.address,
-            from: DEFAULT_OWNER_ADDRESS,
-            data: `0x1c1083e2000000000000000000000000${securityCouncilAccount
-              .replace('0x', '')
-              .toLowerCase()}`,
-          })
-        ).waitReceipt()
+      await kit.sendTransaction({
+        to: DEFAULT_OWNER_ADDRESS,
+        from: approverAccount,
+        value: parseEther('1').toString(),
       })
 
-      await testLocallyWithWeb3Node(
+      await withImpersonatedAccount(provider, DEFAULT_OWNER_ADDRESS, async () => {
+        // setHotfixExecutionTimeWindow to EXECUTION_TIME_LIMIT (86400)
+        await kit.sendTransaction({
+          to: governanceWrapper.address,
+          from: DEFAULT_OWNER_ADDRESS,
+          data: '0x745407c80000000000000000000000000000000000000000000000000000000000015180',
+        })
+
+        // setApprover to 0x5409ED021D9299bf6814279A6A1411A7e866A631
+        await kit.sendTransaction({
+          to: governanceWrapper.address,
+          from: DEFAULT_OWNER_ADDRESS,
+          data: `0x3156560e000000000000000000000000${approverAccount
+            .replace('0x', '')
+            .toLowerCase()}`,
+        })
+
+        // setSecurityCouncil to 0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb
+        await kit.sendTransaction({
+          to: governanceWrapper.address,
+          from: DEFAULT_OWNER_ADDRESS,
+          data: `0x1c1083e2000000000000000000000000${securityCouncilAccount
+            .replace('0x', '')
+            .toLowerCase()}`,
+        })
+      })
+
+      await testLocallyWithNode(
         Approve,
         ['--hotfix', HOTFIX_HASH, '--from', approverAccount],
-        web3
+        provider
       )
 
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         Approve,
         ['--hotfix', HOTFIX_HASH, '--from', securityCouncilAccount, '--type', 'securityCouncil'],
-        web3
+        provider
       )
 
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         PrepareHotfix,
         ['--hash', HOTFIX_HASH, '--from', approverAccount],
-        web3
+        provider
       )
 
-      const testTransactionsContract = new web3.eth.Contract(
+      const testTransactionsContract = kit.connection.getCeloContract(
         TEST_TRANSACTIONS_ABI,
         PROXY_ADMIN_ADDRESS
       )
 
       // TestTransaction contract returns 0 if a value is not set for a given key
+      const getValueCallData = encodeFunctionData({
+        abi: testTransactionsContract.abi,
+        functionName: 'getValue',
+        args: [HOTFIX_TRANSACTION_TEST_KEY],
+      })
+      const { data: getValueResultData } = await kit.connection.viemClient.call({
+        to: testTransactionsContract.address,
+        data: getValueCallData,
+      })
       expect(
-        await testTransactionsContract.methods.getValue(HOTFIX_TRANSACTION_TEST_KEY).call()
-      ).toEqual('0')
+        decodeFunctionResult({
+          abi: testTransactionsContract.abi,
+          functionName: 'getValue',
+          data: getValueResultData!,
+        })
+      ).toEqual(0n)
 
       logMock.mockClear()
 
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         ExecuteHotfix,
         [
           '--jsonTransactions',
@@ -164,12 +169,25 @@ testWithAnvilL2('governance:executehotfix cmd', (web3: Web3) => {
           '--salt',
           SALT,
         ],
-        web3
+        provider
       )
 
+      const getValueCallData2 = encodeFunctionData({
+        abi: testTransactionsContract.abi,
+        functionName: 'getValue',
+        args: [HOTFIX_TRANSACTION_TEST_KEY],
+      })
+      const { data: getValueResultData2 } = await kit.connection.viemClient.call({
+        to: testTransactionsContract.address,
+        data: getValueCallData2,
+      })
       expect(
-        await testTransactionsContract.methods.getValue(HOTFIX_TRANSACTION_TEST_KEY).call()
-      ).toEqual(HOTFIX_TRANSACTION_TEST_VALUE)
+        decodeFunctionResult({
+          abi: testTransactionsContract.abi,
+          functionName: 'getValue',
+          data: getValueResultData2!,
+        })
+      ).toEqual(BigInt(HOTFIX_TRANSACTION_TEST_VALUE))
 
       expect(
         logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
@@ -199,12 +217,6 @@ testWithAnvilL2('governance:executehotfix cmd', (web3: Web3) => {
           [
             "txHash: 0xtxhash",
           ],
-          [
-            "HotfixExecuted:",
-          ],
-          [
-            "hash: 0x8ad3719bb2577b277bcafc1f00ac2f1c3fa5e565173303684d0a8d4f3661680c",
-          ],
         ]
       `)
     },
@@ -214,82 +226,87 @@ testWithAnvilL2('governance:executehotfix cmd', (web3: Web3) => {
   it(
     'fails if execution time limit has been reached',
     async () => {
-      const kit = newKitFromWeb3(web3)
+      const kit = newKitFromProvider(provider)
       const governanceWrapper = await kit.contracts.getGovernance()
-      const [approverAccount, securityCouncilAccount] = await web3.eth.getAccounts()
+      const [approverAccount, securityCouncilAccount] = await kit.connection.getAccounts()
       const logMock = jest.spyOn(console, 'log')
 
-      await setCode(web3, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
+      await setCode(provider, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
 
       // send some funds to DEFAULT_OWNER_ADDRESS to execute transactions
-      await (
-        await kit.sendTransaction({
-          to: DEFAULT_OWNER_ADDRESS,
-          from: approverAccount,
-          value: web3.utils.toWei('1', 'ether'),
-        })
-      ).waitReceipt()
-
-      await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
-        // setHotfixExecutionTimeWindow to 1 second
-        await (
-          await kit.sendTransaction({
-            to: governanceWrapper.address,
-            from: DEFAULT_OWNER_ADDRESS,
-            data: '0x745407c80000000000000000000000000000000000000000000000000000000000000001',
-          })
-        ).waitReceipt()
-
-        // setApprover to 0x5409ED021D9299bf6814279A6A1411A7e866A631
-        await (
-          await kit.sendTransaction({
-            to: governanceWrapper.address,
-            from: DEFAULT_OWNER_ADDRESS,
-            data: `0x3156560e000000000000000000000000${approverAccount
-              .replace('0x', '')
-              .toLowerCase()}`,
-          })
-        ).waitReceipt()
-
-        // setSecurityCouncil to 0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb
-        await (
-          await kit.sendTransaction({
-            to: governanceWrapper.address,
-            from: DEFAULT_OWNER_ADDRESS,
-            data: `0x1c1083e2000000000000000000000000${securityCouncilAccount
-              .replace('0x', '')
-              .toLowerCase()}`,
-          })
-        ).waitReceipt()
+      await kit.sendTransaction({
+        to: DEFAULT_OWNER_ADDRESS,
+        from: approverAccount,
+        value: parseEther('1').toString(),
       })
 
-      await testLocallyWithWeb3Node(
+      await withImpersonatedAccount(provider, DEFAULT_OWNER_ADDRESS, async () => {
+        // setHotfixExecutionTimeWindow to 1 second
+        await kit.sendTransaction({
+          to: governanceWrapper.address,
+          from: DEFAULT_OWNER_ADDRESS,
+          data: '0x745407c80000000000000000000000000000000000000000000000000000000000000001',
+        })
+
+        // setApprover to 0x5409ED021D9299bf6814279A6A1411A7e866A631
+        await kit.sendTransaction({
+          to: governanceWrapper.address,
+          from: DEFAULT_OWNER_ADDRESS,
+          data: `0x3156560e000000000000000000000000${approverAccount
+            .replace('0x', '')
+            .toLowerCase()}`,
+        })
+
+        // setSecurityCouncil to 0x6Ecbe1DB9EF729CBe972C83Fb886247691Fb6beb
+        await kit.sendTransaction({
+          to: governanceWrapper.address,
+          from: DEFAULT_OWNER_ADDRESS,
+          data: `0x1c1083e2000000000000000000000000${securityCouncilAccount
+            .replace('0x', '')
+            .toLowerCase()}`,
+        })
+      })
+
+      await testLocallyWithNode(
         Approve,
         ['--hotfix', HOTFIX_HASH, '--from', approverAccount],
-        web3
+        provider
       )
 
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         Approve,
         ['--hotfix', HOTFIX_HASH, '--from', securityCouncilAccount, '--type', 'securityCouncil'],
-        web3
+        provider
       )
 
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         PrepareHotfix,
         ['--hash', HOTFIX_HASH, '--from', approverAccount],
-        web3
+        provider
       )
 
-      const testTransactionsContract = new web3.eth.Contract(
+      const testTransactionsContract = kit.connection.getCeloContract(
         TEST_TRANSACTIONS_ABI,
         PROXY_ADMIN_ADDRESS
       )
 
       // TestTransaction contract returns 0 if a value is not set for a given key
+      const getValueCallData = encodeFunctionData({
+        abi: testTransactionsContract.abi,
+        functionName: 'getValue',
+        args: [HOTFIX_TRANSACTION_TEST_KEY],
+      })
+      const { data: getValueResultData } = await kit.connection.viemClient.call({
+        to: testTransactionsContract.address,
+        data: getValueCallData,
+      })
       expect(
-        await testTransactionsContract.methods.getValue(HOTFIX_TRANSACTION_TEST_KEY).call()
-      ).toEqual('0')
+        decodeFunctionResult({
+          abi: testTransactionsContract.abi,
+          functionName: 'getValue',
+          data: getValueResultData!,
+        })
+      ).toEqual(0n)
 
       const timestampAfterExecutionLimit = (
         (await governanceWrapper.getHotfixRecord(HOTFIX_BUFFER)) as HotfixRecord
@@ -299,12 +316,12 @@ testWithAnvilL2('governance:executehotfix cmd', (web3: Web3) => {
         .spyOn(global.Date, 'now')
         .mockImplementation(() => timestampAfterExecutionLimit.multipliedBy(1000).toNumber())
 
-      await setNextBlockTimestamp(web3, timestampAfterExecutionLimit.toNumber())
+      await setNextBlockTimestamp(provider, timestampAfterExecutionLimit.toNumber())
 
       logMock.mockClear()
 
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           ExecuteHotfix,
           [
             '--jsonTransactions',
@@ -314,14 +331,27 @@ testWithAnvilL2('governance:executehotfix cmd', (web3: Web3) => {
             '--salt',
             SALT,
           ],
-          web3
+          provider
         )
       ).rejects.toThrow("Some checks didn't pass!")
 
       // Should still return 0 because the hotfix should not have been executed
+      const getValueCallData2 = encodeFunctionData({
+        abi: testTransactionsContract.abi,
+        functionName: 'getValue',
+        args: [HOTFIX_TRANSACTION_TEST_KEY],
+      })
+      const { data: getValueResultData2 } = await kit.connection.viemClient.call({
+        to: testTransactionsContract.address,
+        data: getValueCallData2,
+      })
       expect(
-        await testTransactionsContract.methods.getValue(HOTFIX_TRANSACTION_TEST_KEY).call()
-      ).toEqual('0')
+        decodeFunctionResult({
+          abi: testTransactionsContract.abi,
+          functionName: 'getValue',
+          data: getValueResultData2!,
+        })
+      ).toEqual(0n)
 
       expect(
         logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))

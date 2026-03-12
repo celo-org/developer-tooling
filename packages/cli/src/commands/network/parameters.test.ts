@@ -1,13 +1,13 @@
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import Parameters from './parameters'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('network:parameters', (web3) => {
+testWithAnvilL2('network:parameters', (provider) => {
   test('runs', async () => {
     const spy = jest.spyOn(console, 'log')
-    await testLocallyWithWeb3Node(Parameters, [], web3)
+    await testLocallyWithNode(Parameters, [], provider)
     expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
       [
         [

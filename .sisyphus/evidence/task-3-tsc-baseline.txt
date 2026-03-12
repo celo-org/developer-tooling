@@ -1,0 +1,14 @@
+Task 3: TypeScript Compilation Baseline
+========================================
+Command: npx tsc -p packages/sdk/contractkit/tsconfig.json --noEmit
+Date: 2026-02-26
+
+Run 1: 1.317s (wall clock)
+Run 2: 0.807s (wall clock)
+Run 3: 0.811s (wall clock)
+
+Median: 0.811s
+2x threshold: 1.622s
+
+Note: Uses project references mode (reads .d.ts from dependencies)
+Type-checking verified: introduced intentional error, tsc caught it.

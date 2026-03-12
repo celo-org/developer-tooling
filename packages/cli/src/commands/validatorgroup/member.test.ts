@@ -1,19 +1,18 @@
-import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
+import { ContractKit, newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2, withImpersonatedAccount } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
-import Web3 from 'web3'
 import {
   setupGroup,
   setupValidator,
   setupValidatorAndAddToGroup,
 } from '../../test-utils/chain-setup'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import ValidatorAffiliate from '../validator/affiliate'
 import Member from './member'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validatorgroup:member cmd', (web3: Web3) => {
+testWithAnvilL2('validatorgroup:member cmd', (provider) => {
   afterEach(() => {
     jest.clearAllMocks()
   })
@@ -23,8 +22,8 @@ testWithAnvilL2('validatorgroup:member cmd', (web3: Web3) => {
     let kit: ContractKit
     const logSpy = jest.spyOn(console, 'log').mockImplementation()
     beforeEach(async () => {
-      kit = newKitFromWeb3(web3)
-      const addresses = await web3.eth.getAccounts()
+      kit = newKitFromProvider(provider)
+      const addresses = await kit.connection.getAccounts()
       groupAddress = addresses[0]
       validatorAddress = addresses[1]
       await setupGroup(kit, groupAddress)
@@ -32,19 +31,19 @@ testWithAnvilL2('validatorgroup:member cmd', (web3: Web3) => {
     describe('when --accept called from the group signer', () => {
       beforeEach(async () => {
         await setupValidator(kit, validatorAddress)
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           ValidatorAffiliate,
           [groupAddress, '--from', validatorAddress, '--yes'],
-          web3
+          provider
         )
       })
       it('accepts a new member to the group', async () => {
         const writeMock = jest.spyOn(ux.write, 'stdout').mockImplementation()
         logSpy.mockClear()
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           Member,
           ['--yes', '--from', groupAddress, '--accept', validatorAddress],
-          web3
+          provider
         )
         expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`[]`)
         expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls)).toMatchInlineSnapshot(`
@@ -84,10 +83,10 @@ testWithAnvilL2('validatorgroup:member cmd', (web3: Web3) => {
       it('removes a member from the group', async () => {
         const writeMock = jest.spyOn(ux.write, 'stdout').mockImplementation()
         logSpy.mockClear()
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           Member,
           ['--yes', '--from', groupAddress, '--remove', validatorAddress],
-          web3
+          provider
         )
         expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`[]`)
         expect(stripAnsiCodesFromNestedArray(logSpy.mock.calls)).toMatchInlineSnapshot(`
@@ -124,7 +123,7 @@ testWithAnvilL2('validatorgroup:member cmd', (web3: Web3) => {
   describe('when --reorder called from the group signer', () => {
     it('orders member to new position in group rank', async () => {
       const logSpy = jest.spyOn(console, 'log').mockImplementation()
-      const kit = newKitFromWeb3(web3)
+      const kit = newKitFromProvider(provider)
 
       const ValidatorsWrapper = await kit.contracts.getValidators()
       const vgroups = await ValidatorsWrapper.getRegisteredValidatorGroups()
@@ -150,11 +149,11 @@ testWithAnvilL2('validatorgroup:member cmd', (web3: Web3) => {
       expect(validatorAddress).toBeDefined()
       const newPosition = '0'
 
-      await withImpersonatedAccount(web3, groupToMessWith.address, async () => {
-        await testLocallyWithWeb3Node(
+      await withImpersonatedAccount(provider, groupToMessWith.address, async () => {
+        await testLocallyWithNode(
           Member,
           [validatorAddress, '--from', groupToMessWith.address, '--reorder', newPosition],
-          web3
+          provider
         )
       })
 

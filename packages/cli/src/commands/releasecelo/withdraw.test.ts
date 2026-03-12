@@ -1,14 +1,13 @@
-import { newReleaseGold } from '@celo/abis/web3/ReleaseGold'
+import { releaseGoldABI } from '@celo/abis'
 import { StableToken, StrongAddress } from '@celo/base'
-import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
+import { ContractKit, newKitFromProvider } from '@celo/contractkit'
 import { ReleaseGoldWrapper } from '@celo/contractkit/lib/wrappers/ReleaseGold'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { getContractFromEvent, timeTravel } from '@celo/dev-utils/ganache-test'
 import { DAY, MONTH } from '@celo/dev-utils/test-utils'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
 import { topUpWithToken } from '../../test-utils/chain-setup'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import { createMultisig } from '../../test-utils/multisigUtils'
 import { deployReleaseGoldContract } from '../../test-utils/release-gold'
 import CreateAccount from './create-account'
@@ -19,42 +18,42 @@ import Withdraw from './withdraw'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('releasegold:withdraw cmd', (web3: Web3) => {
+testWithAnvilL2('releasegold:withdraw cmd', (provider) => {
   let contractAddress: string
   let kit: ContractKit
 
   beforeEach(async () => {
-    const accounts = (await web3.eth.getAccounts()) as StrongAddress[]
-    kit = newKitFromWeb3(web3)
+    kit = newKitFromProvider(provider)
+    const accounts = (await kit.connection.getAccounts()) as StrongAddress[]
 
     contractAddress = await deployReleaseGoldContract(
-      web3,
+      provider,
       await createMultisig(kit, [accounts[0], accounts[1]] as StrongAddress[], 2, 2),
       accounts[1],
       accounts[0],
       accounts[2]
     )
-    await testLocallyWithWeb3Node(CreateAccount, ['--contract', contractAddress], web3)
+    await testLocallyWithNode(CreateAccount, ['--contract', contractAddress], provider)
     // make the whole balance available for withdrawal
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       SetMaxDistribution,
       ['--contract', contractAddress, '--yesreally', '--distributionRatio', '1000'],
-      web3
+      provider
     )
   })
 
   test('can withdraw released celo to beneficiary', async () => {
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       SetLiquidityProvision,
       ['--contract', contractAddress, '--yesreally'],
-      web3
+      provider
     )
     // Based on the release schedule, 3 months needs to pass
-    await timeTravel(MONTH * 3 + DAY, web3)
+    await timeTravel(MONTH * 3 + DAY, provider)
     const withdrawalAmount = '10000000000000000000'
     const releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
-      newReleaseGold(web3, contractAddress),
+      kit.connection.getCeloContract(releaseGoldABI as any, contractAddress) as any,
       kit.contracts
     )
     const beneficiary = await releaseGoldWrapper.getBeneficiary()
@@ -62,24 +61,27 @@ testWithAnvilL2('releasegold:withdraw cmd', (web3: Web3) => {
     expect((await releaseGoldWrapper.getTotalWithdrawn()).toFixed()).toEqual('0')
 
     const balanceBefore = (await kit.getTotalBalance(beneficiary)).CELO!
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Withdraw,
       ['--contract', contractAddress, '--value', withdrawalAmount],
-      web3
+      provider
     )
 
     const balanceAfter = (await kit.getTotalBalance(beneficiary)).CELO!
 
-    const latestTransactionReceipt = await web3.eth.getTransactionReceipt(
-      (await web3.eth.getBlock('latest')).transactions[0]
-    )
+    const latestBlock = await kit.connection.viemClient.getBlock({ blockTag: 'latest' })
+    const latestTransactionReceipt = await kit.connection.viemClient.getTransactionReceipt({
+      hash: latestBlock.transactions[0],
+    })
 
     // Safety check if the latest transaction was originated by the beneficiary
     expect(latestTransactionReceipt.from.toLowerCase()).toEqual(beneficiary.toLowerCase())
 
     const difference = new BigNumber(balanceAfter)
       .minus(balanceBefore)
-      .plus(latestTransactionReceipt.effectiveGasPrice * latestTransactionReceipt.gasUsed)
+      .plus(
+        (latestTransactionReceipt.effectiveGasPrice * latestTransactionReceipt.gasUsed).toString()
+      )
 
     expect(difference.toFixed()).toEqual(withdrawalAmount)
     expect((await releaseGoldWrapper.getTotalWithdrawn()).toFixed()).toEqual(withdrawalAmount)
@@ -87,18 +89,18 @@ testWithAnvilL2('releasegold:withdraw cmd', (web3: Web3) => {
 
   test.skip("can't withdraw the whole balance if there is a USDm balance", async () => {
     const spy = jest.spyOn(console, 'log')
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       SetLiquidityProvision,
       ['--contract', contractAddress, '--yesreally'],
-      web3
+      provider
     )
     expect(spy).toHaveBeenCalledWith(
       expect.stringContaining('The liquidity provision has not already been set')
     )
-    await timeTravel(MONTH * 12 + DAY, web3)
+    await timeTravel(MONTH * 12 + DAY, provider)
     const releaseGoldWrapper = new ReleaseGoldWrapper(
       kit.connection,
-      newReleaseGold(web3, contractAddress),
+      kit.connection.getCeloContract(releaseGoldABI as any, contractAddress) as any,
       kit.contracts
     )
     const beneficiary = await releaseGoldWrapper.getBeneficiary()
@@ -109,17 +111,20 @@ testWithAnvilL2('releasegold:withdraw cmd', (web3: Web3) => {
     const USDmAmount = 100
 
     await topUpWithToken(kit, StableToken.USDm, beneficiary, new BigNumber(USDmAmount))
-    await stableToken
-      .transfer(contractAddress, USDmAmount)
-      .sendAndWaitForReceipt({ from: beneficiary })
+    const transferHash = await stableToken.transfer(contractAddress, USDmAmount, {
+      from: beneficiary,
+    })
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: transferHash as `0x${string}`,
+    })
 
     spy.mockClear()
     // Can't withdraw since there is USDm balance still
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         Withdraw,
         ['--contract', contractAddress, '--value', remainingBalance.toString()],
-        web3
+        provider
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
 
@@ -148,22 +153,22 @@ testWithAnvilL2('releasegold:withdraw cmd', (web3: Web3) => {
     spy.mockClear()
     // Move out the USDm balance
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         RGTransferDollars,
         ['--contract', contractAddress, '--to', beneficiary, '--value', '100'],
-        web3
+        provider
       )
     ).resolves.toBeUndefined()
     spy.mockClear()
 
     const totalWithdrawn = await releaseGoldWrapper.getTotalWithdrawn()
     expect(totalWithdrawn.toFixed()).toMatchInlineSnapshot(`"0"`)
-    await timeTravel(DAY * 31, web3)
+    await timeTravel(DAY * 31, provider)
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         Withdraw,
         ['--contract', contractAddress, '--value', remainingBalance.toString()],
-        web3
+        provider
       )
     ).resolves.toBeUndefined()
     expect(stripAnsiCodesFromNestedArray(spy.mock.calls)).toMatchInlineSnapshot(`
@@ -203,7 +208,7 @@ testWithAnvilL2('releasegold:withdraw cmd', (web3: Web3) => {
 
     const destroyedContractAddress = await getContractFromEvent(
       'ReleaseGoldInstanceDestroyed(address,address)',
-      web3
+      provider
     )
 
     expect(destroyedContractAddress).toBe(contractAddress)

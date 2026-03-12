@@ -1,0 +1,10 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "formatter": {
+    "biome": {
+      "command": ["yarn", "biome", "format", "--write", "$FILE"],
+      "extensions": [".ts", ".tsx", ".js", ".jsx", ".json", ".jsonc"]
+    }
+  },
+  "instructions": ["AGENTS.md", "CONTRIBUTING.md"]
+}

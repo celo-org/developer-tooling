@@ -1,10 +1,4 @@
-import {
-  CeloTransactionObject,
-  CeloTx,
-  EventLog,
-  parseDecodedParams,
-  TransactionResult,
-} from '@celo/connect'
+import { CeloTx } from '@celo/connect'
 import { LockedGoldRequirements } from '@celo/contractkit/lib/wrappers/Validators'
 import { Errors, ux } from '@oclif/core'
 import { TransactionResult as SafeTransactionResult } from '@safe-global/types-kit'
@@ -24,8 +18,7 @@ import {
 
 const CLIError = Errors.CLIError
 
-// TODO: How can we deploy contracts with the Celo provider w/o a CeloTransactionObject?
-export async function displayWeb3Tx(name: string, txObj: any, tx?: Omit<CeloTx, 'data'>) {
+export async function displayTx(name: string, txObj: any, tx?: Omit<CeloTx, 'data'>) {
   ux.action.start(`Sending Transaction: ${name}`)
   const result = await txObj.send(tx)
   console.log(result)
@@ -137,61 +130,12 @@ export async function displayViemTx<const abi extends Abi | undefined = undefine
   }
 }
 
-export async function displaySendTx<A>(
-  name: string,
-  txObj: CeloTransactionObject<A>,
-  tx?: Omit<CeloTx, 'data'>,
-  displayEventName?: string | string[]
-) {
-  ux.action.start(`Sending Transaction: ${name}`)
-  try {
-    const txResult = await txObj.send(tx)
-    await innerDisplaySendTx(name, txResult, displayEventName)
-  } catch (e) {
-    ux.action.stop(`failed: ${(e as Error).message}`)
-    throw e
-  }
-}
-
-// to share between displaySendTx and displaySendEthersTxViaCK
-async function innerDisplaySendTx(
-  name: string,
-  txResult: TransactionResult,
-  displayEventName?: string | string[] | undefined
-) {
-  const txHash = await txResult.getHash()
-
-  console.log(chalk`SendTransaction: {red.bold ${name}}`)
-  printValueMap({ txHash })
-
-  const txReceipt = await txResult.waitReceipt()
-  ux.action.stop()
-
-  if (displayEventName && txReceipt.events) {
-    Object.entries(txReceipt.events)
-      .filter(
-        ([eventName]) =>
-          (typeof displayEventName === 'string' && eventName === displayEventName) ||
-          displayEventName.includes(eventName)
-      )
-      .forEach(([eventName, log]) => {
-        const { params } = parseDecodedParams((log as EventLog).returnValues)
-        console.log(chalk.magenta.bold(`${eventName}:`))
-        printValueMap(params, chalk.magenta)
-      })
-  }
-}
-
 export function printValueMap(valueMap: Record<string, any>, color = chalk.yellowBright.bold) {
   console.log(
     Object.keys(valueMap)
       .map((key) => color(`${key}: `) + valueMap[key])
       .join('\n')
   )
-}
-
-export function printValueMap2(valueMap: Map<any, any>, color = chalk.yellowBright.bold) {
-  valueMap.forEach((value, key) => console.log(color(`${key}: `) + value))
 }
 
 export function printValueMapRecursive(valueMap: Record<string, any>) {

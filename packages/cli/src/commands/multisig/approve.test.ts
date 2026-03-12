@@ -1,15 +1,14 @@
 import { StrongAddress } from '@celo/base'
-import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
+import { ContractKit, newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
-import Web3 from 'web3'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import { createMultisig } from '../../test-utils/multisigUtils'
 import ApproveMultiSig from './approve'
 import ProposeMultiSig from './propose'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('multisig:approve integration tests', (web3: Web3) => {
+testWithAnvilL2('multisig:approve integration tests', (provider) => {
   let kit: ContractKit
   let accounts: StrongAddress[]
   let multisigAddress: StrongAddress
@@ -19,8 +18,8 @@ testWithAnvilL2('multisig:approve integration tests', (web3: Web3) => {
   let nonOwner: StrongAddress
 
   beforeAll(async () => {
-    kit = newKitFromWeb3(web3)
-    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
+    kit = newKitFromProvider(provider)
+    accounts = (await kit.connection.getAccounts()) as StrongAddress[]
 
     // Set up test accounts
     owner1 = accounts[0]
@@ -52,14 +51,14 @@ testWithAnvilL2('multisig:approve integration tests', (web3: Web3) => {
       const value = (10 ** 18).toString() // 1 CELO in wei
 
       // Propose transaction using owner1
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         ProposeMultiSig,
         [multisigAddress, '--from', owner1, '--to', recipient, '--value', value],
-        web3
+        provider
       )
 
       // Now approve the transaction using owner2
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         ApproveMultiSig,
         [
           '--from',
@@ -69,7 +68,7 @@ testWithAnvilL2('multisig:approve integration tests', (web3: Web3) => {
           '--tx',
           '0', // First transaction
         ],
-        web3
+        provider
       )
       expect(logMock).toHaveBeenCalledWith(
         expect.stringContaining(`The provided address is an owner of the multisig`)
@@ -78,17 +77,17 @@ testWithAnvilL2('multisig:approve integration tests', (web3: Web3) => {
 
     it('fails when non-owner tries to approve', async () => {
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           ApproveMultiSig,
           ['--from', nonOwner, '--for', multisigAddress, '--tx', '0'],
-          web3
+          provider
         )
       ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     })
 
     it('fails when approving non-existent transaction', async () => {
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           ApproveMultiSig,
           [
             '--from',
@@ -98,17 +97,17 @@ testWithAnvilL2('multisig:approve integration tests', (web3: Web3) => {
             '--tx',
             '999', // Non-existent transaction
           ],
-          web3
+          provider
         )
       ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     })
 
     it('fails with invalid multisig address', async () => {
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           ApproveMultiSig,
           ['--from', owner1, '--for', '0x0000000000000000000000000000000000000000', '--tx', '0'],
-          web3
+          provider
         )
       ).rejects.toThrowErrorMatchingInlineSnapshot(`
         "The contract function "getOwners" returned no data ("0x").
@@ -134,10 +133,10 @@ testWithAnvilL2('multisig:approve integration tests', (web3: Web3) => {
       const logMock = jest.spyOn(console, 'log')
 
       // Propose transaction using owner1
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         ProposeMultiSig,
         [multisigAddress, '--from', owner1, '--to', recipient, '--value', value],
-        web3
+        provider
       )
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [
@@ -167,10 +166,10 @@ testWithAnvilL2('multisig:approve integration tests', (web3: Web3) => {
 
       // Approve with owner2
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           ApproveMultiSig,
           ['--from', owner2, '--for', multisigAddress, '--tx', '0'],
-          web3
+          provider
         )
       ).resolves.toBeUndefined()
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
@@ -219,10 +218,10 @@ testWithAnvilL2('multisig:approve integration tests', (web3: Web3) => {
 
       // Try to approve again with owner3 (should fail if already approved)
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           ApproveMultiSig,
           ['--from', owner3, '--for', multisigAddress, '--tx', '1'],
-          web3
+          provider
         )
       ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     })

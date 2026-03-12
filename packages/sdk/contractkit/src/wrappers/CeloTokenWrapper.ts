@@ -1,32 +1,40 @@
+import { goldTokenABI } from '@celo/abis'
 // NOTE: removing this import results in `yarn build` failures in Dockerfiles
 // after the move to node 10. This allows types to be inferred without
 // referencing '@celo/utils/node_modules/bignumber.js'
-import { ICeloToken } from '@celo/abis/web3/ICeloToken'
-import { IERC20 } from '@celo/abis/web3/IERC20'
+import { CeloTx } from '@celo/connect'
+import type { Abi } from 'viem'
 import 'bignumber.js'
-import { proxyCall, proxySend, valueToInt } from './BaseWrapper'
+
 import { Erc20Wrapper } from './Erc20Wrapper'
 
 /**
  * Contract for Celo native currency that adheres to the ICeloToken and IERC20 interfaces.
  */
-export class CeloTokenWrapper<T extends IERC20 & ICeloToken> extends Erc20Wrapper<T> {
+export class CeloTokenWrapper<TAbi extends Abi = typeof goldTokenABI> extends Erc20Wrapper<TAbi> {
   /**
    * Returns the name of the token.
    * @returns Name of the token.
    */
-  name = proxyCall(this.contract.methods.name)
+  name = async (): Promise<string> => {
+    return (this.contract as any).read.name()
+  }
 
   /**
    * Returns the three letter symbol of the token.
    * @returns Symbol of the token.
    */
-  symbol = proxyCall(this.contract.methods.symbol)
+  symbol = async (): Promise<string> => {
+    return (this.contract as any).read.symbol()
+  }
   /**
    * Returns the number of decimals used in the token.
    * @returns Number of decimals.
    */
-  decimals = proxyCall(this.contract.methods.decimals, undefined, valueToInt)
+  decimals = async (): Promise<number> => {
+    const res = await (this.contract as any).read.decimals()
+    return Number(res)
+  }
 
   /**
    * Transfers the token from one address to another with a comment.
@@ -35,5 +43,11 @@ export class CeloTokenWrapper<T extends IERC20 & ICeloToken> extends Erc20Wrappe
    * @param comment The transfer comment
    * @return True if the transaction succeeds.
    */
-  transferWithComment = proxySend(this.connection, this.contract.methods.transferWithComment)
+  transferWithComment = (
+    to: string,
+    value: string,
+    comment: string,
+    txParams?: Omit<CeloTx, 'data'>
+  ) =>
+    (this.contract as any).write.transferWithComment([to, value, comment] as const, txParams as any)
 }

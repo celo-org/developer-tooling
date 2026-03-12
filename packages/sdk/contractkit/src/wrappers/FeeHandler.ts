@@ -1,7 +1,7 @@
-import { FeeHandler } from '@celo/abis/web3/FeeHandler'
-import { Address } from '@celo/connect'
+import { feeHandlerABI } from '@celo/abis'
+import { Address, CeloTx } from '@celo/connect'
 import BigNumber from 'bignumber.js'
-import { BaseWrapper, proxyCall, proxySend } from './BaseWrapper'
+import { BaseWrapper, toViemAddress } from './BaseWrapper'
 
 export enum ExchangeProposalState {
   None,
@@ -40,25 +40,22 @@ export interface ExchangeProposalReadable {
   implictPricePerCelo: BigNumber
 }
 
-export class FeeHandlerWrapper extends BaseWrapper<FeeHandler> {
-  owner = proxyCall(this.contract.methods.owner)
+export class FeeHandlerWrapper extends BaseWrapper<typeof feeHandlerABI> {
+  owner = async () => this.contract.read.owner() as Promise<string>
 
-  handleAll = proxySend(this.connection, this.contract.methods.handleAll)
-  burnCelo = proxySend(this.connection, this.contract.methods.burnCelo)
+  handleAll = (txParams?: Omit<CeloTx, 'data'>) => this.contract.write.handleAll(txParams as any)
+  burnCelo = (txParams?: Omit<CeloTx, 'data'>) => this.contract.write.burnCelo(txParams as any)
 
-  async handle(tokenAddress: Address) {
-    const createExchangeProposalInner = proxySend(this.connection, this.contract.methods.handle)
-    return createExchangeProposalInner(tokenAddress)
+  handle(tokenAddress: Address, txParams?: Omit<CeloTx, 'data'>) {
+    return this.contract.write.handle([toViemAddress(tokenAddress)] as const, txParams as any)
   }
 
-  async sell(tokenAddress: Address) {
-    const innerCall = proxySend(this.connection, this.contract.methods.sell)
-    return innerCall(tokenAddress)
+  sell(tokenAddress: Address, txParams?: Omit<CeloTx, 'data'>) {
+    return this.contract.write.sell([toViemAddress(tokenAddress)] as const, txParams as any)
   }
 
-  async distribute(tokenAddress: Address) {
-    const innerCall = proxySend(this.connection, this.contract.methods.distribute)
-    return innerCall(tokenAddress)
+  distribute(tokenAddress: Address, txParams?: Omit<CeloTx, 'data'>) {
+    return this.contract.write.distribute([toViemAddress(tokenAddress)] as const, txParams as any)
   }
 }
 

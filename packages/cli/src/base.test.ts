@@ -7,11 +7,10 @@ import http from 'http'
 import { tmpdir } from 'os'
 import { MethodNotFoundRpcError } from 'viem'
 import { privateKeyToAddress } from 'viem/accounts'
-import Web3 from 'web3'
 import { BaseCommand } from './base'
 import Set from './commands/config/set'
 import CustomHelp from './help'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from './test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from './test-utils/cliUtils'
 import { mockRpcFetch } from './test-utils/mockRpc'
 import { CustomFlags } from './utils/command'
 import * as config from './utils/config'
@@ -62,17 +61,17 @@ describe('flags', () => {
   describe('--node celo-sepolia', () => {
     it('it connects to 11_142_220', async () => {
       const command = new BasicCommand(['--node', 'celo-sepolia'], config)
-      const runnerWeb3 = await command.getWeb3()
-      const connectdChain = await runnerWeb3.eth.getChainId()
-      expect(connectdChain).toBe(11_142_220)
+      const runnerClient = await command.getPublicClient()
+      const connectdChain = runnerClient.chain
+      expect(connectdChain.id).toBe(11_142_220)
     })
   })
   describe.each(['celo', 'mainnet'])('--node  %s', (node) => {
     it('it connects to 42220', async () => {
       const command = new BasicCommand(['--node', node], config)
-      const runnerWeb3 = await command.getWeb3()
-      const connectdChain = await runnerWeb3.eth.getChainId()
-      expect(connectdChain).toBe(42220)
+      const runnerClient = await command.getPublicClient()
+      const connectdChain = runnerClient.chain
+      expect(connectdChain.id).toBe(42220)
     })
   })
   describe('--node websockets', () => {
@@ -105,7 +104,7 @@ jest.mock('../package.json', () => ({
   version: '5.2.3',
 }))
 
-testWithAnvilL2('BaseCommand', (web3: Web3) => {
+testWithAnvilL2('BaseCommand', (provider) => {
   const logSpy = jest.spyOn(console, 'log').mockImplementation()
 
   beforeEach(() => {
@@ -118,7 +117,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
         const storedDerivationPath = readConfig(tmpdir()).derivationPath
         console.info('storedDerivationPath', storedDerivationPath)
         expect(storedDerivationPath).not.toBe(undefined)
-        await testLocallyWithWeb3Node(BasicCommand, ['--useLedger'], web3)
+        await testLocallyWithNode(BasicCommand, ['--useLedger'], provider)
         expect(WalletLedgerExports.newLedgerWalletWithSetup).toHaveBeenCalledWith(
           expect.anything(),
           expect.objectContaining({
@@ -134,8 +133,8 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
       it('uses custom derivationPath', async () => {
         const storedDerivationPath = readConfig(tmpdir()).derivationPath
         const customPath = "m/44'/9000'/0'"
-        await testLocallyWithWeb3Node(Set, ['--derivationPath', customPath], web3)
-        await testLocallyWithWeb3Node(BasicCommand, ['--useLedger'], web3)
+        await testLocallyWithNode(Set, ['--derivationPath', customPath], provider)
+        await testLocallyWithNode(BasicCommand, ['--useLedger'], provider)
         expect(WalletLedgerExports.newLedgerWalletWithSetup).toHaveBeenCalledWith(
           expect.anything(),
           expect.objectContaining({
@@ -147,12 +146,12 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
             baseDerivationPath: customPath,
           })
         )
-        await testLocallyWithWeb3Node(Set, ['--derivationPath', storedDerivationPath], web3)
+        await testLocallyWithNode(Set, ['--derivationPath', storedDerivationPath], provider)
       })
     })
 
     it('--ledgerAddresses passes derivationPathIndexes to LedgerWallet', async () => {
-      await testLocallyWithWeb3Node(BasicCommand, ['--useLedger', '--ledgerAddresses', '5'], web3)
+      await testLocallyWithNode(BasicCommand, ['--useLedger', '--ledgerAddresses', '5'], provider)
 
       expect(WalletLedgerExports.newLedgerWalletWithSetup).toHaveBeenCalledWith(
         expect.anything(),
@@ -197,10 +196,10 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
 
     describe('with --ledgerLiveMode', () => {
       it('--ledgerAddresses passes changeIndexes to LedgerWallet', async () => {
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           BasicCommand,
           ['--useLedger', '--ledgerLiveMode', '--ledgerAddresses', '5'],
-          web3
+          provider
         )
 
         expect(WalletLedgerExports.newLedgerWalletWithSetup).toHaveBeenCalledWith(
@@ -246,10 +245,10 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
       })
       describe('with --ledgerCustomAddresses', () => {
         it('passes custom changeIndexes to LedgerWallet', async () => {
-          await testLocallyWithWeb3Node(
+          await testLocallyWithNode(
             BasicCommand,
             ['--useLedger', '--ledgerLiveMode', '--ledgerCustomAddresses', '[1,8,9]'],
-            web3
+            provider
           )
 
           expect(WalletLedgerExports.newLedgerWalletWithSetup).toHaveBeenCalledWith(
@@ -293,10 +292,10 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
     })
     describe('with --ledgerCustomAddresses', () => {
       it('passes custom derivationPathIndexes to LedgerWallet', async () => {
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           BasicCommand,
           ['--useLedger', '--ledgerCustomAddresses', '[1,8,9]'],
-          web3
+          provider
         )
 
         expect(WalletLedgerExports.newLedgerWalletWithSetup).toHaveBeenCalledWith(
@@ -341,7 +340,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
 
     describe('with --from', () => {
       it('uses it as the default account', async () => {
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           BasicCommand,
           [
             '--useLedger',
@@ -350,7 +349,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
             '--from',
             '0x1234567890123456789012345678901234567890',
           ],
-          web3
+          provider
         )
 
         expect(ViemAccountLedgerExports.ledgerToWalletClient).toHaveBeenCalledWith(
@@ -381,7 +380,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
     const errorSpy = jest.spyOn(console, 'error').mockImplementation()
 
     await expect(
-      testLocallyWithWeb3Node(TestErrorCommand, [], web3)
+      testLocallyWithNode(TestErrorCommand, [], provider)
     ).rejects.toThrowErrorMatchingInlineSnapshot(
       `"Unable to create an RPC Wallet Client, the node is not unlocked. Did you forget to use \`--privateKey\` or \`--useLedger\`?"`
     )
@@ -399,7 +398,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
     const errorSpy = jest.spyOn(console, 'error').mockImplementation()
 
     await expect(
-      testLocallyWithWeb3Node(TestErrorCommand, [], web3)
+      testLocallyWithNode(TestErrorCommand, [], provider)
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"test error"`)
 
     expect(errorSpy.mock.calls).toMatchInlineSnapshot(`
@@ -432,7 +431,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
     const errorSpy = jest.spyOn(console, 'error').mockImplementation()
 
     await expect(
-      testLocallyWithWeb3Node(TestErrorCommand, ['--output', 'csv'], web3)
+      testLocallyWithNode(TestErrorCommand, ['--output', 'csv'], provider)
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"test error"`)
 
     expect(errorSpy.mock.calls).toMatchInlineSnapshot(`[]`)
@@ -453,7 +452,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
       throw new Error('Mock connection stop error')
     })
 
-    await testLocallyWithWeb3Node(TestConnectionStopErrorCommand, [], web3)
+    await testLocallyWithNode(TestConnectionStopErrorCommand, [], provider)
 
     expect(logSpy.mock.calls).toMatchInlineSnapshot(`
       [
@@ -489,10 +488,10 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
       }
 
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           TestPrivateKeyCommand,
           ['--privateKey', privateKey, '--from', wrongFromAddress],
-          web3
+          provider
         )
       ).rejects.toThrowErrorMatchingInlineSnapshot(
         `"The --from address ${wrongFromAddress} does not match the address derived from the provided private key 0x1Be31A94361a391bBaFB2a4CCd704F57dc04d4bb."`
@@ -515,10 +514,10 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
       }
 
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           TestPrivateKeyCommand,
           ['--privateKey', privateKey, '--from', correctFromAddress],
-          web3
+          provider
         )
       ).resolves.not.toThrow()
     })
@@ -538,7 +537,7 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
       }
 
       await expect(
-        testLocallyWithWeb3Node(TestPrivateKeyCommand, ['--privateKey', privateKey], web3)
+        testLocallyWithNode(TestPrivateKeyCommand, ['--privateKey', privateKey], provider)
       ).resolves.not.toThrow()
     })
   })
@@ -687,7 +686,6 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
         })
 
         delete process.env.TELEMETRY_ENABLED
-        process.env.TELEMETRY_URL = 'http://localhost:3000/'
 
         const fetchSpy = jest.spyOn(global, 'fetch')
 
@@ -697,13 +695,17 @@ testWithAnvilL2('BaseCommand', (web3: Web3) => {
           }, 5000) // Higher timeout than the telemetry logic uses
         })
 
-        server.listen(3000, async () => {
+        server.listen(0, async () => {
+          const address = server.address() as { port: number }
+          const telemetryUrl = `http://localhost:${address.port}/`
+          process.env.TELEMETRY_URL = telemetryUrl
+
           // Make sure the command actually returns
           await expect(TestTelemetryCommand.run([])).resolves.toBe(EXPECTED_COMMAND_RESULT)
 
           expect(fetchSpy.mock.calls.length).toEqual(1)
 
-          expect(fetchSpy.mock.calls[0][0]).toMatchInlineSnapshot(`"http://localhost:3000/"`)
+          expect(fetchSpy.mock.calls[0][0]).toEqual(telemetryUrl)
           expect(fetchSpy.mock.calls[0][1]?.body).toMatchInlineSnapshot(`
             "
             celocli_invocation{success="true", version="5.2.3", command="test:telemetry-timeout"} 1

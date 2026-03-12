@@ -1,21 +1,7 @@
-import { ensureLeading0x, StrongAddress, trimLeading0x } from '@celo/base/lib/address'
-import { isValidAddress, toChecksumAddress } from '@celo/utils/lib/address'
-import { sha3 } from '@celo/utils/lib/solidity'
-import BigNumber from 'bignumber.js'
+import { ensureLeading0x, StrongAddress } from '@celo/base/lib/address'
+import { isValidAddress } from '@celo/utils/lib/address'
 import { encode } from 'utf8'
-import { AccessList } from 'web3-core'
-import {
-  AccessListRaw,
-  Block,
-  BlockHeader,
-  BlockNumber,
-  CeloTx,
-  CeloTxPending,
-  CeloTxReceipt,
-  FormattedCeloTx,
-  Hex,
-  Log,
-} from '../types'
+import { AccessList, AccessListRaw, BlockNumber, CeloTx, FormattedCeloTx, Hex } from '../types'
 
 /**
  * Formats the input of a transaction and converts all values to HEX
@@ -44,7 +30,7 @@ export function inputCeloTxFormatter(tx: CeloTx): FormattedCeloTx {
   formattedTX.from = inputAddressFormatter(from?.toString())
   formattedTX.to = inputAddressFormatter(to)
 
-  formattedTX.gas = numberToHex(gas)
+  formattedTX.gas = numberToHex(gas != null ? gas.toString() : undefined)
 
   formattedTX.value = numberToHex(value?.toString())
   formattedTX.nonce = numberToHex(nonce?.toString())
@@ -79,73 +65,6 @@ export function inputCeloTxFormatter(tx: CeloTx): FormattedCeloTx {
   return formattedTX as FormattedCeloTx
 }
 
-export function outputCeloTxFormatter(tx: any): CeloTxPending {
-  if (tx.blockNumber !== null) {
-    tx.blockNumber = hexToNumber(tx.blockNumber)
-  }
-  if (tx.transactionIndex !== null) {
-    tx.transactionIndex = hexToNumber(tx.transactionIndex)
-  }
-  tx.nonce = hexToNumber(tx.nonce)
-  tx.gas = hexToNumber(tx.gas)
-  tx.value = outputBigNumberFormatter(tx.value)
-
-  if (tx.gasPrice) {
-    tx.gasPrice = outputBigNumberFormatter(tx.gasPrice)
-  }
-  if (tx.maxFeePerGas) {
-    tx.maxFeePerGas = outputBigNumberFormatter(tx.maxFeePerGas)
-  }
-  if (tx.maxPriorityFeePerGas) {
-    tx.maxPriorityFeePerGas = outputBigNumberFormatter(tx.maxPriorityFeePerGas)
-  }
-
-  tx.to =
-    tx.to && isValidAddress(tx.to)
-      ? // tx.to could be `0x0` or `null` while contract creation
-        (tx.to = toChecksumAddress(tx.to))
-      : null // set to `null` if invalid address
-
-  if (tx.from) {
-    tx.from = toChecksumAddress(tx.from)
-  }
-
-  if (tx.feeCurrency) {
-    tx.feeCurrency = toChecksumAddress(tx.feeCurrency)
-  }
-
-  return tx as CeloTxPending
-}
-
-export function outputCeloTxReceiptFormatter(receipt: any): CeloTxReceipt {
-  if (typeof receipt !== 'object') {
-    throw new Error('Received receipt is invalid: ' + receipt)
-  }
-
-  if (receipt.blockNumber !== null) {
-    receipt.blockNumber = hexToNumber(receipt.blockNumber)
-  }
-  if (receipt.transactionIndex !== null) {
-    receipt.transactionIndex = hexToNumber(receipt.transactionIndex)
-  }
-  receipt.cumulativeGasUsed = hexToNumber(receipt.cumulativeGasUsed)
-  receipt.gasUsed = hexToNumber(receipt.gasUsed)
-
-  if (Array.isArray(receipt.logs)) {
-    receipt.logs = receipt.logs.map(outputLogFormatter)
-  }
-
-  if (receipt.contractAddress) {
-    receipt.contractAddress = toChecksumAddress(receipt.contractAddress)
-  }
-
-  if (typeof receipt.status !== 'undefined' && receipt.status !== null) {
-    receipt.status = Boolean(parseInt(trimLeading0x(receipt.status), 10))
-  }
-
-  return receipt as CeloTxReceipt
-}
-
 export function inputDefaultBlockNumberFormatter(blockNumber: BlockNumber | null | undefined) {
   if (blockNumber == null) {
     blockNumber = 'latest'
@@ -172,86 +91,11 @@ export function inputBlockNumberFormatter(blockNumber: BlockNumber) {
     : numberToHex(blockNumber.toString())!
 }
 
-// TODO prune after gingerbread hardfork
-export function outputBlockHeaderFormatter(blockHeader: any): BlockHeader {
-  // transform to number
-  blockHeader.gasLimit = hexToNumber(blockHeader.gasLimit)
-  blockHeader.gasUsed = hexToNumber(blockHeader.gasUsed)
-  blockHeader.size = hexToNumber(blockHeader.size)
-  blockHeader.timestamp = hexToNumber(blockHeader.timestamp)
-  if (blockHeader.number !== null) {
-    blockHeader.number = hexToNumber(blockHeader.number)
-  }
-  if (blockHeader.miner) {
-    blockHeader.miner = toChecksumAddress(blockHeader.miner)
-  }
-  return blockHeader as BlockHeader
-}
-
-export function outputBlockFormatter(block: any): Block {
-  block = outputBlockHeaderFormatter(block)
-
-  if (block.difficulty) {
-    block.difficulty = outputBigNumberFormatter(block.difficulty)
-  }
-  if (block.totalDifficulty) {
-    block.totalDifficulty = outputBigNumberFormatter(block.totalDifficulty)
-  }
-
-  if (Array.isArray(block.transactions)) {
-    block.transactions.forEach((item: any) => {
-      if (typeof item !== 'string' && !(item instanceof String)) {
-        return outputCeloTxFormatter(item)
-      }
-    })
-  }
-
-  return block as Block
-}
-
 export function hexToNumber(hex?: string): number | undefined {
   if (hex) {
-    return new BigNumber(hex).toNumber()
+    return Number(BigInt(hex))
   }
   return undefined
-}
-
-export function outputLogFormatter(log: any): Log {
-  // generate a custom log id
-  if (
-    typeof log.blockHash === 'string' &&
-    typeof log.transactionHash === 'string' &&
-    typeof log.logIndex === 'string'
-  ) {
-    const shaId = sha3(
-      trimLeading0x(log.blockHash) +
-        trimLeading0x(log.transactionHash) +
-        trimLeading0x(log.logIndex)
-    )!
-    log.id = 'log_' + trimLeading0x(shaId).substring(0, 8)
-  } else if (!log.id) {
-    log.id = null
-  }
-
-  if (log.blockNumber !== null) {
-    log.blockNumber = hexToNumber(log.blockNumber)
-  }
-  if (log.transactionIndex !== null) {
-    log.transactionIndex = hexToNumber(log.transactionIndex)
-  }
-  if (log.logIndex !== null) {
-    log.logIndex = hexToNumber(log.logIndex)
-  }
-
-  if (log.address) {
-    log.address = toChecksumAddress(log.address)
-  }
-
-  return log as Log
-}
-
-export function outputBigNumberFormatter(hex: string): string {
-  return new BigNumber(hex).toString(10)
 }
 
 function isHash(value: string) {
@@ -274,7 +118,7 @@ export function parseAccessList(accessListRaw: AccessListRaw | undefined): Acces
         if (isHash(key)) {
           return key
         } else {
-          // same behavior as web3
+          // validate storage key format
           throw new Error(`Invalid storage key: ${key}`)
         }
       }),
@@ -349,12 +193,14 @@ function isHexStrict(hex: string): boolean {
   return /^(-)?0x[0-9a-f]*$/i.test(hex)
 }
 
-function numberToHex(value?: BigNumber.Value): Hex | undefined {
+function numberToHex(value?: string | number | bigint): Hex | undefined {
   if (value) {
-    const numberValue = new BigNumber(value)
-    const result = ensureLeading0x(new BigNumber(value).toString(16))
-    // Seen in web3, copied just in case
-    return (numberValue.lt(new BigNumber(0)) ? `-${result}` : result) as Hex
+    const bigValue = BigInt(value)
+    const zero = BigInt(0)
+    const result = ensureLeading0x(
+      bigValue < zero ? (-bigValue).toString(16) : bigValue.toString(16)
+    )
+    return (bigValue < zero ? `-${result}` : result) as Hex
   }
   return undefined
 }

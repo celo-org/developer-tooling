@@ -23,13 +23,12 @@ import {
 import { publicKeyToAddress } from '@celo/utils/lib/address'
 import { EIP712TypedData, generateTypedDataHash } from '@celo/utils/lib/sign-typed-data-utils'
 import { parseSignatureWithoutPrefix } from '@celo/utils/lib/signatureUtils'
-import * as RLP from '@ethereumjs/rlp'
-import * as ethUtil from '@ethereumjs/util'
+import { fromRlp, toRlp, type Hex as ViemHex } from 'viem'
 import { secp256k1 } from '@noble/curves/secp256k1'
 import { keccak_256 } from '@noble/hashes/sha3'
 import { bytesToHex, hexToBytes } from '@noble/hashes/utils'
+import { publicKeyToAddress as viemPublicKeyToAddress } from 'viem/accounts'
 import debugFactory from 'debug'
-import Web3 from 'web3' // TODO try to do this without web3 direct
 
 type OldTransactionTypes = 'celo-legacy' | 'cip42' | TransactionTypes
 type LegacyCeloTx = Omit<CeloTx, 'type'> & {
@@ -37,7 +36,6 @@ type LegacyCeloTx = Omit<CeloTx, 'type'> & {
 }
 type LegacyCeloTxWithSig = WithSig<LegacyCeloTx>
 
-const { ecrecover, fromRpcSig, hashPersonalMessage, toBuffer } = ethUtil
 const debug = debugFactory('wallet-base:tx:sign')
 
 // Original code taken from
@@ -51,8 +49,8 @@ export const thirtyTwo: number = 32
 
 const Y_PARITY_EIP_2098 = 27
 
-function rlpEncodeHex(value: RLP.Input): StrongAddress {
-  return ensureLeading0x(Buffer.from(RLP.encode(value)).toString('hex'))
+function rlpEncodeHex(value: unknown[]): StrongAddress {
+  return toRlp(value as any) as StrongAddress
 }
 
 function isNullOrUndefined(value: any): boolean {
@@ -112,9 +110,7 @@ function signatureFormatter(
   }
 }
 
-export function stringNumberOrBNToHex(
-  num?: number | string | ReturnType<Web3['utils']['toBN']> | bigint
-): Hex {
+export function stringNumberOrBNToHex(num?: number | string | bigint): Hex {
   if (typeof num === 'string' || typeof num === 'number' || num === undefined) {
     return stringNumberToHex(num)
   } else {
@@ -129,7 +125,7 @@ function stringNumberToHex(num?: number | string | bigint): StrongAddress {
   if (typeof num === 'bigint') {
     return makeEven(`0x` + num.toString(16)) as StrongAddress
   }
-  return makeEven(Web3.utils.numberToHex(num)) as StrongAddress
+  return makeEven(ensureLeading0x(Number(num).toString(16))) as StrongAddress
 }
 export function rlpEncodedTx(tx: CeloTx): RLPEncodedTx {
   assertSerializableTX(tx)
@@ -327,7 +323,7 @@ function isLessThanZero(value: CeloTx['gasPrice']) {
     case 'number':
       return Number(value) < 0
     default:
-      return value?.lt(Web3.utils.toBN(0)) || false
+      return typeof value === 'bigint' ? value < BigInt(0) : false
   }
 }
 
@@ -399,12 +395,12 @@ export async function encodeTransaction(
 }
 
 // new types have prefix but legacy does not
-function prefixAwareRLPDecode(rlpEncode: string, type: OldTransactionTypes) {
+function prefixAwareRLPDecode(rlpEncode: string, type: OldTransactionTypes): Uint8Array[] {
   if (type === 'celo-legacy' || type === 'ethereum-legacy') {
-    return RLP.decode(rlpEncode)
+    return fromRlp(rlpEncode as ViemHex, 'bytes') as Uint8Array[]
   }
 
-  return RLP.decode(`0x${rlpEncode.slice(4)}`)
+  return fromRlp(`0x${rlpEncode.slice(4)}` as ViemHex, 'bytes') as Uint8Array[]
 }
 
 function correctLengthOf(type: OldTransactionTypes, includeSig: boolean = true) {
@@ -482,30 +478,30 @@ export function recoverTransaction(rawTx: string): [CeloTx, string] {
 function getPublicKeyofSignerFromTx(transactionArray: Uint8Array[], type: OldTransactionTypes) {
   // this needs to be 10 for cip64, 12 for cip42 and eip1559
   const base = transactionArray.slice(0, correctLengthOf(type, false))
-  const message = concatHex([TxTypeToPrefix[type], rlpEncodeHex(base).slice(2)])
+  const message = concatHex([
+    TxTypeToPrefix[type],
+    rlpEncodeHex(base as unknown as unknown[]).slice(2),
+  ])
   const msgHash = keccak_256(hexToBytes(trimLeading0x(message)))
 
   const { v, r, s } = extractSignatureFromDecoded(transactionArray)
   try {
-    return ecrecover(
-      Buffer.from(msgHash),
-      v === '0x' || v === undefined ? BigInt(0) : BigInt(1),
-      toBuffer(r),
-      toBuffer(s)
-    )
+    const recovery = v === '0x' || v === undefined ? 0 : 1
+    const sig = new secp256k1.Signature(BigInt(r), BigInt(s)).addRecoveryBit(recovery)
+    return Buffer.from(sig.recoverPublicKey(msgHash).toRawBytes(false))
   } catch (e: any) {
     throw new Error(e)
   }
 }
 
 export function getSignerFromTxEIP2718TX(serializedTransaction: string): string {
-  const transactionArray = RLP.decode(`0x${serializedTransaction.slice(4)}`)
+  const transactionArray = fromRlp(`0x${serializedTransaction.slice(4)}` as ViemHex, 'bytes')
   const signer = getPublicKeyofSignerFromTx(
     transactionArray as Uint8Array[],
     determineTXType(serializedTransaction)
   )
 
-  return publicKeyToAddress(signer.toString('hex'))
+  return viemPublicKeyToAddress(`0x${Buffer.from(signer).toString('hex')}` as `0x${string}`)
 }
 
 export function determineTXType(serializedTransaction: string): OldTransactionTypes {
@@ -523,12 +519,11 @@ export function determineTXType(serializedTransaction: string): OldTransactionTy
 
   // it is one of the legacy types (Celo or Ethereum), to differentiate between
   // legacy tx types we have to check the numberof fields
-  const rawValues = RLP.decode(serializedTransaction)
+  const rawValues = fromRlp(serializedTransaction as ViemHex, 'bytes')
   const length = rawValues.length
 
   return correctLengthOf('celo-legacy') === length ? 'celo-legacy' : 'ethereum-legacy'
 }
-
 function vrsForRecovery(vRaw: string, r: string, s: string) {
   const v =
     vRaw === '0x' || hexToNumber(vRaw) === 0 || hexToNumber(vRaw) === 27
@@ -724,7 +719,7 @@ function recoverTransactionEIP1559(serializedTransaction: StrongAddress): [CeloT
 }
 
 function recoverCeloLegacy(serializedTransaction: StrongAddress): [CeloTx, string] {
-  const rawValues = RLP.decode(serializedTransaction) as Uint8Array[]
+  const rawValues = fromRlp(serializedTransaction as ViemHex, 'bytes') as Uint8Array[]
   debug('signing-utils@recoverTransaction: values are %s', rawValues)
   const recovery = handleNumber(rawValues[9])
   const chainId = (recovery - 35) >> 1
@@ -765,7 +760,7 @@ function recoverCeloLegacy(serializedTransaction: StrongAddress): [CeloTx, strin
 }
 
 function recoverEthereumLegacy(serializedTransaction: StrongAddress): [CeloTx, string] {
-  const rawValues = RLP.decode(serializedTransaction) as Uint8Array[]
+  const rawValues = fromRlp(serializedTransaction as ViemHex, 'bytes') as Uint8Array[]
   debug('signing-utils@recoverTransaction: values are %s', rawValues)
   const recovery = handleNumber(rawValues[6])
   const chainId = (recovery - 35) >> 1
@@ -802,12 +797,29 @@ function recoverEthereumLegacy(serializedTransaction: StrongAddress): [CeloTx, s
 }
 
 export function recoverMessageSigner(signingDataHex: string, signedData: string): string {
-  const dataBuff = toBuffer(signingDataHex)
-  const msgHashBuff = hashPersonalMessage(dataBuff)
-  const signature = fromRpcSig(signedData)
+  const dataBytes = hexToBytes(trimLeading0x(signingDataHex))
+  // hashPersonalMessage equivalent: keccak256("\x19Ethereum Signed Message:\n" + len + data)
+  const prefix = Buffer.from(`\x19Ethereum Signed Message:\n${dataBytes.length}`)
+  const combined = new Uint8Array(prefix.length + dataBytes.length)
+  combined.set(prefix)
+  combined.set(dataBytes, prefix.length)
+  const msgHash = keccak_256(combined)
 
-  const publicKey = ecrecover(msgHashBuff, signature.v, signature.r, signature.s)
-  const address = publicKeyToAddress(publicKey.toString('hex'))
+  // fromRpcSig equivalent
+  const trimmedSig = trimLeading0x(signedData)
+  const rBytes = hexToBytes(trimmedSig.slice(0, 64))
+  const sBytes = hexToBytes(trimmedSig.slice(64, 128))
+  let v = parseInt(trimmedSig.slice(128, 130), 16)
+  if (v < 27) v += 27
+
+  const sig = new secp256k1.Signature(
+    BigInt(ensureLeading0x(Buffer.from(rBytes).toString('hex'))),
+    BigInt(ensureLeading0x(Buffer.from(sBytes).toString('hex')))
+  ).addRecoveryBit(v - 27)
+  const publicKey = sig.recoverPublicKey(msgHash).toRawBytes(false)
+  const address = viemPublicKeyToAddress(
+    `0x${Buffer.from(publicKey).toString('hex')}` as `0x${string}`
+  )
   return ensureLeading0x(address)
 }
 
@@ -816,7 +828,7 @@ export function verifyEIP712TypedDataSigner(
   signedData: string,
   expectedAddress: string
 ): boolean {
-  const dataHex = ethUtil.bufferToHex(generateTypedDataHash(typedData))
+  const dataHex = ensureLeading0x(Buffer.from(generateTypedDataHash(typedData)).toString('hex'))
   return verifySignatureWithoutPrefix(dataHex, signedData, expectedAddress)
 }
 

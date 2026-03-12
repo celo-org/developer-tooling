@@ -1,6 +1,6 @@
 import { Flags } from '@oclif/core'
 import { BaseCommand } from '../../base'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class Deauthorize extends BaseCommand {
@@ -26,6 +26,7 @@ export default class Deauthorize extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(Deauthorize)
 
     const accounts = await kit.contracts.getAccounts()
@@ -44,8 +45,8 @@ export default class Deauthorize extends BaseCommand {
       return
     }
 
-    const tx = await accounts.removeAttestationSigner()
+    const tx = accounts.removeAttestationSigner()
 
-    await displaySendTx('deauthorizeTx', tx)
+    await displayViemTx('deauthorizeTx', tx, publicClient)
   }
 }

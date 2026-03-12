@@ -1,5 +1,5 @@
 import { BaseCommand } from '../../base'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class Dequeue extends BaseCommand {
@@ -14,11 +14,12 @@ export default class Dequeue extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(Dequeue)
     const account = res.flags.from
     kit.defaultAccount = account
     const governance = await kit.contracts.getGovernance()
 
-    await displaySendTx('dequeue', governance.dequeueProposalsIfReady(), {}, 'ProposalsDequeued')
+    await displayViemTx('dequeue', governance.dequeueProposalsIfReady(), publicClient)
   }
 }

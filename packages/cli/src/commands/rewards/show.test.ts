@@ -1,4 +1,4 @@
-import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
+import { ContractKit, newKitFromProvider } from '@celo/contractkit'
 import { ElectionWrapper } from '@celo/contractkit/lib/wrappers/Election'
 import { LockedGoldWrapper } from '@celo/contractkit/lib/wrappers/LockedGold'
 import { ValidatorsWrapper } from '@celo/contractkit/lib/wrappers/Validators'
@@ -6,16 +6,15 @@ import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import { ux } from '@oclif/core'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
 import { registerAccount } from '../../test-utils/chain-setup'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import Switch from '../epochs/switch'
 import Show from './show'
 
 process.env.NO_SYNCCHECK = 'true'
 const KNOWN_DEVCHAIN_VALIDATOR = '0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f'
 
-testWithAnvilL2('rewards:show cmd', (web3: Web3) => {
+testWithAnvilL2('rewards:show cmd', (provider) => {
   let kit: ContractKit
   let accounts: string[]
   const writeMock = jest.spyOn(ux.write, 'stdout')
@@ -23,17 +22,17 @@ testWithAnvilL2('rewards:show cmd', (web3: Web3) => {
   const infoMock = jest.spyOn(console, 'info')
 
   beforeEach(async () => {
-    kit = newKitFromWeb3(web3)
-    accounts = await web3.eth.getAccounts()
+    kit = newKitFromProvider(provider)
+    accounts = await kit.connection.getAccounts()
     const epochManager = await kit.contracts.getEpochManager()
-    await timeTravel((await epochManager.epochDuration()) + 1, web3)
-    await testLocallyWithWeb3Node(Switch, ['--from', accounts[0]], web3)
+    await timeTravel((await epochManager.epochDuration()) + 1, provider)
+    await testLocallyWithNode(Switch, ['--from', accounts[0]], provider)
     jest.clearAllMocks()
-  })
+  }, 60000)
 
   describe('no arguments', () => {
     test('default', async () => {
-      await expect(testLocallyWithWeb3Node(Show, [], web3)).resolves.toBeUndefined()
+      await expect(testLocallyWithNode(Show, [], provider)).resolves.toBeUndefined()
       expect(stripAnsiCodesFromNestedArray(infoMock.mock.calls)).toMatchInlineSnapshot(`
         [
           [
@@ -49,7 +48,7 @@ testWithAnvilL2('rewards:show cmd', (web3: Web3) => {
         .mockImplementationOnce(async () => {
           throw new Error('test missing trie node')
         })
-      await expect(testLocallyWithWeb3Node(Show, [], web3)).rejects.toMatchInlineSnapshot(`
+      await expect(testLocallyWithNode(Show, [], provider)).rejects.toMatchInlineSnapshot(`
         [Error: Exact voter information is available only for 1024 blocks after each epoch.
         Supply --estimate to estimate rewards based on current votes, or use an archive node.]
       `)
@@ -59,10 +58,10 @@ testWithAnvilL2('rewards:show cmd', (web3: Web3) => {
   describe('--validator', () => {
     test('invalid', async () => {
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           Show,
           ['--validator', '0x1234567890123456789012345678901234567890'],
-          web3
+          provider
         )
       ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
@@ -78,7 +77,7 @@ testWithAnvilL2('rewards:show cmd', (web3: Web3) => {
     })
 
     test('valid', async () => {
-      await testLocallyWithWeb3Node(Show, ['--validator', KNOWN_DEVCHAIN_VALIDATOR], web3)
+      await testLocallyWithNode(Show, ['--validator', KNOWN_DEVCHAIN_VALIDATOR], provider)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [
           [
@@ -148,7 +147,7 @@ testWithAnvilL2('rewards:show cmd', (web3: Web3) => {
         },
       ])
 
-      await testLocallyWithWeb3Node(Show, ['--validator', KNOWN_DEVCHAIN_VALIDATOR], web3)
+      await testLocallyWithNode(Show, ['--validator', KNOWN_DEVCHAIN_VALIDATOR], provider)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [
           [
@@ -194,10 +193,10 @@ testWithAnvilL2('rewards:show cmd', (web3: Web3) => {
   describe('--voter', () => {
     test('invalid', async () => {
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           Show,
           ['--voter', '0x1234567890123456789012345678901234567890'],
-          web3
+          provider
         )
       ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
@@ -214,7 +213,7 @@ testWithAnvilL2('rewards:show cmd', (web3: Web3) => {
     test('valid', async () => {
       await registerAccount(kit, accounts[0])
       await expect(
-        testLocallyWithWeb3Node(Show, ['--voter', accounts[0], '--estimate'], web3)
+        testLocallyWithNode(Show, ['--voter', accounts[0], '--estimate'], provider)
       ).resolves.toMatchInlineSnapshot(`undefined`)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [

@@ -6,6 +6,7 @@ import BigNumber from 'bignumber.js'
 import inquirer from 'inquirer'
 import type { ProposalTransactionJSON } from './'
 import { ProposalBuilder } from './proposal-builder'
+import { bigintReplacer } from './json-utils'
 
 const DONE_CHOICE = '✔ done'
 
@@ -14,7 +15,7 @@ export class InteractiveProposalBuilder {
 
   async outputTransactions() {
     const transactionList = this.builder.build()
-    console.log(JSON.stringify(transactionList, null, 2))
+    console.log(JSON.stringify(transactionList, bigintReplacer, 2))
   }
 
   async promptTransactions() {
@@ -79,7 +80,7 @@ export class InteractiveProposalBuilder {
           },
         })
 
-        const answer: string = inputAnswer[functionInput.name]
+        const answer: string = inputAnswer[functionInput.name!]
         // transformedValue may not be in scientific notation
         const transformedValue =
           functionInput.type === 'uint256' ? new BigNumber(answer).toString(10) : answer
@@ -118,25 +119,11 @@ export class InteractiveProposalBuilder {
   }
 }
 export function requireABI(contractName: CeloContract): ABIDefinition[] {
-  // search thru multiple paths to find the ABI
-  if (contractName === CeloContract.CeloToken) {
-    contractName = CeloContract.GoldToken
-  } else if (contractName === CeloContract.LockedCelo) {
-    contractName = CeloContract.LockedGold
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const mod = require(`@celo/abis/${contractName}`)
+  const abiKey = Object.keys(mod).find((key) => key.endsWith('ABI'))
+  if (abiKey) {
+    return mod[abiKey] as ABIDefinition[]
   }
-  for (const path of ['', '0.8/', 'mento/']) {
-    const abi = safeRequire(contractName, path)
-    if (abi !== null) {
-      return abi
-    }
-  }
-  throw new Error(`Cannot require ABI for ${contractName}`)
-}
-
-function safeRequire(contractName: CeloContract, subPath?: string) {
-  try {
-    return require(`@celo/abis/web3/${subPath ?? ''}${contractName}`).ABI as ABIDefinition[]
-  } catch {
-    return null
-  }
+  throw new Error(`Cannot find ABI export for ${contractName}`)
 }

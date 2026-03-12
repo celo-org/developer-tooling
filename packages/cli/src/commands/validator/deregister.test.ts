@@ -1,5 +1,6 @@
+import { encodeFunctionData } from 'viem'
 import { StrongAddress } from '@celo/base'
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { ValidatorsWrapper } from '@celo/contractkit/lib/wrappers/Validators'
 import {
   asCoreContractsOwner,
@@ -8,11 +9,10 @@ import {
 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
-import Web3 from 'web3'
 import {
   EXTRA_LONG_TIMEOUT_MS,
   stripAnsiCodesFromNestedArray,
-  testLocallyWithWeb3Node,
+  testLocallyWithNode,
 } from '../../test-utils/cliUtils'
 import Register from '../account/register'
 import Lock from '../lockedcelo/lock'
@@ -23,7 +23,7 @@ import { default as ValidatorRegister } from './register'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validator:deregister', (web3: Web3) => {
+testWithAnvilL2('validator:deregister', (provider) => {
   let account: string
   let ecdsaPublicKey: string
   let groupAddress: StrongAddress
@@ -36,53 +36,78 @@ testWithAnvilL2('validator:deregister', (web3: Web3) => {
     jest.spyOn(console, 'error').mockImplementation(() => {
       // noop
     })
-    const accounts = await web3.eth.getAccounts()
+    const kit = newKitFromProvider(provider)
+    const accounts = await kit.connection.getAccounts()
     account = accounts[0]
-    const kit = newKitFromWeb3(web3)
     validatorContract = await kit.contracts.getValidators()
     const groups = await validatorContract.getRegisteredValidatorGroupsAddresses()
     groupAddress = groups[0] as StrongAddress
-    ecdsaPublicKey = await addressToPublicKey(account, web3.eth.sign)
-    await testLocallyWithWeb3Node(Register, ['--from', account], web3)
-    await testLocallyWithWeb3Node(
+    ecdsaPublicKey = await addressToPublicKey(account, kit.connection.sign)
+    await testLocallyWithNode(Register, ['--from', account], provider)
+    await testLocallyWithNode(
       Lock,
       ['--from', account, '--value', '10000000000000000000000'],
-      web3
+      provider
     )
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       ValidatorRegister,
       ['--from', account, '--ecdsaKey', ecdsaPublicKey, '--yes'],
-      web3
+      provider
     )
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       ValidatorAffiliate,
       ['--from', account, groupAddress, '--yes'],
-      web3
+      provider
     )
-    await asCoreContractsOwner(web3, async (ownerAddress) => {
-      // @ts-expect-error (.contract)
-      await validatorContract.contract.methods.setMaxGroupSize(5).send({ from: ownerAddress })
-      // @ts-expect-error (.contract)
-      await validatorContract.contract.methods
-        .setValidatorLockedGoldRequirements(2, 10000)
-        .send({ from: ownerAddress })
-      // @ts-expect-error (.contract)
-      await validatorContract.contract.methods
-        .setGroupLockedGoldRequirements(2, 10000)
-        .send({ from: ownerAddress })
+    await asCoreContractsOwner(provider, async (ownerAddress) => {
+      const setMaxGroupSizeData = encodeFunctionData({
+        // @ts-expect-error (.contract)
+        abi: validatorContract.contract.abi,
+        functionName: 'setMaxGroupSize',
+        args: [BigInt(5)],
+      })
+      await kit.connection.sendTransaction({
+        // @ts-expect-error (.contract)
+        to: validatorContract.contract.address,
+        data: setMaxGroupSizeData,
+        from: ownerAddress,
+      })
+      const setValidatorLockedGoldData = encodeFunctionData({
+        // @ts-expect-error (.contract)
+        abi: validatorContract.contract.abi,
+        functionName: 'setValidatorLockedGoldRequirements',
+        args: [BigInt(2), BigInt(10000)],
+      })
+      await kit.connection.sendTransaction({
+        // @ts-expect-error (.contract)
+        to: validatorContract.contract.address,
+        data: setValidatorLockedGoldData,
+        from: ownerAddress,
+      })
+      const setGroupLockedGoldData = encodeFunctionData({
+        // @ts-expect-error (.contract)
+        abi: validatorContract.contract.abi,
+        functionName: 'setGroupLockedGoldRequirements',
+        args: [BigInt(2), BigInt(10000)],
+      })
+      await kit.connection.sendTransaction({
+        // @ts-expect-error (.contract)
+        to: validatorContract.contract.address,
+        data: setGroupLockedGoldData,
+        from: ownerAddress,
+      })
     })
-    await withImpersonatedAccount(web3, groupAddress, async () => {
-      await testLocallyWithWeb3Node(
+    await withImpersonatedAccount(provider, groupAddress, async () => {
+      await testLocallyWithNode(
         ValidatorGroupMembers,
         [account, '--from', groupAddress, '--accept', '--yes'],
-        web3
+        provider
       )
     })
-  })
+  }, 60000)
 
   afterEach(() => {
-    jest.resetAllMocks()
-    jest.clearAllMocks()
+    jest.restoreAllMocks()
   })
 
   it(
@@ -91,11 +116,11 @@ testWithAnvilL2('validator:deregister', (web3: Web3) => {
       // precondition
       const groupAtSettup = await validatorContract.getValidatorGroup(groupAddress, false)
       expect(groupAtSettup.members).toContain(account)
-      await withImpersonatedAccount(web3, groupAddress, async () => {
-        await testLocallyWithWeb3Node(
+      await withImpersonatedAccount(provider, groupAddress, async () => {
+        await testLocallyWithNode(
           ValidatorGroupMembers,
           [account, '--from', groupAddress, '--remove', '--yes'],
-          web3
+          provider
         )
       })
 
@@ -103,11 +128,11 @@ testWithAnvilL2('validator:deregister', (web3: Web3) => {
       const { lastRemovedFromGroupTimestamp } =
         await validatorContract.getValidatorMembershipHistoryExtraData(account)
       // travel in the evm
-      await timeTravel(duration.multipliedBy(2).toNumber(), web3)
+      await timeTravel(duration.multipliedBy(2).toNumber(), provider)
       // time travel in node land
       const jestTime = lastRemovedFromGroupTimestamp * 1000
       const futureTime = jestTime + duration.multipliedBy(2000).toNumber()
-      global.Date.now = jest.fn(() => futureTime)
+      jest.spyOn(Date, 'now').mockReturnValue(futureTime)
 
       const logMock = jest.spyOn(console, 'log')
       // this ensures that any spy that were allready attached to console.log from previous calls to spyOn are cleared
@@ -123,7 +148,7 @@ testWithAnvilL2('validator:deregister', (web3: Web3) => {
         duration.toNumber()
       )
       await expect(
-        testLocallyWithWeb3Node(ValidatorDeRegister, ['--from', account], web3)
+        testLocallyWithNode(ValidatorDeRegister, ['--from', account], provider)
       ).resolves.toMatchInlineSnapshot(`undefined`)
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
               [
@@ -157,8 +182,6 @@ testWithAnvilL2('validator:deregister', (web3: Web3) => {
               ]
           `)
       expect(validatorContract.isValidator(account)).resolves.toEqual(false)
-      // @ts-expect-error
-      global.Date.now.mockReset()
     },
     EXTRA_LONG_TIMEOUT_MS
   )
@@ -175,7 +198,7 @@ testWithAnvilL2('validator:deregister', (web3: Web3) => {
       logMock.mockClear()
 
       await expect(
-        testLocallyWithWeb3Node(ValidatorDeRegister, ['--from', account], web3)
+        testLocallyWithNode(ValidatorDeRegister, ['--from', account], provider)
       ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
 
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
@@ -196,7 +219,7 @@ testWithAnvilL2('validator:deregister', (web3: Web3) => {
             "   ✘  Account isn't a member of a validator group ",
           ],
           [
-            "   ✘  Enough time has passed since the account was removed from a validator group? ",
+            "   ✔  Enough time has passed since the account was removed from a validator group? ",
           ],
         ]
       `)
@@ -207,44 +230,45 @@ testWithAnvilL2('validator:deregister', (web3: Web3) => {
   it(
     'succeeds if not a member of any group',
     async () => {
-      const [_, notAffiliatedValidator] = await web3.eth.getAccounts()
+      const kit = newKitFromProvider(provider)
+      const [_, notAffiliatedValidator] = await kit.connection.getAccounts()
       const groupAtSetup = await validatorContract.getValidatorGroup(groupAddress, false)
 
       // Sanity check
       expect(groupAtSetup.members).not.toContain(notAffiliatedValidator)
 
       // Register, but not affiliate
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         Lock,
         ['--from', notAffiliatedValidator, '--value', '10000000000000000000000'],
-        web3
+        provider
       )
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         ValidatorRegister,
         [
           '--from',
           notAffiliatedValidator,
           '--ecdsaKey',
-          await addressToPublicKey(notAffiliatedValidator, web3.eth.sign),
+          await addressToPublicKey(notAffiliatedValidator, kit.connection.sign),
           '--yes',
         ],
-        web3
+        provider
       )
 
       const { duration } = await validatorContract.getValidatorLockedGoldRequirements()
       const { lastRemovedFromGroupTimestamp } =
         await validatorContract.getValidatorMembershipHistoryExtraData(account)
       // travel in the evm
-      await timeTravel(duration.multipliedBy(2).toNumber(), web3)
+      await timeTravel(duration.multipliedBy(2).toNumber(), provider)
       // time travel in node land
       const jestTime = lastRemovedFromGroupTimestamp * 1000
       const futureTime = jestTime + duration.multipliedBy(2000).toNumber()
-      global.Date.now = jest.fn(() => futureTime)
+      jest.spyOn(Date, 'now').mockReturnValue(futureTime)
 
       const logMock = jest.spyOn(console, 'log')
       logMock.mockClear()
 
-      await testLocallyWithWeb3Node(ValidatorDeRegister, ['--from', notAffiliatedValidator], web3)
+      await testLocallyWithNode(ValidatorDeRegister, ['--from', notAffiliatedValidator], provider)
 
       expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
         [

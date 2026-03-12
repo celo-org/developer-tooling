@@ -1,10 +1,13 @@
 import { StrongAddress } from '@celo/base'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
-import { newKitFromWeb3 } from '../kit'
+import { privateKeyToAddress } from '@celo/utils/lib/address'
+import { soliditySha3 } from '@celo/utils/lib/solidity'
+import { randomBytes } from 'crypto'
+import { newKitFromProvider } from '../kit'
 import { FederatedAttestationsWrapper } from './FederatedAttestations'
 
-testWithAnvilL2('FederatedAttestations Wrapper', (web3) => {
-  const kit = newKitFromWeb3(web3)
+testWithAnvilL2('FederatedAttestations Wrapper', (provider) => {
+  const kit = newKitFromProvider(provider)
   const TIME_STAMP = 1665080820
   let accounts: StrongAddress[] = []
   let federatedAttestations: FederatedAttestationsWrapper
@@ -13,12 +16,13 @@ testWithAnvilL2('FederatedAttestations Wrapper', (web3) => {
   let testAccountAddress: StrongAddress
 
   beforeAll(async () => {
-    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
+    accounts = await kit.connection.getAccounts()
     kit.defaultAccount = accounts[0]
     federatedAttestations = await kit.contracts.getFederatedAttestations()
-    testAccountAddress = kit.web3.eth.accounts.create().address as StrongAddress
+    const randomPrivateKey = '0x' + randomBytes(32).toString('hex')
+    testAccountAddress = privateKeyToAddress(randomPrivateKey)
     plainTextIdentifier = '221B Baker St., London'
-    testIdentifierBytes32 = kit.web3.utils.soliditySha3({
+    testIdentifierBytes32 = soliditySha3({
       t: 'bytes32',
       v: plainTextIdentifier,
     }) as string
@@ -49,16 +53,16 @@ testWithAnvilL2('FederatedAttestations Wrapper', (web3) => {
     const account = accounts[3]
 
     const accountInstance = await kit.contracts.getAccounts()
-    await accountInstance.createAccount().sendAndWaitForReceipt({ from: issuer })
-    const celoTransactionObject = await federatedAttestations.registerAttestation(
+    const createHash = await accountInstance.createAccount({ from: issuer })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: createHash })
+    const registerHash = await federatedAttestations.registerAttestation(
       testIdentifierBytes32,
       issuer,
       account,
       issuer,
       TIME_STAMP
     )
-
-    await celoTransactionObject.sendAndWaitForReceipt()
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: registerHash })
 
     const attestationsAfterRegistration = await federatedAttestations.lookupAttestations(
       testIdentifierBytes32,
@@ -80,9 +84,12 @@ testWithAnvilL2('FederatedAttestations Wrapper', (web3) => {
   })
 
   it('attestation should exist when registered and not when revoked', async () => {
-    await federatedAttestations
-      .registerAttestationAsIssuer(testIdentifierBytes32, testAccountAddress, TIME_STAMP)
-      .sendAndWaitForReceipt()
+    const registerHash = await federatedAttestations.registerAttestationAsIssuer(
+      testIdentifierBytes32,
+      testAccountAddress,
+      TIME_STAMP
+    )
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: registerHash })
 
     const attestationsAfterRegistration = await federatedAttestations.lookupAttestations(
       testIdentifierBytes32,
@@ -103,9 +110,12 @@ testWithAnvilL2('FederatedAttestations Wrapper', (web3) => {
     expect(identifiersAfterRegistration.countsPerIssuer).toEqual(['1'])
     expect(identifiersAfterRegistration.identifiers).toEqual([testIdentifierBytes32])
 
-    await federatedAttestations
-      .revokeAttestation(testIdentifierBytes32, accounts[0], testAccountAddress)
-      .sendAndWaitForReceipt()
+    const revokeHash = await federatedAttestations.revokeAttestation(
+      testIdentifierBytes32,
+      accounts[0],
+      testAccountAddress
+    )
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: revokeHash })
 
     const attestationsAfterRevocation = await federatedAttestations.lookupAttestations(
       testIdentifierBytes32,
@@ -127,18 +137,24 @@ testWithAnvilL2('FederatedAttestations Wrapper', (web3) => {
     expect(identifiersAfterRevocation.identifiers).toEqual([])
   })
   it('batch revoke attestations should remove all attestations specified ', async () => {
-    const secondIdentifierBytes32 = kit.web3.utils.soliditySha3({
+    const secondIdentifierBytes32 = soliditySha3({
       t: 'bytes32',
       v: '1600 Pennsylvania Avenue, Washington, D.C., USA',
     }) as string
 
-    await federatedAttestations
-      .registerAttestationAsIssuer(testIdentifierBytes32, testAccountAddress, TIME_STAMP)
-      .sendAndWaitForReceipt()
+    const register1Hash = await federatedAttestations.registerAttestationAsIssuer(
+      testIdentifierBytes32,
+      testAccountAddress,
+      TIME_STAMP
+    )
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: register1Hash })
 
-    await federatedAttestations
-      .registerAttestationAsIssuer(secondIdentifierBytes32, testAccountAddress, TIME_STAMP)
-      .sendAndWaitForReceipt()
+    const register2Hash = await federatedAttestations.registerAttestationAsIssuer(
+      secondIdentifierBytes32,
+      testAccountAddress,
+      TIME_STAMP
+    )
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: register2Hash })
 
     const identifiersAfterRegistration = await federatedAttestations.lookupIdentifiers(
       testAccountAddress,
@@ -151,13 +167,12 @@ testWithAnvilL2('FederatedAttestations Wrapper', (web3) => {
       secondIdentifierBytes32,
     ])
 
-    await federatedAttestations
-      .batchRevokeAttestations(
-        accounts[0],
-        [testIdentifierBytes32, secondIdentifierBytes32],
-        [testAccountAddress, testAccountAddress]
-      )
-      .sendAndWaitForReceipt()
+    const batchRevokeHash = await federatedAttestations.batchRevokeAttestations(
+      accounts[0],
+      [testIdentifierBytes32, secondIdentifierBytes32],
+      [testAccountAddress, testAccountAddress]
+    )
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: batchRevokeHash })
 
     const identifiersAfterBatchRevocation = await federatedAttestations.lookupIdentifiers(
       testAccountAddress,

@@ -1,23 +1,17 @@
 import { StrongAddress } from '@celo/base'
-import { CeloTransactionObject } from '@celo/connect'
+import { type Provider } from '@celo/connect'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { MultiSigWrapper } from '@celo/contractkit/lib/wrappers/MultiSig'
-import { toBuffer } from '@ethereumjs/util'
+import { hexToBytes } from 'viem'
 import { Flags } from '@oclif/core'
 import fetch from 'cross-fetch'
 import debugFactory from 'debug'
 import { Hex } from 'viem'
-
-import Web3 from 'web3'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx, failWith } from '../../utils/cli'
+import { displayViemTx, failWith } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
-import {
-  createSafeFromWeb3,
-  performSafeTransaction,
-  safeTransactionMetadataFromCeloTransactionObject,
-} from '../../utils/safe'
+import { createSafe, performSafeTransaction, safeTransactionMetadata } from '../../utils/safe'
 
 enum HotfixApprovalType {
   APPROVER = 'approver',
@@ -80,6 +74,7 @@ export default class Approve extends BaseCommand {
   async run() {
     const checkBuilder = newCheckBuilder(this)
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(Approve)
     const account = res.flags.from
     const useMultiSig = res.flags.useMultiSig
@@ -98,7 +93,7 @@ export default class Approve extends BaseCommand {
     const approver = useMultiSig ? governanceApproverMultiSig!.address : account
 
     await addDefaultChecks(
-      await this.getWeb3(),
+      (await this.getKit()).connection.currentProvider,
       checkBuilder,
       governance,
       !!hotfix,
@@ -111,11 +106,11 @@ export default class Approve extends BaseCommand {
       governanceApproverMultiSig
     )
 
-    let governanceTx: CeloTransactionObject<any>
-    let logEvent: string
+    let encodedGovernanceData: `0x${string}` | undefined
     if (id) {
       if (await governance.isQueued(id)) {
-        await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
+        const dequeueHash = await governance.dequeueProposalsIfReady()
+        await publicClient.waitForTransactionReceipt({ hash: dequeueHash })
       }
 
       await checkBuilder
@@ -126,78 +121,96 @@ export default class Approve extends BaseCommand {
           'Proposal has not been submitted to multisig',
           res.flags.submit,
           async () => {
-            // We would prefer it allow for submissions if there is ambiguity, only fail if we confirm that it has been submitted
             const confrimations = await fetchConfirmationsForProposals(id)
             return confrimations === null || confrimations.count === 0
           }
         )
         .addConditionalCheck('multisgTXId provided is valid', !!res.flags.multisigTx, async () => {
           const confirmations = await fetchConfirmationsForProposals(id)
-          // if none are found the api could be wrong, so we allow it.
           if (!confirmations || confirmations.count === 0) {
             return true
           }
-          // if we have confirmations, ensure one matches the provided id
           return confirmations.approvals.some(
             (approval) => approval.multisigTx.toString() === res.flags.multisigTx
           )
         })
         .runChecks()
-      governanceTx = await governance.approve(id)
-      logEvent = 'ProposalApproved'
+
+      if (useMultiSig || useSafe) {
+        const dequeue = await governance.getDequeue()
+        const proposalIndex = dequeue.findIndex((d) => d.eq(id))
+        encodedGovernanceData = governance.encodeFunctionData('approve', [
+          id,
+          proposalIndex.toString(),
+        ])
+      }
     } else if (hotfix) {
       await checkBuilder.runChecks()
 
-      // TODO dedup toBuffer
-      governanceTx = governance.approveHotfix(toBuffer(hotfix) as Buffer)
-      logEvent = 'HotfixApproved'
+      if (useMultiSig || useSafe) {
+        encodedGovernanceData = governance.encodeFunctionData('approveHotfix', [hotfix])
+      }
     } else {
       failWith('Proposal ID or hotfix must be provided')
     }
 
     if (approvalType === 'securityCouncil' && useSafe) {
       await performSafeTransaction(
-        await this.getWeb3(),
-        await governance.getSecurityCouncil(),
+        (await this.getKit()).connection.currentProvider,
+        (await governance.getSecurityCouncil()) as StrongAddress,
         account,
-        await safeTransactionMetadataFromCeloTransactionObject(governanceTx, governance.address)
+        safeTransactionMetadata(encodedGovernanceData!, governance.address)
       )
     } else if (
       approvalType === 'securityCouncil' &&
       useMultiSig &&
       governanceSecurityCouncilMultiSig
     ) {
-      const tx = await governanceSecurityCouncilMultiSig.submitOrConfirmTransaction(
-        governance.address,
-        governanceTx.txo
+      await displayViemTx(
+        'approveTx',
+        governanceSecurityCouncilMultiSig.submitOrConfirmTransaction(
+          governance.address,
+          encodedGovernanceData!
+        ),
+        publicClient
       )
-
-      await displaySendTx<string | void | boolean>('approveTx', tx, {}, logEvent)
     } else if (res.flags.multisigTx && useMultiSig) {
-      const tx = await governanceApproverMultiSig!.confirmTransaction(
-        parseInt(res.flags.multisigTx)
+      await displayViemTx(
+        'approveTx',
+        governanceApproverMultiSig!.confirmTransaction(parseInt(res.flags.multisigTx)),
+        publicClient
       )
-      await displaySendTx<string | void | boolean>('approveTx', tx, {}, logEvent)
     } else if (res.flags.submit && useMultiSig) {
-      const tx = await governanceApproverMultiSig!.submitTransaction(
-        governance.address,
-        governanceTx.txo
+      await displayViemTx(
+        'approveTx',
+        governanceApproverMultiSig!.submitTransaction(governance.address, encodedGovernanceData!),
+        publicClient
       )
-      await displaySendTx<string | void | boolean>('approveTx', tx, {}, logEvent)
+    } else if (useMultiSig) {
+      await displayViemTx(
+        'approveTx',
+        governanceApproverMultiSig!.submitOrConfirmTransaction(
+          governance.address,
+          encodedGovernanceData!
+        ),
+        publicClient
+      )
     } else {
-      const tx = useMultiSig
-        ? await governanceApproverMultiSig!.submitOrConfirmTransaction(
-            governance.address,
-            governanceTx.txo
-          )
-        : governanceTx
-      await displaySendTx<string | void | boolean>('approveTx', tx, {}, logEvent)
+      if (id) {
+        await displayViemTx('approveTx', governance.approve(id), publicClient)
+      } else {
+        await displayViemTx(
+          'approveTx',
+          governance.approveHotfix(Buffer.from(hexToBytes(hotfix! as `0x${string}`))),
+          publicClient
+        )
+      }
     }
   }
 }
 
 const addDefaultChecks = async (
-  web3: Web3,
+  provider: Provider,
   checkBuilder: ReturnType<typeof newCheckBuilder>,
   governance: GovernanceWrapper,
   isHotfix: boolean,
@@ -210,7 +223,7 @@ const addDefaultChecks = async (
   governanceApproverMultiSig: MultiSigWrapper | undefined
 ) => {
   if (isHotfix) {
-    const hotfixBuf = toBuffer(hotfix) as Buffer
+    const hotfixBuf = Buffer.from(hexToBytes(hotfix as `0x${string}`))
 
     if (approvalType === HotfixApprovalType.APPROVER || approvalType === undefined) {
       if (useMultiSig) {
@@ -238,10 +251,10 @@ const addDefaultChecks = async (
           })
       } else if (useSafe) {
         checkBuilder.addCheck(`${account} is security council safe signatory`, async () => {
-          const protocolKit = await createSafeFromWeb3(
-            web3,
+          const protocolKit = await createSafe(
+            provider,
             account,
-            await governance.getSecurityCouncil()
+            (await governance.getSecurityCouncil()) as StrongAddress
           )
 
           return await protocolKit.isOwner(account)

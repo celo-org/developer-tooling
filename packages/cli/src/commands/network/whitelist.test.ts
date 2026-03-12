@@ -1,12 +1,11 @@
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
-import Web3 from 'web3'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import Whitelist from './whitelist'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('network:whitelist cmd', (web3: Web3) => {
+testWithAnvilL2('network:whitelist cmd', (provider) => {
   const writeMock = jest.spyOn(ux.write, 'stdout')
 
   afterAll(() => {
@@ -14,7 +13,7 @@ testWithAnvilL2('network:whitelist cmd', (web3: Web3) => {
   })
 
   it('can print the whitelist', async () => {
-    await testLocallyWithWeb3Node(Whitelist, [], web3)
+    await testLocallyWithNode(Whitelist, [], provider)
 
     expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`
       [
@@ -42,7 +41,7 @@ testWithAnvilL2('network:whitelist cmd', (web3: Web3) => {
     `)
   })
   it('modifies output when formating flag is passed', async () => {
-    await testLocallyWithWeb3Node(Whitelist, ['--output=json'], web3)
+    await testLocallyWithNode(Whitelist, ['--output=json'], provider)
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`
       [

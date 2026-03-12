@@ -1,12 +1,11 @@
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
-import Web3 from 'web3'
-import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesAndTxHashes, testLocallyWithNode } from '../../test-utils/cliUtils'
 import Run from './run'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('election:run', (web3: Web3) => {
+testWithAnvilL2('election:run', (provider) => {
   afterEach(async () => {
     jest.clearAllMocks()
   })
@@ -17,7 +16,7 @@ testWithAnvilL2('election:run', (web3: Web3) => {
     const warnMock = jest.spyOn(console, 'warn')
     const writeMock = jest.spyOn(ux.write, 'stdout')
 
-    await testLocallyWithWeb3Node(Run, ['--csv'], web3)
+    await testLocallyWithNode(Run, ['--csv'], provider)
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`
       [
@@ -46,7 +45,7 @@ testWithAnvilL2('election:run', (web3: Web3) => {
     const warnMock = jest.spyOn(console, 'warn')
     const writeMock = jest.spyOn(ux.write, 'stdout')
 
-    await testLocallyWithWeb3Node(Run, ['--csv'], web3)
+    await testLocallyWithNode(Run, ['--csv'], provider)
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`
       [

@@ -1,10 +1,9 @@
 import { COMPLIANT_ERROR_RESPONSE } from '@celo/compliance'
-import { ContractKit, StableToken, newKitFromWeb3 } from '@celo/contractkit'
+import { ContractKit, StableToken, newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
 import { topUpWithToken } from '../../test-utils/chain-setup'
-import { TEST_SANCTIONED_ADDRESS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { TEST_SANCTIONED_ADDRESS, testLocallyWithNode } from '../../test-utils/cliUtils'
 import TransferStable from './stable'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -12,7 +11,7 @@ process.env.NO_SYNCCHECK = 'true'
 // Lots of commands, sometimes times out
 jest.setTimeout(15000)
 
-testWithAnvilL2('transfer:stable cmd', (web3: Web3) => {
+testWithAnvilL2('transfer:stable cmd', (provider) => {
   let accounts: string[] = []
   let kit: ContractKit
 
@@ -26,8 +25,8 @@ testWithAnvilL2('transfer:stable cmd', (web3: Web3) => {
   })
 
   beforeEach(async () => {
-    kit = newKitFromWeb3(web3)
-    accounts = await web3.eth.getAccounts()
+    kit = newKitFromProvider(provider)
+    accounts = await kit.connection.getAccounts()
 
     await topUpWithToken(
       kit,
@@ -48,7 +47,7 @@ testWithAnvilL2('transfer:stable cmd', (web3: Web3) => {
     const amountToTransfer = '5000000000000000000'
 
     // Send cusd as erc20
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       TransferStable,
       [
         '--from',
@@ -60,7 +59,7 @@ testWithAnvilL2('transfer:stable cmd', (web3: Web3) => {
         '--stableToken',
         StableToken.USDm,
       ],
-      web3
+      provider
     )
     // Send cusd as erc20
     const receiverBalance = await kit.getTotalBalance(reciever)
@@ -68,7 +67,7 @@ testWithAnvilL2('transfer:stable cmd', (web3: Web3) => {
       receiverBalanceBefore.USDm!.plus(amountToTransfer).toFixed()
     )
     // Attempt to send erc20, back
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       TransferStable,
       [
         '--from',
@@ -80,7 +79,7 @@ testWithAnvilL2('transfer:stable cmd', (web3: Web3) => {
         '--stableToken',
         StableToken.USDm,
       ],
-      web3
+      provider
     )
   })
 
@@ -90,7 +89,7 @@ testWithAnvilL2('transfer:stable cmd', (web3: Web3) => {
     })
 
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         TransferStable,
         [
           '--from',
@@ -102,7 +101,7 @@ testWithAnvilL2('transfer:stable cmd', (web3: Web3) => {
           '--stableToken',
           StableToken.USDm,
         ],
-        web3
+        provider
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     expect(spy).toHaveBeenCalledWith(expect.stringContaining(COMPLIANT_ERROR_RESPONSE))
@@ -110,7 +109,7 @@ testWithAnvilL2('transfer:stable cmd', (web3: Web3) => {
 
   test('should fail if using with --useAKV', async () => {
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         TransferStable,
         [
           '--from',
@@ -124,7 +123,7 @@ testWithAnvilL2('transfer:stable cmd', (web3: Web3) => {
           '--useAKV',
         ],
 
-        web3
+        provider
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"--useAKV flag is no longer supported"`)
   })

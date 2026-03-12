@@ -1,4 +1,4 @@
-import { newKitFromWeb3, RegisteredContracts } from '@celo/contractkit'
+import { newKitFromProvider, RegisteredContracts } from '@celo/contractkit'
 import inquirer from 'inquirer'
 import { InteractiveProposalBuilder, requireABI } from './interactive-proposal-builder'
 import { ProposalBuilder } from './proposal-builder'
@@ -17,13 +17,13 @@ describe('all registered contracts can be required', () => {
   })
 })
 
-testWithAnvilL2('InteractiveProposalBuilder', (web3) => {
+testWithAnvilL2('InteractiveProposalBuilder', (provider) => {
   let builder: ProposalBuilder
   let interactiveBuilder: InteractiveProposalBuilder
   let fromJsonTxSpy: jest.SpyInstance
 
   beforeEach(() => {
-    const kit = newKitFromWeb3(web3)
+    const kit = newKitFromProvider(provider)
     builder = new ProposalBuilder(kit)
     fromJsonTxSpy = jest.spyOn(builder, 'fromJsonTx')
     interactiveBuilder = new InteractiveProposalBuilder(builder)

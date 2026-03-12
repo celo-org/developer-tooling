@@ -10,7 +10,7 @@ import { verifyClaim } from '@celo/metadata-claims/lib/verify'
 import { eqAddress } from '@celo/utils/lib/address'
 import { concurrentMap } from '@celo/utils/lib/async'
 import { NativeSigner } from '@celo/utils/lib/signatureUtils'
-import { toChecksumAddress } from '@ethereumjs/util'
+import { getAddress } from 'viem'
 import { ux } from '@oclif/core'
 
 import humanizeDuration from 'humanize-duration'
@@ -70,7 +70,7 @@ export abstract class ClaimCommand extends BaseCommand {
   protected async getSigner() {
     const res = await this.parse(this.self)
     const kit = await this.getKit()
-    const address = toChecksumAddress(res.flags.from)
+    const address = getAddress(res.flags.from)
     return NativeSigner(kit.connection.sign, address)
   }
 

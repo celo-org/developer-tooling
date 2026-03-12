@@ -1,16 +1,15 @@
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
-import Web3 from 'web3'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { testLocallyWithNode } from '../../test-utils/cliUtils'
 import Dequeue from './dequeue'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:dequeue cmd', (web3: Web3) => {
+testWithAnvilL2('governance:dequeue cmd', (provider) => {
   it('does not dequeue anything if no proposals are ready', async () => {
-    const kit = newKitFromWeb3(web3)
-    const [account] = await web3.eth.getAccounts()
+    const kit = newKitFromProvider(provider)
+    const [account] = await kit.connection.getAccounts()
     const governanceWrapper = await kit.contracts.getGovernance()
     const minDeposit = (await governanceWrapper.minDeposit()).toFixed()
 
@@ -21,12 +20,16 @@ testWithAnvilL2('governance:dequeue cmd', (web3: Web3) => {
     expect(initialDequeue).toEqual([])
 
     // Create first proposal
-    await governanceWrapper
-      .propose([], 'URL')
-      .sendAndWaitForReceipt({ from: account, value: minDeposit })
+    const proposeHash = await governanceWrapper.propose([], 'URL', {
+      from: account,
+      value: minDeposit,
+    })
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: proposeHash as `0x${string}`,
+    })
 
     // Run dequeue operation
-    await testLocallyWithWeb3Node(Dequeue, ['--from', account], web3)
+    await testLocallyWithNode(Dequeue, ['--from', account], provider)
 
     // After first dequeue, we should have either proposal dequeued or still in queue
     const afterFirstDequeue = await governanceWrapper.getDequeue()
@@ -35,12 +38,16 @@ testWithAnvilL2('governance:dequeue cmd', (web3: Web3) => {
     expect(totalProposals).toBe(1) // Should have exactly 1 proposal in system
 
     // Create second proposal
-    await governanceWrapper
-      .propose([], 'URL2')
-      .sendAndWaitForReceipt({ from: account, value: minDeposit })
+    const proposeHash2 = await governanceWrapper.propose([], 'URL2', {
+      from: account,
+      value: minDeposit,
+    })
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: proposeHash2 as `0x${string}`,
+    })
 
     // Run dequeue again
-    await testLocallyWithWeb3Node(Dequeue, ['--from', account], web3)
+    await testLocallyWithNode(Dequeue, ['--from', account], provider)
 
     // After second dequeue, we should have 2 total proposals in the system
     const finalDequeue = await governanceWrapper.getDequeue()
@@ -50,8 +57,8 @@ testWithAnvilL2('governance:dequeue cmd', (web3: Web3) => {
   })
 
   it('dequeues proposals after time has passed', async () => {
-    const kit = newKitFromWeb3(web3)
-    const [account] = await web3.eth.getAccounts()
+    const kit = newKitFromProvider(provider)
+    const [account] = await kit.connection.getAccounts()
     const governanceWrapper = await kit.contracts.getGovernance()
     const minDeposit = (await governanceWrapper.minDeposit()).toFixed()
     const dequeueFrequency = (await governanceWrapper.dequeueFrequency()).toNumber()
@@ -61,12 +68,16 @@ testWithAnvilL2('governance:dequeue cmd', (web3: Web3) => {
     expect(await governanceWrapper.getDequeue()).toEqual([])
 
     // Create first proposal
-    await governanceWrapper
-      .propose([], 'URL')
-      .sendAndWaitForReceipt({ from: account, value: minDeposit })
+    const proposeHash = await governanceWrapper.propose([], 'URL', {
+      from: account,
+      value: minDeposit,
+    })
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: proposeHash as `0x${string}`,
+    })
 
     // Run dequeue immediately (should not dequeue due to timing)
-    await testLocallyWithWeb3Node(Dequeue, ['--from', account], web3)
+    await testLocallyWithNode(Dequeue, ['--from', account], provider)
 
     // Should have 1 proposal total in the system
     const afterFirstDequeue = await governanceWrapper.getDequeue()
@@ -74,15 +85,19 @@ testWithAnvilL2('governance:dequeue cmd', (web3: Web3) => {
     expect(afterFirstDequeue.length + afterFirstQueue.length).toBe(1)
 
     // Create second proposal
-    await governanceWrapper
-      .propose([], 'URL2')
-      .sendAndWaitForReceipt({ from: account, value: minDeposit })
+    const proposeHash2 = await governanceWrapper.propose([], 'URL2', {
+      from: account,
+      value: minDeposit,
+    })
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: proposeHash2 as `0x${string}`,
+    })
 
     // Advance time to allow dequeuing
-    await timeTravel(dequeueFrequency + 1, web3)
+    await timeTravel(dequeueFrequency + 1, provider)
 
     // Now dequeue should work
-    await testLocallyWithWeb3Node(Dequeue, ['--from', account], web3)
+    await testLocallyWithNode(Dequeue, ['--from', account], provider)
 
     // Should have 2 proposals total, and some should be dequeued
     const finalDequeue = await governanceWrapper.getDequeue()

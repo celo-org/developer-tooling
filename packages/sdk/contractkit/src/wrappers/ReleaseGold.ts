@@ -1,18 +1,15 @@
-import { ReleaseGold } from '@celo/abis/web3/ReleaseGold'
-import { concurrentMap } from '@celo/base'
+import { releaseGoldABI } from '@celo/abis'
 import { StrongAddress, findAddressIndex } from '@celo/base/lib/address'
 import { Signature } from '@celo/base/lib/signatureUtils'
-import { Address, CeloTransactionObject, CeloTxObject, toTransactionObject } from '@celo/connect'
+import { Address, CeloTx } from '@celo/connect'
+import { soliditySha3 } from '@celo/utils/lib/solidity'
 import { hashMessageWithPrefix, signedMessageToPublicKey } from '@celo/utils/lib/signatureUtils'
 import BigNumber from 'bignumber.js'
-import { flatten } from 'fp-ts/lib/Array'
+
 import {
-  proxyCall,
-  proxySend,
   secondsToDurationString,
-  stringIdentity,
   stringToSolidityBytes,
-  tupleParser,
+  toViemAddress,
   unixSecondsTimestampToDateString,
   valueToBigNumber,
   valueToInt,
@@ -64,13 +61,24 @@ interface RevocationInfo {
 /**
  * Contract for handling an instance of a ReleaseGold contract.
  */
-export class ReleaseGoldWrapper extends BaseWrapperForGoverning<ReleaseGold> {
+export class ReleaseGoldWrapper extends BaseWrapperForGoverning<typeof releaseGoldABI> {
+  private _getReleaseSchedule = async () => {
+    const res = await this.contract.read.releaseSchedule()
+    return {
+      releaseStartTime: res[0].toString(),
+      releaseCliff: res[1].toString(),
+      numReleasePeriods: res[2].toString(),
+      releasePeriod: res[3].toString(),
+      amountReleasedPerPeriod: res[4].toString(),
+    }
+  }
+
   /**
    * Returns the underlying Release schedule of the ReleaseGold contract
    * @return A ReleaseSchedule.
    */
   async getReleaseSchedule(): Promise<ReleaseSchedule> {
-    const releaseSchedule = await this.contract.methods.releaseSchedule().call()
+    const releaseSchedule = await this._getReleaseSchedule()
 
     return {
       releaseStartTime: valueToInt(releaseSchedule.releaseStartTime),
@@ -100,74 +108,73 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<ReleaseGold> {
    * Returns the beneficiary of the ReleaseGold contract
    * @return The address of the beneficiary.
    */
-  getBeneficiary: () => Promise<StrongAddress> = proxyCall(
-    this.contract.methods.beneficiary as () => CeloTxObject<StrongAddress>
-  )
+  getBeneficiary = async (): Promise<StrongAddress> => this.contract.read.beneficiary()
 
   /**
    * Returns the releaseOwner address of the ReleaseGold contract
    * @return The address of the releaseOwner.
    */
-  getReleaseOwner: () => Promise<StrongAddress> = proxyCall(
-    this.contract.methods.releaseOwner as () => CeloTxObject<StrongAddress>
-  )
+  getReleaseOwner = async (): Promise<StrongAddress> => this.contract.read.releaseOwner()
 
   /**
    * Returns the refund address of the ReleaseGold contract
    * @return The refundAddress.
    */
-  getRefundAddress: () => Promise<StrongAddress> = proxyCall(
-    this.contract.methods.refundAddress as () => CeloTxObject<StrongAddress>
-  )
+  getRefundAddress = async (): Promise<StrongAddress> => this.contract.read.refundAddress()
 
   /**
    * Returns the owner's address of the ReleaseGold contract
    * @return The owner's address.
    */
-  getOwner: () => Promise<StrongAddress> = proxyCall(
-    this.contract.methods.owner as () => CeloTxObject<StrongAddress>
-  )
+  getOwner = async (): Promise<StrongAddress> => this.contract.read.owner()
 
   /**
    * Returns true if the liquidity provision has been met for this contract
    * @return If the liquidity provision is met.
    */
-  getLiquidityProvisionMet: () => Promise<boolean> = proxyCall(
-    this.contract.methods.liquidityProvisionMet
-  )
+  getLiquidityProvisionMet = async (): Promise<boolean> =>
+    this.contract.read.liquidityProvisionMet()
 
   /**
    * Returns true if the contract can validate
    * @return If the contract can validate
    */
-  getCanValidate: () => Promise<boolean> = proxyCall(this.contract.methods.canValidate)
+  getCanValidate = async (): Promise<boolean> => this.contract.read.canValidate()
 
   /**
    * Returns true if the contract can vote
    * @return If the contract can vote
    */
-  getCanVote: () => Promise<boolean> = proxyCall(this.contract.methods.canVote)
+  getCanVote = async (): Promise<boolean> => this.contract.read.canVote()
 
   /**
    * Returns the total withdrawn amount from the ReleaseGold contract
    * @return The total withdrawn amount from the ReleaseGold contract
    */
-  getTotalWithdrawn: () => Promise<BigNumber> = proxyCall(
-    this.contract.methods.totalWithdrawn,
-    undefined,
-    valueToBigNumber
-  )
+  getTotalWithdrawn = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.totalWithdrawn()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Returns the maximum amount of gold (regardless of release schedule)
    * currently allowed for release.
    * @return The max amount of gold currently withdrawable.
    */
-  getMaxDistribution: () => Promise<BigNumber> = proxyCall(
-    this.contract.methods.maxDistribution,
-    undefined,
-    valueToBigNumber
-  )
+  getMaxDistribution = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.maxDistribution()
+    return valueToBigNumber(res.toString())
+  }
+
+  private _getRevocationInfo = async () => {
+    const res = await this.contract.read.revocationInfo()
+    return {
+      revocable: res[0] as boolean,
+      canExpire: res[1] as boolean,
+      releasedBalanceAtRevoke: res[2].toString(),
+      revokeTime: res[3].toString(),
+    }
+  }
 
   /**
    * Returns the underlying Revocation Info of the ReleaseGold contract
@@ -175,7 +182,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<ReleaseGold> {
    */
   async getRevocationInfo(): Promise<RevocationInfo> {
     try {
-      const revocationInfo = await this.contract.methods.revocationInfo().call()
+      const revocationInfo = await this._getRevocationInfo()
       return {
         revocable: revocationInfo.revocable,
         canExpire: revocationInfo.canExpire,
@@ -208,7 +215,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<ReleaseGold> {
    * Indicates if the release grant is revoked or not
    * @return A boolean indicating revoked releasing (true) or non-revoked(false).
    */
-  isRevoked: () => Promise<boolean> = proxyCall(this.contract.methods.isRevoked)
+  isRevoked = async (): Promise<boolean> => this.contract.read.isRevoked()
 
   /**
    * Returns the time at which the release schedule was revoked
@@ -232,111 +239,94 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<ReleaseGold> {
    * Returns the total balance of the ReleaseGold instance
    * @return The total ReleaseGold instance balance
    */
-  getTotalBalance: () => Promise<BigNumber> = proxyCall(
-    this.contract.methods.getTotalBalance,
-    undefined,
-    valueToBigNumber
-  )
+  getTotalBalance = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.getTotalBalance()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Returns the the sum of locked and unlocked gold in the ReleaseGold instance
    * @return The remaining total ReleaseGold instance balance
    */
-  getRemainingTotalBalance: () => Promise<BigNumber> = proxyCall(
-    this.contract.methods.getRemainingTotalBalance,
-    undefined,
-    valueToBigNumber
-  )
+  getRemainingTotalBalance = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.getRemainingTotalBalance()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Returns the remaining unlocked gold balance in the ReleaseGold instance
    * @return The available unlocked ReleaseGold instance gold balance
    */
-  getRemainingUnlockedBalance: () => Promise<BigNumber> = proxyCall(
-    this.contract.methods.getRemainingUnlockedBalance,
-    undefined,
-    valueToBigNumber
-  )
+  getRemainingUnlockedBalance = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.getRemainingUnlockedBalance()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Returns the remaining locked gold balance in the ReleaseGold instance
    * @return The remaining locked ReleaseGold instance gold balance
    */
-  getRemainingLockedBalance: () => Promise<BigNumber> = proxyCall(
-    this.contract.methods.getRemainingLockedBalance,
-    undefined,
-    valueToBigNumber
-  )
+  getRemainingLockedBalance = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.getRemainingLockedBalance()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Returns the total amount that has already released up to now
    * @return The already released gold amount up to the point of call
    */
-  getCurrentReleasedTotalAmount: () => Promise<BigNumber> = proxyCall(
-    this.contract.methods.getCurrentReleasedTotalAmount,
-    undefined,
-    valueToBigNumber
-  )
+  getCurrentReleasedTotalAmount = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.getCurrentReleasedTotalAmount()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Returns currently withdrawable amount
    * @return The amount that can be yet withdrawn
    */
-  getWithdrawableAmount: () => Promise<BigNumber> = proxyCall(
-    this.contract.methods.getWithdrawableAmount,
-    undefined,
-    valueToBigNumber
-  )
+  getWithdrawableAmount = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.getWithdrawableAmount()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Revoke a Release schedule
-   * @return A CeloTransactionObject
+   * @returns A promise that resolves to the transaction hash
    */
-  revokeReleasing: () => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract.methods.revoke
-  )
+  revokeReleasing = (txParams?: Omit<CeloTx, 'data'>) => this.contract.write.revoke(txParams as any)
 
   /**
    * Revoke a vesting CELO schedule from the contract's beneficiary.
-   * @return A CeloTransactionObject
+   * @returns A promise that resolves to the transaction hash
    */
   revokeBeneficiary = this.revokeReleasing
 
   /**
    * Refund `refundAddress` and `beneficiary` after the ReleaseGold schedule has been revoked.
-   * @return A CeloTransactionObject
+   * @returns A promise that resolves to the transaction hash
    */
-  refundAndFinalize: () => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract.methods.refundAndFinalize
-  )
+  refundAndFinalize = (txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.refundAndFinalize(txParams as any)
 
   /**
    * Locks gold to be used for voting.
    * @param value The amount of gold to lock
    */
-  lockGold: (value: BigNumber.Value) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract.methods.lockGold,
-    tupleParser(valueToString)
-  )
+  lockGold = (value: BigNumber.Value, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.lockGold([BigInt(valueToString(value))] as const, txParams as any)
 
-  transfer: (to: Address, value: BigNumber.Value) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract.methods.transfer,
-    tupleParser(stringIdentity, valueToString)
-  )
+  transfer = (to: Address, value: BigNumber.Value, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.transfer(
+      [toViemAddress(to), BigInt(valueToString(value))] as const,
+      txParams as any
+    )
 
   /**
    * Unlocks gold that becomes withdrawable after the unlocking period.
    * @param value The amount of gold to unlock
    */
-  unlockGold: (value: BigNumber.Value) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract.methods.unlockGold,
-    tupleParser(valueToString)
-  )
+  unlockGold = (value: BigNumber.Value, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.unlockGold([BigInt(valueToString(value))] as const, txParams as any)
 
   async unlockAllGold() {
     const lockedGold = await this.contracts.getLockedGold()
@@ -349,7 +339,10 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<ReleaseGold> {
    * @param index The index of the pending withdrawal to relock from.
    * @param value The value to relock from the specified pending withdrawal.
    */
-  async relockGold(value: BigNumber.Value): Promise<CeloTransactionObject<void>[]> {
+  async relockGold(
+    value: BigNumber.Value,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`[]> {
     const lockedGold = await this.contracts.getLockedGold()
     const pendingWithdrawals = await lockedGold.getPendingWithdrawals(this.address)
     // Ensure there are enough pending withdrawals to relock.
@@ -367,15 +360,20 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<ReleaseGold> {
     pendingWithdrawals.forEach(throwIfNotSorted)
 
     let remainingToRelock = new BigNumber(value)
-    const relockPw = (acc: CeloTransactionObject<void>[], pw: PendingWithdrawal, i: number) => {
+    const relockOps: { index: number; value: BigNumber }[] = []
+    pendingWithdrawals.reduceRight((_acc: null, pw: PendingWithdrawal, i: number) => {
       const valueToRelock = BigNumber.minimum(pw.value, remainingToRelock)
       if (!valueToRelock.isZero()) {
         remainingToRelock = remainingToRelock.minus(valueToRelock)
-        acc.push(this._relockGold(i, valueToRelock))
+        relockOps.push({ index: i, value: valueToRelock })
       }
-      return acc
+      return null
+    }, null)
+    const hashes: `0x${string}`[] = []
+    for (const op of relockOps) {
+      hashes.push(await this._relockGold(op.index, op.value, txParams))
     }
-    return pendingWithdrawals.reduceRight(relockPw, []) as CeloTransactionObject<void>[]
+    return hashes
   }
 
   /**
@@ -383,36 +381,31 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<ReleaseGold> {
    * @param index The index of the pending withdrawal to relock from.
    * @param value The value to relock from the specified pending withdrawal.
    */
-  _relockGold: (index: number, value: BigNumber.Value) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract.methods.relockGold,
-    tupleParser(valueToString, valueToString)
-  )
+  _relockGold = (index: number, value: BigNumber.Value, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.relockGold(
+      [BigInt(valueToString(index)), BigInt(valueToString(value))] as const,
+      txParams as any
+    )
 
   /**
    * Withdraw gold in the ReleaseGold instance that has been unlocked but not withdrawn.
    * @param index The index of the pending locked gold withdrawal
    */
-  withdrawLockedGold: (index: BigNumber.Value) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract.methods.withdrawLockedGold,
-    tupleParser(valueToString)
-  )
+  withdrawLockedGold = (index: BigNumber.Value, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.withdrawLockedGold([BigInt(valueToString(index))] as const, txParams as any)
 
   /**
    * Transfer released gold from the ReleaseGold instance back to beneficiary.
    * @param value The requested gold amount
    */
-  withdraw: (value: BigNumber.Value) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract.methods.withdraw,
-    tupleParser(valueToString)
-  )
+  withdraw = (value: BigNumber.Value, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.withdraw([BigInt(valueToString(value))] as const, txParams as any)
 
   /**
    * Beneficiary creates an account on behalf of the ReleaseGold contract.
    */
-  createAccount = proxySend(this.connection, this.contract.methods.createAccount)
+  createAccount = (txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.createAccount(txParams as any)
 
   /**
    * Beneficiary creates an account on behalf of the ReleaseGold contract.
@@ -420,94 +413,131 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<ReleaseGold> {
    * @param dataEncryptionKey The key to set
    * @param walletAddress The address to set
    */
-  setAccount = proxySend(this.connection, this.contract.methods.setAccount)
+  setAccount = (
+    name: string,
+    dataEncryptionKey: string,
+    walletAddress: string,
+    txParams?: Omit<CeloTx, 'data'>
+  ) =>
+    this.contract.write.setAccount(
+      [name, dataEncryptionKey as `0x${string}`, toViemAddress(walletAddress)] as any,
+      txParams as any
+    )
 
   /**
    * Sets the name for the account
    * @param name The name to set
    */
-  setAccountName = proxySend(this.connection, this.contract.methods.setAccountName)
+  setAccountName = (name: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.setAccountName([name] as const, txParams as any)
 
   /**
    * Sets the metadataURL for the account
    * @param metadataURL The url to set
    */
-  setAccountMetadataURL = proxySend(this.connection, this.contract.methods.setAccountMetadataURL)
+  setAccountMetadataURL = (url: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.setAccountMetadataURL([url] as const, txParams as any)
 
   /**
    * Sets the wallet address for the account
    * @param walletAddress The address to set
+   * @param v The recovery id of the incoming ECDSA signature
+   * @param r The output of the ECDSA signature
+   * @param s The output of the ECDSA signature
    */
-  setAccountWalletAddress = proxySend(
-    this.connection,
-    this.contract.methods.setAccountWalletAddress
-  )
+  setAccountWalletAddress = (
+    walletAddress: string,
+    v: number | string,
+    r: string | number[],
+    s: string | number[],
+    txParams?: Omit<CeloTx, 'data'>
+  ) =>
+    this.contract.write.setAccountWalletAddress(
+      [toViemAddress(walletAddress), Number(v), r as `0x${string}`, s as `0x${string}`] as const,
+      txParams as any
+    )
 
   /**
    * Sets the data encryption of the account
    * @param dataEncryptionKey The key to set
    */
-  setAccountDataEncryptionKey = proxySend(
-    this.connection,
-    this.contract.methods.setAccountDataEncryptionKey
-  )
+  setAccountDataEncryptionKey = (dataEncryptionKey: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.setAccountDataEncryptionKey(
+      [dataEncryptionKey as `0x${string}`] as const,
+      txParams as any
+    )
 
   /**
    * Sets the contract's liquidity provision to true
    */
-  setLiquidityProvision = proxySend(this.connection, this.contract.methods.setLiquidityProvision)
+  setLiquidityProvision = (txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.setLiquidityProvision(txParams as any)
 
   /**
    * Sets the contract's `canExpire` field to `_canExpire`
    * @param _canExpire If the contract can expire `EXPIRATION_TIME` after the release schedule finishes.
    */
-  setCanExpire = proxySend(this.connection, this.contract.methods.setCanExpire)
+  setCanExpire = (canExpire: boolean, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.setCanExpire([canExpire] as const, txParams as any)
 
   /**
    * Sets the contract's max distribution
    */
-  setMaxDistribution = proxySend(this.connection, this.contract.methods.setMaxDistribution)
+  setMaxDistribution = (distributionRatio: number | string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.setMaxDistribution([BigInt(distributionRatio)] as const, txParams as any)
 
   /**
    * Sets the contract's beneficiary
    */
-  setBeneficiary = proxySend(this.connection, this.contract.methods.setBeneficiary)
+  setBeneficiary = (beneficiary: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.setBeneficiary([toViemAddress(beneficiary)] as const, txParams as any)
+
+  private _authorizeVoteSigner = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.authorizeVoteSigner(args as any, txParams as any)
 
   /**
    * Authorizes an address to sign votes on behalf of the account.
    * @param signer The address of the vote signing key to authorize.
    * @param proofOfSigningKeyPossession The account address signed by the signer address.
-   * @return A CeloTransactionObject
+   * @returns A promise that resolves to the transaction hash
    */
   async authorizeVoteSigner(
     signer: Address,
-    proofOfSigningKeyPossession: Signature
-  ): Promise<CeloTransactionObject<void>> {
-    return toTransactionObject(
-      this.connection,
-      this.contract.methods.authorizeVoteSigner(
+    proofOfSigningKeyPossession: Signature,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
+    return this._authorizeVoteSigner(
+      [
         signer,
         proofOfSigningKeyPossession.v,
         proofOfSigningKeyPossession.r,
-        proofOfSigningKeyPossession.s
-      )
+        proofOfSigningKeyPossession.s,
+      ],
+      txParams
     )
   }
+
+  private _authorizeValidatorSignerWithPublicKey = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.authorizeValidatorSignerWithPublicKey(args as any, txParams as any)
+
+  private _authorizeValidatorSigner = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.authorizeValidatorSigner(args as any, txParams as any)
 
   /**
    * Authorizes an address to sign validation messages on behalf of the account.
    * @param signer The address of the validator signing key to authorize.
    * @param proofOfSigningKeyPossession The account address signed by the signer address.
-   * @return A CeloTransactionObject
+   * @returns A promise that resolves to the transaction hash
    */
   async authorizeValidatorSigner(
     signer: Address,
-    proofOfSigningKeyPossession: Signature
-  ): Promise<CeloTransactionObject<void>> {
+    proofOfSigningKeyPossession: Signature,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     const validators = await this.contracts.getValidators()
     const account = this.address
     if (await validators.isValidator(account)) {
-      const message = this.connection.web3.utils.soliditySha3({
+      const message = soliditySha3({
         type: 'address',
         value: account,
       })!
@@ -518,48 +548,42 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<ReleaseGold> {
         proofOfSigningKeyPossession.r,
         proofOfSigningKeyPossession.s
       )
-      return toTransactionObject(
-        this.connection,
-        this.contract.methods.authorizeValidatorSignerWithPublicKey(
+      return this._authorizeValidatorSignerWithPublicKey(
+        [
           signer,
           proofOfSigningKeyPossession.v,
           proofOfSigningKeyPossession.r,
           proofOfSigningKeyPossession.s,
-          stringToSolidityBytes(pubKey)
-        )
+          stringToSolidityBytes(pubKey),
+        ],
+        txParams
       )
     } else {
-      return toTransactionObject(
-        this.connection,
-        this.contract.methods.authorizeValidatorSigner(
+      return this._authorizeValidatorSigner(
+        [
           signer,
           proofOfSigningKeyPossession.v,
           proofOfSigningKeyPossession.r,
-          proofOfSigningKeyPossession.s
-        )
+          proofOfSigningKeyPossession.s,
+        ],
+        txParams
       )
     }
-  }
-
-  /**
-   * @deprecated use `authorizeValidatorSignerWithPublicKey`
-   */
-  async authorizeValidatorSignerAndBls(signer: Address, proofOfSigningKeyPossession: Signature) {
-    return this.authorizeValidatorSignerWithPublicKey(signer, proofOfSigningKeyPossession)
   }
 
   /**
    * Authorizes an address to sign consensus messages on behalf of the contract's account. Also switch BLS key at the same time.
    * @param signer The address of the signing key to authorize.
    * @param proofOfSigningKeyPossession The contract's account address signed by the signer address.
-   * @return A CeloTransactionObject
+   * @returns A promise that resolves to the transaction hash
    */
   async authorizeValidatorSignerWithPublicKey(
     signer: Address,
-    proofOfSigningKeyPossession: Signature
-  ): Promise<CeloTransactionObject<void>> {
+    proofOfSigningKeyPossession: Signature,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     const account = this.address
-    const message = this.connection.web3.utils.soliditySha3({
+    const message = soliditySha3({
       type: 'address',
       value: account,
     })!
@@ -570,38 +594,45 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<ReleaseGold> {
       proofOfSigningKeyPossession.r,
       proofOfSigningKeyPossession.s
     )
-    return toTransactionObject(
-      this.connection,
-      this.contract.methods.authorizeValidatorSignerWithPublicKey(
+    return this._authorizeValidatorSignerWithPublicKey(
+      [
         signer,
         proofOfSigningKeyPossession.v,
         proofOfSigningKeyPossession.r,
         proofOfSigningKeyPossession.s,
-        stringToSolidityBytes(pubKey)
-      )
+        stringToSolidityBytes(pubKey),
+      ],
+      txParams
     )
   }
+
+  private _authorizeAttestationSigner = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.authorizeAttestationSigner(args as any, txParams as any)
 
   /**
    * Authorizes an address to sign attestation messages on behalf of the account.
    * @param signer The address of the attestation signing key to authorize.
    * @param proofOfSigningKeyPossession The account address signed by the signer address.
-   * @return A CeloTransactionObject
+   * @returns A promise that resolves to the transaction hash
    */
   async authorizeAttestationSigner(
     signer: Address,
-    proofOfSigningKeyPossession: Signature
-  ): Promise<CeloTransactionObject<void>> {
-    return toTransactionObject(
-      this.connection,
-      this.contract.methods.authorizeAttestationSigner(
+    proofOfSigningKeyPossession: Signature,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
+    return this._authorizeAttestationSigner(
+      [
         signer,
         proofOfSigningKeyPossession.v,
         proofOfSigningKeyPossession.r,
-        proofOfSigningKeyPossession.s
-      )
+        proofOfSigningKeyPossession.s,
+      ],
+      txParams
     )
   }
+
+  private _revokePending = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.revokePending(args as any, txParams as any)
 
   /**
    * Revokes pending votes
@@ -613,8 +644,9 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<ReleaseGold> {
   async revokePending(
     account: Address,
     group: Address,
-    value: BigNumber
-  ): Promise<CeloTransactionObject<void>> {
+    value: BigNumber,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     const electionContract = await this.contracts.getElection()
     const groups = await electionContract.getGroupsVotedForByAccount(account)
     const index = findAddressIndex(group, groups)
@@ -623,10 +655,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<ReleaseGold> {
       value.times(-1)
     )
 
-    return toTransactionObject(
-      this.connection,
-      this.contract.methods.revokePending(group, value.toFixed(), lesser, greater, index)
-    )
+    return this._revokePending([group, value.toFixed(), lesser, greater, index], txParams)
   }
 
   /**
@@ -636,6 +665,9 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<ReleaseGold> {
    */
   revokePendingVotes = (group: Address, value: BigNumber) =>
     this.revokePending(this.address, group, value)
+
+  private _revokeActive = (args: any[], txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.revokeActive(args as any, txParams as any)
 
   /**
    * Revokes active votes
@@ -647,8 +679,9 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<ReleaseGold> {
   async revokeActive(
     account: Address,
     group: Address,
-    value: BigNumber
-  ): Promise<CeloTransactionObject<void>> {
+    value: BigNumber,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     const electionContract = await this.contracts.getElection()
     const groups = await electionContract.getGroupsVotedForByAccount(account)
     const index = findAddressIndex(group, groups)
@@ -657,10 +690,7 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<ReleaseGold> {
       value.times(-1)
     )
 
-    return toTransactionObject(
-      this.connection,
-      this.contract.methods.revokeActive(group, value.toFixed(), lesser, greater, index)
-    )
+    return this._revokeActive([group, value.toFixed(), lesser, greater, index], txParams)
   }
 
   /**
@@ -681,23 +711,24 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<ReleaseGold> {
   async revoke(
     account: Address,
     group: Address,
-    value: BigNumber
-  ): Promise<CeloTransactionObject<void>[]> {
+    value: BigNumber,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`[]> {
     const electionContract = await this.contracts.getElection()
     const vote = await electionContract.getVotesForGroupByAccount(account, group)
     if (value.gt(vote.pending.plus(vote.active))) {
       throw new Error(`can't revoke more votes for ${group} than have been made by ${account}`)
     }
-    const txos = []
+    const hashes: `0x${string}`[] = []
     const pendingValue = BigNumber.minimum(vote.pending, value)
     if (!pendingValue.isZero()) {
-      txos.push(await this.revokePending(account, group, pendingValue))
+      hashes.push(await this.revokePending(account, group, pendingValue, txParams))
     }
     if (pendingValue.lt(value)) {
       const activeValue = value.minus(pendingValue)
-      txos.push(await this.revokeActive(account, group, activeValue))
+      hashes.push(await this.revokeActive(account, group, activeValue, txParams))
     }
-    return txos
+    return hashes
   }
 
   /**
@@ -708,28 +739,30 @@ export class ReleaseGoldWrapper extends BaseWrapperForGoverning<ReleaseGold> {
   revokeValueFromVotes = (group: Address, value: BigNumber) =>
     this.revoke(this.address, group, value)
 
-  revokeAllVotesForGroup = async (group: Address) => {
-    const txos = []
+  revokeAllVotesForGroup = async (group: Address): Promise<`0x${string}`[]> => {
+    const hashes: `0x${string}`[] = []
     const electionContract = await this.contracts.getElection()
     const { pending, active } = await electionContract.getVotesForGroupByAccount(
       this.address,
       group
     )
     if (pending.isGreaterThan(0)) {
-      const revokePendingTx = await this.revokePendingVotes(group, pending)
-      txos.push(revokePendingTx)
+      hashes.push(await this.revokePendingVotes(group, pending))
     }
     if (active.isGreaterThan(0)) {
-      const revokeActiveTx = await this.revokeActiveVotes(group, active)
-      txos.push(revokeActiveTx)
+      hashes.push(await this.revokeActiveVotes(group, active))
     }
-    return txos
+    return hashes
   }
 
-  revokeAllVotesForAllGroups = async () => {
+  revokeAllVotesForAllGroups = async (): Promise<`0x${string}`[]> => {
     const electionContract = await this.contracts.getElection()
     const groups = await electionContract.getGroupsVotedForByAccount(this.address)
-    const txoMatrix = await concurrentMap(4, groups, (group) => this.revokeAllVotesForGroup(group))
-    return flatten(txoMatrix)
+    const hashes: `0x${string}`[] = []
+    for (const group of groups) {
+      const groupHashes = await this.revokeAllVotesForGroup(group)
+      hashes.push(...groupHashes)
+    }
+    return hashes
   }
 }

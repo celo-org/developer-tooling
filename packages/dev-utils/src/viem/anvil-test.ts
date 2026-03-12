@@ -27,6 +27,7 @@ import {
 import { testWithViem } from './test-utils'
 
 let instance: null | Anvil = null
+let instanceCounter = 0
 
 type chains = typeof celo | typeof celoSepolia
 export type TestClientExtended<account extends Account | undefined = Account | undefined> = Client<
@@ -44,7 +45,7 @@ function createInstance(opts?: { chainId?: number; forkUrl?: string; forkBlockNu
   const forkUrl = opts?.forkUrl
   const forkBlockNumber = opts?.forkBlockNumber
 
-  const port = ANVIL_PORT + (process.pid - process.ppid)
+  const port = ANVIL_PORT + (process.pid - process.ppid) + instanceCounter++
   const options: CreateAnvilOptions = {
     port,
     mnemonic: TEST_MNEMONIC,
@@ -52,6 +53,7 @@ function createInstance(opts?: { chainId?: number; forkUrl?: string; forkBlockNu
     gasPrice: TEST_GAS_PRICE,
     gasLimit: TEST_GAS_LIMIT,
     blockBaseFeePerGas: TEST_BASE_FEE,
+    startTimeout: 60_000,
     stopTimeout: 3000,
     chainId: opts?.chainId,
     ...(forkUrl

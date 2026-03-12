@@ -1,8 +1,8 @@
+import { newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
 import { ux } from '@oclif/core'
-import Web3 from 'web3'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import Register from '../account/register'
 import Lock from '../lockedcelo/lock'
 import ListValidators from './list'
@@ -10,7 +10,7 @@ import ValidatorRegister from './register'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validator:list', (web3: Web3) => {
+testWithAnvilL2('validator:list', (provider) => {
   let account: string
   let ecdsaPublicKey: string
   const writeMock = jest.spyOn(ux.write, 'stdout').mockImplementation(() => {
@@ -21,19 +21,20 @@ testWithAnvilL2('validator:list', (web3: Web3) => {
     jest.spyOn(console, 'log').mockImplementation(() => {
       // noop
     })
-    const accounts = await web3.eth.getAccounts()
+    const kit = newKitFromProvider(provider)
+    const accounts = await kit.connection.getAccounts()
     account = accounts[0]
-    ecdsaPublicKey = await addressToPublicKey(account, web3.eth.sign)
-    await testLocallyWithWeb3Node(Register, ['--from', account], web3)
-    await testLocallyWithWeb3Node(
+    ecdsaPublicKey = await addressToPublicKey(account, kit.connection.sign)
+    await testLocallyWithNode(Register, ['--from', account], provider)
+    await testLocallyWithNode(
       Lock,
       ['--from', account, '--value', '10000000000000000000000'],
-      web3
+      provider
     )
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       ValidatorRegister,
       ['--from', account, '--ecdsaKey', ecdsaPublicKey, '--yes'],
-      web3
+      provider
     )
   })
 
@@ -43,7 +44,7 @@ testWithAnvilL2('validator:list', (web3: Web3) => {
   })
 
   it('shows all registered validators', async () => {
-    await testLocallyWithWeb3Node(ListValidators, ['--csv'], web3)
+    await testLocallyWithNode(ListValidators, ['--csv'], provider)
     expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`
       [
         [

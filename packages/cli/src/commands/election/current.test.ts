@@ -1,9 +1,8 @@
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { impersonateAccount, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
 import { Address } from 'viem'
-import Web3 from 'web3'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { testLocallyWithNode } from '../../test-utils/cliUtils'
 import Current from './current'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -13,7 +12,7 @@ afterEach(async () => {
   jest.restoreAllMocks()
 })
 
-testWithAnvilL2('election:current cmd', async (web3: Web3) => {
+testWithAnvilL2('election:current cmd', async (provider) => {
   let logMock: ReturnType<typeof jest.spyOn>
   let warnMock: ReturnType<typeof jest.spyOn>
   let writeMock: ReturnType<typeof jest.spyOn>
@@ -23,7 +22,7 @@ testWithAnvilL2('election:current cmd', async (web3: Web3) => {
     writeMock = jest.spyOn(ux.write, 'stdout')
   })
   it('shows list with no --valset provided', async () => {
-    await testLocallyWithWeb3Node(Current, ['--csv'], web3)
+    await testLocallyWithNode(Current, ['--csv'], provider)
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`
       [
@@ -62,7 +61,7 @@ testWithAnvilL2('election:current cmd', async (web3: Web3) => {
   })
 
   it('shows list with --valset provided', async () => {
-    const kit = newKitFromWeb3(web3)
+    const kit = newKitFromProvider(provider)
     const epochManager = await kit.contracts.getEpochManager()
     const accountsContract = await kit.contracts.getAccounts()
 
@@ -75,10 +74,16 @@ testWithAnvilL2('election:current cmd', async (web3: Web3) => {
     )
 
     // Set the names
-    await impersonateAccount(web3, validator1)
-    await accountsContract.setName('Validator #1').sendAndWaitForReceipt({ from: validator1 })
-    await impersonateAccount(web3, validator2)
-    await accountsContract.setName('Validator #2').sendAndWaitForReceipt({ from: validator2 })
+    await impersonateAccount(provider, validator1)
+    const setName1Hash = await accountsContract.setName('Validator #1', { from: validator1 })
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: setName1Hash as `0x${string}`,
+    })
+    await impersonateAccount(provider, validator2)
+    const setName2Hash = await accountsContract.setName('Validator #2', { from: validator2 })
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: setName2Hash as `0x${string}`,
+    })
 
     // // change the signer
     kit.connection.defaultAccount = validator2 as Address
@@ -86,16 +91,17 @@ testWithAnvilL2('election:current cmd', async (web3: Web3) => {
       validator2,
       changingSignerAddress
     )
-    const txo = await accountsContract.authorizeValidatorSigner(
+    const authHash = await accountsContract.authorizeValidatorSigner(
       changingSignerAddress,
       proof,
-      await kit.contracts.getValidators()
+      await kit.contracts.getValidators(),
+      { from: validator2 }
     )
-    await txo.sendAndWaitForReceipt({ from: validator2 })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: authHash as `0x${string}` })
 
     // The actual test
 
-    await testLocallyWithWeb3Node(Current, ['--csv', '--valset'], web3)
+    await testLocallyWithNode(Current, ['--csv', '--valset'], provider)
 
     expect(writeMock.mock.calls).toMatchInlineSnapshot(`
       [

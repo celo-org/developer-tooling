@@ -1,14 +1,13 @@
-import { Attestations } from '@celo/abis/web3/Attestations'
+import { attestationsABI } from '@celo/abis'
 import { StableToken } from '@celo/base'
 import { eqAddress } from '@celo/base/lib/address'
-import { Address, Connection, toTransactionObject } from '@celo/connect'
+import { Address, CeloTx, CeloContract, Connection } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import { AccountsWrapper } from './Accounts'
 import {
   BaseWrapper,
   blocksToDurationString,
-  proxyCall,
-  proxySend,
+  toViemAddress,
   valueToBigNumber,
   valueToInt,
 } from './BaseWrapper'
@@ -60,10 +59,10 @@ interface ContractsForAttestation {
   getStableToken(stableToken: StableToken): Promise<StableTokenWrapper>
 }
 
-export class AttestationsWrapper extends BaseWrapper<Attestations> {
+export class AttestationsWrapper extends BaseWrapper<typeof attestationsABI> {
   constructor(
     protected readonly connection: Connection,
-    protected readonly contract: Attestations,
+    protected readonly contract: CeloContract<typeof attestationsABI>,
     protected readonly contracts: ContractsForAttestation
   ) {
     super(connection, contract)
@@ -72,43 +71,45 @@ export class AttestationsWrapper extends BaseWrapper<Attestations> {
   /**
    *  Returns the time an attestation can be completable before it is considered expired
    */
-  attestationExpiryBlocks = proxyCall(
-    this.contract.methods.attestationExpiryBlocks,
-    undefined,
-    valueToInt
-  )
+  attestationExpiryBlocks = async () => {
+    const res = await this.contract.read.attestationExpiryBlocks()
+    return valueToInt(res.toString())
+  }
 
   /**
    * Returns the attestation request fee in a given currency.
    * @param address Token address.
    * @returns The fee as big number.
    */
-  attestationRequestFees = proxyCall(
-    this.contract.methods.attestationRequestFees,
-    undefined,
-    valueToBigNumber
-  )
+  attestationRequestFees = async (token: string) => {
+    const res = await this.contract.read.attestationRequestFees([toViemAddress(token)])
+    return valueToBigNumber(res.toString())
+  }
 
-  selectIssuersWaitBlocks = proxyCall(
-    this.contract.methods.selectIssuersWaitBlocks,
-    undefined,
-    valueToInt
-  )
+  selectIssuersWaitBlocks = async () => {
+    const res = await this.contract.read.selectIssuersWaitBlocks()
+    return valueToInt(res.toString())
+  }
 
   /**
    * @notice Returns the unselected attestation request for an identifier/account pair, if any.
    * @param identifier Attestation identifier (e.g. phone hash)
    * @param account Address of the account
    */
-  getUnselectedRequest = proxyCall(
-    this.contract.methods.getUnselectedRequest,
-    undefined,
-    (res) => ({
-      blockNumber: valueToInt(res[0]),
-      attestationsRequested: valueToInt(res[1]),
-      attestationRequestFeeToken: res[2],
-    })
-  )
+  getUnselectedRequest = async (
+    identifier: string,
+    account: Address
+  ): Promise<UnselectedRequest> => {
+    const res = await this.contract.read.getUnselectedRequest([
+      identifier as `0x${string}`,
+      toViemAddress(account),
+    ])
+    return {
+      blockNumber: valueToInt(res[0].toString()),
+      attestationsRequested: valueToInt(res[1].toString()),
+      attestationRequestFeeToken: res[2] as string,
+    }
+  }
 
   /**
    * @notice Checks if attestation request is expired.
@@ -117,7 +118,7 @@ export class AttestationsWrapper extends BaseWrapper<Attestations> {
   isAttestationExpired = async (attestationRequestBlockNumber: number) => {
     // We duplicate the implementation here, until Attestation.sol->isAttestationExpired is not external
     const attestationExpiryBlocks = await this.attestationExpiryBlocks()
-    const blockNumber = await this.connection.getBlockNumber()
+    const blockNumber = Number(await this.connection.viemClient.getBlockNumber())
     return blockNumber >= attestationRequestBlockNumber + attestationExpiryBlocks
   }
 
@@ -126,33 +127,47 @@ export class AttestationsWrapper extends BaseWrapper<Attestations> {
    * @param identifier Attestation identifier (e.g. phone hash)
    * @param account Address of the account
    */
-  getAttestationIssuers = proxyCall(this.contract.methods.getAttestationIssuers)
+  getAttestationIssuers = async (identifier: string, account: string) => {
+    const res = await this.contract.read.getAttestationIssuers([
+      identifier as `0x${string}`,
+      toViemAddress(account),
+    ])
+    return [...res] as string[]
+  }
 
   /**
    * Returns the attestation state of a phone number/account/issuer tuple
    * @param identifier Attestation identifier (e.g. phone hash)
    * @param account Address of the account
    */
-  getAttestationState: (
+  getAttestationState = async (
     identifier: string,
     account: Address,
     issuer: Address
-  ) => Promise<AttestationStateForIssuer> = proxyCall(
-    this.contract.methods.getAttestationState,
-    undefined,
-    (state) => ({ attestationState: valueToInt(state[0]) })
-  )
+  ): Promise<AttestationStateForIssuer> => {
+    const res = await this.contract.read.getAttestationState([
+      identifier as `0x${string}`,
+      toViemAddress(account),
+      toViemAddress(issuer),
+    ])
+    return { attestationState: valueToInt(res[0].toString()) }
+  }
 
   /**
    * Returns the attestation stats of a identifer/account pair
    * @param identifier Attestation identifier (e.g. phone hash)
    * @param account Address of the account
    */
-  getAttestationStat: (identifier: string, account: Address) => Promise<AttestationStat> =
-    proxyCall(this.contract.methods.getAttestationStats, undefined, (stat) => ({
-      completed: valueToInt(stat[0]),
-      total: valueToInt(stat[1]),
-    }))
+  getAttestationStat = async (identifier: string, account: Address): Promise<AttestationStat> => {
+    const res = await this.contract.read.getAttestationStats([
+      identifier as `0x${string}`,
+      toViemAddress(account),
+    ])
+    return {
+      completed: valueToInt(res[0].toString()),
+      total: valueToInt(res[1].toString()),
+    }
+  }
 
   /**
    * Returns the verified status of an identifier/account pair indicating whether the attestation
@@ -193,23 +208,26 @@ export class AttestationsWrapper extends BaseWrapper<Attestations> {
     }
   }
 
+  private _getAttestationRequestFee = async (token: string) => {
+    const res = await this.contract.read.getAttestationRequestFee([toViemAddress(token)])
+    return valueToBigNumber(res.toString())
+  }
+
   /**
    * Calculates the amount of StableToken required to request Attestations
    * @param attestationsRequested  The number of attestations to request
    */
   async getAttestationFeeRequired(attestationsRequested: number) {
     const contract = await this.contracts.getStableToken(StableToken.USDm)
-    const attestationFee = await this.contract.methods
-      .getAttestationRequestFee(contract.address)
-      .call()
-    return new BigNumber(attestationFee).times(attestationsRequested)
+    const attestationFee = await this._getAttestationRequestFee(contract.address)
+    return attestationFee.times(attestationsRequested)
   }
 
   /**
    * Approves the necessary amount of StableToken to request Attestations
    * @param attestationsRequested The number of attestations to request
    */
-  async approveAttestationFee(attestationsRequested: number) {
+  async approveAttestationFee(attestationsRequested: number): Promise<`0x${string}`> {
     const tokenContract = await this.contracts.getStableToken(StableToken.USDm)
     const fee = await this.getAttestationFeeRequired(attestationsRequested)
     return tokenContract.approve(this.address, fee.toFixed())
@@ -221,17 +239,20 @@ export class AttestationsWrapper extends BaseWrapper<Attestations> {
    * @param account The address of the account.
    * @return The reward amount.
    */
-  getPendingWithdrawals: (token: string, account: string) => Promise<BigNumber> = proxyCall(
-    this.contract.methods.pendingWithdrawals,
-    undefined,
-    valueToBigNumber
-  )
+  getPendingWithdrawals = async (account: string, token: string) => {
+    const res = await this.contract.read.pendingWithdrawals([
+      toViemAddress(account),
+      toViemAddress(token),
+    ])
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Allows issuers to withdraw accumulated attestation rewards
    * @param address The address of the token that will be withdrawn
    */
-  withdraw = proxySend(this.connection, this.contract.methods.withdraw)
+  withdraw = (token: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.withdraw([toViemAddress(token)] as const, txParams as any)
 
   /**
    * Returns the current configuration parameters for the contract.
@@ -269,20 +290,35 @@ export class AttestationsWrapper extends BaseWrapper<Attestations> {
    * Returns the list of accounts associated with an identifier.
    * @param identifier Attestation identifier (e.g. phone hash)
    */
-  lookupAccountsForIdentifier = proxyCall(this.contract.methods.lookupAccountsForIdentifier)
+  lookupAccountsForIdentifier = async (identifier: string) => {
+    const res = await this.contract.read.lookupAccountsForIdentifier([identifier as `0x${string}`])
+    return [...res] as string[]
+  }
 
   /**
    * Lookup mapped wallet addresses for a given list of identifiers
    * @param identifiers Attestation identifiers (e.g. phone hashes)
    */
+  private _batchGetAttestationStats = async (identifiers: string[]) => {
+    const res = await this.contract.read.batchGetAttestationStats([
+      identifiers.map((id) => id as `0x${string}`),
+    ])
+    return {
+      0: [...res[0]].map((v) => v.toString()),
+      1: [...res[1]] as string[],
+      2: [...res[2]].map((v) => v.toString()),
+      3: [...res[3]].map((v) => v.toString()),
+    }
+  }
+
   async lookupIdentifiers(identifiers: string[]): Promise<IdentifierLookupResult> {
     // Unfortunately can't be destructured
-    const stats = await this.contract.methods.batchGetAttestationStats(identifiers).call()
+    const stats = await this._batchGetAttestationStats(identifiers)
 
-    const matches = stats[0].map(valueToInt)
-    const addresses = stats[1]
-    const completed = stats[2].map(valueToInt)
-    const total = stats[3].map(valueToInt)
+    const matches = (stats[0] as string[]).map(valueToInt)
+    const addresses = stats[1] as string[]
+    const completed = (stats[2] as string[]).map(valueToInt)
+    const total = (stats[3] as string[]).map(valueToInt)
     // Map of identifier -> (Map of address -> AttestationStat)
     const result: IdentifierLookupResult = {}
 
@@ -311,13 +347,20 @@ export class AttestationsWrapper extends BaseWrapper<Attestations> {
     return result
   }
 
-  async revoke(identifer: string, account: Address) {
+  async revoke(
+    identifer: string,
+    account: Address,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     const accounts = await this.lookupAccountsForIdentifier(identifer)
-    const idx = accounts.findIndex((acc) => eqAddress(acc, account))
+    const idx = accounts.findIndex((acc: string) => eqAddress(acc, account))
     if (idx < 0) {
       throw new Error("Account not found in identifier's accounts")
     }
-    return toTransactionObject(this.connection, this.contract.methods.revoke(identifer, idx))
+    return this.contract.write.revoke(
+      [identifer as `0x${string}`, BigInt(idx)] as const,
+      txParams as any
+    )
   }
 }
 

@@ -4,7 +4,7 @@ import { Flags } from '@oclif/core'
 import { readFileSync } from 'fs-extra'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class ExecuteHotfix extends BaseCommand {
@@ -23,6 +23,7 @@ export default class ExecuteHotfix extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(ExecuteHotfix)
     const account = res.flags.from
     kit.defaultAccount = account
@@ -44,11 +45,6 @@ export default class ExecuteHotfix extends BaseCommand {
       .hotfixExecutionTimeLimitNotReached(hash)
       .runChecks()
 
-    await displaySendTx(
-      'executeHotfixTx',
-      governance.executeHotfix(hotfix, saltBuff),
-      {},
-      'HotfixExecuted'
-    )
+    await displayViemTx('executeHotfixTx', governance.executeHotfix(hotfix, saltBuff), publicClient)
   }
 }

@@ -2,14 +2,14 @@ import { StrongAddress } from '@celo/base'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
 import { StableToken } from '../celo-tokens'
-import { ContractKit, newKitFromWeb3 } from '../kit'
+import { ContractKit, newKitFromProvider } from '../kit'
 import { topUpWithToken } from '../test-utils/utils'
 import { StableTokenWrapper } from './StableTokenWrapper'
 
 // TEST NOTES: balances defined in test-utils/migration-override
 
-testWithAnvilL2('StableToken Wrapper', async (web3) => {
-  const kit = newKitFromWeb3(web3)
+testWithAnvilL2('StableToken Wrapper', async (provider) => {
+  const kit = newKitFromProvider(provider)
 
   const stableTokenInfos: {
     [key in StableToken]: {
@@ -54,14 +54,13 @@ export function testStableToken(
   expectedName: string,
   expectedSymbol: string
 ) {
-  const web3 = kit.web3
-  const ONE_STABLE = web3.utils.toWei('1', 'ether')
+  const ONE_STABLE = new BigNumber('1e18').toFixed()
 
   let accounts: string[] = []
   let stableToken: StableTokenWrapper
 
   beforeEach(async () => {
-    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
+    accounts = await kit.connection.getAccounts()
     kit.defaultAccount = accounts[0] as StrongAddress
     stableToken = await kit.contracts.getStableToken(stableTokenName)
 
@@ -69,7 +68,7 @@ export function testStableToken(
     for (let i = 0; i <= 3; i++) {
       await topUpWithToken(kit, stableTokenName, accounts[i], new BigNumber(ONE_STABLE))
     }
-  })
+  }, 60000)
 
   it('checks balance', () => expect(stableToken.balanceOf(accounts[0])).resolves.toBeBigNumber())
   it('checks decimals', () => expect(stableToken.decimals()).resolves.toBe(18))
@@ -79,8 +78,8 @@ export function testStableToken(
 
   it('transfers', async () => {
     const before = await stableToken.balanceOf(accounts[1])
-    const tx = await stableToken.transfer(accounts[1], ONE_STABLE).send()
-    await tx.waitReceipt()
+    const hash = await stableToken.transfer(accounts[1], ONE_STABLE)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
 
     const after = await stableToken.balanceOf(accounts[1])
     expect(after.minus(before)).toEqBigNumber(ONE_STABLE)
@@ -90,7 +89,8 @@ export function testStableToken(
     const before = await stableToken.allowance(accounts[0], accounts[1])
     expect(before).toEqBigNumber(0)
 
-    await stableToken.approve(accounts[1], ONE_STABLE).sendAndWaitForReceipt()
+    const hash = await stableToken.approve(accounts[1], ONE_STABLE)
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
     const after = await stableToken.allowance(accounts[0], accounts[1])
     expect(after).toEqBigNumber(ONE_STABLE)
   })
@@ -98,12 +98,13 @@ export function testStableToken(
   it('transfers from', async () => {
     const before = await stableToken.balanceOf(accounts[3])
     // account1 approves account0
-    await stableToken.approve(accounts[1], ONE_STABLE).sendAndWaitForReceipt({ from: accounts[0] })
+    const approveHash = await stableToken.approve(accounts[1], ONE_STABLE, { from: accounts[0] })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: approveHash })
 
-    const tx = await stableToken
-      .transferFrom(accounts[0], accounts[3], ONE_STABLE)
-      .send({ from: accounts[1] })
-    await tx.waitReceipt()
+    const transferHash = await stableToken.transferFrom(accounts[0], accounts[3], ONE_STABLE, {
+      from: accounts[1],
+    })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: transferHash })
     const after = await stableToken.balanceOf(accounts[3])
     expect(after.minus(before)).toEqBigNumber(ONE_STABLE)
   })

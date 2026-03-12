@@ -1,10 +1,11 @@
-import { newReleaseGold } from '@celo/abis/web3/ReleaseGold'
+import { releaseGoldABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
+import { Connection, Provider } from '@celo/connect'
 import { REGISTRY_CONTRACT_ADDRESS } from '@celo/contractkit'
 import { setBalance, setCode, withImpersonatedAccount } from '@celo/dev-utils/anvil-test'
 import { HOUR, MINUTE, MONTH } from '@celo/dev-utils/test-utils'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
+import { encodeFunctionData, parseEther } from 'viem'
 import { getCurrentTimestamp } from '../utils/cli'
 
 // ported from ganache tests
@@ -13,7 +14,7 @@ const RELEASE_GOLD_IMPLEMENTATION_CONTRACT_BYTECODE =
 const RELEASE_GOLD_IMPLEMENTATION_CONTRACT_ADDRESS = '0xDdbe68bEae54dd94465C6bbA2477EE9500ce1974'
 
 export async function deployReleaseGoldContract(
-  web3: Web3,
+  provider: Provider,
   ownerMultisigAddress: StrongAddress,
   beneficiary: StrongAddress,
   releaseOwner: StrongAddress,
@@ -21,22 +22,29 @@ export async function deployReleaseGoldContract(
   canValidate: boolean = false
 ): Promise<StrongAddress> {
   await setCode(
-    web3,
+    provider,
     RELEASE_GOLD_IMPLEMENTATION_CONTRACT_ADDRESS,
     RELEASE_GOLD_IMPLEMENTATION_CONTRACT_BYTECODE
   )
 
-  const contract = newReleaseGold(web3, RELEASE_GOLD_IMPLEMENTATION_CONTRACT_ADDRESS)
+  // Create contract using Connection's getCeloContract
+  const connection = new Connection(provider)
+  const contract = connection.getCeloContract(
+    releaseGoldABI as any,
+    RELEASE_GOLD_IMPLEMENTATION_CONTRACT_ADDRESS
+  )
   const releasePeriods = 4
-  const amountReleasedPerPeriod = new BigNumber(web3.utils.toWei('10', 'ether'))
+  const amountReleasedPerPeriod = new BigNumber(parseEther('10').toString())
 
   await withImpersonatedAccount(
-    web3,
+    provider,
     ownerMultisigAddress,
     async () => {
       // default values taken from https://github.com/celo-org/celo-monorepo/blob/master/packages/protocol/test-sol/unit/governance/voting/ReleaseGold.t.sol#L146
-      await contract.methods
-        .initialize(
+      const initData = encodeFunctionData({
+        abi: contract.abi,
+        functionName: 'initialize',
+        args: [
           getCurrentTimestamp() + 5 * MINUTE,
           HOUR,
           releasePeriods,
@@ -50,15 +58,21 @@ export async function deployReleaseGoldContract(
           500, // distribution ratio
           canValidate,
           true,
-          REGISTRY_CONTRACT_ADDRESS
-        )
-        .send({ from: ownerMultisigAddress })
+          REGISTRY_CONTRACT_ADDRESS,
+        ],
+      })
+      await connection.sendTransaction({
+        to: contract.address,
+        data: initData,
+        from: ownerMultisigAddress,
+      })
+      // Hash is returned directly from sendTransaction
     },
-    new BigNumber(web3.utils.toWei('1', 'ether'))
+    new BigNumber(parseEther('1').toString())
   )
 
   await setBalance(
-    web3,
+    provider,
     RELEASE_GOLD_IMPLEMENTATION_CONTRACT_ADDRESS,
     amountReleasedPerPeriod.multipliedBy(releasePeriods)
   )

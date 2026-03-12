@@ -4,12 +4,14 @@ import BigNumber from 'bignumber.js'
 import { ContractKit } from '../kit'
 
 export const startAndFinishEpochProcess = async (kit: ContractKit) => {
-  const [from] = await kit.web3.eth.getAccounts()
+  const [from] = await kit.connection.getAccounts()
   const epochManagerWrapper = await kit.contracts.getEpochManager()
 
-  await epochManagerWrapper.startNextEpochProcess().sendAndWaitForReceipt({ from })
+  const startHash = await epochManagerWrapper.startNextEpochProcess({ from })
+  await kit.connection.viemClient.waitForTransactionReceipt({ hash: startHash })
 
-  await (await epochManagerWrapper.finishNextEpochProcessTx()).sendAndWaitForReceipt({ from })
+  const finishHash = await epochManagerWrapper.finishNextEpochProcessTx({ from })
+  await kit.connection.viemClient.waitForTransactionReceipt({ hash: finishHash })
 }
 
 export const topUpWithToken = async (
@@ -20,9 +22,8 @@ export const topUpWithToken = async (
 ) => {
   const token = await kit.contracts.getStableToken(stableToken)
 
-  await withImpersonatedAccount(kit.web3, STABLES_ADDRESS, async () => {
-    await token.transfer(recipientAddress, amount.toFixed()).sendAndWaitForReceipt({
-      from: STABLES_ADDRESS,
-    })
+  await withImpersonatedAccount(kit.connection.currentProvider, STABLES_ADDRESS, async () => {
+    const hash = await token.transfer(recipientAddress, amount.toFixed(), { from: STABLES_ADDRESS })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
   })
 }

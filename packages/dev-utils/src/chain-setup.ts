@@ -1,54 +1,68 @@
 import { governanceABI, validatorsABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
-import Web3 from 'web3'
+import { Connection, Provider } from '@celo/connect'
 import { DEFAULT_OWNER_ADDRESS, withImpersonatedAccount } from './anvil-test'
+import { encodeFunctionData } from 'viem'
 
 export async function setCommissionUpdateDelay(
-  web3: Web3,
+  provider: Provider,
   validatorsContractAddress: StrongAddress,
   delayInBlocks: number
 ) {
-  await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
-    // @ts-expect-error
-    const validators = new web3.eth.Contract(validatorsABI, validatorsContractAddress)
-
-    const { transactionHash } = await validators.methods
-      .setCommissionUpdateDelay(delayInBlocks)
-      .send({
-        from: DEFAULT_OWNER_ADDRESS,
-      })
-    await web3.eth.getTransactionReceipt(transactionHash)
+  const conn = new Connection(provider)
+  await withImpersonatedAccount(provider, DEFAULT_OWNER_ADDRESS, async () => {
+    const data = encodeFunctionData({
+      abi: validatorsABI,
+      functionName: 'setCommissionUpdateDelay',
+      args: [BigInt(delayInBlocks)],
+    })
+    const transactionHash = await conn.sendTransaction({
+      to: validatorsContractAddress,
+      data,
+      from: DEFAULT_OWNER_ADDRESS,
+    })
+    await conn.viemClient.waitForTransactionReceipt({ hash: transactionHash })
   })
 }
 
 export async function setDequeueFrequency(
-  web3: Web3,
+  provider: Provider,
   governanceContractAddress: StrongAddress,
   frequency: number
 ) {
-  await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
-    // @ts-expect-error
-    const governance = new web3.eth.Contract(governanceABI, governanceContractAddress)
-
-    const { transactionHash } = await governance.methods.setDequeueFrequency(frequency).send({
+  const conn = new Connection(provider)
+  await withImpersonatedAccount(provider, DEFAULT_OWNER_ADDRESS, async () => {
+    const data = encodeFunctionData({
+      abi: governanceABI,
+      functionName: 'setDequeueFrequency',
+      args: [BigInt(frequency)],
+    })
+    const transactionHash = await conn.sendTransaction({
+      to: governanceContractAddress,
+      data,
       from: DEFAULT_OWNER_ADDRESS,
     })
-    await web3.eth.getTransactionReceipt(transactionHash)
+    await conn.viemClient.waitForTransactionReceipt({ hash: transactionHash })
   })
 }
 
 export async function setReferendumStageDuration(
-  web3: Web3,
+  provider: Provider,
   governanceContractAddress: StrongAddress,
   duration: number
 ) {
-  await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
-    // @ts-expect-error
-    const governance = new web3.eth.Contract(governanceABI, governanceContractAddress)
-
-    const { transactionHash } = await governance.methods.setReferendumStageDuration(duration).send({
+  const conn = new Connection(provider)
+  await withImpersonatedAccount(provider, DEFAULT_OWNER_ADDRESS, async () => {
+    const data = encodeFunctionData({
+      abi: governanceABI,
+      functionName: 'setReferendumStageDuration',
+      args: [BigInt(duration)],
+    })
+    const transactionHash = await conn.sendTransaction({
+      to: governanceContractAddress,
+      data,
       from: DEFAULT_OWNER_ADDRESS,
     })
-    await web3.eth.getTransactionReceipt(transactionHash)
+    await conn.viemClient.waitForTransactionReceipt({ hash: transactionHash })
   })
 }

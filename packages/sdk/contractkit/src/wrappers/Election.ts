@@ -1,4 +1,4 @@
-import { Election } from '@celo/abis/web3/Election'
+import { electionABI } from '@celo/abis'
 import {
   eqAddress,
   findAddressIndex,
@@ -7,21 +7,13 @@ import {
   StrongAddress,
 } from '@celo/base/lib/address'
 import { concurrentMap, concurrentValuesMap } from '@celo/base/lib/async'
-import { zeroRange, zip } from '@celo/base/lib/collections'
-import {
-  Address,
-  CeloTransactionObject,
-  CeloTxObject,
-  EventLog,
-  toTransactionObject,
-} from '@celo/connect'
+import { zip } from '@celo/base/lib/collections'
+import { Address, CeloTx, EventLog } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import {
   fixidityValueToBigNumber,
-  identity,
-  proxyCall,
-  proxySend,
-  tupleParser,
+  toViemAddress,
+  toViemBigInt,
   valueToBigNumber,
   valueToInt,
 } from './BaseWrapper'
@@ -76,25 +68,118 @@ export interface ElectionConfig {
 /**
  * Contract for voting for validators and managing validator groups.
  */
-export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
+export class ElectionWrapper extends BaseWrapperForGoverning<typeof electionABI> {
+  // --- private proxy fields for typed contract calls ---
+  private _electableValidators = async () => {
+    const res = await this.contract.read.electableValidators()
+    return {
+      min: valueToBigNumber(res[0].toString()),
+      max: valueToBigNumber(res[1].toString()),
+    }
+  }
+
+  private _electNValidatorSigners = async (min: string, max: string) => {
+    const res = await this.contract.read.electNValidatorSigners([
+      toViemBigInt(min),
+      toViemBigInt(max),
+    ])
+    return [...res] as Address[]
+  }
+
+  private _electValidatorSigners = async () => {
+    const res = await this.contract.read.electValidatorSigners()
+    return [...res] as Address[]
+  }
+
+  private _getTotalVotesForGroup = async (group: string) => {
+    const res = await this.contract.read.getTotalVotesForGroup([toViemAddress(group)])
+    return valueToBigNumber(res.toString())
+  }
+
+  private _getActiveVotesForGroup = async (group: string) => {
+    const res = await this.contract.read.getActiveVotesForGroup([toViemAddress(group)])
+    return valueToBigNumber(res.toString())
+  }
+
+  private _getPendingVotesForGroupByAccount = async (group: string, account: string) => {
+    const res = await this.contract.read.getPendingVotesForGroupByAccount([
+      toViemAddress(group),
+      toViemAddress(account),
+    ])
+    return valueToBigNumber(res.toString())
+  }
+
+  private _getActiveVotesForGroupByAccount = async (group: string, account: string) => {
+    const res = await this.contract.read.getActiveVotesForGroupByAccount([
+      toViemAddress(group),
+      toViemAddress(account),
+    ])
+    return valueToBigNumber(res.toString())
+  }
+
+  private _getGroupsVotedForByAccountInternal = async (account: string) => {
+    const res = await this.contract.read.getGroupsVotedForByAccount([toViemAddress(account)])
+    return [...res] as string[]
+  }
+
+  private _hasActivatablePendingVotes = async (
+    account: string,
+    group: string
+  ): Promise<boolean> => {
+    return this.contract.read.hasActivatablePendingVotes([
+      toViemAddress(account),
+      toViemAddress(group),
+    ])
+  }
+
+  private _maxNumGroupsVotedFor = async () => {
+    const res = await this.contract.read.maxNumGroupsVotedFor()
+    return valueToBigNumber(res.toString())
+  }
+
+  private _getGroupEligibility = async (group: string): Promise<boolean> => {
+    return this.contract.read.getGroupEligibility([toViemAddress(group)])
+  }
+
+  private _getNumVotesReceivable = async (group: string) => {
+    const res = await this.contract.read.getNumVotesReceivable([toViemAddress(group)])
+    return valueToBigNumber(res.toString())
+  }
+
+  private _getTotalVotesForEligibleValidatorGroups = async () => {
+    const res = await this.contract.read.getTotalVotesForEligibleValidatorGroups()
+    return [[...res[0]] as string[], [...res[1]].map((v) => v.toString())] as [string[], string[]]
+  }
+
+  private _getGroupEpochRewardsBasedOnScore = async (
+    group: string,
+    totalEpochRewards: string,
+    groupScore: string
+  ) => {
+    const res = await this.contract.read.getGroupEpochRewardsBasedOnScore([
+      toViemAddress(group),
+      toViemBigInt(totalEpochRewards),
+      toViemBigInt(groupScore),
+    ])
+    return valueToBigNumber(res.toString())
+  }
+
   /**
    * Returns the minimum and maximum number of validators that can be elected.
    * @returns The minimum and maximum number of validators that can be elected.
    */
   async electableValidators(): Promise<ElectableValidators> {
-    const { min, max } = await this.contract.methods.electableValidators().call()
-    return { min: valueToBigNumber(min), max: valueToBigNumber(max) }
+    return this._electableValidators()
   }
 
   /**
    * Returns the current election threshold.
    * @returns Election threshold.
    */
-  electabilityThreshold = proxyCall(
-    this.contract.methods.getElectabilityThreshold,
-    undefined,
-    fixidityValueToBigNumber
-  )
+  electabilityThreshold = async () => {
+    const res = await this.contract.read.getElectabilityThreshold()
+    return fixidityValueToBigNumber(res.toString())
+  }
 
   /**
    * Gets a validator address from the validator set at the given block number.
@@ -102,75 +187,51 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
    * @param blockNumber Block number to retrieve the validator set from.
    * @return Address of validator at the requested index.
    */
-  validatorSignerAddressFromSet: (
+  validatorSignerAddressFromSet = async (
     signerIndex: number,
     blockNumber: number
-  ) => Promise<StrongAddress> = proxyCall(
-    this.contract.methods.validatorSignerAddressFromSet as (
-      signerIndex: number,
-      blockNumber: number
-    ) => CeloTxObject<StrongAddress>
-  )
+  ): Promise<StrongAddress> => {
+    return this.contract.read.validatorSignerAddressFromSet([
+      toViemBigInt(signerIndex),
+      toViemBigInt(blockNumber),
+    ])
+  }
 
   /**
    * Gets a validator address from the current validator set.
    * @param index Index of requested validator in the validator set.
    * @return Address of validator at the requested index.
    */
-  validatorSignerAddressFromCurrentSet: (index: number) => Promise<StrongAddress> = proxyCall(
-    this.contract.methods.validatorSignerAddressFromCurrentSet as (
-      signerIndex: number
-    ) => CeloTxObject<StrongAddress>,
-    tupleParser<number, number>(identity)
-  )
+  validatorSignerAddressFromCurrentSet = async (index: number): Promise<StrongAddress> => {
+    return this.contract.read.validatorSignerAddressFromCurrentSet([toViemBigInt(index)])
+  }
 
   /**
    * Gets the size of the validator set that must sign the given block number.
    * @param blockNumber Block number to retrieve the validator set from.
    * @return Size of the validator set.
    */
-  numberValidatorsInSet: (blockNumber: number) => Promise<number> = proxyCall(
-    this.contract.methods.numberValidatorsInSet,
-    undefined,
-    valueToInt
-  )
+  numberValidatorsInSet = async (blockNumber: number): Promise<number> => {
+    const res = await this.contract.read.numberValidatorsInSet([toViemBigInt(blockNumber)])
+    return valueToInt(res.toString())
+  }
 
   /**
    * Gets the size of the current elected validator set.
    * @return Size of the current elected validator set.
    */
-  numberValidatorsInCurrentSet = proxyCall(
-    this.contract.methods.numberValidatorsInCurrentSet,
-    undefined,
-    valueToInt
-  )
+  numberValidatorsInCurrentSet = async (): Promise<number> => {
+    const res = await this.contract.read.numberValidatorsInCurrentSet()
+    return valueToInt(res.toString())
+  }
 
   /**
    * Returns the total votes received across all groups.
    * @return The total votes received across all groups.
    */
-  getTotalVotes = proxyCall(this.contract.methods.getTotalVotes, undefined, valueToBigNumber)
-
-  /**
-   * Returns the current validator signers using the precompiles.
-   * @return List of current validator signers.
-   * @deprecated use EpochManagerWrapper.getElectedSigners instead. see see https://specs.celo.org/smart_contract_updates_from_l1.html
-   */
-  getCurrentValidatorSigners: () => Promise<Address[]> = proxyCall(
-    this.contract.methods.getCurrentValidatorSigners
-  )
-
-  /**
-   * Returns the validator signers for block `blockNumber`.
-   * @param blockNumber Block number to retrieve signers for.
-   * @return Address of each signer in the validator set.
-   * @deprecated see https://specs.celo.org/smart_contract_updates_from_l1.html
-   */
-  async getValidatorSigners(blockNumber: number): Promise<Address[]> {
-    const numValidators = await this.numberValidatorsInSet(blockNumber)
-    return concurrentMap(10, zeroRange(numValidators), (i: number) =>
-      this.validatorSignerAddressFromSet(i, blockNumber)
-    )
+  getTotalVotes = async () => {
+    const res = await this.contract.read.getTotalVotes()
+    return valueToBigNumber(res.toString())
   }
 
   /**
@@ -183,11 +244,9 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
       const config = await this.getConfig()
       const minArg = min === undefined ? config.electableValidators.min : min
       const maxArg = max === undefined ? config.electableValidators.max : max
-      return this.contract.methods
-        .electNValidatorSigners(minArg.toString(10), maxArg.toString(10))
-        .call()
+      return this._electNValidatorSigners(minArg.toString(10), maxArg.toString(10))
     } else {
-      return this.contract.methods.electValidatorSigners().call()
+      return this._electValidatorSigners()
     }
   }
 
@@ -196,10 +255,8 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
    * @param group The address of the validator group.
    * @return The total votes for `group`.
    */
-  async getTotalVotesForGroup(group: Address, blockNumber?: number): Promise<BigNumber> {
-    // @ts-ignore: Expected 0-1 arguments, but got 2
-    const votes = await this.contract.methods.getTotalVotesForGroup(group).call({}, blockNumber)
-    return valueToBigNumber(votes)
+  async getTotalVotesForGroup(group: Address, _blockNumber?: number): Promise<BigNumber> {
+    return this._getTotalVotesForGroup(group)
   }
 
   /**
@@ -208,21 +265,21 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
    * @param account The address of the voting account.
    * @return The total votes for `group` made by `account`.
    */
-  getTotalVotesForGroupByAccount = proxyCall(
-    this.contract.methods.getTotalVotesForGroupByAccount,
-    undefined,
-    valueToBigNumber
-  )
+  getTotalVotesForGroupByAccount = async (group: string, account: string) => {
+    const res = await this.contract.read.getTotalVotesForGroupByAccount([
+      toViemAddress(group),
+      toViemAddress(account),
+    ])
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Returns the active votes for `group`.
    * @param group The address of the validator group.
    * @return The active votes for `group`.
    */
-  async getActiveVotesForGroup(group: Address, blockNumber?: number): Promise<BigNumber> {
-    // @ts-ignore: Expected 0-1 arguments, but got 2
-    const votes = await this.contract.methods.getActiveVotesForGroup(group).call({}, blockNumber)
-    return valueToBigNumber(votes)
+  async getActiveVotesForGroup(group: Address, _blockNumber?: number): Promise<BigNumber> {
+    return this._getActiveVotesForGroup(group)
   }
 
   /**
@@ -230,37 +287,28 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
    * @param account The address of the account casting votes.
    * @return The groups that `account` has voted for.
    */
-  getGroupsVotedForByAccount: (account: Address) => Promise<Address[]> = proxyCall(
-    this.contract.methods.getGroupsVotedForByAccount
-  )
+  getGroupsVotedForByAccount = async (account: string) => {
+    const res = await this.contract.read.getGroupsVotedForByAccount([toViemAddress(account)])
+    return [...res] as string[]
+  }
 
   async getVotesForGroupByAccount(
     account: Address,
     group: Address,
-    blockNumber?: number
+    _blockNumber?: number
   ): Promise<GroupVote> {
-    const pending = await this.contract.methods
-      .getPendingVotesForGroupByAccount(group, account)
-      // @ts-ignore: Expected 0-1 arguments, but got 2
-      .call({}, blockNumber)
-
-    const active = await this.contract.methods
-      .getActiveVotesForGroupByAccount(group, account)
-      // @ts-ignore: Expected 0-1 arguments, but got 2
-      .call({}, blockNumber)
+    const pending = await this._getPendingVotesForGroupByAccount(group, account)
+    const active = await this._getActiveVotesForGroupByAccount(group, account)
 
     return {
       group,
-      pending: valueToBigNumber(pending),
-      active: valueToBigNumber(active),
+      pending,
+      active,
     }
   }
 
   async getVoter(account: Address, blockNumber?: number): Promise<Voter> {
-    const groups: Address[] = await this.contract.methods
-      .getGroupsVotedForByAccount(account)
-      // @ts-ignore: Expected 0-1 arguments, but got 2
-      .call({}, blockNumber)
+    const groups: Address[] = await this._getGroupsVotedForByAccountInternal(account)
 
     const votes = await concurrentMap(10, groups, (g) =>
       this.getVotesForGroupByAccount(account, g, blockNumber)
@@ -268,11 +316,10 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
     return { address: account, votes }
   }
 
-  getTotalVotesByAccount = proxyCall(
-    this.contract.methods.getTotalVotesByAccount,
-    undefined,
-    valueToBigNumber
-  )
+  getTotalVotesByAccount = async (account: string) => {
+    const res = await this.contract.read.getTotalVotesByAccount([toViemAddress(account)])
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Returns whether or not the account has any pending votes.
@@ -280,21 +327,19 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
    * @return The groups that `account` has voted for.
    */
   async hasPendingVotes(account: Address): Promise<boolean> {
-    const groups: string[] = await this.contract.methods.getGroupsVotedForByAccount(account).call()
+    const groups: string[] = await this._getGroupsVotedForByAccountInternal(account)
     const isPending = await Promise.all(
       groups.map(async (g) =>
-        valueToBigNumber(
-          await this.contract.methods.getPendingVotesForGroupByAccount(g, account).call()
-        ).isGreaterThan(0)
+        (await this._getPendingVotesForGroupByAccount(g, account)).isGreaterThan(0)
       )
     )
     return isPending.some((a: boolean) => a)
   }
 
   async hasActivatablePendingVotes(account: Address): Promise<boolean> {
-    const groups = await this.contract.methods.getGroupsVotedForByAccount(account).call()
+    const groups = await this._getGroupsVotedForByAccountInternal(account)
     const isActivatable = await Promise.all(
-      groups.map((g: string) => this.contract.methods.hasActivatablePendingVotes(account, g).call())
+      groups.map((g: string) => this._hasActivatablePendingVotes(account, g))
     )
     return isActivatable.some((a: boolean) => a)
   }
@@ -306,29 +351,29 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
     const res = await Promise.all([
       this.electableValidators(),
       this.electabilityThreshold(),
-      this.contract.methods.maxNumGroupsVotedFor().call(),
+      this._maxNumGroupsVotedFor(),
       this.getTotalVotes(),
     ])
     return {
       electableValidators: res[0],
       electabilityThreshold: res[1],
-      maxNumGroupsVotedFor: valueToBigNumber(res[2]),
+      maxNumGroupsVotedFor: res[2],
       totalVotes: res[3],
       currentThreshold: res[3].multipliedBy(res[1]),
     }
   }
 
   async getValidatorGroupVotes(address: Address): Promise<ValidatorGroupVote> {
-    const votes = await this.contract.methods.getTotalVotesForGroup(address).call()
-    const eligible = await this.contract.methods.getGroupEligibility(address).call()
-    const numVotesReceivable = await this.contract.methods.getNumVotesReceivable(address).call()
+    const votes = await this._getTotalVotesForGroup(address)
+    const eligible = await this._getGroupEligibility(address)
+    const numVotesReceivable = await this._getNumVotesReceivable(address)
     const accounts = await this.contracts.getAccounts()
     const name = (await accounts.getName(address)) || ''
     return {
       address,
       name,
-      votes: valueToBigNumber(votes),
-      capacity: valueToBigNumber(numVotesReceivable).minus(votes),
+      votes,
+      capacity: numVotesReceivable.minus(votes),
       eligible,
     }
   }
@@ -341,40 +386,52 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
     return concurrentMap(5, groups, (g) => this.getValidatorGroupVotes(g as string))
   }
 
-  private _activate = proxySend(this.connection, this.contract.methods.activate)
-
-  private _activateForAccount = proxySend(this.connection, this.contract.methods.activateForAccount)
-
   /**
    * Activates any activatable pending votes.
    * @param account The account with pending votes to activate.
    */
   async activate(
     account: Address,
-    onBehalfOfAccount?: boolean
-  ): Promise<CeloTransactionObject<boolean>[]> {
-    const groups = await this.contract.methods.getGroupsVotedForByAccount(account).call()
+    onBehalfOfAccount?: boolean,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`[]> {
+    const groups = await this._getGroupsVotedForByAccountInternal(account)
     const isActivatable = await Promise.all(
-      groups.map((g) => this.contract.methods.hasActivatablePendingVotes(account, g).call())
+      groups.map((g: string) => this._hasActivatablePendingVotes(account, g))
     )
-    const groupsActivatable = groups.filter((_, i) => isActivatable[i])
-    return groupsActivatable.map((g) =>
-      onBehalfOfAccount ? this._activateForAccount(g, account) : this._activate(g)
-    )
+    const groupsActivatable = groups.filter((_: string, i: number) => isActivatable[i])
+    const hashes: `0x${string}`[] = []
+    for (const g of groupsActivatable) {
+      const hash = onBehalfOfAccount
+        ? await this.contract.write.activateForAccount(
+            [toViemAddress(g), toViemAddress(account)],
+            txParams as any
+          )
+        : await this.contract.write.activate([toViemAddress(g)], txParams as any)
+      hashes.push(hash)
+    }
+    return hashes
   }
 
   async revokePending(
     account: Address,
     group: Address,
-    value: BigNumber
-  ): Promise<CeloTransactionObject<boolean>> {
-    const groups = await this.contract.methods.getGroupsVotedForByAccount(account).call()
+    value: BigNumber,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
+    const groups = await this._getGroupsVotedForByAccountInternal(account)
     const index = findAddressIndex(group, groups)
     const { lesser, greater } = await this.findLesserAndGreaterAfterVote(group, value.times(-1))
 
-    return toTransactionObject(
-      this.connection,
-      this.contract.methods.revokePending(group, value.toFixed(), lesser, greater, index)
+    return this.contract.write.revokePending(
+      [
+        toViemAddress(group),
+        toViemBigInt(value.toFixed()),
+        toViemAddress(lesser),
+        toViemAddress(greater),
+        BigInt(index),
+      ],
+      txParams as any
     )
   }
 
@@ -392,11 +449,12 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
     group: Address,
     value: BigNumber,
     lesserAfterVote?: Address,
-    greaterAfterVote?: Address
-  ): Promise<CeloTransactionObject<boolean>> {
+    greaterAfterVote?: Address,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     let lesser: Address, greater: Address
 
-    const groups = await this.contract.methods.getGroupsVotedForByAccount(account).call()
+    const groups = await this._getGroupsVotedForByAccountInternal(account)
     const index = findAddressIndex(group, groups)
     if (lesserAfterVote !== undefined && greaterAfterVote !== undefined) {
       lesser = lesserAfterVote
@@ -406,32 +464,39 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
       lesser = res.lesser
       greater = res.greater
     }
-    return toTransactionObject(
-      this.connection,
-      this.contract.methods.revokeActive(group, value.toFixed(), lesser, greater, index)
+    return this.contract.write.revokeActive(
+      [
+        toViemAddress(group),
+        toViemBigInt(value.toFixed()),
+        toViemAddress(lesser),
+        toViemAddress(greater),
+        BigInt(index),
+      ],
+      txParams as any
     )
   }
 
   async revoke(
     account: Address,
     group: Address,
-    value: BigNumber
-  ): Promise<CeloTransactionObject<boolean>[]> {
+    value: BigNumber,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`[]> {
     const vote = await this.getVotesForGroupByAccount(account, group)
     if (value.gt(vote.pending.plus(vote.active))) {
       throw new Error(`can't revoke more votes for ${group} than have been made by ${account}`)
     }
-    const txos = []
+    const hashes: `0x${string}`[] = []
     const pendingValue = BigNumber.minimum(vote.pending, value)
     if (!pendingValue.isZero()) {
-      txos.push(await this.revokePending(account, group, pendingValue))
+      hashes.push(await this.revokePending(account, group, pendingValue, txParams))
     }
     if (pendingValue.lt(value)) {
       const activeValue = value.minus(pendingValue)
       const { lesser, greater } = await this.findLesserAndGreaterAfterVote(group, value.times(-1))
-      txos.push(await this.revokeActive(account, group, activeValue, lesser, greater))
+      hashes.push(await this.revokeActive(account, group, activeValue, lesser, greater, txParams))
     }
-    return txos
+    return hashes
   }
 
   /**
@@ -439,12 +504,21 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
    * @param validatorGroup The validator group to vote for.
    * @param value The amount of gold to use to vote.
    */
-  async vote(validatorGroup: Address, value: BigNumber): Promise<CeloTransactionObject<boolean>> {
+  async vote(
+    validatorGroup: Address,
+    value: BigNumber,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     const { lesser, greater } = await this.findLesserAndGreaterAfterVote(validatorGroup, value)
 
-    return toTransactionObject(
-      this.connection,
-      this.contract.methods.vote(validatorGroup, value.toFixed(), lesser, greater)
+    return this.contract.write.vote(
+      [
+        toViemAddress(validatorGroup),
+        toViemBigInt(value.toFixed()),
+        toViemAddress(lesser),
+        toViemAddress(greater),
+      ],
+      txParams as any
     )
   }
 
@@ -452,17 +526,17 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
    * Returns the current eligible validator groups and their total votes.
    */
   async getEligibleValidatorGroupsVotes(): Promise<ValidatorGroupVote[]> {
-    const res = await this.contract.methods.getTotalVotesForEligibleValidatorGroups().call()
+    const res = await this._getTotalVotesForEligibleValidatorGroups()
     return zip(
-      (a, b) => ({
+      (a: string, b: string) => ({
         address: a,
         name: '',
         votes: new BigNumber(b),
         capacity: new BigNumber(0),
-        eligible: true,
+        eligible: true as const,
       }),
-      res[0],
-      res[1]
+      res[0] as string[],
+      res[1] as string[]
     )
   }
 
@@ -580,10 +654,11 @@ export class ElectionWrapper extends BaseWrapperForGoverning<Election> {
     totalEpochRewards: BigNumber,
     groupScore: BigNumber
   ): Promise<BigNumber> {
-    const rewards = await this.contract.methods
-      .getGroupEpochRewardsBasedOnScore(group, totalEpochRewards.toFixed(), groupScore.toFixed())
-      .call()
-    return valueToBigNumber(rewards)
+    return this._getGroupEpochRewardsBasedOnScore(
+      group,
+      totalEpochRewards.toFixed(),
+      groupScore.toFixed()
+    )
   }
 }
 

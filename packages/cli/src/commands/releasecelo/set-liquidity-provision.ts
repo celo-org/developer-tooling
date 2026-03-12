@@ -1,7 +1,7 @@
 import { Flags } from '@oclif/core'
 import prompts from 'prompts'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
 export default class SetLiquidityProvision extends ReleaseGoldBaseCommand {
   static description =
@@ -20,6 +20,7 @@ export default class SetLiquidityProvision extends ReleaseGoldBaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const { flags } = await this.parse(SetLiquidityProvision)
 
     await newCheckBuilder(this)
@@ -43,6 +44,10 @@ export default class SetLiquidityProvision extends ReleaseGoldBaseCommand {
     }
 
     kit.defaultAccount = await this.releaseGoldWrapper.getReleaseOwner()
-    await displaySendTx('setLiquidityProvision', this.releaseGoldWrapper.setLiquidityProvision())
+    await displayViemTx(
+      'setLiquidityProvision',
+      this.releaseGoldWrapper.setLiquidityProvision(),
+      publicClient
+    )
   }
 }

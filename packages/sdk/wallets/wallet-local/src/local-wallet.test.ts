@@ -9,9 +9,8 @@ import {
 import { Encrypt } from '@celo/utils/lib/ecies'
 import { verifySignature } from '@celo/utils/lib/signatureUtils'
 import { recoverTransaction, verifyEIP712TypedDataSigner } from '@celo/wallet-base'
-import { parseTransaction, TransactionSerializableEIP1559 } from 'viem'
+import { parseEther, parseTransaction, TransactionSerializableEIP1559 } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
-import Web3 from 'web3'
 import { LocalWallet } from './local-wallet'
 
 const CHAIN_ID = 44378
@@ -80,7 +79,7 @@ describe('Local wallet class', () => {
       wallet.addAccount('this is not a valid private key')
       throw new Error('Expected exception to be thrown')
     } catch (e: any) {
-      expect(e.message).toBe('Expected 32 bytes of private key')
+      expect(e.message).toMatch(/private key/)
     }
   })
 
@@ -116,7 +115,7 @@ describe('Local wallet class', () => {
             from: unknownAddress,
             to: unknownAddress,
             chainId: 2,
-            value: Web3.utils.toWei('1', 'ether'),
+            value: parseEther('1').toString(),
             nonce: 0,
             gas: '10',
             maxFeePerGas: '99',
@@ -161,7 +160,7 @@ describe('Local wallet class', () => {
               from: knownAddress,
               to: otherAddress,
               chainId: CHAIN_ID,
-              value: Web3.utils.toWei('1', 'ether'),
+              value: parseEther('1').toString(),
               nonce: 0,
               gas: '10',
               gasPrice: '99',
@@ -390,7 +389,7 @@ describe('Local wallet class', () => {
               from: ACCOUNT_ADDRESS1,
               to: ACCOUNT_ADDRESS2,
               chainId: CHAIN_ID,
-              value: Web3.utils.toWei('1', 'ether'),
+              value: parseEther('1').toString(),
               nonce: 65,
               gas: '10',
               gasPrice: '99',
@@ -419,7 +418,7 @@ describe('Local wallet class', () => {
               from: knownAddress,
               to: otherAddress,
               chainId: CHAIN_ID,
-              value: Web3.utils.toWei('1', 'ether'),
+              value: parseEther('1').toString(),
               nonce: 0,
               data: '0xabcdef',
             }

@@ -1,12 +1,12 @@
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { activateAllValidatorGroupsVotes } from '../../test-utils/chain-setup'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import SendValidatorPayment from './send-validator-payment'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('epochs:send-validator-payment cmd', (web3) => {
+testWithAnvilL2('epochs:send-validator-payment cmd', (provider) => {
   const logMock = jest.spyOn(console, 'log')
   const errorMock = jest.spyOn(console, 'error')
 
@@ -14,12 +14,12 @@ testWithAnvilL2('epochs:send-validator-payment cmd', (web3) => {
     logMock.mockClear()
     errorMock.mockClear()
 
-    await activateAllValidatorGroupsVotes(newKitFromWeb3(web3))
+    await activateAllValidatorGroupsVotes(newKitFromProvider(provider))
   })
 
   it('successfuly sends the payments', async () => {
-    const kit = newKitFromWeb3(web3)
-    const [sender] = await web3.eth.getAccounts()
+    const kit = newKitFromProvider(provider)
+    const [sender] = await kit.connection.getAccounts()
     const epochManagerWrapper = await kit.contracts.getEpochManager()
     const validatorsWrapper = await kit.contracts.getValidators()
     const electedValidators = await epochManagerWrapper.getElectedAccounts()
@@ -28,10 +28,10 @@ testWithAnvilL2('epochs:send-validator-payment cmd', (web3) => {
     const validatorBalanceBefore = (await kit.getTotalBalance(validatorAddress)).USDm!
     const groupBalanceBefore = (await kit.getTotalBalance(groupAddress)).USDm!
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       SendValidatorPayment,
       ['--for', validatorAddress, '--from', sender],
-      web3
+      provider
     )
 
     // TODO as the numbers are not deterministic, we can't assert the exact values, so it's tested separately
@@ -66,13 +66,14 @@ testWithAnvilL2('epochs:send-validator-payment cmd', (web3) => {
   })
 
   it('fails if not a validator', async () => {
-    const [nonValidatorAccount, sender] = await web3.eth.getAccounts()
+    const kit = newKitFromProvider(provider)
+    const [nonValidatorAccount, sender] = await kit.connection.getAccounts()
 
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         SendValidatorPayment,
         ['--for', nonValidatorAccount, '--from', sender],
-        web3
+        provider
       )
     ).rejects.toMatchInlineSnapshot(`[Error: Some checks didn't pass!]`)
 

@@ -1,17 +1,16 @@
-import { LockedGold } from '@celo/abis/web3/LockedGold'
+import { lockedGoldABI } from '@celo/abis'
 import {
   AddressListItem as ALI,
   Comparator,
   linkedListChanges as baseLinkedListChanges,
   zip,
 } from '@celo/base/lib/collections'
-import { Address, CeloTransactionObject, EventLog } from '@celo/connect'
+import { Address, CeloTx, EventLog } from '@celo/connect'
 import BigNumber from 'bignumber.js'
 import {
-  proxyCall,
-  proxySend,
   secondsToDurationString,
-  tupleParser,
+  toViemAddress,
+  toViemBigInt,
   valueToBigNumber,
   valueToString,
 } from '../wrappers/BaseWrapper'
@@ -71,53 +70,75 @@ export interface LockedGoldConfig {
  * Contract for handling deposits needed for voting.
  */
 
-export class LockedGoldWrapper extends BaseWrapperForGoverning<LockedGold> {
+export class LockedGoldWrapper extends BaseWrapperForGoverning<typeof lockedGoldABI> {
   /**
    * Withdraws a gold that has been unlocked after the unlocking period has passed.
    * @param index The index of the pending withdrawal to withdraw.
    */
-  withdraw: (index: number) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract.methods.withdraw
-  )
+  withdraw = (index: number, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.withdraw([BigInt(index)] as const, txParams as any)
 
   /**
    * Locks gold to be used for voting.
    * The gold to be locked, must be specified as the `tx.value`
    */
-  lock = proxySend(this.connection, this.contract.methods.lock)
+  lock = (txParams?: Omit<CeloTx, 'data'>) => this.contract.write.lock(txParams as any)
 
   /**
    * Delegates locked gold.
    */
-  delegate = proxySend(this.connection, this.contract.methods.delegateGovernanceVotes)
+  delegate = (delegatee: string, percentAmount: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.delegateGovernanceVotes(
+      [toViemAddress(delegatee), BigInt(percentAmount)] as const,
+      txParams as any
+    )
 
   /**
    * Updates the amount of delegated locked gold. There might be discrepancy between the amount of locked gold
    * and the amount of delegated locked gold because of received rewards.
    */
-  updateDelegatedAmount = proxySend(this.connection, this.contract.methods.updateDelegatedAmount)
+  updateDelegatedAmount = (delegator: string, delegatee: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.updateDelegatedAmount(
+      [toViemAddress(delegator), toViemAddress(delegatee)] as const,
+      txParams as any
+    )
 
   /**
    * Revokes delegated locked gold.
    */
-  revokeDelegated = proxySend(this.connection, this.contract.methods.revokeDelegatedGovernanceVotes)
+  revokeDelegated = (delegatee: string, percentAmount: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.revokeDelegatedGovernanceVotes(
+      [toViemAddress(delegatee), BigInt(percentAmount)] as const,
+      txParams as any
+    )
 
   getMaxDelegateesCount = async () => {
-    const maxDelegateesCountHex = await this.connection.web3.eth.getStorageAt(
-      // @ts-ignore
-      this.contract._address,
-      10
-    )
-    return new BigNumber(maxDelegateesCountHex, 16)
+    const maxDelegateesCountHex = await this.connection.viemClient.getStorageAt({
+      address: this.contract.address,
+      slot: '0xa',
+    })
+    return new BigNumber(maxDelegateesCountHex ?? '0x0', 16)
+  }
+
+  private _getAccountTotalDelegatedFraction = async (account: string) => {
+    const res = await this.contract.read.getAccountTotalDelegatedFraction([toViemAddress(account)])
+    return res.toString()
+  }
+
+  private _getTotalDelegatedCelo = async (account: string) => {
+    const res = await this.contract.read.totalDelegatedCelo([toViemAddress(account)])
+    return res.toString()
+  }
+
+  private _getDelegateesOfDelegator = async (account: string) => {
+    const res = await this.contract.read.getDelegateesOfDelegator([toViemAddress(account)])
+    return [...res] as string[]
   }
 
   getDelegateInfo = async (account: string): Promise<DelegateInfo> => {
-    const totalDelegatedFractionPromise = this.contract.methods
-      .getAccountTotalDelegatedFraction(account)
-      .call()
-    const totalDelegatedCeloPromise = this.contract.methods.totalDelegatedCelo(account).call()
-    const delegateesPromise = this.contract.methods.getDelegateesOfDelegator(account).call()
+    const totalDelegatedFractionPromise = this._getAccountTotalDelegatedFraction(account)
+    const totalDelegatedCeloPromise = this._getTotalDelegatedCelo(account)
+    const delegateesPromise = this._getDelegateesOfDelegator(account)
 
     const fixidity = new BigNumber('1000000000000000000000000')
 
@@ -136,11 +157,8 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<LockedGold> {
    * Unlocks gold that becomes withdrawable after the unlocking period.
    * @param value The amount of gold to unlock.
    */
-  unlock: (value: BigNumber.Value) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract.methods.unlock,
-    tupleParser(valueToString)
-  )
+  unlock = (value: BigNumber.Value, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.unlock([BigInt(valueToString(value))] as const, txParams as any)
 
   async getPendingWithdrawalsTotalValue(account: Address) {
     const pendingWithdrawals = await this.getPendingWithdrawals(account)
@@ -154,7 +172,11 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<LockedGold> {
    * Relocks gold that has been unlocked but not withdrawn.
    * @param value The value to relock from pending withdrawals.
    */
-  async relock(account: Address, value: BigNumber.Value): Promise<CeloTransactionObject<void>[]> {
+  async relock(
+    account: Address,
+    value: BigNumber.Value,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`[]> {
     const pendingWithdrawals = await this.getPendingWithdrawals(account)
     // Ensure there are enough pending withdrawals to relock.
     const totalValue = await this.getPendingWithdrawalsTotalValue(account)
@@ -171,15 +193,22 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<LockedGold> {
     pendingWithdrawals.forEach(throwIfNotSorted)
 
     let remainingToRelock = new BigNumber(value)
-    const relockPw = (acc: CeloTransactionObject<void>[], pw: PendingWithdrawal, i: number) => {
+    const relockOps: { index: number; value: BigNumber }[] = []
+    // Use reduceRight to determine which withdrawals to relock (highest index first)
+    pendingWithdrawals.reduceRight((_acc: null, pw: PendingWithdrawal, i: number) => {
       const valueToRelock = BigNumber.minimum(pw.value, remainingToRelock)
       if (!valueToRelock.isZero()) {
         remainingToRelock = remainingToRelock.minus(valueToRelock)
-        acc.push(this._relock(i, valueToRelock))
+        relockOps.push({ index: i, value: valueToRelock })
       }
-      return acc
+      return null
+    }, null)
+    // Send sequentially, preserving reduceRight ordering
+    const hashes: `0x${string}`[] = []
+    for (const op of relockOps) {
+      hashes.push(await this._relock(op.index, op.value, txParams))
     }
-    return pendingWithdrawals.reduceRight(relockPw, []) as CeloTransactionObject<void>[]
+    return hashes
   }
 
   /**
@@ -187,51 +216,53 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<LockedGold> {
    * @param index The index of the pending withdrawal to relock from.
    * @param value The value to relock from the specified pending withdrawal.
    */
-  _relock: (index: number, value: BigNumber.Value) => CeloTransactionObject<void> = proxySend(
-    this.connection,
-    this.contract.methods.relock,
-    tupleParser(valueToString, valueToString)
-  )
+  _relock = (index: number, value: BigNumber.Value, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.relock(
+      [BigInt(valueToString(index)), BigInt(valueToString(value))] as const,
+      txParams as any
+    )
 
   /**
    * Returns the total amount of locked gold for an account.
    * @param account The account.
    * @return The total amount of locked gold for an account.
    */
-  getAccountTotalLockedGold = proxyCall(
-    this.contract.methods.getAccountTotalLockedGold,
-    undefined,
-    valueToBigNumber
-  )
+  getAccountTotalLockedGold = async (account: string) => {
+    const res = await this.contract.read.getAccountTotalLockedGold([toViemAddress(account)])
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Returns the total amount of locked gold in the system. Note that this does not include
    *   gold that has been unlocked but not yet withdrawn.
    * @returns The total amount of locked gold in the system.
    */
-  getTotalLockedGold = proxyCall(
-    this.contract.methods.getTotalLockedGold,
-    undefined,
-    valueToBigNumber
-  )
+  getTotalLockedGold = async () => {
+    const res = await this.contract.read.getTotalLockedGold()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Returns the total amount of non-voting locked gold for an account.
    * @param account The account.
    * @return The total amount of non-voting locked gold for an account.
    */
-  getAccountNonvotingLockedGold = proxyCall(
-    this.contract.methods.getAccountNonvotingLockedGold,
-    undefined,
-    valueToBigNumber
-  )
+  getAccountNonvotingLockedGold = async (account: string) => {
+    const res = await this.contract.read.getAccountNonvotingLockedGold([toViemAddress(account)])
+    return valueToBigNumber(res.toString())
+  }
+
+  private _getUnlockingPeriod = async () => {
+    const res = await this.contract.read.unlockingPeriod()
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Returns current configuration parameters.
    */
   async getConfig(): Promise<LockedGoldConfig> {
     return {
-      unlockingPeriod: valueToBigNumber(await this.contract.methods.unlockingPeriod().call()),
+      unlockingPeriod: await this._getUnlockingPeriod(),
       totalLockedGold: await this.getTotalLockedGold(),
     }
   }
@@ -272,11 +303,15 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<LockedGold> {
    * @param account The address of the account.
    * @return The total amount of governance voting power for an account.
    */
+  private _getAccountTotalGovernanceVotingPower = async (account: string) => {
+    const res = await this.contract.read.getAccountTotalGovernanceVotingPower([
+      toViemAddress(account),
+    ])
+    return valueToBigNumber(res.toString())
+  }
+
   async getAccountTotalGovernanceVotingPower(account: string) {
-    const totalGovernanceVotingPower = await this.contract.methods
-      .getAccountTotalGovernanceVotingPower(account)
-      .call()
-    return new BigNumber(totalGovernanceVotingPower)
+    return this._getAccountTotalGovernanceVotingPower(account)
   }
 
   /**
@@ -284,15 +319,23 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<LockedGold> {
    * @param account The address of the account.
    * @return The value and timestamp for each pending withdrawal.
    */
+  private _getPendingWithdrawals = async (account: string) => {
+    const res = await this.contract.read.getPendingWithdrawals([toViemAddress(account)])
+    return {
+      0: [...res[0]].map((v) => v.toString()),
+      1: [...res[1]].map((v) => v.toString()),
+    }
+  }
+
   async getPendingWithdrawals(account: string) {
-    const withdrawals = await this.contract.methods.getPendingWithdrawals(account).call()
+    const withdrawals = await this._getPendingWithdrawals(account)
     return zip(
-      (time, value): PendingWithdrawal => ({
+      (time: string, value: string): PendingWithdrawal => ({
         time: valueToBigNumber(time),
         value: valueToBigNumber(value),
       }),
-      withdrawals[1],
-      withdrawals[0]
+      withdrawals[1] as string[],
+      withdrawals[0] as string[]
     )
   }
 
@@ -303,8 +346,19 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<LockedGold> {
    * @return The value of the pending withdrawal.
    * @return The timestamp of the pending withdrawal.
    */
+  private _getPendingWithdrawal = async (account: string, index: number) => {
+    const res = await this.contract.read.getPendingWithdrawal([
+      toViemAddress(account),
+      toViemBigInt(index),
+    ])
+    return {
+      0: res[0].toString(),
+      1: res[1].toString(),
+    }
+  }
+
   async getPendingWithdrawal(account: string, index: number) {
-    const response = await this.contract.methods.getPendingWithdrawal(account, index).call()
+    const response = await this._getPendingWithdrawal(account, index)
     return {
       value: valueToBigNumber(response[0]),
       time: valueToBigNumber(response[1]),
@@ -401,11 +455,10 @@ export class LockedGoldWrapper extends BaseWrapperForGoverning<LockedGold> {
     return this._getTotalPendingWithdrawalsCount(account)
   }
 
-  _getTotalPendingWithdrawalsCount = proxyCall(
-    this.contract.methods.getTotalPendingWithdrawalsCount,
-    undefined,
-    valueToBigNumber
-  )
+  _getTotalPendingWithdrawalsCount = async (account: string) => {
+    const res = await this.contract.read.getTotalPendingWithdrawalsCount([toViemAddress(account)])
+    return valueToBigNumber(res.toString())
+  }
 }
 
 export type LockedGoldWrapperType = LockedGoldWrapper

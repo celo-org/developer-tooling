@@ -1,7 +1,7 @@
+import { newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { addressToPublicKey } from '@celo/utils/lib/signatureUtils'
-import Web3 from 'web3'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import { PROOF_OF_POSSESSION_SIGNATURE } from '../../test-utils/constants'
 import Lock from '../lockedcelo/lock'
 import ValidatorRegister from '../validator/register'
@@ -10,7 +10,7 @@ import Register from './register'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('account:authorize cmd', (web3: Web3) => {
+testWithAnvilL2('account:authorize cmd', (provider) => {
   const logMock = jest.spyOn(console, 'log')
   const errorMock = jest.spyOn(console, 'error')
 
@@ -22,15 +22,16 @@ testWithAnvilL2('account:authorize cmd', (web3: Web3) => {
   afterEach(() => jest.clearAllMocks())
 
   test('can authorize vote signer', async () => {
-    const accounts = await web3.eth.getAccounts()
+    const kit = newKitFromProvider(provider)
+    const accounts = await kit.connection.getAccounts()
     const notRegisteredAccount = accounts[0]
     const signerNotRegisteredAccount = accounts[1]
 
-    await testLocallyWithWeb3Node(Register, ['--from', notRegisteredAccount], web3)
+    await testLocallyWithNode(Register, ['--from', notRegisteredAccount], provider)
 
     logMock.mockClear()
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Authorize,
       [
         '--from',
@@ -42,7 +43,7 @@ testWithAnvilL2('account:authorize cmd', (web3: Web3) => {
         '--signature',
         PROOF_OF_POSSESSION_SIGNATURE,
       ],
-      web3
+      provider
     )
 
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
@@ -67,15 +68,16 @@ testWithAnvilL2('account:authorize cmd', (web3: Web3) => {
   })
 
   test('can authorize attestation signer', async () => {
-    const accounts = await web3.eth.getAccounts()
+    const kit = newKitFromProvider(provider)
+    const accounts = await kit.connection.getAccounts()
     const notRegisteredAccount = accounts[0]
     const signerNotRegisteredAccount = accounts[1]
 
-    await testLocallyWithWeb3Node(Register, ['--from', notRegisteredAccount], web3)
+    await testLocallyWithNode(Register, ['--from', notRegisteredAccount], provider)
 
     logMock.mockClear()
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Authorize,
       [
         '--from',
@@ -87,7 +89,7 @@ testWithAnvilL2('account:authorize cmd', (web3: Web3) => {
         '--signature',
         PROOF_OF_POSSESSION_SIGNATURE,
       ],
-      web3
+      provider
     )
 
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
@@ -112,15 +114,16 @@ testWithAnvilL2('account:authorize cmd', (web3: Web3) => {
   })
 
   test('can authorize validator signer before validator is registered', async () => {
-    const accounts = await web3.eth.getAccounts()
+    const kit = newKitFromProvider(provider)
+    const accounts = await kit.connection.getAccounts()
     const notRegisteredAccount = accounts[0]
     const signerNotRegisteredAccount = accounts[1]
 
-    await testLocallyWithWeb3Node(Register, ['--from', notRegisteredAccount], web3)
+    await testLocallyWithNode(Register, ['--from', notRegisteredAccount], provider)
 
     logMock.mockClear()
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Authorize,
       [
         '--from',
@@ -132,7 +135,7 @@ testWithAnvilL2('account:authorize cmd', (web3: Web3) => {
         '--signature',
         PROOF_OF_POSSESSION_SIGNATURE,
       ],
-      web3
+      provider
     )
 
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
@@ -158,25 +161,26 @@ testWithAnvilL2('account:authorize cmd', (web3: Web3) => {
   })
 
   it('can authorize validator signer after validator is registered', async () => {
-    const accounts = await web3.eth.getAccounts()
+    const kit = newKitFromProvider(provider)
+    const accounts = await kit.connection.getAccounts()
     const notRegisteredAccount = accounts[0]
     const signerNotRegisteredAccount = accounts[1]
-    const ecdsaPublicKey = await addressToPublicKey(notRegisteredAccount, web3.eth.sign)
-    await testLocallyWithWeb3Node(Register, ['--from', notRegisteredAccount], web3)
-    await testLocallyWithWeb3Node(
+    const ecdsaPublicKey = await addressToPublicKey(notRegisteredAccount, kit.connection.sign)
+    await testLocallyWithNode(Register, ['--from', notRegisteredAccount], provider)
+    await testLocallyWithNode(
       Lock,
       ['--from', notRegisteredAccount, '--value', '10000000000000000000000'],
-      web3
+      provider
     )
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       ValidatorRegister,
       ['--from', notRegisteredAccount, '--ecdsaKey', ecdsaPublicKey, '--yes'],
-      web3
+      provider
     )
 
     logMock.mockClear()
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Authorize,
       [
         '--from',
@@ -188,7 +192,7 @@ testWithAnvilL2('account:authorize cmd', (web3: Web3) => {
         '--signature',
         PROOF_OF_POSSESSION_SIGNATURE,
       ],
-      web3
+      provider
     )
 
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
@@ -213,26 +217,27 @@ testWithAnvilL2('account:authorize cmd', (web3: Web3) => {
   })
 
   it('fails when using BLS keys on L2', async () => {
-    const accounts = await web3.eth.getAccounts()
+    const kit = newKitFromProvider(provider)
+    const accounts = await kit.connection.getAccounts()
     const notRegisteredAccount = accounts[0]
     const signerNotRegisteredAccount = accounts[1]
-    const ecdsaPublicKey = await addressToPublicKey(notRegisteredAccount, web3.eth.sign)
-    await testLocallyWithWeb3Node(Register, ['--from', notRegisteredAccount], web3)
-    await testLocallyWithWeb3Node(
+    const ecdsaPublicKey = await addressToPublicKey(notRegisteredAccount, kit.connection.sign)
+    await testLocallyWithNode(Register, ['--from', notRegisteredAccount], provider)
+    await testLocallyWithNode(
       Lock,
       ['--from', notRegisteredAccount, '--value', '10000000000000000000000'],
-      web3
+      provider
     )
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       ValidatorRegister,
       ['--from', notRegisteredAccount, '--ecdsaKey', ecdsaPublicKey, '--yes'],
-      web3
+      provider
     )
 
     logMock.mockClear()
 
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         Authorize,
         [
           '--from',
@@ -249,7 +254,7 @@ testWithAnvilL2('account:authorize cmd', (web3: Web3) => {
           '0xcdb77255037eb68897cd487fdd85388cbda448f617f874449d4b11588b0b7ad8ddc20d9bb450b513bb35664ea3923900',
         ],
 
-        web3
+        provider
       )
     ).rejects.toMatchInlineSnapshot(`
       [Error: Nonexistent flags: --blsKey, --blsPop
@@ -260,25 +265,26 @@ testWithAnvilL2('account:authorize cmd', (web3: Web3) => {
   })
 
   test('can force authorize validator signer without BLS after validator is registered', async () => {
-    const accounts = await web3.eth.getAccounts()
+    const kit = newKitFromProvider(provider)
+    const accounts = await kit.connection.getAccounts()
     const notRegisteredAccount = accounts[0]
     const signerNotRegisteredAccount = accounts[1]
-    const ecdsaPublicKey = await addressToPublicKey(notRegisteredAccount, web3.eth.sign)
-    await testLocallyWithWeb3Node(Register, ['--from', notRegisteredAccount], web3)
-    await testLocallyWithWeb3Node(
+    const ecdsaPublicKey = await addressToPublicKey(notRegisteredAccount, kit.connection.sign)
+    await testLocallyWithNode(Register, ['--from', notRegisteredAccount], provider)
+    await testLocallyWithNode(
       Lock,
       ['--from', notRegisteredAccount, '--value', '10000000000000000000000'],
-      web3
+      provider
     )
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       ValidatorRegister,
       ['--from', notRegisteredAccount, '--ecdsaKey', ecdsaPublicKey, '--yes'],
-      web3
+      provider
     )
 
     logMock.mockClear()
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Authorize,
       [
         '--from',
@@ -291,7 +297,7 @@ testWithAnvilL2('account:authorize cmd', (web3: Web3) => {
         PROOF_OF_POSSESSION_SIGNATURE,
         '--force',
       ],
-      web3
+      provider
     )
     expect(stripAnsiCodesFromNestedArray(errorMock.mock.calls)).toMatchInlineSnapshot(`[]`)
     expect(stripAnsiCodesFromNestedArray(logMock.mock.calls)).toMatchInlineSnapshot(`
@@ -316,14 +322,15 @@ testWithAnvilL2('account:authorize cmd', (web3: Web3) => {
   })
 
   test('fails if from is not an account', async () => {
-    const accounts = await web3.eth.getAccounts()
+    const kit = newKitFromProvider(provider)
+    const accounts = await kit.connection.getAccounts()
     const notRegisteredAccount = accounts[0]
     const signerNotRegisteredAccount = accounts[1]
 
     logMock.mockClear()
 
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         Authorize,
         [
           '--from',
@@ -336,7 +343,7 @@ testWithAnvilL2('account:authorize cmd', (web3: Web3) => {
           PROOF_OF_POSSESSION_SIGNATURE,
         ],
 
-        web3
+        provider
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     expect(stripAnsiCodesFromNestedArray(errorMock.mock.calls)).toMatchInlineSnapshot(`[]`)

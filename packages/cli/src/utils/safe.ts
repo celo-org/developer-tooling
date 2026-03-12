@@ -1,46 +1,45 @@
 import { StrongAddress } from '@celo/base'
-import { CeloTransactionObject } from '@celo/connect'
+import { type Provider } from '@celo/connect'
 import { CeloProvider } from '@celo/connect/lib/celo-provider'
 import Safe from '@safe-global/protocol-kit'
 import { MetaTransactionData, TransactionResult } from '@safe-global/types-kit'
-import Web3 from 'web3'
 import { displaySafeTx } from './cli'
 
-export const createSafeFromWeb3 = async (
-  web3: Web3,
+export const createSafe = async (
+  provider: Provider,
   signer: StrongAddress,
   safeAddress: StrongAddress
 ) => {
-  if (!(web3.currentProvider instanceof CeloProvider)) {
-    throw new Error('Unexpected web3 provider')
+  if (!(provider instanceof CeloProvider)) {
+    throw new Error('Expected CeloProvider')
   }
 
   return await Safe.init({
-    provider: web3.currentProvider.toEip1193Provider(),
+    provider: provider as any,
     signer,
     safeAddress,
   })
 }
 
-export const safeTransactionMetadataFromCeloTransactionObject = async (
-  tx: CeloTransactionObject<any>,
+export const safeTransactionMetadata = (
+  encodedData: `0x${string}`,
   toAddress: StrongAddress,
   value = '0'
-): Promise<MetaTransactionData> => {
+): MetaTransactionData => {
   return {
     to: toAddress,
-    data: tx.txo.encodeABI(),
+    data: encodedData,
     value,
   }
 }
 
 export const performSafeTransaction = async (
-  web3: Web3,
+  provider: Provider,
   safeAddress: StrongAddress,
   safeSigner: StrongAddress,
   txData: MetaTransactionData
 ) => {
-  const safe = await createSafeFromWeb3(web3, safeSigner, safeAddress)
+  const safe = await createSafe(provider, safeSigner, safeAddress)
   const approveTxPromise = await createApproveSafeTransactionIfNotApproved(safe, txData, safeSigner)
 
   if (approveTxPromise) {

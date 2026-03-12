@@ -1,9 +1,9 @@
 import { StrongAddress } from '@celo/base'
+import { Provider } from '@celo/connect'
 import { setCode } from '@celo/dev-utils/anvil-test'
-import Web3 from 'web3'
 
-export async function deployMultiCall(web3: Web3, address: StrongAddress) {
-  return setCode(web3, address, bytecode)
+export async function deployMultiCall(provider: Provider, address: StrongAddress) {
+  return setCode(provider, address, bytecode)
 }
 
 // SOURCE https://celo.blockscout.com/address/0xcA11bde05977b3631167028862bE2a173976CA11?tab=contract_bytecode

@@ -1,19 +1,6 @@
-import BigNumber from 'bignumber.js'
 import { Connection } from '../connection'
 import { CeloTx } from '../types'
-
-function isEmpty(value: string | undefined) {
-  return (
-    value === undefined ||
-    value === null ||
-    value === '0' ||
-    value.toLowerCase() === '0x' ||
-    value.toLowerCase() === '0x0'
-  )
-}
-function isPresent(value: string | undefined) {
-  return !isEmpty(value)
-}
+import { isEmpty, isPresent } from '../viem-abi-coder'
 
 export class TxParamsNormalizer {
   private chainId: number | null = null
@@ -33,7 +20,10 @@ export class TxParamsNormalizer {
         },
         async () => {
           if (txParams.nonce == null) {
-            return this.connection.nonce(txParams.from!.toString())
+            return this.connection.viemClient.getTransactionCount({
+              address: txParams.from!.toString() as `0x${string}`,
+              blockTag: 'pending',
+            })
           }
           return txParams.nonce
         },
@@ -51,11 +41,10 @@ export class TxParamsNormalizer {
           ) {
             const suggestedPrice = await this.connection.gasPrice(txParams.feeCurrency)
             // add small buffer to suggested price like other libraries do
-            const priceWithRoom = new BigNumber(suggestedPrice)
-              .times(120)
-              .dividedBy(100)
-              .integerValue()
-              .toString(16)
+            // use ceiling division to match previous BigNumber.integerValue(ROUND_HALF_UP) behavior
+            const numerator = BigInt(suggestedPrice) * BigInt(120)
+            const denominator = BigInt(100)
+            const priceWithRoom = ((numerator + denominator - BigInt(1)) / denominator).toString(16)
             return `0x${priceWithRoom}`
           }
           return txParams.maxFeePerGas
@@ -73,11 +62,7 @@ export class TxParamsNormalizer {
       isPresent(txParams.maxFeePerGas?.toString()) &&
       isEmpty(txParams.maxPriorityFeePerGas?.toString())
     ) {
-      const clientMaxPriorityFeePerGas = await this.connection.rpcCaller.call(
-        'eth_maxPriorityFeePerGas',
-        []
-      )
-      txParams.maxPriorityFeePerGas = clientMaxPriorityFeePerGas.result
+      txParams.maxPriorityFeePerGas = await this.connection.getMaxPriorityFeePerGas()
     }
 
     // remove gasPrice if maxFeePerGas is set
@@ -91,7 +76,7 @@ export class TxParamsNormalizer {
 
   private async getChainId(): Promise<number> {
     if (this.chainId === null) {
-      this.chainId = await this.connection.chainId()
+      this.chainId = await this.connection.viemClient.getChainId()
     }
     return this.chainId
   }

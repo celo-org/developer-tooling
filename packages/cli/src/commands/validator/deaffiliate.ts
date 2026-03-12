@@ -1,6 +1,6 @@
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class ValidatorDeAffiliate extends BaseCommand {
@@ -16,6 +16,7 @@ export default class ValidatorDeAffiliate extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(ValidatorDeAffiliate)
 
     const validators = await kit.contracts.getValidators()
@@ -26,6 +27,6 @@ export default class ValidatorDeAffiliate extends BaseCommand {
       .signerAccountIsValidator()
       .runChecks()
 
-    await displaySendTx('deaffiliate', validators.deaffiliate())
+    await displayViemTx('deaffiliate', validators.deaffiliate(), publicClient)
   }
 }

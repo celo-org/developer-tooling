@@ -1,10 +1,9 @@
 import { COMPLIANT_ERROR_RESPONSE } from '@celo/compliance'
-import { ContractKit, StableToken, newKitFromWeb3 } from '@celo/contractkit'
+import { ContractKit, StableToken, newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
 import { topUpWithToken } from '../../test-utils/chain-setup'
-import { TEST_SANCTIONED_ADDRESS, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { TEST_SANCTIONED_ADDRESS, testLocallyWithNode } from '../../test-utils/cliUtils'
 import TransferReals from './reals'
 
 process.env.NO_SYNCCHECK = 'true'
@@ -12,7 +11,7 @@ process.env.NO_SYNCCHECK = 'true'
 // Lots of commands, sometimes times out
 jest.setTimeout(15000)
 
-testWithAnvilL2('transfer:reals cmd', (web3: Web3) => {
+testWithAnvilL2('transfer:reals cmd', (provider) => {
   let accounts: string[] = []
   let kit: ContractKit
 
@@ -26,8 +25,8 @@ testWithAnvilL2('transfer:reals cmd', (web3: Web3) => {
   })
 
   beforeEach(async () => {
-    kit = newKitFromWeb3(web3)
-    accounts = await web3.eth.getAccounts()
+    kit = newKitFromProvider(provider)
+    accounts = await kit.connection.getAccounts()
 
     await topUpWithToken(
       kit,
@@ -52,10 +51,10 @@ testWithAnvilL2('transfer:reals cmd', (web3: Web3) => {
     const receiverBalanceBefore = await kit.getTotalBalance(accounts[1])
     const amountToTransfer = '500000000000000000000'
     // Send BRLm, to RG contract
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       TransferReals,
       ['--from', accounts[0], '--to', accounts[1], '--value', amountToTransfer],
-      web3
+      provider
     )
     // RG BRLm, balance should match the amount sent
     const receiverBalance = await kit.getTotalBalance(accounts[1])
@@ -63,10 +62,10 @@ testWithAnvilL2('transfer:reals cmd', (web3: Web3) => {
       receiverBalanceBefore.BRLm!.plus(amountToTransfer).toFixed()
     )
     // Attempt to send BRLm, back
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       TransferReals,
       ['--from', accounts[1], '--to', accounts[0], '--value', amountToTransfer],
-      web3
+      provider
     )
     const balanceAfter = await kit.getTotalBalance(accounts[0])
     expect(balanceBefore.BRLm).toEqual(balanceAfter.BRLm)
@@ -78,10 +77,10 @@ testWithAnvilL2('transfer:reals cmd', (web3: Web3) => {
     })
 
     await expect(
-      testLocallyWithWeb3Node(
+      testLocallyWithNode(
         TransferReals,
         ['--from', accounts[1], '--to', TEST_SANCTIONED_ADDRESS, '--value', '1'],
-        web3
+        provider
       )
     ).rejects.toThrowErrorMatchingInlineSnapshot(`"Some checks didn't pass!"`)
     expect(spy).toHaveBeenCalledWith(expect.stringContaining(COMPLIANT_ERROR_RESPONSE))

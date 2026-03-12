@@ -1,4 +1,4 @@
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { AccountsWrapper } from '@celo/contractkit/lib/wrappers/Accounts'
 import { setBalance, testWithAnvilL2, withImpersonatedAccount } from '@celo/dev-utils/anvil-test'
 import { ClaimTypes, IdentityMetadataWrapper } from '@celo/metadata-claims'
@@ -9,12 +9,12 @@ import {
   setupGroupAndAffiliateValidator,
   setupValidator,
 } from '../../test-utils/chain-setup'
-import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesAndTxHashes, testLocallyWithNode } from '../../test-utils/cliUtils'
 import RpcUrls from './rpc-urls'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validatorgroup:rpc-urls cmd', async (web3) => {
+testWithAnvilL2('validatorgroup:rpc-urls cmd', async (provider) => {
   jest.spyOn(IdentityMetadataWrapper, 'fetchFromURL').mockImplementation(async (_, url) => {
     const validatorAddress = url.split('/').pop()
 
@@ -38,19 +38,23 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (web3) => {
     } as any) // that data is enough
   })
 
+  let kit: ReturnType<typeof newKitFromProvider>
+
   const setMetadataUrlForValidator = async (
     accountsWrapper: AccountsWrapper,
     validator: string
   ) => {
     await withImpersonatedAccount(
-      web3,
+      provider,
       validator,
       async () => {
-        await accountsWrapper
-          .setMetadataURL(`https://example.com/metadata/${validator}`)
-          .sendAndWaitForReceipt({
+        const hash = await accountsWrapper.setMetadataURL(
+          `https://example.com/metadata/${validator}`,
+          {
             from: validator,
-          })
+          }
+        )
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash as `0x${string}` })
       },
       parseEther('10000000')
     )
@@ -65,40 +69,47 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (web3) => {
   ]
 
   beforeEach(async () => {
-    const kit = newKitFromWeb3(web3)
+    kit = newKitFromProvider(provider)
     const accountsWrapper = await kit.contracts.getAccounts()
 
     const [nonElectedGroupAddress, validatorAddress, nonAffilatedValidatorAddress] =
-      await web3.eth.getAccounts()
+      await kit.connection.getAccounts()
 
-    await setBalance(web3, nonAffilatedValidatorAddress as Address, MIN_PRACTICAL_LOCKED_CELO_VALUE)
+    await setBalance(
+      provider,
+      nonAffilatedValidatorAddress as Address,
+      MIN_PRACTICAL_LOCKED_CELO_VALUE
+    )
     await setupValidator(kit, nonAffilatedValidatorAddress)
-    await setBalance(web3, nonElectedGroupAddress as Address, MIN_PRACTICAL_LOCKED_CELO_VALUE)
-    await setBalance(web3, validatorAddress as Address, MIN_PRACTICAL_LOCKED_CELO_VALUE)
+    await setBalance(provider, nonElectedGroupAddress as Address, MIN_PRACTICAL_LOCKED_CELO_VALUE)
+    await setBalance(provider, validatorAddress as Address, MIN_PRACTICAL_LOCKED_CELO_VALUE)
     await setupGroupAndAffiliateValidator(kit, nonElectedGroupAddress, validatorAddress)
 
-    await accountsWrapper
-      .setName('Test group')
-      .sendAndWaitForReceipt({ from: nonElectedGroupAddress })
+    const setNameHash = await accountsWrapper.setName('Test group', {
+      from: nonElectedGroupAddress,
+    })
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: setNameHash as `0x${string}`,
+    })
     for (const validator of [
       ...EXISTING_VALIDATORS,
       validatorAddress,
       nonAffilatedValidatorAddress,
     ]) {
-      await setBalance(web3, validator as Address, MIN_PRACTICAL_LOCKED_CELO_VALUE)
+      await setBalance(provider, validator as Address, MIN_PRACTICAL_LOCKED_CELO_VALUE)
       try {
         await setMetadataUrlForValidator(accountsWrapper, validator)
       } catch (error) {
         process.stderr.write(`Failed to set metadata URL for ${validator}: ${error}\n`)
       }
     }
-  })
+  }, 60000)
 
   it('shows the RPC URLs of the elected validator groups', async () => {
     const logMock = jest.spyOn(console, 'log')
     const writeMock = jest.spyOn(ux.write, 'stdout')
 
-    await testLocallyWithWeb3Node(RpcUrls, ['--csv'], web3)
+    await testLocallyWithNode(RpcUrls, ['--csv'], provider)
 
     expect(
       writeMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
@@ -127,7 +138,7 @@ testWithAnvilL2('validatorgroup:rpc-urls cmd', async (web3) => {
     const logMock = jest.spyOn(console, 'log')
     const writeMock = jest.spyOn(ux.write, 'stdout')
 
-    await testLocallyWithWeb3Node(RpcUrls, ['--all', '--csv'], web3)
+    await testLocallyWithNode(RpcUrls, ['--all', '--csv'], provider)
 
     expect(
       writeMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))

@@ -1,38 +1,16 @@
 import { StrongAddress } from '@celo/base'
 import { Lock } from '@celo/base/lib/lock'
 import debugFactory from 'debug'
+import type { EIP1193RequestFn } from 'viem'
 import { Connection } from './connection'
-import {
-  Callback,
-  Eip1193Provider,
-  Eip1193RequestArguments,
-  EncodedTransaction,
-  Error,
-  JsonRpcPayload,
-  JsonRpcResponse,
-  Provider,
-} from './types'
+import { EncodedTransaction, Provider } from './types'
 import { hasProperty, stopProvider } from './utils/provider-utils'
-import { rpcCallHandler } from './utils/rpc-caller'
 
 const debug = debugFactory('provider:connection')
 const debugPayload = debugFactory('provider:payload')
 const debugTxToSend = debugFactory('provider:tx-to-send')
 const debugEncodedTx = debugFactory('provider:encoded-tx')
 const debugResponse = debugFactory('provider:response')
-
-enum InterceptedMethods {
-  accounts = 'eth_accounts',
-  sendTransaction = 'eth_sendTransaction',
-  signTransaction = 'eth_signTransaction',
-  sign = 'eth_sign',
-  personalSign = 'personal_sign',
-  signTypedData = 'eth_signTypedData',
-  signTypedDataV1 = 'eth_signTypedData_v1',
-  signTypedDataV3 = 'eth_signTypedData_v3',
-  signTypedDataV4 = 'eth_signTypedData_v4',
-  signTypedDataV5 = 'eth_signTypedData_v5',
-}
 
 export function assertIsCeloProvider(provider: any): asserts provider is CeloProvider {
   if (!(provider instanceof CeloProvider)) {
@@ -43,7 +21,8 @@ export function assertIsCeloProvider(provider: any): asserts provider is CeloPro
 }
 
 /*
- * CeloProvider wraps a web3.js provider for use with Celo
+ * CeloProvider wraps an EIP-1193 provider for use with Celo.
+ * Intercepts signing methods and delegates to a local wallet when available.
  */
 export class CeloProvider implements Provider {
   private alreadyStopped: boolean = false
@@ -60,105 +39,82 @@ export class CeloProvider implements Provider {
     this.addProviderDelegatedFunctions()
   }
 
-  // @deprecated  Use the `addAccount` from the Connection
-  addAccount(privateKey: string) {
-    this.connection.addAccount(privateKey)
-  }
-
-  // @deprecated  Use the `removeAccount` from the Connection
-  removeAccount(address: string) {
-    this.connection.removeAccount(address)
-  }
-
-  // @deprecated  Use the `getAccounts` from the Connection
-  async getAccounts(): Promise<string[]> {
-    return this.connection.getAccounts()
-  }
-
   isLocalAccount(address?: string): boolean {
     return this.connection.wallet != null && this.connection.wallet.hasAccount(address)
   }
 
   /**
-   * Send method as expected by web3.js
+   * EIP-1193 request method — the single entry point for all JSON-RPC calls.
    */
-  send(payload: JsonRpcPayload, callback: Callback<JsonRpcResponse>): void {
-    let txParams: any
-    let address: StrongAddress
+  request: EIP1193RequestFn = async ({ method, params }) => {
+    const safeParams: any[] = Array.isArray(params) ? params : params != null ? [params] : []
 
-    debugPayload('%O', payload)
-
-    const decoratedCallback = (error: Error | null, result?: JsonRpcResponse) => {
-      debugResponse('%O', result)
-      callback(error, result)
-    }
+    debugPayload('%O', { method, params: safeParams })
 
     if (this.alreadyStopped) {
-      throw Error('CeloProvider already stopped')
+      throw new Error('CeloProvider already stopped')
     }
 
-    switch (payload.method) {
-      case InterceptedMethods.accounts: {
-        rpcCallHandler(payload, this.handleAccounts.bind(this), decoratedCallback)
-        return
-      }
-      case InterceptedMethods.sendTransaction: {
-        this.checkPayloadWithAtLeastNParams(payload, 1)
-        txParams = payload.params[0]
+    let result: any
 
+    switch (method) {
+      case 'eth_accounts': {
+        result = await this.handleAccounts()
+        break
+      }
+      case 'eth_sendTransaction': {
+        this.checkAtLeastNParams(safeParams, 1)
+        const txParams = safeParams[0]
         if (this.connection.isLocalAccount(txParams.from)) {
-          rpcCallHandler(payload, this.handleSendTransaction.bind(this), decoratedCallback)
+          result = await this.handleSendTransaction(txParams)
         } else {
-          this.forwardSend(payload, callback)
+          result = await this.existingProvider.request({ method, params: safeParams } as any)
         }
-        return
+        break
       }
-      case InterceptedMethods.signTransaction: {
-        this.checkPayloadWithAtLeastNParams(payload, 1)
-        txParams = payload.params[0]
-
+      case 'eth_signTransaction': {
+        this.checkAtLeastNParams(safeParams, 1)
+        const txParams = safeParams[0]
         if (this.connection.isLocalAccount(txParams.from)) {
-          rpcCallHandler(payload, this.handleSignTransaction.bind(this), decoratedCallback)
+          result = await this.handleSignTransaction(txParams)
         } else {
-          this.forwardSend(payload, callback)
+          result = await this.existingProvider.request({ method, params: safeParams } as any)
         }
-        return
+        break
       }
-      case InterceptedMethods.sign:
-      case InterceptedMethods.personalSign: {
-        this.checkPayloadWithAtLeastNParams(payload, 2)
-
-        address = payload.method === InterceptedMethods.sign ? payload.params[0] : payload.params[1]
-
+      case 'eth_sign':
+      case 'personal_sign': {
+        this.checkAtLeastNParams(safeParams, 2)
+        const address: StrongAddress = method === 'eth_sign' ? safeParams[0] : safeParams[1]
         if (this.connection.isLocalAccount(address)) {
-          rpcCallHandler(payload, this.handleSignPersonalMessage.bind(this), decoratedCallback)
+          result = await this.handleSignPersonalMessage(method, safeParams)
         } else {
-          this.forwardSend(payload, callback)
+          result = await this.existingProvider.request({ method, params: safeParams } as any)
         }
-
-        return
+        break
       }
-      case InterceptedMethods.signTypedData:
-      case InterceptedMethods.signTypedDataV1:
-      case InterceptedMethods.signTypedDataV3:
-      case InterceptedMethods.signTypedDataV4:
-      case InterceptedMethods.signTypedDataV5: {
-        this.checkPayloadWithAtLeastNParams(payload, 1)
-        address = payload.params[0]
-
+      case 'eth_signTypedData':
+      case 'eth_signTypedData_v1':
+      case 'eth_signTypedData_v3':
+      case 'eth_signTypedData_v4':
+      case 'eth_signTypedData_v5': {
+        this.checkAtLeastNParams(safeParams, 1)
+        const address: StrongAddress = safeParams[0]
         if (this.connection.isLocalAccount(address)) {
-          rpcCallHandler(payload, this.handleSignTypedData.bind(this), decoratedCallback)
+          result = await this.handleSignTypedData(safeParams)
         } else {
-          this.forwardSend(payload, callback)
+          result = await this.existingProvider.request({ method, params: safeParams } as any)
         }
-        return
+        break
       }
-
       default: {
-        this.forwardSend(payload, callback)
-        return
+        result = await this.existingProvider.request({ method, params: safeParams } as any)
+        break
       }
     }
+
+    debugResponse('%O', result)
+    return result
   }
 
   stop() {
@@ -173,49 +129,22 @@ export class CeloProvider implements Provider {
     }
   }
 
-  toEip1193Provider(): Eip1193Provider {
-    return {
-      request: async (args: Eip1193RequestArguments) => {
-        return new Promise((resolve, reject) => {
-          this.send(
-            {
-              id: 0,
-              jsonrpc: '2.0',
-              method: args.method,
-              params: args.params as any[],
-            },
-            (error: Error | null, result: unknown) => {
-              if (error) {
-                reject(error)
-              } else {
-                resolve((result as any).result)
-              }
-            }
-          )
-        })
-      },
-    }
-  }
-
-  private async handleAccounts(_payload: JsonRpcPayload): Promise<any> {
+  private async handleAccounts(): Promise<string[]> {
     return this.connection.getAccounts()
   }
 
-  private async handleSignTypedData(payload: JsonRpcPayload): Promise<any> {
-    const [address, typedData] = payload.params
-    const signature = this.connection.wallet!.signTypedData(address, typedData)
-    return signature
+  private async handleSignTypedData(params: any[]): Promise<any> {
+    const [address, typedData] = params
+    return this.connection.wallet!.signTypedData(address, typedData)
   }
 
-  private async handleSignPersonalMessage(payload: JsonRpcPayload): Promise<any> {
-    const address = payload.method === 'eth_sign' ? payload.params[0] : payload.params[1]
-    const data = payload.method === 'eth_sign' ? payload.params[1] : payload.params[0]
-    const ecSignatureHex = this.connection.wallet!.signPersonalMessage(address, data)
-    return ecSignatureHex
+  private async handleSignPersonalMessage(method: string, params: any[]): Promise<any> {
+    const address = method === 'eth_sign' ? params[0] : params[1]
+    const data = method === 'eth_sign' ? params[1] : params[0]
+    return this.connection.wallet!.signPersonalMessage(address, data)
   }
 
-  private async handleSignTransaction(payload: JsonRpcPayload): Promise<EncodedTransaction> {
-    const txParams = payload.params[0]
+  private async handleSignTransaction(txParams: any): Promise<EncodedTransaction> {
     const filledParams = await this.connection.paramsPopulator.populate(txParams)
     debugTxToSend('%O', filledParams)
     const signedTx = await this.connection.wallet!.signTransaction(filledParams)
@@ -223,30 +152,26 @@ export class CeloProvider implements Provider {
     return signedTx
   }
 
-  private async handleSendTransaction(payload: JsonRpcPayload): Promise<any> {
+  private async handleSendTransaction(txParams: any): Promise<any> {
     await this.nonceLock.acquire()
     try {
-      const signedTx = await this.handleSignTransaction(payload)
-      const response = await this.connection.rpcCaller.call('eth_sendRawTransaction', [
-        signedTx.raw,
-      ])
-      return response.result
+      const signedTx = await this.handleSignTransaction(txParams)
+      return await this.connection.viemClient.request({
+        method: 'eth_sendRawTransaction',
+        params: [signedTx.raw as `0x${string}`],
+      })
     } finally {
       this.nonceLock.release()
     }
   }
 
-  private forwardSend(payload: JsonRpcPayload, callback: Callback<JsonRpcResponse>): void {
-    this.connection.rpcCaller.send(payload, callback)
-  }
-
-  private checkPayloadWithAtLeastNParams(payload: JsonRpcPayload, n: number) {
-    if (!payload.params || payload.params.length < n) {
-      throw Error('Invalid params')
+  private checkAtLeastNParams(params: any[], n: number) {
+    if (!params || params.length < n) {
+      throw new Error('Invalid params')
     }
   }
 
-  // Functions required to act as a delefator for the existingProvider
+  // Functions required to act as a delegator for the existingProvider
   private addProviderDelegatedFunctions(): void {
     if (
       hasProperty<{ on: (type: string, callback: () => void) => void }>(this.existingProvider, 'on')

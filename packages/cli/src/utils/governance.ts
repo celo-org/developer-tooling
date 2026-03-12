@@ -1,8 +1,8 @@
-import { toTxResult } from '@celo/connect'
 import { ContractKit } from '@celo/contractkit'
 import { ProposalTransaction } from '@celo/contractkit/lib/wrappers/Governance'
 import { ProposalBuilder, proposalToJSON, ProposalTransactionJSON } from '@celo/governance'
 import chalk from 'chalk'
+import { waitForTransactionReceipt } from 'viem/actions'
 import { readJsonSync } from 'fs-extra'
 
 export async function checkProposal(proposal: ProposalTransaction[], kit: ContractKit) {
@@ -33,17 +33,20 @@ async function tryProposal(
 
     try {
       if (call) {
-        await kit.web3.eth.call({
+        await kit.connection.viemClient.request({
+          method: 'eth_call',
+          params: [{ to: tx.to, from, value: tx.value, data: tx.input }, 'latest'] as any,
+        })
+      } else {
+        const hash = await kit.connection.sendTransaction({
           to: tx.to,
           from,
           value: tx.value,
           data: tx.input,
         })
-      } else {
-        const txRes = toTxResult(
-          kit.web3.eth.sendTransaction({ to: tx.to, from, value: tx.value, data: tx.input })
-        )
-        await txRes.waitReceipt()
+        await waitForTransactionReceipt(kit.connection.viemClient, {
+          hash,
+        })
       }
       console.log(chalk.green(`   ${chalk.bold('✔')}  Transaction ${i} success!`))
     } catch (err: any) {

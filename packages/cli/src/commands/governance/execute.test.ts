@@ -1,5 +1,5 @@
 import { AbiItem, PROXY_ADMIN_ADDRESS } from '@celo/connect'
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { Proposal } from '@celo/contractkit/lib/wrappers/Governance'
 import {
   DEFAULT_OWNER_ADDRESS,
@@ -10,13 +10,13 @@ import {
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import fs from 'fs'
 import path from 'node:path'
-import Web3 from 'web3'
-import { stripAnsiCodesAndTxHashes, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesAndTxHashes, testLocallyWithNode } from '../../test-utils/cliUtils'
 import Execute from './execute'
+import { decodeFunctionResult, encodeFunctionData, parseEther } from 'viem'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:execute cmd', (web3: Web3) => {
+testWithAnvilL2('governance:execute cmd', (provider) => {
   const PROPOSAL_TRANSACTION_TEST_KEY = '3'
   const PROPOSAL_TRANSACTION_TEST_VALUE = '4'
   const PROPOSAL_TRANSACTIONS = [
@@ -64,9 +64,9 @@ testWithAnvilL2('governance:execute cmd', (web3: Web3) => {
   })
 
   it('should execute a proposal successfuly', async () => {
-    const kit = newKitFromWeb3(web3)
+    const kit = newKitFromProvider(provider)
     const governanceWrapper = await kit.contracts.getGovernance()
-    const [approver, proposer, voter] = await web3.eth.getAccounts()
+    const [approver, proposer, voter] = await kit.connection.getAccounts()
     const minDeposit = (await governanceWrapper.minDeposit()).toFixed()
     const lockedGold = await kit.contracts.getLockedGold()
     const majorityOfVotes = (await lockedGold.getTotalLockedGold()).multipliedBy(0.6)
@@ -74,24 +74,31 @@ testWithAnvilL2('governance:execute cmd', (web3: Web3) => {
     const dequeueFrequency = (await governanceWrapper.dequeueFrequency()).toNumber()
     const proposalId = 1
 
-    await setCode(web3, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
+    await setCode(provider, PROXY_ADMIN_ADDRESS, TEST_TRANSACTIONS_BYTECODE)
 
-    await governanceWrapper
-      .propose(PROPOSAL_TRANSACTIONS, 'URL')
-      .sendAndWaitForReceipt({ from: proposer, value: minDeposit })
+    const proposeHash = await governanceWrapper.propose(PROPOSAL_TRANSACTIONS, 'URL', {
+      from: proposer,
+      value: minDeposit,
+    })
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: proposeHash as `0x${string}`,
+    })
 
     const accountWrapper = await kit.contracts.getAccounts()
     const lockedGoldWrapper = await kit.contracts.getLockedGold()
 
-    await accountWrapper.createAccount().sendAndWaitForReceipt({ from: voter })
-    await lockedGoldWrapper
-      .lock()
-      .sendAndWaitForReceipt({ from: voter, value: majorityOfVotes.toFixed() })
+    const createHash = await accountWrapper.createAccount({ from: voter })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: createHash as `0x${string}` })
+    const lockHash = await lockedGoldWrapper.lock({ from: voter, value: majorityOfVotes.toFixed() })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: lockHash as `0x${string}` })
 
-    await timeTravel(dequeueFrequency + 1, web3)
+    await timeTravel(dequeueFrequency + 1, provider)
 
-    await governanceWrapper.dequeueProposalsIfReady().sendAndWaitForReceipt({
+    const dequeueHash = await governanceWrapper.dequeueProposalsIfReady({
       from: proposer,
+    })
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: dequeueHash as `0x${string}`,
     })
 
     expect(await governanceWrapper.getDequeue()).toMatchInlineSnapshot(`
@@ -102,85 +109,106 @@ testWithAnvilL2('governance:execute cmd', (web3: Web3) => {
     expect(await governanceWrapper.getQueue()).toMatchInlineSnapshot(`[]`)
 
     // send some funds to DEFAULT_OWNER_ADDRESS to execute transactions
-    await (
-      await kit.sendTransaction({
-        to: DEFAULT_OWNER_ADDRESS,
-        from: approver,
-        value: web3.utils.toWei('1', 'ether'),
-      })
-    ).waitReceipt()
-
-    await withImpersonatedAccount(web3, DEFAULT_OWNER_ADDRESS, async () => {
-      // setApprover to approverAccount
-      await (
-        await kit.sendTransaction({
-          to: governanceWrapper.address,
-          from: DEFAULT_OWNER_ADDRESS,
-          data: `0x3156560e000000000000000000000000${approver.replace('0x', '').toLowerCase()}`,
-        })
-      ).waitReceipt()
+    await kit.sendTransaction({
+      to: DEFAULT_OWNER_ADDRESS,
+      from: approver,
+      value: parseEther('1').toString(),
     })
 
-    await (await governanceWrapper.approve(proposalId)).sendAndWaitForReceipt({ from: approver })
+    await withImpersonatedAccount(provider, DEFAULT_OWNER_ADDRESS, async () => {
+      // setApprover to approverAccount
+      await kit.sendTransaction({
+        to: governanceWrapper.address,
+        from: DEFAULT_OWNER_ADDRESS,
+        data: `0x3156560e000000000000000000000000${approver.replace('0x', '').toLowerCase()}`,
+      })
+    })
 
-    await lockedGoldWrapper.lock().sendAndWaitForReceipt({ from: voter, value: minDeposit })
-    await (await governanceWrapper.vote(proposalId, 'Yes')).sendAndWaitForReceipt({ from: voter })
-    await timeTravel((await governanceWrapper.stageDurations()).Referendum.toNumber() + 1, web3)
+    const approveHash = await governanceWrapper.approve(proposalId, { from: approver })
+    await kit.connection.viemClient.waitForTransactionReceipt({
+      hash: approveHash as `0x${string}`,
+    })
 
-    const testTransactionsContract = new web3.eth.Contract(
+    const lockHash2 = await lockedGoldWrapper.lock({ from: voter, value: minDeposit })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: lockHash2 as `0x${string}` })
+    const voteHash = await governanceWrapper.vote(proposalId, 'Yes', { from: voter })
+    await kit.connection.viemClient.waitForTransactionReceipt({ hash: voteHash as `0x${string}` })
+    await timeTravel((await governanceWrapper.stageDurations()).Referendum.toNumber() + 1, provider)
+
+    const testTransactionsContract = kit.connection.getCeloContract(
       TEST_TRANSACTIONS_ABI,
       PROXY_ADMIN_ADDRESS
     )
 
     // TestTransaction contract returns 0 if a value is not set for a given key
+    const getValueCallData = encodeFunctionData({
+      abi: testTransactionsContract.abi,
+      functionName: 'getValue',
+      args: [PROPOSAL_TRANSACTION_TEST_KEY],
+    })
+    const { data: getValueResultData } = await kit.connection.viemClient.call({
+      to: testTransactionsContract.address,
+      data: getValueCallData,
+    })
     expect(
-      await testTransactionsContract.methods.getValue(PROPOSAL_TRANSACTION_TEST_KEY).call()
-    ).toEqual('0')
+      decodeFunctionResult({
+        abi: testTransactionsContract.abi,
+        functionName: 'getValue',
+        data: getValueResultData!,
+      })
+    ).toEqual(0n)
 
     logMock.mockClear()
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Execute,
       ['--proposalID', proposalId.toString(), '--from', proposer],
-      web3
+      provider
     )
 
+    const getValueCallData2 = encodeFunctionData({
+      abi: testTransactionsContract.abi,
+      functionName: 'getValue',
+      args: [PROPOSAL_TRANSACTION_TEST_KEY],
+    })
+    const { data: getValueResultData2 } = await kit.connection.viemClient.call({
+      to: testTransactionsContract.address,
+      data: getValueCallData2,
+    })
     expect(
-      await testTransactionsContract.methods.getValue(PROPOSAL_TRANSACTION_TEST_KEY).call()
-    ).toEqual(PROPOSAL_TRANSACTION_TEST_VALUE)
+      decodeFunctionResult({
+        abi: testTransactionsContract.abi,
+        functionName: 'getValue',
+        data: getValueResultData2!,
+      })
+    ).toEqual(BigInt(PROPOSAL_TRANSACTION_TEST_VALUE))
 
     expect(
       logMock.mock.calls.map((args) => args.map(stripAnsiCodesAndTxHashes))
     ).toMatchInlineSnapshot(`
+      [
         [
-          [
-            "Running Checks:",
-          ],
-          [
-            "   ✔  1 is an existing proposal ",
-          ],
-          [
-            "   ✔  1 is in stage Execution ",
-          ],
-          [
-            "   ✔  Proposal 1 is passing corresponding constitutional quorum ",
-          ],
-          [
-            "All checks passed",
-          ],
-          [
-            "SendTransaction: executeTx",
-          ],
-          [
-            "txHash: 0xtxhash",
-          ],
-          [
-            "ProposalExecuted:",
-          ],
-          [
-            "proposalId: 1",
-          ],
-        ]
-      `)
+          "Running Checks:",
+        ],
+        [
+          "   ✔  1 is an existing proposal ",
+        ],
+        [
+          "   ✔  1 is in stage Execution ",
+        ],
+        [
+          "   ✔  Proposal 1 is passing corresponding constitutional quorum ",
+        ],
+        [
+          "All checks passed",
+        ],
+        [
+          "SendTransaction: executeTx",
+        ],
+        [
+          "txHash: 0xtxhash",
+        ],
+      ]
+    `)
   })
 })

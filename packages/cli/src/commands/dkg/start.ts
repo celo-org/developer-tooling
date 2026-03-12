@@ -1,5 +1,6 @@
+import { encodeFunctionData } from 'viem'
 import { BaseCommand } from '../../base'
-import { displayWeb3Tx } from '../../utils/cli'
+import { displayTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { deprecationOptions } from '../../utils/notice'
 
@@ -20,11 +21,19 @@ export default class DKGStart extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(DKGStart)
-    const web3 = kit.connection.web3
+    const dkg = kit.connection.getCeloContract(DKG.abi, res.flags.address)
 
-    const dkg = new web3.eth.Contract(DKG.abi, res.flags.address)
-
-    await displayWeb3Tx('start', dkg.methods.start(), { from: res.flags.from })
+    const startData = encodeFunctionData({ abi: dkg.abi, functionName: 'start', args: [] })
+    await displayTx(
+      'start',
+      {
+        send: (tx: any) =>
+          kit.connection
+            .sendTransaction({ ...tx, to: dkg.address, data: startData })
+            .then((r) => r),
+      },
+      { from: res.flags.from }
+    )
     this.log('DKG Started!')
   }
 }

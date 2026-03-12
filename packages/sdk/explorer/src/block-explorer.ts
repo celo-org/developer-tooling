@@ -1,11 +1,6 @@
-import {
-  ABIDefinition,
-  Address,
-  Block,
-  CeloTxPending,
-  parseDecodedParams,
-  signatureToAbiDefinition,
-} from '@celo/connect'
+import { ABIDefinition, Address, decodeParametersToObject, parseDecodedParams } from '@celo/connect'
+import type { Block, Transaction } from 'viem'
+import { toChecksumAddress } from '@celo/utils/lib/address'
 import { CeloContract, ContractKit } from '@celo/contractkit'
 import { PROXY_ABI } from '@celo/contractkit/lib/proxy'
 import { fromFixed } from '@celo/utils/lib/fixidity'
@@ -38,7 +33,7 @@ export interface CallDetails {
 
 export interface ParsedTx {
   callDetails: CallDetails
-  tx: CeloTxPending
+  tx: Transaction
 }
 
 export interface ParsedBlock {
@@ -92,10 +87,10 @@ export class BlockExplorer {
   }
 
   async fetchBlockByHash(blockHash: string): Promise<Block> {
-    return this.kit.connection.getBlock(blockHash)
+    return this.kit.connection.viemClient.getBlock({ blockHash: blockHash as `0x${string}` })
   }
   async fetchBlock(blockNumber: number): Promise<Block> {
-    return this.kit.connection.getBlock(blockNumber)
+    return this.kit.connection.viemClient.getBlock({ blockNumber: BigInt(blockNumber) })
   }
 
   async fetchBlockRange(from: number, to: number): Promise<Block[]> {
@@ -123,7 +118,7 @@ export class BlockExplorer {
     }
   }
 
-  async tryParseTx(tx: CeloTxPending): Promise<ParsedTx | null> {
+  async tryParseTx(tx: Transaction): Promise<ParsedTx | null> {
     const callDetails = await this.tryParseTxInput(tx.to!, tx.input)
     if (!callDetails) {
       return null
@@ -146,136 +141,15 @@ export class BlockExplorer {
     return null
   }
 
-  private getContractMethodAbiFromMapping = (
-    contractMapping: ContractMapping,
-    selector: string
-  ): ContractNameAndMethodAbi | null => {
-    if (contractMapping === undefined) {
-      return null
-    }
-
-    const methodAbi = contractMapping.fnMapping.get(selector)
-    if (methodAbi === undefined) {
-      return null
-    }
-
-    return {
-      contract: contractMapping.details.address,
-      contractName: contractMapping.details.name,
-      abi: methodAbi,
-    }
-  }
-
-  /**
-   * @deprecated use getContractMappingWithSelector instead
-   * Returns the contract name and ABI of the method by looking up
-   * the contract address either in all possible contract mappings.
-   * @param address
-   * @param selector
-   * @param onlyCoreContracts
-   * @returns The contract name and ABI of the method or null if not found
-   */
-  getContractMethodAbi = async (
-    address: string,
-    selector: string,
-    onlyCoreContracts = false
-  ): Promise<ContractNameAndMethodAbi | null> => {
-    if (onlyCoreContracts) {
-      return this.getContractMethodAbiFromCore(address, selector)
-    }
-
-    const contractMapping = await this.getContractMappingWithSelector(address, selector)
-    if (contractMapping === undefined) {
-      return null
-    }
-
-    return this.getContractMethodAbiFromMapping(contractMapping, selector)
-  }
-
-  /**
-   * Returns the contract name and ABI of the method by looking up
-   * the contract address but only in core contracts
-   * @param address
-   * @param selector
-   * @returns The contract name and ABI of the method or null if not found
-   */
-  getContractMethodAbiFromCore = async (
-    address: string,
-    selector: string
-  ): Promise<ContractNameAndMethodAbi | null> => {
-    const contractMapping = await this.getContractMappingWithSelector(address, selector, [
-      this.getContractMappingFromCore,
-    ])
-
-    if (contractMapping === undefined) {
-      return null
-    }
-
-    return this.getContractMethodAbiFromMapping(contractMapping, selector)
-  }
-
-  /**
-   * @deprecated use getContractMappingWithSelector instead
-   * Returns the contract name and ABI of the method by looking up
-   * the contract address in Sourcify.
-   * @param address
-   * @param selector
-   * @returns The contract name and ABI of the method or null if not found
-   */
-  getContractMethodAbiFromSourcify = async (
-    address: string,
-    selector: string
-  ): Promise<ContractNameAndMethodAbi | null> => {
-    const contractMapping = await this.getContractMappingWithSelector(address, selector, [
-      this.getContractMappingFromSourcify,
-      this.getContractMappingFromSourcifyAsProxy,
-    ])
-
-    if (contractMapping === undefined) {
-      return null
-    }
-
-    return this.getContractMethodAbiFromMapping(contractMapping, selector)
-  }
-
-  /**
-   * @deprecated use getContractMappingWithSelector instead
-   * Returns the contract name and ABI of the method by looking up
-   * the selector in a list of known functions.
-   * @param address
-   * @param selector
-   * @param onlyCoreContracts
-   * @returns The contract name and ABI of the method or null if not found
-   */
-  getContractMethodAbiFallback = (
-    address: string,
-    selector: string
-  ): ContractNameAndMethodAbi | null => {
-    // TODO(bogdan): This could be replaced with a call to 4byte.directory
-    // or a local database of common functions.
-    const knownFunctions: { [k: string]: string } = {
-      '0x095ea7b3': 'approve(address to, uint256 value)',
-      '0x4d49e87d': 'addLiquidity(uint256[] amounts, uint256 minLPToMint, uint256 deadline)',
-    }
-    const signature = knownFunctions[selector]
-    if (signature) {
-      return {
-        abi: signatureToAbiDefinition(signature),
-        contract: `Unknown(${address})`,
-      }
-    }
-    return null
-  }
-
   buildCallDetails(contract: ContractDetails, abi: ABIDefinition, input: string): CallDetails {
     const encodedParameters = input.slice(10)
     const { args, params } = parseDecodedParams(
-      this.kit.connection.getAbiCoder().decodeParameters(abi.inputs!, encodedParameters)
+      decodeParametersToObject(abi.inputs!, encodedParameters)
     )
 
     // transform numbers to big numbers in params
     abi.inputs!.forEach((abiInput, idx) => {
-      if (abiInput.type === 'uint256') {
+      if (abiInput.type === 'uint256' && abiInput.name) {
         debug('transforming number param')
         params[abiInput.name] = new BigNumber(args[idx])
       }
@@ -286,7 +160,7 @@ export class BlockExplorer {
       .filter((key) => key.includes('fraction')) // TODO: come up with better enumeration
       .forEach((fractionKey) => {
         debug('transforming fixed number param')
-        params[fractionKey] = fromFixed(params[fractionKey])
+        params[fractionKey] = fromFixed(params[fractionKey] as BigNumber)
       })
 
     return {
@@ -322,10 +196,7 @@ export class BlockExplorer {
     if (cached) {
       return cached
     }
-    const metadata = await fetchMetadata(
-      this.kit.connection,
-      this.kit.web3.utils.toChecksumAddress(address)
-    )
+    const metadata = await fetchMetadata(this.kit.connection, toChecksumAddress(address))
     const mapping = metadata?.toContractMapping()
     if (mapping) {
       this.addressMapping.set(address, mapping)

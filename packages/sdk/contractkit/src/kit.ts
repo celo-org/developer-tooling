@@ -1,22 +1,17 @@
 // tslint:disable: ordered-imports
 import { StrongAddress } from '@celo/base'
-import { CeloTx, CeloTxObject, Connection, ReadOnlyWallet, TransactionResult } from '@celo/connect'
+import { CeloTx, Connection, Provider, ReadOnlyWallet } from '@celo/connect'
+import { isValidAddress } from '@celo/utils/lib/address'
 import { EIP712TypedData } from '@celo/utils/lib/sign-typed-data-utils'
 import { Signature } from '@celo/utils/lib/signatureUtils'
 import { LocalWallet } from '@celo/wallet-local'
 import { BigNumber } from 'bignumber.js'
-import Web3 from 'web3'
 import { AddressRegistry } from './address-registry'
 import { CeloContract } from './base'
 import { CeloTokens, EachCeloToken } from './celo-tokens'
 import { ValidWrappers, WrapperCache } from './contract-cache'
-import {
-  ensureCurrentProvider,
-  getWeb3ForKit,
-  HttpProviderOptions,
-  setupAPIKey,
-} from './setupForKits'
-import { Web3ContractCache } from './web3-contract-cache'
+import { getProviderForKit, HttpProviderOptions, setupAPIKey } from './setupForKits'
+import { ContractCache } from './contract-factory-cache'
 import { AttestationsConfig } from './wrappers/Attestations'
 import { ElectionConfig } from './wrappers/Election'
 import { GovernanceConfig } from './wrappers/Governance'
@@ -32,11 +27,11 @@ export { API_KEY_HEADER_KEY, HttpProviderOptions } from './setupForKits'
  * Creates a new instance of `ContractKit` given a nodeUrl
  * @param url CeloBlockchain node url
  * @param wallet to reuse or add a wallet different than the default (example ledger-wallet)
- * @param options to pass to the Web3 HttpProvider constructor
+ * @param options to pass to the HttpProvider constructor
  */
 export function newKit(url: string, wallet?: ReadOnlyWallet, options?: HttpProviderOptions) {
-  const web3: Web3 = getWeb3ForKit(url, options)
-  return newKitFromWeb3(web3, wallet)
+  const provider = getProviderForKit(url, options)
+  return newKitFromProvider(provider, wallet)
 }
 
 /**
@@ -51,13 +46,14 @@ export function newKitWithApiKey(url: string, apiKey: string, wallet?: ReadOnlyW
 }
 
 /**
- * Creates a new instance of the `ContractKit` with a web3 instance
- * @param web3 Web3 instance
+ * Creates a new instance of the `ContractKit` from a Provider
+ * @param provider – a JSON-RPC {@link Provider}
+ * @param wallet – optional wallet for signing
  */
-export function newKitFromWeb3(web3: Web3, wallet: ReadOnlyWallet = new LocalWallet()) {
-  ensureCurrentProvider(web3)
-  return new ContractKit(new Connection(web3, wallet))
+export function newKitFromProvider(provider: Provider, wallet: ReadOnlyWallet = new LocalWallet()) {
+  return new ContractKit(new Connection(provider, wallet))
 }
+
 export interface NetworkConfig {
   stableTokens: EachCeloToken<StableTokenConfig>
   election: ElectionConfig
@@ -89,20 +85,17 @@ interface AccountBalance extends EachCeloToken<BigNumber> {
 export class ContractKit {
   /** core contract's address registry */
   readonly registry: AddressRegistry
-  /** factory for core contract's native web3 wrappers  */
-  readonly _web3Contracts: Web3ContractCache
+  /** factory for core contract's native contract wrappers  */
+  readonly _contracts: ContractCache
   /** factory for core contract's kit wrappers  */
   readonly contracts: WrapperCache
   /** helper for interacting with CELO & stable tokens */
   readonly celoTokens: CeloTokens
 
-  /** @deprecated no longer needed since gasPrice is available on node rpc */
-  gasPriceSuggestionMultiplier = 5
-
   constructor(readonly connection: Connection) {
     this.registry = new AddressRegistry(connection)
-    this._web3Contracts = new Web3ContractCache(this.registry)
-    this.contracts = new WrapperCache(connection, this._web3Contracts, this.registry)
+    this._contracts = new ContractCache(this.registry)
+    this.contracts = new WrapperCache(connection, this._contracts, this.registry)
     this.celoTokens = new CeloTokens(this.contracts, this.registry)
   }
 
@@ -178,7 +171,7 @@ export class ContractKit {
    * @dev Throws if supplied address is not a valid hexadecimal address
    */
   setFeeCurrency(address: StrongAddress) {
-    if (!this.web3.utils.isAddress(address)) {
+    if (!isValidAddress(address)) {
       throw new Error('Supplied address is not a valid hexadecimal address.')
     }
     this.connection.defaultFeeCurrency = address
@@ -247,23 +240,8 @@ export class ContractKit {
     return this.connection.defaultFeeCurrency
   }
 
-  isListening(): Promise<boolean> {
-    return this.connection.isListening()
-  }
-
-  isSyncing(): Promise<boolean> {
-    return this.connection.isSyncing()
-  }
-
-  async sendTransaction(tx: CeloTx): Promise<TransactionResult> {
+  async sendTransaction(tx: CeloTx): Promise<`0x${string}`> {
     return this.connection.sendTransaction(tx)
-  }
-
-  async sendTransactionObject(
-    txObj: CeloTxObject<any>,
-    tx?: Omit<CeloTx, 'data'>
-  ): Promise<TransactionResult> {
-    return this.connection.sendTransactionObject(txObj, tx)
   }
 
   async signTypedData(signer: string, typedData: EIP712TypedData): Promise<Signature> {
@@ -272,9 +250,5 @@ export class ContractKit {
 
   stop() {
     this.connection.stop()
-  }
-
-  get web3() {
-    return this.connection.web3
   }
 }

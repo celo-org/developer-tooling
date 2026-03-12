@@ -32,14 +32,14 @@
     "@types/debug": "^4.1.5",
     "bignumber.js": "9.0.0",
     "cross-fetch": "3.1.5",
-    "debug": "^4.1.1"
+    "debug": "^4.1.1",
+    "viem": "^2.33.2"
   },
   "devDependencies": {
     "@celo/dev-utils": "workspace:^",
     "@celo/typescript": "workspace:^",
     "@types/debug": "^4.1.12",
-    "fetch-mock": "^10.0.7",
-    "web3": "1.10.4"
+    "fetch-mock": "^10.0.7"
   },
   "engines": {
     "node": ">=20"

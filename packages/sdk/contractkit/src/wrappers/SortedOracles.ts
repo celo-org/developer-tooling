@@ -1,16 +1,16 @@
-import { SortedOracles } from '@celo/abis/web3/SortedOracles'
+import { sortedOraclesABI } from '@celo/abis'
 import { eqAddress, NULL_ADDRESS, StrongAddress } from '@celo/base/lib/address'
-import { Address, CeloTransactionObject, Connection, toTransactionObject } from '@celo/connect'
+import { Address, CeloTx, CeloContract, Connection } from '@celo/connect'
 import { isValidAddress } from '@celo/utils/lib/address'
 import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
 import { AddressRegistry } from '../address-registry'
-import { CeloContract, StableTokenContract } from '../base'
+import { CeloContract as CeloContractEnum, StableTokenContract } from '../base'
 import { isStableTokenContract, StableToken, stableTokenInfos } from '../celo-tokens'
 import {
   BaseWrapper,
-  proxyCall,
   secondsToDurationString,
+  toViemAddress,
   valueToBigNumber,
   valueToFrac,
   valueToInt,
@@ -54,14 +54,20 @@ export type ReportTarget = StableTokenContract | Address
 /**
  * Currency price oracle contract.
  */
-export class SortedOraclesWrapper extends BaseWrapper<SortedOracles> {
+export class SortedOraclesWrapper extends BaseWrapper<typeof sortedOraclesABI> {
   constructor(
     protected readonly connection: Connection,
-    protected readonly contract: SortedOracles,
+    protected readonly contract: CeloContract<typeof sortedOraclesABI>,
     protected readonly registry: AddressRegistry
   ) {
     super(connection, contract)
   }
+
+  private _numRates = async (target: string): Promise<number> => {
+    const res = await this.contract.read.numRates([toViemAddress(target)])
+    return valueToInt(res.toString())
+  }
+
   /**
    * Gets the number of rates that have been reported for the given target
    * @param target The ReportTarget, either CeloToken or currency pair
@@ -69,8 +75,15 @@ export class SortedOraclesWrapper extends BaseWrapper<SortedOracles> {
    */
   async numRates(target: ReportTarget): Promise<number> {
     const identifier = await this.toCurrencyPairIdentifier(target)
-    const response = await this.contract.methods.numRates(identifier).call()
-    return valueToInt(response)
+    return this._numRates(identifier)
+  }
+
+  private _medianRate = async (target: string) => {
+    const res = await this.contract.read.medianRate([toViemAddress(target)])
+    return {
+      0: res[0].toString(),
+      1: res[1].toString(),
+    }
   }
 
   /**
@@ -81,10 +94,14 @@ export class SortedOraclesWrapper extends BaseWrapper<SortedOracles> {
    */
   async medianRate(target: ReportTarget): Promise<MedianRate> {
     const identifier = await this.toCurrencyPairIdentifier(target)
-    const response = await this.contract.methods.medianRate(identifier).call()
+    const response = await this._medianRate(identifier)
     return {
       rate: valueToFrac(response[0], response[1]),
     }
+  }
+
+  private _isOracle = async (target: string, oracle: string): Promise<boolean> => {
+    return this.contract.read.isOracle([toViemAddress(target), toViemAddress(oracle)])
   }
 
   /**
@@ -95,7 +112,12 @@ export class SortedOraclesWrapper extends BaseWrapper<SortedOracles> {
    */
   async isOracle(target: ReportTarget, oracle: Address): Promise<boolean> {
     const identifier = await this.toCurrencyPairIdentifier(target)
-    return this.contract.methods.isOracle(identifier, oracle).call()
+    return this._isOracle(identifier, oracle)
+  }
+
+  private _getOracles = async (target: string) => {
+    const res = await this.contract.read.getOracles([toViemAddress(target)])
+    return [...res] as string[]
   }
 
   /**
@@ -105,18 +127,22 @@ export class SortedOraclesWrapper extends BaseWrapper<SortedOracles> {
    */
   async getOracles(target: ReportTarget): Promise<Address[]> {
     const identifier = await this.toCurrencyPairIdentifier(target)
-    return this.contract.methods.getOracles(identifier).call()
+    return this._getOracles(identifier)
   }
 
   /**
    * Returns the report expiry parameter.
    * @returns Current report expiry.
    */
-  reportExpirySeconds = proxyCall(
-    this.contract.methods.reportExpirySeconds,
-    undefined,
-    valueToBigNumber
-  )
+  reportExpirySeconds = async (): Promise<BigNumber> => {
+    const res = await this.contract.read.reportExpirySeconds()
+    return valueToBigNumber(res.toString())
+  }
+
+  private _getTokenReportExpirySeconds = async (target: string): Promise<BigNumber> => {
+    const res = await this.contract.read.getTokenReportExpirySeconds([toViemAddress(target)])
+    return valueToBigNumber(res.toString())
+  }
 
   /**
    * Returns the expiry for the target if exists, if not the default.
@@ -125,8 +151,12 @@ export class SortedOraclesWrapper extends BaseWrapper<SortedOracles> {
    */
   async getTokenReportExpirySeconds(target: ReportTarget): Promise<BigNumber> {
     const identifier = await this.toCurrencyPairIdentifier(target)
-    const response = await this.contract.methods.getTokenReportExpirySeconds(identifier).call()
-    return valueToBigNumber(response)
+    return this._getTokenReportExpirySeconds(identifier)
+  }
+
+  private _isOldestReportExpired = async (target: string): Promise<{ 0: boolean; 1: Address }> => {
+    const res = await this.contract.read.isOldestReportExpired([toViemAddress(target)])
+    return { 0: res[0], 1: res[1] as Address }
   }
 
   /**
@@ -135,7 +165,7 @@ export class SortedOraclesWrapper extends BaseWrapper<SortedOracles> {
    */
   async isOldestReportExpired(target: ReportTarget): Promise<[boolean, Address]> {
     const identifier = await this.toCurrencyPairIdentifier(target)
-    const response = await this.contract.methods.isOldestReportExpired(identifier).call()
+    const response = await this._isOldestReportExpired(identifier)
     // response is NOT an array, but a js object with two keys 0 and 1
     return [response[0], response[1]]
   }
@@ -149,15 +179,16 @@ export class SortedOraclesWrapper extends BaseWrapper<SortedOracles> {
    */
   async removeExpiredReports(
     target: ReportTarget,
-    numReports?: number
-  ): Promise<CeloTransactionObject<void>> {
+    numReports?: number,
+    txParams?: Omit<CeloTx, 'data'>
+  ): Promise<`0x${string}`> {
     const identifier = await this.toCurrencyPairIdentifier(target)
     if (!numReports) {
       numReports = (await this.getReports(target)).length - 1
     }
-    return toTransactionObject(
-      this.connection,
-      this.contract.methods.removeExpiredReports(identifier, numReports)
+    return this.contract.write.removeExpiredReports(
+      [toViemAddress(identifier), BigInt(numReports!)] as const,
+      txParams as any
     )
   }
 
@@ -170,7 +201,7 @@ export class SortedOraclesWrapper extends BaseWrapper<SortedOracles> {
     target: ReportTarget,
     value: BigNumber.Value,
     oracleAddress: Address
-  ): Promise<CeloTransactionObject<void>> {
+  ): Promise<`0x${string}`> {
     const identifier = await this.toCurrencyPairIdentifier(target)
     const fixedValue = toFixed(valueToBigNumber(value))
 
@@ -180,10 +211,14 @@ export class SortedOraclesWrapper extends BaseWrapper<SortedOracles> {
       oracleAddress
     )
 
-    return toTransactionObject(
-      this.connection,
-      this.contract.methods.report(identifier, fixedValue.toFixed(), lesserKey, greaterKey),
-      { from: oracleAddress }
+    return this.contract.write.report(
+      [
+        toViemAddress(identifier),
+        BigInt(fixedValue.toFixed()),
+        toViemAddress(lesserKey),
+        toViemAddress(greaterKey),
+      ] as const,
+      { from: oracleAddress } as any
     )
   }
 
@@ -197,7 +232,7 @@ export class SortedOraclesWrapper extends BaseWrapper<SortedOracles> {
     value: BigNumber.Value,
     oracleAddress: Address,
     token: StableToken = StableToken.USDm
-  ): Promise<CeloTransactionObject<void>> {
+  ): Promise<`0x${string}`> {
     return this.report(stableTokenInfos[token].contract, value, oracleAddress)
   }
 
@@ -225,7 +260,17 @@ export class SortedOraclesWrapper extends BaseWrapper<SortedOracles> {
    * Helper function to get the rates for StableToken, by passing the address
    * of StableToken to `getRates`.
    */
-  getStableTokenRates = async (): Promise<OracleRate[]> => this.getRates(CeloContract.StableToken)
+  getStableTokenRates = async (): Promise<OracleRate[]> =>
+    this.getRates(CeloContractEnum.StableToken)
+
+  private _getRates = async (target: string) => {
+    const res = await this.contract.read.getRates([toViemAddress(target)])
+    return {
+      0: [...res[0]] as string[],
+      1: [...res[1]].map((v) => v.toString()),
+      2: [...res[2]].map((v) => v.toString()),
+    }
+  }
 
   /**
    * Gets all elements from the doubly linked list.
@@ -234,17 +279,26 @@ export class SortedOraclesWrapper extends BaseWrapper<SortedOracles> {
    */
   async getRates(target: ReportTarget): Promise<OracleRate[]> {
     const identifier = await this.toCurrencyPairIdentifier(target)
-    const response = await this.contract.methods.getRates(identifier).call()
+    const response = await this._getRates(identifier)
     const rates: OracleRate[] = []
-    for (let i = 0; i < response[0].length; i++) {
-      const medRelIndex = parseInt(response[2][i], 10)
+    for (let i = 0; i < (response[0] as Address[]).length; i++) {
+      const medRelIndex = parseInt((response[2] as string[])[i], 10)
       rates.push({
-        address: response[0][i],
-        rate: fromFixed(valueToBigNumber(response[1][i])),
+        address: (response[0] as Address[])[i],
+        rate: fromFixed(valueToBigNumber((response[1] as string[])[i])),
         medianRelation: medRelIndex,
       })
     }
     return rates
+  }
+
+  private _getTimestamps = async (target: string) => {
+    const res = await this.contract.read.getTimestamps([toViemAddress(target)])
+    return {
+      0: [...res[0]] as string[],
+      1: [...res[1]].map((v) => v.toString()),
+      2: [...res[2]].map((v) => v.toString()),
+    }
   }
 
   /**
@@ -254,13 +308,13 @@ export class SortedOraclesWrapper extends BaseWrapper<SortedOracles> {
    */
   async getTimestamps(target: ReportTarget): Promise<OracleTimestamp[]> {
     const identifier = await this.toCurrencyPairIdentifier(target)
-    const response = await this.contract.methods.getTimestamps(identifier).call()
+    const response = await this._getTimestamps(identifier)
     const timestamps: OracleTimestamp[] = []
-    for (let i = 0; i < response[0].length; i++) {
-      const medRelIndex = parseInt(response[2][i], 10)
+    for (let i = 0; i < (response[0] as Address[]).length; i++) {
+      const medRelIndex = parseInt((response[2] as string[])[i], 10)
       timestamps.push({
-        address: response[0][i],
-        timestamp: valueToBigNumber(response[1][i]),
+        address: (response[0] as Address[])[i],
+        timestamp: valueToBigNumber((response[1] as string[])[i]),
         medianRelation: medRelIndex,
       })
     }
@@ -305,7 +359,7 @@ export class SortedOraclesWrapper extends BaseWrapper<SortedOracles> {
   }
 
   private async toCurrencyPairIdentifier(target: ReportTarget): Promise<StrongAddress> {
-    if (isStableTokenContract(target as CeloContract)) {
+    if (isStableTokenContract(target as CeloContractEnum)) {
       return this.registry.addressFor(target as StableTokenContract)
     } else if (isValidAddress(target)) {
       return target

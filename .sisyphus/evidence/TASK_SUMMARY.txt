@@ -1,0 +1,57 @@
+=== TASK COMPLETION SUMMARY ===
+
+TASK: Add "declarationMap": true to 3 TypeScript config files
+
+STATUS: ✓ COMPLETE
+
+=== FILES MODIFIED ===
+
+1. packages/typescript/tsconfig.library.json
+   - Added "declarationMap": true after "sourceMap": true (line 14)
+   - Affects 20+ legacy SDK packages
+
+2. packages/actions/tsconfig-base.json
+   - Added "declarationMap": true after "declaration": true (line 5)
+   - Affects @celo/actions (modern package with dual ESM/CJS)
+
+3. packages/dev-utils/tsconfig-base.json
+   - Added "declarationMap": true after "declaration": true (line 5)
+   - Affects @celo/dev-utils (modern package with dual ESM/CJS)
+
+=== VERIFICATION RESULTS ===
+
+✓ JSON Syntax: All 3 files are valid JSON
+✓ Git Scope: Exactly 3 files changed (no unintended modifications)
+✓ Build: yarn clean && yarn build completed (celocli error is pre-existing)
+✓ Lint: yarn lint passed (14 pre-existing warnings, no new issues)
+
+=== DECLARATION MAP FILES GENERATED ===
+
+Legacy Package (@celo/base):
+  - 17 .d.ts.map files generated in packages/sdk/base/lib/
+  - Sample: index.d.ts.map contains sources: ["../src/index.ts"]
+
+Modern Package (@celo/actions):
+  - 21 .d.ts.map files in dist/mjs/
+  - 21 .d.ts.map files in dist/cjs/
+  - Sample: contract-name.d.ts.map contains sources: ["../../src/contract-name.ts"]
+
+Modern Package (@celo/dev-utils):
+  - 11 .d.ts.map files in dist/mjs/
+  - 11 .d.ts.map files in dist/cjs/
+  - All map files correctly reference .ts source files
+
+=== FUNCTIONALITY ENABLED ===
+
+VS Code cmd+click navigation now works across inter-package imports:
+- Clicking on imported types/functions navigates to .ts source
+- Works for both legacy (CommonJS) and modern (ESM/CJS) packages
+- Enables better IDE experience for developers
+
+=== EVIDENCE FILES ===
+
+- task-1-legacy-dtsmap.txt: Legacy package map file verification
+- task-1-modern-dtsmap.txt: Modern packages map file verification
+- task-1-scope-guard.txt: Git diff verification (3 files only)
+- TASK_SUMMARY.txt: This summary
+

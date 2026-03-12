@@ -35,7 +35,8 @@
     "@types/inquirer": "^6.5.0",
     "bignumber.js": "^9.0.0",
     "debug": "^4.1.1",
-    "inquirer": "^7.3.3"
+    "inquirer": "^7.3.3",
+    "viem": "^2.33.2"
   },
   "engines": {
     "node": ">=20"

@@ -17,12 +17,15 @@ export default class Lock extends BaseCommand {
   requireSynced = false
 
   async run() {
-    const web3 = await this.getWeb3()
+    const kit = await this.getKit()
     const res = await this.parse(Lock)
     if (res.flags.useLedger) {
       console.warn('Warning: account:lock not implemented for Ledger')
     }
 
-    await web3.eth.personal.lockAccount(res.args.arg1 as string)
+    await kit.connection.viemClient.request({
+      method: 'personal_lockAccount' as any,
+      params: [res.args.arg1 as string] as any,
+    })
   }
 }

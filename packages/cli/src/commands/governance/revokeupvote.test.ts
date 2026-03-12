@@ -1,42 +1,48 @@
 import { StrongAddress } from '@celo/base'
-import { newKitFromWeb3 } from '@celo/contractkit'
+import { newKitFromProvider } from '@celo/contractkit'
 import { GovernanceWrapper } from '@celo/contractkit/lib/wrappers/Governance'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { testLocallyWithNode } from '../../test-utils/cliUtils'
 import Register from '../account/register'
 import Lock from '../lockedcelo/lock'
 import RevokeUpvote from './revokeupvote'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('governance:revokeupvote cmd', (web3: Web3) => {
+testWithAnvilL2('governance:revokeupvote cmd', (provider) => {
   let minDeposit: BigNumber
-  const kit = newKitFromWeb3(web3)
+  const kit = newKitFromProvider(provider)
   const proposalId = '2'
 
   let accounts: StrongAddress[] = []
   let governance: GovernanceWrapper
 
   beforeEach(async () => {
-    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
+    accounts = (await kit.connection.getAccounts()) as StrongAddress[]
     kit.defaultAccount = accounts[0]
     governance = await kit.contracts.getGovernance()
     minDeposit = await governance.minDeposit()
 
     for (let i = 1; i <= 2; i++) {
-      await governance
-        .propose([], `URL${i}`)
-        .sendAndWaitForReceipt({ from: accounts[0], value: minDeposit.toFixed() })
+      const proposeHash = await governance.propose([], `URL${i}`, {
+        from: accounts[0],
+        value: minDeposit.toFixed(),
+      })
+      await kit.connection.viemClient.waitForTransactionReceipt({
+        hash: proposeHash as `0x${string}`,
+      })
     }
 
     for (let i = 1; i <= 4; i++) {
-      await testLocallyWithWeb3Node(Register, ['--from', accounts[i]], web3)
-      await testLocallyWithWeb3Node(Lock, ['--from', accounts[i], '--value', i.toString()], web3)
+      await testLocallyWithNode(Register, ['--from', accounts[i]], provider)
+      await testLocallyWithNode(Lock, ['--from', accounts[i], '--value', i.toString()], provider)
 
-      await (await governance.upvote(proposalId, accounts[i])).sendAndWaitForReceipt({
+      const upvoteHash = await governance.upvote(proposalId, accounts[i], {
         from: accounts[i],
+      })
+      await kit.connection.viemClient.waitForTransactionReceipt({
+        hash: upvoteHash as `0x${string}`,
       })
     }
   })
@@ -53,7 +59,7 @@ testWithAnvilL2('governance:revokeupvote cmd', (web3: Web3) => {
     `)
 
     // Revoke upvote from account 2 (2 upvotes)
-    await testLocallyWithWeb3Node(RevokeUpvote, ['--from', accounts[2]], web3)
+    await testLocallyWithNode(RevokeUpvote, ['--from', accounts[2]], provider)
 
     // 1 + 3 + 4 = 8 upvotes
     expect(await governance.getQueue()).toMatchInlineSnapshot(`
