@@ -1,4 +1,4 @@
-**@celo/contractkit v10.0.3**
+**@celo/contractkit v10.0.4**
 
 ***
 

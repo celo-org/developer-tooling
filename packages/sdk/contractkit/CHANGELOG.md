@@ -1,5 +1,13 @@
 # @celo/contractkit
 
+## 10.0.4
+
+### Patch Changes
+
+- [#743](https://github.com/celo-org/developer-tooling/pull/743) [`a695c5c`](https://github.com/celo-org/developer-tooling/commit/a695c5c510dad78028744e1537ca3954f1aef86b) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Add `submitTransaction` method to `MultiSigWrapper` to submit transactions to multisig without automatic confirmation. This complements the existing `submitOrConfirmTransaction` method by providing more granular control over the submission process.
+
+- [#743](https://github.com/celo-org/developer-tooling/pull/743) [`a695c5c`](https://github.com/celo-org/developer-tooling/commit/a695c5c510dad78028744e1537ca3954f1aef86b) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Updates logic for submiting/confirming transaction with multisig to only search thru non executed transactions
+
 ## 10.0.3
 
 ### Patch Changes
