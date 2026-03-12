@@ -1,5 +1,24 @@
 # Changelog
 
+## 8.1.0
+
+### Minor Changes
+
+- [#743](https://github.com/celo-org/developer-tooling/pull/743) [`a695c5c`](https://github.com/celo-org/developer-tooling/commit/a695c5c510dad78028744e1537ca3954f1aef86b) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Add new flags to `governance:approve` command for better multisig transaction control:
+
+  - `--submit`: Force submission of approval transaction to multisig without checking for prior confirmations onchain. Use with caution - this bypasses the check for existing submissions. Example: `celocli governance:approve --proposalID 99 --from 0x... --useMultiSig --submit`
+
+  - `--multisigTx`: Specify exact multisig transaction ID to confirm, rather than searching onchain. Useful when you know the transaction ID from offchain sources. Example: `celocli governance:approve --proposalID 99 --from 0x... --useMultiSig --multisigTx 5`
+
+  Both flags depend on `--proposalID` and `--useMultiSig` being provided.
+
+### Patch Changes
+
+- [#743](https://github.com/celo-org/developer-tooling/pull/743) [`a695c5c`](https://github.com/celo-org/developer-tooling/commit/a695c5c510dad78028744e1537ca3954f1aef86b) Thanks [@aaronmgdr](https://github.com/aaronmgdr)! - Updates logic for submiting/confirming transaction with multisig to only search thru non executed transactions
+
+- Updated dependencies [[`a695c5c`](https://github.com/celo-org/developer-tooling/commit/a695c5c510dad78028744e1537ca3954f1aef86b), [`a695c5c`](https://github.com/celo-org/developer-tooling/commit/a695c5c510dad78028744e1537ca3954f1aef86b)]:
+  - @celo/contractkit@10.0.4
+
 ## 8.0.3
 
 ### Patch Changes
