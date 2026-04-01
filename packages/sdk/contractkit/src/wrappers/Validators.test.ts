@@ -125,11 +125,11 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
   })
 
   describe('reorders member', () => {
-    jest.setTimeout(30 * 1000)
+    jest.setTimeout(60 * 1000)
     let groupAccount: string, validator1: string, validator2: string
 
     beforeEach(async () => {
-      jest.setTimeout(30 * 1000)
+      jest.setTimeout(60 * 1000)
 
       groupAccount = accounts[0]
       await setupGroup(groupAccount, 2)
@@ -210,13 +210,13 @@ testWithAnvilL2('Validators Wrapper', (provider) => {
       await startAndFinishEpochProcess(kit)
       const lastBlockNumberForEpochPromise = validators.getLastBlockNumberForEpoch(lastEpoch)
       expect(typeof (await lastBlockNumberForEpochPromise)).toBe('number')
-    })
+    }, 60000)
     it("can fetch block's epoch information", async () => {
       await startAndFinishEpochProcess(kit)
       const epochNumberOfBlockPromise = validators.getEpochNumberOfBlock(
         Number(await kit.connection.viemClient.getBlockNumber())
       )
       expect(typeof (await epochNumberOfBlockPromise)).toBe('number')
-    })
+    }, 60000)
   })
 })

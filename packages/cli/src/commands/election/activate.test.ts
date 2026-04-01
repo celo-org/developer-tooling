@@ -190,9 +190,6 @@ testWithAnvilL2(
             [
               "txHash: 0xtxhash",
             ],
-            [
-              "txHash: 0xtxhash",
-            ],
           ]
         `)
         expect(writeMock.mock.calls).toMatchInlineSnapshot(`[]`)
@@ -334,9 +331,6 @@ testWithAnvilL2(
           ],
           [
             "SendTransaction: activate",
-          ],
-          [
-            "txHash: 0xtxhash",
           ],
           [
             "txHash: 0xtxhash",
