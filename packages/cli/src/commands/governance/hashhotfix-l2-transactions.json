@@ -1,0 +1,8 @@
+[
+  {
+    "address": "0x4200000000000000000000000000000000000018",
+    "function": "setValue(uint256,uint256,bool)",
+    "args": ["3", "4", true],
+    "value": 0
+  }
+]
