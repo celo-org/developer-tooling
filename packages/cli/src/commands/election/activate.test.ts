@@ -182,6 +182,9 @@ testWithAnvilL2(
               "SendTransaction: finishNextEpoch",
             ],
             [
+              "txHash: 0xtxhash",
+            ],
+            [
               "SendTransaction: activate",
             ],
             [
@@ -319,6 +322,9 @@ testWithAnvilL2(
           ],
           [
             "SendTransaction: finishNextEpoch",
+          ],
+          [
+            "txHash: 0xtxhash",
           ],
           [
             "SendTransaction: activate",

@@ -14,12 +14,15 @@ class SimpleHttpProvider implements Provider {
   }
 
   request: EIP1193RequestFn = async ({ method, params }) => {
-    const body = JSON.stringify({
-      id: ++nextId,
-      jsonrpc: '2.0',
-      method,
-      params: Array.isArray(params) ? params : params != null ? [params] : [],
-    })
+    const body = JSON.stringify(
+      {
+        id: ++nextId,
+        jsonrpc: '2.0',
+        method,
+        params: Array.isArray(params) ? params : params != null ? [params] : [],
+      },
+      (_, val) => (typeof val === 'bigint' ? `0x${val.toString(16)}` : val)
+    )
     const parsedUrl = new URL(this.url)
 
     return new Promise<any>((resolve, reject) => {
