@@ -1,5 +1,5 @@
-import { newICeloVersionedContract } from '@celo/abis/web3/ICeloVersionedContract'
-import { newProxy } from '@celo/abis/web3/Proxy'
+import { decodeFunctionResult, encodeFunctionData } from 'viem'
+import { iCeloVersionedContractABI, proxyABI } from '@celo/abis'
 import { concurrentMap } from '@celo/base'
 import { CeloContract } from '@celo/contractkit'
 import { ux } from '@oclif/core'
@@ -39,7 +39,21 @@ export default class Contracts extends BaseCommand {
           implementation = 'NONE'
         } else {
           try {
-            implementation = await newProxy(kit.web3, proxy).methods._getImplementation().call()
+            const proxyContract = kit.connection.getCeloContract(proxyABI as any, proxy)
+            const implCallData = encodeFunctionData({
+              abi: proxyContract.abi,
+              functionName: '_getImplementation',
+              args: [],
+            })
+            const { data: implResultData } = await kit.connection.viemClient.call({
+              to: proxyContract.address,
+              data: implCallData,
+            })
+            implementation = decodeFunctionResult({
+              abi: proxyContract.abi,
+              functionName: '_getImplementation',
+              data: implResultData!,
+            }) as string
           } catch (e) {
             // if we fail to get implementation that means it doesnt have one so set it to NONE
             implementation = 'NONE'
@@ -51,9 +65,24 @@ export default class Contracts extends BaseCommand {
           version = 'NONE'
         } else {
           try {
-            const raw = await newICeloVersionedContract(kit.web3, implementation)
-              .methods.getVersionNumber()
-              .call()
+            const versionContract = kit.connection.getCeloContract(
+              iCeloVersionedContractABI as any,
+              implementation
+            )
+            const versionCallData = encodeFunctionData({
+              abi: versionContract.abi,
+              functionName: 'getVersionNumber',
+              args: [],
+            })
+            const { data: versionResultData } = await kit.connection.viemClient.call({
+              to: versionContract.address,
+              data: versionCallData,
+            })
+            const raw = decodeFunctionResult({
+              abi: versionContract.abi,
+              functionName: 'getVersionNumber',
+              data: versionResultData!,
+            }) as readonly [unknown, unknown, unknown, unknown]
             version = `${raw[0]}.${raw[1]}.${raw[2]}.${raw[3]}`
           } catch (e) {
             console.warn(`Failed to get version for ${contract} at ${proxy}`)
