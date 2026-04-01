@@ -1,9 +1,11 @@
 import { multiSigABI, proxyABI } from '@celo/abis'
 import { StrongAddress } from '@celo/base'
+import { AbiItem, Provider } from '@celo/connect'
 import { ContractKit } from '@celo/contractkit'
 import { setCode } from '@celo/dev-utils/anvil-test'
 import { TEST_GAS_PRICE } from '@celo/dev-utils/test-utils'
-import Web3 from 'web3'
+import { encodeFunctionData, parseUnits } from 'viem'
+import { waitForTransactionReceipt } from 'viem/actions'
 import {
   multiSigBytecode,
   proxyBytecode,
@@ -19,56 +21,91 @@ import {
   SAFE_PROXY_FACTORY_CODE,
 } from './constants'
 
+interface RpcBlockResponse {
+  baseFeePerGas: string
+}
+
 export async function createMultisig(
   kit: ContractKit,
   owners: StrongAddress[],
   requiredSignatures: number,
   requiredInternalSignatures: number
 ): Promise<StrongAddress> {
-  const accounts = (await kit.web3.eth.getAccounts()) as StrongAddress[]
+  const accounts = (await kit.connection.getAccounts()) as StrongAddress[]
   kit.defaultAccount = accounts[0]
 
   // Deploy Proxy contract
-  const proxyDeploymentTx = await kit.sendTransaction({
+  const proxyHash = await kit.sendTransaction({
     data: proxyBytecode,
     maxFeePerGas: TEST_GAS_PRICE,
   })
-  const { contractAddress: proxyAddress } = await proxyDeploymentTx.waitReceipt()
+  const proxyReceipt = await waitForTransactionReceipt(kit.connection.viemClient, {
+    hash: proxyHash,
+  })
+  const { contractAddress: proxyAddress } = proxyReceipt
   // Deploy MultiSig contract
-  const multisigDeploymentTx = await kit.sendTransaction({
+  const multisigHash = await kit.sendTransaction({
     data: multiSigBytecode,
     maxFeePerGas: TEST_GAS_PRICE,
   })
-  const { contractAddress: multiSigAddress } = await multisigDeploymentTx.waitReceipt()
+  const multisigReceipt = await waitForTransactionReceipt(kit.connection.viemClient, {
+    hash: multisigHash,
+  })
+  const { contractAddress: multiSigAddress } = multisigReceipt
 
   // Configure and initialize MultiSig
   const initializerAbi = multiSigABI.find(
     (abi) => abi.type === 'function' && abi.name === 'initialize'
   )
-  const proxy = new kit.web3.eth.Contract(proxyABI as any, proxyAddress)
-  const baseFee = await kit.web3.eth.getBlock('latest').then((block: any) => block.baseFeePerGas)
-  const priorityFee = kit.web3.utils.toWei('25', 'gwei')
-  const initMethod = proxy.methods._setAndInitializeImplementation
-  const callData = kit.web3.eth.abi.encodeFunctionCall(initializerAbi as any, [
-    owners as any,
-    requiredSignatures as any,
-    requiredInternalSignatures as any,
-  ])
-  const initTx = initMethod(multiSigAddress, callData)
-  await initTx.send({
+  const proxy = kit.connection.getCeloContract(proxyABI as unknown as AbiItem[], proxyAddress!)
+  const blockResp = await kit.connection.viemClient.request({
+    method: 'eth_getBlockByNumber',
+    params: ['latest', false],
+  })
+  const baseFee = (blockResp as RpcBlockResponse).baseFeePerGas
+  const priorityFee = parseUnits('25', 9).toString()
+  const callData = encodeFunctionData({
+    abi: [initializerAbi] as any,
+    args: [owners, requiredSignatures, requiredInternalSignatures] as any,
+  })
+  const initData = encodeFunctionData({
+    abi: proxy.abi,
+    functionName: '_setAndInitializeImplementation',
+    args: [multiSigAddress, callData],
+  })
+  const initGas = await kit.connection.estimateGas({
     from: kit.defaultAccount,
-    gas: await initTx.estimateGas({ from: kit.defaultAccount }),
+    to: proxy.address,
+    data: initData,
+  })
+  await kit.connection.sendTransaction({
+    from: kit.defaultAccount,
+    to: proxy.address,
+    data: initData,
+    gas: initGas,
     maxPriorityFeePerGas: priorityFee,
     maxFeePerGas: (BigInt(baseFee) + BigInt(priorityFee)).toString(),
   })
-  const transferOwnershipMethod = proxy.methods._transferOwnership
-  const changeOwnerTx = transferOwnershipMethod(proxyAddress)
-  await changeOwnerTx.send({
+  // Hash is returned directly from sendTransaction
+  const changeOwnerData = encodeFunctionData({
+    abi: proxy.abi,
+    functionName: '_transferOwnership',
+    args: [proxyAddress],
+  })
+  const changeOwnerGas = await kit.connection.estimateGas({
     from: kit.defaultAccount,
-    gas: await changeOwnerTx.estimateGas({ from: kit.defaultAccount }),
+    to: proxy.address,
+    data: changeOwnerData,
+  })
+  await kit.connection.sendTransaction({
+    from: kit.defaultAccount,
+    to: proxy.address,
+    data: changeOwnerData,
+    gas: changeOwnerGas,
     maxPriorityFeePerGas: priorityFee,
     maxFeePerGas: (BigInt(baseFee) + BigInt(priorityFee)).toString(),
   })
+  // Hash is returned directly from sendTransaction
 
   return proxyAddress as StrongAddress
 }
@@ -87,11 +124,11 @@ export async function createMultisig(
  *
  * A working example can be found in packages/cli/src/commands/governance/approve-l2.test.ts`
  */
-export const setupSafeContracts = async (web3: Web3) => {
+export const setupSafeContracts = async (provider: Provider) => {
   // Set up safe 1.3.0 in devchain
-  await setCode(web3, SAFE_MULTISEND_ADDRESS, SAFE_MULTISEND_CODE)
-  await setCode(web3, SAFE_MULTISEND_CALL_ONLY_ADDRESS, SAFE_MULTISEND_CALL_ONLY_CODE)
-  await setCode(web3, SAFE_PROXY_FACTORY_ADDRESS, SAFE_PROXY_FACTORY_CODE)
-  await setCode(web3, SAFE_PROXY_ADDRESS, SAFE_PROXY_CODE)
-  await setCode(web3, SAFE_FALLBACK_HANDLER_ADDRESS, SAFE_FALLBACK_HANDLER_CODE)
+  await setCode(provider, SAFE_MULTISEND_ADDRESS, SAFE_MULTISEND_CODE)
+  await setCode(provider, SAFE_MULTISEND_CALL_ONLY_ADDRESS, SAFE_MULTISEND_CALL_ONLY_CODE)
+  await setCode(provider, SAFE_PROXY_FACTORY_ADDRESS, SAFE_PROXY_FACTORY_CODE)
+  await setCode(provider, SAFE_PROXY_ADDRESS, SAFE_PROXY_CODE)
+  await setCode(provider, SAFE_FALLBACK_HANDLER_ADDRESS, SAFE_FALLBACK_HANDLER_CODE)
 }

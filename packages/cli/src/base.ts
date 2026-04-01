@@ -5,8 +5,9 @@ import {
   ETHEREUM_DERIVATION_PATH,
   StrongAddress,
 } from '@celo/base'
-import { ReadOnlyWallet } from '@celo/connect'
-import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
+import { type Provider, ReadOnlyWallet } from '@celo/connect'
+import { ContractKit, newKitFromProvider } from '@celo/contractkit'
+import { getProviderForKit } from '@celo/contractkit/lib/setupForKits'
 import { ledgerToWalletClient } from '@celo/viem-account-ledger'
 import { AzureHSMWallet } from '@celo/wallet-hsm-azure'
 import { AddressValidation, newLedgerWalletWithSetup } from '@celo/wallet-ledger'
@@ -16,7 +17,6 @@ import { Command, Flags, ux } from '@oclif/core'
 import { CLIError } from '@oclif/core/lib/errors'
 import { ArgOutput, FlagOutput, Input, ParserOutput } from '@oclif/core/lib/interfaces/parser'
 import chalk from 'chalk'
-import net from 'net'
 import {
   createPublicClient,
   createWalletClient,
@@ -30,7 +30,6 @@ import {
 import { privateKeyToAccount } from 'viem/accounts'
 import { celo, celoSepolia } from 'viem/chains'
 import { ipc } from 'viem/node'
-import Web3 from 'web3'
 import createRpcWalletClient from './packages-to-be/rpc-client'
 import { failWith } from './utils/cli'
 import { CustomFlags } from './utils/command'
@@ -143,20 +142,13 @@ export abstract class BaseCommand extends Command {
   // useful for the LedgerWalletClient which sometimes needs user input on reads
   public isOnlyReadingWallet = false
 
-  private _web3: Web3 | null = null
+  private _provider: Provider | null = null
   private _kit: ContractKit | null = null
 
   private publicClient: PublicCeloClient | null = null
   private walletClient: WalletCeloClient | null = null
   private _parseResult: null | ParserOutput<FlagOutput, FlagOutput> = null
   private ledgerTransport: Awaited<ReturnType<(typeof _TransportNodeHid)['open']>> | null = null
-
-  async getWeb3() {
-    if (!this._web3) {
-      this._web3 = await this.newWeb3()
-    }
-    return this._web3
-  }
 
   get _wallet(): ReadOnlyWallet | undefined {
     return this._wallet
@@ -172,17 +164,17 @@ export abstract class BaseCommand extends Command {
     return (res.flags && res.flags.node) || getNodeUrl(this.config.configDir)
   }
 
-  async newWeb3() {
-    const nodeUrl = await this.getNodeUrl()
-
-    return nodeUrl && nodeUrl.endsWith('.ipc')
-      ? new Web3(new Web3.providers.IpcProvider(nodeUrl, net))
-      : new Web3(nodeUrl)
+  async newProvider(): Promise<Provider> {
+    if (!this._provider) {
+      const nodeUrl = await this.getNodeUrl()
+      this._provider = getProviderForKit(nodeUrl, undefined)
+    }
+    return this._provider
   }
 
   async getKit() {
     if (!this._kit) {
-      this._kit = newKitFromWeb3(await this.getWeb3())
+      this._kit = newKitFromProvider(await this.newProvider())
     }
 
     const res = await this.parse()
@@ -324,7 +316,10 @@ export abstract class BaseCommand extends Command {
         } catch (e) {
           let code: number | undefined
           try {
-            const error = JSON.parse((e as any).details) as { code: number; message: string }
+            const error = JSON.parse((e as Error & { details: string }).details) as {
+              code: number
+              message: string
+            }
             code = error.code
           } catch (_) {
             // noop
@@ -348,7 +343,7 @@ export abstract class BaseCommand extends Command {
     const res = await this.parse(BaseCommand)
     const isLedgerLiveMode = res.flags.ledgerLiveMode
     const indicesToIterateOver: number[] = res.raw.some(
-      (value: any) => value.flag === 'ledgerCustomAddresses'
+      (value) => (value as { flag?: string }).flag === 'ledgerCustomAddresses'
     )
       ? JSON.parse(res.flags.ledgerCustomAddresses)
       : Array.from(new Array(res.flags.ledgerAddresses).keys())
@@ -401,7 +396,7 @@ export abstract class BaseCommand extends Command {
       try {
         const isLedgerLiveMode = res.flags.ledgerLiveMode
         const indicesToIterateOver: number[] = res.raw.some(
-          (value) => (value as any).flag === 'ledgerCustomAddresses'
+          (value) => (value as { flag?: string }).flag === 'ledgerCustomAddresses'
         )
           ? JSON.parse(res.flags.ledgerCustomAddresses)
           : Array.from(new Array(res.flags.ledgerAddresses).keys())
@@ -511,7 +506,7 @@ export abstract class BaseCommand extends Command {
     return false
   }
 
-  async finally(arg: Error | undefined): Promise<any> {
+  async finally(arg: Error | undefined): Promise<void> {
     const hideExtraOutput = await this.shouldHideExtraOutput(arg)
 
     try {
