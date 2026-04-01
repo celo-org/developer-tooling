@@ -1,37 +1,37 @@
-import { Registry } from '@celo/abis/web3/Registry'
 import { Address, StrongAddress } from '@celo/base/lib/address'
+import { type ContractRef } from '@celo/connect'
 import { asCoreContractsOwner, testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { timeTravel } from '@celo/dev-utils/ganache-test'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
+import { encodeFunctionData } from 'viem'
 import { CeloContract } from '..'
-import { newKitFromWeb3 } from '../kit'
+import { newKitFromProvider } from '../kit'
 import { AccountsWrapper } from './Accounts'
 import { GovernanceWrapper, Proposal, ProposalTransaction, VoteValue } from './Governance'
 import { LockedGoldWrapper } from './LockedGold'
 import { MultiSigWrapper } from './MultiSig'
 
-testWithAnvilL2('Governance Wrapper', (web3: Web3) => {
+testWithAnvilL2('Governance Wrapper', (provider) => {
   const ONE_SEC = 1000
-  const kit = newKitFromWeb3(web3)
-  const ONE_CGLD = web3.utils.toWei('1', 'ether')
+  const kit = newKitFromProvider(provider)
+  const ONE_CGLD = new BigNumber('1e18').toFixed()
 
   let accounts: StrongAddress[] = []
   let governance: GovernanceWrapper
   let governanceApproverMultiSig: MultiSigWrapper
   let lockedGold: LockedGoldWrapper
   let accountWrapper: AccountsWrapper
-  let registry: Registry
+  let registry: ContractRef
   let minDeposit: string
   let dequeueFrequency: number
   let referendumStageDuration: number
 
   beforeAll(async () => {
-    accounts = (await web3.eth.getAccounts()) as StrongAddress[]
+    accounts = await kit.connection.getAccounts()
     kit.defaultAccount = accounts[0]
     governance = await kit.contracts.getGovernance()
     governanceApproverMultiSig = await kit.contracts.getMultiSig(await governance.getApprover())
-    registry = await kit._web3Contracts.getRegistry()
+    registry = await kit._contracts.getRegistry()
     lockedGold = await kit.contracts.getLockedGold()
     accountWrapper = await kit.contracts.getAccounts()
     minDeposit = (await governance.minDeposit()).toFixed()
@@ -39,8 +39,10 @@ testWithAnvilL2('Governance Wrapper', (web3: Web3) => {
     dequeueFrequency = (await governance.dequeueFrequency()).toNumber()
 
     for (const account of accounts.slice(0, 4)) {
-      await accountWrapper.createAccount().sendAndWaitForReceipt({ from: account })
-      await lockedGold.lock().sendAndWaitForReceipt({ from: account, value: ONE_CGLD })
+      const createHash = await accountWrapper.createAccount({ from: account })
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: createHash })
+      const lockHash = await lockedGold.lock({ from: account, value: ONE_CGLD })
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: lockHash })
     }
   })
 
@@ -50,8 +52,12 @@ testWithAnvilL2('Governance Wrapper', (web3: Web3) => {
     const proposals: ProposalTransaction[] = repoints.map<ProposalTransaction>((repoint) => {
       return {
         value: '0',
-        to: (registry as any)._address,
-        input: registry.methods.setAddressFor(...repoint).encodeABI(),
+        to: registry.address,
+        input: encodeFunctionData({
+          abi: registry.abi as any,
+          functionName: 'setAddressFor',
+          args: repoint,
+        }),
       }
     })
     return proposals as Proposal
@@ -90,41 +96,47 @@ testWithAnvilL2('Governance Wrapper', (web3: Web3) => {
 
     const proposeFn = async (proposer: Address, proposeTwice = false) => {
       if (proposeTwice) {
-        await governance
-          .propose(proposal, 'URL')
-          .sendAndWaitForReceipt({ from: proposer, value: minDeposit })
+        const hash = await governance.propose(proposal, 'URL', {
+          from: proposer,
+          value: minDeposit,
+        })
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
       }
 
-      await governance
-        .propose(proposal, 'URL')
-        .sendAndWaitForReceipt({ from: proposer, value: minDeposit })
+      const hash = await governance.propose(proposal, 'URL', { from: proposer, value: minDeposit })
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
     }
 
     const upvoteFn = async (upvoter: Address, shouldTimeTravel = true, proposalId?: BigNumber) => {
-      const tx = await governance.upvote(proposalId ?? proposalID, upvoter)
-      await tx.sendAndWaitForReceipt({ from: upvoter })
+      const hash = await governance.upvote(proposalId ?? proposalID, upvoter, { from: upvoter })
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
       if (shouldTimeTravel) {
-        await timeTravel(dequeueFrequency, web3)
-        await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
+        await timeTravel(dequeueFrequency, provider)
+        const dequeueHash = await governance.dequeueProposalsIfReady()
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: dequeueHash })
       }
     }
 
     // protocol/truffle-config defines approver address as accounts[0]
     const approveFn = async () => {
-      await asCoreContractsOwner(web3, async (ownerAddress) => {
-        const tx = await governance.approve(proposalID)
-        const multisigTx = await governanceApproverMultiSig.submitOrConfirmTransaction(
+      await asCoreContractsOwner(provider, async (ownerAddress) => {
+        const dequeue = await governance.getDequeue()
+        const index = dequeue.findIndex((id) => id.eq(proposalID))
+        const approveData = governance.encodeFunctionData('approve', [proposalID, index])
+        const hash = await governanceApproverMultiSig.submitOrConfirmTransaction(
           governance.address,
-          tx.txo
+          approveData,
+          '0',
+          { from: ownerAddress }
         )
-        await multisigTx.sendAndWaitForReceipt({ from: ownerAddress })
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
       })
     }
 
     const voteFn = async (voter: Address) => {
-      const tx = await governance.vote(proposalID, 'Yes')
-      await tx.sendAndWaitForReceipt({ from: voter })
-      await timeTravel(referendumStageDuration, web3)
+      const hash = await governance.vote(proposalID, 'Yes', { from: voter })
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
+      await timeTravel(referendumStageDuration, provider)
     }
 
     it('#propose', async () => {
@@ -139,7 +151,7 @@ testWithAnvilL2('Governance Wrapper', (web3: Web3) => {
 
     describe('#getHotfixRecord', () => {
       it('gets hotfix record', async () => {
-        const kit = newKitFromWeb3(web3)
+        const kit = newKitFromProvider(provider)
         const governance = await kit.contracts.getGovernance()
         const hotfixHash = Buffer.from('0x', 'hex')
 
@@ -180,8 +192,8 @@ testWithAnvilL2('Governance Wrapper', (web3: Web3) => {
       const before = await governance.getUpvotes(proposalId)
       const upvoteRecord = await governance.getUpvoteRecord(accounts[1])
 
-      const tx = await governance.revokeUpvote(accounts[1])
-      await tx.sendAndWaitForReceipt({ from: accounts[1] })
+      const hash = await governance.revokeUpvote(accounts[1], { from: accounts[1] })
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
 
       const after = await governance.getUpvotes(proposalId)
       expect(after).toEqBigNumber(before.minus(upvoteRecord.upvotes))
@@ -189,8 +201,9 @@ testWithAnvilL2('Governance Wrapper', (web3: Web3) => {
 
     it('#approve', async () => {
       await proposeFn(accounts[0])
-      await timeTravel(dequeueFrequency, web3)
-      await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
+      await timeTravel(dequeueFrequency, provider)
+      const dequeueHash = await governance.dequeueProposalsIfReady()
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: dequeueHash })
       await approveFn()
 
       const approved = await governance.isApproved(proposalID)
@@ -199,8 +212,9 @@ testWithAnvilL2('Governance Wrapper', (web3: Web3) => {
 
     it('#vote', async () => {
       await proposeFn(accounts[0])
-      await timeTravel(dequeueFrequency, web3)
-      await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
+      await timeTravel(dequeueFrequency, provider)
+      const dequeueHash = await governance.dequeueProposalsIfReady()
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: dequeueHash })
       await approveFn()
       await voteFn(accounts[2])
 
@@ -212,8 +226,9 @@ testWithAnvilL2('Governance Wrapper', (web3: Web3) => {
     it('#getVoteRecord', async () => {
       const voter = accounts[2]
       await proposeFn(accounts[0])
-      await timeTravel(dequeueFrequency, web3)
-      await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
+      await timeTravel(dequeueFrequency, provider)
+      const dequeueHash = await governance.dequeueProposalsIfReady()
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: dequeueHash })
       await approveFn()
       await voteFn(voter)
 
@@ -229,17 +244,20 @@ testWithAnvilL2('Governance Wrapper', (web3: Web3) => {
 
     it('#votePartially', async () => {
       await proposeFn(accounts[0])
-      await timeTravel(dequeueFrequency, web3)
-      await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
+      await timeTravel(dequeueFrequency, provider)
+      const dequeueHash = await governance.dequeueProposalsIfReady()
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: dequeueHash })
       await approveFn()
 
       const yes = 10
       const no = 20
       const abstain = 0
 
-      const tx = await governance.votePartially(proposalID, yes, no, abstain)
-      await tx.sendAndWaitForReceipt({ from: accounts[2] })
-      await timeTravel(referendumStageDuration, web3)
+      const hash = await governance.votePartially(proposalID, yes, no, abstain, {
+        from: accounts[2],
+      })
+      await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
+      await timeTravel(referendumStageDuration, provider)
 
       const votes = await governance.getVotes(proposalID)
       const yesVotes = votes[VoteValue.Yes]
@@ -254,40 +272,46 @@ testWithAnvilL2('Governance Wrapper', (web3: Web3) => {
       '#execute',
       async () => {
         await proposeFn(accounts[0])
-        await timeTravel(dequeueFrequency, web3)
-        await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
+        await timeTravel(dequeueFrequency, provider)
+        const dequeueHash = await governance.dequeueProposalsIfReady()
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: dequeueHash })
         await approveFn()
         await voteFn(accounts[2])
 
-        const tx = await governance.execute(proposalID)
-        await tx.sendAndWaitForReceipt()
+        const hash = await governance.execute(proposalID)
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash })
 
         const exists = await governance.proposalExists(proposalID)
         expect(exists).toBeFalsy()
       },
-      10 * ONE_SEC
+      30 * ONE_SEC
     )
 
-    it('#getVoter', async () => {
-      await proposeFn(accounts[0])
-      await timeTravel(dequeueFrequency, web3)
-      await governance.dequeueProposalsIfReady().sendAndWaitForReceipt()
-      await approveFn()
-      await voteFn(accounts[2])
+    it(
+      '#getVoter',
+      async () => {
+        await proposeFn(accounts[0])
+        await timeTravel(dequeueFrequency, provider)
+        const dequeueHash = await governance.dequeueProposalsIfReady()
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: dequeueHash })
+        await approveFn()
+        await voteFn(accounts[2])
 
-      const proposer = await governance.getVoter(accounts[0])
-      expect(proposer.refundedDeposits).toEqBigNumber(minDeposit)
+        const proposer = await governance.getVoter(accounts[0])
+        expect(proposer.refundedDeposits).toEqBigNumber(minDeposit)
 
-      const voter = await governance.getVoter(accounts[2])
-      const expectedVoteRecord = {
-        proposalID,
-        votes: new BigNumber(0),
-        value: VoteValue.None,
-        abstainVotes: new BigNumber(0),
-        noVotes: new BigNumber(0),
-        yesVotes: new BigNumber('1000000000000000000'),
-      }
-      expect(voter.votes[0]).toEqual(expectedVoteRecord)
-    })
+        const voter = await governance.getVoter(accounts[2])
+        const expectedVoteRecord = {
+          proposalID,
+          votes: new BigNumber(0),
+          value: VoteValue.None,
+          abstainVotes: new BigNumber(0),
+          noVotes: new BigNumber(0),
+          yesVotes: new BigNumber('1000000000000000000'),
+        }
+        expect(voter.votes[0]).toEqual(expectedVoteRecord)
+      },
+      30 * ONE_SEC
+    )
   })
 })

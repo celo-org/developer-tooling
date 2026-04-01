@@ -1,51 +1,63 @@
-import { ICeloVersionedContract } from '@celo/abis/web3/ICeloVersionedContract'
 import { StrongAddress, bufferToHex, ensureLeading0x } from '@celo/base/lib/address'
-import { zip } from '@celo/base/lib/collections'
-import {
-  CeloTransactionObject,
-  CeloTxObject,
-  Connection,
-  Contract,
-  EventLog,
-  PastEventOptions,
-  toTransactionObject,
-} from '@celo/connect'
+
+import { type CeloContract, Connection, type EventLog, type PastEventOptions } from '@celo/connect'
+import type { AbiItem } from '@celo/connect'
+import { coerceArgsForAbi } from '@celo/connect/lib/viem-abi-coder'
+import { decodeParametersToObject } from '@celo/connect/lib/utils/abi-utils'
+import type { PublicClient } from 'viem'
+import { toFunctionHash, encodeFunctionData as viemEncodeFunctionData } from 'viem'
 import { fromFixed, toFixed } from '@celo/utils/lib/fixidity'
 import BigNumber from 'bignumber.js'
 import { ContractVersion } from '../versions'
 
-/** Represents web3 native contract Method */
-type Method<I extends any[], O> = (...args: I) => CeloTxObject<O>
-
-type Events<T extends Contract> = keyof T['events']
-type Methods<T extends Contract> = keyof T['methods']
-type EventsEnum<T extends Contract> = {
-  [event in Events<T>]: event
+/** @internal Minimal contract shape for proxy helpers. CeloContract satisfies this. */
+export interface ContractLike<TAbi extends readonly unknown[] = readonly unknown[]> {
+  readonly abi: TAbi
+  readonly address: `0x${string}`
 }
+
+type Events = string
+type Methods = string
+type EventsEnum = Record<string, string>
 
 /**
  * @internal -- use its children
  */
-export abstract class BaseWrapper<T extends Contract> {
-  protected _version?: T['methods'] extends ICeloVersionedContract['methods']
-    ? ContractVersion
-    : never
+export abstract class BaseWrapper<TAbi extends readonly unknown[] = AbiItem[]> {
+  protected _version?: ContractVersion
+  protected readonly client: PublicClient
 
   constructor(
     protected readonly connection: Connection,
-    protected readonly contract: T
-  ) {}
+    protected readonly contract: CeloContract<TAbi>
+  ) {
+    this.client = connection.viemClient
+  }
 
   /** Contract address */
   get address(): StrongAddress {
-    return this.contract.options.address as StrongAddress
+    return this.contract.address as StrongAddress
   }
 
   async version() {
     if (!this._version) {
-      const raw = await this.contract.methods.getVersionNumber().call()
-      // @ts-ignore conditional type
-      this._version = ContractVersion.fromRaw(raw)
+      const result = await this.client.call({
+        to: this.contract.address as `0x${string}`,
+        data: toFunctionHash('getVersionNumber()').slice(0, 10) as `0x${string}`,
+      })
+      if (result.data && result.data !== '0x') {
+        const decoded = decodeParametersToObject(
+          [
+            { name: '', type: 'uint256' },
+            { name: '', type: 'uint256' },
+            { name: '', type: 'uint256' },
+            { name: '', type: 'uint256' },
+          ],
+          result.data
+        )
+        // @ts-ignore conditional type
+        this._version = ContractVersion.fromRaw(decoded)
+      }
     }
     return this._version!
   }
@@ -56,31 +68,100 @@ export abstract class BaseWrapper<T extends Contract> {
     }
   }
 
-  /** Contract getPastEvents */
-  public getPastEvents(event: Events<T>, options: PastEventOptions): Promise<EventLog[]> {
-    return this.contract.getPastEvents(event as string, options)
+  /**
+   * Encode function call data without sending.
+   * @internal
+   */
+  public encodeFunctionData(functionName: string, args: unknown[]): `0x${string}` {
+    const contractAbi = this.contract.abi as AbiItem[]
+    const methodAbi = contractAbi.find(
+      (item: AbiItem) => item.type === 'function' && item.name === functionName
+    )
+    if (!methodAbi) {
+      throw new Error(`Method ${functionName} not found in ABI`)
+    }
+    const coercedArgs = methodAbi.inputs ? coerceArgsForAbi(methodAbi.inputs, args) : args
+    return viemEncodeFunctionData({
+      abi: [methodAbi],
+      args: coercedArgs,
+    }) as `0x${string}`
   }
 
-  events: T['events'] = this.contract.events
+  /** Contract getPastEvents */
+  public async getPastEvents(event: Events, options: PastEventOptions): Promise<EventLog[]> {
+    const eventAbi = (this.contract.abi as unknown as AbiItem[]).find(
+      (item: AbiItem) => item.type === 'event' && item.name === event
+    )
+    if (!eventAbi) return []
 
-  eventTypes = Object.keys(this.events).reduce<EventsEnum<T>>(
+    const fromBlock =
+      options.fromBlock != null
+        ? typeof options.fromBlock === 'number'
+          ? BigInt(options.fromBlock)
+          : options.fromBlock === 'latest' ||
+              options.fromBlock === 'earliest' ||
+              options.fromBlock === 'pending'
+            ? options.fromBlock
+            : BigInt(options.fromBlock)
+        : undefined
+    const toBlock =
+      options.toBlock != null
+        ? typeof options.toBlock === 'number'
+          ? BigInt(options.toBlock)
+          : options.toBlock === 'latest' ||
+              options.toBlock === 'earliest' ||
+              options.toBlock === 'pending'
+            ? options.toBlock
+            : BigInt(options.toBlock)
+        : undefined
+
+    try {
+      const logs = await this.client.getLogs({
+        address: this.contract.address,
+        event: eventAbi as any,
+        fromBlock,
+        toBlock,
+      })
+
+      return logs.map((log) => {
+        const decoded = log as typeof log & { args?: Record<string, unknown> }
+        return {
+          event: eventAbi.name!,
+          address: log.address,
+          returnValues: decoded.args ?? {},
+          logIndex: log.logIndex!,
+          transactionIndex: log.transactionIndex!,
+          transactionHash: log.transactionHash!,
+          blockHash: log.blockHash!,
+          blockNumber: Number(log.blockNumber!),
+          raw: { data: log.data, topics: log.topics as string[] },
+        }
+      })
+    } catch {
+      // Event decoding may fail for proxy contracts; return empty gracefully
+      return []
+    }
+  }
+
+  events: Record<string, AbiItem> = (this.contract.abi as unknown as AbiItem[])
+    .filter((item: AbiItem) => item.type === 'event' && item.name)
+    .reduce<Record<string, AbiItem>>((acc, item: AbiItem) => {
+      acc[item.name!] = item
+      return acc
+    }, {})
+
+  eventTypes = Object.keys(this.events).reduce<EventsEnum>(
     (acc, key) => ({ ...acc, [key]: key }),
     {} as any
   )
 
-  methodIds = Object.keys(this.contract.methods).reduce<Record<Methods<T>, string>>(
-    (acc, method: Methods<T>) => {
-      const methodABI = this.contract.options.jsonInterface.find((item) => item.name === method)
-
-      acc[method] =
-        methodABI === undefined
-          ? '0x'
-          : this.connection.getAbiCoder().encodeFunctionSignature(methodABI)
-
+  methodIds = (this.contract.abi as unknown as AbiItem[])
+    .filter((item: AbiItem) => item.type === 'function' && item.name)
+    .reduce<Record<Methods, string>>((acc, item: AbiItem) => {
+      const sig = `${item.name}(${(item.inputs || []).map((i) => i.type).join(',')})`
+      acc[item.name!] = toFunctionHash(sig).slice(0, 10)
       return acc
-    },
-    {} as any
-  )
+    }, {} as any)
 }
 
 export const valueToBigNumber = (input: BigNumber.Value) => new BigNumber(input)
@@ -97,6 +178,16 @@ export const valueToInt = (input: BigNumber.Value) =>
 
 export const valueToFrac = (numerator: BigNumber.Value, denominator: BigNumber.Value) =>
   valueToBigNumber(numerator).div(valueToBigNumber(denominator))
+
+/** Convert a string address to viem's strict hex address type */
+export function toViemAddress(v: string): `0x${string}` {
+  return ensureLeading0x(v) as `0x${string}`
+}
+
+/** Convert BigNumber.Value (string | number | BigNumber) to bigint for viem .read calls */
+export function toViemBigInt(v: BigNumber.Value): bigint {
+  return BigInt(new BigNumber(v).toFixed(0))
+}
 
 enum TimeDurations {
   millennium = 31536000000000,
@@ -163,7 +254,7 @@ export const unixSecondsTimestampToDateString = (input: BigNumber.Value) => {
   return Intl.DateTimeFormat('default', DATE_TIME_OPTIONS).format(date)
 }
 
-// Type of bytes in solidity gets represented as a string of number array by typechain and web3
+// Type of bytes in solidity gets represented as a string of number array
 // Hopefully this will improve in the future, at which point we can make improvements here
 type SolidityBytes = string | number[]
 export const stringToSolidityBytes = (input: string) => ensureLeading0x(input) as SolidityBytes
@@ -176,173 +267,5 @@ export const solidityBytesToString = (input: SolidityBytes): string => {
     return ensureLeading0x(hexString)
   } else {
     throw new Error('Unexpected input type for solidity bytes')
-  }
-}
-
-type Parser<A, B> = (input: A) => B
-
-/** Identity Parser */
-export const identity = <A>(a: A) => a
-export const stringIdentity = (x: string) => x
-
-/**
- * Tuple parser
- * Useful to map different input arguments
- */
-export function tupleParser<A0, B0>(parser0: Parser<A0, B0>): (...args: [A0]) => [B0]
-export function tupleParser<A0, B0, A1, B1>(
-  parser0: Parser<A0, B0>,
-  parser1: Parser<A1, B1>
-): (...args: [A0, A1]) => [B0, B1]
-export function tupleParser<A0, B0, A1, B1, A2, B2>(
-  parser0: Parser<A0, B0>,
-  parser1: Parser<A1, B1>,
-  parser2: Parser<A2, B2>
-): (...args: [A0, A1, A2]) => [B0, B1, B2]
-export function tupleParser<A0, B0, A1, B1, A2, B2, A3, B3>(
-  parser0: Parser<A0, B0>,
-  parser1: Parser<A1, B1>,
-  parser2: Parser<A2, B2>,
-  parser3: Parser<A3, B3>
-): (...args: [A0, A1, A2, A3]) => [B0, B1, B2, B3]
-export function tupleParser(...parsers: Parser<any, any>[]) {
-  return (...args: any[]) => zip((parser, input) => parser(input), parsers, args)
-}
-
-/**
- * Specifies all different possible proxyCall arguments so that
- * it always return a function of type: (...args:InputArgs) => Promise<Output>
- *
- * cases:
- *  - methodFn
- *  - parseInputArgs => methodFn
- *  - parseInputArgs => methodFn => parseOutput
- *  - methodFn => parseOutput
- */
-type ProxyCallArgs<
-  InputArgs extends any[],
-  ParsedInputArgs extends any[],
-  PreParsedOutput,
-  Output,
-> = // parseInputArgs => methodFn => parseOutput
-| [
-    Method<ParsedInputArgs, PreParsedOutput>,
-    (...arg: InputArgs) => ParsedInputArgs,
-    (arg: PreParsedOutput) => Output,
-  ]
-// methodFn => parseOutput
-| [Method<InputArgs, PreParsedOutput>, undefined, (arg: PreParsedOutput) => Output]
-// parseInputArgs => methodFn
-| [Method<ParsedInputArgs, Output>, (...arg: InputArgs) => ParsedInputArgs]
-// methodFn
-| [Method<InputArgs, Output>]
-
-/**
- * Creates a proxy to call a web3 native contract method.
- *
- * There are 4 cases:
- *  - methodFn
- *  - parseInputArgs => methodFn
- *  - parseInputArgs => methodFn => parseOutput
- *  - methodFn => parseOutput
- *
- * @param methodFn Web3 methods function
- * @param parseInputArgs [optional] parseInputArgs function, tranforms arguments into `methodFn` expected inputs
- * @param parseOutput [optional] parseOutput function, transforms `methodFn` output into proxy return
- */
-export function proxyCall<
-  InputArgs extends any[],
-  ParsedInputArgs extends any[],
-  PreParsedOutput,
-  Output,
->(
-  methodFn: Method<ParsedInputArgs, PreParsedOutput>,
-  parseInputArgs: (...args: InputArgs) => ParsedInputArgs,
-  parseOutput: (o: PreParsedOutput) => Output
-): (...args: InputArgs) => Promise<Output>
-export function proxyCall<InputArgs extends any[], PreParsedOutput, Output>(
-  methodFn: Method<InputArgs, PreParsedOutput>,
-  x: undefined,
-  parseOutput: (o: PreParsedOutput) => Output
-): (...args: InputArgs) => Promise<Output>
-export function proxyCall<InputArgs extends any[], ParsedInputArgs extends any[], Output>(
-  methodFn: Method<ParsedInputArgs, Output>,
-  parseInputArgs: (...args: InputArgs) => ParsedInputArgs
-): (...args: InputArgs) => Promise<Output>
-export function proxyCall<InputArgs extends any[], Output>(
-  methodFn: Method<InputArgs, Output>
-): (...args: InputArgs) => Promise<Output>
-
-export function proxyCall<
-  InputArgs extends any[],
-  ParsedInputArgs extends any[],
-  PreParsedOutput,
-  Output,
->(
-  ...callArgs: ProxyCallArgs<InputArgs, ParsedInputArgs, PreParsedOutput, Output>
-): (...args: InputArgs) => Promise<Output> {
-  if (callArgs.length === 3 && callArgs[1] != null) {
-    const methodFn = callArgs[0]
-    const parseInputArgs = callArgs[1]
-    const parseOutput = callArgs[2]
-    return (...args: InputArgs) =>
-      methodFn(...parseInputArgs(...args))
-        .call()
-        .then(parseOutput)
-  } else if (callArgs.length === 3) {
-    const methodFn = callArgs[0]
-    const parseOutput = callArgs[2]
-    return (...args: InputArgs) =>
-      methodFn(...args)
-        .call()
-        .then(parseOutput)
-  } else if (callArgs.length === 2) {
-    const methodFn = callArgs[0]
-    const parseInputArgs = callArgs[1]
-    return (...args: InputArgs) => methodFn(...parseInputArgs(...args)).call()
-  } else {
-    const methodFn = callArgs[0]
-    return (...args: InputArgs) => methodFn(...args).call()
-  }
-}
-
-/**
- * Specifies all different possible proxySend arguments so that
- * it always return a function of type: (...args:InputArgs) => CeloTransactionObject<Output>
- *
- * cases:
- *  - methodFn
- *  - parseInputArgs => methodFn
- */
-type ProxySendArgs<
-  InputArgs extends any[],
-  ParsedInputArgs extends any[],
-  Output,
-> = // parseInputArgs => methodFn
-| [Method<ParsedInputArgs, Output>, (...arg: InputArgs) => ParsedInputArgs]
-// methodFn
-| [Method<InputArgs, Output>]
-
-/**
- * Creates a proxy to send a tx on a web3 native contract method.
- *
- * There are 2 cases:
- *  - call methodFn (no pre or post parsing)
- *  - preParse arguments & call methodFn
- *
- * @param methodFn Web3 methods function
- * @param preParse [optional] preParse function, tranforms arguments into `methodFn` expected inputs
- */
-export function proxySend<InputArgs extends any[], ParsedInputArgs extends any[], Output>(
-  connection: Connection,
-  ...sendArgs: ProxySendArgs<InputArgs, ParsedInputArgs, Output>
-): (...args: InputArgs) => CeloTransactionObject<Output> {
-  if (sendArgs.length === 2) {
-    const methodFn = sendArgs[0]
-    const preParse = sendArgs[1]
-    return (...args: InputArgs) => toTransactionObject(connection, methodFn(...preParse(...args)))
-  } else {
-    const methodFn = sendArgs[0]
-    return (...args: InputArgs) => toTransactionObject(connection, methodFn(...args))
   }
 }

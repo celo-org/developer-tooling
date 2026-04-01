@@ -1,7 +1,7 @@
 import { StrongAddress } from '@celo/base'
 import { Flags } from '@oclif/core'
 import prompts from 'prompts'
-import { displaySendTx, printValueMap } from '../../utils/cli'
+import { displayViemTx, printValueMap } from '../../utils/cli'
 import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
 
 export default class AdminRevoke extends ReleaseGoldBaseCommand {
@@ -20,6 +20,7 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const { flags: _flags } = await this.parse(AdminRevoke)
     if (!_flags.yesreally) {
       const response = await prompts({
@@ -38,11 +39,10 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
 
     const isRevoked = await this.releaseGoldWrapper.isRevoked()
     if (!isRevoked) {
-      await displaySendTx(
+      await displayViemTx(
         'releasegold: revokeBeneficiary',
         this.releaseGoldWrapper.revokeBeneficiary(),
-        undefined,
-        'ReleaseScheduleRevoked'
+        publicClient
       )
     }
 
@@ -55,11 +55,10 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
       if (voteSigner !== contractAddress) {
         voteSigner = kit.defaultAccount
         const pop = await accounts.generateProofOfKeyPossession(contractAddress, voteSigner)
-        await displaySendTx(
+        await displayViemTx(
           'accounts: rotateVoteSigner',
-          await this.releaseGoldWrapper.authorizeVoteSigner(voteSigner, pop),
-          undefined,
-          'VoteSignerAuthorized'
+          this.releaseGoldWrapper.authorizeVoteSigner(voteSigner, pop),
+          publicClient
         )
       }
 
@@ -69,13 +68,10 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
 
       // handle election votes
       if (isElectionVoting) {
-        const txos = await this.releaseGoldWrapper.revokeAllVotesForAllGroups()
+        const hashes = await this.releaseGoldWrapper.revokeAllVotesForAllGroups()
 
-        for (const txo of txos) {
-          await displaySendTx('election: revokeVotes', txo, { from: voteSigner }, [
-            'ValidatorGroupPendingVoteRevoked',
-            'ValidatorGroupActiveVoteRevoked',
-          ])
+        for (const hash of hashes) {
+          await displayViemTx('election: revokeVotes', Promise.resolve(hash), publicClient)
         }
       }
 
@@ -86,30 +82,23 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
       if (isGovernanceVoting) {
         const isUpvoting = await governance.isUpvoting(contractAddress)
         if (isUpvoting) {
-          await displaySendTx(
+          await displayViemTx(
             'governance: revokeUpvote',
-            await governance.revokeUpvote(contractAddress),
-            { from: voteSigner },
-            'ProposalUpvoteRevoked'
+            governance.revokeUpvote(contractAddress),
+            publicClient
           )
         }
 
         const isVotingReferendum = await governance.isVotingReferendum(contractAddress)
         if (isVotingReferendum) {
-          await displaySendTx(
-            'governance: revokeVotes',
-            governance.revokeVotes(),
-            { from: voteSigner },
-            'ProposalVoteRevoked'
-          )
+          await displayViemTx('governance: revokeVotes', governance.revokeVotes(), publicClient)
         }
       }
 
-      await displaySendTx(
+      await displayViemTx(
         'releasegold: unlockAllGold',
-        await this.releaseGoldWrapper.unlockAllGold(),
-        undefined,
-        'GoldUnlocked'
+        this.releaseGoldWrapper.unlockAllGold(),
+        publicClient
       )
     }
 
@@ -117,22 +106,20 @@ export default class AdminRevoke extends ReleaseGoldBaseCommand {
     const stabletoken = await kit.contracts.getStableToken()
     const cusdBalance = await stabletoken.balanceOf(contractAddress)
     if (cusdBalance.isGreaterThan(0)) {
-      await displaySendTx(
+      await displayViemTx(
         'releasegold: rescueCUSD',
         this.releaseGoldWrapper.transfer(kit.defaultAccount, cusdBalance),
-        undefined,
-        'Transfer'
+        publicClient
       )
     }
 
     // attempt to refund and finalize, surface pending withdrawals
     const remainingLockedGold = await this.releaseGoldWrapper.getRemainingLockedBalance()
     if (remainingLockedGold.isZero()) {
-      await displaySendTx(
+      await displayViemTx(
         'releasegold: refundAndFinalize',
         this.releaseGoldWrapper.refundAndFinalize(),
-        undefined,
-        'ReleaseGoldInstanceDestroyed'
+        publicClient
       )
     } else {
       console.log('Some celo is still locked, printing pending withdrawals...')

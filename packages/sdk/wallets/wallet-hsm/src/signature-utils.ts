@@ -1,5 +1,5 @@
 import { Address, ensureLeading0x } from '@celo/base/lib/address'
-import * as ethUtil from '@ethereumjs/util'
+import { publicKeyToAddress as viemPublicKeyToAddress } from 'viem/accounts'
 import { SignatureType } from '@noble/curves/abstract/weierstrass'
 import { secp256k1 } from '@noble/curves/secp256k1'
 import { BigNumber } from 'bignumber.js'
@@ -35,7 +35,7 @@ export const bigNumberToBuffer = (input: BigNumber, lengthInBytes: number): Buff
   if (hex.length < hexLength) {
     hex = '0'.repeat(hexLength - hex.length) + hex
   }
-  return ethUtil.toBuffer(ensureLeading0x(hex)) as Buffer
+  return Buffer.from(ensureLeading0x(hex).slice(2), 'hex')
 }
 
 export class Signature {
@@ -97,10 +97,22 @@ export function recoverKeyIndex(
 }
 
 export function getAddressFromPublicKey(publicKey: BigNumber): Address {
-  const pkBuffer = ethUtil.toBuffer(ensureLeading0x(publicKey.toString(16)))
-  if (!ethUtil.isValidPublic(pkBuffer, true)) {
-    throw new Error(`Invalid secp256k1 public key ${publicKey}`)
+  let rawHex = publicKey.toString(16)
+  // If the BigNumber represents a 65-byte uncompressed key (with 04 prefix),
+  // it will be 130 hex chars. If it's a 64-byte raw key (no prefix), 128 chars.
+  // We need the full uncompressed key (130 hex chars with 04 prefix).
+  if (rawHex.length <= 128) {
+    // Pad to 128 chars (64 bytes) and prepend 04 prefix
+    rawHex = '04' + rawHex.padStart(128, '0')
+  } else {
+    // Already includes prefix, pad to 130 chars (65 bytes)
+    rawHex = rawHex.padStart(130, '0')
   }
-  const address = ethUtil.pubToAddress(pkBuffer, true)
-  return ensureLeading0x(address.toString('hex'))
+  const pkHex = ensureLeading0x(rawHex)
+  try {
+    secp256k1.ProjectivePoint.fromHex(pkHex.slice(2))
+  } catch {
+    throw new Error(`Invalid secp256k1 public key ${pkHex}`)
+  }
+  return viemPublicKeyToAddress(pkHex as `0x${string}`)
 }

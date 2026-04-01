@@ -1,4 +1,3 @@
-import { CeloTxObject } from '@celo/connect'
 import { failWith } from './cli'
 
 export enum Op {
@@ -22,13 +21,4 @@ export function requireOp<A>(value: A, op: Op, expected: A, ctx: string) {
   if (!OpFn[op](value, expected)) {
     failWith(`require(${ctx}) => [${value}, ${expected}]`)
   }
-}
-export async function requireCall<A>(
-  callPromise: CeloTxObject<A>,
-  op: Op,
-  expected: A,
-  ctx: string
-) {
-  const value = await callPromise.call()
-  requireOp(value, op, expected, ctx)
 }

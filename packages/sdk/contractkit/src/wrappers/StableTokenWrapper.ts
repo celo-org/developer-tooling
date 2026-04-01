@@ -1,6 +1,6 @@
-import { ICeloToken } from '@celo/abis/web3/ICeloToken'
-import { StableToken } from '@celo/abis/web3/mento/StableToken'
-import { proxyCall, proxySend, stringIdentity, tupleParser, valueToString } from './BaseWrapper'
+import { stableTokenABI } from '@celo/abis'
+import { CeloTx } from '@celo/connect'
+import { toViemAddress, valueToString } from './BaseWrapper'
 import { CeloTokenWrapper } from './CeloTokenWrapper'
 
 export interface StableTokenConfig {
@@ -12,12 +12,12 @@ export interface StableTokenConfig {
 /**
  * Stable token with variable supply
  */
-export class StableTokenWrapper extends CeloTokenWrapper<StableToken & ICeloToken> {
+export class StableTokenWrapper extends CeloTokenWrapper<typeof stableTokenABI> {
   /**
    * Returns the address of the owner of the contract.
    * @return the address of the owner of the contract.
    */
-  owner = proxyCall(this.contract.methods.owner)
+  owner = async () => this.contract.read.owner() as Promise<string>
 
   /**
    * Increases the allowance of another user.
@@ -25,20 +25,30 @@ export class StableTokenWrapper extends CeloTokenWrapper<StableToken & ICeloToke
    * @param value The increment of the amount of StableToken approved to the spender.
    * @returns true if success.
    */
-  increaseAllowance = proxySend(
-    this.connection,
-    this.contract.methods.increaseAllowance,
-    tupleParser(stringIdentity, valueToString)
-  )
+  increaseAllowance = (
+    spender: string,
+    value: import('bignumber.js').default.Value,
+    txParams?: Omit<CeloTx, 'data'>
+  ) =>
+    this.contract.write.increaseAllowance(
+      [toViemAddress(spender), BigInt(valueToString(value))] as const,
+      txParams as any
+    )
   /**
    * Decreases the allowance of another user.
    * @param spender The address which is being approved to spend StableToken.
    * @param value The decrement of the amount of StableToken approved to the spender.
    * @returns true if success.
    */
-  decreaseAllowance = proxySend(this.connection, this.contract.methods.decreaseAllowance)
-  mint = proxySend(this.connection, this.contract.methods.mint)
-  burn = proxySend(this.connection, this.contract.methods.burn)
+  decreaseAllowance = (spender: string, value: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.decreaseAllowance(
+      [toViemAddress(spender), BigInt(value)] as const,
+      txParams as any
+    )
+  mint = (to: string, value: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.mint([toViemAddress(to), BigInt(value)] as const, txParams as any)
+  burn = (value: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.burn([BigInt(value)] as const, txParams as any)
 
   /**
    * Returns current configuration parameters.

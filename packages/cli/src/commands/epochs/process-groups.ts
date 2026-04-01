@@ -1,5 +1,5 @@
 import { BaseCommand } from '../../base'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class ProcessGroups extends BaseCommand {
@@ -16,6 +16,7 @@ export default class ProcessGroups extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(ProcessGroups)
     const address = res.flags.from
 
@@ -29,9 +30,9 @@ export default class ProcessGroups extends BaseCommand {
     }
 
     if (!(await epochManager.isIndividualProcessing())) {
-      await displaySendTx('setToProcessGroups', epochManager.setToProcessGroups())
+      await displayViemTx('setToProcessGroups', epochManager.setToProcessGroups(), publicClient)
     }
 
-    await displaySendTx('processGroups', await epochManager.processGroupsTx())
+    await displayViemTx('processGroups', epochManager.processGroupsTx(), publicClient)
   }
 }

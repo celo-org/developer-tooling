@@ -9,9 +9,8 @@ import {
 import { verifySignature } from '@celo/utils/lib/signatureUtils'
 import { recoverTransaction, verifyEIP712TypedDataSigner } from '@celo/wallet-base'
 import { Signature, publicKeyPrefix } from '@celo/wallet-hsm'
-import * as ethUtil from '@ethereumjs/util'
+import { secp256k1 } from '@noble/curves/secp256k1'
 import { BigNumber } from 'bignumber.js'
-import Web3 from 'web3'
 import { AzureHSMWallet } from './azure-hsm-wallet'
 
 // Env var should hold service principal credentials
@@ -120,7 +119,7 @@ describe('AzureHSMWallet class', () => {
               const privKey = keyVaultAddresses.get(keyName)!.privateKey
               const pubKey = Buffer.concat([
                 Buffer.from(new Uint8Array([publicKeyPrefix])),
-                ethUtil.privateToPublic(ethUtil.toBuffer(privKey)),
+                Buffer.from(secp256k1.getPublicKey(trimLeading0x(privKey), false).subarray(1)),
               ])
               return new BigNumber(ensureLeading0x(pubKey.toString('hex')))
             },
@@ -128,10 +127,14 @@ describe('AzureHSMWallet class', () => {
               if (keyVaultAddresses.has(keyName)) {
                 const trimmedKey = trimLeading0x(keyVaultAddresses.get(keyName)!.privateKey)
                 const pkBuffer = Buffer.from(trimmedKey, 'hex')
-                const signature = ethUtil.ecsign(message, pkBuffer)
-                // Azure HSM doesn't add the byte prefix (+27) while ecsign does
-                // Subtract 27 to properly mock the HSM signer
-                return new Signature(Number(signature.v) - 27, signature.r, signature.s)
+                const signature = secp256k1.sign(message, pkBuffer)
+                // Azure HSM doesn't add the byte prefix (+27) while secp256k1.sign gives recovery (0 or 1)
+                // so no subtraction needed here
+                return new Signature(
+                  signature.recovery,
+                  Buffer.from(signature.r.toString(16).padStart(64, '0'), 'hex'),
+                  Buffer.from(signature.s.toString(16).padStart(64, '0'), 'hex')
+                )
               }
               throw new Error(`Unable to locate key: ${keyName}`)
             },
@@ -166,7 +169,7 @@ describe('AzureHSMWallet class', () => {
             celoTransaction = {
               from: unknownAddress,
               chainId: CHAIN_ID,
-              value: Web3.utils.toWei('1', 'ether'),
+              value: '1000000000000000000',
               nonce: 0,
               gas: '10',
               maxFeePerGas: '99',
@@ -228,7 +231,7 @@ describe('AzureHSMWallet class', () => {
               from: knownAddress,
               to: otherAddress,
               chainId: CHAIN_ID,
-              value: Web3.utils.toWei('1', 'ether'),
+              value: '1000000000000000000',
               nonce: 0,
               gas: '10',
               gasPrice: '99',
@@ -258,7 +261,7 @@ describe('AzureHSMWallet class', () => {
                 from: await wallet.getAddressFromKeyName(knownKey),
                 to: ACCOUNT_ADDRESS2,
                 chainId: CHAIN_ID,
-                value: Web3.utils.toWei('1', 'ether'),
+                value: '1000000000000000000',
                 nonce: 65,
                 gas: '10',
                 gasPrice: '99',

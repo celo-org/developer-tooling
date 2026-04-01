@@ -43,11 +43,6 @@ export type CeloTokenContract =
   | StableTokenContract
   | CeloContract.CeloToken
   | CeloContract.GoldToken
-/**
- * Deprecated alias for CeloTokenContract.
- * @deprecated Use CeloTokenContract instead
- */
-export type CeloToken = CeloTokenContract
 
 export const AllContracts = Object.values(CeloContract) as CeloContract[]
 const AuxiliaryContracts = [CeloContract.MultiSig, CeloContract.ERC20]

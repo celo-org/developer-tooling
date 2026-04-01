@@ -1,25 +1,52 @@
 import { NULL_ADDRESS } from '@celo/base'
-import { CeloTxObject, Connection } from '@celo/connect'
+import { Connection, Provider } from '@celo/connect'
+import type { AbiItem } from '@celo/connect'
+import { encodeAbiParameters, type AbiParameter } from 'viem'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
-import {
-  ICeloVersionedContract,
-  newICeloVersionedContract,
-} from '@celo/abis/web3/ICeloVersionedContract'
+import type { PublicClient } from 'viem'
 import { ContractVersion, newContractVersion } from '../versions'
-import { BaseWrapper, unixSecondsTimestampToDateString } from './BaseWrapper'
+import { BaseWrapper, type ContractLike, unixSecondsTimestampToDateString } from './BaseWrapper'
 
-const web3 = new Web3('http://localhost:8545')
-const mockContract = newICeloVersionedContract(web3, NULL_ADDRESS)
 const mockVersion = newContractVersion(1, 1, 1, 1)
-// @ts-ignore
-mockContract.methods.getVersionNumber = (): CeloTxObject<any> => ({
-  call: async () => mockVersion.toRaw(),
-})
 
-class TestWrapper extends BaseWrapper<ICeloVersionedContract> {
+// Encode the version as ABI-encoded (uint256, uint256, uint256, uint256)
+const encodedVersion = encodeAbiParameters(
+  [
+    { type: 'uint256' },
+    { type: 'uint256' },
+    { type: 'uint256' },
+    { type: 'uint256' },
+  ] as AbiParameter[],
+  [BigInt(1), BigInt(1), BigInt(1), BigInt(1)]
+)
+
+const mockContract: ContractLike<AbiItem[]> = {
+  abi: [
+    {
+      type: 'function' as const,
+      name: 'getVersionNumber',
+      inputs: [],
+      outputs: [
+        { name: '', type: 'uint256' },
+        { name: '', type: 'uint256' },
+        { name: '', type: 'uint256' },
+        { name: '', type: 'uint256' },
+      ],
+    },
+  ],
+  address: NULL_ADDRESS,
+}
+
+const mockProvider = { send: (_payload: unknown, _cb: unknown) => undefined } as unknown as Provider
+const connection = new Connection(mockProvider)
+// Override viemClient with mock that returns encoded version data
+;(connection as any)._viemClient = {
+  call: jest.fn().mockResolvedValue({ data: encodedVersion }),
+} as unknown as PublicClient
+
+class TestWrapper extends BaseWrapper {
   constructor() {
-    super(new Connection(web3), mockContract)
+    super(connection, mockContract as any)
   }
 
   async protectedFunction(v: ContractVersion) {

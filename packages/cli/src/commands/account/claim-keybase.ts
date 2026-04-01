@@ -7,7 +7,7 @@ import {
   verifyKeybaseClaim,
 } from '@celo/metadata-claims/lib/keybase'
 import { sleep } from '@celo/utils/lib/async'
-import { toChecksumAddress } from '@ethereumjs/util'
+import { getAddress } from 'viem'
 
 import { Flags, ux } from '@oclif/core'
 import { writeFileSync } from 'fs'
@@ -34,7 +34,7 @@ export default class ClaimKeybase extends ClaimCommand {
     const res = await this.parse(ClaimKeybase)
     const username = res.flags.username
     const metadata = await this.readMetadata()
-    const accountAddress = toChecksumAddress(metadata.data.meta.address)
+    const accountAddress = getAddress(metadata.data.meta.address)
     const claim = createKeybaseClaim(username)
     const signer = await this.getSigner()
     const signature = await signer.sign(hashOfClaim(claim))

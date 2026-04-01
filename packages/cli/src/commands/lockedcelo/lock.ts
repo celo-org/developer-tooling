@@ -3,7 +3,7 @@ import { Flags } from '@oclif/core'
 import BigNumber from 'bignumber.js'
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { LockedGoldArgs } from '../../utils/lockedgold'
 
@@ -26,6 +26,7 @@ export default class Lock extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(Lock)
     const address = res.flags.from as StrongAddress
 
@@ -45,7 +46,7 @@ export default class Lock extends BaseCommand {
 
     if (!isAccount) {
       console.log('Address will be registered with Account contract to enable locking.')
-      await displaySendTx('register', accountsContract.createAccount())
+      await displayViemTx('register', accountsContract.createAccount(), publicClient)
     }
 
     const pendingWithdrawalsValue = await lockedGold.getPendingWithdrawalsTotalValue(address)
@@ -54,13 +55,13 @@ export default class Lock extends BaseCommand {
 
     await newCheckBuilder(this).hasEnoughCelo(address, lockValue).runChecks()
 
-    const txos = await lockedGold.relock(address, relockValue)
-    for (const txo of txos) {
-      await displaySendTx('relock', txo, { from: address })
+    const hashes = await lockedGold.relock(address, relockValue, { from: address })
+    for (const hash of hashes) {
+      await displayViemTx('relock', Promise.resolve(hash), publicClient)
     }
     if (lockValue.gt(new BigNumber(0))) {
-      const tx = lockedGold.lock()
-      await displaySendTx('lock', tx, { value: lockValue.toFixed() })
+      const tx = lockedGold.lock({ value: lockValue.toFixed() })
+      await displayViemTx('lock', tx, publicClient)
     }
   }
 }

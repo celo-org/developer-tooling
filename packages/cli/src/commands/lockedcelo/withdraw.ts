@@ -1,6 +1,6 @@
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 
 export default class Withdraw extends BaseCommand {
@@ -18,6 +18,7 @@ export default class Withdraw extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const { flags } = await this.parse(Withdraw)
     kit.defaultAccount = flags.from
     const lockedgold = await kit.contracts.getLockedGold()
@@ -34,7 +35,7 @@ export default class Withdraw extends BaseCommand {
           console.log(
             `Found available pending withdrawal of value ${pendingWithdrawal.value.toFixed()}, withdrawing`
           )
-          await displaySendTx('withdraw', lockedgold.withdraw(i))
+          await displayViemTx('withdraw', lockedgold.withdraw(i), publicClient)
           madeWithdrawal = true
         }
       }

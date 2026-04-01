@@ -1,6 +1,5 @@
 import { Address, CeloTx, Signer } from '@celo/connect'
 import { normalizeAddressWith0x, privateKeyToAddress } from '@celo/utils/lib/address'
-import Web3 from 'web3'
 import { RemoteWallet } from './remote-wallet'
 
 export const PRIVATE_KEY1 = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
@@ -70,7 +69,7 @@ describe('RemoteWallet', () => {
         from: knownAddress,
         to: knownAddress,
         chainId: CHAIN_ID,
-        value: Web3.utils.toWei('1', 'ether'),
+        value: '1000000000000000000',
         nonce: 0,
         gas: '10',
         gasPrice: '99',

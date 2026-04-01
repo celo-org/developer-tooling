@@ -1,6 +1,6 @@
 import { Flags as oclifFlags } from '@oclif/core'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { ReleaseGoldBaseCommand } from '../../utils/release-gold-base'
 export default class Authorize extends ReleaseGoldBaseCommand {
@@ -36,6 +36,7 @@ export default class Authorize extends ReleaseGoldBaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const { flags } = await this.parse(Authorize)
 
     const role = flags.role
@@ -73,6 +74,6 @@ export default class Authorize extends ReleaseGoldBaseCommand {
       this.error('Invalid role provided')
       return
     }
-    await displaySendTx('authorize' + role + 'Tx', tx)
+    await displayViemTx('authorize' + role + 'Tx', tx, publicClient)
   }
 }

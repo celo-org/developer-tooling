@@ -1,51 +1,55 @@
+import { goldTokenABI } from '@celo/abis'
 // NOTE: removing this import results in `yarn build` failures in Dockerfiles
 // after the move to node 10. This allows types to be inferred without
 // referencing '@celo/utils/node_modules/bignumber.js'
-import { GoldToken } from '@celo/abis/web3/GoldToken'
 import { Address } from '@celo/base'
+import { CeloTx } from '@celo/connect'
 import 'bignumber.js'
-import {
-  proxySend,
-  stringIdentity,
-  tupleParser,
-  valueToBigNumber,
-  valueToString,
-} from './BaseWrapper'
+import { toViemAddress, valueToBigNumber, valueToString } from './BaseWrapper'
 import { CeloTokenWrapper } from './CeloTokenWrapper'
 
 /**
  * ERC-20 contract for Celo native currency.
  */
-export class GoldTokenWrapper extends CeloTokenWrapper<GoldToken> {
+export class GoldTokenWrapper extends CeloTokenWrapper<typeof goldTokenABI> {
   /**
    * Increases the allowance of another user.
    * @param spender The address which is being approved to spend CELO.
    * @param value The increment of the amount of CELO approved to the spender.
    * @returns true if success.
    */
-  increaseAllowance = proxySend(
-    this.connection,
-    this.contract.methods.increaseAllowance,
-    tupleParser(stringIdentity, valueToString)
-  )
+  increaseAllowance = (
+    spender: string,
+    value: import('bignumber.js').default.Value,
+    txParams?: Omit<CeloTx, 'data'>
+  ) =>
+    this.contract.write.increaseAllowance(
+      [toViemAddress(spender), BigInt(valueToString(value))] as const,
+      txParams as any
+    )
   /**
    * Decreases the allowance of another user.
    * @param spender The address which is being approved to spend CELO.
    * @param value The decrement of the amount of CELO approved to the spender.
    * @returns true if success.
    */
-  decreaseAllowance = proxySend(this.connection, this.contract.methods.decreaseAllowance)
+  decreaseAllowance = (spender: string, value: string | number, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.decreaseAllowance(
+      [toViemAddress(spender), BigInt(value)] as const,
+      txParams as any
+    )
 
   /**
    * Gets the balance of the specified address.
-   * WARNING: The actual call to the Gold contract of the balanceOf:
-   * `balanceOf = proxyCall(this.contract.methods.balanceOf, undefined, valueToBigNumber)`
-   * has issues with web3. Keep the one calling getBalance
    * @param owner The address to query the balance of.
    * @return The balance of the specified address.
    */
-  balanceOf = (account: Address) =>
-    this.connection.web3.eth.getBalance(account).then(valueToBigNumber)
+  balanceOf = async (account: Address) => {
+    const balance = await this.connection.viemClient.getBalance({
+      address: account as `0x${string}`,
+    })
+    return valueToBigNumber(balance.toString())
+  }
 }
 
 export type GoldTokenWrapperType = GoldTokenWrapper

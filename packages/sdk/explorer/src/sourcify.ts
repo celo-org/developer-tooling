@@ -10,9 +10,36 @@
  *  // do something with it.
  * }
  */
-import { AbiCoder, ABIDefinition, AbiItem, Address, Connection } from '@celo/connect'
+import { ABIDefinition, AbiItem, AbiInput, Address, Connection } from '@celo/connect'
+import { toFunctionSelector } from 'viem'
 import fetch from 'cross-fetch'
 import { ContractMapping, mapFromPairs } from './base'
+
+/**
+ * Convert an ABI item to a function signature string like `transfer(address,uint256)`.
+ * Replaces the former `_jsonInterfaceMethodToString` helper.
+ */
+function abiItemToSignatureString(item: AbiItem): string {
+  if (item.type === 'function' || item.type === 'constructor' || item.type === 'event') {
+    const inputTypes = (item.inputs || []).map((input: AbiInput) => formatAbiInputType(input))
+    return `${item.name || ''}(${inputTypes.join(',')})`
+  }
+  return item.name || ''
+}
+
+/** ABI input that may have tuple components (runtime ABI data from Solidity) */
+type AbiInputWithComponents = AbiInput & { components?: readonly AbiInputWithComponents[] }
+
+function formatAbiInputType(input: AbiInputWithComponents): string {
+  if (input.type === 'tuple' && input.components) {
+    return `(${input.components.map((c: AbiInput) => formatAbiInputType(c)).join(',')})`
+  }
+  if (input.type.startsWith('tuple[') && input.components) {
+    const suffix = input.type.slice(5) // e.g. '[]' or '[3]'
+    return `(${input.components.map((c: AbiInput) => formatAbiInputType(c)).join(',')})${suffix}`
+  }
+  return input.type
+}
 
 const PROXY_IMPLEMENTATION_GETTERS = [
   '_getImplementation',
@@ -66,17 +93,10 @@ export class Metadata {
   public contractName: string | null = null
   public fnMapping: Map<string, ABIDefinition> = new Map()
 
-  private abiCoder: AbiCoder
-  private jsonInterfaceMethodToString: (item: AbiItem) => string
   private address: Address
 
-  constructor(connection: Connection, address: Address, response: any) {
-    this.abiCoder = connection.getAbiCoder()
-
+  constructor(_connection: Connection, address: Address, response: any) {
     this.response = response as MetadataResponse
-    // XXX: For some reason this isn't exported as it should be
-    // @ts-ignore
-    this.jsonInterfaceMethodToString = connection.web3.utils._jsonInterfaceMethodToString
     this.address = address
   }
 
@@ -93,7 +113,8 @@ export class Metadata {
         (this.abi || [])
           .filter((item) => item.type === 'function')
           .map((item) => {
-            const signature = this.abiCoder.encodeFunctionSignature(item)
+            const sig = `${item.name}(${(item.inputs || []).map((i: AbiInput) => formatAbiInputType(i)).join(',')})`
+            const signature = toFunctionSelector(sig)
             return { ...item, signature }
           })
           .map((item) => [item.signature, item])
@@ -136,7 +157,12 @@ export class Metadata {
   abiForSelector(selector: string): AbiItem | null {
     return (
       this.abi?.find((item) => {
-        return item.type === 'function' && this.abiCoder.encodeFunctionSignature(item) === selector
+        return (
+          item.type === 'function' &&
+          toFunctionSelector(
+            `${item.name}(${(item.inputs || []).map((i: AbiInput) => formatAbiInputType(i)).join(',')})`
+          ) === selector
+        )
       }) || null
     )
   }
@@ -154,7 +180,7 @@ export class Metadata {
       // Method is a full call signature with arguments
       return (
         this.abi?.filter((item) => {
-          return item.type === 'function' && this.jsonInterfaceMethodToString(item) === query
+          return item.type === 'function' && abiItemToSignatureString(item) === query
         }) || []
       )
     } else {
@@ -203,7 +229,7 @@ async function querySourcify(
   matchType: 'full_match' | 'partial_match',
   contract: Address
 ): Promise<Metadata | null> {
-  const chainID = await connection.chainId()
+  const chainID = await connection.viemClient.getChainId()
   const resp = await fetch(
     `https://repo.sourcify.dev/contracts/${matchType}/${chainID}/${contract}/metadata.json`
   )
@@ -229,23 +255,25 @@ export async function tryGetProxyImplementation(
   connection: Connection,
   contract: Address
 ): Promise<Address | undefined> {
-  const proxyContract = new connection.web3.eth.Contract(PROXY_ABI, contract)
+  const proxyContract = connection.getCeloContract(PROXY_ABI, contract)
   for (const fn of PROXY_IMPLEMENTATION_GETTERS) {
     try {
-      return await new Promise((resolve, reject) => {
-        proxyContract.methods[fn]().call().then(resolve).catch(reject)
-      })
+      const result = await (proxyContract as any).read[fn]()
+      return result as Address
     } catch {
       continue
     }
   }
 
   try {
-    const hexValue = await connection.web3.eth.getStorageAt(
-      contract,
-      PROXY_IMPLEMENTATION_POSITION_UUPS
-    )
-    const address = connection.web3.utils.toChecksumAddress('0x' + hexValue.slice(-40))
+    const hexValue = await connection.viemClient.getStorageAt({
+      address: contract as `0x${string}`,
+      slot: PROXY_IMPLEMENTATION_POSITION_UUPS as `0x${string}`,
+    })
+    if (!hexValue) {
+      return undefined
+    }
+    const address = ('0x' + hexValue.slice(-40)) as Address
     return address
   } catch {
     return undefined

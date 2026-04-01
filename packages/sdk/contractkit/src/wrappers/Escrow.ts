@@ -1,18 +1,30 @@
-import { Escrow } from '@celo/abis/web3/Escrow'
-import { Address, CeloTransactionObject } from '@celo/connect'
-import { BaseWrapper, proxyCall, proxySend } from './BaseWrapper'
+import { escrowABI } from '@celo/abis'
+import { Address, CeloTx } from '@celo/connect'
+import { BaseWrapper, toViemAddress } from './BaseWrapper'
 
 /**
  * Contract for handling reserve for stable currencies
  */
-export class EscrowWrapper extends BaseWrapper<Escrow> {
+export class EscrowWrapper extends BaseWrapper<typeof escrowABI> {
   /**
    * @notice Gets the unique escrowed payment for a given payment ID
    * @param paymentId The ID of the payment to get.
    * @return An EscrowedPayment struct which holds information such
    * as; recipient identifier, sender address, token address, value, etc.
    */
-  escrowedPayments = proxyCall(this.contract.methods.escrowedPayments)
+  escrowedPayments = async (paymentId: string) => {
+    const res = await this.contract.read.escrowedPayments([paymentId as `0x${string}`])
+    return {
+      recipientIdentifier: res[0] as string,
+      sender: res[1] as string,
+      token: res[2] as string,
+      value: res[3].toString(),
+      sentIndex: res[4].toString(),
+      timestamp: res[6].toString(),
+      expirySeconds: res[7].toString(),
+      minAttestations: res[8].toString(),
+    }
+  }
 
   /**
    * @notice Gets array of all Escrowed Payments received by identifier.
@@ -20,7 +32,10 @@ export class EscrowWrapper extends BaseWrapper<Escrow> {
    * @return An array containing all the IDs of the Escrowed Payments that were received
    * by the specified receiver.
    */
-  getReceivedPaymentIds = proxyCall(this.contract.methods.getReceivedPaymentIds)
+  getReceivedPaymentIds = async (identifier: string) => {
+    const res = await this.contract.read.getReceivedPaymentIds([identifier as `0x${string}`])
+    return [...res] as string[]
+  }
 
   /**
    * @notice Gets array of all Escrowed Payment IDs sent by sender.
@@ -28,20 +43,29 @@ export class EscrowWrapper extends BaseWrapper<Escrow> {
    * @return An array containing all the IDs of the Escrowed Payments that were sent by the
    * specified sender.
    */
-  getSentPaymentIds = proxyCall(this.contract.methods.getSentPaymentIds)
+  getSentPaymentIds = async (sender: string) => {
+    const res = await this.contract.read.getSentPaymentIds([toViemAddress(sender)])
+    return [...res] as string[]
+  }
 
   /**
    * @notice Gets trusted issuers set as default for payments by `transfer` function.
    * @return An array of addresses of trusted issuers.
    */
-  getDefaultTrustedIssuers = proxyCall(this.contract.methods.getDefaultTrustedIssuers)
+  getDefaultTrustedIssuers = async () => {
+    const res = await this.contract.read.getDefaultTrustedIssuers()
+    return [...res] as string[]
+  }
 
   /**
    * @notice Gets array of all trusted issuers set per paymentId.
    * @param paymentId The ID of the payment to get.
    * @return An array of addresses of trusted issuers set for an escrowed payment.
    */
-  getTrustedIssuersPerPayment = proxyCall(this.contract.methods.getTrustedIssuersPerPayment)
+  getTrustedIssuersPerPayment = async (paymentId: string) => {
+    const res = await this.contract.read.getTrustedIssuersPerPayment([toViemAddress(paymentId)])
+    return [...res] as string[]
+  }
 
   /**
    * @notice Transfer tokens to a specific user. Supports both identity with privacy (an empty
@@ -61,14 +85,26 @@ export class EscrowWrapper extends BaseWrapper<Escrow> {
    * @dev If minAttestations is 0, trustedIssuers will be set to empty list.
    * @dev msg.sender needs to have already approved this contract to transfer
    */
-  transfer: (
+  transfer = (
     identifier: string,
     token: Address,
     value: number | string,
     expirySeconds: number,
     paymentId: Address,
-    minAttestations: number
-  ) => CeloTransactionObject<boolean> = proxySend(this.connection, this.contract.methods.transfer)
+    minAttestations: number,
+    txParams?: Omit<CeloTx, 'data'>
+  ) =>
+    this.contract.write.transfer(
+      [
+        identifier as `0x${string}`,
+        toViemAddress(token),
+        BigInt(value),
+        BigInt(expirySeconds),
+        toViemAddress(paymentId),
+        BigInt(minAttestations),
+      ] as const,
+      txParams as any
+    )
 
   /**
    * @notice Withdraws tokens for a verified user.
@@ -80,12 +116,17 @@ export class EscrowWrapper extends BaseWrapper<Escrow> {
    * @dev Throws if 'token' or 'value' is 0.
    * @dev Throws if msg.sender does not prove ownership of the withdraw key.
    */
-  withdraw: (
+  withdraw = (
     paymentId: Address,
     v: number | string,
     r: string | number[],
-    s: string | number[]
-  ) => CeloTransactionObject<boolean> = proxySend(this.connection, this.contract.methods.withdraw)
+    s: string | number[],
+    txParams?: Omit<CeloTx, 'data'>
+  ) =>
+    this.contract.write.withdraw(
+      [toViemAddress(paymentId), Number(v), r as `0x${string}`, s as `0x${string}`] as const,
+      txParams as any
+    )
 
   /**
    * @notice Revokes tokens for a sender who is redeeming a payment after it has expired.
@@ -94,10 +135,8 @@ export class EscrowWrapper extends BaseWrapper<Escrow> {
    * @dev Throws if msg.sender is not the sender of payment.
    * @dev Throws if redeem time hasn't been reached yet.
    */
-  revoke: (paymentId: string) => CeloTransactionObject<boolean> = proxySend(
-    this.connection,
-    this.contract.methods.revoke
-  )
+  revoke = (paymentId: string, txParams?: Omit<CeloTx, 'data'>) =>
+    this.contract.write.revoke([toViemAddress(paymentId)] as const, txParams as any)
 
   /**
    * @notice Transfer tokens to a specific user. Supports both identity with privacy (an empty
@@ -118,18 +157,28 @@ export class EscrowWrapper extends BaseWrapper<Escrow> {
    * @dev Throws if minAttestations == 0 but trustedIssuers are provided.
    * @dev msg.sender needs to have already approved this contract to transfer.
    */
-  transferWithTrustedIssuers: (
+  transferWithTrustedIssuers = (
     identifier: string,
     token: Address,
     value: number | string,
     expirySeconds: number,
     paymentId: Address,
     minAttestations: number,
-    trustedIssuers: Address[]
-  ) => CeloTransactionObject<boolean> = proxySend(
-    this.connection,
-    this.contract.methods.transferWithTrustedIssuers
-  )
+    trustedIssuers: Address[],
+    txParams?: Omit<CeloTx, 'data'>
+  ) =>
+    this.contract.write.transferWithTrustedIssuers(
+      [
+        identifier as `0x${string}`,
+        toViemAddress(token),
+        BigInt(value),
+        BigInt(expirySeconds),
+        toViemAddress(paymentId),
+        BigInt(minAttestations),
+        trustedIssuers.map(toViemAddress),
+      ] as const,
+      txParams as any
+    )
 }
 
 export type EscrowWrapperType = EscrowWrapper

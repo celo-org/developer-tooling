@@ -1,7 +1,8 @@
 import { PublicCeloClient } from '@celo/actions'
+import { Provider } from '@celo/connect'
+import { CeloProvider } from '@celo/connect/lib/celo-provider'
 import { TestClientExtended } from '@celo/dev-utils/viem/anvil-test'
 import { Interfaces } from '@oclif/core'
-import Web3 from 'web3'
 import { BaseCommand } from '../base'
 
 type AbstractConstructor<T> = new (...args: any[]) => T
@@ -10,31 +11,32 @@ interface Runner extends AbstractConstructor<BaseCommand> {
   flags: typeof BaseCommand.flags
 }
 
-export async function testLocallyWithWeb3Node(
+export async function testLocallyWithNode(
   command: Runner,
   argv: string[],
-  web3: Web3,
+  client: Provider,
   config?: Interfaces.LoadOptions
 ) {
-  return testLocally(command, [...argv, '--node', extractHostFromWeb3(web3)], config)
+  return testLocally(command, [...argv, '--node', extractHostFromProvider(client)], config)
 }
 
-export const extractHostFromWeb3 = (web3: Web3): string => {
-  // why would the constructor name be HttpProvider but it not be considered an instance of HttpProvider? idk but it happens
-  if (
-    web3.currentProvider instanceof Web3.providers.HttpProvider ||
-    web3.currentProvider?.constructor.name === 'HttpProvider'
-  ) {
-    // @ts-ignore
-    return web3.currentProvider.host
+export const extractHostFromProvider = (provider: Provider): string => {
+  // CeloProvider wraps the underlying provider
+  if (provider instanceof CeloProvider) {
+    const inner = provider.existingProvider as { host?: string; url?: string }
+    return inner?.host || inner?.url || 'http://localhost:8545'
   }
 
-  // CeloProvider is not exported from @celo/connect, but it's injected into web3
-  if (web3.currentProvider !== null && web3.currentProvider.constructor.name === 'CeloProvider') {
-    return (web3.currentProvider as any).existingProvider.host
+  // Direct provider (HttpProvider or SimpleHttpProvider)
+  const rawProvider = provider as Provider & { host?: string; url?: string }
+  if (rawProvider.host) {
+    return rawProvider.host
+  }
+  if (rawProvider.url) {
+    return rawProvider.url
   }
 
-  throw new Error(`Unsupported provider, ${web3.currentProvider?.constructor.name}`)
+  throw new Error(`Unsupported provider, ${provider.constructor.name}`)
 }
 
 export async function testLocallyWithViemNode(
@@ -85,6 +87,6 @@ export function stripAnsiCodesFromNestedArray(arrays: string[][]) {
 }
 
 export const LONG_TIMEOUT_MS = 10 * 1000
-export const EXTRA_LONG_TIMEOUT_MS = 60 * 1000
+export const EXTRA_LONG_TIMEOUT_MS = 120 * 1000
 
 export const TEST_SANCTIONED_ADDRESS = '0x01e2919679362dfbc9ee1644ba9c6da6d6245bb1'

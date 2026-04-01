@@ -1,6 +1,72 @@
-import Web3 from 'web3'
-import { JsonRpcResponse } from 'web3-core-helpers'
+import { Provider } from '@celo/connect'
+import type { EIP1193RequestFn } from 'viem'
+import * as http from 'http'
 import migrationOverride from './migration-override.json'
+
+let nextId = 0
+
+class SimpleHttpProvider implements Provider {
+  /** Compat with legacy HttpProvider which exposed .host */
+  readonly host: string
+
+  constructor(readonly url: string) {
+    this.host = url
+  }
+
+  request: EIP1193RequestFn = async ({ method, params }) => {
+    const body = JSON.stringify({
+      id: ++nextId,
+      jsonrpc: '2.0',
+      method,
+      params: Array.isArray(params) ? params : params != null ? [params] : [],
+    })
+    const parsedUrl = new URL(this.url)
+
+    return new Promise<any>((resolve, reject) => {
+      const req = http.request(
+        {
+          hostname: parsedUrl.hostname,
+          port: parsedUrl.port,
+          path: parsedUrl.pathname + parsedUrl.search,
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(body).toString(),
+          },
+        },
+        (res) => {
+          let data = ''
+          res.on('data', (chunk: string) => {
+            data += chunk
+          })
+          res.on('end', () => {
+            try {
+              const json = JSON.parse(data)
+              if (json.error) {
+                reject(
+                  new Error(
+                    `JSON-RPC error: method: ${method} params: ${JSON.stringify(params)} error: ${JSON.stringify(json.error)}`
+                  )
+                )
+              } else {
+                resolve(json.result)
+              }
+            } catch (e) {
+              reject(new Error(`Invalid JSON response: ${data}`))
+            }
+          })
+        }
+      )
+
+      req.on('error', (err) => {
+        reject(err)
+      })
+
+      req.write(body)
+      req.end()
+    })
+  }
+}
 
 export const MINUTE = 60
 export const HOUR = 60 * 60
@@ -17,79 +83,45 @@ export const TEST_GAS_LIMIT = 20000000
 
 export const NetworkConfig = migrationOverride
 
-export function jsonRpcCall<O>(web3: Web3, method: string, params: any[]): Promise<O> {
-  return new Promise<O>((resolve, reject) => {
-    if (web3.currentProvider && typeof web3.currentProvider !== 'string') {
-      // @ts-expect-error
-      web3.currentProvider.send(
-        {
-          id: new Date().getTime(),
-          jsonrpc: '2.0',
-          method,
-          params,
-        },
-        (err: Error | null, res?: JsonRpcResponse) => {
-          if (err) {
-            reject(err)
-          } else if (!res) {
-            reject(new Error('no response'))
-          } else if (res.error) {
-            reject(
-              new Error(
-                `Failed JsonRpcResponse: method: ${method} params: ${JSON.stringify(
-                  params
-                )} error: ${JSON.stringify(res.error)}`
-              )
-            )
-          } else {
-            resolve(res.result)
-          }
-        }
-      )
-    } else {
-      reject(new Error('Invalid provider'))
-    }
-  })
+export function jsonRpcCall<O>(provider: Provider, method: string, params: unknown[]): Promise<O> {
+  return provider.request({ method, params }) as Promise<O>
 }
 
-export function evmRevert(web3: Web3, snapId: string): Promise<void> {
-  return jsonRpcCall(web3, 'evm_revert', [snapId])
+export function evmRevert(provider: Provider, snapId: string): Promise<void> {
+  return jsonRpcCall(provider, 'evm_revert', [snapId])
 }
 
-export function evmSnapshot(web3: Web3) {
-  return jsonRpcCall<string>(web3, 'evm_snapshot', [])
+export function evmSnapshot(provider: Provider) {
+  return jsonRpcCall<string>(provider, 'evm_snapshot', [])
 }
 
-type TestWithWeb3Hooks = {
+type TestWithProviderHooks = {
   beforeAll?: () => Promise<void>
   afterAll?: () => Promise<void>
 }
 
 /**
- * Creates a test suite with a given name and provides function with a web3 instance connected to the given rpcUrl.
+ * Creates a test suite with a given name and provides the test function with a Provider
+ * connected to the given rpcUrl.
  *
- * It is an equivalent of jest `describe` with the web3 additioon. It also provides hooks for beforeAll and afterAll.
+ * It is an equivalent of jest `describe` with a Provider. It also provides
+ * hooks for beforeAll and afterAll.
  *
- * Optionally if a runIf flag is set to false the test suite will be skipped (useful for conditional test suites). By
- * default all test suites are run normally, but if the runIf flag is set to false the test suite will be skipped by using
- * jest `describe.skip`. It will be reported in the summary as "skipped".
+ * Optionally if a runIf flag is set to false the test suite will be skipped (useful for
+ * conditional test suites). By default all test suites are run normally, but if the runIf
+ * flag is set to false the test suite will be skipped by using jest `describe.skip`. It will
+ * be reported in the summary as "skipped".
  */
-export function testWithWeb3(
+export function testWithProvider(
   name: string,
   rpcUrl: string,
-  fn: (web3: Web3) => void,
+  fn: (provider: Provider) => void,
   options: {
-    hooks?: TestWithWeb3Hooks
+    hooks?: TestWithProviderHooks
     runIf?: boolean
   } = {}
 ) {
-  const web3 = new Web3(rpcUrl)
-
-  // @ts-ignore with anvil setup the tx receipt is apparently not immedietaly
-  // available after the tx is send, so by default it was waiting for 1000 ms
-  // before polling again making the tests slow
-  web3.eth.transactionPollingInterval = 10
-
+  const provider = new SimpleHttpProvider(rpcUrl)
   // By default we run all the tests
   let describeFn = describe
 
@@ -102,19 +134,19 @@ export function testWithWeb3(
     let snapId: string | null = null
 
     if (options.hooks?.beforeAll) {
-      beforeAll(options.hooks.beforeAll)
+      beforeAll(options.hooks.beforeAll, 60_000)
     }
 
     beforeEach(async () => {
       if (snapId != null) {
-        await evmRevert(web3, snapId)
+        await evmRevert(provider, snapId)
       }
-      snapId = await evmSnapshot(web3)
+      snapId = await evmSnapshot(provider)
     })
 
     afterAll(async () => {
       if (snapId != null) {
-        await evmRevert(web3, snapId)
+        await evmRevert(provider, snapId)
       }
       if (options.hooks?.afterAll) {
         // hook must be awaited here or jest doesnt actually wait for it and complains of open handles
@@ -122,6 +154,6 @@ export function testWithWeb3(
       }
     })
 
-    fn(web3)
+    fn(provider)
   })
 }

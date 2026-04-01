@@ -1,14 +1,14 @@
+import { newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ux } from '@oclif/core'
-import Web3 from 'web3'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import AccountRegister from '../account/register'
 import Lock from '../lockedcelo/lock'
 import List from './list'
 import ValidatorGroupRegister from './register'
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('validatorgroup:list cmd', (web3: Web3) => {
+testWithAnvilL2('validatorgroup:list cmd', (provider) => {
   const writeMock = jest.spyOn(ux.write, 'stdout')
 
   afterAll(() => {
@@ -16,24 +16,25 @@ testWithAnvilL2('validatorgroup:list cmd', (web3: Web3) => {
   })
 
   const registerValidatorGroup = async () => {
-    const accounts = await web3.eth.getAccounts()
+    const kit = newKitFromProvider(provider)
+    const accounts = await kit.connection.getAccounts()
 
-    await testLocallyWithWeb3Node(AccountRegister, ['--from', accounts[0]], web3)
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(AccountRegister, ['--from', accounts[0]], provider)
+    await testLocallyWithNode(
       Lock,
       ['--from', accounts[0], '--value', '10000000000000000000000'],
-      web3
+      provider
     )
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       ValidatorGroupRegister,
       ['--from', accounts[0], '--commission', '0.1', '--yes'],
-      web3
+      provider
     )
   }
 
   it('outputs the current validator groups', async () => {
     await registerValidatorGroup()
-    await testLocallyWithWeb3Node(List, [], web3)
+    await testLocallyWithNode(List, [], provider)
     expect(stripAnsiCodesFromNestedArray(writeMock.mock.calls)).toMatchInlineSnapshot(`
       [
         [

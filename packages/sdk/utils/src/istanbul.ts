@@ -1,6 +1,5 @@
-import { bufferToHex, toChecksumAddress } from '@ethereumjs/util'
+import { bytesToHex, fromRlp, getAddress, type Hex } from 'viem'
 import BigNumber from 'bignumber.js'
-import * as rlp from '@ethereumjs/rlp'
 import { Address } from './address'
 
 // This file contains utilities that help with istanbul-specific block information.
@@ -42,19 +41,24 @@ function sealFromBuffers(data: Buffer[]): Seal {
 // Parse RLP encoded block extra data into an IstanbulExtra object.
 export function parseBlockExtraData(data: string): IstanbulExtra {
   const buffer = Buffer.from(data.replace(/^0x/, ''), 'hex')
-  const decode = rlp.decode('0x' + buffer.subarray(ISTANBUL_EXTRA_VANITY_BYTES).toString('hex'))
+  const rlpHex = ('0x' + buffer.subarray(ISTANBUL_EXTRA_VANITY_BYTES).toString('hex')) as Hex
+  const decode = fromRlp(rlpHex, 'bytes') as Uint8Array[]
 
   return {
-    addedValidators: (decode.at(0) as Uint8Array[]).map((addr) =>
-      toChecksumAddress(bufferToHex(Buffer.from(addr)))
+    addedValidators: (decode[0] as unknown as Uint8Array[]).map((addr) =>
+      getAddress(bytesToHex(addr))
     ),
-    addedValidatorsPublicKeys: (decode.at(1) as Uint8Array[]).map(
+    addedValidatorsPublicKeys: (decode[1] as unknown as Uint8Array[]).map(
       (key) => '0x' + Buffer.from(key).toString('hex')
     ),
-    removedValidators: bigNumberFromBuffer(Buffer.from(decode.at(2) as Uint8Array)),
-    seal: '0x' + Buffer.from(decode.at(3) as Uint8Array).toString('hex'),
-    aggregatedSeal: sealFromBuffers((decode.at(4) as Uint8Array[]).map(Buffer.from)),
-    parentAggregatedSeal: sealFromBuffers((decode.at(5) as Uint8Array[]).map(Buffer.from)),
+    removedValidators: bigNumberFromBuffer(Buffer.from(decode[2])),
+    seal: '0x' + Buffer.from(decode[3]).toString('hex'),
+    aggregatedSeal: sealFromBuffers(
+      (decode[4] as unknown as Uint8Array[]).map((b) => Buffer.from(b))
+    ),
+    parentAggregatedSeal: sealFromBuffers(
+      (decode[5] as unknown as Uint8Array[]).map((b) => Buffer.from(b))
+    ),
   }
 }
 

@@ -1,56 +1,60 @@
-import { newICeloVersionedContract } from '@celo/abis/web3/ICeloVersionedContract'
+import { Connection } from '@celo/connect'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import write from '@oclif/core/lib/cli-ux/write'
-import { testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { testLocallyWithNode } from '../../test-utils/cliUtils'
 import Contracts from './contracts'
 process.env.NO_SYNCCHECK = 'true'
-jest.mock('@celo/abis/web3/ICeloVersionedContract')
 
-testWithAnvilL2('network:contracts', (web3) => {
+testWithAnvilL2('network:contracts', (provider) => {
   describe('when version can be obtained', () => {
-    beforeEach(() => {
-      jest.unmock('@celo/abis/web3/ICeloVersionedContract')
-      jest.resetModules()
-      const actual = jest.requireActual('@celo/abis/web3/ICeloVersionedContract')
-      // @ts-expect-error
-      newICeloVersionedContract.mockImplementation(actual.newICeloVersionedContract)
-    })
     test('runs', async () => {
       const spy = jest.spyOn(write, 'stdout')
       const warnSpy = jest.spyOn(console, 'warn')
       expect(warnSpy.mock.calls).toMatchInlineSnapshot(`[]`)
-      await testLocallyWithWeb3Node(Contracts, ['--output', 'json'], web3)
+      await testLocallyWithNode(Contracts, ['--output', 'json'], provider)
       expect(spy.mock.calls).toMatchSnapshot()
     })
   })
   describe('when version cant be obtained', () => {
+    // Capture the real viemClient getter before any spying
+    const realViemClientGetter = Object.getOwnPropertyDescriptor(
+      Connection.prototype,
+      'viemClient'
+    )!.get!
+
+    let viemClientSpy: jest.SpyInstance
     beforeEach(() => {
-      // @ts-expect-error
-      newICeloVersionedContract.mockImplementation((_, address) => {
-        return {
-          methods: {
-            getVersionNumber: jest.fn().mockImplementation(() => {
-              // fake governance slasher
-              if (address === '0x76C05a43234EB2804aa83Cd40BA10080a43d07AE') {
-                return { call: jest.fn().mockRejectedValue(new Error('Error: execution reverted')) }
-              } else {
-                // return a fake normal version
-                return { call: jest.fn().mockResolvedValue([1, 2, 3, 4]) }
+      const modifiedClients = new WeakSet()
+      viemClientSpy = jest
+        .spyOn(Connection.prototype, 'viemClient', 'get')
+        .mockImplementation(function (this: Connection) {
+          const client = realViemClientGetter.call(this)
+          if (!modifiedClients.has(client)) {
+            const origCall = client.call.bind(client)
+            // Intercept getVersionNumber() calls (selector 0x54255be0)
+            // and return ABI-encoded [1, 2, 3, 4] for deterministic version output
+            client.call = async (params: any) => {
+              if (params?.data?.startsWith?.('0x54255be0')) {
+                return {
+                  data: '0x0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000030000000000000000000000000000000000000000000000000000000000000004',
+                }
               }
-            }),
-          },
-        }
-      })
+              return origCall(params)
+            }
+            modifiedClients.add(client)
+          }
+          return client
+        })
     })
     afterEach(() => {
+      viemClientSpy.mockRestore()
       jest.clearAllMocks()
-      jest.resetModules()
     })
     it('still prints rest of contracts', async () => {
       const spy = jest.spyOn(write, 'stdout')
       const warnSpy = jest.spyOn(console, 'warn')
 
-      await testLocallyWithWeb3Node(Contracts, ['--output', 'json'], web3)
+      await testLocallyWithNode(Contracts, ['--output', 'json'], provider)
       expect(warnSpy.mock.calls).toMatchInlineSnapshot(`[]`)
       expect(spy.mock.calls).toMatchSnapshot() // see the file for the snapshot
     })

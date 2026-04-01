@@ -1,22 +1,23 @@
+import type { EIP1193RequestFn } from 'viem'
 import { StrongAddress } from '@celo/base'
-import Web3 from 'web3'
-import {
-  AccessList,
-  PromiEvent,
-  Transaction,
-  TransactionConfig,
-  TransactionReceipt,
-} from 'web3-core'
-import { Contract } from 'web3-eth-contract'
 export type Address = string
 
 export type Hex = `0x${string}`
 export interface CeloParams {
   feeCurrency: StrongAddress
-  maxFeeInFeeCurrency?: Hex | string | bigint | ReturnType<Web3['utils']['toBN']>
+  maxFeeInFeeCurrency?: Hex | string | bigint
 }
 
 export type AccessListRaw = [string, string[]][]
+
+/** EIP-2930 access list entry */
+export interface AccessListEntry {
+  address: string
+  storageKeys: string[]
+}
+
+/** EIP-2930 access list */
+export type AccessList = AccessListEntry[]
 
 export type HexOrMissing = Hex | undefined
 export interface FormattedCeloTx {
@@ -36,22 +37,82 @@ export interface FormattedCeloTx {
   type: TransactionTypes
 }
 
-export type CeloTx = TransactionConfig &
-  Partial<CeloParams> & { accessList?: AccessList; type?: TransactionTypes }
-export type WithSig<T> = T & { v: number; s: string; r: string; yParity: 0 | 1 }
-export type CeloTxWithSig = WithSig<CeloTx>
-export interface CeloTxObject<T> {
-  arguments: any[]
-  call(tx?: CeloTx): Promise<T>
-  send(tx?: CeloTx): PromiEvent<CeloTxReceipt>
-  estimateGas(tx?: CeloTx): Promise<number>
-  encodeABI(): string
-  _parent: Contract
+/** Transaction configuration */
+export interface CeloTx extends Partial<CeloParams> {
+  from?: string
+  to?: string
+  value?: number | string | bigint
+  gas?: number | string | bigint
+  gasPrice?: number | string | bigint
+  maxFeePerGas?: number | string | bigint
+  maxPriorityFeePerGas?: number | string | bigint
+  data?: string
+  nonce?: number
+  chainId?: number
+  chain?: string
+  hardfork?: string
+  common?: Record<string, unknown>
+  accessList?: AccessList
+  type?: TransactionTypes
 }
 
-export { BlockNumber, EventLog, Log, PromiEvent, Sign } from 'web3-core'
-export { Block, BlockHeader, Syncing } from 'web3-eth'
-export { Contract, ContractSendMethod, PastEventOptions } from 'web3-eth-contract'
+export type WithSig<T> = T & { v: number; s: string; r: string; yParity: 0 | 1 }
+export type CeloTxWithSig = WithSig<CeloTx>
+
+/**
+ * Minimal contract shape needed for tx object creation.
+ * CeloContract (GetContractReturnType) satisfies this interface.
+ * @internal
+ */
+export interface ContractRef {
+  readonly abi: readonly unknown[]
+  readonly address: `0x${string}`
+}
+
+/** Block number can be a number, hex string, or named tag */
+export type BlockNumber = string | number
+
+/** Event log entry */
+export interface EventLog {
+  event: string
+  address: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- decoded event values have dynamic types based on ABI
+  returnValues: Record<string, any>
+  logIndex: number
+  transactionIndex: number
+  transactionHash: string
+  blockHash: string
+  blockNumber: number
+  raw?: { data: string; topics: string[] }
+}
+
+/** Block header */
+export interface BlockHeader {
+  number: number
+  hash: string
+  parentHash: string
+  nonce: string
+  sha3Uncles: string
+  logsBloom: string
+  transactionsRoot: string
+  stateRoot: string
+  receiptsRoot: string
+  miner: string
+  extraData: string
+  gasLimit: number
+  gasUsed: number
+  timestamp: number | string
+  baseFeePerGas?: number | string
+  size?: number
+}
+
+/** PastEventOptions - retained for backward compatibility */
+export interface PastEventOptions {
+  filter?: Record<string, unknown>
+  fromBlock?: BlockNumber
+  toBlock?: BlockNumber
+  topics?: string[]
+}
 
 export type TransactionTypes = 'ethereum-legacy' | 'eip1559' | 'cip42' | 'cip64' | 'cip66'
 
@@ -99,61 +160,36 @@ export interface EncodedTransaction {
   tx: EthereumLegacyTXProperties | EIP1559TXProperties | CIP64TXProperties | CIP66TXProperties
 }
 
-export type CeloTxPending = Transaction & Partial<CeloParams>
-export type CeloTxReceipt = TransactionReceipt & Partial<CeloParams>
-
-export type Callback<T> = (error: Error | null, result?: T) => void
-
-export interface JsonRpcResponse {
-  jsonrpc: string
-  id: string | number
-  result?: any
-  error?: {
-    readonly code?: number
-    readonly data?: unknown
-    readonly message: string
-  }
+/** Pending transaction */
+export interface CeloTxPending extends Partial<CeloParams> {
+  hash: string
+  nonce: number
+  blockHash: string | null
+  blockNumber: number | null
+  transactionIndex: number | null
+  from: string
+  to: string | null
+  value: string
+  gasPrice?: string
+  maxFeePerGas?: string
+  maxPriorityFeePerGas?: string
+  gas: number
+  input: string
+  v?: string
+  r?: string
+  s?: string
 }
 
-export interface JsonRpcPayload {
-  jsonrpc: string
-  method: string
-  params: any[]
-  id?: string | number
-}
-
+/**
+ * EIP-1193 compliant provider interface.
+ * Uses viem's strongly-typed EIP1193RequestFn for full type safety.
+ */
 export interface Provider {
-  send(
-    payload: JsonRpcPayload,
-    callback: (error: Error | null, result?: JsonRpcResponse) => void
-  ): void
-}
-
-export interface Error {
-  readonly code?: number
-  readonly data?: unknown
-  readonly message: string
-}
-
-export interface HttpProvider {
-  send(
-    payload: JsonRpcPayload,
-    callback: (error: Error | null, result?: JsonRpcResponse) => void
-  ): void
+  request: EIP1193RequestFn
 }
 
 export interface RLPEncodedTx {
   transaction: FormattedCeloTx
   rlpEncode: Hex
   type: TransactionTypes
-}
-
-// Based on https://eips.ethereum.org/EIPS/eip-1193
-export interface Eip1193RequestArguments {
-  readonly method: string
-  readonly params?: readonly unknown[] | object
-}
-
-export interface Eip1193Provider {
-  request(args: Eip1193RequestArguments): Promise<unknown>
 }
