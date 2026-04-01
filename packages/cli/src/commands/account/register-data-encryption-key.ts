@@ -3,7 +3,7 @@ import { Flags } from '@oclif/core'
 
 import { BaseCommand } from '../../base'
 import { newCheckBuilder } from '../../utils/checks'
-import { displaySendTx } from '../../utils/cli'
+import { displayViemTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 export default class RegisterDataEncryptionKey extends BaseCommand {
   static description =
@@ -27,6 +27,7 @@ export default class RegisterDataEncryptionKey extends BaseCommand {
 
   async run() {
     const kit = await this.getKit()
+    const publicClient = await this.getPublicClient()
     const res = await this.parse(RegisterDataEncryptionKey)
     kit.defaultAccount = res.flags.from
 
@@ -35,9 +36,10 @@ export default class RegisterDataEncryptionKey extends BaseCommand {
     const publicKey = res.flags.publicKey
 
     const accounts = await kit.contracts.getAccounts()
-    await displaySendTx(
+    await displayViemTx(
       'RegisterDataEncryptionKey',
-      accounts.setAccountDataEncryptionKey(ensureLeading0x(publicKey))
+      accounts.setAccountDataEncryptionKey(ensureLeading0x(publicKey)),
+      publicClient
     )
   }
 }

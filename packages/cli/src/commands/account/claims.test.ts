@@ -1,4 +1,4 @@
-import { ContractKit, newKitFromWeb3 } from '@celo/contractkit'
+import { ContractKit, newKitFromProvider } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import { ClaimTypes, IdentityMetadataWrapper } from '@celo/metadata-claims'
 import { now } from '@celo/metadata-claims/lib/types'
@@ -6,8 +6,7 @@ import { ux } from '@oclif/core'
 import { readFileSync, writeFileSync } from 'fs'
 import humanizeDuration from 'humanize-duration'
 import { tmpdir } from 'os'
-import Web3 from 'web3'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import ClaimAccount from './claim-account'
 import ClaimDomain from './claim-domain'
 import ClaimName from './claim-name'
@@ -17,14 +16,14 @@ import RegisterMetadata from './register-metadata'
 import ShowMetadata from './show-metadata'
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('account metadata cmds', (web3: Web3) => {
+testWithAnvilL2('account metadata cmds', (provider) => {
   let account: string
   let accounts: string[]
   let kit: ContractKit
 
   beforeEach(async () => {
-    accounts = await web3.eth.getAccounts()
-    kit = newKitFromWeb3(web3)
+    kit = newKitFromProvider(provider)
+    accounts = await kit.connection.getAccounts()
     account = accounts[0]
   })
 
@@ -40,7 +39,7 @@ testWithAnvilL2('account metadata cmds', (web3: Web3) => {
 
     test('account:create-metadata cmd', async () => {
       const newFilePath = `${tmpdir()}/newfile.json`
-      await testLocallyWithWeb3Node(CreateMetadata, ['--from', account, newFilePath], web3)
+      await testLocallyWithNode(CreateMetadata, ['--from', account, newFilePath], provider)
       const res = JSON.parse(readFileSync(newFilePath).toString())
       expect(res.meta.address).toEqual(account)
     })
@@ -48,10 +47,10 @@ testWithAnvilL2('account metadata cmds', (web3: Web3) => {
     test('account:claim-name cmd', async () => {
       generateEmptyMetadataFile()
       const name = 'myname'
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         ClaimName,
         ['--from', account, '--name', name, emptyFilePath],
-        web3
+        provider
       )
       const metadata = await readFile()
       const claim = metadata.findClaim(ClaimTypes.NAME)
@@ -62,10 +61,10 @@ testWithAnvilL2('account metadata cmds', (web3: Web3) => {
     test('account:claim-domain cmd', async () => {
       generateEmptyMetadataFile()
       const domain = 'example.com'
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         ClaimDomain,
         ['--from', account, '--domain', domain, emptyFilePath],
-        web3
+        provider
       )
       const metadata = await readFile()
       const claim = metadata.findClaim(ClaimTypes.DOMAIN)
@@ -78,10 +77,10 @@ testWithAnvilL2('account metadata cmds', (web3: Web3) => {
       const rpcUrl = 'http://example.com:8545'
 
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           ClaimRpcUrl,
           [emptyFilePath, '--from', account, '--rpcUrl', 'http://127.0.0.1:8545'],
-          web3
+          provider
         )
       ).rejects.toMatchInlineSnapshot(`
         [Error: Parsing --rpcUrl 
@@ -89,10 +88,10 @@ testWithAnvilL2('account metadata cmds', (web3: Web3) => {
         See more help with --help]
       `)
 
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         ClaimRpcUrl,
         [emptyFilePath, '--from', account, '--rpcUrl', rpcUrl],
-        web3
+        provider
       )
 
       const metadata = await readFile()
@@ -104,7 +103,7 @@ testWithAnvilL2('account metadata cmds', (web3: Web3) => {
       const infoMock = jest.spyOn(console, 'info')
       const writeMock = jest.spyOn(ux.write, 'stdout')
 
-      await testLocallyWithWeb3Node(ShowMetadata, [emptyFilePath, '--csv'], web3)
+      await testLocallyWithNode(ShowMetadata, [emptyFilePath, '--csv'], provider)
 
       expect(stripAnsiCodesFromNestedArray(infoMock.mock.calls)).toMatchInlineSnapshot(`
         [
@@ -133,10 +132,10 @@ testWithAnvilL2('account metadata cmds', (web3: Web3) => {
     test('account:claim-account cmd', async () => {
       generateEmptyMetadataFile()
       const otherAccount = accounts[1]
-      await testLocallyWithWeb3Node(
+      await testLocallyWithNode(
         ClaimAccount,
         ['--from', account, '--address', otherAccount, emptyFilePath],
-        web3
+        provider
       )
       const metadata = await readFile()
       const claim = metadata.findClaim(ClaimTypes.ACCOUNT)
@@ -149,30 +148,31 @@ testWithAnvilL2('account metadata cmds', (web3: Web3) => {
     describe('when the account is registered', () => {
       beforeEach(async () => {
         const accountsInstance = await kit.contracts.getAccounts()
-        await accountsInstance.createAccount().sendAndWaitForReceipt({ from: account })
+        const hash = await accountsInstance.createAccount({ from: account })
+        await kit.connection.viemClient.waitForTransactionReceipt({ hash: hash as `0x${string}` })
       })
 
       test('can register metadata', async () => {
-        await testLocallyWithWeb3Node(
+        await testLocallyWithNode(
           RegisterMetadata,
           ['--force', '--from', account, '--url', 'https://example.com'],
-          web3
+          provider
         )
       })
 
       test('fails if url is missing', async () => {
         await expect(
-          testLocallyWithWeb3Node(RegisterMetadata, ['--force', '--from', account], web3)
+          testLocallyWithNode(RegisterMetadata, ['--force', '--from', account], provider)
         ).rejects.toThrow('Missing required flag')
       })
     })
 
     it('cannot register metadata', async () => {
       await expect(
-        testLocallyWithWeb3Node(
+        testLocallyWithNode(
           RegisterMetadata,
           ['--force', '--from', account, '--url', 'https://example.com'],
-          web3
+          provider
         )
       ).rejects.toThrow("Some checks didn't pass!")
     })

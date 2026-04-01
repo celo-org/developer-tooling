@@ -1,8 +1,9 @@
+import { encodeFunctionData } from 'viem'
 import { ensureLeading0x } from '@celo/utils/lib/address'
 import { Flags } from '@oclif/core'
 import fs from 'fs'
 import { BaseCommand } from '../../base'
-import { displayWeb3Tx } from '../../utils/cli'
+import { displayTx } from '../../utils/cli'
 import { CustomFlags } from '../../utils/command'
 import { deprecationOptions } from '../../utils/notice'
 
@@ -24,14 +25,24 @@ export default class DKGRegister extends BaseCommand {
   async run() {
     const kit = await this.getKit()
     const res = await this.parse(DKGRegister)
-    const web3 = kit.connection.web3
-
-    const dkg = new web3.eth.Contract(DKG.abi, res.flags.address)
+    const dkg = kit.connection.getCeloContract(DKG.abi, res.flags.address)
 
     // read the pubkey and publish it
     const blsKey = fs.readFileSync(res.flags.blsKey).toString('hex')
-    await displayWeb3Tx('registerBlsKey', dkg.methods.register(ensureLeading0x(blsKey)), {
-      from: res.flags.from,
+    const registerData = encodeFunctionData({
+      abi: dkg.abi,
+      functionName: 'register',
+      args: [ensureLeading0x(blsKey)],
     })
+    await displayTx(
+      'registerBlsKey',
+      {
+        send: (tx: any) =>
+          kit.connection
+            .sendTransaction({ ...tx, to: dkg.address, data: registerData })
+            .then((r) => r),
+      },
+      { from: res.flags.from }
+    )
   }
 }

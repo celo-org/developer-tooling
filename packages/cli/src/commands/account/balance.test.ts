@@ -1,33 +1,32 @@
-import { ContractKit, newKitFromWeb3, StableToken } from '@celo/contractkit'
+import { ContractKit, newKitFromProvider, StableToken } from '@celo/contractkit'
 import { testWithAnvilL2 } from '@celo/dev-utils/anvil-test'
 import BigNumber from 'bignumber.js'
-import Web3 from 'web3'
 import { topUpWithToken } from '../../test-utils/chain-setup'
-import { stripAnsiCodesFromNestedArray, testLocallyWithWeb3Node } from '../../test-utils/cliUtils'
+import { stripAnsiCodesFromNestedArray, testLocallyWithNode } from '../../test-utils/cliUtils'
 import Lock from '../lockedcelo/lock'
 import Unlock from '../lockedcelo/unlock'
 import Balance from './balance'
 
 process.env.NO_SYNCCHECK = 'true'
 
-testWithAnvilL2('account:balance cmd', (web3: Web3) => {
+testWithAnvilL2('account:balance cmd', (provider) => {
   const consoleMock = jest.spyOn(console, 'log')
   let accounts: string[] = []
   let kit: ContractKit
 
   beforeEach(async () => {
-    kit = newKitFromWeb3(web3)
-    accounts = await web3.eth.getAccounts()
+    kit = newKitFromProvider(provider)
+    accounts = await kit.connection.getAccounts()
     consoleMock.mockClear()
   })
 
   it('shows the balance of the account for CELO only', async () => {
-    await testLocallyWithWeb3Node(Lock, ['--from', accounts[0], '--value', '1234567890'], web3)
-    await testLocallyWithWeb3Node(Unlock, ['--from', accounts[0], '--value', '890'], web3)
+    await testLocallyWithNode(Lock, ['--from', accounts[0], '--value', '1234567890'], provider)
+    await testLocallyWithNode(Unlock, ['--from', accounts[0], '--value', '890'], provider)
 
     consoleMock.mockClear()
 
-    await testLocallyWithWeb3Node(Balance, [accounts[0]], web3)
+    await testLocallyWithNode(Balance, [accounts[0]], provider)
 
     // Instead of exact snapshot matching, let's verify the balance structure and ranges
     const calls = stripAnsiCodesFromNestedArray(consoleMock.mock.calls)
@@ -52,10 +51,10 @@ testWithAnvilL2('account:balance cmd', (web3: Web3) => {
     await topUpWithToken(kit, StableToken.EURm, accounts[0], EURmAmount)
     await topUpWithToken(kit, StableToken.BRLm, accounts[0], BRLmAmount)
 
-    await testLocallyWithWeb3Node(
+    await testLocallyWithNode(
       Balance,
       [accounts[0], '--erc20Address', (await kit.contracts.getGoldToken()).address],
-      web3
+      provider
     )
 
     expect(stripAnsiCodesFromNestedArray(consoleMock.mock.calls)).toMatchInlineSnapshot(`
